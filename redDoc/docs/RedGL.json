@@ -1,0 +1,37 @@
+[
+  {
+    "constructorYn": true,
+    "title": "RedGL",
+    "description": "\n    RedGL 인스턴스 생성자.\n    WebGL 초기화를 담당하며, 단일 월드를 소유한다.\n",
+    "params": {
+      "canvas": [
+        {
+          "type": "Canvas Element"
+        }
+      ],
+      "callback": [
+        {
+          "type": "function"
+        },
+        "컨텍스트 초기화이후 실행될 콜백",
+        "리턴인자로 true,false를 반환한다"
+      ],
+      "option": [
+        {
+          "type": "Object"
+        },
+        "초기화 옵션을 지정한다.",
+        "\n        <pre>\n        {\n            alpha: false,\n            depth: true,\n            stencil: false,\n            antialias: true,\n            premultipliedAlpha: false,\n            preserveDrawingBuffer: false,\n            powerPreference: 'default', // default, high-performance, low-power\n            failIfMajorPerformanceCaveat: false\n        }\n        </pre>\n        "
+      ]
+    },
+    "example": "\n// 기초 초기화\nRedGL(document.getElementById('test'), function(v){\n         // 콜백내용 \n         // 성공,실패에 따라 v값이 true or false.\n    })\n",
+    "return": "RedGL Instance"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedGL.makeUUID",
+    "description": "\n    UUID 생성기\n",
+    "example": "\n// 기초 초기화\nRedGL.makeUUID()\n",
+    "return": "int"
+  }
+]

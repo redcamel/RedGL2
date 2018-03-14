@@ -1,0 +1,8 @@
+[
+  {
+    "constructorYn": true,
+    "title": "RedCamera",
+    "description": "\n    RedCamera 인스턴스 생성자.\n",
+    "return": "RedCamera Instance"
+  }
+]

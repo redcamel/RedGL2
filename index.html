@@ -1,0 +1,45 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>기초테스트</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
+    />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden
+        }
+    </style>
+    <script src="src/RedGL.js"></script>
+    <script src="src/RedRenderItem.js"></script>
+    <script src="src/RedWorld.js"></script>
+    <script src="src/RedScene.js"></script>
+    <script src="src/RedCamera.js"></script>
+</head>
+
+<body>
+    <canvas id="test" style="border: none;background:red" width="1280" height="768"></canvas>
+    <script>
+        RedGL(document.getElementById('test'), function (v) {
+            var tWorld, tScene, tCamera;
+            this.world = tWorld = new RedWorld();
+            tScene = new RedScene();
+            tCamera = new RedCamera();
+            tWorld.addRenderItem('test', tScene, tCamera);
+            tWorld.addRenderItem('test2', tScene, tCamera);
+            console.log(tWorld.getRenderItemList());
+            console.log("tWorld.hasRenderItem('test')",tWorld.hasRenderItem('test'));
+            console.log(tWorld.getRenderItemList());
+            tWorld.delRenderItem('test');
+            console.log("tWorld.hasRenderItem('test')",tWorld.hasRenderItem('test'));
+            console.log(tWorld.getRenderItemList());
+            // tWorld.addRenderItem('test', tScene, tCamera)
+        })
+    </script>
+</body>
+
+</html>

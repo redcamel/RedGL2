@@ -1,0 +1,76 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://redcamel.github.io/Recard/beta/lib/prism.css">
+    <script src='https://redcamel.github.io/Recard/beta/lib/prism.js'></script>
+    <script src='https://redcamel.github.io/Recard/beta/release/recard.min.js'></script>
+    <script src='https://redcamel.github.io/Recard/beta/redDoc/redDoc.js'></script>
+    <style>
+        body {
+            font-size: 12px;
+            line-height: 22px;
+            color: #4c6575
+        }
+
+        a {
+            color: inherit;
+        }
+
+        h1 {
+            font-size: 40px
+        }
+
+        .topTitle {
+            font-size: 35px;
+            line-height: 21px;
+            color: #333;
+            font-weight: bold
+        }
+
+        .title {
+            font-size: 24px;
+            line-height: 21px;
+            color: #333;
+            font-weight: bold
+        }
+
+        .paramTitle {
+            font-size: 14px;
+            line-height: 21px;
+            color: #2233aa;
+            font-weight: bold
+        }
+
+        .defineBox {
+            margin-top: 30px;
+            margin-left: 10px;
+            margin-right: 10px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .defineBox:last-child {
+            border-bottom: 0
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        Recard(function () {
+            var path = 'docs/'
+
+            DocJS.init(
+                [
+                    path + "RedGL.json",
+                    path + 'RedRenderItem.json',
+                    path + "RedWorld.json"
+                ]
+            )
+        }
+        )
+    </script>
+</body>
+
+</html>
