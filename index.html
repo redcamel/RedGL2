@@ -29,8 +29,8 @@
             this.world = tWorld = new RedWorld();
             tScene = new RedScene();
             tCamera = new RedCamera();
-            tWorld.addRenderItem('test', tScene, tCamera);
-            tWorld.addRenderItem('test2', tScene, tCamera);
+            tWorld.addRenderItem( new RedRenderItem('test', tScene, tCamera));
+            tWorld.addRenderItem( new RedRenderItem('test2', tScene, tCamera));
             console.log(tWorld.getRenderItemList());
             console.log("tWorld.hasRenderItem('test')",tWorld.hasRenderItem('test'));
             console.log(tWorld.getRenderItemList());

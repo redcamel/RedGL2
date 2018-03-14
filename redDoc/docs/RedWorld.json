@@ -2,25 +2,13 @@
   {
     "code": "FUNCTION",
     "title": "addRenderItem",
-    "description": "\n    렌더정보 추가.\n    정상처리된다면 내부적으로 RedRenderItem이 생성됨.\n",
+    "description": "\n    렌더정보 추가.\n    정상처리된다면 내부적으로 <b>RedRenderItem</b>이 생성됨.\n",
     "params": {
-      "key": [
+      "RedRenderItem": [
         {
-          "type": "String"
+          "type": "RedRenderItem"
         },
-        "고유키"
-      ],
-      "scene": [
-        {
-          "type": "RedScene"
-        },
-        "RedScene"
-      ],
-      "camera": [
-        {
-          "type": "RedCamera"
-        },
-        "RedCamera"
+        "RedRenderItem"
       ]
     },
     "return": "RedWorld Instance"
@@ -41,7 +29,7 @@
   },
   {
     "code": "FUNCTION",
-    "title": "hasRenderItem",
+    "title": "getRenderItemList",
     "description": "고유키 기반 렌더정보 검색",
     "params": {
       "key": [
@@ -51,7 +39,7 @@
         "고유키"
       ]
     },
-    "return": "RedRenderItem Instance"
+    "return": "Array"
   },
   {
     "code": "FUNCTION",
@@ -65,12 +53,12 @@
         "고유키"
       ]
     },
-    "return": "RedRenderItem Instance"
+    "return": "Boolean"
   },
   {
     "constructorYn": true,
     "title": "RedWorld",
-    "description": "\n    RedWorld 인스턴스 생성자.\n    월드는 RedScene과 RedCamera를 쌍으로 하는 정보를 소유하며 렌더리스트로서 작동한다.. \n",
+    "description": "\n    RedWorld 인스턴스 생성자.\n    RedWorld는 RedRenderItem를 소유하며 이는 렌더리스트로서 작동한다.. \n",
     "params": {
       "key": [
         {

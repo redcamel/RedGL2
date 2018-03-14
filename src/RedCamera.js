@@ -13,7 +13,7 @@ var RedCamera;
 	:DOC*/
     RedCamera = function () {
         if (!(this instanceof RedCamera)) return new RedCamera();
-        this['_uuid'] = RedGL['makeUUID']();
+        this['_UUID'] = RedGL['makeUUID']();
     };
     RedCamera.prototype = {
     };

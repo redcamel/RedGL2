@@ -60,11 +60,11 @@ gulp.task('make-doc', function () {
 	console.log('-------------------------------------------');
 	console.log('시작!');
 	return gulp.src([
+		"src/RedCamera.js",
 		"src/RedGL.js",
 		'src/RedRenderItem.js',
 		"src/RedWorld.js",
-		"src/RedScene.js",
-		"src/RedCamera.js"
+		"src/RedScene.js"
 		
 	])
 		.pipe(myTransformation()) // 병합한다.
@@ -78,11 +78,11 @@ gulp.task('combine-js', function () {
 	console.log('파일 병합 시작!');
 	var name = "RedGL"
 	return gulp.src([
+		"src/RedCamera.js",
 		"src/RedGL.js",
 		'src/RedRenderItem.js',
 		"src/RedWorld.js",
-		"src/RedScene.js",
-		"src/RedCamera.js"
+		"src/RedScene.js"
 	])
 		.pipe(concat(name + '.js')) // 병합한다.
 		.pipe(gulp.dest('release')) //

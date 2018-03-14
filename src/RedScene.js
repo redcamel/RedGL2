@@ -13,7 +13,7 @@ var RedScene;
 	:DOC*/
     RedScene = function () {
         if (!(this instanceof RedScene)) return new RedScene();
-        this['_uuid'] = RedGL['makeUUID']();
+        this['_UUID'] = RedGL['makeUUID']();
     };
     RedScene.prototype = {
     };

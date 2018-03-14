@@ -110,7 +110,7 @@ var RedGL;
 
         if (tGL) this['_detect'] = redGLDetect(tGL, option);
         this['_datas'] = {};
-        this['_uuid'] = RedGL['makeUUID']();
+        this['_UUID'] = RedGL['makeUUID']();
 
         requestAnimationFrame(function (v) {
             callback ? callback.call(self, tGL ? true : false) : 0;

@@ -7,7 +7,7 @@ var RedWorld;
         title :`RedWorld`,
         description : `
             RedWorld 인스턴스 생성자.
-            월드는 RedScene과 RedCamera를 쌍으로 하는 정보를 소유하며 렌더리스트로서 작동한다.. 
+            RedWorld는 RedRenderItem를 소유하며 이는 렌더리스트로서 작동한다.. 
         `,
         params : {
             key :[
@@ -22,7 +22,7 @@ var RedWorld;
         if (!(this instanceof RedWorld)) return new RedWorld();
         this['_renderList'] = [];
         this['_renderMap'] = {};
-        this['_uuid'] = RedGL['makeUUID']();
+        this['_UUID'] = RedGL['makeUUID']();
     };
     RedWorld.prototype = {
         /**DOC:
@@ -31,29 +31,21 @@ var RedWorld;
                 title :`addRenderItem`,
                 description : `
                     렌더정보 추가.
-                    정상처리된다면 내부적으로 RedRenderItem이 생성됨.
+                    정상처리된다면 내부적으로 <b>RedRenderItem</b>이 생성됨.
                 `,
                 params : {
-                    key :[
-                        {type:'String'},
-                        '고유키'
-                    ],
-                    scene :[
-                        {type:'RedScene'},
-                        'RedScene'
-                    ],
-                    camera :[
-                        {type:'RedCamera'},
-                        'RedCamera'
+                    RedRenderItem :[
+                        {type:'RedRenderItem'},
+                        'RedRenderItem'
                     ]
                 },
                 return : 'RedWorld Instance'
             }
         :DOC*/
-        addRenderItem: function (key, scene, camera) {
-            var t0;
-            this['_renderMap'][key] = t0 = new RedRenderItem(key, scene, camera);
-            this['_renderList'].push(t0);
+        addRenderItem: function (redRenderItem) {
+            if (!(redRenderItem instanceof RedRenderItem)) RedGL['throwFunc']('RedRenderItem 인스턴스만 허용함.')
+            this['_renderMap'][redRenderItem['key']] = redRenderItem;
+            this['_renderList'].push(redRenderItem);
             return this;
         },
         /**DOC:
@@ -90,7 +82,7 @@ var RedWorld;
                         '고유키'
                     ]
                 },
-                return : 'RedRenderItem Instance'
+                return : 'Boolean'
             }
         :DOC*/
         hasRenderItem: function (key) {
@@ -99,7 +91,7 @@ var RedWorld;
         /**DOC:
             {
                 code:`FUNCTION`,
-                title :`hasRenderItem`,
+                title :`getRenderItemList`,
                 description : `고유키 기반 렌더정보 검색`,
                 params : {
                     key :[
@@ -107,7 +99,7 @@ var RedWorld;
                         '고유키'
                     ]
                 },
-                return : 'RedRenderItem Instance'
+                return : 'Array'
             }
         :DOC*/
         getRenderItemList: function () {

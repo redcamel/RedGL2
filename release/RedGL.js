@@ -1,4 +1,26 @@
 "use strict";
+var RedCamera;
+(function () {
+    /**DOC:
+    {
+        constructorYn : true,
+        title :`RedCamera`,
+        description : `
+            RedCamera 인스턴스 생성자.
+        `,
+        return : 'RedCamera Instance'
+    }
+	:DOC*/
+    RedCamera = function () {
+        if (!(this instanceof RedCamera)) return new RedCamera();
+        this['_UUID'] = RedGL['makeUUID']();
+    };
+    RedCamera.prototype = {
+    };
+    Object.freeze(RedCamera);
+})();
+
+"use strict";
 var RedGL;
 (function () {
     var throwFunc;
@@ -110,7 +132,7 @@ var RedGL;
 
         if (tGL) this['_detect'] = redGLDetect(tGL, option);
         this['_datas'] = {};
-        this['_uuid'] = RedGL['makeUUID']();
+        this['_UUID'] = RedGL['makeUUID']();
 
         requestAnimationFrame(function (v) {
             callback ? callback.call(self, tGL ? true : false) : 0;
@@ -151,16 +173,94 @@ var RedRenderItem;
 (function () {
     var renderItemMap;
     renderItemMap = {};
+    /**DOC:
+    {
+        constructorYn : true,
+        title :`RedRenderItem`,
+        description : `
+            고유 키를 기반으로 <b>RedScene</b>과 <b>RedCamera를</b> 쌍으로 하는 정보를 소유.
+            RedWorld가 소유하게 되며 렌더링시 활용하게 된다.
+        `,
+        params : {
+            key :[
+                {type:'String'},
+                '고유키',
+                '기존에 존재하는 키일경우 <b>캐쉬된 인스턴스</b>를 반환'
+            ],
+            scene :[
+                {type:'RedScene'},
+                'RedScene'
+            ],
+            camera :[
+                {type:'RedCamera'},
+                'RedCamera'
+            ]
+        },
+        example : `
+            var tWorld, tScene, tCamera;
+            tScene = new RedScene(); // 씬생성
+            tCamera = new RedCamera(); // 카메라생성
+            new RedRenderItem('test', tScene, tCamera); // test라는 키값을 가진 RedRenderItem 생성
+            new RedRenderItem('test2', tScene, tCamera); // test2라는 키값을 가진 RedRenderItem 생성
+        `,
+        return : 'RedRenderItem Instance'
+    }
+	:DOC*/
     RedRenderItem = function (key, scene, camera) {
+        if (!(this instanceof RedRenderItem)) return new RedRenderItem(key, scene, camera);
         if (renderItemMap[key]) return renderItemMap[key]
+        if (!(typeof key == 'string')) RedGL['throwFunc']('key : 문자열만 허용')
         if (!(scene instanceof RedScene)) RedGL['throwFunc']('RedWorld 인스턴스만 허용')
         if (!(camera instanceof RedCamera)) RedGL['throwFunc']('RedCamera 인스턴스만 허용')
+        this['key'] = key;
         this['scene'] = scene;
         this['camera'] = camera;
         renderItemMap[key] = this;
     };
-    RedRenderItem['getList'] = function () {
+    /**DOC:
+        {
+            code:`FUNCTION`,
+            title :`getKeyMap`,
+            description : `
+                RedRenderItem에 등록된 키맵조회
+            `,
+            example : `
+            var tWorld, tScene, tCamera;
+            tScene = new RedScene(); // 씬생성
+            tCamera = new RedCamera(); // 카메라생성
+            new RedRenderItem('test', tScene, tCamera); // test라는 키값을 가진 RedRenderItem 생성
+            new RedRenderItem('test2', tScene, tCamera); // test2라는 키값을 가진 RedRenderItem 생성
+            console.log(RedRenderItem['getKeyMap']()) // { test: RedRenderItem, test2: RedRenderItem } 출력
+            `,
+            return : 'Object'
+        }
+    :DOC*/
+    RedRenderItem['getKeyMap'] = function () {
         return renderItemMap
+    }
+    /**DOC:
+        {
+            code:`FUNCTION`,
+            title :`del`,
+            description : `
+                key를 통해서 생성된 아이템을 삭제
+            `,
+            example : `
+            var tWorld, tScene, tCamera;
+            tScene = new RedScene(); // 씬생성
+            tCamera = new RedCamera(); // 카메라생성
+            new RedRenderItem('test', tScene, tCamera); // test라는 키값을 가진 RedRenderItem 생성
+            new RedRenderItem('test2', tScene, tCamera); // test2라는 키값을 가진 RedRenderItem 생성
+
+            console.log(RedRenderItem['getKeyMap']()) // { test: RedRenderItem, test2: RedRenderItem } 출력
+            RedRenderItem.del('test2'); // 삭제
+            console.log(RedRenderItem['getKeyMap']()) // { test: RedRenderItem } 출력            
+            `,
+            return : 'void'
+        }
+    :DOC*/
+    RedRenderItem['del'] = function (key) {
+        delete renderItemMap[key];
     }
     Object.freeze(RedRenderItem);
 })();
@@ -174,7 +274,7 @@ var RedWorld;
         title :`RedWorld`,
         description : `
             RedWorld 인스턴스 생성자.
-            월드는 RedScene과 RedCamera를 쌍으로 하는 정보를 소유하며 렌더리스트로서 작동한다.. 
+            RedWorld는 RedRenderItem를 소유하며 이는 렌더리스트로서 작동한다.. 
         `,
         params : {
             key :[
@@ -189,7 +289,7 @@ var RedWorld;
         if (!(this instanceof RedWorld)) return new RedWorld();
         this['_renderList'] = [];
         this['_renderMap'] = {};
-        this['_uuid'] = RedGL['makeUUID']();
+        this['_UUID'] = RedGL['makeUUID']();
     };
     RedWorld.prototype = {
         /**DOC:
@@ -198,29 +298,21 @@ var RedWorld;
                 title :`addRenderItem`,
                 description : `
                     렌더정보 추가.
-                    정상처리된다면 내부적으로 RedRenderItem이 생성됨.
+                    정상처리된다면 내부적으로 <b>RedRenderItem</b>이 생성됨.
                 `,
                 params : {
-                    key :[
-                        {type:'String'},
-                        '고유키'
-                    ],
-                    scene :[
-                        {type:'RedScene'},
-                        'RedScene'
-                    ],
-                    camera :[
-                        {type:'RedCamera'},
-                        'RedCamera'
+                    RedRenderItem :[
+                        {type:'RedRenderItem'},
+                        'RedRenderItem'
                     ]
                 },
                 return : 'RedWorld Instance'
             }
         :DOC*/
-        addRenderItem: function (key, scene, camera) {
-            var t0;
-            this['_renderMap'][key] = t0 = new RedRenderItem(key, scene, camera);
-            this['_renderList'].push(t0);
+        addRenderItem: function (redRenderItem) {
+            if (!(redRenderItem instanceof RedRenderItem)) RedGL['throwFunc']('RedRenderItem 인스턴스만 허용함.')
+            this['_renderMap'][redRenderItem['key']] = redRenderItem;
+            this['_renderList'].push(redRenderItem);
             return this;
         },
         /**DOC:
@@ -257,7 +349,7 @@ var RedWorld;
                         '고유키'
                     ]
                 },
-                return : 'RedRenderItem Instance'
+                return : 'Boolean'
             }
         :DOC*/
         hasRenderItem: function (key) {
@@ -266,7 +358,7 @@ var RedWorld;
         /**DOC:
             {
                 code:`FUNCTION`,
-                title :`hasRenderItem`,
+                title :`getRenderItemList`,
                 description : `고유키 기반 렌더정보 검색`,
                 params : {
                     key :[
@@ -274,7 +366,7 @@ var RedWorld;
                         '고유키'
                     ]
                 },
-                return : 'RedRenderItem Instance'
+                return : 'Array'
             }
         :DOC*/
         getRenderItemList: function () {
@@ -299,31 +391,9 @@ var RedScene;
 	:DOC*/
     RedScene = function () {
         if (!(this instanceof RedScene)) return new RedScene();
-        this['_uuid'] = RedGL['makeUUID']();
+        this['_UUID'] = RedGL['makeUUID']();
     };
     RedScene.prototype = {
     };
     Object.freeze(RedScene);
-})();
-
-"use strict";
-var RedCamera;
-(function () {
-    /**DOC:
-    {
-        constructorYn : true,
-        title :`RedCamera`,
-        description : `
-            RedCamera 인스턴스 생성자.
-        `,
-        return : 'RedCamera Instance'
-    }
-	:DOC*/
-    RedCamera = function () {
-        if (!(this instanceof RedCamera)) return new RedCamera();
-        this['_uuid'] = RedGL['makeUUID']();
-    };
-    RedCamera.prototype = {
-    };
-    Object.freeze(RedCamera);
 })();
