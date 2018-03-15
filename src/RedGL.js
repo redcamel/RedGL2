@@ -132,6 +132,9 @@ var RedGL;
 		}
 	:DOC*/
     RedGL['makeUUID'] = makeUUID;
+    RedGL['extendsProto'] = function(target,from){
+        for (var k in from.prototype) target.prototype[k] = from.prototype[k]
+    };
     RedGL.prototype = {};
     Object.defineProperties(RedGL.prototype, {
         'world': {

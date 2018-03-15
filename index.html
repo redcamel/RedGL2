@@ -14,6 +14,7 @@
             overflow: hidden
         }
     </style>
+    <script src="src/base/RedBaseContainer.js"></script>
     <script src="src/RedGL.js"></script>
     <script src="src/RedRenderItem.js"></script>
     <script src="src/RedWorld.js"></script>
@@ -29,15 +30,18 @@
             this.world = tWorld = new RedWorld();
             tScene = new RedScene();
             tCamera = new RedCamera();
-            tWorld.addRenderItem( new RedRenderItem('test', tScene, tCamera));
-            tWorld.addRenderItem( new RedRenderItem('test2', tScene, tCamera));
-            console.log(tWorld.getRenderItemList());
-            console.log("tWorld.hasRenderItem('test')",tWorld.hasRenderItem('test'));
-            console.log(tWorld.getRenderItemList());
-            tWorld.delRenderItem('test');
-            console.log("tWorld.hasRenderItem('test')",tWorld.hasRenderItem('test'));
+            tWorld.addRenderItem(new RedRenderItem('test', tScene, tCamera));
+            tWorld.addRenderItem(new RedRenderItem('test2', tScene, tCamera));
             console.log(tWorld.getRenderItemList());
             // tWorld.addRenderItem('test', tScene, tCamera)
+
+            var tRendererLoop = function(){
+                tWorld.render()
+                requestAnimationFrame(tRendererLoop)
+            }            
+            requestAnimationFrame(tRendererLoop)
+
+
         })
     </script>
 </body>

@@ -1,4 +1,22 @@
 "use strict";
+var RedBaseContainer;
+(function () {
+    RedBaseContainer = function () { }
+    RedBaseContainer.prototype = {
+        addChild: function (v) {
+            // TODO:
+        },
+        removeChild: function (v) {
+            // TODO:
+        },
+        getChildAt: function (v) {
+            // TODO: 
+        }
+    };
+    Object.freeze(RedBaseContainer);
+})();
+
+"use strict";
 var RedCamera;
 (function () {
     /**DOC:
@@ -154,6 +172,9 @@ var RedGL;
 		}
 	:DOC*/
     RedGL['makeUUID'] = makeUUID;
+    RedGL['extendsProto'] = function(target,from){
+        for (var k in from.prototype) target.prototype[k] = from.prototype[k]
+    };
     RedGL.prototype = {};
     Object.defineProperties(RedGL.prototype, {
         'world': {
@@ -180,6 +201,7 @@ var RedRenderItem;
         description : `
             고유 키를 기반으로 <b>RedScene</b>과 <b>RedCamera를</b> 쌍으로 하는 정보를 소유.
             RedWorld가 소유하게 되며 렌더링시 활용하게 된다.
+            TODO: 실제 렌더링시 Perspective 계산에 필요한 그려질 크기와 위치를 결정한다.
         `,
         params : {
             key :[
@@ -215,12 +237,18 @@ var RedRenderItem;
         this['key'] = key;
         this['scene'] = scene;
         this['camera'] = camera;
+
+        this['_width'] = '100%';
+        this['_height'] = '100%';
+        this['_x'] = 0;
+        this['_y'] = 0;
         renderItemMap[key] = this;
+        Object.seal(this)
     };
     /**DOC:
         {
-            code:`FUNCTION`,
-            title :`getKeyMap`,
+            constructorYn : true,
+            title :`RedRenderItem.getKeyMap`,
             description : `
                 RedRenderItem에 등록된 키맵조회
             `,
@@ -235,13 +263,11 @@ var RedRenderItem;
             return : 'Object'
         }
     :DOC*/
-    RedRenderItem['getKeyMap'] = function () {
-        return renderItemMap
-    }
+    RedRenderItem['getKeyMap'] = function () { return renderItemMap; }
     /**DOC:
         {
-            code:`FUNCTION`,
-            title :`del`,
+            constructorYn : true,
+            title :`RedRenderItem.del`,
             description : `
                 key를 통해서 생성된 아이템을 삭제
             `,
@@ -259,8 +285,48 @@ var RedRenderItem;
             return : 'void'
         }
     :DOC*/
-    RedRenderItem['del'] = function (key) {
-        delete renderItemMap[key];
+    RedRenderItem['del'] = function (key) { delete renderItemMap[key]; }
+    RedRenderItem.prototype = {
+        /**DOC:
+           {
+               code : 'FUNCTION',
+               title :`setSize`,
+               description : `
+                   TODO: 씬의 사이즈를 결정
+               `,
+               example : `
+                   // TODO       
+               `,
+               return : 'void'
+           }
+       :DOC*/
+        setSize: function (w, h) {
+            this['_width'] = w ? w : '100%';
+            this['_height'] = h ? h : '100%';
+        },
+        /**DOC:
+           {
+               code : 'FUNCTION',
+               title :`setLocation`,
+               description : `
+                   TODO:씬의 위치를 결정
+               `,
+               example : `
+                   // TODO       
+               `,
+               return : 'void'
+           }
+       :DOC*/
+        setLocation: function (x,y) {
+            // TODO: 씬의 위치는 결정할 수 있어야한다.(일단은 픽셀 기준)
+            this['_x'] = x ? x : 0;
+            this['_y'] = y ? y : 0;
+        },
+        // 월드리사이즈시 발동될 내부 매서드
+        // TODO: 위치와 사이즈를 계산한다.(%인경우)
+        _resize: function () {
+
+        }
     }
     Object.freeze(RedRenderItem);
 })();
@@ -282,6 +348,9 @@ var RedWorld;
                 '고유키'
             ]
         },
+        example : `
+            // TODO       
+        `,
         return : 'RedWorld Instance'
     }
 	:DOC*/
@@ -290,8 +359,43 @@ var RedWorld;
         this['_renderList'] = [];
         this['_renderMap'] = {};
         this['_UUID'] = RedGL['makeUUID']();
+        Object.seal(this)
     };
     RedWorld.prototype = {
+        /**DOC:
+            {
+                code:`FUNCTION`,
+                title :`render`,
+                description : `
+                    등록된 RedRenderItem을 기반으로 렌더링을 실행함
+                `,
+                return : 'void'
+            }
+        :DOC*/
+        render: (function () {
+            var worldRect;
+            var valueParser;
+            // 숫자면 숫자로 %면 월드대비 수치로 변경해줌
+            valueParser = function (rect) {
+                rect.forEach(function (v, index) {
+                    if (typeof v == 'number') worldRect[index] = v;
+                    else worldRect[index] *= parseFloat(v) / 100;
+                })
+                return rect;
+            }
+            return function () {
+                worldRect = [0, 0, document.body.clientWidth, document.body.clientHeight];
+                console.log('--렌더시작')
+                this['_renderList'].forEach(function (v) {
+                    // 렌더할 사이즈와 위치 정보를 생성하고
+                    console.log("render", v['key'], v['_x'], v['_y'], v['_width'], v['_height'])
+                    console.log(valueParser(worldRect))
+                    // TODO: 카메라 퍼스펙티브를 먹여준뒤..
+                    // TODO: 씬의 자식들을 렌더링한다.
+                })
+                console.log('--렌더종료')
+            }
+        })(),
         /**DOC:
             {
                 code:`FUNCTION`,
@@ -301,19 +405,42 @@ var RedWorld;
                     정상처리된다면 내부적으로 <b>RedRenderItem</b>이 생성됨.
                 `,
                 params : {
-                    RedRenderItem :[
+                    renderItem :[
                         {type:'RedRenderItem'},
-                        'RedRenderItem'
+                        '추가할 RedRenderItem Instance'
                     ]
                 },
+                example : `
+                   // TODO       
+               `,
                 return : 'RedWorld Instance'
             }
         :DOC*/
-        addRenderItem: function (redRenderItem) {
-            if (!(redRenderItem instanceof RedRenderItem)) RedGL['throwFunc']('RedRenderItem 인스턴스만 허용함.')
-            this['_renderMap'][redRenderItem['key']] = redRenderItem;
-            this['_renderList'].push(redRenderItem);
+        addRenderItem: function (renderItem) {
+            if (!(renderItem instanceof RedRenderItem)) RedGL['throwFunc']('RedRenderItem 인스턴스만 허용함.')
+            this['_renderMap'][renderItem['key']] = renderItem;
+            this['_renderList'].push(renderItem);
             return this;
+        },
+        /**DOC:
+            {
+                code:`FUNCTION`,
+                title :`getRenderItem`,
+                description : `고유키 기반 렌더정보 검색`,
+                params : {
+                    key :[
+                        {type:'String'},
+                        '고유키'
+                    ]
+                },
+                example : `
+                   // TODO       
+               `,
+                return : 'RedRenderItem'
+            }
+        :DOC*/
+        getRenderItem: function (key) {
+            return this['_renderMap'][key]
         },
         /**DOC:
             {
@@ -326,6 +453,9 @@ var RedWorld;
                         '고유키'
                     ]
                 },
+                example : `
+                   // TODO       
+               `,
                 return : 'RedWorld Instance'
             }
         :DOC*/
@@ -342,13 +472,16 @@ var RedWorld;
             {
                 code:`FUNCTION`,
                 title :`hasRenderItem`,
-                description : `고유키 기반 렌더정보 검색`,
+                description : `고유키 기반 렌더정보 존재여부`,
                 params : {
                     key :[
                         {type:'String'},
                         '고유키'
                     ]
                 },
+                example : `
+                   // TODO       
+               `,
                 return : 'Boolean'
             }
         :DOC*/
@@ -366,6 +499,9 @@ var RedWorld;
                         '고유키'
                     ]
                 },
+                example : `
+                   // TODO       
+               `,
                 return : 'Array'
             }
         :DOC*/
@@ -391,9 +527,11 @@ var RedScene;
 	:DOC*/
     RedScene = function () {
         if (!(this instanceof RedScene)) return new RedScene();
+        this['children'] = []
         this['_UUID'] = RedGL['makeUUID']();
+        Object.seal(this)
     };
-    RedScene.prototype = {
-    };
+    RedScene.prototype = {};
+    RedGL['extendsProto'](RedScene, RedBaseContainer)
     Object.freeze(RedScene);
 })();

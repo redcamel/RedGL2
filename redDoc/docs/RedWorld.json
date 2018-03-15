@@ -4,13 +4,14 @@
     "title": "addRenderItem",
     "description": "\n    렌더정보 추가.\n    정상처리된다면 내부적으로 <b>RedRenderItem</b>이 생성됨.\n",
     "params": {
-      "RedRenderItem": [
+      "renderItem": [
         {
           "type": "RedRenderItem"
         },
-        "RedRenderItem"
+        "추가할 RedRenderItem Instance"
       ]
     },
+    "example": "\n   // TODO       \n",
     "return": "RedWorld Instance"
   },
   {
@@ -25,7 +26,23 @@
         "고유키"
       ]
     },
+    "example": "\n   // TODO       \n",
     "return": "RedWorld Instance"
+  },
+  {
+    "code": "FUNCTION",
+    "title": "getRenderItem",
+    "description": "고유키 기반 렌더정보 검색",
+    "params": {
+      "key": [
+        {
+          "type": "String"
+        },
+        "고유키"
+      ]
+    },
+    "example": "\n   // TODO       \n",
+    "return": "RedRenderItem"
   },
   {
     "code": "FUNCTION",
@@ -39,12 +56,13 @@
         "고유키"
       ]
     },
+    "example": "\n   // TODO       \n",
     "return": "Array"
   },
   {
     "code": "FUNCTION",
     "title": "hasRenderItem",
-    "description": "고유키 기반 렌더정보 검색",
+    "description": "고유키 기반 렌더정보 존재여부",
     "params": {
       "key": [
         {
@@ -53,6 +71,7 @@
         "고유키"
       ]
     },
+    "example": "\n   // TODO       \n",
     "return": "Boolean"
   },
   {
@@ -67,6 +86,13 @@
         "고유키"
       ]
     },
+    "example": "\n    // TODO       \n",
     "return": "RedWorld Instance"
+  },
+  {
+    "code": "FUNCTION",
+    "title": "render",
+    "description": "\n    등록된 RedRenderItem을 기반으로 렌더링을 실행함\n",
+    "return": "void"
   }
 ]

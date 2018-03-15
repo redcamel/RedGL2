@@ -1,22 +1,8 @@
 [
   {
-    "code": "FUNCTION",
-    "title": "del",
-    "description": "\n    key를 통해서 생성된 아이템을 삭제\n",
-    "example": "\nvar tWorld, tScene, tCamera;\ntScene = new RedScene(); // 씬생성\ntCamera = new RedCamera(); // 카메라생성\nnew RedRenderItem('test', tScene, tCamera); // test라는 키값을 가진 RedRenderItem 생성\nnew RedRenderItem('test2', tScene, tCamera); // test2라는 키값을 가진 RedRenderItem 생성\n  console.log(RedRenderItem['getKeyMap']()) // { test: RedRenderItem, test2: RedRenderItem } 출력\nRedRenderItem.del('test2'); // 삭제\nconsole.log(RedRenderItem['getKeyMap']()) // { test: RedRenderItem } 출력            \n",
-    "return": "void"
-  },
-  {
-    "code": "FUNCTION",
-    "title": "getKeyMap",
-    "description": "\n    RedRenderItem에 등록된 키맵조회\n",
-    "example": "\nvar tWorld, tScene, tCamera;\ntScene = new RedScene(); // 씬생성\ntCamera = new RedCamera(); // 카메라생성\nnew RedRenderItem('test', tScene, tCamera); // test라는 키값을 가진 RedRenderItem 생성\nnew RedRenderItem('test2', tScene, tCamera); // test2라는 키값을 가진 RedRenderItem 생성\nconsole.log(RedRenderItem['getKeyMap']()) // { test: RedRenderItem, test2: RedRenderItem } 출력\n",
-    "return": "Object"
-  },
-  {
     "constructorYn": true,
     "title": "RedRenderItem",
-    "description": "\n    고유 키를 기반으로 <b>RedScene</b>과 <b>RedCamera를</b> 쌍으로 하는 정보를 소유.\n    RedWorld가 소유하게 되며 렌더링시 활용하게 된다.\n",
+    "description": "\n    고유 키를 기반으로 <b>RedScene</b>과 <b>RedCamera를</b> 쌍으로 하는 정보를 소유.\n    RedWorld가 소유하게 되며 렌더링시 활용하게 된다.\n    TODO: 실제 렌더링시 Perspective 계산에 필요한 그려질 크기와 위치를 결정한다.\n",
     "params": {
       "key": [
         {
@@ -40,5 +26,33 @@
     },
     "example": "\n    var tWorld, tScene, tCamera;\n    tScene = new RedScene(); // 씬생성\n    tCamera = new RedCamera(); // 카메라생성\n    new RedRenderItem('test', tScene, tCamera); // test라는 키값을 가진 RedRenderItem 생성\n    new RedRenderItem('test2', tScene, tCamera); // test2라는 키값을 가진 RedRenderItem 생성\n",
     "return": "RedRenderItem Instance"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedRenderItem.del",
+    "description": "\n    key를 통해서 생성된 아이템을 삭제\n",
+    "example": "\nvar tWorld, tScene, tCamera;\ntScene = new RedScene(); // 씬생성\ntCamera = new RedCamera(); // 카메라생성\nnew RedRenderItem('test', tScene, tCamera); // test라는 키값을 가진 RedRenderItem 생성\nnew RedRenderItem('test2', tScene, tCamera); // test2라는 키값을 가진 RedRenderItem 생성\n  console.log(RedRenderItem['getKeyMap']()) // { test: RedRenderItem, test2: RedRenderItem } 출력\nRedRenderItem.del('test2'); // 삭제\nconsole.log(RedRenderItem['getKeyMap']()) // { test: RedRenderItem } 출력            \n",
+    "return": "void"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedRenderItem.getKeyMap",
+    "description": "\n    RedRenderItem에 등록된 키맵조회\n",
+    "example": "\nvar tWorld, tScene, tCamera;\ntScene = new RedScene(); // 씬생성\ntCamera = new RedCamera(); // 카메라생성\nnew RedRenderItem('test', tScene, tCamera); // test라는 키값을 가진 RedRenderItem 생성\nnew RedRenderItem('test2', tScene, tCamera); // test2라는 키값을 가진 RedRenderItem 생성\nconsole.log(RedRenderItem['getKeyMap']()) // { test: RedRenderItem, test2: RedRenderItem } 출력\n",
+    "return": "Object"
+  },
+  {
+    "code": "FUNCTION",
+    "title": "setLocation",
+    "description": "\n    TODO:씬의 위치를 결정\n",
+    "example": "\n    // TODO       \n",
+    "return": "void"
+  },
+  {
+    "code": "FUNCTION",
+    "title": "setSize",
+    "description": "\n    TODO: 씬의 사이즈를 결정\n",
+    "example": "\n    // TODO       \n",
+    "return": "void"
   }
 ]

@@ -15,6 +15,9 @@ var RedWorld;
                 '고유키'
             ]
         },
+        example : `
+            // TODO       
+        `,
         return : 'RedWorld Instance'
     }
 	:DOC*/
@@ -23,8 +26,43 @@ var RedWorld;
         this['_renderList'] = [];
         this['_renderMap'] = {};
         this['_UUID'] = RedGL['makeUUID']();
+        Object.seal(this)
     };
     RedWorld.prototype = {
+        /**DOC:
+            {
+                code:`FUNCTION`,
+                title :`render`,
+                description : `
+                    등록된 RedRenderItem을 기반으로 렌더링을 실행함
+                `,
+                return : 'void'
+            }
+        :DOC*/
+        render: (function () {
+            var worldRect;
+            var valueParser;
+            // 숫자면 숫자로 %면 월드대비 수치로 변경해줌
+            valueParser = function (rect) {
+                rect.forEach(function (v, index) {
+                    if (typeof v == 'number') worldRect[index] = v;
+                    else worldRect[index] *= parseFloat(v) / 100;
+                })
+                return rect;
+            }
+            return function () {
+                worldRect = [0, 0, document.body.clientWidth, document.body.clientHeight];
+                console.log('--렌더시작')
+                this['_renderList'].forEach(function (v) {
+                    // 렌더할 사이즈와 위치 정보를 생성하고
+                    console.log("render", v['key'], v['_x'], v['_y'], v['_width'], v['_height'])
+                    console.log(valueParser(worldRect))
+                    // TODO: 카메라 퍼스펙티브를 먹여준뒤..
+                    // TODO: 씬의 자식들을 렌더링한다.
+                })
+                console.log('--렌더종료')
+            }
+        })(),
         /**DOC:
             {
                 code:`FUNCTION`,
@@ -34,19 +72,42 @@ var RedWorld;
                     정상처리된다면 내부적으로 <b>RedRenderItem</b>이 생성됨.
                 `,
                 params : {
-                    RedRenderItem :[
+                    renderItem :[
                         {type:'RedRenderItem'},
-                        'RedRenderItem'
+                        '추가할 RedRenderItem Instance'
                     ]
                 },
+                example : `
+                   // TODO       
+               `,
                 return : 'RedWorld Instance'
             }
         :DOC*/
-        addRenderItem: function (redRenderItem) {
-            if (!(redRenderItem instanceof RedRenderItem)) RedGL['throwFunc']('RedRenderItem 인스턴스만 허용함.')
-            this['_renderMap'][redRenderItem['key']] = redRenderItem;
-            this['_renderList'].push(redRenderItem);
+        addRenderItem: function (renderItem) {
+            if (!(renderItem instanceof RedRenderItem)) RedGL['throwFunc']('RedRenderItem 인스턴스만 허용함.')
+            this['_renderMap'][renderItem['key']] = renderItem;
+            this['_renderList'].push(renderItem);
             return this;
+        },
+        /**DOC:
+            {
+                code:`FUNCTION`,
+                title :`getRenderItem`,
+                description : `고유키 기반 렌더정보 검색`,
+                params : {
+                    key :[
+                        {type:'String'},
+                        '고유키'
+                    ]
+                },
+                example : `
+                   // TODO       
+               `,
+                return : 'RedRenderItem'
+            }
+        :DOC*/
+        getRenderItem: function (key) {
+            return this['_renderMap'][key]
         },
         /**DOC:
             {
@@ -59,6 +120,9 @@ var RedWorld;
                         '고유키'
                     ]
                 },
+                example : `
+                   // TODO       
+               `,
                 return : 'RedWorld Instance'
             }
         :DOC*/
@@ -75,13 +139,16 @@ var RedWorld;
             {
                 code:`FUNCTION`,
                 title :`hasRenderItem`,
-                description : `고유키 기반 렌더정보 검색`,
+                description : `고유키 기반 렌더정보 존재여부`,
                 params : {
                     key :[
                         {type:'String'},
                         '고유키'
                     ]
                 },
+                example : `
+                   // TODO       
+               `,
                 return : 'Boolean'
             }
         :DOC*/
@@ -99,6 +166,9 @@ var RedWorld;
                         '고유키'
                     ]
                 },
+                example : `
+                   // TODO       
+               `,
                 return : 'Array'
             }
         :DOC*/

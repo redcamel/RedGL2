@@ -10,6 +10,7 @@ var RedRenderItem;
         description : `
             고유 키를 기반으로 <b>RedScene</b>과 <b>RedCamera를</b> 쌍으로 하는 정보를 소유.
             RedWorld가 소유하게 되며 렌더링시 활용하게 된다.
+            TODO: 실제 렌더링시 Perspective 계산에 필요한 그려질 크기와 위치를 결정한다.
         `,
         params : {
             key :[
@@ -45,12 +46,18 @@ var RedRenderItem;
         this['key'] = key;
         this['scene'] = scene;
         this['camera'] = camera;
+
+        this['_width'] = '100%';
+        this['_height'] = '100%';
+        this['_x'] = 0;
+        this['_y'] = 0;
         renderItemMap[key] = this;
+        Object.seal(this)
     };
     /**DOC:
         {
-            code:`FUNCTION`,
-            title :`getKeyMap`,
+            constructorYn : true,
+            title :`RedRenderItem.getKeyMap`,
             description : `
                 RedRenderItem에 등록된 키맵조회
             `,
@@ -65,13 +72,11 @@ var RedRenderItem;
             return : 'Object'
         }
     :DOC*/
-    RedRenderItem['getKeyMap'] = function () {
-        return renderItemMap
-    }
+    RedRenderItem['getKeyMap'] = function () { return renderItemMap; }
     /**DOC:
         {
-            code:`FUNCTION`,
-            title :`del`,
+            constructorYn : true,
+            title :`RedRenderItem.del`,
             description : `
                 key를 통해서 생성된 아이템을 삭제
             `,
@@ -89,8 +94,48 @@ var RedRenderItem;
             return : 'void'
         }
     :DOC*/
-    RedRenderItem['del'] = function (key) {
-        delete renderItemMap[key];
+    RedRenderItem['del'] = function (key) { delete renderItemMap[key]; }
+    RedRenderItem.prototype = {
+        /**DOC:
+           {
+               code : 'FUNCTION',
+               title :`setSize`,
+               description : `
+                   TODO: 씬의 사이즈를 결정
+               `,
+               example : `
+                   // TODO       
+               `,
+               return : 'void'
+           }
+       :DOC*/
+        setSize: function (w, h) {
+            this['_width'] = w ? w : '100%';
+            this['_height'] = h ? h : '100%';
+        },
+        /**DOC:
+           {
+               code : 'FUNCTION',
+               title :`setLocation`,
+               description : `
+                   TODO:씬의 위치를 결정
+               `,
+               example : `
+                   // TODO       
+               `,
+               return : 'void'
+           }
+       :DOC*/
+        setLocation: function (x,y) {
+            // TODO: 씬의 위치는 결정할 수 있어야한다.(일단은 픽셀 기준)
+            this['_x'] = x ? x : 0;
+            this['_y'] = y ? y : 0;
+        },
+        // 월드리사이즈시 발동될 내부 매서드
+        // TODO: 위치와 사이즈를 계산한다.(%인경우)
+        _resize: function () {
+
+        }
     }
     Object.freeze(RedRenderItem);
 })();
