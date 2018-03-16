@@ -1,0 +1,14 @@
+[
+  {
+    "constructorYn": true,
+    "title": "RedRenderer",
+    "description": "\n    RedRenderer 인스턴스 생성자.\n",
+    "return": "RedRenderer Instance"
+  },
+  {
+    "code": "FUNCTION",
+    "title": "render",
+    "description": "\n    등록된 RedView을 기반으로 렌더링을 실행함\n",
+    "return": "void"
+  }
+]

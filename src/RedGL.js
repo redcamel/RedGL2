@@ -136,16 +136,6 @@ var RedGL;
         for (var k in from.prototype) target.prototype[k] = from.prototype[k]
     };
     RedGL.prototype = {};
-    Object.defineProperties(RedGL.prototype, {
-        'world': {
-            set: function (v) {
-                if (!(v instanceof RedWorld)) throwFunc('RedWorld 인스턴스만 허용');
-                this['_world'] = v;
-
-            },
-            get: function () { return this['_world'] }
-        }
-    })
-
+   
     Object.freeze(RedGL);
 })();

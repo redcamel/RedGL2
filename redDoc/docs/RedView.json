@@ -2,7 +2,7 @@
   {
     "constructorYn": true,
     "title": "RedView",
-    "description": "\n    고유 키를 기반으로 <b>RedScene</b>과 <b>RedCamera를</b> 쌍으로 하는 정보를 소유.\n    RedWorld가 소유하게 되며 렌더링시 활용하게 된다.\n    TODO: 실제 렌더링시 Perspective 계산에 필요한 그려질 크기와 위치를 결정한다.\n",
+    "description": "\n    고유 키를 기반으로 <b>RedScene</b>과 <b>RedCamera를</b> 쌍으로 하는 정보를 소유.\n    RedWorld가 소유하게 되며 렌더링시 활용하게 된다.\n    실제 렌더링시 Perspective 계산에 필요한 그려질 크기와 위치를 결정한다.\n",
     "params": {
       "key": [
         {
@@ -44,14 +44,14 @@
   {
     "code": "FUNCTION",
     "title": "setLocation",
-    "description": "\n    TODO:씬의 위치를 결정\n",
+    "description": "\n    씬의 위치를 결정\n",
     "example": "\n    // TODO       \n",
     "return": "void"
   },
   {
     "code": "FUNCTION",
     "title": "setSize",
-    "description": "\n    TODO: 씬의 사이즈를 결정\n",
+    "description": "\n     씬의 사이즈를 결정\n",
     "example": "\n    // TODO       \n",
     "return": "void"
   }

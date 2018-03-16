@@ -1,16 +1,16 @@
 "use strict";
-var RedRenderItem;
+var RedView;
 (function () {
-    var renderItemMap;
-    renderItemMap = {};
+    var ViewMap;
+    ViewMap = {};
     /**DOC:
     {
         constructorYn : true,
-        title :`RedRenderItem`,
+        title :`RedView`,
         description : `
             고유 키를 기반으로 <b>RedScene</b>과 <b>RedCamera를</b> 쌍으로 하는 정보를 소유.
             RedWorld가 소유하게 되며 렌더링시 활용하게 된다.
-            TODO: 실제 렌더링시 Perspective 계산에 필요한 그려질 크기와 위치를 결정한다.
+            실제 렌더링시 Perspective 계산에 필요한 그려질 크기와 위치를 결정한다.
         `,
         params : {
             key :[
@@ -31,15 +31,15 @@ var RedRenderItem;
             var tWorld, tScene, tCamera;
             tScene = new RedScene(); // 씬생성
             tCamera = new RedCamera(); // 카메라생성
-            new RedRenderItem('test', tScene, tCamera); // test라는 키값을 가진 RedRenderItem 생성
-            new RedRenderItem('test2', tScene, tCamera); // test2라는 키값을 가진 RedRenderItem 생성
+            new RedView('test', tScene, tCamera); // test라는 키값을 가진 RedView 생성
+            new RedView('test2', tScene, tCamera); // test2라는 키값을 가진 RedView 생성
         `,
-        return : 'RedRenderItem Instance'
+        return : 'RedView Instance'
     }
 	:DOC*/
-    RedRenderItem = function (key, scene, camera) {
-        if (!(this instanceof RedRenderItem)) return new RedRenderItem(key, scene, camera);
-        if (renderItemMap[key]) return renderItemMap[key]
+    RedView = function (key, scene, camera) {
+        if (ViewMap[key]) return ViewMap[key]
+        if (!(this instanceof RedView)) return new RedView(key, scene, camera);
         if (!(typeof key == 'string')) RedGL['throwFunc']('key : 문자열만 허용')
         if (!(scene instanceof RedScene)) RedGL['throwFunc']('RedWorld 인스턴스만 허용')
         if (!(camera instanceof RedCamera)) RedGL['throwFunc']('RedCamera 인스턴스만 허용')
@@ -51,32 +51,32 @@ var RedRenderItem;
         this['_height'] = '100%';
         this['_x'] = 0;
         this['_y'] = 0;
-        renderItemMap[key] = this;
+        ViewMap[key] = this;
         Object.seal(this)
     };
     /**DOC:
         {
             constructorYn : true,
-            title :`RedRenderItem.getKeyMap`,
+            title :`RedView.getKeyMap`,
             description : `
-                RedRenderItem에 등록된 키맵조회
+                RedView에 등록된 키맵조회
             `,
             example : `
             var tWorld, tScene, tCamera;
             tScene = new RedScene(); // 씬생성
             tCamera = new RedCamera(); // 카메라생성
-            new RedRenderItem('test', tScene, tCamera); // test라는 키값을 가진 RedRenderItem 생성
-            new RedRenderItem('test2', tScene, tCamera); // test2라는 키값을 가진 RedRenderItem 생성
-            console.log(RedRenderItem['getKeyMap']()) // { test: RedRenderItem, test2: RedRenderItem } 출력
+            new RedView('test', tScene, tCamera); // test라는 키값을 가진 RedView 생성
+            new RedView('test2', tScene, tCamera); // test2라는 키값을 가진 RedView 생성
+            console.log(RedView['getKeyMap']()) // { test: RedView, test2: RedView } 출력
             `,
             return : 'Object'
         }
     :DOC*/
-    RedRenderItem['getKeyMap'] = function () { return renderItemMap; }
+    RedView['getKeyMap'] = function () { return ViewMap; }
     /**DOC:
         {
             constructorYn : true,
-            title :`RedRenderItem.del`,
+            title :`RedView.del`,
             description : `
                 key를 통해서 생성된 아이템을 삭제
             `,
@@ -84,24 +84,24 @@ var RedRenderItem;
             var tWorld, tScene, tCamera;
             tScene = new RedScene(); // 씬생성
             tCamera = new RedCamera(); // 카메라생성
-            new RedRenderItem('test', tScene, tCamera); // test라는 키값을 가진 RedRenderItem 생성
-            new RedRenderItem('test2', tScene, tCamera); // test2라는 키값을 가진 RedRenderItem 생성
+            new RedView('test', tScene, tCamera); // test라는 키값을 가진 RedView 생성
+            new RedView('test2', tScene, tCamera); // test2라는 키값을 가진 RedView 생성
 
-            console.log(RedRenderItem['getKeyMap']()) // { test: RedRenderItem, test2: RedRenderItem } 출력
-            RedRenderItem.del('test2'); // 삭제
-            console.log(RedRenderItem['getKeyMap']()) // { test: RedRenderItem } 출력            
+            console.log(RedView['getKeyMap']()) // { test: RedView, test2: RedView } 출력
+            RedView.del('test2'); // 삭제
+            console.log(RedView['getKeyMap']()) // { test: RedView } 출력            
             `,
             return : 'void'
         }
     :DOC*/
-    RedRenderItem['del'] = function (key) { delete renderItemMap[key]; }
-    RedRenderItem.prototype = {
+    RedView['del'] = function (key) { delete ViewMap[key]; }
+    RedView.prototype = {
         /**DOC:
            {
                code : 'FUNCTION',
                title :`setSize`,
                description : `
-                   TODO: 씬의 사이즈를 결정
+                    씬의 사이즈를 결정
                `,
                example : `
                    // TODO       
@@ -118,7 +118,7 @@ var RedRenderItem;
                code : 'FUNCTION',
                title :`setLocation`,
                description : `
-                   TODO:씬의 위치를 결정
+                   씬의 위치를 결정
                `,
                example : `
                    // TODO       
@@ -127,15 +127,9 @@ var RedRenderItem;
            }
        :DOC*/
         setLocation: function (x,y) {
-            // TODO: 씬의 위치는 결정할 수 있어야한다.(일단은 픽셀 기준)
             this['_x'] = x ? x : 0;
             this['_y'] = y ? y : 0;
-        },
-        // 월드리사이즈시 발동될 내부 매서드
-        // TODO: 위치와 사이즈를 계산한다.(%인경우)
-        _resize: function () {
-
         }
     }
-    Object.freeze(RedRenderItem);
+    Object.freeze(RedView);
 })();

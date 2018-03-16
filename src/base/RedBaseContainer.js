@@ -6,10 +6,28 @@ var RedBaseContainer;
         addChild: function (v) {
             // TODO:
         },
+        addChildAt: function (v) {
+            // TODO:
+        },
         removeChild: function (v) {
             // TODO:
         },
+        removeChildAt: function (v) {
+            // TODO:
+        },
         getChildAt: function (v) {
+            // TODO: 
+        },
+        getChildIndex: function (v) {
+            // TODO: 
+        },
+        getChildByName: function () {
+
+        },
+        setChildIndex: function (v) {
+            // TODO: 
+        },
+        numChildren: function (v) {
             // TODO: 
         }
     };

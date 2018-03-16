@@ -14,9 +14,12 @@
             overflow: hidden
         }
     </style>
+    <script src="src/gl-matrix-min.js"></script>
     <script src="src/base/RedBaseContainer.js"></script>
+    <script src="src/base/RedBaseObject3D.js"></script>
+    <script src="src/renderer/RedRenderer.js"></script>
     <script src="src/RedGL.js"></script>
-    <script src="src/RedRenderItem.js"></script>
+    <script src="src/RedView.js"></script>
     <script src="src/RedWorld.js"></script>
     <script src="src/RedScene.js"></script>
     <script src="src/RedCamera.js"></script>
@@ -26,21 +29,18 @@
     <canvas id="test" style="border: none;background:red" width="1280" height="768"></canvas>
     <script>
         RedGL(document.getElementById('test'), function (v) {
+            var tGL;
             var tWorld, tScene, tCamera;
-            this.world = tWorld = new RedWorld();
-            tScene = new RedScene();
-            tCamera = new RedCamera();
-            tWorld.addRenderItem(new RedRenderItem('test', tScene, tCamera));
-            tWorld.addRenderItem(new RedRenderItem('test2', tScene, tCamera));
-            console.log(tWorld.getRenderItemList());
-            // tWorld.addRenderItem('test', tScene, tCamera)
-
-            var tRendererLoop = function(){
-                tWorld.render()
-                requestAnimationFrame(tRendererLoop)
-            }            
-            requestAnimationFrame(tRendererLoop)
-
+            var tRenderer;
+            tGL = this.gl;
+            this.world = tWorld = RedWorld();
+            tScene = RedScene();
+            tCamera = RedCamera();
+            tRenderer = RedRenderer();
+            tWorld.addView(RedView('test', tScene, tCamera));
+            tWorld.addView(RedView('test2', tScene, tCamera));
+            RedView('test2').setSize('50%', '50%')
+            tRenderer.renderStart(this)
 
         })
     </script>

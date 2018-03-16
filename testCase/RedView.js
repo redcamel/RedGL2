@@ -1,6 +1,6 @@
 "use strict";
 redSuite(
-    "RedRenderItem Test",
+    "RedView Test",
     redGroup(
         "생성 확인"
     ),

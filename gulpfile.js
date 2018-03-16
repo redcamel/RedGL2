@@ -60,10 +60,10 @@ gulp.task('make-doc', function () {
 	console.log('-------------------------------------------');
 	console.log('시작!');
 	return gulp.src([
-		"src/base/RedBaseContainer.js",
+		"src/renderer/RedRenderer.js",
 		"src/RedCamera.js",
 		"src/RedGL.js",
-		'src/RedRenderItem.js',
+		'src/RedView.js',
 		"src/RedWorld.js",
 		"src/RedScene.js"
 		
@@ -79,10 +79,13 @@ gulp.task('combine-js', function () {
 	console.log('파일 병합 시작!');
 	var name = "RedGL"
 	return gulp.src([
+		"src/gl-matrix-min.js",
 		"src/base/RedBaseContainer.js",
+		"src/base/RedBaseObject3D.js",
+		"src/renderer/RedRenderer.js",
 		"src/RedCamera.js",
 		"src/RedGL.js",
-		'src/RedRenderItem.js',
+		'src/RedView.js',
 		"src/RedWorld.js",
 		"src/RedScene.js"
 	])
