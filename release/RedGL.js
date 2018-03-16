@@ -114,6 +114,8 @@ var RedRenderer;
                 requestAnimationFrame(tick);
             }
             return function (redGL) {
+                if(!(redGL instanceof RedGL)) RedGL.throwFunc('RedGL 인스턴스만 허용');
+                if(!(redGL.world instanceof RedWorld)) RedGL.throwFunc('RedWorld 인스턴스만 허용');
                 self = this;
                 self.world = redGL.world;
                 tGL = redGL.gl;
@@ -128,6 +130,12 @@ var RedRenderer;
         description : `
             등록된 RedView을 기반으로 렌더링을 실행함
         `,
+        params : {
+            gl : [
+                {type : "webgl context"},
+                'webgl context'
+            ]
+        },
         return : 'void'
     }
     :DOC*/
@@ -154,19 +162,22 @@ var RedRenderer;
             // 렌더할 사이즈와 위치 정보를 생성하고
             this['world']['_viewList'].forEach(function (view) {
                 console.log(view)
+                var tCamera, tScene;
                 viewRect[0] = view['_x'];
                 viewRect[1] = view['_y'];
                 viewRect[2] = view['_width'];
                 viewRect[3] = view['_height'];
+                tScene = view.scene;
+                tCamera = view.camera;
                 console.log(valueParser(viewRect))
                 // 카메라 퍼스펙티브를 먹여준뒤..
                 mat4.identity(perspectiveMTX);
                 mat4.perspective(
                     perspectiveMTX,
-                    view.camera.fov * Math.PI / 180,
+                    tCamera.fov * Math.PI / 180,
                     viewRect[2] / viewRect[3],
-                    view.camera.nearClipping,
-                    view.camera.farClipping
+                    tCamera.nearClipping,
+                    tCamera.farClipping
                 )
                 // console.log('perspectiveMTX',perspectiveMTX)
 
@@ -174,7 +185,7 @@ var RedRenderer;
             })
             // console.log('--렌더종료')
         }
-    })()
+    })();
     Object.freeze(RedRenderer);
 })();
 
@@ -193,19 +204,115 @@ var RedCamera;
 	:DOC*/
     RedCamera = function () {
         if (!(this instanceof RedCamera)) return new RedCamera();
+        /**DOC:
+        {
+            code:`PROPERTY`,
+            title :`x`,
+            description : `x - 기본값 : 0`,
+            return : 'Number'
+        }
+        :DOC*/
+        /**DOC:
+        {
+            code:`PROPERTY`,
+            title :`y`,
+            description : `y - 기본값 : 0`,
+            return : 'Number'
+        }
+        :DOC*/
+        /**DOC:
+        {
+            code:`PROPERTY`,
+            title :`z`,
+            description : `z - 기본값 : 0`,
+            return : 'Number'
+        }
+        :DOC*/
         this.x = this.y = this.z = 0;
+        /**DOC:
+        {
+            code:`PROPERTY`,
+            title :`rotationX`,
+            description : `rotationX - 기본값 : 0`,
+            return : 'Number'
+        }
+        :DOC*/
+        /**DOC:
+        {
+            code:`PROPERTY`,
+            title :`rotationY`,
+            description : `rotationY - 기본값 : 0`,
+            return : 'Number'
+        }
+        :DOC*/
+        /**DOC:
+        {
+            code:`PROPERTY`,
+            title :`rotationZ`,
+            description : `rotationZ - 기본값 : 0`,
+            return : 'Number'
+        }
+        :DOC*/
         this.rotationX = this.rotationY = this.rotationZ = 0;
 
+        /**DOC:
+        {
+            code:`PROPERTY`,
+            title :`fov`,
+            description : `fov - 기본값 : Math.PI / 2`,
+            return : 'Number'
+        }
+        :DOC*/
         this.fov = Math.PI / 2;
-        this.nearClipping = 0.1;
+        /**DOC:
+        {
+            code:`PROPERTY`,
+            title :`nearClipping`,
+            description : `nearClipping - 0.01`,
+            return : 'Number'
+        }
+        :DOC*/
+        this.nearClipping = 0.01;
+        /**DOC:
+        {
+            code:`PROPERTY`,
+            title :`farClipping`,
+            description : `farClipping - 기본값 : 10000`,
+            return : 'Number'
+        }
+        :DOC*/
         this.farClipping = 10000;
+        /**DOC:
+        {
+            code:`PROPERTY`,
+            title :`orthographic`,
+            description : `orthographic - false`,
+            return : 'Boolean'
+        }
+        :DOC*/
         this.orthographic = false;
-
+        /**DOC:
+        {
+            code:`PROPERTY`,
+            title :`matrix`,
+            description : `matrix`,
+            return : 'mat4'
+        }
+        :DOC*/
         this.matrix = mat4.create();
-
         this['_UUID'] = RedGL['makeUUID']();
     };
     RedCamera.prototype = {
+        /**DOC:
+        {
+            code:`PROPERTY`,
+            title :`updateMatrix`,
+            description : `
+                x, y, z, rotationX, rotationY, rotationZ 를 기반으로한 matrix 업데이트
+            `,
+            return : 'mat4'
+        }
+        :DOC*/
         updateMatrix: (function () {
             var t0;
             return function () {
@@ -219,6 +326,21 @@ var RedCamera;
         })()
     }
     RedGL['extendsProto'](RedCamera, RedBaseObject3D);
+    /**DOC:
+    {
+        code:`PROPERTY`,
+        title :`lookAt`,
+        description : `
+            대상 위치를 바라보는 matrix 생성
+        `,
+        params : {
+            x : [{type : "Number"}],
+            y : [{type : "Number"}],
+            z : [{type : "Number"}]
+        },
+        return : 'mat4'
+    }
+    :DOC*/
     Object.freeze(RedCamera);
 })();
 

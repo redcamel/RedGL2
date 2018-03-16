@@ -42,6 +42,12 @@ var RedRenderer;
         description : `
             등록된 RedView을 기반으로 렌더링을 실행함
         `,
+        params : {
+            gl : [
+                {type : "webgl context"},
+                'webgl context'
+            ]
+        },
         return : 'void'
     }
     :DOC*/
@@ -68,19 +74,22 @@ var RedRenderer;
             // 렌더할 사이즈와 위치 정보를 생성하고
             this['world']['_viewList'].forEach(function (view) {
                 console.log(view)
+                var tCamera, tScene;
                 viewRect[0] = view['_x'];
                 viewRect[1] = view['_y'];
                 viewRect[2] = view['_width'];
                 viewRect[3] = view['_height'];
+                tScene = view.scene;
+                tCamera = view.camera;
                 console.log(valueParser(viewRect))
                 // 카메라 퍼스펙티브를 먹여준뒤..
                 mat4.identity(perspectiveMTX);
                 mat4.perspective(
                     perspectiveMTX,
-                    view.camera.fov * Math.PI / 180,
+                    tCamera.fov * Math.PI / 180,
                     viewRect[2] / viewRect[3],
-                    view.camera.nearClipping,
-                    view.camera.farClipping
+                    tCamera.nearClipping,
+                    tCamera.farClipping
                 )
                 // console.log('perspectiveMTX',perspectiveMTX)
 
@@ -88,6 +97,6 @@ var RedRenderer;
             })
             // console.log('--렌더종료')
         }
-    })()
+    })();
     Object.freeze(RedRenderer);
 })();

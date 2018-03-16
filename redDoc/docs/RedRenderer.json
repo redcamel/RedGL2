@@ -9,6 +9,14 @@
     "code": "FUNCTION",
     "title": "render",
     "description": "\n    등록된 RedView을 기반으로 렌더링을 실행함\n",
+    "params": {
+      "gl": [
+        {
+          "type": "webgl context"
+        },
+        "webgl context"
+      ]
+    },
     "return": "void"
   }
 ]

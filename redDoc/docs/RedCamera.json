@@ -1,8 +1,103 @@
 [
   {
+    "code": "PROPERTY",
+    "title": "farClipping",
+    "description": "farClipping - 기본값 : 10000",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "fov",
+    "description": "fov - 기본값 : Math.PI / 2",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "lookAt",
+    "description": "\n    대상 위치를 바라보는 matrix 생성\n",
+    "params": {
+      "x": [
+        {
+          "type": "Number"
+        }
+      ],
+      "y": [
+        {
+          "type": "Number"
+        }
+      ],
+      "z": [
+        {
+          "type": "Number"
+        }
+      ]
+    },
+    "return": "mat4"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "matrix",
+    "description": "matrix",
+    "return": "mat4"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "nearClipping",
+    "description": "nearClipping - 0.01",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "orthographic",
+    "description": "orthographic - false",
+    "return": "Boolean"
+  },
+  {
     "constructorYn": true,
     "title": "RedCamera",
     "description": "\n    RedCamera 인스턴스 생성자.\n",
     "return": "RedCamera Instance"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "rotationX",
+    "description": "rotationX - 기본값 : 0",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "rotationY",
+    "description": "rotationY - 기본값 : 0",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "rotationZ",
+    "description": "rotationZ - 기본값 : 0",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "updateMatrix",
+    "description": "\n    x, y, z, rotationX, rotationY, rotationZ 를 기반으로한 matrix 업데이트\n",
+    "return": "mat4"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "x",
+    "description": "x - 기본값 : 0",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "y",
+    "description": "y - 기본값 : 0",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "z",
+    "description": "z - 기본값 : 0",
+    "return": "Number"
   }
 ]
