@@ -49,8 +49,12 @@
             testVS = `
             attribute vec4 aPosition;
             varying vec4 vColor;
-            vec2 test;
+            float test;
             vec4 test2() {
+
+                if(test==1.0){
+
+                };
                 return vec4(1.0, 1.0, 1.0, 1.0);
             }
 

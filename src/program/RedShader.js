@@ -96,13 +96,16 @@ var RedShader;
     parser = (function () {
         var parseData, checkList;
         return function (type, source) {
+            console.log(source)
+            console.log(source.trim())
             parseData = { func: [] }
-            checkList = source.match(/attribute[\s\S]+?\;|uniform[\s\S]+?\;|varying[\s\S]+?\;|precision[\s\S]+?\;/g)
             checkList = checkList ? checkList : []
+            checkList = source.match(/attribute[\s\S]+?\;|uniform[\s\S]+?\;|varying[\s\S]+?\;|precision[\s\S]+?\;|(^[\S]+.\s.[\S]+).\;/g)
             checkList = mergeShareSource(type, checkList)
             checkList.sort()
             checkList.forEach(function (v) {
                 v = v.trim()
+                console.log(v)
                 source = source.replace(v + ';', '')
                 var data;
                 var tType, tName, tDataType, tArrayNum;
@@ -129,6 +132,7 @@ var RedShader;
                     }
                 } else {
                     // 변수인경우
+                    console.log('여기로오나')
                     tType = 'var';
                     tDataType = data[0];
                     tName = data[1].replace(';', '').split('[');
@@ -151,11 +155,11 @@ var RedShader;
             });
 
             // 함수부를 찾아서 머징
-            source= source.trim()
-            console.log(source)
-            source.match(/\;[\s\S]+\([\s\S]+?\}/g).forEach(function (v) {
+            source = source.trim()
+            source +='\n'
+            console.log(source.match(/(^[\S]+.\s.[\S]+).\;/g))
+            source.match(/[\S]+\s.[\S]+\([\s\S]+\}/g).forEach(function (v) {
                 console.log('---')
-                v = v.trim();
                 console.log(v)
                 parseData['func'].push(v)
             })
