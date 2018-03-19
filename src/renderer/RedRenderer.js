@@ -14,26 +14,56 @@ var RedRenderer;
     RedRenderer = function () {
         if (!(this instanceof RedRenderer)) return new RedRenderer();
         this.world = null;
+        this['_tickKey'] = null;
         this['_UUID'] = RedGL['makeUUID']();
         Object.seal(this)
     };
     RedRenderer.prototype = {
-        renderStart: (function () {
+        /**DOC:
+        {
+            code:`FUNCTION`,
+            title :`start`,
+            description : `
+                렌더 시작
+            `,
+            params : {
+                gl : [
+                    {type : "webgl context"},
+                    'webgl context'
+                ]
+            },
+            return : 'void'
+        }
+        :DOC*/
+        start: (function () {
             var tick;
             var self, tGL;
             tick = function (time) {
                 self.render(tGL, time);
-                requestAnimationFrame(tick);
+                self['_tickKey'] = requestAnimationFrame(tick);
             }
             return function (redGL) {
-                if(!(redGL instanceof RedGL)) RedGL.throwFunc('RedGL 인스턴스만 허용');
-                if(!(redGL.world instanceof RedWorld)) RedGL.throwFunc('RedWorld 인스턴스만 허용');
+                if (!(redGL instanceof RedGL)) RedGL.throwFunc('RedGL 인스턴스만 허용');
+                if (!(redGL.world instanceof RedWorld)) RedGL.throwFunc('RedWorld 인스턴스만 허용');
                 self = this;
                 self.world = redGL.world;
                 tGL = redGL.gl;
-                requestAnimationFrame(tick);
+                self['_tickKey'] = requestAnimationFrame(tick);
             }
-        })()
+        })(),
+        /**DOC:
+        {
+            code:`FUNCTION`,
+            title :`stop`,
+            description : `
+                렌더 중지
+            `,
+            return : 'void'
+        }
+        :DOC*/
+        stop: function () {
+            cancelAnimationFrame(this['_tickKey'])
+        }
     };
     /**DOC:
     {

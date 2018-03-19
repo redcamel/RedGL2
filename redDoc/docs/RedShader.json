@@ -1,0 +1,68 @@
+[
+  {
+    "title": "FRAGMENT_SHADER",
+    "code": "CONST",
+    "description": "\n프레그먼트 쉐이더 상수.\n",
+    "example": "\nRedShader.FRAGMENT_SHADER\n",
+    "return": "String"
+  },
+  {
+    "title": "key",
+    "description": "고유키",
+    "example": "인스턴스.key",
+    "return": "String"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedShader",
+    "description": "\n    - RedShader 인스턴스 생성자\n    - <b>유일키</b>만 지원.\n    - <b>단 프레그먼트/버텍스의 키는 따로 관리함.</b>\n    - 쉐이더정보는 <b>Object.freeze</b> 상태로 반환됨.\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "Red Instance"
+        },
+        "redGL 인스턴스"
+      ],
+      "key": [
+        {
+          "type": "String"
+        },
+        "- 등록될 키명"
+      ],
+      "type": [
+        {
+          "type": "String"
+        },
+        "- 버텍스 쉐이더(RedShader.VERTEX_SHADER)",
+        "- 프레그먼트 쉐이더(RedShader.FRAGMENT_SHADER)"
+      ],
+      "source": [
+        {
+          "type": "String"
+        },
+        "- 생성할 쉐이더 소스문자열"
+      ]
+    },
+    "example": "\n    var test;\n    test = RedGL(Canvas Element)\n    // basic이라는 이름으로 버텍스 쉐이더를 만든다. \n    test.createShaderInfo('basic', RedShader.VERTEX_SHADER, 쉐이더소스)\n",
+    "return": "RedShader Instance"
+  },
+  {
+    "title": "shader",
+    "description": "실제 쉐이더(WebGLShader instance)",
+    "example": "인스턴스.shader",
+    "return": "String"
+  },
+  {
+    "title": "type",
+    "description": "RedShader.VERTEX_SHADER or RedShader.FRAGMENT_SHADER",
+    "example": "인스턴스.type",
+    "return": "String"
+  },
+  {
+    "title": "VERTEX_SHADER",
+    "code": "CONST",
+    "description": "\n버텍스 쉐이더 상수.\n",
+    "example": "\nRedShader.FRAGMENT_SHADER\n",
+    "return": "String"
+  }
+]

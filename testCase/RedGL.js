@@ -26,28 +26,5 @@ redSuite(
                 unit.run(v == (this['gl'] ? true : false))
             })
         }, true)
-    ),
-    redGroup(
-        "get/set",
-        redTest("world : 형식체크", function (unit) {
-            RedGL(document.createElement('canvas'), function (v) {
-                try {
-                    this.world = new RedWorld()
-                    unit.run(true)
-                } catch (error) {
-                    unit.run(false)
-                }
-            })
-        }, true),
-        redTest("world : 형식체크", function (unit) {
-            RedGL(document.createElement('canvas'), function (v) {
-                try {
-                    this.world = 1
-                    unit.run(true)
-                } catch (error) {
-                    unit.run(false)
-                }
-            })
-        }, false)
     )
 )

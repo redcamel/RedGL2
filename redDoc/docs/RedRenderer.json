@@ -18,5 +18,25 @@
       ]
     },
     "return": "void"
+  },
+  {
+    "code": "FUNCTION",
+    "title": "start",
+    "description": "\n    렌더 시작\n",
+    "params": {
+      "gl": [
+        {
+          "type": "webgl context"
+        },
+        "webgl context"
+      ]
+    },
+    "return": "void"
+  },
+  {
+    "code": "FUNCTION",
+    "title": "stop",
+    "description": "\n    렌더 중지\n",
+    "return": "void"
   }
 ]

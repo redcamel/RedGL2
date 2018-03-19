@@ -114,7 +114,7 @@ var RedCamera;
     RedCamera.prototype = {
         /**DOC:
         {
-            code:`PROPERTY`,
+            code:`FUNCTION`,
             title :`updateMatrix`,
             description : `
                 x, y, z, rotationX, rotationY, rotationZ 를 기반으로한 matrix 업데이트

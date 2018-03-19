@@ -17,6 +17,8 @@
     <script src="src/gl-matrix-min.js"></script>
     <script src="src/base/RedBaseContainer.js"></script>
     <script src="src/base/RedBaseObject3D.js"></script>
+    <script src="src/program/RedProgram.js"></script>
+    <script src="src/program/RedShader.js"></script>
     <script src="src/renderer/RedRenderer.js"></script>
     <script src="src/RedGL.js"></script>
     <script src="src/RedView.js"></script>
@@ -28,7 +30,9 @@
 <body>
     <canvas id="test" style="border: none;background:red" width="1280" height="768"></canvas>
     <script>
-        RedGL(document.getElementById('test'), function (v) {
+        var t = document.getElementById('test')
+        document.body.appendChild(t)
+        RedGL(t, function (v) {
             var tGL;
             var tWorld, tScene, tCamera;
             var tRenderer;
@@ -40,8 +44,29 @@
             tWorld.addView(RedView('test', tScene, tCamera));
             tWorld.addView(RedView('test2', tScene, tCamera));
             RedView('test2').setSize('50%', '50%')
-            tRenderer.renderStart(this)
+            // tRenderer.start(this)
+            var testVS, testFS;
+            testVS = `
+            attribute vec4 aPosition;
+            varying vec4 vColor;
+            vec2 test;
+            vec4 test2() {
+                return vec4(1.0, 1.0, 1.0, 1.0);
+            }
 
+            void main() {
+                vColor = aPosition;
+                gl_Position = aPosition;
+            }
+            `
+            testFS = `
+            precision mediump float;
+            varying vec4 vColor;
+            void main() {
+                gl_FragColor = vColor;
+            }
+            `
+            RedProgram(this, 'testProgram', RedShader(this, 'testVS', RedShader.VERTEX, testVS), RedShader(this, 'testFS', RedShader.FRAGMENT, testFS))
         })
     </script>
 </body>

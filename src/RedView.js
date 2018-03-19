@@ -38,11 +38,16 @@ var RedView;
     }
 	:DOC*/
     RedView = function (key, scene, camera) {
-        if (ViewMap[key]) return ViewMap[key]
+        if (ViewMap[key]) {
+            if (scene || camera) RedGL['throwFunc'](key, '는 이미 생성된 RedView key입니다.')
+            else return ViewMap[key]
+        }
         if (!(this instanceof RedView)) return new RedView(key, scene, camera);
         if (!(typeof key == 'string')) RedGL['throwFunc']('key : 문자열만 허용')
-        if (!(scene instanceof RedScene)) RedGL['throwFunc']('RedWorld 인스턴스만 허용')
-        if (!(camera instanceof RedCamera)) RedGL['throwFunc']('RedCamera 인스턴스만 허용')
+        if (!scene && !camera) RedGL['throwFunc']('존재하지 않는 key입니다.')
+        if (scene && !(scene instanceof RedScene)) RedGL['throwFunc']('RedScene 인스턴스만 허용')
+        if (camera && !(camera instanceof RedCamera)) RedGL['throwFunc']('RedCamera 인스턴스만 허용')
+
         this['key'] = key;
         this['scene'] = scene;
         this['camera'] = camera;
@@ -54,47 +59,6 @@ var RedView;
         ViewMap[key] = this;
         Object.seal(this)
     };
-    /**DOC:
-        {
-            constructorYn : true,
-            title :`RedView.getKeyMap`,
-            description : `
-                RedView에 등록된 키맵조회
-            `,
-            example : `
-            var tWorld, tScene, tCamera;
-            tScene = new RedScene(); // 씬생성
-            tCamera = new RedCamera(); // 카메라생성
-            new RedView('test', tScene, tCamera); // test라는 키값을 가진 RedView 생성
-            new RedView('test2', tScene, tCamera); // test2라는 키값을 가진 RedView 생성
-            console.log(RedView['getKeyMap']()) // { test: RedView, test2: RedView } 출력
-            `,
-            return : 'Object'
-        }
-    :DOC*/
-    RedView['getKeyMap'] = function () { return ViewMap; }
-    /**DOC:
-        {
-            constructorYn : true,
-            title :`RedView.del`,
-            description : `
-                key를 통해서 생성된 아이템을 삭제
-            `,
-            example : `
-            var tWorld, tScene, tCamera;
-            tScene = new RedScene(); // 씬생성
-            tCamera = new RedCamera(); // 카메라생성
-            new RedView('test', tScene, tCamera); // test라는 키값을 가진 RedView 생성
-            new RedView('test2', tScene, tCamera); // test2라는 키값을 가진 RedView 생성
-
-            console.log(RedView['getKeyMap']()) // { test: RedView, test2: RedView } 출력
-            RedView.del('test2'); // 삭제
-            console.log(RedView['getKeyMap']()) // { test: RedView } 출력            
-            `,
-            return : 'void'
-        }
-    :DOC*/
-    RedView['del'] = function (key) { delete ViewMap[key]; }
     RedView.prototype = {
         /**DOC:
            {
@@ -104,14 +68,19 @@ var RedView;
                     씬의 사이즈를 결정
                `,
                example : `
-                   // TODO       
+                    var tWorld, tScene, tCamera;
+                    tScene = new RedScene(); // 씬생성
+                    tCamera = new RedCamera(); // 카메라생성
+                    new RedView('test', tScene, tCamera); // test라는 키값을 가진 RedView 생성
+                    RedView('test').setSize(100,100);
+                    RedView('test').setSize('50%',100);
                `,
                return : 'void'
            }
        :DOC*/
         setSize: function (w, h) {
-            this['_width'] = w ? w : '100%';
-            this['_height'] = h ? h : '100%';
+            this['_width'] = w != undefined ? w : '100%';
+            this['_height'] = h != undefined ? h : '100%';
         },
         /**DOC:
            {
@@ -126,9 +95,9 @@ var RedView;
                return : 'void'
            }
        :DOC*/
-        setLocation: function (x,y) {
-            this['_x'] = x ? x : 0;
-            this['_y'] = y ? y : 0;
+        setLocation: function (x, y) {
+            this['_x'] = x != undefined ? x : 0;
+            this['_y'] = y != undefined ? y : 0;
         }
     }
     Object.freeze(RedView);

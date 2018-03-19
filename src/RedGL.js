@@ -5,7 +5,7 @@ var RedGL;
     var getGL;
     var redGLDetect;
     var makeUUID;
-    throwFunc = function (v) { throw v };
+    throwFunc = function () { throw Array.prototype.slice.call(arguments).join(' ') };
     makeUUID = (function () {
         var UUID = 0
         return function () {
