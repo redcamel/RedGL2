@@ -103,6 +103,7 @@ var RedRenderer;
         return function (gl, time) {
             // console.log('--렌더시작')
             worldRect = [0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight];
+            gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
             gl.scissor(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
             // gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
             // console.log("render", v['key'], t0)
