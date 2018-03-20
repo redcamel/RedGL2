@@ -84,36 +84,45 @@ var RedRenderer;
     RedRenderer.prototype.render = (function () {
         var worldRect, viewRect;
         var valueParser;
-        var perspectiveMTX;
+
         // 숫자면 숫자로 %면 월드대비 수치로 변경해줌
         valueParser = function (rect) {
-            worldRect.forEach(function (v, index) {
+            rect.forEach(function (v, index) {
                 if (typeof rect[index] == 'number') rect[index] = v;
-                else rect[index] = v * parseFloat(rect[index]) / 100;
+                else rect[index] = worldRect[index] * parseFloat(rect[index]) / 100;
             })
             return rect;
         }
         viewRect = [];
-        perspectiveMTX = mat4.create()
+
         return function (gl, time) {
             // console.log('--렌더시작')
             worldRect = [0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight];
-            gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight)
+
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
             // console.log("render", v['key'], t0)
             // 렌더할 사이즈와 위치 정보를 생성하고
             this['world']['_viewList'].forEach(function (view) {
-                console.log(view)
                 var tCamera, tScene;
+                var tChildren, tMesh, i, i2;
+                //
+                var tProgram;
+                var tAttributeLocation;
+                var tLocationInfo, tBufferInfo;
+                var perspectiveMTX;
+                perspectiveMTX = mat4.create()
+                //
                 viewRect[0] = view['_x'];
                 viewRect[1] = view['_y'];
                 viewRect[2] = view['_width'];
                 viewRect[3] = view['_height'];
                 tScene = view.scene;
                 tCamera = view.camera;
-                console.log(valueParser(viewRect))
+                valueParser(viewRect)
                 // 카메라 퍼스펙티브를 먹여준뒤..
                 mat4.identity(perspectiveMTX);
+                gl.viewport(viewRect[0], worldRect[3] - viewRect[3] - viewRect[1], viewRect[2], viewRect[3])
+                gl.clear(gl.DEPTH_BUFFER_BIT);
                 mat4.perspective(
                     perspectiveMTX,
                     tCamera.fov * Math.PI / 180,
@@ -121,6 +130,37 @@ var RedRenderer;
                     tCamera.nearClipping,
                     tCamera.farClipping
                 )
+                tChildren = tScene.children;
+                i = tChildren.length
+                while (i--) {
+                    tMesh = tChildren[i]
+                    tProgram = tMesh.program
+                    gl.useProgram(tProgram.webglProgram)
+                    tAttributeLocation = tProgram.attributeLocation
+                    tLocationInfo = tProgram.uniformLocation
+                    gl.uniformMatrix4fv(tLocationInfo['uPMatrix']['location'], false, perspectiveMTX)
+                  
+                    gl.uniformMatrix4fv(tLocationInfo['uMVMatrix']['location'], false, tMesh.matrix)
+
+
+                    i2 = tAttributeLocation.length
+                    while (i2--) {
+                        tLocationInfo = tAttributeLocation[i]
+                        tBufferInfo = tMesh['buffer']
+                        gl.bindBuffer(gl.ARRAY_BUFFER, tBufferInfo['webglBuffer'])
+                        gl.enableVertexAttribArray(tLocationInfo['location'])
+                        gl.vertexAttribPointer(
+                            tLocationInfo['location'],
+                            tBufferInfo['pointSize'],
+                            tBufferInfo['glArrayType'],
+                            tBufferInfo['normalize'],
+                            tBufferInfo['stride'],
+                            tBufferInfo['offset']
+                        )
+                    }
+                    gl.drawArrays(gl.TRIANGLES, 0, tBufferInfo['pointNum'])
+
+                }
                 // console.log('perspectiveMTX',perspectiveMTX)
 
                 // TODO: 씬의 자식들을 렌더링한다.

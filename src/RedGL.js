@@ -43,7 +43,8 @@ var RedGL;
             powerPreference: 'default', // default, high-performance, low-power
             failIfMajorPerformanceCaveat: false
         }
-        checkList = 'webkit-3d,moz-webgl,3d,experimental-webgl,webgl,webgl2'.split(',')
+        // checkList = 'webkit-3d,moz-webgl,3d,experimental-webgl,webgl,webgl2'.split(',')
+        checkList = 'webkit-3d,moz-webgl,3d,experimental-webgl,webgl'.split(',')
         return function (canvas, option) {
             initOption = JSON.parse(JSON.stringify(OPTION));
             i = checkList.length;

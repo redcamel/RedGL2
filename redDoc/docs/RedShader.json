@@ -1,9 +1,9 @@
 [
   {
-    "title": "FRAGMENT_SHADER",
+    "title": "FRAGMENT",
     "code": "CONST",
     "description": "\n프레그먼트 쉐이더 상수.\n",
-    "example": "\nRedShader.FRAGMENT_SHADER\n",
+    "example": "\nRedShader.FRAGMENT\n",
     "return": "String"
   },
   {
@@ -33,8 +33,8 @@
         {
           "type": "String"
         },
-        "- 버텍스 쉐이더(RedShader.VERTEX_SHADER)",
-        "- 프레그먼트 쉐이더(RedShader.FRAGMENT_SHADER)"
+        "- 버텍스 쉐이더(RedShader.VERTEX)",
+        "- 프레그먼트 쉐이더(RedShader.FRAGMENT)"
       ],
       "source": [
         {
@@ -43,7 +43,7 @@
         "- 생성할 쉐이더 소스문자열"
       ]
     },
-    "example": "\n    var test;\n    test = RedGL(Canvas Element)\n    // basic이라는 이름으로 버텍스 쉐이더를 만든다. \n    test.createShaderInfo('basic', RedShader.VERTEX_SHADER, 쉐이더소스)\n",
+    "example": "\n    var test;\n    test = RedGL(Canvas Element)\n    // basic이라는 이름으로 버텍스 쉐이더를 만든다. \n    test.createShaderInfo('basic', RedShader.VERTEX_, 쉐이더소스)\n",
     "return": "RedShader Instance"
   },
   {
@@ -54,7 +54,7 @@
   },
   {
     "title": "type",
-    "description": "RedShader.VERTEX_SHADER or RedShader.FRAGMENT_SHADER",
+    "description": "RedShader.VERTEXor RedShader.FRAGMENT",
     "example": "인스턴스.type",
     "return": "String"
   },

@@ -20,8 +20,8 @@
             ],
             type : [
                 {type:'String'},
-                '- 버텍스 쉐이더(RedShader.VERTEX_SHADER)',
-                '- 프레그먼트 쉐이더(RedShader.FRAGMENT_SHADER)'
+                '- 버텍스 쉐이더(RedShader.VERTEX)',
+                '- 프레그먼트 쉐이더(RedShader.FRAGMENT)'
             ],
             source : [
                 {type:'String'},
@@ -32,7 +32,7 @@
             var test;
             test = RedGL(Canvas Element)
             // basic이라는 이름으로 버텍스 쉐이더를 만든다. 
-            test.createShaderInfo('basic', RedShader.VERTEX_SHADER, 쉐이더소스)
+            test.createShaderInfo('basic', RedShader.VERTEX_, 쉐이더소스)
         `,
         return : 'RedShader Instance'
     }
@@ -40,9 +40,10 @@
 var RedShader;
 (function () {
     var tShader, tGL;
-    var makeShader, compile, parser, mergeShareSource;
+    var makeWebGLShader, compile, parser, mergeShareSource;
     var keyMap;
     var vShareSource, fShareSource;
+    // 공유변수
     vShareSource = [
         'uniform vec4 uTime',
         'uniform vec4 uTime2[10]',
@@ -52,7 +53,7 @@ var RedShader;
     fShareSource = [
         'varying vec4 vTime'
     ]
-    makeShader = (function () {
+    makeWebGLShader = (function () {
         var t0;
         return function (gl, key, type) {
             switch (type) {
@@ -81,9 +82,14 @@ var RedShader;
         var t0;
         return function (type, source) {
             switch (type) {
-                case RedShader.VERTEX: t0 = vShareSource.concat(); break;
-                case RedShader.FRAGMENT: t0 = fShareSource.concat(); break;
-                default: RedGL.throwFunc('RedShader : 쉐이더 타입을 확인하세요!')
+                case RedShader.VERTEX:
+                    t0 = vShareSource.concat();
+                    break;
+                case RedShader.FRAGMENT:
+                    t0 = fShareSource.concat();
+                    break;
+                default:
+                    RedGL.throwFunc('RedShader : 쉐이더 타입을 확인하세요!')
             }
             source.forEach(function (v) {
                 v = v.replace(';', '');
@@ -95,27 +101,34 @@ var RedShader;
     })();
     parser = (function () {
         var parseData, checkList;
+        var mergeStr;
         return function (type, source) {
-            console.log(source)
-            console.log(source.trim())
-            parseData = { func: [] }
-            checkList = checkList ? checkList : []
-            checkList = source.match(/attribute[\s\S]+?\;|uniform[\s\S]+?\;|varying[\s\S]+?\;|precision[\s\S]+?\;|(^[\S]+.\s.[\S]+).\;/g)
-            checkList = mergeShareSource(type, checkList)
-            checkList.sort()
+            source = source.replace(/  /g, '').trim();
+            // console.log(source)
+            parseData = {
+                func: {
+                    list: [],
+                    map: {},
+                    source: ''
+                }
+            }
+            checkList = checkList ? checkList : [];
+            // 함수제외 전부 검색
+            checkList = source.match(/attribute[\s\S]+?\;|uniform[\s\S]+?\;|varying[\s\S]+?\;|precision[\s\S]+?\;|([a-z0-9]+)\s([\S]+)\;\n/g);
+            checkList = mergeShareSource(type, checkList);
+            checkList.sort();
             checkList.forEach(function (v) {
-                v = v.trim()
-                console.log(v)
-                source = source.replace(v + ';', '')
-                var data;
+                var tData;
                 var tType, tName, tDataType, tArrayNum;
-                data = v.split(' ')
-                console.log(data)
-                if (data[2]) {
+                v = v.trim()
+                source = source.replace(v + ';', '')
+                tData = v.split(' ')
+                // console.log(v,data)
+                if (tData[2]) {
                     // 정의인경우
-                    tType = data[0];
-                    tDataType = data[1];
-                    tName = data[2].replace(';', '').split('[');
+                    tType = tData[0];
+                    tDataType = tData[1];
+                    tName = tData[2].replace(';', '').split('[');
                     tArrayNum = tName.length > 1 ? +tName[1].charAt(0) : 0;
                     tName = tName[0]
                     // console.log(tType, tName)
@@ -132,48 +145,47 @@ var RedShader;
                     }
                 } else {
                     // 변수인경우
-                    console.log('여기로오나')
                     tType = 'var';
-                    tDataType = data[0];
-                    tName = data[1].replace(';', '').split('[');
+                    tDataType = tData[0];
+                    tName = tData[1].replace(';', '').split('[');
                     tArrayNum = tName.length > 1 ? +tName[1].charAt(0) : 0;
                     tName = tName[0];
 
                 }
                 // console.log(tType, tDataType, tName, tArrayNum)
-
                 if (!parseData[tType]) parseData[tType] = {}, parseData[tType]['list'] = [], parseData[tType]['map'] = {}, parseData[tType]['source'] = '';
-                parseData[tType]['list'].push(
-                    {
-                        dataType: tDataType,
-                        name: tName,
-                        arrayNum: tArrayNum
-                    }
-                );
+                parseData[tType]['list'].push({
+                    dataType: tDataType,
+                    name: tName,
+                    arrayNum: tArrayNum
+                });
                 parseData[tType]['map'][tName] = v;
                 parseData[tType]['source'] += v + ';\n';
             });
 
             // 함수부를 찾아서 머징
             source = source.trim()
-            source +='\n'
-            console.log(source.match(/(^[\S]+.\s.[\S]+).\;/g))
-            source.match(/[\S]+\s.[\S]+\([\s\S]+\}/g).forEach(function (v) {
-                console.log('---')
-                console.log(v)
-                parseData['func'].push(v)
+            source += '\n'
+            source.match(/[a-z0-9]+\s[\s\S]+?(\}\n)/g).forEach(function (v) {
+                // console.log(v.split(' '))
+                var data = v.split(' ');
+                var tName = data[1].replace(/\([\s\S]+/g, '').trim()
+                parseData['func']['list'].push({
+                    dataType: data[0],
+                    name: tName
+                })
+                parseData['func']['map'][tName] = v;
+                parseData['func']['source'] += v + '\n';
             })
 
-            var mergeStr;
             mergeStr = '';
-            if (parseData['precision']) mergeStr += parseData['precision']['source'];
-            if (parseData['attribute']) mergeStr += parseData['attribute']['source'];
-            if (parseData['uniform']) mergeStr += parseData['uniform']['source'];
-            if (parseData['varying']) mergeStr += parseData['varying']['source'];
-            if (parseData['var']) mergeStr += parseData['var']['source'];
-            mergeStr += parseData['func'].join('\n');
+            if (parseData['precision']) mergeStr += parseData['precision']['source'] + '\n//attribute\n';
+            if (parseData['attribute']) mergeStr += parseData['attribute']['source'] + '\n//uniform\n';
+            if (parseData['uniform']) mergeStr += parseData['uniform']['source'] + '\n//varying\n';
+            if (parseData['varying']) mergeStr += parseData['varying']['source'] + '\n//var\n';
+            if (parseData['var']) mergeStr += parseData['var']['source'] + '\n//func\n';
+            if (parseData['func']) mergeStr += parseData['func']['source'];
             parseData.lastSource = mergeStr;
-            console.log(mergeStr)
             return parseData;
         }
     })()
@@ -185,7 +197,7 @@ var RedShader;
         if (typeof source != 'string') throw 'RedShader : source - 문자열만 허용됩니다.'
         tGL = redGL.gl
 
-        tShader = makeShader(tGL, key, type);
+        tShader = makeWebGLShader(tGL, key, type);
         this['parseData'] = parser(type, source);
         source = this['parseData']['lastSource'];
         compile(tGL, type, tShader, source);
@@ -201,7 +213,7 @@ var RedShader;
         /**DOC:
 		{
             title :`type`,
-			description : `RedShader.VERTEX_SHADER or RedShader.FRAGMENT_SHADER`,
+			description : `RedShader.VERTEXor RedShader.FRAGMENT`,
 			example : `인스턴스.type`,
 			return : 'String'
 		}
@@ -218,18 +230,18 @@ var RedShader;
         this['webglShader'] = tShader
         this['_UUID'] = RedGL['makeUUID']();
         console.log(this);
-        Object.seal(this)
+        Object.freeze(this)
         // console.log(this)
     }
     /**DOC:
 		{
-            title :`FRAGMENT_SHADER`,
+            title :`FRAGMENT`,
             code: 'CONST',
 			description : `
 				프레그먼트 쉐이더 상수.
 			`,
 			example : `
-				RedShader.FRAGMENT_SHADER
+				RedShader.FRAGMENT
 			`,
 			return : 'String'
 		}

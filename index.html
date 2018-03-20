@@ -15,12 +15,15 @@
         }
     </style>
     <script src="src/gl-matrix-min.js"></script>
+    <script src="src/RedGL.js"></script>
     <script src="src/base/RedBaseContainer.js"></script>
     <script src="src/base/RedBaseObject3D.js"></script>
+    <script src="src/geometry/RedBuffer.js"></script>
+    <script src="src/object3D/RedMesh.js"></script>
+
     <script src="src/program/RedProgram.js"></script>
     <script src="src/program/RedShader.js"></script>
     <script src="src/renderer/RedRenderer.js"></script>
-    <script src="src/RedGL.js"></script>
     <script src="src/RedView.js"></script>
     <script src="src/RedWorld.js"></script>
     <script src="src/RedScene.js"></script>
@@ -44,33 +47,48 @@
             tWorld.addView(RedView('test', tScene, tCamera));
             tWorld.addView(RedView('test2', tScene, tCamera));
             RedView('test2').setSize('50%', '50%')
-            // tRenderer.start(this)
+            RedView('test2').setLocation(0, 0)
+            tRenderer.start(this)
             var testVS, testFS;
-            testVS = `
-            attribute vec4 aPosition;
-            varying vec4 vColor;
-            float test;
-            vec4 test2() {
-
-                if(test==1.0){
-
-                };
-                return vec4(1.0, 1.0, 1.0, 1.0);
-            }
-
-            void main() {
-                vColor = aPosition;
-                gl_Position = aPosition;
-            }
+            testVS =
+                `
+attribute vec3 aVertexPosition;
+uniform mat4 uMVMatrix;
+uniform mat4 uPMatrix;
+void main(void) {
+    gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+}
             `
-            testFS = `
-            precision mediump float;
-            varying vec4 vColor;
-            void main() {
-                gl_FragColor = vColor;
-            }
+            testFS =
+                `
+precision mediump float;
+void main(void) {
+    gl_FragColor = vec4(1.0, 0.0, 1.0, 1.0);
+}
             `
-            RedProgram(this, 'testProgram', RedShader(this, 'testVS', RedShader.VERTEX, testVS), RedShader(this, 'testFS', RedShader.FRAGMENT, testFS))
+            var testProgram = RedProgram(this, 'testProgram', RedShader(this, 'testVS', RedShader.VERTEX, testVS), RedShader(this,
+                'testFS', RedShader.FRAGMENT, testFS))
+            var vertices = new Float32Array([
+                0.0, 1.0, 0.0,
+                -1.0, -1.0, 0.0,
+                1.0, -1.0, 0.0
+            ]);
+            var testBuffer = RedBuffer(this, 'testBuffer', vertices, RedBuffer.ARRAY_BUFFER, 3, {
+                aVertexPosition: {
+                    size: 3,
+                    dataType: tGL.FLOAT
+                }
+            })
+            var testMesh = RedMesh(testBuffer, testProgram)
+            tScene.addChild(testMesh)
+
+            var time = 0.001
+            setInterval(function () {
+                mat4.rotateX(testMesh.matrix, testMesh.matrix, time)
+                mat4.rotateY(testMesh.matrix, testMesh.matrix, time)
+                mat4.rotateZ(testMesh.matrix, testMesh.matrix, time)
+            })
+            console.log(tScene)
         })
     </script>
 </body>

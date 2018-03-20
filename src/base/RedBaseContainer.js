@@ -4,7 +4,7 @@ var RedBaseContainer;
     RedBaseContainer = function () { }
     RedBaseContainer.prototype = {
         addChild: function (v) {
-            // TODO:
+            if (this.children.indexOf(v) == -1) this.children.push(v)
         },
         addChildAt: function (v) {
             // TODO:

@@ -382,8 +382,8 @@ var RedRenderer;
             ],
             type : [
                 {type:'String'},
-                '- 버텍스 쉐이더(RedShader.VERTEX_SHADER)',
-                '- 프레그먼트 쉐이더(RedShader.FRAGMENT_SHADER)'
+                '- 버텍스 쉐이더(RedShader.VERTEX)',
+                '- 프레그먼트 쉐이더(RedShader.FRAGMENT)'
             ],
             source : [
                 {type:'String'},
@@ -394,35 +394,163 @@ var RedRenderer;
             var test;
             test = RedGL(Canvas Element)
             // basic이라는 이름으로 버텍스 쉐이더를 만든다. 
-            test.createShaderInfo('basic', RedShader.VERTEX_SHADER, 쉐이더소스)
+            test.createShaderInfo('basic', RedShader.VERTEX_, 쉐이더소스)
         `,
         return : 'RedShader Instance'
     }
 :DOC*/
 var RedShader;
 (function () {
-    var parseData;
     var tShader, tGL;
-    var makeShader, compile;
+    var makeWebGLShader, compile, parser, mergeShareSource;
     var keyMap;
-    makeShader = function (gl, type) {
-        switch (type) {
-            case RedShader.VERTEX:
-                return gl.createShader(gl.VERTEX_SHADER);
-            case RedShader.FRAGMENT:
-                return gl.createShader(gl.FRAGMENT_SHADER);
-            default:
-                RedGL.throwFunc('RedShader : 쉐이더 타입을 확인하세요!')
-                break
+    var vShareSource, fShareSource;
+    // 공유변수
+    vShareSource = [
+        'uniform vec4 uTime',
+        'uniform vec4 uTime2[10]',
+        'varying vec4 vTime',
+        'const vec4 uConstTest'
+    ]
+    fShareSource = [
+        'varying vec4 vTime'
+    ]
+    makeWebGLShader = (function () {
+        var t0;
+        return function (gl, key, type) {
+            switch (type) {
+                case RedShader.VERTEX:
+                    t0 = gl.createShader(gl.VERTEX_SHADER);
+                    t0.key = key;
+                    t0.type = type;
+                    return t0
+                case RedShader.FRAGMENT:
+                    t0 = gl.createShader(gl.FRAGMENT_SHADER);
+                    t0.key = key;
+                    t0.type = type;
+                    return t0
+                default:
+                    RedGL.throwFunc('RedShader : 쉐이더 타입을 확인하세요!')
+                    break
+            }
         }
-    };
-    compile = function (gl, shader, source) {
-        gl.shaderSource(shader, source)
-        gl.compileShader(shader)
-        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-            RedGL.throwFunc(gl.getShaderInfoLog(shader), '쉐이더 컴파일에 실패하였습니다.')
-        }
+    })();
+    compile = function (gl, type, shader, source) {
+        gl.shaderSource(shader, source);
+        gl.compileShader(shader);
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) RedGL.throwFunc(gl.getShaderInfoLog(shader), '쉐이더 컴파일에 실패하였습니다.')
     }
+    mergeShareSource = (function () {
+        var t0;
+        return function (type, source) {
+            switch (type) {
+                case RedShader.VERTEX:
+                    t0 = vShareSource.concat();
+                    break;
+                case RedShader.FRAGMENT:
+                    t0 = fShareSource.concat();
+                    break;
+                default:
+                    RedGL.throwFunc('RedShader : 쉐이더 타입을 확인하세요!')
+            }
+            source.forEach(function (v) {
+                v = v.replace(';', '');
+                if (t0.indexOf(v) == -1) t0.push(v);
+                else RedGL.throwFunc('중복된 소스 : ', v);
+            })
+            return t0;
+        }
+    })();
+    parser = (function () {
+        var parseData, checkList;
+        var mergeStr;
+        return function (type, source) {
+            source = source.replace(/  /g, '').trim();
+            // console.log(source)
+            parseData = {
+                func: {
+                    list: [],
+                    map: {},
+                    source: ''
+                }
+            }
+            checkList = checkList ? checkList : [];
+            // 함수제외 전부 검색
+            checkList = source.match(/attribute[\s\S]+?\;|uniform[\s\S]+?\;|varying[\s\S]+?\;|precision[\s\S]+?\;|([a-z0-9]+)\s([\S]+)\;\n/g);
+            checkList = mergeShareSource(type, checkList);
+            checkList.sort();
+            checkList.forEach(function (v) {
+                var tData;
+                var tType, tName, tDataType, tArrayNum;
+                v = v.trim()
+                source = source.replace(v + ';', '')
+                tData = v.split(' ')
+                // console.log(v,data)
+                if (tData[2]) {
+                    // 정의인경우
+                    tType = tData[0];
+                    tDataType = tData[1];
+                    tName = tData[2].replace(';', '').split('[');
+                    tArrayNum = tName.length > 1 ? +tName[1].charAt(0) : 0;
+                    tName = tName[0]
+                    // console.log(tType, tName)
+                    switch (tType) {
+                        case 'attribute':
+                            if (tName.charAt(0) != 'a') RedGL.throwFunc('attribute의 첫글자는 a로 시작해야합니다.', tName)
+                            break
+                        case 'uniform':
+                            if (tName.charAt(0) != 'u') RedGL.throwFunc('uniform의 첫글자는 u로 시작해야합니다.', tName)
+                            break
+                        case 'varying':
+                            if (tName.charAt(0) != 'v') RedGL.throwFunc('varying의 첫글자는 v로 시작해야합니다.', tName)
+                            break
+                    }
+                } else {
+                    // 변수인경우
+                    tType = 'var';
+                    tDataType = tData[0];
+                    tName = tData[1].replace(';', '').split('[');
+                    tArrayNum = tName.length > 1 ? +tName[1].charAt(0) : 0;
+                    tName = tName[0];
+
+                }
+                // console.log(tType, tDataType, tName, tArrayNum)
+                if (!parseData[tType]) parseData[tType] = {}, parseData[tType]['list'] = [], parseData[tType]['map'] = {}, parseData[tType]['source'] = '';
+                parseData[tType]['list'].push({
+                    dataType: tDataType,
+                    name: tName,
+                    arrayNum: tArrayNum
+                });
+                parseData[tType]['map'][tName] = v;
+                parseData[tType]['source'] += v + ';\n';
+            });
+
+            // 함수부를 찾아서 머징
+            source = source.trim()
+            source += '\n'
+            source.match(/[a-z0-9]+\s[\s\S]+?(\}\n)/g).forEach(function (v) {
+                // console.log(v.split(' '))
+                var data = v.split(' ');
+                var tName = data[1].replace(/\([\s\S]+/g, '').trim()
+                parseData['func']['list'].push({
+                    dataType: data[0],
+                    name: tName
+                })
+                parseData['func']['map'][tName] = v;
+                parseData['func']['source'] += v + '\n';
+            })
+
+            mergeStr = '';
+            if (parseData['precision']) mergeStr += parseData['precision']['source'] + '\n//attribute\n';
+            if (parseData['attribute']) mergeStr += parseData['attribute']['source'] + '\n//uniform\n';
+            if (parseData['uniform']) mergeStr += parseData['uniform']['source'] + '\n//varying\n';
+            if (parseData['varying']) mergeStr += parseData['varying']['source'] + '\n//var\n';
+            if (parseData['var']) mergeStr += parseData['var']['source'] + '\n//func\n';
+            if (parseData['func']) mergeStr += parseData['func']['source'];
+            parseData.lastSource = mergeStr;
+            return parseData;
+        }
+    })()
     RedShader = function (redGL, key, type, source) {
         if (!(this instanceof RedShader)) return new RedShader(redGL, key, type, source)
         if (!(redGL instanceof RedGL)) throw 'RedShader : RedGL 인스턴스만 허용됩니다.'
@@ -430,29 +558,11 @@ var RedShader;
         if (typeof type != 'string') throw 'RedShader : type - 문자열만 허용됩니다.'
         if (typeof source != 'string') throw 'RedShader : source - 문자열만 허용됩니다.'
         tGL = redGL.gl
-    
 
-        parseData = {}
-        source.match(/attribute[\s\S]+?\;|uniform[\s\S]+?\;/g).forEach(function(data){
-            var t0 = data.split(' ')
-            var tName,tDataType;
-            if(!parseData[t0[0]]) parseData[t0[0]] = [], parseData[t0[0]]['map'] = {}
-            tName = t0[2].replace(';', '').split('[')[0];
-            tDataType = t0[1];
-            parseData[t0[0]].push({
-               dataType : tDataType,
-               name :tName
-            })
-            parseData[t0[0]]['map'][tName] = data
-
-        })
-      
-        tShader = makeShader(tGL, type);
-        compile(tGL, tShader, source);
-        console.log(this)
-
-        this['parseData'] = parseData
-        this['_UUID'] = RedGL['makeUUID']();
+        tShader = makeWebGLShader(tGL, key, type);
+        this['parseData'] = parser(type, source);
+        source = this['parseData']['lastSource'];
+        compile(tGL, type, tShader, source);
         /**DOC:
         {
             title :`key`,
@@ -465,7 +575,7 @@ var RedShader;
         /**DOC:
 		{
             title :`type`,
-			description : `RedShader.VERTEX_SHADER or RedShader.FRAGMENT_SHADER`,
+			description : `RedShader.VERTEXor RedShader.FRAGMENT`,
 			example : `인스턴스.type`,
 			return : 'String'
 		}
@@ -479,20 +589,21 @@ var RedShader;
 			return : 'String'
 		}
 	    :DOC*/
-        this['shader'] = tShader
-
-        Object.freeze(this)
+        this['webglShader'] = tShader
+        this['_UUID'] = RedGL['makeUUID']();
+        console.log(this);
+        Object.seal(this)
         // console.log(this)
     }
     /**DOC:
 		{
-            title :`FRAGMENT_SHADER`,
+            title :`FRAGMENT`,
             code: 'CONST',
 			description : `
 				프레그먼트 쉐이더 상수.
 			`,
 			example : `
-				RedShader.FRAGMENT_SHADER
+				RedShader.FRAGMENT
 			`,
 			return : 'String'
 		}
