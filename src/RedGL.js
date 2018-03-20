@@ -113,6 +113,15 @@ var RedGL;
         this['_datas'] = {};
         this['_UUID'] = RedGL['makeUUID']();
 
+        // 초기상태정의
+		tGL.enable(tGL.DEPTH_TEST);
+		tGL.depthFunc(tGL.LESS)
+		// 컬링 페이스 설정
+		tGL.frontFace(tGL.CCW)
+		tGL.enable(tGL.CULL_FACE);
+        tGL.cullFace(tGL.BACK)
+        tGL.enable(tGL.SCISSOR_TEST);
+		
         requestAnimationFrame(function (v) {
             callback ? callback.call(self, tGL ? true : false) : 0;
         });

@@ -56,6 +56,7 @@ var RedProgram;
                         tInfo['type'] = v['dataType']
                         tInfo['name'] = v['name']
                         self['attributeLocation'].push(tInfo)  
+                        self['attributeLocation'][v['name']] = tInfo
                     })
                 }
                 if (shader['parseData']['uniform']) {
