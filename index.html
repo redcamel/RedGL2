@@ -8,10 +8,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
     />
     <style>
-        body {
+        html,body {
             margin: 0;
             padding: 0;
-            overflow: hidden
+            overflow: hidden;
         }
     </style>
     <script src="src/gl-matrix-min.js"></script>
@@ -35,7 +35,7 @@
 </head>
 
 <body>
-    <canvas id="test" style="border: none;background:red" width="1280" height="720"></canvas>
+    <canvas id="test" style="border: none;background:red"></canvas>
     <script>
         var t = document.getElementById('test')
         document.body.appendChild(t)

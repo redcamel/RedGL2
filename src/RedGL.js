@@ -108,7 +108,9 @@ var RedGL;
 
         self = this;
         this['gl'] = tGL = getGL(canvas);
+        this['canvas'] = canvas;
 
+       
         if (tGL) this['_detect'] = redGLDetect(tGL, option);
         this['_datas'] = {};
         this['_UUID'] = RedGL['makeUUID']();
@@ -124,6 +126,20 @@ var RedGL;
 		console.log(this)
         requestAnimationFrame(function (v) {
             callback ? callback.call(self, tGL ? true : false) : 0;
+
+            //TODO: GL객체가 리사이즈를 담당해야겠구만..
+            window.addEventListener('resize',function(){
+                canvas.setAttribute('width',document.body.clientWidth)  
+                canvas.setAttribute('height',document.body.clientHeight)  
+                canvas.style.width = document.body.clientWidth
+                canvas.style.height = document.body.clientHeight
+            })
+            canvas.setAttribute('width',document.body.clientWidth)  
+            canvas.setAttribute('height',document.body.clientHeight)  
+            canvas.style.width = document.body.clientWidth
+            canvas.style.height = document.body.clientHeight
+            
+    
         });
     };
     RedGL['throwFunc'] = throwFunc;
