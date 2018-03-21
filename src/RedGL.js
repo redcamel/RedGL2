@@ -121,7 +121,7 @@ var RedGL;
 		tGL.enable(tGL.CULL_FACE);
         tGL.cullFace(tGL.BACK)
         tGL.enable(tGL.SCISSOR_TEST);
-		
+		console.log(this)
         requestAnimationFrame(function (v) {
             callback ? callback.call(self, tGL ? true : false) : 0;
         });

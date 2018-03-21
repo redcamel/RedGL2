@@ -25,6 +25,7 @@
     <script src="src/object3D/RedMesh.js"></script>
 
     <script src="src/program/RedProgram.js"></script>
+    <script src="src/program/RedBasicShaderCode.js"></script>
     <script src="src/program/RedShader.js"></script>
     <script src="src/renderer/RedRenderer.js"></script>
     <script src="src/RedView.js"></script>
@@ -53,9 +54,15 @@
             tWorld.addView(RedView('test', tScene, tCamera));
             tWorld.addView(RedView('test2', tScene, tCamera2));
             tWorld.addView(RedView('test3', tScene, tCamera3));
+            tWorld.addView(RedView('test4', tScene, tCamera3));
             RedView('test2').setSize('25%', '25%')
             RedView('test3').setSize('35%', '25%')
             RedView('test3').setLocation('50%', '50%')
+            RedView('test4').setSize('10%', '25%')
+            RedView('test4').setLocation('0%', '75%')
+
+
+
             var testVS, testFS;
             testVS =
                 `
@@ -67,6 +74,8 @@ uniform mat4 uCameraMatrix;
 varying vec4 vColor;
 void main(void) {
     vColor = aVertexColor;
+    vColor.r= sin(uTime*0.01);
+    uResolution;
     gl_Position = uPMatrix * uCameraMatrix* uMVMatrix * vec4(aVertexPosition, 1.0);
 }
             `
@@ -78,34 +87,31 @@ void main(void) {
     gl_FragColor = vColor;
 }
             `
-            var testProgram = RedProgram(
+            var testProgram
+            testProgram = RedProgram(
                 this,
                 'testProgram',
                 RedShader(this, 'testVS', RedShader.VERTEX, testVS),
                 RedShader(this, 'testFS', RedShader.FRAGMENT, testFS)
             )
-            var testMaterial = RedMaterial(testProgram)
-            var positionData = new Float32Array([
-                0.0, 1.0, 0.0, -1.0, -1.0, 0.0,
-                1.0, -1.0, 0.0,
-            ]);
-            var colorData = new Float32Array([
-                1.0, 0.0, 0.0, 1.0,
-                0.0, 1.0, 0.0, 1.0,
-                0.0, 0.0, 1.0, 1.0
-            ]);
-            var data = new Float32Array([
+            var testMaterial
+            testMaterial = RedMaterial(testProgram)
+
+            var interleaveData
+            interleaveData = new Float32Array([
                 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 1.0,
                 -1.0, -1.0, 0.0, 0.0, 1.0, 0.0, 1.0,
                 1.0, -1.0, 0.0, 0.0, 0.0, 1.0, 1.0
             ]);
+            var indexData
+            indexData = new Uint16Array([0, 1, 2])
 
-            var indexData = new Uint16Array([0, 1, 2])
-
-            var testBuffer = RedBuffer(
+            var testInterleaveBuffer
+            var testIndexBuffer
+            testInterleaveBuffer = RedBuffer(
                 this,
-                'testBuffer',
-                data,
+                'testInterleaveBuffer',
+                interleaveData,
                 RedBuffer.ARRAY_BUFFER, [{
                     attributeKey: 'aVertexPosition',
                     size: 3,
@@ -118,17 +124,17 @@ void main(void) {
                 }
                 ]
             )
-            var testIndexBuffer = RedBuffer(
+            testIndexBuffer = RedBuffer(
                 this,
                 'testIndexBuffer',
                 indexData,
                 RedBuffer.ELEMENT_ARRAY_BUFFER
             )
-            var geometry = RedGeometry(testBuffer, testIndexBuffer)
-
+            var geometry
+            geometry = RedGeometry(testInterleaveBuffer, testIndexBuffer)
 
             var testMesh
-            var i = 2000
+            var i = 4000
             while (i--) {
                 testMesh = RedMesh(geometry, testMaterial)
                 testMesh.x = Math.random() * 50 - 25
@@ -140,12 +146,15 @@ void main(void) {
                 tScene.addChild(testMesh)
             }
 
-
-
+            var renderResult;
+            renderResult = document.createElement('div')
+            renderResult.style.cssText = 'position:absolute;top:0px;left:0px;color:#fff;font-size:12px'
+            document.body.appendChild(renderResult)
+            
             tRenderer.start(this, function (time) {
 
-                data[2] = Math.sin(time / 100)
-                // testBuffer.updateData(data)
+                interleaveData[2] = Math.sin(time / 100)
+                // testInterleaveBuffer.updateData(interleaveData)
                 i = tScene.children.length
                 while (i--) {
                     testMesh = tScene.children[i]
@@ -155,21 +164,26 @@ void main(void) {
                 }
                 RedView('test2').setLocation(Math.cos(time / 1000) * 100 + 100, Math.sin(time / 1000) *
                     100 + 100)
-                tCamera.x = Math.sin(time / 3000) * 10
-                tCamera.y = Math.cos(time / 3000) * 10
-                tCamera.z = Math.cos(time / 1500) * 10
+                tCamera.x = Math.sin(time / 3000) * 5
+                tCamera.y = Math.cos(time / 3000) * 5
+                tCamera.z = Math.cos(time / 1500) * 5
                 tCamera.lookAt(0, 0, 0)
 
-                tCamera2.x = Math.sin(time / 3000) * 20
-                tCamera2.y = Math.cos(time / 3000) * 20
-                tCamera2.z = Math.cos(time / 1500) * 20
+                tCamera2.x = Math.sin(time / 3000) * 15
+                tCamera2.y = Math.cos(time / 3000) * 15
+                tCamera2.z = Math.cos(time / 1500) * 15
                 tCamera2.lookAt(0, 0, 0)
 
                 // tCamera3.x = Math.sin(time / 3000) 
                 tCamera3.y = Math.cos(time / 3000)
-                tCamera3.z = Math.cos(time / 1500) * 50
+                tCamera3.z = Math.cos(time / 1500) * 10
                 tCamera3.lookAt(0, 0, 0)
 
+                renderResult.innerHTML = ''
+                for (var k in tRenderer['renderInfo']) {
+                    // console.log(tRenderer['renderInfo'][k])
+                    renderResult.innerHTML += 'RedView : key - ' + tRenderer['renderInfo'][k]['key'] + ' : call - ' + tRenderer['renderInfo'][k]['call'] + '<br>'
+                }
 
             })
 

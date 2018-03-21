@@ -42,17 +42,6 @@ var RedShader;
     var tShader, tGL;
     var makeWebGLShader, compile, parser, mergeShareSource;
     var keyMap;
-    var vShareSource, fShareSource;
-    // 공유변수
-    vShareSource = [
-        'uniform vec4 uTime',
-        'uniform vec4 uTime2[10]',
-        'varying vec4 vTime',
-        'const vec4 uConstTest'
-    ]
-    fShareSource = [
-        'varying vec4 vTime'
-    ]
     makeWebGLShader = (function () {
         var t0;
         return function (gl, key, type) {
@@ -80,18 +69,18 @@ var RedShader;
     }
     mergeShareSource = (function () {
         var t0;
-        return function (type, source) {
+        return function (type, sourceList) {
             switch (type) {
                 case RedShader.VERTEX:
-                    t0 = vShareSource.concat();
+                    t0 = RedBasicShaderCode.vShareSource.concat();
                     break;
                 case RedShader.FRAGMENT:
-                    t0 = fShareSource.concat();
+                    t0 = RedBasicShaderCode.fShareSource.concat();
                     break;
                 default:
                     RedGL.throwFunc('RedShader : 쉐이더 타입을 확인하세요!')
             }
-            source.forEach(function (v) {
+            sourceList.forEach(function (v) {
                 v = v.replace(';', '');
                 if (t0.indexOf(v) == -1) t0.push(v);
                 else RedGL.throwFunc('중복된 소스 : ', v);
@@ -129,9 +118,8 @@ var RedShader;
                     tType = tData[0];
                     tDataType = tData[1];
                     tName = tData[2].replace(';', '').split('[');
-                    tArrayNum = tName.length > 1 ? +tName[1].charAt(0) : 0;
+                    tArrayNum = tName.length > 1 ? +tName[1].split(']')[0] : 0;
                     tName = tName[0]
-                    // console.log(tType, tName)
                     switch (tType) {
                         case 'attribute':
                             if (tName.charAt(0) != 'a') RedGL.throwFunc('attribute의 첫글자는 a로 시작해야합니다.', tName)
@@ -148,7 +136,7 @@ var RedShader;
                     tType = 'var';
                     tDataType = tData[0];
                     tName = tData[1].replace(';', '').split('[');
-                    tArrayNum = tName.length > 1 ? +tName[1].charAt(0) : 0;
+                    tArrayNum = tName.length > 1 ? +tName[1].split(']')[0] : 0;
                     tName = tName[0];
 
                 }

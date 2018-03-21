@@ -4,6 +4,7 @@ var RedProgram;
 (function () {
     var makeProgram;
     var tGL;
+    var TYPE_MAP;
     makeProgram = (function () {
         var tProgram;
         return function (gl, key, vs, fs) {
@@ -29,6 +30,10 @@ var RedProgram;
         if (fs['type'] != RedShader.FRAGMENT) throw 'RedProgram : fShaderInfo - FRAGMENT 타입만 허용됩니다.'
         tGL = redGL.gl;
 
+        if (!redGL['_datas']['RedProgram']) redGL['_datas']['RedProgram'] = {};
+        redGL['_datas']['RedProgram'][key] = this
+
+
         this['key'] = key;
         this['webglProgram'] = makeProgram(tGL, key, vs, fs);
         tGL.useProgram(this['webglProgram'])
@@ -43,6 +48,17 @@ var RedProgram;
         this['_UUID'] = RedGL['makeUUID']();
         Object.freeze(this)
     }
+    TYPE_MAP = {
+        //TODO: 이놈정교화
+        'mat4': 'mat',
+        'mat3': 'mat',
+        'mat2': 'mat',
+        'vec4': 'vec',
+        'vec3': 'vec',
+        'vec2': 'vec',
+        'float': 'float',
+        'int': 'int'
+    }
     RedProgram.prototype = {
         updateLocation: (function () {
             var self;
@@ -55,20 +71,22 @@ var RedProgram;
                         tInfo['location'] = tGL.getAttribLocation(self['webglProgram'], v['name']);
                         tInfo['type'] = v['dataType']
                         tInfo['name'] = v['name']
-                        self['attributeLocation'].push(tInfo)  
+                        self['attributeLocation'].push(tInfo)
                         self['attributeLocation'][v['name']] = tInfo
                     })
                 }
                 if (shader['parseData']['uniform']) {
                     shader['parseData']['uniform']['list'].forEach(function (v) {
+                        // console.log(v['name'],tGL.getUniformLocation(self['webglProgram'], v['name']))
                         tInfo = {}
                         tInfo['location'] = tGL.getUniformLocation(self['webglProgram'], v['name']);
                         tInfo['type'] = v['dataType']
+                        tInfo['renderType'] = TYPE_MAP[v['dataType']]
                         tInfo['name'] = v['name']
                         self['uniformLocation'].push(tInfo)
                         self['uniformLocation'][v['name']] = tInfo
                     })
-                    
+
                 }
             }
         })()

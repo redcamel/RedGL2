@@ -72,8 +72,8 @@ var RedBuffer;
         this.updateData = function (v) {
             this['updated'] = true
             this.data = v
-            redGL.gl.bindBuffer(tBufferType, this['webglBuffer']);
-            redGL.gl.bufferData(tBufferType, this.data, this.drawMode);
+            tGL.bindBuffer(this.bufferType, this['webglBuffer']);
+            tGL.bufferData(this.bufferType, this.data, this.drawMode);
         }
     }
     RedBuffer.dataMake = function () {
