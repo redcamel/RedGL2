@@ -128,16 +128,34 @@ var RedGL;
             callback ? callback.call(self, tGL ? true : false) : 0;
 
             //TODO: GL객체가 리사이즈를 담당해야겠구만..
+            var setSize = (function(){
+               
+                var W, H;
+                var prevW, prevH
+                var ratio
+                var renderScale = 1
+                prevW = 0, prevH = 0
+                return function (width, height, force) {
+                    W = width ? width : (document.documentElement ? document.documentElement.clientWidth : document.body.clientWidth)
+                    H = height ? height : (document.documentElement ? document.documentElement.clientHeight : document.body.clientHeight)
+                    // W = width ? width : window.innerWidth
+                    H = height ? height : window.innerHeight
+                    ratio = window.devicePixelRatio || 1
+                    if (prevW != W || prevH != H || force) {
+                        canvas.width = W * ratio * renderScale
+                        canvas.height = H * ratio * renderScale
+                        canvas.style.width = W
+                        canvas.style.height = H
+                        console.log(tGL.drawingBufferWidth, tGL.drawingBufferHeight)
+                        prevW = W
+                        prevH = H
+                    }
+                }
+            })()
             window.addEventListener('resize',function(){
-                canvas.setAttribute('width',document.body.clientWidth)  
-                canvas.setAttribute('height',document.body.clientHeight)  
-                canvas.style.width = document.body.clientWidth
-                canvas.style.height = document.body.clientHeight
+                setSize()
             })
-            canvas.setAttribute('width',document.body.clientWidth)  
-            canvas.setAttribute('height',document.body.clientHeight)  
-            canvas.style.width = document.body.clientWidth
-            canvas.style.height = document.body.clientHeight
+            setSize()
             
     
         });
