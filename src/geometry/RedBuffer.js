@@ -49,21 +49,28 @@ var RedBuffer;
         this.glArrayType = checkDataType(bufferType, data);
         this.bufferType = tBufferType;
         this.drawMode = tGL.STATIC_DRAW
-        this.interleaveInfo = interleaveInfo
+        if (interleaveInfo) {
+            this.interleaveInfo = interleaveInfo
 
-        for (var k in interleaveInfo) {
-            interleaveInfo[k]['offset'] = t0
-            t0 += interleaveInfo[k]['size']
+            for (var k in interleaveInfo) {
+                interleaveInfo[k]['offset'] = t0
+                t0 += interleaveInfo[k]['size']
+            }
+            this.stride = t0;
+            this.pointNum = data.length / t0;
+        } else {
+            this.pointNum = data.length;
         }
-        this.stride = t0;
-        this.pointNum = data.length / t0;
+
 
         this['webglBuffer'] = tGL.createBuffer()
         tGL.bindBuffer(tBufferType, this['webglBuffer']);
         tGL.bufferData(tBufferType, this.data, this.drawMode);
+        this['updated'] = true
         this['_UUID'] = RedGL['makeUUID']();
         console.log(this)
         this.updateData = function (v) {
+            this['updated'] = true
             this.data = v
             redGL.gl.bindBuffer(tBufferType, this['webglBuffer']);
             redGL.gl.bufferData(tBufferType, this.data, this.drawMode);

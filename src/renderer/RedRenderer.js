@@ -141,7 +141,7 @@ var RedRenderer;
             })
         }
     })();
-    RedRenderer.prototype.sceneRender = function (gl, scene, perspectiveMTX,cameraMTX) {
+    RedRenderer.prototype.sceneRender = function (gl, scene, perspectiveMTX, cameraMTX) {
         var tChildren, tMesh;
         var k, i, i2;
         //
@@ -152,7 +152,7 @@ var RedRenderer;
         var tInterleaveInfo, tAttributeInfo;
         var tLocationAttr, tLocationUniform;
         var tLocationInfo, tAttributeInfo;
-        var tBufferInfo
+        var tInterleaveBufferInfo, tIndexBufferInfo;
         var tMVMatrix;
         // 캐시관련
         var prevBuffer;
@@ -188,32 +188,35 @@ var RedRenderer;
             // 공용 유니폼을 업데이트함 // TODO: 분리해야함
             gl.uniformMatrix4fv(tLocationUniform['uPMatrix']['location'], false, perspectiveMTX)
             gl.uniformMatrix4fv(tLocationUniform['uCameraMatrix']['location'], false, cameraMTX)
-            
+
             // 버퍼를 찾는다.
-            tBufferInfo = tGeometry['buffer']
+            tInterleaveBufferInfo = tGeometry['interleaveBuffer'] // 인터리브 버퍼
+            tIndexBufferInfo = tGeometry['indexBuffer'] // 엘리먼트 버퍼
             // 어트리뷰트 인터리브 정보를 가져온다. 
-            tInterleaveInfo = tBufferInfo['interleaveInfo']
+            tInterleaveInfo = tInterleaveBufferInfo['interleaveInfo']
             i2 = tInterleaveInfo.length
             while (i2--) {
                 // 어트리뷰트 갱신정보를 얻는다.
-                tAttributeInfo = tInterleaveInfo[i2]
-                tLocationInfo = tLocationAttr[i2]
+                tAttributeInfo = tInterleaveInfo[i2];
+                tLocationInfo = tLocationAttr[i2];
                 // 활성화 된적이 없으면 활성화 시킨다. 
                 tAttributeInfo['enabled'] ? 0 : (gl.enableVertexAttribArray(tLocationInfo['location']), tAttributeInfo['enabled'] = true);
                 // 어트리뷰트 데이터 업데이트는 필요시 버퍼를 통해 직접한다.
                 // 즉 실제로 버퍼는 한번 업데이트 해놓으면 GPU상에 온전하게 보관된다.
-                prevBuffer == tBufferInfo['_UUID'] ? 0 : gl.bindBuffer(gl.ARRAY_BUFFER, tBufferInfo['webglBuffer'])
-                //TODO: 업데이트 되었을때만 해도 해도될듯한데..
-                prevBuffer == tBufferInfo['_UUID'] ? 0 : gl.vertexAttribPointer(
-                    tLocationInfo['location'],
-                    tAttributeInfo['size'],
-                    tBufferInfo['glArrayType'],
-                    tAttributeInfo['normalize'],
-                    tBufferInfo['stride'] * BYTES_PER_ELEMENT, //stride
-                    tAttributeInfo['offset'] * BYTES_PER_ELEMENT //offset
-                )
+                prevBuffer == tInterleaveBufferInfo['_UUID'] ? 0 : gl.bindBuffer(gl.ARRAY_BUFFER, tInterleaveBufferInfo['webglBuffer']);
+                if (tInterleaveBufferInfo['updated']) {
+                    prevBuffer == tInterleaveBufferInfo['_UUID'] ? 0 : gl.vertexAttribPointer(
+                        tLocationInfo['location'],
+                        tAttributeInfo['size'],
+                        tInterleaveBufferInfo['glArrayType'],
+                        tAttributeInfo['normalize'],
+                        tInterleaveBufferInfo['stride'] * BYTES_PER_ELEMENT, //stride
+                        tAttributeInfo['offset'] * BYTES_PER_ELEMENT //offset
+                    )
+                }
             }
-            prevBuffer = tBufferInfo['_UUID'] // 버퍼 캐싱
+            prevBuffer = tInterleaveBufferInfo['_UUID']; // 버퍼 캐싱           
+            tInterleaveBufferInfo['updated'] = 0; // 버퍼 업데이트 처리완료
             // tMVMatrix
             // tMVMatrix 초기화
             tMVMatrix[0] = 1, tMVMatrix[1] = 0, tMVMatrix[2] = 0, tMVMatrix[3] = 0,
@@ -286,7 +289,11 @@ var RedRenderer;
             gl.uniformMatrix4fv(tLocationUniform['uMVMatrix']['location'], false, tMVMatrix)
 
             // 드로우
-            gl.drawArrays(gl.TRIANGLES, 0, tBufferInfo['pointNum'])
+            if (tIndexBufferInfo) {
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, tIndexBufferInfo['webglBuffer'])
+                //enum mode, long count, enum type, long offset
+                gl.drawElements(gl.TRIANGLES, tIndexBufferInfo['pointNum'], tIndexBufferInfo['glArrayType'], 0)
+            } else gl.drawArrays(gl.TRIANGLES, 0, tInterleaveBufferInfo['pointNum'])
 
         }
     }

@@ -95,35 +95,45 @@ void main(void) {
                 0.0, 0.0, 1.0, 1.0
             ]);
             var data = new Float32Array([
-                0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 1.0, -1.0, -1.0, 0.0, 0.0, 1.0, 0.0, 1.0,
+                0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 1.0,
+                -1.0, -1.0, 0.0, 0.0, 1.0, 0.0, 1.0,
                 1.0, -1.0, 0.0, 0.0, 0.0, 1.0, 1.0
             ]);
+
+            var indexData = new Uint16Array([0, 1, 2])
 
             var testBuffer = RedBuffer(
                 this,
                 'testBuffer',
                 data,
                 RedBuffer.ARRAY_BUFFER, [{
-                        attributeKey: 'aVertexPosition',
-                        size: 3,
-                        normalize: false
-                    },
-                    {
-                        attributeKey: 'aVertexColor',
-                        size: 4,
-                        normalize: false
-                    }
-                ])
-            var geometry = RedGeometry(testBuffer)
+                    attributeKey: 'aVertexPosition',
+                    size: 3,
+                    normalize: false
+                },
+                {
+                    attributeKey: 'aVertexColor',
+                    size: 4,
+                    normalize: false
+                }
+                ]
+            )
+            var testIndexBuffer = RedBuffer(
+                this,
+                'testIndexBuffer',
+                indexData,
+                RedBuffer.ELEMENT_ARRAY_BUFFER
+            )
+            var geometry = RedGeometry(testBuffer, testIndexBuffer)
 
 
             var testMesh
             var i = 2000
             while (i--) {
                 testMesh = RedMesh(geometry, testMaterial)
-                testMesh.x = Math.random() * 100 - 50
-                testMesh.y = Math.random() * 100 - 50
-                testMesh.z = Math.random() * 100 - 50
+                testMesh.x = Math.random() * 50 - 25
+                testMesh.y = Math.random() * 50 - 25
+                testMesh.z = Math.random() * 50 - 25
                 testMesh.rotationX = Math.random() * 360
                 testMesh.rotationY = Math.random() * 360
                 testMesh.rotationZ = Math.random() * 360

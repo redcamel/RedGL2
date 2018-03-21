@@ -1,9 +1,9 @@
 "use strict";
 var RedGeometry;
 (function () {
-    RedGeometry = function (buffer) {
+    RedGeometry = function (interleaveBuffer, indexBuffer) {
         // bufferType, key, shaderPointerKey, typedArrayData, pointSize, pointNum, glArrayType, normalize, stride, offset, drawMode
-        if (!(this instanceof RedGeometry)) return new RedGeometry(buffer)
+        if (!(this instanceof RedGeometry)) return new RedGeometry(interleaveBuffer, indexBuffer)
         /*
          {
              aVertexPosition: {
@@ -13,7 +13,8 @@ var RedGeometry;
          }
      */
         //TODO: 
-        this['buffer'] = buffer
+        this['interleaveBuffer'] = interleaveBuffer
+        this['indexBuffer'] = indexBuffer
     }
     Object.freeze(RedGeometry);
 })()
