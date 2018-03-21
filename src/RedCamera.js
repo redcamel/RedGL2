@@ -72,7 +72,7 @@ var RedCamera;
             return : 'Number'
         }
         :DOC*/
-        this.fov = Math.PI / 2;
+        this.fov = 45;
         /**DOC:
         {
             code:`PROPERTY`,
@@ -81,7 +81,7 @@ var RedCamera;
             return : 'Number'
         }
         :DOC*/
-        this.nearClipping = 0.01;
+        this.nearClipping = 0.1;
         /**DOC:
         {
             code:`PROPERTY`,
@@ -90,7 +90,7 @@ var RedCamera;
             return : 'Number'
         }
         :DOC*/
-        this.farClipping = 10000;
+        this.farClipping = 100000;
         /**DOC:
         {
             code:`PROPERTY`,
@@ -124,13 +124,14 @@ var RedCamera;
         :DOC*/
         updateMatrix: (function () {
             var t0;
+            var TO_RAD = Math.PI/180
             return function () {
                 t0 = mat4.identity(this.matrix);
                 mat4.translate(t0, t0, [this.x, this.y, this.z]);
-                mat4.rotateX(t0, t0, this.rotationX);
-                mat4.rotateY(t0, t0, this.rotationY);
-                mat4.rotateZ(t0, t0, this.rotationZ);
-                console.log(this.matrix);
+                mat4.rotateX(t0, t0, this.rotationX*TO_RAD);
+                mat4.rotateY(t0, t0, this.rotationY*TO_RAD);
+                mat4.rotateZ(t0, t0, this.rotationZ*TO_RAD);
+                // console.log(this.matrix);
             }
         })()
     }

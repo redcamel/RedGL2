@@ -117,7 +117,7 @@ var RedGL;
 		tGL.enable(tGL.DEPTH_TEST);
 		tGL.depthFunc(tGL.LESS)
 		// 컬링 페이스 설정
-		tGL.frontFace(tGL.CCW)
+        tGL.frontFace(tGL.CCW)
 		tGL.enable(tGL.CULL_FACE);
         tGL.cullFace(tGL.BACK)
         tGL.enable(tGL.SCISSOR_TEST);

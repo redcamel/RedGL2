@@ -34,24 +34,28 @@
 </head>
 
 <body>
-    <canvas id="test" style="border: none;background:red" width="1280" height="768"></canvas>
+    <canvas id="test" style="border: none;background:red" width="1280" height="720"></canvas>
     <script>
         var t = document.getElementById('test')
         document.body.appendChild(t)
         RedGL(t, function (v) {
             var tGL;
-            var tWorld, tScene, tCamera;
+            var tWorld, tScene, tCamera, tCamera2, tCamera3;
             var tRenderer;
             tGL = this.gl;
             this.world = tWorld = RedWorld();
             tScene = RedScene();
             tCamera = RedCamera();
+            tCamera2 = RedCamera();
+            tCamera3 = RedCamera();
+
             tRenderer = RedRenderer();
             tWorld.addView(RedView('test', tScene, tCamera));
-            tWorld.addView(RedView('test2', tScene, tCamera));
+            tWorld.addView(RedView('test2', tScene, tCamera2));
+            tWorld.addView(RedView('test3', tScene, tCamera3));
             RedView('test2').setSize('25%', '25%')
-            RedView('test2').setLocation(0, 0)
-
+            RedView('test3').setSize('35%', '25%')
+            RedView('test3').setLocation('50%', '50%')
             var testVS, testFS;
             testVS =
                 `
@@ -59,10 +63,11 @@ attribute vec3 aVertexPosition;
 attribute vec4 aVertexColor;
 uniform mat4 uMVMatrix;
 uniform mat4 uPMatrix;
+uniform mat4 uCameraMatrix;
 varying vec4 vColor;
 void main(void) {
     vColor = aVertexColor;
-    gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+    gl_Position = uPMatrix * uCameraMatrix* uMVMatrix * vec4(aVertexPosition, 1.0);
 }
             `
             testFS =
@@ -81,8 +86,7 @@ void main(void) {
             )
             var testMaterial = RedMaterial(testProgram)
             var positionData = new Float32Array([
-                0.0, 1.0, 0.0,
-                -1.0, -1.0, 0.0,
+                0.0, 1.0, 0.0, -1.0, -1.0, 0.0,
                 1.0, -1.0, 0.0,
             ]);
             var colorData = new Float32Array([
@@ -91,8 +95,7 @@ void main(void) {
                 0.0, 0.0, 1.0, 1.0
             ]);
             var data = new Float32Array([
-                0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 1.0,
-                -1.0, -1.0, 0.0, 0.0, 1.0, 0.0, 1.0,
+                0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 1.0, -1.0, -1.0, 0.0, 0.0, 1.0, 0.0, 1.0,
                 1.0, -1.0, 0.0, 0.0, 0.0, 1.0, 1.0
             ]);
 
@@ -100,9 +103,7 @@ void main(void) {
                 this,
                 'testBuffer',
                 data,
-                RedBuffer.ARRAY_BUFFER,
-                [
-                    {
+                RedBuffer.ARRAY_BUFFER, [{
                         attributeKey: 'aVertexPosition',
                         size: 3,
                         normalize: false
@@ -117,26 +118,48 @@ void main(void) {
 
 
             var testMesh
-            var i = 3000
+            var i = 2000
             while (i--) {
                 testMesh = RedMesh(geometry, testMaterial)
+                testMesh.x = Math.random() * 100 - 50
+                testMesh.y = Math.random() * 100 - 50
+                testMesh.z = Math.random() * 100 - 50
+                testMesh.rotationX = Math.random() * 360
+                testMesh.rotationY = Math.random() * 360
+                testMesh.rotationZ = Math.random() * 360
                 tScene.addChild(testMesh)
             }
 
 
-        
+
             tRenderer.start(this, function (time) {
-             
+
                 data[2] = Math.sin(time / 100)
                 // testBuffer.updateData(data)
                 i = tScene.children.length
                 while (i--) {
                     testMesh = tScene.children[i]
-                    // testMesh.rotationX = time/10000
-                    // testMesh.rotationY = time/10000
-                    testMesh.rotationZ = time/1000
+                    testMesh.rotationX += 1 / 60
+                    testMesh.rotationY += 1 / 60
+                    testMesh.rotationZ += 1 / 60
                 }
-                RedView('test2').setLocation(Math.cos(time / 1000)*100+100, Math.sin(time / 1000)*100+100)
+                RedView('test2').setLocation(Math.cos(time / 1000) * 100 + 100, Math.sin(time / 1000) *
+                    100 + 100)
+                tCamera.x = Math.sin(time / 3000) * 10
+                tCamera.y = Math.cos(time / 3000) * 10
+                tCamera.z = Math.cos(time / 1500) * 10
+                tCamera.lookAt(0, 0, 0)
+
+                tCamera2.x = Math.sin(time / 3000) * 20
+                tCamera2.y = Math.cos(time / 3000) * 20
+                tCamera2.z = Math.cos(time / 1500) * 20
+                tCamera2.lookAt(0, 0, 0)
+
+                // tCamera3.x = Math.sin(time / 3000) 
+                tCamera3.y = Math.cos(time / 3000)
+                tCamera3.z = Math.cos(time / 1500) * 50
+                tCamera3.lookAt(0, 0, 0)
+
 
             })
 

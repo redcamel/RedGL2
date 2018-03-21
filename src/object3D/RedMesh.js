@@ -10,9 +10,7 @@ var RedMesh;
         this.rotationX = this.rotationY = this.rotationZ = 0;
         this.scaleX = this.scaleY = this.scaleZ = 1;
 
-        this.x = Math.random()*30 - 15
-        this.y = Math.random()*30 - 15
-        this.z = -1000 + Math.random()*100-50
+      
         this['_UUID'] = RedGL['makeUUID']();
     }
     RedGL['extendsProto'](RedMesh, RedBaseContainer);
