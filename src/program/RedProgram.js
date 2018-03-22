@@ -42,6 +42,7 @@ var RedProgram;
 
         this.attributeLocation = [];
         this.uniformLocation = [];
+        this.systemUniformLocation = [];
         this.updateLocation(vs);
         this.updateLocation(fs);
         console.log(this)
@@ -62,11 +63,12 @@ var RedProgram;
     RedProgram.prototype = {
         updateLocation: (function () {
             var self;
-            var tInfo;
+        
             return function (shader) {
                 self = this;
                 if (shader['parseData']['attribute']) {
                     shader['parseData']['attribute']['list'].forEach(function (v) {
+                        var tInfo = {};
                         tInfo = {}
                         tInfo['location'] = tGL.getAttribLocation(self['webglProgram'], v['name']);
                         tInfo['type'] = v['dataType']
@@ -77,14 +79,21 @@ var RedProgram;
                 }
                 if (shader['parseData']['uniform']) {
                     shader['parseData']['uniform']['list'].forEach(function (v) {
+                        var tInfo = {};
+                        console.log(v)
                         // console.log(v['name'],tGL.getUniformLocation(self['webglProgram'], v['name']))
-                        tInfo = {}
                         tInfo['location'] = tGL.getUniformLocation(self['webglProgram'], v['name']);
                         tInfo['type'] = v['dataType']
                         tInfo['renderType'] = TYPE_MAP[v['dataType']]
                         tInfo['name'] = v['name']
-                        self['uniformLocation'].push(tInfo)
-                        self['uniformLocation'][v['name']] = tInfo
+                        if (v['systemUniformYn']) {
+                            self['systemUniformLocation'].push(tInfo)
+                            self['systemUniformLocation'][v['name']] = tInfo
+                        } else {
+                            self['uniformLocation'].push(tInfo)
+                            self['uniformLocation'][v['name']] = tInfo
+                        }
+
                     })
 
                 }

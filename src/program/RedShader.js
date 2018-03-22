@@ -72,10 +72,10 @@ var RedShader;
         return function (type, sourceList) {
             switch (type) {
                 case RedShader.VERTEX:
-                    t0 = RedBasicShaderCode.vShareSource.concat();
+                    t0 = RedSystemShaderCode.vShareSource.concat();
                     break;
                 case RedShader.FRAGMENT:
-                    t0 = RedBasicShaderCode.fShareSource.concat();
+                    t0 = RedSystemShaderCode.fShareSource.concat();
                     break;
                 default:
                     RedGL.throwFunc('RedShader : 쉐이더 타입을 확인하세요!')
@@ -83,7 +83,10 @@ var RedShader;
             sourceList.forEach(function (v) {
                 v = v.replace(';', '');
                 if (t0.indexOf(v) == -1) t0.push(v);
-                else RedGL.throwFunc('중복된 소스 : ', v);
+                else {
+                    console.log(RedSystemShaderCode)
+                    RedGL.throwFunc('RedShader : ', '\n1. 중복된 소스이거나', '\n2. RedSystemShaderCode에 정의된 소스\n', v);
+                }
             })
             return t0;
         }
@@ -145,7 +148,8 @@ var RedShader;
                 parseData[tType]['list'].push({
                     dataType: tDataType,
                     name: tName,
-                    arrayNum: tArrayNum
+                    arrayNum: tArrayNum,
+                    systemUniformYn : RedSystemShaderCode.systemUniform[tName] ? true : false
                 });
                 parseData[tType]['map'][tName] = v;
                 parseData[tType]['source'] += v + ';\n';

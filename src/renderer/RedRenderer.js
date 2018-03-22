@@ -109,12 +109,12 @@ var RedRenderer;
             var gl;
             gl = redGL.gl;
             for (var k in redGL['_datas']['RedProgram']) {
-                tUniformGroup = redGL['_datas']['RedProgram'][k]['uniformLocation']
+                tUniformGroup = redGL['_datas']['RedProgram'][k]['systemUniformLocation']
                 if(!updatedSystemUniformYn){
-                    if (tUniformGroup['uCameraMatrix']) gl.uniformMatrix4fv(tUniformGroup['uCameraMatrix']['location'], false, cameraMTX)
                     if (tUniformGroup['uTime']) gl.uniform1f(tUniformGroup['uTime']['location'], time)
                     if (tUniformGroup['uResolution']) gl.uniform2fv(tUniformGroup['uResolution']['location'], [viewRect[2], viewRect[3]])
                 }
+                if (tUniformGroup['uCameraMatrix']) gl.uniformMatrix4fv(tUniformGroup['uCameraMatrix']['location'], false, cameraMTX)
                 if (tUniformGroup['uPMatrix']) gl.uniformMatrix4fv(tUniformGroup['uPMatrix']['location'], false, perspectiveMTX)
             }
         }
@@ -177,7 +177,7 @@ var RedRenderer;
             var tMesh;
             var tGeometry, tMaterial;
             var tInterleaveInfo;
-            var tAttrGroup, tUniformGroup;
+            var tAttrGroup, tUniformGroup, tSystemUniformGroup;
             var tAttributeUpdateInfo
             var tLocationInfo;
             var tInterleaveBufferInfo, tIndexBufferInfo;
@@ -194,15 +194,7 @@ var RedRenderer;
             // sin,cos 관련
             var SIN, COS, tRadian, CPI, CPI2, C225, C127, C045, C157;
             // systemUnfiom
-            var SYSTEM_UNIFORM;
             //////////////// 변수값 할당 ////////////////
-            //TODO: 이놈을 옮겨야겠군..
-            SYSTEM_UNIFORM = {
-                uPMatrix: 1,
-                uCameraMatrix: 1,
-                uMVMatrix: 1,
-                uTime: 1
-            }
             BYTES_PER_ELEMENT = Float32Array.BYTES_PER_ELEMENT;
             CPI = 3.141592653589793,
                 CPI2 = 6.283185307179586,
@@ -222,8 +214,9 @@ var RedRenderer;
                 prevProgram_UUID == tMaterial['program']['_UUID'] ? 0 : gl.useProgram(tMaterial['program']['webglProgram'])
                 prevProgram_UUID = tMaterial['program']['_UUID']
                 // 업데이트할 어트리뷰트와 유니폼 정보를 가져옴
-                tAttrGroup = tMaterial.attributeLocation
-                tUniformGroup = tMaterial.uniformLocation
+                tAttrGroup = tMaterial['program']['attributeLocation'];
+                tUniformGroup = tMaterial['program']['uniformLocation'];
+                tSystemUniformGroup = tMaterial['program']['systemUniformLocation'];
                 // 버퍼를 찾는다.
                 tInterleaveBufferInfo = tGeometry['interleaveBuffer'] // 인터리브 버퍼
                 tIndexBufferInfo = tGeometry['indexBuffer'] // 엘리먼트 버퍼
@@ -263,14 +256,11 @@ var RedRenderer;
 
                 while (i2--) {
                     tLocationInfo = tUniformGroup[i2]
-                    if (!SYSTEM_UNIFORM[tLocationInfo['name']]) {
-                        if (tLocationInfo['location']) {
-                            // console.log('tLocationInfo',tLocationInfo)
-                            //TODO: 고도화
-                            tRenderType = tLocationInfo['renderType']
-                            if (tRenderType == 'float') {
-                                gl.uniform1f(tLocationInfo['location'], time)
-                            }
+                    if (tLocationInfo['location']) {
+                        //TODO: 고도화
+                        tRenderType = tLocationInfo['renderType']
+                        if (tRenderType == 'float') {
+                            gl.uniform1f(tLocationInfo['location'], time)
                         }
                     }
                 }
@@ -343,7 +333,7 @@ var RedRenderer;
 
                 /////////////////////////////////////////////////////////////////////////
                 /////////////////////////////////////////////////////////////////////////
-                gl.uniformMatrix4fv(tUniformGroup['uMVMatrix']['location'], false, tMVMatrix)
+                gl.uniformMatrix4fv(tSystemUniformGroup['uMVMatrix']['location'], false, tMVMatrix)
                 /////////////////////////////////////////////////////////////////////////
                 /////////////////////////////////////////////////////////////////////////
 

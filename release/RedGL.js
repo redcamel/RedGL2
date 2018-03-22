@@ -29,18 +29,12 @@ THE SOFTWARE. */
 "use strict";
 var RedGL;
 (function () {
-    var throwFunc;
     var getGL;
     var redGLDetect;
-    var makeUUID;
-    throwFunc = function () { throw Array.prototype.slice.call(arguments).join(' ') };
-    makeUUID = (function () {
-        var UUID = 0
-        return function () {
-            return UUID++
-        }
-    })();
-
+    var glInitialize;
+    /*
+        webgl 관련 디텍팅
+    */
     redGLDetect = (function () {
         var checkList, i, k;
         return function (gl) {
@@ -55,7 +49,9 @@ var RedGL;
             while (i--) this[k = checkList[i]] = gl.getParameter(gl[k]);
         }
     })();
-
+    /*
+        gl 컨텍스트 찾기
+    */
     getGL = (function () {
         var checkList; // 체크할 리스트
         var OPTION; // 기본초기화 옵션 리스트
@@ -71,15 +67,26 @@ var RedGL;
             powerPreference: 'default', // default, high-performance, low-power
             failIfMajorPerformanceCaveat: false
         }
-        checkList = 'webkit-3d,moz-webgl,3d,experimental-webgl,webgl,webgl2'.split(',')
+        // checkList = 'webkit-3d,moz-webgl,3d,experimental-webgl,webgl,webgl2'.split(',')
+        checkList = 'webkit-3d,moz-webgl,3d,experimental-webgl,webgl'.split(',')
         return function (canvas, option) {
             initOption = JSON.parse(JSON.stringify(OPTION));
             i = checkList.length;
             if (option) for (i in option) initOption[i] = option[i];
-            while (i--) if (t0 = canvas.getContext(t1 = checkList[i], initOption)) return t0['mode'] = t1, t0;
+            while (i--) if (t0 = canvas.getContext(t1 = checkList[i], initOption)) return t0['version'] = t1, t0;
             return null;
         }
     })();
+    glInitialize = function (gl) {
+        // 뎁스데스티 설정
+        gl.enable(gl.DEPTH_TEST);
+        gl.depthFunc(gl.LESS)
+        // 컬링 페이스 설정
+        gl.frontFace(gl.CCW)
+        gl.enable(gl.CULL_FACE);
+        gl.cullFace(gl.BACK)
+        gl.enable(gl.SCISSOR_TEST);
+    }
     /**DOC:
 		{
 			constructorYn : true,
@@ -122,49 +129,156 @@ var RedGL;
 				RedGL(document.getElementById('test'), function(v){
                      // 콜백내용 
                      // 성공,실패에 따라 v값이 true or false.
+                     if(v){
+                         // 초기화 성공
+                     }else{
+                         // 초기화실패
+                     }
                 })
 			`,
 			return : 'RedGL Instance'
 		}
 	:DOC*/
     RedGL = function (canvas, callback, option) {
-        var tGL;
-        var self;
+        var _tGL, _self;
+        var _fullMode, _renderScale;
         if (!(this instanceof RedGL)) return new RedGL(canvas, callback);
-        if (!(canvas instanceof Element) || (canvas['tagName'] != 'CANVAS')) throwFunc('캔버스 엘리먼트만 허용됩니다.');
+        if (!(canvas instanceof Element) || (canvas['tagName'] != 'CANVAS')) RedGL.throwFunc('RedGL : Canvas Element만 허용');
 
-        self = this;
-        this['gl'] = tGL = getGL(canvas);
+        _self = this;
+        _fullMode = true;
+        _renderScale = 1;
 
-        if (tGL) this['_detect'] = redGLDetect(tGL, option);
+        this['canvas'] = canvas;
+        /**DOC:
+		{
+            title :`renderScale`,
+            code: `PROPERTY`,
+            description : `
+                기본값 : 1
+                렌더링시 사용할 적용할 렌더링 스케일                
+                size 1024*768, renderScale 0.5 일경우 512 * 389로 렌더링된다
+			`,
+			return : 'void'
+		}
+	    :DOC*/
+        Object.defineProperty(this, 'renderScale', {
+            get: function () { return _renderScale },
+            set: function (v) {
+                _renderScale = v
+                this.setSize(this['_width'], this['_height'])
+            }
+        });
+        /**DOC:
+		{
+            title :`fullMode`,
+            code: `PROPERTY`,
+            description : `
+                기본값 : true
+                캔버스크기를 화면 전체사이즈로 설정할지 여부
+			`,
+			return : 'void'
+		}
+	    :DOC*/
+        Object.defineProperty(this, 'fullMode', {
+            get: function () { return _fullMode },
+            set: function (v) {
+                if (typeof v != 'boolean') RedGL.throwFunc('RedGL : Boolean만 가능.')
+                _fullMode = v
+                this.setSize(this['_width'], this['_height'])
+            }
+        });
+        this['_width'] = 500;
+        this['_height'] = 500;
+        this['gl'] = _tGL = getGL(canvas);
+        if (_tGL) this['_detect'] = redGLDetect(_tGL, option);
         this['_datas'] = {};
         this['_UUID'] = RedGL['makeUUID']();
-
+        ////
+        glInitialize(_tGL);
         requestAnimationFrame(function (v) {
-            callback ? callback.call(self, tGL ? true : false) : 0;
+            callback ? callback.call(_self, _tGL ? true : false) : 0;
+            window.addEventListener('resize', function () { _self.setSize(_self['_width'], _self['_height']) });
+            _self.setSize(_self['_width'], _self['_height']);
         });
+        console.log(this)
     };
-    RedGL['throwFunc'] = throwFunc;
     /**DOC:
-		{
+        {
             constructorYn : true,
-			title :`RedGL.makeUUID`,
+            title :`RedGL.makeUUID`,
             description : `
                 UUID 생성기
-			`,
-			example : `
-				// 기초 초기화
-				RedGL.makeUUID()
-			`,
-			return : 'int'
-		}
-	:DOC*/
-    RedGL['makeUUID'] = makeUUID;
-    RedGL['extendsProto'] = function(target,from){
+            `,
+            example : `
+                // 기초 초기화
+                RedGL.makeUUID()
+            `,
+            return : 'int'
+        }
+    :DOC*/
+    RedGL['makeUUID'] = (function () {
+        var UUID = 0
+        return function () { return UUID++ }
+    })();
+    RedGL['throwFunc'] = function () { throw Array.prototype.slice.call(arguments).join(' ') },
+    RedGL['extendsProto'] = function (target, from) {
         for (var k in from.prototype) target.prototype[k] = from.prototype[k]
     };
-    RedGL.prototype = {};
-   
+    RedGL.prototype = {
+        /**DOC:
+        {
+            title :`setSize`,
+            code: `FUNCTION`,
+            description : `
+                RedGL 인스턴스의 Canvas 사이즈 설정
+                fullMode 속성이 false일때만 적용.
+            `,
+            example : `
+                RedGL(document.getElementById('test'), function(v){
+                     if(v){
+                         // 초기화 성공
+                         this.setSize(200,200)
+                     }else{
+                         // 초기화실패
+                     }
+                })
+            `,
+            return : 'void'
+        }
+        :DOC*/
+        setSize: (function () {
+            var W, H;
+            var prevW, prevH
+            var ratio;
+            var tCanvas;
+            prevW = 0, prevH = 0;
+            return function (width, height) {
+                if (this.fullMode) {
+                    W = document.documentElement ? document.documentElement.clientWidth : document.body.clientWidth;
+                    H = window.innerHeight;
+                } else {
+                    if (width == undefined) RedGL.throwFunc('RedGL : width가 입력되지 않았습니다.')
+                    if (height == undefined) RedGL.throwFunc('RedGL : height가 입력되지 않았습니다.')
+                    this['_width'] = W = width;
+                    this['_height'] = H = height;
+                }
+
+                ratio = window.devicePixelRatio || 1;
+                tCanvas = this.canvas;
+                console.log(this.renderScale)
+                if (prevW != W || prevH != H) {
+                    tCanvas.width = W * ratio * this.renderScale;
+                    tCanvas.height = H * ratio * this.renderScale;
+                    tCanvas.style.width = W;
+                    tCanvas.style.height = H;
+                    console.log('RedGL canvas setSize : ', this.gl.drawingBufferWidth, this.gl.drawingBufferHeight);
+                    prevW = W;
+                    prevH = H;
+                }
+            }
+        })()
+    };
     Object.freeze(RedGL);
 })();
 "use strict";
@@ -173,7 +287,7 @@ var RedBaseContainer;
     RedBaseContainer = function () { }
     RedBaseContainer.prototype = {
         addChild: function (v) {
-            // TODO:
+            if (this.children.indexOf(v) == -1) this.children.push(v)
         },
         addChildAt: function (v) {
             // TODO:
@@ -212,15 +326,17 @@ var RedBaseObject3D;
             var deltaX, deltaY, deltaZ;
             var rotX;
             var HPI;
+            var TO_DEGREE;
+            TO_DEGREE = 180/Math.PI;
             HPI = 0.5 * Math.PI;
             return function (x, y, z) {
                 deltaX = x - this.x;
                 deltaY = y - this.y;
                 deltaZ = z - this.z;
                 rotX = Math.atan2(deltaZ, Math.sqrt(deltaX * deltaX + deltaY * deltaY));
-                this.rotationX = rotX - HPI;
+                this.rotationX = (rotX - HPI)*TO_DEGREE;
                 this.rotationY = 0;
-                this.rotationZ = -  Math.atan2(deltaX, deltaY);
+                this.rotationZ = (-Math.atan2(deltaX, deltaY))*TO_DEGREE;
             }
         })()
     };
@@ -244,7 +360,9 @@ var RedRenderer;
         if (!(this instanceof RedRenderer)) return new RedRenderer();
         this.world = null;
         this['_tickKey'] = null;
+        this['_callback'] = null;
         this['_UUID'] = RedGL['makeUUID']();
+        this['renderInfo'] = {}
         Object.seal(this)
     };
     RedRenderer.prototype = {
@@ -266,18 +384,20 @@ var RedRenderer;
         :DOC*/
         start: (function () {
             var tick;
-            var self, tGL;
+            var self, tRedGL;
             tick = function (time) {
-                self.render(tGL, time);
+                self.worldRender(tRedGL, time);
+                self['_callback'] ? self['_callback'](time) : 0
                 self['_tickKey'] = requestAnimationFrame(tick);
             }
-            return function (redGL) {
+            return function (redGL, callback) {
                 if (!(redGL instanceof RedGL)) RedGL.throwFunc('RedGL 인스턴스만 허용');
                 if (!(redGL.world instanceof RedWorld)) RedGL.throwFunc('RedWorld 인스턴스만 허용');
                 self = this;
                 self.world = redGL.world;
-                tGL = redGL.gl;
+                tRedGL = redGL
                 self['_tickKey'] = requestAnimationFrame(tick);
+                self['_callback'] = callback
             }
         })(),
         /**DOC:
@@ -297,7 +417,7 @@ var RedRenderer;
     /**DOC:
     {
         code:`FUNCTION`,
-        title :`render`,
+        title :`worldRender`,
         description : `
             등록된 RedView을 기반으로 렌더링을 실행함
         `,
@@ -310,38 +430,70 @@ var RedRenderer;
         return : 'void'
     }
     :DOC*/
-    RedRenderer.prototype.render = (function () {
+    RedRenderer.prototype.worldRender = (function () {
         var worldRect, viewRect;
-        var valueParser;
+        var tCamera;
         var perspectiveMTX;
+        var self;
+        var valueParser;
+        var updateSystemUniform;
+        var updatedSystemUniformYn;
         // 숫자면 숫자로 %면 월드대비 수치로 변경해줌
         valueParser = function (rect) {
-            worldRect.forEach(function (v, index) {
+            rect.forEach(function (v, index) {
                 if (typeof rect[index] == 'number') rect[index] = v;
-                else rect[index] = v * parseFloat(rect[index]) / 100;
+                else {
+                    if (index < 2) rect[index] = worldRect[index + 2] * parseFloat(rect[index]) / 100
+                    else rect[index] = worldRect[index] * parseFloat(rect[index]) / 100
+                };
             })
             return rect;
         }
+        updateSystemUniform = function (redGL, updatedSystemUniformYn, time, perspectiveMTX, cameraMTX, viewRect) {
+            var tUniformGroup;
+            var gl;
+            gl = redGL.gl;
+            for (var k in redGL['_datas']['RedProgram']) {
+                tUniformGroup = redGL['_datas']['RedProgram'][k]['systemUniformLocation']
+                if(!updatedSystemUniformYn){
+                    if (tUniformGroup['uTime']) gl.uniform1f(tUniformGroup['uTime']['location'], time)
+                    if (tUniformGroup['uResolution']) gl.uniform2fv(tUniformGroup['uResolution']['location'], [viewRect[2], viewRect[3]])
+                }
+                if (tUniformGroup['uCameraMatrix']) gl.uniformMatrix4fv(tUniformGroup['uCameraMatrix']['location'], false, cameraMTX)
+                if (tUniformGroup['uPMatrix']) gl.uniformMatrix4fv(tUniformGroup['uPMatrix']['location'], false, perspectiveMTX)
+            }
+        }
         viewRect = [];
-        perspectiveMTX = mat4.create()
-        return function (gl, time) {
-            // console.log('--렌더시작')
+        perspectiveMTX = mat4.create();
+        return function (redGL, time) {
+            var gl;
+            updatedSystemUniformYn = false
+            gl = redGL.gl;
+            self = this;
+            // 캔버스 사이즈 적용
             worldRect = [0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight];
-            gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight)
+            gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+            gl.scissor(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-            // console.log("render", v['key'], t0)
-            // 렌더할 사이즈와 위치 정보를 생성하고
-            this['world']['_viewList'].forEach(function (view) {
-                console.log(view)
-                var tCamera, tScene;
-                viewRect[0] = view['_x'];
-                viewRect[1] = view['_y'];
-                viewRect[2] = view['_width'];
-                viewRect[3] = view['_height'];
-                tScene = view.scene;
-                tCamera = view.camera;
-                console.log(valueParser(viewRect))
-                // 카메라 퍼스펙티브를 먹여준뒤..
+            // console.log("worldRender", v['key'], t0)
+            self['renderInfo'] = {}
+            self['world']['_viewList'].forEach(function (tView) {
+                self['renderInfo'][tView.key] = { key: tView.key, call: 0 }
+                ///////////////////////////////////
+                // view의 위치/크기결정
+                viewRect[0] = tView['_x'];
+                viewRect[1] = tView['_y'];
+                viewRect[2] = tView['_width'];
+                viewRect[3] = tView['_height'];
+                tCamera = tView.camera;
+                tCamera['updateMatrix']()
+                // 위치/크기의 % 여부를 파싱
+                valueParser(viewRect);
+                // viewport 설정
+                gl.viewport(viewRect[0], worldRect[3] - viewRect[3] - viewRect[1], viewRect[2], viewRect[3]);
+                gl.scissor(viewRect[0], worldRect[3] - viewRect[3] - viewRect[1], viewRect[2], viewRect[3]);
+                gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+                // view 에 적용할 카메라 퍼스펙티브를 계산
                 mat4.identity(perspectiveMTX);
                 mat4.perspective(
                     perspectiveMTX,
@@ -349,14 +501,202 @@ var RedRenderer;
                     viewRect[2] / viewRect[3],
                     tCamera.nearClipping,
                     tCamera.farClipping
-                )
-                // console.log('perspectiveMTX',perspectiveMTX)
-
-                // TODO: 씬의 자식들을 렌더링한다.
+                );
+                updateSystemUniform(redGL, updatedSystemUniformYn,time, perspectiveMTX, tCamera['matrix'], viewRect)
+                updatedSystemUniformYn = true
+                // 씬렌더 호출
+                self.sceneRender(gl, tView.scene, time, self['renderInfo'][tView.key]);
             })
-            // console.log('--렌더종료')
         }
     })();
+    RedRenderer.prototype.sceneRender = (function () {
+        // 캐시관련
+        var prevInterleaveBuffer_UUID, prevIndexBuffer_UUID;
+        var prevProgram_UUID;
+        return function (gl, scene, time, renderResultObj) {
+            var tChildren, tMesh;
+            var k, i, i2;
+            //
+            var BYTES_PER_ELEMENT;;
+            // 
+            var tMesh;
+            var tGeometry, tMaterial;
+            var tInterleaveInfo;
+            var tAttrGroup, tUniformGroup, tSystemUniformGroup;
+            var tAttributeUpdateInfo
+            var tLocationInfo;
+            var tInterleaveBufferInfo, tIndexBufferInfo;
+            var tMVMatrix;
+            var tRenderType;
+            // matix 관련
+            var a,
+                aSx, aSy, aSz, aCx, aCy, aCz, tRx, tRy, tRz,
+                a00, a01, a02, a03, a10, a11, a12, a13, a20, a21, a22, a23, a30, a31, a32, a33,
+                b0, b1, b2, b3,
+                b00, b01, b02, b10, b11, b12, b20, b21, b22,
+                aX, aY, aZ,
+                inverse_c, inverse_d, inverse_e, inverse_g, inverse_f, inverse_h, inverse_i, inverse_j, inverse_k, inverse_l, inverse_n, inverse_o, inverse_A, inverse_m, inverse_p, inverse_r, inverse_s, inverse_B, inverse_t, inverse_u, inverse_v, inverse_w, inverse_x, inverse_y, inverse_z, inverse_C, inverse_D, inverse_E, inverse_q;
+            // sin,cos 관련
+            var SIN, COS, tRadian, CPI, CPI2, C225, C127, C045, C157;
+            // systemUnfiom
+            //////////////// 변수값 할당 ////////////////
+            BYTES_PER_ELEMENT = Float32Array.BYTES_PER_ELEMENT;
+            CPI = 3.141592653589793,
+                CPI2 = 6.283185307179586,
+                C225 = 0.225,
+                C127 = 1.27323954,
+                C045 = 0.405284735,
+                C157 = 1.5707963267948966;
+            //////////////// 렌더시작 ////////////////
+            tMVMatrix = mat4.create()
+            tChildren = scene.children;
+            i = tChildren.length
+            while (i--) {
+                renderResultObj['call']++
+                tMesh = tChildren[i]
+                tGeometry = tMesh.geometry
+                tMaterial = tMesh.material
+                prevProgram_UUID == tMaterial['program']['_UUID'] ? 0 : gl.useProgram(tMaterial['program']['webglProgram'])
+                prevProgram_UUID = tMaterial['program']['_UUID']
+                // 업데이트할 어트리뷰트와 유니폼 정보를 가져옴
+                tAttrGroup = tMaterial.attributeLocation
+                tUniformGroup = tMaterial.uniformLocation
+                tSystemUniformGroup = tMaterial.systemUniformLocation
+                // 버퍼를 찾는다.
+                tInterleaveBufferInfo = tGeometry['interleaveBuffer'] // 인터리브 버퍼
+                tIndexBufferInfo = tGeometry['indexBuffer'] // 엘리먼트 버퍼
+
+                /////////////////////////////////////////////////////////////////////////
+                /////////////////////////////////////////////////////////////////////////
+                // 어트리뷰트 인터리브 정보를 가져온다. 
+                tInterleaveInfo = tInterleaveBufferInfo['interleaveInfo']
+                i2 = tInterleaveInfo.length
+                while (i2--) {
+                    // 어트리뷰트 갱신정보를 얻는다.
+                    tAttributeUpdateInfo = tInterleaveInfo[i2];
+                    tLocationInfo = tAttrGroup[i2];
+                    // 활성화 된적이 없으면 활성화 시킨다. 
+                    tAttributeUpdateInfo['enabled'] ? 0 : (gl.enableVertexAttribArray(tLocationInfo['location']), tAttributeUpdateInfo['enabled'] = true);
+                    // 어트리뷰트 데이터 업데이트는 필요시 버퍼를 통해 직접한다.
+                    // 즉 실제로 버퍼는 한번 업데이트 해놓으면 GPU상에 온전하게 보관된다.
+                    prevInterleaveBuffer_UUID == tInterleaveBufferInfo['_UUID'] ? 0 : gl.bindBuffer(gl.ARRAY_BUFFER, tInterleaveBufferInfo['webglBuffer']);
+                    if (tInterleaveBufferInfo['updated']) {
+                        prevInterleaveBuffer_UUID == tInterleaveBufferInfo['_UUID'] ? 0 : gl.vertexAttribPointer(
+                            tLocationInfo['location'],
+                            tAttributeUpdateInfo['size'],
+                            tInterleaveBufferInfo['glArrayType'],
+                            tAttributeUpdateInfo['normalize'],
+                            tInterleaveBufferInfo['stride'] * BYTES_PER_ELEMENT, //stride
+                            tAttributeUpdateInfo['offset'] * BYTES_PER_ELEMENT //offset
+                        )
+                    }
+                }
+                prevInterleaveBuffer_UUID = tInterleaveBufferInfo['_UUID']; // 버퍼 캐싱           
+                tInterleaveBufferInfo['updated'] = 0; // 버퍼 업데이트 처리완료
+                /////////////////////////////////////////////////////////////////////////
+                /////////////////////////////////////////////////////////////////////////
+                // 유니폼 업데이트
+                // console.log(tUniformGroup)
+                i2 = tUniformGroup.length
+
+                while (i2--) {
+                    tLocationInfo = tUniformGroup[i2]
+                    if (tLocationInfo['location']) {
+                        //TODO: 고도화
+                        tRenderType = tLocationInfo['renderType']
+                        if (tRenderType == 'float') {
+                            gl.uniform1f(tLocationInfo['location'], time)
+                        }
+                    }
+                }
+
+                /////////////////////////////////////////////////////////////////////////
+                /////////////////////////////////////////////////////////////////////////
+                // 어트리뷰트 인터리브 정보를 가져온다. 
+
+                // tMVMatrix
+                // tMVMatrix 초기화
+                tMVMatrix[0] = 1, tMVMatrix[1] = 0, tMVMatrix[2] = 0, tMVMatrix[3] = 0,
+                    tMVMatrix[4] = 0, tMVMatrix[5] = 1, tMVMatrix[6] = 0, tMVMatrix[7] = 0,
+                    tMVMatrix[8] = 0, tMVMatrix[9] = 0, tMVMatrix[10] = 1, tMVMatrix[11] = 0,
+                    tMVMatrix[12] = 0, tMVMatrix[13] = 0, tMVMatrix[14] = 0, tMVMatrix[15] = 1,
+                    a = tMVMatrix,
+                    // tMVMatrix translate
+                    aX = tMesh['x'], aY = tMesh['y'], aZ = tMesh['z'],
+                    a[12] = a[0] * aX + a[4] * aY + a[8] * aZ + a[12],
+                    a[13] = a[1] * aX + a[5] * aY + a[9] * aZ + a[13],
+                    a[14] = a[2] * aX + a[6] * aY + a[10] * aZ + a[14],
+                    a[15] = a[3] * aX + a[7] * aY + a[11] * aZ + a[15],
+                    // tMVMatrix rotate
+                    tRx = tMesh['rotationX'], tRy = tMesh['rotationY'], tRz = tMesh['rotationZ'],
+                    /////////////////////////
+                    tRadian = tRx % CPI2,
+                    tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
+                    tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
+                    aSx = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
+
+                    tRadian = (tRx + C157) % CPI2,
+                    tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
+                    tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
+                    aCx = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
+
+                    tRadian = tRy % CPI2,
+                    tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
+                    tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
+                    aSy = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
+
+                    tRadian = (tRy + C157) % CPI2,
+                    tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
+                    tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
+                    aCy = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
+
+                    tRadian = tRz % CPI2,
+                    tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
+                    tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
+                    aSz = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
+
+                    tRadian = (tRz + C157) % CPI2,
+                    tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
+                    tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
+                    aCz = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
+                    /////////////////////////
+                    a00 = a[0], a01 = a[1], a02 = a[2],
+                    a10 = a[4], a11 = a[5], a12 = a[6],
+                    a20 = a[8], a21 = a[9], a22 = a[10],
+                    b00 = aCy * aCz, b01 = aSx * aSy * aCz - aCx * aSz, b02 = aCx * aSy * aCz + aSx * aSz,
+                    b10 = aCy * aSz, b11 = aSx * aSy * aSz + aCx * aCz, b12 = aCx * aSy * aSz - aSx * aCz,
+                    b20 = -aSy, b21 = aSx * aCy, b22 = aCx * aCy,
+                    a[0] = a00 * b00 + a10 * b01 + a20 * b02, a[1] = a01 * b00 + a11 * b01 + a21 * b02, a[2] = a02 * b00 + a12 * b01 + a22 * b02,
+                    a[4] = a00 * b10 + a10 * b11 + a20 * b12, a[5] = a01 * b10 + a11 * b11 + a21 * b12, a[6] = a02 * b10 + a12 * b11 + a22 * b12,
+                    a[8] = a00 * b20 + a10 * b21 + a20 * b22, a[9] = a01 * b20 + a11 * b21 + a21 * b22, a[10] = a02 * b20 + a12 * b21 + a22 * b22,
+                    // tMVMatrix scale
+                    aX = tMesh['scaleX'], aY = tMesh['scaleY'], aZ = tMesh['scaleZ'],
+                    a[0] = a[0] * aX, a[1] = a[1] * aX, a[2] = a[2] * aX, a[3] = a[3] * aX,
+                    a[4] = a[4] * aY, a[5] = a[5] * aY, a[6] = a[6] * aY, a[7] = a[7] * aY,
+                    a[8] = a[8] * aZ, a[9] = a[9] * aZ, a[10] = a[10] * aZ, a[11] = a[11] * aZ,
+                    a[12] = a[12], a[13] = a[13], a[14] = a[14], a[15] = a[15]
+
+                /////////////////////////////////////////////////////////////////////////
+                /////////////////////////////////////////////////////////////////////////
+                gl.uniformMatrix4fv(tSystemUniformGroup['uMVMatrix']['location'], false, tMVMatrix)
+                /////////////////////////////////////////////////////////////////////////
+                /////////////////////////////////////////////////////////////////////////
+
+                /////////////////////////////////////////////////////////////////////////
+                /////////////////////////////////////////////////////////////////////////
+                // 드로우
+                if (tIndexBufferInfo && prevIndexBuffer_UUID != tIndexBufferInfo['_UUID']) {
+                    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, tIndexBufferInfo['webglBuffer'])
+                    //enum mode, long count, enum type, long offset
+                    gl.drawElements(gl.TRIANGLES, tIndexBufferInfo['pointNum'], tIndexBufferInfo['glArrayType'], 0)
+                    prevIndexBuffer_UUID = tIndexBufferInfo['_UUID']
+                } else gl.drawArrays(gl.TRIANGLES, 0, tInterleaveBufferInfo['pointNum'])
+                /////////////////////////////////////////////////////////////////////////
+                /////////////////////////////////////////////////////////////////////////
+
+            }
+        }
+    })()
     Object.freeze(RedRenderer);
 })();
 
@@ -404,17 +744,6 @@ var RedShader;
     var tShader, tGL;
     var makeWebGLShader, compile, parser, mergeShareSource;
     var keyMap;
-    var vShareSource, fShareSource;
-    // 공유변수
-    vShareSource = [
-        'uniform vec4 uTime',
-        'uniform vec4 uTime2[10]',
-        'varying vec4 vTime',
-        'const vec4 uConstTest'
-    ]
-    fShareSource = [
-        'varying vec4 vTime'
-    ]
     makeWebGLShader = (function () {
         var t0;
         return function (gl, key, type) {
@@ -442,21 +771,24 @@ var RedShader;
     }
     mergeShareSource = (function () {
         var t0;
-        return function (type, source) {
+        return function (type, sourceList) {
             switch (type) {
                 case RedShader.VERTEX:
-                    t0 = vShareSource.concat();
+                    t0 = RedSystemShaderCode.vShareSource.concat();
                     break;
                 case RedShader.FRAGMENT:
-                    t0 = fShareSource.concat();
+                    t0 = RedSystemShaderCode.fShareSource.concat();
                     break;
                 default:
                     RedGL.throwFunc('RedShader : 쉐이더 타입을 확인하세요!')
             }
-            source.forEach(function (v) {
+            sourceList.forEach(function (v) {
                 v = v.replace(';', '');
                 if (t0.indexOf(v) == -1) t0.push(v);
-                else RedGL.throwFunc('중복된 소스 : ', v);
+                else {
+                    console.log(RedSystemShaderCode)
+                    RedGL.throwFunc('RedShader : ', '\n1. 중복된 소스이거나', '\n2. RedSystemShaderCode에 정의된 소스\n', v);
+                }
             })
             return t0;
         }
@@ -491,9 +823,8 @@ var RedShader;
                     tType = tData[0];
                     tDataType = tData[1];
                     tName = tData[2].replace(';', '').split('[');
-                    tArrayNum = tName.length > 1 ? +tName[1].charAt(0) : 0;
+                    tArrayNum = tName.length > 1 ? +tName[1].split(']')[0] : 0;
                     tName = tName[0]
-                    // console.log(tType, tName)
                     switch (tType) {
                         case 'attribute':
                             if (tName.charAt(0) != 'a') RedGL.throwFunc('attribute의 첫글자는 a로 시작해야합니다.', tName)
@@ -510,7 +841,7 @@ var RedShader;
                     tType = 'var';
                     tDataType = tData[0];
                     tName = tData[1].replace(';', '').split('[');
-                    tArrayNum = tName.length > 1 ? +tName[1].charAt(0) : 0;
+                    tArrayNum = tName.length > 1 ? +tName[1].split(']')[0] : 0;
                     tName = tName[0];
 
                 }
@@ -519,7 +850,8 @@ var RedShader;
                 parseData[tType]['list'].push({
                     dataType: tDataType,
                     name: tName,
-                    arrayNum: tArrayNum
+                    arrayNum: tArrayNum,
+                    systemUniformYn : RedSystemShaderCode.systemUniform[tName] ? true : false
                 });
                 parseData[tType]['map'][tName] = v;
                 parseData[tType]['source'] += v + ';\n';
@@ -592,7 +924,7 @@ var RedShader;
         this['webglShader'] = tShader
         this['_UUID'] = RedGL['makeUUID']();
         console.log(this);
-        Object.seal(this)
+        Object.freeze(this)
         // console.log(this)
     }
     /**DOC:
@@ -699,7 +1031,7 @@ var RedCamera;
             return : 'Number'
         }
         :DOC*/
-        this.fov = Math.PI / 2;
+        this.fov = 45;
         /**DOC:
         {
             code:`PROPERTY`,
@@ -708,7 +1040,7 @@ var RedCamera;
             return : 'Number'
         }
         :DOC*/
-        this.nearClipping = 0.01;
+        this.nearClipping = 0.1;
         /**DOC:
         {
             code:`PROPERTY`,
@@ -717,7 +1049,7 @@ var RedCamera;
             return : 'Number'
         }
         :DOC*/
-        this.farClipping = 10000;
+        this.farClipping = 100000;
         /**DOC:
         {
             code:`PROPERTY`,
@@ -751,13 +1083,14 @@ var RedCamera;
         :DOC*/
         updateMatrix: (function () {
             var t0;
+            var TO_RAD = Math.PI/180
             return function () {
                 t0 = mat4.identity(this.matrix);
                 mat4.translate(t0, t0, [this.x, this.y, this.z]);
-                mat4.rotateX(t0, t0, this.rotationX);
-                mat4.rotateY(t0, t0, this.rotationY);
-                mat4.rotateZ(t0, t0, this.rotationZ);
-                console.log(this.matrix);
+                mat4.rotateX(t0, t0, this.rotationX*TO_RAD);
+                mat4.rotateY(t0, t0, this.rotationY*TO_RAD);
+                mat4.rotateZ(t0, t0, this.rotationZ*TO_RAD);
+                // console.log(this.matrix);
             }
         })()
     }

@@ -8,7 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
     />
     <style>
-        html,body {
+        html,
+        body {
             margin: 0;
             padding: 0;
             overflow: hidden;
@@ -25,7 +26,7 @@
     <script src="src/object3D/RedMesh.js"></script>
 
     <script src="src/program/RedProgram.js"></script>
-    <script src="src/program/RedBasicShaderCode.js"></script>
+    <script src="src/program/RedSystemShaderCode.js"></script>
     <script src="src/program/RedShader.js"></script>
     <script src="src/renderer/RedRenderer.js"></script>
     <script src="src/RedView.js"></script>
@@ -62,15 +63,11 @@
             RedView('test4').setLocation('0%', '75%')
 
 
-
             var testVS, testFS;
             testVS =
                 `
 attribute vec3 aVertexPosition;
 attribute vec4 aVertexColor;
-uniform mat4 uMVMatrix;
-uniform mat4 uPMatrix;
-uniform mat4 uCameraMatrix;
 varying vec4 vColor;
 void main(void) {
     vColor = aVertexColor;
@@ -134,7 +131,7 @@ void main(void) {
             geometry = RedGeometry(testInterleaveBuffer, testIndexBuffer)
 
             var testMesh
-            var i = 4000
+            var i = 2000
             while (i--) {
                 testMesh = RedMesh(geometry, testMaterial)
                 testMesh.x = Math.random() * 50 - 25
@@ -150,7 +147,7 @@ void main(void) {
             renderResult = document.createElement('div')
             renderResult.style.cssText = 'position:absolute;top:0px;left:0px;color:#fff;font-size:12px'
             document.body.appendChild(renderResult)
-            
+
             tRenderer.start(this, function (time) {
 
                 interleaveData[2] = Math.sin(time / 100)

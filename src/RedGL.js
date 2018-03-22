@@ -1,18 +1,12 @@
 "use strict";
 var RedGL;
 (function () {
-    var throwFunc;
     var getGL;
     var redGLDetect;
-    var makeUUID;
-    throwFunc = function () { throw Array.prototype.slice.call(arguments).join(' ') };
-    makeUUID = (function () {
-        var UUID = 0
-        return function () {
-            return UUID++
-        }
-    })();
-
+    var glInitialize;
+    /*
+        webgl 관련 디텍팅
+    */
     redGLDetect = (function () {
         var checkList, i, k;
         return function (gl) {
@@ -27,7 +21,9 @@ var RedGL;
             while (i--) this[k = checkList[i]] = gl.getParameter(gl[k]);
         }
     })();
-
+    /*
+        gl 컨텍스트 찾기
+    */
     getGL = (function () {
         var checkList; // 체크할 리스트
         var OPTION; // 기본초기화 옵션 리스트
@@ -49,10 +45,20 @@ var RedGL;
             initOption = JSON.parse(JSON.stringify(OPTION));
             i = checkList.length;
             if (option) for (i in option) initOption[i] = option[i];
-            while (i--) if (t0 = canvas.getContext(t1 = checkList[i], initOption)) return t0['mode'] = t1, t0;
+            while (i--) if (t0 = canvas.getContext(t1 = checkList[i], initOption)) return t0['version'] = t1, t0;
             return null;
         }
     })();
+    glInitialize = function (gl) {
+        // 뎁스데스티 설정
+        gl.enable(gl.DEPTH_TEST);
+        gl.depthFunc(gl.LESS)
+        // 컬링 페이스 설정
+        gl.frontFace(gl.CCW)
+        gl.enable(gl.CULL_FACE);
+        gl.cullFace(gl.BACK)
+        gl.enable(gl.SCISSOR_TEST);
+    }
     /**DOC:
 		{
 			constructorYn : true,
@@ -95,91 +101,155 @@ var RedGL;
 				RedGL(document.getElementById('test'), function(v){
                      // 콜백내용 
                      // 성공,실패에 따라 v값이 true or false.
+                     if(v){
+                         // 초기화 성공
+                     }else{
+                         // 초기화실패
+                     }
                 })
 			`,
 			return : 'RedGL Instance'
 		}
 	:DOC*/
     RedGL = function (canvas, callback, option) {
-        var tGL;
-        var self;
+        var _tGL, _self;
+        var _fullMode, _renderScale;
         if (!(this instanceof RedGL)) return new RedGL(canvas, callback);
-        if (!(canvas instanceof Element) || (canvas['tagName'] != 'CANVAS')) throwFunc('캔버스 엘리먼트만 허용됩니다.');
+        if (!(canvas instanceof Element) || (canvas['tagName'] != 'CANVAS')) RedGL.throwFunc('RedGL : Canvas Element만 허용');
 
-        self = this;
-        this['gl'] = tGL = getGL(canvas);
+        _self = this;
+        _fullMode = true;
+        _renderScale = 1;
+
         this['canvas'] = canvas;
-
-       
-        if (tGL) this['_detect'] = redGLDetect(tGL, option);
+        /**DOC:
+		{
+            title :`renderScale`,
+            code: `PROPERTY`,
+            description : `
+                기본값 : 1
+                렌더링시 사용할 적용할 렌더링 스케일                
+                size 1024*768, renderScale 0.5 일경우 512 * 389로 렌더링된다
+			`,
+			return : 'void'
+		}
+	    :DOC*/
+        Object.defineProperty(this, 'renderScale', {
+            get: function () { return _renderScale },
+            set: function (v) {
+                _renderScale = v
+                this.setSize(this['_width'], this['_height'])
+            }
+        });
+        /**DOC:
+		{
+            title :`fullMode`,
+            code: `PROPERTY`,
+            description : `
+                기본값 : true
+                캔버스크기를 화면 전체사이즈로 설정할지 여부
+			`,
+			return : 'void'
+		}
+	    :DOC*/
+        Object.defineProperty(this, 'fullMode', {
+            get: function () { return _fullMode },
+            set: function (v) {
+                if (typeof v != 'boolean') RedGL.throwFunc('RedGL : Boolean만 가능.')
+                _fullMode = v
+                this.setSize(this['_width'], this['_height'])
+            }
+        });
+        this['_width'] = 500;
+        this['_height'] = 500;
+        this['gl'] = _tGL = getGL(canvas);
+        if (_tGL) this['_detect'] = redGLDetect(_tGL, option);
         this['_datas'] = {};
         this['_UUID'] = RedGL['makeUUID']();
-
-        // 초기상태정의
-		tGL.enable(tGL.DEPTH_TEST);
-		tGL.depthFunc(tGL.LESS)
-		// 컬링 페이스 설정
-        tGL.frontFace(tGL.CCW)
-		tGL.enable(tGL.CULL_FACE);
-        tGL.cullFace(tGL.BACK)
-        tGL.enable(tGL.SCISSOR_TEST);
-		console.log(this)
+        ////
+        glInitialize(_tGL);
         requestAnimationFrame(function (v) {
-            callback ? callback.call(self, tGL ? true : false) : 0;
-
-            //TODO: GL객체가 리사이즈를 담당해야겠구만..
-            var setSize = (function(){
-               
-                var W, H;
-                var prevW, prevH
-                var ratio
-                var renderScale = 1
-                prevW = 0, prevH = 0
-                return function (width, height, force) {
-                    W = width ? width : (document.documentElement ? document.documentElement.clientWidth : document.body.clientWidth)
-                    H = height ? height : (document.documentElement ? document.documentElement.clientHeight : document.body.clientHeight)
-                    // W = width ? width : window.innerWidth
-                    H = height ? height : window.innerHeight
-                    ratio = window.devicePixelRatio || 1
-                    if (prevW != W || prevH != H || force) {
-                        canvas.width = W * ratio * renderScale
-                        canvas.height = H * ratio * renderScale
-                        canvas.style.width = W
-                        canvas.style.height = H
-                        console.log(tGL.drawingBufferWidth, tGL.drawingBufferHeight)
-                        prevW = W
-                        prevH = H
-                    }
-                }
-            })()
-            window.addEventListener('resize',function(){
-                setSize()
-            })
-            setSize()
-            
-    
+            callback ? callback.call(_self, _tGL ? true : false) : 0;
+            window.addEventListener('resize', function () { _self.setSize(_self['_width'], _self['_height']) });
+            _self.setSize(_self['_width'], _self['_height']);
         });
+        console.log(this)
     };
-    RedGL['throwFunc'] = throwFunc;
     /**DOC:
-		{
+        {
             constructorYn : true,
-			title :`RedGL.makeUUID`,
+            title :`RedGL.makeUUID`,
             description : `
                 UUID 생성기
-			`,
-			example : `
-				// 기초 초기화
-				RedGL.makeUUID()
-			`,
-			return : 'int'
-		}
-	:DOC*/
-    RedGL['makeUUID'] = makeUUID;
-    RedGL['extendsProto'] = function(target,from){
+            `,
+            example : `
+                // 기초 초기화
+                RedGL.makeUUID()
+            `,
+            return : 'int'
+        }
+    :DOC*/
+    RedGL['makeUUID'] = (function () {
+        var UUID = 0
+        return function () { return UUID++ }
+    })();
+    RedGL['throwFunc'] = function () { throw Array.prototype.slice.call(arguments).join(' ') },
+    RedGL['extendsProto'] = function (target, from) {
         for (var k in from.prototype) target.prototype[k] = from.prototype[k]
     };
-    RedGL.prototype = {};
-   
+    RedGL.prototype = {
+        /**DOC:
+        {
+            title :`setSize`,
+            code: `FUNCTION`,
+            description : `
+                RedGL 인스턴스의 Canvas 사이즈 설정
+                fullMode 속성이 false일때만 적용.
+            `,
+            example : `
+                RedGL(document.getElementById('test'), function(v){
+                     if(v){
+                         // 초기화 성공
+                         this.setSize(200,200)
+                     }else{
+                         // 초기화실패
+                     }
+                })
+            `,
+            return : 'void'
+        }
+        :DOC*/
+        setSize: (function () {
+            var W, H;
+            var prevW, prevH
+            var ratio;
+            var tCanvas;
+            prevW = 0, prevH = 0;
+            return function (width, height) {
+                if (this.fullMode) {
+                    W = document.documentElement ? document.documentElement.clientWidth : document.body.clientWidth;
+                    H = window.innerHeight;
+                } else {
+                    if (width == undefined) RedGL.throwFunc('RedGL : width가 입력되지 않았습니다.')
+                    if (height == undefined) RedGL.throwFunc('RedGL : height가 입력되지 않았습니다.')
+                    this['_width'] = W = width;
+                    this['_height'] = H = height;
+                }
+
+                ratio = window.devicePixelRatio || 1;
+                tCanvas = this.canvas;
+                console.log(this.renderScale)
+                if (prevW != W || prevH != H) {
+                    tCanvas.width = W * ratio * this.renderScale;
+                    tCanvas.height = H * ratio * this.renderScale;
+                    tCanvas.style.width = W;
+                    tCanvas.style.height = H;
+                    console.log('RedGL canvas setSize : ', this.gl.drawingBufferWidth, this.gl.drawingBufferHeight);
+                    prevW = W;
+                    prevH = H;
+                }
+            }
+        })()
+    };
     Object.freeze(RedGL);
 })();
