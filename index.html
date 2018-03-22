@@ -70,10 +70,22 @@
                 `
 attribute vec3 aVertexPosition;
 attribute vec4 aVertexColor;
+uniform float uFloatTest;
+uniform float uFloatTest2[10];
+uniform int uIntTest;
+uniform int uIntTest2[10];
+uniform vec4 uVec4Test;
+uniform mat4 uMat4Test;
 varying vec4 vColor;
 void main(void) {
     vColor = aVertexColor;
     vColor.r= sin(uTime*0.01);
+    uFloatTest;
+    uFloatTest2;
+    uIntTest;
+    uIntTest2;
+    uVec4Test;
+    uMat4Test;
     uResolution;
     gl_Position = uPMatrix * uCameraMatrix* uMVMatrix * vec4(aVertexPosition, 1.0);
 }
@@ -95,6 +107,12 @@ void main(void) {
             )
             var testMaterial
             testMaterial = RedMaterial(testProgram)
+            testMaterial['uFloatTest'] = 1
+            testMaterial['uFloatTest2'] = [1, 2, 3, 4, 5]
+            testMaterial['uIntTest'] = 1
+            testMaterial['uIntTest2'] = [1, 2, 3, 4, 5]
+            testMaterial['uVec4Test'] = [0, 0, 0, 0]
+            testMaterial['uMat4Test'] = mat4.create()
 
             var interleaveData
             interleaveData = new Float32Array([
@@ -133,7 +151,7 @@ void main(void) {
             geometry = RedGeometry(testInterleaveBuffer, testIndexBuffer)
 
             var testMesh
-            var i = 2000
+            var i = 3000
             while (i--) {
                 testMesh = RedMesh(geometry, testMaterial)
                 testMesh.x = Math.random() * 50 - 25
@@ -151,9 +169,10 @@ void main(void) {
             document.body.appendChild(renderResult)
 
             tRenderer.start(this, function (time) {
-
-                interleaveData[2] = Math.sin(time / 100)
-                // testInterleaveBuffer.updateData(interleaveData)
+                testMaterial['uFloatTest'] = time
+                interleaveData[0] = Math.sin(time / 1000) * 3
+                interleaveData[2] = Math.cos(time / 1000) * 3
+                testInterleaveBuffer.updateData(interleaveData)
                 i = tScene.children.length
                 while (i--) {
                     testMesh = tScene.children[i]
@@ -181,14 +200,14 @@ void main(void) {
                 renderResult.innerHTML = ''
                 for (var k in tRenderer['renderInfo']) {
                     // console.log(tRenderer['renderInfo'][k])
-                    renderResult.innerHTML += 
-                    'RedView : key - ' + tRenderer['renderInfo'][k]['key']
-                     + ' : call - ' + tRenderer['renderInfo'][k]['call']
-                     + ' : width - ' + tRenderer['renderInfo'][k]['width']
-                     + ' : height - ' + tRenderer['renderInfo'][k]['height']
-                     + ' : x - ' + tRenderer['renderInfo'][k]['x']
-                     + ' : y - ' + tRenderer['renderInfo'][k]['y']
-                      + '<br>'
+                    renderResult.innerHTML +=
+                        'RedView : key - ' + tRenderer['renderInfo'][k]['key']
+                        + ' : call - ' + tRenderer['renderInfo'][k]['call']
+                        + ' : width - ' + tRenderer['renderInfo'][k]['width']
+                        + ' : height - ' + tRenderer['renderInfo'][k]['height']
+                        + ' : x - ' + tRenderer['renderInfo'][k]['x']
+                        + ' : y - ' + tRenderer['renderInfo'][k]['y']
+                        + '<br>'
                 }
                 renderResult.innerHTML += 'renderScale : ' + self.renderScale
 

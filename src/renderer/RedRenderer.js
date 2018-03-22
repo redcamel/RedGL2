@@ -18,6 +18,7 @@ var RedRenderer;
         this['_callback'] = null;
         this['_UUID'] = RedGL['makeUUID']();
         this['renderInfo'] = {}
+        this['cacheInfo'] = []
         Object.seal(this)
     };
     RedRenderer.prototype = {
@@ -110,7 +111,7 @@ var RedRenderer;
             gl = redGL.gl;
             for (var k in redGL['_datas']['RedProgram']) {
                 tUniformGroup = redGL['_datas']['RedProgram'][k]['systemUniformLocation']
-                if(!updatedSystemUniformYn){
+                if (!updatedSystemUniformYn) {
                     if (tUniformGroup['uTime']) gl.uniform1f(tUniformGroup['uTime']['location'], time)
                     if (tUniformGroup['uResolution']) gl.uniform2fv(tUniformGroup['uResolution']['location'], [viewRect[2], viewRect[3]])
                 }
@@ -133,14 +134,14 @@ var RedRenderer;
             // console.log("worldRender", v['key'], t0)
             self['renderInfo'] = {}
             self['world']['_viewList'].forEach(function (tView) {
-                self['renderInfo'][tView.key] = { 
-                    x : tView._x,
-                    y : tView._y,
-                    width : tView._width,
-                    height : tView._height,
-                    key: tView.key, 
+                self['renderInfo'][tView.key] = {
+                    x: tView._x,
+                    y: tView._y,
+                    width: tView._width,
+                    height: tView._height,
+                    key: tView.key,
                     call: 0
-                 }
+                }
                 ///////////////////////////////////
                 // view의 위치/크기결정
                 viewRect[0] = tView['_x'];
@@ -164,7 +165,7 @@ var RedRenderer;
                     tCamera.nearClipping,
                     tCamera.farClipping
                 );
-                updateSystemUniform(redGL, updatedSystemUniformYn,time, perspectiveMTX, tCamera['matrix'], viewRect)
+                updateSystemUniform(redGL, updatedSystemUniformYn, time, perspectiveMTX, tCamera['matrix'], viewRect)
                 updatedSystemUniformYn = true
                 // 씬렌더 호출
                 self.sceneRender(gl, tView.scene, time, self['renderInfo'][tView.key]);
@@ -179,6 +180,8 @@ var RedRenderer;
             var tChildren, tMesh;
             var k, i, i2;
             //
+            var tCacheInfo;
+            //
             var BYTES_PER_ELEMENT;;
             // 
             var tMesh;
@@ -186,10 +189,12 @@ var RedRenderer;
             var tInterleaveInfo;
             var tAttrGroup, tUniformGroup, tSystemUniformGroup;
             var tAttributeUpdateInfo
-            var tLocationInfo;
+            var tLocationInfo, tWebGLUniformLocation;
             var tInterleaveBufferInfo, tIndexBufferInfo;
+            var tUniformValue
             var tMVMatrix;
             var tRenderType;
+            var tUUID, noChangeUniform;
             // matix 관련
             var a,
                 aSx, aSy, aSz, aCx, aCy, aCz, tRx, tRy, tRz,
@@ -202,6 +207,7 @@ var RedRenderer;
             var SIN, COS, tRadian, CPI, CPI2, C225, C127, C045, C157;
             // systemUnfiom
             //////////////// 변수값 할당 ////////////////
+            tCacheInfo = this['cacheInfo']
             BYTES_PER_ELEMENT = Float32Array.BYTES_PER_ELEMENT;
             CPI = 3.141592653589793,
                 CPI2 = 6.283185307179586,
@@ -261,14 +267,23 @@ var RedRenderer;
                 // console.log(tUniformGroup)
                 i2 = tUniformGroup.length
 
+                // console.log(tCacheInfo)
                 while (i2--) {
-                    tLocationInfo = tUniformGroup[i2]
-                    if (tLocationInfo['location']) {
-                        //TODO: 고도화
-                        tRenderType = tLocationInfo['renderType']
-                        if (tRenderType == 'float') {
-                            gl.uniform1f(tLocationInfo['location'], time)
-                        }
+                    tLocationInfo = tUniformGroup[i2];
+                    tWebGLUniformLocation = tLocationInfo['location'];
+                    tUUID = tLocationInfo['_UUID'];
+                    if (tWebGLUniformLocation) {
+                        tRenderType = tLocationInfo['renderType'];
+                        tUniformValue = tMaterial[tLocationInfo['name']];
+                        tUniformValue == undefined ? RedGL.throwFunc('RedRenderer : Material에 ', tLocationInfo['name'], '이 정의 되지않았습니다.') : 0;
+                        noChangeUniform = tCacheInfo[tUUID] == tUniformValue;
+                        // if (!noChange) console.log('변경되었다', tLocationInfo['name'], tCacheInfo[tUUID], tUniformValue)
+                        // console.log(tCacheInfo)
+                        tRenderType == 'float' ? noChangeUniform ? 0 : gl[tLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheInfo[tUUID] = tUniformValue)
+                            : tRenderType == 'int' ? noChangeUniform ? 0 : gl[tLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheInfo[tUUID] = tUniformValue)
+                                : tRenderType == 'vec' ? noChangeUniform ? 0 : gl[tLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheInfo[tUUID] = tUniformValue)
+                                    : tRenderType == 'mat' ? gl[tLocationInfo['renderMethod']](tWebGLUniformLocation, false, tUniformValue)
+                                        : RedGL.throwFunc('RedRenderer : 처리할수없는 타입입니다.', 'tRenderType -', tRenderType)
                     }
                 }
 

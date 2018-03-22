@@ -4,7 +4,6 @@ var RedProgram;
 (function () {
     var makeProgram;
     var tGL;
-    var TYPE_MAP;
     makeProgram = (function () {
         var tProgram;
         return function (gl, key, vs, fs) {
@@ -49,29 +48,21 @@ var RedProgram;
         this['_UUID'] = RedGL['makeUUID']();
         Object.freeze(this)
     }
-    TYPE_MAP = {
-        //TODO: 이놈정교화
-        'mat4': 'mat',
-        'mat3': 'mat',
-        'mat2': 'mat',
-        'vec4': 'vec',
-        'vec3': 'vec',
-        'vec2': 'vec',
-        'float': 'float',
-        'int': 'int'
-    }
+
+
     RedProgram.prototype = {
         updateLocation: (function () {
             var self;
-        
             return function (shader) {
                 self = this;
                 if (shader['parseData']['attribute']) {
                     shader['parseData']['attribute']['list'].forEach(function (v) {
                         var tInfo = {};
                         tInfo = {}
+                        tInfo['_UUID'] = RedGL.makeUUID()
                         tInfo['location'] = tGL.getAttribLocation(self['webglProgram'], v['name']);
-                        tInfo['type'] = v['dataType']
+                        if (!tInfo['location']) tInfo['msg'] = '쉐이더 main 함수에서 사용되고 있지 않음'
+                        tInfo['uniformType'] = v['uniformType']
                         tInfo['name'] = v['name']
                         self['attributeLocation'].push(tInfo)
                         self['attributeLocation'][v['name']] = tInfo
@@ -80,12 +71,56 @@ var RedProgram;
                 if (shader['parseData']['uniform']) {
                     shader['parseData']['uniform']['list'].forEach(function (v) {
                         var tInfo = {};
+                        tInfo['_UUID'] = RedGL.makeUUID()
                         console.log(v)
                         // console.log(v['name'],tGL.getUniformLocation(self['webglProgram'], v['name']))
                         tInfo['location'] = tGL.getUniformLocation(self['webglProgram'], v['name']);
-                        tInfo['type'] = v['dataType']
-                        tInfo['renderType'] = TYPE_MAP[v['dataType']]
+                        if (!tInfo['location']) tInfo['msg'] = '쉐이더 main 함수에서 사용되고 있지 않음'
+                        tInfo['uniformType'] = v['uniformType']
+                        // renderType 조사
+                        // TODO: 데이터 타입조사를 이놈이 하는게 맞는건가..
+                        var arrayNum, tRenderType, tRenderMethod;
+                        arrayNum = v['arrayNum']
+                        switch (v['uniformType']) {
+                            case 'float':
+                                tRenderType = 'float';
+                                tRenderMethod = 'uniform1f';
+                                break
+                            case 'int':
+                                tRenderType = 'int';
+                                tRenderMethod = 'uniform1i';
+                                break
+                            case 'mat4':
+                                tRenderType = 'mat';
+                                tRenderMethod = 'uniformMatrix4fv';
+                                break
+                            case 'mat3':
+                                tRenderType = 'mat';
+                                tRenderMethod = 'uniformMatrix3fv';
+                                break
+                            case 'mat2':
+                                tRenderType = 'mat';
+                                tRenderMethod = 'uniformMatrix2fv';
+                                break
+                            case 'vec4':
+                                tRenderType = 'vec';
+                                tRenderMethod = 'uniform4fv';
+                                break
+                            case 'vec3':
+                                tRenderType = 'vec';
+                                tRenderMethod = 'uniform3fv';
+                                break
+                            case 'vec2':
+                                tRenderType = 'vec';
+                                tRenderMethod = 'uniform2fv';
+                                break
+
+                        }
+                        tInfo['renderType'] = tRenderType
+                        tInfo['renderMethod'] = tRenderMethod
+                        //
                         tInfo['name'] = v['name']
+                        tInfo['arrayNum'] = v['arrayNum']
                         if (v['systemUniformYn']) {
                             self['systemUniformLocation'].push(tInfo)
                             self['systemUniformLocation'][v['name']] = tInfo
