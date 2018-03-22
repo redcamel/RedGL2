@@ -478,6 +478,8 @@ var RedRenderer;
             self['renderInfo'] = {}
             self['world']['_viewList'].forEach(function (tView) {
                 self['renderInfo'][tView.key] = { 
+                    x : tView._x,
+                    y : tView._y,
                     width : tView._width,
                     height : tView._height,
                     key: tView.key, 

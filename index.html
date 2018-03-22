@@ -70,11 +70,12 @@
                 `
 attribute vec3 aVertexPosition;
 attribute vec4 aVertexColor;
+uniform float uTest;
 varying vec4 vColor;
 void main(void) {
     vColor = aVertexColor;
     vColor.r= sin(uTime*0.01);
-    uResolution;
+    uTest;
     gl_Position = uPMatrix * uCameraMatrix* uMVMatrix * vec4(aVertexPosition, 1.0);
 }
             `
@@ -181,14 +182,14 @@ void main(void) {
                 renderResult.innerHTML = ''
                 for (var k in tRenderer['renderInfo']) {
                     // console.log(tRenderer['renderInfo'][k])
-                    renderResult.innerHTML += 
-                    'RedView : key - ' + tRenderer['renderInfo'][k]['key']
-                     + ' : call - ' + tRenderer['renderInfo'][k]['call']
-                     + ' : width - ' + tRenderer['renderInfo'][k]['width']
-                     + ' : height - ' + tRenderer['renderInfo'][k]['height']
-                     + ' : x - ' + tRenderer['renderInfo'][k]['x']
-                     + ' : y - ' + tRenderer['renderInfo'][k]['y']
-                      + '<br>'
+                    renderResult.innerHTML +=
+                        'RedView : key - ' + tRenderer['renderInfo'][k]['key']
+                        + ' : call - ' + tRenderer['renderInfo'][k]['call']
+                        + ' : width - ' + tRenderer['renderInfo'][k]['width']
+                        + ' : height - ' + tRenderer['renderInfo'][k]['height']
+                        + ' : x - ' + tRenderer['renderInfo'][k]['x']
+                        + ' : y - ' + tRenderer['renderInfo'][k]['y']
+                        + '<br>'
                 }
                 renderResult.innerHTML += 'renderScale : ' + self.renderScale
 

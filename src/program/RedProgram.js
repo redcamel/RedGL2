@@ -63,7 +63,6 @@ var RedProgram;
     RedProgram.prototype = {
         updateLocation: (function () {
             var self;
-        
             return function (shader) {
                 self = this;
                 if (shader['parseData']['attribute']) {
@@ -71,6 +70,7 @@ var RedProgram;
                         var tInfo = {};
                         tInfo = {}
                         tInfo['location'] = tGL.getAttribLocation(self['webglProgram'], v['name']);
+                        if(!tInfo['location']) tInfo['msg'] = '쉐이더 main 함수에서 사용되고 있지 않음'
                         tInfo['type'] = v['dataType']
                         tInfo['name'] = v['name']
                         self['attributeLocation'].push(tInfo)
@@ -80,9 +80,10 @@ var RedProgram;
                 if (shader['parseData']['uniform']) {
                     shader['parseData']['uniform']['list'].forEach(function (v) {
                         var tInfo = {};
-                        console.log(v)
+                        // console.log(v)
                         // console.log(v['name'],tGL.getUniformLocation(self['webglProgram'], v['name']))
                         tInfo['location'] = tGL.getUniformLocation(self['webglProgram'], v['name']);
+                        if(!tInfo['location']) tInfo['msg'] = '쉐이더 main 함수에서 사용되고 있지 않음'
                         tInfo['type'] = v['dataType']
                         tInfo['renderType'] = TYPE_MAP[v['dataType']]
                         tInfo['name'] = v['name']
