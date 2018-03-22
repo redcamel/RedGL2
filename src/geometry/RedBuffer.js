@@ -62,7 +62,6 @@ var RedBuffer;
             this.pointNum = data.length;
         }
 
-
         this['webglBuffer'] = tGL.createBuffer()
         tGL.bindBuffer(tBufferType, this['webglBuffer']);
         tGL.bufferData(tBufferType, this.data, this.drawMode);

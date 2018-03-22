@@ -182,12 +182,12 @@ var RedRenderer;
         }
     })();
     RedRenderer.prototype.sceneRender = (function () {
-        
+
         return function (gl, scene, time, renderResultObj) {
             var tChildren, tMesh;
             var k, i, i2;
             //
-          
+
             //
             var BYTES_PER_ELEMENT;;
             // 
@@ -245,31 +245,41 @@ var RedRenderer;
                 /////////////////////////////////////////////////////////////////////////
                 // 어트리뷰트 인터리브 정보를 가져온다. 
                 tInterleaveInfo = tInterleaveBufferInfo['interleaveInfo']
+                // console.log(tInterleaveInfo)
+                // console.log(tAttrGroup)
                 i2 = tInterleaveInfo.length
+                // 버퍼의 UUID
+                tUUID = tInterleaveBufferInfo['_UUID']
                 while (i2--) {
                     // 어트리뷰트 갱신정보를 얻는다.
                     tAttributeUpdateInfo = tInterleaveInfo[i2];
-                    tLocationInfo = tAttrGroup[i2];
+                    tLocationInfo = tAttrGroup[tAttributeUpdateInfo['attributeKey']];
                     if (tLocationInfo) {
                         // 활성화 된적이 없으면 활성화 시킨다. 
-                        tAttributeUpdateInfo['enabled'] ? 0 : (gl.enableVertexAttribArray(tLocationInfo['location']), tAttributeUpdateInfo['enabled'] = true);
+                        gl.enableVertexAttribArray(tLocationInfo['location'])
+                        // tAttributeUpdateInfo['enabled'] ? 0 : (gl.enableVertexAttribArray(tLocationInfo['location']), tAttributeUpdateInfo['enabled'] = true);
                         // 어트리뷰트 데이터 업데이트는 필요시 버퍼를 통해 직접한다.
                         // 즉 실제로 버퍼는 한번 업데이트 해놓으면 GPU상에 온전하게 보관된다.
-                        prevInterleaveBuffer_UUID == tInterleaveBufferInfo['_UUID'] ? 0 : gl.bindBuffer(gl.ARRAY_BUFFER, tInterleaveBufferInfo['webglBuffer']);
-                        if (tInterleaveBufferInfo['updated']) {
-                            prevInterleaveBuffer_UUID == tInterleaveBufferInfo['_UUID'] ? 0 : gl.vertexAttribPointer(
-                                tLocationInfo['location'],
-                                tAttributeUpdateInfo['size'],
-                                tInterleaveBufferInfo['glArrayType'],
-                                tAttributeUpdateInfo['normalize'],
-                                tInterleaveBufferInfo['stride'] * BYTES_PER_ELEMENT, //stride
-                                tAttributeUpdateInfo['offset'] * BYTES_PER_ELEMENT //offset
-                            )
-                        }
+                        prevInterleaveBuffer_UUID == tUUID ? 0 : gl.bindBuffer(gl.ARRAY_BUFFER, tInterleaveBufferInfo['webglBuffer']);
+
+                        /*
+                            TODO: 하...이걸 공략해야함
+                        */
+
+                        gl.vertexAttribPointer(
+                            tLocationInfo['location'],
+                            tAttributeUpdateInfo['size'],
+                            tInterleaveBufferInfo['glArrayType'],
+                            tAttributeUpdateInfo['normalize'],
+                            tInterleaveBufferInfo['stride'] * BYTES_PER_ELEMENT, //stride
+                            tAttributeUpdateInfo['offset'] * BYTES_PER_ELEMENT //offset
+                        )
+
                     }
                 }
-                prevInterleaveBuffer_UUID = tInterleaveBufferInfo['_UUID']; // 버퍼 캐싱           
-                tInterleaveBufferInfo['updated'] = 0; // 버퍼 업데이트 처리완료
+                prevInterleaveBuffer_UUID = tUUID
+                tCacheInfo[prevProgram_UUID] = false // 버퍼데이터 updated여부
+                // tInterleaveBufferInfo['updated'] = 0; // 버퍼 업데이트 처리완료
                 /////////////////////////////////////////////////////////////////////////
                 /////////////////////////////////////////////////////////////////////////
                 // 유니폼 업데이트
@@ -289,10 +299,10 @@ var RedRenderer;
                         // if (!noChange) console.log('변경되었다', tLocationInfo['name'], tCacheInfo[tUUID], tUniformValue)
                         // console.log(tCacheInfo)
                         tRenderType == 'float' ? noChangeUniform ? 0 : gl[tLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheInfo[tUUID] = tUniformValue)
-                        : tRenderType == 'int' ? noChangeUniform ? 0 : gl[tLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheInfo[tUUID] = tUniformValue)
-                        : tRenderType == 'vec' ? noChangeUniform ? 0 : gl[tLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheInfo[tUUID] = tUniformValue)
-                        : tRenderType == 'mat' ? gl[tLocationInfo['renderMethod']](tWebGLUniformLocation, false, tUniformValue)
-                        : RedGL.throwFunc('RedRenderer : 처리할수없는 타입입니다.', 'tRenderType -', tRenderType)
+                            : tRenderType == 'int' ? noChangeUniform ? 0 : gl[tLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheInfo[tUUID] = tUniformValue)
+                                : tRenderType == 'vec' ? noChangeUniform ? 0 : gl[tLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheInfo[tUUID] = tUniformValue)
+                                    : tRenderType == 'mat' ? gl[tLocationInfo['renderMethod']](tWebGLUniformLocation, false, tUniformValue)
+                                        : RedGL.throwFunc('RedRenderer : 처리할수없는 타입입니다.', 'tRenderType -', tRenderType)
                     }
                 }
 
@@ -376,7 +386,9 @@ var RedRenderer;
                     //enum mode, long count, enum type, long offset
                     gl.drawElements(gl.TRIANGLES, tIndexBufferInfo['pointNum'], tIndexBufferInfo['glArrayType'], 0)
                     prevIndexBuffer_UUID = tIndexBufferInfo['_UUID']
-                } else gl.drawArrays(gl.TRIANGLES, 0, tInterleaveBufferInfo['pointNum'])
+                } else {
+                    gl.drawArrays(gl.TRIANGLES, 0, tInterleaveBufferInfo['pointNum'])
+                }
                 /////////////////////////////////////////////////////////////////////////
                 /////////////////////////////////////////////////////////////////////////
 

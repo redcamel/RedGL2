@@ -67,7 +67,7 @@
 
 
             var testMaterial, testMaterial2
-            testMaterial = RedColorMaterial(this, Math.random() > 0.5 ? '#fff' : '#555')
+            testMaterial = RedColorMaterial(this, '#555')
             testMaterial2 = RedMaterial(this)
 
 
@@ -108,9 +108,10 @@
             geometry = RedGeometry(testInterleaveBuffer, testIndexBuffer)
 
             var testMesh
-            var i = 3000
+            var i = 500
             while (i--) {
-                testMesh = RedMesh(geometry, i > 1500 ? testMaterial : testMaterial2)
+                var t = (Math.random()>0.5) ? testMaterial : testMaterial2
+                testMesh = RedMesh(geometry, t)
                 testMesh.x = Math.random() * 50 - 25
                 testMesh.y = Math.random() * 50 - 25
                 testMesh.z = Math.random() * 50 - 25

@@ -62,7 +62,7 @@ var RedProgram;
                         tInfo = {}
                         tInfo['_UUID'] = RedGL.makeUUID()
                         tInfo['location'] = tGL.getAttribLocation(self['webglProgram'], v['name']);
-                        if (!tInfo['location']) tInfo['msg'] = '쉐이더 main 함수에서 사용되고 있지 않음'
+                        if (!tInfo['location']==-1) tInfo['msg'] = '쉐이더 main 함수에서 사용되고 있지 않음'
                         tInfo['uniformType'] = v['uniformType']
                         tInfo['name'] = v['name']
                         self['attributeLocation'].push(tInfo)
