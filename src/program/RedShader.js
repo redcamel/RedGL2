@@ -146,7 +146,7 @@ var RedShader;
                 // console.log(tType, tDataType, tName, tArrayNum)
                 if (!parseData[tType]) parseData[tType] = {}, parseData[tType]['list'] = [], parseData[tType]['map'] = {}, parseData[tType]['source'] = '';
                 parseData[tType]['list'].push({
-                    dataType: tDataType,
+                    uniformType: tDataType,
                     name: tName,
                     arrayNum: tArrayNum,
                     systemUniformYn : RedSystemShaderCode.systemUniform[tName] ? true : false
@@ -163,7 +163,7 @@ var RedShader;
                 var data = v.split(' ');
                 var tName = data[1].replace(/\([\s\S]+/g, '').trim()
                 parseData['func']['list'].push({
-                    dataType: data[0],
+                    uniformType: data[0],
                     name: tName
                 })
                 parseData['func']['map'][tName] = v;
