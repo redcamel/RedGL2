@@ -238,7 +238,6 @@ var RedGL;
 
                 ratio = window.devicePixelRatio || 1;
                 tCanvas = this.canvas;
-                console.log(this.renderScale)
                 if (prevW != W || prevH != H) {
                     tCanvas.width = W * ratio * this.renderScale;
                     tCanvas.height = H * ratio * this.renderScale;

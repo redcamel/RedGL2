@@ -266,7 +266,6 @@ var RedGL;
 
                 ratio = window.devicePixelRatio || 1;
                 tCanvas = this.canvas;
-                console.log(this.renderScale)
                 if (prevW != W || prevH != H) {
                     tCanvas.width = W * ratio * this.renderScale;
                     tCanvas.height = H * ratio * this.renderScale;
@@ -478,7 +477,12 @@ var RedRenderer;
             // console.log("worldRender", v['key'], t0)
             self['renderInfo'] = {}
             self['world']['_viewList'].forEach(function (tView) {
-                self['renderInfo'][tView.key] = { key: tView.key, call: 0 }
+                self['renderInfo'][tView.key] = { 
+                    width : tView._width,
+                    height : tView._height,
+                    key: tView.key, 
+                    call: 0
+                 }
                 ///////////////////////////////////
                 // view의 위치/크기결정
                 viewRect[0] = tView['_x'];
@@ -559,9 +563,9 @@ var RedRenderer;
                 prevProgram_UUID == tMaterial['program']['_UUID'] ? 0 : gl.useProgram(tMaterial['program']['webglProgram'])
                 prevProgram_UUID = tMaterial['program']['_UUID']
                 // 업데이트할 어트리뷰트와 유니폼 정보를 가져옴
-                tAttrGroup = tMaterial.attributeLocation
-                tUniformGroup = tMaterial.uniformLocation
-                tSystemUniformGroup = tMaterial.systemUniformLocation
+                tAttrGroup = tMaterial['program']['attributeLocation'];
+                tUniformGroup = tMaterial['program']['uniformLocation'];
+                tSystemUniformGroup = tMaterial['program']['systemUniformLocation'];
                 // 버퍼를 찾는다.
                 tInterleaveBufferInfo = tGeometry['interleaveBuffer'] // 인터리브 버퍼
                 tIndexBufferInfo = tGeometry['indexBuffer'] // 엘리먼트 버퍼
