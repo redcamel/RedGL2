@@ -7,20 +7,6 @@
   },
   {
     "code": "FUNCTION",
-    "title": "render",
-    "description": "\n    등록된 RedView을 기반으로 렌더링을 실행함\n",
-    "params": {
-      "gl": [
-        {
-          "type": "webgl context"
-        },
-        "webgl context"
-      ]
-    },
-    "return": "void"
-  },
-  {
-    "code": "FUNCTION",
     "title": "start",
     "description": "\n    렌더 시작\n",
     "params": {
@@ -37,6 +23,20 @@
     "code": "FUNCTION",
     "title": "stop",
     "description": "\n    렌더 중지\n",
+    "return": "void"
+  },
+  {
+    "code": "FUNCTION",
+    "title": "worldRender",
+    "description": "\n    등록된 RedView을 기반으로 렌더링을 실행함\n",
+    "params": {
+      "gl": [
+        {
+          "type": "webgl context"
+        },
+        "webgl context"
+      ]
+    },
     "return": "void"
   }
 ]
