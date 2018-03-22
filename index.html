@@ -22,6 +22,7 @@
     <script src="src/geometry/RedBuffer.js"></script>
     <script src="src/geometry/RedGeometry.js"></script>
     <script src="src/material/RedMaterial.js"></script>
+    <script src="src/material/RedColorMaterial.js"></script>
 
     <script src="src/object3D/RedMesh.js"></script>
 
@@ -65,54 +66,10 @@
             RedView('test4').setLocation('0%', '75%')
 
 
-            var testVS, testFS;
-            testVS =
-                `
-attribute vec3 aVertexPosition;
-attribute vec4 aVertexColor;
-uniform float uFloatTest;
-uniform float uFloatTest2[10];
-uniform int uIntTest;
-uniform int uIntTest2[10];
-uniform vec4 uVec4Test;
-uniform mat4 uMat4Test;
-varying vec4 vColor;
-void main(void) {
-    vColor = aVertexColor;
-    vColor.r= sin(uTime*0.01);
-    uFloatTest;
-    uFloatTest2;
-    uIntTest;
-    uIntTest2;
-    uVec4Test;
-    uMat4Test;
-    uResolution;
-    gl_Position = uPMatrix * uCameraMatrix* uMVMatrix * vec4(aVertexPosition, 1.0);
-}
-            `
-            testFS =
-                `
-precision mediump float;
-varying vec4 vColor;
-void main(void) {
-    gl_FragColor = vColor;
-}
-            `
-            var testProgram
-            testProgram = RedProgram(
-                this,
-                'testProgram',
-                RedShader(this, 'testVS', RedShader.VERTEX, testVS),
-                RedShader(this, 'testFS', RedShader.FRAGMENT, testFS)
-            )
-            var testMaterial
-            testMaterial = RedMaterial(testProgram)
-            testMaterial['uFloatTest'] = 1
-            testMaterial['uFloatTest2'] = [1, 2, 3, 4, 5]
-            testMaterial['uIntTest'] = 1
-            testMaterial['uIntTest2'] = [1, 2, 3, 4, 5]
-            testMaterial['uVec4Test'] = [0, 0, 0, 0]
-            testMaterial['uMat4Test'] = mat4.create()
+            var testMaterial, testMaterial2
+            testMaterial = RedColorMaterial(this, Math.random() > 0.5 ? '#fff' : '#555')
+            testMaterial2 = RedMaterial(this)
+
 
             var interleaveData
             interleaveData = new Float32Array([
@@ -153,7 +110,7 @@ void main(void) {
             var testMesh
             var i = 3000
             while (i--) {
-                testMesh = RedMesh(geometry, testMaterial)
+                testMesh = RedMesh(geometry, i > 1500 ? testMaterial : testMaterial2)
                 testMesh.x = Math.random() * 50 - 25
                 testMesh.y = Math.random() * 50 - 25
                 testMesh.z = Math.random() * 50 - 25
@@ -169,7 +126,7 @@ void main(void) {
             document.body.appendChild(renderResult)
 
             tRenderer.start(this, function (time) {
-                testMaterial['uFloatTest'] = time
+                testMaterial['floatTest'] = time
                 interleaveData[0] = Math.sin(time / 1000) * 3
                 interleaveData[2] = Math.cos(time / 1000) * 3
                 testInterleaveBuffer.updateData(interleaveData)
