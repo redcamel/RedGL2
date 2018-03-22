@@ -20,6 +20,7 @@ var RedRenderer;
         this['renderInfo'] = {}
         this['cacheInfo'] = []
         Object.seal(this)
+        console.log(this)
     };
     RedRenderer.prototype = {
         /**DOC:
@@ -86,6 +87,10 @@ var RedRenderer;
         return : 'void'
     }
     :DOC*/
+    // 캐시관련
+    var prevInterleaveBuffer_UUID, prevIndexBuffer_UUID;
+    var prevProgram_UUID;
+    var tCacheInfo;
     RedRenderer.prototype.worldRender = (function () {
         var worldRect, viewRect;
         var tCamera;
@@ -106,17 +111,21 @@ var RedRenderer;
             return rect;
         }
         updateSystemUniform = function (redGL, updatedSystemUniformYn, time, perspectiveMTX, cameraMTX, viewRect) {
+            var tProgram;
             var tUniformGroup;
             var gl;
             gl = redGL.gl;
             for (var k in redGL['_datas']['RedProgram']) {
-                tUniformGroup = redGL['_datas']['RedProgram'][k]['systemUniformLocation']
+                tProgram = redGL['_datas']['RedProgram'][k];
+                gl.useProgram(tProgram['webglProgram']);
+                tUniformGroup = tProgram['systemUniformLocation']
                 if (!updatedSystemUniformYn) {
-                    if (tUniformGroup['uTime']) gl.uniform1f(tUniformGroup['uTime']['location'], time)
-                    if (tUniformGroup['uResolution']) gl.uniform2fv(tUniformGroup['uResolution']['location'], [viewRect[2], viewRect[3]])
+                    if (tUniformGroup['uTime']['location']) gl.uniform1f(tUniformGroup['uTime']['location'], time)
+                    if (tUniformGroup['uResolution']['location']) gl.uniform2fv(tUniformGroup['uResolution']['location'], [viewRect[2], viewRect[3]])
                 }
-                if (tUniformGroup['uCameraMatrix']) gl.uniformMatrix4fv(tUniformGroup['uCameraMatrix']['location'], false, cameraMTX)
-                if (tUniformGroup['uPMatrix']) gl.uniformMatrix4fv(tUniformGroup['uPMatrix']['location'], false, perspectiveMTX)
+                if (tUniformGroup['uCameraMatrix']['location']) gl.uniformMatrix4fv(tUniformGroup['uCameraMatrix']['location'], false, cameraMTX)
+                if (tUniformGroup['uPMatrix']['location']) gl.uniformMatrix4fv(tUniformGroup['uPMatrix']['location'], false, perspectiveMTX)
+                prevProgram_UUID = tProgram['_UUID']
             }
         }
         viewRect = [];
@@ -173,14 +182,12 @@ var RedRenderer;
         }
     })();
     RedRenderer.prototype.sceneRender = (function () {
-        // 캐시관련
-        var prevInterleaveBuffer_UUID, prevIndexBuffer_UUID;
-        var prevProgram_UUID;
+        
         return function (gl, scene, time, renderResultObj) {
             var tChildren, tMesh;
             var k, i, i2;
             //
-            var tCacheInfo;
+          
             //
             var BYTES_PER_ELEMENT;;
             // 
@@ -243,20 +250,22 @@ var RedRenderer;
                     // 어트리뷰트 갱신정보를 얻는다.
                     tAttributeUpdateInfo = tInterleaveInfo[i2];
                     tLocationInfo = tAttrGroup[i2];
-                    // 활성화 된적이 없으면 활성화 시킨다. 
-                    tAttributeUpdateInfo['enabled'] ? 0 : (gl.enableVertexAttribArray(tLocationInfo['location']), tAttributeUpdateInfo['enabled'] = true);
-                    // 어트리뷰트 데이터 업데이트는 필요시 버퍼를 통해 직접한다.
-                    // 즉 실제로 버퍼는 한번 업데이트 해놓으면 GPU상에 온전하게 보관된다.
-                    prevInterleaveBuffer_UUID == tInterleaveBufferInfo['_UUID'] ? 0 : gl.bindBuffer(gl.ARRAY_BUFFER, tInterleaveBufferInfo['webglBuffer']);
-                    if (tInterleaveBufferInfo['updated']) {
-                        prevInterleaveBuffer_UUID == tInterleaveBufferInfo['_UUID'] ? 0 : gl.vertexAttribPointer(
-                            tLocationInfo['location'],
-                            tAttributeUpdateInfo['size'],
-                            tInterleaveBufferInfo['glArrayType'],
-                            tAttributeUpdateInfo['normalize'],
-                            tInterleaveBufferInfo['stride'] * BYTES_PER_ELEMENT, //stride
-                            tAttributeUpdateInfo['offset'] * BYTES_PER_ELEMENT //offset
-                        )
+                    if (tLocationInfo) {
+                        // 활성화 된적이 없으면 활성화 시킨다. 
+                        tAttributeUpdateInfo['enabled'] ? 0 : (gl.enableVertexAttribArray(tLocationInfo['location']), tAttributeUpdateInfo['enabled'] = true);
+                        // 어트리뷰트 데이터 업데이트는 필요시 버퍼를 통해 직접한다.
+                        // 즉 실제로 버퍼는 한번 업데이트 해놓으면 GPU상에 온전하게 보관된다.
+                        prevInterleaveBuffer_UUID == tInterleaveBufferInfo['_UUID'] ? 0 : gl.bindBuffer(gl.ARRAY_BUFFER, tInterleaveBufferInfo['webglBuffer']);
+                        if (tInterleaveBufferInfo['updated']) {
+                            prevInterleaveBuffer_UUID == tInterleaveBufferInfo['_UUID'] ? 0 : gl.vertexAttribPointer(
+                                tLocationInfo['location'],
+                                tAttributeUpdateInfo['size'],
+                                tInterleaveBufferInfo['glArrayType'],
+                                tAttributeUpdateInfo['normalize'],
+                                tInterleaveBufferInfo['stride'] * BYTES_PER_ELEMENT, //stride
+                                tAttributeUpdateInfo['offset'] * BYTES_PER_ELEMENT //offset
+                            )
+                        }
                     }
                 }
                 prevInterleaveBuffer_UUID = tInterleaveBufferInfo['_UUID']; // 버퍼 캐싱           
@@ -274,16 +283,16 @@ var RedRenderer;
                     tUUID = tLocationInfo['_UUID'];
                     if (tWebGLUniformLocation) {
                         tRenderType = tLocationInfo['renderType'];
-                        tUniformValue = tMaterial[tLocationInfo['name']];
-                        tUniformValue == undefined ? RedGL.throwFunc('RedRenderer : Material에 ', tLocationInfo['name'], '이 정의 되지않았습니다.') : 0;
+                        tUniformValue = tMaterial[tLocationInfo['materialPropertyName']];
+                        tUniformValue == undefined ? RedGL.throwFunc('RedRenderer : Material에 ', tLocationInfo['materialPropertyName'], '이 정의 되지않았습니다.') : 0;
                         noChangeUniform = tCacheInfo[tUUID] == tUniformValue;
                         // if (!noChange) console.log('변경되었다', tLocationInfo['name'], tCacheInfo[tUUID], tUniformValue)
                         // console.log(tCacheInfo)
                         tRenderType == 'float' ? noChangeUniform ? 0 : gl[tLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheInfo[tUUID] = tUniformValue)
-                            : tRenderType == 'int' ? noChangeUniform ? 0 : gl[tLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheInfo[tUUID] = tUniformValue)
-                                : tRenderType == 'vec' ? noChangeUniform ? 0 : gl[tLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheInfo[tUUID] = tUniformValue)
-                                    : tRenderType == 'mat' ? gl[tLocationInfo['renderMethod']](tWebGLUniformLocation, false, tUniformValue)
-                                        : RedGL.throwFunc('RedRenderer : 처리할수없는 타입입니다.', 'tRenderType -', tRenderType)
+                        : tRenderType == 'int' ? noChangeUniform ? 0 : gl[tLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheInfo[tUUID] = tUniformValue)
+                        : tRenderType == 'vec' ? noChangeUniform ? 0 : gl[tLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheInfo[tUUID] = tUniformValue)
+                        : tRenderType == 'mat' ? gl[tLocationInfo['renderMethod']](tWebGLUniformLocation, false, tUniformValue)
+                        : RedGL.throwFunc('RedRenderer : 처리할수없는 타입입니다.', 'tRenderType -', tRenderType)
                     }
                 }
 

@@ -30,7 +30,8 @@ var RedProgram;
         tGL = redGL.gl;
 
         if (!redGL['_datas']['RedProgram']) redGL['_datas']['RedProgram'] = {};
-        redGL['_datas']['RedProgram'][key] = this
+        if(redGL['_datas']['RedProgram'][key]) return redGL['_datas']['RedProgram'][key]
+        else redGL['_datas']['RedProgram'][key] = this
 
 
         this['key'] = key;
@@ -72,7 +73,7 @@ var RedProgram;
                     shader['parseData']['uniform']['list'].forEach(function (v) {
                         var tInfo = {};
                         tInfo['_UUID'] = RedGL.makeUUID()
-                        console.log(v)
+                        // console.log(v)
                         // console.log(v['name'],tGL.getUniformLocation(self['webglProgram'], v['name']))
                         tInfo['location'] = tGL.getUniformLocation(self['webglProgram'], v['name']);
                         if (!tInfo['location']) tInfo['msg'] = '쉐이더 main 함수에서 사용되고 있지 않음'
@@ -120,6 +121,7 @@ var RedProgram;
                         tInfo['renderMethod'] = tRenderMethod
                         //
                         tInfo['name'] = v['name']
+                        tInfo['materialPropertyName'] = v['name'].charAt(1).toLowerCase()+v['name'].substr(2)
                         tInfo['arrayNum'] = v['arrayNum']
                         if (v['systemUniformYn']) {
                             self['systemUniformLocation'].push(tInfo)
