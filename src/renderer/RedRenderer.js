@@ -173,14 +173,7 @@ var RedRenderer;
             // console.log("worldRender", v['key'], t0)
             self['renderInfo'] = {}
             self['world']['_viewList'].forEach(function (tView) {
-                self['renderInfo'][tView.key] = {
-                    x: tView._x,
-                    y: tView._y,
-                    width: tView._width,
-                    height: tView._height,
-                    key: tView.key,
-                    call: 0
-                }
+              
                 ///////////////////////////////////
                 // view의 위치/크기결정
                 viewRect[0] = tView['_x'];
@@ -189,6 +182,16 @@ var RedRenderer;
                 viewRect[3] = tView['_height'];
                 tCamera = tView.camera;
                 tCamera['updateMatrix']()
+                //
+                self['renderInfo'][tView.key] = {
+                    orthographic : tCamera['orthographic'],
+                    x: tView._x,
+                    y: tView._y,
+                    width: tView._width,
+                    height: tView._height,
+                    key: tView.key,
+                    call: 0
+                }
                 // 위치/크기의 % 여부를 파싱
                 valueParser(viewRect);
                 // viewport 설정
@@ -211,7 +214,6 @@ var RedRenderer;
                     mat4.scale(perspectiveMTX, perspectiveMTX, [1 / viewRect[2], -1 / viewRect[3], 1]);
                     mat4.identity(tCamera['matrix'])
                     gl.cullFace(gl.FRONT)
-
                 } else {
                     mat4.perspective(
                         perspectiveMTX,
