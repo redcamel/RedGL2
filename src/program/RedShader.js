@@ -112,6 +112,7 @@ var RedShader;
             checkList.forEach(function (v) {
                 var tData;
                 var tType, tName, tDataType, tArrayNum;
+                var tInputData;
                 v = v.trim()
                 source = source.replace(v + ';', '')
                 tData = v.split(' ')
@@ -145,12 +146,14 @@ var RedShader;
                 }
                 // console.log(tType, tDataType, tName, tArrayNum)
                 if (!parseData[tType]) parseData[tType] = {}, parseData[tType]['list'] = [], parseData[tType]['map'] = {}, parseData[tType]['source'] = '';
-                parseData[tType]['list'].push({
-                    uniformType: tDataType,
+                tInputData = {
                     name: tName,
                     arrayNum: tArrayNum,
-                    systemUniformYn : RedSystemShaderCode.systemUniform[tName] ? true : false
-                });
+                    systemUniformYn: RedSystemShaderCode.systemUniform[tName] ? true : false
+                };
+                if (tType == 'uniform') tInputData['uniformType'] = tDataType
+                if (tType == 'attribute') tInputData['attributeType'] = tDataType
+                parseData[tType]['list'].push(tInputData);
                 parseData[tType]['map'][tName] = v;
                 parseData[tType]['source'] += v + ';\n';
             });
