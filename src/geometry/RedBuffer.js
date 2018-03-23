@@ -65,11 +65,11 @@ var RedBuffer;
         this['webglBuffer'] = tGL.createBuffer()
         tGL.bindBuffer(tBufferType, this['webglBuffer']);
         tGL.bufferData(tBufferType, this.data, this.drawMode);
-        this['updated'] = true
+
         this['_UUID'] = RedGL['makeUUID']();
         console.log(this)
         this.updateData = function (v) {
-            this['updated'] = true
+           
             this.data = v
             tGL.bindBuffer(this.bufferType, this['webglBuffer']);
             tGL.bufferData(this.bufferType, this.data, this.drawMode);

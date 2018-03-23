@@ -108,9 +108,9 @@
             geometry = RedGeometry(testInterleaveBuffer, testIndexBuffer)
 
             var testMesh
-            var i = 500
+            var i = 3000
             while (i--) {
-                var t = (Math.random()>0.5) ? testMaterial : testMaterial2
+                var t = (1500>i) ? testMaterial : testMaterial2
                 testMesh = RedMesh(geometry, t)
                 testMesh.x = Math.random() * 50 - 25
                 testMesh.y = Math.random() * 50 - 25
@@ -132,12 +132,12 @@
                 interleaveData[2] = Math.cos(time / 1000) * 3
                 testInterleaveBuffer.updateData(interleaveData)
                 i = tScene.children.length
-                while (i--) {
-                    testMesh = tScene.children[i]
-                    testMesh.rotationX += 1 / 60
-                    testMesh.rotationY += 1 / 60
-                    testMesh.rotationZ += 1 / 60
-                }
+                // while (i--) {
+                //     testMesh = tScene.children[i]
+                //     testMesh.rotationX += 1 / 60
+                //     testMesh.rotationY += 1 / 60
+                //     testMesh.rotationZ += 1 / 60
+                // }
                 RedView('test2').setLocation(Math.cos(time / 1000) * 100 + 100, Math.sin(time / 1000) *
                     100 + 100)
                 tCamera.x = Math.sin(time / 3000) * 5
