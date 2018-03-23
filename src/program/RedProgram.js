@@ -83,6 +83,10 @@ var RedProgram;
                         var arrayNum, tRenderType, tRenderMethod;
                         arrayNum = v['arrayNum']
                         switch (v['uniformType']) {
+                            case 'sampler2D':
+                                tRenderType = 'sampler2D';
+                                tRenderMethod = 'uniform1f';
+                                break
                             case 'float':
                                 tRenderType = 'float';
                                 tRenderMethod = 'uniform1f';

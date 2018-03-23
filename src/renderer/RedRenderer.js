@@ -173,7 +173,7 @@ var RedRenderer;
             // console.log("worldRender", v['key'], t0)
             self['renderInfo'] = {}
             self['world']['_viewList'].forEach(function (tView) {
-              
+
                 ///////////////////////////////////
                 // view의 위치/크기결정
                 viewRect[0] = tView['_x'];
@@ -184,7 +184,7 @@ var RedRenderer;
                 tCamera['updateMatrix']()
                 //
                 self['renderInfo'][tView.key] = {
-                    orthographic : tCamera['orthographic'],
+                    orthographic: tCamera['orthographic'],
                     x: tView._x,
                     y: tView._y,
                     width: tView._width,
@@ -348,9 +348,14 @@ var RedRenderer;
                         // console.log(tCacheInfo)
                         tRenderType == 'float' ? noChangeUniform ? 0 : gl[tLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
                             : tRenderType == 'int' ? noChangeUniform ? 0 : gl[tLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
-                                : tRenderType == 'vec' ? noChangeUniform ? 0 : gl[tLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
-                                    : tRenderType == 'mat' ? gl[tLocationInfo['renderMethod']](tWebGLUniformLocation, false, tUniformValue)
-                                        : RedGL.throwFunc('RedRenderer : 처리할수없는 타입입니다.', 'tRenderType -', tRenderType)
+                                : tRenderType == 'sampler2D' ? (
+                                    gl.activeTexture(gl.TEXTURE0 + 0),
+                                    gl.bindTexture(gl.TEXTURE_2D, tUniformValue['webglTexture']),
+                                    gl.uniform1i(tWebGLUniformLocation, 0)
+                                )
+                                    : tRenderType == 'vec' ? noChangeUniform ? 0 : gl[tLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
+                                        : tRenderType == 'mat' ? gl[tLocationInfo['renderMethod']](tWebGLUniformLocation, false, tUniformValue)
+                                            : RedGL.throwFunc('RedRenderer : 처리할수없는 타입입니다.', 'tRenderType -', tRenderType)
                     }
                 }
 

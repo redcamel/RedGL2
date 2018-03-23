@@ -1,21 +1,16 @@
 "use strict";
-var RedColorMaterial;
+var RedBitmapMaterial;
 (function () {
     var makeProgram;
-    RedColorMaterial = function (redGL, color) {
+    RedBitmapMaterial = function (redGL, texture) {
         var _color;
-        if (!(this instanceof RedColorMaterial)) return new RedColorMaterial(redGL, color);
+        if (!(this instanceof RedBitmapMaterial)) return new RedBitmapMaterial(redGL, texture);
+        if (!(redGL instanceof RedGL)) throw 'RedBitmapMaterial : RedGL 인스턴스만 허용됩니다.'
+        if (!(texture instanceof RedBitmapTexture)) throw 'RedBitmapMaterial : RedBitmapTexture 인스턴스만 허용됩니다.'
         this['program'] = makeProgram(redGL)
         // 유니폼 프로퍼티
-        this['color'] = new Float32Array(4)
+        this['diffuse'] = texture
         // 일반 프로퍼티
-        this.hexToRGB(color ? color : '#fff')
-        this['alpha'] = 1;
-        this['color'][0] = this.r
-        this['color'][1] = this.g
-        this['color'][2] = this.b
-        this['color'][3] = this.alpha
-        console.log(this['color'] )
 
         this['_UUID'] = RedGL['makeUUID']();
         Object.seal(this)
@@ -27,31 +22,32 @@ var RedColorMaterial;
         vSource =
             `
 attribute vec3 aVertexPosition;
-uniform vec4 uColor;
-varying vec4 vColor;
+attribute vec2 aTexcoord;
+varying vec2 vTexcoord;
 void main(void) {
-    vColor = uColor;
+    vTexcoord = aTexcoord;
     gl_Position = uPMatrix * uCameraMatrix* uMVMatrix * vec4(aVertexPosition, 1.0);
 }
             `
         fSource =
             `
 precision mediump float;
-varying vec4 vColor;
+uniform sampler2D uDiffuse;
+varying vec2 vTexcoord;
 void main(void) {
-    gl_FragColor = vColor;
+    gl_FragColor = texture2D(uDiffuse, vTexcoord);
 }
             `
         return RedProgram(
             redGL,
-            'colorProgram',
-            RedShader(redGL, 'colorVs', RedShader.VERTEX, vSource),
-            RedShader(redGL, 'colorFS', RedShader.FRAGMENT, fSource)
+            'bitmapProgram',
+            RedShader(redGL, 'bitmapVs', RedShader.VERTEX, vSource),
+            RedShader(redGL, 'bitmapFS', RedShader.FRAGMENT, fSource)
         )
 
     }
 
-    RedColorMaterial.prototype = {
+    RedBitmapMaterial.prototype = {
         hexToRGB: function (hex) {
             var c;
             if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
@@ -64,5 +60,5 @@ void main(void) {
             }
         }
     }
-    Object.freeze(RedColorMaterial)
+    Object.freeze(RedBitmapMaterial)
 })();
