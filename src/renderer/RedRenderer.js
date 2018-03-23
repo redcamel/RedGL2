@@ -197,27 +197,48 @@ var RedRenderer;
                 gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
                 // view 에 적용할 카메라 퍼스펙티브를 계산
                 mat4.identity(perspectiveMTX);
-                mat4.perspective(
-                    perspectiveMTX,
-                    tCamera.fov * Math.PI / 180,
-                    viewRect[2] / viewRect[3],
-                    tCamera.nearClipping,
-                    tCamera.farClipping
-                );
+                if (tCamera['orthographic']) {
+                    mat4.ortho(
+                        perspectiveMTX,
+                        -0.5, // left
+                        0.5, // right
+                        -0.5, // bottom
+                        0.5, // top,
+                        - tCamera.farClipping,
+                        tCamera.farClipping
+                    )
+                    mat4.translate(perspectiveMTX, perspectiveMTX, [-0.5, 0.5, 0])
+                    mat4.scale(perspectiveMTX, perspectiveMTX, [1 / viewRect[2], -1 / viewRect[3], 1]);
+                    mat4.identity(tCamera['matrix'])
+                    gl.cullFace(gl.FRONT)
+
+                } else {
+                    mat4.perspective(
+                        perspectiveMTX,
+                        tCamera.fov * Math.PI / 180,
+                        viewRect[2] / viewRect[3],
+                        tCamera.nearClipping,
+                        tCamera.farClipping
+                    );
+                    gl.cullFace(gl.BACK)
+                }
+
                 updateSystemUniform(redGL, time, perspectiveMTX, tCamera['matrix'], viewRect)
                 // 씬렌더 호출
-                self.sceneRender(gl, tView.scene, time, self['renderInfo'][tView.key]);
+                self.sceneRender(gl, tCamera['orthographic'], tView.scene, time, self['renderInfo'][tView.key]);
             })
         }
     })();
     RedRenderer.prototype.sceneRender = (function () {
         var tPrevIndexBuffer_UUID;
-        return function (gl, scene, time, renderResultObj) {
+        return function (gl, orthographic, scene, time, renderResultObj) {
             var tChildren, tMesh;
             var k, i, i2;
             // 캐싱관련            
             var tCacheInterleaveBuffer;
             var tCacheUniformInfo;
+            //
+            var orthographicScale = orthographic ? 0.5 : 1
             //
             var BYTES_PER_ELEMENT;;
             // 
@@ -391,7 +412,7 @@ var RedRenderer;
                     a[4] = a00 * b10 + a10 * b11 + a20 * b12, a[5] = a01 * b10 + a11 * b11 + a21 * b12, a[6] = a02 * b10 + a12 * b11 + a22 * b12,
                     a[8] = a00 * b20 + a10 * b21 + a20 * b22, a[9] = a01 * b20 + a11 * b21 + a21 * b22, a[10] = a02 * b20 + a12 * b21 + a22 * b22,
                     // tMVMatrix scale
-                    aX = tMesh['scaleX'], aY = tMesh['scaleY'], aZ = tMesh['scaleZ'],
+                    aX = tMesh['scaleX'] * orthographicScale, aY = tMesh['scaleY'] * orthographicScale, aZ = tMesh['scaleZ'] * orthographicScale,
                     a[0] = a[0] * aX, a[1] = a[1] * aX, a[2] = a[2] * aX, a[3] = a[3] * aX,
                     a[4] = a[4] * aY, a[5] = a[5] * aY, a[6] = a[6] * aY, a[7] = a[7] * aY,
                     a[8] = a[8] * aZ, a[9] = a[9] * aZ, a[10] = a[10] * aZ, a[11] = a[11] * aZ,

@@ -7,13 +7,15 @@ var RedSystemShaderCode;
             'varying float vTime',
 
             'uniform vec2 uResolution',
+            'varying vec2 vResolution',
 
             'uniform mat4 uMVMatrix',
             'uniform mat4 uPMatrix',
             'uniform mat4 uCameraMatrix'
         ],
         fShareSource: [
-            'varying float vTime'
+            'varying float vTime',
+            'varying vec2 vResolution'
         ],
         systemUniform: {}
     }

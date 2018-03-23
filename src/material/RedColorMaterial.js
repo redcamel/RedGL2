@@ -9,11 +9,8 @@ var RedColorMaterial;
         // 유니폼 프로퍼티
         this['color'] = new Float32Array(4)
         // 일반 프로퍼티
-
         this.hexToRGB(color ? color : '#ff0000')
-
         this['alpha'] = 1;
-
         this['color'][0] = this.r
         this['color'][1] = this.g
         this['color'][2] = this.b

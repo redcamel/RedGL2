@@ -43,22 +43,24 @@
         document.body.appendChild(t)
         RedGL(t, function (v) {
             var tGL;
-            var tWorld, tScene, tCamera, tCamera2, tCamera3;
+            var tWorld, tScene2D, tScene3D, tCamera, tCamera2, tCamera3;
             var tRenderer;
             var self;
             self = this
             tGL = this.gl;
             this.world = tWorld = RedWorld();
-            tScene = RedScene();
+            tScene3D = RedScene();
+            tScene2D = RedScene();
             tCamera = RedCamera();
             tCamera2 = RedCamera();
             tCamera3 = RedCamera();
+            tCamera.orthographic = true
 
             tRenderer = RedRenderer();
-            tWorld.addView(RedView('test', tScene, tCamera));
-            tWorld.addView(RedView('test2', tScene, tCamera2));
-            tWorld.addView(RedView('test3', tScene, tCamera3));
-            tWorld.addView(RedView('test4', tScene, tCamera3));
+            tWorld.addView(RedView('test', tScene2D, tCamera));
+            tWorld.addView(RedView('test2', tScene3D, tCamera2));
+            tWorld.addView(RedView('test3', tScene3D, tCamera3));
+            tWorld.addView(RedView('test4', tScene3D, tCamera3));
             RedView('test2').setSize('25%', '25%')
             RedView('test3').setSize('35%', '25%')
             RedView('test3').setLocation('50%', '50%')
@@ -110,7 +112,7 @@
             var testMesh
             var i = 2500
             while (i--) {
-                var t = (1500>i) ? testMaterial : testMaterial2
+                var t = (1500 > i) ? testMaterial : testMaterial2
                 testMesh = RedMesh(geometry, t)
                 testMesh.x = Math.random() * 50 - 25
                 testMesh.y = Math.random() * 50 - 25
@@ -118,7 +120,20 @@
                 testMesh.rotationX = Math.random() * 360
                 testMesh.rotationY = Math.random() * 360
                 testMesh.rotationZ = Math.random() * 360
-                tScene.addChild(testMesh)
+                tScene3D.addChild(testMesh)
+
+            }
+            i = 200
+            while (i--) {
+                var t = (100 > i) ? testMaterial : testMaterial2
+                testMesh = RedMesh(geometry, t)
+                testMesh.x = Math.random() * 1280
+                testMesh.y = Math.random() * 768
+                testMesh.scaleX = testMesh.scaleY = 50
+                // testMesh.rotationX = Math.random() * 360
+                // testMesh.rotationY = Math.random() * 360
+                testMesh.rotationZ = Math.random() * 360
+                tScene2D.addChild(testMesh)
             }
 
             var renderResult;
@@ -130,20 +145,23 @@
                 testMaterial['floatTest'] = time
                 interleaveData[0] = Math.sin(time / 1000) * 3
                 interleaveData[2] = Math.cos(time / 1000) * 3
-                testInterleaveBuffer.updateData(interleaveData)
-                i = tScene.children.length
-                // while (i--) {
-                //     testMesh = tScene.children[i]
-                //     testMesh.rotationX += 1 / 60
-                //     testMesh.rotationY += 1 / 60
-                //     testMesh.rotationZ += 1 / 60
-                // }
+                // testInterleaveBuffer.updateData(interleaveData)
+                i = tScene3D.children.length
+                while (i--) {
+                    testMesh = tScene3D.children[i]
+                    testMesh.rotationX += 1 / 20
+                    testMesh.rotationY += 1 / 20
+                    testMesh.rotationZ += 1 / 20
+                }
+                i = tScene2D.children.length
+                while (i--) {
+                    testMesh = tScene2D.children[i]
+                    
+                    testMesh.rotationZ += 1 / 20
+                }
                 RedView('test2').setLocation(Math.cos(time / 1000) * 100 + 100, Math.sin(time / 1000) *
                     100 + 100)
-                tCamera.x = Math.sin(time / 3000) * 5
-                tCamera.y = Math.cos(time / 3000) * 5
-                tCamera.z = Math.cos(time / 1500) * 5
-                tCamera.lookAt(0, 0, 0)
+             
 
                 tCamera2.x = Math.sin(time / 3000) * 15
                 tCamera2.y = Math.cos(time / 3000) * 15
@@ -171,7 +189,7 @@
 
             })
 
-            console.log(tScene)
+            console.log(tScene3D)
         })
     </script>
 </body>
