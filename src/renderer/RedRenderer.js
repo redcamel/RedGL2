@@ -89,10 +89,7 @@ var RedRenderer;
     }
     :DOC*/
     // 캐시관련
-    var tCacheInterleaveBuffer, prevIndexBuffer_UUID;
     var prevProgram_UUID;
-    var tCacheUniformInfo;
-
     RedRenderer.prototype.worldRender = (function () {
         var worldRect, viewRect;
         var tCamera;
@@ -100,7 +97,6 @@ var RedRenderer;
         var self;
         var valueParser;
         var updateSystemUniform;
-        var updatedSystemUniformYn;
         // 숫자면 숫자로 %면 월드대비 수치로 변경해줌
         valueParser = function (rect) {
             rect.forEach(function (v, index) {
@@ -112,29 +108,61 @@ var RedRenderer;
             })
             return rect;
         }
-        updateSystemUniform = function (redGL, updatedSystemUniformYn, time, perspectiveMTX, cameraMTX, viewRect) {
+        updateSystemUniform = (function () {
             var tProgram;
-            var tUniformGroup;
+            var tSystemUniformGroup;
             var gl;
-            gl = redGL.gl;
-            for (var k in redGL['_datas']['RedProgram']) {
-                tProgram = redGL['_datas']['RedProgram'][k];
-                gl.useProgram(tProgram['webglProgram']);
-                tUniformGroup = tProgram['systemUniformLocation']
-                if (!updatedSystemUniformYn) {
-                    if (tUniformGroup['uTime']['location']) gl.uniform1f(tUniformGroup['uTime']['location'], time)
-                    if (tUniformGroup['uResolution']['location']) gl.uniform2fv(tUniformGroup['uResolution']['location'], [viewRect[2], viewRect[3]])
+            var tLocationInfo, tLocation, tUUID, tViewRect;
+            var cacheSystemUniform;
+            cacheSystemUniform = []
+            return function (redGL, time, perspectiveMTX, cameraMTX, viewRect) {
+                gl = redGL.gl;
+                for (var k in redGL['_datas']['RedProgram']) {
+                    tProgram = redGL['_datas']['RedProgram'][k];
+                    prevProgram_UUID == tProgram['_UUID'] ? 0 : gl.useProgram(tProgram['webglProgram']);
+                    prevProgram_UUID = tProgram['_UUID'];
+                    //
+                    tSystemUniformGroup = tProgram['systemUniformLocation'];
+                    //
+                    tLocationInfo = tSystemUniformGroup['uTime'];
+                    tLocation = tLocationInfo['location'];
+                    tUUID = tLocationInfo['_UUID']
+                    if (tLocation && cacheSystemUniform[tUUID] != time) {
+                        gl.uniform1f(tLocation, time);
+                        cacheSystemUniform[tUUID] = time;
+                    }
+                    //
+                    tLocationInfo = tSystemUniformGroup['uResolution'];
+                    tLocation = tLocationInfo['location'];
+                    tUUID = tLocationInfo['_UUID'];
+                    tViewRect = [viewRect[2], viewRect[3]]
+                    if (tLocation && cacheSystemUniform[tUUID] != tViewRect.toString()) {
+                        gl.uniform2fv(tLocation, tViewRect);
+                        cacheSystemUniform[tUUID] = tViewRect.toString()
+                    }
+                    //
+                    tLocationInfo = tSystemUniformGroup['uCameraMatrix'];
+                    tLocation = tLocationInfo['location'];
+                    tUUID = tLocationInfo['_UUID'];
+                    if (tLocation && cacheSystemUniform[tUUID] != cameraMTX.toString()) {
+                        gl.uniformMatrix4fv(tLocation, false, cameraMTX);
+                        cacheSystemUniform[tUUID] = cameraMTX.toString()
+                    }
+                    //
+                    tLocationInfo = tSystemUniformGroup['uPMatrix'];
+                    tLocation = tLocationInfo['location'];
+                    tUUID = tLocationInfo['_UUID'];
+                    if (tLocation && cacheSystemUniform[tUUID] != perspectiveMTX.toString()) {
+                        gl.uniformMatrix4fv(tLocation, false, perspectiveMTX);
+                        cacheSystemUniform[tUUID] = perspectiveMTX.toString()
+                    }
                 }
-                if (tUniformGroup['uCameraMatrix']['location']) gl.uniformMatrix4fv(tUniformGroup['uCameraMatrix']['location'], false, cameraMTX)
-                if (tUniformGroup['uPMatrix']['location']) gl.uniformMatrix4fv(tUniformGroup['uPMatrix']['location'], false, perspectiveMTX)
-                prevProgram_UUID = tProgram['_UUID']
             }
-        }
+        })();
         viewRect = [];
         perspectiveMTX = mat4.create();
         return function (redGL, time) {
             var gl;
-            updatedSystemUniformYn = false
             gl = redGL.gl;
             self = this;
             // 캔버스 사이즈 적용
@@ -176,25 +204,26 @@ var RedRenderer;
                     tCamera.nearClipping,
                     tCamera.farClipping
                 );
-                updateSystemUniform(redGL, updatedSystemUniformYn, time, perspectiveMTX, tCamera['matrix'], viewRect)
-                updatedSystemUniformYn = true
+                updateSystemUniform(redGL, time, perspectiveMTX, tCamera['matrix'], viewRect)
                 // 씬렌더 호출
                 self.sceneRender(gl, tView.scene, time, self['renderInfo'][tView.key]);
             })
         }
     })();
     RedRenderer.prototype.sceneRender = (function () {
-
+        var tPrevIndexBuffer_UUID;
         return function (gl, scene, time, renderResultObj) {
             var tChildren, tMesh;
             var k, i, i2;
-            //
-
+            // 캐싱관련            
+            var tCacheInterleaveBuffer;
+            var tCacheUniformInfo;
             //
             var BYTES_PER_ELEMENT;;
             // 
             var tMesh;
-            var tGeometry, tMaterial;
+            var tGeometry;
+            var tMaterial;
             var tInterleaveInfo;
             var tAttrGroup, tUniformGroup, tSystemUniformGroup;
             var tAttributeUpdateInfo
@@ -277,14 +306,12 @@ var RedRenderer;
                         }
                     }
                 }
-                tCacheInterleaveBuffer[prevProgram_UUID] = tUUID
+                tCacheInterleaveBuffer[prevProgram_UUID] = tUUID;
+
                 /////////////////////////////////////////////////////////////////////////
                 /////////////////////////////////////////////////////////////////////////
                 // 유니폼 업데이트
-                // console.log(tUniformGroup)
                 i2 = tUniformGroup.length
-
-                // console.log(tCacheInfo)
                 while (i2--) {
                     tLocationInfo = tUniformGroup[i2];
                     tWebGLUniformLocation = tLocationInfo['location'];
@@ -379,14 +406,17 @@ var RedRenderer;
                 /////////////////////////////////////////////////////////////////////////
                 /////////////////////////////////////////////////////////////////////////
                 // 드로우
-                if (tIndexBufferInfo && prevIndexBuffer_UUID != tIndexBufferInfo['_UUID']) {
-                    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, tIndexBufferInfo['webglBuffer'])
+                if (tIndexBufferInfo) {
+                    tPrevIndexBuffer_UUID == tIndexBufferInfo['_UUID'] ? 0 : gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, tIndexBufferInfo['webglBuffer'])
                     //enum mode, long count, enum type, long offset
-                    gl.drawElements(gl.TRIANGLES, tIndexBufferInfo['pointNum'], tIndexBufferInfo['glArrayType'], 0)
-                    prevIndexBuffer_UUID = tIndexBufferInfo['_UUID']
-                } else {
-                    gl.drawArrays(gl.TRIANGLES, 0, tInterleaveBufferInfo['pointNum'])
-                }
+                    gl.drawElements(
+                        gl.TRIANGLES,
+                        tIndexBufferInfo['pointNum'],
+                        tIndexBufferInfo['glArrayType'],
+                        0
+                    );
+                    tPrevIndexBuffer_UUID = tIndexBufferInfo['_UUID'];
+                } else gl.drawArrays(gl.TRIANGLES, 0, tInterleaveBufferInfo['pointNum'])
                 /////////////////////////////////////////////////////////////////////////
                 /////////////////////////////////////////////////////////////////////////
 
