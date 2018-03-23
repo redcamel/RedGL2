@@ -178,11 +178,12 @@
                     // console.log(tRenderer['renderInfo'][k])
                     renderResult.innerHTML +=
                         'RedView : key - ' + tRenderer['renderInfo'][k]['key']
-                        + ' : call - ' + tRenderer['renderInfo'][k]['call']
-                        + ' : width - ' + tRenderer['renderInfo'][k]['width']
-                        + ' : height - ' + tRenderer['renderInfo'][k]['height']
-                        + ' : x - ' + tRenderer['renderInfo'][k]['x']
-                        + ' : y - ' + tRenderer['renderInfo'][k]['y']
+                        + ' / orthographic - ' + tRenderer['renderInfo'][k]['orthographic']
+                        + ' / call - ' + tRenderer['renderInfo'][k]['call']
+                        + ' / width - ' + tRenderer['renderInfo'][k]['width']
+                        + ' / height - ' + tRenderer['renderInfo'][k]['height']
+                        + ' / x - ' + tRenderer['renderInfo'][k]['x']
+                        + ' / y - ' + tRenderer['renderInfo'][k]['y']
                         + '<br>'
                 }
                 renderResult.innerHTML += 'renderScale : ' + self.renderScale
