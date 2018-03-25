@@ -23,6 +23,7 @@
     <script src="src/geometry/RedGeometry.js"></script>
     <script src="src/material/RedMaterial.js"></script>
     <script src="src/material/RedColorMaterial.js"></script>
+    <script src="src/material/RedBitmapMaterial.js"></script>
 
     <script src="src/object3D/RedMesh.js"></script>
 
@@ -30,6 +31,9 @@
     <script src="src/program/RedSystemShaderCode.js"></script>
     <script src="src/program/RedShader.js"></script>
     <script src="src/renderer/RedRenderer.js"></script>
+
+    <script src="src/resources/RedBitmapTexture.js"></script>
+
     <script src="src/RedView.js"></script>
     <script src="src/RedWorld.js"></script>
     <script src="src/RedScene.js"></script>
@@ -68,19 +72,23 @@
             RedView('test4').setLocation('0%', '75%')
 
 
-            var testMaterial, testMaterial2
-            testMaterial = RedColorMaterial(this, '#555')
-            testMaterial2 = RedMaterial(this)
+
+
+            var testMaterial, testMaterial2, testMaterial3
+            testMaterial = RedMaterial(this)
+            testMaterial2 = RedColorMaterial(this, '#333')
+            testMaterial3 = RedBitmapMaterial(this, RedBitmapTexture(this, 'crate.png'))
 
 
             var interleaveData
             interleaveData = new Float32Array([
-                0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 1.0,
-                -1.0, -1.0, 0.0, 0.0, 1.0, 0.0, 1.0,
-                1.0, -1.0, 0.0, 0.0, 0.0, 1.0, 1.0
+                -1.0, -1.0, 0.0,  0.0, 1.0,    0.0, 1.0, 1.0, 1.0,
+                1.0, -1.0, 0.0,   1.0, 1.0,    1.0, 0.0, 1.0, 1.0,
+                1.0, 1.0, 0.0,    1.0, 0.0,    1.0, 1.0, 0.0, 1.0,
+                -1.0, 1.0, 0.0,   0.0, 0.0,    1.0, 1.0, 1.0, 1.0
             ]);
             var indexData
-            indexData = new Uint16Array([0, 1, 2])
+            indexData = new Uint16Array([0, 1, 2, 0, 2, 3])
 
             var testInterleaveBuffer
             var testIndexBuffer
@@ -91,6 +99,11 @@
                 RedBuffer.ARRAY_BUFFER, [{
                     attributeKey: 'aVertexPosition',
                     size: 3,
+                    normalize: false
+                },
+                {
+                    attributeKey: 'aTexcoord',
+                    size: 2,
                     normalize: false
                 },
                 {
@@ -110,9 +123,13 @@
             geometry = RedGeometry(testInterleaveBuffer, testIndexBuffer)
 
             var testMesh
-            var i = 2500
+            var i = 3000;
+            var len = i
             while (i--) {
-                var t = (1500 > i) ? testMaterial : testMaterial2
+                var t
+                if( i > len / 3 *2) t = testMaterial
+                else if( i > len / 3) t = testMaterial2
+                else t = testMaterial3
                 testMesh = RedMesh(geometry, t)
                 testMesh.x = Math.random() * 50 - 25
                 testMesh.y = Math.random() * 50 - 25
@@ -123,9 +140,13 @@
                 tScene3D.addChild(testMesh)
 
             }
-            i = 200
+            i = 1000
+            len = i
             while (i--) {
-                var t = (100 > i) ? testMaterial : testMaterial2
+                var t
+                if( i > len / 3 *2) t = testMaterial
+                else if( i > len / 3) t = testMaterial2
+                else t = testMaterial3
                 testMesh = RedMesh(geometry, t)
                 testMesh.x = Math.random() * 1280
                 testMesh.y = Math.random() * 768
@@ -156,12 +177,12 @@
                 i = tScene2D.children.length
                 while (i--) {
                     testMesh = tScene2D.children[i]
-                    
+
                     testMesh.rotationZ += 1 / 20
                 }
                 RedView('test2').setLocation(Math.cos(time / 1000) * 100 + 100, Math.sin(time / 1000) *
                     100 + 100)
-             
+
 
                 tCamera2.x = Math.sin(time / 3000) * 15
                 tCamera2.y = Math.cos(time / 3000) * 15

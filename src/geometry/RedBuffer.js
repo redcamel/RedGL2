@@ -32,10 +32,10 @@ var RedBuffer;
                 RedGL.throwFunc('RedBuffer : bufferType - 지원하지 않는 버퍼타입입니다. ')
         }
     }
-    RedBuffer = function (redGL, key, data, bufferType, interleaveInfo) {
+    RedBuffer = function (redGL, key, data, bufferType, interleaveDefineInfo) {
         var t0;
         // bufferType, key, shaderPointerKey, typedArrayData, pointSize, pointNum, glArrayType, normalize, stride, offset, drawMode
-        if (!(this instanceof RedBuffer)) return new RedBuffer(redGL, key, data, bufferType, interleaveInfo)
+        if (!(this instanceof RedBuffer)) return new RedBuffer(redGL, key, data, bufferType, interleaveDefineInfo)
         if (!(redGL instanceof RedGL)) RedGL.throwFunc('RedBuffer : RedGL 인스턴스만 허용됩니다.')
         if (typeof bufferType != 'string') RedGL.throwFunc('RedBuffer : bufferType - 문자열만 허용됩니다.')
         if (typeof key != 'string') RedGL.throwFunc('RedBuffer : key - 문자열만 허용됩니다.')
@@ -49,16 +49,20 @@ var RedBuffer;
         this.glArrayType = checkDataType(bufferType, data);
         this.bufferType = tBufferType;
         this.drawMode = tGL.STATIC_DRAW
-        if (interleaveInfo) {
-            this.interleaveInfo = interleaveInfo
-
-            for (var k in interleaveInfo) {
-                interleaveInfo[k]['offset'] = t0
-                t0 += interleaveInfo[k]['size']
+        if (interleaveDefineInfo) {
+            this['interleaveDefineInfo'] = interleaveDefineInfo
+            for (var k in interleaveDefineInfo) {
+                interleaveDefineInfo[k]['offset'] = t0
+                t0 += interleaveDefineInfo[k]['size']
             }
+            interleaveDefineInfo.forEach(function(v){
+                interleaveDefineInfo[v['attributeKey']] = v
+            })
+
             this.stride = t0;
             this.pointNum = data.length / t0;
         } else {
+            //TODO: 엘리먼트 버퍼일때만 적용되도록 
             this.pointNum = data.length;
         }
 
