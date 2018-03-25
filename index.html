@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>기초테스트</title>
+    <title>다중뷰</title>
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
@@ -74,10 +74,15 @@
 
 
 
-            var testMaterial, testMaterial2, testMaterial3
+            var testMaterial, testMaterial2, testMaterial3, testMaterial4, testMaterial5, testMaterial6, testMaterial7, testMateria8
             testMaterial = RedMaterial(this)
             testMaterial2 = RedColorMaterial(this, '#333')
-            testMaterial3 = RedBitmapMaterial(this, RedBitmapTexture(this, 'crate.png'))
+            testMaterial3 = RedBitmapMaterial(this, RedBitmapTexture(this, 'asset/crate.png'))
+            testMaterial4 = RedBitmapMaterial(this, RedBitmapTexture(this, 'asset/draft1.png'))
+            testMaterial5 = RedBitmapMaterial(this, RedBitmapTexture(this, 'asset/draft2.png'))
+            testMaterial6 = RedBitmapMaterial(this, RedBitmapTexture(this, 'asset/draft3.png'))
+            testMaterial7 = RedBitmapMaterial(this, RedBitmapTexture(this, 'asset/draft4.png'))
+            testMaterial8 = RedBitmapMaterial(this, RedBitmapTexture(this, 'asset/draft5.png'))
 
 
             var interleaveData
@@ -144,9 +149,14 @@
             len = i
             while (i--) {
                 var t
-                if( i > len / 3 *2) t = testMaterial
-                else if( i > len / 3) t = testMaterial2
-                else t = testMaterial3
+                if( i > len / 8 *7) t = testMaterial
+                else if( i > len / 8 *6) t = testMaterial2
+                else if( i > len / 8 *5) t = testMaterial3
+                else if( i > len / 8 *4) t = testMaterial4
+                else if( i > len / 8 *3) t = testMaterial5
+                else if( i > len / 8 *2) t = testMaterial6
+                else if( i > len / 8) t = testMaterial7
+                else t = testMaterial8
                 testMesh = RedMesh(geometry, t)
                 testMesh.x = Math.random() * 1280
                 testMesh.y = Math.random() * 768

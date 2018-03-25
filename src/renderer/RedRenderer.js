@@ -20,6 +20,7 @@ var RedRenderer;
         this['renderInfo'] = {}
         this['cacheUniformInfo'] = []
         this['cacheAttrInfo'] = []
+        this['cacheTextureInfo'] = []
         Object.seal(this)
         console.log(this)
     };
@@ -234,13 +235,14 @@ var RedRenderer;
     RedRenderer.prototype.sceneRender = (function () {
         var tPrevIndexBuffer_UUID;
         var tPrevInterleaveBuffer_UUID;
-
+        var tTextureIndex=1;
         return function (gl, orthographic, scene, time, renderResultObj) {
             var tChildren, tMesh;
             var k, i, i2;
             // 캐싱관련            
             var tCacheInterleaveBuffer;
             var tCacheUniformInfo;
+            var tCacheTextureInfo;
             //
             var orthographicScale = orthographic ? 0.5 : 1
             //
@@ -272,6 +274,7 @@ var RedRenderer;
             //////////////// 변수값 할당 ////////////////
             tCacheUniformInfo = this['cacheUniformInfo'];
             tCacheInterleaveBuffer = this['cacheAttrInfo'];
+            tCacheTextureInfo = this['cacheTextureInfo'];
             BYTES_PER_ELEMENT = Float32Array.BYTES_PER_ELEMENT;
             CPI = 3.141592653589793,
                 CPI2 = 6.283185307179586,
@@ -321,9 +324,7 @@ var RedRenderer;
                     if (tLocationInfo) {
                         tWebGLAttrLocation = tLocationInfo['location'] // 어트리뷰트 로케이션도 알아낸다.
                         // 캐싱된 attribute정보과 현재 대상정보가 같다면 무시
-                        if (tCacheInterleaveBuffer[tWebGLAttrLocation] == tLocationInfo['_UUID']) {
-
-                        } else {
+                        if (tCacheInterleaveBuffer[tWebGLAttrLocation] != tLocationInfo['_UUID']) {
                             // 실제 버퍼 바인딩하고 //TODO: 이놈은 검증해야함
                             tPrevInterleaveBuffer_UUID == tUUID ? 0 : gl.bindBuffer(gl.ARRAY_BUFFER, tInterleaveBuffer['webglBuffer'])
                             tPrevInterleaveBuffer_UUID = tUUID
@@ -340,7 +341,6 @@ var RedRenderer;
                             // 상태 캐싱
                             tCacheInterleaveBuffer[tWebGLAttrLocation] = tLocationInfo['_UUID']
                         }
-
                     }
                 }
 
@@ -360,16 +360,29 @@ var RedRenderer;
                         noChangeUniform = tCacheUniformInfo[tUUID] == tUniformValue;
                         // if (!noChange) console.log('변경되었다', tLocationInfo['name'], tCacheInfo[tUUID], tUniformValue)
                         // console.log(tCacheInfo)
-                        tRenderType == 'float' ? noChangeUniform ? 0 : gl[tLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
-                            : tRenderType == 'int' ? noChangeUniform ? 0 : gl[tLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
-                                : tRenderType == 'sampler2D' ? (
-                                    gl.activeTexture(gl.TEXTURE0 + 0),
-                                    gl.bindTexture(gl.TEXTURE_2D, tUniformValue['webglTexture']),
-                                    gl.uniform1i(tWebGLUniformLocation, 0)
-                                )
+                        if (tRenderType == 'sampler2D') {
+                           
+                            //TODO: 자 이제 이인덱스를 어떻게 해결하냐가 문젠데
+                            // tTextureIndex : 0 번은 생성용으로 쓴다.                            
+                            if (tCacheTextureInfo[tTextureIndex] == tUniformValue['_UUID']) {
+                            } else {
+                                gl.activeTexture(gl.TEXTURE0 + tTextureIndex)
+                                gl.bindTexture(gl.TEXTURE_2D, tUniformValue['webglTexture'])
+                                gl.uniform1i(tWebGLUniformLocation, tTextureIndex)
+                                if(tCacheTextureInfo[tTextureIndex]) tTextureIndex++
+                                if(tTextureIndex==8) tTextureIndex = 1
+                                tCacheTextureInfo[tTextureIndex] = tUniformValue['_UUID']                                                                
+                                // console.log(tCacheTextureInfo)
+                            }
+
+                        } else {
+                            tRenderType == 'float' ? noChangeUniform ? 0 : gl[tLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
+                                : tRenderType == 'int' ? noChangeUniform ? 0 : gl[tLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
                                     : tRenderType == 'vec' ? noChangeUniform ? 0 : gl[tLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
                                         : tRenderType == 'mat' ? gl[tLocationInfo['renderMethod']](tWebGLUniformLocation, false, tUniformValue)
                                             : RedGL.throwFunc('RedRenderer : 처리할수없는 타입입니다.', 'tRenderType -', tRenderType)
+                        }
+
                     }
                 }
 
