@@ -233,6 +233,8 @@ var RedRenderer;
     })();
     RedRenderer.prototype.sceneRender = (function () {
         var tPrevIndexBuffer_UUID;
+        var tPrevInterleaveBuffer_UUID;
+
         return function (gl, orthographic, scene, time, renderResultObj) {
             var tChildren, tMesh;
             var k, i, i2;
@@ -247,11 +249,11 @@ var RedRenderer;
             var tMesh;
             var tGeometry;
             var tMaterial;
-            var tInterleaveInfo;
+            var tInterleaveGroupUnit;
             var tAttrGroup, tUniformGroup, tSystemUniformGroup;
-            var tAttributeUpdateInfo
+            var tInterleaveDefineUnit
             var tLocationInfo, tWebGLUniformLocation, tWebGLAttrLocation;
-            var tInterleaveBufferInfo, tIndexBufferInfo;
+            var tInterleaveBuffer, tIndexBufferInfo;
             var tUniformValue
             var tMVMatrix;
             var tRenderType;
@@ -293,43 +295,55 @@ var RedRenderer;
                 tUniformGroup = tMaterial['program']['uniformLocation'];
                 tSystemUniformGroup = tMaterial['program']['systemUniformLocation'];
                 // 버퍼를 찾는다.
-                tInterleaveBufferInfo = tGeometry['interleaveBuffer'] // 인터리브 버퍼
+                tInterleaveBuffer = tGeometry['interleaveBuffer'] // 인터리브 버퍼
                 tIndexBufferInfo = tGeometry['indexBuffer'] // 엘리먼트 버퍼
 
                 /////////////////////////////////////////////////////////////////////////
                 /////////////////////////////////////////////////////////////////////////
                 // 어트리뷰트 인터리브 정보를 가져온다. 
-                tInterleaveInfo = tInterleaveBufferInfo['interleaveInfo']
-                // console.log(tInterleaveInfo)
+                tInterleaveGroupUnit = tInterleaveBuffer['interleaveDefineInfo']
+                // console.log(tInterleaveGroupInfo)
                 // console.log(tAttrGroup)
-                i2 = tInterleaveInfo.length
+
                 // 버퍼의 UUID
-                tUUID = tInterleaveBufferInfo['_UUID']
+                tUUID = tInterleaveBuffer['_UUID']
+                // 바인딩 필요여부 판단
+
+                i2 = tAttrGroup.length
                 while (i2--) {
-                    // 인터리브 정의 보를 얻는다.
-                    tAttributeUpdateInfo = tInterleaveInfo[i2];
-                    // 실제 어드리뷰트의 로케이션 정보를 얻어온다.
-                    tLocationInfo = tAttrGroup[tAttributeUpdateInfo['attributeKey']];
+                    // console.log(tAttrGroup[i2])
+                    // 대상 로케이션 정보를 구하고
+                    tLocationInfo = tAttrGroup[i2]
+                    // 인터리브 구성정보를 가져온다.
+                    tInterleaveDefineUnit = tInterleaveGroupUnit[tLocationInfo['name']]
+                    // console.log(tLocationInfo, tInterleaveDefineInfo)
+                    // 어트리뷰트 정보매칭이 안되는 녀석은 무시한다 
                     if (tLocationInfo) {
-                        tWebGLAttrLocation = tLocationInfo['location'];
-                        // 활성화 된적이 없으면 활성화 시킨다. 
-                        tLocationInfo['enabled'] ? 0 : (gl.enableVertexAttribArray(tWebGLAttrLocation), tLocationInfo['enabled'] = true);
-                        // 어트리뷰트 데이터 업데이트는 필요시 버퍼를 통해 직접한다.
-                        // 즉 실제로 버퍼는 한번 업데이트 해놓으면 GPU상에 온전하게 보관된다.
-                        if (tCacheInterleaveBuffer[prevProgram_UUID] != tUUID) {
-                            gl.bindBuffer(gl.ARRAY_BUFFER, tInterleaveBufferInfo['webglBuffer'])
-                            gl.vertexAttribPointer(
-                                tWebGLAttrLocation,
-                                tAttributeUpdateInfo['size'],
-                                tInterleaveBufferInfo['glArrayType'],
-                                tAttributeUpdateInfo['normalize'],
-                                tInterleaveBufferInfo['stride'] * BYTES_PER_ELEMENT, //stride
-                                tAttributeUpdateInfo['offset'] * BYTES_PER_ELEMENT //offset
-                            )
+                        tWebGLAttrLocation = tLocationInfo['location'] // 어트리뷰트 로케이션도 알아낸다.
+                        // 캐싱된 attribute정보과 현재 대상정보가 같다면 무시
+                        if (tCacheInterleaveBuffer[tWebGLAttrLocation] == tLocationInfo['_UUID']) {
+
+                        } else {
+                            // 실제 버퍼 바인딩하고 //TODO: 이놈은 검증해야함
+                            tPrevInterleaveBuffer_UUID == tUUID ? 0 : gl.bindBuffer(gl.ARRAY_BUFFER, tInterleaveBuffer['webglBuffer'])
+                            tPrevInterleaveBuffer_UUID = tUUID
+                            // 해당로케이션을 활성화된적이없으면 활성화 시킨다
+                            tLocationInfo['enabled'] ? 0 : (gl.enableVertexAttribArray(tWebGLAttrLocation), tLocationInfo['enabled'] = true),
+                                gl.vertexAttribPointer(
+                                    tWebGLAttrLocation,
+                                    tInterleaveDefineUnit['size'],
+                                    tInterleaveBuffer['glArrayType'],
+                                    tInterleaveDefineUnit['normalize'],
+                                    tInterleaveBuffer['stride'] * BYTES_PER_ELEMENT, //stride
+                                    tInterleaveDefineUnit['offset'] * BYTES_PER_ELEMENT //offset
+                                )
+                            // 상태 캐싱
+                            tCacheInterleaveBuffer[tWebGLAttrLocation] = tLocationInfo['_UUID']
                         }
+
                     }
                 }
-                tCacheInterleaveBuffer[prevProgram_UUID] = tUUID;
+
 
                 /////////////////////////////////////////////////////////////////////////
                 /////////////////////////////////////////////////////////////////////////
@@ -444,7 +458,7 @@ var RedRenderer;
                         0
                     );
                     tPrevIndexBuffer_UUID = tIndexBufferInfo['_UUID'];
-                } else gl.drawArrays(gl.TRIANGLES, 0, tInterleaveBufferInfo['pointNum'])
+                } else gl.drawArrays(gl.TRIANGLES, 0, tInterleaveBuffer['pointNum'])
                 /////////////////////////////////////////////////////////////////////////
                 /////////////////////////////////////////////////////////////////////////
 

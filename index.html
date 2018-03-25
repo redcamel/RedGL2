@@ -76,21 +76,16 @@
 
             var testMaterial, testMaterial2, testMaterial3
             testMaterial = RedMaterial(this)
-            testMaterial2 = RedColorMaterial(this, '#555555')
+            testMaterial2 = RedColorMaterial(this, '#333')
             testMaterial3 = RedBitmapMaterial(this, RedBitmapTexture(this, 'crate.png'))
 
 
             var interleaveData
             interleaveData = new Float32Array([
-                -1.0, -1.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0,
-                1.0, -1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0,
-                1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0,
-                -1.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 1.0
-
-
-
-
-
+                -1.0, -1.0, 0.0,  0.0, 1.0,    0.0, 1.0, 1.0, 1.0,
+                1.0, -1.0, 0.0,   1.0, 1.0,    1.0, 0.0, 1.0, 1.0,
+                1.0, 1.0, 0.0,    1.0, 0.0,    1.0, 1.0, 0.0, 1.0,
+                -1.0, 1.0, 0.0,   0.0, 0.0,    1.0, 1.0, 1.0, 1.0
             ]);
             var indexData
             indexData = new Uint16Array([0, 1, 2, 0, 2, 3])
@@ -128,10 +123,13 @@
             geometry = RedGeometry(testInterleaveBuffer, testIndexBuffer)
 
             var testMesh
-            var i = 100;
+            var i = 3000;
             var len = i
             while (i--) {
-                var t = i > len / 3 ? testMaterial3 : i > len / 3 * 2 ? testMaterial2 : testMaterial
+                var t
+                if( i > len / 3 *2) t = testMaterial
+                else if( i > len / 3) t = testMaterial2
+                else t = testMaterial3
                 testMesh = RedMesh(geometry, t)
                 testMesh.x = Math.random() * 50 - 25
                 testMesh.y = Math.random() * 50 - 25
@@ -145,7 +143,10 @@
             i = 1000
             len = i
             while (i--) {
-                var t = i > len / 3 ? testMaterial3 : i > len / 3 * 2 ? testMaterial2 : testMaterial
+                var t
+                if( i > len / 3 *2) t = testMaterial
+                else if( i > len / 3) t = testMaterial2
+                else t = testMaterial3
                 testMesh = RedMesh(geometry, t)
                 testMesh.x = Math.random() * 1280
                 testMesh.y = Math.random() * 768
