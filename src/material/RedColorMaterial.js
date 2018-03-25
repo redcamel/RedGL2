@@ -2,14 +2,14 @@
 var RedColorMaterial;
 (function () {
     var makeProgram;
-    RedColorMaterial = function (redGL, color) {
-        var _color;
-        if (!(this instanceof RedColorMaterial)) return new RedColorMaterial(redGL, color);
+    RedColorMaterial = function (redGL, color, alpha) {
+
+        if (!(this instanceof RedColorMaterial)) return new RedColorMaterial(redGL, color, alpha);
         this['program'] = makeProgram(redGL)
         // 유니폼 프로퍼티
         this['color'] = new Float32Array(4)
         // 일반 프로퍼티
-        this.setColor(color)
+        this.setColor(color, 0.5)
         console.log(this['color'])
 
         this['_UUID'] = RedGL['makeUUID']();
@@ -47,14 +47,17 @@ void main(void) {
     }
 
     RedColorMaterial.prototype = {
-        setColor: function (color) {
-            color = color ? color : '#ff2211'
-            RedGLUtil.hexToRGB.call(this,color)
-            this['color'][0] = this.r
-            this['color'][1] = this.g
-            this['color'][2] = this.b
-            this['color'][3] = this.alpha
-        }
+        setColor: (function(){
+            var t0;
+            return function (color, alpha) {
+                color = color ? color : '#ff2211'
+                t0 = RedGLUtil.hexToRGB.call(this, color, alpha);
+                this['color'][0] = t0[0]
+                this['color'][1] = t0[1]
+                this['color'][2] = t0[2]
+                this['color'][3] = t0[3]
+            }
+        })()
     }
     Object.freeze(RedColorMaterial)
 })();
