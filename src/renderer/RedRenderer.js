@@ -243,7 +243,7 @@ var RedRenderer;
             var tCacheUniformInfo;
             var tCacheTextureInfo;
             // 오쏘고날 스케일 비율
-            var orthographicScale = orthographic ? -0.5 : 1
+            var orthographicScale = orthographic ? 0.5 : 1
             //
             var BYTES_PER_ELEMENT;;
             // 

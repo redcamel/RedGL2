@@ -58,6 +58,14 @@ var RedGL;
         gl.enable(gl.CULL_FACE);
         gl.cullFace(gl.BACK)
         gl.enable(gl.SCISSOR_TEST);
+         // 블렌드모드설정
+         gl.enable(gl.BLEND);
+         gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+        // 픽셀 블렌딩 결정
+        gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+        // 픽셀 플립 기본설정
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+       
     }
     /**DOC:
 		{

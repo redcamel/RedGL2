@@ -47,9 +47,9 @@ void main(void) {
     }
 
     RedColorMaterial.prototype = {
-        setColor: function (color) {
+        setColor: function (color, alpha) {
             color = color ? color : '#ff2211'
-            RedGLUtil.hexToRGB.call(this,color)
+            RedGLUtil.hexToRGB.call(this, color, alpha)
             this['color'][0] = this.r
             this['color'][1] = this.g
             this['color'][2] = this.b
