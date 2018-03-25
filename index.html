@@ -86,18 +86,25 @@
             testMaterial8 = RedBitmapMaterial(this, RedBitmapTexture(this, 'asset/draft5.png'))
 
 
-            var interleaveData
+            var interleaveData, interleaveData2
             interleaveData = new Float32Array([
-                -1.0, -1.0, 0.0,  0.0, 1.0,    0.0, 1.0, 1.0, 1.0,
-                1.0, -1.0, 0.0,   1.0, 1.0,    1.0, 0.0, 1.0, 1.0,
-                1.0, 1.0, 0.0,    1.0, 0.0,    1.0, 1.0, 0.0, 1.0,
-                -1.0, 1.0, 0.0,   0.0, 0.0,    1.0, 1.0, 1.0, 1.0
+                -1.0, -1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 1.0,
+                1.0, -1.0, 0.0, 1.0, 1.0, 1.0, 0.0, 1.0, 1.0,
+                1.0, 1.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0,
+                -1.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0
             ]);
-            var indexData
-            indexData = new Uint16Array([0, 1, 2, 0, 2, 3])
+            interleaveData2 = new Float32Array([
+                -1.0, -1.0, 0.0, 0.0, 1.0,
+                1.0, -1.0, 0.0, 1.0, 1.0,
+                1.0, 1.0, 0.0, 1.0, 0.0
+            ]);
+            var indexData,
+                indexData = new Uint16Array([0, 1, 2, 0, 2, 3])
+            indexData2 = new Uint16Array([0, 1, 2])
 
             var testInterleaveBuffer
-            var testIndexBuffer
+            var testInterleaveBuffer2
+            var testIndexBuffer, testIndexBuffer2
             testInterleaveBuffer = RedBuffer(
                 this,
                 'testInterleaveBuffer',
@@ -119,24 +126,52 @@
                 }
                 ]
             )
+            testInterleaveBuffer2 = RedBuffer(
+                this,
+                'testInterleaveBuffer2',
+                interleaveData2,
+                RedBuffer.ARRAY_BUFFER, [{
+                    attributeKey: 'aVertexPosition',
+                    size: 3,
+                    normalize: false
+                },
+                {
+                    attributeKey: 'aTexcoord',
+                    size: 2,
+                    normalize: false
+                }
+                ]
+            )
             testIndexBuffer = RedBuffer(
                 this,
                 'testIndexBuffer',
                 indexData,
                 RedBuffer.ELEMENT_ARRAY_BUFFER
             )
-            var geometry
+            testIndexBuffer2 = RedBuffer(
+                this,
+                'testIndexBuffer2',
+                indexData2,
+                RedBuffer.ELEMENT_ARRAY_BUFFER
+            )
+            var geometry, geometry2
             geometry = RedGeometry(testInterleaveBuffer, testIndexBuffer)
+            geometry2 = RedGeometry(testInterleaveBuffer2, testIndexBuffer2)
 
             var testMesh
             var i = 5000;
             var len = i
             while (i--) {
                 var t
-                if( i > len / 3 *2) t = testMaterial
-                else if( i > len / 3) t = testMaterial2
-                else t = testMaterial3
-                testMesh = RedMesh(geometry, t)
+                if (i > len / 8 * 7) testMesh = RedMesh(geometry, testMaterial)
+                else if (i > len / 8 * 6) testMesh = RedMesh(geometry, testMaterial2)
+                else if (i > len / 8 * 5) testMesh = RedMesh(geometry2, testMaterial3)
+                else if (i > len / 8 * 4) testMesh = RedMesh(geometry2, testMaterial4)
+                else if (i > len / 8 * 3) testMesh = RedMesh(geometry, testMaterial5)
+                else if (i > len / 8 * 2) testMesh = RedMesh(geometry2, testMaterial6)
+                else if (i > len / 8) testMesh = RedMesh(geometry, testMaterial7)
+                else testMesh = RedMesh(geometry, testMaterial8)
+           
                 testMesh.x = Math.random() * 50 - 25
                 testMesh.y = Math.random() * 50 - 25
                 testMesh.z = Math.random() * 50 - 25
@@ -149,19 +184,17 @@
             i = 1000
             len = i
             while (i--) {
-                var t
-                if( i > len / 8 *7) t = testMaterial
-                else if( i > len / 8 *6) t = testMaterial2
-                else if( i > len / 8 *5) t = testMaterial3
-                else if( i > len / 8 *4) t = testMaterial4
-                else if( i > len / 8 *3) t = testMaterial5
-                else if( i > len / 8 *2) t = testMaterial6
-                else if( i > len / 8) t = testMaterial7
-                else t = testMaterial8
-                testMesh = RedMesh(geometry, t)
+                if (i > len / 8 * 7) testMesh = RedMesh(geometry, testMaterial)
+                else if (i > len / 8 * 6) testMesh = RedMesh(geometry, testMaterial2)
+                else if (i > len / 8 * 5) testMesh = RedMesh(geometry2, testMaterial3)
+                else if (i > len / 8 * 4) testMesh = RedMesh(geometry2, testMaterial4)
+                else if (i > len / 8 * 3) testMesh = RedMesh(geometry, testMaterial5)
+                else if (i > len / 8 * 2) testMesh = RedMesh(geometry2, testMaterial6)
+                else if (i > len / 8) testMesh = RedMesh(geometry, testMaterial7)
+                else testMesh = RedMesh(geometry, testMaterial8)
                 testMesh.x = Math.random() * 1280
                 testMesh.y = Math.random() * 768
-                testMesh.scaleX = testMesh.scaleY = 50
+                testMesh.scaleX = testMesh.scaleY = 10 + Math.random() * 50
                 // testMesh.rotationX = Math.random() * 360
                 // testMesh.rotationY = Math.random() * 360
                 testMesh.rotationZ = Math.random() * 360
@@ -188,7 +221,8 @@
                 i = tScene2D.children.length
                 while (i--) {
                     testMesh = tScene2D.children[i]
-
+                    // testMesh.rotationX += 1 / 20
+                    // testMesh.rotationY += 1 / 20
                     testMesh.rotationZ += 1 / 20
                 }
                 RedView('test2').setLocation(Math.cos(time / 1000) * 100 + 100, Math.sin(time / 1000) *
