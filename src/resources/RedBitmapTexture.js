@@ -10,12 +10,15 @@ var RedBitmapTexture;
         gl = redGL.gl;
         tTexture = gl.createTexture();
         this['webglTexture'] = tTexture;
+        this['_UUID'] = RedGL['makeUUID']();
         this.setEmptyTexture(gl, tTexture)
         this.loadTexture(gl, tTexture, src)
+        console.log(this)
     }
     RedBitmapTexture.prototype = {
         setEmptyTexture: function (gl, texture) {
             console.log('빈 텍스쳐를 설정')
+            gl.activeTexture(gl.TEXTURE0 + 0)
             gl.bindTexture(gl.TEXTURE_2D, texture);
             gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1)
             gl.texImage2D(
@@ -38,7 +41,8 @@ var RedBitmapTexture;
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-            gl.pixelStorei(gl.UNPACK_ALIGNMENT, 4)
+            gl.generateMipmap(gl.TEXTURE_2D);
+            gl.pixelStorei(gl.UNPACK_ALIGNMENT, 4);
             gl.bindTexture(gl.TEXTURE_2D, null);
         },
         loadTexture: (function () {
@@ -56,6 +60,7 @@ var RedBitmapTexture;
                 }
                 onLoad = function () {
                     clearEvents(this)
+                    gl.activeTexture(gl.TEXTURE0 + 0)
                     gl.bindTexture(gl.TEXTURE_2D, texture);
                     //level,internalFormat, format, type
                     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA,  gl.RGBA, gl.UNSIGNED_BYTE, this)
