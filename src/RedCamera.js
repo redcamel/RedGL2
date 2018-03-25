@@ -135,7 +135,7 @@ var RedCamera;
             }
         })()
     }
-    RedGL['extendsProto'](RedCamera, RedBaseObject3D);
+    RedGLUtil['extendsProto'](RedCamera, RedBaseObject3D);
     /**DOC:
     {
         code:`PROPERTY`,

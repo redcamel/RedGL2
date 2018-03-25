@@ -57,7 +57,7 @@ var RedShader;
                     t0.type = type;
                     return t0
                 default:
-                    RedGL.throwFunc('RedShader : 쉐이더 타입을 확인하세요!')
+                    RedGLUtil.throwFunc('RedShader : 쉐이더 타입을 확인하세요!')
                     break
             }
         }
@@ -65,7 +65,7 @@ var RedShader;
     compile = function (gl, type, shader, source) {
         gl.shaderSource(shader, source);
         gl.compileShader(shader);
-        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) RedGL.throwFunc(gl.getShaderInfoLog(shader), '쉐이더 컴파일에 실패하였습니다.')
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) RedGLUtil.throwFunc(gl.getShaderInfoLog(shader), '쉐이더 컴파일에 실패하였습니다.')
     }
     mergeShareSource = (function () {
         var t0;
@@ -78,14 +78,14 @@ var RedShader;
                     t0 = RedSystemShaderCode.fShareSource.concat();
                     break;
                 default:
-                    RedGL.throwFunc('RedShader : 쉐이더 타입을 확인하세요!')
+                    RedGLUtil.throwFunc('RedShader : 쉐이더 타입을 확인하세요!')
             }
             sourceList.forEach(function (v) {
                 v = v.replace(';', '');
                 if (t0.indexOf(v) == -1) t0.push(v);
                 else {
                     console.log(RedSystemShaderCode)
-                    RedGL.throwFunc('RedShader : ', '\n1. 중복된 소스이거나', '\n2. RedSystemShaderCode에 정의된 소스\n', v);
+                    RedGLUtil.throwFunc('RedShader : ', '\n1. 중복된 소스이거나', '\n2. RedSystemShaderCode에 정의된 소스\n', v);
                 }
             })
             return t0;
@@ -126,13 +126,13 @@ var RedShader;
                     tName = tName[0]
                     switch (tType) {
                         case 'attribute':
-                            if (tName.charAt(0) != 'a') RedGL.throwFunc('attribute의 첫글자는 a로 시작해야합니다.', tName)
+                            if (tName.charAt(0) != 'a') RedGLUtil.throwFunc('attribute의 첫글자는 a로 시작해야합니다.', tName)
                             break
                         case 'uniform':
-                            if (tName.charAt(0) != 'u') RedGL.throwFunc('uniform의 첫글자는 u로 시작해야합니다.', tName)
+                            if (tName.charAt(0) != 'u') RedGLUtil.throwFunc('uniform의 첫글자는 u로 시작해야합니다.', tName)
                             break
                         case 'varying':
-                            if (tName.charAt(0) != 'v') RedGL.throwFunc('varying의 첫글자는 v로 시작해야합니다.', tName)
+                            if (tName.charAt(0) != 'v') RedGLUtil.throwFunc('varying의 첫글자는 v로 시작해야합니다.', tName)
                             break
                     }
                 } else {

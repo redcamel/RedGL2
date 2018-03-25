@@ -12,7 +12,7 @@ var RedBuffer;
                 if (v instanceof Float32Array || v instanceof Float64Array) {
                     if (v instanceof Float32Array) return tGL.FLOAT;
                     if (v instanceof Float64Array) return tGL.FLOAT;
-                } else RedGL.throwFunc('RedBuffer : 올바른 TypedArray(RedBuffer.ARRAY_BUFFER)형식을 사용해야합니다.')
+                } else RedGLUtil.throwFunc('RedBuffer : 올바른 TypedArray(RedBuffer.ARRAY_BUFFER)형식을 사용해야합니다.')
                 break
             case RedBuffer.ELEMENT_ARRAY_BUFFER:
                 tBufferType = tGL.ELEMENT_ARRAY_BUFFER
@@ -26,19 +26,19 @@ var RedBuffer;
                     if (v instanceof Uint32Array) return tGL.UNSIGNED_INT
                     if (v instanceof Int16Array) return tGL.SHORT
                     if (v instanceof Int32Array) return tGL.INT
-                } else RedGL.throwFunc('RedBuffer : 올바른 TypedArray(RedBuffer.ELEMENT_ARRAY_BUFFER)형식을 사용해야합니다.')
+                } else RedGLUtil.throwFunc('RedBuffer : 올바른 TypedArray(RedBuffer.ELEMENT_ARRAY_BUFFER)형식을 사용해야합니다.')
                 break
             default:
-                RedGL.throwFunc('RedBuffer : bufferType - 지원하지 않는 버퍼타입입니다. ')
+                RedGLUtil.throwFunc('RedBuffer : bufferType - 지원하지 않는 버퍼타입입니다. ')
         }
     }
     RedBuffer = function (redGL, key, data, bufferType, interleaveDefineInfo) {
         var t0;
         // bufferType, key, shaderPointerKey, typedArrayData, pointSize, pointNum, glArrayType, normalize, stride, offset, drawMode
         if (!(this instanceof RedBuffer)) return new RedBuffer(redGL, key, data, bufferType, interleaveDefineInfo)
-        if (!(redGL instanceof RedGL)) RedGL.throwFunc('RedBuffer : RedGL 인스턴스만 허용됩니다.')
-        if (typeof bufferType != 'string') RedGL.throwFunc('RedBuffer : bufferType - 문자열만 허용됩니다.')
-        if (typeof key != 'string') RedGL.throwFunc('RedBuffer : key - 문자열만 허용됩니다.')
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedBuffer : RedGL 인스턴스만 허용됩니다.')
+        if (typeof bufferType != 'string') RedGLUtil.throwFunc('RedBuffer : bufferType - 문자열만 허용됩니다.')
+        if (typeof key != 'string') RedGLUtil.throwFunc('RedBuffer : key - 문자열만 허용됩니다.')
 
         t0 = 0
         tGL = redGL.gl;

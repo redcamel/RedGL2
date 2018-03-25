@@ -16,6 +16,7 @@
         }
     </style>
     <script src="src/gl-matrix-min.js"></script>
+    <script src="src/RedGLUtil.js"></script>
     <script src="src/RedGL.js"></script>
     <script src="src/base/RedBaseContainer.js"></script>
     <script src="src/base/RedBaseObject3D.js"></script>
@@ -76,7 +77,7 @@
 
             var testMaterial, testMaterial2, testMaterial3, testMaterial4, testMaterial5, testMaterial6, testMaterial7, testMateria8
             testMaterial = RedMaterial(this)
-            testMaterial2 = RedColorMaterial(this, '#333')
+            testMaterial2 = RedColorMaterial(this)
             testMaterial3 = RedBitmapMaterial(this, RedBitmapTexture(this, 'asset/crate.png'))
             testMaterial4 = RedBitmapMaterial(this, RedBitmapTexture(this, 'asset/draft1.png'))
             testMaterial5 = RedBitmapMaterial(this, RedBitmapTexture(this, 'asset/draft2.png'))
@@ -128,7 +129,7 @@
             geometry = RedGeometry(testInterleaveBuffer, testIndexBuffer)
 
             var testMesh
-            var i = 3000;
+            var i = 5000;
             var len = i
             while (i--) {
                 var t

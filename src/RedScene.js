@@ -18,6 +18,6 @@ var RedScene;
         Object.seal(this)
     };
     RedScene.prototype = {};
-    RedGL['extendsProto'](RedScene, RedBaseContainer)
+    RedGLUtil['extendsProto'](RedScene, RedBaseContainer)
     Object.freeze(RedScene);
 })();

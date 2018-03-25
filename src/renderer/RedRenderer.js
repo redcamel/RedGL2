@@ -50,8 +50,8 @@ var RedRenderer;
                 self['_tickKey'] = requestAnimationFrame(tick);
             }
             return function (redGL, callback) {
-                if (!(redGL instanceof RedGL)) RedGL.throwFunc('RedGL 인스턴스만 허용');
-                if (!(redGL.world instanceof RedWorld)) RedGL.throwFunc('RedWorld 인스턴스만 허용');
+                if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedGL 인스턴스만 허용');
+                if (!(redGL.world instanceof RedWorld)) RedGLUtil.throwFunc('RedWorld 인스턴스만 허용');
                 self = this;
                 self.world = redGL.world;
                 tRedGL = redGL
@@ -356,13 +356,11 @@ var RedRenderer;
                     if (tWebGLUniformLocation) {
                         tRenderType = tLocationInfo['renderType'];
                         tUniformValue = tMaterial[tLocationInfo['materialPropertyName']];
-                        tUniformValue == undefined ? RedGL.throwFunc('RedRenderer : Material에 ', tLocationInfo['materialPropertyName'], '이 정의 되지않았습니다.') : 0;
+                        tUniformValue == undefined ? RedGLUtil.throwFunc('RedRenderer : Material에 ', tLocationInfo['materialPropertyName'], '이 정의 되지않았습니다.') : 0;
                         noChangeUniform = tCacheUniformInfo[tUUID] == tUniformValue;
                         // if (!noChange) console.log('변경되었다', tLocationInfo['name'], tCacheInfo[tUUID], tUniformValue)
                         // console.log(tCacheInfo)
                         if (tRenderType == 'sampler2D') {
-                           
-                            //TODO: 자 이제 이인덱스를 어떻게 해결하냐가 문젠데
                             // tTextureIndex : 0 번은 생성용으로 쓴다.                            
                             if (tCacheTextureInfo[tTextureIndex] == tUniformValue['_UUID']) {
                             } else {
@@ -380,7 +378,7 @@ var RedRenderer;
                                 : tRenderType == 'int' ? noChangeUniform ? 0 : gl[tLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
                                     : tRenderType == 'vec' ? noChangeUniform ? 0 : gl[tLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
                                         : tRenderType == 'mat' ? gl[tLocationInfo['renderMethod']](tWebGLUniformLocation, false, tUniformValue)
-                                            : RedGL.throwFunc('RedRenderer : 처리할수없는 타입입니다.', 'tRenderType -', tRenderType)
+                                            : RedGLUtil.throwFunc('RedRenderer : 처리할수없는 타입입니다.', 'tRenderType -', tRenderType)
                         }
 
                     }

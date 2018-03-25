@@ -9,13 +9,8 @@ var RedColorMaterial;
         // 유니폼 프로퍼티
         this['color'] = new Float32Array(4)
         // 일반 프로퍼티
-        this.hexToRGB(color ? color : '#334455')
-        this['alpha'] = 1;
-        this['color'][0] = this.r
-        this['color'][1] = this.g
-        this['color'][2] = this.b
-        this['color'][3] = this.alpha
-        console.log(this['color'] )
+        this.setColor(color)
+        console.log(this['color'])
 
         this['_UUID'] = RedGL['makeUUID']();
         Object.seal(this)
@@ -52,16 +47,13 @@ void main(void) {
     }
 
     RedColorMaterial.prototype = {
-        hexToRGB: function (hex) {
-            var c;
-            if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
-                c = hex.substring(1).split('');
-                if (c.length == 3) c = [c[0], c[0], c[1], c[1], c[2], c[2]];
-                c = '0x' + c.join('');
-                this['r'] = ((c >> 16) & 255) / 255;
-                this['g'] = ((c >> 8) & 255) / 255;
-                this['b'] = (c & 255 / 255);
-            }
+        setColor: function (color) {
+            color = color ? color : '#ff2211'
+            RedGLUtil.hexToRGB.call(this,color)
+            this['color'][0] = this.r
+            this['color'][1] = this.g
+            this['color'][2] = this.b
+            this['color'][3] = this.alpha
         }
     }
     Object.freeze(RedColorMaterial)

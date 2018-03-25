@@ -50,7 +50,7 @@ var RedWorld;
             }
         :DOC*/
         addView: function (View) {
-            if (!(View instanceof RedView)) RedGL['throwFunc']('RedView 인스턴스만 허용함.')
+            if (!(View instanceof RedView)) RedGLUtil.throwFunc('RedView 인스턴스만 허용함.')
             this['_viewMap'][View['key']] = View;
             this['_viewList'].push(View);
             return this;
