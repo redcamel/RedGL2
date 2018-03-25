@@ -55,7 +55,7 @@ var RedBitmapTexture;
                 }
                 onError = function () {
                     var msg = "couldn't load image: " + src;
-                    RedGL.throwFunc(msg);
+                    RedGLUtil.throwFunc(msg);
                     clearEvents(this);
                 }
                 onLoad = function () {
@@ -63,7 +63,7 @@ var RedBitmapTexture;
                     gl.activeTexture(gl.TEXTURE0 + 0)
                     gl.bindTexture(gl.TEXTURE_2D, texture);
                     //level,internalFormat, format, type
-                    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA,  gl.RGBA, gl.UNSIGNED_BYTE, this)
+                    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this)
                     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
                     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
                     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);

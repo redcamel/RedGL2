@@ -39,14 +39,14 @@ var RedView;
 	:DOC*/
     RedView = function (key, scene, camera) {
         if (ViewMap[key]) {
-            if (scene || camera) RedGL['throwFunc'](key, '는 이미 생성된 RedView key입니다.')
+            if (scene || camera) RedGLUtil.throwFunc(key, '는 이미 생성된 RedView key입니다.')
             else return ViewMap[key]
         }
         if (!(this instanceof RedView)) return new RedView(key, scene, camera);
-        if (!(typeof key == 'string')) RedGL['throwFunc']('key : 문자열만 허용')
-        if (!scene && !camera) RedGL['throwFunc']('존재하지 않는 key입니다.')
-        if (scene && !(scene instanceof RedScene)) RedGL['throwFunc']('RedScene 인스턴스만 허용')
-        if (camera && !(camera instanceof RedCamera)) RedGL['throwFunc']('RedCamera 인스턴스만 허용')
+        if (!(typeof key == 'string')) RedGLUtil.throwFunc('key : 문자열만 허용')
+        if (!scene && !camera) RedGLUtil.throwFunc('존재하지 않는 key입니다.')
+        if (scene && !(scene instanceof RedScene)) RedGLUtil.throwFunc('RedScene 인스턴스만 허용')
+        if (camera && !(camera instanceof RedCamera)) RedGLUtil.throwFunc('RedCamera 인스턴스만 허용')
 
         this['key'] = key;
         this['scene'] = scene;

@@ -50,8 +50,8 @@ var RedRenderer;
                 self['_tickKey'] = requestAnimationFrame(tick);
             }
             return function (redGL, callback) {
-                if (!(redGL instanceof RedGL)) RedGL.throwFunc('RedGL 인스턴스만 허용');
-                if (!(redGL.world instanceof RedWorld)) RedGL.throwFunc('RedWorld 인스턴스만 허용');
+                if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedGL 인스턴스만 허용');
+                if (!(redGL.world instanceof RedWorld)) RedGLUtil.throwFunc('RedWorld 인스턴스만 허용');
                 self = this;
                 self.world = redGL.world;
                 tRedGL = redGL
@@ -214,7 +214,7 @@ var RedRenderer;
                     mat4.translate(perspectiveMTX, perspectiveMTX, [-0.5, 0.5, 0])
                     mat4.scale(perspectiveMTX, perspectiveMTX, [1 / viewRect[2], -1 / viewRect[3], 1]);
                     mat4.identity(tCamera['matrix'])
-                    gl.cullFace(gl.FRONT)
+                    gl.disable(gl.CULL_FACE);
                 } else {
                     mat4.perspective(
                         perspectiveMTX,
@@ -223,9 +223,8 @@ var RedRenderer;
                         tCamera.nearClipping,
                         tCamera.farClipping
                     );
-                    gl.cullFace(gl.BACK)
+                    gl.enable(gl.CULL_FACE);
                 }
-
                 updateSystemUniform(redGL, time, perspectiveMTX, tCamera['matrix'], viewRect)
                 // 씬렌더 호출
                 self.sceneRender(gl, tCamera['orthographic'], tView.scene, time, self['renderInfo'][tView.key]);
@@ -243,15 +242,15 @@ var RedRenderer;
             var tCacheInterleaveBuffer;
             var tCacheUniformInfo;
             var tCacheTextureInfo;
-            //
-            var orthographicScale = orthographic ? 0.5 : 1
+            // 오쏘고날 스케일 비율
+            var orthographicScale = orthographic ? -0.5 : 1
             //
             var BYTES_PER_ELEMENT;;
             // 
             var tMesh;
             var tGeometry;
             var tMaterial;
-            var tInterleaveGroupUnit;
+            var tInterleaveDefineInfo;
             var tAttrGroup, tUniformGroup, tSystemUniformGroup;
             var tInterleaveDefineUnit
             var tLocationInfo, tWebGLUniformLocation, tWebGLAttrLocation;
@@ -270,7 +269,6 @@ var RedRenderer;
                 inverse_c, inverse_d, inverse_e, inverse_g, inverse_f, inverse_h, inverse_i, inverse_j, inverse_k, inverse_l, inverse_n, inverse_o, inverse_A, inverse_m, inverse_p, inverse_r, inverse_s, inverse_B, inverse_t, inverse_u, inverse_v, inverse_w, inverse_x, inverse_y, inverse_z, inverse_C, inverse_D, inverse_E, inverse_q;
             // sin,cos 관련
             var SIN, COS, tRadian, CPI, CPI2, C225, C127, C045, C157;
-            // systemUnfiom
             //////////////// 변수값 할당 ////////////////
             tCacheUniformInfo = this['cacheUniformInfo'];
             tCacheInterleaveBuffer = this['cacheAttrInfo'];
@@ -303,31 +301,28 @@ var RedRenderer;
 
                 /////////////////////////////////////////////////////////////////////////
                 /////////////////////////////////////////////////////////////////////////
-                // 어트리뷰트 인터리브 정보를 가져온다. 
-                tInterleaveGroupUnit = tInterleaveBuffer['interleaveDefineInfo']
-                // console.log(tInterleaveGroupInfo)
-                // console.log(tAttrGroup)
-
+                // interleaveDefineInfo 정보를 가져온다. 
+                tInterleaveDefineInfo = tInterleaveBuffer['interleaveDefineInfo']
                 // 버퍼의 UUID
                 tUUID = tInterleaveBuffer['_UUID']
-                // 바인딩 필요여부 판단
-
+                // 프로그램의 어트리뷰트를 순환한다. 
                 i2 = tAttrGroup.length
                 while (i2--) {
-                    // console.log(tAttrGroup[i2])
-                    // 대상 로케이션 정보를 구하고
+                    // 대상 어트리뷰트의 로케이션 정보를 구함
                     tLocationInfo = tAttrGroup[i2]
-                    // 인터리브 구성정보를 가져온다.
-                    tInterleaveDefineUnit = tInterleaveGroupUnit[tLocationInfo['name']]
-                    // console.log(tLocationInfo, tInterleaveDefineInfo)
-                    // 어트리뷰트 정보매칭이 안되는 녀석은 무시한다 
+                    // 대상 어트리뷰트의 이름으로 interleaveDefineInfo에서 단위 인터리브 정보를 가져온다. 
+                    tInterleaveDefineUnit = tInterleaveDefineInfo[tLocationInfo['name']]
+                    /*
+                        어트리뷰트 정보매칭이 안되는 녀석은 무시한다 
+                        이경우는 버퍼상에는 존재하지만 프로그램에서 사용하지 않는경우이다.
+                    */
                     if (tLocationInfo) {
-                        tWebGLAttrLocation = tLocationInfo['location'] // 어트리뷰트 로케이션도 알아낸다.
-                        // 캐싱된 attribute정보과 현재 대상정보가 같다면 무시
+                        // webgl location도 알아낸다.
+                        tWebGLAttrLocation = tLocationInfo['location'] 
+                        // 실제 버퍼 바인딩하고 //TODO: 이놈은 검증해야함
+                        tPrevInterleaveBuffer_UUID == tUUID ? 0 : gl.bindBuffer(gl.ARRAY_BUFFER, tInterleaveBuffer['webglBuffer'])
+                        tPrevInterleaveBuffer_UUID = tUUID;
                         if (tCacheInterleaveBuffer[tWebGLAttrLocation] != tLocationInfo['_UUID']) {
-                            // 실제 버퍼 바인딩하고 //TODO: 이놈은 검증해야함
-                            tPrevInterleaveBuffer_UUID == tUUID ? 0 : gl.bindBuffer(gl.ARRAY_BUFFER, tInterleaveBuffer['webglBuffer'])
-                            tPrevInterleaveBuffer_UUID = tUUID
                             // 해당로케이션을 활성화된적이없으면 활성화 시킨다
                             tLocationInfo['enabled'] ? 0 : (gl.enableVertexAttribArray(tWebGLAttrLocation), tLocationInfo['enabled'] = true),
                                 gl.vertexAttribPointer(
@@ -356,13 +351,11 @@ var RedRenderer;
                     if (tWebGLUniformLocation) {
                         tRenderType = tLocationInfo['renderType'];
                         tUniformValue = tMaterial[tLocationInfo['materialPropertyName']];
-                        tUniformValue == undefined ? RedGL.throwFunc('RedRenderer : Material에 ', tLocationInfo['materialPropertyName'], '이 정의 되지않았습니다.') : 0;
+                        tUniformValue == undefined ? RedGLUtil.throwFunc('RedRenderer : Material에 ', tLocationInfo['materialPropertyName'], '이 정의 되지않았습니다.') : 0;
                         noChangeUniform = tCacheUniformInfo[tUUID] == tUniformValue;
                         // if (!noChange) console.log('변경되었다', tLocationInfo['name'], tCacheInfo[tUUID], tUniformValue)
                         // console.log(tCacheInfo)
                         if (tRenderType == 'sampler2D') {
-                           
-                            //TODO: 자 이제 이인덱스를 어떻게 해결하냐가 문젠데
                             // tTextureIndex : 0 번은 생성용으로 쓴다.                            
                             if (tCacheTextureInfo[tTextureIndex] == tUniformValue['_UUID']) {
                             } else {
@@ -380,7 +373,7 @@ var RedRenderer;
                                 : tRenderType == 'int' ? noChangeUniform ? 0 : gl[tLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
                                     : tRenderType == 'vec' ? noChangeUniform ? 0 : gl[tLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
                                         : tRenderType == 'mat' ? gl[tLocationInfo['renderMethod']](tWebGLUniformLocation, false, tUniformValue)
-                                            : RedGL.throwFunc('RedRenderer : 처리할수없는 타입입니다.', 'tRenderType -', tRenderType)
+                                            : RedGLUtil.throwFunc('RedRenderer : 처리할수없는 타입입니다.', 'tRenderType -', tRenderType)
                         }
 
                     }

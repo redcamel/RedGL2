@@ -13,7 +13,7 @@ var RedMesh;
       
         this['_UUID'] = RedGL['makeUUID']();
     }
-    RedGL['extendsProto'](RedMesh, RedBaseContainer);
-    RedGL['extendsProto'](RedMesh, RedBaseObject3D);
+    RedGLUtil['extendsProto'](RedMesh, RedBaseContainer);
+    RedGLUtil['extendsProto'](RedMesh, RedBaseObject3D);
     Object.freeze(RedMesh);
 })();

@@ -115,7 +115,7 @@ var RedGL;
         var _tGL, _self;
         var _fullMode, _renderScale;
         if (!(this instanceof RedGL)) return new RedGL(canvas, callback);
-        if (!(canvas instanceof Element) || (canvas['tagName'] != 'CANVAS')) RedGL.throwFunc('RedGL : Canvas Element만 허용');
+        if (!(canvas instanceof Element) || (canvas['tagName'] != 'CANVAS')) RedGLUtil.throwFunc('RedGL : Canvas Element만 허용');
 
         _self = this;
         _fullMode = true;
@@ -155,7 +155,7 @@ var RedGL;
         Object.defineProperty(this, 'fullMode', {
             get: function () { return _fullMode },
             set: function (v) {
-                if (typeof v != 'boolean') RedGL.throwFunc('RedGL : Boolean만 가능.')
+                if (typeof v != 'boolean') RedGLUtil.throwFunc('RedGL : Boolean만 가능.')
                 _fullMode = v
                 this.setSize(this['_width'], this['_height'])
             }
@@ -193,10 +193,6 @@ var RedGL;
         var UUID = 0
         return function () { return UUID++ }
     })();
-    RedGL['throwFunc'] = function () { throw Array.prototype.slice.call(arguments).join(' ') },
-    RedGL['extendsProto'] = function (target, from) {
-        for (var k in from.prototype) target.prototype[k] = from.prototype[k]
-    };
     RedGL.prototype = {
         /**DOC:
         {
@@ -230,8 +226,8 @@ var RedGL;
                     W = document.documentElement ? document.documentElement.clientWidth : document.body.clientWidth;
                     H = window.innerHeight;
                 } else {
-                    if (width == undefined) RedGL.throwFunc('RedGL : width가 입력되지 않았습니다.')
-                    if (height == undefined) RedGL.throwFunc('RedGL : height가 입력되지 않았습니다.')
+                    if (width == undefined) RedGLUtil.throwFunc('RedGL : width가 입력되지 않았습니다.')
+                    if (height == undefined) RedGLUtil.throwFunc('RedGL : height가 입력되지 않았습니다.')
                     this['_width'] = W = width;
                     this['_height'] = H = height;
                 }
