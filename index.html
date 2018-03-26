@@ -19,6 +19,7 @@
     <script src="src/RedGLUtil.js"></script>
     <script src="src/RedGL.js"></script>
     <script src="src/base/RedBaseContainer.js"></script>
+    <script src="src/base/RedBaseMaterial.js"></script>
     <script src="src/base/RedBaseObject3D.js"></script>
     <script src="src/geometry/RedBuffer.js"></script>
     <script src="src/geometry/RedGeometry.js"></script>
@@ -27,6 +28,7 @@
     <script src="src/material/RedBitmapMaterial.js"></script>
 
     <script src="src/object3D/RedMesh.js"></script>
+    <script src="src/object3D/RedLine.js"></script>
 
     <script src="src/program/RedProgram.js"></script>
     <script src="src/program/RedSystemShaderCode.js"></script>
@@ -88,17 +90,22 @@
 
 
             var interleaveData, interleaveData2
-            interleaveData = new Float32Array([-1.0, -1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 1.0,
+            interleaveData = new Float32Array([
+                -1.0, -1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 1.0,
                 1.0, -1.0, 0.0, 1.0, 1.0, 1.0, 0.0, 1.0, 1.0,
                 1.0, 1.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, -1.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0,
                 1.0
             ]);
-            interleaveData2 = new Float32Array([-1.0, -1.0, 0.0, 0.0, 1.0,
-                1.0, -1.0, 0.0, 1.0, 1.0,
-                1.0, 1.0, 0.0, 1.0, 0.0
+            interleaveData2 = new Float32Array([
+                // -1.0, -1.0, 0.0, 0.0, 1.0,
+                // 1.0, -1.0, 0.0, 1.0, 1.0,
+                // 1.0, 1.0, 0.0, 1.0, 0.0
+                -1.0, 0.0, 0.0, 0.0, 1.0,
+                0.0, 0.0, 0.0, 1.0, 1.0,
+                1.0, 0.0, 0.0, 1.0, 0.0
             ]);
-            var indexData,
-                indexData = new Uint16Array([0, 1, 2, 0, 2, 3])
+            var indexData, indexData2
+            indexData = new Uint16Array([0, 1, 2, 0, 2, 3])
             indexData2 = new Uint16Array([0, 1, 2])
 
             var testInterleaveBuffer
@@ -109,20 +116,20 @@
                 'testInterleaveBuffer',
                 interleaveData,
                 RedBuffer.ARRAY_BUFFER, [{
-                        attributeKey: 'aVertexPosition',
-                        size: 3,
-                        normalize: false
-                    },
-                    {
-                        attributeKey: 'aTexcoord',
-                        size: 2,
-                        normalize: false
-                    },
-                    {
-                        attributeKey: 'aVertexColor',
-                        size: 4,
-                        normalize: false
-                    }
+                    attributeKey: 'aVertexPosition',
+                    size: 3,
+                    normalize: false
+                },
+                {
+                    attributeKey: 'aTexcoord',
+                    size: 2,
+                    normalize: false
+                },
+                {
+                    attributeKey: 'aVertexColor',
+                    size: 4,
+                    normalize: false
+                }
                 ]
             )
             testInterleaveBuffer2 = RedBuffer(
@@ -130,15 +137,15 @@
                 'testInterleaveBuffer2',
                 interleaveData2,
                 RedBuffer.ARRAY_BUFFER, [{
-                        attributeKey: 'aVertexPosition',
-                        size: 3,
-                        normalize: false
-                    },
-                    {
-                        attributeKey: 'aTexcoord',
-                        size: 2,
-                        normalize: false
-                    }
+                    attributeKey: 'aVertexPosition',
+                    size: 3,
+                    normalize: false
+                },
+                {
+                    attributeKey: 'aTexcoord',
+                    size: 2,
+                    normalize: false
+                }
                 ]
             )
             testIndexBuffer = RedBuffer(
@@ -158,18 +165,18 @@
             geometry2 = RedGeometry(testInterleaveBuffer2, testIndexBuffer2)
 
             var testMesh
-            var i = 500;
+            var i = 2000;
             var len = i
             while (i--) {
                 var t
-                if (i > len / 8 * 7) testMesh = RedMesh(geometry, testMaterial)
-                else if (i > len / 8 * 6) testMesh = RedMesh(geometry, testMaterial2)
-                else if (i > len / 8 * 5) testMesh = RedMesh(geometry2, testMaterial3)
-                else if (i > len / 8 * 4) testMesh = RedMesh(geometry2, testMaterial4)
-                else if (i > len / 8 * 3) testMesh = RedMesh(geometry, testMaterial5)
-                else if (i > len / 8 * 2) testMesh = RedMesh(geometry2, testMaterial6)
-                else if (i > len / 8) testMesh = RedMesh(geometry, testMaterial7)
-                else testMesh = RedMesh(geometry, testMaterial8)
+                if (i > len / 8 * 7) testMesh = RedMesh(this, geometry, testMaterial)
+                else if (i > len / 8 * 6) testMesh = RedMesh(this, geometry, testMaterial2)
+                else if (i > len / 8 * 5) testMesh = RedMesh(this, geometry2, testMaterial3)
+                else if (i > len / 8 * 4) testMesh = RedMesh(this, geometry2, testMaterial4)
+                else if (i > len / 8 * 3) testMesh = RedMesh(this, geometry, testMaterial5)
+                else if (i > len / 8 * 2) testMesh = RedMesh(this, geometry2, testMaterial6)
+                else if (i > len / 8) testMesh = RedMesh(this, geometry, testMaterial7)
+                else testMesh = RedMesh(this, geometry, testMaterial8)
                 testMesh.x = Math.random() * 50 - 25
                 testMesh.y = Math.random() * 50 - 25
                 testMesh.z = Math.random() * 50 - 25
@@ -178,27 +185,53 @@
                 testMesh.rotationZ = Math.random() * 360
                 tScene3D.addChild(testMesh)
 
+
             }
-            i = 1000
+
+
+            i = 500
             len = i
             while (i--) {
-                if (i > len / 8 * 7) testMesh = RedMesh(geometry, testMaterial)
-                else if (i > len / 8 * 6) testMesh = RedMesh(geometry, testMaterial2)
-                else if (i > len / 8 * 5) testMesh = RedMesh(geometry2, testMaterial3)
-                else if (i > len / 8 * 4) testMesh = RedMesh(geometry2, testMaterial4)
-                else if (i > len / 8 * 3) testMesh = RedMesh(geometry, testMaterial5)
-                else if (i > len / 8 * 2) testMesh = RedMesh(geometry2, testMaterial6)
-                else if (i > len / 8) testMesh = RedMesh(geometry, testMaterial7)
-                else testMesh = RedMesh(geometry, testMaterial8)
+                if (i > len / 8 * 7) testMesh = RedMesh(this, geometry, testMaterial)
+                else if (i > len / 8 * 6) testMesh = RedMesh(this, geometry, testMaterial2)
+                else if (i > len / 8 * 5) testMesh = RedMesh(this, geometry2, testMaterial3)
+                else if (i > len / 8 * 4) testMesh = RedMesh(this, geometry2, testMaterial4)
+                else if (i > len / 8 * 3) testMesh = RedMesh(this, geometry, testMaterial5)
+                else if (i > len / 8 * 2) testMesh = RedMesh(this, geometry2, testMaterial6)
+                else if (i > len / 8) testMesh = RedMesh(this, geometry, testMaterial7)
+                else testMesh = RedMesh(this, geometry, testMaterial8)
                 testMesh.x = Math.random() * 1280
                 testMesh.y = Math.random() * 768
-                testMesh.scaleX = testMesh.scaleY = 10 + Math.random() * 50
+                // testMesh.drawMode = this.gl.LINES
+                testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 10 + Math.random() * 50
                 // testMesh.rotationX = Math.random() * 360
                 // testMesh.rotationY = Math.random() * 360
                 testMesh.rotationZ = Math.random() * 360
                 tScene2D.addChild(testMesh)
-            }
 
+
+
+            }
+            i = 100
+            while (i--) {
+                var testLine = new RedLine(this, new RedColorMaterial(this, i % 2 ? '#ff0000' : i % 3 ? '#00ff00' : '#0000ff'))
+                var tX, tY, tZ
+                tX = tY = tZ = 0
+                var i2 = 50
+                while (i2--) {
+                    tX += Math.random() * 30
+                    tY += Math.random() * 30
+                    tZ += Math.random() * 30
+                    testLine.addPoint(tX, tY, tZ)
+                }
+                testLine.rotationX = Math.random() * 360
+                testLine.rotationY = Math.random() * 360
+                testLine.rotationZ = Math.random() * 360
+                testLine.x = 500
+                testLine.y = 500
+                testLine.update()
+                tScene2D.addChild(testLine)
+            }
             var renderResult;
             renderResult = document.createElement('div')
             renderResult.style.cssText = 'position:absolute;top:0px;left:0px;color:#fff;font-size:12px'
@@ -221,7 +254,7 @@
                     testMesh = tScene2D.children[i]
                     // testMesh.rotationX += 1 / 20
                     // testMesh.rotationY += 1 / 20
-                    testMesh.rotationZ += 1 / 20
+                    testMesh.rotationZ += 1 / 60
                 }
                 RedView('test2').setLocation(Math.cos(time / 1000) * 100 + 100, Math.sin(time / 1000) *
                     100 + 100)
@@ -241,13 +274,15 @@
                 for (var k in tRenderer['renderInfo']) {
                     // console.log(tRenderer['renderInfo'][k])
                     renderResult.innerHTML +=
-                        'RedView : key - ' + tRenderer['renderInfo'][k]['key'] +
-                        ' / orthographic - ' + tRenderer['renderInfo'][k]['orthographic'] +
-                        ' / call - ' + tRenderer['renderInfo'][k]['call'] +
-                        ' / width - ' + tRenderer['renderInfo'][k]['width'] +
-                        ' / height - ' + tRenderer['renderInfo'][k]['height'] +
-                        ' / x - ' + tRenderer['renderInfo'][k]['x'] +
-                        ' / y - ' + tRenderer['renderInfo'][k]['y'] +
+                        '<b>RedView : key - ' + tRenderer['renderInfo'][k]['key'] + '</b>' +
+                        ' <br>orthographic - ' + tRenderer['renderInfo'][k]['orthographic'] +
+                        ' <br>call - ' + tRenderer['renderInfo'][k]['call'] +
+                        ' <br> width - ' + tRenderer['renderInfo'][k]['width'] +
+                        ' <br> height - ' + tRenderer['renderInfo'][k]['height'] +
+                        ' <br> viewRectWidth - ' + tRenderer['renderInfo'][k]['viewRectWidth'] +
+                        ' <br> viewRectHeight - ' + tRenderer['renderInfo'][k]['viewRectHeight'] +
+                        ' <br> x - ' + tRenderer['renderInfo'][k]['x'] +
+                        ' <br> y - ' + tRenderer['renderInfo'][k]['y'] +
                         '<br>'
                 }
                 renderResult.innerHTML += 'renderScale : ' + self.renderScale

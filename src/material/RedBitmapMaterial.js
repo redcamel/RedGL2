@@ -84,6 +84,6 @@ var RedBitmapMaterial;
             RedShader(redGL, 'bitmapFS', RedShader.FRAGMENT, fSource)
         )
     }
-    RedBitmapMaterial.prototype = {}
+    RedBitmapMaterial.prototype = RedBaseMaterial.prototype
     Object.freeze(RedBitmapMaterial)
 })();

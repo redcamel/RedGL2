@@ -19,29 +19,34 @@ var RedProgram;
     })();
     updateLocation = (function () {
         // TODO: 정보를 객체화시키자
+        var AttributeLocationInfo;
+        var UniformLocationInfo;
+        AttributeLocationInfo = function () { }
+        UniformLocationInfo = function () { }
         return function (self, gl, shader) {
             if (shader['parseData']['attribute']) {
                 shader['parseData']['attribute']['list'].forEach(function (v) {
-                    var tInfo = {};
-                    tInfo = {}
-                    tInfo['_UUID'] = RedGL.makeUUID()
-                    tInfo['location'] = gl.getAttribLocation(self['webglProgram'], v['name']);
-                    if (!tInfo['location'] == -1) tInfo['msg'] = '쉐이더 main 함수에서 사용되고 있지 않음'
-                    tInfo['attributeType'] = v['attributeType']
-                    tInfo['name'] = v['name']
-                    self['attributeLocation'].push(tInfo)
-                    self['attributeLocation'][v['name']] = tInfo
+                    var t0 = new AttributeLocationInfo();
+                    t0['_UUID'] = RedGL.makeUUID()
+                    t0['location'] = gl.getAttribLocation(self['webglProgram'], v['name']);
+                    if (!t0['location'] == -1) t0['msg'] = '쉐이더 main 함수에서 사용되고 있지 않음';
+                    t0['attributeType'] = v['attributeType'];
+                    t0['name'] = v['name'];
+                    t0['enabled'] = false;
+                    self['attributeLocation'].push(t0);
+                    self['attributeLocation'][v['name']] = t0;
+                    Object.seal(t0);
                 })
             }
             if (shader['parseData']['uniform']) {
                 shader['parseData']['uniform']['list'].forEach(function (v) {
-                    var tInfo = {};
-                    tInfo['_UUID'] = RedGL.makeUUID()
+                    var t0 = new UniformLocationInfo();
+                    t0['_UUID'] = RedGL.makeUUID()
                     // console.log(v)
                     // console.log(v['name'],tGL.getUniformLocation(self['webglProgram'], v['name']))
-                    tInfo['location'] = gl.getUniformLocation(self['webglProgram'], v['name']);
-                    if (!tInfo['location']) tInfo['msg'] = '쉐이더 main 함수에서 사용되고 있지 않음'
-                    tInfo['uniformType'] = v['uniformType']
+                    t0['location'] = gl.getUniformLocation(self['webglProgram'], v['name']);
+                    if (!t0['location']) t0['msg'] = '쉐이더 main 함수에서 사용되고 있지 않음';
+                    t0['uniformType'] = v['uniformType'];
                     // renderType 조사
                     // TODO: 데이터 타입조사를 이놈이 하는게 맞는건가..
                     var arrayNum, tRenderType, tRenderMethod;
@@ -85,19 +90,20 @@ var RedProgram;
                             break
 
                     }
-                    tInfo['renderType'] = tRenderType
-                    tInfo['renderMethod'] = tRenderMethod
+                    t0['renderType'] = tRenderType
+                    t0['renderMethod'] = tRenderMethod
                     //
-                    tInfo['name'] = v['name']
-                    tInfo['materialPropertyName'] = v['name'].charAt(1).toLowerCase() + v['name'].substr(2)
-                    tInfo['arrayNum'] = v['arrayNum']
+                    t0['name'] = v['name']
+                    t0['materialPropertyName'] = v['name'].charAt(1).toLowerCase() + v['name'].substr(2)
+                    t0['arrayNum'] = v['arrayNum']
                     if (v['systemUniformYn']) {
-                        self['systemUniformLocation'].push(tInfo)
-                        self['systemUniformLocation'][v['name']] = tInfo
+                        self['systemUniformLocation'].push(t0)
+                        self['systemUniformLocation'][v['name']] = t0
                     } else {
-                        self['uniformLocation'].push(tInfo)
-                        self['uniformLocation'][v['name']] = tInfo
+                        self['uniformLocation'].push(t0)
+                        self['uniformLocation'][v['name']] = t0
                     }
+                    Object.seal(t0)
                 })
 
             }

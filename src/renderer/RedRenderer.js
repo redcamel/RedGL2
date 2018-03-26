@@ -184,6 +184,8 @@ var RedRenderer;
                 viewRect[3] = tView['_height'];
                 tCamera = tView.camera;
                 tCamera['updateMatrix']()
+                // 위치/크기의 % 여부를 파싱
+                valueParser(viewRect);
                 //
                 self['renderInfo'][tView.key] = {
                     orthographic: tCamera['orthographic'],
@@ -191,11 +193,13 @@ var RedRenderer;
                     y: tView._y,
                     width: tView._width,
                     height: tView._height,
+                    viewRectX: viewRect[0],
+                    viewRectY: viewRect[1],
+                    viewRectWidth: viewRect[2],
+                    viewRectHeight: viewRect[3],
                     key: tView.key,
                     call: 0
                 }
-                // 위치/크기의 % 여부를 파싱
-                valueParser(viewRect);
                 // viewport 설정
                 gl.viewport(viewRect[0], worldRect[3] - viewRect[3] - viewRect[1], viewRect[2], viewRect[3]);
                 gl.scissor(viewRect[0], worldRect[3] - viewRect[3] - viewRect[1], viewRect[2], viewRect[3]);
@@ -255,7 +259,7 @@ var RedRenderer;
             var tInterleaveDefineInfo;
             var tAttrGroup, tUniformGroup, tSystemUniformGroup;
             var tInterleaveDefineUnit
-            var tLocationInfo, tWebGLUniformLocation, tWebGLAttrLocation;
+            var tUniformLocationInfo, tAttributeLocationInfo, tWebGLUniformLocation, tWebGLAttributeLocation;
             var tInterleaveBuffer, tIndexBufferInfo;
             var tUniformValue
             var tMVMatrix;
@@ -311,24 +315,25 @@ var RedRenderer;
                 i2 = tAttrGroup.length
                 while (i2--) {
                     // 대상 어트리뷰트의 로케이션 정보를 구함
-                    tLocationInfo = tAttrGroup[i2]
+                    tAttributeLocationInfo = tAttrGroup[i2]
                     // 대상 어트리뷰트의 이름으로 interleaveDefineInfo에서 단위 인터리브 정보를 가져온다. 
-                    tInterleaveDefineUnit = tInterleaveDefineInfo[tLocationInfo['name']]
+                    tInterleaveDefineUnit = tInterleaveDefineInfo[tAttributeLocationInfo['name']]
                     /*
                         어트리뷰트 정보매칭이 안되는 녀석은 무시한다 
                         이경우는 버퍼상에는 존재하지만 프로그램에서 사용하지 않는경우이다.
                     */
-                    if (tLocationInfo) {
+                    if (tAttributeLocationInfo && tInterleaveDefineUnit) {
                         // webgl location도 알아낸다.
-                        tWebGLAttrLocation = tLocationInfo['location']
+                        tWebGLAttributeLocation = tAttributeLocationInfo['location']
                         // 실제 버퍼 바인딩하고 //TODO: 이놈은 검증해야함
                         tPrevInterleaveBuffer_UUID == tUUID ? 0 : gl.bindBuffer(gl.ARRAY_BUFFER, tInterleaveBuffer['webglBuffer'])
                         tPrevInterleaveBuffer_UUID = tUUID;
-                        if (tCacheInterleaveBuffer[tWebGLAttrLocation] != tLocationInfo['_UUID']) {
+                        if (tCacheInterleaveBuffer[tWebGLAttributeLocation] != tAttributeLocationInfo['_UUID']) {
                             // 해당로케이션을 활성화된적이없으면 활성화 시킨다
-                            tLocationInfo['enabled'] ? 0 : (gl.enableVertexAttribArray(tWebGLAttrLocation), tLocationInfo['enabled'] = true),
+                            tAttributeLocationInfo['enabled'] ? 0 : (gl.enableVertexAttribArray(tWebGLAttributeLocation), tAttributeLocationInfo['enabled'] = true)
+                           
                                 gl.vertexAttribPointer(
-                                    tWebGLAttrLocation,
+                                    tWebGLAttributeLocation,
                                     tInterleaveDefineUnit['size'],
                                     tInterleaveBuffer['glArrayType'],
                                     tInterleaveDefineUnit['normalize'],
@@ -336,24 +341,22 @@ var RedRenderer;
                                     tInterleaveDefineUnit['offset'] * BYTES_PER_ELEMENT //offset
                                 )
                             // 상태 캐싱
-                            tCacheInterleaveBuffer[tWebGLAttrLocation] = tLocationInfo['_UUID']
+                            tCacheInterleaveBuffer[tWebGLAttributeLocation] = tAttributeLocationInfo['_UUID']
                         }
                     }
                 }
-
-
                 /////////////////////////////////////////////////////////////////////////
                 /////////////////////////////////////////////////////////////////////////
                 // 유니폼 업데이트
                 i2 = tUniformGroup.length
                 while (i2--) {
-                    tLocationInfo = tUniformGroup[i2];
-                    tWebGLUniformLocation = tLocationInfo['location'];
-                    tUUID = tLocationInfo['_UUID'];
+                    tUniformLocationInfo = tUniformGroup[i2];
+                    tWebGLUniformLocation = tUniformLocationInfo['location'];
+                    tUUID = tUniformLocationInfo['_UUID'];
                     if (tWebGLUniformLocation) {
-                        tRenderType = tLocationInfo['renderType'];
-                        tUniformValue = tMaterial[tLocationInfo['materialPropertyName']];
-                        tUniformValue == undefined ? RedGLUtil.throwFunc('RedRenderer : Material에 ', tLocationInfo['materialPropertyName'], '이 정의 되지않았습니다.') : 0;
+                        tRenderType = tUniformLocationInfo['renderType'];
+                        tUniformValue = tMaterial[tUniformLocationInfo['materialPropertyName']];
+                        tUniformValue == undefined ? RedGLUtil.throwFunc('RedRenderer : Material에 ', tUniformLocationInfo['materialPropertyName'], '이 정의 되지않았습니다.') : 0;
                         noChangeUniform = tCacheUniformInfo[tUUID] == tUniformValue;
                         // if (!noChange) console.log('변경되었다', tLocationInfo['name'], tCacheInfo[tUUID], tUniformValue)
                         // console.log(tCacheInfo)
@@ -371,10 +374,10 @@ var RedRenderer;
                             }
 
                         } else {
-                            tRenderType == 'float' ? noChangeUniform ? 0 : gl[tLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
-                                : tRenderType == 'int' ? noChangeUniform ? 0 : gl[tLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
-                                    : tRenderType == 'vec' ? noChangeUniform ? 0 : gl[tLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
-                                        : tRenderType == 'mat' ? gl[tLocationInfo['renderMethod']](tWebGLUniformLocation, false, tUniformValue)
+                            tRenderType == 'float' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
+                                : tRenderType == 'int' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
+                                    : tRenderType == 'vec' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
+                                        : tRenderType == 'mat' ? gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, false, tUniformValue)
                                             : RedGLUtil.throwFunc('RedRenderer : 처리할수없는 타입입니다.', 'tRenderType -', tRenderType)
                         }
 
@@ -460,13 +463,13 @@ var RedRenderer;
                     tPrevIndexBuffer_UUID == tIndexBufferInfo['_UUID'] ? 0 : gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, tIndexBufferInfo['webglBuffer'])
                     //enum mode, long count, enum type, long offset
                     gl.drawElements(
-                        gl.TRIANGLES,
+                        tMesh['drawMode'],
                         tIndexBufferInfo['pointNum'],
                         tIndexBufferInfo['glArrayType'],
                         0
                     );
                     tPrevIndexBuffer_UUID = tIndexBufferInfo['_UUID'];
-                } else gl.drawArrays(gl.TRIANGLES, 0, tInterleaveBuffer['pointNum'])
+                } else gl.drawArrays(tMesh['drawMode'], 0, tInterleaveBuffer['pointNum'])
                 /////////////////////////////////////////////////////////////////////////
                 /////////////////////////////////////////////////////////////////////////
 

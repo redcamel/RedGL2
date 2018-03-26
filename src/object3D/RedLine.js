@@ -1,12 +1,12 @@
 "use strict";
-var RedMesh;
+var RedLine;
 (function () {
     /**DOC:
         {
             constructorYn : true,
-            title :`RedMesh`,
+            title :`RedLine`,
             description : `
-                RedMesh Instance 생성기
+                RedLine Instance 생성기
             `,
             params : {
                 geometry : [
@@ -21,13 +21,50 @@ var RedMesh;
             return : 'RedProgram Instance'
         }
     :DOC*/
-    RedMesh = function (redGL, geometry, material) {
-        if (!(this instanceof RedMesh)) return new RedMesh(redGL, geometry, material);
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedMesh : RedGL Instance만 허용됩니다.')
-        if (!(geometry instanceof RedGeometry)) RedGLUtil.throwFunc('RedMesh : RedGeometry Instance만 허용됩니다.')
-        if (!(material instanceof RedBaseMaterial)) RedGLUtil.throwFunc('RedMesh : RedBaseMaterial 확장 Instance만 허용됩니다.')
+    RedLine = function (redGL, material) {
+        if (!(this instanceof RedLine)) return new RedLine(redGL, material);
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedLine : RedGL Instance만 허용됩니다.')
+        if (!(material instanceof RedBaseMaterial)) RedGLUtil.throwFunc('RedLine : RedBaseMaterial 확장 Instance만 허용됩니다.')
         var tGL;
+        var interleaveData, indexData
+        var geometry;
+        interleaveData = [];
+        indexData = []
+        var interleaveBuffer, indexBuffer
+        this['_UUID'] = RedGL['makeUUID']();
+        interleaveBuffer = RedBuffer(
+            redGL,
+            'RedLine_InterleaveBuffer_' + this['_UUID'],
+            new Float32Array(interleaveData),
+            RedBuffer.ARRAY_BUFFER, [
+                {
+                    attributeKey: 'aVertexPosition',
+                    size: 3,
+                    normalize: false
+                }
+            ]
+        )
+        indexBuffer = RedBuffer(
+            redGL,
+            'RedLine_indexBuffer_' + this['_UUID'],
+            new Uint16Array(indexData),
+            RedBuffer.ELEMENT_ARRAY_BUFFER
+        )
+        geometry = RedGeometry(interleaveBuffer, indexBuffer)
         tGL = redGL.gl;
+        this['addPoint'] = function(x,y,z){
+            var t = interleaveData.length/3
+            interleaveData.push(x,y,z)
+            indexData.push(t)
+        }
+        this['update'] = function(){
+            interleaveBuffer['updateData'](new Float32Array(interleaveData))
+            indexBuffer['updateData'](new Uint16Array(indexData))
+            interleaveBuffer.parseInterleaveDefineInfo()
+            indexBuffer.parseInterleaveDefineInfo()
+            // console.log(interleaveData,indexData)
+        }
+        this['interleaveData'] = interleaveData
         /**DOC:
 		{
             title :`geometry`,
@@ -51,7 +88,7 @@ var RedMesh;
             return : 'gl 상수'
 		}
 	    :DOC*/
-        this['drawMode'] = tGL.TRIANGLES
+        this['drawMode'] = tGL.LINE_STRIP
         /**DOC:
 		{
             title :`x`,
@@ -118,9 +155,9 @@ var RedMesh;
 		}
 	    :DOC*/
         this['scaleX'] = this['scaleY'] = this['scaleZ'] = 1;
-        this['_UUID'] = RedGL['makeUUID']();
+        Object.seal(RedLine);
+        console.log(this)
     }
-    RedGLUtil['extendsProto'](RedMesh, RedBaseContainer);
-    RedGLUtil['extendsProto'](RedMesh, RedBaseObject3D);
-    Object.freeze(RedMesh);
+    RedLine.prototype = RedMesh.prototype;
+    Object.freeze(RedLine);
 })();
