@@ -106,35 +106,34 @@ var RedColorMaterial;
             RedShader(redGL, 'colorFS', RedShader.FRAGMENT, fSource)
         )
     }
-    RedColorMaterial.prototype = {
-        /**DOC:
-            {
-                code : 'FUNCTION',
-                title :`setColor`,
-                description : `
-                    컬러설정
-                `,
-                params : {
-                    hex : [
-                        {type: 'hex'},
-                        'ex) #fff, #ffffff'
-                    ]
-                },
-                example : `// TODO:`,
-                return : 'RedProgram Instance'
-            }
-        :DOC*/
-        setColor: (function () {
-            var t0;
-            return function (hex) {
-                hex = hex ? hex : '#ff2211';
-                t0 = RedGLUtil.hexToRGB.call(this, hex);
-                this['color'][0] = t0[0];
-                this['color'][1] = t0[1];
-                this['color'][2] = t0[2];
-                this['color'][3] = this['alpha'];
-            }
-        })()
-    }
+    RedColorMaterial.prototype = RedBaseMaterial.prototype
+    /**DOC:
+        {
+            code : 'FUNCTION',
+            title :`setColor`,
+            description : `
+                컬러설정
+            `,
+            params : {
+                hex : [
+                    {type: 'hex'},
+                    'ex) #fff, #ffffff'
+                ]
+            },
+            example : `// TODO:`,
+            return : 'RedProgram Instance'
+        }
+    :DOC*/
+    RedColorMaterial.prototype['setColor'] = (function () {
+        var t0;
+        return function (hex) {
+            hex = hex ? hex : '#ff2211';
+            t0 = RedGLUtil.hexToRGB.call(this, hex);
+            this['color'][0] = t0[0];
+            this['color'][1] = t0[1];
+            this['color'][2] = t0[2];
+            this['color'][3] = this['alpha'];
+        }
+    })();
     Object.freeze(RedColorMaterial)
 })();

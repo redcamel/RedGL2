@@ -14,17 +14,20 @@ var RedMesh;
                     `geometry`
                 ],
                 material : [
-                    {type:'*어떻게 처리를해야할까..'},
+                    {type:'RedBaseMaterial 확장 Instance'},
                     `material`
                 ]
             },
             return : 'RedProgram Instance'
         }
     :DOC*/
-    RedMesh = function (geometry, material) {
-        if (!(this instanceof RedMesh)) return new RedMesh(geometry, material);
+    RedMesh = function (redGL, geometry, material) {
+        if (!(this instanceof RedMesh)) return new RedMesh(redGL, geometry, material);
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedMesh : RedGL Instance만 허용됩니다.')
         if (!(geometry instanceof RedGeometry)) RedGLUtil.throwFunc('RedMesh : RedGeometry Instance만 허용됩니다.')
-        // TODO: 재질을 어떻게 벨리데이션 체크를 하는게 좋을까
+        if (!(material instanceof RedBaseMaterial)) RedGLUtil.throwFunc('RedMesh : RedBaseMaterial 확장 Instance만 허용됩니다.')
+        var tGL;
+        tGL = redGL.gl;
         /**DOC:
 		{
             title :`geometry`,
@@ -36,10 +39,19 @@ var RedMesh;
         /**DOC:
 		{
             title :`material`,
-            description : `material`
+            description : `material`,
+            return : 'RedBaseMaterial 확장 Instance'
 		}
 	    :DOC*/
         this['material'] = material;
+        /**DOC:
+		{
+            title :`drawMode`,
+            description : `drawMode`,
+            return : 'gl 상수'
+		}
+	    :DOC*/
+        this['drawMode'] = tGL.TRIANGLES
         /**DOC:
 		{
             title :`x`,

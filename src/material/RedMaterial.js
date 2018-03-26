@@ -65,8 +65,6 @@ var RedMaterial;
 
     }
 
-    RedMaterial.prototype = {
-
-    }
+    RedMaterial.prototype = RedBaseMaterial.prototype
     Object.freeze(RedMaterial)
 })();

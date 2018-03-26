@@ -1,12 +1,18 @@
 [
   {
+    "title": "drawMode",
+    "description": "drawMode",
+    "return": "gl 상수"
+  },
+  {
     "title": "geometry",
     "description": "geometry",
     "return": "RedGeometry"
   },
   {
     "title": "material",
-    "description": "material"
+    "description": "material",
+    "return": "RedBaseMaterial 확장 Instance"
   },
   {
     "constructorYn": true,
@@ -21,7 +27,7 @@
       ],
       "material": [
         {
-          "type": "*어떻게 처리를해야할까.."
+          "type": "RedBaseMaterial 확장 Instance"
         },
         "material"
       ]
