@@ -171,6 +171,7 @@ var RedRenderer;
             gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
             gl.scissor(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+           
             // console.log("worldRender", v['key'], t0)
             self['renderInfo'] = {}
             self['world']['_viewList'].forEach(function (tView) {
@@ -196,7 +197,7 @@ var RedRenderer;
                 // 위치/크기의 % 여부를 파싱
                 valueParser(viewRect);
                 // viewport 설정
-                gl.viewport(viewRect[0], worldRect[3] - viewRect[3] - viewRect[1], viewRect[2], viewRect[3]);
+                // gl.viewport(viewRect[0], worldRect[3] - viewRect[3] - viewRect[1], viewRect[2], viewRect[3]);
                 gl.scissor(viewRect[0], worldRect[3] - viewRect[3] - viewRect[1], viewRect[2], viewRect[3]);
                 gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
                 // view 에 적용할 카메라 퍼스펙티브를 계산
@@ -224,6 +225,7 @@ var RedRenderer;
                         tCamera.farClipping
                     );
                     gl.enable(gl.CULL_FACE);
+                 
                 }
                 updateSystemUniform(redGL, time, perspectiveMTX, tCamera['matrix'], viewRect)
                 // 씬렌더 호출

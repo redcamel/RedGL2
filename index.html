@@ -159,7 +159,7 @@
             geometry2 = RedGeometry(testInterleaveBuffer2, testIndexBuffer2)
 
             var testMesh
-            var i = 5000;
+            var i = 2000;
             var len = i
             while (i--) {
                 var t
@@ -171,7 +171,6 @@
                 else if (i > len / 8 * 2) testMesh = RedMesh(geometry2, testMaterial6)
                 else if (i > len / 8) testMesh = RedMesh(geometry, testMaterial7)
                 else testMesh = RedMesh(geometry, testMaterial8)
-
                 testMesh.x = Math.random() * 50 - 25
                 testMesh.y = Math.random() * 50 - 25
                 testMesh.z = Math.random() * 50 - 25
@@ -181,7 +180,7 @@
                 tScene3D.addChild(testMesh)
 
             }
-            i = 1000
+            i = 2000
             len = i
             while (i--) {
                 if (i > len / 8 * 7) testMesh = RedMesh(geometry, testMaterial)
@@ -225,8 +224,8 @@
                     // testMesh.rotationY += 1 / 20
                     testMesh.rotationZ += 1 / 20
                 }
-                RedView('test2').setLocation(Math.cos(time / 1000) * 100 + 100, Math.sin(time / 1000) *
-                    100 + 100)
+                // RedView('test2').setLocation(Math.cos(time / 1000) * 100 + 100, Math.sin(time / 1000) *
+                //     100 + 100)
 
 
                 tCamera2.x = Math.sin(time / 3000) * 15
