@@ -6,7 +6,7 @@ var RedCamera;
         constructorYn : true,
         title :`RedCamera`,
         description : `
-            RedCamera 인스턴스 생성자.
+            RedCamera Instance 생성자.
         `,
         return : 'RedCamera Instance'
     }

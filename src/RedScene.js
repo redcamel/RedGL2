@@ -6,7 +6,7 @@ var RedScene;
         constructorYn : true,
         title :`RedScene`,
         description : `
-            RedScene 인스턴스 생성자.
+            RedScene Instance 생성자.
         `,
         return : 'RedScene Instance'
     }

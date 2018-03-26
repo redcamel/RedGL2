@@ -1,0 +1,118 @@
+[
+  {
+    "code": "PROPERTY",
+    "title": "bufferType",
+    "description": "bufferType 상수",
+    "example": "\n    // TODO:\n",
+    "return": "RedBuffer.ARRAY_BUFFER or RedBuffer.ELEMENT_ARRAY_BUFFER"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "data",
+    "description": "data",
+    "example": "\n    // TODO:\n",
+    "return": "TypedArray"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "drawMode",
+    "description": "gl.STATIC_DRAW 상수",
+    "example": "\n    // TODO:\n",
+    "return": "gl.STATIC_DRAW or gl.DYNAMIC_DRAW"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "glArrayType",
+    "description": "\ndata의 type의 gl.XXX 상수\nex) gl.FLOAT, gl.BYTE\n",
+    "example": "\n    // TODO:\n",
+    "return": "gl.XXX 상수"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "glBufferType",
+    "description": "bufferType에 대응하는 gl.ARRAY_BUFFER or gl.ELEMENT_ARRAY_BUFFER 상수",
+    "example": "\n    // TODO:\n",
+    "return": "gl.ARRAY_BUFFER or glELEMENT_ARRAY_BUFFER 상수"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "key",
+    "description": "고유키",
+    "example": "\n    // TODO:\n",
+    "return": "String"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedBuffer",
+    "description": "\n    RedBuffer Instance 생성자\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL Instance"
+        }
+      ],
+      "key": [
+        {
+          "type": "String"
+        },
+        "고유키"
+      ],
+      "data": [
+        {
+          "type": "TypedArray"
+        },
+        "버퍼 구성 데이터"
+      ],
+      "bufferType": [
+        {
+          "type": "String"
+        },
+        "RedBuffer.ARRAY_BUFFER or RedBuffer.ELEMENT_ARRAY_BUFFER"
+      ],
+      "interleaveDefineInfo": [
+        {
+          "type": "Object"
+        },
+        "\n        버퍼의 인터리브 구성 정보\n        RedBuffer.ARRAY_BUFFER 일때만 필요\n        "
+      ]
+    },
+    "example": "\n    // TODO:\n",
+    "return": "RedBuffer Instance"
+  },
+  {
+    "code": "CONST",
+    "title": "RedBuffer.ARRAY_BUFFER",
+    "description": "\n    ARRAY_BUFFER 버퍼상수\n",
+    "example": "\n    // TODO:\n",
+    "return": "RedBuffer Instance"
+  },
+  {
+    "code": "CONST",
+    "title": "RedBuffer.ELEMENT_ARRAY_BUFFER",
+    "description": "\n    ELEMENT_ARRAY_BUFFER 버퍼상수\n",
+    "example": "\n    // TODO:\n",
+    "return": "RedBuffer Instance"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "updateData",
+    "description": "\n    버퍼 데이터 갱신\n    기존 버퍼의 타입과 다른 타입의 값이 들어올경우 에러. \n",
+    "params": {
+      "data": [
+        {
+          "type": "TypedArray"
+        },
+        "갱신 할 데이터"
+      ]
+    },
+    "example": "\n    // TODO:\n",
+    "return": "RedBuffer Instance"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "webglBuffer",
+    "description": "WebGLBuffer",
+    "example": "\n    // TODO:\n",
+    "return": "WebGLBuffer"
+  }
+]

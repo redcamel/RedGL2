@@ -5,8 +5,8 @@ var RedBitmapTexture;
     RedBitmapTexture = function (redGL, src, option) {
         var gl;
         var tTexture;
-        if (!(this instanceof RedBitmapTexture)) return new RedBitmapTexture(redGL, src, option)
-        if (!(redGL instanceof RedGL)) throw 'RedBitmapTexture : RedGL 인스턴스만 허용됩니다.'
+        if (!(this instanceof RedBitmapTexture)) return new RedBitmapTexture(redGL, src, option);
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwfunc('RedBitmapTexture : RedGL Instance만 허용됩니다.');
         gl = redGL.gl;
         tTexture = gl.createTexture();
         this['webglTexture'] = tTexture;

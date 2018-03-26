@@ -6,7 +6,7 @@ var RedWorld;
         constructorYn : true,
         title :`RedWorld`,
         description : `
-            RedWorld 인스턴스 생성자.
+            RedWorld Instance 생성자.
             RedWorld는 RedView를 소유하며 이는 렌더리스트로서 작동한다.. 
         `,
         params : {
@@ -50,7 +50,7 @@ var RedWorld;
             }
         :DOC*/
         addView: function (View) {
-            if (!(View instanceof RedView)) RedGLUtil.throwFunc('RedView 인스턴스만 허용함.')
+            if (!(View instanceof RedView)) RedGLUtil.throwFunc('RedView Instance만 허용함.')
             this['_viewMap'][View['key']] = View;
             this['_viewList'].push(View);
             return this;

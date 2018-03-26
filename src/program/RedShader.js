@@ -1,60 +1,20 @@
 "use strict";
-/**DOC:
-    {
-        constructorYn : true,
-        title :`RedShader`,
-        description : `
-            - RedShader 인스턴스 생성자
-            - <b>유일키</b>만 지원.
-            - <b>단 프레그먼트/버텍스의 키는 따로 관리함.</b>
-            - 쉐이더정보는 <b>Object.freeze</b> 상태로 반환됨.
-        `,
-        params : {
-            redGL : [
-                {type:'Red Instance'},
-                'redGL 인스턴스'
-            ],
-            key : [
-                {type:'String'},
-                '- 등록될 키명'
-            ],
-            type : [
-                {type:'String'},
-                '- 버텍스 쉐이더(RedShader.VERTEX)',
-                '- 프레그먼트 쉐이더(RedShader.FRAGMENT)'
-            ],
-            source : [
-                {type:'String'},
-                '- 생성할 쉐이더 소스문자열'
-            ]
-        },
-        example : `
-            var test;
-            test = RedGL(Canvas Element)
-            // basic이라는 이름으로 버텍스 쉐이더를 만든다. 
-            test.createShaderInfo('basic', RedShader.VERTEX_, 쉐이더소스)
-        `,
-        return : 'RedShader Instance'
-    }
-:DOC*/
 var RedShader;
 (function () {
-    var tShader, tGL;
-    var makeWebGLShader, compile, parser, mergeShareSource;
-    var keyMap;
+    var makeWebGLShader, compile, parser, mergeSystemCode;
     makeWebGLShader = (function () {
         var t0;
         return function (gl, key, type) {
             switch (type) {
                 case RedShader.VERTEX:
                     t0 = gl.createShader(gl.VERTEX_SHADER);
-                    t0.key = key;
-                    t0.type = type;
+                    t0['key'] = key;
+                    t0['type'] = type;
                     return t0
                 case RedShader.FRAGMENT:
                     t0 = gl.createShader(gl.FRAGMENT_SHADER);
-                    t0.key = key;
-                    t0.type = type;
+                    t0['key'] = key;
+                    t0['type'] = type;
                     return t0
                 default:
                     RedGLUtil.throwFunc('RedShader : 쉐이더 타입을 확인하세요!')
@@ -67,15 +27,15 @@ var RedShader;
         gl.compileShader(shader);
         if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) RedGLUtil.throwFunc(gl.getShaderInfoLog(shader), '쉐이더 컴파일에 실패하였습니다.')
     }
-    mergeShareSource = (function () {
+    mergeSystemCode = (function () {
         var t0;
         return function (type, sourceList) {
             switch (type) {
                 case RedShader.VERTEX:
-                    t0 = RedSystemShaderCode.vShareSource.concat();
+                    t0 = RedSystemShaderCode['vShareSource'].concat();
                     break;
                 case RedShader.FRAGMENT:
-                    t0 = RedSystemShaderCode.fShareSource.concat();
+                    t0 = RedSystemShaderCode['fShareSource'].concat();
                     break;
                 default:
                     RedGLUtil.throwFunc('RedShader : 쉐이더 타입을 확인하세요!')
@@ -105,9 +65,9 @@ var RedShader;
                 }
             }
             checkList = checkList ? checkList : [];
-            // 함수제외 전부 검색
+            // 함수 제외 전부 검색
             checkList = source.match(/attribute[\s\S]+?\;|uniform[\s\S]+?\;|varying[\s\S]+?\;|precision[\s\S]+?\;|([a-z0-9]+)\s([\S]+)\;\n/g);
-            checkList = mergeShareSource(type, checkList);
+            checkList = mergeSystemCode(type, checkList);
             checkList.sort();
             checkList.forEach(function (v) {
                 var tData;
@@ -158,7 +118,7 @@ var RedShader;
                 parseData[tType]['source'] += v + ';\n';
             });
 
-            // 함수부를 찾아서 머징
+            // 함수부 찾는다.
             source = source.trim()
             source += '\n'
             source.match(/[a-z0-9]+\s[\s\S]+?(\}\n)/g).forEach(function (v) {
@@ -184,45 +144,72 @@ var RedShader;
             return parseData;
         }
     })()
+    /**DOC:
+        {
+            constructorYn : true,
+            title :`RedShader`,
+            description : `
+                RedShader Instance 생성기
+                RedSystemShaderCode 소스와 머징된 RedShader Instance를 생성
+            `,
+            params : {
+                redGL : [
+                    {type:'RedGL Instance'}
+                ],
+                key : [
+                    {type:'String'},
+                    `고유키`
+                ],
+                type : [
+                    {type:'RedShader.VERTEX or RedShader.FRAGMENT'},
+                    `버퍼 타입`
+                ],
+                source : [
+                    {type:'String'},
+                    `쉐이더 문자열 소스`
+                ],
+            },
+            return : 'RedShader Instance'
+        }
+    :DOC*/
     RedShader = function (redGL, key, type, source) {
-        if (!(this instanceof RedShader)) return new RedShader(redGL, key, type, source)
-        if (!(redGL instanceof RedGL)) throw 'RedShader : RedGL 인스턴스만 허용됩니다.'
-        if (typeof key != 'string') throw 'RedShader : key - 문자열만 허용됩니다.'
-        if (typeof type != 'string') throw 'RedShader : type - 문자열만 허용됩니다.'
-        if (typeof source != 'string') throw 'RedShader : source - 문자열만 허용됩니다.'
+        var tGL;
+        if (!(this instanceof RedShader)) return new RedShader(redGL, key, type, source);
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwfunc('RedShader : RedGL Instance만 허용됩니다.');
+        if (typeof key != 'string') RedGLUtil.throwfunc('RedShader : key - 문자열만 허용됩니다.');
+        if (typeof type != 'string') RedGLUtil.throwfunc('RedShader : type - 문자열만 허용됩니다.');
+        if (typeof source != 'string') RedGLUtil.throwfunc('RedShader : source - 문자열만 허용됩니다.');
         tGL = redGL.gl
-
-        tShader = makeWebGLShader(tGL, key, type);
+        /**DOC:
+            {
+                title :`webglShader`,
+                description : `실제 쉐이더(WebGLShader Instance)`,
+                example : `Instance.webglShader`,
+                return : 'WebGLShader'
+            }
+        :DOC*/
+        this['webglShader'] = makeWebGLShader(tGL, key, type);
         this['parseData'] = parser(type, source);
-        source = this['parseData']['lastSource'];
-        compile(tGL, type, tShader, source);
+        compile(tGL, type, this['webglShader'], this['parseData']['lastSource']);
         /**DOC:
         {
             title :`key`,
             description : `고유키`,
-            example : `인스턴스.key`,
+            example : `Instance.key`,
             return : 'String'
         }
         :DOC*/
+        //TODO: 고유키 방어
         this['key'] = key
         /**DOC:
 		{
             title :`type`,
-			description : `RedShader.VERTEXor RedShader.FRAGMENT`,
-			example : `인스턴스.type`,
+			description : `RedShader.VERTEX or RedShader.FRAGMENT`,
+			example : `Instance.type`,
 			return : 'String'
 		}
 	    :DOC*/
         this['type'] = type
-        /**DOC:
-		{
-            title :`shader`,
-			description : `실제 쉐이더(WebGLShader instance)`,
-			example : `인스턴스.shader`,
-			return : 'String'
-		}
-	    :DOC*/
-        this['webglShader'] = tShader
         this['_UUID'] = RedGL['makeUUID']();
         console.log(this);
         Object.freeze(this)
@@ -230,7 +217,7 @@ var RedShader;
     }
     /**DOC:
 		{
-            title :`FRAGMENT`,
+            title :`RedShader.FRAGMENT`,
             code: 'CONST',
 			description : `
 				프레그먼트 쉐이더 상수.
@@ -244,7 +231,7 @@ var RedShader;
     RedShader.FRAGMENT = 'fragmentShader'
     /**DOC:
 		{
-            title :`VERTEX_SHADER`,
+            title :`RedShader.VERTEX_SHADER`,
             code: 'CONST',
 			description : `
 				버텍스 쉐이더 상수.
