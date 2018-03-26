@@ -42,20 +42,27 @@ var RedBuffer;
     parseInterleaveDefineInfo = (function () {
         var t0, k;
         return function (self, bufferType, data, interleaveDefineInfo) {
+            // console.log(self,bufferType)
             t0 = 0;
             switch (bufferType) {
                 case RedBuffer.ARRAY_BUFFER:
                     self['interleaveDefineInfo'] = interleaveDefineInfo;
                     if (interleaveDefineInfo) {
                         for (k in interleaveDefineInfo) {
-                            interleaveDefineInfo[k]['offset'] = t0
+                            interleaveDefineInfo[k]['offset'] = interleaveDefineInfo.length<2 ? 0 :t0
                             t0 += interleaveDefineInfo[k]['size']
                         }
                         interleaveDefineInfo.forEach(function (v) {
                             interleaveDefineInfo[v['attributeKey']] = v
                         })
-                        self['stride'] = t0;
-                        self['pointNum'] = data.length / t0;
+                        if(interleaveDefineInfo.length<2){
+                            self['stride'] = 0;
+                            self['pointNum'] = data.length / 3;
+                        }else{
+                            self['stride'] = t0;
+                            self['pointNum'] = data.length / t0;
+                        }
+                        
                     } else RedGLUtil.throwFunc('RedBuffer : interleaveDefineInfo는 반드시 정의 되어야합니다.')
                     break
                 case RedBuffer.ELEMENT_ARRAY_BUFFER:
@@ -223,6 +230,9 @@ var RedBuffer;
                 tGL.bufferData(this['glBufferType'], this['data'], this['drawMode']);
             } else RedGLUtil.throwFunc('RedBuffer : updateData - data형식이 기존 형식과 다름', data)
 
+        }
+        this.parseInterleaveDefineInfo = function(){
+            parseInterleaveDefineInfo(this, this['bufferType'], this['data'], this['interleaveDefineInfo']);
         }
         this.updateData(this['data']);
         Object.seal(this);

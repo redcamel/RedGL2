@@ -331,6 +331,7 @@ var RedRenderer;
                         if (tCacheInterleaveBuffer[tWebGLAttributeLocation] != tAttributeLocationInfo['_UUID']) {
                             // 해당로케이션을 활성화된적이없으면 활성화 시킨다
                             tAttributeLocationInfo['enabled'] ? 0 : (gl.enableVertexAttribArray(tWebGLAttributeLocation), tAttributeLocationInfo['enabled'] = true)
+                           
                                 gl.vertexAttribPointer(
                                     tWebGLAttributeLocation,
                                     tInterleaveDefineUnit['size'],

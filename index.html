@@ -28,6 +28,7 @@
     <script src="src/material/RedBitmapMaterial.js"></script>
 
     <script src="src/object3D/RedMesh.js"></script>
+    <script src="src/object3D/RedLine.js"></script>
 
     <script src="src/program/RedProgram.js"></script>
     <script src="src/program/RedSystemShaderCode.js"></script>
@@ -103,8 +104,8 @@
                 0.0, 0.0, 0.0, 1.0, 1.0,
                 1.0, 0.0, 0.0, 1.0, 0.0
             ]);
-            var indexData,
-                indexData = new Uint16Array([0, 1, 2, 0, 2, 3])
+            var indexData, indexData2
+            indexData = new Uint16Array([0, 1, 2, 0, 2, 3])
             indexData2 = new Uint16Array([0, 1, 2])
 
             var testInterleaveBuffer
@@ -164,7 +165,7 @@
             geometry2 = RedGeometry(testInterleaveBuffer2, testIndexBuffer2)
 
             var testMesh
-            var i = 100;
+            var i = 2000;
             var len = i
             while (i--) {
                 var t
@@ -179,13 +180,16 @@
                 testMesh.x = Math.random() * 50 - 25
                 testMesh.y = Math.random() * 50 - 25
                 testMesh.z = Math.random() * 50 - 25
-                // testMesh.rotationX = Math.random() * 360
-                // testMesh.rotationY = Math.random() * 360
-                // testMesh.rotationZ = Math.random() * 360
+                testMesh.rotationX = Math.random() * 360
+                testMesh.rotationY = Math.random() * 360
+                testMesh.rotationZ = Math.random() * 360
                 tScene3D.addChild(testMesh)
 
+
             }
-            i = 100
+
+
+            i = 500
             len = i
             while (i--) {
                 if (i > len / 8 * 7) testMesh = RedMesh(this, geometry, testMaterial)
@@ -204,9 +208,30 @@
                 // testMesh.rotationY = Math.random() * 360
                 testMesh.rotationZ = Math.random() * 360
                 tScene2D.addChild(testMesh)
+
+
+
             }
-
-
+            i = 100
+            while (i--) {
+                var testLine = new RedLine(this, new RedColorMaterial(this, i % 2 ? '#ff0000' : i % 3 ? '#00ff00' : '#0000ff'))
+                var tX, tY, tZ
+                tX = tY = tZ = 0
+                var i2 = 50
+                while (i2--) {
+                    tX += Math.random() * 30
+                    tY += Math.random() * 30
+                    tZ += Math.random() * 30
+                    testLine.addPoint(tX, tY, tZ)
+                }
+                testLine.rotationX = Math.random() * 360
+                testLine.rotationY = Math.random() * 360
+                testLine.rotationZ = Math.random() * 360
+                testLine.x = 500
+                testLine.y = 500
+                testLine.update()
+                tScene2D.addChild(testLine)
+            }
             var renderResult;
             renderResult = document.createElement('div')
             renderResult.style.cssText = 'position:absolute;top:0px;left:0px;color:#fff;font-size:12px'
@@ -229,7 +254,7 @@
                     testMesh = tScene2D.children[i]
                     // testMesh.rotationX += 1 / 20
                     // testMesh.rotationY += 1 / 20
-                    testMesh.rotationZ += 1 / 20
+                    testMesh.rotationZ += 1 / 60
                 }
                 RedView('test2').setLocation(Math.cos(time / 1000) * 100 + 100, Math.sin(time / 1000) *
                     100 + 100)
