@@ -75,7 +75,8 @@
 
 
 
-            var testMaterial, testMaterial2, testMaterial3, testMaterial4, testMaterial5, testMaterial6, testMaterial7, testMateria8
+            var testMaterial, testMaterial2, testMaterial3, testMaterial4, testMaterial5, testMaterial6,
+                testMaterial7, testMateria8
             testMaterial = RedMaterial(this)
             testMaterial2 = RedColorMaterial(this)
             testMaterial3 = RedBitmapMaterial(this, RedBitmapTexture(this, 'asset/crate.png'))
@@ -87,14 +88,12 @@
 
 
             var interleaveData, interleaveData2
-            interleaveData = new Float32Array([
-                -1.0, -1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 1.0,
+            interleaveData = new Float32Array([-1.0, -1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 1.0,
                 1.0, -1.0, 0.0, 1.0, 1.0, 1.0, 0.0, 1.0, 1.0,
-                1.0, 1.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0,
-                -1.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0
+                1.0, 1.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, -1.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0,
+                1.0
             ]);
-            interleaveData2 = new Float32Array([
-                -1.0, -1.0, 0.0, 0.0, 1.0,
+            interleaveData2 = new Float32Array([-1.0, -1.0, 0.0, 0.0, 1.0,
                 1.0, -1.0, 0.0, 1.0, 1.0,
                 1.0, 1.0, 0.0, 1.0, 0.0
             ]);
@@ -110,20 +109,20 @@
                 'testInterleaveBuffer',
                 interleaveData,
                 RedBuffer.ARRAY_BUFFER, [{
-                    attributeKey: 'aVertexPosition',
-                    size: 3,
-                    normalize: false
-                },
-                {
-                    attributeKey: 'aTexcoord',
-                    size: 2,
-                    normalize: false
-                },
-                {
-                    attributeKey: 'aVertexColor',
-                    size: 4,
-                    normalize: false
-                }
+                        attributeKey: 'aVertexPosition',
+                        size: 3,
+                        normalize: false
+                    },
+                    {
+                        attributeKey: 'aTexcoord',
+                        size: 2,
+                        normalize: false
+                    },
+                    {
+                        attributeKey: 'aVertexColor',
+                        size: 4,
+                        normalize: false
+                    }
                 ]
             )
             testInterleaveBuffer2 = RedBuffer(
@@ -131,15 +130,15 @@
                 'testInterleaveBuffer2',
                 interleaveData2,
                 RedBuffer.ARRAY_BUFFER, [{
-                    attributeKey: 'aVertexPosition',
-                    size: 3,
-                    normalize: false
-                },
-                {
-                    attributeKey: 'aTexcoord',
-                    size: 2,
-                    normalize: false
-                }
+                        attributeKey: 'aVertexPosition',
+                        size: 3,
+                        normalize: false
+                    },
+                    {
+                        attributeKey: 'aTexcoord',
+                        size: 2,
+                        normalize: false
+                    }
                 ]
             )
             testIndexBuffer = RedBuffer(
@@ -159,7 +158,7 @@
             geometry2 = RedGeometry(testInterleaveBuffer2, testIndexBuffer2)
 
             var testMesh
-            var i = 2000;
+            var i = 500;
             var len = i
             while (i--) {
                 var t
@@ -180,7 +179,7 @@
                 tScene3D.addChild(testMesh)
 
             }
-            i = 2000
+            i = 1000
             len = i
             while (i--) {
                 if (i > len / 8 * 7) testMesh = RedMesh(geometry, testMaterial)
@@ -224,8 +223,8 @@
                     // testMesh.rotationY += 1 / 20
                     testMesh.rotationZ += 1 / 20
                 }
-                // RedView('test2').setLocation(Math.cos(time / 1000) * 100 + 100, Math.sin(time / 1000) *
-                //     100 + 100)
+                RedView('test2').setLocation(Math.cos(time / 1000) * 100 + 100, Math.sin(time / 1000) *
+                    100 + 100)
 
 
                 tCamera2.x = Math.sin(time / 3000) * 15
@@ -242,14 +241,14 @@
                 for (var k in tRenderer['renderInfo']) {
                     // console.log(tRenderer['renderInfo'][k])
                     renderResult.innerHTML +=
-                        'RedView : key - ' + tRenderer['renderInfo'][k]['key']
-                        + ' / orthographic - ' + tRenderer['renderInfo'][k]['orthographic']
-                        + ' / call - ' + tRenderer['renderInfo'][k]['call']
-                        + ' / width - ' + tRenderer['renderInfo'][k]['width']
-                        + ' / height - ' + tRenderer['renderInfo'][k]['height']
-                        + ' / x - ' + tRenderer['renderInfo'][k]['x']
-                        + ' / y - ' + tRenderer['renderInfo'][k]['y']
-                        + '<br>'
+                        'RedView : key - ' + tRenderer['renderInfo'][k]['key'] +
+                        ' / orthographic - ' + tRenderer['renderInfo'][k]['orthographic'] +
+                        ' / call - ' + tRenderer['renderInfo'][k]['call'] +
+                        ' / width - ' + tRenderer['renderInfo'][k]['width'] +
+                        ' / height - ' + tRenderer['renderInfo'][k]['height'] +
+                        ' / x - ' + tRenderer['renderInfo'][k]['x'] +
+                        ' / y - ' + tRenderer['renderInfo'][k]['y'] +
+                        '<br>'
                 }
                 renderResult.innerHTML += 'renderScale : ' + self.renderScale
 

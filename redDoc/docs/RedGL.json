@@ -8,7 +8,7 @@
   {
     "constructorYn": true,
     "title": "RedGL",
-    "description": "\n    RedGL 인스턴스 생성자.\n    WebGL 초기화를 담당하며, 단일 월드를 소유한다.\n",
+    "description": "\n    RedGL Instance 생성자.\n    WebGL 초기화를 담당하며, 단일 월드를 소유한다.\n",
     "params": {
       "canvas": [
         {
@@ -49,7 +49,7 @@
   {
     "title": "setSize",
     "code": "FUNCTION",
-    "description": "\n    RedGL 인스턴스의 Canvas 사이즈 설정\n    fullMode 속성이 false일때만 적용.\n",
+    "description": "\n    RedGL Instance의 Canvas 사이즈 설정\n    fullMode 속성이 false일때만 적용.\n",
     "example": "\n    RedGL(document.getElementById('test'), function(v){\n         if(v){\n             // 초기화 성공\n             this.setSize(200,200)\n         }else{\n             // 초기화실패\n         }\n    })\n",
     "return": "void"
   }

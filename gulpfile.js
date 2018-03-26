@@ -60,14 +60,30 @@ gulp.task('make-doc', function () {
 	console.log('-------------------------------------------');
 	console.log('시작!');
 	return gulp.src([
+		"src/RedGLUtil.js",
 		"src/RedGL.js",
-		"src/renderer/RedRenderer.js",
+		"src/base/RedBaseContainer.js",
+		"src/base/RedBaseObject3D.js",
+		"src/geometry/RedBuffer.js",
+		"src/geometry/RedGeometry.js",
+		"src/material/RedMaterial.js",
+		"src/material/RedColorMaterial.js",
+		"src/material/RedBitmapMaterial.js",
+
+		"src/object3D/RedMesh.js",
+
+		"src/program/RedProgram.js",
+		"src/program/RedSystemShaderCode.js",
 		"src/program/RedShader.js",
-		"src/RedCamera.js",
-		'src/RedView.js',
+		"src/renderer/RedRenderer.js",
+
+		"src/resources/RedBitmapTexture.js",
+
+		"src/RedView.js",
 		"src/RedWorld.js",
-		"src/RedScene.js"
-		
+		"src/RedScene.js",
+		"src/RedCamera.js"
+
 	])
 		.pipe(myTransformation()) // 병합한다.
 		.pipe(rename(function (path) {
@@ -81,15 +97,29 @@ gulp.task('combine-js', function () {
 	var name = "RedGL"
 	return gulp.src([
 		"src/gl-matrix-min.js",
+		"src/RedGLUtil.js",
 		"src/RedGL.js",
 		"src/base/RedBaseContainer.js",
 		"src/base/RedBaseObject3D.js",
-		"src/renderer/RedRenderer.js",
+		"src/geometry/RedBuffer.js",
+		"src/geometry/RedGeometry.js",
+		"src/material/RedMaterial.js",
+		"src/material/RedColorMaterial.js",
+		"src/material/RedBitmapMaterial.js",
+
+		"src/object3D/RedMesh.js",
+
+		"src/program/RedProgram.js",
+		"src/program/RedSystemShaderCode.js",
 		"src/program/RedShader.js",
-		"src/RedCamera.js",
-		'src/RedView.js',
+		"src/renderer/RedRenderer.js",
+
+		"src/resources/RedBitmapTexture.js",
+
+		"src/RedView.js",
 		"src/RedWorld.js",
-		"src/RedScene.js"
+		"src/RedScene.js",
+		"src/RedCamera.js"
 	])
 		.pipe(concat(name + '.js')) // 병합한다.
 		.pipe(gulp.dest('release')) //

@@ -1,0 +1,64 @@
+[
+  {
+    "code": "FUNCTION",
+    "title": "addChild",
+    "description": "addChild",
+    "example": "// TODO:",
+    "return": "void"
+  },
+  {
+    "code": "FUNCTION",
+    "title": "addChildAt",
+    "description": "addChildAt",
+    "example": "// TODO:",
+    "return": "void"
+  },
+  {
+    "code": "FUNCTION",
+    "title": "getChildAt",
+    "description": "getChildAt",
+    "example": "// TODO:",
+    "return": "void"
+  },
+  {
+    "code": "FUNCTION",
+    "title": "getChildIndex",
+    "description": "getChildIndex",
+    "example": "// TODO:",
+    "return": "void"
+  },
+  {
+    "code": "FUNCTION",
+    "title": "numChildren",
+    "description": "numChildren",
+    "example": "// TODO:",
+    "return": "void"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedBaseContainer",
+    "description": "\n    DisplayContainer 기저층\n    프로토타입 확장을 통해서만 사용가능(RedGLUtil.extendsProto 사용)\n",
+    "return": "DisplayContainer Instance"
+  },
+  {
+    "code": "FUNCTION",
+    "title": "removeChild",
+    "description": "removeChild",
+    "example": "// TODO:",
+    "return": "void"
+  },
+  {
+    "code": "FUNCTION",
+    "title": "removeChildAll",
+    "description": "removeChildAll",
+    "example": "// TODO:",
+    "return": "void"
+  },
+  {
+    "code": "FUNCTION",
+    "title": "removeChildAt",
+    "description": "removeChildAt",
+    "example": "// TODO:",
+    "return": "void"
+  }
+]

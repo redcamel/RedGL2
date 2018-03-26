@@ -1,0 +1,63 @@
+[
+  {
+    "title": "attributeLocation",
+    "description": "어리뷰트 로케이션 정보",
+    "example": "// TODO:",
+    "return": "Array"
+  },
+  {
+    "title": "key",
+    "description": "고유키",
+    "example": "Instance.key",
+    "return": "String"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedProgram",
+    "description": "\n    RedProgram Instance 생성기\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL Instance"
+        }
+      ],
+      "key": [
+        {
+          "type": "String"
+        },
+        "고유키"
+      ],
+      "vs": [
+        {
+          "type": "RedShader Instance"
+        },
+        "버텍스 쉐이더(RedShader.VERTEX 타입)"
+      ],
+      "fs": [
+        {
+          "type": "RedShader Instance"
+        },
+        "프레그먼트 쉐이더(RedShader.FRAGMENT 타입)"
+      ]
+    },
+    "return": "RedProgram Instance"
+  },
+  {
+    "title": "systemUniformLocation",
+    "description": "시스템 유니폼 로케이션 정보",
+    "example": "// TODO:",
+    "return": "Array"
+  },
+  {
+    "title": "uniformLocation",
+    "description": "유니폼 로케이션 정보",
+    "example": "// TODO:",
+    "return": "Array"
+  },
+  {
+    "title": "webglProgram",
+    "description": "실제 프로그램(WebGLProgram Instance)",
+    "example": "// TODO:",
+    "return": "WebGLShader"
+  }
+]

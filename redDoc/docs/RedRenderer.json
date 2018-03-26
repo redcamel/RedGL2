@@ -2,7 +2,7 @@
   {
     "constructorYn": true,
     "title": "RedRenderer",
-    "description": "\n    RedRenderer 인스턴스 생성자.\n",
+    "description": "\n    RedRenderer Instance 생성자.\n",
     "return": "RedRenderer Instance"
   },
   {

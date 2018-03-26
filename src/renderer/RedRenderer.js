@@ -6,7 +6,7 @@ var RedRenderer;
         constructorYn : true,
         title :`RedRenderer`,
         description : `
-            RedRenderer 인스턴스 생성자.
+            RedRenderer Instance 생성자.
         `,
         return : 'RedRenderer Instance'
     }
@@ -50,8 +50,8 @@ var RedRenderer;
                 self['_tickKey'] = requestAnimationFrame(tick);
             }
             return function (redGL, callback) {
-                if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedGL 인스턴스만 허용');
-                if (!(redGL.world instanceof RedWorld)) RedGLUtil.throwFunc('RedWorld 인스턴스만 허용');
+                if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedGL Instance만 허용');
+                if (!(redGL.world instanceof RedWorld)) RedGLUtil.throwFunc('RedWorld Instance만 허용');
                 self = this;
                 self.world = redGL.world;
                 tRedGL = redGL
@@ -171,7 +171,7 @@ var RedRenderer;
             gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
             gl.scissor(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-           
+
             // console.log("worldRender", v['key'], t0)
             self['renderInfo'] = {}
             self['world']['_viewList'].forEach(function (tView) {
@@ -225,7 +225,7 @@ var RedRenderer;
                         tCamera.farClipping
                     );
                     gl.enable(gl.CULL_FACE);
-                 
+
                 }
                 updateSystemUniform(redGL, time, perspectiveMTX, tCamera['matrix'], viewRect)
                 // 씬렌더 호출
@@ -236,7 +236,7 @@ var RedRenderer;
     RedRenderer.prototype.sceneRender = (function () {
         var tPrevIndexBuffer_UUID;
         var tPrevInterleaveBuffer_UUID;
-        var tTextureIndex=1;
+        var tTextureIndex = 1;
         return function (gl, orthographic, scene, time, renderResultObj) {
             var tChildren, tMesh;
             var k, i, i2;
@@ -320,7 +320,7 @@ var RedRenderer;
                     */
                     if (tLocationInfo) {
                         // webgl location도 알아낸다.
-                        tWebGLAttrLocation = tLocationInfo['location'] 
+                        tWebGLAttrLocation = tLocationInfo['location']
                         // 실제 버퍼 바인딩하고 //TODO: 이놈은 검증해야함
                         tPrevInterleaveBuffer_UUID == tUUID ? 0 : gl.bindBuffer(gl.ARRAY_BUFFER, tInterleaveBuffer['webglBuffer'])
                         tPrevInterleaveBuffer_UUID = tUUID;
@@ -364,9 +364,9 @@ var RedRenderer;
                                 gl.activeTexture(gl.TEXTURE0 + tTextureIndex)
                                 gl.bindTexture(gl.TEXTURE_2D, tUniformValue['webglTexture'])
                                 gl.uniform1i(tWebGLUniformLocation, tTextureIndex)
-                                if(tCacheTextureInfo[tTextureIndex]) tTextureIndex++
-                                if(tTextureIndex==8) tTextureIndex = 1
-                                tCacheTextureInfo[tTextureIndex] = tUniformValue['_UUID']                                                                
+                                if (tCacheTextureInfo[tTextureIndex]) tTextureIndex++
+                                if (tTextureIndex == 8) tTextureIndex = 1
+                                tCacheTextureInfo[tTextureIndex] = tUniformValue['_UUID']
                                 // console.log(tCacheTextureInfo)
                             }
 

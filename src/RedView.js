@@ -16,7 +16,7 @@ var RedView;
             key :[
                 {type:'String'},
                 '고유키',
-                '기존에 존재하는 키일경우 <b>캐쉬된 인스턴스</b>를 반환'
+                '기존에 존재하는 키일경우 <b>캐쉬된 Instance</b>를 반환'
             ],
             scene :[
                 {type:'RedScene'},
@@ -45,8 +45,8 @@ var RedView;
         if (!(this instanceof RedView)) return new RedView(key, scene, camera);
         if (!(typeof key == 'string')) RedGLUtil.throwFunc('key : 문자열만 허용')
         if (!scene && !camera) RedGLUtil.throwFunc('존재하지 않는 key입니다.')
-        if (scene && !(scene instanceof RedScene)) RedGLUtil.throwFunc('RedScene 인스턴스만 허용')
-        if (camera && !(camera instanceof RedCamera)) RedGLUtil.throwFunc('RedCamera 인스턴스만 허용')
+        if (scene && !(scene instanceof RedScene)) RedGLUtil.throwFunc('RedScene Instance만 허용')
+        if (camera && !(camera instanceof RedCamera)) RedGLUtil.throwFunc('RedCamera Instance만 허용')
 
         this['key'] = key;
         this['scene'] = scene;

@@ -5,8 +5,8 @@ var RedBitmapMaterial;
     RedBitmapMaterial = function (redGL, texture) {
         var _color;
         if (!(this instanceof RedBitmapMaterial)) return new RedBitmapMaterial(redGL, texture);
-        if (!(redGL instanceof RedGL)) throw 'RedBitmapMaterial : RedGL 인스턴스만 허용됩니다.'
-        if (!(texture instanceof RedBitmapTexture)) throw 'RedBitmapMaterial : RedBitmapTexture 인스턴스만 허용됩니다.'
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwfunc('RedBitmapMaterial : RedGL Instance만 허용됩니다.')
+        if (!(texture instanceof RedBitmapTexture)) RedGLUtil.throwfunc('RedBitmapMaterial : RedBitmapTexture Instance만 허용됩니다.')
         this['program'] = makeProgram(redGL)
         // 유니폼 프로퍼티
         this['diffuse'] = texture

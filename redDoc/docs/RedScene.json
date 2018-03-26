@@ -2,7 +2,7 @@
   {
     "constructorYn": true,
     "title": "RedScene",
-    "description": "\n    RedScene 인스턴스 생성자.\n",
+    "description": "\n    RedScene Instance 생성자.\n",
     "return": "RedScene Instance"
   }
 ]

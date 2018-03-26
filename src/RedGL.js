@@ -72,7 +72,7 @@ var RedGL;
 			constructorYn : true,
 			title :`RedGL`,
             description : `
-                RedGL 인스턴스 생성자.
+                RedGL Instance 생성자.
                 WebGL 초기화를 담당하며, 단일 월드를 소유한다.
 
 			`,
@@ -207,7 +207,7 @@ var RedGL;
             title :`setSize`,
             code: `FUNCTION`,
             description : `
-                RedGL 인스턴스의 Canvas 사이즈 설정
+                RedGL Instance의 Canvas 사이즈 설정
                 fullMode 속성이 false일때만 적용.
             `,
             example : `
