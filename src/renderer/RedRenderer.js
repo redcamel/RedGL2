@@ -197,7 +197,7 @@ var RedRenderer;
                 // 위치/크기의 % 여부를 파싱
                 valueParser(viewRect);
                 // viewport 설정
-                // gl.viewport(viewRect[0], worldRect[3] - viewRect[3] - viewRect[1], viewRect[2], viewRect[3]);
+                gl.viewport(viewRect[0], worldRect[3] - viewRect[3] - viewRect[1], viewRect[2], viewRect[3]);
                 gl.scissor(viewRect[0], worldRect[3] - viewRect[3] - viewRect[1], viewRect[2], viewRect[3]);
                 gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
                 // view 에 적용할 카메라 퍼스펙티브를 계산
