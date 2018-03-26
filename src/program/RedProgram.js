@@ -3,21 +3,22 @@ var RedProgram;
 (function () {
     var makeProgram, updateLocation;
     makeProgram = (function () {
-        var tProgram;
+        var program;
         return function (gl, key, vs, fs) {
-            tProgram = gl.createProgram();
-            gl.attachShader(tProgram, vs['webglShader']);
-            gl.attachShader(tProgram, fs['webglShader']);
-            gl.linkProgram(tProgram);
-            if (!gl.getProgramParameter(tProgram, gl.LINK_STATUS)) RedGLUtil.throwfunc("프로그램을 초기화 할 수 없습니다.");
-            tProgram.key = key;
-            tProgram.vShaderKey = vs.key;
-            tProgram.fShaderKey = vs.key;
-            gl.useProgram(tProgram);
-            return tProgram;
+            program = gl.createProgram();
+            gl.attachShader(program, vs['webglShader']);
+            gl.attachShader(program, fs['webglShader']);
+            gl.linkProgram(program);
+            if (!gl.getProgramParameter(program, gl.LINK_STATUS)) RedGLUtil.throwFunc("프로그램을 초기화 할 수 없습니다.");
+            program['key'] = key;
+            program['vShaderKey'] = vs['key'];
+            program['fShaderKey'] = vs['key'];
+            gl.useProgram(program);
+            return program;
         }
     })();
     updateLocation = (function () {
+        // TODO: 정보를 객체화시키자
         return function (self, gl, shader) {
             if (shader['parseData']['attribute']) {
                 shader['parseData']['attribute']['list'].forEach(function (v) {
@@ -132,15 +133,15 @@ var RedProgram;
     RedProgram = function (redGL, key, vs, fs) {
         var tGL;
         if (!(this instanceof RedProgram)) return new RedProgram(redGL, key, vs, fs)
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwfunc('RedProgram : RedGL Instance만 허용됩니다.');
-        if (typeof key != 'string') RedGLUtil.throwfunc('RedProgram : key - 문자열만 허용됩니다.');
-        if (!vs instanceof RedShader) RedGLUtil.throwfunc('RedProgram : vShaderInfo - RedShader만 허용됩니다.');
-        if (!fs instanceof RedShader) RedGLUtil.throwfunc('RedProgram : fShaderInfo - RedShader만 허용됩니다.');
-        if (vs['type'] != RedShader.VERTEX) RedGLUtil.throwfunc('RedProgram : vShaderInfo - VERTEX 타입만 허용됩니다.');
-        if (fs['type'] != RedShader.FRAGMENT) RedGLUtil.throwfunc('RedProgram : fShaderInfo - FRAGMENT 타입만 허용됩니다.');
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedProgram : RedGL Instance만 허용됩니다.');
+        if (typeof key != 'string') RedGLUtil.throwFunc('RedProgram : key - 문자열만 허용됩니다.');
+        if (!vs instanceof RedShader) RedGLUtil.throwFunc('RedProgram : vShaderInfo - RedShader만 허용됩니다.');
+        if (!fs instanceof RedShader) RedGLUtil.throwFunc('RedProgram : fShaderInfo - RedShader만 허용됩니다.');
+        if (vs['type'] != RedShader.VERTEX) RedGLUtil.throwFunc('RedProgram : vShaderInfo - VERTEX 타입만 허용됩니다.');
+        if (fs['type'] != RedShader.FRAGMENT) RedGLUtil.throwFunc('RedProgram : fShaderInfo - FRAGMENT 타입만 허용됩니다.');
 
         tGL = redGL.gl;
-        // 유일키 방어
+        // TODO: 유일키 방어
         if (!redGL['_datas']['RedProgram']) redGL['_datas']['RedProgram'] = {};
         if (redGL['_datas']['RedProgram'][key]) return redGL['_datas']['RedProgram'][key]
         else redGL['_datas']['RedProgram'][key] = this

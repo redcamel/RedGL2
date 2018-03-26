@@ -1,16 +1,69 @@
 "use strict";
 var RedGLUtil;
 (function () {
+    /**DOC:
+        {
+            constructorYn : true,
+            title :`RedGLUtil`,
+            description : `
+                이것저것모음
+            `,
+            return : 'void'
+        }
+    :DOC*/
     RedGLUtil = {
+        /**DOC:
+            {
+                constructorYn : true,
+                title :`RedGLUtil.throwFunc`,
+                description : `
+                    에러생성기
+                `,
+                return : 'void'
+            }
+        :DOC*/
         throwFunc: function () { throw Array.prototype.slice.call(arguments).join(' ') },
+        /**DOC:
+            {
+                constructorYn : true,
+                title :`RedGLUtil.extendsProto`,
+                description : `
+                    프로토타입확장
+                `,
+                params : {
+                    target : [
+                        {type : 'Object'},
+                        '확장할 대상'
+                    ],
+                    from : [
+                        {type : 'Object'},
+                        '가져올 대상'
+                    ]
+                },
+                return : 'void'
+            }
+        :DOC*/
         extendsProto: function (target, from) {
             for (var k in from.prototype) target.prototype[k] = from.prototype[k]
         },
-        hexToRGB: function (hex, alpha) {
-            var t0,t1;
-            console.log('alpha',alpha)
-            if (alpha == undefined) alpha = 1;
-            if (typeof alpha != 'number') RedGLUtil.throwFunc('RedGLUtil.hexToRGB : 잘못된 alpha값입니다.', alpha);
+        /**DOC:
+            {
+                constructorYn : true,
+                title :`RedGLUtil.hexToRGB`,
+                description : `
+                    hex값을 RGB로 변환
+                `,
+                params : {
+                    hex : [
+                        {type : 'hex'},
+                        'hex'
+                    ]
+                },
+                return : 'Array'
+            }
+        :DOC*/
+        hexToRGB: function (hex) {
+            var t0, t1;
             if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
                 t1 = [];
                 t0 = hex.substring(1).split('');
@@ -19,11 +72,31 @@ var RedGLUtil;
                 t1[0] = ((t0 >> 16) & 255) / 255;
                 t1[1] = ((t0 >> 8) & 255) / 255;
                 t1[2] = (t0 & 255) / 255;
-                t1[3] = alpha == undefined ? 1 : alpha
                 return t1
             } else RedGLUtil.throwFunc('RedGLUtil.hexToRGB : 잘못된 hex값입니다.', hex)
-        }
-    }
-    Object.freeze(RedGLUtil)
-
+        },
+        /**DOC:
+            {
+                constructorYn : true,
+                title :`RedGLUtil.getStrFromComment`,
+                description : "문자열중 멀티라인 코멘트 사이값을 반환함",
+                params : {
+                    source : [
+                        {type : 'String'}
+                    ]
+                },
+                return : 'String'
+            }
+        :DOC*/
+        getStrFromComment: (function () {
+            var t0;
+            return function (source) {
+                if (typeof source != 'string') RedGLUtil.throwFunc('getStrFromComment : 해석할 값은 문자열만 가능', source)
+                t0 = source.toString().trim().match(/(\/\*)[\s\S]+(\*\/)/g)
+                if (t0) return t0[0].replace(/\/\*|\*\//g, '');
+                else RedGLUtil.throwFunc('getStrFromComment : 해석할 불가능한 값', source)
+            }
+        })()
+    };
+    Object.freeze(RedGLUtil);
 })();

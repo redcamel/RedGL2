@@ -29,16 +29,69 @@ THE SOFTWARE. */
 "use strict";
 var RedGLUtil;
 (function () {
+    /**DOC:
+        {
+            constructorYn : true,
+            title :`RedGLUtil`,
+            description : `
+                이것저것모음
+            `,
+            return : 'void'
+        }
+    :DOC*/
     RedGLUtil = {
+        /**DOC:
+            {
+                constructorYn : true,
+                title :`RedGLUtil.throwFunc`,
+                description : `
+                    에러생성기
+                `,
+                return : 'void'
+            }
+        :DOC*/
         throwFunc: function () { throw Array.prototype.slice.call(arguments).join(' ') },
+        /**DOC:
+            {
+                constructorYn : true,
+                title :`RedGLUtil.extendsProto`,
+                description : `
+                    프로토타입확장
+                `,
+                params : {
+                    target : [
+                        {type : 'Object'},
+                        '확장할 대상'
+                    ],
+                    from : [
+                        {type : 'Object'},
+                        '가져올 대상'
+                    ]
+                },
+                return : 'void'
+            }
+        :DOC*/
         extendsProto: function (target, from) {
             for (var k in from.prototype) target.prototype[k] = from.prototype[k]
         },
-        hexToRGB: function (hex, alpha) {
-            var t0,t1;
-            console.log('alpha',alpha)
-            if (alpha == undefined) alpha = 1;
-            if (typeof alpha != 'number') RedGLUtil.throwFunc('RedGLUtil.hexToRGB : 잘못된 alpha값입니다.', alpha);
+        /**DOC:
+            {
+                constructorYn : true,
+                title :`RedGLUtil.hexToRGB`,
+                description : `
+                    hex값을 RGB로 변환
+                `,
+                params : {
+                    hex : [
+                        {type : 'hex'},
+                        'hex'
+                    ]
+                },
+                return : 'Array'
+            }
+        :DOC*/
+        hexToRGB: function (hex) {
+            var t0, t1;
             if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
                 t1 = [];
                 t0 = hex.substring(1).split('');
@@ -47,10 +100,31 @@ var RedGLUtil;
                 t1[0] = ((t0 >> 16) & 255) / 255;
                 t1[1] = ((t0 >> 8) & 255) / 255;
                 t1[2] = (t0 & 255) / 255;
-                t1[3] = alpha == undefined ? 1 : alpha
                 return t1
             } else RedGLUtil.throwFunc('RedGLUtil.hexToRGB : 잘못된 hex값입니다.', hex)
-        }
+        },
+        /**DOC:
+            {
+                constructorYn : true,
+                title :`RedGLUtil.getStrFromComment`,
+                description : "문자열중 멀티라인 코멘트 사이값을 반환함",
+                params : {
+                    source : [
+                        {type : 'String'}
+                    ]
+                },
+                return : 'String'
+            }
+        :DOC*/
+        getStrFromComment: (function () {
+            var t0;
+            return function (source) {
+                if (typeof source != 'string') RedGLUtil.throwFunc('getStrFromComment : 해석할 값은 문자열만 가능', source)
+                t0 = source.toString().trim().match(/(\/\*)[\s\S]+(\*\/)/g)
+                if (t0) return t0[0].replace(/\/\*|\*\//g, '');
+                else RedGLUtil.throwFunc('getStrFromComment : 해석할 불가능한 값', source)
+            }
+        })()
     }
     Object.freeze(RedGLUtil)
 
@@ -122,7 +196,6 @@ var RedGL;
         gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
         // 픽셀 플립 기본설정
         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-
     }
     /**DOC:
 		{
@@ -317,8 +390,30 @@ var RedGL;
 //TODO: 검증해야함
 var RedBaseContainer;
 (function () {
-    RedBaseContainer = function () { }
+    /**DOC:
+        {
+            constructorYn : true,
+            title :`RedBaseContainer`,
+            description : `
+                DisplayContainer 기저층
+                프로토타입 확장을 통해서만 사용가능(RedGLUtil.extendsProto 사용)
+            `,
+            return : 'void'
+        }
+    :DOC*/
+    RedBaseContainer = function () {
+        RedGLUtil.throwFunc('RedBaseContainer : 생성자/직접실행으로 사용 할 수 없습니다.')
+    }
     RedBaseContainer.prototype = {
+        /**DOC:
+            {
+                code : 'FUNCTION',
+                title :`addChild`,
+                description : `addChild`,
+                example : `// TODO:`,
+                return : 'void'
+            }
+        :DOC*/
         addChild: (function () {
             var t0;
             return function (child) {
@@ -328,23 +423,50 @@ var RedBaseContainer;
                 this.children.push(child);
             }
         })(),
+        /**DOC:
+            {
+                code : 'FUNCTION',
+                title :`addChildAt`,
+                description : `addChildAt`,
+                example : `// TODO:`,
+                return : 'void'
+            }
+        :DOC*/
         addChildAt: (function () {
             var t0;
             return function (child, index) {
-                if (!(child instanceof RedMesh)) RedGLUtil.throwFunc('addChild', 'RedMesh Instance만 가능');
+                if (!(child instanceof RedMesh)) RedGLUtil.throwFunc('addChildAt', 'RedMesh Instance만 가능');
                 t0 = this.children.indexOf(child);
                 this.children.splice(t0, 0, child);
             }
         })(),
+        /**DOC:
+            {
+                code : 'FUNCTION',
+                title :`removeChild`,
+                description : `removeChild`,
+                example : `// TODO:`,
+                return : 'void'
+            }
+        :DOC*/
         removeChild: (function () {
             var t0;
             return function (child) {
-                if (!(child instanceof RedMesh)) RedGLUtil.throwFunc('addChild', 'RedMesh Instance만 가능');
+                if (!(child instanceof RedMesh)) RedGLUtil.throwFunc('removeChild', 'RedMesh Instance만 가능');
                 t0 = this.children.indexOf(child);
                 if (t0 == -1) RedGLUtil.throwFunc('removeChild', '존재하지 않는 RedMesh를 삭제하려고 함');
                 else this.children.splice(t0, 1);
             }
         })(),
+        /**DOC:
+            {
+                code : 'FUNCTION',
+                title :`removeChildAt`,
+                description : `removeChildAt`,
+                example : `// TODO:`,
+                return : 'void'
+            }
+        :DOC*/
         removeChildAt: (function () {
             var t0;
             return function (index) {
@@ -352,13 +474,40 @@ var RedBaseContainer;
                 this.children.splice(t0, 1);
             }
         }),
+        /**DOC:
+            {
+                code : 'FUNCTION',
+                title :`removeChildAll`,
+                description : `removeChildAll`,
+                example : `// TODO:`,
+                return : 'void'
+            }
+        :DOC*/
         removeChildAll: function () {
             this.children.length = 0
         },
+        /**DOC:
+            {
+                code : 'FUNCTION',
+                title :`getChildAt`,
+                description : `getChildAt`,
+                example : `// TODO:`,
+                return : 'void'
+            }
+        :DOC*/
         getChildAt: function (index) {
             if (typeof index != 'number') RedGLUtil.throwFunc('getChildAt', 'index가 Number형이 아님 ');
             return this.children[index];
         },
+        /**DOC:
+            {
+                code : 'FUNCTION',
+                title :`getChildIndex`,
+                description : `getChildIndex`,
+                example : `// TODO:`,
+                return : 'void'
+            }
+        :DOC*/
         getChildIndex: function (child) {
             if (!(child instanceof RedMesh)) RedGLUtil.throwFunc('getChildIndex', 'RedMesh Instance만 가능');
             return this.children.indexOf(child);
@@ -369,6 +518,15 @@ var RedBaseContainer;
         // setChildIndex: function (v) {
         //     // TODO: 
         // },
+        /**DOC:
+            {
+                code : 'FUNCTION',
+                title :`numChildren`,
+                description : `numChildren`,
+                example : `// TODO:`,
+                return : 'void'
+            }
+        :DOC*/
         numChildren: function (v) {
             return this.children.length;
         }
@@ -379,23 +537,56 @@ var RedBaseContainer;
 "use strict";
 var RedBaseObject3D;
 (function () {
-    RedBaseObject3D = function () { }
+    /**DOC:
+        {
+            constructorYn : true,
+            title :`RedBaseObject3D`,
+            description : `
+                RedBaseObject3D 기저층
+                프로토타입 확장을 통해서만 사용가능(RedGLUtil.extendsProto 사용)
+            `,
+            return : 'void'
+        }
+    :DOC*/
+    RedBaseObject3D = function () {
+        RedGLUtil.throwFunc('RedBaseObject3D : 생성자/직접실행으로 사용 할 수 없습니다.')
+    }
     RedBaseObject3D.prototype = {
+        /**DOC:
+            {
+                code : 'FUNCTION',
+                title :`lookAt`,
+                description : `lookAt`,
+                params : {
+                    x : [
+                        {type:'Number'}
+                    ],
+                    y : [
+                        {type:'Number'}
+                    ],
+                    z : [
+                        {type:'Number'}
+                    ]
+                },
+                example : `// TODO:`,
+                return : 'void'
+            }
+        :DOC*/
         lookAt: (function () {
             var deltaX, deltaY, deltaZ;
             var rotX;
             var HPI;
             var TO_DEGREE;
-            TO_DEGREE = 180/Math.PI;
+            TO_DEGREE = 180 / Math.PI;
             HPI = 0.5 * Math.PI;
             return function (x, y, z) {
                 deltaX = x - this.x;
                 deltaY = y - this.y;
                 deltaZ = z - this.z;
                 rotX = Math.atan2(deltaZ, Math.sqrt(deltaX * deltaX + deltaY * deltaY));
-                this.rotationX = (rotX - HPI)*TO_DEGREE;
+                this.rotationX = (rotX - HPI) * TO_DEGREE;
                 this.rotationY = 0;
-                this.rotationZ = (-Math.atan2(deltaX, deltaY))*TO_DEGREE;
+                this.rotationZ = (-Math.atan2(deltaX, deltaY)) * TO_DEGREE;
             }
         })()
     };
@@ -758,41 +949,43 @@ var RedMaterial;
         console.log(this)
     }
     makeProgram = function (redGL) {
-
         var vSource, fSource;
-        vSource =
-            `
-attribute vec3 aVertexPosition;
-attribute vec4 aVertexColor;
-uniform float uFloatTest;
-uniform float uFloatTest2[10];
-uniform int uIntTest;
-uniform int uIntTest2[10];
-uniform vec4 uVec4Test;
-uniform mat4 uMat4Test;
-varying vec4 vColor;
-void main(void) {
-    vColor = aVertexColor;
-    vColor.r= sin(uTime*0.01);
-    uFloatTest;
-    uFloatTest2;
-    uIntTest;
-    uIntTest2;
-    uVec4Test;
-    uMat4Test;
-    uResolution;
-gl_Position = uPMatrix * uCameraMatrix* uMVMatrix * vec4(aVertexPosition, 1.0);
-}
-        `
-        fSource =
-            `
-precision mediump float;
-varying vec4 vColor;
-void main(void) {
-gl_FragColor = vColor;
-}
-        `
-
+        vSource = function () {
+            /*
+            attribute vec3 aVertexPosition;
+            attribute vec4 aVertexColor;
+            uniform float uFloatTest;
+            uniform float uFloatTest2[10];
+            uniform int uIntTest;
+            uniform int uIntTest2[10];
+            uniform vec4 uVec4Test;
+            uniform mat4 uMat4Test;
+            varying vec4 vColor;
+            void main(void) {
+                vColor = aVertexColor;
+                vColor.r= sin(uTime*0.01);
+                uFloatTest;
+                uFloatTest2;
+                uIntTest;
+                uIntTest2;
+                uVec4Test;
+                uMat4Test;
+                uResolution;
+                gl_Position = uPMatrix * uCameraMatrix* uMVMatrix * vec4(aVertexPosition, 1.0);
+            }
+            */
+        }
+        fSource = function () {
+            /*
+            precision mediump float;
+            varying vec4 vColor;
+            void main(void) {
+                gl_FragColor = vColor;
+            }
+            */
+        }
+        vSource = RedGLUtil.getStrFromComment(vSource.toString());
+        fSource = RedGLUtil.getStrFromComment(fSource.toString());
         return RedProgram(
             redGL,
             'testrProgram',
@@ -803,7 +996,7 @@ gl_FragColor = vColor;
     }
 
     RedMaterial.prototype = {
-       
+
     }
     Object.freeze(RedMaterial)
 })();
@@ -811,60 +1004,137 @@ gl_FragColor = vColor;
 var RedColorMaterial;
 (function () {
     var makeProgram;
-    RedColorMaterial = function (redGL, color, alpha) {
-
-        if (!(this instanceof RedColorMaterial)) return new RedColorMaterial(redGL, color, alpha);
-        this['program'] = makeProgram(redGL)
+    /**DOC:
+        {
+            constructorYn : true,
+            title :`RedColorMaterial`,
+            description : `
+                RedColorMaterial Instance 생성
+            `,
+            params : {
+                redGL : [
+                    {type:'RedGL Instance'}
+                ],
+                color : [
+                    {type:'hex'},
+                    'hex'
+                ],
+                alpha : [
+                    {type:'number'},
+                    '알파값'
+                ]
+            },
+            return : 'RedColorMaterial Instance'
+        }
+    :DOC*/
+    RedColorMaterial = function (redGL, hex, alpha) {
+        if (!(this instanceof RedColorMaterial)) return new RedColorMaterial(redGL, hex, alpha);
+        /////////////////////////////////////////
         // 유니폼 프로퍼티
-        this['color'] = new Float32Array(4)
+        /**DOC:
+            {
+                title :`color`,
+                description : `
+                    RedProgram Instance
+                    직접설정하지 않도록 유의해야함!
+                `,
+                example : `// TODO:`,
+                return : 'RedProgram Instance'
+            }
+        :DOC*/
+        this['color'] = new Float32Array(4);
+        /////////////////////////////////////////
         // 일반 프로퍼티
-        this.setColor(color, 0.5)
-        console.log(this['color'])
-
+        this.setColor(hex, 0.5);
+        /**DOC:
+            {
+                title :`program`,
+                description : `RedProgram Instance`,
+                example : `// TODO:`,
+                return : 'RedProgram Instance'
+            }
+        :DOC*/
+        this['program'] = makeProgram(redGL);
+        /**DOC:
+            {
+                title :`alpha`,
+                description : `alpha`,
+                example : `// TODO:`,
+                return : 'number'
+            }
+        :DOC*/
+        Object.defineProperty(this, 'alpha', (function () {
+            var _alpha;
+            _alpha = alpha == undefined ? 1 : alpha;
+            return {
+                get: function () { return _alpha },
+                set: function (v) { _alpha = this['color'][3] = v }
+            }
+        })());
+        this['alpha'] = alpha;
         this['_UUID'] = RedGL['makeUUID']();
-        Object.seal(this)
-        console.log(this)
+        Object.seal(this);
+        console.log(this);
     }
     makeProgram = function (redGL) {
-
         var vSource, fSource;
-        vSource =
-            `
-attribute vec3 aVertexPosition;
-uniform vec4 uColor;
-varying vec4 vColor;
-void main(void) {
-    vColor = uColor;
-    gl_Position = uPMatrix * uCameraMatrix* uMVMatrix * vec4(aVertexPosition, 1.0);
-}
-            `
-        fSource =
-            `
-precision mediump float;
-varying vec4 vColor;
-void main(void) {
-    gl_FragColor = vColor;
-}
-            `
+        vSource = function () {
+            /*
+            attribute vec3 aVertexPosition;
+            uniform vec4 uColor;
+            varying vec4 vColor;
+            void main(void) {
+                vColor = uColor;
+                gl_Position = uPMatrix * uCameraMatrix* uMVMatrix * vec4(aVertexPosition, 1.0);
+            }
+            */
+        }
+        fSource = function () {
+            /*
+            precision mediump float;
+            varying vec4 vColor;
+            void main(void) {
+                gl_FragColor = vColor;
+            }
+            */
+        }
+        vSource = RedGLUtil.getStrFromComment(vSource.toString());
+        fSource = RedGLUtil.getStrFromComment(fSource.toString());
+        console.log(vSource, fSource)
         return RedProgram(
             redGL,
             'colorProgram',
             RedShader(redGL, 'colorVs', RedShader.VERTEX, vSource),
             RedShader(redGL, 'colorFS', RedShader.FRAGMENT, fSource)
         )
-
     }
-
     RedColorMaterial.prototype = {
-        setColor: (function(){
+        /**DOC:
+            {
+                code : 'FUNCTION',
+                title :`setColor`,
+                description : `
+                    컬러설정
+                `,
+                params : {
+                    hex : [
+                        {type: 'hex'},
+                        'ex) #fff, #ffffff'
+                    ]
+                },
+                example : `// TODO:`,
+                return : 'RedProgram Instance'
+            }
+        :DOC*/
+        setColor: (function () {
             var t0;
-            return function (color, alpha) {
-                color = color ? color : '#ff2211'
-                t0 = RedGLUtil.hexToRGB.call(this, color, alpha);
-                this['color'][0] = t0[0]
-                this['color'][1] = t0[1]
-                this['color'][2] = t0[2]
-                this['color'][3] = t0[3]
+            return function (hex) {
+                hex = hex ? hex : '#ff2211';
+                t0 = RedGLUtil.hexToRGB.call(this, hex);
+                this['color'][0] = t0[0];
+                this['color'][1] = t0[1];
+                this['color'][2] = t0[2];
+                this['color'][3] = this['alpha'];
             }
         })()
     }
@@ -874,51 +1144,88 @@ void main(void) {
 var RedBitmapMaterial;
 (function () {
     var makeProgram;
+    /**DOC:
+        {
+            constructorYn : true,
+            title :`RedBitmapMaterial`,
+            description : `
+                RedBitmapMaterial Instance 생성
+            `,
+            params : {
+                redGL : [
+                    {type:'RedGL Instance'}
+                ],
+                texture : [
+                    {type:'RedBitmapMaterial'},
+                    'RedBitmapMaterial'
+                ]
+            },
+            return : 'RedBitmapMaterial Instance'
+        }
+    :DOC*/
     RedBitmapMaterial = function (redGL, texture) {
-        var _color;
         if (!(this instanceof RedBitmapMaterial)) return new RedBitmapMaterial(redGL, texture);
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwfunc('RedBitmapMaterial : RedGL Instance만 허용됩니다.')
-        if (!(texture instanceof RedBitmapTexture)) RedGLUtil.throwfunc('RedBitmapMaterial : RedBitmapTexture Instance만 허용됩니다.')
-        this['program'] = makeProgram(redGL)
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedBitmapMaterial : RedGL Instance만 허용됩니다.')
+        if (!(texture instanceof RedBitmapTexture)) RedGLUtil.throwFunc('RedBitmapMaterial : RedBitmapTexture Instance만 허용됩니다.')
+        /////////////////////////////////////////
         // 유니폼 프로퍼티
-        this['diffuse'] = texture
+        /**DOC:
+            {
+                title :`diffuse`,
+                description : `Diffuse Texture(RedBitmapMaterial Instance)`,
+                example : `// TODO:`,
+                return : 'RedBitmapMaterial'
+            }
+        :DOC*/
+        this['diffuse'] = texture;
+        /////////////////////////////////////////
         // 일반 프로퍼티
-
+        /**DOC:
+            {
+                title :`program`,
+                description : `RedProgram Instance`,
+                example : `// TODO:`,
+                return : 'RedProgram Instance'
+            }
+        :DOC*/
+        this['program'] = makeProgram(redGL);
         this['_UUID'] = RedGL['makeUUID']();
         Object.seal(this)
         console.log(this)
     }
     makeProgram = function (redGL) {
-
         var vSource, fSource;
-        vSource =
-            `
-attribute vec3 aVertexPosition;
-attribute vec2 aTexcoord;
-varying vec2 vTexcoord;
-void main(void) {
-    vTexcoord = aTexcoord;
-    gl_Position = uPMatrix * uCameraMatrix* uMVMatrix * vec4(aVertexPosition, 1.0);
-}
-            `
-        fSource =
-            `
-precision mediump float;
-uniform sampler2D uDiffuse;
-varying vec2 vTexcoord;
-void main(void) {
-    gl_FragColor = texture2D(uDiffuse, vTexcoord);
-}
-            `
+        vSource = function () {
+            /*
+            attribute vec3 aVertexPosition;
+            attribute vec2 aTexcoord;
+            varying vec2 vTexcoord;
+            void main(void) {
+                vTexcoord = aTexcoord;
+                gl_Position = uPMatrix * uCameraMatrix* uMVMatrix * vec4(aVertexPosition, 1.0);
+            }
+            */
+        }
+        fSource = function () {
+            /*
+            precision mediump float;
+            uniform sampler2D uDiffuse;
+            varying vec2 vTexcoord;
+            void main(void) {
+                gl_FragColor = texture2D(uDiffuse, vTexcoord);
+            }
+            */
+        }
+        vSource = RedGLUtil.getStrFromComment(vSource.toString());
+        fSource = RedGLUtil.getStrFromComment(fSource.toString());
+        console.log(vSource, fSource)
         return RedProgram(
             redGL,
             'bitmapProgram',
             RedShader(redGL, 'bitmapVs', RedShader.VERTEX, vSource),
             RedShader(redGL, 'bitmapFS', RedShader.FRAGMENT, fSource)
         )
-
     }
-
     RedBitmapMaterial.prototype = {}
     Object.freeze(RedBitmapMaterial)
 })();
@@ -942,140 +1249,205 @@ var RedMesh;
 "use strict";
 var RedProgram;
 (function () {
-    var makeProgram;
+    var makeProgram, updateLocation;
     makeProgram = (function () {
-        var tProgram;
+        var program;
         return function (gl, key, vs, fs) {
-            tProgram = gl.createProgram();
-            gl.attachShader(tProgram, vs['webglShader']);
-            gl.attachShader(tProgram, fs['webglShader']);
-            gl.linkProgram(tProgram);
-            if (!gl.getProgramParameter(tProgram, gl.LINK_STATUS)) RedGLUtil.throwfunc("프로그램을 초기화 할 수 없습니다.");
-            tProgram.key = key;
-            tProgram.vShaderKey = vs.key;
-            tProgram.fShaderKey = vs.key;
-            gl.useProgram(tProgram);
-            return tProgram;
+            program = gl.createProgram();
+            gl.attachShader(program, vs['webglShader']);
+            gl.attachShader(program, fs['webglShader']);
+            gl.linkProgram(program);
+            if (!gl.getProgramParameter(program, gl.LINK_STATUS)) RedGLUtil.throwFunc("프로그램을 초기화 할 수 없습니다.");
+            program['key'] = key;
+            program['vShaderKey'] = vs['key'];
+            program['fShaderKey'] = vs['key'];
+            gl.useProgram(program);
+            return program;
         }
-    })()
+    })();
+    updateLocation = (function () {
+        // TODO: 정보를 객체화시키자
+        return function (self, gl, shader) {
+            if (shader['parseData']['attribute']) {
+                shader['parseData']['attribute']['list'].forEach(function (v) {
+                    var tInfo = {};
+                    tInfo = {}
+                    tInfo['_UUID'] = RedGL.makeUUID()
+                    tInfo['location'] = gl.getAttribLocation(self['webglProgram'], v['name']);
+                    if (!tInfo['location'] == -1) tInfo['msg'] = '쉐이더 main 함수에서 사용되고 있지 않음'
+                    tInfo['attributeType'] = v['attributeType']
+                    tInfo['name'] = v['name']
+                    self['attributeLocation'].push(tInfo)
+                    self['attributeLocation'][v['name']] = tInfo
+                })
+            }
+            if (shader['parseData']['uniform']) {
+                shader['parseData']['uniform']['list'].forEach(function (v) {
+                    var tInfo = {};
+                    tInfo['_UUID'] = RedGL.makeUUID()
+                    // console.log(v)
+                    // console.log(v['name'],tGL.getUniformLocation(self['webglProgram'], v['name']))
+                    tInfo['location'] = gl.getUniformLocation(self['webglProgram'], v['name']);
+                    if (!tInfo['location']) tInfo['msg'] = '쉐이더 main 함수에서 사용되고 있지 않음'
+                    tInfo['uniformType'] = v['uniformType']
+                    // renderType 조사
+                    // TODO: 데이터 타입조사를 이놈이 하는게 맞는건가..
+                    var arrayNum, tRenderType, tRenderMethod;
+                    arrayNum = v['arrayNum']
+                    switch (v['uniformType']) {
+                        case 'sampler2D':
+                            tRenderType = 'sampler2D';
+                            tRenderMethod = 'uniform1f';
+                            break
+                        case 'float':
+                            tRenderType = 'float';
+                            tRenderMethod = 'uniform1f';
+                            break
+                        case 'int':
+                            tRenderType = 'int';
+                            tRenderMethod = 'uniform1i';
+                            break
+                        case 'mat4':
+                            tRenderType = 'mat';
+                            tRenderMethod = 'uniformMatrix4fv';
+                            break
+                        case 'mat3':
+                            tRenderType = 'mat';
+                            tRenderMethod = 'uniformMatrix3fv';
+                            break
+                        case 'mat2':
+                            tRenderType = 'mat';
+                            tRenderMethod = 'uniformMatrix2fv';
+                            break
+                        case 'vec4':
+                            tRenderType = 'vec';
+                            tRenderMethod = 'uniform4fv';
+                            break
+                        case 'vec3':
+                            tRenderType = 'vec';
+                            tRenderMethod = 'uniform3fv';
+                            break
+                        case 'vec2':
+                            tRenderType = 'vec';
+                            tRenderMethod = 'uniform2fv';
+                            break
+
+                    }
+                    tInfo['renderType'] = tRenderType
+                    tInfo['renderMethod'] = tRenderMethod
+                    //
+                    tInfo['name'] = v['name']
+                    tInfo['materialPropertyName'] = v['name'].charAt(1).toLowerCase() + v['name'].substr(2)
+                    tInfo['arrayNum'] = v['arrayNum']
+                    if (v['systemUniformYn']) {
+                        self['systemUniformLocation'].push(tInfo)
+                        self['systemUniformLocation'][v['name']] = tInfo
+                    } else {
+                        self['uniformLocation'].push(tInfo)
+                        self['uniformLocation'][v['name']] = tInfo
+                    }
+                })
+
+            }
+        }
+    })();
+    /**DOC:
+        {
+            constructorYn : true,
+            title :`RedProgram`,
+            description : `
+                RedProgram Instance 생성기
+            `,
+            params : {
+                redGL : [
+                    {type:'RedGL Instance'}
+                ],
+                key : [
+                    {type:'String'},
+                    `고유키`
+                ],
+                vs : [
+                    {type:'RedShader Instance'},
+                    `버텍스 쉐이더(RedShader.VERTEX 타입)`
+                ],
+                fs : [
+                    {type:'RedShader Instance'},
+                    `프레그먼트 쉐이더(RedShader.FRAGMENT 타입)`
+                ]
+            },
+            return : 'RedProgram Instance'
+        }
+    :DOC*/
     RedProgram = function (redGL, key, vs, fs) {
         var tGL;
         if (!(this instanceof RedProgram)) return new RedProgram(redGL, key, vs, fs)
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwfunc('RedProgram : RedGL Instance만 허용됩니다.');
-        if (typeof key != 'string') RedGLUtil.throwfunc('RedProgram : key - 문자열만 허용됩니다.');
-        if (!vs instanceof RedShader) RedGLUtil.throwfunc('RedProgram : vShaderInfo - RedShader만 허용됩니다.');
-        if (!fs instanceof RedShader) RedGLUtil.throwfunc('RedProgram : fShaderInfo - RedShader만 허용됩니다.');
-        if (vs['type'] != RedShader.VERTEX) RedGLUtil.throwfunc('RedProgram : vShaderInfo - VERTEX 타입만 허용됩니다.');
-        if (fs['type'] != RedShader.FRAGMENT) RedGLUtil.throwfunc('RedProgram : fShaderInfo - FRAGMENT 타입만 허용됩니다.');
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedProgram : RedGL Instance만 허용됩니다.');
+        if (typeof key != 'string') RedGLUtil.throwFunc('RedProgram : key - 문자열만 허용됩니다.');
+        if (!vs instanceof RedShader) RedGLUtil.throwFunc('RedProgram : vShaderInfo - RedShader만 허용됩니다.');
+        if (!fs instanceof RedShader) RedGLUtil.throwFunc('RedProgram : fShaderInfo - RedShader만 허용됩니다.');
+        if (vs['type'] != RedShader.VERTEX) RedGLUtil.throwFunc('RedProgram : vShaderInfo - VERTEX 타입만 허용됩니다.');
+        if (fs['type'] != RedShader.FRAGMENT) RedGLUtil.throwFunc('RedProgram : fShaderInfo - FRAGMENT 타입만 허용됩니다.');
 
         tGL = redGL.gl;
-
+        // TODO: 유일키 방어
         if (!redGL['_datas']['RedProgram']) redGL['_datas']['RedProgram'] = {};
         if (redGL['_datas']['RedProgram'][key]) return redGL['_datas']['RedProgram'][key]
         else redGL['_datas']['RedProgram'][key] = this
-
-
+        /**DOC:
+            {
+                title :`key`,
+                description : `고유키`,
+                example : `Instance.key`,
+                return : 'String'
+            }
+        :DOC*/
         this['key'] = key;
+        /**DOC:
+            {
+                title :`webglProgram`,
+                description : `실제 프로그램(WebGLProgram Instance)`,
+                example : `// TODO:`,
+                return : 'WebGLShader'
+            }
+        :DOC*/
         this['webglProgram'] = makeProgram(tGL, key, vs, fs);
+        /**DOC:
+            {
+                title :`attributeLocation`,
+                description : `어리뷰트 로케이션 정보`,
+                example : `// TODO:`,
+                return : 'Array'
+            }
+        :DOC*/
+        this['attributeLocation'] = [];
+        /**DOC:
+            {
+                title :`uniformLocation`,
+                description : `유니폼 로케이션 정보`,
+                example : `// TODO:`,
+                return : 'Array'
+            }
+        :DOC*/
+        this['uniformLocation'] = [];
+        /**DOC:
+            {
+                title :`systemUniformLocation`,
+                description : `시스템 유니폼 로케이션 정보`,
+                example : `// TODO:`,
+                return : 'Array'
+            }
+        :DOC*/
+        this['systemUniformLocation'] = [];
+
+        // 쉐이더 로케이션 찾기
         tGL.useProgram(this['webglProgram'])
-        this.attributeLocation = [];
-        this.uniformLocation = [];
-        this.systemUniformLocation = [];
-        this.updateLocation(tGL, vs);
-        this.updateLocation(tGL, fs);
-        console.log(this)
+        updateLocation(this, tGL, vs);
+        updateLocation(this, tGL, fs);
         this['_UUID'] = RedGL['makeUUID']();
         Object.freeze(this)
+        console.log(this)
     }
-    RedProgram.prototype = {
-        updateLocation: (function () {
-            var self;
-            return function (gl, shader) {
-                self = this;
-                if (shader['parseData']['attribute']) {
-                    shader['parseData']['attribute']['list'].forEach(function (v) {
-                        var tInfo = {};
-                        tInfo = {}
-                        tInfo['_UUID'] = RedGL.makeUUID()
-                        tInfo['location'] = gl.getAttribLocation(self['webglProgram'], v['name']);
-                        if (!tInfo['location'] == -1) tInfo['msg'] = '쉐이더 main 함수에서 사용되고 있지 않음'
-                        tInfo['attributeType'] = v['attributeType']
-                        tInfo['name'] = v['name']
-                        self['attributeLocation'].push(tInfo)
-                        self['attributeLocation'][v['name']] = tInfo
-                    })
-                }
-                if (shader['parseData']['uniform']) {
-                    shader['parseData']['uniform']['list'].forEach(function (v) {
-                        var tInfo = {};
-                        tInfo['_UUID'] = RedGL.makeUUID()
-                        // console.log(v)
-                        // console.log(v['name'],tGL.getUniformLocation(self['webglProgram'], v['name']))
-                        tInfo['location'] = gl.getUniformLocation(self['webglProgram'], v['name']);
-                        if (!tInfo['location']) tInfo['msg'] = '쉐이더 main 함수에서 사용되고 있지 않음'
-                        tInfo['uniformType'] = v['uniformType']
-                        // renderType 조사
-                        // TODO: 데이터 타입조사를 이놈이 하는게 맞는건가..
-                        var arrayNum, tRenderType, tRenderMethod;
-                        arrayNum = v['arrayNum']
-                        switch (v['uniformType']) {
-                            case 'sampler2D':
-                                tRenderType = 'sampler2D';
-                                tRenderMethod = 'uniform1f';
-                                break
-                            case 'float':
-                                tRenderType = 'float';
-                                tRenderMethod = 'uniform1f';
-                                break
-                            case 'int':
-                                tRenderType = 'int';
-                                tRenderMethod = 'uniform1i';
-                                break
-                            case 'mat4':
-                                tRenderType = 'mat';
-                                tRenderMethod = 'uniformMatrix4fv';
-                                break
-                            case 'mat3':
-                                tRenderType = 'mat';
-                                tRenderMethod = 'uniformMatrix3fv';
-                                break
-                            case 'mat2':
-                                tRenderType = 'mat';
-                                tRenderMethod = 'uniformMatrix2fv';
-                                break
-                            case 'vec4':
-                                tRenderType = 'vec';
-                                tRenderMethod = 'uniform4fv';
-                                break
-                            case 'vec3':
-                                tRenderType = 'vec';
-                                tRenderMethod = 'uniform3fv';
-                                break
-                            case 'vec2':
-                                tRenderType = 'vec';
-                                tRenderMethod = 'uniform2fv';
-                                break
-
-                        }
-                        tInfo['renderType'] = tRenderType
-                        tInfo['renderMethod'] = tRenderMethod
-                        //
-                        tInfo['name'] = v['name']
-                        tInfo['materialPropertyName'] = v['name'].charAt(1).toLowerCase() + v['name'].substr(2)
-                        tInfo['arrayNum'] = v['arrayNum']
-                        if (v['systemUniformYn']) {
-                            self['systemUniformLocation'].push(tInfo)
-                            self['systemUniformLocation'][v['name']] = tInfo
-                        } else {
-                            self['uniformLocation'].push(tInfo)
-                            self['uniformLocation'][v['name']] = tInfo
-                        }
-                    })
-
-                }
-            }
-        })()
-    }
+    RedProgram.prototype = {}
     Object.freeze(RedProgram)
 })();
 "use strict";
@@ -1145,17 +1517,26 @@ var RedSystemShaderCode;
 var RedShader;
 (function () {
     var makeWebGLShader, compile, parser, mergeSystemCode;
-    makeWebGLShader = function (gl, key, type) {
-        switch (type) {
-            case RedShader.VERTEX:
-                return gl.createShader(gl.VERTEX_SHADER);
-            case RedShader.FRAGMENT:
-                return gl.createShader(gl.FRAGMENT_SHADER);
-            default:
-                RedGLUtil.throwFunc('RedShader : 쉐이더 타입을 확인하세요!')
-                break
+    makeWebGLShader = (function () {
+        var t0;
+        return function (gl, key, type) {
+            switch (type) {
+                case RedShader.VERTEX:
+                    t0 = gl.createShader(gl.VERTEX_SHADER);
+                    t0['key'] = key;
+                    t0['type'] = type;
+                    return t0
+                case RedShader.FRAGMENT:
+                    t0 = gl.createShader(gl.FRAGMENT_SHADER);
+                    t0['key'] = key;
+                    t0['type'] = type;
+                    return t0
+                default:
+                    RedGLUtil.throwFunc('RedShader : 쉐이더 타입을 확인하세요!')
+                    break
+            }
         }
-    };
+    })();
     compile = function (gl, type, shader, source) {
         gl.shaderSource(shader, source);
         gl.compileShader(shader);
@@ -1309,10 +1690,10 @@ var RedShader;
     RedShader = function (redGL, key, type, source) {
         var tGL;
         if (!(this instanceof RedShader)) return new RedShader(redGL, key, type, source);
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwfunc('RedShader : RedGL Instance만 허용됩니다.');
-        if (typeof key != 'string') RedGLUtil.throwfunc('RedShader : key - 문자열만 허용됩니다.');
-        if (typeof type != 'string') RedGLUtil.throwfunc('RedShader : type - 문자열만 허용됩니다.');
-        if (typeof source != 'string') RedGLUtil.throwfunc('RedShader : source - 문자열만 허용됩니다.');
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedShader : RedGL Instance만 허용됩니다.');
+        if (typeof key != 'string') RedGLUtil.throwFunc('RedShader : key - 문자열만 허용됩니다.');
+        if (typeof type != 'string') RedGLUtil.throwFunc('RedShader : type - 문자열만 허용됩니다.');
+        if (typeof source != 'string') RedGLUtil.throwFunc('RedShader : source - 문자열만 허용됩니다.');
         tGL = redGL.gl
         /**DOC:
             {
@@ -1860,87 +2241,109 @@ var RedRenderer;
 "use strict";
 var RedBitmapTexture;
 (function () {
+    var setEmptyTexture;
+    var loadTexture;
+    setEmptyTexture = function (gl, texture) {
+        gl.activeTexture(gl.TEXTURE0 + 0)
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1)
+        gl.texImage2D(
+            gl.TEXTURE_2D,
+            0, //level
+            gl.LUMINANCE, //internalFormat
+            2, //width
+            2, //height
+            0, //border
+            gl.LUMINANCE, //format
+            gl.UNSIGNED_BYTE, //type
+            new Uint8Array(
+                [
+                    128, 64,
+                    0, 192
+                ]
+            )
+        )
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.generateMipmap(gl.TEXTURE_2D);
+        gl.pixelStorei(gl.UNPACK_ALIGNMENT, 4);
+        gl.bindTexture(gl.TEXTURE_2D, null);
+    }
+    loadTexture = (function () {
+        return function (gl, texture, src) {
+            var onError, onLoad;
+            var clearEvents;
+            clearEvents = function (img) {
+                img.removeEventListener('error', onError);
+                img.removeEventListener('load', onLoad);
+            }
+            onError = function () {
+                var msg = "couldn't load image: " + src;
+                RedGLUtil.throwFunc(msg);
+                clearEvents(this);
+            }
+            onLoad = function () {
+                clearEvents(this)
+                gl.activeTexture(gl.TEXTURE0 + 0)
+                gl.bindTexture(gl.TEXTURE_2D, texture);
+                //level,internalFormat, format, type
+                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this)
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+                gl.generateMipmap(gl.TEXTURE_2D)
+                gl.bindTexture(gl.TEXTURE_2D, null);
+            }
+
+            var img;
+            setEmptyTexture(gl, texture)
+            img = new Image();
+            img.crossOrigin = 'anonymous'
+            img.src = src;
+            img.addEventListener('error', onError);
+            img.addEventListener('load', onLoad);
+            return img;
+        }
+    })()
     //TODO: 기본옵션 정의
+    /**DOC:
+        {
+            constructorYn : true,
+            title :`RedBitmapTexture`,
+            description : `
+                RedBitmapTexture Instance 생성
+            `,
+            params : {
+                redGL : [
+                    {type:'RedGL Instance'}
+                ],
+                src : [
+                    {type:'string'},
+                    '경로'
+                ],
+                option : [
+                    {type:'Object'},
+                    '텍스쳐 정의옵션'
+                ]
+            },
+            return : 'RedBitmapTexture Instance'
+        }
+    :DOC*/
     RedBitmapTexture = function (redGL, src, option) {
         var gl;
-        var tTexture;
         if (!(this instanceof RedBitmapTexture)) return new RedBitmapTexture(redGL, src, option);
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwfunc('RedBitmapTexture : RedGL Instance만 허용됩니다.');
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedBitmapTexture : RedGL Instance만 허용됩니다.');
         gl = redGL.gl;
-        tTexture = gl.createTexture();
-        this['webglTexture'] = tTexture;
+        this['webglTexture'] = gl.createTexture();
         this['_UUID'] = RedGL['makeUUID']();
-        this.setEmptyTexture(gl, tTexture)
-        this.loadTexture(gl, tTexture, src)
+        loadTexture(gl, this['webglTexture'], src);
+        Object.seal(this);
         console.log(this)
     }
-    RedBitmapTexture.prototype = {
-        setEmptyTexture: function (gl, texture) {
-            console.log('빈 텍스쳐를 설정')
-            gl.activeTexture(gl.TEXTURE0 + 0)
-            gl.bindTexture(gl.TEXTURE_2D, texture);
-            gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1)
-            gl.texImage2D(
-                gl.TEXTURE_2D,
-                0, //level
-                gl.LUMINANCE, //internalFormat
-                2, //width
-                2, //height
-                0, //border
-                gl.LUMINANCE, //format
-                gl.UNSIGNED_BYTE, //type
-                new Uint8Array(
-                    [
-                        128, 64,
-                        0, 192
-                    ]
-                )
-            )
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-            gl.generateMipmap(gl.TEXTURE_2D);
-            gl.pixelStorei(gl.UNPACK_ALIGNMENT, 4);
-            gl.bindTexture(gl.TEXTURE_2D, null);
-        },
-        loadTexture: (function () {
-            return function (gl, texture, src) {
-                var onError, onLoad;
-                var clearEvents;
-                clearEvents = function (img) {
-                    img.removeEventListener('error', onError);
-                    img.removeEventListener('load', onLoad);
-                }
-                onError = function () {
-                    var msg = "couldn't load image: " + src;
-                    RedGLUtil.throwFunc(msg);
-                    clearEvents(this);
-                }
-                onLoad = function () {
-                    clearEvents(this)
-                    gl.activeTexture(gl.TEXTURE0 + 0)
-                    gl.bindTexture(gl.TEXTURE_2D, texture);
-                    //level,internalFormat, format, type
-                    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this)
-                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
-                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-                    gl.generateMipmap(gl.TEXTURE_2D)
-                    gl.bindTexture(gl.TEXTURE_2D, null);
-                }
-
-                var img;
-                img = new Image();
-                img.crossOrigin = 'anonymous'
-                img.src = src;
-                img.addEventListener('error', onError);
-                img.addEventListener('load', onLoad);
-                return img;
-            }
-        })()
-    }
+    RedBitmapTexture.prototype = {};
     Object.freeze(RedBitmapTexture);
 })();
 

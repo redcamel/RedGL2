@@ -19,41 +19,43 @@ var RedMaterial;
         console.log(this)
     }
     makeProgram = function (redGL) {
-
         var vSource, fSource;
-        vSource =
-            `
-attribute vec3 aVertexPosition;
-attribute vec4 aVertexColor;
-uniform float uFloatTest;
-uniform float uFloatTest2[10];
-uniform int uIntTest;
-uniform int uIntTest2[10];
-uniform vec4 uVec4Test;
-uniform mat4 uMat4Test;
-varying vec4 vColor;
-void main(void) {
-    vColor = aVertexColor;
-    vColor.r= sin(uTime*0.01);
-    uFloatTest;
-    uFloatTest2;
-    uIntTest;
-    uIntTest2;
-    uVec4Test;
-    uMat4Test;
-    uResolution;
-gl_Position = uPMatrix * uCameraMatrix* uMVMatrix * vec4(aVertexPosition, 1.0);
-}
-        `
-        fSource =
-            `
-precision mediump float;
-varying vec4 vColor;
-void main(void) {
-gl_FragColor = vColor;
-}
-        `
-
+        vSource = function () {
+            /*
+            attribute vec3 aVertexPosition;
+            attribute vec4 aVertexColor;
+            uniform float uFloatTest;
+            uniform float uFloatTest2[10];
+            uniform int uIntTest;
+            uniform int uIntTest2[10];
+            uniform vec4 uVec4Test;
+            uniform mat4 uMat4Test;
+            varying vec4 vColor;
+            void main(void) {
+                vColor = aVertexColor;
+                vColor.r= sin(uTime*0.01);
+                uFloatTest;
+                uFloatTest2;
+                uIntTest;
+                uIntTest2;
+                uVec4Test;
+                uMat4Test;
+                uResolution;
+                gl_Position = uPMatrix * uCameraMatrix* uMVMatrix * vec4(aVertexPosition, 1.0);
+            }
+            */
+        }
+        fSource = function () {
+            /*
+            precision mediump float;
+            varying vec4 vColor;
+            void main(void) {
+                gl_FragColor = vColor;
+            }
+            */
+        }
+        vSource = RedGLUtil.getStrFromComment(vSource.toString());
+        fSource = RedGLUtil.getStrFromComment(fSource.toString());
         return RedProgram(
             redGL,
             'testrProgram',
@@ -64,7 +66,7 @@ gl_FragColor = vColor;
     }
 
     RedMaterial.prototype = {
-       
+
     }
     Object.freeze(RedMaterial)
 })();

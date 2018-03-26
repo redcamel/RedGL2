@@ -38,7 +38,7 @@
     "constructorYn": true,
     "title": "RedBaseContainer",
     "description": "\n    DisplayContainer 기저층\n    프로토타입 확장을 통해서만 사용가능(RedGLUtil.extendsProto 사용)\n",
-    "return": "DisplayContainer Instance"
+    "return": "void"
   },
   {
     "code": "FUNCTION",

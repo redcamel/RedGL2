@@ -175,10 +175,10 @@ var RedShader;
     RedShader = function (redGL, key, type, source) {
         var tGL;
         if (!(this instanceof RedShader)) return new RedShader(redGL, key, type, source);
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwfunc('RedShader : RedGL Instance만 허용됩니다.');
-        if (typeof key != 'string') RedGLUtil.throwfunc('RedShader : key - 문자열만 허용됩니다.');
-        if (typeof type != 'string') RedGLUtil.throwfunc('RedShader : type - 문자열만 허용됩니다.');
-        if (typeof source != 'string') RedGLUtil.throwfunc('RedShader : source - 문자열만 허용됩니다.');
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedShader : RedGL Instance만 허용됩니다.');
+        if (typeof key != 'string') RedGLUtil.throwFunc('RedShader : key - 문자열만 허용됩니다.');
+        if (typeof type != 'string') RedGLUtil.throwFunc('RedShader : type - 문자열만 허용됩니다.');
+        if (typeof source != 'string') RedGLUtil.throwFunc('RedShader : source - 문자열만 허용됩니다.');
         tGL = redGL.gl
         /**DOC:
             {

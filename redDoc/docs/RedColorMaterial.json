@@ -1,1 +1,60 @@
-[]
+[
+  {
+    "title": "alpha",
+    "description": "alpha",
+    "example": "// TODO:",
+    "return": "number"
+  },
+  {
+    "title": "color",
+    "description": "\n    RedProgram Instance\n    직접설정하지 않도록 유의해야함!\n",
+    "example": "// TODO:",
+    "return": "RedProgram Instance"
+  },
+  {
+    "title": "program",
+    "description": "RedProgram Instance",
+    "example": "// TODO:",
+    "return": "RedProgram Instance"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedColorMaterial",
+    "description": "\n    RedColorMaterial Instance 생성\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL Instance"
+        }
+      ],
+      "color": [
+        {
+          "type": "hex"
+        },
+        "hex"
+      ],
+      "alpha": [
+        {
+          "type": "number"
+        },
+        "알파값"
+      ]
+    },
+    "return": "RedColorMaterial Instance"
+  },
+  {
+    "code": "FUNCTION",
+    "title": "setColor",
+    "description": "\n    컬러설정\n",
+    "params": {
+      "hex": [
+        {
+          "type": "hex"
+        },
+        "ex) #fff, #ffffff"
+      ]
+    },
+    "example": "// TODO:",
+    "return": "RedProgram Instance"
+  }
+]
