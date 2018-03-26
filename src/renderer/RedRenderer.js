@@ -171,6 +171,7 @@ var RedRenderer;
             gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
             gl.scissor(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+           
             // console.log("worldRender", v['key'], t0)
             self['renderInfo'] = {}
             self['world']['_viewList'].forEach(function (tView) {
@@ -224,6 +225,7 @@ var RedRenderer;
                         tCamera.farClipping
                     );
                     gl.enable(gl.CULL_FACE);
+                 
                 }
                 updateSystemUniform(redGL, time, perspectiveMTX, tCamera['matrix'], viewRect)
                 // 씬렌더 호출
