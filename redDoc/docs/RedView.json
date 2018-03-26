@@ -1,5 +1,15 @@
 [
   {
+    "title": "camera",
+    "description": "camera",
+    "return": "RedCamera"
+  },
+  {
+    "title": "key",
+    "description": "고유키",
+    "return": "String"
+  },
+  {
     "constructorYn": true,
     "title": "RedView",
     "description": "\n    고유 키를 기반으로 <b>RedScene</b>과 <b>RedCamera를</b> 쌍으로 하는 정보를 소유.\n    RedWorld가 소유하게 되며 렌더링시 활용하게 된다.\n    실제 렌더링시 Perspective 계산에 필요한 그려질 크기와 위치를 결정한다.\n",
@@ -26,6 +36,11 @@
     },
     "example": "\n    var tWorld, tScene, tCamera;\n    tScene = new RedScene(); // 씬생성\n    tCamera = new RedCamera(); // 카메라생성\n    new RedView('test', tScene, tCamera); // test라는 키값을 가진 RedView 생성\n    new RedView('test2', tScene, tCamera); // test2라는 키값을 가진 RedView 생성\n",
     "return": "RedView Instance"
+  },
+  {
+    "title": "scene",
+    "description": "scene",
+    "return": "RedScene"
   },
   {
     "code": "FUNCTION",

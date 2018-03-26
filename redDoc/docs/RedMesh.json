@@ -1,1 +1,76 @@
-[]
+[
+  {
+    "title": "geometry",
+    "description": "geometry",
+    "return": "RedGeometry"
+  },
+  {
+    "title": "material",
+    "description": "material"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedMesh",
+    "description": "\n    RedMesh Instance 생성기\n",
+    "params": {
+      "geometry": [
+        {
+          "type": "RedGeometry"
+        },
+        "geometry"
+      ],
+      "material": [
+        {
+          "type": "*어떻게 처리를해야할까.."
+        },
+        "material"
+      ]
+    },
+    "return": "RedProgram Instance"
+  },
+  {
+    "title": "rotationX",
+    "description": "rotationX",
+    "return": "Number"
+  },
+  {
+    "title": "rotationY",
+    "description": "rotationY",
+    "return": "Number"
+  },
+  {
+    "title": "rotationZ",
+    "description": "rotationZ",
+    "return": "Number"
+  },
+  {
+    "title": "scaleX",
+    "description": "scaleX",
+    "return": "Number"
+  },
+  {
+    "title": "scaleY",
+    "description": "scaleY",
+    "return": "Number"
+  },
+  {
+    "title": "scaleZ",
+    "description": "scaleZ",
+    "return": "Number"
+  },
+  {
+    "title": "x",
+    "description": "x",
+    "return": "Number"
+  },
+  {
+    "title": "y",
+    "description": "y",
+    "return": "Number"
+  },
+  {
+    "title": "z",
+    "description": "z",
+    "return": "Number"
+  }
+]

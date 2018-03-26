@@ -125,9 +125,8 @@ var RedGLUtil;
                 else RedGLUtil.throwFunc('getStrFromComment : 해석할 불가능한 값', source)
             }
         })()
-    }
-    Object.freeze(RedGLUtil)
-
+    };
+    Object.freeze(RedGLUtil);
 })();
 "use strict";
 var RedGL;
@@ -1232,14 +1231,111 @@ var RedBitmapMaterial;
 "use strict";
 var RedMesh;
 (function () {
+    /**DOC:
+        {
+            constructorYn : true,
+            title :`RedMesh`,
+            description : `
+                RedMesh Instance 생성기
+            `,
+            params : {
+                geometry : [
+                    {type:'RedGeometry'},
+                    `geometry`
+                ],
+                material : [
+                    {type:'*어떻게 처리를해야할까..'},
+                    `material`
+                ]
+            },
+            return : 'RedProgram Instance'
+        }
+    :DOC*/
     RedMesh = function (geometry, material) {
         if (!(this instanceof RedMesh)) return new RedMesh(geometry, material);
+        if (!(geometry instanceof RedGeometry)) RedGLUtil.throwFunc('RedMesh : RedGeometry Instance만 허용됩니다.')
+        // TODO: 재질을 어떻게 벨리데이션 체크를 하는게 좋을까
+        /**DOC:
+		{
+            title :`geometry`,
+            description : `geometry`,
+			return : 'RedGeometry'
+		}
+	    :DOC*/
         this['geometry'] = geometry;
+        /**DOC:
+		{
+            title :`material`,
+            description : `material`
+		}
+	    :DOC*/
         this['material'] = material;
-        
-        this.x = this.y = this.z = 0;
-        this.rotationX = this.rotationY = this.rotationZ = 0;
-        this.scaleX = this.scaleY = this.scaleZ = 1;
+        /**DOC:
+		{
+            title :`x`,
+            description : `x`,
+            return : 'Number'
+		}
+        :DOC*/
+        /**DOC:
+		{
+            title :`y`,
+            description : `y`,
+            return : 'Number'
+		}
+        :DOC*/
+        /**DOC:
+		{
+            title :`z`,
+            description : `z`,
+            return : 'Number'
+		}
+	    :DOC*/
+        this['x'] = this['y'] = this['z'] = 0;
+        /**DOC:
+		{
+            title :`rotationX`,
+            description : `rotationX`,
+            return : 'Number'
+		}
+        :DOC*/
+        /**DOC:
+		{
+            title :`rotationY`,
+            description : `rotationY`,
+            return : 'Number'
+		}
+        :DOC*/
+        /**DOC:
+		{
+            title :`rotationZ`,
+            description : `rotationZ`,
+            return : 'Number'
+		}
+	    :DOC*/
+        this['rotationX'] = this['rotationY'] = this['rotationZ'] = 0;
+        /**DOC:
+		{
+            title :`scaleX`,
+            description : `scaleX`,
+            return : 'Number'
+		}
+        :DOC*/
+        /**DOC:
+		{
+            title :`scaleY`,
+            description : `scaleY`,
+            return : 'Number'
+		}
+        :DOC*/
+        /**DOC:
+		{
+            title :`scaleZ`,
+            description : `scaleZ`,
+            return : 'Number'
+		}
+	    :DOC*/
+        this['scaleX'] = this['scaleY'] = this['scaleZ'] = 1;
         this['_UUID'] = RedGL['makeUUID']();
     }
     RedGLUtil['extendsProto'](RedMesh, RedBaseContainer);
@@ -2396,9 +2492,29 @@ var RedView;
         if (!scene && !camera) RedGLUtil.throwFunc('존재하지 않는 key입니다.')
         if (scene && !(scene instanceof RedScene)) RedGLUtil.throwFunc('RedScene Instance만 허용')
         if (camera && !(camera instanceof RedCamera)) RedGLUtil.throwFunc('RedCamera Instance만 허용')
-
+        /**DOC:
+           {
+               title :`key`,
+               description : `고유키`,
+               return : 'String'
+           }
+        :DOC*/
         this['key'] = key;
+        /**DOC:
+           {
+               title :`scene`,
+               description : `scene`,
+               return : 'RedScene'
+           }
+        :DOC*/
         this['scene'] = scene;
+        /**DOC:
+           {
+               title :`camera`,
+               description : `camera`,
+               return : 'RedCamera'
+           }
+        :DOC*/
         this['camera'] = camera;
 
         this['_width'] = '100%';
@@ -2614,6 +2730,15 @@ var RedScene;
 	:DOC*/
     RedScene = function () {
         if (!(this instanceof RedScene)) return new RedScene();
+        /**DOC:
+            {
+                title :`children`,
+                description : `
+                    자식 리스트
+                `,
+                return : 'Array'
+            }
+        :DOC*/
         this['children'] = []
         this['_UUID'] = RedGL['makeUUID']();
         Object.seal(this)

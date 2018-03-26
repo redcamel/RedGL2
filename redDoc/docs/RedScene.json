@@ -1,5 +1,10 @@
 [
   {
+    "title": "children",
+    "description": "\n    자식 리스트\n",
+    "return": "Array"
+  },
+  {
     "constructorYn": true,
     "title": "RedScene",
     "description": "\n    RedScene Instance 생성자.\n",

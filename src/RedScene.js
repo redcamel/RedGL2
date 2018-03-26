@@ -13,6 +13,15 @@ var RedScene;
 	:DOC*/
     RedScene = function () {
         if (!(this instanceof RedScene)) return new RedScene();
+        /**DOC:
+            {
+                title :`children`,
+                description : `
+                    자식 리스트
+                `,
+                return : 'Array'
+            }
+        :DOC*/
         this['children'] = []
         this['_UUID'] = RedGL['makeUUID']();
         Object.seal(this)
