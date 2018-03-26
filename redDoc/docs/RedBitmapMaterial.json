@@ -1,1 +1,33 @@
-[]
+[
+  {
+    "title": "diffuse",
+    "description": "Diffuse Texture(RedBitmapMaterial Instance)",
+    "example": "// TODO:",
+    "return": "RedBitmapMaterial"
+  },
+  {
+    "title": "program",
+    "description": "RedProgram Instance",
+    "example": "// TODO:",
+    "return": "RedProgram Instance"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedBitmapMaterial",
+    "description": "\n    RedBitmapMaterial Instance 생성\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL Instance"
+        }
+      ],
+      "texture": [
+        {
+          "type": "RedBitmapMaterial"
+        },
+        "RedBitmapMaterial"
+      ]
+    },
+    "return": "RedBitmapMaterial Instance"
+  }
+]

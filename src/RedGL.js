@@ -65,7 +65,6 @@ var RedGL;
         gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
         // 픽셀 플립 기본설정
         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-
     }
     /**DOC:
 		{

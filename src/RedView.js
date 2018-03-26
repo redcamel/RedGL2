@@ -47,9 +47,29 @@ var RedView;
         if (!scene && !camera) RedGLUtil.throwFunc('존재하지 않는 key입니다.')
         if (scene && !(scene instanceof RedScene)) RedGLUtil.throwFunc('RedScene Instance만 허용')
         if (camera && !(camera instanceof RedCamera)) RedGLUtil.throwFunc('RedCamera Instance만 허용')
-
+        /**DOC:
+           {
+               title :`key`,
+               description : `고유키`,
+               return : 'String'
+           }
+        :DOC*/
         this['key'] = key;
+        /**DOC:
+           {
+               title :`scene`,
+               description : `scene`,
+               return : 'RedScene'
+           }
+        :DOC*/
         this['scene'] = scene;
+        /**DOC:
+           {
+               title :`camera`,
+               description : `camera`,
+               return : 'RedCamera'
+           }
+        :DOC*/
         this['camera'] = camera;
 
         this['_width'] = '100%';
