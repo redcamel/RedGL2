@@ -76,6 +76,8 @@ var RedShader;
                 var tInputData;
                 v = v.trim()
                 source = source.replace(v + ';', '')
+                source = source.replace(/\=/g, ' = ')
+                
                 tData = v.split(' ')
                 // console.log(v,data)
                 if (tData[2]) {
