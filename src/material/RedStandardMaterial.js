@@ -75,7 +75,7 @@ var RedStandardMaterial;
 
                 float shininess = 64.0;
                 float specular;
-                float lambertTerm = dot(N,-L);
+                float lambertTerm =dot(N,-L);
                 if(lambertTerm > 0.0){
                     ld += lightColor * texelColor * lambertTerm;
                     R = reflect(L, N);
