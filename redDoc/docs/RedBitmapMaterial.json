@@ -1,7 +1,7 @@
 [
   {
-    "title": "diffuse",
-    "description": "Diffuse Texture(RedBitmapMaterial Instance)",
+    "title": "diffuseTexture",
+    "description": "diffuseTexture",
     "example": "// TODO:",
     "return": "RedBitmapMaterial"
   },
