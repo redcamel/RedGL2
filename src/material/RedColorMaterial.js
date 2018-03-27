@@ -95,8 +95,8 @@ var RedColorMaterial;
             precision mediump float;
             varying vec4 vColor;
             void main(void) {
-                gl_FragColor = vColor;
-                gl_FragColor.rgb *=vColor.a;
+                vec4 finalColor = vColor;
+                gl_FragColor = finalColor;
             }
             */
         }
