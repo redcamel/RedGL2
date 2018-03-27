@@ -69,6 +69,7 @@ var RedShader;
             checkList = checkList ? checkList : [];
             checkList = mergeSystemCode(type, checkList);
             checkList.sort();
+            console.log(checkList)
             checkList.forEach(function (v) {
                 var tData;
                 var tType, tName, tDataType, tArrayNum;
