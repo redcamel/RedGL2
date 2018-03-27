@@ -69,6 +69,7 @@ var RedGeometry;
             }
         :DOC*/
         this['indexBuffer'] = indexBuffer
+        this['_UUID'] = RedGL['makeUUID']();
         Object.freeze(this)
     }
     Object.freeze(RedGeometry);

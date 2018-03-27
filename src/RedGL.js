@@ -3,7 +3,6 @@ var RedGL;
 (function () {
     var getGL;
     var redGLDetect;
-    var glInitialize;
     /*
         webgl 관련 디텍팅
     */
@@ -49,23 +48,7 @@ var RedGL;
             return null;
         }
     })();
-    glInitialize = function (gl) {
-        // 뎁스데스티 설정
-        gl.enable(gl.DEPTH_TEST);
-        gl.depthFunc(gl.LEQUAL)
-        // 컬링 페이스 설정
-        gl.frontFace(gl.CCW)
-        gl.enable(gl.CULL_FACE);
-        gl.cullFace(gl.BACK)
-        gl.enable(gl.SCISSOR_TEST);
-        // 블렌드모드설정
-        gl.enable(gl.BLEND);
-        gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-        // 픽셀 블렌딩 결정
-        gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
-        // 픽셀 플립 기본설정
-        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-    }
+    
     /**DOC:
 		{
 			constructorYn : true,
@@ -174,7 +157,6 @@ var RedGL;
         this['_datas'] = {};
         this['_UUID'] = RedGL['makeUUID']();
         ////
-        glInitialize(_tGL);
         requestAnimationFrame(function (v) {
             callback ? callback.call(_self, _tGL ? true : false) : 0;
             window.addEventListener('resize', function () { _self.setSize(_self['_width'], _self['_height']) });

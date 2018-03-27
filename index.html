@@ -30,6 +30,8 @@
     <script src="src/object3D/RedMesh.js"></script>
     <script src="src/object3D/RedLine.js"></script>
 
+    <script src="src/primitives/RedPlane.js"></script>
+
     <script src="src/program/RedProgram.js"></script>
     <script src="src/program/RedSystemShaderCode.js"></script>
     <script src="src/program/RedShader.js"></script>
@@ -71,8 +73,8 @@
             RedView('test2').setSize('25%', '25%')
             RedView('test3').setSize('35%', '25%')
             RedView('test3').setLocation('50%', '50%')
-            RedView('test4').setSize('10%', '25%')
-            RedView('test4').setLocation('0%', '75%')
+            RedView('test4').setSize('50%', '50%')
+            RedView('test4').setLocation('50%', '50%')
 
 
 
@@ -90,18 +92,18 @@
 
 
             var interleaveData, interleaveData2
-            interleaveData = new Float32Array([-1.0, -1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 1.0,
-                1.0, -1.0, 0.0, 1.0, 1.0, 1.0, 0.0, 1.0, 1.0,
-                1.0, 1.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, -1.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0,
-                1.0
+            interleaveData = new Float32Array([-0.5, -0.5, 0.0, 0.0, 0.5, 0.0, 0.5, 0.5, 0.5,
+                0.5, -0.5, 0.0, 0.5, 0.5, 0.5, 0.0, 0.5, 0.5,
+                0.5, 0.5, 0.0, 0.5, 0.0, 0.5, 0.5, 0.0, 0.5, -0.5, 0.5, 0.0, 0.0, 0.0, 0.5, 0.5, 0.5,
+                0.5
             ]);
             interleaveData2 = new Float32Array([
-                // -1.0, -1.0, 0.0, 0.0, 1.0,
-                // 1.0, -1.0, 0.0, 1.0, 1.0,
-                // 1.0, 1.0, 0.0, 1.0, 0.0
-                -1.0, 0.0, 0.0, 0.0, 1.0,
-                0.0, 0.0, 0.0, 1.0, 1.0,
-                1.0, 0.0, 0.0, 1.0, 0.0
+                // -0.5, -0.5, 0.0, 0.0, 0.5,
+                // 0.5, -0.5, 0.0, 0.5, 0.5,
+                // 0.5, 0.5, 0.0, 0.5, 0.0
+                -0.5, 0.0, 0.0, 0.0, 0.5,
+                0.0, 0.0, 0.0, 0.5, 0.5,
+                0.5, 0.0, 0.0, 0.5, 0.0
             ]);
             var indexData, indexData2
             indexData = new Uint16Array([0, 1, 2, 0, 2, 3])
@@ -115,20 +117,20 @@
                 'testInterleaveBuffer',
                 interleaveData,
                 RedBuffer.ARRAY_BUFFER, [{
-                        attributeKey: 'aVertexPosition',
-                        size: 3,
-                        normalize: false
-                    },
-                    {
-                        attributeKey: 'aTexcoord',
-                        size: 2,
-                        normalize: false
-                    },
-                    {
-                        attributeKey: 'aVertexColor',
-                        size: 4,
-                        normalize: false
-                    }
+                    attributeKey: 'aVertexPosition',
+                    size: 3,
+                    normalize: false
+                },
+                {
+                    attributeKey: 'aTexcoord',
+                    size: 2,
+                    normalize: false
+                },
+                {
+                    attributeKey: 'aVertexColor',
+                    size: 4,
+                    normalize: false
+                }
                 ]
             )
             testInterleaveBuffer2 = RedBuffer(
@@ -136,15 +138,15 @@
                 'testInterleaveBuffer2',
                 interleaveData2,
                 RedBuffer.ARRAY_BUFFER, [{
-                        attributeKey: 'aVertexPosition',
-                        size: 3,
-                        normalize: false
-                    },
-                    {
-                        attributeKey: 'aTexcoord',
-                        size: 2,
-                        normalize: false
-                    }
+                    attributeKey: 'aVertexPosition',
+                    size: 3,
+                    normalize: false
+                },
+                {
+                    attributeKey: 'aTexcoord',
+                    size: 2,
+                    normalize: false
+                }
                 ]
             )
             testIndexBuffer = RedBuffer(
@@ -173,7 +175,7 @@
                 else if (i > len / 8 * 5) testMesh = RedMesh(this, geometry2, testMaterial3)
                 else if (i > len / 8 * 4) testMesh = RedMesh(this, geometry2, testMaterial4)
                 else if (i > len / 8 * 3) testMesh = RedMesh(this, geometry, testMaterial5)
-                else if (i > len / 8 * 2) testMesh = RedMesh(this, geometry2, testMaterial6)
+                else if (i > len / 8 * 2) testMesh = RedMesh(this, new RedPlane(this), testMaterial6)
                 else if (i > len / 8) testMesh = RedMesh(this, geometry, testMaterial7)
                 else testMesh = RedMesh(this, geometry, testMaterial8)
                 testMesh.x = Math.random() * 50 - 25
@@ -184,9 +186,10 @@
                 testMesh.rotationZ = Math.random() * 360
                 tScene3D.addChild(testMesh)
 
-
             }
 
+                console.log(new RedPlane(this) instanceof RedPlane)
+                console.log(new RedPlane(this) instanceof RedGeometry)
 
             i = 1000
             len = i
@@ -199,21 +202,23 @@
                 else if (i > len / 8 * 2) testMesh = RedMesh(this, geometry2, testMaterial6)
                 else if (i > len / 8) testMesh = RedMesh(this, geometry, testMaterial7)
                 else testMesh = RedMesh(this, geometry, testMaterial8)
+                // testMesh = RedMesh(this, new RedPlane(this), testMaterial8)
                 testMesh.x = Math.random() * 1280
                 testMesh.y = Math.random() * 768
                 // testMesh.drawMode = this.gl.LINES
-                testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 10 + Math.random() * 50
+                testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 50 + Math.random()*30
                 // testMesh.rotationX = Math.random() * 360
                 // testMesh.rotationY = Math.random() * 360
                 testMesh.rotationZ = Math.random() * 360
                 tScene2D.addChild(testMesh)
 
-
+               
+              
 
             }
-            i = 500
+            i = 100
             while (i--) {
-                var testLine = new RedLine(this, new RedColorMaterial(this, i % 2 ? '#ff0000' : i % 3 ?'#00ff00' : '#0000ff'))
+                var testLine = new RedLine(this, new RedColorMaterial(this, i % 2 ? '#ff0000' : i % 3 ? '#00ff00' : '#0000ff'))
                 // var testLine = new RedLine(this, testMaterial2)
                 var tX, tY, tZ
                 var i2 = 4
@@ -229,7 +234,7 @@
                 // testLine.addPoint(300, 100+Math.random()*50, 0)
                 // testLine.addPoint(600, 100+Math.random()*50, 0)
 
-                 var i2 = 3*10
+                var i2 = 3 * 10
                 tX = tY = tZ = 0
                 while (i2--) {
                     tX += Math.random() * 30
@@ -237,7 +242,7 @@
                     // tZ += Math.random() * 30
                     testLine.addPoint(tX, tY, tZ)
                 }
-                
+
                 testLine.rotationX = Math.random() * 360
                 testLine.rotationY = Math.random() * 360
                 testLine.rotationZ = Math.random() * 360

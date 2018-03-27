@@ -98,6 +98,7 @@ var RedRenderer;
         var self;
         var valueParser;
         var updateSystemUniform;
+        var glInitialize;
         // 숫자면 숫자로 %면 월드대비 수치로 변경해줌
         valueParser = function (rect) {
             rect.forEach(function (v, index) {
@@ -160,6 +161,23 @@ var RedRenderer;
                 }
             }
         })();
+        glInitialize = function (gl) {
+            // 뎁스데스티 설정
+            gl.enable(gl.DEPTH_TEST);
+            gl.depthFunc(gl.LEQUAL)
+            // 컬링 페이스 설정
+            gl.frontFace(gl.CCW)
+            gl.enable(gl.CULL_FACE);
+            gl.cullFace(gl.BACK)
+            gl.enable(gl.SCISSOR_TEST);
+            // 블렌드모드설정
+            gl.enable(gl.BLEND);
+            gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+            // 픽셀 블렌딩 결정
+            gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+            // 픽셀 플립 기본설정
+            gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+        };
         viewRect = [];
         perspectiveMTX = mat4.create();
         return function (redGL, time) {
@@ -171,6 +189,8 @@ var RedRenderer;
             gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
             gl.scissor(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+            // glInitialize
+            glInitialize(gl);
 
             // console.log("worldRender", v['key'], t0)
             self['renderInfo'] = {}
@@ -239,7 +259,7 @@ var RedRenderer;
         }
     })();
     RedRenderer.prototype.sceneRender = (function () {
-     
+
         return function (gl, orthographic, scene, time, renderResultObj) {
             var tChildren, tMesh;
             var k, i, i2;
@@ -250,7 +270,7 @@ var RedRenderer;
             var tPrevIndexBuffer_UUID;
             var tPrevInterleaveBuffer_UUID;
             // 오쏘고날 스케일 비율
-            var orthographicScale = orthographic ? 0.5 : 1
+            var orthographicScale = orthographic ? -1 : 1
             //
             var BYTES_PER_ELEMENT;;
             // 
@@ -278,7 +298,7 @@ var RedRenderer;
             // sin,cos 관련
             var SIN, COS, tRadian, CPI, CPI2, C225, C127, C045, C157;
             //////////////// 변수값 할당 ////////////////
-            
+
             tCacheInterleaveBuffer = this['cacheAttrInfo'];
             tCacheUniformInfo = this['cacheUniformInfo'];
             tCacheTextureInfo = this['cacheTextureInfo'];
@@ -334,15 +354,15 @@ var RedRenderer;
                         if (tCacheInterleaveBuffer[tWebGLAttributeLocation] != tAttributeLocationInfo['_UUID']) {
                             // 해당로케이션을 활성화된적이없으면 활성화 시킨다
                             tAttributeLocationInfo['enabled'] ? 0 : (gl.enableVertexAttribArray(tWebGLAttributeLocation), tAttributeLocationInfo['enabled'] = true)
-                           
-                                gl.vertexAttribPointer(
-                                    tWebGLAttributeLocation,
-                                    tInterleaveDefineUnit['size'],
-                                    tInterleaveBuffer['glArrayType'],
-                                    tInterleaveDefineUnit['normalize'],
-                                    tInterleaveBuffer['stride'] * BYTES_PER_ELEMENT, //stride
-                                    tInterleaveDefineUnit['offset'] * BYTES_PER_ELEMENT //offset
-                                )
+
+                            gl.vertexAttribPointer(
+                                tWebGLAttributeLocation,
+                                tInterleaveDefineUnit['size'],
+                                tInterleaveBuffer['glArrayType'],
+                                tInterleaveDefineUnit['normalize'],
+                                tInterleaveBuffer['stride'] * BYTES_PER_ELEMENT, //stride
+                                tInterleaveDefineUnit['offset'] * BYTES_PER_ELEMENT //offset
+                            )
                             // 상태 캐싱
                             tCacheInterleaveBuffer[tWebGLAttributeLocation] = tAttributeLocationInfo['_UUID']
                         }
@@ -447,7 +467,7 @@ var RedRenderer;
                     a[4] = a00 * b10 + a10 * b11 + a20 * b12, a[5] = a01 * b10 + a11 * b11 + a21 * b12, a[6] = a02 * b10 + a12 * b11 + a22 * b12,
                     a[8] = a00 * b20 + a10 * b21 + a20 * b22, a[9] = a01 * b20 + a11 * b21 + a21 * b22, a[10] = a02 * b20 + a12 * b21 + a22 * b22,
                     // tMVMatrix scale
-                    aX = tMesh['scaleX'] * orthographicScale, aY = tMesh['scaleY'] * orthographicScale, aZ = tMesh['scaleZ'] * orthographicScale,
+                    aX = tMesh['scaleX'] , aY = tMesh['scaleY'] * orthographicScale, aZ = tMesh['scaleZ'] ,
                     a[0] = a[0] * aX, a[1] = a[1] * aX, a[2] = a[2] * aX, a[3] = a[3] * aX,
                     a[4] = a[4] * aY, a[5] = a[5] * aY, a[6] = a[6] * aY, a[7] = a[7] * aY,
                     a[8] = a[8] * aZ, a[9] = a[9] * aZ, a[10] = a[10] * aZ, a[11] = a[11] * aZ,
