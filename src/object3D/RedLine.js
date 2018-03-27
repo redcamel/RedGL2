@@ -158,7 +158,10 @@ var RedLine;
 		}
 	    :DOC*/
         this['scaleX'] = this['scaleY'] = this['scaleZ'] = 1;
-        Object.seal(RedLine);
+        this['matrix'] = mat4.create();
+        this['normalMatrix'] = mat4.create();
+        this['children'] = []
+        // Object.seal(RedLine);
         // console.log(this);
     }
     RedLine.prototype = RedMesh.prototype;

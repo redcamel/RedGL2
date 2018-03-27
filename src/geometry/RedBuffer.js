@@ -242,7 +242,7 @@ var RedBuffer;
             parseInterleaveDefineInfo(this, this['bufferType'], this['data'], this['interleaveDefineInfo']);
         }
         this.upload(this['data']);
-        Object.seal(this);
+        // Object.seal(this);
         console.log(this);
     }
     /**DOC:

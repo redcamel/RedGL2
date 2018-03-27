@@ -74,7 +74,7 @@ var RedColorMaterial;
         })());
         this['alpha'] = alpha;
         this['_UUID'] = RedGL['makeUUID']();
-        Object.seal(this);
+        // Object.seal(this);
         console.log(this);
     }
     makeProgram = function (redGL) {

@@ -118,7 +118,11 @@ var RedMesh;
 		}
 	    :DOC*/
         this['scaleX'] = this['scaleY'] = this['scaleZ'] = 1;
+        this['matrix'] = mat4.create();
+        this['normalMatrix'] = mat4.create();
+        this['children'] = []
         this['_UUID'] = RedGL['makeUUID']();
+        // Object.seal(this)
     }
     RedGLUtil['extendsProto'](RedMesh, RedBaseContainer);
     RedGLUtil['extendsProto'](RedMesh, RedBaseObject3D);

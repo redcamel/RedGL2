@@ -36,7 +36,7 @@ var RedProgram;
                         t0['enabled'] = false;
                         self['attributeLocation'].push(t0);
                         self['attributeLocation'][v['name']] = t0;
-                        Object.seal(t0);
+                        // Object.seal(t0);
                     }
                 })
             }
@@ -105,7 +105,7 @@ var RedProgram;
                         self['uniformLocation'].push(t0)
                         self['uniformLocation'][v['name']] = t0
                     }
-                    Object.seal(t0)
+                    // Object.seal(t0)
                 })
 
             }
