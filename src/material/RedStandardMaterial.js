@@ -22,6 +22,7 @@ var RedStandardMaterial;
         this['diffuseTexture'] = diffuseTexture;
         this['normalTexture'] = normalTexture;
         this['specularTexture'] = specularTexture;
+        this['shininess'] = 10
         /////////////////////////////////////////
         // 일반 프로퍼티
         /**DOC:
@@ -56,10 +57,11 @@ var RedStandardMaterial;
             uniform sampler2D uDiffuseTexture;
             uniform sampler2D uNormalTexture;
             uniform sampler2D uSpecularTexture;
-
+            uniform float uShininess;
             varying vec4 vVertexPositionEye4;
+            vec4 texelColor;
             void main(void) {
-                vec4 texelColor = texture2D(uDiffuseTexture, vTexcoord);
+                texelColor = texture2D(uDiffuseTexture, vTexcoord);
 
                 vec4 la = vec4(0.05, 0.05, 0.05, 1.0);
                 vec4 ld = vec4(0.0, 0.0, 0.0, 1.0);
@@ -73,13 +75,12 @@ var RedStandardMaterial;
                 vec3 L = normalize(lightDirection);
                 vec3 R;
 
-                float shininess = 64.0;
                 float specular;
                 float lambertTerm =dot(N,-L);
                 if(lambertTerm > 0.0){
                     ld += lightColor * texelColor * lambertTerm;
                     R = reflect(L, N);
-                    specular = pow( max(dot(R, -L), 0.0), shininess);
+                    specular = pow( max(dot(R, -L), 0.0), uShininess);
                     ls +=  specularLightColor * specular;
                 }
                 vec4 finalColor = la + ld + ls; 

@@ -397,9 +397,9 @@ var RedRenderer;
                                 gl.activeTexture(gl.TEXTURE0 + tTextureIndex)
                                 gl.bindTexture(gl.TEXTURE_2D, tUniformValue['webglTexture'])
                                 gl.uniform1i(tWebGLUniformLocation, tTextureIndex)
-                                if (tCacheTextureInfo[tTextureIndex]) tTextureIndex++
-                                if (tTextureIndex == 8) tTextureIndex = 1
                                 tCacheTextureInfo[tTextureIndex] = tUniformValue['_UUID']
+                                if (tCacheTextureInfo[tTextureIndex]) tTextureIndex++
+                                if (tTextureIndex == 8) tTextureIndex = 1                                
                                 // console.log(tCacheTextureInfo)
                             }
 
