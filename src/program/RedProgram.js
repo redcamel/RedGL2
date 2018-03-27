@@ -18,7 +18,6 @@ var RedProgram;
         }
     })();
     updateLocation = (function () {
-        // TODO: 정보를 객체화시키자
         var AttributeLocationInfo;
         var UniformLocationInfo;
         AttributeLocationInfo = function () { }

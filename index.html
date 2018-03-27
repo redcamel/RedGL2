@@ -56,13 +56,16 @@
         document.body.appendChild(t)
         RedGL(t, function (v) {
             var tGL;
-            var tWorld, tScene2D, tScene3D, tCamera, tCamera2, tCamera3;
+            var tWorld, tScene2D, tScene3D,tScene3D_2, tCamera, tCamera2, tCamera3;
             var tRenderer;
             var self;
             self = this
             tGL = this.gl;
             this.world = tWorld = RedWorld();
-            tScene3D = RedScene();
+            tScene3D = RedScene('#223344');
+            tScene3D.alpha = 0.1
+            tScene3D_2 = RedScene();
+            tScene3D_2.useBackgroundColor = false
             tScene2D = RedScene();
             tCamera = RedCamera();
             tCamera2 = RedCamera();
@@ -72,7 +75,7 @@
             tRenderer = RedRenderer();
             tWorld.addView(RedView('test', tScene2D, tCamera));
             tWorld.addView(RedView('test2', tScene3D, tCamera2));
-            tWorld.addView(RedView('test3', tScene3D, tCamera3));
+            tWorld.addView(RedView('test3', tScene3D_2, tCamera3));
             tWorld.addView(RedView('test4', tScene3D, tCamera3));
             RedView('test2').setSize('25%', '25%')
             RedView('test3').setSize('35%', '25%')
@@ -169,7 +172,7 @@
             geometry2 = RedGeometry(testInterleaveBuffer2, testIndexBuffer2)
 
             var testMesh
-            var i = 2000;
+            var i = 1000;
             var len = i
             while (i--) {
                 var t
@@ -188,6 +191,7 @@
                 testMesh.rotationY = Math.random() * 360
                 testMesh.rotationZ = Math.random() * 360
                 tScene3D.addChild(testMesh)
+                tScene3D_2.addChild(testMesh)
 
             }
 
@@ -195,7 +199,7 @@
             console.log(new RedPlane(this) instanceof RedGeometry)
             console.log(new RedBox(this))
 
-            i = 500
+            i = 100
             len = i
             while (i--) {
                 if (i > len / 8 * 7) testMesh = RedMesh(this, geometry, testMaterial)

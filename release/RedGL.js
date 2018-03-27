@@ -1368,7 +1368,6 @@ var RedProgram;
         }
     })();
     updateLocation = (function () {
-        // TODO: 정보를 객체화시키자
         var AttributeLocationInfo;
         var UniformLocationInfo;
         AttributeLocationInfo = function () { }
@@ -1973,7 +1972,7 @@ var RedRenderer;
     var prevProgram_UUID;
     RedRenderer.prototype.worldRender = (function () {
         var worldRect, viewRect;
-        var tCamera;
+        var tCamera, tScene;
         var perspectiveMTX;
         var self;
         var valueParser;
@@ -2083,28 +2082,32 @@ var RedRenderer;
                 viewRect[1] = tView['_y'];
                 viewRect[2] = tView['_width'];
                 viewRect[3] = tView['_height'];
-                tCamera = tView.camera;
+                tCamera = tView['camera'];
+                tScene = tView['scene']
                 tCamera['updateMatrix']()
                 // 위치/크기의 % 여부를 파싱
                 valueParser(viewRect);
                 //
-                self['renderInfo'][tView.key] = {
+                self['renderInfo'][tView['key']] = {
                     orthographic: tCamera['orthographic'],
-                    x: tView._x,
-                    y: tView._y,
-                    width: tView._width,
-                    height: tView._height,
+                    x: tView['_x'],
+                    y: tView['_y'],
+                    width: tView['_width'],
+                    height: tView['_height'],
                     viewRectX: viewRect[0],
                     viewRectY: viewRect[1],
                     viewRectWidth: viewRect[2],
                     viewRectHeight: viewRect[3],
-                    key: tView.key,
+                    key: tView['key'],
                     call: 0
                 }
                 // viewport 설정
                 gl.viewport(viewRect[0], worldRect[3] - viewRect[3] - viewRect[1], viewRect[2], viewRect[3]);
                 gl.scissor(viewRect[0], worldRect[3] - viewRect[3] - viewRect[1], viewRect[2], viewRect[3]);
-                gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+                gl.clearColor(tScene['r'], tScene['g'], tScene['b'], 1)
+                if (tScene['useBackgroundColor']) gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+                else gl.clear(gl.DEPTH_BUFFER_BIT);
+
                 // view 에 적용할 카메라 퍼스펙티브를 계산
                 mat4.identity(perspectiveMTX);
                 if (tCamera['orthographic']) {
@@ -2114,8 +2117,8 @@ var RedRenderer;
                         0.5, // right
                         -0.5, // bottom
                         0.5, // top,
-                        - tCamera.farClipping,
-                        tCamera.farClipping
+                        - tCamera['farClipping'],
+                        tCamera['farClipping']
                     )
                     mat4.translate(perspectiveMTX, perspectiveMTX, [-0.5, 0.5, 0])
                     mat4.scale(perspectiveMTX, perspectiveMTX, [1 / viewRect[2], -1 / viewRect[3], 1]);
@@ -2124,17 +2127,17 @@ var RedRenderer;
                 } else {
                     mat4.perspective(
                         perspectiveMTX,
-                        tCamera.fov * Math.PI / 180,
+                        tCamera['fov'] * Math.PI / 180,
                         viewRect[2] / viewRect[3],
-                        tCamera.nearClipping,
-                        tCamera.farClipping
+                        tCamera['nearClipping'],
+                        tCamera['farClipping']
                     );
                     gl.enable(gl.CULL_FACE);
 
                 }
                 updateSystemUniform(redGL, time, perspectiveMTX, tCamera['matrix'], viewRect)
                 // 씬렌더 호출
-                self.sceneRender(gl, tCamera['orthographic'], tView.scene, time, self['renderInfo'][tView.key]);
+                self.sceneRender(gl, tCamera['orthographic'], tScene, time, self['renderInfo'][tView['key']]);
             })
         }
     })();
@@ -2346,7 +2349,7 @@ var RedRenderer;
                     a[4] = a00 * b10 + a10 * b11 + a20 * b12, a[5] = a01 * b10 + a11 * b11 + a21 * b12, a[6] = a02 * b10 + a12 * b11 + a22 * b12,
                     a[8] = a00 * b20 + a10 * b21 + a20 * b22, a[9] = a01 * b20 + a11 * b21 + a21 * b22, a[10] = a02 * b20 + a12 * b21 + a22 * b22,
                     // tMVMatrix scale
-                    aX = tMesh['scaleX'] , aY = tMesh['scaleY'] * orthographicScale, aZ = tMesh['scaleZ'] ,
+                    aX = tMesh['scaleX'], aY = tMesh['scaleY'] * orthographicScale, aZ = tMesh['scaleZ'],
                     a[0] = a[0] * aX, a[1] = a[1] * aX, a[2] = a[2] * aX, a[3] = a[3] * aX,
                     a[4] = a[4] * aY, a[5] = a[5] * aY, a[6] = a[6] * aY, a[7] = a[7] * aY,
                     a[8] = a[8] * aZ, a[9] = a[9] * aZ, a[10] = a[10] * aZ, a[11] = a[11] * aZ,
@@ -2775,8 +2778,22 @@ var RedScene;
         return : 'RedScene Instance'
     }
 	:DOC*/
-    RedScene = function () {
-        if (!(this instanceof RedScene)) return new RedScene();
+    RedScene = function (backgroundColor) {
+        if (!(this instanceof RedScene)) return new RedScene(backgroundColor);
+        this['r'] = 0
+        this['g'] = 0
+        this['b'] = 0
+        this.setBackgroundColor(backgroundColor ? backgroundColor : '#000')
+        /**DOC:
+            {
+                title :`useBackgroundColor`,
+                description : `
+                    배경색 사용여부
+                `,
+                return : 'Boolean'
+            }
+        :DOC*/
+        this['useBackgroundColor'] = true
         /**DOC:
             {
                 title :`children`,
@@ -2791,6 +2808,33 @@ var RedScene;
         Object.seal(this)
     };
     RedScene.prototype = {};
+    /**DOC:
+        {
+            code : 'FUNCTION',
+            title :`setBackgroundColor`,
+            description : `
+                배경 컬러설정
+            `,
+            params : {
+                hex : [
+                    {type: 'hex'},
+                    'ex) #fff, #ffffff'
+                ]
+            },
+            example : `// TODO:`,
+            return : 'void'
+        }
+    :DOC*/
+    RedScene.prototype['setBackgroundColor'] = (function () {
+        var t0;
+        return function (hex) {
+            hex = hex ? hex : '#000';
+            t0 = RedGLUtil.hexToRGB.call(this, hex);
+            this['r'] = t0[0];
+            this['g'] = t0[1];
+            this['b'] = t0[2];
+        }
+    })();
     RedGLUtil['extendsProto'](RedScene, RedBaseContainer)
     Object.freeze(RedScene);
 })();
