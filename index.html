@@ -56,7 +56,7 @@
         document.body.appendChild(t)
         RedGL(t, function (v) {
             var tGL;
-            var tWorld, tScene2D, tScene3D,tScene3D_2, tCamera, tCamera2, tCamera3;
+            var tWorld, tScene2D, tScene3D, tScene3D_2, tCamera, tCamera2, tCamera3;
             var tRenderer;
             var self;
             self = this
@@ -89,7 +89,7 @@
                 testMaterial7, testMateria8
             testMaterial = RedMaterial(this)
             testMaterial2 = RedColorMaterial(this)
-            testMaterial3 = RedBitmapMaterial(this, RedBitmapTexture(this, 'asset/earth.jpg'))
+            testMaterial3 = RedBitmapMaterial(this, RedBitmapTexture(this, 'asset/UV_Grid_Sm.jpg'))
             testMaterial4 = RedBitmapMaterial(this, RedBitmapTexture(this, 'asset/draft1.png'))
             testMaterial5 = RedBitmapMaterial(this, RedBitmapTexture(this, 'asset/draft2.png'))
             testMaterial6 = RedBitmapMaterial(this, RedBitmapTexture(this, 'asset/draft3.png'))
@@ -104,12 +104,9 @@
                 0.5
             ]);
             interleaveData2 = new Float32Array([
-                // -0.5, -0.5, 0.0, 0.0, 0.5,
-                // 0.5, -0.5, 0.0, 0.5, 0.5,
-                // 0.5, 0.5, 0.0, 0.5, 0.0
-                -0.5, 0.0, 0.0, 0.0, 0.5,
-                0.0, 0.0, 0.0, 0.5, 0.5,
-                0.5, 0.0, 0.0, 0.5, 0.0
+                0.0, 0.5, 0.0, 0.0, 0.5,
+                -0.5, -0.5, 0.0, 0.5, 0.5,
+                0.5, -0.5, 0.0, 0.5, 0.0
             ]);
             var indexData, indexData2
             indexData = new Uint16Array([0, 1, 2, 0, 2, 3])
@@ -172,8 +169,9 @@
             geometry2 = RedGeometry(testInterleaveBuffer2, testIndexBuffer2)
 
             var testMesh
-            var i = 1000;
+            var i = 1500;
             var len = i
+            var boxGeo = new RedBox(this)
             while (i--) {
                 var t
                 if (i > len / 8 * 7) testMesh = RedMesh(this, geometry, testMaterial)
@@ -187,11 +185,19 @@
                 testMesh.x = Math.random() * 50 - 25
                 testMesh.y = Math.random() * 50 - 25
                 testMesh.z = Math.random() * 50 - 25
+                // if(Math.random() >0.8) testMesh.drawMode = this.gl.LINE_LOOP
                 testMesh.rotationX = Math.random() * 360
                 testMesh.rotationY = Math.random() * 360
                 testMesh.rotationZ = Math.random() * 360
                 tScene3D.addChild(testMesh)
                 tScene3D_2.addChild(testMesh)
+
+                // if (Math.random() > 0.8) {
+                //     subTest = RedMesh(this, boxGeo, testMaterial2)
+                //     subTest.scaleX = subTest.scaleY = subTest.scaleZ = 0.5
+                //     subTest.x = 1
+                //     testMesh.addChild(subTest)
+                // }
 
             }
 
@@ -199,7 +205,7 @@
             console.log(new RedPlane(this) instanceof RedGeometry)
             console.log(new RedBox(this))
 
-            i = 100
+            i = 1000
             len = i
             while (i--) {
                 if (i > len / 8 * 7) testMesh = RedMesh(this, geometry, testMaterial)
@@ -214,12 +220,13 @@
                 // testMesh = RedMesh(this, new RedBox(this), testMaterial7)
                 testMesh.x = Math.random() * 1280
                 testMesh.y = Math.random() * 768
-                // testMesh.drawMode = this.gl.LINES
+                // if(Math.random() >0.8) testMesh.drawMode = this.gl.LINES
                 testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 50 + Math.random() * 30
                 testMesh.rotationX = Math.random() * 360
                 testMesh.rotationY = Math.random() * 360
                 testMesh.rotationZ = Math.random() * 360
                 tScene2D.addChild(testMesh)
+
 
 
 
@@ -265,7 +272,7 @@
                 console.log('호잇!', interleaveBuffer, indexBuffer)
 
 
-                var i = 100
+                var i = 500
                 while (i--) {
                     var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer), testMaterial3)
                     testMesh.x = Math.random() * 500 - 250

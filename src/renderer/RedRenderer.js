@@ -263,16 +263,22 @@ var RedRenderer;
         }
     })();
     RedRenderer.prototype.sceneRender = (function () {
-
-        return function (gl, orthographic, scene, time, renderResultObj) {
-            var tChildren, tMesh;
+        var draw;
+        var tPrevIndexBuffer_UUID;
+        var tPrevInterleaveBuffer_UUID;
+        draw = function (
+            gl,
+            children,
+            orthographic,
+            time,
+            renderResultObj,
+            tCacheInterleaveBuffer,
+            tCacheUniformInfo,
+            tCacheTextureInfo,
+            parentMTX
+        ) {
+            var tMesh;
             var k, i, i2;
-            // 캐싱관련            
-            var tCacheInterleaveBuffer;
-            var tCacheUniformInfo;
-            var tCacheTextureInfo;
-            var tPrevIndexBuffer_UUID;
-            var tPrevInterleaveBuffer_UUID;
             // 오쏘고날 스케일 비율
             var orthographicScale = orthographic ? -1 : 1
             //
@@ -288,8 +294,8 @@ var RedRenderer;
             var tUniformLocationInfo, tAttributeLocationInfo, tWebGLUniformLocation, tWebGLAttributeLocation;
             var tInterleaveBuffer, tIndexBufferInfo;
             var tUniformValue
-            var tMVMatrix;
             var tRenderType;
+            var tMVMatrix, tNMatrix
             var tUUID, noChangeUniform;
             // matix 관련
             var a,
@@ -302,10 +308,6 @@ var RedRenderer;
             // sin,cos 관련
             var SIN, COS, tRadian, CPI, CPI2, C225, C127, C045, C157;
             //////////////// 변수값 할당 ////////////////
-
-            tCacheInterleaveBuffer = this['cacheAttrInfo'];
-            tCacheUniformInfo = this['cacheUniformInfo'];
-            tCacheTextureInfo = this['cacheTextureInfo'];
             BYTES_PER_ELEMENT = Float32Array.BYTES_PER_ELEMENT;
             CPI = 3.141592653589793,
                 CPI2 = 6.283185307179586,
@@ -314,12 +316,13 @@ var RedRenderer;
                 C045 = 0.405284735,
                 C157 = 1.5707963267948966;
             //////////////// 렌더시작 ////////////////
-            tMVMatrix = mat4.create()
-            tChildren = scene.children;
-            i = tChildren.length
+
+            i = children.length
             while (i--) {
                 renderResultObj['call']++
-                tMesh = tChildren[i]
+                tMesh = children[i]
+                tMVMatrix = tMesh['matrix']
+                tNMatrix = tMesh['normalMatrix']
                 tGeometry = tMesh.geometry
                 tMaterial = tMesh.material
                 prevProgram_UUID == tMaterial['program']['_UUID'] ? 0 : gl.useProgram(tMaterial['program']['webglProgram'])
@@ -387,6 +390,7 @@ var RedRenderer;
                         // if (!noChange) console.log('변경되었다', tLocationInfo['name'], tCacheInfo[tUUID], tUniformValue)
                         // console.log(tCacheInfo)
                         if (tRenderType == 'sampler2D') {
+                            //TODO: 텍스쳐 인덱스는 내부적으로 먹어야하는 거였군...
                             // tTextureIndex : 0 번은 생성용으로 쓴다.                            
                             if (tCacheTextureInfo[tTextureIndex] == tUniformValue['_UUID']) {
                             } else {
@@ -412,8 +416,6 @@ var RedRenderer;
 
                 /////////////////////////////////////////////////////////////////////////
                 /////////////////////////////////////////////////////////////////////////
-                // 어트리뷰트 인터리브 정보를 가져온다. 
-
                 // tMVMatrix
                 // tMVMatrix 초기화
                 tMVMatrix[0] = 1, tMVMatrix[1] = 0, tMVMatrix[2] = 0, tMVMatrix[3] = 0,
@@ -474,13 +476,91 @@ var RedRenderer;
                     a[0] = a[0] * aX, a[1] = a[1] * aX, a[2] = a[2] * aX, a[3] = a[3] * aX,
                     a[4] = a[4] * aY, a[5] = a[5] * aY, a[6] = a[6] * aY, a[7] = a[7] * aY,
                     a[8] = a[8] * aZ, a[9] = a[9] * aZ, a[10] = a[10] * aZ, a[11] = a[11] * aZ,
-                    a[12] = a[12], a[13] = a[13], a[14] = a[14], a[15] = a[15]
+                    a[12] = a[12], a[13] = a[13], a[14] = a[14], a[15] = a[15],
+                    // 부모가있으면 곱함
+                    parentMTX ? (
+                        // 부모매트릭스 복사
+                        // 매트립스 곱
+                        a00 = parentMTX[0], a01 = parentMTX[1], a02 = parentMTX[2], a03 = parentMTX[3],
+                        a10 = parentMTX[4], a11 = parentMTX[5], a12 = parentMTX[6], a13 = parentMTX[7],
+                        a20 = parentMTX[8], a21 = parentMTX[9], a22 = parentMTX[10], a23 = parentMTX[11],
+                        a30 = parentMTX[12], a31 = parentMTX[13], a32 = parentMTX[14], a33 = parentMTX[15],
+                        // Cache only the current line of the second matrix
+                        b0 = tMVMatrix[0], b1 = tMVMatrix[1], b2 = tMVMatrix[2], b3 = tMVMatrix[3],
+                        tMVMatrix[0] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30,
+                        tMVMatrix[1] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
+                        tMVMatrix[2] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
+                        tMVMatrix[3] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33,
+                        b0 = tMVMatrix[4], b1 = tMVMatrix[5], b2 = tMVMatrix[6], b3 = tMVMatrix[7],
+                        tMVMatrix[4] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30,
+                        tMVMatrix[5] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
+                        tMVMatrix[6] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
+                        tMVMatrix[7] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33,
+                        b0 = tMVMatrix[8], b1 = tMVMatrix[9], b2 = tMVMatrix[10], b3 = tMVMatrix[11],
+                        tMVMatrix[8] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30,
+                        tMVMatrix[9] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
+                        tMVMatrix[10] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
+                        tMVMatrix[11] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33,
+                        b0 = tMVMatrix[12], b1 = tMVMatrix[13], b2 = tMVMatrix[14], b3 = tMVMatrix[15],
+                        tMVMatrix[12] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30,
+                        tMVMatrix[13] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
+                        tMVMatrix[14] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
+                        tMVMatrix[15] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33
+                    ) : 0,
+
+                    /////////////////////////////////////////////////////////////////////////
+                    /////////////////////////////////////////////////////////////////////////
+                    gl.uniformMatrix4fv(tSystemUniformGroup['uMVMatrix']['location'], false, tMVMatrix)
 
                 /////////////////////////////////////////////////////////////////////////
                 /////////////////////////////////////////////////////////////////////////
-                gl.uniformMatrix4fv(tSystemUniformGroup['uMVMatrix']['location'], false, tMVMatrix)
-                /////////////////////////////////////////////////////////////////////////
-                /////////////////////////////////////////////////////////////////////////
+                // 노말매트릭스를 사용할경우
+                if (tSystemUniformGroup['uNMatrix']) {
+                    //클론
+                    // mat4Inverse
+                    inverse_c = tMVMatrix[0], inverse_d = tMVMatrix[1], inverse_e = tMVMatrix[2], inverse_g = tMVMatrix[3],
+                        inverse_f = tMVMatrix[4], inverse_h = tMVMatrix[5], inverse_i = tMVMatrix[6], inverse_j = tMVMatrix[7],
+                        inverse_k = tMVMatrix[8], inverse_l = tMVMatrix[9], inverse_n = tMVMatrix[10], inverse_o = tMVMatrix[11],
+                        inverse_m = tMVMatrix[12], inverse_p = tMVMatrix[13], inverse_r = tMVMatrix[14], inverse_s = tMVMatrix[15],
+                        inverse_A = inverse_c * inverse_h - inverse_d * inverse_f,
+                        inverse_B = inverse_c * inverse_i - inverse_e * inverse_f,
+                        inverse_t = inverse_c * inverse_j - inverse_g * inverse_f,
+                        inverse_u = inverse_d * inverse_i - inverse_e * inverse_h,
+                        inverse_v = inverse_d * inverse_j - inverse_g * inverse_h,
+                        inverse_w = inverse_e * inverse_j - inverse_g * inverse_i,
+                        inverse_x = inverse_k * inverse_p - inverse_l * inverse_m,
+                        inverse_y = inverse_k * inverse_r - inverse_n * inverse_m,
+                        inverse_z = inverse_k * inverse_s - inverse_o * inverse_m,
+                        inverse_C = inverse_l * inverse_r - inverse_n * inverse_p,
+                        inverse_D = inverse_l * inverse_s - inverse_o * inverse_p,
+                        inverse_E = inverse_n * inverse_s - inverse_o * inverse_r,
+                        inverse_q = inverse_A * inverse_E - inverse_B * inverse_D + inverse_t * inverse_C + inverse_u * inverse_z - inverse_v * inverse_y + inverse_w * inverse_x,
+                        inverse_q = 1 / inverse_q,
+                        tNMatrix[0] = (inverse_h * inverse_E - inverse_i * inverse_D + inverse_j * inverse_C) * inverse_q,
+                        tNMatrix[1] = (-inverse_d * inverse_E + inverse_e * inverse_D - inverse_g * inverse_C) * inverse_q,
+                        tNMatrix[2] = (inverse_p * inverse_w - inverse_r * inverse_v + inverse_s * inverse_u) * inverse_q,
+                        tNMatrix[3] = (-inverse_l * inverse_w + inverse_n * inverse_v - inverse_o * inverse_u) * inverse_q,
+                        tNMatrix[4] = (-inverse_f * inverse_E + inverse_i * inverse_z - inverse_j * inverse_y) * inverse_q,
+                        tNMatrix[5] = (inverse_c * inverse_E - inverse_e * inverse_z + inverse_g * inverse_y) * inverse_q,
+                        tNMatrix[6] = (-inverse_m * inverse_w + inverse_r * inverse_t - inverse_s * inverse_B) * inverse_q,
+                        tNMatrix[7] = (inverse_k * inverse_w - inverse_n * inverse_t + inverse_o * inverse_B) * inverse_q,
+                        tNMatrix[8] = (inverse_f * inverse_D - inverse_h * inverse_z + inverse_j * inverse_x) * inverse_q,
+                        tNMatrix[9] = (-inverse_c * inverse_D + inverse_d * inverse_z - inverse_g * inverse_x) * inverse_q,
+                        tNMatrix[10] = (inverse_m * inverse_v - inverse_p * inverse_t + inverse_s * inverse_A) * inverse_q,
+                        tNMatrix[11] = (-inverse_k * inverse_v + inverse_l * inverse_t - inverse_o * inverse_A) * inverse_q,
+                        tNMatrix[12] = (-inverse_f * inverse_C + inverse_h * inverse_y - inverse_i * inverse_x) * inverse_q,
+                        tNMatrix[13] = (inverse_c * inverse_C - inverse_d * inverse_y + inverse_e * inverse_x) * inverse_q,
+                        tNMatrix[14] = (-inverse_m * inverse_u + inverse_p * inverse_B - inverse_r * inverse_A) * inverse_q,
+                        tNMatrix[15] = (inverse_k * inverse_u - inverse_l * inverse_B + inverse_n * inverse_A) * inverse_q,
+                        // transpose
+                        a01 = tNMatrix[1], a02 = tNMatrix[2], a03 = tNMatrix[3],
+                        a12 = tNMatrix[6], a13 = tNMatrix[7], a23 = tNMatrix[11],
+                        tNMatrix[1] = tNMatrix[4], tNMatrix[2] = tNMatrix[8], tNMatrix[3] = tNMatrix[12], tNMatrix[4] = a01, tNMatrix[6] = tNMatrix[9],
+                        tNMatrix[7] = tNMatrix[13], tNMatrix[8] = a02, tNMatrix[9] = a12, tNMatrix[11] = tNMatrix[14],
+                        tNMatrix[12] = a03, tNMatrix[13] = a13, tNMatrix[14] = a23,
+                        // uNMatrix 입력 
+                        gl.uniformMatrix4fv(tSystemUniformGroup['uNMatrix']['location'], false, tNMatrix)
+                }
 
                 /////////////////////////////////////////////////////////////////////////
                 /////////////////////////////////////////////////////////////////////////
@@ -498,8 +578,33 @@ var RedRenderer;
                 } else gl.drawArrays(tMesh['drawMode'], 0, tInterleaveBuffer['pointNum'])
                 /////////////////////////////////////////////////////////////////////////
                 /////////////////////////////////////////////////////////////////////////
-
+                if (tMesh['children'].length) {
+                    draw(
+                        gl,
+                        tMesh['children'],
+                        orthographic,
+                        time,
+                        renderResultObj,
+                        tCacheInterleaveBuffer,
+                        tCacheUniformInfo,
+                        tCacheTextureInfo,
+                        tMVMatrix
+                    )
+                }
             }
+        }
+        return function (gl, orthographic, scene, time, renderResultObj) {
+            draw(
+                gl,
+                scene['children'],
+                orthographic,
+                time,
+                renderResultObj,
+                this['cacheAttrInfo'],
+                this['cacheUniformInfo'],
+                this['cacheTextureInfo']
+            )
+
         }
     })()
     Object.freeze(RedRenderer);
