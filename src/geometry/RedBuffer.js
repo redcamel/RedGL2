@@ -116,6 +116,11 @@ var RedBuffer;
         if (typeof bufferType != 'string') RedGLUtil.throwFunc('RedBuffer : bufferType - 문자열만 허용됩니다.')
         if (typeof key != 'string') RedGLUtil.throwFunc('RedBuffer : key - 문자열만 허용됩니다.')
         var tGL = redGL.gl;
+
+         // TODO: 유일키 방어
+         if (!redGL['_datas'][bufferType]) redGL['_datas'][bufferType] = {};
+         if (redGL['_datas'][bufferType][key]) return redGL['_datas'][bufferType][key]
+         else redGL['_datas'][bufferType][key] = this
         /**DOC:
            {
                code : 'PROPERTY',

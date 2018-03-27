@@ -133,7 +133,6 @@ var RedGL;
 (function () {
     var getGL;
     var redGLDetect;
-    var glInitialize;
     /*
         webgl 관련 디텍팅
     */
@@ -179,23 +178,7 @@ var RedGL;
             return null;
         }
     })();
-    glInitialize = function (gl) {
-        // 뎁스데스티 설정
-        gl.enable(gl.DEPTH_TEST);
-        gl.depthFunc(gl.LEQUAL)
-        // 컬링 페이스 설정
-        gl.frontFace(gl.CCW)
-        gl.enable(gl.CULL_FACE);
-        gl.cullFace(gl.BACK)
-        gl.enable(gl.SCISSOR_TEST);
-        // 블렌드모드설정
-        gl.enable(gl.BLEND);
-        gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-        // 픽셀 블렌딩 결정
-        gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
-        // 픽셀 플립 기본설정
-        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-    }
+    
     /**DOC:
 		{
 			constructorYn : true,
@@ -304,7 +287,6 @@ var RedGL;
         this['_datas'] = {};
         this['_UUID'] = RedGL['makeUUID']();
         ////
-        glInitialize(_tGL);
         requestAnimationFrame(function (v) {
             callback ? callback.call(_self, _tGL ? true : false) : 0;
             window.addEventListener('resize', function () { _self.setSize(_self['_width'], _self['_height']) });
@@ -636,20 +618,29 @@ var RedBuffer;
     parseInterleaveDefineInfo = (function () {
         var t0, k;
         return function (self, bufferType, data, interleaveDefineInfo) {
+            // console.log(self,bufferType)
             t0 = 0;
             switch (bufferType) {
                 case RedBuffer.ARRAY_BUFFER:
                     self['interleaveDefineInfo'] = interleaveDefineInfo;
                     if (interleaveDefineInfo) {
                         for (k in interleaveDefineInfo) {
-                            interleaveDefineInfo[k]['offset'] = t0
+                            interleaveDefineInfo[k]['offset'] = interleaveDefineInfo.length<2 ? 0 :t0
                             t0 += interleaveDefineInfo[k]['size']
+                            interleaveDefineInfo[k]['_UUID'] = RedGL['makeUUID']();
                         }
                         interleaveDefineInfo.forEach(function (v) {
                             interleaveDefineInfo[v['attributeKey']] = v
                         })
-                        self['stride'] = t0;
-                        self['pointNum'] = data.length / t0;
+                        if(interleaveDefineInfo.length<2){
+                            self['stride'] = 0;
+                            self['pointNum'] = data.length / 3;
+                        }else{
+                            self['stride'] = t0;
+                            self['pointNum'] = data.length / t0;
+                        }
+                      
+                        
                     } else RedGLUtil.throwFunc('RedBuffer : interleaveDefineInfo는 반드시 정의 되어야합니다.')
                     break
                 case RedBuffer.ELEMENT_ARRAY_BUFFER:
@@ -701,6 +692,11 @@ var RedBuffer;
         if (typeof bufferType != 'string') RedGLUtil.throwFunc('RedBuffer : bufferType - 문자열만 허용됩니다.')
         if (typeof key != 'string') RedGLUtil.throwFunc('RedBuffer : key - 문자열만 허용됩니다.')
         var tGL = redGL.gl;
+
+         // TODO: 유일키 방어
+         if (!redGL['_datas'][bufferType]) redGL['_datas'][bufferType] = {};
+         if (redGL['_datas'][bufferType][key]) return redGL['_datas'][bufferType][key]
+         else redGL['_datas'][bufferType][key] = this
         /**DOC:
            {
                code : 'PROPERTY',
@@ -818,6 +814,9 @@ var RedBuffer;
             } else RedGLUtil.throwFunc('RedBuffer : upload - data형식이 기존 형식과 다름', data)
 
         }
+        this.parseInterleaveDefineInfo = function(){
+            parseInterleaveDefineInfo(this, this['bufferType'], this['data'], this['interleaveDefineInfo']);
+        }
         this.upload(this['data']);
         Object.seal(this);
         console.log(this);
@@ -923,6 +922,7 @@ var RedGeometry;
             }
         :DOC*/
         this['indexBuffer'] = indexBuffer
+        this['_UUID'] = RedGL['makeUUID']();
         Object.freeze(this)
     }
     Object.freeze(RedGeometry);
@@ -1042,7 +1042,7 @@ var RedColorMaterial;
         this['color'] = new Float32Array(4);
         /////////////////////////////////////////
         // 일반 프로퍼티
-        this.setColor(hex, 0.5);
+        this.setColor(hex, 1);
         /**DOC:
             {
                 title :`program`,
@@ -1065,7 +1065,10 @@ var RedColorMaterial;
             _alpha = alpha == undefined ? 1 : alpha;
             return {
                 get: function () { return _alpha },
-                set: function (v) { _alpha = this['color'][3] = v }
+                set: function (v) {
+                    if (v > 1) v = 1;
+                    _alpha = this['color'][3] = v
+                }
             }
         })());
         this['alpha'] = alpha;
@@ -1097,7 +1100,7 @@ var RedColorMaterial;
         }
         vSource = RedGLUtil.getStrFromComment(vSource.toString());
         fSource = RedGLUtil.getStrFromComment(fSource.toString());
-        console.log(vSource, fSource)
+        // console.log(vSource, fSource)
         return RedProgram(
             redGL,
             'colorProgram',
@@ -1214,7 +1217,7 @@ var RedBitmapMaterial;
         }
         vSource = RedGLUtil.getStrFromComment(vSource.toString());
         fSource = RedGLUtil.getStrFromComment(fSource.toString());
-        console.log(vSource, fSource)
+        // console.log(vSource, fSource)
         return RedProgram(
             redGL,
             'bitmapProgram',
@@ -1690,9 +1693,9 @@ var RedShader;
                     source: ''
                 }
             }
-            checkList = checkList ? checkList : [];
             // 함수 제외 전부 검색
             checkList = source.match(/attribute[\s\S]+?\;|uniform[\s\S]+?\;|varying[\s\S]+?\;|precision[\s\S]+?\;|([a-z0-9]+)\s([\S]+)\;\n/g);
+            checkList = checkList ? checkList : [];
             checkList = mergeSystemCode(type, checkList);
             checkList.sort();
             checkList.forEach(function (v) {
@@ -1971,6 +1974,7 @@ var RedRenderer;
         var self;
         var valueParser;
         var updateSystemUniform;
+        var glInitialize;
         // 숫자면 숫자로 %면 월드대비 수치로 변경해줌
         valueParser = function (rect) {
             rect.forEach(function (v, index) {
@@ -2033,6 +2037,23 @@ var RedRenderer;
                 }
             }
         })();
+        glInitialize = function (gl) {
+            // 뎁스데스티 설정
+            gl.enable(gl.DEPTH_TEST);
+            gl.depthFunc(gl.LEQUAL)
+            // 컬링 페이스 설정
+            gl.frontFace(gl.CCW)
+            gl.enable(gl.CULL_FACE);
+            gl.cullFace(gl.BACK)
+            gl.enable(gl.SCISSOR_TEST);
+            // 블렌드모드설정
+            gl.enable(gl.BLEND);
+            gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+            // 픽셀 블렌딩 결정
+            gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+            // 픽셀 플립 기본설정
+            gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+        };
         viewRect = [];
         perspectiveMTX = mat4.create();
         return function (redGL, time) {
@@ -2044,9 +2065,12 @@ var RedRenderer;
             gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
             gl.scissor(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+            // glInitialize
+            glInitialize(gl);
 
             // console.log("worldRender", v['key'], t0)
             self['renderInfo'] = {}
+            this['cacheAttrInfo'].length = 0
             self['world']['_viewList'].forEach(function (tView) {
 
                 ///////////////////////////////////
@@ -2111,9 +2135,7 @@ var RedRenderer;
         }
     })();
     RedRenderer.prototype.sceneRender = (function () {
-        var tPrevIndexBuffer_UUID;
-        var tPrevInterleaveBuffer_UUID;
-        var tTextureIndex = 1;
+
         return function (gl, orthographic, scene, time, renderResultObj) {
             var tChildren, tMesh;
             var k, i, i2;
@@ -2121,14 +2143,17 @@ var RedRenderer;
             var tCacheInterleaveBuffer;
             var tCacheUniformInfo;
             var tCacheTextureInfo;
+            var tPrevIndexBuffer_UUID;
+            var tPrevInterleaveBuffer_UUID;
             // 오쏘고날 스케일 비율
-            var orthographicScale = orthographic ? 0.5 : 1
+            var orthographicScale = orthographic ? -1 : 1
             //
             var BYTES_PER_ELEMENT;;
             // 
             var tMesh;
             var tGeometry;
             var tMaterial;
+            var tTextureIndex = 1;
             var tInterleaveDefineInfo;
             var tAttrGroup, tUniformGroup, tSystemUniformGroup;
             var tInterleaveDefineUnit
@@ -2149,8 +2174,9 @@ var RedRenderer;
             // sin,cos 관련
             var SIN, COS, tRadian, CPI, CPI2, C225, C127, C045, C157;
             //////////////// 변수값 할당 ////////////////
-            tCacheUniformInfo = this['cacheUniformInfo'];
+
             tCacheInterleaveBuffer = this['cacheAttrInfo'];
+            tCacheUniformInfo = this['cacheUniformInfo'];
             tCacheTextureInfo = this['cacheTextureInfo'];
             BYTES_PER_ELEMENT = Float32Array.BYTES_PER_ELEMENT;
             CPI = 3.141592653589793,
@@ -2191,6 +2217,9 @@ var RedRenderer;
                     tAttributeLocationInfo = tAttrGroup[i2]
                     // 대상 어트리뷰트의 이름으로 interleaveDefineInfo에서 단위 인터리브 정보를 가져온다. 
                     tInterleaveDefineUnit = tInterleaveDefineInfo[tAttributeLocationInfo['name']]
+                    // 실제 버퍼 바인딩하고 //TODO: 이놈은 검증해야함
+                    tPrevInterleaveBuffer_UUID == tUUID ? 0 : gl.bindBuffer(gl.ARRAY_BUFFER, tInterleaveBuffer['webglBuffer'])
+                    tPrevInterleaveBuffer_UUID = tUUID;
                     /*
                         어트리뷰트 정보매칭이 안되는 녀석은 무시한다 
                         이경우는 버퍼상에는 존재하지만 프로그램에서 사용하지 않는경우이다.
@@ -2198,22 +2227,19 @@ var RedRenderer;
                     if (tAttributeLocationInfo && tInterleaveDefineUnit) {
                         // webgl location도 알아낸다.
                         tWebGLAttributeLocation = tAttributeLocationInfo['location']
-                        // 실제 버퍼 바인딩하고 //TODO: 이놈은 검증해야함
-                        tPrevInterleaveBuffer_UUID == tUUID ? 0 : gl.bindBuffer(gl.ARRAY_BUFFER, tInterleaveBuffer['webglBuffer'])
-                        tPrevInterleaveBuffer_UUID = tUUID;
-                        if (tCacheInterleaveBuffer[tWebGLAttributeLocation] != tAttributeLocationInfo['_UUID']) {
+                        if (tCacheInterleaveBuffer[tWebGLAttributeLocation] != tInterleaveDefineUnit['_UUID']) {
                             // 해당로케이션을 활성화된적이없으면 활성화 시킨다
                             tAttributeLocationInfo['enabled'] ? 0 : (gl.enableVertexAttribArray(tWebGLAttributeLocation), tAttributeLocationInfo['enabled'] = true)
-                                gl.vertexAttribPointer(
-                                    tWebGLAttributeLocation,
-                                    tInterleaveDefineUnit['size'],
-                                    tInterleaveBuffer['glArrayType'],
-                                    tInterleaveDefineUnit['normalize'],
-                                    tInterleaveBuffer['stride'] * BYTES_PER_ELEMENT, //stride
-                                    tInterleaveDefineUnit['offset'] * BYTES_PER_ELEMENT //offset
-                                )
+                            gl.vertexAttribPointer(
+                                tWebGLAttributeLocation,
+                                tInterleaveDefineUnit['size'],
+                                tInterleaveBuffer['glArrayType'],
+                                tInterleaveDefineUnit['normalize'],
+                                tInterleaveBuffer['stride'] * BYTES_PER_ELEMENT, //stride
+                                tInterleaveDefineUnit['offset'] * BYTES_PER_ELEMENT //offset
+                            )
                             // 상태 캐싱
-                            tCacheInterleaveBuffer[tWebGLAttributeLocation] = tAttributeLocationInfo['_UUID']
+                            tCacheInterleaveBuffer[tWebGLAttributeLocation] = tInterleaveDefineUnit['_UUID']
                         }
                     }
                 }
@@ -2316,7 +2342,7 @@ var RedRenderer;
                     a[4] = a00 * b10 + a10 * b11 + a20 * b12, a[5] = a01 * b10 + a11 * b11 + a21 * b12, a[6] = a02 * b10 + a12 * b11 + a22 * b12,
                     a[8] = a00 * b20 + a10 * b21 + a20 * b22, a[9] = a01 * b20 + a11 * b21 + a21 * b22, a[10] = a02 * b20 + a12 * b21 + a22 * b22,
                     // tMVMatrix scale
-                    aX = tMesh['scaleX'] * orthographicScale, aY = tMesh['scaleY'] * orthographicScale, aZ = tMesh['scaleZ'] * orthographicScale,
+                    aX = tMesh['scaleX'] , aY = tMesh['scaleY'] * orthographicScale, aZ = tMesh['scaleZ'] ,
                     a[0] = a[0] * aX, a[1] = a[1] * aX, a[2] = a[2] * aX, a[3] = a[3] * aX,
                     a[4] = a[4] * aY, a[5] = a[5] * aY, a[6] = a[6] * aY, a[7] = a[7] * aY,
                     a[8] = a[8] * aZ, a[9] = a[9] * aZ, a[10] = a[10] * aZ, a[11] = a[11] * aZ,
@@ -2405,8 +2431,8 @@ var RedBitmapTexture;
                 gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this)
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
                 gl.generateMipmap(gl.TEXTURE_2D)
                 gl.bindTexture(gl.TEXTURE_2D, null);
             }
