@@ -43,7 +43,7 @@ var RedColorMaterial;
         this['color'] = new Float32Array(4);
         /////////////////////////////////////////
         // 일반 프로퍼티
-        this.setColor(hex, 0.5);
+        this.setColor(hex, 1);
         /**DOC:
             {
                 title :`program`,
@@ -66,7 +66,10 @@ var RedColorMaterial;
             _alpha = alpha == undefined ? 1 : alpha;
             return {
                 get: function () { return _alpha },
-                set: function (v) { _alpha = this['color'][3] = v }
+                set: function (v) {
+                    if (v > 1) v = 1;
+                    _alpha = this['color'][3] = v
+                }
             }
         })());
         this['alpha'] = alpha;
