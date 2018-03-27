@@ -172,6 +172,7 @@
             var i = 1500;
             var len = i
             var boxGeo = new RedBox(this)
+            var planeGeo = new RedPlane(this)
             while (i--) {
                 var t
                 if (i > len / 8 * 7) testMesh = RedMesh(this, geometry, testMaterial)
@@ -179,8 +180,8 @@
                 else if (i > len / 8 * 5) testMesh = RedMesh(this, geometry2, testMaterial3)
                 else if (i > len / 8 * 4) testMesh = RedMesh(this, geometry2, testMaterial4)
                 else if (i > len / 8 * 3) testMesh = RedMesh(this, geometry, testMaterial5)
-                else if (i > len / 8 * 2) testMesh = RedMesh(this, new RedPlane(this), testMaterial6)
-                else if (i > len / 8) testMesh = RedMesh(this, new RedBox(this), testMaterial7)
+                else if (i > len / 8 * 2) testMesh = RedMesh(this, planeGeo, testMaterial6)
+                else if (i > len / 8) testMesh = RedMesh(this, boxGeo, testMaterial7)
                 else testMesh = RedMesh(this, geometry, testMaterial8)
                 testMesh.x = Math.random() * 50 - 25
                 testMesh.y = Math.random() * 50 - 25
