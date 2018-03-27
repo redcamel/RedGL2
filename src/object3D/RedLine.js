@@ -27,11 +27,12 @@ var RedLine;
         if (!(material instanceof RedBaseMaterial)) RedGLUtil.throwFunc('RedLine : RedBaseMaterial 확장 Instance만 허용됩니다.')
         var tGL;
         var interleaveData, indexData
-        var geometry;
-        interleaveData = [];
-        indexData = []
         var interleaveBuffer, indexBuffer
+        interleaveData = [];
+        indexData = [];
+
         this['_UUID'] = RedGL['makeUUID']();
+
         interleaveBuffer = RedBuffer(
             redGL,
             'RedLine_InterleaveBuffer_' + this['_UUID'],
@@ -44,27 +45,29 @@ var RedLine;
                 }
             ]
         )
+
         indexBuffer = RedBuffer(
             redGL,
             'RedLine_indexBuffer_' + this['_UUID'],
             new Uint16Array(indexData),
             RedBuffer.ELEMENT_ARRAY_BUFFER
         )
-        geometry = RedGeometry(interleaveBuffer, indexBuffer)
+
         tGL = redGL.gl;
-        this['addPoint'] = function(x,y,z){
-            var t = interleaveData.length/3
-            interleaveData.push(x,y,z)
+
+        this['addPoint'] = function (x, y, z) {
+            var t = interleaveData.length / 3
+            interleaveData.push(x, y, z)
             indexData.push(t)
         }
-        this['update'] = function(){
-            interleaveBuffer['updateData'](new Float32Array(interleaveData))
-            indexBuffer['updateData'](new Uint16Array(indexData))
-            interleaveBuffer.parseInterleaveDefineInfo()
-            indexBuffer.parseInterleaveDefineInfo()
-            // console.log(interleaveData,indexData)
+
+        this['upload'] = function () {
+            interleaveBuffer['upload'](new Float32Array(interleaveData));
+            indexBuffer['upload'](new Uint16Array(indexData));
+            interleaveBuffer.parseInterleaveDefineInfo();
+            indexBuffer.parseInterleaveDefineInfo();
         }
-        this['interleaveData'] = interleaveData
+
         /**DOC:
 		{
             title :`geometry`,
@@ -72,7 +75,7 @@ var RedLine;
 			return : 'RedGeometry'
 		}
 	    :DOC*/
-        this['geometry'] = geometry;
+        this['geometry'] = RedGeometry(interleaveBuffer, indexBuffer);
         /**DOC:
 		{
             title :`material`,
@@ -156,7 +159,7 @@ var RedLine;
 	    :DOC*/
         this['scaleX'] = this['scaleY'] = this['scaleZ'] = 1;
         Object.seal(RedLine);
-        console.log(this)
+        console.log(this);
     }
     RedLine.prototype = RedMesh.prototype;
     Object.freeze(RedLine);

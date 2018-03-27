@@ -95,7 +95,7 @@
   },
   {
     "code": "PROPERTY",
-    "title": "updateData",
+    "title": "upload",
     "description": "\n    버퍼 데이터 갱신\n    기존 버퍼의 타입과 다른 타입의 값이 들어올경우 에러. \n",
     "params": {
       "data": [
