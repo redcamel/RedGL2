@@ -109,6 +109,10 @@ var RedPlane;
         :DOC*/
         var t0;
         t0 = makeData(redGL, width, height, segmentW, segmentH);
+        // TODO: 유일키 방어
+        if (!redGL['_datas']['Primitives']) redGL['_datas']['Primitives'] = {};
+        if (redGL['_datas']['Primitives'][t0['type']]) return redGL['_datas']['Primitives'][t0['type']]
+        else redGL['_datas']['Primitives'][t0['type']] = this
         this['interleaveBuffer'] = t0['interleaveBuffer']
         /**DOC:
             {
@@ -126,7 +130,7 @@ var RedPlane;
         this['indexBuffer'] = t0['indexBuffer']
         this['_UUID'] = RedGL['makeUUID']();
         Object.freeze(this)
-        console.log(this)
+        // console.log(this)
     }
     RedPlane.prototype = RedGeometry.prototype;
     Object.freeze(RedPlane);

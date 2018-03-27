@@ -30,6 +30,7 @@
     <script src="src/object3D/RedMesh.js"></script>
     <script src="src/object3D/RedLine.js"></script>
 
+    <script src="src/primitives/RedBox.js"></script>
     <script src="src/primitives/RedPlane.js"></script>
 
     <script src="src/program/RedProgram.js"></script>
@@ -176,7 +177,7 @@
                 else if (i > len / 8 * 4) testMesh = RedMesh(this, geometry2, testMaterial4)
                 else if (i > len / 8 * 3) testMesh = RedMesh(this, geometry, testMaterial5)
                 else if (i > len / 8 * 2) testMesh = RedMesh(this, new RedPlane(this), testMaterial6)
-                else if (i > len / 8) testMesh = RedMesh(this, geometry, testMaterial7)
+                else if (i > len / 8) testMesh = RedMesh(this, new RedBox(this), testMaterial7)
                 else testMesh = RedMesh(this, geometry, testMaterial8)
                 testMesh.x = Math.random() * 50 - 25
                 testMesh.y = Math.random() * 50 - 25
@@ -190,6 +191,7 @@
 
                 console.log(new RedPlane(this) instanceof RedPlane)
                 console.log(new RedPlane(this) instanceof RedGeometry)
+                console.log(new RedBox(this))
 
             i = 1000
             len = i
@@ -199,16 +201,17 @@
                 else if (i > len / 8 * 5) testMesh = RedMesh(this, geometry2, testMaterial3)
                 else if (i > len / 8 * 4) testMesh = RedMesh(this, geometry2, testMaterial4)
                 else if (i > len / 8 * 3) testMesh = RedMesh(this, geometry, testMaterial5)
-                else if (i > len / 8 * 2) testMesh = RedMesh(this, geometry2, testMaterial6)
-                else if (i > len / 8) testMesh = RedMesh(this, geometry, testMaterial7)
+                else if (i > len / 8 * 2) testMesh = RedMesh(this, new RedPlane(this), testMaterial6)
+                else if (i > len / 8) testMesh = RedMesh(this, new RedBox(this), testMaterial7)
                 else testMesh = RedMesh(this, geometry, testMaterial8)
                 // testMesh = RedMesh(this, new RedPlane(this), testMaterial8)
+                // testMesh = RedMesh(this, new RedBox(this), testMaterial7)
                 testMesh.x = Math.random() * 1280
                 testMesh.y = Math.random() * 768
                 // testMesh.drawMode = this.gl.LINES
                 testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 50 + Math.random()*30
-                // testMesh.rotationX = Math.random() * 360
-                // testMesh.rotationY = Math.random() * 360
+                testMesh.rotationX = Math.random() * 360
+                testMesh.rotationY = Math.random() * 360
                 testMesh.rotationZ = Math.random() * 360
                 tScene2D.addChild(testMesh)
 
@@ -271,8 +274,8 @@
                 i = tScene2D.children.length
                 while (i--) {
                     testMesh = tScene2D.children[i]
-                    // testMesh.rotationX += 1 / 60
-                    // testMesh.rotationY += 1 / 60
+                    testMesh.rotationX += 1 / 60
+                    testMesh.rotationY += 1 / 60
                     testMesh.rotationZ += 1 / 60
                 }
                 RedView('test2').setLocation(Math.cos(time / 1000) * 100 + 100, Math.sin(time / 1000) *
