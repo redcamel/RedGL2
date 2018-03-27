@@ -25,7 +25,9 @@ var RedSystemShaderCode;
         :DOC*/
         vShareSource: [
             'attribute vec3 aVertexPosition',
-            'attribute vec3 aNormal',
+            'attribute vec3 aVertexNormal',
+            'varying vec3 vNormal',
+            
             'attribute vec2 aTexcoord',
             'varying vec2 vTexcoord',
 
@@ -36,6 +38,7 @@ var RedSystemShaderCode;
             'varying vec2 vResolution',
 
             'uniform mat4 uMVMatrix',
+            'uniform mat4 uNMatrix',
             'uniform mat4 uPMatrix',
             'uniform mat4 uCameraMatrix'
         ],
@@ -50,6 +53,7 @@ var RedSystemShaderCode;
             }
         :DOC*/
         fShareSource: [
+            'varying vec3 vNormal',
             'varying vec2 vTexcoord',
 
             'varying float vTime',

@@ -41,32 +41,6 @@ var RedCamera;
         /**DOC:
         {
             code:`PROPERTY`,
-            title :`rotationX`,
-            description : `rotationX - 기본값 : 0`,
-            return : 'Number'
-        }
-        :DOC*/
-        /**DOC:
-        {
-            code:`PROPERTY`,
-            title :`rotationY`,
-            description : `rotationY - 기본값 : 0`,
-            return : 'Number'
-        }
-        :DOC*/
-        /**DOC:
-        {
-            code:`PROPERTY`,
-            title :`rotationZ`,
-            description : `rotationZ - 기본값 : 0`,
-            return : 'Number'
-        }
-        :DOC*/
-        this.rotationX = this.rotationY = this.rotationZ = 0;
-
-        /**DOC:
-        {
-            code:`PROPERTY`,
             title :`fov`,
             description : `fov - 기본값 : Math.PI / 2`,
             return : 'Number'
@@ -126,12 +100,19 @@ var RedCamera;
             var t0;
             var TO_RAD = Math.PI/180
             return function () {
-                t0 = mat4.identity(this.matrix);
-                mat4.translate(t0, t0, [this.x, this.y, this.z]);
-                mat4.rotateX(t0, t0, this.rotationX*TO_RAD);
-                mat4.rotateY(t0, t0, this.rotationY*TO_RAD);
-                mat4.rotateZ(t0, t0, this.rotationZ*TO_RAD);
+                // t0 = mat4.identity(this.matrix);
+                // mat4.translate(t0, t0, [this.x, this.y, this.z]);
+                // mat4.rotateX(t0, t0, this.rotationX*TO_RAD);
+                // mat4.rotateY(t0, t0, this.rotationY*TO_RAD);
+                // mat4.rotateZ(t0, t0, this.rotationZ*TO_RAD);
                 // console.log(this.matrix);
+            }
+        })(),
+        lookAt: (function () {
+            var up = new Float32Array([0, 1, 0]);
+            return function (x,y,z) {
+                //out, eye, center, up
+                mat4.lookAt(this['matrix'], [this.x, this.y, this.z], [x, y, z], up);
             }
         })()
     }

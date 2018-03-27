@@ -108,7 +108,7 @@ var RedBox;
                         normalize: false
                     },
                     {
-                        attributeKey: 'aNormal',
+                        attributeKey: 'aVertexNormal',
                         size: 3,
                         normalize: false
                     },
