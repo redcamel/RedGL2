@@ -76,10 +76,10 @@ var RedShader;
                 var tInputData;
                 v = v.trim()
                 source = source.replace(v + ';', '')
-                source = source.replace(/\=/g, ' = ')
+                // console.log(source)
                 
                 tData = v.split(' ')
-                // console.log(v,data)
+                console.log(v,tData)
                 if (tData[2]) {
                     // 정의인경우
                     tType = tData[0];
