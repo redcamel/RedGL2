@@ -59,24 +59,6 @@
     "return": "RedCamera Instance"
   },
   {
-    "code": "PROPERTY",
-    "title": "rotationX",
-    "description": "rotationX - 기본값 : 0",
-    "return": "Number"
-  },
-  {
-    "code": "PROPERTY",
-    "title": "rotationY",
-    "description": "rotationY - 기본값 : 0",
-    "return": "Number"
-  },
-  {
-    "code": "PROPERTY",
-    "title": "rotationZ",
-    "description": "rotationZ - 기본값 : 0",
-    "return": "Number"
-  },
-  {
     "code": "FUNCTION",
     "title": "updateMatrix",
     "description": "\n    x, y, z, rotationX, rotationY, rotationZ 를 기반으로한 matrix 업데이트\n",
