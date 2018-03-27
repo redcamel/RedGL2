@@ -24,6 +24,11 @@ var RedSystemShaderCode;
             }
         :DOC*/
         vShareSource: [
+            'attribute vec3 aVertexPosition',
+            'attribute vec3 aNormal',
+            'attribute vec2 aTexcoord',
+            'varying vec2 vTexcoord',
+
             'uniform float uTime',
             'varying float vTime',
 
@@ -45,6 +50,8 @@ var RedSystemShaderCode;
             }
         :DOC*/
         fShareSource: [
+            'varying vec2 vTexcoord',
+
             'varying float vTime',
             'varying vec2 vResolution'
         ],

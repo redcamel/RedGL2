@@ -951,7 +951,6 @@ var RedMaterial;
         var vSource, fSource;
         vSource = function () {
             /*
-            attribute vec3 aVertexPosition;
             attribute vec4 aVertexColor;
             uniform float uFloatTest;
             uniform float uFloatTest2[10];
@@ -1080,7 +1079,6 @@ var RedColorMaterial;
         var vSource, fSource;
         vSource = function () {
             /*
-            attribute vec3 aVertexPosition;
             uniform vec4 uColor;
             varying vec4 vColor;
             void main(void) {
@@ -1196,9 +1194,6 @@ var RedBitmapMaterial;
         var vSource, fSource;
         vSource = function () {
             /*
-            attribute vec3 aVertexPosition;
-            attribute vec2 aTexcoord;
-            varying vec2 vTexcoord;
             void main(void) {
                 vTexcoord = aTexcoord;
                 gl_Position = uPMatrix * uCameraMatrix* uMVMatrix * vec4(aVertexPosition, 1.0);
@@ -1209,7 +1204,6 @@ var RedBitmapMaterial;
             /*
             precision mediump float;
             uniform sampler2D uDiffuse;
-            varying vec2 vTexcoord;
             void main(void) {
                 gl_FragColor = texture2D(uDiffuse, vTexcoord);
             }
@@ -1385,13 +1379,16 @@ var RedProgram;
                     var t0 = new AttributeLocationInfo();
                     t0['_UUID'] = RedGL.makeUUID()
                     t0['location'] = gl.getAttribLocation(self['webglProgram'], v['name']);
-                    if (!t0['location'] == -1) t0['msg'] = '쉐이더 main 함수에서 사용되고 있지 않음';
-                    t0['attributeType'] = v['attributeType'];
-                    t0['name'] = v['name'];
-                    t0['enabled'] = false;
-                    self['attributeLocation'].push(t0);
-                    self['attributeLocation'][v['name']] = t0;
-                    Object.seal(t0);
+                    if (t0['location'] == -1){
+                        t0['msg'] = '쉐이더 main 함수에서 사용되고 있지 않음';
+                    } else {
+                        t0['attributeType'] = v['attributeType'];
+                        t0['name'] = v['name'];
+                        t0['enabled'] = false;
+                        self['attributeLocation'].push(t0);
+                        self['attributeLocation'][v['name']] = t0;
+                        Object.seal(t0);
+                    }
                 })
             }
             if (shader['parseData']['uniform']) {
@@ -1590,6 +1587,11 @@ var RedSystemShaderCode;
             }
         :DOC*/
         vShareSource: [
+            'attribute vec3 aVertexPosition',
+            'attribute vec3 aNormal',
+            'attribute vec2 aTexcoord',
+            'varying vec2 vTexcoord',
+
             'uniform float uTime',
             'varying float vTime',
 
@@ -1611,6 +1613,8 @@ var RedSystemShaderCode;
             }
         :DOC*/
         fShareSource: [
+            'varying vec2 vTexcoord',
+
             'varying float vTime',
             'varying vec2 vResolution'
         ],

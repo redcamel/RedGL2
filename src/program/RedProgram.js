@@ -29,13 +29,16 @@ var RedProgram;
                     var t0 = new AttributeLocationInfo();
                     t0['_UUID'] = RedGL.makeUUID()
                     t0['location'] = gl.getAttribLocation(self['webglProgram'], v['name']);
-                    if (!t0['location'] == -1) t0['msg'] = '쉐이더 main 함수에서 사용되고 있지 않음';
-                    t0['attributeType'] = v['attributeType'];
-                    t0['name'] = v['name'];
-                    t0['enabled'] = false;
-                    self['attributeLocation'].push(t0);
-                    self['attributeLocation'][v['name']] = t0;
-                    Object.seal(t0);
+                    if (t0['location'] == -1){
+                        t0['msg'] = '쉐이더 main 함수에서 사용되고 있지 않음';
+                    } else {
+                        t0['attributeType'] = v['attributeType'];
+                        t0['name'] = v['name'];
+                        t0['enabled'] = false;
+                        self['attributeLocation'].push(t0);
+                        self['attributeLocation'][v['name']] = t0;
+                        Object.seal(t0);
+                    }
                 })
             }
             if (shader['parseData']['uniform']) {

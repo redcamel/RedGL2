@@ -81,7 +81,6 @@ var RedColorMaterial;
         var vSource, fSource;
         vSource = function () {
             /*
-            attribute vec3 aVertexPosition;
             uniform vec4 uColor;
             varying vec4 vColor;
             void main(void) {
