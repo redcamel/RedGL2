@@ -55,9 +55,6 @@ var RedBitmapMaterial;
         var vSource, fSource;
         vSource = function () {
             /*
-            attribute vec3 aVertexPosition;
-            attribute vec2 aTexcoord;
-            varying vec2 vTexcoord;
             void main(void) {
                 vTexcoord = aTexcoord;
                 gl_Position = uPMatrix * uCameraMatrix* uMVMatrix * vec4(aVertexPosition, 1.0);
@@ -68,7 +65,6 @@ var RedBitmapMaterial;
             /*
             precision mediump float;
             uniform sampler2D uDiffuse;
-            varying vec2 vTexcoord;
             void main(void) {
                 gl_FragColor = texture2D(uDiffuse, vTexcoord);
             }
