@@ -21,21 +21,21 @@ var RedBitmapMaterial;
             return : 'RedBitmapMaterial Instance'
         }
     :DOC*/
-    RedBitmapMaterial = function (redGL, texture) {
-        if (!(this instanceof RedBitmapMaterial)) return new RedBitmapMaterial(redGL, texture);
+    RedBitmapMaterial = function (redGL, diffuseTexture) {
+        if (!(this instanceof RedBitmapMaterial)) return new RedBitmapMaterial(redGL, diffuseTexture);
         if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedBitmapMaterial : RedGL Instance만 허용됩니다.')
-        if (!(texture instanceof RedBitmapTexture)) RedGLUtil.throwFunc('RedBitmapMaterial : RedBitmapTexture Instance만 허용됩니다.')
+        if (!(diffuseTexture instanceof RedBitmapTexture)) RedGLUtil.throwFunc('RedBitmapMaterial : RedBitmapTexture Instance만 허용됩니다.')
         /////////////////////////////////////////
         // 유니폼 프로퍼티
         /**DOC:
             {
-                title :`diffuse`,
-                description : `Diffuse Texture(RedBitmapMaterial Instance)`,
+                title :`diffuseTexture`,
+                description : `diffuseTexture`,
                 example : `// TODO:`,
                 return : 'RedBitmapMaterial'
             }
         :DOC*/
-        this['diffuse'] = texture;
+        this['diffuseTexture'] = diffuseTexture;
         /////////////////////////////////////////
         // 일반 프로퍼티
         /**DOC:
@@ -64,9 +64,9 @@ var RedBitmapMaterial;
         fSource = function () {
             /*
             precision mediump float;
-            uniform sampler2D uDiffuse;
+            uniform sampler2D uDiffuseTexture;
             void main(void) {
-                gl_FragColor = texture2D(uDiffuse, vTexcoord);
+                gl_FragColor = texture2D(uDiffuseTexture, vTexcoord);
             }
             */
         }

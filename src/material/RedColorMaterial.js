@@ -43,7 +43,8 @@ var RedColorMaterial;
         this['color'] = new Float32Array(4);
         /////////////////////////////////////////
         // 일반 프로퍼티
-        this.setColor(hex, 1);
+   
+        this.setColor(hex, alpha);
         /**DOC:
             {
                 title :`program`,
@@ -95,6 +96,7 @@ var RedColorMaterial;
             varying vec4 vColor;
             void main(void) {
                 gl_FragColor = vColor;
+                gl_FragColor.rgb *=vColor.a;
             }
             */
         }
