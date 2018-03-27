@@ -51,6 +51,7 @@ var RedBuffer;
                         for (k in interleaveDefineInfo) {
                             interleaveDefineInfo[k]['offset'] = interleaveDefineInfo.length<2 ? 0 :t0
                             t0 += interleaveDefineInfo[k]['size']
+                            interleaveDefineInfo[k]['_UUID'] = RedGL['makeUUID']();
                         }
                         interleaveDefineInfo.forEach(function (v) {
                             interleaveDefineInfo[v['attributeKey']] = v
@@ -62,6 +63,7 @@ var RedBuffer;
                             self['stride'] = t0;
                             self['pointNum'] = data.length / t0;
                         }
+                      
                         
                     } else RedGLUtil.throwFunc('RedBuffer : interleaveDefineInfo는 반드시 정의 되어야합니다.')
                     break

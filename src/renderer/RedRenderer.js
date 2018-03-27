@@ -341,6 +341,9 @@ var RedRenderer;
                     tAttributeLocationInfo = tAttrGroup[i2]
                     // 대상 어트리뷰트의 이름으로 interleaveDefineInfo에서 단위 인터리브 정보를 가져온다. 
                     tInterleaveDefineUnit = tInterleaveDefineInfo[tAttributeLocationInfo['name']]
+                    // 실제 버퍼 바인딩하고 //TODO: 이놈은 검증해야함
+                    tPrevInterleaveBuffer_UUID == tUUID ? 0 : gl.bindBuffer(gl.ARRAY_BUFFER, tInterleaveBuffer['webglBuffer'])
+                    tPrevInterleaveBuffer_UUID = tUUID;
                     /*
                         어트리뷰트 정보매칭이 안되는 녀석은 무시한다 
                         이경우는 버퍼상에는 존재하지만 프로그램에서 사용하지 않는경우이다.
@@ -348,13 +351,9 @@ var RedRenderer;
                     if (tAttributeLocationInfo && tInterleaveDefineUnit) {
                         // webgl location도 알아낸다.
                         tWebGLAttributeLocation = tAttributeLocationInfo['location']
-                        // 실제 버퍼 바인딩하고 //TODO: 이놈은 검증해야함
-                        tPrevInterleaveBuffer_UUID == tUUID ? 0 : gl.bindBuffer(gl.ARRAY_BUFFER, tInterleaveBuffer['webglBuffer'])
-                        tPrevInterleaveBuffer_UUID = tUUID;
-                        if (tCacheInterleaveBuffer[tWebGLAttributeLocation] != tAttributeLocationInfo['_UUID']) {
+                        if (tCacheInterleaveBuffer[tWebGLAttributeLocation] != tInterleaveDefineUnit['_UUID']) {
                             // 해당로케이션을 활성화된적이없으면 활성화 시킨다
                             tAttributeLocationInfo['enabled'] ? 0 : (gl.enableVertexAttribArray(tWebGLAttributeLocation), tAttributeLocationInfo['enabled'] = true)
-
                             gl.vertexAttribPointer(
                                 tWebGLAttributeLocation,
                                 tInterleaveDefineUnit['size'],
@@ -364,7 +363,7 @@ var RedRenderer;
                                 tInterleaveDefineUnit['offset'] * BYTES_PER_ELEMENT //offset
                             )
                             // 상태 캐싱
-                            tCacheInterleaveBuffer[tWebGLAttributeLocation] = tAttributeLocationInfo['_UUID']
+                            tCacheInterleaveBuffer[tWebGLAttributeLocation] = tInterleaveDefineUnit['_UUID']
                         }
                     }
                 }
