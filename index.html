@@ -90,8 +90,7 @@
 
 
             var interleaveData, interleaveData2
-            interleaveData = new Float32Array([
-                -1.0, -1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 1.0,
+            interleaveData = new Float32Array([-1.0, -1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 1.0,
                 1.0, -1.0, 0.0, 1.0, 1.0, 1.0, 0.0, 1.0, 1.0,
                 1.0, 1.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, -1.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0,
                 1.0
@@ -116,20 +115,20 @@
                 'testInterleaveBuffer',
                 interleaveData,
                 RedBuffer.ARRAY_BUFFER, [{
-                    attributeKey: 'aVertexPosition',
-                    size: 3,
-                    normalize: false
-                },
-                {
-                    attributeKey: 'aTexcoord',
-                    size: 2,
-                    normalize: false
-                },
-                {
-                    attributeKey: 'aVertexColor',
-                    size: 4,
-                    normalize: false
-                }
+                        attributeKey: 'aVertexPosition',
+                        size: 3,
+                        normalize: false
+                    },
+                    {
+                        attributeKey: 'aTexcoord',
+                        size: 2,
+                        normalize: false
+                    },
+                    {
+                        attributeKey: 'aVertexColor',
+                        size: 4,
+                        normalize: false
+                    }
                 ]
             )
             testInterleaveBuffer2 = RedBuffer(
@@ -137,15 +136,15 @@
                 'testInterleaveBuffer2',
                 interleaveData2,
                 RedBuffer.ARRAY_BUFFER, [{
-                    attributeKey: 'aVertexPosition',
-                    size: 3,
-                    normalize: false
-                },
-                {
-                    attributeKey: 'aTexcoord',
-                    size: 2,
-                    normalize: false
-                }
+                        attributeKey: 'aVertexPosition',
+                        size: 3,
+                        normalize: false
+                    },
+                    {
+                        attributeKey: 'aTexcoord',
+                        size: 2,
+                        normalize: false
+                    }
                 ]
             )
             testIndexBuffer = RedBuffer(
@@ -189,7 +188,7 @@
             }
 
 
-            i = 500
+            i = 1000
             len = i
             while (i--) {
                 if (i > len / 8 * 7) testMesh = RedMesh(this, geometry, testMaterial)
@@ -212,36 +211,51 @@
 
 
             }
-            i = 100
+            i = 500
             while (i--) {
-                var testLine = new RedLine(this, new RedColorMaterial(this, i % 2 ? '#ff0000' : i % 3 ? '#00ff00' : '#0000ff'))
+                var testLine = new RedLine(this, new RedColorMaterial(this, i % 2 ? '#ff0000' : i % 3 ?'#00ff00' : '#0000ff'))
+                // var testLine = new RedLine(this, testMaterial2)
                 var tX, tY, tZ
+                var i2 = 4
                 tX = tY = tZ = 0
-                var i2 = 50
+                // testLine.addPoint(0, 0, 0)
+                // testLine.addPoint(100, 0, 0)
+
+                // testLine.addPoint(200, 0, 0)
+                // testLine.addPoint(300, 0, 0)
+                // testLine.addPoint(300, 0, 0)
+                // testLine.addPoint(300, 100, 0)
+
+                // testLine.addPoint(300, 100+Math.random()*50, 0)
+                // testLine.addPoint(600, 100+Math.random()*50, 0)
+
+                 var i2 = 3*10
+                tX = tY = tZ = 0
                 while (i2--) {
                     tX += Math.random() * 30
                     tY += Math.random() * 30
-                    tZ += Math.random() * 30
+                    // tZ += Math.random() * 30
                     testLine.addPoint(tX, tY, tZ)
                 }
+                
                 testLine.rotationX = Math.random() * 360
                 testLine.rotationY = Math.random() * 360
                 testLine.rotationZ = Math.random() * 360
                 testLine.x = 500
-                testLine.y = 500
-                testLine.update()
+                testLine.y = 300
+                testLine.upload()
                 tScene2D.addChild(testLine)
             }
             var renderResult;
             renderResult = document.createElement('div')
-            renderResult.style.cssText = 'position:absolute;top:0px;left:0px;color:#fff;font-size:12px'
+            renderResult.style.cssText = 'position:absolute;top:0px;left:0px;color:#fff;font-size:12px;background:rgba(0,0,0,0.6)'
             document.body.appendChild(renderResult)
 
             tRenderer.start(this, function (time) {
                 testMaterial['floatTest'] = time
                 interleaveData[0] = Math.sin(time / 1000) * 3
                 interleaveData[2] = Math.cos(time / 1000) * 3
-                // testInterleaveBuffer.updateData(interleaveData)
+                // testInterleaveBuffer.upload(interleaveData)
                 i = tScene3D.children.length
                 while (i--) {
                     testMesh = tScene3D.children[i]
@@ -252,8 +266,8 @@
                 i = tScene2D.children.length
                 while (i--) {
                     testMesh = tScene2D.children[i]
-                    // testMesh.rotationX += 1 / 20
-                    // testMesh.rotationY += 1 / 20
+                    // testMesh.rotationX += 1 / 60
+                    // testMesh.rotationY += 1 / 60
                     testMesh.rotationZ += 1 / 60
                 }
                 RedView('test2').setLocation(Math.cos(time / 1000) * 100 + 100, Math.sin(time / 1000) *

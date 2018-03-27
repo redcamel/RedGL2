@@ -174,6 +174,7 @@ var RedRenderer;
 
             // console.log("worldRender", v['key'], t0)
             self['renderInfo'] = {}
+            this['cacheAttrInfo'].length = 0
             self['world']['_viewList'].forEach(function (tView) {
 
                 ///////////////////////////////////
@@ -238,9 +239,7 @@ var RedRenderer;
         }
     })();
     RedRenderer.prototype.sceneRender = (function () {
-        var tPrevIndexBuffer_UUID;
-        var tPrevInterleaveBuffer_UUID;
-        var tTextureIndex = 1;
+     
         return function (gl, orthographic, scene, time, renderResultObj) {
             var tChildren, tMesh;
             var k, i, i2;
@@ -248,6 +247,8 @@ var RedRenderer;
             var tCacheInterleaveBuffer;
             var tCacheUniformInfo;
             var tCacheTextureInfo;
+            var tPrevIndexBuffer_UUID;
+            var tPrevInterleaveBuffer_UUID;
             // 오쏘고날 스케일 비율
             var orthographicScale = orthographic ? 0.5 : 1
             //
@@ -256,6 +257,7 @@ var RedRenderer;
             var tMesh;
             var tGeometry;
             var tMaterial;
+            var tTextureIndex = 1;
             var tInterleaveDefineInfo;
             var tAttrGroup, tUniformGroup, tSystemUniformGroup;
             var tInterleaveDefineUnit
@@ -276,8 +278,9 @@ var RedRenderer;
             // sin,cos 관련
             var SIN, COS, tRadian, CPI, CPI2, C225, C127, C045, C157;
             //////////////// 변수값 할당 ////////////////
-            tCacheUniformInfo = this['cacheUniformInfo'];
+            
             tCacheInterleaveBuffer = this['cacheAttrInfo'];
+            tCacheUniformInfo = this['cacheUniformInfo'];
             tCacheTextureInfo = this['cacheTextureInfo'];
             BYTES_PER_ELEMENT = Float32Array.BYTES_PER_ELEMENT;
             CPI = 3.141592653589793,

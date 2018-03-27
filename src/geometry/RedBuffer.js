@@ -206,7 +206,7 @@ var RedBuffer;
         /**DOC:
            {
                code : 'PROPERTY',
-               title :`updateData`,
+               title :`upload`,
                description : `
                    버퍼 데이터 갱신
                    기존 버퍼의 타입과 다른 타입의 값이 들어올경우 에러. 
@@ -223,18 +223,18 @@ var RedBuffer;
                return : 'RedBuffer Instance'
            }
        :DOC*/
-        this.updateData = function (data) {
+        this.upload = function (data) {
             if (this['glArrayType'] == checkGlArrayType(tGL, bufferType, data)) {
                 this['data'] = data
                 tGL.bindBuffer(this['glBufferType'], this['webglBuffer']);
                 tGL.bufferData(this['glBufferType'], this['data'], this['drawMode']);
-            } else RedGLUtil.throwFunc('RedBuffer : updateData - data형식이 기존 형식과 다름', data)
+            } else RedGLUtil.throwFunc('RedBuffer : upload - data형식이 기존 형식과 다름', data)
 
         }
         this.parseInterleaveDefineInfo = function(){
             parseInterleaveDefineInfo(this, this['bufferType'], this['data'], this['interleaveDefineInfo']);
         }
-        this.updateData(this['data']);
+        this.upload(this['data']);
         Object.seal(this);
         console.log(this);
     }
