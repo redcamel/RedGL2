@@ -23,6 +23,9 @@
     <script src="src/base/RedBaseObject3D.js"></script>
     <script src="src/geometry/RedBuffer.js"></script>
     <script src="src/geometry/RedGeometry.js"></script>
+
+    <script src="src/loader/JsonModelLoader.js"></script>
+
     <script src="src/material/RedMaterial.js"></script>
     <script src="src/material/RedColorMaterial.js"></script>
     <script src="src/material/RedBitmapMaterial.js"></script>
@@ -73,10 +76,9 @@
             tWorld.addView(RedView('test4', tScene3D, tCamera3));
             RedView('test2').setSize('25%', '25%')
             RedView('test3').setSize('35%', '25%')
-            RedView('test3').setLocation('50%', '50%')
+            RedView('test3').setLocation('0%', '50%')
             RedView('test4').setSize('50%', '50%')
             RedView('test4').setLocation('50%', '50%')
-
 
 
 
@@ -84,7 +86,7 @@
                 testMaterial7, testMateria8
             testMaterial = RedMaterial(this)
             testMaterial2 = RedColorMaterial(this)
-            testMaterial3 = RedBitmapMaterial(this, RedBitmapTexture(this, 'asset/crate.png'))
+            testMaterial3 = RedBitmapMaterial(this, RedBitmapTexture(this, 'asset/earth.jpg'))
             testMaterial4 = RedBitmapMaterial(this, RedBitmapTexture(this, 'asset/draft1.png'))
             testMaterial5 = RedBitmapMaterial(this, RedBitmapTexture(this, 'asset/draft2.png'))
             testMaterial6 = RedBitmapMaterial(this, RedBitmapTexture(this, 'asset/draft3.png'))
@@ -167,7 +169,7 @@
             geometry2 = RedGeometry(testInterleaveBuffer2, testIndexBuffer2)
 
             var testMesh
-            var i = 2000;
+            var i = 1000;
             var len = i
             while (i--) {
                 var t
@@ -189,11 +191,11 @@
 
             }
 
-                console.log(new RedPlane(this) instanceof RedPlane)
-                console.log(new RedPlane(this) instanceof RedGeometry)
-                console.log(new RedBox(this))
+            console.log(new RedPlane(this) instanceof RedPlane)
+            console.log(new RedPlane(this) instanceof RedGeometry)
+            console.log(new RedBox(this))
 
-            i = 1000
+            i = 500
             len = i
             while (i--) {
                 if (i > len / 8 * 7) testMesh = RedMesh(this, geometry, testMaterial)
@@ -209,14 +211,14 @@
                 testMesh.x = Math.random() * 1280
                 testMesh.y = Math.random() * 768
                 // testMesh.drawMode = this.gl.LINES
-                testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 50 + Math.random()*30
+                testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 50 + Math.random() * 30
                 testMesh.rotationX = Math.random() * 360
                 testMesh.rotationY = Math.random() * 360
                 testMesh.rotationZ = Math.random() * 360
                 tScene2D.addChild(testMesh)
 
-               
-              
+
+
 
             }
             i = 100
@@ -254,6 +256,24 @@
                 testLine.upload()
                 tScene2D.addChild(testLine)
             }
+
+            JsonModelLoader(this, 'testJsonModel', 'asset/teapot.json', function (interleaveBuffer, indexBuffer) {
+                console.log('호잇!', interleaveBuffer, indexBuffer)
+
+
+                var i = 100
+                while (i--) {
+                    var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer), testMaterial3)
+                    testMesh.x = Math.random() * 500 - 250
+                    testMesh.y = Math.random() * 500 - 250
+                    testMesh.z = Math.random() * 500 - 250
+                    // testMesh.drawMode = self.gl.LINES
+                    tScene2D.addChild(testMesh)
+                    tScene3D.addChild(testMesh)
+                }
+
+            })
+
             var renderResult;
             renderResult = document.createElement('div')
             renderResult.style.cssText = 'position:absolute;top:0px;left:0px;color:#fff;font-size:12px;background:rgba(0,0,0,0.6)'
@@ -267,9 +287,9 @@
                 i = tScene3D.children.length
                 while (i--) {
                     testMesh = tScene3D.children[i]
-                    testMesh.rotationX += 1 / 20
-                    testMesh.rotationY += 1 / 20
-                    testMesh.rotationZ += 1 / 20
+                    testMesh.rotationX += 1 / 60
+                    testMesh.rotationY += 1 / 60
+                    testMesh.rotationZ += 1 / 60
                 }
                 i = tScene2D.children.length
                 while (i--) {

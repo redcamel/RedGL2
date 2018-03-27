@@ -159,7 +159,7 @@ var RedLine;
 	    :DOC*/
         this['scaleX'] = this['scaleY'] = this['scaleZ'] = 1;
         Object.seal(RedLine);
-        console.log(this);
+        // console.log(this);
     }
     RedLine.prototype = RedMesh.prototype;
     Object.freeze(RedLine);

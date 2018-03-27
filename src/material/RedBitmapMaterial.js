@@ -76,7 +76,7 @@ var RedBitmapMaterial;
         }
         vSource = RedGLUtil.getStrFromComment(vSource.toString());
         fSource = RedGLUtil.getStrFromComment(fSource.toString());
-        console.log(vSource, fSource)
+        // console.log(vSource, fSource)
         return RedProgram(
             redGL,
             'bitmapProgram',
