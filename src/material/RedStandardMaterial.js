@@ -61,6 +61,7 @@ var RedStandardMaterial;
 
             varying vec4 vVertexPositionEye4;
             vec4 texelColor;
+            
             void main(void) {
                 texelColor = texture2D(uDiffuseTexture, vTexcoord);
                 vec4 la = uAmbientLightColor * uAmbientLightColor.a;
@@ -69,8 +70,7 @@ var RedStandardMaterial;
 
                 vec4 specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);
          
-                float specular;
-              
+                float specular;             
 
                 for(int i=0; i<DIRETIONAL_MAX; i++){
                     if(i == uDirectionalLightNum) break;
