@@ -55,8 +55,10 @@ var RedShader;
         var parseData, checkList;
         var mergeStr;
         return function (type, source) {
+            source = source.replace(/\s+$/, '')
             source = source.replace(/  /g, '').trim();
-            // console.log(source)
+
+            console.log(source)
             parseData = {
                 func: {
                     list: [],
@@ -65,10 +67,11 @@ var RedShader;
                 }
             }
             // 함수 제외 전부 검색
-            checkList = source.match(/attribute[\s\S]+?\;|uniform[\s\S]+?\;|varying[\s\S]+?\;|precision[\s\S]+?\;|^([a-z0-9]+)\s([\S]+)\;\n/g);
+            checkList = source.match(/attribute[\s\S]+?\;|uniform[\s\S]+?\;|varying[\s\S]+?\;|precision[\s\S]+?\;/g);
             checkList = checkList ? checkList : [];
             checkList = mergeSystemCode(type, checkList);
             checkList.sort();
+            console.log(checkList)
             // console.log(checkList)
             checkList.forEach(function (v) {
                 var tData;
@@ -124,11 +127,10 @@ var RedShader;
                 parseData[tType]['source'] += v + ';\n';
               
             });
-
+            console.log('일단 걸러진상태는',source)
             // 함수부 찾는다.
-            source = source.trim()
             source += '\n'
-            source.match(/[a-z0-9]+\s[\s\S]+?(\}\n)/g).forEach(function (v) {
+            source.match(/[A-Za-z0-9]+\s[\s\S]+?(\}\n)/g).forEach(function (v) {
                 // console.log(v.split(' '))
                 var data = v.split(' ');
                 var tName = data[1].replace(/\([\s\S]+/g, '').trim()
