@@ -41,10 +41,9 @@ var RedColorMaterial;
             }
         :DOC*/
         this['color'] = new Float32Array(4);
+        this.setColor(hex ? hex : '#ff0000', alpha == undefined ? 1 : alpha);
         /////////////////////////////////////////
         // 일반 프로퍼티
-   
-        this.setColor(hex, alpha);
         /**DOC:
             {
                 title :`program`,
@@ -54,26 +53,8 @@ var RedColorMaterial;
             }
         :DOC*/
         this['program'] = makeProgram(redGL);
-        /**DOC:
-            {
-                title :`alpha`,
-                description : `alpha`,
-                example : `// TODO:`,
-                return : 'number'
-            }
-        :DOC*/
-        Object.defineProperty(this, 'alpha', (function () {
-            var _alpha;
-            _alpha = alpha == undefined ? 1 : alpha;
-            return {
-                get: function () { return _alpha },
-                set: function (v) {
-                    if (v > 1) v = 1;
-                    _alpha = this['color'][3] = v
-                }
-            }
-        })());
-        this['alpha'] = alpha;
+
+    
         this['_UUID'] = RedGL['makeUUID']();
         // Object.seal(this);
         console.log(this);
@@ -95,7 +76,7 @@ var RedColorMaterial;
             precision mediump float;
             varying vec4 vColor;
             void main(void) {
-                vec4 finalColor = vColor;
+                vec4 finalColor = vColor * vColor.a;
                 gl_FragColor = finalColor;
             }
             */
@@ -130,13 +111,15 @@ var RedColorMaterial;
     :DOC*/
     RedColorMaterial.prototype['setColor'] = (function () {
         var t0;
-        return function (hex) {
+        return function (hex,alpha) {
             hex = hex ? hex : '#ff2211';
+            if (alpha == undefined) alpha = 1;
+            if (alpha > 1) alpha = 1
             t0 = RedGLUtil.hexToRGB.call(this, hex);
             this['color'][0] = t0[0];
             this['color'][1] = t0[1];
             this['color'][2] = t0[2];
-            this['color'][3] = this['alpha'];
+            this['color'][3] = alpha;
         }
     })();
     Object.freeze(RedColorMaterial)

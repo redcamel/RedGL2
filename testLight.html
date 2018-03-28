@@ -70,80 +70,45 @@
             tGL = this.gl;
             this.world = tWorld = RedWorld();
             tScene3D = RedScene();
-
-
             tCamera = RedCamera();
-
-            var testDLight, testALight;
-            testDLight = RedDirectionalLight(this, '#00ff00')
-            testALight = RedAmbientLight(this)
-
-            tScene3D.addLight(testALight)
-            tScene3D.addLight(testDLight)
-
             tRenderer = RedRenderer();
             tWorld.addView(RedView('test', tScene3D, tCamera));
             RedView('test').setSize('100%', '100%')
             RedView('test').setLocation('0%', '0%')
+
+
             var testMaterial
             testMaterial = RedStandardMaterial(this, RedBitmapTexture(this, 'asset/crate.png'))
-
-
             JsonModelLoader(this, 'testJsonModel', 'asset/teapot.json', function (interleaveBuffer, indexBuffer) {
                 console.log('호잇!', interleaveBuffer, indexBuffer)
-                var i = 5000
-                while (i--) {
-                    var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer), testMaterial)
-                    testMesh.x = Math.random() * 500 - 250
-                    testMesh.y = Math.random() * 500 - 250
-                    testMesh.z = Math.random() * 500 - 250
-                    testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.3
-                    testMesh.rotationX = Math.random() * 360
-                    testMesh.rotationY = Math.random() * 360
-                    testMesh.rotationZ = Math.random() * 360
-                    tScene3D.addChild(testMesh)
-                }
                 var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer), testMaterial)
                 testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.1
                 tScene3D.addChild(testMesh)
 
-                i = 100
-                while (i--) {
-                    var testLine = new RedLine(self, new RedColorMaterial(self, i % 2 ? '#ff0000' : i % 3 ? '#00ff00' : '#0000ff', Math.random()))
-           
-                    console.log(testLine.material)
-                    // var testLine = new RedLine(this, testMaterial2)
-                    var tX, tY, tZ
-                    var i2 = 4
-                    tX = tY = tZ = 0
-                    // testLine.addPoint(0, 0, 0)
-                    // testLine.addPoint(100, 0, 0)
-
-                    // testLine.addPoint(200, 0, 0)
-                    // testLine.addPoint(300, 0, 0)
-                    // testLine.addPoint(300, 0, 0)
-                    // testLine.addPoint(300, 100, 0)
-
-                    // testLine.addPoint(300, 100+Math.random()*50, 0)
-                    // testLine.addPoint(600, 100+Math.random()*50, 0)
-
-                    var i2 = 3 * 10
-                    tX = tY = tZ = 0
-                    while (i2--) {
-                        tX += Math.random()
-                        tY += Math.random()
-                        tZ += Math.random()
-                        testLine.addPoint(tX, tY, tZ)
-                    }
-
-                    testLine.rotationX = Math.random() * 360
-                    testLine.rotationY = Math.random() * 360
-                    testLine.rotationZ = Math.random() * 360
-                    testLine.upload()
-                    tScene3D.addChild(testLine)
-                }
             })
 
+            var testDLight, testALight;
+
+            testDLight = RedDirectionalLight(this, '#0000ff')
+            testDLight.directionX = -3
+            testDLight.directionY = -3
+            testDLight.directionZ = -3
+            tScene3D.addLight(testDLight)
+
+            testDLight = RedDirectionalLight(this, '#00ff00')
+            testDLight.directionX = 3
+            testDLight.directionY = 3
+            testDLight.directionZ = 3
+            tScene3D.addLight(testDLight)
+
+            testDLight = RedDirectionalLight(this, '#ff0000')
+            testDLight.directionX = Math.random() * 10 - 5
+            // testDLight.directionY = Math.random() * 30 - 15
+            testDLight.directionZ = Math.random() * 10 - 5
+            tScene3D.addLight(testDLight)
+
+            testALight = RedAmbientLight(this)
+            tScene3D.addLight(testALight)
 
             var renderResult;
             renderResult = document.createElement('div')
@@ -155,17 +120,20 @@
                 i = tScene3D.children.length
                 while (i--) {
                     testMesh = tScene3D.children[i]
-                    testMesh.rotationX += 1 / 60
-                    testMesh.rotationY += 1 / 60
-                    testMesh.rotationZ += 1 / 60
+                    // testMesh.rotationX += 1 / 60
+                    // testMesh.rotationY += 1 / 60
+                    // testMesh.rotationZ += 1 / 60
                 }
-                // testDLight.directionX = Math.sin(time / 500) * 10
-                // testLight.y = Math.cos(time / 1500) * 10
-                // testDLight.directionZ = Math.cos(time / 500) * 10
 
-                tCamera.x = Math.sin(time / 1500) * 20
-                tCamera.y = Math.cos(time / 1500) * 20
-                tCamera.z = Math.cos(time / 1500) * 20
+
+                testDLight.directionX = Math.sin(time / 1500) * 10
+                // testLight.y = Math.cos(time / 1500) * 10
+                testDLight.directionZ = Math.cos(time / 1500) * 10
+
+                // tCamera.x = Math.sin(time / 1500) * 20
+                // tCamera.y = Math.cos(time / 1500) * 20
+                // tCamera.z = Math.cos(time / 1500) * 20 + Math.sin(time / 1500) * 20
+                tCamera.z = 20
                 tCamera.lookAt(0, 0, 0)
 
 

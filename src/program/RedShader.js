@@ -69,22 +69,24 @@ var RedShader;
             checkList = checkList ? checkList : [];
             checkList = mergeSystemCode(type, checkList);
             checkList.sort();
-            console.log(checkList)
+            // console.log(checkList)
             checkList.forEach(function (v) {
                 var tData;
-                var tType, tName, tDataType, tArrayNum;
+                var tType, tName, tDataType, tArrayNum,tValue;
                 var tInputData;
                 v = v.trim()
                 source = source.replace(v + ';', '')
                 // console.log(source)
                 
                 tData = v.split(' ')
-                console.log(v,tData)
+                // console.log(v,tData)
                 if (tData[2]) {
                     // 정의인경우
                     tType = tData[0];
                     tDataType = tData[1];
                     tName = tData[2].replace(';', '').split('[');
+                    tValue = v.split('=')
+                    tValue = tValue[1] ? tValue[1].trim().replace(';', '') : null
                     tArrayNum = tName.length > 1 ? +tName[1].split(']')[0] : 0;
                     tName = tName[0]
                     switch (tType) {
@@ -112,13 +114,15 @@ var RedShader;
                 tInputData = {
                     name: tName,
                     arrayNum: tArrayNum,
-                    systemUniformYn: RedSystemShaderCode.systemUniform[tName] ? true : false
+                    value : tValue,
+                    systemUniformYn: RedSystemShaderCode.systemUniform[tArrayNum ? tName + '[' + tArrayNum + ']' : tName] ? true : false
                 };
                 if (tType == 'uniform') tInputData['uniformType'] = tDataType
                 if (tType == 'attribute') tInputData['attributeType'] = tDataType
                 parseData[tType]['list'].push(tInputData);
                 parseData[tType]['map'][tName] = v;
                 parseData[tType]['source'] += v + ';\n';
+              
             });
 
             // 함수부 찾는다.
@@ -138,12 +142,14 @@ var RedShader;
 
             mergeStr = '';
             if (parseData['precision']) mergeStr += parseData['precision']['source'] + '\n//attribute\n';
+            if (parseData['const']) mergeStr += parseData['const']['source'] + '\n//const\n';
             if (parseData['attribute']) mergeStr += parseData['attribute']['source'] + '\n//uniform\n';
             if (parseData['uniform']) mergeStr += parseData['uniform']['source'] + '\n//varying\n';
             if (parseData['varying']) mergeStr += parseData['varying']['source'] + '\n//var\n';
             if (parseData['var']) mergeStr += parseData['var']['source'] + '\n//func\n';
             if (parseData['func']) mergeStr += parseData['func']['source'];
             parseData.lastSource = mergeStr;
+            console.log(parseData)
             return parseData;
         }
     })()
