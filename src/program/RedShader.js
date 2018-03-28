@@ -129,8 +129,9 @@ var RedShader;
             });
             console.log('일단 걸러진상태는',source)
             // 함수부 찾는다.
-            source += '\n'
-            source.match(/[A-Za-z0-9]+\s[\s\S]+?(\}\n)/g).forEach(function (v) {
+            source += '\n';
+            // source.match(/[A-Za-z0-9]+\s[\s\S]+?(\}\n)/g).forEach(function (v) {
+            [source].forEach(function (v) {
                 // console.log(v.split(' '))
                 var data = v.split(' ');
                 var tName = data[1].replace(/\([\s\S]+/g, '').trim()
