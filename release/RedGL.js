@@ -1559,7 +1559,7 @@ var RedSystemShaderCode;
         vShareSource: [
             'attribute vec3 aVertexPosition',
             'attribute vec3 aVertexNormal',
-            'varying vec3 vNormal',
+            'varying vec3 vVertexNormal',
             
             'attribute vec2 aTexcoord',
             'varying vec2 vTexcoord',
@@ -1586,7 +1586,7 @@ var RedSystemShaderCode;
             }
         :DOC*/
         fShareSource: [
-            'varying vec3 vNormal',
+            'varying vec3 vVertexNormal',
             'varying vec2 vTexcoord',
 
             'varying float vTime',

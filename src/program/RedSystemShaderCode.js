@@ -26,8 +26,8 @@ var RedSystemShaderCode;
         vShareSource: [
             'attribute vec3 aVertexPosition',
             'attribute vec3 aVertexNormal',
-            'varying vec3 vNormal',
-            
+            'varying vec3 vVertexNormal',
+
             'attribute vec2 aTexcoord',
             'varying vec2 vTexcoord',
 
@@ -53,11 +53,21 @@ var RedSystemShaderCode;
             }
         :DOC*/
         fShareSource: [
-            'varying vec3 vNormal',
+            'varying vec3 vVertexNormal',
             'varying vec2 vTexcoord',
 
             'varying float vTime',
-            'varying vec2 vResolution'
+            'varying vec2 vResolution',
+
+            'const int DIRETIONAL_MAX = 5',
+            'uniform vec3 uDirectionalLightDirection[5]',
+            'uniform vec4 uDirectionalLightColor[5]',
+            'uniform float uDirectionalLightIntensity[5]',
+            'uniform int uDirectionalLightNum',
+
+            'uniform vec4 uAmbientLightColor',
+            'uniform float uAmbientIntensity',
+
         ],
         systemUniform: {}
     };

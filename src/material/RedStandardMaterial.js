@@ -22,6 +22,7 @@ var RedStandardMaterial;
         this['diffuseTexture'] = diffuseTexture;
         this['normalTexture'] = normalTexture;
         this['specularTexture'] = specularTexture;
+        this['shininess'] = 32
         /////////////////////////////////////////
         // 일반 프로퍼티
         /**DOC:
@@ -44,7 +45,7 @@ var RedStandardMaterial;
             varying vec4 vVertexPositionEye4;
             void main(void) {
                 vTexcoord = aTexcoord;
-                vNormal = vec3(uNMatrix * vec4(aVertexNormal,1.0)); 
+                vVertexNormal = vec3(uNMatrix * vec4(aVertexNormal,1.0)); 
                 vVertexPositionEye4 = uMVMatrix * vec4(aVertexPosition, 1.0);
                 gl_Position = uPMatrix * uCameraMatrix* vVertexPositionEye4;
             }
@@ -56,33 +57,36 @@ var RedStandardMaterial;
             uniform sampler2D uDiffuseTexture;
             uniform sampler2D uNormalTexture;
             uniform sampler2D uSpecularTexture;
+            uniform float uShininess;
 
             varying vec4 vVertexPositionEye4;
+            vec4 texelColor;
             void main(void) {
-                vec4 texelColor = texture2D(uDiffuseTexture, vTexcoord);
-
-                vec4 la = vec4(0.05, 0.05, 0.05, 1.0);
+                texelColor = texture2D(uDiffuseTexture, vTexcoord);
+                vec4 la = uAmbientLightColor * uAmbientLightColor.a;
                 vec4 ld = vec4(0.0, 0.0, 0.0, 1.0);
                 vec4 ls = vec4(0.0, 0.0, 0.0, 1.0);
 
-                vec3 lightDirection = vec3(0.0, 0.1,0.1);
-                vec4 lightColor = vec4(1.0, 0.0, 1.0, 1.0);
-
                 vec4 specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);
-                vec3 N = normalize(vNormal);
-                vec3 L = normalize(lightDirection);
-                vec3 R;
-
-                float shininess = 64.0;
+         
                 float specular;
-                float lambertTerm =dot(N,-L);
-                if(lambertTerm > 0.0){
-                    ld += lightColor * texelColor * lambertTerm;
-                    R = reflect(L, N);
-                    specular = pow( max(dot(R, -L), 0.0), shininess);
-                    ls +=  specularLightColor * specular;
-                }
-                vec4 finalColor = la + ld + ls; 
+              
+
+                for(int i=0; i<DIRETIONAL_MAX; i++){
+                    if(i == uDirectionalLightNum) break;
+                    vec3 L = normalize(uDirectionalLightDirection[i]);
+                    vec3 N = normalize(vVertexNormal);
+                    float lambertTerm =dot(N,-L);
+                    if(lambertTerm > 0.0){
+                        vec3 R;
+                        ld += uDirectionalLightColor[i] * texelColor * lambertTerm * uDirectionalLightIntensity[i];
+                        R = reflect(L, N);
+                        specular = pow( max(dot(R, -L), 0.0), uShininess);
+                        ls +=  specularLightColor * specular * uDirectionalLightIntensity[i];
+                    }
+                }                
+                
+                vec4 finalColor = la * uAmbientIntensity + ld + ls; 
                 finalColor.a = texelColor.a;
                 gl_FragColor = finalColor;
             }

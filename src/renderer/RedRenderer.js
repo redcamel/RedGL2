@@ -99,6 +99,8 @@ var RedRenderer;
         var valueParser;
         var updateSystemUniform;
         var glInitialize;
+        var lightDebugRenderList
+        lightDebugRenderList = []
         // 숫자면 숫자로 %면 월드대비 수치로 변경해줌
         valueParser = function (rect) {
             rect.forEach(function (v, index) {
@@ -116,9 +118,11 @@ var RedRenderer;
             var gl;
             var tLocationInfo, tLocation, tUUID, tViewRect;
             var cacheSystemUniform;
+
             cacheSystemUniform = []
-            return function (redGL, time, perspectiveMTX, cameraMTX, viewRect) {
+            return function (redGL, time, scene, perspectiveMTX, cameraMTX, viewRect) {
                 gl = redGL.gl;
+                lightDebugRenderList.length = 0
                 for (var k in redGL['_datas']['RedProgram']) {
                     tProgram = redGL['_datas']['RedProgram'][k];
                     prevProgram_UUID == tProgram['_UUID'] ? 0 : gl.useProgram(tProgram['webglProgram']);
@@ -158,7 +162,111 @@ var RedRenderer;
                         gl.uniformMatrix4fv(tLocation, false, perspectiveMTX);
                         cacheSystemUniform[tUUID] = perspectiveMTX.toString()
                     }
+                    //
+                    var i, tList;
+                    var tLightData, tDebugObj;
+                    var tValue
+                    // 엠비언트 라이트 업데이트
+                    if (tLightData = scene['lightInfo']['RedAmbientLight']) {
+                        tLocationInfo = tSystemUniformGroup['uAmbientLightColor'];
+                        tLocation = tLocationInfo['location'];
+                        tUUID = tLocationInfo['_UUID'];
+                        tValue = tLightData['color'];
+                        if (tLocation && cacheSystemUniform[tUUID] != tValue.toString()) {
+                            gl.uniform4fv(tLocation, tValue)
+                            cacheSystemUniform[tUUID] = tValue.toString()
+                        };
+                        //
+                        tLocationInfo = tSystemUniformGroup['uAmbientIntensity'];
+                        tLocation = tLocationInfo['location'];
+                        tUUID = tLocationInfo['_UUID'];
+                        tValue = tLightData['intensity'];
+                        if (tLocation && cacheSystemUniform[tUUID] != tValue) {
+                            gl.uniform1f(tLocation, tValue)
+                            cacheSystemUniform[tUUID] = tValue
+                        };
+
+                    }
+
+                    // 디렉셔널 라이트 업데이트
+                    var tDirectionList, tColorList, tIntensityList;
+                    var tVector;
+                    tVector = vec3.create()
+                    tDirectionList = new Float32Array(3 * 5)
+                    tColorList = new Float32Array(4 * 5)
+                    tIntensityList = new Float32Array(5)
+                    tList = scene['lightInfo']['RedDirectionalLight'];
+                    i = tList.length;
+                    while (i--) {
+                        tLightData = tList[i];
+                        tDebugObj = tLightData['debugObject'];
+                        vec3.set(tVector, tLightData['directionX'], tLightData['directionY'], tLightData['directionZ'])
+                        vec3.normalize(tVector, tVector)
+                        tDebugObj['x'] = -tVector[0] * 5;
+                        tDebugObj['y'] = -tVector[1] * 5;
+                        tDebugObj['z'] = -tVector[2] * 5;
+                        lightDebugRenderList.push(tDebugObj)
+                        //
+                        tLocationInfo = tSystemUniformGroup['uDirectionalLightDirection'];
+                        tLocation = tLocationInfo['location'];
+                        if (tLocation) {
+                            tDirectionList[0 + 3 * i] = tVector[0];
+                            tDirectionList[1 + 3 * i] = tVector[1];
+                            tDirectionList[2 + 3 * i] = tVector[2];
+                        }
+                        //
+                        tLocationInfo = tSystemUniformGroup['uDirectionalLightColor'];
+                        tLocation = tLocationInfo['location'];
+                        if (tLocation) {
+                            tColorList[0 + 4 * i] = tLightData['color'][0];
+                            tColorList[1 + 4 * i] = tLightData['color'][1];
+                            tColorList[2 + 4 * i] = tLightData['color'][2];
+                            tColorList[3 + 4 * i] = tLightData['color'][3];
+                        }
+                        //
+                        tLocationInfo = tSystemUniformGroup['uDirectionalLightIntensity'];
+                        tLocation = tLocationInfo['location'];
+                        if (tLocation) tIntensityList[i] = tLightData['intensity']
+                    }
+                    //
+                    tLocationInfo = tSystemUniformGroup['uDirectionalLightDirection'];
+                    tLocation = tLocationInfo['location'];
+                    tUUID = tLocationInfo['_UUID'];
+                    tValue = tDirectionList;
+                    if (tLocation && cacheSystemUniform[tUUID] != tValue.toString()) {
+                        gl.uniform3fv(tLocation, tValue);
+                        cacheSystemUniform[tUUID] = tValue.toString()
+                    }
+                    //
+                    tLocationInfo = tSystemUniformGroup['uDirectionalLightColor'];
+                    tLocation = tLocationInfo['location'];
+                    tUUID = tLocationInfo['_UUID'];
+                    tValue = tColorList;
+                    if (tLocation && cacheSystemUniform[tUUID] != tValue.toString()) {
+                        gl.uniform4fv(tLocation, tValue);
+                        cacheSystemUniform[tUUID] = tValue.toString()
+                    }
+                    //
+                    tLocationInfo = tSystemUniformGroup['uDirectionalLightIntensity'];
+                    tLocation = tLocationInfo['location'];
+                    tUUID = tLocationInfo['_UUID'];
+                    tValue = tIntensityList;
+                    if (tLocation && cacheSystemUniform[tUUID] != tValue.toString()) {
+                        gl.uniform1fv(tLocation, tValue)
+                        cacheSystemUniform[tUUID] = tValue.toString()
+                    }
+                    //
+                    tLocationInfo = tSystemUniformGroup['uDirectionalLightNum'];
+                    tLocation = tLocationInfo['location'];
+                    tUUID = tLocationInfo['_UUID'];
+                    tValue = tList.length;
+                    if (tLocation && cacheSystemUniform[tUUID] != tValue) {
+                        gl.uniform1i(tLocation, tValue)
+                        cacheSystemUniform[tUUID] = tValue
+                    }
+
                 }
+                return lightDebugRenderList
             }
         })();
         glInitialize = function (gl) {
@@ -196,7 +304,6 @@ var RedRenderer;
             self['renderInfo'] = {}
             this['cacheAttrInfo'].length = 0
             self['world']['_viewList'].forEach(function (tView) {
-
                 ///////////////////////////////////
                 // view의 위치/크기결정
                 viewRect[0] = tView['_x'];
@@ -256,12 +363,15 @@ var RedRenderer;
                     gl.enable(gl.CULL_FACE);
 
                 }
-                updateSystemUniform(redGL, time, perspectiveMTX, tCamera['matrix'], viewRect)
+                updateSystemUniform(redGL, time, tScene, perspectiveMTX, tCamera['matrix'], viewRect)
+                // 디버깅 라이트 업데이트 
+                self.sceneRender(gl, tCamera['orthographic'], lightDebugRenderList, time, self['renderInfo'][tView['key']]);
                 // 씬렌더 호출
-                self.sceneRender(gl, tCamera['orthographic'], tScene, time, self['renderInfo'][tView['key']]);
+                self.sceneRender(gl, tCamera['orthographic'], tScene['children'], time, self['renderInfo'][tView['key']]);
             })
         }
     })();
+
     RedRenderer.prototype.sceneRender = (function () {
         var draw;
         var tPrevIndexBuffer_UUID;
@@ -397,9 +507,9 @@ var RedRenderer;
                                 gl.activeTexture(gl.TEXTURE0 + tTextureIndex)
                                 gl.bindTexture(gl.TEXTURE_2D, tUniformValue['webglTexture'])
                                 gl.uniform1i(tWebGLUniformLocation, tTextureIndex)
+                                tCacheTextureInfo[tTextureIndex] = tUniformValue['_UUID']
                                 if (tCacheTextureInfo[tTextureIndex]) tTextureIndex++
                                 if (tTextureIndex == 8) tTextureIndex = 1
-                                tCacheTextureInfo[tTextureIndex] = tUniformValue['_UUID']
                                 // console.log(tCacheTextureInfo)
                             }
 
@@ -593,10 +703,10 @@ var RedRenderer;
                 }
             }
         }
-        return function (gl, orthographic, scene, time, renderResultObj) {
+        return function (gl, orthographic, children, time, renderResultObj) {
             draw(
                 gl,
-                scene['children'],
+                children,
                 orthographic,
                 time,
                 renderResultObj,

@@ -37,10 +37,34 @@ var RedScene;
             }
         :DOC*/
         this['children'] = []
+        this['lightInfo'] = {
+            RedAmbientLight: null,
+            RedDirectionalLight: [],
+            RedOmniLight: []
+        }
         this['_UUID'] = RedGL['makeUUID']();
         Object.seal(this)
     };
-    RedScene.prototype = {};
+    RedScene.prototype = {
+        addLight: function (v) {
+            if (!(v instanceof RedBaseLight)) RedGLUtil.throwFunc('RedBaseLight 확장객체만 가능')
+            switch (v['type']) {
+                case 'RedAmbientLight':
+                    this['lightInfo'][v['type']] = v
+                    break
+                case 'RedDirectionalLight':
+                    this['lightInfo'][v['type']].push(v)
+                    break
+                case 'RedOmniLight':
+                    this['lightInfo'][v['type']].push(v)
+                    break
+            }
+
+        },
+        removeLight: function () {
+
+        }
+    };
     /**DOC:
         {
             code : 'FUNCTION',
