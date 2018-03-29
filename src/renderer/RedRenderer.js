@@ -364,6 +364,13 @@ var RedRenderer;
 
                 }
                 updateSystemUniform(redGL, time, tScene, perspectiveMTX, tCamera['matrix'], viewRect)
+                
+                if (tScene['skyBox']) {
+                    gl.cullFace(gl.FRONT)
+                    tScene['skyBox']['scaleX'] = tScene['skyBox']['scaleY'] =tScene['skyBox']['scaleZ'] = tCamera['farClipping']
+                    self.sceneRender(gl, tCamera['orthographic'], [tScene['skyBox']], time, self['renderInfo'][tView['key']]);
+                    gl.cullFace(gl.BACK)
+                }
                 // 디버깅 라이트 업데이트 
                 self.sceneRender(gl, tCamera['orthographic'], lightDebugRenderList, time, self['renderInfo'][tView['key']]);
                 // 씬렌더 호출

@@ -42,6 +42,7 @@ var RedScene;
             RedDirectionalLight: [],
             RedOmniLight: []
         }
+        this['skyBox'] = null;
         this['_UUID'] = RedGL['makeUUID']();
         Object.seal(this)
     };
@@ -60,6 +61,9 @@ var RedScene;
                     break
             }
 
+        },
+        setSkyBox : function(v){
+            this['skyBox'] = v
         },
         removeLight: function () {
 

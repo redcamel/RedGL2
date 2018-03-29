@@ -161,9 +161,9 @@ var RedEnvironmentMaterial;
         // console.log(vSource, fSource)
         return RedProgram(
             redGL,
-            'standardProgram',
-            RedShader(redGL, 'standardProgramVs', RedShader.VERTEX, vSource),
-            RedShader(redGL, 'standardProgramFS', RedShader.FRAGMENT, fSource)
+            'environmentProgram',
+            RedShader(redGL, 'environmentProgramVs', RedShader.VERTEX, vSource),
+            RedShader(redGL, 'environmentProgramFS', RedShader.FRAGMENT, fSource)
         )
     }
     RedEnvironmentMaterial.prototype = RedBaseMaterial.prototype

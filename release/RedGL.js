@@ -72,7 +72,7 @@ var RedGLUtil;
             }
         :DOC*/
         extendsProto: function (target, from) {
-            for (var k in from.prototype) target.prototype[k] = from.prototype[k]
+            for (var k in from.prototype) target.prototype[k] = from.prototype[k],console.log(k)
         },
         /**DOC:
             {
@@ -178,7 +178,7 @@ var RedGL;
             return null;
         }
     })();
-    
+
     /**DOC:
 		{
 			constructorYn : true,
@@ -291,6 +291,16 @@ var RedGL;
             callback ? callback.call(_self, _tGL ? true : false) : 0;
             window.addEventListener('resize', function () { _self.setSize(_self['_width'], _self['_height']) });
             _self.setSize(_self['_width'], _self['_height']);
+
+            var t0;
+            var i = _self['_detect']['MAX_COMBINED_TEXTURE_IMAGE_UNITS']
+            t0 = RedBitmapTexture(_self, 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYxIDY0LjE0MDk0OSwgMjAxMC8xMi8wNy0xMDo1NzowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNS4xIFdpbmRvd3MiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NzMxRDhBQzRFNUZFMTFFN0IxMDVGNEEzQjQ0RjAwRDIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NzMxRDhBQzVFNUZFMTFFN0IxMDVGNEEzQjQ0RjAwRDIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo3MzFEOEFDMkU1RkUxMUU3QjEwNUY0QTNCNDRGMDBEMiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo3MzFEOEFDM0U1RkUxMUU3QjEwNUY0QTNCNDRGMDBEMiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PuojYFUAAAAQSURBVHjaYvj//z8DQIABAAj8Av7bok0WAAAAAElFTkSuQmCC')
+            while (i--) {
+                _tGL.activeTexture(_tGL.TEXTURE0 + i)
+                _tGL.bindTexture(_tGL.TEXTURE_2D, t0['webglTexture'])
+            }
+
+
         });
         console.log(this)
     };
@@ -909,6 +919,7 @@ var RedMaterial;
         this['mat4Test'] = mat4.create()
         // 일반 프로퍼티
         this['_UUID'] = RedGL['makeUUID']();
+        this.checkProperty()
         Object.seal(this)
         console.log(this)
     }
@@ -1004,10 +1015,9 @@ var RedColorMaterial;
             }
         :DOC*/
         this['color'] = new Float32Array(4);
+        this.setColor(hex ? hex : '#ff0000', alpha == undefined ? 1 : alpha);
         /////////////////////////////////////////
         // 일반 프로퍼티
-   
-        this.setColor(hex, alpha);
         /**DOC:
             {
                 title :`program`,
@@ -1017,27 +1027,10 @@ var RedColorMaterial;
             }
         :DOC*/
         this['program'] = makeProgram(redGL);
-        /**DOC:
-            {
-                title :`alpha`,
-                description : `alpha`,
-                example : `// TODO:`,
-                return : 'number'
-            }
-        :DOC*/
-        Object.defineProperty(this, 'alpha', (function () {
-            var _alpha;
-            _alpha = alpha == undefined ? 1 : alpha;
-            return {
-                get: function () { return _alpha },
-                set: function (v) {
-                    if (v > 1) v = 1;
-                    _alpha = this['color'][3] = v
-                }
-            }
-        })());
-        this['alpha'] = alpha;
+
+    
         this['_UUID'] = RedGL['makeUUID']();
+        this.checkProperty()
         // Object.seal(this);
         console.log(this);
     }
@@ -1058,8 +1051,8 @@ var RedColorMaterial;
             precision mediump float;
             varying vec4 vColor;
             void main(void) {
-                gl_FragColor = vColor;
-                gl_FragColor.rgb *=vColor.a;
+                vec4 finalColor = vColor * vColor.a;
+                gl_FragColor = finalColor;
             }
             */
         }
@@ -1093,13 +1086,15 @@ var RedColorMaterial;
     :DOC*/
     RedColorMaterial.prototype['setColor'] = (function () {
         var t0;
-        return function (hex) {
+        return function (hex,alpha) {
             hex = hex ? hex : '#ff2211';
+            if (alpha == undefined) alpha = 1;
+            if (alpha > 1) alpha = 1
             t0 = RedGLUtil.hexToRGB.call(this, hex);
             this['color'][0] = t0[0];
             this['color'][1] = t0[1];
             this['color'][2] = t0[2];
-            this['color'][3] = this['alpha'];
+            this['color'][3] = alpha;
         }
     })();
     Object.freeze(RedColorMaterial)
@@ -1154,6 +1149,7 @@ var RedBitmapMaterial;
         :DOC*/
         this['program'] = makeProgram(redGL);
         this['_UUID'] = RedGL['makeUUID']();
+        this.checkProperty()
         // Object.seal(this)
         console.log(this)
     }
@@ -1349,7 +1345,7 @@ var RedProgram;
                     var t0 = new AttributeLocationInfo();
                     t0['_UUID'] = RedGL.makeUUID()
                     t0['location'] = gl.getAttribLocation(self['webglProgram'], v['name']);
-                    if (t0['location'] == -1){
+                    if (t0['location'] == -1) {
                         t0['msg'] = '쉐이더 main 함수에서 사용되고 있지 않음';
                     } else {
                         t0['attributeType'] = v['attributeType'];
@@ -1378,6 +1374,12 @@ var RedProgram;
                         case 'sampler2D':
                             tRenderType = 'sampler2D';
                             tRenderMethod = 'uniform1f';
+                            t0['samplerIndex'] = v['samplerIndex']
+                            break
+                        case 'samplerCube':
+                            tRenderType = 'samplerCube';
+                            tRenderMethod = 'uniform1f';
+                            t0['samplerIndex'] = v['samplerIndex']
                             break
                         case 'float':
                             tRenderType = 'float';
@@ -1415,6 +1417,7 @@ var RedProgram;
                     }
                     t0['renderType'] = tRenderType
                     t0['renderMethod'] = tRenderMethod
+
                     //
                     t0['name'] = v['name']
                     t0['materialPropertyName'] = v['name'].charAt(1).toLowerCase() + v['name'].substr(2)
@@ -1560,7 +1563,7 @@ var RedSystemShaderCode;
             'attribute vec3 aVertexPosition',
             'attribute vec3 aVertexNormal',
             'varying vec3 vVertexNormal',
-            
+
             'attribute vec2 aTexcoord',
             'varying vec2 vTexcoord',
 
@@ -1590,7 +1593,17 @@ var RedSystemShaderCode;
             'varying vec2 vTexcoord',
 
             'varying float vTime',
-            'varying vec2 vResolution'
+            'varying vec2 vResolution',
+
+            'const int DIRETIONAL_MAX = 5',
+            'uniform vec3 uDirectionalLightDirection[5]',
+            'uniform vec4 uDirectionalLightColor[5]',
+            'uniform float uDirectionalLightIntensity[5]',
+            'uniform int uDirectionalLightNum',
+
+            'uniform vec4 uAmbientLightColor',
+            'uniform float uAmbientIntensity',
+
         ],
         systemUniform: {}
     };
@@ -1661,34 +1674,44 @@ var RedShader;
     parser = (function () {
         var parseData, checkList;
         var mergeStr;
+        
         return function (type, source) {
+            var samplerIndex = 1
+            source = source.replace(/\s+$/, '')
             source = source.replace(/  /g, '').trim();
-            // console.log(source)
+
+            console.log(source)
             parseData = {
-                func: {
+                etc: {
                     list: [],
                     map: {},
                     source: ''
                 }
             }
             // 함수 제외 전부 검색
-            checkList = source.match(/attribute[\s\S]+?\;|uniform[\s\S]+?\;|varying[\s\S]+?\;|precision[\s\S]+?\;|([a-z0-9]+)\s([\S]+)\;\n/g);
+            checkList = source.match(/attribute[\s\S]+?\;|uniform[\s\S]+?\;|varying[\s\S]+?\;|precision[\s\S]+?\;/g);
             checkList = checkList ? checkList : [];
             checkList = mergeSystemCode(type, checkList);
             checkList.sort();
+            console.log(checkList)
+            // console.log(checkList)
             checkList.forEach(function (v) {
                 var tData;
-                var tType, tName, tDataType, tArrayNum;
+                var tType, tName, tDataType, tArrayNum,tValue;
                 var tInputData;
                 v = v.trim()
                 source = source.replace(v + ';', '')
+                // console.log(source)
+                
                 tData = v.split(' ')
-                // console.log(v,data)
+                // console.log(v,tData)
                 if (tData[2]) {
                     // 정의인경우
                     tType = tData[0];
                     tDataType = tData[1];
                     tName = tData[2].replace(';', '').split('[');
+                    tValue = v.split('=')
+                    tValue = tValue[1] ? tValue[1].trim().replace(';', '') : null
                     tArrayNum = tName.length > 1 ? +tName[1].split(']')[0] : 0;
                     tName = tName[0]
                     switch (tType) {
@@ -1716,38 +1739,47 @@ var RedShader;
                 tInputData = {
                     name: tName,
                     arrayNum: tArrayNum,
-                    systemUniformYn: RedSystemShaderCode.systemUniform[tName] ? true : false
+                    value : tValue,
+                    systemUniformYn: RedSystemShaderCode.systemUniform[tArrayNum ? tName + '[' + tArrayNum + ']' : tName] ? true : false
                 };
                 if (tType == 'uniform') tInputData['uniformType'] = tDataType
+                if (tDataType.indexOf('sampler')>-1) {
+                    tInputData['samplerIndex'] = samplerIndex
+                    samplerIndex++
+                    if (samplerIndex == 8) samplerIndex = 1
+                }
                 if (tType == 'attribute') tInputData['attributeType'] = tDataType
                 parseData[tType]['list'].push(tInputData);
                 parseData[tType]['map'][tName] = v;
                 parseData[tType]['source'] += v + ';\n';
+              
             });
-
+            console.log('일단 걸러진상태는',source)
             // 함수부 찾는다.
-            source = source.trim()
-            source += '\n'
-            source.match(/[a-z0-9]+\s[\s\S]+?(\}\n)/g).forEach(function (v) {
+            source += '\n';
+            // source.match(/[A-Za-z0-9]+\s[\s\S]+?(\}\n)/g).forEach(function (v) {
+            [source].forEach(function (v) {
                 // console.log(v.split(' '))
                 var data = v.split(' ');
                 var tName = data[1].replace(/\([\s\S]+/g, '').trim()
-                parseData['func']['list'].push({
+                parseData['etc']['list'].push({
                     uniformType: data[0],
                     name: tName
                 })
-                parseData['func']['map'][tName] = v;
-                parseData['func']['source'] += v + '\n';
+                parseData['etc']['map'][tName] = v;
+                parseData['etc']['source'] += v + '\n';
             })
 
             mergeStr = '';
             if (parseData['precision']) mergeStr += parseData['precision']['source'] + '\n//attribute\n';
+            if (parseData['const']) mergeStr += parseData['const']['source'] + '\n//const\n';
             if (parseData['attribute']) mergeStr += parseData['attribute']['source'] + '\n//uniform\n';
             if (parseData['uniform']) mergeStr += parseData['uniform']['source'] + '\n//varying\n';
             if (parseData['varying']) mergeStr += parseData['varying']['source'] + '\n//var\n';
-            if (parseData['var']) mergeStr += parseData['var']['source'] + '\n//func\n';
-            if (parseData['func']) mergeStr += parseData['func']['source'];
+            if (parseData['var']) mergeStr += parseData['var']['source'] + '\n//etc\n';
+            if (parseData['etc']) mergeStr += parseData['etc']['source'];
             parseData.lastSource = mergeStr;
+            console.log(parseData)
             return parseData;
         }
     })()
@@ -1953,6 +1985,8 @@ var RedRenderer;
         var valueParser;
         var updateSystemUniform;
         var glInitialize;
+        var lightDebugRenderList
+        lightDebugRenderList = []
         // 숫자면 숫자로 %면 월드대비 수치로 변경해줌
         valueParser = function (rect) {
             rect.forEach(function (v, index) {
@@ -1970,9 +2004,11 @@ var RedRenderer;
             var gl;
             var tLocationInfo, tLocation, tUUID, tViewRect;
             var cacheSystemUniform;
+
             cacheSystemUniform = []
-            return function (redGL, time, perspectiveMTX, cameraMTX, viewRect) {
+            return function (redGL, time, scene, perspectiveMTX, cameraMTX, viewRect) {
                 gl = redGL.gl;
+                lightDebugRenderList.length = 0
                 for (var k in redGL['_datas']['RedProgram']) {
                     tProgram = redGL['_datas']['RedProgram'][k];
                     prevProgram_UUID == tProgram['_UUID'] ? 0 : gl.useProgram(tProgram['webglProgram']);
@@ -2012,7 +2048,111 @@ var RedRenderer;
                         gl.uniformMatrix4fv(tLocation, false, perspectiveMTX);
                         cacheSystemUniform[tUUID] = perspectiveMTX.toString()
                     }
+                    //
+                    var i, tList;
+                    var tLightData, tDebugObj;
+                    var tValue
+                    // 엠비언트 라이트 업데이트
+                    if (tLightData = scene['lightInfo']['RedAmbientLight']) {
+                        tLocationInfo = tSystemUniformGroup['uAmbientLightColor'];
+                        tLocation = tLocationInfo['location'];
+                        tUUID = tLocationInfo['_UUID'];
+                        tValue = tLightData['color'];
+                        if (tLocation && cacheSystemUniform[tUUID] != tValue.toString()) {
+                            gl.uniform4fv(tLocation, tValue)
+                            cacheSystemUniform[tUUID] = tValue.toString()
+                        };
+                        //
+                        tLocationInfo = tSystemUniformGroup['uAmbientIntensity'];
+                        tLocation = tLocationInfo['location'];
+                        tUUID = tLocationInfo['_UUID'];
+                        tValue = tLightData['intensity'];
+                        if (tLocation && cacheSystemUniform[tUUID] != tValue) {
+                            gl.uniform1f(tLocation, tValue)
+                            cacheSystemUniform[tUUID] = tValue
+                        };
+
+                    }
+
+                    // 디렉셔널 라이트 업데이트
+                    var tDirectionList, tColorList, tIntensityList;
+                    var tVector;
+                    tVector = vec3.create()
+                    tDirectionList = new Float32Array(3 * 5)
+                    tColorList = new Float32Array(4 * 5)
+                    tIntensityList = new Float32Array(5)
+                    tList = scene['lightInfo']['RedDirectionalLight'];
+                    i = tList.length;
+                    while (i--) {
+                        tLightData = tList[i];
+                        tDebugObj = tLightData['debugObject'];
+                        vec3.set(tVector, tLightData['directionX'], tLightData['directionY'], tLightData['directionZ'])
+                        vec3.normalize(tVector, tVector)
+                        tDebugObj['x'] = -tVector[0] * 5;
+                        tDebugObj['y'] = -tVector[1] * 5;
+                        tDebugObj['z'] = -tVector[2] * 5;
+                        lightDebugRenderList.push(tDebugObj)
+                        //
+                        tLocationInfo = tSystemUniformGroup['uDirectionalLightDirection'];
+                        tLocation = tLocationInfo['location'];
+                        if (tLocation) {
+                            tDirectionList[0 + 3 * i] = tVector[0];
+                            tDirectionList[1 + 3 * i] = tVector[1];
+                            tDirectionList[2 + 3 * i] = tVector[2];
+                        }
+                        //
+                        tLocationInfo = tSystemUniformGroup['uDirectionalLightColor'];
+                        tLocation = tLocationInfo['location'];
+                        if (tLocation) {
+                            tColorList[0 + 4 * i] = tLightData['color'][0];
+                            tColorList[1 + 4 * i] = tLightData['color'][1];
+                            tColorList[2 + 4 * i] = tLightData['color'][2];
+                            tColorList[3 + 4 * i] = tLightData['color'][3];
+                        }
+                        //
+                        tLocationInfo = tSystemUniformGroup['uDirectionalLightIntensity'];
+                        tLocation = tLocationInfo['location'];
+                        if (tLocation) tIntensityList[i] = tLightData['intensity']
+                    }
+                    //
+                    tLocationInfo = tSystemUniformGroup['uDirectionalLightDirection'];
+                    tLocation = tLocationInfo['location'];
+                    tUUID = tLocationInfo['_UUID'];
+                    tValue = tDirectionList;
+                    if (tLocation && cacheSystemUniform[tUUID] != tValue.toString()) {
+                        gl.uniform3fv(tLocation, tValue);
+                        cacheSystemUniform[tUUID] = tValue.toString()
+                    }
+                    //
+                    tLocationInfo = tSystemUniformGroup['uDirectionalLightColor'];
+                    tLocation = tLocationInfo['location'];
+                    tUUID = tLocationInfo['_UUID'];
+                    tValue = tColorList;
+                    if (tLocation && cacheSystemUniform[tUUID] != tValue.toString()) {
+                        gl.uniform4fv(tLocation, tValue);
+                        cacheSystemUniform[tUUID] = tValue.toString()
+                    }
+                    //
+                    tLocationInfo = tSystemUniformGroup['uDirectionalLightIntensity'];
+                    tLocation = tLocationInfo['location'];
+                    tUUID = tLocationInfo['_UUID'];
+                    tValue = tIntensityList;
+                    if (tLocation && cacheSystemUniform[tUUID] != tValue.toString()) {
+                        gl.uniform1fv(tLocation, tValue)
+                        cacheSystemUniform[tUUID] = tValue.toString()
+                    }
+                    //
+                    tLocationInfo = tSystemUniformGroup['uDirectionalLightNum'];
+                    tLocation = tLocationInfo['location'];
+                    tUUID = tLocationInfo['_UUID'];
+                    tValue = tList.length;
+                    if (tLocation && cacheSystemUniform[tUUID] != tValue) {
+                        gl.uniform1i(tLocation, tValue)
+                        cacheSystemUniform[tUUID] = tValue
+                    }
+
                 }
+                return lightDebugRenderList
             }
         })();
         glInitialize = function (gl) {
@@ -2050,7 +2190,6 @@ var RedRenderer;
             self['renderInfo'] = {}
             this['cacheAttrInfo'].length = 0
             self['world']['_viewList'].forEach(function (tView) {
-
                 ///////////////////////////////////
                 // view의 위치/크기결정
                 viewRect[0] = tView['_x'];
@@ -2110,12 +2249,22 @@ var RedRenderer;
                     gl.enable(gl.CULL_FACE);
 
                 }
-                updateSystemUniform(redGL, time, perspectiveMTX, tCamera['matrix'], viewRect)
+                updateSystemUniform(redGL, time, tScene, perspectiveMTX, tCamera['matrix'], viewRect)
+                
+                if (tScene['skyBox']) {
+                    gl.cullFace(gl.FRONT)
+                    tScene['skyBox']['scaleX'] = tScene['skyBox']['scaleY'] =tScene['skyBox']['scaleZ'] = tCamera['farClipping']
+                    self.sceneRender(gl, tCamera['orthographic'], [tScene['skyBox']], time, self['renderInfo'][tView['key']]);
+                    gl.cullFace(gl.BACK)
+                }
+                // 디버깅 라이트 업데이트 
+                self.sceneRender(gl, tCamera['orthographic'], lightDebugRenderList, time, self['renderInfo'][tView['key']]);
                 // 씬렌더 호출
-                self.sceneRender(gl, tCamera['orthographic'], tScene, time, self['renderInfo'][tView['key']]);
+                self.sceneRender(gl, tCamera['orthographic'], tScene['children'], time, self['renderInfo'][tView['key']]);
             })
         }
     })();
+
     RedRenderer.prototype.sceneRender = (function () {
         var draw;
         var tPrevIndexBuffer_UUID;
@@ -2141,7 +2290,6 @@ var RedRenderer;
             var tMesh;
             var tGeometry;
             var tMaterial;
-            var tTextureIndex = 1;
             var tInterleaveDefineInfo;
             var tAttrGroup, tUniformGroup, tSystemUniformGroup;
             var tInterleaveDefineUnit
@@ -2151,6 +2299,7 @@ var RedRenderer;
             var tRenderType;
             var tMVMatrix, tNMatrix
             var tUUID, noChangeUniform;
+            var tSamplerIndex;
             // matix 관련
             var a,
                 aSx, aSy, aSz, aCx, aCy, aCz, tRx, tRy, tRz,
@@ -2239,25 +2388,34 @@ var RedRenderer;
                     if (tWebGLUniformLocation) {
                         tRenderType = tUniformLocationInfo['renderType'];
                         tUniformValue = tMaterial[tUniformLocationInfo['materialPropertyName']];
-                        tUniformValue == undefined ? RedGLUtil.throwFunc('RedRenderer : Material에 ', tUniformLocationInfo['materialPropertyName'], '이 정의 되지않았습니다.') : 0;
                         noChangeUniform = tCacheUniformInfo[tUUID] == tUniformValue;
                         // if (!noChange) console.log('변경되었다', tLocationInfo['name'], tCacheInfo[tUUID], tUniformValue)
                         // console.log(tCacheInfo)
-                        if (tRenderType == 'sampler2D') {
+                        if (tRenderType == 'sampler2D'|| tRenderType == 'samplerCube') {
                             //TODO: 텍스쳐 인덱스는 내부적으로 먹어야하는 거였군...
-                            // tTextureIndex : 0 번은 생성용으로 쓴다.                            
-                            if (tCacheTextureInfo[tTextureIndex] == tUniformValue['_UUID']) {
-                            } else {
-                                gl.activeTexture(gl.TEXTURE0 + tTextureIndex)
-                                gl.bindTexture(gl.TEXTURE_2D, tUniformValue['webglTexture'])
-                                gl.uniform1i(tWebGLUniformLocation, tTextureIndex)
-                                if (tCacheTextureInfo[tTextureIndex]) tTextureIndex++
-                                if (tTextureIndex == 8) tTextureIndex = 1
-                                tCacheTextureInfo[tTextureIndex] = tUniformValue['_UUID']
-                                // console.log(tCacheTextureInfo)
+                            tSamplerIndex = tUniformLocationInfo['samplerIndex']
+                            // samplerIndex : 0 번은 생성용으로 쓴다.     
+                            if (tUniformValue) {
+                                // console.log(tUniformLocationInfo['materialPropertyName'],tUniformValue)  
+                                // console.log(tUniformLocationInfo)
+                                if (tCacheTextureInfo[tSamplerIndex] == tUniformValue['_UUID']) {
+                                } else {
+                                    gl.activeTexture(gl.TEXTURE0 + tSamplerIndex)
+                                    gl.bindTexture(tRenderType == 'sampler2D' ? gl.TEXTURE_2D : gl.TEXTURE_CUBE_MAP , tUniformValue['webglTexture'])
+                                    gl.uniform1i(tWebGLUniformLocation, tSamplerIndex)
+                                    tCacheTextureInfo[tSamplerIndex] = tUniformValue['_UUID']
+                                    // console.log(tCacheTextureInfo)
+                                }
+                            }else {
+                                if (tCacheTextureInfo[tSamplerIndex] == 0) {
+                                }else {
+                                    gl.uniform1i(tWebGLUniformLocation, tSamplerIndex)
+                                    tCacheTextureInfo[tSamplerIndex] = 0
+                                }
                             }
-
                         } else {
+                            tUniformValue == undefined ? RedGLUtil.throwFunc('RedRenderer : Material에 ', tUniformLocationInfo['materialPropertyName'], '이 정의 되지않았습니다.') : 0;
+
                             tRenderType == 'float' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
                                 : tRenderType == 'int' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
                                     : tRenderType == 'vec' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
@@ -2447,10 +2605,10 @@ var RedRenderer;
                 }
             }
         }
-        return function (gl, orthographic, scene, time, renderResultObj) {
+        return function (gl, orthographic, children, time, renderResultObj) {
             draw(
                 gl,
-                scene['children'],
+                children,
                 orthographic,
                 time,
                 renderResultObj,
@@ -2884,10 +3042,38 @@ var RedScene;
             }
         :DOC*/
         this['children'] = []
+        this['lightInfo'] = {
+            RedAmbientLight: null,
+            RedDirectionalLight: [],
+            RedOmniLight: []
+        }
+        this['skyBox'] = null;
         this['_UUID'] = RedGL['makeUUID']();
         Object.seal(this)
     };
-    RedScene.prototype = {};
+    RedScene.prototype = {
+        addLight: function (v) {
+            if (!(v instanceof RedBaseLight)) RedGLUtil.throwFunc('RedBaseLight 확장객체만 가능')
+            switch (v['type']) {
+                case 'RedAmbientLight':
+                    this['lightInfo'][v['type']] = v
+                    break
+                case 'RedDirectionalLight':
+                    this['lightInfo'][v['type']].push(v)
+                    break
+                case 'RedOmniLight':
+                    this['lightInfo'][v['type']].push(v)
+                    break
+            }
+
+        },
+        setSkyBox : function(v){
+            this['skyBox'] = v
+        },
+        removeLight: function () {
+
+        }
+    };
     /**DOC:
         {
             code : 'FUNCTION',

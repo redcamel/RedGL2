@@ -35,10 +35,12 @@
     <script src="src/material/RedColorMaterial.js"></script>
     <script src="src/material/RedEnvironmentMaterial.js"></script>
     <script src="src/material/RedBitmapMaterial.js"></script>
+    <script src="src/material/RedSkyBoxMaterial.js"></script>
     <script src="src/material/RedStandardMaterial.js"></script>
 
     <script src="src/object3D/RedMesh.js"></script>
     <script src="src/object3D/RedLine.js"></script>
+    <script src="src/object3D/RedSkyBox.js"></script>
 
     <script src="src/primitives/RedBox.js"></script>
     <script src="src/primitives/RedPlane.js"></script>
@@ -78,7 +80,7 @@
 
             var testDLight, testALight;
             testDLight = RedDirectionalLight(this, '#fff')
-            testALight = RedAmbientLight(this, '#111',1)
+            testALight = RedAmbientLight(this, '#111', 1)
 
             tScene3D.addLight(testALight)
             tScene3D.addLight(testDLight)
@@ -99,8 +101,19 @@
                     'asset/cubemap/posz.png',
                     'asset/cubemap/negz.png'
                 ])
-                ,RedBitmapTexture(this, 'asset/normalTest.jpg')
-                ,RedBitmapTexture(this, 'asset/specular.png')
+                , RedBitmapTexture(this, 'asset/normalTest.jpg')
+                , RedBitmapTexture(this, 'asset/specular.png')
+            )
+
+            tScene3D.setSkyBox(
+                RedSkyBox(this, [
+                    'asset/cubemap/posx.png',
+                    'asset/cubemap/negx.png',
+                    'asset/cubemap/posy.png',
+                    'asset/cubemap/negy.png',
+                    'asset/cubemap/posz.png',
+                    'asset/cubemap/negz.png'
+                ])
             )
 
 
