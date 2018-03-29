@@ -153,13 +153,7 @@ var RedGL;
         this['_width'] = 500;
         this['_height'] = 500;
         this['gl'] = _tGL = getGL(canvas);
-        if (_tGL) {
-            this['_detect'] = redGLDetect(_tGL, option);
-              // 픽셀 블렌딩 결정
-              _tGL.pixelStorei(_tGL.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
-              // 픽셀 플립 기본설정
-              _tGL.pixelStorei(_tGL.UNPACK_FLIP_Y_WEBGL, true);
-        }
+        if (_tGL) this['_detect'] = redGLDetect(_tGL, option);
         this['_datas'] = {};
         this['_UUID'] = RedGL['makeUUID']();
         ////
