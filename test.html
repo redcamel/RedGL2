@@ -119,7 +119,7 @@
 
             JsonModelLoader(this, 'testJsonModel', 'asset/teapot.json', function (interleaveBuffer, indexBuffer) {
                 console.log('호잇!', interleaveBuffer, indexBuffer)
-                var i = 4000
+                var i = 5000
                 while (i--) {
                     var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer), testMaterial)
                     testMesh.x = Math.random() * 500 - 250
@@ -129,13 +129,14 @@
                     testMesh.rotationX = Math.random() * 360
                     testMesh.rotationY = Math.random() * 360
                     testMesh.rotationZ = Math.random() * 360
+                  
                     tScene3D.addChild(testMesh)
                 }
                 var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer), testMaterial)
                 testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.1
                 tScene3D.addChild(testMesh)
 
-                i = 100
+                i = 0
                 while (i--) {
                     var testLine = new RedLine(self, new RedColorMaterial(self, i % 2 ? '#ff0000' : i % 3 ? '#00ff00' : '#0000ff', Math.random()))
 
