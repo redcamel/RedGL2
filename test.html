@@ -78,9 +78,9 @@
 
             var testDLight, testALight;
             testDLight = RedDirectionalLight(this, '#fff')
-            testALight = RedAmbientLight(this)
+            testALight = RedAmbientLight(this, '#111',1)
 
-            // tScene3D.addLight(testALight)
+            tScene3D.addLight(testALight)
             tScene3D.addLight(testDLight)
 
             tRenderer = RedRenderer();

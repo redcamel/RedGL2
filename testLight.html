@@ -92,9 +92,9 @@
                     'asset/cubemap/posz.png',
                     'asset/cubemap/negz.png'
                 ])
-                // ,
-                // RedBitmapTexture(this, 'asset/normalTest.jpg'),
-                // RedBitmapTexture(this, 'asset/specular.png')
+                ,
+                RedBitmapTexture(this, 'asset/normalTest.jpg'),
+                RedBitmapTexture(this, 'asset/specular.png')
             )
 
             JsonModelLoader(this, 'testJsonModel', 'asset/teapot.json', function (interleaveBuffer, indexBuffer) {
@@ -108,17 +108,17 @@
 
             var testDLight, testALight;
 
-            // testDLight = RedDirectionalLight(this, '#0000ff')
-            // testDLight.directionX = -3
-            // testDLight.directionY = -3
-            // testDLight.directionZ = -3
-            // tScene3D.addLight(testDLight)
+            testDLight = RedDirectionalLight(this, '#0000ff')
+            testDLight.directionX = -3
+            testDLight.directionY = -3
+            testDLight.directionZ = -3
+            tScene3D.addLight(testDLight)
 
-            // testDLight = RedDirectionalLight(this, '#00ff00')
-            // testDLight.directionX = 3
-            // testDLight.directionY = 3
-            // testDLight.directionZ = 3
-            // tScene3D.addLight(testDLight)
+            testDLight = RedDirectionalLight(this, '#00ff00')
+            testDLight.directionX = 3
+            testDLight.directionY = 3
+            testDLight.directionZ = 3
+            tScene3D.addLight(testDLight)
 
             testDLight = RedDirectionalLight(this, '#fff')
             testDLight.directionX = Math.random() * 10 - 5
