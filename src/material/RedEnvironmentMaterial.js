@@ -128,7 +128,7 @@ var RedEnvironmentMaterial;
                 vec3 N = normalize(vVertexNormal);
                 N = normalize(2.0 * (N + texture2D(uNormalTexture, vTexcoord).rgb  - 0.5));
 
-                vec4 reflectionColor = textureCube(uEnvironmentTexture, vReflectionCubeCoord );
+                vec4 reflectionColor = textureCube(uEnvironmentTexture, 2.0 * dot(vReflectionCubeCoord,vVertexNormal) * vVertexNormal - vReflectionCubeCoord);
                 texelColor = texelColor * (1.0 - uReflectionPower) + reflectionColor * uReflectionPower;
 
 
