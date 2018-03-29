@@ -15,6 +15,7 @@ var RedMaterial;
         this['mat4Test'] = mat4.create()
         // 일반 프로퍼티
         this['_UUID'] = RedGL['makeUUID']();
+        this.checkProperty()
         Object.seal(this)
         console.log(this)
     }

@@ -397,7 +397,6 @@ var RedRenderer;
             var tMesh;
             var tGeometry;
             var tMaterial;
-            var tTextureIndex = 1;
             var tInterleaveDefineInfo;
             var tAttrGroup, tUniformGroup, tSystemUniformGroup;
             var tInterleaveDefineUnit
@@ -407,6 +406,7 @@ var RedRenderer;
             var tRenderType;
             var tMVMatrix, tNMatrix
             var tUUID, noChangeUniform;
+            var tSamplerIndex;
             // matix 관련
             var a,
                 aSx, aSy, aSz, aCx, aCy, aCz, tRx, tRy, tRz,
@@ -495,25 +495,34 @@ var RedRenderer;
                     if (tWebGLUniformLocation) {
                         tRenderType = tUniformLocationInfo['renderType'];
                         tUniformValue = tMaterial[tUniformLocationInfo['materialPropertyName']];
-                        tUniformValue == undefined ? RedGLUtil.throwFunc('RedRenderer : Material에 ', tUniformLocationInfo['materialPropertyName'], '이 정의 되지않았습니다.') : 0;
                         noChangeUniform = tCacheUniformInfo[tUUID] == tUniformValue;
                         // if (!noChange) console.log('변경되었다', tLocationInfo['name'], tCacheInfo[tUUID], tUniformValue)
                         // console.log(tCacheInfo)
-                        if (tRenderType == 'sampler2D') {
+                        if (tRenderType == 'sampler2D'|| tRenderType == 'samplerCube') {
                             //TODO: 텍스쳐 인덱스는 내부적으로 먹어야하는 거였군...
-                            // tTextureIndex : 0 번은 생성용으로 쓴다.                            
-                            if (tCacheTextureInfo[tTextureIndex] == tUniformValue['_UUID']) {
-                            } else {
-                                gl.activeTexture(gl.TEXTURE0 + tTextureIndex)
-                                gl.bindTexture(gl.TEXTURE_2D, tUniformValue['webglTexture'])
-                                gl.uniform1i(tWebGLUniformLocation, tTextureIndex)
-                                tCacheTextureInfo[tTextureIndex] = tUniformValue['_UUID']
-                                if (tCacheTextureInfo[tTextureIndex]) tTextureIndex++
-                                if (tTextureIndex == 8) tTextureIndex = 1
-                                // console.log(tCacheTextureInfo)
+                            tSamplerIndex = tUniformLocationInfo['samplerIndex']
+                            // samplerIndex : 0 번은 생성용으로 쓴다.     
+                            if (tUniformValue) {
+                                // console.log(tUniformLocationInfo['materialPropertyName'],tUniformValue)  
+                                // console.log(tUniformLocationInfo)
+                                if (tCacheTextureInfo[tSamplerIndex] == tUniformValue['_UUID']) {
+                                } else {
+                                    gl.activeTexture(gl.TEXTURE0 + tSamplerIndex)
+                                    gl.bindTexture(tRenderType == 'sampler2D' ? gl.TEXTURE_2D : gl.TEXTURE_CUBE_MAP , tUniformValue['webglTexture'])
+                                    gl.uniform1i(tWebGLUniformLocation, tSamplerIndex)
+                                    tCacheTextureInfo[tSamplerIndex] = tUniformValue['_UUID']
+                                    // console.log(tCacheTextureInfo)
+                                }
+                            }else {
+                                if (tCacheTextureInfo[tSamplerIndex] == 0) {
+                                }else {
+                                    gl.uniform1i(tWebGLUniformLocation, tSamplerIndex)
+                                    tCacheTextureInfo[tSamplerIndex] = 0
+                                }
                             }
-
                         } else {
+                            tUniformValue == undefined ? RedGLUtil.throwFunc('RedRenderer : Material에 ', tUniformLocationInfo['materialPropertyName'], '이 정의 되지않았습니다.') : 0;
+
                             tRenderType == 'float' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
                                 : tRenderType == 'int' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
                                     : tRenderType == 'vec' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)

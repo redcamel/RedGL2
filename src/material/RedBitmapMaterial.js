@@ -48,6 +48,7 @@ var RedBitmapMaterial;
         :DOC*/
         this['program'] = makeProgram(redGL);
         this['_UUID'] = RedGL['makeUUID']();
+        this.checkProperty()
         // Object.seal(this)
         console.log(this)
     }

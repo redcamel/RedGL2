@@ -33,6 +33,7 @@
 
     <script src="src/material/RedMaterial.js"></script>
     <script src="src/material/RedColorMaterial.js"></script>
+    <script src="src/material/RedEnvironmentMaterial.js"></script>
     <script src="src/material/RedBitmapMaterial.js"></script>
     <script src="src/material/RedStandardMaterial.js"></script>
 
@@ -48,6 +49,7 @@
 
     <script src="src/renderer/RedRenderer.js"></script>
 
+    <script src="src/resources/RedBitmapCubeTexture.js"></script>
     <script src="src/resources/RedBitmapTexture.js"></script>
 
     <script src="src/RedView.js"></script>
@@ -77,8 +79,24 @@
             RedView('test').setLocation('0%', '0%')
 
 
+
             var testMaterial
-            testMaterial = RedStandardMaterial(this, RedBitmapTexture(this, 'asset/crate.png'))
+            testMaterial = RedEnvironmentMaterial(
+                this,
+                RedBitmapTexture(this, 'asset/crate.png'),
+                RedBitmapCubeTexture(this, [
+                    'asset/cubemap/posx.png',
+                    'asset/cubemap/negx.png',
+                    'asset/cubemap/posy.png',
+                    'asset/cubemap/negy.png',
+                    'asset/cubemap/posz.png',
+                    'asset/cubemap/negz.png'
+                ])
+                // ,
+                // RedBitmapTexture(this, 'asset/normalTest.jpg'),
+                // RedBitmapTexture(this, 'asset/specular.png')
+            )
+
             JsonModelLoader(this, 'testJsonModel', 'asset/teapot.json', function (interleaveBuffer, indexBuffer) {
                 console.log('호잇!', interleaveBuffer, indexBuffer)
                 var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer), testMaterial)
@@ -87,28 +105,29 @@
 
             })
 
+
             var testDLight, testALight;
 
-            testDLight = RedDirectionalLight(this, '#0000ff')
-            testDLight.directionX = -3
-            testDLight.directionY = -3
-            testDLight.directionZ = -3
-            tScene3D.addLight(testDLight)
+            // testDLight = RedDirectionalLight(this, '#0000ff')
+            // testDLight.directionX = -3
+            // testDLight.directionY = -3
+            // testDLight.directionZ = -3
+            // tScene3D.addLight(testDLight)
 
-            testDLight = RedDirectionalLight(this, '#00ff00')
-            testDLight.directionX = 3
-            testDLight.directionY = 3
-            testDLight.directionZ = 3
-            tScene3D.addLight(testDLight)
+            // testDLight = RedDirectionalLight(this, '#00ff00')
+            // testDLight.directionX = 3
+            // testDLight.directionY = 3
+            // testDLight.directionZ = 3
+            // tScene3D.addLight(testDLight)
 
-            testDLight = RedDirectionalLight(this, '#ff0000')
+            testDLight = RedDirectionalLight(this, '#fff')
             testDLight.directionX = Math.random() * 10 - 5
             // testDLight.directionY = Math.random() * 30 - 15
             testDLight.directionZ = Math.random() * 10 - 5
             tScene3D.addLight(testDLight)
 
-            testALight = RedAmbientLight(this)
-            tScene3D.addLight(testALight)
+            // testALight = RedAmbientLight(this)
+            // tScene3D.addLight(testALight)
 
             var renderResult;
             renderResult = document.createElement('div')
@@ -120,9 +139,9 @@
                 i = tScene3D.children.length
                 while (i--) {
                     testMesh = tScene3D.children[i]
-                    // testMesh.rotationX += 1 / 60
-                    // testMesh.rotationY += 1 / 60
-                    // testMesh.rotationZ += 1 / 60
+                    testMesh.rotationX += 1 / 160
+                    testMesh.rotationY += 1 / 160
+                    testMesh.rotationZ += 1 / 160
                 }
 
 
@@ -133,7 +152,7 @@
                 // tCamera.x = Math.sin(time / 1500) * 20
                 // tCamera.y = Math.cos(time / 1500) * 20
                 // tCamera.z = Math.cos(time / 1500) * 20 + Math.sin(time / 1500) * 20
-                tCamera.z = 20
+                tCamera.z = 10
                 tCamera.lookAt(0, 0, 0)
 
 
