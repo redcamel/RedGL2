@@ -54,13 +54,15 @@ var RedShader;
     parser = (function () {
         var parseData, checkList;
         var mergeStr;
+        
         return function (type, source) {
+            var samplerIndex = 1
             source = source.replace(/\s+$/, '')
             source = source.replace(/  /g, '').trim();
 
             console.log(source)
             parseData = {
-                func: {
+                etc: {
                     list: [],
                     map: {},
                     source: ''
@@ -121,6 +123,11 @@ var RedShader;
                     systemUniformYn: RedSystemShaderCode.systemUniform[tArrayNum ? tName + '[' + tArrayNum + ']' : tName] ? true : false
                 };
                 if (tType == 'uniform') tInputData['uniformType'] = tDataType
+                if (tDataType.indexOf('sampler')>-1) {
+                    tInputData['samplerIndex'] = samplerIndex
+                    samplerIndex++
+                    if (samplerIndex == 8) samplerIndex = 1
+                }
                 if (tType == 'attribute') tInputData['attributeType'] = tDataType
                 parseData[tType]['list'].push(tInputData);
                 parseData[tType]['map'][tName] = v;
@@ -135,12 +142,12 @@ var RedShader;
                 // console.log(v.split(' '))
                 var data = v.split(' ');
                 var tName = data[1].replace(/\([\s\S]+/g, '').trim()
-                parseData['func']['list'].push({
+                parseData['etc']['list'].push({
                     uniformType: data[0],
                     name: tName
                 })
-                parseData['func']['map'][tName] = v;
-                parseData['func']['source'] += v + '\n';
+                parseData['etc']['map'][tName] = v;
+                parseData['etc']['source'] += v + '\n';
             })
 
             mergeStr = '';
@@ -149,8 +156,8 @@ var RedShader;
             if (parseData['attribute']) mergeStr += parseData['attribute']['source'] + '\n//uniform\n';
             if (parseData['uniform']) mergeStr += parseData['uniform']['source'] + '\n//varying\n';
             if (parseData['varying']) mergeStr += parseData['varying']['source'] + '\n//var\n';
-            if (parseData['var']) mergeStr += parseData['var']['source'] + '\n//func\n';
-            if (parseData['func']) mergeStr += parseData['func']['source'];
+            if (parseData['var']) mergeStr += parseData['var']['source'] + '\n//etc\n';
+            if (parseData['etc']) mergeStr += parseData['etc']['source'];
             parseData.lastSource = mergeStr;
             console.log(parseData)
             return parseData;

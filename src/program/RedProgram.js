@@ -28,7 +28,7 @@ var RedProgram;
                     var t0 = new AttributeLocationInfo();
                     t0['_UUID'] = RedGL.makeUUID()
                     t0['location'] = gl.getAttribLocation(self['webglProgram'], v['name']);
-                    if (t0['location'] == -1){
+                    if (t0['location'] == -1) {
                         t0['msg'] = '쉐이더 main 함수에서 사용되고 있지 않음';
                     } else {
                         t0['attributeType'] = v['attributeType'];
@@ -57,6 +57,12 @@ var RedProgram;
                         case 'sampler2D':
                             tRenderType = 'sampler2D';
                             tRenderMethod = 'uniform1f';
+                            t0['samplerIndex'] = v['samplerIndex']
+                            break
+                        case 'samplerCube':
+                            tRenderType = 'samplerCube';
+                            tRenderMethod = 'uniform1f';
+                            t0['samplerIndex'] = v['samplerIndex']
                             break
                         case 'float':
                             tRenderType = 'float';
@@ -94,6 +100,7 @@ var RedProgram;
                     }
                     t0['renderType'] = tRenderType
                     t0['renderMethod'] = tRenderMethod
+
                     //
                     t0['name'] = v['name']
                     t0['materialPropertyName'] = v['name'].charAt(1).toLowerCase() + v['name'].substr(2)
