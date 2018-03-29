@@ -1,11 +1,5 @@
 [
   {
-    "title": "alpha",
-    "description": "alpha",
-    "example": "// TODO:",
-    "return": "number"
-  },
-  {
     "title": "color",
     "description": "\n    RedProgram Instance\n    직접설정하지 않도록 유의해야함!\n",
     "example": "// TODO:",

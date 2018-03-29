@@ -35,10 +35,12 @@
     <script src="src/material/RedColorMaterial.js"></script>
     <script src="src/material/RedEnvironmentMaterial.js"></script>
     <script src="src/material/RedBitmapMaterial.js"></script>
+    <script src="src/material/RedSkyBoxMaterial.js"></script>
     <script src="src/material/RedStandardMaterial.js"></script>
 
     <script src="src/object3D/RedMesh.js"></script>
     <script src="src/object3D/RedLine.js"></script>
+    <script src="src/object3D/RedSkyBox.js"></script>
 
     <script src="src/primitives/RedBox.js"></script>
     <script src="src/primitives/RedPlane.js"></script>
@@ -93,10 +95,22 @@
                     'asset/cubemap/negz.png'
                 ])
                 ,
-                RedBitmapTexture(this, 'asset/normalTest.jpg'),
-                RedBitmapTexture(this, 'asset/specular.png')
+                // RedBitmapTexture(this, 'asset/normalTest.jpg'),
+                // RedBitmapTexture(this, 'asset/specular.png')
             )
 
+
+
+            tScene3D.setSkyBox(
+                RedSkyBox(this, [
+                    'asset/cubemap/posx.png',
+                    'asset/cubemap/negx.png',
+                    'asset/cubemap/posy.png',
+                    'asset/cubemap/negy.png',
+                    'asset/cubemap/posz.png',
+                    'asset/cubemap/negz.png'
+                ])
+            )
             JsonModelLoader(this, 'testJsonModel', 'asset/teapot.json', function (interleaveBuffer, indexBuffer) {
                 console.log('호잇!', interleaveBuffer, indexBuffer)
                 var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer), testMaterial)
@@ -108,7 +122,7 @@
 
             var testDLight, testALight;
 
-            testDLight = RedDirectionalLight(this, '#0000ff')
+            testDLight = RedDirectionalLight(this, '#fff')
             testDLight.directionX = -3
             testDLight.directionY = -3
             testDLight.directionZ = -3
@@ -149,9 +163,9 @@
                 // testLight.y = Math.cos(time / 1500) * 10
                 testDLight.directionZ = Math.cos(time / 1500) * 10
 
-                // tCamera.x = Math.sin(time / 1500) * 20
-                // tCamera.y = Math.cos(time / 1500) * 20
-                // tCamera.z = Math.cos(time / 1500) * 20 + Math.sin(time / 1500) * 20
+                tCamera.x = Math.sin(time / 1500) * 20
+                tCamera.y = Math.cos(time / 1500) * 20
+                tCamera.z = Math.cos(time / 1500) * 20 + Math.sin(time / 1500) * 20
                 tCamera.z = 10
                 tCamera.lookAt(0, 0, 0)
 

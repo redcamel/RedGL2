@@ -18,21 +18,29 @@
     <script src="src/gl-matrix-min.js"></script>
     <script src="src/RedGLUtil.js"></script>
     <script src="src/RedGL.js"></script>
+
     <script src="src/base/RedBaseContainer.js"></script>
+    <script src="src/base/RedBaseLight.js"></script>
     <script src="src/base/RedBaseMaterial.js"></script>
     <script src="src/base/RedBaseObject3D.js"></script>
+
     <script src="src/geometry/RedBuffer.js"></script>
     <script src="src/geometry/RedGeometry.js"></script>
 
+    <script src="src/light/RedAmbientLight.js"></script>
+    <script src="src/light/RedDirectionalLight.js"></script>
     <script src="src/loader/JsonModelLoader.js"></script>
 
     <script src="src/material/RedMaterial.js"></script>
     <script src="src/material/RedColorMaterial.js"></script>
+    <script src="src/material/RedEnvironmentMaterial.js"></script>
     <script src="src/material/RedBitmapMaterial.js"></script>
+    <script src="src/material/RedSkyBoxMaterial.js"></script>
     <script src="src/material/RedStandardMaterial.js"></script>
 
     <script src="src/object3D/RedMesh.js"></script>
     <script src="src/object3D/RedLine.js"></script>
+    <script src="src/object3D/RedSkyBox.js"></script>
 
     <script src="src/primitives/RedBox.js"></script>
     <script src="src/primitives/RedPlane.js"></script>
@@ -40,8 +48,10 @@
     <script src="src/program/RedProgram.js"></script>
     <script src="src/program/RedSystemShaderCode.js"></script>
     <script src="src/program/RedShader.js"></script>
+
     <script src="src/renderer/RedRenderer.js"></script>
 
+    <script src="src/resources/RedBitmapCubeTexture.js"></script>
     <script src="src/resources/RedBitmapTexture.js"></script>
 
     <script src="src/RedView.js"></script>
@@ -84,7 +94,16 @@
             RedView('test4').setSize('50%', '50%')
             RedView('test4').setLocation('50%', '50%')
 
-
+            tScene3D.setSkyBox(
+                RedSkyBox(this, [
+                    'asset/cubemap/posx.png',
+                    'asset/cubemap/negx.png',
+                    'asset/cubemap/posy.png',
+                    'asset/cubemap/negy.png',
+                    'asset/cubemap/posz.png',
+                    'asset/cubemap/negz.png'
+                ])
+            )
 
             var testMaterial, testMaterial2, testMaterial3, testMaterial4, testMaterial5, testMaterial6,
                 testMaterial7, testMateria8
@@ -170,7 +189,7 @@
             geometry2 = RedGeometry(testInterleaveBuffer2, testIndexBuffer2)
 
             var testMesh
-            var i = 2000;
+            var i = 1000;
             var len = i
             var boxGeo = new RedBox(this)
             var planeGeo = new RedPlane(this)
