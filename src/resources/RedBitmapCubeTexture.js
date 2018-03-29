@@ -47,16 +47,18 @@ var RedBitmapCubeTexture;
                     clearEvents(this)
                     gl.activeTexture(gl.TEXTURE0)
                     gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
-                    imgList.forEach(function (image, index) {
+                    var i = imgList.length
+                    while(i--){
                         gl.texImage2D(
-                            gl.TEXTURE_CUBE_MAP_POSITIVE_X + index,
+                            gl.TEXTURE_CUBE_MAP_POSITIVE_X + i,
                             0,
                             gl.RGBA,
                             gl.RGBA,
                             gl.UNSIGNED_BYTE,
-                            image
+                            imgList[i]
                         );
-                    })
+                    }
+                  
                     gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
                     gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
                     gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);

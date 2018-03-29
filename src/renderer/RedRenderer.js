@@ -20,6 +20,7 @@ var RedRenderer;
         this['renderInfo'] = {}
         this['cacheUniformInfo'] = []
         this['cacheAttrInfo'] = []
+        this['cacheSamplerIndex'] = []
         this['cacheTextureInfo'] = []
         Object.seal(this)
         console.log(this)
@@ -370,6 +371,7 @@ var RedRenderer;
                     tScene['skyBox']['scaleX'] = tScene['skyBox']['scaleY'] =tScene['skyBox']['scaleZ'] = tCamera['farClipping']
                     self.sceneRender(gl, tCamera['orthographic'], [tScene['skyBox']], time, self['renderInfo'][tView['key']]);
                     gl.cullFace(gl.BACK)
+                    gl.clear(gl.DEPTH_BUFFER_BIT);
                 }
                 // 디버깅 라이트 업데이트 
                 self.sceneRender(gl, tCamera['orthographic'], lightDebugRenderList, time, self['renderInfo'][tView['key']]);
@@ -383,6 +385,7 @@ var RedRenderer;
         var draw;
         var tPrevIndexBuffer_UUID;
         var tPrevInterleaveBuffer_UUID;
+        var tPrevSamplerIndex;
         draw = function (
             gl,
             children,
@@ -391,6 +394,7 @@ var RedRenderer;
             renderResultObj,
             tCacheInterleaveBuffer,
             tCacheUniformInfo,
+            tCacheSamplerIndex,
             tCacheTextureInfo,
             parentMTX
         ) {
@@ -512,19 +516,19 @@ var RedRenderer;
                             if (tUniformValue) {
                                 // console.log(tUniformLocationInfo['materialPropertyName'],tUniformValue)  
                                 // console.log(tUniformLocationInfo)
-                                if (tCacheTextureInfo[tSamplerIndex] == tUniformValue['_UUID']) {
+                                if (tCacheSamplerIndex[tSamplerIndex] == tUniformValue['_UUID']) {
                                 } else {
                                     gl.activeTexture(gl.TEXTURE0 + tSamplerIndex)
                                     gl.bindTexture(tRenderType == 'sampler2D' ? gl.TEXTURE_2D : gl.TEXTURE_CUBE_MAP , tUniformValue['webglTexture'])
                                     gl.uniform1i(tWebGLUniformLocation, tSamplerIndex)
-                                    tCacheTextureInfo[tSamplerIndex] = tUniformValue['_UUID']
+                                    tCacheSamplerIndex[tSamplerIndex] = tUniformValue['_UUID']
                                     // console.log(tCacheTextureInfo)
                                 }
                             }else {
-                                if (tCacheTextureInfo[tSamplerIndex] == 0) {
+                                if (tCacheSamplerIndex[tSamplerIndex] == 0) {
                                 }else {
                                     gl.uniform1i(tWebGLUniformLocation, tSamplerIndex)
-                                    tCacheTextureInfo[tSamplerIndex] = 0
+                                    tCacheSamplerIndex[tSamplerIndex] = 0
                                 }
                             }
                         } else {
@@ -641,7 +645,7 @@ var RedRenderer;
                 /////////////////////////////////////////////////////////////////////////
                 /////////////////////////////////////////////////////////////////////////
                 // 노말매트릭스를 사용할경우
-                if (tSystemUniformGroup['uNMatrix']) {
+                if (tSystemUniformGroup['uNMatrix']['location']) {
                     //클론
                     // mat4Inverse
                     inverse_c = tMVMatrix[0], inverse_d = tMVMatrix[1], inverse_e = tMVMatrix[2], inverse_g = tMVMatrix[3],
@@ -713,7 +717,7 @@ var RedRenderer;
                         renderResultObj,
                         tCacheInterleaveBuffer,
                         tCacheUniformInfo,
-                        tCacheTextureInfo,
+                        tCacheSamplerIndex,
                         tMVMatrix
                     )
                 }
@@ -728,6 +732,7 @@ var RedRenderer;
                 renderResultObj,
                 this['cacheAttrInfo'],
                 this['cacheUniformInfo'],
+                this['cacheSamplerIndex'],
                 this['cacheTextureInfo']
             )
 

@@ -99,6 +99,7 @@ var RedEnvironmentMaterial;
                 vVertexPositionEye4 = uMVMatrix * vec4(aVertexPosition, 1.0);
                 vReflectionCubeCoord = -(uMVMatrix *vec4(aVertexPosition, 0.0)).xyz;
                 gl_Position = uPMatrix * uCameraMatrix* vVertexPositionEye4;
+                
             }
             */
         }
