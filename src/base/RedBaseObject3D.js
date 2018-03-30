@@ -15,9 +15,7 @@ var RedBaseObject3D;
     RedBaseObject3D = function () {
         RedGLUtil.throwFunc('RedBaseObject3D : 생성자/직접실행으로 사용 할 수 없습니다.')
     }
-    RedBaseObject3D.prototype = {
-        
-       
-    };
+    RedBaseObject3D.prototype = {};
+   
     Object.freeze(RedBaseObject3D);
 })();

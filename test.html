@@ -116,7 +116,15 @@
                 ])
             )
 
+            var testDLight;
 
+
+            testDLight = RedDirectionalLight(this, '#00ff00')
+            testDLight.directionX = 3
+            testDLight.directionY = 3
+            testDLight.directionZ = 3
+            tScene3D.addLight(testDLight)
+            
             JsonModelLoader(this, 'testJsonModel', 'asset/teapot.json', function (interleaveBuffer, indexBuffer) {
                 console.log('호잇!', interleaveBuffer, indexBuffer)
                 var i = 5000
@@ -129,14 +137,14 @@
                     testMesh.rotationX = Math.random() * 360
                     testMesh.rotationY = Math.random() * 360
                     testMesh.rotationZ = Math.random() * 360
-                  
+
                     tScene3D.addChild(testMesh)
                 }
                 var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer), testMaterial)
                 testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.1
                 tScene3D.addChild(testMesh)
 
-                i = 0
+                i = 100
                 while (i--) {
                     var testLine = new RedLine(self, new RedColorMaterial(self, i % 2 ? '#ff0000' : i % 3 ? '#00ff00' : '#0000ff', Math.random()))
 
@@ -184,9 +192,9 @@
                 i = tScene3D.children.length
                 while (i--) {
                     testMesh = tScene3D.children[i]
-                    testMesh.rotationX += 1 / 160
-                    testMesh.rotationY += 1 / 160
-                    testMesh.rotationZ += 1 / 160
+                    testMesh.rotationX += 1
+                    testMesh.rotationY += 1
+                    testMesh.rotationZ += 1
                 }
                 // testDLight.directionX = Math.sin(time / 500) * 10
                 // testLight.y = Math.cos(time / 1500) * 10

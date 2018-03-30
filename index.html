@@ -319,16 +319,16 @@
                 i = tScene3D.children.length
                 while (i--) {
                     testMesh = tScene3D.children[i]
-                    testMesh.rotationX += 1 / 60
-                    testMesh.rotationY += 1 / 60
-                    testMesh.rotationZ += 1 / 60
+                    testMesh.rotationX +=1
+                    testMesh.rotationY += 1
+                    testMesh.rotationZ +=1
                 }
                 i = tScene2D.children.length
                 while (i--) {
                     testMesh = tScene2D.children[i]
-                    testMesh.rotationX += 1 / 60
-                    testMesh.rotationY += 1 / 60
-                    testMesh.rotationZ += 1 / 60
+                    testMesh.rotationX += 1
+                    testMesh.rotationY += 1
+                    testMesh.rotationZ +=1
                 }
                 RedView('test2').setLocation(Math.cos(time / 1000) * 100 + 100, Math.sin(time / 1000) *
                     100 + 100)
