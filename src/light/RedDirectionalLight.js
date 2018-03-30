@@ -18,7 +18,7 @@ var RedDirectionalLight;
             writable: false,
             value: 'RedDirectionalLight'
         })
-        this['debugObject'] = RedMesh(redGL, RedBox(redGL), RedColorMaterial(redGL))
+        this['debugObject'] = RedMesh(redGL, RedBox(redGL,1,1,1), RedColorMaterial(redGL))
         this['debugObject']['drawMode'] = redGL.gl.LINE_STRIP
         console.log(this)
     }

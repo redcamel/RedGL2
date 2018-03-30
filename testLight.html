@@ -93,9 +93,9 @@
                     'asset/cubemap/negy.png',
                     'asset/cubemap/posz.png',
                     'asset/cubemap/negz.png'
-                ])
-                // RedBitmapTexture(this, 'asset/normalTest.jpg'),
-                // RedBitmapTexture(this, 'asset/specular.png')
+                ]),
+                RedBitmapTexture(this, 'asset/normalTest.jpg'),
+                RedBitmapTexture(this, 'asset/specular.png')
             )
 
 
@@ -113,8 +113,15 @@
             JsonModelLoader(this, 'testJsonModel', 'asset/teapot.json', function (interleaveBuffer, indexBuffer) {
                 console.log('호잇!', interleaveBuffer, indexBuffer)
                 var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer), testMaterial)
-                testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.1
-                tScene3D.addChild(testMesh)
+                testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.2
+                // var testMesh = RedMesh(self,RedPlane(self),testMaterial)
+                // testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 1
+                // testMesh.scaleY  = 
+
+
+              
+
+                    tScene3D.addChild(testMesh)
 
             })
 
@@ -152,10 +159,13 @@
                 i = tScene3D.children.length
                 while (i--) {
                     testMesh = tScene3D.children[i]
-                    testMesh.rotationX += 1 / 160
-                    testMesh.rotationY += 1 / 160
-                    testMesh.rotationZ += 1 / 160
+                    testMesh.rotationX += 1
+                    testMesh.rotationY += 1
+                    testMesh.rotationZ += 1
+                    // testMesh['drawMode'] = self.gl.POINTS
+               
                 }
+
 
 
                 testDLight.directionX = Math.sin(time / 1500) * 10
@@ -165,7 +175,7 @@
                 tCamera.x = Math.sin(time / 1500) * 20
                 tCamera.y = Math.cos(time / 1500) * 20
                 tCamera.z = Math.cos(time / 1500) * 20 + Math.sin(time / 1500) * 20
-                tCamera.z = 10
+                // tCamera.z = 20
                 tCamera.lookAt(0, 0, 0)
 
 

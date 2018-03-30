@@ -21,7 +21,6 @@ var RedRenderer;
         this['cacheUniformInfo'] = []
         this['cacheAttrInfo'] = []
         this['cacheSamplerIndex'] = []
-        this['cacheTextureInfo'] = []
         Object.seal(this)
         console.log(this)
     };
@@ -201,11 +200,16 @@ var RedRenderer;
                     while (i--) {
                         tLightData = tList[i];
                         tDebugObj = tLightData['debugObject'];
+                        
                         vec3.set(tVector, tLightData['directionX'], tLightData['directionY'], tLightData['directionZ'])
                         vec3.normalize(tVector, tVector)
+                        
                         tDebugObj['x'] = -tVector[0] * 5;
                         tDebugObj['y'] = -tVector[1] * 5;
                         tDebugObj['z'] = -tVector[2] * 5;
+                        
+                        tDebugObj['material']['color'] = tLightData['color']
+                      
                         lightDebugRenderList.push(tDebugObj)
                         //
                         tLocationInfo = tSystemUniformGroup['uDirectionalLightDirection'];
@@ -313,7 +317,7 @@ var RedRenderer;
                 viewRect[3] = tView['_height'];
                 tCamera = tView['camera'];
                 tScene = tView['scene']
-                tCamera['updateMatrix']()
+                // tCamera['updateMatrix']()
                 // 위치/크기의 % 여부를 파싱
                 valueParser(viewRect);
                 //
@@ -365,10 +369,10 @@ var RedRenderer;
 
                 }
                 updateSystemUniform(redGL, time, tScene, perspectiveMTX, tCamera['matrix'], viewRect)
-                
+
                 if (tScene['skyBox']) {
                     gl.cullFace(gl.FRONT)
-                    tScene['skyBox']['scaleX'] = tScene['skyBox']['scaleY'] =tScene['skyBox']['scaleZ'] = tCamera['farClipping']
+                    tScene['skyBox']['scaleX'] = tScene['skyBox']['scaleY'] = tScene['skyBox']['scaleZ'] = tCamera['farClipping']
                     self.sceneRender(gl, tCamera['orthographic'], [tScene['skyBox']], time, self['renderInfo'][tView['key']]);
                     gl.cullFace(gl.BACK)
                     gl.clear(gl.DEPTH_BUFFER_BIT);
@@ -395,8 +399,8 @@ var RedRenderer;
             tCacheInterleaveBuffer,
             tCacheUniformInfo,
             tCacheSamplerIndex,
-            tCacheTextureInfo,
             parentMTX
+
         ) {
             var tMesh;
             var k, i, i2;
@@ -404,6 +408,7 @@ var RedRenderer;
             var orthographicScale = orthographic ? -1 : 1
             //
             var BYTES_PER_ELEMENT;;
+            var CONVERT_RADIAN
             // 
             var tMesh;
             var tGeometry;
@@ -430,6 +435,7 @@ var RedRenderer;
             var SIN, COS, tRadian, CPI, CPI2, C225, C127, C045, C157;
             //////////////// 변수값 할당 ////////////////
             BYTES_PER_ELEMENT = Float32Array.BYTES_PER_ELEMENT;
+            CONVERT_RADIAN = Math.PI / 180
             CPI = 3.141592653589793,
                 CPI2 = 6.283185307179586,
                 C225 = 0.225,
@@ -509,7 +515,7 @@ var RedRenderer;
                         noChangeUniform = tCacheUniformInfo[tUUID] == tUniformValue;
                         // if (!noChange) console.log('변경되었다', tLocationInfo['name'], tCacheInfo[tUUID], tUniformValue)
                         // console.log(tCacheInfo)
-                        if (tRenderType == 'sampler2D'|| tRenderType == 'samplerCube') {
+                        if (tRenderType == 'sampler2D' || tRenderType == 'samplerCube') {
                             //TODO: 텍스쳐 인덱스는 내부적으로 먹어야하는 거였군...
                             tSamplerIndex = tUniformLocationInfo['samplerIndex']
                             // samplerIndex : 0 번은 생성용으로 쓴다.     
@@ -519,14 +525,14 @@ var RedRenderer;
                                 if (tCacheSamplerIndex[tSamplerIndex] == tUniformValue['_UUID']) {
                                 } else {
                                     gl.activeTexture(gl.TEXTURE0 + tSamplerIndex)
-                                    gl.bindTexture(tRenderType == 'sampler2D' ? gl.TEXTURE_2D : gl.TEXTURE_CUBE_MAP , tUniformValue['webglTexture'])
+                                    gl.bindTexture(tRenderType == 'sampler2D' ? gl.TEXTURE_2D : gl.TEXTURE_CUBE_MAP, tUniformValue['webglTexture'])
                                     gl.uniform1i(tWebGLUniformLocation, tSamplerIndex)
                                     tCacheSamplerIndex[tSamplerIndex] = tUniformValue['_UUID']
-                                    // console.log(tCacheTextureInfo)
+
                                 }
-                            }else {
+                            } else {
                                 if (tCacheSamplerIndex[tSamplerIndex] == 0) {
-                                }else {
+                                } else {
                                     gl.uniform1i(tWebGLUniformLocation, tSamplerIndex)
                                     tCacheSamplerIndex[tSamplerIndex] = 0
                                 }
@@ -560,7 +566,7 @@ var RedRenderer;
                     a[14] = a[2] * aX + a[6] * aY + a[10] * aZ + a[14],
                     a[15] = a[3] * aX + a[7] * aY + a[11] * aZ + a[15],
                     // tMVMatrix rotate
-                    tRx = tMesh['rotationX'], tRy = tMesh['rotationY'], tRz = tMesh['rotationZ'],
+                    tRx = tMesh['rotationX'] * CONVERT_RADIAN, tRy = tMesh['rotationY'] * CONVERT_RADIAN, tRz = tMesh['rotationZ'] * CONVERT_RADIAN,
                     /////////////////////////
                     tRadian = tRx % CPI2,
                     tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
@@ -732,8 +738,7 @@ var RedRenderer;
                 renderResultObj,
                 this['cacheAttrInfo'],
                 this['cacheUniformInfo'],
-                this['cacheSamplerIndex'],
-                this['cacheTextureInfo']
+                this['cacheSamplerIndex']
             )
 
         }
