@@ -82,7 +82,7 @@
 
 
 
-            var testMaterial
+            var testMaterial, testMaterial2
             testMaterial = RedEnvironmentMaterial(
                 this,
                 RedBitmapTexture(this, 'asset/crate.png'),
@@ -97,7 +97,10 @@
                 RedBitmapTexture(this, 'asset/normalTest.jpg'),
                 RedBitmapTexture(this, 'asset/specular.png')
             )
-
+            testMaterial2 = RedStandardMaterial(
+                this,
+                RedBitmapTexture(this, 'asset/alphaTest.png')
+            )
 
 
             tScene3D.setSkyBox(
@@ -117,11 +120,17 @@
                 // var testMesh = RedMesh(self,RedPlane(self),testMaterial)
                 // testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 1
                 // testMesh.scaleY  = 
-
-
-              
-
+                tScene3D.addChild(testMesh)
+                var i = 10
+                while (i--) {
+                    var testMesh = RedMesh(self, RedBox(self), testMaterial2)
+                    testMesh.x = Math.sin(Math.PI*2 / 10 * i ) * 5
+                    testMesh.y = Math.cos(Math.PI*2 / 10 * i ) * 5
                     tScene3D.addChild(testMesh)
+                }
+
+
+
 
             })
 
@@ -163,7 +172,8 @@
                     testMesh.rotationY += 1
                     testMesh.rotationZ += 1
                     // testMesh['drawMode'] = self.gl.POINTS
-               
+                    
+
                 }
 
 
