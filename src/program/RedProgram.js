@@ -2,7 +2,7 @@
 var RedProgram;
 (function () {
     var makeProgram, updateLocation;
-    var samplerIndex
+    var samplerIndex //TODO: 같은 이름으로 된 인덱스가 있을경우 기존 인덱스를 쓰도록 유도
     makeProgram = (function () {
         var program;
         return function (gl, key, vs, fs) {
@@ -42,7 +42,6 @@ var RedProgram;
                 })
             }
             if (shader['parseData']['uniform']) {
-               
                 shader['parseData']['uniform']['list'].forEach(function (v) {
                     var t0 = new UniformLocationInfo();
                     t0['_UUID'] = RedGL.makeUUID()
@@ -57,7 +56,7 @@ var RedProgram;
                     arrayNum = v['arrayNum']
                     switch (v['uniformType']) {
                         case 'sampler2D':
-                        //TODO: 인덱스를 고유 번호로 인식하도록 변경
+                            //TODO: 인덱스를 고유 번호로 인식하도록 변경
                             tRenderType = 'sampler2D';
                             tRenderMethod = 'uniform1f';
                             t0['samplerIndex'] = samplerIndex
