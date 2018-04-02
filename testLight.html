@@ -149,6 +149,33 @@
 
                 }
                 tScene3D['grid'] = RedGrid(self)
+
+                var testMesh = RedMesh(self, RedBox(self), RedColorMaterial(self,'#ff0000'))
+                testMesh2 = RedMesh(self, RedBox(self), RedColorMaterial(self,'#ff0000'))
+                testMesh2.scaleX = testMesh2.scaleY = testMesh2.scaleZ = 0.5
+                testMesh2.scaleX = 10
+                testMesh2.x = -5
+                testMesh.x = 5
+                testMesh.addChild(testMesh2)
+                tScene3D.addChild(testMesh)
+
+                var testMesh = RedMesh(self, RedBox(self), RedColorMaterial(self, '#00ff00'))
+                testMesh2 = RedMesh(self, RedBox(self), RedColorMaterial(self, '#00ff00'))
+                testMesh2.scaleX = testMesh2.scaleY = testMesh2.scaleZ = 0.5
+                testMesh2.scaleY = 10
+                testMesh2.y = -5
+                testMesh.y = 5
+                testMesh.addChild(testMesh2)
+                tScene3D.addChild(testMesh)
+
+                 var testMesh = RedMesh(self, RedBox(self), RedColorMaterial(self, '#0000ff'))
+                testMesh2 = RedMesh(self, RedBox(self), RedColorMaterial(self, '#0000ff'))
+                testMesh2.scaleX = testMesh2.scaleY = testMesh2.scaleZ = 0.5
+                testMesh2.scaleZ = 10
+                testMesh2.z = -5
+                testMesh.z = 5
+                testMesh.addChild(testMesh2)
+                tScene3D.addChild(testMesh)
             })
 
 
@@ -202,8 +229,8 @@
                 tCamera.z = Math.cos(time / 1500) * 30 + Math.sin(time / 1500) * 30
 
                 testMaterial['displacementPower'] = Math.sin(time / 100)
-                // tCamera.z = 1
-                // tCamera.y = 40
+                // tCamera.y = 10
+                // tCamera.z = 40
                 tCamera.lookAt(0, 0, 0)
 
 
