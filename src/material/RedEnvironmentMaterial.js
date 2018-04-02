@@ -3,14 +3,21 @@ var RedEnvironmentMaterial;
 (function () {
     var makeProgram;
 
-    RedEnvironmentMaterial = function (redGL, diffuseTexture, environmentTexture, normalTexture, specularTexture) {
-        if (!(this instanceof RedEnvironmentMaterial)) return new RedEnvironmentMaterial(redGL, diffuseTexture, environmentTexture, normalTexture, specularTexture);
+    RedEnvironmentMaterial = function (
+        redGL,
+        diffuseTexture,
+        environmentTexture,
+        normalTexture,
+        specularTexture,
+        displacementTexture
+    ) {
+        if (!(this instanceof RedEnvironmentMaterial)) return new RedEnvironmentMaterial(redGL, diffuseTexture, environmentTexture, normalTexture, specularTexture,displacementTexture);
         if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedEnvironmentMaterial : RedGL Instance만 허용됩니다.')
         if (!(diffuseTexture instanceof RedBitmapTexture)) RedGLUtil.throwFunc('RedEnvironmentMaterial : diffuseTexture - RedBitmapTexture Instance만 허용됩니다.')
         if (environmentTexture && !(environmentTexture instanceof RedBitmapCubeTexture)) RedGLUtil.throwFunc('RedEnvironmentMaterial : environmentTexture - RedBitmapCubeTexture Instance만 허용됩니다.')
         if (normalTexture && !(normalTexture instanceof RedBitmapTexture)) RedGLUtil.throwFunc('RedEnvironmentMaterial : normalTexture - RedBitmapTexture Instance만 허용됩니다.')
-        // if (reflectionTexture && !(reflectionTexture instanceof RedBitmapCubeTexture)) RedGLUtil.throwFunc('RedEnvironmentMaterial : reflectionTexture - RedBitmapCubeTexture Instance만 허용됩니다.')
         if (specularTexture && !(specularTexture instanceof RedBitmapTexture)) RedGLUtil.throwFunc('RedEnvironmentMaterial : specularTexture - RedBitmapTexture Instance만 허용됩니다.')
+        if (displacementTexture && !(displacementTexture instanceof RedBitmapTexture)) RedGLUtil.throwFunc('RedEnvironmentMaterial : displacementTexture - RedBitmapTexture Instance만 허용됩니다.')
         /////////////////////////////////////////
         // 유니폼 프로퍼티
         /**DOC:
@@ -58,6 +65,7 @@ var RedEnvironmentMaterial;
                 return : 'RedBitmapTexture'
             }
         :DOC*/
+        this['displacementTexture'] = displacementTexture;
         this['shininess'] = 16
         /**DOC:
             {
@@ -69,7 +77,7 @@ var RedEnvironmentMaterial;
         :DOC*/
         this['specularPower'] = 1
         this['reflectionPower'] = 1
-
+        this['displacementPower'] = 1
         /////////////////////////////////////////
         // 일반 프로퍼티
         /**DOC:
@@ -92,13 +100,20 @@ var RedEnvironmentMaterial;
             /*
             varying vec4 vVertexPositionEye4;
             varying vec3 vReflectionCubeCoord;
+            uniform sampler2D uDisplacementTexture;
+            uniform float uDisplacementPower;
 
             void main(void) {
                 vTexcoord = aTexcoord;
                 vVertexNormal = vec3(uNMatrix * vec4(aVertexNormal,1.0)); 
-                vVertexPositionEye4 = uMVMatrix * vec4(aVertexPosition, 1.0);
+                vVertexPositionEye4 = vec4(aVertexPosition, 1.0);
                 vReflectionCubeCoord = -(uMVMatrix *vec4(aVertexPosition, 0.0)).xyz;
-                gl_Position = uPMatrix * uCameraMatrix* vVertexPositionEye4;
+
+            
+                vVertexPositionEye4.xyz += normalize(vVertexNormal) * texture2D(uDisplacementTexture, vTexcoord).x * uDisplacementPower ;
+              
+
+                gl_Position = uPMatrix * uCameraMatrix * uMVMatrix * vVertexPositionEye4;
                 
             }
             */
