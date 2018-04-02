@@ -200,16 +200,16 @@ var RedRenderer;
                     while (i--) {
                         tLightData = tList[i];
                         tDebugObj = tLightData['debugObject'];
-                        
+
                         vec3.set(tVector, tLightData['directionX'], tLightData['directionY'], tLightData['directionZ'])
                         vec3.normalize(tVector, tVector)
-                        
+
                         tDebugObj['x'] = -tVector[0] * 5;
                         tDebugObj['y'] = -tVector[1] * 5;
                         tDebugObj['z'] = -tVector[2] * 5;
-                        
+
                         tDebugObj['material']['color'] = tLightData['color']
-                      
+
                         lightDebugRenderList.push(tDebugObj)
                         //
                         tLocationInfo = tSystemUniformGroup['uDirectionalLightDirection'];
@@ -373,14 +373,14 @@ var RedRenderer;
                 if (tScene['skyBox']) {
                     gl.cullFace(gl.FRONT)
                     tScene['skyBox']['scaleX'] = tScene['skyBox']['scaleY'] = tScene['skyBox']['scaleZ'] = tCamera['farClipping']
-                    self.sceneRender(gl, tCamera['orthographic'], [tScene['skyBox']], time, self['renderInfo'][tView['key']]);
+                    self.sceneRender(redGL, gl, tCamera['orthographic'], [tScene['skyBox']], time, self['renderInfo'][tView['key']]);
                     gl.cullFace(gl.BACK)
                     gl.clear(gl.DEPTH_BUFFER_BIT);
                 }
                 // 디버깅 라이트 업데이트 
-                self.sceneRender(gl, tCamera['orthographic'], lightDebugRenderList, time, self['renderInfo'][tView['key']]);
+                self.sceneRender(redGL, gl, tCamera['orthographic'], lightDebugRenderList, time, self['renderInfo'][tView['key']]);
                 // 씬렌더 호출
-                self.sceneRender(gl, tCamera['orthographic'], tScene['children'], time, self['renderInfo'][tView['key']]);
+                self.sceneRender(redGL, gl, tCamera['orthographic'], tScene['children'], time, self['renderInfo'][tView['key']]);
             })
         }
     })();
@@ -391,6 +391,7 @@ var RedRenderer;
         var tPrevInterleaveBuffer_UUID;
         var tPrevSamplerIndex;
         draw = function (
+            redGL,
             gl,
             children,
             orthographic,
@@ -531,11 +532,27 @@ var RedRenderer;
 
                                 }
                             } else {
-                                if (tCacheSamplerIndex[tSamplerIndex] == 0) {
+                                if (tRenderType == 'sampler2D') {
+                                    if (tCacheSamplerIndex[tSamplerIndex] == 0) {
+                                    } else {
+                                        // gl.uniform1i(tWebGLUniformLocation, tSamplerIndex)
+                                        // tCacheSamplerIndex[tSamplerIndex] = 0
+                                        gl.activeTexture(gl.TEXTURE0)
+                                        gl.bindTexture(gl.TEXTURE_2D, redGL['_datas']['emptyTexture']['2d']['webglTexture'])
+                                        gl.uniform1i(tWebGLUniformLocation, 0)
+                                        tCacheSamplerIndex[tSamplerIndex] = 0
+                                    }
                                 } else {
-                                    gl.uniform1i(tWebGLUniformLocation, tSamplerIndex)
-                                    tCacheSamplerIndex[tSamplerIndex] = 0
+                                    if (tCacheSamplerIndex[tSamplerIndex] == 1) {
+                                    } else {
+                                        gl.activeTexture(gl.TEXTURE0 + 1)
+                                        gl.bindTexture(gl.TEXTURE_CUBE_MAP, redGL['_datas']['emptyTexture']['3d']['webglTexture'])
+                                        gl.uniform1i(tWebGLUniformLocation, 1)
+                                        tCacheSamplerIndex[tSamplerIndex] = 1
+                                    }
                                 }
+
+
                             }
                         } else {
                             tUniformValue == undefined ? RedGLUtil.throwFunc('RedRenderer : Material에 ', tUniformLocationInfo['materialPropertyName'], '이 정의 되지않았습니다.') : 0;
@@ -716,6 +733,7 @@ var RedRenderer;
                 /////////////////////////////////////////////////////////////////////////
                 if (tMesh['children'].length) {
                     draw(
+                        redGL,
                         gl,
                         tMesh['children'],
                         orthographic,
@@ -729,8 +747,9 @@ var RedRenderer;
                 }
             }
         }
-        return function (gl, orthographic, children, time, renderResultObj) {
+        return function (redGL, gl, orthographic, children, time, renderResultObj) {
             draw(
+                redGL,
                 gl,
                 children,
                 orthographic,

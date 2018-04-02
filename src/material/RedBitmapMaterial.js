@@ -67,7 +67,9 @@ var RedBitmapMaterial;
             precision mediump float;
             uniform sampler2D uDiffuseTexture;
             void main(void) {
-                gl_FragColor = texture2D(uDiffuseTexture, vTexcoord);
+                vec4 texelColor = texture2D(uDiffuseTexture, vTexcoord);
+                texelColor.rgb *= texelColor.a;
+                gl_FragColor = texelColor;
             }
             */
         }
