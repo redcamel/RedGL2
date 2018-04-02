@@ -29,7 +29,10 @@ var RedBaseContainer;
         addChild: (function () {
             var t0;
             return function (child) {
-                if (!(child instanceof RedMesh)) RedGLUtil.throwFunc('addChild', 'RedMesh Instance만 가능');
+                if (
+                    !(child instanceof RedMesh)
+                    && !(child instanceof RedSprite3D)
+                ) RedGLUtil.throwFunc('addChild', 'RedMesh Instance만 가능');
                 t0 = this.children.indexOf(child);
                 if (t0 != -1) child = this.children.splice(t0, 1);
                 this.children.push(child);

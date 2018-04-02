@@ -41,6 +41,7 @@
     <script src="src/object3D/RedMesh.js"></script>
     <script src="src/object3D/RedLine.js"></script>
     <script src="src/object3D/RedSkyBox.js"></script>
+    <script src="src/object3D/RedSprite3D.js"></script>
 
     <script src="src/primitives/RedBox.js"></script>
     <script src="src/primitives/RedPlane.js"></script>
@@ -143,6 +144,15 @@
                 var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer), testMaterial)
                 testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.1
                 tScene3D.addChild(testMesh)
+
+                  var i = 10
+                while (i--) {
+                    var testMesh2 = RedSprite3D(self, RedBox(self), RedColorMaterial(self))
+                    testMesh2.x = Math.sin(Math.PI*2 / 10 * i ) * 5
+                    testMesh2.y = Math.cos(Math.PI*2 / 10 * i ) * 5
+                    // testMesh2.scaleX = testMesh2.scaleY = testMesh2.scaleZ =10
+                    tScene3D.addChild(testMesh2)
+                }
 
                 i = 100
                 while (i--) {
