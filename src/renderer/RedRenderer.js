@@ -527,30 +527,32 @@ var RedRenderer;
                                 // console.log(tUniformLocationInfo['materialPropertyName'],tUniformValue)  
                                 // console.log(tUniformLocationInfo)
                                 if (tCacheSamplerIndex[tSamplerIndex] == tUniformValue['_UUID']) {
+                                    // console.log('온다',tUniformLocationInfo['materialPropertyName'],tSamplerIndex,tSamplerIndex)
                                 } else {
+                                    // console.log('온다2',tUniformLocationInfo['materialPropertyName'],tSamplerIndex,tSamplerIndex)
                                     gl.activeTexture(gl.TEXTURE0 + tSamplerIndex)
                                     gl.bindTexture(tRenderType == 'sampler2D' ? gl.TEXTURE_2D : gl.TEXTURE_CUBE_MAP, tUniformValue['webglTexture'])
                                     gl.uniform1i(tWebGLUniformLocation, tSamplerIndex)
-                                    tCacheSamplerIndex[tSamplerIndex] = tUniformValue['_UUID']
-
                                 }
+                                tCacheSamplerIndex[tSamplerIndex] = tUniformValue['_UUID']
                             } else {
+                                // console.log('설마',tUniformLocationInfo['materialPropertyName'])
                                 if (tRenderType == 'sampler2D') {
                                     if (tCacheSamplerIndex[tSamplerIndex] == 0) {
                                     } else {
                                         gl.activeTexture(gl.TEXTURE0)
                                         gl.bindTexture(gl.TEXTURE_2D, redGL['_datas']['emptyTexture']['2d']['webglTexture'])
                                         gl.uniform1i(tWebGLUniformLocation, 0)
-                                        tCacheSamplerIndex[tSamplerIndex] = 0
                                     }
+                                    tCacheSamplerIndex[tSamplerIndex] = 0
                                 } else {
                                     if (tCacheSamplerIndex[tSamplerIndex] == 1) {
                                     } else {
                                         gl.activeTexture(gl.TEXTURE0 + 1)
                                         gl.bindTexture(gl.TEXTURE_CUBE_MAP, redGL['_datas']['emptyTexture']['3d']['webglTexture'])
                                         gl.uniform1i(tWebGLUniformLocation, 1)
-                                        tCacheSamplerIndex[tSamplerIndex] = 1
                                     }
+                                    tCacheSamplerIndex[tSamplerIndex] = 1
                                 }
 
 

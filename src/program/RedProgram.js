@@ -2,6 +2,7 @@
 var RedProgram;
 (function () {
     var makeProgram, updateLocation;
+    var samplerIndex
     makeProgram = (function () {
         var program;
         return function (gl, key, vs, fs) {
@@ -41,7 +42,7 @@ var RedProgram;
                 })
             }
             if (shader['parseData']['uniform']) {
-                var samplerIndex = 2
+               
                 shader['parseData']['uniform']['list'].forEach(function (v) {
                     var t0 = new UniformLocationInfo();
                     t0['_UUID'] = RedGL.makeUUID()
@@ -56,9 +57,9 @@ var RedProgram;
                     arrayNum = v['arrayNum']
                     switch (v['uniformType']) {
                         case 'sampler2D':
+                        //TODO: 인덱스를 고유 번호로 인식하도록 변경
                             tRenderType = 'sampler2D';
                             tRenderMethod = 'uniform1f';
-
                             t0['samplerIndex'] = samplerIndex
                             samplerIndex++
                             if (samplerIndex == 8) samplerIndex = 2
@@ -215,6 +216,7 @@ var RedProgram;
 
         // 쉐이더 로케이션 찾기
         tGL.useProgram(this['webglProgram'])
+        samplerIndex = 2
         updateLocation(this, tGL, vs);
         updateLocation(this, tGL, fs);
         this['_UUID'] = RedGL['makeUUID']();

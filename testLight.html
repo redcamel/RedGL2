@@ -96,7 +96,9 @@
                     'asset/cubemap/negz.png'
                 ]),
                 RedBitmapTexture(this, 'asset/normalTest.jpg'),
-                RedBitmapTexture(this, 'asset/specular.png')
+                RedBitmapTexture(this, 'asset/specular.png'),
+                RedBitmapTexture(this, 'asset/displacementTest.jpg')
+                
             )
             testMaterial2 = RedStandardMaterial(
                 this,
@@ -123,18 +125,26 @@
                 // testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 1
                 // testMesh.scaleY  = 
                 tScene3D.addChild(testMesh)
+                // var i = 10
+                // while (i--) {
+                //     var testMesh2 = RedSprite3D(self, RedBox(self), testMaterial2)
+                //     testMesh2.x = Math.sin(Math.PI * 2 / 10 * i) * 15
+                //     testMesh2.y = Math.cos(Math.PI * 2 / 10 * i) * 15
+                //     testMesh2.scaleX = testMesh2.scaleY = testMesh2.scaleZ = 10
+                //     testMesh.addChild(testMesh2)
+
+
+                // }
                 var i = 10
                 while (i--) {
-                    var testMesh2 = RedSprite3D(self, RedBox(self), testMaterial2)
-                    testMesh2.x = Math.sin(Math.PI * 2 / 10 * i) * 15
-                    testMesh2.y = Math.cos(Math.PI * 2 / 10 * i) * 15
-                    testMesh2.scaleX = testMesh2.scaleY = testMesh2.scaleZ = 10
-                    testMesh.addChild(testMesh2)
+                    var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer), testMaterial)
+                    // var testMesh = RedMesh(self, RedBox(self), testMaterial2)
+                    testMesh.x = Math.sin(Math.PI * 2 / 10 * i) * 8
+                    testMesh.z = Math.cos(Math.PI * 2 / 10 * i) * 8
+                    testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.1
+                    tScene3D.addChild(testMesh)
+
                 }
-
-
-
-
             })
 
 
@@ -171,11 +181,12 @@
                 i = tScene3D.children.length
                 while (i--) {
                     testMesh = tScene3D.children[i]
-                    testMesh.rotationX += 1
-                    testMesh.rotationY += 1
-                    testMesh.rotationZ += 1
+                    // testMesh.rotationX += 1
+                    // testMesh.rotationY += 1
+                    // testMesh.rotationZ += 1
                     // testMesh.lookAt(tCamera.x, tCamera.y, tCamera.z)
                     // testMesh['drawMode'] = self.gl.POINTS
+                    // testMesh.lookAt(tCamera.x,tCamera.y,tCamera.z)
                 }
 
                 testDLight.directionX = Math.sin(time / 1500) * 20
@@ -185,7 +196,10 @@
                 tCamera.x = Math.sin(time / 1500) * 30
                 tCamera.y = Math.cos(time / 1500) * 30
                 tCamera.z = Math.cos(time / 1500) * 30 + Math.sin(time / 1500) * 30
-                // tCamera.z = 20
+
+                testMaterial['displacementPower'] = Math.sin(time/100) 
+                // tCamera.z = 1
+                // tCamera.y = 40
                 tCamera.lookAt(0, 0, 0)
 
 
