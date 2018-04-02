@@ -91,9 +91,10 @@ var RedRenderer;
     :DOC*/
     // 캐시관련
     var prevProgram_UUID;
+    var tCamera
     RedRenderer.prototype.worldRender = (function () {
         var worldRect, viewRect;
-        var tCamera, tScene;
+        var tScene;
         var perspectiveMTX;
         var self;
         var valueParser;
@@ -154,6 +155,7 @@ var RedRenderer;
                         gl.uniformMatrix4fv(tLocation, false, cameraMTX);
                         cacheSystemUniform[tUUID] = cameraMTX.toString()
                     }
+
                     //
                     tLocationInfo = tSystemUniformGroup['uPMatrix'];
                     tLocation = tLocationInfo['location'];
@@ -200,16 +202,16 @@ var RedRenderer;
                     while (i--) {
                         tLightData = tList[i];
                         tDebugObj = tLightData['debugObject'];
-                        
+
                         vec3.set(tVector, tLightData['directionX'], tLightData['directionY'], tLightData['directionZ'])
                         vec3.normalize(tVector, tVector)
-                        
+
                         tDebugObj['x'] = -tVector[0] * 5;
                         tDebugObj['y'] = -tVector[1] * 5;
                         tDebugObj['z'] = -tVector[2] * 5;
-                        
+
                         tDebugObj['material']['color'] = tLightData['color']
-                      
+
                         lightDebugRenderList.push(tDebugObj)
                         //
                         tLocationInfo = tSystemUniformGroup['uDirectionalLightDirection'];
@@ -373,14 +375,14 @@ var RedRenderer;
                 if (tScene['skyBox']) {
                     gl.cullFace(gl.FRONT)
                     tScene['skyBox']['scaleX'] = tScene['skyBox']['scaleY'] = tScene['skyBox']['scaleZ'] = tCamera['farClipping']
-                    self.sceneRender(gl, tCamera['orthographic'], [tScene['skyBox']], time, self['renderInfo'][tView['key']]);
+                    self.sceneRender(redGL, gl, tCamera['orthographic'], [tScene['skyBox']], time, self['renderInfo'][tView['key']]);
                     gl.cullFace(gl.BACK)
                     gl.clear(gl.DEPTH_BUFFER_BIT);
                 }
                 // 디버깅 라이트 업데이트 
-                self.sceneRender(gl, tCamera['orthographic'], lightDebugRenderList, time, self['renderInfo'][tView['key']]);
+                self.sceneRender(redGL, gl, tCamera['orthographic'], lightDebugRenderList, time, self['renderInfo'][tView['key']]);
                 // 씬렌더 호출
-                self.sceneRender(gl, tCamera['orthographic'], tScene['children'], time, self['renderInfo'][tView['key']]);
+                self.sceneRender(redGL, gl, tCamera['orthographic'], tScene['children'], time, self['renderInfo'][tView['key']]);
             })
         }
     })();
@@ -391,6 +393,7 @@ var RedRenderer;
         var tPrevInterleaveBuffer_UUID;
         var tPrevSamplerIndex;
         draw = function (
+            redGL,
             gl,
             children,
             orthographic,
@@ -431,6 +434,7 @@ var RedRenderer;
                 b00, b01, b02, b10, b11, b12, b20, b21, b22,
                 aX, aY, aZ,
                 inverse_c, inverse_d, inverse_e, inverse_g, inverse_f, inverse_h, inverse_i, inverse_j, inverse_k, inverse_l, inverse_n, inverse_o, inverse_A, inverse_m, inverse_p, inverse_r, inverse_s, inverse_B, inverse_t, inverse_u, inverse_v, inverse_w, inverse_x, inverse_y, inverse_z, inverse_C, inverse_D, inverse_E, inverse_q;
+            var eyex, eyey, eyez, upx, upy, upz, z0, z1, z2, targetToLength, x0, x1, x2
             // sin,cos 관련
             var SIN, COS, tRadian, CPI, CPI2, C225, C127, C045, C157;
             //////////////// 변수값 할당 ////////////////
@@ -518,7 +522,7 @@ var RedRenderer;
                         if (tRenderType == 'sampler2D' || tRenderType == 'samplerCube') {
                             //TODO: 텍스쳐 인덱스는 내부적으로 먹어야하는 거였군...
                             tSamplerIndex = tUniformLocationInfo['samplerIndex']
-                            // samplerIndex : 0 번은 생성용으로 쓴다.     
+                            // samplerIndex : 0,1 번은 생성용으로 쓴다.     
                             if (tUniformValue) {
                                 // console.log(tUniformLocationInfo['materialPropertyName'],tUniformValue)  
                                 // console.log(tUniformLocationInfo)
@@ -531,11 +535,25 @@ var RedRenderer;
 
                                 }
                             } else {
-                                if (tCacheSamplerIndex[tSamplerIndex] == 0) {
+                                if (tRenderType == 'sampler2D') {
+                                    if (tCacheSamplerIndex[tSamplerIndex] == 0) {
+                                    } else {
+                                        gl.activeTexture(gl.TEXTURE0)
+                                        gl.bindTexture(gl.TEXTURE_2D, redGL['_datas']['emptyTexture']['2d']['webglTexture'])
+                                        gl.uniform1i(tWebGLUniformLocation, 0)
+                                        tCacheSamplerIndex[tSamplerIndex] = 0
+                                    }
                                 } else {
-                                    gl.uniform1i(tWebGLUniformLocation, tSamplerIndex)
-                                    tCacheSamplerIndex[tSamplerIndex] = 0
+                                    if (tCacheSamplerIndex[tSamplerIndex] == 1) {
+                                    } else {
+                                        gl.activeTexture(gl.TEXTURE0 + 1)
+                                        gl.bindTexture(gl.TEXTURE_CUBE_MAP, redGL['_datas']['emptyTexture']['3d']['webglTexture'])
+                                        gl.uniform1i(tWebGLUniformLocation, 1)
+                                        tCacheSamplerIndex[tSamplerIndex] = 1
+                                    }
                                 }
+
+
                             }
                         } else {
                             tUniformValue == undefined ? RedGLUtil.throwFunc('RedRenderer : Material에 ', tUniformLocationInfo['materialPropertyName'], '이 정의 되지않았습니다.') : 0;
@@ -607,12 +625,15 @@ var RedRenderer;
                     a[0] = a00 * b00 + a10 * b01 + a20 * b02, a[1] = a01 * b00 + a11 * b01 + a21 * b02, a[2] = a02 * b00 + a12 * b01 + a22 * b02,
                     a[4] = a00 * b10 + a10 * b11 + a20 * b12, a[5] = a01 * b10 + a11 * b11 + a21 * b12, a[6] = a02 * b10 + a12 * b11 + a22 * b12,
                     a[8] = a00 * b20 + a10 * b21 + a20 * b22, a[9] = a01 * b20 + a11 * b21 + a21 * b22, a[10] = a02 * b20 + a12 * b21 + a22 * b22,
+
+
                     // tMVMatrix scale
                     aX = tMesh['scaleX'], aY = tMesh['scaleY'] * orthographicScale, aZ = tMesh['scaleZ'],
                     a[0] = a[0] * aX, a[1] = a[1] * aX, a[2] = a[2] * aX, a[3] = a[3] * aX,
                     a[4] = a[4] * aY, a[5] = a[5] * aY, a[6] = a[6] * aY, a[7] = a[7] * aY,
                     a[8] = a[8] * aZ, a[9] = a[9] * aZ, a[10] = a[10] * aZ, a[11] = a[11] * aZ,
                     a[12] = a[12], a[13] = a[13], a[14] = a[14], a[15] = a[15],
+
                     // 부모가있으면 곱함
                     parentMTX ? (
                         // 부모매트릭스 복사
@@ -642,10 +663,50 @@ var RedRenderer;
                         tMVMatrix[13] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
                         tMVMatrix[14] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
                         tMVMatrix[15] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33
-                    ) : 0,
 
+                    ) : 0
+
+
+                // Sprite3D 처리
+                tMesh instanceof RedSprite3D ? (
+                    // mat4.targetTo(tMVMatrix, [tMVMatrix[12],tMVMatrix[13],tMVMatrix[14]], [tCamera.x, tCamera.y, tCamera.z], [0, 1, 0])
+                    eyex = tMVMatrix[12], eyey = tMVMatrix[13], eyez = tMVMatrix[14],
+                    upx = 0, upy = 1, upz = 0,
+
+                    z0 = eyex - tCamera['x'], z1 = eyey - tCamera['y'], z2 = eyez - tCamera['z'],
+                    targetToLength = z0 * z0 + z1 * z1 + z2 * z2,
+                    targetToLength > 0 ? (
+                        targetToLength = 1 / Math.sqrt(targetToLength),
+                        z0 *= targetToLength, z1 *= targetToLength, z2 *= targetToLength
+                    ) : 0,
+                    x0 = upy * z2 - upz * z1,
+                    x1 = upz * z0 - upx * z2,
+                    x2 = upx * z1 - upy * z0,
+
+                    // scale캐싱
+                    aX = Math.sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]),
+                    aY = Math.sqrt(a[4] * a[4] + a[5] * a[5] + a[6] * a[6]),
+                    aZ = Math.sqrt(a[8] * a[8] + a[9] * a[9] + a[10] * a[10]),
+
+                    // 카메라 바라보게 설정
+                    tMVMatrix[0] = x0, tMVMatrix[1] = x1, tMVMatrix[2] = x2, tMVMatrix[3] = 0,
+                    tMVMatrix[4] = z1 * x2 - z2 * x1, tMVMatrix[5] = z2 * x0 - z0 * x2, tMVMatrix[6] = z0 * x1 - z1 * x0, tMVMatrix[7] = 0,
+                    tMVMatrix[8] = z0, tMVMatrix[9] = z1, tMVMatrix[10] = z2, tMVMatrix[11] = 0,
+                    tMVMatrix[12] = eyex, tMVMatrix[13] = eyey, tMVMatrix[14] = eyez, tMVMatrix[15] = 1,
+
+                    // 스케일적용
+                    a[0] = a[0] * aX, a[1] = a[1] * aX, a[2] = a[2] * aX, a[3] = a[3] * aX,
+                    a[4] = a[4] * aY, a[5] = a[5] * aY, a[6] = a[6] * aY, a[7] = a[7] * aY,
+                    a[8] = a[8] * aZ, a[9] = a[9] * aZ, a[10] = a[10] * aZ, a[11] = a[11] * aZ,
+                    a[12] = a[12], a[13] = a[13], a[14] = a[14], a[15] = a[15]
+
+
+                ) : 0,
                     /////////////////////////////////////////////////////////////////////////
                     /////////////////////////////////////////////////////////////////////////
+
+
+
                     gl.uniformMatrix4fv(tSystemUniformGroup['uMVMatrix']['location'], false, tMVMatrix)
 
                 /////////////////////////////////////////////////////////////////////////
@@ -716,6 +777,7 @@ var RedRenderer;
                 /////////////////////////////////////////////////////////////////////////
                 if (tMesh['children'].length) {
                     draw(
+                        redGL,
                         gl,
                         tMesh['children'],
                         orthographic,
@@ -729,8 +791,9 @@ var RedRenderer;
                 }
             }
         }
-        return function (gl, orthographic, children, time, renderResultObj) {
+        return function (redGL, gl, orthographic, children, time, renderResultObj) {
             draw(
+                redGL,
                 gl,
                 children,
                 orthographic,

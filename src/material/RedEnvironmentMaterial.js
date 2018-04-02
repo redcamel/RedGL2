@@ -40,7 +40,7 @@ var RedEnvironmentMaterial;
             }
         :DOC*/
         this['normalTexture'] = normalTexture;
-   
+
         /**DOC:
             {
                 title :`specularTexture`,
@@ -69,7 +69,7 @@ var RedEnvironmentMaterial;
         :DOC*/
         this['specularPower'] = 1
         this['reflectionPower'] = 1
-        
+
         /////////////////////////////////////////
         // 일반 프로퍼티
         /**DOC:
@@ -125,13 +125,15 @@ var RedEnvironmentMaterial;
                 vec4 ls = vec4(0.0, 0.0, 0.0, 1.0);
 
                 vec4 texelColor = texture2D(uDiffuseTexture, vTexcoord);
+                texelColor.rgb *= texelColor.a;
+                if(texelColor.a == 0.0) discard;
 
                 vec3 N = normalize(vVertexNormal);
-                N = normalize(2.0 * (N + texture2D(uNormalTexture, vTexcoord).rgb  - 0.5));
+                vec4 normalColor = texture2D(uNormalTexture, vTexcoord);
+                N = normalize(2.0 * (N + normalColor.rgb - 0.5));
 
                 vec4 reflectionColor = textureCube(uEnvironmentTexture, 2.0 * dot(vReflectionCubeCoord,vVertexNormal) * vVertexNormal - vReflectionCubeCoord);
                 texelColor = texelColor * (1.0 - uReflectionPower) + reflectionColor * uReflectionPower;
-
 
                 vec4 specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);
                 float specularTextureValue = 1.0;

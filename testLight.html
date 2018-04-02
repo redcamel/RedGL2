@@ -41,6 +41,7 @@
     <script src="src/object3D/RedMesh.js"></script>
     <script src="src/object3D/RedLine.js"></script>
     <script src="src/object3D/RedSkyBox.js"></script>
+    <script src="src/object3D/RedSprite3D.js"></script>
 
     <script src="src/primitives/RedBox.js"></script>
     <script src="src/primitives/RedPlane.js"></script>
@@ -116,17 +117,19 @@
             JsonModelLoader(this, 'testJsonModel', 'asset/teapot.json', function (interleaveBuffer, indexBuffer) {
                 console.log('호잇!', interleaveBuffer, indexBuffer)
                 var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer), testMaterial)
-                testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.2
+                // var testMesh = RedMesh(self, RedBox(self), testMaterial)
+                testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.5
                 // var testMesh = RedMesh(self,RedPlane(self),testMaterial)
                 // testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 1
                 // testMesh.scaleY  = 
                 tScene3D.addChild(testMesh)
                 var i = 10
                 while (i--) {
-                    var testMesh = RedMesh(self, RedBox(self), testMaterial2)
-                    testMesh.x = Math.sin(Math.PI*2 / 10 * i ) * 5
-                    testMesh.y = Math.cos(Math.PI*2 / 10 * i ) * 5
-                    tScene3D.addChild(testMesh)
+                    var testMesh2 = RedSprite3D(self, RedBox(self), testMaterial2)
+                    testMesh2.x = Math.sin(Math.PI * 2 / 10 * i) * 15
+                    testMesh2.y = Math.cos(Math.PI * 2 / 10 * i) * 15
+                    testMesh2.scaleX = testMesh2.scaleY = testMesh2.scaleZ = 10
+                    testMesh.addChild(testMesh2)
                 }
 
 
@@ -171,20 +174,17 @@
                     testMesh.rotationX += 1
                     testMesh.rotationY += 1
                     testMesh.rotationZ += 1
+                    // testMesh.lookAt(tCamera.x, tCamera.y, tCamera.z)
                     // testMesh['drawMode'] = self.gl.POINTS
-                    
-
                 }
 
-
-
-                testDLight.directionX = Math.sin(time / 1500) * 10
+                testDLight.directionX = Math.sin(time / 1500) * 20
                 // testLight.y = Math.cos(time / 1500) * 10
-                testDLight.directionZ = Math.cos(time / 1500) * 10
+                testDLight.directionZ = Math.cos(time / 1500) * 20
 
-                tCamera.x = Math.sin(time / 1500) * 20
-                tCamera.y = Math.cos(time / 1500) * 20
-                tCamera.z = Math.cos(time / 1500) * 20 + Math.sin(time / 1500) * 20
+                tCamera.x = Math.sin(time / 1500) * 30
+                tCamera.y = Math.cos(time / 1500) * 30
+                tCamera.z = Math.cos(time / 1500) * 30 + Math.sin(time / 1500) * 30
                 // tCamera.z = 20
                 tCamera.lookAt(0, 0, 0)
 

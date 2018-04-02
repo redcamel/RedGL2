@@ -97,10 +97,13 @@ var RedStandardMaterial;
             varying vec4 vVertexPositionEye4;
             
             void main(void) {
-                vec4 texelColor = texture2D(uDiffuseTexture, vTexcoord);
                 vec4 la = uAmbientLightColor * uAmbientLightColor.a;
                 vec4 ld = vec4(0.0, 0.0, 0.0, 1.0);
                 vec4 ls = vec4(0.0, 0.0, 0.0, 1.0);
+
+                vec4 texelColor = texture2D(uDiffuseTexture, vTexcoord);
+                texelColor.rgb *= texelColor.a;
+                if(texelColor.a == 0.0) discard;
 
                 vec3 N = normalize(vVertexNormal);
                 N = normalize(2.0 * (N + texture2D(uNormalTexture, vTexcoord).rgb  - 0.5));

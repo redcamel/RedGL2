@@ -41,6 +41,7 @@ var RedProgram;
                 })
             }
             if (shader['parseData']['uniform']) {
+                var samplerIndex = 2
                 shader['parseData']['uniform']['list'].forEach(function (v) {
                     var t0 = new UniformLocationInfo();
                     t0['_UUID'] = RedGL.makeUUID()
@@ -57,12 +58,18 @@ var RedProgram;
                         case 'sampler2D':
                             tRenderType = 'sampler2D';
                             tRenderMethod = 'uniform1f';
-                            t0['samplerIndex'] = v['samplerIndex']
+
+                            t0['samplerIndex'] = samplerIndex
+                            samplerIndex++
+                            if (samplerIndex == 8) samplerIndex = 2
+
                             break
                         case 'samplerCube':
                             tRenderType = 'samplerCube';
                             tRenderMethod = 'uniform1f';
-                            t0['samplerIndex'] = v['samplerIndex']
+                            t0['samplerIndex'] = samplerIndex
+                            samplerIndex++
+                            if (samplerIndex == 8) samplerIndex = 2
                             break
                         case 'float':
                             tRenderType = 'float';

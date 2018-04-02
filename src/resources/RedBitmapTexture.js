@@ -29,7 +29,7 @@ var RedBitmapTexture;
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
         gl.generateMipmap(gl.TEXTURE_2D);
         gl.pixelStorei(gl.UNPACK_ALIGNMENT, 4);
-        gl.bindTexture(gl.TEXTURE_2D, null);
+        // gl.bindTexture(gl.TEXTURE_2D, null);
     }
     loadTexture = (function () {
         return function (gl, texture, src) {
@@ -57,7 +57,7 @@ var RedBitmapTexture;
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
                 gl.generateMipmap(gl.TEXTURE_2D)
-                gl.bindTexture(gl.TEXTURE_2D, null);
+                // gl.bindTexture(gl.TEXTURE_2D, null);
             }
 
             var img;
@@ -101,6 +101,15 @@ var RedBitmapTexture;
         gl = redGL.gl;
         this['webglTexture'] = gl.createTexture();
         this['_UUID'] = RedGL['makeUUID']();
+        
+        if(redGL['_datas']['emptyTexture']){
+            //TODO: 이거 렌더러쪽으로 옮겨야함
+            
+            gl.activeTexture(gl.TEXTURE0)
+            gl.bindTexture(gl.TEXTURE_2D, redGL['_datas']['emptyTexture']['2d']['webglTexture'])
+            gl.uniform1i(tWebGLUniformLocation, 0)
+        }        
+
         loadTexture(gl, this['webglTexture'], src);
         Object.seal(this);
         console.log(this)

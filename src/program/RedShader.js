@@ -56,7 +56,6 @@ var RedShader;
         var mergeStr;
         
         return function (type, source) {
-            var samplerIndex = 1
             source = source.replace(/\s+$/, '')
             source = source.replace(/  /g, '').trim();
 
@@ -123,11 +122,7 @@ var RedShader;
                     systemUniformYn: RedSystemShaderCode.systemUniform[tArrayNum ? tName + '[' + tArrayNum + ']' : tName] ? true : false
                 };
                 if (tType == 'uniform') tInputData['uniformType'] = tDataType
-                if (tDataType.indexOf('sampler')>-1) {
-                    tInputData['samplerIndex'] = samplerIndex
-                    samplerIndex++
-                    if (samplerIndex == 8) samplerIndex = 1
-                }
+               
                 if (tType == 'attribute') tInputData['attributeType'] = tDataType
                 parseData[tType]['list'].push(tInputData);
                 parseData[tType]['map'][tName] = v;

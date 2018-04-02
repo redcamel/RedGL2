@@ -24,7 +24,7 @@ var RedBitmapCubeTexture;
         gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
         gl.bindTexture(gl.TEXTURE_CUBE_MAP, null);
-        // gl.bindTexture(gl.TEXTURE_2D, null);
+        gl.bindTexture(gl.TEXTURE_2D, null);
     }
     loadTexture = (function () {
         return function (gl, texture, srcList) {
@@ -48,7 +48,7 @@ var RedBitmapCubeTexture;
                     gl.activeTexture(gl.TEXTURE0)
                     gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
                     var i = imgList.length
-                    while(i--){
+                    while (i--) {
                         gl.texImage2D(
                             gl.TEXTURE_CUBE_MAP_POSITIVE_X + i,
                             0,
@@ -114,6 +114,14 @@ var RedBitmapCubeTexture;
         gl = redGL.gl;
         this['webglTexture'] = gl.createTexture();
         this['_UUID'] = RedGL['makeUUID']();
+
+        if (redGL['_datas']['emptyTexture']) {
+            //TODO: 이거 렌더러쪽으로 옮겨야함
+            gl.activeTexture(gl.TEXTURE0 + 1)
+            gl.bindTexture(gl.TEXTURE_CUBE_MAP, redGL['_datas']['emptyTexture']['3d']['webglTexture'])
+            gl.uniform1i(tWebGLUniformLocation, 1)
+        }
+
         loadTexture(gl, this['webglTexture'], srcList);
         Object.seal(this);
         console.log(this)
