@@ -34,10 +34,13 @@
     <script src="src/material/RedMaterial.js"></script>
     <script src="src/material/RedColorMaterial.js"></script>
     <script src="src/material/RedEnvironmentMaterial.js"></script>
+    <script src="src/material/RedGridMaterial.js"></script>
     <script src="src/material/RedBitmapMaterial.js"></script>
     <script src="src/material/RedSkyBoxMaterial.js"></script>
     <script src="src/material/RedStandardMaterial.js"></script>
 
+
+    <script src="src/object3D/RedGrid.js"></script>
     <script src="src/object3D/RedMesh.js"></script>
     <script src="src/object3D/RedLine.js"></script>
     <script src="src/object3D/RedSkyBox.js"></script>
@@ -98,7 +101,7 @@
                 RedBitmapTexture(this, 'asset/normalTest.jpg'),
                 RedBitmapTexture(this, 'asset/specular.png'),
                 RedBitmapTexture(this, 'asset/displacementTest.jpg')
-                
+
             )
             testMaterial2 = RedStandardMaterial(
                 this,
@@ -145,6 +148,7 @@
                     tScene3D.addChild(testMesh)
 
                 }
+                tScene3D['grid'] = RedGrid(self)
             })
 
 
@@ -197,7 +201,7 @@
                 tCamera.y = Math.cos(time / 1500) * 30
                 tCamera.z = Math.cos(time / 1500) * 30 + Math.sin(time / 1500) * 30
 
-                testMaterial['displacementPower'] = Math.sin(time/100) 
+                testMaterial['displacementPower'] = Math.sin(time / 100)
                 // tCamera.z = 1
                 // tCamera.y = 40
                 tCamera.lookAt(0, 0, 0)

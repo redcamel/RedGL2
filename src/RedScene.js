@@ -43,8 +43,9 @@ var RedScene;
             RedOmniLight: []
         }
         this['skyBox'] = null;
+        this['grid'] = null
         this['_UUID'] = RedGL['makeUUID']();
-        Object.seal(this)
+        // Object.seal(this)
     };
     RedScene.prototype = {
         addLight: function (v) {

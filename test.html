@@ -34,14 +34,18 @@
     <script src="src/material/RedMaterial.js"></script>
     <script src="src/material/RedColorMaterial.js"></script>
     <script src="src/material/RedEnvironmentMaterial.js"></script>
+    <script src="src/material/RedGridMaterial.js"></script>
     <script src="src/material/RedBitmapMaterial.js"></script>
     <script src="src/material/RedSkyBoxMaterial.js"></script>
     <script src="src/material/RedStandardMaterial.js"></script>
 
+
+    <script src="src/object3D/RedGrid.js"></script>
     <script src="src/object3D/RedMesh.js"></script>
     <script src="src/object3D/RedLine.js"></script>
     <script src="src/object3D/RedSkyBox.js"></script>
     <script src="src/object3D/RedSprite3D.js"></script>
+
 
     <script src="src/primitives/RedBox.js"></script>
     <script src="src/primitives/RedPlane.js"></script>
@@ -154,7 +158,7 @@
                     // testMesh2.scaleX = testMesh2.scaleY = testMesh2.scaleZ =10
                     tScene3D.addChild(testMesh2)
                 }
-
+                tScene3D['grid'] = RedGrid(self)
                 i = 0
                 while (i--) {
                     var testLine = new RedLine(self, new RedColorMaterial(self, i % 2 ? '#ff0000' : i % 3 ? '#00ff00' : '#0000ff', Math.random()))

@@ -34,14 +34,18 @@
     <script src="src/material/RedMaterial.js"></script>
     <script src="src/material/RedColorMaterial.js"></script>
     <script src="src/material/RedEnvironmentMaterial.js"></script>
+    <script src="src/material/RedGridMaterial.js"></script>
     <script src="src/material/RedBitmapMaterial.js"></script>
     <script src="src/material/RedSkyBoxMaterial.js"></script>
     <script src="src/material/RedStandardMaterial.js"></script>
 
+
+    <script src="src/object3D/RedGrid.js"></script>
     <script src="src/object3D/RedMesh.js"></script>
     <script src="src/object3D/RedLine.js"></script>
     <script src="src/object3D/RedSkyBox.js"></script>
     <script src="src/object3D/RedSprite3D.js"></script>
+
 
     <script src="src/primitives/RedBox.js"></script>
     <script src="src/primitives/RedPlane.js"></script>
@@ -194,6 +198,7 @@
             var len = i
             var boxGeo = new RedBox(this)
             var planeGeo = new RedPlane(this)
+            tScene3D['grid'] = RedGrid(self)
             while (i--) {
                 var t
                 if (i > len / 8 * 7) testMesh = RedMesh(this, geometry, testMaterial)
@@ -223,13 +228,13 @@
 
             }
             var i = 10
-                while (i--) {
-                    var testMesh2 = RedSprite3D(self, RedBox(self), testMaterial2)
-                    testMesh2.x = Math.sin(Math.PI*2 / 10 * i ) * 15
-                    testMesh2.y = Math.cos(Math.PI*2 / 10 * i ) * 15
-                    // testMesh2.scaleX = testMesh2.scaleY = testMesh2.scaleZ =10
-                    testMesh.addChild(testMesh2)
-                }
+            while (i--) {
+                var testMesh2 = RedSprite3D(self, RedBox(self), testMaterial2)
+                testMesh2.x = Math.sin(Math.PI * 2 / 10 * i) * 15
+                testMesh2.y = Math.cos(Math.PI * 2 / 10 * i) * 15
+                // testMesh2.scaleX = testMesh2.scaleY = testMesh2.scaleZ =10
+                testMesh.addChild(testMesh2)
+            }
 
 
             console.log(new RedPlane(this) instanceof RedPlane)
@@ -329,16 +334,16 @@
                 i = tScene3D.children.length
                 while (i--) {
                     testMesh = tScene3D.children[i]
-                    testMesh.rotationX +=1
+                    testMesh.rotationX += 1
                     testMesh.rotationY += 1
-                    testMesh.rotationZ +=1
+                    testMesh.rotationZ += 1
                 }
                 i = tScene2D.children.length
                 while (i--) {
                     testMesh = tScene2D.children[i]
                     testMesh.rotationX += 1
                     testMesh.rotationY += 1
-                    testMesh.rotationZ +=1
+                    testMesh.rotationZ += 1
                 }
                 RedView('test2').setLocation(Math.cos(time / 1000) * 100 + 100, Math.sin(time / 1000) *
                     100 + 100)
