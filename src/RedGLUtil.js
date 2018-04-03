@@ -44,7 +44,7 @@ var RedGLUtil;
             }
         :DOC*/
         extendsProto: function (target, from) {
-            for (var k in from.prototype) target.prototype[k] = from.prototype[k],console.log(k)
+            for (var k in from.prototype) target.prototype[k] = from.prototype[k]//,console.log(k)
         },
         /**DOC:
             {

@@ -32,7 +32,8 @@ var RedBaseContainer;
                 if (
                     !(child instanceof RedMesh)
                     && !(child instanceof RedSprite3D)
-                ) RedGLUtil.throwFunc('addChild', 'RedMesh Instance만 가능');
+                    && !(child instanceof RedLine)
+                ) RedGLUtil.throwFunc('addChild', 'RedMesh,RedSprite3D,RedLine Instance만 가능');
                 t0 = this.children.indexOf(child);
                 if (t0 != -1) child = this.children.splice(t0, 1);
                 this.children.push(child);
@@ -50,7 +51,11 @@ var RedBaseContainer;
         addChildAt: (function () {
             var t0;
             return function (child, index) {
-                if (!(child instanceof RedMesh)) RedGLUtil.throwFunc('addChildAt', 'RedMesh Instance만 가능');
+                if (
+                    !(child instanceof RedMesh)
+                    && !(child instanceof RedSprite3D)
+                    && !(child instanceof RedLine)
+                ) RedGLUtil.throwFunc('addChildAt', 'RedMesh,RedSprite3D,RedLine Instance만 가능');
                 t0 = this.children.indexOf(child);
                 this.children.splice(t0, 0, child);
             }
@@ -67,7 +72,6 @@ var RedBaseContainer;
         removeChild: (function () {
             var t0;
             return function (child) {
-                if (!(child instanceof RedMesh)) RedGLUtil.throwFunc('removeChild', 'RedMesh Instance만 가능');
                 t0 = this.children.indexOf(child);
                 if (t0 == -1) RedGLUtil.throwFunc('removeChild', '존재하지 않는 RedMesh를 삭제하려고 함');
                 else this.children.splice(t0, 1);
@@ -124,7 +128,6 @@ var RedBaseContainer;
             }
         :DOC*/
         getChildIndex: function (child) {
-            if (!(child instanceof RedMesh)) RedGLUtil.throwFunc('getChildIndex', 'RedMesh Instance만 가능');
             return this.children.indexOf(child);
         },
         // getChildByName: function () {

@@ -21,6 +21,7 @@ var RedRenderer;
         this['cacheUniformInfo'] = []
         this['cacheAttrInfo'] = []
         this['cacheSamplerIndex'] = []
+        this['cacheState'] = []
         Object.seal(this)
         console.log(this)
     };
@@ -169,7 +170,7 @@ var RedRenderer;
                     var tLightData, tDebugObj;
                     var tValue
                     // 엠비언트 라이트 업데이트
-                    if (tLightData = scene['lightInfo']['RedAmbientLight']) {
+                    if (tLightData = scene['lightInfo'][RedAmbientLight['type']]) {
                         tLocationInfo = tSystemUniformGroup['uAmbientLightColor'];
                         tLocation = tLocationInfo['location'];
                         tUUID = tLocationInfo['_UUID'];
@@ -197,7 +198,7 @@ var RedRenderer;
                     tDirectionList = new Float32Array(3 * 5)
                     tColorList = new Float32Array(4 * 5)
                     tIntensityList = new Float32Array(5)
-                    tList = scene['lightInfo']['RedDirectionalLight'];
+                    tList = scene['lightInfo'][RedDirectionalLight['type']];
                     i = tList.length;
                     while (i--) {
                         tLightData = tList[i];
@@ -379,12 +380,12 @@ var RedRenderer;
                     gl.cullFace(gl.BACK)
                     gl.clear(gl.DEPTH_BUFFER_BIT);
                 }
-                // 그리드가 있으면 그림
-                if (tScene['grid']) self.sceneRender(redGL, gl, tCamera['orthographic'], [tScene['grid']], time, self['renderInfo'][tView['key']]);
                 // 디버깅 라이트 업데이트 
                 self.sceneRender(redGL, gl, tCamera['orthographic'], lightDebugRenderList, time, self['renderInfo'][tView['key']]);
                 // 씬렌더 호출
                 self.sceneRender(redGL, gl, tCamera['orthographic'], tScene['children'], time, self['renderInfo'][tView['key']]);
+                // 그리드가 있으면 그림
+                if (tScene['grid']) self.sceneRender(redGL, gl, tCamera['orthographic'], [tScene['grid']], time, self['renderInfo'][tView['key']]);
             })
         }
     })();
@@ -404,6 +405,7 @@ var RedRenderer;
             tCacheInterleaveBuffer,
             tCacheUniformInfo,
             tCacheSamplerIndex,
+            tCacheState,
             parentMTX
 
         ) {
@@ -762,6 +764,26 @@ var RedRenderer;
                         // uNMatrix 입력 
                         gl.uniformMatrix4fv(tSystemUniformGroup['uNMatrix']['location'], false, tNMatrix)
                 }
+                /////////////////////////////////////////////////////////////////////////
+                /////////////////////////////////////////////////////////////////////////
+                // 상태처리
+
+                // 컬페이스 사용여부 캐싱처리
+                tCacheState['useCullFace'] != tMesh['useCullFace'] ? (tCacheState['useCullFace'] = tMesh['useCullFace']) ? gl.enable(gl.CULL_FACE) : gl.disable(gl.CULL_FACE) : 0;
+                // 컬페이스 캐싱처리
+                tCacheState['cullFace'] != tMesh['cullFace'] ? gl.cullFace(tCacheState['cullFace'] = tMesh['cullFace']) : 0;
+                // 뎁스테스트 사용여부 캐싱처리
+                tCacheState['useDepthTest'] != tMesh['useDepthTest'] ? (tCacheState['useDepthTest'] = tMesh['useDepthTest']) ? gl.enable(gl.DEPTH_TEST) : gl.disable(gl.DEPTH_TEST) : 0;
+                // 뎁스테스팅 캐싱처리
+                tCacheState['depthTestFunc'] != tMesh['depthTestFunc'] ? gl.depthFunc(tCacheState['depthTestFunc'] = tMesh['depthTestFunc']) : 0;
+                // 블렌딩 사용여부 캐싱처리
+                tCacheState['useBlendMode'] != tMesh['useBlendMode'] ? (tCacheState['useBlendMode'] = tMesh['useBlendMode']) ? gl.enable(gl.BLEND) : gl.disable(gl.BLEND) : 0;
+                // 블렌딩팩터 캐싱처리
+                if(tCacheState['blendSrc'] != tMesh['blendSrc'] || tCacheState['blendDst'] != tMesh['blendDst']){
+                    gl.blendFunc(tMesh['blendSrc'], tMesh['blendDst'])
+                    tCacheState['blendSrc'] = tMesh['blendSrc'] 
+                    tCacheState['blendDst'] = tMesh['blendDst'] 
+                }
 
                 /////////////////////////////////////////////////////////////////////////
                 /////////////////////////////////////////////////////////////////////////
@@ -790,12 +812,23 @@ var RedRenderer;
                         tCacheInterleaveBuffer,
                         tCacheUniformInfo,
                         tCacheSamplerIndex,
+                        tCacheState,
                         tMVMatrix
                     )
                 }
             }
         }
         return function (redGL, gl, orthographic, children, time, renderResultObj) {
+            if(!this['cacheState']['useCullFace']) this['cacheState']['useCullFace'] = gl.getParameter(gl.CULL_FACE)
+            if(!this['cacheState']['cullFace']) this['cacheState']['cullFace'] = gl.getParameter(gl.CULL_FACE_MODE)
+            if(!this['cacheState']['useDepthTest']) this['cacheState']['useDepthTest'] = gl.getParameter(gl.DEPTH_TEST)
+            if(!this['cacheState']['depthTestFunc']) this['cacheState']['depthTestFunc'] = gl.getParameter(gl.DEPTH_FUNC)
+            if(!this['cacheState']['useBlendMode']) this['cacheState']['useBlendMode'] =gl.getParameter(gl.BLEND)
+            if(!this['cacheState']['blendSrc']) this['cacheState']['blendSrc'] =gl.getParameter(gl.BLEND_SRC_RGB)
+            if(!this['cacheState']['blendDst']) this['cacheState']['blendDst'] =gl.getParameter(gl.BLEND_DST_RGB)
+
+              
+
             draw(
                 redGL,
                 gl,
@@ -805,7 +838,8 @@ var RedRenderer;
                 renderResultObj,
                 this['cacheAttrInfo'],
                 this['cacheUniformInfo'],
-                this['cacheSamplerIndex']
+                this['cacheSamplerIndex'],
+                this['cacheState']
             )
 
         }

@@ -16,13 +16,13 @@ var RedDirectionalLight;
         Object.defineProperty(this, 'type', {
             configurable: false,
             writable: false,
-            value: 'RedDirectionalLight'
+            value: RedDirectionalLight['type']
         })
         this['debugObject'] = RedMesh(redGL, RedBox(redGL,1,1,1), RedColorMaterial(redGL))
         this['debugObject']['drawMode'] = redGL.gl.LINE_STRIP
         console.log(this)
     }
-    RedDirectionalLight.prototype = RedBaseLight.prototype
+    RedDirectionalLight['type'] = 'RedDirectionalLight'
     RedGLUtil['extendsProto'](RedDirectionalLight, RedBaseLight);
     Object.freeze(RedDirectionalLight)
 

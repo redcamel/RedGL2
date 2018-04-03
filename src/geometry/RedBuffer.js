@@ -49,22 +49,22 @@ var RedBuffer;
                     self['interleaveDefineInfo'] = interleaveDefineInfo;
                     if (interleaveDefineInfo) {
                         for (k in interleaveDefineInfo) {
-                            interleaveDefineInfo[k]['offset'] = interleaveDefineInfo.length<2 ? 0 :t0
+                            interleaveDefineInfo[k]['offset'] = interleaveDefineInfo.length < 2 ? 0 : t0
                             t0 += interleaveDefineInfo[k]['size']
                             interleaveDefineInfo[k]['_UUID'] = RedGL['makeUUID']();
                         }
                         interleaveDefineInfo.forEach(function (v) {
                             interleaveDefineInfo[v['attributeKey']] = v
                         })
-                        if(interleaveDefineInfo.length<2){
+                        if (interleaveDefineInfo.length < 2) {
                             self['stride'] = 0;
                             self['pointNum'] = data.length / 3;
-                        }else{
+                        } else {
                             self['stride'] = t0;
                             self['pointNum'] = data.length / t0;
                         }
-                      
-                        
+
+
                     } else RedGLUtil.throwFunc('RedBuffer : interleaveDefineInfo는 반드시 정의 되어야합니다.')
                     break
                 case RedBuffer.ELEMENT_ARRAY_BUFFER:
@@ -115,12 +115,13 @@ var RedBuffer;
         if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedBuffer : RedGL Instance만 허용됩니다.')
         if (typeof bufferType != 'string') RedGLUtil.throwFunc('RedBuffer : bufferType - 문자열만 허용됩니다.')
         if (typeof key != 'string') RedGLUtil.throwFunc('RedBuffer : key - 문자열만 허용됩니다.')
+        if (bufferType == RedBuffer.ARRAY_BUFFER && !interleaveDefineInfo) RedGLUtil.throwFunc('RedBuffer : interleaveDefineInfo를 반드시 정의해야합니다.')
         var tGL = redGL.gl;
 
-         // TODO: 유일키 방어
-         if (!redGL['_datas'][bufferType]) redGL['_datas'][bufferType] = {};
-         if (redGL['_datas'][bufferType][key]) return redGL['_datas'][bufferType][key]
-         else redGL['_datas'][bufferType][key] = this
+        // TODO: 유일키 방어
+        if (!redGL['_datas'][bufferType]) redGL['_datas'][bufferType] = {};
+        if (redGL['_datas'][bufferType][key]) return redGL['_datas'][bufferType][key]
+        else redGL['_datas'][bufferType][key] = this
         /**DOC:
            {
                code : 'PROPERTY',
@@ -238,7 +239,7 @@ var RedBuffer;
             } else RedGLUtil.throwFunc('RedBuffer : upload - data형식이 기존 형식과 다름', data)
 
         }
-        this.parseInterleaveDefineInfo = function(){
+        this.parseInterleaveDefineInfo = function () {
             parseInterleaveDefineInfo(this, this['bufferType'], this['data'], this['interleaveDefineInfo']);
         }
         this.upload(this['data']);

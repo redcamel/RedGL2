@@ -27,7 +27,7 @@ var RedGrid;
 
         var tGL;
         tGL = redGL.gl;
-
+        RedBaseObject3D['build'].call(this,tGL)
         var interleaveData = []
 
         size = size || 100;
@@ -87,76 +87,7 @@ var RedGrid;
 		}
 	    :DOC*/
         this['drawMode'] = tGL.LINES
-        /**DOC:
-		{
-            title :`x`,
-            description : `x`,
-            return : 'Number'
-		}
-        :DOC*/
-        /**DOC:
-		{
-            title :`y`,
-            description : `y`,
-            return : 'Number'
-		}
-        :DOC*/
-        /**DOC:
-		{
-            title :`z`,
-            description : `z`,
-            return : 'Number'
-		}
-	    :DOC*/
-        this['x'] = this['y'] = this['z'] = 0;
-        /**DOC:
-		{
-            title :`rotationX`,
-            description : `rotationX`,
-            return : 'Number'
-		}
-        :DOC*/
-        /**DOC:
-		{
-            title :`rotationY`,
-            description : `rotationY`,
-            return : 'Number'
-		}
-        :DOC*/
-        /**DOC:
-		{
-            title :`rotationZ`,
-            description : `rotationZ`,
-            return : 'Number'
-		}
-	    :DOC*/
-        this['rotationX'] = this['rotationY'] = this['rotationZ'] = 0;
-        /**DOC:
-		{
-            title :`scaleX`,
-            description : `scaleX`,
-            return : 'Number'
-		}
-        :DOC*/
-        /**DOC:
-		{
-            title :`scaleY`,
-            description : `scaleY`,
-            return : 'Number'
-		}
-        :DOC*/
-        /**DOC:
-		{
-            title :`scaleZ`,
-            description : `scaleZ`,
-            return : 'Number'
-		}
-	    :DOC*/
-        this['scaleX'] = this['scaleY'] = this['scaleZ'] = 1;
-        this['matrix'] = mat4.create();
-        this['normalMatrix'] = mat4.create();
-        this['children'] = []
-
+        this['_UUID'] = RedGL['makeUUID']();
         // Object.seal(this)
     }
     RedGLUtil['extendsProto'](RedGrid, RedBaseContainer);
