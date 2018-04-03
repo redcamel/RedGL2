@@ -170,7 +170,7 @@ var RedRenderer;
                     var tLightData, tDebugObj;
                     var tValue
                     // 엠비언트 라이트 업데이트
-                    if (tLightData = scene['lightInfo']['RedAmbientLight']) {
+                    if (tLightData = scene['lightInfo'][RedAmbientLight['type']]) {
                         tLocationInfo = tSystemUniformGroup['uAmbientLightColor'];
                         tLocation = tLocationInfo['location'];
                         tUUID = tLocationInfo['_UUID'];
@@ -198,7 +198,7 @@ var RedRenderer;
                     tDirectionList = new Float32Array(3 * 5)
                     tColorList = new Float32Array(4 * 5)
                     tIntensityList = new Float32Array(5)
-                    tList = scene['lightInfo']['RedDirectionalLight'];
+                    tList = scene['lightInfo'][RedDirectionalLight['type']];
                     i = tList.length;
                     while (i--) {
                         tLightData = tList[i];

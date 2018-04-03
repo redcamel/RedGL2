@@ -12,10 +12,11 @@ var RedAmbientLight;
         Object.defineProperty(this, 'type', {
             configurable: false,
             writable: false,
-            value: 'RedAmbientLight'
+            value: RedAmbientLight['type']
         })
         console.log(this)
     }
+    RedAmbientLight['type'] = 'RedAmbientLight'
     RedGLUtil['extendsProto'](RedAmbientLight, RedBaseLight);
     Object.freeze(RedAmbientLight)
 

@@ -50,13 +50,13 @@ var RedScene;
     RedScene.prototype = {
         addLight: function (v) {
             switch (v['type']) {
-                case 'RedAmbientLight':
+                case RedAmbientLight['type']:
                     this['lightInfo'][v['type']] = v
                     break
-                case 'RedDirectionalLight':
+                case RedDirectionalLight['type']:
                     this['lightInfo'][v['type']].push(v)
                     break
-                case 'RedOmniLight':
+                case RedOmniLight['type']:
                     this['lightInfo'][v['type']].push(v)
                     break
                 default:

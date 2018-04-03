@@ -10,9 +10,14 @@ var RedOmniLight;
         this.setColor(color)
         this['x'] = this['y'] = this['z'] = 0;        
         this['_UUID'] = RedGL['makeUUID']();
-
+        Object.defineProperty(this, 'type', {
+            configurable: false,
+            writable: false,
+            value: RedOmniLight['type']
+        })
         console.log(this)
     }
+    RedOmniLight['type'] = 'RedOmniLight'
     RedGLUtil['extendsProto'](RedOmniLight, RedBaseLight);
     RedGLUtil['extendsProto'](RedOmniLight, RedBaseObject3D);
     Object.freeze(RedOmniLight)

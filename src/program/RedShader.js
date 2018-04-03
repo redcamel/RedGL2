@@ -59,7 +59,7 @@ var RedShader;
             source = source.replace(/\s+$/, '')
             source = source.replace(/  /g, '').trim();
 
-            console.log(source)
+            // console.log(source)
             parseData = {
                 etc: {
                     list: [],
@@ -72,7 +72,7 @@ var RedShader;
             checkList = checkList ? checkList : [];
             checkList = mergeSystemCode(type, checkList);
             checkList.sort();
-            console.log(checkList)
+            // console.log(checkList)
             // console.log(checkList)
             checkList.forEach(function (v) {
                 var tData;
@@ -129,7 +129,7 @@ var RedShader;
                 parseData[tType]['source'] += v + ';\n';
               
             });
-            console.log('일단 걸러진상태는',source)
+            // console.log('일단 걸러진상태는',source)
             // 함수부 찾는다.
             source += '\n';
             // source.match(/[A-Za-z0-9]+\s[\s\S]+?(\}\n)/g).forEach(function (v) {
@@ -154,7 +154,7 @@ var RedShader;
             if (parseData['var']) mergeStr += parseData['var']['source'] + '\n//etc\n';
             if (parseData['etc']) mergeStr += parseData['etc']['source'];
             parseData.lastSource = mergeStr;
-            console.log(parseData)
+            // console.log(parseData)
             return parseData;
         }
     })()
