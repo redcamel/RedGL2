@@ -16,7 +16,6 @@ var RedAmbientLight;
         })
         console.log(this)
     }
-    RedAmbientLight.prototype = RedBaseLight.prototype
     RedGLUtil['extendsProto'](RedAmbientLight, RedBaseLight);
     Object.freeze(RedAmbientLight)
 

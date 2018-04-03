@@ -123,7 +123,7 @@
                 console.log('호잇!', interleaveBuffer, indexBuffer)
                 var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer), testMaterial)
                 // var testMesh = RedMesh(self, RedBox(self), testMaterial)
-                testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.5
+                testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.3
                 // var testMesh = RedMesh(self,RedPlane(self),testMaterial)
                 // testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 1
                 // testMesh.scaleY  = 
@@ -140,7 +140,8 @@
                 }
                 var i = 10
                 while (i--) {
-                    var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer), testMaterial)
+                    var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer),
+                        testMaterial)
                     // var testMesh = RedMesh(self, RedBox(self), testMaterial2)
                     testMesh.x = Math.sin(Math.PI * 2 / 10 * i) * 8
                     testMesh.z = Math.cos(Math.PI * 2 / 10 * i) * 8
@@ -150,8 +151,8 @@
                 }
                 tScene3D['grid'] = RedGrid(self)
 
-                var testMesh = RedMesh(self, RedBox(self), RedColorMaterial(self,'#ff0000'))
-                testMesh2 = RedMesh(self, RedBox(self), RedColorMaterial(self,'#ff0000'))
+                var testMesh = RedMesh(self, RedBox(self), RedColorMaterial(self, '#ff0000'))
+                testMesh2 = RedMesh(self, RedBox(self), RedColorMaterial(self, '#ff0000'))
                 testMesh2.scaleX = testMesh2.scaleY = testMesh2.scaleZ = 0.5
                 testMesh2.scaleX = 10
                 testMesh2.x = -5
@@ -168,7 +169,7 @@
                 testMesh.addChild(testMesh2)
                 tScene3D.addChild(testMesh)
 
-                 var testMesh = RedMesh(self, RedBox(self), RedColorMaterial(self, '#0000ff'))
+                var testMesh = RedMesh(self, RedBox(self), RedColorMaterial(self, '#0000ff'))
                 testMesh2 = RedMesh(self, RedBox(self), RedColorMaterial(self, '#0000ff'))
                 testMesh2.scaleX = testMesh2.scaleY = testMesh2.scaleZ = 0.5
                 testMesh2.scaleZ = 10
@@ -204,7 +205,8 @@
 
             var renderResult;
             renderResult = document.createElement('div')
-            renderResult.style.cssText = 'position:absolute;top:0px;left:0px;color:#fff;font-size:12px;background:rgba(0,0,0,0.6)'
+            renderResult.style.cssText =
+                'position:absolute;top:0px;left:0px;color:#fff;font-size:12px;background:rgba(0,0,0,0.6)'
             document.body.appendChild(renderResult)
 
             tRenderer.start(this, function (time) {

@@ -53,7 +53,6 @@ var RedLine;
             RedBuffer.ELEMENT_ARRAY_BUFFER
         )
 
-        tGL = redGL.gl;
 
         this['addPoint'] = function (x, y, z) {
             var t = interleaveData.length / 3
@@ -68,6 +67,8 @@ var RedLine;
             indexBuffer.parseInterleaveDefineInfo();
         }
 
+        tGL = redGL.gl;
+        RedBaseObject3D['build'].call(this, tGL)
         /**DOC:
 		{
             title :`geometry`,
@@ -92,78 +93,11 @@ var RedLine;
 		}
 	    :DOC*/
         this['drawMode'] = tGL.LINE_STRIP
-        /**DOC:
-		{
-            title :`x`,
-            description : `x`,
-            return : 'Number'
-		}
-        :DOC*/
-        /**DOC:
-		{
-            title :`y`,
-            description : `y`,
-            return : 'Number'
-		}
-        :DOC*/
-        /**DOC:
-		{
-            title :`z`,
-            description : `z`,
-            return : 'Number'
-		}
-	    :DOC*/
-        this['x'] = this['y'] = this['z'] = 0;
-        /**DOC:
-		{
-            title :`rotationX`,
-            description : `rotationX`,
-            return : 'Number'
-		}
-        :DOC*/
-        /**DOC:
-		{
-            title :`rotationY`,
-            description : `rotationY`,
-            return : 'Number'
-		}
-        :DOC*/
-        /**DOC:
-		{
-            title :`rotationZ`,
-            description : `rotationZ`,
-            return : 'Number'
-		}
-	    :DOC*/
-        this['rotationX'] = this['rotationY'] = this['rotationZ'] = 0;
-        /**DOC:
-		{
-            title :`scaleX`,
-            description : `scaleX`,
-            return : 'Number'
-		}
-        :DOC*/
-        /**DOC:
-		{
-            title :`scaleY`,
-            description : `scaleY`,
-            return : 'Number'
-		}
-        :DOC*/
-        /**DOC:
-		{
-            title :`scaleZ`,
-            description : `scaleZ`,
-            return : 'Number'
-		}
-	    :DOC*/
-        this['scaleX'] = this['scaleY'] = this['scaleZ'] = 1;
-        this['matrix'] = mat4.create();
-        this['normalMatrix'] = mat4.create();
-        this['children'] = []
+        
         // Object.seal(RedLine);
         // console.log(this);
     }
-    RedLine.prototype = RedMesh.prototype;
+    RedGLUtil['extendsProto'](RedLine, RedBaseContainer);
+    RedGLUtil['extendsProto'](RedLine, RedBaseObject3D);
     Object.freeze(RedLine);
 })();

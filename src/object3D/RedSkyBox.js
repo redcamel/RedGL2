@@ -26,6 +26,7 @@ var RedSkyBox;
         if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedSkyBox : RedGL Instance만 허용됩니다.')
         var tGL;
         tGL = redGL.gl;
+        RedBaseObject3D['build'].call(this,tGL)
         /**DOC:
 		{
             title :`geometry`,
@@ -50,13 +51,6 @@ var RedSkyBox;
             return : 'gl 상수'
 		}
 	    :DOC*/
-        this['drawMode'] = tGL.TRIANGLES
-        this['x'] = this['y'] = this['z'] = 0;
-        this['rotationX'] = this['rotationY'] = this['rotationZ'] = 0;
-        this['scaleX'] = this['scaleY'] = this['scaleZ'] = 1;
-        this['matrix'] = mat4.create();
-        this['normalMatrix'] = mat4.create();
-        this['children'] = []
         this['_UUID'] = RedGL['makeUUID']();
         // Object.seal(this)
     }

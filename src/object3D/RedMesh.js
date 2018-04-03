@@ -28,6 +28,7 @@ var RedMesh;
         if (!(material instanceof RedBaseMaterial)) RedGLUtil.throwFunc('RedMesh : RedBaseMaterial 확장 Instance만 허용됩니다.')
         var tGL;
         tGL = redGL.gl;
+        RedBaseObject3D['build'].call(this, tGL)
         /**DOC:
 		{
             title :`geometry`,
@@ -51,7 +52,7 @@ var RedMesh;
             return : 'gl 상수'
 		}
 	    :DOC*/
-        this['drawMode'] = tGL.TRIANGLES
+
         /**DOC:
 		{
             title :`x`,
@@ -73,7 +74,7 @@ var RedMesh;
             return : 'Number'
 		}
 	    :DOC*/
-        this['x'] = this['y'] = this['z'] = 0;
+
         /**DOC:
 		{
             title :`rotationX`,
@@ -95,7 +96,7 @@ var RedMesh;
             return : 'Number'
 		}
 	    :DOC*/
-        this['rotationX'] = this['rotationY'] = this['rotationZ'] = 0;
+
         /**DOC:
 		{
             title :`scaleX`,
@@ -117,10 +118,7 @@ var RedMesh;
             return : 'Number'
 		}
 	    :DOC*/
-        this['scaleX'] = this['scaleY'] = this['scaleZ'] = 1;
-        this['matrix'] = mat4.create();
-        this['normalMatrix'] = mat4.create();
-        this['children'] = []
+        
         this['_UUID'] = RedGL['makeUUID']();
         // Object.seal(this)
     }

@@ -49,7 +49,6 @@ var RedScene;
     };
     RedScene.prototype = {
         addLight: function (v) {
-            if (!(v instanceof RedBaseLight)) RedGLUtil.throwFunc('RedBaseLight 확장객체만 가능')
             switch (v['type']) {
                 case 'RedAmbientLight':
                     this['lightInfo'][v['type']] = v
@@ -60,10 +59,12 @@ var RedScene;
                 case 'RedOmniLight':
                     this['lightInfo'][v['type']].push(v)
                     break
+                default:
+                    RedGLUtil.throwFunc('RedBaseLight 확장객체만 가능')
             }
 
         },
-        setSkyBox : function(v){
+        setSkyBox: function (v) {
             this['skyBox'] = v
         },
         removeLight: function () {

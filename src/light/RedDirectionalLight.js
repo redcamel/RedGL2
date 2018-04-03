@@ -22,7 +22,6 @@ var RedDirectionalLight;
         this['debugObject']['drawMode'] = redGL.gl.LINE_STRIP
         console.log(this)
     }
-    RedDirectionalLight.prototype = RedBaseLight.prototype
     RedGLUtil['extendsProto'](RedDirectionalLight, RedBaseLight);
     Object.freeze(RedDirectionalLight)
 
