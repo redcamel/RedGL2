@@ -95,7 +95,7 @@ var RedRenderer;
     var tCamera
     var tScene;
     RedRenderer.prototype.worldRender = (function () {
-        var worldRect, viewRect;
+        var worldRect;
 
         var perspectiveMTX;
         var self;
@@ -294,10 +294,10 @@ var RedRenderer;
             // 픽셀 플립 기본설정
             gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
         };
-        viewRect = [];
-        perspectiveMTX = mat4.create();
+        
         return function (redGL, time) {
             var gl;
+            var tViewRect;
             gl = redGL.gl;
             self = this;
             // 캔버스 사이즈 적용
@@ -316,15 +316,16 @@ var RedRenderer;
             self['world']['_viewList'].forEach(function (tView) {
                 ///////////////////////////////////
                 // view의 위치/크기결정
-                viewRect[0] = tView['_x'];
-                viewRect[1] = tView['_y'];
-                viewRect[2] = tView['_width'];
-                viewRect[3] = tView['_height'];
+                tViewRect = tView['_viewRect']
+                tViewRect[0] = tView['_x'];
+                tViewRect[1] = tView['_y'];
+                tViewRect[2] = tView['_width'];
+                tViewRect[3] = tView['_height'];
                 tCamera = tView['camera'];
                 tScene = tView['scene']
                 // tCamera['updateMatrix']()
                 // 위치/크기의 % 여부를 파싱
-                valueParser(viewRect);
+                valueParser(tViewRect);
                 //
                 self['renderInfo'][tView['key']] = {
                     orthographic: tCamera['orthographic'],
@@ -332,20 +333,20 @@ var RedRenderer;
                     y: tView['_y'],
                     width: tView['_width'],
                     height: tView['_height'],
-                    viewRectX: viewRect[0],
-                    viewRectY: viewRect[1],
-                    viewRectWidth: viewRect[2],
-                    viewRectHeight: viewRect[3],
+                    viewRectX: tViewRect[0],
+                    viewRectY: tViewRect[1],
+                    viewRectWidth: tViewRect[2],
+                    viewRectHeight: tViewRect[3],
                     key: tView['key'],
                     call: 0
                 }
                 // viewport 설정
-                gl.viewport(viewRect[0], worldRect[3] - viewRect[3] - viewRect[1], viewRect[2], viewRect[3]);
-                gl.scissor(viewRect[0], worldRect[3] - viewRect[3] - viewRect[1], viewRect[2], viewRect[3]);
+                gl.viewport(tViewRect[0], worldRect[3] - tViewRect[3] - tViewRect[1], tViewRect[2], tViewRect[3]);
+                gl.scissor(tViewRect[0], worldRect[3] - tViewRect[3] - tViewRect[1], tViewRect[2], tViewRect[3]);
                 gl.clearColor(tScene['r'], tScene['g'], tScene['b'], 1)
                 if (tScene['useBackgroundColor']) gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
                 else gl.clear(gl.DEPTH_BUFFER_BIT);
-
+                perspectiveMTX = tCamera['perspectiveMTX']
                 // view 에 적용할 카메라 퍼스펙티브를 계산
                 mat4.identity(perspectiveMTX);
                 if (tCamera['orthographic']) {
@@ -359,23 +360,22 @@ var RedRenderer;
                         tCamera['farClipping']
                     )
                     mat4.translate(perspectiveMTX, perspectiveMTX, [-0.5, 0.5, 0])
-                    mat4.scale(perspectiveMTX, perspectiveMTX, [1 / viewRect[2], -1 / viewRect[3], 1]);
+                    mat4.scale(perspectiveMTX, perspectiveMTX, [1 / tViewRect[2], -1 / tViewRect[3], 1]);
                     mat4.identity(tCamera['matrix'])
                     gl.disable(gl.CULL_FACE);
                 } else {
                     mat4.perspective(
                         perspectiveMTX,
                         tCamera['fov'] * Math.PI / 180,
-                        viewRect[2] / viewRect[3],
+                        tViewRect[2] / tViewRect[3],
                         tCamera['nearClipping'],
                         tCamera['farClipping']
                     );
                     gl.enable(gl.CULL_FACE);
                 };
-
                 ///////////////////////////////
                 // 실제렌더 계산
-                updateSystemUniform(redGL, time, tScene, perspectiveMTX, tCamera['matrix'], viewRect)
+                updateSystemUniform(redGL, time, tScene, perspectiveMTX, tCamera['matrix'], tViewRect)
                 if (tScene['skyBox']) {
                     gl.cullFace(gl.FRONT)
                     tScene['skyBox']['scaleX'] = tScene['skyBox']['scaleY'] = tScene['skyBox']['scaleZ'] = tCamera['farClipping']

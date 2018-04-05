@@ -110,7 +110,9 @@
                 console.log('호잇!', interleaveBuffer, indexBuffer)
 
                 testMesh = RedMesh(self, RedBox(self), testMaterial)
-                testMesh.x = 2
+                testMesh.x = 1
+                testMesh.y = 1
+                testMesh.z = 1
                 tScene3D.addChild(testMesh)
 
                 testMesh2 = RedMesh(self, RedBox(self), testMaterial)
@@ -128,7 +130,7 @@
 
                 testMesh.addChild(testMesh4)
 
-                // tScene3D['grid'] = RedGrid(self)
+                tScene3D['grid'] = RedGrid(self)
                 // tScene3D['axis'] = RedAxis(self)
 
             })
@@ -147,6 +149,13 @@
             testALight = RedAmbientLight(this)
             tScene3D.addLight(testALight)
 
+            var worldToScreenBox;
+            worldToScreenBox = document.createElement('div')
+            worldToScreenBox.style.cssText = 'position:absolute;top:0px;left:0px;color:#fff;font-size:12px;background:rgba(0,0,0,0.6)'
+            worldToScreenBox.innerHTML = 'worldToScreen Test'
+            document.body.appendChild(worldToScreenBox)
+
+
             var renderResult;
             renderResult = document.createElement('div')
             renderResult.style.cssText =
@@ -164,26 +173,26 @@
                 //     testMesh.rotationZ += 1
 
                 // }
-                testMesh.rotationX += 1
-                testMesh.rotationY += 1
-                testMesh.rotationZ += 1
+                // testMesh.rotationX += 1
+                // testMesh.rotationY += 1
+                // testMesh.rotationZ += 1
 
-                testMesh2.rotationX += 0.5
-                testMesh2.rotationY += 0.5
-                testMesh2.rotationZ += 0.5
+                // testMesh2.rotationX += 0.5
+                // testMesh2.rotationY += 0.5
+                // testMesh2.rotationZ += 0.5
 
                 // console.log(testMesh2.localToWorld(-2, 0, 0))
 
-                testMesh3.x = testMesh2.localToWorld(-2, 3, 0)[0]
-                testMesh3.y = testMesh2.localToWorld(-2, 3, 0)[1]
-                testMesh3.z = testMesh2.localToWorld(-2, 3, 0)[2]
+                testMesh3.x = testMesh2.localToWorld(-1, 1, 0)[0]
+                testMesh3.y = testMesh2.localToWorld(-1, 1, 0)[1]
+                testMesh3.z = testMesh2.localToWorld(-1, 1, 0)[2]
 
                 testDLight.x = Math.sin(time / 1500) * 1
                 testDLight.y = 5
                 testDLight.z = Math.cos(time / 1500) * 1
 
 
-                console.log(testMesh4.worldToLocal(2, 2, 2))
+                // console.log(testMesh4.worldToLocal(2, 2, 2))
 
 
                 testMesh4.x = testMesh4.worldToLocal(3, 0, 1)[0]
@@ -197,12 +206,24 @@
 
 
 
-                // tCamera.x = Math.sin(time / 1500) * 30
-                // tCamera.y = Math.cos(time / 1500) * 30
-                // tCamera.z = Math.cos(time / 1500) * 30 + Math.sin(time / 1500) * 30
 
-                tCamera.y = 10
+
+                var testtest;
+                testtest = [1, 2, 1]
+                console.log('소스', testtest)
+                var tttt = RedView('test')['worldToScreen'](testtest[0], testtest[1], testtest[2])
+                console.log('결과', tttt)
+                worldToScreenBox.style.left = tttt[0] + 'px'
+                worldToScreenBox.style.top = tttt[1] + 'px'
+
+                // tCamera.y = 10
                 tCamera.z = 20
+                tCamera.x = Math.sin(time / 1500) * 30
+                tCamera.y = Math.cos(time / 1500) * 30
+                if(tCamera.y<1) tCamera.y = 1
+                tCamera.z = Math.cos(time / 1500) * 30 + Math.sin(time / 1500) * 30
+
+
                 tCamera.lookAt(0, 0, 0)
 
 
