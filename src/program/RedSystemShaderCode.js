@@ -40,8 +40,7 @@ var RedSystemShaderCode;
             'uniform mat4 uMVMatrix',
             'uniform mat4 uNMatrix',
             'uniform mat4 uPMatrix',
-            'uniform mat4 uCameraMatrix',
-            'uniform mat4 uLightMatrix'
+            'uniform mat4 uCameraMatrix'
         ],
         /**DOC:
             {
@@ -67,8 +66,7 @@ var RedSystemShaderCode;
             'uniform int uDirectionalLightNum',
 
             'uniform vec4 uAmbientLightColor',
-            'uniform float uAmbientIntensity',
-            'uniform sampler2D uShadowTexture'
+            'uniform float uAmbientIntensity'
 
         ],
         systemUniform: {}

@@ -165,38 +165,6 @@ var RedRenderer;
                         gl.uniformMatrix4fv(tLocation, false, perspectiveMTX);
                         cacheSystemUniform[tUUID] = perspectiveMTX.toString()
                     }
-                    tLocationInfo = tSystemUniformGroup['uLightMatrix'];
-                    tLocation = tLocationInfo['location'];
-                    tUUID = tLocationInfo['_UUID'];
-                    if (tLocation) {
-                        var lightMatrix;
-                        lightMatrix = mat4.create()
-                        mat4.lookAt(
-                            lightMatrix,
-                            [
-                                scene['lightInfo'][RedDirectionalLight['type']][0].x,
-                                scene['lightInfo'][RedDirectionalLight['type']][0].y,
-                                scene['lightInfo'][RedDirectionalLight['type']][0].z
-                            ],
-                            [0, 0, 0],
-                            [0, 1, 0]
-                        )
-
-                        gl.uniformMatrix4fv(tLocation, false, lightMatrix);
-                    }
-
-                    //
-                    tLocationInfo = tSystemUniformGroup['uShadowTexture'];
-                    tLocation = tLocationInfo['location'];
-                    tUUID = tLocationInfo['_UUID'];
-                    if (tLocation) {
-                        var tSamplerIndex = tLocationInfo['samplerIndex']
-                        gl.activeTexture(gl.TEXTURE0 + tSamplerIndex)
-                        gl.bindTexture(gl.TEXTURE_2D, testShadowFrameBuffer['webglTexture'])
-                        gl.uniform1i(tLocation, tSamplerIndex)
-                    }
-
-
 
                     //
                     var i, tList;
