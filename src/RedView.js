@@ -123,7 +123,7 @@ var RedView;
         //TODO: 
         worldToScreen: (function () {
             return function (x, y, z) {
-             
+               
                 return [0,0]
             }
         })(),

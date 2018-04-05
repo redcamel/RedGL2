@@ -173,13 +173,13 @@
                 //     testMesh.rotationZ += 1
 
                 // }
-                // testMesh.rotationX += 1
-                // testMesh.rotationY += 1
-                // testMesh.rotationZ += 1
+                testMesh.rotationX += 1
+                testMesh.rotationY += 1
+                testMesh.rotationZ += 1
 
-                // testMesh2.rotationX += 0.5
-                // testMesh2.rotationY += 0.5
-                // testMesh2.rotationZ += 0.5
+                testMesh2.rotationX += 0.5
+                testMesh2.rotationY += 0.5
+                testMesh2.rotationZ += 0.5
 
                 // console.log(testMesh2.localToWorld(-2, 0, 0))
 
@@ -209,14 +209,14 @@
 
 
                 var testtest;
-                testtest = [1, 2, 1]
+                testtest = [1, 1, 1]
                 console.log('소스', testtest)
                 var tttt = RedView('test')['worldToScreen'](testtest[0], testtest[1], testtest[2])
                 console.log('결과', tttt)
                 worldToScreenBox.style.left = tttt[0] + 'px'
                 worldToScreenBox.style.top = tttt[1] + 'px'
 
-                // tCamera.y = 10
+                tCamera.y = 10
                 tCamera.z = 20
                 tCamera.x = Math.sin(time / 1500) * 30
                 tCamera.y = Math.cos(time / 1500) * 30
