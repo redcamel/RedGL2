@@ -40,7 +40,8 @@ var RedSystemShaderCode;
             'uniform mat4 uMVMatrix',
             'uniform mat4 uNMatrix',
             'uniform mat4 uPMatrix',
-            'uniform mat4 uCameraMatrix'
+            'uniform mat4 uCameraMatrix',
+            'uniform mat4 uLightMatrix'
         ],
         /**DOC:
             {
@@ -60,13 +61,14 @@ var RedSystemShaderCode;
             'varying vec2 vResolution',
 
             'const int DIRETIONAL_MAX = 5',
-            'uniform vec3 uDirectionalLightDirection[5]',
+            'uniform vec3 uDirectionalLightPosition[5]',
             'uniform vec4 uDirectionalLightColor[5]',
             'uniform float uDirectionalLightIntensity[5]',
             'uniform int uDirectionalLightNum',
 
             'uniform vec4 uAmbientLightColor',
             'uniform float uAmbientIntensity',
+            'uniform sampler2D uShadowTexture'
 
         ],
         systemUniform: {}

@@ -119,7 +119,6 @@ var RedBitmapCubeTexture;
             //TODO: 이거 렌더러쪽으로 옮겨야함
             gl.activeTexture(gl.TEXTURE0 + 1)
             gl.bindTexture(gl.TEXTURE_CUBE_MAP, redGL['_datas']['emptyTexture']['3d']['webglTexture'])
-            gl.uniform1i(tWebGLUniformLocation, 1)
         }
 
         loadTexture(gl, this['webglTexture'], srcList);

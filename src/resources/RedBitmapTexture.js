@@ -104,10 +104,8 @@ var RedBitmapTexture;
         
         if(redGL['_datas']['emptyTexture']){
             //TODO: 이거 렌더러쪽으로 옮겨야함
-            
             gl.activeTexture(gl.TEXTURE0)
             gl.bindTexture(gl.TEXTURE_2D, redGL['_datas']['emptyTexture']['2d']['webglTexture'])
-            gl.uniform1i(tWebGLUniformLocation, 0)
         }        
 
         loadTexture(gl, this['webglTexture'], src);

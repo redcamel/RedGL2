@@ -22,10 +22,13 @@ var RedShader;
             }
         }
     })();
-    compile = function (gl, type, shader, source) {
-        gl.shaderSource(shader, source);
+    compile = function (gl, type, shader, parseData) {
+        gl.shaderSource(shader, parseData['lastSource']);
         gl.compileShader(shader);
-        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) RedGLUtil.throwFunc(gl.getShaderInfoLog(shader), '쉐이더 컴파일에 실패하였습니다.')
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+            console.log(parseData)
+            RedGLUtil.throwFunc(gl.getShaderInfoLog(shader), '쉐이더 컴파일에 실패하였습니다.')
+        }
     }
     mergeSystemCode = (function () {
         var t0;
@@ -54,7 +57,7 @@ var RedShader;
     parser = (function () {
         var parseData, checkList;
         var mergeStr;
-        
+
         return function (type, source) {
             source = source.replace(/\s+$/, '')
             source = source.replace(/  /g, '').trim();
@@ -76,12 +79,12 @@ var RedShader;
             // console.log(checkList)
             checkList.forEach(function (v) {
                 var tData;
-                var tType, tName, tDataType, tArrayNum,tValue;
+                var tType, tName, tDataType, tArrayNum, tValue;
                 var tInputData;
                 v = v.trim()
                 source = source.replace(v + ';', '')
                 // console.log(source)
-                
+
                 tData = v.split(' ')
                 // console.log(v,tData)
                 if (tData[2]) {
@@ -118,16 +121,16 @@ var RedShader;
                 tInputData = {
                     name: tName,
                     arrayNum: tArrayNum,
-                    value : tValue,
+                    value: tValue,
                     systemUniformYn: RedSystemShaderCode.systemUniform[tArrayNum ? tName + '[' + tArrayNum + ']' : tName] ? true : false
                 };
                 if (tType == 'uniform') tInputData['uniformType'] = tDataType
-               
+
                 if (tType == 'attribute') tInputData['attributeType'] = tDataType
                 parseData[tType]['list'].push(tInputData);
                 parseData[tType]['map'][tName] = v;
                 parseData[tType]['source'] += v + ';\n';
-              
+
             });
             // console.log('일단 걸러진상태는',source)
             // 함수부 찾는다.
@@ -196,15 +199,15 @@ var RedShader;
         tGL = redGL.gl
         /**DOC:
             {
-                title :`webglShader`,
-                description : `실제 쉐이더(WebGLShader Instance)`,
-                example : `Instance.webglShader`,
-                return : 'WebGLShader'
+             title :`webglShader`,
+             description : `실제 쉐이더(WebGLShader Instance)`,
+             example : `Instance.webglShader`,
+             return : 'WebGLShader'
             }
         :DOC*/
         this['webglShader'] = makeWebGLShader(tGL, key, type);
         this['parseData'] = parser(type, source);
-        compile(tGL, type, this['webglShader'], this['parseData']['lastSource']);
+        compile(tGL, type, this['webglShader'], this['parseData']);
         /**DOC:
         {
             title :`key`,

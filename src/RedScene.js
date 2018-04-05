@@ -13,6 +13,7 @@ var RedScene;
 	:DOC*/
     RedScene = function (backgroundColor) {
         if (!(this instanceof RedScene)) return new RedScene(backgroundColor);
+        var _skyBox, _grid, _axis;
         this['r'] = 0
         this['g'] = 0
         this['b'] = 0
@@ -41,9 +42,33 @@ var RedScene;
             RedAmbientLight: null,
             RedDirectionalLight: [],
             RedOmniLight: []
-        }
-        this['skyBox'] = null;
-        this['grid'] = null
+        };
+
+        
+        Object.defineProperty(this, 'skyBox', {
+            get: function () { return _skyBox },
+            set: function (v) {
+                if (!(v instanceof RedSkyBox)) RedGLUtil.throwFunc('RedScene : RedSkyBox Instance만 허용됩니다.')
+                _skyBox = v;
+                return _skyBox
+            }
+        });
+        Object.defineProperty(this, 'grid', {
+            get: function () { return _grid },
+            set: function (v) {
+                if (!(v instanceof RedGrid)) RedGLUtil.throwFunc('RedScene : RedGrid Instance만 허용됩니다.')
+                _grid = v;
+                return _grid
+            }
+        });
+        Object.defineProperty(this, 'axis', {
+            get: function () { return _axis },
+            set: function (v) {
+                if (!(v instanceof RedAxis)) RedGLUtil.throwFunc('RedScene : RedAxis Instance만 허용됩니다.')
+                _axis = v;
+                return _axis
+            }
+        })
         this['_UUID'] = RedGL['makeUUID']();
         // Object.seal(this)
     };

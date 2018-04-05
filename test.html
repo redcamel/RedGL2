@@ -24,6 +24,8 @@
     <script src="src/base/RedBaseMaterial.js"></script>
     <script src="src/base/RedBaseObject3D.js"></script>
 
+    <script src="src/frameBuffer/RedFrameBuffer.js"></script>
+    
     <script src="src/geometry/RedBuffer.js"></script>
     <script src="src/geometry/RedGeometry.js"></script>
 
@@ -36,10 +38,11 @@
     <script src="src/material/RedEnvironmentMaterial.js"></script>
     <script src="src/material/RedGridMaterial.js"></script>
     <script src="src/material/RedBitmapMaterial.js"></script>
-    <script src="src/material/RedSkyBoxMaterial.js"></script>
+    
+        <script src="src/material/RedSkyBoxMaterial.js"></script>
     <script src="src/material/RedStandardMaterial.js"></script>
 
-
+    <script src="src/object3D/RedAxis.js"></script>
     <script src="src/object3D/RedGrid.js"></script>
     <script src="src/object3D/RedMesh.js"></script>
     <script src="src/object3D/RedLine.js"></script>
@@ -122,14 +125,7 @@
                 ])
             )
 
-            var testDLight;
-
-
-            testDLight = RedDirectionalLight(this, '#00ff00')
-            testDLight.directionX = 3
-            testDLight.directionY = 3
-            testDLight.directionZ = 3
-            tScene3D.addLight(testDLight)
+         
 
             JsonModelLoader(this, 'testJsonModel', 'asset/teapot.json', function (interleaveBuffer, indexBuffer) {
                 console.log('호잇!', interleaveBuffer, indexBuffer)
@@ -211,13 +207,14 @@
                     testMesh.rotationY += 1
                     testMesh.rotationZ += 1
                 }
-                // testDLight.directionX = Math.sin(time / 500) * 10
-                // testLight.y = Math.cos(time / 1500) * 10
-                // testDLight.directionZ = Math.cos(time / 500) * 10
+                testDLight.x = Math.sin(time / 1500) * 10
+                testDLight.y = Math.cos(time / 1500) * 10
+                testDLight.z = Math.cos(time / 1500) * 10
                 testMaterial['displacementPower'] = Math.sin(time/100) 
-                tCamera.x = Math.sin(time / 2500) * 20
-                tCamera.y = Math.cos(time / 2500) * 20
-                tCamera.z = Math.cos(time / 2500) * 20
+                tCamera.x = Math.sin(time / 3500) * 20
+                tCamera.y = Math.cos(time / 3500) * 20
+                tCamera.z = Math.cos(time / 3500) * 20
+                // tCamera.z = 20
                 tCamera.lookAt(0, 0, 0)
 
 

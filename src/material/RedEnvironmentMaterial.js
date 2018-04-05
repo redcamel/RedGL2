@@ -157,7 +157,7 @@ var RedEnvironmentMaterial;
 
                 for(int i=0; i<DIRETIONAL_MAX; i++){
                     if(i == uDirectionalLightNum) break;
-                    vec3 L = normalize(uDirectionalLightDirection[i]);
+                    vec3 L = normalize(-uDirectionalLightPosition[i]);
                     float lambertTerm =dot(N,-L);
                     if(lambertTerm > 0.0){
                         vec3 R;

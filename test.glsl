@@ -11,7 +11,7 @@ uniform int uDirectionalLightNum;
 uniform sampler2D uDiffuseTexture;
 uniform sampler2D uNormalTexture;
 uniform sampler2D uSpecularTexture;
-uniform vec3 uDirectionalLightDirection[5];
+uniform vec3 uDirectionalLightPosition[5];
 uniform vec4 uAmbientLightColor;
 uniform vec4 uDirectionalLightColor[5];
 
@@ -37,7 +37,7 @@ void main(void) {
 
     for(int i=0; i<DIRETIONAL_MAX; i++){
         if(i == uDirectionalLightNum) break;
-        vec3 L = normalize(uDirectionalLightDirection[i]);
+        vec3 L = normalize(-uDirectionalLightPosition[i]);
         vec3 N = normalize(vVertexNormal);
         float lambertTerm =dot(N,-L);
         if(lambertTerm > 0.0){

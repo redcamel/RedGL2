@@ -24,6 +24,8 @@
     <script src="src/base/RedBaseMaterial.js"></script>
     <script src="src/base/RedBaseObject3D.js"></script>
 
+    <script src="src/frameBuffer/RedFrameBuffer.js"></script>
+
     <script src="src/geometry/RedBuffer.js"></script>
     <script src="src/geometry/RedGeometry.js"></script>
 
@@ -36,8 +38,10 @@
     <script src="src/material/RedEnvironmentMaterial.js"></script>
     <script src="src/material/RedGridMaterial.js"></script>
     <script src="src/material/RedBitmapMaterial.js"></script>
+    
     <script src="src/material/RedSkyBoxMaterial.js"></script>
     <script src="src/material/RedStandardMaterial.js"></script>
+
 
     <script src="src/object3D/RedAxis.js"></script>
     <script src="src/object3D/RedGrid.js"></script>
@@ -86,29 +90,11 @@
 
 
 
-            var testMaterial, testMaterial2
-            testMaterial = RedEnvironmentMaterial(
+            var testMaterial
+            testMaterial = RedStandardMaterial(
                 this,
-                RedBitmapTexture(this, 'asset/crate.png'),
-                RedBitmapCubeTexture(this, [
-                    'asset/cubemap/posx.png',
-                    'asset/cubemap/negx.png',
-                    'asset/cubemap/posy.png',
-                    'asset/cubemap/negy.png',
-                    'asset/cubemap/posz.png',
-                    'asset/cubemap/negz.png'
-                ]),
-                RedBitmapTexture(this, 'asset/normalTest.jpg'),
-                RedBitmapTexture(this, 'asset/specular.png'),
-                RedBitmapTexture(this, 'asset/displacementTest.jpg')
-
+                RedBitmapTexture(this, 'asset/crate.png')
             )
-            testMaterial2 = RedStandardMaterial(
-                this,
-                RedBitmapTexture(this, 'asset/alphaTest.png')
-            )
-
-
             tScene3D.setSkyBox(
                 RedSkyBox(this, [
                     'asset/cubemap/posx.png',
@@ -121,39 +107,22 @@
             )
             JsonModelLoader(this, 'testJsonModel', 'asset/teapot.json', function (interleaveBuffer, indexBuffer) {
                 console.log('호잇!', interleaveBuffer, indexBuffer)
-                var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer), testMaterial)
-                // var testMesh = RedMesh(self, RedBox(self), testMaterial)
-                testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.3
-                // var testMesh = RedMesh(self,RedPlane(self),testMaterial)
-                // testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 1
-                // testMesh.scaleY  = 
+                var testMesh
+                testMesh = RedMesh(self, RedBox(self), testMaterial)
+                testMesh.y = 1
                 tScene3D.addChild(testMesh)
-                var i = 10
-                while (i--) {
-                    var testMesh2 = RedSprite3D(self, RedBox(self), testMaterial2)
-                    testMesh2.x = Math.sin(Math.PI * 2 / 10 * i) * 15
-                    testMesh2.y = Math.cos(Math.PI * 2 / 10 * i) * 15
-                    testMesh2.scaleX = testMesh2.scaleY = testMesh2.scaleZ = 10
-                    testMesh.addChild(testMesh2)
 
+                testMesh = RedMesh(self, RedBox(self, ), testMaterial)
+                testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 6
+                testMesh.y = -3
+                tScene3D.addChild(testMesh)
 
-                }
-                var i = 10
-                while (i--) {
-                    var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer),
-                        testMaterial)
-                    // var testMesh = RedMesh(self, RedBox(self), testMaterial2)
-                    testMesh.x = Math.sin(Math.PI * 2 / 10 * i) * 8
-                    testMesh.z = Math.cos(Math.PI * 2 / 10 * i) * 8
-                    testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.1
-                    tScene3D.addChild(testMesh)
+                // tScene3D['grid'] = RedGrid(self)
+                // tScene3D['axis'] = RedAxis(self)
 
-                }
-                tScene3D['grid'] = RedGrid(self)
-
-                
             })
 
+            RedFrameBuffer(this)
 
             var testDLight, testALight;
 
@@ -163,20 +132,9 @@
             testDLight.z = 3
             tScene3D.addLight(testDLight)
 
-            testDLight = RedDirectionalLight(this, '#00ff00')
-            testDLight.x = -3
-            testDLight.y = -3
-            testDLight.z = -3
-            tScene3D.addLight(testDLight)
 
-            testDLight = RedDirectionalLight(this, '#fff')
-            testDLight.x = Math.random() * 10 - 5
-            // testDLight.y = Math.random() * 30 - 15
-            testDLight.z = Math.random() * 10 - 5
-            tScene3D.addLight(testDLight)
-
-            // testALight = RedAmbientLight(this)
-            // tScene3D.addLight(testALight)
+            testALight = RedAmbientLight(this)
+            tScene3D.addLight(testALight)
 
             var renderResult;
             renderResult = document.createElement('div')
@@ -188,26 +146,24 @@
                 // testInterleaveBuffer.upload(interleaveData)
                 i = tScene3D.children.length
                 while (i--) {
-                    testMesh = tScene3D.children[i]
-                    // testMesh.rotationX += 1
-                    // testMesh.rotationY += 1
-                    // testMesh.rotationZ += 1
-                    // testMesh.lookAt(tCamera.x, tCamera.y, tCamera.z)
-                    // testMesh['drawMode'] = self.gl.POINTS
-                    // testMesh.lookAt(tCamera.x,tCamera.y,tCamera.z)
+                    if (i == 0) {
+                        testMesh = tScene3D.children[i]
+                        testMesh.rotationX += 1
+                        testMesh.rotationY += 1
+                        testMesh.rotationZ += 1
+                    }
                 }
 
-                testDLight.x = -Math.sin(time / 1500) * 20
-                // testLight.y = Math.cos(time / 1500) * 10
-                testDLight.z = -Math.cos(time / 1500) * 20
+                testDLight.x = Math.sin(time / 1500) * 1
+                testDLight.y = 5
+                testDLight.z = Math.cos(time / 1500) * 1
 
-                tCamera.x = Math.sin(time / 1500) * 30
-                tCamera.y = Math.cos(time / 1500) * 30
-                tCamera.z = Math.cos(time / 1500) * 30 + Math.sin(time / 1500) * 30
+                // tCamera.x = Math.sin(time / 1500) * 30
+                // tCamera.y = Math.cos(time / 1500) * 30
+                // tCamera.z = Math.cos(time / 1500) * 30 + Math.sin(time / 1500) * 30
 
-                testMaterial['displacementPower'] = Math.sin(time / 100)
-                // tCamera.y = 10
-                // tCamera.z = 40
+                tCamera.y = 10
+                tCamera.z = 10
                 tCamera.lookAt(0, 0, 0)
 
 
