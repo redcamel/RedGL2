@@ -46,6 +46,7 @@ var RedBuffer;
             t0 = 0;
             switch (bufferType) {
                 case RedBuffer.ARRAY_BUFFER:
+             
                     self['interleaveDefineInfo'] = interleaveDefineInfo;
                     if (interleaveDefineInfo) {
                         for (k in interleaveDefineInfo) {
@@ -111,6 +112,7 @@ var RedBuffer;
         }
     :DOC*/
     RedBuffer = function (redGL, key, data, bufferType, interleaveDefineInfo) {
+        // console.log(redGL, key, data, bufferType, interleaveDefineInfo)
         if (!(this instanceof RedBuffer)) return new RedBuffer(redGL, key, data, bufferType, interleaveDefineInfo)
         if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedBuffer : RedGL Instance만 허용됩니다.')
         if (typeof bufferType != 'string') RedGLUtil.throwFunc('RedBuffer : bufferType - 문자열만 허용됩니다.')
