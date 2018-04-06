@@ -21,10 +21,9 @@ var RedSprite3D;
             return : 'RedProgram Instance'
         }
     :DOC*/
-    RedSprite3D = function (redGL, geometry, material) {
-        if (!(this instanceof RedSprite3D)) return new RedSprite3D(redGL, geometry, material);
+    RedSprite3D = function (redGL, material) {
+        if (!(this instanceof RedSprite3D)) return new RedSprite3D(redGL, material);
         if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedSprite3D : RedGL Instance만 허용됩니다.')
-        if (!(geometry instanceof RedGeometry)) RedGLUtil.throwFunc('RedSprite3D : RedGeometry Instance만 허용됩니다.')
         if (!(material instanceof RedBaseMaterial)) RedGLUtil.throwFunc('RedSprite3D : RedBaseMaterial 확장 Instance만 허용됩니다.')
         var tGL;
         tGL = redGL.gl;
@@ -36,7 +35,7 @@ var RedSprite3D;
 			return : 'RedGeometry'
 		}
 	    :DOC*/
-        this['geometry'] = geometry;
+        this['geometry'] = RedBox(redGL,1,1,0);
         /**DOC:
 		{
             title :`material`,
