@@ -105,8 +105,13 @@
                 ])
             )
             var testMesh, testMesh2, testMesh3
-            JsonModelLoader(this, 'testJsonModel', 'asset/teapot.json', function (interleaveBuffer, indexBuffer) {
+            JsonModelLoader(this, 'testJsonModel', 'asset/monster.json', function (interleaveBuffer, indexBuffer) {
                 console.log('호잇!', interleaveBuffer, indexBuffer)
+                var  aa = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer), testMaterial)
+                tScene3D.addChild(aa)
+                
+                aa.scaleX = aa.scaleY = aa.scaleZ =  0.002
+                
 
                 testMesh = RedMesh(self, RedBox(self), testMaterial)
                 testMesh.x = 1
@@ -134,7 +139,6 @@
 
             })
 
-            RedFrameBuffer(this)
 
             var testDLight, testALight;
 

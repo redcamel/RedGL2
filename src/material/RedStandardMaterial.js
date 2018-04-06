@@ -154,6 +154,7 @@ var RedStandardMaterial;
                 }            
                 
                 vec4 finalColor = la * uAmbientIntensity + ld + ls; 
+                finalColor.rgb *= texelColor.a;
                 finalColor.a = texelColor.a;
                 gl_FragColor = finalColor;
             }
