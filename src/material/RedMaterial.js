@@ -24,7 +24,6 @@ var RedMaterial;
         vSource = function () {
             /*
             attribute vec4 aVertexColor;
-            attribute float aPointSize;
             
             uniform float uFloatTest;
             uniform float uFloatTest2[10];

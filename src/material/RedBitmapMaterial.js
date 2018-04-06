@@ -58,6 +58,7 @@ var RedBitmapMaterial;
             /*
             void main(void) {
                 vTexcoord = aTexcoord;
+                gl_PointSize = aPointSize;
                 gl_Position = uPMatrix * uCameraMatrix* uMVMatrix * vec4(aVertexPosition, 1.0);
             }
             */

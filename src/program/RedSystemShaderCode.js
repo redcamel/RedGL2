@@ -28,6 +28,8 @@ var RedSystemShaderCode;
             'attribute vec3 aVertexNormal',
             'varying vec3 vVertexNormal',
 
+            'attribute float aPointSize',
+
             'attribute vec2 aTexcoord',
             'varying vec2 vTexcoord',
 
