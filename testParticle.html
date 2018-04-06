@@ -48,6 +48,7 @@
     <script src="src/object3D/RedSkyBox.js"></script>
     <script src="src/object3D/RedSprite3D.js"></script>
 
+
     <script src="src/particle/RedParticleUnit.js"></script>
 
     <script src="src/primitives/RedBox.js"></script>
@@ -82,66 +83,17 @@
             self = this
             tGL = this.gl;
             this.world = tWorld = RedWorld();
-            tScene3D = RedScene();
+            tScene3D = RedScene('#223344');
+            tScene3D.alpha = 0.1
 
-
-            tCamera = RedCamera();
-
-            var testDLight, testALight;
-            testDLight = RedDirectionalLight(this, '#fff')
-            testALight = RedAmbientLight(this, '#111', 1)
-
-            tScene3D.addLight(testALight)
-            tScene3D.addLight(testDLight)
-
-            var testPLight = RedPointLight(this, '#ff0000')
-            testPLight.x = -3
-            testPLight.y = -3
-            testPLight.z = -3
-            testPLight['radius'] = 4
-            testPLight['intensity'] = 1
-            tScene3D.addLight(testPLight)
-
-
-            var testPLight2 = RedPointLight(this, '#00ff00')
-            testPLight2.x = -3
-            testPLight2.y = -3
-            testPLight2.z = -3
-            testPLight2['radius'] = 6
-            testPLight2['intensity'] = 1
-            tScene3D.addLight(testPLight2)
+            tCamera = RedCamera()
+            tCamera.y = 10
+            tCamera.z = 10
+            tCamera.lookAt(0, 0, 0)
 
             tRenderer = RedRenderer();
             tWorld.addView(RedView('test', tScene3D, tCamera));
-            RedView('test').setSize('100%', '100%')
-            RedView('test').setLocation('0%', '0%')
-            var testMaterial
-            testMaterial = RedEnvironmentMaterial(
-                this,
-                RedBitmapTexture(this, 'asset/crate.png'),
-                RedBitmapCubeTexture(this, [
-                    'asset/cubemap/posx.png',
-                    'asset/cubemap/negx.png',
-                    'asset/cubemap/posy.png',
-                    'asset/cubemap/negy.png',
-                    'asset/cubemap/posz.png',
-                    'asset/cubemap/negz.png'
-                ])
-                , RedBitmapTexture(this, 'asset/normalTest.jpg')
-                , RedBitmapTexture(this, 'asset/specular.png')
-                , RedBitmapTexture(this, 'asset/displacementTest.jpg')
-            )
 
-            tScene3D.setSkyBox(
-                RedSkyBox(this, [
-                    'asset/cubemap/posx.png',
-                    'asset/cubemap/negx.png',
-                    'asset/cubemap/posy.png',
-                    'asset/cubemap/negy.png',
-                    'asset/cubemap/posz.png',
-                    'asset/cubemap/negz.png'
-                ])
-            );
 
             (function () {
                 var testMaterial
@@ -183,70 +135,7 @@
                 tScene3D.addChild(testParticle)
             })();
 
-            JsonModelLoader(this, 'testJsonModel', 'asset/teapot.json', function (interleaveBuffer, indexBuffer) {
-                console.log('호잇!', interleaveBuffer, indexBuffer)
-                var i = 5000
-                while (i--) {
-                    var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer), testMaterial)
-                    testMesh.x = Math.random() * 250 - 125
-                    testMesh.y = Math.random() * 250 - 125
-                    testMesh.z = Math.random() * 250 - 125
-                    testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.3
-                    testMesh.rotationX = Math.random() * 360
-                    testMesh.rotationY = Math.random() * 360
-                    testMesh.rotationZ = Math.random() * 360
-
-                    tScene3D.addChild(testMesh)
-                }
-                var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer), testMaterial)
-                testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.1
-                tScene3D.addChild(testMesh)
-
-                var i = 10
-                while (i--) {
-                    var testMesh2 = RedSprite3D(self, RedColorMaterial(self))
-                    testMesh2.x = Math.sin(Math.PI * 2 / 10 * i) * 5
-                    testMesh2.y = Math.cos(Math.PI * 2 / 10 * i) * 5
-                    // testMesh2.scaleX = testMesh2.scaleY = testMesh2.scaleZ =10
-                    tScene3D.addChild(testMesh2)
-                }
-                tScene3D['grid'] = RedGrid(self)
-                i = 100
-                while (i--) {
-                    var testLine = new RedLine(self, new RedColorMaterial(self, i % 2 ? '#ff0000' : i % 3 ? '#00ff00' : '#0000ff', Math.random()))
-
-                    console.log(testLine.material)
-                    // var testLine = new RedLine(this, testMaterial2)
-                    var tX, tY, tZ
-                    var i2 = 4
-                    tX = tY = tZ = 0
-                    // testLine.addPoint(0, 0, 0)
-                    // testLine.addPoint(100, 0, 0)
-
-                    // testLine.addPoint(200, 0, 0)
-                    // testLine.addPoint(300, 0, 0)
-                    // testLine.addPoint(300, 0, 0)
-                    // testLine.addPoint(300, 100, 0)
-
-                    // testLine.addPoint(300, 100+Math.random()*50, 0)
-                    // testLine.addPoint(600, 100+Math.random()*50, 0)
-
-                    var i2 = 3 * 10
-                    tX = tY = tZ = 0
-                    while (i2--) {
-                        tX += Math.random()
-                        tY += Math.random()
-                        tZ += Math.random()
-                        testLine.addPoint(tX, tY, tZ)
-                    }
-
-                    testLine.rotationX = Math.random() * 360
-                    testLine.rotationY = Math.random() * 360
-                    testLine.rotationZ = Math.random() * 360
-                    testLine.upload()
-                    tScene3D.addChild(testLine)
-                }
-            })
+            tScene3D['grid'] = RedGrid(self)
 
 
             var renderResult;
@@ -255,32 +144,14 @@
             document.body.appendChild(renderResult)
 
             tRenderer.start(this, function (time) {
-                // testInterleaveBuffer.upload(interleaveData)
-                i = tScene3D.children.length
-                while (i--) {
-                    if (i == 0) break
-                    testMesh = tScene3D.children[i]
-                    testMesh.rotationX += 1
-                    testMesh.rotationY += 1
-                    testMesh.rotationZ += 1
-                }
-                testDLight.x = Math.sin(time / 1500) * 10
-                testDLight.y = Math.cos(time / 1500) * 10
-                testDLight.z = Math.cos(time / 1500) * 10
-                testMaterial['displacementPower'] = Math.sin(time / 100)
-                tCamera.x = Math.sin(time / 3500) * 20
-                tCamera.y = Math.cos(time / 3500) * 20
-                tCamera.z = Math.cos(time / 3500) * 20
-                // tCamera.z = 20
+
+                tCamera.x = Math.sin(time / 1500) * 30
+                tCamera.y = Math.cos(time / 1500) * 30
+                if (tCamera.y < 1) tCamera.y = 1
+                tCamera.z = Math.cos(time / 1500) * 30 + Math.sin(time / 1500) * 30
+
+
                 tCamera.lookAt(0, 0, 0)
-
-                testPLight.x = -Math.sin(time / 1500) * 5
-                testPLight.y = 2
-                testPLight.z = -Math.cos(time / 1500) * 5
-
-                testPLight2.x = Math.sin(time / 1500) * 18.5
-                testPLight2.y = 0
-                testPLight2.z = Math.cos(time / 1500) * 18.5
 
                 renderResult.innerHTML = ''
                 for (var k in tRenderer['renderInfo']) {

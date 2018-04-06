@@ -24,6 +24,8 @@ var RedMaterial;
         vSource = function () {
             /*
             attribute vec4 aVertexColor;
+            attribute float aPointSize;
+            
             uniform float uFloatTest;
             uniform float uFloatTest2[10];
             uniform int uIntTest;
@@ -41,7 +43,8 @@ var RedMaterial;
                 uVec4Test;
                 uMat4Test;
                 uResolution;
-                gl_Position = uPMatrix * uCameraMatrix* uMVMatrix * vec4(aVertexPosition, 1.0);
+                gl_PointSize = aPointSize;
+                gl_Position = uPMatrix * uCameraMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
             }
             */
         }
