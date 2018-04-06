@@ -119,21 +119,7 @@ var RedView;
         setLocation: function (x, y) {
             this['_x'] = x != undefined ? x : 0;
             this['_y'] = y != undefined ? y : 0;
-        },
-        //TODO: 
-        worldToScreen: (function () {
-            return function (x, y, z) {
-               
-                return [0,0]
-            }
-        })(),
-        //TODO: 
-        screenToWorld: (function () {
-            var up = new Float32Array([0, 1, 0]);
-            return function (x, y, z) {
-
-            }
-        })()
+        }
     }
     Object.freeze(RedView);
 })();

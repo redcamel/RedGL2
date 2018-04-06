@@ -69,7 +69,6 @@ var RedBitmapMaterial;
             void main(void) {
                 vec4 texelColor = texture2D(uDiffuseTexture, vTexcoord);
                 texelColor.rgb *= texelColor.a;
-                if(texelColor.a == 0.0) discard;
                 gl_FragColor = texelColor;
             }
             */

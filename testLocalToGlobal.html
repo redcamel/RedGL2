@@ -24,13 +24,13 @@
     <script src="src/base/RedBaseMaterial.js"></script>
     <script src="src/base/RedBaseObject3D.js"></script>
 
-    <script src="src/frameBuffer/RedFrameBuffer.js"></script>
-
     <script src="src/geometry/RedBuffer.js"></script>
     <script src="src/geometry/RedGeometry.js"></script>
 
     <script src="src/light/RedAmbientLight.js"></script>
     <script src="src/light/RedDirectionalLight.js"></script>
+    <script src="src/light/RedPointLight.js"></script>
+
     <script src="src/loader/JsonModelLoader.js"></script>
 
     <script src="src/material/RedMaterial.js"></script>
@@ -38,10 +38,8 @@
     <script src="src/material/RedEnvironmentMaterial.js"></script>
     <script src="src/material/RedGridMaterial.js"></script>
     <script src="src/material/RedBitmapMaterial.js"></script>
-
     <script src="src/material/RedSkyBoxMaterial.js"></script>
     <script src="src/material/RedStandardMaterial.js"></script>
-
 
     <script src="src/object3D/RedAxis.js"></script>
     <script src="src/object3D/RedGrid.js"></script>
@@ -52,6 +50,7 @@
 
     <script src="src/primitives/RedBox.js"></script>
     <script src="src/primitives/RedPlane.js"></script>
+    <script src="src/primitives/RedSphere.js"></script>
 
     <script src="src/program/RedProgram.js"></script>
     <script src="src/program/RedSystemShaderCode.js"></script>
@@ -127,7 +126,7 @@
 
                 testMesh4 = RedMesh(self, RedBox(self), RedColorMaterial(self, '#00ff00'))
                 testMesh4.scaleX = testMesh4.scaleY = testMesh4.scaleZ = 1
-
+                testMesh4.x = 2
                 testMesh.addChild(testMesh4)
 
                 tScene3D['grid'] = RedGrid(self)
@@ -181,47 +180,40 @@
                 testMesh2.rotationY += 0.5
                 testMesh2.rotationZ += 0.5
 
-                // console.log(testMesh2.localToWorld(-2, 0, 0))
+                // console.log(testMesh2.localToGlobal(-2, 0, 0))
 
-                testMesh3.x = testMesh2.localToWorld(-1, 1, 0)[0]
-                testMesh3.y = testMesh2.localToWorld(-1, 1, 0)[1]
-                testMesh3.z = testMesh2.localToWorld(-1, 1, 0)[2]
+                testMesh3.x = testMesh2.localToGlobal(-1, 1, 0)[0]
+                testMesh3.y = testMesh2.localToGlobal(-1, 1, 0)[1]
+                testMesh3.z = testMesh2.localToGlobal(-1, 1, 0)[2]
 
                 testDLight.x = Math.sin(time / 1500) * 1
                 testDLight.y = 5
                 testDLight.z = Math.cos(time / 1500) * 1
 
 
-                // console.log(testMesh4.worldToLocal(2, 2, 2))
+                // console.log(testMesh4.globalToLocal(2, 2, 2))
 
 
-                testMesh4.x = testMesh4.worldToLocal(3, 0, 1)[0]
-                testMesh4.y = testMesh4.worldToLocal(3, 0, 1)[1]
-                testMesh4.z = testMesh4.worldToLocal(3, 0, 1)[2]
+                testMesh4.x = testMesh4.globalToLocal(3, 0, 1)[0]
+                testMesh4.y = testMesh4.globalToLocal(3, 0, 1)[1]
+                testMesh4.z = testMesh4.globalToLocal(3, 0, 1)[2]
 
                 //   var testPosition = [Math.sin(time / 1500) * 5, 0, Math.cos(time / 1500) * 5]
-                // testMesh4.x = testMesh4.worldToLocal(testPosition[0], testPosition[1], testPosition[2])[0]
-                // testMesh4.y = testMesh4.worldToLocal(testPosition[0], testPosition[1], testPosition[2])[1]
-                // testMesh4.z = testMesh4.worldToLocal(testPosition[0], testPosition[1], testPosition[2])[2]
+                // testMesh4.x = testMesh4.globalToLocal(testPosition[0], testPosition[1], testPosition[2])[0]
+                // testMesh4.y = testMesh4.globalToLocal(testPosition[0], testPosition[1], testPosition[2])[1]
+                // testMesh4.z = testMesh4.globalToLocal(testPosition[0], testPosition[1], testPosition[2])[2]
 
 
 
 
 
-                var testtest;
-                testtest = [1, 1, 1]
-                console.log('소스', testtest)
-                var tttt = RedView('test')['worldToScreen'](testtest[0], testtest[1], testtest[2])
-                console.log('결과', tttt)
-                worldToScreenBox.style.left = tttt[0] + 'px'
-                worldToScreenBox.style.top = tttt[1] + 'px'
-
+              
                 tCamera.y = 10
                 tCamera.z = 20
-                tCamera.x = Math.sin(time / 1500) * 30
-                tCamera.y = Math.cos(time / 1500) * 30
-                if(tCamera.y<1) tCamera.y = 1
-                tCamera.z = Math.cos(time / 1500) * 30 + Math.sin(time / 1500) * 30
+                // tCamera.x = Math.sin(time / 1500) * 30
+                // tCamera.y = Math.cos(time / 1500) * 30
+                // if(tCamera.y<1) tCamera.y = 1
+                // tCamera.z = Math.cos(time / 1500) * 30 + Math.sin(time / 1500) * 30
 
 
                 tCamera.lookAt(0, 0, 0)

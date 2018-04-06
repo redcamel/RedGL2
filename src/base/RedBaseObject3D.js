@@ -36,7 +36,7 @@ var RedBaseObject3D;
         this['children'] = []
     }
     RedBaseObject3D.prototype = {
-        localToWorld: (function () {
+        localToGlobal: (function () {
             var t0;
             t0 = mat4.create()
             return function (x, y, z) {
@@ -53,7 +53,7 @@ var RedBaseObject3D;
                 ]
             }
         })(),
-        worldToLocal: (function () {
+        globalToLocal: (function () {
             var t0,t1;
             t0 = mat4.create() // 이동
             t1 = mat4.create()

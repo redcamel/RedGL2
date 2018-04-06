@@ -29,6 +29,8 @@
 
     <script src="src/light/RedAmbientLight.js"></script>
     <script src="src/light/RedDirectionalLight.js"></script>
+    <script src="src/light/RedPointLight.js"></script>
+
     <script src="src/loader/JsonModelLoader.js"></script>
 
     <script src="src/material/RedMaterial.js"></script>
@@ -48,6 +50,7 @@
 
     <script src="src/primitives/RedBox.js"></script>
     <script src="src/primitives/RedPlane.js"></script>
+    <script src="src/primitives/RedSphere.js"></script>
 
     <script src="src/program/RedProgram.js"></script>
     <script src="src/program/RedSystemShaderCode.js"></script>
@@ -140,22 +143,22 @@
                 }
                 var i = 10
                 while (i--) {
-                    var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer),
-                        testMaterial)
-                    // var testMesh = RedMesh(self, RedBox(self), testMaterial2)
-                    testMesh.x = Math.sin(Math.PI * 2 / 10 * i) * 8
-                    testMesh.z = Math.cos(Math.PI * 2 / 10 * i) * 8
-                    testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.1
+                    // var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer),
+                    //     testMaterial)
+                    var testMesh = RedMesh(self, RedSphere(self), testMaterial)
+                    testMesh.x = Math.sin(Math.PI * 2 / 10 * i) * 6
+                    testMesh.z = Math.cos(Math.PI * 2 / 10 * i) * 6
+                    testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 1
                     tScene3D.addChild(testMesh)
 
                 }
                 tScene3D['grid'] = RedGrid(self)
 
-                
+
             })
 
 
-            var testDLight, testALight;
+            var testDLight, testALight, testPLight;
 
             testDLight = RedDirectionalLight(this, '#fff')
             testDLight.x = 3
@@ -167,13 +170,30 @@
             testDLight.x = -3
             testDLight.y = -3
             testDLight.z = -3
-            tScene3D.addLight(testDLight)
+            // tScene3D.addLight(testDLight)
+
+            testPLight = RedPointLight(this, '#ff0000')
+            testPLight.x = -3
+            testPLight.y = -3
+            testPLight.z = -3
+            testPLight['radius'] = 4
+            testPLight['intensity'] = 1
+            tScene3D.addLight(testPLight)
+
+
+            var testPLight2 = RedPointLight(this, '#00ff00')
+            testPLight2.x = -3
+            testPLight2.y = -3
+            testPLight2.z = -3
+            testPLight2['radius'] = 2
+            testPLight2['intensity'] = 1
+            tScene3D.addLight(testPLight2)
 
             testDLight = RedDirectionalLight(this, '#fff')
             testDLight.x = Math.random() * 10 - 5
             // testDLight.y = Math.random() * 30 - 15
             testDLight.z = Math.random() * 10 - 5
-            tScene3D.addLight(testDLight)
+            // tScene3D.addLight(testDLight)
 
             // testALight = RedAmbientLight(this)
             // tScene3D.addLight(testALight)
@@ -201,13 +221,23 @@
                 // testLight.y = Math.cos(time / 1500) * 10
                 testDLight.z = -Math.cos(time / 1500) * 20
 
-                tCamera.x = Math.sin(time / 1500) * 30
-                tCamera.y = Math.cos(time / 1500) * 30
-                tCamera.z = Math.cos(time / 1500) * 30 + Math.sin(time / 1500) * 30
 
-                testMaterial['displacementPower'] = Math.sin(time / 100)
-                // tCamera.y = 10
-                // tCamera.z = 40
+                testPLight.x = -Math.sin(time / 1500) * 5
+                testPLight.y = 2
+                testPLight.z = -Math.cos(time / 1500) * 5
+
+                testPLight2.x = Math.sin(time / 1500) * 8.5
+                testPLight2.y = 0
+                testPLight2.z = Math.cos(time / 1500) * 8.5
+
+                // tCamera.x = Math.sin(time / 1500) * 20
+                // tCamera.y = Math.cos(time / 1500) * 20
+                // tCamera.z = Math.cos(time / 1500) * 15 + Math.sin(time / 1500) * 15
+
+                // testMaterial['displacementPower'] = Math.sin(time / 100)
+                tCamera.y = 20
+                // tCamera.x = 25
+                tCamera.z = 20
                 tCamera.lookAt(0, 0, 0)
 
 

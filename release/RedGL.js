@@ -3045,7 +3045,7 @@ var RedScene;
         this['lightInfo'] = {
             RedAmbientLight: null,
             RedDirectionalLight: [],
-            RedOmniLight: []
+            RedPointLight: []
         }
         this['skyBox'] = null;
         this['_UUID'] = RedGL['makeUUID']();
@@ -3061,7 +3061,7 @@ var RedScene;
                 case 'RedDirectionalLight':
                     this['lightInfo'][v['type']].push(v)
                     break
-                case 'RedOmniLight':
+                case 'RedPointLight':
                     this['lightInfo'][v['type']].push(v)
                     break
             }

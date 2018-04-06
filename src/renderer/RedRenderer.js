@@ -196,9 +196,9 @@ var RedRenderer;
                     var tDirectionnalPositionList, tColorList, tIntensityList;
                     var tVector;
                     tVector = vec3.create()
-                    tDirectionnalPositionList = new Float32Array(3 * 5)
-                    tColorList = new Float32Array(4 * 5)
-                    tIntensityList = new Float32Array(5)
+                    tDirectionnalPositionList = new Float32Array(3 * 3)
+                    tColorList = new Float32Array(4 * 3)
+                    tIntensityList = new Float32Array(3)
                     tList = scene['lightInfo'][RedDirectionalLight['type']];
                     i = tList.length;
                     while (i--) {
@@ -273,6 +273,102 @@ var RedRenderer;
                         cacheSystemUniform[tUUID] = tValue
                     }
 
+                    // 포인트 라이트 업데이트
+                    var tPointPositionList, tColorList, tIntensityList, tRadiusList;
+                    var tVector;
+                    tVector = vec3.create()
+                    tPointPositionList = new Float32Array(3 * 5)
+                    tColorList = new Float32Array(4 * 5)
+                    tIntensityList = new Float32Array(5)
+                    tRadiusList = new Float32Array(5)
+                    tList = scene['lightInfo'][RedPointLight['type']];
+                    i = tList.length;
+                    while (i--) {
+                        tLightData = tList[i];
+                        tDebugObj = tLightData['debugObject'];
+
+                        vec3.set(tVector, tLightData['x'], tLightData['y'], tLightData['z'])
+                        tDebugObj['x'] = tVector[0];
+                        tDebugObj['y'] = tVector[1];
+                        tDebugObj['z'] = tVector[2];
+                        tDebugObj['scaleX'] = tDebugObj['scaleY'] = tDebugObj['scaleZ'] = tLightData['radius']
+                      
+
+                        tDebugObj['material']['color'] = tLightData['color']
+
+                        lightDebugRenderList.push(tDebugObj)
+                        //
+                        tLocationInfo = tSystemUniformGroup['uPointLightPosition'];
+                        tLocation = tLocationInfo['location'];
+                        if (tLocation) {
+                            tPointPositionList[0 + 3 * i] = tVector[0];
+                            tPointPositionList[1 + 3 * i] = tVector[1];
+                            tPointPositionList[2 + 3 * i] = tVector[2];
+                        }
+                        //
+                        tLocationInfo = tSystemUniformGroup['uPointLightColor'];
+                        tLocation = tLocationInfo['location'];
+                        if (tLocation) {
+                            tColorList[0 + 4 * i] = tLightData['color'][0];
+                            tColorList[1 + 4 * i] = tLightData['color'][1];
+                            tColorList[2 + 4 * i] = tLightData['color'][2];
+                            tColorList[3 + 4 * i] = tLightData['color'][3];
+                        }
+                        //
+                        tLocationInfo = tSystemUniformGroup['uPointLightIntensity'];
+                        tLocation = tLocationInfo['location'];
+                        if (tLocation) tIntensityList[i] = tLightData['intensity']
+                        //
+                        tLocationInfo = tSystemUniformGroup['uPointLightRadius'];
+                        tLocation = tLocationInfo['location'];
+                        if (tLocation) tRadiusList[i] = tLightData['radius']
+                    }
+                    //
+                    tLocationInfo = tSystemUniformGroup['uPointLightPosition'];
+                    tLocation = tLocationInfo['location'];
+                    tUUID = tLocationInfo['_UUID'];
+                    tValue = tPointPositionList;
+                    if (tLocation && cacheSystemUniform[tUUID] != tValue.toString()) {
+                        gl.uniform3fv(tLocation, tValue);
+                        cacheSystemUniform[tUUID] = tValue.toString()
+                    }
+                    //
+                    tLocationInfo = tSystemUniformGroup['uPointLightColor'];
+                    tLocation = tLocationInfo['location'];
+                    tUUID = tLocationInfo['_UUID'];
+                    tValue = tColorList;
+                    if (tLocation && cacheSystemUniform[tUUID] != tValue.toString()) {
+                        gl.uniform4fv(tLocation, tValue);
+                        cacheSystemUniform[tUUID] = tValue.toString()
+                    }
+                    //
+                    tLocationInfo = tSystemUniformGroup['uPointLightIntensity'];
+                    tLocation = tLocationInfo['location'];
+                    tUUID = tLocationInfo['_UUID'];
+                    tValue = tIntensityList;
+                    if (tLocation && cacheSystemUniform[tUUID] != tValue.toString()) {
+                        gl.uniform1fv(tLocation, tValue)
+                        cacheSystemUniform[tUUID] = tValue.toString()
+                    }
+                    //
+                    tLocationInfo = tSystemUniformGroup['uPointLightRadius'];
+                    tLocation = tLocationInfo['location'];
+                    tUUID = tLocationInfo['_UUID'];
+                    tValue = tRadiusList;
+                    if (tLocation && cacheSystemUniform[tUUID] != tValue.toString()) {
+                        gl.uniform1fv(tLocation, tValue)
+                        cacheSystemUniform[tUUID] = tValue.toString()
+                    }
+                    //
+                    tLocationInfo = tSystemUniformGroup['uPointLightNum'];
+                    tLocation = tLocationInfo['location'];
+                    tUUID = tLocationInfo['_UUID'];
+                    tValue = tList.length;
+                    if (tLocation && cacheSystemUniform[tUUID] != tValue) {
+                        gl.uniform1i(tLocation, tValue)
+                        cacheSystemUniform[tUUID] = tValue
+                    }
+
                 }
                 return lightDebugRenderList
             }
@@ -294,7 +390,7 @@ var RedRenderer;
             // 픽셀 플립 기본설정
             gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
         };
-        
+
         return function (redGL, time) {
             var gl;
             var tViewRect;

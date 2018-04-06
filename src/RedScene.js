@@ -41,7 +41,7 @@ var RedScene;
         this['lightInfo'] = {
             RedAmbientLight: null,
             RedDirectionalLight: [],
-            RedOmniLight: []
+            RedPointLight: []
         };
 
         
@@ -81,7 +81,7 @@ var RedScene;
                 case RedDirectionalLight['type']:
                     this['lightInfo'][v['type']].push(v)
                     break
-                case RedOmniLight['type']:
+                case RedPointLight['type']:
                     this['lightInfo'][v['type']].push(v)
                     break
                 default:

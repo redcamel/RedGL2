@@ -166,7 +166,7 @@ var RedBox;
         :DOC*/
         this['indexBuffer'] = t0['indexBuffer']
         this['_UUID'] = RedGL['makeUUID']();
-        Object.freeze(this)
+        // Object.freeze(this)
         // console.log(this)
     }
     RedBox.prototype = RedGeometry.prototype;
