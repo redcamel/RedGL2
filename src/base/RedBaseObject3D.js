@@ -35,5 +35,42 @@ var RedBaseObject3D;
         //
         this['children'] = []
     }
+    RedBaseObject3D.prototype = {
+        localToGlobal: (function () {
+            var t0;
+            t0 = mat4.create()
+            return function (x, y, z) {
+                x = x || 0
+                y = y || 0
+                z = z || 0
+                mat4.identity(t0);
+                mat4.translate(t0, t0, [x, y, z])
+                mat4.multiply(t0, this['matrix'], t0)
+                return [
+                    t0[12],
+                    t0[13],
+                    t0[14]
+                ]
+            }
+        })(),
+        globalToLocal: (function () {
+            var t0,t1;
+            t0 = mat4.create() // 이동
+            t1 = mat4.create()
+            return function (x, y, z) {
+                x = x || 0
+                y = y || 0
+                z = z || 0
+                mat4.translate(t0, t0, [x, y, z])
+                // mat4.invert(t1, this['matrix'])
+                mat4.multiply(t1, t0,this['matrix'])
+                return [
+                    t1[0] * x + t1[1] * y + t1[2] * z + t1[3],
+                    t1[4] * x + t1[5] * y + t1[6] * z + t1[7],
+                    t1[8] * x + t1[9] * y + t1[10] * z + t1[11]
+                ]
+            }
+        })()
+    }
     Object.freeze(RedBaseObject3D);
 })();

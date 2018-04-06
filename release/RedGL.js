@@ -1596,7 +1596,7 @@ var RedSystemShaderCode;
             'varying vec2 vResolution',
 
             'const int DIRETIONAL_MAX = 5',
-            'uniform vec3 uDirectionalLightDirection[5]',
+            'uniform vec3 uDirectionalLightPosition[5]',
             'uniform vec4 uDirectionalLightColor[5]',
             'uniform float uDirectionalLightIntensity[5]',
             'uniform int uDirectionalLightNum',
@@ -2086,14 +2086,14 @@ var RedRenderer;
                     while (i--) {
                         tLightData = tList[i];
                         tDebugObj = tLightData['debugObject'];
-                        vec3.set(tVector, tLightData['directionX'], tLightData['directionY'], tLightData['directionZ'])
+                        vec3.set(tVector, tLightData['x'], tLightData['y'], tLightData['z'])
                         vec3.normalize(tVector, tVector)
                         tDebugObj['x'] = -tVector[0] * 5;
                         tDebugObj['y'] = -tVector[1] * 5;
                         tDebugObj['z'] = -tVector[2] * 5;
                         lightDebugRenderList.push(tDebugObj)
                         //
-                        tLocationInfo = tSystemUniformGroup['uDirectionalLightDirection'];
+                        tLocationInfo = tSystemUniformGroup['uDirectionalLightPosition'];
                         tLocation = tLocationInfo['location'];
                         if (tLocation) {
                             tDirectionList[0 + 3 * i] = tVector[0];
@@ -2115,7 +2115,7 @@ var RedRenderer;
                         if (tLocation) tIntensityList[i] = tLightData['intensity']
                     }
                     //
-                    tLocationInfo = tSystemUniformGroup['uDirectionalLightDirection'];
+                    tLocationInfo = tSystemUniformGroup['uDirectionalLightPosition'];
                     tLocation = tLocationInfo['location'];
                     tUUID = tLocationInfo['_UUID'];
                     tValue = tDirectionList;
@@ -3045,7 +3045,7 @@ var RedScene;
         this['lightInfo'] = {
             RedAmbientLight: null,
             RedDirectionalLight: [],
-            RedOmniLight: []
+            RedPointLight: []
         }
         this['skyBox'] = null;
         this['_UUID'] = RedGL['makeUUID']();
@@ -3061,7 +3061,7 @@ var RedScene;
                 case 'RedDirectionalLight':
                     this['lightInfo'][v['type']].push(v)
                     break
-                case 'RedOmniLight':
+                case 'RedPointLight':
                     this['lightInfo'][v['type']].push(v)
                     break
             }

@@ -56,6 +56,10 @@ var RedStandardMaterial;
             }
         :DOC*/
         this['specularPower'] = 1
+        this['shadowBiasMatrix'] = mat4.create()
+        mat4.identity(this['shadowBiasMatrix']);
+        mat4.scale(this['shadowBiasMatrix'], this['shadowBiasMatrix'], [0.5, 0.5, 0.5]);
+        mat4.translate(this['shadowBiasMatrix'], this['shadowBiasMatrix'], [1.0, 1.0, 1.0, 1.0]);
         /////////////////////////////////////////
         // 일반 프로퍼티
         /**DOC:
@@ -80,8 +84,9 @@ var RedStandardMaterial;
             void main(void) {
                 vTexcoord = aTexcoord;
                 vVertexNormal = vec3(uNMatrix * vec4(aVertexNormal,1.0)); 
-                vVertexPositionEye4 = uMVMatrix * vec4(aVertexPosition, 1.0);
-                gl_Position = uPMatrix * uCameraMatrix* vVertexPositionEye4;
+                vVertexPositionEye4 = uMVMatrix * vec4(aVertexPosition, 1.0);         
+          
+                gl_Position = uPMatrix * uCameraMatrix * vVertexPositionEye4;
             }
             */
         }
@@ -91,11 +96,12 @@ var RedStandardMaterial;
             uniform sampler2D uDiffuseTexture;
             uniform sampler2D uNormalTexture;
             uniform sampler2D uSpecularTexture;
+
             uniform float uShininess;
             uniform float uSpecularPower;
             
             varying vec4 vVertexPositionEye4;
-            
+       
             void main(void) {
                 vec4 la = uAmbientLightColor * uAmbientLightColor.a;
                 vec4 ld = vec4(0.0, 0.0, 0.0, 1.0);
@@ -103,7 +109,7 @@ var RedStandardMaterial;
 
                 vec4 texelColor = texture2D(uDiffuseTexture, vTexcoord);
                 texelColor.rgb *= texelColor.a;
-                if(texelColor.a == 0.0) discard;
+                if(texelColor.a ==0.0) discard;
 
                 vec3 N = normalize(vVertexNormal);
                 N = normalize(2.0 * (N + texture2D(uNormalTexture, vTexcoord).rgb  - 0.5));
@@ -113,18 +119,39 @@ var RedStandardMaterial;
                 specularTextureValue = texture2D(uSpecularTexture, vTexcoord).r;
                 float specular;             
 
+                vec3 L;
+                vec3 R;
+                highp float lambertTerm;
                 for(int i=0; i<DIRETIONAL_MAX; i++){
                     if(i == uDirectionalLightNum) break;
-                    vec3 L = normalize(uDirectionalLightDirection[i]);
-                    float lambertTerm =dot(N,-L);
+                    L = normalize(-uDirectionalLightPosition[i]);
+                    lambertTerm = dot(N,-L);
                     if(lambertTerm > 0.0){
-                        vec3 R;
                         ld += uDirectionalLightColor[i] * texelColor * lambertTerm * uDirectionalLightIntensity[i];
                         R = reflect(L, N);
                         specular = pow( max(dot(R, -L), 0.0), uShininess);
                         ls +=  specularLightColor * specular * uSpecularPower * specularTextureValue * uDirectionalLightIntensity[i];
                     }
-                }                
+                }         
+                vec3 pointDirection;  
+                highp float distanceLength;
+                highp float attenuation;
+                for(int i=0;i<POINT_MAX;i++){
+                    if(i== uPointLightNum) break;
+                    pointDirection =  -uPointLightPosition[i] + vVertexPositionEye4.xyz;
+                    distanceLength = length(pointDirection);
+                    if(uPointLightRadius[i]> distanceLength){
+                        attenuation = 1.0 / (0.01 + 0.02 * distanceLength + 0.03 * distanceLength * distanceLength); 
+                        L = normalize(pointDirection);
+                        lambertTerm = dot(N,-L);
+                        if(lambertTerm > 0.0){
+                            ld += uPointLightColor[i] * texelColor * lambertTerm * attenuation * uPointLightIntensity[i];
+                            R = reflect(L, N);
+                            specular = pow( max(dot(R, -L), 0.0), uShininess);
+                            ls +=  specularLightColor * specular * uSpecularPower * specularTextureValue * uPointLightIntensity[i] ;
+                        }
+                    }                          
+                }            
                 
                 vec4 finalColor = la * uAmbientIntensity + ld + ls; 
                 finalColor.a = texelColor.a;

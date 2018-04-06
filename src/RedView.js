@@ -76,6 +76,7 @@ var RedView;
         this['_height'] = '100%';
         this['_x'] = 0;
         this['_y'] = 0;
+        this['_viewRect'] = [0, 0, 0, 0]
         ViewMap[key] = this;
         Object.seal(this)
     };

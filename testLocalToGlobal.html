@@ -89,29 +89,11 @@
 
 
 
-            var testMaterial, testMaterial2
-            testMaterial = RedEnvironmentMaterial(
+            var testMaterial
+            testMaterial = RedStandardMaterial(
                 this,
-                RedBitmapTexture(this, 'asset/crate.png'),
-                RedBitmapCubeTexture(this, [
-                    'asset/cubemap/posx.png',
-                    'asset/cubemap/negx.png',
-                    'asset/cubemap/posy.png',
-                    'asset/cubemap/negy.png',
-                    'asset/cubemap/posz.png',
-                    'asset/cubemap/negz.png'
-                ]),
-                RedBitmapTexture(this, 'asset/normalTest.jpg'),
-                RedBitmapTexture(this, 'asset/specular.png'),
-                RedBitmapTexture(this, 'asset/displacementTest.jpg')
-
+                RedBitmapTexture(this, 'asset/crate.png')
             )
-            testMaterial2 = RedStandardMaterial(
-                this,
-                RedBitmapTexture(this, 'asset/alphaTest.png')
-            )
-
-
             tScene3D.setSkyBox(
                 RedSkyBox(this, [
                     'asset/cubemap/posx.png',
@@ -122,43 +104,39 @@
                     'asset/cubemap/negz.png'
                 ])
             )
+            var testMesh, testMesh2, testMesh3
             JsonModelLoader(this, 'testJsonModel', 'asset/teapot.json', function (interleaveBuffer, indexBuffer) {
                 console.log('호잇!', interleaveBuffer, indexBuffer)
-                var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer), testMaterial)
-                // var testMesh = RedMesh(self, RedBox(self), testMaterial)
-                testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.3
-                // var testMesh = RedMesh(self,RedPlane(self),testMaterial)
-                // testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 1
-                // testMesh.scaleY  = 
+
+                testMesh = RedMesh(self, RedBox(self), testMaterial)
+                testMesh.x = 1
+                testMesh.y = 1
+                testMesh.z = 1
                 tScene3D.addChild(testMesh)
-                var i = 10
-                while (i--) {
-                    var testMesh2 = RedSprite3D(self, RedBox(self), testMaterial2)
-                    testMesh2.x = Math.sin(Math.PI * 2 / 10 * i) * 15
-                    testMesh2.y = Math.cos(Math.PI * 2 / 10 * i) * 15
-                    testMesh2.scaleX = testMesh2.scaleY = testMesh2.scaleZ = 10
-                    testMesh.addChild(testMesh2)
 
+                testMesh2 = RedMesh(self, RedBox(self), testMaterial)
 
-                }
-                var i = 10
-                while (i--) {
-                    // var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer),
-                    //     testMaterial)
-                    var testMesh = RedMesh(self, RedSphere(self), testMaterial)
-                    testMesh.x = Math.sin(Math.PI * 2 / 10 * i) * 6
-                    testMesh.z = Math.cos(Math.PI * 2 / 10 * i) * 6
-                    testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 1
-                    tScene3D.addChild(testMesh)
+                testMesh2.x = -2
+                testMesh.addChild(testMesh2)
 
-                }
+                testMesh3 = RedMesh(self, RedBox(self), RedColorMaterial(self))
+                testMesh3.scaleX = testMesh3.scaleY = testMesh3.scaleZ = 1.1
+
+                tScene3D.addChild(testMesh3)
+
+                testMesh4 = RedMesh(self, RedBox(self), RedColorMaterial(self, '#00ff00'))
+                testMesh4.scaleX = testMesh4.scaleY = testMesh4.scaleZ = 1
+                testMesh4.x = 2
+                testMesh.addChild(testMesh4)
+
                 tScene3D['grid'] = RedGrid(self)
-
+                // tScene3D['axis'] = RedAxis(self)
 
             })
 
+            RedFrameBuffer(this)
 
-            var testDLight, testALight, testPLight;
+            var testDLight, testALight;
 
             testDLight = RedDirectionalLight(this, '#fff')
             testDLight.x = 3
@@ -166,37 +144,16 @@
             testDLight.z = 3
             tScene3D.addLight(testDLight)
 
-            testDLight = RedDirectionalLight(this, '#00ff00')
-            testDLight.x = -3
-            testDLight.y = -3
-            testDLight.z = -3
-            // tScene3D.addLight(testDLight)
 
-            testPLight = RedPointLight(this, '#ff0000')
-            testPLight.x = -3
-            testPLight.y = -3
-            testPLight.z = -3
-            testPLight['radius'] = 4
-            testPLight['intensity'] = 1
-            tScene3D.addLight(testPLight)
+            testALight = RedAmbientLight(this)
+            tScene3D.addLight(testALight)
 
+            var worldToScreenBox;
+            worldToScreenBox = document.createElement('div')
+            worldToScreenBox.style.cssText = 'position:absolute;top:0px;left:0px;color:#fff;font-size:12px;background:rgba(0,0,0,0.6)'
+            worldToScreenBox.innerHTML = 'worldToScreen Test'
+            document.body.appendChild(worldToScreenBox)
 
-            var testPLight2 = RedPointLight(this, '#00ff00')
-            testPLight2.x = -3
-            testPLight2.y = -3
-            testPLight2.z = -3
-            testPLight2['radius'] = 2
-            testPLight2['intensity'] = 1
-            tScene3D.addLight(testPLight2)
-
-            testDLight = RedDirectionalLight(this, '#fff')
-            testDLight.x = Math.random() * 10 - 5
-            // testDLight.y = Math.random() * 30 - 15
-            testDLight.z = Math.random() * 10 - 5
-            // tScene3D.addLight(testDLight)
-
-            // testALight = RedAmbientLight(this)
-            // tScene3D.addLight(testALight)
 
             var renderResult;
             renderResult = document.createElement('div')
@@ -206,38 +163,59 @@
 
             tRenderer.start(this, function (time) {
                 // testInterleaveBuffer.upload(interleaveData)
-                i = tScene3D.children.length
-                while (i--) {
-                    testMesh = tScene3D.children[i]
-                    // testMesh.rotationX += 1
-                    // testMesh.rotationY += 1
-                    // testMesh.rotationZ += 1
-                    // testMesh.lookAt(tCamera.x, tCamera.y, tCamera.z)
-                    // testMesh['drawMode'] = self.gl.POINTS
-                    // testMesh.lookAt(tCamera.x,tCamera.y,tCamera.z)
-                }
+                // i = tScene3D.children.length
+                // while (i--) {
 
-                testDLight.x = -Math.sin(time / 1500) * 20
-                // testLight.y = Math.cos(time / 1500) * 10
-                testDLight.z = -Math.cos(time / 1500) * 20
+                //     testMesh = tScene3D.children[i]
+                //     testMesh.rotationX += 1
+                //     testMesh.rotationY += 1
+                //     testMesh.rotationZ += 1
+
+                // }
+                testMesh.rotationX += 1
+                testMesh.rotationY += 1
+                testMesh.rotationZ += 1
+
+                testMesh2.rotationX += 0.5
+                testMesh2.rotationY += 0.5
+                testMesh2.rotationZ += 0.5
+
+                // console.log(testMesh2.localToGlobal(-2, 0, 0))
+
+                testMesh3.x = testMesh2.localToGlobal(-1, 1, 0)[0]
+                testMesh3.y = testMesh2.localToGlobal(-1, 1, 0)[1]
+                testMesh3.z = testMesh2.localToGlobal(-1, 1, 0)[2]
+
+                testDLight.x = Math.sin(time / 1500) * 1
+                testDLight.y = 5
+                testDLight.z = Math.cos(time / 1500) * 1
 
 
-                testPLight.x = -Math.sin(time / 1500) * 5
-                testPLight.y = 2
-                testPLight.z = -Math.cos(time / 1500) * 5
+                // console.log(testMesh4.globalToLocal(2, 2, 2))
 
-                testPLight2.x = Math.sin(time / 1500) * 8.5
-                testPLight2.y = 0
-                testPLight2.z = Math.cos(time / 1500) * 8.5
 
-                // tCamera.x = Math.sin(time / 1500) * 20
-                // tCamera.y = Math.cos(time / 1500) * 20
-                // tCamera.z = Math.cos(time / 1500) * 15 + Math.sin(time / 1500) * 15
+                testMesh4.x = testMesh4.globalToLocal(3, 0, 1)[0]
+                testMesh4.y = testMesh4.globalToLocal(3, 0, 1)[1]
+                testMesh4.z = testMesh4.globalToLocal(3, 0, 1)[2]
 
-                // testMaterial['displacementPower'] = Math.sin(time / 100)
-                tCamera.y = 20
-                // tCamera.x = 25
+                //   var testPosition = [Math.sin(time / 1500) * 5, 0, Math.cos(time / 1500) * 5]
+                // testMesh4.x = testMesh4.globalToLocal(testPosition[0], testPosition[1], testPosition[2])[0]
+                // testMesh4.y = testMesh4.globalToLocal(testPosition[0], testPosition[1], testPosition[2])[1]
+                // testMesh4.z = testMesh4.globalToLocal(testPosition[0], testPosition[1], testPosition[2])[2]
+
+
+
+
+
+              
+                tCamera.y = 10
                 tCamera.z = 20
+                // tCamera.x = Math.sin(time / 1500) * 30
+                // tCamera.y = Math.cos(time / 1500) * 30
+                // if(tCamera.y<1) tCamera.y = 1
+                // tCamera.z = Math.cos(time / 1500) * 30 + Math.sin(time / 1500) * 30
+
+
                 tCamera.lookAt(0, 0, 0)
 
 

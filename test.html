@@ -15,54 +15,56 @@
             overflow: hidden;
         }
     </style>
-    <script src="src/gl-matrix-min.js"></script>
-    <script src="src/RedGLUtil.js"></script>
-    <script src="src/RedGL.js"></script>
+   <script src="src/gl-matrix-min.js"></script>
+   <script src="src/RedGLUtil.js"></script>
+   <script src="src/RedGL.js"></script>
 
-    <script src="src/base/RedBaseContainer.js"></script>
-    <script src="src/base/RedBaseLight.js"></script>
-    <script src="src/base/RedBaseMaterial.js"></script>
-    <script src="src/base/RedBaseObject3D.js"></script>
+   <script src="src/base/RedBaseContainer.js"></script>
+   <script src="src/base/RedBaseLight.js"></script>
+   <script src="src/base/RedBaseMaterial.js"></script>
+   <script src="src/base/RedBaseObject3D.js"></script>
 
-    <script src="src/geometry/RedBuffer.js"></script>
-    <script src="src/geometry/RedGeometry.js"></script>
+   <script src="src/geometry/RedBuffer.js"></script>
+   <script src="src/geometry/RedGeometry.js"></script>
 
-    <script src="src/light/RedAmbientLight.js"></script>
-    <script src="src/light/RedDirectionalLight.js"></script>
-    <script src="src/loader/JsonModelLoader.js"></script>
+   <script src="src/light/RedAmbientLight.js"></script>
+   <script src="src/light/RedDirectionalLight.js"></script>
+   <script src="src/light/RedPointLight.js"></script>
 
-    <script src="src/material/RedMaterial.js"></script>
-    <script src="src/material/RedColorMaterial.js"></script>
-    <script src="src/material/RedEnvironmentMaterial.js"></script>
-    <script src="src/material/RedGridMaterial.js"></script>
-    <script src="src/material/RedBitmapMaterial.js"></script>
-    <script src="src/material/RedSkyBoxMaterial.js"></script>
-    <script src="src/material/RedStandardMaterial.js"></script>
+   <script src="src/loader/JsonModelLoader.js"></script>
 
+   <script src="src/material/RedMaterial.js"></script>
+   <script src="src/material/RedColorMaterial.js"></script>
+   <script src="src/material/RedEnvironmentMaterial.js"></script>
+   <script src="src/material/RedGridMaterial.js"></script>
+   <script src="src/material/RedBitmapMaterial.js"></script>
+   <script src="src/material/RedSkyBoxMaterial.js"></script>
+   <script src="src/material/RedStandardMaterial.js"></script>
 
-    <script src="src/object3D/RedGrid.js"></script>
-    <script src="src/object3D/RedMesh.js"></script>
-    <script src="src/object3D/RedLine.js"></script>
-    <script src="src/object3D/RedSkyBox.js"></script>
-    <script src="src/object3D/RedSprite3D.js"></script>
+   <script src="src/object3D/RedAxis.js"></script>
+   <script src="src/object3D/RedGrid.js"></script>
+   <script src="src/object3D/RedMesh.js"></script>
+   <script src="src/object3D/RedLine.js"></script>
+   <script src="src/object3D/RedSkyBox.js"></script>
+   <script src="src/object3D/RedSprite3D.js"></script>
 
+   <script src="src/primitives/RedBox.js"></script>
+   <script src="src/primitives/RedPlane.js"></script>
+   <script src="src/primitives/RedSphere.js"></script>
 
-    <script src="src/primitives/RedBox.js"></script>
-    <script src="src/primitives/RedPlane.js"></script>
+   <script src="src/program/RedProgram.js"></script>
+   <script src="src/program/RedSystemShaderCode.js"></script>
+   <script src="src/program/RedShader.js"></script>
 
-    <script src="src/program/RedProgram.js"></script>
-    <script src="src/program/RedSystemShaderCode.js"></script>
-    <script src="src/program/RedShader.js"></script>
+   <script src="src/renderer/RedRenderer.js"></script>
 
-    <script src="src/renderer/RedRenderer.js"></script>
+   <script src="src/resources/RedBitmapCubeTexture.js"></script>
+   <script src="src/resources/RedBitmapTexture.js"></script>
 
-    <script src="src/resources/RedBitmapCubeTexture.js"></script>
-    <script src="src/resources/RedBitmapTexture.js"></script>
-
-    <script src="src/RedView.js"></script>
-    <script src="src/RedWorld.js"></script>
-    <script src="src/RedScene.js"></script>
-    <script src="src/RedCamera.js"></script>
+   <script src="src/RedView.js"></script>
+   <script src="src/RedWorld.js"></script>
+   <script src="src/RedScene.js"></script>
+   <script src="src/RedCamera.js"></script>
 </head>
 
 <body>
@@ -89,6 +91,23 @@
 
             tScene3D.addLight(testALight)
             tScene3D.addLight(testDLight)
+
+            var testPLight = RedPointLight(this, '#ff0000')
+            testPLight.x = -3
+            testPLight.y = -3
+            testPLight.z = -3
+            testPLight['radius'] = 4
+            testPLight['intensity'] = 1
+            tScene3D.addLight(testPLight)
+
+
+            var testPLight2 = RedPointLight(this, '#00ff00')
+            testPLight2.x = -3
+            testPLight2.y = -3
+            testPLight2.z = -3
+            testPLight2['radius'] = 6
+            testPLight2['intensity'] = 1
+            tScene3D.addLight(testPLight2)
 
             tRenderer = RedRenderer();
             tWorld.addView(RedView('test', tScene3D, tCamera));
@@ -122,23 +141,16 @@
                 ])
             )
 
-            var testDLight;
-
-
-            testDLight = RedDirectionalLight(this, '#00ff00')
-            testDLight.directionX = 3
-            testDLight.directionY = 3
-            testDLight.directionZ = 3
-            tScene3D.addLight(testDLight)
+         
 
             JsonModelLoader(this, 'testJsonModel', 'asset/teapot.json', function (interleaveBuffer, indexBuffer) {
                 console.log('호잇!', interleaveBuffer, indexBuffer)
                 var i = 5000
                 while (i--) {
                     var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer), testMaterial)
-                    testMesh.x = Math.random() * 500 - 250
-                    testMesh.y = Math.random() * 500 - 250
-                    testMesh.z = Math.random() * 500 - 250
+                    testMesh.x = Math.random() * 250 - 125
+                    testMesh.y = Math.random() * 250 - 125
+                    testMesh.z = Math.random() * 250 - 125
                     testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.3
                     testMesh.rotationX = Math.random() * 360
                     testMesh.rotationY = Math.random() * 360
@@ -211,15 +223,23 @@
                     testMesh.rotationY += 1
                     testMesh.rotationZ += 1
                 }
-                // testDLight.directionX = Math.sin(time / 500) * 10
-                // testLight.y = Math.cos(time / 1500) * 10
-                // testDLight.directionZ = Math.cos(time / 500) * 10
+                testDLight.x = Math.sin(time / 1500) * 10
+                testDLight.y = Math.cos(time / 1500) * 10
+                testDLight.z = Math.cos(time / 1500) * 10
                 testMaterial['displacementPower'] = Math.sin(time/100) 
-                tCamera.x = Math.sin(time / 2500) * 20
-                tCamera.y = Math.cos(time / 2500) * 20
-                tCamera.z = Math.cos(time / 2500) * 20
+                tCamera.x = Math.sin(time / 3500) * 20
+                tCamera.y = Math.cos(time / 3500) * 20
+                tCamera.z = Math.cos(time / 3500) * 20
+                // tCamera.z = 20
                 tCamera.lookAt(0, 0, 0)
 
+    testPLight.x = -Math.sin(time / 1500) * 5
+                testPLight.y = 2
+                testPLight.z = -Math.cos(time / 1500) * 5
+
+                testPLight2.x = Math.sin(time / 1500) * 18.5
+                testPLight2.y = 0
+                testPLight2.z = Math.cos(time / 1500) * 18.5
 
                 renderResult.innerHTML = ''
                 for (var k in tRenderer['renderInfo']) {

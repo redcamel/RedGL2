@@ -82,7 +82,8 @@ var RedCamera;
             return : 'mat4'
         }
         :DOC*/
-        this.matrix = mat4.create();
+        this['matrix'] = mat4.create();
+        this['perspectiveMTX'] = mat4.create();
         this['_UUID'] = RedGL['makeUUID']();
     };
     RedGLUtil['extendsProto'](RedCamera, RedBaseObject3D);
@@ -108,5 +109,7 @@ var RedCamera;
             mat4.lookAt(this['matrix'], [this.x, this.y, this.z], [x, y, z], up);
         }
     })();
+    
+    
     Object.freeze(RedCamera);
 })();

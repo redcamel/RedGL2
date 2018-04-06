@@ -59,14 +59,22 @@ var RedSystemShaderCode;
             'varying float vTime',
             'varying vec2 vResolution',
 
-            'const int DIRETIONAL_MAX = 5',
-            'uniform vec3 uDirectionalLightDirection[5]',
-            'uniform vec4 uDirectionalLightColor[5]',
-            'uniform float uDirectionalLightIntensity[5]',
+            'const int DIRETIONAL_MAX = 3',
+            'uniform vec3 uDirectionalLightPosition[3]',
+            'uniform vec4 uDirectionalLightColor[3]',
+            'uniform float uDirectionalLightIntensity[3]',
             'uniform int uDirectionalLightNum',
 
+            //포인트라이트
+            'const int POINT_MAX = 5',
+            'uniform vec3 uPointLightPosition[5]',
+            'uniform vec4 uPointLightColor[5]',
+            'uniform float uPointLightRadius[5]',
+            'uniform float uPointLightIntensity[5]',
+            'uniform int uPointLightNum',
+            
             'uniform vec4 uAmbientLightColor',
-            'uniform float uAmbientIntensity',
+            'uniform float uAmbientIntensity'
 
         ],
         systemUniform: {}
