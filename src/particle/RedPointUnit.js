@@ -1,12 +1,12 @@
 "use strict";
-var RedParticleUnit;
+var RedPointUnit;
 (function () {
     /**DOC:
         {
             constructorYn : true,
-            title :`RedParticleUnit`,
+            title :`RedPointUnit`,
             description : `
-                RedParticleUnit Instance 생성기
+                RedPointUnit Instance 생성기
             `,
             params : {
                 geometry : [
@@ -21,8 +21,8 @@ var RedParticleUnit;
             return : 'RedProgram Instance'
         }
     :DOC*/
-    RedParticleUnit = function (redGL, interleaveData, interleaveDefineInfo, material) {
-        if (!(this instanceof RedParticleUnit)) return new RedParticleUnit(redGL, interleaveData, interleaveDefineInfo, material);
+    RedPointUnit = function (redGL, interleaveData, interleaveDefineInfo, material) {
+        if (!(this instanceof RedPointUnit)) return new RedPointUnit(redGL, interleaveData, interleaveDefineInfo, material);
         var tGL;
         tGL = redGL.gl
         RedBaseObject3D['build'].call(this, tGL)
@@ -30,7 +30,7 @@ var RedParticleUnit;
         var interleaveBuffer
         interleaveBuffer = RedBuffer(
             redGL,
-            'RedParticleUnit_' + this['_UUID'],
+            'RedPointUnit_' + this['_UUID'],
             interleaveData,
             RedBuffer.ARRAY_BUFFER,
             interleaveDefineInfo
@@ -40,7 +40,7 @@ var RedParticleUnit;
         this['drawMode'] = tGL.POINTS
         // Object.seal(this)
     }
-    RedGLUtil['extendsProto'](RedParticleUnit, RedBaseContainer);
-    RedGLUtil['extendsProto'](RedParticleUnit, RedBaseObject3D);
-    Object.freeze(RedParticleUnit);
+    RedGLUtil['extendsProto'](RedPointUnit, RedBaseContainer);
+    RedGLUtil['extendsProto'](RedPointUnit, RedBaseObject3D);
+    Object.freeze(RedPointUnit);
 })();

@@ -375,6 +375,7 @@ var RedRenderer;
         })();
         glInitialize = function (gl) {
             // 뎁스데스티 설정
+
             gl.enable(gl.DEPTH_TEST);
             gl.depthFunc(gl.LEQUAL)
             // 컬링 페이스 설정
@@ -384,7 +385,8 @@ var RedRenderer;
             gl.enable(gl.SCISSOR_TEST);
             // 블렌드모드설정
             gl.enable(gl.BLEND);
-            gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+            gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+            // gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
             // 픽셀 블렌딩 결정
             gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
             // 픽셀 플립 기본설정
@@ -875,7 +877,7 @@ var RedRenderer;
                 // 뎁스테스트 사용여부 캐싱처리
                 tCacheState['useDepthTest'] != tMesh['useDepthTest'] ? (tCacheState['useDepthTest'] = tMesh['useDepthTest']) ? gl.enable(gl.DEPTH_TEST) : gl.disable(gl.DEPTH_TEST) : 0;
                 // 뎁스테스팅 캐싱처리
-                tCacheState['depthTestFunc'] != tMesh['depthTestFunc'] ? gl.depthFunc(tCacheState['depthTestFunc'] = tMesh['depthTestFunc']) : 0;
+                tCacheState['depthTestFunc'] != tMesh['depthTestFunc'] ? gl.depthFunc(tMesh['depthTestFunc']) : 0;
                 // 블렌딩 사용여부 캐싱처리
                 tCacheState['useBlendMode'] != tMesh['useBlendMode'] ? (tCacheState['useBlendMode'] = tMesh['useBlendMode']) ? gl.enable(gl.BLEND) : gl.disable(gl.BLEND) : 0;
                 // 블렌딩팩터 캐싱처리

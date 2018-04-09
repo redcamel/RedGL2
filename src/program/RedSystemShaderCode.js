@@ -26,7 +26,10 @@ var RedSystemShaderCode;
         vShareSource: [
             'attribute vec3 aVertexPosition',
             'attribute vec3 aVertexNormal',
+            'attribute vec4 aVertexColor',
             'varying vec3 vVertexNormal',
+
+            'attribute float aPointSize',
 
             'attribute vec2 aTexcoord',
             'varying vec2 vTexcoord',

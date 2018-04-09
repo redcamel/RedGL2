@@ -16,7 +16,6 @@ var RedGridMaterial;
         var vSource, fSource;
         vSource = function () {
             /*
-            attribute vec4 aVertexColor;
             varying vec4 vColor;
             void main(void) {
                 vColor = aVertexColor;
