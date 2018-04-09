@@ -927,7 +927,6 @@ var RedMaterial;
         var vSource, fSource;
         vSource = function () {
             /*
-            attribute vec4 aVertexColor;
             uniform float uFloatTest;
             uniform float uFloatTest2[10];
             uniform int uIntTest;

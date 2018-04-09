@@ -2,7 +2,7 @@
 var JsonModelLoader;
 (function () {
     JsonModelLoader = function (redGL, key, src, callback) {
-        if((!(this instanceof JsonModelLoader))) return new JsonModelLoader(redGL, key, src, callback)
+        if ((!(this instanceof JsonModelLoader))) return new JsonModelLoader(redGL, key, src, callback)
         console.log('~~~~~~~~~~~')
         var request = new XMLHttpRequest();
         request.open("GET", src);
@@ -29,7 +29,8 @@ var JsonModelLoader;
                                 redGL,
                                 key,
                                 new Float32Array(interleaveData),
-                                RedBuffer.ARRAY_BUFFER, [{
+                                RedBuffer.ARRAY_BUFFER,
+                                [{
                                     attributeKey: 'aVertexPosition',
                                     size: 3,
                                     normalize: false

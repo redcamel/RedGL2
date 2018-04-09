@@ -22,16 +22,14 @@ var RedMaterial;
     makeProgram = function (redGL) {
         var vSource, fSource;
         vSource = function () {
-            /*
-            attribute vec4 aVertexColor;
-            
+            /*      
+            varying vec4 vColor;
             uniform float uFloatTest;
             uniform float uFloatTest2[10];
             uniform int uIntTest;
             uniform int uIntTest2[10];
             uniform vec4 uVec4Test;
             uniform mat4 uMat4Test;
-            varying vec4 vColor;
             void main(void) {
                 vColor = aVertexColor;
                 vColor.r= sin(uTime*0.01);

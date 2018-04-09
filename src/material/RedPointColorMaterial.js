@@ -1,41 +1,32 @@
 "use strict";
-var RedBitmapMaterial;
+var RedPointColorMaterial;
 (function () {
     var makeProgram;
     /**DOC:
         {
             constructorYn : true,
-            title :`RedBitmapMaterial`,
+            title :`RedPointColorMaterial`,
             description : `
-                RedBitmapMaterial Instance 생성
+                RedPointColorMaterial Instance 생성
             `,
             params : {
                 redGL : [
                     {type:'RedGL Instance'}
                 ],
                 texture : [
-                    {type:'RedBitmapMaterial'},
-                    'RedBitmapMaterial'
+                    {type:'RedPointColorMaterial'},
+                    'RedPointColorMaterial'
                 ]
             },
-            return : 'RedBitmapMaterial Instance'
+            return : 'RedPointColorMaterial Instance'
         }
     :DOC*/
-    RedBitmapMaterial = function (redGL, diffuseTexture) {
-        if (!(this instanceof RedBitmapMaterial)) return new RedBitmapMaterial(redGL, diffuseTexture);
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedBitmapMaterial : RedGL Instance만 허용됩니다.')
-        if (!(diffuseTexture instanceof RedBitmapTexture)) RedGLUtil.throwFunc('RedBitmapMaterial : RedBitmapTexture Instance만 허용됩니다.')
+    RedPointColorMaterial = function (redGL) {
+        if (!(this instanceof RedPointColorMaterial)) return new RedPointColorMaterial(redGL);
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPointColorMaterial : RedGL Instance만 허용됩니다.')
         /////////////////////////////////////////
         // 유니폼 프로퍼티
-        /**DOC:
-            {
-                title :`diffuseTexture`,
-                description : `diffuseTexture`,
-                example : `// TODO:`,
-                return : 'RedBitmapMaterial'
-            }
-        :DOC*/
-        this['diffuseTexture'] = diffuseTexture;
+    
         /////////////////////////////////////////
         // 일반 프로퍼티
         /**DOC:
@@ -56,8 +47,10 @@ var RedBitmapMaterial;
         var vSource, fSource;
         vSource = function () {
             /*
+            varying vec4 vColor;
             void main(void) {
-                vTexcoord = aTexcoord;
+                gl_PointSize = aPointSize;
+                vColor = aVertexColor;
                 gl_Position = uPMatrix * uCameraMatrix* uMVMatrix * vec4(aVertexPosition, 1.0);
             }
             */
@@ -65,11 +58,9 @@ var RedBitmapMaterial;
         fSource = function () {
             /*
             precision mediump float;
-            uniform sampler2D uDiffuseTexture;
+            varying vec4 vColor;
             void main(void) {
-                vec4 texelColor = texture2D(uDiffuseTexture, vTexcoord);
-                texelColor.rgb *= texelColor.a;
-                gl_FragColor = texelColor;
+                gl_FragColor = vColor;
             }
             */
         }
@@ -78,11 +69,11 @@ var RedBitmapMaterial;
         // console.log(vSource, fSource)
         return RedProgram(
             redGL,
-            'bitmapProgram',
-            RedShader(redGL, 'bitmapVs', RedShader.VERTEX, vSource),
-            RedShader(redGL, 'bitmapFS', RedShader.FRAGMENT, fSource)
+            'pointColorProgram',
+            RedShader(redGL, 'pointColorVs', RedShader.VERTEX, vSource),
+            RedShader(redGL, 'pointColorFS', RedShader.FRAGMENT, fSource)
         )
     }
-    RedBitmapMaterial.prototype = RedBaseMaterial.prototype
-    Object.freeze(RedBitmapMaterial)
+    RedPointColorMaterial.prototype = RedBaseMaterial.prototype
+    Object.freeze(RedPointColorMaterial)
 })();

@@ -38,6 +38,9 @@
     <script src="src/material/RedEnvironmentMaterial.js"></script>
     <script src="src/material/RedGridMaterial.js"></script>
     <script src="src/material/RedBitmapMaterial.js"></script>
+
+    <script src="src/material/RedPointBitmapMaterial.js"></script>
+    <script src="src/material/RedPointColorMaterial.js"></script>
     <script src="src/material/RedSkyBoxMaterial.js"></script>
     <script src="src/material/RedStandardMaterial.js"></script>
 
@@ -48,7 +51,8 @@
     <script src="src/object3D/RedSkyBox.js"></script>
     <script src="src/object3D/RedSprite3D.js"></script>
 
-    <script src="src/particle/RedParticleUnit.js"></script>
+
+    <script src="src/particle/RedPointUnit.js"></script>
 
     <script src="src/primitives/RedBox.js"></script>
     <script src="src/primitives/RedPlane.js"></script>
@@ -154,11 +158,11 @@
                 while (i--) {
                     var t = Math.random() * 100 - 50
                     interleaveData.push(Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50)
-                    interleaveData.push(Math.random() * 2)
+                    interleaveData.push(Math.random() * 5)
                     interleaveData.push(Math.random(), Math.random(), Math.random(), 1)
                 }
                 interleaveData = new Float32Array(interleaveData)
-                var testParticle = RedParticleUnit(
+                var testParticle = RedPointUnit(
                     self,
                     interleaveData,
                     [
@@ -183,6 +187,48 @@
                 tScene3D.addChild(testParticle)
             })();
 
+            (function () {
+                var testMaterial
+
+                testMaterial = RedPointBitmapMaterial(self, RedBitmapTexture(self, 'asset/alphaTest.png'))
+
+                var interleaveData
+                interleaveData = []
+
+                var i = 10000
+                while (i--) {
+             
+                    interleaveData.push(Math.random() * 150 - 75, Math.random() * 150 - 75, Math.random() * 150 - 75)
+                    interleaveData.push(Math.random() * 100)
+                    interleaveData.push(Math.random(), Math.random(), Math.random(), 1)
+                }
+                interleaveData = new Float32Array(interleaveData)
+                var testParticle = RedPointUnit(
+                    self,
+                    interleaveData,
+                    [
+                        {
+                            attributeKey: 'aVertexPosition',
+                            size: 3,
+                            normalize: false
+                        },
+                        {
+                            attributeKey: 'aPointSize',
+                            size: 1,
+                            normalize: false
+                        },
+                        {
+                            attributeKey: 'aVertexColor',
+                            size: 4,
+                            normalize: false
+                        }
+                        // TODO: 텍스쳐를 받으려면 쿼드로 그려야하는건가..
+                        // TODO: 쿼드가 아니라면 포인트에서 텍스쳐를 받아들일 방법을 고안해야함
+                    ],
+                    testMaterial
+                )
+                tScene3D.addChild(testParticle)
+            })();
             JsonModelLoader(this, 'testJsonModel', 'asset/teapot.json', function (interleaveBuffer, indexBuffer) {
                 console.log('호잇!', interleaveBuffer, indexBuffer)
                 var i = 5000

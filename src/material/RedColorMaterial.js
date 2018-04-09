@@ -67,7 +67,7 @@ var RedColorMaterial;
             uniform vec4 uColor;
             varying vec4 vColor;
             void main(void) {
-                vColor = uColor;
+                vColor = uColor; 
                 gl_Position = uPMatrix * uCameraMatrix* uMVMatrix * vec4(aVertexPosition, 1.0);
             }
             */

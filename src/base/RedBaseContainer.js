@@ -33,8 +33,8 @@ var RedBaseContainer;
                     !(child instanceof RedMesh)
                     && !(child instanceof RedSprite3D)
                     && !(child instanceof RedLine)
-                    && !(child instanceof RedParticleUnit)
-                ) RedGLUtil.throwFunc('addChild', 'RedMesh,RedSprite3D,RedLine,RedParticleUnit Instance만 가능');
+                    && !(child instanceof RedPointUnit)
+                ) RedGLUtil.throwFunc('addChild', 'RedMesh,RedSprite3D,RedLine,RedPointUnit Instance만 가능');
                 t0 = this.children.indexOf(child);
                 if (t0 != -1) child = this.children.splice(t0, 1);
                 this.children.push(child);
@@ -56,7 +56,8 @@ var RedBaseContainer;
                     !(child instanceof RedMesh)
                     && !(child instanceof RedSprite3D)
                     && !(child instanceof RedLine)
-                ) RedGLUtil.throwFunc('addChildAt', 'RedMesh,RedSprite3D,RedLine Instance만 가능');
+                    && !(child instanceof RedPointUnit)
+                ) RedGLUtil.throwFunc('addChildAt', 'RedMesh,RedSprite3D,RedLine,RedPointUnit Instance만 가능');
                 t0 = this.children.indexOf(child);
                 this.children.splice(t0, 0, child);
             }
