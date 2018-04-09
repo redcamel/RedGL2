@@ -100,6 +100,54 @@
 
             (function () {
                 var testMaterial
+
+                testMaterial = RedPointBitmapMaterial(self, RedBitmapTexture(self, 'asset/particle.png'))
+                
+
+                var interleaveData
+                interleaveData = []
+
+                var i = 10000
+                while (i--) {
+                    var t = Math.random() * 100 - 50
+                    interleaveData.push(Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50)
+                    interleaveData.push(Math.random() * 100)
+                    interleaveData.push(Math.random(), Math.random(), Math.random(), 1)
+                }
+                interleaveData = new Float32Array(interleaveData)
+              
+                var testParticle = RedPointUnit(
+                    self,
+                    interleaveData,
+                    [
+                        {
+                            attributeKey: 'aVertexPosition',
+                            size: 3,
+                            normalize: false
+                        },
+                        {
+                            attributeKey: 'aPointSize',
+                            size: 1,
+                            normalize: false
+                        },
+                        {
+                            attributeKey: 'aVertexColor',
+                            size: 4,
+                            normalize: false
+                        }
+                        // TODO: 텍스쳐를 받으려면 쿼드로 그려야하는건가..
+                        // TODO: 쿼드가 아니라면 포인트에서 텍스쳐를 받아들일 방법을 고안해야함
+                    ],
+                    testMaterial
+                )
+                testParticle['useDepthTest'] = false
+                // testParticle['depthTestFunc'] = self.gl.LESS
+                testParticle['blendSrc'] = self.gl.SRC_ALPHA
+                testParticle['blendDst'] = self.gl.ONE
+                tScene3D.addChildAt(testParticle,0)
+            })();
+            (function () {
+                var testMaterial
                 testMaterial = RedPointColorMaterial(self)
 
                 var interleaveData, interleaveData2
@@ -185,54 +233,6 @@
                 tScene3D.addChild(testParticle)
             })();
 
-            (function () {
-                var testMaterial
-
-                testMaterial = RedPointBitmapMaterial(self, RedBitmapTexture(self, 'asset/particle.png'))
-                
-
-                var interleaveData
-                interleaveData = []
-
-                var i = 10000
-                while (i--) {
-                    var t = Math.random() * 100 - 50
-                    interleaveData.push(Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50)
-                    interleaveData.push(Math.random() * 100)
-                    interleaveData.push(Math.random(), Math.random(), Math.random(), 1)
-                }
-                interleaveData = new Float32Array(interleaveData)
-              
-                var testParticle = RedPointUnit(
-                    self,
-                    interleaveData,
-                    [
-                        {
-                            attributeKey: 'aVertexPosition',
-                            size: 3,
-                            normalize: false
-                        },
-                        {
-                            attributeKey: 'aPointSize',
-                            size: 1,
-                            normalize: false
-                        },
-                        {
-                            attributeKey: 'aVertexColor',
-                            size: 4,
-                            normalize: false
-                        }
-                        // TODO: 텍스쳐를 받으려면 쿼드로 그려야하는건가..
-                        // TODO: 쿼드가 아니라면 포인트에서 텍스쳐를 받아들일 방법을 고안해야함
-                    ],
-                    testMaterial
-                )
-                testParticle['useDepthTest'] = false
-                // testParticle['depthTestFunc'] = self.gl.LESS
-                testParticle['blendSrc'] = self.gl.SRC_ALPHA
-                testParticle['blendDst'] = self.gl.ONE
-                tScene3D.addChildAt(testParticle,0)
-            })();
 
             tScene3D['grid'] = RedGrid(self)
 
