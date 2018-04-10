@@ -89,6 +89,7 @@ var RedEnvironmentMaterial;
             }
         :DOC*/
         this['program'] = makeProgram(redGL);
+   
         this['_UUID'] = RedGL['makeUUID']();
         this.checkProperty()
         console.log(this)
@@ -110,6 +111,7 @@ var RedEnvironmentMaterial;
                 vReflectionCubeCoord = -(uMVMatrix *vec4(aVertexPosition, 0.0)).xyz;
                 vVertexPositionEye4.xyz += normalize(vVertexNormal) * texture2D(uDisplacementTexture, vTexcoord).x * uDisplacementPower ;
                 
+                gl_PointSize = uPointSize;
                 gl_Position = uPMatrix * uCameraMatrix * uMVMatrix * vVertexPositionEye4;                
                 vVertexPositionEye4 = uMVMatrix * vVertexPositionEye4;
                 

@@ -35,6 +35,7 @@
 
     <script src="src/material/RedMaterial.js"></script>
     <script src="src/material/RedColorMaterial.js"></script>
+    <script src="src/material/RedColorPhongMaterial.js"></script>
     <script src="src/material/RedEnvironmentMaterial.js"></script>
     <script src="src/material/RedGridMaterial.js"></script>
     <script src="src/material/RedBitmapMaterial.js"></script>
@@ -111,30 +112,42 @@
                 ])
             )
             var testMesh, testMesh2, testMesh3
-            JsonModelLoader(this, 'testJsonModel', 'asset/monster.json', function (interleaveBuffer, indexBuffer) {
+
+            testMesh = RedMesh(self, RedBox(self), testMaterial)
+            testMesh.x = 1
+            testMesh.y = 1
+            testMesh.z = 1
+            tScene3D.addChild(testMesh)
+
+            testMesh2 = RedMesh(self, RedBox(self), testMaterial)
+
+            testMesh2.x = -2
+            testMesh.addChild(testMesh2)
+
+            testMesh3 = RedMesh(self, RedBox(self), RedColorMaterial(self))
+            testMesh3.scaleX = testMesh3.scaleY = testMesh3.scaleZ = 1.1
+
+            tScene3D.addChild(testMesh3)
+
+            testMesh4 = RedMesh(self, RedBox(self), RedColorMaterial(self, '#00ff00'))
+            testMesh4.scaleX = testMesh4.scaleY = testMesh4.scaleZ = 1
+            testMesh4.x = 2
+            testMesh.addChild(testMesh4)
+            var testMesh5
+            JsonModelLoader(this, 'testJsonModel', 'asset/bunny.json', function (interleaveBuffer, indexBuffer) {
+
+                testMesh5 = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer),
+                    RedColorPhongMaterial(
+                        self
+                    ))
+                testMesh5.scaleX = testMesh5.scaleY = testMesh5.scaleZ = 0.3
 
 
 
-                testMesh = RedMesh(self, RedBox(self), testMaterial)
-                testMesh.x = 1
-                testMesh.y = 1
-                testMesh.z = 1
-                tScene3D.addChild(testMesh)
+                tScene3D.addChild(testMesh5)
 
-                testMesh2 = RedMesh(self, RedBox(self), testMaterial)
 
-                testMesh2.x = -2
-                testMesh.addChild(testMesh2)
-
-                testMesh3 = RedMesh(self, RedBox(self), RedColorMaterial(self))
-                testMesh3.scaleX = testMesh3.scaleY = testMesh3.scaleZ = 1.1
-
-                tScene3D.addChild(testMesh3)
-
-                testMesh4 = RedMesh(self, RedBox(self), RedColorMaterial(self, '#00ff00'))
-                testMesh4.scaleX = testMesh4.scaleY = testMesh4.scaleZ = 1
-                testMesh4.x = 2
-                testMesh.addChild(testMesh4)
+               
 
                 tScene3D['grid'] = RedGrid(self)
                 // tScene3D['axis'] = RedAxis(self)
@@ -156,7 +169,8 @@
 
             var worldToScreenBox;
             worldToScreenBox = document.createElement('div')
-            worldToScreenBox.style.cssText = 'position:absolute;top:0px;left:0px;color:#fff;font-size:12px;background:rgba(0,0,0,0.6)'
+            worldToScreenBox.style.cssText =
+                'position:absolute;top:0px;left:0px;color:#fff;font-size:12px;background:rgba(0,0,0,0.6)'
             worldToScreenBox.innerHTML = 'worldToScreen Test'
             document.body.appendChild(worldToScreenBox)
 
@@ -186,6 +200,12 @@
                 testMesh2.rotationY += 0.5
                 testMesh2.rotationZ += 0.5
 
+
+                if (testMesh5) {
+                    testMesh5.rotationX += 0.5
+                    testMesh5.rotationY += 0.5
+                    testMesh5.rotationZ += 0.5
+                }
                 // console.log(testMesh2.localToGlobal(-2, 0, 0))
 
                 testMesh3.x = testMesh2.localToGlobal(-1, 1, 0)[0]
@@ -214,8 +234,8 @@
 
 
 
-                tCamera.y = 10
-                tCamera.z = 20
+                tCamera.y = 20
+                tCamera.z = 50
                 // tCamera.x = Math.sin(time / 1500) * 30
                 // tCamera.y = Math.cos(time / 1500) * 30
                 // if(tCamera.y<1) tCamera.y = 1

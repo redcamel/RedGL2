@@ -44,7 +44,16 @@ var RedGL;
             initOption = JSON.parse(JSON.stringify(OPTION));
             i = checkList.length;
             if (option) for (i in option) initOption[i] = option[i];
-            while (i--) if (t0 = canvas.getContext(t1 = checkList[i], initOption)) return t0['version'] = t1, t0;
+            while (i--) if (t0 = canvas.getContext(t1 = checkList[i], initOption)) {
+                var ext
+                t0['OES_element_index_uint'] = t0.getExtension('OES_element_index_uint');
+                console.log('확장여부 OES_element_index_uint :', t0['OES_element_index_uint'])
+                t0['EXT_texture_filter_anisotropic'] = t0.getExtension('EXT_texture_filter_anisotropic');
+                console.log('확장여부 EXT_texture_filter_anisotropic :', t0['EXT_texture_filter_anisotropic'])
+
+
+                return t0['version'] = t1, t0;
+            }
             return null;
         }
     })();
@@ -158,7 +167,7 @@ var RedGL;
         this['_UUID'] = RedGL['makeUUID']();
         ////
         requestAnimationFrame(function (v) {
-          
+
             window.addEventListener('resize', function () { _self.setSize(_self['_width'], _self['_height']) });
             _self.setSize(_self['_width'], _self['_height']);
             callback ? callback.call(_self, _tGL ? true : false) : 0;
@@ -175,7 +184,7 @@ var RedGL;
                 if (i != 1) {
                     _tGL.activeTexture(_tGL.TEXTURE0 + i)
                     _tGL.bindTexture(_tGL.TEXTURE_2D, t0['webglTexture'])
-                }else{
+                } else {
                     _tGL.activeTexture(_tGL.TEXTURE0 + 1)
                     _tGL.bindTexture(_tGL.TEXTURE_CUBE_MAP, t1['webglTexture'])
                 }

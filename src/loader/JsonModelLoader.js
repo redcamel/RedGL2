@@ -1,6 +1,7 @@
 "use strict";
 var JsonModelLoader;
 (function () {
+    //TODO:
     JsonModelLoader = function (redGL, key, src, callback) {
         if ((!(this instanceof JsonModelLoader))) return new JsonModelLoader(redGL, key, src, callback)
         console.log('~~~~~~~~~~~')
@@ -10,18 +11,21 @@ var JsonModelLoader;
             request.onreadystatechange = function () {
                 if (request.readyState == 4) {
                     var jsonData;
-                    var interleaveData;
+                    var interleaveData,indexData;
                     var i, len;
                     interleaveData = []
+                    indexData = []
                     jsonData = JSON.parse(request.responseText)
                     i = 0, len = jsonData['position'].length / 3
                     for (i; i < len; i++) {
                         interleaveData.push(jsonData['position'][i * 3], jsonData['position'][i * 3 + 1], jsonData['position'][i * 3 + 2])
                         interleaveData.push(jsonData['normal'][i * 3], jsonData['normal'][i * 3 + 1], jsonData['normal'][i * 3 + 2])
-                        interleaveData.push(jsonData['texcoord'][i * 2], jsonData['texcoord'][i * 2 + 1])
+                        if(jsonData['uvs'])interleaveData.push(jsonData['uvs'][i * 2], jsonData['uvs'][i * 2 + 1])
+                        else interleaveData.push(0,0)
+
                     }
                     console.log(jsonData)
-                    console.log(jsonData['texcoord'])
+                    console.log(interleaveData)
                     if (callback) {
                         // TODO: 유일키 방어
                         callback(
@@ -35,6 +39,7 @@ var JsonModelLoader;
                                     size: 3,
                                     normalize: false
                                 },
+                                ,
                                 {
                                     attributeKey: 'aVertexNormal',
                                     size: 3,
