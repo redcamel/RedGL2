@@ -41,6 +41,7 @@ var RedColorMaterial;
             }
         :DOC*/
         this['color'] = new Float32Array(4);
+       
         this.setColor(hex ? hex : '#ff0000', alpha == undefined ? 1 : alpha);
         /////////////////////////////////////////
         // 일반 프로퍼티
@@ -68,6 +69,7 @@ var RedColorMaterial;
             varying vec4 vColor;
             void main(void) {
                 vColor = uColor; 
+                gl_PointSize = uPointSize;
                 gl_Position = uPMatrix * uCameraMatrix* uMVMatrix * vec4(aVertexPosition, 1.0);
             }
             */

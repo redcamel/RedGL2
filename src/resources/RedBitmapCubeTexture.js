@@ -24,14 +24,14 @@ var RedBitmapCubeTexture;
         gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
         gl.bindTexture(gl.TEXTURE_CUBE_MAP, null);
-        gl.bindTexture(gl.TEXTURE_2D, null);
     }
     loadTexture = (function () {
-        return function (gl, texture, srcList) {
+        return function (gl, texture, srcList, option) {
             var onError, onLoad;
             var clearEvents;
             var imgList = []
             var i, loaded;
+            if (!option) option = {}
             clearEvents = function (img) {
                 img.removeEventListener('error', onError);
                 img.removeEventListener('load', onLoad);
@@ -60,11 +60,15 @@ var RedBitmapCubeTexture;
                     }
                     gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
                     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-                    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
-                    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-                    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-                    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-                    gl.generateMipmap(gl.TEXTURE_CUBE_MAP)
+                    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, option['min'] ? option['min'] : gl.LINEAR_MIPMAP_NEAREST);
+                    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, option['max'] ? option['max'] : gl.LINEAR);
+                    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, option['wrap_s'] ? option['wrap_s'] : gl.CLAMP_TO_EDGE);
+                    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, option['wrap_t'] ? option['wrap_t'] : gl.CLAMP_TO_EDGE);
+                    try {
+                        gl.generateMipmap(gl.TEXTURE_CUBE_MAP)
+                    } catch (error) {
+                        console.log('밉맵을 생성할수 없음',imgList)                    
+                    }
                     gl.bindTexture(gl.TEXTURE_CUBE_MAP, null);
                 } else clearEvents(this)
 
@@ -121,7 +125,7 @@ var RedBitmapCubeTexture;
             gl.bindTexture(gl.TEXTURE_CUBE_MAP, redGL['_datas']['emptyTexture']['3d']['webglTexture'])
         }
 
-        loadTexture(gl, this['webglTexture'], srcList);
+        loadTexture(gl, this['webglTexture'], srcList, option);
         Object.seal(this);
         console.log(this)
     }

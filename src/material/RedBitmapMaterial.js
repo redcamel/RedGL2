@@ -47,6 +47,7 @@ var RedBitmapMaterial;
             }
         :DOC*/
         this['program'] = makeProgram(redGL);
+        
         this['_UUID'] = RedGL['makeUUID']();
         this.checkProperty()
         // Object.seal(this)
@@ -58,6 +59,7 @@ var RedBitmapMaterial;
             /*
             void main(void) {
                 vTexcoord = aTexcoord;
+                gl_PointSize = uPointSize;
                 gl_Position = uPMatrix * uCameraMatrix* uMVMatrix * vec4(aVertexPosition, 1.0);
             }
             */

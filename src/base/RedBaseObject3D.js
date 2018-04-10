@@ -25,6 +25,7 @@ var RedBaseObject3D;
         this['blendDst'] = gl.ONE_MINUS_SRC_ALPHA
         //
         this['drawMode'] = gl.TRIANGLES
+        this['pointSize'] = 1
         //
         this['x'] = this['y'] = this['z'] = 0;
         this['rotationX'] = this['rotationY'] = this['rotationZ'] = 0;

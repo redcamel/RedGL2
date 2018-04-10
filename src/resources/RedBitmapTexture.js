@@ -32,9 +32,10 @@ var RedBitmapTexture;
         // gl.bindTexture(gl.TEXTURE_2D, null);
     }
     loadTexture = (function () {
-        return function (gl, texture, src) {
+        return function (gl, texture, src, option) {
             var onError, onLoad;
             var clearEvents;
+            if (!option) option = {}
             clearEvents = function (img) {
                 img.removeEventListener('error', onError);
                 img.removeEventListener('load', onLoad);
@@ -52,12 +53,19 @@ var RedBitmapTexture;
                 gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this)
                 gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
                 gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
-                gl.generateMipmap(gl.TEXTURE_2D)
-                // gl.bindTexture(gl.TEXTURE_2D, null);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, option['min'] ? option['min'] : gl.LINEAR_MIPMAP_NEAREST);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, option['max'] ? option['max'] : gl.LINEAR);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, option['wrap_s'] ? option['wrap_s'] : gl.CLAMP_TO_EDGE);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, option['wrap_t'] ? option['wrap_t'] : gl.CLAMP_TO_EDGE);
+                if (gl['EXT_texture_filter_anisotropic'] && option['anisotropic']) {
+                    gl.texParameterf(gl.TEXTURE_2D, gl['EXT_texture_filter_anisotropic'].TEXTURE_MAX_ANISOTROPY_EXT, option['anisotropic']);
+                }
+                try {
+                    gl.generateMipmap(gl.TEXTURE_2D)
+                } catch (error) {
+                    console.log('밉맵을 생성할수 없음', this)
+                }
+                gl.bindTexture(gl.TEXTURE_2D, null);
             }
 
             var img;
@@ -101,14 +109,14 @@ var RedBitmapTexture;
         gl = redGL.gl;
         this['webglTexture'] = gl.createTexture();
         this['_UUID'] = RedGL['makeUUID']();
-        
-        if(redGL['_datas']['emptyTexture']){
+
+        if (redGL['_datas']['emptyTexture']) {
             //TODO: 이거 렌더러쪽으로 옮겨야함
             gl.activeTexture(gl.TEXTURE0)
             gl.bindTexture(gl.TEXTURE_2D, redGL['_datas']['emptyTexture']['2d']['webglTexture'])
-        }        
+        }
 
-        loadTexture(gl, this['webglTexture'], src);
+        loadTexture(gl, this['webglTexture'], src, option);
         Object.seal(this);
         console.log(this)
     }

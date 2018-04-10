@@ -30,6 +30,7 @@ var RedSystemShaderCode;
             'varying vec3 vVertexNormal',
 
             'attribute float aPointSize',
+            'uniform float uPointSize',
 
             'attribute vec2 aTexcoord',
             'varying vec2 vTexcoord',

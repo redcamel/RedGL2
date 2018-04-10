@@ -56,10 +56,6 @@ var RedStandardMaterial;
             }
         :DOC*/
         this['specularPower'] = 1
-        this['shadowBiasMatrix'] = mat4.create()
-        mat4.identity(this['shadowBiasMatrix']);
-        mat4.scale(this['shadowBiasMatrix'], this['shadowBiasMatrix'], [0.5, 0.5, 0.5]);
-        mat4.translate(this['shadowBiasMatrix'], this['shadowBiasMatrix'], [1.0, 1.0, 1.0, 1.0]);
         /////////////////////////////////////////
         // 일반 프로퍼티
         /**DOC:
@@ -71,6 +67,7 @@ var RedStandardMaterial;
             }
         :DOC*/
         this['program'] = makeProgram(redGL);
+     
         this['_UUID'] = RedGL['makeUUID']();
         this.checkProperty()
         console.log(this)
@@ -86,6 +83,7 @@ var RedStandardMaterial;
                 vVertexNormal = vec3(uNMatrix * vec4(aVertexNormal,1.0)); 
                 vVertexPositionEye4 = uMVMatrix * vec4(aVertexPosition, 1.0);         
           
+                gl_PointSize = uPointSize;
                 gl_Position = uPMatrix * uCameraMatrix * vVertexPositionEye4;
             }
             */

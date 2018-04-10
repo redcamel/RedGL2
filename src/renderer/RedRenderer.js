@@ -292,7 +292,7 @@ var RedRenderer;
                         tDebugObj['y'] = tVector[1];
                         tDebugObj['z'] = tVector[2];
                         tDebugObj['scaleX'] = tDebugObj['scaleY'] = tDebugObj['scaleZ'] = tLightData['radius']
-                      
+
 
                         tDebugObj['material']['color'] = tLightData['color']
 
@@ -645,6 +645,7 @@ var RedRenderer;
                             } else {
                                 // console.log('설마',tUniformLocationInfo['materialPropertyName'])
                                 if (tRenderType == 'sampler2D') {
+                                 
                                     if (tCacheSamplerIndex[tSamplerIndex] == 0) {
                                     } else {
                                         gl.activeTexture(gl.TEXTURE0)
@@ -870,6 +871,10 @@ var RedRenderer;
                 /////////////////////////////////////////////////////////////////////////
                 // 상태처리
 
+                if (tSystemUniformGroup['uPointSize']['location']) {
+                    tCacheState['pointSize'] != tMesh['pointSize'] ? gl.uniform1f(tSystemUniformGroup['uPointSize']['location'], tCacheState['pointSize'] = tMesh['pointSize']) : 0
+                }
+
                 // 컬페이스 사용여부 캐싱처리
                 tCacheState['useCullFace'] != tMesh['useCullFace'] ? (tCacheState['useCullFace'] = tMesh['useCullFace']) ? gl.enable(gl.CULL_FACE) : gl.disable(gl.CULL_FACE) : 0;
                 // 컬페이스 캐싱처리
@@ -893,6 +898,7 @@ var RedRenderer;
                 if (tIndexBufferInfo) {
                     tPrevIndexBuffer_UUID == tIndexBufferInfo['_UUID'] ? 0 : gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, tIndexBufferInfo['webglBuffer'])
                     //enum mode, long count, enum type, long offset
+
                     gl.drawElements(
                         tMesh['drawMode'],
                         tIndexBufferInfo['pointNum'],
@@ -921,6 +927,7 @@ var RedRenderer;
             }
         }
         return function (redGL, gl, orthographic, children, time, renderResultObj) {
+            if (this['cacheState']['pointSize'] == undefined) this['cacheState']['pointSize'] = 1
             if (!this['cacheState']['useCullFace']) this['cacheState']['useCullFace'] = gl.getParameter(gl.CULL_FACE)
             if (!this['cacheState']['cullFace']) this['cacheState']['cullFace'] = gl.getParameter(gl.CULL_FACE_MODE)
             if (!this['cacheState']['useDepthTest']) this['cacheState']['useDepthTest'] = gl.getParameter(gl.DEPTH_TEST)
@@ -928,7 +935,8 @@ var RedRenderer;
             if (!this['cacheState']['useBlendMode']) this['cacheState']['useBlendMode'] = gl.getParameter(gl.BLEND)
             if (!this['cacheState']['blendSrc']) this['cacheState']['blendSrc'] = gl.getParameter(gl.BLEND_SRC_RGB)
             if (!this['cacheState']['blendDst']) this['cacheState']['blendDst'] = gl.getParameter(gl.BLEND_DST_RGB)
-
+            
+            this['cacheSamplerIndex'] = [] //TODO: 이거 세분화해야함
 
 
             draw(
