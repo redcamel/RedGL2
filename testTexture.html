@@ -147,7 +147,9 @@
                     this,
                     RedBitmapTexture(this, 'asset/alphaTest.png', {
                         min: this.gl.LINEAR,
-                        max: this.gl.LINEAR
+                        max: this.gl.LINEAR,
+                        wrap_s: this.gl.CLAMP_TO_EDGE,
+                        wrap_t: this.gl.CLAMP_TO_EDGE
                     })
                 )
             )
@@ -156,7 +158,9 @@
                     this,
                     RedBitmapTexture(this, 'asset/alphaTest.png', {
                         min: this.gl.NEAREST,
-                        max: this.gl.NEAREST
+                        max: this.gl.NEAREST,
+                        wrap_s: this.gl.CLAMP_TO_EDGE,
+                        wrap_t: this.gl.CLAMP_TO_EDGE
                     })
                 )
             ),
@@ -197,7 +201,7 @@
                 while (i--) {
                     var testMesh = RedMesh(self, RedGeometry(testInterleaveBuffer, testIndexBuffer), testMaterials[i] ? testMaterials[i] : testMaterials[0])
                     testMesh.x = -2 + i
-                    if (i < 3) testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 2
+                    testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 1
                     tScene3D.addChild(testMesh)
                 }
 

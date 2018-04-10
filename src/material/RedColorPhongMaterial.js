@@ -106,7 +106,7 @@ var RedColorPhongMaterial;
             varying vec4 vVertexPositionEye4;
             void main(void) {
                 vColor = uColor; 
-                vTexcoord = aTexcoord;
+                vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
                 vVertexNormal = vec3(uNMatrix * vec4(aVertexNormal,1.0)); 
                 vVertexPositionEye4 = uMVMatrix * vec4(aVertexPosition, 1.0);      
                 gl_PointSize = uPointSize;

@@ -117,6 +117,7 @@ var RedBitmapCubeTexture;
         if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedBitmapCubeTexture : RedGL Instance만 허용됩니다.');
         gl = redGL.gl;
         this['webglTexture'] = gl.createTexture();
+        this['atlascoord'] = RedAtlasUV(redGL)
         this['_UUID'] = RedGL['makeUUID']();
 
         if (redGL['_datas']['emptyTexture']) {
