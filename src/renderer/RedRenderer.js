@@ -633,7 +633,9 @@ var RedRenderer;
                             if (tUniformValue) {
                                 // console.log(tUniformLocationInfo['materialPropertyName'],tUniformValue)  
                                 // console.log(tUniformLocationInfo)
+
                                 if (tCacheSamplerIndex[tSamplerIndex] == tUniformValue['_UUID']) {
+
                                     // console.log('온다',tUniformLocationInfo['materialPropertyName'],tSamplerIndex,tSamplerIndex)
                                 } else {
                                     // console.log('온다2',tUniformLocationInfo['materialPropertyName'],tSamplerIndex,tSamplerIndex)
@@ -641,16 +643,26 @@ var RedRenderer;
                                     gl.bindTexture(tRenderType == 'sampler2D' ? gl.TEXTURE_2D : gl.TEXTURE_CUBE_MAP, tUniformValue['webglTexture'])
                                     gl.uniform1i(tWebGLUniformLocation, tSamplerIndex)
                                 }
+                                // 아틀라스 UV검색
+                                if (tUniformValue instanceof RedAtlasTexture && tSystemUniformGroup['uAtlascoord']['location']) {
+                                    tUUID = tSystemUniformGroup['uAtlascoord']['_UUID']
+                                    if (tCacheUniformInfo[tUUID] != tUniformValue['atlascoord']['data']['_UUID']) {
+                                        gl.uniform4fv(tSystemUniformGroup['uAtlascoord']['location'], tUniformValue['atlascoord']['data'])
+                                        tCacheUniformInfo[tUUID] = tUniformValue['atlascoord']['data']['_UUID']
+                                    }
+                                }
+
                                 tCacheSamplerIndex[tSamplerIndex] = tUniformValue['_UUID']
                             } else {
                                 // console.log('설마',tUniformLocationInfo['materialPropertyName'])
                                 if (tRenderType == 'sampler2D') {
-                                 
+
                                     if (tCacheSamplerIndex[tSamplerIndex] == 0) {
                                     } else {
                                         gl.activeTexture(gl.TEXTURE0)
                                         gl.bindTexture(gl.TEXTURE_2D, redGL['_datas']['emptyTexture']['2d']['webglTexture'])
                                         gl.uniform1i(tWebGLUniformLocation, 0)
+
                                     }
                                     tCacheSamplerIndex[tSamplerIndex] = 0
                                 } else {
@@ -935,8 +947,8 @@ var RedRenderer;
             if (!this['cacheState']['useBlendMode']) this['cacheState']['useBlendMode'] = gl.getParameter(gl.BLEND)
             if (!this['cacheState']['blendSrc']) this['cacheState']['blendSrc'] = gl.getParameter(gl.BLEND_SRC_RGB)
             if (!this['cacheState']['blendDst']) this['cacheState']['blendDst'] = gl.getParameter(gl.BLEND_DST_RGB)
-            
-            this['cacheSamplerIndex'] = [] //TODO: 이거 세분화해야함
+
+            this['cacheSamplerIndex'] = []
 
 
             draw(
