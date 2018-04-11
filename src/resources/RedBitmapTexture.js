@@ -75,10 +75,8 @@ var RedBitmapTexture;
 
             setEmptyTexture(gl, texture)
             if (src instanceof HTMLCanvasElement) {
-             
                 makeTexture(gl, texture, src, option)
             } else {
-                console.log('설마')
                 var img;
                 img = new Image();
                 img.crossOrigin = 'anonymous'

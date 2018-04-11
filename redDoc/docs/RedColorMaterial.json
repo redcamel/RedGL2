@@ -37,7 +37,7 @@
     "return": "RedColorMaterial Instance"
   },
   {
-    "code": "FUNCTION",
+    "code": "METHOD",
     "title": "setColor",
     "description": "\n    컬러설정\n",
     "params": {

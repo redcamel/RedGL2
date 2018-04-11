@@ -1,0 +1,44 @@
+[
+  {
+    "title": "diffuseTexture",
+    "description": "diffuseTexture",
+    "example": "// TODO:",
+    "return": "RedBitmapTexture"
+  },
+  {
+    "title": "environmentTexture",
+    "description": "environmentTexture",
+    "example": "// TODO:",
+    "return": "RedBitmapCubeTexture"
+  },
+  {
+    "title": "normalTexture",
+    "description": "normalTexture",
+    "example": "// TODO:",
+    "return": "RedBitmapTexture"
+  },
+  {
+    "title": "program",
+    "description": "RedProgram Instance",
+    "example": "// TODO:",
+    "return": "RedProgram Instance"
+  },
+  {
+    "title": "shininess",
+    "description": "shininess",
+    "example": "// TODO:",
+    "return": "RedBitmapTexture"
+  },
+  {
+    "title": "specularPower",
+    "description": "specularPower",
+    "example": "// TODO:",
+    "return": "RedBitmapTexture"
+  },
+  {
+    "title": "specularTexture",
+    "description": "specularTexture",
+    "example": "// TODO:",
+    "return": "RedBitmapTexture"
+  }
+]

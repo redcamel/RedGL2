@@ -66,17 +66,18 @@
     <script src="src/program/RedShader.js"></script>
 
     <script src="src/renderer/RedRenderer.js"></script>
+    <script src="src/renderer/RedRenderDebuger.js"></script>
 
     
     <script src="src/resources/RedAtlasUV.js"></script>
+    <script src="src/resources/RedBitmapTexture.js"></script>
     <script src="src/resources/RedAtlasTexture.js"></script>
     <script src="src/resources/RedBitmapCubeTexture.js"></script>
-    <script src="src/resources/RedBitmapTexture.js"></script>
 
     <script src="src/RedView.js"></script>
     <script src="src/RedWorld.js"></script>
     <script src="src/RedScene.js"></script>
-    <script src="src/RedCamera.js"></script>
+    <script src="src/camera/RedCamera.js"></script>
 </head>
 
 <body>
@@ -243,10 +244,6 @@
             tScene3D['grid'] = RedGrid(self)
 
 
-            var renderResult;
-            renderResult = document.createElement('div')
-            renderResult.style.cssText = 'position:absolute;top:0px;left:0px;color:#fff;font-size:12px;background:rgba(0,0,0,0.6)'
-            document.body.appendChild(renderResult)
 
             tRenderer.start(this, function (time) {
 
@@ -258,22 +255,7 @@
 
                 tCamera.lookAt(0, 0, 0)
 
-                renderResult.innerHTML = ''
-                for (var k in tRenderer['renderInfo']) {
-                    // console.log(tRenderer['renderInfo'][k])
-                    renderResult.innerHTML +=
-                        '<b>RedView : key - ' + tRenderer['renderInfo'][k]['key'] + '</b>' +
-                        ' <br>orthographic - ' + tRenderer['renderInfo'][k]['orthographic'] +
-                        ' <br>call - ' + tRenderer['renderInfo'][k]['call'] +
-                        ' <br> width - ' + tRenderer['renderInfo'][k]['width'] +
-                        ' <br> height - ' + tRenderer['renderInfo'][k]['height'] +
-                        ' <br> viewRectWidth - ' + tRenderer['renderInfo'][k]['viewRectWidth'] +
-                        ' <br> viewRectHeight - ' + tRenderer['renderInfo'][k]['viewRectHeight'] +
-                        ' <br> x - ' + tRenderer['renderInfo'][k]['x'] +
-                        ' <br> y - ' + tRenderer['renderInfo'][k]['y'] +
-                        '<br>'
-                }
-                renderResult.innerHTML += 'renderScale : ' + self.renderScale
+                tRenderer.renderDebuger.visible = true
 
             })
 

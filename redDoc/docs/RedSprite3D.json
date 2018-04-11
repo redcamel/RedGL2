@@ -1,0 +1,32 @@
+[
+  {
+    "title": "material",
+    "description": "material",
+    "return": "RedBaseMaterial 확장 Instance"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedSprite3D",
+    "description": "\n    RedSprite3D Instance 생성기\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL Instance"
+        }
+      ],
+      "material": [
+        {
+          "type": "RedBaseMaterial 확장 Instance"
+        }
+      ]
+    },
+    "example": "\n    var tScene;\n    var tSprite3D;\n    tScene = RedScene();\n    tSprite3D = RedSprite3D(RedGL Instance, RedColorMaterial(RedGL Instance))\n    tScene.addChild(tSprite3D)\n",
+    "return": "RedSprite3D Instance"
+  },
+  {
+    "extendDoc": "RedBaseContainer"
+  },
+  {
+    "extendDoc": "RedBaseObject3D"
+  }
+]

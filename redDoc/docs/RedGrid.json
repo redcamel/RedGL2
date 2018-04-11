@@ -1,0 +1,39 @@
+[
+  {
+    "title": "drawMode",
+    "description": "\n    기본값 : gl.LINES\n",
+    "return": "gl 상수"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedGrid",
+    "description": "\n    RedGrid Instance 생성기\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL Instance"
+        }
+      ],
+      "size": [
+        {
+          "type": "uint"
+        },
+        "격자 크기"
+      ],
+      "divisions": [
+        {
+          "type": "uint"
+        },
+        "격자 수"
+      ]
+    },
+    "example": "\n    var tScene;\n    tScene = RedScene();\n    tScene['grid'] = RedGrid(redGL Instance)\n",
+    "return": "RedGrid Instance"
+  },
+  {
+    "extendDoc": "RedBaseContainer"
+  },
+  {
+    "extendDoc": "RedBaseObject3D"
+  }
+]

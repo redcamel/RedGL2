@@ -22,13 +22,14 @@ var RedRenderer;
         this['cacheAttrInfo'] = []
         this['cacheSamplerIndex'] = []
         this['cacheState'] = []
+        this['renderDebuger'] = RedRenderDebuger()
         Object.seal(this)
         console.log(this)
     };
     RedRenderer.prototype = {
         /**DOC:
         {
-            code:`FUNCTION`,
+            code:`METHOD`,
             title :`start`,
             description : `
                 렌더 시작
@@ -62,7 +63,7 @@ var RedRenderer;
         })(),
         /**DOC:
         {
-            code:`FUNCTION`,
+            code:`METHOD`,
             title :`stop`,
             description : `
                 렌더 중지
@@ -76,7 +77,7 @@ var RedRenderer;
     };
     /**DOC:
     {
-        code:`FUNCTION`,
+        code:`METHOD`,
         title :`worldRender`,
         description : `
             등록된 RedView을 기반으로 렌더링을 실행함
@@ -171,7 +172,7 @@ var RedRenderer;
                     var tLightData, tDebugObj;
                     var tValue
                     // 엠비언트 라이트 업데이트
-                    if (tLightData = scene['lightInfo'][RedAmbientLight['type']]) {
+                    if (tLightData = scene['_lightInfo'][RedAmbientLight['type']]) {
                         tLocationInfo = tSystemUniformGroup['uAmbientLightColor'];
                         tLocation = tLocationInfo['location'];
                         tUUID = tLocationInfo['_UUID'];
@@ -199,7 +200,7 @@ var RedRenderer;
                     tDirectionnalPositionList = new Float32Array(3 * 3)
                     tColorList = new Float32Array(4 * 3)
                     tIntensityList = new Float32Array(3)
-                    tList = scene['lightInfo'][RedDirectionalLight['type']];
+                    tList = scene['_lightInfo'][RedDirectionalLight['type']];
                     i = tList.length;
                     while (i--) {
                         tLightData = tList[i];
@@ -281,7 +282,7 @@ var RedRenderer;
                     tColorList = new Float32Array(4 * 5)
                     tIntensityList = new Float32Array(5)
                     tRadiusList = new Float32Array(5)
-                    tList = scene['lightInfo'][RedPointLight['type']];
+                    tList = scene['_lightInfo'][RedPointLight['type']];
                     i = tList.length;
                     while (i--) {
                         tLightData = tList[i];
@@ -441,9 +442,15 @@ var RedRenderer;
                 // viewport 설정
                 gl.viewport(tViewRect[0], worldRect[3] - tViewRect[3] - tViewRect[1], tViewRect[2], tViewRect[3]);
                 gl.scissor(tViewRect[0], worldRect[3] - tViewRect[3] - tViewRect[1], tViewRect[2], tViewRect[3]);
-                gl.clearColor(tScene['r'], tScene['g'], tScene['b'], 1)
-                if (tScene['useBackgroundColor']) gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-                else gl.clear(gl.DEPTH_BUFFER_BIT);
+              
+                if (tScene['useBackgroundColor']) {
+                    gl.clearColor(tScene['r'], tScene['g'], tScene['b'], 1);
+                    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+                }
+                else {
+                    gl.clearColor(0,0,0, 0);
+                    gl.clear(gl.DEPTH_BUFFER_BIT);
+                }
                 perspectiveMTX = tCamera['perspectiveMTX']
                 // view 에 적용할 카메라 퍼스펙티브를 계산
                 mat4.identity(perspectiveMTX);
@@ -490,6 +497,7 @@ var RedRenderer;
                 // asix가 있으면 그림
                 if (tScene['axis']) self.sceneRender(redGL, gl, tCamera['orthographic'], tScene['axis']['children'], time, self['renderInfo'][tView['key']]);
             })
+            if(this['renderDebuger']['visible']) this['renderDebuger'].update(redGL, self['renderInfo'])
         }
     })();
 

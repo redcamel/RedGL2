@@ -9,16 +9,21 @@ var RedSprite3D;
                 RedSprite3D Instance 생성기
             `,
             params : {
-                geometry : [
-                    {type:'RedGeometry'},
-                    `geometry`
+                redGL : [
+                    {type:'RedGL Instance'}
                 ],
                 material : [
-                    {type:'RedBaseMaterial 확장 Instance'},
-                    `material`
+                    {type:'RedBaseMaterial 확장 Instance'}
                 ]
             },
-            return : 'RedProgram Instance'
+            example : `
+                var tScene;
+                var tSprite3D;
+                tScene = RedScene();
+                tSprite3D = RedSprite3D(RedGL Instance, RedColorMaterial(RedGL Instance))
+                tScene.addChild(tSprite3D)
+            `,
+            return : 'RedSprite3D Instance'
         }
     :DOC*/
     RedSprite3D = function (redGL, material) {
@@ -28,14 +33,7 @@ var RedSprite3D;
         var tGL;
         tGL = redGL.gl;
         RedBaseObject3D['build'].call(this, tGL)
-        /**DOC:
-		{
-            title :`geometry`,
-            description : `geometry`,
-			return : 'RedGeometry'
-		}
-	    :DOC*/
-        this['geometry'] = RedBox(redGL,1,1,0);
+        this['geometry'] = RedBox(redGL, 1, 1, 0);
         /**DOC:
 		{
             title :`material`,
@@ -47,7 +45,17 @@ var RedSprite3D;
         this['_UUID'] = RedGL['makeUUID']();
         // Object.seal(this)
     }
+    /**DOC:
+        {
+            extendDoc : 'RedBaseContainer'
+        }
+    :DOC*/
     RedGLUtil['extendsProto'](RedSprite3D, RedBaseContainer);
+    /**DOC:
+        {
+            extendDoc : 'RedBaseObject3D'
+        }
+    :DOC*/
     RedGLUtil['extendsProto'](RedSprite3D, RedBaseObject3D);
     Object.freeze(RedSprite3D);
 })();

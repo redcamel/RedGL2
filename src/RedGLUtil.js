@@ -28,7 +28,7 @@ var RedGLUtil;
                 constructorYn : true,
                 title :`RedGLUtil.extendsProto`,
                 description : `
-                    프로토타입확장
+                    프로토타입 내용을 복사
                 `,
                 params : {
                     target : [
@@ -40,6 +40,15 @@ var RedGLUtil;
                         '가져올 대상'
                     ]
                 },
+                example : `
+                    var a = function(){};
+                    var b = function(){};
+                    a.prototype.test = function(){
+                        console.log('test')
+                    };
+                    RedGLUtil.extendsProto(b,a);
+                    (new b()).test(); // test
+                `,
                 return : 'void'
             }
         :DOC*/
@@ -55,10 +64,12 @@ var RedGLUtil;
                 `,
                 params : {
                     hex : [
-                        {type : 'hex'},
-                        'hex'
+                        {type : 'hex'}
                     ]
                 },
+                example : `
+                    RedGLUtil.hexToRGB('#fff') // [1,1,1]
+                `,
                 return : 'Array'
             }
         :DOC*/
@@ -79,7 +90,10 @@ var RedGLUtil;
             {
                 constructorYn : true,
                 title :`RedGLUtil.getStrFromComment`,
-                description : "문자열중 멀티라인 코멘트 사이값을 반환함",
+                description : `
+                문자열중 멀티 라인 코멘트 사이값을 반환함.
+                프로그램 생성기에서 사용
+                `,
                 params : {
                     source : [
                         {type : 'String'}
@@ -93,7 +107,7 @@ var RedGLUtil;
             return function (source) {
                 if (typeof source != 'string') RedGLUtil.throwFunc('getStrFromComment : 해석할 값은 문자열만 가능', source)
                 t0 = source.toString().trim().match(/(\/\*)[\s\S]+(\*\/)/g)
-                if (t0) return t0[0].replace(/\/\*|\*\//g, '');
+                if (t0) return t0[0].replace(/\/\*|\*\//g, '').trim();
                 else RedGLUtil.throwFunc('getStrFromComment : 해석할 불가능한 값', source)
             }
         })()

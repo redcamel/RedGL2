@@ -9,16 +9,24 @@ var RedGrid;
                 RedGrid Instance 생성기
             `,
             params : {
-                geometry : [
-                    {type:'RedGeometry'},
-                    `geometry`
+                redGL : [
+                    {type:'RedGL Instance'}
                 ],
-                material : [
-                    {type:'RedBaseMaterial 확장 Instance'},
-                    `material`
+                size : [
+                    {type:'uint'},
+                    `격자 크기`
+                ],
+                divisions : [
+                    {type:'uint'},
+                    `격자 수`
                 ]
             },
-            return : 'RedProgram Instance'
+            example : `
+                var tScene;
+                tScene = RedScene();
+                tScene['grid'] = RedGrid(redGL Instance)
+            `,
+            return : 'RedGrid Instance'
         }
     :DOC*/
     RedGrid = function (redGL, size, divisions, color1, color2) {
@@ -27,7 +35,7 @@ var RedGrid;
 
         var tGL;
         tGL = redGL.gl;
-        RedBaseObject3D['build'].call(this,tGL)
+        RedBaseObject3D['build'].call(this, tGL)
         var interleaveData = []
 
         size = size || 100;
@@ -51,7 +59,7 @@ var RedGrid;
             interleaveData.push(k, 0, halfSize)
             interleaveData.push(color[0], color[1], color[2], color[3])
 
-            
+
         }
         var interleaveBuffer
         interleaveBuffer = RedBuffer(
@@ -71,18 +79,13 @@ var RedGrid;
             ]
         )
         this['geometry'] = RedGeometry(interleaveBuffer);
-        /**DOC:
-		{
-            title :`material`,
-            description : `material`,
-            return : 'RedBaseMaterial 확장 Instance'
-		}
-	    :DOC*/
         this['material'] = RedGridMaterial(redGL);
         /**DOC:
 		{
             title :`drawMode`,
-            description : `drawMode`,
+            description : `
+                기본값 : gl.LINES
+            `,
             return : 'gl 상수'
 		}
 	    :DOC*/
@@ -90,7 +93,17 @@ var RedGrid;
         this['_UUID'] = RedGL['makeUUID']();
         // Object.seal(this)
     }
+    /**DOC:
+        {
+            extendDoc : 'RedBaseContainer'
+        }
+    :DOC*/
     RedGLUtil['extendsProto'](RedGrid, RedBaseContainer);
+    /**DOC:
+        {
+            extendDoc : 'RedBaseObject3D'
+        }
+    :DOC*/
     RedGLUtil['extendsProto'](RedGrid, RedBaseObject3D);
     Object.freeze(RedGrid);
 })();

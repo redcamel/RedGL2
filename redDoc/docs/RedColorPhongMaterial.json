@@ -1,0 +1,78 @@
+[
+  {
+    "title": "color",
+    "description": "\n    RedProgram Instance\n    직접설정하지 않도록 유의해야함!\n",
+    "example": "// TODO:",
+    "return": "RedProgram Instance"
+  },
+  {
+    "title": "normalTexture",
+    "description": "normalTexture",
+    "example": "// TODO:",
+    "return": "RedBitmapTexture"
+  },
+  {
+    "title": "program",
+    "description": "RedProgram Instance",
+    "example": "// TODO:",
+    "return": "RedProgram Instance"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedColorPhongMaterial",
+    "description": "\n    RedColorPhongMaterial Instance 생성\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL Instance"
+        }
+      ],
+      "color": [
+        {
+          "type": "hex"
+        },
+        "hex"
+      ],
+      "alpha": [
+        {
+          "type": "number"
+        },
+        "알파값"
+      ]
+    },
+    "return": "RedColorPhongMaterial Instance"
+  },
+  {
+    "code": "METHOD",
+    "title": "setColor",
+    "description": "\n    컬러설정\n",
+    "params": {
+      "hex": [
+        {
+          "type": "hex"
+        },
+        "ex) #fff, #ffffff"
+      ]
+    },
+    "example": "// TODO:",
+    "return": "RedProgram Instance"
+  },
+  {
+    "title": "shininess",
+    "description": "shininess",
+    "example": "// TODO:",
+    "return": "RedBitmapTexture"
+  },
+  {
+    "title": "specularPower",
+    "description": "specularPower",
+    "example": "// TODO:",
+    "return": "RedBitmapTexture"
+  },
+  {
+    "title": "specularTexture",
+    "description": "specularTexture",
+    "example": "// TODO:",
+    "return": "RedBitmapTexture"
+  }
+]

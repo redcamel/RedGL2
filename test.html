@@ -66,17 +66,18 @@
      <script src="src/program/RedShader.js"></script>
  
      <script src="src/renderer/RedRenderer.js"></script>
+     <script src="src/renderer/RedRenderDebuger.js"></script>
  
      
      <script src="src/resources/RedAtlasUV.js"></script>
+     <script src="src/resources/RedBitmapTexture.js"></script>
      <script src="src/resources/RedAtlasTexture.js"></script>
      <script src="src/resources/RedBitmapCubeTexture.js"></script>
-     <script src="src/resources/RedBitmapTexture.js"></script>
  
      <script src="src/RedView.js"></script>
      <script src="src/RedWorld.js"></script>
      <script src="src/RedScene.js"></script>
-     <script src="src/RedCamera.js"></script>
+     <script src="src/camera/RedCamera.js"></script>
 </head>
 
 <body>
@@ -142,7 +143,7 @@
                 , RedBitmapTexture(this, 'asset/displacementTest.jpg')
             )
 
-            tScene3D.setSkyBox(
+            tScene3D.skyBox =
                 RedSkyBox(this, [
                     'asset/cubemap/posx.png',
                     'asset/cubemap/negx.png',
@@ -150,8 +151,8 @@
                     'asset/cubemap/negy.png',
                     'asset/cubemap/posz.png',
                     'asset/cubemap/negz.png'
-                ])
-            );
+                ]);
+
 
             (function () {
                 var testMaterial
@@ -302,10 +303,7 @@
             })
 
 
-            var renderResult;
-            renderResult = document.createElement('div')
-            renderResult.style.cssText = 'position:absolute;top:0px;left:0px;color:#fff;font-size:12px;background:rgba(0,0,0,0.6)'
-            document.body.appendChild(renderResult)
+            tRenderer.renderDebuger.visible = true
 
             tRenderer.start(this, function (time) {
                 // testInterleaveBuffer.upload(interleaveData)
@@ -335,22 +333,7 @@
                 testPLight2.y = 0
                 testPLight2.z = Math.cos(time / 1500) * 18.5
 
-                renderResult.innerHTML = ''
-                for (var k in tRenderer['renderInfo']) {
-                    // console.log(tRenderer['renderInfo'][k])
-                    renderResult.innerHTML +=
-                        '<b>RedView : key - ' + tRenderer['renderInfo'][k]['key'] + '</b>' +
-                        ' <br>orthographic - ' + tRenderer['renderInfo'][k]['orthographic'] +
-                        ' <br>call - ' + tRenderer['renderInfo'][k]['call'] +
-                        ' <br> width - ' + tRenderer['renderInfo'][k]['width'] +
-                        ' <br> height - ' + tRenderer['renderInfo'][k]['height'] +
-                        ' <br> viewRectWidth - ' + tRenderer['renderInfo'][k]['viewRectWidth'] +
-                        ' <br> viewRectHeight - ' + tRenderer['renderInfo'][k]['viewRectHeight'] +
-                        ' <br> x - ' + tRenderer['renderInfo'][k]['x'] +
-                        ' <br> y - ' + tRenderer['renderInfo'][k]['y'] +
-                        '<br>'
-                }
-                renderResult.innerHTML += 'renderScale : ' + self.renderScale
+                
 
             })
 

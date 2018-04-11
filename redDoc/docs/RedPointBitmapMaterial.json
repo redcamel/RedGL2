@@ -1,0 +1,33 @@
+[
+  {
+    "title": "diffuseTexture",
+    "description": "diffuseTexture",
+    "example": "// TODO:",
+    "return": "RedPointBitmapMaterial"
+  },
+  {
+    "title": "program",
+    "description": "RedProgram Instance",
+    "example": "// TODO:",
+    "return": "RedProgram Instance"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedPointBitmapMaterial",
+    "description": "\n    RedPointBitmapMaterial Instance 생성\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL Instance"
+        }
+      ],
+      "texture": [
+        {
+          "type": "RedPointBitmapMaterial"
+        },
+        "RedPointBitmapMaterial"
+      ]
+    },
+    "return": "RedPointBitmapMaterial Instance"
+  }
+]

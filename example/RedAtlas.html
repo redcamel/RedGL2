@@ -1,0 +1,115 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>RedAtlas</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
+    />
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+    </style>
+    <script src="dat.gui.min.js"></script>
+    <script src="baseTestUI.js"></script>
+    <script src="../release/RedGL.min.js"></script>
+</head>
+
+<body>
+    <canvas id="test" style="border: none;background:red"></canvas>
+    <script>
+        var testUI;
+        document.getElementById('test')
+        RedGL(document.getElementById('test'), function (v) {
+            if (v) {
+                console.log('초기화 성공!')
+                var tWorld, tScene, tCamera, tRenderer;
+
+                // 월드 생성
+                this['world'] = tWorld = RedWorld();
+
+                // 씬 생성
+                tScene = RedScene();
+
+                // 카메라 생성
+                tCamera = RedCamera();
+
+                // 렌더러 생성
+                tRenderer = RedRenderer();
+
+                // 뷰생성 및 적용
+                tWorld.addView(RedView('test', tScene, tCamera));
+
+                // 그리드 설정
+                tScene['grid'] = RedGrid(this);
+
+                // Atlas 설정
+                var testMaterials = []
+                var imgList = []
+                var i;
+                var tRedGL = this
+                for (i = 0; i < 10; i++) {
+                    imgList.push('../asset/draft' + (i % 5 + 1) + '.png?test=' + Math.random())
+                }
+                RedAtlas(this, imgList,
+                    function (resultInfo) {
+                        // 아틀라스 생성 완료후 아틀라스 텍스쳐를 생성한다.
+                        for (var k in resultInfo['atlasMap']) {
+                            testMaterials.push(
+                                RedBitmapMaterial(
+                                    tRedGL,
+                                    RedAtlasTexture(tRedGL, k)
+                                )
+                            )
+                        }
+
+                        i = 3000
+                        var geo = RedBox(tRedGL)
+                        while (i--) {
+                            var tMesh = RedMesh(tRedGL, geo, testMaterials[i % imgList.length])
+                            tMesh.x = Math.random() * 100 - 50
+                            tMesh.y = Math.random() * 100 - 50
+                            tMesh.z = Math.random() * 100 - 50
+                            tScene.addChild(tMesh)
+                        }
+
+                        console.log(testMaterials)
+                    }
+                )
+
+
+
+                // 렌더시작
+                tRenderer.start(this, function (time) {
+                    tCamera.x = Math.sin(time / 1500) * 10
+                    tCamera.y = Math.cos(time / 1500) * 10
+                    tCamera.z = Math.cos(time / 1500) * 10 + Math.sin(time / 1500) * 10
+
+                    tCamera.lookAt(0, 0, 0)
+                })
+
+                // 렌더 디버거 활성화
+                tRenderer['renderDebuger']['visible'] = true
+
+                // 
+                testUI(this, tCamera, tScene)
+            } else {
+                console.log('초기화 실패!')
+            }
+        })
+        testUI = function (redGL, tCamera, tScene) {
+            console.log('test')
+            var gui = new baseTestUI(redGL)
+            gui.initRedGL()
+            gui.initCamera(tCamera)
+            gui.initScene(tScene)
+        }
+    </script>
+</body>
+
+</html>

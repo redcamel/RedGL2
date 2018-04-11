@@ -1,0 +1,22 @@
+[
+  {
+    "constructorYn": true,
+    "title": "RedPointUnit",
+    "description": "\n    RedPointUnit Instance 생성기\n",
+    "params": {
+      "geometry": [
+        {
+          "type": "RedGeometry"
+        },
+        "geometry"
+      ],
+      "material": [
+        {
+          "type": "RedBaseMaterial 확장 Instance"
+        },
+        "material"
+      ]
+    },
+    "return": "RedProgram Instance"
+  }
+]

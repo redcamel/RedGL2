@@ -1,0 +1,25 @@
+[
+  {
+    "constructorYn": true,
+    "title": "RedSkyBox",
+    "description": "\n    RedSkyBox Instance 생성기\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL Instance"
+        }
+      ],
+      "srcList": [
+        {
+          "type": "Array"
+        },
+        "스카이박스 이미지 리스트"
+      ]
+    },
+    "example": "\n    var tScene3D;\n    tScene3D = RedScene()\n    tScene3D.skyBox = RedSkyBox(RedGL Instance, [\n        'asset/cubemap/posx.png',\n        'asset/cubemap/negx.png',\n        'asset/cubemap/posy.png',\n        'asset/cubemap/negy.png',\n        'asset/cubemap/posz.png',\n        'asset/cubemap/negz.png'\n    ])\n",
+    "return": "RedSkyBox Instance"
+  },
+  {
+    "extendDoc": "RedBaseObject3D"
+  }
+]

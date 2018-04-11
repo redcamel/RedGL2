@@ -1,5 +1,4 @@
 "use strict";
-//TODO: 검증해야함
 var RedBaseContainer;
 (function () {
     /**DOC:
@@ -19,10 +18,15 @@ var RedBaseContainer;
     RedBaseContainer.prototype = {
         /**DOC:
             {
-                code : 'FUNCTION',
+                code : 'METHOD',
                 title :`addChild`,
                 description : `addChild`,
-                example : `// TODO:`,
+                params:{
+                    child : [
+                        {type:'RedMesh,RedSprite3D,RedLine,RedPointUnit'}
+                    ]
+                },
+                example : `//TODO:`,
                 return : 'void'
             }
         :DOC*/
@@ -35,17 +39,25 @@ var RedBaseContainer;
                     && !(child instanceof RedLine)
                     && !(child instanceof RedPointUnit)
                 ) RedGLUtil.throwFunc('addChild', 'RedMesh,RedSprite3D,RedLine,RedPointUnit Instance만 가능');
-                t0 = this.children.indexOf(child);
-                if (t0 != -1) child = this.children.splice(t0, 1);
-                this.children.push(child);
+                t0 = this['children'].indexOf(child);
+                if (t0 != -1) child = this['children'].splice(t0, 1);
+                this['children'].push(child);
             }
         })(),
         /**DOC:
             {
-                code : 'FUNCTION',
+                code : 'METHOD',
                 title :`addChildAt`,
                 description : `addChildAt`,
-                example : `// TODO:`,
+                params:{
+                    child : [
+                        {type:'RedMesh,RedSprite3D,RedLine,RedPointUnit'}
+                    ],
+                    index : [
+                        {type:'uint'}
+                    ]
+                },
+                example : `//TODO:`,
                 return : 'void'
             }
         :DOC*/
@@ -58,33 +70,43 @@ var RedBaseContainer;
                     && !(child instanceof RedLine)
                     && !(child instanceof RedPointUnit)
                 ) RedGLUtil.throwFunc('addChildAt', 'RedMesh,RedSprite3D,RedLine,RedPointUnit Instance만 가능');
-                t0 = this.children.indexOf(child);
-                this.children.splice(t0, 0, child);
+                t0 = this['children'].indexOf(child);
+                this['children'].splice(t0, 0, child);
             }
         })(),
         /**DOC:
             {
-                code : 'FUNCTION',
+                code : 'METHOD',
                 title :`removeChild`,
                 description : `removeChild`,
-                example : `// TODO:`,
+                params:{
+                    child : [
+                        {type:'RedMesh,RedSprite3D,RedLine,RedPointUnit'}
+                    ]
+                },
+                example : `//TODO:`,
                 return : 'void'
             }
         :DOC*/
         removeChild: (function () {
             var t0;
             return function (child) {
-                t0 = this.children.indexOf(child);
+                t0 = this['children'].indexOf(child);
                 if (t0 == -1) RedGLUtil.throwFunc('removeChild', '존재하지 않는 RedMesh를 삭제하려고 함');
-                else this.children.splice(t0, 1);
+                else this['children'].splice(t0, 1);
             }
         })(),
         /**DOC:
             {
-                code : 'FUNCTION',
+                code : 'METHOD',
                 title :`removeChildAt`,
                 description : `removeChildAt`,
-                example : `// TODO:`,
+                params:{
+                    index : [
+                        {type:'uint'}
+                    ]
+                },
+                example : `//TODO:`,
                 return : 'void'
             }
         :DOC*/
@@ -92,63 +114,78 @@ var RedBaseContainer;
             var t0;
             return function (index) {
                 if (typeof index != 'number') RedGLUtil.throwFunc('removeChildAt', 'index가 Number형이 아님 ');
-                this.children.splice(t0, 1);
+                this['children'].splice(t0, 1);
             }
         }),
         /**DOC:
             {
-                code : 'FUNCTION',
+                code : 'METHOD',
                 title :`removeChildAll`,
                 description : `removeChildAll`,
-                example : `// TODO:`,
+                example : `//TODO:`,
                 return : 'void'
             }
         :DOC*/
         removeChildAll: function () {
-            this.children.length = 0
+            this['children'].length = 0
         },
         /**DOC:
             {
-                code : 'FUNCTION',
+                code : 'METHOD',
                 title :`getChildAt`,
                 description : `getChildAt`,
-                example : `// TODO:`,
-                return : 'void'
+                params:{
+                    index : [
+                        {type:'uint'}
+                    ]
+                },
+                example : `//TODO:`,
+                return : 'RedMesh,RedSprite3D,RedLine,RedPointUnit'
             }
         :DOC*/
         getChildAt: function (index) {
             if (typeof index != 'number') RedGLUtil.throwFunc('getChildAt', 'index가 Number형이 아님 ');
-            return this.children[index];
+            return this['children'][index];
         },
         /**DOC:
             {
-                code : 'FUNCTION',
+                code : 'METHOD',
                 title :`getChildIndex`,
                 description : `getChildIndex`,
-                example : `// TODO:`,
-                return : 'void'
+                params:{
+                    child : [
+                        {type:'RedMesh,RedSprite3D,RedLine,RedPointUnit'}
+                    ]
+                },
+                example : `//TODO:`,
+                return : 'int'
             }
         :DOC*/
         getChildIndex: function (child) {
-            return this.children.indexOf(child);
+            return this['children'].indexOf(child);
         },
         // getChildByName: function () {
-        //     // TODO: 
+        //     //TODO: 
         // },
         // setChildIndex: function (v) {
-        //     // TODO: 
+        //     //TODO: 
         // },
         /**DOC:
             {
-                code : 'FUNCTION',
+                code : 'METHOD',
                 title :`numChildren`,
                 description : `numChildren`,
-                example : `// TODO:`,
-                return : 'void'
+                params:{
+                    target : [
+                        {type:'RedMesh,RedSprite3D,RedLine,RedPointUnit'}
+                    ]
+                },
+                example : `//TODO:`,
+                return : 'uint'
             }
         :DOC*/
-        numChildren: function (v) {
-            return this.children.length;
+        numChildren: function (target) {
+            return this['children'].length;
         }
     };
     Object.freeze(RedBaseContainer);

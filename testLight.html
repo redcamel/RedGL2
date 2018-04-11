@@ -66,17 +66,17 @@
     <script src="src/program/RedShader.js"></script>
 
     <script src="src/renderer/RedRenderer.js"></script>
-
+    <script src="src/renderer/RedRenderDebuger.js"></script>
     
     <script src="src/resources/RedAtlasUV.js"></script>
+    <script src="src/resources/RedBitmapTexture.js"></script>
     <script src="src/resources/RedAtlasTexture.js"></script>
     <script src="src/resources/RedBitmapCubeTexture.js"></script>
-    <script src="src/resources/RedBitmapTexture.js"></script>
 
     <script src="src/RedView.js"></script>
     <script src="src/RedWorld.js"></script>
     <script src="src/RedScene.js"></script>
-    <script src="src/RedCamera.js"></script>
+    <script src="src/camera/RedCamera.js"></script>
 </head>
 
 <body>
@@ -85,6 +85,7 @@
         var t = document.getElementById('test')
         document.body.appendChild(t)
         RedGL(t, function (v) {
+            console.log(v)
             var tGL;
             var tWorld, tScene3D, tCamera
             var tRenderer;
@@ -99,7 +100,7 @@
             RedView('test').setSize('100%', '100%')
             RedView('test').setLocation('0%', '0%')
 
-
+            this.renderScale = 1
 
             var testMaterial, testMaterial2
             testMaterial = RedEnvironmentMaterial(
@@ -124,7 +125,7 @@
             )
 
 
-            tScene3D.setSkyBox(
+             tScene3D.skyBox =
                 RedSkyBox(this, [
                     'asset/cubemap/posx.png',
                     'asset/cubemap/negx.png',
@@ -132,8 +133,8 @@
                     'asset/cubemap/negy.png',
                     'asset/cubemap/posz.png',
                     'asset/cubemap/negz.png'
-                ])
-            )
+                ]);
+
             JsonModelLoader(this, 'testJsonModel', 'asset/teapot.json', function (interleaveBuffer, indexBuffer) {
                 console.log('호잇!', interleaveBuffer, indexBuffer)
                 var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer), testMaterial)
@@ -210,12 +211,7 @@
             // testALight = RedAmbientLight(this)
             // tScene3D.addLight(testALight)
 
-            var renderResult;
-            renderResult = document.createElement('div')
-            renderResult.style.cssText =
-                'position:absolute;top:0px;left:0px;color:#fff;font-size:12px;background:rgba(0,0,0,0.6)'
-            document.body.appendChild(renderResult)
-
+          tRenderer.renderDebuger.visible = true
             tRenderer.start(this, function (time) {
                 // testInterleaveBuffer.upload(interleaveData)
                 i = tScene3D.children.length
@@ -253,22 +249,7 @@
                 tCamera.lookAt(0, 0, 0)
 
 
-                renderResult.innerHTML = ''
-                for (var k in tRenderer['renderInfo']) {
-                    // console.log(tRenderer['renderInfo'][k])
-                    renderResult.innerHTML +=
-                        '<b>RedView : key - ' + tRenderer['renderInfo'][k]['key'] + '</b>' +
-                        ' <br>orthographic - ' + tRenderer['renderInfo'][k]['orthographic'] +
-                        ' <br>call - ' + tRenderer['renderInfo'][k]['call'] +
-                        ' <br> width - ' + tRenderer['renderInfo'][k]['width'] +
-                        ' <br> height - ' + tRenderer['renderInfo'][k]['height'] +
-                        ' <br> viewRectWidth - ' + tRenderer['renderInfo'][k]['viewRectWidth'] +
-                        ' <br> viewRectHeight - ' + tRenderer['renderInfo'][k]['viewRectHeight'] +
-                        ' <br> x - ' + tRenderer['renderInfo'][k]['x'] +
-                        ' <br> y - ' + tRenderer['renderInfo'][k]['y'] +
-                        '<br>'
-                }
-                renderResult.innerHTML += 'renderScale : ' + self.renderScale
+                
 
             })
 

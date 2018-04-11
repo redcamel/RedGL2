@@ -66,17 +66,17 @@
     <script src="src/program/RedShader.js"></script>
 
     <script src="src/renderer/RedRenderer.js"></script>
-
+    <script src="src/renderer/RedRenderDebuger.js"></script>
     
     <script src="src/resources/RedAtlasUV.js"></script>
+    <script src="src/resources/RedBitmapTexture.js"></script>
     <script src="src/resources/RedAtlasTexture.js"></script>
     <script src="src/resources/RedBitmapCubeTexture.js"></script>
-    <script src="src/resources/RedBitmapTexture.js"></script>
 
     <script src="src/RedView.js"></script>
     <script src="src/RedWorld.js"></script>
     <script src="src/RedScene.js"></script>
-    <script src="src/RedCamera.js"></script>
+    <script src="src/camera/RedCamera.js"></script>
 </head>
 
 <body>
@@ -106,7 +106,7 @@
                 this,
                 RedBitmapTexture(this, 'asset/crate.png')
             )
-            tScene3D.setSkyBox(
+            tScene3D.skyBox =
                 RedSkyBox(this, [
                     'asset/cubemap/posx.png',
                     'asset/cubemap/negx.png',
@@ -114,8 +114,8 @@
                     'asset/cubemap/negy.png',
                     'asset/cubemap/posz.png',
                     'asset/cubemap/negz.png'
-                ])
-            )
+                ]);
+
             var testMesh, testMesh2, testMesh3
 
             testMesh = RedMesh(self, RedBox(self), testMaterial)
@@ -180,11 +180,7 @@
             document.body.appendChild(worldToScreenBox)
 
 
-            var renderResult;
-            renderResult = document.createElement('div')
-            renderResult.style.cssText =
-                'position:absolute;top:0px;left:0px;color:#fff;font-size:12px;background:rgba(0,0,0,0.6)'
-            document.body.appendChild(renderResult)
+           tRenderer.renderDebuger.visible = true
 
             tRenderer.start(this, function (time) {
                 // testInterleaveBuffer.upload(interleaveData)
@@ -211,28 +207,28 @@
                     testMesh5.rotationY += 0.5
                     testMesh5.rotationZ += 0.5
                 }
-                // console.log(testMesh2.localToGlobal(-2, 0, 0))
+                // console.log(testMesh2.localToWorld(-2, 0, 0))
 
-                testMesh3.x = testMesh2.localToGlobal(-1, 1, 0)[0]
-                testMesh3.y = testMesh2.localToGlobal(-1, 1, 0)[1]
-                testMesh3.z = testMesh2.localToGlobal(-1, 1, 0)[2]
+                testMesh3.x = testMesh2.localToWorld(-1, 1, 0)[0]
+                testMesh3.y = testMesh2.localToWorld(-1, 1, 0)[1]
+                testMesh3.z = testMesh2.localToWorld(-1, 1, 0)[2]
 
                 testDLight.x = Math.sin(time / 1500) * 1
                 testDLight.y = 5
                 testDLight.z = Math.cos(time / 1500) * 1
 
 
-                // console.log(testMesh4.globalToLocal(2, 2, 2))
+                // console.log(testMesh4.worldToLocal(2, 2, 2))
 
 
-                testMesh4.x = testMesh4.globalToLocal(3, 0, 1)[0]
-                testMesh4.y = testMesh4.globalToLocal(3, 0, 1)[1]
-                testMesh4.z = testMesh4.globalToLocal(3, 0, 1)[2]
+                testMesh4.x = testMesh4.worldToLocal(3, 0, 1)[0]
+                testMesh4.y = testMesh4.worldToLocal(3, 0, 1)[1]
+                testMesh4.z = testMesh4.worldToLocal(3, 0, 1)[2]
 
                 //   var testPosition = [Math.sin(time / 1500) * 5, 0, Math.cos(time / 1500) * 5]
-                // testMesh4.x = testMesh4.globalToLocal(testPosition[0], testPosition[1], testPosition[2])[0]
-                // testMesh4.y = testMesh4.globalToLocal(testPosition[0], testPosition[1], testPosition[2])[1]
-                // testMesh4.z = testMesh4.globalToLocal(testPosition[0], testPosition[1], testPosition[2])[2]
+                // testMesh4.x = testMesh4.worldToLocal(testPosition[0], testPosition[1], testPosition[2])[0]
+                // testMesh4.y = testMesh4.worldToLocal(testPosition[0], testPosition[1], testPosition[2])[1]
+                // testMesh4.z = testMesh4.worldToLocal(testPosition[0], testPosition[1], testPosition[2])[2]
 
 
 
@@ -250,22 +246,6 @@
                 tCamera.lookAt(0, 0, 0)
 
 
-                renderResult.innerHTML = ''
-                for (var k in tRenderer['renderInfo']) {
-                    // console.log(tRenderer['renderInfo'][k])
-                    renderResult.innerHTML +=
-                        '<b>RedView : key - ' + tRenderer['renderInfo'][k]['key'] + '</b>' +
-                        ' <br>orthographic - ' + tRenderer['renderInfo'][k]['orthographic'] +
-                        ' <br>call - ' + tRenderer['renderInfo'][k]['call'] +
-                        ' <br> width - ' + tRenderer['renderInfo'][k]['width'] +
-                        ' <br> height - ' + tRenderer['renderInfo'][k]['height'] +
-                        ' <br> viewRectWidth - ' + tRenderer['renderInfo'][k]['viewRectWidth'] +
-                        ' <br> viewRectHeight - ' + tRenderer['renderInfo'][k]['viewRectHeight'] +
-                        ' <br> x - ' + tRenderer['renderInfo'][k]['x'] +
-                        ' <br> y - ' + tRenderer['renderInfo'][k]['y'] +
-                        '<br>'
-                }
-                renderResult.innerHTML += 'renderScale : ' + self.renderScale
 
             })
 

@@ -9,8 +9,7 @@ var RedView;
         title :`RedView`,
         description : `
             고유 키를 기반으로 <b>RedScene</b>과 <b>RedCamera를</b> 쌍으로 하는 정보를 소유.
-            RedWorld가 소유하게 되며 렌더링시 활용하게 된다.
-            실제 렌더링시 Perspective 계산에 필요한 그려질 크기와 위치를 결정한다.
+            <b>RedWorld</b>에 등록되어지며 실제 렌더링시 필요한 그려질 크기와 위치를 결정한다.
         `,
         params : {
             key :[
@@ -29,10 +28,10 @@ var RedView;
         },
         example : `
             var tWorld, tScene, tCamera;
-            tScene = new RedScene(); // 씬생성
-            tCamera = new RedCamera(); // 카메라생성
-            new RedView('test', tScene, tCamera); // test라는 키값을 가진 RedView 생성
-            new RedView('test2', tScene, tCamera); // test2라는 키값을 가진 RedView 생성
+            tScene = RedScene(); // 씬생성
+            tCamera = RedCamera(); // 카메라생성
+            RedView('test', tScene, tCamera); // test라는 키값을 가진 RedView 생성
+            RedView('test2', tScene, tCamera); // test2라는 키값을 가진 RedView 생성
         `,
         return : 'RedView Instance'
     }
@@ -83,16 +82,17 @@ var RedView;
     RedView.prototype = {
         /**DOC:
            {
-               code : 'FUNCTION',
+               code : 'METHOD',
                title :`setSize`,
                description : `
-                    씬의 사이즈를 결정
+                    씬의 사이즈를 결정.
+                    px, % 단위를 받음
                `,
                example : `
                     var tWorld, tScene, tCamera;
-                    tScene = new RedScene(); // 씬생성
-                    tCamera = new RedCamera(); // 카메라생성
-                    new RedView('test', tScene, tCamera); // test라는 키값을 가진 RedView 생성
+                    tScene = RedScene(); // 씬생성
+                    tCamera = RedCamera(); // 카메라생성
+                    RedView('test', tScene, tCamera); // test라는 키값을 가진 RedView 생성
                     RedView('test').setSize(100,100);
                     RedView('test').setSize('50%',100);
                `,
@@ -105,13 +105,19 @@ var RedView;
         },
         /**DOC:
            {
-               code : 'FUNCTION',
+               code : 'METHOD',
                title :`setLocation`,
                description : `
-                   씬의 위치를 결정
+                   씬의 위치를 결정.
+                   px, % 단위를 받음
                `,
                example : `
-                   // TODO       
+                    var tWorld, tScene, tCamera;
+                    tScene = RedScene(); // 씬생성
+                    tCamera = RedCamera(); // 카메라생성
+                    RedView('test', tScene, tCamera); // test라는 키값을 가진 RedView 생성
+                    RedView('test').setLocation(100,100);
+                    RedView('test').setLocation('50%',100);
                `,
                return : 'void'
            }

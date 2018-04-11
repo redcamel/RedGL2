@@ -1,0 +1,65 @@
+[
+  {
+    "title": "addPoint",
+    "description": "\n    라인포인트 추가\n",
+    "parmas": {
+      "x": [
+        {
+          "type": "Number"
+        }
+      ],
+      "y": [
+        {
+          "type": "Number"
+        }
+      ],
+      "z": [
+        {
+          "type": "Number"
+        }
+      ]
+    },
+    "return": "void"
+  },
+  {
+    "title": "drawMode",
+    "description": "\n    기본값 : gl.LINE_STRIP\n",
+    "return": "gl 상수"
+  },
+  {
+    "title": "material",
+    "description": "material",
+    "return": "RedBaseMaterial 확장 Instance"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedLine",
+    "description": "\n    RedLine Instance 생성기\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL Instance"
+        }
+      ],
+      "material": [
+        {
+          "type": "RedBaseMaterial 확장 Instance"
+        },
+        "material"
+      ]
+    },
+    "example": "\nvar tScene;\nvar tLine;\nvar tX, tY, tZ;\nvar i;\ntScene = RedScene();\ni = 3 * 20;\ntLine = RedLine(redGL Instance, RedColorMaterial(redGL Instance))\ntX = tY = tZ = 0\nwhile (i--) {\n    tX += Math.random() * 0.5\n    tY += Math.random() * 0.5\n    tZ += Math.random() * 0.5\n    tLine.addPoint(tX, tY, tZ)\n}\ntLine.upload()\ntScene.addChild(tLine)\n",
+    "return": "RedLine Instance"
+  },
+  {
+    "title": "upload",
+    "description": "\n    addPoint로 포인트 추가후 실제 버퍼 반영할떄 사용\n",
+    "return": "void"
+  },
+  {
+    "extendDoc": "RedBaseContainer"
+  },
+  {
+    "extendDoc": "RedBaseObject3D"
+  }
+]
