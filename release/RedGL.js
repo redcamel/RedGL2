@@ -434,8 +434,8 @@ var RedAtlas;
             atlasMap: {}
         }
         MAX_TEXTURE_SIZE = redGL['_detect']['MAX_TEXTURE_SIZE']
-		if (MAX_TEXTURE_SIZE > 2048) MAX_TEXTURE_SIZE = 2048
-        this.loadList(redGL, srcList,callBack)
+        if (MAX_TEXTURE_SIZE > 2048) MAX_TEXTURE_SIZE = 2048
+        this.loadList(redGL, srcList, callBack)
 
 
     }
@@ -471,18 +471,18 @@ var RedAtlas;
                     }
                     // console.log(node)
                 }
-                
+
                 tAtlasMap[img.id] = {
                     atlas: tAtlas,
                     rect: tAtlas.uv()[img.id]
-                    
-                }
-              
-             
-          
-                
 
-                if(!tAtlas['texture']) tAtlas['texture'] = RedBitmapTexture(redGL, tAtlas['canvas'])
+                }
+
+
+
+
+
+                if (!tAtlas['texture']) tAtlas['texture'] = RedBitmapTexture(redGL, tAtlas['canvas'])
                 console.log(tAtlasMap[img.id], tAtlasMap)
             }
         },
@@ -501,10 +501,10 @@ var RedAtlas;
                     self.atlasPack(redGL, this)
                     loaded++
                     if (loaded == srcList.length && callBack) {
-                      
+
                         var t0;
-                        t0 =  redGL['_datas']['RedAtlas']['atlasInfoList']
-                        t0.forEach(function(v){
+                        t0 = redGL['_datas']['RedAtlas']['atlasInfoList']
+                        t0.forEach(function (v) {
                             v['texture'] = RedBitmapTexture(redGL, v['canvas'])
                         })
 
@@ -5775,7 +5775,6 @@ var RedBitmapTexture;
 
         }
     })()
-    //TODO: 기본옵션 정의
     /**DOC:
         {
             constructorYn : true,
@@ -5814,7 +5813,7 @@ var RedBitmapTexture;
             gl.bindTexture(gl.TEXTURE_2D, redGL['_datas']['emptyTexture']['2d']['webglTexture'])
         }
 
-        if(src) loadTexture(gl, this['webglTexture'], src, option);
+        if (src) loadTexture(gl, this['webglTexture'], src, option);
         Object.seal(this);
         console.log(this)
     }
