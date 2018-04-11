@@ -2,19 +2,19 @@
   {
     "code": "PROPERTY",
     "title": "farClipping",
-    "description": "farClipping - 기본값 : 10000",
+    "description": "기본값 : 10000",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "fov",
-    "description": "fov - 기본값 : Math.PI / 2",
+    "description": "기본값 : 45degree",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "lookAt",
-    "description": "\n    대상 위치를 바라보는 matrix 생성\n",
+    "description": "\n    대상 위치를 바라보도록 matrix 설정\n",
     "params": {
       "x": [
         {
@@ -37,13 +37,13 @@
   {
     "code": "PROPERTY",
     "title": "matrix",
-    "description": "matrix",
+    "description": "\n카메라 매트릭스\n",
     "return": "mat4"
   },
   {
     "code": "PROPERTY",
     "title": "nearClipping",
-    "description": "nearClipping - 0.01",
+    "description": "기본값 - 0.01",
     "return": "Number"
   },
   {
@@ -53,33 +53,34 @@
     "return": "Boolean"
   },
   {
+    "code": "PROPERTY",
+    "title": "perspectiveMTX",
+    "description": "\northographic값에따라 렌더링시 퍼스펙티브 or 오쏘고날 매트릭스로 자동 변경됨\n",
+    "return": "mat4"
+  },
+  {
     "constructorYn": true,
     "title": "RedCamera",
     "description": "\n    RedCamera Instance 생성자.\n",
+    "example": "\n    RedCamera()\n",
     "return": "RedCamera Instance"
-  },
-  {
-    "code": "FUNCTION",
-    "title": "updateMatrix",
-    "description": "\n    x, y, z, rotationX, rotationY, rotationZ 를 기반으로한 matrix 업데이트\n",
-    "return": "mat4"
   },
   {
     "code": "PROPERTY",
     "title": "x",
-    "description": "x - 기본값 : 0",
+    "description": "기본값 : 0",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "y",
-    "description": "y - 기본값 : 0",
+    "description": "기본값 : 0",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "z",
-    "description": "z - 기본값 : 0",
+    "description": "기본값 : 0",
     "return": "Number"
   }
 ]

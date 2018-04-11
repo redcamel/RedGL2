@@ -3,7 +3,8 @@
     "title": "fullMode",
     "code": "PROPERTY",
     "description": "\n    기본값 : true\n    캔버스크기를 화면 전체사이즈로 설정할지 여부\n",
-    "return": "void"
+    "example": "\nRedGL(document.getElementById('test'), function (v) {\n    this.fullMode = false // 기본값 true\n})\n",
+    "return": "Boolean"
   },
   {
     "constructorYn": true,
@@ -27,14 +28,14 @@
           "type": "Object"
         },
         "초기화 옵션을 지정한다.",
-        "\n        <pre>\n        {\n            alpha: false,\n            depth: true,\n            stencil: false,\n            antialias: true,\n            premultipliedAlpha: false,\n            preserveDrawingBuffer: false,\n            powerPreference: 'default', // default, high-performance, low-power\n            failIfMajorPerformanceCaveat: false\n        }\n        </pre>\n        "
+        "\n        <code>\n        {\n            alpha: false,\n            depth: true,\n            stencil: false,\n            antialias: true,\n            premultipliedAlpha: false,\n            preserveDrawingBuffer: false,\n            powerPreference: 'default', // default, high-performance, low-power\n            failIfMajorPerformanceCaveat: false\n        }\n        </code>\n        "
       ]
     },
     "example": "\n// 기초 초기화\nRedGL(document.getElementById('test'), function(v){\n         // 콜백내용 \n         // 성공,실패에 따라 v값이 true or false.\n         if(v){\n             // 초기화 성공\n         }else{\n             // 초기화실패\n         }\n    })\n",
     "return": "RedGL Instance"
   },
   {
-    "constructorYn": true,
+    "code": "STATIC",
     "title": "RedGL.makeUUID",
     "description": "\n    UUID 생성기\n",
     "example": "\n    // 기초 초기화\n    RedGL.makeUUID()\n",
@@ -44,12 +45,13 @@
     "title": "renderScale",
     "code": "PROPERTY",
     "description": "\n    기본값 : 1\n    렌더링시 사용할 적용할 렌더링 스케일                \n    size 1024*768, renderScale 0.5 일경우 512 * 389로 렌더링된다\n",
-    "return": "void"
+    "example": "\nRedGL(document.getElementById('test'), function (v) {\n    this.renderScale = 0.5 // 기본값 1\n})\n",
+    "return": "Number"
   },
   {
     "title": "setSize",
     "code": "FUNCTION",
-    "description": "\n    RedGL Instance의 Canvas 사이즈 설정\n    fullMode 속성이 false일때만 적용.\n",
+    "description": "\n    RedGL Instance의 Canvas 사이즈 설정\n    fullMode 속성이 false일때만 적용.\n    px 단위만 입력가능.\n",
     "example": "\n    RedGL(document.getElementById('test'), function(v){\n         if(v){\n             // 초기화 성공\n             this.setSize(200,200)\n         }else{\n             // 초기화실패\n         }\n    })\n",
     "return": "void"
   }

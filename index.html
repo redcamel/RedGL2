@@ -15,68 +15,68 @@
             overflow: hidden;
         }
     </style>
-   <script src="src/gl-matrix-min.js"></script>
-   <script src="src/RedGLUtil.js"></script>
-   <script src="src/RedGL.js"></script>
+    <script src="src/gl-matrix-min.js"></script>
+    <script src="src/RedGLUtil.js"></script>
+    <script src="src/RedGL.js"></script>
 
-   <script src="src/atlas/RedAtlas.js"></script>
+    <script src="src/atlas/RedAtlas.js"></script>
 
-   <script src="src/base/RedBaseContainer.js"></script>
-   <script src="src/base/RedBaseLight.js"></script>
-   <script src="src/base/RedBaseMaterial.js"></script>
-   <script src="src/base/RedBaseObject3D.js"></script>
+    <script src="src/base/RedBaseContainer.js"></script>
+    <script src="src/base/RedBaseLight.js"></script>
+    <script src="src/base/RedBaseMaterial.js"></script>
+    <script src="src/base/RedBaseObject3D.js"></script>
 
-   <script src="src/geometry/RedBuffer.js"></script>
-   <script src="src/geometry/RedGeometry.js"></script>
+    <script src="src/geometry/RedBuffer.js"></script>
+    <script src="src/geometry/RedGeometry.js"></script>
 
-   <script src="src/light/RedAmbientLight.js"></script>
-   <script src="src/light/RedDirectionalLight.js"></script>
-   <script src="src/light/RedPointLight.js"></script>
+    <script src="src/light/RedAmbientLight.js"></script>
+    <script src="src/light/RedDirectionalLight.js"></script>
+    <script src="src/light/RedPointLight.js"></script>
 
-   <script src="src/loader/JsonModelLoader.js"></script>
+    <script src="src/loader/JsonModelLoader.js"></script>
 
-   <script src="src/material/RedMaterial.js"></script>
-   <script src="src/material/RedColorMaterial.js"></script>
-   <script src="src/material/RedColorPhongMaterial.js"></script>
-   <script src="src/material/RedEnvironmentMaterial.js"></script>
-   <script src="src/material/RedGridMaterial.js"></script>
-   <script src="src/material/RedBitmapMaterial.js"></script>
+    <script src="src/material/RedMaterial.js"></script>
+    <script src="src/material/RedColorMaterial.js"></script>
+    <script src="src/material/RedColorPhongMaterial.js"></script>
+    <script src="src/material/RedEnvironmentMaterial.js"></script>
+    <script src="src/material/RedGridMaterial.js"></script>
+    <script src="src/material/RedBitmapMaterial.js"></script>
 
-   <script src="src/material/RedPointBitmapMaterial.js"></script>
-   <script src="src/material/RedPointColorMaterial.js"></script>
-   <script src="src/material/RedSkyBoxMaterial.js"></script>
-   <script src="src/material/RedStandardMaterial.js"></script>
+    <script src="src/material/RedPointBitmapMaterial.js"></script>
+    <script src="src/material/RedPointColorMaterial.js"></script>
+    <script src="src/material/RedSkyBoxMaterial.js"></script>
+    <script src="src/material/RedStandardMaterial.js"></script>
 
-   <script src="src/object3D/RedAxis.js"></script>
-   <script src="src/object3D/RedGrid.js"></script>
-   <script src="src/object3D/RedMesh.js"></script>
-   <script src="src/object3D/RedLine.js"></script>
-   <script src="src/object3D/RedSkyBox.js"></script>
-   <script src="src/object3D/RedSprite3D.js"></script>
+    <script src="src/object3D/RedAxis.js"></script>
+    <script src="src/object3D/RedGrid.js"></script>
+    <script src="src/object3D/RedMesh.js"></script>
+    <script src="src/object3D/RedLine.js"></script>
+    <script src="src/object3D/RedSkyBox.js"></script>
+    <script src="src/object3D/RedSprite3D.js"></script>
 
 
-   <script src="src/particle/RedPointUnit.js"></script>
+    <script src="src/particle/RedPointUnit.js"></script>
 
-   <script src="src/primitives/RedBox.js"></script>
-   <script src="src/primitives/RedPlane.js"></script>
-   <script src="src/primitives/RedSphere.js"></script>
+    <script src="src/primitives/RedBox.js"></script>
+    <script src="src/primitives/RedPlane.js"></script>
+    <script src="src/primitives/RedSphere.js"></script>
 
-   <script src="src/program/RedProgram.js"></script>
-   <script src="src/program/RedSystemShaderCode.js"></script>
-   <script src="src/program/RedShader.js"></script>
+    <script src="src/program/RedProgram.js"></script>
+    <script src="src/program/RedSystemShaderCode.js"></script>
+    <script src="src/program/RedShader.js"></script>
 
-   <script src="src/renderer/RedRenderer.js"></script>
+    <script src="src/renderer/RedRenderer.js"></script>
+    <script src="src/renderer/RedRenderDebuger.js"></script>
 
-   
-   <script src="src/resources/RedAtlasUV.js"></script>
-   <script src="src/resources/RedBitmapTexture.js"></script>
-   <script src="src/resources/RedAtlasTexture.js"></script>
-   <script src="src/resources/RedBitmapCubeTexture.js"></script>
+    <script src="src/resources/RedAtlasUV.js"></script>
+    <script src="src/resources/RedBitmapTexture.js"></script>
+    <script src="src/resources/RedAtlasTexture.js"></script>
+    <script src="src/resources/RedBitmapCubeTexture.js"></script>
 
-   <script src="src/RedView.js"></script>
-   <script src="src/RedWorld.js"></script>
-   <script src="src/RedScene.js"></script>
-   <script src="src/RedCamera.js"></script>
+    <script src="src/RedView.js"></script>
+    <script src="src/RedWorld.js"></script>
+    <script src="src/RedScene.js"></script>
+    <script src="src/camera/RedCamera.js"></script>
 </head>
 
 <body>
@@ -113,16 +113,16 @@
             RedView('test4').setSize('50%', '50%')
             RedView('test4').setLocation('50%', '50%')
 
-            tScene3D.setSkyBox(
-                RedSkyBox(this, [
-                    'asset/cubemap/posx.png',
-                    'asset/cubemap/negx.png',
-                    'asset/cubemap/posy.png',
-                    'asset/cubemap/negy.png',
-                    'asset/cubemap/posz.png',
-                    'asset/cubemap/negz.png'
-                ])
-            )
+            // tScene3D.skyBox =
+            //     RedSkyBox(this, [
+            //         'asset/cubemap/posx.png',
+            //         'asset/cubemap/negx.png',
+            //         'asset/cubemap/posy.png',
+            //         'asset/cubemap/negy.png',
+            //         'asset/cubemap/posz.png',
+            //         'asset/cubemap/negz.png'
+            //     ])
+
 
             var testMaterial, testMaterial2, testMaterial3, testMaterial4, testMaterial5, testMaterial6,
                 testMaterial7, testMateria8
@@ -336,10 +336,7 @@
 
             })
 
-            var renderResult;
-            renderResult = document.createElement('div')
-            renderResult.style.cssText = 'position:absolute;top:0px;left:0px;color:#fff;font-size:12px;background:rgba(0,0,0,0.6)'
-            document.body.appendChild(renderResult)
+            tRenderer.renderDebuger.visible = true
 
             tRenderer.start(this, function (time) {
                 testMaterial['floatTest'] = time
@@ -374,22 +371,7 @@
                 tCamera3.z = Math.cos(time / 1500) * 10
                 tCamera3.lookAt(0, 0, 0)
 
-                renderResult.innerHTML = ''
-                for (var k in tRenderer['renderInfo']) {
-                    // console.log(tRenderer['renderInfo'][k])
-                    renderResult.innerHTML +=
-                        '<b>RedView : key - ' + tRenderer['renderInfo'][k]['key'] + '</b>' +
-                        ' <br>orthographic - ' + tRenderer['renderInfo'][k]['orthographic'] +
-                        ' <br>call - ' + tRenderer['renderInfo'][k]['call'] +
-                        ' <br> width - ' + tRenderer['renderInfo'][k]['width'] +
-                        ' <br> height - ' + tRenderer['renderInfo'][k]['height'] +
-                        ' <br> viewRectWidth - ' + tRenderer['renderInfo'][k]['viewRectWidth'] +
-                        ' <br> viewRectHeight - ' + tRenderer['renderInfo'][k]['viewRectHeight'] +
-                        ' <br> x - ' + tRenderer['renderInfo'][k]['x'] +
-                        ' <br> y - ' + tRenderer['renderInfo'][k]['y'] +
-                        '<br>'
-                }
-                renderResult.innerHTML += 'renderScale : ' + self.renderScale
+
 
             })
 

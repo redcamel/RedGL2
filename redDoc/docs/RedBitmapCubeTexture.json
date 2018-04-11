@@ -1,0 +1,27 @@
+[
+  {
+    "constructorYn": true,
+    "title": "RedBitmapCubeTexture",
+    "description": "\n    RedBitmapCubeTexture Instance 생성\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL Instance"
+        }
+      ],
+      "src": [
+        {
+          "type": "string"
+        },
+        "경로"
+      ],
+      "option": [
+        {
+          "type": "Object"
+        },
+        "텍스쳐 정의옵션"
+      ]
+    },
+    "return": "RedBitmapCubeTexture Instance"
+  }
+]

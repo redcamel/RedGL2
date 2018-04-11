@@ -1,8 +1,24 @@
 [
   {
+    "title": "addLight",
+    "code": "METHOD",
+    "description": "\n    라이트 추가 매서드.\n    RedBaseLight 확장객체만 등록가능.\n",
+    "return": "void"
+  },
+  {
+    "title": "axis",
+    "description": "\n    axis get/set\n",
+    "return": "RedAxis"
+  },
+  {
     "title": "children",
     "description": "\n    자식 리스트\n",
     "return": "Array"
+  },
+  {
+    "title": "grid",
+    "description": "\n    grid get/set\n",
+    "return": "RedGrid"
   },
   {
     "constructorYn": true,
@@ -13,7 +29,7 @@
   {
     "code": "FUNCTION",
     "title": "setBackgroundColor",
-    "description": "\n    배경 컬러설정\n",
+    "description": "\n    배경 컬러설정.\n    알파설정은 불가능\n",
     "params": {
       "hex": [
         {
@@ -26,8 +42,16 @@
     "return": "void"
   },
   {
+    "title": "skyBox",
+    "description": "\n    skyBox get/set\n",
+    "return": "RedSkyBox"
+  },
+  {
     "title": "useBackgroundColor",
-    "description": "\n    배경색 사용여부\n",
+    "description": "\n    배경색 사용여부.\n    초기값 false\n",
     "return": "Boolean"
+  },
+  {
+    "extendDoc": "RedBaseContainer"
   }
 ]

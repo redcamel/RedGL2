@@ -1,0 +1,32 @@
+[
+  {
+    "title": "drawMode",
+    "description": "drawMode",
+    "return": "gl 상수"
+  },
+  {
+    "title": "material",
+    "description": "material",
+    "return": "RedBaseMaterial 확장 Instance"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedGrid",
+    "description": "\n    RedGrid Instance 생성기\n",
+    "params": {
+      "geometry": [
+        {
+          "type": "RedGeometry"
+        },
+        "geometry"
+      ],
+      "material": [
+        {
+          "type": "RedBaseMaterial 확장 Instance"
+        },
+        "material"
+      ]
+    },
+    "return": "RedProgram Instance"
+  }
+]

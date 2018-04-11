@@ -1,0 +1,37 @@
+[
+  {
+    "title": "drawMode",
+    "description": "drawMode",
+    "return": "gl 상수"
+  },
+  {
+    "title": "geometry",
+    "description": "geometry",
+    "return": "RedGeometry"
+  },
+  {
+    "title": "material",
+    "description": "material",
+    "return": "RedBaseMaterial 확장 Instance"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedLine",
+    "description": "\n    RedLine Instance 생성기\n",
+    "params": {
+      "geometry": [
+        {
+          "type": "RedGeometry"
+        },
+        "geometry"
+      ],
+      "material": [
+        {
+          "type": "RedBaseMaterial 확장 Instance"
+        },
+        "material"
+      ]
+    },
+    "return": "RedProgram Instance"
+  }
+]
