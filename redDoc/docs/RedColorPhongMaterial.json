@@ -2,20 +2,12 @@
   {
     "title": "color",
     "description": "\n    RedProgram Instance\n    직접설정하지 않도록 유의해야함!\n",
-    "example": "// TODO:",
     "return": "RedProgram Instance"
   },
   {
     "title": "normalTexture",
     "description": "normalTexture",
-    "example": "// TODO:",
     "return": "RedBitmapTexture"
-  },
-  {
-    "title": "program",
-    "description": "RedProgram Instance",
-    "example": "// TODO:",
-    "return": "RedProgram Instance"
   },
   {
     "constructorYn": true,
@@ -40,6 +32,7 @@
         "알파값"
       ]
     },
+    "example": "\nRedColorPhongMaterial(RedGL Instance, hex, alpha, normalTexture, specularTexture)\n",
     "return": "RedColorPhongMaterial Instance"
   },
   {
@@ -59,20 +52,17 @@
   },
   {
     "title": "shininess",
-    "description": "shininess",
-    "example": "// TODO:",
-    "return": "RedBitmapTexture"
+    "description": "기본값 : 16",
+    "return": "uint"
   },
   {
     "title": "specularPower",
-    "description": "specularPower",
-    "example": "// TODO:",
-    "return": "RedBitmapTexture"
+    "description": "기본값 : 1",
+    "return": "uint"
   },
   {
     "title": "specularTexture",
     "description": "specularTexture",
-    "example": "// TODO:",
     "return": "RedBitmapTexture"
   }
 ]

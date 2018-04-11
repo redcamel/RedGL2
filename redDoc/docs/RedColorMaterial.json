@@ -2,14 +2,7 @@
   {
     "title": "color",
     "description": "\n    RedProgram Instance\n    직접설정하지 않도록 유의해야함!\n",
-    "example": "// TODO:",
-    "return": "RedProgram Instance"
-  },
-  {
-    "title": "program",
-    "description": "RedProgram Instance",
-    "example": "// TODO:",
-    "return": "RedProgram Instance"
+    "return": "Float32Array"
   },
   {
     "constructorYn": true,
@@ -21,7 +14,7 @@
           "type": "RedGL Instance"
         }
       ],
-      "color": [
+      "hex": [
         {
           "type": "hex"
         },
@@ -34,6 +27,7 @@
         "알파값"
       ]
     },
+    "example": "\n    RedColorMaterial(RedGL Instance, hex)\n",
     "return": "RedColorMaterial Instance"
   },
   {
