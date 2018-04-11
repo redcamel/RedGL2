@@ -1,10 +1,5 @@
 [
   {
-    "title": "drawMode",
-    "description": "drawMode",
-    "return": "gl 상수"
-  },
-  {
     "title": "geometry",
     "description": "geometry",
     "return": "RedGeometry"
@@ -19,6 +14,11 @@
     "title": "RedMesh",
     "description": "\n    RedMesh Instance 생성기\n",
     "params": {
+      "redGL": [
+        {
+          "type": "RedGL Instance"
+        }
+      ],
       "geometry": [
         {
           "type": "RedGeometry"
@@ -32,51 +32,12 @@
         "material"
       ]
     },
-    "return": "RedProgram Instance"
+    "return": "RedMesh Instance"
   },
   {
-    "title": "rotationX",
-    "description": "rotationX",
-    "return": "Number"
+    "extendDoc": "RedBaseContainer"
   },
   {
-    "title": "rotationY",
-    "description": "rotationY",
-    "return": "Number"
-  },
-  {
-    "title": "rotationZ",
-    "description": "rotationZ",
-    "return": "Number"
-  },
-  {
-    "title": "scaleX",
-    "description": "scaleX",
-    "return": "Number"
-  },
-  {
-    "title": "scaleY",
-    "description": "scaleY",
-    "return": "Number"
-  },
-  {
-    "title": "scaleZ",
-    "description": "scaleZ",
-    "return": "Number"
-  },
-  {
-    "title": "x",
-    "description": "x",
-    "return": "Number"
-  },
-  {
-    "title": "y",
-    "description": "y",
-    "return": "Number"
-  },
-  {
-    "title": "z",
-    "description": "z",
-    "return": "Number"
+    "extendDoc": "RedBaseObject3D"
   }
 ]

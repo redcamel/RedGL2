@@ -1,13 +1,27 @@
 "use strict";
 var RedAxis;
 (function () {
+    /**DOC:
+        {
+            constructorYn : true,
+            title :`RedAxis`,
+            description : `
+                RedAxis Instance 생성기
+            `,
+            params : {
+                redGL : [
+                    {type:'RedGL Instance'}
+                ],
+            },
+            return : 'RedAxis Instance'
+        }
+    :DOC*/
     RedAxis = function (redGL) {
         if (!(this instanceof RedAxis)) return new RedAxis(redGL);
         if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedAxis : RedGL Instance만 허용됩니다.')
         var root;
         var xAxis, yAxis, zAxis;
         RedBaseObject3D['build'].call(this, redGL.gl)
-        this['children'] = [];
         //
         root = RedMesh(redGL, RedBox(redGL), RedColorMaterial(redGL, '#ff0000'))
         xAxis = RedMesh(redGL, RedBox(redGL), RedColorMaterial(redGL, '#ff0000'))

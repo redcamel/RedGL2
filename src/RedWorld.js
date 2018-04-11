@@ -9,14 +9,16 @@ var RedWorld;
             RedWorld Instance 생성자.
             RedWorld는 RedView를 소유하며 이는 렌더리스트로서 작동한다.. 
         `,
-        params : {
-            key :[
-                {type:'String'},
-                '고유키'
-            ]
-        },
         example : `
-            // TODO       
+            RedGL(document.getElementById('test'), function(v){
+                // 성공,실패에 따라 v값이 true or false.
+                if(v){
+                    // 월드 생성
+                    this['world'] = RedWorld();
+                }else{
+                    // 초기화실패
+                }
+            })
         `,
         return : 'RedWorld Instance'
     }
@@ -31,7 +33,7 @@ var RedWorld;
     RedWorld.prototype = {
         /**DOC:
             {
-                code:`FUNCTION`,
+                code:`METHOD`,
                 title :`addView`,
                 description : `
                     렌더정보 추가.
@@ -44,20 +46,20 @@ var RedWorld;
                     ]
                 },
                 example : `
-                   // TODO       
+                    var tWorld = RedWorld()
+                    tWorld.addView(RedView('testView',RedScene(),RedCamera()))
                `,
-                return : 'RedWorld Instance'
+                return : 'void'
             }
         :DOC*/
         addView: function (View) {
             if (!(View instanceof RedView)) RedGLUtil.throwFunc('RedView Instance만 허용함.')
             this['_viewMap'][View['key']] = View;
             this['_viewList'].push(View);
-            return this;
         },
         /**DOC:
             {
-                code:`FUNCTION`,
+                code:`METHOD`,
                 title :`getView`,
                 description : `고유키 기반 렌더정보 검색`,
                 params : {
@@ -67,7 +69,11 @@ var RedWorld;
                     ]
                 },
                 example : `
-                   // TODO       
+                    var tWorld = RedWorld();
+                    tWorld.addView(RedView('testView',RedScene(),RedCamera()));
+                    console.log(tWorld.getView('testView')) // testView 반환
+                    tWorld.delView('testView');
+                    console.log(tWorld.getView('testView')) // undefined
                `,
                 return : 'RedView'
             }
@@ -77,7 +83,7 @@ var RedWorld;
         },
         /**DOC:
             {
-                code:`FUNCTION`,
+                code:`METHOD`,
                 title :`delView`,
                 description : `렌더정보 삭제`,
                 params : {
@@ -87,9 +93,13 @@ var RedWorld;
                     ]
                 },
                 example : `
-                   // TODO       
+                    var tWorld = RedWorld();
+                    tWorld.addView(RedView('testView',RedScene(),RedCamera()));
+                    console.log(tWorld.getView('testView')) // testView 반환
+                    tWorld.delView('testView');
+                    console.log(tWorld.getView('testView')) // undefined
                `,
-                return : 'RedWorld Instance'
+                return : 'void'
             }
         :DOC*/
         delView: function (key) {
@@ -99,11 +109,10 @@ var RedWorld;
                 this['_viewList'].splice(t1, 1)
                 delete this['_viewMap'][key]
             }
-            return this;
         },
         /**DOC:
             {
-                code:`FUNCTION`,
+                code:`METHOD`,
                 title :`hasView`,
                 description : `고유키 기반 렌더정보 존재여부`,
                 params : {
@@ -113,7 +122,10 @@ var RedWorld;
                     ]
                 },
                 example : `
-                   // TODO       
+                    var tWorld = RedWorld();
+                    tWorld.addView(RedView('testView',RedScene(),RedCamera()));
+                    console.log(tWorld.hasView('testView')) // true
+                   
                `,
                 return : 'Boolean'
             }
@@ -123,7 +135,7 @@ var RedWorld;
         },
         /**DOC:
             {
-                code:`FUNCTION`,
+                code:`METHOD`,
                 title :`getViewList`,
                 description : `고유키 기반 렌더정보 검색`,
                 params : {

@@ -6,7 +6,7 @@
     "return": "RedRenderer Instance"
   },
   {
-    "code": "FUNCTION",
+    "code": "METHOD",
     "title": "start",
     "description": "\n    렌더 시작\n",
     "params": {
@@ -20,13 +20,13 @@
     "return": "void"
   },
   {
-    "code": "FUNCTION",
+    "code": "METHOD",
     "title": "stop",
     "description": "\n    렌더 중지\n",
     "return": "void"
   },
   {
-    "code": "FUNCTION",
+    "code": "METHOD",
     "title": "worldRender",
     "description": "\n    등록된 RedView을 기반으로 렌더링을 실행함\n",
     "params": {

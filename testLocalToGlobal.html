@@ -207,28 +207,28 @@
                     testMesh5.rotationY += 0.5
                     testMesh5.rotationZ += 0.5
                 }
-                // console.log(testMesh2.localToGlobal(-2, 0, 0))
+                // console.log(testMesh2.localToWorld(-2, 0, 0))
 
-                testMesh3.x = testMesh2.localToGlobal(-1, 1, 0)[0]
-                testMesh3.y = testMesh2.localToGlobal(-1, 1, 0)[1]
-                testMesh3.z = testMesh2.localToGlobal(-1, 1, 0)[2]
+                testMesh3.x = testMesh2.localToWorld(-1, 1, 0)[0]
+                testMesh3.y = testMesh2.localToWorld(-1, 1, 0)[1]
+                testMesh3.z = testMesh2.localToWorld(-1, 1, 0)[2]
 
                 testDLight.x = Math.sin(time / 1500) * 1
                 testDLight.y = 5
                 testDLight.z = Math.cos(time / 1500) * 1
 
 
-                // console.log(testMesh4.globalToLocal(2, 2, 2))
+                // console.log(testMesh4.worldToLocal(2, 2, 2))
 
 
-                testMesh4.x = testMesh4.globalToLocal(3, 0, 1)[0]
-                testMesh4.y = testMesh4.globalToLocal(3, 0, 1)[1]
-                testMesh4.z = testMesh4.globalToLocal(3, 0, 1)[2]
+                testMesh4.x = testMesh4.worldToLocal(3, 0, 1)[0]
+                testMesh4.y = testMesh4.worldToLocal(3, 0, 1)[1]
+                testMesh4.z = testMesh4.worldToLocal(3, 0, 1)[2]
 
                 //   var testPosition = [Math.sin(time / 1500) * 5, 0, Math.cos(time / 1500) * 5]
-                // testMesh4.x = testMesh4.globalToLocal(testPosition[0], testPosition[1], testPosition[2])[0]
-                // testMesh4.y = testMesh4.globalToLocal(testPosition[0], testPosition[1], testPosition[2])[1]
-                // testMesh4.z = testMesh4.globalToLocal(testPosition[0], testPosition[1], testPosition[2])[2]
+                // testMesh4.x = testMesh4.worldToLocal(testPosition[0], testPosition[1], testPosition[2])[0]
+                // testMesh4.y = testMesh4.worldToLocal(testPosition[0], testPosition[1], testPosition[2])[1]
+                // testMesh4.z = testMesh4.worldToLocal(testPosition[0], testPosition[1], testPosition[2])[2]
 
 
 

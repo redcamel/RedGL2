@@ -1,13 +1,8 @@
 [
   {
-    "title": "drawMode",
-    "description": "drawMode",
-    "return": "gl 상수"
-  },
-  {
     "title": "geometry",
     "description": "geometry",
-    "return": "RedGeometry"
+    "return": "RedBox Instance"
   },
   {
     "title": "material",
@@ -19,19 +14,22 @@
     "title": "RedSkyBox",
     "description": "\n    RedSkyBox Instance 생성기\n",
     "params": {
-      "geometry": [
+      "redGL": [
         {
-          "type": "RedGeometry"
-        },
-        "geometry"
+          "type": "RedGL Instance"
+        }
       ],
-      "material": [
+      "srcList": [
         {
-          "type": "RedBaseMaterial 확장 Instance"
+          "type": "Array"
         },
-        "material"
+        "스카이박스 이미지 리스트"
       ]
     },
-    "return": "RedProgram Instance"
+    "example": "\n    var tScene3D;\n    tScene3D = RedScene()\n    tScene3D.skyBox = RedSkyBox(this, [\n        'asset/cubemap/posx.png',\n        'asset/cubemap/negx.png',\n        'asset/cubemap/posy.png',\n        'asset/cubemap/negy.png',\n        'asset/cubemap/posz.png',\n        'asset/cubemap/negz.png'\n    ])\n",
+    "return": "RedSkyBox Instance"
+  },
+  {
+    "extendDoc": "RedBaseObject3D"
   }
 ]

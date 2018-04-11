@@ -38,7 +38,6 @@
 
                 // 카메라 생성
                 tCamera = RedCamera();
-                tCamera.z = 20
 
                 // 렌더러 생성
                 tRenderer = RedRenderer();
@@ -49,37 +48,31 @@
                 // 그리드 설정
                 tScene['grid'] = RedGrid(this)
 
-
                 // Box 설정
-                var tMesh, tMesh2D;
-                var i = 100
-                while (i--) {
-                    // 3D 테스트용
-                    tMesh = RedMesh(this, RedBox(this), RedColorMaterial(this))
-                    tMesh.x = Math.random() * 50 - 25
-                    tMesh.y = Math.random() * 50 - 25
-                    tMesh.z = Math.random() * 50 - 25
-                    tScene.addChild(tMesh)
-                    // 2D 테스트용
-                    tMesh = RedMesh(this, RedBox(this), RedColorMaterial(this, '#00ff00'))
-                    tMesh.x = Math.random() * 1280 + 10
-                    tMesh.y = Math.random() * 600
-                    tMesh.scaleX = tMesh.scaleY = Math.random() * 10 * 10
-                    tScene.addChild(tMesh)
-                }
+                var tBox, tPlane, tSphere;
+                tBox = RedMesh(this, RedBox(this), RedColorMaterial(this, '#ff0000'))
+                tPlane = RedMesh(this, RedPlane(this), RedColorMaterial(this, '#00ff00'))
+                tSphere = RedMesh(this, RedSphere(this), RedColorMaterial(this, '#0000ff'))
+
+                tBox.x = -2
+                tPlane.x = 0
+                tSphere.x = 2
+                tScene.addChild(tBox)
+                tScene.addChild(tPlane)
+                tScene.addChild(tSphere)
 
                 // 렌더시작
                 tRenderer.start(this, function (time) {
                     var i = tScene.children.length
+                    var tMesh;
                     while (i--) {
-                        testMesh = tScene.children[i]
-                        testMesh.rotationX += 1
-                        testMesh.rotationY += 1
-                        testMesh.rotationZ += 1
+                        tMesh = tScene.children[i]
+                        // tMesh.rotationX += 1
+                        // tMesh.rotationY += 1
+                        // tMesh.rotationZ += 1
                     }
-                    // tCamera.x = Math.sin(time / 1500) * 10
-                    // tCamera.y = Math.cos(time / 1500) * 10
-                    // tCamera.z = Math.cos(time / 1500) * 15 + Math.sin(time / 1500) * 15
+
+                    tCamera.z = 10
                     tCamera.lookAt(0, 0, 0)
                 })
 
@@ -87,17 +80,36 @@
                 tRenderer['renderDebuger']['visible'] = true
 
                 // 
-                testUI(this, tCamera)
+                testUI(this, tCamera, tScene, [tBox, tPlane, tSphere])
             } else {
                 console.log('초기화 실패!')
             }
         })
-        testUI = function (redGL, tCamera) {
+        testUI = function (redGL, tCamera, tScene, geoList) {
             console.log('test')
             var gui = new baseTestUI(redGL)
             gui.initRedGL()
-            gui.initCamera(tCamera).open()
-          
+            gui.initCamera(tCamera)
+            gui.initScene(tScene)
+            var test = {
+                drawMode: 'TRIANGLES',
+                pointSize: 1
+
+            }
+            var t0 = gui['gui'].addFolder('mesh')
+            t0.open()
+            t0.add(test, 'drawMode', ['TRIANGLES', 'TRIANGLE_STRIP', 'TRIANGLE_FAN', 'LINES', 'LINE_LOOP', 'LINE_STRIP', 'POINTS']).onChange(function (v) {
+                geoList.forEach(function (v2) {
+                    v2['drawMode'] = redGL.gl[v]
+                })
+
+            })
+            t0.add(test, 'pointSize', 1, 100).onChange(function (v) {
+                geoList.forEach(function (v2) {
+                    v2['pointSize'] = v
+                })
+            })
+
 
         }
     </script>

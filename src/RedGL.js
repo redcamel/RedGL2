@@ -222,7 +222,7 @@ var RedGL;
         /**DOC:
         {
             title :`setSize`,
-            code: `FUNCTION`,
+            code: `METHOD`,
             description : `
                 RedGL Instance의 Canvas 사이즈 설정
                 fullMode 속성이 false일때만 적용.

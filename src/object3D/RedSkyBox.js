@@ -9,16 +9,27 @@ var RedSkyBox;
                 RedSkyBox Instance 생성기
             `,
             params : {
-                geometry : [
-                    {type:'RedGeometry'},
-                    `geometry`
+                redGL : [
+                    {type:'RedGL Instance'}
                 ],
-                material : [
-                    {type:'RedBaseMaterial 확장 Instance'},
-                    `material`
+                srcList : [
+                    {type:'Array'},
+                    `스카이박스 이미지 리스트`
                 ]
             },
-            return : 'RedProgram Instance'
+            example : `
+                var tScene3D;
+                tScene3D = RedScene()
+                tScene3D.skyBox = RedSkyBox(this, [
+                    'asset/cubemap/posx.png',
+                    'asset/cubemap/negx.png',
+                    'asset/cubemap/posy.png',
+                    'asset/cubemap/negy.png',
+                    'asset/cubemap/posz.png',
+                    'asset/cubemap/negz.png'
+                ])
+            `,
+            return : 'RedSkyBox Instance'
         }
     :DOC*/
     RedSkyBox = function (redGL, srcList) {
@@ -31,7 +42,7 @@ var RedSkyBox;
 		{
             title :`geometry`,
             description : `geometry`,
-			return : 'RedGeometry'
+			return : 'RedBox Instance'
 		}
 	    :DOC*/
         this['geometry'] = RedBox(redGL);
@@ -44,16 +55,14 @@ var RedSkyBox;
         :DOC*/
 
         this['material'] = RedSkyBoxMaterial(redGL, RedBitmapCubeTexture(redGL, srcList));
-        /**DOC:
-		{
-            title :`drawMode`,
-            description : `drawMode`,
-            return : 'gl 상수'
-		}
-	    :DOC*/
         this['_UUID'] = RedGL['makeUUID']();
         // Object.seal(this)
     }
+    /**DOC:
+        {
+            extendDoc : 'RedBaseObject3D'
+        }
+    :DOC*/
     RedGLUtil['extendsProto'](RedSkyBox, RedBaseObject3D);
     Object.freeze(RedSkyBox);
 })();

@@ -1,7 +1,34 @@
 [
   {
+    "title": "addPoint",
+    "description": "\n    라인포인트 추가\n",
+    "parmas": {
+      "x": [
+        {
+          "type": "Number"
+        }
+      ],
+      "y": [
+        {
+          "type": "Number"
+        }
+      ],
+      "z": [
+        {
+          "type": "Number"
+        }
+      ]
+    },
+    "return": "void"
+  },
+  {
+    "title": "addPoint",
+    "description": "\n    addPoint로 포인트 추가후 실제 버퍼 반영할떄 사용\n",
+    "return": "void"
+  },
+  {
     "title": "drawMode",
-    "description": "drawMode",
+    "description": "\n    기본값 : gl.LINE_STRIP\n",
     "return": "gl 상수"
   },
   {
@@ -19,11 +46,10 @@
     "title": "RedLine",
     "description": "\n    RedLine Instance 생성기\n",
     "params": {
-      "geometry": [
+      "redGL": [
         {
-          "type": "RedGeometry"
-        },
-        "geometry"
+          "type": "RedGL Instance"
+        }
       ],
       "material": [
         {
@@ -32,6 +58,12 @@
         "material"
       ]
     },
-    "return": "RedProgram Instance"
+    "return": "RedLine Instance"
+  },
+  {
+    "extendDoc": "RedBaseContainer"
+  },
+  {
+    "extendDoc": "RedBaseObject3D"
   }
 ]

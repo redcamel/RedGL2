@@ -195,7 +195,7 @@ var RedColorPhongMaterial;
     RedColorPhongMaterial.prototype = RedBaseMaterial.prototype
     /**DOC:
         {
-            code : 'FUNCTION',
+            code : 'METHOD',
             title :`setColor`,
             description : `
                 컬러설정

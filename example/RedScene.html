@@ -89,6 +89,7 @@
         testUI = function (redGL, tCamera, tScene) {
             console.log('test')
             var gui = new baseTestUI(redGL)
+            gui.initRedGL()
             gui.initCamera(tCamera)
             gui.initScene(tScene).open()
 

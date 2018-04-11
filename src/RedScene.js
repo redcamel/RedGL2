@@ -23,12 +23,12 @@ var RedScene;
                 title :`useBackgroundColor`,
                 description : `
                     배경색 사용여부.
-                    초기값 false
+                    초기값 true
                 `,
                 return : 'Boolean'
             }
         :DOC*/
-        this['useBackgroundColor'] = false
+        this['useBackgroundColor'] = true
         /**DOC:
             {
                 title :`children`,
@@ -133,7 +133,7 @@ var RedScene;
     };
     /**DOC:
         {
-            code : 'FUNCTION',
+            code : 'METHOD',
             title :`setBackgroundColor`,
             description : `
                 배경 컬러설정.

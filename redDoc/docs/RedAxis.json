@@ -1,1 +1,15 @@
-[]
+[
+  {
+    "constructorYn": true,
+    "title": "RedAxis",
+    "description": "\n    RedAxis Instance 생성기\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL Instance"
+        }
+      ]
+    },
+    "return": "RedAxis Instance"
+  }
+]

@@ -1,7 +1,7 @@
 [
   {
     "title": "drawMode",
-    "description": "drawMode",
+    "description": "\n    기본값 : gl.LINES\n",
     "return": "gl 상수"
   },
   {
@@ -14,19 +14,30 @@
     "title": "RedGrid",
     "description": "\n    RedGrid Instance 생성기\n",
     "params": {
-      "geometry": [
+      "redGL": [
         {
-          "type": "RedGeometry"
-        },
-        "geometry"
+          "type": "RedGL Instance"
+        }
       ],
-      "material": [
+      "size": [
         {
-          "type": "RedBaseMaterial 확장 Instance"
+          "type": "uint"
         },
-        "material"
+        "격자 크기"
+      ],
+      "divisions": [
+        {
+          "type": "uint"
+        },
+        "격자 수"
       ]
     },
-    "return": "RedProgram Instance"
+    "return": "RedGrid Instance"
+  },
+  {
+    "extendDoc": "RedBaseContainer"
+  },
+  {
+    "extendDoc": "RedBaseObject3D"
   }
 ]

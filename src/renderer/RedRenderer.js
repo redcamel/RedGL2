@@ -29,7 +29,7 @@ var RedRenderer;
     RedRenderer.prototype = {
         /**DOC:
         {
-            code:`FUNCTION`,
+            code:`METHOD`,
             title :`start`,
             description : `
                 렌더 시작
@@ -63,7 +63,7 @@ var RedRenderer;
         })(),
         /**DOC:
         {
-            code:`FUNCTION`,
+            code:`METHOD`,
             title :`stop`,
             description : `
                 렌더 중지
@@ -77,7 +77,7 @@ var RedRenderer;
     };
     /**DOC:
     {
-        code:`FUNCTION`,
+        code:`METHOD`,
         title :`worldRender`,
         description : `
             등록된 RedView을 기반으로 렌더링을 실행함

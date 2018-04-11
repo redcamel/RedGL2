@@ -1,8 +1,139 @@
 [
   {
+    "title": "blendDst",
+    "description": "\n    블렌드 목표값 factor\n    기본값 : gl.ONE_MINUS_SRC_ALPHA\n",
+    "return": "gl 상수"
+  },
+  {
+    "title": "blendSrc",
+    "description": "\n    블렌드 소스값 factor\n    기본값 : gl.ONE\n",
+    "return": "gl 상수"
+  },
+  {
+    "title": "children",
+    "description": "children",
+    "return": "Array"
+  },
+  {
+    "title": "cullFace",
+    "description": "\n    컬링 페이스 설정\n    기본값 : gl.BACK\n",
+    "return": "gl 상수"
+  },
+  {
+    "title": "depthTestFunc",
+    "description": "\n    뎁스 테스트 함수 설정\n    기본값 : gl.LEQUAL\n",
+    "return": "gl 상수"
+  },
+  {
+    "title": "drawMode",
+    "description": "\n    기본값 : gl.TRIANGLES\n    drawCall시 적용한 드로잉 모드\n",
+    "return": "gl 상수"
+  },
+  {
+    "title": "localToWorld",
+    "code": "METHOD",
+    "description": "\n    로컬좌표를 RedWorld 좌표로 변경\n",
+    "return": "Array"
+  },
+  {
+    "title": "matrix",
+    "description": "\nmatrix 렌더링시 자동계산\n",
+    "return": "mat4"
+  },
+  {
+    "title": "normalMatrix",
+    "description": "\nnormalMatrix 렌더링시 자동계산\n",
+    "return": "mat4"
+  },
+  {
+    "title": "pointSize",
+    "description": "\n    기본값 : 1\n    gl.POINTS로 그릴경우 반영될 포인트 사이즈.\n",
+    "return": "Number"
+  },
+  {
     "constructorYn": true,
     "title": "RedBaseObject3D",
-    "description": "\n    RedBaseObject3D 기저층\n    프로토타입 확장을 통해서만 사용가능(RedGLUtil.extendsProto 사용)\n",
+    "description": "\n    RedBaseObject3D 기저층\n    프로토타입 확장을 통해서만 사용가능(RedGLUtil.extendsProto 사용)\n    \n            ",
     "return": "void"
+  },
+  {
+    "title": "RedBaseObject3D.build",
+    "code": "STATIC",
+    "description": "\n   RedBaseObject3D가 가지고있는 속성을 해당 인스턴스에 복사하기위해사용\n",
+    "params": {
+      "gl": [
+        {
+          "type": "glContext"
+        }
+      ]
+    },
+    "example": "\nvar testMesh = function (redGL) {\n    var tGL;\n    tGL = redGL.gl;\n    RedBaseObject3D['build'].call(this, tGL)\n}\n",
+    "return": "void"
+  },
+  {
+    "title": "rotationX",
+    "description": "rotationX",
+    "return": "Number"
+  },
+  {
+    "title": "rotationY",
+    "description": "rotationY",
+    "return": "Number"
+  },
+  {
+    "title": "rotationZ",
+    "description": "rotationZ",
+    "return": "Number"
+  },
+  {
+    "title": "scaleX",
+    "description": "scaleX",
+    "return": "Number"
+  },
+  {
+    "title": "scaleY",
+    "description": "scaleY",
+    "return": "Number"
+  },
+  {
+    "title": "scaleZ",
+    "description": "scaleZ",
+    "return": "Number"
+  },
+  {
+    "title": "useBlendMode",
+    "description": "\n    블렌드 모드 사용여부\n    기본값 : true\n",
+    "return": "Boolean"
+  },
+  {
+    "title": "useCullFace",
+    "description": "\n    컬링 사용여부\n    기본값 : true\n",
+    "return": "Boolean"
+  },
+  {
+    "title": "useDepthTest",
+    "description": "\n    뎁스 테스트 사용여부\n    기본값 : true\n",
+    "return": "Boolean"
+  },
+  {
+    "title": "worldToLocal",
+    "code": "METHOD",
+    "description": "\n    RedWorld좌료를 로컬좌료로 변환\n",
+    "return": "Array"
+  },
+  {
+    "title": "x",
+    "description": "x",
+    "return": "Number"
+  },
+  {
+    "title": "y",
+    "description": "y",
+    "return": "Number"
+  },
+  {
+    "title": "z",
+    "description": "z",
+    "return": "Number"
   }
 ]

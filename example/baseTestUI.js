@@ -4,27 +4,31 @@ var baseTestUI = function (redGL) {
         name: 'test'
     });
     this['redGL'] = redGL;
-    var redGLTest = {
-        setSizeTest1: function () {
-            redGL.fullMode = false
-            redGL.setSize(300, 300)
-            this['gui'].updateDisplay()
-
-        },
-        setSizeTest2: function () {
-            redGL.fullMode = false
-            redGL.setSize(600, 300)
-            this['gui'].updateDisplay()
-        }
-    }
-    var t0 = this['gui'].addFolder('RedGL')
-    t0.add(redGL, 'renderScale', 0.1, 1);
-    t0.add(redGL, 'fullMode', true, false, true);
-    t0.add(redGLTest, 'setSizeTest1').name('setSize(300,300)');
-    t0.add(redGLTest, 'setSizeTest2').name('setSize(600,300)');
+    
 
 }
 baseTestUI.prototype = {
+    initRedGL : function(){
+        var self =this
+        var redGLTest = {
+            setSizeTest1: function () {
+                self['redGL'].fullMode = false
+                self['redGL'].setSize(300, 300)
+                self['gui'].updateDisplay()
+    
+            },
+            setSizeTest2: function () {
+                self['redGL'].fullMode = false
+                self['redGL'].setSize(600, 300)
+                self['gui'].updateDisplay()
+            }
+        }
+        var t0 = self['gui'].addFolder('RedGL')
+        t0.add(self['redGL'], 'renderScale', 0.1, 1);
+        t0.add(self['redGL'], 'fullMode', true, false, true);
+        t0.add(redGLTest, 'setSizeTest1').name('setSize(300,300)');
+        t0.add(redGLTest, 'setSizeTest2').name('setSize(600,300)');
+    },
     initCamera: function (camera) {
         var t0 = this['gui'].addFolder('camera')
         t0.add(camera, 'orthographic', true, false)
@@ -75,6 +79,25 @@ baseTestUI.prototype = {
                     '../asset/cubemap/negz.png'
                 ]) : null
         })
+        return t0
+    },
+    initView: function (view) {
+        var t0 = this['gui'].addFolder('view')
+        var self = this
+        var test = {
+            setLocationTest1: function () {
+                view.setLocation(200,200)
+                self['gui'].updateDisplay()
+            },
+            setLocationTest2: function () {
+                view.setLocation(100,400)
+                self['gui'].updateDisplay()
+            }
+        }
+
+        t0.add(test, 'setLocationTest1').name('setLocation(200,200)');
+        t0.add(test, 'setLocationTest2').name('setLocation(100,400)')
+       
         return t0
     }
 }

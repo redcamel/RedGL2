@@ -27,7 +27,7 @@
     "return": "RedScene Instance"
   },
   {
-    "code": "FUNCTION",
+    "code": "METHOD",
     "title": "setBackgroundColor",
     "description": "\n    배경 컬러설정.\n    알파설정은 불가능\n",
     "params": {
@@ -48,7 +48,7 @@
   },
   {
     "title": "useBackgroundColor",
-    "description": "\n    배경색 사용여부.\n    초기값 false\n",
+    "description": "\n    배경색 사용여부.\n    초기값 true\n",
     "return": "Boolean"
   },
   {

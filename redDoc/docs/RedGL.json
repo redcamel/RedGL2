@@ -50,7 +50,7 @@
   },
   {
     "title": "setSize",
-    "code": "FUNCTION",
+    "code": "METHOD",
     "description": "\n    RedGL Instance의 Canvas 사이즈 설정\n    fullMode 속성이 false일때만 적용.\n    px 단위만 입력가능.\n",
     "example": "\n    RedGL(document.getElementById('test'), function(v){\n         if(v){\n             // 초기화 성공\n             this.setSize(200,200)\n         }else{\n             // 초기화실패\n         }\n    })\n",
     "return": "void"

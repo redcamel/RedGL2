@@ -1,8 +1,8 @@
 [
   {
     "title": "geometry",
-    "description": "geometry",
-    "return": "RedGeometry"
+    "description": "\n    내부적으로 자동생성됨\n",
+    "return": "RedBox Instance"
   },
   {
     "title": "material",
@@ -14,11 +14,10 @@
     "title": "RedSprite3D",
     "description": "\n    RedSprite3D Instance 생성기\n",
     "params": {
-      "geometry": [
+      "redGL": [
         {
-          "type": "RedGeometry"
-        },
-        "geometry"
+          "type": "RedGL Instance"
+        }
       ],
       "material": [
         {
@@ -27,6 +26,12 @@
         "material"
       ]
     },
-    "return": "RedProgram Instance"
+    "return": "RedSprite3D Instance"
+  },
+  {
+    "extendDoc": "RedBaseContainer"
+  },
+  {
+    "extendDoc": "RedBaseObject3D"
   }
 ]

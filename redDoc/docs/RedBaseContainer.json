@@ -1,38 +1,78 @@
 [
   {
-    "code": "FUNCTION",
+    "code": "METHOD",
     "title": "addChild",
     "description": "addChild",
-    "example": "// TODO:",
+    "params": {
+      "child": [
+        {
+          "type": "RedMesh,RedSprite3D,RedLine,RedPointUnit"
+        }
+      ]
+    },
+    "example": "//TODO:",
     "return": "void"
   },
   {
-    "code": "FUNCTION",
+    "code": "METHOD",
     "title": "addChildAt",
     "description": "addChildAt",
-    "example": "// TODO:",
+    "params": {
+      "child": [
+        {
+          "type": "RedMesh,RedSprite3D,RedLine,RedPointUnit"
+        }
+      ],
+      "index": [
+        {
+          "type": "uint"
+        }
+      ]
+    },
+    "example": "//TODO:",
     "return": "void"
   },
   {
-    "code": "FUNCTION",
+    "code": "METHOD",
     "title": "getChildAt",
     "description": "getChildAt",
-    "example": "// TODO:",
-    "return": "void"
+    "params": {
+      "index": [
+        {
+          "type": "uint"
+        }
+      ]
+    },
+    "example": "//TODO:",
+    "return": "RedMesh,RedSprite3D,RedLine,RedPointUnit"
   },
   {
-    "code": "FUNCTION",
+    "code": "METHOD",
     "title": "getChildIndex",
     "description": "getChildIndex",
-    "example": "// TODO:",
-    "return": "void"
+    "params": {
+      "child": [
+        {
+          "type": "RedMesh,RedSprite3D,RedLine,RedPointUnit"
+        }
+      ]
+    },
+    "example": "//TODO:",
+    "return": "int"
   },
   {
-    "code": "FUNCTION",
+    "code": "METHOD",
     "title": "numChildren",
     "description": "numChildren",
-    "example": "// TODO:",
-    "return": "void"
+    "params": {
+      "target": [
+        {
+          "type": "RedMesh,RedSprite3D,RedLine,RedPointUnit"
+        }
+      ]
+    },
+    "example": "//TODO:",
+    "return": "uint"
   },
   {
     "constructorYn": true,
@@ -41,24 +81,38 @@
     "return": "void"
   },
   {
-    "code": "FUNCTION",
+    "code": "METHOD",
     "title": "removeChild",
     "description": "removeChild",
-    "example": "// TODO:",
+    "params": {
+      "child": [
+        {
+          "type": "RedMesh,RedSprite3D,RedLine,RedPointUnit"
+        }
+      ]
+    },
+    "example": "//TODO:",
     "return": "void"
   },
   {
-    "code": "FUNCTION",
+    "code": "METHOD",
     "title": "removeChildAll",
     "description": "removeChildAll",
-    "example": "// TODO:",
+    "example": "//TODO:",
     "return": "void"
   },
   {
-    "code": "FUNCTION",
+    "code": "METHOD",
     "title": "removeChildAt",
     "description": "removeChildAt",
-    "example": "// TODO:",
+    "params": {
+      "index": [
+        {
+          "type": "uint"
+        }
+      ]
+    },
+    "example": "//TODO:",
     "return": "void"
   }
 ]

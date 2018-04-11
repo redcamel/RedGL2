@@ -262,7 +262,7 @@ var DocJS = {
                                 '@id', vTitle,
                                 '@className', 'defineBox',
                                 '<', v['constructorYn'] ? descripttionBox
-                                    : v['code'] == 'FUNCTION' ? methodBox
+                                    : v['code'] == 'METHOD' ? methodBox
                                         : v['code'] == 'CONST' ? constBox
                                             : v['code'] == 'STATIC' ? staticMethodBox
                                                 : propertybox
@@ -381,8 +381,8 @@ var DocJS = {
             else t0 = t0[0]
             tValue = selectBox.__dom__.options[0].value
             Array.prototype.slice.call(selectBox.__dom__.options).forEach(function (v, index) {
-                console.log(v.value, t0)
-                if (v.value == t0) tValue = v.value
+                console.log(v.value.split('/')[1], ',,,',t0)
+                if (v.value.split('/')[1] == t0) tValue = v.value
             })
             console.log(tValue)
             parseDoc(tValue)
