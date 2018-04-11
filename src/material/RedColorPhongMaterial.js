@@ -22,6 +22,9 @@ var RedColorPhongMaterial;
                     '알파값'
                 ]
             },
+            example: `
+            RedColorPhongMaterial(RedGL Instance, hex, alpha, normalTexture, specularTexture)
+            `,
             return : 'RedColorPhongMaterial Instance'
         }
     :DOC*/
@@ -36,25 +39,22 @@ var RedColorPhongMaterial;
                     RedProgram Instance
                     직접설정하지 않도록 유의해야함!
                 `,
-                example : `// TODO:`,
                 return : 'RedProgram Instance'
             }
         :DOC*/
         this['color'] = new Float32Array(4);
-       /**DOC:
-            {
-                title :`normalTexture`,
-                description : `normalTexture`,
-                example : `// TODO:`,
-                return : 'RedBitmapTexture'
-            }
-        :DOC*/
+        /**DOC:
+             {
+                 title :`normalTexture`,
+                 description : `normalTexture`,
+                 return : 'RedBitmapTexture'
+             }
+         :DOC*/
         this['normalTexture'] = normalTexture;
         /**DOC:
             {
                 title :`specularTexture`,
                 description : `specularTexture`,
-                example : `// TODO:`,
                 return : 'RedBitmapTexture'
             }
         :DOC*/
@@ -62,35 +62,23 @@ var RedColorPhongMaterial;
         /**DOC:
             {
                 title :`shininess`,
-                description : `shininess`,
-                example : `// TODO:`,
-                return : 'RedBitmapTexture'
+                description : `기본값 : 16`,
+                return : 'uint'
             }
         :DOC*/
         this['shininess'] = 16
         /**DOC:
             {
                 title :`specularPower`,
-                description : `specularPower`,
-                example : `// TODO:`,
-                return : 'RedBitmapTexture'
+                description : `기본값 : 1`,
+                return : 'uint'
             }
         :DOC*/
         this['specularPower'] = 1
         this.setColor(hex ? hex : '#ff0000', alpha == undefined ? 1 : alpha);
         /////////////////////////////////////////
         // 일반 프로퍼티
-        /**DOC:
-            {
-                title :`program`,
-                description : `RedProgram Instance`,
-                example : `// TODO:`,
-                return : 'RedProgram Instance'
-            }
-        :DOC*/
         this['program'] = makeProgram(redGL);
-
-    
         this['_UUID'] = RedGL['makeUUID']();
         this.checkProperty()
         // Object.seal(this);
@@ -212,7 +200,7 @@ var RedColorPhongMaterial;
     :DOC*/
     RedColorPhongMaterial.prototype['setColor'] = (function () {
         var t0;
-        return function (hex,alpha) {
+        return function (hex, alpha) {
             hex = hex ? hex : '#ff2211';
             if (alpha == undefined) alpha = 1;
             if (alpha > 1) alpha = 1

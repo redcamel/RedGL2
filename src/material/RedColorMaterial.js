@@ -13,7 +13,7 @@ var RedColorMaterial;
                 redGL : [
                     {type:'RedGL Instance'}
                 ],
-                color : [
+                hex : [
                     {type:'hex'},
                     'hex'
                 ],
@@ -22,6 +22,9 @@ var RedColorMaterial;
                     '알파값'
                 ]
             },
+            example : `
+                RedColorMaterial(RedGL Instance, hex)
+            `,
             return : 'RedColorMaterial Instance'
         }
     :DOC*/
@@ -36,26 +39,14 @@ var RedColorMaterial;
                     RedProgram Instance
                     직접설정하지 않도록 유의해야함!
                 `,
-                example : `// TODO:`,
-                return : 'RedProgram Instance'
+                return : 'Float32Array'
             }
         :DOC*/
         this['color'] = new Float32Array(4);
-       
         this.setColor(hex ? hex : '#ff0000', alpha == undefined ? 1 : alpha);
         /////////////////////////////////////////
         // 일반 프로퍼티
-        /**DOC:
-            {
-                title :`program`,
-                description : `RedProgram Instance`,
-                example : `// TODO:`,
-                return : 'RedProgram Instance'
-            }
-        :DOC*/
         this['program'] = makeProgram(redGL);
-
-    
         this['_UUID'] = RedGL['makeUUID']();
         this.checkProperty()
         // Object.seal(this);
@@ -114,7 +105,7 @@ var RedColorMaterial;
     :DOC*/
     RedColorMaterial.prototype['setColor'] = (function () {
         var t0;
-        return function (hex,alpha) {
+        return function (hex, alpha) {
             hex = hex ? hex : '#ff2211';
             if (alpha == undefined) alpha = 1;
             if (alpha > 1) alpha = 1

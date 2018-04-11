@@ -89,7 +89,6 @@ var RedBitmapTexture;
 
         }
     })()
-    //TODO: 기본옵션 정의
     /**DOC:
         {
             constructorYn : true,
@@ -128,7 +127,7 @@ var RedBitmapTexture;
             gl.bindTexture(gl.TEXTURE_2D, redGL['_datas']['emptyTexture']['2d']['webglTexture'])
         }
 
-        if(src) loadTexture(gl, this['webglTexture'], src, option);
+        if (src) loadTexture(gl, this['webglTexture'], src, option);
         Object.seal(this);
         console.log(this)
     }
