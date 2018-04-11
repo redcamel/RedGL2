@@ -1,10 +1,5 @@
 [
   {
-    "title": "geometry",
-    "description": "\n    내부적으로 자동생성됨\n",
-    "return": "RedBox Instance"
-  },
-  {
     "title": "material",
     "description": "material",
     "return": "RedBaseMaterial 확장 Instance"
@@ -22,10 +17,10 @@
       "material": [
         {
           "type": "RedBaseMaterial 확장 Instance"
-        },
-        "material"
+        }
       ]
     },
+    "example": "\n    var tScene;\n    var tSprite3D;\n    tScene = RedScene();\n    tSprite3D = RedSprite3D(RedGL Instance, RedColorMaterial(RedGL Instance))\n    tScene.addChild(tSprite3D)\n",
     "return": "RedSprite3D Instance"
   },
   {

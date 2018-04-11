@@ -10,6 +10,13 @@
         }
       ]
     },
+    "example": "\n    var tScene;\n    tScene = RedScene();\n    tScene['axis'] = RedAxis(redGL Instance)\n",
     "return": "RedAxis Instance"
+  },
+  {
+    "extendDoc": "RedBaseContainer"
+  },
+  {
+    "extendDoc": "RedBaseObject3D"
   }
 ]

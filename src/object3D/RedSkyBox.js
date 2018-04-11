@@ -20,7 +20,7 @@ var RedSkyBox;
             example : `
                 var tScene3D;
                 tScene3D = RedScene()
-                tScene3D.skyBox = RedSkyBox(this, [
+                tScene3D.skyBox = RedSkyBox(RedGL Instance, [
                     'asset/cubemap/posx.png',
                     'asset/cubemap/negx.png',
                     'asset/cubemap/posy.png',
@@ -37,23 +37,8 @@ var RedSkyBox;
         if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedSkyBox : RedGL Instance만 허용됩니다.')
         var tGL;
         tGL = redGL.gl;
-        RedBaseObject3D['build'].call(this,tGL)
-        /**DOC:
-		{
-            title :`geometry`,
-            description : `geometry`,
-			return : 'RedBox Instance'
-		}
-	    :DOC*/
+        RedBaseObject3D['build'].call(this, tGL)
         this['geometry'] = RedBox(redGL);
-        /**DOC:
-		{
-            title :`material`,
-            description : `material`,
-            return : 'RedBaseMaterial 확장 Instance'
-		}
-        :DOC*/
-
         this['material'] = RedSkyBoxMaterial(redGL, RedBitmapCubeTexture(redGL, srcList));
         this['_UUID'] = RedGL['makeUUID']();
         // Object.seal(this)

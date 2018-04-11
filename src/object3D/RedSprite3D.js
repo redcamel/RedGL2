@@ -13,10 +13,16 @@ var RedSprite3D;
                     {type:'RedGL Instance'}
                 ],
                 material : [
-                    {type:'RedBaseMaterial 확장 Instance'},
-                    `material`
+                    {type:'RedBaseMaterial 확장 Instance'}
                 ]
             },
+            example : `
+                var tScene;
+                var tSprite3D;
+                tScene = RedScene();
+                tSprite3D = RedSprite3D(RedGL Instance, RedColorMaterial(RedGL Instance))
+                tScene.addChild(tSprite3D)
+            `,
             return : 'RedSprite3D Instance'
         }
     :DOC*/
@@ -27,15 +33,6 @@ var RedSprite3D;
         var tGL;
         tGL = redGL.gl;
         RedBaseObject3D['build'].call(this, tGL)
-        /**DOC:
-		{
-            title :`geometry`,
-            description : `
-                내부적으로 자동생성됨
-            `,
-			return : 'RedBox Instance'
-		}
-	    :DOC*/
         this['geometry'] = RedBox(redGL, 1, 1, 0);
         /**DOC:
 		{

@@ -32,6 +32,7 @@
         "material"
       ]
     },
+    "example": "\n    var tScene;\n    var tMesh;\n    tScene = RedScene();\n    tMesh = RedMesh(RedGL Instance, RedBox(RedGL Instance), RedColorMaterial(RedGL Instance, '#ff0000'));\n    tScene.addChild(tMesh);\n",
     "return": "RedMesh Instance"
   },
   {

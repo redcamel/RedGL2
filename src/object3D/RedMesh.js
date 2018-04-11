@@ -21,6 +21,13 @@ var RedMesh;
                     `material`
                 ]
             },
+            example : `
+                var tScene;
+                var tMesh;
+                tScene = RedScene();
+                tMesh = RedMesh(RedGL Instance, RedBox(RedGL Instance), RedColorMaterial(RedGL Instance, '#ff0000'));
+                tScene.addChild(tMesh);
+            `,
             return : 'RedMesh Instance'
         }
     :DOC*/
@@ -48,7 +55,7 @@ var RedMesh;
 		}
 	    :DOC*/
         this['material'] = material;
-        
+
         this['_UUID'] = RedGL['makeUUID']();
         // Object.seal(this)
     }

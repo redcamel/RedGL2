@@ -21,6 +21,11 @@ var RedGrid;
                     `격자 수`
                 ]
             },
+            example : `
+                var tScene;
+                tScene = RedScene();
+                tScene['grid'] = RedGrid(redGL Instance)
+            `,
             return : 'RedGrid Instance'
         }
     :DOC*/
@@ -74,13 +79,6 @@ var RedGrid;
             ]
         )
         this['geometry'] = RedGeometry(interleaveBuffer);
-        /**DOC:
-		{
-            title :`material`,
-            description : `material`,
-            return : 'RedBaseMaterial 확장 Instance'
-		}
-	    :DOC*/
         this['material'] = RedGridMaterial(redGL);
         /**DOC:
 		{

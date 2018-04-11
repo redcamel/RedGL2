@@ -13,6 +13,11 @@ var RedAxis;
                     {type:'RedGL Instance'}
                 ],
             },
+            example : `
+                var tScene;
+                tScene = RedScene();
+                tScene['axis'] = RedAxis(redGL Instance)
+            `,
             return : 'RedAxis Instance'
         }
     :DOC*/
@@ -54,7 +59,17 @@ var RedAxis;
         this['_UUID'] = RedGL['makeUUID']();
         // Object.seal(this)
     }
+    /**DOC:
+        {
+            extendDoc : 'RedBaseContainer'
+        }
+    :DOC*/
     RedGLUtil['extendsProto'](RedAxis, RedBaseContainer);
+    /**DOC:
+        {
+            extendDoc : 'RedBaseObject3D'
+        }
+    :DOC*/
     RedGLUtil['extendsProto'](RedAxis, RedBaseObject3D);
     Object.freeze(RedAxis);
 })();

@@ -17,6 +17,24 @@ var RedLine;
                     `material`
                 ]
             },
+            example : `
+            var tScene;
+            var tLine;
+            var tX, tY, tZ;
+            var i;
+            tScene = RedScene();
+            i = 3 * 20;
+            tLine = RedLine(redGL Instance, RedColorMaterial(redGL Instance))
+            tX = tY = tZ = 0
+            while (i--) {
+                tX += Math.random() * 0.5
+                tY += Math.random() * 0.5
+                tZ += Math.random() * 0.5
+                tLine.addPoint(tX, tY, tZ)
+            }
+            tLine.upload()
+            tScene.addChild(tLine)
+            `,
             return : 'RedLine Instance'
         }
     :DOC*/
@@ -70,7 +88,7 @@ var RedLine;
         }
         /**DOC:
 		{
-            title :`addPoint`,
+            title :`upload`,
             description : `
                 addPoint로 포인트 추가후 실제 버퍼 반영할떄 사용
             `,
@@ -86,13 +104,6 @@ var RedLine;
 
         tGL = redGL.gl;
         RedBaseObject3D['build'].call(this, tGL)
-        /**DOC:
-		{
-            title :`geometry`,
-            description : `geometry`,
-			return : 'RedGeometry'
-		}
-	    :DOC*/
         this['geometry'] = RedGeometry(interleaveBuffer, indexBuffer);
         /**DOC:
 		{
