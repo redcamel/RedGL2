@@ -28,6 +28,7 @@ baseTestUI.prototype = {
         t0.add(self['redGL'], 'fullMode', true, false, true);
         t0.add(redGLTest, 'setSizeTest1').name('setSize(300,300)');
         t0.add(redGLTest, 'setSizeTest2').name('setSize(600,300)');
+        return t0
     },
     initCamera: function (camera) {
         var t0 = this['gui'].addFolder('camera')

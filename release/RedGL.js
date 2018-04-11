@@ -2385,6 +2385,7 @@ var RedEnvironmentMaterial;
 
                 vec4 texelColor = texture2D(uDiffuseTexture, vTexcoord);
                 texelColor.rgb *= texelColor.a;
+                if(texelColor.a ==0.0) discard;
 
                 vec3 N = normalize(vVertexNormal);
                 vec4 normalColor = texture2D(uNormalTexture, vTexcoord);
@@ -2574,6 +2575,7 @@ var RedBitmapMaterial;
             void main(void) {
                 vec4 texelColor = texture2D(uDiffuseTexture, vTexcoord);
                 texelColor.rgb *= texelColor.a;
+                if(texelColor.a ==0.0) discard;
                 gl_FragColor = texelColor;
             }
             */

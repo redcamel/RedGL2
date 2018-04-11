@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>RedPrimitive</title>
+    <title>RedAtlas</title>
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
@@ -46,33 +46,50 @@
                 tWorld.addView(RedView('test', tScene, tCamera));
 
                 // 그리드 설정
-                tScene['grid'] = RedGrid(this)
+                tScene['grid'] = RedGrid(this);
 
-                // Box 설정
-                var tBox, tPlane, tSphere;
-                tBox = RedMesh(this, RedBox(this), RedColorMaterial(this, '#ff0000'))
-                tPlane = RedMesh(this, RedPlane(this), RedColorMaterial(this, '#00ff00'))
-                tSphere = RedMesh(this, RedSphere(this), RedColorMaterial(this, '#0000ff'))
+                // Atlas 설정
+                var testMaterials = []
+                var imgList = []
+                var i;
+                var tRedGL = this
+                for (i = 0; i < 10; i++) {
+                    imgList.push('../asset/draft' + (i % 5 + 1) + '.png?test=' + Math.random())
+                }
+                RedAtlas(this, imgList,
+                    function (resultInfo) {
+                        // 아틀라스 생성 완료후 아틀라스 텍스쳐를 생성한다.
+                        for (var k in resultInfo['atlasMap']) {
+                            testMaterials.push(
+                                RedBitmapMaterial(
+                                    tRedGL,
+                                    RedAtlasTexture(tRedGL, k)
+                                )
+                            )
+                        }
 
-                tBox.x = -2
-                tPlane.x = 0
-                tSphere.x = 2
-                tScene.addChild(tBox)
-                tScene.addChild(tPlane)
-                tScene.addChild(tSphere)
+                        i = 3000
+                        var geo = RedBox(tRedGL)
+                        while (i--) {
+                            var tMesh = RedMesh(tRedGL, geo, testMaterials[i % imgList.length])
+                            tMesh.x = Math.random() * 100 - 50
+                            tMesh.y = Math.random() * 100 - 50
+                            tMesh.z = Math.random() * 100 - 50
+                            tScene.addChild(tMesh)
+                        }
+
+                        console.log(testMaterials)
+                    }
+                )
+
+
 
                 // 렌더시작
                 tRenderer.start(this, function (time) {
-                    var i = tScene.children.length
-                    var tMesh;
-                    while (i--) {
-                        tMesh = tScene.children[i]
-                        // tMesh.rotationX += 1
-                        // tMesh.rotationY += 1
-                        // tMesh.rotationZ += 1
-                    }
+                    tCamera.x = Math.sin(time / 1500) * 10
+                    tCamera.y = Math.cos(time / 1500) * 10
+                    tCamera.z = Math.cos(time / 1500) * 10 + Math.sin(time / 1500) * 10
 
-                    tCamera.z = 10
                     tCamera.lookAt(0, 0, 0)
                 })
 
@@ -80,37 +97,17 @@
                 tRenderer['renderDebuger']['visible'] = true
 
                 // 
-                testUI(this, tCamera, tScene, [tBox, tPlane, tSphere])
+                testUI(this, tCamera, tScene)
             } else {
                 console.log('초기화 실패!')
             }
         })
-        testUI = function (redGL, tCamera, tScene, geoList) {
+        testUI = function (redGL, tCamera, tScene) {
             console.log('test')
             var gui = new baseTestUI(redGL)
             gui.initRedGL()
             gui.initCamera(tCamera)
             gui.initScene(tScene)
-            var test = {
-                drawMode: 'TRIANGLES',
-                pointSize: 1
-
-            }
-            var t0 = gui['gui'].addFolder('mesh')
-            t0.open()
-            t0.add(test, 'drawMode', ['TRIANGLES', 'TRIANGLE_STRIP', 'TRIANGLE_FAN', 'LINES', 'LINE_LOOP', 'LINE_STRIP', 'POINTS']).onChange(function (v) {
-                geoList.forEach(function (v2) {
-                    v2['drawMode'] = redGL.gl[v]
-                })
-
-            })
-            t0.add(test, 'pointSize', 1, 100).onChange(function (v) {
-                geoList.forEach(function (v2) {
-                    v2['pointSize'] = v
-                })
-            })
-
-
         }
     </script>
 </body>
