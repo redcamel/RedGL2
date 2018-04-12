@@ -93,7 +93,7 @@ gulp.task('make-doc', function () {
 		"src/material/RedStandardMaterial.js",
 		
 		"src/material/system/RedGridMaterial.js",
-		"src/material/system/RedPointColorMaterial.js",
+		"src/material/RedPointColorMaterial.js",
 		"src/material/system/RedSkyBoxMaterial.js",
 
 		"src/object3D/RedAxis.js",
@@ -166,7 +166,7 @@ gulp.task('combine-js', function () {
 		"src/material/RedStandardMaterial.js",
 		
 		"src/material/system/RedGridMaterial.js",
-		"src/material/system/RedPointColorMaterial.js",
+		"src/material/RedPointColorMaterial.js",
 		"src/material/system/RedSkyBoxMaterial.js",
 
 		"src/object3D/RedAxis.js",

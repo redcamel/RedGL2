@@ -4,17 +4,25 @@
     "title": "RedPointUnit",
     "description": "\n    RedPointUnit Instance 생성기\n",
     "params": {
-      "geometry": [
+      "redGL": [
         {
-          "type": "RedGeometry"
-        },
-        "geometry"
+          "type": "RedGL"
+        }
+      ],
+      "interleaveData": [
+        {
+          "type": "Array"
+        }
+      ],
+      "interleaveDefineInfo": [
+        {
+          "type": "Array"
+        }
       ],
       "material": [
         {
-          "type": "RedBaseMaterial 확장 Instance"
-        },
-        "material"
+          "type": "RedPointColorMaterial or RedPointBitmapMaterial"
+        }
       ]
     },
     "return": "RedProgram Instance"
