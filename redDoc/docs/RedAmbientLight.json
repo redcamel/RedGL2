@@ -1,1 +1,48 @@
-[]
+[
+  {
+    "title": "alpha",
+    "description": "\n    기본값 : 0.1\n",
+    "return": "Number"
+  },
+  {
+    "title": "intensity",
+    "description": "\n    라이트 강도\n    기본값 : 1\n",
+    "return": "Number"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedAmbientLight",
+    "description": "\n    RedAmbientLight Instance 생성\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ],
+      "hex": [
+        {
+          "type": "hex"
+        }
+      ],
+      "alpha": [
+        {
+          "type": "number"
+        },
+        "알파값"
+      ]
+    },
+    "example": "\n    RedAmbientLight(RedGL Instance, hex, alpha)\n",
+    "return": "RedAmbientLight Instance"
+  },
+  {
+    "title": "RedAmbientLight.type",
+    "code": "CONST",
+    "description": "RedAmbientLight 타입상수",
+    "return": "String"
+  },
+  {
+    "title": "type",
+    "description": "RedAmbientLight['type']",
+    "return": "String"
+  }
+]
