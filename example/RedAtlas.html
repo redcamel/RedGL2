@@ -49,40 +49,44 @@
                 tScene['grid'] = RedGrid(this);
 
                 // Atlas 설정
-                var testMaterials = []
-                var imgList = []
-                var i;
-                var tRedGL = this
-                for (i = 0; i < 10; i++) {
-                    imgList.push('../asset/draft' + (i % 5 + 1) + '.png?test=' + Math.random())
-                }
-                RedAtlas(this, imgList,
-                    function (resultInfo) {
-                        // 아틀라스 생성 완료후 아틀라스 텍스쳐를 생성한다.
-                        for (var k in resultInfo['atlasMap']) {
-                            testMaterials.push(
-                                RedBitmapMaterial(
-                                    tRedGL,
-                                    RedAtlasTexture(tRedGL, k)
+                (function (redGL) {
+                    var testMaterials = []
+                    var imgList;
+                    var i;
+                    imgList = [
+                        '../asset/draft1.png',
+                        '../asset/draft2.png',
+                        '../asset/draft3.png',
+                        '../asset/draft4.png',
+                        '../asset/draft5.png'
+                    ]
+                    RedAtlas(redGL, imgList,
+                        function (resultInfo) {
+                            // 아틀라스 생성 완료후 아틀라스 텍스쳐를 생성한다.
+                            console.log(resultInfo)
+                            for (var k in resultInfo['atlasMap']) {
+                                console.log('아틀라스키', k)
+                                testMaterials.push(
+                                    RedBitmapMaterial(
+                                        redGL,
+                                        // 아틀라스 텍스쳐 생성
+                                        RedAtlasTexture(redGL, k)
+                                    )
                                 )
-                            )
+                            }
+
+                            i = 5
+                            while (i--) {
+                                var tMesh = RedMesh(redGL, RedBox(redGL), testMaterials[i % imgList.length])
+                                tMesh.x = i * 2 - 4
+                                tScene.addChild(tMesh)
+                            }
+                            console.log(this)
+                            console.log(this.getAtlasMap())
+                            console.log(this.getAtlasInfoList())
                         }
-
-                        i = 3000
-                        var geo = RedBox(tRedGL)
-                        while (i--) {
-                            var tMesh = RedMesh(tRedGL, geo, testMaterials[i % imgList.length])
-                            tMesh.x = Math.random() * 100 - 50
-                            tMesh.y = Math.random() * 100 - 50
-                            tMesh.z = Math.random() * 100 - 50
-                            tScene.addChild(tMesh)
-                        }
-
-                        console.log(testMaterials)
-                    }
-                )
-
-
+                    )
+                })(this);
 
                 // 렌더시작
                 tRenderer.start(this, function (time) {
@@ -95,15 +99,12 @@
 
                 // 렌더 디버거 활성화
                 tRenderer['renderDebuger']['visible'] = true
-
-                // 
                 testUI(this, tCamera, tScene)
             } else {
                 console.log('초기화 실패!')
             }
         })
         testUI = function (redGL, tCamera, tScene) {
-            console.log('test')
             var gui = new baseTestUI(redGL)
             gui.initRedGL()
             gui.initCamera(tCamera)

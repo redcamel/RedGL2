@@ -6,8 +6,26 @@ var RedAtlasUV;
     var tKey
     var t0
     baseUV['_UUID'] = RedGL.makeUUID()
+    /**DOC:
+        {
+            constructorYn : true,
+            title :`RedAtlasUV`,
+            description : `
+                RedAtlasUV Instance 생성
+                시스템적으로 자동생성됨.
+            `,
+            params : {
+                redGL : [
+                    {type:'RedGL'}
+                ],
+                rect : [
+                    {type:'Array'}
+                ]
+            },
+            return : 'RedAtlasTexture Instance'
+        }
+    :DOC*/
     RedAtlasUV = function (redGL, rect) {
-
         if (!(this instanceof RedAtlasUV)) return new RedAtlasUV(redGL, rect);
         if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedAtlasUV : RedGL Instance만 허용됩니다.');
         if (rect) {
@@ -21,7 +39,6 @@ var RedAtlasUV;
             if (checkMap[tKey]) this['data'] = checkMap[tKey]
             else this['data'] = checkMap[tKey] = t0, this['data']['_UUID'] = RedGL.makeUUID()
         } else this['data'] = baseUV
-
       
         // console.log(this)
     }

@@ -9,19 +9,20 @@
           "type": "RedGL"
         }
       ],
-      "src": [
+      "srcList": [
         {
-          "type": "string"
-        },
-        "경로"
+          "type": "Array"
+        }
       ],
       "option": [
         {
           "type": "Object"
         },
-        "텍스쳐 정의옵션"
+        "텍스쳐 정의옵션",
+        "\n        <code>\n        {\n            min: gl.LINEAR_MIPMAP_NEAREST,\n            max: gl.LINEAR,\n            wrap_s: gl.REPEAT,\n            wrap_t: gl.REPEAT\n        }\n        </code>\n        "
       ]
     },
+    "example": "\nRedBitmapCubeTexture( RedGL Instance,  srcList, {\n    min: gl.LINEAR_MIPMAP_NEAREST,\n    max: gl.LINEAR,\n    wrap_s: gl.REPEAT,\n    wrap_t: gl.REPEAT\n})\n",
     "return": "RedBitmapCubeTexture Instance"
   }
 ]

@@ -12,16 +12,17 @@
       "src": [
         {
           "type": "string"
-        },
-        "경로"
+        }
       ],
       "option": [
         {
           "type": "Object"
         },
-        "텍스쳐 정의옵션"
+        "텍스쳐 정의옵션",
+        "\n        <code>\n        {\n            min: this.gl.LINEAR_MIPMAP_NEAREST,\n            max: this.gl.LINEAR,\n            wrap_s: this.gl.REPEAT,\n            wrap_t: this.gl.REPEAT,\n            anisotropic: 16 // 지원가능한경우에만 작동\n        }\n        </code>\n        "
       ]
     },
+    "example": "\nRedBitmapTexture( RedGL Instance,  src, {\n    min: gl.LINEAR_MIPMAP_NEAREST,\n    max: gl.LINEAR,\n    wrap_s: gl.REPEAT,\n    wrap_t: gl.REPEAT\n})\n",
     "return": "RedBitmapTexture Instance"
   }
 ]

@@ -1,1 +1,20 @@
-[]
+[
+  {
+    "constructorYn": true,
+    "title": "RedAtlasUV",
+    "description": "\n    RedAtlasUV Instance 생성\n    시스템적으로 자동생성됨.\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ],
+      "rect": [
+        {
+          "type": "Array"
+        }
+      ]
+    },
+    "return": "RedAtlasTexture Instance"
+  }
+]

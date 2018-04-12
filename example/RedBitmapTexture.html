@@ -1,0 +1,240 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>RedBitmapMaterial</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
+    />
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+    </style>
+    <script src="dat.gui.min.js"></script>
+    <script src="baseTestUI.js"></script>
+    <script src="../release/RedGL.min.js"></script>
+</head>
+
+<body>
+    <canvas id="test" style="border: none;background:red"></canvas>
+    <script>
+        var testUI;
+        document.getElementById('test')
+        RedGL(document.getElementById('test'), function (v) {
+            if (v) {
+                console.log('초기화 성공!')
+                var tWorld, tScene, tCamera, tRenderer;
+
+                // 월드 생성
+                this['world'] = tWorld = RedWorld();
+
+                // 씬 생성
+                tScene = RedScene();
+
+                // 카메라 생성
+                tCamera = RedCamera();
+                tCamera.z = 4
+
+                // 렌더러 생성
+                tRenderer = RedRenderer();
+
+                // 뷰생성 및 적용
+                tWorld.addView(RedView('test', tScene, tCamera));
+
+                // Geometry 생성
+                var tGeo;
+                (function (redGL) {
+                    var interleaveData;
+                    var indexData
+                    interleaveData = new Float32Array([
+                        -0.5, -0.5, 0.0, 0.0, 0.0,
+                        0.5, -0.5, 0.0, 2.0, 0.0,
+                        0.5, 0.5, 0.0, 2.0, 2.0,
+                        -0.5, 0.5, 0.0, 0.0, 2.0
+                    ]);
+                    indexData = new Uint16Array([0, 1, 2, 0, 2, 3])
+                    var testInterleaveBuffer, testIndexBuffer
+                    testInterleaveBuffer = RedBuffer(
+                        redGL,
+                        'testInterleaveBuffer',
+                        interleaveData,
+                        RedBuffer.ARRAY_BUFFER, [{
+                            attributeKey: 'aVertexPosition',
+                            size: 3,
+                            normalize: false
+                        },
+                        {
+                            attributeKey: 'aTexcoord',
+                            size: 2,
+                            normalize: false
+                        }
+                        ]
+                    )
+                    testIndexBuffer = RedBuffer(
+                        redGL,
+                        'testIndexBuffer',
+                        indexData,
+                        RedBuffer.ELEMENT_ARRAY_BUFFER
+                    )
+                    tGeo = RedGeometry(testInterleaveBuffer, testIndexBuffer)
+                })(this);
+
+                // Mesh 설정
+                var tMesh;
+                var tDiffuse1, tDiffuse2, tDiffuse3
+                // REPEAT
+                tDiffuse1 = RedBitmapTexture(
+                    this,
+                    '../asset/crate.png',
+                    {
+                        min: this.gl.LINEAR,
+                        max: this.gl.LINEAR,
+                        wrap_s: this.gl.REPEAT,
+                        wrap_t: this.gl.REPEAT
+                    }
+                )
+                tDiffuse2 = RedBitmapTexture(
+                    this,
+                    '../asset/crate.png',
+                    {
+                        min: this.gl.NEAREST,
+                        max: this.gl.NEAREST,
+                        wrap_s: this.gl.REPEAT,
+                        wrap_t: this.gl.REPEAT
+                    }
+                )
+                tDiffuse3 = RedBitmapTexture(
+                    this,
+                    '../asset/crate.png',
+                    {
+                        min: this.gl.LINEAR_MIPMAP_NEAREST,
+                        max: this.gl.LINEAR,
+                        wrap_s: this.gl.REPEAT,
+                        wrap_t: this.gl.REPEAT
+                    }
+                )
+                tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse1))
+                tMesh.x = -1.1
+                tScene.addChild(tMesh)
+                tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse2))
+                tMesh.x = 0
+                tScene.addChild(tMesh)
+                tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse3))
+                tMesh.x = 1.1
+                tScene.addChild(tMesh)
+
+                // MIRRORED_REPEAT
+                tDiffuse1 = RedBitmapTexture(
+                    this,
+                    '../asset/crate.png',
+                    {
+                        min: this.gl.LINEAR,
+                        max: this.gl.LINEAR,
+                        wrap_s: this.gl.MIRRORED_REPEAT,
+                        wrap_t: this.gl.MIRRORED_REPEAT
+                    }
+                )
+                tDiffuse2 = RedBitmapTexture(
+                    this,
+                    '../asset/crate.png',
+                    {
+                        min: this.gl.NEAREST,
+                        max: this.gl.NEAREST,
+                        wrap_s: this.gl.MIRRORED_REPEAT,
+                        wrap_t: this.gl.MIRRORED_REPEAT
+                    }
+                )
+                tDiffuse3 = RedBitmapTexture(
+                    this,
+                    '../asset/crate.png',
+                    {
+                        min: this.gl.LINEAR_MIPMAP_NEAREST,
+                        max: this.gl.LINEAR,
+                        wrap_s: this.gl.MIRRORED_REPEAT,
+                        wrap_t: this.gl.MIRRORED_REPEAT
+                    }
+                )
+                tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse1))
+                tMesh.x = -1.1
+                tMesh.y = 1.1
+                tScene.addChild(tMesh)
+                tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse2))
+                tMesh.x = 0
+                tMesh.y = 1.1
+                tScene.addChild(tMesh)
+                tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse3))
+                tMesh.x = 1.1
+                tMesh.y = 1.1
+                tScene.addChild(tMesh)
+
+                // CLAMP_TO_EDGE
+                tDiffuse1 = RedBitmapTexture(
+                    this,
+                    '../asset/crate.png',
+                    {
+                        min: this.gl.LINEAR,
+                        max: this.gl.LINEAR,
+                        wrap_s: this.gl.CLAMP_TO_EDGE,
+                        wrap_t: this.gl.CLAMP_TO_EDGE
+                    }
+                )
+                tDiffuse2 = RedBitmapTexture(
+                    this,
+                    '../asset/crate.png',
+                    {
+                        min: this.gl.NEAREST,
+                        max: this.gl.NEAREST,
+                        wrap_s: this.gl.CLAMP_TO_EDGE,
+                        wrap_t: this.gl.CLAMP_TO_EDGE
+                    }
+                )
+                tDiffuse3 = RedBitmapTexture(
+                    this,
+                    '../asset/crate.png',
+                    {
+                        min: this.gl.LINEAR_MIPMAP_NEAREST,
+                        max: this.gl.LINEAR,
+                        wrap_s: this.gl.CLAMP_TO_EDGE,
+                        wrap_t: this.gl.CLAMP_TO_EDGE
+                    }
+                )
+                tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse1))
+                tMesh.x = -1.1
+                tMesh.y = -1.1
+                tScene.addChild(tMesh)
+                tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse2))
+                tMesh.x = 0
+                tMesh.y = -1.1
+                tScene.addChild(tMesh)
+                tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse3))
+                tMesh.x = 1.1
+                tMesh.y = -1.1
+                tScene.addChild(tMesh)
+
+                // 렌더시작
+                tRenderer.start(this, function (time) {
+                    tCamera.lookAt(0, 0, 0)
+                })
+
+                // 렌더 디버거 활성화
+                tRenderer['renderDebuger']['visible'] = true
+                testUI(this, tCamera, tScene)
+            } else {
+                console.log('초기화 실패!')
+            }
+        })
+        testUI = function (redGL, tCamera, tScene) {
+            var gui = new baseTestUI(redGL)
+            gui.initRedGL()
+            gui.initCamera(tCamera)
+            gui.initScene(tScene)
+        }
+    </script>
+</body>
+
+</html>

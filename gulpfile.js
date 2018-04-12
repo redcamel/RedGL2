@@ -70,8 +70,6 @@ gulp.task('make-doc', function () {
 		"src/RedGLUtil.js",
 		"src/RedGL.js",
 
-		"src/atlas/RedAtlas.js",
-
 		"src/base/RedBaseContainer.js",
 		"src/base/RedBaseLight.js",
 		"src/base/RedBaseMaterial.js",
@@ -93,7 +91,7 @@ gulp.task('make-doc', function () {
 		"src/material/RedBitmapMaterial.js",
 		"src/material/RedPointBitmapMaterial.js",
 		"src/material/RedStandardMaterial.js",
-
+		
 		"src/material/system/RedGridMaterial.js",
 		"src/material/system/RedPointColorMaterial.js",
 		"src/material/system/RedSkyBoxMaterial.js",
@@ -104,7 +102,6 @@ gulp.task('make-doc', function () {
 		"src/object3D/RedLine.js",
 		"src/object3D/RedSkyBox.js",
 		"src/object3D/RedSprite3D.js",
-
 
 		"src/particle/RedPointUnit.js",
 
@@ -119,9 +116,8 @@ gulp.task('make-doc', function () {
 		"src/renderer/RedRenderer.js",
 		"src/renderer/RedRenderDebuger.js",
 
-
-
-		"src/resources/RedAtlasUV.js",
+		"src/resources/RedAtlas.js",
+		"src/resources/system/RedAtlasUV.js",
 		"src/resources/RedBitmapTexture.js",
 		"src/resources/RedAtlasTexture.js",
 		"src/resources/RedBitmapCubeTexture.js",
@@ -146,8 +142,6 @@ gulp.task('combine-js', function () {
 		"src/gl-matrix-min.js",
 		"src/RedGLUtil.js",
 		"src/RedGL.js",
-
-		"src/atlas/RedAtlas.js",
 
 		"src/base/RedBaseContainer.js",
 		"src/base/RedBaseLight.js",
@@ -182,7 +176,6 @@ gulp.task('combine-js', function () {
 		"src/object3D/RedSkyBox.js",
 		"src/object3D/RedSprite3D.js",
 
-
 		"src/particle/RedPointUnit.js",
 
 		"src/primitives/RedBox.js",
@@ -196,9 +189,8 @@ gulp.task('combine-js', function () {
 		"src/renderer/RedRenderer.js",
 		"src/renderer/RedRenderDebuger.js",
 
-
-
-		"src/resources/RedAtlasUV.js",
+		"src/resources/RedAtlas.js",
+		"src/resources/system/RedAtlasUV.js",
 		"src/resources/RedBitmapTexture.js",
 		"src/resources/RedAtlasTexture.js",
 		"src/resources/RedBitmapCubeTexture.js",
