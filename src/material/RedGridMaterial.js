@@ -2,11 +2,30 @@
 var RedGridMaterial;
 (function () {
     var makeProgram;
+    /**DOC:
+        {
+            constructorYn : true,
+            title :`RedGridMaterial`,
+            description : `
+                RedGridMaterial Instance 생성.
+                RedGrid Instance 새성시 내부적으로 자동으로 생성됨.
+            `,
+            params : {
+                redGL : [
+                    {type:'RedGL'}
+                ]
+            },
+            example : `
+                RedGridMaterial(RedGL Instance)
+            `,
+            return : 'RedGridMaterial Instance'
+        }
+    :DOC*/
     RedGridMaterial = function (redGL) {
         if (!(this instanceof RedGridMaterial)) return new RedGridMaterial(redGL);
-        this['program'] = makeProgram(redGL)
         // 유니폼 프로퍼티
         // 일반 프로퍼티
+        this['program'] = makeProgram(redGL)
         this['_UUID'] = RedGL['makeUUID']();
         this.checkProperty()
         Object.seal(this)

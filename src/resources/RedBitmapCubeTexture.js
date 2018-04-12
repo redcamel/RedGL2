@@ -97,7 +97,7 @@ var RedBitmapCubeTexture;
             `,
             params : {
                 redGL : [
-                    {type:'RedGL Instance'}
+                    {type:'RedGL'}
                 ],
                 src : [
                     {type:'string'},

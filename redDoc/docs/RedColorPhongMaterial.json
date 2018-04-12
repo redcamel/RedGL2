@@ -5,8 +5,16 @@
     "return": "RedProgram Instance"
   },
   {
+    "title": "displacementPower",
+    "description": "기본값 : 0",
+    "return": "Number"
+  },
+  {
+    "title": "displacementTexture",
+    "return": "RedBitmapTexture"
+  },
+  {
     "title": "normalTexture",
-    "description": "normalTexture",
     "return": "RedBitmapTexture"
   },
   {
@@ -16,20 +24,34 @@
     "params": {
       "redGL": [
         {
-          "type": "RedGL Instance"
+          "type": "RedGL"
         }
       ],
       "color": [
         {
           "type": "hex"
-        },
-        "hex"
+        }
       ],
       "alpha": [
         {
           "type": "number"
         },
         "알파값"
+      ],
+      "normalTexture": [
+        {
+          "type": "RedBitmapTexture"
+        }
+      ],
+      "specularTexture": [
+        {
+          "type": "RedBitmapTexture"
+        }
+      ],
+      "displacementTexture": [
+        {
+          "type": "RedBitmapTexture"
+        }
       ]
     },
     "example": "\nRedColorPhongMaterial(RedGL Instance, hex, alpha, normalTexture, specularTexture)\n",
@@ -62,7 +84,6 @@
   },
   {
     "title": "specularTexture",
-    "description": "specularTexture",
     "return": "RedBitmapTexture"
   }
 ]

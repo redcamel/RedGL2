@@ -1,15 +1,12 @@
 [
   {
-    "title": "diffuseTexture",
-    "description": "diffuseTexture",
-    "example": "// TODO:",
-    "return": "RedPointBitmapMaterial"
+    "title": "alphaTest",
+    "description": "\n기본값 : 0.0001\n해당값보다 알파값이 작을경우 discard 처리됨.\n",
+    "return": "Number"
   },
   {
-    "title": "program",
-    "description": "RedProgram Instance",
-    "example": "// TODO:",
-    "return": "RedProgram Instance"
+    "title": "diffuseTexture",
+    "return": "RedBitmapTexture"
   },
   {
     "constructorYn": true,
@@ -18,14 +15,13 @@
     "params": {
       "redGL": [
         {
-          "type": "RedGL Instance"
+          "type": "RedGL"
         }
       ],
-      "texture": [
+      "diffuseTexture": [
         {
-          "type": "RedPointBitmapMaterial"
-        },
-        "RedPointBitmapMaterial"
+          "type": "RedBitmapTexture"
+        }
       ]
     },
     "return": "RedPointBitmapMaterial Instance"

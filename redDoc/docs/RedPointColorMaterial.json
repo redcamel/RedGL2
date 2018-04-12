@@ -1,25 +1,13 @@
 [
   {
-    "title": "program",
-    "description": "RedProgram Instance",
-    "example": "// TODO:",
-    "return": "RedProgram Instance"
-  },
-  {
     "constructorYn": true,
     "title": "RedPointColorMaterial",
     "description": "\n    RedPointColorMaterial Instance 생성\n",
     "params": {
       "redGL": [
         {
-          "type": "RedGL Instance"
+          "type": "RedGL"
         }
-      ],
-      "texture": [
-        {
-          "type": "RedPointColorMaterial"
-        },
-        "RedPointColorMaterial"
       ]
     },
     "return": "RedPointColorMaterial Instance"

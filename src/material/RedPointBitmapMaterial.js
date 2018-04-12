@@ -11,11 +11,10 @@ var RedPointBitmapMaterial;
             `,
             params : {
                 redGL : [
-                    {type:'RedGL Instance'}
+                    {type:'RedGL'}
                 ],
-                texture : [
-                    {type:'RedPointBitmapMaterial'},
-                    'RedPointBitmapMaterial'
+                diffuseTexture : [
+                    {type:'RedBitmapTexture'}
                 ]
             },
             return : 'RedPointBitmapMaterial Instance'
@@ -30,23 +29,23 @@ var RedPointBitmapMaterial;
         /**DOC:
             {
                 title :`diffuseTexture`,
-                description : `diffuseTexture`,
-                example : `// TODO:`,
-                return : 'RedPointBitmapMaterial'
+                return : 'RedBitmapTexture'
             }
         :DOC*/
         this['diffuseTexture'] = diffuseTexture;
         /////////////////////////////////////////
         // 일반 프로퍼티
+        this['program'] = makeProgram(redGL);
         /**DOC:
             {
-                title :`program`,
-                description : `RedProgram Instance`,
-                example : `// TODO:`,
-                return : 'RedProgram Instance'
+                title :`alphaTest`,
+                description : `
+                기본값 : 0.0001
+                해당값보다 알파값이 작을경우 discard 처리됨.
+                `,
+                return : 'Number'
             }
         :DOC*/
-        this['program'] = makeProgram(redGL);
         this['alphaTest'] = 0.00001
         this['_UUID'] = RedGL['makeUUID']();
         this.checkProperty()

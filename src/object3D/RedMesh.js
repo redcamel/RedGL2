@@ -10,7 +10,7 @@ var RedMesh;
             `,
             params : {
                 redGL : [
-                    {type:'RedGL Instance'}
+                    {type:'RedGL'}
                 ],
                 geometry : [
                     {type:'RedGeometry'},

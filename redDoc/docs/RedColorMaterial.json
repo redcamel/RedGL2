@@ -11,14 +11,13 @@
     "params": {
       "redGL": [
         {
-          "type": "RedGL Instance"
+          "type": "RedGL"
         }
       ],
       "hex": [
         {
           "type": "hex"
-        },
-        "hex"
+        }
       ],
       "alpha": [
         {

@@ -10,7 +10,7 @@ var RedGeometry;
             `,
             params : {
                 redGL : [
-                    {type:'RedGL Instance'}
+                    {type:'RedGL'}
                 ],
                 interleaveBuffer : [
                     {type:'RedBuffer'},

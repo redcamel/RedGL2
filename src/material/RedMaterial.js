@@ -6,7 +6,6 @@ var RedMaterial;
         if (!(this instanceof RedMaterial)) return new RedMaterial(redGL);
         this['program'] = makeProgram(redGL)
         // 유니폼 프로퍼티
-
         this['floatTest'] = 1
         this['floatTest2'] = [1, 2, 3, 4, 5]
         this['intTest'] = 1

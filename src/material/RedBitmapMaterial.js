@@ -11,43 +11,35 @@ var RedBitmapMaterial;
             `,
             params : {
                 redGL : [
-                    {type:'RedGL Instance'}
+                    {type:'RedGL'}
                 ],
-                texture : [
-                    {type:'RedBitmapMaterial'},
-                    'RedBitmapMaterial'
+                diffuseTexture : [
+                    {type:'RedBitmapTexture'},
+                    'RedBitmapTexture Instance'
                 ]
             },
+            example : `
+                RedBitmapMaterial(RedGL Instance, RedBitmapTexture(RedGL Instance, src))
+            `,
             return : 'RedBitmapMaterial Instance'
         }
     :DOC*/
     RedBitmapMaterial = function (redGL, diffuseTexture) {
         if (!(this instanceof RedBitmapMaterial)) return new RedBitmapMaterial(redGL, diffuseTexture);
         if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedBitmapMaterial : RedGL Instance만 허용됩니다.')
-        if (!(diffuseTexture instanceof RedBitmapTexture) ) RedGLUtil.throwFunc('RedBitmapMaterial : RedBitmapTexture Instance만 허용됩니다.')
+        if (!(diffuseTexture instanceof RedBitmapTexture)) RedGLUtil.throwFunc('RedBitmapMaterial : RedBitmapTexture Instance만 허용됩니다.')
         /////////////////////////////////////////
         // 유니폼 프로퍼티
         /**DOC:
             {
                 title :`diffuseTexture`,
-                description : `diffuseTexture`,
-                example : `// TODO:`,
                 return : 'RedBitmapMaterial'
             }
         :DOC*/
         this['diffuseTexture'] = diffuseTexture;
         /////////////////////////////////////////
         // 일반 프로퍼티
-        /**DOC:
-            {
-                title :`program`,
-                description : `RedProgram Instance`,
-                example : `// TODO:`,
-                return : 'RedProgram Instance'
-            }
-        :DOC*/
         this['program'] = makeProgram(redGL);
-        
         this['_UUID'] = RedGL['makeUUID']();
         this.checkProperty()
         // Object.seal(this)
