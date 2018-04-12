@@ -165,7 +165,7 @@ var RedColorPhongMaterial;
                     L = normalize(-uDirectionalLightPosition[i]);
                     lambertTerm = dot(N,-L);
                     if(lambertTerm > 0.0){
-                        ld += uDirectionalLightColor[i] * texelColor * lambertTerm * uDirectionalLightIntensity[i];
+                        ld += (uDirectionalLightColor[i] * texelColor * lambertTerm * uDirectionalLightIntensity[i]) * uDirectionalLightColor[i].a;
                         R = reflect(L, N);
                         specular = pow( max(dot(R, -L), 0.0), uShininess);
                         ls +=  specularLightColor * specular * uSpecularPower * specularTextureValue * uDirectionalLightIntensity[i];
@@ -183,7 +183,7 @@ var RedColorPhongMaterial;
                         L = normalize(pointDirection);
                         lambertTerm = dot(N,-L);
                         if(lambertTerm > 0.0){
-                            ld += uPointLightColor[i] * texelColor * lambertTerm * attenuation * uPointLightIntensity[i];
+                            ld += (uPointLightColor[i] * texelColor * lambertTerm * attenuation * uPointLightIntensity[i]) * uPointLightColor[i].a;
                             R = reflect(L, N);
                             specular = pow( max(dot(R, -L), 0.0), uShininess);
                             ls +=  specularLightColor * specular * uSpecularPower * specularTextureValue * uPointLightIntensity[i] ;

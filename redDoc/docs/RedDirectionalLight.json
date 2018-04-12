@@ -1,1 +1,63 @@
-[]
+[
+  {
+    "title": "alpha",
+    "description": "\n    기본값 : 0.1\n",
+    "return": "Number"
+  },
+  {
+    "title": "intensity",
+    "description": "\n    라이트 강도\n    기본값 : 1\n",
+    "return": "Number"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedDirectionalLight",
+    "description": "\n    RedDirectionalLight Instance 생성\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ],
+      "hex": [
+        {
+          "type": "hex"
+        }
+      ],
+      "alpha": [
+        {
+          "type": "number"
+        },
+        "알파값"
+      ]
+    },
+    "example": "\n    RedDirectionalLight(RedGL Instance, hex, alpha)\n",
+    "return": "RedDirectionalLight Instance"
+  },
+  {
+    "title": "RedDirectionalLight.type",
+    "code": "CONST",
+    "description": "RedDirectionalLight 타입상수",
+    "return": "String"
+  },
+  {
+    "title": "type",
+    "description": "RedDirectionalLight['type']",
+    "return": "String"
+  },
+  {
+    "title": "x",
+    "description": "\n기본값 : 0\n포지션값은 광원계산시 0,0,0을 바라보는 방향벡터로 계산됨\n",
+    "return": "Number"
+  },
+  {
+    "title": "y",
+    "description": "\n기본값 : 0\n포지션값은 광원계산시 0,0,0을 바라보는 방향벡터로 계산됨\n",
+    "return": "Number"
+  },
+  {
+    "title": "z",
+    "description": "\n기본값 : 0\n포지션값은 광원계산시 0,0,0을 바라보는 방향벡터로 계산됨\n",
+    "return": "Number"
+  }
+]

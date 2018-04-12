@@ -632,7 +632,7 @@ var RedBaseLight;
                 this['color'][2] = t0[2];
                 this['color'][3] = alpha;
             }
-        })()
+        })(),
     }
     Object.freeze(RedBaseLight)
 
@@ -1354,14 +1354,67 @@ var RedGeometry;
 "use strict";
 var RedAmbientLight;
 (function () {
+    /**DOC:
+        {
+            constructorYn : true,
+            title :`RedAmbientLight`,
+            description : `
+                RedAmbientLight Instance 생성
+            `,
+            params : {
+                redGL : [
+                    {type:'RedGL'}
+                ],
+                hex : [
+                    {type:'hex'}
+                ],
+                alpha : [
+                    {type:'number'},
+                    '알파값'
+                ]
+            },
+            example: `
+                RedAmbientLight(RedGL Instance, hex, alpha)
+            `,
+            return : 'RedAmbientLight Instance'
+        }
+    :DOC*/
     RedAmbientLight = function (redGL, hex, alpha) {
         if (!(this instanceof RedAmbientLight)) return new RedAmbientLight(redGL, hex, alpha);
         // 유니폼 프로퍼티
         this['color'] = new Float32Array(4)
+        /**DOC:
+            {
+                title :`intensity`,
+                description : `
+                    라이트 강도
+                    기본값 : 1
+                `,
+                return : 'Number'
+            }
+        :DOC*/
         this['intensity'] = 1
+
         // 일반 프로퍼티
-        this.setColor(hex ? hex : '#ff0000', alpha == undefined ? 0.1 : alpha)
+        /**DOC:
+            {
+                title :`alpha`,
+                description : `
+                    기본값 : 0.1
+                `,
+                return : 'Number'
+            }
+        :DOC*/
+        this['alpha'] = alpha == undefined ? 0.1 : alpha
+        this.setColor(hex ? hex : '#fff', this['alpha'])
         this['_UUID'] = RedGL['makeUUID']();
+        /**DOC:
+            {
+                title :`type`,
+                description : `RedAmbientLight['type']`,
+                return : 'String'
+            }
+        :DOC*/
         Object.defineProperty(this, 'type', {
             configurable: false,
             writable: false,
@@ -1369,64 +1422,280 @@ var RedAmbientLight;
         })
         console.log(this)
     }
+    /**DOC:
+        {
+            title :`RedAmbientLight.type`,
+            code : 'CONST',
+            description : `RedAmbientLight 타입상수`,
+            return : 'String'
+        }
+    :DOC*/
     RedAmbientLight['type'] = 'RedAmbientLight'
     RedGLUtil['copyProto'](RedAmbientLight, RedBaseLight);
+    Object.defineProperty(RedAmbientLight.prototype, 'alpha', {
+        get: function () {
+            return this['color'][3]
+        },
+        set: function (v) {
+            this['color'][3] = v
+        }
+    })
     Object.freeze(RedAmbientLight)
-
 })();
 "use strict";
 var RedDirectionalLight;
 (function () {
+    /**DOC:
+        {
+            constructorYn : true,
+            title :`RedDirectionalLight`,
+            description : `
+                RedDirectionalLight Instance 생성
+            `,
+            params : {
+                redGL : [
+                    {type:'RedGL'}
+                ],
+                hex : [
+                    {type:'hex'}
+                ],
+                alpha : [
+                    {type:'number'},
+                    '알파값'
+                ]
+            },
+            example: `
+                RedDirectionalLight(RedGL Instance, hex, alpha)
+            `,
+            return : 'RedDirectionalLight Instance'
+        }
+    :DOC*/
     RedDirectionalLight = function (redGL, hex, alpha) {
         if (!(this instanceof RedDirectionalLight)) return new RedDirectionalLight(redGL, hex, alpha);
         // 유니폼 프로퍼티
         this['color'] = new Float32Array(4)
-        this['intensity'] = 1.0
+        /**DOC:
+            {
+                title :`intensity`,
+                description : `
+                    라이트 강도
+                    기본값 : 1
+                `,
+                return : 'Number'
+            }
+        :DOC*/
+        this['intensity'] = 1
+
         // 일반 프로퍼티
-        this.setColor(hex ? hex : '#fff', alpha==undefined ? 1 : alpha)
+        /**DOC:
+            {
+                title :`alpha`,
+                description : `
+                    기본값 : 0.1
+                `,
+                return : 'Number'
+            }
+        :DOC*/
+        this['alpha'] = alpha == undefined ? 1 : alpha
+        this.setColor(hex ? hex : '#fff', this['alpha'])
+        /**DOC:
+            {
+                title :`x`,
+                description : `
+                기본값 : 0
+                포지션값은 광원계산시 0,0,0을 바라보는 방향벡터로 계산됨
+                `,
+                return : 'Number'
+            }
+        :DOC*/
         this['x'] = 0
+        /**DOC:
+            {
+                title :`y`,
+                description : `
+                기본값 : 0
+                포지션값은 광원계산시 0,0,0을 바라보는 방향벡터로 계산됨
+                `,
+                return : 'Number'
+            }
+        :DOC*/
         this['y'] = -1
+        /**DOC:
+            {
+                title :`z`,
+                description : `
+                기본값 : 0
+                포지션값은 광원계산시 0,0,0을 바라보는 방향벡터로 계산됨
+                `,
+                return : 'Number'
+            }
+        :DOC*/
         this['z'] = 0;
         this['_UUID'] = RedGL['makeUUID']();
-        console.log(this.color)
+
+        /**DOC:
+            {
+                title :`type`,
+                description : `RedDirectionalLight['type']`,
+                return : 'String'
+            }
+        :DOC*/
         Object.defineProperty(this, 'type', {
             configurable: false,
             writable: false,
             value: RedDirectionalLight['type']
         })
-        this['debugObject'] = RedMesh(redGL, RedBox(redGL,1,1,1), RedColorMaterial(redGL))
+        this['debugObject'] = RedMesh(redGL, RedBox(redGL, 1, 1, 1), RedColorMaterial(redGL))
         this['debugObject']['drawMode'] = redGL.gl.LINE_STRIP
         console.log(this)
     }
+    /**DOC:
+        {
+            title :`RedDirectionalLight.type`,
+            code : 'CONST',
+            description : `RedDirectionalLight 타입상수`,
+            return : 'String'
+        }
+    :DOC*/
     RedDirectionalLight['type'] = 'RedDirectionalLight'
     RedGLUtil['copyProto'](RedDirectionalLight, RedBaseLight);
+    Object.defineProperty(RedDirectionalLight.prototype, 'alpha', {
+        get: function () {
+            return this['color'][3]
+        },
+        set: function (v) {
+            this['color'][3] = v
+        }
+    })
     Object.freeze(RedDirectionalLight)
 
 })()
 "use strict";
 var RedPointLight;
 (function () {
+    /**DOC:
+        {
+            constructorYn : true,
+            title :`RedPointLight`,
+            description : `
+                RedPointLight Instance 생성
+            `,
+            params : {
+                redGL : [
+                    {type:'RedGL'}
+                ],
+                hex : [
+                    {type:'hex'}
+                ],
+                alpha : [
+                    {type:'number'},
+                    '알파값'
+                ]
+            },
+            example: `
+                RedPointLight(RedGL Instance, hex, alpha)
+            `,
+            return : 'RedPointLight Instance'
+        }
+    :DOC*/
     RedPointLight = function (redGL, hex, alpha) {
         if (!(this instanceof RedPointLight)) return new RedPointLight(redGL, hex, alpha);
         // 유니폼 프로퍼티
         this['color'] = new Float32Array(4)
-        this['intensity'] = 1.0
+        /**DOC:
+            {
+                title :`intensity`,
+                description : `
+                    라이트 강도
+                    기본값 : 1
+                `,
+                return : 'Number'
+            }
+        :DOC*/
+        this['intensity'] = 1
+
         // 일반 프로퍼티
-        this.setColor(hex ? hex : '#fff', alpha==undefined ? 1 : alpha)
-        this['x'] = this['y'] = this['z'] = 0;    
-        this['radius'] = 1    
+        /**DOC:
+            {
+                title :`alpha`,
+                description : `
+                    기본값 : 0.1
+                `,
+                return : 'Number'
+            }
+        :DOC*/
+        this['alpha'] = alpha == undefined ? 1 : alpha
+        this.setColor(hex ? hex : '#fff', this['alpha'])
+        /**DOC:
+            {
+                title :`x`,
+                description : `기본값 : 0`,
+                return : 'Number'
+            }
+        :DOC*/
+        this['x'] = 0
+        /**DOC:
+            {
+                title :`y`,
+                description : `기본값 : 0`,
+                return : 'Number'
+            }
+        :DOC*/
+        this['y'] = 0
+        /**DOC:
+            {
+                title :`z`,
+                description : `기본값 : 0`,
+                return : 'Number'
+            }
+        :DOC*/
+        this['z'] = 0;
+        /**DOC:
+            {
+                title :`radius`,
+                description : `
+                점광의 반지름
+                기본값 : 1
+                `,
+                return : 'Number'
+            }
+        :DOC*/
+        this['radius'] = 1
         this['_UUID'] = RedGL['makeUUID']();
+        /**DOC:
+            {
+                title :`type`,
+                description : `RedPointLight['type']`,
+                return : 'String'
+            }
+        :DOC*/
         Object.defineProperty(this, 'type', {
             configurable: false,
             writable: false,
             value: RedPointLight['type']
         })
-        this['debugObject'] = RedMesh(redGL, RedSphere(redGL,1,16,16,16), RedColorMaterial(redGL))
+        this['debugObject'] = RedMesh(redGL, RedSphere(redGL, 1, 16, 16, 16), RedColorMaterial(redGL))
         this['debugObject']['drawMode'] = redGL.gl.LINE_STRIP
         console.log(this)
     }
+    /**DOC:
+        {
+            title :`RedPointLight.type`,
+            code : 'CONST',
+            description : `RedPointLight 타입상수`,
+            return : 'String'
+        }
+    :DOC*/
     RedPointLight['type'] = 'RedPointLight'
     RedGLUtil['copyProto'](RedPointLight, RedBaseLight);
+    Object.defineProperty(RedPointLight.prototype, 'alpha', {
+        get: function () {
+            return this['color'][3]
+        },
+        set: function (v) {
+            this['color'][3] = v
+        }
+    })
     Object.freeze(RedPointLight)
 
 })()
@@ -1853,7 +2122,7 @@ var RedColorPhongMaterial;
                     L = normalize(-uDirectionalLightPosition[i]);
                     lambertTerm = dot(N,-L);
                     if(lambertTerm > 0.0){
-                        ld += uDirectionalLightColor[i] * texelColor * lambertTerm * uDirectionalLightIntensity[i];
+                        ld += (uDirectionalLightColor[i] * texelColor * lambertTerm * uDirectionalLightIntensity[i]) * uDirectionalLightColor[i].a;
                         R = reflect(L, N);
                         specular = pow( max(dot(R, -L), 0.0), uShininess);
                         ls +=  specularLightColor * specular * uSpecularPower * specularTextureValue * uDirectionalLightIntensity[i];
@@ -1871,7 +2140,7 @@ var RedColorPhongMaterial;
                         L = normalize(pointDirection);
                         lambertTerm = dot(N,-L);
                         if(lambertTerm > 0.0){
-                            ld += uPointLightColor[i] * texelColor * lambertTerm * attenuation * uPointLightIntensity[i];
+                            ld += (uPointLightColor[i] * texelColor * lambertTerm * attenuation * uPointLightIntensity[i]) * uPointLightColor[i].a;
                             R = reflect(L, N);
                             specular = pow( max(dot(R, -L), 0.0), uShininess);
                             ls +=  specularLightColor * specular * uSpecularPower * specularTextureValue * uPointLightIntensity[i] ;
@@ -2128,7 +2397,7 @@ var RedEnvironmentMaterial;
                     L = normalize(-uDirectionalLightPosition[i]);
                     lambertTerm = dot(N,-L);
                     if(lambertTerm > 0.0){
-                        ld += uDirectionalLightColor[i] * texelColor * lambertTerm * uDirectionalLightIntensity[i];
+                        ld += (uDirectionalLightColor[i] * texelColor * lambertTerm * uDirectionalLightIntensity[i]) * uDirectionalLightColor[i].a;
                         R = reflect(L, N);
                         specular = pow( max(dot(R, -L), 0.0), uShininess);
                         ls +=  specularLightColor * specular * uSpecularPower * specularTextureValue * uDirectionalLightIntensity[i];
@@ -2146,7 +2415,7 @@ var RedEnvironmentMaterial;
                         L = normalize(pointDirection);
                         lambertTerm = dot(N,-L);
                         if(lambertTerm > 0.0){
-                            ld += uPointLightColor[i] * texelColor * lambertTerm * attenuation * uPointLightIntensity[i];
+                            ld += (uPointLightColor[i] * texelColor * lambertTerm * attenuation * uPointLightIntensity[i]) * uPointLightColor[i].a;
                             R = reflect(L, N);
                             specular = pow( max(dot(R, -L), 0.0), uShininess);
                             ls +=  specularLightColor * specular * uSpecularPower * specularTextureValue * uPointLightIntensity[i] ;
@@ -2513,7 +2782,7 @@ var RedStandardMaterial;
                     L = normalize(-uDirectionalLightPosition[i]);
                     lambertTerm = dot(N,-L);
                     if(lambertTerm > 0.0){
-                        ld += uDirectionalLightColor[i] * texelColor * lambertTerm * uDirectionalLightIntensity[i];
+                        ld += (uDirectionalLightColor[i] * texelColor * lambertTerm * uDirectionalLightIntensity[i]) * uDirectionalLightColor[i].a;
                         R = reflect(L, N);
                         specular = pow( max(dot(R, -L), 0.0), uShininess);
                         ls +=  specularLightColor * specular * uSpecularPower * specularTextureValue * uDirectionalLightIntensity[i];
@@ -2531,7 +2800,7 @@ var RedStandardMaterial;
                         L = normalize(pointDirection);
                         lambertTerm = dot(N,-L);
                         if(lambertTerm > 0.0){
-                            ld += uPointLightColor[i] * texelColor * lambertTerm * attenuation * uPointLightIntensity[i];
+                            ld += (uPointLightColor[i] * texelColor * lambertTerm * attenuation * uPointLightIntensity[i]) * uPointLightColor[i].a;
                             R = reflect(L, N);
                             specular = pow( max(dot(R, -L), 0.0), uShininess);
                             ls +=  specularLightColor * specular * uSpecularPower * specularTextureValue * uPointLightIntensity[i] ;
@@ -3306,13 +3575,17 @@ var RedPointUnit;
                 RedPointUnit Instance 생성기
             `,
             params : {
-                geometry : [
-                    {type:'RedGeometry'},
-                    `geometry`
+                redGL : [
+                    {type:'RedGL'}
+                ],
+                interleaveData : [
+                    {type:'Array'}
+                ],
+                interleaveDefineInfo : [
+                    {type:'Array'}
                 ],
                 material : [
-                    {type:'RedBaseMaterial 확장 Instance'},
-                    `material`
+                    {type : 'RedPointColorMaterial or RedPointBitmapMaterial'}
                 ]
             },
             return : 'RedProgram Instance'
@@ -3320,11 +3593,13 @@ var RedPointUnit;
     :DOC*/
     RedPointUnit = function (redGL, interleaveData, interleaveDefineInfo, material) {
         if (!(this instanceof RedPointUnit)) return new RedPointUnit(redGL, interleaveData, interleaveDefineInfo, material);
+        if (!(material instanceof RedPointColorMaterial) && !(material instanceof RedPointBitmapMaterial)) RedGLUtil.throwFunc('RedPointUnit : material - RedPointColorMaterial Instance or RedPointBitmapMaterial Instance만 허용됩니다.')
+
         var tGL;
+        var interleaveBuffer;
         tGL = redGL.gl
         RedBaseObject3D['build'].call(this, tGL)
         this['_UUID'] = RedGL['makeUUID']();
-        var interleaveBuffer
         interleaveBuffer = RedBuffer(
             redGL,
             'RedPointUnit_' + this['_UUID'],
@@ -3339,6 +3614,9 @@ var RedPointUnit;
     }
     RedGLUtil['copyProto'](RedPointUnit, RedBaseContainer);
     RedGLUtil['copyProto'](RedPointUnit, RedBaseObject3D);
+    RedPointUnit.prototype['update'] = function(){
+        //TODO
+    }
     Object.freeze(RedPointUnit);
 })();
 "use strict";

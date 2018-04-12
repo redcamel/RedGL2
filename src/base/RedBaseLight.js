@@ -17,7 +17,7 @@ var RedBaseLight;
                 this['color'][2] = t0[2];
                 this['color'][3] = alpha;
             }
-        })()
+        })(),
     }
     Object.freeze(RedBaseLight)
 
