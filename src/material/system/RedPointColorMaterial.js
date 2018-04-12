@@ -11,11 +11,7 @@ var RedPointColorMaterial;
             `,
             params : {
                 redGL : [
-                    {type:'RedGL Instance'}
-                ],
-                texture : [
-                    {type:'RedPointColorMaterial'},
-                    'RedPointColorMaterial'
+                    {type:'RedGL'}
                 ]
             },
             return : 'RedPointColorMaterial Instance'
@@ -26,17 +22,8 @@ var RedPointColorMaterial;
         if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPointColorMaterial : RedGL Instance만 허용됩니다.')
         /////////////////////////////////////////
         // 유니폼 프로퍼티
-    
         /////////////////////////////////////////
         // 일반 프로퍼티
-        /**DOC:
-            {
-                title :`program`,
-                description : `RedProgram Instance`,
-                example : `// TODO:`,
-                return : 'RedProgram Instance'
-            }
-        :DOC*/
         this['program'] = makeProgram(redGL);
         this['_UUID'] = RedGL['makeUUID']();
         this.checkProperty()

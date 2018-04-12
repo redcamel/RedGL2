@@ -83,7 +83,7 @@ var RedBuffer;
             `,
             params : {
                 redGL : [
-                    {type:'RedGL Instance'}
+                    {type:'RedGL'}
                 ],
                 key : [
                     {type:'String'},

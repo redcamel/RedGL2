@@ -2,7 +2,46 @@
 var RedEnvironmentMaterial;
 (function () {
     var makeProgram;
-
+    /**DOC:
+        {
+            constructorYn : true,
+            title :`RedEnvironmentMaterial`,
+            description : `
+                RedEnvironmentMaterial Instance 생성
+            `,
+            params : {
+                redGL : [
+                    {type:'RedGL'}
+                ],
+                diffuseTexture : [
+                    {type:'RedBitmapTexture'}
+                ],
+                environmentTexture : [
+                    {type:'RedBitmapCubeTexture'}
+                ],
+                normalTexture : [
+                    {type:'RedBitmapTexture'}
+                ],
+                specularTexture : [
+                    {type:'RedBitmapTexture'}
+                ],
+                displacementTexture : [
+                    {type:'RedBitmapTexture'}
+                ]
+            },
+            example : `
+                RedEnvironmentMaterial(
+                    RedGL Instance, 
+                    RedBitmapTexture(RedGL Instance, src), // diffuseTexture
+                    RedBitmapCubeTexture(RedGL Instance, srcList),
+                    RedBitmapTexture(RedGL Instance, src), // normalTexture
+                    RedBitmapTexture(RedGL Instance, src), // specularTexture
+                    RedBitmapTexture(RedGL Instance, src)  // displacementTexture
+                )
+            `,
+            return : 'RedEnvironmentMaterial Instance'
+        }
+    :DOC*/
     RedEnvironmentMaterial = function (
         redGL,
         diffuseTexture,
@@ -11,7 +50,14 @@ var RedEnvironmentMaterial;
         specularTexture,
         displacementTexture
     ) {
-        if (!(this instanceof RedEnvironmentMaterial)) return new RedEnvironmentMaterial(redGL, diffuseTexture, environmentTexture, normalTexture, specularTexture, displacementTexture);
+        if (!(this instanceof RedEnvironmentMaterial)) return new RedEnvironmentMaterial(
+            redGL,
+            diffuseTexture,
+            environmentTexture,
+            normalTexture,
+            specularTexture,
+            displacementTexture
+        );
         if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedEnvironmentMaterial : RedGL Instance만 허용됩니다.')
         if (!(diffuseTexture instanceof RedBitmapTexture)) RedGLUtil.throwFunc('RedEnvironmentMaterial : diffuseTexture - RedBitmapTexture Instance만 허용됩니다.')
         if (environmentTexture && !(environmentTexture instanceof RedBitmapCubeTexture)) RedGLUtil.throwFunc('RedEnvironmentMaterial : environmentTexture - RedBitmapCubeTexture Instance만 허용됩니다.')
@@ -23,8 +69,6 @@ var RedEnvironmentMaterial;
         /**DOC:
             {
                 title :`diffuseTexture`,
-                description : `diffuseTexture`,
-                example : `// TODO:`,
                 return : 'RedBitmapTexture'
             }
         :DOC*/
@@ -32,8 +76,6 @@ var RedEnvironmentMaterial;
         /**DOC:
             {
                 title :`environmentTexture`,
-                description : `environmentTexture`,
-                example : `// TODO:`,
                 return : 'RedBitmapCubeTexture'
             }
         :DOC*/
@@ -41,18 +83,13 @@ var RedEnvironmentMaterial;
         /**DOC:
             {
                 title :`normalTexture`,
-                description : `normalTexture`,
-                example : `// TODO:`,
                 return : 'RedBitmapTexture'
             }
         :DOC*/
         this['normalTexture'] = normalTexture;
-
         /**DOC:
             {
                 title :`specularTexture`,
-                description : `specularTexture`,
-                example : `// TODO:`,
                 return : 'RedBitmapTexture'
             }
         :DOC*/
@@ -60,36 +97,45 @@ var RedEnvironmentMaterial;
         /**DOC:
             {
                 title :`shininess`,
-                description : `shininess`,
-                example : `// TODO:`,
                 return : 'RedBitmapTexture'
             }
         :DOC*/
         this['displacementTexture'] = displacementTexture;
+        /**DOC:
+            {
+                title :`shininess`,
+                description : `기본값 : 16`,                
+                return : 'Number'
+            }
+        :DOC*/
         this['shininess'] = 16
         /**DOC:
             {
                 title :`specularPower`,
-                description : `specularPower`,
-                example : `// TODO:`,
-                return : 'RedBitmapTexture'
+                description : `기본값 : 1`,                
+                return : 'Number'
             }
         :DOC*/
         this['specularPower'] = 1
+        /**DOC:
+            {
+                title :`reflectionPower`,
+                description : `기본값 : 1`,                
+                return : 'Number'
+            }
+        :DOC*/
         this['reflectionPower'] = 1
+        /**DOC:
+            {
+                title :`displacementPower`,
+                description : `기본값 : 0`,                
+                return : 'Number'
+            }
+        :DOC*/
         this['displacementPower'] = 0
         /////////////////////////////////////////
         // 일반 프로퍼티
-        /**DOC:
-            {
-                title :`program`,
-                description : `RedProgram Instance`,
-                example : `// TODO:`,
-                return : 'RedProgram Instance'
-            }
-        :DOC*/
         this['program'] = makeProgram(redGL);
-   
         this['_UUID'] = RedGL['makeUUID']();
         this.checkProperty()
         console.log(this)
@@ -107,12 +153,12 @@ var RedEnvironmentMaterial;
             void main(void) {
                 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
                 vVertexNormal = vec3(uNMatrix * vec4(aVertexNormal,1.0)); 
-                vVertexPositionEye4 = vec4(aVertexPosition, 1.0);
+                vVertexPositionEye4 = uMVMatrix * vec4(aVertexPosition, 1.0);     
                 vReflectionCubeCoord = -(uMVMatrix *vec4(aVertexPosition, 0.0)).xyz;
                 vVertexPositionEye4.xyz += normalize(vVertexNormal) * texture2D(uDisplacementTexture, vTexcoord).x * uDisplacementPower ;
                 
                 gl_PointSize = uPointSize;
-                gl_Position = uPMatrix * uCameraMatrix * uMVMatrix * vVertexPositionEye4;                
+                gl_Position = uPMatrix * uCameraMatrix * vVertexPositionEye4;                
                 vVertexPositionEye4 = uMVMatrix * vVertexPositionEye4;
                 
             }

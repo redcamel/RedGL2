@@ -134,7 +134,7 @@ var RedProgram;
             `,
             params : {
                 redGL : [
-                    {type:'RedGL Instance'}
+                    {type:'RedGL'}
                 ],
                 key : [
                     {type:'String'},

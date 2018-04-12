@@ -2,20 +2,55 @@
 var RedStandardMaterial;
 (function () {
     var makeProgram;
-
-    RedStandardMaterial = function (redGL, diffuseTexture, normalTexture, specularTexture) {
-        if (!(this instanceof RedStandardMaterial)) return new RedStandardMaterial(redGL, diffuseTexture, normalTexture, specularTexture);
+    /**DOC:
+        {
+            constructorYn : true,
+            title :`RedStandardMaterial`,
+            description : `
+                RedStandardMaterial Instance 생성
+            `,
+            params : {
+                redGL : [
+                    {type:'RedGL'}
+                ],
+                diffuseTexture : [
+                    {type:'RedBitmapTexture'}
+                ],
+                normalTexture : [
+                    {type:'RedBitmapTexture'}
+                ],
+                specularTexture : [
+                    {type:'RedBitmapTexture'}
+                ],
+                displacementTexture : [
+                    {type:'RedBitmapTexture'}
+                ]
+            },
+            example : `
+                RedStandardMaterial(
+                    RedGL Instance, 
+                    RedBitmapTexture(RedGL Instance, src), // diffuseTexture
+                    RedBitmapTexture(RedGL Instance, src), // normalTexture
+                    RedBitmapTexture(RedGL Instance, src), // specularTexture
+                    RedBitmapTexture(RedGL Instance, src)  // displacementTexture
+                )
+            `,
+            return : 'RedStandardMaterial Instance'
+        }
+    :DOC*/
+    RedStandardMaterial = function (redGL, diffuseTexture, normalTexture, specularTexture, displacementTexture) {
+        if (!(this instanceof RedStandardMaterial)) return new RedStandardMaterial(redGL, diffuseTexture, normalTexture, specularTexture,displacementTexture);
         if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedStandardMaterial : RedGL Instance만 허용됩니다.')
         if (!(diffuseTexture instanceof RedBitmapTexture)) RedGLUtil.throwFunc('RedStandardMaterial : diffuseTexture - RedBitmapTexture Instance만 허용됩니다.')
         if (normalTexture && !(normalTexture instanceof RedBitmapTexture)) RedGLUtil.throwFunc('RedStandardMaterial : normalTexture - RedBitmapTexture Instance만 허용됩니다.')
         if (specularTexture && !(specularTexture instanceof RedBitmapTexture)) RedGLUtil.throwFunc('RedStandardMaterial : specularTexture - RedBitmapTexture Instance만 허용됩니다.')
+        if (displacementTexture && !(displacementTexture instanceof RedBitmapTexture)) RedGLUtil.throwFunc('RedStandardMaterial : displacementTexture - RedBitmapTexture Instance만 허용됩니다.')
+
         /////////////////////////////////////////
         // 유니폼 프로퍼티
         /**DOC:
             {
                 title :`diffuseTexture`,
-                description : `diffuseTexture`,
-                example : `// TODO:`,
                 return : 'RedBitmapTexture'
             }
         :DOC*/
@@ -23,8 +58,6 @@ var RedStandardMaterial;
         /**DOC:
             {
                 title :`normalTexture`,
-                description : `normalTexture`,
-                example : `// TODO:`,
                 return : 'RedBitmapTexture'
             }
         :DOC*/
@@ -32,8 +65,6 @@ var RedStandardMaterial;
         /**DOC:
             {
                 title :`specularTexture`,
-                description : `specularTexture`,
-                example : `// TODO:`,
                 return : 'RedBitmapTexture'
             }
         :DOC*/
@@ -41,33 +72,37 @@ var RedStandardMaterial;
         /**DOC:
             {
                 title :`shininess`,
-                description : `shininess`,
-                example : `// TODO:`,
                 return : 'RedBitmapTexture'
+            }
+        :DOC*/
+        this['displacementTexture'] = displacementTexture;
+        /**DOC:
+            {
+                title :`shininess`,
+                description : `기본값 : 16`,
+                return : 'number'
             }
         :DOC*/
         this['shininess'] = 16
         /**DOC:
             {
                 title :`specularPower`,
-                description : `specularPower`,
-                example : `// TODO:`,
-                return : 'RedBitmapTexture'
+                description : `기본값 : 1`,                
+                return : 'number'
             }
         :DOC*/
         this['specularPower'] = 1
-        /////////////////////////////////////////
-        // 일반 프로퍼티
         /**DOC:
             {
-                title :`program`,
-                description : `RedProgram Instance`,
-                example : `// TODO:`,
-                return : 'RedProgram Instance'
+                title :`displacementPower`,
+                description : `기본값 : 0`,                
+                return : 'Number'
             }
         :DOC*/
+        this['displacementPower'] = 0
+        /////////////////////////////////////////
+        // 일반 프로퍼티
         this['program'] = makeProgram(redGL);
-     
         this['_UUID'] = RedGL['makeUUID']();
         this.checkProperty()
         console.log(this)
@@ -77,12 +112,16 @@ var RedStandardMaterial;
         var vSource, fSource;
         vSource = function () {
             /*
+            uniform sampler2D uDisplacementTexture;
+            uniform float uDisplacementPower;
+            
             varying vec4 vVertexPositionEye4;
             void main(void) {
                 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
                 vVertexNormal = vec3(uNMatrix * vec4(aVertexNormal,1.0)); 
                 vVertexPositionEye4 = uMVMatrix * vec4(aVertexPosition, 1.0);         
-          
+                vVertexPositionEye4.xyz += normalize(vVertexNormal) * texture2D(uDisplacementTexture, vTexcoord).x * uDisplacementPower ;
+
                 gl_PointSize = uPointSize;
                 gl_Position = uPMatrix * uCameraMatrix * vVertexPositionEye4;
             }

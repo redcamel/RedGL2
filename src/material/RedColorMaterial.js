@@ -11,11 +11,10 @@ var RedColorMaterial;
             `,
             params : {
                 redGL : [
-                    {type:'RedGL Instance'}
+                    {type:'RedGL'}
                 ],
                 hex : [
-                    {type:'hex'},
-                    'hex'
+                    {type:'hex'}
                 ],
                 alpha : [
                     {type:'number'},

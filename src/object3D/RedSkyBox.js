@@ -10,7 +10,7 @@ var RedSkyBox;
             `,
             params : {
                 redGL : [
-                    {type:'RedGL Instance'}
+                    {type:'RedGL'}
                 ],
                 srcList : [
                     {type:'Array'},

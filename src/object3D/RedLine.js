@@ -10,7 +10,7 @@ var RedLine;
             `,
             params : {
                 redGL : [
-                    {type:'RedGL Instance'}
+                    {type:'RedGL'}
                 ],
                 material : [
                     {type:'RedBaseMaterial 확장 Instance'},

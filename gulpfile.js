@@ -46,11 +46,11 @@ var transformString = function (s) {
 		var result = docParser()
 		if (result) list[index] = result
 	})
-	var t0 = list.filter(function(a){
-		if(a.hasOwnProperty('extendDoc')) return true
+	var t0 = list.filter(function (a) {
+		if (a.hasOwnProperty('extendDoc')) return true
 	})
-	list= list.filter(function(a){
-		if(!a.hasOwnProperty('extendDoc')) return true
+	list = list.filter(function (a) {
+		if (!a.hasOwnProperty('extendDoc')) return true
 	})
 
 	list.sort(function (a, b) {
@@ -90,13 +90,13 @@ gulp.task('make-doc', function () {
 		"src/material/RedColorMaterial.js",
 		"src/material/RedColorPhongMaterial.js",
 		"src/material/RedEnvironmentMaterial.js",
-		"src/material/RedGridMaterial.js",
 		"src/material/RedBitmapMaterial.js",
-
 		"src/material/RedPointBitmapMaterial.js",
-		"src/material/RedPointColorMaterial.js",
-		"src/material/RedSkyBoxMaterial.js",
 		"src/material/RedStandardMaterial.js",
+
+		"src/material/system/RedGridMaterial.js",
+		"src/material/system/RedPointColorMaterial.js",
+		"src/material/system/RedSkyBoxMaterial.js",
 
 		"src/object3D/RedAxis.js",
 		"src/object3D/RedGrid.js",
@@ -118,7 +118,7 @@ gulp.task('make-doc', function () {
 
 		"src/renderer/RedRenderer.js",
 		"src/renderer/RedRenderDebuger.js",
-		
+
 
 
 		"src/resources/RedAtlasUV.js",
@@ -167,13 +167,13 @@ gulp.task('combine-js', function () {
 		"src/material/RedColorMaterial.js",
 		"src/material/RedColorPhongMaterial.js",
 		"src/material/RedEnvironmentMaterial.js",
-		"src/material/RedGridMaterial.js",
 		"src/material/RedBitmapMaterial.js",
-
 		"src/material/RedPointBitmapMaterial.js",
-		"src/material/RedPointColorMaterial.js",
-		"src/material/RedSkyBoxMaterial.js",
 		"src/material/RedStandardMaterial.js",
+		
+		"src/material/system/RedGridMaterial.js",
+		"src/material/system/RedPointColorMaterial.js",
+		"src/material/system/RedSkyBoxMaterial.js",
 
 		"src/object3D/RedAxis.js",
 		"src/object3D/RedGrid.js",
@@ -195,7 +195,7 @@ gulp.task('combine-js', function () {
 
 		"src/renderer/RedRenderer.js",
 		"src/renderer/RedRenderDebuger.js",
-		
+
 
 
 		"src/resources/RedAtlasUV.js",

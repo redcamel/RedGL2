@@ -1,44 +1,81 @@
 [
   {
     "title": "diffuseTexture",
-    "description": "diffuseTexture",
-    "example": "// TODO:",
     "return": "RedBitmapTexture"
   },
   {
+    "title": "displacementPower",
+    "description": "기본값 : 0",
+    "return": "Number"
+  },
+  {
     "title": "environmentTexture",
-    "description": "environmentTexture",
-    "example": "// TODO:",
     "return": "RedBitmapCubeTexture"
   },
   {
     "title": "normalTexture",
-    "description": "normalTexture",
-    "example": "// TODO:",
     "return": "RedBitmapTexture"
   },
   {
-    "title": "program",
-    "description": "RedProgram Instance",
-    "example": "// TODO:",
-    "return": "RedProgram Instance"
+    "constructorYn": true,
+    "title": "RedEnvironmentMaterial",
+    "description": "\n    RedEnvironmentMaterial Instance 생성\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ],
+      "diffuseTexture": [
+        {
+          "type": "RedBitmapTexture"
+        }
+      ],
+      "environmentTexture": [
+        {
+          "type": "RedBitmapCubeTexture"
+        }
+      ],
+      "normalTexture": [
+        {
+          "type": "RedBitmapTexture"
+        }
+      ],
+      "specularTexture": [
+        {
+          "type": "RedBitmapTexture"
+        }
+      ],
+      "displacementTexture": [
+        {
+          "type": "RedBitmapTexture"
+        }
+      ]
+    },
+    "example": "\n    RedEnvironmentMaterial(\n        RedGL Instance, \n        RedBitmapTexture(RedGL Instance, src), // diffuseTexture\n        RedBitmapCubeTexture(RedGL Instance, srcList),\n        RedBitmapTexture(RedGL Instance, src), // normalTexture\n        RedBitmapTexture(RedGL Instance, src), // specularTexture\n        RedBitmapTexture(RedGL Instance, src)  // displacementTexture\n    )\n",
+    "return": "RedEnvironmentMaterial Instance"
+  },
+  {
+    "title": "reflectionPower",
+    "description": "기본값 : 1",
+    "return": "Number"
   },
   {
     "title": "shininess",
-    "description": "shininess",
-    "example": "// TODO:",
     "return": "RedBitmapTexture"
+  },
+  {
+    "title": "shininess",
+    "description": "기본값 : 16",
+    "return": "Number"
   },
   {
     "title": "specularPower",
-    "description": "specularPower",
-    "example": "// TODO:",
-    "return": "RedBitmapTexture"
+    "description": "기본값 : 1",
+    "return": "Number"
   },
   {
     "title": "specularTexture",
-    "description": "specularTexture",
-    "example": "// TODO:",
     "return": "RedBitmapTexture"
   }
 ]

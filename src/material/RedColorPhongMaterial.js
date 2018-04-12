@@ -11,15 +11,26 @@ var RedColorPhongMaterial;
             `,
             params : {
                 redGL : [
-                    {type:'RedGL Instance'}
+                    {type:'RedGL'}
                 ],
                 color : [
-                    {type:'hex'},
-                    'hex'
+                    {type:'hex'}
                 ],
                 alpha : [
                     {type:'number'},
                     '알파값'
+                ],
+                normalTexture : [
+                    {type: 'RedBitmapTexture'}
+                ],
+                specularTexture : [
+                    {type: 'RedBitmapTexture'}
+                ],
+                specularTexture : [
+                    {type: 'RedBitmapTexture'}
+                ],
+                displacementTexture : [
+                    {type: 'RedBitmapTexture'}
                 ]
             },
             example: `
@@ -28,8 +39,8 @@ var RedColorPhongMaterial;
             return : 'RedColorPhongMaterial Instance'
         }
     :DOC*/
-    RedColorPhongMaterial = function (redGL, hex, alpha, normalTexture, specularTexture) {
-        if (!(this instanceof RedColorPhongMaterial)) return new RedColorPhongMaterial(redGL, hex, alpha, normalTexture, specularTexture);
+    RedColorPhongMaterial = function (redGL, hex, alpha, normalTexture, specularTexture, displacementTexture) {
+        if (!(this instanceof RedColorPhongMaterial)) return new RedColorPhongMaterial(redGL, hex, alpha, normalTexture, specularTexture, displacementTexture);
         /////////////////////////////////////////
         // 유니폼 프로퍼티
         /**DOC:
@@ -46,7 +57,6 @@ var RedColorPhongMaterial;
         /**DOC:
              {
                  title :`normalTexture`,
-                 description : `normalTexture`,
                  return : 'RedBitmapTexture'
              }
          :DOC*/
@@ -54,11 +64,17 @@ var RedColorPhongMaterial;
         /**DOC:
             {
                 title :`specularTexture`,
-                description : `specularTexture`,
                 return : 'RedBitmapTexture'
             }
         :DOC*/
         this['specularTexture'] = specularTexture;
+        /**DOC:
+            {
+                title :`displacementTexture`,
+                return : 'RedBitmapTexture'
+            }
+        :DOC*/
+        this['displacementTexture'] = displacementTexture;
         /**DOC:
             {
                 title :`shininess`,
@@ -75,6 +91,14 @@ var RedColorPhongMaterial;
             }
         :DOC*/
         this['specularPower'] = 1
+        /**DOC:
+           {
+               title :`displacementPower`,
+               description : `기본값 : 0`,                
+               return : 'Number'
+           }
+       :DOC*/
+        this['displacementPower'] = 0
         this.setColor(hex ? hex : '#ff0000', alpha == undefined ? 1 : alpha);
         /////////////////////////////////////////
         // 일반 프로퍼티
@@ -91,12 +115,16 @@ var RedColorPhongMaterial;
             
             uniform vec4 uColor;
             varying vec4 vColor;
+            uniform sampler2D uDisplacementTexture;
+            uniform float uDisplacementPower;
+
             varying vec4 vVertexPositionEye4;
             void main(void) {
                 vColor = uColor; 
                 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
                 vVertexNormal = vec3(uNMatrix * vec4(aVertexNormal,1.0)); 
-                vVertexPositionEye4 = uMVMatrix * vec4(aVertexPosition, 1.0);      
+                vVertexPositionEye4 = uMVMatrix * vec4(aVertexPosition, 1.0);
+                vVertexPositionEye4.xyz += normalize(vVertexNormal) * texture2D(uDisplacementTexture, vTexcoord).x * uDisplacementPower ;
                 gl_PointSize = uPointSize;
                 gl_Position = uPMatrix * uCameraMatrix* vVertexPositionEye4;
             }
@@ -198,18 +226,6 @@ var RedColorPhongMaterial;
             return : 'RedProgram Instance'
         }
     :DOC*/
-    RedColorPhongMaterial.prototype['setColor'] = (function () {
-        var t0;
-        return function (hex, alpha) {
-            hex = hex ? hex : '#ff2211';
-            if (alpha == undefined) alpha = 1;
-            if (alpha > 1) alpha = 1
-            t0 = RedGLUtil.hexToRGB.call(this, hex);
-            this['color'][0] = t0[0];
-            this['color'][1] = t0[1];
-            this['color'][2] = t0[2];
-            this['color'][3] = alpha;
-        }
-    })();
+    RedColorPhongMaterial.prototype['setColor'] = RedColorMaterial.prototype['setColor'];
     Object.freeze(RedColorPhongMaterial)
 })();

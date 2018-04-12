@@ -1,14 +1,25 @@
 [
   {
-    "title": "program",
-    "description": "RedProgram Instance",
-    "example": "// TODO:",
-    "return": "RedProgram Instance"
+    "constructorYn": true,
+    "title": "RedSkyBoxMaterial",
+    "description": "\n    RedSkyBoxMaterial Instance 생성.\n    RedSkyBox Instance 생성시 내부적으로 자동으로 생성됨.\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ],
+      "skyboxTexture": [
+        {
+          "type": "RedBitmapCubeTexture"
+        }
+      ]
+    },
+    "example": "\n    RedSkyBoxMaterial(\n        RedGL Instance,\n        RedBitmapCubeTexture Instance\n    )\n",
+    "return": "RedSkyBoxMaterial Instance"
   },
   {
     "title": "skyboxTexture",
-    "description": "skyboxTexture",
-    "example": "// TODO:",
     "return": "RedBitmapCubeTexture"
   }
 ]

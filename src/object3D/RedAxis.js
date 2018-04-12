@@ -10,7 +10,7 @@ var RedAxis;
             `,
             params : {
                 redGL : [
-                    {type:'RedGL Instance'}
+                    {type:'RedGL'}
                 ],
             },
             example : `

@@ -10,7 +10,7 @@ var RedGrid;
             `,
             params : {
                 redGL : [
-                    {type:'RedGL Instance'}
+                    {type:'RedGL'}
                 ],
                 size : [
                     {type:'uint'},
