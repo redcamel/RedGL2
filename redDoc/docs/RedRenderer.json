@@ -3,6 +3,7 @@
     "constructorYn": true,
     "title": "RedRenderer",
     "description": "\n    RedRenderer Instance 생성자.\n",
+    "example": "\nRedRenderer();\n",
     "return": "RedRenderer Instance"
   },
   {
@@ -10,11 +11,16 @@
     "title": "start",
     "description": "\n    렌더 시작\n",
     "params": {
-      "gl": [
+      "redGL": [
         {
-          "type": "webgl context"
+          "type": "RedGL"
+        }
+      ],
+      "callback": [
+        {
+          "type": "Function"
         },
-        "webgl context"
+        "렌더시마다 실행될 콜백"
       ]
     },
     "return": "void"
@@ -23,20 +29,6 @@
     "code": "METHOD",
     "title": "stop",
     "description": "\n    렌더 중지\n",
-    "return": "void"
-  },
-  {
-    "code": "METHOD",
-    "title": "worldRender",
-    "description": "\n    등록된 RedView을 기반으로 렌더링을 실행함\n",
-    "params": {
-      "gl": [
-        {
-          "type": "webgl context"
-        },
-        "webgl context"
-      ]
-    },
     "return": "void"
   }
 ]

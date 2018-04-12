@@ -1,16 +1,10 @@
 [
   {
-    "code": "PROPERTY",
     "title": "indexBuffer",
-    "description": "\n    indexBuffer 정보\n",
-    "example": "\n    // TODO:\n",
     "return": "RedBuffer Instance"
   },
   {
-    "code": "PROPERTY",
     "title": "interleaveBuffer",
-    "description": "\n    interleaveBuffer 정보\n",
-    "example": "\n    // TODO:\n",
     "return": "RedBuffer Instance"
   },
   {
@@ -27,16 +21,16 @@
         {
           "type": "RedBuffer"
         },
-        "interleaveBuffer"
+        "필수"
       ],
       "indexBuffer": [
         {
           "type": "RedBuffer"
         },
-        "indexBuffer"
+        "필수아님"
       ]
     },
-    "example": "\n    // TODO:\n",
+    "example": "\n    RedGeometry(interleaveBuffer,indexBuffer)\n",
     "return": "RedGeometry Instance"
   }
 ]

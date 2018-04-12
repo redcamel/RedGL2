@@ -2,7 +2,7 @@
   {
     "constructorYn": true,
     "title": "RedSystemShaderCode",
-    "description": "\n    쉐이더 기본 정의 코드\n    쉐이더 생성시 자동으로 추가되어 들어감.\n",
+    "description": "\n    쉐이더 기본 정의 코드.\n",
     "return": "RedSystemShaderCode"
   },
   {

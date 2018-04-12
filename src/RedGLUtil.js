@@ -26,7 +26,7 @@ var RedGLUtil;
         /**DOC:
             {
                 constructorYn : true,
-                title :`RedGLUtil.extendsProto`,
+                title :`RedGLUtil.copyProto`,
                 description : `
                     프로토타입 내용을 복사
                 `,
@@ -46,13 +46,13 @@ var RedGLUtil;
                     a.prototype.test = function(){
                         console.log('test')
                     };
-                    RedGLUtil.extendsProto(b,a);
+                    RedGLUtil.copyProto(b,a);
                     (new b()).test(); // test
                 `,
                 return : 'void'
             }
         :DOC*/
-        extendsProto: function (target, from) {
+        copyProto: function (target, from) {
             for (var k in from.prototype) target.prototype[k] = from.prototype[k]//,console.log(k)
         },
         /**DOC:

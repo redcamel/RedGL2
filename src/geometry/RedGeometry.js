@@ -14,15 +14,15 @@ var RedGeometry;
                 ],
                 interleaveBuffer : [
                     {type:'RedBuffer'},
-                    `interleaveBuffer`
+                    `필수`
                 ],
                 indexBuffer : [
                     {type:'RedBuffer'},
-                    `indexBuffer`
+                    `필수아님`
                 ]
             },
             example : `
-                // TODO:
+                RedGeometry(interleaveBuffer,indexBuffer)
             `,
             return : 'RedGeometry Instance'
         }
@@ -35,7 +35,7 @@ var RedGeometry;
                 RedGLUtil.throwFunc('RedGeometry : interleaveBuffer - RedBuffer.ARRAY_BUFFER 타입만.', interleaveBuffer)
             }
         }
-        if(indexBuffer){
+        if (indexBuffer) {
             if (!(indexBuffer instanceof RedBuffer)) RedGLUtil.throwFunc('RedGeometry : indexBuffer - RedBuffer Instance만 허용.', indexBuffer)
             else {
                 if (!(indexBuffer['bufferType'] == RedBuffer.ELEMENT_ARRAY_BUFFER)) {
@@ -43,37 +43,22 @@ var RedGeometry;
                 }
             }
         }
-      
         /**DOC:
             {
-                code : 'PROPERTY',
                 title :`interleaveBuffer`,
-                description : `
-                    interleaveBuffer 정보
-                `,
-                example : `
-                    // TODO:
-                `,
                 return : 'RedBuffer Instance'
             }
         :DOC*/
         this['interleaveBuffer'] = interleaveBuffer
         /**DOC:
             {
-                code : 'PROPERTY',
                 title :`indexBuffer`,
-                description : `
-                    indexBuffer 정보
-                `,
-                example : `
-                    // TODO:
-                `,
                 return : 'RedBuffer Instance'
             }
         :DOC*/
         this['indexBuffer'] = indexBuffer
         this['_UUID'] = RedGL['makeUUID']();
-        Object.freeze(this)
+        // Object.freeze(this)
     }
     Object.freeze(RedGeometry);
 })()

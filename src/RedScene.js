@@ -164,6 +164,6 @@ var RedScene;
             extendDoc : 'RedBaseContainer'
         }
     :DOC*/
-    RedGLUtil['extendsProto'](RedScene, RedBaseContainer)
+    RedGLUtil['copyProto'](RedScene, RedBaseContainer)
     Object.freeze(RedScene);
 })();

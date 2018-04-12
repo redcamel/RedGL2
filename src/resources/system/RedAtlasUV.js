@@ -39,7 +39,7 @@ var RedAtlasUV;
             if (checkMap[tKey]) this['data'] = checkMap[tKey]
             else this['data'] = checkMap[tKey] = t0, this['data']['_UUID'] = RedGL.makeUUID()
         } else this['data'] = baseUV
-      
+
         // console.log(this)
     }
     RedAtlasUV.prototype = {};

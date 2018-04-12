@@ -21,7 +21,7 @@ var RedPointLight;
         console.log(this)
     }
     RedPointLight['type'] = 'RedPointLight'
-    RedGLUtil['extendsProto'](RedPointLight, RedBaseLight);
+    RedGLUtil['copyProto'](RedPointLight, RedBaseLight);
     Object.freeze(RedPointLight)
 
 })()

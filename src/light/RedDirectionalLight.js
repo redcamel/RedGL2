@@ -23,7 +23,7 @@ var RedDirectionalLight;
         console.log(this)
     }
     RedDirectionalLight['type'] = 'RedDirectionalLight'
-    RedGLUtil['extendsProto'](RedDirectionalLight, RedBaseLight);
+    RedGLUtil['copyProto'](RedDirectionalLight, RedBaseLight);
     Object.freeze(RedDirectionalLight)
 
 })()

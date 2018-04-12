@@ -6,8 +6,7 @@ var RedSystemShaderCode;
             constructorYn : true,
             title :`RedSystemShaderCode`,
             description : `
-                쉐이더 기본 정의 코드
-                쉐이더 생성시 자동으로 추가되어 들어감.
+                쉐이더 기본 정의 코드.
             `,
             return : 'RedSystemShaderCode'
         }
@@ -78,7 +77,7 @@ var RedSystemShaderCode;
             'uniform float uPointLightRadius[5]',
             'uniform float uPointLightIntensity[5]',
             'uniform int uPointLightNum',
-            
+
             'uniform vec4 uAmbientLightColor',
             'uniform float uAmbientIntensity'
 

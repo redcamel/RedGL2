@@ -46,7 +46,7 @@ var RedBuffer;
             t0 = 0;
             switch (bufferType) {
                 case RedBuffer.ARRAY_BUFFER:
-             
+
                     self['interleaveDefineInfo'] = interleaveDefineInfo;
                     if (interleaveDefineInfo) {
                         for (k in interleaveDefineInfo) {
@@ -102,25 +102,78 @@ var RedBuffer;
                     `
                     버퍼의 인터리브 구성 정보
                     RedBuffer.ARRAY_BUFFER 일때만 필요
-                    `
+                    `,
+                    `<code>
+                    [
+                        {
+                            attributeKey: 'aVertexPosition',
+                            size: 3,
+                            normalize: false
+                        },
+                        {
+                            attributeKey: 'aTexcoord',
+                            size: 2,
+                            normalize: false
+                        }
+                    ]
+                    </code>`
                 ],
+                drawMode : [
+                    {type:'gl 상수'},
+                    `ex) gl.STATIC_DRAW`
+                ]
             },
             example : `
-                // TODO:
+                var interleaveData, indexData;
+                var tInterleaveBuffer, tIndexBuffer
+                interleaveData = new Float32Array([
+                    0.0, 0.5, 0.0, 0.0, 0.5,
+                    -0.5, -0.5, 0.0, 0.5, 0.5,
+                    0.5, -0.5, 0.0, 0.5, 0.0
+                ]);
+                indexData = new Uint16Array([0, 1, 2])
+                // 인터리브 버퍼생성
+                tInterleaveBuffer = RedBuffer(
+                    this, // RedGL Instance
+                    'tInterleaveBuffer', // key
+                    interleaveData, // data
+                    RedBuffer.ARRAY_BUFFER, // bufferType
+                    [
+                        {
+                            attributeKey: 'aVertexPosition',
+                            size: 3,
+                            normalize: false
+                        },
+                        {
+                            attributeKey: 'aTexcoord',
+                            size: 2,
+                            normalize: false
+                        }
+                    ]
+                )
+                // 인덱스 버퍼생성
+                tIndexBuffer = RedBuffer(
+                    this, // RedGL Instance
+                    'tIndexBuffer', // key
+                    indexData,  // data
+                    RedBuffer.ELEMENT_ARRAY_BUFFER // bufferType
+                )
+                console.log('인터리브버퍼', tInterleaveBuffer)
+                console.log('인덱스버퍼', tIndexBuffer)
             `,
             return : 'RedBuffer Instance'
         }
     :DOC*/
-    RedBuffer = function (redGL, key, data, bufferType, interleaveDefineInfo) {
+    RedBuffer = function (redGL, key, data, bufferType, interleaveDefineInfo, drawMode) {
         // console.log(redGL, key, data, bufferType, interleaveDefineInfo)
-        if (!(this instanceof RedBuffer)) return new RedBuffer(redGL, key, data, bufferType, interleaveDefineInfo)
+        if (!(this instanceof RedBuffer)) return new RedBuffer(redGL, key, data, bufferType, interleaveDefineInfo, drawMode)
         if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedBuffer : RedGL Instance만 허용됩니다.')
         if (typeof bufferType != 'string') RedGLUtil.throwFunc('RedBuffer : bufferType - 문자열만 허용됩니다.')
         if (typeof key != 'string') RedGLUtil.throwFunc('RedBuffer : key - 문자열만 허용됩니다.')
         if (bufferType == RedBuffer.ARRAY_BUFFER && !interleaveDefineInfo) RedGLUtil.throwFunc('RedBuffer : interleaveDefineInfo를 반드시 정의해야합니다.')
         var tGL = redGL.gl;
 
-        // TODO: 유일키 방어
+        //유일키 방어
         if (!redGL['_datas'][bufferType]) redGL['_datas'][bufferType] = {};
         if (redGL['_datas'][bufferType][key]) return redGL['_datas'][bufferType][key]
         else redGL['_datas'][bufferType][key] = this
@@ -130,7 +183,7 @@ var RedBuffer;
                title :`key`,
                description : `고유키`,
                example : `
-                   // TODO:
+                  
                `,
                return : 'String'
            }
@@ -142,7 +195,7 @@ var RedBuffer;
                title :`data`,
                description : `data`,
                example : `
-                   // TODO:
+                  
                `,
                return : 'TypedArray'
            }
@@ -154,7 +207,7 @@ var RedBuffer;
                title :`bufferType`,
                description : `bufferType 상수`,
                example : `
-                   // TODO:
+                  
                `,
                return : 'RedBuffer.ARRAY_BUFFER or RedBuffer.ELEMENT_ARRAY_BUFFER'
            }
@@ -169,7 +222,7 @@ var RedBuffer;
                ex) gl.FLOAT, gl.BYTE
                `,
                example : `
-                   // TODO:
+                  
                `,
                return : 'gl.XXX 상수'
            }
@@ -181,7 +234,7 @@ var RedBuffer;
                title :`glBufferType`,
                description : `bufferType에 대응하는 gl.ARRAY_BUFFER or gl.ELEMENT_ARRAY_BUFFER 상수`,
                example : `
-                   // TODO:
+                  
                `,
                return : 'gl.ARRAY_BUFFER or glELEMENT_ARRAY_BUFFER 상수'
            }
@@ -193,12 +246,12 @@ var RedBuffer;
                title :`drawMode`,
                description : `gl.STATIC_DRAW 상수`,
                example : `
-                   // TODO:
+                  
                `,
                return : 'gl.STATIC_DRAW or gl.DYNAMIC_DRAW'
            }
        :DOC*/
-        this['drawMode'] = tGL.STATIC_DRAW;
+        this['drawMode'] = drawMode ? drawMode : tGL.STATIC_DRAW;
         parseInterleaveDefineInfo(this, this['bufferType'], this['data'], interleaveDefineInfo);
         /**DOC:
            {
@@ -206,7 +259,7 @@ var RedBuffer;
                title :`webglBuffer`,
                description : `WebGLBuffer`,
                example : `
-                   // TODO:
+                  
                `,
                return : 'WebGLBuffer'
            }
@@ -215,7 +268,7 @@ var RedBuffer;
         this['_UUID'] = RedGL['makeUUID']();
         /**DOC:
            {
-               code : 'PROPERTY',
+               code : 'METHOD',
                title :`upload`,
                description : `
                    버퍼 데이터 갱신
@@ -228,7 +281,12 @@ var RedBuffer;
                    ]
                },
                example : `
-                   // TODO:
+                   // ... interleaveData 정의 후 tInterleaveBuffer 버퍼를 가정하면 
+                   // 아래와 같이 데이터를 변경하고 버퍼데이터를 업데이트 시킬수 있다.
+                   interleaveData[0] = Math.sin(time / 1000) * 1
+                   interleaveData[2] = Math.cos(time / 1000) * 2
+                   // 버퍼정보 업로드
+                   tInterleaveBuffer.upload(interleaveData)
                `,
                return : 'RedBuffer Instance'
            }
@@ -239,7 +297,6 @@ var RedBuffer;
                 tGL.bindBuffer(this['glBufferType'], this['webglBuffer']);
                 tGL.bufferData(this['glBufferType'], this['data'], this['drawMode']);
             } else RedGLUtil.throwFunc('RedBuffer : upload - data형식이 기존 형식과 다름', data)
-
         }
         this.parseInterleaveDefineInfo = function () {
             parseInterleaveDefineInfo(this, this['bufferType'], this['data'], this['interleaveDefineInfo']);
@@ -255,9 +312,6 @@ var RedBuffer;
             description : `
                 ARRAY_BUFFER 버퍼상수
             `,
-            example : `
-                // TODO:
-            `,
             return : 'RedBuffer Instance'
         }
     :DOC*/
@@ -268,9 +322,6 @@ var RedBuffer;
             title :`RedBuffer.ELEMENT_ARRAY_BUFFER`,
             description : `
                 ELEMENT_ARRAY_BUFFER 버퍼상수
-            `,
-            example : `
-                // TODO:
             `,
             return : 'RedBuffer Instance'
         }

@@ -64,12 +64,12 @@ var RedAxis;
             extendDoc : 'RedBaseContainer'
         }
     :DOC*/
-    RedGLUtil['extendsProto'](RedAxis, RedBaseContainer);
+    RedGLUtil['copyProto'](RedAxis, RedBaseContainer);
     /**DOC:
         {
             extendDoc : 'RedBaseObject3D'
         }
     :DOC*/
-    RedGLUtil['extendsProto'](RedAxis, RedBaseObject3D);
+    RedGLUtil['copyProto'](RedAxis, RedBaseObject3D);
     Object.freeze(RedAxis);
 })();
