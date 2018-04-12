@@ -24,10 +24,10 @@ var RedPointUnit;
     RedPointUnit = function (redGL, interleaveData, interleaveDefineInfo, material) {
         if (!(this instanceof RedPointUnit)) return new RedPointUnit(redGL, interleaveData, interleaveDefineInfo, material);
         var tGL;
+        var interleaveBuffer;
         tGL = redGL.gl
         RedBaseObject3D['build'].call(this, tGL)
         this['_UUID'] = RedGL['makeUUID']();
-        var interleaveBuffer
         interleaveBuffer = RedBuffer(
             redGL,
             'RedPointUnit_' + this['_UUID'],
@@ -40,7 +40,7 @@ var RedPointUnit;
         this['drawMode'] = tGL.POINTS
         // Object.seal(this)
     }
-    RedGLUtil['extendsProto'](RedPointUnit, RedBaseContainer);
-    RedGLUtil['extendsProto'](RedPointUnit, RedBaseObject3D);
+    RedGLUtil['copyProto'](RedPointUnit, RedBaseContainer);
+    RedGLUtil['copyProto'](RedPointUnit, RedBaseObject3D);
     Object.freeze(RedPointUnit);
 })();

@@ -98,12 +98,12 @@ var RedGrid;
             extendDoc : 'RedBaseContainer'
         }
     :DOC*/
-    RedGLUtil['extendsProto'](RedGrid, RedBaseContainer);
+    RedGLUtil['copyProto'](RedGrid, RedBaseContainer);
     /**DOC:
         {
             extendDoc : 'RedBaseObject3D'
         }
     :DOC*/
-    RedGLUtil['extendsProto'](RedGrid, RedBaseObject3D);
+    RedGLUtil['copyProto'](RedGrid, RedBaseObject3D);
     Object.freeze(RedGrid);
 })();

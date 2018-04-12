@@ -8,6 +8,9 @@ var RedRenderer;
         description : `
             RedRenderer Instance 생성자.
         `,
+        example : `
+        RedRenderer();
+        `,
         return : 'RedRenderer Instance'
     }
 	:DOC*/
@@ -35,9 +38,12 @@ var RedRenderer;
                 렌더 시작
             `,
             params : {
-                gl : [
-                    {type : "webgl context"},
-                    'webgl context'
+                redGL : [
+                    {type : "RedGL"}
+                ],
+                callback : [
+                    {type : "Function"},
+                    '렌더시마다 실행될 콜백'
                 ]
             },
             return : 'void'
@@ -75,22 +81,6 @@ var RedRenderer;
             cancelAnimationFrame(this['_tickKey'])
         }
     };
-    /**DOC:
-    {
-        code:`METHOD`,
-        title :`worldRender`,
-        description : `
-            등록된 RedView을 기반으로 렌더링을 실행함
-        `,
-        params : {
-            gl : [
-                {type : "webgl context"},
-                'webgl context'
-            ]
-        },
-        return : 'void'
-    }
-    :DOC*/
     // 캐시관련
     var prevProgram_UUID;
     var tCamera
@@ -442,13 +432,13 @@ var RedRenderer;
                 // viewport 설정
                 gl.viewport(tViewRect[0], worldRect[3] - tViewRect[3] - tViewRect[1], tViewRect[2], tViewRect[3]);
                 gl.scissor(tViewRect[0], worldRect[3] - tViewRect[3] - tViewRect[1], tViewRect[2], tViewRect[3]);
-              
+
                 if (tScene['useBackgroundColor']) {
                     gl.clearColor(tScene['r'], tScene['g'], tScene['b'], 1);
                     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
                 }
                 else {
-                    gl.clearColor(0,0,0, 0);
+                    gl.clearColor(0, 0, 0, 0);
                     gl.clear(gl.DEPTH_BUFFER_BIT);
                 }
                 perspectiveMTX = tCamera['perspectiveMTX']
@@ -497,7 +487,7 @@ var RedRenderer;
                 // asix가 있으면 그림
                 if (tScene['axis']) self.sceneRender(redGL, gl, tCamera['orthographic'], tScene['axis']['children'], time, self['renderInfo'][tView['key']]);
             })
-            if(this['renderDebuger']['visible']) this['renderDebuger'].update(redGL, self['renderInfo'])
+            if (this['renderDebuger']['visible']) this['renderDebuger'].update(redGL, self['renderInfo'])
         }
     })();
 

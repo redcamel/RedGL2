@@ -67,7 +67,7 @@ var RedBitmapCubeTexture;
                     try {
                         gl.generateMipmap(gl.TEXTURE_CUBE_MAP)
                     } catch (error) {
-                        console.log('밉맵을 생성할수 없음',imgList)                    
+                        console.log('밉맵을 생성할수 없음', imgList)
                     }
                     gl.bindTexture(gl.TEXTURE_CUBE_MAP, null);
                 } else clearEvents(this)
@@ -77,17 +77,17 @@ var RedBitmapCubeTexture;
             loaded = 0
             while (i--) {
                 var img;
-                setEmptyTexture(gl, texture)
+                setEmptyTexture(gl, texture);
                 img = new Image();
-                img.crossOrigin = 'anonymous'
+                img.crossOrigin = 'anonymous';
                 img.src = srcList[i];
                 img.addEventListener('error', onError);
                 img.addEventListener('load', onLoad);
-                imgList[i] = img
+                imgList[i] = img;
             }
         }
     })()
-    //TODO: 기본옵션 정의
+
     /**DOC:
         {
             constructorYn : true,
@@ -99,15 +99,32 @@ var RedBitmapCubeTexture;
                 redGL : [
                     {type:'RedGL'}
                 ],
-                src : [
-                    {type:'string'},
-                    '경로'
+                srcList : [
+                    {type:'Array'}
                 ],
                 option : [
                     {type:'Object'},
-                    '텍스쳐 정의옵션'
+                    '텍스쳐 정의옵션',
+                    `
+                    <code>
+                    {
+                        min: gl.LINEAR_MIPMAP_NEAREST,
+                        max: gl.LINEAR,
+                        wrap_s: gl.REPEAT,
+                        wrap_t: gl.REPEAT
+                    }
+                    </code>
+                    `
                 ]
             },
+            example : `
+            RedBitmapCubeTexture( RedGL Instance,  srcList, {
+                min: gl.LINEAR_MIPMAP_NEAREST,
+                max: gl.LINEAR,
+                wrap_s: gl.REPEAT,
+                wrap_t: gl.REPEAT
+            })
+            `,
             return : 'RedBitmapCubeTexture Instance'
         }
     :DOC*/
@@ -120,14 +137,12 @@ var RedBitmapCubeTexture;
         this['atlascoord'] = RedAtlasUV(redGL)
         this['_UUID'] = RedGL['makeUUID']();
 
-        if (redGL['_datas']['emptyTexture']) {
-            //TODO: 이거 렌더러쪽으로 옮겨야함
-            gl.activeTexture(gl.TEXTURE0 + 1)
-            gl.bindTexture(gl.TEXTURE_CUBE_MAP, redGL['_datas']['emptyTexture']['3d']['webglTexture'])
-        }
+        // if (redGL['_datas']['emptyTexture']) {
+        //     gl.activeTexture(gl.TEXTURE0 + 1)
+        //     gl.bindTexture(gl.TEXTURE_CUBE_MAP, redGL['_datas']['emptyTexture']['3d']['webglTexture'])
+        // }
 
         loadTexture(gl, this['webglTexture'], srcList, option);
-        Object.seal(this);
         console.log(this)
     }
     RedBitmapCubeTexture.prototype = {};

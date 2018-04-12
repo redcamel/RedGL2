@@ -38,7 +38,7 @@ var DocJS = {
 
                 tLoader.onAllLoaded(function (rsList) {
                     console.log('전체로딩성공!', rsList)
-                    var groupBox, propertybox, methodBox, eventBox, descripttionBox, listBox, constBox, staticMethodBox,extendsMethodBox
+                    var groupBox, propertybox, methodBox, eventBox, descripttionBox, listBox, constBox, staticMethodBox, extendsMethodBox
                     var makeBox;
                     var makeDocObject;
                     var descriptionParser, methodParser, paramsParser, propertyParser, exampleParser;
@@ -218,24 +218,24 @@ var DocJS = {
                     makeDocObject = function (data) {
                         var comments = JSON.parse(data)
                         console.log(comments)
-                        var extendList = comments.filter(function(v){
-                            if(v.hasOwnProperty('extendDoc')) return true
+                        var extendList = comments.filter(function (v) {
+                            if (v.hasOwnProperty('extendDoc')) return true
                         })
-                        extendList.forEach(function(v){
+                        extendList.forEach(function (v) {
                             Recard.Dom('div').S(
                                 'html', v['extendDoc'],
-                                'display','inline-block',
+                                'display', 'inline-block',
                                 '@className', 'defineBox',
-                                'cursor','pointer',
-                                'on',['down',function(){
+                                'cursor', 'pointer',
+                                'on', ['down', function () {
                                     console.log('test')
-                                    parseDoc(document.querySelector('option[key="'+v['extendDoc']+'"]').value)
+                                    parseDoc(document.querySelector('option[key="' + v['extendDoc'] + '"]').value)
                                 }],
-                                '<',extendsMethodBox
+                                '<', extendsMethodBox
                             )
                         })
-                        comments = comments.filter(function(v){
-                            if(!v.hasOwnProperty('extendDoc')) return true
+                        comments = comments.filter(function (v) {
+                            if (!v.hasOwnProperty('extendDoc')) return true
                         })
                         comments.sort(function (a, b) {
                             a = a['title'].toLowerCase().replace(/[^a-z]/gi, '') // 정렬할때, 일단은 알파벳만 가지고 비교하는걸로~
@@ -294,7 +294,7 @@ var DocJS = {
                     groupBox = makeBox(rsList[0]['requestURL'].replace('.json', ''), rootBox, 20)
                     descripttionBox = makeBox(null, groupBox)
                     extendsMethodBox = makeBox('Extend List', groupBox)
-                    listBox = makeBox('API', groupBox)                    
+                    listBox = makeBox('API', groupBox)
                     staticMethodBox = makeBox('Static Methods', groupBox)
                     constBox = makeBox('Const', groupBox)
                     propertybox = makeBox('properties', groupBox)
@@ -347,7 +347,7 @@ var DocJS = {
                 selectBox.S(
                     '>', Recard.Dom('option').S(
                         '@value', v,
-                        '@key',title.replace('.json', ''),
+                        '@key', title.replace('.json', ''),
                         'html', title.replace('.json', '')
                     )
                 )
@@ -367,9 +367,8 @@ var DocJS = {
                 '<', 'body'
             )
             Recard.Dom('div').S(
-
-                'html', '<hr style="border:0px;border-top:1px solid #eee">' +
-                '<div style="font-size:11px;color:#222;margin-left:7px">By Redcamel' +
+                'html', '<hr style="border:0px;border-top:1px solid #eee;margin-left:251px">' +
+                '<div style="font-size:11px;color:#222;margin-left:251px;text-align:right;padding-right:10px">By Redcamel' +
                 '</div>',
                 '<', 'body'
             )
@@ -381,7 +380,7 @@ var DocJS = {
             else t0 = t0[0]
             tValue = selectBox.__dom__.options[0].value
             Array.prototype.slice.call(selectBox.__dom__.options).forEach(function (v, index) {
-                console.log(v.value.split('/')[1], ',,,',t0)
+                console.log(v.value.split('/')[1], ',,,', t0)
                 if (v.value.split('/')[1] == t0) tValue = v.value
             })
             console.log(tValue)

@@ -2,7 +2,47 @@
 var RedAtlas;
 (function () {
     var Atlas;
-    var MAX_TEXTURE_SIZE
+    var MAX_TEXTURE_SIZE;
+    /**DOC:
+        {
+            constructorYn : true,
+            title :`Atlas`,
+            description : `
+                Atlas Instance 생성
+            `,
+            params : {
+                redGL : [
+                    {type:'RedGL'}
+                ],
+                srcList : [
+                    {type:'Array'}
+                ],
+                callBack : [
+                    {type:'Function'}
+                ]
+            },
+            example : `
+                var imgList;
+                imgList = [
+                    '../asset/draft1.png',
+                    '../asset/draft2.png',
+                    '../asset/draft3.png',
+                    '../asset/draft4.png',
+                    '../asset/draft5.png'
+                ]
+                RedAtlas(
+                    RedGL Instance, 
+                    imgList,
+                    function (resultInfo) {
+                        console.log(this)
+                        console.log(this.getAtlasMap())
+                        console.log(this.getAtlasInfoList())
+                    }
+                )
+            `,
+            return : 'Atlas Instance'
+        }
+    :DOC*/
     RedAtlas = function (redGL, srcList, callBack) {
         if (!(this instanceof RedAtlas)) return new RedAtlas(redGL, srcList, callBack);
         if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedBitmapMaterial : RedGL Instance만 허용됩니다.')
@@ -11,60 +51,62 @@ var RedAtlas;
             atlasInfoList: [new Atlas()],
             atlasMap: {}
         }
+
         MAX_TEXTURE_SIZE = redGL['_detect']['MAX_TEXTURE_SIZE']
         if (MAX_TEXTURE_SIZE > 2048) MAX_TEXTURE_SIZE = 2048
-        this.loadList(redGL, srcList, callBack)
 
-
+        this['redGL'] = redGL
+        this.loadList(srcList, callBack)
     }
     RedAtlas.prototype = {
-        atlasPack: function (redGL, img) {
-            var tAtlasInfoList, tAtlasMap;
-            tAtlasInfoList = redGL['_datas']['RedAtlas']['atlasInfoList']
-            tAtlasMap = redGL['_datas']['RedAtlas']['atlasMap']
-            if (tAtlasMap[img.id]) return
-            else {
-                // console.log(tAtlasInfoList)
-                // console.log(tAtlasMap)
-
-                var i, len
-                var tAtlas
-                var node
-                tAtlas = tAtlasInfoList[0]
-                node = tAtlas.pack(img);
-                if (node === false) {
-                    // 아틀라스를 전체를 돌면서 찾아야하고..
-                    i = 0, len = tAtlasInfoList.length
-                    for (i; i < len; i++) {
-                        // 기존있는놈중에 들어가면 종료시키고
-                        tAtlas = tAtlasInfoList[i]
-                        node = tAtlas.pack(img);
-
-                        if (node) break
-                    }
-                    // 여기까지 흘러들어오면 아틀라스캔버스 자체를 추가한다.
-                    if (node === false) {
-                        tAtlasInfoList.push(tAtlas = new Atlas())
-                        node = tAtlas.pack(img)
-                    }
-                    // console.log(node)
-                }
-
-                tAtlasMap[img.id] = {
-                    atlas: tAtlas,
-                    rect: tAtlas.uv()[img.id]
-
-                }
-
-
-
-
-
-                if (!tAtlas['texture']) tAtlas['texture'] = RedBitmapTexture(redGL, tAtlas['canvas'])
-                console.log(tAtlasMap[img.id], tAtlasMap)
+        /**DOC:
+            {
+                code : 'METHOD',
+                title :`getAtlasMap`,
+                description : `
+                    아틀라스정보 반환
+                `,
+                return : 'Object'
             }
+        :DOC*/
+        getAtlasMap: function () {
+            return this['redGL']['_datas']['RedAtlas']['atlasMap'];
         },
-        loadList: function (redGL, srcList, callBack) {
+        /**DOC:
+            {
+                code : 'METHOD',
+                title :`getAtlasInfoList`,
+                description : `
+                    아틀라스정보 리스트
+                `,
+                return : 'Array'
+            }
+        :DOC*/
+        getAtlasInfoList: function () {
+            return this['redGL']['_datas']['RedAtlas']['atlasInfoList'];
+        },
+        /**DOC:
+            {
+                code : 'METHOD',
+                title :`loadList`,
+                description : `
+                    이미지 로더
+                `,
+                params : {
+                    redGL : [
+                        {type:'RedGL'}
+                    ],
+                    srcList : [
+                        {type:'Array'}
+                    ],
+                    callBack : [
+                        {type:'Function'}
+                    ]
+                },
+                return : 'void'
+            }
+        :DOC*/
+        loadList: function (srcList, callBack) {
             var i, len;
             var self;
             var loaded
@@ -76,19 +118,57 @@ var RedAtlas;
                 var img = new Image();
                 img.id = img.src = srcList[i]
                 img.onload = function () {
-                    self.atlasPack(redGL, this)
+                    self.atlasPack(self['redGL'], this)
                     loaded++
-                    if (loaded == srcList.length && callBack) {
+                    if (loaded == srcList.length) {
 
                         var t0;
-                        t0 = redGL['_datas']['RedAtlas']['atlasInfoList']
+                        t0 = self['redGL']['_datas']['RedAtlas']['atlasInfoList']
                         t0.forEach(function (v) {
-                            v['texture'] = RedBitmapTexture(redGL, v['canvas'])
+                            v['texture'] = RedBitmapTexture(self['redGL'], v['canvas'])
                         })
 
-                        callBack(redGL['_datas']['RedAtlas'])
+                        if (callBack) callBack.call(self, self['redGL']['_datas']['RedAtlas'])
                     }
                 };
+            }
+        },
+        atlasPack: function (redGL, img) {
+            var tAtlasInfoList, tAtlasMap;
+            tAtlasInfoList = redGL['_datas']['RedAtlas']['atlasInfoList']
+            tAtlasMap = redGL['_datas']['RedAtlas']['atlasMap']
+            if (tAtlasMap[img.id]) return
+            else {
+                // console.log(tAtlasInfoList)
+                // console.log(tAtlasMap)
+                var i, len;
+                var tAtlas;
+                var node;
+                tAtlas = tAtlasInfoList[0];
+                node = tAtlas.pack(img);
+                if (node === false) {
+                    // 아틀라스를 전체를 돌면서 찾아야하고..
+                    i = 0, len = tAtlasInfoList.length
+                    for (i; i < len; i++) {
+                        // 기존있는놈중에 들어가면 종료시키고
+                        tAtlas = tAtlasInfoList[i]
+                        node = tAtlas.pack(img);
+                        if (node) break
+                    }
+                    // 여기까지 흘러들어오면 아틀라스캔버스 자체를 추가한다.
+                    if (node === false) {
+                        tAtlasInfoList.push(tAtlas = new Atlas())
+                        node = tAtlas.pack(img)
+                    }
+                }
+                // 아틀라스 맵에 정보를 기입한다.
+                tAtlasMap[img.id] = {
+                    atlas: tAtlas,
+                    rect: tAtlas.uv()[img.id]
+
+                }
+                if (!tAtlas['texture']) tAtlas['texture'] = RedBitmapTexture(redGL, tAtlas['canvas'])
+                // console.log(tAtlasMap[img.id], tAtlasMap)
             }
         }
     }

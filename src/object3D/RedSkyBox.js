@@ -48,6 +48,6 @@ var RedSkyBox;
             extendDoc : 'RedBaseObject3D'
         }
     :DOC*/
-    RedGLUtil['extendsProto'](RedSkyBox, RedBaseObject3D);
+    RedGLUtil['copyProto'](RedSkyBox, RedBaseObject3D);
     Object.freeze(RedSkyBox);
 })();

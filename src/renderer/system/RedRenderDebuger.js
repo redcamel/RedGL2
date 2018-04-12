@@ -1,7 +1,17 @@
 "use strict";
 var RedRenderDebuger;
 (function () {
-
+    /**DOC:
+        {
+            constructorYn : true,
+            title :`RedRenderDebuger`,
+            description : `
+                RedRenderDebuger Instance 생성
+                렌더러 생성시 시스템적으로 자동생성됨.
+            `,
+            return : 'RedRenderDebuger Instance'
+        }
+    :DOC*/
     RedRenderDebuger = function () {
         if (!(this instanceof RedRenderDebuger)) return new RedRenderDebuger();
         if (!this['renderResult']) {
@@ -32,6 +42,15 @@ var RedRenderDebuger;
 
         }
     }
+    /**DOC:
+        {
+            title :`visible`,
+            description : `
+                RedRenderDebuger 정보 visible 여부
+            `,
+            return : 'Boolean'
+        }
+    :DOC*/
     Object.defineProperty(RedRenderDebuger.prototype, 'visible', {
         get: function () {
             return this['_visible']

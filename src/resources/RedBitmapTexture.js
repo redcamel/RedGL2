@@ -68,25 +68,20 @@ var RedBitmapTexture;
                 clearEvents(this);
             }
             onLoad = function () {
-                clearEvents(this)
-                makeTexture(gl, texture, this, option)
+                clearEvents(this);
+                makeTexture(gl, texture, this, option);
             }
 
-
             setEmptyTexture(gl, texture)
-            if (src instanceof HTMLCanvasElement) {
-                makeTexture(gl, texture, src, option)
-            } else {
+            if (src instanceof HTMLCanvasElement) makeTexture(gl, texture, src, option)
+            else {
                 var img;
                 img = new Image();
                 img.crossOrigin = 'anonymous'
                 img.src = src;
                 img.addEventListener('error', onError);
                 img.addEventListener('load', onLoad);
-
             }
-
-
         }
     })()
     /**DOC:
@@ -101,14 +96,32 @@ var RedBitmapTexture;
                     {type:'RedGL'}
                 ],
                 src : [
-                    {type:'string'},
-                    '경로'
+                    {type:'string'}
                 ],
                 option : [
                     {type:'Object'},
-                    '텍스쳐 정의옵션'
+                    '텍스쳐 정의옵션',
+                    `
+                    <code>
+                    {
+                        min: this.gl.LINEAR_MIPMAP_NEAREST,
+                        max: this.gl.LINEAR,
+                        wrap_s: this.gl.REPEAT,
+                        wrap_t: this.gl.REPEAT,
+                        anisotropic: 16 // 지원가능한경우에만 작동
+                    }
+                    </code>
+                    `
                 ]
             },
+            example : `
+            RedBitmapTexture( RedGL Instance,  src, {
+                min: gl.LINEAR_MIPMAP_NEAREST,
+                max: gl.LINEAR,
+                wrap_s: gl.REPEAT,
+                wrap_t: gl.REPEAT
+            })
+            `,
             return : 'RedBitmapTexture Instance'
         }
     :DOC*/
@@ -121,14 +134,13 @@ var RedBitmapTexture;
         this['atlascoord'] = RedAtlasUV(redGL)
         this['_UUID'] = RedGL['makeUUID']();
 
-        if (redGL['_datas']['emptyTexture']) {
-            //TODO: 이거 렌더러쪽으로 옮겨야함
-            gl.activeTexture(gl.TEXTURE0)
-            gl.bindTexture(gl.TEXTURE_2D, redGL['_datas']['emptyTexture']['2d']['webglTexture'])
-        }
+        // if (redGL['_datas']['emptyTexture']) {
+        //     gl.activeTexture(gl.TEXTURE0)
+        //     gl.bindTexture(gl.TEXTURE_2D, redGL['_datas']['emptyTexture']['2d']['webglTexture'])
+        // }
 
         if (src) loadTexture(gl, this['webglTexture'], src, option);
-        Object.seal(this);
+        // Object.seal(this);
         console.log(this)
     }
     RedBitmapTexture.prototype = {};

@@ -7,7 +7,7 @@
   },
   {
     "constructorYn": true,
-    "title": "RedGLUtil.extendsProto",
+    "title": "RedGLUtil.copyProto",
     "description": "\n    프로토타입 내용을 복사\n",
     "params": {
       "target": [
@@ -23,7 +23,7 @@
         "가져올 대상"
       ]
     },
-    "example": "\n    var a = function(){};\n    var b = function(){};\n    a.prototype.test = function(){\n        console.log('test')\n    };\n    RedGLUtil.extendsProto(b,a);\n    (new b()).test(); // test\n",
+    "example": "\n    var a = function(){};\n    var b = function(){};\n    a.prototype.test = function(){\n        console.log('test')\n    };\n    RedGLUtil.copyProto(b,a);\n    (new b()).test(); // test\n",
     "return": "void"
   },
   {

@@ -7,7 +7,7 @@ var RedBaseContainer;
             title :`RedBaseContainer`,
             description : `
                 DisplayContainer 기저층
-                프로토타입 확장을 통해서만 사용가능(RedGLUtil.extendsProto 사용)
+                프로토타입 확장을 통해서만 사용가능(RedGLUtil.copyProto 사용)
             `,
             return : 'void'
         }

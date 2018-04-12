@@ -17,7 +17,7 @@ var RedAmbientLight;
         console.log(this)
     }
     RedAmbientLight['type'] = 'RedAmbientLight'
-    RedGLUtil['extendsProto'](RedAmbientLight, RedBaseLight);
+    RedGLUtil['copyProto'](RedAmbientLight, RedBaseLight);
     Object.freeze(RedAmbientLight)
 
 })();
