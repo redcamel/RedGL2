@@ -39,8 +39,8 @@ var RedStandardMaterial;
         }
     :DOC*/
     RedStandardMaterial = function (redGL, diffuseTexture, normalTexture, specularTexture, displacementTexture) {
-        if (!(this instanceof RedStandardMaterial)) return new RedStandardMaterial(redGL, diffuseTexture, normalTexture, specularTexture,displacementTexture);
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedStandardMaterial : RedGL Instance만 허용됩니다.')
+        if (!(this instanceof RedStandardMaterial)) return new RedStandardMaterial(redGL, diffuseTexture, normalTexture, specularTexture, displacementTexture);
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedStandardMaterial : RedGL Instance만 허용됩니다.', redGL)
         if (!(diffuseTexture instanceof RedBitmapTexture)) RedGLUtil.throwFunc('RedStandardMaterial : diffuseTexture - RedBitmapTexture Instance만 허용됩니다.')
         if (normalTexture && !(normalTexture instanceof RedBitmapTexture)) RedGLUtil.throwFunc('RedStandardMaterial : normalTexture - RedBitmapTexture Instance만 허용됩니다.')
         if (specularTexture && !(specularTexture instanceof RedBitmapTexture)) RedGLUtil.throwFunc('RedStandardMaterial : specularTexture - RedBitmapTexture Instance만 허용됩니다.')
@@ -102,14 +102,15 @@ var RedStandardMaterial;
         this['displacementPower'] = 0
         /////////////////////////////////////////
         // 일반 프로퍼티
-        this['program'] = makeProgram(redGL);
+        this['program'] = makeProgram(this, redGL);
         this['_UUID'] = RedGL['makeUUID']();
         this.checkProperty()
         console.log(this)
         // Object.seal(this)
     }
-    makeProgram = function (redGL) {
+    makeProgram = (function () {
         var vSource, fSource;
+        var PROGRAM_NAME;
         vSource = function () {
             /*
             uniform sampler2D uDisplacementTexture;
@@ -121,7 +122,7 @@ var RedStandardMaterial;
                 vVertexNormal = vec3(uNMatrix * vec4(aVertexNormal,1.0)); 
                 vVertexPositionEye4 = uMVMatrix * vec4(aVertexPosition, 1.0);         
                 vVertexPositionEye4.xyz += normalize(vVertexNormal) * texture2D(uDisplacementTexture, vTexcoord).x * uDisplacementPower ;
-
+ 
                 gl_PointSize = uPointSize;
                 gl_Position = uPMatrix * uCameraMatrix * vVertexPositionEye4;
             }
@@ -133,7 +134,7 @@ var RedStandardMaterial;
             uniform sampler2D uDiffuseTexture;
             uniform sampler2D uNormalTexture;
             uniform sampler2D uSpecularTexture;
-
+ 
             uniform float uShininess;
             uniform float uSpecularPower;
             
@@ -143,19 +144,19 @@ var RedStandardMaterial;
                 vec4 la = uAmbientLightColor * uAmbientLightColor.a;
                 vec4 ld = vec4(0.0, 0.0, 0.0, 1.0);
                 vec4 ls = vec4(0.0, 0.0, 0.0, 1.0);
-
+ 
                 vec4 texelColor = texture2D(uDiffuseTexture, vTexcoord);
                 texelColor.rgb *= texelColor.a;
                 if(texelColor.a ==0.0) discard;
-
+ 
                 vec3 N = normalize(vVertexNormal);
                 N = normalize(2.0 * (N + texture2D(uNormalTexture, vTexcoord).rgb  - 0.5));
-
+ 
                 vec4 specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);
                 float specularTextureValue = 1.0;
                 specularTextureValue = texture2D(uSpecularTexture, vTexcoord).r;
                 float specular;             
-
+ 
                 vec3 L;
                 vec3 R;
                 highp float lambertTerm;
@@ -199,14 +200,12 @@ var RedStandardMaterial;
         }
         vSource = RedGLUtil.getStrFromComment(vSource.toString());
         fSource = RedGLUtil.getStrFromComment(fSource.toString());
-        // console.log(vSource, fSource)
-        return RedProgram(
-            redGL,
-            'standardProgram',
-            RedShader(redGL, 'standardProgramVs', RedShader.VERTEX, vSource),
-            RedShader(redGL, 'standardProgramFS', RedShader.FRAGMENT, fSource)
-        )
-    }
+        PROGRAM_NAME = 'standardProgram';
+        return function (target, redGL) {
+            return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource)
+
+        }
+    })();
     RedStandardMaterial.prototype = RedBaseMaterial.prototype
     Object.freeze(RedStandardMaterial)
 })();

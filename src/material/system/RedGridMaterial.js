@@ -25,14 +25,15 @@ var RedGridMaterial;
         if (!(this instanceof RedGridMaterial)) return new RedGridMaterial(redGL);
         // 유니폼 프로퍼티
         // 일반 프로퍼티
-        this['program'] = makeProgram(redGL)
+        this['program'] = makeProgram(this, redGL)
         this['_UUID'] = RedGL['makeUUID']();
         this.checkProperty()
         Object.seal(this)
         console.log(this)
     }
-    makeProgram = function (redGL) {
+    makeProgram = (function () {
         var vSource, fSource;
+        var PROGRAM_NAME;
         vSource = function () {
             /*
             varying vec4 vColor;
@@ -54,14 +55,12 @@ var RedGridMaterial;
         }
         vSource = RedGLUtil.getStrFromComment(vSource.toString());
         fSource = RedGLUtil.getStrFromComment(fSource.toString());
-        return RedProgram(
-            redGL,
-            'gridMaterialProgram',
-            RedShader(redGL, 'gridMaterialVs', RedShader.VERTEX, vSource),
-            RedShader(redGL, 'gridMaterialFS', RedShader.FRAGMENT, fSource)
-        )
+        PROGRAM_NAME = 'gridMaterialProgram';
+        return function (target, redGL) {
+            return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource)
 
-    }
+        }
+    })();
 
     RedGridMaterial.prototype = RedBaseMaterial.prototype
     Object.freeze(RedGridMaterial)

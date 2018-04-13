@@ -34,7 +34,7 @@ var RedSkyBox;
     :DOC*/
     RedSkyBox = function (redGL, srcList) {
         if (!(this instanceof RedSkyBox)) return new RedSkyBox(redGL, srcList);
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedSkyBox : RedGL Instance만 허용됩니다.')
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedSkyBox : RedGL Instance만 허용됩니다.', redGL)
         var tGL;
         tGL = redGL.gl;
         RedBaseObject3D['build'].call(this, tGL)

@@ -7,7 +7,6 @@
   {
     "title": "key",
     "description": "고유키",
-    "example": "\n// TODO: \n",
     "return": "String"
   },
   {
@@ -40,6 +39,26 @@
       ]
     },
     "return": "RedProgram Instance"
+  },
+  {
+    "title": "RedProgram.hasKey",
+    "code": "STATIC",
+    "description": "키에 해당하는 쉐이더 존재 여부 반환",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ],
+      "key": [
+        {
+          "type": "String"
+        },
+        "고유키"
+      ]
+    },
+    "example": "\n    RedProgram.haskey(RedGL Instance, '찾고자하는키')\n",
+    "return": "Boolean"
   },
   {
     "title": "systemUniformLocation",

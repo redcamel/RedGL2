@@ -31,7 +31,7 @@ var RedGrid;
     :DOC*/
     RedGrid = function (redGL, size, divisions, color1, color2) {
         if (!(this instanceof RedGrid)) return new RedGrid(redGL, size, divisions, color1, color2);
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedGrid : RedGL Instance만 허용됩니다.')
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedGrid : RedGL Instance만 허용됩니다.', redGL)
 
         var tGL;
         tGL = redGL.gl;

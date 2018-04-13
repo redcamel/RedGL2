@@ -131,7 +131,7 @@ var RedBitmapCubeTexture;
     RedBitmapCubeTexture = function (redGL, srcList, option) {
         var gl;
         if (!(this instanceof RedBitmapCubeTexture)) return new RedBitmapCubeTexture(redGL, srcList, option);
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedBitmapCubeTexture : RedGL Instance만 허용됩니다.');
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedBitmapCubeTexture : RedGL Instance만 허용됩니다.', redGL);
         gl = redGL.gl;
         this['webglTexture'] = gl.createTexture();
         this['atlascoord'] = RedAtlasUV(redGL)

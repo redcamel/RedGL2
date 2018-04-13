@@ -29,7 +29,7 @@ var RedSkyBoxMaterial;
     :DOC*/
     RedSkyBoxMaterial = function (redGL, skyboxTexture) {
         if (!(this instanceof RedSkyBoxMaterial)) return new RedSkyBoxMaterial(redGL, skyboxTexture);
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedSkyBoxMaterial : RedGL Instance만 허용됩니다.')
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedSkyBoxMaterial : RedGL Instance만 허용됩니다.', redGL)
         if (skyboxTexture && !(skyboxTexture instanceof RedBitmapCubeTexture)) RedGLUtil.throwFunc('RedSkyBoxMaterial : skyboxTexture - RedBitmapCubeTexture Instance만 허용됩니다.')
         /////////////////////////////////////////
         // 유니폼 프로퍼티
@@ -42,14 +42,15 @@ var RedSkyBoxMaterial;
         this['skyboxTexture'] = skyboxTexture;
         /////////////////////////////////////////
         // 일반 프로퍼티
-        this['program'] = makeProgram(redGL);
+        this['program'] = makeProgram(this, redGL);
         this['_UUID'] = RedGL['makeUUID']();
         this.checkProperty()
         console.log(this)
         // Object.seal(this)
     }
-    makeProgram = function (redGL) {
+    makeProgram = (function () {
         var vSource, fSource;
+        var PROGRAM_NAME;
         vSource = function () {
             /*
             varying vec3 vReflectionCubeCoord;
@@ -74,13 +75,12 @@ var RedSkyBoxMaterial;
         vSource = RedGLUtil.getStrFromComment(vSource.toString());
         fSource = RedGLUtil.getStrFromComment(fSource.toString());
         // console.log(vSource, fSource)
-        return RedProgram(
-            redGL,
-            'skyboxProgram',
-            RedShader(redGL, 'skyboxProgramVs', RedShader.VERTEX, vSource),
-            RedShader(redGL, 'skyboxProgramFS', RedShader.FRAGMENT, fSource)
-        )
-    }
+        PROGRAM_NAME = 'skyboxProgram';
+        return function (target, redGL) {
+            return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource)
+
+        }
+    })();
     RedSkyBoxMaterial.prototype = RedBaseMaterial.prototype
     Object.freeze(RedSkyBoxMaterial)
 })();

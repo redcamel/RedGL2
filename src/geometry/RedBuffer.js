@@ -167,7 +167,7 @@ var RedBuffer;
     RedBuffer = function (redGL, key, data, bufferType, interleaveDefineInfo, drawMode) {
         // console.log(redGL, key, data, bufferType, interleaveDefineInfo)
         if (!(this instanceof RedBuffer)) return new RedBuffer(redGL, key, data, bufferType, interleaveDefineInfo, drawMode)
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedBuffer : RedGL Instance만 허용됩니다.')
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedBuffer : RedGL Instance만 허용됩니다.', redGL)
         if (typeof bufferType != 'string') RedGLUtil.throwFunc('RedBuffer : bufferType - 문자열만 허용됩니다.')
         if (typeof key != 'string') RedGLUtil.throwFunc('RedBuffer : key - 문자열만 허용됩니다.')
         if (bufferType == RedBuffer.ARRAY_BUFFER && !interleaveDefineInfo) RedGLUtil.throwFunc('RedBuffer : interleaveDefineInfo를 반드시 정의해야합니다.')

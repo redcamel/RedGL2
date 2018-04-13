@@ -26,7 +26,7 @@ var RedBitmapMaterial;
     :DOC*/
     RedBitmapMaterial = function (redGL, diffuseTexture) {
         if (!(this instanceof RedBitmapMaterial)) return new RedBitmapMaterial(redGL, diffuseTexture);
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedBitmapMaterial : RedGL Instance만 허용됩니다.')
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedBitmapMaterial : RedGL Instance만 허용됩니다.', redGL)
         if (!(diffuseTexture instanceof RedBitmapTexture)) RedGLUtil.throwFunc('RedBitmapMaterial : RedBitmapTexture Instance만 허용됩니다.')
         /////////////////////////////////////////
         // 유니폼 프로퍼티
@@ -39,14 +39,15 @@ var RedBitmapMaterial;
         this['diffuseTexture'] = diffuseTexture;
         /////////////////////////////////////////
         // 일반 프로퍼티
-        this['program'] = makeProgram(redGL);
+        this['program'] = makeProgram(this, redGL);
         this['_UUID'] = RedGL['makeUUID']();
         this.checkProperty()
         // Object.seal(this)
         console.log(this)
     }
-    makeProgram = function (redGL) {
+    makeProgram = (function () {
         var vSource, fSource;
+        var PROGRAM_NAME;
         vSource = function () {
             /*
             void main(void) {
@@ -70,14 +71,12 @@ var RedBitmapMaterial;
         }
         vSource = RedGLUtil.getStrFromComment(vSource.toString());
         fSource = RedGLUtil.getStrFromComment(fSource.toString());
-        // console.log(vSource, fSource)
-        return RedProgram(
-            redGL,
-            'bitmapProgram',
-            RedShader(redGL, 'bitmapVs', RedShader.VERTEX, vSource),
-            RedShader(redGL, 'bitmapFS', RedShader.FRAGMENT, fSource)
-        )
-    }
+        PROGRAM_NAME = 'bitmapProgram';
+        return function (target, redGL) {
+            return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource)
+
+        }
+    })();
     RedBitmapMaterial.prototype = RedBaseMaterial.prototype
     Object.freeze(RedBitmapMaterial)
 })();
