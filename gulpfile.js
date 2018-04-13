@@ -77,6 +77,7 @@ gulp.task('make-doc', function () {
 
 		"src/geometry/RedBuffer.js",
 		"src/geometry/RedGeometry.js",
+		'src/geometry/RedInterleaveInfo.js',
 
 		"src/light/RedAmbientLight.js",
 		"src/light/RedDirectionalLight.js",
@@ -150,6 +151,7 @@ gulp.task('combine-js', function () {
 
 		"src/geometry/RedBuffer.js",
 		"src/geometry/RedGeometry.js",
+		'src/geometry/RedInterleaveInfo.js',
 
 		"src/light/RedAmbientLight.js",
 		"src/light/RedDirectionalLight.js",

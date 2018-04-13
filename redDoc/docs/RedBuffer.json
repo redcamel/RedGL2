@@ -74,7 +74,7 @@
           "type": "Object"
         },
         "\n        버퍼의 인터리브 구성 정보\n        RedBuffer.ARRAY_BUFFER 일때만 필요\n        ",
-        "<code>\n        [\n            {\n                attributeKey: 'aVertexPosition',\n                size: 3,\n                normalize: false\n            },\n            {\n                attributeKey: 'aTexcoord',\n                size: 2,\n                normalize: false\n            }\n        ]\n        </code>"
+        "<code>\n        [\n          RedInterleaveInfo('aVertexPosition', 3),\n          RedInterleaveInfo('aTexcoord', 2)\n        ]\n        </code>"
       ],
       "drawMode": [
         {
@@ -83,7 +83,7 @@
         "ex) gl.STATIC_DRAW"
       ]
     },
-    "example": "\n    var interleaveData, indexData;\n    var tInterleaveBuffer, tIndexBuffer\n    interleaveData = new Float32Array([\n        0.0, 0.5, 0.0, 0.0, 0.5,\n        -0.5, -0.5, 0.0, 0.5, 0.5,\n        0.5, -0.5, 0.0, 0.5, 0.0\n    ]);\n    indexData = new Uint16Array([0, 1, 2])\n    // 인터리브 버퍼생성\n    tInterleaveBuffer = RedBuffer(\n        this, // RedGL Instance\n        'tInterleaveBuffer', // key\n        interleaveData, // data\n        RedBuffer.ARRAY_BUFFER, // bufferType\n        [\n            {\n                attributeKey: 'aVertexPosition',\n                size: 3,\n                normalize: false\n            },\n            {\n                attributeKey: 'aTexcoord',\n                size: 2,\n                normalize: false\n            }\n        ]\n    )\n    // 인덱스 버퍼생성\n    tIndexBuffer = RedBuffer(\n        this, // RedGL Instance\n        'tIndexBuffer', // key\n        indexData,  // data\n        RedBuffer.ELEMENT_ARRAY_BUFFER // bufferType\n    )\n    console.log('인터리브버퍼', tInterleaveBuffer)\n    console.log('인덱스버퍼', tIndexBuffer)\n",
+    "example": "\n    var interleaveData, indexData;\n    var tInterleaveBuffer, tIndexBuffer\n    interleaveData = new Float32Array([\n        0.0, 0.5, 0.0, 0.0, 0.5,\n        -0.5, -0.5, 0.0, 0.5, 0.5,\n        0.5, -0.5, 0.0, 0.5, 0.0\n    ]);\n    indexData = new Uint16Array([0, 1, 2])\n    // 인터리브 버퍼생성\n    tInterleaveBuffer = RedBuffer(\n        this, // RedGL Instance\n        'tInterleaveBuffer', // key\n        interleaveData, // data\n        RedBuffer.ARRAY_BUFFER, // bufferType\n        [\n          RedInterleaveInfo('aVertexPosition', 3),\n          RedInterleaveInfo('aTexcoord', 2)\n        ]\n    )\n    // 인덱스 버퍼생성\n    tIndexBuffer = RedBuffer(\n        this, // RedGL Instance\n        'tIndexBuffer', // key\n        indexData,  // data\n        RedBuffer.ELEMENT_ARRAY_BUFFER // bufferType\n    )\n    console.log('인터리브버퍼', tInterleaveBuffer)\n    console.log('인덱스버퍼', tIndexBuffer)\n",
     "return": "RedBuffer Instance"
   },
   {

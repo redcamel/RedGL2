@@ -26,6 +26,7 @@
 
     <script src="src/geometry/RedBuffer.js"></script>
     <script src="src/geometry/RedGeometry.js"></script>
+    <script src="src/geometry/RedInterleaveInfo.js"></script>
 
     <script src="src/light/RedAmbientLight.js"></script>
     <script src="src/light/RedDirectionalLight.js"></script>
@@ -169,21 +170,9 @@
                     self,
                     interleaveData,
                     [
-                        {
-                            attributeKey: 'aVertexPosition',
-                            size: 3,
-                            normalize: false
-                        },
-                        {
-                            attributeKey: 'aPointSize',
-                            size: 1,
-                            normalize: false
-                        },
-                        {
-                            attributeKey: 'aVertexColor',
-                            size: 4,
-                            normalize: false
-                        }
+                        RedInterleaveInfo('aVertexPosition', 3),
+                        RedInterleaveInfo('aPointSize', 1),
+                        RedInterleaveInfo('aVertexColor', 4)
                     ],
                     testMaterial
                 )
@@ -210,23 +199,9 @@
                     self,
                     interleaveData,
                     [
-                        {
-                            attributeKey: 'aVertexPosition',
-                            size: 3,
-                            normalize: false
-                        },
-                        {
-                            attributeKey: 'aPointSize',
-                            size: 1,
-                            normalize: false
-                        },
-                        {
-                            attributeKey: 'aVertexColor',
-                            size: 4,
-                            normalize: false
-                        }
-                        // TODO: 텍스쳐를 받으려면 쿼드로 그려야하는건가..
-                        // TODO: 쿼드가 아니라면 포인트에서 텍스쳐를 받아들일 방법을 고안해야함
+                        RedInterleaveInfo('aVertexPosition', 3),
+                        RedInterleaveInfo('aPointSize', 1),
+                        RedInterleaveInfo('aVertexColor', 4)
                     ],
                     testMaterial
                 )

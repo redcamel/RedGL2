@@ -83,21 +83,11 @@ var RedSphere;
                     redGL,
                     tType + '_interleaveBuffer',
                     new Float32Array(interleaveData),
-                    RedBuffer.ARRAY_BUFFER, [{
-                        attributeKey: 'aVertexPosition',
-                        size: 3,
-                        normalize: false
-                    },
-                    {
-                        attributeKey: 'aVertexNormal',
-                        size: 3,
-                        normalize: false
-                    },
-                    {
-                        attributeKey: 'aTexcoord',
-                        size: 2,
-                        normalize: false
-                    }
+                    RedBuffer.ARRAY_BUFFER, 
+                    [
+                        RedInterleaveInfo('aVertexPosition', 3),
+                        RedInterleaveInfo('aVertexNormal', 3),
+                        RedInterleaveInfo('aTexcoord', 2)
                     ]
                 ),
                 indexBuffer: RedBuffer(

@@ -66,16 +66,10 @@ var RedGrid;
             redGL,
             'gridInterleaveBuffer_' + divisions,
             new Float32Array(interleaveData),
-            RedBuffer.ARRAY_BUFFER, [{
-                attributeKey: 'aVertexPosition',
-                size: 3,
-                normalize: false
-            },
-            {
-                attributeKey: 'aVertexColor',
-                size: 4,
-                normalize: false
-            }
+            RedBuffer.ARRAY_BUFFER,
+            [
+                RedInterleaveInfo('aVertexPosition', 3),
+                RedInterleaveInfo('aVertexColor', 4)
             ]
         )
         this['geometry'] = RedGeometry(interleaveBuffer);
