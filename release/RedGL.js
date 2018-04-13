@@ -5783,7 +5783,6 @@ var RedRenderDebuger;
                     '</div><br>'
             }
             this['renderResult'].innerHTML += '<div style="padding:3px;background:#000">renderScale : ' + redGL['renderScale'] + '</div>'
-
         }
     }
     /**DOC:
