@@ -201,7 +201,6 @@ var RedShader;
             {
              title :`webglShader`,
              description : `실제 쉐이더(WebGLShader Instance)`,
-             example : `Instance.webglShader`,
              return : 'WebGLShader'
             }
         :DOC*/
@@ -212,17 +211,16 @@ var RedShader;
         {
             title :`key`,
             description : `고유키`,
-            example : `Instance.key`,
             return : 'String'
         }
         :DOC*/
+
         //TODO: 고유키 방어
         this['key'] = key
         /**DOC:
 		{
             title :`type`,
 			description : `RedShader.VERTEX or RedShader.FRAGMENT`,
-			example : `Instance.type`,
 			return : 'String'
 		}
 	    :DOC*/
@@ -236,12 +234,6 @@ var RedShader;
 		{
             title :`RedShader.FRAGMENT`,
             code: 'CONST',
-			description : `
-				프레그먼트 쉐이더 상수.
-			`,
-			example : `
-				RedShader.FRAGMENT
-			`,
 			return : 'String'
 		}
 	:DOC*/
@@ -250,12 +242,6 @@ var RedShader;
 		{
             title :`RedShader.VERTEX_SHADER`,
             code: 'CONST',
-			description : `
-				버텍스 쉐이더 상수.
-			`,
-			example : `
-				RedShader.FRAGMENT_SHADER
-			`,
 			return : 'String'
 		}
 	:DOC*/

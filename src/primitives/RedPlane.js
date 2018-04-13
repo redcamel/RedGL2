@@ -15,18 +15,18 @@ var RedPlane;
         var tX, tY;
         var a, b, c, d;
         var tType, tDatas
-        return function (redGL, width, height, segmentW, segmentH) {
+        return function (redGL, width, height, widthSegments, heightSegments) {
             width = width || 1, height = height || 1
-            segmentW = segmentW || 1, segmentH = segmentH || 1
+            widthSegments = widthSegments || 1, heightSegments = heightSegments || 1
             width_half = width / 2, height_half = height / 2
-            gridX = Math.floor(segmentW) || 1, gridY = Math.floor(segmentH) || 1
+            gridX = Math.floor(widthSegments) || 1, gridY = Math.floor(heightSegments) || 1
             gridX1 = gridX + 1, gridY1 = gridY + 1
             segment_width = width / gridX, segment_height = height / gridY
 
             // TODO: 중복방지
 
             // 기존에 생성된 녀석이면 생성된 프리미티브 정보를 넘긴다.
-            tType = 'RedPlane' + '_' + width + '_' + height + '_' + segmentW + '_' + segmentH
+            tType = 'RedPlane' + '_' + width + '_' + height + '_' + widthSegments + '_' + heightSegments
 
             ////////////////////////////////////////////////////////////////////////////
             // 데이터 생성!
@@ -40,8 +40,8 @@ var RedPlane;
                 for (ix = 0; ix < gridX1; ix++) {
                     tX = ix * segment_width - width_half,
                         interleaveData.push(tX, - tY, 0) // position
-                        interleaveData.push(0, 0, 1) // normal
-                        interleaveData.push(ix / gridX, 1 - (iy / gridY)) // texcoord
+                    interleaveData.push(0, 0, 1) // normal
+                    interleaveData.push(ix / gridX, 1 - (iy / gridY)) // texcoord
                 }
             }
             // indexData
@@ -91,42 +91,53 @@ var RedPlane;
             }
         }
     })();
-    RedPlane = function (redGL, width, height, segmentW, segmentH) {
-        if (!(this instanceof RedPlane)) return new RedPlane(redGL, width, height, segmentW, segmentH)
+    /**DOC:
+        {
+            constructorYn : true,
+            title :`RedPlane`,
+            description : `
+                RedPlane Instance 생성기.
+                Box 형태의 RedGeometry 생성
+            `,
+            params : {
+                redGL : [
+                    {type:'RedGL'}
+                ],
+                width : [
+                    {type:'uint'},
+                    '기본값 : 1'
+                ],
+                height : [
+                    {type:'uint'},
+                    '기본값 : 1'
+                ],
+                widthSegments : [
+                    {type:'uint'},
+                    '기본값 : 1'
+                ],
+                heightSegments : [
+                    {type:'uint'},
+                    '기본값 : 1'
+                ]
+            },
+            example : `
+                RedPlane(RedGL Instance);
+                RedPlane(RedGL Instance, 1, 1);
+                RedPlane(RedGL Instance, 1, 1, 16, 16);
+            `,
+            return : 'RedPlane Instance'
+        }
+    :DOC*/
+    RedPlane = function (redGL, width, height, widthSegments, heightSegments) {
+        if (!(this instanceof RedPlane)) return new RedPlane(redGL, width, height, widthSegments, heightSegments)
         if (!(redGL instanceof RedGL)) throw 'RedPrimitive : RedGL 인스턴스만 허용됩니다.'
-        /**DOC:
-            {
-                code : 'PROPERTY',
-                title :`interleaveBuffer`,
-                description : `
-                    interleaveBuffer 정보
-                `,
-                example : `
-                    // TODO:
-                `,
-                return : 'RedBuffer Instance'
-            }
-        :DOC*/
         var t0;
-        t0 = makeData(redGL, width, height, segmentW, segmentH);
-        // TODO: 유일키 방어
+        t0 = makeData(redGL, width, height, widthSegments, heightSegments);
+        // 유일키 방어
         if (!redGL['_datas']['Primitives']) redGL['_datas']['Primitives'] = {};
         if (redGL['_datas']['Primitives'][t0['type']]) return redGL['_datas']['Primitives'][t0['type']]
         else redGL['_datas']['Primitives'][t0['type']] = this
         this['interleaveBuffer'] = t0['interleaveBuffer']
-        /**DOC:
-            {
-                code : 'PROPERTY',
-                title :`indexBuffer`,
-                description : `
-                    indexBuffer 정보
-                `,
-                example : `
-                    // TODO:
-                `,
-                return : 'RedBuffer Instance'
-            }
-        :DOC*/
         this['indexBuffer'] = t0['indexBuffer']
         this['_UUID'] = RedGL['makeUUID']();
         // Object.freeze(this)

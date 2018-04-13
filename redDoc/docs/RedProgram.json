@@ -2,13 +2,12 @@
   {
     "title": "attributeLocation",
     "description": "어리뷰트 로케이션 정보",
-    "example": "// TODO:",
     "return": "Array"
   },
   {
     "title": "key",
     "description": "고유키",
-    "example": "Instance.key",
+    "example": "\n// TODO: \n",
     "return": "String"
   },
   {
@@ -27,13 +26,13 @@
         },
         "고유키"
       ],
-      "vs": [
+      "vertexShader": [
         {
           "type": "RedShader Instance"
         },
         "버텍스 쉐이더(RedShader.VERTEX 타입)"
       ],
-      "fs": [
+      "fragmentShader": [
         {
           "type": "RedShader Instance"
         },
@@ -45,19 +44,16 @@
   {
     "title": "systemUniformLocation",
     "description": "시스템 유니폼 로케이션 정보",
-    "example": "// TODO:",
     "return": "Array"
   },
   {
     "title": "uniformLocation",
     "description": "유니폼 로케이션 정보",
-    "example": "// TODO:",
     "return": "Array"
   },
   {
     "title": "webglProgram",
     "description": "실제 프로그램(WebGLProgram Instance)",
-    "example": "// TODO:",
     "return": "WebGLShader"
   }
 ]

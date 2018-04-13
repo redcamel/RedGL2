@@ -2,7 +2,7 @@
   {
     "code": "METHOD",
     "title": "addChild",
-    "description": "addChild",
+    "description": "자식추가",
     "params": {
       "child": [
         {
@@ -10,13 +10,12 @@
         }
       ]
     },
-    "example": "//TODO:",
     "return": "void"
   },
   {
     "code": "METHOD",
     "title": "addChildAt",
-    "description": "addChildAt",
+    "description": "인덱스 위치에 자식을 추가",
     "params": {
       "child": [
         {
@@ -29,13 +28,12 @@
         }
       ]
     },
-    "example": "//TODO:",
     "return": "void"
   },
   {
     "code": "METHOD",
     "title": "getChildAt",
-    "description": "getChildAt",
+    "description": "해당위치의 자식을 반환",
     "params": {
       "index": [
         {
@@ -43,13 +41,12 @@
         }
       ]
     },
-    "example": "//TODO:",
     "return": "RedMesh,RedSprite3D,RedLine,RedPointUnit"
   },
   {
     "code": "METHOD",
     "title": "getChildIndex",
-    "description": "getChildIndex",
+    "description": "해당객체의 인덱스 번호를 반환",
     "params": {
       "child": [
         {
@@ -57,7 +54,6 @@
         }
       ]
     },
-    "example": "//TODO:",
     "return": "int"
   },
   {
@@ -71,7 +67,6 @@
         }
       ]
     },
-    "example": "//TODO:",
     "return": "uint"
   },
   {
@@ -83,7 +78,7 @@
   {
     "code": "METHOD",
     "title": "removeChild",
-    "description": "removeChild",
+    "description": "해당 자식을 제거",
     "params": {
       "child": [
         {
@@ -91,20 +86,18 @@
         }
       ]
     },
-    "example": "//TODO:",
     "return": "void"
   },
   {
     "code": "METHOD",
     "title": "removeChildAll",
-    "description": "removeChildAll",
-    "example": "//TODO:",
+    "description": "전체 자식을 제거",
     "return": "void"
   },
   {
     "code": "METHOD",
     "title": "removeChildAt",
-    "description": "removeChildAt",
+    "description": "인덱스 위치에 있는 자식을 제거",
     "params": {
       "index": [
         {
@@ -112,7 +105,6 @@
         }
       ]
     },
-    "example": "//TODO:",
     "return": "void"
   }
 ]

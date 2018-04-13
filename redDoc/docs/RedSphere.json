@@ -1,16 +1,52 @@
 [
   {
-    "code": "PROPERTY",
-    "title": "indexBuffer",
-    "description": "\n    indexBuffer 정보\n",
-    "example": "\n    // TODO:\n",
-    "return": "RedBuffer Instance"
-  },
-  {
-    "code": "PROPERTY",
-    "title": "interleaveBuffer",
-    "description": "\n    interleaveBuffer 정보\n",
-    "example": "\n    // TODO:\n",
-    "return": "RedBuffer Instance"
+    "constructorYn": true,
+    "title": "RedSphere",
+    "description": "\n    RedSphere Instance 생성기.\n    Box 형태의 RedGeometry 생성\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ],
+      "widthSegments": [
+        {
+          "type": "uint"
+        },
+        "기본값 : 8"
+      ],
+      "heightSegments": [
+        {
+          "type": "uint"
+        },
+        "기본값 : 6"
+      ],
+      "phiStart": [
+        {
+          "type": "uint"
+        },
+        "기본값 : 0"
+      ],
+      "phiLength": [
+        {
+          "type": "uint"
+        },
+        "기본값 : 2"
+      ],
+      "thetaStart": [
+        {
+          "type": "uint"
+        },
+        "기본값 : 0"
+      ],
+      "thetaLength": [
+        {
+          "type": "Number"
+        },
+        "기본값 : Math.PI"
+      ]
+    },
+    "example": "\n    RedSphere(RedGL Instance);\n    RedSphere(RedGL Instance, 1);\n    RedSphere(RedGL Instance, 1, 16,16);\n",
+    "return": "RedSphere Instance"
   }
 ]

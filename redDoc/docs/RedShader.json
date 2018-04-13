@@ -2,7 +2,6 @@
   {
     "title": "key",
     "description": "고유키",
-    "example": "Instance.key",
     "return": "String"
   },
   {
@@ -39,27 +38,21 @@
   {
     "title": "RedShader.FRAGMENT",
     "code": "CONST",
-    "description": "\n프레그먼트 쉐이더 상수.\n",
-    "example": "\nRedShader.FRAGMENT\n",
     "return": "String"
   },
   {
     "title": "RedShader.VERTEX_SHADER",
     "code": "CONST",
-    "description": "\n버텍스 쉐이더 상수.\n",
-    "example": "\nRedShader.FRAGMENT_SHADER\n",
     "return": "String"
   },
   {
     "title": "type",
     "description": "RedShader.VERTEX or RedShader.FRAGMENT",
-    "example": "Instance.type",
     "return": "String"
   },
   {
     "title": "webglShader",
     "description": "실제 쉐이더(WebGLShader Instance)",
-    "example": "Instance.webglShader",
     "return": "WebGLShader"
   }
 ]

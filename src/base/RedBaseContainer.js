@@ -20,13 +20,12 @@ var RedBaseContainer;
             {
                 code : 'METHOD',
                 title :`addChild`,
-                description : `addChild`,
+                description : `자식추가`,
                 params:{
                     child : [
                         {type:'RedMesh,RedSprite3D,RedLine,RedPointUnit'}
                     ]
-                },
-                example : `//TODO:`,
+                },                
                 return : 'void'
             }
         :DOC*/
@@ -48,7 +47,7 @@ var RedBaseContainer;
             {
                 code : 'METHOD',
                 title :`addChildAt`,
-                description : `addChildAt`,
+                description : `인덱스 위치에 자식을 추가`,
                 params:{
                     child : [
                         {type:'RedMesh,RedSprite3D,RedLine,RedPointUnit'}
@@ -56,8 +55,7 @@ var RedBaseContainer;
                     index : [
                         {type:'uint'}
                     ]
-                },
-                example : `//TODO:`,
+                },                
                 return : 'void'
             }
         :DOC*/
@@ -78,13 +76,12 @@ var RedBaseContainer;
             {
                 code : 'METHOD',
                 title :`removeChild`,
-                description : `removeChild`,
+                description : `해당 자식을 제거`,
                 params:{
                     child : [
                         {type:'RedMesh,RedSprite3D,RedLine,RedPointUnit'}
                     ]
-                },
-                example : `//TODO:`,
+                },                
                 return : 'void'
             }
         :DOC*/
@@ -100,13 +97,12 @@ var RedBaseContainer;
             {
                 code : 'METHOD',
                 title :`removeChildAt`,
-                description : `removeChildAt`,
+                description : `인덱스 위치에 있는 자식을 제거`,
                 params:{
                     index : [
                         {type:'uint'}
                     ]
-                },
-                example : `//TODO:`,
+                },                
                 return : 'void'
             }
         :DOC*/
@@ -114,15 +110,14 @@ var RedBaseContainer;
             var t0;
             return function (index) {
                 if (typeof index != 'number') RedGLUtil.throwFunc('removeChildAt', 'index가 Number형이 아님 ');
-                this['children'].splice(t0, 1);
+                if (this['children'][index]) this['children'].splice(t0, 1);
             }
         }),
         /**DOC:
             {
                 code : 'METHOD',
                 title :`removeChildAll`,
-                description : `removeChildAll`,
-                example : `//TODO:`,
+                description : `전체 자식을 제거`,                
                 return : 'void'
             }
         :DOC*/
@@ -133,13 +128,12 @@ var RedBaseContainer;
             {
                 code : 'METHOD',
                 title :`getChildAt`,
-                description : `getChildAt`,
+                description : `해당위치의 자식을 반환`,
                 params:{
                     index : [
                         {type:'uint'}
                     ]
                 },
-                example : `//TODO:`,
                 return : 'RedMesh,RedSprite3D,RedLine,RedPointUnit'
             }
         :DOC*/
@@ -151,13 +145,12 @@ var RedBaseContainer;
             {
                 code : 'METHOD',
                 title :`getChildIndex`,
-                description : `getChildIndex`,
+                description : `해당객체의 인덱스 번호를 반환`,
                 params:{
                     child : [
                         {type:'RedMesh,RedSprite3D,RedLine,RedPointUnit'}
                     ]
-                },
-                example : `//TODO:`,
+                },                
                 return : 'int'
             }
         :DOC*/
@@ -180,7 +173,7 @@ var RedBaseContainer;
                         {type:'RedMesh,RedSprite3D,RedLine,RedPointUnit'}
                     ]
                 },
-                example : `//TODO:`,
+                
                 return : 'uint'
             }
         :DOC*/

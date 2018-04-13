@@ -1,1 +1,14 @@
-[]
+[
+  {
+    "code": "METHOD",
+    "title": "checkProperty",
+    "description": "\n    소유하고 있는 Program에서 사용하고 있지만 \n    재질이 해당 유니폼에 대응하는 프로퍼티를 소유하고 않는경우를 검출.\n",
+    "return": "void"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedBaseMaterial",
+    "description": "\n    RedBaseMaterial 기저층\n    프로토타입 확장을 통해서만 사용가능( RedGLUtil.copyProto 사용 )\n    \n            ",
+    "return": "void"
+  }
+]

@@ -194,16 +194,15 @@ var RedRenderer;
                     i = tList.length;
                     while (i--) {
                         tLightData = tList[i];
-                        tDebugObj = tLightData['debugObject'];
-
                         vec3.set(tVector, tLightData['x'], tLightData['y'], tLightData['z'])
-                        tDebugObj['x'] = tVector[0];
-                        tDebugObj['y'] = tVector[1];
-                        tDebugObj['z'] = tVector[2];
-
-                        tDebugObj['material']['color'] = tLightData['color']
-
-                        lightDebugRenderList.push(tDebugObj)
+                        if (tLightData['debug']) {
+                            tDebugObj = tLightData['debugObject'];
+                            tDebugObj['x'] = tVector[0];
+                            tDebugObj['y'] = tVector[1];
+                            tDebugObj['z'] = tVector[2];
+                            tDebugObj['material']['color'] = tLightData['color']
+                            lightDebugRenderList.push(tDebugObj)
+                        }
                         //
                         tLocationInfo = tSystemUniformGroup['uDirectionalLightPosition'];
                         tLocation = tLocationInfo['location'];
@@ -276,18 +275,16 @@ var RedRenderer;
                     i = tList.length;
                     while (i--) {
                         tLightData = tList[i];
-                        tDebugObj = tLightData['debugObject'];
-
                         vec3.set(tVector, tLightData['x'], tLightData['y'], tLightData['z'])
-                        tDebugObj['x'] = tVector[0];
-                        tDebugObj['y'] = tVector[1];
-                        tDebugObj['z'] = tVector[2];
-                        tDebugObj['scaleX'] = tDebugObj['scaleY'] = tDebugObj['scaleZ'] = tLightData['radius']
-
-
-                        tDebugObj['material']['color'] = tLightData['color']
-
-                        lightDebugRenderList.push(tDebugObj)
+                        if (tLightData['debug']) {
+                            tDebugObj = tLightData['debugObject'];
+                            tDebugObj['x'] = tVector[0];
+                            tDebugObj['y'] = tVector[1];
+                            tDebugObj['z'] = tVector[2];
+                            tDebugObj['scaleX'] = tDebugObj['scaleY'] = tDebugObj['scaleZ'] = tLightData['radius']
+                            tDebugObj['material']['color'] = tLightData['color']
+                            lightDebugRenderList.push(tDebugObj)
+                        }
                         //
                         tLocationInfo = tSystemUniformGroup['uPointLightPosition'];
                         tLocation = tLocationInfo['location'];
@@ -478,14 +475,15 @@ var RedRenderer;
                     gl.cullFace(gl.BACK)
                     gl.clear(gl.DEPTH_BUFFER_BIT);
                 }
-                // 디버깅 라이트 업데이트 
-                self.sceneRender(redGL, gl, tCamera['orthographic'], lightDebugRenderList, time, self['renderInfo'][tView['key']]);
+
                 // 씬렌더 호출
                 self.sceneRender(redGL, gl, tCamera['orthographic'], tScene['children'], time, self['renderInfo'][tView['key']]);
                 // 그리드가 있으면 그림
                 if (tScene['grid']) self.sceneRender(redGL, gl, tCamera['orthographic'], [tScene['grid']], time, self['renderInfo'][tView['key']]);
                 // asix가 있으면 그림
                 if (tScene['axis']) self.sceneRender(redGL, gl, tCamera['orthographic'], tScene['axis']['children'], time, self['renderInfo'][tView['key']]);
+                // 디버깅 라이트 업데이트 
+                self.sceneRender(redGL, gl, tCamera['orthographic'], lightDebugRenderList, time, self['renderInfo'][tView['key']]);
             })
             if (this['renderDebuger']['visible']) this['renderDebuger'].update(redGL, self['renderInfo'])
         }

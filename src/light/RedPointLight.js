@@ -102,6 +102,14 @@ var RedPointLight;
             writable: false,
             value: RedPointLight['type']
         })
+        /**DOC:
+            {
+                title :`debug`,
+                description : `디버그오브젝트 활성화 여부`,
+                return : 'Boolean'
+            }
+        :DOC*/
+        this['debug'] = false
         this['debugObject'] = RedMesh(redGL, RedSphere(redGL, 1, 16, 16, 16), RedColorMaterial(redGL))
         this['debugObject']['drawMode'] = redGL.gl.LINE_STRIP
         console.log(this)

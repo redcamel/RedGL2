@@ -128,42 +128,64 @@ var RedBox;
             }
         }
     })();
+    /**DOC:
+        {
+            constructorYn : true,
+            title :`RedBox`,
+            description : `
+                RedBox Instance 생성기.
+                Box 형태의 RedGeometry 생성
+            `,
+            params : {
+                redGL : [
+                    {type:'RedGL'}
+                ],
+                width : [
+                    {type:'uint'},
+                    '기본값 : 1'
+                ],
+                height : [
+                    {type:'uint'},
+                    '기본값 : 1'
+                ],
+                depth : [
+                    {type:'uint'},
+                    '기본값 : 1'
+                ],
+                widthSegments : [
+                    {type:'uint'},
+                    '기본값 : 1'
+                ],
+                heightSegments : [
+                    {type:'uint'},
+                    '기본값 : 1'
+                ],
+                depthSegments : [
+                    {type:'uint'},
+                    '기본값 : 1'
+                ]
+            },
+            example : `
+                RedBox(RedGL Instance);
+                RedBox(RedGL Instance, 1, 1, 1);
+                RedBox(RedGL Instance, 1, 1, 1, 16, 16, 16);
+            `,
+            return : 'RedBox Instance'
+        }
+    :DOC*/
     RedBox = function (redGL, width, height, depth, widthSegments, heightSegments, depthSegments) {
         if (!(this instanceof RedBox)) return new RedBox(redGL, width, height, depth, widthSegments, heightSegments, depthSegments)
         if (!(redGL instanceof RedGL)) throw 'RedPrimitive : RedGL 인스턴스만 허용됩니다.'
-        /**DOC:
-            {
-                code : 'PROPERTY',
-                title :`interleaveBuffer`,
-                description : `
-                    interleaveBuffer 정보
-                `,
-                example : `
-                    // TODO:
-                `,
-                return : 'RedBuffer Instance'
-            }
-        :DOC*/
+
         var t0;
         t0 = makeData(redGL, width, height, depth, widthSegments, heightSegments, depthSegments);
-        // TODO: 유일키 방어
+
+        // 유일키방어
         if (!redGL['_datas']['Primitives']) redGL['_datas']['Primitives'] = {};
-        if (redGL['_datas']['Primitives'][t0['type']]) return redGL['_datas']['Primitives'][t0['type']]
-        else redGL['_datas']['Primitives'][t0['type']] = this
+        if (redGL['_datas']['Primitives'][t0['type']]) return redGL['_datas']['Primitives'][t0['type']];
+        else redGL['_datas']['Primitives'][t0['type']] = this;
+        //
         this['interleaveBuffer'] = t0['interleaveBuffer']
-        /**DOC:
-            {
-                code : 'PROPERTY',
-                title :`indexBuffer`,
-                description : `
-                    indexBuffer 정보
-                `,
-                example : `
-                    // TODO:
-                `,
-                return : 'RedBuffer Instance'
-            }
-        :DOC*/
         this['indexBuffer'] = t0['indexBuffer']
         this['_UUID'] = RedGL['makeUUID']();
         // Object.freeze(this)

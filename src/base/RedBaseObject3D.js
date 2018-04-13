@@ -7,7 +7,7 @@ var RedBaseObject3D;
             title :`RedBaseObject3D`,
             description : `
                 RedBaseObject3D 기저층
-                프로토타입 확장을 통해서만 사용가능(RedGLUtil.copyProto 사용)
+                프로토타입 확장을 통해서만 사용가능( RedGLUtil.copyProto 사용 )
                 
             `,
             return : 'void'
@@ -141,21 +141,18 @@ var RedBaseObject3D;
         /**DOC:
 		{
             title :`x`,
-            description : `x`,
             return : 'Number'
 		}
         :DOC*/
         /**DOC:
 		{
             title :`y`,
-            description : `y`,
             return : 'Number'
 		}
         :DOC*/
         /**DOC:
 		{
             title :`z`,
-            description : `z`,
             return : 'Number'
 		}
 	    :DOC*/
@@ -163,21 +160,18 @@ var RedBaseObject3D;
         /**DOC:
 		{
             title :`rotationX`,
-            description : `rotationX`,
             return : 'Number'
 		}
         :DOC*/
         /**DOC:
 		{
             title :`rotationY`,
-            description : `rotationY`,
             return : 'Number'
 		}
         :DOC*/
         /**DOC:
 		{
             title :`rotationZ`,
-            description : `rotationZ`,
             return : 'Number'
 		}
 	    :DOC*/
@@ -185,21 +179,18 @@ var RedBaseObject3D;
         /**DOC:
 		{
             title :`scaleX`,
-            description : `scaleX`,
             return : 'Number'
 		}
         :DOC*/
         /**DOC:
 		{
             title :`scaleY`,
-            description : `scaleY`,
             return : 'Number'
 		}
         :DOC*/
         /**DOC:
 		{
             title :`scaleZ`,
-            description : `scaleZ`,
             return : 'Number'
 		}
 	    :DOC*/
@@ -227,7 +218,6 @@ var RedBaseObject3D;
         /**DOC:
         {
             title :`children`,
-            description : `children`,
             return : 'Array'
         }
         :DOC*/
