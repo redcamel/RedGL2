@@ -1,16 +1,52 @@
 [
   {
-    "code": "PROPERTY",
-    "title": "indexBuffer",
-    "description": "\n    indexBuffer 정보\n",
-    "example": "\n    // TODO:\n",
-    "return": "RedBuffer Instance"
-  },
-  {
-    "code": "PROPERTY",
-    "title": "interleaveBuffer",
-    "description": "\n    interleaveBuffer 정보\n",
-    "example": "\n    // TODO:\n",
-    "return": "RedBuffer Instance"
+    "constructorYn": true,
+    "title": "RedBox",
+    "description": "\n    RedBox Instance 생성기.\n    Box 형태의 RedGeometry 생성\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ],
+      "width": [
+        {
+          "type": "uint"
+        },
+        "기본값 : 1"
+      ],
+      "height": [
+        {
+          "type": "uint"
+        },
+        "기본값 : 1"
+      ],
+      "depth": [
+        {
+          "type": "uint"
+        },
+        "기본값 : 1"
+      ],
+      "widthSegments": [
+        {
+          "type": "uint"
+        },
+        "기본값 : 1"
+      ],
+      "heightSegments": [
+        {
+          "type": "uint"
+        },
+        "기본값 : 1"
+      ],
+      "depthSegments": [
+        {
+          "type": "uint"
+        },
+        "기본값 : 1"
+      ]
+    },
+    "example": "\n    RedBox(RedGL Instance);\n    RedBox(RedGL Instance, 1, 1, 1);\n    RedBox(RedGL Instance, 1, 1, 1, 16, 16, 16);\n",
+    "return": "RedBox Instance"
   }
 ]

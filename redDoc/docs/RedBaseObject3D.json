@@ -11,7 +11,6 @@
   },
   {
     "title": "children",
-    "description": "children",
     "return": "Array"
   },
   {
@@ -53,7 +52,7 @@
   {
     "constructorYn": true,
     "title": "RedBaseObject3D",
-    "description": "\n    RedBaseObject3D 기저층\n    프로토타입 확장을 통해서만 사용가능(RedGLUtil.copyProto 사용)\n    \n            ",
+    "description": "\n    RedBaseObject3D 기저층\n    프로토타입 확장을 통해서만 사용가능( RedGLUtil.copyProto 사용 )\n    \n            ",
     "return": "void"
   },
   {
@@ -72,32 +71,26 @@
   },
   {
     "title": "rotationX",
-    "description": "rotationX",
     "return": "Number"
   },
   {
     "title": "rotationY",
-    "description": "rotationY",
     "return": "Number"
   },
   {
     "title": "rotationZ",
-    "description": "rotationZ",
     "return": "Number"
   },
   {
     "title": "scaleX",
-    "description": "scaleX",
     "return": "Number"
   },
   {
     "title": "scaleY",
-    "description": "scaleY",
     "return": "Number"
   },
   {
     "title": "scaleZ",
-    "description": "scaleZ",
     "return": "Number"
   },
   {
@@ -123,17 +116,14 @@
   },
   {
     "title": "x",
-    "description": "x",
     "return": "Number"
   },
   {
     "title": "y",
-    "description": "y",
     "return": "Number"
   },
   {
     "title": "z",
-    "description": "z",
     "return": "Number"
   }
 ]

@@ -5,6 +5,11 @@
     "return": "Number"
   },
   {
+    "title": "debug",
+    "description": "디버그오브젝트 활성화 여부",
+    "return": "Boolean"
+  },
+  {
     "title": "intensity",
     "description": "\n    라이트 강도\n    기본값 : 1\n",
     "return": "Number"

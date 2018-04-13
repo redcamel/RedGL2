@@ -38,7 +38,7 @@ var DocJS = {
 
                 tLoader.onAllLoaded(function (rsList) {
                     console.log('전체로딩성공!', rsList)
-                    var groupBox, propertybox, methodBox, eventBox, descripttionBox, listBox, constBox, staticMethodBox, extendsMethodBox
+                    var groupBox, propertybox, methodBox, eventBox, descripttionBox, listBox, constBox, staticBox, extendsMethodBox
                     var makeBox;
                     var makeDocObject;
                     var descriptionParser, methodParser, paramsParser, propertyParser, exampleParser;
@@ -264,7 +264,7 @@ var DocJS = {
                                 '<', v['constructorYn'] ? descripttionBox
                                     : v['code'] == 'METHOD' ? methodBox
                                         : v['code'] == 'CONST' ? constBox
-                                            : v['code'] == 'STATIC' ? staticMethodBox
+                                            : v['code'] == 'STATIC' ? staticBox
                                                 : propertybox
                             )
                             propertyParser(vTitle, v, tContainer)
@@ -295,7 +295,7 @@ var DocJS = {
                     descripttionBox = makeBox(null, groupBox)
                     extendsMethodBox = makeBox('Extend List', groupBox)
                     listBox = makeBox('API', groupBox)
-                    staticMethodBox = makeBox('Static Methods', groupBox)
+                    staticBox = makeBox('Statics', groupBox)
                     constBox = makeBox('Const', groupBox)
                     propertybox = makeBox('properties', groupBox)
                     methodBox = makeBox('Methods', groupBox)
@@ -305,7 +305,7 @@ var DocJS = {
                     if (!methodBox.__dom__.querySelector('.defineBox')) methodBox.remove()
                     if (!propertybox.__dom__.querySelector('.defineBox')) propertybox.remove()
                     if (!eventBox.__dom__.querySelector('.defineBox')) eventBox.remove()
-                    if (!staticMethodBox.__dom__.querySelector('.defineBox')) staticMethodBox.remove()
+                    if (!staticBox.__dom__.querySelector('.defineBox')) staticBox.remove()
                     if (!extendsMethodBox.__dom__.querySelector('.defineBox')) extendsMethodBox.remove()
                     /////
 
@@ -368,7 +368,8 @@ var DocJS = {
             )
             Recard.Dom('div').S(
                 'html', '<hr style="border:0px;border-top:1px solid #eee;margin-left:251px">' +
-                '<div style="font-size:11px;color:#222;margin-left:251px;text-align:right;padding-right:10px">By Redcamel' +
+                '<div style="font-size:11px;color:#222;margin-left:251px;text-align:right;padding-right:10px">By Redcamel<br>' +
+                '<a href = "https://github.com/redcamel/RedGL2">https://github.com/redcamel/RedGL2</a>'+
                 '</div>',
                 '<', 'body'
             )

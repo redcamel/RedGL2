@@ -1,7 +1,16 @@
 "use strict";
 var JsonModelLoader;
 (function () {
-    //TODO:
+    /**DOC:
+        {
+            constructorYn : true,
+            title :`JsonModelLoader`,
+            description : `
+                초안 작업진행중
+            `,
+            return : 'void'
+        }
+    :DOC*/
     JsonModelLoader = function (redGL, key, src, callback) {
         if ((!(this instanceof JsonModelLoader))) return new JsonModelLoader(redGL, key, src, callback)
         console.log('~~~~~~~~~~~')
@@ -11,7 +20,7 @@ var JsonModelLoader;
             request.onreadystatechange = function () {
                 if (request.readyState == 4) {
                     var jsonData;
-                    var interleaveData,indexData;
+                    var interleaveData, indexData;
                     var i, len;
                     interleaveData = []
                     indexData = []
@@ -20,8 +29,8 @@ var JsonModelLoader;
                     for (i; i < len; i++) {
                         interleaveData.push(jsonData['position'][i * 3], jsonData['position'][i * 3 + 1], jsonData['position'][i * 3 + 2])
                         interleaveData.push(jsonData['normal'][i * 3], jsonData['normal'][i * 3 + 1], jsonData['normal'][i * 3 + 2])
-                        if(jsonData['uvs'])interleaveData.push(jsonData['uvs'][i * 2], jsonData['uvs'][i * 2 + 1])
-                        else interleaveData.push(0,0)
+                        if (jsonData['uvs']) interleaveData.push(jsonData['uvs'][i * 2], jsonData['uvs'][i * 2 + 1])
+                        else interleaveData.push(0, 0)
 
                     }
                     console.log(jsonData)
@@ -39,7 +48,7 @@ var JsonModelLoader;
                                     size: 3,
                                     normalize: false
                                 },
-                                ,
+                                    ,
                                 {
                                     attributeKey: 'aVertexNormal',
                                     size: 3,

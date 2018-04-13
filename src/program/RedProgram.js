@@ -2,7 +2,7 @@
 var RedProgram;
 (function () {
     var makeProgram, updateLocation;
-    var samplerIndex //TODO: 같은 이름으로 된 인덱스가 있을경우 기존 인덱스를 쓰도록 유도
+    var samplerIndex;
     makeProgram = (function () {
         var program;
         return function (gl, key, vs, fs) {
@@ -51,7 +51,6 @@ var RedProgram;
                     if (!t0['location']) t0['msg'] = '쉐이더 main 함수에서 사용되고 있지 않음';
                     t0['uniformType'] = v['uniformType'];
                     // renderType 조사
-                    // TODO: 데이터 타입조사를 이놈이 하는게 맞는건가..
                     var arrayNum, tRenderType, tRenderMethod;
                     arrayNum = v['arrayNum']
                     switch (v['uniformType']) {
@@ -140,11 +139,11 @@ var RedProgram;
                     {type:'String'},
                     `고유키`
                 ],
-                vs : [
+                vertexShader : [
                     {type:'RedShader Instance'},
                     `버텍스 쉐이더(RedShader.VERTEX 타입)`
                 ],
-                fs : [
+                fragmentShader : [
                     {type:'RedShader Instance'},
                     `프레그먼트 쉐이더(RedShader.FRAGMENT 타입)`
                 ]
@@ -152,15 +151,15 @@ var RedProgram;
             return : 'RedProgram Instance'
         }
     :DOC*/
-    RedProgram = function (redGL, key, vs, fs) {
+    RedProgram = function (redGL, key, vertexShader, fragmentShader) {
         var tGL;
-        if (!(this instanceof RedProgram)) return new RedProgram(redGL, key, vs, fs)
+        if (!(this instanceof RedProgram)) return new RedProgram(redGL, key, vertexShader, fragmentShader)
         if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedProgram : RedGL Instance만 허용됩니다.');
         if (typeof key != 'string') RedGLUtil.throwFunc('RedProgram : key - 문자열만 허용됩니다.');
-        if (!vs instanceof RedShader) RedGLUtil.throwFunc('RedProgram : vShaderInfo - RedShader만 허용됩니다.');
-        if (!fs instanceof RedShader) RedGLUtil.throwFunc('RedProgram : fShaderInfo - RedShader만 허용됩니다.');
-        if (vs['type'] != RedShader.VERTEX) RedGLUtil.throwFunc('RedProgram : vShaderInfo - VERTEX 타입만 허용됩니다.');
-        if (fs['type'] != RedShader.FRAGMENT) RedGLUtil.throwFunc('RedProgram : fShaderInfo - FRAGMENT 타입만 허용됩니다.');
+        if (!vertexShader instanceof RedShader) RedGLUtil.throwFunc('RedProgram : vShaderInfo - RedShader만 허용됩니다.');
+        if (!fragmentShader instanceof RedShader) RedGLUtil.throwFunc('RedProgram : fShaderInfo - RedShader만 허용됩니다.');
+        if (vertexShader['type'] != RedShader.VERTEX) RedGLUtil.throwFunc('RedProgram : vShaderInfo - VERTEX 타입만 허용됩니다.');
+        if (fragmentShader['type'] != RedShader.FRAGMENT) RedGLUtil.throwFunc('RedProgram : fShaderInfo - FRAGMENT 타입만 허용됩니다.');
 
         tGL = redGL.gl;
         // TODO: 유일키 방어
@@ -171,7 +170,9 @@ var RedProgram;
             {
                 title :`key`,
                 description : `고유키`,
-                example : `Instance.key`,
+                example : `
+                // TODO: 
+                `,
                 return : 'String'
             }
         :DOC*/
@@ -180,16 +181,14 @@ var RedProgram;
             {
                 title :`webglProgram`,
                 description : `실제 프로그램(WebGLProgram Instance)`,
-                example : `// TODO:`,
                 return : 'WebGLShader'
             }
         :DOC*/
-        this['webglProgram'] = makeProgram(tGL, key, vs, fs);
+        this['webglProgram'] = makeProgram(tGL, key, vertexShader, fragmentShader);
         /**DOC:
             {
                 title :`attributeLocation`,
                 description : `어리뷰트 로케이션 정보`,
-                example : `// TODO:`,
                 return : 'Array'
             }
         :DOC*/
@@ -198,7 +197,6 @@ var RedProgram;
             {
                 title :`uniformLocation`,
                 description : `유니폼 로케이션 정보`,
-                example : `// TODO:`,
                 return : 'Array'
             }
         :DOC*/
@@ -207,7 +205,6 @@ var RedProgram;
             {
                 title :`systemUniformLocation`,
                 description : `시스템 유니폼 로케이션 정보`,
-                example : `// TODO:`,
                 return : 'Array'
             }
         :DOC*/
@@ -216,10 +213,10 @@ var RedProgram;
         // 쉐이더 로케이션 찾기
         tGL.useProgram(this['webglProgram'])
         samplerIndex = 2
-        updateLocation(this, tGL, vs);
-        updateLocation(this, tGL, fs);
+        updateLocation(this, tGL, vertexShader);
+        updateLocation(this, tGL, fragmentShader);
         this['_UUID'] = RedGL['makeUUID']();
-        Object.freeze(this)
+        // Object.freeze(this)
         console.log(this)
     }
     RedProgram.prototype = {}

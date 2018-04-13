@@ -442,13 +442,12 @@ var RedBaseContainer;
             {
                 code : 'METHOD',
                 title :`addChild`,
-                description : `addChild`,
+                description : `자식추가`,
                 params:{
                     child : [
                         {type:'RedMesh,RedSprite3D,RedLine,RedPointUnit'}
                     ]
-                },
-                example : `//TODO:`,
+                },                
                 return : 'void'
             }
         :DOC*/
@@ -470,7 +469,7 @@ var RedBaseContainer;
             {
                 code : 'METHOD',
                 title :`addChildAt`,
-                description : `addChildAt`,
+                description : `인덱스 위치에 자식을 추가`,
                 params:{
                     child : [
                         {type:'RedMesh,RedSprite3D,RedLine,RedPointUnit'}
@@ -478,8 +477,7 @@ var RedBaseContainer;
                     index : [
                         {type:'uint'}
                     ]
-                },
-                example : `//TODO:`,
+                },                
                 return : 'void'
             }
         :DOC*/
@@ -500,13 +498,12 @@ var RedBaseContainer;
             {
                 code : 'METHOD',
                 title :`removeChild`,
-                description : `removeChild`,
+                description : `해당 자식을 제거`,
                 params:{
                     child : [
                         {type:'RedMesh,RedSprite3D,RedLine,RedPointUnit'}
                     ]
-                },
-                example : `//TODO:`,
+                },                
                 return : 'void'
             }
         :DOC*/
@@ -522,13 +519,12 @@ var RedBaseContainer;
             {
                 code : 'METHOD',
                 title :`removeChildAt`,
-                description : `removeChildAt`,
+                description : `인덱스 위치에 있는 자식을 제거`,
                 params:{
                     index : [
                         {type:'uint'}
                     ]
-                },
-                example : `//TODO:`,
+                },                
                 return : 'void'
             }
         :DOC*/
@@ -536,15 +532,14 @@ var RedBaseContainer;
             var t0;
             return function (index) {
                 if (typeof index != 'number') RedGLUtil.throwFunc('removeChildAt', 'index가 Number형이 아님 ');
-                this['children'].splice(t0, 1);
+                if (this['children'][index]) this['children'].splice(t0, 1);
             }
         }),
         /**DOC:
             {
                 code : 'METHOD',
                 title :`removeChildAll`,
-                description : `removeChildAll`,
-                example : `//TODO:`,
+                description : `전체 자식을 제거`,                
                 return : 'void'
             }
         :DOC*/
@@ -555,13 +550,12 @@ var RedBaseContainer;
             {
                 code : 'METHOD',
                 title :`getChildAt`,
-                description : `getChildAt`,
+                description : `해당위치의 자식을 반환`,
                 params:{
                     index : [
                         {type:'uint'}
                     ]
                 },
-                example : `//TODO:`,
                 return : 'RedMesh,RedSprite3D,RedLine,RedPointUnit'
             }
         :DOC*/
@@ -573,13 +567,12 @@ var RedBaseContainer;
             {
                 code : 'METHOD',
                 title :`getChildIndex`,
-                description : `getChildIndex`,
+                description : `해당객체의 인덱스 번호를 반환`,
                 params:{
                     child : [
                         {type:'RedMesh,RedSprite3D,RedLine,RedPointUnit'}
                     ]
-                },
-                example : `//TODO:`,
+                },                
                 return : 'int'
             }
         :DOC*/
@@ -602,7 +595,7 @@ var RedBaseContainer;
                         {type:'RedMesh,RedSprite3D,RedLine,RedPointUnit'}
                     ]
                 },
-                example : `//TODO:`,
+                
                 return : 'uint'
             }
         :DOC*/
@@ -616,50 +609,98 @@ var RedBaseContainer;
 "use strict";
 var RedBaseLight;
 (function () {
-    RedBaseLight =function () {
+    /**DOC:
+        {
+            constructorYn : true,
+            title :`RedBaseLight`,
+            description : `
+                RedBaseLight 기저층
+                프로토타입 확장을 통해서만 사용가능( RedGLUtil.copyProto 사용 )
+                
+            `,
+            return : 'void'
+        }
+    :DOC*/
+    RedBaseLight = function () {
         RedGLUtil.throwFunc('RedBaseLight : 생성자/직접실행으로 사용 할 수 없습니다.')
     }
     RedBaseLight.prototype = {
+        /**DOC:
+            {
+                code : 'METHOD',
+                title :`setColor`,
+                description : `
+                    hex로 컬러값 설정
+                `,
+                parmas : {
+                    hex : [{type:'hex'}],
+                    alpha : [{type:'Number'}, '알파값']
+                },
+                return : 'void'
+            }
+        :DOC*/
         setColor: (function () {
             var t0;
             return function (hex, alpha) {
                 hex = hex ? hex : '#fff';
-                if (alpha == undefined) alpha = 1;
+                if (alpha == undefined) alpha = this['alpha'];
                 if (alpha > 1) alpha = 1
+                this['alpha'] = alpha;
                 t0 = RedGLUtil.hexToRGB.call(this, hex);
                 this['color'][0] = t0[0];
                 this['color'][1] = t0[1];
                 this['color'][2] = t0[2];
-                this['color'][3] = alpha;
+                this['color'][3] = this['alpha'];
             }
-        })(),
+        })()
     }
     Object.freeze(RedBaseLight)
-
 })();
 "use strict";
 var RedBaseMaterial;
 (function () {
+    /**DOC:
+        {
+            constructorYn : true,
+            title :`RedBaseMaterial`,
+            description : `
+                RedBaseMaterial 기저층
+                프로토타입 확장을 통해서만 사용가능( RedGLUtil.copyProto 사용 )
+                
+            `,
+            return : 'void'
+        }
+    :DOC*/
     RedBaseMaterial = function () {
         RedGLUtil.throwFunc('RedBaseMaterial : 생성자/직접실행으로 사용 할 수 없습니다.')
     }
     RedBaseMaterial.prototype = {
+        /**DOC:
+            {
+                code : 'METHOD',
+                title :`checkProperty`,
+                description : `
+                    소유하고 있는 Program에서 사용하고 있지만 
+                    재질이 해당 유니폼에 대응하는 프로퍼티를 소유하고 않는경우를 검출.
+                `,
+                return : 'void'
+            }
+        :DOC*/
         checkProperty: function () {
             var i2
-            var tUniformGroup, tUniformLocationInfo, tWebGLUniformLocation
+            var tUniformGroup, tUniformLocationInfo, tWebGLUniformLocation;
             tUniformGroup = this['program']['uniformLocation'];
             i2 = tUniformGroup.length
             while (i2--) {
                 tUniformLocationInfo = tUniformGroup[i2];
                 tWebGLUniformLocation = tUniformLocationInfo['location'];
-                if (tWebGLUniformLocation) {
-                    this.hasOwnProperty(tUniformLocationInfo['materialPropertyName']) ? 0 : RedGLUtil.throwFunc('Material에 ', tUniformLocationInfo['materialPropertyName'], '이 정의 되지않았습니다.');
+                if (tWebGLUniformLocation && !this.hasOwnProperty(tUniformLocationInfo['materialPropertyName'])) {
+                    RedGLUtil.throwFunc('Material에 ', tUniformLocationInfo['materialPropertyName'], '이 정의 되지않았습니다.')
                 }
             }
         }
     }
     Object.freeze(RedBaseMaterial)
-
 })();
 "use strict";
 var RedBaseObject3D;
@@ -670,7 +711,7 @@ var RedBaseObject3D;
             title :`RedBaseObject3D`,
             description : `
                 RedBaseObject3D 기저층
-                프로토타입 확장을 통해서만 사용가능(RedGLUtil.copyProto 사용)
+                프로토타입 확장을 통해서만 사용가능( RedGLUtil.copyProto 사용 )
                 
             `,
             return : 'void'
@@ -804,21 +845,18 @@ var RedBaseObject3D;
         /**DOC:
 		{
             title :`x`,
-            description : `x`,
             return : 'Number'
 		}
         :DOC*/
         /**DOC:
 		{
             title :`y`,
-            description : `y`,
             return : 'Number'
 		}
         :DOC*/
         /**DOC:
 		{
             title :`z`,
-            description : `z`,
             return : 'Number'
 		}
 	    :DOC*/
@@ -826,21 +864,18 @@ var RedBaseObject3D;
         /**DOC:
 		{
             title :`rotationX`,
-            description : `rotationX`,
             return : 'Number'
 		}
         :DOC*/
         /**DOC:
 		{
             title :`rotationY`,
-            description : `rotationY`,
             return : 'Number'
 		}
         :DOC*/
         /**DOC:
 		{
             title :`rotationZ`,
-            description : `rotationZ`,
             return : 'Number'
 		}
 	    :DOC*/
@@ -848,21 +883,18 @@ var RedBaseObject3D;
         /**DOC:
 		{
             title :`scaleX`,
-            description : `scaleX`,
             return : 'Number'
 		}
         :DOC*/
         /**DOC:
 		{
             title :`scaleY`,
-            description : `scaleY`,
             return : 'Number'
 		}
         :DOC*/
         /**DOC:
 		{
             title :`scaleZ`,
-            description : `scaleZ`,
             return : 'Number'
 		}
 	    :DOC*/
@@ -890,7 +922,6 @@ var RedBaseObject3D;
         /**DOC:
         {
             title :`children`,
-            description : `children`,
             return : 'Array'
         }
         :DOC*/
@@ -1545,8 +1576,24 @@ var RedDirectionalLight;
             writable: false,
             value: RedDirectionalLight['type']
         })
-        this['debugObject'] = RedMesh(redGL, RedBox(redGL, 1, 1, 1), RedColorMaterial(redGL))
-        this['debugObject']['drawMode'] = redGL.gl.LINE_STRIP
+        /**DOC:
+            {
+                title :`debug`,
+                description : `디버그오브젝트 활성화 여부`,
+                return : 'Boolean'
+            }
+        :DOC*/
+        this['debug'] = false
+        this['debugObject'] = RedSprite3D(
+            redGL,
+            RedBitmapMaterial(
+                redGL,
+                RedBitmapTexture(
+                    redGL,
+                    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYxIDY0LjE0MDk0OSwgMjAxMC8xMi8wNy0xMDo1NzowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNS4xIFdpbmRvd3MiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OEY3MkNCREQzRUMwMTFFODkxOUZBQUY2QzI1MUMxRkYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OEY3MkNCREUzRUMwMTFFODkxOUZBQUY2QzI1MUMxRkYiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo4RjcyQ0JEQjNFQzAxMUU4OTE5RkFBRjZDMjUxQzFGRiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo4RjcyQ0JEQzNFQzAxMUU4OTE5RkFBRjZDMjUxQzFGRiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PnFzHU0AABcbSURBVHja5Ft7lCRVeb+3Ht1VPY+dnRl0EYiyQBbkKCCBRIi8H+dE2EhWskZCEIgnBI4gaxLeJ5FzAq7EiCZKIIjyUDcx6BI1CLhwAIMkLoIeSYDIIuyuyO7OzM6ju9518/vuvdV9q7p6Zvjb2VPbXV1V937v7/d99xYXQrBf5z+L/Zr/Oezha5v4JDOI9W8+jhRHgoPj8HBk+rqlz0McOQ4bBz0f6DEc4zzX3+m3th6Lqfu4zbIoY3nuMtfjjPMEv2IsaY5CP2vp51N90N+QnjutzCWM+yNNbwOHa8zd1GOE+tMrLCCuMM8088V5bjBfCCc3hBEbzJvCcfVvgSFwIWkRacbae05g4d6HWXv3d1k4ezz9qIlsauJbepyClpaeK63MnRu0Fcy7eoxiblcrK9LnTf1M6GjiTeYDY8JMP8T19aQijEgTZEOLnnxWiCoBuf7O5f30v+CTMIJ/wjOHMYHLcfs3WJYex1rjU1poI5W5W6W5OW/Ja0IkmjFfz5UZltEx5nb1udCCs/T9vGBkXE80iPmWYSmWPlfMc+7g4CwJFlgS4hmrjnm3a2Vk5dH8Kgy7Wk1Fw1urmWUfYmiLzHauj3lO9OJIwgWWhol0pTLz7hLMF5ovzhtFEIwN5ocGSL+Qdqvnh2A+z3LWmVnDOtMXQwiHM04WIIIBBKi/PMW1PC9HI0/rQ95vaU36JeYzTNmZwlxTf8DS6AAIDc/wsMbsBzFvuiSNbVuamQWD+XSg6fWbfc6iheOhjSeY5dzJ8uRJNv/Gb7O4k4OZKgFK2MSkt4KeLYfjYG8OYTKt+Vy7QarntjEC5po/C8HzaTB+P0vjxxFH3gFrICt0K8F3EPOmG9Bfx9I3tvRRMG8tYvaJHIzzJjSew38vAFPj2rxXgomb4QWOFqA5oavuAX3RQtaXj/wxm1lWEZjJ0ua7zFuOzaLZcZZ0boLVD6tAmh3I0uAsI6h1lsm8b7i7tLlM/5AZzPuG2VeZt7vRnh53mjvLyMI+EYReCAIR8LgZdKJeLsg5qwIwkQudKcc1E1oYCK5xO2ZxcBkEcXjvftzeHN3D3BZ9X0zzto4poibQNy39UK5dYVC0Dw3mfR3tczAP9kbuxOPbSsykwV+yqP0WJp20G3RYxQV6PiDzw7xgMoGwGa19Pbdos2DmUHy/opRNLWcrc/3vSIsq5/3FfL6a5ZhpAVaNz7dKPt8XccUQptqOY6MZ48DkIYgHG1gWZ/heMG8bLhAyE4NLO1lRBEHRBWkk+M40/XQNBDZRur8x9LcQwqy+fTmaFxVhSKUXQCgcwHw4mHlMSqbnYO6hfb4MYv6zRzvkmUZ/Dr99tzGh02Wg4W2DcWyRwpByyLeCweeNeSZkkEyRVrPoVJBzfkn7dmMzs93NWvtLad6rIMCWvi8sYoCnI25UY/aDmO9FXCEaIAiCsz5ZymycjyIgXqHNWhgxwIbfCoCeS2DCtwIK3wrtrwdDCxpE0SCz+N7BuLi7eZkBo5nMWCK/UUGANxXwSpov0KRjaCap1TznfgXh1UTcPGYN/xF8bkKO/5CK0vS0MyE1rHI1yRu4IU1ZCMtsDO9k/sorFQK2lTtyGovHFOLxHCdHB7N+if0svY15rWdhQS6uuUYtUGGe6BaswrwwYp2scRwDA1R8nkQMoEMIT8ITH/eKptRMNeISky5BCOt6gJSDkM6OAdN7AW6+UAqO0byFiH4ALOMgEL+fJIoQncgD+PQezPd/+L4T34l3h8VzCcuSfwazJ0mCRf4Ya7Q2Mm8UWSRvDNQ8YZA8i1k4k8ks4bZ8lWW6zHdTPhcPXWPrh92S5gUEEkxNIpCdzKzGFCZ9AoMGMFm2CL7usHhhFDjgGGh6O46XtM+uASPrkB5PB3FHgIYxIlMpihdxD1lA7MHxLJj8Hu7/N9y7nbUmyMCOAFBaKSN/a4KsEfOJGuYp7UqoTYo7Fda1hnljD0EALxr5xox1nATQ0uYx10113LZRqU1ioAcxaRHIHoH53cBG9vkv+CWZZtbHvMIBjnSXhd0CAewg+PZVuOuPcP9wH/ob+Cf52IOxvgLL+zwksJ05LaYAFqzQZJ4j1Yq8Y1jZUSycuwHud44OHa/inlMhuJcx/1AF7PmWZnpvj3n4TtIB8Jg/w2Ce/k7HoI+zYPYOtrBrX0gYNoIoJQuUIs/j2TzjgKjE/KV4/r8hjI+C1hrmRblFUPrjpJtJMPYXYOgpFsyt1z/bJZ8n5tOQrA76XFiFsvrvQfsTEPo5vbHzt2Osc/T8SRXsOUaOVk0DSm2IL/Dp15HKqqrB9eyjuGct8P5ncI6S1p6XgIgG5Ahg7WkPRN0B5j9Sr1z4Ird3gfjXYObTclrbJTs/ENcmlFy4iSn2R8myCSn1WNB9FVwRdYYN5hmZeZu1d7uINRdj4OuRhfbrE7TCDNvk70KYWY6+J+QCVsWnMxn8KLC1d8F8s+tAhF/ORN2qbjNrjpwLP7NAfI6YAeajr4HAs2s4fwPEbML934FZvwC0+CsIMcU50qLvAfCM4dkjgCvWAUStw70r+jjJ8zthypciRnDMDWHvQYWY3ANLPK9/Ooms90KRN7Hm8C1GoO8yT+ckgGYXdZXLyg7MiQLTUZD0jZjwLAXNS5NkYP4kpMAfQBMEfr4KzX+4QkoM4dyGz41Ie69L4skKCDNwy5KNFCFCWE0uWwkIIcgkB2Os63H9gj7GbPezCKobZKZIguPhIo93UWbPylLc91XUCjdDoC/qGFtl3i5qAccohtxSn60x7GKQn2KQsyHltTieK3e3LBREYlYynwRXl5mXEf51fK7D8x9nw299HaY6hBjhaGxAPcAWiI0kPnaASSwL0Dq3AIx+zkZWfQTR+yKcz5brjPhKQOkLJIbjfBrjzZXtPX8SY53BWpMXKubFIOblOVkA1wKw6xsKvCM1RqVqEg5DO5dAS3+smHdukbV53P4t3PcYCBo2kOAOEPIBfHsGZm5pYBL3FVWDOjkU4JIgQGA7A+f/imOFMfZOCOcEloXbWJqcC8u5WtUd7HbmT9yNeQljk4CTGrO3TaRLAmA13dyaPA+R52kHvksBchixgUBKhN9I+w/gnrWGJkJme2fB3LfAFAcRsMw2FuX1hfMRL+4pBTiRfZE1V1wG/ybXa8AVMlgsgI/nadATLcU8XacbRnUNHi7eR0PuBTKFS3iQRYzvkfRDp3kirp1d8cGbYSVgvsGXYH6pBmZTBmDbvRfM315Ol9Z5zHEP09gjRm1BzLeWwXxgtNW9IodPa4JsfXSMVrfVw9PCURWYiLulbRycp1Bdl/n/AVD6nBQOlcuLa96rYb6M7SlAUr+wNX4LhLHLgAorAHjWwQ1024ENaXC2lOYzs4Vf9AOKFhWlwEB3cpju+gYKYnKma4ReYZOGEzhOLplmnt4F/5zF9aFKF2kxzbsG83l/PS8zxcv49rVyyR2fydLUltd7IIf31gx4UlnMSatzFz1BX5u5LOxkHSRBkOy8MCll0jYxmsV6DpRxSUgmuNrQ/gI09V3WHCJLeTNm3zDO+zs5HP8yGkpsVsrogqQjEekP0czFii4uVIAG85IXS8hAbvFidSk3BN1dGQpkPk5CCjjU428isqNy6zgsajfwCQJil4XzpHUKHereLFyjobAWlv08QM1ryPF5pX8YVE1vUbMv1/Oq59dALdCa/BkY+oWRDYZB72+CXmKUmrScBdNMYooA2THGMFkikLmELMGV9eQqBaulMu3j1N8HZ+Hew2RjI5vZX4KJPLHkM9S+ymFqGapBx/1HRODNslnhtA5Rkxf1v/uyIl6wAZr3asy+syjzhSVQF1qkc8j7L+H7gUb/8W2yQs0zMDl7ER49U7bX8zgntiAALoVA+CNpPw26/wGATAcwNSEACAYPkeMFA5LjR3Wbl0UBqXC0Shp5dgyqwpMR/Z/Bj+OGNggnvC5dxhu1ZCNjcZ9vDOjhDWhgwoTTKIHwpyRjBdx1/TFZ84ezH8cPGyXdQqH5bqCWQVJC6XUYpiU7SpozSwaKHL6bRatwetjSlWo+AkL2l66QRqKcm9NEC65O80HF54MK850BzOs2FjIP9R8tp1w6WviRGM6S43o4fVDZLX8/0ixHdbogBEfdmOzRMqw0Couun7s/gES/zwJU0HnSLt3TGB6H9klI4QCzb9RE+7oGZn8bi8a3PRTE7mhpTSFLZ2UNYTnf7jVZhfoUBm2654KU+h9d68YZNRhcKQh/ZYKLF8KnL4ZfvR1ojzqyajS3SYHRQXZ4jfljd0EAbeR6mHz7lwiSyvxlYshXwxSp/Byk+UGpblDfvrdewRF0gmn4cXiAzvtFvfGGdtkvwULmcN/pEhY7LoquDP6f4buH+BXTYsz3EEwfwKdV7G/QVaBq3YLwGQz+KUhZAL+DlBnyMaZWX/bQJ2nA7vqVEC+WzCtLDofQ9sEkqI54c4mAZ5q9V2/2Zg8vb0PbB4HhNaVK0268LJujzSG438g3MPw3mFxksnRKt8hquWzgqCXKFUZHybaMRQhLDuQ0Baox5RoULR2fcnoTRQZ9h7/lvQWOeOFZfJk2CNqXNUZOkYGwnOoaizBf17ouNzA5AmDcJpc7Q/Umuml3G+h9pbusJsQIfh5VqVl4zGq4CIaEEFsyU7i+L9Fssb6pa4HU2O4ilL/kTgEUlIvIICR3NnS3q5DZt8Z3wCKe6jqbLKqji5GbmQF33TcR8Fp9zNN8eRYpQGQskEj9NZ6Eye/RNBWArnCphqJdVoQp+HJVM7W0Et5dGitaRa6xnSTTBLi9NQNudaO+ELZ0DW5v6gUl6QanIy6s1VmmivCWEe371igjOXWe/ykmfY/hcZTbv67jgA3SWpr5gm7HmMs2ut6xdjm5Am0ZRYlrFA+xJjjrLVRyX8LbqJ0pDMEzuWEhS74FAp4rLX5y8WlYwf7Sb1VdsRyfr2o+6+4qyaJ3wYdvKKU3IR7B2I/J+ZIow3VEX97WfHDd6C2UXLhYaOwSmTG3yXkVApql4oI6xbS6E86kiPLvhhA2Al5ey9q738qGJjtIf5/RwKogbg2L525HEB2SvsKtxXy+xuwJt3PVkU3DfVk0dzeEuY+BRQjObmTeSiqIjsf1v0OG+BiEPinpFmLesDprwBYZGZ+Kcjcx1u6qG5IaSCFtlJ6TmGwDTP5jLOkM6yCEgGetxXEfzn8f93/QsITfg4n+C4vmL5apym0pQStUWZ/qil1oWRTJLJNnq/H8Jpj/UeVubw44O/koBPEuKOLfZT9DFnCdy3H8Deb+OhSTK3MUgV6J9ipL9b5pAQ1jaSw1NiTlmCBn7amLUAv8CERdAzJVj1+OLY5jwex+yA60QvwJ/PZSKS0K8X5o5VFYzWmyc0S1fdzW2N7y9eKqzvOWJ9cFg5kIwoY62uvx+TiYPKaMNsVTKIr+WqZnufoMON6LSwdDWPfhme9j3hMA1gJZB6gdbLwu/hTaD7UQ9KoJuCOpBdPvA/DYIkEG4++ogcVbcfxC1s9O8zXAij+E1naU9wrwd+LygxDC/XCZ06BRXwojXghwHsoWG8WJaD7AfLRWuBZzP4TfEVyz/UuLJ0K8gMxzPphfUPEnfQbPTpXRrhT8yRjvERx3wGpR2EnrrtsoIZfGHM18b0sM1dCd6VNBxGYQP1TTc4fmsk1Ai1ex1sodOIdVUBs9pI1OR0PLBEgO7F+hkAuXsBLrx8jp/wvh7QEzhERXwa1W49qxOA4csFT2Y8y1Htb2c8xtd5s4tAYY7EURxI82IK4pkecg8FPYyKoZvdJdWiF2dHROe8zT0ljQBkEfAKAZ6lvK4vyHIPx6IMVHWXMUqJDaXkBWtIvL9aiH9wyKohMxxm24+f2VQoTLAMnSNSpbkN8mvcbLwHVCcS9rTVwJSDttMO/K+OQ0tjBv5Hdxz5+B5qvx+6pytsiOxHPHIk49pNO1GW9yq2ZjRCTNyPV/ZBBAXrEDk9F638lAiI8CLRLI8I09gU2535dqcX9sOxtetQ5A5RKcv9K3Iaq0bbiyFFa2tJ/h4rkw+z8BEzMQLO/boaIatTHzxj6H+uQ9GPLzsq3XqxV2QkCvmDvDjDQbFm3xchORW2qr2vwbH4IEPwhhPM+aw1/AhDtVq9RtSGRVKmygzjTqIDARQS25ESJPEEydcRByHrSzHpZztOzf8WIpQpQFovBFB/P/EM/fjXm/yfzxNmhoIQXDTfleCIMapf0bsjmtX+g2etx+L2LOJagBGmD+ixjnSa0EXtkOKGOAa+yyLndQae3OsjlM21RhDfNyP0GHdXY3ofGb5CpSGv0ExdXlyA6/lP28aM6Ctg7FnL8DYRwOZt8GmQHnM1rfQ97mr0LIP0UwfQ6x50UEuBzMU5MVqW4aws8OhkV9Cdb1SVkbKKHVbIDkysxpxbjhKzfrMe9XtgN6TncTc10DszlM5XJDp6rF9uF1dK9gAxjboLpH7sGY/FWcf0Jq3BvL4YcvyLZ5o9WL2KFe2WqOMlmwiCIeyDxrI8B9Cs+8T1V36fVsYddLoOte3F8UZpVNGlTpYdzmiCczmRCREf37Nn9bi/bOqQrsZ76/sKGzLKFdIFd2zVnu8oomZEmt7Jvigy1rCGkx2bhc8UnDU+Qagus56rpu1VEPMF6AdYSTlRhxLQqwfVS3t0tLJc8LX27GZKJgdtD+59gyioXqqonpZ4P69kraRLSMwAZclT245AHZOFFCyWSrmqOG6ExZbGH3XRDAPXh2i1x9zuLU2P3tS+LtZoRUe18piHLrUBYHl7OFNxJt21558aac56s+X0W6xd4Ar6aBGVQamFXmey9CZMFJ0OT5pfSTZ9+G2X+LNYfcCjBiMi0xdlY3GKbRFSycPwRf4+5GLbUTlTNv9CvM4k+XskMSXIrjnXo+a0CFuRTzdrE0ViyR55U+frWBWS1p1W6saL7JgrnrdMFTRPMONHcjiiQOQVilviEtGeRZS2ubdWsCyx7TyHxGE+jK5fMsnsdMN5aEaFnjGPs6iShVd+dNa96MAbnxosJSDcxySUtb0ZLOOWD+tMpOztsRrbfiMbdXZPHu4hO0lxrLbwoKOx7XDZfiPQG1XYfWBYff8iA+v1nuO8QfZu09p2F+1usS1TK/6M53U/vu8nyeFVUdl6kmT99bDlL8NYCkz+rf4j5UR4ZCLTe5EdIAmdFspn3aMd5bKObmMk6wfK4y1pmqX5lX9wGnNa/61O18tyxjo/Ryfd7TkDaQm6OaI1tVG02bd2Po04jS23U0t3rND9EDO2ko+lv3pV0uU0bzQr3X5Po/gRXcWkKnjeGntSeFS0X7yi7YoifoFXuDxCLMV9+06DUzHM+DFjZBOwA09gkAHlugkS8bzPvGW1+a8Jx12+09CEjQ29a7SAo3KG+1b427LIluYu1dO4AxTmTe0MOY636jEeMv4fPVne8y1hVQmC2h+X7mizaWwgl6bYAXqMuqvHdQzgK0YzSYfbhXvQmC38ehzt+qF1uH9dx7DYTH5U5V8vlmq4rwWstgvnbzt7UI886SzMu3RjjXZWZjSeaLTJBlrxo9OyYxvjc2pQVStK1nKggvkB7rjfq0RGRgA78m4CXL3PluFz7aHLw5oRZoCGP/fd3LlWau9fvfV22+hONqoMHdCKK/gjb/CnEDFZtYobfsCCN+lDs5aofKIJ/339wLHyoGJMYbmHUBrw5ohAPSTWkToiH98uu6TgN1/MTtKLYeAFrMkDZ3G73C4nWZIU1TZKTodJFUZzLvVHaFDNyY5RjbYwYFvMX6+MthPq0IIFXvHggHQXMX+LAVdpc2XaQ+x2jVmTGhbTRT0/4tMd3oPlbsBl9iV5pwjDa4VdO67himJQZI315iK5ptCNns0+eKablykxlb9ld03wzpaTLVllF9t9E2NG9uvNprvEjVNJhvVqpZ9/8FGAAhiupr7Qvt4wAAAABJRU5ErkJggg=='
+                )
+            )
+        )
         console.log(this)
     }
     /**DOC:
@@ -1674,6 +1721,14 @@ var RedPointLight;
             writable: false,
             value: RedPointLight['type']
         })
+        /**DOC:
+            {
+                title :`debug`,
+                description : `디버그오브젝트 활성화 여부`,
+                return : 'Boolean'
+            }
+        :DOC*/
+        this['debug'] = false
         this['debugObject'] = RedMesh(redGL, RedSphere(redGL, 1, 16, 16, 16), RedColorMaterial(redGL))
         this['debugObject']['drawMode'] = redGL.gl.LINE_STRIP
         console.log(this)
@@ -1702,7 +1757,16 @@ var RedPointLight;
 "use strict";
 var JsonModelLoader;
 (function () {
-    //TODO:
+    /**DOC:
+        {
+            constructorYn : true,
+            title :`JsonModelLoader`,
+            description : `
+                초안 작업진행중
+            `,
+            return : 'void'
+        }
+    :DOC*/
     JsonModelLoader = function (redGL, key, src, callback) {
         if ((!(this instanceof JsonModelLoader))) return new JsonModelLoader(redGL, key, src, callback)
         console.log('~~~~~~~~~~~')
@@ -1712,7 +1776,7 @@ var JsonModelLoader;
             request.onreadystatechange = function () {
                 if (request.readyState == 4) {
                     var jsonData;
-                    var interleaveData,indexData;
+                    var interleaveData, indexData;
                     var i, len;
                     interleaveData = []
                     indexData = []
@@ -1721,8 +1785,8 @@ var JsonModelLoader;
                     for (i; i < len; i++) {
                         interleaveData.push(jsonData['position'][i * 3], jsonData['position'][i * 3 + 1], jsonData['position'][i * 3 + 2])
                         interleaveData.push(jsonData['normal'][i * 3], jsonData['normal'][i * 3 + 1], jsonData['normal'][i * 3 + 2])
-                        if(jsonData['uvs'])interleaveData.push(jsonData['uvs'][i * 2], jsonData['uvs'][i * 2 + 1])
-                        else interleaveData.push(0,0)
+                        if (jsonData['uvs']) interleaveData.push(jsonData['uvs'][i * 2], jsonData['uvs'][i * 2 + 1])
+                        else interleaveData.push(0, 0)
 
                     }
                     console.log(jsonData)
@@ -1740,7 +1804,7 @@ var JsonModelLoader;
                                     size: 3,
                                     normalize: false
                                 },
-                                ,
+                                    ,
                                 {
                                     attributeKey: 'aVertexNormal',
                                     size: 3,
@@ -3749,42 +3813,64 @@ var RedBox;
             }
         }
     })();
+    /**DOC:
+        {
+            constructorYn : true,
+            title :`RedBox`,
+            description : `
+                RedBox Instance 생성기.
+                Box 형태의 RedGeometry 생성
+            `,
+            params : {
+                redGL : [
+                    {type:'RedGL'}
+                ],
+                width : [
+                    {type:'uint'},
+                    '기본값 : 1'
+                ],
+                height : [
+                    {type:'uint'},
+                    '기본값 : 1'
+                ],
+                depth : [
+                    {type:'uint'},
+                    '기본값 : 1'
+                ],
+                widthSegments : [
+                    {type:'uint'},
+                    '기본값 : 1'
+                ],
+                heightSegments : [
+                    {type:'uint'},
+                    '기본값 : 1'
+                ],
+                depthSegments : [
+                    {type:'uint'},
+                    '기본값 : 1'
+                ]
+            },
+            example : `
+                RedBox(RedGL Instance);
+                RedBox(RedGL Instance, 1, 1, 1);
+                RedBox(RedGL Instance, 1, 1, 1, 16, 16, 16);
+            `,
+            return : 'RedBox Instance'
+        }
+    :DOC*/
     RedBox = function (redGL, width, height, depth, widthSegments, heightSegments, depthSegments) {
         if (!(this instanceof RedBox)) return new RedBox(redGL, width, height, depth, widthSegments, heightSegments, depthSegments)
         if (!(redGL instanceof RedGL)) throw 'RedPrimitive : RedGL 인스턴스만 허용됩니다.'
-        /**DOC:
-            {
-                code : 'PROPERTY',
-                title :`interleaveBuffer`,
-                description : `
-                    interleaveBuffer 정보
-                `,
-                example : `
-                    // TODO:
-                `,
-                return : 'RedBuffer Instance'
-            }
-        :DOC*/
+
         var t0;
         t0 = makeData(redGL, width, height, depth, widthSegments, heightSegments, depthSegments);
-        // TODO: 유일키 방어
+
+        // 유일키방어
         if (!redGL['_datas']['Primitives']) redGL['_datas']['Primitives'] = {};
-        if (redGL['_datas']['Primitives'][t0['type']]) return redGL['_datas']['Primitives'][t0['type']]
-        else redGL['_datas']['Primitives'][t0['type']] = this
+        if (redGL['_datas']['Primitives'][t0['type']]) return redGL['_datas']['Primitives'][t0['type']];
+        else redGL['_datas']['Primitives'][t0['type']] = this;
+        //
         this['interleaveBuffer'] = t0['interleaveBuffer']
-        /**DOC:
-            {
-                code : 'PROPERTY',
-                title :`indexBuffer`,
-                description : `
-                    indexBuffer 정보
-                `,
-                example : `
-                    // TODO:
-                `,
-                return : 'RedBuffer Instance'
-            }
-        :DOC*/
         this['indexBuffer'] = t0['indexBuffer']
         this['_UUID'] = RedGL['makeUUID']();
         // Object.freeze(this)
@@ -3793,6 +3879,7 @@ var RedBox;
     RedBox.prototype = RedGeometry.prototype;
     Object.freeze(RedBox);
 })()
+
 "use strict";
 var RedPlane;
 (function () {
@@ -3810,18 +3897,18 @@ var RedPlane;
         var tX, tY;
         var a, b, c, d;
         var tType, tDatas
-        return function (redGL, width, height, segmentW, segmentH) {
+        return function (redGL, width, height, widthSegments, heightSegments) {
             width = width || 1, height = height || 1
-            segmentW = segmentW || 1, segmentH = segmentH || 1
+            widthSegments = widthSegments || 1, heightSegments = heightSegments || 1
             width_half = width / 2, height_half = height / 2
-            gridX = Math.floor(segmentW) || 1, gridY = Math.floor(segmentH) || 1
+            gridX = Math.floor(widthSegments) || 1, gridY = Math.floor(heightSegments) || 1
             gridX1 = gridX + 1, gridY1 = gridY + 1
             segment_width = width / gridX, segment_height = height / gridY
 
             // TODO: 중복방지
 
             // 기존에 생성된 녀석이면 생성된 프리미티브 정보를 넘긴다.
-            tType = 'RedPlane' + '_' + width + '_' + height + '_' + segmentW + '_' + segmentH
+            tType = 'RedPlane' + '_' + width + '_' + height + '_' + widthSegments + '_' + heightSegments
 
             ////////////////////////////////////////////////////////////////////////////
             // 데이터 생성!
@@ -3835,8 +3922,8 @@ var RedPlane;
                 for (ix = 0; ix < gridX1; ix++) {
                     tX = ix * segment_width - width_half,
                         interleaveData.push(tX, - tY, 0) // position
-                        interleaveData.push(0, 0, 1) // normal
-                        interleaveData.push(ix / gridX, 1 - (iy / gridY)) // texcoord
+                    interleaveData.push(0, 0, 1) // normal
+                    interleaveData.push(ix / gridX, 1 - (iy / gridY)) // texcoord
                 }
             }
             // indexData
@@ -3886,42 +3973,53 @@ var RedPlane;
             }
         }
     })();
-    RedPlane = function (redGL, width, height, segmentW, segmentH) {
-        if (!(this instanceof RedPlane)) return new RedPlane(redGL, width, height, segmentW, segmentH)
+    /**DOC:
+        {
+            constructorYn : true,
+            title :`RedPlane`,
+            description : `
+                RedPlane Instance 생성기.
+                Box 형태의 RedGeometry 생성
+            `,
+            params : {
+                redGL : [
+                    {type:'RedGL'}
+                ],
+                width : [
+                    {type:'uint'},
+                    '기본값 : 1'
+                ],
+                height : [
+                    {type:'uint'},
+                    '기본값 : 1'
+                ],
+                widthSegments : [
+                    {type:'uint'},
+                    '기본값 : 1'
+                ],
+                heightSegments : [
+                    {type:'uint'},
+                    '기본값 : 1'
+                ]
+            },
+            example : `
+                RedPlane(RedGL Instance);
+                RedPlane(RedGL Instance, 1, 1);
+                RedPlane(RedGL Instance, 1, 1, 16, 16);
+            `,
+            return : 'RedPlane Instance'
+        }
+    :DOC*/
+    RedPlane = function (redGL, width, height, widthSegments, heightSegments) {
+        if (!(this instanceof RedPlane)) return new RedPlane(redGL, width, height, widthSegments, heightSegments)
         if (!(redGL instanceof RedGL)) throw 'RedPrimitive : RedGL 인스턴스만 허용됩니다.'
-        /**DOC:
-            {
-                code : 'PROPERTY',
-                title :`interleaveBuffer`,
-                description : `
-                    interleaveBuffer 정보
-                `,
-                example : `
-                    // TODO:
-                `,
-                return : 'RedBuffer Instance'
-            }
-        :DOC*/
         var t0;
-        t0 = makeData(redGL, width, height, segmentW, segmentH);
-        // TODO: 유일키 방어
+        t0 = makeData(redGL, width, height, widthSegments, heightSegments);
+        // 유일키 방어
         if (!redGL['_datas']['Primitives']) redGL['_datas']['Primitives'] = {};
         if (redGL['_datas']['Primitives'][t0['type']]) return redGL['_datas']['Primitives'][t0['type']]
         else redGL['_datas']['Primitives'][t0['type']] = this
         this['interleaveBuffer'] = t0['interleaveBuffer']
-        /**DOC:
-            {
-                code : 'PROPERTY',
-                title :`indexBuffer`,
-                description : `
-                    indexBuffer 정보
-                `,
-                example : `
-                    // TODO:
-                `,
-                return : 'RedBuffer Instance'
-            }
-        :DOC*/
         this['indexBuffer'] = t0['indexBuffer']
         this['_UUID'] = RedGL['makeUUID']();
         // Object.freeze(this)
@@ -4041,22 +4139,54 @@ var RedSphere;
             }
         }
     })();
+    /**DOC:
+        {
+            constructorYn : true,
+            title :`RedSphere`,
+            description : `
+                RedSphere Instance 생성기.
+                Box 형태의 RedGeometry 생성
+            `,
+            params : {
+                redGL : [
+                    {type:'RedGL'}
+                ],
+                widthSegments : [
+                    {type:'uint'},
+                    '기본값 : 8'
+                ],
+                heightSegments : [
+                    {type:'uint'},
+                    '기본값 : 6'
+                ],
+                phiStart : [
+                    {type:'uint'},
+                    '기본값 : 0'
+                ],
+                phiLength : [
+                    {type:'uint'},
+                    '기본값 : 2'
+                ],
+                thetaStart : [
+                    {type:'uint'},
+                    '기본값 : 0'
+                ],
+                thetaLength : [
+                    {type:'Number'},
+                    '기본값 : Math.PI'
+                ]
+            },
+            example : `
+                RedSphere(RedGL Instance);
+                RedSphere(RedGL Instance, 1);
+                RedSphere(RedGL Instance, 1, 16,16);
+            `,
+            return : 'RedSphere Instance'
+        }
+    :DOC*/
     RedSphere = function (redGL, radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength) {
         if (!(this instanceof RedSphere)) return new RedSphere(redGL, radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength)
         if (!(redGL instanceof RedGL)) throw 'RedPrimitive : RedGL 인스턴스만 허용됩니다.'
-        /**DOC:
-            {
-                code : 'PROPERTY',
-                title :`interleaveBuffer`,
-                description : `
-                    interleaveBuffer 정보
-                `,
-                example : `
-                    // TODO:
-                `,
-                return : 'RedBuffer Instance'
-            }
-        :DOC*/
         var t0;
         t0 = makeData(redGL, radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength);
         // TODO: 유일키 방어
@@ -4064,19 +4194,6 @@ var RedSphere;
         if (redGL['_datas']['Primitives'][t0['type']]) return redGL['_datas']['Primitives'][t0['type']]
         else redGL['_datas']['Primitives'][t0['type']] = this
         this['interleaveBuffer'] = t0['interleaveBuffer']
-        /**DOC:
-            {
-                code : 'PROPERTY',
-                title :`indexBuffer`,
-                description : `
-                    indexBuffer 정보
-                `,
-                example : `
-                    // TODO:
-                `,
-                return : 'RedBuffer Instance'
-            }
-        :DOC*/
         this['indexBuffer'] = t0['indexBuffer']
         this['_UUID'] = RedGL['makeUUID']();
         // Object.freeze(this)
@@ -4089,7 +4206,7 @@ var RedSphere;
 var RedProgram;
 (function () {
     var makeProgram, updateLocation;
-    var samplerIndex //TODO: 같은 이름으로 된 인덱스가 있을경우 기존 인덱스를 쓰도록 유도
+    var samplerIndex;
     makeProgram = (function () {
         var program;
         return function (gl, key, vs, fs) {
@@ -4138,7 +4255,6 @@ var RedProgram;
                     if (!t0['location']) t0['msg'] = '쉐이더 main 함수에서 사용되고 있지 않음';
                     t0['uniformType'] = v['uniformType'];
                     // renderType 조사
-                    // TODO: 데이터 타입조사를 이놈이 하는게 맞는건가..
                     var arrayNum, tRenderType, tRenderMethod;
                     arrayNum = v['arrayNum']
                     switch (v['uniformType']) {
@@ -4227,11 +4343,11 @@ var RedProgram;
                     {type:'String'},
                     `고유키`
                 ],
-                vs : [
+                vertexShader : [
                     {type:'RedShader Instance'},
                     `버텍스 쉐이더(RedShader.VERTEX 타입)`
                 ],
-                fs : [
+                fragmentShader : [
                     {type:'RedShader Instance'},
                     `프레그먼트 쉐이더(RedShader.FRAGMENT 타입)`
                 ]
@@ -4239,15 +4355,15 @@ var RedProgram;
             return : 'RedProgram Instance'
         }
     :DOC*/
-    RedProgram = function (redGL, key, vs, fs) {
+    RedProgram = function (redGL, key, vertexShader, fragmentShader) {
         var tGL;
-        if (!(this instanceof RedProgram)) return new RedProgram(redGL, key, vs, fs)
+        if (!(this instanceof RedProgram)) return new RedProgram(redGL, key, vertexShader, fragmentShader)
         if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedProgram : RedGL Instance만 허용됩니다.');
         if (typeof key != 'string') RedGLUtil.throwFunc('RedProgram : key - 문자열만 허용됩니다.');
-        if (!vs instanceof RedShader) RedGLUtil.throwFunc('RedProgram : vShaderInfo - RedShader만 허용됩니다.');
-        if (!fs instanceof RedShader) RedGLUtil.throwFunc('RedProgram : fShaderInfo - RedShader만 허용됩니다.');
-        if (vs['type'] != RedShader.VERTEX) RedGLUtil.throwFunc('RedProgram : vShaderInfo - VERTEX 타입만 허용됩니다.');
-        if (fs['type'] != RedShader.FRAGMENT) RedGLUtil.throwFunc('RedProgram : fShaderInfo - FRAGMENT 타입만 허용됩니다.');
+        if (!vertexShader instanceof RedShader) RedGLUtil.throwFunc('RedProgram : vShaderInfo - RedShader만 허용됩니다.');
+        if (!fragmentShader instanceof RedShader) RedGLUtil.throwFunc('RedProgram : fShaderInfo - RedShader만 허용됩니다.');
+        if (vertexShader['type'] != RedShader.VERTEX) RedGLUtil.throwFunc('RedProgram : vShaderInfo - VERTEX 타입만 허용됩니다.');
+        if (fragmentShader['type'] != RedShader.FRAGMENT) RedGLUtil.throwFunc('RedProgram : fShaderInfo - FRAGMENT 타입만 허용됩니다.');
 
         tGL = redGL.gl;
         // TODO: 유일키 방어
@@ -4258,7 +4374,9 @@ var RedProgram;
             {
                 title :`key`,
                 description : `고유키`,
-                example : `Instance.key`,
+                example : `
+                // TODO: 
+                `,
                 return : 'String'
             }
         :DOC*/
@@ -4267,16 +4385,14 @@ var RedProgram;
             {
                 title :`webglProgram`,
                 description : `실제 프로그램(WebGLProgram Instance)`,
-                example : `// TODO:`,
                 return : 'WebGLShader'
             }
         :DOC*/
-        this['webglProgram'] = makeProgram(tGL, key, vs, fs);
+        this['webglProgram'] = makeProgram(tGL, key, vertexShader, fragmentShader);
         /**DOC:
             {
                 title :`attributeLocation`,
                 description : `어리뷰트 로케이션 정보`,
-                example : `// TODO:`,
                 return : 'Array'
             }
         :DOC*/
@@ -4285,7 +4401,6 @@ var RedProgram;
             {
                 title :`uniformLocation`,
                 description : `유니폼 로케이션 정보`,
-                example : `// TODO:`,
                 return : 'Array'
             }
         :DOC*/
@@ -4294,7 +4409,6 @@ var RedProgram;
             {
                 title :`systemUniformLocation`,
                 description : `시스템 유니폼 로케이션 정보`,
-                example : `// TODO:`,
                 return : 'Array'
             }
         :DOC*/
@@ -4303,10 +4417,10 @@ var RedProgram;
         // 쉐이더 로케이션 찾기
         tGL.useProgram(this['webglProgram'])
         samplerIndex = 2
-        updateLocation(this, tGL, vs);
-        updateLocation(this, tGL, fs);
+        updateLocation(this, tGL, vertexShader);
+        updateLocation(this, tGL, fragmentShader);
         this['_UUID'] = RedGL['makeUUID']();
-        Object.freeze(this)
+        // Object.freeze(this)
         console.log(this)
     }
     RedProgram.prototype = {}
@@ -4612,7 +4726,6 @@ var RedShader;
             {
              title :`webglShader`,
              description : `실제 쉐이더(WebGLShader Instance)`,
-             example : `Instance.webglShader`,
              return : 'WebGLShader'
             }
         :DOC*/
@@ -4623,17 +4736,16 @@ var RedShader;
         {
             title :`key`,
             description : `고유키`,
-            example : `Instance.key`,
             return : 'String'
         }
         :DOC*/
+
         //TODO: 고유키 방어
         this['key'] = key
         /**DOC:
 		{
             title :`type`,
 			description : `RedShader.VERTEX or RedShader.FRAGMENT`,
-			example : `Instance.type`,
 			return : 'String'
 		}
 	    :DOC*/
@@ -4647,12 +4759,6 @@ var RedShader;
 		{
             title :`RedShader.FRAGMENT`,
             code: 'CONST',
-			description : `
-				프레그먼트 쉐이더 상수.
-			`,
-			example : `
-				RedShader.FRAGMENT
-			`,
 			return : 'String'
 		}
 	:DOC*/
@@ -4661,12 +4767,6 @@ var RedShader;
 		{
             title :`RedShader.VERTEX_SHADER`,
             code: 'CONST',
-			description : `
-				버텍스 쉐이더 상수.
-			`,
-			example : `
-				RedShader.FRAGMENT_SHADER
-			`,
 			return : 'String'
 		}
 	:DOC*/
@@ -4869,16 +4969,15 @@ var RedRenderer;
                     i = tList.length;
                     while (i--) {
                         tLightData = tList[i];
-                        tDebugObj = tLightData['debugObject'];
-
                         vec3.set(tVector, tLightData['x'], tLightData['y'], tLightData['z'])
-                        tDebugObj['x'] = tVector[0];
-                        tDebugObj['y'] = tVector[1];
-                        tDebugObj['z'] = tVector[2];
-
-                        tDebugObj['material']['color'] = tLightData['color']
-
-                        lightDebugRenderList.push(tDebugObj)
+                        if (tLightData['debug']) {
+                            tDebugObj = tLightData['debugObject'];
+                            tDebugObj['x'] = tVector[0];
+                            tDebugObj['y'] = tVector[1];
+                            tDebugObj['z'] = tVector[2];
+                            tDebugObj['material']['color'] = tLightData['color']
+                            lightDebugRenderList.push(tDebugObj)
+                        }
                         //
                         tLocationInfo = tSystemUniformGroup['uDirectionalLightPosition'];
                         tLocation = tLocationInfo['location'];
@@ -4951,18 +5050,16 @@ var RedRenderer;
                     i = tList.length;
                     while (i--) {
                         tLightData = tList[i];
-                        tDebugObj = tLightData['debugObject'];
-
                         vec3.set(tVector, tLightData['x'], tLightData['y'], tLightData['z'])
-                        tDebugObj['x'] = tVector[0];
-                        tDebugObj['y'] = tVector[1];
-                        tDebugObj['z'] = tVector[2];
-                        tDebugObj['scaleX'] = tDebugObj['scaleY'] = tDebugObj['scaleZ'] = tLightData['radius']
-
-
-                        tDebugObj['material']['color'] = tLightData['color']
-
-                        lightDebugRenderList.push(tDebugObj)
+                        if (tLightData['debug']) {
+                            tDebugObj = tLightData['debugObject'];
+                            tDebugObj['x'] = tVector[0];
+                            tDebugObj['y'] = tVector[1];
+                            tDebugObj['z'] = tVector[2];
+                            tDebugObj['scaleX'] = tDebugObj['scaleY'] = tDebugObj['scaleZ'] = tLightData['radius']
+                            tDebugObj['material']['color'] = tLightData['color']
+                            lightDebugRenderList.push(tDebugObj)
+                        }
                         //
                         tLocationInfo = tSystemUniformGroup['uPointLightPosition'];
                         tLocation = tLocationInfo['location'];
@@ -5153,14 +5250,15 @@ var RedRenderer;
                     gl.cullFace(gl.BACK)
                     gl.clear(gl.DEPTH_BUFFER_BIT);
                 }
-                // 디버깅 라이트 업데이트 
-                self.sceneRender(redGL, gl, tCamera['orthographic'], lightDebugRenderList, time, self['renderInfo'][tView['key']]);
+
                 // 씬렌더 호출
                 self.sceneRender(redGL, gl, tCamera['orthographic'], tScene['children'], time, self['renderInfo'][tView['key']]);
                 // 그리드가 있으면 그림
                 if (tScene['grid']) self.sceneRender(redGL, gl, tCamera['orthographic'], [tScene['grid']], time, self['renderInfo'][tView['key']]);
                 // asix가 있으면 그림
                 if (tScene['axis']) self.sceneRender(redGL, gl, tCamera['orthographic'], tScene['axis']['children'], time, self['renderInfo'][tView['key']]);
+                // 디버깅 라이트 업데이트 
+                self.sceneRender(redGL, gl, tCamera['orthographic'], lightDebugRenderList, time, self['renderInfo'][tView['key']]);
             })
             if (this['renderDebuger']['visible']) this['renderDebuger'].update(redGL, self['renderInfo'])
         }
