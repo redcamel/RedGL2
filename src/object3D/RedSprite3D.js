@@ -28,7 +28,7 @@ var RedSprite3D;
     :DOC*/
     RedSprite3D = function (redGL, material) {
         if (!(this instanceof RedSprite3D)) return new RedSprite3D(redGL, material);
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedSprite3D : RedGL Instance만 허용됩니다.')
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedSprite3D : RedGL Instance만 허용됩니다.', redGL)
         if (!(material instanceof RedBaseMaterial)) RedGLUtil.throwFunc('RedSprite3D : RedBaseMaterial 확장 Instance만 허용됩니다.')
         var tGL;
         tGL = redGL.gl;

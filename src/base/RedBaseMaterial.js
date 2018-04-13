@@ -40,6 +40,28 @@ var RedBaseMaterial;
                     RedGLUtil.throwFunc('Material에 ', tUniformLocationInfo['materialPropertyName'], '이 정의 되지않았습니다.')
                 }
             }
+        },
+        /**DOC:
+            {
+                code : 'METHOD',
+                title :`checkProgram`,
+                description : `
+                    키에 해당하는 프로그램이 존재할경우 기존것을 리턴하고 
+                    없을경우 신규생성함.
+                `,
+                return : 'void'
+            }
+        :DOC*/
+        checkProgram: function (redGL, key, vSource, fSource) {
+            if (RedProgram.hasKey(redGL, key)) return RedProgram(redGL, key)
+            else {
+                return RedProgram(
+                    redGL,
+                    key,
+                    RedShader(redGL, key + '_VS', RedShader['VERTEX'], vSource),
+                    RedShader(redGL, key + '_FS', RedShader['FRAGMENT'], fSource)
+                )
+            }
         }
     }
     Object.freeze(RedBaseMaterial)

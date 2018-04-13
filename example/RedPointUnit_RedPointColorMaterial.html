@@ -68,21 +68,9 @@
                         redGL,
                         interleaveData,
                         [
-                            {
-                                attributeKey: 'aVertexPosition',
-                                size: 3,
-                                normalize: false
-                            },
-                            {
-                                attributeKey: 'aPointSize',
-                                size: 1,
-                                normalize: false
-                            },
-                            {
-                                attributeKey: 'aVertexColor',
-                                size: 4,
-                                normalize: false
-                            }
+                            RedInterleaveInfo('aVertexPosition', 3),
+                            RedInterleaveInfo('aPointSize', 1),
+                            RedInterleaveInfo('aVertexColor', 4)
                         ],
                         RedPointColorMaterial(redGL)
                         // RedPointBitmapMaterial(redGL, RedBitmapTexture(redGL, '../asset/particle.png'))

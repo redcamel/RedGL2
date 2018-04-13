@@ -102,14 +102,15 @@ var RedColorPhongMaterial;
         this.setColor(hex ? hex : '#ff0000', alpha == undefined ? 1 : alpha);
         /////////////////////////////////////////
         // 일반 프로퍼티
-        this['program'] = makeProgram(redGL);
+        this['program'] = makeProgram(this, redGL);
         this['_UUID'] = RedGL['makeUUID']();
         this.checkProperty()
         // Object.seal(this);
         console.log(this);
     }
-    makeProgram = function (redGL) {
+    makeProgram = (function () {
         var vSource, fSource;
+        var PROGRAM_NAME;
         vSource = function () {
             /*
             
@@ -201,13 +202,12 @@ var RedColorPhongMaterial;
         vSource = RedGLUtil.getStrFromComment(vSource.toString());
         fSource = RedGLUtil.getStrFromComment(fSource.toString());
         // console.log(vSource, fSource)
-        return RedProgram(
-            redGL,
-            'colorPhongProgram',
-            RedShader(redGL, 'colorPhongVs', RedShader.VERTEX, vSource),
-            RedShader(redGL, 'colorPhongFS', RedShader.FRAGMENT, fSource)
-        )
-    }
+        PROGRAM_NAME = 'colorPhongProgram';
+        return function (target, redGL) {
+            return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource)
+
+        }
+    })();
     RedColorPhongMaterial.prototype = RedBaseMaterial.prototype
     /**DOC:
         {

@@ -68,16 +68,8 @@
                     interleaveData, // data
                     RedBuffer.ARRAY_BUFFER, // bufferType
                     [
-                        {
-                            attributeKey: 'aVertexPosition',
-                            size: 3,
-                            normalize: false
-                        },
-                        {
-                            attributeKey: 'aTexcoord',
-                            size: 2,
-                            normalize: false
-                        }
+                        RedInterleaveInfo('aVertexPosition', 3),
+                        RedInterleaveInfo('aTexcoord', 2)
                     ]
                 )
                 // 인덱스 버퍼생성

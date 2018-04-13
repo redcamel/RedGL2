@@ -22,7 +22,7 @@ var RedPointBitmapMaterial;
     :DOC*/
     RedPointBitmapMaterial = function (redGL, diffuseTexture) {
         if (!(this instanceof RedPointBitmapMaterial)) return new RedPointBitmapMaterial(redGL, diffuseTexture);
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPointBitmapMaterial : RedGL Instance만 허용됩니다.')
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPointBitmapMaterial : RedGL Instance만 허용됩니다.', redGL)
         if (!(diffuseTexture instanceof RedBitmapTexture)) RedGLUtil.throwFunc('RedPointBitmapMaterial : RedBitmapTexture Instance만 허용됩니다.')
         /////////////////////////////////////////
         // 유니폼 프로퍼티
@@ -35,7 +35,7 @@ var RedPointBitmapMaterial;
         this['diffuseTexture'] = diffuseTexture;
         /////////////////////////////////////////
         // 일반 프로퍼티
-        this['program'] = makeProgram(redGL);
+        this['program'] = makeProgram(this,redGL);
         /**DOC:
             {
                 title :`alphaTest`,
@@ -52,8 +52,9 @@ var RedPointBitmapMaterial;
         // Object.seal(this)
         console.log(this)
     }
-    makeProgram = function (redGL) {
+    makeProgram = (function () {
         var vSource, fSource;
+        var PROGRAM_NAME;
         vSource = function () {
             /*
             void main(void) {
@@ -78,13 +79,12 @@ var RedPointBitmapMaterial;
         vSource = RedGLUtil.getStrFromComment(vSource.toString());
         fSource = RedGLUtil.getStrFromComment(fSource.toString());
         // console.log(vSource, fSource)
-        return RedProgram(
-            redGL,
-            'pointBitmapProgram',
-            RedShader(redGL, 'pointBitmapVs', RedShader.VERTEX, vSource),
-            RedShader(redGL, 'pointBitmapFS', RedShader.FRAGMENT, fSource)
-        )
-    }
+        PROGRAM_NAME = 'pointBitmapProgram';
+        return function (target, redGL) {
+            return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource)
+
+        }
+    })();
     RedPointBitmapMaterial.prototype = RedBaseMaterial.prototype
     Object.freeze(RedPointBitmapMaterial)
 })();

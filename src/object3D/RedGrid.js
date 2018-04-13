@@ -31,7 +31,7 @@ var RedGrid;
     :DOC*/
     RedGrid = function (redGL, size, divisions, color1, color2) {
         if (!(this instanceof RedGrid)) return new RedGrid(redGL, size, divisions, color1, color2);
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedGrid : RedGL Instance만 허용됩니다.')
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedGrid : RedGL Instance만 허용됩니다.', redGL)
 
         var tGL;
         tGL = redGL.gl;
@@ -66,16 +66,10 @@ var RedGrid;
             redGL,
             'gridInterleaveBuffer_' + divisions,
             new Float32Array(interleaveData),
-            RedBuffer.ARRAY_BUFFER, [{
-                attributeKey: 'aVertexPosition',
-                size: 3,
-                normalize: false
-            },
-            {
-                attributeKey: 'aVertexColor',
-                size: 4,
-                normalize: false
-            }
+            RedBuffer.ARRAY_BUFFER,
+            [
+                RedInterleaveInfo('aVertexPosition', 3),
+                RedInterleaveInfo('aVertexColor', 4)
             ]
         )
         this['geometry'] = RedGeometry(interleaveBuffer);

@@ -50,6 +50,8 @@ var RedBuffer;
                     self['interleaveDefineInfo'] = interleaveDefineInfo;
                     if (interleaveDefineInfo) {
                         for (k in interleaveDefineInfo) {
+                            if (!(interleaveDefineInfo[k] instanceof RedInterleaveInfo)) RedGLUtil.throwFunc('RedBuffer : interleaveDefineInfo의 정보는 RedInterleaveInfo Instance로만 구성되어야합니다.', interleaveDefineInfo)
+
                             interleaveDefineInfo[k]['offset'] = interleaveDefineInfo.length < 2 ? 0 : t0
                             t0 += interleaveDefineInfo[k]['size']
                             interleaveDefineInfo[k]['_UUID'] = RedGL['makeUUID']();
@@ -105,16 +107,8 @@ var RedBuffer;
                     `,
                     `<code>
                     [
-                        {
-                            attributeKey: 'aVertexPosition',
-                            size: 3,
-                            normalize: false
-                        },
-                        {
-                            attributeKey: 'aTexcoord',
-                            size: 2,
-                            normalize: false
-                        }
+                      RedInterleaveInfo('aVertexPosition', 3),
+                      RedInterleaveInfo('aTexcoord', 2)
                     ]
                     </code>`
                 ],
@@ -139,16 +133,8 @@ var RedBuffer;
                     interleaveData, // data
                     RedBuffer.ARRAY_BUFFER, // bufferType
                     [
-                        {
-                            attributeKey: 'aVertexPosition',
-                            size: 3,
-                            normalize: false
-                        },
-                        {
-                            attributeKey: 'aTexcoord',
-                            size: 2,
-                            normalize: false
-                        }
+                      RedInterleaveInfo('aVertexPosition', 3),
+                      RedInterleaveInfo('aTexcoord', 2)
                     ]
                 )
                 // 인덱스 버퍼생성
@@ -167,7 +153,7 @@ var RedBuffer;
     RedBuffer = function (redGL, key, data, bufferType, interleaveDefineInfo, drawMode) {
         // console.log(redGL, key, data, bufferType, interleaveDefineInfo)
         if (!(this instanceof RedBuffer)) return new RedBuffer(redGL, key, data, bufferType, interleaveDefineInfo, drawMode)
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedBuffer : RedGL Instance만 허용됩니다.')
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedBuffer : RedGL Instance만 허용됩니다.', redGL)
         if (typeof bufferType != 'string') RedGLUtil.throwFunc('RedBuffer : bufferType - 문자열만 허용됩니다.')
         if (typeof key != 'string') RedGLUtil.throwFunc('RedBuffer : key - 문자열만 허용됩니다.')
         if (bufferType == RedBuffer.ARRAY_BUFFER && !interleaveDefineInfo) RedGLUtil.throwFunc('RedBuffer : interleaveDefineInfo를 반드시 정의해야합니다.')

@@ -58,7 +58,7 @@ var RedEnvironmentMaterial;
             specularTexture,
             displacementTexture
         );
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedEnvironmentMaterial : RedGL Instance만 허용됩니다.')
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedEnvironmentMaterial : RedGL Instance만 허용됩니다.', redGL)
         if (!(diffuseTexture instanceof RedBitmapTexture)) RedGLUtil.throwFunc('RedEnvironmentMaterial : diffuseTexture - RedBitmapTexture Instance만 허용됩니다.')
         if (environmentTexture && !(environmentTexture instanceof RedBitmapCubeTexture)) RedGLUtil.throwFunc('RedEnvironmentMaterial : environmentTexture - RedBitmapCubeTexture Instance만 허용됩니다.')
         if (normalTexture && !(normalTexture instanceof RedBitmapTexture)) RedGLUtil.throwFunc('RedEnvironmentMaterial : normalTexture - RedBitmapTexture Instance만 허용됩니다.')
@@ -135,21 +135,22 @@ var RedEnvironmentMaterial;
         this['displacementPower'] = 0
         /////////////////////////////////////////
         // 일반 프로퍼티
-        this['program'] = makeProgram(redGL);
+        this['program'] = makeProgram(this, redGL);
         this['_UUID'] = RedGL['makeUUID']();
         this.checkProperty()
         console.log(this)
         // Object.seal(this)
     }
-    makeProgram = function (redGL) {
+    makeProgram = (function () {
         var vSource, fSource;
+        var PROGRAM_NAME;
         vSource = function () {
             /*
             varying vec4 vVertexPositionEye4;
             varying vec3 vReflectionCubeCoord;
             uniform sampler2D uDisplacementTexture;
             uniform float uDisplacementPower;
-
+ 
             void main(void) {
                 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
                 vVertexNormal = vec3(uNMatrix * vec4(aVertexNormal,1.0)); 
@@ -178,29 +179,29 @@ var RedEnvironmentMaterial;
             
             varying vec4 vVertexPositionEye4;
             varying vec3 vReflectionCubeCoord;
-
+ 
             void main(void) {
                 
                 vec4 la = uAmbientLightColor * uAmbientLightColor.a;
                 vec4 ld = vec4(0.0, 0.0, 0.0, 1.0);
                 vec4 ls = vec4(0.0, 0.0, 0.0, 1.0);
-
+ 
                 vec4 texelColor = texture2D(uDiffuseTexture, vTexcoord);
                 texelColor.rgb *= texelColor.a;
                 if(texelColor.a ==0.0) discard;
-
+ 
                 vec3 N = normalize(vVertexNormal);
                 vec4 normalColor = texture2D(uNormalTexture, vTexcoord);
                 N = normalize(2.0 * (N + normalColor.rgb - 0.5));
-
+ 
                 vec4 reflectionColor = textureCube(uEnvironmentTexture, 2.0 * dot(vReflectionCubeCoord,vVertexNormal) * vVertexNormal - vReflectionCubeCoord);
                 texelColor = texelColor * (1.0 - uReflectionPower) + reflectionColor * uReflectionPower;
-
+ 
                 vec4 specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);
                 float specularTextureValue = 1.0;
                 specularTextureValue = texture2D(uSpecularTexture, vTexcoord).r;
                 float specular;             
-
+ 
                 vec3 L;
                 vec3 R;
                 highp float lambertTerm;
@@ -245,13 +246,12 @@ var RedEnvironmentMaterial;
         vSource = RedGLUtil.getStrFromComment(vSource.toString());
         fSource = RedGLUtil.getStrFromComment(fSource.toString());
         // console.log(vSource, fSource)
-        return RedProgram(
-            redGL,
-            'environmentProgram',
-            RedShader(redGL, 'environmentProgramVs', RedShader.VERTEX, vSource),
-            RedShader(redGL, 'environmentProgramFS', RedShader.FRAGMENT, fSource)
-        )
-    }
+        PROGRAM_NAME = 'environmentProgram';
+        return function (target, redGL) {
+            return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource)
+
+        }
+    })();
     RedEnvironmentMaterial.prototype = RedBaseMaterial.prototype
     Object.freeze(RedEnvironmentMaterial)
 })();

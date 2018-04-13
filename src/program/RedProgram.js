@@ -154,25 +154,32 @@ var RedProgram;
     RedProgram = function (redGL, key, vertexShader, fragmentShader) {
         var tGL;
         if (!(this instanceof RedProgram)) return new RedProgram(redGL, key, vertexShader, fragmentShader)
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedProgram : RedGL Instance만 허용됩니다.');
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedProgram : RedGL Instance만 허용됩니다.', redGL);
         if (typeof key != 'string') RedGLUtil.throwFunc('RedProgram : key - 문자열만 허용됩니다.');
         if (!vertexShader instanceof RedShader) RedGLUtil.throwFunc('RedProgram : vShaderInfo - RedShader만 허용됩니다.');
         if (!fragmentShader instanceof RedShader) RedGLUtil.throwFunc('RedProgram : fShaderInfo - RedShader만 허용됩니다.');
-        if (vertexShader['type'] != RedShader.VERTEX) RedGLUtil.throwFunc('RedProgram : vShaderInfo - VERTEX 타입만 허용됩니다.');
-        if (fragmentShader['type'] != RedShader.FRAGMENT) RedGLUtil.throwFunc('RedProgram : fShaderInfo - FRAGMENT 타입만 허용됩니다.');
+        if (vertexShader && vertexShader['type'] != RedShader.VERTEX) RedGLUtil.throwFunc('RedProgram : vShaderInfo - VERTEX 타입만 허용됩니다.');
+        if (fragmentShader && fragmentShader['type'] != RedShader.FRAGMENT) RedGLUtil.throwFunc('RedProgram : fShaderInfo - FRAGMENT 타입만 허용됩니다.');
 
         tGL = redGL.gl;
-        // TODO: 유일키 방어
+
+        // 데이터 공간확보
         if (!redGL['_datas']['RedProgram']) redGL['_datas']['RedProgram'] = {};
-        if (redGL['_datas']['RedProgram'][key]) return redGL['_datas']['RedProgram'][key]
-        else redGL['_datas']['RedProgram'][key] = this
+
+        // 소스 쉐이더가 모두 없으면 기존에서 검색
+        if (!vertexShader && !fragmentShader) {
+            if (redGL['_datas']['RedProgram'][key]) return redGL['_datas']['RedProgram'][key]
+            else RedGLUtil.throwFunc('RedShader : 존재하지않는 key를 검색하려고합니다.', key);
+        } else {
+            if (!vertexShader || !fragmentShader) RedGLUtil.throwFunc('RedProgram : 신규 생성시 vertexShader, fragmentShader 모두 입력해야함.');
+            if (RedProgram['hasKey'](redGL, key)) RedGLUtil.throwFunc('RedProgram : key - 이미 정의된 키로 생성을 시도.', '\n키 :', key);
+            else redGL['_datas']['RedProgram'][key] = this;
+            console.log('신규생성', key)
+        }
         /**DOC:
             {
                 title :`key`,
                 description : `고유키`,
-                example : `
-                // TODO: 
-                `,
                 return : 'String'
             }
         :DOC*/
@@ -219,6 +226,30 @@ var RedProgram;
         // Object.freeze(this)
         console.log(this)
     }
-    RedProgram.prototype = {}
+    RedProgram.prototype = {};
+    /**DOC:
+        {
+            title :`RedProgram.hasKey`,
+            code: 'STATIC',
+            description : '키에 해당하는 쉐이더 존재 여부 반환',
+            params : {
+                redGL : [
+                    {type:'RedGL'}
+                ],
+                key : [
+                    {type:'String'},
+                    `고유키`
+                ]
+            },
+            example : `
+                RedProgram.haskey(RedGL Instance, '찾고자하는키')
+            `,
+            return : 'Boolean'
+        }
+    :DOC*/
+    RedProgram['hasKey'] = function (redGL, key) {
+        if (!redGL['_datas']['RedProgram']) redGL['_datas']['RedProgram'] = {};
+        return redGL['_datas']['RedProgram'][key] ? true : false
+    }
     Object.freeze(RedProgram)
 })();

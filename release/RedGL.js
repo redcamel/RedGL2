@@ -698,6 +698,28 @@ var RedBaseMaterial;
                     RedGLUtil.throwFunc('Material에 ', tUniformLocationInfo['materialPropertyName'], '이 정의 되지않았습니다.')
                 }
             }
+        },
+        /**DOC:
+            {
+                code : 'METHOD',
+                title :`checkProgram`,
+                description : `
+                    키에 해당하는 프로그램이 존재할경우 기존것을 리턴하고 
+                    없을경우 신규생성함.
+                `,
+                return : 'void'
+            }
+        :DOC*/
+        checkProgram: function (redGL, key, vSource, fSource) {
+            if (RedProgram.hasKey(redGL, key)) return RedProgram(redGL, key)
+            else {
+                return RedProgram(
+                    redGL,
+                    key,
+                    RedShader(redGL, key + '_VS', RedShader['VERTEX'], vSource),
+                    RedShader(redGL, key + '_FS', RedShader['FRAGMENT'], fSource)
+                )
+            }
         }
     }
     Object.freeze(RedBaseMaterial)
@@ -1039,6 +1061,8 @@ var RedBuffer;
                     self['interleaveDefineInfo'] = interleaveDefineInfo;
                     if (interleaveDefineInfo) {
                         for (k in interleaveDefineInfo) {
+                            if (!(interleaveDefineInfo[k] instanceof RedInterleaveInfo)) RedGLUtil.throwFunc('RedBuffer : interleaveDefineInfo의 정보는 RedInterleaveInfo Instance로만 구성되어야합니다.', interleaveDefineInfo)
+
                             interleaveDefineInfo[k]['offset'] = interleaveDefineInfo.length < 2 ? 0 : t0
                             t0 += interleaveDefineInfo[k]['size']
                             interleaveDefineInfo[k]['_UUID'] = RedGL['makeUUID']();
@@ -1094,16 +1118,8 @@ var RedBuffer;
                     `,
                     `<code>
                     [
-                        {
-                            attributeKey: 'aVertexPosition',
-                            size: 3,
-                            normalize: false
-                        },
-                        {
-                            attributeKey: 'aTexcoord',
-                            size: 2,
-                            normalize: false
-                        }
+                      RedInterleaveInfo('aVertexPosition', 3),
+                      RedInterleaveInfo('aTexcoord', 2)
                     ]
                     </code>`
                 ],
@@ -1128,16 +1144,8 @@ var RedBuffer;
                     interleaveData, // data
                     RedBuffer.ARRAY_BUFFER, // bufferType
                     [
-                        {
-                            attributeKey: 'aVertexPosition',
-                            size: 3,
-                            normalize: false
-                        },
-                        {
-                            attributeKey: 'aTexcoord',
-                            size: 2,
-                            normalize: false
-                        }
+                      RedInterleaveInfo('aVertexPosition', 3),
+                      RedInterleaveInfo('aTexcoord', 2)
                     ]
                 )
                 // 인덱스 버퍼생성
@@ -1156,7 +1164,7 @@ var RedBuffer;
     RedBuffer = function (redGL, key, data, bufferType, interleaveDefineInfo, drawMode) {
         // console.log(redGL, key, data, bufferType, interleaveDefineInfo)
         if (!(this instanceof RedBuffer)) return new RedBuffer(redGL, key, data, bufferType, interleaveDefineInfo, drawMode)
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedBuffer : RedGL Instance만 허용됩니다.')
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedBuffer : RedGL Instance만 허용됩니다.', redGL)
         if (typeof bufferType != 'string') RedGLUtil.throwFunc('RedBuffer : bufferType - 문자열만 허용됩니다.')
         if (typeof key != 'string') RedGLUtil.throwFunc('RedBuffer : key - 문자열만 허용됩니다.')
         if (bufferType == RedBuffer.ARRAY_BUFFER && !interleaveDefineInfo) RedGLUtil.throwFunc('RedBuffer : interleaveDefineInfo를 반드시 정의해야합니다.')
@@ -1382,6 +1390,48 @@ var RedGeometry;
     }
     Object.freeze(RedGeometry);
 })()
+"use strict";
+var RedInterleaveInfo;
+(function () {
+    /**DOC:
+        {
+            constructorYn : true,
+            title :`RedInterleaveInfo`,
+            description : `
+                RedInterleaveInfo Instance 생성자
+            `,
+            params : {
+                attributeKey : [
+                    {type:'String'},
+                    `쉐이더내의 attributeKey키`
+                ],
+                size : [
+                    {type:'Number'},
+                    `구성 사이즈`
+                ],
+                normalize : [
+                    {type:'Booleab\n'},
+                    `버퍼 업로드시 노멀라이징 여부`,
+                    `기본값 : false`
+                ]
+            },
+            example : `
+                RedInterleaveInfo('aVertexPosition', 3);
+            `,
+            return : 'RedBuffer Instance'
+        }
+    :DOC*/
+    RedInterleaveInfo = function (attributeKey, size, normalize) {
+        if (!(this instanceof RedInterleaveInfo)) return new RedInterleaveInfo(attributeKey, size, normalize);
+        if (typeof attributeKey != 'string') RedGLUtil.throwFunc('RedInterleaveInfo : attributeKey - 문자열만 허용', attributeKey);
+        if (typeof size != 'number') RedGLUtil.throwFunc('RedInterleaveInfo : size - 숫자만 허용', size);
+        this['attributeKey'] = attributeKey;
+        this['size'] = size;
+        this['normalize'] = normalize == undefined ? false : true;
+        this['offset'] = null // RedBuffer생성시 주입됨
+    }
+    Object.freeze(RedInterleaveInfo)
+})();
 "use strict";
 var RedAmbientLight;
 (function () {
@@ -1799,22 +1849,10 @@ var JsonModelLoader;
                                 key,
                                 new Float32Array(interleaveData),
                                 RedBuffer.ARRAY_BUFFER,
-                                [{
-                                    attributeKey: 'aVertexPosition',
-                                    size: 3,
-                                    normalize: false
-                                },
-                                    ,
-                                {
-                                    attributeKey: 'aVertexNormal',
-                                    size: 3,
-                                    normalize: false
-                                },
-                                {
-                                    attributeKey: 'aTexcoord',
-                                    size: 2,
-                                    normalize: false
-                                }
+                                [
+                                    RedInterleaveInfo('aVertexPosition', 3),
+                                    RedInterleaveInfo('aVertexNormal', 3),
+                                    RedInterleaveInfo('aTexcoord', 2)
                                 ]
                             ),
                             RedBuffer(
@@ -1837,7 +1875,7 @@ var RedMaterial;
     var makeProgram;
     RedMaterial = function (redGL) {
         if (!(this instanceof RedMaterial)) return new RedMaterial(redGL);
-        this['program'] = makeProgram(redGL)
+        this['program'] = makeProgram(this, redGL)
         // 유니폼 프로퍼티
         this['floatTest'] = 1
         this['floatTest2'] = [1, 2, 3, 4, 5]
@@ -1851,8 +1889,9 @@ var RedMaterial;
         Object.seal(this)
         console.log(this)
     }
-    makeProgram = function (redGL) {
+    makeProgram = (function () {
         var vSource, fSource;
+        var PROGRAM_NAME;
         vSource = function () {
             /*      
             varying vec4 vColor;
@@ -1888,14 +1927,12 @@ var RedMaterial;
         }
         vSource = RedGLUtil.getStrFromComment(vSource.toString());
         fSource = RedGLUtil.getStrFromComment(fSource.toString());
-        return RedProgram(
-            redGL,
-            'testrProgram',
-            RedShader(redGL, 'testVs', RedShader.VERTEX, vSource),
-            RedShader(redGL, 'testFS', RedShader.FRAGMENT, fSource)
-        )
+        PROGRAM_NAME = 'testrProgram';
+        return function (target, redGL) {
+            return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource)
 
-    }
+        }
+    })()
 
     RedMaterial.prototype = RedBaseMaterial.prototype
     Object.freeze(RedMaterial)
@@ -1947,14 +1984,15 @@ var RedColorMaterial;
         this.setColor(hex ? hex : '#ff0000', alpha == undefined ? 1 : alpha);
         /////////////////////////////////////////
         // 일반 프로퍼티
-        this['program'] = makeProgram(redGL);
+        this['program'] = makeProgram(this, redGL);
         this['_UUID'] = RedGL['makeUUID']();
         this.checkProperty()
         // Object.seal(this);
         console.log(this);
     }
-    makeProgram = function (redGL) {
+    makeProgram = (function () {
         var vSource, fSource;
+        var PROGRAM_NAME;
         vSource = function () {
             /*
             uniform vec4 uColor;
@@ -1978,14 +2016,12 @@ var RedColorMaterial;
         }
         vSource = RedGLUtil.getStrFromComment(vSource.toString());
         fSource = RedGLUtil.getStrFromComment(fSource.toString());
-        // console.log(vSource, fSource)
-        return RedProgram(
-            redGL,
-            'colorProgram',
-            RedShader(redGL, 'colorVs', RedShader.VERTEX, vSource),
-            RedShader(redGL, 'colorFS', RedShader.FRAGMENT, fSource)
-        )
-    }
+        PROGRAM_NAME = 'colorProgram';
+        return function (target, redGL) {
+            return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource)
+
+        }
+    })()
     RedColorMaterial.prototype = RedBaseMaterial.prototype
     /**DOC:
         {
@@ -2123,14 +2159,15 @@ var RedColorPhongMaterial;
         this.setColor(hex ? hex : '#ff0000', alpha == undefined ? 1 : alpha);
         /////////////////////////////////////////
         // 일반 프로퍼티
-        this['program'] = makeProgram(redGL);
+        this['program'] = makeProgram(this, redGL);
         this['_UUID'] = RedGL['makeUUID']();
         this.checkProperty()
         // Object.seal(this);
         console.log(this);
     }
-    makeProgram = function (redGL) {
+    makeProgram = (function () {
         var vSource, fSource;
+        var PROGRAM_NAME;
         vSource = function () {
             /*
             
@@ -2222,13 +2259,12 @@ var RedColorPhongMaterial;
         vSource = RedGLUtil.getStrFromComment(vSource.toString());
         fSource = RedGLUtil.getStrFromComment(fSource.toString());
         // console.log(vSource, fSource)
-        return RedProgram(
-            redGL,
-            'colorPhongProgram',
-            RedShader(redGL, 'colorPhongVs', RedShader.VERTEX, vSource),
-            RedShader(redGL, 'colorPhongFS', RedShader.FRAGMENT, fSource)
-        )
-    }
+        PROGRAM_NAME = 'colorPhongProgram';
+        return function (target, redGL) {
+            return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource)
+
+        }
+    })();
     RedColorPhongMaterial.prototype = RedBaseMaterial.prototype
     /**DOC:
         {
@@ -2310,7 +2346,7 @@ var RedEnvironmentMaterial;
             specularTexture,
             displacementTexture
         );
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedEnvironmentMaterial : RedGL Instance만 허용됩니다.')
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedEnvironmentMaterial : RedGL Instance만 허용됩니다.', redGL)
         if (!(diffuseTexture instanceof RedBitmapTexture)) RedGLUtil.throwFunc('RedEnvironmentMaterial : diffuseTexture - RedBitmapTexture Instance만 허용됩니다.')
         if (environmentTexture && !(environmentTexture instanceof RedBitmapCubeTexture)) RedGLUtil.throwFunc('RedEnvironmentMaterial : environmentTexture - RedBitmapCubeTexture Instance만 허용됩니다.')
         if (normalTexture && !(normalTexture instanceof RedBitmapTexture)) RedGLUtil.throwFunc('RedEnvironmentMaterial : normalTexture - RedBitmapTexture Instance만 허용됩니다.')
@@ -2387,21 +2423,22 @@ var RedEnvironmentMaterial;
         this['displacementPower'] = 0
         /////////////////////////////////////////
         // 일반 프로퍼티
-        this['program'] = makeProgram(redGL);
+        this['program'] = makeProgram(this, redGL);
         this['_UUID'] = RedGL['makeUUID']();
         this.checkProperty()
         console.log(this)
         // Object.seal(this)
     }
-    makeProgram = function (redGL) {
+    makeProgram = (function () {
         var vSource, fSource;
+        var PROGRAM_NAME;
         vSource = function () {
             /*
             varying vec4 vVertexPositionEye4;
             varying vec3 vReflectionCubeCoord;
             uniform sampler2D uDisplacementTexture;
             uniform float uDisplacementPower;
-
+ 
             void main(void) {
                 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
                 vVertexNormal = vec3(uNMatrix * vec4(aVertexNormal,1.0)); 
@@ -2430,29 +2467,29 @@ var RedEnvironmentMaterial;
             
             varying vec4 vVertexPositionEye4;
             varying vec3 vReflectionCubeCoord;
-
+ 
             void main(void) {
                 
                 vec4 la = uAmbientLightColor * uAmbientLightColor.a;
                 vec4 ld = vec4(0.0, 0.0, 0.0, 1.0);
                 vec4 ls = vec4(0.0, 0.0, 0.0, 1.0);
-
+ 
                 vec4 texelColor = texture2D(uDiffuseTexture, vTexcoord);
                 texelColor.rgb *= texelColor.a;
                 if(texelColor.a ==0.0) discard;
-
+ 
                 vec3 N = normalize(vVertexNormal);
                 vec4 normalColor = texture2D(uNormalTexture, vTexcoord);
                 N = normalize(2.0 * (N + normalColor.rgb - 0.5));
-
+ 
                 vec4 reflectionColor = textureCube(uEnvironmentTexture, 2.0 * dot(vReflectionCubeCoord,vVertexNormal) * vVertexNormal - vReflectionCubeCoord);
                 texelColor = texelColor * (1.0 - uReflectionPower) + reflectionColor * uReflectionPower;
-
+ 
                 vec4 specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);
                 float specularTextureValue = 1.0;
                 specularTextureValue = texture2D(uSpecularTexture, vTexcoord).r;
                 float specular;             
-
+ 
                 vec3 L;
                 vec3 R;
                 highp float lambertTerm;
@@ -2497,13 +2534,12 @@ var RedEnvironmentMaterial;
         vSource = RedGLUtil.getStrFromComment(vSource.toString());
         fSource = RedGLUtil.getStrFromComment(fSource.toString());
         // console.log(vSource, fSource)
-        return RedProgram(
-            redGL,
-            'environmentProgram',
-            RedShader(redGL, 'environmentProgramVs', RedShader.VERTEX, vSource),
-            RedShader(redGL, 'environmentProgramFS', RedShader.FRAGMENT, fSource)
-        )
-    }
+        PROGRAM_NAME = 'environmentProgram';
+        return function (target, redGL) {
+            return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource)
+
+        }
+    })();
     RedEnvironmentMaterial.prototype = RedBaseMaterial.prototype
     Object.freeze(RedEnvironmentMaterial)
 })();
@@ -2535,7 +2571,7 @@ var RedBitmapMaterial;
     :DOC*/
     RedBitmapMaterial = function (redGL, diffuseTexture) {
         if (!(this instanceof RedBitmapMaterial)) return new RedBitmapMaterial(redGL, diffuseTexture);
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedBitmapMaterial : RedGL Instance만 허용됩니다.')
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedBitmapMaterial : RedGL Instance만 허용됩니다.', redGL)
         if (!(diffuseTexture instanceof RedBitmapTexture)) RedGLUtil.throwFunc('RedBitmapMaterial : RedBitmapTexture Instance만 허용됩니다.')
         /////////////////////////////////////////
         // 유니폼 프로퍼티
@@ -2548,14 +2584,15 @@ var RedBitmapMaterial;
         this['diffuseTexture'] = diffuseTexture;
         /////////////////////////////////////////
         // 일반 프로퍼티
-        this['program'] = makeProgram(redGL);
+        this['program'] = makeProgram(this, redGL);
         this['_UUID'] = RedGL['makeUUID']();
         this.checkProperty()
         // Object.seal(this)
         console.log(this)
     }
-    makeProgram = function (redGL) {
+    makeProgram = (function () {
         var vSource, fSource;
+        var PROGRAM_NAME;
         vSource = function () {
             /*
             void main(void) {
@@ -2579,14 +2616,12 @@ var RedBitmapMaterial;
         }
         vSource = RedGLUtil.getStrFromComment(vSource.toString());
         fSource = RedGLUtil.getStrFromComment(fSource.toString());
-        // console.log(vSource, fSource)
-        return RedProgram(
-            redGL,
-            'bitmapProgram',
-            RedShader(redGL, 'bitmapVs', RedShader.VERTEX, vSource),
-            RedShader(redGL, 'bitmapFS', RedShader.FRAGMENT, fSource)
-        )
-    }
+        PROGRAM_NAME = 'bitmapProgram';
+        return function (target, redGL) {
+            return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource)
+
+        }
+    })();
     RedBitmapMaterial.prototype = RedBaseMaterial.prototype
     Object.freeze(RedBitmapMaterial)
 })();
@@ -2614,7 +2649,7 @@ var RedPointBitmapMaterial;
     :DOC*/
     RedPointBitmapMaterial = function (redGL, diffuseTexture) {
         if (!(this instanceof RedPointBitmapMaterial)) return new RedPointBitmapMaterial(redGL, diffuseTexture);
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPointBitmapMaterial : RedGL Instance만 허용됩니다.')
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPointBitmapMaterial : RedGL Instance만 허용됩니다.', redGL)
         if (!(diffuseTexture instanceof RedBitmapTexture)) RedGLUtil.throwFunc('RedPointBitmapMaterial : RedBitmapTexture Instance만 허용됩니다.')
         /////////////////////////////////////////
         // 유니폼 프로퍼티
@@ -2627,7 +2662,7 @@ var RedPointBitmapMaterial;
         this['diffuseTexture'] = diffuseTexture;
         /////////////////////////////////////////
         // 일반 프로퍼티
-        this['program'] = makeProgram(redGL);
+        this['program'] = makeProgram(this,redGL);
         /**DOC:
             {
                 title :`alphaTest`,
@@ -2644,8 +2679,9 @@ var RedPointBitmapMaterial;
         // Object.seal(this)
         console.log(this)
     }
-    makeProgram = function (redGL) {
+    makeProgram = (function () {
         var vSource, fSource;
+        var PROGRAM_NAME;
         vSource = function () {
             /*
             void main(void) {
@@ -2670,13 +2706,12 @@ var RedPointBitmapMaterial;
         vSource = RedGLUtil.getStrFromComment(vSource.toString());
         fSource = RedGLUtil.getStrFromComment(fSource.toString());
         // console.log(vSource, fSource)
-        return RedProgram(
-            redGL,
-            'pointBitmapProgram',
-            RedShader(redGL, 'pointBitmapVs', RedShader.VERTEX, vSource),
-            RedShader(redGL, 'pointBitmapFS', RedShader.FRAGMENT, fSource)
-        )
-    }
+        PROGRAM_NAME = 'pointBitmapProgram';
+        return function (target, redGL) {
+            return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource)
+
+        }
+    })();
     RedPointBitmapMaterial.prototype = RedBaseMaterial.prototype
     Object.freeze(RedPointBitmapMaterial)
 })();
@@ -2721,8 +2756,8 @@ var RedStandardMaterial;
         }
     :DOC*/
     RedStandardMaterial = function (redGL, diffuseTexture, normalTexture, specularTexture, displacementTexture) {
-        if (!(this instanceof RedStandardMaterial)) return new RedStandardMaterial(redGL, diffuseTexture, normalTexture, specularTexture,displacementTexture);
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedStandardMaterial : RedGL Instance만 허용됩니다.')
+        if (!(this instanceof RedStandardMaterial)) return new RedStandardMaterial(redGL, diffuseTexture, normalTexture, specularTexture, displacementTexture);
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedStandardMaterial : RedGL Instance만 허용됩니다.', redGL)
         if (!(diffuseTexture instanceof RedBitmapTexture)) RedGLUtil.throwFunc('RedStandardMaterial : diffuseTexture - RedBitmapTexture Instance만 허용됩니다.')
         if (normalTexture && !(normalTexture instanceof RedBitmapTexture)) RedGLUtil.throwFunc('RedStandardMaterial : normalTexture - RedBitmapTexture Instance만 허용됩니다.')
         if (specularTexture && !(specularTexture instanceof RedBitmapTexture)) RedGLUtil.throwFunc('RedStandardMaterial : specularTexture - RedBitmapTexture Instance만 허용됩니다.')
@@ -2784,14 +2819,15 @@ var RedStandardMaterial;
         this['displacementPower'] = 0
         /////////////////////////////////////////
         // 일반 프로퍼티
-        this['program'] = makeProgram(redGL);
+        this['program'] = makeProgram(this, redGL);
         this['_UUID'] = RedGL['makeUUID']();
         this.checkProperty()
         console.log(this)
         // Object.seal(this)
     }
-    makeProgram = function (redGL) {
+    makeProgram = (function () {
         var vSource, fSource;
+        var PROGRAM_NAME;
         vSource = function () {
             /*
             uniform sampler2D uDisplacementTexture;
@@ -2803,7 +2839,7 @@ var RedStandardMaterial;
                 vVertexNormal = vec3(uNMatrix * vec4(aVertexNormal,1.0)); 
                 vVertexPositionEye4 = uMVMatrix * vec4(aVertexPosition, 1.0);         
                 vVertexPositionEye4.xyz += normalize(vVertexNormal) * texture2D(uDisplacementTexture, vTexcoord).x * uDisplacementPower ;
-
+ 
                 gl_PointSize = uPointSize;
                 gl_Position = uPMatrix * uCameraMatrix * vVertexPositionEye4;
             }
@@ -2815,7 +2851,7 @@ var RedStandardMaterial;
             uniform sampler2D uDiffuseTexture;
             uniform sampler2D uNormalTexture;
             uniform sampler2D uSpecularTexture;
-
+ 
             uniform float uShininess;
             uniform float uSpecularPower;
             
@@ -2825,19 +2861,19 @@ var RedStandardMaterial;
                 vec4 la = uAmbientLightColor * uAmbientLightColor.a;
                 vec4 ld = vec4(0.0, 0.0, 0.0, 1.0);
                 vec4 ls = vec4(0.0, 0.0, 0.0, 1.0);
-
+ 
                 vec4 texelColor = texture2D(uDiffuseTexture, vTexcoord);
                 texelColor.rgb *= texelColor.a;
                 if(texelColor.a ==0.0) discard;
-
+ 
                 vec3 N = normalize(vVertexNormal);
                 N = normalize(2.0 * (N + texture2D(uNormalTexture, vTexcoord).rgb  - 0.5));
-
+ 
                 vec4 specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);
                 float specularTextureValue = 1.0;
                 specularTextureValue = texture2D(uSpecularTexture, vTexcoord).r;
                 float specular;             
-
+ 
                 vec3 L;
                 vec3 R;
                 highp float lambertTerm;
@@ -2881,14 +2917,12 @@ var RedStandardMaterial;
         }
         vSource = RedGLUtil.getStrFromComment(vSource.toString());
         fSource = RedGLUtil.getStrFromComment(fSource.toString());
-        // console.log(vSource, fSource)
-        return RedProgram(
-            redGL,
-            'standardProgram',
-            RedShader(redGL, 'standardProgramVs', RedShader.VERTEX, vSource),
-            RedShader(redGL, 'standardProgramFS', RedShader.FRAGMENT, fSource)
-        )
-    }
+        PROGRAM_NAME = 'standardProgram';
+        return function (target, redGL) {
+            return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource)
+
+        }
+    })();
     RedStandardMaterial.prototype = RedBaseMaterial.prototype
     Object.freeze(RedStandardMaterial)
 })();
@@ -2919,14 +2953,15 @@ var RedGridMaterial;
         if (!(this instanceof RedGridMaterial)) return new RedGridMaterial(redGL);
         // 유니폼 프로퍼티
         // 일반 프로퍼티
-        this['program'] = makeProgram(redGL)
+        this['program'] = makeProgram(this, redGL)
         this['_UUID'] = RedGL['makeUUID']();
         this.checkProperty()
         Object.seal(this)
         console.log(this)
     }
-    makeProgram = function (redGL) {
+    makeProgram = (function () {
         var vSource, fSource;
+        var PROGRAM_NAME;
         vSource = function () {
             /*
             varying vec4 vColor;
@@ -2948,14 +2983,12 @@ var RedGridMaterial;
         }
         vSource = RedGLUtil.getStrFromComment(vSource.toString());
         fSource = RedGLUtil.getStrFromComment(fSource.toString());
-        return RedProgram(
-            redGL,
-            'gridMaterialProgram',
-            RedShader(redGL, 'gridMaterialVs', RedShader.VERTEX, vSource),
-            RedShader(redGL, 'gridMaterialFS', RedShader.FRAGMENT, fSource)
-        )
+        PROGRAM_NAME = 'gridMaterialProgram';
+        return function (target, redGL) {
+            return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource)
 
-    }
+        }
+    })();
 
     RedGridMaterial.prototype = RedBaseMaterial.prototype
     Object.freeze(RedGridMaterial)
@@ -2981,19 +3014,20 @@ var RedPointColorMaterial;
     :DOC*/
     RedPointColorMaterial = function (redGL) {
         if (!(this instanceof RedPointColorMaterial)) return new RedPointColorMaterial(redGL);
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPointColorMaterial : RedGL Instance만 허용됩니다.')
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPointColorMaterial : RedGL Instance만 허용됩니다.', redGL)
         /////////////////////////////////////////
         // 유니폼 프로퍼티
         /////////////////////////////////////////
         // 일반 프로퍼티
-        this['program'] = makeProgram(redGL);
+        this['program'] = makeProgram(this, redGL);
         this['_UUID'] = RedGL['makeUUID']();
         this.checkProperty()
         // Object.seal(this)
         console.log(this)
     }
-    makeProgram = function (redGL) {
+    makeProgram = (function () {
         var vSource, fSource;
+        var PROGRAM_NAME;
         vSource = function () {
             /*
             varying vec4 vColor;
@@ -3016,13 +3050,12 @@ var RedPointColorMaterial;
         vSource = RedGLUtil.getStrFromComment(vSource.toString());
         fSource = RedGLUtil.getStrFromComment(fSource.toString());
         // console.log(vSource, fSource)
-        return RedProgram(
-            redGL,
-            'pointColorProgram',
-            RedShader(redGL, 'pointColorVs', RedShader.VERTEX, vSource),
-            RedShader(redGL, 'pointColorFS', RedShader.FRAGMENT, fSource)
-        )
-    }
+        PROGRAM_NAME = 'pointColorProgram';
+        return function (target, redGL) {
+            return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource)
+
+        }
+    })();
     RedPointColorMaterial.prototype = RedBaseMaterial.prototype
     Object.freeze(RedPointColorMaterial)
 })();
@@ -3057,7 +3090,7 @@ var RedSkyBoxMaterial;
     :DOC*/
     RedSkyBoxMaterial = function (redGL, skyboxTexture) {
         if (!(this instanceof RedSkyBoxMaterial)) return new RedSkyBoxMaterial(redGL, skyboxTexture);
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedSkyBoxMaterial : RedGL Instance만 허용됩니다.')
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedSkyBoxMaterial : RedGL Instance만 허용됩니다.', redGL)
         if (skyboxTexture && !(skyboxTexture instanceof RedBitmapCubeTexture)) RedGLUtil.throwFunc('RedSkyBoxMaterial : skyboxTexture - RedBitmapCubeTexture Instance만 허용됩니다.')
         /////////////////////////////////////////
         // 유니폼 프로퍼티
@@ -3070,14 +3103,15 @@ var RedSkyBoxMaterial;
         this['skyboxTexture'] = skyboxTexture;
         /////////////////////////////////////////
         // 일반 프로퍼티
-        this['program'] = makeProgram(redGL);
+        this['program'] = makeProgram(this, redGL);
         this['_UUID'] = RedGL['makeUUID']();
         this.checkProperty()
         console.log(this)
         // Object.seal(this)
     }
-    makeProgram = function (redGL) {
+    makeProgram = (function () {
         var vSource, fSource;
+        var PROGRAM_NAME;
         vSource = function () {
             /*
             varying vec3 vReflectionCubeCoord;
@@ -3102,13 +3136,12 @@ var RedSkyBoxMaterial;
         vSource = RedGLUtil.getStrFromComment(vSource.toString());
         fSource = RedGLUtil.getStrFromComment(fSource.toString());
         // console.log(vSource, fSource)
-        return RedProgram(
-            redGL,
-            'skyboxProgram',
-            RedShader(redGL, 'skyboxProgramVs', RedShader.VERTEX, vSource),
-            RedShader(redGL, 'skyboxProgramFS', RedShader.FRAGMENT, fSource)
-        )
-    }
+        PROGRAM_NAME = 'skyboxProgram';
+        return function (target, redGL) {
+            return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource)
+
+        }
+    })();
     RedSkyBoxMaterial.prototype = RedBaseMaterial.prototype
     Object.freeze(RedSkyBoxMaterial)
 })();
@@ -3137,7 +3170,7 @@ var RedAxis;
     :DOC*/
     RedAxis = function (redGL) {
         if (!(this instanceof RedAxis)) return new RedAxis(redGL);
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedAxis : RedGL Instance만 허용됩니다.')
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedAxis : RedGL Instance만 허용됩니다.', redGL)
         var root;
         var xAxis, yAxis, zAxis;
         RedBaseObject3D['build'].call(this, redGL.gl)
@@ -3220,7 +3253,7 @@ var RedGrid;
     :DOC*/
     RedGrid = function (redGL, size, divisions, color1, color2) {
         if (!(this instanceof RedGrid)) return new RedGrid(redGL, size, divisions, color1, color2);
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedGrid : RedGL Instance만 허용됩니다.')
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedGrid : RedGL Instance만 허용됩니다.', redGL)
 
         var tGL;
         tGL = redGL.gl;
@@ -3255,16 +3288,10 @@ var RedGrid;
             redGL,
             'gridInterleaveBuffer_' + divisions,
             new Float32Array(interleaveData),
-            RedBuffer.ARRAY_BUFFER, [{
-                attributeKey: 'aVertexPosition',
-                size: 3,
-                normalize: false
-            },
-            {
-                attributeKey: 'aVertexColor',
-                size: 4,
-                normalize: false
-            }
+            RedBuffer.ARRAY_BUFFER,
+            [
+                RedInterleaveInfo('aVertexPosition', 3),
+                RedInterleaveInfo('aVertexColor', 4)
             ]
         )
         this['geometry'] = RedGeometry(interleaveBuffer);
@@ -3331,7 +3358,7 @@ var RedMesh;
     :DOC*/
     RedMesh = function (redGL, geometry, material) {
         if (!(this instanceof RedMesh)) return new RedMesh(redGL, geometry, material);
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedMesh : RedGL Instance만 허용됩니다.')
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedMesh : RedGL Instance만 허용됩니다.', redGL)
         if (!(geometry instanceof RedGeometry)) RedGLUtil.throwFunc('RedMesh : RedGeometry Instance만 허용됩니다.')
         if (!(material instanceof RedBaseMaterial)) RedGLUtil.throwFunc('RedMesh : RedBaseMaterial 확장 Instance만 허용됩니다.')
         var tGL;
@@ -3413,7 +3440,7 @@ var RedLine;
     :DOC*/
     RedLine = function (redGL, material) {
         if (!(this instanceof RedLine)) return new RedLine(redGL, material);
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedLine : RedGL Instance만 허용됩니다.')
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedLine : RedGL Instance만 허용됩니다.', redGL)
         if (!(material instanceof RedColorMaterial)) RedGLUtil.throwFunc('RedLine : RedColorMaterial Instance만 허용됩니다.')
         var tGL;
         var interleaveData, indexData
@@ -3425,12 +3452,9 @@ var RedLine;
             redGL,
             'RedLine_InterleaveBuffer_' + this['_UUID'],
             new Float32Array(interleaveData),
-            RedBuffer.ARRAY_BUFFER, [
-                {
-                    attributeKey: 'aVertexPosition',
-                    size: 3,
-                    normalize: false
-                }
+            RedBuffer.ARRAY_BUFFER,
+            [
+                RedInterleaveInfo('aVertexPosition', 3)
             ]
         )
         indexBuffer = RedBuffer(
@@ -3550,7 +3574,7 @@ var RedSkyBox;
     :DOC*/
     RedSkyBox = function (redGL, srcList) {
         if (!(this instanceof RedSkyBox)) return new RedSkyBox(redGL, srcList);
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedSkyBox : RedGL Instance만 허용됩니다.')
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedSkyBox : RedGL Instance만 허용됩니다.', redGL)
         var tGL;
         tGL = redGL.gl;
         RedBaseObject3D['build'].call(this, tGL)
@@ -3597,7 +3621,7 @@ var RedSprite3D;
     :DOC*/
     RedSprite3D = function (redGL, material) {
         if (!(this instanceof RedSprite3D)) return new RedSprite3D(redGL, material);
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedSprite3D : RedGL Instance만 허용됩니다.')
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedSprite3D : RedGL Instance만 허용됩니다.', redGL)
         if (!(material instanceof RedBaseMaterial)) RedGLUtil.throwFunc('RedSprite3D : RedBaseMaterial 확장 Instance만 허용됩니다.')
         var tGL;
         tGL = redGL.gl;
@@ -3787,21 +3811,11 @@ var RedBox;
                     redGL,
                     tType + '_interleaveBuffer',
                     new Float32Array(interleaveData),
-                    RedBuffer.ARRAY_BUFFER, [{
-                        attributeKey: 'aVertexPosition',
-                        size: 3,
-                        normalize: false
-                    },
-                    {
-                        attributeKey: 'aVertexNormal',
-                        size: 3,
-                        normalize: false
-                    },
-                    {
-                        attributeKey: 'aTexcoord',
-                        size: 2,
-                        normalize: false
-                    }
+                    RedBuffer.ARRAY_BUFFER, 
+                    [
+                        RedInterleaveInfo('aVertexPosition', 3),
+                        RedInterleaveInfo('aVertexNormal', 3),
+                        RedInterleaveInfo('aTexcoord', 2)
                     ]
                 ),
                 indexBuffer: RedBuffer(
@@ -3947,21 +3961,11 @@ var RedPlane;
                     redGL,
                     tType + '_interleaveBuffer',
                     new Float32Array(interleaveData),
-                    RedBuffer.ARRAY_BUFFER, [{
-                        attributeKey: 'aVertexPosition',
-                        size: 3,
-                        normalize: false
-                    },
-                    {
-                        attributeKey: 'aVertexNormal',
-                        size: 3,
-                        normalize: false
-                    },
-                    {
-                        attributeKey: 'aTexcoord',
-                        size: 2,
-                        normalize: false
-                    }
+                    RedBuffer.ARRAY_BUFFER, 
+                    [
+                        RedInterleaveInfo('aVertexPosition', 3),
+                        RedInterleaveInfo('aVertexNormal', 3),
+                        RedInterleaveInfo('aTexcoord', 2)
                     ]
                 ),
                 indexBuffer: RedBuffer(
@@ -4113,21 +4117,11 @@ var RedSphere;
                     redGL,
                     tType + '_interleaveBuffer',
                     new Float32Array(interleaveData),
-                    RedBuffer.ARRAY_BUFFER, [{
-                        attributeKey: 'aVertexPosition',
-                        size: 3,
-                        normalize: false
-                    },
-                    {
-                        attributeKey: 'aVertexNormal',
-                        size: 3,
-                        normalize: false
-                    },
-                    {
-                        attributeKey: 'aTexcoord',
-                        size: 2,
-                        normalize: false
-                    }
+                    RedBuffer.ARRAY_BUFFER, 
+                    [
+                        RedInterleaveInfo('aVertexPosition', 3),
+                        RedInterleaveInfo('aVertexNormal', 3),
+                        RedInterleaveInfo('aTexcoord', 2)
                     ]
                 ),
                 indexBuffer: RedBuffer(
@@ -4358,25 +4352,32 @@ var RedProgram;
     RedProgram = function (redGL, key, vertexShader, fragmentShader) {
         var tGL;
         if (!(this instanceof RedProgram)) return new RedProgram(redGL, key, vertexShader, fragmentShader)
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedProgram : RedGL Instance만 허용됩니다.');
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedProgram : RedGL Instance만 허용됩니다.', redGL);
         if (typeof key != 'string') RedGLUtil.throwFunc('RedProgram : key - 문자열만 허용됩니다.');
         if (!vertexShader instanceof RedShader) RedGLUtil.throwFunc('RedProgram : vShaderInfo - RedShader만 허용됩니다.');
         if (!fragmentShader instanceof RedShader) RedGLUtil.throwFunc('RedProgram : fShaderInfo - RedShader만 허용됩니다.');
-        if (vertexShader['type'] != RedShader.VERTEX) RedGLUtil.throwFunc('RedProgram : vShaderInfo - VERTEX 타입만 허용됩니다.');
-        if (fragmentShader['type'] != RedShader.FRAGMENT) RedGLUtil.throwFunc('RedProgram : fShaderInfo - FRAGMENT 타입만 허용됩니다.');
+        if (vertexShader && vertexShader['type'] != RedShader.VERTEX) RedGLUtil.throwFunc('RedProgram : vShaderInfo - VERTEX 타입만 허용됩니다.');
+        if (fragmentShader && fragmentShader['type'] != RedShader.FRAGMENT) RedGLUtil.throwFunc('RedProgram : fShaderInfo - FRAGMENT 타입만 허용됩니다.');
 
         tGL = redGL.gl;
-        // TODO: 유일키 방어
+
+        // 데이터 공간확보
         if (!redGL['_datas']['RedProgram']) redGL['_datas']['RedProgram'] = {};
-        if (redGL['_datas']['RedProgram'][key]) return redGL['_datas']['RedProgram'][key]
-        else redGL['_datas']['RedProgram'][key] = this
+
+        // 소스 쉐이더가 모두 없으면 기존에서 검색
+        if (!vertexShader && !fragmentShader) {
+            if (redGL['_datas']['RedProgram'][key]) return redGL['_datas']['RedProgram'][key]
+            else RedGLUtil.throwFunc('RedShader : 존재하지않는 key를 검색하려고합니다.', key);
+        } else {
+            if (!vertexShader || !fragmentShader) RedGLUtil.throwFunc('RedProgram : 신규 생성시 vertexShader, fragmentShader 모두 입력해야함.');
+            if (RedProgram['hasKey'](redGL, key)) RedGLUtil.throwFunc('RedProgram : key - 이미 정의된 키로 생성을 시도.', '\n키 :', key);
+            else redGL['_datas']['RedProgram'][key] = this;
+            console.log('신규생성', key)
+        }
         /**DOC:
             {
                 title :`key`,
                 description : `고유키`,
-                example : `
-                // TODO: 
-                `,
                 return : 'String'
             }
         :DOC*/
@@ -4423,7 +4424,31 @@ var RedProgram;
         // Object.freeze(this)
         console.log(this)
     }
-    RedProgram.prototype = {}
+    RedProgram.prototype = {};
+    /**DOC:
+        {
+            title :`RedProgram.hasKey`,
+            code: 'STATIC',
+            description : '키에 해당하는 쉐이더 존재 여부 반환',
+            params : {
+                redGL : [
+                    {type:'RedGL'}
+                ],
+                key : [
+                    {type:'String'},
+                    `고유키`
+                ]
+            },
+            example : `
+                RedProgram.haskey(RedGL Instance, '찾고자하는키')
+            `,
+            return : 'Boolean'
+        }
+    :DOC*/
+    RedProgram['hasKey'] = function (redGL, key) {
+        if (!redGL['_datas']['RedProgram']) redGL['_datas']['RedProgram'] = {};
+        return redGL['_datas']['RedProgram'][key] ? true : false
+    }
     Object.freeze(RedProgram)
 })();
 "use strict";
@@ -4582,11 +4607,9 @@ var RedShader;
     parser = (function () {
         var parseData, checkList;
         var mergeStr;
-
         return function (type, source) {
             source = source.replace(/\s+$/, '')
             source = source.replace(/  /g, '').trim();
-
             // console.log(source)
             parseData = {
                 etc: {
@@ -4711,16 +4734,37 @@ var RedShader;
                     `쉐이더 문자열 소스`
                 ],
             },
+            example : `
+            RedShader(RedGL Instance, 'test', RedShader.VERTEX, 'vec3 test; void main(){}')
+            RedShader(RedGL Instance, 'test', RedShader.FRAGMENT, 'precision mediump float;vec3 test; void main(){test;}')
+            `,
             return : 'RedShader Instance'
         }
     :DOC*/
     RedShader = function (redGL, key, type, source) {
         var tGL;
         if (!(this instanceof RedShader)) return new RedShader(redGL, key, type, source);
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedShader : RedGL Instance만 허용됩니다.');
-        if (typeof key != 'string') RedGLUtil.throwFunc('RedShader : key - 문자열만 허용됩니다.');
-        if (typeof type != 'string') RedGLUtil.throwFunc('RedShader : type - 문자열만 허용됩니다.');
-        if (typeof source != 'string') RedGLUtil.throwFunc('RedShader : source - 문자열만 허용됩니다.');
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedShader : RedGL Instance만 허용됩니다.', redGL);
+        if (typeof key != 'string') RedGLUtil.throwFunc('RedShader : key - 문자열만 허용됩니다.', key);
+        if (type != RedShader['VERTEX'] && type != RedShader['FRAGMENT']) RedGLUtil.throwFunc('RedShader : type - RedShader.VERTEX or RedShader.FRAGMENT 만 허용됩니다.', type);
+
+        // 데이터 공간확보
+        if (!redGL['_datas']['RedShader']) {
+            redGL['_datas']['RedShader'] = {};
+            redGL['_datas']['RedShader'][RedShader['VERTEX']] = {};
+            redGL['_datas']['RedShader'][RedShader['FRAGMENT']] = {};
+        }
+
+        // 소스가 있을 경우 검증
+        if (source) {
+            if (typeof source != 'string') RedGLUtil.throwFunc('RedShader : source - 문자열만 허용됩니다.');
+            if (RedShader['hasKey'](redGL, key, type)) RedGLUtil.throwFunc('RedShader : key - 이미 정의된 키로 생성을 시도.', '\n키 :', key, '\n타입 :', type);
+            else redGL['_datas']['RedShader'][type][key] = this;
+        } else {
+            // 소스가 없을경우, 기존데이터에서 찾아옴
+            if (RedShader['hasKey'](redGL, key, type)) return redGL['_datas']['RedShader'][type][key];
+            else RedGLUtil.throwFunc('RedShader : 존재하지않는 key를 검색하려고합니다.', key);
+        }
         tGL = redGL.gl
         /**DOC:
             {
@@ -4730,7 +4774,15 @@ var RedShader;
             }
         :DOC*/
         this['webglShader'] = makeWebGLShader(tGL, key, type);
+        /**DOC:
+            {
+             title :`parseData`,
+             description : `쉐이더 해석 데이터`,
+             return : 'Object'
+            }
+        :DOC*/
         this['parseData'] = parser(type, source);
+        // 쉐이더 컴파일
         compile(tGL, type, this['webglShader'], this['parseData']);
         /**DOC:
         {
@@ -4739,8 +4791,6 @@ var RedShader;
             return : 'String'
         }
         :DOC*/
-
-        //TODO: 고유키 방어
         this['key'] = key
         /**DOC:
 		{
@@ -4756,21 +4806,53 @@ var RedShader;
         // console.log(this)
     }
     /**DOC:
-		{
+        {
+            title :`RedShader.hasKey`,
+            code: 'STATIC',
+            description : '키에 해당하는 쉐이더 존재 여부 반환',
+            params : {
+                redGL : [
+                    {type:'RedGL'}
+                ],
+                key : [
+                    {type:'String'},
+                    `고유키`
+                ],
+                type : [
+                    {type:'RedShader.VERTEX or RedShader.FRAGMENT'},
+                    `버퍼 타입`
+                ]
+            },
+            example : `
+                RedShader.haskey(RedGL Instance, '찾고자하는키', RedShader.FRAGMENT or RedShader.VERTEX)
+            `,
+            return : 'Boolean'
+        }
+    :DOC*/
+    RedShader['hasKey'] = function (redGL, key, type) {
+        if (!redGL['_datas']['RedShader']) {
+            redGL['_datas']['RedShader'] = {};
+            redGL['_datas']['RedShader'][RedShader['VERTEX']] = {};
+            redGL['_datas']['RedShader'][RedShader['FRAGMENT']] = {};
+        }
+        return redGL['_datas']['RedShader'][type][key] ? true : false
+    }
+    /**DOC:
+        {
             title :`RedShader.FRAGMENT`,
             code: 'CONST',
-			return : 'String'
-		}
-	:DOC*/
-    RedShader.FRAGMENT = 'fragmentShader'
+            return : 'String'
+        }
+    :DOC*/
+    RedShader['FRAGMENT'] = 'fragmentShader'
     /**DOC:
 		{
-            title :`RedShader.VERTEX_SHADER`,
+            title :`RedShader.VERTEX`,
             code: 'CONST',
 			return : 'String'
 		}
 	:DOC*/
-    RedShader.VERTEX = 'vertexShader'
+    RedShader['VERTEX'] = 'vertexShader'
     Object.freeze(RedShader)
 })();
 "use strict";
@@ -5760,16 +5842,23 @@ var RedRenderDebuger;
         if (!(this instanceof RedRenderDebuger)) return new RedRenderDebuger();
         if (!this['renderResult']) {
             this['renderResult'] = document.createElement('div')
+            this['_contentBox'] = document.createElement('div')
+            this['_etcBox'] = document.createElement('div')
+            this['renderResult'].appendChild(this['_contentBox'])
+            this['renderResult'].appendChild(this['_etcBox'])
             this['renderResult'].style.cssText = 'position:absolute;bottom:0px;left:0px;color:#fff;font:11px Lucida Grande,sans-serif;font-size:11px;background:rgba(0,0,0,0.6);padding:3px;width:300px'
+            
+            this['_etcBox'].style.cssText = 'position:relative;color:#fff;font:11px Lucida Grande,sans-serif;font-size:11px;background:rgba(0,0,0,0.6);padding:3px'
+            this['_etcBox'].innerHTML = '<a href="https://redcamel.github.io/RedGL2/redDoc/index.html" stlye="color:#fff;text-decoration:none">API document</a>'
         }
         this['_visible'] = false
     }
     RedRenderDebuger.prototype = {
         update: function (redGL, renderInfo) {
-            this['renderResult'].innerHTML = ''
+            this['_contentBox'].innerHTML = ''
             for (var k in renderInfo) {
                 // console.log(tRenderer['renderInfo'][k])
-                this['renderResult'].innerHTML +=
+                this['_contentBox'].innerHTML +=
                     '<div style="padding:3px">' +
                     '<div><b>RedView : key - ' + renderInfo[k]['key'] + '</b></div>' +
                     ' orthographic - ' + renderInfo[k]['orthographic'] +
@@ -5782,7 +5871,7 @@ var RedRenderDebuger;
                     ' / y - ' + renderInfo[k]['y'] +
                     '</div><br>'
             }
-            this['renderResult'].innerHTML += '<div style="padding:3px;background:#000">renderScale : ' + redGL['renderScale'] + '</div>'
+            this['_contentBox'].innerHTML += '<div style="padding:3px;background:#000">renderScale : ' + redGL['renderScale'] + '</div>'
         }
     }
     /**DOC:
@@ -5856,7 +5945,7 @@ var RedAtlas;
     :DOC*/
     RedAtlas = function (redGL, srcList, callBack) {
         if (!(this instanceof RedAtlas)) return new RedAtlas(redGL, srcList, callBack);
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedBitmapMaterial : RedGL Instance만 허용됩니다.')
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedBitmapMaterial : RedGL Instance만 허용됩니다.', redGL)
 
         if (!redGL['_datas']['RedAtlas']) redGL['_datas']['RedAtlas'] = {
             atlasInfoList: [new Atlas()],
@@ -6272,7 +6361,7 @@ var RedAtlasUV;
     :DOC*/
     RedAtlasUV = function (redGL, rect) {
         if (!(this instanceof RedAtlasUV)) return new RedAtlasUV(redGL, rect);
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedAtlasUV : RedGL Instance만 허용됩니다.');
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedAtlasUV : RedGL Instance만 허용됩니다.', redGL);
         if (rect) {
             t0 = [
                 rect[0][0],
@@ -6421,7 +6510,7 @@ var RedBitmapTexture;
     RedBitmapTexture = function (redGL, src, option) {
         var gl;
         if (!(this instanceof RedBitmapTexture)) return new RedBitmapTexture(redGL, src, option);
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedBitmapTexture : RedGL Instance만 허용됩니다.');
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedBitmapTexture : RedGL Instance만 허용됩니다.', redGL);
         gl = redGL.gl;
         this['webglTexture'] = gl.createTexture();
         this['atlascoord'] = RedAtlasUV(redGL)
@@ -6489,7 +6578,7 @@ var RedAtlasTexture;
     var t0;
     RedAtlasTexture = function (redGL, key) {
         if (!(this instanceof RedAtlasTexture)) return new RedAtlasTexture(redGL, key);
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedAtlasTexture : RedGL Instance만 허용됩니다.');
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedAtlasTexture : RedGL Instance만 허용됩니다.', redGL);
         t0 = redGL['_datas']['RedAtlas']['atlasMap'][key]
         this['webglTexture'] = t0['atlas']['texture']['webglTexture']
         this['atlascoord'] = RedAtlasUV(redGL, t0['rect'])
@@ -6633,7 +6722,7 @@ var RedBitmapCubeTexture;
     RedBitmapCubeTexture = function (redGL, srcList, option) {
         var gl;
         if (!(this instanceof RedBitmapCubeTexture)) return new RedBitmapCubeTexture(redGL, srcList, option);
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedBitmapCubeTexture : RedGL Instance만 허용됩니다.');
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedBitmapCubeTexture : RedGL Instance만 허용됩니다.', redGL);
         gl = redGL.gl;
         this['webglTexture'] = gl.createTexture();
         this['atlascoord'] = RedAtlasUV(redGL)

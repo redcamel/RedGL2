@@ -19,7 +19,7 @@
     <script src="src/RedGLUtil.js"></script>
     <script src="src/RedGL.js"></script>
 
-    <script src="src/atlas/RedAtlas.js"></script>
+
 
     <script src="src/base/RedBaseContainer.js"></script>
     <script src="src/base/RedBaseLight.js"></script>
@@ -28,6 +28,7 @@
 
     <script src="src/geometry/RedBuffer.js"></script>
     <script src="src/geometry/RedGeometry.js"></script>
+    <script src="src/geometry/RedInterleaveInfo.js"></script>
 
     <script src="src/light/RedAmbientLight.js"></script>
     <script src="src/light/RedDirectionalLight.js"></script>
@@ -68,6 +69,7 @@
     <script src="src/renderer/system/RedRenderDebuger.js"></script>
 
     <script src="src/resources/system/RedAtlasUV.js"></script>
+    <script src="src/resources/RedAtlas.js"></script>
     <script src="src/resources/RedBitmapTexture.js"></script>
     <script src="src/resources/RedAtlasTexture.js"></script>
     <script src="src/resources/RedBitmapCubeTexture.js"></script>
@@ -158,37 +160,19 @@
                 this,
                 'testInterleaveBuffer',
                 interleaveData,
-                RedBuffer.ARRAY_BUFFER, [{
-                    attributeKey: 'aVertexPosition',
-                    size: 3,
-                    normalize: false
-                },
-                {
-                    attributeKey: 'aTexcoord',
-                    size: 2,
-                    normalize: false
-                },
-                {
-                    attributeKey: 'aVertexColor',
-                    size: 4,
-                    normalize: false
-                }
+                RedBuffer.ARRAY_BUFFER, [
+                    RedInterleaveInfo('aVertexPosition', 3),
+                    RedInterleaveInfo('aTexcoord', 2),
+                    RedInterleaveInfo('aVertexColor', 4)
                 ]
             )
             testInterleaveBuffer2 = RedBuffer(
                 this,
                 'testInterleaveBuffer2',
                 interleaveData2,
-                RedBuffer.ARRAY_BUFFER, [{
-                    attributeKey: 'aVertexPosition',
-                    size: 3,
-                    normalize: false
-                },
-                {
-                    attributeKey: 'aTexcoord',
-                    size: 2,
-                    normalize: false
-                }
+                RedBuffer.ARRAY_BUFFER, [
+                    RedInterleaveInfo('aVertexPosition', 3),
+                    RedInterleaveInfo('aTexcoord', 2)
                 ]
             )
             testIndexBuffer = RedBuffer(

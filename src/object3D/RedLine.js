@@ -40,7 +40,7 @@ var RedLine;
     :DOC*/
     RedLine = function (redGL, material) {
         if (!(this instanceof RedLine)) return new RedLine(redGL, material);
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedLine : RedGL Instance만 허용됩니다.')
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedLine : RedGL Instance만 허용됩니다.', redGL)
         if (!(material instanceof RedColorMaterial)) RedGLUtil.throwFunc('RedLine : RedColorMaterial Instance만 허용됩니다.')
         var tGL;
         var interleaveData, indexData
@@ -52,12 +52,9 @@ var RedLine;
             redGL,
             'RedLine_InterleaveBuffer_' + this['_UUID'],
             new Float32Array(interleaveData),
-            RedBuffer.ARRAY_BUFFER, [
-                {
-                    attributeKey: 'aVertexPosition',
-                    size: 3,
-                    normalize: false
-                }
+            RedBuffer.ARRAY_BUFFER,
+            [
+                RedInterleaveInfo('aVertexPosition', 3)
             ]
         )
         indexBuffer = RedBuffer(

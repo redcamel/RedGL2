@@ -15,7 +15,7 @@
             overflow: hidden;
         }
     </style>
-    <<script src="src/gl-matrix-min.js"></script>
+    <script src="src/gl-matrix-min.js"></script>
     <script src="src/RedGLUtil.js"></script>
     <script src="src/RedGL.js"></script>
 
@@ -80,9 +80,9 @@
 <body>
     <canvas id="test" style="border: none;background:red"></canvas>
     <script>
-        var t = document.getElementById('test')
-        document.body.appendChild(t)
-        RedGL(t, function (v) {
+        document.getElementById('test')
+        RedGL(document.getElementById('test'), function (v) {
+
             var tGL;
             var tWorld, tScene3D, tCamera
             var tRenderer;
@@ -96,80 +96,119 @@
             tWorld.addView(RedView('test', tScene3D, tCamera));
             RedView('test').setSize('100%', '100%')
             RedView('test').setLocation('0%', '0%')
-            tScene3D.skyBox =
-                RedSkyBox(this, [
+
+            // RedShader(this, 'test', RedShader.VERTEX)
+            RedShader(this, 'testVs', RedShader.VERTEX, 'vec3 test; void main(){}')
+            RedShader(this, 'testFs', RedShader.FRAGMENT,
+                'precision mediump float;vec3 test; void main(){test;}')
+            // RedShader(this, 'test', RedShader.VERTEX, 'vec3 test; void main(){}')
+
+            RedProgram(
+                this,
+                'testProgram',
+                RedShader(this, 'testVs', RedShader.VERTEX),
+                RedShader(this, 'testFs', RedShader.FRAGMENT)
+            )
+
+            console.log('검색', RedProgram(this, 'testProgram'))
+            // this.renderScale = 1
+
+            var testMaterial
+            testMaterial = RedStandardMaterial(
+                this,
+                RedBitmapTexture(this, 'asset/crate.png')
+            )
+            RedStandardMaterial(
+                this,
+                RedBitmapTexture(this, 'asset/crate.png')
+            )
+
+            RedBitmapMaterial(
+                this,
+                RedBitmapTexture(this, 'asset/crate.png')
+            )
+            RedBitmapMaterial(
+                this,
+                RedBitmapTexture(this, 'asset/crate.png')
+            )
+
+            RedColorMaterial(this)
+            RedColorMaterial(this)
+            RedColorPhongMaterial(this)
+            RedColorPhongMaterial(this)
+
+            RedEnvironmentMaterial(this, RedBitmapTexture(this, 'asset/crate.png'))
+            RedEnvironmentMaterial(this, RedBitmapTexture(this, 'asset/crate.png'))
+
+            RedPointBitmapMaterial(this, RedBitmapTexture(this, 'asset/crate.png'))
+            RedPointBitmapMaterial(this, RedBitmapTexture(this, 'asset/crate.png'))
+
+            RedPointColorMaterial(this)
+            RedPointColorMaterial(this)
+
+            RedGridMaterial(this)
+            RedGridMaterial(this)
+
+
+            RedSkyBoxMaterial(this,
+                RedBitmapCubeTexture(this, [
                     'asset/cubemap/posx.png',
                     'asset/cubemap/negx.png',
                     'asset/cubemap/posy.png',
                     'asset/cubemap/negy.png',
                     'asset/cubemap/posz.png',
                     'asset/cubemap/negz.png'
-                ]);
-
-            var testDLight
-
-            testDLight = RedDirectionalLight(this, '#fff')
-            testDLight.x = 3
-            testDLight.y = 3
-            testDLight.z = 3
-            tScene3D.addLight(testDLight)
-
-            var testMaterials = []
-            var imgList = []
-            for (var i = 0; i < 10; i++) {
-                imgList.push('asset/draft' + (i % 5 + 1) + '.png?test='+Math.random())
-
-            }
-          
-            RedAtlas(this, imgList,
-                function (v) {
-                    console.log('~~~~~~~~~~~~~~~', v)
-                    for (var k in v['atlasMap']) {
-                    
-                        // console.log( v['atlasMap'][k]['atlas']['canvas'])
-                        testMaterials.push(
-                            RedBitmapMaterial(
-                                self,
-                                RedAtlasTexture(self, k)
-                            )
-                        )
-                    }
-                    var i = 5000
-                    var geo = RedBox(self)
-                    while (i--) {
-                        var testMesh = RedMesh(self, geo, testMaterials[i%imgList.length] )
-                        testMesh.x = Math.random()*100-50
-                        testMesh.y = Math.random()*100-50
-                        testMesh.z = Math.random()*100-50
-                        tScene3D.addChild(testMesh)
-                    }
-
-                    console.log(testMaterials)
-                }
+                ])
             )
 
-          tRenderer.renderDebuger.visible = true
+            RedSkyBoxMaterial(this,
+                RedBitmapCubeTexture(this, [
+                    'asset/cubemap/posx.png',
+                    'asset/cubemap/negx.png',
+                    'asset/cubemap/posy.png',
+                    'asset/cubemap/negy.png',
+                    'asset/cubemap/posz.png',
+                    'asset/cubemap/negz.png'
+                ])
+            )
 
-            tRenderer.start(this, function (time) {
-                i = tScene3D.children.length
-                while (i--) {
-                    if (i == 0) break
-                    testMesh = tScene3D.children[i]
-                    testMesh.rotationX += 1
-                    testMesh.rotationY += 1
-                    testMesh.rotationZ += 1
-                }
-                
 
-                tCamera.x = Math.sin(time / 3500) * 20
-                tCamera.y = Math.cos(time / 3500) * 20
-                tCamera.z = Math.cos(time / 3500) * 20
-                tCamera.lookAt(0, 0, 0)
+            // JsonModelLoader(this, 'testJsonModel', 'asset/teapot.json', function (interleaveBuffer, indexBuffer) {
+            //     console.log('호잇!', interleaveBuffer, indexBuffer)
+            //     var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer), testMaterial)
+            //     testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.3
+            //     // tScene3D.addChild(testMesh)
+            //     // tScene3D['grid'] = RedGrid(self)
+            // })
 
-              
-            })
 
-            console.log(tScene3D)
+            // var testDLight
+
+            // testDLight = RedDirectionalLight(this, '#fff')
+            // testDLight.x = 3
+            // testDLight.y = 3
+            // testDLight.z = 3
+            // tScene3D.addLight(testDLight)
+
+            // tRenderer.renderDebuger.visible = true
+            // tRenderer.start(this, function (time) {
+            //     // testInterleaveBuffer.upload(interleaveData)
+            //     i = tScene3D.children.length
+            //     while (i--) {
+            //         testMesh = tScene3D.children[i]
+            //         testMesh.rotationX += 1
+            //         testMesh.rotationY += 1
+            //         testMesh.rotationZ += 1
+            //     }
+
+            //     tCamera.x = Math.sin(time / 1500) * 10
+            //     tCamera.y = Math.cos(time / 1500) * 10
+            //     tCamera.z = Math.cos(time / 1500) * 15 + Math.sin(time / 1500) * 15
+            //     tCamera.lookAt(0, 0, 0)
+
+
+            // })
+
         })
     </script>
 </body>

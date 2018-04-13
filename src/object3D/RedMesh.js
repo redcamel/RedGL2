@@ -33,7 +33,7 @@ var RedMesh;
     :DOC*/
     RedMesh = function (redGL, geometry, material) {
         if (!(this instanceof RedMesh)) return new RedMesh(redGL, geometry, material);
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedMesh : RedGL Instance만 허용됩니다.')
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedMesh : RedGL Instance만 허용됩니다.', redGL)
         if (!(geometry instanceof RedGeometry)) RedGLUtil.throwFunc('RedMesh : RedGeometry Instance만 허용됩니다.')
         if (!(material instanceof RedBaseMaterial)) RedGLUtil.throwFunc('RedMesh : RedBaseMaterial 확장 Instance만 허용됩니다.')
         var tGL;

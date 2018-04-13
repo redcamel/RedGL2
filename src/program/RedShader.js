@@ -57,11 +57,9 @@ var RedShader;
     parser = (function () {
         var parseData, checkList;
         var mergeStr;
-
         return function (type, source) {
             source = source.replace(/\s+$/, '')
             source = source.replace(/  /g, '').trim();
-
             // console.log(source)
             parseData = {
                 etc: {
@@ -186,16 +184,37 @@ var RedShader;
                     `쉐이더 문자열 소스`
                 ],
             },
+            example : `
+            RedShader(RedGL Instance, 'test', RedShader.VERTEX, 'vec3 test; void main(){}')
+            RedShader(RedGL Instance, 'test', RedShader.FRAGMENT, 'precision mediump float;vec3 test; void main(){test;}')
+            `,
             return : 'RedShader Instance'
         }
     :DOC*/
     RedShader = function (redGL, key, type, source) {
         var tGL;
         if (!(this instanceof RedShader)) return new RedShader(redGL, key, type, source);
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedShader : RedGL Instance만 허용됩니다.');
-        if (typeof key != 'string') RedGLUtil.throwFunc('RedShader : key - 문자열만 허용됩니다.');
-        if (typeof type != 'string') RedGLUtil.throwFunc('RedShader : type - 문자열만 허용됩니다.');
-        if (typeof source != 'string') RedGLUtil.throwFunc('RedShader : source - 문자열만 허용됩니다.');
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedShader : RedGL Instance만 허용됩니다.', redGL);
+        if (typeof key != 'string') RedGLUtil.throwFunc('RedShader : key - 문자열만 허용됩니다.', key);
+        if (type != RedShader['VERTEX'] && type != RedShader['FRAGMENT']) RedGLUtil.throwFunc('RedShader : type - RedShader.VERTEX or RedShader.FRAGMENT 만 허용됩니다.', type);
+
+        // 데이터 공간확보
+        if (!redGL['_datas']['RedShader']) {
+            redGL['_datas']['RedShader'] = {};
+            redGL['_datas']['RedShader'][RedShader['VERTEX']] = {};
+            redGL['_datas']['RedShader'][RedShader['FRAGMENT']] = {};
+        }
+
+        // 소스가 있을 경우 검증
+        if (source) {
+            if (typeof source != 'string') RedGLUtil.throwFunc('RedShader : source - 문자열만 허용됩니다.');
+            if (RedShader['hasKey'](redGL, key, type)) RedGLUtil.throwFunc('RedShader : key - 이미 정의된 키로 생성을 시도.', '\n키 :', key, '\n타입 :', type);
+            else redGL['_datas']['RedShader'][type][key] = this;
+        } else {
+            // 소스가 없을경우, 기존데이터에서 찾아옴
+            if (RedShader['hasKey'](redGL, key, type)) return redGL['_datas']['RedShader'][type][key];
+            else RedGLUtil.throwFunc('RedShader : 존재하지않는 key를 검색하려고합니다.', key);
+        }
         tGL = redGL.gl
         /**DOC:
             {
@@ -205,7 +224,15 @@ var RedShader;
             }
         :DOC*/
         this['webglShader'] = makeWebGLShader(tGL, key, type);
+        /**DOC:
+            {
+             title :`parseData`,
+             description : `쉐이더 해석 데이터`,
+             return : 'Object'
+            }
+        :DOC*/
         this['parseData'] = parser(type, source);
+        // 쉐이더 컴파일
         compile(tGL, type, this['webglShader'], this['parseData']);
         /**DOC:
         {
@@ -214,8 +241,6 @@ var RedShader;
             return : 'String'
         }
         :DOC*/
-
-        //TODO: 고유키 방어
         this['key'] = key
         /**DOC:
 		{
@@ -231,20 +256,52 @@ var RedShader;
         // console.log(this)
     }
     /**DOC:
-		{
+        {
+            title :`RedShader.hasKey`,
+            code: 'STATIC',
+            description : '키에 해당하는 쉐이더 존재 여부 반환',
+            params : {
+                redGL : [
+                    {type:'RedGL'}
+                ],
+                key : [
+                    {type:'String'},
+                    `고유키`
+                ],
+                type : [
+                    {type:'RedShader.VERTEX or RedShader.FRAGMENT'},
+                    `버퍼 타입`
+                ]
+            },
+            example : `
+                RedShader.haskey(RedGL Instance, '찾고자하는키', RedShader.FRAGMENT or RedShader.VERTEX)
+            `,
+            return : 'Boolean'
+        }
+    :DOC*/
+    RedShader['hasKey'] = function (redGL, key, type) {
+        if (!redGL['_datas']['RedShader']) {
+            redGL['_datas']['RedShader'] = {};
+            redGL['_datas']['RedShader'][RedShader['VERTEX']] = {};
+            redGL['_datas']['RedShader'][RedShader['FRAGMENT']] = {};
+        }
+        return redGL['_datas']['RedShader'][type][key] ? true : false
+    }
+    /**DOC:
+        {
             title :`RedShader.FRAGMENT`,
             code: 'CONST',
-			return : 'String'
-		}
-	:DOC*/
-    RedShader.FRAGMENT = 'fragmentShader'
+            return : 'String'
+        }
+    :DOC*/
+    RedShader['FRAGMENT'] = 'fragmentShader'
     /**DOC:
 		{
-            title :`RedShader.VERTEX_SHADER`,
+            title :`RedShader.VERTEX`,
             code: 'CONST',
 			return : 'String'
 		}
 	:DOC*/
-    RedShader.VERTEX = 'vertexShader'
+    RedShader['VERTEX'] = 'vertexShader'
     Object.freeze(RedShader)
 })();

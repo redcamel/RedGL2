@@ -3,7 +3,7 @@ var RedFrameBuffer;
 (function () {
     RedFrameBuffer = function (redGL, width, height) {
         if (!(this instanceof RedFrameBuffer)) return new RedFrameBuffer(redGL, width, height)
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedFrameBuffer : RedGL Instance만 허용됩니다.')
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedFrameBuffer : RedGL Instance만 허용됩니다.', redGL)
         var gl;
         gl = redGL['gl'];
         width  = width  || gl.drawingBufferWidth;
