@@ -30,7 +30,7 @@ var RedBitmapTexture;
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
         gl.generateMipmap(gl.TEXTURE_2D);
         gl.pixelStorei(gl.UNPACK_ALIGNMENT, 4);
-        // gl.bindTexture(gl.TEXTURE_2D, null);
+        gl.bindTexture(gl.TEXTURE_2D, null);
     }
     makeTexture = function (gl, texture, source, option) {
         gl.activeTexture(gl.TEXTURE0 + 0)

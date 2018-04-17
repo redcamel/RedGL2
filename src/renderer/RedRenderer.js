@@ -1,5 +1,6 @@
 "use strict";
 var RedRenderer;
+//TODO: 캐싱전략을 좀더 고도화하는게 좋을듯
 (function () {
     /**DOC:
     {
@@ -23,10 +24,10 @@ var RedRenderer;
         this['renderInfo'] = {}
         this['cacheUniformInfo'] = []
         this['cacheAttrInfo'] = []
-        this['cacheSamplerIndex'] = []
+        this['cacheBySamplerIndex'] = []
         this['cacheState'] = []
         this['renderDebuger'] = RedRenderDebuger()
-        Object.seal(this)
+        // Object.seal(this)
         console.log(this)
     };
     RedRenderer.prototype = {
@@ -363,7 +364,6 @@ var RedRenderer;
         })();
         glInitialize = function (gl) {
             // 뎁스데스티 설정
-
             gl.enable(gl.DEPTH_TEST);
             gl.depthFunc(gl.LEQUAL)
             // 컬링 페이스 설정
@@ -483,7 +483,7 @@ var RedRenderer;
                 // asix가 있으면 그림
                 if (tScene['axis']) self.sceneRender(redGL, gl, tCamera['orthographic'], tScene['axis']['children'], time, self['renderInfo'][tView['key']]);
                 // 디버깅 라이트 업데이트 
-                self.sceneRender(redGL, gl, tCamera['orthographic'], lightDebugRenderList, time, self['renderInfo'][tView['key']]);
+                if (lightDebugRenderList.length) self.sceneRender(redGL, gl, tCamera['orthographic'], lightDebugRenderList, time, self['renderInfo'][tView['key']]);
             })
             if (this['renderDebuger']['visible']) this['renderDebuger'].update(redGL, self['renderInfo'])
         }
@@ -504,7 +504,7 @@ var RedRenderer;
             renderResultObj,
             tCacheInterleaveBuffer,
             tCacheUniformInfo,
-            tCacheSamplerIndex,
+            tCacheBySamplerIndex,
             tCacheState,
             parentMTX
 
@@ -551,6 +551,7 @@ var RedRenderer;
                 C045 = 0.405284735,
                 C157 = 1.5707963267948966;
             //////////////// 렌더시작 ////////////////
+            tPrevSamplerIndex = null
             i = children.length
             while (i--) {
                 renderResultObj['call']++
@@ -630,48 +631,53 @@ var RedRenderer;
                                 // console.log(tUniformLocationInfo['materialPropertyName'],tUniformValue)  
                                 // console.log(tUniformLocationInfo)
 
-                                if (tCacheSamplerIndex[tSamplerIndex] == tUniformValue['_UUID']) {
+                                if (tCacheBySamplerIndex[tSamplerIndex] == tUniformValue['_UUID']) {
 
                                     // console.log('온다',tUniformLocationInfo['materialPropertyName'],tSamplerIndex,tSamplerIndex)
                                 } else {
                                     // console.log('온다2',tUniformLocationInfo['materialPropertyName'],tSamplerIndex,tSamplerIndex)
-                                    gl.activeTexture(gl.TEXTURE0 + tSamplerIndex)
-                                    gl.bindTexture(tRenderType == 'sampler2D' ? gl.TEXTURE_2D : gl.TEXTURE_CUBE_MAP, tUniformValue['webglTexture'])
-                                    gl.uniform1i(tWebGLUniformLocation, tSamplerIndex)
+                                    tPrevSamplerIndex == tSamplerIndex ? 0 : gl.activeTexture(gl.TEXTURE0 + (tPrevSamplerIndex = tSamplerIndex));;
+                                    gl.bindTexture(tRenderType == 'sampler2D' ? gl.TEXTURE_2D : gl.TEXTURE_CUBE_MAP, tUniformValue['webglTexture']);
+                                    tCacheBySamplerIndex[tUUID] == tSamplerIndex ? 0 : gl.uniform1i(tWebGLUniformLocation, tCacheBySamplerIndex[tUUID] = tSamplerIndex);
+                                    tCacheBySamplerIndex[tSamplerIndex] = tUniformValue['_UUID'];
                                 }
+
+
+
+
+
                                 // 아틀라스 UV검색
-                                if (tUniformValue instanceof RedAtlasTexture && tSystemUniformGroup['uAtlascoord']['location']) {
+                                if (tSystemUniformGroup['uAtlascoord']['location']) {
                                     tUUID = tSystemUniformGroup['uAtlascoord']['_UUID']
                                     if (tCacheUniformInfo[tUUID] != tUniformValue['atlascoord']['data']['_UUID']) {
                                         gl.uniform4fv(tSystemUniformGroup['uAtlascoord']['location'], tUniformValue['atlascoord']['data'])
                                         tCacheUniformInfo[tUUID] = tUniformValue['atlascoord']['data']['_UUID']
                                     }
                                 }
-
-                                tCacheSamplerIndex[tSamplerIndex] = tUniformValue['_UUID']
                             } else {
                                 // console.log('설마',tUniformLocationInfo['materialPropertyName'])
                                 if (tRenderType == 'sampler2D') {
 
-                                    if (tCacheSamplerIndex[tSamplerIndex] == 0) {
+                                    if (tCacheBySamplerIndex[tSamplerIndex] == 0) {
                                     } else {
-                                        gl.activeTexture(gl.TEXTURE0)
-                                        gl.bindTexture(gl.TEXTURE_2D, redGL['_datas']['emptyTexture']['2d']['webglTexture'])
-                                        gl.uniform1i(tWebGLUniformLocation, 0)
-
+                                        tPrevSamplerIndex == 0 ? 0 : gl.activeTexture(gl.TEXTURE0);
+                                        gl.bindTexture(gl.TEXTURE_2D, redGL['_datas']['emptyTexture']['2d']['webglTexture']);
+                                        tCacheBySamplerIndex[tUUID] == 0 ? 0 : gl.uniform1i(tWebGLUniformLocation, tCacheBySamplerIndex[tUUID] = 0);
+                                        tCacheBySamplerIndex[tSamplerIndex] = 0;
+                                        tPrevSamplerIndex = 0;
                                     }
-                                    tCacheSamplerIndex[tSamplerIndex] = 0
+
+
                                 } else {
-                                    if (tCacheSamplerIndex[tSamplerIndex] == 1) {
+                                    if (tCacheBySamplerIndex[tSamplerIndex] == 1) {
                                     } else {
-                                        gl.activeTexture(gl.TEXTURE0 + 1)
-                                        gl.bindTexture(gl.TEXTURE_CUBE_MAP, redGL['_datas']['emptyTexture']['3d']['webglTexture'])
-                                        gl.uniform1i(tWebGLUniformLocation, 1)
+                                        tPrevSamplerIndex == 1 ? 0 : gl.activeTexture(gl.TEXTURE0 + 1);
+                                        gl.bindTexture(gl.TEXTURE_CUBE_MAP, redGL['_datas']['emptyTexture']['3d']['webglTexture']);
+                                        tCacheBySamplerIndex[tUUID] == 1 ? 0 : gl.uniform1i(tWebGLUniformLocation, tCacheBySamplerIndex[tUUID] = 1);
+                                        tCacheBySamplerIndex[tSamplerIndex] = 1;
+                                        tPrevSamplerIndex = 1;
                                     }
-                                    tCacheSamplerIndex[tSamplerIndex] = 1
                                 }
-
-
                             }
                         } else {
                             tUniformValue == undefined ? RedGLUtil.throwFunc('RedRenderer : Material에 ', tUniformLocationInfo['materialPropertyName'], '이 정의 되지않았습니다.') : 0;
@@ -929,7 +935,7 @@ var RedRenderer;
                         renderResultObj,
                         tCacheInterleaveBuffer,
                         tCacheUniformInfo,
-                        tCacheSamplerIndex,
+                        tCacheBySamplerIndex,
                         tCacheState,
                         tMVMatrix
                     )
@@ -946,9 +952,9 @@ var RedRenderer;
             if (!this['cacheState']['blendSrc']) this['cacheState']['blendSrc'] = gl.getParameter(gl.BLEND_SRC_RGB)
             if (!this['cacheState']['blendDst']) this['cacheState']['blendDst'] = gl.getParameter(gl.BLEND_DST_RGB)
 
-            this['cacheSamplerIndex'] = []
-
-
+            this['cacheBySamplerIndex'].length = 0
+            // this['cacheBySamplerIndex'][0] = null
+            // this['cacheBySamplerIndex'][1] = null
             draw(
                 redGL,
                 gl,
@@ -958,7 +964,7 @@ var RedRenderer;
                 renderResultObj,
                 this['cacheAttrInfo'],
                 this['cacheUniformInfo'],
-                this['cacheSamplerIndex'],
+                this['cacheBySamplerIndex'],
                 this['cacheState']
             )
 

@@ -15,66 +15,66 @@
             overflow: hidden;
         }
     </style>
-    <script src="src/gl-matrix-min.js"></script>
-    <script src="src/RedGLUtil.js"></script>
-    <script src="src/RedGL.js"></script>
+    <script src="../src/gl-matrix-min.js"></script>
+    <script src="../src/RedGLUtil.js"></script>
+    <script src="../src/RedGL.js"></script>
 
-    <script src="src/base/RedBaseContainer.js"></script>
-    <script src="src/base/RedBaseLight.js"></script>
-    <script src="src/base/RedBaseMaterial.js"></script>
-    <script src="src/base/RedBaseObject3D.js"></script>
+    <script src="../src/base/RedBaseContainer.js"></script>
+    <script src="../src/base/RedBaseLight.js"></script>
+    <script src="../src/base/RedBaseMaterial.js"></script>
+    <script src="../src/base/RedBaseObject3D.js"></script>
 
-    <script src="src/geometry/RedBuffer.js"></script>
-    <script src="src/geometry/RedGeometry.js"></script>
-    <script src="src/geometry/RedInterleaveInfo.js"></script>
+    <script src="../src/geometry/RedBuffer.js"></script>
+    <script src="../src/geometry/RedGeometry.js"></script>
+    <script src="../src/geometry/RedInterleaveInfo.js"></script>
 
-    <script src="src/light/RedAmbientLight.js"></script>
-    <script src="src/light/RedDirectionalLight.js"></script>
-    <script src="src/light/RedPointLight.js"></script>
+    <script src="../src/light/RedAmbientLight.js"></script>
+    <script src="../src/light/RedDirectionalLight.js"></script>
+    <script src="../src/light/RedPointLight.js"></script>
 
-    <script src="src/loader/JsonModelLoader.js"></script>
+    <script src="../src/loader/JsonModelLoader.js"></script>
 
-    <script src="src/material/RedMaterial.js"></script>
-    <script src="src/material/RedColorMaterial.js"></script>
-    <script src="src/material/RedColorPhongMaterial.js"></script>
-    <script src="src/material/RedEnvironmentMaterial.js"></script>
-    <script src="src/material/RedBitmapMaterial.js"></script>
-    <script src="src/material/RedPointBitmapMaterial.js"></script>
-    <script src="src/material/RedStandardMaterial.js"></script>
-    <script src="src/material/system/RedGridMaterial.js"></script>
-    <script src="src/material/RedPointColorMaterial.js"></script>
-    <script src="src/material/system/RedSkyBoxMaterial.js"></script>
+    <script src="../src/material/RedMaterial.js"></script>
+    <script src="../src/material/RedColorMaterial.js"></script>
+    <script src="../src/material/RedColorPhongMaterial.js"></script>
+    <script src="../src/material/RedEnvironmentMaterial.js"></script>
+    <script src="../src/material/RedBitmapMaterial.js"></script>
+    <script src="../src/material/RedPointBitmapMaterial.js"></script>
+    <script src="../src/material/RedStandardMaterial.js"></script>
+    <script src="../src/material/system/RedGridMaterial.js"></script>
+    <script src="../src/material/RedPointColorMaterial.js"></script>
+    <script src="../src/material/system/RedSkyBoxMaterial.js"></script>
 
-    <script src="src/object3D/RedAxis.js"></script>
-    <script src="src/object3D/RedGrid.js"></script>
-    <script src="src/object3D/RedMesh.js"></script>
-    <script src="src/object3D/RedLine.js"></script>
-    <script src="src/object3D/RedSkyBox.js"></script>
-    <script src="src/object3D/RedSprite3D.js"></script>
+    <script src="../src/object3D/RedAxis.js"></script>
+    <script src="../src/object3D/RedGrid.js"></script>
+    <script src="../src/object3D/RedMesh.js"></script>
+    <script src="../src/object3D/RedLine.js"></script>
+    <script src="../src/object3D/RedSkyBox.js"></script>
+    <script src="../src/object3D/RedSprite3D.js"></script>
 
-    <script src="src/particle/RedPointUnit.js"></script>
+    <script src="../src/particle/RedPointUnit.js"></script>
 
-    <script src="src/primitives/RedBox.js"></script>
-    <script src="src/primitives/RedPlane.js"></script>
-    <script src="src/primitives/RedSphere.js"></script>
+    <script src="../src/primitives/RedBox.js"></script>
+    <script src="../src/primitives/RedPlane.js"></script>
+    <script src="../src/primitives/RedSphere.js"></script>
 
-    <script src="src/program/RedProgram.js"></script>
-    <script src="src/program/RedSystemShaderCode.js"></script>
-    <script src="src/program/RedShader.js"></script>
+    <script src="../src/program/RedProgram.js"></script>
+    <script src="../src/program/RedSystemShaderCode.js"></script>
+    <script src="../src/program/RedShader.js"></script>
 
-    <script src="src/renderer/RedRenderer.js"></script>
-    <script src="src/renderer/system/RedRenderDebuger.js"></script>
+    <script src="../src/renderer/RedRenderer.js"></script>
+    <script src="../src/renderer/system/RedRenderDebuger.js"></script>
 
-    <script src="src/resources/RedAtlas.js"></script>
-    <script src="src/resources/system/RedAtlasUV.js"></script>
-    <script src="src/resources/RedBitmapTexture.js"></script>
-    <script src="src/resources/RedAtlasTexture.js"></script>
-    <script src="src/resources/RedBitmapCubeTexture.js"></script>
+    <script src="../src/resources/RedAtlas.js"></script>
+    <script src="../src/resources/system/RedAtlasUV.js"></script>
+    <script src="../src/resources/RedBitmapTexture.js"></script>
+    <script src="../src/resources/RedAtlasTexture.js"></script>
+    <script src="../src/resources/RedBitmapCubeTexture.js"></script>
 
-    <script src="src/RedView.js"></script>
-    <script src="src/RedWorld.js"></script>
-    <script src="src/RedScene.js"></script>
-    <script src="src/camera/RedCamera.js"></script>
+    <script src="../src/RedView.js"></script>
+    <script src="../src/RedWorld.js"></script>
+    <script src="../src/RedScene.js"></script>
+    <script src="../src/camera/RedCamera.js"></script>
 </head>
 
 <body>
@@ -103,37 +103,37 @@
             var testMaterial, testMaterial2
             testMaterial = RedEnvironmentMaterial(
                 this,
-                RedBitmapTexture(this, 'asset/crate.png'),
+                RedBitmapTexture(this, '../asset/crate.png'),
                 RedBitmapCubeTexture(this, [
-                    'asset/cubemap/posx.png',
-                    'asset/cubemap/negx.png',
-                    'asset/cubemap/posy.png',
-                    'asset/cubemap/negy.png',
-                    'asset/cubemap/posz.png',
-                    'asset/cubemap/negz.png'
+                    '../asset/cubemap/posx.png',
+                    '../asset/cubemap/negx.png',
+                    '../asset/cubemap/posy.png',
+                    '../asset/cubemap/negy.png',
+                    '../asset/cubemap/posz.png',
+                    '../asset/cubemap/negz.png'
                 ]),
-                RedBitmapTexture(this, 'asset/normalTest.jpg'),
-                RedBitmapTexture(this, 'asset/specular.png'),
-                RedBitmapTexture(this, 'asset/displacementTest.jpg')
+                RedBitmapTexture(this, '../asset/normalTest.jpg'),
+                RedBitmapTexture(this, '../asset/specular.png'),
+                RedBitmapTexture(this, '../asset/displacementTest.jpg')
 
             )
             testMaterial2 = RedStandardMaterial(
                 this,
-                RedBitmapTexture(this, 'asset/alphaTest.png')
+                RedBitmapTexture(this, '../asset/alphaTest.png')
             )
 
 
              tScene3D.skyBox =
                 RedSkyBox(this, [
-                    'asset/cubemap/posx.png',
-                    'asset/cubemap/negx.png',
-                    'asset/cubemap/posy.png',
-                    'asset/cubemap/negy.png',
-                    'asset/cubemap/posz.png',
-                    'asset/cubemap/negz.png'
+                    '../asset/cubemap/posx.png',
+                    '../asset/cubemap/negx.png',
+                    '../asset/cubemap/posy.png',
+                    '../asset/cubemap/negy.png',
+                    '../asset/cubemap/posz.png',
+                    '../asset/cubemap/negz.png'
                 ]);
 
-            JsonModelLoader(this, 'testJsonModel', 'asset/teapot.json', function (interleaveBuffer, indexBuffer) {
+            JsonModelLoader(this, 'testJsonModel', '../asset/teapot.json', function (interleaveBuffer, indexBuffer) {
                 console.log('호잇!', interleaveBuffer, indexBuffer)
                 var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer), testMaterial)
                 // var testMesh = RedMesh(self, RedBox(self), testMaterial)
