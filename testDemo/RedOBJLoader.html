@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>다중뷰</title>
+    <title>RedOBJLoader</title>
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
@@ -134,6 +134,7 @@
             RedOBJLoader(this, '../asset/obj/', 'female.obj', function (v, materialInfo) {
                 console.log('호잇!', v, materialInfo)
                 // var testMesh = RedMesh(self, RedGeometry(v['Cube']['interleaveBuffer'], v['Cube']['indexBuffer'] ?  v['Cube']['indexBuffer'] : null), RedColorMaterial(self))
+                
                 var i = 0
                 var list = [
                     '#ff0000', '#ffff00', '#ff00ff', '#00ff00', '#0000ff', '#ffffff', '#223324',
@@ -141,6 +142,10 @@
                     '#ff0000', '#ffff00', '#ff00ff', '#00ff00', '#0000ff', '#ffffff', '#223324',
                     '#992255', '#663945'
                 ]
+                var tGroup;
+                tGroup = RedMesh(self)
+                tGroup.y = -2
+                tScene3D.addChild(tGroup)
                 for (var k in v) {
                     var tMaterial;
                     tMaterial = materialInfo[v[k]['data']['materialKey']] ? materialInfo[v[k]['data'][
@@ -151,11 +156,15 @@
                         v[k]['indexBuffer'] ? v[k]['indexBuffer'] : null
                     ), tMaterial)
                     testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.025
-                    testMesh.y = -2
-                    tScene3D.addChild(testMesh)
+                    tGroup.addChild(testMesh)
                     i++
                 }
                 i = 0
+                var tGroup;
+                tGroup = RedMesh(self)
+                tGroup.x = -2
+                tGroup.y = -2
+                tScene3D.addChild(tGroup)
                 for (var k in v) {
                     var tMaterial;
                     tMaterial = materialInfo[v[k]['data']['materialKey']] ? materialInfo[v[k]['data'][
@@ -168,12 +177,15 @@
                     testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.025
                     testMesh.drawMode = self.gl.POINTS
                     testMesh.pointSize = 2
-                    testMesh.x = -2
-                    testMesh.y = -2
-                    tScene3D.addChild(testMesh)
+                    tGroup.addChild(testMesh)
                     i++
                 }
                 i = 0
+                var tGroup;
+                tGroup = RedMesh(self)
+                tGroup.x = 2
+                tGroup.y = -2
+                tScene3D.addChild(tGroup)
                 for (var k in v) {
                     var tMaterial;
                     tMaterial = materialInfo[v[k]['data']['materialKey']] ? materialInfo[v[k]['data'][
@@ -186,13 +198,16 @@
                     testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.025
                     testMesh.drawMode = self.gl.LINES
                     testMesh.pointSize = 1
-                    testMesh.x = 2
-                    testMesh.y = -2
-                    tScene3D.addChild(testMesh)
+                    tGroup.addChild(testMesh)
                     i++
                 }
 
                 i = 0
+                var tGroup;
+                tGroup = RedMesh(self)
+                tGroup.y = -2
+                tGroup.z = -1.5
+                tScene3D.addChild(tGroup)
                 for (var k in v) {
                     var tMaterial;
                     tMaterial = materialInfo[v[k]['data']['materialKey']] ? materialInfo[v[k]['data'][
@@ -204,9 +219,8 @@
                     ), tMaterial)
                     testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.025
                     testMesh.x = -3 + i * 0.5
-                    testMesh.y = -2
-                    testMesh.z = -1.5
-                    tScene3D.addChild(testMesh)
+
+                    tGroup.addChild(testMesh)
                     i++
                 }
             })

@@ -75,7 +75,7 @@ var RedOBJLoader;
         var currentMeshInfo;
         var currentObjectName
         var mtlLoader
-        var objList = {}
+
         lines.forEach(function (line) {
             if (regMtllib.test(line)) {
                 console.log('regMtllib', '재질파일정보', line)
@@ -92,13 +92,15 @@ var RedOBJLoader;
             // 그룹 검색
             if (regGroup.test(line)) {
                 var tName = line.split(' ');
+                var tInfo
                 console.log(tName)
                 tName = tName.slice(1)
                 tName = tName.join('')
                 tName = tName.trim()
                 console.log('name', tName)
+                console.log('currentObjectName', currentObjectName)
                 info[currentObjectName]['use'] = false
-                info[tName] = {
+                tInfo = {
                     name: tName,
                     groupName: currentObjectName,
                     materialKey: tName.replace(currentObjectName + '_', ''),
@@ -108,10 +110,11 @@ var RedOBJLoader;
                     resultNormal: [],
                     resultUV: [],
                     resultInterleave: [],
-                    use: true
+                    use: true,
+                    childrenInfo: {}
                 }
-                currentMeshInfo = info[tName];
-                objList[currentObjectName]['children'].push(currentMeshInfo)
+                currentMeshInfo = tInfo;
+                info[currentObjectName]['childrenInfo'][tName] = currentMeshInfo
                 console.log('regGroup', line, '신규그룹오브젝트', regGroup.test(line))
                 // console.log(info)
             }
@@ -125,7 +128,7 @@ var RedOBJLoader;
                 console.log('name', tName)
                 info[tName] = {
                     name: tName,
-                    groupName: name,
+                    groupName: tName,
                     materialKey: tName,
                     index: [],
                     position: [],
@@ -133,13 +136,12 @@ var RedOBJLoader;
                     resultNormal: [],
                     resultUV: [],
                     resultInterleave: [],
-                    use: true
+                    use: true,
+                    childrenInfo: {}
                 }
                 currentMeshInfo = info[tName];
                 currentObjectName = tName
-                objList[tName] = {
-                    children: []
-                }
+
                 console.log('regObject', line, '신규오브젝트', regObject.test(line))
                 // console.log(info)
             } else {
@@ -148,19 +150,19 @@ var RedOBJLoader;
                     var tName = 'objModel' + RedGL.makeUUID()
                     info[tName] = {
                         name: tName,
+                        groupName: tName,
                         index: [],
                         position: [],
                         resultPosition: [],
                         resultNormal: [],
                         resultUV: [],
                         resultInterleave: [],
-                        use: true
+                        use: true,
+                        childrenInfo: {}
                     }
                     currentMeshInfo = info[tName];
                     currentObjectName = tName
-                    objList[tName] = {
-                        children: []
-                    }
+
                 }
             }
             // 포지션 검색
@@ -298,44 +300,96 @@ var RedOBJLoader;
             }
         })
         console.log(info)
-        console.log(objList)
         // console.log(lines)
         var newData = {}
         var resultMesh = RedMesh(redGL)
-        for (var k in info) {
-            // console.log(k, info[k])
-            if (info[k]['use'] && info[k]['position'].length) {
-                var tMesh
-                var temp = info[k];
-                // 인터리브 버퍼 생성
-                var tInterleaveInfo = []
-                newData[k] = {}
-                if (info[k]['resultPosition'].length) tInterleaveInfo.push(RedInterleaveInfo('aVertexPosition', 3))
-                if (info[k]['resultNormal'].length) tInterleaveInfo.push(RedInterleaveInfo('aVertexNormal', 3))
-                if (info[k]['resultUV'].length) tInterleaveInfo.push(RedInterleaveInfo('aTexcoord', 2))
+        var makeMesh;
+        console.log('resultMesh', resultMesh)
+        makeMesh = function (redGL, parentMesh, childrenInfo) {
+            console.log('!!!', childrenInfo)
+            for (var k in childrenInfo) {
+                var tData;
+                tData = childrenInfo[k]
+                var tMesh;
+                if (!tData['use']) {
+                    tMesh = RedMesh(redGL)
+                    tMesh['name'] = k
+                    tData['mesh'] = tMesh
+                    parentMesh.addChild(tMesh)
+                } else {
 
-                newData[k]['interleaveBuffer'] = RedBuffer(
-                    redGL,
-                    k + '_interleave',
-                    new Float32Array(info[k]['resultInterleave'].length ? info[k]['resultInterleave'] : info[k]['resultPosition']),
-                    RedBuffer.ARRAY_BUFFER,
-                    tInterleaveInfo
-                )
-                if (info[k]['index'].length) {
-                    // 인덱스 버퍼 생성
-                    if (info[k]['index'].length) {
-                        newData[k]['indexBuffer'] = RedBuffer(
-                            redGL,
-                            k + '_index',
-                            new Uint16Array(info[k]['index']),
-                            RedBuffer.ELEMENT_ARRAY_BUFFER
-                        )
+                    // 인터리브 버퍼 생성
+                    var tInterleaveInfo = []
+                    var interleaveBuffer, indexBuffer
+                    if (tData['resultPosition'].length) tInterleaveInfo.push(RedInterleaveInfo('aVertexPosition', 3))
+                    if (tData['resultNormal'].length) tInterleaveInfo.push(RedInterleaveInfo('aVertexNormal', 3))
+                    if (tData['resultUV'].length) tInterleaveInfo.push(RedInterleaveInfo('aTexcoord', 2))
+
+                    interleaveBuffer = RedBuffer(
+                        redGL,
+                        k + '_interleave',
+                        new Float32Array(tData['resultInterleave'].length ? tData['resultInterleave'] : tData['resultPosition']),
+                        RedBuffer.ARRAY_BUFFER,
+                        tInterleaveInfo
+                    )
+                    if (tData['index'].length) {
+                        // 인덱스 버퍼 생성
+                        if (tData['index'].length) {
+                            indexBuffer = RedBuffer(
+                                redGL,
+                                k + '_index',
+                                new Uint16Array(tData['index']),
+                                RedBuffer.ELEMENT_ARRAY_BUFFER
+                            )
+                        }
                     }
+                    tMesh = RedMesh(redGL, RedGeometry(interleaveBuffer, indexBuffer), RedColorMaterial(redGL))
+                    tMesh['name'] = k
+                    tData['mesh'] = tMesh
+                    parentMesh.addChild(tMesh)
                 }
-                newData[k]['data'] = temp;
+                makeMesh(redGL, tMesh, tData['childrenInfo'])
             }
         }
-        return newData
+        makeMesh(redGL, resultMesh, info)
+        // for (var k in info) {
+        // console.log(k, info[k])
+
+        // if (info[k]['use'] && info[k]['position'].length) {
+        //     var tMesh
+        //     var temp = info[k];
+        //     console.log('temp',temp)
+
+
+        //     // 인터리브 버퍼 생성
+        //     var tInterleaveInfo = []
+        //     newData[k] = {}
+        //     if (info[k]['resultPosition'].length) tInterleaveInfo.push(RedInterleaveInfo('aVertexPosition', 3))
+        //     if (info[k]['resultNormal'].length) tInterleaveInfo.push(RedInterleaveInfo('aVertexNormal', 3))
+        //     if (info[k]['resultUV'].length) tInterleaveInfo.push(RedInterleaveInfo('aTexcoord', 2))
+
+        //     newData[k]['interleaveBuffer'] = RedBuffer(
+        //         redGL,
+        //         k + '_interleave',
+        //         new Float32Array(info[k]['resultInterleave'].length ? info[k]['resultInterleave'] : info[k]['resultPosition']),
+        //         RedBuffer.ARRAY_BUFFER,
+        //         tInterleaveInfo
+        //     )
+        //     if (info[k]['index'].length) {
+        //         // 인덱스 버퍼 생성
+        //         if (info[k]['index'].length) {
+        //             newData[k]['indexBuffer'] = RedBuffer(
+        //                 redGL,
+        //                 k + '_index',
+        //                 new Uint16Array(info[k]['index']),
+        //                 RedBuffer.ELEMENT_ARRAY_BUFFER
+        //             )
+        //         }
+        //     }
+        //     newData[k]['data'] = temp;
+        // }
+        // }
+        return resultMesh
     }
     Object.freeze(RedOBJLoader)
 })()
