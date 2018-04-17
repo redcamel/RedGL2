@@ -642,10 +642,6 @@ var RedRenderer;
                                     tCacheBySamplerIndex[tSamplerIndex] = tUniformValue['_UUID'];
                                 }
 
-
-
-
-
                                 // 아틀라스 UV검색
                                 if (tSystemUniformGroup['uAtlascoord']['location']) {
                                     tUUID = tSystemUniformGroup['uAtlascoord']['_UUID']
@@ -829,8 +825,6 @@ var RedRenderer;
                 ) : 0,
                     /////////////////////////////////////////////////////////////////////////
                     /////////////////////////////////////////////////////////////////////////
-
-
 
                     gl.uniformMatrix4fv(tSystemUniformGroup['uMVMatrix']['location'], false, tMVMatrix)
 

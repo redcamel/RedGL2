@@ -17,38 +17,29 @@ var RedOBJLoader;
         console.log('~~~~~~~~~~~')
         var self = this;
         var request = new XMLHttpRequest();
-        request.open("GET", path + fileName);
-        request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8"),
-            request.onreadystatechange = function () {
-                if (request.readyState == 4) {
-
-                    var data;
-                    data = parser(self, redGL, request.responseText)
-                    self['complete'] = true
-                    self['parseData'] = data
-                    if (callback) {
-                        if (self['mtlLoader']) {
-                            if (self['mtlLoader']['complete']) {
-                                callback(self['parseData'], self['mtlLoader'])
-                                console.log('파싱 종료 & 재질 파싱 종료')
-                            } else {
-                                console.log('파싱 종료 & 재질 파싱중')
-                            }
-
-                        } else {
-                            console.log('파싱 종료 & 재질없음')
-                            callback(self['parseData'], {})
-                        }
-                    }
+        request.open("GET", path + fileName, true);
+        request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
+        request.onreadystatechange = function () {
+            if (request.readyState == 4) {
+                var data;
+                data = parser(self, redGL, request.responseText)
+                self['modelParsingComplete'] = true
+                self['parseData'] = data
+                if (callback) {
+                    if (self['mtlLoader']) {
+                        if (self['mtlLoader']['complete']) console.log('모델 파싱 종료 & 재질 파싱 종료'), callback(self['parseData'], self['mtlLoader'])
+                        else console.log('모델 파싱 종료 & 재질 파싱중')
+                    } else console.log('모델 파싱 종료 & 재질 없음'), callback(self['parseData'], {})
                 }
             }
+        }
         request.send();
-        this['path'] = path
-        this['fileName'] = fileName
-        this['mtlLoader'] = null
-        this['complete'] = false
-        this['parseData'] = null
-        this['callback'] = callback
+        this['path'] = path;
+        this['fileName'] = fileName;
+        this['parseData'] = null;
+        this['mtlLoader'] = null;
+        this['modelParsingComplete'] = false;
+        this['callback'] = callback;
     }
     parser = function (target, redGL, data) {
         console.log('파싱시작')
@@ -89,19 +80,12 @@ var RedOBJLoader;
                 console.log('regMtllib', '재질파일정보', line)
                 mtlLoader = RedMTLLoader(redGL, target['path'], line.split(' ')[1], function (v) {
                     target['mtlLoader'] = v
-                    if (target['complete']) {
-                        if (target['callback']) {
-                            console.log('재질에서  -  파싱 종료 & 재질 파싱 종료')
-                            target['callback'](target['parseData'], target['mtlLoader'])
-                        } else {
-
-                        }
-                    } else {
-                        console.log('재질에서  -  파싱 진행중 & 재질 파싱 종료')
-                    }
+                    if (target['modelParsingComplete']) {
+                        if (target['callback']) console.log('재질에서 - 재질 파싱 종료 & 재질 파싱 종료'), target['callback'](target['parseData'], target['mtlLoader'])
+                        else console.log('RedOBJLoader 콜백없음')
+                    } else console.log('재질에서 - 파싱 진행중 & 재질 파싱 종료')
                 })
                 target['mtlLoader'] = mtlLoader
-
                 return
             }
             // 그룹 검색
@@ -115,7 +99,7 @@ var RedOBJLoader;
                 info[currentObjectName]['use'] = false
                 info[tName] = {
                     name: tName,
-                    mainObjectName: currentObjectName,
+                    groupName: currentObjectName,
                     materialKey: tName.replace(currentObjectName + '_', ''),
                     index: [],
                     position: currentMeshInfo['position'],
@@ -139,7 +123,7 @@ var RedOBJLoader;
                 console.log('name', tName)
                 info[tName] = {
                     name: tName,
-                    mainObjectName: name,
+                    groupName: name,
                     materialKey: tName,
                     index: [],
                     position: [],

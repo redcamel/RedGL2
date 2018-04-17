@@ -129,9 +129,7 @@
                 RedBitmapTexture(this, '../asset/normalTest.jpg'),
                 RedBitmapTexture(this, '../asset/specular.png'),
                 RedBitmapTexture(this, '../asset/displacementTest.jpg')
-
             )
-
 
             RedOBJLoader(this, '../asset/obj/', 'female.obj', function (v, materialInfo) {
                 console.log('호잇!', v, materialInfo)
@@ -144,59 +142,70 @@
                     '#992255', '#663945'
                 ]
                 for (var k in v) {
+                    var tMaterial;
+                    tMaterial = materialInfo[v[k]['data']['materialKey']] ? materialInfo[v[k]['data'][
+                        'materialKey'
+                    ]] : RedColorPhongMaterial(self, list[i])
                     var testMesh = RedMesh(self, RedGeometry(
                         v[k]['interleaveBuffer'],
                         v[k]['indexBuffer'] ? v[k]['indexBuffer'] : null
-                    ), RedColorPhongMaterial(self, list[i]))
+                    ), tMaterial)
                     testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.025
                     testMesh.y = -2
-                    console.log(materialInfo[v[k]['data']['materialKey']])
-                    if(materialInfo[v[k]['data']['materialKey']]) testMesh.material = materialInfo[v[k]['data']['materialKey']]['material']
                     tScene3D.addChild(testMesh)
                     i++
                 }
                 i = 0
                 for (var k in v) {
+                    var tMaterial;
+                    tMaterial = materialInfo[v[k]['data']['materialKey']] ? materialInfo[v[k]['data'][
+                        'materialKey'
+                    ]] : RedColorPhongMaterial(self, list[i])
                     var testMesh = RedMesh(self, RedGeometry(
                         v[k]['interleaveBuffer'],
                         v[k]['indexBuffer'] ? v[k]['indexBuffer'] : null
-                    ), RedColorPhongMaterial(self, list[i]))
+                    ), tMaterial)
                     testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.025
                     testMesh.drawMode = self.gl.POINTS
                     testMesh.pointSize = 2
                     testMesh.x = -2
                     testMesh.y = -2
-                    if(materialInfo[v[k]['data']['materialKey']]) testMesh.material = materialInfo[v[k]['data']['materialKey']]['material']
                     tScene3D.addChild(testMesh)
                     i++
                 }
                 i = 0
                 for (var k in v) {
+                    var tMaterial;
+                    tMaterial = materialInfo[v[k]['data']['materialKey']] ? materialInfo[v[k]['data'][
+                        'materialKey'
+                    ]] : RedColorPhongMaterial(self, list[i])
                     var testMesh = RedMesh(self, RedGeometry(
                         v[k]['interleaveBuffer'],
                         v[k]['indexBuffer'] ? v[k]['indexBuffer'] : null
-                    ), RedColorPhongMaterial(self, list[i]))
+                    ), tMaterial)
                     testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.025
                     testMesh.drawMode = self.gl.LINES
                     testMesh.pointSize = 1
                     testMesh.x = 2
                     testMesh.y = -2
-                    if(materialInfo[v[k]['data']['materialKey']]) testMesh.material = materialInfo[v[k]['data']['materialKey']]['material']
                     tScene3D.addChild(testMesh)
                     i++
                 }
 
                 i = 0
                 for (var k in v) {
+                    var tMaterial;
+                    tMaterial = materialInfo[v[k]['data']['materialKey']] ? materialInfo[v[k]['data'][
+                        'materialKey'
+                    ]] : RedColorPhongMaterial(self, list[i])
                     var testMesh = RedMesh(self, RedGeometry(
                         v[k]['interleaveBuffer'],
                         v[k]['indexBuffer'] ? v[k]['indexBuffer'] : null
-                    ), RedColorPhongMaterial(self, list[i]))
+                    ), tMaterial)
                     testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.025
                     testMesh.x = -3 + i * 0.5
                     testMesh.y = -2
                     testMesh.z = -1.5
-                    if(materialInfo[v[k]['data']['materialKey']]) testMesh.material = materialInfo[v[k]['data']['materialKey']]['material']
                     tScene3D.addChild(testMesh)
                     i++
                 }
