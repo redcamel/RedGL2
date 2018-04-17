@@ -1,6 +1,6 @@
 # Blender v2.54 (sub 0) OBJ File: ''
 # www.blender.org
-mtllib female02.mtl
+mtllib female.mtl
 o mesh1.002_mesh1-geometry
 v 15.257854 104.640892 8.680023
 v 14.044281 104.444138 11.718708

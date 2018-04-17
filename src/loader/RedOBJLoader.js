@@ -12,31 +12,52 @@ var RedOBJLoader;
             return : 'void'
         }
     :DOC*/
-    RedOBJLoader = function (redGL, src, callback) {
-        if ((!(this instanceof RedOBJLoader))) return new RedOBJLoader(redGL, src, callback)
+    RedOBJLoader = function (redGL, path, fileName, callback) {
+        if ((!(this instanceof RedOBJLoader))) return new RedOBJLoader(redGL, path, fileName, callback)
         console.log('~~~~~~~~~~~')
+        var self = this;
         var request = new XMLHttpRequest();
-        request.open("GET", src);
+        request.open("GET", path + fileName);
         request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8"),
             request.onreadystatechange = function () {
                 if (request.readyState == 4) {
 
                     var data;
-                    data = parser(redGL, request.responseText)
+                    data = parser(self, redGL, request.responseText)
+                    self['complete'] = true
+                    self['parseData'] = data
                     if (callback) {
-                        callback(data)
+                        if (self['mtlLoader']) {
+                            if (self['mtlLoader']['complete']) {
+                                callback(self['parseData'], self['mtlLoader'])
+                                console.log('파싱 종료 & 재질 파싱 종료')
+                            } else {
+                                console.log('파싱 종료 & 재질 파싱중')
+                            }
+
+                        } else {
+                            console.log('파싱 종료 & 재질없음')
+                            callback(self['parseData'], {})
+                        }
                     }
                 }
             }
         request.send();
+        this['path'] = path
+        this['fileName'] = fileName
+        this['mtlLoader'] = null
+        this['complete'] = false
+        this['parseData'] = null
+        this['callback'] = callback
     }
-    parser = function (redGL, data) {
+    parser = function (target, redGL, data) {
         console.log('파싱시작')
         console.log(data)
         var lines;
         var info;
         var regObject, regGroup, regVertex, regNormal, redUV, regIndex, regIndex2, regIndex3, regIndex4;
-
+        var regMtllib;
+        regMtllib = /^(mtllib)/;
         regObject = /^o/;
         regGroup = /^g/;
         regVertex = /v( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/;
@@ -62,14 +83,31 @@ var RedOBJLoader;
         }
         var currentMeshInfo;
         var currentObjectName
+        var mtlLoader
         lines.forEach(function (line) {
+            if (regMtllib.test(line)) {
+                console.log('regMtllib', '재질파일정보', line)
+                mtlLoader = RedMTLLoader(redGL, target['path'], line.split(' ')[1], function (v) {
+                    target['mtlLoader'] = v
+                    if (target['complete']) {
+                        if (target['callback']) {
+                            console.log('재질에서  -  파싱 종료 & 재질 파싱 종료')
+                            target['callback'](target['parseData'], target['mtlLoader'])
+                        } else {
+
+                        }
+                    } else {
+                        console.log('재질에서  -  파싱 진행중 & 재질 파싱 종료')
+                    }
+                })
+                target['mtlLoader'] = mtlLoader
+
+                return
+            }
             // 그룹 검색
             if (regGroup.test(line)) {
-                var mainObjectName;
-                mainObjectName = currentMeshInfo['name']
                 var tName = line.split(' ');
                 console.log(tName)
-                console.log('mainObjectName',mainObjectName)
                 tName = tName.slice(1)
                 tName = tName.join('')
                 tName = tName.trim()
@@ -77,18 +115,20 @@ var RedOBJLoader;
                 info[currentObjectName]['use'] = false
                 info[tName] = {
                     name: tName,
+                    mainObjectName: currentObjectName,
+                    materialKey: tName.replace(currentObjectName + '_', ''),
                     index: [],
                     position: currentMeshInfo['position'],
                     resultPosition: [],
                     resultNormal: [],
                     resultUV: [],
                     resultInterleave: [],
-                    use : true
-                }                
+                    use: true
+                }
                 currentMeshInfo = info[tName];
                 console.log('regGroup', line, '신규그룹오브젝트', regGroup.test(line))
                 // console.log(info)
-            } 
+            }
             // 오브젝트 검색
             else if (regObject.test(line)) {
                 var tName = line.split(' ');
@@ -99,13 +139,15 @@ var RedOBJLoader;
                 console.log('name', tName)
                 info[tName] = {
                     name: tName,
+                    mainObjectName: name,
+                    materialKey: tName,
                     index: [],
                     position: [],
                     resultPosition: [],
                     resultNormal: [],
                     resultUV: [],
                     resultInterleave: [],
-                    use : true
+                    use: true
                 }
                 currentMeshInfo = info[tName];
                 currentObjectName = tName
@@ -123,7 +165,7 @@ var RedOBJLoader;
                         resultNormal: [],
                         resultUV: [],
                         resultInterleave: [],
-                        use : true
+                        use: true
                     }
                     currentMeshInfo = info[tName];
                     currentObjectName = tName
