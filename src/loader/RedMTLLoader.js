@@ -2,6 +2,10 @@
 var RedMTLLoader;
 (function () {
     var parser;
+    var RedMTLResult;
+    RedMTLResult = function(){
+
+    }
     /**DOC:
         {
             constructorYn : true,
@@ -17,27 +21,34 @@ var RedMTLLoader;
         console.log('~~~~~~~~~~~')
         var self = this;
         var request = new XMLHttpRequest();
-        request.open("GET", path + fileName);
-        request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8"),
-            request.onreadystatechange = function () {
-                if (request.readyState == 4) {
+        request.open("GET", path + fileName, true);
+        request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
+        request.onreadystatechange = function () {
+            if (request.readyState == 4) {
+                self['complete'] = true
+                if (request.status == 200) {
                     var data;
                     data = parser(self, redGL, request.responseText)
-                    this['complete'] = false
                     self['parseData'] = data
-                    if (callback) {
-                        callback(self['parseData'] )
-                    }
+                } else {
+                    self['parseData'] = new RedMTLResult()
                 }
+                if (callback) callback(self['parseData'])
+
+
             }
+        }
+        request.addEventListener('error', function (e) {
+            console.log('에럿', e)
+        })
         request.send();
-        this['path'] = path
-        this['fileName'] = fileName
-        this['complete'] = false
-        this['parseData'] = null
+        this['path'] = path;
+        this['fileName'] = fileName;
+        this['complete'] = false;
+        this['parseData'] = null;
     }
     parser = function (target, redGL, data) {
-        var info;
+        var info, resultInfo;
         var lines;
         var reg_newmtl, reg_Ns, reg_Ka, reg_Kd, reg_Ks, reg_Ni, reg_d, reg_illum, reg_map_Kd;
         var currentMaterialInfo;
@@ -53,16 +64,16 @@ var RedMTLLoader;
         reg_map_Kd = /^(map_Kd)/;
         data = data.replace(/^\#[\s\S]+?\n/g, '');
         lines = data.split("\n");
-
+        // 재질 정보 정의
         lines.forEach(function (line) {
             if (reg_newmtl.test(line)) {
                 console.log(line)
                 var tName;
-                tName = line.replace('newmtl ', '').trim()
+                tName = line.replace('newmtl ', '').trim();
                 currentMaterialInfo = {
                     name: tName
-                }
-                info[tName] = currentMaterialInfo
+                };
+                info[tName] = currentMaterialInfo;
             }
             else if (reg_Ns.test(line)) currentMaterialInfo['Ns'] = line.replace('Ns ', '')
             else if (reg_Ka.test(line)) currentMaterialInfo['Ka'] = line.replace('Ka ', '')
@@ -74,14 +85,12 @@ var RedMTLLoader;
         })
 
         console.log(target)
+        resultInfo = new RedMTLResult()
         for (var k in info) {
-           
-            info[k]['material'] = RedStandardMaterial(redGL, RedBitmapTexture(redGL, info[k]['map_Kd']))
+            // info[k]['material'] = RedStandardMaterial(redGL, RedBitmapTexture(redGL, info[k]['map_Kd']))
+            resultInfo[k] = RedStandardMaterial(redGL, RedBitmapTexture(redGL, info[k]['map_Kd']))
         }
-
-        return info
-
-
+        return resultInfo
     }
     Object.freeze(RedMTLLoader)
 })()
