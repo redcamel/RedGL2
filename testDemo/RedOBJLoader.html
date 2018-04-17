@@ -38,7 +38,7 @@
 
     <script src="../src/material/RedMaterial.js"></script>
     <script src="../src/material/RedColorMaterial.js"></script>
-    <script src="../src/material/RedColorPhongMaterial.js"></script>
+    <script src="../src/material/RedColorMaterial.js"></script>
     <script src="../src/material/RedEnvironmentMaterial.js"></script>
     <script src="../src/material/RedBitmapMaterial.js"></script>
     <script src="../src/material/RedPointBitmapMaterial.js"></script>
@@ -145,7 +145,7 @@
                     var tMaterial;
                     tMaterial = materialInfo[v[k]['data']['materialKey']] ? materialInfo[v[k]['data'][
                         'materialKey'
-                    ]] : RedColorPhongMaterial(self, list[i])
+                    ]] : RedColorMaterial(self, list[i])
                     var testMesh = RedMesh(self, RedGeometry(
                         v[k]['interleaveBuffer'],
                         v[k]['indexBuffer'] ? v[k]['indexBuffer'] : null
@@ -160,7 +160,7 @@
                     var tMaterial;
                     tMaterial = materialInfo[v[k]['data']['materialKey']] ? materialInfo[v[k]['data'][
                         'materialKey'
-                    ]] : RedColorPhongMaterial(self, list[i])
+                    ]] : RedColorMaterial(self, list[i])
                     var testMesh = RedMesh(self, RedGeometry(
                         v[k]['interleaveBuffer'],
                         v[k]['indexBuffer'] ? v[k]['indexBuffer'] : null
@@ -178,7 +178,7 @@
                     var tMaterial;
                     tMaterial = materialInfo[v[k]['data']['materialKey']] ? materialInfo[v[k]['data'][
                         'materialKey'
-                    ]] : RedColorPhongMaterial(self, list[i])
+                    ]] : RedColorMaterial(self, list[i])
                     var testMesh = RedMesh(self, RedGeometry(
                         v[k]['interleaveBuffer'],
                         v[k]['indexBuffer'] ? v[k]['indexBuffer'] : null
@@ -197,7 +197,7 @@
                     var tMaterial;
                     tMaterial = materialInfo[v[k]['data']['materialKey']] ? materialInfo[v[k]['data'][
                         'materialKey'
-                    ]] : RedColorPhongMaterial(self, list[i])
+                    ]] : RedColorMaterial(self, list[i])
                     var testMesh = RedMesh(self, RedGeometry(
                         v[k]['interleaveBuffer'],
                         v[k]['indexBuffer'] ? v[k]['indexBuffer'] : null
