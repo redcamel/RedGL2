@@ -136,29 +136,65 @@
                 console.log('호잇!', v)
                 // var testMesh = RedMesh(self, RedGeometry(v['Cube']['interleaveBuffer'], v['Cube']['indexBuffer'] ?  v['Cube']['indexBuffer'] : null), RedColorMaterial(self))
                 var i = 0
-                var list=  ['#ff0000','#ffff00','#ff00ff','#00ff00','#0000ff','#ffffff','#223324']
+                var list = [
+                    '#ff0000', '#ffff00', '#ff00ff', '#00ff00', '#0000ff', '#ffffff', '#223324', '#992255', '#663945',
+                    '#ff0000', '#ffff00', '#ff00ff', '#00ff00', '#0000ff', '#ffffff', '#223324', '#992255', '#663945'
+                ]
                 for (var k in v) {
-                   
-                   
                     var testMesh = RedMesh(self, RedGeometry(
                         v[k]['interleaveBuffer'],
                         v[k]['indexBuffer'] ? v[k]['indexBuffer'] : null
-                    ), RedColorPhongMaterial(self,list[i]))
+                    ), RedColorPhongMaterial(self, list[i]))
                     testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.025
-                    // testMesh.drawMode = self.gl.POINTS
-                    testMesh.pointSize = 2
-                    // testMesh.x = Math.random()*10 - 5
-                    // testMesh.z = Math.random()*10 - 5
                     testMesh.y = -2
                     tScene3D.addChild(testMesh)
                     i++
-                  
+                }
+                i = 0
+                for (var k in v) {
+                    var testMesh = RedMesh(self, RedGeometry(
+                        v[k]['interleaveBuffer'],
+                        v[k]['indexBuffer'] ? v[k]['indexBuffer'] : null
+                    ), RedColorPhongMaterial(self, list[i]))
+                    testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.025
+                    testMesh.drawMode = self.gl.POINTS
+                    testMesh.pointSize = 2
+                    testMesh.x = -2
+                    testMesh.y = -2
+                    tScene3D.addChild(testMesh)
+                    i++
+                }
+                i = 0
+                for (var k in v) {
+                    var testMesh = RedMesh(self, RedGeometry(
+                        v[k]['interleaveBuffer'],
+                        v[k]['indexBuffer'] ? v[k]['indexBuffer'] : null
+                    ), RedColorPhongMaterial(self, list[i]))
+                    testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.025
+                    testMesh.drawMode = self.gl.LINES
+                    testMesh.pointSize = 1
+                    testMesh.x = 2
+                    testMesh.y = -2
+                    tScene3D.addChild(testMesh)
+                    i++
                 }
 
-
+                i = 0
+                for (var k in v) {
+                    var testMesh = RedMesh(self, RedGeometry(
+                        v[k]['interleaveBuffer'],
+                        v[k]['indexBuffer'] ? v[k]['indexBuffer'] : null
+                    ), RedColorPhongMaterial(self, list[i]))
+                    testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.025
+                    testMesh.drawMode = self.gl.LINES
+                    testMesh.pointSize = 1
+                    testMesh.x = -3 + i * 0.5
+                    testMesh.y = -2
+                    testMesh.z = -1.5
+                    tScene3D.addChild(testMesh)
+                    i++
+                }
             })
-
-
             var testDLight
 
             testDLight = RedDirectionalLight(this, '#fff')
@@ -169,11 +205,11 @@
 
             tRenderer.renderDebuger.visible = true
             tRenderer.start(this, function (time) {
-                
 
-                tCamera.x = Math.sin(time / 1500) * 5
-                tCamera.y = 5
-                tCamera.z = Math.cos(time / 1500) * 2 + Math.sin(time / 1500) * 2
+
+                tCamera.x = Math.sin(time / 1500) * 14
+                tCamera.y = 7
+                tCamera.z = Math.cos(time / 1500) * 7 + Math.sin(time / 1500) * 7
                 tCamera.lookAt(0, 0, 0)
 
 

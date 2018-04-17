@@ -61,54 +61,25 @@ var RedOBJLoader;
             uvPoints: []
         }
         var currentMeshInfo;
-        var currentObjectName
         lines.forEach(function (line) {
-            // 그룹 검색
-            if (regGroup.test(line)) {
-                var mainObjectName;
-                mainObjectName = currentMeshInfo['name']
-                var tName = line.split(' ');
-                console.log(tName)
-                console.log('mainObjectName',mainObjectName)
-                tName = tName.slice(1)
-                tName = tName.join('')
-                tName = tName.trim()
-                console.log('name', tName)
-                info[currentObjectName]['use'] = false
-                info[tName] = {
-                    name: tName,
-                    index: [],
-                    position: currentMeshInfo['position'],
-                    resultPosition: [],
-                    resultNormal: [],
-                    resultUV: [],
-                    resultInterleave: [],
-                    use : true
-                }                
-                currentMeshInfo = info[tName];
-                console.log('regGroup', line, '신규그룹오브젝트', regGroup.test(line))
-                // console.log(info)
-            } 
             // 오브젝트 검색
-            else if (regObject.test(line)) {
-                var tName = line.split(' ');
-                console.log(tName)
-                tName = tName.slice(1)
-                tName = tName.join('')
-                tName = tName.trim()
-                console.log('name', tName)
-                info[tName] = {
-                    name: tName,
+            if (regObject.test(line)) {
+                var name = line.split(' ');
+                console.log(name)
+                name = name.slice(1)
+                name = name.join('')
+                name = name.trim()
+                console.log('name', name)
+                info[name] = {
+                    name: name,
                     index: [],
                     position: [],
                     resultPosition: [],
                     resultNormal: [],
                     resultUV: [],
-                    resultInterleave: [],
-                    use : true
+                    resultInterleave: []
                 }
-                currentMeshInfo = info[tName];
-                currentObjectName = tName
+                currentMeshInfo = info[name];
                 console.log('regObject', line, '신규오브젝트', regObject.test(line))
                 // console.log(info)
             } else {
@@ -122,11 +93,9 @@ var RedOBJLoader;
                         resultPosition: [],
                         resultNormal: [],
                         resultUV: [],
-                        resultInterleave: [],
-                        use : true
+                        resultInterleave: []
                     }
                     currentMeshInfo = info[tName];
-                    currentObjectName = tName
                 }
             }
             // 포지션 검색
@@ -267,8 +236,8 @@ var RedOBJLoader;
         // console.log(lines)
         var newData = {}
         for (var k in info) {
-            // console.log(k, info[k])
-            if (info[k]['use'] && info[k]['position'].length) {
+            console.log(k, info[k])
+            if (info[k]['position'].length) {
                 var temp = info[k];
                 newData[k] = {}
                 // 인터리브 버퍼 생성

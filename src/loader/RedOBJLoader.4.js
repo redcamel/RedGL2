@@ -50,7 +50,6 @@ var RedOBJLoader;
 
         data = data.replace(/^\#[\s\S]+?\n/g, '');
         lines = data.split("\n");
-        // 루트에 삼각형 정보를 다모은다. 
         var root = {
             position: [],
             normal: [],
@@ -61,56 +60,24 @@ var RedOBJLoader;
             uvPoints: []
         }
         var currentMeshInfo;
-        var currentObjectName
         lines.forEach(function (line) {
-            // 그룹 검색
-            if (regGroup.test(line)) {
-                var mainObjectName;
-                mainObjectName = currentMeshInfo['name']
-                var tName = line.split(' ');
-                console.log(tName)
-                console.log('mainObjectName',mainObjectName)
-                tName = tName.slice(1)
-                tName = tName.join('')
-                tName = tName.trim()
-                console.log('name', tName)
-                info[currentObjectName]['use'] = false
-                info[tName] = {
-                    name: tName,
-                    index: [],
-                    position: currentMeshInfo['position'],
-                    resultPosition: [],
-                    resultNormal: [],
-                    resultUV: [],
-                    resultInterleave: [],
-                    use : true
-                }                
-                currentMeshInfo = info[tName];
-                console.log('regGroup', line, '신규그룹오브젝트', regGroup.test(line))
-                // console.log(info)
-            } 
             // 오브젝트 검색
-            else if (regObject.test(line)) {
-                var tName = line.split(' ');
-                console.log(tName)
-                tName = tName.slice(1)
-                tName = tName.join('')
-                tName = tName.trim()
-                console.log('name', tName)
-                info[tName] = {
-                    name: tName,
+            if (regObject.test(line)) {
+                var name = line.split(' ')[1];
+                name = name.trim()
+                console.log('name', name)
+                info[name] = {
+                    name: name,
                     index: [],
                     position: [],
                     resultPosition: [],
                     resultNormal: [],
                     resultUV: [],
-                    resultInterleave: [],
-                    use : true
+                    resultInterleave: []
                 }
-                currentMeshInfo = info[tName];
-                currentObjectName = tName
+                currentMeshInfo = info[name];
                 console.log('regObject', line, '신규오브젝트', regObject.test(line))
-                // console.log(info)
+                console.log(info)
             } else {
                 // 오브젝트 이름이 등록되어있지 않은경우
                 if (!currentMeshInfo) {
@@ -122,37 +89,36 @@ var RedOBJLoader;
                         resultPosition: [],
                         resultNormal: [],
                         resultUV: [],
-                        resultInterleave: [],
-                        use : true
+                        resultInterleave: []
                     }
                     currentMeshInfo = info[tName];
-                    currentObjectName = tName
                 }
             }
             // 포지션 검색
             if (regVertex.test(line)) {
                 var tPosition;
                 tPosition = line.split(' ');
+                console.log(root)
                 root['position'].push(+tPosition[1], +tPosition[2], +tPosition[3])
                 currentMeshInfo['position'].push(+tPosition[1], +tPosition[2], +tPosition[3])
                 root['points'][root['points'].length] = [+tPosition[1], +tPosition[2], +tPosition[3]]
-                // console.log('regVertex', line, regVertex.test(line))
+                console.log('regVertex', line, regVertex.test(line))
             }
-            // 노말 검색
+            // // TODO 노말 검색
             else if (regNormal.test(line)) {
                 var tNormal;
                 tNormal = line.split(' ');
                 root['normal'].push(+tNormal[1], +tNormal[2], +tNormal[3])
                 root['normalPoints'][root['normalPoints'].length] = [+tNormal[1], +tNormal[2], +tNormal[3]]
-                // console.log('regNormal', line, regNormal.test(line))
+                console.log('regNormal', line, regNormal.test(line))
             }
-            //UV 검색
+            // // UV 검색
             else if (redUV.test(line)) {
                 var tUV;
                 tUV = line.split(' ');
                 root['uv'].push(+tUV[1], +tUV[2])
                 root['uvPoints'][root['uvPoints'].length] = [+tUV[1], +tUV[2]]
-                // console.log('redUV', line, redUV.test(line))
+                console.log('redUV', line, redUV.test(line))
             }
             // 인덱스 검색 1//1 1//1 1//1 v//n
             else if (regIndex4.test(line)) {
@@ -182,8 +148,8 @@ var RedOBJLoader;
                         currentMeshInfo['resultInterleave'].push(tNormalPoint[0], tNormalPoint[1], tNormalPoint[2])
                     }
                 })
-                // console.log(tData)
-                // console.log('regIndex4', line, regIndex4.test(line))
+                console.log(tData)
+                console.log('regIndex4', line, regIndex4.test(line))
             }
             // 인덱스 검색 1/1/1 1/1/1 1/1/1  v/uv/n
             else if (regIndex3.test(line)) {
@@ -220,8 +186,8 @@ var RedOBJLoader;
                         currentMeshInfo['resultInterleave'].push(tUVPoints[0], tUVPoints[1])
                     }
                 })
-                // console.log(tData)
-                // console.log('regIndex3', line, regIndex3.test(line))
+                console.log(tData)
+                console.log('regIndex3', line, regIndex3.test(line))
             } // 인덱스 검색 1/1 1/1 1/1 v/uv
             else if (regIndex2.test(line)) {
                 var tData;
@@ -250,25 +216,31 @@ var RedOBJLoader;
                         currentMeshInfo['resultInterleave'].push(tUVPoints[0], tUVPoints[1])
                     }
                 })
-                // console.log(tData)
-                // console.log('regIndex2', line, regIndex3.test(line))
+                //TODO: 노말생성해야할듯한데
+                console.log(tData)
+                console.log('regIndex2', line, regIndex3.test(line))
             }
             else if (regIndex.test(line)) {
                 // 인덱스 검색 1 1 1 1// 인덱스 검색 1 1 1 1
                 var tIndex;
                 tIndex = line.split(' ');
+
                 currentMeshInfo['resultInterleave'] = currentMeshInfo['resultPosition'] = currentMeshInfo['position']
+
                 currentMeshInfo['index'].push(+tIndex[1] - 1, +tIndex[2] - 1, +tIndex[3] - 1)
                 currentMeshInfo['index'].push(+tIndex[1] - 1, +tIndex[3] - 1, +tIndex[4] - 1)
-                // console.log('regIndex', line, regIndex.test(line))
+
+                console.log('regIndex', line, regIndex.test(line))
             }
         })
         console.log(info)
         // console.log(lines)
         var newData = {}
         for (var k in info) {
-            // console.log(k, info[k])
-            if (info[k]['use'] && info[k]['position'].length) {
+
+            console.log(k, info[k])
+
+            if (info[k]['position'].length) {
                 var temp = info[k];
                 newData[k] = {}
                 // 인터리브 버퍼 생성
@@ -295,10 +267,14 @@ var RedOBJLoader;
                         )
                     }
                 }
+
                 newData[k]['data'] = temp;
             }
+
         }
+
         return newData
+
     }
     Object.freeze(RedOBJLoader)
 })()
