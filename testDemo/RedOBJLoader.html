@@ -33,6 +33,7 @@
     <script src="../src/light/RedPointLight.js"></script>
 
     <script src="../src/loader/JsonModelLoader.js"></script>
+    <script src="../src/loader/RedMTLLoader.js"></script>
     <script src="../src/loader/RedOBJLoader.js"></script>
 
     <script src="../src/material/RedMaterial.js"></script>
@@ -132,13 +133,15 @@
             )
 
 
-            RedOBJLoader(this, '../asset/female2.obj', function (v) {
-                console.log('호잇!', v)
+            RedOBJLoader(this, '../asset/obj/', 'female.obj', function (v, materialInfo) {
+                console.log('호잇!', v, materialInfo)
                 // var testMesh = RedMesh(self, RedGeometry(v['Cube']['interleaveBuffer'], v['Cube']['indexBuffer'] ?  v['Cube']['indexBuffer'] : null), RedColorMaterial(self))
                 var i = 0
                 var list = [
-                    '#ff0000', '#ffff00', '#ff00ff', '#00ff00', '#0000ff', '#ffffff', '#223324', '#992255', '#663945',
-                    '#ff0000', '#ffff00', '#ff00ff', '#00ff00', '#0000ff', '#ffffff', '#223324', '#992255', '#663945'
+                    '#ff0000', '#ffff00', '#ff00ff', '#00ff00', '#0000ff', '#ffffff', '#223324',
+                    '#992255', '#663945',
+                    '#ff0000', '#ffff00', '#ff00ff', '#00ff00', '#0000ff', '#ffffff', '#223324',
+                    '#992255', '#663945'
                 ]
                 for (var k in v) {
                     var testMesh = RedMesh(self, RedGeometry(
@@ -147,6 +150,8 @@
                     ), RedColorPhongMaterial(self, list[i]))
                     testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.025
                     testMesh.y = -2
+                    console.log(materialInfo[v[k]['data']['materialKey']])
+                    if(materialInfo[v[k]['data']['materialKey']]) testMesh.material = materialInfo[v[k]['data']['materialKey']]['material']
                     tScene3D.addChild(testMesh)
                     i++
                 }
@@ -161,6 +166,7 @@
                     testMesh.pointSize = 2
                     testMesh.x = -2
                     testMesh.y = -2
+                    if(materialInfo[v[k]['data']['materialKey']]) testMesh.material = materialInfo[v[k]['data']['materialKey']]['material']
                     tScene3D.addChild(testMesh)
                     i++
                 }
@@ -175,6 +181,7 @@
                     testMesh.pointSize = 1
                     testMesh.x = 2
                     testMesh.y = -2
+                    if(materialInfo[v[k]['data']['materialKey']]) testMesh.material = materialInfo[v[k]['data']['materialKey']]['material']
                     tScene3D.addChild(testMesh)
                     i++
                 }
@@ -186,11 +193,10 @@
                         v[k]['indexBuffer'] ? v[k]['indexBuffer'] : null
                     ), RedColorPhongMaterial(self, list[i]))
                     testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.025
-                    testMesh.drawMode = self.gl.LINES
-                    testMesh.pointSize = 1
                     testMesh.x = -3 + i * 0.5
                     testMesh.y = -2
                     testMesh.z = -1.5
+                    if(materialInfo[v[k]['data']['materialKey']]) testMesh.material = materialInfo[v[k]['data']['materialKey']]['material']
                     tScene3D.addChild(testMesh)
                     i++
                 }
