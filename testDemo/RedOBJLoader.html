@@ -38,7 +38,7 @@
 
     <script src="../src/material/RedMaterial.js"></script>
     <script src="../src/material/RedColorMaterial.js"></script>
-    <script src="../src/material/RedColorMaterial.js"></script>
+    <script src="../src/material/RedColorPhongMaterial.js"></script>
     <script src="../src/material/RedEnvironmentMaterial.js"></script>
     <script src="../src/material/RedBitmapMaterial.js"></script>
     <script src="../src/material/RedPointBitmapMaterial.js"></script>
@@ -130,99 +130,28 @@
                 RedBitmapTexture(this, '../asset/specular.png'),
                 RedBitmapTexture(this, '../asset/displacementTest.jpg')
             )
+            tScene3D['grid'] = RedGrid(self)
+            RedOBJLoader(this, '../asset/obj/', 'female.obj', function (v) {
+                console.log('호잇!', v)
+                tScene3D.addChild(v['resultMesh'])
+                v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.025
 
-            RedOBJLoader(this, '../asset/obj/', 'female.obj', function (v, materialInfo) {
-                console.log('호잇!', v, materialInfo)
-                // var testMesh = RedMesh(self, RedGeometry(v['Cube']['interleaveBuffer'], v['Cube']['indexBuffer'] ?  v['Cube']['indexBuffer'] : null), RedColorMaterial(self))
-                
-                var i = 0
-                var list = [
-                    '#ff0000', '#ffff00', '#ff00ff', '#00ff00', '#0000ff', '#ffffff', '#223324',
-                    '#992255', '#663945',
-                    '#ff0000', '#ffff00', '#ff00ff', '#00ff00', '#0000ff', '#ffffff', '#223324',
-                    '#992255', '#663945'
-                ]
-                var tGroup;
-                tGroup = RedMesh(self)
-                tGroup.y = -2
-                tScene3D.addChild(tGroup)
-                for (var k in v) {
-                    var tMaterial;
-                    tMaterial = materialInfo[v[k]['data']['materialKey']] ? materialInfo[v[k]['data'][
-                        'materialKey'
-                    ]] : RedColorMaterial(self, list[i])
-                    var testMesh = RedMesh(self, RedGeometry(
-                        v[k]['interleaveBuffer'],
-                        v[k]['indexBuffer'] ? v[k]['indexBuffer'] : null
-                    ), tMaterial)
-                    testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.025
-                    tGroup.addChild(testMesh)
-                    i++
-                }
-                i = 0
-                var tGroup;
-                tGroup = RedMesh(self)
-                tGroup.x = -2
-                tGroup.y = -2
-                tScene3D.addChild(tGroup)
-                for (var k in v) {
-                    var tMaterial;
-                    tMaterial = materialInfo[v[k]['data']['materialKey']] ? materialInfo[v[k]['data'][
-                        'materialKey'
-                    ]] : RedColorMaterial(self, list[i])
-                    var testMesh = RedMesh(self, RedGeometry(
-                        v[k]['interleaveBuffer'],
-                        v[k]['indexBuffer'] ? v[k]['indexBuffer'] : null
-                    ), tMaterial)
-                    testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.025
-                    testMesh.drawMode = self.gl.POINTS
-                    testMesh.pointSize = 2
-                    tGroup.addChild(testMesh)
-                    i++
-                }
-                i = 0
-                var tGroup;
-                tGroup = RedMesh(self)
-                tGroup.x = 2
-                tGroup.y = -2
-                tScene3D.addChild(tGroup)
-                for (var k in v) {
-                    var tMaterial;
-                    tMaterial = materialInfo[v[k]['data']['materialKey']] ? materialInfo[v[k]['data'][
-                        'materialKey'
-                    ]] : RedColorMaterial(self, list[i])
-                    var testMesh = RedMesh(self, RedGeometry(
-                        v[k]['interleaveBuffer'],
-                        v[k]['indexBuffer'] ? v[k]['indexBuffer'] : null
-                    ), tMaterial)
-                    testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.025
-                    testMesh.drawMode = self.gl.LINES
-                    testMesh.pointSize = 1
-                    tGroup.addChild(testMesh)
-                    i++
-                }
-
-                i = 0
-                var tGroup;
-                tGroup = RedMesh(self)
-                tGroup.y = -2
-                tGroup.z = -1.5
-                tScene3D.addChild(tGroup)
-                for (var k in v) {
-                    var tMaterial;
-                    tMaterial = materialInfo[v[k]['data']['materialKey']] ? materialInfo[v[k]['data'][
-                        'materialKey'
-                    ]] : RedColorMaterial(self, list[i])
-                    var testMesh = RedMesh(self, RedGeometry(
-                        v[k]['interleaveBuffer'],
-                        v[k]['indexBuffer'] ? v[k]['indexBuffer'] : null
-                    ), tMaterial)
-                    testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.025
-                    testMesh.x = -3 + i * 0.5
-
-                    tGroup.addChild(testMesh)
-                    i++
-                }
+            })
+            RedOBJLoader(this, '../asset/obj/', 'WaltHead.obj', function (v) {
+                console.log('호잇!', v)
+                tScene3D.addChild(v['resultMesh'])
+                v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.025
+                v['resultMesh'].x = 1
+            })
+            RedOBJLoader(this, '../asset/obj/', 'cube.obj', function (v) {
+                console.log('호잇!', v)
+                tScene3D.addChild(v['resultMesh'])
+                v['resultMesh'].x = -2
+            })
+            RedOBJLoader(this, '../asset/obj/', 'tree.obj', function (v) {
+                console.log('호잇!', v)
+                tScene3D.addChild(v['resultMesh'])
+                v['resultMesh'].z = 1
             })
             var testDLight
 
@@ -239,7 +168,7 @@
                 tCamera.x = Math.sin(time / 1500) * 14
                 tCamera.y = 7
                 tCamera.z = Math.cos(time / 1500) * 7 + Math.sin(time / 1500) * 7
-                tCamera.lookAt(0, 0, 0)
+                tCamera.lookAt(0, 2.5, 0)
 
 
             })
