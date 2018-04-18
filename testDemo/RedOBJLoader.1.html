@@ -133,38 +133,101 @@
             tScene3D['grid'] = RedGrid(self)
             RedOBJLoader(this, '../asset/obj/', 'female.obj', function (v) {
                 console.log('호잇!', v)
+                // var testMesh = RedMesh(self, RedGeometry(v['Cube']['interleaveBuffer'], v['Cube']['indexBuffer'] ?  v['Cube']['indexBuffer'] : null), RedColorMaterial(self))
                 tScene3D.addChild(v['resultMesh'])
-
-                var i = 100
-                while (i--) {
-                    var t0;
-                    t0 = RedMesh(self)
-                    t0['children'] = v['resultMesh']['children'].concat()
-                    t0.x =  Math.random() * 30 - 15
-                    t0.z = Math.random() * 30 - 15
-                    t0.scaleX = t0.scaleY = t0.scaleZ = 0.01
-                    tScene3D.addChild(t0)
-
-                }
-
+              
+                console.log(v['resultMesh'])
                 v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.025
+                // var i = 0
+                // var list = [
+                //     '#ff0000', '#ffff00', '#ff00ff', '#00ff00', '#0000ff', '#ffffff', '#223324',
+                //     '#992255', '#663945',
+                //     '#ff0000', '#ffff00', '#ff00ff', '#00ff00', '#0000ff', '#ffffff', '#223324',
+                //     '#992255', '#663945'
+                // ]
+                // var tGroup;
+                // tGroup = RedMesh(self)
+                // tGroup.y = -2
+                // console.log(tGroup)
+                // tScene3D.addChild(tGroup)
+                // var materialInfo = v['parseInfoMaterial']['parseData']
+                // var objInfo = v['parseRawInfo']
+                // for (var k in objInfo) {
+                //     var tMaterial;
+                //     var testMesh = objInfo[k]['mesh']
+                //     if (testMesh && objInfo[k]['resultInterleave']) {
+                //         tMaterial = materialInfo[objInfo[k]['materialKey']] ? materialInfo[objInfo[k]['materialKey']] : RedColorMaterial(self, list[i])
+                //         console.log('tMaterial',tMaterial)
+                //         testMesh.material = tMaterial
+                //         testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.025
+                //         tGroup.addChild(testMesh)
+                //     }
+                  
+                // }
+            //     i = 0
+            //     var tGroup;
+            //     tGroup = RedMesh(self)
+            //     tGroup.x = -2
+            //     tGroup.y = -2
+            //     tScene3D.addChild(tGroup)
+            //     for (var k in v) {
+            //         var tMaterial;
+            //         tMaterial = materialInfo[v[k]['data']['materialKey']] ? materialInfo[v[k]['data'][
+            //             'materialKey'
+            //         ]] : RedColorMaterial(self, list[i])
+            //         var testMesh = RedMesh(self, RedGeometry(
+            //             v[k]['interleaveBuffer'],
+            //             v[k]['indexBuffer'] ? v[k]['indexBuffer'] : null
+            //         ), tMaterial)
+            //         testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.025
+            //         testMesh.drawMode = self.gl.POINTS
+            //         testMesh.pointSize = 2
+            //         tGroup.addChild(testMesh)
+            //         i++
+            //     }
+            //     i = 0
+            //     var tGroup;
+            //     tGroup = RedMesh(self)
+            //     tGroup.x = 2
+            //     tGroup.y = -2
+            //     tScene3D.addChild(tGroup)
+            //     for (var k in v) {
+            //         var tMaterial;
+            //         tMaterial = materialInfo[v[k]['data']['materialKey']] ? materialInfo[v[k]['data'][
+            //             'materialKey'
+            //         ]] : RedColorMaterial(self, list[i])
+            //         var testMesh = RedMesh(self, RedGeometry(
+            //             v[k]['interleaveBuffer'],
+            //             v[k]['indexBuffer'] ? v[k]['indexBuffer'] : null
+            //         ), tMaterial)
+            //         testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.025
+            //         testMesh.drawMode = self.gl.LINES
+            //         testMesh.pointSize = 1
+            //         tGroup.addChild(testMesh)
+            //         i++
+            //     }
 
-            })
-            RedOBJLoader(this, '../asset/obj/', 'WaltHead.obj', function (v) {
-                console.log('호잇!', v)
-                tScene3D.addChild(v['resultMesh'])
-                v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.025
-                v['resultMesh'].x = 1
-            })
-            RedOBJLoader(this, '../asset/obj/', 'cube.obj', function (v) {
-                console.log('호잇!', v)
-                tScene3D.addChild(v['resultMesh'])
-                v['resultMesh'].x = -2
-            })
-            RedOBJLoader(this, '../asset/obj/', 'tree.obj', function (v) {
-                console.log('호잇!', v)
-                tScene3D.addChild(v['resultMesh'])
-                v['resultMesh'].z = 1
+            //     i = 0
+            //     var tGroup;
+            //     tGroup = RedMesh(self)
+            //     tGroup.y = -2
+            //     tGroup.z = -1.5
+            //     tScene3D.addChild(tGroup)
+            //     for (var k in v) {
+            //         var tMaterial;
+            //         tMaterial = materialInfo[v[k]['data']['materialKey']] ? materialInfo[v[k]['data'][
+            //             'materialKey'
+            //         ]] : RedColorMaterial(self, list[i])
+            //         var testMesh = RedMesh(self, RedGeometry(
+            //             v[k]['interleaveBuffer'],
+            //             v[k]['indexBuffer'] ? v[k]['indexBuffer'] : null
+            //         ), tMaterial)
+            //         testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.025
+            //         testMesh.x = -3 + i * 0.5
+
+            //         tGroup.addChild(testMesh)
+            //         i++
+            //     }
             })
             var testDLight
 
@@ -176,14 +239,7 @@
 
             tRenderer.renderDebuger.visible = true
             tRenderer.start(this, function (time) {
-                var i = tScene3D.children.length
-                while (i--) {
-                    if (i == 0) break
-                    testMesh = tScene3D.children[i]
-                    // testMesh.rotationX += 1
-                    testMesh.rotationY += 1
-                    // testMesh.rotationZ += 1
-                }
+
 
                 tCamera.x = Math.sin(time / 1500) * 14
                 tCamera.y = 7

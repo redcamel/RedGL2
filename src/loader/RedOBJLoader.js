@@ -2,6 +2,8 @@
 var RedOBJLoader;
 (function () {
     var parser;
+    var setMesh;
+    var setMaterial;
     /**DOC:
         {
             constructorYn : true,
@@ -22,35 +24,140 @@ var RedOBJLoader;
         request.onreadystatechange = function () {
             if (request.readyState == 4) {
                 var data;
-                data = parser(self, redGL, request.responseText)
+                self['result'] = parser(self, redGL, request.responseText)
                 self['modelParsingComplete'] = true
-                self['parseData'] = data
+                self['resultMesh'] = data
                 if (callback) {
                     if (self['mtlLoader']) {
-                        if (self['mtlLoader']['complete']) console.log('모델 파싱 종료 & 재질 파싱 종료'), callback(self['parseData'], self['mtlLoader'])
+                        if (self['mtlLoader']['complete']) {
+                            console.log('모델 파싱 종료 & 재질 파싱 종료');
+                            callback(self['result'])
+                        }
                         else console.log('모델 파싱 종료 & 재질 파싱중')
-                    } else console.log('모델 파싱 종료 & 재질 없음'), callback(self['parseData'], {})
+                    } else {
+                        console.log('모델 파싱 종료 & 재질 없음');
+                        callback(self['result'])
+                    }
                 }
             }
         }
         request.send();
         this['path'] = path;
         this['fileName'] = fileName;
-        this['parseData'] = null;
         this['mtlLoader'] = null;
         this['modelParsingComplete'] = false;
         this['callback'] = callback;
+        this['resultMesh'] = RedMesh(redGL)
+        this['resultMesh']['name'] = 'instanceOfRedOBJLoader_' + RedGL.makeUUID()
+        this['result'] = null;
     }
-    parser = function (target, redGL, data) {
-        console.log('파싱시작')
-        console.log(data)
-        var lines;
-        var info;
-        var regObject, regGroup, regVertex, regNormal, redUV, regIndex, regIndex2, regIndex3, regIndex4;
+    setMaterial = function (redGL, tObjInfo, tMtlLoader) {
+        // console.log(tObjInfo)
+        // console.log('tMtlLoader', tMtlLoader)
+        var k;
+
+        var tMtlData, tMeshData
+
+        for (k in tObjInfo) {
+            var tMaterial;
+            var tMesh
+            tMeshData = tObjInfo[k]
+            tMesh = tMeshData['mesh']
+
+            if (tMeshData['use'] && tMeshData['resultInterleave'].length) {
+                var r, g, b;
+                var ableLight
+                ableLight = tMeshData['ableLight']
+                // console.log(tMeshData)
+                // console.log('해석할 재질키', tMeshData['materialKey'])
+                //
+                tMtlData = tMtlLoader['parseData'][tMeshData['materialKey']]
+                if (tMtlData) {
+                    if (tMtlData['map_Kd']) {
+                        // 비트맵 기반으로 해석
+                        if (ableLight) tMaterial = RedStandardMaterial(redGL, RedBitmapTexture(redGL, tMtlData['map_Kd']));
+                        else tMaterial = RedBitmapMaterial(redGL, RedBitmapTexture(redGL, tMtlData['map_Kd']));
+                    }
+                    else if (tMtlData['Kd']) {
+                        // 컬러기반으로 해석
+                        r = tMtlData['Kd'][0] * 255;
+                        g = tMtlData['Kd'][1] * 255;
+                        b = tMtlData['Kd'][2] * 255;
+                        if (ableLight) tMaterial = RedColorPhongMaterial(redGL, RedGLUtil.rgb2hex(r, g, b));
+                        else tMaterial = RedColorMaterial(redGL, RedGLUtil.rgb2hex(r, g, b));
+                    }
+                    if (tMaterial) {
+                        // 스페큘러텍스쳐 
+                        if (tMtlData['map_Ks']) tMaterial['specular'] = RedBitmapTexture(redGL, tMtlData['map_Ks'])
+                        // shininess
+                        if (tMtlData['Ns'] != undefined) tMaterial['shininess'] = tMtlData['Ns']
+                        // 메쉬에 재질 적용
+                        tMeshData['mesh']['material'] = tMaterial
+                    }
+                } else {
+                    console.log('스킵')
+                }
+            }
+        }
+    }
+    setMesh = function (redGL, parentMesh, childrenInfo) {
+        for (var k in childrenInfo) {
+            var tData;
+            tData = childrenInfo[k]
+            // console.log('!!!', k, tData)
+            var tMesh;
+            if (!tData['use']) {
+                tMesh = RedMesh(redGL)
+            } else {
+                // 인터리브 버퍼 생성
+                var tInterleaveInfo = []
+                var interleaveBuffer, indexBuffer
+                if (tData['resultPosition'].length) tInterleaveInfo.push(RedInterleaveInfo('aVertexPosition', 3))
+                if (tData['resultNormal'].length) tInterleaveInfo.push(RedInterleaveInfo('aVertexNormal', 3))
+                if (tData['resultUV'].length) tInterleaveInfo.push(RedInterleaveInfo('aTexcoord', 2))
+
+                interleaveBuffer = RedBuffer(
+                    redGL,
+                    k + '_interleave',
+                    new Float32Array(tData['resultInterleave'].length ? tData['resultInterleave'] : tData['resultPosition']),
+                    RedBuffer.ARRAY_BUFFER,
+                    tInterleaveInfo
+                )
+                if (tData['index'].length) {
+                    // 인덱스 버퍼 생성
+                    if (tData['index'].length) {
+                        indexBuffer = RedBuffer(
+                            redGL,
+                            k + '_index',
+                            new Uint16Array(tData['index']),
+                            RedBuffer.ELEMENT_ARRAY_BUFFER
+                        )
+                    }
+                }
+                tMesh = RedMesh
+                    (redGL,
+                    RedGeometry(interleaveBuffer, indexBuffer),
+                    (tData['resultUV'].length && tData['resultNormal'].length) ? RedColorPhongMaterial(redGL, '#00ff00') : RedColorMaterial(redGL, '#0000ff')
+                    );
+                tData['ableUV'] = tData['resultUV'].length ? true : false
+                tData['ableNormal'] = tData['resultNormal'].length ? true : false
+                tData['ableLight'] = tData['ableUV'] & tData['ableNormal']? true : false
+            }
+            tMesh['name'] = k
+            tData['mesh'] = tMesh
+            parentMesh.addChild(tMesh)
+            setMesh(redGL, tMesh, tData['childrenInfo'])
+        }
+    }
+    var parseObj;
+    parseObj = (function () {
+        var regObject, regGroup;
+        var regVertex, regNormal, redUV;
+        var regIndex, regIndex2, regIndex3, regIndex4;
         var regMtllib;
-        regMtllib = /^(mtllib)/;
-        regObject = /^o/;
-        regGroup = /^g/;
+        regMtllib = /^(mtllib )/;
+        regObject = /^o /;
+        regGroup = /^g /;
         regVertex = /v( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/;
         regNormal = /vn( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/;
         redUV = /vt( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/;
@@ -58,273 +165,295 @@ var RedOBJLoader;
         regIndex2 = /f\s+((([\d]{1,}\/[\d]{1,}[\s]?){3,})+)/;
         regIndex3 = /f\s+((([\d]{1,}\/[\d]{1,}\/[\d]{1,}[\s]?){3,})+)/;
         regIndex4 = /f\s+((([\d]{1,}\/\/[\d]{1,}[\s]?){3,})+)/
-        info = {};
+        return function (redGL, tRedOBJLoader, lineList) {
+            var info; // 단편 구조로 정보구성
+            var infoHierarchy; // 하이라키 구조로 정보구성
+            var pointInfo;;
+            // 현재 바라볼 메쉬정보
+            var currentMeshInfo;
+            // 현재 그룹이름
+            var currentGroupName;
+            // 재질로더
+            var tMtlLoader;
+            // 전체 삼각형 구성정보. 
+            pointInfo = {
+                position: [],
+                normal: [],
+                uv: [],
+                //
+                points: [],
+                normalPoints: [],
+                uvPoints: []
+            }
+            infoHierarchy = {};
+            info = {};
 
-        data = data.replace(/^\#[\s\S]+?\n/g, '');
-        lines = data.split("\n");
-        // 루트에 삼각형 정보를 다모은다. 
-        var root = {
-            position: [],
-            normal: [],
-            uv: [],
-            //
-            points: [],
-            normalPoints: [],
-            uvPoints: []
-        }
-        var currentMeshInfo;
-        var currentObjectName
-        var mtlLoader
-        lines.forEach(function (line) {
-            if (regMtllib.test(line)) {
-                console.log('regMtllib', '재질파일정보', line)
-                mtlLoader = RedMTLLoader(redGL, target['path'], line.split(' ')[1], function (v) {
-                    target['mtlLoader'] = v
-                    if (target['modelParsingComplete']) {
-                        if (target['callback']) console.log('재질에서 - 재질 파싱 종료 & 재질 파싱 종료'), target['callback'](target['parseData'], target['mtlLoader'])
-                        else console.log('RedOBJLoader 콜백없음')
-                    } else console.log('재질에서 - 파싱 진행중 & 재질 파싱 종료')
-                })
-                target['mtlLoader'] = mtlLoader
-                return
-            }
-            // 그룹 검색
-            if (regGroup.test(line)) {
-                var tName = line.split(' ');
-                console.log(tName)
-                tName = tName.slice(1)
-                tName = tName.join('')
-                tName = tName.trim()
-                console.log('name', tName)
-                info[currentObjectName]['use'] = false
-                info[tName] = {
-                    name: tName,
-                    groupName: currentObjectName,
-                    materialKey: tName.replace(currentObjectName + '_', ''),
-                    index: [],
-                    position: currentMeshInfo['position'],
-                    resultPosition: [],
-                    resultNormal: [],
-                    resultUV: [],
-                    resultInterleave: [],
-                    use: true
+
+            var i;
+            var hasObjectName;
+            i = lineList.length
+            while (i--) {
+                if (regObject.test(lineList[i])) {
+                    hasObjectName = true
+                    break
                 }
-                currentMeshInfo = info[tName];
-                console.log('regGroup', line, '신규그룹오브젝트', regGroup.test(line))
-                // console.log(info)
             }
-            // 오브젝트 검색
-            else if (regObject.test(line)) {
-                var tName = line.split(' ');
-                console.log(tName)
-                tName = tName.slice(1)
-                tName = tName.join('')
-                tName = tName.trim()
-                console.log('name', tName)
-                info[tName] = {
+            if (!hasObjectName) {
+                var tName;
+                var tInfo;
+                tName = 'objModel' + RedGL.makeUUID()
+                tInfo = {
                     name: tName,
-                    groupName: name,
-                    materialKey: tName,
+                    groupName: tName,
                     index: [],
                     position: [],
                     resultPosition: [],
                     resultNormal: [],
                     resultUV: [],
                     resultInterleave: [],
-                    use: true
+                    use: true,
+                    childrenInfo: {}
                 }
-                currentMeshInfo = info[tName];
-                currentObjectName = tName
-                console.log('regObject', line, '신규오브젝트', regObject.test(line))
-                // console.log(info)
-            } else {
-                // 오브젝트 이름이 등록되어있지 않은경우
-                if (!currentMeshInfo) {
-                    var tName = 'objModel' + RedGL.makeUUID()
-                    info[tName] = {
+                infoHierarchy[tName] = currentMeshInfo = tInfo;
+                info[tName] = currentMeshInfo
+                currentGroupName = tName
+            }
+
+            lineList.forEach(function (line) {
+                if (regMtllib.test(line)) {
+                    console.log('regMtllib', '재질파일정보', line)
+                    tMtlLoader = RedMTLLoader(redGL, tRedOBJLoader['path'], line.split(' ')[1], function (v) {
+                        tRedOBJLoader['mtlLoader'] = v
+                        if (tRedOBJLoader['modelParsingComplete']) {
+                            if (tRedOBJLoader['callback']) {
+                                console.log('재질에서 - 재질 파싱 종료 & 재질 파싱 종료');
+                                setMaterial(redGL, info, tMtlLoader)
+                                tRedOBJLoader['callback'](tRedOBJLoader['result'])
+                            }
+                            else console.log('RedOBJLoader 콜백없음')
+                        } else console.log('재질에서 - 파싱 진행중 & 재질 파싱 종료')
+                    })
+                    tRedOBJLoader['mtlLoader'] = tMtlLoader
+                    return
+                }
+                // 그룹 검색
+                if (regGroup.test(line)) {
+                    var tName;
+                    var tInfo;
+                    tName = line.split(' ').slice(1).join('').trim()
+                    // console.log('name', tName)
+                    // console.log('currentGroupName', currentGroupName)
+                    // 그룹으로 판정될 경우 현재 그룹은 컨테이너로만 사용한다. 
+                    infoHierarchy[currentGroupName]['use'] = false
+                    tInfo = {
                         name: tName,
+                        groupName: currentGroupName,
+                        materialKey: tName.replace(currentGroupName + '_', ''),
+                        index: [],
+                        position: currentMeshInfo['position'],
+                        resultPosition: [],
+                        resultNormal: [],
+                        resultUV: [],
+                        resultInterleave: [],
+                        use: true,
+                        childrenInfo: {}
+                    }
+                    // 현재 메쉬 정보를 저장
+                    info[tName] = currentMeshInfo = tInfo;
+                    // 현재 그룹의 자식정보에 현재 메쉬 정보 추가
+                    infoHierarchy[currentGroupName]['childrenInfo'][tName] = currentMeshInfo
+                    // 이름이없는 오브젝트가 처음으로 생성되었을떄 사용안함으로 변경함
+                    // console.log('regGroup', line, '신규그룹오브젝트', regGroup.test(line))
+                }
+                // 오브젝트 검색
+                else if (regObject.test(line)) {
+                    var tName;
+                    var tInfo;
+                    tName = line.split(' ').slice(1).join('').trim()
+                    // console.log('name', tName)
+                    tInfo = {
+                        name: tName,
+                        groupName: tName,
+                        materialKey: tName,
                         index: [],
                         position: [],
                         resultPosition: [],
                         resultNormal: [],
                         resultUV: [],
                         resultInterleave: [],
-                        use: true
+                        use: true,
+                        childrenInfo: {}
                     }
-                    currentMeshInfo = info[tName];
-                    currentObjectName = tName
+                    // 하이라키 정보에 추가
+                    infoHierarchy[tName] = currentMeshInfo = tInfo;
+                    // 현재 메쉬 정보 저장
+                    info[tName] = currentMeshInfo;
+                    // 현재 그룹이름을 현재 오브젝트 이름으로 설정
+                    currentGroupName = tName;
+                    // console.log('regObject', line, '신규오브젝트', regObject.test(line))
                 }
-            }
-            // 포지션 검색
-            if (regVertex.test(line)) {
-                var tPosition;
-                tPosition = line.split(' ');
-                root['position'].push(+tPosition[1], +tPosition[2], +tPosition[3])
-                currentMeshInfo['position'].push(+tPosition[1], +tPosition[2], +tPosition[3])
-                root['points'][root['points'].length] = [+tPosition[1], +tPosition[2], +tPosition[3]]
-                // console.log('regVertex', line, regVertex.test(line))
-            }
-            // 노말 검색
-            else if (regNormal.test(line)) {
-                var tNormal;
-                tNormal = line.split(' ');
-                root['normal'].push(+tNormal[1], +tNormal[2], +tNormal[3])
-                root['normalPoints'][root['normalPoints'].length] = [+tNormal[1], +tNormal[2], +tNormal[3]]
-                // console.log('regNormal', line, regNormal.test(line))
-            }
-            //UV 검색
-            else if (redUV.test(line)) {
-                var tUV;
-                tUV = line.split(' ');
-                root['uv'].push(+tUV[1], +tUV[2])
-                root['uvPoints'][root['uvPoints'].length] = [+tUV[1], +tUV[2]]
-                // console.log('redUV', line, redUV.test(line))
-            }
-            // 인덱스 검색 1//1 1//1 1//1 v//n
-            else if (regIndex4.test(line)) {
-                var tData;
-                var tIndex, tNIndex;
-                tData = line.split(' ').slice(1, 4);
-                tData.forEach(function (v) {
-                    var tPoint, tNormalPoint;
-                    var max;
-                    max = 0
-                    v = v.split('/')
-                    tIndex = +v[0] - 1
-                    tNIndex = +v[2] - 1
-                    tPoint = root['points'][tIndex]
-                    tNormalPoint = root['normalPoints'][tNIndex]
-                    if (root['position'].length) max += 3
-                    if (root['normal'].length) max += 3
-                    //
-                    currentMeshInfo['index'].push(currentMeshInfo['resultInterleave'].length / max)
-                    //
-                    if (root['position'].length) {
-                        currentMeshInfo['resultPosition'].push(tPoint[0], tPoint[1], tPoint[2])
-                        currentMeshInfo['resultInterleave'].push(tPoint[0], tPoint[1], tPoint[2])
-                    }
-                    if (root['normal'].length) {
-                        currentMeshInfo['resultNormal'].push(tNormalPoint[0], tNormalPoint[1], tNormalPoint[2])
-                        currentMeshInfo['resultInterleave'].push(tNormalPoint[0], tNormalPoint[1], tNormalPoint[2])
-                    }
-                })
-                // console.log(tData)
-                // console.log('regIndex4', line, regIndex4.test(line))
-            }
-            // 인덱스 검색 1/1/1 1/1/1 1/1/1  v/uv/n
-            else if (regIndex3.test(line)) {
-                var tData;
-                var tIndex, tUVIndex, tNIndex;
-                tData = line.split(' ').slice(1, 4);
-                tData.forEach(function (v) {
-                    var tPoint, tNormalPoint, tUVPoints;
-                    var max;
-                    max = 0
-                    v = v.split('/')
-                    tIndex = +v[0] - 1
-                    tUVIndex = +v[1] - 1
-                    tNIndex = +v[2] - 1
-                    tPoint = root['points'][tIndex]
-                    tUVPoints = root['uvPoints'][tUVIndex]
-                    tNormalPoint = root['normalPoints'][tNIndex]
-                    if (root['position'].length) max += 3
-                    if (root['normal'].length) max += 3
-                    if (root['uv'].length) max += 2
-                    //
-                    currentMeshInfo['index'].push(currentMeshInfo['resultInterleave'].length / max)
-                    //
-                    if (root['position'].length) {
-                        currentMeshInfo['resultPosition'].push(tPoint[0], tPoint[1], tPoint[2])
-                        currentMeshInfo['resultInterleave'].push(tPoint[0], tPoint[1], tPoint[2])
-                    }
-                    if (root['normal'].length) {
-                        currentMeshInfo['resultNormal'].push(tNormalPoint[0], tNormalPoint[1], tNormalPoint[2])
-                        currentMeshInfo['resultInterleave'].push(tNormalPoint[0], tNormalPoint[1], tNormalPoint[2])
-                    }
-                    if (root['uv'].length) {
-                        currentMeshInfo['resultUV'].push(tUVPoints[0], tUVPoints[1])
-                        currentMeshInfo['resultInterleave'].push(tUVPoints[0], tUVPoints[1])
-                    }
-                })
-                // console.log(tData)
-                // console.log('regIndex3', line, regIndex3.test(line))
-            } // 인덱스 검색 1/1 1/1 1/1 v/uv
-            else if (regIndex2.test(line)) {
-                var tData;
-                var tIndex, tUVIndex;
-                tData = line.split(' ').slice(1, 4);
-                tData.forEach(function (v) {
-                    var tPoint, tUVPoints;
-                    var max;
-                    max = 0
-                    v = v.split('/')
-                    tIndex = +v[0] - 1
-                    tUVIndex = +v[1] - 1
-                    tPoint = root['points'][tIndex]
-                    tUVPoints = root['uvPoints'][tUVIndex]
-                    if (root['position'].length) max += 3
-                    if (root['uv'].length) max += 2
-                    //
-                    currentMeshInfo['index'].push(currentMeshInfo['resultInterleave'].length / max)
-                    //
-                    if (root['position'].length) {
-                        currentMeshInfo['resultPosition'].push(tPoint[0], tPoint[1], tPoint[2])
-                        currentMeshInfo['resultInterleave'].push(tPoint[0], tPoint[1], tPoint[2])
-                    }
-                    if (root['uv'].length) {
-                        currentMeshInfo['resultUV'].push(tUVPoints[0], tUVPoints[1])
-                        currentMeshInfo['resultInterleave'].push(tUVPoints[0], tUVPoints[1])
-                    }
-                })
-                // console.log(tData)
-                // console.log('regIndex2', line, regIndex3.test(line))
-            }
-            else if (regIndex.test(line)) {
-                // 인덱스 검색 1 1 1 1// 인덱스 검색 1 1 1 1
-                var tIndex;
-                tIndex = line.split(' ');
-                currentMeshInfo['resultInterleave'] = currentMeshInfo['resultPosition'] = currentMeshInfo['position']
-                currentMeshInfo['index'].push(+tIndex[1] - 1, +tIndex[2] - 1, +tIndex[3] - 1)
-                currentMeshInfo['index'].push(+tIndex[1] - 1, +tIndex[3] - 1, +tIndex[4] - 1)
-                // console.log('regIndex', line, regIndex.test(line))
-            }
-        })
-        console.log(info)
-        // console.log(lines)
-        var newData = {}
-        for (var k in info) {
-            // console.log(k, info[k])
-            if (info[k]['use'] && info[k]['position'].length) {
-                var temp = info[k];
-                newData[k] = {}
-                // 인터리브 버퍼 생성
-                var tInterleaveInfo = []
-                if (info[k]['resultPosition'].length) tInterleaveInfo.push(RedInterleaveInfo('aVertexPosition', 3))
-                if (info[k]['resultNormal'].length) tInterleaveInfo.push(RedInterleaveInfo('aVertexNormal', 3))
-                if (info[k]['resultUV'].length) tInterleaveInfo.push(RedInterleaveInfo('aTexcoord', 2))
-
-                newData[k]['interleaveBuffer'] = RedBuffer(
-                    redGL,
-                    k + '_interleave',
-                    new Float32Array(info[k]['resultInterleave'].length ? info[k]['resultInterleave'] : info[k]['resultPosition']),
-                    RedBuffer.ARRAY_BUFFER,
-                    tInterleaveInfo
-                )
-                if (info[k]['index'].length) {
-                    // 인덱스 버퍼 생성
-                    if (info[k]['index'].length) {
-                        newData[k]['indexBuffer'] = RedBuffer(
-                            redGL,
-                            k + '_index',
-                            new Uint16Array(info[k]['index']),
-                            RedBuffer.ELEMENT_ARRAY_BUFFER
-                        )
-                    }
+                // 포지션 검색
+                if (regVertex.test(line)) {
+                    var tPosition;
+                    tPosition = line.split(' ');
+                    pointInfo['position'].push(+tPosition[1], +tPosition[2], +tPosition[3])
+                    currentMeshInfo['position'].push(+tPosition[1], +tPosition[2], +tPosition[3])
+                    pointInfo['points'][pointInfo['points'].length] = [+tPosition[1], +tPosition[2], +tPosition[3]]
+                    // console.log('regVertex', line, regVertex.test(line))
                 }
-                newData[k]['data'] = temp;
+                // 노말 검색
+                else if (regNormal.test(line)) {
+                    var tNormal;
+                    tNormal = line.split(' ');
+                    pointInfo['normal'].push(+tNormal[1], +tNormal[2], +tNormal[3])
+                    pointInfo['normalPoints'][pointInfo['normalPoints'].length] = [+tNormal[1], +tNormal[2], +tNormal[3]]
+                    // console.log('regNormal', line, regNormal.test(line))
+                }
+                //UV 검색
+                else if (redUV.test(line)) {
+                    var tUV;
+                    tUV = line.split(' ');
+                    pointInfo['uv'].push(+tUV[1], +tUV[2])
+                    pointInfo['uvPoints'][pointInfo['uvPoints'].length] = [+tUV[1], +tUV[2]]
+                    // console.log('redUV', line, redUV.test(line))
+                }
+                // 인덱스 검색 1//1 1//1 1//1 v//n
+                else if (regIndex4.test(line)) {
+                    var tData;
+                    var tIndex, tNIndex;
+                    tData = line.split(' ').slice(1, 4);
+                    tData.forEach(function (v) {
+                        var tPoint, tNormalPoint;
+                        var max;
+                        max = 0
+                        v = v.split('/')
+                        tIndex = +v[0] - 1
+                        tNIndex = +v[2] - 1
+                        tPoint = pointInfo['points'][tIndex]
+                        tNormalPoint = pointInfo['normalPoints'][tNIndex]
+                        if (pointInfo['position'].length) max += 3
+                        if (pointInfo['normal'].length) max += 3
+                        //
+                        currentMeshInfo['index'].push(currentMeshInfo['resultInterleave'].length / max)
+                        //
+                        if (pointInfo['position'].length) {
+                            currentMeshInfo['resultPosition'].push(tPoint[0], tPoint[1], tPoint[2])
+                            currentMeshInfo['resultInterleave'].push(tPoint[0], tPoint[1], tPoint[2])
+                        }
+                        if (pointInfo['normal'].length) {
+                            currentMeshInfo['resultNormal'].push(tNormalPoint[0], tNormalPoint[1], tNormalPoint[2])
+                            currentMeshInfo['resultInterleave'].push(tNormalPoint[0], tNormalPoint[1], tNormalPoint[2])
+                        }
+                    })
+                    // console.log(tData)
+                    // console.log('regIndex4', line, regIndex4.test(line))
+                }
+                // 인덱스 검색 1/1/1 1/1/1 1/1/1  v/uv/n
+                else if (regIndex3.test(line)) {
+                    var tData;
+                    var tIndex, tUVIndex, tNIndex;
+                    tData = line.split(' ').slice(1, 4);
+                    tData.forEach(function (v) {
+                        var tPoint, tNormalPoint, tUVPoints;
+                        var max;
+                        max = 0
+                        v = v.split('/')
+                        tIndex = +v[0] - 1
+                        tUVIndex = +v[1] - 1
+                        tNIndex = +v[2] - 1
+                        tPoint = pointInfo['points'][tIndex]
+                        tUVPoints = pointInfo['uvPoints'][tUVIndex]
+                        tNormalPoint = pointInfo['normalPoints'][tNIndex]
+                        if (pointInfo['position'].length) max += 3
+                        if (pointInfo['normal'].length) max += 3
+                        if (pointInfo['uv'].length) max += 2
+                        //
+                        currentMeshInfo['index'].push(currentMeshInfo['resultInterleave'].length / max)
+                        //
+                        if (pointInfo['position'].length) {
+                            currentMeshInfo['resultPosition'].push(tPoint[0], tPoint[1], tPoint[2])
+                            currentMeshInfo['resultInterleave'].push(tPoint[0], tPoint[1], tPoint[2])
+                        }
+                        if (pointInfo['normal'].length) {
+                            currentMeshInfo['resultNormal'].push(tNormalPoint[0], tNormalPoint[1], tNormalPoint[2])
+                            currentMeshInfo['resultInterleave'].push(tNormalPoint[0], tNormalPoint[1], tNormalPoint[2])
+                        }
+                        if (pointInfo['uv'].length) {
+                            currentMeshInfo['resultUV'].push(tUVPoints[0], tUVPoints[1])
+                            currentMeshInfo['resultInterleave'].push(tUVPoints[0], tUVPoints[1])
+                        }
+                    })
+                    // console.log(tData)
+                    // console.log('regIndex3', line, regIndex3.test(line))
+                } // 인덱스 검색 1/1 1/1 1/1 v/uv
+                else if (regIndex2.test(line)) {
+                    var tData;
+                    var tIndex, tUVIndex;
+                    tData = line.split(' ').slice(1, 4);
+                    tData.forEach(function (v) {
+                        var tPoint, tUVPoints;
+                        var max;
+                        max = 0
+                        v = v.split('/')
+                        tIndex = +v[0] - 1
+                        tUVIndex = +v[1] - 1
+                        tPoint = pointInfo['points'][tIndex]
+                        tUVPoints = pointInfo['uvPoints'][tUVIndex]
+                        if (pointInfo['position'].length) max += 3
+                        if (pointInfo['uv'].length) max += 2
+                        //
+                        currentMeshInfo['index'].push(currentMeshInfo['resultInterleave'].length / max)
+                        //
+                        if (pointInfo['position'].length) {
+                            currentMeshInfo['resultPosition'].push(tPoint[0], tPoint[1], tPoint[2])
+                            currentMeshInfo['resultInterleave'].push(tPoint[0], tPoint[1], tPoint[2])
+                        }
+                        if (pointInfo['uv'].length) {
+                            currentMeshInfo['resultUV'].push(tUVPoints[0], tUVPoints[1])
+                            currentMeshInfo['resultInterleave'].push(tUVPoints[0], tUVPoints[1])
+                        }
+                    })
+                    // console.log(tData)
+                    // console.log('regIndex2', line, regIndex3.test(line))
+                }
+                else if (regIndex.test(line)) {
+                    // 인덱스 검색 1 1 1 1// 인덱스 검색 1 1 1 1
+                    var tIndex;
+                    tIndex = line.split(' ');
+                    currentMeshInfo['resultInterleave'] = currentMeshInfo['resultPosition'] = currentMeshInfo['position']
+                    currentMeshInfo['index'].push(+tIndex[1] - 1, +tIndex[2] - 1, +tIndex[3] - 1)
+                    currentMeshInfo['index'].push(+tIndex[1] - 1, +tIndex[3] - 1, +tIndex[4] - 1)
+                    // console.log('regIndex', line, regIndex.test(line))
+                }
+            })
+            return {
+                info: info,
+                infoHierarchy: infoHierarchy
             }
         }
-        return newData
+    })();
+    parser = function (tRedOBJLoader, redGL, rawData) {
+        console.log('파싱시작', tRedOBJLoader['path'] + tRedOBJLoader['fileName'])
+        // console.log(rawData)
+        rawData = rawData.replace(/^\#[\s\S]+?\n/g, '');
+        var RedOBJResult;
+        var parsedData = parseObj(redGL, tRedOBJLoader, rawData.split("\n"))
+        setMesh(redGL, tRedOBJLoader['resultMesh'], parsedData['infoHierarchy'])
+        RedOBJResult = function (v) {
+            for (var k in v) this[k] = v[k]
+            console.log(this)
+        }
+
+        return new RedOBJResult(
+            {
+                fileName: tRedOBJLoader['fileName'],
+                path: tRedOBJLoader['path'],
+                resultMesh: tRedOBJLoader['resultMesh'],
+                parseRawInfo: parsedData['info'],
+                parseInfoHierarchy: parsedData['infoHierarchy'],
+                parseInfoMaterial: tRedOBJLoader['mtlLoader']
+            }
+        )
     }
     Object.freeze(RedOBJLoader)
 })()

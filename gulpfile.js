@@ -84,6 +84,8 @@ gulp.task('make-doc', function () {
 		"src/light/RedPointLight.js",
 
 		"src/loader/JsonModelLoader.js",
+		"src/loader/RedMTLLoader.js",
+		"src/loader/RedOBJLoader.js",
 
 		"src/material/RedMaterial.js",
 		"src/material/RedColorMaterial.js",
@@ -92,7 +94,7 @@ gulp.task('make-doc', function () {
 		"src/material/RedBitmapMaterial.js",
 		"src/material/RedPointBitmapMaterial.js",
 		"src/material/RedStandardMaterial.js",
-		
+
 		"src/material/system/RedGridMaterial.js",
 		"src/material/RedPointColorMaterial.js",
 		"src/material/system/RedSkyBoxMaterial.js",
@@ -166,7 +168,7 @@ gulp.task('combine-js', function () {
 		"src/material/RedBitmapMaterial.js",
 		"src/material/RedPointBitmapMaterial.js",
 		"src/material/RedStandardMaterial.js",
-		
+
 		"src/material/system/RedGridMaterial.js",
 		"src/material/RedPointColorMaterial.js",
 		"src/material/system/RedSkyBoxMaterial.js",

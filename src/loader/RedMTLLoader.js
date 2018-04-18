@@ -53,22 +53,22 @@ var RedMTLLoader;
         var reg_newmtl, reg_Ns, reg_Ka, reg_Kd, reg_Ks, reg_Ni, reg_d, reg_illum, reg_map_Kd, reg_map_Ns;
         var currentMaterialInfo;
         info = {};
-        reg_newmtl = /^(newmtl)/;
-        reg_Ns = /^(Ns)/; // uShininess
-        reg_Ka = /^(Ka)/;
-        reg_Kd = /^(Kd)/; // 컬러
-        reg_Ks = /^(Ks)/;
-        reg_Ni = /^(Ni)/; // 굴절률
-        reg_d = /^(d)/;
-        reg_illum = /^(illum)/;
-        reg_map_Kd = /^(map_Kd)/;
-        reg_map_Ns = /^(map_Ks)/;
+        reg_newmtl = /^(newmtl )/;
+        reg_Ns = /^(Ns )/; // uShininess
+        reg_Ka = /^(Ka )/;
+        reg_Kd = /^(Kd )/; // 컬러
+        reg_Ks = /^(Ks )/;
+        reg_Ni = /^(Ni )/; // 굴절률
+        reg_d = /^(d )/;
+        reg_illum = /^(illum )/;
+        reg_map_Kd = /^(map_Kd )/;
+        reg_map_Ns = /^(map_Ks )/;
         data = data.replace(/^\#[\s\S]+?\n/g, '');
         lines = data.split("\n");
         // 재질 정보 정의
         lines.forEach(function (line) {
             if (reg_newmtl.test(line)) {
-                console.log(line)
+                // console.log(line)
                 var tName;
                 tName = line.replace('newmtl ', '').trim();
                 currentMaterialInfo = {
@@ -88,7 +88,7 @@ var RedMTLLoader;
             // 굴절률
             else if (reg_Ni.test(line)) currentMaterialInfo['Ni'] = +line.replace('Ni ', '')
             // 디졸브라는데 뭐래 -_-
-            else if (reg_d.test(line)) currentMaterialInfo['d'] = +line.replace('d ')
+            else if (reg_d.test(line)) currentMaterialInfo['d'] = +line.replace('d ', '')
             else if (reg_illum.test(line)) {
                 // illum illum_#
 
@@ -103,47 +103,36 @@ var RedMTLLoader;
                 switch (currentMaterialInfo['illum']) {
                     case 0:
                         // 0		Color on and Ambient off
-                        currentMaterialInfo['lightYn'] = false
                         break
                     case 1:
                         // 1		Color on and Ambient on
-                        currentMaterialInfo['lightYn'] = true
                         break
                     case 2:
                         // 2		Highlight on
-                        currentMaterialInfo['lightYn'] = true
                         break
                     case 3:
                         // 3		Reflection on and Ray trace on
-                        currentMaterialInfo['lightYn'] = true
                         break
                     case 4:
                         // 4		Transparency: Glass on
-                        currentMaterialInfo['lightYn'] = true
                         break
                     case 5:
                         // 5		Reflection: Fresnel on and Ray trace on
-                        currentMaterialInfo['lightYn'] = true
                         break
                     case 6:
                         // 6		Transparency: Refraction on
-                        currentMaterialInfo['lightYn'] = true
                         break
                     case 7:
                         // 7		Transparency: Refraction on
-                        currentMaterialInfo['lightYn'] = true
                         break
                     case 8:
                         // 8		Reflection on and Ray trace off
-                        currentMaterialInfo['lightYn'] = true
                         break
                     case 9:
                         // 9		Transparency: Glass on
-                        currentMaterialInfo['lightYn'] = true
                         break
                     case 10:
                         // 10		Casts shadows onto invisible surfaces
-                        currentMaterialInfo['lightYn'] = true
                         break
                 }
             }
@@ -158,30 +147,9 @@ var RedMTLLoader;
             else if (reg_map_Ns.test(line)) currentMaterialInfo['map_Ns'] = target['path'] + line.replace('map_Ns ', '')
         })
 
-        console.log(target)
-        console.log(currentMaterialInfo)
         resultInfo = new RedMTLResult()
         for (var k in info) {
-            // info[k]['material'] = RedStandardMaterial(redGL, RedBitmapTexture(redGL, info[k]['map_Kd']))
-            var shininess;
-            if (currentMaterialInfo['Ns'] != undefined) shininess = currentMaterialInfo['Ns']
-            if (currentMaterialInfo['map_Kd']) {
-                resultInfo[k] = RedStandardMaterial(redGL, RedBitmapTexture(redGL, info[k]['map_Kd']))
-                if (currentMaterialInfo['map_Ks']) resultInfo[k]['specular'] = RedBitmapTexture(redGL, info[k]['map_Ks'])
-            }
-            else if (currentMaterialInfo['Kd']) {
-                var r, g, b;
-                r = currentMaterialInfo['Kd'][0] * 255
-                g = currentMaterialInfo['Kd'][1] * 255
-                b = currentMaterialInfo['Kd'][2] * 255
-                if (currentMaterialInfo['lightYn']) resultInfo[k] = RedColorPhongMaterial(redGL, RedGLUtil.rgb2hex(r, g, b))
-                else resultInfo[k] = RedColorMaterial(redGL, RedGLUtil.rgb2hex(r, g, b))
-            }
-            else {
-                // 해석못하면 그냥 컬러로
-                resultInfo[k] = RedColorMaterial(redGL)
-            }
-            if (shininess != undefined) resultInfo[k]['shininess'] = shininess
+            resultInfo[k] = info[k]
         }
         console.log(resultInfo)
         return resultInfo
