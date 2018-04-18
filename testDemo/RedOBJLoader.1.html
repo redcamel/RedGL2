@@ -1,0 +1,257 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>RedOBJLoader</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
+    />
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+    </style>
+    <script src="../src/gl-matrix-min.js"></script>
+    <script src="../src/RedGLUtil.js"></script>
+    <script src="../src/RedGL.js"></script>
+
+    <script src="../src/base/RedBaseContainer.js"></script>
+    <script src="../src/base/RedBaseLight.js"></script>
+    <script src="../src/base/RedBaseMaterial.js"></script>
+    <script src="../src/base/RedBaseObject3D.js"></script>
+
+    <script src="../src/geometry/RedBuffer.js"></script>
+    <script src="../src/geometry/RedGeometry.js"></script>
+    <script src="../src/geometry/RedInterleaveInfo.js"></script>
+
+    <script src="../src/light/RedAmbientLight.js"></script>
+    <script src="../src/light/RedDirectionalLight.js"></script>
+    <script src="../src/light/RedPointLight.js"></script>
+
+    <script src="../src/loader/JsonModelLoader.js"></script>
+    <script src="../src/loader/RedMTLLoader.js"></script>
+    <script src="../src/loader/RedOBJLoader.js"></script>
+
+    <script src="../src/material/RedMaterial.js"></script>
+    <script src="../src/material/RedColorMaterial.js"></script>
+    <script src="../src/material/RedColorPhongMaterial.js"></script>
+    <script src="../src/material/RedEnvironmentMaterial.js"></script>
+    <script src="../src/material/RedBitmapMaterial.js"></script>
+    <script src="../src/material/RedPointBitmapMaterial.js"></script>
+    <script src="../src/material/RedStandardMaterial.js"></script>
+    <script src="../src/material/system/RedGridMaterial.js"></script>
+    <script src="../src/material/RedPointColorMaterial.js"></script>
+    <script src="../src/material/system/RedSkyBoxMaterial.js"></script>
+
+    <script src="../src/object3D/RedAxis.js"></script>
+    <script src="../src/object3D/RedGrid.js"></script>
+    <script src="../src/object3D/RedMesh.js"></script>
+    <script src="../src/object3D/RedLine.js"></script>
+    <script src="../src/object3D/RedSkyBox.js"></script>
+    <script src="../src/object3D/RedSprite3D.js"></script>
+
+    <script src="../src/particle/RedPointUnit.js"></script>
+
+    <script src="../src/primitives/RedBox.js"></script>
+    <script src="../src/primitives/RedPlane.js"></script>
+    <script src="../src/primitives/RedSphere.js"></script>
+
+    <script src="../src/program/RedProgram.js"></script>
+    <script src="../src/program/RedSystemShaderCode.js"></script>
+    <script src="../src/program/RedShader.js"></script>
+
+    <script src="../src/renderer/RedRenderer.js"></script>
+    <script src="../src/renderer/system/RedRenderDebuger.js"></script>
+
+    <script src="../src/resources/RedAtlas.js"></script>
+    <script src="../src/resources/system/RedAtlasUV.js"></script>
+    <script src="../src/resources/RedBitmapTexture.js"></script>
+    <script src="../src/resources/RedAtlasTexture.js"></script>
+    <script src="../src/resources/RedBitmapCubeTexture.js"></script>
+
+    <script src="../src/RedView.js"></script>
+    <script src="../src/RedWorld.js"></script>
+    <script src="../src/RedScene.js"></script>
+    <script src="../src/camera/RedCamera.js"></script>
+</head>
+
+<body>
+    <canvas id="test" style="border: none;background:red"></canvas>
+    <script>
+        document.getElementById('test')
+        RedGL(document.getElementById('test'), function (v) {
+
+            console.log(v)
+            var tGL;
+            var tWorld, tScene3D, tCamera
+            var tRenderer;
+            var self;
+            self = this
+            tGL = this.gl;
+            this.world = tWorld = RedWorld();
+            tScene3D = RedScene();
+            tCamera = RedCamera();
+            tRenderer = RedRenderer();
+            tWorld.addView(RedView('test', tScene3D, tCamera));
+            RedView('test').setSize('100%', '100%')
+            RedView('test').setLocation('0%', '0%')
+            // this.fullMode = false
+
+            // this.setSize(300,300)
+
+            this.renderScale = 1
+
+
+            var testDLight, testALight, testPLight;
+
+            testDLight = RedDirectionalLight(this, '#fff')
+            testDLight.x = 3
+            testDLight.y = 3
+            testDLight.z = 3
+            tScene3D.addLight(testDLight)
+
+            var testMaterial
+            testMaterial = RedEnvironmentMaterial(
+                this,
+                RedBitmapTexture(this, '../asset/crate.png'),
+                RedBitmapCubeTexture(this, [
+                    '../asset/cubemap/posx.png',
+                    '../asset/cubemap/negx.png',
+                    '../asset/cubemap/posy.png',
+                    '../asset/cubemap/negy.png',
+                    '../asset/cubemap/posz.png',
+                    '../asset/cubemap/negz.png'
+                ]),
+                RedBitmapTexture(this, '../asset/normalTest.jpg'),
+                RedBitmapTexture(this, '../asset/specular.png'),
+                RedBitmapTexture(this, '../asset/displacementTest.jpg')
+            )
+            tScene3D['grid'] = RedGrid(self)
+            RedOBJLoader(this, '../asset/obj/', 'female.obj', function (v) {
+                console.log('호잇!', v)
+                // var testMesh = RedMesh(self, RedGeometry(v['Cube']['interleaveBuffer'], v['Cube']['indexBuffer'] ?  v['Cube']['indexBuffer'] : null), RedColorMaterial(self))
+                tScene3D.addChild(v['resultMesh'])
+              
+                console.log(v['resultMesh'])
+                v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.025
+                // var i = 0
+                // var list = [
+                //     '#ff0000', '#ffff00', '#ff00ff', '#00ff00', '#0000ff', '#ffffff', '#223324',
+                //     '#992255', '#663945',
+                //     '#ff0000', '#ffff00', '#ff00ff', '#00ff00', '#0000ff', '#ffffff', '#223324',
+                //     '#992255', '#663945'
+                // ]
+                // var tGroup;
+                // tGroup = RedMesh(self)
+                // tGroup.y = -2
+                // console.log(tGroup)
+                // tScene3D.addChild(tGroup)
+                // var materialInfo = v['parseInfoMaterial']['parseData']
+                // var objInfo = v['parseRawInfo']
+                // for (var k in objInfo) {
+                //     var tMaterial;
+                //     var testMesh = objInfo[k]['mesh']
+                //     if (testMesh && objInfo[k]['resultInterleave']) {
+                //         tMaterial = materialInfo[objInfo[k]['materialKey']] ? materialInfo[objInfo[k]['materialKey']] : RedColorMaterial(self, list[i])
+                //         console.log('tMaterial',tMaterial)
+                //         testMesh.material = tMaterial
+                //         testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.025
+                //         tGroup.addChild(testMesh)
+                //     }
+                  
+                // }
+            //     i = 0
+            //     var tGroup;
+            //     tGroup = RedMesh(self)
+            //     tGroup.x = -2
+            //     tGroup.y = -2
+            //     tScene3D.addChild(tGroup)
+            //     for (var k in v) {
+            //         var tMaterial;
+            //         tMaterial = materialInfo[v[k]['data']['materialKey']] ? materialInfo[v[k]['data'][
+            //             'materialKey'
+            //         ]] : RedColorMaterial(self, list[i])
+            //         var testMesh = RedMesh(self, RedGeometry(
+            //             v[k]['interleaveBuffer'],
+            //             v[k]['indexBuffer'] ? v[k]['indexBuffer'] : null
+            //         ), tMaterial)
+            //         testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.025
+            //         testMesh.drawMode = self.gl.POINTS
+            //         testMesh.pointSize = 2
+            //         tGroup.addChild(testMesh)
+            //         i++
+            //     }
+            //     i = 0
+            //     var tGroup;
+            //     tGroup = RedMesh(self)
+            //     tGroup.x = 2
+            //     tGroup.y = -2
+            //     tScene3D.addChild(tGroup)
+            //     for (var k in v) {
+            //         var tMaterial;
+            //         tMaterial = materialInfo[v[k]['data']['materialKey']] ? materialInfo[v[k]['data'][
+            //             'materialKey'
+            //         ]] : RedColorMaterial(self, list[i])
+            //         var testMesh = RedMesh(self, RedGeometry(
+            //             v[k]['interleaveBuffer'],
+            //             v[k]['indexBuffer'] ? v[k]['indexBuffer'] : null
+            //         ), tMaterial)
+            //         testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.025
+            //         testMesh.drawMode = self.gl.LINES
+            //         testMesh.pointSize = 1
+            //         tGroup.addChild(testMesh)
+            //         i++
+            //     }
+
+            //     i = 0
+            //     var tGroup;
+            //     tGroup = RedMesh(self)
+            //     tGroup.y = -2
+            //     tGroup.z = -1.5
+            //     tScene3D.addChild(tGroup)
+            //     for (var k in v) {
+            //         var tMaterial;
+            //         tMaterial = materialInfo[v[k]['data']['materialKey']] ? materialInfo[v[k]['data'][
+            //             'materialKey'
+            //         ]] : RedColorMaterial(self, list[i])
+            //         var testMesh = RedMesh(self, RedGeometry(
+            //             v[k]['interleaveBuffer'],
+            //             v[k]['indexBuffer'] ? v[k]['indexBuffer'] : null
+            //         ), tMaterial)
+            //         testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.025
+            //         testMesh.x = -3 + i * 0.5
+
+            //         tGroup.addChild(testMesh)
+            //         i++
+            //     }
+            })
+            var testDLight
+
+            testDLight = RedDirectionalLight(this, '#fff')
+            testDLight.x = 3
+            testDLight.y = 3
+            testDLight.z = 3
+            tScene3D.addLight(testDLight)
+
+            tRenderer.renderDebuger.visible = true
+            tRenderer.start(this, function (time) {
+
+
+                tCamera.x = Math.sin(time / 1500) * 14
+                tCamera.y = 7
+                tCamera.z = Math.cos(time / 1500) * 7 + Math.sin(time / 1500) * 7
+                tCamera.lookAt(0, 2.5, 0)
+
+
+            })
+
+            console.log(tScene3D)
+        })
+    </script>
+</body>
+
+</html>
