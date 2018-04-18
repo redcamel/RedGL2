@@ -52,8 +52,8 @@ var RedOBJLoader;
         this['result'] = null;
     }
     setMaterial = function (redGL, tObjInfo, tMtlLoader) {
-        console.log(tObjInfo)
-        console.log('tMtlLoader', tMtlLoader)
+        // console.log(tObjInfo)
+        // console.log('tMtlLoader', tMtlLoader)
         var k;
 
         var tMtlData, tMeshData
@@ -63,45 +63,37 @@ var RedOBJLoader;
             var tMesh
             tMeshData = tObjInfo[k]
             tMesh = tMeshData['mesh']
-            var has_atexcoord;
-            if (tMesh['geometry'] && tMesh['geometry'].interleaveBuffer.interleaveDefineInfo['aTexcoord']) has_atexcoord = true
 
             if (tMeshData['use'] && tMeshData['resultInterleave'].length) {
-                var shininess;
                 var r, g, b;
-                console.log(tMeshData)
-                console.log('해석할 재질키', tMeshData['materialKey'])
+                var ableLight
+                ableLight = tMeshData['ableLight']
+                // console.log(tMeshData)
+                // console.log('해석할 재질키', tMeshData['materialKey'])
                 //
                 tMtlData = tMtlLoader['parseData'][tMeshData['materialKey']]
                 if (tMtlData) {
-                    if (tMtlData['Ns'] != undefined) shininess = tMtlData['Ns']
                     if (tMtlData['map_Kd']) {
                         // 비트맵 기반으로 해석
-                        if (tMtlData['lightYn']) {
-                            tMaterial = RedStandardMaterial(redGL, RedBitmapTexture(redGL, tMtlData['map_Kd']))
-                        }
-                        else {
-                            tMaterial = RedBitmapMaterial(redGL, RedBitmapTexture(redGL, tMtlData['map_Kd']))
-                        }
+                        if (ableLight) tMaterial = RedStandardMaterial(redGL, RedBitmapTexture(redGL, tMtlData['map_Kd']));
+                        else tMaterial = RedBitmapMaterial(redGL, RedBitmapTexture(redGL, tMtlData['map_Kd']));
                     }
                     else if (tMtlData['Kd']) {
                         // 컬러기반으로 해석
                         r = tMtlData['Kd'][0] * 255;
                         g = tMtlData['Kd'][1] * 255;
                         b = tMtlData['Kd'][2] * 255;
-                        if (tMtlData['lightYn']) {
-                            if (has_atexcoord) tMaterial = RedColorPhongMaterial(redGL, RedGLUtil.rgb2hex(r, g, b))
-                            else tMaterial = RedColorMaterial(redGL, RedGLUtil.rgb2hex(r, g, b))
-                        }
-                        else tMaterial = RedColorMaterial(redGL, RedGLUtil.rgb2hex(r, g, b))
+                        if (ableLight) tMaterial = RedColorPhongMaterial(redGL, RedGLUtil.rgb2hex(r, g, b));
+                        else tMaterial = RedColorMaterial(redGL, RedGLUtil.rgb2hex(r, g, b));
                     }
-                    else {
-                        // 해석못하면 그냥 컬러로
-                        tMaterial = RedColorMaterial(redGL)
+                    if (tMaterial) {
+                        // 스페큘러텍스쳐 
+                        if (tMtlData['map_Ks']) tMaterial['specular'] = RedBitmapTexture(redGL, tMtlData['map_Ks'])
+                        // shininess
+                        if (tMtlData['Ns'] != undefined) tMaterial['shininess'] = tMtlData['Ns']
+                        // 메쉬에 재질 적용
+                        tMeshData['mesh']['material'] = tMaterial
                     }
-                    if (tMtlData['map_Ks']) tMaterial['specular'] = RedBitmapTexture(redGL, tMtlData['map_Ks'])
-                    if (shininess != undefined) tMaterial['shininess'] = shininess
-                    tMeshData['mesh']['material'] = tMaterial
                 } else {
                     console.log('스킵')
                 }
@@ -112,7 +104,7 @@ var RedOBJLoader;
         for (var k in childrenInfo) {
             var tData;
             tData = childrenInfo[k]
-            console.log('!!!', k, tData)
+            // console.log('!!!', k, tData)
             var tMesh;
             if (!tData['use']) {
                 tMesh = RedMesh(redGL)
@@ -142,7 +134,14 @@ var RedOBJLoader;
                         )
                     }
                 }
-                tMesh = RedMesh(redGL, RedGeometry(interleaveBuffer, indexBuffer), RedColorMaterial(redGL, '#00ff00'))
+                tMesh = RedMesh
+                    (redGL,
+                    RedGeometry(interleaveBuffer, indexBuffer),
+                    (tData['resultUV'].length && tData['resultNormal'].length) ? RedColorPhongMaterial(redGL, '#00ff00') : RedColorMaterial(redGL, '#0000ff')
+                    );
+                tData['ableUV'] = tData['resultUV'].length ? true : false
+                tData['ableNormal'] = tData['resultNormal'].length ? true : false
+                tData['ableLight'] = tData['ableUV'] & tData['ableNormal']? true : false
             }
             tMesh['name'] = k
             tData['mesh'] = tMesh
@@ -242,8 +241,8 @@ var RedOBJLoader;
                     var tName;
                     var tInfo;
                     tName = line.split(' ').slice(1).join('').trim()
-                    console.log('name', tName)
-                    console.log('currentGroupName', currentGroupName)
+                    // console.log('name', tName)
+                    // console.log('currentGroupName', currentGroupName)
                     // 그룹으로 판정될 경우 현재 그룹은 컨테이너로만 사용한다. 
                     infoHierarchy[currentGroupName]['use'] = false
                     tInfo = {
@@ -264,14 +263,14 @@ var RedOBJLoader;
                     // 현재 그룹의 자식정보에 현재 메쉬 정보 추가
                     infoHierarchy[currentGroupName]['childrenInfo'][tName] = currentMeshInfo
                     // 이름이없는 오브젝트가 처음으로 생성되었을떄 사용안함으로 변경함
-                    console.log('regGroup', line, '신규그룹오브젝트', regGroup.test(line))
+                    // console.log('regGroup', line, '신규그룹오브젝트', regGroup.test(line))
                 }
                 // 오브젝트 검색
                 else if (regObject.test(line)) {
                     var tName;
                     var tInfo;
                     tName = line.split(' ').slice(1).join('').trim()
-                    console.log('name', tName)
+                    // console.log('name', tName)
                     tInfo = {
                         name: tName,
                         groupName: tName,
@@ -291,7 +290,7 @@ var RedOBJLoader;
                     info[tName] = currentMeshInfo;
                     // 현재 그룹이름을 현재 오브젝트 이름으로 설정
                     currentGroupName = tName;
-                    console.log('regObject', line, '신규오브젝트', regObject.test(line))
+                    // console.log('regObject', line, '신규오브젝트', regObject.test(line))
                 }
                 // 포지션 검색
                 if (regVertex.test(line)) {
@@ -434,24 +433,27 @@ var RedOBJLoader;
         }
     })();
     parser = function (tRedOBJLoader, redGL, rawData) {
-        console.log('파싱시작')
-        console.log(rawData)
+        console.log('파싱시작', tRedOBJLoader['path'] + tRedOBJLoader['fileName'])
+        // console.log(rawData)
         rawData = rawData.replace(/^\#[\s\S]+?\n/g, '');
+        var RedOBJResult;
         var parsedData = parseObj(redGL, tRedOBJLoader, rawData.split("\n"))
-        console.log('infoHierarchy', parsedData['infoHierarchy'])
-        console.log('info', parsedData['info'])
-        var newData = {}
-        console.log('resultMesh', tRedOBJLoader['resultMesh'])
         setMesh(redGL, tRedOBJLoader['resultMesh'], parsedData['infoHierarchy'])
-        var result = {
-            fileName: tRedOBJLoader['fileName'],
-            path: tRedOBJLoader['path'],
-            resultMesh: tRedOBJLoader['resultMesh'],
-            parseRawInfo: parsedData['info'],
-            parseInfoHierarchy: parsedData['infoHierarchy'],
-            parseInfoMaterial: tRedOBJLoader['mtlLoader']
+        RedOBJResult = function (v) {
+            for (var k in v) this[k] = v[k]
+            console.log(this)
         }
-        return result
+
+        return new RedOBJResult(
+            {
+                fileName: tRedOBJLoader['fileName'],
+                path: tRedOBJLoader['path'],
+                resultMesh: tRedOBJLoader['resultMesh'],
+                parseRawInfo: parsedData['info'],
+                parseInfoHierarchy: parsedData['infoHierarchy'],
+                parseInfoMaterial: tRedOBJLoader['mtlLoader']
+            }
+        )
     }
     Object.freeze(RedOBJLoader)
 })()

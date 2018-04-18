@@ -68,7 +68,7 @@ var RedMTLLoader;
         // 재질 정보 정의
         lines.forEach(function (line) {
             if (reg_newmtl.test(line)) {
-                console.log(line)
+                // console.log(line)
                 var tName;
                 tName = line.replace('newmtl ', '').trim();
                 currentMaterialInfo = {
@@ -103,47 +103,36 @@ var RedMTLLoader;
                 switch (currentMaterialInfo['illum']) {
                     case 0:
                         // 0		Color on and Ambient off
-                        currentMaterialInfo['lightYn'] = false
                         break
                     case 1:
                         // 1		Color on and Ambient on
-                        currentMaterialInfo['lightYn'] = false
                         break
                     case 2:
                         // 2		Highlight on
-                        currentMaterialInfo['lightYn'] = true
                         break
                     case 3:
                         // 3		Reflection on and Ray trace on
-                        currentMaterialInfo['lightYn'] = true
                         break
                     case 4:
                         // 4		Transparency: Glass on
-                        currentMaterialInfo['lightYn'] = true
                         break
                     case 5:
                         // 5		Reflection: Fresnel on and Ray trace on
-                        currentMaterialInfo['lightYn'] = true
                         break
                     case 6:
                         // 6		Transparency: Refraction on
-                        currentMaterialInfo['lightYn'] = true
                         break
                     case 7:
                         // 7		Transparency: Refraction on
-                        currentMaterialInfo['lightYn'] = true
                         break
                     case 8:
                         // 8		Reflection on and Ray trace off
-                        currentMaterialInfo['lightYn'] = true
                         break
                     case 9:
                         // 9		Transparency: Glass on
-                        currentMaterialInfo['lightYn'] = true
                         break
                     case 10:
                         // 10		Casts shadows onto invisible surfaces
-                        currentMaterialInfo['lightYn'] = true
                         break
                 }
             }
@@ -158,8 +147,6 @@ var RedMTLLoader;
             else if (reg_map_Ns.test(line)) currentMaterialInfo['map_Ns'] = target['path'] + line.replace('map_Ns ', '')
         })
 
-        console.log(target)
-        console.log(currentMaterialInfo)
         resultInfo = new RedMTLResult()
         for (var k in info) {
             resultInfo[k] = info[k]

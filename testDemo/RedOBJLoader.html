@@ -134,6 +134,19 @@
             RedOBJLoader(this, '../asset/obj/', 'female.obj', function (v) {
                 console.log('호잇!', v)
                 tScene3D.addChild(v['resultMesh'])
+
+                var i = 100
+                while (i--) {
+                    var t0;
+                    t0 = RedMesh(self)
+                    t0['children'] = v['resultMesh']['children'].concat()
+                    t0.x =  Math.random() * 30 - 15
+                    t0.z = Math.random() * 30 - 15
+                    t0.scaleX = t0.scaleY = t0.scaleZ = 0.01
+                    tScene3D.addChild(t0)
+
+                }
+
                 v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.025
 
             })
@@ -163,7 +176,14 @@
 
             tRenderer.renderDebuger.visible = true
             tRenderer.start(this, function (time) {
-
+                var i = tScene3D.children.length
+                while (i--) {
+                    if (i == 0) break
+                    testMesh = tScene3D.children[i]
+                    // testMesh.rotationX += 1
+                    testMesh.rotationY += 1
+                    // testMesh.rotationZ += 1
+                }
 
                 tCamera.x = Math.sin(time / 1500) * 14
                 tCamera.y = 7

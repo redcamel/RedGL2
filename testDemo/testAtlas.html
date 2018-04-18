@@ -33,6 +33,8 @@
     <script src="../src/light/RedPointLight.js"></script>
 
     <script src="../src/loader/JsonModelLoader.js"></script>
+    <script src="../src/loader/RedMTLLoader.js"></script>
+    <script src="../src/loader/RedOBJLoader.js"></script>
 
     <script src="../src/material/RedMaterial.js"></script>
     <script src="../src/material/RedColorMaterial.js"></script>
@@ -134,7 +136,7 @@
                             )
                         )
                     }
-                    var i = 10000
+                    var i = 20000
                     var geo = RedBox(self)
                     while (i--) {
                         var testMesh = RedMesh(self, geo, testMaterials[i%imgList.length] )
