@@ -7,6 +7,7 @@ var JsonModelLoader;
             title :`JsonModelLoader`,
             description : `
                 초안 작업진행중
+                현재 단순테스트용
             `,
             return : 'void'
         }
@@ -15,7 +16,7 @@ var JsonModelLoader;
         if ((!(this instanceof JsonModelLoader))) return new JsonModelLoader(redGL, key, src, callback)
         console.log('~~~~~~~~~~~')
         var request = new XMLHttpRequest();
-        request.open("GET", src);
+        request.open("GET", src, true);
         request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8"),
             request.onreadystatechange = function () {
                 if (request.readyState == 4) {

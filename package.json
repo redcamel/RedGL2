@@ -1,7 +1,7 @@
 {
-  "name": "recard",
+  "name": "RedGL2",
   "version": "1.0.0",
-  "description": "아카드따우....버리기위한 레포",
+  "description": "RedGL2",
   "main": "index.js",
   "dependencies": {
     "date-utils": "^1.2.21",
@@ -20,18 +20,19 @@
     "gulp-text-simple": "^0.4.1",
     "map-stream": "0.0.7",
     "mocha": "^4.0.1",
+    "uglify-es": "^3.3.9",
     "window": "^4.2.2",
     "window.requestanimationframe": "^1.0.1"
   },
   "scripts": {},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/redcamel/Recard.git"
+    "url": "git+https://github.com/redcamel/RedGL2.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/redcamel/Recard/issues"
+    "url": "https://github.com/redcamel/RedGL2/issues"
   },
-  "homepage": "https://github.com/redcamel/Recard#readme"
+  "homepage": "https://github.com/redcamel/RedGL2"
 }

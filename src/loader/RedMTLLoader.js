@@ -3,16 +3,28 @@ var RedMTLLoader;
 (function () {
     var parser;
     var RedMTLResult;
-    RedMTLResult = function () {
-
-    }
+    RedMTLResult = function () { }
     /**DOC:
         {
             constructorYn : true,
-            title :`RedMTLLoader`,
+            title :`RedMTLResult`,
             description : `
-                초안 작업진행중
+                OBJ 로딩시 mtl로딩이 필요하면 자동으로 호출됨
             `,
+            params : {
+                redGL : [
+                    {type:'RedGL'}
+                ],
+                path : [
+                    {type:'String'}
+                ],
+                fileName : [
+                    {type:'String'}
+                ],
+                callback : [
+                    {type:'Function'}
+                ]
+            },
             return : 'void'
         }
     :DOC*/
@@ -149,7 +161,7 @@ var RedMTLLoader;
             else if (reg_map_Ns.test(line)) currentMaterialInfo['map_Ns'] = target['path'] + line.replace('map_Ns ', '')
             // else if (reg_map_Ks.test(line)) currentMaterialInfo['map_Ks'] = target['path'] + line.replace('map_Ks ', '')
             else if (red_map_Bump.test(line)) currentMaterialInfo['map_Bump'] = target['path'] + (line.replace('map_Bump ', '').split(' ')[2])
-            
+
         })
 
         resultInfo = new RedMTLResult()

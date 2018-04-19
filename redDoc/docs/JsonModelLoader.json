@@ -2,7 +2,7 @@
   {
     "constructorYn": true,
     "title": "JsonModelLoader",
-    "description": "\n    초안 작업진행중\n",
+    "description": "\n    초안 작업진행중\n    현재 단순테스트용\n",
     "return": "void"
   }
 ]
