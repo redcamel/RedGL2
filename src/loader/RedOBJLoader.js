@@ -126,7 +126,7 @@ var RedOBJLoader;
                                 tTexture = RedBitmapTexture(redGL, tMtlData['map_Ns'])
                                 cacheTexture[tMtlData['map_Ns']] = tTexture
                             }
-                            tMaterial['specularTexture'] = RedBitmapTexture(redGL, tTexture)
+                            tMaterial['specularTexture'] = tTexture
                         }
                         if (tMtlData['map_bump']) {
                             if (cacheTexture[tMtlData['map_bump']]) tTexture = cacheTexture[tMtlData['map_bump']]
@@ -134,7 +134,7 @@ var RedOBJLoader;
                                 tTexture = RedBitmapTexture(redGL, tMtlData['map_bump'])
                                 cacheTexture[tMtlData['map_bump']] = tTexture
                             }
-                            tMaterial['normalTexture'] = RedBitmapTexture(redGL, tMtlData['map_bump'])
+                            tMaterial['normalTexture'] = tTexture
                         }
                         // shininess
                         if (tMtlData['Ns'] != undefined) tMaterial['shininess'] = tMtlData['Ns']
