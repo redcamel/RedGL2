@@ -75,10 +75,12 @@ var RedOBJLoader;
                 if (tMtlData) {
                     if (tMtlData['map_Kd']) {
                         // 비트맵 기반으로 해석
+                        console.log('tMtlData',tMtlData)
                         if (ableLight) tMaterial = RedStandardMaterial(redGL, RedBitmapTexture(redGL, tMtlData['map_Kd']));
                         else tMaterial = RedBitmapMaterial(redGL, RedBitmapTexture(redGL, tMtlData['map_Kd']));
                     }
                     else if (tMtlData['Kd']) {
+
                         // 컬러기반으로 해석
                         r = tMtlData['Kd'][0] * 255;
                         g = tMtlData['Kd'][1] * 255;
@@ -88,7 +90,8 @@ var RedOBJLoader;
                     }
                     if (tMaterial) {
                         // 스페큘러텍스쳐 
-                        if (tMtlData['map_Ks']) tMaterial['specular'] = RedBitmapTexture(redGL, tMtlData['map_Ks'])
+                        if (tMtlData['map_Ns']) tMaterial['specular'] = RedBitmapTexture(redGL, tMtlData['map_Ns'])
+                        if (tMtlData['map_Bump']) tMaterial['normal'] = RedBitmapTexture(redGL, tMtlData['map_Bump'])
                         // shininess
                         if (tMtlData['Ns'] != undefined) tMaterial['shininess'] = tMtlData['Ns']
                         // 메쉬에 재질 적용
@@ -141,7 +144,7 @@ var RedOBJLoader;
                     );
                 tData['ableUV'] = tData['resultUV'].length ? true : false
                 tData['ableNormal'] = tData['resultNormal'].length ? true : false
-                tData['ableLight'] = tData['ableUV'] & tData['ableNormal']? true : false
+                tData['ableLight'] = tData['ableUV'] & tData['ableNormal'] ? true : false
             }
             tMesh['name'] = k
             tData['mesh'] = tMesh
@@ -155,7 +158,9 @@ var RedOBJLoader;
         var regVertex, regNormal, redUV;
         var regIndex, regIndex2, regIndex3, regIndex4;
         var regMtllib;
+        var regUseMtl;
         regMtllib = /^(mtllib )/;
+        regUseMtl = /^(usemtl )/;
         regObject = /^o /;
         regGroup = /^g /;
         regVertex = /v( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/;
@@ -236,8 +241,16 @@ var RedOBJLoader;
                     tRedOBJLoader['mtlLoader'] = tMtlLoader
                     return
                 }
+
+                if (regUseMtl.test(line)) {
+                    var tName;
+                    var tInfo;
+                    tName = line.split(' ').slice(1).join('').trim()
+                    info[currentGroupName]['materialKey'] = tName
+                    console.log('regUseMtl', line, '재질사용', regUseMtl.test(line),info[currentGroupName])
+                }
                 // 그룹 검색
-                if (regGroup.test(line)) {
+                else if (regGroup.test(line)) {
                     var tName;
                     var tInfo;
                     tName = line.split(' ').slice(1).join('').trim()
@@ -352,7 +365,14 @@ var RedOBJLoader;
                 else if (regIndex3.test(line)) {
                     var tData;
                     var tIndex, tUVIndex, tNIndex;
-                    tData = line.split(' ').slice(1, 4);
+                    tData = line.split(' ').slice(1, 5);
+                    // console.log('tData',tData)
+                    if (tData.length == 4) {
+                        var t0 = tData[3]
+                        tData[3] = tData[0]
+                        tData[4] = tData[2]
+                        tData[5] = t0
+                    }
                     tData.forEach(function (v) {
                         var tPoint, tNormalPoint, tUVPoints;
                         var max;
@@ -382,6 +402,7 @@ var RedOBJLoader;
                             currentMeshInfo['resultUV'].push(tUVPoints[0], tUVPoints[1])
                             currentMeshInfo['resultInterleave'].push(tUVPoints[0], tUVPoints[1])
                         }
+
                     })
                     // console.log(tData)
                     // console.log('regIndex3', line, regIndex3.test(line))
