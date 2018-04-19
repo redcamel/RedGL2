@@ -147,7 +147,7 @@ var RedMTLLoader;
             // map_bump lemur_bump.tga    # some implementations use 'map_bump' instead of 'bump' below
             else if (reg_map_Kd.test(line)) currentMaterialInfo['map_Kd'] = target['path'] + line.replace('map_Kd ', '')
             else if (reg_map_Ns.test(line)) currentMaterialInfo['map_Ns'] = target['path'] + line.replace('map_Ns ', '')
-            else if (reg_map_Ks.test(line)) currentMaterialInfo['map_Ks'] = target['path'] + line.replace('map_Ks ', '')
+            // else if (reg_map_Ks.test(line)) currentMaterialInfo['map_Ks'] = target['path'] + line.replace('map_Ks ', '')
             else if (red_map_Bump.test(line)) currentMaterialInfo['map_Bump'] = target['path'] + (line.replace('map_Bump ', '').split(' ')[2])
             
         })

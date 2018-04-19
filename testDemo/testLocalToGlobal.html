@@ -39,6 +39,7 @@
     <script src="../src/material/RedMaterial.js"></script>
     <script src="../src/material/RedColorMaterial.js"></script>
     <script src="../src/material/RedColorPhongMaterial.js"></script>
+    <script src="../src/material/RedColorPhongTextureMaterial.js"></script>
     <script src="../src/material/RedEnvironmentMaterial.js"></script>
     <script src="../src/material/RedBitmapMaterial.js"></script>
     <script src="../src/material/RedPointBitmapMaterial.js"></script>
@@ -142,7 +143,7 @@
             JsonModelLoader(this, 'testJsonModel', '../asset/bunny.json', function (interleaveBuffer, indexBuffer) {
 
                 testMesh5 = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer),
-                    RedColorPhongMaterial(
+                    RedColorPhongTextureMaterial(
                         self
                     ))
                 testMesh5.scaleX = testMesh5.scaleY = testMesh5.scaleZ = 0.3

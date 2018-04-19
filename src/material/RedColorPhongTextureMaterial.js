@@ -1,13 +1,13 @@
 "use strict";
-var RedColorPhongMaterial;
+var RedColorPhongTextureMaterial;
 (function () {
     var makeProgram;
     /**DOC:
         {
             constructorYn : true,
-            title :`RedColorPhongMaterial`,
+            title :`RedColorPhongTextureMaterial`,
             description : `
-                RedColorPhongMaterial Instance 생성
+                RedColorPhongTextureMaterial Instance 생성
             `,
             params : {
                 redGL : [
@@ -19,16 +19,28 @@ var RedColorPhongMaterial;
                 alpha : [
                     {type:'number'},
                     '알파값'
+                ],
+                normalTexture : [
+                    {type: 'RedBitmapTexture'}
+                ],
+                specularTexture : [
+                    {type: 'RedBitmapTexture'}
+                ],
+                specularTexture : [
+                    {type: 'RedBitmapTexture'}
+                ],
+                displacementTexture : [
+                    {type: 'RedBitmapTexture'}
                 ]
             },
             example: `
-            RedColorPhongMaterial(RedGL Instance, hex, alpha)
+            RedColorPhongTextureMaterial(RedGL Instance, hex, alpha, normalTexture, specularTexture)
             `,
-            return : 'RedColorPhongMaterial Instance'
+            return : 'RedColorPhongTextureMaterial Instance'
         }
     :DOC*/
-    RedColorPhongMaterial = function (redGL, hex, alpha) {
-        if (!(this instanceof RedColorPhongMaterial)) return new RedColorPhongMaterial(redGL, hex, alpha);
+    RedColorPhongTextureMaterial = function (redGL, hex, alpha, normalTexture, specularTexture, displacementTexture) {
+        if (!(this instanceof RedColorPhongTextureMaterial)) return new RedColorPhongTextureMaterial(redGL, hex, alpha, normalTexture, specularTexture, displacementTexture);
         /////////////////////////////////////////
         // 유니폼 프로퍼티
         /**DOC:
@@ -42,6 +54,34 @@ var RedColorPhongMaterial;
             }
         :DOC*/
         this['color'] = new Float32Array(4);
+        /**DOC:
+             {
+                 title :`normalTexture`,
+                 return : 'RedBitmapTexture'
+             }
+         :DOC*/
+        this['normalTexture'] = normalTexture;
+        /**DOC:
+            {
+                title :`specularTexture`,
+                return : 'RedBitmapTexture'
+            }
+        :DOC*/
+        this['specularTexture'] = specularTexture;
+        /**DOC:
+            {
+                title :`displacementTexture`,
+                return : 'RedBitmapTexture'
+            }
+        :DOC*/
+        this['displacementTexture'] = displacementTexture;
+        /**DOC:
+            {
+                title :`shininess`,
+                description : `기본값 : 16`,
+                return : 'uint'
+            }
+        :DOC*/
         this['shininess'] = 16
         /**DOC:
             {
@@ -51,6 +91,14 @@ var RedColorPhongMaterial;
             }
         :DOC*/
         this['specularPower'] = 1
+        /**DOC:
+           {
+               title :`displacementPower`,
+               description : `기본값 : 0`,                
+               return : 'Number'
+           }
+       :DOC*/
+        this['displacementPower'] = 0
         this.setColor(hex ? hex : '#ff0000', alpha == undefined ? 1 : alpha);
         /////////////////////////////////////////
         // 일반 프로퍼티
@@ -68,12 +116,16 @@ var RedColorPhongMaterial;
             
             uniform vec4 uColor;
             varying vec4 vColor;
+            uniform sampler2D uDisplacementTexture;
+            uniform float uDisplacementPower;
 
             varying vec4 vVertexPositionEye4;
             void main(void) {
                 vColor = uColor; 
+                vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
                 vVertexNormal = vec3(uNMatrix * vec4(aVertexNormal,1.0)); 
                 vVertexPositionEye4 = uMVMatrix * vec4(aVertexPosition, 1.0);
+                vVertexPositionEye4.xyz += normalize(vVertexNormal) * texture2D(uDisplacementTexture, vTexcoord).x * uDisplacementPower ;
                 gl_PointSize = uPointSize;
                 gl_Position = uPMatrix * uCameraMatrix* vVertexPositionEye4;
             }
@@ -82,7 +134,9 @@ var RedColorPhongMaterial;
         fSource = function () {
             /*
             precision mediump float;
-            
+            uniform sampler2D uNormalTexture;
+            uniform sampler2D uSpecularTexture;
+
             uniform float uShininess;
             uniform float uSpecularPower;
             
@@ -97,9 +151,11 @@ var RedColorPhongMaterial;
                 // texelColor.rgb *= texelColor.a;
 
                 vec3 N = normalize(vVertexNormal);
+                N = normalize(2.0 * (N + texture2D(uNormalTexture, vTexcoord).rgb  - 0.5));
 
                 vec4 specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);
                 float specularTextureValue = 1.0;
+                specularTextureValue = texture2D(uSpecularTexture, vTexcoord).r;
                 float specular;             
 
                 vec3 L;
@@ -146,13 +202,13 @@ var RedColorPhongMaterial;
         vSource = RedGLUtil.getStrFromComment(vSource.toString());
         fSource = RedGLUtil.getStrFromComment(fSource.toString());
         // console.log(vSource, fSource)
-        PROGRAM_NAME = 'colorPhongProgram';
+        PROGRAM_NAME = 'colorPhongTextureProgram';
         return function (target, redGL) {
             return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource)
 
         }
     })();
-    RedColorPhongMaterial.prototype = RedBaseMaterial.prototype
+    RedColorPhongTextureMaterial.prototype = RedBaseMaterial.prototype
     /**DOC:
         {
             code : 'METHOD',
@@ -170,6 +226,6 @@ var RedColorPhongMaterial;
             return : 'RedProgram Instance'
         }
     :DOC*/
-    RedColorPhongMaterial.prototype['setColor'] = RedColorMaterial.prototype['setColor'];
-    Object.freeze(RedColorPhongMaterial)
+    RedColorPhongTextureMaterial.prototype['setColor'] = RedColorMaterial.prototype['setColor'];
+    Object.freeze(RedColorPhongTextureMaterial)
 })();
