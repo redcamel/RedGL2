@@ -380,7 +380,6 @@ var RedRenderer;
             // 픽셀 플립 기본설정
             gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
         };
-        
         return function (redGL, time) {
             var gl;
             var tViewRect;
@@ -397,8 +396,6 @@ var RedRenderer;
             // console.log("worldRender", v['key'], t0)
             self['renderInfo'] = {}
             this['cacheAttrInfo'].length = 0
-
-
             self['world']['_viewList'].forEach(function (tView) {
                 ///////////////////////////////////
                 // view의 위치/크기결정
@@ -429,7 +426,7 @@ var RedRenderer;
                 // viewport 설정
                 gl.viewport(tViewRect[0], worldRect[3] - tViewRect[3] - tViewRect[1], tViewRect[2], tViewRect[3]);
                 gl.scissor(tViewRect[0], worldRect[3] - tViewRect[3] - tViewRect[1], tViewRect[2], tViewRect[3]);
-
+        
                 if (tScene['useBackgroundColor']) {
                     gl.clearColor(tScene['r'], tScene['g'], tScene['b'], 1);
                     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -484,8 +481,11 @@ var RedRenderer;
                 if (tScene['axis']) self.sceneRender(redGL, gl, tCamera['orthographic'], tScene['axis']['children'], time, self['renderInfo'][tView['key']]);
                 // 디버깅 라이트 업데이트 
                 if (lightDebugRenderList.length) self.sceneRender(redGL, gl, tCamera['orthographic'], lightDebugRenderList, time, self['renderInfo'][tView['key']]);
+
+             
             })
             if (this['renderDebuger']['visible']) this['renderDebuger'].update(redGL, self['renderInfo'])
+            
         }
     })();
 
