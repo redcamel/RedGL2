@@ -50,7 +50,7 @@ var RedMTLLoader;
     parser = function (target, redGL, data) {
         var info, resultInfo;
         var lines;
-        var reg_newmtl, reg_Ns, reg_Ka, reg_Kd, reg_Ks, reg_Ni, reg_d, reg_illum, reg_map_Kd, reg_map_Ns;
+        var reg_newmtl, reg_Ns, reg_Ka, reg_Kd, reg_Ks, reg_Ni, reg_d, reg_illum, reg_map_Kd, reg_map_Ns, reg_map_Ks, red_map_Bump;
         var currentMaterialInfo;
         info = {};
         reg_newmtl = /^(newmtl )/;
@@ -62,7 +62,9 @@ var RedMTLLoader;
         reg_d = /^(d )/;
         reg_illum = /^(illum )/;
         reg_map_Kd = /^(map_Kd )/;
-        reg_map_Ns = /^(map_Ks )/;
+        reg_map_Ks = /^(map_Ks )/;
+        reg_map_Ns = /^(map_Ns )/;
+        red_map_Bump = /^(map_Bump )/;
         data = data.replace(/^\#[\s\S]+?\n/g, '');
         lines = data.split("\n");
         // 재질 정보 정의
@@ -145,6 +147,9 @@ var RedMTLLoader;
             // map_bump lemur_bump.tga    # some implementations use 'map_bump' instead of 'bump' below
             else if (reg_map_Kd.test(line)) currentMaterialInfo['map_Kd'] = target['path'] + line.replace('map_Kd ', '')
             else if (reg_map_Ns.test(line)) currentMaterialInfo['map_Ns'] = target['path'] + line.replace('map_Ns ', '')
+            else if (reg_map_Ks.test(line)) currentMaterialInfo['map_Ks'] = target['path'] + line.replace('map_Ks ', '')
+            else if (red_map_Bump.test(line)) currentMaterialInfo['map_Bump'] = target['path'] + (line.replace('map_Bump ', '').split(' ')[2])
+            
         })
 
         resultInfo = new RedMTLResult()

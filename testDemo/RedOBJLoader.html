@@ -108,11 +108,27 @@
 
             var testDLight, testALight, testPLight;
 
-            testDLight = RedDirectionalLight(this, '#fff')
+            testDLight = RedDirectionalLight(this, '#fff', 0.5)
             testDLight.x = 3
-            testDLight.y = 3
+            testDLight.y = 2
             testDLight.z = 3
+            testDLight.debug = true
             tScene3D.addLight(testDLight)
+
+            testDLight = RedDirectionalLight(this, '#fff', 0.5)
+            testDLight.x = -3
+            testDLight.y = 2
+            testDLight.z = -3
+            testDLight.debug = true
+            tScene3D.addLight(testDLight)
+
+            var testPLight = RedPointLight(this, '#00ff00', 0.5)
+            testPLight.x = -3
+            testPLight.y = -3
+            testPLight.z = -3
+            testPLight['radius'] = 1
+            testPLight['intensity'] = 1
+            tScene3D.addLight(testPLight)
 
             var testMaterial
             testMaterial = RedEnvironmentMaterial(
@@ -131,22 +147,26 @@
                 RedBitmapTexture(this, '../asset/displacementTest.jpg')
             )
             tScene3D['grid'] = RedGrid(self)
-            RedOBJLoader(this, '../asset/obj/', 'female.obj', function (v) {
+            RedOBJLoader(this, '../asset/obj/gun/', 'Handgun_obj.obj', function (v) {
                 console.log('호잇!', v)
                 tScene3D.addChild(v['resultMesh'])
+                v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 2
+                v['resultMesh'].y = -1
 
+            })
+            RedOBJLoader(this, '../asset/obj/', 'female.obj', function (v) {
+                console.log('호잇!', v)
                 var i = 100
                 while (i--) {
                     var t0;
                     t0 = RedMesh(self)
                     t0['children'] = v['resultMesh']['children'].concat()
-                    t0.x =  Math.random() * 30 - 15
+                    t0.x = Math.random() * 30 - 15
                     t0.z = Math.random() * 30 - 15
                     t0.scaleX = t0.scaleY = t0.scaleZ = 0.01
                     tScene3D.addChild(t0)
 
                 }
-
                 v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.025
 
             })
@@ -154,21 +174,21 @@
                 console.log('호잇!', v)
                 tScene3D.addChild(v['resultMesh'])
                 v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.025
-                v['resultMesh'].x = 1
+                v['resultMesh'].x = 3
             })
             RedOBJLoader(this, '../asset/obj/', 'cube.obj', function (v) {
                 console.log('호잇!', v)
                 tScene3D.addChild(v['resultMesh'])
-                v['resultMesh'].x = -2
+                v['resultMesh'].x = -4
             })
             RedOBJLoader(this, '../asset/obj/', 'tree.obj', function (v) {
                 console.log('호잇!', v)
                 tScene3D.addChild(v['resultMesh'])
-                v['resultMesh'].z = 1
+                v['resultMesh'].z = 3
             })
             var testDLight
 
-            testDLight = RedDirectionalLight(this, '#fff')
+            testDLight = RedDirectionalLight(this, '#fff', 0.5)
             testDLight.x = 3
             testDLight.y = 3
             testDLight.z = 3
@@ -176,19 +196,17 @@
 
             tRenderer.renderDebuger.visible = true
             tRenderer.start(this, function (time) {
-                var i = tScene3D.children.length
-                while (i--) {
-                    if (i == 0) break
-                    testMesh = tScene3D.children[i]
-                    // testMesh.rotationX += 1
-                    testMesh.rotationY += 1
-                    // testMesh.rotationZ += 1
-                }
 
-                tCamera.x = Math.sin(time / 1500) * 14
-                tCamera.y = 7
-                tCamera.z = Math.cos(time / 1500) * 7 + Math.sin(time / 1500) * 7
-                tCamera.lookAt(0, 2.5, 0)
+                testPLight.x = Math.sin(time / 1500) * 2
+                testPLight.y = Math.cos(time / 1500) * 2
+                testPLight.z = Math.cos(time / 1500) * 2
+                testPLight.debug = true
+                // testDLight.debug = true
+
+                tCamera.x = Math.sin(time / 1500) * 8
+                tCamera.y = 2
+                tCamera.z = Math.cos(time / 1500) * 8
+                tCamera.lookAt(0, 0, 0)
 
 
             })
