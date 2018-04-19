@@ -78,10 +78,12 @@ var RedOBJLoader;
         var k;
 
         var tMtlData, tMeshData
-
+        var cacheTexture;
+        cacheTexture = {}
         for (k in tObjInfo) {
             var tMaterial;
             var tMesh
+            var tTexture;
             tMeshData = tObjInfo[k]
             tMesh = tMeshData['mesh']
 
@@ -97,8 +99,13 @@ var RedOBJLoader;
                     if (tMtlData['map_Kd']) {
                         // 비트맵 기반으로 해석
                         console.log('tMtlData', tMtlData)
-                        if (ableLight) tMaterial = RedStandardMaterial(redGL, RedBitmapTexture(redGL, tMtlData['map_Kd']));
-                        else tMaterial = RedBitmapMaterial(redGL, RedBitmapTexture(redGL, tMtlData['map_Kd']));
+                        if (cacheTexture[tMtlData['map_Kd']]) tTexture = cacheTexture[tMtlData['map_Kd']]
+                        else {
+                            tTexture = RedBitmapTexture(redGL, tMtlData['map_Kd'])
+                            cacheTexture[tMtlData['map_Kd']] = tTexture
+                        }
+                        if (ableLight) tMaterial = RedStandardMaterial(redGL, tTexture);
+                        else tMaterial = RedBitmapMaterial(redGL, tTexture);
                     }
                     else if (tMtlData['Kd']) {
                         // 컬러기반으로 해석
@@ -113,8 +120,22 @@ var RedOBJLoader;
                     }
                     if (tMaterial) {
                         // 스페큘러텍스쳐 
-                        if (tMtlData['map_Ns']) tMaterial['specularTexture'] = RedBitmapTexture(redGL, tMtlData['map_Ns'])
-                        if (tMtlData['map_bump']) tMaterial['normalTexture'] = RedBitmapTexture(redGL, tMtlData['map_bump'])
+                        if (tMtlData['map_Ns']) {
+                            if (cacheTexture[tMtlData['map_Ns']]) tTexture = cacheTexture[tMtlData['map_Ns']]
+                            else {
+                                tTexture = RedBitmapTexture(redGL, tMtlData['map_Ns'])
+                                cacheTexture[tMtlData['map_Ns']] = tTexture
+                            }
+                            tMaterial['specularTexture'] = RedBitmapTexture(redGL, tTexture)
+                        }
+                        if (tMtlData['map_bump']) {
+                            if (cacheTexture[tMtlData['map_bump']]) tTexture = cacheTexture[tMtlData['map_bump']]
+                            else {
+                                tTexture = RedBitmapTexture(redGL, tMtlData['map_bump'])
+                                cacheTexture[tMtlData['map_bump']] = tTexture
+                            }
+                            tMaterial['normalTexture'] = RedBitmapTexture(redGL, tMtlData['map_bump'])
+                        }
                         // shininess
                         if (tMtlData['Ns'] != undefined) tMaterial['shininess'] = tMtlData['Ns']
                         // 메쉬에 재질 적용

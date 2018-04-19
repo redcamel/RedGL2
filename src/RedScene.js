@@ -39,6 +39,7 @@ var RedScene;
             }
         :DOC*/
         this['children'] = []
+        
 
         /**DOC:
             {

@@ -380,7 +380,7 @@ var RedRenderer;
             // 픽셀 플립 기본설정
             gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
         };
-
+        
         return function (redGL, time) {
             var gl;
             var tViewRect;

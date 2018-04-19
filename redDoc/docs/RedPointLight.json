@@ -1,0 +1,73 @@
+[
+  {
+    "title": "alpha",
+    "description": "\n    기본값 : 0.1\n",
+    "return": "Number"
+  },
+  {
+    "title": "debug",
+    "description": "디버그오브젝트 활성화 여부",
+    "return": "Boolean"
+  },
+  {
+    "title": "intensity",
+    "description": "\n    라이트 강도\n    기본값 : 1\n",
+    "return": "Number"
+  },
+  {
+    "title": "radius",
+    "description": "\n점광의 반지름\n기본값 : 1\n",
+    "return": "Number"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedPointLight",
+    "description": "\n    RedPointLight Instance 생성\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ],
+      "hex": [
+        {
+          "type": "hex"
+        }
+      ],
+      "alpha": [
+        {
+          "type": "number"
+        },
+        "알파값"
+      ]
+    },
+    "example": "\n    RedPointLight(RedGL Instance, hex, alpha)\n",
+    "return": "RedPointLight Instance"
+  },
+  {
+    "title": "RedPointLight.type",
+    "code": "CONST",
+    "description": "RedPointLight 타입상수",
+    "return": "String"
+  },
+  {
+    "title": "type",
+    "description": "RedPointLight['type']",
+    "return": "String"
+  },
+  {
+    "title": "x",
+    "description": "기본값 : 0",
+    "return": "Number"
+  },
+  {
+    "title": "y",
+    "description": "기본값 : 0",
+    "return": "Number"
+  },
+  {
+    "title": "z",
+    "description": "기본값 : 0",
+    "return": "Number"
+  }
+]
