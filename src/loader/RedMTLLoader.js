@@ -62,7 +62,7 @@ var RedMTLLoader;
     parser = function (target, redGL, data) {
         var info, resultInfo;
         var lines;
-        var reg_newmtl, reg_Ns, reg_Ka, reg_Kd, reg_Ks, reg_Ni, reg_d, reg_illum, reg_map_Kd, reg_map_Ns, reg_map_Ks, red_map_Bump;
+        var reg_newmtl, reg_Ns, reg_Ka, reg_Kd, reg_Ks, reg_Ni, reg_d, reg_illum, reg_map_Kd, reg_map_Ns, reg_map_Ks, red_map_bump;
         var currentMaterialInfo;
         info = {};
         reg_newmtl = /^(newmtl )/;
@@ -76,7 +76,7 @@ var RedMTLLoader;
         reg_map_Kd = /^(map_Kd )/;
         reg_map_Ks = /^(map_Ks )/;
         reg_map_Ns = /^(map_Ns )/;
-        red_map_Bump = /^(map_Bump )/;
+        red_map_bump = /^(map_bump )/;
         data = data.replace(/^\#[\s\S]+?\n/g, '');
         lines = data.split("\n");
         // 재질 정보 정의
@@ -160,7 +160,7 @@ var RedMTLLoader;
             else if (reg_map_Kd.test(line)) currentMaterialInfo['map_Kd'] = target['path'] + line.replace('map_Kd ', '')
             else if (reg_map_Ns.test(line)) currentMaterialInfo['map_Ns'] = target['path'] + line.replace('map_Ns ', '')
             // else if (reg_map_Ks.test(line)) currentMaterialInfo['map_Ks'] = target['path'] + line.replace('map_Ks ', '')
-            else if (red_map_Bump.test(line)) currentMaterialInfo['map_Bump'] = target['path'] + (line.replace('map_Bump ', '').split(' ')[2])
+            else if (red_map_bump.test(line)) currentMaterialInfo['map_bump'] = target['path'] + (line.replace('map_bump ', '').split(' ')[2])
 
         })
 

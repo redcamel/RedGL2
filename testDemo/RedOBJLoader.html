@@ -131,7 +131,15 @@
                 console.log('호잇!', v)
                 tScene3D.addChild(v['resultMesh'])
                 v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 2
-                v['resultMesh'].y = -1
+                v['resultMesh'].z = -2
+            })
+
+            RedOBJLoader(this, '../asset/obj/rabbit/', 'Rabbit.obj', function (v) {
+                console.log('호잇!', v)
+                tScene3D.addChild(v['resultMesh'])
+                v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 2
+
+
             })
             RedOBJLoader(this, '../asset/obj/', 'female.obj', function (v) {
                 console.log('호잇!', v)

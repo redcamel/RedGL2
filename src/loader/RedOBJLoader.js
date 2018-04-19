@@ -34,7 +34,7 @@ var RedOBJLoader;
         }
     :DOC*/
     //TODO: 환경맵 파싱
-    //TODO: Bump 값 상세파싱
+    //TODO: bump 값 상세파싱
     RedOBJLoader = function (redGL, path, fileName, callback) {
         if ((!(this instanceof RedOBJLoader))) return new RedOBJLoader(redGL, path, fileName, callback)
         console.log('~~~~~~~~~~~')
@@ -113,8 +113,8 @@ var RedOBJLoader;
                     }
                     if (tMaterial) {
                         // 스페큘러텍스쳐 
-                        if (tMtlData['map_Ns']) tMaterial['specular'] = RedBitmapTexture(redGL, tMtlData['map_Ns'])
-                        if (tMtlData['map_Bump']) tMaterial['normal'] = RedBitmapTexture(redGL, tMtlData['map_Bump'])
+                        if (tMtlData['map_Ns']) tMaterial['specularTexture'] = RedBitmapTexture(redGL, tMtlData['map_Ns'])
+                        if (tMtlData['map_bump']) tMaterial['normalTexture'] = RedBitmapTexture(redGL, tMtlData['map_bump'])
                         // shininess
                         if (tMtlData['Ns'] != undefined) tMaterial['shininess'] = tMtlData['Ns']
                         // 메쉬에 재질 적용
