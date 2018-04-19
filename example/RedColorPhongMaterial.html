@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>RedColorPhongMaterial</title>
+    <title>RedColorPhongTextureMaterial</title>
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
@@ -58,16 +58,20 @@
                 // Box 설정
                 var tSphere, tSphere2;
                 var tMaterial = RedColorMaterial(this, '#ff0000')
-                var tMaterial2 = RedColorPhongMaterial(this, '#ff0000')
+                var tMaterial2 = RedColorPhongTextureMaterial(this, '#ff0000')
+                var tMaterial3 = RedColorPhongMaterial(this, '#ff0000')
                 var tNormalTexture = RedBitmapTexture(this, '../asset/normalTest.jpg')
                 var tSpecularTexture = RedBitmapTexture(this, '../asset/specular.png')
                 var tDisplacementTexture = RedBitmapTexture(this, '../asset/displacementTest.jpg')
                 tSphere = RedMesh(this, RedSphere(this, 1, 32, 32, 32), tMaterial)
-                tSphere.x = -1.5
+                tSphere.x = 0
                 tScene.addChild(tSphere)
                 tSphere2 = RedMesh(this, RedSphere(this, 1, 32, 32, 32), tMaterial2)
-                tSphere2.x = 1.5
+                tSphere2.x = 3
                 tScene.addChild(tSphere2)
+                tSphere3 = RedMesh(this, RedSphere(this, 1, 32, 32, 32), tMaterial3)
+                tSphere3.x = -3
+                tScene.addChild(tSphere3)
 
                 // 렌더시작
                 tRenderer.start(this, function (time) {
@@ -81,12 +85,12 @@
                 tRenderer['renderDebuger']['visible'] = true
 
                 // 
-                testUI(this, tCamera, tScene, tMaterial, tMaterial2, tNormalTexture, tSpecularTexture,tDisplacementTexture)
+                testUI(this, tCamera, tScene, tMaterial, tMaterial2, tMaterial3, tNormalTexture, tSpecularTexture, tDisplacementTexture)
             } else {
                 console.log('초기화 실패!')
             }
         })
-        testUI = function (redGL, tCamera, tScene, tMaterial, tMaterial2, tNormalTexture, tSpecularTexture,tDisplacementTexture) {
+        testUI = function (redGL, tCamera, tScene, tMaterial, tMaterial2, tMaterial3, tNormalTexture, tSpecularTexture, tDisplacementTexture) {
             console.log('test')
             var gui = new baseTestUI(redGL)
             gui.initRedGL()
@@ -103,14 +107,22 @@
                 this.normalTexture = false
                 this.specularTexture = false
                 this.displacementTexture = false
+                this.shininess = 16
+                this.specularPower = 1
             }
             testColorPhong = new testColorPhong()
             t0.addColor(testColorPhong, 'color').onChange(function (v) {
                 tMaterial.setColor(v)
                 tMaterial2.setColor(v)
             })
-            t0.add(tMaterial2, 'shininess', 1, 128)
-            t0.add(tMaterial2, 'specularPower', 0.1, 10)
+            t0.add(testColorPhong, 'shininess', 1, 128).onChange(function (v) {
+                tMaterial2['shininess'] = v
+                tMaterial3['shininess'] = v
+            })
+            t0.add(testColorPhong, 'specularPower', 0.1, 10).onChange(function (v) {
+                tMaterial2['specularPower'] = v
+                tMaterial3['specularPower'] = v
+            })
             t0.add(testColorPhong, 'normalTexture').onChange(function (v) {
                 tMaterial2['normalTexture'] = v ? tNormalTexture : null
             })

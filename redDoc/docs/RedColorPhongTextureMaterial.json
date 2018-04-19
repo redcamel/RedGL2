@@ -1,0 +1,89 @@
+[
+  {
+    "title": "color",
+    "description": "\n    RedProgram Instance\n    직접설정하지 않도록 유의해야함!\n",
+    "return": "RedProgram Instance"
+  },
+  {
+    "title": "displacementPower",
+    "description": "기본값 : 0",
+    "return": "Number"
+  },
+  {
+    "title": "displacementTexture",
+    "return": "RedBitmapTexture"
+  },
+  {
+    "title": "normalTexture",
+    "return": "RedBitmapTexture"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedColorPhongTextureMaterial",
+    "description": "\n    RedColorPhongTextureMaterial Instance 생성\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ],
+      "color": [
+        {
+          "type": "hex"
+        }
+      ],
+      "alpha": [
+        {
+          "type": "number"
+        },
+        "알파값"
+      ],
+      "normalTexture": [
+        {
+          "type": "RedBitmapTexture"
+        }
+      ],
+      "specularTexture": [
+        {
+          "type": "RedBitmapTexture"
+        }
+      ],
+      "displacementTexture": [
+        {
+          "type": "RedBitmapTexture"
+        }
+      ]
+    },
+    "example": "\nRedColorPhongTextureMaterial(RedGL Instance, hex, alpha, normalTexture, specularTexture)\n",
+    "return": "RedColorPhongTextureMaterial Instance"
+  },
+  {
+    "code": "METHOD",
+    "title": "setColor",
+    "description": "\n    컬러설정\n",
+    "params": {
+      "hex": [
+        {
+          "type": "hex"
+        },
+        "ex) #fff, #ffffff"
+      ]
+    },
+    "example": "// TODO:",
+    "return": "RedProgram Instance"
+  },
+  {
+    "title": "shininess",
+    "description": "기본값 : 16",
+    "return": "uint"
+  },
+  {
+    "title": "specularPower",
+    "description": "기본값 : 1",
+    "return": "uint"
+  },
+  {
+    "title": "specularTexture",
+    "return": "RedBitmapTexture"
+  }
+]

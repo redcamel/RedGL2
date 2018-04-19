@@ -85,8 +85,11 @@ var RedOBJLoader;
                         r = tMtlData['Kd'][0] * 255;
                         g = tMtlData['Kd'][1] * 255;
                         b = tMtlData['Kd'][2] * 255;
-                        if (ableLight) tMaterial = RedColorPhongMaterial(redGL, RedGLUtil.rgb2hex(r, g, b));
-                        else tMaterial = RedColorMaterial(redGL, RedGLUtil.rgb2hex(r, g, b));
+                        if (ableLight) tMaterial = RedColorPhongTextureMaterial(redGL, RedGLUtil.rgb2hex(r, g, b));
+                        else {
+                            if(tMeshData['ableNormal']) tMaterial = RedColorPhongMaterial(redGL, RedGLUtil.rgb2hex(r, g, b));
+                            else tMaterial = RedColorMaterial(redGL, RedGLUtil.rgb2hex(r, g, b));
+                        }
                     }
                     if (tMaterial) {
                         // 스페큘러텍스쳐 
@@ -140,7 +143,7 @@ var RedOBJLoader;
                 tMesh = RedMesh
                     (redGL,
                     RedGeometry(interleaveBuffer, indexBuffer),
-                    (tData['resultUV'].length && tData['resultNormal'].length) ? RedColorPhongMaterial(redGL, '#00ff00') : RedColorMaterial(redGL, '#0000ff')
+                    (tData['resultUV'].length && tData['resultNormal'].length) ? RedColorPhongTextureMaterial(redGL, '#00ff00') : RedColorMaterial(redGL, '#0000ff')
                     );
                 tData['ableUV'] = tData['resultUV'].length ? true : false
                 tData['ableNormal'] = tData['resultNormal'].length ? true : false
