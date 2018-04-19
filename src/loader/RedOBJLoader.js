@@ -9,11 +9,32 @@ var RedOBJLoader;
             constructorYn : true,
             title :`RedOBJLoader`,
             description : `
-                초안 작업진행중
+                OBJ 로더
+            `,
+            params : {
+                redGL : [
+                    {type:'RedGL'}
+                ],
+                path : [
+                    {type:'String'}
+                ],
+                fileName : [
+                    {type:'String'}
+                ],
+                callback : [
+                    {type:'Function'}
+                ]
+            },
+            example : `
+            RedOBJLoader(RedGL Instance, '../asset/obj/gun/', 'Handgun_obj.obj', function (result) {
+                tScene3D.addChild(result['resultMesh'])
+            })
             `,
             return : 'void'
         }
     :DOC*/
+    //TODO: 환경맵 파싱
+    //TODO: Bump 값 상세파싱
     RedOBJLoader = function (redGL, path, fileName, callback) {
         if ((!(this instanceof RedOBJLoader))) return new RedOBJLoader(redGL, path, fileName, callback)
         console.log('~~~~~~~~~~~')
@@ -75,19 +96,18 @@ var RedOBJLoader;
                 if (tMtlData) {
                     if (tMtlData['map_Kd']) {
                         // 비트맵 기반으로 해석
-                        console.log('tMtlData',tMtlData)
+                        console.log('tMtlData', tMtlData)
                         if (ableLight) tMaterial = RedStandardMaterial(redGL, RedBitmapTexture(redGL, tMtlData['map_Kd']));
                         else tMaterial = RedBitmapMaterial(redGL, RedBitmapTexture(redGL, tMtlData['map_Kd']));
                     }
                     else if (tMtlData['Kd']) {
-
                         // 컬러기반으로 해석
                         r = tMtlData['Kd'][0] * 255;
                         g = tMtlData['Kd'][1] * 255;
                         b = tMtlData['Kd'][2] * 255;
                         if (ableLight) tMaterial = RedColorPhongTextureMaterial(redGL, RedGLUtil.rgb2hex(r, g, b));
                         else {
-                            if(tMeshData['ableNormal']) tMaterial = RedColorPhongMaterial(redGL, RedGLUtil.rgb2hex(r, g, b));
+                            if (tMeshData['ableNormal']) tMaterial = RedColorPhongMaterial(redGL, RedGLUtil.rgb2hex(r, g, b));
                             else tMaterial = RedColorMaterial(redGL, RedGLUtil.rgb2hex(r, g, b));
                         }
                     }
@@ -140,11 +160,13 @@ var RedOBJLoader;
                         )
                     }
                 }
-                tMesh = RedMesh
-                    (redGL,
-                    RedGeometry(interleaveBuffer, indexBuffer),
-                    (tData['resultUV'].length && tData['resultNormal'].length) ? RedColorPhongTextureMaterial(redGL, '#00ff00') : RedColorMaterial(redGL, '#0000ff')
-                    );
+                var tempMaterial;
+                if (tData['resultUV'].length && tData['resultNormal'].length) tempMaterial = RedColorPhongTextureMaterial(redGL, '#00ff00')
+                else {
+                    if (tData['resultNormal']) tempMaterial = RedColorPhongMaterial(redGL, '#00ff00')
+                    else tempMaterial = RedColorMaterial(redGL, '#0000ff')
+                }
+                tMesh = RedMesh(redGL, RedGeometry(interleaveBuffer, indexBuffer), tempMaterial);
                 tData['ableUV'] = tData['resultUV'].length ? true : false
                 tData['ableNormal'] = tData['resultNormal'].length ? true : false
                 tData['ableLight'] = tData['ableUV'] & tData['ableNormal'] ? true : false
@@ -250,7 +272,7 @@ var RedOBJLoader;
                     var tInfo;
                     tName = line.split(' ').slice(1).join('').trim()
                     info[currentGroupName]['materialKey'] = tName
-                    console.log('regUseMtl', line, '재질사용', regUseMtl.test(line),info[currentGroupName])
+                    console.log('regUseMtl', line, '재질사용', regUseMtl.test(line), info[currentGroupName])
                 }
                 // 그룹 검색
                 else if (regGroup.test(line)) {

@@ -2,7 +2,30 @@
   {
     "constructorYn": true,
     "title": "RedOBJLoader",
-    "description": "\n    초안 작업진행중\n",
+    "description": "\n    OBJ 로더\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ],
+      "path": [
+        {
+          "type": "String"
+        }
+      ],
+      "fileName": [
+        {
+          "type": "String"
+        }
+      ],
+      "callback": [
+        {
+          "type": "Function"
+        }
+      ]
+    },
+    "example": "\nRedOBJLoader(RedGL Instance, '../asset/obj/gun/', 'Handgun_obj.obj', function (result) {\n    tScene3D.addChild(result['resultMesh'])\n})\n",
     "return": "void"
   }
 ]

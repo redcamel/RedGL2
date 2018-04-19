@@ -142,7 +142,7 @@ gulp.task('combine-js', function () {
 	console.log('-------------------------------------------');
 	console.log('파일 병합 시작!');
 	var name = "RedGL"
-	return gulp.src([
+	gulp.src([
 		"src/gl-matrix-min.js",
 		"src/RedGLUtil.js",
 		"src/RedGL.js",
@@ -162,18 +162,7 @@ gulp.task('combine-js', function () {
 
 		"src/loader/JsonModelLoader.js",
 
-		"src/material/RedMaterial.js",
-		"src/material/RedColorMaterial.js",
-		"src/material/RedColorPhongMaterial.js",
-		"src/material/RedColorPhongTextureMaterial.js",
-		"src/material/RedEnvironmentMaterial.js",
-		"src/material/RedBitmapMaterial.js",
-		"src/material/RedPointBitmapMaterial.js",
-		"src/material/RedStandardMaterial.js",
 
-		"src/material/system/RedGridMaterial.js",
-		"src/material/RedPointColorMaterial.js",
-		"src/material/system/RedSkyBoxMaterial.js",
 
 		"src/object3D/RedAxis.js",
 		"src/object3D/RedGrid.js",
@@ -206,16 +195,34 @@ gulp.task('combine-js', function () {
 		"src/RedScene.js",
 		"src/camera/RedCamera.js"
 	])
-		.pipe(concat(name + '.js')) // 병합한다.
-		.pipe(gulp.dest('release')) //
 		.pipe(concat(name + '.min.js')) // 병합한다.
-		//.pipe(stripComment())
-		// .pipe(stripDebug())
-		// .pipe(uglify({
-		// 	// mangle: true // 알파벳 한 글자 압축 과정 설정 
-		// }))
-		.pipe(insert.append("console.log('" + 'RedGL' + " Release. last update(" + d + ")'" + ");"))
-		.pipe(gulp.dest('release'));
+		.pipe(stripDebug())
+		.pipe(uglify({}))
+		.pipe(gulp.dest('release')).on(
+			'end', function () {
+				gulp.src([
+					"release/" + name + '.min.js',
+					"src/material/RedMaterial.js",
+					"src/material/RedMaterial.js",
+					"src/material/RedColorMaterial.js",
+					"src/material/RedColorPhongMaterial.js",
+					"src/material/RedColorPhongTextureMaterial.js",
+					"src/material/RedEnvironmentMaterial.js",
+					"src/material/RedBitmapMaterial.js",
+					"src/material/RedPointBitmapMaterial.js",
+					"src/material/RedStandardMaterial.js",
+
+					"src/material/system/RedGridMaterial.js",
+					"src/material/RedPointColorMaterial.js",
+					"src/material/system/RedSkyBoxMaterial.js"
+				])
+					.pipe(concat(name + '.min.js')) // 병합한다.
+					.pipe(insert.append("console.log('" + 'RedGL' + " Release. last update(" + d + ")'" + ");"))
+					.pipe(gulp.dest('release'))
+
+			}
+		)
+
 });
 gulp.task('default', ['make-doc', 'combine-js'], function () {
 	console.log('-------------------------------------------');
