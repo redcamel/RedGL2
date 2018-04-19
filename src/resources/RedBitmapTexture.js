@@ -8,6 +8,7 @@ var RedBitmapTexture;
         gl.activeTexture(gl.TEXTURE0 + 0)
         gl.bindTexture(gl.TEXTURE_2D, texture);
         gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1)
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
         gl.texImage2D(
             gl.TEXTURE_2D,
             0, //level
@@ -31,13 +32,15 @@ var RedBitmapTexture;
         gl.generateMipmap(gl.TEXTURE_2D);
         gl.pixelStorei(gl.UNPACK_ALIGNMENT, 4);
         gl.bindTexture(gl.TEXTURE_2D, null);
+        // 픽셀 플립 기본설정
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
     }
     makeTexture = function (gl, texture, source, option) {
         gl.activeTexture(gl.TEXTURE0 + 0)
         gl.bindTexture(gl.TEXTURE_2D, texture);
         //level,internalFormat, format, type
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, source)
-        gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+        // gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, option['min'] ? option['min'] : gl.LINEAR_MIPMAP_NEAREST);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, option['max'] ? option['max'] : gl.LINEAR);

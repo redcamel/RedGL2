@@ -125,6 +125,15 @@
             testPLight['intensity'] = 1
             tScene3D.addLight(testPLight)
 
+            tScene3D.skyBox =
+                RedSkyBox(this, [
+                    '../asset/cubemap/posx.png',
+                    '../asset/cubemap/negx.png',
+                    '../asset/cubemap/posy.png',
+                    '../asset/cubemap/negy.png',
+                    '../asset/cubemap/posz.png',
+                    '../asset/cubemap/negz.png'
+                ]);
 
             tScene3D['grid'] = RedGrid(self)
             RedOBJLoader(this, '../asset/obj/gun/', 'Handgun_obj.obj', function (v) {
