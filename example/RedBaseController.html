@@ -1,0 +1,105 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>RedCamera</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
+    />
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+    </style>
+    <script src="dat.gui.min.js"></script>
+    <script src="baseTestUI.js"></script>
+    <script src="../release/RedGL.min.js"></script>
+</head>
+
+<body>
+    <canvas id="test" style="border: none;background:red"></canvas>
+    <script>
+        var testUI;
+        document.getElementById('test')
+        RedGL(document.getElementById('test'), function (v) {
+            if (v) {
+                console.log('초기화 성공!')
+                var tWorld, tScene, tController, tRenderer;
+
+                // 월드 생성
+                this['world'] = tWorld = RedWorld();
+
+                // 씬 생성
+                tScene = RedScene();
+
+                // 카메라 생성
+                tController = RedBaseController(this);
+                tController.x = tController.y = tController.z = 10
+                tController.tilt = -45
+                tController.pan = 45
+
+                // 렌더러 생성
+                tRenderer = RedRenderer();
+
+                // 뷰생성 및 적용
+                tWorld.addView(RedView('test', tScene, tController));
+
+                // 그리드 설정
+                tScene['grid'] = RedGrid(this)
+                // axis 설정
+                tScene['axis'] = RedAxis(this)
+
+
+                // 렌더시작
+                tRenderer.start(this, function (time) {
+                })
+
+                // 렌더 디버거 활성화
+                tRenderer['renderDebuger']['visible'] = true
+
+                // 
+                testUI(this, tController)
+            } else {
+                console.log('초기화 실패!')
+            }
+        })
+        testUI = function (redGL, tController) {
+            console.log('test')
+            var gui = new baseTestUI(redGL)
+            gui.initRedGL()
+            gui.initBaseController(tController).open()
+
+            var t0, t1;
+
+            t0 = document.createElement('div')
+            t1 = ''
+            t0.style.cssText = 'position:absolute;top:0px;left:0px;background:#000;padding:3px;color:#fff;font-size:11px;'
+
+
+            t1 += 'w - forward<br>'
+            t1 += 's - back<br>'
+            t1 += 'a - left<br>'
+            t1 += 'd - right<br>'
+            t1 += 't - up<br>'
+            t1 += 'g - down<br>'
+            t1 += 'q - pan left<br>'
+            t1 += 'e - pan right<br>'
+            t1 += 'r - tilt up<br>'
+            t1 += 'f - tilt down<br>'
+            t0.innerHTML = t1;
+            document.body.appendChild(t0)
+
+            setInterval(function () {
+                gui['gui'].updateDisplay()
+            }, 16)
+
+
+        }
+    </script>
+</body>
+
+</html>

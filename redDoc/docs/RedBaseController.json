@@ -1,0 +1,9 @@
+[
+  {
+    "constructorYn": true,
+    "title": "RedBaseController",
+    "description": "\n    RedBaseController Instance 생성자.\n",
+    "example": "\n    RedBaseController()\n",
+    "return": "RedBaseController Instance"
+  }
+]

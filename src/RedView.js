@@ -45,7 +45,15 @@ var RedView;
         if (!(typeof key == 'string')) RedGLUtil.throwFunc('key : 문자열만 허용')
         if (!scene && !camera) RedGLUtil.throwFunc('존재하지 않는 key입니다.')
         if (scene && !(scene instanceof RedScene)) RedGLUtil.throwFunc('RedScene Instance만 허용')
-        if (camera && !(camera instanceof RedCamera)) RedGLUtil.throwFunc('RedCamera Instance만 허용')
+        if(!camera) RedGLUtil.throwFunc('RedCamera or XXController Instance만 허용')
+        else {
+            if (
+                !(camera instanceof RedCamera)
+                && !(camera instanceof RedBaseController)
+
+            ) RedGLUtil.throwFunc('RedCamera or XXController Instance만 허용')
+        }
+        
         /**DOC:
            {
                title :`key`,
