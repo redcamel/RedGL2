@@ -67,6 +67,24 @@
   },
   {
     "code": "PROPERTY",
+    "title": "targetX",
+    "description": "\n카메라가 바라볼 X위치\n기본값 : 0\n",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "targetY",
+    "description": "\n카메라가 바라볼 Y위치\n기본값 : 0\n",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "targetZ",
+    "description": "\n카메라가 바라볼 Z위치\n기본값 : 0\n",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
     "title": "x",
     "description": "기본값 : 0",
     "return": "Number"

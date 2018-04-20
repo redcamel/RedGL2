@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>testCustom</title>
+    <title>RedOBJLoader</title>
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
@@ -27,6 +27,8 @@
     <script src="../src/geometry/RedBuffer.js"></script>
     <script src="../src/geometry/RedGeometry.js"></script>
     <script src="../src/geometry/RedInterleaveInfo.js"></script>
+
+    <script src="../src/frameBuffer/RedFrameBuffer.js"></script>
 
     <script src="../src/light/RedAmbientLight.js"></script>
     <script src="../src/light/RedDirectionalLight.js"></script>
@@ -66,6 +68,8 @@
     <script src="../src/program/RedShader.js"></script>
 
     <script src="../src/renderer/RedRenderer.js"></script>
+
+
     <script src="../src/renderer/system/RedRenderDebuger.js"></script>
 
     <script src="../src/resources/RedAtlas.js"></script>
@@ -77,90 +81,100 @@
     <script src="../src/RedView.js"></script>
     <script src="../src/RedWorld.js"></script>
     <script src="../src/RedScene.js"></script>
+
     <script src="../src/camera/RedCamera.js"></script>
     <script src="../src/camera/RedBaseController.js"></script>
+
 </head>
 
 <body>
     <canvas id="test" style="border: none;background:red"></canvas>
     <script>
-        var t = document.getElementById('test')
-        document.body.appendChild(t)
-        RedGL(t, function (v) {
+        document.getElementById('test')
+        RedGL(document.getElementById('test'), function (v) {
+            console.log(v)
             var tGL;
-            var tWorld, tScene3D, tCamera
+            var tWorld, tScene3D, tController
             var tRenderer;
             var self;
             self = this
             tGL = this.gl;
             this.world = tWorld = RedWorld();
-            tScene3D = RedScene('#223344');
-            tScene3D.alpha = 0.1
-
-            tCamera = RedCamera()
-            tCamera.y = 10
-            tCamera.z = 10
-            tCamera.lookAt(0, 0, 0)
-
+            tScene3D = RedScene();
+            tController = RedBaseController(this);
+            tController.x = tController.y = tController.z = 10
+            tController.tilt = -45
+            tController.pan = 45
             tRenderer = RedRenderer();
-            tWorld.addView(RedView('test', tScene3D, tCamera));
+            tWorld.addView(RedView('test', tScene3D, tController));
+            RedView('test').setSize('100%', '100%')
+            RedView('test').setLocation('0%', '0%')
+            this.renderScale = 1
 
 
-            var testMaterial
-            testMaterial = RedMaterial(this)
 
-            var interleaveData, interleaveData2
-            interleaveData = []
+            var testDLight, testALight, testPLight;
+            testDLight = RedDirectionalLight(this, '#fff', 1)
+            testDLight.x = 3
+            testDLight.y = 2
+            testDLight.z = 3
+            testDLight.debug = true
+            tScene3D.addLight(testDLight)
 
-            var i = 1000000
-            while (i--) {
-                var t = Math.random() * 100 - 50
-                interleaveData.push(Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50)
-                interleaveData.push(Math.random() * 2)
-                interleaveData.push(Math.random(), Math.random(), Math.random(), 1)
-            }
-            interleaveData = new Float32Array(interleaveData)
-            var testInterleaveBuffer
-            testInterleaveBuffer = RedBuffer(
-                this,
-                'testInterleaveBuffer',
-                interleaveData,
-                RedBuffer.ARRAY_BUFFER, [
-                    RedInterleaveInfo('aVertexPosition', 3),
-                    RedInterleaveInfo('aPointSize', 1),
-                    RedInterleaveInfo('aVertexColor', 4)
-                ]
-            )
-            var geometry
-            geometry = RedGeometry(testInterleaveBuffer)
+            testDLight = RedDirectionalLight(this, '#ff00ff', 0.2)
+            testDLight.x = -3
+            testDLight.y = 2
+            testDLight.z = -3
+            testDLight.debug = true
+            tScene3D.addLight(testDLight)
 
-            var testMesh
-            var i = 1;
-            var len = i
+            testPLight = RedPointLight(this, '#00ff00', 0.5)
+            testPLight.x = -3
+            testPLight.y = -3
+            testPLight.z = -3
+            testPLight['radius'] = 1
+            testPLight['intensity'] = 1
+            tScene3D.addLight(testPLight)
+
+            tScene3D.skyBox =
+                RedSkyBox(this, [
+                    '../asset/cubemap/posx.png',
+                    '../asset/cubemap/negx.png',
+                    '../asset/cubemap/posy.png',
+                    '../asset/cubemap/negy.png',
+                    '../asset/cubemap/posz.png',
+                    '../asset/cubemap/negz.png'
+                ]);
+
             tScene3D['grid'] = RedGrid(self)
-            testMesh = RedMesh(this, geometry, testMaterial)
-            testMesh.drawMode = this.gl.POINTS
-            // if(Math.random() >0.8) testMesh.drawMode = this.gl.LINE_LOOP
+            tScene3D['axis'] = RedAxis(self)
+            RedOBJLoader(this, '../asset/obj/rabbit/', 'Rabbit.obj', function (v) {
+                console.log('호잇!', v)
+                tScene3D.addChild(v['resultMesh'])
+                v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 2
 
-            tScene3D.addChild(testMesh)
-
+            })
             tRenderer.renderDebuger.visible = true
-
             tRenderer.start(this, function (time) {
 
-                tCamera.x = Math.sin(time / 1500) * 30
-                tCamera.y = Math.cos(time / 1500) * 30
-                if (tCamera.y < 1) tCamera.y = 1
-                tCamera.z = Math.cos(time / 1500) * 30 + Math.sin(time / 1500) * 30
+                testDLight.x = Math.sin(time / 1000) * 2
+                testDLight.y = Math.cos(time / 1000) * 2
+                testDLight.z = Math.cos(time / 1000) * 2
 
+                testPLight.x = Math.sin(time / 1500) * 2
+                testPLight.y = Math.cos(time / 1500) * 2
+                testPLight.z = Math.cos(time / 1500) * 2
+                testPLight.debug = true
+                // testDLight.debug = true
 
-                tCamera.lookAt(0, 0, 0)
+                //  tController.x = Math.sin(time / 1500) * 10
+                //  tController.y = Math.cos(time / 1500) * 10
+                // tController.z = Math.cos(time / 1500) * 15 + Math.sin(time / 1500) * 15
 
 
 
             })
 
-            console.log(tScene3D)
         })
     </script>
 </body>

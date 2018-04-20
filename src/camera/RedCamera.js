@@ -44,6 +44,40 @@ var RedCamera;
         /**DOC:
         {
             code:`PROPERTY`,
+            title :`targetX`,
+            description : `
+            카메라가 바라볼 X위치
+            기본값 : 0
+            `,
+            return : 'Number'
+        }
+        :DOC*/
+        /**DOC:
+        {
+            code:`PROPERTY`,
+            title :`targetY`,
+            description : `
+            카메라가 바라볼 Y위치
+            기본값 : 0
+            `,
+            return : 'Number'
+        }
+        :DOC*/
+        /**DOC:
+        {
+            code:`PROPERTY`,
+            title :`targetZ`,
+            description : `
+            카메라가 바라볼 Z위치
+            기본값 : 0
+            `,
+            return : 'Number'
+        }
+        :DOC*/
+        this['targetX'] = this['targetY'] = this['targetZ'] = 0
+        /**DOC:
+        {
+            code:`PROPERTY`,
             title :`fov`,
             description : `기본값 : 45degree`,
             return : 'Number'
@@ -116,14 +150,25 @@ var RedCamera;
         return : 'mat4'
     }
     :DOC*/
-    RedCamera.prototype['lookAt'] = (function () {
+    RedCamera.prototype['update'] = (function () {
         var up = new Float32Array([0, 1, 0]);
-        return function (x, y, z) {
-            //out, eye, center, up
-            mat4.lookAt(this['matrix'], [this.x, this.y, this.z], [x, y, z], up);
+        return function () {
+            this.lookAt(this['targetX'], this['targetY'], this['targetZ'])
         }
     })();
+    RedCamera.prototype['lookAt'] = (function () {
+        var up = new Float32Array([0, 1, 0]);
+        var targetPosition = []
+        return function (x, y, z) {
+            targetPosition[0] = this['targetX'] = x
+            targetPosition[1] = this['targetY'] = y
+            targetPosition[2] = this['targetZ'] = z
 
+            //out, eye, center, up
+            mat4.identity(this['matrix'])
+            mat4.lookAt(this['matrix'], [this.x, this.y, this.z], targetPosition, up);
+        }
+    })();
 
     Object.freeze(RedCamera);
 })();

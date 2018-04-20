@@ -4,18 +4,18 @@ var baseTestUI = function (redGL) {
         name: 'test'
     });
     this['redGL'] = redGL;
-    
+
 
 }
 baseTestUI.prototype = {
-    initRedGL : function(){
-        var self =this
+    initRedGL: function () {
+        var self = this
         var redGLTest = {
             setSizeTest1: function () {
                 self['redGL'].fullMode = false
                 self['redGL'].setSize(300, 300)
                 self['gui'].updateDisplay()
-    
+
             },
             setSizeTest2: function () {
                 self['redGL'].fullMode = false
@@ -41,6 +41,23 @@ baseTestUI.prototype = {
         t0.add(camera, 'z', -100, 100)
         return t0
     },
+    initBaseController: function (controller) {
+        var t0 = this['gui'].addFolder('BaseController')
+        t0.add(controller, 'x', -100, 100)
+        t0.add(controller, 'y', -100, 100)
+        t0.add(controller, 'z', -100, 100)
+        t0.add(controller, 'tilt', 0, 360)
+        t0.add(controller, 'pan', 0, 360)
+
+        t0.add(controller, 'speed', 0.1, 5)
+        t0.add(controller, 'delay', 0.001, 1)
+        t0.add(controller, 'speedRotation', 0.1, 2)
+        t0.add(controller, 'delayRotation', 0.1, 2)
+        t0.add(controller, 'maxAcceleration', 0.1, 5)
+
+        return t0
+    },
+
     initScene: function (scene) {
         var t0 = this['gui'].addFolder('scene')
         var self = this
@@ -87,18 +104,18 @@ baseTestUI.prototype = {
         var self = this
         var test = {
             setLocationTest1: function () {
-                view.setLocation(200,200)
+                view.setLocation(200, 200)
                 self['gui'].updateDisplay()
             },
             setLocationTest2: function () {
-                view.setLocation(100,400)
+                view.setLocation(100, 400)
                 self['gui'].updateDisplay()
             }
         }
 
         t0.add(test, 'setLocationTest1').name('setLocation(200,200)');
         t0.add(test, 'setLocationTest2').name('setLocation(100,400)')
-       
+
         return t0
     }
 }

@@ -435,6 +435,12 @@ var RedRenderer;
                     gl.clearColor(0, 0, 0, 0);
                     gl.clear(gl.DEPTH_BUFFER_BIT);
                 }
+               
+                if(tCamera instanceof RedBaseController){
+                    tCamera['update']()
+                    tCamera = tCamera['camera']
+                }
+                tCamera['update']()
                 perspectiveMTX = tCamera['perspectiveMTX']
                 // view 에 적용할 카메라 퍼스펙티브를 계산
                 mat4.identity(perspectiveMTX);
@@ -460,6 +466,7 @@ var RedRenderer;
                         tCamera['nearClipping'],
                         tCamera['farClipping']
                     );
+            
                     gl.enable(gl.CULL_FACE);
                 };
                 ///////////////////////////////

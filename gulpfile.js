@@ -129,7 +129,8 @@ gulp.task('make-doc', function () {
 		"src/RedView.js",
 		"src/RedWorld.js",
 		"src/RedScene.js",
-		"src/camera/RedCamera.js"
+		"src/camera/RedCamera.js",
+		"src/camera/RedBaseController.js"
 
 	])
 		.pipe(myTransformation()) // 병합한다.
@@ -193,7 +194,8 @@ gulp.task('combine-js', function () {
 		"src/RedView.js",
 		"src/RedWorld.js",
 		"src/RedScene.js",
-		"src/camera/RedCamera.js"
+		"src/camera/RedCamera.js",
+		"src/camera/RedBaseController.js"
 	])
 		.pipe(concat(name + '.min.js')) // 병합한다.
 		.pipe(stripDebug())
