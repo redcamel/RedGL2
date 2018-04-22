@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>RedBasicController</title>
+    <title>RedOBJLoader</title>
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
@@ -29,7 +29,8 @@
             if (v) {
                 console.log('초기화 성공!')
                 var tWorld, tScene, tController, tRenderer;
-
+                var self;
+                self = this;
                 // 월드 생성
                 this['world'] = tWorld = RedWorld();
 
@@ -37,25 +38,58 @@
                 tScene = RedScene();
 
                 // 카메라 생성
-                tController = RedBasicController(this);
-                tController.x = tController.y = tController.z = 10
-                tController.tilt = -45
+                tController = RedObitController(this);
+                tController.tilt = -30
                 tController.pan = 45
 
                 // 렌더러 생성
                 tRenderer = RedRenderer();
-
                 // 뷰생성 및 적용
                 tWorld.addView(RedView('test', tScene, tController));
-
                 // 그리드 설정
                 tScene['grid'] = RedGrid(this)
-                // axis 설정
-                tScene['axis'] = RedAxis(this)
 
+                // 라이트 설정
+                var testDLight, testALight, testPLight;
+                testDLight = RedDirectionalLight(this, '#fff', 1)
+                testDLight.x = 3
+                testDLight.y = 2
+                testDLight.z = 3
+                testDLight.debug = true
+                tScene.addLight(testDLight)
+
+                testDLight = RedDirectionalLight(this, '#ff00ff', 0.2)
+                testDLight.x = -3
+                testDLight.y = 2
+                testDLight.z = -3
+                testDLight.debug = true
+                tScene.addLight(testDLight)
+
+                testPLight = RedPointLight(this, '#00ff00', 0.5)
+                testPLight.x = -3
+                testPLight.y = -3
+                testPLight.z = -3
+                testPLight['radius'] = 2
+                testPLight['intensity'] = 1
+                testPLight.debug = true
+                tScene.addLight(testPLight)
+
+
+                // OBJ 로딩
+                RedOBJLoader(this, '../asset/obj/', 'female.obj', function (v) {
+                    v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.025
+                    tScene.addChild(v['resultMesh'])
+                })
 
                 // 렌더시작
                 tRenderer.start(this, function (time) {
+                    testDLight.x = Math.sin(time / 1000) * 2
+                    testDLight.y = Math.cos(time / 1000) * 2
+                    testDLight.z = Math.cos(time / 1000) * 2
+
+                    testPLight.x = Math.sin(time / 1500) * 1
+                    testPLight.y = Math.cos(time / 1500) * 1 + 1
+                    testPLight.z = Math.cos(time / 1500) * 1
                 })
 
                 // 렌더 디버거 활성화
@@ -71,27 +105,7 @@
             console.log('test')
             var gui = new baseTestUI(redGL)
             gui.initRedGL()
-            gui.initBasicController(tController).open()
-
-            var t0, t1;
-
-            t0 = document.createElement('div')
-            t1 = ''
-            t0.style.cssText = 'position:absolute;top:0px;left:0px;background:#000;padding:3px;color:#fff;font-size:11px;'
-
-
-            t1 += 'w - forward<br>'
-            t1 += 's - back<br>'
-            t1 += 'a - left<br>'
-            t1 += 'd - right<br>'
-            t1 += 't - up<br>'
-            t1 += 'g - down<br>'
-            t1 += 'q - pan left<br>'
-            t1 += 'e - pan right<br>'
-            t1 += 'r - tilt up<br>'
-            t1 += 'f - tilt down<br>'
-            t0.innerHTML = t1;
-            document.body.appendChild(t0)
+            gui.initObitController(tController).open()
 
             setInterval(function () {
                 gui['gui'].updateDisplay()

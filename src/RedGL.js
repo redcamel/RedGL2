@@ -175,7 +175,7 @@ var RedGL;
         requestAnimationFrame(function (v) {
             window.addEventListener('resize', function () { _self.setSize(_self['_width'], _self['_height']) });
             _self.setSize(_self['_width'], _self['_height']);
-            callback ? callback.call(_self, _tGL ? true : false) : 0;
+           
             // 빈텍스쳐를 미리 체워둔다.
             var t0, t1;
             var i = _self['_detect']['MAX_COMBINED_TEXTURE_IMAGE_UNITS']
@@ -186,6 +186,7 @@ var RedGL;
                 '2d': t0,
                 '3d': t1
             }
+            callback ? callback.call(_self, _tGL ? true : false) : 0;
             while (i--) {
                 // 0번은 2D 공백텍스쳐로 사용할예정
                 // 1번은 3D 공백텍스쳐로 사용할예정
