@@ -344,7 +344,7 @@ var RedBasicController;
 
             // 카메라를 오브젝트 바로 뒤에 위치시킴
             tMTX1 = mat4.clone(tMTX0)
-            mat4.translate(tMTX1, tMTX1, [0, 0, 0.1])
+            mat4.translate(tMTX1, tMTX1, [0, 0, 10.1])
             tCamera['x'] = tMTX1[12]
             tCamera['y'] = tMTX1[13]
             tCamera['z'] = tMTX1[14]
