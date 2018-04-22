@@ -40,7 +40,7 @@ var RedGrid;
 
         size = size || 100;
         divisions = divisions || 100;
-        color1 = [0, 0, 0, 0.5];
+        color1 = [1, 1, 1, 0.7];
         color2 = [1, 1, 1, 0.5]
 
         var center = divisions / 2;

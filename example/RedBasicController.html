@@ -37,7 +37,7 @@
                 tScene = RedScene();
 
                 // 카메라 생성
-                tController = RedBaseController(this);
+                tController = RedBasicController(this);
                 tController.x = tController.y = tController.z = 10
                 tController.tilt = -45
                 tController.pan = 45
@@ -71,7 +71,7 @@
             console.log('test')
             var gui = new baseTestUI(redGL)
             gui.initRedGL()
-            gui.initBaseController(tController).open()
+            gui.initBasicController(tController).open()
 
             var t0, t1;
 

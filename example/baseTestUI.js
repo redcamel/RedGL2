@@ -41,8 +41,8 @@ baseTestUI.prototype = {
         t0.add(camera, 'z', -100, 100)
         return t0
     },
-    initBaseController: function (controller) {
-        var t0 = this['gui'].addFolder('BaseController')
+    initBasicController: function (controller) {
+        var t0 = this['gui'].addFolder('BasicController')
         t0.add(controller, 'x', -100, 100)
         t0.add(controller, 'y', -100, 100)
         t0.add(controller, 'z', -100, 100)
@@ -52,12 +52,28 @@ baseTestUI.prototype = {
         t0.add(controller, 'speed', 0.1, 5)
         t0.add(controller, 'delay', 0.001, 1)
         t0.add(controller, 'speedRotation', 0.1, 2)
-        t0.add(controller, 'delayRotation', 0.1, 2)
+        t0.add(controller, 'delayRotation', 0.01, 0.5)
         t0.add(controller, 'maxAcceleration', 0.1, 5)
 
         return t0
     },
+    initObitController: function (controller) {
+        var t0 = this['gui'].addFolder('ObitController')
+        t0.add(controller, 'centerX', -10, 10)
+        t0.add(controller, 'centerY', -10, 10)
+        t0.add(controller, 'centerZ', -10, 10)
+        t0.add(controller, 'tilt', 0, 360)
+        t0.add(controller, 'pan', 0, 360)
+        t0.add(controller, 'minTilt', -90, 0)
+        t0.add(controller, 'maxTilt', 0, 90)
 
+        t0.add(controller, 'distance', 0.1, 20)
+        t0.add(controller, 'speedDistance', 0.001, 1)
+        t0.add(controller, 'speedRotation', 0.1, 2)
+        t0.add(controller, 'delayRotation', 0.01, 0.5)
+
+        return t0
+    },
     initScene: function (scene) {
         var t0 = this['gui'].addFolder('scene')
         var self = this

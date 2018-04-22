@@ -1,0 +1,71 @@
+[
+  {
+    "title": "camera",
+    "description": "\n    컨트롤러 생성시 자동생성됨\n",
+    "return": "RedCamera"
+  },
+  {
+    "title": "delayDistance",
+    "description": "\n    거리 지연 속도\n    기본값 : 0.1\n",
+    "return": "Number"
+  },
+  {
+    "title": "maxTilt",
+    "description": "\n    기본값 : 90\n",
+    "return": "Number"
+  },
+  {
+    "title": "minTilt",
+    "description": "\n    기본값 : -90\n",
+    "return": "Number"
+  },
+  {
+    "title": "pan",
+    "return": "Number"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedObitController",
+    "description": "\n    RedObitController Instance 생성자.\n",
+    "example": "\n    RedObitController()\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ]
+    },
+    "return": "RedObitController Instance"
+  },
+  {
+    "title": "speedDistance",
+    "description": "\n    거리 속도\n    기본값 : 2\n",
+    "return": "Number"
+  },
+  {
+    "title": "speedRotation",
+    "description": "\n    회전 지연 속도\n    기본값 : 0.1\n",
+    "return": "Number"
+  },
+  {
+    "title": "speedRotation",
+    "description": "\n    회전 속도\n    기본값 : 3\n",
+    "return": "Number"
+  },
+  {
+    "title": "tilt",
+    "return": "Number"
+  },
+  {
+    "title": "x",
+    "return": "Number"
+  },
+  {
+    "title": "y",
+    "return": "Number"
+  },
+  {
+    "title": "z",
+    "return": "Number"
+  }
+]

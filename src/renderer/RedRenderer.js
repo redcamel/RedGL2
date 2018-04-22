@@ -436,7 +436,8 @@ var RedRenderer;
                     gl.clear(gl.DEPTH_BUFFER_BIT);
                 }
                
-                if(tCamera instanceof RedBaseController){
+                if(!(tCamera instanceof RedCamera)){
+                    // 카메라 형식이 아닌경우 컨트롤러로 판단함
                     tCamera['update']()
                     tCamera = tCamera['camera']
                 }

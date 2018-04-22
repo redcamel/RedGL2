@@ -82,8 +82,11 @@
     <script src="../src/RedWorld.js"></script>
     <script src="../src/RedScene.js"></script>
 
+    
     <script src="../src/camera/RedCamera.js"></script>
-    <script src="../src/camera/RedBaseController.js"></script>
+    
+    <script src="../src/camera/RedBasicController.js"></script>
+    <script src="../src/camera/RedObitController.js"></script>
 
 </head>
 
@@ -101,10 +104,7 @@
             tGL = this.gl;
             this.world = tWorld = RedWorld();
             tScene3D = RedScene();
-            tController = RedBaseController(this);
-            tController.x = tController.y = tController.z = 10
-            tController.tilt = -45
-            tController.pan = 45
+            tController = RedObitController(this);
             tRenderer = RedRenderer();
             tWorld.addView(RedView('test', tScene3D, tController));
             RedView('test').setSize('100%', '100%')
