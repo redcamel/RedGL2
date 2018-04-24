@@ -159,8 +159,7 @@ var RedEnvironmentMaterial;
                 vVertexPositionEye4.xyz += normalize(vVertexNormal) * texture2D(uDisplacementTexture, vTexcoord).x * uDisplacementPower ;
                 
                 gl_PointSize = uPointSize;
-                gl_Position = uPMatrix * uCameraMatrix * vVertexPositionEye4;                
-                vVertexPositionEye4 = uMVMatrix * vVertexPositionEye4;
+                gl_Position = uPMatrix * uCameraMatrix * vVertexPositionEye4;     
                 
             }
             */

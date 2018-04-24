@@ -56,12 +56,26 @@ var RedColorMaterial;
         var PROGRAM_NAME;
         vSource = function () {
             /*
+            mat4 calSprite3D(mat4 cameraMTX, mat4 mvMatrix){
+                mat4 cacheScale = mat4(
+                    mvMatrix[0][0], 0.0, 0.0, 0.0, 
+                    0.0, mvMatrix[1][1], 0.0, 0.0, 
+                    0.0, 0.0, 1.0, mvMatrix[2][2], 
+                    0.0, 0.0, 0.0, 1.0 
+                );
+                mat4 tMTX = cameraMTX * mvMatrix;
+                tMTX[0][0] = 1.0, tMTX[0][1] = 0.0, tMTX[0][2] = 0.0,
+                tMTX[1][0] = 0.0, tMTX[1][1] = 1.0, tMTX[1][2] = 0.0,
+                tMTX[2][0] = 0.0, tMTX[2][1] = 0.0, tMTX[2][2] = 1.0;
+                return tMTX * cacheScale;
+            }
             uniform vec4 uColor;
             varying vec4 vColor;
             void main(void) {
                 vColor = uColor; 
                 gl_PointSize = uPointSize;
-                gl_Position = uPMatrix * uCameraMatrix* uMVMatrix * vec4(aVertexPosition, 1.0);
+                if(uSprite3DYn) gl_Position = uPMatrix * calSprite3D(uCameraMatrix , uMVMatrix) *  vec4(aVertexPosition, 1.0);
+                else gl_Position = uPMatrix * uCameraMatrix * uMVMatrix *  vec4(aVertexPosition, 1.0);
             }
             */
         }

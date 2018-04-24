@@ -45,7 +45,10 @@ var RedSystemShaderCode;
             'uniform mat4 uMVMatrix',
             'uniform mat4 uNMatrix',
             'uniform mat4 uPMatrix',
-            'uniform mat4 uCameraMatrix'
+            'uniform mat4 uCameraMatrix',
+
+            'uniform bool uSprite3DYn' // sprite3d인지 아닌지
+            
         ],
         /**DOC:
             {

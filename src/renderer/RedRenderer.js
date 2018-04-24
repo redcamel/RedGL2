@@ -140,7 +140,7 @@ var RedRenderer;
                         gl.uniform2fv(tLocation, tViewRect);
                         cacheSystemUniform[tUUID] = tViewRect.toString()
                     }
-                    
+
                     tLocationInfo = tSystemUniformGroup['uUseFog'];
                     tLocation = tLocationInfo['location'];
                     tValue = scene['useFog'] ? 1 : 0;
@@ -532,7 +532,7 @@ var RedRenderer;
                 if (tScene['axis']) self.sceneRender(redGL, gl, tCamera['orthographicYn'], tScene['axis']['children'], time, tRenderInfo);
                 // 디버깅 라이트 업데이트 
                 if (lightDebugRenderList.length) self.sceneRender(redGL, gl, tCamera['orthographicYn'], lightDebugRenderList, time, tRenderInfo);
-               
+
 
             })
             if (this['renderDebuger']['visible']) this['renderDebuger'].update(redGL, self['renderInfo'])
@@ -581,6 +581,7 @@ var RedRenderer;
             var tMVMatrix, tNMatrix
             var tUUID, noChangeUniform;
             var tSamplerIndex;
+            var tSpriteYn;
             // matix 관련
             var a,
                 aSx, aSy, aSz, aCx, aCy, aCz, tRx, tRy, tRz,
@@ -610,6 +611,7 @@ var RedRenderer;
                 tMVMatrix = tMesh['matrix']
                 tNMatrix = tMesh['normalMatrix']
                 tGeometry = tMesh['geometry']
+                tSpriteYn = tMesh instanceof RedSprite3D
                 if (tGeometry) {
                     tMaterial = tMesh['material']
                     prevProgram_UUID == tMaterial['program']['_UUID'] ? 0 : gl.useProgram(tMaterial['program']['webglProgram'])
@@ -758,7 +760,9 @@ var RedRenderer;
                     a[14] = a[2] * aX + a[6] * aY + a[10] * aZ + a[14],
                     a[15] = a[3] * aX + a[7] * aY + a[11] * aZ + a[15],
                     // tMVMatrix rotate
-                    tRx = tMesh['rotationX'] * CONVERT_RADIAN, tRy = tMesh['rotationY'] * CONVERT_RADIAN, tRz = tMesh['rotationZ'] * CONVERT_RADIAN,
+                    tSpriteYn
+                        ? (tRx = 0 * CONVERT_RADIAN, tRy = 0 * CONVERT_RADIAN, tRz = 0)
+                        : (tRx = tMesh['rotationX'] * CONVERT_RADIAN, tRy = tMesh['rotationY'] * CONVERT_RADIAN, tRz = tMesh['rotationZ'] * CONVERT_RADIAN),
                     /////////////////////////
                     tRadian = tRx % CPI2,
                     tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
@@ -839,42 +843,6 @@ var RedRenderer;
                         tMVMatrix[15] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33
 
                     ) : 0
-
-                // Sprite3D 처리
-                tMesh instanceof RedSprite3D ? (
-                    // mat4.targetTo(tMVMatrix, [tMVMatrix[12],tMVMatrix[13],tMVMatrix[14]], [tCamera.x, tCamera.y, tCamera.z], [0, 1, 0])
-                    eyex = tMVMatrix[12], eyey = tMVMatrix[13], eyez = tMVMatrix[14],
-                    upx = 0, upy = 1, upz = 0,
-
-                    z0 = eyex - tCamera['x'], z1 = eyey - tCamera['y'], z2 = eyez - tCamera['z'],
-                    targetToLength = z0 * z0 + z1 * z1 + z2 * z2,
-                    targetToLength > 0 ? (
-                        targetToLength = 1 / Math.sqrt(targetToLength),
-                        z0 *= targetToLength, z1 *= targetToLength, z2 *= targetToLength
-                    ) : 0,
-                    x0 = upy * z2 - upz * z1,
-                    x1 = upz * z0 - upx * z2,
-                    x2 = upx * z1 - upy * z0,
-
-                    // scale캐싱
-                    aX = Math.sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]),
-                    aY = Math.sqrt(a[4] * a[4] + a[5] * a[5] + a[6] * a[6]),
-                    aZ = Math.sqrt(a[8] * a[8] + a[9] * a[9] + a[10] * a[10]),
-
-                    // 카메라 바라보게 설정
-                    tMVMatrix[0] = x0, tMVMatrix[1] = x1, tMVMatrix[2] = x2, tMVMatrix[3] = 0,
-                    tMVMatrix[4] = z1 * x2 - z2 * x1, tMVMatrix[5] = z2 * x0 - z0 * x2, tMVMatrix[6] = z0 * x1 - z1 * x0, tMVMatrix[7] = 0,
-                    tMVMatrix[8] = z0, tMVMatrix[9] = z1, tMVMatrix[10] = z2, tMVMatrix[11] = 0,
-                    tMVMatrix[12] = eyex, tMVMatrix[13] = eyey, tMVMatrix[14] = eyez, tMVMatrix[15] = 1,
-
-                    // 스케일적용
-                    a[0] = a[0] * aX, a[1] = a[1] * aX, a[2] = a[2] * aX, a[3] = a[3] * aX,
-                    a[4] = a[4] * aY, a[5] = a[5] * aY, a[6] = a[6] * aY, a[7] = a[7] * aY,
-                    a[8] = a[8] * aZ, a[9] = a[9] * aZ, a[10] = a[10] * aZ, a[11] = a[11] * aZ,
-                    a[12] = a[12], a[13] = a[13], a[14] = a[14], a[15] = a[15]
-
-
-                ) : 0
                 /////////////////////////////////////////////////////////////////////////
                 /////////////////////////////////////////////////////////////////////////
 
@@ -954,6 +922,7 @@ var RedRenderer;
                         tCacheState['blendSrc'] = tMesh['blendSrc']
                         tCacheState['blendDst'] = tMesh['blendDst']
                     }
+                    if (tSystemUniformGroup['uSprite3DYn']['location']) gl.uniform1i(tSystemUniformGroup['uSprite3DYn']['location'], tSpriteYn)
 
                     /////////////////////////////////////////////////////////////////////////
                     /////////////////////////////////////////////////////////////////////////
