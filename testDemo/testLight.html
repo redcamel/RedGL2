@@ -79,6 +79,7 @@
     <script src="../src/RedScene.js"></script>
     <script src="../src/camera/RedCamera.js"></script>
     <script src="../src/camera/RedBasicController.js"></script>
+    <script src="../src/camera/RedObitController.js"></script>
 </head>
 
 <body>
@@ -89,16 +90,17 @@
         RedGL(t, function (v) {
             console.log(v)
             var tGL;
-            var tWorld, tScene3D, tCamera
+            var tWorld, tScene3D, tController
             var tRenderer;
             var self;
             self = this
             tGL = this.gl;
             this.world = tWorld = RedWorld();
             tScene3D = RedScene();
-            tCamera = RedCamera();
+            tController = RedObitController(this);
+            tController.distance = 20
             tRenderer = RedRenderer();
-            tWorld.addView(RedView('test', tScene3D, tCamera));
+            tWorld.addView(RedView('test', tScene3D, tController));
             RedView('test').setSize('100%', '100%')
             RedView('test').setLocation('0%', '0%')
 
@@ -121,7 +123,7 @@
                 RedBitmapTexture(this, '../asset/displacementTest.jpg')
 
             )
-            testMaterial2 = RedStandardMaterial(
+            testMaterial2 = RedBitmapMaterial(
                 this,
                 RedBitmapTexture(this, '../asset/alphaTest.png')
             )
@@ -185,6 +187,7 @@
             testDLight.x = -3
             testDLight.y = -3
             testDLight.z = -3
+            testDLight.debug= true
             // tScene3D.addLight(testDLight)
 
             testPLight = RedPointLight(this, '#ff0000')
@@ -193,6 +196,7 @@
             testPLight.z = -3
             testPLight['radius'] = 4
             testPLight['intensity'] = 1
+            testPLight.debug= true
             tScene3D.addLight(testPLight)
 
 
@@ -202,6 +206,7 @@
             testPLight2.z = -3
             testPLight2['radius'] = 2
             testPLight2['intensity'] = 1
+            testPLight2.debug= true
             tScene3D.addLight(testPLight2)
 
             testDLight = RedDirectionalLight(this, '#fff')
@@ -219,12 +224,12 @@
                 i = tScene3D.children.length
                 while (i--) {
                     testMesh = tScene3D.children[i]
-                    testMesh.rotationX += 1
-                    testMesh.rotationY += 1
-                    testMesh.rotationZ += 1
-                    // testMesh.lookAt(tCamera.x, tCamera.y, tCamera.z)
+                    // testMesh.rotationX += 1
+                    // testMesh.rotationY += 1
+                    // testMesh.rotationZ += 1
+                    // testMesh.lookAt(tController.x, tController.y, tController.z)
                     // testMesh['drawMode'] = self.gl.POINTS
-                    // testMesh.lookAt(tCamera.x,tCamera.y,tCamera.z)
+                    // testMesh.lookAt(tController.x,tController.y,tController.z)
                 }
 
                 testDLight.x = -Math.sin(time / 1500) * 20
@@ -240,15 +245,15 @@
                 testPLight2.y = 0
                 testPLight2.z = Math.cos(time / 1500) * 8.5
 
-                tCamera.x = Math.sin(time / 1500) * 10
-                tCamera.y = Math.cos(time / 1500) * 10
-                tCamera.z = Math.cos(time / 1500) * 15 + Math.sin(time / 1500) * 15
+                // tController.x = Math.sin(time / 1500) * 10
+                // tController.y = Math.cos(time / 1500) * 10
+                // tController.z = Math.cos(time / 1500) * 15 + Math.sin(time / 1500) * 15
 
                 // testMaterial['displacementPower'] = Math.sin(time / 100)
               
-                // tCamera.x = 25
-                // tCamera.z = 20
-                tCamera.lookAt(0, 0, 0)
+                // tController.x = 25
+                // tController.z = 20
+                // tController.lookAt(0, 0, 0)
 
 
                 

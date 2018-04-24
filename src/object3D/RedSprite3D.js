@@ -29,11 +29,15 @@ var RedSprite3D;
     RedSprite3D = function (redGL, material) {
         if (!(this instanceof RedSprite3D)) return new RedSprite3D(redGL, material);
         if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedSprite3D : RedGL Instance만 허용됩니다.', redGL)
-        if (!(material instanceof RedBaseMaterial)) RedGLUtil.throwFunc('RedSprite3D : RedBaseMaterial 확장 Instance만 허용됩니다.')
+        if (
+            !(material instanceof RedColorMaterial)
+            && !(material instanceof RedBitmapMaterial)
+        ) RedGLUtil.throwFunc('RedSprite3D : RedColorMaterial or RedBitmapMaterial Instance만 허용됩니다.')
         var tGL;
         tGL = redGL.gl;
         RedBaseObject3D['build'].call(this, tGL)
-        this['geometry'] = RedBox(redGL, 1, 1, 0);
+        this['geometry'] = RedPlane(redGL, 1, 1, 0);
+        this['useCullFace'] = false
         /**DOC:
 		{
             title :`material`,
