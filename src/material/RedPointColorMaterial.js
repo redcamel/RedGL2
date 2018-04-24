@@ -39,7 +39,7 @@ var RedPointColorMaterial;
             void main(void) {
                 gl_PointSize = aPointSize;
                 vColor = aVertexColor;
-                gl_Position = uPMatrix * uCameraMatrix* uMVMatrix * vec4(aVertexPosition, 1.0);
+                gl_Position = uPMatrix * uCameraMatrix* uMMatrix * vec4(aVertexPosition, 1.0);
             }
             */
         }

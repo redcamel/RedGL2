@@ -55,8 +55,8 @@ var RedSkyBoxMaterial;
             /*
             varying vec3 vReflectionCubeCoord;
             void main(void) {
-                vReflectionCubeCoord = (uMVMatrix *vec4(-aVertexPosition, 0.0)).xyz;
-                gl_Position = uPMatrix * uCameraMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+                vReflectionCubeCoord = (uMMatrix *vec4(-aVertexPosition, 0.0)).xyz;
+                gl_Position = uPMatrix * uCameraMatrix * uMMatrix * vec4(aVertexPosition, 1.0);
             }
             */
         }
