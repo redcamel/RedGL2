@@ -16,6 +16,16 @@
     "return": "Array"
   },
   {
+    "title": "fogDensity",
+    "description": "\n    안개농도\n    초기값 0.5\n",
+    "return": "Number"
+  },
+  {
+    "title": "fogDistance",
+    "description": "\n    가시거리\n    초기값 25.0\n",
+    "return": "Number"
+  },
+  {
     "title": "grid",
     "description": "\n    grid get/set\n",
     "return": "RedGrid"
@@ -49,6 +59,11 @@
   {
     "title": "useBackgroundColor",
     "description": "\n    배경색 사용여부.\n    초기값 true\n",
+    "return": "Boolean"
+  },
+  {
+    "title": "useFog",
+    "description": "\n    안개 사용여부\n    초기값 true\n",
     "return": "Boolean"
   },
   {

@@ -13,12 +13,12 @@ var RedFrameBuffer;
         this['height'] = height;
         this['webglFrameBuffer'] = gl.createFramebuffer();
         this['webglRenderBuffer'] = gl.createRenderbuffer();
-        this['webglTexture'] = gl.createTexture();
+        this['texture'] = RedBitmapTexture(redGL)
         this['_UUID'] = RedGL['makeUUID']();
         
         gl.bindFramebuffer(gl.FRAMEBUFFER, this['webglFrameBuffer'] );
         // 텍스쳐 세팅
-        gl.bindTexture(gl.TEXTURE_2D, this['webglTexture']);
+        gl.bindTexture(gl.TEXTURE_2D, this['texture']['webglTexture']);
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this['width'], this['height'], 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
@@ -30,7 +30,7 @@ var RedFrameBuffer;
         gl.bindRenderbuffer(gl.RENDERBUFFER, this['webglRenderBuffer']);
         gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, this['width'], this['height']);
         // 프레임버퍼 세팅
-        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this['webglTexture'], 0);
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this['texture']['webglTexture'], 0);
         gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, this['webglRenderBuffer']);
         //
         gl.bindTexture(gl.TEXTURE_2D, null);

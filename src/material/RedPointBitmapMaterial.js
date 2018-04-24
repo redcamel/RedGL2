@@ -68,11 +68,18 @@ var RedPointBitmapMaterial;
             precision mediump float;
             uniform sampler2D uDiffuseTexture;
             uniform float uAlphaTest;
+            vec4 fog(float perspectiveFar, float density, vec4 fogColor, vec4 currentColor) {
+                float flog_cord = gl_FragCoord.z / gl_FragCoord.w / perspectiveFar;
+                float fog = flog_cord * density;
+                float fogFactor = clamp(1.0 - fog, 0.0,  1.0);
+                return mix(fogColor, currentColor, fogFactor);
+            }
             void main(void) {
-                vec4 texelColor = texture2D(uDiffuseTexture, vec2(gl_PointCoord.x, - gl_PointCoord.y));
-                texelColor.rgb *= texelColor.a;
-                if(texelColor.a < uAlphaTest) discard;
-                gl_FragColor = texelColor;
+                vec4 finalColor = texture2D(uDiffuseTexture, vec2(gl_PointCoord.x, - gl_PointCoord.y));
+                finalColor.rgb *= finalColor.a;
+                if(finalColor.a < uAlphaTest) discard;
+                if(uUseFog == 1.0) gl_FragColor = fog(uFogDistance, uFogDensity, uFogColor, finalColor);
+                else gl_FragColor = finalColor;
             }
             */
         }

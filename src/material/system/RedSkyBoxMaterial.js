@@ -65,10 +65,18 @@ var RedSkyBoxMaterial;
             precision mediump float;
             uniform samplerCube uSkyboxTexture;
             
+            vec4 fog(float perspectiveFar, float density, vec4 fogColor, vec4 currentColor) {
+              float flog_cord = gl_FragCoord.z / gl_FragCoord.w / perspectiveFar;
+              float fog = flog_cord * density;
+              float fogFactor = clamp(1.0 - fog, 0.0,  1.0);
+              return mix(fogColor, currentColor, fogFactor);
+            }
+
             varying vec3 vReflectionCubeCoord;
             void main(void) {
-                vec4 texelColor = textureCube(uSkyboxTexture, vReflectionCubeCoord);
-                gl_FragColor = texelColor;
+                vec4 finalColor = textureCube(uSkyboxTexture, vReflectionCubeCoord);
+                if(uUseFog == 1.0) gl_FragColor = fog(uFogDistance, uFogDensity, uFogColor, finalColor);
+                else gl_FragColor = finalColor;
             }
             */
         }

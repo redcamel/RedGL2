@@ -31,6 +31,56 @@ var RedScene;
         this['useBackgroundColor'] = true
         /**DOC:
             {
+                title :`useFog`,
+                description : `
+                    안개 사용여부
+                    초기값 true
+                `,
+                return : 'Boolean'
+            }
+        :DOC*/
+        this['useFog'] = false
+        /**DOC:
+            {
+                title :`fogDensity`,
+                description : `
+                    안개농도
+                    초기값 0.5
+                `,
+                return : 'Number'
+            }
+        :DOC*/
+        this['fogDensity'] = 0.5
+        /**DOC:
+            {
+                title :`fogDistance`,
+                description : `
+                    가시거리
+                    초기값 25.0
+                `,
+                return : 'Number'
+            }
+        :DOC*/
+        this['fogDistance'] = 25.0
+        Object.defineProperty(this, 'fogColor', (function () {
+            var v = [1,1,1,1]
+            var t0;
+            return {
+                get: function () {
+                    return v
+                },
+                set: function (hex) {
+                    hex = hex ? hex : '#fff';
+                    t0 = RedGLUtil.hexToRGB.call(this, hex);
+                    v[0] = t0[0];
+                    v[1] = t0[1];
+                    v[2] = t0[2];
+                }
+            }
+        })());
+        this['fogColor'] = '#fff'
+        /**DOC:
+            {
                 title :`children`,
                 description : `
                     자식 리스트
@@ -39,7 +89,7 @@ var RedScene;
             }
         :DOC*/
         this['children'] = []
-        
+
 
         /**DOC:
             {

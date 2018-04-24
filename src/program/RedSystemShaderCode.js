@@ -64,6 +64,14 @@ var RedSystemShaderCode;
             'varying float vTime',
             'varying vec2 vResolution',
 
+            // fog
+            'uniform float uUseFog',
+            'uniform float uFogDistance',
+            'uniform float uFogDensity',
+            'uniform vec4 uFogColor',
+
+
+            // 디렉셔널
             'const int DIRETIONAL_MAX = 3',
             'uniform vec3 uDirectionalLightPosition[3]',
             'uniform vec4 uDirectionalLightColor[3]',
@@ -78,8 +86,11 @@ var RedSystemShaderCode;
             'uniform float uPointLightIntensity[5]',
             'uniform int uPointLightNum',
 
+            // 암비안트
             'uniform vec4 uAmbientLightColor',
-            'uniform float uAmbientIntensity'
+            'uniform float uAmbientIntensity',
+
+
 
         ],
         systemUniform: {}

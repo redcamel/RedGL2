@@ -114,7 +114,7 @@ var RedRenderer;
             var tLocationInfo, tLocation, tUUID, tViewRect;
             var cacheSystemUniform;
             cacheSystemUniform = []
-            return function (redGL, time, scene, perspectiveMTX, cameraMTX, viewRect) {
+            return function (redGL, time, scene, camera, viewRect) {
                 gl = redGL.gl;
                 lightDebugRenderList.length = 0
                 for (var k in redGL['_datas']['RedProgram']) {
@@ -140,22 +140,62 @@ var RedRenderer;
                         gl.uniform2fv(tLocation, tViewRect);
                         cacheSystemUniform[tUUID] = tViewRect.toString()
                     }
+                    
+                    tLocationInfo = tSystemUniformGroup['uUseFog'];
+                    tLocation = tLocationInfo['location'];
+                    tValue = scene['useFog'] ? 1 : 0;
+                    tUUID = tLocationInfo['_UUID'];
+                    if (tLocation && cacheSystemUniform[tUUID] != tValue) {
+                        gl.uniform1f(tLocation, tValue)
+                        cacheSystemUniform[tUUID] = tValue
+                    }
+                    //
+                    tLocationInfo = tSystemUniformGroup['uFogDensity'];
+                    tLocation = tLocationInfo['location'];
+                    tValue = scene['fogDensity'];
+                    tUUID = tLocationInfo['_UUID'];
+                    if (tLocation && cacheSystemUniform[tUUID] != tValue) {
+                        gl.uniform1f(tLocation, tValue)
+                        cacheSystemUniform[tUUID] = tValue
+                    }
+                    //
+                    tLocationInfo = tSystemUniformGroup['uFogColor'];
+                    tLocation = tLocationInfo['location'];
+                    tValue = scene['fogColor'];
+                    tUUID = tLocationInfo['_UUID'];
+                    if (tLocation && cacheSystemUniform[tUUID] != tValue.toString()) {
+                        gl.uniform4fv(tLocation, tValue)
+                        cacheSystemUniform[tUUID] = tValue.toString()
+                    }
+
+                    //
+                    tLocationInfo = tSystemUniformGroup['uFogDistance'];
+                    tLocation = tLocationInfo['location'];
+                    tValue = scene['fogDistance'];
+                    tUUID = tLocationInfo['_UUID'];
+                    if (tLocation && cacheSystemUniform[tUUID] != tValue) {
+                        gl.uniform1f(tLocation, tValue)
+                        cacheSystemUniform[tUUID] = tValue
+                    }
+
                     //
                     tLocationInfo = tSystemUniformGroup['uCameraMatrix'];
                     tLocation = tLocationInfo['location'];
+                    tValue = camera['matrix'];
                     tUUID = tLocationInfo['_UUID'];
-                    if (tLocation && cacheSystemUniform[tUUID] != cameraMTX.toString()) {
-                        gl.uniformMatrix4fv(tLocation, false, cameraMTX);
-                        cacheSystemUniform[tUUID] = cameraMTX.toString()
+                    if (tLocation && cacheSystemUniform[tUUID] != tValue.toString()) {
+                        gl.uniformMatrix4fv(tLocation, false, tValue);
+                        cacheSystemUniform[tUUID] = tValue.toString()
                     }
 
                     //
                     tLocationInfo = tSystemUniformGroup['uPMatrix'];
                     tLocation = tLocationInfo['location'];
+                    tValue = camera['perspectiveMTX'];
                     tUUID = tLocationInfo['_UUID'];
-                    if (tLocation && cacheSystemUniform[tUUID] != perspectiveMTX.toString()) {
-                        gl.uniformMatrix4fv(tLocation, false, perspectiveMTX);
-                        cacheSystemUniform[tUUID] = perspectiveMTX.toString()
+                    if (tLocation && cacheSystemUniform[tUUID] != tValue.toString()) {
+                        gl.uniformMatrix4fv(tLocation, false, tValue);
+                        cacheSystemUniform[tUUID] = tValue.toString()
                     }
 
                     //
@@ -383,6 +423,7 @@ var RedRenderer;
         return function (redGL, time) {
             var gl;
             var tViewRect;
+            var tRenderInfo
             gl = redGL.gl;
             self = this;
             // 캔버스 사이즈 적용
@@ -410,8 +451,8 @@ var RedRenderer;
                 // 위치/크기의 % 여부를 파싱
                 valueParser(tViewRect);
                 //
-                self['renderInfo'][tView['key']] = {
-                    orthographic: tCamera['orthographic'],
+                tRenderInfo = self['renderInfo'][tView['key']] = {
+                    orthographicYn: tCamera['orthographicYn'],
                     x: tView['_x'],
                     y: tView['_y'],
                     width: tView['_width'],
@@ -426,7 +467,7 @@ var RedRenderer;
                 // viewport 설정
                 gl.viewport(tViewRect[0], worldRect[3] - tViewRect[3] - tViewRect[1], tViewRect[2], tViewRect[3]);
                 gl.scissor(tViewRect[0], worldRect[3] - tViewRect[3] - tViewRect[1], tViewRect[2], tViewRect[3]);
-        
+
                 if (tScene['useBackgroundColor']) {
                     gl.clearColor(tScene['r'], tScene['g'], tScene['b'], 1);
                     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -435,8 +476,8 @@ var RedRenderer;
                     gl.clearColor(0, 0, 0, 0);
                     gl.clear(gl.DEPTH_BUFFER_BIT);
                 }
-               
-                if(!(tCamera instanceof RedCamera)){
+
+                if (!(tCamera instanceof RedCamera)) {
                     // 카메라 형식이 아닌경우 컨트롤러로 판단함
                     tCamera['update']()
                     tCamera = tCamera['camera']
@@ -445,7 +486,7 @@ var RedRenderer;
                 perspectiveMTX = tCamera['perspectiveMTX']
                 // view 에 적용할 카메라 퍼스펙티브를 계산
                 mat4.identity(perspectiveMTX);
-                if (tCamera['orthographic']) {
+                if (tCamera['orthographicYn']) {
                     mat4.ortho(
                         perspectiveMTX,
                         -0.5, // left
@@ -467,33 +508,35 @@ var RedRenderer;
                         tCamera['nearClipping'],
                         tCamera['farClipping']
                     );
-            
+
                     gl.enable(gl.CULL_FACE);
                 };
+
+
                 ///////////////////////////////
                 // 실제렌더 계산
-                updateSystemUniform(redGL, time, tScene, perspectiveMTX, tCamera['matrix'], tViewRect)
+                updateSystemUniform(redGL, time, tScene, tCamera, tViewRect)
                 if (tScene['skyBox']) {
                     gl.cullFace(gl.FRONT)
                     tScene['skyBox']['scaleX'] = tScene['skyBox']['scaleY'] = tScene['skyBox']['scaleZ'] = tCamera['farClipping']
-                    self.sceneRender(redGL, gl, tCamera['orthographic'], [tScene['skyBox']], time, self['renderInfo'][tView['key']]);
+                    self.sceneRender(redGL, gl, tCamera['orthographicYn'], [tScene['skyBox']], time, tRenderInfo);
                     gl.cullFace(gl.BACK)
                     gl.clear(gl.DEPTH_BUFFER_BIT);
                 }
 
                 // 씬렌더 호출
-                self.sceneRender(redGL, gl, tCamera['orthographic'], tScene['children'], time, self['renderInfo'][tView['key']]);
+                self.sceneRender(redGL, gl, tCamera['orthographicYn'], tScene['children'], time, tRenderInfo);
                 // 그리드가 있으면 그림
-                if (tScene['grid']) self.sceneRender(redGL, gl, tCamera['orthographic'], [tScene['grid']], time, self['renderInfo'][tView['key']]);
+                if (tScene['grid']) self.sceneRender(redGL, gl, tCamera['orthographicYn'], [tScene['grid']], time, tRenderInfo);
                 // asix가 있으면 그림
-                if (tScene['axis']) self.sceneRender(redGL, gl, tCamera['orthographic'], tScene['axis']['children'], time, self['renderInfo'][tView['key']]);
+                if (tScene['axis']) self.sceneRender(redGL, gl, tCamera['orthographicYn'], tScene['axis']['children'], time, tRenderInfo);
                 // 디버깅 라이트 업데이트 
-                if (lightDebugRenderList.length) self.sceneRender(redGL, gl, tCamera['orthographic'], lightDebugRenderList, time, self['renderInfo'][tView['key']]);
+                if (lightDebugRenderList.length) self.sceneRender(redGL, gl, tCamera['orthographicYn'], lightDebugRenderList, time, tRenderInfo);
+               
 
-             
             })
             if (this['renderDebuger']['visible']) this['renderDebuger'].update(redGL, self['renderInfo'])
-            
+
         }
     })();
 
@@ -507,7 +550,7 @@ var RedRenderer;
             redGL,
             gl,
             children,
-            orthographic,
+            orthographicYn,
             time,
             renderResultObj,
             tCacheInterleaveBuffer,
@@ -520,7 +563,7 @@ var RedRenderer;
             var tMesh;
             var k, i, i2;
             // 오쏘고날 스케일 비율
-            var orthographicScale = orthographic ? -1 : 1
+            var orthographicYnScale = orthographicYn ? -1 : 1
             //
             var BYTES_PER_ELEMENT;;
             var CONVERT_RADIAN
@@ -759,7 +802,7 @@ var RedRenderer;
 
 
                     // tMVMatrix scale
-                    aX = tMesh['scaleX'], aY = tMesh['scaleY'] * orthographicScale, aZ = tMesh['scaleZ'],
+                    aX = tMesh['scaleX'], aY = tMesh['scaleY'] * orthographicYnScale, aZ = tMesh['scaleZ'],
                     a[0] = a[0] * aX, a[1] = a[1] * aX, a[2] = a[2] * aX, a[3] = a[3] * aX,
                     a[4] = a[4] * aY, a[5] = a[5] * aY, a[6] = a[6] * aY, a[7] = a[7] * aY,
                     a[8] = a[8] * aZ, a[9] = a[9] * aZ, a[10] = a[10] * aZ, a[11] = a[11] * aZ,
@@ -936,7 +979,7 @@ var RedRenderer;
                         redGL,
                         gl,
                         tMesh['children'],
-                        orthographic,
+                        orthographicYn,
                         time,
                         renderResultObj,
                         tCacheInterleaveBuffer,
@@ -948,7 +991,7 @@ var RedRenderer;
                 }
             }
         }
-        return function (redGL, gl, orthographic, children, time, renderResultObj) {
+        return function (redGL, gl, orthographicYn, children, time, renderResultObj) {
             if (this['cacheState']['pointSize'] == undefined) this['cacheState']['pointSize'] = 1
             if (!this['cacheState']['useCullFace']) this['cacheState']['useCullFace'] = gl.getParameter(gl.CULL_FACE)
             if (!this['cacheState']['cullFace']) this['cacheState']['cullFace'] = gl.getParameter(gl.CULL_FACE_MODE)
@@ -965,7 +1008,7 @@ var RedRenderer;
                 redGL,
                 gl,
                 children,
-                orthographic,
+                orthographicYn,
                 time,
                 renderResultObj,
                 this['cacheAttrInfo'],

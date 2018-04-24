@@ -48,14 +48,14 @@
   },
   {
     "code": "PROPERTY",
-    "title": "orthographic",
-    "description": "orthographic - false",
+    "title": "orthographicYn",
+    "description": "orthographicYn - false",
     "return": "Boolean"
   },
   {
     "code": "PROPERTY",
     "title": "perspectiveMTX",
-    "description": "\northographic값에따라 렌더링시 퍼스펙티브 or 오쏘고날 매트릭스로 자동 변경됨\n",
+    "description": "\northographicYn값에따라 렌더링시 퍼스펙티브 or 오쏘고날 매트릭스로 자동 변경됨\n",
     "return": "mat4"
   },
   {

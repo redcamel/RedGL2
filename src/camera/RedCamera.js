@@ -105,12 +105,12 @@ var RedCamera;
         /**DOC:
         {
             code:`PROPERTY`,
-            title :`orthographic`,
-            description : `orthographic - false`,
+            title :`orthographicYn`,
+            description : `orthographicYn - false`,
             return : 'Boolean'
         }
         :DOC*/
-        this['orthographic'] = false;
+        this['orthographicYn'] = false;
         /**DOC:
         {
             code:`PROPERTY`,
@@ -127,7 +127,7 @@ var RedCamera;
             code:`PROPERTY`,
             title :`perspectiveMTX`,
             description : `
-            orthographic값에따라 렌더링시 퍼스펙티브 or 오쏘고날 매트릭스로 자동 변경됨
+            orthographicYn값에따라 렌더링시 퍼스펙티브 or 오쏘고날 매트릭스로 자동 변경됨
             `,
             return : 'mat4'
         }
