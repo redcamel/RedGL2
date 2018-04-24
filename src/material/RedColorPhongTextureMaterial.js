@@ -118,7 +118,6 @@ var RedColorPhongTextureMaterial;
             varying vec4 vColor;
             uniform sampler2D uDisplacementTexture;
             uniform float uDisplacementPower;
-
             varying vec4 vVertexPositionEye4;
             void main(void) {
                 vColor = uColor; 
@@ -142,6 +141,13 @@ var RedColorPhongTextureMaterial;
             
             varying vec4 vVertexPositionEye4;
             varying vec4 vColor;
+            
+            vec4 fog(float perspectiveFar, float density, vec4 fogColor, vec4 currentColor) {
+              float flog_cord = gl_FragCoord.z / gl_FragCoord.w / perspectiveFar;
+              float fog = flog_cord * density;
+              float fogFactor = clamp(1.0 - fog, 0.0,  1.0);
+              return mix(fogColor, currentColor, fogFactor);
+            }
             void main(void) {
                 vec4 la = uAmbientLightColor * uAmbientLightColor.a;
                 vec4 ld = vec4(0.0, 0.0, 0.0, 1.0);
@@ -195,7 +201,8 @@ var RedColorPhongTextureMaterial;
                 vec4 finalColor = la * uAmbientIntensity + ld + ls; 
                 finalColor.rgb *= texelColor.a;
                 finalColor.a = texelColor.a;
-                gl_FragColor = finalColor;
+                if(uUseFog == 1.0) gl_FragColor = fog(uFogDistance, uFogDensity, uFogColor, finalColor);
+                else gl_FragColor = finalColor;
             }
             */
         }

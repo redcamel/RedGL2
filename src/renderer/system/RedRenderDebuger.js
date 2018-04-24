@@ -35,7 +35,7 @@ var RedRenderDebuger;
                 this['_contentBox'].innerHTML +=
                     '<div style="padding:3px">' +
                     '<div><b>RedView : key - ' + renderInfo[k]['key'] + '</b></div>' +
-                    ' orthographic - ' + renderInfo[k]['orthographic'] +
+                    ' orthographicYn - ' + renderInfo[k]['orthographicYn'] +
                     ' <br>call - ' + renderInfo[k]['call'] +
                     ' <br> width - ' + renderInfo[k]['width'] +
                     ' / height - ' + renderInfo[k]['height'] +
