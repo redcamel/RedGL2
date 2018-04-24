@@ -74,7 +74,13 @@ var RedColorMaterial;
             void main(void) {
                 vColor = uColor; 
                 gl_PointSize = uPointSize;
-                if(uSprite3DYn) gl_Position = uPMatrix * calSprite3D(uCameraMatrix , uMVMatrix) *  vec4(aVertexPosition, 1.0);
+                if(uSprite3DYn) {
+                    gl_Position = uPMatrix * calSprite3D(uCameraMatrix , uMVMatrix) *  vec4(aVertexPosition, 1.0);
+                    if(!uPerspectiveScale){
+                        gl_Position /= gl_Position.w;
+                        gl_Position.xy += aVertexPosition.xy * vec2(uMVMatrix[0][0],uMVMatrix[1][1]);
+                    }
+                }
                 else gl_Position = uPMatrix * uCameraMatrix * uMVMatrix *  vec4(aVertexPosition, 1.0);
             }
             */

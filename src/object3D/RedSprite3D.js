@@ -37,7 +37,6 @@ var RedSprite3D;
         tGL = redGL.gl;
         RedBaseObject3D['build'].call(this, tGL)
         this['geometry'] = RedPlane(redGL, 1, 1, 0);
-        this['useCullFace'] = false
         /**DOC:
 		{
             title :`material`,
@@ -46,6 +45,18 @@ var RedSprite3D;
 		}
 	    :DOC*/
         this['material'] = material;
+        /**DOC:
+       {
+           title :`perspectiveScale`,
+           description : `
+           퍼스펙티브에 스케일이 반응할것인가 여부
+           기본값 true
+           `,
+           return : 'Boolean'
+       }
+       :DOC*/
+        this['perspectiveScale'] = true
+        this['useCullFace'] = false
         this['_UUID'] = RedGL['makeUUID']();
         // Object.seal(this)
     }

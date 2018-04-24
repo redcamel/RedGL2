@@ -5,6 +5,11 @@
     "return": "RedBaseMaterial 확장 Instance"
   },
   {
+    "title": "perspectiveScale",
+    "description": "\n퍼스펙티브에 스케일이 반응할것인가 여부\n기본값 true\n",
+    "return": "Boolean"
+  },
+  {
     "constructorYn": true,
     "title": "RedSprite3D",
     "description": "\n    RedSprite3D Instance 생성기\n",
