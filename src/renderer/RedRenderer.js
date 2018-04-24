@@ -922,7 +922,10 @@ var RedRenderer;
                         tCacheState['blendSrc'] = tMesh['blendSrc']
                         tCacheState['blendDst'] = tMesh['blendDst']
                     }
-                    if (tSystemUniformGroup['uSprite3DYn']['location']) gl.uniform1i(tSystemUniformGroup['uSprite3DYn']['location'], tSpriteYn)
+                    if (tSystemUniformGroup['uSprite3DYn']['location']) {
+                        gl.uniform1i(tSystemUniformGroup['uSprite3DYn']['location'], tSpriteYn)
+                        gl.uniform1i(tSystemUniformGroup['uPerspectiveScale']['location'], tMesh['perspectiveScale'])                        
+                    }
 
                     /////////////////////////////////////////////////////////////////////////
                     /////////////////////////////////////////////////////////////////////////

@@ -81,6 +81,22 @@
             gui.initRedGL()
             gui.initCamera(tCamera)
             gui.initScene(tScene)
+
+             var t0 = gui['gui'].addFolder('Sprite3D')
+            var testSprite = function () {
+                this.perspectiveScale = true
+            }
+            testSprite = new testSprite()
+
+            t0.add(testSprite, 'perspectiveScale').onChange(function (v) {
+                var i = tScene.numChildren()
+                while(i--){
+                    console.log(tScene['children'][i])
+                    tScene['children'][i]['perspectiveScale'] = v
+                }
+
+            })
+            t0.open()
         }
     </script>
 </body>
