@@ -120,7 +120,7 @@ var RedStandardMaterial;
             void main(void) {
                 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
                 vVertexNormal = vec3(uNMatrix * vec4(aVertexNormal,1.0)); 
-                vVertexPositionEye4 = uMVMatrix * vec4(aVertexPosition, 1.0);         
+                vVertexPositionEye4 = uMMatrix * vec4(aVertexPosition, 1.0);         
                 vVertexPositionEye4.xyz += normalize(vVertexNormal) * texture2D(uDisplacementTexture, vTexcoord).x * uDisplacementPower ;
  
                 gl_PointSize = uPointSize;
@@ -155,7 +155,8 @@ var RedStandardMaterial;
                 if(texelColor.a ==0.0) discard;
  
                 vec3 N = normalize(vVertexNormal);
-                N = normalize(2.0 * (N + texture2D(uNormalTexture, vTexcoord).rgb  - 0.5));
+                vec4 normalColor = texture2D(uNormalTexture, vTexcoord);
+                if(normalColor.a != 0.0) N = normalize(2.0 * (N + normalColor.rgb  - 0.5));
  
                 vec4 specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);
                 float specularTextureValue = 1.0;
