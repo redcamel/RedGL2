@@ -157,7 +157,8 @@ var RedColorPhongTextureMaterial;
                 // texelColor.rgb *= texelColor.a;
 
                 vec3 N = normalize(vVertexNormal);
-                N = normalize(2.0 * (N + texture2D(uNormalTexture, vTexcoord).rgb  - 0.5));
+                vec4 normalColor = texture2D(uNormalTexture, vTexcoord);
+                if(normalColor.a != 0.0) N = normalize(2.0 * (N + normalColor.rgb  - 0.5));
 
                 vec4 specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);
                 float specularTextureValue = 1.0;

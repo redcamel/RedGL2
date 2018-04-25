@@ -108,7 +108,7 @@ var RedEnvironmentMaterial;
                 return : 'Number'
             }
         :DOC*/
-        this['shininess'] = 16
+        this['shininess'] = 8
         /**DOC:
             {
                 title :`specularPower`,
@@ -155,8 +155,8 @@ var RedEnvironmentMaterial;
                 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
                 vVertexNormal = vec3(uNMatrix * vec4(aVertexNormal,1.0)); 
                 vVertexPositionEye4 = uMMatrix * vec4(aVertexPosition, 1.0);     
-                vReflectionCubeCoord = -(uMMatrix *vec4(aVertexPosition, 0.0)).xyz;
                 vVertexPositionEye4.xyz += normalize(vVertexNormal) * texture2D(uDisplacementTexture, vTexcoord).x * uDisplacementPower ;
+                vReflectionCubeCoord = -vVertexPositionEye4.xyz;
                 
                 gl_PointSize = uPointSize;
                 gl_Position = uPMatrix * uCameraMatrix * vVertexPositionEye4;     
@@ -197,7 +197,7 @@ var RedEnvironmentMaterial;
  
                 vec3 N = normalize(vVertexNormal);
                 vec4 normalColor = texture2D(uNormalTexture, vTexcoord);
-                N = normalize(2.0 * (N + normalColor.rgb - 0.5));
+                if(normalColor.a != 0.0) N = normalize(2.0 * (N + normalColor.rgb  - 0.5));
  
                 vec4 reflectionColor = textureCube(uEnvironmentTexture, 2.0 * dot(vReflectionCubeCoord,vVertexNormal) * vVertexNormal - vReflectionCubeCoord);
                 texelColor = texelColor * (1.0 - uReflectionPower) + reflectionColor * uReflectionPower;
