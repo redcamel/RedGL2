@@ -46,17 +46,20 @@ var RedGridMaterial;
         fSource = function () {
             /*
             precision mediump float;
-            vec4 fog(float perspectiveFar, float density, vec4 fogColor, vec4 currentColor) {
-              float flog_cord = gl_FragCoord.z / gl_FragCoord.w / perspectiveFar;
-              float fog = flog_cord * density;
-              float fogFactor = clamp(1.0 - fog, 0.0,  1.0);
-              return mix(fogColor, currentColor, fogFactor);
+            float fogFactor(float perspectiveFar, float density){
+                float flog_cord = gl_FragCoord.z / gl_FragCoord.w / perspectiveFar;
+                float fog = flog_cord * density;
+                if(1.0 - fog < 0.0) discard;
+                return clamp(1.0 - fog, 0.0,  1.0);
+            }
+            vec4 fog(float fogFactor, vec4 fogColor, vec4 currentColor) {
+                return mix(fogColor, currentColor, fogFactor);
             }
             varying vec4 vColor;
             void main(void) {
                 vec4 finalColor = vColor;
                 finalColor.rgb *= vColor.a;
-                if(uUseFog == 1.0) gl_FragColor = fog(uFogDistance, uFogDensity, uFogColor, finalColor);
+                if(uUseFog == 1.0) gl_FragColor = fog( fogFactor(uFogDistance, uFogDensity), uFogColor, finalColor);
                 else gl_FragColor = finalColor;
             }
             */

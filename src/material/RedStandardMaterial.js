@@ -122,7 +122,7 @@ var RedStandardMaterial;
                 vVertexNormal = vec3(uNMatrix * vec4(aVertexNormal,1.0)); 
                 vVertexPositionEye4 = uMMatrix * vec4(aVertexPosition, 1.0);         
                 vVertexPositionEye4.xyz += normalize(vVertexNormal) * texture2D(uDisplacementTexture, vTexcoord).x * uDisplacementPower ;
- 
+                
                 gl_PointSize = uPointSize;
                 gl_Position = uPMatrix * uCameraMatrix * vVertexPositionEye4;
             }
@@ -139,10 +139,13 @@ var RedStandardMaterial;
             uniform float uSpecularPower;
             
             varying vec4 vVertexPositionEye4;
-            vec4 fog(float perspectiveFar, float density, vec4 fogColor, vec4 currentColor) {
+            float fogFactor(float perspectiveFar, float density){
                 float flog_cord = gl_FragCoord.z / gl_FragCoord.w / perspectiveFar;
                 float fog = flog_cord * density;
-                float fogFactor = clamp(1.0 - fog, 0.0,  1.0);
+                if(1.0 - fog < 0.0) discard;
+                return clamp(1.0 - fog, 0.0,  1.0);
+            }
+            vec4 fog(float fogFactor, vec4 fogColor, vec4 currentColor) {
                 return mix(fogColor, currentColor, fogFactor);
             }
             void main(void) {
@@ -200,7 +203,7 @@ var RedStandardMaterial;
                 vec4 finalColor = la * uAmbientIntensity + ld + ls; 
                 finalColor.rgb *= texelColor.a;
                 finalColor.a = texelColor.a;
-                if(uUseFog == 1.0) gl_FragColor = fog(uFogDistance, uFogDensity, uFogColor, finalColor);
+                if(uUseFog == 1.0) gl_FragColor = fog( fogFactor(uFogDistance, uFogDensity), uFogColor, finalColor);
                 else gl_FragColor = finalColor;
             }
             */

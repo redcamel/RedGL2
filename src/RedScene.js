@@ -11,8 +11,8 @@ var RedScene;
         return : 'RedScene Instance'
     }
 	:DOC*/
-    RedScene = function (backgroundColor) {
-        if (!(this instanceof RedScene)) return new RedScene(backgroundColor);
+    RedScene = function (redGL, backgroundColor) {
+        if (!(this instanceof RedScene)) return new RedScene(redGL, backgroundColor);
         var _skyBox, _grid, _axis;
         this['r'] = 0
         this['g'] = 0
@@ -63,7 +63,7 @@ var RedScene;
         :DOC*/
         this['fogDistance'] = 25.0
         Object.defineProperty(this, 'fogColor', (function () {
-            var v = [1,1,1,1]
+            var v = [1, 1, 1, 1]
             var t0;
             return {
                 get: function () {
@@ -142,6 +142,7 @@ var RedScene;
                 return _axis
             }
         })
+        this['postEffectManager'] = RedPostEffectManager(redGL)
         this['_lightInfo'] = {
             RedAmbientLight: null,
             RedDirectionalLight: [],

@@ -102,6 +102,10 @@ var RedProgram;
                             tRenderType = 'vec';
                             tRenderMethod = 'uniform2fv';
                             break
+                        case 'bool':
+                            tRenderType = 'bool';
+                            tRenderMethod = 'uniform1i';
+                        break
 
                     }
                     t0['renderType'] = tRenderType
