@@ -75,6 +75,8 @@ gulp.task('make-doc', function () {
 		"src/base/RedBaseMaterial.js",
 		"src/base/RedBaseObject3D.js",
 
+		"src/frameBuffer/RedFrameBuffer.js",
+
 		"src/geometry/RedBuffer.js",
 		"src/geometry/RedGeometry.js",
 		'src/geometry/RedInterleaveInfo.js',
@@ -108,6 +110,18 @@ gulp.task('make-doc', function () {
 		"src/object3D/RedSprite3D.js",
 
 		"src/particle/RedPointUnit.js",
+
+		"src/postEffect/RedPostEffect_Blur.js",
+		"src/postEffect/RedPostEffect_Convolution.js",
+		"src/postEffect/RedPostEffect_Invert.js",
+		"src/postEffect/RedPostEffect_Gray.js",
+		"src/postEffect/RedPostEffect_HueSaturation.js",
+		"src/postEffect/RedPostEffect_BrightnessContrast.js",
+		"src/postEffect/RedPostEffect_Vignetting.js",
+		"src/postEffect/RedPostEffect_Pixelize.js",
+		"src/postEffect/RedPostEffect_ZoomBlur.js",
+		"src/postEffect/RedPostEffect_HalfTone.js",
+		"src/postEffect/RedPostEffectManager.js",
 
 		"src/primitives/RedBox.js",
 		"src/primitives/RedPlane.js",
@@ -153,6 +167,8 @@ gulp.task('combine-js', function () {
 		"src/base/RedBaseLight.js",
 		"src/base/RedBaseMaterial.js",
 		"src/base/RedBaseObject3D.js",
+
+		"src/frameBuffer/RedFrameBuffer.js",
 
 		"src/geometry/RedBuffer.js",
 		"src/geometry/RedGeometry.js",
@@ -207,6 +223,7 @@ gulp.task('combine-js', function () {
 			'end', function () {
 				gulp.src([
 					"release/" + name + '.min.js',
+					// 재질
 					"src/material/RedMaterial.js",
 					"src/material/RedMaterial.js",
 					"src/material/RedColorMaterial.js",
@@ -219,7 +236,19 @@ gulp.task('combine-js', function () {
 
 					"src/material/system/RedGridMaterial.js",
 					"src/material/RedPointColorMaterial.js",
-					"src/material/system/RedSkyBoxMaterial.js"
+					"src/material/system/RedSkyBoxMaterial.js",
+					// 이펙트
+					"src/postEffect/RedPostEffect_Blur.js",
+					"src/postEffect/RedPostEffect_Convolution.js",
+					"src/postEffect/RedPostEffect_Invert.js",
+					"src/postEffect/RedPostEffect_Gray.js",
+					"src/postEffect/RedPostEffect_HueSaturation.js",
+					"src/postEffect/RedPostEffect_BrightnessContrast.js",
+					"src/postEffect/RedPostEffect_Vignetting.js",
+					"src/postEffect/RedPostEffect_Pixelize.js",
+					"src/postEffect/RedPostEffect_ZoomBlur.js",
+					"src/postEffect/RedPostEffect_HalfTone.js",
+					"src/postEffect/RedPostEffectManager.js"
 				])
 					.pipe(concat(name + '.min.js')) // 병합한다.
 					.pipe(insert.append("console.log('" + 'RedGL' + " Release. last update(" + d + ")'" + ");"))

@@ -512,7 +512,8 @@ var RedRenderer;
                     gl.enable(gl.CULL_FACE);
                 };
 
-
+                // 포스트이펙트 확인
+                if (tScene['postEffectManager']['postEffectList'].length) tScene['postEffectManager'].bind(gl);
                 ///////////////////////////////
                 // 실제렌더 계산
                 updateSystemUniform(redGL, time, tScene, tCamera, tViewRect)
@@ -532,6 +533,76 @@ var RedRenderer;
                 if (tScene['axis']) self.sceneRender(redGL, gl, tCamera['orthographicYn'], tScene['axis']['children'], time, tRenderInfo);
                 // 디버깅 라이트 업데이트 
                 if (lightDebugRenderList.length) self.sceneRender(redGL, gl, tCamera['orthographicYn'], lightDebugRenderList, time, tRenderInfo);
+
+
+
+                // 포스트이펙트 렌더
+                if (tScene['postEffectManager']['postEffectList'].length) {
+                    tScene['postEffectManager'].unbind(gl)
+                    var tChild
+                    var tMaterial;
+                    var tProgram;
+                    var tLocationInfo;
+                    var tLocation;
+                    var tValue;
+                    var tManager
+                    var setBaseUniform;
+                    tManager = tScene['postEffectManager']
+                    tChild = tManager['children'][0]
+                    setBaseUniform = function (effect) {
+                        tMaterial = tChild['material'] = effect;
+                        tProgram = tMaterial['program']
+                        gl.useProgram(tProgram['webglProgram'])
+                        tLocationInfo = tProgram['systemUniformLocation']['uCameraMatrix'];
+                        tLocation = tLocationInfo['location'];
+                        tValue = mat4.create();
+                        gl.uniformMatrix4fv(tLocation, false, tValue);
+
+                        tLocationInfo = tProgram['systemUniformLocation']['uPMatrix'];
+                        tLocation = tLocationInfo['location'];
+                        tValue = mat4.ortho(
+                            tValue,
+                            -0.5  , // left
+                            0.5, // right
+                            -0.5, // bottom
+                            0.5, // top,
+                            - tCamera['farClipping'],
+                            tCamera['farClipping']
+                        )
+                        gl.uniformMatrix4fv(tLocation, false, tValue);
+
+                        tLocationInfo = tProgram['systemUniformLocation']['uResolution'];
+                        tLocation = tLocationInfo['location'];
+                        gl.uniform2fv(tLocation, [tViewRect[2], tViewRect[3]]);
+                    }
+                    setBaseUniform(tManager['finalMaterial'])
+                    var originFrameBufferTexture;
+                    var lastFrameBufferTexture;
+                  
+                    lastFrameBufferTexture = originFrameBufferTexture = tManager['frameBuffer']['texture']
+                    tManager['postEffectList'].forEach(function (effect) {
+                        effect['frameBuffer']['width'] =  gl.drawingBufferWidth;
+                        effect['frameBuffer']['height'] =  gl.drawingBufferHeight
+                        // console.log('Render Effect', v)
+                        effect.bind(gl);
+                        setBaseUniform(effect)
+                        effect['diffuseTexture'] = lastFrameBufferTexture;
+
+
+                        self.sceneRender(redGL, gl, true, tManager['children'], time, tRenderInfo);
+                        effect.unbind(gl)
+                        lastFrameBufferTexture = effect['frameBuffer']['texture']
+                    })
+                    if (lastFrameBufferTexture != originFrameBufferTexture) {
+                        tManager['finalMaterial']['diffuseTexture'] = lastFrameBufferTexture['texture'];
+                        self.sceneRender(redGL, gl, true, tManager['children'], time, tRenderInfo);
+                    } else {
+                    }
+                    tManager['finalMaterial']['diffuseTexture'] = tManager['frameBuffer']['texture'];
+                    tManager['frameBuffer']['width'] =  gl.drawingBufferWidth;
+                    tManager['frameBuffer']['height'] =  gl.drawingBufferHeight
+
+                }
 
 
             })
@@ -563,7 +634,7 @@ var RedRenderer;
             var tMesh;
             var k, i, i2;
             // 오쏘고날 스케일 비율
-            var orthographicYnScale = orthographicYn ? -1 : 1
+            var orthographicYnScale = orthographicYn ? 1 : 1
             //
             var BYTES_PER_ELEMENT;;
             var CONVERT_RADIAN
@@ -734,6 +805,7 @@ var RedRenderer;
 
                                 tRenderType == 'float' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
                                     : tRenderType == 'int' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
+                                        : tRenderType == 'bool' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
                                         // : tRenderType == 'vec' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
                                         //TODO: 이걸해결해야하는군..
                                         : tRenderType == 'vec' ? gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
@@ -924,7 +996,7 @@ var RedRenderer;
                     }
                     if (tSystemUniformGroup['uSprite3DYn']['location']) {
                         gl.uniform1i(tSystemUniformGroup['uSprite3DYn']['location'], tSpriteYn)
-                        gl.uniform1i(tSystemUniformGroup['uPerspectiveScale']['location'], tMesh['perspectiveScale'])                        
+                        gl.uniform1i(tSystemUniformGroup['uPerspectiveScale']['location'], tMesh['perspectiveScale'])
                     }
 
                     /////////////////////////////////////////////////////////////////////////

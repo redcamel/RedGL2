@@ -59,6 +59,18 @@
 
     <script src="../src/particle/RedPointUnit.js"></script>
 
+    <script src="../src/postEffect/RedPostEffect_Blur.js"></script>
+    <script src="../src/postEffect/RedPostEffect_Convolution.js"></script>
+    <script src="../src/postEffect/RedPostEffect_Invert.js"></script>
+    <script src="../src/postEffect/RedPostEffect_Gray.js"></script>
+    <script src="../src/postEffect/RedPostEffect_HueSaturation.js"></script>    
+    <script src="../src/postEffect/RedPostEffect_BrightnessContrast.js"></script>    
+    <script src="../src/postEffect/RedPostEffect_Vignetting.js"></script>        
+    <script src="../src/postEffect/RedPostEffect_Pixelize.js"></script>
+    <script src="../src/postEffect/RedPostEffect_ZoomBlur.js"></script>
+    <script src="../src/postEffect/RedPostEffect_HalfTone.js"></script>
+    <script src="../src/postEffect/RedPostEffectManager.js"></script>
+
     <script src="../src/primitives/RedBox.js"></script>
     <script src="../src/primitives/RedPlane.js"></script>
     <script src="../src/primitives/RedSphere.js"></script>
@@ -99,7 +111,7 @@
             self = this
             tGL = this.gl;
             this.world = tWorld = RedWorld();
-            tScene3D = RedScene();
+            tScene3D = RedScene(this);
 
             tScene3D['useFog'] = true
 
