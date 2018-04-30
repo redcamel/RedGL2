@@ -88,13 +88,13 @@ var RedRenderer;
     var tScene;
     RedRenderer.prototype.worldRender = (function () {
         var worldRect;
-
         var perspectiveMTX;
         var self;
         var valueParser;
         var updateSystemUniform;
         var glInitialize;
         var lightDebugRenderList
+        var postEffectRender;
         lightDebugRenderList = []
         // 숫자면 숫자로 %면 월드대비 수치로 변경해줌
         valueParser = function (rect) {
@@ -420,6 +420,110 @@ var RedRenderer;
             // 픽셀 플립 기본설정
             gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
         };
+        postEffectRender = (function () {
+            var tPostEffectMesh;
+            var setBaseUniform;
+            setBaseUniform = (function () {
+                var tMaterial;
+                var tProgram;
+                var tLocationInfo;
+                var tSystemUniformLocation;
+                var tLocation;
+                var tValue;
+                var tViewRect;
+                tViewRect = new Float32Array(2)
+                return function (gl, effect, viewRect) {
+                    // 최종메쉬의 재질을 현재 이펙트로 변경
+                    tMaterial = tPostEffectMesh['material'] = effect;
+                    // 프로그램을 변경
+                    tProgram = tMaterial['program']
+                    gl.useProgram(tProgram['webglProgram'])
+                    // 시스템 유니폼중 업데이트 해야할 목록 처리
+                    tSystemUniformLocation = tProgram['systemUniformLocation'];
+                    // 카메라 매트릭스 처리
+                    tLocationInfo = tSystemUniformLocation['uCameraMatrix'];
+                    tLocation = tLocationInfo['location'];
+                    tValue = mat4.create();
+                    gl.uniformMatrix4fv(tLocation, false, tValue);
+                    // 퍼스펙티브 매트릭스 처리
+                    tLocationInfo = tSystemUniformLocation['uPMatrix'];
+                    tLocation = tLocationInfo['location'];
+                    tValue = mat4.ortho(
+                        tValue,
+                        -0.5, // left
+                        0.5, // right
+                        -0.5, // bottom
+                        0.5, // top,
+                        - tCamera['farClipping'],
+                        tCamera['farClipping']
+                    )
+
+                    gl.uniformMatrix4fv(tLocation, false, tValue);
+                    // 레졸루션 정보 처리
+                    tLocationInfo = tSystemUniformLocation['uResolution'];
+                    tLocation = tLocationInfo['location'];
+                    tViewRect[0] = viewRect[2];
+                    tViewRect[1] = viewRect[3];
+                    gl.uniform2fv(tLocation, tViewRect);
+                }
+            })();
+            return (function () {
+                var originFrameBufferTexture;
+                var lastFrameBufferTexture;
+                var frameBufferRect;
+                frameBufferRect = new Float32Array(4)
+
+                return function (redGL, gl, postEffectManager, viewRect, time, renderInfo) {
+                    // 포스트 이펙터 언바인딩
+                    postEffectManager.unbind(gl)
+                    tPostEffectMesh = postEffectManager['children'][0]
+
+                    // 프레임 버퍼 정보를 캐싱
+                    lastFrameBufferTexture = originFrameBufferTexture = postEffectManager['frameBuffer']['texture']
+                    // 포스트 이펙트를 돌면서 갱신해나간다.
+                    if (
+                        postEffectManager['frameBuffer']['width'] != gl.drawingBufferWidth
+                        || postEffectManager['frameBuffer']['height'] != gl.drawingBufferWidth
+                    ) {
+                        postEffectManager['frameBuffer']['width'] = gl.drawingBufferWidth
+                        postEffectManager['frameBuffer']['height'] = gl.drawingBufferHeight
+                        frameBufferRect[2] = postEffectManager['postEffectList'][0]['frameBuffer']['width']
+                        frameBufferRect[3] = postEffectManager['postEffectList'][0]['frameBuffer']['height']
+                        gl.viewport(0, 0, frameBufferRect[2], frameBufferRect[3]);
+                        gl.scissor(0, 0, frameBufferRect[2], frameBufferRect[3]);
+                    }
+                    postEffectManager['postEffectList'].forEach(function (effect) {
+                        // console.log('Render Effect', v)
+
+                        // 해당 이펙트의 프레임 버퍼를 바인딩
+                        effect.bind(gl);
+                        // 해당 이펙트의 프레임버퍼 유니폼 정보 업데이트
+                        setBaseUniform(gl, effect, frameBufferRect)
+                        // 해당 이펙트의 기본 텍스쳐를 지난 이펙트의 최종 텍스쳐로 업로드
+                        effect['diffuseTexture'] = lastFrameBufferTexture;
+                        // 해당 이펙트를 렌더링하고
+                        self.sceneRender(redGL, gl, true, postEffectManager['children'], time, renderInfo);
+                        // 해당 이펙트의 프레임 버퍼를 언바인딩한다.
+                        effect.unbind(gl)
+                        // 현재 이펙트를 최종 텍스쳐로 기록하고 다음 이펙트가 있을경우 활용한다. 
+                        lastFrameBufferTexture = effect['frameBuffer']['texture']
+                        // console.log(effect)
+                    })
+                    // 이펙트가 존재한다면 최종 이펙트의 프레임버퍼 결과물을 최종으로 렌더링한다.
+                    if (lastFrameBufferTexture != originFrameBufferTexture) {
+                        postEffectManager['finalMaterial']['diffuseTexture'] = lastFrameBufferTexture;
+                        gl.viewport(viewRect[0], worldRect[3] - viewRect[3] - viewRect[1], viewRect[2], viewRect[3]);
+                        gl.scissor(viewRect[0], worldRect[3] - viewRect[3] - viewRect[1], viewRect[2], viewRect[3]);
+                        // 최종 재질을 기준으로 필요한 기본 유니폼을 세팅한다.
+                        setBaseUniform(gl, postEffectManager['finalMaterial'], viewRect)
+                        self.sceneRender(redGL, gl, true, postEffectManager['children'], time, renderInfo);
+                    }
+                    postEffectManager['finalMaterial']['diffuseTexture'] = postEffectManager['frameBuffer']['texture'];
+
+
+                }
+            })()
+        })();
         return function (redGL, time) {
             var gl;
             var tViewRect;
@@ -511,9 +615,19 @@ var RedRenderer;
 
                     gl.enable(gl.CULL_FACE);
                 };
-
                 // 포스트이펙트 확인
-                if (tScene['postEffectManager']['postEffectList'].length) tScene['postEffectManager'].bind(gl);
+                if (tScene['postEffectManager']['postEffectList'].length) {
+                    tScene['postEffectManager'].bind(gl);
+                    mat4.perspective(
+                        perspectiveMTX,
+                        tCamera['fov'] * Math.PI / 180,
+                        tScene['postEffectManager']['frameBuffer']['width'] / tScene['postEffectManager']['frameBuffer']['height'],
+                        tCamera['nearClipping'],
+                        tCamera['farClipping']
+                    );
+                    gl.viewport(0, 0, tScene['postEffectManager']['frameBuffer']['width'], tScene['postEffectManager']['frameBuffer']['height']);
+                    gl.scissor(0, 0, tScene['postEffectManager']['frameBuffer']['width'], tScene['postEffectManager']['frameBuffer']['height']);
+                }
                 ///////////////////////////////
                 // 실제렌더 계산
                 updateSystemUniform(redGL, time, tScene, tCamera, tViewRect)
@@ -524,7 +638,6 @@ var RedRenderer;
                     gl.cullFace(gl.BACK)
                     gl.clear(gl.DEPTH_BUFFER_BIT);
                 }
-
                 // 씬렌더 호출
                 self.sceneRender(redGL, gl, tCamera['orthographicYn'], tScene['children'], time, tRenderInfo);
                 // 그리드가 있으면 그림
@@ -533,78 +646,8 @@ var RedRenderer;
                 if (tScene['axis']) self.sceneRender(redGL, gl, tCamera['orthographicYn'], tScene['axis']['children'], time, tRenderInfo);
                 // 디버깅 라이트 업데이트 
                 if (lightDebugRenderList.length) self.sceneRender(redGL, gl, tCamera['orthographicYn'], lightDebugRenderList, time, tRenderInfo);
-
-
-
                 // 포스트이펙트 렌더
-                if (tScene['postEffectManager']['postEffectList'].length) {
-                    tScene['postEffectManager'].unbind(gl)
-                    var tChild
-                    var tMaterial;
-                    var tProgram;
-                    var tLocationInfo;
-                    var tLocation;
-                    var tValue;
-                    var tManager
-                    var setBaseUniform;
-                    tManager = tScene['postEffectManager']
-                    tChild = tManager['children'][0]
-                    setBaseUniform = function (effect) {
-                        tMaterial = tChild['material'] = effect;
-                        tProgram = tMaterial['program']
-                        gl.useProgram(tProgram['webglProgram'])
-                        tLocationInfo = tProgram['systemUniformLocation']['uCameraMatrix'];
-                        tLocation = tLocationInfo['location'];
-                        tValue = mat4.create();
-                        gl.uniformMatrix4fv(tLocation, false, tValue);
-
-                        tLocationInfo = tProgram['systemUniformLocation']['uPMatrix'];
-                        tLocation = tLocationInfo['location'];
-                        tValue = mat4.ortho(
-                            tValue,
-                            -0.5  , // left
-                            0.5, // right
-                            -0.5, // bottom
-                            0.5, // top,
-                            - tCamera['farClipping'],
-                            tCamera['farClipping']
-                        )
-                        gl.uniformMatrix4fv(tLocation, false, tValue);
-
-                        tLocationInfo = tProgram['systemUniformLocation']['uResolution'];
-                        tLocation = tLocationInfo['location'];
-                        gl.uniform2fv(tLocation, [tViewRect[2], tViewRect[3]]);
-                    }
-                    setBaseUniform(tManager['finalMaterial'])
-                    var originFrameBufferTexture;
-                    var lastFrameBufferTexture;
-                  
-                    lastFrameBufferTexture = originFrameBufferTexture = tManager['frameBuffer']['texture']
-                    tManager['postEffectList'].forEach(function (effect) {
-                        effect['frameBuffer']['width'] =  gl.drawingBufferWidth;
-                        effect['frameBuffer']['height'] =  gl.drawingBufferHeight
-                        // console.log('Render Effect', v)
-                        effect.bind(gl);
-                        setBaseUniform(effect)
-                        effect['diffuseTexture'] = lastFrameBufferTexture;
-
-
-                        self.sceneRender(redGL, gl, true, tManager['children'], time, tRenderInfo);
-                        effect.unbind(gl)
-                        lastFrameBufferTexture = effect['frameBuffer']['texture']
-                    })
-                    if (lastFrameBufferTexture != originFrameBufferTexture) {
-                        tManager['finalMaterial']['diffuseTexture'] = lastFrameBufferTexture['texture'];
-                        self.sceneRender(redGL, gl, true, tManager['children'], time, tRenderInfo);
-                    } else {
-                    }
-                    tManager['finalMaterial']['diffuseTexture'] = tManager['frameBuffer']['texture'];
-                    tManager['frameBuffer']['width'] =  gl.drawingBufferWidth;
-                    tManager['frameBuffer']['height'] =  gl.drawingBufferHeight
-
-                }
-
-
+                if (tScene['postEffectManager']['postEffectList'].length) postEffectRender(redGL, gl, tScene['postEffectManager'], tViewRect, time, tRenderInfo)
             })
             if (this['renderDebuger']['visible']) this['renderDebuger'].update(redGL, self['renderInfo'])
 
@@ -806,11 +849,11 @@ var RedRenderer;
                                 tRenderType == 'float' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
                                     : tRenderType == 'int' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
                                         : tRenderType == 'bool' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
-                                        // : tRenderType == 'vec' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
-                                        //TODO: 이걸해결해야하는군..
-                                        : tRenderType == 'vec' ? gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
-                                            : tRenderType == 'mat' ? gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, false, tUniformValue)
-                                                : RedGLUtil.throwFunc('RedRenderer : 처리할수없는 타입입니다.', 'tRenderType -', tRenderType)
+                                            // : tRenderType == 'vec' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
+                                            //TODO: 이걸해결해야하는군..
+                                            : tRenderType == 'vec' ? gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
+                                                : tRenderType == 'mat' ? gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, false, tUniformValue)
+                                                    : RedGLUtil.throwFunc('RedRenderer : 처리할수없는 타입입니다.', 'tRenderType -', tRenderType)
                             }
 
                         }
@@ -913,7 +956,6 @@ var RedRenderer;
                         tMVMatrix[13] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
                         tMVMatrix[14] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
                         tMVMatrix[15] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33
-
                     ) : 0
                 /////////////////////////////////////////////////////////////////////////
                 /////////////////////////////////////////////////////////////////////////

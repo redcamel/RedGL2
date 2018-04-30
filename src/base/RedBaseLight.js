@@ -17,6 +17,23 @@ var RedBaseLight;
         RedGLUtil.throwFunc('RedBaseLight : 생성자/직접실행으로 사용 할 수 없습니다.')
     }
     RedBaseLight.prototype = {
+        addCasting: (function () {
+            var t0;
+            return function (v) {
+                t0 = this['_castingList'].indexOf(v)
+                if (t0 == -1) this['_castingList'].push(v)
+            }
+        })(),
+        removeCasting: (function () {
+            var t0;
+            return function (v) {
+                t0 = this['_castingList'].indexOf(v)
+                if (t0 > -1) this['_castingList'].splice
+            }
+        })(),
+        _castingList: [
+
+        ],
         /**DOC:
             {
                 code : 'METHOD',
