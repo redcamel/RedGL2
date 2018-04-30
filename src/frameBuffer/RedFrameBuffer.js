@@ -8,6 +8,8 @@ var RedFrameBuffer;
         gl = redGL['gl'];
         width = width || gl.drawingBufferWidth;
         height = height || gl.drawingBufferHeight;
+        // width = 1024
+        // height = 1024
         this['redGL'] = redGL
         this['width'] = width;
         this['height'] = height;
@@ -19,11 +21,13 @@ var RedFrameBuffer;
         gl.bindFramebuffer(gl.FRAMEBUFFER, this['webglFrameBuffer']);
         // 텍스쳐 세팅
         gl.bindTexture(gl.TEXTURE_2D, this['texture']['webglTexture']);
+
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this['width'], this['height'], 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
 
         // gl.generateMipmap(gl.TEXTURE_2D);
         // 렌더버퍼 세팅
@@ -36,14 +40,16 @@ var RedFrameBuffer;
         gl.bindTexture(gl.TEXTURE_2D, null);
         gl.bindRenderbuffer(gl.RENDERBUFFER, null);
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
         // console.log(this)
     }
     RedFrameBuffer.prototype = {
-        bind : function(gl){
+        bind: function (gl) {
             gl.bindFramebuffer(gl.FRAMEBUFFER, this['webglFrameBuffer']);
 
             gl.activeTexture(gl.TEXTURE0)
             gl.bindTexture(gl.TEXTURE_2D, this['texture']['webglTexture']);
+
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this['width'], this['height'], 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
@@ -58,7 +64,7 @@ var RedFrameBuffer;
             gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, this['webglRenderBuffer']);
             //
         },
-        unbind : function(gl){
+        unbind: function (gl) {
             gl.bindTexture(gl.TEXTURE_2D, null);
             gl.bindRenderbuffer(gl.RENDERBUFFER, null);
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);

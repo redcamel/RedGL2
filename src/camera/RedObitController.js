@@ -220,8 +220,8 @@ var RedObitController;
 
             // 카메라는 대상 오브젝트를 바라봄
             tCamera.lookAt(this['centerX'], this['centerY'], this['centerZ'])
-            console.log(this['tilt'], this['pan'])
-            console.log('RedObitController update')
+            // console.log(this['tilt'], this['pan'])
+            // console.log('RedObitController update')
         }
     })();
 
