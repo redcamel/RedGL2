@@ -8,8 +8,8 @@ var RedFrameBuffer;
         gl = redGL['gl'];
         width = width || gl.drawingBufferWidth;
         height = height || gl.drawingBufferHeight;
-        // width = 1024
-        // height = 1024
+        if(width>2048) width = 2048
+        if(height>2048) height = 2048
         this['redGL'] = redGL
         this['width'] = width;
         this['height'] = height;
