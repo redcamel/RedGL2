@@ -59,14 +59,14 @@
 
 
     <script src="../src/particle/RedPointUnit.js"></script>
-    
+
     <script src="../src/postEffect/RedPostEffect_Blur.js"></script>
     <script src="../src/postEffect/RedPostEffect_Convolution.js"></script>
     <script src="../src/postEffect/RedPostEffect_Invert.js"></script>
     <script src="../src/postEffect/RedPostEffect_Gray.js"></script>
-    <script src="../src/postEffect/RedPostEffect_HueSaturation.js"></script>    
-    <script src="../src/postEffect/RedPostEffect_BrightnessContrast.js"></script>    
-    <script src="../src/postEffect/RedPostEffect_Vignetting.js"></script>        
+    <script src="../src/postEffect/RedPostEffect_HueSaturation.js"></script>
+    <script src="../src/postEffect/RedPostEffect_BrightnessContrast.js"></script>
+    <script src="../src/postEffect/RedPostEffect_Vignetting.js"></script>
     <script src="../src/postEffect/RedPostEffect_Pixelize.js"></script>
     <script src="../src/postEffect/RedPostEffect_ZoomBlur.js"></script>
     <script src="../src/postEffect/RedPostEffect_HalfTone.js"></script>
@@ -109,7 +109,7 @@
             self = this
             tGL = this.gl;
             this.world = tWorld = RedWorld();
-            tScene3D = RedScene(this,'#223344');
+            tScene3D = RedScene(this, '#223344');
             tScene3D.alpha = 0.1
             tScene3D_2 = RedScene(this);
             tScene3D_2.useBackgroundColor = false
@@ -138,6 +138,18 @@
             //         '../asset/cubemap/posz.png',
             //         '../asset/cubemap/negz.png'
             //     ])
+
+            // tScene3D['postEffectManager'].addEffect(RedPostEffect_Invert(this))
+            // tScene3D['postEffectManager'].addEffect(RedPostEffect_Blur(this))
+            // tScene3D['postEffectManager'].addEffect(RedPostEffect_Gray(this))
+            // tScene3D['postEffectManager'].addEffect(RedPostEffect_Pixelize(this))
+
+            // tScene3D['postEffectManager'].addEffect(RedPostEffect_Convolution(this, RedPostEffect_Convolution['EMBOSS']))
+            // tScene3D['postEffectManager'].addEffect(RedPostEffect_HueSaturation(this))
+            // tScene3D['postEffectManager'].addEffect(RedPostEffect_Vignetting(this))
+            // tScene3D['postEffectManager'].addEffect(RedPostEffect_BrightnessContrast(this))
+            // tScene3D['postEffectManager'].addEffect(RedPostEffect_ZoomBlur(this))
+            // tScene3D['postEffectManager'].addEffect(RedPostEffect_HalfTone(this))
 
 
             var testMaterial, testMaterial2, testMaterial3, testMaterial4, testMaterial5, testMaterial6,

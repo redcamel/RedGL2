@@ -457,7 +457,6 @@ var RedRenderer;
                         - tCamera['farClipping'],
                         tCamera['farClipping']
                     )
-
                     gl.uniformMatrix4fv(tLocation, false, tValue);
                     // 레졸루션 정보 처리
                     tLocationInfo = tSystemUniformLocation['uResolution'];
@@ -502,6 +501,7 @@ var RedRenderer;
                         // 해당 이펙트의 기본 텍스쳐를 지난 이펙트의 최종 텍스쳐로 업로드
                         effect['diffuseTexture'] = lastFrameBufferTexture;
                         // 해당 이펙트를 렌더링하고
+                      
                         self.sceneRender(redGL, gl, true, postEffectManager['children'], time, renderInfo);
                         // 해당 이펙트의 프레임 버퍼를 언바인딩한다.
                         effect.unbind(gl)
@@ -514,6 +514,7 @@ var RedRenderer;
                         postEffectManager['finalMaterial']['diffuseTexture'] = lastFrameBufferTexture;
                         gl.viewport(viewRect[0], worldRect[3] - viewRect[3] - viewRect[1], viewRect[2], viewRect[3]);
                         gl.scissor(viewRect[0], worldRect[3] - viewRect[3] - viewRect[1], viewRect[2], viewRect[3]);
+                        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
                         // 최종 재질을 기준으로 필요한 기본 유니폼을 세팅한다.
                         setBaseUniform(gl, postEffectManager['finalMaterial'], viewRect)
                         self.sceneRender(redGL, gl, true, postEffectManager['children'], time, renderInfo);
@@ -789,10 +790,8 @@ var RedRenderer;
                             tRenderType = tUniformLocationInfo['renderType'];
                             tUniformValue = tMaterial[tUniformLocationInfo['materialPropertyName']];
                             noChangeUniform = tCacheUniformInfo[tUUID] == tUniformValue;
-                            // if (!noChange) console.log('변경되었다', tLocationInfo['name'], tCacheInfo[tUUID], tUniformValue)
                             // console.log(tCacheInfo)
                             if (tRenderType == 'sampler2D' || tRenderType == 'samplerCube') {
-                                //TODO: 텍스쳐 인덱스는 내부적으로 먹어야하는 거였군...
                                 tSamplerIndex = tUniformLocationInfo['samplerIndex']
                                 // samplerIndex : 0,1 번은 생성용으로 쓴다.     
                                 if (tUniformValue) {
@@ -1037,8 +1036,18 @@ var RedRenderer;
                         tCacheState['blendDst'] = tMesh['blendDst']
                     }
                     if (tSystemUniformGroup['uSprite3DYn']['location']) {
-                        gl.uniform1i(tSystemUniformGroup['uSprite3DYn']['location'], tSpriteYn)
-                        gl.uniform1i(tSystemUniformGroup['uPerspectiveScale']['location'], tMesh['perspectiveScale'])
+                        tUUID = tSystemUniformGroup['uSprite3DYn']['_UUID']
+                        tUniformValue = tSpriteYn
+                        if (tCacheUniformInfo[tUUID] != tUniformValue) {
+                            gl.uniform1i(tSystemUniformGroup['uSprite3DYn']['location'], tUniformValue)
+                            tCacheUniformInfo[tUUID] = tUniformValue
+                        }
+                        tUUID = tSystemUniformGroup['uPerspectiveScale']['_UUID']
+                        tUniformValue = tMesh['perspectiveScale']
+                        if (tCacheUniformInfo[tUUID] != tUniformValue) {
+                            gl.uniform1i(tSystemUniformGroup['uPerspectiveScale']['location'], tUniformValue)
+                            tCacheUniformInfo[tUUID] = tUniformValue
+                        }
                     }
 
                     /////////////////////////////////////////////////////////////////////////
