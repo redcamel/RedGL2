@@ -41,7 +41,7 @@ var RedPostEffect_Convolution;
             void main(void) {
                 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
                 vResolution = uResolution;
-                gl_Position = uPMatrix * uCameraMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
+                gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
             }
             */
         }

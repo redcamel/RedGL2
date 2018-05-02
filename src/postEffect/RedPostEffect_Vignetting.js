@@ -33,7 +33,7 @@ var RedPostEffect_Vignetting;
             /*
             void main(void) {
                 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
-                gl_Position = uPMatrix * uCameraMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
+                gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
             }
             */
         }
