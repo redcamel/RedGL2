@@ -6,7 +6,7 @@ var RedFrameBuffer;
         if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedFrameBuffer : RedGL Instance만 허용됩니다.', redGL)
         var gl;
         gl = redGL['gl'];
-        width = width || 2048;
+        width = width || 1024;
         height = height || 1024;
         if(width>2048) width = 2048
         if(height>2048) height = 2048

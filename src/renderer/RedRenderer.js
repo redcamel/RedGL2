@@ -1089,14 +1089,14 @@ var RedRenderer;
             }
         }
         return function (redGL, gl, orthographicYn, children, time, renderResultObj) {
-            if (this['cacheState']['pointSize'] == undefined) this['cacheState']['pointSize'] = 1
-            if (!this['cacheState']['useCullFace']) this['cacheState']['useCullFace'] = gl.getParameter(gl.CULL_FACE)
-            if (!this['cacheState']['cullFace']) this['cacheState']['cullFace'] = gl.getParameter(gl.CULL_FACE_MODE)
-            if (!this['cacheState']['useDepthTest']) this['cacheState']['useDepthTest'] = gl.getParameter(gl.DEPTH_TEST)
-            if (!this['cacheState']['depthTestFunc']) this['cacheState']['depthTestFunc'] = gl.getParameter(gl.DEPTH_FUNC)
-            if (!this['cacheState']['useBlendMode']) this['cacheState']['useBlendMode'] = gl.getParameter(gl.BLEND)
-            if (!this['cacheState']['blendSrc']) this['cacheState']['blendSrc'] = gl.getParameter(gl.BLEND_SRC_RGB)
-            if (!this['cacheState']['blendDst']) this['cacheState']['blendDst'] = gl.getParameter(gl.BLEND_DST_RGB)
+            if (this['cacheState']['pointSize'] == undefined) this['cacheState']['pointSize'] = null
+            if (!this['cacheState']['useCullFace']) this['cacheState']['useCullFace'] = null
+            if (!this['cacheState']['cullFace']) this['cacheState']['cullFace'] = null
+            if (!this['cacheState']['useDepthTest']) this['cacheState']['useDepthTest'] = null
+            if (!this['cacheState']['depthTestFunc']) this['cacheState']['depthTestFunc'] = null
+            if (!this['cacheState']['useBlendMode']) this['cacheState']['useBlendMode'] =null
+            if (!this['cacheState']['blendSrc']) this['cacheState']['blendSrc'] = null
+            if (!this['cacheState']['blendDst']) this['cacheState']['blendDst'] = null
 
             this['cacheBySamplerIndex'].length = 0
             // this['cacheBySamplerIndex'][0] = null
