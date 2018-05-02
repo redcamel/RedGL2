@@ -58,14 +58,14 @@
     <script src="../src/object3D/RedSprite3D.js"></script>
 
     <script src="../src/particle/RedPointUnit.js"></script>
-    
+
     <script src="../src/postEffect/RedPostEffect_Blur.js"></script>
     <script src="../src/postEffect/RedPostEffect_Convolution.js"></script>
     <script src="../src/postEffect/RedPostEffect_Invert.js"></script>
     <script src="../src/postEffect/RedPostEffect_Gray.js"></script>
-    <script src="../src/postEffect/RedPostEffect_HueSaturation.js"></script>    
-    <script src="../src/postEffect/RedPostEffect_BrightnessContrast.js"></script>    
-    <script src="../src/postEffect/RedPostEffect_Vignetting.js"></script>        
+    <script src="../src/postEffect/RedPostEffect_HueSaturation.js"></script>
+    <script src="../src/postEffect/RedPostEffect_BrightnessContrast.js"></script>
+    <script src="../src/postEffect/RedPostEffect_Vignetting.js"></script>
     <script src="../src/postEffect/RedPostEffect_Pixelize.js"></script>
     <script src="../src/postEffect/RedPostEffect_ZoomBlur.js"></script>
     <script src="../src/postEffect/RedPostEffect_HalfTone.js"></script>
@@ -96,7 +96,7 @@
     <script src="../src/camera/RedCamera.js"></script>
     <script src="../src/camera/RedBasicController.js"></script>
     <script src="../src/camera/RedObitController.js"></script>
-    
+
 </head>
 
 <body>
@@ -135,23 +135,15 @@
 
             tScene3D['postEffectManager'].addEffect(RedPostEffect_Invert(this))
             // tScene3D['postEffectManager'].addEffect(RedPostEffect_Blur(this))
-            tScene3D['postEffectManager'].addEffect(RedPostEffect_Gray(this))
+            // tScene3D['postEffectManager'].addEffect(RedPostEffect_Gray(this))
             // tScene3D['postEffectManager'].addEffect(RedPostEffect_Pixelize(this))
-            
+
             // tScene3D['postEffectManager'].addEffect(RedPostEffect_Convolution(this,RedPostEffect_Convolution['EMBOSS']))
             // tScene3D['postEffectManager'].addEffect(RedPostEffect_HueSaturation(this)) 
             // tScene3D['postEffectManager'].addEffect(RedPostEffect_Vignetting(this)) 
             // tScene3D['postEffectManager'].addEffect(RedPostEffect_BrightnessContrast(this)) 
-            // tScene3D['postEffectManager'].addEffect(RedPostEffect_ZoomBlur(this)) 
+            // tScene3D['postEffectManager'].addEffect(RedPostEffect_ZoomBlur(this))
             // tScene3D['postEffectManager'].addEffect(RedPostEffect_HalfTone(this)) 
-            
-            
-            
-            
-            
-         
-
-
 
             tScene3D.skyBox =
                 RedSkyBox(this, [
@@ -163,7 +155,7 @@
                     '../asset/cubemap/negz.png'
                 ]);
 
-            tScene3D['grid'] = RedGrid(self)
+            // tScene3D['grid'] = RedGrid(self)
             RedOBJLoader(this, '../asset/obj/rabbit/', 'Rabbit.obj', function (v) {
                 console.log('호잇!', v)
                 tScene3D.addChild(v['resultMesh'])
