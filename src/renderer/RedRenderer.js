@@ -500,13 +500,30 @@ var RedRenderer;
                     }
                     postEffectManager['postEffectList'].forEach(function (effect) {
                         // console.log('Render Effect', v)
-
+                        
+                        if (effect['filter'] && effect['filter'].length) {
+                            var parentFramBufferTexture = lastFrameBufferTexture
+                            effect['filter'].forEach(function (subEffect) {
+                                // 해당 이펙트의 프레임 버퍼를 바인딩
+                                subEffect.bind(gl);
+                                // 해당 이펙트의 프레임버퍼 유니폼 정보 업데이트
+                                setBaseUniform(gl, subEffect, frameBufferRect)
+                                // 해당 이펙트의 기본 텍스쳐를 지난 이펙트의 최종 텍스쳐로 업로드
+                                subEffect['diffuseTexture'] = lastFrameBufferTexture;
+                                // 해당 이펙트를 렌더링하고
+                                self.sceneRender(redGL, gl, true, postEffectManager['children'], time, renderInfo);
+                                // 해당 이펙트의 프레임 버퍼를 언바인딩한다.
+                                subEffect.unbind(gl)
+                                // 현재 이펙트를 최종 텍스쳐로 기록하고 다음 이펙트가 있을경우 활용한다. 
+                                lastFrameBufferTexture = subEffect['frameBuffer']['texture']
+                            })
+                        }
                         // 해당 이펙트의 프레임 버퍼를 바인딩
                         effect.bind(gl);
                         // 해당 이펙트의 프레임버퍼 유니폼 정보 업데이트
                         setBaseUniform(gl, effect, frameBufferRect)
                         // 해당 이펙트의 기본 텍스쳐를 지난 이펙트의 최종 텍스쳐로 업로드
-                        effect['diffuseTexture'] = lastFrameBufferTexture;
+                        effect.updateTexture(lastFrameBufferTexture, parentFramBufferTexture);
                         // 해당 이펙트를 렌더링하고
                         self.sceneRender(redGL, gl, true, postEffectManager['children'], time, renderInfo);
                         // 해당 이펙트의 프레임 버퍼를 언바인딩한다.
@@ -514,6 +531,10 @@ var RedRenderer;
                         // 현재 이펙트를 최종 텍스쳐로 기록하고 다음 이펙트가 있을경우 활용한다. 
                         lastFrameBufferTexture = effect['frameBuffer']['texture']
                         // console.log(effect)
+
+
+
+
                     })
                     // 이펙트가 존재한다면 최종 이펙트의 프레임버퍼 결과물을 최종으로 렌더링한다.
                     if (lastFrameBufferTexture != originFrameBufferTexture) {
@@ -1094,7 +1115,7 @@ var RedRenderer;
             if (!this['cacheState']['cullFace']) this['cacheState']['cullFace'] = null
             if (!this['cacheState']['useDepthTest']) this['cacheState']['useDepthTest'] = null
             if (!this['cacheState']['depthTestFunc']) this['cacheState']['depthTestFunc'] = null
-            if (!this['cacheState']['useBlendMode']) this['cacheState']['useBlendMode'] =null
+            if (!this['cacheState']['useBlendMode']) this['cacheState']['useBlendMode'] = null
             if (!this['cacheState']['blendSrc']) this['cacheState']['blendSrc'] = null
             if (!this['cacheState']['blendDst']) this['cacheState']['blendDst'] = null
 
