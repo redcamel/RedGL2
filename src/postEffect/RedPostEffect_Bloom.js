@@ -3,7 +3,7 @@ var RedPostEffect_Bloom;
 (function () {
     var makeProgram;
 
-    RedPostEffect_Bloom = function (redGL, width, height) {
+    RedPostEffect_Bloom = function (redGL) {
         if (!(this instanceof RedPostEffect_Bloom)) return new RedPostEffect_Bloom(redGL);
         if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_Bloom : RedGL Instance만 허용됩니다.', redGL)
         this['frameBuffer'] = RedFrameBuffer(redGL);
