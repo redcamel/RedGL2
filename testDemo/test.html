@@ -24,7 +24,7 @@
     <script src="../src/base/RedBaseMaterial.js"></script>
     <script src="../src/base/RedBaseObject3D.js"></script>
 
-    
+
     <script src="../src/frameBuffer/RedFrameBuffer.js"></script>
 
     <script src="../src/geometry/RedBuffer.js"></script>
@@ -60,26 +60,19 @@
 
     <script src="../src/particle/RedPointUnit.js"></script>
 
-    <script src="../src/postEffect/RedPostEffect_Blur.js"></script>
-    <script src="../src/postEffect/RedPostEffect_Convolution.js"></script>
-    <script src="../src/postEffect/RedPostEffect_Invert.js"></script>
-    <script src="../src/postEffect/RedPostEffect_Gray.js"></script>
-    <script src="../src/postEffect/RedPostEffect_HueSaturation.js"></script>    
-    <script src="../src/postEffect/RedPostEffect_BrightnessContrast.js"></script>    
-    <script src="../src/postEffect/RedPostEffect_Vignetting.js"></script>        
-    <script src="../src/postEffect/RedPostEffect_Pixelize.js"></script>
-    <script src="../src/postEffect/RedPostEffect_ZoomBlur.js"></script>
-    <script src="../src/postEffect/RedPostEffect_HalfTone.js"></script>
-       
-    <script src="../src/postEffect/RedPostEffectManager.js"></script>
 
     <script src="../src/postEffect/RedPostEffect_Blur.js"></script>
+    <script src="../src/postEffect/RedPostEffect_BlurX.js"></script>
+    <script src="../src/postEffect/RedPostEffect_BlurY.js"></script>
+    <script src="../src/postEffect/RedPostEffect_Bloom.js"></script>
+
+
     <script src="../src/postEffect/RedPostEffect_Convolution.js"></script>
     <script src="../src/postEffect/RedPostEffect_Invert.js"></script>
     <script src="../src/postEffect/RedPostEffect_Gray.js"></script>
-    <script src="../src/postEffect/RedPostEffect_HueSaturation.js"></script>    
-    <script src="../src/postEffect/RedPostEffect_BrightnessContrast.js"></script>    
-    <script src="../src/postEffect/RedPostEffect_Vignetting.js"></script>        
+    <script src="../src/postEffect/RedPostEffect_HueSaturation.js"></script>
+    <script src="../src/postEffect/RedPostEffect_BrightnessContrast.js"></script>
+    <script src="../src/postEffect/RedPostEffect_Vignetting.js"></script>
     <script src="../src/postEffect/RedPostEffect_Pixelize.js"></script>
     <script src="../src/postEffect/RedPostEffect_ZoomBlur.js"></script>
     <script src="../src/postEffect/RedPostEffect_HalfTone.js"></script>
@@ -125,21 +118,23 @@
             tScene3D = RedScene(this);
 
 
-           
-        //    tScene3D['postEffectManager'].addEffect(RedPostEffect_Invert(this))
+
+            //    tScene3D['postEffectManager'].addEffect(RedPostEffect_Invert(this))
             // tScene3D['postEffectManager'].addEffect(RedPostEffect_Blur(this))
-            // tScene3D['postEffectManager'].addEffect(RedPostEffect_Gray(this))
+            tScene3D['postEffectManager'].addEffect(RedPostEffect_Gray(this))
             // tScene3D['postEffectManager'].addEffect(RedPostEffect_Pixelize(this))
-            
+
             // tScene3D['postEffectManager'].addEffect(RedPostEffect_Convolution(this,RedPostEffect_Convolution['EMBOSS']))
-            // tScene3D['postEffectManager'].addEffect(RedPostEffect_HueSaturation(this)) 
-            tScene3D['postEffectManager'].addEffect(RedPostEffect_Vignetting(this)) 
-            tScene3D['postEffectManager'].addEffect(RedPostEffect_BrightnessContrast(this)) 
+            // tScene3D['postEffectManager'].addEffect(RedPostEffect_HueSaturation(this))
+            tScene3D['postEffectManager'].addEffect(RedPostEffect_Vignetting(this))
+            // tScene3D['postEffectManager'].addEffect(RedPostEffect_BrightnessContrast(this))
             var zoomBlur = RedPostEffect_ZoomBlur(this)
-            tScene3D['postEffectManager'].addEffect(zoomBlur) 
+            tScene3D['postEffectManager'].addEffect(zoomBlur)
             // tScene3D['postEffectManager'].addEffect(RedPostEffect_HalfTone(this)) 
-            
-            
+            tScene3D['postEffectManager'].addEffect(RedPostEffect_Bloom(this))
+
+
+
             tCamera = RedCamera();
 
             var testDLight, testALight;
@@ -155,7 +150,7 @@
             testPLight.z = -3
             testPLight['radius'] = 4
             testPLight['intensity'] = 1
-            testPLight.debug=true
+            testPLight.debug = true
             tScene3D.addLight(testPLight)
 
 
@@ -165,7 +160,7 @@
             testPLight2.z = -3
             testPLight2['radius'] = 6
             testPLight2['intensity'] = 1
-            testPLight2.debug=true
+            testPLight2.debug = true
             tScene3D.addLight(testPLight2)
 
             tRenderer = RedRenderer();
@@ -331,9 +326,9 @@
                 while (i--) {
                     if (i == 0) break
                     testMesh = tScene3D.children[i]
-                    testMesh.rotationX += 1
-                    testMesh.rotationY += 1
-                    testMesh.rotationZ += 1
+                    testMesh.rotationX += 0.1
+                    testMesh.rotationY += 0.1
+                    testMesh.rotationZ += 0.1
                 }
                 testDLight.x = Math.sin(time / 1500) * 10
                 testDLight.y = Math.cos(time / 1500) * 10
@@ -353,10 +348,10 @@
                 testPLight2.y = 0
                 testPLight2.z = Math.cos(time / 1500) * 18.5
 
-                    zoomBlur.centerX = Math.sin(time/1000)/3.14
-                    zoomBlur.centerY = Math.sin(time/1000)/3.14
+                zoomBlur.centerX = Math.sin(time / 1000) / 3.14
+                zoomBlur.centerY = Math.sin(time / 1000) / 3.14
 
-                    zoomBlur.strength = Math.sin(time/500)/3.14
+                zoomBlur.strength = Math.sin(time / 500) / 3.14 / 2
 
             })
 

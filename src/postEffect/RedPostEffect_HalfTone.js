@@ -20,7 +20,9 @@ var RedPostEffect_HalfTone;
         this.checkProperty()
         // Object.seal(this)
         console.log(this)
-
+        this.updateTexture = function (lastFrameBufferTexture) {
+            this['diffuseTexture'] = lastFrameBufferTexture
+        }
         this.bind = function (gl) {
             this['frameBuffer'].bind(gl);
         }

@@ -112,6 +112,9 @@ gulp.task('make-doc', function () {
 		"src/particle/RedPointUnit.js",
 
 		"src/postEffect/RedPostEffect_Blur.js",
+		"src/postEffect/RedPostEffect_BlurX.js",
+		"src/postEffect/RedPostEffect_BlurY.js",
+		"src/postEffect/RedPostEffect_Bloom.js",
 		"src/postEffect/RedPostEffect_Convolution.js",
 		"src/postEffect/RedPostEffect_Invert.js",
 		"src/postEffect/RedPostEffect_Gray.js",
@@ -239,6 +242,9 @@ gulp.task('combine-js', function () {
 					"src/material/system/RedSkyBoxMaterial.js",
 					// 이펙트
 					"src/postEffect/RedPostEffect_Blur.js",
+					"src/postEffect/RedPostEffect_BlurX.js",
+					"src/postEffect/RedPostEffect_BlurY.js",
+					"src/postEffect/RedPostEffect_Bloom.js",					
 					"src/postEffect/RedPostEffect_Convolution.js",
 					"src/postEffect/RedPostEffect_Invert.js",
 					"src/postEffect/RedPostEffect_Gray.js",

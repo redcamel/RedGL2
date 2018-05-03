@@ -1,16 +1,14 @@
 "use strict";
-var RedPostEffect_ZoomBlur;
+var RedPostEffect_BlurX;
 (function () {
     var makeProgram;
 
-    RedPostEffect_ZoomBlur = function (redGL) {
-        if (!(this instanceof RedPostEffect_ZoomBlur)) return new RedPostEffect_ZoomBlur(redGL);
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_ZoomBlur : RedGL Instance만 허용됩니다.', redGL)
+    RedPostEffect_BlurX = function (redGL) {
+        if (!(this instanceof RedPostEffect_BlurX)) return new RedPostEffect_BlurX(redGL);
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_BlurX : RedGL Instance만 허용됩니다.', redGL)
         this['frameBuffer'] = RedFrameBuffer(redGL);
         this['diffuseTexture'] = null;
-        this['centerX'] = 0.0
-        this['centerY'] = 0.0
-        this['strength'] = 0.15
+        this['radius'] = 50
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['program'] = makeProgram(this, redGL);
@@ -35,6 +33,7 @@ var RedPostEffect_ZoomBlur;
             /*
             void main(void) {
                 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
+                vResolution = uResolution;
                 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
             }
             */
@@ -43,40 +42,42 @@ var RedPostEffect_ZoomBlur;
             /*
             precision mediump float;
             uniform sampler2D uDiffuseTexture;      
-            uniform float uCenterX;
-            uniform float uCenterY;
-            uniform float uStrength;
+            uniform float uRadius;
             float random(vec3 scale, float seed) {
                 return fract(sin(dot(gl_FragCoord.xyz + seed, scale)) * 43758.5453 + seed);
             }
-            void main(void) {
+            void main() {
                 vec4 finalColor = vec4(0.0);
-                vec2 center = vec2(uCenterX+0.5,-uCenterY+0.5);
-                vec2 toCenter = center - vTexcoord ;
-                float offset = random(vec3(12.9898, 78.233, 151.7182), 0.0);
+                vec2 delta;
                 float total = 0.0;
-                
-                for (float t = 0.0; t <= 30.0; t++) {
-                    float percent = (t + offset) / 30.0;
-                    float weight = 3.0 * (percent - percent * percent);
-                    vec4 sample = texture2D(uDiffuseTexture, vTexcoord + toCenter * percent * uStrength );
+                float offset = random(vec3(12.9898, 78.233, 151.7182), 0.0);
+                delta = vec2(uRadius/vResolution.x,0.0);
+                for (float t = -5.0; t <= 5.0; t++) {
+                    float percent = (t + offset - 0.5) / 5.0;
+                    float weight = 1.0 - abs(percent);
+                    vec4 sample = texture2D(uDiffuseTexture, vTexcoord + delta * percent);
                     sample.rgb *= sample.a;
                     finalColor += sample * weight;
                     total += weight;
                 }
-                gl_FragColor = finalColor / total;
-                gl_FragColor.rgb /= gl_FragColor.a + 0.00001;
+
+                vec4 diffuse = texture2D(uDiffuseTexture, vTexcoord);
+                               
+                finalColor = finalColor / total;
+                finalColor.rgb /= finalColor.a + 0.00001;
+
+                gl_FragColor =  finalColor ;
             }
             */
         }
         vSource = RedGLUtil.getStrFromComment(vSource.toString());
         fSource = RedGLUtil.getStrFromComment(fSource.toString());
-        PROGRAM_NAME = 'RedPostEffect_ZoomBlur_Program';
+        PROGRAM_NAME = 'RedPostEffect_BlurX_Program';
         return function (target, redGL) {
             return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource)
 
         }
     })();
-    RedPostEffect_ZoomBlur.prototype = RedBaseMaterial.prototype
-    Object.freeze(RedPostEffect_ZoomBlur)
+    RedPostEffect_BlurX.prototype = RedBaseMaterial.prototype
+    Object.freeze(RedPostEffect_BlurX)
 })();
