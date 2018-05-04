@@ -66,9 +66,13 @@
     <script src="../src/postEffect/RedPostEffect_Bloom.js"></script>
 
 
+
     <script src="../src/postEffect/RedPostEffect_Convolution.js"></script>
+
+    <script src="../src/postEffect/RedPostEffect_Film.js"></script>
     <script src="../src/postEffect/RedPostEffect_Invert.js"></script>
     <script src="../src/postEffect/RedPostEffect_Gray.js"></script>
+    
     <script src="../src/postEffect/RedPostEffect_HueSaturation.js"></script>
     <script src="../src/postEffect/RedPostEffect_BrightnessContrast.js"></script>
     <script src="../src/postEffect/RedPostEffect_Vignetting.js"></script>
@@ -149,13 +153,21 @@
             // tScene3D['postEffectManager'].addEffect(RedPostEffect_BlurX(this))
             // tScene3D['postEffectManager'].addEffect(RedPostEffect_BlurY(this))
             var bloom = RedPostEffect_Bloom(this)
+            bloom['frameBuffer']['width'] = 1024
+            bloom['frameBuffer']['height'] = 1024
             tScene3D['postEffectManager'].addEffect(bloom)
 
+            var film = RedPostEffect_Film(this)
+            bloom['frameBuffer']['width'] = 2048
+            bloom['frameBuffer']['height'] = 2048
+            tScene3D['postEffectManager'].addEffect(film)
             // tScene3D['postEffectManager'].addEffect(RedPostEffect_HueSaturation(this)) 
             // tScene3D['postEffectManager'].addEffect(RedPostEffect_Vignetting(this)) 
             // tScene3D['postEffectManager'].addEffect(RedPostEffect_BrightnessContrast(this)) 
             // tScene3D['postEffectManager'].addEffect(RedPostEffect_ZoomBlur(this))
             // tScene3D['postEffectManager'].addEffect(RedPostEffect_HalfTone(this)) 
+
+            
 
             tScene3D.skyBox =
                 RedSkyBox(this, [
@@ -218,17 +230,23 @@
                     testMesh.rotationY += 0.1
                     testMesh.rotationZ += 0.1
                 }
+
+                film['scanlineCount'] = Math.sin(time/1000)/3.14 * 2048 + 2048
             })
 
             this['gui'] = new dat.GUI({
                 name: 'test'
             });
-            var t0 = this['gui'].addFolder('test')
-
-
+            var t0 = this['gui'].addFolder('bloom')
             t0.add(bloom, 'exposure', 0, 2)
             t0.add(bloom, 'bloomStrength', 0, 2)
             t0.add(bloom, 'blur', 0, 100)
+            t0.open()
+            t0 = this['gui'].addFolder('film')
+            t0.add(film, 'scanlineIntensity', 0, 1)
+            t0.add(film, 'noiseIntensity', 0, 1)
+            t0.add(film, 'scanlineCount', 0, 4096)
+            t0.add(film, 'gray', false, true)
             t0.open()
 
             console.log(tScene3D)
