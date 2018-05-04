@@ -18,6 +18,7 @@ var RedPostEffect_Bloom;
         console.log(this)
 
         this['filter'] = [
+            RedPostEffect_BloomThreshold(redGL),
             RedPostEffect_BlurX(redGL),
             RedPostEffect_BlurY(redGL)
         ]
@@ -30,15 +31,30 @@ var RedPostEffect_Bloom;
                 },
                 set: function (v) {
                     _v = v
-                    this['filter'][0]['radius'] = _v
                     this['filter'][1]['radius'] = _v
+                    this['filter'][2]['radius'] = _v
+                }
+            }
+        })());
+        this['blur'] = 20
+        this['exposure'] = 1
+        this['bloomStrength'] = 1.2
+        Object.defineProperty(this, 'threshold', (function () {
+            var _v = 0.25
+            return {
+                get: function () {
+                    return _v
+                },
+                set: function (v) {
+                    _v = v
+                    this['filter'][0]['threshold'] = _v
                 }
             }
         })())
-        this['blur'] = 20
-        this['exposure'] = 1
-        this['bloomStrength'] = 1
+        this['threshold'] = 0.3
+
         
+
         this.checkProperty()
         this.updateTexture = function (lastFrameBufferTexture, parentFramBufferTexture) {
             this['diffuseTexture'] = parentFramBufferTexture;
@@ -68,12 +84,14 @@ var RedPostEffect_Bloom;
             uniform sampler2D uDiffuseTexture;     
             uniform sampler2D uBlurTexture;         
             uniform float uExposure;            
-            uniform float uBloomStrength;            
+            uniform float uBloomStrength;       
             
             void main() {
                 vec4 finalColor = texture2D(uDiffuseTexture, vTexcoord);
+                vec4 thresholdColor = finalColor;
                 vec4 blurColor = texture2D(uBlurTexture, vTexcoord);
                 gl_FragColor = (finalColor  + blurColor * uBloomStrength) * uExposure ;
+          
             }
             */
         }
