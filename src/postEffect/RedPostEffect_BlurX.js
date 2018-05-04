@@ -8,7 +8,7 @@ var RedPostEffect_BlurX;
         if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_BlurX : RedGL Instance만 허용됩니다.', redGL)
         this['frameBuffer'] = RedFrameBuffer(redGL);
         this['diffuseTexture'] = null;
-        this['radius'] = 50
+        this['size'] = 50
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['program'] = makeProgram(this, redGL);
@@ -42,7 +42,7 @@ var RedPostEffect_BlurX;
             /*
             precision mediump float;
             uniform sampler2D uDiffuseTexture;      
-            uniform float uRadius;
+            uniform float uSize;
             float random(vec3 scale, float seed) {
                 return fract(sin(dot(gl_FragCoord.xyz + seed, scale)) * 43758.5453 + seed);
             }
@@ -51,7 +51,7 @@ var RedPostEffect_BlurX;
                 vec2 delta;
                 float total = 0.0;
                 float offset = random(vec3(12.9898, 78.233, 151.7182), 0.0);
-                delta = vec2(uRadius/vResolution.x,0.0);
+                delta = vec2(uSize/vResolution.x,0.0);
                 for (float t = -5.0; t <= 5.0; t++) {
                     float percent = (t + offset - 0.5) / 5.0;
                     float weight = 1.0 - abs(percent);

@@ -1,14 +1,13 @@
 "use strict";
-var RedPostEffect_Bloom;
+var RedPostEffect_GaussianBlur;
 (function () {
     var makeProgram;
 
-    RedPostEffect_Bloom = function (redGL) {
-        if (!(this instanceof RedPostEffect_Bloom)) return new RedPostEffect_Bloom(redGL);
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_Bloom : RedGL Instance만 허용됩니다.', redGL)
+    RedPostEffect_GaussianBlur = function (redGL) {
+        if (!(this instanceof RedPostEffect_GaussianBlur)) return new RedPostEffect_GaussianBlur(redGL);
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_GaussianBlur : RedGL Instance만 허용됩니다.', redGL)
         this['frameBuffer'] = RedFrameBuffer(redGL);
         this['diffuseTexture'] = null;
-        this['blurTexture'] = null;
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['program'] = makeProgram(this, redGL);
@@ -18,12 +17,11 @@ var RedPostEffect_Bloom;
         console.log(this)
 
         this['filter'] = [
-            RedPostEffect_BloomThreshold(redGL),
             RedPostEffect_BlurX(redGL),
             RedPostEffect_BlurY(redGL)
         ]
 
-        Object.defineProperty(this, 'blur', (function () {
+        Object.defineProperty(this, 'radius', (function () {
             var _v = 1
             return {
                 get: function () {
@@ -31,14 +29,12 @@ var RedPostEffect_Bloom;
                 },
                 set: function (v) {
                     _v = v
+                    this['filter'][0]['size'] = _v
                     this['filter'][1]['size'] = _v
-                    this['filter'][2]['size'] = _v
                 }
             }
         })());
-        this['blur'] = 20
-        this['exposure'] = 1
-        this['bloomStrength'] = 1.2
+        this['radius'] = 20
         Object.defineProperty(this, 'threshold', (function () {
             var _v = 0.25
             return {
@@ -51,14 +47,10 @@ var RedPostEffect_Bloom;
                 }
             }
         })())
-        this['threshold'] = 0.3
-
-        
 
         this.checkProperty()
-        this.updateTexture = function (lastFrameBufferTexture, parentFramBufferTexture) {
-            this['diffuseTexture'] = parentFramBufferTexture;
-            this['blurTexture'] = lastFrameBufferTexture;
+        this.updateTexture = function (lastFrameBufferTexture) {
+            this['diffuseTexture'] = lastFrameBufferTexture;
         }
         this.bind = function (gl) {
             this['frameBuffer'].bind(gl);
@@ -82,27 +74,22 @@ var RedPostEffect_Bloom;
             /*
             precision mediump float;
             uniform sampler2D uDiffuseTexture;     
-            uniform sampler2D uBlurTexture;         
-            uniform float uExposure;            
-            uniform float uBloomStrength;       
             
             void main() {
                 vec4 finalColor = texture2D(uDiffuseTexture, vTexcoord);
-                vec4 thresholdColor = finalColor;
-                vec4 blurColor = texture2D(uBlurTexture, vTexcoord);
-                gl_FragColor = (finalColor  + blurColor * uBloomStrength) * uExposure ;
+                gl_FragColor = finalColor ;
           
             }
             */
         }
         vSource = RedGLUtil.getStrFromComment(vSource.toString());
         fSource = RedGLUtil.getStrFromComment(fSource.toString());
-        PROGRAM_NAME = 'RedPostEffect_Bloom_Program';
+        PROGRAM_NAME = 'RedPostEffect_GaussianBlur_Program';
         return function (target, redGL) {
             return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource)
 
         }
     })();
-    RedPostEffect_Bloom.prototype = RedBaseMaterial.prototype
-    Object.freeze(RedPostEffect_Bloom)
+    RedPostEffect_GaussianBlur.prototype = RedBaseMaterial.prototype
+    Object.freeze(RedPostEffect_GaussianBlur)
 })();
