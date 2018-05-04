@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>RedOBJLoader</title>
+    <title>testBloomEffect</title>
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
@@ -64,8 +64,7 @@
     <script src="../src/postEffect/RedPostEffect_BlurX.js"></script>
     <script src="../src/postEffect/RedPostEffect_BlurY.js"></script>
     <script src="../src/postEffect/RedPostEffect_Bloom.js"></script>
-
-
+    <script src="../src/postEffect/RedPostEffect_BloomThreshold.js"></script>
     <script src="../src/postEffect/RedPostEffect_Convolution.js"></script>
     <script src="../src/postEffect/RedPostEffect_Invert.js"></script>
     <script src="../src/postEffect/RedPostEffect_Gray.js"></script>
@@ -75,6 +74,8 @@
     <script src="../src/postEffect/RedPostEffect_Pixelize.js"></script>
     <script src="../src/postEffect/RedPostEffect_ZoomBlur.js"></script>
     <script src="../src/postEffect/RedPostEffect_HalfTone.js"></script>
+    <script src="../src/postEffect/RedPostEffect_Threshold.js"></script>
+
     <script src="../src/postEffect/RedPostEffectManager.js"></script>
 
     <script src="../src/primitives/RedBox.js"></script>
@@ -156,6 +157,10 @@
             // tScene3D['postEffectManager'].addEffect(RedPostEffect_BrightnessContrast(this)) 
             // tScene3D['postEffectManager'].addEffect(RedPostEffect_ZoomBlur(this))
             // tScene3D['postEffectManager'].addEffect(RedPostEffect_HalfTone(this)) 
+            // var threshold = RedPostEffect_Threshold(this)
+            // tScene3D['postEffectManager'].addEffect(threshold)
+
+
 
             tScene3D.skyBox =
                 RedSkyBox(this, [
@@ -229,7 +234,10 @@
             t0.add(bloom, 'exposure', 0, 2)
             t0.add(bloom, 'bloomStrength', 0, 2)
             t0.add(bloom, 'blur', 0, 100)
+            t0.add(bloom, 'threshold', 0, 1)
+
             t0.open()
+
 
             console.log(tScene3D)
         })

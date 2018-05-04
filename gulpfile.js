@@ -115,6 +115,7 @@ gulp.task('make-doc', function () {
 		"src/postEffect/RedPostEffect_BlurX.js",
 		"src/postEffect/RedPostEffect_BlurY.js",
 		"src/postEffect/RedPostEffect_Bloom.js",
+		"src/postEffect/RedPostEffect_BloomThreshold.js",	
 		"src/postEffect/RedPostEffect_Convolution.js",
 		"src/postEffect/RedPostEffect_Film.js",		
 		"src/postEffect/RedPostEffect_Invert.js",
@@ -125,6 +126,7 @@ gulp.task('make-doc', function () {
 		"src/postEffect/RedPostEffect_Pixelize.js",
 		"src/postEffect/RedPostEffect_ZoomBlur.js",
 		"src/postEffect/RedPostEffect_HalfTone.js",
+		"src/postEffect/RedPostEffect_Threshold.js",
 		"src/postEffect/RedPostEffectManager.js",
 
 		"src/primitives/RedBox.js",
@@ -245,7 +247,8 @@ gulp.task('combine-js', function () {
 					"src/postEffect/RedPostEffect_Blur.js",
 					"src/postEffect/RedPostEffect_BlurX.js",
 					"src/postEffect/RedPostEffect_BlurY.js",
-					"src/postEffect/RedPostEffect_Bloom.js",					
+					"src/postEffect/RedPostEffect_Bloom.js",		
+					"src/postEffect/RedPostEffect_BloomThreshold.js",	
 					"src/postEffect/RedPostEffect_Convolution.js",
 					"src/postEffect/RedPostEffect_Film.js",		
 					"src/postEffect/RedPostEffect_Invert.js",
@@ -256,6 +259,7 @@ gulp.task('combine-js', function () {
 					"src/postEffect/RedPostEffect_Pixelize.js",
 					"src/postEffect/RedPostEffect_ZoomBlur.js",
 					"src/postEffect/RedPostEffect_HalfTone.js",
+					"src/postEffect/RedPostEffect_Threshold.js",					
 					"src/postEffect/RedPostEffectManager.js"
 				])
 					.pipe(concat(name + '.min.js')) // 병합한다.
