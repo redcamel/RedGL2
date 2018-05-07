@@ -32,6 +32,18 @@ var RedPostEffect_Convolution;
            }
        :DOC*/
         this['kernel'] = kernel;
+        Object.defineProperty(this, 'kernel', (function () {
+            var _v;
+            return {
+                get: function () {
+                    if (!_v) _v = RedPostEffect_Convolution['NORMAL']
+                    return _v
+                },
+                set: function (v) {
+                    _v = v
+                }
+            }
+        })());
         Object.defineProperty(this, 'kernelWeight', (function () {
             var sum;
             return {

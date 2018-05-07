@@ -24,7 +24,7 @@ var RedPostEffect_Film;
         this['diffuseTexture'] = null;
         /**DOC:
            {
-               title :`gray`,
+               title :`grayMode`,
                description : `
                    그레이모드
                    기본값 : false
@@ -32,7 +32,7 @@ var RedPostEffect_Film;
                return : 'Boolean'
            }
        :DOC*/
-        this['gray'] = false;
+        this['grayMode'] = false;
         /**DOC:
            {
                title :`scanlineIntensity`,
@@ -93,7 +93,7 @@ var RedPostEffect_Film;
         fSource = function () {
             /*
             precision mediump float;
-            uniform bool uGray;
+            uniform bool uGrayMode;
             uniform sampler2D uDiffuseTexture;     
             // noise effect intensity value (0 = no effect, 1 = full effect)
             uniform float uNoiseIntensity;
@@ -124,7 +124,7 @@ var RedPostEffect_Film;
                 finalColor = diffuseColor.rgb + clamp( uNoiseIntensity, 0.0, 1.0 ) * ( finalColor - diffuseColor.rgb );
                
                 // convert to grayscale if desired
-                if( uGray ) finalColor = vec3( finalColor.r * 0.3 + finalColor.g * 0.59 + finalColor.b * 0.11 );
+                if( uGrayMode ) finalColor = vec3( finalColor.r * 0.3 + finalColor.g * 0.59 + finalColor.b * 0.11 );
                 gl_FragColor =  vec4( finalColor, diffuseColor.a );
             }
             */

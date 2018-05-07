@@ -71,8 +71,8 @@ var RedPostEffect_BlurX;
                 float total = 0.0;
                 float offset = random(vec3(12.9898, 78.233, 151.7182), 0.0);
                 delta = vec2(uSize/vResolution.x,0.0);
-                for (float t = -5.0; t <= 5.0; t++) {
-                    float percent = (t + offset - 0.5) / 5.0;
+                for (float t = -10.0; t <= 10.0; t++) {
+                    float percent = (t + offset - 0.5) / 10.0;
                     float weight = 1.0 - abs(percent);
                     vec4 sample = texture2D(uDiffuseTexture, vTexcoord + delta * percent);
                     sample.rgb *= sample.a;

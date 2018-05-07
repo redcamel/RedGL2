@@ -162,8 +162,8 @@
                 t0.add(test, k).name(k.replace('RedPostEffect_', '')).onChange((function () {
                     var tEffect = effectList[k]
                     return function (v) {
-                        if(v) tScene['postEffectManager'].addEffect(tEffect)
-                        else  tScene['postEffectManager'].removeEffect(tEffect)
+                        if (v) tScene['postEffectManager'].addEffect(tEffect)
+                        else tScene['postEffectManager'].removeEffect(tEffect)
                     }
                 })())
             }

@@ -1,6 +1,6 @@
 [
   {
-    "title": "gray",
+    "title": "grayMode",
     "description": "\n    그레이모드\n    기본값 : false\n",
     "return": "Boolean"
   },

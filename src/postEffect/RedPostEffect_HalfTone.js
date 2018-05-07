@@ -62,10 +62,11 @@ var RedPostEffect_HalfTone;
             uniform float uRadius;
             uniform bool uGrayMode;            
             float pattern(float angle) {
+                angle = angle * 3.141592653589793/180.0;
                 float s = sin(angle), c = cos(angle);
                 vec2 tex = vTexcoord;
-                // tex.x -= uCenterX + 0.5;
-                // tex.y -= uCenterY + 0.5;
+                tex.x -= uCenterX + 0.5;
+                tex.y -= uCenterY + 0.5;
                 vec2 point = vec2( 
                     c * tex.x - s * tex.y, 
                     s * tex.x + c * tex.y 
