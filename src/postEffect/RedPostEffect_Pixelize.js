@@ -2,12 +2,47 @@
 var RedPostEffect_Pixelize;
 (function () {
     var makeProgram;
+    /**DOC:
+       {
+           constructorYn : true,
+           title :`RedPostEffect_Pixelize`,
+           description : `
+               RedPostEffect_Pixelize Instance 생성.
+           `,
+           params : {
+               redGL : [
+                   {type:'RedGL'}
+               ]
+           },
+           return : 'RedPostEffect_Pixelize Instance'
+       }
+   :DOC*/
     RedPostEffect_Pixelize = function (redGL) {
         if (!(this instanceof RedPostEffect_Pixelize)) return new RedPostEffect_Pixelize(redGL);
         if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_Pixelize : RedGL Instance만 허용됩니다.', redGL);
         this['frameBuffer'] = RedFrameBuffer(redGL);
         this['diffuseTexture'] = null;
+        /**DOC:
+           {
+               title :`width`,
+               description : `
+                   픽셀화 가로 크기
+                   기본값 : 5
+               `,
+               return : 'Number'
+           }
+       :DOC*/
         this['width'] = 5;
+        /**DOC:
+           {
+               title :`height`,
+               description : `
+                   픽셀화 세로 크기
+                   기본값 : 5
+               `,
+               return : 'Number'
+           }
+       :DOC*/
         this['height'] = 5;
         /////////////////////////////////////////
         // 일반 프로퍼티

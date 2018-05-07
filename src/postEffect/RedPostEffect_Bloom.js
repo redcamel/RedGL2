@@ -2,6 +2,21 @@
 var RedPostEffect_Bloom;
 (function () {
     var makeProgram;
+    /**DOC:
+       {
+           constructorYn : true,
+           title :`RedPostEffect_Bloom`,
+           description : `
+               RedPostEffect_Bloom Instance 생성.
+           `,
+           params : {
+               redGL : [
+                   {type:'RedGL'}
+               ]
+           },
+           return : 'RedPostEffect_Bloom Instance'
+       }
+   :DOC*/
     RedPostEffect_Bloom = function (redGL) {
         if (!(this instanceof RedPostEffect_Bloom)) return new RedPostEffect_Bloom(redGL);
         if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_Bloom : RedGL Instance만 허용됩니다.', redGL)
@@ -17,6 +32,16 @@ var RedPostEffect_Bloom;
             RedPostEffect_BlurX(redGL),
             RedPostEffect_BlurY(redGL)
         ]
+        /**DOC:
+           {
+               title :`blur`,
+               description : `
+                   blur 정도.
+                   기본값 : 20
+               `,
+               return : 'Number'
+           }
+       :DOC*/
         Object.defineProperty(this, 'blur', (function () {
             var _v = 1
             return {
@@ -29,10 +54,40 @@ var RedPostEffect_Bloom;
             }
         })());
         this['blur'] = 20;
+        /**DOC:
+           {
+               title :`exposure`,
+               description : `
+                   확산 강도.
+                   기본값 : 1
+               `,
+               return : 'Number'
+           }
+       :DOC*/
         this['exposure'] = 1;
+        /**DOC:
+           {
+               title :`bloomStrength`,
+               description : `
+                   블룸 강도
+                   기본값 : 1.2
+               `,
+               return : 'Number'
+           }
+       :DOC*/
         this['bloomStrength'] = 1.2;
+        /**DOC:
+           {
+               title :`threshold`,
+               description : `
+                   최소 유효값
+                   기본값 : 0.3
+               `,
+               return : 'Number'
+           }
+       :DOC*/
         Object.defineProperty(this, 'threshold', (function () {
-            var _v = 0.25
+            var _v = 0.3
             return {
                 get: function () { return _v },
                 set: function (v) { this['process'][0]['threshold'] = _v = v }

@@ -3,12 +3,47 @@
 var RedPostEffect_BrightnessContrast;
 (function () {
     var makeProgram;
+    /**DOC:
+       {
+           constructorYn : true,
+           title :`RedPostEffect_BrightnessContrast`,
+           description : `
+               RedPostEffect_BrightnessContrast Instance 생성.
+           `,
+           params : {
+               redGL : [
+                   {type:'RedGL'}
+               ]
+           },
+           return : 'RedPostEffect_BrightnessContrast Instance'
+       }
+   :DOC*/
     RedPostEffect_BrightnessContrast = function (redGL) {
         if (!(this instanceof RedPostEffect_BrightnessContrast)) return new RedPostEffect_BrightnessContrast(redGL);
         if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_BrightnessContrast : RedGL Instance만 허용됩니다.', redGL);
         this['frameBuffer'] = RedFrameBuffer(redGL);
         this['diffuseTexture'] = null;
+        /**DOC:
+           {
+               title :`brightness`,
+               description : `
+                   밝기
+                   기본값 : 0
+               `,
+               return : 'Number'
+           }
+       :DOC*/
         this['brightness'] = 0;
+        /**DOC:
+           {
+               title :`contrast`,
+               description : `
+                   대조
+                   기본값 : 0
+               `,
+               return : 'Number'
+           }
+       :DOC*/
         this['contrast'] = 0;
         /////////////////////////////////////////
         // 일반 프로퍼티

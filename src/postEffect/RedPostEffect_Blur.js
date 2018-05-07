@@ -2,6 +2,21 @@
 var RedPostEffect_Blur;
 (function () {
     var makeProgram;
+    /**DOC:
+       {
+           constructorYn : true,
+           title :`RedPostEffect_Blur`,
+           description : `
+               RedPostEffect_Blur Instance 생성.
+           `,
+           params : {
+               redGL : [
+                   {type:'RedGL'}
+               ]
+           },
+           return : 'RedPostEffect_Blur Instance'
+       }
+   :DOC*/
     RedPostEffect_Blur = function (redGL) {
         if (!(this instanceof RedPostEffect_Blur)) return new RedPostEffect_Blur(redGL);
         if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_Blur : RedGL Instance만 허용됩니다.', redGL);

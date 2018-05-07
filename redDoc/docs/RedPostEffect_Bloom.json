@@ -1,1 +1,35 @@
-[]
+[
+  {
+    "title": "bloomStrength",
+    "description": "\n    블룸 강도\n    기본값 : 1.2\n",
+    "return": "Number"
+  },
+  {
+    "title": "blur",
+    "description": "\n    blur 정도.\n    기본값 : 20\n",
+    "return": "Number"
+  },
+  {
+    "title": "exposure",
+    "description": "\n    확산 강도.\n    기본값 : 1\n",
+    "return": "Number"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedPostEffect_Bloom",
+    "description": "\n    RedPostEffect_Bloom Instance 생성.\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ]
+    },
+    "return": "RedPostEffect_Bloom Instance"
+  },
+  {
+    "title": "threshold",
+    "description": "\n    최소 유효값\n    기본값 : 0.3\n",
+    "return": "Number"
+  }
+]

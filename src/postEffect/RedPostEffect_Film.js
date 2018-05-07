@@ -2,14 +2,69 @@
 var RedPostEffect_Film;
 (function () {
     var makeProgram;
+    /**DOC:
+       {
+           constructorYn : true,
+           title :`RedPostEffect_Film`,
+           description : `
+               RedPostEffect_Film Instance 생성.
+           `,
+           params : {
+               redGL : [
+                   {type:'RedGL'}
+               ]
+           },
+           return : 'RedPostEffect_Film Instance'
+       }
+   :DOC*/
     RedPostEffect_Film = function (redGL, width, height) {
         if (!(this instanceof RedPostEffect_Film)) return new RedPostEffect_Film(redGL);
         if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_Film : RedGL Instance만 허용됩니다.', redGL);
         this['frameBuffer'] = RedFrameBuffer(redGL);
         this['diffuseTexture'] = null;
+        /**DOC:
+           {
+               title :`gray`,
+               description : `
+                   그레이모드
+                   기본값 : false
+               `,
+               return : 'Boolean'
+           }
+       :DOC*/
         this['gray'] = false;
+        /**DOC:
+           {
+               title :`scanlineIntensity`,
+               description : `
+                   스캔라인강도
+                   기본값 : 0.5
+               `,
+               return : 'Number'
+           }
+       :DOC*/
         this['scanlineIntensity'] = 0.5;
+        /**DOC:
+           {
+               title :`noiseIntensity`,
+               description : `
+                   노이즈강도
+                   기본값 : 0.5
+               `,
+               return : 'Number'
+           }
+       :DOC*/
         this['noiseIntensity'] = 0.5;
+        /**DOC:
+           {
+               title :`scanlineCount`,
+               description : `
+                   스캔라인 수
+                   기본값 : 2048
+               `,
+               return : 'Number'
+           }
+       :DOC*/
         this['scanlineCount'] = 2048;
         /////////////////////////////////////////
         // 일반 프로퍼티

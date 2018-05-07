@@ -1,1 +1,20 @@
-[]
+[
+  {
+    "constructorYn": true,
+    "title": "RedPostEffect_BlurX",
+    "description": "\n    RedPostEffect_BlurX Instance 생성.\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ]
+    },
+    "return": "RedPostEffect_BlurX Instance"
+  },
+  {
+    "title": "size",
+    "description": "\n    블러 사이즈\n    기본값 : 50\n",
+    "return": "Number"
+  }
+]

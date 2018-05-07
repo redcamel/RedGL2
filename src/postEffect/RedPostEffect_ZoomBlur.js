@@ -2,13 +2,58 @@
 var RedPostEffect_ZoomBlur;
 (function () {
     var makeProgram;
+    /**DOC:
+       {
+           constructorYn : true,
+           title :`RedPostEffect_ZoomBlur`,
+           description : `
+               RedPostEffect_ZoomBlur Instance 생성.
+           `,
+           params : {
+               redGL : [
+                   {type:'RedGL'}
+               ]
+           },
+           return : 'RedPostEffect_ZoomBlur Instance'
+       }
+   :DOC*/
     RedPostEffect_ZoomBlur = function (redGL) {
         if (!(this instanceof RedPostEffect_ZoomBlur)) return new RedPostEffect_ZoomBlur(redGL);
         if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_ZoomBlur : RedGL Instance만 허용됩니다.', redGL);
         this['frameBuffer'] = RedFrameBuffer(redGL);
         this['diffuseTexture'] = null;
+        /**DOC:
+            {
+                title :`centerX`,
+                description : `
+                    정중앙 중심의 가로 위치
+                    기본값 : 0.0
+                `,
+                return : 'Number'
+            }
+       :DOC*/
         this['centerX'] = 0.0;
+        /**DOC:
+            {
+                title :`centerY`,
+                description : `
+                    정중앙 중심의 세로 위치
+                    기본값 : 0.0
+                `,
+                return : 'Number'
+            }
+       :DOC*/
         this['centerY'] = 0.0;
+        /**DOC:
+            {
+                title :`strength`,
+                description : `
+                    강도
+                    기본값 : 0.15
+                `,
+                return : 'Number'
+            }
+       :DOC*/
         this['strength'] = 0.15;
         /////////////////////////////////////////
         // 일반 프로퍼티

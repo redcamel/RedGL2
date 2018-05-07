@@ -72,6 +72,7 @@ var DocJS = {
                             )
                         )
                         t2.S('html', Prism.highlight(dedent(v), Prism.languages.javascript).trim())
+
                     }
                     paramsParser = (function () {
                         var parser;
@@ -308,7 +309,10 @@ var DocJS = {
                     if (!staticBox.__dom__.querySelector('.defineBox')) staticBox.remove()
                     if (!extendsMethodBox.__dom__.querySelector('.defineBox')) extendsMethodBox.remove()
                     /////
-
+                    console.log(window.location.href)
+                    var t0 = window.location.href.split('#')[0]
+                    window.location.href = t0 + '#' + rsList[0]['requestURL'].replace('.json', '')
+                    window.scrollTo(0, 0)
                 })
                 tLoader.start()
             }
@@ -369,7 +373,7 @@ var DocJS = {
             Recard.Dom('div').S(
                 'html', '<hr style="border:0px;border-top:1px solid #eee;margin-left:251px">' +
                 '<div style="font-size:11px;color:#222;margin-left:251px;text-align:right;padding-right:10px">By Redcamel<br>' +
-                '<a href = "https://github.com/redcamel/RedGL2">https://github.com/redcamel/RedGL2</a>'+
+                '<a href = "https://github.com/redcamel/RedGL2">https://github.com/redcamel/RedGL2</a>' +
                 '</div>',
                 '<', 'body'
             )

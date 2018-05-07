@@ -1,1 +1,35 @@
-[]
+[
+  {
+    "title": "gray",
+    "description": "\n    그레이모드\n    기본값 : false\n",
+    "return": "Boolean"
+  },
+  {
+    "title": "noiseIntensity",
+    "description": "\n    노이즈강도\n    기본값 : 0.5\n",
+    "return": "Number"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedPostEffect_Film",
+    "description": "\n    RedPostEffect_Film Instance 생성.\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ]
+    },
+    "return": "RedPostEffect_Film Instance"
+  },
+  {
+    "title": "scanlineCount",
+    "description": "\n    스캔라인 수\n    기본값 : 2048\n",
+    "return": "Number"
+  },
+  {
+    "title": "scanlineIntensity",
+    "description": "\n    스캔라인강도\n    기본값 : 0.5\n",
+    "return": "Number"
+  }
+]

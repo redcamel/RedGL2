@@ -2,6 +2,21 @@
 var RedPostEffect_Threshold;
 (function () {
     var makeProgram;
+    /**DOC:
+       {
+           constructorYn : true,
+           title :`RedPostEffect_Threshold`,
+           description : `
+               RedPostEffect_Threshold Instance 생성.
+           `,
+           params : {
+               redGL : [
+                   {type:'RedGL'}
+               ]
+           },
+           return : 'RedPostEffect_Threshold Instance'
+       }
+   :DOC*/
     RedPostEffect_Threshold = function (redGL) {
         if (!(this instanceof RedPostEffect_Threshold)) return new RedPostEffect_Threshold(redGL);
         if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_Threshold : RedGL Instance만 허용됩니다.', redGL);
@@ -11,6 +26,16 @@ var RedPostEffect_Threshold;
         // 일반 프로퍼티
         this['program'] = makeProgram(this, redGL);
         this['_UUID'] = RedGL['makeUUID']();
+        /**DOC:
+           {
+               title :`threshold`,
+               description : `
+                   최소 유효값
+                   기본값 : 0.24
+               `,
+               return : 'Number'
+           }
+       :DOC*/
         this['threshold'] = 0.24;
         this.updateTexture = function (lastFrameBufferTexture) {
             this['diffuseTexture'] = lastFrameBufferTexture;

@@ -1,1 +1,50 @@
-[]
+[
+  {
+    "title": "kernel",
+    "description": "\n    커널값.\n",
+    "return": "Array"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedPostEffect_Convolution",
+    "description": "\n    RedPostEffect_Convolution Instance 생성.\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ]
+    },
+    "return": "RedPostEffect_Convolution Instance"
+  },
+  {
+    "title": "RedPostEffect_Convolution.BLUR",
+    "code": "CONST",
+    "description": "\n    <code>\n    [\n        1, 1, 1,\n        1, 1, 1,\n        1, 1, 1\n    ]\n    </code>\n",
+    "return": "Array"
+  },
+  {
+    "title": "RedPostEffect_Convolution.EDGE",
+    "code": "CONST",
+    "description": "\n    <code>\n    [\n        0, 1, 0,\n        1, -4, 1,\n        0, 1, 0\n    ]\n    </code>\n",
+    "return": "Array"
+  },
+  {
+    "title": "RedPostEffect_Convolution.EMBOSS",
+    "code": "CONST",
+    "description": "\n    <code>\n    [\n        -2, -1, 0,\n        -1, 1, 1,\n        0, 1, 2\n    ]\n    </code>\n",
+    "return": "Array"
+  },
+  {
+    "title": "RedPostEffect_Convolution.NORMAL",
+    "code": "CONST",
+    "description": "\n    <code>\n    [\n        0, 0, 0,\n        0, 1, 0,\n        0, 0, 0\n    ]\n    </code>\n",
+    "return": "Array"
+  },
+  {
+    "title": "RedPostEffect_Convolution.SHARPEN",
+    "code": "CONST",
+    "description": "\n    <code>\n    [\n        0, -1, 0,\n        -1, 5, -1,\n        0, -1, 0\n    ]\n    </code>\n",
+    "return": "Array"
+  }
+]

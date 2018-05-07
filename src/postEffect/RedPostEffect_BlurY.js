@@ -2,11 +2,36 @@
 var RedPostEffect_BlurY;
 (function () {
     var makeProgram;
+    /**DOC:
+       {
+           constructorYn : true,
+           title :`RedPostEffect_BlurY`,
+           description : `
+               RedPostEffect_BlurY Instance 생성.
+           `,
+           params : {
+               redGL : [
+                   {type:'RedGL'}
+               ]
+           },
+           return : 'RedPostEffect_BlurY Instance'
+       }
+   :DOC*/
     RedPostEffect_BlurY = function (redGL) {
         if (!(this instanceof RedPostEffect_BlurY)) return new RedPostEffect_BlurY(redGL);
         if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_BlurY : RedGL Instance만 허용됩니다.', redGL);
         this['frameBuffer'] = RedFrameBuffer(redGL);
         this['diffuseTexture'] = null;
+        /**DOC:
+           {
+               title :`size`,
+               description : `
+                   블러 사이즈
+                   기본값 : 50
+               `,
+               return : 'Number'
+           }
+       :DOC*/
         this['size'] = 50;
         /////////////////////////////////////////
         // 일반 프로퍼티

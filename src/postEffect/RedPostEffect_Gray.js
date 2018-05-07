@@ -2,6 +2,21 @@
 var RedPostEffect_Gray;
 (function () {
     var makeProgram;
+    /**DOC:
+       {
+           constructorYn : true,
+           title :`RedPostEffect_Gray`,
+           description : `
+               RedPostEffect_Gray Instance 생성.
+           `,
+           params : {
+               redGL : [
+                   {type:'RedGL'}
+               ]
+           },
+           return : 'RedPostEffect_Gray Instance'
+       }
+   :DOC*/
     RedPostEffect_Gray = function (redGL) {
         if (!(this instanceof RedPostEffect_Gray)) return new RedPostEffect_Gray(redGL);
         if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_Gray : RedGL Instance만 허용됩니다.', redGL);

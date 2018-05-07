@@ -1,1 +1,25 @@
-[]
+[
+  {
+    "constructorYn": true,
+    "title": "RedPostEffect_Vignetting",
+    "description": "\n    RedPostEffect_Vignetting Instance 생성.\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ]
+    },
+    "return": "RedPostEffect_Vignetting Instance"
+  },
+  {
+    "title": "size",
+    "description": "\n    비네팅사이즈\n    기본값 : 0.1\n",
+    "return": "Number"
+  },
+  {
+    "title": "size",
+    "description": "\n    비네팅 강도\n    기본값 : 0.85\n",
+    "return": "Number"
+  }
+]

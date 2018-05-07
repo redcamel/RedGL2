@@ -2,7 +2,22 @@
 var RedPostEffect_HalfTone;
 (function () {
     var makeProgram;
-
+    /**DOC:
+       {
+           constructorYn : true,
+           title :`RedPostEffect_HalfTone`,
+           description : `
+               RedPostEffect_HalfTone Instance 생성.
+           `,
+           params : {
+               redGL : [
+                   {type:'RedGL'}
+               ]
+           },
+           return : 'RedPostEffect_HalfTone Instance'
+       }
+   :DOC*/
+   //TODO: 각각의 값을 정의해봐야겠군....의미가 아리까리..
     RedPostEffect_HalfTone = function (redGL) {
         if (!(this instanceof RedPostEffect_HalfTone)) return new RedPostEffect_HalfTone(redGL);
         if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_HalfTone : RedGL Instance만 허용됩니다.', redGL)
@@ -10,9 +25,9 @@ var RedPostEffect_HalfTone;
         this['diffuseTexture'] = null;
         this['centerX'] = 0.0;
         this['centerY'] = 0.0;
-        this['angle'] = 1;
-        this['radius'] = 1;
-        this['grayMode'] = true;
+        this['angle'] = 0;
+        this['radius'] = 2;
+        this['grayMode'] = false;
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['program'] = makeProgram(this, redGL);
@@ -49,8 +64,8 @@ var RedPostEffect_HalfTone;
             float pattern(float angle) {
                 float s = sin(angle), c = cos(angle);
                 vec2 tex = vTexcoord;
-                tex.x -= uCenterX + 0.5;
-                tex.y -= uCenterY + 0.5;
+                // tex.x -= uCenterX + 0.5;
+                // tex.y -= uCenterY + 0.5;
                 vec2 point = vec2( 
                     c * tex.x - s * tex.y, 
                     s * tex.x + c * tex.y 

@@ -2,11 +2,35 @@
 var RedPostEffect_Convolution;
 (function () {
     var makeProgram;
+    /**DOC:
+       {
+           constructorYn : true,
+           title :`RedPostEffect_Convolution`,
+           description : `
+               RedPostEffect_Convolution Instance 생성.
+           `,
+           params : {
+               redGL : [
+                   {type:'RedGL'}
+               ]
+           },
+           return : 'RedPostEffect_Convolution Instance'
+       }
+   :DOC*/
     RedPostEffect_Convolution = function (redGL, kernel) {
         if (!(this instanceof RedPostEffect_Convolution)) return new RedPostEffect_Convolution(redGL, kernel);
         if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_Convolution : RedGL Instance만 허용됩니다.', redGL);
         this['frameBuffer'] = RedFrameBuffer(redGL);
         this['diffuseTexture'] = null;
+        /**DOC:
+           {
+               title :`kernel`,
+               description : `
+                   커널값.
+               `,
+               return : 'Array'
+           }
+       :DOC*/
         this['kernel'] = kernel;
         Object.defineProperty(this, 'kernelWeight', (function () {
             var sum;
@@ -78,27 +102,106 @@ var RedPostEffect_Convolution;
         }
     })();
     RedPostEffect_Convolution.prototype = RedBaseMaterial.prototype;
+    /**DOC:
+        {
+            title :`RedPostEffect_Convolution.NORMAL`,
+            code : 'CONST',
+            description : `
+                <code>
+                [
+                    0, 0, 0,
+                    0, 1, 0,
+                    0, 0, 0
+                ]
+                </code>
+            `,
+            return : 'Array'
+        }
+    :DOC*/
     RedPostEffect_Convolution['NORMAL'] = [
         0, 0, 0,
         0, 1, 0,
         0, 0, 0
     ]
+    /**DOC:
+        {
+            title :`RedPostEffect_Convolution.SHARPEN`,
+            code : 'CONST',
+            description : `
+                <code>
+                [
+                    0, -1, 0,
+                    -1, 5, -1,
+                    0, -1, 0
+                ]
+                </code>
+            `,
+            return : 'Array'
+        }
+    :DOC*/
     RedPostEffect_Convolution['SHARPEN'] = [
         0, -1, 0,
         -1, 5, -1,
         0, -1, 0
-
     ]
+    /**DOC:
+        {
+            title :`RedPostEffect_Convolution.BLUR`,
+            code : 'CONST',
+            description : `
+                <code>
+                [
+                    1, 1, 1,
+                    1, 1, 1,
+                    1, 1, 1
+                ]
+                </code>
+            `,
+            return : 'Array'
+        }
+    :DOC*/
     RedPostEffect_Convolution['BLUR'] = [
         1, 1, 1,
         1, 1, 1,
         1, 1, 1
     ]
+    /**DOC:
+        {
+            title :`RedPostEffect_Convolution.EDGE`,
+            code : 'CONST',
+            description : `
+                <code>
+                [
+                    0, 1, 0,
+                    1, -4, 1,
+                    0, 1, 0
+                ]
+                </code>
+            `,
+            return : 'Array'
+        }
+    :DOC*/
     RedPostEffect_Convolution['EDGE'] = [
         0, 1, 0,
         1, -4, 1,
         0, 1, 0
     ]
+    /**DOC:
+        {
+            title :`RedPostEffect_Convolution.EMBOSS`,
+            code : 'CONST',
+            description : `
+                <code>
+                [
+                    -2, -1, 0,
+                    -1, 1, 1,
+                    0, 1, 2
+                ]
+                </code>
+            `,
+            return : 'Array'
+        }
+    :DOC*/
     RedPostEffect_Convolution['EMBOSS'] = [
         -2, -1, 0,
         -1, 1, 1,

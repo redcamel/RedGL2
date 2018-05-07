@@ -3,12 +3,47 @@
 var RedPostEffect_Vignetting;
 (function () {
     var makeProgram;
+    /**DOC:
+       {
+           constructorYn : true,
+           title :`RedPostEffect_Vignetting`,
+           description : `
+               RedPostEffect_Vignetting Instance 생성.
+           `,
+           params : {
+               redGL : [
+                   {type:'RedGL'}
+               ]
+           },
+           return : 'RedPostEffect_Vignetting Instance'
+       }
+   :DOC*/
     RedPostEffect_Vignetting = function (redGL) {
         if (!(this instanceof RedPostEffect_Vignetting)) return new RedPostEffect_Vignetting(redGL);
         if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_Vignetting : RedGL Instance만 허용됩니다.', redGL);
         this['frameBuffer'] = RedFrameBuffer(redGL);
         this['diffuseTexture'] = null;
+        /**DOC:
+           {
+               title :`size`,
+               description : `
+                   비네팅사이즈
+                   기본값 : 0.1
+               `,
+               return : 'Number'
+           }
+       :DOC*/
         this['size'] = 0.1;
+        /**DOC:
+            {
+                title :`size`,
+                description : `
+                    비네팅 강도
+                    기본값 : 0.85
+            `,
+            return : 'Number'
+            }
+       :DOC*/
         this['indensity'] = 0.85;
         /////////////////////////////////////////
         // 일반 프로퍼티

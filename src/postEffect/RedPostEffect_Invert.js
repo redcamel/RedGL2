@@ -2,7 +2,21 @@
 var RedPostEffect_Invert;
 (function () {
     var makeProgram;
-
+    /**DOC:
+       {
+           constructorYn : true,
+           title :`RedPostEffect_Invert`,
+           description : `
+               RedPostEffect_Invert Instance 생성.
+           `,
+           params : {
+               redGL : [
+                   {type:'RedGL'}
+               ]
+           },
+           return : 'RedPostEffect_Invert Instance'
+       }
+   :DOC*/
     RedPostEffect_Invert = function (redGL) {
         if (!(this instanceof RedPostEffect_Invert)) return new RedPostEffect_Invert(redGL);
         if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_Invert : RedGL Instance만 허용됩니다.', redGL);

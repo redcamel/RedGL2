@@ -3,12 +3,47 @@
 var RedPostEffect_HueSaturation;
 (function () {
     var makeProgram;
+    /**DOC:
+       {
+           constructorYn : true,
+           title :`RedPostEffect_HueSaturation`,
+           description : `
+               RedPostEffect_HueSaturation Instance 생성.
+           `,
+           params : {
+               redGL : [
+                   {type:'RedGL'}
+               ]
+           },
+           return : 'RedPostEffect_HueSaturation Instance'
+       }
+   :DOC*/
     RedPostEffect_HueSaturation = function (redGL) {
         if (!(this instanceof RedPostEffect_HueSaturation)) return new RedPostEffect_HueSaturation(redGL);
         if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_HueSaturation : RedGL Instance만 허용됩니다.', redGL);
         this['frameBuffer'] = RedFrameBuffer(redGL);
         this['diffuseTexture'] = null;
+        /**DOC:
+           {
+               title :`hue`,
+               description : `
+                   색조
+                   기본값 : 0
+               `,
+               return : 'Number'
+           }
+       :DOC*/
         this['hue'] = 0;
+        /**DOC:
+           {
+               title :`saturation`,
+               description : `
+                   채도
+                   기본값 : 0
+               `,
+               return : 'Number'
+           }
+       :DOC*/
         this['saturation'] = 0;
         /////////////////////////////////////////
         // 일반 프로퍼티

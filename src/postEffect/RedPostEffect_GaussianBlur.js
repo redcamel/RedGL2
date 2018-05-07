@@ -2,7 +2,21 @@
 var RedPostEffect_GaussianBlur;
 (function () {
     var makeProgram;
-
+    /**DOC:
+       {
+           constructorYn : true,
+           title :`RedPostEffect_GaussianBlur`,
+           description : `
+               RedPostEffect_GaussianBlur Instance 생성.
+           `,
+           params : {
+               redGL : [
+                   {type:'RedGL'}
+               ]
+           },
+           return : 'RedPostEffect_GaussianBlur Instance'
+       }
+   :DOC*/
     RedPostEffect_GaussianBlur = function (redGL) {
         if (!(this instanceof RedPostEffect_GaussianBlur)) return new RedPostEffect_GaussianBlur(redGL);
         if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_GaussianBlur : RedGL Instance만 허용됩니다.', redGL)
@@ -16,6 +30,16 @@ var RedPostEffect_GaussianBlur;
             RedPostEffect_BlurX(redGL),
             RedPostEffect_BlurY(redGL)
         ];
+        /**DOC:
+           {
+               title :`radius`,
+               description : `
+                   가우시간 블러강도
+                   기본값 : 20
+               `,
+               return : 'Number'
+           }
+       :DOC*/
         Object.defineProperty(this, 'radius', (function () {
             var _v = 1
             return {
@@ -28,13 +52,6 @@ var RedPostEffect_GaussianBlur;
             }
         })());
         this['radius'] = 20;
-        Object.defineProperty(this, 'threshold', (function () {
-            var _v = 0.25
-            return {
-                get: function () { return _v },
-                set: function (v) { this['process'][0]['threshold'] = _v = v }
-            }
-        })());
         this.updateTexture = function (lastFrameBufferTexture) {
             this['diffuseTexture'] = lastFrameBufferTexture;
         }

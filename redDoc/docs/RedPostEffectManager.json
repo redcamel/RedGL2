@@ -1,1 +1,85 @@
-[]
+[
+  {
+    "title": "addEffect",
+    "code": "METHOD",
+    "description": "\n    postEffect 추가\n",
+    "params": {
+      "postEffect": [
+        {
+          "type": "RedGL"
+        }
+      ]
+    },
+    "return": "void"
+  },
+  {
+    "title": "bind",
+    "code": "METHOD",
+    "description": "\n    프레임 버퍼 바인딩.\n    렌더러에서 자동호출됨.\n",
+    "params": {
+      "gl": [
+        {
+          "type": "WebGL Context"
+        }
+      ]
+    },
+    "return": "void"
+  },
+  {
+    "title": "finalMaterial",
+    "code": "PROPERTY",
+    "description": "\n    최종 프레임버퍼 렌더링을 담당할 재질.\n",
+    "return": "Array"
+  },
+  {
+    "title": "frameBuffer",
+    "code": "PROPERTY",
+    "description": "\n    이펙트 렌더링시 사용될 프레임버퍼\n",
+    "return": "RedFrameBuffer Instance"
+  },
+  {
+    "title": "postEffectList",
+    "code": "PROPERTY",
+    "description": "\n    이펙트 리스트\n",
+    "return": "Array"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedPostEffectManager",
+    "description": "\n    RedPostEffectManager Instance 생성.\n    RedScene 생성시 내부속성으로 자동생성됨.\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ]
+    },
+    "return": "RedPostEffectManager Instance"
+  },
+  {
+    "title": "removeEffect",
+    "code": "METHOD",
+    "description": "\n    postEffect 제거\n",
+    "params": {
+      "postEffect": [
+        {
+          "type": "RedGL"
+        }
+      ]
+    },
+    "return": "void"
+  },
+  {
+    "title": "unbind",
+    "code": "METHOD",
+    "description": "\n    프레임 버퍼 언바인딩.\n    렌더러에서 자동호출됨.\n",
+    "params": {
+      "gl": [
+        {
+          "type": "WebGL Context"
+        }
+      ]
+    },
+    "return": "void"
+  }
+]

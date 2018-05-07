@@ -1,1 +1,15 @@
-[]
+[
+  {
+    "constructorYn": true,
+    "title": "RedPostEffect_HalfTone",
+    "description": "\n    RedPostEffect_HalfTone Instance 생성.\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ]
+    },
+    "return": "RedPostEffect_HalfTone Instance"
+  }
+]
