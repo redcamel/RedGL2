@@ -514,8 +514,9 @@ var RedRenderer;
                     // 포스트 이펙트를 돌면서 갱신해나간다.
                     postEffectManager['postEffectList'].forEach(function (effect) {
                         // console.log('Render Effect', v)
+                        var parentFramBufferTexture
                         if (effect['process'] && effect['process'].length) {
-                            var parentFramBufferTexture = lastFrameBufferTexture
+                            parentFramBufferTexture = lastFrameBufferTexture
                             effect['process'].forEach(function (subEffect) {
                                 setViewportScissorAndBaseUniform(gl, subEffect)
                                 // 해당 이펙트의 프레임 버퍼를 바인딩
@@ -530,18 +531,20 @@ var RedRenderer;
                                 lastFrameBufferTexture = subEffect['frameBuffer']['texture']
                             })
                         }
-                        setViewportScissorAndBaseUniform(gl, effect)
-                        // 해당 이펙트의 프레임 버퍼를 바인딩
-                        effect.bind(gl);
-                        // 해당 이펙트의 기본 텍스쳐를 지난 이펙트의 최종 텍스쳐로 업로드
-                        effect.updateTexture(lastFrameBufferTexture, parentFramBufferTexture);
-                        // 해당 이펙트를 렌더링하고
-                        self.sceneRender(redGL, gl, true, postEffectManager['children'], time, renderInfo);
-                        // 해당 이펙트의 프레임 버퍼를 언바인딩한다.
-                        effect.unbind(gl)
-                        // 현재 이펙트를 최종 텍스쳐로 기록하고 다음 이펙트가 있을경우 활용한다. 
-                        lastFrameBufferTexture = effect['frameBuffer']['texture']
-                        // console.log(effect)
+                        if (effect['frameBuffer']) {
+                            setViewportScissorAndBaseUniform(gl, effect)
+                            // 해당 이펙트의 프레임 버퍼를 바인딩
+                            effect.bind(gl);
+                            // 해당 이펙트의 기본 텍스쳐를 지난 이펙트의 최종 텍스쳐로 업로드
+                            effect.updateTexture(lastFrameBufferTexture, parentFramBufferTexture);
+                            // 해당 이펙트를 렌더링하고
+                            self.sceneRender(redGL, gl, true, postEffectManager['children'], time, renderInfo);
+                            // 해당 이펙트의 프레임 버퍼를 언바인딩한다.
+                            effect.unbind(gl)
+                            // 현재 이펙트를 최종 텍스쳐로 기록하고 다음 이펙트가 있을경우 활용한다. 
+                            lastFrameBufferTexture = effect['frameBuffer']['texture']
+                            // console.log(effect)
+                        }
                     })
                     // 이펙트가 존재한다면 최종 이펙트의 프레임버퍼 결과물을 최종으로 렌더링한다.
                     if (lastFrameBufferTexture != originFrameBufferTexture) {
