@@ -514,9 +514,9 @@ var RedRenderer;
                     // 포스트 이펙트를 돌면서 갱신해나간다.
                     postEffectManager['postEffectList'].forEach(function (effect) {
                         // console.log('Render Effect', v)
-                        if (effect['filter'] && effect['filter'].length) {
+                        if (effect['process'] && effect['process'].length) {
                             var parentFramBufferTexture = lastFrameBufferTexture
-                            effect['filter'].forEach(function (subEffect) {
+                            effect['process'].forEach(function (subEffect) {
                                 setViewportScissorAndBaseUniform(gl, subEffect)
                                 // 해당 이펙트의 프레임 버퍼를 바인딩
                                 subEffect.bind(gl);

@@ -49,7 +49,7 @@
                 // 뷰생성 및 적용
                 tWorld.addView(RedView('test', tScene, tController));
                 // 그리드 설정
-                tScene['grid'] = RedGrid(this)
+                // tScene['grid'] = RedGrid(this)
 
                 // 라이트 설정
                 var testDLight, testALight, testPLight;
@@ -162,8 +162,8 @@
                 t0.add(test, k).name(k.replace('RedPostEffect_', '')).onChange((function () {
                     var tEffect = effectList[k]
                     return function (v) {
-                        if(v) tScene['postEffectManager'].addEffect(tEffect)
-                        else  tScene['postEffectManager'].removeEffect(tEffect)
+                        if (v) tScene['postEffectManager'].addEffect(tEffect)
+                        else tScene['postEffectManager'].removeEffect(tEffect)
                     }
                 })())
             }

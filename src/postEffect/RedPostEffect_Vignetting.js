@@ -1,32 +1,61 @@
 "use strict";
-//TODO: 좀더 정리해야함
+
 var RedPostEffect_Vignetting;
 (function () {
     var makeProgram;
-
+    /**DOC:
+       {
+           constructorYn : true,
+           title :`RedPostEffect_Vignetting`,
+           description : `
+               RedPostEffect_Vignetting Instance 생성.
+           `,
+           params : {
+               redGL : [
+                   {type:'RedGL'}
+               ]
+           },
+           return : 'RedPostEffect_Vignetting Instance'
+       }
+   :DOC*/
     RedPostEffect_Vignetting = function (redGL) {
         if (!(this instanceof RedPostEffect_Vignetting)) return new RedPostEffect_Vignetting(redGL);
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_Vignetting : RedGL Instance만 허용됩니다.', redGL)
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_Vignetting : RedGL Instance만 허용됩니다.', redGL);
         this['frameBuffer'] = RedFrameBuffer(redGL);
         this['diffuseTexture'] = null;
+        /**DOC:
+           {
+               title :`size`,
+               description : `
+                   비네팅사이즈
+                   기본값 : 0.1
+               `,
+               return : 'Number'
+           }
+       :DOC*/
         this['size'] = 0.1;
+        /**DOC:
+            {
+                title :`size`,
+                description : `
+                    비네팅 강도
+                    기본값 : 0.85
+            `,
+            return : 'Number'
+            }
+       :DOC*/
         this['indensity'] = 0.85;
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['program'] = makeProgram(this, redGL);
         this['_UUID'] = RedGL['makeUUID']();
-        this.checkProperty()
-        // Object.seal(this)
-        console.log(this)
         this.updateTexture = function (lastFrameBufferTexture) {
-            this['diffuseTexture'] = lastFrameBufferTexture
+            this['diffuseTexture'] = lastFrameBufferTexture;
         }
-        this.bind = function (gl) {
-            this['frameBuffer'].bind(gl);
-        }
-        this.unbind = function (gl) {
-            this['frameBuffer'].unbind(gl);
-        }
+        this['bind'] = RedPostEffectManager.prototype['bind'];
+        this['unbind'] = RedPostEffectManager.prototype['unbind'];
+        this.checkProperty();
+        console.log(this);
     }
     makeProgram = (function () {
         var vSource, fSource;
@@ -57,36 +86,9 @@ var RedPostEffect_Vignetting;
         fSource = RedGLUtil.getStrFromComment(fSource.toString());
         PROGRAM_NAME = 'RedPostEffect_Vignetting_Program';
         return function (target, redGL) {
-            return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource)
-
+            return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource);
         }
     })();
-    RedPostEffect_Vignetting.prototype = RedBaseMaterial.prototype
-    RedPostEffect_Vignetting['NORMAL'] = [
-        0, 0, 0,
-        0, 1, 0,
-        0, 0, 0
-    ]
-    RedPostEffect_Vignetting['SHARPEN'] = [
-        0, -1, 0,
-        -1, 5, -1,
-        0, -1, 0
-
-    ]
-    RedPostEffect_Vignetting['BLUR'] = [
-        1, 1, 1,
-        1, 1, 1,
-        1, 1, 1
-    ]
-    RedPostEffect_Vignetting['EDGE'] = [
-        0, 1, 0,
-        1, -4, 1,
-        0, 1, 0
-    ]
-    RedPostEffect_Vignetting['EMBOSS'] = [
-        -2, -1, 0,
-        -1, 1, 1,
-        0, 1, 2
-    ]
-    Object.freeze(RedPostEffect_Vignetting)
+    RedPostEffect_Vignetting.prototype = RedBaseMaterial.prototype;
+    Object.freeze(RedPostEffect_Vignetting);
 })();

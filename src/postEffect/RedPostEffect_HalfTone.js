@@ -2,33 +2,43 @@
 var RedPostEffect_HalfTone;
 (function () {
     var makeProgram;
-
+    /**DOC:
+       {
+           constructorYn : true,
+           title :`RedPostEffect_HalfTone`,
+           description : `
+               RedPostEffect_HalfTone Instance 생성.
+           `,
+           params : {
+               redGL : [
+                   {type:'RedGL'}
+               ]
+           },
+           return : 'RedPostEffect_HalfTone Instance'
+       }
+   :DOC*/
+   //TODO: 각각의 값을 정의해봐야겠군....의미가 아리까리..
     RedPostEffect_HalfTone = function (redGL) {
         if (!(this instanceof RedPostEffect_HalfTone)) return new RedPostEffect_HalfTone(redGL);
         if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_HalfTone : RedGL Instance만 허용됩니다.', redGL)
         this['frameBuffer'] = RedFrameBuffer(redGL);
         this['diffuseTexture'] = null;
-        this['centerX'] = 0.0
-        this['centerY'] = 0.0
-        this['angle'] = 1
-        this['radius'] = 1
-        this['grayMode'] = true
+        this['centerX'] = 0.0;
+        this['centerY'] = 0.0;
+        this['angle'] = 0;
+        this['radius'] = 2;
+        this['grayMode'] = false;
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['program'] = makeProgram(this, redGL);
         this['_UUID'] = RedGL['makeUUID']();
-        this.checkProperty()
-        // Object.seal(this)
-        console.log(this)
         this.updateTexture = function (lastFrameBufferTexture) {
             this['diffuseTexture'] = lastFrameBufferTexture
         }
-        this.bind = function (gl) {
-            this['frameBuffer'].bind(gl);
-        }
-        this.unbind = function (gl) {
-            this['frameBuffer'].unbind(gl);
-        }
+        this['bind'] = RedPostEffectManager.prototype['bind'];
+        this['unbind'] = RedPostEffectManager.prototype['unbind'];
+        this.checkProperty();
+        console.log(this);
     }
     makeProgram = (function () {
         var vSource, fSource;
@@ -52,6 +62,7 @@ var RedPostEffect_HalfTone;
             uniform float uRadius;
             uniform bool uGrayMode;            
             float pattern(float angle) {
+                angle = angle * 3.141592653589793/180.0;
                 float s = sin(angle), c = cos(angle);
                 vec2 tex = vTexcoord;
                 tex.x -= uCenterX + 0.5;
@@ -83,10 +94,9 @@ var RedPostEffect_HalfTone;
         fSource = RedGLUtil.getStrFromComment(fSource.toString());
         PROGRAM_NAME = 'RedPostEffect_HalfTone_Program';
         return function (target, redGL) {
-            return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource)
-
+            return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource);
         }
     })();
-    RedPostEffect_HalfTone.prototype = RedBaseMaterial.prototype
-    Object.freeze(RedPostEffect_HalfTone)
+    RedPostEffect_HalfTone.prototype = RedBaseMaterial.prototype;
+    Object.freeze(RedPostEffect_HalfTone);
 })();

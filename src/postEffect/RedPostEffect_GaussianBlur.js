@@ -1,42 +1,57 @@
 "use strict";
-var RedPostEffect_Threshold;
+var RedPostEffect_GaussianBlur;
 (function () {
     var makeProgram;
     /**DOC:
        {
            constructorYn : true,
-           title :`RedPostEffect_Threshold`,
+           title :`RedPostEffect_GaussianBlur`,
            description : `
-               RedPostEffect_Threshold Instance 생성.
+               RedPostEffect_GaussianBlur Instance 생성.
            `,
            params : {
                redGL : [
                    {type:'RedGL'}
                ]
            },
-           return : 'RedPostEffect_Threshold Instance'
+           return : 'RedPostEffect_GaussianBlur Instance'
        }
    :DOC*/
-    RedPostEffect_Threshold = function (redGL) {
-        if (!(this instanceof RedPostEffect_Threshold)) return new RedPostEffect_Threshold(redGL);
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_Threshold : RedGL Instance만 허용됩니다.', redGL);
+    RedPostEffect_GaussianBlur = function (redGL) {
+        if (!(this instanceof RedPostEffect_GaussianBlur)) return new RedPostEffect_GaussianBlur(redGL);
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_GaussianBlur : RedGL Instance만 허용됩니다.', redGL)
         this['frameBuffer'] = RedFrameBuffer(redGL);
         this['diffuseTexture'] = null;
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['program'] = makeProgram(this, redGL);
         this['_UUID'] = RedGL['makeUUID']();
+        this['process'] = [
+            RedPostEffect_BlurX(redGL),
+            RedPostEffect_BlurY(redGL)
+        ];
         /**DOC:
            {
-               title :`threshold`,
+               title :`radius`,
                description : `
-                   최소 유효값
-                   기본값 : 0.24
+                   가우시간 블러강도
+                   기본값 : 20
                `,
                return : 'Number'
            }
        :DOC*/
-        this['threshold'] = 0.24;
+        Object.defineProperty(this, 'radius', (function () {
+            var _v = 1
+            return {
+                get: function () { return _v },
+                set: function (v) {
+                    _v = v;
+                    this['process'][0]['size'] = _v;
+                    this['process'][1]['size'] = _v;
+                }
+            }
+        })());
+        this['radius'] = 20;
         this.updateTexture = function (lastFrameBufferTexture) {
             this['diffuseTexture'] = lastFrameBufferTexture;
         }
@@ -58,26 +73,23 @@ var RedPostEffect_Threshold;
         }
         fSource = function () {
             /*
-            precision highp float;
+            precision mediump float;
             uniform sampler2D uDiffuseTexture;     
-            uniform float uThreshold;
+            
             void main() {
                 vec4 finalColor = texture2D(uDiffuseTexture, vTexcoord);
-                float v;
-                if(0.2126 * finalColor.r + 0.7152 * finalColor.g + 0.0722 * finalColor.b >= uThreshold) v = 1.0;
-                else v = 0.0;
-                finalColor.r = finalColor.g = finalColor.b = v;
-                gl_FragColor = finalColor;          
+                gl_FragColor = finalColor ;
+          
             }
             */
         }
         vSource = RedGLUtil.getStrFromComment(vSource.toString());
         fSource = RedGLUtil.getStrFromComment(fSource.toString());
-        PROGRAM_NAME = 'RedPostEffect_Threshold_Program';
+        PROGRAM_NAME = 'RedPostEffect_GaussianBlur_Program';
         return function (target, redGL) {
             return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource);
         }
     })();
-    RedPostEffect_Threshold.prototype = RedBaseMaterial.prototype;
-    Object.freeze(RedPostEffect_Threshold);
+    RedPostEffect_GaussianBlur.prototype = RedBaseMaterial.prototype;
+    Object.freeze(RedPostEffect_GaussianBlur);
 })();

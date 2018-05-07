@@ -2,28 +2,37 @@
 var RedPostEffect_Gray;
 (function () {
     var makeProgram;
-
+    /**DOC:
+       {
+           constructorYn : true,
+           title :`RedPostEffect_Gray`,
+           description : `
+               RedPostEffect_Gray Instance 생성.
+           `,
+           params : {
+               redGL : [
+                   {type:'RedGL'}
+               ]
+           },
+           return : 'RedPostEffect_Gray Instance'
+       }
+   :DOC*/
     RedPostEffect_Gray = function (redGL) {
         if (!(this instanceof RedPostEffect_Gray)) return new RedPostEffect_Gray(redGL);
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_Gray : RedGL Instance만 허용됩니다.', redGL)
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_Gray : RedGL Instance만 허용됩니다.', redGL);
         this['frameBuffer'] = RedFrameBuffer(redGL);
         this['diffuseTexture'] = null;
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['program'] = makeProgram(this, redGL);
         this['_UUID'] = RedGL['makeUUID']();
-        this.checkProperty()
-        // Object.seal(this)
-        console.log(this)
         this.updateTexture = function (lastFrameBufferTexture) {
-            this['diffuseTexture'] = lastFrameBufferTexture
+            this['diffuseTexture'] = lastFrameBufferTexture;
         }
-        this.bind = function (gl) {
-            this['frameBuffer'].bind(gl);
-        }
-        this.unbind = function (gl) {
-            this['frameBuffer'].unbind(gl);
-        }
+        this['bind'] = RedPostEffectManager.prototype['bind'];
+        this['unbind'] = RedPostEffectManager.prototype['unbind'];
+        this.checkProperty();
+        console.log(this);
     }
     makeProgram = (function () {
         var vSource, fSource;
@@ -52,10 +61,9 @@ var RedPostEffect_Gray;
         fSource = RedGLUtil.getStrFromComment(fSource.toString());
         PROGRAM_NAME = 'RedPostEffect_Gray_Program';
         return function (target, redGL) {
-            return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource)
-
+            return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource);
         }
     })();
-    RedPostEffect_Gray.prototype = RedBaseMaterial.prototype
-    Object.freeze(RedPostEffect_Gray)
+    RedPostEffect_Gray.prototype = RedBaseMaterial.prototype;
+    Object.freeze(RedPostEffect_Gray);
 })();

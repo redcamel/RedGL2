@@ -68,6 +68,7 @@
     <script src="../src/postEffect/RedPostEffect_Convolution.js"></script>
     <script src="../src/postEffect/RedPostEffect_Invert.js"></script>
     <script src="../src/postEffect/RedPostEffect_Gray.js"></script>
+    <script src="../src/postEffect/RedPostEffect_GaussianBlur.js"></script>
     <script src="../src/postEffect/RedPostEffect_HueSaturation.js"></script>
     <script src="../src/postEffect/RedPostEffect_BrightnessContrast.js"></script>
     <script src="../src/postEffect/RedPostEffect_Vignetting.js"></script>
@@ -145,20 +146,23 @@
             // tScene3D['postEffectManager'].addEffect(RedPostEffect_Blur(this))
             // tScene3D['postEffectManager'].addEffect(RedPostEffect_Gray(this))
             // tScene3D['postEffectManager'].addEffect(RedPostEffect_Pixelize(this))
-
+     
             // tScene3D['postEffectManager'].addEffect(RedPostEffect_Convolution(this,RedPostEffect_Convolution['EMBOSS']))
             // tScene3D['postEffectManager'].addEffect(RedPostEffect_BlurX(this))
             // tScene3D['postEffectManager'].addEffect(RedPostEffect_BlurY(this))
             var bloom = RedPostEffect_Bloom(this)
             tScene3D['postEffectManager'].addEffect(bloom)
 
-            // tScene3D['postEffectManager'].addEffect(RedPostEffect_HueSaturation(this)) 
+            tScene3D['postEffectManager'].addEffect(RedPostEffect_HueSaturation(this)) 
             // tScene3D['postEffectManager'].addEffect(RedPostEffect_Vignetting(this)) 
             // tScene3D['postEffectManager'].addEffect(RedPostEffect_BrightnessContrast(this)) 
             // tScene3D['postEffectManager'].addEffect(RedPostEffect_ZoomBlur(this))
             // tScene3D['postEffectManager'].addEffect(RedPostEffect_HalfTone(this)) 
             // var threshold = RedPostEffect_Threshold(this)
             // tScene3D['postEffectManager'].addEffect(threshold)
+            var guassian = RedPostEffect_GaussianBlur(this)
+            // tScene3D['postEffectManager'].addEffect(guassian)
+
 
 
 
@@ -228,13 +232,20 @@
             this['gui'] = new dat.GUI({
                 name: 'test'
             });
-            var t0 = this['gui'].addFolder('test')
+            var t0 = this['gui'].addFolder('bloom')
 
 
             t0.add(bloom, 'exposure', 0, 2)
             t0.add(bloom, 'bloomStrength', 0, 2)
             t0.add(bloom, 'blur', 0, 100)
             t0.add(bloom, 'threshold', 0, 1)
+
+            t0.open()
+
+            var t0 = this['gui'].addFolder('guassian')
+
+
+            t0.add(guassian, 'radius', 0, 100)
 
             t0.open()
 

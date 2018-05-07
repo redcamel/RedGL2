@@ -64,7 +64,7 @@
     <script src="../src/postEffect/RedPostEffect_BlurX.js"></script>
     <script src="../src/postEffect/RedPostEffect_BlurY.js"></script>
     <script src="../src/postEffect/RedPostEffect_Bloom.js"></script>
-
+    <script src="../src/postEffect/RedPostEffect_BloomThreshold.js"></script>
 
 
     <script src="../src/postEffect/RedPostEffect_Convolution.js"></script>
@@ -160,7 +160,7 @@
             var film = RedPostEffect_Film(this)
             bloom['frameBuffer']['width'] = 2048
             bloom['frameBuffer']['height'] = 2048
-            tScene3D['postEffectManager'].addEffect(film)
+            // tScene3D['postEffectManager'].addEffect(film)
             // tScene3D['postEffectManager'].addEffect(RedPostEffect_HueSaturation(this)) 
             // tScene3D['postEffectManager'].addEffect(RedPostEffect_Vignetting(this)) 
             // tScene3D['postEffectManager'].addEffect(RedPostEffect_BrightnessContrast(this)) 

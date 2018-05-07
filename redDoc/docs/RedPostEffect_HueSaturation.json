@@ -1,1 +1,25 @@
-[]
+[
+  {
+    "title": "hue",
+    "description": "\n    색조\n    기본값 : 0\n",
+    "return": "Number"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedPostEffect_HueSaturation",
+    "description": "\n    RedPostEffect_HueSaturation Instance 생성.\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ]
+    },
+    "return": "RedPostEffect_HueSaturation Instance"
+  },
+  {
+    "title": "saturation",
+    "description": "\n    채도\n    기본값 : 0\n",
+    "return": "Number"
+  }
+]

@@ -2,33 +2,81 @@
 var RedPostEffect_Film;
 (function () {
     var makeProgram;
+    /**DOC:
+       {
+           constructorYn : true,
+           title :`RedPostEffect_Film`,
+           description : `
+               RedPostEffect_Film Instance 생성.
+           `,
+           params : {
+               redGL : [
+                   {type:'RedGL'}
+               ]
+           },
+           return : 'RedPostEffect_Film Instance'
+       }
+   :DOC*/
     RedPostEffect_Film = function (redGL, width, height) {
         if (!(this instanceof RedPostEffect_Film)) return new RedPostEffect_Film(redGL);
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_Film : RedGL Instance만 허용됩니다.', redGL)
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_Film : RedGL Instance만 허용됩니다.', redGL);
         this['frameBuffer'] = RedFrameBuffer(redGL);
         this['diffuseTexture'] = null;
-        this['gray'] = false
-        this['scanlineIntensity'] = 0.5
-        this['noiseIntensity'] = 0.5
-        this['scanlineCount'] = 2048
+        /**DOC:
+           {
+               title :`grayMode`,
+               description : `
+                   그레이모드
+                   기본값 : false
+               `,
+               return : 'Boolean'
+           }
+       :DOC*/
+        this['grayMode'] = false;
+        /**DOC:
+           {
+               title :`scanlineIntensity`,
+               description : `
+                   스캔라인강도
+                   기본값 : 0.5
+               `,
+               return : 'Number'
+           }
+       :DOC*/
+        this['scanlineIntensity'] = 0.5;
+        /**DOC:
+           {
+               title :`noiseIntensity`,
+               description : `
+                   노이즈강도
+                   기본값 : 0.5
+               `,
+               return : 'Number'
+           }
+       :DOC*/
+        this['noiseIntensity'] = 0.5;
+        /**DOC:
+           {
+               title :`scanlineCount`,
+               description : `
+                   스캔라인 수
+                   기본값 : 2048
+               `,
+               return : 'Number'
+           }
+       :DOC*/
+        this['scanlineCount'] = 2048;
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['program'] = makeProgram(this, redGL);
         this['_UUID'] = RedGL['makeUUID']();
-
-        // Object.seal(this)
-        console.log(this)
-
-        this.checkProperty()
         this.updateTexture = function (lastFrameBufferTexture) {
             this['diffuseTexture'] = lastFrameBufferTexture;
         }
-        this.bind = function (gl) {
-            this['frameBuffer'].bind(gl);
-        }
-        this.unbind = function (gl) {
-            this['frameBuffer'].unbind(gl);
-        }
+        this['bind'] = RedPostEffectManager.prototype['bind'];
+        this['unbind'] = RedPostEffectManager.prototype['unbind'];
+        this.checkProperty();
+        console.log(this);
     }
     makeProgram = (function () {
         var vSource, fSource;
@@ -45,7 +93,7 @@ var RedPostEffect_Film;
         fSource = function () {
             /*
             precision mediump float;
-            uniform bool uGray;
+            uniform bool uGrayMode;
             uniform sampler2D uDiffuseTexture;     
             // noise effect intensity value (0 = no effect, 1 = full effect)
             uniform float uNoiseIntensity;
@@ -76,7 +124,7 @@ var RedPostEffect_Film;
                 finalColor = diffuseColor.rgb + clamp( uNoiseIntensity, 0.0, 1.0 ) * ( finalColor - diffuseColor.rgb );
                
                 // convert to grayscale if desired
-                if( uGray ) finalColor = vec3( finalColor.r * 0.3 + finalColor.g * 0.59 + finalColor.b * 0.11 );
+                if( uGrayMode ) finalColor = vec3( finalColor.r * 0.3 + finalColor.g * 0.59 + finalColor.b * 0.11 );
                 gl_FragColor =  vec4( finalColor, diffuseColor.a );
             }
             */
@@ -85,10 +133,10 @@ var RedPostEffect_Film;
         fSource = RedGLUtil.getStrFromComment(fSource.toString());
         PROGRAM_NAME = 'RedPostEffect_Film_Program';
         return function (target, redGL) {
-            return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource)
+            return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 
         }
     })();
-    RedPostEffect_Film.prototype = RedBaseMaterial.prototype
-    Object.freeze(RedPostEffect_Film)
+    RedPostEffect_Film.prototype = RedBaseMaterial.prototype;
+    Object.freeze(RedPostEffect_Film);
 })();
