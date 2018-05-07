@@ -31,7 +31,6 @@ var RedPostEffectManager;
         unbind: function (gl) {
             this['frameBuffer'].unbind(gl);
         }
-
     }
     Object.freeze(RedPostEffectManager);
 })();

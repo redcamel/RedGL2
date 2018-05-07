@@ -4,31 +4,24 @@ var RedPostEffect_Film;
     var makeProgram;
     RedPostEffect_Film = function (redGL, width, height) {
         if (!(this instanceof RedPostEffect_Film)) return new RedPostEffect_Film(redGL);
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_Film : RedGL Instance만 허용됩니다.', redGL)
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_Film : RedGL Instance만 허용됩니다.', redGL);
         this['frameBuffer'] = RedFrameBuffer(redGL);
         this['diffuseTexture'] = null;
-        this['gray'] = false
-        this['scanlineIntensity'] = 0.5
-        this['noiseIntensity'] = 0.5
-        this['scanlineCount'] = 2048
+        this['gray'] = false;
+        this['scanlineIntensity'] = 0.5;
+        this['noiseIntensity'] = 0.5;
+        this['scanlineCount'] = 2048;
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['program'] = makeProgram(this, redGL);
         this['_UUID'] = RedGL['makeUUID']();
-
-        // Object.seal(this)
-        console.log(this)
-
-        this.checkProperty()
         this.updateTexture = function (lastFrameBufferTexture) {
             this['diffuseTexture'] = lastFrameBufferTexture;
         }
-        this.bind = function (gl) {
-            this['frameBuffer'].bind(gl);
-        }
-        this.unbind = function (gl) {
-            this['frameBuffer'].unbind(gl);
-        }
+        this['bind'] = RedPostEffectManager.prototype['bind'];
+        this['unbind'] = RedPostEffectManager.prototype['unbind'];
+        this.checkProperty();
+        console.log(this);
     }
     makeProgram = (function () {
         var vSource, fSource;
@@ -85,10 +78,10 @@ var RedPostEffect_Film;
         fSource = RedGLUtil.getStrFromComment(fSource.toString());
         PROGRAM_NAME = 'RedPostEffect_Film_Program';
         return function (target, redGL) {
-            return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource)
+            return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 
         }
     })();
-    RedPostEffect_Film.prototype = RedBaseMaterial.prototype
-    Object.freeze(RedPostEffect_Film)
+    RedPostEffect_Film.prototype = RedBaseMaterial.prototype;
+    Object.freeze(RedPostEffect_Film);
 })();

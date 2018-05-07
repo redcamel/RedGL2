@@ -2,7 +2,6 @@
 var RedPostEffect_Bloom;
 (function () {
     var makeProgram;
-
     RedPostEffect_Bloom = function (redGL) {
         if (!(this instanceof RedPostEffect_Bloom)) return new RedPostEffect_Bloom(redGL);
         if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_Bloom : RedGL Instance만 허용됩니다.', redGL)
@@ -13,59 +12,41 @@ var RedPostEffect_Bloom;
         // 일반 프로퍼티
         this['program'] = makeProgram(this, redGL);
         this['_UUID'] = RedGL['makeUUID']();
-
-        // Object.seal(this)
-        console.log(this)
-
-        this['filter'] = [
+        this['process'] = [
             RedPostEffect_BloomThreshold(redGL),
             RedPostEffect_BlurX(redGL),
             RedPostEffect_BlurY(redGL)
         ]
-
         Object.defineProperty(this, 'blur', (function () {
             var _v = 1
             return {
-                get: function () {
-                    return _v
-                },
+                get: function () { return _v },
                 set: function (v) {
-                    _v = v
-                    this['filter'][1]['size'] = _v
-                    this['filter'][2]['size'] = _v
+                    _v = v;
+                    this['process'][1]['size'] = _v;
+                    this['process'][2]['size'] = _v;
                 }
             }
         })());
-        this['blur'] = 20
-        this['exposure'] = 1
-        this['bloomStrength'] = 1.2
+        this['blur'] = 20;
+        this['exposure'] = 1;
+        this['bloomStrength'] = 1.2;
         Object.defineProperty(this, 'threshold', (function () {
             var _v = 0.25
             return {
-                get: function () {
-                    return _v
-                },
-                set: function (v) {
-                    _v = v
-                    this['filter'][0]['threshold'] = _v
-                }
+                get: function () { return _v },
+                set: function (v) { this['process'][0]['threshold'] = _v = v }
             }
         })())
-        this['threshold'] = 0.3
-
-        
-
-        this.checkProperty()
+        this['threshold'] = 0.3;
         this.updateTexture = function (lastFrameBufferTexture, parentFramBufferTexture) {
             this['diffuseTexture'] = parentFramBufferTexture;
             this['blurTexture'] = lastFrameBufferTexture;
         }
-        this.bind = function (gl) {
-            this['frameBuffer'].bind(gl);
-        }
-        this.unbind = function (gl) {
-            this['frameBuffer'].unbind(gl);
-        }
+        this['bind'] = RedPostEffectManager.prototype['bind'];
+        this['unbind'] = RedPostEffectManager.prototype['unbind'];
+        this.checkProperty();
+        console.log(this);
     }
     makeProgram = (function () {
         var vSource, fSource;
@@ -85,7 +66,6 @@ var RedPostEffect_Bloom;
             uniform sampler2D uBlurTexture;         
             uniform float uExposure;            
             uniform float uBloomStrength;       
-            
             void main() {
                 vec4 finalColor = texture2D(uDiffuseTexture, vTexcoord);
                 vec4 thresholdColor = finalColor;
@@ -99,10 +79,9 @@ var RedPostEffect_Bloom;
         fSource = RedGLUtil.getStrFromComment(fSource.toString());
         PROGRAM_NAME = 'RedPostEffect_Bloom_Program';
         return function (target, redGL) {
-            return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource)
-
+            return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource);
         }
     })();
-    RedPostEffect_Bloom.prototype = RedBaseMaterial.prototype
-    Object.freeze(RedPostEffect_Bloom)
+    RedPostEffect_Bloom.prototype = RedBaseMaterial.prototype;
+    Object.freeze(RedPostEffect_Bloom);
 })();

@@ -12,52 +12,36 @@ var RedPostEffect_GaussianBlur;
         // 일반 프로퍼티
         this['program'] = makeProgram(this, redGL);
         this['_UUID'] = RedGL['makeUUID']();
-
-        // Object.seal(this)
-        console.log(this)
-
-        this['filter'] = [
+        this['process'] = [
             RedPostEffect_BlurX(redGL),
             RedPostEffect_BlurY(redGL)
-        ]
-
+        ];
         Object.defineProperty(this, 'radius', (function () {
             var _v = 1
             return {
-                get: function () {
-                    return _v
-                },
+                get: function () { return _v },
                 set: function (v) {
-                    _v = v
-                    this['filter'][0]['size'] = _v
-                    this['filter'][1]['size'] = _v
+                    _v = v;
+                    this['process'][0]['size'] = _v;
+                    this['process'][1]['size'] = _v;
                 }
             }
         })());
-        this['radius'] = 20
+        this['radius'] = 20;
         Object.defineProperty(this, 'threshold', (function () {
             var _v = 0.25
             return {
-                get: function () {
-                    return _v
-                },
-                set: function (v) {
-                    _v = v
-                    this['filter'][0]['threshold'] = _v
-                }
+                get: function () { return _v },
+                set: function (v) { this['process'][0]['threshold'] = _v = v }
             }
-        })())
-
-        this.checkProperty()
+        })());
         this.updateTexture = function (lastFrameBufferTexture) {
             this['diffuseTexture'] = lastFrameBufferTexture;
         }
-        this.bind = function (gl) {
-            this['frameBuffer'].bind(gl);
-        }
-        this.unbind = function (gl) {
-            this['frameBuffer'].unbind(gl);
-        }
+        this['bind'] = RedPostEffectManager.prototype['bind'];
+        this['unbind'] = RedPostEffectManager.prototype['unbind'];
+        this.checkProperty();
+        console.log(this);
     }
     makeProgram = (function () {
         var vSource, fSource;
@@ -86,10 +70,9 @@ var RedPostEffect_GaussianBlur;
         fSource = RedGLUtil.getStrFromComment(fSource.toString());
         PROGRAM_NAME = 'RedPostEffect_GaussianBlur_Program';
         return function (target, redGL) {
-            return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource)
-
+            return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource);
         }
     })();
-    RedPostEffect_GaussianBlur.prototype = RedBaseMaterial.prototype
-    Object.freeze(RedPostEffect_GaussianBlur)
+    RedPostEffect_GaussianBlur.prototype = RedBaseMaterial.prototype;
+    Object.freeze(RedPostEffect_GaussianBlur);
 })();

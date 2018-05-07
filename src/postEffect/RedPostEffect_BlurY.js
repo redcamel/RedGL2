@@ -2,29 +2,23 @@
 var RedPostEffect_BlurY;
 (function () {
     var makeProgram;
-
     RedPostEffect_BlurY = function (redGL) {
         if (!(this instanceof RedPostEffect_BlurY)) return new RedPostEffect_BlurY(redGL);
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_BlurY : RedGL Instance만 허용됩니다.', redGL)
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_BlurY : RedGL Instance만 허용됩니다.', redGL);
         this['frameBuffer'] = RedFrameBuffer(redGL);
         this['diffuseTexture'] = null;
-        this['size'] = 50
+        this['size'] = 50;
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['program'] = makeProgram(this, redGL);
         this['_UUID'] = RedGL['makeUUID']();
-        this.checkProperty()
-        // Object.seal(this)
-        console.log(this)
         this.updateTexture = function (lastFrameBufferTexture) {
-            this['diffuseTexture'] = lastFrameBufferTexture
+            this['diffuseTexture'] = lastFrameBufferTexture;
         }
-        this.bind = function (gl) {
-            this['frameBuffer'].bind(gl);
-        }
-        this.unbind = function (gl) {
-            this['frameBuffer'].unbind(gl);
-        }
+        this['bind'] = RedPostEffectManager.prototype['bind'];
+        this['unbind'] = RedPostEffectManager.prototype['unbind'];
+        this.checkProperty();
+        console.log(this);
     }
     makeProgram = (function () {
         var vSource, fSource;
@@ -60,10 +54,8 @@ var RedPostEffect_BlurY;
                     finalColor += sample * weight;
                     total += weight;
                 }
-
                 finalColor = finalColor / total;
                 finalColor.rgb /= finalColor.a + 0.00001;
-
                 gl_FragColor =   finalColor ;
             }
             */
@@ -72,10 +64,9 @@ var RedPostEffect_BlurY;
         fSource = RedGLUtil.getStrFromComment(fSource.toString());
         PROGRAM_NAME = 'RedPostEffect_BlurY_Program';
         return function (target, redGL) {
-            return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource)
-
+            return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource);
         }
     })();
-    RedPostEffect_BlurY.prototype = RedBaseMaterial.prototype
-    Object.freeze(RedPostEffect_BlurY)
+    RedPostEffect_BlurY.prototype = RedBaseMaterial.prototype;
+    Object.freeze(RedPostEffect_BlurY);
 })();

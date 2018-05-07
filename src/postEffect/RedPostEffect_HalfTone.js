@@ -8,27 +8,22 @@ var RedPostEffect_HalfTone;
         if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_HalfTone : RedGL Instance만 허용됩니다.', redGL)
         this['frameBuffer'] = RedFrameBuffer(redGL);
         this['diffuseTexture'] = null;
-        this['centerX'] = 0.0
-        this['centerY'] = 0.0
-        this['angle'] = 1
-        this['radius'] = 1
-        this['grayMode'] = true
+        this['centerX'] = 0.0;
+        this['centerY'] = 0.0;
+        this['angle'] = 1;
+        this['radius'] = 1;
+        this['grayMode'] = true;
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['program'] = makeProgram(this, redGL);
         this['_UUID'] = RedGL['makeUUID']();
-        this.checkProperty()
-        // Object.seal(this)
-        console.log(this)
         this.updateTexture = function (lastFrameBufferTexture) {
             this['diffuseTexture'] = lastFrameBufferTexture
         }
-        this.bind = function (gl) {
-            this['frameBuffer'].bind(gl);
-        }
-        this.unbind = function (gl) {
-            this['frameBuffer'].unbind(gl);
-        }
+        this['bind'] = RedPostEffectManager.prototype['bind'];
+        this['unbind'] = RedPostEffectManager.prototype['unbind'];
+        this.checkProperty();
+        console.log(this);
     }
     makeProgram = (function () {
         var vSource, fSource;
@@ -83,10 +78,9 @@ var RedPostEffect_HalfTone;
         fSource = RedGLUtil.getStrFromComment(fSource.toString());
         PROGRAM_NAME = 'RedPostEffect_HalfTone_Program';
         return function (target, redGL) {
-            return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource)
-
+            return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource);
         }
     })();
-    RedPostEffect_HalfTone.prototype = RedBaseMaterial.prototype
-    Object.freeze(RedPostEffect_HalfTone)
+    RedPostEffect_HalfTone.prototype = RedBaseMaterial.prototype;
+    Object.freeze(RedPostEffect_HalfTone);
 })();

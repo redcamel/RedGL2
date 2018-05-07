@@ -2,33 +2,23 @@
 var RedPostEffect_Threshold;
 (function () {
     var makeProgram;
-
     RedPostEffect_Threshold = function (redGL) {
         if (!(this instanceof RedPostEffect_Threshold)) return new RedPostEffect_Threshold(redGL);
-        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_Threshold : RedGL Instance만 허용됩니다.', redGL)
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_Threshold : RedGL Instance만 허용됩니다.', redGL);
         this['frameBuffer'] = RedFrameBuffer(redGL);
         this['diffuseTexture'] = null;
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['program'] = makeProgram(this, redGL);
         this['_UUID'] = RedGL['makeUUID']();
-
-        // Object.seal(this)
-        console.log(this)
-        this['threshold'] = 0.24
-
-
-
-        this.checkProperty()
+        this['threshold'] = 0.24;
         this.updateTexture = function (lastFrameBufferTexture) {
             this['diffuseTexture'] = lastFrameBufferTexture;
         }
-        this.bind = function (gl) {
-            this['frameBuffer'].bind(gl);
-        }
-        this.unbind = function (gl) {
-            this['frameBuffer'].unbind(gl);
-        }
+        this['bind'] = RedPostEffectManager.prototype['bind'];
+        this['unbind'] = RedPostEffectManager.prototype['unbind'];
+        this.checkProperty();
+        console.log(this);
     }
     makeProgram = (function () {
         var vSource, fSource;
@@ -46,7 +36,6 @@ var RedPostEffect_Threshold;
             precision highp float;
             uniform sampler2D uDiffuseTexture;     
             uniform float uThreshold;
-            
             void main() {
                 vec4 finalColor = texture2D(uDiffuseTexture, vTexcoord);
                 float v;
@@ -61,10 +50,9 @@ var RedPostEffect_Threshold;
         fSource = RedGLUtil.getStrFromComment(fSource.toString());
         PROGRAM_NAME = 'RedPostEffect_Threshold_Program';
         return function (target, redGL) {
-            return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource)
-
+            return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource);
         }
     })();
-    RedPostEffect_Threshold.prototype = RedBaseMaterial.prototype
-    Object.freeze(RedPostEffect_Threshold)
+    RedPostEffect_Threshold.prototype = RedBaseMaterial.prototype;
+    Object.freeze(RedPostEffect_Threshold);
 })();
