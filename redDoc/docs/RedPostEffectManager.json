@@ -13,6 +13,12 @@
     "return": "void"
   },
   {
+    "title": "antialiasing",
+    "code": "PROPERTY",
+    "description": "\n    안티알리어싱 모드 설정\n",
+    "return": "Array"
+  },
+  {
     "title": "bind",
     "code": "METHOD",
     "description": "\n    프레임 버퍼 바인딩.\n    렌더러에서 자동호출됨.\n",

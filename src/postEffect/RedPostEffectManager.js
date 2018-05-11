@@ -47,6 +47,28 @@ var RedPostEffectManager;
         this['postEffectList'] = [];
         /**DOC:
             {
+               title :`antialiasing`,
+               code : 'PROPERTY', 
+               description : `
+                   안티알리어싱 모드 설정
+               `,
+               return : 'Array'
+           }
+       :DOC*/
+        Object.defineProperty(this, 'antialiasing', (function () {
+            var _v = undefined
+            return {
+                get: function () {
+                    return _v
+                },
+                set: function (v) {
+                    _v = v
+                }
+            }
+        })())
+        this['antialiasing'] = undefined
+        /**DOC:
+            {
                title :`finalMaterial`,
                code : 'PROPERTY', 
                description : `
@@ -81,7 +103,9 @@ var RedPostEffectManager;
                 return : 'void'
             }
         :DOC*/
-        addEffect: function (postEffect) { this['postEffectList'].push(postEffect) },
+        addEffect: function (postEffect) {
+            this['postEffectList'].push(postEffect)
+        },
         /**DOC:
              {
                 title :`removeEffect`,
@@ -120,7 +144,9 @@ var RedPostEffectManager;
                 return : 'void'
             }
         :DOC*/
-        bind: function (gl) { this['frameBuffer'].bind(gl); },
+        bind: function (gl) {
+            this['frameBuffer'].bind(gl);
+        },
         /**DOC:
              {
                 title :`unbind`,
@@ -137,7 +163,9 @@ var RedPostEffectManager;
                 return : 'void'
             }
         :DOC*/
-        unbind: function (gl) { this['frameBuffer'].unbind(gl); }
+        unbind: function (gl) {
+            this['frameBuffer'].unbind(gl);
+        }
     }
     Object.freeze(RedPostEffectManager);
 })();
