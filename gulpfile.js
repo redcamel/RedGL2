@@ -127,6 +127,7 @@ gulp.task('make-doc', function () {
 		"src/postEffect/RedPostEffect_ZoomBlur.js",
 		"src/postEffect/RedPostEffect_HalfTone.js",
 		"src/postEffect/RedPostEffect_Threshold.js",
+		"src/postEffect/antialiasing/RedPostEffect_FXAA.js",
 		"src/postEffect/RedPostEffectManager.js",
 
 		"src/primitives/RedBox.js",
@@ -261,6 +262,7 @@ gulp.task('combine-js', function () {
 					"src/postEffect/RedPostEffect_Threshold.js",
 					"src/postEffect/RedPostEffect_Vignetting.js",
 					"src/postEffect/RedPostEffect_ZoomBlur.js",
+					"src/postEffect/antialiasing/RedPostEffect_FXAA.js",
 					"src/postEffect/RedPostEffectManager.js"
 				])
 					.pipe(concat(name + '.min.js')) // 병합한다.

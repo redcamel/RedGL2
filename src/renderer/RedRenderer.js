@@ -450,12 +450,11 @@ var RedRenderer;
                     tLocation = tLocationInfo['location'];
                     if (tLocation) {
                         mat4.ortho(
-                            tMTX,
-                            -0.5, // left
+                            tMTX, -0.5, // left
                             0.5, // right
                             -0.5, // bottom
                             0.5, // top,
-                            - tCamera['farClipping'],
+                            -tCamera['farClipping'],
                             tCamera['farClipping']
                         )
                         gl.uniformMatrix4fv(tLocation, false, tMTX);
@@ -512,7 +511,9 @@ var RedRenderer;
                     postEffectManager['frameBuffer']['width'] = gl.drawingBufferWidth
                     postEffectManager['frameBuffer']['height'] = gl.drawingBufferHeight
                     // 포스트 이펙트를 돌면서 갱신해나간다.
-                    postEffectManager['postEffectList'].forEach(function (effect) {
+                    var tList = postEffectManager['postEffectList'].concat();
+                    if (postEffectManager['antialiasing']) tList.push(postEffectManager['antialiasing']);
+                    tList.forEach(function (effect) {
                         // console.log('Render Effect', v)
                         var parentFramBufferTexture
                         if (effect['process'] && effect['process'].length) {
@@ -610,8 +611,7 @@ var RedRenderer;
                 if (tScene['useBackgroundColor']) {
                     gl.clearColor(tScene['r'], tScene['g'], tScene['b'], 1);
                     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-                }
-                else {
+                } else {
                     gl.clearColor(0, 0, 0, 0);
                     gl.clear(gl.DEPTH_BUFFER_BIT);
                 }
@@ -627,12 +627,11 @@ var RedRenderer;
                 mat4.identity(perspectiveMTX);
                 if (tCamera['orthographicYn']) {
                     mat4.ortho(
-                        perspectiveMTX,
-                        -0.5, // left
+                        perspectiveMTX, -0.5, // left
                         0.5, // right
                         -0.5, // bottom
                         0.5, // top,
-                        - tCamera['farClipping'],
+                        -tCamera['farClipping'],
                         tCamera['farClipping']
                     )
                     mat4.translate(perspectiveMTX, perspectiveMTX, [-0.5, 0.5, 0])
@@ -756,7 +755,7 @@ var RedRenderer;
             i = children.length
             while (i--) {
                 renderResultObj['call']++
-                tMesh = children[i]
+                    tMesh = children[i]
                 tMVMatrix = tMesh['matrix']
                 tNMatrix = tMesh['normalMatrix']
                 tGeometry = tMesh['geometry']
@@ -855,8 +854,7 @@ var RedRenderer;
                                     // console.log('설마',tUniformLocationInfo['materialPropertyName'])
                                     if (tRenderType == 'sampler2D') {
 
-                                        if (tCacheBySamplerIndex[tSamplerIndex] == 0) {
-                                        } else {
+                                        if (tCacheBySamplerIndex[tSamplerIndex] == 0) {} else {
                                             tPrevSamplerIndex == 0 ? 0 : gl.activeTexture(gl.TEXTURE0);
                                             gl.bindTexture(gl.TEXTURE_2D, redGL['_datas']['emptyTexture']['2d']['webglTexture']);
                                             tCacheBySamplerIndex[tUUID] == 0 ? 0 : gl.uniform1i(tWebGLUniformLocation, tCacheBySamplerIndex[tUUID] = 0);
@@ -866,8 +864,7 @@ var RedRenderer;
 
 
                                     } else {
-                                        if (tCacheBySamplerIndex[tSamplerIndex] == 1) {
-                                        } else {
+                                        if (tCacheBySamplerIndex[tSamplerIndex] == 1) {} else {
                                             tPrevSamplerIndex == 1 ? 0 : gl.activeTexture(gl.TEXTURE0 + 1);
                                             gl.bindTexture(gl.TEXTURE_CUBE_MAP, redGL['_datas']['emptyTexture']['3d']['webglTexture']);
                                             tCacheBySamplerIndex[tUUID] == 1 ? 0 : gl.uniform1i(tWebGLUniformLocation, tCacheBySamplerIndex[tUUID] = 1);
@@ -878,14 +875,15 @@ var RedRenderer;
                                 }
                             } else {
                                 tUniformValue == undefined ? RedGLUtil.throwFunc('RedRenderer : Material에 ', tUniformLocationInfo['materialPropertyName'], '이 정의 되지않았습니다.') : 0;
-                                tRenderType == 'float' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
-                                    : tRenderType == 'int' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
-                                        : tRenderType == 'bool' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
-                                            // : tRenderType == 'vec' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
-                                            //TODO: 이걸해결해야하는군..
-                                            : tRenderType == 'vec' ? gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
-                                                : tRenderType == 'mat' ? gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, false, tUniformValue)
-                                                    : RedGLUtil.throwFunc('RedRenderer : 처리할수없는 타입입니다.', 'tRenderType -', tRenderType)
+                                tRenderType == 'float' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue) :
+                                    tRenderType == 'int' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue) :
+                                    tRenderType == 'bool' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
+                                    // : tRenderType == 'vec' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
+                                    //TODO: 이걸해결해야하는군..
+                                    :
+                                    tRenderType == 'vec' ? gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue) :
+                                    tRenderType == 'mat' ? gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, false, tUniformValue) :
+                                    RedGLUtil.throwFunc('RedRenderer : 처리할수없는 타입입니다.', 'tRenderType -', tRenderType)
                             }
 
                         }
@@ -907,9 +905,9 @@ var RedRenderer;
                     a[14] = a[2] * aX + a[6] * aY + a[10] * aZ + a[14],
                     a[15] = a[3] * aX + a[7] * aY + a[11] * aZ + a[15],
                     // tMVMatrix rotate
-                    tSpriteYn
-                        ? (tRx = 0 * CONVERT_RADIAN, tRy = 0 * CONVERT_RADIAN, tRz = 0)
-                        : (tRx = tMesh['rotationX'] * CONVERT_RADIAN, tRy = tMesh['rotationY'] * CONVERT_RADIAN, tRz = tMesh['rotationZ'] * CONVERT_RADIAN),
+                    tSpriteYn ?
+                    (tRx = 0 * CONVERT_RADIAN, tRy = 0 * CONVERT_RADIAN, tRz = 0) :
+                    (tRx = tMesh['rotationX'] * CONVERT_RADIAN, tRy = tMesh['rotationY'] * CONVERT_RADIAN, tRz = tMesh['rotationZ'] * CONVERT_RADIAN),
                     /////////////////////////
                     tRadian = tRx % CPI2,
                     tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,

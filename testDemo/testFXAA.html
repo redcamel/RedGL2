@@ -144,30 +144,11 @@
             testDLight.debug = true
             tScene3D.addLight(testDLight)
 
-
-            // tScene3D['postEffectManager'].addEffect(RedPostEffect_Invert(this))
-            // tScene3D['postEffectManager'].addEffect(RedPostEffect_Blur(this))
-            // tScene3D['postEffectManager'].addEffect(RedPostEffect_Gray(this))
-            // tScene3D['postEffectManager'].addEffect(RedPostEffect_Pixelize(this))
-
-            // tScene3D['postEffectManager'].addEffect(RedPostEffect_Convolution(this,RedPostEffect_Convolution['EMBOSS']))
-            // tScene3D['postEffectManager'].addEffect(RedPostEffect_BlurX(this))
-            // tScene3D['postEffectManager'].addEffect(RedPostEffect_BlurY(this))
             var bloom = RedPostEffect_Bloom(this)
             tScene3D['postEffectManager'].addEffect(bloom)
 
-            // tScene3D['postEffectManager'].addEffect(RedPostEffect_HueSaturation(this)) 
-            // tScene3D['postEffectManager'].addEffect(RedPostEffect_Vignetting(this)) 
-            // tScene3D['postEffectManager'].addEffect(RedPostEffect_BrightnessContrast(this)) 
-            // tScene3D['postEffectManager'].addEffect(RedPostEffect_ZoomBlur(this))
-            // tScene3D['postEffectManager'].addEffect(RedPostEffect_HalfTone(this)) 
-            // var threshold = RedPostEffect_Threshold(this)
-            // tScene3D['postEffectManager'].addEffect(threshold)
-            // var guassian = RedPostEffect_GaussianBlur(this)
-            // tScene3D['postEffectManager'].addEffect(guassian)
-            // var fxaa = RedPostEffect_FXAA(this)
-            // tScene3D['postEffectManager'].addEffect(fxaa)
-
+            var fxaa = RedPostEffect_FXAA(this)
+            tScene3D['postEffectManager']['antialiasing'] = fxaa
 
 
 
@@ -199,7 +180,7 @@
                 var max = 10
                 var j
                 var tMesh;
-                var tGeo = RedSphere(self, 1, 32, 32, 32)
+                var tGeo = RedBox(self, 2, 2, 2, 32,32,32)
                 var tMat = RedStandardMaterial(
                     self,
                     RedBitmapTexture(self, '../asset/crate.png'),
@@ -214,6 +195,7 @@
                         tMesh = RedMesh(self, tGeo, tMat)
                         tMesh.x = Math.sin(Math.PI * 2 / (max - 1) * i) * j * 3
                         tMesh.z = Math.cos(Math.PI * 2 / (max - 1) * i) * j * 3
+             
                         tScene3D.addChild(tMesh)
                     }
                 }
@@ -240,7 +222,6 @@
             });
             var t0 = this['gui'].addFolder('bloom')
 
-
             t0.add(bloom, 'exposure', 0, 2)
             t0.add(bloom, 'bloomStrength', 0, 2)
             t0.add(bloom, 'blur', 0, 100)
@@ -248,7 +229,16 @@
 
             t0.open()
 
-        
+
+            var t0 = this['gui'].addFolder('fxaa')
+            var testFXAA = {
+                fxaa: true
+            }
+            t0.add(testFXAA, 'fxaa', false, true).onChange(function (v) {
+                if (v) tScene3D['postEffectManager']['antialiasing'] = fxaa
+                else tScene3D['postEffectManager']['antialiasing'] = null
+            })
+            t0.open()
 
 
             console.log(tScene3D)
