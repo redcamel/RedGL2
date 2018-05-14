@@ -34,6 +34,22 @@ var RedPostEffectManager;
             }
         :DOC*/
         this['frameBuffer'] = RedFrameBuffer(redGL);
+        (function () {
+            tGL.activeTexture(tGL.TEXTURE0 + 0)
+            tGL.bindTexture(tGL.TEXTURE_2D, tGL.createTexture());
+            // tGL.texImage2D(tGL.TEXTURE_2D, 0, tGL.RGBA, tGL.RGBA, tGL.UNSIGNED_BYTE, source)
+            tGL.pixelStorei(tGL.UNPACK_FLIP_Y_WEBGL, true);
+            tGL.texParameteri(tGL.TEXTURE_2D, tGL.TEXTURE_MIN_FILTER, tGL.NEAREST);
+            tGL.texParameteri(tGL.TEXTURE_2D, tGL.TEXTURE_MAG_FILTER, tGL.NEAREST);
+            tGL.texParameteri(tGL.TEXTURE_2D, tGL.TEXTURE_WRAP_S, tGL.CLAMP_TO_EDGE);
+            tGL.texParameteri(tGL.TEXTURE_2D, tGL.TEXTURE_WRAP_T, tGL.CLAMP_TO_EDGE);
+            try {
+                tGL.generateMipmap(tGL.TEXTURE_2D)
+            } catch (error) {
+                console.log('밉맵을 생성할수 없음', source)
+            }
+            tGL.bindTexture(tGL.TEXTURE_2D, null);
+        })();
         /**DOC:
              {
                 title :`postEffectList`,
