@@ -138,6 +138,9 @@ var RedBaseObject3D;
 		}
         :DOC*/
         this['pointSize'] = 1
+    
+
+        
         /**DOC:
 		{
             title :`x`,

@@ -118,7 +118,8 @@ var RedPostEffect_Bloom;
             /*
             precision mediump float;
             uniform sampler2D uDiffuseTexture;     
-            uniform sampler2D uBlurTexture;         
+            uniform sampler2D uBlurTexture;          
+                
             uniform float uExposure;            
             uniform float uBloomStrength;       
             void main() {
@@ -126,7 +127,6 @@ var RedPostEffect_Bloom;
                 vec4 thresholdColor = finalColor;
                 vec4 blurColor = texture2D(uBlurTexture, vTexcoord);
                 gl_FragColor = (finalColor  + blurColor * uBloomStrength) * uExposure ;
-          
             }
             */
         }
