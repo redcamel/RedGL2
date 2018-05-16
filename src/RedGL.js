@@ -48,8 +48,11 @@ var RedGL;
                 var ext
                 t0['OES_element_index_uint'] = t0.getExtension('OES_element_index_uint');
                 t0['EXT_texture_filter_anisotropic'] = t0.getExtension('EXT_texture_filter_anisotropic');
+                t0['WEBGL_depth_texture'] = t0.getExtension('WEBGL_depth_texture');
+                
                 console.log('확장여부 OES_element_index_uint :', t0['OES_element_index_uint'])
                 console.log('확장여부 EXT_texture_filter_anisotropic :', t0['EXT_texture_filter_anisotropic'])
+                console.log('확장여부 WEBGL_depth_texture :', t0['WEBGL_depth_texture'])
                 return t0['version'] = t1, t0;
             }
             return null;
