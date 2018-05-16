@@ -520,6 +520,7 @@ var RedRenderer;
                         if (effect['process'] && effect['process'].length) {
                             parentFramBufferTexture = lastFrameBufferTexture
                             effect['process'].forEach(function (subEffect) {
+
                                 setViewportScissorAndBaseUniform(gl, subEffect)
                                 // 해당 이펙트의 프레임 버퍼를 바인딩
                                 subEffect.bind(gl);
@@ -533,28 +534,36 @@ var RedRenderer;
                                 lastFrameBufferTexture = subEffect['frameBuffer']['texture']
                             })
                         }
-
-                        // 뎁스프레임버퍼를 사용해야한다면 뎁스를 그림
-                        if (effect['depthFrameBuffer']) {
-
-                            effect['depthFrameBuffer'].bind(gl);
-                            effect['depthFrameBuffer']['width'] = tScene['postEffectManager']['frameBuffer']['width']
-                            effect['depthFrameBuffer']['height'] = tScene['postEffectManager']['frameBuffer']['height']
-                            gl.viewport(0, 0, effect['depthFrameBuffer']['width'], effect['depthFrameBuffer']['height']);
-                            gl.scissor(0, 0, effect['depthFrameBuffer']['width'], effect['depthFrameBuffer']['height']);
-                            self.sceneRender(redGL, gl, tCamera['orthographicYn'], tScene['children'], time, renderInfo, effect['depthMaterial']);
-                            effect['depthFrameBuffer'].unbind(gl);
-
+                     
+                        // 서브신버퍼를 사용해야한다면 그림
+                        if (effect['subSceneFrameBuffer']) {
+                            effect['subSceneFrameBuffer'].bind(gl);
+                           
+                            // effect['subSceneFrameBuffer']['width'] = tScene['postEffectManager']['frameBuffer']['width']
+                            // effect['subSceneFrameBuffer']['height'] = tScene['postEffectManager']['frameBuffer']['height']
+                            gl.viewport(0, 0, effect['subSceneFrameBuffer']['width'], effect['subSceneFrameBuffer']['height']);
+                            gl.scissor(0, 0, effect['subSceneFrameBuffer']['width'], effect['subSceneFrameBuffer']['height']);
+                            gl.clearColor(255, 255, 255, 1);
+                         
+                            self.sceneRender(redGL, gl, tCamera['orthographicYn'], tScene['children'], time, renderInfo, effect['subSceneMaterial']);
+                            effect['subSceneFrameBuffer'].unbind(gl);
+                            
                             pWidth = 0
                             pHeight = 0
                         }
 
                         if (effect['frameBuffer']) {
+
                             setViewportScissorAndBaseUniform(gl, effect)
+                            
+                            
                             // 해당 이펙트의 프레임 버퍼를 바인딩
                             effect.bind(gl);
                             // 해당 이펙트의 기본 텍스쳐를 지난 이펙트의 최종 텍스쳐로 업로드
-                            effect.updateTexture(lastFrameBufferTexture, parentFramBufferTexture, effect['depthFrameBuffer'] ? effect['depthFrameBuffer']['texture'] : null);
+                            effect.updateTexture(
+                                lastFrameBufferTexture,
+                                parentFramBufferTexture
+                            );
                             // 해당 이펙트를 렌더링하고
                             self.sceneRender(redGL, gl, true, postEffectManager['children'], time, renderInfo);
                             // 해당 이펙트의 프레임 버퍼를 언바인딩한다.
@@ -725,7 +734,7 @@ var RedRenderer;
             tCacheBySamplerIndex,
             tCacheState,
             parentMTX,
-            depthMaterial
+            subSceneMaterial
 
         ) {
             var tMesh;
@@ -781,7 +790,7 @@ var RedRenderer;
                 tGeometry = tMesh['geometry']
                 tSpriteYn = tMesh instanceof RedSprite3D
                 if (tGeometry) {
-                    tMaterial = depthMaterial ? depthMaterial : tMesh['material']
+                    tMaterial = subSceneMaterial ? subSceneMaterial : tMesh['material']
                     prevProgram_UUID == tMaterial['program']['_UUID'] ? 0 : gl.useProgram(tMaterial['program']['webglProgram'])
                     prevProgram_UUID = tMaterial['program']['_UUID']
                     // 업데이트할 어트리뷰트와 유니폼 정보를 가져옴
@@ -1134,12 +1143,12 @@ var RedRenderer;
                         tCacheBySamplerIndex,
                         tCacheState,
                         tMVMatrix,
-                        depthMaterial
+                        subSceneMaterial
                     )
                 }
             }
         }
-        return function (redGL, gl, orthographicYn, children, time, renderResultObj, depthMaterial) {
+        return function (redGL, gl, orthographicYn, children, time, renderResultObj, subSceneMaterial) {
             if (this['cacheState']['pointSize'] == undefined) this['cacheState']['pointSize'] = null
             if (!this['cacheState']['useCullFace']) this['cacheState']['useCullFace'] = null
             if (!this['cacheState']['cullFace']) this['cacheState']['cullFace'] = null
@@ -1164,7 +1173,7 @@ var RedRenderer;
                 this['cacheBySamplerIndex'],
                 this['cacheState'],
                 undefined,
-                depthMaterial
+                subSceneMaterial
             )
 
         }

@@ -21,8 +21,8 @@ var RedPostEffect_DoF;
         if (!(this instanceof RedPostEffect_DoF)) return new RedPostEffect_DoF(redGL);
         if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_DoF : RedGL Instance만 허용됩니다.', redGL)
         this['frameBuffer'] = RedFrameBuffer(redGL);
-        this['depthFrameBuffer'] = RedFrameBuffer(redGL);
-        this['depthMaterial'] = RedPostEffect_DoF_DepthMaterial(redGL);
+        this['subSceneFrameBuffer'] = RedFrameBuffer(redGL);
+        this['subSceneMaterial'] = RedPostEffect_DoF_DepthMaterial(redGL);
 
         this['diffuseTexture'] = null;
         this['blurTexture'] = null;
@@ -48,10 +48,10 @@ var RedPostEffect_DoF;
         Object.defineProperty(this, 'focusLength', (function () {
             return {
                 get: function () {
-                    return this['depthMaterial']['focusLength']
+                    return this['subSceneMaterial']['focusLength']
                 },
                 set: function (v) {
-                    this['depthMaterial']['focusLength'] = v
+                    this['subSceneMaterial']['focusLength'] = v
                 }
             }
         })());
@@ -79,13 +79,14 @@ var RedPostEffect_DoF;
             }
         })());
         this['blur'] = 10
-        this.updateTexture = function (lastFrameBufferTexture, parentFramBufferTexture, depthTexture) {
+        this.updateTexture = function (lastFrameBufferTexture, parentFramBufferTexture) {
             this['diffuseTexture'] = parentFramBufferTexture;
             this['blurTexture'] = lastFrameBufferTexture;
-            this['depthTexture'] = depthTexture;
+            this['depthTexture'] = this['subSceneFrameBuffer']['texture'] 
         }
         this['bind'] = RedPostEffectManager.prototype['bind'];
         this['unbind'] = RedPostEffectManager.prototype['unbind'];
+        
         this.checkProperty();
         console.log(this);
     }
@@ -109,23 +110,7 @@ var RedPostEffect_DoF;
             uniform sampler2D uBlurTexture;    
             uniform sampler2D uDepthTexture;    
                  
-            highp float unpack_depth( const in highp vec4 rgba_depth ) {
-                const highp vec4 bit_shift = vec4( 1.0 / ( 256.0 * 256.0 * 256.0 ), 1.0 / ( 256.0 * 256.0 ), 1.0 / 256.0, 1.0 );
-                highp float depth = dot( rgba_depth, bit_shift );
-                return depth;
-            }
-
-            //http://www.nutty.ca/?page_id=352&amp;link=shadow_map	
-            highp float unpack_depth2 (highp vec4 colour)
-            {
-                const highp vec4 bitShifts = vec4(
-                    1.0,
-                    1.0 / 255.0,
-                    1.0 / (255.0 * 255.0),
-                    1.0 / (255.0 * 255.0 * 255.0)
-                );
-                return dot(colour, bitShifts);
-            }
+           
             
             uniform float uDistance;           
             void main() {
