@@ -26,7 +26,7 @@ var RedPostEffect_SSAO_PointMaker;
 
         this['diffuseTexture'] = null;
         this['depthTexture'] = null;
-        this['factor'] = 30;
+        this['factor'] = 10;
         this['factor2'] = 0.2;
         this['size'] = 3;
 
@@ -91,7 +91,7 @@ var RedPostEffect_SSAO_PointMaker;
                 const int SAMPLES = 8;
                 float ao = 0.0;
                 for (int i = 0; i < SAMPLES; ++i) {
-                    float v = vTime + PI/float(SAMPLES)*float(i);
+                    float v = vTime / 1000000.0 + PI/float(SAMPLES)*float(i);
                     float rand = random(vec3(12.9898, 78.233, 151.7182), v) * uSize;         
                     vec2 offset;
                     

@@ -139,6 +139,7 @@
 
             tCamera = RedObitController(this);
             tCamera.tilt = -45
+            tCamera.distance =20
             tRenderer = RedRenderer();
             tWorld.addView(RedView('test', tScene3D, tCamera));
             RedView('test').setSize('100%', '100%')
@@ -224,7 +225,7 @@
             });
             var t0 = this['gui'].addFolder('ssao')
             t0.add(ssao, 'size', 0.0, 10)
-            t0.add(ssao, 'factor', 0.0, 3)
+            t0.add(ssao, 'factor', 0.0, 10)
             t0.add(ssao, 'factor2', 0.0, 10)
 
 
