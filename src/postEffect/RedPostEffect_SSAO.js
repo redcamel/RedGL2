@@ -33,7 +33,19 @@ var RedPostEffect_SSAO;
         this['process'] = [
             point
         ]
-        this['onlySSAO'] = false
+      
+        this['mode'] = RedPostEffect_SSAO.COLOR_SSAO
+        Object.defineProperty(this, 'contrast', (function () {
+
+            return {
+                get: function () {
+                    return point['processSubSceneFrameBuffer'][0]['contrast']
+                },
+                set: function (v) {
+                    point['processSubSceneFrameBuffer'][0]['contrast'] = v;
+                }
+            }
+        })());
         Object.defineProperty(this, 'blur', (function () {
             var _v = 1
             return {
@@ -42,12 +54,12 @@ var RedPostEffect_SSAO;
                 },
                 set: function (v) {
                     _v = v;
-                    point['processSubSceneFrameBuffer'][0]['size'] = _v;
                     point['processSubSceneFrameBuffer'][1]['size'] = _v;
+                    point['processSubSceneFrameBuffer'][2]['size'] = _v;
                 }
             }
         })());
-        this['blur'] = 4
+        this['blur'] = 20
         Object.defineProperty(this, 'size', (function () {
 
             return {
@@ -59,7 +71,7 @@ var RedPostEffect_SSAO;
                 }
             }
         })());
-        this['size'] = 9
+        this['size'] = 5
         Object.defineProperty(this, 'factor', (function () {
 
             return {
@@ -71,7 +83,7 @@ var RedPostEffect_SSAO;
                 }
             }
         })());
-        this['factor2'] = 10
+        this['factor'] = 40
         Object.defineProperty(this, 'factor2', (function () {
             return {
                 get: function () {
@@ -116,12 +128,13 @@ var RedPostEffect_SSAO;
             precision mediump float;
             uniform sampler2D uDiffuseTexture;      
             uniform sampler2D uSsaoTexture;   
-            uniform bool uOnlySSAO;
+            uniform float uMode;
             void main() {
                 vec4 finalColor = texture2D(uDiffuseTexture, vTexcoord);
                 vec4 ssaoColor = texture2D(uSsaoTexture, vTexcoord);  
-                if(uOnlySSAO) gl_FragColor = ssaoColor;
-                else {
+                if(uMode == 0.0) gl_FragColor = ssaoColor;
+                else if(uMode == 1.0) gl_FragColor = finalColor;
+                else if(uMode == 2.0) {
                     finalColor.rgb *= ssaoColor.r;
                     gl_FragColor = finalColor;
                 };
@@ -137,6 +150,9 @@ var RedPostEffect_SSAO;
             return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource);
         }
     })();
+    RedPostEffect_SSAO['ONLY_SSAO'] = 0
+    RedPostEffect_SSAO['ONLY_COLOR'] = 1
+    RedPostEffect_SSAO['COLOR_SSAO'] = 2
     RedPostEffect_SSAO.prototype = RedBaseMaterial.prototype;
     Object.freeze(RedPostEffect_SSAO);
 })();

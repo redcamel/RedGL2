@@ -531,7 +531,7 @@ var RedRenderer;
                                 // effect['subSceneFrameBuffer']['height'] = tScene['postEffectManager']['frameBuffer']['height']
                                 gl.viewport(0, 0, effect['subSceneFrameBuffer']['width'], effect['subSceneFrameBuffer']['height']);
                                 gl.scissor(0, 0, effect['subSceneFrameBuffer']['width'], effect['subSceneFrameBuffer']['height']);
-                                gl.clearColor(255, 255, 255, 1);
+                                // gl.clearColor(255, 255, 255, 1);
     
                                 self.sceneRender(redGL, gl, tCamera['orthographicYn'], tScene['children'], time, renderInfo, effect['subSceneMaterial']);
                                 effect['subSceneFrameBuffer'].unbind(gl);
@@ -571,7 +571,6 @@ var RedRenderer;
                                     subEffect2.unbind(gl)
                                     // 현재 이펙트를 최종 텍스쳐로 기록하고 다음 이펙트가 있을경우 활용한다. 
                                     lastFrameBufferTexture = subEffect2['frameBuffer']['texture']
-                                    console.log('안오나', subEffect2)
                                 })
                             }
                         })

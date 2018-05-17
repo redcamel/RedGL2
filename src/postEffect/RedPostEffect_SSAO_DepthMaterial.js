@@ -24,7 +24,7 @@ var RedPostEffect_SSAO_DepthMaterial;
         if (!(this instanceof RedPostEffect_SSAO_DepthMaterial)) return new RedPostEffect_SSAO_DepthMaterial(redGL);
         /////////////////////////////////////////
         // 유니폼 프로퍼티
-        this['focusLength'] = 300
+        this['focusLength'] = 1000
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['program'] = makeProgram(this, redGL);
@@ -39,7 +39,7 @@ var RedPostEffect_SSAO_DepthMaterial;
         vSource = function () {
             /*
             varying vec3 vCameraPosition;
-            varying vec3 vPosition;
+            varying vec4 vPosition;
             mat4 calSprite3D(mat4 cameraMTX, mat4 mvMatrix){
                 mat4 cacheScale = mat4(
                         mvMatrix[0][0], 0.0, 0.0, 0.0, 
@@ -66,7 +66,7 @@ var RedPostEffect_SSAO_DepthMaterial;
                 else gl_Position = uPMatrix * uCameraMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
                 mat4 test = uPMatrix * uCameraMatrix;
                 vCameraPosition = vec3(test[3][0], test[3][1], test[3][2]);
-                vPosition = gl_Position.xyz;
+                vPosition = gl_Position;
             }
             */
         }
@@ -75,9 +75,9 @@ var RedPostEffect_SSAO_DepthMaterial;
             precision mediump float;
             varying vec3 vCameraPosition;
             uniform float uFocusLength;
-             varying vec3 vPosition;
+            varying vec4 vPosition;
             float fogFactor(float focusLength, float density){
-                float flog_cord = gl_FragCoord.z / gl_FragCoord.w / focusLength;
+                float flog_cord = gl_FragCoord.z / gl_FragCoord.w / focusLength ;
                 float fog = flog_cord * density;
                 if(1.0 - fog < 0.0) discard;
                 return clamp(1.0 - fog, 0.0,  1.0);
@@ -86,14 +86,10 @@ var RedPostEffect_SSAO_DepthMaterial;
                 return mix(fogColor, currentColor, fogFactor);
             }
             void main(void) {
-                float depth =  gl_FragCoord.w / gl_FragCoord.z * vCameraPosition.z - 1.0;
+                float depth =  gl_FragCoord.w / gl_FragCoord.z* vCameraPosition.z  - gl_FragCoord.w - 0.5 ;
+              
                 vec4 depthColor = vec4(depth,depth,depth,1.0);
-
-                vec4 finalColor = depthColor;
-                vec4 fogColor = vec4(1.0);
-                gl_FragColor = fog( fogFactor(uFocusLength, 1.0), fogColor, finalColor);
-                
-     
+                gl_FragColor = depthColor;
             }
             */
         }

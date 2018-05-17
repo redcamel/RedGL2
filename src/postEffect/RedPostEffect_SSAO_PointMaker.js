@@ -24,7 +24,9 @@ var RedPostEffect_SSAO_PointMaker;
         this['subSceneFrameBuffer'] = RedFrameBuffer(redGL);
         this['subSceneMaterial'] = RedPostEffect_SSAO_DepthMaterial(redGL);
 
+    
         this['processSubSceneFrameBuffer'] = [
+            RedPostEffect_BrightnessContrast(redGL),
             RedPostEffect_BlurX(redGL),
             RedPostEffect_BlurY(redGL)
         ]
@@ -87,21 +89,26 @@ var RedPostEffect_SSAO_PointMaker;
             void main() {
 
                 vec2 tLocation = gl_FragCoord.xy/vResolution ;
+                tLocation = vTexcoord;
                 vec4 finalColor = texture2D(uDiffuseTexture, tLocation);  
                 vec4 depthColor = texture2D(uDepthTexture, tLocation);  
                 const int SAMPLES = 8;
                 float ao = 0.0;
                 for (int i = 0; i < SAMPLES; ++i) {
-                    float v = vTime / 1000000.0 + PI/float(SAMPLES)*float(i);
-                    float rand = random(vec3(12.9898, 78.233, 151.7182), v) * uSize;         
-                    vec2 offset;
-                    
-                    if(i<2) offset = vec2(rand/vResolution.x, rand/vResolution.y);
-                    else if(i<4) offset = vec2(-rand/vResolution.x, rand/vResolution.y);
-                    else if(i<6) offset = vec2(rand/vResolution.x, -rand/vResolution.y);
-                    else offset = vec2(-rand/vResolution.x, -rand/vResolution.y);
+                    float rand = random(vec3(tLocation, gl_FragCoord.w), 0.0) * uFactor ;         
+                    vec2 offset;                    
+                    if(i==0) offset = vec2(rand/vResolution.x, rand/vResolution.y);
+                    else if(i==1) offset = vec2(-rand/vResolution.x, rand/vResolution.y);
+                    else if(i==2) offset = vec2(rand/vResolution.x, -rand/vResolution.y);
+                    else if(i==3) offset = vec2(-rand/vResolution.x, -rand/vResolution.y);
 
-                    vec2 tLocation2 = tLocation + offset * uFactor  ;
+                    else if(i==4) offset = vec2(rand/2.0/vResolution.x, sqrt(rand*rand + rand*rand)/vResolution.y);
+                    else if(i==5) offset = vec2(-rand/2.0/vResolution.x, sqrt(rand*rand + rand*rand)/vResolution.y);
+                    else if(i==6) offset = vec2(rand/2.0/vResolution.x, -sqrt(rand*rand + rand*rand)/vResolution.y);
+                    else if(i==7) offset = vec2(-rand/2.0/vResolution.x, -sqrt(rand*rand + rand*rand)/vResolution.y);
+                    
+
+                    vec2 tLocation2 = tLocation + offset   ;
 
                     if(tLocation2.x <0.0) continue;
                     else if(tLocation2.x >1.0) continue;
@@ -109,11 +116,11 @@ var RedPostEffect_SSAO_PointMaker;
                     else if(tLocation2.y >1.0) continue;
                     else {
                         float sampleDepth = texture2D(uDepthTexture, tLocation2).r;
-                        if(sampleDepth < 0.9){
-                            if(abs((sampleDepth - depthColor.r)) < 0.2){
-                                if(sampleDepth > depthColor.r) ao+= 1.0/float(SAMPLES) * abs(normalize(sampleDepth - depthColor.r)) * 0.5;                
+                        // if(sampleDepth < 0.9){
+                            if(abs((sampleDepth - depthColor.r)) < 0.5){
+                                if(sampleDepth > depthColor.r) ao+= 1.0/float(SAMPLES) * abs(normalize(sampleDepth - depthColor.r)) ;                
                             }
-                        }
+                        // }
                         
                     }
                 }
