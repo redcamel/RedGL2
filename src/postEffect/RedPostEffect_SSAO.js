@@ -21,62 +21,77 @@ var RedPostEffect_SSAO;
         if (!(this instanceof RedPostEffect_SSAO)) return new RedPostEffect_SSAO(redGL);
         if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_SSAO : RedGL Instance만 허용됩니다.', redGL)
         this['frameBuffer'] = RedFrameBuffer(redGL);
-       
         this['diffuseTexture'] = null;
-        this['pointTexture'] = null;
-
+        this['ssaoTexture'] = null;
 
         /////////////////////////////////////////
         // 일반 프로퍼티
-        var blurX,blurY ;
         var point;
-        blurX = RedPostEffect_BlurX(redGL)
-        blurY = RedPostEffect_BlurY(redGL)
+
         point = RedPostEffect_SSAO_PointMaker(redGL)
+      
         this['process'] = [
-          
-            blurX,
-            blurY
+            point
         ]
+        this['onlySSAO'] = false
         Object.defineProperty(this, 'blur', (function () {
             var _v = 1
             return {
-                get: function () { return _v },
+                get: function () {
+                    return _v
+                },
                 set: function (v) {
                     _v = v;
-                    blurX['size'] = _v;
-                    blurY['size'] = _v;
+                    point['processSubSceneFrameBuffer'][0]['size'] = _v;
+                    point['processSubSceneFrameBuffer'][1]['size'] = _v;
                 }
             }
         })());
-        this['blur'] = 3;  
+        this['blur'] = 4
+        Object.defineProperty(this, 'size', (function () {
 
-        Object.defineProperty(this, 'factor', (function () {
-        
             return {
-                get: function () { return point['factor'] },
+                get: function () {
+                    return point['size']
+                },
+                set: function (v) {
+                    point['size'] = v;
+                }
+            }
+        })());
+        this['size'] = 9
+        Object.defineProperty(this, 'factor', (function () {
+
+            return {
+                get: function () {
+                    return point['factor']
+                },
                 set: function (v) {
                     point['factor'] = v;
                 }
             }
         })());
-        
+        this['factor2'] = 10
         Object.defineProperty(this, 'factor2', (function () {
             return {
-                get: function () { return point['factor2'] },
+                get: function () {
+                    return point['factor2']
+                },
                 set: function (v) {
                     point['factor2'] = v;
                 }
             }
         })());
+        this['factor2'] = 0.2
 
         this['program'] = makeProgram(this, redGL);
         this['_UUID'] = RedGL['makeUUID']();
 
         this.updateTexture = function (lastFrameBufferTexture, parentFramBufferTexture) {
             this['diffuseTexture'] = parentFramBufferTexture;
-            this['pointTexture'] =  point['frameBuffer']['texture'];
-        }
+            this['ssaoTexture'] = lastFrameBufferTexture;
+        }        
+
         this['bind'] = RedPostEffectManager.prototype['bind'];
         this['unbind'] = RedPostEffectManager.prototype['unbind'];
         this.checkProperty();
@@ -100,13 +115,17 @@ var RedPostEffect_SSAO;
             /*
             precision mediump float;
             uniform sampler2D uDiffuseTexture;      
-            uniform sampler2D uPointTexture;   
-            
+            uniform sampler2D uSsaoTexture;   
+            uniform bool uOnlySSAO;
             void main() {
                 vec4 finalColor = texture2D(uDiffuseTexture, vTexcoord);
-                vec4 pointColor = texture2D(uPointTexture, vTexcoord);  
-                         
-                gl_FragColor = finalColor * pointColor;
+                vec4 ssaoColor = texture2D(uSsaoTexture, vTexcoord);  
+                if(uOnlySSAO) gl_FragColor = ssaoColor;
+                else {
+                    finalColor.rgb *= ssaoColor.r;
+                    gl_FragColor = finalColor;
+                };
+                
                 
             }
             */

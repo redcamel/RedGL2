@@ -158,7 +158,8 @@
             var bloom = RedPostEffect_Bloom(this)
             // tScene3D['postEffectManager'].addEffect(bloom)
 
-            var ssao = RedPostEffect_SSAO_PointMaker(this)
+            // var ssao = RedPostEffect_SSAO_PointMaker(this)
+            var ssao = RedPostEffect_SSAO(this)
             
             tScene3D['postEffectManager'].addEffect(ssao)
 
@@ -174,28 +175,32 @@
                 ]);
 
             // tScene3D['grid'] = RedGrid(self)
-            var i = 1000
+            var i = 50
 
             var j
             var k
             var tMesh;
-            var tGeo = RedBox(self, 1, 1, 1, 16, 16, 16)
+         
             // var tGeo = RedSphere(self, 0.5,  16, 16, 16)
-            var tMat = RedColorMaterial(
+            var tMat = RedColorPhongMaterial(
                 self
             )
             tMat.shininess = 32
             while (i--) {
+                var t = Math.random()*3
+                var tGeo = RedBox(self, t, t, t, 16, 16, 16)
                 tMesh = RedMesh(self, tGeo, tMat)
-                tMesh.x = Math.random() * 8 - 4
-                tMesh.y = Math.random() * 8 - 4
-                tMesh.z = Math.random() * 8 - 4
+                tMesh.x = Math.random() * 50 - 25
+                // tMesh.y = Math.random() * 50 - 25
+                tMesh.z = Math.random() * 50 - 25
+                tMesh.rotationX = tMesh.rotationY = tMesh.rotationZ = Math.random()*360
                 tScene3D.addChild(tMesh)
             }
             tMesh = tScene3D.children[0]
             tMesh.x = 0
             tMesh.y = -3
             tMesh.z = 0
+            tMesh.rotationX = tMesh.rotationY = tMesh.rotationZ = 0
             tMesh.scaleX = 100
             tMesh.scaleY = 1
             tMesh.scaleZ = 100
@@ -214,9 +219,9 @@
                 while (i--) {
                     if (i == 0) break
                     testMesh = tScene3D.children[i]
-                    // testMesh.rotationX += 0.5
-                    // testMesh.rotationY += 0.5
-                    // testMesh.rotationZ += 0.5
+                    testMesh.rotationX += 0.5
+                    testMesh.rotationY += 0.5
+                    testMesh.rotationZ += 0.5
                 }
             })
 
@@ -224,9 +229,11 @@
                 name: 'test'
             });
             var t0 = this['gui'].addFolder('ssao')
+            t0.add(ssao, 'blur', 0.0, 10)
             t0.add(ssao, 'size', 0.0, 10)
             t0.add(ssao, 'factor', 0.0, 10)
             t0.add(ssao, 'factor2', 0.0, 10)
+            t0.add(ssao, 'onlySSAO', true,false)
 
 
             t0.open()

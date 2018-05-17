@@ -24,20 +24,25 @@ var RedPostEffect_SSAO_PointMaker;
         this['subSceneFrameBuffer'] = RedFrameBuffer(redGL);
         this['subSceneMaterial'] = RedPostEffect_SSAO_DepthMaterial(redGL);
 
-        this['diffuseTexture'] = null;
+        this['processSubSceneFrameBuffer'] = [
+            RedPostEffect_BlurX(redGL),
+            RedPostEffect_BlurY(redGL)
+        ]
+
+        this['diffuseTexture'] = null
         this['depthTexture'] = null;
         this['factor'] = 10;
         this['factor2'] = 0.2;
         this['size'] = 3;
-
 
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['program'] = makeProgram(this, redGL);
         this['_UUID'] = RedGL['makeUUID']();
 
+
         this.updateTexture = function (lastFrameBufferTexture, parentFramBufferTexture) {
-            this['diffuseTexture'] = this['subSceneFrameBuffer']['texture'];
+            this['diffuseTexture'] = lastFrameBufferTexture;
             this['depthTexture'] = this['subSceneFrameBuffer']['texture'];
         }
         this['bind'] = RedPostEffectManager.prototype['bind'];
@@ -63,7 +68,8 @@ var RedPostEffect_SSAO_PointMaker;
         fSource = function () {
             /*
             precision mediump float;
-            uniform sampler2D uDiffuseTexture;      
+    
+            uniform sampler2D uDiffuseTexture;   
             uniform sampler2D uDepthTexture;    
             
             uniform float uFactor;
@@ -81,13 +87,8 @@ var RedPostEffect_SSAO_PointMaker;
             void main() {
 
                 vec2 tLocation = gl_FragCoord.xy/vResolution ;
-              
-
-                vec4 finalColor = texture2D(uDiffuseTexture, tLocation);
+                vec4 finalColor = texture2D(uDiffuseTexture, tLocation);  
                 vec4 depthColor = texture2D(uDepthTexture, tLocation);  
-              
-                
-              
                 const int SAMPLES = 8;
                 float ao = 0.0;
                 for (int i = 0; i < SAMPLES; ++i) {
@@ -110,7 +111,7 @@ var RedPostEffect_SSAO_PointMaker;
                         float sampleDepth = texture2D(uDepthTexture, tLocation2).r;
                         if(sampleDepth < 0.9){
                             if(abs((sampleDepth - depthColor.r)) < 0.2){
-                                if(sampleDepth > depthColor.r) ao+= 1.0/float(SAMPLES) * abs(normalize(sampleDepth - depthColor.r));                
+                                if(sampleDepth > depthColor.r) ao+= 1.0/float(SAMPLES) * abs(normalize(sampleDepth - depthColor.r)) * 0.5;                
                             }
                         }
                         
@@ -119,7 +120,7 @@ var RedPostEffect_SSAO_PointMaker;
                 // ao /= float(SAMPLES);
                 ao = 1.0 - ao;
                 ao = pow(ao, uFactor2);
-                gl_FragColor =vec4(ao,ao,ao,1.0);
+                gl_FragColor = vec4(ao,ao,ao,1.0);
                 // gl_FragColor = depthColor;
                 
             }
