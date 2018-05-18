@@ -39,7 +39,7 @@ var RedPostEffect_SSAO_DepthMaterial;
         vSource = function () {
             /*
             varying vec3 vCameraPosition;
-            varying vec4 vPosition;
+  
             mat4 calSprite3D(mat4 cameraMTX, mat4 mvMatrix){
                 mat4 cacheScale = mat4(
                         mvMatrix[0][0], 0.0, 0.0, 0.0, 
@@ -66,7 +66,7 @@ var RedPostEffect_SSAO_DepthMaterial;
                 else gl_Position = uPMatrix * uCameraMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
                 mat4 test = uPMatrix * uCameraMatrix;
                 vCameraPosition = vec3(test[3][0], test[3][1], test[3][2]);
-                vPosition = gl_Position;
+            
             }
             */
         }
@@ -75,21 +75,44 @@ var RedPostEffect_SSAO_DepthMaterial;
             precision mediump float;
             varying vec3 vCameraPosition;
             uniform float uFocusLength;
-            varying vec4 vPosition;
-            float fogFactor(float focusLength, float density){
-                float flog_cord = gl_FragCoord.z / gl_FragCoord.w / focusLength ;
-                float fog = flog_cord * density;
-                if(1.0 - fog < 0.0) discard;
-                return clamp(1.0 - fog, 0.0,  1.0);
+          
+            
+
+            highp vec4 pack_depth( const in highp float depth ) {
+                const highp vec4 bit_shift = vec4( 256.0 * 256.0 * 256.0, 256.0 * 256.0, 256.0, 1.0 );
+                const highp vec4 bit_mask  = vec4( 0.0, 1.0 / 256.0, 1.0 / 256.0, 1.0 / 256.0 );
+                highp vec4 res = fract( depth * bit_shift );
+                res -= res.xxyz * bit_mask;
+                return res;
             }
-            vec4 fog(float fogFactor, vec4 fogColor, vec4 currentColor) {
-                return mix(fogColor, currentColor, fogFactor);
-            }
+
+            //http://www.nutty.ca/?page_id=352&amp;link=shadow_map		
+            highp vec4 pack_depth2 (highp float depth)
+            {
+                const highp vec4 bias = vec4(1.0 / 255.0,
+                            1.0 / 255.0,
+                            1.0 / 255.0,
+                            0.0);
+
+                highp float r = depth;
+                highp float g = fract(r * 255.0);
+                highp float b = fract(g * 255.0);
+                highp float a = fract(b * 255.0);
+                highp vec4 colour = vec4(r, g, b, a);
+                
+                return colour - (colour.yzww * bias);
+            }	
+
+
             void main(void) {
-                float depth =  gl_FragCoord.w / gl_FragCoord.z* vCameraPosition.z  - gl_FragCoord.w - 0.5 ;
-              
-                vec4 depthColor = vec4(depth,depth,depth,1.0);
-                gl_FragColor = depthColor;
+                // float depth =  gl_FragCoord.w / gl_FragCoord.z * vCameraPosition.z  - gl_FragCoord.w - 0.5  ;
+                // depth += gl_FragCoord.w / gl_FragCoord.z * vDepth  - gl_FragCoord.w - 0.5  ;
+                // depth *= 0.5;
+            
+                // vec4 depthColor = vec4(depth,depth,depth,1.0);
+                // gl_FragColor = depthColor;
+                gl_FragColor = pack_depth2( gl_FragCoord.z );
+                gl_FragColor.a = 1.0;
             }
             */
         }

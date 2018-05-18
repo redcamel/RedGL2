@@ -39,10 +39,10 @@ var RedPostEffect_SSAO;
 
             return {
                 get: function () {
-                    return point['processSubSceneFrameBuffer'][0]['contrast']
+                    return point['subFrameBufferInfo']['process'][0]['contrast']
                 },
                 set: function (v) {
-                    point['processSubSceneFrameBuffer'][0]['contrast'] = v;
+                    point['subFrameBufferInfo']['process'][0]['contrast'] = v;
                 }
             }
         })());
@@ -54,12 +54,12 @@ var RedPostEffect_SSAO;
                 },
                 set: function (v) {
                     _v = v;
-                    point['processSubSceneFrameBuffer'][1]['size'] = _v;
-                    point['processSubSceneFrameBuffer'][2]['size'] = _v;
+                    point['subFrameBufferInfo']['process'][1]['size'] = _v;
+                    point['subFrameBufferInfo']['process'][2]['size'] = _v;
                 }
             }
         })());
-        this['blur'] = 20
+        this['blur'] = 5
         Object.defineProperty(this, 'size', (function () {
 
             return {

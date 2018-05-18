@@ -20,10 +20,15 @@ var RedPostEffect_DoF;
     RedPostEffect_DoF = function (redGL) {
         if (!(this instanceof RedPostEffect_DoF)) return new RedPostEffect_DoF(redGL);
         if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_DoF : RedGL Instance만 허용됩니다.', redGL)
-        this['frameBuffer'] = RedFrameBuffer(redGL);
-        this['subSceneFrameBuffer'] = RedFrameBuffer(redGL);
-        this['subSceneMaterial'] = RedPostEffect_DoF_DepthMaterial(redGL);
+        
+        this['subFrameBufferInfo'] = {
+            frameBuffer: RedFrameBuffer(redGL),
+            renderMaterial: RedPostEffect_DoF_DepthMaterial(redGL),
+            process: []
+        }
 
+        this['frameBuffer'] = RedFrameBuffer(redGL);
+      
         this['diffuseTexture'] = null;
         this['blurTexture'] = null;
         this['depthTexture'] = null;
@@ -48,10 +53,10 @@ var RedPostEffect_DoF;
         Object.defineProperty(this, 'focusLength', (function () {
             return {
                 get: function () {
-                    return this['subSceneMaterial']['focusLength']
+                    return this['subFrameBufferInfo']['renderMaterial']['focusLength']
                 },
                 set: function (v) {
-                    this['subSceneMaterial']['focusLength'] = v
+                    this['subFrameBufferInfo']['renderMaterial']['focusLength'] = v
                 }
             }
         })());
@@ -82,7 +87,7 @@ var RedPostEffect_DoF;
         this.updateTexture = function (lastFrameBufferTexture, parentFramBufferTexture) {
             this['diffuseTexture'] = parentFramBufferTexture;
             this['blurTexture'] = lastFrameBufferTexture;
-            this['depthTexture'] = this['subSceneFrameBuffer']['texture'] 
+            this['depthTexture'] = this['subFrameBufferInfo']['frameBuffer']['texture'] 
         }
         this['bind'] = RedPostEffectManager.prototype['bind'];
         this['unbind'] = RedPostEffectManager.prototype['unbind'];
