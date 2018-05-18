@@ -76,8 +76,6 @@ var RedPostEffect_SSAO_DepthMaterial;
             varying vec3 vCameraPosition;
             uniform float uFocusLength;
           
-            
-
             highp vec4 pack_depth( const in highp float depth ) {
                 const highp vec4 bit_shift = vec4( 256.0 * 256.0 * 256.0, 256.0 * 256.0, 256.0, 1.0 );
                 const highp vec4 bit_mask  = vec4( 0.0, 1.0 / 256.0, 1.0 / 256.0, 1.0 / 256.0 );

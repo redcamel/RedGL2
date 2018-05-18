@@ -93,7 +93,7 @@ var RedPostEffectManager;
                return : 'Array'
            }
        :DOC*/
-        this['finalMaterial'] = RedBitmapMaterial(redGL, this['frameBuffer']['texture']);
+        this['finalMaterial'] = RedPostEffectMaterial(redGL, this['frameBuffer']['texture']);
         //
         this['children'] = [];
         quad = RedMesh(redGL, RedPlane(redGL), this['finalMaterial']);
