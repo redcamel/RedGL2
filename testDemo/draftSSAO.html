@@ -185,7 +185,7 @@
             var tMesh;
 
             // var tGeo = RedSphere(self, 0.5,  16, 16, 16)
-            var tMat = RedColorPhongMaterial(
+            var tMat = RedColorMaterial(
                 self
             )
             var tMat2 = RedStandardMaterial(
@@ -201,7 +201,7 @@
             while (i--) {
                 var t = Math.random() * 10
                 var tGeo = RedBox(self, t,t,t, 16, 16, 16)
-                tMesh = RedMesh(self, tGeo, tMat)
+                tMesh = RedMesh(self, tGeo, tMat2)
                 tMesh.x = Math.random() * 200 - 100
                 tMesh.y = Math.random() * 3
                 tMesh.z = Math.random() * 200 - 100
@@ -218,7 +218,7 @@
             })
 
             tMesh = tScene3D.children[0]
-            tMesh.material = tMat
+            tMesh.material = tMat3
             tMesh.x = 0
 
             tMesh.z = 0
@@ -262,10 +262,9 @@
             // }) 
             var t0 = this['gui'].addFolder('ssao')
             t0.add(ssao, 'blur', 0.0, 30)
-            t0.add(ssao, 'size', 0.0, 10)
-            t0.add(ssao, 'factor', 0.0, 500)
+            t0.add(ssao, 'range', 0.0, 100)
             t0.add(ssao, 'factor2', 0.0, 5)
-            // t0.add(ssao, 'contrast', 0.0, 1)
+            t0.add(ssao, 'contrast', -1, 1)
 
             var test = {
                 mode: 'COLOR_SSAO'

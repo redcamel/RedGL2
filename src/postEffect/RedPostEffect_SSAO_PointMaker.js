@@ -31,13 +31,10 @@ var RedPostEffect_SSAO_PointMaker;
             ]
         }
 
-
-
-        this['diffuseTexture'] = null
         this['depthTexture'] = null;
-        this['factor'] = 10;
+        this['range'] = 10;
         this['factor2'] = 0.2;
-        this['size'] = 3;
+   
 
         /////////////////////////////////////////
         // 일반 프로퍼티
@@ -72,12 +69,11 @@ var RedPostEffect_SSAO_PointMaker;
             /*
             precision mediump float;
     
-            uniform sampler2D uDiffuseTexture;   
+        
             uniform sampler2D uDepthTexture;    
             
-            uniform float uFactor;
+            uniform float uRange;
             uniform float uFactor2;
-            uniform float uSize;
 
             float PHI = 1.61803398874989484820459 * 00000.1; // Golden Ratio   
             float PI  = 3.14159265358979323846264 * 00000.1; // PI
@@ -110,24 +106,24 @@ var RedPostEffect_SSAO_PointMaker;
 
                 vec2 tLocation = gl_FragCoord.xy/vResolution ;
                 // tLocation = vTexcoord;
-                vec4 finalColor = texture2D(uDiffuseTexture, tLocation);  
+             
                 vec4 depthColor = texture2D(uDepthTexture, tLocation);  
                 float depth = unpack_depth2(depthColor);
                 const int SAMPLES = 8;
                 float ao = 0.0;
                 for (int i = 0; i < SAMPLES; ++i) {
-                    float rand = random(vec3(tLocation, gl_FragCoord.w), 0.0)  * uFactor  ;         
+                    float rand = random(vec3(tLocation, 0.0), 0.0) * uRange  ;         
                     vec2 offset;                    
-                    float tRadius  = sqrt(rand*rand + rand*rand);
+               
                     if(i==0) offset = vec2(rand/vResolution.x, rand/vResolution.y);
                     else if(i==1) offset = vec2(-rand/vResolution.x, rand/vResolution.y);
                     else if(i==2) offset = vec2(rand/vResolution.x, -rand/vResolution.y);
                     else if(i==3) offset = vec2(-rand/vResolution.x, -rand/vResolution.y);
 
-                    else if(i==4) offset = vec2(rand/2.0/vResolution.x, sqrt(rand*rand + rand*rand)/vResolution.y);
-                    else if(i==5) offset = vec2(-rand/2.0/vResolution.x, sqrt(rand*rand + rand*rand)/vResolution.y);
-                    else if(i==6) offset = vec2(rand/2.0/vResolution.x, -sqrt(rand*rand + rand*rand)/vResolution.y);
-                    else if(i==7) offset = vec2(-rand/2.0/vResolution.x, -sqrt(rand*rand + rand*rand)/vResolution.y);
+                    else if(i==4) offset = vec2(rand/vResolution.x, sqrt(rand*rand + rand*rand)/vResolution.y);
+                    else if(i==5) offset = vec2(-rand/vResolution.x, sqrt(rand*rand + rand*rand)/vResolution.y);
+                    else if(i==6) offset = vec2(rand/vResolution.x, -sqrt(rand*rand + rand*rand)/vResolution.y);
+                    else if(i==7) offset = vec2(-rand/vResolution.x, -sqrt(rand*rand + rand*rand)/vResolution.y);
                     
 
                     vec2 tLocation2 = tLocation + offset   ;
@@ -139,8 +135,8 @@ var RedPostEffect_SSAO_PointMaker;
                     else {
                         float sampleDepth = unpack_depth2(texture2D(uDepthTexture, tLocation2));
                         // if(sampleDepth < 0.9){
-                            if(abs((sampleDepth - depth)) < 0.2){
-                                if(sampleDepth > depth) ao+= 1.0/(float(SAMPLES)) / 2.0 * abs(normalize(sampleDepth - depth)) ;                
+                            if(abs((sampleDepth - depth)) < 0.01){
+                                if(sampleDepth > depth) ao+= 1.0/(float(SAMPLES) )  * abs(normalize(sampleDepth - depth)) ;               
                                         
                             }
                         // }

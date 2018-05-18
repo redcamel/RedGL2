@@ -60,30 +60,19 @@ var RedPostEffect_SSAO;
             }
         })());
         this['blur'] = 5
-        Object.defineProperty(this, 'size', (function () {
+       
+        Object.defineProperty(this, 'range', (function () {
 
             return {
                 get: function () {
-                    return point['size']
+                    return point['range']
                 },
                 set: function (v) {
-                    point['size'] = v;
+                    point['range'] = v;
                 }
             }
         })());
-        this['size'] = 5
-        Object.defineProperty(this, 'factor', (function () {
-
-            return {
-                get: function () {
-                    return point['factor']
-                },
-                set: function (v) {
-                    point['factor'] = v;
-                }
-            }
-        })());
-        this['factor'] = 40
+        this['range'] = 20
         Object.defineProperty(this, 'factor2', (function () {
             return {
                 get: function () {
@@ -135,8 +124,8 @@ var RedPostEffect_SSAO;
                 if(uMode == 0.0) gl_FragColor = ssaoColor;
                 else if(uMode == 1.0) gl_FragColor = finalColor;
                 else if(uMode == 2.0) {
-                    finalColor.rgb *= ssaoColor.r;
-                    gl_FragColor = finalColor;
+                    // finalColor.rgb *= ssaoColor.r * ssaoColor.r;
+                    gl_FragColor = finalColor * ssaoColor;
                 };
                 
                 
