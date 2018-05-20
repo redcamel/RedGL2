@@ -126,13 +126,13 @@ var RedLine;
     }
     /**DOC:
         {
-            extendDoc : 'RedBaseContainer'
+            copyProto : 'RedBaseContainer'
         }
     :DOC*/
     RedGLUtil['copyProto'](RedLine, RedBaseContainer);
     /**DOC:
         {
-            extendDoc : 'RedBaseObject3D'
+            copyProto : 'RedBaseObject3D'
         }
     :DOC*/
     RedGLUtil['copyProto'](RedLine, RedBaseObject3D);

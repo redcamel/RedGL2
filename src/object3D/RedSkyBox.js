@@ -45,7 +45,7 @@ var RedSkyBox;
     }
     /**DOC:
         {
-            extendDoc : 'RedBaseObject3D'
+            copyProto : 'RedBaseObject3D'
         }
     :DOC*/
     RedGLUtil['copyProto'](RedSkyBox, RedBaseObject3D);

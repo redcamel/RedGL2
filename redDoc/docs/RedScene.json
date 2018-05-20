@@ -67,6 +67,6 @@
     "return": "Boolean"
   },
   {
-    "extendDoc": "RedBaseContainer"
+    "copyProto": "RedBaseContainer"
   }
 ]

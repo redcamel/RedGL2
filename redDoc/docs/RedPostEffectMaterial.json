@@ -1,0 +1,26 @@
+[
+  {
+    "title": "diffuseTexture",
+    "return": "RedPostEffectMaterial"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedPostEffectMaterial",
+    "description": "\n    RedPostEffectMaterial Instance 생성\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ],
+      "diffuseTexture": [
+        {
+          "type": "RedBitmapTexture"
+        },
+        "RedBitmapTexture Instance"
+      ]
+    },
+    "example": "\n    RedPostEffectMaterial(RedGL Instance, RedBitmapTexture(RedGL Instance, src))\n",
+    "return": "RedPostEffectMaterial Instance"
+  }
+]

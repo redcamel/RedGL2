@@ -35,17 +35,7 @@ var RedPostEffect_SSAO;
         ]
       
         this['mode'] = RedPostEffect_SSAO.COLOR_SSAO
-        Object.defineProperty(this, 'contrast', (function () {
-
-            return {
-                get: function () {
-                    return point['subFrameBufferInfo']['process'][0]['contrast']
-                },
-                set: function (v) {
-                    point['subFrameBufferInfo']['process'][0]['contrast'] = v;
-                }
-            }
-        })());
+       
         Object.defineProperty(this, 'blur', (function () {
             var _v = 1
             return {
@@ -54,8 +44,8 @@ var RedPostEffect_SSAO;
                 },
                 set: function (v) {
                     _v = v;
+                    point['subFrameBufferInfo']['process'][0]['size'] = _v;
                     point['subFrameBufferInfo']['process'][1]['size'] = _v;
-                    point['subFrameBufferInfo']['process'][2]['size'] = _v;
                 }
             }
         })());
@@ -72,7 +62,7 @@ var RedPostEffect_SSAO;
                 }
             }
         })());
-        this['range'] = 20
+        this['range'] = 15
         Object.defineProperty(this, 'factor2', (function () {
             return {
                 get: function () {
@@ -83,7 +73,7 @@ var RedPostEffect_SSAO;
                 }
             }
         })());
-        this['factor2'] = 0.2
+        this['factor2'] = 0.4
 
         this['program'] = makeProgram(this, redGL);
         this['_UUID'] = RedGL['makeUUID']();
@@ -124,8 +114,8 @@ var RedPostEffect_SSAO;
                 if(uMode == 0.0) gl_FragColor = ssaoColor;
                 else if(uMode == 1.0) gl_FragColor = finalColor;
                 else if(uMode == 2.0) {
-                    // finalColor.rgb *= ssaoColor.r * ssaoColor.r;
-                    gl_FragColor = finalColor * ssaoColor;
+                    finalColor.rgb *= ssaoColor.r;
+                    gl_FragColor = finalColor;
                 };
                 
                 

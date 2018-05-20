@@ -20,6 +20,6 @@
     "return": "RedSkyBox Instance"
   },
   {
-    "extendDoc": "RedBaseObject3D"
+    "copyProto": "RedBaseObject3D"
   }
 ]

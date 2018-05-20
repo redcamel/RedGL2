@@ -51,9 +51,9 @@
 
     <script src="../src/material/system/RedGridMaterial.js"></script>
     <script src="../src/material/RedPointColorMaterial.js"></script>
-    <script src="../src/material/system/RedSkyBoxMaterial.js"></script>  
+    <script src="../src/material/system/RedSkyBoxMaterial.js"></script>
     <script src="../src/material/system/RedPostEffectMaterial.js"></script>
-    
+
 
     <script src="../src/object3D/RedAxis.js"></script>
     <script src="../src/object3D/RedGrid.js"></script>
@@ -158,7 +158,7 @@
             tScene3D.addLight(testDLight)
 
 
-       
+
 
             // var ssao = RedPostEffect_SSAO_PointMaker(this)
             var ssao = RedPostEffect_SSAO(this)
@@ -190,7 +190,7 @@
             var tMat = RedColorMaterial(
                 self
             )
-            var tMat2 = RedBitmapMaterial(
+            var tMat2 = RedStandardMaterial(
                 self,
                 RedBitmapTexture(self, '../asset/crate.png')
             )
@@ -202,7 +202,7 @@
             tMat.shininess = 32
             while (i--) {
                 var t = Math.random() * 10
-                var tGeo = RedBox(self, t,t,t, 16, 16, 16)
+                var tGeo = RedBox(self, t, t, t, 30, 30, 30)
                 tMesh = RedMesh(self, tGeo, tMat2)
                 tMesh.x = Math.random() * 200 - 100
                 tMesh.y = Math.random() * 3
@@ -211,15 +211,17 @@
                 tScene3D.addChild(tMesh)
             }
 
-             RedOBJLoader(this, '../asset/obj/', 'female.obj', function (v) {
+            RedOBJLoader(this, '../asset/obj/', 'female.obj', function (v) {
                 console.log('호잇!', v)
-               
+
                 v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.1
                 tScene3D.addChild(v['resultMesh'])
 
             })
 
-            tMesh = tScene3D.children[0]
+            var tGeo = RedBox(self, t, t, t, 100, 100, 100)
+            tMesh = RedMesh(self, tGeo, tMat)
+            tScene3D.addChild(tMesh)
             tMesh.material = tMat3
             tMesh.x = 0
 
@@ -252,7 +254,7 @@
             this['gui'] = new dat.GUI({
                 name: 'test'
             });
-        
+
 
             // var t0 = this['gui'].addFolder('fxaa')
             // var testFXAA = {
@@ -264,9 +266,9 @@
             // }) 
             var t0 = this['gui'].addFolder('ssao')
             t0.add(ssao, 'blur', 0.0, 30)
-            t0.add(ssao, 'range', 0.0, 100)
-            t0.add(ssao, 'factor2', 0.0, 5)
-            t0.add(ssao, 'contrast', -1, 1)
+            t0.add(ssao, 'range', 0, 50)
+            t0.add(ssao, 'factor2', 0.0, 2)
+            // t0.add(ssao, 'contrast', -1, 1)
 
             var test = {
                 mode: 'COLOR_SSAO'

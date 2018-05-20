@@ -220,23 +220,23 @@ var DocJS = {
                         var comments = JSON.parse(data)
                         console.log(comments)
                         var extendList = comments.filter(function (v) {
-                            if (v.hasOwnProperty('extendDoc')) return true
+                            if (v.hasOwnProperty('copyProto')) return true
                         })
                         extendList.forEach(function (v) {
                             Recard.Dom('div').S(
-                                'html', v['extendDoc'],
+                                'html', v['copyProto'],
                                 'display', 'inline-block',
                                 '@className', 'defineBox',
                                 'cursor', 'pointer',
                                 'on', ['down', function () {
                                     console.log('test')
-                                    parseDoc(document.querySelector('option[key="' + v['extendDoc'] + '"]').value)
+                                    parseDoc(document.querySelector('option[key="' + v['copyProto'] + '"]').value)
                                 }],
                                 '<', extendsMethodBox
                             )
                         })
                         comments = comments.filter(function (v) {
-                            if (!v.hasOwnProperty('extendDoc')) return true
+                            if (!v.hasOwnProperty('copyProto')) return true
                         })
                         comments.sort(function (a, b) {
                             a = a['title'].toLowerCase().replace(/[^a-z]/gi, '') // 정렬할때, 일단은 알파벳만 가지고 비교하는걸로~

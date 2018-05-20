@@ -515,61 +515,67 @@ var RedRenderer;
                     var tList = postEffectManager['postEffectList'].concat();
                     if (postEffectManager['antialiasing']) tList.push(postEffectManager['antialiasing']);
 
-                    var draw = function (tList) {
-                        tList.forEach(function (effect) {
-                            // console.log('Render Effect', v)
-                            var parentFramBufferTexture
-                            var subFrameBufferInfo;
-                            subFrameBufferInfo = effect['subFrameBufferInfo'];
-                            // 이펙트 전처리 진행
-                            if (effect['process'] && effect['process'].length) {
-                                parentFramBufferTexture = lastFrameBufferTexture
-                                draw(effect['process'], parentFramBufferTexture)
-                            }
+                    var draw = function (effect) {
+                        // console.log('Render Effect', v)
+                        var parentFramBufferTexture
+                        var subFrameBufferInfo;
+                        subFrameBufferInfo = effect['subFrameBufferInfo'];
 
-                            // 이펙트 처리
-                            if (effect['frameBuffer']) {
-                                setViewportScissorAndBaseUniform(gl, effect)
-                                // 해당 이펙트의 프레임 버퍼를 바인딩
-                                effect.bind(gl);
-                                // 해당 이펙트의 기본 텍스쳐를 지난 이펙트의 최종 텍스쳐로 업로드
-                                effect.updateTexture(
-                                    lastFrameBufferTexture,
-                                    parentFramBufferTexture
-                                );
-                                // 해당 이펙트를 렌더링하고
-                                self.sceneRender(redGL, gl, true, postEffectManager['children'], time, renderInfo);
-                                // 해당 이펙트의 프레임 버퍼를 언바인딩한다.
-                                effect.unbind(gl)
-                                // 현재 이펙트를 최종 텍스쳐로 기록하고 다음 이펙트가 있을경우 활용한다. 
-                                lastFrameBufferTexture = effect['frameBuffer']['texture']
-                                // console.log(effect)
-                            }
+                        // 이펙트 전처리 진행
+                        if (effect['process'] && effect['process'].length) {
+                            parentFramBufferTexture = lastFrameBufferTexture
+                            effect['process'].forEach(function (effect) {
+                                draw(effect)
+                            })
+                        }
+                        // 이펙트 서브신버퍼를 사용한다면 그림
+                        if (subFrameBufferInfo) {
+                            subFrameBufferInfo['frameBuffer'].bind(gl);
+                            // effect['subSceneFrameBuffer']['width'] = tScene['postEffectManager']['frameBuffer']['width']
+                            // effect['subSceneFrameBuffer']['height'] = tScene['postEffectManager']['frameBuffer']['height']
 
-                            // 이펙트 서브신버퍼를 사용한다면 그림
-                            if (subFrameBufferInfo) {
-                                subFrameBufferInfo['frameBuffer'].bind(gl);
-                                // effect['subSceneFrameBuffer']['width'] = tScene['postEffectManager']['frameBuffer']['width']
-                                // effect['subSceneFrameBuffer']['height'] = tScene['postEffectManager']['frameBuffer']['height']
-                                gl.viewport(0, 0, subFrameBufferInfo['frameBuffer']['width'], subFrameBufferInfo['frameBuffer']['height']);
-                                gl.scissor(0, 0, subFrameBufferInfo['frameBuffer']['width'], subFrameBufferInfo['frameBuffer']['height']);
+                            gl.viewport(0, 0, subFrameBufferInfo['frameBuffer']['width'], subFrameBufferInfo['frameBuffer']['height']);
+                            gl.scissor(0, 0, subFrameBufferInfo['frameBuffer']['width'], subFrameBufferInfo['frameBuffer']['height']);
+                            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+                            self.sceneRender(redGL, gl, tCamera['orthographicYn'], tScene['children'], time, renderInfo, subFrameBufferInfo['renderMaterial']);
+                            subFrameBufferInfo['frameBuffer'].unbind(gl);
 
-                                self.sceneRender(redGL, gl, tCamera['orthographicYn'], tScene['children'], time, renderInfo, subFrameBufferInfo['renderMaterial']);
-                                subFrameBufferInfo['frameBuffer'].unbind(gl);
-
-                                pWidth = subFrameBufferInfo['frameBuffer']['width']
-                                pHeight = subFrameBufferInfo['frameBuffer']['height']
-                            }
-
-                            // 서브 신버퍼에 프로세스 처리 
-                            if (subFrameBufferInfo && subFrameBufferInfo['process']) {
-                                draw(subFrameBufferInfo['process'], subFrameBufferInfo['frameBuffer']['texture'])
-                            }
+                            pWidth = subFrameBufferInfo['frameBuffer']['width']
+                            pHeight = subFrameBufferInfo['frameBuffer']['height']
+                        }
 
 
-                        })
+                        // 이펙트 처리
+                        if (effect['frameBuffer']) {
+                            setViewportScissorAndBaseUniform(gl, effect)
+                            // 해당 이펙트의 프레임 버퍼를 바인딩
+                            effect.bind(gl);
+                            // 해당 이펙트의 기본 텍스쳐를 지난 이펙트의 최종 텍스쳐로 업로드
+                            effect.updateTexture(
+                                lastFrameBufferTexture,
+                                parentFramBufferTexture
+                            );
+                            // 해당 이펙트를 렌더링하고
+                            self.sceneRender(redGL, gl, true, postEffectManager['children'], time, renderInfo);
+                            // 해당 이펙트의 프레임 버퍼를 언바인딩한다.
+                            effect.unbind(gl)
+                            // 현재 이펙트를 최종 텍스쳐로 기록하고 다음 이펙트가 있을경우 활용한다. 
+                            lastFrameBufferTexture = effect['frameBuffer']['texture']
+                            // console.log(effect)
+                        }
+
+
+                        // 서브 신버퍼에 프로세스 처리 
+                        if (subFrameBufferInfo && subFrameBufferInfo['process']) {
+                            subFrameBufferInfo['process'].forEach(function (effect) {
+                                draw(effect)
+                            })
+                        }
+
                     }
-                    draw(tList)
+                    tList.forEach(function (effect) {
+                        draw(effect)
+                    })
 
                     // 이펙트가 존재한다면 최종 이펙트의 프레임버퍼 결과물을 최종으로 렌더링한다.
                     if (lastFrameBufferTexture != originFrameBufferTexture) {
@@ -782,7 +788,7 @@ var RedRenderer;
             i = children.length
             while (i--) {
                 renderResultObj['call']++
-                    tMesh = children[i]
+                tMesh = children[i]
                 tMVMatrix = tMesh['matrix']
                 tNMatrix = tMesh['normalMatrix']
                 tGeometry = tMesh['geometry']
@@ -881,7 +887,7 @@ var RedRenderer;
                                     // console.log('설마',tUniformLocationInfo['materialPropertyName'])
                                     if (tRenderType == 'sampler2D') {
 
-                                        if (tCacheBySamplerIndex[tSamplerIndex] == 0) {} else {
+                                        if (tCacheBySamplerIndex[tSamplerIndex] == 0) { } else {
                                             tPrevSamplerIndex == 0 ? 0 : gl.activeTexture(gl.TEXTURE0);
                                             gl.bindTexture(gl.TEXTURE_2D, redGL['_datas']['emptyTexture']['2d']['webglTexture']);
                                             tCacheBySamplerIndex[tUUID] == 0 ? 0 : gl.uniform1i(tWebGLUniformLocation, tCacheBySamplerIndex[tUUID] = 0);
@@ -891,7 +897,7 @@ var RedRenderer;
 
 
                                     } else {
-                                        if (tCacheBySamplerIndex[tSamplerIndex] == 1) {} else {
+                                        if (tCacheBySamplerIndex[tSamplerIndex] == 1) { } else {
                                             tPrevSamplerIndex == 1 ? 0 : gl.activeTexture(gl.TEXTURE0 + 1);
                                             gl.bindTexture(gl.TEXTURE_CUBE_MAP, redGL['_datas']['emptyTexture']['3d']['webglTexture']);
                                             tCacheBySamplerIndex[tUUID] == 1 ? 0 : gl.uniform1i(tWebGLUniformLocation, tCacheBySamplerIndex[tUUID] = 1);
@@ -904,13 +910,13 @@ var RedRenderer;
                                 tUniformValue == undefined ? RedGLUtil.throwFunc('RedRenderer : Material에 ', tUniformLocationInfo['materialPropertyName'], '이 정의 되지않았습니다.') : 0;
                                 tRenderType == 'float' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue) :
                                     tRenderType == 'int' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue) :
-                                    tRenderType == 'bool' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
-                                    // : tRenderType == 'vec' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
-                                    //TODO: 이걸해결해야하는군..
-                                    :
-                                    tRenderType == 'vec' ? gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue) :
-                                    tRenderType == 'mat' ? gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, false, tUniformValue) :
-                                    RedGLUtil.throwFunc('RedRenderer : 처리할수없는 타입입니다.', 'tRenderType -', tRenderType)
+                                        tRenderType == 'bool' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
+                                            // : tRenderType == 'vec' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
+                                            //TODO: 이걸해결해야하는군..
+                                            :
+                                            tRenderType == 'vec' ? gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue) :
+                                                tRenderType == 'mat' ? gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, false, tUniformValue) :
+                                                    RedGLUtil.throwFunc('RedRenderer : 처리할수없는 타입입니다.', 'tRenderType -', tRenderType)
                             }
 
                         }
@@ -933,8 +939,8 @@ var RedRenderer;
                     a[15] = a[3] * aX + a[7] * aY + a[11] * aZ + a[15],
                     // tMVMatrix rotate
                     tSpriteYn ?
-                    (tRx = 0 * CONVERT_RADIAN, tRy = 0 * CONVERT_RADIAN, tRz = 0) :
-                    (tRx = tMesh['rotationX'] * CONVERT_RADIAN, tRy = tMesh['rotationY'] * CONVERT_RADIAN, tRz = tMesh['rotationZ'] * CONVERT_RADIAN),
+                        (tRx = 0 * CONVERT_RADIAN, tRy = 0 * CONVERT_RADIAN, tRz = 0) :
+                        (tRx = tMesh['rotationX'] * CONVERT_RADIAN, tRy = tMesh['rotationY'] * CONVERT_RADIAN, tRz = tMesh['rotationZ'] * CONVERT_RADIAN),
                     /////////////////////////
                     tRadian = tRx % CPI2,
                     tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,

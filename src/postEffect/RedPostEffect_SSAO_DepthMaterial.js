@@ -90,7 +90,7 @@ var RedPostEffect_SSAO_DepthMaterial;
                 const highp vec4 bias = vec4(1.0 / 255.0,
                             1.0 / 255.0,
                             1.0 / 255.0,
-                            0.0);
+                            1.0);
 
                 highp float r = depth;
                 highp float g = fract(r * 255.0);
@@ -103,12 +103,7 @@ var RedPostEffect_SSAO_DepthMaterial;
 
 
             void main(void) {
-                // float depth =  gl_FragCoord.w / gl_FragCoord.z * vCameraPosition.z  - gl_FragCoord.w - 0.5  ;
-                // depth += gl_FragCoord.w / gl_FragCoord.z * vDepth  - gl_FragCoord.w - 0.5  ;
-                // depth *= 0.5;
             
-                // vec4 depthColor = vec4(depth,depth,depth,1.0);
-                // gl_FragColor = depthColor;
                 gl_FragColor = pack_depth2( gl_FragCoord.z );
                 gl_FragColor.a = 1.0;
             }
