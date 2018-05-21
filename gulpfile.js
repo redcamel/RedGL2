@@ -86,8 +86,8 @@ gulp.task('make-doc', function () {
 		"src/light/RedPointLight.js",
 
 		"src/loader/JsonModelLoader.js",
-		"src/loader/RedMTLLoader.js",
-		"src/loader/RedOBJLoader.js",
+		"src/loader/obj/RedMTLLoader.js",
+		"src/loader/obj/RedOBJLoader.js",
 
 		"src/material/RedMaterial.js",
 		"src/material/RedColorMaterial.js",
@@ -190,8 +190,8 @@ gulp.task('combine-js', function () {
 		"src/light/RedPointLight.js",
 
 		"src/loader/JsonModelLoader.js",
-		"src/loader/RedMTLLoader.js",
-		"src/loader/RedOBJLoader.js",
+		"src/loader/obj/RedMTLLoader.js",
+		"src/loader/obj/RedOBJLoader.js",
 
 
 		"src/object3D/RedAxis.js",
