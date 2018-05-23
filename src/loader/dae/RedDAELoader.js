@@ -62,114 +62,167 @@ var RedDAELoader;
     parser = function (tRedDAELoader, redGL, rawData) {
         console.log('파싱시작', tRedDAELoader['path'] + tRedDAELoader['fileName'])
 
-        var meshs = rawData.querySelector('library_geometries geometry mesh')
-        var parseSourceDatas = meshs.querySelectorAll('source')
-        var parseIndexData = meshs.querySelectorAll('p')[1].textContent.split(' ')
-        var parseSourceNum = parseSourceDatas.length
-        console.log(meshs)
-        console.log(parseSourceDatas)
-        console.log(parseIndexData)
-        var indexDataIndex = []
-        var normalDataindex = []
-        var coordDataIndex = []
-        parseIndexData.forEach(function (v, index) {
-            if (index % parseSourceNum == 0) indexDataIndex.push(+v)
-            else if (index % parseSourceNum == 1) normalDataindex.push(+v)
-            else if (index % parseSourceNum == 2) coordDataIndex.push(+v)
-        })
-        console.log('indexDataIndex', indexDataIndex)
-        console.log('normalDataindex', normalDataindex)
-        console.log('coordDataIndex', coordDataIndex)
+        var mesh = rawData.querySelector('library_geometries geometry mesh')
+        var parseSourceDatas = mesh.querySelectorAll('source')
 
-
-
-        var testInterleaveBufferData = []
         var tPosition = parseSourceDatas[0].querySelector('float_array').textContent.split(' ').map(Number)
         var tNormal = parseSourceDatas[1].querySelector('float_array').textContent.split(' ').map(Number)
-        var tCoord = parseSourceDatas[2].querySelector('float_array').textContent.split(' ').map(Number)
-        var i, len
+        var tTexcoord = parseSourceDatas[2].querySelector('float_array').textContent.split(' ').map(Number)
+
+        var pointList = []
+        var normalPointList = []
+        var uvPointList = []
 
 
-        i = 0
-        len = indexDataIndex.length
+        console.log('tPosition', tPosition)
+        console.log('tNormal', tNormal)
+        console.log('tTexcoord', tTexcoord)
 
+
+        var i, len;
+        i = 0, len = tPosition.length / 3
         for (i; i < len; i++) {
-
-            testInterleaveBufferData[indexDataIndex[i] * 6] = tPosition[indexDataIndex[i] * 3]
-            testInterleaveBufferData[indexDataIndex[i] * 6 + 1] = tPosition[indexDataIndex[i] * 3 + 1]
-            testInterleaveBufferData[indexDataIndex[i] * 6 + 2] = tPosition[indexDataIndex[i] * 3 + 2]
-            i++
-
-            testInterleaveBufferData[indexDataIndex[i] * 6] = tPosition[indexDataIndex[i] * 3]
-            testInterleaveBufferData[indexDataIndex[i] * 6 + 1] = tPosition[indexDataIndex[i] * 3 + 1]
-            testInterleaveBufferData[indexDataIndex[i] * 6 + 2] = tPosition[indexDataIndex[i] * 3 + 2]
-            i++
-
-            testInterleaveBufferData[indexDataIndex[i] * 6] = tPosition[indexDataIndex[i] * 3]
-            testInterleaveBufferData[indexDataIndex[i] * 6 + 1] = tPosition[indexDataIndex[i] * 3 + 1]
-            testInterleaveBufferData[indexDataIndex[i] * 6 + 2] = tPosition[indexDataIndex[i] * 3 + 2]
-            i--
-            i--
-
-
-            testInterleaveBufferData[indexDataIndex[i] * 6 + 3] = tNormal[indexDataIndex[i] * 3 + 3]
-            testInterleaveBufferData[indexDataIndex[i] * 6 + 1 + 3] = tNormal[indexDataIndex[i] * 3 + 1 + 3]
-            testInterleaveBufferData[indexDataIndex[i] * 6 + 2 + 3] = tNormal[indexDataIndex[i] * 3 + 2 + 3]
-
-            i++
-            testInterleaveBufferData[indexDataIndex[i] * 6 + 3] = tNormal[indexDataIndex[i] * 3 + 3]
-            testInterleaveBufferData[indexDataIndex[i] * 6 + 1 + 3] = tNormal[indexDataIndex[i] * 3 + 1 + 3]
-            testInterleaveBufferData[indexDataIndex[i] * 6 + 2 + 3] = tNormal[indexDataIndex[i] * 3 + 2 + 3]
-
-            i++
-            testInterleaveBufferData[indexDataIndex[i] * 6 + 3] = tNormal[indexDataIndex[i] * 3 + 3]
-            testInterleaveBufferData[indexDataIndex[i] * 6 + 1 + 3] = tNormal[indexDataIndex[i] * 3 + 1 + 3]
-            testInterleaveBufferData[indexDataIndex[i] * 6 + 2 + 3] = tNormal[indexDataIndex[i] * 3 + 2 + 3]
-
+            pointList.push(
+                [
+                    tPosition[i * 3 + 0],
+                    tPosition[i * 3 + 1],
+                    tPosition[i * 3 + 2]
+                ]
+            )
         }
+        console.log('pointList', pointList)
+        i = 0, len = tNormal.length / 3
+        for (i; i < len; i++) {
+            normalPointList.push(
+                [
+                    tNormal[i * 3 + 0],
+                    tNormal[i * 3 + 1],
+                    tNormal[i * 3 + 2]
+                ]
+            )
+        }
+        console.log('normalPointList', normalPointList)
 
-        console.log('testInterleaveBufferData', testInterleaveBufferData)
-        var testInterleaveBuffer = RedBuffer(
-            redGL,
-            'testInterleaveBuffer2',
-            new Float32Array(testInterleaveBufferData),
-            RedBuffer.ARRAY_BUFFER, [
-                RedInterleaveInfo('aVertexPosition', 3),
-                RedInterleaveInfo('aVertexNormal', 3),
-                // RedInterleaveInfo('aTexcoord', 2)
-            ]
-        )
-        console.log('indexDataIndex', indexDataIndex)
-        var testIndexBuffer = RedBuffer(
-            redGL,
-            'testIndexBuffer2',
-            new Uint16Array(indexDataIndex),
-            RedBuffer.ELEMENT_ARRAY_BUFFER
-        )
-        tRedDAELoader['resultMesh']['geometry'] = RedGeometry(testInterleaveBuffer, testIndexBuffer)
-        tRedDAELoader['resultMesh']['material'] = RedStandardMaterial(redGL, RedBitmapTexture(redGL, '../asset/Body_tex_003.jpg'))
-        tRedDAELoader['resultMesh']['material'] = RedColorPhongMaterial(redGL)
-        // tRedDAELoader['resultMesh']['material'] = RedColorMaterial(redGL)
-        // tRedDAELoader['resultMesh']['material'].shininess = 128
-        // tRedDAELoader['resultMesh'].drawMode = redGL.gl.POINTS
+        i = 0, len = tTexcoord.length / 2
+        for (i; i < len; i++) {
+            uvPointList.push([
+                tTexcoord[i * 2 + 0],
+                tTexcoord[i * 2 + 1]
+            ])
+        }
+        console.log('uvPointList', uvPointList)
 
+        // 텍스쳐 해석
+        var textureMap = {}
+        var images = rawData.querySelectorAll('library_images image')
+        images.forEach(function (v) {
+            textureMap[v.getAttribute('id')] = RedBitmapTexture(redGL, tRedDAELoader['path'] + v.querySelector('init_from').textContent)
+        })
+        console.log('텍스쳐로 만들어야 할 녀석들', textureMap)
+        // 이펙트 해석
+        var effectMap = {}
+        var effects = rawData.querySelectorAll('library_effects effect')
+        effects.forEach(function (v) {
+            effectMap[v.getAttribute('id')] = {
+                texture: textureMap[v.querySelector('newparam init_from').textContent]
+            }
+        })
+        console.log('이펙트', effectMap)
+
+        // 재직 해석
+        var materialMap = {}
+        var materials = rawData.querySelectorAll('library_materials material')
+        materials.forEach(function (v) {
+            console.log(v.querySelector('instance_effect').getAttribute('url').replace('#', ''))
+            materialMap[v.getAttribute('id')] = {
+                effect: effectMap[v.querySelector('instance_effect').getAttribute('url').replace('#', '')]
+            }
+        })
+        console.log('재직', materialMap)
+        // 폴리곤 해석
+        mesh.querySelectorAll('polylist').forEach(function (pData, pDataIndex) {
+
+            var testInterleaveBufferData = []
+            var tIndex = []
+
+            var polylistIndices = pData.querySelector('p').textContent.split(' ')
+            var parseSourceNum = 3
+            var t_indexDataIndex = []
+            var t_normalDataindex = []
+            var t_coordDataIndex = []
+
+            var tUVPointList = []
+            polylistIndices.forEach(function (v, index) {
+                if (index % parseSourceNum == 0) t_indexDataIndex.push(+v)
+                else if (index % parseSourceNum == 1) t_normalDataindex.push(+v)
+                if (index % parseSourceNum === 2) t_coordDataIndex.push(+v)
+            })
+
+            t_indexDataIndex.forEach(function (v, index) {
+
+                testInterleaveBufferData[index * 8 + 0] = pointList[v][0]
+                testInterleaveBufferData[index * 8 + 1] = pointList[v][1]
+                testInterleaveBufferData[index * 8 + 2] = pointList[v][2]
+
+                testInterleaveBufferData[index * 8 + 3] = normalPointList[t_normalDataindex[index]][0]
+                testInterleaveBufferData[index * 8 + 4] = normalPointList[t_normalDataindex[index]][1]
+                testInterleaveBufferData[index * 8 + 5] = normalPointList[t_normalDataindex[index]][2]
+
+
+                testInterleaveBufferData[index * 8 + 6] = uvPointList[t_coordDataIndex[index]][0]
+                testInterleaveBufferData[index * 8 + 7] = uvPointList[t_coordDataIndex[index]][1]
+
+
+
+                tIndex.push(index)
+            })
+            var testInterleaveBuffer = RedBuffer(
+                redGL,
+                'testInterleaveBuffer2' + pDataIndex,
+                new Float32Array(testInterleaveBufferData),
+                RedBuffer.ARRAY_BUFFER, [
+                    RedInterleaveInfo('aVertexPosition', 3),
+                    RedInterleaveInfo('aVertexNormal', 3),
+                    RedInterleaveInfo('aTexcoord', 2)
+                ]
+            )
+
+            var testIndexBuffer = RedBuffer(
+                redGL,
+                'testIndexBuffer2' + pDataIndex,
+                new Uint16Array(tIndex),
+                RedBuffer.ELEMENT_ARRAY_BUFFER
+            )
+            var tMesh;
+            tMesh = RedMesh(redGL)
+            tMesh['geometry'] = RedGeometry(testInterleaveBuffer, testIndexBuffer)
+            console.log('그래서 재질은?', pData.getAttribute('material'))
+            var tTexture = materialMap[pData.getAttribute('material')]['effect']['texture']
+            console.log('그래서 재질은?', tTexture)
+            tMesh['material'] = RedStandardMaterial(redGL, tTexture)
+            // tMesh['material'] = RedColorPhongMaterial(redGL)
+            // tMesh['material'] = RedColorMaterial(redGL)
+            // tMesh.useCullFace = false
+            tRedDAELoader['resultMesh'].addChild(tMesh)
+
+        })
 
         var parsedData = {}
         return {
             fileName: tRedDAELoader['fileName'],
             path: tRedDAELoader['path'],
-            resultMesh: tRedDAELoader['resultMesh'],
-            rawData: rawData,
-            indexS: {
-                index: indexDataIndex,
-                normal: normalDataindex,
-                coord: coordDataIndex
-            },
-            rawData: {
-                position: parseSourceDatas[0].querySelector('float_array').textContent.split(' ').map(Number),
-                normal: parseSourceDatas[1].querySelector('float_array').textContent.split(' ').map(Number),
-                coord: parseSourceDatas[2].querySelector('float_array').textContent.split(' ').map(Number)
-            }
+            resultMesh: tRedDAELoader['resultMesh']
+            // rawData: rawData,
+            // indexS: {
+            //     // index: indexDataIndex,
+            //     // normal: normalDataindex,
+            //     // coord: coordDataIndex
+            // },
+            // rawData: {
+            //     position: parseSourceDatas[0].querySelector('float_array').textContent.split(' ').map(Number),
+            //     normal: parseSourceDatas[1].querySelector('float_array').textContent.split(' ').map(Number),
+            //     coord: parseSourceDatas[2].querySelector('float_array').textContent.split(' ').map(Number)
+            // }
         }
     }
     Object.freeze(RedDAELoader)

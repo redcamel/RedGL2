@@ -41,7 +41,7 @@
     <script src="../src/loader/obj/RedOBJLoader.js"></script>
 
     <script src="../src/loader/dae/RedDAELoader.js"></script>
-    
+
 
     <script src="../src/material/RedMaterial.js"></script>
     <script src="../src/material/RedColorMaterial.js"></script>
@@ -101,6 +101,8 @@
     <script src="../src/RedScene.js"></script>
     <script src="../src/camera/RedCamera.js"></script>
     <script src="../src/camera/RedBasicController.js"></script>
+    <script src="../src/camera/RedObitController.js"></script>
+
 </head>
 
 <body>
@@ -118,11 +120,11 @@
             tGL = this.gl;
             this.world = tWorld = RedWorld();
             tScene3D = RedScene(this);
-           
-            tCamera = RedBasicController(this);
+
+            tCamera = RedObitController(this);
             tCamera.tilt = -45
             tRenderer = RedRenderer();
-            
+
             tWorld.addView(RedView('test', tScene3D, tCamera));
             RedView('test').setSize('100%', '100%')
             RedView('test').setLocation('0%', '0%')
@@ -136,7 +138,7 @@
             testDLight.debug = true
             tScene3D.addLight(testDLight)
 
-            testDLight = RedDirectionalLight(this, '#ff00ff', 0.3)
+            testDLight = RedDirectionalLight(this, '#ff00ff', 0.2)
             testDLight.x = -3
             testDLight.y = 2
             testDLight.z = -3
@@ -151,21 +153,22 @@
             testPLight['intensity'] = 1
             tScene3D.addLight(testPLight)
 
-            tScene3D.skyBox =
-                RedSkyBox(this, [
-                    '../asset/cubemap/posx.png',
-                    '../asset/cubemap/negx.png',
-                    '../asset/cubemap/posy.png',
-                    '../asset/cubemap/negy.png',
-                    '../asset/cubemap/posz.png',
-                    '../asset/cubemap/negz.png'
-                ]);
+            // tScene3D.skyBox =
+            //     RedSkyBox(this, [
+            //         '../asset/cubemap/posx.png',
+            //         '../asset/cubemap/negx.png',
+            //         '../asset/cubemap/posy.png',
+            //         '../asset/cubemap/negy.png',
+            //         '../asset/cubemap/posz.png',
+            //         '../asset/cubemap/negz.png'
+            //     ]);
 
             tScene3D['grid'] = RedGrid(self)
             RedDAELoader(this, '../asset/dae/', 'test.dae', function (v) {
                 console.log('호잇!', v)
                 tScene3D.addChild(v['resultMesh'])
                 v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.1
+                v['resultMesh'].y = -2
                 // v['resultMesh'].rotationX = 90
             })
 
