@@ -21,24 +21,28 @@ var RedPostEffect_SSAO_PointMaker;
         if (!(this instanceof RedPostEffect_SSAO_PointMaker)) return new RedPostEffect_SSAO_PointMaker(redGL);
         if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_SSAO_PointMaker : RedGL Instance만 허용됩니다.', redGL)
         this['frameBuffer'] = RedFrameBuffer(redGL);
-        this['subSceneFrameBuffer'] = RedFrameBuffer(redGL);
-        this['subSceneMaterial'] = RedPostEffect_SSAO_DepthMaterial(redGL);
+        this['subFrameBufferInfo'] = {
+            frameBuffer: RedFrameBuffer(redGL),
+            renderMaterial: RedPostEffect_SSAO_DepthMaterial(redGL),
+            process: [
+                RedPostEffect_BlurX(redGL),
+                RedPostEffect_BlurY(redGL)
+            ]
+        }
 
-        this['diffuseTexture'] = null;
         this['depthTexture'] = null;
-        this['factor'] = 10;
+        this['range'] = 10;
         this['factor2'] = 0.2;
-        this['size'] = 3;
-
+   
 
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['program'] = makeProgram(this, redGL);
         this['_UUID'] = RedGL['makeUUID']();
 
+
         this.updateTexture = function (lastFrameBufferTexture, parentFramBufferTexture) {
-            this['diffuseTexture'] = this['subSceneFrameBuffer']['texture'];
-            this['depthTexture'] = this['subSceneFrameBuffer']['texture'];
+            this['depthTexture'] = this['subFrameBufferInfo']['frameBuffer']['texture'];
         }
         this['bind'] = RedPostEffectManager.prototype['bind'];
         this['unbind'] = RedPostEffectManager.prototype['unbind'];
@@ -63,17 +67,36 @@ var RedPostEffect_SSAO_PointMaker;
         fSource = function () {
             /*
             precision mediump float;
-            uniform sampler2D uDiffuseTexture;      
+    
+        
             uniform sampler2D uDepthTexture;    
             
-            uniform float uFactor;
+            uniform float uRange;
             uniform float uFactor2;
-            uniform float uSize;
 
             float PHI = 1.61803398874989484820459 * 00000.1; // Golden Ratio   
             float PI  = 3.14159265358979323846264 * 00000.1; // PI
             float SQ2 = 1.41421356237309504880169 * 10000.0; // Square Root of Two
           
+
+            highp float unpack_depth( const in highp vec4 rgba_depth ) {
+                const highp vec4 bit_shift = vec4( 1.0 / ( 256.0 * 256.0 * 256.0 ), 1.0 / ( 256.0 * 256.0 ), 1.0 / 256.0, 1.0 );
+                highp float depth = dot( rgba_depth, bit_shift );
+                return 1.0 - depth;
+            }
+
+            //http://www.nutty.ca/?page_id=352&amp;link=shadow_map	
+            highp float unpack_depth2 (highp vec4 colour)
+            {
+                const highp vec4 bitShifts = vec4(
+                    1.0,
+                    1.0 / 255.0,
+                    1.0 / (255.0 * 255.0),
+                    1.0 / (255.0 * 255.0 * 255.0)
+                );
+                return 1.0 - dot(colour, bitShifts);
+            }
+
 
             float random(vec3 scale, float seed) {
                 return fract(sin(dot(gl_FragCoord.xyz + seed, scale)) * 43758.5453 + seed);
@@ -81,45 +104,47 @@ var RedPostEffect_SSAO_PointMaker;
             void main() {
 
                 vec2 tLocation = gl_FragCoord.xy/vResolution ;
-              
-
-                vec4 finalColor = texture2D(uDiffuseTexture, tLocation);
-                vec4 depthColor = texture2D(uDepthTexture, tLocation);  
-              
+                vec2 px = vec2(1.0/vResolution.x, 1.0/vResolution.y);
                 
-              
+                vec4 depthColor = texture2D(uDepthTexture, vTexcoord);  
+                float depth = unpack_depth2(depthColor);
                 const int SAMPLES = 8;
                 float ao = 0.0;
+                float rand = random(vec3(tLocation, 0.0), 0.0) * uRange  ;     
                 for (int i = 0; i < SAMPLES; ++i) {
-                    float v = vTime / 1000000.0 + PI/float(SAMPLES)*float(i);
-                    float rand = random(vec3(12.9898, 78.233, 151.7182), v) * uSize;         
-                    vec2 offset;
+                        
+                    vec2 offset;                    
                     
-                    if(i<2) offset = vec2(rand/vResolution.x, rand/vResolution.y);
-                    else if(i<4) offset = vec2(-rand/vResolution.x, rand/vResolution.y);
-                    else if(i<6) offset = vec2(rand/vResolution.x, -rand/vResolution.y);
-                    else offset = vec2(-rand/vResolution.x, -rand/vResolution.y);
+                    
+                    float x;
+                    float y;
+                    float per = 3.14/(float(SAMPLES) ) * float(i);
+                    x = rand * sin(per) / 3.14;
+                    y = rand * cos(per) / 3.14;
+                    
+                    offset = vec2(x*px.x, y*px.y);
 
-                    vec2 tLocation2 = tLocation + offset * uFactor  ;
+                    vec2 tLocation2 = tLocation + offset   ;
 
                     if(tLocation2.x <0.0) continue;
                     else if(tLocation2.x >1.0) continue;
                     else if(tLocation2.y <0.0) continue;
                     else if(tLocation2.y >1.0) continue;
                     else {
-                        float sampleDepth = texture2D(uDepthTexture, tLocation2).r;
-                        if(sampleDepth < 0.9){
-                            if(abs((sampleDepth - depthColor.r)) < 0.2){
-                                if(sampleDepth > depthColor.r) ao+= 1.0/float(SAMPLES) * abs(normalize(sampleDepth - depthColor.r));                
+                        float sampleDepth = unpack_depth2(texture2D(uDepthTexture, tLocation2));
+                        // if(sampleDepth < 0.9){
+                            if(abs((sampleDepth - depth)) < 0.01){
+                                if(sampleDepth > depth) ao+= 1.0/(float(SAMPLES)) * abs(normalize(sampleDepth - depth)) ;         
+                             
                             }
-                        }
+                        // }
                         
                     }
                 }
-                // ao /= float(SAMPLES);
+           
                 ao = 1.0 - ao;
                 ao = pow(ao, uFactor2);
-                gl_FragColor =vec4(ao,ao,ao,1.0);
+                gl_FragColor = vec4(ao,ao,ao,1.0);
                 // gl_FragColor = depthColor;
                 
             }

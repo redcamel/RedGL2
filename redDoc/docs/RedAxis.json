@@ -14,9 +14,9 @@
     "return": "RedAxis Instance"
   },
   {
-    "extendDoc": "RedBaseContainer"
+    "copyProto": "RedBaseContainer"
   },
   {
-    "extendDoc": "RedBaseObject3D"
+    "copyProto": "RedBaseObject3D"
   }
 ]

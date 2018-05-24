@@ -89,13 +89,13 @@ var RedGrid;
     }
     /**DOC:
         {
-            extendDoc : 'RedBaseContainer'
+            copyProto : 'RedBaseContainer'
         }
     :DOC*/
     RedGLUtil['copyProto'](RedGrid, RedBaseContainer);
     /**DOC:
         {
-            extendDoc : 'RedBaseObject3D'
+            copyProto : 'RedBaseObject3D'
         }
     :DOC*/
     RedGLUtil['copyProto'](RedGrid, RedBaseObject3D);

@@ -213,7 +213,7 @@ var RedScene;
     })();
     /**DOC:
         {
-            extendDoc : 'RedBaseContainer'
+            copyProto : 'RedBaseContainer'
         }
     :DOC*/
     RedGLUtil['copyProto'](RedScene, RedBaseContainer)

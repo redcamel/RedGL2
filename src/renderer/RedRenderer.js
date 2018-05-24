@@ -514,49 +514,40 @@ var RedRenderer;
                     // 포스트 이펙트를 돌면서 갱신해나간다.
                     var tList = postEffectManager['postEffectList'].concat();
                     if (postEffectManager['antialiasing']) tList.push(postEffectManager['antialiasing']);
-                    tList.forEach(function (effect) {
+
+                    var draw = function (effect) {
                         // console.log('Render Effect', v)
                         var parentFramBufferTexture
+                        var subFrameBufferInfo;
+                        subFrameBufferInfo = effect['subFrameBufferInfo'];
+
+                        // 이펙트 전처리 진행
                         if (effect['process'] && effect['process'].length) {
                             parentFramBufferTexture = lastFrameBufferTexture
-                            effect['process'].forEach(function (subEffect) {
-
-                                setViewportScissorAndBaseUniform(gl, subEffect)
-                                // 해당 이펙트의 프레임 버퍼를 바인딩
-                                subEffect.bind(gl);
-                                // 해당 이펙트의 기본 텍스쳐를 지난 이펙트의 최종 텍스쳐로 업로드
-                                subEffect['diffuseTexture'] = lastFrameBufferTexture;
-                                // 해당 이펙트를 렌더링하고
-                                self.sceneRender(redGL, gl, true, postEffectManager['children'], time, renderInfo);
-                                // 해당 이펙트의 프레임 버퍼를 언바인딩한다.
-                                subEffect.unbind(gl)
-                                // 현재 이펙트를 최종 텍스쳐로 기록하고 다음 이펙트가 있을경우 활용한다. 
-                                lastFrameBufferTexture = subEffect['frameBuffer']['texture']
+                            effect['process'].forEach(function (effect) {
+                                draw(effect)
                             })
                         }
-                     
-                        // 서브신버퍼를 사용해야한다면 그림
-                        if (effect['subSceneFrameBuffer']) {
-                            effect['subSceneFrameBuffer'].bind(gl);
-                           
+                        // 이펙트 서브신버퍼를 사용한다면 그림
+                        if (subFrameBufferInfo) {
+                            subFrameBufferInfo['frameBuffer'].bind(gl);
                             // effect['subSceneFrameBuffer']['width'] = tScene['postEffectManager']['frameBuffer']['width']
                             // effect['subSceneFrameBuffer']['height'] = tScene['postEffectManager']['frameBuffer']['height']
-                            gl.viewport(0, 0, effect['subSceneFrameBuffer']['width'], effect['subSceneFrameBuffer']['height']);
-                            gl.scissor(0, 0, effect['subSceneFrameBuffer']['width'], effect['subSceneFrameBuffer']['height']);
-                            gl.clearColor(255, 255, 255, 1);
-                         
-                            self.sceneRender(redGL, gl, tCamera['orthographicYn'], tScene['children'], time, renderInfo, effect['subSceneMaterial']);
-                            effect['subSceneFrameBuffer'].unbind(gl);
-                            
-                            pWidth = 0
-                            pHeight = 0
+
+                            gl.viewport(0, 0, subFrameBufferInfo['frameBuffer']['width'], subFrameBufferInfo['frameBuffer']['height']);
+                            gl.scissor(0, 0, subFrameBufferInfo['frameBuffer']['width'], subFrameBufferInfo['frameBuffer']['height']);
+                            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+                            self.sceneRender(redGL, gl, tCamera['orthographicYn'], tScene['children'], time, renderInfo, subFrameBufferInfo['renderMaterial']);
+                            subFrameBufferInfo['frameBuffer'].unbind(gl);
+
+                            pWidth = subFrameBufferInfo['frameBuffer']['width']
+                            pHeight = subFrameBufferInfo['frameBuffer']['height']
                         }
 
-                        if (effect['frameBuffer']) {
 
+                        // 이펙트 처리
+                        if (effect['frameBuffer']) {
                             setViewportScissorAndBaseUniform(gl, effect)
-                            
-                            
                             // 해당 이펙트의 프레임 버퍼를 바인딩
                             effect.bind(gl);
                             // 해당 이펙트의 기본 텍스쳐를 지난 이펙트의 최종 텍스쳐로 업로드
@@ -572,7 +563,20 @@ var RedRenderer;
                             lastFrameBufferTexture = effect['frameBuffer']['texture']
                             // console.log(effect)
                         }
+
+
+                        // 서브 신버퍼에 프로세스 처리 
+                        if (subFrameBufferInfo && subFrameBufferInfo['process']) {
+                            subFrameBufferInfo['process'].forEach(function (effect) {
+                                draw(effect)
+                            })
+                        }
+
+                    }
+                    tList.forEach(function (effect) {
+                        draw(effect)
                     })
+
                     // 이펙트가 존재한다면 최종 이펙트의 프레임버퍼 결과물을 최종으로 렌더링한다.
                     if (lastFrameBufferTexture != originFrameBufferTexture) {
                         postEffectManager['finalMaterial']['diffuseTexture'] = lastFrameBufferTexture;
@@ -922,100 +926,106 @@ var RedRenderer;
                 /////////////////////////////////////////////////////////////////////////
                 // tMVMatrix
                 // tMVMatrix 초기화
-                tMVMatrix[0] = 1, tMVMatrix[1] = 0, tMVMatrix[2] = 0, tMVMatrix[3] = 0,
+              
+                if (!tMesh['skeletonYn']) {
+                    tMVMatrix[0] = 1, tMVMatrix[1] = 0, tMVMatrix[2] = 0, tMVMatrix[3] = 0,
                     tMVMatrix[4] = 0, tMVMatrix[5] = 1, tMVMatrix[6] = 0, tMVMatrix[7] = 0,
                     tMVMatrix[8] = 0, tMVMatrix[9] = 0, tMVMatrix[10] = 1, tMVMatrix[11] = 0,
                     tMVMatrix[12] = 0, tMVMatrix[13] = 0, tMVMatrix[14] = 0, tMVMatrix[15] = 1,
                     a = tMVMatrix,
                     // tMVMatrix translate
                     aX = tMesh['x'], aY = tMesh['y'], aZ = tMesh['z'],
-                    a[12] = a[0] * aX + a[4] * aY + a[8] * aZ + a[12],
-                    a[13] = a[1] * aX + a[5] * aY + a[9] * aZ + a[13],
-                    a[14] = a[2] * aX + a[6] * aY + a[10] * aZ + a[14],
-                    a[15] = a[3] * aX + a[7] * aY + a[11] * aZ + a[15],
-                    // tMVMatrix rotate
-                    tSpriteYn ?
-                    (tRx = 0 * CONVERT_RADIAN, tRy = 0 * CONVERT_RADIAN, tRz = 0) :
-                    (tRx = tMesh['rotationX'] * CONVERT_RADIAN, tRy = tMesh['rotationY'] * CONVERT_RADIAN, tRz = tMesh['rotationZ'] * CONVERT_RADIAN),
-                    /////////////////////////
-                    tRadian = tRx % CPI2,
-                    tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
-                    tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
-                    aSx = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
+                        a[12] = a[0] * aX + a[4] * aY + a[8] * aZ + a[12],
+                        a[13] = a[1] * aX + a[5] * aY + a[9] * aZ + a[13],
+                        a[14] = a[2] * aX + a[6] * aY + a[10] * aZ + a[14],
+                        a[15] = a[3] * aX + a[7] * aY + a[11] * aZ + a[15],
+                        // tMVMatrix rotate
+                        tSpriteYn ?
+                        (tRx = 0 * CONVERT_RADIAN, tRy = 0 * CONVERT_RADIAN, tRz = 0) :
+                        (tRx = tMesh['rotationX'] * CONVERT_RADIAN, tRy = tMesh['rotationY'] * CONVERT_RADIAN, tRz = tMesh['rotationZ'] * CONVERT_RADIAN),
+                        /////////////////////////
+                        tRadian = tRx % CPI2,
+                        tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
+                        tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
+                        aSx = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
 
-                    tRadian = (tRx + C157) % CPI2,
-                    tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
-                    tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
-                    aCx = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
+                        tRadian = (tRx + C157) % CPI2,
+                        tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
+                        tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
+                        aCx = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
 
-                    tRadian = tRy % CPI2,
-                    tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
-                    tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
-                    aSy = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
+                        tRadian = tRy % CPI2,
+                        tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
+                        tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
+                        aSy = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
 
-                    tRadian = (tRy + C157) % CPI2,
-                    tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
-                    tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
-                    aCy = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
+                        tRadian = (tRy + C157) % CPI2,
+                        tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
+                        tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
+                        aCy = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
 
-                    tRadian = tRz % CPI2,
-                    tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
-                    tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
-                    aSz = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
+                        tRadian = tRz % CPI2,
+                        tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
+                        tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
+                        aSz = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
 
-                    tRadian = (tRz + C157) % CPI2,
-                    tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
-                    tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
-                    aCz = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
-                    /////////////////////////
-                    a00 = a[0], a01 = a[1], a02 = a[2],
-                    a10 = a[4], a11 = a[5], a12 = a[6],
-                    a20 = a[8], a21 = a[9], a22 = a[10],
-                    b00 = aCy * aCz, b01 = aSx * aSy * aCz - aCx * aSz, b02 = aCx * aSy * aCz + aSx * aSz,
-                    b10 = aCy * aSz, b11 = aSx * aSy * aSz + aCx * aCz, b12 = aCx * aSy * aSz - aSx * aCz,
-                    b20 = -aSy, b21 = aSx * aCy, b22 = aCx * aCy,
-                    a[0] = a00 * b00 + a10 * b01 + a20 * b02, a[1] = a01 * b00 + a11 * b01 + a21 * b02, a[2] = a02 * b00 + a12 * b01 + a22 * b02,
-                    a[4] = a00 * b10 + a10 * b11 + a20 * b12, a[5] = a01 * b10 + a11 * b11 + a21 * b12, a[6] = a02 * b10 + a12 * b11 + a22 * b12,
-                    a[8] = a00 * b20 + a10 * b21 + a20 * b22, a[9] = a01 * b20 + a11 * b21 + a21 * b22, a[10] = a02 * b20 + a12 * b21 + a22 * b22,
+                        tRadian = (tRz + C157) % CPI2,
+                        tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
+                        tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
+                        aCz = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
+                        /////////////////////////
+                        a00 = a[0], a01 = a[1], a02 = a[2],
+                        a10 = a[4], a11 = a[5], a12 = a[6],
+                        a20 = a[8], a21 = a[9], a22 = a[10],
+                        b00 = aCy * aCz, b01 = aSx * aSy * aCz - aCx * aSz, b02 = aCx * aSy * aCz + aSx * aSz,
+                        b10 = aCy * aSz, b11 = aSx * aSy * aSz + aCx * aCz, b12 = aCx * aSy * aSz - aSx * aCz,
+                        b20 = -aSy, b21 = aSx * aCy, b22 = aCx * aCy,
+                        a[0] = a00 * b00 + a10 * b01 + a20 * b02, a[1] = a01 * b00 + a11 * b01 + a21 * b02, a[2] = a02 * b00 + a12 * b01 + a22 * b02,
+                        a[4] = a00 * b10 + a10 * b11 + a20 * b12, a[5] = a01 * b10 + a11 * b11 + a21 * b12, a[6] = a02 * b10 + a12 * b11 + a22 * b12,
+                        a[8] = a00 * b20 + a10 * b21 + a20 * b22, a[9] = a01 * b20 + a11 * b21 + a21 * b22, a[10] = a02 * b20 + a12 * b21 + a22 * b22,
 
 
-                    // tMVMatrix scale
-                    aX = tMesh['scaleX'], aY = tMesh['scaleY'] * orthographicYnScale, aZ = tMesh['scaleZ'],
-                    a[0] = a[0] * aX, a[1] = a[1] * aX, a[2] = a[2] * aX, a[3] = a[3] * aX,
-                    a[4] = a[4] * aY, a[5] = a[5] * aY, a[6] = a[6] * aY, a[7] = a[7] * aY,
-                    a[8] = a[8] * aZ, a[9] = a[9] * aZ, a[10] = a[10] * aZ, a[11] = a[11] * aZ,
-                    a[12] = a[12], a[13] = a[13], a[14] = a[14], a[15] = a[15],
+                        // tMVMatrix scale
+                        aX = tMesh['scaleX'], aY = tMesh['scaleY'] * orthographicYnScale, aZ = tMesh['scaleZ'],
+                        a[0] = a[0] * aX, a[1] = a[1] * aX, a[2] = a[2] * aX, a[3] = a[3] * aX,
+                        a[4] = a[4] * aY, a[5] = a[5] * aY, a[6] = a[6] * aY, a[7] = a[7] * aY,
+                        a[8] = a[8] * aZ, a[9] = a[9] * aZ, a[10] = a[10] * aZ, a[11] = a[11] * aZ,
+                        a[12] = a[12], a[13] = a[13], a[14] = a[14], a[15] = a[15],
 
-                    // 부모가있으면 곱함
-                    parentMTX ? (
-                        // 부모매트릭스 복사
-                        // 매트립스 곱
-                        a00 = parentMTX[0], a01 = parentMTX[1], a02 = parentMTX[2], a03 = parentMTX[3],
-                        a10 = parentMTX[4], a11 = parentMTX[5], a12 = parentMTX[6], a13 = parentMTX[7],
-                        a20 = parentMTX[8], a21 = parentMTX[9], a22 = parentMTX[10], a23 = parentMTX[11],
-                        a30 = parentMTX[12], a31 = parentMTX[13], a32 = parentMTX[14], a33 = parentMTX[15],
-                        // Cache only the current line of the second matrix
-                        b0 = tMVMatrix[0], b1 = tMVMatrix[1], b2 = tMVMatrix[2], b3 = tMVMatrix[3],
-                        tMVMatrix[0] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30,
-                        tMVMatrix[1] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
-                        tMVMatrix[2] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
-                        tMVMatrix[3] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33,
-                        b0 = tMVMatrix[4], b1 = tMVMatrix[5], b2 = tMVMatrix[6], b3 = tMVMatrix[7],
-                        tMVMatrix[4] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30,
-                        tMVMatrix[5] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
-                        tMVMatrix[6] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
-                        tMVMatrix[7] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33,
-                        b0 = tMVMatrix[8], b1 = tMVMatrix[9], b2 = tMVMatrix[10], b3 = tMVMatrix[11],
-                        tMVMatrix[8] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30,
-                        tMVMatrix[9] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
-                        tMVMatrix[10] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
-                        tMVMatrix[11] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33,
-                        b0 = tMVMatrix[12], b1 = tMVMatrix[13], b2 = tMVMatrix[14], b3 = tMVMatrix[15],
-                        tMVMatrix[12] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30,
-                        tMVMatrix[13] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
-                        tMVMatrix[14] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
-                        tMVMatrix[15] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33
-                    ) : 0
+                        // 부모가있으면 곱함
+                        parentMTX ? (
+                            // 부모매트릭스 복사
+                            // 매트립스 곱
+                            a00 = parentMTX[0], a01 = parentMTX[1], a02 = parentMTX[2], a03 = parentMTX[3],
+                            a10 = parentMTX[4], a11 = parentMTX[5], a12 = parentMTX[6], a13 = parentMTX[7],
+                            a20 = parentMTX[8], a21 = parentMTX[9], a22 = parentMTX[10], a23 = parentMTX[11],
+                            a30 = parentMTX[12], a31 = parentMTX[13], a32 = parentMTX[14], a33 = parentMTX[15],
+                            // Cache only the current line of the second matrix
+                            b0 = tMVMatrix[0], b1 = tMVMatrix[1], b2 = tMVMatrix[2], b3 = tMVMatrix[3],
+                            tMVMatrix[0] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30,
+                            tMVMatrix[1] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
+                            tMVMatrix[2] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
+                            tMVMatrix[3] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33,
+                            b0 = tMVMatrix[4], b1 = tMVMatrix[5], b2 = tMVMatrix[6], b3 = tMVMatrix[7],
+                            tMVMatrix[4] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30,
+                            tMVMatrix[5] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
+                            tMVMatrix[6] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
+                            tMVMatrix[7] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33,
+                            b0 = tMVMatrix[8], b1 = tMVMatrix[9], b2 = tMVMatrix[10], b3 = tMVMatrix[11],
+                            tMVMatrix[8] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30,
+                            tMVMatrix[9] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
+                            tMVMatrix[10] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
+                            tMVMatrix[11] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33,
+                            b0 = tMVMatrix[12], b1 = tMVMatrix[13], b2 = tMVMatrix[14], b3 = tMVMatrix[15],
+                            tMVMatrix[12] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30,
+                            tMVMatrix[13] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
+                            tMVMatrix[14] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
+                            tMVMatrix[15] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33
+                        ) : 0
+                } else {
+                    a = tMVMatrix
+
+                }
                 /////////////////////////////////////////////////////////////////////////
                 /////////////////////////////////////////////////////////////////////////
 

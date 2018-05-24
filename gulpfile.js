@@ -47,10 +47,10 @@ var transformString = function (s) {
 		if (result) list[index] = result
 	})
 	var t0 = list.filter(function (a) {
-		if (a.hasOwnProperty('extendDoc')) return true
+		if (a.hasOwnProperty('copyProto')) return true
 	})
 	list = list.filter(function (a) {
-		if (!a.hasOwnProperty('extendDoc')) return true
+		if (!a.hasOwnProperty('copyProto')) return true
 	})
 
 	list.sort(function (a, b) {
@@ -86,8 +86,8 @@ gulp.task('make-doc', function () {
 		"src/light/RedPointLight.js",
 
 		"src/loader/JsonModelLoader.js",
-		"src/loader/RedMTLLoader.js",
-		"src/loader/RedOBJLoader.js",
+		"src/loader/obj/RedMTLLoader.js",
+		"src/loader/obj/RedOBJLoader.js",
 
 		"src/material/RedMaterial.js",
 		"src/material/RedColorMaterial.js",
@@ -101,6 +101,7 @@ gulp.task('make-doc', function () {
 		"src/material/system/RedGridMaterial.js",
 		"src/material/RedPointColorMaterial.js",
 		"src/material/system/RedSkyBoxMaterial.js",
+		"src/material/system/RedPostEffectMaterial.js",
 
 		"src/object3D/RedAxis.js",
 		"src/object3D/RedGrid.js",
@@ -111,24 +112,25 @@ gulp.task('make-doc', function () {
 
 		"src/particle/RedPointUnit.js",
 
+		"src/postEffect/RedPostEffect_Bloom.js",
+		"src/postEffect/RedPostEffect_BloomThreshold.js",
 		"src/postEffect/RedPostEffect_Blur.js",
 		"src/postEffect/RedPostEffect_BlurX.js",
 		"src/postEffect/RedPostEffect_BlurY.js",
-		"src/postEffect/RedPostEffect_Bloom.js",
-		"src/postEffect/RedPostEffect_BloomThreshold.js",
+		"src/postEffect/RedPostEffect_BrightnessContrast.js",
 		"src/postEffect/RedPostEffect_Convolution.js",
 		"src/postEffect/RedPostEffect_DoF.js",
 		"src/postEffect/RedPostEffect_DoF_DepthMaterial.js",
 		"src/postEffect/RedPostEffect_Film.js",
-		"src/postEffect/RedPostEffect_Invert.js",
+		"src/postEffect/RedPostEffect_GaussianBlur.js",
 		"src/postEffect/RedPostEffect_Gray.js",
-		"src/postEffect/RedPostEffect_HueSaturation.js",
-		"src/postEffect/RedPostEffect_BrightnessContrast.js",
-		"src/postEffect/RedPostEffect_Vignetting.js",
-		"src/postEffect/RedPostEffect_Pixelize.js",
-		"src/postEffect/RedPostEffect_ZoomBlur.js",
 		"src/postEffect/RedPostEffect_HalfTone.js",
+		"src/postEffect/RedPostEffect_HueSaturation.js",
+		"src/postEffect/RedPostEffect_Invert.js",
+		"src/postEffect/RedPostEffect_Pixelize.js",
 		"src/postEffect/RedPostEffect_Threshold.js",
+		"src/postEffect/RedPostEffect_Vignetting.js",
+		"src/postEffect/RedPostEffect_ZoomBlur.js",
 		"src/postEffect/antialiasing/RedPostEffect_FXAA.js",
 		"src/postEffect/RedPostEffectManager.js",
 
@@ -188,8 +190,8 @@ gulp.task('combine-js', function () {
 		"src/light/RedPointLight.js",
 
 		"src/loader/JsonModelLoader.js",
-		"src/loader/RedMTLLoader.js",
-		"src/loader/RedOBJLoader.js",
+		"src/loader/obj/RedMTLLoader.js",
+		"src/loader/obj/RedOBJLoader.js",
 
 
 		"src/object3D/RedAxis.js",
@@ -246,6 +248,7 @@ gulp.task('combine-js', function () {
 					"src/material/system/RedGridMaterial.js",
 					"src/material/RedPointColorMaterial.js",
 					"src/material/system/RedSkyBoxMaterial.js",
+					"src/material/system/RedPostEffectMaterial.js",
 					// 이펙트
 					"src/postEffect/RedPostEffect_Bloom.js",
 					"src/postEffect/RedPostEffect_BloomThreshold.js",

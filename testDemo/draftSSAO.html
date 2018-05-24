@@ -36,8 +36,8 @@
     <script src="../src/light/RedPointLight.js"></script>
 
     <script src="../src/loader/JsonModelLoader.js"></script>
-    <script src="../src/loader/RedMTLLoader.js"></script>
-    <script src="../src/loader/RedOBJLoader.js"></script>
+    <script src="../src/loader/obj/RedMTLLoader.js"></script>
+    <script src="../src/loader/obj/RedOBJLoader.js"></script>
 
     <script src="../src/material/RedMaterial.js"></script>
     <script src="../src/material/RedColorMaterial.js"></script>
@@ -52,6 +52,8 @@
     <script src="../src/material/system/RedGridMaterial.js"></script>
     <script src="../src/material/RedPointColorMaterial.js"></script>
     <script src="../src/material/system/RedSkyBoxMaterial.js"></script>
+    <script src="../src/material/system/RedPostEffectMaterial.js"></script>
+
 
     <script src="../src/object3D/RedAxis.js"></script>
     <script src="../src/object3D/RedGrid.js"></script>
@@ -73,7 +75,7 @@
     <script src="../src/postEffect/RedPostEffect_SSAO.js"></script>
     <script src="../src/postEffect/RedPostEffect_SSAO_DepthMaterial.js"></script>
     <script src="../src/postEffect/RedPostEffect_SSAO_PointMaker.js"></script>
-    
+
 
     <script src="../src/postEffect/RedPostEffect_Invert.js"></script>
     <script src="../src/postEffect/RedPostEffect_Gray.js"></script>
@@ -139,7 +141,7 @@
 
             tCamera = RedObitController(this);
             tCamera.tilt = -45
-            tCamera.distance =20
+            tCamera.distance = 40
             tRenderer = RedRenderer();
             tWorld.addView(RedView('test', tScene3D, tCamera));
             RedView('test').setSize('100%', '100%')
@@ -152,15 +154,19 @@
             testDLight.y = 2
             testDLight.z = 3
             testDLight.debug = true
+            testDLight.intensity = 1.5
             tScene3D.addLight(testDLight)
 
 
-            var bloom = RedPostEffect_Bloom(this)
-            // tScene3D['postEffectManager'].addEffect(bloom)
 
-            var ssao = RedPostEffect_SSAO_PointMaker(this)
-            
+
+            // var ssao = RedPostEffect_SSAO_PointMaker(this)
+            var ssao = RedPostEffect_SSAO(this)
+
             tScene3D['postEffectManager'].addEffect(ssao)
+
+            // var bloom = RedPostEffect_Bloom(this)
+            // tScene3D['postEffectManager'].addEffect(bloom)
 
 
             tScene3D.skyBox =
@@ -179,25 +185,50 @@
             var j
             var k
             var tMesh;
-            var tGeo = RedBox(self, 1, 1, 1, 16, 16, 16)
+
             // var tGeo = RedSphere(self, 0.5,  16, 16, 16)
             var tMat = RedColorMaterial(
                 self
             )
+            var tMat2 = RedStandardMaterial(
+                self,
+                RedBitmapTexture(self, '../asset/crate.png')
+            )
+
+            var tMat3 = RedStandardMaterial(
+                self,
+                RedBitmapTexture(self, '../asset/grass.jpg')
+            )
             tMat.shininess = 32
             while (i--) {
-                tMesh = RedMesh(self, tGeo, tMat)
-                tMesh.x = Math.random() * 8 - 4
-                tMesh.y = Math.random() * 8 - 4
-                tMesh.z = Math.random() * 8 - 4
+                var t = Math.random() * 10
+                var tGeo = RedBox(self, t, t, t, 30, 30, 30)
+                tMesh = RedMesh(self, tGeo, tMat2)
+                tMesh.x = Math.random() * 200 - 100
+                tMesh.y = Math.random() * 3
+                tMesh.z = Math.random() * 200 - 100
+                tMesh.rotationX = tMesh.rotationY = tMesh.rotationZ = Math.random() * 360
                 tScene3D.addChild(tMesh)
             }
-            tMesh = tScene3D.children[0]
+
+            RedOBJLoader(this, '../asset/obj/', 'female.obj', function (v) {
+                console.log('호잇!', v)
+
+                v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.1
+                tScene3D.addChild(v['resultMesh'])
+
+            })
+
+            var tGeo = RedBox(self, t, t, t, 100, 100, 100)
+            tMesh = RedMesh(self, tGeo, tMat)
+            tScene3D.addChild(tMesh)
+            tMesh.material = tMat3
             tMesh.x = 0
-            tMesh.y = -3
+
             tMesh.z = 0
+            tMesh.rotationX = tMesh.rotationY = tMesh.rotationZ = 0
             tMesh.scaleX = 100
-            tMesh.scaleY = 1
+            tMesh.scaleY = 0.1
             tMesh.scaleZ = 100
 
 
@@ -223,13 +254,31 @@
             this['gui'] = new dat.GUI({
                 name: 'test'
             });
+
+
+            // var t0 = this['gui'].addFolder('fxaa')
+            // var testFXAA = {
+            //     bloom: true
+            // }
+            // t0.add(testFXAA, 'bloom', false, true).onChange(function (v) {
+            //     if (!v) tScene3D['postEffectManager'].removeEffect(bloom)
+            //     else tScene3D['postEffectManager'].addEffect(bloom)
+            // }) 
             var t0 = this['gui'].addFolder('ssao')
-            t0.add(ssao, 'size', 0.0, 10)
-            t0.add(ssao, 'factor', 0.0, 10)
-            t0.add(ssao, 'factor2', 0.0, 10)
+            t0.add(ssao, 'blur', 0.0, 30)
+            t0.add(ssao, 'range', 0, 50)
+            t0.add(ssao, 'factor2', 0.0, 2)
+            // t0.add(ssao, 'contrast', -1, 1)
 
-
+            var test = {
+                mode: 'COLOR_SSAO'
+            }
+            t0.add(test, 'mode', ['ONLY_SSAO', 'ONLY_COLOR', 'COLOR_SSAO']).onChange(function (v) {
+                ssao['mode'] = RedPostEffect_SSAO[v]
+            })
             t0.open()
+
+
 
 
 
