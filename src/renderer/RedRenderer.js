@@ -788,7 +788,7 @@ var RedRenderer;
             i = children.length
             while (i--) {
                 renderResultObj['call']++
-                tMesh = children[i]
+                    tMesh = children[i]
                 tMVMatrix = tMesh['matrix']
                 tNMatrix = tMesh['normalMatrix']
                 tGeometry = tMesh['geometry']
@@ -887,7 +887,7 @@ var RedRenderer;
                                     // console.log('설마',tUniformLocationInfo['materialPropertyName'])
                                     if (tRenderType == 'sampler2D') {
 
-                                        if (tCacheBySamplerIndex[tSamplerIndex] == 0) { } else {
+                                        if (tCacheBySamplerIndex[tSamplerIndex] == 0) {} else {
                                             tPrevSamplerIndex == 0 ? 0 : gl.activeTexture(gl.TEXTURE0);
                                             gl.bindTexture(gl.TEXTURE_2D, redGL['_datas']['emptyTexture']['2d']['webglTexture']);
                                             tCacheBySamplerIndex[tUUID] == 0 ? 0 : gl.uniform1i(tWebGLUniformLocation, tCacheBySamplerIndex[tUUID] = 0);
@@ -897,7 +897,7 @@ var RedRenderer;
 
 
                                     } else {
-                                        if (tCacheBySamplerIndex[tSamplerIndex] == 1) { } else {
+                                        if (tCacheBySamplerIndex[tSamplerIndex] == 1) {} else {
                                             tPrevSamplerIndex == 1 ? 0 : gl.activeTexture(gl.TEXTURE0 + 1);
                                             gl.bindTexture(gl.TEXTURE_CUBE_MAP, redGL['_datas']['emptyTexture']['3d']['webglTexture']);
                                             tCacheBySamplerIndex[tUUID] == 1 ? 0 : gl.uniform1i(tWebGLUniformLocation, tCacheBySamplerIndex[tUUID] = 1);
@@ -910,13 +910,13 @@ var RedRenderer;
                                 tUniformValue == undefined ? RedGLUtil.throwFunc('RedRenderer : Material에 ', tUniformLocationInfo['materialPropertyName'], '이 정의 되지않았습니다.') : 0;
                                 tRenderType == 'float' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue) :
                                     tRenderType == 'int' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue) :
-                                        tRenderType == 'bool' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
-                                            // : tRenderType == 'vec' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
-                                            //TODO: 이걸해결해야하는군..
-                                            :
-                                            tRenderType == 'vec' ? gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue) :
-                                                tRenderType == 'mat' ? gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, false, tUniformValue) :
-                                                    RedGLUtil.throwFunc('RedRenderer : 처리할수없는 타입입니다.', 'tRenderType -', tRenderType)
+                                    tRenderType == 'bool' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
+                                    // : tRenderType == 'vec' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
+                                    //TODO: 이걸해결해야하는군..
+                                    :
+                                    tRenderType == 'vec' ? gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue) :
+                                    tRenderType == 'mat' ? gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, false, tUniformValue) :
+                                    RedGLUtil.throwFunc('RedRenderer : 처리할수없는 타입입니다.', 'tRenderType -', tRenderType)
                             }
 
                         }
@@ -926,100 +926,106 @@ var RedRenderer;
                 /////////////////////////////////////////////////////////////////////////
                 // tMVMatrix
                 // tMVMatrix 초기화
-                tMVMatrix[0] = 1, tMVMatrix[1] = 0, tMVMatrix[2] = 0, tMVMatrix[3] = 0,
+              
+                if (!tMesh['skeletonYn']) {
+                    tMVMatrix[0] = 1, tMVMatrix[1] = 0, tMVMatrix[2] = 0, tMVMatrix[3] = 0,
                     tMVMatrix[4] = 0, tMVMatrix[5] = 1, tMVMatrix[6] = 0, tMVMatrix[7] = 0,
                     tMVMatrix[8] = 0, tMVMatrix[9] = 0, tMVMatrix[10] = 1, tMVMatrix[11] = 0,
                     tMVMatrix[12] = 0, tMVMatrix[13] = 0, tMVMatrix[14] = 0, tMVMatrix[15] = 1,
                     a = tMVMatrix,
                     // tMVMatrix translate
                     aX = tMesh['x'], aY = tMesh['y'], aZ = tMesh['z'],
-                    a[12] = a[0] * aX + a[4] * aY + a[8] * aZ + a[12],
-                    a[13] = a[1] * aX + a[5] * aY + a[9] * aZ + a[13],
-                    a[14] = a[2] * aX + a[6] * aY + a[10] * aZ + a[14],
-                    a[15] = a[3] * aX + a[7] * aY + a[11] * aZ + a[15],
-                    // tMVMatrix rotate
-                    tSpriteYn ?
+                        a[12] = a[0] * aX + a[4] * aY + a[8] * aZ + a[12],
+                        a[13] = a[1] * aX + a[5] * aY + a[9] * aZ + a[13],
+                        a[14] = a[2] * aX + a[6] * aY + a[10] * aZ + a[14],
+                        a[15] = a[3] * aX + a[7] * aY + a[11] * aZ + a[15],
+                        // tMVMatrix rotate
+                        tSpriteYn ?
                         (tRx = 0 * CONVERT_RADIAN, tRy = 0 * CONVERT_RADIAN, tRz = 0) :
                         (tRx = tMesh['rotationX'] * CONVERT_RADIAN, tRy = tMesh['rotationY'] * CONVERT_RADIAN, tRz = tMesh['rotationZ'] * CONVERT_RADIAN),
-                    /////////////////////////
-                    tRadian = tRx % CPI2,
-                    tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
-                    tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
-                    aSx = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
+                        /////////////////////////
+                        tRadian = tRx % CPI2,
+                        tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
+                        tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
+                        aSx = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
 
-                    tRadian = (tRx + C157) % CPI2,
-                    tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
-                    tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
-                    aCx = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
+                        tRadian = (tRx + C157) % CPI2,
+                        tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
+                        tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
+                        aCx = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
 
-                    tRadian = tRy % CPI2,
-                    tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
-                    tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
-                    aSy = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
+                        tRadian = tRy % CPI2,
+                        tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
+                        tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
+                        aSy = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
 
-                    tRadian = (tRy + C157) % CPI2,
-                    tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
-                    tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
-                    aCy = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
+                        tRadian = (tRy + C157) % CPI2,
+                        tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
+                        tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
+                        aCy = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
 
-                    tRadian = tRz % CPI2,
-                    tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
-                    tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
-                    aSz = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
+                        tRadian = tRz % CPI2,
+                        tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
+                        tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
+                        aSz = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
 
-                    tRadian = (tRz + C157) % CPI2,
-                    tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
-                    tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
-                    aCz = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
-                    /////////////////////////
-                    a00 = a[0], a01 = a[1], a02 = a[2],
-                    a10 = a[4], a11 = a[5], a12 = a[6],
-                    a20 = a[8], a21 = a[9], a22 = a[10],
-                    b00 = aCy * aCz, b01 = aSx * aSy * aCz - aCx * aSz, b02 = aCx * aSy * aCz + aSx * aSz,
-                    b10 = aCy * aSz, b11 = aSx * aSy * aSz + aCx * aCz, b12 = aCx * aSy * aSz - aSx * aCz,
-                    b20 = -aSy, b21 = aSx * aCy, b22 = aCx * aCy,
-                    a[0] = a00 * b00 + a10 * b01 + a20 * b02, a[1] = a01 * b00 + a11 * b01 + a21 * b02, a[2] = a02 * b00 + a12 * b01 + a22 * b02,
-                    a[4] = a00 * b10 + a10 * b11 + a20 * b12, a[5] = a01 * b10 + a11 * b11 + a21 * b12, a[6] = a02 * b10 + a12 * b11 + a22 * b12,
-                    a[8] = a00 * b20 + a10 * b21 + a20 * b22, a[9] = a01 * b20 + a11 * b21 + a21 * b22, a[10] = a02 * b20 + a12 * b21 + a22 * b22,
+                        tRadian = (tRz + C157) % CPI2,
+                        tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
+                        tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
+                        aCz = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
+                        /////////////////////////
+                        a00 = a[0], a01 = a[1], a02 = a[2],
+                        a10 = a[4], a11 = a[5], a12 = a[6],
+                        a20 = a[8], a21 = a[9], a22 = a[10],
+                        b00 = aCy * aCz, b01 = aSx * aSy * aCz - aCx * aSz, b02 = aCx * aSy * aCz + aSx * aSz,
+                        b10 = aCy * aSz, b11 = aSx * aSy * aSz + aCx * aCz, b12 = aCx * aSy * aSz - aSx * aCz,
+                        b20 = -aSy, b21 = aSx * aCy, b22 = aCx * aCy,
+                        a[0] = a00 * b00 + a10 * b01 + a20 * b02, a[1] = a01 * b00 + a11 * b01 + a21 * b02, a[2] = a02 * b00 + a12 * b01 + a22 * b02,
+                        a[4] = a00 * b10 + a10 * b11 + a20 * b12, a[5] = a01 * b10 + a11 * b11 + a21 * b12, a[6] = a02 * b10 + a12 * b11 + a22 * b12,
+                        a[8] = a00 * b20 + a10 * b21 + a20 * b22, a[9] = a01 * b20 + a11 * b21 + a21 * b22, a[10] = a02 * b20 + a12 * b21 + a22 * b22,
 
 
-                    // tMVMatrix scale
-                    aX = tMesh['scaleX'], aY = tMesh['scaleY'] * orthographicYnScale, aZ = tMesh['scaleZ'],
-                    a[0] = a[0] * aX, a[1] = a[1] * aX, a[2] = a[2] * aX, a[3] = a[3] * aX,
-                    a[4] = a[4] * aY, a[5] = a[5] * aY, a[6] = a[6] * aY, a[7] = a[7] * aY,
-                    a[8] = a[8] * aZ, a[9] = a[9] * aZ, a[10] = a[10] * aZ, a[11] = a[11] * aZ,
-                    a[12] = a[12], a[13] = a[13], a[14] = a[14], a[15] = a[15],
+                        // tMVMatrix scale
+                        aX = tMesh['scaleX'], aY = tMesh['scaleY'] * orthographicYnScale, aZ = tMesh['scaleZ'],
+                        a[0] = a[0] * aX, a[1] = a[1] * aX, a[2] = a[2] * aX, a[3] = a[3] * aX,
+                        a[4] = a[4] * aY, a[5] = a[5] * aY, a[6] = a[6] * aY, a[7] = a[7] * aY,
+                        a[8] = a[8] * aZ, a[9] = a[9] * aZ, a[10] = a[10] * aZ, a[11] = a[11] * aZ,
+                        a[12] = a[12], a[13] = a[13], a[14] = a[14], a[15] = a[15],
 
-                    // 부모가있으면 곱함
-                    parentMTX ? (
-                        // 부모매트릭스 복사
-                        // 매트립스 곱
-                        a00 = parentMTX[0], a01 = parentMTX[1], a02 = parentMTX[2], a03 = parentMTX[3],
-                        a10 = parentMTX[4], a11 = parentMTX[5], a12 = parentMTX[6], a13 = parentMTX[7],
-                        a20 = parentMTX[8], a21 = parentMTX[9], a22 = parentMTX[10], a23 = parentMTX[11],
-                        a30 = parentMTX[12], a31 = parentMTX[13], a32 = parentMTX[14], a33 = parentMTX[15],
-                        // Cache only the current line of the second matrix
-                        b0 = tMVMatrix[0], b1 = tMVMatrix[1], b2 = tMVMatrix[2], b3 = tMVMatrix[3],
-                        tMVMatrix[0] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30,
-                        tMVMatrix[1] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
-                        tMVMatrix[2] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
-                        tMVMatrix[3] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33,
-                        b0 = tMVMatrix[4], b1 = tMVMatrix[5], b2 = tMVMatrix[6], b3 = tMVMatrix[7],
-                        tMVMatrix[4] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30,
-                        tMVMatrix[5] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
-                        tMVMatrix[6] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
-                        tMVMatrix[7] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33,
-                        b0 = tMVMatrix[8], b1 = tMVMatrix[9], b2 = tMVMatrix[10], b3 = tMVMatrix[11],
-                        tMVMatrix[8] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30,
-                        tMVMatrix[9] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
-                        tMVMatrix[10] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
-                        tMVMatrix[11] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33,
-                        b0 = tMVMatrix[12], b1 = tMVMatrix[13], b2 = tMVMatrix[14], b3 = tMVMatrix[15],
-                        tMVMatrix[12] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30,
-                        tMVMatrix[13] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
-                        tMVMatrix[14] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
-                        tMVMatrix[15] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33
-                    ) : 0
+                        // 부모가있으면 곱함
+                        parentMTX ? (
+                            // 부모매트릭스 복사
+                            // 매트립스 곱
+                            a00 = parentMTX[0], a01 = parentMTX[1], a02 = parentMTX[2], a03 = parentMTX[3],
+                            a10 = parentMTX[4], a11 = parentMTX[5], a12 = parentMTX[6], a13 = parentMTX[7],
+                            a20 = parentMTX[8], a21 = parentMTX[9], a22 = parentMTX[10], a23 = parentMTX[11],
+                            a30 = parentMTX[12], a31 = parentMTX[13], a32 = parentMTX[14], a33 = parentMTX[15],
+                            // Cache only the current line of the second matrix
+                            b0 = tMVMatrix[0], b1 = tMVMatrix[1], b2 = tMVMatrix[2], b3 = tMVMatrix[3],
+                            tMVMatrix[0] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30,
+                            tMVMatrix[1] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
+                            tMVMatrix[2] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
+                            tMVMatrix[3] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33,
+                            b0 = tMVMatrix[4], b1 = tMVMatrix[5], b2 = tMVMatrix[6], b3 = tMVMatrix[7],
+                            tMVMatrix[4] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30,
+                            tMVMatrix[5] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
+                            tMVMatrix[6] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
+                            tMVMatrix[7] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33,
+                            b0 = tMVMatrix[8], b1 = tMVMatrix[9], b2 = tMVMatrix[10], b3 = tMVMatrix[11],
+                            tMVMatrix[8] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30,
+                            tMVMatrix[9] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
+                            tMVMatrix[10] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
+                            tMVMatrix[11] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33,
+                            b0 = tMVMatrix[12], b1 = tMVMatrix[13], b2 = tMVMatrix[14], b3 = tMVMatrix[15],
+                            tMVMatrix[12] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30,
+                            tMVMatrix[13] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
+                            tMVMatrix[14] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
+                            tMVMatrix[15] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33
+                        ) : 0
+                } else {
+                    a = tMVMatrix
+
+                }
                 /////////////////////////////////////////////////////////////////////////
                 /////////////////////////////////////////////////////////////////////////
 

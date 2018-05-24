@@ -164,14 +164,21 @@
             //     ]);
 
             tScene3D['grid'] = RedGrid(self)
-            RedDAELoader(this, '../asset/dae/', 'test.dae', function (v) {
+            // RedDAELoader(this, '../asset/dae/', 'test.dae', function (v) {
+            //     console.log('호잇!', v)
+            //     tScene3D.addChild(v['resultMesh'])
+            //     v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.1
+            //     v['resultMesh'].y = -2
+            //     // v['resultMesh'].rotationX = 90
+            // })
+
+            RedDAELoader(this, '../asset/dae/', 'test2.dae', function (v) {
                 console.log('호잇!', v)
                 tScene3D.addChild(v['resultMesh'])
-                v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.1
-                v['resultMesh'].y = -2
+                // v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.2
+                // v['resultMesh'].x = 4
                 // v['resultMesh'].rotationX = 90
             })
-
 
             tRenderer.renderDebuger.visible = true
             tRenderer.start(this, function (time) {
