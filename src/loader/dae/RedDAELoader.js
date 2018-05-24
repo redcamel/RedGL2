@@ -197,8 +197,9 @@ var RedDAELoader;
         var map = {};
         var aniList = rawData.querySelectorAll('library_controllers controller')
         var tList = []
+        var vertex_weight = []
         aniList.forEach(function (tController) {
-            console.log('tAni', tController)
+            console.log('tController', tController)
             var tNames;
             var tTimes, tMatrixSource;
             var float_arrayList = tController.querySelectorAll('float_array')
@@ -210,7 +211,7 @@ var RedDAELoader;
                     name: v,
                     tTime: tTimes,
                     matrix: tMatrixSource.slice(index * 16, index * 16 + 16).map(Number),
-                    skeleton: RedMesh(redGL, RedSphere(redGL, 0.05), RedColorPhongMaterial(redGL))
+                    skeleton: RedMesh(redGL, RedSphere(redGL, 0.05), RedColorPhongMaterial(redGL)),
                 }
                 t0['skeleton']['matrix'] = t0['matrix']
                 // t0['skeleton']['drawMode'] = redGL.gl.LINES
@@ -222,8 +223,22 @@ var RedDAELoader;
                 map[v['name']] = v
             })
 
+            var tCount = tController.querySelector('vcount').textContent.split(' ').map(Number)
+            var tV = tController.querySelector('v').textContent.split(' ').map(Number)
+            console.log('tV', tV)
+
+            var offset = 0
+            tCount.forEach(function (len) {
+                var i = 0;
+                for (i; i < len; i++) {
+                    vertex_weight.push(tV[offset])
+                    offset++
+                }
+            })
+
         })
         console.log('map', map)
+        map['__v__'] = vertex_weight
         return map
     }
     parseVisualSceneInfo = (function () {
@@ -288,10 +303,15 @@ var RedDAELoader;
                     else if (index % sourceNum === 2) t_coordDataIndex.push(+v)
                 })
                 // 버퍼데이터생성
+                var idxMap = {}
                 t_indexDataIndex.forEach(function (v, index) {
                     tInterleaveBufferData[index * 8 + 0] = pointInfo['pointList'][v][0]
                     tInterleaveBufferData[index * 8 + 1] = pointInfo['pointList'][v][1]
                     tInterleaveBufferData[index * 8 + 2] = pointInfo['pointList'][v][2]
+
+                    // 해당인덱스에 해당하는 인터리브 버퍼상의 위치
+                    if (!idxMap[v]) idxMap[v] = []
+                    idxMap[v].push(index * 8)
 
                     tInterleaveBufferData[index * 8 + 3] = pointInfo['normalPointList'][t_normalDataindex[index]][0]
                     tInterleaveBufferData[index * 8 + 4] = pointInfo['normalPointList'][t_normalDataindex[index]][1]
@@ -331,7 +351,8 @@ var RedDAELoader;
 
                 // 대상 메쉬를 결과메쉬에 추가
                 tRedDAELoader['resultMesh'].addChild(tResultMesh)
-                meshMap
+
+
 
                 // 씬해석
                 visualSceneInfo = parseVisualSceneInfo(rawData)
@@ -339,7 +360,7 @@ var RedDAELoader;
                 // 애니메이션해석
                 aniInfo = parseAnimation(rawData)
                 // 콘트롤러해석
-                controllerInfo = parseController(redGL, rawData, tRedDAELoader['resultMesh'])
+                controllerInfo = parseController(redGL, rawData, tRedDAELoader['resultMesh'], tResultMesh)
                 var aniIndex = 0
                 var aniMax = aniInfo['Armature_mixamorig_HeadTop_End_pose_matrix']['time'].length
 
@@ -360,18 +381,24 @@ var RedDAELoader;
 
                 }
 
+
+                console.log("controllerInfo['__v__'] ", controllerInfo['__v__'])
+                console.log('idxMap', idxMap)
                 setInterval(function () {
+                    // console.log()
+                    var i = 0
                     for (var k in aniInfo) {
                         var tMatrix = mat4.clone(aniInfo[k]['matrix'][aniIndex])
                         if (aniInfo[k]['target'] && controllerInfo[aniInfo[k]['target']]) {
 
                             var parentMTX = mat4.create()
-
+                            var parentMTX2 = mat4.create()
                             var mtxList = []
                             makeMatrix(mtxList, aniInfo[k]['target'], tMatrix)
                             // mtxList.reverse()
                             // console.log('mtxList',mtxList)
-                            mtxList.forEach(function (v) {
+                            mtxList.forEach(function (v,index) {
+                                if(index == mtxList.length-2) parentMTX2 =  v['matrix']
                                 mat4.multiply(parentMTX, parentMTX, v['matrix'])
                             })
                             // mat4.multiply(parentMTX, parentMTX, tMatrix)
@@ -379,11 +406,97 @@ var RedDAELoader;
                             mat4.transpose(parentMTX, parentMTX, parentMTX)
                             // console.log(mtxList)
                             controllerInfo[aniInfo[k]['target']]['skeleton']['matrix'] = parentMTX
+                            var per = 0
+                            for (var k in idxMap) {
+                                per++
+                            }
+                            var per = pointInfo['pointList'].length / 52
+                            controllerInfo['__v__'].slice(i * per, i * per + per).forEach(function (v) {
+                                var tList = idxMap[v]
+                                if (tList) {
+                                    tList.forEach(function (v2) {
+                                        var t0 = [
+                                            tInterleaveBuffer['originData'][v2],
+                                            tInterleaveBuffer['originData'][v2 + 1],
+                                            tInterleaveBuffer['originData'][v2 + 2]
+                                        ]
+                                        var t = parentMTX
+                                        // vec3.transformMat4(t0, t0, controllerInfo[aniInfo[k]['target']]['skeleton']['matrix'])
+                                        // vec3.transformMat4(t0, t0, mat4.invert(tMatrix,tMatrix))
+                                        // vec3.transformMat4(t0, t0, parentMTX)
+
+                                        var t2 = mat4.create()
+                                     
+                                        var inversMTX = mat4.create()
+                                        var inverse_c = tMatrix[0],
+                                            inverse_d = tMatrix[1],
+                                            inverse_e = tMatrix[2],
+                                            inverse_g = tMatrix[3],
+                                            inverse_f = tMatrix[4],
+                                            inverse_h = tMatrix[5],
+                                            inverse_i = tMatrix[6],
+                                            inverse_j = tMatrix[7],
+                                            inverse_k = tMatrix[8],
+                                            inverse_l = tMatrix[9],
+                                            inverse_n = tMatrix[10],
+                                            inverse_o = tMatrix[11],
+                                            inverse_m = tMatrix[12],
+                                            inverse_p = tMatrix[13],
+                                            inverse_r = tMatrix[14],
+                                            inverse_s = tMatrix[15],
+                                            inverse_A = inverse_c * inverse_h - inverse_d * inverse_f,
+                                            inverse_B = inverse_c * inverse_i - inverse_e * inverse_f,
+                                            inverse_t = inverse_c * inverse_j - inverse_g * inverse_f,
+                                            inverse_u = inverse_d * inverse_i - inverse_e * inverse_h,
+                                            inverse_v = inverse_d * inverse_j - inverse_g * inverse_h,
+                                            inverse_w = inverse_e * inverse_j - inverse_g * inverse_i,
+                                            inverse_x = inverse_k * inverse_p - inverse_l * inverse_m,
+                                            inverse_y = inverse_k * inverse_r - inverse_n * inverse_m,
+                                            inverse_z = inverse_k * inverse_s - inverse_o * inverse_m,
+                                            inverse_C = inverse_l * inverse_r - inverse_n * inverse_p,
+                                            inverse_D = inverse_l * inverse_s - inverse_o * inverse_p,
+                                            inverse_E = inverse_n * inverse_s - inverse_o * inverse_r,
+                                            inverse_q = inverse_A * inverse_E - inverse_B * inverse_D + inverse_t * inverse_C + inverse_u * inverse_z - inverse_v * inverse_y + inverse_w * inverse_x,
+                                            inverse_q = 1 / inverse_q;
+                                            inversMTX[0] = (inverse_h * inverse_E - inverse_i * inverse_D + inverse_j * inverse_C) * inverse_q,
+                                            inversMTX[1] = (-inverse_d * inverse_E + inverse_e * inverse_D - inverse_g * inverse_C) * inverse_q,
+                                            inversMTX[2] = (inverse_p * inverse_w - inverse_r * inverse_v + inverse_s * inverse_u) * inverse_q,
+                                            inversMTX[3] = (-inverse_l * inverse_w + inverse_n * inverse_v - inverse_o * inverse_u) * inverse_q,
+                                            inversMTX[4] = (-inverse_f * inverse_E + inverse_i * inverse_z - inverse_j * inverse_y) * inverse_q,
+                                            inversMTX[5] = (inverse_c * inverse_E - inverse_e * inverse_z + inverse_g * inverse_y) * inverse_q,
+                                            inversMTX[6] = (-inverse_m * inverse_w + inverse_r * inverse_t - inverse_s * inverse_B) * inverse_q,
+                                            inversMTX[7] = (inverse_k * inverse_w - inverse_n * inverse_t + inverse_o * inverse_B) * inverse_q,
+                                            inversMTX[8] = (inverse_f * inverse_D - inverse_h * inverse_z + inverse_j * inverse_x) * inverse_q,
+                                            inversMTX[9] = (-inverse_c * inverse_D + inverse_d * inverse_z - inverse_g * inverse_x) * inverse_q,
+                                            inversMTX[10] = (inverse_m * inverse_v - inverse_p * inverse_t + inverse_s * inverse_A) * inverse_q,
+                                            inversMTX[11] = (-inverse_k * inverse_v + inverse_l * inverse_t - inverse_o * inverse_A) * inverse_q,
+                                            inversMTX[12] = (-inverse_f * inverse_C + inverse_h * inverse_y - inverse_i * inverse_x) * inverse_q,
+                                            inversMTX[13] = (inverse_c * inverse_C - inverse_d * inverse_y + inverse_e * inverse_x) * inverse_q,
+                                            inversMTX[14] = (-inverse_m * inverse_u + inverse_p * inverse_B - inverse_r * inverse_A) * inverse_q,
+                                            inversMTX[15] = (inverse_k * inverse_u - inverse_l * inverse_B + inverse_n * inverse_A) * inverse_q,
+
+                                            mat4.translate(t2, t2, t0)
+                                            // mat4.multiply(t2,tMatrix,t2)
+                                            mat4.multiply(t2, t2, tMatrix)
+                                            mat4.multiply(t2, t2, inversMTX)
+                                            mat4.multiply(t2, t2, parentMTX)
+                                            
+
+                                        tInterleaveBuffer['data'][v2] = t2[12] / 3
+                                        tInterleaveBuffer['data'][v2 + 1] = t2[13] / 3
+                                        tInterleaveBuffer['data'][v2 + 2] = t2[14] / 3
+                                    })
+
+                                }
+                            })
                         }
+                        i++
                     }
+
+                    tResultMesh['geometry']['interleaveBuffer'].upload(tInterleaveBuffer['data'])
                     aniIndex++
                     if (aniMax == aniIndex) aniIndex = 0
-                }, 32)
+                }, 16)
             })
         })
     }
