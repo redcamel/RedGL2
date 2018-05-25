@@ -1,7 +1,7 @@
 "use strict";
 var RedDAELoader;
 (function () {
-    var parser, parseMaterial, parseMesh, parseAnimation, parseController, parseController2, parseVisualSceneInfo;
+    var parser, parseMaterial, parseMesh, parseAnimation, parseController, parseVisualSceneInfo;
     var makePointList;
     /**DOC:
         {
@@ -195,10 +195,10 @@ var RedDAELoader;
     }
     parseController = function (redGL, rawData, resultMesh) {
         var map = {};
-        var ctrList = rawData.querySelectorAll('library_controllers controller')
+        var aniList = rawData.querySelectorAll('library_controllers controller')
         var tList = []
         var vertex_weight = []
-        ctrList.forEach(function (tController) {
+        aniList.forEach(function (tController) {
             console.log('tController', tController)
             var tNames;
             var tTimes, tMatrixSource;
@@ -223,79 +223,22 @@ var RedDAELoader;
                 map[v['name']] = v
             })
 
+            var tCount = tController.querySelector('vcount').textContent.split(' ').map(Number)
+            var tV = tController.querySelector('v').textContent.split(' ').map(Number)
+            console.log('tV', tV)
 
-        })
-        console.log('ctr1 map', map)
-        return map
-    }
-    parseController2 = function (rawData) {
-        var map = {};
-        var ctrList = rawData.querySelectorAll('library_controllers controller')
-        ctrList.forEach(function (tController) {
-            console.log('tController', tController)
-            var float_arrayList = tController.querySelectorAll('float_array')
-            // Get the name of the armature that this model is a child of
-            var armatureName = tController.getAttribute('name')
-            // Number of vertexes that need weights
-            // # of (joint,weight) pairs to read for each vertex
-            var jointWeightCounts = tController.querySelector('vcount').textContent.split(' ').map(Number)
-            // An array of all possible weights (I think?)
-            var weightsArray = float_arrayList[1].textContent.split(' ').map(Number)
-            // Every (joint,weight). Use jointWeightCounts to know how many to read per vertex
-            var parsedVertexJointWeights = []
-            var jointsAndWeights = tController.querySelector('v').textContent.split(' ').map(Number)
-            jointWeightCounts.forEach(function (_, index) {
-                var numJointWeightsToRead = jointWeightCounts[index]
-                parsedVertexJointWeights[index] = {}
-                for (var i = 0; i < numJointWeightsToRead; i++) {
-                    // The particular joint that we are dealing with, and its weighting on this vertex
-                    var jointNumber = jointsAndWeights.shift()
-                    var jointWeighting = jointsAndWeights.shift()
-                    parsedVertexJointWeights[index][jointNumber] = weightsArray[jointWeighting]
+            var offset = 0
+            tCount.forEach(function (len) {
+                var i = 0;
+                for (i; i < len; i++) {
+                    vertex_weight.push(tV[offset])
+                    offset++
                 }
-
             })
 
-            // All of our model's joints
-            var orderedJointNames = tController.querySelector('Name_array').textContent.split(' ')
-            // Bind shape matrix (inverse bind matrix)
-            var bindShapeMatrix = tController.querySelector('bind_shape_matrix').textContent.split(' ').map(Number)
-            // The matrices that transforms each of our joints from world space to model space.
-            // You typically multiply this with all parent joint bind poses.
-            // We do this in `parse-skeletal-animations.js`
-            var jointInverseBindPoses = {}
-            var bindPoses = float_arrayList[0].textContent.split(' ').map(Number)
-            // A way to look up each joint's index using it's name
-            // This is useful for creating bone groups using names
-            // but then easily converting them to their index within
-            // the collada-dae-parser data structure.
-            //  (collada-dae-parser uses index's and not names to store bone data)
-            var jointNamePositionIndex = {}
-            orderedJointNames.forEach(function (jointName, index) {
-                // If we've already encountered this joint we skip it
-                // this is meant to handle an issue where Blender was
-                // exporting the same joint name twice for my right side bones that were
-                // duplicates of my original left side bones. Still not sure when/wju
-                // this happens. Must have done something strange. Doesn't happen to
-                // every model..
-                if (jointNamePositionIndex[jointName] || jointNamePositionIndex[jointName] === 0) {
-                    return
-                }
-                var bindPose = bindPoses.slice(16 * index, 16 * index + 16)
-                mat4.multiply(bindPose, bindShapeMatrix, bindPose)
-                jointInverseBindPoses[index] = bindPose
-                jointNamePositionIndex[jointName] = index
-            })
-
-            map = {
-                bindShapeMatrix: bindShapeMatrix,
-                parsedVertexJointWeights: parsedVertexJointWeights,
-                jointInverseBindPoses: jointInverseBindPoses,
-                jointNamePositionIndex: jointNamePositionIndex,
-            }
-
         })
-        console.log('ctr2 map', map)
+        console.log('map', map)
+        map['__v__'] = vertex_weight
         return map
     }
     parseVisualSceneInfo = (function () {
@@ -334,7 +277,7 @@ var RedDAELoader;
             var pointInfo;
             var materialInfo;
             var meshMap = {}
-            var aniInfo, controllerInfo, controllerInfo2;
+            var aniInfo, controllerInfo;
             var visualSceneInfo;
             sourceList = mesh.querySelectorAll('source')
             // 포인트 리스트 만들기
@@ -368,7 +311,7 @@ var RedDAELoader;
 
                     // 해당인덱스에 해당하는 인터리브 버퍼상의 위치
                     if (!idxMap[v]) idxMap[v] = []
-                    idxMap[v].push(index)
+                    idxMap[v].push(index * 8)
 
                     tInterleaveBufferData[index * 8 + 3] = pointInfo['normalPointList'][t_normalDataindex[index]][0]
                     tInterleaveBufferData[index * 8 + 4] = pointInfo['normalPointList'][t_normalDataindex[index]][1]
@@ -418,11 +361,9 @@ var RedDAELoader;
                 aniInfo = parseAnimation(rawData)
                 // 콘트롤러해석
                 controllerInfo = parseController(redGL, rawData, tRedDAELoader['resultMesh'], tResultMesh)
-                controllerInfo2 = parseController2(rawData)
                 var aniIndex = 0
                 var aniMax = aniInfo['Armature_mixamorig_HeadTop_End_pose_matrix']['time'].length
 
-                // console.log('idxMap',idxMap)
                 var makeMatrix = function (list, target) {
                     // console.log('뭐가오나',visualSceneInfo[target])
                     var tAniMatrix;
@@ -440,146 +381,117 @@ var RedDAELoader;
 
                 }
 
+
+                console.log("controllerInfo['__v__'] ", controllerInfo['__v__'])
                 console.log('idxMap', idxMap)
                 setInterval(function () {
                     // console.log()
                     var i = 0
-                    var mtxMap = {}
                     for (var k in aniInfo) {
                         var tMatrix = mat4.clone(aniInfo[k]['matrix'][aniIndex])
                         if (aniInfo[k]['target'] && controllerInfo[aniInfo[k]['target']]) {
 
-                            var skeletonMatrix = mat4.create()
+                            var parentMTX = mat4.create()
                             var parentMTX2 = mat4.create()
                             var mtxList = []
                             makeMatrix(mtxList, aniInfo[k]['target'], tMatrix)
                             // mtxList.reverse()
                             // console.log('mtxList',mtxList)
-                            mtxList.forEach(function (v, index) {
-                                if (index == mtxList.length - 1) parentMTX2 = mat4.clone(v['matrix'])
-                                mat4.multiply(skeletonMatrix, skeletonMatrix, v['matrix'])
+                            mtxList.forEach(function (v,index) {
+                                if(index == mtxList.length-2) parentMTX2 =  v['matrix']
+                                mat4.multiply(parentMTX, parentMTX, v['matrix'])
                             })
                             // mat4.multiply(parentMTX, parentMTX, tMatrix)
 
-                            mat4.transpose(skeletonMatrix, skeletonMatrix, skeletonMatrix)
+                            mat4.transpose(parentMTX, parentMTX, parentMTX)
                             // console.log(mtxList)
-                            controllerInfo[aniInfo[k]['target']]['skeleton']['matrix'] = skeletonMatrix
-
-                            var tControllIndex = controllerInfo2['jointNamePositionIndex'][aniInfo[k]['target']]
-                            var tInversePose = controllerInfo2['jointInverseBindPoses'][tControllIndex]
-
-                            mtxMap[tControllIndex] = {
-                                jointNamePositionIndex: tControllIndex,
-                                inversePose: tInversePose,
-                                skeletonMatrix: skeletonMatrix,
-                                parentMTX2: parentMTX2,
-                                tMatrix: tMatrix,
-                                bindShapeMatrix: controllerInfo2['bindShapeMatrix']
+                            controllerInfo[aniInfo[k]['target']]['skeleton']['matrix'] = parentMTX
+                            var per = 0
+                            for (var k in idxMap) {
+                                per++
                             }
+                            var per = pointInfo['pointList'].length / 52
+                            controllerInfo['__v__'].slice(i * per, i * per + per).forEach(function (v) {
+                                var tList = idxMap[v]
+                                if (tList) {
+                                    tList.forEach(function (v2) {
+                                        var t0 = [
+                                            tInterleaveBuffer['originData'][v2],
+                                            tInterleaveBuffer['originData'][v2 + 1],
+                                            tInterleaveBuffer['originData'][v2 + 2]
+                                        ]
+                                        var t = parentMTX
+                                        // vec3.transformMat4(t0, t0, controllerInfo[aniInfo[k]['target']]['skeleton']['matrix'])
+                                        // vec3.transformMat4(t0, t0, mat4.invert(tMatrix,tMatrix))
+                                        // vec3.transformMat4(t0, t0, parentMTX)
+
+                                        var t2 = mat4.create()
+                                     
+                                        var inversMTX = mat4.create()
+                                        var inverse_c = tMatrix[0],
+                                            inverse_d = tMatrix[1],
+                                            inverse_e = tMatrix[2],
+                                            inverse_g = tMatrix[3],
+                                            inverse_f = tMatrix[4],
+                                            inverse_h = tMatrix[5],
+                                            inverse_i = tMatrix[6],
+                                            inverse_j = tMatrix[7],
+                                            inverse_k = tMatrix[8],
+                                            inverse_l = tMatrix[9],
+                                            inverse_n = tMatrix[10],
+                                            inverse_o = tMatrix[11],
+                                            inverse_m = tMatrix[12],
+                                            inverse_p = tMatrix[13],
+                                            inverse_r = tMatrix[14],
+                                            inverse_s = tMatrix[15],
+                                            inverse_A = inverse_c * inverse_h - inverse_d * inverse_f,
+                                            inverse_B = inverse_c * inverse_i - inverse_e * inverse_f,
+                                            inverse_t = inverse_c * inverse_j - inverse_g * inverse_f,
+                                            inverse_u = inverse_d * inverse_i - inverse_e * inverse_h,
+                                            inverse_v = inverse_d * inverse_j - inverse_g * inverse_h,
+                                            inverse_w = inverse_e * inverse_j - inverse_g * inverse_i,
+                                            inverse_x = inverse_k * inverse_p - inverse_l * inverse_m,
+                                            inverse_y = inverse_k * inverse_r - inverse_n * inverse_m,
+                                            inverse_z = inverse_k * inverse_s - inverse_o * inverse_m,
+                                            inverse_C = inverse_l * inverse_r - inverse_n * inverse_p,
+                                            inverse_D = inverse_l * inverse_s - inverse_o * inverse_p,
+                                            inverse_E = inverse_n * inverse_s - inverse_o * inverse_r,
+                                            inverse_q = inverse_A * inverse_E - inverse_B * inverse_D + inverse_t * inverse_C + inverse_u * inverse_z - inverse_v * inverse_y + inverse_w * inverse_x,
+                                            inverse_q = 1 / inverse_q;
+                                            inversMTX[0] = (inverse_h * inverse_E - inverse_i * inverse_D + inverse_j * inverse_C) * inverse_q,
+                                            inversMTX[1] = (-inverse_d * inverse_E + inverse_e * inverse_D - inverse_g * inverse_C) * inverse_q,
+                                            inversMTX[2] = (inverse_p * inverse_w - inverse_r * inverse_v + inverse_s * inverse_u) * inverse_q,
+                                            inversMTX[3] = (-inverse_l * inverse_w + inverse_n * inverse_v - inverse_o * inverse_u) * inverse_q,
+                                            inversMTX[4] = (-inverse_f * inverse_E + inverse_i * inverse_z - inverse_j * inverse_y) * inverse_q,
+                                            inversMTX[5] = (inverse_c * inverse_E - inverse_e * inverse_z + inverse_g * inverse_y) * inverse_q,
+                                            inversMTX[6] = (-inverse_m * inverse_w + inverse_r * inverse_t - inverse_s * inverse_B) * inverse_q,
+                                            inversMTX[7] = (inverse_k * inverse_w - inverse_n * inverse_t + inverse_o * inverse_B) * inverse_q,
+                                            inversMTX[8] = (inverse_f * inverse_D - inverse_h * inverse_z + inverse_j * inverse_x) * inverse_q,
+                                            inversMTX[9] = (-inverse_c * inverse_D + inverse_d * inverse_z - inverse_g * inverse_x) * inverse_q,
+                                            inversMTX[10] = (inverse_m * inverse_v - inverse_p * inverse_t + inverse_s * inverse_A) * inverse_q,
+                                            inversMTX[11] = (-inverse_k * inverse_v + inverse_l * inverse_t - inverse_o * inverse_A) * inverse_q,
+                                            inversMTX[12] = (-inverse_f * inverse_C + inverse_h * inverse_y - inverse_i * inverse_x) * inverse_q,
+                                            inversMTX[13] = (inverse_c * inverse_C - inverse_d * inverse_y + inverse_e * inverse_x) * inverse_q,
+                                            inversMTX[14] = (-inverse_m * inverse_u + inverse_p * inverse_B - inverse_r * inverse_A) * inverse_q,
+                                            inversMTX[15] = (inverse_k * inverse_u - inverse_l * inverse_B + inverse_n * inverse_A) * inverse_q,
+
+                                            mat4.translate(t2, t2, t0)
+                                            // mat4.multiply(t2,tMatrix,t2)
+                                            mat4.multiply(t2, t2, tMatrix)
+                                            mat4.multiply(t2, t2, inversMTX)
+                                            mat4.multiply(t2, t2, parentMTX)
+                                            
+
+                                        tInterleaveBuffer['data'][v2] = t2[12] / 3
+                                        tInterleaveBuffer['data'][v2 + 1] = t2[13] / 3
+                                        tInterleaveBuffer['data'][v2 + 2] = t2[14] / 3
+                                    })
+
+                                }
+                            })
                         }
                         i++
                     }
-
-                    var time = (new Date()).getTime()
-                    // t_indexDataIndex.forEach(function (v, index) {
-                    //     var t = (time + index)/10000
-                    //     tInterleaveBuffer['data'][index * 8 + 0] = pointInfo['pointList'][v][0] + Math.sin(t)
-                    //     tInterleaveBuffer['data'][index * 8 + 1] = pointInfo['pointList'][v][1] + Math.sin(t)
-                    //     tInterleaveBuffer['data'][index * 8 + 2] = pointInfo['pointList'][v][2] + Math.sin(t)
-                    // })
-                    // 일단 전체 포인트에 대한 초기화는 이렇게 가능하고..
-                    t_indexDataIndex.forEach(function (v, index) {
-                        var t = (time + index) / 10000
-                        tInterleaveBuffer['data'][index * 8 + 0] = pointInfo['pointList'][v][0]
-                        tInterleaveBuffer['data'][index * 8 + 1] = pointInfo['pointList'][v][1]
-                        tInterleaveBuffer['data'][index * 8 + 2] = pointInfo['pointList'][v][2]
-                    })
-
-                    // 뼈대 가중치에서 처리함
-                    var maxttt = 0
-                    for (var k in idxMap) {
-                        var targetList = idxMap[k]
-                        var t = (time) / 16
-
-                        var result = []
-                        targetList.forEach(function (v2) {
-                            v2 = v2
-                            var t0 = [
-                                tInterleaveBuffer['originData'][v2 * 8],
-                                tInterleaveBuffer['originData'][v2 * 8 + 1],
-                                tInterleaveBuffer['originData'][v2 * 8 + 2]
-                            ]
-                            var t1 = [
-                                tInterleaveBuffer['originData'][v2 * 8],
-                                tInterleaveBuffer['originData'][v2 * 8 + 1],
-                                tInterleaveBuffer['originData'][v2 * 8 + 2]
-                            ]
-                            /*
-                            outV = (i=0~n)∑ { ( (v * BSM) * IBMi * JMi) * JW } 
-                            n : vertex V 에 영향을 주는 joints의 number
-                            BSM : Bind Shape Matrix
-                            IBMi : Bind 행렬의 역행렬 (mesh 좌표)
-                            JMi : joint i 의 행렬
-                            JW : vetex V의 joint i 에 대한 가중치 
-                            Bind Shape : base mesh
-                            Joints 
-                            Weights
-                            Inverse bind matrix : <joints>엘리먼트의 관련 역행렬
-                            Bind Shape matrix : skinning 전의 bind shape을 나타내는 한 개의 행렬
-                            */
-                           
-                            for (var k2 in controllerInfo2['parsedVertexJointWeights'][k]) {
-                                // vec3.transformMat4(t0, t0, mtxMap[k2]['parentMTX'])
-                                var t2 = mat4.create()
-
-                                var tRadio = controllerInfo2['parsedVertexJointWeights'][k][k2]
-                          
-                                mat4.multiply(t2, mtxMap[k2]['skeletonMatrix'],t2)
-                                // mtxMap[k2]['inversePose']
-                            
-                                t1[0] += t2[12] * tRadio
-                                t1[1] += t2[13] * tRadio
-                                t1[2] += t2[14] * tRadio
-                                // break
-                            }
-                            for (var k2 in controllerInfo2['parsedVertexJointWeights'][k]) {
-                                tInterleaveBuffer['data'][v2 * 8 + 0] = t1[0]
-                                tInterleaveBuffer['data'][v2 * 8 + 1] = t1[1]
-                                tInterleaveBuffer['data'][v2 * 8 + 2] = t1[2]
-                            }
-
-                        })
-                        if (k > maxttt) maxttt = k
-                    }
-                    // console.log('maxttt', maxttt)
-                    // t_indexDataIndex.forEach(function (v, index) {
-                    //     // var targetList = idxMap[v]
-                    //     // var t = (time)/100
-                    //     // targetList.forEach(function (v2) {
-                    //     //     tInterleaveBuffer['data'][v2 * 8 + 0] += Math.sin(t)/10
-                    //     //     tInterleaveBuffer['data'][v2 * 8 + 1] += Math.sin(t)/10
-                    //     //     tInterleaveBuffer['data'][v2 * 8 + 2] += Math.sin(t)/10
-                    //     // })
-                    //     // 생성된 포인트 위치들
-                    //     // console.log(tList)
-                    // })
-                    // controllerInfo2['parsedVertexJointWeights'].forEach(function (v, index) {
-                    //     // 생성된 인덱스들을 알수 있다. 
-
-
-
-                    // })
-
-                    /*
-                     이렇다는것은 조인트 웨이트 기반에서
-                     뼈대 가중치를 원본 포인트에 해당하는 뼈대 가중치들을 얻을수 있으며..
-                     원본 인덱스를 기준으로...
-                     생성된 포인트들의 위치를 알수 있다. 
-                     생성된 위치의 데이터를.... 가중치 합산으로 구해준다.
-                     
-                     */
-
-
 
                     tResultMesh['geometry']['interleaveBuffer'].upload(tInterleaveBuffer['data'])
                     aniIndex++

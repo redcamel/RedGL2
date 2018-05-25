@@ -368,7 +368,7 @@ var RedDAELoader;
 
                     // 해당인덱스에 해당하는 인터리브 버퍼상의 위치
                     if (!idxMap[v]) idxMap[v] = []
-                    idxMap[v].push(index)
+                    idxMap[v].push(index * 8)
 
                     tInterleaveBufferData[index * 8 + 3] = pointInfo['normalPointList'][t_normalDataindex[index]][0]
                     tInterleaveBufferData[index * 8 + 4] = pointInfo['normalPointList'][t_normalDataindex[index]][1]
@@ -440,7 +440,7 @@ var RedDAELoader;
 
                 }
 
-                console.log('idxMap', idxMap)
+
                 setInterval(function () {
                     // console.log()
                     var i = 0
@@ -449,21 +449,21 @@ var RedDAELoader;
                         var tMatrix = mat4.clone(aniInfo[k]['matrix'][aniIndex])
                         if (aniInfo[k]['target'] && controllerInfo[aniInfo[k]['target']]) {
 
-                            var skeletonMatrix = mat4.create()
+                            var parentMTX = mat4.create()
                             var parentMTX2 = mat4.create()
                             var mtxList = []
                             makeMatrix(mtxList, aniInfo[k]['target'], tMatrix)
                             // mtxList.reverse()
                             // console.log('mtxList',mtxList)
                             mtxList.forEach(function (v, index) {
-                                if (index == mtxList.length - 1) parentMTX2 = mat4.clone(v['matrix'])
-                                mat4.multiply(skeletonMatrix, skeletonMatrix, v['matrix'])
+                                if (index == mtxList.length - 2) parentMTX2 = v['matrix']
+                                mat4.multiply(parentMTX, parentMTX, v['matrix'])
                             })
                             // mat4.multiply(parentMTX, parentMTX, tMatrix)
 
-                            mat4.transpose(skeletonMatrix, skeletonMatrix, skeletonMatrix)
+                            mat4.transpose(parentMTX, parentMTX, parentMTX)
                             // console.log(mtxList)
-                            controllerInfo[aniInfo[k]['target']]['skeleton']['matrix'] = skeletonMatrix
+                            controllerInfo[aniInfo[k]['target']]['skeleton']['matrix'] = parentMTX
 
                             var tControllIndex = controllerInfo2['jointNamePositionIndex'][aniInfo[k]['target']]
                             var tInversePose = controllerInfo2['jointInverseBindPoses'][tControllIndex]
@@ -471,115 +471,19 @@ var RedDAELoader;
                             mtxMap[tControllIndex] = {
                                 jointNamePositionIndex: tControllIndex,
                                 inversePose: tInversePose,
-                                skeletonMatrix: skeletonMatrix,
-                                parentMTX2: parentMTX2,
-                                tMatrix: tMatrix,
-                                bindShapeMatrix: controllerInfo2['bindShapeMatrix']
+                                parentMTX: parentMTX,
+                                tMatrix : tMatrix
                             }
                         }
                         i++
                     }
 
-                    var time = (new Date()).getTime()
-                    // t_indexDataIndex.forEach(function (v, index) {
-                    //     var t = (time + index)/10000
-                    //     tInterleaveBuffer['data'][index * 8 + 0] = pointInfo['pointList'][v][0] + Math.sin(t)
-                    //     tInterleaveBuffer['data'][index * 8 + 1] = pointInfo['pointList'][v][1] + Math.sin(t)
-                    //     tInterleaveBuffer['data'][index * 8 + 2] = pointInfo['pointList'][v][2] + Math.sin(t)
-                    // })
-                    // 일단 전체 포인트에 대한 초기화는 이렇게 가능하고..
-                    t_indexDataIndex.forEach(function (v, index) {
-                        var t = (time + index) / 10000
-                        tInterleaveBuffer['data'][index * 8 + 0] = pointInfo['pointList'][v][0]
-                        tInterleaveBuffer['data'][index * 8 + 1] = pointInfo['pointList'][v][1]
-                        tInterleaveBuffer['data'][index * 8 + 2] = pointInfo['pointList'][v][2]
+                   
+                    controllerInfo2['parsedVertexJointWeights'].forEach(function (v, index) {
+                       
+
                     })
-
-                    // 뼈대 가중치에서 처리함
-                    var maxttt = 0
-                    for (var k in idxMap) {
-                        var targetList = idxMap[k]
-                        var t = (time) / 16
-
-                        var result = []
-                        targetList.forEach(function (v2) {
-                            v2 = v2
-                            var t0 = [
-                                tInterleaveBuffer['originData'][v2 * 8],
-                                tInterleaveBuffer['originData'][v2 * 8 + 1],
-                                tInterleaveBuffer['originData'][v2 * 8 + 2]
-                            ]
-                            var t1 = [
-                                tInterleaveBuffer['originData'][v2 * 8],
-                                tInterleaveBuffer['originData'][v2 * 8 + 1],
-                                tInterleaveBuffer['originData'][v2 * 8 + 2]
-                            ]
-                            /*
-                            outV = (i=0~n)∑ { ( (v * BSM) * IBMi * JMi) * JW } 
-                            n : vertex V 에 영향을 주는 joints의 number
-                            BSM : Bind Shape Matrix
-                            IBMi : Bind 행렬의 역행렬 (mesh 좌표)
-                            JMi : joint i 의 행렬
-                            JW : vetex V의 joint i 에 대한 가중치 
-                            Bind Shape : base mesh
-                            Joints 
-                            Weights
-                            Inverse bind matrix : <joints>엘리먼트의 관련 역행렬
-                            Bind Shape matrix : skinning 전의 bind shape을 나타내는 한 개의 행렬
-                            */
-                           
-                            for (var k2 in controllerInfo2['parsedVertexJointWeights'][k]) {
-                                // vec3.transformMat4(t0, t0, mtxMap[k2]['parentMTX'])
-                                var t2 = mat4.create()
-
-                                var tRadio = controllerInfo2['parsedVertexJointWeights'][k][k2]
-                          
-                                mat4.multiply(t2, mtxMap[k2]['skeletonMatrix'],t2)
-                                // mtxMap[k2]['inversePose']
-                            
-                                t1[0] += t2[12] * tRadio
-                                t1[1] += t2[13] * tRadio
-                                t1[2] += t2[14] * tRadio
-                                // break
-                            }
-                            for (var k2 in controllerInfo2['parsedVertexJointWeights'][k]) {
-                                tInterleaveBuffer['data'][v2 * 8 + 0] = t1[0]
-                                tInterleaveBuffer['data'][v2 * 8 + 1] = t1[1]
-                                tInterleaveBuffer['data'][v2 * 8 + 2] = t1[2]
-                            }
-
-                        })
-                        if (k > maxttt) maxttt = k
-                    }
-                    // console.log('maxttt', maxttt)
-                    // t_indexDataIndex.forEach(function (v, index) {
-                    //     // var targetList = idxMap[v]
-                    //     // var t = (time)/100
-                    //     // targetList.forEach(function (v2) {
-                    //     //     tInterleaveBuffer['data'][v2 * 8 + 0] += Math.sin(t)/10
-                    //     //     tInterleaveBuffer['data'][v2 * 8 + 1] += Math.sin(t)/10
-                    //     //     tInterleaveBuffer['data'][v2 * 8 + 2] += Math.sin(t)/10
-                    //     // })
-                    //     // 생성된 포인트 위치들
-                    //     // console.log(tList)
-                    // })
-                    // controllerInfo2['parsedVertexJointWeights'].forEach(function (v, index) {
-                    //     // 생성된 인덱스들을 알수 있다. 
-
-
-
-                    // })
-
-                    /*
-                     이렇다는것은 조인트 웨이트 기반에서
-                     뼈대 가중치를 원본 포인트에 해당하는 뼈대 가중치들을 얻을수 있으며..
-                     원본 인덱스를 기준으로...
-                     생성된 포인트들의 위치를 알수 있다. 
-                     생성된 위치의 데이터를.... 가중치 합산으로 구해준다.
-                     
-                     */
-
-
+                    // console.log('mtxMap',mtxMap)
 
                     tResultMesh['geometry']['interleaveBuffer'].upload(tInterleaveBuffer['data'])
                     aniIndex++
