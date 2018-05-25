@@ -187,6 +187,7 @@ var RedBuffer;
            }
        :DOC*/
         this['data'] = data
+        this['originData'] = JSON.parse(JSON.stringify(data))
         /**DOC:
            {
                code : 'PROPERTY',
