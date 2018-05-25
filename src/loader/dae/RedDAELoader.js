@@ -446,20 +446,20 @@ var RedDAELoader;
                     var i = 0
                     var mtxMap = {}
                     for (var k in aniInfo) {
-                        var tMatrix = mat4.clone(aniInfo[k]['matrix'][aniIndex])
+                      
                         if (aniInfo[k]['target'] && controllerInfo[aniInfo[k]['target']]) {
-
+                         
                             var skeletonMatrix = mat4.create()
                             var parentMTX2 = mat4.create()
                             var mtxList = []
-                            makeMatrix(mtxList, aniInfo[k]['target'], tMatrix)
+                            makeMatrix(mtxList, aniInfo[k]['target'])
                             // mtxList.reverse()
                             // console.log('mtxList',mtxList)
                             mtxList.forEach(function (v, index) {
                                 if (index == mtxList.length - 1) parentMTX2 = mat4.clone(v['matrix'])
                                 mat4.multiply(skeletonMatrix, skeletonMatrix, v['matrix'])
                             })
-                            // mat4.multiply(parentMTX, parentMTX, tMatrix)
+                         
 
                             mat4.transpose(skeletonMatrix, skeletonMatrix, skeletonMatrix)
                             // console.log(mtxList)
@@ -473,7 +473,7 @@ var RedDAELoader;
                                 inversePose: tInversePose,
                                 skeletonMatrix: skeletonMatrix,
                                 parentMTX2: parentMTX2,
-                                tMatrix: tMatrix,
+                                tMatrix: mtxList[0],
                                 bindShapeMatrix: controllerInfo2['bindShapeMatrix']
                             }
                         }
@@ -534,15 +534,22 @@ var RedDAELoader;
 
                                 var tRadio = controllerInfo2['parsedVertexJointWeights'][k][k2]
                           
+                                
                                 mat4.multiply(t2, mtxMap[k2]['skeletonMatrix'],t2)
+                                // mat4.multiply(t2, t2,mtxMap[k2]['bindShapeMatrix'])
+                                mat4.multiply(t2, t2,mtxMap[k2]['inversePose'])
+                                
+                                
                                 // mtxMap[k2]['inversePose']
                             
-                                t1[0] += t2[12] * tRadio
-                                t1[1] += t2[13] * tRadio
-                                t1[2] += t2[14] * tRadio
+                                t1[0] += t2[12] * tRadio + (t0[0] - t2[12])
+                                t1[1] += t2[13] * tRadio + (t0[1]- t2[13])
+                                t1[2] += t2[14] * tRadio + (t0[2]- t2[14])
+                               
                                 // break
                             }
                             for (var k2 in controllerInfo2['parsedVertexJointWeights'][k]) {
+                                var tRadio = controllerInfo2['parsedVertexJointWeights'][k][k2]
                                 tInterleaveBuffer['data'][v2 * 8 + 0] = t1[0]
                                 tInterleaveBuffer['data'][v2 * 8 + 1] = t1[1]
                                 tInterleaveBuffer['data'][v2 * 8 + 2] = t1[2]
