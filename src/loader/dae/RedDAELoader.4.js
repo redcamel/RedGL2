@@ -446,9 +446,9 @@ var RedDAELoader;
                     var i = 0
                     var mtxMap = {}
                     for (var k in aniInfo) {
-
+                      
                         if (aniInfo[k]['target'] && controllerInfo[aniInfo[k]['target']]) {
-
+                         
                             var skeletonMatrix = mat4.create()
                             var parentMTX2 = mat4.create()
                             var mtxList = []
@@ -458,8 +458,9 @@ var RedDAELoader;
                             mtxList.forEach(function (v, index) {
                                 if (index == mtxList.length - 1) parentMTX2 = mat4.clone(v['matrix'])
                                 mat4.multiply(skeletonMatrix, skeletonMatrix, v['matrix'])
+                                
                             })
-
+                         
 
                             mat4.transpose(skeletonMatrix, skeletonMatrix, skeletonMatrix)
                             // console.log(mtxList)
@@ -479,7 +480,7 @@ var RedDAELoader;
                         }
                         i++
                     }
-                    // console.log(mtxMap)
+
                     var time = (new Date()).getTime()
                     // t_indexDataIndex.forEach(function (v, index) {
                     //     var t = (time + index)/10000
@@ -497,119 +498,97 @@ var RedDAELoader;
 
                     // 뼈대 가중치에서 처리함
                     var maxttt = 0
-
-                    for (var k3 in idxMap) {
-                        var targetList = idxMap[k3]
+                    for (var k in idxMap) {
+                        var targetList = idxMap[k]
                         var t = (time) / 16
 
                         var result = []
-                        var t1
-                        var tSkel
-                        var total = 0
-
-                        targetList.forEach(function (v2, index) {
+                        targetList.forEach(function (v2) {
                             v2 = v2
-                            if (index == 0) {
-                                var t0 = [
-                                    tInterleaveBuffer['originData'][v2 * 8],
-                                    tInterleaveBuffer['originData'][v2 * 8 + 1],
-                                    tInterleaveBuffer['originData'][v2 * 8 + 2]
-                                ]
-                                t1 = [
-                                    0, 0, 0
-                                ]
-                                /*
-                                outV = (i=0~n)∑ { ( (v * BSM) * IBMi * JMi) * JW } 
-                                n : vertex V 에 영향을 주는 joints의 number
-                                BSM : Bind Shape Matrix
-                                IBMi : Bind 행렬의 역행렬 (mesh 좌표)
-                                JMi : joint i 의 행렬
-                                JW : vetex V의 joint i 에 대한 가중치 
-                                Bind Shape : base mesh
-                                Joints 
-                                Weights
-                                Inverse bind matrix : <joints>엘리먼트의 관련 역행렬
-                                Bind Shape matrix : skinning 전의 bind shape을 나타내는 한 개의 행렬
-                                */
+                            var t0 = [
+                                tInterleaveBuffer['originData'][v2 * 8],
+                                tInterleaveBuffer['originData'][v2 * 8 + 1],
+                                tInterleaveBuffer['originData'][v2 * 8 + 2]
+                            ]
+                            var t1 = [
+                                tInterleaveBuffer['originData'][v2 * 8],
+                                tInterleaveBuffer['originData'][v2 * 8 + 1],
+                                tInterleaveBuffer['originData'][v2 * 8 + 2]
+                            ]
+                            /*
+                            outV = (i=0~n)∑ { ( (v * BSM) * IBMi * JMi) * JW } 
+                            n : vertex V 에 영향을 주는 joints의 number
+                            BSM : Bind Shape Matrix
+                            IBMi : Bind 행렬의 역행렬 (mesh 좌표)
+                            JMi : joint i 의 행렬
+                            JW : vetex V의 joint i 에 대한 가중치 
+                            Bind Shape : base mesh
+                            Joints 
+                            Weights
+                            Inverse bind matrix : <joints>엘리먼트의 관련 역행렬
+                            Bind Shape matrix : skinning 전의 bind shape을 나타내는 한 개의 행렬
+                            */
+                           
+                            // for (var k2 in controllerInfo2['parsedVertexJointWeights'][k]) {
+                            //     // vec3.transformMat4(t0, t0, mtxMap[k2]['parentMTX'])
+                            //     var t2 = mat4.create()
 
-                                total = 0
-                                for (var k2 in controllerInfo2['parsedVertexJointWeights'][k3]) {
-                                    // vec3.transformMat4(t0, t0, mtxMap[k2]['parentMTX'])
-                                    var t2 = mat4.create()
-
-                                    var tRadio = controllerInfo2['parsedVertexJointWeights'][k3][k2]
-                                    total += 1
-
-                                    // mat4.multiply(t2, t2,mtxMap[k2]['inversePose'])
-                                    tSkel = mtxMap[k2]['inversePose']
-                                    // 
-                                    // mat4.multiply(t2, t2,mtxMap[k2]['tMatrix']['matrix'])
-                                    // mat4.multiply(t2, t2,mtxMap[k2]['parentMTX2'])
-                                    // mat4.multiply(t2, mtxMap[k2]['skeletonMatrix'],t2)
-
-                                    // 오리진 위치
-                                    var t3 = [
-                                        1, 0, 0, 0,
-                                        0, 1, 0, 0,
-                                        0, 0, 1, 0,
-                                        tInterleaveBuffer['originData'][v2 * 8 + 0],
-                                        tInterleaveBuffer['originData'][v2 * 8 + 1],
-                                        tInterleaveBuffer['originData'][v2 * 8 + 2],
-                                        1
-                                    ]
-                                    mat4.multiply(t3, t3, aniInfo[k]['matrix'][0])
-
-                                    // 변형위치
-                                    var t4 = [
-                                        1, 0, 0, 0,
-                                        0, 1, 0, 0,
-                                        0, 0, 1, 0,
-                                        tInterleaveBuffer['originData'][v2 * 8 + 0],
-                                        tInterleaveBuffer['originData'][v2 * 8 + 1],
-                                        tInterleaveBuffer['originData'][v2 * 8 + 2],
-                                        1
-                                    ]
-                                    mat4.multiply(t4, t4, aniInfo[k]['matrix'][aniIndex])
-                                    // mat4.multiply(t2, t2, t3)
-                                    // mat4.scale(t2, t2, [tRadio, tRadio, tRadio])
-                                    var t4 = [
-                                        1, 0, 0, 0,
-                                        0, 1, 0, 0,
-                                        0, 0, 1, 0,
-                                        t4[12] - t3[12],
-                                        t4[13] - t3[13],
-                                        t4[14] - t3[14],
-                                        1
-                                    ]
-
-
-                                    mat4.subtract(t4, t3,)
-                                    // mat4.multiply(t2, t2, tSkel = mtxMap[k2]['skeletonMatrix'])
-                                    mat4.multiply(t2, t2, mtxMap[k2]['skeletonMatrix'])
-                                  
-                                    mat4.translate(t2, t2, mat4.getTranslation(t4,t4))
-                                    // // mat4.scale(t2, t2, [1 / total, 1 / total, 1 / total])
-
-                                    // // mtxMap[k2]['inversePose']
-                                    // mat4.multiply(t2, t2, t4)
-
-                                    t1[0] += t2[12] * tRadio
-                                    t1[1] += t2[13] * tRadio
-                                    t1[2] += t2[14] * tRadio
-                                    // break
-                                }
-                            }
-                            tInterleaveBuffer['data'][v2 * 8 + 0] = t1[0]
-                            tInterleaveBuffer['data'][v2 * 8 + 1] = t1[1]
-                            tInterleaveBuffer['data'][v2 * 8 + 2] = t1[2]
+                            //     var tRadio = controllerInfo2['parsedVertexJointWeights'][k][k2]
+                          
+                            //     // mat4.multiply(t2, t2,mtxMap[k2]['inversePose'])
+                              
+                            //     mat4.multiply(t2, mtxMap[k2]['skeletonMatrix'],t2)
+                                
+                            //     // mat4.multiply(t2, t2,mtxMap[k2]['bindShapeMatrix'])
+                                
+                                
+                            //     // mtxMap[k2]['inversePose']
+                            
+                            //     t1[0] += t2[12] * tRadio
+                            //     t1[1] += t2[13]  * tRadio 
+                            //     t1[2] += t2[14] * tRadio
+                               
+                            //     // break
+                            // }
+                            // tInterleaveBuffer['data'][v2 * 8 + 0] = t1[0]
+                            // tInterleaveBuffer['data'][v2 * 8 + 1] = t1[1]/2
+                            // tInterleaveBuffer['data'][v2 * 8 + 2] = t1[2]
 
                         })
                         if (k > maxttt) maxttt = k
                     }
+                    // console.log('maxttt', maxttt)
+                    // t_indexDataIndex.forEach(function (v, index) {
+                    //     // var targetList = idxMap[v]
+                    //     // var t = (time)/100
+                    //     // targetList.forEach(function (v2) {
+                    //     //     tInterleaveBuffer['data'][v2 * 8 + 0] += Math.sin(t)/10
+                    //     //     tInterleaveBuffer['data'][v2 * 8 + 1] += Math.sin(t)/10
+                    //     //     tInterleaveBuffer['data'][v2 * 8 + 2] += Math.sin(t)/10
+                    //     // })
+                    //     // 생성된 포인트 위치들
+                    //     // console.log(tList)
+                    // })
+                    // controllerInfo2['parsedVertexJointWeights'].forEach(function (v, index) {
+                    //     // 생성된 인덱스들을 알수 있다. 
+
+
+
+                    // })
+
+                    /*
+                     이렇다는것은 조인트 웨이트 기반에서
+                     뼈대 가중치를 원본 포인트에 해당하는 뼈대 가중치들을 얻을수 있으며..
+                     원본 인덱스를 기준으로...
+                     생성된 포인트들의 위치를 알수 있다. 
+                     생성된 위치의 데이터를.... 가중치 합산으로 구해준다.
+                     
+                     */
+
+
 
                     tResultMesh['geometry']['interleaveBuffer'].upload(tInterleaveBuffer['data'])
                     aniIndex++
-
                     if (aniMax == aniIndex) aniIndex = 0
                 }, 16)
             })
