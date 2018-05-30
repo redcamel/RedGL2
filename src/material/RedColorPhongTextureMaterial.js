@@ -112,8 +112,7 @@ var RedColorPhongTextureMaterial;
         var vSource, fSource;
         var PROGRAM_NAME;
         vSource = function () {
-            /*
-            
+            /* @preserve
             uniform vec4 uColor;
             varying vec4 vColor;
             uniform sampler2D uDisplacementTexture;
@@ -131,7 +130,7 @@ var RedColorPhongTextureMaterial;
             */
         }
         fSource = function () {
-            /*
+            /* @preserve
             precision mediump float;
             uniform sampler2D uNormalTexture;
             uniform sampler2D uSpecularTexture;

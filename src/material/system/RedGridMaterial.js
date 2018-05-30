@@ -35,7 +35,7 @@ var RedGridMaterial;
         var vSource, fSource;
         var PROGRAM_NAME;
         vSource = function () {
-            /*
+            /* @preserve
             varying vec4 vColor;
             void main(void) {
                 vColor = aVertexColor;
@@ -44,7 +44,7 @@ var RedGridMaterial;
             */
         }
         fSource = function () {
-            /*
+            /* @preserve
             precision mediump float;
             float fogFactor(float perspectiveFar, float density){
                 float flog_cord = gl_FragCoord.z / gl_FragCoord.w / perspectiveFar;

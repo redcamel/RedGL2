@@ -22,7 +22,7 @@ var RedMaterial;
         var vSource, fSource;
         var PROGRAM_NAME;
         vSource = function () {
-            /*      
+            /* @preserve
             varying vec4 vColor;
             uniform float uFloatTest;
             uniform float uFloatTest2[10];
@@ -46,7 +46,7 @@ var RedMaterial;
             */
         }
         fSource = function () {
-            /*
+            /* @preserve
             precision mediump float;
             varying vec4 vColor;
             void main(void) {

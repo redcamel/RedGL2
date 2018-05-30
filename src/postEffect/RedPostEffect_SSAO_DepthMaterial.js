@@ -37,7 +37,7 @@ var RedPostEffect_SSAO_DepthMaterial;
         var vSource, fSource;
         var PROGRAM_NAME;
         vSource = function () {
-            /*
+            /* @preserve
             varying vec3 vCameraPosition;
   
             mat4 calSprite3D(mat4 cameraMTX, mat4 mvMatrix){
@@ -71,7 +71,7 @@ var RedPostEffect_SSAO_DepthMaterial;
             */
         }
         fSource = function () {
-            /*
+            /* @preserve
             precision mediump float;
             varying vec3 vCameraPosition;
             uniform float uFocusLength;

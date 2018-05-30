@@ -49,7 +49,7 @@ var RedBitmapMaterial;
         var vSource, fSource;
         var PROGRAM_NAME;
         vSource = function () {
-            /*
+            /* @preserve
             mat4 calSprite3D(mat4 cameraMTX, mat4 mvMatrix){
                 mat4 cacheScale = mat4(
                     mvMatrix[0][0], 0.0, 0.0, 0.0, 
@@ -78,7 +78,7 @@ var RedBitmapMaterial;
             */
         }
         fSource = function () {
-            /*
+            /* @preserve
             precision mediump float;
             uniform sampler2D uDiffuseTexture;
             float fogFactor(float perspectiveFar, float density){

@@ -55,13 +55,13 @@ var RedColorMaterial;
         var vSource, fSource;
         var PROGRAM_NAME;
         vSource = function () {
-            /*
+            /* @preserve
             mat4 calSprite3D(mat4 cameraMTX, mat4 mvMatrix){
                 mat4 cacheScale = mat4(
-                    mvMatrix[0][0], 0.0, 0.0, 0.0, 
-                    0.0, mvMatrix[1][1], 0.0, 0.0, 
-                    0.0, 0.0, 1.0, mvMatrix[2][2], 
-                    0.0, 0.0, 0.0, 1.0 
+                    mvMatrix[0][0], 0.0, 0.0, 0.0,
+                    0.0, mvMatrix[1][1], 0.0, 0.0,
+                    0.0, 0.0, 1.0, mvMatrix[2][2],
+                    0.0, 0.0, 0.0, 1.0
                 );
                 mat4 tMTX = cameraMTX * mvMatrix;
                 tMTX[0][0] = 1.0, tMTX[0][1] = 0.0, tMTX[0][2] = 0.0,
@@ -72,7 +72,7 @@ var RedColorMaterial;
             uniform vec4 uColor;
             varying vec4 vColor;
             void main(void) {
-                vColor = uColor; 
+                vColor = uColor;
                 gl_PointSize = uPointSize;
                 if(uSprite3DYn) {
                     gl_Position = uPMatrix * calSprite3D(uCameraMatrix , uMMatrix) *  vec4(aVertexPosition, 1.0);
@@ -86,7 +86,7 @@ var RedColorMaterial;
             */
         }
         fSource = function () {
-            /*
+            /* @preserve
             precision mediump float;
             varying vec4 vColor;
             float fogFactor(float perspectiveFar, float density){

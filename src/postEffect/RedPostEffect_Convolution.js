@@ -70,7 +70,7 @@ var RedPostEffect_Convolution;
         var vSource, fSource;
         var PROGRAM_NAME;
         vSource = function () {
-            /*
+            /* @preserve
             void main(void) {
                 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
                 vResolution = uResolution;
@@ -79,7 +79,7 @@ var RedPostEffect_Convolution;
             */
         }
         fSource = function () {
-            /*
+            /* @preserve
             precision mediump float;
             uniform sampler2D uDiffuseTexture;    
             uniform mat3 uKernel;  

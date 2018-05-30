@@ -71,7 +71,7 @@ var RedPostEffect_ZoomBlur;
         var vSource, fSource;
         var PROGRAM_NAME;
         vSource = function () {
-            /*
+            /* @preserve
             void main(void) {
                 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
                 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
@@ -79,7 +79,7 @@ var RedPostEffect_ZoomBlur;
             */
         }
         fSource = function () {
-            /*
+            /* @preserve
             precision mediump float;
             uniform sampler2D uDiffuseTexture;      
             uniform float uCenterX;

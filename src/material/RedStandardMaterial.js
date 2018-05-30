@@ -112,7 +112,7 @@ var RedStandardMaterial;
         var vSource, fSource;
         var PROGRAM_NAME;
         vSource = function () {
-            /*
+            /* @preserve
             uniform sampler2D uDisplacementTexture;
             uniform float uDisplacementPower;
             
@@ -129,7 +129,7 @@ var RedStandardMaterial;
             */
         }
         fSource = function () {
-            /*
+            /* @preserve
             precision mediump float;
             uniform sampler2D uDiffuseTexture;
             uniform sampler2D uNormalTexture;

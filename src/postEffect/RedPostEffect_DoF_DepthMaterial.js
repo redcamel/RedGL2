@@ -38,7 +38,7 @@ var RedPostEffect_DoF_DepthMaterial;
         var vSource, fSource;
         var PROGRAM_NAME;
         vSource = function () {
-            /*
+            /* @preserve
             mat4 calSprite3D(mat4 cameraMTX, mat4 mvMatrix){
                 mat4 cacheScale = mat4(
                         mvMatrix[0][0], 0.0, 0.0, 0.0, 
@@ -67,7 +67,7 @@ var RedPostEffect_DoF_DepthMaterial;
             */
         }
         fSource = function () {
-            /*
+            /* @preserve
             precision mediump float;
             uniform float uFocusLength;
            

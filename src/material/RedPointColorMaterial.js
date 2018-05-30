@@ -34,7 +34,7 @@ var RedPointColorMaterial;
         var vSource, fSource;
         var PROGRAM_NAME;
         vSource = function () {
-            /*
+            /* @preserve
             varying vec4 vColor;
             void main(void) {
                 gl_PointSize = aPointSize;
@@ -44,7 +44,7 @@ var RedPointColorMaterial;
             */
         }
         fSource = function () {
-            /*
+            /* @preserve
             precision mediump float;
             varying vec4 vColor;
             float fogFactor(float perspectiveFar, float density){

@@ -26,7 +26,7 @@ var RedPostEffect_FXAA;
         // 일반 프로퍼티
         this['program'] = makeProgram(this, redGL);
         this['_UUID'] = RedGL['makeUUID']();
-      
+
         this.updateTexture = function (lastFrameBufferTexture) {
             this['diffuseTexture'] = lastFrameBufferTexture;
         }
@@ -39,7 +39,7 @@ var RedPostEffect_FXAA;
         var vSource, fSource;
         var PROGRAM_NAME;
         vSource = function () {
-            /*
+            /* @preserve
             void main(void) {
                 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
                 vResolution = uResolution;
@@ -48,9 +48,9 @@ var RedPostEffect_FXAA;
             */
         }
         fSource = function () {
-            /*
+            /* @preserve
             precision mediump float;
-            uniform sampler2D uDiffuseTexture;     
+            uniform sampler2D uDiffuseTexture;
             const float FXAA_REDUCE_MIN = 1.0/ 128.0;
             const float FXAA_REDUCE_MUL = 1.0 / 8.0;
             const float FXAA_SPAN_MAX = 8.0;
@@ -80,10 +80,10 @@ var RedPostEffect_FXAA;
 
                 float rcpDirMin = 1.0 / (min(abs(dir.x), abs(dir.y)) + dirReduce);
                 dir = min(
-                    vec2(FXAA_SPAN_MAX, FXAA_SPAN_MAX), 
+                    vec2(FXAA_SPAN_MAX, FXAA_SPAN_MAX),
                     max( vec2(-FXAA_SPAN_MAX, -FXAA_SPAN_MAX), dir * rcpDirMin)
                 ) * inverseVP;
-                    
+
                 vec3 rgbA = 0.5 * (
                     texture2D(uDiffuseTexture, fragCoord * inverseVP + dir * (1.0 / 3.0 - 0.5)).xyz +
                     texture2D(uDiffuseTexture, fragCoord * inverseVP + dir * (2.0 / 3.0 - 0.5)).xyz

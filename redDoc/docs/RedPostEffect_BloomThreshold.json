@@ -2,7 +2,7 @@
   {
     "constructorYn": true,
     "title": "RedPostEffect_BloomThreshold",
-    "description": "\n    RedPostEffect_BloomThreshold Instance 생성.\n",
+    "description": "\nRedPostEffect_BloomThreshold Instance 생성.\n",
     "params": {
       "redGL": [
         {
@@ -14,7 +14,7 @@
   },
   {
     "title": "threshold",
-    "description": "\n    최소 유효값\n    기본값 : 0.24\n",
+    "description": "\n최소 유효값\n기본값 : 0.24\n",
     "return": "Number"
   }
 ]

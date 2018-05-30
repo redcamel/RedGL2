@@ -99,7 +99,7 @@ var RedPostEffect_DoF;
         var vSource, fSource;
         var PROGRAM_NAME;
         vSource = function () {
-            /*
+            /* @preserve
             
             void main(void) {
                 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
@@ -109,7 +109,7 @@ var RedPostEffect_DoF;
             */
         }
         fSource = function () {
-            /*
+            /* @preserve
             precision mediump float;
             uniform sampler2D uDiffuseTexture;     
             uniform sampler2D uBlurTexture;    

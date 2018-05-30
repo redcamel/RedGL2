@@ -60,7 +60,7 @@ var RedPostEffect_Pixelize;
         var vSource, fSource;
         var PROGRAM_NAME;
         vSource = function () {
-            /*
+            /* @preserve
             void main(void) {
                 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
                 vResolution = uResolution;
@@ -69,7 +69,7 @@ var RedPostEffect_Pixelize;
             */
         }
         fSource = function () {
-            /*
+            /* @preserve
             precision mediump float;
             uniform sampler2D uDiffuseTexture;
             uniform float uWidth;

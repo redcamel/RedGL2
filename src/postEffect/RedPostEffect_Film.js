@@ -82,7 +82,7 @@ var RedPostEffect_Film;
         var vSource, fSource;
         var PROGRAM_NAME;
         vSource = function () {
-            /*
+            /* @preserve
             void main(void) {             
                 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
                 vTime = uTime;
@@ -91,7 +91,7 @@ var RedPostEffect_Film;
             */
         }
         fSource = function () {
-            /*
+            /* @preserve
             precision mediump float;
             uniform bool uGrayMode;
             uniform sampler2D uDiffuseTexture;     

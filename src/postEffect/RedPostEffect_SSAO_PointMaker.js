@@ -53,7 +53,7 @@ var RedPostEffect_SSAO_PointMaker;
         var vSource, fSource;
         var PROGRAM_NAME;
         vSource = function () {
-            /*
+            /* @preserve
          
             void main(void) {
                 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
@@ -65,7 +65,7 @@ var RedPostEffect_SSAO_PointMaker;
             */
         }
         fSource = function () {
-            /*
+            /* @preserve
             precision mediump float;
     
         

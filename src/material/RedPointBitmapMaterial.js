@@ -56,7 +56,7 @@ var RedPointBitmapMaterial;
         var vSource, fSource;
         var PROGRAM_NAME;
         vSource = function () {
-            /*
+            /* @preserve
             void main(void) {
                 gl_PointSize = aPointSize;
                 gl_Position = uPMatrix * uCameraMatrix* uMMatrix * vec4(aVertexPosition, 1.0);
@@ -64,7 +64,7 @@ var RedPointBitmapMaterial;
             */
         }
         fSource = function () {
-            /*
+            /* @preserve
             precision mediump float;
             uniform sampler2D uDiffuseTexture;
             uniform float uAlphaTest;

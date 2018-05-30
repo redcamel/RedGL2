@@ -52,7 +52,7 @@ var RedSkyBoxMaterial;
         var vSource, fSource;
         var PROGRAM_NAME;
         vSource = function () {
-            /*
+            /* @preserve
             varying vec3 vReflectionCubeCoord;
             void main(void) {
                 vReflectionCubeCoord = (uMMatrix *vec4(-aVertexPosition, 0.0)).xyz;
@@ -61,7 +61,7 @@ var RedSkyBoxMaterial;
             */
         }
         fSource = function () {
-            /*
+            /* @preserve
             precision mediump float;
             uniform samplerCube uSkyboxTexture;
             

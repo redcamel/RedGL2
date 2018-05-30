@@ -64,8 +64,7 @@ var RedColorPhongMaterial;
         var vSource, fSource;
         var PROGRAM_NAME;
         vSource = function () {
-            /*
-            
+            /* @preserve
             uniform vec4 uColor;
             varying vec4 vColor;
 
@@ -80,7 +79,7 @@ var RedColorPhongMaterial;
             */
         }
         fSource = function () {
-            /*
+            /* @preserve
             precision mediump float;
             
             uniform float uShininess;

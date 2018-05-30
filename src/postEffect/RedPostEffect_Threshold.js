@@ -49,7 +49,7 @@ var RedPostEffect_Threshold;
         var vSource, fSource;
         var PROGRAM_NAME;
         vSource = function () {
-            /*
+            /* @preserve
             void main(void) {
                 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
                 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
@@ -57,7 +57,7 @@ var RedPostEffect_Threshold;
             */
         }
         fSource = function () {
-            /*
+            /* @preserve
             precision highp float;
             uniform sampler2D uDiffuseTexture;     
             uniform float uThreshold;

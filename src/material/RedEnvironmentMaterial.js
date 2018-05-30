@@ -145,7 +145,7 @@ var RedEnvironmentMaterial;
         var vSource, fSource;
         var PROGRAM_NAME;
         vSource = function () {
-            /*
+            /* @preserve
             varying vec4 vVertexPositionEye4;
             varying vec3 vReflectionCubeCoord;
             uniform sampler2D uDisplacementTexture;
@@ -165,7 +165,7 @@ var RedEnvironmentMaterial;
             */
         }
         fSource = function () {
-            /*
+            /* @preserve
             precision mediump float;
             uniform sampler2D uDiffuseTexture;
             uniform sampler2D uNormalTexture;
