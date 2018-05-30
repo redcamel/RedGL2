@@ -43,7 +43,8 @@ RedGL(document.createElement('canvas'), function (v) {
 					unit.run(false)
 				}
 			}, true)
-		), redGroup(
+		),
+		redGroup(
 			"쉐이더 타입 확인",
 			redTest("쉐이더 타입 확인 : type과 다른 형식의 소스가 들어왔을때 vertexShaderType + fragmentSource", function (unit) {
 				var fSource;
@@ -119,6 +120,47 @@ RedGL(document.createElement('canvas'), function (v) {
 					unit.run(false)
 				}
 			}, false)
+		),
+		redGroup(
+			"유니폼 체크 확인",
+			redTest("유니폼 이름 형식 확인 : 유니폼은 uXxxxx형태로 선언되어야함. - 실패테스트( uniform vec3 test; )", function (unit) {
+				var vSource;
+				vSource = function () {
+					/* @preserve
+					 uniform vec3 test;
+					 void main(void) {
+					 gl_Position = vec4(1.0);
+					 }
+					 */
+				}
+				vSource = RedGLUtil.getStrFromComment(vSource.toString());
+				try {
+					RedShader(tRedGL, 'testShader' + RedGL.makeUUID(), RedShader.VERTEX, vSource);
+					unit.run(true)
+				} catch (error) {
+					console.log(error)
+					unit.run(false)
+				}
+			}, false),
+			redTest("유니폼 이름 형식 확인 : 유니폼은 uXxxxx형태로 선언되어야함. - 성공테스트( uniform vec3 utest; )", function (unit) {
+				var vSource;
+				vSource = function () {
+					/* @preserve
+					 uniform vec3 utest;
+					 void main(void) {
+					 gl_Position = vec4(1.0);
+					 }
+					 */
+				}
+				vSource = RedGLUtil.getStrFromComment(vSource.toString());
+				try {
+					RedShader(tRedGL, 'testShader' + RedGL.makeUUID(), RedShader.VERTEX, vSource);
+					unit.run(true)
+				} catch (error) {
+					console.log(error)
+					unit.run(false)
+				}
+			}, true)
 		)
 	)
 })
