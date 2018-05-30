@@ -38,14 +38,15 @@ var RedView;
 	 :DOC*/
 	RedView = function (key, scene, camera) {
 		if (ViewMap[key]) {
-			if (scene || camera) RedGLUtil.throwFunc(key, '는 이미 생성된 RedView key입니다.')
+			if (scene || camera) RedGLUtil.throwFunc('RedView : ' + key, '는 이미 생성된 RedView key입니다.', '입력값 : ' + key)
 			else return ViewMap[key]
 		}
 		if (!(this instanceof RedView)) return new RedView(key, scene, camera);
-		if (!(typeof key == 'string')) RedGLUtil.throwFunc('RedView : key : 문자열만 허용')
-		if (!scene && !camera) RedGLUtil.throwFunc('RedView : 존재하지 않는 key입니다.')
-		if (scene && !(scene instanceof RedScene)) RedGLUtil.throwFunc('RedView : RedScene Instance만 허용')
-		if (!camera) RedGLUtil.throwFunc('RedView : RedCamera or XXController Instance만 허용')
+		if (!(typeof key == 'string')) RedGLUtil.throwFunc('RedView : key : 문자열만 허용', '입력값 : ' + key)
+		if (!scene && !camera) RedGLUtil.throwFunc('RedView : 존재하지 않는 key입니다.', '입력값 : ' + key)
+		if (scene && !(scene instanceof RedScene)) RedGLUtil.throwFunc('RedView : RedScene Instance만 허용', '입력값 : ' + scene)
+		//TODO: 카메라 컨트롤러 벨리데이션 어쩔껀지 결정해야함
+		if (!camera) RedGLUtil.throwFunc('RedView : RedCamera or XXController Instance만 허용', '입력값 : ' + camera)
 		else {
 			if (
 				!(camera instanceof RedCamera)
@@ -79,14 +80,13 @@ var RedView;
 		 }
 		 :DOC*/
 		this['camera'] = camera;
-
 		this['_width'] = '100%';
 		this['_height'] = '100%';
 		this['_x'] = 0;
 		this['_y'] = 0;
-		this['_viewRect'] = [0, 0, 0, 0]
+		this['_viewRect'] = [0, 0, 0, 0];
 		ViewMap[key] = this;
-		Object.seal(this)
+		console.log(this);
 	};
 	RedView.prototype = {
 		/**DOC:

@@ -60,7 +60,7 @@ var RedScene;
 				}
 			}
 		})());
-		if (backgroundColor) this['backgroundColor'] = backgroundColor;
+		this['backgroundColor'] = backgroundColor ? backgroundColor : '#000000';
 
 		/**DOC:
 		 {

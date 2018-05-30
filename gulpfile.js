@@ -10,6 +10,7 @@ var d = dt.toFormat('YYYY-MM-DD HH24:MI:SS');
 var fs = require('fs')
 var rename = require("gulp-rename");
 var replace = require('gulp-string-replace');
+var name = "RedGL"
 /////////////////////////////////////////////////////////////
 var transformString = function (s) {
 	var reg = /\/\*\*DOC\:[\s\S]+?\:\DOC\*\//g;
@@ -165,10 +166,8 @@ gulp.task('make-doc', function () {
 		}))
 		.pipe(gulp.dest('redDoc/docs'))
 });
+
 gulp.task('combine-js', function () {
-	console.log('-------------------------------------------');
-	console.log('파일 병합 시작!');
-	var name = "RedGL"
 	gulp.src([
 		"src/gl-matrix-min.js",
 		"src/RedGLUtil.js",
@@ -269,16 +268,17 @@ gulp.task('combine-js', function () {
 		.pipe(uglify(
 			{
 				output: {
-					beautify: false,
 					comments: /^!|@preserve|@license|@cc_on/i
 				}
 			}
 		))
 		.pipe(replace(/\n\s{2,}/g, '\n'))
-		.pipe(replace(/\@preserve/g, ''))
 		.pipe(gulp.dest('release'))
 		.pipe(insert.append("console.log('" + 'RedGL' + " Release. last update(" + d + ")'" + ");"))
 		.pipe(gulp.dest('release'))
+	console.log('-------------------------------------------');
+	console.log('파일 병합 시작!');
+
 
 
 });
