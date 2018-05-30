@@ -1,13 +1,13 @@
 [
   {
     "title": "drawMode",
-    "description": "\n    기본값 : gl.LINES\n",
+    "description": "\n기본값 : gl.LINES\n",
     "return": "gl 상수"
   },
   {
     "constructorYn": true,
     "title": "RedGrid",
-    "description": "\n    RedGrid Instance 생성기\n",
+    "description": "\nRedGrid Instance 생성기\n",
     "params": {
       "redGL": [
         {
@@ -27,7 +27,7 @@
         "격자 수"
       ]
     },
-    "example": "\n    var tScene;\n    tScene = RedScene();\n    tScene['grid'] = RedGrid(redGL Instance)\n",
+    "example": "\nvar tScene;\ntScene = RedScene();\ntScene['grid'] = RedGrid(redGL Instance)\n",
     "return": "RedGrid Instance"
   },
   {

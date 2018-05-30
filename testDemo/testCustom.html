@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>testCustom</title>
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
     />
     <style>
         html,
@@ -48,7 +49,8 @@
     <script src="../src/material/RedStandardMaterial.js"></script>
     <script src="../src/material/system/RedGridMaterial.js"></script>
     <script src="../src/material/RedPointColorMaterial.js"></script>
-    <script src="../src/material/system/RedSkyBoxMaterial.js"></script>     <script src="../src/material/system/RedPostEffectMaterial.js"></script>
+    <script src="../src/material/system/RedSkyBoxMaterial.js"></script>
+    <script src="../src/material/system/RedPostEffectMaterial.js"></script>
 
     <script src="../src/object3D/RedAxis.js"></script>
     <script src="../src/object3D/RedGrid.js"></script>
@@ -63,9 +65,9 @@
     <script src="../src/postEffect/RedPostEffect_Convolution.js"></script>
     <script src="../src/postEffect/RedPostEffect_Invert.js"></script>
     <script src="../src/postEffect/RedPostEffect_Gray.js"></script>
-    <script src="../src/postEffect/RedPostEffect_HueSaturation.js"></script>    
-    <script src="../src/postEffect/RedPostEffect_BrightnessContrast.js"></script>    
-    <script src="../src/postEffect/RedPostEffect_Vignetting.js"></script>        
+    <script src="../src/postEffect/RedPostEffect_HueSaturation.js"></script>
+    <script src="../src/postEffect/RedPostEffect_BrightnessContrast.js"></script>
+    <script src="../src/postEffect/RedPostEffect_Vignetting.js"></script>
     <script src="../src/postEffect/RedPostEffect_Pixelize.js"></script>
     <script src="../src/postEffect/RedPostEffect_ZoomBlur.js"></script>
     <script src="../src/postEffect/RedPostEffect_HalfTone.js"></script>
@@ -96,87 +98,86 @@
 </head>
 
 <body>
-    <canvas id="test" style="border: none;background:red"></canvas>
-    <script>
-        var t = document.getElementById('test')
-        document.body.appendChild(t)
-        RedGL(t, function (v) {
-            var tGL;
-            var tWorld, tScene3D, tCamera
-            var tRenderer;
-            var self;
-            self = this
-            tGL = this.gl;
-            this.world = tWorld = RedWorld();
-            tScene3D = RedScene(this,'#223344');
-            tScene3D.alpha = 0.1
+<canvas id="test" style="border: none;background:red"></canvas>
+<script>
+	var t = document.getElementById('test')
+	document.body.appendChild(t)
+	RedGL(t, function (v) {
+		var tGL;
+		var tWorld, tScene3D, tCamera
+		var tRenderer;
+		var self;
+		self = this
+		tGL = this.gl;
+		this.world = tWorld = RedWorld();
+		tScene3D = RedScene(this, '#223344');
+		tScene3D.alpha = 0.1
 
-            tCamera = RedCamera()
-            tCamera.y = 10
-            tCamera.z = 10
-            tCamera.lookAt(0, 0, 0)
+		tCamera = RedCamera()
+		tCamera.y = 10
+		tCamera.z = 10
+		tCamera.lookAt(0, 0, 0)
 
-            tRenderer = RedRenderer();
-            tWorld.addView(RedView('test', tScene3D, tCamera));
-
-
-            var testMaterial
-            testMaterial = RedMaterial(this)
-
-            var interleaveData, interleaveData2
-            interleaveData = []
-
-            var i = 1000000
-            while (i--) {
-                var t = Math.random() * 100 - 50
-                interleaveData.push(Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50)
-                interleaveData.push(Math.random() * 2)
-                interleaveData.push(Math.random(), Math.random(), Math.random(), 1)
-            }
-            interleaveData = new Float32Array(interleaveData)
-            var testInterleaveBuffer
-            testInterleaveBuffer = RedBuffer(
-                this,
-                'testInterleaveBuffer',
-                interleaveData,
-                RedBuffer.ARRAY_BUFFER, [
-                    RedInterleaveInfo('aVertexPosition', 3),
-                    RedInterleaveInfo('aPointSize', 1),
-                    RedInterleaveInfo('aVertexColor', 4)
-                ]
-            )
-            var geometry
-            geometry = RedGeometry(testInterleaveBuffer)
-
-            var testMesh
-            var i = 1;
-            var len = i
-            tScene3D['grid'] = RedGrid(self)
-            testMesh = RedMesh(this, geometry, testMaterial)
-            testMesh.drawMode = this.gl.POINTS
-            // if(Math.random() >0.8) testMesh.drawMode = this.gl.LINE_LOOP
-
-            tScene3D.addChild(testMesh)
-
-            tRenderer.renderDebuger.visible = true
-
-            tRenderer.start(this, function (time) {
-
-                tCamera.x = Math.sin(time / 1500) * 30
-                tCamera.y = Math.cos(time / 1500) * 30
-                if (tCamera.y < 1) tCamera.y = 1
-                tCamera.z = Math.cos(time / 1500) * 30 + Math.sin(time / 1500) * 30
+		tRenderer = RedRenderer();
+		tWorld.addView(RedView('test', tScene3D, tCamera));
 
 
-                tCamera.lookAt(0, 0, 0)
+		var testMaterial
+		testMaterial = RedMaterial(this)
+
+		var interleaveData, interleaveData2
+		interleaveData = []
+
+		var i = 1000000
+		while (i--) {
+			var t = Math.random() * 100 - 50
+			interleaveData.push(Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50)
+			interleaveData.push(Math.random() * 2)
+			interleaveData.push(Math.random(), Math.random(), Math.random(), 1)
+		}
+		interleaveData = new Float32Array(interleaveData)
+		var testInterleaveBuffer
+		testInterleaveBuffer = RedBuffer(
+			this,
+			'testInterleaveBuffer',
+			interleaveData,
+			RedBuffer.ARRAY_BUFFER, [
+				RedInterleaveInfo('aVertexPosition', 3),
+				RedInterleaveInfo('aPointSize', 1),
+				RedInterleaveInfo('aVertexColor', 4)
+			]
+		)
+		var geometry
+		geometry = RedGeometry(testInterleaveBuffer)
+
+		var testMesh
+		var i = 1;
+		var len = i
+		tScene3D['grid'] = RedGrid(self)
+		testMesh = RedMesh(this, geometry, testMaterial)
+		testMesh.drawMode = this.gl.POINTS
+		// if(Math.random() >0.8) testMesh.drawMode = this.gl.LINE_LOOP
+
+		tScene3D.addChild(testMesh)
+
+		tRenderer.renderDebuger.visible = true
+
+		tRenderer.start(this, function (time) {
+
+			tCamera.x = Math.sin(time / 1500) * 30
+			tCamera.y = Math.cos(time / 1500) * 30
+			if (tCamera.y < 1) tCamera.y = 1
+			tCamera.z = Math.cos(time / 1500) * 30 + Math.sin(time / 1500) * 30
 
 
+			tCamera.lookAt(0, 0, 0)
 
-            })
 
-            console.log(tScene3D)
-        })
-    </script>
+		})
+
+		console.log(tScene3D)
+	})
+</script>
 </body>
 
 </html>

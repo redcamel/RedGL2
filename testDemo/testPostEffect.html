@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>RedOBJLoader</title>
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
     />
     <style>
         html,
@@ -49,7 +50,8 @@
     <script src="../src/material/RedStandardMaterial.js"></script>
     <script src="../src/material/system/RedGridMaterial.js"></script>
     <script src="../src/material/RedPointColorMaterial.js"></script>
-    <script src="../src/material/system/RedSkyBoxMaterial.js"></script>     <script src="../src/material/system/RedPostEffectMaterial.js"></script>
+    <script src="../src/material/system/RedSkyBoxMaterial.js"></script>
+    <script src="../src/material/system/RedPostEffectMaterial.js"></script>
 
     <script src="../src/object3D/RedAxis.js"></script>
     <script src="../src/object3D/RedGrid.js"></script>
@@ -72,7 +74,7 @@
     <script src="../src/postEffect/RedPostEffect_Film.js"></script>
     <script src="../src/postEffect/RedPostEffect_Invert.js"></script>
     <script src="../src/postEffect/RedPostEffect_Gray.js"></script>
-    
+
     <script src="../src/postEffect/RedPostEffect_HueSaturation.js"></script>
     <script src="../src/postEffect/RedPostEffect_BrightnessContrast.js"></script>
     <script src="../src/postEffect/RedPostEffect_Vignetting.js"></script>
@@ -110,148 +112,147 @@
 </head>
 
 <body>
-    <canvas id="test" style="border: none;background:red"></canvas>
-    <script>
-        document.getElementById('test')
-        RedGL(document.getElementById('test'), function (v) {
+<canvas id="test" style="border: none;background:red"></canvas>
+<script>
+	document.getElementById('test')
+	RedGL(document.getElementById('test'), function (v) {
 
-            console.log(v)
-            var tGL;
-            var tWorld, tScene3D, tCamera
-            var tRenderer;
-            var self;
-            self = this
-            tGL = this.gl;
-            this.world = tWorld = RedWorld();
-            tScene3D = RedScene(this);
+		console.log(v)
+		var tGL;
+		var tWorld, tScene3D, tCamera
+		var tRenderer;
+		var self;
+		self = this
+		tGL = this.gl;
+		this.world = tWorld = RedWorld();
+		tScene3D = RedScene(this);
 
-            // tScene3D['useFog'] = true
+		// tScene3D['useFog'] = true
 
-            tCamera = RedObitController(this);
-            tCamera.tilt = -45
-            tRenderer = RedRenderer();
-            tWorld.addView(RedView('test', tScene3D, tCamera));
-            RedView('test').setSize('100%', '100%')
-            RedView('test').setLocation('0%', '0%')
-            this.renderScale = 1
+		tCamera = RedObitController(this);
+		tCamera.tilt = -45
+		tRenderer = RedRenderer();
+		tWorld.addView(RedView('test', tScene3D, tCamera));
+		RedView('test').setSize('100%', '100%')
+		RedView('test').setLocation('0%', '0%')
+		this.renderScale = 1
 
-            var testDLight, testALight, testPLight;
-            testDLight = RedDirectionalLight(this)
-            testDLight.x = 3
-            testDLight.y = 2
-            testDLight.z = 3
-            testDLight.debug = true
-            tScene3D.addLight(testDLight)
-
-
-            // tScene3D['postEffectManager'].addEffect(RedPostEffect_Invert(this))
-            // tScene3D['postEffectManager'].addEffect(RedPostEffect_Blur(this))
-            // tScene3D['postEffectManager'].addEffect(RedPostEffect_Gray(this))
-            // tScene3D['postEffectManager'].addEffect(RedPostEffect_Pixelize(this))
-
-            // tScene3D['postEffectManager'].addEffect(RedPostEffect_Convolution(this,RedPostEffect_Convolution['EMBOSS']))
-            // tScene3D['postEffectManager'].addEffect(RedPostEffect_BlurX(this))
-            // tScene3D['postEffectManager'].addEffect(RedPostEffect_BlurY(this))
-            var bloom = RedPostEffect_Bloom(this)
-            bloom['frameBuffer']['width'] = 1024
-            bloom['frameBuffer']['height'] = 1024
-            tScene3D['postEffectManager'].addEffect(bloom)
-
-            var film = RedPostEffect_Film(this)
-            bloom['frameBuffer']['width'] = 2048
-            bloom['frameBuffer']['height'] = 2048
-            // tScene3D['postEffectManager'].addEffect(film)
-            // tScene3D['postEffectManager'].addEffect(RedPostEffect_HueSaturation(this)) 
-            // tScene3D['postEffectManager'].addEffect(RedPostEffect_Vignetting(this)) 
-            // tScene3D['postEffectManager'].addEffect(RedPostEffect_BrightnessContrast(this)) 
-            // tScene3D['postEffectManager'].addEffect(RedPostEffect_ZoomBlur(this))
-            // tScene3D['postEffectManager'].addEffect(RedPostEffect_HalfTone(this)) 
-
-            
-
-            tScene3D.skyBox =
-                RedSkyBox(this, [
-                    '../asset/cubemap/posx.png',
-                    '../asset/cubemap/negx.png',
-                    '../asset/cubemap/posy.png',
-                    '../asset/cubemap/negy.png',
-                    '../asset/cubemap/posz.png',
-                    '../asset/cubemap/negz.png'
-                ]);
-
-            // tScene3D['grid'] = RedGrid(self)
-            RedOBJLoader(this, '../asset/obj/', 'female.obj', function (v) {
-                console.log('호잇!', v)
-                var i = 1
-                while (i--) {
-                    var t0;
-                    t0 = RedMesh(self)
-                    t0['children'] = v['resultMesh']['children'].concat()
-                    t0.scaleX = t0.scaleY = t0.scaleZ = 0.03
-                    tScene3D.addChild(t0)
-
-                }
-
-                var i = 10
-                var max = 10
-                var j
-                var tMesh;
-                var tGeo = RedSphere(self, 1, 32, 32, 32)
-                var tMat = RedStandardMaterial(
-                    self,
-                    RedBitmapTexture(self, '../asset/crate.png'),
-                    RedBitmapTexture(self, '../asset/normalTest.jpg'),
-                    RedBitmapTexture(self, '../asset/brick_roughness.jpg')
-                )
-                tMat.shininess = 32
-                while (i--) {
-
-                    j = 10
-                    while (j--) {
-                        tMesh = RedMesh(self, tGeo, tMat)
-                        tMesh.x = Math.sin(Math.PI * 2 / (max - 1) * i) * j * 3
-                        tMesh.z = Math.cos(Math.PI * 2 / (max - 1) * i) * j * 3
-                        tScene3D.addChild(tMesh)
-                    }
-                }
-
-                v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.025
-
-            })
+		var testDLight, testALight, testPLight;
+		testDLight = RedDirectionalLight(this)
+		testDLight.x = 3
+		testDLight.y = 2
+		testDLight.z = 3
+		testDLight.debug = true
+		tScene3D.addLight(testDLight)
 
 
-            tRenderer.renderDebuger.visible = true
-            tRenderer.start(this, function (time) {
-                i = tScene3D.children.length
-                while (i--) {
-                    if (i == 0) break
-                    testMesh = tScene3D.children[i]
-                    testMesh.rotationX += 0.1
-                    testMesh.rotationY += 0.1
-                    testMesh.rotationZ += 0.1
-                }
+		// tScene3D['postEffectManager'].addEffect(RedPostEffect_Invert(this))
+		// tScene3D['postEffectManager'].addEffect(RedPostEffect_Blur(this))
+		// tScene3D['postEffectManager'].addEffect(RedPostEffect_Gray(this))
+		// tScene3D['postEffectManager'].addEffect(RedPostEffect_Pixelize(this))
 
-                film['scanlineCount'] = Math.sin(time/1000)/3.14 * 2048 + 2048
-            })
+		// tScene3D['postEffectManager'].addEffect(RedPostEffect_Convolution(this,RedPostEffect_Convolution['EMBOSS']))
+		// tScene3D['postEffectManager'].addEffect(RedPostEffect_BlurX(this))
+		// tScene3D['postEffectManager'].addEffect(RedPostEffect_BlurY(this))
+		var bloom = RedPostEffect_Bloom(this)
+		bloom['frameBuffer']['width'] = 1024
+		bloom['frameBuffer']['height'] = 1024
+		tScene3D['postEffectManager'].addEffect(bloom)
 
-            this['gui'] = new dat.GUI({
-                name: 'test'
-            });
-            var t0 = this['gui'].addFolder('bloom')
-            t0.add(bloom, 'exposure', 0, 2)
-            t0.add(bloom, 'bloomStrength', 0, 2)
-            t0.add(bloom, 'blur', 0, 100)
-            t0.open()
-            t0 = this['gui'].addFolder('film')
-            t0.add(film, 'scanlineIntensity', 0, 1)
-            t0.add(film, 'noiseIntensity', 0, 1)
-            t0.add(film, 'scanlineCount', 0, 4096)
-            t0.add(film, 'gray', false, true)
-            t0.open()
+		var film = RedPostEffect_Film(this)
+		bloom['frameBuffer']['width'] = 2048
+		bloom['frameBuffer']['height'] = 2048
+		// tScene3D['postEffectManager'].addEffect(film)
+		// tScene3D['postEffectManager'].addEffect(RedPostEffect_HueSaturation(this))
+		// tScene3D['postEffectManager'].addEffect(RedPostEffect_Vignetting(this))
+		// tScene3D['postEffectManager'].addEffect(RedPostEffect_BrightnessContrast(this))
+		// tScene3D['postEffectManager'].addEffect(RedPostEffect_ZoomBlur(this))
+		// tScene3D['postEffectManager'].addEffect(RedPostEffect_HalfTone(this))
 
-            console.log(tScene3D)
-        })
-    </script>
+
+		tScene3D.skyBox =
+			RedSkyBox(this, [
+				'../asset/cubemap/posx.png',
+				'../asset/cubemap/negx.png',
+				'../asset/cubemap/posy.png',
+				'../asset/cubemap/negy.png',
+				'../asset/cubemap/posz.png',
+				'../asset/cubemap/negz.png'
+			]);
+
+		// tScene3D['grid'] = RedGrid(self)
+		RedOBJLoader(this, '../asset/obj/', 'female.obj', function (v) {
+			console.log('호잇!', v)
+			var i = 1
+			while (i--) {
+				var t0;
+				t0 = RedMesh(self)
+				t0['children'] = v['resultMesh']['children'].concat()
+				t0.scaleX = t0.scaleY = t0.scaleZ = 0.03
+				tScene3D.addChild(t0)
+
+			}
+
+			var i = 10
+			var max = 10
+			var j
+			var tMesh;
+			var tGeo = RedSphere(self, 1, 32, 32, 32)
+			var tMat = RedStandardMaterial(
+				self,
+				RedBitmapTexture(self, '../asset/crate.png'),
+				RedBitmapTexture(self, '../asset/normalTest.jpg'),
+				RedBitmapTexture(self, '../asset/brick_roughness.jpg')
+			)
+			tMat.shininess = 32
+			while (i--) {
+
+				j = 10
+				while (j--) {
+					tMesh = RedMesh(self, tGeo, tMat)
+					tMesh.x = Math.sin(Math.PI * 2 / (max - 1) * i) * j * 3
+					tMesh.z = Math.cos(Math.PI * 2 / (max - 1) * i) * j * 3
+					tScene3D.addChild(tMesh)
+				}
+			}
+
+			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.025
+
+		})
+
+
+		tRenderer.renderDebuger.visible = true
+		tRenderer.start(this, function (time) {
+			i = tScene3D.children.length
+			while (i--) {
+				if (i == 0) break
+				testMesh = tScene3D.children[i]
+				testMesh.rotationX += 0.1
+				testMesh.rotationY += 0.1
+				testMesh.rotationZ += 0.1
+			}
+
+			film['scanlineCount'] = Math.sin(time / 1000) / 3.14 * 2048 + 2048
+		})
+
+		this['gui'] = new dat.GUI({
+			name: 'test'
+		});
+		var t0 = this['gui'].addFolder('bloom')
+		t0.add(bloom, 'exposure', 0, 2)
+		t0.add(bloom, 'bloomStrength', 0, 2)
+		t0.add(bloom, 'blur', 0, 100)
+		t0.open()
+		t0 = this['gui'].addFolder('film')
+		t0.add(film, 'scanlineIntensity', 0, 1)
+		t0.add(film, 'noiseIntensity', 0, 1)
+		t0.add(film, 'scanlineCount', 0, 4096)
+		t0.add(film, 'gray', false, true)
+		t0.open()
+
+		console.log(tScene3D)
+	})
+</script>
 </body>
 
 </html>

@@ -2,7 +2,7 @@
   {
     "constructorYn": true,
     "title": "RedAtlasUV",
-    "description": "\n    RedAtlasUV Instance 생성\n    시스템적으로 자동생성됨.\n",
+    "description": "\nRedAtlasUV Instance 생성\n시스템적으로 자동생성됨.\n",
     "params": {
       "redGL": [
         {

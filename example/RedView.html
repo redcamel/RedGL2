@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>RedView</title>
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
     />
     <style>
         html,
@@ -21,97 +22,97 @@
 </head>
 
 <body>
-    <canvas id="test" style="border: none;background:red"></canvas>
-    <script>
-        var testUI;
-        document.getElementById('test')
-        RedGL(document.getElementById('test'), function (v) {
-            if (v) {
-                console.log('초기화 성공!')
-                var tWorld, tRenderer;
-                var tScene, tScene2;
-                var tCamera, tCamera2;
+<canvas id="test" style="border: none;background:red"></canvas>
+<script>
+	var testUI;
+	document.getElementById('test')
+	RedGL(document.getElementById('test'), function (v) {
+		if (v) {
+			console.log('초기화 성공!')
+			var tWorld, tRenderer;
+			var tScene, tScene2;
+			var tCamera, tCamera2;
 
-                // 월드 생성
-                this['world'] = tWorld = RedWorld();
+			// 월드 생성
+			this['world'] = tWorld = RedWorld();
 
-                // 씬 생성
-                tScene = RedScene(this);
-                tScene2 = RedScene(this);
-                tScene2.setBackgroundColor('#aaffbb')
+			// 씬 생성
+			tScene = RedScene(this);
+			tScene2 = RedScene(this);
+			tScene2.backgroundColor = '#aaffbb'
 
-                // 카메라 생성
-                tCamera = RedCamera();
-                tCamera.z = 20
-                tCamera2 = RedCamera();
-                tCamera2.z = 20
+			// 카메라 생성
+			tCamera = RedCamera();
+			tCamera.z = 20
+			tCamera2 = RedCamera();
+			tCamera2.z = 20
 
-                // 렌더러 생성
-                tRenderer = RedRenderer();
+			// 렌더러 생성
+			tRenderer = RedRenderer();
 
-                // 뷰생성 및 적용
-                tWorld.addView(RedView('testView', tScene, tCamera));
-                tWorld.addView(RedView('testView2', tScene2, tCamera2));
-                RedView('testView2').setSize(200, 200)
-                RedView('testView2').setLocation(100, 100)
+			// 뷰생성 및 적용
+			tWorld.addView(RedView('testView', tScene, tCamera));
+			tWorld.addView(RedView('testView2', tScene2, tCamera2));
+			RedView('testView2').setSize(200, 200)
+			RedView('testView2').setLocation(100, 100)
 
-                // 그리드 설정
-                tScene['grid'] = RedGrid(this)
+			// 그리드 설정
+			tScene['grid'] = RedGrid(this)
 
 
-                // Box 설정
-                var tMesh;
-                var i = 100
-                while (i--) {
-                    tMesh = RedMesh(this, RedBox(this), RedColorMaterial(this))
-                    tMesh.x = Math.random() * 50 - 25
-                    tMesh.y = Math.random() * 50 - 25
-                    tMesh.z = Math.random() * 50 - 25
-                    tScene.addChild(tMesh)
+			// Box 설정
+			var tMesh;
+			var i = 100
+			while (i--) {
+				tMesh = RedMesh(this, RedBox(this), RedColorMaterial(this))
+				tMesh.x = Math.random() * 50 - 25
+				tMesh.y = Math.random() * 50 - 25
+				tMesh.z = Math.random() * 50 - 25
+				tScene.addChild(tMesh)
 
-                }
-                tMesh = RedMesh(this, RedBox(this), RedColorMaterial(this))
-                tScene2.addChild(tMesh)
+			}
+			tMesh = RedMesh(this, RedBox(this), RedColorMaterial(this))
+			tScene2.addChild(tMesh)
 
-                // 렌더시작
-                tRenderer.start(this, function (time) {
-                    var i = tScene.children.length
-                    var t0
-                    while (i--) {
-                        t0 = tScene.children[i]
-                        t0.rotationX += 1
-                        t0.rotationY += 1
-                        t0.rotationZ += 1
-                    }
-                    tCamera2.x = tCamera.x = Math.sin(time / 1500) * 10
-                    tCamera2.y = tCamera.y = Math.cos(time / 1500) * 10
-                    tCamera2.z = tCamera.z = Math.cos(time / 1500) * 15 + Math.sin(time / 1500) * 15
-                    tCamera.lookAt(0, 0, 0)
-                    tCamera2.lookAt(0, 0, 0)
-                })
+			// 렌더시작
+			tRenderer.start(this, function (time) {
+				var i = tScene.children.length
+				var t0
+				while (i--) {
+					t0 = tScene.children[i]
+					t0.rotationX += 1
+					t0.rotationY += 1
+					t0.rotationZ += 1
+				}
+				tCamera2.x = tCamera.x = Math.sin(time / 1500) * 10
+				tCamera2.y = tCamera.y = Math.cos(time / 1500) * 10
+				tCamera2.z = tCamera.z = Math.cos(time / 1500) * 15 + Math.sin(time / 1500) * 15
+				tCamera.lookAt(0, 0, 0)
+				tCamera2.lookAt(0, 0, 0)
+			})
 
-                // 렌더 디버거 활성화
-                tRenderer['renderDebuger']['visible'] = true
+			// 렌더 디버거 활성화
+			tRenderer['renderDebuger']['visible'] = true
 
-                // 
-                testUI(this, RedView('testView'), RedView('testView2'))
-            } else {
-                console.log('초기화 실패!')
-            }
-        })
-        testUI = function (redGL, view1, view2) {
-            console.log('test')
-            var gui = new baseTestUI(redGL)
-            gui.initCamera(view1['camera'])
-            gui.initScene(view1['scene']).open()
-            //
-            var gui2 = new baseTestUI(redGL)
-            gui2.initCamera(view2['camera'])
-            gui2.initScene(view2['scene']).open()
-            gui2.initView(view2).open()
+			//
+			testUI(this, RedView('testView'), RedView('testView2'))
+		} else {
+			console.log('초기화 실패!')
+		}
+	})
+	testUI = function (redGL, view1, view2) {
+		console.log('test')
+		var gui = new baseTestUI(redGL)
+		gui.initCamera(view1['camera'])
+		gui.initScene(view1['scene']).open()
+		//
+		var gui2 = new baseTestUI(redGL)
+		gui2.initCamera(view2['camera'])
+		gui2.initScene(view2['scene']).open()
+		gui2.initView(view2).open()
 
-        }
-    </script>
+	}
+</script>
 </body>
 
 </html>

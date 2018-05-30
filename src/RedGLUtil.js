@@ -88,10 +88,16 @@ var RedGLUtil;
 				return t1
 			} else RedGLUtil.throwFunc('RedGLUtil.hexToRGB : 잘못된 hex값입니다.', hex)
 		},
-		rgb2hex(red, green, blue) {
+		rgb2hex: function (red, green, blue) {
 			var rgb = blue | (green << 8) | (red << 16);
 			return '#' + (0x1000000 + rgb).toString(16).slice(1)
 		},
+		regHex: (function () {
+			var reg = /^#(?:[0-9a-fA-F]{3}){1,2}$/;
+			return function (hex) {
+				return reg.test(hex);
+			}
+		})(),
 		/**DOC:
 		 {
 			 constructorYn : true,

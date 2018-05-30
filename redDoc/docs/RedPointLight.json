@@ -1,7 +1,7 @@
 [
   {
     "title": "alpha",
-    "description": "\n    기본값 : 0.1\n",
+    "description": "\n기본값 : 0.1\n",
     "return": "Number"
   },
   {
@@ -11,7 +11,7 @@
   },
   {
     "title": "intensity",
-    "description": "\n    라이트 강도\n    기본값 : 1\n",
+    "description": "\n라이트 강도\n기본값 : 1\n",
     "return": "Number"
   },
   {
@@ -22,7 +22,7 @@
   {
     "constructorYn": true,
     "title": "RedPointLight",
-    "description": "\n    RedPointLight Instance 생성\n",
+    "description": "\nRedPointLight Instance 생성\n",
     "params": {
       "redGL": [
         {
@@ -41,7 +41,7 @@
         "알파값"
       ]
     },
-    "example": "\n    RedPointLight(RedGL Instance, hex, alpha)\n",
+    "example": "\nRedPointLight(RedGL Instance, hex, alpha)\n",
     "return": "RedPointLight Instance"
   },
   {

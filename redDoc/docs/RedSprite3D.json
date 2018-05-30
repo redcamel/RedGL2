@@ -12,7 +12,7 @@
   {
     "constructorYn": true,
     "title": "RedSprite3D",
-    "description": "\n    RedSprite3D Instance 생성기\n",
+    "description": "\nRedSprite3D Instance 생성기\n",
     "params": {
       "redGL": [
         {
@@ -25,7 +25,7 @@
         }
       ]
     },
-    "example": "\n    var tScene;\n    var tSprite3D;\n    tScene = RedScene();\n    tSprite3D = RedSprite3D(RedGL Instance, RedColorMaterial(RedGL Instance))\n    tScene.addChild(tSprite3D)\n",
+    "example": "\nvar tScene;\nvar tSprite3D;\ntScene = RedScene();\ntSprite3D = RedSprite3D(RedGL Instance, RedColorMaterial(RedGL Instance))\ntScene.addChild(tSprite3D)\n",
     "return": "RedSprite3D Instance"
   },
   {

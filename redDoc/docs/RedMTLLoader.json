@@ -2,7 +2,7 @@
   {
     "constructorYn": true,
     "title": "RedMTLResult",
-    "description": "\n    OBJ 로딩시 mtl로딩이 필요하면 자동으로 호출됨\n",
+    "description": "\nOBJ 로딩시 mtl로딩이 필요하면 자동으로 호출됨\n",
     "params": {
       "redGL": [
         {

@@ -1,221 +1,332 @@
 "use strict";
 var RedScene;
 (function () {
-    /**DOC:
-    {
-        constructorYn : true,
-        title :`RedScene`,
-        description : `
-            RedScene Instance 생성자.
-        `,
-        return : 'RedScene Instance'
-    }
-	:DOC*/
-    RedScene = function (redGL, backgroundColor) {
-        if (!(this instanceof RedScene)) return new RedScene(redGL, backgroundColor);
-        var _skyBox, _grid, _axis;
-        this['r'] = 0
-        this['g'] = 0
-        this['b'] = 0
-        this.setBackgroundColor(backgroundColor ? backgroundColor : '#000')
-        /**DOC:
-            {
-                title :`useBackgroundColor`,
-                description : `
-                    배경색 사용여부.
-                    초기값 true
-                `,
-                return : 'Boolean'
-            }
-        :DOC*/
-        this['useBackgroundColor'] = true
-        /**DOC:
-            {
-                title :`useFog`,
-                description : `
-                    안개 사용여부
-                    초기값 true
-                `,
-                return : 'Boolean'
-            }
-        :DOC*/
-        this['useFog'] = false
-        /**DOC:
-            {
-                title :`fogDensity`,
-                description : `
-                    안개농도
-                    초기값 0.5
-                `,
-                return : 'Number'
-            }
-        :DOC*/
-        this['fogDensity'] = 0.5
-        /**DOC:
-            {
-                title :`fogDistance`,
-                description : `
-                    가시거리
-                    초기값 25.0
-                `,
-                return : 'Number'
-            }
-        :DOC*/
-        this['fogDistance'] = 25.0
-        Object.defineProperty(this, 'fogColor', (function () {
-            var v = [1, 1, 1, 1]
-            var t0;
-            return {
-                get: function () {
-                    return v
-                },
-                set: function (hex) {
-                    hex = hex ? hex : '#fff';
-                    t0 = RedGLUtil.hexToRGB.call(this, hex);
-                    v[0] = t0[0];
-                    v[1] = t0[1];
-                    v[2] = t0[2];
-                }
-            }
-        })());
-        this['fogColor'] = '#fff'
-        /**DOC:
-            {
-                title :`children`,
-                description : `
-                    자식 리스트
-                `,
-                return : 'Array'
-            }
-        :DOC*/
-        this['children'] = []
+	/**DOC:
+	 {
+		 constructorYn : true,
+		 title :`RedScene`,
+		 description : `
+			 RedScene Instance 생성자.
+		 `,
+		 params : {
+			 redGL : [
+				 {type: 'RedGL Instance'}
+			 ],
+			 backgroundColor : [
+				 {type: 'hex'},
+				 '초기값 #000000'
+			 ]
+		 },
+		 return : 'RedScene Instance'
+	 }
+	 :DOC*/
+	RedScene = function (redGL, backgroundColor) {
+		if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedScene : RedGL Instance만 허용됩니다.', redGL);
+		if (!(this instanceof RedScene)) return new RedScene(redGL, backgroundColor);
+		var _skyBoxMesh, _gridMesh, _axisMesh;
 
+		/**DOC:
+		 {
+			 code : 'property',
+			 title :`backgroundColor`,
+			 description : `
+				 배경 컬러설정.
+				 알파설정은 불가능
+			 `,
+			 params : {
+				 hex : [
+					 {type: 'hex'},
+					 'ex) #fff, #ffffff'
+				 ]
+			 },
+			 return : 'void'
+		 }
+		 :DOC*/
+		Object.defineProperty(this, 'backgroundColor', (function () {
+			var _v = '#000000'
+			var t0;
+			return {
+				get: function () {
+					return _v
+				},
+				set: function (hex) {
+					_v = hex ? hex : '#000000';
+					if (typeof _v != 'string') RedGLUtil.throwFunc('RedScene : backgroundColor hex 문자열만 허용함', '입력값 : ' + _v)
+					if (!RedGLUtil.regHex(_v)) RedGLUtil.throwFunc('RedScene : backgroundColor hex 형식을 사용해야함', '입력값 : ' + _v)
+					t0 = RedGLUtil.hexToRGB.call(this, _v);
+					this['_r'] = t0[0];
+					this['_g'] = t0[1];
+					this['_b'] = t0[2];
+				}
+			}
+		})());
+		if (backgroundColor) this['backgroundColor'] = backgroundColor;
 
-        /**DOC:
-            {
-                title :`skyBox`,
-                description : `
-                    skyBox get/set
-                `,
-                return : 'RedSkyBox'
-            }
-        :DOC*/
-        Object.defineProperty(this, 'skyBox', {
-            get: function () { return _skyBox },
-            set: function (v) {
-                if (!(v instanceof RedSkyBox) && v) RedGLUtil.throwFunc('RedScene : RedSkyBox Instance만 허용됩니다.')
-                _skyBox = v;
-                return _skyBox
-            }
-        });
-        /**DOC:
-            {
-                title :`grid`,
-                description : `
-                    grid get/set
-                `,
-                return : 'RedGrid'
-            }
-        :DOC*/
-        Object.defineProperty(this, 'grid', {
-            get: function () { return _grid },
-            set: function (v) {
-                if (!(v instanceof RedGrid) && v) RedGLUtil.throwFunc('RedScene : RedGrid Instance만 허용됩니다.')
-                _grid = v;
-                return _grid
-            }
-        });
-        /**DOC:
-            {
-                title :`axis`,
-                description : `
-                    axis get/set
-                `,
-                return : 'RedAxis'
-            }
-        :DOC*/
-        Object.defineProperty(this, 'axis', {
-            get: function () { return _axis },
-            set: function (v) {
-                if (!(v instanceof RedAxis) && v) RedGLUtil.throwFunc('RedScene : RedAxis Instance만 허용됩니다.')
-                _axis = v;
-                return _axis
-            }
-        })
-        this['postEffectManager'] = RedPostEffectManager(redGL)
-        this['_lightInfo'] = {
-            RedAmbientLight: null,
-            RedDirectionalLight: [],
-            RedPointLight: []
-        };
-        this['_UUID'] = RedGL['makeUUID']();
-        // Object.seal(this)
-    };
-    RedScene.prototype = {
-        /**DOC:
-            {
-                title :`addLight`,
-                code : 'METHOD',
-                description : `
-                    라이트 추가 매서드.
-                    RedBaseLight 확장객체만 등록가능.
-                `,
-                return : 'void'
-            }
-        :DOC*/
-        addLight: function (v) {
-            switch (v['type']) {
-                case RedAmbientLight['type']:
-                    this['_lightInfo'][v['type']] = v
-                    break
-                case RedDirectionalLight['type']:
-                    this['_lightInfo'][v['type']].push(v)
-                    break
-                case RedPointLight['type']:
-                    this['_lightInfo'][v['type']].push(v)
-                    break
-                default:
-                    RedGLUtil.throwFunc('RedBaseLight 확장객체만 가능')
-            }
+		/**DOC:
+		 {
+			 title :`useBackgroundColor`,
+			 description : `
+				 배경색 사용여부.
+				 초기값 true
+			 `,
+			 return : 'Boolean'
+		 }
+		 :DOC*/
+		this['useBackgroundColor'] = true
 
-        },
-        removeLight: function () {
+		/**DOC:
+		 {
+			 title :`useFog`,
+			 description : `
+				 안개 사용여부
+				 초기값 true
+			 `,
+			 return : 'Boolean'
+		 }
+		 :DOC*/
+		this['useFog'] = false
+		/**DOC:
+		 {
+			 title :`fogDensity`,
+			 description : `
+				 안개농도
+				 초기값 0.5
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		this['fogDensity'] = 0.5
+		Object.defineProperty(this, 'fogDensity', (function () {
+			var _v = 0.5
+			return {
+				get: function () {
+					return _v
+				},
+				set: function (v) {
+					if (typeof v != 'number') RedGLUtil.throwFunc('RedScene : fogDensity 숫자만허용함', '입력값 : ' + v);
+					if (v < 0) v = 0;
+					_v = v
+				}
+			}
+		})());
 
-        }
-    };
-    /**DOC:
-        {
-            code : 'METHOD',
-            title :`setBackgroundColor`,
-            description : `
-                배경 컬러설정.
-                알파설정은 불가능
-            `,
-            params : {
-                hex : [
-                    {type: 'hex'},
-                    'ex) #fff, #ffffff'
-                ]
-            },
-            example : `// TODO:`,
-            return : 'void'
-        }
-    :DOC*/
-    RedScene.prototype['setBackgroundColor'] = (function () {
-        var t0;
-        return function (hex) {
-            hex = hex ? hex : '#000';
-            t0 = RedGLUtil.hexToRGB.call(this, hex);
-            this['r'] = t0[0];
-            this['g'] = t0[1];
-            this['b'] = t0[2];
-        }
-    })();
-    /**DOC:
-        {
-            copyProto : 'RedBaseContainer'
-        }
-    :DOC*/
-    RedGLUtil['copyProto'](RedScene, RedBaseContainer)
-    Object.freeze(RedScene);
+		/**DOC:
+		 {
+			 title :`fogDistance`,
+			 description : `
+				 가시거리
+				 초기값 25.0
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		Object.defineProperty(this, 'fogDistance', (function () {
+			var _v = 25
+			return {
+				get: function () {
+					return _v
+				},
+				set: function (v) {
+					if (typeof v != 'number') RedGLUtil.throwFunc('RedScene : fogDistance 숫자만허용함', '입력값 : ' + v);
+					if (v < 0) v = 0;
+					_v = v
+				}
+			}
+		})());
+
+		/**DOC:
+		 {
+			 title :`fogColor`,
+			 description : `
+				 초기값 '#ffffff
+			 `,
+			 return : 'hex'
+		 }
+		 :DOC*/
+		Object.defineProperty(this, 'fogColor', (function () {
+			var _v = '#ffffff'
+			var t0;
+			return {
+				get: function () {
+					return _v
+				},
+				set: function (hex) {
+					_v = hex ? hex : '#ffffff';
+					if (typeof _v != 'string') RedGLUtil.throwFunc('RedScene : fogColor hex 문자열만 허용함', '입력값 : ' + _v)
+					if (!RedGLUtil.regHex(_v)) RedGLUtil.throwFunc('RedScene : fogColor hex 형식을 사용해야함', '입력값 : ' + _v)
+					t0 = RedGLUtil.hexToRGB.call(this, _v);
+					this['_fogR'] = t0[0];
+					this['_fogG'] = t0[1];
+					this['_fogB'] = t0[2];
+				}
+			}
+		})());
+		this['fogColor'] = '#ffffff';
+
+		/**DOC:
+		 {
+			 title :`children`,
+			 description : `
+				 자식 리스트
+			 `,
+			 return : 'Array'
+		 }
+		 :DOC*/
+		this['children'] = []
+
+		/**DOC:
+		 {
+			 title :`skyBox`,
+			 description : `
+				 skyBox get/set
+			 `,
+			 return : 'RedSkyBox Instance'
+		 }
+		 :DOC*/
+		Object.defineProperty(this, 'skyBox', {
+			get: function () {
+				return _skyBoxMesh
+			},
+			set: function (v) {
+				if (!(v instanceof RedSkyBox) && v) RedGLUtil.throwFunc('RedScene : RedSkyBox Instance만 허용됩니다.')
+				_skyBoxMesh = v;
+				return _skyBoxMesh
+			}
+		});
+
+		/**DOC:
+		 {
+			 title :`grid`,
+			 description : `
+				 grid get/set
+			 `,
+			 return : 'RedGrid Instance'
+		 }
+		 :DOC*/
+		Object.defineProperty(this, 'grid', {
+			get: function () {
+				return _gridMesh
+			},
+			set: function (v) {
+				if (!(v instanceof RedGrid) && v) RedGLUtil.throwFunc('RedScene : RedGrid Instance만 허용됩니다.')
+				_gridMesh = v;
+				return _gridMesh
+			}
+		});
+
+		/**DOC:
+		 {
+			 title :`axis`,
+			 description : `
+				 axis get/set
+			 `,
+			 return : 'RedAxis Instance'
+		 }
+		 :DOC*/
+		Object.defineProperty(this, 'axis', {
+			get: function () {
+				return _axisMesh
+			},
+			set: function (v) {
+				if (!(v instanceof RedAxis) && v) RedGLUtil.throwFunc('RedScene : RedAxis Instance만 허용됩니다.')
+				_axisMesh = v;
+				return _axisMesh
+			}
+		})
+
+		/**DOC:
+		 {
+			 title :`postEffectManager`,
+			 description : `
+				 postEffectManager
+			 `,
+			 return : 'RedPostEffectManager Instance'
+		 }
+		 :DOC*/
+		this['postEffectManager'] = RedPostEffectManager(redGL)
+
+		this['_lightInfo'] = {
+			RedAmbientLight: null,
+			RedDirectionalLight: [],
+			RedPointLight: []
+		};
+		this['_UUID'] = RedGL['makeUUID']();
+		console.log(this)
+	};
+	RedScene.prototype = {
+		_r: 0,
+		_g: 0,
+		_b: 0,
+		_fogR: 1,
+		_fogG: 1,
+		_fogB: 1,
+		/**DOC:
+		 {
+			 title :`addLight`,
+			 code : 'METHOD',
+			 description : `
+				 라이트 추가 매서드.
+				 RedBaseLight 확장객체만 등록가능.
+			 `,
+			 return : 'void'
+		 }
+		 :DOC*/
+		addLight: function (v) {
+			switch (v['type']) {
+				//TODO: 맥스제한을 어떻게 줄지 결정해야함
+				case RedAmbientLight['type']:
+					this['_lightInfo'][v['type']] = v
+					break
+				case RedDirectionalLight['type']:
+					this['_lightInfo'][v['type']].push(v)
+					break
+				case RedPointLight['type']:
+					this['_lightInfo'][v['type']].push(v)
+					break
+				default:
+					RedGLUtil.throwFunc('RedScene : RedBaseLight 확장객체만 가능')
+			}
+
+		},
+		/**DOC:
+		 {
+			 title :`removeLight`,
+			 code : 'METHOD',
+			 description : `
+				 라이트 제거 매서드.
+				 RedBaseLight 확장객체만 사용가능.
+			 `,
+			 return : 'void'
+		 }
+		 :DOC*/
+		removeLight: (function () {
+			var tIndex;
+			return function (v) {
+				//TODO:검증해야함
+				switch (v['type']) {
+					case RedAmbientLight['type']:
+						if (this['_lightInfo'][v['type']] == v) this['_lightInfo'][v['type']] = null
+						break
+					case RedDirectionalLight['type']:
+						tIndex = this['_lightInfo'][v['type']].indexOf(v)
+						if (tIndex > -1) this['_lightInfo'][v['type']].splice(tIndex, 1)
+						break
+					case RedPointLight['type']:
+						tIndex = this['_lightInfo'][v['type']].indexOf(v)
+						if (tIndex > -1) this['_lightInfo'][v['type']].splice(tIndex, 1)
+						break
+					default:
+						RedGLUtil.throwFunc('RedScene : RedBaseLight 확장객체만 가능')
+				}
+			}
+		})()
+	};
+
+	/**DOC:
+	 {
+		 copyProto : 'RedBaseContainer'
+	 }
+	 :DOC*/
+	RedGLUtil['copyProto'](RedScene, RedBaseContainer)
+	Object.freeze(RedScene);
 })();

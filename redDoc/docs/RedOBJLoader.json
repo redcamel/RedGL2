@@ -2,7 +2,7 @@
   {
     "constructorYn": true,
     "title": "RedOBJLoader",
-    "description": "\n    OBJ 로더\n",
+    "description": "\nOBJ 로더\n",
     "params": {
       "redGL": [
         {
@@ -25,7 +25,7 @@
         }
       ]
     },
-    "example": "\nRedOBJLoader(RedGL Instance, '../asset/obj/gun/', 'Handgun_obj.obj', function (result) {\n    tScene3D.addChild(result['resultMesh'])\n})\n",
+    "example": "\nRedOBJLoader(RedGL Instance, '../asset/obj/gun/', 'Handgun_obj.obj', function (result) {\ntScene3D.addChild(result['resultMesh'])\n})\n",
     "return": "void"
   }
 ]

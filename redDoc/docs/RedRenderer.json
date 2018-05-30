@@ -2,14 +2,14 @@
   {
     "constructorYn": true,
     "title": "RedRenderer",
-    "description": "\n    RedRenderer Instance 생성자.\n",
+    "description": "\nRedRenderer Instance 생성자.\n",
     "example": "\nRedRenderer();\n",
     "return": "RedRenderer Instance"
   },
   {
     "code": "METHOD",
     "title": "start",
-    "description": "\n    렌더 시작\n",
+    "description": "\n렌더 시작\n",
     "params": {
       "redGL": [
         {
@@ -28,7 +28,7 @@
   {
     "code": "METHOD",
     "title": "stop",
-    "description": "\n    렌더 중지\n",
+    "description": "\n렌더 중지\n",
     "return": "void"
   }
 ]

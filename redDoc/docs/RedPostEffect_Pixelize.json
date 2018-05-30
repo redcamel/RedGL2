@@ -1,13 +1,13 @@
 [
   {
     "title": "height",
-    "description": "\n    픽셀화 세로 크기\n    기본값 : 5\n",
+    "description": "\n픽셀화 세로 크기\n기본값 : 5\n",
     "return": "Number"
   },
   {
     "constructorYn": true,
     "title": "RedPostEffect_Pixelize",
-    "description": "\n    RedPostEffect_Pixelize Instance 생성.\n",
+    "description": "\nRedPostEffect_Pixelize Instance 생성.\n",
     "params": {
       "redGL": [
         {
@@ -19,7 +19,7 @@
   },
   {
     "title": "width",
-    "description": "\n    픽셀화 가로 크기\n    기본값 : 5\n",
+    "description": "\n픽셀화 가로 크기\n기본값 : 5\n",
     "return": "Number"
   }
 ]

@@ -2,7 +2,7 @@
   {
     "constructorYn": true,
     "title": "RedSkyBoxMaterial",
-    "description": "\n    RedSkyBoxMaterial Instance 생성.\n    RedSkyBox Instance 생성시 내부적으로 자동으로 생성됨.\n",
+    "description": "\nRedSkyBoxMaterial Instance 생성.\nRedSkyBox Instance 생성시 내부적으로 자동으로 생성됨.\n",
     "params": {
       "redGL": [
         {
@@ -15,7 +15,7 @@
         }
       ]
     },
-    "example": "\n    RedSkyBoxMaterial(\n        RedGL Instance,\n        RedBitmapCubeTexture Instance\n    )\n",
+    "example": "\nRedSkyBoxMaterial(\nRedGL Instance,\nRedBitmapCubeTexture Instance\n)\n",
     "return": "RedSkyBoxMaterial Instance"
   },
   {

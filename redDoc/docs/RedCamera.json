@@ -14,7 +14,7 @@
   {
     "code": "PROPERTY",
     "title": "lookAt",
-    "description": "\n    대상 위치를 바라보도록 matrix 설정\n",
+    "description": "\n대상 위치를 바라보도록 matrix 설정\n",
     "params": {
       "x": [
         {
@@ -61,8 +61,8 @@
   {
     "constructorYn": true,
     "title": "RedCamera",
-    "description": "\n    RedCamera Instance 생성자.\n",
-    "example": "\n    RedCamera()\n",
+    "description": "\nRedCamera Instance 생성자.\n",
+    "example": "\nRedCamera()\n",
     "return": "RedCamera Instance"
   },
   {

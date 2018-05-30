@@ -1,18 +1,18 @@
 [
   {
     "title": "blur",
-    "description": "\n    blur 정도.\n    기본값 : 20\n",
+    "description": "\nblur 정도.\n기본값 : 20\n",
     "return": "Number"
   },
   {
     "title": "focusLength",
-    "description": "\n    focusLength\n    기본값 : 15\n",
+    "description": "\nfocusLength\n기본값 : 15\n",
     "return": "Number"
   },
   {
     "constructorYn": true,
     "title": "RedPostEffect_DoF",
-    "description": "\n    RedPostEffect_DoF Instance 생성.\n",
+    "description": "\nRedPostEffect_DoF Instance 생성.\n",
     "params": {
       "redGL": [
         {

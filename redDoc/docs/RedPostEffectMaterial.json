@@ -6,7 +6,7 @@
   {
     "constructorYn": true,
     "title": "RedPostEffectMaterial",
-    "description": "\n    RedPostEffectMaterial Instance 생성\n",
+    "description": "\nRedPostEffectMaterial Instance 생성\n",
     "params": {
       "redGL": [
         {
@@ -20,7 +20,7 @@
         "RedBitmapTexture Instance"
       ]
     },
-    "example": "\n    RedPostEffectMaterial(RedGL Instance, RedBitmapTexture(RedGL Instance, src))\n",
+    "example": "\nRedPostEffectMaterial(RedGL Instance, RedBitmapTexture(RedGL Instance, src))\n",
     "return": "RedPostEffectMaterial Instance"
   }
 ]

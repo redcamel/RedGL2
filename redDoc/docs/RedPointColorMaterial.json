@@ -2,7 +2,7 @@
   {
     "constructorYn": true,
     "title": "RedPointColorMaterial",
-    "description": "\n    RedPointColorMaterial Instance 생성\n",
+    "description": "\nRedPointColorMaterial Instance 생성\n",
     "params": {
       "redGL": [
         {

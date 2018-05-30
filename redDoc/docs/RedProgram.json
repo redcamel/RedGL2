@@ -12,7 +12,7 @@
   {
     "constructorYn": true,
     "title": "RedProgram",
-    "description": "\n    RedProgram Instance 생성기\n",
+    "description": "\nRedProgram Instance 생성기\n",
     "params": {
       "redGL": [
         {
@@ -57,7 +57,7 @@
         "고유키"
       ]
     },
-    "example": "\n    RedProgram.haskey(RedGL Instance, '찾고자하는키')\n",
+    "example": "\nRedProgram.haskey(RedGL Instance, '찾고자하는키')\n",
     "return": "Boolean"
   },
   {

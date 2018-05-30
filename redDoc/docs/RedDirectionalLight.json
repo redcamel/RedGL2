@@ -1,7 +1,7 @@
 [
   {
     "title": "alpha",
-    "description": "\n    기본값 : 0.1\n",
+    "description": "\n기본값 : 0.1\n",
     "return": "Number"
   },
   {
@@ -11,13 +11,13 @@
   },
   {
     "title": "intensity",
-    "description": "\n    라이트 강도\n    기본값 : 1\n",
+    "description": "\n라이트 강도\n기본값 : 1\n",
     "return": "Number"
   },
   {
     "constructorYn": true,
     "title": "RedDirectionalLight",
-    "description": "\n    RedDirectionalLight Instance 생성\n",
+    "description": "\nRedDirectionalLight Instance 생성\n",
     "params": {
       "redGL": [
         {
@@ -36,7 +36,7 @@
         "알파값"
       ]
     },
-    "example": "\n    RedDirectionalLight(RedGL Instance, hex, alpha)\n",
+    "example": "\nRedDirectionalLight(RedGL Instance, hex, alpha)\n",
     "return": "RedDirectionalLight Instance"
   },
   {

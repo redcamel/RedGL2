@@ -1,7 +1,7 @@
 [
   {
     "title": "color",
-    "description": "\n    RedProgram Instance\n    직접설정하지 않도록 유의해야함!\n",
+    "description": "\nRedProgram Instance\n직접설정하지 않도록 유의해야함!\n",
     "return": "RedProgram Instance"
   },
   {
@@ -20,7 +20,7 @@
   {
     "constructorYn": true,
     "title": "RedColorPhongTextureMaterial",
-    "description": "\n    RedColorPhongTextureMaterial Instance 생성\n",
+    "description": "\nRedColorPhongTextureMaterial Instance 생성\n",
     "params": {
       "redGL": [
         {
@@ -60,7 +60,7 @@
   {
     "code": "METHOD",
     "title": "setColor",
-    "description": "\n    컬러설정\n",
+    "description": "\n컬러설정\n",
     "params": {
       "hex": [
         {

@@ -10,7 +10,7 @@
   {
     "constructorYn": true,
     "title": "RedGeometry",
-    "description": "\n    RedGeometry Instance 생성자\n",
+    "description": "\nRedGeometry Instance 생성자\n",
     "params": {
       "redGL": [
         {
@@ -30,7 +30,7 @@
         "필수아님"
       ]
     },
-    "example": "\n    RedGeometry(interleaveBuffer,indexBuffer)\n",
+    "example": "\nRedGeometry(interleaveBuffer,indexBuffer)\n",
     "return": "RedGeometry Instance"
   }
 ]
