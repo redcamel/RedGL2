@@ -66,7 +66,6 @@
                         tZ += Math.random() * 0.5
                         tLine.addPoint(tX, tY, tZ)
                     }
-                    tLine.upload()
                 }
                 addLine2 = function (redGL) {
                     var tLine;
@@ -83,7 +82,6 @@
                     }
                     tLine.rotationX = tLine.rotationY = tLine.rotationZ = Math.random() * 360
                     tLine.drawMode = redGL.gl.LINES
-                    tLine.upload()
                 }
                 addLine(this)
                 addLine2(this)

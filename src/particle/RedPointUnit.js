@@ -15,7 +15,7 @@ var RedPointUnit;
 			 interleaveData : [
 				 {type:'Array'}
 			 ],
-			 interleaveDefineInfo : [
+			 interleaveDefineInfoList : [
 				 {type:'Array'}
 			 ],
 			 material : [
@@ -25,8 +25,8 @@ var RedPointUnit;
 		 return : 'RedProgram Instance'
 	 }
 	 :DOC*/
-	RedPointUnit = function (redGL, interleaveData, interleaveDefineInfo, material) {
-		if (!(this instanceof RedPointUnit)) return new RedPointUnit(redGL, interleaveData, interleaveDefineInfo, material);
+	RedPointUnit = function (redGL, interleaveData, interleaveDefineInfoList, material) {
+		if (!(this instanceof RedPointUnit)) return new RedPointUnit(redGL, interleaveData, interleaveDefineInfoList, material);
 		if (!(material instanceof RedPointColorMaterial) && !(material instanceof RedPointBitmapMaterial)) RedGLUtil.throwFunc('RedPointUnit : material - RedPointColorMaterial Instance or RedPointBitmapMaterial Instance만 허용됩니다.')
 
 		var tGL;
@@ -39,7 +39,7 @@ var RedPointUnit;
 			'RedPointUnit_' + this['_UUID'],
 			interleaveData,
 			RedBuffer.ARRAY_BUFFER,
-			interleaveDefineInfo
+			interleaveDefineInfoList
 		)
 		this['geometry'] = RedGeometry(interleaveBuffer)
 		this['material'] = material

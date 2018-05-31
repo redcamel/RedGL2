@@ -82,6 +82,7 @@ var RedLine;
 			var t = interleaveData.length / 3
 			interleaveData.push(x, y, z)
 			indexData.push(t)
+			this['upload']()
 		}
 		/**DOC:
 		 {
@@ -95,8 +96,6 @@ var RedLine;
 		this['upload'] = function () {
 			interleaveBuffer['upload'](new Float32Array(interleaveData));
 			indexBuffer['upload'](new Uint16Array(indexData));
-			interleaveBuffer.parseInterleaveDefineInfo();
-			indexBuffer.parseInterleaveDefineInfo();
 		}
 
 		tGL = redGL.gl;

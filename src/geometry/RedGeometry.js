@@ -9,9 +9,6 @@ var RedGeometry;
 			 RedGeometry Instance 생성자
 		 `,
 		 params : {
-			 redGL : [
-				 {type:'RedGL'}
-			 ],
 			 interleaveBuffer : [
 				 {type:'RedBuffer'},
 				 `필수`

@@ -842,8 +842,8 @@ var RedRenderer;
 
 					/////////////////////////////////////////////////////////////////////////
 					/////////////////////////////////////////////////////////////////////////
-					// interleaveDefineInfo 정보를 가져온다.
-					tInterleaveDefineInfo = tInterleaveBuffer['interleaveDefineInfo']
+					// interleaveDefineInfoList 정보를 가져온다.
+					tInterleaveDefineInfo = tInterleaveBuffer['interleaveDefineInfoList']
 					// 버퍼의 UUID
 					tUUID = tInterleaveBuffer['_UUID']
 					// 프로그램의 어트리뷰트를 순환한다.
@@ -851,7 +851,7 @@ var RedRenderer;
 					while (i2--) {
 						// 대상 어트리뷰트의 로케이션 정보를 구함
 						tAttributeLocationInfo = tAttrGroup[i2]
-						// 대상 어트리뷰트의 이름으로 interleaveDefineInfo에서 단위 인터리브 정보를 가져온다.
+						// 대상 어트리뷰트의 이름으로 interleaveDefineInfoList에서 단위 인터리브 정보를 가져온다.
 						tInterleaveDefineUnit = tInterleaveDefineInfo[tAttributeLocationInfo['name']]
 						// 실제 버퍼 바인딩하고 //TODO: 이놈은 검증해야함
 						tPrevInterleaveBuffer_UUID == tUUID ? 0 : gl.bindBuffer(gl.ARRAY_BUFFER, tInterleaveBuffer['webglBuffer'])
