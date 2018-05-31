@@ -24,112 +24,139 @@ RedGL(document.createElement('canvas'), function (v) {
 		"RedProgram Test",
 		redGroup(
 			"생성 확인",
-			redTest("기본 파싱 테스트", function (unit) {
+			redTest("기본 파싱 테스트", function (unit, title) {
 				try {
 					RedProgram(tRedGL, 'testShaderProgram' + RedGL.makeUUID(), vSource1, fSource1);
 					unit.run(true)
 				} catch (error) {
-					console.log(error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
 					unit.run(false)
 				}
 			}, true),
-			redTest("인자확인(redGL, key, vertexShaderSource, fragmentShaderSource) : 실패테스트 - RedGL Instance만 허용", function (unit) {
+			redTest("인자확인(redGL, key, vertexShaderSource, fragmentShaderSource) : 실패테스트 - RedGL Instance만 허용", function (unit, title) {
 				try {
 					RedProgram(null, 'testShaderProgram' + RedGL.makeUUID(), vSource1, fSource1);
 					unit.run(true)
 				} catch (error) {
-					console.log(error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
 					unit.run(false)
 				}
 			}, false)
 		),
 		redGroup(
 			"키관련 확인",
-			redTest("인자확인(redGL, key, vertexShaderSource, fragmentShaderSource) : 실패테스트 key는 문자열만 허용", function (unit) {
+			redTest("인자확인(redGL, key, vertexShaderSource, fragmentShaderSource) : 실패테스트 key는 문자열만 허용", function (unit, title) {
 				try {
 					RedProgram(tRedGL, 1, vSource1, fSource1);
 					unit.run(true)
 				} catch (error) {
-					console.log(error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
 					unit.run(false)
 				}
 			}, false),
-			redTest("키가 같을 경우 기존것을 리턴하는지 체크 : 키로 찾기", function (unit) {
+			redTest("키가 같을 경우 기존것을 리턴하는지 체크 : 키로 찾기", function (unit, title) {
 				var t0 = RedProgram(tRedGL, 'testShaderProgram', vSource1, fSource1);
 				var t1 = RedProgram(tRedGL, 'testShaderProgram');
 				unit.run(t0 == t1)
 			}, true),
-			redTest("키가 같을 경우 기존것을 리턴하는지 체크 :  기존키가 있으면 입력된 소스를 무시한다.", function (unit) {
+			redTest("키가 같을 경우 기존것을 리턴하는지 체크 :  기존키가 있으면 입력된 소스를 무시한다.", function (unit, title) {
 				var t0 = RedProgram(tRedGL, 'testShaderProgram', vSource1, fSource1);
 				var t1 = RedProgram(tRedGL, 'testShaderProgram', vSource1, fSource1);
 				unit.run(t0 == t1)
 			}, true),
-			redTest("존재하지 않는키를 찾으려할때 테스트", function (unit) {
+			redTest("존재하지 않는키를 찾으려할때 테스트", function (unit, title) {
 				try {
 					RedProgram(tRedGL, 'xxxxxxxx');
 					unit.run(true)
 				} catch (error) {
-					console.log(error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
 					unit.run(false)
 				}
 			}, false)
 		),
 		redGroup(
 			"쉐이더 소스 확인",
-			redTest("쉐이더 소스를 둘다 입력하지 않을경우 + 기존에 키가 존재하지않을떄 : 실패테스트 vertexShaderSource, fragmentShaderSource 문자열이나 falsy만 허용", function (unit) {
+			redTest("쉐이더 소스를 둘다 입력하지 않을경우 + 기존에 키가 존재하지않을떄 : 실패테스트 vertexShaderSource, fragmentShaderSource 문자열이나 falsy만 허용", function (unit, title) {
 				try {
 					RedProgram(tRedGL, 'testShaderProgram' + RedGL.makeUUID());
 					unit.run(true)
 				} catch (error) {
-					console.log(error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
 					unit.run(false)
 				}
 			}, false),
-			redTest("fragmentShader Source 입력안한경우 + 기존에 키가 존재하지않을떄 : 실패테스트 ", function (unit) {
+			redTest("fragmentShader Source 입력안한경우 + 기존에 키가 존재하지않을떄 : 실패테스트 ", function (unit, title) {
 				try {
 					RedProgram(tRedGL, 'testShaderProgram' + RedGL.makeUUID(), vSource1);
 					unit.run(true)
 				} catch (error) {
-					console.log(error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
 					unit.run(false)
 				}
 			}, false),
-			redTest("vertexShaderSource 입력안한경우 + 기존에 키가 존재하지않을떄 : 실패테스트 ", function (unit) {
+			redTest("vertexShaderSource 입력안한경우 + 기존에 키가 존재하지않을떄 : 실패테스트 ", function (unit, title) {
 				try {
 					RedProgram(tRedGL, 'testShaderProgram' + RedGL.makeUUID(), false, fSource1);
 					unit.run(true)
 				} catch (error) {
-					console.log(error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
 					unit.run(false)
 				}
 			}, false),
-			redTest("쉐이더 소스를 둘다 입력하지 않을경우 + 기존에 키가 존재할경우 :  기존 캐시된값이 돌아오는지 ", function (unit) {
+			redTest("쉐이더 소스를 둘다 입력하지 않을경우 + 기존에 키가 존재할경우 :  기존 캐시된값이 돌아오는지 ", function (unit, title) {
 				var t0 = RedProgram(tRedGL, 'testShaderProgram_checkSource', vSource1, fSource1);
 				var t1 = RedProgram(tRedGL, 'testShaderProgram_checkSource');
 				unit.run(t0 == t1)
 			}, true),
-			redTest("vertexShader 소스에 fragmentShader 소스를 입력할경우 : 실패테스트 ", function (unit) {
+			redTest("vertexShader 소스에 fragmentShader 소스를 입력할경우 : 실패테스트 ", function (unit, title) {
 				try {
 					RedProgram(tRedGL, 'testShaderProgram' + RedGL.makeUUID(), fSource1, fSource1);
 					unit.run(true)
 				} catch (error) {
-					console.log(error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
 					unit.run(false)
 				}
 			}, false),
-			redTest("fragmentShader 소스에 vertexShader 소스를 입력할경우 : 실패테스트 ", function (unit) {
+			redTest("fragmentShader 소스에 vertexShader 소스를 입력할경우 : 실패테스트 ", function (unit, title) {
 				try {
 					RedProgram(tRedGL, 'testShaderProgram' + RedGL.makeUUID(), vSource1, vSource1);
 					unit.run(true)
 				} catch (error) {
-					console.log(error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
 					unit.run(false)
 				}
 			}, false),
 		),
 		redGroup(
 			"uniform 정보 파싱 확인 : uniformLocation",
-			redTest("uniformLocation에 uniform 이름정보가 잘들어가나 확인 : uUniformParsingTest", function (unit) {
+			redTest("uniformLocation에 uniform 이름정보가 잘들어가나 확인 : uUniformParsingTest", function (unit, title) {
 				var vSource, fSource;
 				vSource = function () {
 					/* @preserve
@@ -153,7 +180,7 @@ RedGL(document.createElement('canvas'), function (v) {
 				unit.run(t0['uniformLocation']['uUniformParsingTest']['name'])
 				console.log(t0)
 			}, 'uUniformParsingTest'),
-			redTest("uniform이 선언은 되었지만 main함수에서 사용되지않을경우 로케이션이 없어야함", function (unit) {
+			redTest("uniform이 선언은 되었지만 main함수에서 사용되지않을경우 로케이션이 없어야함", function (unit, title) {
 				var vSource, fSource;
 				vSource = function () {
 					/* @preserve
@@ -177,7 +204,7 @@ RedGL(document.createElement('canvas'), function (v) {
 				unit.run(t0['uniformLocation']['uUniformParsingTest']['location'] == null)
 				console.log(t0)
 			}, true),
-			redTest("uniform이 선언되고 main함수에서 사용될경우 WebGLUniformLocation Instance 를 할당받아야함", function (unit) {
+			redTest("uniform이 선언되고 main함수에서 사용될경우 WebGLUniformLocation Instance 를 할당받아야함", function (unit, title) {
 				var vSource, fSource;
 				vSource = function () {
 					/* @preserve
@@ -201,7 +228,7 @@ RedGL(document.createElement('canvas'), function (v) {
 				unit.run(t0['uniformLocation']['uUniformParsingTest']['location'] instanceof WebGLUniformLocation)
 				console.log(t0)
 			}, true),
-			redTest("uniformLocation에 uniform 이름에 매칭되는 재질 프로퍼티 이름 정보가 잘들어가나 확인 : uUniformParsingTest / uniformParsingTest", function (unit) {
+			redTest("uniformLocation에 uniform 이름에 매칭되는 재질 프로퍼티 이름 정보가 잘들어가나 확인 : uUniformParsingTest / uniformParsingTest", function (unit, title) {
 				var vSource, fSource;
 				vSource = function () {
 					/* @preserve
@@ -228,7 +255,7 @@ RedGL(document.createElement('canvas'), function (v) {
 		),
 		redGroup(
 			"uniform 정보 파싱 확인 : uniformType, renderType, renderMethod, 조회비교",
-			redTest("uniformType : float / renderType : float / renderMethod : uniform1f", function (unit) {
+			redTest("uniformType : float / renderType : float / renderMethod : uniform1f", function (unit, title) {
 				var vSource, fSource;
 				vSource = function () {
 					/* @preserve
@@ -264,7 +291,7 @@ RedGL(document.createElement('canvas'), function (v) {
 				unit.run(tInfo['uniformType'] + '_' + tInfo['renderType'] + '_' + tInfo['renderMethod'] + '_' + returnValue + '_' + returnValueArray)
 
 			}, 'float_float_uniform1f_1.5_-1.5'),
-			redTest("uniformType : bool / renderType : bool  / renderMethod : uniform1i", function (unit) {
+			redTest("uniformType : bool / renderType : bool  / renderMethod : uniform1i", function (unit, title) {
 				var vSource, fSource;
 				vSource = function () {
 					/* @preserve
@@ -299,7 +326,7 @@ RedGL(document.createElement('canvas'), function (v) {
 				unit.run(tInfo['uniformType'] + '_' + tInfo['renderType'] + '_' + tInfo['renderMethod'] + '_' + returnValue + '_' + returnValueArray)
 
 			}, 'bool_bool_uniform1i_true_false'),
-			redTest("uniformType : vec2 / renderType : vec / renderMethod : uniform2fv", function (unit) {
+			redTest("uniformType : vec2 / renderType : vec / renderMethod : uniform2fv", function (unit, title) {
 				var vSource, fSource;
 				vSource = function () {
 					/* @preserve
@@ -333,7 +360,7 @@ RedGL(document.createElement('canvas'), function (v) {
 				// 유닛테스트
 				unit.run(tInfo['uniformType'] + '_' + tInfo['renderType'] + '_' + tInfo['renderMethod'] + '_' + returnValue + '_' + returnValueArray)
 			}, 'vec2_vec_uniform2fv_1.5,2.5_2.5,3.5'),
-			redTest("uniformType : vec3 / renderType : vec  / renderMethod : uniform3fv", function (unit) {
+			redTest("uniformType : vec3 / renderType : vec  / renderMethod : uniform3fv", function (unit, title) {
 				var vSource, fSource;
 				vSource = function () {
 					/* @preserve
@@ -367,7 +394,7 @@ RedGL(document.createElement('canvas'), function (v) {
 				// 유닛테스트
 				unit.run(tInfo['uniformType'] + '_' + tInfo['renderType'] + '_' + tInfo['renderMethod'] + '_' + returnValue + '_' + returnValueArray)
 			}, 'vec3_vec_uniform3fv_1.5,2.5,3.5_2.5,3.5,4.5'),
-			redTest("uniformType : vec4 / renderType : vec / renderMethod : uniform4fv", function (unit) {
+			redTest("uniformType : vec4 / renderType : vec / renderMethod : uniform4fv", function (unit, title) {
 				var vSource, fSource;
 				vSource = function () {
 					/* @preserve
@@ -401,7 +428,7 @@ RedGL(document.createElement('canvas'), function (v) {
 				// 유닛테스트
 				unit.run(tInfo['uniformType'] + '_' + tInfo['renderType'] + '_' + tInfo['renderMethod'] + '_' + returnValue + '_' + returnValueArray)
 			}, 'vec4_vec_uniform4fv_1.5,2.5,3.5,4.5_2.5,3.5,4.5,5.5'),
-			redTest("uniformType : ivec2 / renderType : vec / renderMethod : uniform2iv", function (unit) {
+			redTest("uniformType : ivec2 / renderType : vec / renderMethod : uniform2iv", function (unit, title) {
 				var vSource, fSource;
 				vSource = function () {
 					/* @preserve
@@ -435,7 +462,7 @@ RedGL(document.createElement('canvas'), function (v) {
 				// 유닛테스트
 				unit.run(tInfo['uniformType'] + '_' + tInfo['renderType'] + '_' + tInfo['renderMethod'] + '_' + returnValue + '_' + returnValueArray)
 			}, 'ivec2_vec_uniform2iv_1,2_2,3'),
-			redTest("uniformType : ivec3 / renderType : vec / renderMethod : uniform3iv", function (unit) {
+			redTest("uniformType : ivec3 / renderType : vec / renderMethod : uniform3iv", function (unit, title) {
 				var vSource, fSource;
 				vSource = function () {
 					/* @preserve
@@ -470,7 +497,7 @@ RedGL(document.createElement('canvas'), function (v) {
 				unit.run(tInfo['uniformType'] + '_' + tInfo['renderType'] + '_' + tInfo['renderMethod'] + '_' + returnValue + '_' + returnValueArray)
 				console.log(t0)
 			}, 'ivec3_vec_uniform3iv_1,2,3_2,3,4'),
-			redTest("uniformType : ivec4 / renderType : vec / renderMethod : uniform4iv", function (unit) {
+			redTest("uniformType : ivec4 / renderType : vec / renderMethod : uniform4iv", function (unit, title) {
 				var vSource, fSource;
 				vSource = function () {
 					/* @preserve
@@ -504,7 +531,7 @@ RedGL(document.createElement('canvas'), function (v) {
 				// 유닛테스트
 				unit.run(tInfo['uniformType'] + '_' + tInfo['renderType'] + '_' + tInfo['renderMethod'] + '_' + returnValue + '_' + returnValueArray)
 			}, 'ivec4_vec_uniform4iv_1,2,3,4_2,3,4,5'),
-			redTest("uniformType : bvec2 / renderType : vec / renderMethod : uniform2iv", function (unit) {
+			redTest("uniformType : bvec2 / renderType : vec / renderMethod : uniform2iv", function (unit, title) {
 				var vSource, fSource;
 				vSource = function () {
 					/* @preserve
@@ -538,7 +565,7 @@ RedGL(document.createElement('canvas'), function (v) {
 				// 유닛테스트
 				unit.run(tInfo['uniformType'] + '_' + tInfo['renderType'] + '_' + tInfo['renderMethod'] + '_' + returnValue + '_' + returnValueArray)
 			}, 'bvec2_vec_uniform2iv_true,false_false,true'),
-			redTest("uniformType : bvec3 / renderType : vec / renderMethod : uniform3iv", function (unit) {
+			redTest("uniformType : bvec3 / renderType : vec / renderMethod : uniform3iv", function (unit, title) {
 				var vSource, fSource;
 				vSource = function () {
 					/* @preserve
@@ -572,7 +599,7 @@ RedGL(document.createElement('canvas'), function (v) {
 				// 유닛테스트
 				unit.run(tInfo['uniformType'] + '_' + tInfo['renderType'] + '_' + tInfo['renderMethod'] + '_' + returnValue + '_' + returnValueArray)
 			}, 'bvec3_vec_uniform3iv_true,false,false_false,false,true'),
-			redTest("uniformType : bvec4 / renderType : vec / renderMethod : uniform4iv", function (unit) {
+			redTest("uniformType : bvec4 / renderType : vec / renderMethod : uniform4iv", function (unit, title) {
 				var vSource, fSource;
 				vSource = function () {
 					/* @preserve
@@ -606,7 +633,7 @@ RedGL(document.createElement('canvas'), function (v) {
 				// 유닛테스트
 				unit.run(tInfo['uniformType'] + '_' + tInfo['renderType'] + '_' + tInfo['renderMethod'] + '_' + returnValue + '_' + returnValueArray)
 			}, 'bvec4_vec_uniform4iv_true,false,false,true_true,false,false,false'),
-			redTest("uniformType : sampler2D / renderType : sampler2D / renderMethod : uniform1i", function (unit) {
+			redTest("uniformType : sampler2D / renderType : sampler2D / renderMethod : uniform1i", function (unit, title) {
 				var vSource, fSource;
 				vSource = function () {
 					/* @preserve
@@ -637,7 +664,7 @@ RedGL(document.createElement('canvas'), function (v) {
 				//console.log(tRedGL.gl.getUniform(t0.webglProgram, t0['uniformLocation']['uSampler2DTest']['location']))
 
 			}, 'sampler2D_sampler2D_uniform1i'),
-			redTest("uniformType : samplerCube / renderType : samplerCube / renderMethod : uniform1i", function (unit) {
+			redTest("uniformType : samplerCube / renderType : samplerCube / renderMethod : uniform1i", function (unit, title) {
 				var vSource, fSource;
 				vSource = function () {
 					/* @preserve
@@ -664,7 +691,7 @@ RedGL(document.createElement('canvas'), function (v) {
 		),
 		redGroup(
 			"uniform 배열 정보 파싱 확인 : uniformLocation",
-			redTest("uniformLocation에 uniform 이름정보가 잘들어가나 확인 : uUniformParsingTest[3]", function (unit) {
+			redTest("uniformLocation에 uniform 이름정보가 잘들어가나 확인 : uUniformParsingTest[3]", function (unit, title) {
 				var vSource, fSource;
 				vSource = function () {
 					/* @preserve
@@ -688,7 +715,7 @@ RedGL(document.createElement('canvas'), function (v) {
 				unit.run(t0['uniformLocation']['uUniformParsingTest']['name'])
 				console.log(t0)
 			}, 'uUniformParsingTest'),
-			redTest("uniformLocation에 uniform 배열 length가  잘들어가나 확인 : uUniformParsingTest[3]", function (unit) {
+			redTest("uniformLocation에 uniform 배열 length가  잘들어가나 확인 : uUniformParsingTest[3]", function (unit, title) {
 				var vSource, fSource;
 				vSource = function () {
 					/* @preserve
@@ -712,7 +739,7 @@ RedGL(document.createElement('canvas'), function (v) {
 				unit.run(t0['uniformLocation']['uUniformParsingTest']['arrayNum'])
 				console.log(t0)
 			}, 3),
-			redTest("uniform이 배열이 선언은 되었지만 main함수에서 사용되지않을경우 로케이션이 없어야함", function (unit) {
+			redTest("uniform이 배열이 선언은 되었지만 main함수에서 사용되지않을경우 로케이션이 없어야함", function (unit, title) {
 				var vSource, fSource;
 				vSource = function () {
 					/* @preserve
@@ -736,7 +763,7 @@ RedGL(document.createElement('canvas'), function (v) {
 				unit.run(t0['uniformLocation']['uUniformParsingTest']['location'] == null)
 				console.log(t0)
 			}, true),
-			redTest("uniform이 배열이 선언되고 main함수에서 사용될경우 WebGLUniformLocation Instance 를 할당받아야함", function (unit) {
+			redTest("uniform이 배열이 선언되고 main함수에서 사용될경우 WebGLUniformLocation Instance 를 할당받아야함", function (unit, title) {
 				var vSource, fSource;
 				vSource = function () {
 					/* @preserve
@@ -763,7 +790,7 @@ RedGL(document.createElement('canvas'), function (v) {
 				console.log(t0)
 			}, true),
 
-			redTest("uniformLocation에 uniform 이름에 매칭되는 재질 프로퍼티 이름 정보가 잘들어가나 확인 : uUniformParsingTest[3] / uniformParsingTest", function (unit) {
+			redTest("uniformLocation에 uniform 이름에 매칭되는 재질 프로퍼티 이름 정보가 잘들어가나 확인 : uUniformParsingTest[3] / uniformParsingTest", function (unit, title) {
 				var vSource, fSource;
 				vSource = function () {
 					/* @preserve
@@ -790,7 +817,7 @@ RedGL(document.createElement('canvas'), function (v) {
 		),
 		redGroup(
 			"attribute 정보 파싱 확인 : attributeLocation",
-			redTest("attributeLocation에  attribute 이름정보가 잘들어가나 확인 : aAttributeTest", function (unit) {
+			redTest("attributeLocation에  attribute 이름정보가 잘들어가나 확인 : aAttributeTest", function (unit, title) {
 				var vSource, fSource;
 				vSource = function () {
 					/* @preserve
@@ -815,7 +842,7 @@ RedGL(document.createElement('canvas'), function (v) {
 				console.log(t0)
 				unit.run(t0['attributeLocation']['aAttributeTest']['name'])
 			}, 'aAttributeTest'),
-			redTest("attributeLocation에  attribute가 선언되었지만 main함수에서 사용되지않을경우 로케이션 정보는 -1이어야함", function (unit) {
+			redTest("attributeLocation에  attribute가 선언되었지만 main함수에서 사용되지않을경우 로케이션 정보는 -1이어야함", function (unit, title) {
 				var vSource, fSource;
 				vSource = function () {
 					/* @preserve
@@ -839,7 +866,7 @@ RedGL(document.createElement('canvas'), function (v) {
 				console.log(t0)
 				unit.run(t0['attributeLocation']['aAttributeTest']['location'] == -1)
 			}, true),
-			redTest("attributeLocation에  attribute가 선언되고 main함수에서 사용될경우 location을 숫자형식으로 할당받아야함", function (unit) {
+			redTest("attributeLocation에  attribute가 선언되고 main함수에서 사용될경우 location을 숫자형식으로 할당받아야함", function (unit, title) {
 				var vSource, fSource;
 				vSource = function () {
 					/* @preserve

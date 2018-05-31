@@ -24,7 +24,7 @@ RedGL(document.createElement('canvas'), function (v) {
 		"RedShader Test",
 		redGroup(
 			"생성 확인",
-			redTest("기본 파싱 테스트 : vertex shader", function (unit) {
+			redTest("기본 파싱 테스트 : vertex shader", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -38,11 +38,13 @@ RedGL(document.createElement('canvas'), function (v) {
 					RedShader(tRedGL, 'testShader' + RedGL.makeUUID(), RedShader.VERTEX, source);
 					unit.run(true)
 				} catch (error) {
-					console.log(error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
+
 					unit.run(false)
 				}
 			}, true),
-			redTest("기본 파싱 테스트 : fragment shader", function (unit) {
+			redTest("기본 파싱 테스트 : fragment shader", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -57,11 +59,13 @@ RedGL(document.createElement('canvas'), function (v) {
 					RedShader(tRedGL, 'testShader' + RedGL.makeUUID(), RedShader.FRAGMENT, source);
 					unit.run(true)
 				} catch (error) {
-					console.log(error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
+
 					unit.run(false)
 				}
 			}, true),
-			redTest("쉐이더 타입 확인 : vertex shader", function (unit) {
+			redTest("쉐이더 타입 확인 : vertex shader", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -74,7 +78,7 @@ RedGL(document.createElement('canvas'), function (v) {
 				var t0 = RedShader(tRedGL, 'testShader' + RedGL.makeUUID(), RedShader.VERTEX, source);
 				unit.run(t0['type'])
 			}, RedShader.VERTEX),
-			redTest("쉐이더 타입 확인 : fragment shader", function (unit) {
+			redTest("쉐이더 타입 확인 : fragment shader", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -88,7 +92,7 @@ RedGL(document.createElement('canvas'), function (v) {
 				var t0 = RedShader(tRedGL, 'testShader' + RedGL.makeUUID(), RedShader.FRAGMENT, source);
 				unit.run(t0['type'])
 			}, RedShader.FRAGMENT),
-			redTest("key는 문자열만 허용함 : 숫자 테스트 ", function (unit) {
+			redTest("key는 문자열만 허용함 : 숫자 테스트 ", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -103,11 +107,13 @@ RedGL(document.createElement('canvas'), function (v) {
 					RedShader(tRedGL, 1, RedShader.FRAGMENT, source);
 					unit.run(true)
 				} catch (error) {
-					console.log(error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
+
 					unit.run(false)
 				}
 			}, false),
-			redTest("key는 문자열만 허용함 : Boolean 테스트 ", function (unit) {
+			redTest("key는 문자열만 허용함 : Boolean 테스트 ", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -122,35 +128,41 @@ RedGL(document.createElement('canvas'), function (v) {
 					RedShader(tRedGL, true, RedShader.FRAGMENT, source);
 					unit.run(true)
 				} catch (error) {
-					console.log(error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
+
 					unit.run(false)
 				}
 			}, false),
-			redTest("source는 문자열만 허용함 : 숫자 테스트 ", function (unit) {
+			redTest("source는 문자열만 허용함 : 숫자 테스트 ", function (unit, title) {
 				try {
 					RedShader(tRedGL, true, RedShader.FRAGMENT, 1);
 					unit.run(true)
 				} catch (error) {
-					console.log(error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
+
 					unit.run(false)
 				}
 			}, false),
-			redTest("키와 타입으로 찾기 확인 : 키와 타입만  입력시 해당키로 등록된 녀석을 가지고오는지 - 올바른검색", function (unit) {
+			redTest("키와 타입으로 찾기 확인 : 키와 타입만  입력시 해당키로 등록된 녀석을 가지고오는지 - 올바른검색", function (unit, title) {
 				var t0 = RedShader(tRedGL, 'fragmentTestShader', RedShader.FRAGMENT);
 				console.log(t0)
 				unit.run(t0)
 			}, checkShaderFragment),
-			redTest("키와 타입으로 찾기 확인 : 키와 타입만  입력시 해당키로 등록된 녀석을 가지고오는지 - 다른 타입형식키로 검색", function (unit) {
+			redTest("키와 타입으로 찾기 확인 : 키와 타입만  입력시 해당키로 등록된 녀석을 가지고오는지 - 다른 타입형식키로 검색", function (unit, title) {
 				try {
 					var t0 = RedShader(tRedGL, 'fragmentTestShader', RedShader.VERTEX);
 					console.log(t0)
 					unit.run(true)
 				} catch (error) {
-					console.log(error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
+
 					unit.run(false)
 				}
 			}, false),
-			redTest("키 중복 방지확인 : 키, 타입, 소스 모두 입력시 생성으로 판단함. 이때 키 타입별로 키중복을 확인함", function (unit) {
+			redTest("키 중복 방지확인 : 키, 타입, 소스 모두 입력시 생성으로 판단함. 이때 키 타입별로 키중복을 확인함", function (unit, title) {
 				try {
 					var source;
 					source = function () {
@@ -166,14 +178,16 @@ RedGL(document.createElement('canvas'), function (v) {
 					console.log(t0)
 					unit.run(true)
 				} catch (error) {
-					console.log(error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
+
 					unit.run(false)
 				}
 			}, false)
 		),
 		redGroup(
 			"쉐이더 타입 확인",
-			redTest("쉐이더 타입 확인 : type과 다른 형식의 소스가 들어왔을때 vertexShaderType + fragmentSource", function (unit) {
+			redTest("쉐이더 타입 확인 : type과 다른 형식의 소스가 들어왔을때 vertexShaderType + fragmentSource", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -187,11 +201,13 @@ RedGL(document.createElement('canvas'), function (v) {
 					RedShader(tRedGL, 'testShader' + RedGL.makeUUID(), RedShader.VERTEX, source);
 					unit.run(true)
 				} catch (error) {
-					console.log(error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
+
 					unit.run(false)
 				}
 			}, false),
-			redTest("쉐이더 타입 확인 : type과 다른 형식의 소스가 들어왔을때 fragmentShaderType + vertexSource", function (unit) {
+			redTest("쉐이더 타입 확인 : type과 다른 형식의 소스가 들어왔을때 fragmentShaderType + vertexSource", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -206,11 +222,13 @@ RedGL(document.createElement('canvas'), function (v) {
 					RedShader(tRedGL, 'testShader' + RedGL.makeUUID(), RedShader.FRAGMENT, source);
 					unit.run(true)
 				} catch (error) {
-					console.log(error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
+
 					unit.run(false)
 				}
 			}, false),
-			redTest("쉐이더 타입 확인 : 존재하지 않는 type을 입력했을떄", function (unit) {
+			redTest("쉐이더 타입 확인 : 존재하지 않는 type을 입력했을떄", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -225,11 +243,13 @@ RedGL(document.createElement('canvas'), function (v) {
 					RedShader(tRedGL, 'testShader' + RedGL.makeUUID(), RedShader.NO_TYPE_TEST, source);
 					unit.run(true)
 				} catch (error) {
-					console.log(error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
+
 					unit.run(false)
 				}
 			}, false),
-			redTest("쉐이더 타입 확인 : fragmentShaderType인데 소스에 precision가 정의되어있지 않은경우", function (unit) {
+			redTest("쉐이더 타입 확인 : fragmentShaderType인데 소스에 precision가 정의되어있지 않은경우", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -243,14 +263,16 @@ RedGL(document.createElement('canvas'), function (v) {
 					RedShader(tRedGL, 'testShader' + RedGL.makeUUID(), RedShader.FRAGMENT, source);
 					unit.run(true)
 				} catch (error) {
-					console.log(error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
+
 					unit.run(false)
 				}
 			}, false)
 		),
 		redGroup(
 			"유니폼 체크 확인",
-			redTest("유니폼 이름 형식 확인 : 유니폼은 uXxxxx형태로 선언되어야함. - 실패테스트( uniform vec3 test; )", function (unit) {
+			redTest("유니폼 이름 형식 확인 : 유니폼은 uXxxxx형태로 선언되어야함. - 실패테스트( uniform vec3 test; )", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -265,11 +287,13 @@ RedGL(document.createElement('canvas'), function (v) {
 					RedShader(tRedGL, 'uniformTestShader' + RedGL.makeUUID(), RedShader.VERTEX, source);
 					unit.run(true)
 				} catch (error) {
-					console.log(error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
+
 					unit.run(false)
 				}
 			}, false),
-			redTest("유니폼 이름 형식 확인 : 유니폼은 uXxxxx형태로 선언되어야함. - 실패테스트( uniform vec3 Utest; ) / 첫번째 문자는 대문자로 시작하면 안됨", function (unit) {
+			redTest("유니폼 이름 형식 확인 : 유니폼은 uXxxxx형태로 선언되어야함. - 실패테스트( uniform vec3 Utest; ) / 첫번째 문자는 대문자로 시작하면 안됨", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -284,11 +308,13 @@ RedGL(document.createElement('canvas'), function (v) {
 					RedShader(tRedGL, 'uniformTestShader' + RedGL.makeUUID(), RedShader.VERTEX, source);
 					unit.run(true)
 				} catch (error) {
-					console.log(error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
+
 					unit.run(false)
 				}
 			}, false),
-			redTest("유니폼 이름 형식 확인 : 유니폼은 uXxxxx형태로 선언되어야함. - 실패테스트( uniform vec3 utest; ) / 두번째 문자는 대문자로 시작해야함", function (unit) {
+			redTest("유니폼 이름 형식 확인 : 유니폼은 uXxxxx형태로 선언되어야함. - 실패테스트( uniform vec3 utest; ) / 두번째 문자는 대문자로 시작해야함", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -303,11 +329,13 @@ RedGL(document.createElement('canvas'), function (v) {
 					RedShader(tRedGL, 'uniformTestShader' + RedGL.makeUUID(), RedShader.VERTEX, source);
 					unit.run(true)
 				} catch (error) {
-					console.log(error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
+
 					unit.run(false)
 				}
 			}, false),
-			redTest("유니폼 이름 형식 확인 : 유니폼은 uXxxxx형태로 선언되어야함. - 성공테스트( varying vec3 uTest; )", function (unit) {
+			redTest("유니폼 이름 형식 확인 : 유니폼은 uXxxxx형태로 선언되어야함. - 성공테스트( varying vec3 uTest; )", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -322,11 +350,13 @@ RedGL(document.createElement('canvas'), function (v) {
 					var t0 = RedShader(tRedGL, 'uniformTestShader' + RedGL.makeUUID(), RedShader.VERTEX, source);
 					unit.run(true)
 				} catch (error) {
-					console.log(error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
+
 					unit.run(false)
 				}
 			}, true),
-			redTest("유니폼 선언 형식 확인 : float", function (unit) {
+			redTest("유니폼 선언 형식 확인 : float", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -346,7 +376,7 @@ RedGL(document.createElement('canvas'), function (v) {
 				console.log(t0)
 				console.log(t1)
 			}, 'float'),
-			redTest("유니폼 선언 형식 확인 : int", function (unit) {
+			redTest("유니폼 선언 형식 확인 : int", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -366,7 +396,7 @@ RedGL(document.createElement('canvas'), function (v) {
 				console.log(t0)
 				console.log(t1)
 			}, 'int'),
-			redTest("유니폼 선언 형식 확인 : bool", function (unit) {
+			redTest("유니폼 선언 형식 확인 : bool", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -386,7 +416,7 @@ RedGL(document.createElement('canvas'), function (v) {
 				console.log(t0)
 				console.log(t1)
 			}, 'bool'),
-			redTest("유니폼 선언 형식 확인 : vec2", function (unit) {
+			redTest("유니폼 선언 형식 확인 : vec2", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -406,7 +436,7 @@ RedGL(document.createElement('canvas'), function (v) {
 				console.log(t0)
 				console.log(t1)
 			}, 'vec2'),
-			redTest("유니폼 선언 형식 확인 : vec3", function (unit) {
+			redTest("유니폼 선언 형식 확인 : vec3", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -426,7 +456,7 @@ RedGL(document.createElement('canvas'), function (v) {
 				console.log(t0)
 				console.log(t1)
 			}, 'vec3'),
-			redTest("유니폼 선언 형식 확인 : vec4", function (unit) {
+			redTest("유니폼 선언 형식 확인 : vec4", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -446,7 +476,7 @@ RedGL(document.createElement('canvas'), function (v) {
 				console.log(t0)
 				console.log(t1)
 			}, 'vec4'),
-			redTest("유니폼 선언 형식 확인 : ivec2", function (unit) {
+			redTest("유니폼 선언 형식 확인 : ivec2", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -466,7 +496,7 @@ RedGL(document.createElement('canvas'), function (v) {
 				console.log(t0)
 				console.log(t1)
 			}, 'ivec2'),
-			redTest("유니폼 선언 형식 확인 : ivec3", function (unit) {
+			redTest("유니폼 선언 형식 확인 : ivec3", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -486,7 +516,7 @@ RedGL(document.createElement('canvas'), function (v) {
 				console.log(t0)
 				console.log(t1)
 			}, 'ivec3'),
-			redTest("유니폼 선언 형식 확인 : ivec4", function (unit) {
+			redTest("유니폼 선언 형식 확인 : ivec4", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -506,7 +536,7 @@ RedGL(document.createElement('canvas'), function (v) {
 				console.log(t0)
 				console.log(t1)
 			}, 'ivec4'),
-			redTest("유니폼 선언 형식 확인 : bvec2", function (unit) {
+			redTest("유니폼 선언 형식 확인 : bvec2", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -526,7 +556,7 @@ RedGL(document.createElement('canvas'), function (v) {
 				console.log(t0)
 				console.log(t1)
 			}, 'bvec2'),
-			redTest("유니폼 선언 형식 확인 : bvec3", function (unit) {
+			redTest("유니폼 선언 형식 확인 : bvec3", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -546,7 +576,7 @@ RedGL(document.createElement('canvas'), function (v) {
 				console.log(t0)
 				console.log(t1)
 			}, 'bvec3'),
-			redTest("유니폼 선언 형식 확인 : bvec4", function (unit) {
+			redTest("유니폼 선언 형식 확인 : bvec4", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -566,7 +596,7 @@ RedGL(document.createElement('canvas'), function (v) {
 				console.log(t0)
 				console.log(t1)
 			}, 'bvec4'),
-			redTest("유니폼 선언 형식 확인 : mat2", function (unit) {
+			redTest("유니폼 선언 형식 확인 : mat2", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -586,7 +616,7 @@ RedGL(document.createElement('canvas'), function (v) {
 				console.log(t0)
 				console.log(t1)
 			}, 'mat2'),
-			redTest("유니폼 선언 형식 확인 : mat3", function (unit) {
+			redTest("유니폼 선언 형식 확인 : mat3", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -606,7 +636,7 @@ RedGL(document.createElement('canvas'), function (v) {
 				console.log(t0)
 				console.log(t1)
 			}, 'mat3'),
-			redTest("유니폼 선언 형식 확인 : mat4", function (unit) {
+			redTest("유니폼 선언 형식 확인 : mat4", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -626,7 +656,7 @@ RedGL(document.createElement('canvas'), function (v) {
 				console.log(t0)
 				console.log(t1)
 			}, 'mat4'),
-			redTest("유니폼 선언 형식 확인 : sampler2D", function (unit) {
+			redTest("유니폼 선언 형식 확인 : sampler2D", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -646,7 +676,7 @@ RedGL(document.createElement('canvas'), function (v) {
 				console.log(t0)
 				console.log(t1)
 			}, 'sampler2D'),
-			redTest("유니폼 선언 형식 확인 : samplerCube", function (unit) {
+			redTest("유니폼 선언 형식 확인 : samplerCube", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -669,7 +699,7 @@ RedGL(document.createElement('canvas'), function (v) {
 		),
 		redGroup(
 			"베어링 체크 확인",
-			redTest("베어링 이름 형식 확인 : 베어링은 vXxxxx형태로 선언되어야함. - 실패테스트( varying vec3 test; )", function (unit) {
+			redTest("베어링 이름 형식 확인 : 베어링은 vXxxxx형태로 선언되어야함. - 실패테스트( varying vec3 test; )", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -684,11 +714,13 @@ RedGL(document.createElement('canvas'), function (v) {
 					RedShader(tRedGL, 'varyingTestShader' + RedGL.makeUUID(), RedShader.VERTEX, source);
 					unit.run(true)
 				} catch (error) {
-					console.log(error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
+
 					unit.run(false)
 				}
 			}, false),
-			redTest("베어링 이름 형식 확인 : 베어링은 vXxxxx형태로 선언되어야함. - 실패테스트( varying vec3 Vtest; ) / 첫번째 문자는 대문자로 시작하면 안됨", function (unit) {
+			redTest("베어링 이름 형식 확인 : 베어링은 vXxxxx형태로 선언되어야함. - 실패테스트( varying vec3 Vtest; ) / 첫번째 문자는 대문자로 시작하면 안됨", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -703,11 +735,13 @@ RedGL(document.createElement('canvas'), function (v) {
 					RedShader(tRedGL, 'varyingTestShader' + RedGL.makeUUID(), RedShader.VERTEX, source);
 					unit.run(true)
 				} catch (error) {
-					console.log(error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
+
 					unit.run(false)
 				}
 			}, false),
-			redTest("베어링 이름 형식 확인 : 베어링은 vXxxxx형태로 선언되어야함. - 실패테스트( varying vec3 vtest; ) / 두번째 문자는 대문자로 시작해야함 ", function (unit) {
+			redTest("베어링 이름 형식 확인 : 베어링은 vXxxxx형태로 선언되어야함. - 실패테스트( varying vec3 vtest; ) / 두번째 문자는 대문자로 시작해야함 ", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -722,11 +756,13 @@ RedGL(document.createElement('canvas'), function (v) {
 					RedShader(tRedGL, 'varyingTestShader' + RedGL.makeUUID(), RedShader.VERTEX, source);
 					unit.run(true)
 				} catch (error) {
-					console.log(error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
+
 					unit.run(false)
 				}
 			}, false),
-			redTest("베어링 이름 형식 확인 : 베어링은 vXxxxx형태로 선언되어야함. - 성공테스트( varying vec3 vTest; )", function (unit) {
+			redTest("베어링 이름 형식 확인 : 베어링은 vXxxxx형태로 선언되어야함. - 성공테스트( varying vec3 vTest; )", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -741,14 +777,16 @@ RedGL(document.createElement('canvas'), function (v) {
 					RedShader(tRedGL, 'varyingTestShader' + RedGL.makeUUID(), RedShader.VERTEX, source);
 					unit.run(true)
 				} catch (error) {
-					console.log(error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
+
 					unit.run(false)
 				}
 			}, true)
 		),
 		redGroup(
 			"어트리뷰트 체크 확인",
-			redTest("어트리뷰트 이름 형식 확인 : 어트리뷰트은 aXxxxx형태로 선언되어야함. - 실패테스트( attribute vec3 test; )", function (unit) {
+			redTest("어트리뷰트 이름 형식 확인 : 어트리뷰트은 aXxxxx형태로 선언되어야함. - 실패테스트( attribute vec3 test; )", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -763,11 +801,13 @@ RedGL(document.createElement('canvas'), function (v) {
 					var t0 = RedShader(tRedGL, 'attributeTestShader' + RedGL.makeUUID(), RedShader.VERTEX, source);
 					unit.run(true)
 				} catch (error) {
-					console.log(error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
+
 					unit.run(false)
 				}
 			}, false),
-			redTest("어트리뷰트 이름 형식 확인 : 어트리뷰트은 aXxxxx형태로 선언되어야함. - 실패테스트( attribute vec3 Atest; ) / 첫번째 문자는 대문자로 시작하면 안됨", function (unit) {
+			redTest("어트리뷰트 이름 형식 확인 : 어트리뷰트은 aXxxxx형태로 선언되어야함. - 실패테스트( attribute vec3 Atest; ) / 첫번째 문자는 대문자로 시작하면 안됨", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -782,11 +822,13 @@ RedGL(document.createElement('canvas'), function (v) {
 					var t0 = RedShader(tRedGL, 'attributeTestShader' + RedGL.makeUUID(), RedShader.VERTEX, source);
 					unit.run(true)
 				} catch (error) {
-					console.log(error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
+
 					unit.run(false)
 				}
 			}, false),
-			redTest("어트리뷰트 이름 형식 확인 : 어트리뷰트은 aXxxxx형태로 선언되어야함. - 실패테스트( attribute vec3 atest; ) / 두번째 문자는 대문자로 시작해야함", function (unit) {
+			redTest("어트리뷰트 이름 형식 확인 : 어트리뷰트은 aXxxxx형태로 선언되어야함. - 실패테스트( attribute vec3 atest; ) / 두번째 문자는 대문자로 시작해야함", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -801,12 +843,14 @@ RedGL(document.createElement('canvas'), function (v) {
 					var t0 = RedShader(tRedGL, 'attributeTestShader' + RedGL.makeUUID(), RedShader.VERTEX, source);
 					unit.run(true)
 				} catch (error) {
-					console.log(error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
+
 					unit.run(false)
 				}
 			}, false),
 
-			redTest("어트리뷰트 이름 형식 확인 : 어트리뷰트은 aXxxxx형태로 선언되어야함. - 성공테스트( attribute vec3 aTest; )", function (unit) {
+			redTest("어트리뷰트 이름 형식 확인 : 어트리뷰트은 aXxxxx형태로 선언되어야함. - 성공테스트( attribute vec3 aTest; )", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -821,14 +865,16 @@ RedGL(document.createElement('canvas'), function (v) {
 					var t0 = RedShader(tRedGL, 'attributeTestShader' + RedGL.makeUUID(), RedShader.VERTEX, source);
 					unit.run(true)
 				} catch (error) {
-					console.log(error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
+
 					unit.run(false)
 				}
 			}, true)
 		),
 		redGroup(
 			"상수 체크 확인",
-			redTest("상수 이름 형식 확인 : 상수는 cXxxxx형태로 선언되어야함. - 실패테스트( const vec3 test; )", function (unit) {
+			redTest("상수 이름 형식 확인 : 상수는 cXxxxx형태로 선언되어야함. - 실패테스트( const vec3 test; )", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -843,11 +889,13 @@ RedGL(document.createElement('canvas'), function (v) {
 					RedShader(tRedGL, 'constTestShader' + RedGL.makeUUID(), RedShader.VERTEX, source);
 					unit.run(true)
 				} catch (error) {
-					console.log(error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
+
 					unit.run(false)
 				}
 			}, false),
-			redTest("상수 이름 형식 확인 : 상수는 cXxxxx형태로 선언되어야함. - 실패테스트( const vec3 Ctest; ) / 첫번째 문자는 대문자로 시작하면 안됨", function (unit) {
+			redTest("상수 이름 형식 확인 : 상수는 cXxxxx형태로 선언되어야함. - 실패테스트( const vec3 Ctest; ) / 첫번째 문자는 대문자로 시작하면 안됨", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -862,11 +910,13 @@ RedGL(document.createElement('canvas'), function (v) {
 					RedShader(tRedGL, 'constTestShader' + RedGL.makeUUID(), RedShader.VERTEX, source);
 					unit.run(true)
 				} catch (error) {
-					console.log(error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
+
 					unit.run(false)
 				}
 			}, false),
-			redTest("상수 이름 형식 확인 : 상수는 cXxxxx형태로 선언되어야함. - 실패테스트( const vec3 ctest; ) / 두번째 문자는 대문자로 시작해야함", function (unit) {
+			redTest("상수 이름 형식 확인 : 상수는 cXxxxx형태로 선언되어야함. - 실패테스트( const vec3 ctest; ) / 두번째 문자는 대문자로 시작해야함", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -881,11 +931,13 @@ RedGL(document.createElement('canvas'), function (v) {
 					RedShader(tRedGL, 'constTestShader' + RedGL.makeUUID(), RedShader.VERTEX, source);
 					unit.run(true)
 				} catch (error) {
-					console.log(error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
+
 					unit.run(false)
 				}
 			}, false),
-			redTest("상수 이름 형식 확인 : 상수는 cXxxxx형태로 선언되어야함. - 성공테스트( const vec3 cTest; )", function (unit) {
+			redTest("상수 이름 형식 확인 : 상수는 cXxxxx형태로 선언되어야함. - 성공테스트( const vec3 cTest; )", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -900,14 +952,16 @@ RedGL(document.createElement('canvas'), function (v) {
 					RedShader(tRedGL, 'constTestShader' + RedGL.makeUUID(), RedShader.VERTEX, source);
 					unit.run(true)
 				} catch (error) {
-					console.log(error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
+
 					unit.run(false)
 				}
 			}, true)
 		),
 		redGroup(
 			"배열 형식 체크 확인",
-			redTest("유니폼 선언 형식 확인 : uFloatArray[3]", function (unit) {
+			redTest("유니폼 선언 형식 확인 : uFloatArray[3]", function (unit, title) {
 					var source;
 					source = function () {
 						/* @preserve
@@ -928,7 +982,7 @@ RedGL(document.createElement('canvas'), function (v) {
 					console.log(t1)
 				}, 'float_3'
 			),
-			redTest("유니폼 선언 형식 확인 : uIntArray[3]", function (unit) {
+			redTest("유니폼 선언 형식 확인 : uIntArray[3]", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -951,7 +1005,7 @@ RedGL(document.createElement('canvas'), function (v) {
 		),
 		redGroup(
 			"중복소스 확인",
-			redTest("중복선언", function (unit) {
+			redTest("중복선언", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -969,11 +1023,13 @@ RedGL(document.createElement('canvas'), function (v) {
 					console.log(t0)
 					unit.run(true)
 				} catch (error) {
-					console.log(error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
+
 					unit.run(false)
 				}
 			}, false),
-			redTest("시스템 선언과 중복일경우 : RedSystemShaderCode.vShareSource", function (unit) {
+			redTest("시스템 선언과 중복일경우 : RedSystemShaderCode.vShareSource", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -990,11 +1046,13 @@ RedGL(document.createElement('canvas'), function (v) {
 					console.log(t0)
 					unit.run(true)
 				} catch (error) {
-					console.log(error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
+
 					unit.run(false)
 				}
 			}, false),
-			redTest("시스템 선언과 중복일경우 : RedSystemShaderCode.fShareSource", function (unit) {
+			redTest("시스템 선언과 중복일경우 : RedSystemShaderCode.fShareSource", function (unit, title) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -1011,7 +1069,9 @@ RedGL(document.createElement('canvas'), function (v) {
 					console.log(t0)
 					unit.run(true)
 				} catch (error) {
-					console.log(error)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
+
 					unit.run(false)
 				}
 			}, false)

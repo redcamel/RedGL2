@@ -1,9 +1,9 @@
 "use strict";
-var RedMaterial;
+var RedTestMaterial;
 (function () {
 	var makeProgram;
-	RedMaterial = function (redGL) {
-		if (!(this instanceof RedMaterial)) return new RedMaterial(redGL);
+	RedTestMaterial = function (redGL) {
+		if (!(this instanceof RedTestMaterial)) return new RedTestMaterial(redGL);
 		this['program'] = makeProgram(redGL)
 		// 유니폼 프로퍼티
 		this['floatTest'] = 1
@@ -63,6 +63,6 @@ var RedMaterial;
 		}
 	})()
 
-	RedMaterial.prototype = RedBaseMaterial.prototype
-	Object.freeze(RedMaterial)
+	RedTestMaterial.prototype = RedBaseMaterial.prototype
+	Object.freeze(RedTestMaterial)
 })();
