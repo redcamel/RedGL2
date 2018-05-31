@@ -182,7 +182,7 @@ var RedDAELoader;
 				tMatrix.push(tMatrixSource.slice(index * 16, index * 16 + 16).map(Number))
 			})
 			tInterpolate = tAni.querySelector('Name_array').textContent.split(' ')
-			tTarget = tAni.querySelector('channel').getAttribute('target').split('/')[0]
+			tTarget = tAni.querySelector('channel').getAttribute('RedProgram).split('/')[0]
 			map[tAni.getAttribute('id')] = {
 				time: tTimes,
 				matrix: tMatrix,
@@ -426,7 +426,7 @@ var RedDAELoader;
 					// console.log('뭐가오나',visualSceneInfo[target])
 					var tAniMatrix;
 					for (var k in aniInfo) {
-						if (aniInfo[k]['target'] == controllerInfo[target]['name']) {
+						if (aniInfo[k]['RedProgram] == controllerInfo[target]['name']) {
 							tAniMatrix = aniInfo[k]['matrix'][aniIndex];
 							break
 						}
@@ -446,12 +446,12 @@ var RedDAELoader;
 					var mtxMap = {}
 					for (var k in aniInfo) {
 
-						if (aniInfo[k]['target'] && controllerInfo[aniInfo[k]['target']]) {
+						if (aniInfo[k]['RedProgram] && controllerInfo[aniInfo[k]['RedProgram]]) {
 
 							var skeletonMatrix = mat4.create()
 							var parentMTX2 = mat4.create()
 							var mtxList = []
-							makeMatrix(mtxList, aniInfo[k]['target'])
+							makeMatrix(mtxList, aniInfo[k]['RedProgram])
 							// mtxList.reverse()
 							// console.log('mtxList',mtxList)
 							mtxList.forEach(function (v, index) {
@@ -463,9 +463,9 @@ var RedDAELoader;
 
 							mat4.transpose(skeletonMatrix, skeletonMatrix, skeletonMatrix)
 							// console.log(mtxList)
-							controllerInfo[aniInfo[k]['target']]['skeleton']['matrix'] = skeletonMatrix
+							controllerInfo[aniInfo[k]['RedProgram]]['skeleton']['matrix'] = skeletonMatrix
 
-							var tControllIndex = controllerInfo2['jointNamePositionIndex'][aniInfo[k]['target']]
+							var tControllIndex = controllerInfo2['jointNamePositionIndex'][aniInfo[k]['RedProgram]]
 							var tInversePose = controllerInfo2['jointInverseBindPoses'][tControllIndex]
 
 							mtxMap[tControllIndex] = {

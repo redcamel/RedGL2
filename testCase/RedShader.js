@@ -126,7 +126,16 @@ RedGL(document.createElement('canvas'), function (v) {
 					unit.run(false)
 				}
 			}, false),
-			redTest("키와 타입으로 찾기 확인 : 키와 타입만  입력시 해당키로 등록된 녀석을 가지고오는지 - 올바른검샘", function (unit) {
+			redTest("source는 문자열만 허용함 : 숫자 테스트 ", function (unit) {
+				try {
+					RedShader(tRedGL, true, RedShader.FRAGMENT, 1);
+					unit.run(true)
+				} catch (error) {
+					console.log(error)
+					unit.run(false)
+				}
+			}, false),
+			redTest("키와 타입으로 찾기 확인 : 키와 타입만  입력시 해당키로 등록된 녀석을 가지고오는지 - 올바른검색", function (unit) {
 				var t0 = RedShader(tRedGL, 'fragmentTestShader', RedShader.FRAGMENT);
 				console.log(t0)
 				unit.run(t0)

@@ -127,82 +127,100 @@ var RedRenderer;
 					tSystemUniformGroup = tProgram['systemUniformLocation'];
 					//
 					tLocationInfo = tSystemUniformGroup['uTime'];
-					tLocation = tLocationInfo['location'];
-					tUUID = tLocationInfo['_UUID']
-					if (tLocation && cacheSystemUniform[tUUID] != time) {
-						gl.uniform1f(tLocation, time);
-						cacheSystemUniform[tUUID] = time;
+					if (tLocationInfo) {
+						tLocation = tLocationInfo['location'];
+						tUUID = tLocationInfo['_UUID']
+						if (tLocation && cacheSystemUniform[tUUID] != time) {
+							gl.uniform1f(tLocation, time);
+							cacheSystemUniform[tUUID] = time;
+						}
 					}
 					//
 					tLocationInfo = tSystemUniformGroup['uResolution'];
-					tLocation = tLocationInfo['location'];
-					tUUID = tLocationInfo['_UUID'];
-					tViewRect = [viewRect[2], viewRect[3]]
-					if (tLocation && cacheSystemUniform[tUUID] != tViewRect.toString()) {
-						gl.uniform2fv(tLocation, tViewRect);
-						cacheSystemUniform[tUUID] = tViewRect.toString()
+					if (tLocationInfo) {
+						tLocation = tLocationInfo['location'];
+						tUUID = tLocationInfo['_UUID'];
+						tViewRect = [viewRect[2], viewRect[3]]
+						if (tLocation && cacheSystemUniform[tUUID] != tViewRect.toString()) {
+							gl.uniform2fv(tLocation, tViewRect);
+							cacheSystemUniform[tUUID] = tViewRect.toString()
+						}
 					}
-
 					tLocationInfo = tSystemUniformGroup['uUseFog'];
-					tLocation = tLocationInfo['location'];
-					tValue = scene['useFog'] ? 1 : 0;
-					tUUID = tLocationInfo['_UUID'];
-					if (tLocation && cacheSystemUniform[tUUID] != tValue) {
-						gl.uniform1f(tLocation, tValue)
-						cacheSystemUniform[tUUID] = tValue
+					if (tLocationInfo) {
+						tLocation = tLocationInfo['location'];
+						tValue = scene['useFog'] ? 1 : 0;
+						tUUID = tLocationInfo['_UUID'];
+						if (tLocation && cacheSystemUniform[tUUID] != tValue) {
+							gl.uniform1f(tLocation, tValue)
+							cacheSystemUniform[tUUID] = tValue
+						}
 					}
 					//
 					tLocationInfo = tSystemUniformGroup['uFogDensity'];
-					tLocation = tLocationInfo['location'];
-					tValue = scene['fogDensity'];
-					tUUID = tLocationInfo['_UUID'];
-					if (tLocation && cacheSystemUniform[tUUID] != tValue) {
-						gl.uniform1f(tLocation, tValue)
-						cacheSystemUniform[tUUID] = tValue
+					if (tLocationInfo) {
+						tLocation = tLocationInfo['location'];
+						tValue = scene['fogDensity'];
+						tUUID = tLocationInfo['_UUID'];
+						if (tLocation && cacheSystemUniform[tUUID] != tValue) {
+							gl.uniform1f(tLocation, tValue)
+							cacheSystemUniform[tUUID] = tValue
+						}
 					}
+
 					//
 					tLocationInfo = tSystemUniformGroup['uFogColor'];
-					tLocation = tLocationInfo['location'];
-					tFogColor[0] = scene['_fogR'];
-					tFogColor[1] = scene['_fogG'];
-					tFogColor[2] = scene['_fogB'];
-					tFogColor[3] = 1;
-					tValue = tFogColor;
-					tUUID = tLocationInfo['_UUID'];
-					if (tLocation && cacheSystemUniform[tUUID] != tValue.toString()) {
-						gl.uniform4fv(tLocation, tValue)
-						cacheSystemUniform[tUUID] = tValue.toString()
+					if (tLocationInfo) {
+						tLocation = tLocationInfo['location'];
+						tFogColor[0] = scene['_fogR'];
+						tFogColor[1] = scene['_fogG'];
+						tFogColor[2] = scene['_fogB'];
+						tFogColor[3] = 1;
+						tValue = tFogColor;
+						tUUID = tLocationInfo['_UUID'];
+						if (tLocation && cacheSystemUniform[tUUID] != tValue.toString()) {
+							gl.uniform4fv(tLocation, tValue)
+							cacheSystemUniform[tUUID] = tValue.toString()
+						}
 					}
+
 
 					//
 					tLocationInfo = tSystemUniformGroup['uFogDistance'];
-					tLocation = tLocationInfo['location'];
-					tValue = scene['fogDistance'];
-					tUUID = tLocationInfo['_UUID'];
-					if (tLocation && cacheSystemUniform[tUUID] != tValue) {
-						gl.uniform1f(tLocation, tValue)
-						cacheSystemUniform[tUUID] = tValue
+					if (tLocationInfo) {
+						tLocation = tLocationInfo['location'];
+						tValue = scene['fogDistance'];
+						tUUID = tLocationInfo['_UUID'];
+						if (tLocation && cacheSystemUniform[tUUID] != tValue) {
+							gl.uniform1f(tLocation, tValue)
+							cacheSystemUniform[tUUID] = tValue
+						}
 					}
-
 					//
 					tLocationInfo = tSystemUniformGroup['uCameraMatrix'];
-					tLocation = tLocationInfo['location'];
-					tValue = camera['matrix'];
-					tUUID = tLocationInfo['_UUID'];
-					if (tLocation && cacheSystemUniform[tUUID] != tValue.toString()) {
-						gl.uniformMatrix4fv(tLocation, false, tValue);
-						cacheSystemUniform[tUUID] = tValue.toString()
+					if (tLocationInfo) {
+						tLocation = tLocationInfo['location'];
+						tValue = camera['matrix'];
+						tUUID = tLocationInfo['_UUID'];
+						if (tLocation && cacheSystemUniform[tUUID] != tValue.toString()) {
+							gl.uniformMatrix4fv(tLocation, false, tValue);
+							cacheSystemUniform[tUUID] = tValue.toString()
+						}
 					}
+
 
 					//
 					tLocationInfo = tSystemUniformGroup['uPMatrix'];
-					tLocation = tLocationInfo['location'];
-					tValue = camera['perspectiveMTX'];
-					tUUID = tLocationInfo['_UUID'];
-					if (tLocation && cacheSystemUniform[tUUID] != tValue.toString()) {
-						gl.uniformMatrix4fv(tLocation, false, tValue);
-						cacheSystemUniform[tUUID] = tValue.toString()
+					if (tLocationInfo) {
+						tLocation = tLocationInfo['location'];
+						tValue = camera['perspectiveMTX'];
+						tUUID = tLocationInfo['_UUID'];
+						if (tLocation && cacheSystemUniform[tUUID] != tValue.toString()) {
+							gl.uniformMatrix4fv(tLocation, false, tValue);
+							cacheSystemUniform[tUUID] = tValue.toString()
+						}
 					}
+
 
 					//
 					var i, tList;
@@ -254,35 +272,45 @@ var RedRenderer;
 						}
 						//
 						tLocationInfo = tSystemUniformGroup['uDirectionalLightPosition'];
-						tLocation = tLocationInfo['location'];
-						if (tLocation) {
-							vec3.normalize(tVector, tVector)
-							tDirectionnalPositionList[0 + 3 * i] = tVector[0];
-							tDirectionnalPositionList[1 + 3 * i] = tVector[1];
-							tDirectionnalPositionList[2 + 3 * i] = tVector[2];
+						if (tLocationInfo) {
+							tLocation = tLocationInfo['location'];
+							if (tLocation) {
+								vec3.normalize(tVector, tVector)
+								tDirectionnalPositionList[0 + 3 * i] = tVector[0];
+								tDirectionnalPositionList[1 + 3 * i] = tVector[1];
+								tDirectionnalPositionList[2 + 3 * i] = tVector[2];
+							}
+
 						}
 						//
 						tLocationInfo = tSystemUniformGroup['uDirectionalLightColor'];
-						tLocation = tLocationInfo['location'];
-						if (tLocation) {
-							tColorList[0 + 4 * i] = tLightData['color'][0];
-							tColorList[1 + 4 * i] = tLightData['color'][1];
-							tColorList[2 + 4 * i] = tLightData['color'][2];
-							tColorList[3 + 4 * i] = tLightData['color'][3];
+						if (tLocationInfo) {
+							tLocation = tLocationInfo['location'];
+							if (tLocation) {
+								tColorList[0 + 4 * i] = tLightData['color'][0];
+								tColorList[1 + 4 * i] = tLightData['color'][1];
+								tColorList[2 + 4 * i] = tLightData['color'][2];
+								tColorList[3 + 4 * i] = tLightData['color'][3];
+							}
+						}
+						if (tLocationInfo) {
+
+							tLocationInfo = tSystemUniformGroup['uDirectionalLightIntensity'];
+							tLocation = tLocationInfo['location'];
+							if (tLocation) tIntensityList[i] = tLightData['intensity']
 						}
 						//
-						tLocationInfo = tSystemUniformGroup['uDirectionalLightIntensity'];
-						tLocation = tLocationInfo['location'];
-						if (tLocation) tIntensityList[i] = tLightData['intensity']
 					}
 					//
 					tLocationInfo = tSystemUniformGroup['uDirectionalLightPosition'];
-					tLocation = tLocationInfo['location'];
-					tUUID = tLocationInfo['_UUID'];
-					tValue = tDirectionnalPositionList;
-					if (tLocation && cacheSystemUniform[tUUID] != tValue.toString()) {
-						gl.uniform3fv(tLocation, tValue);
-						cacheSystemUniform[tUUID] = tValue.toString()
+					if (tLocationInfo) {
+						tLocation = tLocationInfo['location'];
+						tUUID = tLocationInfo['_UUID'];
+						tValue = tDirectionnalPositionList;
+						if (tLocation && cacheSystemUniform[tUUID] != tValue.toString()) {
+							gl.uniform3fv(tLocation, tValue);
+							cacheSystemUniform[tUUID] = tValue.toString()
+						}
 					}
 					//
 					tLocationInfo = tSystemUniformGroup['uDirectionalLightColor'];
@@ -859,77 +887,73 @@ var RedRenderer;
 						tUniformLocationInfo = tUniformGroup[i2];
 						tWebGLUniformLocation = tUniformLocationInfo['location'];
 						tUUID = tUniformLocationInfo['_UUID'];
-						if (tWebGLUniformLocation) {
-							tRenderType = tUniformLocationInfo['renderType'];
-							tUniformValue = tMaterial[tUniformLocationInfo['materialPropertyName']];
-							noChangeUniform = tCacheUniformInfo[tUUID] == tUniformValue;
-							// console.log(tCacheInfo)
-							if (tRenderType == 'sampler2D' || tRenderType == 'samplerCube') {
-								tSamplerIndex = tUniformLocationInfo['samplerIndex']
-								// samplerIndex : 0,1 번은 생성용으로 쓴다.
-								if (tUniformValue) {
-									// console.log(tUniformLocationInfo['materialPropertyName'],tUniformValue)
-									// console.log(tUniformLocationInfo)
+						tRenderType = tUniformLocationInfo['renderType'];
+						tUniformValue = tMaterial[tUniformLocationInfo['materialPropertyName']];
+						noChangeUniform = tCacheUniformInfo[tUUID] == tUniformValue;
+						// console.log(tCacheInfo)
+						if (tRenderType == 'sampler2D' || tRenderType == 'samplerCube') {
+							tSamplerIndex = tUniformLocationInfo['samplerIndex']
+							// samplerIndex : 0,1 번은 생성용으로 쓴다.
+							if (tUniformValue) {
+								// console.log(tUniformLocationInfo['materialPropertyName'],tUniformValue)
+								// console.log(tUniformLocationInfo)
 
-									if (tCacheBySamplerIndex[tSamplerIndex] == tUniformValue['_UUID']) {
-
-										// console.log('온다',tUniformLocationInfo['materialPropertyName'],tSamplerIndex,tSamplerIndex)
-									} else {
-										// console.log('온다2',tUniformLocationInfo['materialPropertyName'],tSamplerIndex,tSamplerIndex)
-										tPrevSamplerIndex == tSamplerIndex ? 0 : gl.activeTexture(gl.TEXTURE0 + (tPrevSamplerIndex = tSamplerIndex));
-										;
-										gl.bindTexture(tRenderType == 'sampler2D' ? gl.TEXTURE_2D : gl.TEXTURE_CUBE_MAP, tUniformValue['webglTexture']);
-										tCacheBySamplerIndex[tUUID] == tSamplerIndex ? 0 : gl.uniform1i(tWebGLUniformLocation, tCacheBySamplerIndex[tUUID] = tSamplerIndex);
-										tCacheBySamplerIndex[tSamplerIndex] = tUniformValue['_UUID'];
-									}
-
-									// 아틀라스 UV검색
-									if (tSystemUniformGroup['uAtlascoord']['location']) {
-										tUUID = tSystemUniformGroup['uAtlascoord']['_UUID']
-										if (tCacheUniformInfo[tUUID] != tUniformValue['atlascoord']['data']['_UUID']) {
-											gl.uniform4fv(tSystemUniformGroup['uAtlascoord']['location'], tUniformValue['atlascoord']['data'])
-											tCacheUniformInfo[tUUID] = tUniformValue['atlascoord']['data']['_UUID']
-										}
-									}
+								if (tCacheBySamplerIndex[tSamplerIndex] == tUniformValue['_UUID']) {
+									// console.log('온다',tUniformLocationInfo['materialPropertyName'],tSamplerIndex,tSamplerIndex)
 								} else {
-									// console.log('설마',tUniformLocationInfo['materialPropertyName'])
-									if (tRenderType == 'sampler2D') {
+									// console.log('온다2',tUniformLocationInfo['materialPropertyName'],tSamplerIndex,tSamplerIndex)
+									tPrevSamplerIndex == tSamplerIndex ? 0 : gl.activeTexture(gl.TEXTURE0 + (tPrevSamplerIndex = tSamplerIndex));
+									gl.bindTexture(tRenderType == 'sampler2D' ? gl.TEXTURE_2D : gl.TEXTURE_CUBE_MAP, tUniformValue['webglTexture']);
+									tCacheBySamplerIndex[tUUID] == tSamplerIndex ? 0 : gl.uniform1i(tWebGLUniformLocation, tCacheBySamplerIndex[tUUID] = tSamplerIndex);
+									tCacheBySamplerIndex[tSamplerIndex] = tUniformValue['_UUID'];
+								}
 
-										if (tCacheBySamplerIndex[tSamplerIndex] == 0) {
-										} else {
-											tPrevSamplerIndex == 0 ? 0 : gl.activeTexture(gl.TEXTURE0);
-											gl.bindTexture(gl.TEXTURE_2D, redGL['_datas']['emptyTexture']['2d']['webglTexture']);
-											tCacheBySamplerIndex[tUUID] == 0 ? 0 : gl.uniform1i(tWebGLUniformLocation, tCacheBySamplerIndex[tUUID] = 0);
-											tCacheBySamplerIndex[tSamplerIndex] = 0;
-											tPrevSamplerIndex = 0;
-										}
-
-
-									} else {
-										if (tCacheBySamplerIndex[tSamplerIndex] == 1) {
-										} else {
-											tPrevSamplerIndex == 1 ? 0 : gl.activeTexture(gl.TEXTURE0 + 1);
-											gl.bindTexture(gl.TEXTURE_CUBE_MAP, redGL['_datas']['emptyTexture']['3d']['webglTexture']);
-											tCacheBySamplerIndex[tUUID] == 1 ? 0 : gl.uniform1i(tWebGLUniformLocation, tCacheBySamplerIndex[tUUID] = 1);
-											tCacheBySamplerIndex[tSamplerIndex] = 1;
-											tPrevSamplerIndex = 1;
-										}
+								// 아틀라스 UV검색
+								if (tSystemUniformGroup['uAtlascoord']['location']) {
+									tUUID = tSystemUniformGroup['uAtlascoord']['_UUID']
+									if (tCacheUniformInfo[tUUID] != tUniformValue['atlascoord']['data']['_UUID']) {
+										gl.uniform4fv(tSystemUniformGroup['uAtlascoord']['location'], tUniformValue['atlascoord']['data'])
+										tCacheUniformInfo[tUUID] = tUniformValue['atlascoord']['data']['_UUID']
 									}
 								}
 							} else {
-								tUniformValue == undefined ? RedGLUtil.throwFunc('RedRenderer : Material에 ', tUniformLocationInfo['materialPropertyName'], '이 정의 되지않았습니다.') : 0;
-								tRenderType == 'float' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue) :
-									tRenderType == 'int' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue) :
-										tRenderType == 'bool' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
-											// : tRenderType == 'vec' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
-											//TODO: 이걸해결해야하는군..
-											:
-											tRenderType == 'vec' ? gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue) :
-												tRenderType == 'mat' ? gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, false, tUniformValue) :
-													RedGLUtil.throwFunc('RedRenderer : 처리할수없는 타입입니다.', 'tRenderType -', tRenderType)
-							}
+								// console.log('설마',tUniformLocationInfo['materialPropertyName'])
+								if (tRenderType == 'sampler2D') {
 
+									if (tCacheBySamplerIndex[tSamplerIndex] == 0) {
+									} else {
+										tPrevSamplerIndex == 0 ? 0 : gl.activeTexture(gl.TEXTURE0);
+										gl.bindTexture(gl.TEXTURE_2D, redGL['_datas']['emptyTexture']['2d']['webglTexture']);
+										tCacheBySamplerIndex[tUUID] == 0 ? 0 : gl.uniform1i(tWebGLUniformLocation, tCacheBySamplerIndex[tUUID] = 0);
+										tCacheBySamplerIndex[tSamplerIndex] = 0;
+										tPrevSamplerIndex = 0;
+									}
+
+								} else {
+									if (tCacheBySamplerIndex[tSamplerIndex] == 1) {
+									} else {
+										tPrevSamplerIndex == 1 ? 0 : gl.activeTexture(gl.TEXTURE0 + 1);
+										gl.bindTexture(gl.TEXTURE_CUBE_MAP, redGL['_datas']['emptyTexture']['3d']['webglTexture']);
+										tCacheBySamplerIndex[tUUID] == 1 ? 0 : gl.uniform1i(tWebGLUniformLocation, tCacheBySamplerIndex[tUUID] = 1);
+										tCacheBySamplerIndex[tSamplerIndex] = 1;
+										tPrevSamplerIndex = 1;
+									}
+								}
+							}
+						} else {
+							tUniformValue == undefined ? RedGLUtil.throwFunc('RedRenderer : Material에 ', tUniformLocationInfo['materialPropertyName'], '이 정의 되지않았습니다.') : 0;
+							tRenderType == 'float' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue) :
+								tRenderType == 'int' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue) :
+									tRenderType == 'bool' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
+										// : tRenderType == 'vec' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
+										//TODO: 이걸해결해야하는군..
+										:
+										tRenderType == 'vec' ? gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue) :
+											tRenderType == 'mat' ? gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, false, tUniformValue) :
+												RedGLUtil.throwFunc('RedRenderer : 처리할수없는 타입입니다.', 'tRenderType -', tRenderType)
 						}
+
+
 					}
 				}
 				/////////////////////////////////////////////////////////////////////////

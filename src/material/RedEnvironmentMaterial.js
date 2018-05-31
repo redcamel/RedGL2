@@ -133,7 +133,7 @@ var RedEnvironmentMaterial;
 		this['displacementPower'] = 0
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = makeProgram(this, redGL);
+		this['program'] = makeProgram(redGL);
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkProperty()
 		console.log(this)
@@ -253,8 +253,8 @@ var RedEnvironmentMaterial;
 		fSource = RedGLUtil.getStrFromComment(fSource.toString());
 		// console.log(vSource, fSource)
 		PROGRAM_NAME = 'environmentProgram';
-		return function (target, redGL) {
-			return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource)
+		return function (redGL) {
+			return RedProgram(redGL, PROGRAM_NAME, vSource, fSource)
 
 		}
 	})();

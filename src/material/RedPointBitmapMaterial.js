@@ -35,7 +35,7 @@ var RedPointBitmapMaterial;
 		this['diffuseTexture'] = diffuseTexture;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = makeProgram(this, redGL);
+		this['program'] = makeProgram(redGL);
 		/**DOC:
 		 {
 			 title :`alphaTest`,
@@ -90,8 +90,8 @@ var RedPointBitmapMaterial;
 		fSource = RedGLUtil.getStrFromComment(fSource.toString());
 		// console.log(vSource, fSource)
 		PROGRAM_NAME = 'pointBitmapProgram';
-		return function (target, redGL) {
-			return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource)
+		return function (redGL) {
+			return RedProgram(redGL, PROGRAM_NAME, vSource, fSource)
 
 		}
 	})();

@@ -75,7 +75,7 @@ var RedPostEffect_SSAO;
 		})());
 		this['factor2'] = 0.4
 
-		this['program'] = makeProgram(this, redGL);
+		this['program'] = makeProgram(redGL);
 		this['_UUID'] = RedGL['makeUUID']();
 
 		this.updateTexture = function (lastFrameBufferTexture, parentFramBufferTexture) {
@@ -125,8 +125,8 @@ var RedPostEffect_SSAO;
 		vSource = RedGLUtil.getStrFromComment(vSource.toString());
 		fSource = RedGLUtil.getStrFromComment(fSource.toString());
 		PROGRAM_NAME = 'RedPostEffect_SSAO_Program';
-		return function (target, redGL) {
-			return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource);
+		return function (redGL) {
+			return RedProgram(redGL, PROGRAM_NAME, vSource, fSource);
 		}
 	})();
 	RedPostEffect_SSAO['ONLY_SSAO'] = 0

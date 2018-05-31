@@ -57,7 +57,7 @@ var RedPostEffect_ZoomBlur;
 		this['strength'] = 0.15;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = makeProgram(this, redGL);
+		this['program'] = makeProgram(redGL);
 		this['_UUID'] = RedGL['makeUUID']();
 		this.updateTexture = function (lastFrameBufferTexture) {
 			this['diffuseTexture'] = lastFrameBufferTexture
@@ -111,8 +111,8 @@ var RedPostEffect_ZoomBlur;
 		vSource = RedGLUtil.getStrFromComment(vSource.toString());
 		fSource = RedGLUtil.getStrFromComment(fSource.toString());
 		PROGRAM_NAME = 'RedPostEffect_ZoomBlur_Program';
-		return function (target, redGL) {
-			return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource);
+		return function (redGL) {
+			return RedProgram(redGL, PROGRAM_NAME, vSource, fSource);
 		}
 	})();
 	RedPostEffect_ZoomBlur.prototype = RedBaseMaterial.prototype;

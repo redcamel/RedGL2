@@ -13,7 +13,7 @@ var RedProgram;
 			if (!gl.getProgramParameter(program, gl.LINK_STATUS)) RedGLUtil.throwFunc("프로그램을 초기화 할 수 없습니다.");
 			program['key'] = key;
 			program['vShaderKey'] = vs['key'];
-			program['fShaderKey'] = vs['key'];
+			program['fShaderKey'] = fs['key'];
 			gl.useProgram(program);
 			return program;
 		}
@@ -22,9 +22,10 @@ var RedProgram;
 		var AttributeLocationInfo;
 		var UniformLocationInfo;
 		AttributeLocationInfo = function () {
-		}
+		};
 		UniformLocationInfo = function () {
-		}
+		};
+
 		return function (self, gl, shader) {
 			if (shader['parseData']['attribute']) {
 				shader['parseData']['attribute']['list'].forEach(function (v) {
@@ -50,7 +51,6 @@ var RedProgram;
 					// console.log(v)
 					// console.log(v['name'],tGL.getUniformLocation(self['webglProgram'], v['name']))
 					t0['location'] = gl.getUniformLocation(self['webglProgram'], v['name']);
-					if (!t0['location']) t0['msg'] = '쉐이더 main 함수에서 사용되고 있지 않음';
 					t0['uniformType'] = v['uniformType'];
 					// renderType 조사
 					var arrayNum, tRenderType, tRenderMethod;
@@ -63,7 +63,6 @@ var RedProgram;
 							t0['samplerIndex'] = samplerIndex
 							samplerIndex++
 							if (samplerIndex == 8) samplerIndex = 2
-
 							break
 						case 'samplerCube':
 							tRenderType = 'samplerCube';
@@ -117,11 +116,12 @@ var RedProgram;
 					t0['name'] = v['name']
 					t0['materialPropertyName'] = v['name'].charAt(1).toLowerCase() + v['name'].substr(2)
 					t0['arrayNum'] = v['arrayNum']
+					if (!t0['location']) t0['msg'] = '쉐이더 main 함수에서 사용되고 있지 않음';
 					if (v['systemUniformYn']) {
-						self['systemUniformLocation'].push(t0)
+						if (t0['location']) self['systemUniformLocation'].push(t0)
 						self['systemUniformLocation'][v['name']] = t0
 					} else {
-						self['uniformLocation'].push(t0)
+						if (t0['location']) self['uniformLocation'].push(t0)
 						self['uniformLocation'][v['name']] = t0
 					}
 					// Object.seal(t0)
@@ -145,43 +145,41 @@ var RedProgram;
 				 {type:'String'},
 				 `고유키`
 			 ],
-			 vertexShader : [
-				 {type:'RedShader Instance'},
-				 `버텍스 쉐이더(RedShader.VERTEX 타입)`
+			 vSource : [
+				 {type:'string'},
+				 `버텍스 쉐이더 소스`
 			 ],
-			 fragmentShader : [
-				 {type:'RedShader Instance'},
-				 `프레그먼트 쉐이더(RedShader.FRAGMENT 타입)`
+			 fSource : [
+				 {type:'string'},
+				 `프레그먼트 쉐이더 소스`
 			 ]
 		 },
 		 return : 'RedProgram Instance'
 	 }
 	 :DOC*/
-	RedProgram = function (redGL, key, vertexShader, fragmentShader) {
+	RedProgram = function (redGL, key, vSource, fSource) {
 		var tGL;
-		if (!(this instanceof RedProgram)) return new RedProgram(redGL, key, vertexShader, fragmentShader)
-		if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedProgram : RedGL Instance만 허용됩니다.', redGL);
-		if (typeof key != 'string') RedGLUtil.throwFunc('RedProgram : key - 문자열만 허용됩니다.');
-		if (!vertexShader instanceof RedShader) RedGLUtil.throwFunc('RedProgram : vShaderInfo - RedShader만 허용됩니다.');
-		if (!fragmentShader instanceof RedShader) RedGLUtil.throwFunc('RedProgram : fShaderInfo - RedShader만 허용됩니다.');
-		if (vertexShader && vertexShader['type'] != RedShader.VERTEX) RedGLUtil.throwFunc('RedProgram : vShaderInfo - VERTEX 타입만 허용됩니다.');
-		if (fragmentShader && fragmentShader['type'] != RedShader.FRAGMENT) RedGLUtil.throwFunc('RedProgram : fShaderInfo - FRAGMENT 타입만 허용됩니다.');
+		var hasKey;
+		if (!(this instanceof RedProgram)) return new RedProgram(redGL, key, vSource, fSource)
+		if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedProgram : RedGL Instance만 허용됩니다.', '입력값 : ' + redGL);
+		if (typeof key != 'string') RedGLUtil.throwFunc('RedProgram : key - 문자열만 허용됩니다.', '입력값 : ' + key);
 
 		tGL = redGL.gl;
-
 		// 데이터 공간확보
 		if (!redGL['_datas']['RedProgram']) redGL['_datas']['RedProgram'] = {};
+		hasKey = RedProgram.hasKey(redGL, key)
 
-		// 소스 쉐이더가 모두 없으면 기존에서 검색
-		if (!vertexShader && !fragmentShader) {
-			if (redGL['_datas']['RedProgram'][key]) return redGL['_datas']['RedProgram'][key]
-			else RedGLUtil.throwFunc('RedShader : 존재하지않는 key를 검색하려고합니다.', key);
+		var vertexShader, fragmentShader;
+		if (hasKey) {
+			return redGL['_datas']['RedProgram'][key]
 		} else {
+			vertexShader = vSource ? RedShader(redGL, key + '_VS', RedShader['VERTEX'], vSource) : null
+			fragmentShader = fSource ? RedShader(redGL, key + '_FS', RedShader['FRAGMENT'], fSource) : null
 			if (!vertexShader || !fragmentShader) RedGLUtil.throwFunc('RedProgram : 신규 생성시 vertexShader, fragmentShader 모두 입력해야함.');
-			if (RedProgram['hasKey'](redGL, key)) RedGLUtil.throwFunc('RedProgram : key - 이미 정의된 키로 생성을 시도.', '\n키 :', key);
 			else redGL['_datas']['RedProgram'][key] = this;
 			console.log('신규생성', key)
 		}
+
 		/**DOC:
 		 {
 			 title :`key`,
@@ -222,14 +220,12 @@ var RedProgram;
 		 }
 		 :DOC*/
 		this['systemUniformLocation'] = [];
-
 		// 쉐이더 로케이션 찾기
 		tGL.useProgram(this['webglProgram'])
 		samplerIndex = 2
 		updateLocation(this, tGL, vertexShader);
 		updateLocation(this, tGL, fragmentShader);
 		this['_UUID'] = RedGL['makeUUID']();
-		// Object.freeze(this)
 		console.log(this)
 	}
 	RedProgram.prototype = {};
@@ -254,6 +250,7 @@ var RedProgram;
 	 }
 	 :DOC*/
 	RedProgram['hasKey'] = function (redGL, key) {
+		if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedProgram : RedGL Instance만 허용됩니다.', '입력값 : ' + redGL);
 		if (!redGL['_datas']['RedProgram']) redGL['_datas']['RedProgram'] = {};
 		return redGL['_datas']['RedProgram'][key] ? true : false
 	}

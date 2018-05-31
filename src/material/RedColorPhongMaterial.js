@@ -54,7 +54,7 @@ var RedColorPhongMaterial;
 		this.setColor(hex ? hex : '#ff0000', alpha == undefined ? 1 : alpha);
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = makeProgram(this, redGL);
+		this['program'] = makeProgram(redGL);
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkProperty()
 		// Object.seal(this);
@@ -156,8 +156,8 @@ var RedColorPhongMaterial;
 		fSource = RedGLUtil.getStrFromComment(fSource.toString());
 		// console.log(vSource, fSource)
 		PROGRAM_NAME = 'colorPhongProgram';
-		return function (target, redGL) {
-			return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource)
+		return function (redGL) {
+			return RedProgram(redGL, PROGRAM_NAME, vSource, fSource)
 
 		}
 	})();

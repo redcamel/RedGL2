@@ -39,7 +39,7 @@ var RedBitmapMaterial;
 		this['diffuseTexture'] = diffuseTexture;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = makeProgram(this, redGL);
+		this['program'] = makeProgram(redGL);
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkProperty()
 		// Object.seal(this)
@@ -102,8 +102,8 @@ var RedBitmapMaterial;
 		vSource = RedGLUtil.getStrFromComment(vSource.toString());
 		fSource = RedGLUtil.getStrFromComment(fSource.toString());
 		PROGRAM_NAME = 'bitmapProgram';
-		return function (target, redGL) {
-			return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource)
+		return function (redGL) {
+			return RedProgram(redGL, PROGRAM_NAME, vSource, fSource)
 
 		}
 	})();

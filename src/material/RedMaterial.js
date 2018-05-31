@@ -4,7 +4,7 @@ var RedMaterial;
 	var makeProgram;
 	RedMaterial = function (redGL) {
 		if (!(this instanceof RedMaterial)) return new RedMaterial(redGL);
-		this['program'] = makeProgram(this, redGL)
+		this['program'] = makeProgram(redGL)
 		// 유니폼 프로퍼티
 		this['floatTest'] = 1
 		this['floatTest2'] = [1, 2, 3, 4, 5]
@@ -57,8 +57,8 @@ var RedMaterial;
 		vSource = RedGLUtil.getStrFromComment(vSource.toString());
 		fSource = RedGLUtil.getStrFromComment(fSource.toString());
 		PROGRAM_NAME = 'testrProgram';
-		return function (target, redGL) {
-			return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource)
+		return function (redGL) {
+			return RedProgram(redGL, PROGRAM_NAME, vSource, fSource)
 
 		}
 	})()

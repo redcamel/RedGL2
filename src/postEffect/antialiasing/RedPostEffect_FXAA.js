@@ -24,7 +24,7 @@ var RedPostEffect_FXAA;
 		this['diffuseTexture'] = null;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = makeProgram(this, redGL);
+		this['program'] = makeProgram(redGL);
 		this['_UUID'] = RedGL['makeUUID']();
 
 		this.updateTexture = function (lastFrameBufferTexture) {
@@ -104,8 +104,8 @@ var RedPostEffect_FXAA;
 		vSource = RedGLUtil.getStrFromComment(vSource.toString());
 		fSource = RedGLUtil.getStrFromComment(fSource.toString());
 		PROGRAM_NAME = 'RedPostEffect_FXAA_Program';
-		return function (target, redGL) {
-			return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource);
+		return function (redGL) {
+			return RedProgram(redGL, PROGRAM_NAME, vSource, fSource);
 		}
 	})();
 	RedPostEffect_FXAA.prototype = RedBaseMaterial.prototype;

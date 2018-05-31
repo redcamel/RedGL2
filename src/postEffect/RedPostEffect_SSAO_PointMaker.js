@@ -37,7 +37,7 @@ var RedPostEffect_SSAO_PointMaker;
 
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = makeProgram(this, redGL);
+		this['program'] = makeProgram(redGL);
 		this['_UUID'] = RedGL['makeUUID']();
 
 
@@ -153,8 +153,8 @@ var RedPostEffect_SSAO_PointMaker;
 		vSource = RedGLUtil.getStrFromComment(vSource.toString());
 		fSource = RedGLUtil.getStrFromComment(fSource.toString());
 		PROGRAM_NAME = 'RedPostEffect_SSAO_PointMaker_Program';
-		return function (target, redGL) {
-			return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource);
+		return function (redGL) {
+			return RedProgram(redGL, PROGRAM_NAME, vSource, fSource);
 		}
 	})();
 	RedPostEffect_SSAO_PointMaker.prototype = RedBaseMaterial.prototype;

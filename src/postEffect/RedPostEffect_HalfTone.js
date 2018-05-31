@@ -30,7 +30,7 @@ var RedPostEffect_HalfTone;
 		this['grayMode'] = false;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = makeProgram(this, redGL);
+		this['program'] = makeProgram(redGL);
 		this['_UUID'] = RedGL['makeUUID']();
 		this.updateTexture = function (lastFrameBufferTexture) {
 			this['diffuseTexture'] = lastFrameBufferTexture
@@ -93,8 +93,8 @@ var RedPostEffect_HalfTone;
 		vSource = RedGLUtil.getStrFromComment(vSource.toString());
 		fSource = RedGLUtil.getStrFromComment(fSource.toString());
 		PROGRAM_NAME = 'RedPostEffect_HalfTone_Program';
-		return function (target, redGL) {
-			return target['checkProgram'](redGL, PROGRAM_NAME, vSource, fSource);
+		return function (redGL) {
+			return RedProgram(redGL, PROGRAM_NAME, vSource, fSource);
 		}
 	})();
 	RedPostEffect_HalfTone.prototype = RedBaseMaterial.prototype;
