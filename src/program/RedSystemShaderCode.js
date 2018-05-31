@@ -77,14 +77,14 @@ var RedSystemShaderCode;
 
 
 			// 디렉셔널
-			'const int DIRETIONAL_MAX = 3',
+			'const int cDIRETIONAL_MAX = 3',
 			'uniform vec3 uDirectionalLightPosition[3]',
 			'uniform vec4 uDirectionalLightColor[3]',
 			'uniform float uDirectionalLightIntensity[3]',
 			'uniform int uDirectionalLightNum',
 
 			//포인트라이트
-			'const int POINT_MAX = 5',
+			'const int cPOINT_MAX = 5',
 			'uniform vec3 uPointLightPosition[5]',
 			'uniform vec4 uPointLightColor[5]',
 			'uniform float uPointLightRadius[5]',

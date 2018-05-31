@@ -169,7 +169,7 @@ var RedStandardMaterial;
 			 vec3 L;
 			 vec3 R;
 			 highp float lambertTerm;
-			 for(int i=0; i<DIRETIONAL_MAX; i++){
+			 for(int i=0; i<cDIRETIONAL_MAX; i++){
 			 if(i == uDirectionalLightNum) break;
 			 L = normalize(-uDirectionalLightPosition[i]);
 			 lambertTerm = dot(N,-L);
@@ -183,7 +183,7 @@ var RedStandardMaterial;
 			 vec3 pointDirection;
 			 highp float distanceLength;
 			 highp float attenuation;
-			 for(int i=0;i<POINT_MAX;i++){
+			 for(int i=0;i<cPOINT_MAX;i++){
 			 if(i== uPointLightNum) break;
 			 pointDirection =  -uPointLightPosition[i] + vVertexPositionEye4.xyz;
 			 distanceLength = length(pointDirection);

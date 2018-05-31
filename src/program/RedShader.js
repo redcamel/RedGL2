@@ -17,7 +17,7 @@ var RedShader;
 					t0['type'] = type;
 					return t0
 				default:
-					RedGLUtil.throwFunc('RedShader : 쉐이더 타입을 확인하세요!')
+					RedGLUtil.throwFunc('RedShader : 쉐이더 타입을 확인하세요. RedShader.VERTEX or RedShader.FRAGMENT 만 허용됩니다')
 					break
 			}
 		}
@@ -41,14 +41,14 @@ var RedShader;
 					t0 = RedSystemShaderCode['fShareSource'].concat();
 					break;
 				default:
-					RedGLUtil.throwFunc('RedShader : 쉐이더 타입을 확인하세요!')
+					RedGLUtil.throwFunc('RedShader : 쉐이더 타입을 확인하세요. RedShader.VERTEX or RedShader.FRAGMENT 만 허용됩니다')
 			}
 			sourceList.forEach(function (v) {
 				v = v.replace(';', '');
 				if (t0.indexOf(v) == -1) t0.push(v);
 				else {
 					console.log(RedSystemShaderCode)
-					RedGLUtil.throwFunc('RedShader : ', '\n1. 중복된 소스이거나', '\n2. RedSystemShaderCode에 정의된 소스\n', v);
+					RedGLUtil.throwFunc('RedShader : ', '\n1. 중복 선언 이거나', '\n2. RedSystemShaderCode에 정의된 선언\n', '입력값 : ' + v);
 				}
 			})
 			return t0;
@@ -69,7 +69,7 @@ var RedShader;
 				}
 			}
 			// 함수 제외 전부 검색
-			checkList = source.match(/attribute[\s\S]+?\;|uniform[\s\S]+?\;|varying[\s\S]+?\;|precision[\s\S]+?\;/g);
+			checkList = source.match(/attribute[\s\S]+?\;|uniform[\s\S]+?\;|varying[\s\S]+?\;|const[\s\S]+?\;|precision[\s\S]+?\;/g);
 			checkList = checkList ? checkList : [];
 			checkList = mergeSystemCode(type, checkList);
 			checkList.sort();
@@ -95,6 +95,8 @@ var RedShader;
 					tArrayNum = tName.length > 1 ? +tName[1].split(']')[0] : 0;
 					tName = tName[0]
 					switch (tType) {
+						case 'precision':
+							break
 						case 'attribute':
 							if (tName.charAt(0) != 'a') RedGLUtil.throwFunc('RedShader : attribute의 첫글자는 a로 시작해야합니다.', tName)
 							break
@@ -103,6 +105,12 @@ var RedShader;
 							break
 						case 'varying':
 							if (tName.charAt(0) != 'v') RedGLUtil.throwFunc('RedShader : varying의 첫글자는 v로 시작해야합니다.', tName)
+							break
+						case 'const':
+							if (tName.charAt(0) != 'c') RedGLUtil.throwFunc('RedShader : const의 첫글자는 c로 시작해야합니다.', tName)
+							break
+						default :
+							RedGLUtil.throwFunc('RedShader : 체크되지 못하는값인데 뭐냐', tName)
 							break
 					}
 				} else {
@@ -114,7 +122,6 @@ var RedShader;
 					tName = tName[0];
 
 				}
-				// console.log(tType, tDataType, tName, tArrayNum)
 				if (!parseData[tType]) parseData[tType] = {}, parseData[tType]['list'] = [], parseData[tType]['map'] = {}, parseData[tType]['source'] = '';
 				tInputData = {
 					name: tName,
@@ -122,11 +129,12 @@ var RedShader;
 					value: tValue,
 					systemUniformYn: RedSystemShaderCode.systemUniform[tArrayNum ? tName + '[' + tArrayNum + ']' : tName] ? true : false
 				};
-				if (tType == 'uniform') tInputData['uniformType'] = tDataType
-
-				if (tType == 'attribute') tInputData['attributeType'] = tDataType
+				if (tType == 'uniform') tInputData['uniformType'] = tDataType;
+				if (tType == 'attribute') tInputData['attributeType'] = tDataType;
+				if (tType == 'varying') tInputData['varyingType'] = tDataType;
 				parseData[tType]['list'].push(tInputData);
 				parseData[tType]['map'][tName] = v;
+
 				parseData[tType]['source'] += v + ';\n';
 
 			});
@@ -195,9 +203,9 @@ var RedShader;
 	RedShader = function (redGL, key, type, source) {
 		var tGL;
 		if (!(this instanceof RedShader)) return new RedShader(redGL, key, type, source);
-		if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedShader : RedGL Instance만 허용됩니다.', redGL);
-		if (typeof key != 'string') RedGLUtil.throwFunc('RedShader : key - 문자열만 허용됩니다.', key);
-		if (type != RedShader['VERTEX'] && type != RedShader['FRAGMENT']) RedGLUtil.throwFunc('RedShader : type - RedShader.VERTEX or RedShader.FRAGMENT 만 허용됩니다.', type);
+		if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedShader : RedGL Instance만 허용됩니다.', '입력값 : ' + redGL);
+		if (typeof key != 'string') RedGLUtil.throwFunc('RedShader : key - 문자열만 허용됩니다.', '입력값 : ' + key);
+		if (type != RedShader['VERTEX'] && type != RedShader['FRAGMENT']) RedGLUtil.throwFunc('RedShader : type - RedShader.VERTEX or RedShader.FRAGMENT 만 허용됩니다.', '입력값 : ' + type);
 
 		// 데이터 공간확보
 		if (!redGL['_datas']['RedShader']) {
@@ -209,12 +217,12 @@ var RedShader;
 		// 소스가 있을 경우 검증
 		if (source) {
 			if (typeof source != 'string') RedGLUtil.throwFunc('RedShader : source - 문자열만 허용됩니다.');
-			if (RedShader['hasKey'](redGL, key, type)) RedGLUtil.throwFunc('RedShader : key - 이미 정의된 키로 생성을 시도.', '\n키 :', key, '\n타입 :', type);
+			if (RedShader['hasKey'](redGL, key, type)) RedGLUtil.throwFunc('RedShader : key - 이미 정의된 키로 생성을 시도.', '\n키 :', key, '\n타입 :' + type);
 			else redGL['_datas']['RedShader'][type][key] = this;
 		} else {
 			// 소스가 없을경우, 기존데이터에서 찾아옴
 			if (RedShader['hasKey'](redGL, key, type)) return redGL['_datas']['RedShader'][type][key];
-			else RedGLUtil.throwFunc('RedShader : 존재하지않는 key를 검색하려고합니다.', key);
+			else RedGLUtil.throwFunc('RedShader : ' + type + ' 타입에 존재하지 않는 key를 검색하려고합니다.', '입력값 : ' + key);
 		}
 		tGL = redGL.gl
 		/**DOC:
@@ -224,7 +232,7 @@ var RedShader;
 		  return : 'WebGLShader'
 		 }
 		 :DOC*/
-		this['webglShader'] = makeWebGLShader(tGL, key, type);
+		this['webglShader'] = makeWebGLShader(tGL, key, type); // 쉐이더 생성
 		/**DOC:
 		 {
 		  title :`parseData`,
@@ -232,9 +240,8 @@ var RedShader;
 		  return : 'Object'
 		 }
 		 :DOC*/
-		this['parseData'] = parser(type, source);
-		// 쉐이더 컴파일
-		compile(tGL, type, this['webglShader'], this['parseData']);
+		this['parseData'] = parser(type, source); // 소스 파싱
+		compile(tGL, type, this['webglShader'], this['parseData']); // 쉐이더 컴파일
 		/**DOC:
 		 {
 			 title :`key`,
@@ -281,11 +288,6 @@ var RedShader;
 	 }
 	 :DOC*/
 	RedShader['hasKey'] = function (redGL, key, type) {
-		if (!redGL['_datas']['RedShader']) {
-			redGL['_datas']['RedShader'] = {};
-			redGL['_datas']['RedShader'][RedShader['VERTEX']] = {};
-			redGL['_datas']['RedShader'][RedShader['FRAGMENT']] = {};
-		}
 		return redGL['_datas']['RedShader'][type][key] ? true : false
 	}
 	/**DOC:
