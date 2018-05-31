@@ -994,11 +994,11 @@ RedGL(document.createElement('canvas'), function (v) {
 					unit.run(false)
 				}
 			}, false),
-			redTest("시스템 선언과 중복일경우 : RedSystemShaderCode.vShareSource", function (unit) {
+			redTest("시스템 선언과 중복일경우 : RedSystemShaderCode.fShareSource", function (unit) {
 				var source;
 				source = function () {
 					/* @preserve
-					 uniform float uUseFog;
+					 uniform bool uUseFog;
 					 void main(void) {
 					 gl_FragColor = vec4(1.0);
 					 }

@@ -46,12 +46,10 @@ var RedBuffer;
 			t0 = 0;
 			switch (bufferType) {
 				case RedBuffer.ARRAY_BUFFER:
-
 					self['interleaveDefineInfo'] = interleaveDefineInfo;
 					if (interleaveDefineInfo) {
 						for (k in interleaveDefineInfo) {
 							if (!(interleaveDefineInfo[k] instanceof RedInterleaveInfo)) RedGLUtil.throwFunc('RedBuffer : interleaveDefineInfo의 정보는 RedInterleaveInfo Instance로만 구성되어야합니다.', interleaveDefineInfo)
-
 							interleaveDefineInfo[k]['offset'] = interleaveDefineInfo.length < 2 ? 0 : t0
 							t0 += interleaveDefineInfo[k]['size']
 							interleaveDefineInfo[k]['_UUID'] = RedGL['makeUUID']();
@@ -189,7 +187,6 @@ var RedBuffer;
 		 }
 		 :DOC*/
 		this['data'] = data
-		this['originData'] = JSON.parse(JSON.stringify(data))
 		/**DOC:
 		 {
 			 code : 'PROPERTY',

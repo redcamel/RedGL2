@@ -41,15 +41,17 @@ var RedDAELoader;
 		request.open("GET", path + fileName, true);
 		request.setRequestHeader("Content-Type", "application/xml; charset=UTF-8")
 		request.onreadystatechange = function () {
-			if (request.readyState == 4) {
+			if (request.readyState == 4 && request.status === 200) {
 				console.log(request)
-				console.log(request['responseXML'])
-				console.log(request['responseXML'].querySelector('COLLADA'))
-				self['result'] = parser(self, redGL, request['responseXML'])
+				console.log(request['responseText'])
+				var t0 = new DOMParser();
+				self['result'] = parser(self, redGL, t0.parseFromString(request['responseText'], "text/xml"))
 				if (callback) {
 					console.log('모델 파싱 종료');
 					callback(self['result'])
 				}
+			} else {
+				console.log(request)
 			}
 		}
 		request.send();
@@ -182,7 +184,7 @@ var RedDAELoader;
 				tMatrix.push(tMatrixSource.slice(index * 16, index * 16 + 16).map(Number))
 			})
 			tInterpolate = tAni.querySelector('Name_array').textContent.split(' ')
-			tTarget = tAni.querySelector('channel').getAttribute('RedProgram).split('/')[0]
+			tTarget = tAni.querySelector('channel').getAttribute('target').split('/')[0]
 			map[tAni.getAttribute('id')] = {
 				time: tTimes,
 				matrix: tMatrix,
@@ -426,7 +428,7 @@ var RedDAELoader;
 					// console.log('뭐가오나',visualSceneInfo[target])
 					var tAniMatrix;
 					for (var k in aniInfo) {
-						if (aniInfo[k]['RedProgram] == controllerInfo[target]['name']) {
+						if (aniInfo[k]['target'] == controllerInfo[target]['name']) {
 							tAniMatrix = aniInfo[k]['matrix'][aniIndex];
 							break
 						}
@@ -446,25 +448,25 @@ var RedDAELoader;
 					var mtxMap = {}
 					for (var k in aniInfo) {
 
-						if (aniInfo[k]['RedProgram] && controllerInfo[aniInfo[k]['RedProgram]]) {
+						if (aniInfo[k]['target'] && controllerInfo[aniInfo[k]['target']]) {
 
 							var skeletonMatrix = mat4.create()
 							var parentMTX2 = mat4.create()
 							var mtxList = []
-							makeMatrix(mtxList, aniInfo[k]['RedProgram])
+							makeMatrix(mtxList, aniInfo[k]['target'])
 							// mtxList.reverse()
 							// console.log('mtxList',mtxList)
 							mtxList.forEach(function (v, index) {
-								if (index == mtxList.length - 1) parentMTX2 = mat4.clone(v['matrix'])
 								mat4.multiply(skeletonMatrix, skeletonMatrix, v['matrix'])
+								parentMTX2 = mat4.clone(v['matrix'])
 							})
 
 
 							mat4.transpose(skeletonMatrix, skeletonMatrix, skeletonMatrix)
 							// console.log(mtxList)
-							controllerInfo[aniInfo[k]['RedProgram]]['skeleton']['matrix'] = skeletonMatrix
+							controllerInfo[aniInfo[k]['target']]['skeleton']['matrix'] = skeletonMatrix
 
-							var tControllIndex = controllerInfo2['jointNamePositionIndex'][aniInfo[k]['RedProgram]]
+							var tControllIndex = controllerInfo2['jointNamePositionIndex'][aniInfo[k]['target']]
 							var tInversePose = controllerInfo2['jointInverseBindPoses'][tControllIndex]
 
 							mtxMap[tControllIndex] = {
@@ -480,132 +482,6 @@ var RedDAELoader;
 					}
 					// console.log(mtxMap)
 					var time = (new Date()).getTime()
-					// t_indexDataIndex.forEach(function (v, index) {
-					//     var t = (time + index)/10000
-					//     tInterleaveBuffer['data'][index * 8 + 0] = pointInfo['pointList'][v][0] + Math.sin(t)
-					//     tInterleaveBuffer['data'][index * 8 + 1] = pointInfo['pointList'][v][1] + Math.sin(t)
-					//     tInterleaveBuffer['data'][index * 8 + 2] = pointInfo['pointList'][v][2] + Math.sin(t)
-					// })
-					// 일단 전체 포인트에 대한 초기화는 이렇게 가능하고..
-					t_indexDataIndex.forEach(function (v, index) {
-						var t = (time + index) / 10000
-						tInterleaveBuffer['data'][index * 8 + 0] = pointInfo['pointList'][v][0]
-						tInterleaveBuffer['data'][index * 8 + 1] = pointInfo['pointList'][v][1]
-						tInterleaveBuffer['data'][index * 8 + 2] = pointInfo['pointList'][v][2]
-					})
-
-					// 뼈대 가중치에서 처리함
-					var maxttt = 0
-
-					for (var k3 in idxMap) {
-						var targetList = idxMap[k3]
-						var t = (time) / 16
-
-						var result = []
-						var t1
-						var tSkel
-						var total = 0
-
-						targetList.forEach(function (v2, index) {
-							v2 = v2
-							if (index == 0) {
-								var t0 = [
-									tInterleaveBuffer['originData'][v2 * 8],
-									tInterleaveBuffer['originData'][v2 * 8 + 1],
-									tInterleaveBuffer['originData'][v2 * 8 + 2]
-								]
-								t1 = [
-									0, 0, 0
-								]
-								/*
-								 outV = (i=0~n)∑ { ( (v * BSM) * IBMi * JMi) * JW }
-								 n : vertex V 에 영향을 주는 joints의 number
-								 BSM : Bind Shape Matrix
-								 IBMi : Bind 행렬의 역행렬 (mesh 좌표)
-								 JMi : joint i 의 행렬
-								 JW : vetex V의 joint i 에 대한 가중치
-								 Bind Shape : base mesh
-								 Joints
-								 Weights
-								 Inverse bind matrix : <joints>엘리먼트의 관련 역행렬
-								 Bind Shape matrix : skinning 전의 bind shape을 나타내는 한 개의 행렬
-								 */
-
-								total = 0
-								for (var k2 in controllerInfo2['parsedVertexJointWeights'][k3]) {
-									// vec3.transformMat4(t0, t0, mtxMap[k2]['parentMTX'])
-									var t2 = mat4.create()
-
-									var tRadio = controllerInfo2['parsedVertexJointWeights'][k3][k2]
-									total += 1
-
-									// mat4.multiply(t2, t2,mtxMap[k2]['inversePose'])
-									tSkel = mtxMap[k2]['inversePose']
-									//
-									// mat4.multiply(t2, t2,mtxMap[k2]['tMatrix']['matrix'])
-									// mat4.multiply(t2, t2,mtxMap[k2]['parentMTX2'])
-									// mat4.multiply(t2, mtxMap[k2]['skeletonMatrix'],t2)
-
-									// 오리진 위치
-									var t3 = [
-										1, 0, 0, 0,
-										0, 1, 0, 0,
-										0, 0, 1, 0,
-										tInterleaveBuffer['originData'][v2 * 8 + 0],
-										tInterleaveBuffer['originData'][v2 * 8 + 1],
-										tInterleaveBuffer['originData'][v2 * 8 + 2],
-										1
-									]
-									mat4.multiply(t3, t3, aniInfo[k]['matrix'][0])
-
-									// 변형위치
-									var t4 = [
-										1, 0, 0, 0,
-										0, 1, 0, 0,
-										0, 0, 1, 0,
-										tInterleaveBuffer['originData'][v2 * 8 + 0],
-										tInterleaveBuffer['originData'][v2 * 8 + 1],
-										tInterleaveBuffer['originData'][v2 * 8 + 2],
-										1
-									]
-									mat4.multiply(t4, t4, aniInfo[k]['matrix'][aniIndex])
-									// mat4.multiply(t2, t2, t3)
-									// mat4.scale(t2, t2, [tRadio, tRadio, tRadio])
-									var t4 = [
-										1, 0, 0, 0,
-										0, 1, 0, 0,
-										0, 0, 1, 0,
-										t4[12] - t3[12],
-										t4[13] - t3[13],
-										t4[14] - t3[14],
-										1
-									]
-
-
-									mat4.subtract(t4, t3,)
-									// mat4.multiply(t2, t2, tSkel = mtxMap[k2]['skeletonMatrix'])
-									mat4.multiply(t2, t2, mtxMap[k2]['skeletonMatrix'])
-
-									mat4.translate(t2, t2, mat4.getTranslation(t4, t4))
-									// // mat4.scale(t2, t2, [1 / total, 1 / total, 1 / total])
-
-									// // mtxMap[k2]['inversePose']
-									// mat4.multiply(t2, t2, t4)
-
-									t1[0] += t2[12] * tRadio
-									t1[1] += t2[13] * tRadio
-									t1[2] += t2[14] * tRadio
-									// break
-								}
-							}
-							tInterleaveBuffer['data'][v2 * 8 + 0] = t1[0]
-							tInterleaveBuffer['data'][v2 * 8 + 1] = t1[1]
-							tInterleaveBuffer['data'][v2 * 8 + 2] = t1[2]
-
-						})
-						if (k > maxttt) maxttt = k
-					}
-
 					tResultMesh['geometry']['interleaveBuffer'].upload(tInterleaveBuffer['data'])
 					aniIndex++
 
