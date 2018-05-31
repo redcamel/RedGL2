@@ -94,7 +94,7 @@ var RedBitmapMaterial;
 			 vec4 finalColor = texture2D(uDiffuseTexture, vTexcoord);
 			 finalColor.rgb *= finalColor.a;
 			 if(finalColor.a ==0.0) discard;
-			 if(uUseFog == 1.0) gl_FragColor = fog( fogFactor(uFogDistance, uFogDensity), uFogColor, finalColor);
+			 if(uUseFog) gl_FragColor = fog( fogFactor(uFogDistance, uFogDensity), uFogColor, finalColor);
 			 else gl_FragColor = finalColor;
 			 }
 			 */

@@ -100,7 +100,7 @@ var RedColorMaterial;
 			 }
 			 void main(void) {
 			 vec4 finalColor = vColor * vColor.a;
-			 if(uUseFog == 1.0) gl_FragColor = fog( fogFactor(uFogDistance, uFogDensity), uFogColor, finalColor);
+			 if(uUseFog) gl_FragColor = fog( fogFactor(uFogDistance, uFogDensity), uFogColor, finalColor);
 			 else gl_FragColor = finalColor;
 			 }
 			 */

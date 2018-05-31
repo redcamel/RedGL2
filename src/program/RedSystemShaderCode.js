@@ -70,7 +70,7 @@ var RedSystemShaderCode;
 			'varying vec2 vResolution',
 
 			// fog
-			'uniform float uUseFog',
+			'uniform bool uUseFog',
 			'uniform float uFogDistance',
 			'uniform float uFogDensity',
 			'uniform vec4 uFogColor',

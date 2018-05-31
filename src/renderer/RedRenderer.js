@@ -152,7 +152,7 @@ var RedRenderer;
 						tValue = scene['useFog'] ? 1 : 0;
 						tUUID = tLocationInfo['_UUID'];
 						if (tLocation && cacheSystemUniform[tUUID] != tValue) {
-							gl.uniform1f(tLocation, tValue)
+							gl[tLocationInfo['renderMethod']](tLocation, tValue)
 							cacheSystemUniform[tUUID] = tValue
 						}
 					}
@@ -904,7 +904,7 @@ var RedRenderer;
 									// console.log('온다2',tUniformLocationInfo['materialPropertyName'],tSamplerIndex,tSamplerIndex)
 									tPrevSamplerIndex == tSamplerIndex ? 0 : gl.activeTexture(gl.TEXTURE0 + (tPrevSamplerIndex = tSamplerIndex));
 									gl.bindTexture(tRenderType == 'sampler2D' ? gl.TEXTURE_2D : gl.TEXTURE_CUBE_MAP, tUniformValue['webglTexture']);
-									tCacheBySamplerIndex[tUUID] == tSamplerIndex ? 0 : gl.uniform1i(tWebGLUniformLocation, tCacheBySamplerIndex[tUUID] = tSamplerIndex);
+									tCacheBySamplerIndex[tUUID] == tSamplerIndex ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheBySamplerIndex[tUUID] = tSamplerIndex);
 									tCacheBySamplerIndex[tSamplerIndex] = tUniformValue['_UUID'];
 								}
 
@@ -924,7 +924,7 @@ var RedRenderer;
 									} else {
 										tPrevSamplerIndex == 0 ? 0 : gl.activeTexture(gl.TEXTURE0);
 										gl.bindTexture(gl.TEXTURE_2D, redGL['_datas']['emptyTexture']['2d']['webglTexture']);
-										tCacheBySamplerIndex[tUUID] == 0 ? 0 : gl.uniform1i(tWebGLUniformLocation, tCacheBySamplerIndex[tUUID] = 0);
+										tCacheBySamplerIndex[tUUID] == 0 ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheBySamplerIndex[tUUID] = 0);
 										tCacheBySamplerIndex[tSamplerIndex] = 0;
 										tPrevSamplerIndex = 0;
 									}
@@ -934,7 +934,7 @@ var RedRenderer;
 									} else {
 										tPrevSamplerIndex == 1 ? 0 : gl.activeTexture(gl.TEXTURE0 + 1);
 										gl.bindTexture(gl.TEXTURE_CUBE_MAP, redGL['_datas']['emptyTexture']['3d']['webglTexture']);
-										tCacheBySamplerIndex[tUUID] == 1 ? 0 : gl.uniform1i(tWebGLUniformLocation, tCacheBySamplerIndex[tUUID] = 1);
+										tCacheBySamplerIndex[tUUID] == 1 ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheBySamplerIndex[tUUID] = 1);
 										tCacheBySamplerIndex[tSamplerIndex] = 1;
 										tPrevSamplerIndex = 1;
 									}
@@ -1143,13 +1143,13 @@ var RedRenderer;
 						tUUID = tSystemUniformGroup['uSprite3DYn']['_UUID']
 						tUniformValue = tSpriteYn
 						if (tCacheUniformInfo[tUUID] != tUniformValue) {
-							gl.uniform1i(tSystemUniformGroup['uSprite3DYn']['location'], tUniformValue)
+							gl[tSystemUniformGroup['uSprite3DYn']['renderMethod']](tSystemUniformGroup['uSprite3DYn']['location'], tUniformValue)
 							tCacheUniformInfo[tUUID] = tUniformValue
 						}
 						tUUID = tSystemUniformGroup['uPerspectiveScale']['_UUID']
 						tUniformValue = tMesh['perspectiveScale']
 						if (tCacheUniformInfo[tUUID] != tUniformValue) {
-							gl.uniform1i(tSystemUniformGroup['uPerspectiveScale']['location'], tUniformValue)
+							gl[tSystemUniformGroup['uPerspectiveScale']['renderMethod']](tSystemUniformGroup['uPerspectiveScale']['location'], tUniformValue)
 							tCacheUniformInfo[tUUID] = tUniformValue
 						}
 					}

@@ -32,16 +32,14 @@ var RedProgram;
 					var t0 = new AttributeLocationInfo();
 					t0['_UUID'] = RedGL.makeUUID()
 					t0['location'] = gl.getAttribLocation(self['webglProgram'], v['name']);
-					if (t0['location'] == -1) {
-						t0['msg'] = '쉐이더 main 함수에서 사용되고 있지 않음';
-					} else {
-						t0['attributeType'] = v['attributeType'];
-						t0['name'] = v['name'];
-						t0['enabled'] = false;
-						self['attributeLocation'].push(t0);
-						self['attributeLocation'][v['name']] = t0;
-						// Object.seal(t0);
-					}
+					if (t0['location'] == -1) t0['msg'] = '쉐이더 main 함수에서 사용되고 있지 않음';
+					t0['attributeType'] = v['attributeType'];
+					t0['name'] = v['name'];
+					t0['enabled'] = false;
+					if (t0['location'] != -1) self['attributeLocation'].push(t0);
+					self['attributeLocation'][v['name']] = t0;
+					// Object.seal(t0);
+
 				})
 			}
 			if (shader['parseData']['uniform']) {
@@ -57,16 +55,16 @@ var RedProgram;
 					arrayNum = v['arrayNum']
 					switch (v['uniformType']) {
 						case 'sampler2D':
-							//TODO: 인덱스를 고유 번호로 인식하도록 변경
 							tRenderType = 'sampler2D';
-							tRenderMethod = 'uniform1f';
+							tRenderMethod = 'uniform1i';
 							t0['samplerIndex'] = samplerIndex
 							samplerIndex++
+							//TODO: IOS가 아닐경우 늘리자
 							if (samplerIndex == 8) samplerIndex = 2
 							break
 						case 'samplerCube':
 							tRenderType = 'samplerCube';
-							tRenderMethod = 'uniform1f';
+							tRenderMethod = 'uniform1i';
 							t0['samplerIndex'] = samplerIndex
 							samplerIndex++
 							if (samplerIndex == 8) samplerIndex = 2
@@ -102,6 +100,30 @@ var RedProgram;
 						case 'vec2':
 							tRenderType = 'vec';
 							tRenderMethod = 'uniform2fv';
+							break
+						case 'ivec4':
+							tRenderType = 'vec';
+							tRenderMethod = 'uniform4iv';
+							break
+						case 'ivec3':
+							tRenderType = 'vec';
+							tRenderMethod = 'uniform3iv';
+							break
+						case 'ivec2':
+							tRenderType = 'vec';
+							tRenderMethod = 'uniform2iv';
+							break
+						case 'bvec4':
+							tRenderType = 'vec';
+							tRenderMethod = 'uniform4iv';
+							break
+						case 'bvec3':
+							tRenderType = 'vec';
+							tRenderMethod = 'uniform3iv';
+							break
+						case 'bvec2':
+							tRenderType = 'vec';
+							tRenderMethod = 'uniform2iv';
 							break
 						case 'bool':
 							tRenderType = 'bool';
