@@ -99,15 +99,19 @@ var RedShader;
 							break
 						case 'attribute':
 							if (tName.charAt(0) != 'a') RedGLUtil.throwFunc('RedShader : attribute의 첫글자는 a로 시작해야합니다.', tName)
+							if (tName.charAt(1) != tName.charAt(1).toUpperCase()) RedGLUtil.throwFunc('RedShader : attribute의 두번째 글자는 대문자 시작해야합니다.', tName)
 							break
 						case 'uniform':
 							if (tName.charAt(0) != 'u') RedGLUtil.throwFunc('RedShader : uniform의 첫글자는 u로 시작해야합니다.', tName)
+							if (tName.charAt(1) != tName.charAt(1).toUpperCase()) RedGLUtil.throwFunc('RedShader : uniform의 두번째 글자는 대문자 시작해야합니다.', tName)
 							break
 						case 'varying':
 							if (tName.charAt(0) != 'v') RedGLUtil.throwFunc('RedShader : varying의 첫글자는 v로 시작해야합니다.', tName)
+							if (tName.charAt(1) != tName.charAt(1).toUpperCase()) RedGLUtil.throwFunc('RedShader : varying의 두번째 글자는 대문자 시작해야합니다.', tName)
 							break
 						case 'const':
 							if (tName.charAt(0) != 'c') RedGLUtil.throwFunc('RedShader : const의 첫글자는 c로 시작해야합니다.', tName)
+							if (tName.charAt(1) != tName.charAt(1).toUpperCase()) RedGLUtil.throwFunc('RedShader : const의 두번째 글자는 대문자 시작해야합니다.', tName)
 							break
 						default :
 							RedGLUtil.throwFunc('RedShader : 체크되지 못하는값인데 뭐냐', tName)

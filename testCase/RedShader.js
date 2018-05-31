@@ -260,7 +260,7 @@ RedGL(document.createElement('canvas'), function (v) {
 					unit.run(false)
 				}
 			}, false),
-			redTest("유니폼 이름 형식 확인 : 유니폼은 uXxxxx형태로 선언되어야함. - 실패테스트( uniform vec3 Utest; ) / 대문자로 시작해도 안됨", function (unit) {
+			redTest("유니폼 이름 형식 확인 : 유니폼은 uXxxxx형태로 선언되어야함. - 실패테스트( uniform vec3 Utest; ) / 첫번째 문자는 대문자로 시작하면 안됨", function (unit) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -279,11 +279,30 @@ RedGL(document.createElement('canvas'), function (v) {
 					unit.run(false)
 				}
 			}, false),
-			redTest("유니폼 이름 형식 확인 : 유니폼은 uXxxxx형태로 선언되어야함. - 성공테스트( varying vec3 utest; )", function (unit) {
+			redTest("유니폼 이름 형식 확인 : 유니폼은 uXxxxx형태로 선언되어야함. - 실패테스트( uniform vec3 utest; ) / 두번째 문자는 대문자로 시작해야함", function (unit) {
 				var source;
 				source = function () {
 					/* @preserve
 					 uniform vec3 utest;
+					 void main(void) {
+					 gl_Position = vec4(1.0);
+					 }
+					 */
+				}
+				source = RedGLUtil.getStrFromComment(source.toString());
+				try {
+					RedShader(tRedGL, 'uniformTestShader' + RedGL.makeUUID(), RedShader.VERTEX, source);
+					unit.run(true)
+				} catch (error) {
+					console.log(error)
+					unit.run(false)
+				}
+			}, false),
+			redTest("유니폼 이름 형식 확인 : 유니폼은 uXxxxx형태로 선언되어야함. - 성공테스트( varying vec3 uTest; )", function (unit) {
+				var source;
+				source = function () {
+					/* @preserve
+					 uniform vec3 uTest;
 					 void main(void) {
 					 gl_Position = vec4(1.0);
 					 }
@@ -660,7 +679,7 @@ RedGL(document.createElement('canvas'), function (v) {
 					unit.run(false)
 				}
 			}, false),
-			redTest("베어링 이름 형식 확인 : 베어링은 vXxxxx형태로 선언되어야함. - 실패테스트( varying vec3 Vtest; ) / 대문자로 시작해도 안됨", function (unit) {
+			redTest("베어링 이름 형식 확인 : 베어링은 vXxxxx형태로 선언되어야함. - 실패테스트( varying vec3 Vtest; ) / 첫번째 문자는 대문자로 시작하면 안됨", function (unit) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -679,11 +698,30 @@ RedGL(document.createElement('canvas'), function (v) {
 					unit.run(false)
 				}
 			}, false),
-			redTest("베어링 이름 형식 확인 : 베어링은 vXxxxx형태로 선언되어야함. - 성공테스트( varying vec3 vtest; )", function (unit) {
+			redTest("베어링 이름 형식 확인 : 베어링은 vXxxxx형태로 선언되어야함. - 실패테스트( varying vec3 vtest; ) / 두번째 문자는 대문자로 시작해야함 ", function (unit) {
 				var source;
 				source = function () {
 					/* @preserve
 					 varying vec3 vtest;
+					 void main(void) {
+					 gl_Position = vec4(1.0);
+					 }
+					 */
+				}
+				source = RedGLUtil.getStrFromComment(source.toString());
+				try {
+					RedShader(tRedGL, 'varyingTestShader' + RedGL.makeUUID(), RedShader.VERTEX, source);
+					unit.run(true)
+				} catch (error) {
+					console.log(error)
+					unit.run(false)
+				}
+			}, false),
+			redTest("베어링 이름 형식 확인 : 베어링은 vXxxxx형태로 선언되어야함. - 성공테스트( varying vec3 vTest; )", function (unit) {
+				var source;
+				source = function () {
+					/* @preserve
+					 varying vec3 vTest;
 					 void main(void) {
 					 gl_Position = vec4(1.0);
 					 }
@@ -720,7 +758,7 @@ RedGL(document.createElement('canvas'), function (v) {
 					unit.run(false)
 				}
 			}, false),
-			redTest("어트리뷰트 이름 형식 확인 : 어트리뷰트은 aXxxxx형태로 선언되어야함. - 실패테스트( attribute vec3 Vtest; ) / 대문자로 시작해도 안됨", function (unit) {
+			redTest("어트리뷰트 이름 형식 확인 : 어트리뷰트은 aXxxxx형태로 선언되어야함. - 실패테스트( attribute vec3 Atest; ) / 첫번째 문자는 대문자로 시작하면 안됨", function (unit) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -739,7 +777,27 @@ RedGL(document.createElement('canvas'), function (v) {
 					unit.run(false)
 				}
 			}, false),
-			redTest("어트리뷰트 이름 형식 확인 : 어트리뷰트은 aXxxxx형태로 선언되어야함. - 성공테스트( attribute vec3 vtest; )", function (unit) {
+			redTest("어트리뷰트 이름 형식 확인 : 어트리뷰트은 aXxxxx형태로 선언되어야함. - 실패테스트( attribute vec3 atest; ) / 두번째 문자는 대문자로 시작해야함", function (unit) {
+				var source;
+				source = function () {
+					/* @preserve
+					 attribute vec3 atest;
+					 void main(void) {
+					 gl_Position = vec4(1.0);
+					 }
+					 */
+				}
+				source = RedGLUtil.getStrFromComment(source.toString());
+				try {
+					var t0 = RedShader(tRedGL, 'attributeTestShader' + RedGL.makeUUID(), RedShader.VERTEX, source);
+					unit.run(true)
+				} catch (error) {
+					console.log(error)
+					unit.run(false)
+				}
+			}, false),
+
+			redTest("어트리뷰트 이름 형식 확인 : 어트리뷰트은 aXxxxx형태로 선언되어야함. - 성공테스트( attribute vec3 aTest; )", function (unit) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -780,7 +838,7 @@ RedGL(document.createElement('canvas'), function (v) {
 					unit.run(false)
 				}
 			}, false),
-			redTest("상수 이름 형식 확인 : 상수는 cXxxxx형태로 선언되어야함. - 실패테스트( const vec3 Vtest; ) / 대문자로 시작해도 안됨", function (unit) {
+			redTest("상수 이름 형식 확인 : 상수는 cXxxxx형태로 선언되어야함. - 실패테스트( const vec3 Ctest; ) / 첫번째 문자는 대문자로 시작하면 안됨", function (unit) {
 				var source;
 				source = function () {
 					/* @preserve
@@ -799,7 +857,26 @@ RedGL(document.createElement('canvas'), function (v) {
 					unit.run(false)
 				}
 			}, false),
-			redTest("상수 이름 형식 확인 : 상수는 cXxxxx형태로 선언되어야함. - 성공테스트( const vec3 vtest; )", function (unit) {
+			redTest("상수 이름 형식 확인 : 상수는 cXxxxx형태로 선언되어야함. - 실패테스트( const vec3 ctest; ) / 두번째 문자는 대문자로 시작해야함", function (unit) {
+				var source;
+				source = function () {
+					/* @preserve
+					 const vec3 ctest;
+					 void main(void) {
+					 gl_Position = vec4(1.0);
+					 }
+					 */
+				}
+				source = RedGLUtil.getStrFromComment(source.toString());
+				try {
+					RedShader(tRedGL, 'constTestShader' + RedGL.makeUUID(), RedShader.VERTEX, source);
+					unit.run(true)
+				} catch (error) {
+					console.log(error)
+					unit.run(false)
+				}
+			}, false),
+			redTest("상수 이름 형식 확인 : 상수는 cXxxxx형태로 선언되어야함. - 성공테스트( const vec3 cTest; )", function (unit) {
 				var source;
 				source = function () {
 					/* @preserve
