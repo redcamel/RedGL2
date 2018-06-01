@@ -17,7 +17,7 @@ RedGL( document.createElement( 'canvas' ), function ( v ) {
 						// 일반 프로퍼티
 						this['program'] = makeProgram( redGL );
 						this['_UUID'] = RedGL['makeUUID']();
-						this.checkUniformAndProperty()
+						this.checkUniformAndProperty();
 					}
 					makeProgram = (function () {
 						var vSource, fSource;
@@ -71,7 +71,7 @@ RedGL( document.createElement( 'canvas' ), function ( v ) {
 						// 일반 프로퍼티
 						this['program'] = makeProgram( redGL );
 						this['_UUID'] = RedGL['makeUUID']();
-						this.checkUniformAndProperty()
+						this.checkUniformAndProperty();
 					}
 					makeProgram = (function () {
 						var vSource, fSource;
@@ -126,7 +126,7 @@ RedGL( document.createElement( 'canvas' ), function ( v ) {
 						// 일반 프로퍼티
 						this['program'] = makeProgram( redGL );
 						this['_UUID'] = RedGL['makeUUID']();
-						this.checkUniformAndProperty()
+						this.checkUniformAndProperty();
 
 					}
 					makeProgram = (function () {

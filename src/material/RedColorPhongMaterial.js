@@ -47,7 +47,7 @@ var RedColorPhongMaterial;
 		this['color'] = hexColor ? hexColor : '#ff0000'
 		this['program'] = makeProgram( redGL );
 		this['_UUID'] = RedGL['makeUUID']();
-		this.checkUniformAndProperty()
+		this.checkUniformAndProperty();
 		console.log( this );
 	}
 	makeProgram = (function () {

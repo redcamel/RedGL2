@@ -48,6 +48,9 @@
 	testList = [
 
 		"RedCamera.html",
+		"material/RedColorPhongTextureMaterial.html",
+		"material/RedColorPhongMaterial.html",
+		"material/RedColorMaterial.html",
 		"material/checkUniformAndProperty.html",
 		"primitives/RedSphere.html",
 		"primitives/RedBox.html",
@@ -80,7 +83,7 @@
 			tStyle.boxShadow = "5px 5px 20px rgba(0,0,0,0.3)",
 			tTitle = document.createElement( 'button' ),
 			tContainer.appendChild( tTitle ),
-			tTitle.innerHTML = '<a href = "' + testList[i] + '"><div style="padding:15px">' + testList[i].split('/')[testList[i].split('/').length-1] + '</div></a>',
+			tTitle.innerHTML = '<a href = "' + testList[i] + '"><div style="padding:15px">' + testList[i].split( '/' )[testList[i].split( '/' ).length - 1] + '</div></a>',
 			tStyle = tTitle.style,
 			tStyle.display = 'block',
 			tStyle.outline = 'none',
@@ -105,7 +108,7 @@
 					tDate = frame.contentDocument.lastModified
 					tDate = new Date( tDate )
 					tDate = tDate.getFullYear() + '.' + (tDate.getMonth() + 1) + '.' + tDate.getDate() + ' ' + tDate.getHours() + ':' + tDate.getMinutes()
-					title.innerHTML = '<a href = "' + t0 + '"><div style="padding:15px">' + t0.split('/')[t0.split('/').length-1] + ' - <span style="color:#ccc;font-size:11px">' + tDate + '</span></div></a>'
+					title.innerHTML = '<a href = "' + t0 + '"><div style="padding:15px">' + t0.split( '/' )[t0.split( '/' ).length - 1] + ' - <span style="color:#ccc;font-size:11px">' + tDate + '</span></div></a>'
 				}
 			})() )
 	}

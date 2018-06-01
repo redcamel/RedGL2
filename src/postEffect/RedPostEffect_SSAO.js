@@ -85,7 +85,7 @@ var RedPostEffect_SSAO;
 
 		this['bind'] = RedPostEffectManager.prototype['bind'];
 		this['unbind'] = RedPostEffectManager.prototype['unbind'];
-		this.checkUniformAndProperty();
+		this.checkUniformAndProperty();;
 		console.log( this );
 	}
 	makeProgram = (function () {

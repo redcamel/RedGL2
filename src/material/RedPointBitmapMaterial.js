@@ -48,7 +48,7 @@ var RedPointBitmapMaterial;
 		 :DOC*/
 		this['alphaTest'] = 0.00001
 		this['_UUID'] = RedGL['makeUUID']();
-		this.checkUniformAndProperty()
+		this.checkUniformAndProperty();
 		// Object.seal(this)
 		console.log( this )
 	}
