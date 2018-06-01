@@ -20,10 +20,10 @@ var RedPointBitmapMaterial;
 		 return : 'RedPointBitmapMaterial Instance'
 	 }
 	 :DOC*/
-	RedPointBitmapMaterial = function (redGL, diffuseTexture) {
-		if (!(this instanceof RedPointBitmapMaterial)) return new RedPointBitmapMaterial(redGL, diffuseTexture);
-		if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPointBitmapMaterial : RedGL Instance만 허용됩니다.', redGL)
-		if (!(diffuseTexture instanceof RedBitmapTexture)) RedGLUtil.throwFunc('RedPointBitmapMaterial : RedBitmapTexture Instance만 허용됩니다.')
+	RedPointBitmapMaterial = function ( redGL, diffuseTexture ) {
+		if ( !(this instanceof RedPointBitmapMaterial) ) return new RedPointBitmapMaterial( redGL, diffuseTexture );
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedPointBitmapMaterial : RedGL Instance만 허용됩니다.', redGL )
+		if ( !(diffuseTexture instanceof RedBitmapTexture) ) RedGLUtil.throwFunc( 'RedPointBitmapMaterial : RedBitmapTexture Instance만 허용됩니다.' )
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
 		/**DOC:
@@ -35,7 +35,7 @@ var RedPointBitmapMaterial;
 		this['diffuseTexture'] = diffuseTexture;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = makeProgram(redGL);
+		this['program'] = makeProgram( redGL );
 		/**DOC:
 		 {
 			 title :`alphaTest`,
@@ -50,7 +50,7 @@ var RedPointBitmapMaterial;
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkProperty()
 		// Object.seal(this)
-		console.log(this)
+		console.log( this )
 	}
 	makeProgram = (function () {
 		var vSource, fSource;
@@ -86,15 +86,15 @@ var RedPointBitmapMaterial;
 			 }
 			 */
 		}
-		vSource = RedGLUtil.getStrFromComment(vSource.toString());
-		fSource = RedGLUtil.getStrFromComment(fSource.toString());
+		vSource = RedGLUtil.getStrFromComment( vSource.toString() );
+		fSource = RedGLUtil.getStrFromComment( fSource.toString() );
 		// console.log(vSource, fSource)
 		PROGRAM_NAME = 'pointBitmapProgram';
-		return function (redGL) {
-			return RedProgram(redGL, PROGRAM_NAME, vSource, fSource)
+		return function ( redGL ) {
+			return RedProgram( redGL, PROGRAM_NAME, vSource, fSource )
 
 		}
 	})();
 	RedPointBitmapMaterial.prototype = RedBaseMaterial.prototype
-	Object.freeze(RedPointBitmapMaterial)
+	Object.freeze( RedPointBitmapMaterial )
 })();

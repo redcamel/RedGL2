@@ -17,22 +17,22 @@ var RedPostEffect_Gray;
 		 return : 'RedPostEffect_Gray Instance'
 	 }
 	 :DOC*/
-	RedPostEffect_Gray = function (redGL) {
-		if (!(this instanceof RedPostEffect_Gray)) return new RedPostEffect_Gray(redGL);
-		if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_Gray : RedGL Instance만 허용됩니다.', redGL);
-		this['frameBuffer'] = RedFrameBuffer(redGL);
+	RedPostEffect_Gray = function ( redGL ) {
+		if ( !(this instanceof RedPostEffect_Gray) ) return new RedPostEffect_Gray( redGL );
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedPostEffect_Gray : RedGL Instance만 허용됩니다.', redGL );
+		this['frameBuffer'] = RedFrameBuffer( redGL );
 		this['diffuseTexture'] = null;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = makeProgram(redGL);
+		this['program'] = makeProgram( redGL );
 		this['_UUID'] = RedGL['makeUUID']();
-		this.updateTexture = function (lastFrameBufferTexture) {
+		this.updateTexture = function ( lastFrameBufferTexture ) {
 			this['diffuseTexture'] = lastFrameBufferTexture;
 		}
 		this['bind'] = RedPostEffectManager.prototype['bind'];
 		this['unbind'] = RedPostEffectManager.prototype['unbind'];
 		this.checkProperty();
-		console.log(this);
+		console.log( this );
 	}
 	makeProgram = (function () {
 		var vSource, fSource;
@@ -57,13 +57,13 @@ var RedPostEffect_Gray;
 			 }
 			 */
 		}
-		vSource = RedGLUtil.getStrFromComment(vSource.toString());
-		fSource = RedGLUtil.getStrFromComment(fSource.toString());
+		vSource = RedGLUtil.getStrFromComment( vSource.toString() );
+		fSource = RedGLUtil.getStrFromComment( fSource.toString() );
 		PROGRAM_NAME = 'RedPostEffect_Gray_Program';
-		return function (redGL) {
-			return RedProgram(redGL, PROGRAM_NAME, vSource, fSource);
+		return function ( redGL ) {
+			return RedProgram( redGL, PROGRAM_NAME, vSource, fSource );
 		}
 	})();
 	RedPostEffect_Gray.prototype = RedBaseMaterial.prototype;
-	Object.freeze(RedPostEffect_Gray);
+	Object.freeze( RedPostEffect_Gray );
 })();

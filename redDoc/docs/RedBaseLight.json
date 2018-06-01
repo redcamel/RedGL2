@@ -1,27 +1,14 @@
 [
   {
-    "constructorYn": true,
-    "title": "RedBaseLight",
-    "description": "\nRedBaseLight 기저층\n프로토타입 확장을 통해서만 사용가능( RedGLUtil.copyProto 사용 )\n",
-    "return": "void"
+    "code": "PROPERTY",
+    "title": "color",
+    "description": "\n컬러설정\n",
+    "return": "hex"
   },
   {
-    "code": "METHOD",
-    "title": "setColor",
-    "description": "\nhex로 컬러값 설정\n",
-    "parmas": {
-      "hex": [
-        {
-          "type": "hex"
-        }
-      ],
-      "alpha": [
-        {
-          "type": "Number"
-        },
-        "알파값"
-      ]
-    },
+    "constructorYn": true,
+    "title": "RedBaseLight",
+    "description": "\nRedBaseLight 기저층\n",
     "return": "void"
   }
 ]

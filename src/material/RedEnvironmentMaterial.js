@@ -42,13 +42,13 @@ var RedEnvironmentMaterial;
 		 return : 'RedEnvironmentMaterial Instance'
 	 }
 	 :DOC*/
-	RedEnvironmentMaterial = function (redGL,
-	                                   diffuseTexture,
-	                                   environmentTexture,
-	                                   normalTexture,
-	                                   specularTexture,
-	                                   displacementTexture) {
-		if (!(this instanceof RedEnvironmentMaterial)) return new RedEnvironmentMaterial(
+	RedEnvironmentMaterial = function ( redGL,
+	                                    diffuseTexture,
+	                                    environmentTexture,
+	                                    normalTexture,
+	                                    specularTexture,
+	                                    displacementTexture ) {
+		if ( !(this instanceof RedEnvironmentMaterial) ) return new RedEnvironmentMaterial(
 			redGL,
 			diffuseTexture,
 			environmentTexture,
@@ -56,12 +56,12 @@ var RedEnvironmentMaterial;
 			specularTexture,
 			displacementTexture
 		);
-		if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedEnvironmentMaterial : RedGL Instance만 허용됩니다.', redGL)
-		if (!(diffuseTexture instanceof RedBitmapTexture)) RedGLUtil.throwFunc('RedEnvironmentMaterial : diffuseTexture - RedBitmapTexture Instance만 허용됩니다.')
-		if (environmentTexture && !(environmentTexture instanceof RedBitmapCubeTexture)) RedGLUtil.throwFunc('RedEnvironmentMaterial : environmentTexture - RedBitmapCubeTexture Instance만 허용됩니다.')
-		if (normalTexture && !(normalTexture instanceof RedBitmapTexture)) RedGLUtil.throwFunc('RedEnvironmentMaterial : normalTexture - RedBitmapTexture Instance만 허용됩니다.')
-		if (specularTexture && !(specularTexture instanceof RedBitmapTexture)) RedGLUtil.throwFunc('RedEnvironmentMaterial : specularTexture - RedBitmapTexture Instance만 허용됩니다.')
-		if (displacementTexture && !(displacementTexture instanceof RedBitmapTexture)) RedGLUtil.throwFunc('RedEnvironmentMaterial : displacementTexture - RedBitmapTexture Instance만 허용됩니다.')
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedEnvironmentMaterial : RedGL Instance만 허용됩니다.', redGL )
+		if ( !(diffuseTexture instanceof RedBitmapTexture) ) RedGLUtil.throwFunc( 'RedEnvironmentMaterial : diffuseTexture - RedBitmapTexture Instance만 허용됩니다.' )
+		if ( environmentTexture && !(environmentTexture instanceof RedBitmapCubeTexture) ) RedGLUtil.throwFunc( 'RedEnvironmentMaterial : environmentTexture - RedBitmapCubeTexture Instance만 허용됩니다.' )
+		if ( normalTexture && !(normalTexture instanceof RedBitmapTexture) ) RedGLUtil.throwFunc( 'RedEnvironmentMaterial : normalTexture - RedBitmapTexture Instance만 허용됩니다.' )
+		if ( specularTexture && !(specularTexture instanceof RedBitmapTexture) ) RedGLUtil.throwFunc( 'RedEnvironmentMaterial : specularTexture - RedBitmapTexture Instance만 허용됩니다.' )
+		if ( displacementTexture && !(displacementTexture instanceof RedBitmapTexture) ) RedGLUtil.throwFunc( 'RedEnvironmentMaterial : displacementTexture - RedBitmapTexture Instance만 허용됩니다.' )
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
 		/**DOC:
@@ -133,10 +133,10 @@ var RedEnvironmentMaterial;
 		this['displacementPower'] = 0
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = makeProgram(redGL);
+		this['program'] = makeProgram( redGL );
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkProperty()
-		console.log(this)
+		console.log( this )
 		// Object.seal(this)
 	}
 	makeProgram = (function () {
@@ -249,15 +249,15 @@ var RedEnvironmentMaterial;
 			 }
 			 */
 		}
-		vSource = RedGLUtil.getStrFromComment(vSource.toString());
-		fSource = RedGLUtil.getStrFromComment(fSource.toString());
+		vSource = RedGLUtil.getStrFromComment( vSource.toString() );
+		fSource = RedGLUtil.getStrFromComment( fSource.toString() );
 		// console.log(vSource, fSource)
 		PROGRAM_NAME = 'environmentProgram';
-		return function (redGL) {
-			return RedProgram(redGL, PROGRAM_NAME, vSource, fSource)
+		return function ( redGL ) {
+			return RedProgram( redGL, PROGRAM_NAME, vSource, fSource )
 
 		}
 	})();
 	RedEnvironmentMaterial.prototype = RedBaseMaterial.prototype
-	Object.freeze(RedEnvironmentMaterial)
+	Object.freeze( RedEnvironmentMaterial )
 })();

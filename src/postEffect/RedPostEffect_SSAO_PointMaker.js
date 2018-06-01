@@ -17,16 +17,16 @@ var RedPostEffect_SSAO_PointMaker;
 		 return : 'RedPostEffect_SSAO_PointMaker Instance'
 	 }
 	 :DOC*/
-	RedPostEffect_SSAO_PointMaker = function (redGL) {
-		if (!(this instanceof RedPostEffect_SSAO_PointMaker)) return new RedPostEffect_SSAO_PointMaker(redGL);
-		if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_SSAO_PointMaker : RedGL Instance만 허용됩니다.', redGL)
-		this['frameBuffer'] = RedFrameBuffer(redGL);
+	RedPostEffect_SSAO_PointMaker = function ( redGL ) {
+		if ( !(this instanceof RedPostEffect_SSAO_PointMaker) ) return new RedPostEffect_SSAO_PointMaker( redGL );
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedPostEffect_SSAO_PointMaker : RedGL Instance만 허용됩니다.', redGL )
+		this['frameBuffer'] = RedFrameBuffer( redGL );
 		this['subFrameBufferInfo'] = {
-			frameBuffer: RedFrameBuffer(redGL),
-			renderMaterial: RedPostEffect_SSAO_DepthMaterial(redGL),
+			frameBuffer: RedFrameBuffer( redGL ),
+			renderMaterial: RedPostEffect_SSAO_DepthMaterial( redGL ),
 			process: [
-				RedPostEffect_BlurX(redGL),
-				RedPostEffect_BlurY(redGL)
+				RedPostEffect_BlurX( redGL ),
+				RedPostEffect_BlurY( redGL )
 			]
 		}
 
@@ -37,17 +37,17 @@ var RedPostEffect_SSAO_PointMaker;
 
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = makeProgram(redGL);
+		this['program'] = makeProgram( redGL );
 		this['_UUID'] = RedGL['makeUUID']();
 
 
-		this.updateTexture = function (lastFrameBufferTexture, parentFramBufferTexture) {
+		this.updateTexture = function ( lastFrameBufferTexture, parentFramBufferTexture ) {
 			this['depthTexture'] = this['subFrameBufferInfo']['frameBuffer']['texture'];
 		}
 		this['bind'] = RedPostEffectManager.prototype['bind'];
 		this['unbind'] = RedPostEffectManager.prototype['unbind'];
 		this.checkProperty();
-		console.log(this);
+		console.log( this );
 	}
 	makeProgram = (function () {
 		var vSource, fSource;
@@ -150,13 +150,13 @@ var RedPostEffect_SSAO_PointMaker;
 			 }
 			 */
 		}
-		vSource = RedGLUtil.getStrFromComment(vSource.toString());
-		fSource = RedGLUtil.getStrFromComment(fSource.toString());
+		vSource = RedGLUtil.getStrFromComment( vSource.toString() );
+		fSource = RedGLUtil.getStrFromComment( fSource.toString() );
 		PROGRAM_NAME = 'RedPostEffect_SSAO_PointMaker_Program';
-		return function (redGL) {
-			return RedProgram(redGL, PROGRAM_NAME, vSource, fSource);
+		return function ( redGL ) {
+			return RedProgram( redGL, PROGRAM_NAME, vSource, fSource );
 		}
 	})();
 	RedPostEffect_SSAO_PointMaker.prototype = RedBaseMaterial.prototype;
-	Object.freeze(RedPostEffect_SSAO_PointMaker);
+	Object.freeze( RedPostEffect_SSAO_PointMaker );
 })();

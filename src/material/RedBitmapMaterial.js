@@ -24,10 +24,10 @@ var RedBitmapMaterial;
 		 return : 'RedBitmapMaterial Instance'
 	 }
 	 :DOC*/
-	RedBitmapMaterial = function (redGL, diffuseTexture) {
-		if (!(this instanceof RedBitmapMaterial)) return new RedBitmapMaterial(redGL, diffuseTexture);
-		if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedBitmapMaterial : RedGL Instance만 허용됩니다.', redGL)
-		if (!(diffuseTexture instanceof RedBitmapTexture)) RedGLUtil.throwFunc('RedBitmapMaterial : RedBitmapTexture Instance만 허용됩니다.')
+	RedBitmapMaterial = function ( redGL, diffuseTexture ) {
+		if ( !(this instanceof RedBitmapMaterial) ) return new RedBitmapMaterial( redGL, diffuseTexture );
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedBitmapMaterial : RedGL Instance만 허용됩니다.', redGL )
+		if ( !(diffuseTexture instanceof RedBitmapTexture) ) RedGLUtil.throwFunc( 'RedBitmapMaterial : RedBitmapTexture Instance만 허용됩니다.' )
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
 		/**DOC:
@@ -39,11 +39,11 @@ var RedBitmapMaterial;
 		this['diffuseTexture'] = diffuseTexture;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = makeProgram(redGL);
+		this['program'] = makeProgram( redGL );
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkProperty()
 		// Object.seal(this)
-		console.log(this)
+		console.log( this )
 	}
 	makeProgram = (function () {
 		var vSource, fSource;
@@ -99,14 +99,14 @@ var RedBitmapMaterial;
 			 }
 			 */
 		}
-		vSource = RedGLUtil.getStrFromComment(vSource.toString());
-		fSource = RedGLUtil.getStrFromComment(fSource.toString());
+		vSource = RedGLUtil.getStrFromComment( vSource.toString() );
+		fSource = RedGLUtil.getStrFromComment( fSource.toString() );
 		PROGRAM_NAME = 'bitmapProgram';
-		return function (redGL) {
-			return RedProgram(redGL, PROGRAM_NAME, vSource, fSource)
+		return function ( redGL ) {
+			return RedProgram( redGL, PROGRAM_NAME, vSource, fSource )
 
 		}
 	})();
 	RedBitmapMaterial.prototype = RedBaseMaterial.prototype
-	Object.freeze(RedBitmapMaterial)
+	Object.freeze( RedBitmapMaterial )
 })();

@@ -17,10 +17,10 @@ var RedPostEffect_BlurY;
 		 return : 'RedPostEffect_BlurY Instance'
 	 }
 	 :DOC*/
-	RedPostEffect_BlurY = function (redGL) {
-		if (!(this instanceof RedPostEffect_BlurY)) return new RedPostEffect_BlurY(redGL);
-		if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_BlurY : RedGL Instance만 허용됩니다.', redGL);
-		this['frameBuffer'] = RedFrameBuffer(redGL);
+	RedPostEffect_BlurY = function ( redGL ) {
+		if ( !(this instanceof RedPostEffect_BlurY) ) return new RedPostEffect_BlurY( redGL );
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedPostEffect_BlurY : RedGL Instance만 허용됩니다.', redGL );
+		this['frameBuffer'] = RedFrameBuffer( redGL );
 		this['diffuseTexture'] = null;
 		/**DOC:
 		 {
@@ -35,15 +35,15 @@ var RedPostEffect_BlurY;
 		this['size'] = 50;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = makeProgram(redGL);
+		this['program'] = makeProgram( redGL );
 		this['_UUID'] = RedGL['makeUUID']();
-		this.updateTexture = function (lastFrameBufferTexture) {
+		this.updateTexture = function ( lastFrameBufferTexture ) {
 			this['diffuseTexture'] = lastFrameBufferTexture;
 		}
 		this['bind'] = RedPostEffectManager.prototype['bind'];
 		this['unbind'] = RedPostEffectManager.prototype['unbind'];
 		this.checkProperty();
-		console.log(this);
+		console.log( this );
 	}
 	makeProgram = (function () {
 		var vSource, fSource;
@@ -85,13 +85,13 @@ var RedPostEffect_BlurY;
 			 }
 			 */
 		}
-		vSource = RedGLUtil.getStrFromComment(vSource.toString());
-		fSource = RedGLUtil.getStrFromComment(fSource.toString());
+		vSource = RedGLUtil.getStrFromComment( vSource.toString() );
+		fSource = RedGLUtil.getStrFromComment( fSource.toString() );
 		PROGRAM_NAME = 'RedPostEffect_BlurY_Program';
-		return function (redGL) {
-			return RedProgram(redGL, PROGRAM_NAME, vSource, fSource);
+		return function ( redGL ) {
+			return RedProgram( redGL, PROGRAM_NAME, vSource, fSource );
 		}
 	})();
 	RedPostEffect_BlurY.prototype = RedBaseMaterial.prototype;
-	Object.freeze(RedPostEffect_BlurY);
+	Object.freeze( RedPostEffect_BlurY );
 })();

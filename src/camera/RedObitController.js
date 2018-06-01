@@ -19,9 +19,9 @@ var RedObitController;
 		 return : 'RedObitController Instance'
 	 }
 	 :DOC*/
-	RedObitController = function (redGL) {
+	RedObitController = function ( redGL ) {
 		var self;
-		if (!(this instanceof RedObitController)) return new RedObitController(redGL);
+		if ( !(this instanceof RedObitController) ) return new RedObitController( redGL );
 		self = this;
 		/**DOC:
 		 {
@@ -106,18 +106,18 @@ var RedObitController;
 			 return : 'Number'
 		 }
 		 :DOC*/
-		Object.defineProperty(this, 'minTilt', (function () {
+		Object.defineProperty( this, 'minTilt', (function () {
 			var _v = -90
 			return {
 				get: function () {
 					return _v
 				},
-				set: function (v) {
-					if (v < -90) v = -90
+				set: function ( v ) {
+					if ( v < -90 ) v = -90
 					_v = v
 				}
 			}
-		})());
+		})() );
 		/**DOC:
 		 {
 			 title :`maxTilt`,
@@ -127,18 +127,18 @@ var RedObitController;
 			 return : 'Number'
 		 }
 		 :DOC*/
-		Object.defineProperty(this, 'maxTilt', (function () {
+		Object.defineProperty( this, 'maxTilt', (function () {
 			var _v = 90
 			return {
 				get: function () {
 					return _v
 				},
-				set: function (v) {
-					if (v > 90) v = 90
+				set: function ( v ) {
+					if ( v > 90 ) v = 90
 					_v = v
 				}
 			}
-		})());
+		})() );
 		/**DOC:
 		 {
 			 title :`pan`,
@@ -162,47 +162,47 @@ var RedObitController;
 		this['_currentTilt'] = 0;
 		this['_currentDistance'] = 0;
 
-		(function (self) {
+		(function ( self ) {
 			var HD_down, HD_Move, HD_up, HD_wheel;
 			var sX, sY;
 			var mX, mY;
 			sX = 0, sY = 0
 			mX = 0, mY = 0
-			HD_down = function (e) {
+			HD_down = function ( e ) {
 				sX = e['x'], sY = e['y'];
-				redGL['_canvas'].addEventListener('mousemove', HD_Move)
-				window.addEventListener('mouseup', HD_up)
+				redGL['_canvas'].addEventListener( 'mousemove', HD_Move )
+				window.addEventListener( 'mouseup', HD_up )
 			}
-			HD_Move = function (e) {
+			HD_Move = function ( e ) {
 				mX = e['x'] - sX, mY = e['y'] - sY;
 				sX = e['x'], sY = e['y'];
 				self['pan'] -= mX * self['speedRotation'] * 0.1;
 				self['tilt'] -= mY * self['speedRotation'] * 0.1;
 			}
 			HD_up = function () {
-				redGL['_canvas'].removeEventListener('mousemove', HD_Move);
-				window.removeEventListener('mouseup', HD_up);
+				redGL['_canvas'].removeEventListener( 'mousemove', HD_Move );
+				window.removeEventListener( 'mouseup', HD_up );
 			}
-			HD_wheel = function (e) {
-				console.log(e)
+			HD_wheel = function ( e ) {
+				console.log( e )
 				self['distance'] += e['deltaY'] / 100 * self['speedDistance']
 			}
 
-			redGL['_canvas'].addEventListener('mousedown', HD_down);
-			redGL['_canvas'].addEventListener('wheel', HD_wheel);
-		})(this);
+			redGL['_canvas'].addEventListener( 'mousedown', HD_down );
+			redGL['_canvas'].addEventListener( 'wheel', HD_wheel );
+		})( this );
 
 	};
 	RedObitController.prototype['update'] = (function () {
-		var up = new Float32Array([0, 1, 0]);
+		var up = new Float32Array( [0, 1, 0] );
 
 		var tSpeedRotation
 		var tDelayRotation
 		var tCamera
 		var tMTX0;
-		return function (time) {
-			if (this['tilt'] < this['minTilt']) this['tilt'] = this['minTilt'] + 0.01
-			if (this['tilt'] > this['maxTilt']) this['tilt'] = this['maxTilt'] - 0.01
+		return function ( time ) {
+			if ( this['tilt'] < this['minTilt'] ) this['tilt'] = this['minTilt'] + 0.01
+			if ( this['tilt'] > this['maxTilt'] ) this['tilt'] = this['maxTilt'] - 0.01
 
 			tSpeedRotation = this['speedRotation'];
 			tDelayRotation = this['delayRotation'];
@@ -213,21 +213,21 @@ var RedObitController;
 			this['_currentTilt'] += (this['tilt'] - this['_currentTilt']) * tDelayRotation
 			this['_currentDistance'] += (this['distance'] - this['_currentDistance']) * this['delayDistance']
 
-			mat4.identity(tMTX0);
-			mat4.rotateY(tMTX0, tMTX0, this['_currentPan'] * Math.PI / 180);
-			mat4.rotateX(tMTX0, tMTX0, this['_currentTilt'] * Math.PI / 180);
-			mat4.translate(tMTX0, tMTX0, [0, 0, this['_currentDistance']])
+			mat4.identity( tMTX0 );
+			mat4.rotateY( tMTX0, tMTX0, this['_currentPan'] * Math.PI / 180 );
+			mat4.rotateX( tMTX0, tMTX0, this['_currentTilt'] * Math.PI / 180 );
+			mat4.translate( tMTX0, tMTX0, [0, 0, this['_currentDistance']] )
 
 			tCamera['x'] = tMTX0[12]
 			tCamera['y'] = tMTX0[13]
 			tCamera['z'] = tMTX0[14]
 
 			// 카메라는 대상 오브젝트를 바라봄
-			tCamera.lookAt(this['centerX'], this['centerY'], this['centerZ'])
+			tCamera.lookAt( this['centerX'], this['centerY'], this['centerZ'] )
 			// console.log(this['tilt'], this['pan'])
 			// console.log('RedObitController update')
 		}
 	})();
 
-	Object.freeze(RedObitController);
+	Object.freeze( RedObitController );
 })();

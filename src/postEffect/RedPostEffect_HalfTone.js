@@ -18,10 +18,10 @@ var RedPostEffect_HalfTone;
 	 }
 	 :DOC*/
 	//TODO: 각각의 값을 정의해봐야겠군....의미가 아리까리..
-	RedPostEffect_HalfTone = function (redGL) {
-		if (!(this instanceof RedPostEffect_HalfTone)) return new RedPostEffect_HalfTone(redGL);
-		if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_HalfTone : RedGL Instance만 허용됩니다.', redGL)
-		this['frameBuffer'] = RedFrameBuffer(redGL);
+	RedPostEffect_HalfTone = function ( redGL ) {
+		if ( !(this instanceof RedPostEffect_HalfTone) ) return new RedPostEffect_HalfTone( redGL );
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedPostEffect_HalfTone : RedGL Instance만 허용됩니다.', redGL )
+		this['frameBuffer'] = RedFrameBuffer( redGL );
 		this['diffuseTexture'] = null;
 		this['centerX'] = 0.0;
 		this['centerY'] = 0.0;
@@ -30,15 +30,15 @@ var RedPostEffect_HalfTone;
 		this['grayMode'] = false;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = makeProgram(redGL);
+		this['program'] = makeProgram( redGL );
 		this['_UUID'] = RedGL['makeUUID']();
-		this.updateTexture = function (lastFrameBufferTexture) {
+		this.updateTexture = function ( lastFrameBufferTexture ) {
 			this['diffuseTexture'] = lastFrameBufferTexture
 		}
 		this['bind'] = RedPostEffectManager.prototype['bind'];
 		this['unbind'] = RedPostEffectManager.prototype['unbind'];
 		this.checkProperty();
-		console.log(this);
+		console.log( this );
 	}
 	makeProgram = (function () {
 		var vSource, fSource;
@@ -90,13 +90,13 @@ var RedPostEffect_HalfTone;
 			 }
 			 */
 		}
-		vSource = RedGLUtil.getStrFromComment(vSource.toString());
-		fSource = RedGLUtil.getStrFromComment(fSource.toString());
+		vSource = RedGLUtil.getStrFromComment( vSource.toString() );
+		fSource = RedGLUtil.getStrFromComment( fSource.toString() );
 		PROGRAM_NAME = 'RedPostEffect_HalfTone_Program';
-		return function (redGL) {
-			return RedProgram(redGL, PROGRAM_NAME, vSource, fSource);
+		return function ( redGL ) {
+			return RedProgram( redGL, PROGRAM_NAME, vSource, fSource );
 		}
 	})();
 	RedPostEffect_HalfTone.prototype = RedBaseMaterial.prototype;
-	Object.freeze(RedPostEffect_HalfTone);
+	Object.freeze( RedPostEffect_HalfTone );
 })();

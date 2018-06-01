@@ -32,14 +32,14 @@ var RedSkyBox;
 		 return : 'RedSkyBox Instance'
 	 }
 	 :DOC*/
-	RedSkyBox = function (redGL, srcList) {
-		if (!(this instanceof RedSkyBox)) return new RedSkyBox(redGL, srcList);
-		if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedSkyBox : RedGL Instance만 허용됩니다.', redGL)
+	RedSkyBox = function ( redGL, srcList ) {
+		if ( !(this instanceof RedSkyBox) ) return new RedSkyBox( redGL, srcList );
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedSkyBox : RedGL Instance만 허용됩니다.', redGL )
 		var tGL;
 		tGL = redGL.gl;
-		RedBaseObject3D['build'].call(this, tGL)
-		this['geometry'] = RedBox(redGL);
-		this['material'] = RedSkyBoxMaterial(redGL, RedBitmapCubeTexture(redGL, srcList));
+		RedBaseObject3D['build'].call( this, tGL )
+		this['geometry'] = RedBox( redGL );
+		this['material'] = RedSkyBoxMaterial( redGL, RedBitmapCubeTexture( redGL, srcList ) );
 		this['_UUID'] = RedGL['makeUUID']();
 		// Object.seal(this)
 	}
@@ -48,6 +48,6 @@ var RedSkyBox;
 		 copyProto : 'RedBaseObject3D'
 	 }
 	 :DOC*/
-	RedGLUtil['copyProto'](RedSkyBox, RedBaseObject3D);
-	Object.freeze(RedSkyBox);
+	RedGLUtil['copyProto']( RedSkyBox, RedBaseObject3D );
+	Object.freeze( RedSkyBox );
 })();

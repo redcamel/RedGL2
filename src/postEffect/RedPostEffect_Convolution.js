@@ -17,10 +17,10 @@ var RedPostEffect_Convolution;
 		 return : 'RedPostEffect_Convolution Instance'
 	 }
 	 :DOC*/
-	RedPostEffect_Convolution = function (redGL, kernel) {
-		if (!(this instanceof RedPostEffect_Convolution)) return new RedPostEffect_Convolution(redGL, kernel);
-		if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_Convolution : RedGL Instance만 허용됩니다.', redGL);
-		this['frameBuffer'] = RedFrameBuffer(redGL);
+	RedPostEffect_Convolution = function ( redGL, kernel ) {
+		if ( !(this instanceof RedPostEffect_Convolution) ) return new RedPostEffect_Convolution( redGL, kernel );
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedPostEffect_Convolution : RedGL Instance만 허용됩니다.', redGL );
+		this['frameBuffer'] = RedFrameBuffer( redGL );
 		this['diffuseTexture'] = null;
 		/**DOC:
 		 {
@@ -32,39 +32,39 @@ var RedPostEffect_Convolution;
 		 }
 		 :DOC*/
 		this['kernel'] = kernel;
-		Object.defineProperty(this, 'kernel', (function () {
+		Object.defineProperty( this, 'kernel', (function () {
 			var _v;
 			return {
 				get: function () {
-					if (!_v) _v = RedPostEffect_Convolution['NORMAL']
+					if ( !_v ) _v = RedPostEffect_Convolution['NORMAL']
 					return _v
 				},
-				set: function (v) {
+				set: function ( v ) {
 					_v = v
 				}
 			}
-		})());
-		Object.defineProperty(this, 'kernelWeight', (function () {
+		})() );
+		Object.defineProperty( this, 'kernelWeight', (function () {
 			var sum;
 			return {
 				get: function () {
 					sum = 0;
-					for (var k in this['kernel']) sum += this['kernel'][k];
+					for ( var k in this['kernel'] ) sum += this['kernel'][k];
 					return sum;
 				}
 			}
-		})());
+		})() );
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = makeProgram(redGL);
+		this['program'] = makeProgram( redGL );
 		this['_UUID'] = RedGL['makeUUID']();
-		this.updateTexture = function (lastFrameBufferTexture) {
+		this.updateTexture = function ( lastFrameBufferTexture ) {
 			this['diffuseTexture'] = lastFrameBufferTexture;
 		}
 		this['bind'] = RedPostEffectManager.prototype['bind'];
 		this['unbind'] = RedPostEffectManager.prototype['unbind'];
 		this.checkProperty();
-		console.log(this);
+		console.log( this );
 	}
 	makeProgram = (function () {
 		var vSource, fSource;
@@ -105,11 +105,11 @@ var RedPostEffect_Convolution;
 			 }
 			 */
 		}
-		vSource = RedGLUtil.getStrFromComment(vSource.toString());
-		fSource = RedGLUtil.getStrFromComment(fSource.toString());
+		vSource = RedGLUtil.getStrFromComment( vSource.toString() );
+		fSource = RedGLUtil.getStrFromComment( fSource.toString() );
 		PROGRAM_NAME = 'RedPostEffect_Convolution_Program';
-		return function (redGL) {
-			return RedProgram(redGL, PROGRAM_NAME, vSource, fSource);
+		return function ( redGL ) {
+			return RedProgram( redGL, PROGRAM_NAME, vSource, fSource );
 
 		}
 	})();
@@ -219,5 +219,5 @@ var RedPostEffect_Convolution;
 		-1, 1, 1,
 		0, 1, 2
 	]
-	Object.freeze(RedPostEffect_Convolution);
+	Object.freeze( RedPostEffect_Convolution );
 })();

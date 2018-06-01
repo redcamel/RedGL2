@@ -27,11 +27,11 @@ var RedColorMaterial;
 		 return : 'RedColorMaterial Instance'
 	 }
 	 :DOC*/
-	RedColorMaterial = function (redGL, hexColor, alpha) {
-		if (!(this instanceof RedColorMaterial)) return new RedColorMaterial(redGL, hexColor, alpha);
+	RedColorMaterial = function ( redGL, hexColor, alpha ) {
+		if ( !(this instanceof RedColorMaterial) ) return new RedColorMaterial( redGL, hexColor, alpha );
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
-		this['_color'] = new Float32Array(4);
+		this['_color'] = new Float32Array( 4 );
 		/////////////////////////////////////////
 		// 일반 프로퍼티
 		/**DOC:
@@ -44,15 +44,15 @@ var RedColorMaterial;
 			 return : 'hex'
 		 }
 		 :DOC*/
-		Object.defineProperty(this, 'color', (function () {
+		Object.defineProperty( this, 'color', (function () {
 			var _v = '#ff2211'
 			return {
 				get: function () { return _v },
 				set: (function () {
 					var t0;
-					return function (hex) {
+					return function ( hex ) {
 						_v = hex ? hex : '#ff2211';
-						t0 = RedGLUtil.hexToRGB.call(this, _v);
+						t0 = RedGLUtil.hexToRGB.call( this, _v );
 						this['_color'][0] = t0[0];
 						this['_color'][1] = t0[1];
 						this['_color'][2] = t0[2];
@@ -60,21 +60,21 @@ var RedColorMaterial;
 					}
 				})()
 			}
-		})());
-		Object.defineProperty(this, 'alpha', (function () {
+		})() );
+		Object.defineProperty( this, 'alpha', (function () {
 			var _v = '#ff2211'
 			return {
 				get: function () { return _v; },
-				set: function (v) { this['_color'][3] = _v = v }
+				set: function ( v ) { this['_color'][3] = _v = v }
 			}
-		})());
+		})() );
 		this['alpha'] = alpha == undefined ? 1 : alpha;
 		this['color'] = hexColor ? hexColor : '#ff0000'
-		this['program'] = makeProgram(redGL);
+		this['program'] = makeProgram( redGL );
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkProperty()
 		// Object.seal(this);
-		console.log(this);
+		console.log( this );
 	}
 	makeProgram = (function () {
 		var vSource, fSource;
@@ -130,13 +130,13 @@ var RedColorMaterial;
 			 }
 			 */
 		}
-		vSource = RedGLUtil.getStrFromComment(vSource.toString());
-		fSource = RedGLUtil.getStrFromComment(fSource.toString());
+		vSource = RedGLUtil.getStrFromComment( vSource.toString() );
+		fSource = RedGLUtil.getStrFromComment( fSource.toString() );
 		PROGRAM_NAME = 'colorProgram';
-		return function (redGL) {
-			return RedProgram(redGL, PROGRAM_NAME, vSource, fSource)
+		return function ( redGL ) {
+			return RedProgram( redGL, PROGRAM_NAME, vSource, fSource )
 		}
 	})()
 	RedColorMaterial.prototype = RedBaseMaterial.prototype
-	Object.freeze(RedColorMaterial)
+	Object.freeze( RedColorMaterial )
 })();

@@ -35,9 +35,9 @@
 <body>
 <script>
 	(function () {
-		var temp = window.location.href.split('/')
-		var title = document.createElement('div')
-		document.body.appendChild(title)
+		var temp = window.location.href.split( '/' )
+		var title = document.createElement( 'div' )
+		document.body.appendChild( title )
 		title.style.cssText = 'color:#fff;margin-left:7px;font-size:32px;margin-top:15px;margin-bottom:20px'
 		title.innerHTML = 'RedGL Test Suite'
 	})()
@@ -48,6 +48,9 @@
 	testList = [
 
 		"RedCamera.html",
+		"RedSphere.html",
+		"RedBox.html",
+		"RedPlane.html",
 		"RedGeometry.html",
 		"RedBuffer.html",
 		'RedInterleaveInfo.html',
@@ -64,18 +67,18 @@
 	//            if (a < b) return 1
 	//            return 0
 	//        })
-	while (i--) {
+	while ( i-- ) {
 		var tFrame, tContainer, tTitle, tStyle;
-		tContainer = document.createElement('span'),
-			document.body.appendChild(tContainer),
+		tContainer = document.createElement( 'span' ),
+			document.body.appendChild( tContainer ),
 			tStyle = tContainer.style,
 			tStyle.float = "left",
 			tStyle.height = "350px",
 			tStyle.background = '#2c3239',
 			tStyle.margin = "5px",
 			tStyle.boxShadow = "5px 5px 20px rgba(0,0,0,0.3)",
-			tTitle = document.createElement('button'),
-			tContainer.appendChild(tTitle),
+			tTitle = document.createElement( 'button' ),
+			tContainer.appendChild( tTitle ),
 			tTitle.innerHTML = '<a href = "' + testList[i] + '"><div style="padding:15px">' + testList[i] + '</div></a>',
 			tStyle = tTitle.style,
 			tStyle.display = 'block',
@@ -85,25 +88,25 @@
 			tStyle.fontSize = '13px',
 			tStyle.background = '#5b52aa',
 			tStyle.font = "#333",
-			tFrame = document.createElement('iframe'),
+			tFrame = document.createElement( 'iframe' ),
 			tFrame.src = testList[i],
 			tStyle = tFrame.style,
 			tStyle.border = "0px",
 			tStyle.width = "300px",
 			tStyle.height = "303px",
-			tContainer.appendChild(tFrame),
-			tFrame.addEventListener('load', (function () {
+			tContainer.appendChild( tFrame ),
+			tFrame.addEventListener( 'load', (function () {
 				var t0 = testList[i]
 				var frame = tFrame
 				var title = tTitle
 				var tDate
 				return function () {
 					tDate = frame.contentDocument.lastModified
-					tDate = new Date(tDate)
+					tDate = new Date( tDate )
 					tDate = tDate.getFullYear() + '.' + (tDate.getMonth() + 1) + '.' + tDate.getDate() + ' ' + tDate.getHours() + ':' + tDate.getMinutes()
 					title.innerHTML = '<a href = "' + t0 + '"><div style="padding:15px">' + t0 + ' - <span style="color:#ccc;font-size:11px">' + tDate + '</span></div></a>'
 				}
-			})())
+			})() )
 	}
 </script>
 <div style="clear:both"></div>

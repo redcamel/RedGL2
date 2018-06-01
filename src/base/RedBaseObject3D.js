@@ -14,7 +14,7 @@ var RedBaseObject3D;
 	 }
 	 :DOC*/
 	RedBaseObject3D = function () {
-		RedGLUtil.throwFunc('RedBaseObject3D : 생성자/직접실행으로 사용 할 수 없습니다.')
+		RedGLUtil.throwFunc( 'RedBaseObject3D : 생성자/직접실행으로 사용 할 수 없습니다.' )
 	}
 	/**DOC:
 	 {
@@ -38,7 +38,7 @@ var RedBaseObject3D;
 		 return : 'void'
 	 }
 	 :DOC*/
-	RedBaseObject3D['build'] = function (gl) {
+	RedBaseObject3D['build'] = function ( gl ) {
 		/**DOC:
 		 {
 			 title :`useCullFace`,
@@ -239,13 +239,13 @@ var RedBaseObject3D;
 		localToWorld: (function () {
 			var t0;
 			t0 = mat4.create()
-			return function (x, y, z) {
+			return function ( x, y, z ) {
 				x = x || 0
 				y = y || 0
 				z = z || 0
-				mat4.identity(t0);
-				mat4.translate(t0, t0, [x, y, z])
-				mat4.multiply(t0, this['matrix'], t0)
+				mat4.identity( t0 );
+				mat4.translate( t0, t0, [x, y, z] )
+				mat4.multiply( t0, this['matrix'], t0 )
 				return [
 					t0[12],
 					t0[13],
@@ -267,13 +267,13 @@ var RedBaseObject3D;
 			var t0, t1;
 			t0 = mat4.create() // 이동
 			t1 = mat4.create()
-			return function (x, y, z) {
+			return function ( x, y, z ) {
 				x = x || 0
 				y = y || 0
 				z = z || 0
-				mat4.translate(t0, t0, [x, y, z])
+				mat4.translate( t0, t0, [x, y, z] )
 				// mat4.invert(t1, this['matrix'])
-				mat4.multiply(t1, t0, this['matrix'])
+				mat4.multiply( t1, t0, this['matrix'] )
 				return [
 					t1[0] * x + t1[1] * y + t1[2] * z + t1[3],
 					t1[4] * x + t1[5] * y + t1[6] * z + t1[7],
@@ -282,5 +282,5 @@ var RedBaseObject3D;
 			}
 		})()
 	}
-	Object.freeze(RedBaseObject3D);
+	Object.freeze( RedBaseObject3D );
 })();

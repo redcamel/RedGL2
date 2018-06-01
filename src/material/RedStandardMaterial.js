@@ -38,13 +38,13 @@ var RedStandardMaterial;
 		 return : 'RedStandardMaterial Instance'
 	 }
 	 :DOC*/
-	RedStandardMaterial = function (redGL, diffuseTexture, normalTexture, specularTexture, displacementTexture) {
-		if (!(this instanceof RedStandardMaterial)) return new RedStandardMaterial(redGL, diffuseTexture, normalTexture, specularTexture, displacementTexture);
-		if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedStandardMaterial : RedGL Instance만 허용됩니다.', redGL)
-		if (!(diffuseTexture instanceof RedBitmapTexture)) RedGLUtil.throwFunc('RedStandardMaterial : diffuseTexture - RedBitmapTexture Instance만 허용됩니다.')
-		if (normalTexture && !(normalTexture instanceof RedBitmapTexture)) RedGLUtil.throwFunc('RedStandardMaterial : normalTexture - RedBitmapTexture Instance만 허용됩니다.')
-		if (specularTexture && !(specularTexture instanceof RedBitmapTexture)) RedGLUtil.throwFunc('RedStandardMaterial : specularTexture - RedBitmapTexture Instance만 허용됩니다.')
-		if (displacementTexture && !(displacementTexture instanceof RedBitmapTexture)) RedGLUtil.throwFunc('RedStandardMaterial : displacementTexture - RedBitmapTexture Instance만 허용됩니다.')
+	RedStandardMaterial = function ( redGL, diffuseTexture, normalTexture, specularTexture, displacementTexture ) {
+		if ( !(this instanceof RedStandardMaterial) ) return new RedStandardMaterial( redGL, diffuseTexture, normalTexture, specularTexture, displacementTexture );
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedStandardMaterial : RedGL Instance만 허용됩니다.', redGL )
+		if ( !(diffuseTexture instanceof RedBitmapTexture) ) RedGLUtil.throwFunc( 'RedStandardMaterial : diffuseTexture - RedBitmapTexture Instance만 허용됩니다.' )
+		if ( normalTexture && !(normalTexture instanceof RedBitmapTexture) ) RedGLUtil.throwFunc( 'RedStandardMaterial : normalTexture - RedBitmapTexture Instance만 허용됩니다.' )
+		if ( specularTexture && !(specularTexture instanceof RedBitmapTexture) ) RedGLUtil.throwFunc( 'RedStandardMaterial : specularTexture - RedBitmapTexture Instance만 허용됩니다.' )
+		if ( displacementTexture && !(displacementTexture instanceof RedBitmapTexture) ) RedGLUtil.throwFunc( 'RedStandardMaterial : displacementTexture - RedBitmapTexture Instance만 허용됩니다.' )
 
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
@@ -102,10 +102,10 @@ var RedStandardMaterial;
 		this['displacementPower'] = 0
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = makeProgram(redGL);
+		this['program'] = makeProgram( redGL );
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkProperty()
-		console.log(this)
+		console.log( this )
 		// Object.seal(this)
 	}
 	makeProgram = (function () {
@@ -208,14 +208,14 @@ var RedStandardMaterial;
 			 }
 			 */
 		}
-		vSource = RedGLUtil.getStrFromComment(vSource.toString());
-		fSource = RedGLUtil.getStrFromComment(fSource.toString());
+		vSource = RedGLUtil.getStrFromComment( vSource.toString() );
+		fSource = RedGLUtil.getStrFromComment( fSource.toString() );
 		PROGRAM_NAME = 'standardProgram';
-		return function (redGL) {
-			return RedProgram(redGL, PROGRAM_NAME, vSource, fSource)
+		return function ( redGL ) {
+			return RedProgram( redGL, PROGRAM_NAME, vSource, fSource )
 
 		}
 	})();
 	RedStandardMaterial.prototype = RedBaseMaterial.prototype
-	Object.freeze(RedStandardMaterial)
+	Object.freeze( RedStandardMaterial )
 })();

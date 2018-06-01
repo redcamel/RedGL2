@@ -24,12 +24,12 @@ var RedWorld;
 	 }
 	 :DOC*/
 	RedWorld = function () {
-		if (!(this instanceof RedWorld)) return new RedWorld();
+		if ( !(this instanceof RedWorld) ) return new RedWorld();
 		this['_viewList'] = [];
 		this['_viewMap'] = {};
 		this['_UUID'] = RedGL['makeUUID']();
 		//Object.seal(this)
-		console.log(this);
+		console.log( this );
 	};
 	RedWorld.prototype = {
 		/**DOC:
@@ -53,10 +53,10 @@ var RedWorld;
 			 return : 'void'
 		 }
 		 :DOC*/
-		addView: function (redView) {
-			if (!(redView instanceof RedView)) RedGLUtil.throwFunc('RedWorld :addView Instance만 허용함.', '입력값 : ' + redView)
+		addView: function ( redView ) {
+			if ( !(redView instanceof RedView) ) RedGLUtil.throwFunc( 'RedWorld :addView Instance만 허용함.', '입력값 : ' + redView )
 			this['_viewMap'][redView['key']] = redView;
-			this['_viewList'].push(redView);
+			this['_viewList'].push( redView );
 		},
 		/**DOC:
 		 {
@@ -79,8 +79,8 @@ var RedWorld;
 			 return : 'RedView'
 		 }
 		 :DOC*/
-		getView: function (key) {
-			if (typeof key != 'string') RedGLUtil.throwFunc('RedWorld :getView 문자열만 허용함.', '입력값 : ' + key)
+		getView: function ( key ) {
+			if ( typeof key != 'string' ) RedGLUtil.throwFunc( 'RedWorld :getView 문자열만 허용함.', '입력값 : ' + key )
 			return this['_viewMap'][key]
 		},
 		/**DOC:
@@ -104,12 +104,12 @@ var RedWorld;
 			 return : 'void'
 		 }
 		 :DOC*/
-		delView: function (key) {
-			if (typeof key != 'string') RedGLUtil.throwFunc('RedWorld :delView 문자열만 허용함.', '입력값 : ' + key)
+		delView: function ( key ) {
+			if ( typeof key != 'string' ) RedGLUtil.throwFunc( 'RedWorld :delView 문자열만 허용함.', '입력값 : ' + key )
 			var t0, t1
-			if (t0 = this['_viewMap'][key]) {
-				t1 = this['_viewList'].indexOf(t0);
-				this['_viewList'].splice(t1, 1)
+			if ( t0 = this['_viewMap'][key] ) {
+				t1 = this['_viewList'].indexOf( t0 );
+				this['_viewList'].splice( t1, 1 )
 				delete this['_viewMap'][key]
 			}
 		},
@@ -132,8 +132,8 @@ var RedWorld;
 			 return : 'Boolean'
 		 }
 		 :DOC*/
-		hasView: function (key) {
-			if (typeof key != 'string') RedGLUtil.throwFunc('RedWorld :hasView 문자열만 허용함.', '입력값 : ' + key)
+		hasView: function ( key ) {
+			if ( typeof key != 'string' ) RedGLUtil.throwFunc( 'RedWorld :hasView 문자열만 허용함.', '입력값 : ' + key )
 			return this['_viewMap'][key] ? true : false
 		},
 		/**DOC:
@@ -157,5 +157,5 @@ var RedWorld;
 			return this['_viewList'].concat();
 		}
 	};
-	Object.freeze(RedWorld);
+	Object.freeze( RedWorld );
 })();

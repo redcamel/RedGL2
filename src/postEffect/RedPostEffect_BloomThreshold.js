@@ -17,10 +17,10 @@ var RedPostEffect_BloomThreshold;
 		 return : 'RedPostEffect_BloomThreshold Instance'
 	 }
 	 :DOC*/
-	RedPostEffect_BloomThreshold = function (redGL) {
-		if (!(this instanceof RedPostEffect_BloomThreshold)) return new RedPostEffect_BloomThreshold(redGL);
-		if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_BloomThreshold : RedGL Instance만 허용됩니다.', redGL);
-		this['frameBuffer'] = RedFrameBuffer(redGL);
+	RedPostEffect_BloomThreshold = function ( redGL ) {
+		if ( !(this instanceof RedPostEffect_BloomThreshold) ) return new RedPostEffect_BloomThreshold( redGL );
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedPostEffect_BloomThreshold : RedGL Instance만 허용됩니다.', redGL );
+		this['frameBuffer'] = RedFrameBuffer( redGL );
 		this['diffuseTexture'] = null;
 		/**DOC:
 		 {
@@ -35,15 +35,15 @@ var RedPostEffect_BloomThreshold;
 		this['threshold'] = 0.24;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = makeProgram(redGL);
+		this['program'] = makeProgram( redGL );
 		this['_UUID'] = RedGL['makeUUID']();
-		this.updateTexture = function (lastFrameBufferTexture) {
+		this.updateTexture = function ( lastFrameBufferTexture ) {
 			this['diffuseTexture'] = lastFrameBufferTexture;
 		}
 		this['bind'] = RedPostEffectManager.prototype['bind'];
 		this['unbind'] = RedPostEffectManager.prototype['unbind'];
 		this.checkProperty();
-		console.log(this);
+		console.log( this );
 	}
 	makeProgram = (function () {
 		var vSource, fSource;
@@ -69,13 +69,13 @@ var RedPostEffect_BloomThreshold;
 			 }
 			 */
 		}
-		vSource = RedGLUtil.getStrFromComment(vSource.toString());
-		fSource = RedGLUtil.getStrFromComment(fSource.toString());
+		vSource = RedGLUtil.getStrFromComment( vSource.toString() );
+		fSource = RedGLUtil.getStrFromComment( fSource.toString() );
 		PROGRAM_NAME = 'RedPostEffect_BloomThreshold_Program';
-		return function (redGL) {
-			return RedProgram(redGL, PROGRAM_NAME, vSource, fSource);
+		return function ( redGL ) {
+			return RedProgram( redGL, PROGRAM_NAME, vSource, fSource );
 		}
 	})();
 	RedPostEffect_BloomThreshold.prototype = RedBaseMaterial.prototype;
-	Object.freeze(RedPostEffect_BloomThreshold);
+	Object.freeze( RedPostEffect_BloomThreshold );
 })();

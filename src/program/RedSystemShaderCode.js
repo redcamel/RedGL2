@@ -99,14 +99,14 @@ var RedSystemShaderCode;
 		],
 		systemUniform: {}
 	};
-	[RedSystemShaderCode.vShareSource, RedSystemShaderCode.fShareSource].forEach(function (data) {
-		data.forEach(function (v) {
-			v = v.split(' ')
-			if (v[0] == 'uniform') {
+	[RedSystemShaderCode.vShareSource, RedSystemShaderCode.fShareSource].forEach( function ( data ) {
+		data.forEach( function ( v ) {
+			v = v.split( ' ' )
+			if ( v[0] == 'uniform' ) {
 				RedSystemShaderCode.systemUniform[v[2]] = 1
 			}
-		})
-	});
-	console.log(RedSystemShaderCode)
-	Object.freeze(RedSystemShaderCode)
+		} )
+	} );
+	console.log( RedSystemShaderCode )
+	Object.freeze( RedSystemShaderCode )
 })();

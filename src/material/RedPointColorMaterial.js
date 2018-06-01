@@ -17,18 +17,18 @@ var RedPointColorMaterial;
 		 return : 'RedPointColorMaterial Instance'
 	 }
 	 :DOC*/
-	RedPointColorMaterial = function (redGL) {
-		if (!(this instanceof RedPointColorMaterial)) return new RedPointColorMaterial(redGL);
-		if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPointColorMaterial : RedGL Instance만 허용됩니다.', redGL)
+	RedPointColorMaterial = function ( redGL ) {
+		if ( !(this instanceof RedPointColorMaterial) ) return new RedPointColorMaterial( redGL );
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedPointColorMaterial : RedGL Instance만 허용됩니다.', redGL )
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = makeProgram(redGL);
+		this['program'] = makeProgram( redGL );
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkProperty()
 		// Object.seal(this)
-		console.log(this)
+		console.log( this )
 	}
 	makeProgram = (function () {
 		var vSource, fSource;
@@ -63,15 +63,15 @@ var RedPointColorMaterial;
 			 }
 			 */
 		}
-		vSource = RedGLUtil.getStrFromComment(vSource.toString());
-		fSource = RedGLUtil.getStrFromComment(fSource.toString());
+		vSource = RedGLUtil.getStrFromComment( vSource.toString() );
+		fSource = RedGLUtil.getStrFromComment( fSource.toString() );
 		// console.log(vSource, fSource)
 		PROGRAM_NAME = 'pointColorProgram';
-		return function (redGL) {
-			return RedProgram(redGL, PROGRAM_NAME, vSource, fSource)
+		return function ( redGL ) {
+			return RedProgram( redGL, PROGRAM_NAME, vSource, fSource )
 
 		}
 	})();
 	RedPointColorMaterial.prototype = RedBaseMaterial.prototype
-	Object.freeze(RedPointColorMaterial)
+	Object.freeze( RedPointColorMaterial )
 })();

@@ -26,10 +26,10 @@ var RedPointLight;
 		 return : 'RedPointLight Instance'
 	 }
 	 :DOC*/
-	RedPointLight = function (redGL, hexColor, alpha) {
-		if (!(this instanceof RedPointLight)) return new RedPointLight(redGL, hexColor, alpha);
+	RedPointLight = function ( redGL, hexColor, alpha ) {
+		if ( !(this instanceof RedPointLight) ) return new RedPointLight( redGL, hexColor, alpha );
 		// 유니폼 프로퍼티
-		this['_color'] = new Float32Array(4)
+		this['_color'] = new Float32Array( 4 )
 		/**DOC:
 		 {
 			 title :`intensity`,
@@ -97,11 +97,11 @@ var RedPointLight;
 			 return : 'String'
 		 }
 		 :DOC*/
-		Object.defineProperty(this, 'type', {
+		Object.defineProperty( this, 'type', {
 			configurable: false,
 			writable: false,
 			value: RedPointLight['type']
-		})
+		} )
 		/**DOC:
 		 {
 			 title :`debug`,
@@ -110,9 +110,9 @@ var RedPointLight;
 		 }
 		 :DOC*/
 		this['debug'] = false
-		this['debugObject'] = RedMesh(redGL, RedSphere(redGL, 1, 16, 16, 16), RedColorMaterial(redGL))
+		this['debugObject'] = RedMesh( redGL, RedSphere( redGL, 1, 16, 16, 16 ), RedColorMaterial( redGL ) )
 		this['debugObject']['drawMode'] = redGL.gl.LINE_STRIP
-		console.log(this)
+		console.log( this )
 	}
 	/**DOC:
 	 {
@@ -124,6 +124,6 @@ var RedPointLight;
 	 :DOC*/
 	RedPointLight['type'] = 'RedPointLight'
 	RedPointLight.prototype = new RedBaseLight
-	Object.freeze(RedPointLight)
+	Object.freeze( RedPointLight )
 
 })()

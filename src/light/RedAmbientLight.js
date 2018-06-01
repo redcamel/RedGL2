@@ -26,10 +26,10 @@ var RedAmbientLight;
 		 return : 'RedAmbientLight Instance'
 	 }
 	 :DOC*/
-	RedAmbientLight = function (redGL, hexColor, alpha) {
-		if (!(this instanceof RedAmbientLight)) return new RedAmbientLight(redGL, hexColor, alpha);
+	RedAmbientLight = function ( redGL, hexColor, alpha ) {
+		if ( !(this instanceof RedAmbientLight) ) return new RedAmbientLight( redGL, hexColor, alpha );
 		// 유니폼 프로퍼티
-		this['_color'] = new Float32Array(4)
+		this['_color'] = new Float32Array( 4 )
 		/**DOC:
 		 {
 			 title :`intensity`,
@@ -61,12 +61,12 @@ var RedAmbientLight;
 			 return : 'String'
 		 }
 		 :DOC*/
-		Object.defineProperty(this, 'type', {
+		Object.defineProperty( this, 'type', {
 			configurable: false,
 			writable: false,
 			value: RedAmbientLight['type']
-		})
-		console.log(this)
+		} )
+		console.log( this )
 	}
 	/**DOC:
 	 {
@@ -78,5 +78,5 @@ var RedAmbientLight;
 	 :DOC*/
 	RedAmbientLight['type'] = 'RedAmbientLight'
 	RedAmbientLight.prototype = new RedBaseLight
-	Object.freeze(RedAmbientLight)
+	Object.freeze( RedAmbientLight )
 })();

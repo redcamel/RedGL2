@@ -26,17 +26,17 @@ var RedSprite3D;
 		 return : 'RedSprite3D Instance'
 	 }
 	 :DOC*/
-	RedSprite3D = function (redGL, material) {
-		if (!(this instanceof RedSprite3D)) return new RedSprite3D(redGL, material);
-		if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedSprite3D : RedGL Instance만 허용됩니다.', redGL)
+	RedSprite3D = function ( redGL, material ) {
+		if ( !(this instanceof RedSprite3D) ) return new RedSprite3D( redGL, material );
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedSprite3D : RedGL Instance만 허용됩니다.', redGL )
 		if (
 			!(material instanceof RedColorMaterial)
 			&& !(material instanceof RedBitmapMaterial)
-		) RedGLUtil.throwFunc('RedSprite3D : RedColorMaterial or RedBitmapMaterial Instance만 허용됩니다.')
+		) RedGLUtil.throwFunc( 'RedSprite3D : RedColorMaterial or RedBitmapMaterial Instance만 허용됩니다.' )
 		var tGL;
 		tGL = redGL.gl;
-		RedBaseObject3D['build'].call(this, tGL)
-		this['geometry'] = RedPlane(redGL, 1, 1, 0);
+		RedBaseObject3D['build'].call( this, tGL )
+		this['geometry'] = RedPlane( redGL, 1, 1, 0 );
 		/**DOC:
 		 {
 			 title :`material`,
@@ -65,12 +65,12 @@ var RedSprite3D;
 		 copyProto : 'RedBaseContainer'
 	 }
 	 :DOC*/
-	RedGLUtil['copyProto'](RedSprite3D, RedBaseContainer);
+	RedGLUtil['copyProto']( RedSprite3D, RedBaseContainer );
 	/**DOC:
 	 {
 		 copyProto : 'RedBaseObject3D'
 	 }
 	 :DOC*/
-	RedGLUtil['copyProto'](RedSprite3D, RedBaseObject3D);
-	Object.freeze(RedSprite3D);
+	RedGLUtil['copyProto']( RedSprite3D, RedBaseObject3D );
+	Object.freeze( RedSprite3D );
 })();

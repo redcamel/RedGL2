@@ -20,19 +20,19 @@ var RedPostEffect_DoF_DepthMaterial;
 		 return : 'RedPostEffect_DoF_DepthMaterial Instance'
 	 }
 	 :DOC*/
-	RedPostEffect_DoF_DepthMaterial = function (redGL) {
-		if (!(this instanceof RedPostEffect_DoF_DepthMaterial)) return new RedPostEffect_DoF_DepthMaterial(redGL);
+	RedPostEffect_DoF_DepthMaterial = function ( redGL ) {
+		if ( !(this instanceof RedPostEffect_DoF_DepthMaterial) ) return new RedPostEffect_DoF_DepthMaterial( redGL );
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
 
 		this['focusLength'] = 15
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = makeProgram(redGL);
+		this['program'] = makeProgram( redGL );
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkProperty()
 		// Object.seal(this);
-		console.log(this);
+		console.log( this );
 	}
 	makeProgram = (function () {
 		var vSource, fSource;
@@ -77,15 +77,15 @@ var RedPostEffect_DoF_DepthMaterial;
 			 }
 			 */
 		}
-		vSource = RedGLUtil.getStrFromComment(vSource.toString());
-		fSource = RedGLUtil.getStrFromComment(fSource.toString());
+		vSource = RedGLUtil.getStrFromComment( vSource.toString() );
+		fSource = RedGLUtil.getStrFromComment( fSource.toString() );
 		PROGRAM_NAME = 'RedPostEffect_DoF_depthProgram';
-		return function (redGL) {
-			return RedProgram(redGL, PROGRAM_NAME, vSource, fSource)
+		return function ( redGL ) {
+			return RedProgram( redGL, PROGRAM_NAME, vSource, fSource )
 
 		}
 	})()
 	RedPostEffect_DoF_DepthMaterial.prototype = RedBaseMaterial.prototype
 
-	Object.freeze(RedPostEffect_DoF_DepthMaterial)
+	Object.freeze( RedPostEffect_DoF_DepthMaterial )
 })();

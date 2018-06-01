@@ -31,14 +31,14 @@ var RedMesh;
 		 return : 'RedMesh Instance'
 	 }
 	 :DOC*/
-	RedMesh = function (redGL, geometry, material) {
-		if (!(this instanceof RedMesh)) return new RedMesh(redGL, geometry, material);
-		if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedMesh : RedGL Instance만 허용됩니다.', redGL)
-		if (geometry && !(geometry instanceof RedGeometry)) RedGLUtil.throwFunc('RedMesh : RedGeometry Instance만 허용됩니다.')
-		if (material && !(material instanceof RedBaseMaterial)) RedGLUtil.throwFunc('RedMesh : RedBaseMaterial 확장 Instance만 허용됩니다.')
+	RedMesh = function ( redGL, geometry, material ) {
+		if ( !(this instanceof RedMesh) ) return new RedMesh( redGL, geometry, material );
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedMesh : RedGL Instance만 허용됩니다.', redGL )
+		if ( geometry && !(geometry instanceof RedGeometry) ) RedGLUtil.throwFunc( 'RedMesh : RedGeometry Instance만 허용됩니다.' )
+		if ( material && !(material instanceof RedBaseMaterial) ) RedGLUtil.throwFunc( 'RedMesh : RedBaseMaterial 확장 Instance만 허용됩니다.' )
 		var tGL;
 		tGL = redGL.gl;
-		RedBaseObject3D['build'].call(this, tGL)
+		RedBaseObject3D['build'].call( this, tGL )
 		/**DOC:
 		 {
 			 title :`geometry`,
@@ -63,12 +63,12 @@ var RedMesh;
 		 copyProto : 'RedBaseContainer'
 	 }
 	 :DOC*/
-	RedGLUtil['copyProto'](RedMesh, RedBaseContainer);
+	RedGLUtil['copyProto']( RedMesh, RedBaseContainer );
 	/**DOC:
 	 {
 		 copyProto : 'RedBaseObject3D'
 	 }
 	 :DOC*/
-	RedGLUtil['copyProto'](RedMesh, RedBaseObject3D);
-	Object.freeze(RedMesh);
+	RedGLUtil['copyProto']( RedMesh, RedBaseObject3D );
+	Object.freeze( RedMesh );
 })();

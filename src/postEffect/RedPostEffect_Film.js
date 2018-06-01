@@ -17,10 +17,10 @@ var RedPostEffect_Film;
 		 return : 'RedPostEffect_Film Instance'
 	 }
 	 :DOC*/
-	RedPostEffect_Film = function (redGL, width, height) {
-		if (!(this instanceof RedPostEffect_Film)) return new RedPostEffect_Film(redGL);
-		if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedPostEffect_Film : RedGL Instance만 허용됩니다.', redGL);
-		this['frameBuffer'] = RedFrameBuffer(redGL);
+	RedPostEffect_Film = function ( redGL, width, height ) {
+		if ( !(this instanceof RedPostEffect_Film) ) return new RedPostEffect_Film( redGL );
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedPostEffect_Film : RedGL Instance만 허용됩니다.', redGL );
+		this['frameBuffer'] = RedFrameBuffer( redGL );
 		this['diffuseTexture'] = null;
 		/**DOC:
 		 {
@@ -68,15 +68,15 @@ var RedPostEffect_Film;
 		this['scanlineCount'] = 2048;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = makeProgram(redGL);
+		this['program'] = makeProgram( redGL );
 		this['_UUID'] = RedGL['makeUUID']();
-		this.updateTexture = function (lastFrameBufferTexture) {
+		this.updateTexture = function ( lastFrameBufferTexture ) {
 			this['diffuseTexture'] = lastFrameBufferTexture;
 		}
 		this['bind'] = RedPostEffectManager.prototype['bind'];
 		this['unbind'] = RedPostEffectManager.prototype['unbind'];
 		this.checkProperty();
-		console.log(this);
+		console.log( this );
 	}
 	makeProgram = (function () {
 		var vSource, fSource;
@@ -129,14 +129,14 @@ var RedPostEffect_Film;
 			 }
 			 */
 		}
-		vSource = RedGLUtil.getStrFromComment(vSource.toString());
-		fSource = RedGLUtil.getStrFromComment(fSource.toString());
+		vSource = RedGLUtil.getStrFromComment( vSource.toString() );
+		fSource = RedGLUtil.getStrFromComment( fSource.toString() );
 		PROGRAM_NAME = 'RedPostEffect_Film_Program';
-		return function (redGL) {
-			return RedProgram(redGL, PROGRAM_NAME, vSource, fSource);
+		return function ( redGL ) {
+			return RedProgram( redGL, PROGRAM_NAME, vSource, fSource );
 
 		}
 	})();
 	RedPostEffect_Film.prototype = RedBaseMaterial.prototype;
-	Object.freeze(RedPostEffect_Film);
+	Object.freeze( RedPostEffect_Film );
 })();

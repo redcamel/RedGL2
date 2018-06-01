@@ -23,7 +23,7 @@ var RedGLUtil;
 		 }
 		 :DOC*/
 		throwFunc: function () {
-			throw Array.prototype.slice.call(arguments).join(' ')
+			throw Array.prototype.slice.call( arguments ).join( ' ' )
 		},
 		/**DOC:
 		 {
@@ -54,8 +54,8 @@ var RedGLUtil;
 			 return : 'void'
 		 }
 		 :DOC*/
-		copyProto: function (target, from) {
-			for (var k in from.prototype) target.prototype[k] = from.prototype[k]//,console.log(k)
+		copyProto: function ( target, from ) {
+			for ( var k in from.prototype ) target.prototype[k] = from.prototype[k]//,console.log(k)
 		},
 		/**DOC:
 		 {
@@ -75,27 +75,27 @@ var RedGLUtil;
 			 return : 'Array'
 		 }
 		 :DOC*/
-		hexToRGB: function (hex) {
+		hexToRGB: function ( hex ) {
 			var t0, t1;
-			if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
+			if ( /^#([A-Fa-f0-9]{3}){1,2}$/.test( hex ) ) {
 				t1 = [];
-				t0 = hex.substring(1).split('');
-				if (t0.length == 3) t0 = [t0[0], t0[0], t0[1], t0[1], t0[2], t0[2]];
-				t0 = '0x' + t0.join('');
+				t0 = hex.substring( 1 ).split( '' );
+				if ( t0.length == 3 ) t0 = [t0[0], t0[0], t0[1], t0[1], t0[2], t0[2]];
+				t0 = '0x' + t0.join( '' );
 				t1[0] = ((t0 >> 16) & 255) / 255;
 				t1[1] = ((t0 >> 8) & 255) / 255;
 				t1[2] = (t0 & 255) / 255;
 				return t1
-			} else RedGLUtil.throwFunc('RedGLUtil.hexToRGB : 잘못된 hex값입니다.', hex)
+			} else RedGLUtil.throwFunc( 'RedGLUtil.hexToRGB : 잘못된 hex값입니다.', hex )
 		},
-		rgb2hex: function (red, green, blue) {
+		rgb2hex: function ( red, green, blue ) {
 			var rgb = blue | (green << 8) | (red << 16);
-			return '#' + (0x1000000 + rgb).toString(16).slice(1)
+			return '#' + (0x1000000 + rgb).toString( 16 ).slice( 1 )
 		},
 		regHex: (function () {
 			var reg = /^#(?:[0-9a-fA-F]{3}){1,2}$/;
-			return function (hex) {
-				return reg.test(hex);
+			return function ( hex ) {
+				return reg.test( hex );
 			}
 		})(),
 		/**DOC:
@@ -116,13 +116,13 @@ var RedGLUtil;
 		 :DOC*/
 		getStrFromComment: (function () {
 			var t0;
-			return function (source) {
-				if (typeof source != 'string') RedGLUtil.throwFunc('getStrFromComment : 해석할 값은 문자열만 가능', source)
-				t0 = source.replace('@preserve', '').toString().trim().match(/(\/\*)[\s\S]+(\*\/)/g);
-				if (t0) return t0[0].replace(/\/\*|\*\//g, '').trim();
-				else RedGLUtil.throwFunc('getStrFromComment : 해석할 불가능한 값', source)
+			return function ( source ) {
+				if ( typeof source != 'string' ) RedGLUtil.throwFunc( 'getStrFromComment : 해석할 값은 문자열만 가능', source )
+				t0 = source.replace( '@preserve', '' ).toString().trim().match( /(\/\*)[\s\S]+(\*\/)/g );
+				if ( t0 ) return t0[0].replace( /\/\*|\*\//g, '' ).trim();
+				else RedGLUtil.throwFunc( 'getStrFromComment : 해석할 불가능한 값', source )
 			}
 		})()
 	};
-	Object.freeze(RedGLUtil);
+	Object.freeze( RedGLUtil );
 })();
