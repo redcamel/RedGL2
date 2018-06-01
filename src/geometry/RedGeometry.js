@@ -27,18 +27,11 @@ var RedGeometry;
 	RedGeometry = function (interleaveBuffer, indexBuffer) {
 		if (!(this instanceof RedGeometry)) return new RedGeometry(interleaveBuffer, indexBuffer)
 		if (!(interleaveBuffer instanceof RedBuffer)) RedGLUtil.throwFunc('RedGeometry : interleaveBuffer - RedBuffer Instance만 허용.', interleaveBuffer)
-		else {
-			if (!(interleaveBuffer['bufferType'] == RedBuffer.ARRAY_BUFFER)) {
-				RedGLUtil.throwFunc('RedGeometry : interleaveBuffer - RedBuffer.ARRAY_BUFFER 타입만.', interleaveBuffer)
-			}
-		}
+		if (!(interleaveBuffer['bufferType'] == RedBuffer.ARRAY_BUFFER)) RedGLUtil.throwFunc('RedGeometry : interleaveBuffer - RedBuffer.ARRAY_BUFFER 타입만 허용.', interleaveBuffer)
 		if (indexBuffer) {
+			if (!interleaveBuffer) RedGLUtil.throwFunc('RedGeometry : indexBuffer는 반드시 interleaveBuffer와 쌍으로 입력되어야함.', indexBuffer)
 			if (!(indexBuffer instanceof RedBuffer)) RedGLUtil.throwFunc('RedGeometry : indexBuffer - RedBuffer Instance만 허용.', indexBuffer)
-			else {
-				if (!(indexBuffer['bufferType'] == RedBuffer.ELEMENT_ARRAY_BUFFER)) {
-					RedGLUtil.throwFunc('RedGeometry : indexBuffer - RedBuffer.ELEMENT_ARRAY_BUFFER 타입만.', indexBuffer)
-				}
-			}
+			if (!(indexBuffer['bufferType'] == RedBuffer.ELEMENT_ARRAY_BUFFER)) RedGLUtil.throwFunc('RedGeometry : indexBuffer - RedBuffer.ELEMENT_ARRAY_BUFFER 타입만 허용.', indexBuffer)
 		}
 		/**DOC:
 		 {
