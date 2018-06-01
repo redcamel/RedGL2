@@ -42,8 +42,8 @@ var JsonModelLoader;
 							RedBuffer(
 								redGL,
 								key,
-								new Float32Array(interleaveData),
 								RedBuffer.ARRAY_BUFFER,
+								new Float32Array(interleaveData),
 								[
 									RedInterleaveInfo('aVertexPosition', 3),
 									RedInterleaveInfo('aVertexNormal', 3),
@@ -53,8 +53,8 @@ var JsonModelLoader;
 							RedBuffer(
 								redGL,
 								key,
-								new Uint16Array(jsonData['index']),
-								RedBuffer.ELEMENT_ARRAY_BUFFER
+								RedBuffer.ELEMENT_ARRAY_BUFFER,
+								new Uint16Array(jsonData['index'])
 							)
 						)
 					}

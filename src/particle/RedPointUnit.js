@@ -37,8 +37,8 @@ var RedPointUnit;
 		interleaveBuffer = RedBuffer(
 			redGL,
 			'RedPointUnit_' + this['_UUID'],
-			interleaveData,
 			RedBuffer.ARRAY_BUFFER,
+			interleaveData,
 			interleaveDefineInfoList
 		)
 		this['geometry'] = RedGeometry(interleaveBuffer)

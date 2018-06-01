@@ -48,8 +48,11 @@ var RedBuffer;
 				case RedBuffer.ARRAY_BUFFER:
 					self['interleaveDefineInfoList'] = interleaveDefineInfoList;
 					if (interleaveDefineInfoList) {
+						if (interleaveDefineInfoList.length == 0) {
+							RedGLUtil.throwFunc('RedBuffer : interleaveDefineInfoList의 정보는 1개이상의 RedInterleaveInfo Instance로 구성되어야함.', interleaveDefineInfoList)
+						}
 						interleaveDefineInfoList.forEach(function (v) {
-							if (!(v instanceof RedInterleaveInfo)) RedGLUtil.throwFunc('RedBuffer : interleaveDefineInfoList의 정보는 RedInterleaveInfo Instance로만 구성되어야합니다.', interleaveDefineInfoList)
+							if (!(v instanceof RedInterleaveInfo)) RedGLUtil.throwFunc('RedBuffer : interleaveDefineInfoList의 정보는 RedInterleaveInfo Instance로만 구성되어야함.', interleaveDefineInfoList)
 							v['offset'] = interleaveDefineInfoList.length < 2 ? 0 : t0
 							t0 += v['size']
 							v['_UUID'] = RedGL['makeUUID']();
@@ -85,13 +88,13 @@ var RedBuffer;
 				 {type:'String'},
 				 `고유키`
 			 ],
-			 data : [
-				 {type:'TypedArray'},
-				 `버퍼 구성 데이터`
-			 ],
 			 bufferType : [
 				 {type:'String'},
 				 `RedBuffer.ARRAY_BUFFER or RedBuffer.ELEMENT_ARRAY_BUFFER`
+			 ],
+			 data : [
+				 {type:'TypedArray'},
+				 `버퍼 구성 데이터`
 			 ],
 			 interleaveDefineInfoList : [
 				 {type:'Object'},
@@ -124,8 +127,8 @@ var RedBuffer;
 			 tInterleaveBuffer = RedBuffer(
 				 this, // RedGL Instance
 				 'tInterleaveBuffer', // key
-				 interleaveData, // data
 				 RedBuffer.ARRAY_BUFFER, // bufferType
+				 interleaveData, // data
 				 [
 				   RedInterleaveInfo('aVertexPosition', 3),
 				   RedInterleaveInfo('aTexcoord', 2)
@@ -135,8 +138,8 @@ var RedBuffer;
 			 tIndexBuffer = RedBuffer(
 				 this, // RedGL Instance
 				 'tIndexBuffer', // key
-				 indexData,  // data
-				 RedBuffer.ELEMENT_ARRAY_BUFFER // bufferType
+				 RedBuffer.ELEMENT_ARRAY_BUFFER, // bufferType
+				 indexData  // data
 			 )
 			 console.log('인터리브버퍼', tInterleaveBuffer)
 			 console.log('인덱스버퍼', tIndexBuffer)
@@ -144,11 +147,12 @@ var RedBuffer;
 		 return : 'RedBuffer Instance'
 	 }
 	 :DOC*/
-	RedBuffer = function (redGL, key, typedArrayData, bufferType, interleaveDefineInfoList, drawMode) {
+	RedBuffer = function (redGL, key, bufferType, typedArrayData, interleaveDefineInfoList, drawMode) {
 		// console.log(redGL, key, data, bufferType, interleaveDefineInfoList)
-		if (!(this instanceof RedBuffer)) return new RedBuffer(redGL, key, typedArrayData, bufferType, interleaveDefineInfoList, drawMode)
+		if (!(this instanceof RedBuffer)) return new RedBuffer(redGL, key, bufferType, typedArrayData, interleaveDefineInfoList, drawMode)
 		if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedBuffer : RedGL Instance만 허용됩니다.', redGL)
 		if (typeof key != 'string') RedGLUtil.throwFunc('RedBuffer : key - 문자열만 허용됩니다.', '입력값 : ' + key)
+		if (!bufferType) RedGLUtil.throwFunc('RedBuffer : bufferType : 미입력')
 		if (bufferType && bufferType != RedBuffer.ARRAY_BUFFER && bufferType != RedBuffer.ELEMENT_ARRAY_BUFFER) RedGLUtil.throwFunc('RedBuffer : bufferType - RedBuffer.ARRAY_BUFFER or RedBuffer.ELEMENT_ARRAY_BUFFER 만 허용함.', '입력값 : ' + bufferType)
 		var tGL = redGL.gl;
 

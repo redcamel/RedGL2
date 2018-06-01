@@ -62,8 +62,8 @@
                     testInterleaveBuffer = RedBuffer(
                         redGL,
                         'testInterleaveBuffer',
+	                    RedBuffer.ARRAY_BUFFER,
                         interleaveData,
-                        RedBuffer.ARRAY_BUFFER,
                         [
                             RedInterleaveInfo('aVertexPosition', 3),
                             RedInterleaveInfo('aTexcoord', 2)
@@ -72,8 +72,8 @@
                     testIndexBuffer = RedBuffer(
                         redGL,
                         'testIndexBuffer',
-                        indexData,
-                        RedBuffer.ELEMENT_ARRAY_BUFFER
+                        RedBuffer.ELEMENT_ARRAY_BUFFER,
+	                    indexData
                     )
                     tGeo = RedGeometry(testInterleaveBuffer, testIndexBuffer)
                 })(this);

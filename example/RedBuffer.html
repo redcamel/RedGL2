@@ -65,8 +65,8 @@
                 tInterleaveBuffer = RedBuffer(
                     this, // RedGL Instance
                     'tInterleaveBuffer', // key
+	                RedBuffer.ARRAY_BUFFER, // bufferType
                     interleaveData, // data
-                    RedBuffer.ARRAY_BUFFER, // bufferType
                     [
                         RedInterleaveInfo('aVertexPosition', 3),
                         RedInterleaveInfo('aTexcoord', 2)
@@ -76,8 +76,8 @@
                 tIndexBuffer = RedBuffer(
                     this, // RedGL Instance
                     'tIndexBuffer', // key
-                    indexData,  // data
-                    RedBuffer.ELEMENT_ARRAY_BUFFER // bufferType
+                    RedBuffer.ELEMENT_ARRAY_BUFFER, // bufferType
+	                indexData  // data
                 )
                 console.log('인터리브버퍼', tInterleaveBuffer)
                 console.log('인덱스버퍼', tIndexBuffer)

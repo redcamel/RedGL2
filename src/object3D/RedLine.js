@@ -51,8 +51,8 @@ var RedLine;
 		interleaveBuffer = RedBuffer(
 			redGL,
 			'RedLine_InterleaveBuffer_' + this['_UUID'],
-			new Float32Array(interleaveData),
 			RedBuffer.ARRAY_BUFFER,
+			new Float32Array(interleaveData),
 			[
 				RedInterleaveInfo('aVertexPosition', 3)
 			]
@@ -60,8 +60,8 @@ var RedLine;
 		indexBuffer = RedBuffer(
 			redGL,
 			'RedLine_indexBuffer_' + this['_UUID'],
-			new Uint16Array(indexData),
-			RedBuffer.ELEMENT_ARRAY_BUFFER
+			RedBuffer.ELEMENT_ARRAY_BUFFER,
+			new Uint16Array(indexData)
 		)
 
 		/**DOC:

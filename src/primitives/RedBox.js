@@ -101,8 +101,8 @@ var RedBox;
 				interleaveBuffer: RedBuffer(
 					redGL,
 					tType + '_interleaveBuffer',
-					new Float32Array(interleaveData),
 					RedBuffer.ARRAY_BUFFER,
+					new Float32Array(interleaveData),
 					[
 						RedInterleaveInfo('aVertexPosition', 3),
 						RedInterleaveInfo('aVertexNormal', 3),
@@ -112,8 +112,8 @@ var RedBox;
 				indexBuffer: RedBuffer(
 					redGL,
 					tType + '_indexBuffer',
-					new Uint16Array(indexData),
-					RedBuffer.ELEMENT_ARRAY_BUFFER
+					RedBuffer.ELEMENT_ARRAY_BUFFER,
+					new Uint16Array(indexData)
 				)
 			}
 		}

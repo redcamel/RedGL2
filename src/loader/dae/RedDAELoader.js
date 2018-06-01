@@ -385,8 +385,9 @@ var RedDAELoader;
 				tInterleaveBuffer = RedBuffer(
 					redGL,
 					'daeInterleaveBuffer' + RedGL.makeUUID(),
+					RedBuffer.ARRAY_BUFFER,
 					new Float32Array(tInterleaveBufferData),
-					RedBuffer.ARRAY_BUFFER, [
+					[
 						RedInterleaveInfo('aVertexPosition', 3),
 						RedInterleaveInfo('aVertexNormal', 3),
 						RedInterleaveInfo('aTexcoord', 2)
@@ -395,8 +396,8 @@ var RedDAELoader;
 				tIndexBuffer = RedBuffer(
 					redGL,
 					'daeIndexData' + RedGL.makeUUID(),
-					new Uint16Array(tResultIndexData),
-					RedBuffer.ELEMENT_ARRAY_BUFFER
+					RedBuffer.ELEMENT_ARRAY_BUFFER,
+					new Uint16Array(tResultIndexData)
 				)
 
 				tResultMesh = RedMesh(redGL)

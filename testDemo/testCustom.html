@@ -140,8 +140,9 @@
 		testInterleaveBuffer = RedBuffer(
 			this,
 			'testInterleaveBuffer',
+			RedBuffer.ARRAY_BUFFER,
 			interleaveData,
-			RedBuffer.ARRAY_BUFFER, [
+            [
 				RedInterleaveInfo('aVertexPosition', 3),
 				RedInterleaveInfo('aPointSize', 1),
 				RedInterleaveInfo('aVertexColor', 4)

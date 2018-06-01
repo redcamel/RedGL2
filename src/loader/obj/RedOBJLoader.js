@@ -166,8 +166,8 @@ var RedOBJLoader;
 				interleaveBuffer = RedBuffer(
 					redGL,
 					k + '_interleave',
-					new Float32Array(tData['resultInterleave'].length ? tData['resultInterleave'] : tData['resultPosition']),
 					RedBuffer.ARRAY_BUFFER,
+					new Float32Array(tData['resultInterleave'].length ? tData['resultInterleave'] : tData['resultPosition']),
 					tInterleaveInfo
 				)
 				if (tData['index'].length) {
@@ -176,8 +176,8 @@ var RedOBJLoader;
 						indexBuffer = RedBuffer(
 							redGL,
 							k + '_index',
-							new Uint16Array(tData['index']),
-							RedBuffer.ELEMENT_ARRAY_BUFFER
+							RedBuffer.ELEMENT_ARRAY_BUFFER,
+							new Uint16Array(tData['index'])
 						)
 					}
 				}
