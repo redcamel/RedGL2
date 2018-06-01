@@ -31,8 +31,6 @@ RedGL(document.createElement('canvas'), function (v) {
 				} catch (error) {
 					console.log('///////////////////////////////////////////////////////////')
 					console.log(title, '\n', error)
-					console.log('///////////////////////////////////////////////////////////')
-					console.log(title, '\n', error)
 					unit.run(false)
 				}
 			}, true),
@@ -41,8 +39,6 @@ RedGL(document.createElement('canvas'), function (v) {
 					RedProgram(null, 'testShaderProgram' + RedGL.makeUUID(), vSource1, fSource1);
 					unit.run(true)
 				} catch (error) {
-					console.log('///////////////////////////////////////////////////////////')
-					console.log(title, '\n', error)
 					console.log('///////////////////////////////////////////////////////////')
 					console.log(title, '\n', error)
 					unit.run(false)
@@ -56,8 +52,6 @@ RedGL(document.createElement('canvas'), function (v) {
 					RedProgram(tRedGL, 1, vSource1, fSource1);
 					unit.run(true)
 				} catch (error) {
-					console.log('///////////////////////////////////////////////////////////')
-					console.log(title, '\n', error)
 					console.log('///////////////////////////////////////////////////////////')
 					console.log(title, '\n', error)
 					unit.run(false)
@@ -95,8 +89,6 @@ RedGL(document.createElement('canvas'), function (v) {
 				} catch (error) {
 					console.log('///////////////////////////////////////////////////////////')
 					console.log(title, '\n', error)
-					console.log('///////////////////////////////////////////////////////////')
-					console.log(title, '\n', error)
 					unit.run(false)
 				}
 			}, false),
@@ -107,8 +99,6 @@ RedGL(document.createElement('canvas'), function (v) {
 				} catch (error) {
 					console.log('///////////////////////////////////////////////////////////')
 					console.log(title, '\n', error)
-					console.log('///////////////////////////////////////////////////////////')
-					console.log(title, '\n', error)
 					unit.run(false)
 				}
 			}, false),
@@ -117,8 +107,6 @@ RedGL(document.createElement('canvas'), function (v) {
 					RedProgram(tRedGL, 'testShaderProgram' + RedGL.makeUUID(), false, fSource1);
 					unit.run(true)
 				} catch (error) {
-					console.log('///////////////////////////////////////////////////////////')
-					console.log(title, '\n', error)
 					console.log('///////////////////////////////////////////////////////////')
 					console.log(title, '\n', error)
 					unit.run(false)
@@ -146,8 +134,6 @@ RedGL(document.createElement('canvas'), function (v) {
 					RedProgram(tRedGL, 'testShaderProgram' + RedGL.makeUUID(), vSource1, vSource1);
 					unit.run(true)
 				} catch (error) {
-					console.log('///////////////////////////////////////////////////////////')
-					console.log(title, '\n', error)
 					console.log('///////////////////////////////////////////////////////////')
 					console.log(title, '\n', error)
 					unit.run(false)

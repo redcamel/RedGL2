@@ -16,11 +16,11 @@ var RedBuffer;
 					|| typedArrayData instanceof Int8Array || typedArrayData instanceof Int16Array || typedArrayData instanceof Int32Array
 				) {
 					if (typedArrayData instanceof Int8Array) return gl.BYTE
+					if (typedArrayData instanceof Int16Array) return gl.SHORT
+					if (typedArrayData instanceof Int32Array) return gl.INT
 					if (typedArrayData instanceof Uint8Array) return gl.UNSIGNED_BYTE
 					if (typedArrayData instanceof Uint16Array) return gl.UNSIGNED_SHORT
 					if (typedArrayData instanceof Uint32Array) return gl.UNSIGNED_INT
-					if (typedArrayData instanceof Int16Array) return gl.SHORT
-					if (typedArrayData instanceof Int32Array) return gl.INT
 				} else RedGLUtil.throwFunc('RedBuffer : 올바른 TypedArray(RedBuffer.ELEMENT_ARRAY_BUFFER)형식을 사용해야합니다.', '입력값 : ' + typedArrayData)
 				break
 			default:
@@ -65,6 +65,7 @@ var RedBuffer;
 							self['stride'] = t0;
 							self['pointNum'] = data.length / t0;
 						}
+						if (self['pointNum'] != parseInt(self['pointNum'])) RedGLUtil.throwFunc('RedBuffer : ARRAY_BUFFER의 pointNum이 정수로 떨어지지 않음. 데이터구성과 interleaveDefineInfoList 구성 확인 필요')
 					} else RedGLUtil.throwFunc('RedBuffer : interleaveDefineInfoList는 반드시 정의 되어야합니다.')
 					break
 				case RedBuffer.ELEMENT_ARRAY_BUFFER:
