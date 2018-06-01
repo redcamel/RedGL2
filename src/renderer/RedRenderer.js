@@ -231,7 +231,7 @@ var RedRenderer;
 						tLocationInfo = tSystemUniformGroup['uAmbientLightColor'];
 						tLocation = tLocationInfo['location'];
 						tUUID = tLocationInfo['_UUID'];
-						tValue = tLightData['color'];
+						tValue = tLightData['_color'];
 						if (tLocation && cacheSystemUniform[tUUID] != tValue.toString()) {
 							gl.uniform4fv(tLocation, tValue)
 							cacheSystemUniform[tUUID] = tValue.toString()
@@ -267,7 +267,7 @@ var RedRenderer;
 							tDebugObj['x'] = tVector[0];
 							tDebugObj['y'] = tVector[1];
 							tDebugObj['z'] = tVector[2];
-							tDebugObj['material']['color'] = tLightData['color']
+							tDebugObj['material']['_color'] = tLightData['_color']
 							lightDebugRenderList.push(tDebugObj)
 						}
 						//
@@ -287,10 +287,10 @@ var RedRenderer;
 						if (tLocationInfo) {
 							tLocation = tLocationInfo['location'];
 							if (tLocation) {
-								tColorList[0 + 4 * i] = tLightData['color'][0];
-								tColorList[1 + 4 * i] = tLightData['color'][1];
-								tColorList[2 + 4 * i] = tLightData['color'][2];
-								tColorList[3 + 4 * i] = tLightData['color'][3];
+								tColorList[0 + 4 * i] = tLightData['_color'][0];
+								tColorList[1 + 4 * i] = tLightData['_color'][1];
+								tColorList[2 + 4 * i] = tLightData['_color'][2];
+								tColorList[3 + 4 * i] = tLightData['_color'][3];
 							}
 						}
 						if (tLocationInfo) {
@@ -359,7 +359,7 @@ var RedRenderer;
 							tDebugObj['y'] = tVector[1];
 							tDebugObj['z'] = tVector[2];
 							tDebugObj['scaleX'] = tDebugObj['scaleY'] = tDebugObj['scaleZ'] = tLightData['radius']
-							tDebugObj['material']['color'] = tLightData['color']
+							tDebugObj['material']['_color'] = tLightData['_color']
 							lightDebugRenderList.push(tDebugObj)
 						}
 						//
@@ -374,10 +374,10 @@ var RedRenderer;
 						tLocationInfo = tSystemUniformGroup['uPointLightColor'];
 						tLocation = tLocationInfo['location'];
 						if (tLocation) {
-							tColorList[0 + 4 * i] = tLightData['color'][0];
-							tColorList[1 + 4 * i] = tLightData['color'][1];
-							tColorList[2 + 4 * i] = tLightData['color'][2];
-							tColorList[3 + 4 * i] = tLightData['color'][3];
+							tColorList[0 + 4 * i] = tLightData['_color'][0];
+							tColorList[1 + 4 * i] = tLightData['_color'][1];
+							tColorList[2 + 4 * i] = tLightData['_color'][2];
+							tColorList[3 + 4 * i] = tLightData['_color'][3];
 						}
 						//
 						tLocationInfo = tSystemUniformGroup['uPointLightIntensity'];

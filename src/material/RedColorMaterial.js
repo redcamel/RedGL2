@@ -13,7 +13,7 @@ var RedColorMaterial;
 			 redGL : [
 				 {type:'RedGL'}
 			 ],
-			 hex : [
+			 hexColor : [
 				 {type:'hex'}
 			 ],
 			 alpha : [
@@ -27,24 +27,49 @@ var RedColorMaterial;
 		 return : 'RedColorMaterial Instance'
 	 }
 	 :DOC*/
-	RedColorMaterial = function (redGL, hex, alpha) {
-		if (!(this instanceof RedColorMaterial)) return new RedColorMaterial(redGL, hex, alpha);
+	RedColorMaterial = function (redGL, hexColor, alpha) {
+		if (!(this instanceof RedColorMaterial)) return new RedColorMaterial(redGL, hexColor, alpha);
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
-		/**DOC:
-		 {
-			 title :`color`,
-			 description : `
-				 RedProgram Instance
-				 직접설정하지 않도록 유의해야함!
-			 `,
-			 return : 'Float32Array'
-		 }
-		 :DOC*/
-		this['color'] = new Float32Array(4);
-		this.setColor(hex ? hex : '#ff0000', alpha == undefined ? 1 : alpha);
+		this['_color'] = new Float32Array(4);
 		/////////////////////////////////////////
 		// 일반 프로퍼티
+		/**DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`color`,
+			 description : `
+				 컬러설정
+			 `,
+			 return : 'hex'
+		 }
+		 :DOC*/
+		Object.defineProperty(this, 'color', (function () {
+			var _v = '#ff2211'
+			return {
+				get: function () { return _v },
+				set: (function () {
+					var t0;
+					return function (hex) {
+						_v = hex ? hex : '#ff2211';
+						t0 = RedGLUtil.hexToRGB.call(this, _v);
+						this['_color'][0] = t0[0];
+						this['_color'][1] = t0[1];
+						this['_color'][2] = t0[2];
+						this['_color'][3] = this['alpha'];
+					}
+				})()
+			}
+		})());
+		Object.defineProperty(this, 'alpha', (function () {
+			var _v = '#ff2211'
+			return {
+				get: function () { return _v; },
+				set: function (v) { this['_color'][3] = _v = v }
+			}
+		})());
+		this['alpha'] = alpha == undefined ? 1 : alpha;
+		this['color'] = hexColor ? hexColor : '#ff0000'
 		this['program'] = makeProgram(redGL);
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkProperty()
@@ -69,10 +94,10 @@ var RedColorMaterial;
 			 tMTX[2][0] = 0.0, tMTX[2][1] = 0.0, tMTX[2][2] = 1.0;
 			 return tMTX * cacheScale;
 			 }
-			 uniform vec4 uColor;
+			 uniform vec4 u_color;
 			 varying vec4 vColor;
 			 void main(void) {
-			 vColor = uColor;
+			 vColor = u_color;
 			 gl_PointSize = uPointSize;
 			 if(uSprite3DYn) {
 			 gl_Position = uPMatrix * calSprite3D(uCameraMatrix , uMMatrix) *  vec4(aVertexPosition, 1.0);
@@ -113,35 +138,5 @@ var RedColorMaterial;
 		}
 	})()
 	RedColorMaterial.prototype = RedBaseMaterial.prototype
-	/**DOC:
-	 {
-		 code : 'METHOD',
-		 title :`setColor`,
-		 description : `
-			 컬러설정
-		 `,
-		 params : {
-			 hex : [
-				 {type: 'hex'},
-				 'ex) #fff, #ffffff'
-			 ]
-		 },
-		 example : `// TODO:`,
-		 return : 'RedProgram Instance'
-	 }
-	 :DOC*/
-	RedColorMaterial.prototype['setColor'] = (function () {
-		var t0;
-		return function (hex, alpha) {
-			hex = hex ? hex : '#ff2211';
-			if (alpha == undefined) alpha = 1;
-			if (alpha > 1) alpha = 1
-			t0 = RedGLUtil.hexToRGB.call(this, hex);
-			this['color'][0] = t0[0];
-			this['color'][1] = t0[1];
-			this['color'][2] = t0[2];
-			this['color'][3] = alpha;
-		}
-	})();
 	Object.freeze(RedColorMaterial)
 })();

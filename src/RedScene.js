@@ -284,7 +284,7 @@ var RedScene;
 					this['_lightInfo'][v['type']].push(v)
 					break
 				default:
-					RedGLUtil.throwFunc('RedScene : RedBaseLight 확장객체만 가능')
+					RedGLUtil.throwFunc('RedScene : RedAmbientLight,RedDirectionalLight,RedPointLight 인스턴스만 가능')
 			}
 
 		},
@@ -316,7 +316,7 @@ var RedScene;
 						if (tIndex > -1) this['_lightInfo'][v['type']].splice(tIndex, 1)
 						break
 					default:
-						RedGLUtil.throwFunc('RedScene : RedBaseLight 확장객체만 가능')
+						RedGLUtil.throwFunc('RedScene : RedAmbientLight,RedDirectionalLight,RedPointLight 인스턴스만 가능')
 				}
 			}
 		})()

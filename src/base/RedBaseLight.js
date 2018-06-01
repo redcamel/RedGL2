@@ -7,59 +7,62 @@ var RedBaseLight;
 		 title :`RedBaseLight`,
 		 description : `
 			 RedBaseLight 기저층
-			 프로토타입 확장을 통해서만 사용가능( RedGLUtil.copyProto 사용 )
-
 		 `,
 		 return : 'void'
 	 }
 	 :DOC*/
-	RedBaseLight = function () {
-		RedGLUtil.throwFunc('RedBaseLight : 생성자/직접실행으로 사용 할 수 없습니다.')
-	}
+	RedBaseLight = function () {}
 	RedBaseLight.prototype = {
-		addCasting: (function () {
-			var t0;
-			return function (v) {
-				t0 = this['_castingList'].indexOf(v)
-				if (t0 == -1) this['_castingList'].push(v)
-			}
-		})(),
-		removeCasting: (function () {
-			var t0;
-			return function (v) {
-				t0 = this['_castingList'].indexOf(v)
-				if (t0 > -1) this['_castingList'].splice
-			}
-		})(),
-		_castingList: [],
-		/**DOC:
-		 {
-			 code : 'METHOD',
-			 title :`setColor`,
-			 description : `
-				 hex로 컬러값 설정
-			 `,
-			 parmas : {
-				 hex : [{type:'hex'}],
-				 alpha : [{type:'Number'}, '알파값']
-			 },
-			 return : 'void'
-		 }
-		 :DOC*/
-		setColor: (function () {
-			var t0;
-			return function (hex, alpha) {
-				hex = hex ? hex : '#fff';
-				if (alpha == undefined) alpha = this['alpha'];
-				if (alpha > 1) alpha = 1
-				this['alpha'] = alpha;
-				t0 = RedGLUtil.hexToRGB.call(this, hex);
-				this['color'][0] = t0[0];
-				this['color'][1] = t0[1];
-				this['color'][2] = t0[2];
-				this['color'][3] = this['alpha'];
-			}
-		})()
+		//addCasting: (function () {
+		//	var t0;
+		//	return function (v) {
+		//		t0 = this['_castingList'].indexOf(v)
+		//		if (t0 == -1) this['_castingList'].push(v)
+		//	}
+		//})(),
+		//removeCasting: (function () {
+		//	var t0;
+		//	return function (v) {
+		//		t0 = this['_castingList'].indexOf(v)
+		//		if (t0 > -1) this['_castingList'].splice
+		//	}
+		//})(),
+		//_castingList: [],
 	}
+	/**DOC:
+	 {
+		 code : 'PROPERTY',
+		 title :`color`,
+		 description : `
+			 컬러설정
+		 `,
+		 return : 'hex'
+	 }
+	 :DOC*/
+	Object.defineProperty(RedBaseLight.prototype, 'color', (function () {
+		var _v = '#fff'
+		return {
+			get: function () { return _v },
+			set: (function () {
+				var t0;
+				return function (hex) {
+					_v = hex ? hex : '#ff2211';
+					t0 = RedGLUtil.hexToRGB.call(this, _v);
+					this['_color'][0] = t0[0];
+					this['_color'][1] = t0[1];
+					this['_color'][2] = t0[2];
+					this['_color'][3] = this['alpha'];
+					console.log(this,this['_color'])
+				}
+			})()
+		}
+	})());
+	Object.defineProperty(RedBaseLight.prototype, 'alpha', (function () {
+		var _v = '#fff'
+		return {
+			get: function () { return _v; },
+			set: function (v) { this['_color'][3] = _v = v }
+		}
+	})());
 	Object.freeze(RedBaseLight)
 })();

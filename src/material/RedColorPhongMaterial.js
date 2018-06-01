@@ -13,7 +13,7 @@ var RedColorPhongMaterial;
 			 redGL : [
 				 {type:'RedGL'}
 			 ],
-			 color : [
+			 hexColor : [
 				 {type:'hex'}
 			 ],
 			 alpha : [
@@ -27,21 +27,11 @@ var RedColorPhongMaterial;
 		 return : 'RedColorPhongMaterial Instance'
 	 }
 	 :DOC*/
-	RedColorPhongMaterial = function (redGL, hex, alpha) {
-		if (!(this instanceof RedColorPhongMaterial)) return new RedColorPhongMaterial(redGL, hex, alpha);
+	RedColorPhongMaterial = function (redGL, hexColor, alpha) {
+		if (!(this instanceof RedColorPhongMaterial)) return new RedColorPhongMaterial(redGL, hexColor, alpha);
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
-		/**DOC:
-		 {
-			 title :`color`,
-			 description : `
-				 RedProgram Instance
-				 직접설정하지 않도록 유의해야함!
-			 `,
-			 return : 'RedProgram Instance'
-		 }
-		 :DOC*/
-		this['color'] = new Float32Array(4);
+		this['_color'] = new Float32Array(4);
 		this['shininess'] = 16
 		/**DOC:
 		 {
@@ -51,13 +41,47 @@ var RedColorPhongMaterial;
 		 }
 		 :DOC*/
 		this['specularPower'] = 1
-		this.setColor(hex ? hex : '#ff0000', alpha == undefined ? 1 : alpha);
 		/////////////////////////////////////////
 		// 일반 프로퍼티
+		/**DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`color`,
+			 description : `
+				 컬러설정
+			 `,
+			 return : 'hex'
+		 }
+		 :DOC*/
+		Object.defineProperty(this, 'color', (function () {
+			var _v = '#ff2211'
+			return {
+				get: function () { return _v },
+				set: (function () {
+					var t0;
+					return function (hex) {
+						_v = hex ? hex : '#ff2211';
+						t0 = RedGLUtil.hexToRGB.call(this, _v);
+						this['_color'][0] = t0[0];
+						this['_color'][1] = t0[1];
+						this['_color'][2] = t0[2];
+						this['_color'][3] = this['alpha'];
+					}
+				})()
+			}
+		})());
+		Object.defineProperty(this, 'alpha', (function () {
+			var _v = '#ff2211'
+			return {
+				get: function () { return _v; },
+				set: function (v) { this['_color'][3] = _v = v }
+			}
+		})());
+		this['alpha'] = alpha == undefined ? 1 : alpha;
+		this['color'] = hexColor ? hexColor : '#ff0000'
 		this['program'] = makeProgram(redGL);
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkProperty()
-		// Object.seal(this);
 		console.log(this);
 	}
 	makeProgram = (function () {
@@ -65,12 +89,12 @@ var RedColorPhongMaterial;
 		var PROGRAM_NAME;
 		vSource = function () {
 			/* @preserve
-			 uniform vec4 uColor;
+			 uniform vec4 u_color;
 			 varying vec4 vColor;
 
 			 varying vec4 vVertexPositionEye4;
 			 void main(void) {
-			 vColor = uColor;
+			 vColor = u_color;
 			 vVertexNormal = vec3(uNMatrix * vec4(aVertexNormal,1.0));
 			 vVertexPositionEye4 = uMMatrix * vec4(aVertexPosition, 1.0);
 			 gl_PointSize = uPointSize;
@@ -162,23 +186,5 @@ var RedColorPhongMaterial;
 		}
 	})();
 	RedColorPhongMaterial.prototype = RedBaseMaterial.prototype
-	/**DOC:
-	 {
-		 code : 'METHOD',
-		 title :`setColor`,
-		 description : `
-			 컬러설정
-		 `,
-		 params : {
-			 hex : [
-				 {type: 'hex'},
-				 'ex) #fff, #ffffff'
-			 ]
-		 },
-		 example : `// TODO:`,
-		 return : 'RedProgram Instance'
-	 }
-	 :DOC*/
-	RedColorPhongMaterial.prototype['setColor'] = RedColorMaterial.prototype['setColor'];
 	Object.freeze(RedColorPhongMaterial)
 })();

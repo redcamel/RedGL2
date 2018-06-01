@@ -1,8 +1,9 @@
 [
   {
+    "code": "PROPERTY",
     "title": "color",
-    "description": "\nRedProgram Instance\n직접설정하지 않도록 유의해야함!\n",
-    "return": "Float32Array"
+    "description": "\n컬러설정\n",
+    "return": "hex"
   },
   {
     "constructorYn": true,
@@ -14,7 +15,7 @@
           "type": "RedGL"
         }
       ],
-      "hex": [
+      "hexColor": [
         {
           "type": "hex"
         }
@@ -28,20 +29,5 @@
     },
     "example": "\nRedColorMaterial(RedGL Instance, hex)\n",
     "return": "RedColorMaterial Instance"
-  },
-  {
-    "code": "METHOD",
-    "title": "setColor",
-    "description": "\n컬러설정\n",
-    "params": {
-      "hex": [
-        {
-          "type": "hex"
-        },
-        "ex) #fff, #ffffff"
-      ]
-    },
-    "example": "// TODO:",
-    "return": "RedProgram Instance"
   }
 ]

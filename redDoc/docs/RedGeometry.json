@@ -12,11 +12,6 @@
     "title": "RedGeometry",
     "description": "\nRedGeometry Instance 생성자\n",
     "params": {
-      "redGL": [
-        {
-          "type": "RedGL"
-        }
-      ],
       "interleaveBuffer": [
         {
           "type": "RedBuffer"

@@ -25,17 +25,17 @@
         },
         "고유키"
       ],
-      "vertexShader": [
+      "vSource": [
         {
-          "type": "RedShader Instance"
+          "type": "string"
         },
-        "버텍스 쉐이더(RedShader.VERTEX 타입)"
+        "버텍스 쉐이더 소스"
       ],
-      "fragmentShader": [
+      "fSource": [
         {
-          "type": "RedShader Instance"
+          "type": "string"
         },
-        "프레그먼트 쉐이더(RedShader.FRAGMENT 타입)"
+        "프레그먼트 쉐이더 소스"
       ]
     },
     "return": "RedProgram Instance"

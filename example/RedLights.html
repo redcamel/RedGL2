@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>RedLights</title>
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
     />
     <style>
         html,
@@ -21,172 +22,172 @@
 </head>
 
 <body>
-    <canvas id="test" style="border: none;background:red"></canvas>
-    <script>
-        var testUI;
-        document.getElementById('test')
-        RedGL(document.getElementById('test'), function (v) {
-            if (v) {
-                console.log('초기화 성공!')
-                var tWorld, tScene, tCamera, tRenderer;
+<canvas id="test" style="border: none;background:red"></canvas>
+<script>
+	var testUI;
+	document.getElementById('test')
+	RedGL(document.getElementById('test'), function (v) {
+		if (v) {
+			console.log('초기화 성공!')
+			var tWorld, tScene, tCamera, tRenderer;
 
-                // 월드 생성
-                this['world'] = tWorld = RedWorld();
+			// 월드 생성
+			this['world'] = tWorld = RedWorld();
 
-                // 씬 생성
-                tScene = RedScene(this);
+			// 씬 생성
+			tScene = RedScene(this);
 
-                // 카메라 생성
-                tCamera = RedCamera();
-                tCamera.x = 3
-                tCamera.y = 4
-                tCamera.z = 6
-                // 렌더러 생성
-                tRenderer = RedRenderer();
+			// 카메라 생성
+			tCamera = RedCamera();
+			tCamera.x = 3
+			tCamera.y = 4
+			tCamera.z = 6
+			// 렌더러 생성
+			tRenderer = RedRenderer();
 
-                // 뷰생성 및 적용
-                tWorld.addView(RedView('test', tScene, tCamera));
+			// 뷰생성 및 적용
+			tWorld.addView(RedView('test', tScene, tCamera));
 
-                // 그리드 설정
-                tScene['grid'] = RedGrid(this)
+			// 그리드 설정
+			tScene['grid'] = RedGrid(this)
 
-                // 라이트 설정
-                var tALight = RedAmbientLight(this)
-                tScene.addLight(tALight)
-                tALight.x = 10
-                tALight.y = 5
-                tALight.z = 5
+			// 라이트 설정
+			var tALight = RedAmbientLight(this)
+			tScene.addLight(tALight)
+			tALight.x = 10
+			tALight.y = 5
+			tALight.z = 5
 
-                var tDLight = RedDirectionalLight(this)
-                tScene.addLight(tDLight)
-                tDLight.x = 2
-                tDLight.y = 1
-                tDLight.z = 1
-                tDLight['debug'] = true
+			var tDLight = RedDirectionalLight(this)
+			tScene.addLight(tDLight)
+			tDLight.x = 2
+			tDLight.y = 1
+			tDLight.z = 1
+			tDLight['debug'] = true
 
-                var tPLight = RedPointLight(this, '#ff0000')
-                tScene.addLight(tPLight)
-                tPLight.x = -1
-                tPLight.y = 2
-                tPLight.z = 0.5
-                tPLight['debug'] = true
+			var tPLight = RedPointLight(this, '#ff0000')
+			tScene.addLight(tPLight)
+			tPLight.x = -1
+			tPLight.y = 2
+			tPLight.z = 0.5
+			tPLight['debug'] = true
 
-                // Mesh 설정
-                var tMesh;
-                var tMaterial = RedStandardMaterial(this, RedBitmapTexture(this, '../asset/draft1.png'))
-                var tMaterial2 = RedStandardMaterial(this, RedBitmapTexture(this, '../asset/draft2.png'))
-                var tMaterial3 = RedStandardMaterial(this, RedBitmapTexture(this, '../asset/alphaTest.png'))
-                var tNormalTexture = RedBitmapTexture(this, '../asset/normalTest.jpg')
-                var tSpecularTexture = RedBitmapTexture(this, '../asset/specular.png')
-                var tDisplacementTexture = RedBitmapTexture(this, '../asset/displacementTest.jpg')
-                tMesh = RedMesh(this, RedBox(this, 1, 1, 1, 32, 32, 32), tMaterial)
-                tMesh.x = -1.5
-                tScene.addChild(tMesh)
-                tMesh = RedMesh(this, RedBox(this, 1, 1, 1, 32, 32, 32), tMaterial2)
-                tMesh.x = 0
-                tScene.addChild(tMesh)
-                tMesh = RedMesh(this, RedBox(this, 1, 1, 1, 32, 32, 32), tMaterial3)
-                tMesh.x = 1.5
-                tScene.addChild(tMesh)
+			// Mesh 설정
+			var tMesh;
+			var tMaterial = RedStandardMaterial(this, RedBitmapTexture(this, '../asset/draft1.png'))
+			var tMaterial2 = RedStandardMaterial(this, RedBitmapTexture(this, '../asset/draft2.png'))
+			var tMaterial3 = RedStandardMaterial(this, RedBitmapTexture(this, '../asset/alphaTest.png'))
+			var tNormalTexture = RedBitmapTexture(this, '../asset/normalTest.jpg')
+			var tSpecularTexture = RedBitmapTexture(this, '../asset/specular.png')
+			var tDisplacementTexture = RedBitmapTexture(this, '../asset/displacementTest.jpg')
+			tMesh = RedMesh(this, RedBox(this, 1, 1, 1, 32, 32, 32), tMaterial)
+			tMesh.x = -1.5
+			tScene.addChild(tMesh)
+			tMesh = RedMesh(this, RedBox(this, 1, 1, 1, 32, 32, 32), tMaterial2)
+			tMesh.x = 0
+			tScene.addChild(tMesh)
+			tMesh = RedMesh(this, RedBox(this, 1, 1, 1, 32, 32, 32), tMaterial3)
+			tMesh.x = 1.5
+			tScene.addChild(tMesh)
 
-                tMesh = RedMesh(this, RedSphere(this, 0.5, 32, 32, 32), tMaterial)
-                tMesh.x = -1.5
-                tMesh.y = 1.5
-                tScene.addChild(tMesh)
-                tMesh = RedMesh(this, RedSphere(this, 0.5, 32, 32, 32), tMaterial2)
-                tMesh.x = 0
-                tMesh.y = 1.5
-                tScene.addChild(tMesh)
-                tMesh = RedMesh(this, RedSphere(this, 0.5, 32, 32, 32), tMaterial3)
-                tMesh.x = 1.5
-                tMesh.y = 1.5
-                tScene.addChild(tMesh)
+			tMesh = RedMesh(this, RedSphere(this, 0.5, 32, 32, 32), tMaterial)
+			tMesh.x = -1.5
+			tMesh.y = 1.5
+			tScene.addChild(tMesh)
+			tMesh = RedMesh(this, RedSphere(this, 0.5, 32, 32, 32), tMaterial2)
+			tMesh.x = 0
+			tMesh.y = 1.5
+			tScene.addChild(tMesh)
+			tMesh = RedMesh(this, RedSphere(this, 0.5, 32, 32, 32), tMaterial3)
+			tMesh.x = 1.5
+			tMesh.y = 1.5
+			tScene.addChild(tMesh)
 
-                tMesh = RedMesh(this, RedPlane(this, 1, 1, 32, 32), tMaterial)
-                tMesh['useCullFace'] = false
-                tMesh.x = -1.5
-                tMesh.y = -1.5
-                tScene.addChild(tMesh)
-                tMesh = RedMesh(this, RedPlane(this, 1, 1, 32, 32), tMaterial2)
-                tMesh['useCullFace'] = false
-                tMesh.x = 0
-                tMesh.y = -1.5
-                tScene.addChild(tMesh)
-                tMesh = RedMesh(this, RedPlane(this, 1, 1, 32, 32), tMaterial3)
-                tMesh['useCullFace'] = false
-                tMesh.x = 1.5
-                tMesh.y = -1.5
-                tScene.addChild(tMesh)
+			tMesh = RedMesh(this, RedPlane(this, 1, 1, 32, 32), tMaterial)
+			tMesh['useCullFace'] = false
+			tMesh.x = -1.5
+			tMesh.y = -1.5
+			tScene.addChild(tMesh)
+			tMesh = RedMesh(this, RedPlane(this, 1, 1, 32, 32), tMaterial2)
+			tMesh['useCullFace'] = false
+			tMesh.x = 0
+			tMesh.y = -1.5
+			tScene.addChild(tMesh)
+			tMesh = RedMesh(this, RedPlane(this, 1, 1, 32, 32), tMaterial3)
+			tMesh['useCullFace'] = false
+			tMesh.x = 1.5
+			tMesh.y = -1.5
+			tScene.addChild(tMesh)
 
 
-                // 렌더시작
-                tRenderer.start(this, function (time) {
-                    tCamera.lookAt(0, 0, 0)
-                })
+			// 렌더시작
+			tRenderer.start(this, function (time) {
+				tCamera.lookAt(0, 0, 0)
+			})
 
-                // 렌더 디버거 활성화
-                tRenderer['renderDebuger']['visible'] = true
-                testUI(this, tCamera, tScene, tALight, tDLight, tPLight)
-            } else {
-                console.log('초기화 실패!')
-            }
-        })
-        testUI = function (redGL, tCamera, tScene, tALight, tDLight, tPLight) {
-            var gui = new baseTestUI(redGL)
-            gui.initRedGL()
-            gui.initCamera(tCamera)
-            gui.initScene(tScene)
-            //
-            var t0 = gui['gui'].addFolder('RedAmbientLight')
-            var testALight = function () {
-                this.color = '#111'
-            }
-            testALight = new testALight()
-            t0.addColor(testALight, 'color').onChange(function (v) {
-                tALight.setColor(v, tPLight['alpha'])
-                t0.updateDisplay()
-            })
-            t0.add(tALight, 'alpha', 0, 1)
-            t0.add(tALight, 'intensity', 0, 5)
-            t0.open()
-            var t0 = gui['gui'].addFolder('RedDirectionalLight')
-            var testDLight = function () {
-                this.color = '#fff'
-            }
-            testDLight = new testDLight()
-            t0.addColor(testDLight, 'color').onChange(function (v) {
-                tDLight.setColor(v, tPLight['alpha'])
-                t0.updateDisplay()
-            })
-            t0.add(tDLight, 'alpha', 0, 1)
-            t0.add(tDLight, 'intensity', 0, 5)
-            t0.add(tDLight, 'x', -10, 10, 0.1)
-            t0.add(tDLight, 'y', -10, 10, 0.1)
-            t0.add(tDLight, 'z', -10, 10, 0.1)
-            t0.add(tDLight, 'debug', true, false)
-            t0.open()
-            //
-            //
-            var t0 = gui['gui'].addFolder('RedPointLight')
-            var testPLight = function () {
-                this.color = '#ff0000'
-            }
-            testPLight = new testPLight()
-            t0.addColor(testPLight, 'color').onChange(function (v) {
-                tPLight.setColor(v, tPLight['alpha'])
-                t0.updateDisplay()
-            })
-            t0.add(tPLight, 'alpha', 0, 1)
-            t0.add(tPLight, 'intensity', 0, 5)
-            t0.add(tPLight, 'x', -5, 5, 0.1)
-            t0.add(tPLight, 'y', -5, 5, 0.1)
-            t0.add(tPLight, 'z', -5, 5, 0.1)
-            t0.add(tPLight, 'radius', 0, 5)
-            t0.add(tPLight, 'debug', true, false)
-            t0.open()
+			// 렌더 디버거 활성화
+			tRenderer['renderDebuger']['visible'] = true
+			testUI(this, tCamera, tScene, tALight, tDLight, tPLight)
+		} else {
+			console.log('초기화 실패!')
+		}
+	})
+	testUI = function (redGL, tCamera, tScene, tALight, tDLight, tPLight) {
+		var gui = new baseTestUI(redGL)
+		gui.initRedGL()
+		gui.initCamera(tCamera)
+		gui.initScene(tScene)
+		//
+		var t0 = gui['gui'].addFolder('RedAmbientLight')
+		var testALight = function () {
+			this.color = '#111'
+		}
+		testALight = new testALight()
+		t0.addColor(testALight, 'color').onChange(function (v) {
+			tALight.color = v
+			t0.updateDisplay()
+		})
+		t0.add(tALight, 'alpha', 0, 1)
+		t0.add(tALight, 'intensity', 0, 5)
+		t0.open()
+		var t0 = gui['gui'].addFolder('RedDirectionalLight')
+		var testDLight = function () {
+			this.color = '#fff'
+		}
+		testDLight = new testDLight()
+		t0.addColor(testDLight, 'color').onChange(function (v) {
+			tDLight.color = v
+			t0.updateDisplay()
+		})
+		t0.add(tDLight, 'alpha', 0, 1)
+		t0.add(tDLight, 'intensity', 0, 5)
+		t0.add(tDLight, 'x', -10, 10, 0.1)
+		t0.add(tDLight, 'y', -10, 10, 0.1)
+		t0.add(tDLight, 'z', -10, 10, 0.1)
+		t0.add(tDLight, 'debug', true, false)
+		t0.open()
+		//
+		//
+		var t0 = gui['gui'].addFolder('RedPointLight')
+		var testPLight = function () {
+			this.color = '#ff0000'
+		}
+		testPLight = new testPLight()
+		t0.addColor(testPLight, 'color').onChange(function (v) {
+			tPLight.color = v
+			t0.updateDisplay()
+		})
+		t0.add(tPLight, 'alpha', 0, 1)
+		t0.add(tPLight, 'intensity', 0, 5)
+		t0.add(tPLight, 'x', -5, 5, 0.1)
+		t0.add(tPLight, 'y', -5, 5, 0.1)
+		t0.add(tPLight, 'z', -5, 5, 0.1)
+		t0.add(tPLight, 'radius', 0, 5)
+		t0.add(tPLight, 'debug', true, false)
+		t0.open()
 
-        }
-    </script>
+	}
+</script>
 </body>
 
 </html>

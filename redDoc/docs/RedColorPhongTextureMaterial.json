@@ -1,8 +1,9 @@
 [
   {
+    "code": "PROPERTY",
     "title": "color",
-    "description": "\nRedProgram Instance\n직접설정하지 않도록 유의해야함!\n",
-    "return": "RedProgram Instance"
+    "description": "\n컬러설정\n",
+    "return": "hex"
   },
   {
     "title": "displacementPower",
@@ -27,7 +28,7 @@
           "type": "RedGL"
         }
       ],
-      "color": [
+      "hexColor": [
         {
           "type": "hex"
         }
@@ -56,21 +57,6 @@
     },
     "example": "\nRedColorPhongTextureMaterial(RedGL Instance, hex, alpha, normalTexture, specularTexture)\n",
     "return": "RedColorPhongTextureMaterial Instance"
-  },
-  {
-    "code": "METHOD",
-    "title": "setColor",
-    "description": "\n컬러설정\n",
-    "params": {
-      "hex": [
-        {
-          "type": "hex"
-        },
-        "ex) #fff, #ffffff"
-      ]
-    },
-    "example": "// TODO:",
-    "return": "RedProgram Instance"
   },
   {
     "title": "shininess",

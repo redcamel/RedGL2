@@ -26,10 +26,10 @@ var RedAmbientLight;
 		 return : 'RedAmbientLight Instance'
 	 }
 	 :DOC*/
-	RedAmbientLight = function (redGL, hex, alpha) {
-		if (!(this instanceof RedAmbientLight)) return new RedAmbientLight(redGL, hex, alpha);
+	RedAmbientLight = function (redGL, hexColor, alpha) {
+		if (!(this instanceof RedAmbientLight)) return new RedAmbientLight(redGL, hexColor, alpha);
 		// 유니폼 프로퍼티
-		this['color'] = new Float32Array(4)
+		this['_color'] = new Float32Array(4)
 		/**DOC:
 		 {
 			 title :`intensity`,
@@ -41,7 +41,6 @@ var RedAmbientLight;
 		 }
 		 :DOC*/
 		this['intensity'] = 1
-
 		// 일반 프로퍼티
 		/**DOC:
 		 {
@@ -53,7 +52,7 @@ var RedAmbientLight;
 		 }
 		 :DOC*/
 		this['alpha'] = alpha == undefined ? 0.1 : alpha
-		this.setColor(hex ? hex : '#fff', this['alpha'])
+		this['color'] = hexColor ? hexColor : '#fff'
 		this['_UUID'] = RedGL['makeUUID']();
 		/**DOC:
 		 {
@@ -78,14 +77,6 @@ var RedAmbientLight;
 	 }
 	 :DOC*/
 	RedAmbientLight['type'] = 'RedAmbientLight'
-	RedGLUtil['copyProto'](RedAmbientLight, RedBaseLight);
-	Object.defineProperty(RedAmbientLight.prototype, 'alpha', {
-		get: function () {
-			return this['color'][3]
-		},
-		set: function (v) {
-			this['color'][3] = v
-		}
-	})
+	RedAmbientLight.prototype = new RedBaseLight
 	Object.freeze(RedAmbientLight)
 })();

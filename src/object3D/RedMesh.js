@@ -55,7 +55,6 @@ var RedMesh;
 		 }
 		 :DOC*/
 		this['material'] = material;
-
 		this['_UUID'] = RedGL['makeUUID']();
 		// Object.seal(this)
 	}

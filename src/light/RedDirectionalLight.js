@@ -26,10 +26,10 @@ var RedDirectionalLight;
 		 return : 'RedDirectionalLight Instance'
 	 }
 	 :DOC*/
-	RedDirectionalLight = function (redGL, hex, alpha) {
-		if (!(this instanceof RedDirectionalLight)) return new RedDirectionalLight(redGL, hex, alpha);
+	RedDirectionalLight = function (redGL, hexColor, alpha) {
+		if (!(this instanceof RedDirectionalLight)) return new RedDirectionalLight(redGL, hexColor, alpha);
 		// 유니폼 프로퍼티
-		this['color'] = new Float32Array(4)
+		this['_color'] = new Float32Array(4)
 		/**DOC:
 		 {
 			 title :`intensity`,
@@ -53,7 +53,7 @@ var RedDirectionalLight;
 		 }
 		 :DOC*/
 		this['alpha'] = alpha == undefined ? 1 : alpha
-		this.setColor(hex ? hex : '#fff', this['alpha'])
+		this['color'] = hexColor ? hexColor : '#fff'
 		/**DOC:
 		 {
 			 title :`x`,
@@ -130,15 +130,7 @@ var RedDirectionalLight;
 	 }
 	 :DOC*/
 	RedDirectionalLight['type'] = 'RedDirectionalLight'
-	RedGLUtil['copyProto'](RedDirectionalLight, RedBaseLight);
-	Object.defineProperty(RedDirectionalLight.prototype, 'alpha', {
-		get: function () {
-			return this['color'][3]
-		},
-		set: function (v) {
-			this['color'][3] = v
-		}
-	})
+	RedDirectionalLight.prototype = new RedBaseLight
 	Object.freeze(RedDirectionalLight)
 
 })()
