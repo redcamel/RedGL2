@@ -52,6 +52,8 @@ var RedPointLight;
 			 return : 'Number'
 		 }
 		 :DOC*/
+		Object.defineProperty( this, 'color', RedDefinePropertyInfo['color'] );
+		Object.defineProperty( this, 'alpha', RedDefinePropertyInfo['alpha'] );
 		this['alpha'] = alpha == undefined ? 1 : alpha
 		this['color'] = hexColor ? hexColor : '#fff'
 		/**DOC:

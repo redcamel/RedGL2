@@ -51,6 +51,8 @@ var RedAmbientLight;
 			 return : 'Number'
 		 }
 		 :DOC*/
+		Object.defineProperty( this, 'color', RedDefinePropertyInfo['color'] );
+		Object.defineProperty( this, 'alpha', RedDefinePropertyInfo['alpha'] );
 		this['alpha'] = alpha == undefined ? 0.1 : alpha
 		this['color'] = hexColor ? hexColor : '#fff'
 		this['_UUID'] = RedGL['makeUUID']();

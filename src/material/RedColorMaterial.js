@@ -34,6 +34,8 @@ var RedColorMaterial;
 		this['_color'] = new Float32Array( 4 );
 		/////////////////////////////////////////
 		// 일반 프로퍼티
+		Object.defineProperty( this, 'color', RedDefinePropertyInfo['color'] );
+		Object.defineProperty( this, 'alpha', RedDefinePropertyInfo['alpha'] );
 		this['alpha'] = alpha == undefined ? 1 : alpha;
 		this['color'] = hexColor ? hexColor : '#ff0000'
 		this['program'] = makeProgram( redGL );
