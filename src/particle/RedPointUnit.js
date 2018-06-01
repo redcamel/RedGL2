@@ -32,6 +32,7 @@ var RedPointUnit;
 		var tGL;
 		var interleaveBuffer;
 		tGL = redGL.gl
+
 		RedBaseObject3D['build'].call( this, tGL )
 		this['_UUID'] = RedGL['makeUUID']();
 		interleaveBuffer = RedBuffer(
