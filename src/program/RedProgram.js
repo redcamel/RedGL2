@@ -5,12 +5,16 @@ var RedProgram;
 	var samplerIndex;
 	makeProgram = (function () {
 		var program;
+		var tVMap, tFMap, k;
 		return function ( gl, key, vs, fs ) {
 			program = gl.createProgram();
 			gl.attachShader( program, vs['webglShader'] );
 			gl.attachShader( program, fs['webglShader'] );
+			tVMap = vs['parseData']['uniform']['map'];
+			tFMap = fs['parseData']['uniform']['map'];
+			for ( k in tVMap ) if ( tFMap[k] ) RedGLUtil.throwFunc( "vertexShader와 fragmentShader에 중복된 유니폼 선언이 존재함.", "중복선언 : " + k );
 			gl.linkProgram( program );
-			if ( !gl.getProgramParameter( program, gl.LINK_STATUS ) ) RedGLUtil.throwFunc( "프로그램을 초기화 할 수 없습니다." );
+			if ( !gl.getProgramParameter( program, gl.LINK_STATUS ) ) RedGLUtil.throwFunc( "RedProgram : 프로그램을 초기화 할 수 없습니다." );
 			program['key'] = key;
 			program['vShaderKey'] = vs['key'];
 			program['fShaderKey'] = fs['key'];

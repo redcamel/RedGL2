@@ -92,7 +92,7 @@ var RedPostEffect_DoF;
 		this['bind'] = RedPostEffectManager.prototype['bind'];
 		this['unbind'] = RedPostEffectManager.prototype['unbind'];
 
-		this.checkProperty();
+		this.checkUniformAndProperty();
 		console.log( this );
 	}
 	makeProgram = (function () {

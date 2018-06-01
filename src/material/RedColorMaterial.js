@@ -72,7 +72,7 @@ var RedColorMaterial;
 		this['color'] = hexColor ? hexColor : '#ff0000'
 		this['program'] = makeProgram( redGL );
 		this['_UUID'] = RedGL['makeUUID']();
-		this.checkProperty()
+		this.checkUniformAndProperty()
 		// Object.seal(this);
 		console.log( this );
 	}

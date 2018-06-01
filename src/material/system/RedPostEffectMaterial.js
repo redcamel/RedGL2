@@ -41,7 +41,7 @@ var RedPostEffectMaterial;
 		// 일반 프로퍼티
 		this['program'] = makeProgram( redGL );
 		this['_UUID'] = RedGL['makeUUID']();
-		this.checkProperty()
+		this.checkUniformAndProperty()
 		// Object.seal(this)
 		console.log( this )
 	}
@@ -51,8 +51,8 @@ var RedPostEffectMaterial;
 		vSource = function () {
 			/* @preserve
 			 void main(void) {
-			 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
-			 gl_Position = uPMatrix * uCameraMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
+				 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
+				 gl_Position = uPMatrix * uCameraMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
 			 }
 			 */
 		}
@@ -61,8 +61,8 @@ var RedPostEffectMaterial;
 			 precision mediump float;
 			 uniform sampler2D uDiffuseTexture;
 			 void main(void) {
-			 vec4 finalColor = texture2D(uDiffuseTexture, vTexcoord);
-			 gl_FragColor = finalColor;
+				 vec4 finalColor = texture2D(uDiffuseTexture, vTexcoord);
+				 gl_FragColor = finalColor;
 			 }
 			 */
 		}

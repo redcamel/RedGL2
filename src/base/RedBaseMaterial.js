@@ -20,7 +20,7 @@ var RedBaseMaterial;
 		/**DOC:
 		 {
 			 code : 'METHOD',
-			 title :`checkProperty`,
+			 title :`checkUniformAndProperty`,
 			 description : `
 				 소유하고 있는 Program에서 사용하고 있지만
 				 재질이 해당 유니폼에 대응하는 프로퍼티를 소유하고 않는경우를 검출.
@@ -28,7 +28,7 @@ var RedBaseMaterial;
 			 return : 'void'
 		 }
 		 :DOC*/
-		checkProperty: function () {
+		checkUniformAndProperty: function () {
 			var i2
 			var tUniformGroup, tUniformLocationInfo, tWebGLUniformLocation;
 			tUniformGroup = this['program']['uniformLocation'];

@@ -2,7 +2,7 @@
 RedGL( document.createElement( 'canvas' ), function ( v ) {
 	var tRedGL = this;
 	redSuite(
-		"Material 정의시 주요부분 동작테스트",
+		"checkUniformAndProperty 테스트",
 		redGroup(
 			"생성 확인",
 			redTest( "기본 생성 테스트", function ( unit, title ) {

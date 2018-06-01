@@ -30,7 +30,7 @@ var RedPostEffect_DoF_DepthMaterial;
 		// 일반 프로퍼티
 		this['program'] = makeProgram( redGL );
 		this['_UUID'] = RedGL['makeUUID']();
-		this.checkProperty()
+		this.checkUniformAndProperty()
 		// Object.seal(this);
 		console.log( this );
 	}
