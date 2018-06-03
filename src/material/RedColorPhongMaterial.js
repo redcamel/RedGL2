@@ -29,6 +29,7 @@ var RedColorPhongMaterial;
 	 :DOC*/
 	RedColorPhongMaterial = function (redGL, hexColor, alpha) {
 		if (!(this instanceof RedColorPhongMaterial)) return new RedColorPhongMaterial(redGL, hexColor, alpha);
+        if (!(redGL instanceof RedGL)) RedGLUtil.throwFunc('RedColorPhongMaterial : RedGL Instance만 허용됩니다.', '입력값 : ' + redGL);
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
 		this['_color'] = new Float32Array(4);

@@ -72,7 +72,7 @@ var RedDefinePropertyInfo;
 			return {
 				get: function () { return this['_diffuseTexture']; },
 				set: function (v) {
-					if (this['_diffuseTexture'] && !(this['_diffuseTexture'] instanceof RedBitmapTexture)) RedGLUtil.throwFunc('diffuseTexture : RedBitmapTexture Instance만 허용됩니다.')
+					if (v && !(v instanceof RedBitmapTexture)) RedGLUtil.throwFunc('diffuseTexture : RedBitmapTexture Instance만 허용됩니다.', '입력값 : ' + v)
 					this['_diffuseTexture'] = v
 				}
 			}
@@ -81,7 +81,7 @@ var RedDefinePropertyInfo;
 			return {
 				get: function () { return this['_normalTexture']; },
 				set: function (v) {
-					if (this['_normalTexture'] && !(this['_normalTexture'] instanceof RedBitmapTexture)) RedGLUtil.throwFunc('normalTexture : RedBitmapTexture Instance만 허용됩니다.')
+					if (v && !(v instanceof RedBitmapTexture)) RedGLUtil.throwFunc('normalTexture : RedBitmapTexture Instance만 허용됩니다.', '입력값 : ' + v)
 					this['_normalTexture'] = v
 				}
 			}
@@ -90,7 +90,7 @@ var RedDefinePropertyInfo;
 			return {
 				get: function () { return this['_specularTexture']; },
 				set: function (v) {
-					if (this['_specularTexture'] && !(this['_specularTexture'] instanceof RedBitmapTexture)) RedGLUtil.throwFunc('specularTexture : RedBitmapTexture Instance만 허용됩니다.')
+					if (v && !(v instanceof RedBitmapTexture)) RedGLUtil.throwFunc('specularTexture : RedBitmapTexture Instance만 허용됩니다.', '입력값 : ' + v)
 					this['_specularTexture'] = v
 				}
 			}
@@ -99,7 +99,7 @@ var RedDefinePropertyInfo;
 			return {
 				get: function () { return this['_displacementTexture']; },
 				set: function (v) {
-					if (this['_displacementTexture'] && !(this['_displacementTexture'] instanceof RedBitmapTexture)) RedGLUtil.throwFunc('displacementTexture : RedBitmapTexture Instance만 허용됩니다.')
+					if (v && !(v instanceof RedBitmapTexture)) RedGLUtil.throwFunc('displacementTexture : RedBitmapTexture Instance만 허용됩니다.', '입력값 : ' + v)
 					this['_displacementTexture'] = v
 				}
 			}
