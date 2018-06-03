@@ -1,11 +1,5 @@
 [
   {
-    "code": "PROPERTY",
-    "title": "color",
-    "description": "\n컬러설정\n",
-    "return": "hex"
-  },
-  {
     "constructorYn": true,
     "title": "RedBaseLight",
     "description": "\nRedBaseLight 기저층\n",

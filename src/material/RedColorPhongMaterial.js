@@ -27,30 +27,39 @@ var RedColorPhongMaterial;
 		 return : 'RedColorPhongMaterial Instance'
 	 }
 	 :DOC*/
-	RedColorPhongMaterial = function ( redGL, hexColor, alpha ) {
-		if ( !(this instanceof RedColorPhongMaterial) ) return new RedColorPhongMaterial( redGL, hexColor, alpha );
+	RedColorPhongMaterial = function (redGL, hexColor, alpha) {
+		if (!(this instanceof RedColorPhongMaterial)) return new RedColorPhongMaterial(redGL, hexColor, alpha);
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
-		this['_color'] = new Float32Array( 4 );
-		this['shininess'] = 16
+		this['_color'] = new Float32Array(4);
+		/**DOC:
+		 {
+			 title :`shininess`,
+			 description : `기본값 : 16`,
+			 return : 'shininess'
+		 }
+		 :DOC*/
+		this['_shininess'] = 16
 		/**DOC:
 		 {
 			 title :`specularPower`,
 			 description : `기본값 : 1`,
-			 return : 'uint'
+			 return : 'Number'
 		 }
 		 :DOC*/
-		this['specularPower'] = 1
+		this['_specularPower'] = 1
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		Object.defineProperty( this, 'color', RedDefinePropertyInfo['color'] );
-		Object.defineProperty( this, 'alpha', RedDefinePropertyInfo['alpha'] );
+		Object.defineProperty(this, 'color', RedDefinePropertyInfo['color']);
+		Object.defineProperty(this, 'alpha', RedDefinePropertyInfo['alpha']);
+		Object.defineProperty(this, 'shininess', RedDefinePropertyInfo['shininess']);
+		Object.defineProperty(this, 'specularPower', RedDefinePropertyInfo['specularPower']);
 		this['alpha'] = alpha == undefined ? 1 : alpha;
 		this['color'] = hexColor ? hexColor : '#ff0000'
-		this['program'] = makeProgram( redGL );
+		this['program'] = makeProgram(redGL);
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkUniformAndProperty();
-		console.log( this );
+		console.log(this);
 	}
 	makeProgram = (function () {
 		var vSource, fSource;
@@ -72,8 +81,8 @@ var RedColorPhongMaterial;
 		fSource = function () {
 			/* @preserve
 			 precision mediump float;
-			 uniform float uShininess;
-			 uniform float uSpecularPower;
+			 uniform float u_shininess;
+			 uniform float u_specularPower;
 			 varying vec4 vVertexPositionEye4;
 			 varying vec4 vColor;
 			 float fogFactor(float perspectiveFar, float density){
@@ -108,8 +117,8 @@ var RedColorPhongMaterial;
 					 if(lambertTerm > 0.0){
 						 ld += (uDirectionalLightColor[i] * texelColor * lambertTerm * uDirectionalLightIntensity[i]) * uDirectionalLightColor[i].a;
 						 R = reflect(L, N);
-						 specular = pow( max(dot(R, -L), 0.0), uShininess);
-						 ls +=  specularLightColor * specular * uSpecularPower * specularTextureValue * uDirectionalLightIntensity[i];
+						 specular = pow( max(dot(R, -L), 0.0), u_shininess);
+						 ls +=  specularLightColor * specular * u_specularPower * specularTextureValue * uDirectionalLightIntensity[i];
 					 }
 				 }
 				 vec3 pointDirection;
@@ -126,8 +135,8 @@ var RedColorPhongMaterial;
 						 if(lambertTerm > 0.0){
 							 ld += (uPointLightColor[i] * texelColor * lambertTerm * attenuation * uPointLightIntensity[i]) * uPointLightColor[i].a;
 							 R = reflect(L, N);
-							 specular = pow( max(dot(R, -L), 0.0), uShininess);
-							 ls +=  specularLightColor * specular * uSpecularPower * specularTextureValue * uPointLightIntensity[i] ;
+							 specular = pow( max(dot(R, -L), 0.0), u_shininess);
+							 ls +=  specularLightColor * specular * u_specularPower * specularTextureValue * uPointLightIntensity[i] ;
 						 }
 					 }
 				 }
@@ -139,15 +148,15 @@ var RedColorPhongMaterial;
 			 }
 			 */
 		}
-		vSource = RedGLUtil.getStrFromComment( vSource.toString() );
-		fSource = RedGLUtil.getStrFromComment( fSource.toString() );
+		vSource = RedGLUtil.getStrFromComment(vSource.toString());
+		fSource = RedGLUtil.getStrFromComment(fSource.toString());
 		// console.log(vSource, fSource)
 		PROGRAM_NAME = 'colorPhongProgram';
-		return function ( redGL ) {
-			return RedProgram( redGL, PROGRAM_NAME, vSource, fSource )
+		return function (redGL) {
+			return RedProgram(redGL, PROGRAM_NAME, vSource, fSource)
 
 		}
 	})();
 	RedColorPhongMaterial.prototype = RedBaseMaterial.prototype
-	Object.freeze( RedColorPhongMaterial )
+	Object.freeze(RedColorPhongMaterial)
 })();

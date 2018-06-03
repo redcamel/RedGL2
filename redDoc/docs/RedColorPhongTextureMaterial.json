@@ -1,11 +1,5 @@
 [
   {
-    "code": "PROPERTY",
-    "title": "color",
-    "description": "\n컬러설정\n",
-    "return": "hex"
-  },
-  {
     "title": "displacementPower",
     "description": "기본값 : 0",
     "return": "Number"
@@ -61,12 +55,12 @@
   {
     "title": "shininess",
     "description": "기본값 : 16",
-    "return": "uint"
+    "return": "Number"
   },
   {
     "title": "specularPower",
     "description": "기본값 : 1",
-    "return": "uint"
+    "return": "Number"
   },
   {
     "title": "specularTexture",

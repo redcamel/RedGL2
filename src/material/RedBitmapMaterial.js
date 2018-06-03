@@ -36,9 +36,10 @@ var RedBitmapMaterial;
 			 return : 'RedBitmapMaterial'
 		 }
 		 :DOC*/
-		this['diffuseTexture'] = diffuseTexture;
+		this['_diffuseTexture'] = diffuseTexture;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
+		Object.defineProperty(this, 'diffuseTexture', RedDefinePropertyInfo['diffuseTexture']);
 		this['program'] = makeProgram( redGL );
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkUniformAndProperty();
@@ -79,7 +80,7 @@ var RedBitmapMaterial;
 		fSource = function () {
 			/* @preserve
 			 precision mediump float;
-			 uniform sampler2D uDiffuseTexture;
+			 uniform sampler2D u_diffuseTexture;
 			 float fogFactor(float perspectiveFar, float density){
 				 float flog_cord = gl_FragCoord.z / gl_FragCoord.w / perspectiveFar;
 				 float fog = flog_cord * density;
@@ -90,7 +91,7 @@ var RedBitmapMaterial;
 			    return mix(fogColor, currentColor, fogFactor);
 			 }
 			 void main(void) {
-				 vec4 finalColor = texture2D(uDiffuseTexture, vTexcoord);
+				 vec4 finalColor = texture2D(u_diffuseTexture, vTexcoord);
 				 finalColor.rgb *= finalColor.a;
 				 if(finalColor.a ==0.0) discard;
 				 if(uUseFog) gl_FragColor = fog( fogFactor(uFogDistance, uFogDensity), uFogColor, finalColor);

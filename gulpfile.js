@@ -91,7 +91,6 @@ gulp.task('make-doc', function () {
 		"src/loader/obj/RedMTLLoader.js",
 		"src/loader/obj/RedOBJLoader.js",
 
-		"src/material/RedTestMaterial.js",
 		"src/material/RedColorMaterial.js",
 		"src/material/RedColorPhongMaterial.js",
 		"src/material/RedColorPhongTextureMaterial.js",
@@ -228,7 +227,6 @@ gulp.task('combine-js', function () {
 		"src/camera/RedBasicController.js",
 		"src/camera/RedObitController.js",
 		// 재질
-		"src/material/RedTestMaterial.js",
 		"src/material/RedColorMaterial.js",
 		"src/material/RedColorPhongMaterial.js",
 		"src/material/RedColorPhongTextureMaterial.js",

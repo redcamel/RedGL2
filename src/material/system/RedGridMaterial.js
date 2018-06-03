@@ -28,7 +28,6 @@ var RedGridMaterial;
 		this['program'] = makeProgram( redGL )
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkUniformAndProperty();
-		Object.seal( this )
 		console.log( this )
 	}
 	makeProgram = (function () {

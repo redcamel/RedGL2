@@ -39,48 +39,51 @@ var RedColorPhongTextureMaterial;
 		 return : 'RedColorPhongTextureMaterial Instance'
 	 }
 	 :DOC*/
-	RedColorPhongTextureMaterial = function ( redGL, hexColor, alpha, normalTexture, specularTexture, displacementTexture ) {
-		if ( !(this instanceof RedColorPhongTextureMaterial) ) return new RedColorPhongTextureMaterial( redGL, hexColor, alpha, normalTexture, specularTexture, displacementTexture );
+	RedColorPhongTextureMaterial = function (redGL, hexColor, alpha, normalTexture, specularTexture, displacementTexture) {
+		if (!(this instanceof RedColorPhongTextureMaterial)) return new RedColorPhongTextureMaterial(redGL, hexColor, alpha, normalTexture, specularTexture, displacementTexture);
+		if (normalTexture && !(normalTexture instanceof RedBitmapTexture)) RedGLUtil.throwFunc('RedColorPhongTextureMaterial : RedBitmapTexture Instance만 허용됩니다.')
+		if (specularTexture && !(specularTexture instanceof RedBitmapTexture)) RedGLUtil.throwFunc('RedColorPhongTextureMaterial : RedBitmapTexture Instance만 허용됩니다.')
+		if (displacementTexture && !(displacementTexture instanceof RedBitmapTexture)) RedGLUtil.throwFunc('RedColorPhongTextureMaterial : RedBitmapTexture Instance만 허용됩니다.')
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
-		this['_color'] = new Float32Array( 4 );
+		this['_color'] = new Float32Array(4);
 		/**DOC:
 		 {
 			 title :`normalTexture`,
 			 return : 'RedBitmapTexture'
 		 }
 		 :DOC*/
-		this['normalTexture'] = normalTexture;
+		this['_normalTexture'] = normalTexture;
 		/**DOC:
 		 {
 			 title :`specularTexture`,
 			 return : 'RedBitmapTexture'
 		 }
 		 :DOC*/
-		this['specularTexture'] = specularTexture;
+		this['_specularTexture'] = specularTexture;
 		/**DOC:
 		 {
 			 title :`displacementTexture`,
 			 return : 'RedBitmapTexture'
 		 }
 		 :DOC*/
-		this['displacementTexture'] = displacementTexture;
+		this['_displacementTexture'] = displacementTexture;
 		/**DOC:
 		 {
 			 title :`shininess`,
 			 description : `기본값 : 16`,
-			 return : 'uint'
+			 return : 'Number'
 		 }
 		 :DOC*/
-		this['shininess'] = 16
+		this['_shininess'] = 16
 		/**DOC:
 		 {
 			 title :`specularPower`,
 			 description : `기본값 : 1`,
-			 return : 'uint'
+			 return : 'Number'
 		 }
 		 :DOC*/
-		this['specularPower'] = 1
+		this['_specularPower'] = 1
 		/**DOC:
 		 {
 			 title :`displacementPower`,
@@ -88,18 +91,24 @@ var RedColorPhongTextureMaterial;
 			 return : 'Number'
 		 }
 		 :DOC*/
-		this['displacementPower'] = 0
+		this['_displacementPower'] = 0
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		Object.defineProperty( this, 'color', RedDefinePropertyInfo['color'] );
-		Object.defineProperty( this, 'alpha', RedDefinePropertyInfo['alpha'] );
+		Object.defineProperty(this, 'color', RedDefinePropertyInfo['color']);
+		Object.defineProperty(this, 'alpha', RedDefinePropertyInfo['alpha']);
+		Object.defineProperty(this, 'shininess', RedDefinePropertyInfo['shininess']);
+		Object.defineProperty(this, 'specularPower', RedDefinePropertyInfo['specularPower']);
+		Object.defineProperty(this, 'displacementPower', RedDefinePropertyInfo['displacementPower']);
+		Object.defineProperty(this, 'normalTexture', RedDefinePropertyInfo['normalTexture']);
+		Object.defineProperty(this, 'specularTexture', RedDefinePropertyInfo['specularTexture']);
+		Object.defineProperty(this, 'displacementTexture', RedDefinePropertyInfo['displacementTexture']);
 		this['alpha'] = alpha == undefined ? 1 : alpha;
 		this['color'] = hexColor ? hexColor : '#ff0000'
-		this['program'] = makeProgram( redGL );
+		this['program'] = makeProgram(redGL);
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkUniformAndProperty();
 		// Object.seal(this);
-		console.log( this );
+		console.log(this);
 	}
 	makeProgram = (function () {
 		var vSource, fSource;
@@ -108,15 +117,15 @@ var RedColorPhongTextureMaterial;
 			/* @preserve
 			 uniform vec4 u_color;
 			 varying vec4 vColor;
-			 uniform sampler2D uDisplacementTexture;
-			 uniform float uDisplacementPower;
+			 uniform sampler2D u_displacementTexture;
+			 uniform float u_displacementPower;
 			 varying vec4 vVertexPositionEye4;
 			 void main(void) {
 				 vColor = u_color;
 				 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
 				 vVertexNormal = vec3(uNMatrix * vec4(aVertexNormal,1.0));
 				 vVertexPositionEye4 = uMMatrix * vec4(aVertexPosition, 1.0);
-				 vVertexPositionEye4.xyz += normalize(vVertexNormal) * texture2D(uDisplacementTexture, vTexcoord).x * uDisplacementPower ;
+				 vVertexPositionEye4.xyz += normalize(vVertexNormal) * texture2D(u_displacementTexture, vTexcoord).x * u_displacementPower ;
 				 gl_PointSize = uPointSize;
 				 gl_Position = uPMatrix * uCameraMatrix* vVertexPositionEye4;
 			 }
@@ -125,11 +134,11 @@ var RedColorPhongTextureMaterial;
 		fSource = function () {
 			/* @preserve
 			 precision mediump float;
-			 uniform sampler2D uNormalTexture;
-			 uniform sampler2D uSpecularTexture;
+			 uniform sampler2D u_normalTexture;
+			 uniform sampler2D u_specularTexture;
 
-			 uniform float uShininess;
-			 uniform float uSpecularPower;
+			 uniform float u_shininess;
+			 uniform float u_specularPower;
 
 			 varying vec4 vVertexPositionEye4;
 			 varying vec4 vColor;
@@ -152,12 +161,12 @@ var RedColorPhongTextureMaterial;
 				 // texelColor.rgb *= texelColor.a;
 
 				 vec3 N = normalize(vVertexNormal);
-				 vec4 normalColor = texture2D(uNormalTexture, vTexcoord);
+				 vec4 normalColor = texture2D(u_normalTexture, vTexcoord);
 				 if(normalColor.a != 0.0) N = normalize(2.0 * (N + normalColor.rgb  - 0.5));
 
 				 vec4 specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);
 				 float specularTextureValue = 1.0;
-				 specularTextureValue = texture2D(uSpecularTexture, vTexcoord).r;
+				 specularTextureValue = texture2D(u_specularTexture, vTexcoord).r;
 				 float specular;
 
 				 vec3 L;
@@ -170,8 +179,8 @@ var RedColorPhongTextureMaterial;
 					 if(lambertTerm > 0.0){
 						 ld += (uDirectionalLightColor[i] * texelColor * lambertTerm * uDirectionalLightIntensity[i]) * uDirectionalLightColor[i].a;
 						 R = reflect(L, N);
-						 specular = pow( max(dot(R, -L), 0.0), uShininess);
-						 ls +=  specularLightColor * specular * uSpecularPower * specularTextureValue * uDirectionalLightIntensity[i];
+						 specular = pow( max(dot(R, -L), 0.0), u_shininess);
+						 ls +=  specularLightColor * specular * u_specularPower * specularTextureValue * uDirectionalLightIntensity[i];
 					 }
 				 }
 				 vec3 pointDirection;
@@ -188,8 +197,8 @@ var RedColorPhongTextureMaterial;
 						 if(lambertTerm > 0.0){
 							 ld += (uPointLightColor[i] * texelColor * lambertTerm * attenuation * uPointLightIntensity[i]) * uPointLightColor[i].a;
 							 R = reflect(L, N);
-							 specular = pow( max(dot(R, -L), 0.0), uShininess);
-							 ls +=  specularLightColor * specular * uSpecularPower * specularTextureValue * uPointLightIntensity[i] ;
+							 specular = pow( max(dot(R, -L), 0.0), u_shininess);
+							 ls +=  specularLightColor * specular * u_specularPower * specularTextureValue * uPointLightIntensity[i] ;
 						 }
 					 }
 				 }
@@ -202,14 +211,14 @@ var RedColorPhongTextureMaterial;
 			 }
 			 */
 		}
-		vSource = RedGLUtil.getStrFromComment( vSource.toString() );
-		fSource = RedGLUtil.getStrFromComment( fSource.toString() );
+		vSource = RedGLUtil.getStrFromComment(vSource.toString());
+		fSource = RedGLUtil.getStrFromComment(fSource.toString());
 		// console.log(vSource, fSource)
 		PROGRAM_NAME = 'colorPhongTextureProgram';
-		return function ( redGL ) {
-			return RedProgram( redGL, PROGRAM_NAME, vSource, fSource )
+		return function (redGL) {
+			return RedProgram(redGL, PROGRAM_NAME, vSource, fSource)
 		}
 	})();
 	RedColorPhongTextureMaterial.prototype = RedBaseMaterial.prototype
-	Object.freeze( RedColorPhongTextureMaterial )
+	Object.freeze(RedColorPhongTextureMaterial)
 })();

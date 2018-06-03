@@ -46,7 +46,6 @@ var RedSkyBoxMaterial;
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkUniformAndProperty();
 		console.log( this )
-		// Object.seal(this)
 	}
 	makeProgram = (function () {
 		var vSource, fSource;

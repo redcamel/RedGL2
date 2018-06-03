@@ -1,11 +1,5 @@
 [
   {
-    "code": "PROPERTY",
-    "title": "color",
-    "description": "\n컬러설정\n",
-    "return": "hex"
-  },
-  {
     "constructorYn": true,
     "title": "RedColorPhongMaterial",
     "description": "\nRedColorPhongMaterial Instance 생성\n",
@@ -31,8 +25,13 @@
     "return": "RedColorPhongMaterial Instance"
   },
   {
+    "title": "shininess",
+    "description": "기본값 : 16",
+    "return": "shininess"
+  },
+  {
     "title": "specularPower",
     "description": "기본값 : 1",
-    "return": "uint"
+    "return": "Number"
   }
 ]

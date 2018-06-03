@@ -739,10 +739,10 @@ var RedRenderer;
 					gl.cullFace( gl.BACK )
 					gl.clear( gl.DEPTH_BUFFER_BIT );
 				}
-				// 씬렌더 호출
-				self.sceneRender( redGL, gl, tCamera['orthographicYn'], tScene['children'], time, tRenderInfo );
 				// 그리드가 있으면 그림
 				if ( tScene['grid'] ) self.sceneRender( redGL, gl, tCamera['orthographicYn'], [tScene['grid']], time, tRenderInfo );
+				// 씬렌더 호출
+				self.sceneRender( redGL, gl, tCamera['orthographicYn'], tScene['children'], time, tRenderInfo );
 				// asix가 있으면 그림
 				if ( tScene['axis'] ) self.sceneRender( redGL, gl, tCamera['orthographicYn'], tScene['axis']['children'], time, tRenderInfo );
 				// 디버깅 라이트 업데이트
