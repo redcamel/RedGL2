@@ -59,6 +59,15 @@ var RedDefinePropertyInfo;
 				}
 			}
 		})(),
+        reflectionPower: (function () {
+            return {
+                get: function () { return this['_reflectionPower']; },
+                set: function (v) {
+                    if (typeof v != 'number') RedGLUtil.throwFunc('reflectionPower : 숫자만 허용함.')
+                    this['_reflectionPower'] = v
+                }
+            }
+        })(),
 		displacementPower: (function () {
 			return {
 				get: function () { return this['_displacementPower']; },
@@ -77,6 +86,15 @@ var RedDefinePropertyInfo;
 				}
 			}
 		})(),
+        environmentTexture: (function () {
+            return {
+                get: function () { return this['_environmentTexture']; },
+                set: function (v) {
+                    if (v && !(v instanceof RedBitmapCubeTexture)) RedGLUtil.throwFunc('environmentTexture : RedBitmapCubeTexture Instance만 허용됩니다.', '입력값 : ' + v)
+                    this['_environmentTexture'] = v
+                }
+            }
+        })(),
 		normalTexture: (function () {
 			return {
 				get: function () { return this['_normalTexture']; },
@@ -104,6 +122,7 @@ var RedDefinePropertyInfo;
 				}
 			}
 		})()
+
 	}
 	Object.freeze(RedDefinePropertyInfo);
 })();
