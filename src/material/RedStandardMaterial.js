@@ -120,14 +120,14 @@ var RedStandardMaterial;
         vSource = function () {
             /* @preserve
              uniform sampler2D u_displacementTexture;
-             uniform float uDisplacementPower;
+             uniform float u_displacementPower;
 
              varying vec4 vVertexPositionEye4;
              void main(void) {
                  vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
                  vVertexNormal = vec3(uNMatrix * vec4(aVertexNormal,1.0));
                  vVertexPositionEye4 = uMMatrix * vec4(aVertexPosition, 1.0);
-                 vVertexPositionEye4.xyz += normalize(vVertexNormal) * texture2D(u_displacementTexture, vTexcoord).x * uDisplacementPower ;
+                 vVertexPositionEye4.xyz += normalize(vVertexNormal) * texture2D(u_displacementTexture, vTexcoord).x * u_displacementPower ;
 
                  gl_PointSize = uPointSize;
                  gl_Position = uPMatrix * uCameraMatrix * vVertexPositionEye4;
@@ -141,8 +141,8 @@ var RedStandardMaterial;
              uniform sampler2D u_normalTexture;
              uniform sampler2D u_specularTexture;
 
-             uniform float uShininess;
-             uniform float uSpecularPower;
+             uniform float u_shininess;
+             uniform float u_specularPower;
 
              varying vec4 vVertexPositionEye4;
              float fogFactor(float perspectiveFar, float density){
@@ -182,8 +182,8 @@ var RedStandardMaterial;
                      if(lambertTerm > 0.0){
                          ld += (uDirectionalLightColor[i] * texelColor * lambertTerm * uDirectionalLightIntensity[i]) * uDirectionalLightColor[i].a;
                          R = reflect(L, N);
-                         specular = pow( max(dot(R, -L), 0.0), uShininess);
-                         ls +=  specularLightColor * specular * uSpecularPower * specularTextureValue * uDirectionalLightIntensity[i];
+                         specular = pow( max(dot(R, -L), 0.0), u_shininess);
+                         ls +=  specularLightColor * specular * u_specularPower * specularTextureValue * uDirectionalLightIntensity[i];
                      }
                  }
                  vec3 pointDirection;
@@ -200,8 +200,8 @@ var RedStandardMaterial;
                          if(lambertTerm > 0.0){
                              ld += (uPointLightColor[i] * texelColor * lambertTerm * attenuation * uPointLightIntensity[i]) * uPointLightColor[i].a;
                              R = reflect(L, N);
-                             specular = pow( max(dot(R, -L), 0.0), uShininess);
-                             ls +=  specularLightColor * specular * uSpecularPower * specularTextureValue * uPointLightIntensity[i] ;
+                             specular = pow( max(dot(R, -L), 0.0), u_shininess);
+                             ls +=  specularLightColor * specular * u_specularPower * specularTextureValue * uPointLightIntensity[i] ;
                          }
                      }
                  }

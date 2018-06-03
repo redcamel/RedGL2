@@ -122,18 +122,18 @@
 
 
 		//    tScene3D['postEffectManager'].addEffect(RedPostEffect_Invert(this))
-		// tScene3D['postEffectManager'].addEffect(RedPostEffect_Blur(this))
-		tScene3D['postEffectManager'].addEffect(RedPostEffect_Gray(this))
-		// tScene3D['postEffectManager'].addEffect(RedPostEffect_Pixelize(this))
-
-		// tScene3D['postEffectManager'].addEffect(RedPostEffect_Convolution(this,RedPostEffect_Convolution['EMBOSS']))
-		// tScene3D['postEffectManager'].addEffect(RedPostEffect_HueSaturation(this))
-		tScene3D['postEffectManager'].addEffect(RedPostEffect_Vignetting(this))
-		// tScene3D['postEffectManager'].addEffect(RedPostEffect_BrightnessContrast(this))
+		// // tScene3D['postEffectManager'].addEffect(RedPostEffect_Blur(this))
+		// tScene3D['postEffectManager'].addEffect(RedPostEffect_Gray(this))
+		// // tScene3D['postEffectManager'].addEffect(RedPostEffect_Pixelize(this))
+        //
+		// // tScene3D['postEffectManager'].addEffect(RedPostEffect_Convolution(this,RedPostEffect_Convolution['EMBOSS']))
+		// // tScene3D['postEffectManager'].addEffect(RedPostEffect_HueSaturation(this))
+		// tScene3D['postEffectManager'].addEffect(RedPostEffect_Vignetting(this))
+		// // tScene3D['postEffectManager'].addEffect(RedPostEffect_BrightnessContrast(this))
 		var zoomBlur = RedPostEffect_ZoomBlur(this)
-		tScene3D['postEffectManager'].addEffect(zoomBlur)
-		// tScene3D['postEffectManager'].addEffect(RedPostEffect_HalfTone(this))
-		tScene3D['postEffectManager'].addEffect(RedPostEffect_Bloom(this))
+		// tScene3D['postEffectManager'].addEffect(zoomBlur)
+		// // tScene3D['postEffectManager'].addEffect(RedPostEffect_HalfTone(this))
+		// tScene3D['postEffectManager'].addEffect(RedPostEffect_Bloom(this))
 
 
 		tCamera = RedCamera();
@@ -203,7 +203,7 @@
 			var interleaveData, interleaveData2
 			interleaveData = []
 
-			var i = 100000
+			var i = 100
 			while (i--) {
 				var t = Math.random() * 100 - 50
 				interleaveData.push(Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50)
@@ -232,7 +232,7 @@
 			var interleaveData
 			interleaveData = []
 
-			var i = 10000
+			var i = 100
 			while (i--) {
 
 				interleaveData.push(Math.random() * 150 - 75, Math.random() * 150 - 75, Math.random() * 150 - 75)
@@ -254,7 +254,7 @@
 		})();
 		JsonModelLoader(this, 'testJsonModel', '../asset/teapot.json', function (interleaveBuffer, indexBuffer) {
 			console.log('호잇!', interleaveBuffer, indexBuffer)
-			var i = 5000
+			var i = 10000
 			while (i--) {
 				var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer), testMaterial)
 
