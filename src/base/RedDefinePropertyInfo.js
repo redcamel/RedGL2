@@ -121,7 +121,16 @@ var RedDefinePropertyInfo;
 					this['_displacementTexture'] = v
 				}
 			}
-		})()
+		})(),
+		skyBoxTexture: (function () {
+			return {
+				get: function () { return this['_skyBoxTexture']; },
+				set: function (v) {
+					if (v && !(v instanceof RedBitmapCubeTexture)) RedGLUtil.throwFunc('skyBoxTexture : RedBitmapCubeTexture Instance만 허용됩니다.', '입력값 : ' + v)
+					this['_skyBoxTexture'] = v
+				}
+			}
+		})(),
 
 	}
 	Object.freeze(RedDefinePropertyInfo);

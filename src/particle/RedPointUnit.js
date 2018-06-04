@@ -45,7 +45,7 @@ var RedPointUnit;
 		this['geometry'] = RedGeometry( interleaveBuffer )
 		this['material'] = material
 		this['drawMode'] = tGL.POINTS
-		// Object.seal(this)
+
 	}
 	RedGLUtil['copyProto']( RedPointUnit, RedBaseContainer );
 	RedGLUtil['copyProto']( RedPointUnit, RedBaseObject3D );

@@ -85,7 +85,7 @@ var RedGrid;
 		 :DOC*/
 		this['drawMode'] = tGL.LINES
 		this['_UUID'] = RedGL['makeUUID']();
-		// Object.seal(this)
+
 	}
 	/**DOC:
 	 {

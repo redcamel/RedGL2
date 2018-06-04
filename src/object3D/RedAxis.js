@@ -57,7 +57,7 @@ var RedAxis;
 		this['children'].push( root )
 		//
 		this['_UUID'] = RedGL['makeUUID']();
-		// Object.seal(this)
+
 	}
 	/**DOC:
 	 {

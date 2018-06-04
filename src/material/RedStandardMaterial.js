@@ -210,7 +210,7 @@ var RedStandardMaterial;
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkUniformAndProperty();
 		console.log( this )
-		// Object.seal(this)
+
 	}
 	RedStandardMaterial.prototype = RedBaseMaterial.prototype
 	Object.freeze( RedStandardMaterial )

@@ -41,7 +41,7 @@ var RedSkyBox;
 		this['geometry'] = RedBox( redGL );
 		this['material'] = RedSkyBoxMaterial( redGL, RedBitmapCubeTexture( redGL, srcList ) );
 		this['_UUID'] = RedGL['makeUUID']();
-		// Object.seal(this)
+
 	}
 	/**DOC:
 	 {

@@ -143,7 +143,7 @@ var RedBitmapTexture;
 		// }
 
 		if ( src ) loadTexture( gl, this['webglTexture'], src, option );
-		// Object.seal(this);
+		;
 		console.log( this )
 	}
 	RedBitmapTexture.prototype = {};

@@ -58,7 +58,7 @@ var RedSprite3D;
 		this['perspectiveScale'] = true
 		this['useCullFace'] = false
 		this['_UUID'] = RedGL['makeUUID']();
-		// Object.seal(this)
+
 	}
 	/**DOC:
 	 {

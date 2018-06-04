@@ -2,7 +2,7 @@
 var RedSkyBoxMaterial;
 (function () {
 	var vSource, fSource;
-	var PROGRAM_NAME = 'skyboxProgram';
+	var PROGRAM_NAME = 'skyBoxProgram';
 	vSource = function () {
 		/* @preserve
 		 varying vec3 vReflectionCubeCoord;
@@ -15,7 +15,7 @@ var RedSkyBoxMaterial;
 	fSource = function () {
 		/* @preserve
 		 precision mediump float;
-		 uniform samplerCube uSkyboxTexture;
+		 uniform samplerCube u_skyBoxTexture;
 		 varying vec3 vReflectionCubeCoord;
 		 float fogFactor(float perspectiveFar, float density){
 			 float flog_cord = gl_FragCoord.z / gl_FragCoord.w / perspectiveFar;
@@ -26,7 +26,7 @@ var RedSkyBoxMaterial;
 			return mix(fogColor, currentColor, fogFactor);
 		 }
 		 void main(void) {
-			 vec4 finalColor = textureCube(uSkyboxTexture, vReflectionCubeCoord);
+			 vec4 finalColor = textureCube(u_skyBoxTexture, vReflectionCubeCoord);
 			 if(uUseFog) gl_FragColor = fog( fogFactor(uFogDistance, uFogDensity), uFogColor, finalColor);
 			 else gl_FragColor = finalColor;
 		 }
@@ -44,7 +44,7 @@ var RedSkyBoxMaterial;
 			 redGL : [
 				 {type:'RedGL'}
 			 ],
-			 skyboxTexture : [
+			 skyBoxTexture : [
 				 {type:'RedBitmapCubeTexture'}
 			 ]
 		 },
@@ -57,21 +57,22 @@ var RedSkyBoxMaterial;
 		 return : 'RedSkyBoxMaterial Instance'
 	 }
 	 :DOC*/
-	RedSkyBoxMaterial = function ( redGL, skyboxTexture ) {
-		if ( !(this instanceof RedSkyBoxMaterial) ) return new RedSkyBoxMaterial( redGL, skyboxTexture );
+	RedSkyBoxMaterial = function ( redGL, skyBoxTexture ) {
+		if ( !(this instanceof RedSkyBoxMaterial) ) return new RedSkyBoxMaterial( redGL, skyBoxTexture );
 		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedSkyBoxMaterial : RedGL Instance만 허용됩니다.', redGL )
-		if ( skyboxTexture && !(skyboxTexture instanceof RedBitmapCubeTexture) ) RedGLUtil.throwFunc( 'RedSkyBoxMaterial : skyboxTexture - RedBitmapCubeTexture Instance만 허용됩니다.' )
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
 		/**DOC:
 		 {
-			 title :`skyboxTexture`,
+			 title :`skyBoxTexture`,
 			 return : 'RedBitmapCubeTexture'
 		 }
 		 :DOC*/
-		this['skyboxTexture'] = skyboxTexture;
+		this['_skyBoxTexture'] = null;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
+		Object.defineProperty( this, 'skyBoxTexture', RedDefinePropertyInfo['skyBoxTexture'] );
+		this['skyBoxTexture'] = skyBoxTexture;
 		this['program'] = RedProgram['makeProgram']( redGL, PROGRAM_NAME, vSource, fSource );
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkUniformAndProperty();

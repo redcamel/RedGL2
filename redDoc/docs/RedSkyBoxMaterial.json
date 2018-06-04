@@ -9,7 +9,7 @@
           "type": "RedGL"
         }
       ],
-      "skyboxTexture": [
+      "skyBoxTexture": [
         {
           "type": "RedBitmapCubeTexture"
         }
@@ -19,7 +19,7 @@
     "return": "RedSkyBoxMaterial Instance"
   },
   {
-    "title": "skyboxTexture",
+    "title": "skyBoxTexture",
     "return": "RedBitmapCubeTexture"
   }
 ]

@@ -104,7 +104,7 @@ var RedPostEffect_SSAO_DepthMaterial;
 		this['program'] = RedProgram['makeProgram']( redGL, PROGRAM_NAME, vSource, fSource );
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkUniformAndProperty();
-		// Object.seal(this);
+		;
 		console.log( this );
 	}
 	RedPostEffect_SSAO_DepthMaterial.prototype = RedBaseMaterial.prototype

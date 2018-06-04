@@ -27,7 +27,7 @@ var RedRenderer;
 		this['cacheBySamplerIndex'] = []
 		this['cacheState'] = []
 		this['renderDebuger'] = RedRenderDebuger()
-		// Object.seal(this)
+
 		console.log( this )
 	};
 	RedRenderer.prototype = {

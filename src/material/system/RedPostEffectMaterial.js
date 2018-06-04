@@ -14,9 +14,9 @@ var RedPostEffectMaterial;
 	fSource = function () {
 		/* @preserve
 		 precision mediump float;
-		 uniform sampler2D uDiffuseTexture;
+		 uniform sampler2D u_diffuseTexture;
 		 void main(void) {
-			 vec4 finalColor = texture2D(uDiffuseTexture, vTexcoord);
+			 vec4 finalColor = texture2D(u_diffuseTexture, vTexcoord);
 			 gl_FragColor = finalColor;
 		 }
 		 */
@@ -46,7 +46,6 @@ var RedPostEffectMaterial;
 	RedPostEffectMaterial = function ( redGL, diffuseTexture ) {
 		if ( !(this instanceof RedPostEffectMaterial) ) return new RedPostEffectMaterial( redGL, diffuseTexture );
 		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedPostEffectMaterial : RedGL Instance만 허용됩니다.', redGL )
-		if ( !(diffuseTexture instanceof RedBitmapTexture) ) RedGLUtil.throwFunc( 'RedPostEffectMaterial : RedBitmapTexture Instance만 허용됩니다.' )
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
 		/**DOC:
@@ -55,9 +54,11 @@ var RedPostEffectMaterial;
 			 return : 'RedPostEffectMaterial'
 		 }
 		 :DOC*/
-		this['diffuseTexture'] = diffuseTexture;
+		this['_diffuseTexture'] = null
 		/////////////////////////////////////////
 		// 일반 프로퍼티
+		Object.defineProperty( this, 'diffuseTexture', RedDefinePropertyInfo['diffuseTexture'] );
+		this['diffuseTexture'] = diffuseTexture;
 		this['program'] = RedProgram['makeProgram']( redGL, PROGRAM_NAME, vSource, fSource );
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkUniformAndProperty();
