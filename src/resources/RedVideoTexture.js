@@ -57,7 +57,7 @@ var RedVideoTexture;
 		gl.bindTexture( gl.TEXTURE_2D, null );
 	}
 	loadTexture = (function () {
-		return function ( gl,target, texture, src, option ) {
+		return function ( gl, target, texture, src, option ) {
 			var onError, onLoad;
 			var clearEvents;
 			if ( !option ) option = {}
@@ -82,13 +82,14 @@ var RedVideoTexture;
 			if ( src instanceof HTMLCanvasElement ) makeTexture( gl, texture, src, option )
 			else {
 				var video;
-				video = document.createElement(('video'))
+				video = document.createElement( ('video') )
 				video.crossOrigin = 'anonymous'
 				video.src = src;
 				video.style.width = 256
 				video.style.height = 256
 				video.loop = 1
-				video.setAttribute('autoplay','') ;
+				video.muted = true
+				video.setAttribute( 'autoplay', '' );
 				//document.body.appendChild(video)
 				video.style = 'position:absolute;top:0px;left:0px;z-index:200'
 				target['_videoDom'] = video
@@ -146,18 +147,9 @@ var RedVideoTexture;
 		this['webglTexture'] = gl.createTexture();
 		this['atlascoord'] = RedAtlasUV( redGL )
 		this['_UUID'] = RedGL['makeUUID']();
-
-		// if (redGL['_datas']['emptyTexture']) {
-		//     gl.activeTexture(gl.TEXTURE0)
-		//     gl.bindTexture(gl.TEXTURE_2D, redGL['_datas']['emptyTexture']['2d']['webglTexture'])
-		// }
-
-		if ( src ) loadTexture( gl, this,this['webglTexture'], src, option );
-		;
+		if ( src ) loadTexture( gl, this, this['webglTexture'], src, option );
 		console.log( this )
 	}
-	RedVideoTexture.prototype = {
-
-	};
+	RedVideoTexture.prototype = {};
 	Object.freeze( RedVideoTexture );
 })();

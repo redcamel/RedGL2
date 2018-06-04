@@ -1,9 +1,5 @@
 [
   {
-    "title": "diffuseTexture",
-    "return": "RedVideoMaterial"
-  },
-  {
     "constructorYn": true,
     "title": "RedVideoMaterial",
     "description": "\nRedVideoMaterial Instance 생성\n",
@@ -22,5 +18,9 @@
     },
     "example": "\nRedVideoMaterial(RedGL Instance, RedBitmapTexture(RedGL Instance, src))\n",
     "return": "RedVideoMaterial Instance"
+  },
+  {
+    "title": "videoTexture",
+    "return": "RedVideoMaterial"
   }
 ]
