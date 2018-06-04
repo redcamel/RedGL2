@@ -280,5 +280,11 @@ var RedProgram;
 		if ( !redGL['_datas']['RedProgram'] ) redGL['_datas']['RedProgram'] = {};
 		return redGL['_datas']['RedProgram'][key] ? true : false
 	}
+	RedProgram['makeProgram'] = function ( redGL, programName, vSource, fSource ) {
+		vSource = RedGLUtil.getStrFromComment( vSource.toString() );
+		fSource = RedGLUtil.getStrFromComment( fSource.toString() );
+		// console.log(vSource, fSource)
+		return RedProgram( redGL, programName, vSource, fSource )
+	}
 	Object.freeze( RedProgram )
 })();

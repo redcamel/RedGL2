@@ -1,7 +1,37 @@
 "use strict";
 var RedPostEffect_SSAO;
 (function () {
-	var makeProgram;
+	var vSource, fSource;
+	var PROGRAM_NAME = 'RedPostEffect_SSAO_Program';
+	vSource = function () {
+		/* @preserve
+
+		 void main(void) {
+		 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
+		 vTime = uTime;
+		 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
+
+		 }
+		 */
+	}
+	fSource = function () {
+		/* @preserve
+		 precision mediump float;
+		 uniform sampler2D uDiffuseTexture;
+		 uniform sampler2D uSsaoTexture;
+		 uniform float uMode;
+		 void main() {
+		 vec4 finalColor = texture2D(uDiffuseTexture, vTexcoord);
+		 vec4 ssaoColor = texture2D(uSsaoTexture, vTexcoord);
+		 if(uMode == 0.0) gl_FragColor = ssaoColor;
+		 else if(uMode == 1.0) gl_FragColor = finalColor;
+		 else if(uMode == 2.0) {
+		 finalColor.rgb *= ssaoColor.r;
+		 gl_FragColor = finalColor;
+		 };
+		 }
+		 */
+	}
 	/**DOC:
 	 {
 		 constructorYn : true,
@@ -75,7 +105,7 @@ var RedPostEffect_SSAO;
 		})() );
 		this['factor2'] = 0.4
 
-		this['program'] = makeProgram( redGL );
+		this['program'] = RedProgram['makeProgram']( redGL, PROGRAM_NAME, vSource, fSource );
 		this['_UUID'] = RedGL['makeUUID']();
 
 		this.updateTexture = function ( lastFrameBufferTexture, parentFramBufferTexture ) {
@@ -85,50 +115,10 @@ var RedPostEffect_SSAO;
 
 		this['bind'] = RedPostEffectManager.prototype['bind'];
 		this['unbind'] = RedPostEffectManager.prototype['unbind'];
-		this.checkUniformAndProperty();;
+		this.checkUniformAndProperty();
+		;
 		console.log( this );
 	}
-	makeProgram = (function () {
-		var vSource, fSource;
-		var PROGRAM_NAME;
-		vSource = function () {
-			/* @preserve
-
-			 void main(void) {
-			 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
-			 vTime = uTime;
-			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
-
-			 }
-			 */
-		}
-		fSource = function () {
-			/* @preserve
-			 precision mediump float;
-			 uniform sampler2D uDiffuseTexture;
-			 uniform sampler2D uSsaoTexture;
-			 uniform float uMode;
-			 void main() {
-			 vec4 finalColor = texture2D(uDiffuseTexture, vTexcoord);
-			 vec4 ssaoColor = texture2D(uSsaoTexture, vTexcoord);
-			 if(uMode == 0.0) gl_FragColor = ssaoColor;
-			 else if(uMode == 1.0) gl_FragColor = finalColor;
-			 else if(uMode == 2.0) {
-			 finalColor.rgb *= ssaoColor.r;
-			 gl_FragColor = finalColor;
-			 };
-
-
-			 }
-			 */
-		}
-		vSource = RedGLUtil.getStrFromComment( vSource.toString() );
-		fSource = RedGLUtil.getStrFromComment( fSource.toString() );
-		PROGRAM_NAME = 'RedPostEffect_SSAO_Program';
-		return function ( redGL ) {
-			return RedProgram( redGL, PROGRAM_NAME, vSource, fSource );
-		}
-	})();
 	RedPostEffect_SSAO['ONLY_SSAO'] = 0
 	RedPostEffect_SSAO['ONLY_COLOR'] = 1
 	RedPostEffect_SSAO['COLOR_SSAO'] = 2

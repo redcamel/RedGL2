@@ -1,7 +1,36 @@
 "use strict";
 var RedPostEffect_Pixelize;
 (function () {
-	var makeProgram;
+	var vSource, fSource;
+	var PROGRAM_NAME = 'RedPostEffect_Pixelize_Program';
+	vSource = function () {
+		/* @preserve
+		 void main(void) {
+		 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
+		 vResolution = uResolution;
+		 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
+		 }
+		 */
+	}
+	fSource = function () {
+		/* @preserve
+		 precision mediump float;
+		 uniform sampler2D uDiffuseTexture;
+		 uniform float uWidth;
+		 uniform float uHeight;
+		 void main(void) {
+		 vec4 finalColor;
+		 float dx = 1.0/vResolution.x * uWidth;
+		 float dy = 1.0/vResolution.y * uHeight;
+		 vec2 coord = vec2(
+		 dx * (floor(vTexcoord.x / dx) + 0.5),
+		 dy * (floor(vTexcoord.y / dy) + 0.5)
+		 );
+		 finalColor = texture2D(uDiffuseTexture, coord);
+		 gl_FragColor = finalColor;
+		 }
+		 */
+	}
 	/**DOC:
 	 {
 		 constructorYn : true,
@@ -46,54 +75,17 @@ var RedPostEffect_Pixelize;
 		this['height'] = 5;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = makeProgram( redGL );
+		this['program'] = RedProgram['makeProgram']( redGL, PROGRAM_NAME, vSource, fSource );
 		this['_UUID'] = RedGL['makeUUID']();
 		this.updateTexture = function ( lastFrameBufferTexture ) {
 			this['diffuseTexture'] = lastFrameBufferTexture;
 		}
 		this['bind'] = RedPostEffectManager.prototype['bind'];
 		this['unbind'] = RedPostEffectManager.prototype['unbind'];
-		this.checkUniformAndProperty();;
+		this.checkUniformAndProperty();
+		;
 		console.log( this );
 	}
-	makeProgram = (function () {
-		var vSource, fSource;
-		var PROGRAM_NAME;
-		vSource = function () {
-			/* @preserve
-			 void main(void) {
-			 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
-			 vResolution = uResolution;
-			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
-			 }
-			 */
-		}
-		fSource = function () {
-			/* @preserve
-			 precision mediump float;
-			 uniform sampler2D uDiffuseTexture;
-			 uniform float uWidth;
-			 uniform float uHeight;
-			 void main(void) {
-			 vec4 finalColor;
-			 float dx = 1.0/vResolution.x * uWidth;
-			 float dy = 1.0/vResolution.y * uHeight;
-			 vec2 coord = vec2(
-			 dx * (floor(vTexcoord.x / dx) + 0.5),
-			 dy * (floor(vTexcoord.y / dy) + 0.5)
-			 );
-			 finalColor = texture2D(uDiffuseTexture, coord);
-			 gl_FragColor = finalColor;
-			 }
-			 */
-		}
-		vSource = RedGLUtil.getStrFromComment( vSource.toString() );
-		fSource = RedGLUtil.getStrFromComment( fSource.toString() );
-		PROGRAM_NAME = 'RedPostEffect_Pixelize_Program';
-		return function ( redGL ) {
-			return RedProgram( redGL, PROGRAM_NAME, vSource, fSource );
-		}
-	})();
 	RedPostEffect_Pixelize.prototype = RedBaseMaterial.prototype;
 	Object.freeze( RedPostEffect_Pixelize );
 })();

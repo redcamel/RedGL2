@@ -1,7 +1,46 @@
 "use strict";
 var RedPostEffect_ZoomBlur;
 (function () {
-	var makeProgram;
+	var vSource, fSource;
+	var PROGRAM_NAME = 'RedPostEffect_ZoomBlur_Program';
+	vSource = function () {
+		/* @preserve
+		 void main(void) {
+		 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
+		 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
+		 }
+		 */
+	}
+	fSource = function () {
+		/* @preserve
+		 precision mediump float;
+		 uniform sampler2D uDiffuseTexture;
+		 uniform float uCenterX;
+		 uniform float uCenterY;
+		 uniform float uStrength;
+		 float random(vec3 scale, float seed) {
+		 return fract(sin(dot(gl_FragCoord.xyz + seed, scale)) * 43758.5453 + seed);
+		 }
+		 void main(void) {
+		 vec4 finalColor = vec4(0.0);
+		 vec2 center = vec2(uCenterX+0.5,-uCenterY+0.5);
+		 vec2 toCenter = center - vTexcoord ;
+		 float offset = random(vec3(12.9898, 78.233, 151.7182), 0.0);
+		 float total = 0.0;
+
+		 for (float t = 0.0; t <= 30.0; t++) {
+		 float percent = (t + offset) / 30.0;
+		 float weight = 3.0 * (percent - percent * percent);
+		 vec4 sample = texture2D(uDiffuseTexture, vTexcoord + toCenter * percent * uStrength );
+		 sample.rgb *= sample.a;
+		 finalColor += sample * weight;
+		 total += weight;
+		 }
+		 gl_FragColor = finalColor / total;
+		 gl_FragColor.rgb /= gl_FragColor.a + 0.00001;
+		 }
+		 */
+	}
 	/**DOC:
 	 {
 		 constructorYn : true,
@@ -57,64 +96,16 @@ var RedPostEffect_ZoomBlur;
 		this['strength'] = 0.15;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = makeProgram( redGL );
+		this['program'] = RedProgram['makeProgram']( redGL, PROGRAM_NAME, vSource, fSource );
 		this['_UUID'] = RedGL['makeUUID']();
 		this.updateTexture = function ( lastFrameBufferTexture ) {
 			this['diffuseTexture'] = lastFrameBufferTexture
 		}
 		this['bind'] = RedPostEffectManager.prototype['bind'];
 		this['unbind'] = RedPostEffectManager.prototype['unbind'];
-		this.checkUniformAndProperty();;
+		this.checkUniformAndProperty();
 		console.log( this );
 	}
-	makeProgram = (function () {
-		var vSource, fSource;
-		var PROGRAM_NAME;
-		vSource = function () {
-			/* @preserve
-			 void main(void) {
-			 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
-			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
-			 }
-			 */
-		}
-		fSource = function () {
-			/* @preserve
-			 precision mediump float;
-			 uniform sampler2D uDiffuseTexture;
-			 uniform float uCenterX;
-			 uniform float uCenterY;
-			 uniform float uStrength;
-			 float random(vec3 scale, float seed) {
-			 return fract(sin(dot(gl_FragCoord.xyz + seed, scale)) * 43758.5453 + seed);
-			 }
-			 void main(void) {
-			 vec4 finalColor = vec4(0.0);
-			 vec2 center = vec2(uCenterX+0.5,-uCenterY+0.5);
-			 vec2 toCenter = center - vTexcoord ;
-			 float offset = random(vec3(12.9898, 78.233, 151.7182), 0.0);
-			 float total = 0.0;
-
-			 for (float t = 0.0; t <= 30.0; t++) {
-			 float percent = (t + offset) / 30.0;
-			 float weight = 3.0 * (percent - percent * percent);
-			 vec4 sample = texture2D(uDiffuseTexture, vTexcoord + toCenter * percent * uStrength );
-			 sample.rgb *= sample.a;
-			 finalColor += sample * weight;
-			 total += weight;
-			 }
-			 gl_FragColor = finalColor / total;
-			 gl_FragColor.rgb /= gl_FragColor.a + 0.00001;
-			 }
-			 */
-		}
-		vSource = RedGLUtil.getStrFromComment( vSource.toString() );
-		fSource = RedGLUtil.getStrFromComment( fSource.toString() );
-		PROGRAM_NAME = 'RedPostEffect_ZoomBlur_Program';
-		return function ( redGL ) {
-			return RedProgram( redGL, PROGRAM_NAME, vSource, fSource );
-		}
-	})();
 	RedPostEffect_ZoomBlur.prototype = RedBaseMaterial.prototype;
 	Object.freeze( RedPostEffect_ZoomBlur );
 })();

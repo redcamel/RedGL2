@@ -1,7 +1,32 @@
 "use strict";
 var RedPostEffect_Bloom;
 (function () {
-	var makeProgram;
+	var vSource, fSource;
+	var PROGRAM_NAME = 'RedPostEffect_Bloom_Program';
+	vSource = function () {
+		/* @preserve
+		 void main(void) {
+		 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
+		 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
+		 }
+		 */
+	}
+	fSource = function () {
+		/* @preserve
+		 precision mediump float;
+		 uniform sampler2D uDiffuseTexture;
+		 uniform sampler2D uBlurTexture;
+
+		 uniform float uExposure;
+		 uniform float uBloomStrength;
+		 void main() {
+		 vec4 finalColor = texture2D(uDiffuseTexture, vTexcoord);
+		 vec4 thresholdColor = finalColor;
+		 vec4 blurColor = texture2D(uBlurTexture, vTexcoord);
+		 gl_FragColor = (finalColor  + blurColor * uBloomStrength) * uExposure ;
+		 }
+		 */
+	}
 	/**DOC:
 	 {
 		 constructorYn : true,
@@ -25,7 +50,7 @@ var RedPostEffect_Bloom;
 		this['blurTexture'] = null;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = makeProgram( redGL );
+		this['program'] = RedProgram['makeProgram']( redGL, PROGRAM_NAME, vSource, fSource );
 		this['_UUID'] = RedGL['makeUUID']();
 		this['process'] = [
 			RedPostEffect_BloomThreshold( redGL ),
@@ -106,43 +131,10 @@ var RedPostEffect_Bloom;
 		}
 		this['bind'] = RedPostEffectManager.prototype['bind'];
 		this['unbind'] = RedPostEffectManager.prototype['unbind'];
-		this.checkUniformAndProperty();;
+		this.checkUniformAndProperty();
+		;
 		console.log( this );
 	}
-	makeProgram = (function () {
-		var vSource, fSource;
-		var PROGRAM_NAME;
-		vSource = function () {
-			/* @preserve
-			 void main(void) {
-			 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
-			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
-			 }
-			 */
-		}
-		fSource = function () {
-			/* @preserve
-			 precision mediump float;
-			 uniform sampler2D uDiffuseTexture;
-			 uniform sampler2D uBlurTexture;
-
-			 uniform float uExposure;
-			 uniform float uBloomStrength;
-			 void main() {
-			 vec4 finalColor = texture2D(uDiffuseTexture, vTexcoord);
-			 vec4 thresholdColor = finalColor;
-			 vec4 blurColor = texture2D(uBlurTexture, vTexcoord);
-			 gl_FragColor = (finalColor  + blurColor * uBloomStrength) * uExposure ;
-			 }
-			 */
-		}
-		vSource = RedGLUtil.getStrFromComment( vSource.toString() );
-		fSource = RedGLUtil.getStrFromComment( fSource.toString() );
-		PROGRAM_NAME = 'RedPostEffect_Bloom_Program';
-		return function ( redGL ) {
-			return RedProgram( redGL, PROGRAM_NAME, vSource, fSource );
-		}
-	})();
 	RedPostEffect_Bloom.prototype = RedBaseMaterial.prototype;
 	Object.freeze( RedPostEffect_Bloom );
 })();

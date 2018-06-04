@@ -2,7 +2,31 @@
 
 var RedPostEffect_BrightnessContrast;
 (function () {
-	var makeProgram;
+	var vSource, fSource;
+	var PROGRAM_NAME = 'RedPostEffect_BrightnessContrast_Program';
+	vSource = function () {
+		/* @preserve
+		 void main(void) {
+		 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
+		 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
+		 }
+		 */
+	}
+	fSource = function () {
+		/* @preserve
+		 precision mediump float;
+		 uniform sampler2D uDiffuseTexture;
+		 uniform float uBrightness;
+		 uniform float uContrast;
+		 void main(void) {
+		 vec4 finalColor = texture2D(uDiffuseTexture, vTexcoord );
+		 finalColor.rgb += uBrightness;
+		 if (uContrast > 0.0) finalColor.rgb = (finalColor.rgb - 0.5) / (1.0 - uContrast) + 0.5;
+		 else finalColor.rgb = (finalColor.rgb - 0.5) * (1.0 + uContrast) + 0.5;
+		 gl_FragColor = finalColor;
+		 }
+		 */
+	}
 	/**DOC:
 	 {
 		 constructorYn : true,
@@ -47,49 +71,16 @@ var RedPostEffect_BrightnessContrast;
 		this['contrast'] = 0;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = makeProgram( redGL );
+		this['program'] = RedProgram['makeProgram']( redGL, PROGRAM_NAME, vSource, fSource );
 		this['_UUID'] = RedGL['makeUUID']();
 		this.updateTexture = function ( lastFrameBufferTexture ) {
 			this['diffuseTexture'] = lastFrameBufferTexture;
 		}
 		this['bind'] = RedPostEffectManager.prototype['bind'];
 		this['unbind'] = RedPostEffectManager.prototype['unbind'];
-		this.checkUniformAndProperty();;
+		this.checkUniformAndProperty();
 		console.log( this );
 	}
-	makeProgram = (function () {
-		var vSource, fSource;
-		var PROGRAM_NAME;
-		vSource = function () {
-			/* @preserve
-			 void main(void) {
-			 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
-			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
-			 }
-			 */
-		}
-		fSource = function () {
-			/* @preserve
-			 precision mediump float;
-			 uniform sampler2D uDiffuseTexture;
-			 uniform float uBrightness;
-			 uniform float uContrast;
-			 void main(void) {
-			 vec4 finalColor = texture2D(uDiffuseTexture, vTexcoord );
-			 finalColor.rgb += uBrightness;
-			 if (uContrast > 0.0) finalColor.rgb = (finalColor.rgb - 0.5) / (1.0 - uContrast) + 0.5;
-			 else finalColor.rgb = (finalColor.rgb - 0.5) * (1.0 + uContrast) + 0.5;
-			 gl_FragColor = finalColor;
-			 }
-			 */
-		}
-		vSource = RedGLUtil.getStrFromComment( vSource.toString() );
-		fSource = RedGLUtil.getStrFromComment( fSource.toString() );
-		PROGRAM_NAME = 'RedPostEffect_BrightnessContrast_Program';
-		return function ( redGL ) {
-			return RedProgram( redGL, PROGRAM_NAME, vSource, fSource );
-		}
-	})();
 	RedPostEffect_BrightnessContrast.prototype = RedBaseMaterial.prototype;
 	RedPostEffect_BrightnessContrast['NORMAL'] = [
 		0, 0, 0,

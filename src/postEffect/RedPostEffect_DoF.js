@@ -1,7 +1,40 @@
 "use strict";
 var RedPostEffect_DoF;
 (function () {
-	var makeProgram;
+	var vSource, fSource;
+	var PROGRAM_NAME = 'RedPostEffect_DoF_Program';
+	vSource = function () {
+		/* @preserve
+
+		 void main(void) {
+		 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
+		 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
+
+		 }
+		 */
+	}
+	fSource = function () {
+		/* @preserve
+		 precision mediump float;
+		 uniform sampler2D uDiffuseTexture;
+		 uniform sampler2D uBlurTexture;
+		 uniform sampler2D uDepthTexture;
+
+
+
+		 uniform float uDistance;
+		 void main() {
+		 vec4 finalColor = texture2D(uDiffuseTexture, vTexcoord);
+		 vec4 blurColor = texture2D(uBlurTexture, vTexcoord);
+		 vec4 depthColor = texture2D(uDepthTexture, vTexcoord);
+		 finalColor.rgb *= (depthColor.r);
+		 blurColor.rgb *= (1.0-depthColor.r);
+		 gl_FragColor =  (finalColor + blurColor) ;
+
+
+		 }
+		 */
+	}
 	/**DOC:
 	 {
 		 constructorYn : true,
@@ -34,7 +67,7 @@ var RedPostEffect_DoF;
 		this['depthTexture'] = null;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = makeProgram( redGL );
+		this['program'] = RedProgram['makeProgram']( redGL, PROGRAM_NAME, vSource, fSource );
 		this['_UUID'] = RedGL['makeUUID']();
 		this['process'] = [
 			RedPostEffect_BlurX( redGL ),
@@ -92,51 +125,10 @@ var RedPostEffect_DoF;
 		this['bind'] = RedPostEffectManager.prototype['bind'];
 		this['unbind'] = RedPostEffectManager.prototype['unbind'];
 
-		this.checkUniformAndProperty();;
+		this.checkUniformAndProperty();
+		;
 		console.log( this );
 	}
-	makeProgram = (function () {
-		var vSource, fSource;
-		var PROGRAM_NAME;
-		vSource = function () {
-			/* @preserve
-
-			 void main(void) {
-			 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
-			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
-
-			 }
-			 */
-		}
-		fSource = function () {
-			/* @preserve
-			 precision mediump float;
-			 uniform sampler2D uDiffuseTexture;
-			 uniform sampler2D uBlurTexture;
-			 uniform sampler2D uDepthTexture;
-
-
-
-			 uniform float uDistance;
-			 void main() {
-			 vec4 finalColor = texture2D(uDiffuseTexture, vTexcoord);
-			 vec4 blurColor = texture2D(uBlurTexture, vTexcoord);
-			 vec4 depthColor = texture2D(uDepthTexture, vTexcoord);
-			 finalColor.rgb *= (depthColor.r);
-			 blurColor.rgb *= (1.0-depthColor.r);
-			 gl_FragColor =  (finalColor + blurColor) ;
-
-
-			 }
-			 */
-		}
-		vSource = RedGLUtil.getStrFromComment( vSource.toString() );
-		fSource = RedGLUtil.getStrFromComment( fSource.toString() );
-		PROGRAM_NAME = 'RedPostEffect_DoF_Program';
-		return function ( redGL ) {
-			return RedProgram( redGL, PROGRAM_NAME, vSource, fSource );
-		}
-	})();
 	RedPostEffect_DoF.prototype = RedBaseMaterial.prototype;
 	Object.freeze( RedPostEffect_DoF );
 })();

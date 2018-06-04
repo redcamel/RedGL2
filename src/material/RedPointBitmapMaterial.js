@@ -1,7 +1,39 @@
 "use strict";
 var RedPointBitmapMaterial;
 (function () {
-	var makeProgram;
+	var vSource, fSource;
+	var PROGRAM_NAME = 'pointBitmapProgram';
+	vSource = function () {
+		/* @preserve
+		 void main(void) {
+			 gl_PointSize = aPointSize;
+			 gl_Position = uPMatrix * uCameraMatrix* uMMatrix * vec4(aVertexPosition, 1.0);
+		 }
+		 */
+	}
+	fSource = function () {
+		/* @preserve
+		 precision mediump float;
+		 uniform sampler2D uDiffuseTexture;
+		 uniform float uAlphaTest;
+		 float fogFactor(float perspectiveFar, float density){
+			 float flog_cord = gl_FragCoord.z / gl_FragCoord.w / perspectiveFar;
+			 float fog = flog_cord * density;
+			 if(1.0 - fog < 0.0) discard;
+			 return clamp(1.0 - fog, 0.0,  1.0);
+		 }
+		 vec4 fog(float fogFactor, vec4 fogColor, vec4 currentColor) {
+			return mix(fogColor, currentColor, fogFactor);
+		 }
+		 void main(void) {
+			 vec4 finalColor = texture2D(uDiffuseTexture, vec2(gl_PointCoord.x, - gl_PointCoord.y));
+			 finalColor.rgb *= finalColor.a;
+			 if(finalColor.a < uAlphaTest) discard;
+			 if(uUseFog) gl_FragColor = fog( fogFactor(uFogDistance, uFogDensity), uFogColor, finalColor);
+			 else gl_FragColor = finalColor;
+		 }
+		 */
+	}
 	/**DOC:
 	 {
 		 constructorYn : true,
@@ -35,7 +67,7 @@ var RedPointBitmapMaterial;
 		this['diffuseTexture'] = diffuseTexture;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = makeProgram( redGL );
+		this['program'] = RedProgram['makeProgram']( redGL, PROGRAM_NAME, vSource, fSource );
 		/**DOC:
 		 {
 			 title :`alphaTest`,
@@ -52,49 +84,6 @@ var RedPointBitmapMaterial;
 		// Object.seal(this)
 		console.log( this )
 	}
-	makeProgram = (function () {
-		var vSource, fSource;
-		var PROGRAM_NAME;
-		vSource = function () {
-			/* @preserve
-			 void main(void) {
-				 gl_PointSize = aPointSize;
-				 gl_Position = uPMatrix * uCameraMatrix* uMMatrix * vec4(aVertexPosition, 1.0);
-			 }
-			 */
-		}
-		fSource = function () {
-			/* @preserve
-			 precision mediump float;
-			 uniform sampler2D uDiffuseTexture;
-			 uniform float uAlphaTest;
-			 float fogFactor(float perspectiveFar, float density){
-				 float flog_cord = gl_FragCoord.z / gl_FragCoord.w / perspectiveFar;
-				 float fog = flog_cord * density;
-				 if(1.0 - fog < 0.0) discard;
-				 return clamp(1.0 - fog, 0.0,  1.0);
-			 }
-			 vec4 fog(float fogFactor, vec4 fogColor, vec4 currentColor) {
-			    return mix(fogColor, currentColor, fogFactor);
-			 }
-			 void main(void) {
-				 vec4 finalColor = texture2D(uDiffuseTexture, vec2(gl_PointCoord.x, - gl_PointCoord.y));
-				 finalColor.rgb *= finalColor.a;
-				 if(finalColor.a < uAlphaTest) discard;
-				 if(uUseFog) gl_FragColor = fog( fogFactor(uFogDistance, uFogDensity), uFogColor, finalColor);
-				 else gl_FragColor = finalColor;
-			 }
-			 */
-		}
-		vSource = RedGLUtil.getStrFromComment( vSource.toString() );
-		fSource = RedGLUtil.getStrFromComment( fSource.toString() );
-		// console.log(vSource, fSource)
-		PROGRAM_NAME = 'pointBitmapProgram';
-		return function ( redGL ) {
-			return RedProgram( redGL, PROGRAM_NAME, vSource, fSource )
-
-		}
-	})();
 	RedPointBitmapMaterial.prototype = RedBaseMaterial.prototype
 	Object.freeze( RedPointBitmapMaterial )
 })();

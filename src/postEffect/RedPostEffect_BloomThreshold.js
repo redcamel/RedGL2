@@ -1,7 +1,30 @@
 "use strict";
 var RedPostEffect_BloomThreshold;
 (function () {
-	var makeProgram;
+	var vSource, fSource;
+	var PROGRAM_NAME;
+	vSource = function () {
+		/* @preserve
+		 void main(void) {
+		 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
+		 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
+		 }
+		 */
+	}
+	fSource = function () {
+		/* @preserve
+		 precision highp float;
+		 uniform sampler2D uDiffuseTexture;
+		 uniform float uThreshold;
+
+		 void main() {
+		 vec4 finalColor = texture2D(uDiffuseTexture, vTexcoord);
+		 if(0.2126 * finalColor.r + 0.7152 * finalColor.g + 0.0722 * finalColor.b < uThreshold)  finalColor.r = finalColor.g = finalColor.b = 0.0;
+		 gl_FragColor = finalColor;
+		 }
+		 */
+	}
+	PROGRAM_NAME = 'RedPostEffect_BloomThreshold_Program';
 	/**DOC:
 	 {
 		 constructorYn : true,
@@ -35,47 +58,17 @@ var RedPostEffect_BloomThreshold;
 		this['threshold'] = 0.24;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = makeProgram( redGL );
+		this['program'] = RedProgram['makeProgram']( redGL, PROGRAM_NAME, vSource, fSource );
 		this['_UUID'] = RedGL['makeUUID']();
 		this.updateTexture = function ( lastFrameBufferTexture ) {
 			this['diffuseTexture'] = lastFrameBufferTexture;
 		}
 		this['bind'] = RedPostEffectManager.prototype['bind'];
 		this['unbind'] = RedPostEffectManager.prototype['unbind'];
-		this.checkUniformAndProperty();;
+		this.checkUniformAndProperty();
+		;
 		console.log( this );
 	}
-	makeProgram = (function () {
-		var vSource, fSource;
-		var PROGRAM_NAME;
-		vSource = function () {
-			/* @preserve
-			 void main(void) {
-			 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
-			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
-			 }
-			 */
-		}
-		fSource = function () {
-			/* @preserve
-			 precision highp float;
-			 uniform sampler2D uDiffuseTexture;
-			 uniform float uThreshold;
-
-			 void main() {
-			 vec4 finalColor = texture2D(uDiffuseTexture, vTexcoord);
-			 if(0.2126 * finalColor.r + 0.7152 * finalColor.g + 0.0722 * finalColor.b < uThreshold)  finalColor.r = finalColor.g = finalColor.b = 0.0;
-			 gl_FragColor = finalColor;
-			 }
-			 */
-		}
-		vSource = RedGLUtil.getStrFromComment( vSource.toString() );
-		fSource = RedGLUtil.getStrFromComment( fSource.toString() );
-		PROGRAM_NAME = 'RedPostEffect_BloomThreshold_Program';
-		return function ( redGL ) {
-			return RedProgram( redGL, PROGRAM_NAME, vSource, fSource );
-		}
-	})();
 	RedPostEffect_BloomThreshold.prototype = RedBaseMaterial.prototype;
 	Object.freeze( RedPostEffect_BloomThreshold );
 })();

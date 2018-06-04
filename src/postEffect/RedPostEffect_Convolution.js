@@ -1,7 +1,44 @@
 "use strict";
 var RedPostEffect_Convolution;
 (function () {
-	var makeProgram;
+	var vSource, fSource;
+	var PROGRAM_NAME = 'RedPostEffect_Convolution_Program';
+	vSource = function () {
+		/* @preserve
+		 void main(void) {
+		 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
+		 vResolution = uResolution;
+		 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
+		 }
+		 */
+	}
+	fSource = function () {
+		/* @preserve
+		 precision mediump float;
+		 uniform sampler2D uDiffuseTexture;
+		 uniform mat3 uKernel;
+		 uniform float uKernelWeight;
+		 void main(void) {
+		 vec2 perPX = vec2(1.0/vResolution.x, 1.0/vResolution.y);
+		 vec4 finalColor = vec4(0.0);
+		 finalColor += texture2D(uDiffuseTexture, vTexcoord + perPX * vec2(-1.0, -1.0)) * uKernel[0][0] ;
+		 finalColor += texture2D(uDiffuseTexture, vTexcoord + perPX * vec2( 0.0, -1.0)) * uKernel[0][1] ;
+		 finalColor += texture2D(uDiffuseTexture, vTexcoord + perPX * vec2( 1.0, -1.0)) * uKernel[0][2] ;
+		 finalColor += texture2D(uDiffuseTexture, vTexcoord + perPX * vec2(-1.0,  0.0)) * uKernel[1][0] ;
+		 finalColor += texture2D(uDiffuseTexture, vTexcoord + perPX * vec2( 0.0,  0.0)) * uKernel[1][1] ;
+		 finalColor += texture2D(uDiffuseTexture, vTexcoord + perPX * vec2( 1.0,  0.0)) * uKernel[1][2] ;
+		 finalColor += texture2D(uDiffuseTexture, vTexcoord + perPX * vec2(-1.0,  1.0)) * uKernel[2][0] ;
+		 finalColor += texture2D(uDiffuseTexture, vTexcoord + perPX * vec2( 0.0,  1.0)) * uKernel[2][1] ;
+		 finalColor += texture2D(uDiffuseTexture, vTexcoord + perPX * vec2( 1.0,  1.0)) * uKernel[2][2] ;
+		 highp float weight;
+		 weight = uKernelWeight;
+		 if (0.01 > weight) {
+		 weight = 1.0;
+		 }
+		 gl_FragColor = vec4((finalColor / uKernelWeight).rgb, 1.0);
+		 }
+		 */
+	}
 	/**DOC:
 	 {
 		 constructorYn : true,
@@ -56,63 +93,17 @@ var RedPostEffect_Convolution;
 		})() );
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = makeProgram( redGL );
+		this['program'] = RedProgram['makeProgram']( redGL, PROGRAM_NAME, vSource, fSource );
 		this['_UUID'] = RedGL['makeUUID']();
 		this.updateTexture = function ( lastFrameBufferTexture ) {
 			this['diffuseTexture'] = lastFrameBufferTexture;
 		}
 		this['bind'] = RedPostEffectManager.prototype['bind'];
 		this['unbind'] = RedPostEffectManager.prototype['unbind'];
-		this.checkUniformAndProperty();;
+		this.checkUniformAndProperty();
+		;
 		console.log( this );
 	}
-	makeProgram = (function () {
-		var vSource, fSource;
-		var PROGRAM_NAME;
-		vSource = function () {
-			/* @preserve
-			 void main(void) {
-			 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
-			 vResolution = uResolution;
-			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
-			 }
-			 */
-		}
-		fSource = function () {
-			/* @preserve
-			 precision mediump float;
-			 uniform sampler2D uDiffuseTexture;
-			 uniform mat3 uKernel;
-			 uniform float uKernelWeight;
-			 void main(void) {
-			 vec2 perPX = vec2(1.0/vResolution.x, 1.0/vResolution.y);
-			 vec4 finalColor = vec4(0.0);
-			 finalColor += texture2D(uDiffuseTexture, vTexcoord + perPX * vec2(-1.0, -1.0)) * uKernel[0][0] ;
-			 finalColor += texture2D(uDiffuseTexture, vTexcoord + perPX * vec2( 0.0, -1.0)) * uKernel[0][1] ;
-			 finalColor += texture2D(uDiffuseTexture, vTexcoord + perPX * vec2( 1.0, -1.0)) * uKernel[0][2] ;
-			 finalColor += texture2D(uDiffuseTexture, vTexcoord + perPX * vec2(-1.0,  0.0)) * uKernel[1][0] ;
-			 finalColor += texture2D(uDiffuseTexture, vTexcoord + perPX * vec2( 0.0,  0.0)) * uKernel[1][1] ;
-			 finalColor += texture2D(uDiffuseTexture, vTexcoord + perPX * vec2( 1.0,  0.0)) * uKernel[1][2] ;
-			 finalColor += texture2D(uDiffuseTexture, vTexcoord + perPX * vec2(-1.0,  1.0)) * uKernel[2][0] ;
-			 finalColor += texture2D(uDiffuseTexture, vTexcoord + perPX * vec2( 0.0,  1.0)) * uKernel[2][1] ;
-			 finalColor += texture2D(uDiffuseTexture, vTexcoord + perPX * vec2( 1.0,  1.0)) * uKernel[2][2] ;
-			 highp float weight;
-			 weight = uKernelWeight;
-			 if (0.01 > weight) {
-			 weight = 1.0;
-			 }
-			 gl_FragColor = vec4((finalColor / uKernelWeight).rgb, 1.0);
-			 }
-			 */
-		}
-		vSource = RedGLUtil.getStrFromComment( vSource.toString() );
-		fSource = RedGLUtil.getStrFromComment( fSource.toString() );
-		PROGRAM_NAME = 'RedPostEffect_Convolution_Program';
-		return function ( redGL ) {
-			return RedProgram( redGL, PROGRAM_NAME, vSource, fSource );
-
-		}
-	})();
 	RedPostEffect_Convolution.prototype = RedBaseMaterial.prototype;
 	/**DOC:
 	 {

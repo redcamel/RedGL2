@@ -1,7 +1,37 @@
 "use strict";
 var RedSkyBoxMaterial;
 (function () {
-	var makeProgram;
+	var vSource, fSource;
+	var PROGRAM_NAME = 'skyboxProgram';
+	vSource = function () {
+		/* @preserve
+		 varying vec3 vReflectionCubeCoord;
+		 void main(void) {
+			 vReflectionCubeCoord = (uMMatrix *vec4(-aVertexPosition, 0.0)).xyz;
+			 gl_Position = uPMatrix * uCameraMatrix * uMMatrix * vec4(aVertexPosition, 1.0);
+		 }
+		 */
+	}
+	fSource = function () {
+		/* @preserve
+		 precision mediump float;
+		 uniform samplerCube uSkyboxTexture;
+		 varying vec3 vReflectionCubeCoord;
+		 float fogFactor(float perspectiveFar, float density){
+			 float flog_cord = gl_FragCoord.z / gl_FragCoord.w / perspectiveFar;
+			 float fog = flog_cord * density;
+			 return clamp(1.0 - fog, 0.0,  1.0);
+		 }
+		 vec4 fog(float fogFactor, vec4 fogColor, vec4 currentColor) {
+			return mix(fogColor, currentColor, fogFactor);
+		 }
+		 void main(void) {
+			 vec4 finalColor = textureCube(uSkyboxTexture, vReflectionCubeCoord);
+			 if(uUseFog) gl_FragColor = fog( fogFactor(uFogDistance, uFogDensity), uFogColor, finalColor);
+			 else gl_FragColor = finalColor;
+		 }
+		 */
+	}
 	/**DOC:
 	 {
 		 constructorYn : true,
@@ -42,52 +72,11 @@ var RedSkyBoxMaterial;
 		this['skyboxTexture'] = skyboxTexture;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = makeProgram( redGL );
+		this['program'] = RedProgram['makeProgram']( redGL, PROGRAM_NAME, vSource, fSource );
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkUniformAndProperty();
 		console.log( this )
 	}
-	makeProgram = (function () {
-		var vSource, fSource;
-		var PROGRAM_NAME;
-		vSource = function () {
-			/* @preserve
-			 varying vec3 vReflectionCubeCoord;
-			 void main(void) {
-				 vReflectionCubeCoord = (uMMatrix *vec4(-aVertexPosition, 0.0)).xyz;
-				 gl_Position = uPMatrix * uCameraMatrix * uMMatrix * vec4(aVertexPosition, 1.0);
-			 }
-			 */
-		}
-		fSource = function () {
-			/* @preserve
-			 precision mediump float;
-			 uniform samplerCube uSkyboxTexture;
-             varying vec3 vReflectionCubeCoord;
-			 float fogFactor(float perspectiveFar, float density){
-				 float flog_cord = gl_FragCoord.z / gl_FragCoord.w / perspectiveFar;
-				 float fog = flog_cord * density;
-				 return clamp(1.0 - fog, 0.0,  1.0);
-			 }
-			 vec4 fog(float fogFactor, vec4 fogColor, vec4 currentColor) {
-			    return mix(fogColor, currentColor, fogFactor);
-			 }
-			 void main(void) {
-				 vec4 finalColor = textureCube(uSkyboxTexture, vReflectionCubeCoord);
-				 if(uUseFog) gl_FragColor = fog( fogFactor(uFogDistance, uFogDensity), uFogColor, finalColor);
-				 else gl_FragColor = finalColor;
-			 }
-			 */
-		}
-		vSource = RedGLUtil.getStrFromComment( vSource.toString() );
-		fSource = RedGLUtil.getStrFromComment( fSource.toString() );
-		// console.log(vSource, fSource)
-		PROGRAM_NAME = 'skyboxProgram';
-		return function ( redGL ) {
-			return RedProgram( redGL, PROGRAM_NAME, vSource, fSource )
-
-		}
-	})();
 	RedSkyBoxMaterial.prototype = RedBaseMaterial.prototype
 	Object.freeze( RedSkyBoxMaterial )
 })();
