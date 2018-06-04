@@ -44,7 +44,8 @@
 </script>
 <hr style="border:0px;border-top:1px solid #333">
 <script>
-	var i, testList;
+	var len, testList;
+	var index
 	testList = [
 		"RedGL.html",
 		"RedScene.html",
@@ -63,16 +64,15 @@
 		"material/RedColorPhongMaterial.html",
 		"material/RedColorPhongTextureMaterial.html",
 		"material/RedBitmapMaterial.html",
+		"material/RedStandardMaterial.html",
+		"material/RedEnvironmentMaterial.html",
 		"RedCamera.html"
 	]
-	i = testList.length;
-	//        testList.sort(function (a, b) {
-	//            if (a > b) return -1
-	//            if (a < b) return 1
-	//            return 0
-	//        })
-	testList.forEach( function ( v, index ) {
+	len = testList.length;
+	index = 0;
+	var run = function () {
 		var tFrame, tContainer, tTitle, tStyle;
+		var v = testList[index]
 		tContainer = document.createElement( 'span' ),
 			document.body.appendChild( tContainer ),
 			tStyle = tContainer.style,
@@ -108,13 +108,13 @@
 					tDate = new Date( tDate )
 					tDate = tDate.getFullYear() + '.' + (tDate.getMonth() + 1) + '.' + tDate.getDate() + ' ' + tDate.getHours() + ':' + tDate.getMinutes()
 					title.innerHTML = '<a href = "' + t0 + '"><div style="padding:15px">' + t0.split( '/' )[t0.split( '/' ).length - 1] + ' - <span style="color:#ccc;font-size:11px">' + tDate + '</span></div></a>'
+					index++
+					if ( index != len ) requestAnimationFrame(run)
 				}
 			})() );
-		var tSrc = v
-		setTimeout( function () {
-			tFrame.src = tSrc
-		}, index * 500 )
-	} )
+		tFrame.src = v
+	}
+	run()
 </script>
 <div style="clear:both"></div>
 <!-- <hr style="border:0px;border-top:1px solid #222"> -->
