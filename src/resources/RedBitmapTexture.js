@@ -136,14 +136,7 @@ var RedBitmapTexture;
 		this['webglTexture'] = gl.createTexture();
 		this['atlascoord'] = RedAtlasUV( redGL )
 		this['_UUID'] = RedGL['makeUUID']();
-
-		// if (redGL['_datas']['emptyTexture']) {
-		//     gl.activeTexture(gl.TEXTURE0)
-		//     gl.bindTexture(gl.TEXTURE_2D, redGL['_datas']['emptyTexture']['2d']['webglTexture'])
-		// }
-
 		if ( src ) loadTexture( gl, this['webglTexture'], src, option );
-		;
 		console.log( this )
 	}
 	RedBitmapTexture.prototype = {};

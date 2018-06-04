@@ -33,11 +33,11 @@ RedGL( document.createElement( 'canvas' ), function ( v ) {
 				unit.run( t0 == t1 )
 			}, true ),
 			redTest( "생성시 입력변수에 따른 interleaveBuffer 고유키값이 생성되는지 확인 : RedSphere( tRedGL, 2)", function ( unit, title ) {
-				var t0 = RedSphere( tRedGL, 2,3,4,5,6,7,8 );
+				var t0 = RedSphere( tRedGL, 2, 3, 4, 5, 6, 7, 8 );
 				unit.run( t0['interleaveBuffer']['key'] )
 			}, 'RedSphere_2_3_4_5_6_7_8_interleaveBuffer' ),
 			redTest( "생성시 입력변수에 따른 indexBuffer 고유키값이 생성되는지 확인 : RedSphere( tRedGL, 2)", function ( unit, title ) {
-				var t0 = RedSphere( tRedGL, 2,3,4,5,6,7,8 );
+				var t0 = RedSphere( tRedGL, 2, 3, 4, 5, 6, 7, 8 );
 				unit.run( t0['indexBuffer']['key'] )
 			}, 'RedSphere_2_3_4_5_6_7_8_indexBuffer' )
 		)

@@ -136,12 +136,6 @@ var RedBitmapCubeTexture;
 		this['webglTexture'] = gl.createTexture();
 		this['atlascoord'] = RedAtlasUV( redGL )
 		this['_UUID'] = RedGL['makeUUID']();
-
-		// if (redGL['_datas']['emptyTexture']) {
-		//     gl.activeTexture(gl.TEXTURE0 + 1)
-		//     gl.bindTexture(gl.TEXTURE_CUBE_MAP, redGL['_datas']['emptyTexture']['3d']['webglTexture'])
-		// }
-
 		loadTexture( gl, this['webglTexture'], srcList, option );
 		console.log( this )
 	}

@@ -40,20 +40,20 @@ var RedDirectionalLight;
 			 return : 'Number'
 		 }
 		 :DOC*/
-		this['intensity'] = 1
+		this['_intensity'] = 1
 
 		// 일반 프로퍼티
 		/**DOC:
 		 {
 			 title :`alpha`,
 			 description : `
-				 기본값 : 0.1
+				 기본값 : 1
 			 `,
 			 return : 'Number'
 		 }
 		 :DOC*/
-		Object.defineProperty( this, 'color', RedDefinePropertyInfo['color'] );
 		Object.defineProperty( this, 'alpha', RedDefinePropertyInfo['alpha'] );
+		Object.defineProperty( this, 'color', RedDefinePropertyInfo['color'] );
 		this['alpha'] = alpha == undefined ? 1 : alpha
 		this['color'] = hexColor ? hexColor : '#fff'
 		/**DOC:
@@ -90,19 +90,6 @@ var RedDirectionalLight;
 		 :DOC*/
 		this['z'] = 0;
 		this['_UUID'] = RedGL['makeUUID']();
-
-		/**DOC:
-		 {
-			 title :`type`,
-			 description : `RedDirectionalLight['type']`,
-			 return : 'String'
-		 }
-		 :DOC*/
-		Object.defineProperty( this, 'type', {
-			configurable: false,
-			writable: false,
-			value: RedDirectionalLight['type']
-		} )
 		/**DOC:
 		 {
 			 title :`debug`,
@@ -133,6 +120,18 @@ var RedDirectionalLight;
 	 :DOC*/
 	RedDirectionalLight['type'] = 'RedDirectionalLight'
 	RedDirectionalLight.prototype = new RedBaseLight
+	/**DOC:
+	 {
+		 title :`type`,
+		 description : `RedDirectionalLight['type']`,
+		 return : 'String'
+	 }
+	 :DOC*/
+	Object.defineProperty( RedDirectionalLight.prototype, 'type', {
+		configurable: false,
+		writable: false,
+		value: RedDirectionalLight['type']
+	} )
 	Object.freeze( RedDirectionalLight )
 
 })()

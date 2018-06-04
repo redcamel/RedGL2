@@ -33,7 +33,7 @@ RedGL( document.createElement( 'canvas' ), function ( v ) {
 			"인자테스트 - diffuseTexture",
 			redTest( "인자테스트 ( redGL, diffuseTexture ) : RedBitmapTextureInstance 만 허용 - 미입력시", function ( unit, title ) {
 				try {
-					RedBitmapMaterial( tRedGL);
+					RedBitmapMaterial( tRedGL );
 					unit.run( true )
 				} catch ( error ) {
 					console.log( '///////////////////////////////////////////////////////////' )
