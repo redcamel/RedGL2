@@ -195,7 +195,7 @@ var RedStandardMaterial;
 		this['_displacementPower'] = 0
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		Object.defineProperty( this, 'diffuseTexture', RedDefinePropertyInfo['diffuseTexture'] );
+		Object.defineProperty( this, 'diffuseTexture', RedDefinePropertyInfo['diffuseTextureMust'] );
 		Object.defineProperty( this, 'normalTexture', RedDefinePropertyInfo['normalTexture'] );
 		Object.defineProperty( this, 'specularTexture', RedDefinePropertyInfo['specularTexture'] );
 		Object.defineProperty( this, 'displacementTexture', RedDefinePropertyInfo['displacementTexture'] );

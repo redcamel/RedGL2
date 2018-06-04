@@ -236,7 +236,7 @@ var RedEnvironmentMaterial;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
 		Object.defineProperty( this, 'diffuseTexture', RedDefinePropertyInfo['diffuseTexture'] );
-		Object.defineProperty( this, 'environmentTexture', RedDefinePropertyInfo['environmentTexture'] );
+		Object.defineProperty( this, 'environmentTexture', RedDefinePropertyInfo['environmentTextureMust'] );
 		Object.defineProperty( this, 'normalTexture', RedDefinePropertyInfo['normalTexture'] );
 		Object.defineProperty( this, 'specularTexture', RedDefinePropertyInfo['specularTexture'] );
 		Object.defineProperty( this, 'displacementTexture', RedDefinePropertyInfo['displacementTexture'] );
