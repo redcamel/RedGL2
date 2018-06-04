@@ -43,7 +43,7 @@ var RedBitmapTexture;
 		// gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
 		gl.pixelStorei( gl.UNPACK_FLIP_Y_WEBGL, true );
 		gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, option['min'] ? option['min'] : gl.LINEAR_MIPMAP_NEAREST );
-		gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, option['max'] ? option['max'] : gl.LINEAR );
+		gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, option['mag'] ? option['mag'] : gl.LINEAR );
 		gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, option['wrap_s'] ? option['wrap_s'] : gl.REPEAT );
 		gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, option['wrap_t'] ? option['wrap_t'] : gl.REPEAT );
 		if ( gl['glExtension']['EXT_texture_filter_anisotropic'] && option['anisotropic'] ) {
@@ -110,7 +110,7 @@ var RedBitmapTexture;
 				 <code>
 				 {
 					 min: this.gl.LINEAR_MIPMAP_NEAREST,
-					 max: this.gl.LINEAR,
+					 mag: this.gl.LINEAR,
 					 wrap_s: this.gl.REPEAT,
 					 wrap_t: this.gl.REPEAT,
 					 anisotropic: 16 // 지원가능한경우에만 작동
@@ -122,7 +122,7 @@ var RedBitmapTexture;
 		 example : `
 		 RedBitmapTexture( RedGL Instance,  src, {
 			 min: gl.LINEAR_MIPMAP_NEAREST,
-			 max: gl.LINEAR,
+			 mag: gl.LINEAR,
 			 wrap_s: gl.REPEAT,
 			 wrap_t: gl.REPEAT
 		 })
@@ -150,12 +150,12 @@ var RedBitmapTexture;
 				)
 			) RedGLUtil.throwFunc( 'RedBitmapTexture : min 텍스쳐 옵션에서 사용할수 없는값 입력됨.', '입력값 : ' + option['min'] );
 			if (
-				option['max']
+				option['mag']
 				&& !(
-					option['max'] == tGL.LINEAR
-					|| option['max'] == tGL.NEAREST
+					option['mag'] == tGL.LINEAR
+					|| option['mag'] == tGL.NEAREST
 				)
-			) RedGLUtil.throwFunc( 'RedBitmapTexture : max 텍스쳐 옵션에서 사용할수 없는값 입력됨.', '입력값 : ' + option['max'] );
+			) RedGLUtil.throwFunc( 'RedBitmapTexture : mag 텍스쳐 옵션에서 사용할수 없는값 입력됨.', '입력값 : ' + option['mag'] );
 			if (
 				option['wrap_s']
 				&& !(
