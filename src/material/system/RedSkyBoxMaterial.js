@@ -60,6 +60,7 @@ var RedSkyBoxMaterial;
 	RedSkyBoxMaterial = function ( redGL, skyBoxTexture ) {
 		if ( !(this instanceof RedSkyBoxMaterial) ) return new RedSkyBoxMaterial( redGL, skyBoxTexture );
 		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedSkyBoxMaterial : RedGL Instance만 허용됩니다.', redGL )
+		if ( skyBoxTexture && !(skyBoxTexture instanceof RedBitmapCubeTexture) ) RedGLUtil.throwFunc( 'RedSkyBoxMaterial : skyBoxTexture - RedBitmapCubeTexture Instance만 허용됩니다.' )
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
 		/**DOC:

@@ -2,7 +2,7 @@
   {
     "constructorYn": true,
     "title": "RedColorMaterial",
-    "description": "\n    RedColorMaterial Instance 생성\n",
+    "description": "\nRedColorMaterial Instance 생성\n",
     "params": {
       "redGL": [
         {
@@ -21,7 +21,7 @@
         "알파값"
       ]
     },
-    "example": "\n    RedColorMaterial(RedGL Instance, hex)\n",
+    "example": "\nRedColorMaterial(RedGL Instance, hex)\n",
     "return": "RedColorMaterial Instance"
   }
 ]
