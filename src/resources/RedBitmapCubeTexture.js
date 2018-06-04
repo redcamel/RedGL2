@@ -61,7 +61,7 @@ var RedBitmapCubeTexture;
 					// gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
 					gl.pixelStorei( gl.UNPACK_FLIP_Y_WEBGL, true );
 					gl.texParameteri( gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, option['min'] ? option['min'] : gl.LINEAR_MIPMAP_NEAREST );
-					gl.texParameteri( gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, option['max'] ? option['max'] : gl.LINEAR );
+					gl.texParameteri( gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, option['mag'] ? option['mag'] : gl.LINEAR );
 					gl.texParameteri( gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, option['wrap_s'] ? option['wrap_s'] : gl.CLAMP_TO_EDGE );
 					gl.texParameteri( gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, option['wrap_t'] ? option['wrap_t'] : gl.CLAMP_TO_EDGE );
 					try {
@@ -109,7 +109,7 @@ var RedBitmapCubeTexture;
 				 <code>
 				 {
 					 min: gl.LINEAR_MIPMAP_NEAREST,
-					 max: gl.LINEAR,
+					 mag: gl.LINEAR,
 					 wrap_s: gl.REPEAT,
 					 wrap_t: gl.REPEAT
 				 }
@@ -120,7 +120,7 @@ var RedBitmapCubeTexture;
 		 example : `
 		 RedBitmapCubeTexture( RedGL Instance,  srcList, {
 			 min: gl.LINEAR_MIPMAP_NEAREST,
-			 max: gl.LINEAR,
+			 mag: gl.LINEAR,
 			 wrap_s: gl.REPEAT,
 			 wrap_t: gl.REPEAT
 		 })

@@ -22,7 +22,8 @@
 
     <script src="../src/frameBuffer/RedFrameBuffer.js"></script>
 
-    <script src="../src/base/RedDefinePropertyInfo.js"></script><script src="../src/base/RedBaseContainer.js"></script>
+    <script src="../src/base/RedDefinePropertyInfo.js"></script>
+    <script src="../src/base/RedBaseContainer.js"></script>
     <script src="../src/base/RedBaseLight.js"></script>
     <script src="../src/base/RedBaseMaterial.js"></script>
     <script src="../src/base/RedBaseObject3D.js"></script>
@@ -46,7 +47,8 @@
     <script src="../src/material/RedEnvironmentMaterial.js"></script>
     <script src="../src/material/RedBitmapMaterial.js"></script>
     <script src="../src/material/RedPointBitmapMaterial.js"></script>
-    <script src="../src/material/RedStandardMaterial.js"></script><script src="../src/material/RedVideoMaterial.js"></script>
+    <script src="../src/material/RedStandardMaterial.js"></script>
+    <script src="../src/material/RedVideoMaterial.js"></script>
     <script src="../src/material/system/RedGridMaterial.js"></script>
     <script src="../src/material/RedPointColorMaterial.js"></script>
     <script src="../src/material/system/RedSkyBoxMaterial.js"></script>
@@ -86,7 +88,8 @@
 
     <script src="../src/resources/RedAtlas.js"></script>
     <script src="../src/resources/system/RedAtlasUV.js"></script>
-    <script src="../src/resources/RedBitmapTexture.js"></script><script src="../src/resources/RedVideoTexture.js"></script>
+    <script src="../src/resources/RedBitmapTexture.js"></script>
+    <script src="../src/resources/RedVideoTexture.js"></script>
     <script src="../src/resources/RedAtlasTexture.js"></script>
     <script src="../src/resources/RedBitmapCubeTexture.js"></script>
 
@@ -100,9 +103,9 @@
 <body>
 <canvas id="test" style="border: none;background:red"></canvas>
 <script>
-	var t = document.getElementById('test')
-	document.body.appendChild(t)
-	RedGL(t, function (v) {
+	var t = document.getElementById( 'test' )
+	document.body.appendChild( t )
+	RedGL( t, function ( v ) {
 		var tGL;
 		var tWorld, tScene3D, tCamera
 		var tRenderer;
@@ -110,22 +113,22 @@
 		self = this
 		tGL = this.gl;
 		this.world = tWorld = RedWorld();
-		tScene3D = RedScene(this);
+		tScene3D = RedScene( this );
 		tCamera = RedCamera();
 		tRenderer = RedRenderer();
-		tWorld.addView(RedView('test', tScene3D, tCamera));
-		RedView('test').setSize('100%', '100%')
-		RedView('test').setLocation('0%', '0%')
+		tWorld.addView( RedView( 'test', tScene3D, tCamera ) );
+		RedView( 'test' ).setSize( '100%', '100%' )
+		RedView( 'test' ).setLocation( '0%', '0%' )
 
 		var interleaveData,
-			interleaveData = new Float32Array([
+			interleaveData = new Float32Array( [
 				-0.5, -0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.5, 0.5,
 				0.5, -0.5, 0.0, 2.0, 0.0, 0.5, 0.0, 0.5, 0.5,
 				0.5, 0.5, 0.0, 2.0, 2.0, 0.5, 0.5, 0.0, 0.5,
 				-0.5, 0.5, 0.0, 0.0, 2.0, 0.5, 0.5, 0.5, 0.5
-			]);
+			] );
 		var indexData
-		indexData = new Uint16Array([0, 1, 2, 0, 2, 3])
+		indexData = new Uint16Array( [0, 1, 2, 0, 2, 3] )
 
 		var testInterleaveBuffer
 		var testIndexBuffer
@@ -135,9 +138,9 @@
 			RedBuffer.ARRAY_BUFFER,
 			interleaveData,
 			[
-				RedInterleaveInfo('aVertexPosition', 3),
-				RedInterleaveInfo('aTexcoord', 2),
-				RedInterleaveInfo('aVertexColor', 4)
+				RedInterleaveInfo( 'aVertexPosition', 3 ),
+				RedInterleaveInfo( 'aTexcoord', 2 ),
+				RedInterleaveInfo( 'aVertexColor', 4 )
 			]
 		)
 		testIndexBuffer = RedBuffer(
@@ -152,105 +155,105 @@
 		testMaterials.push(
 			RedBitmapMaterial(
 				this,
-				RedBitmapTexture(this, '../asset/alphaTest.png')
+				RedBitmapTexture( this, '../asset/alphaTest.png' )
 			)
 		)
 		testMaterials.push(
 			RedBitmapMaterial(
 				this,
-				RedBitmapTexture(this, '../asset/alphaTest.png', {
+				RedBitmapTexture( this, '../asset/alphaTest.png', {
 					min: this.gl.LINEAR,
-					max: this.gl.LINEAR,
+					mag: this.gl.LINEAR,
 					wrap_s: this.gl.CLAMP_TO_EDGE,
 					wrap_t: this.gl.CLAMP_TO_EDGE
-				})
+				} )
 			)
 		)
 		testMaterials.push(
 			RedBitmapMaterial(
 				this,
-				RedBitmapTexture(this, '../asset/alphaTest.png', {
+				RedBitmapTexture( this, '../asset/alphaTest.png', {
 					min: this.gl.NEAREST,
-					max: this.gl.NEAREST,
+					mag: this.gl.NEAREST,
 					wrap_s: this.gl.CLAMP_TO_EDGE,
 					wrap_t: this.gl.CLAMP_TO_EDGE
-				})
+				} )
 			)
 		),
 			testMaterials.push(
 				RedBitmapMaterial(
 					this,
-					RedBitmapTexture(this, '../asset/alphaTest.png', {
+					RedBitmapTexture( this, '../asset/alphaTest.png', {
 						wrap_s: this.gl.REPEAT,
 						wrap_t: this.gl.REPEAT
-					})
+					} )
 				)
 			)
 
 		testMaterials.push(
 			RedBitmapMaterial(
 				this,
-				RedBitmapTexture(this, '../asset/alphaTest.png', {
+				RedBitmapTexture( this, '../asset/alphaTest.png', {
 					wrap_s: this.gl.MIRRORED_REPEAT,
 					wrap_t: this.gl.MIRRORED_REPEAT
-				})
+				} )
 			)
 		)
 
 
 		tScene3D.skyBox =
-			RedSkyBox(this, [
+			RedSkyBox( this, [
 				'../asset/cubemap/posx.png',
 				'../asset/cubemap/negx.png',
 				'../asset/cubemap/posy.png',
 				'../asset/cubemap/negy.png',
 				'../asset/cubemap/posz.png',
 				'../asset/cubemap/negz.png'
-			]);
+			] );
 
-		JsonModelLoader(this, 'testJsonModel', '../asset/teapot.json', function (interleaveBuffer, indexBuffer) {
+		JsonModelLoader( this, 'testJsonModel', '../asset/teapot.json', function ( interleaveBuffer, indexBuffer ) {
 
 			var i = 5
-			while (i--) {
-				var testMesh = RedMesh(self, RedGeometry(testInterleaveBuffer, testIndexBuffer), testMaterials[i] ? testMaterials[i] : testMaterials[0])
+			while ( i-- ) {
+				var testMesh = RedMesh( self, RedGeometry( testInterleaveBuffer, testIndexBuffer ), testMaterials[i] ? testMaterials[i] : testMaterials[0] )
 				testMesh.x = -2 + i
 				testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 1
-				tScene3D.addChild(testMesh)
+				tScene3D.addChild( testMesh )
 			}
 
-			var testAnisotropic = RedMesh(self, RedBox(self), RedStandardMaterial(
+			var testAnisotropic = RedMesh( self, RedBox( self ), RedStandardMaterial(
 				self,
-				RedBitmapTexture(self, '../asset/crate.png',
+				RedBitmapTexture( self, '../asset/crate.png',
 					{
 						anisotropic: 4
-					})
-			))
+					} )
+			) )
 			testAnisotropic.rotationX = -25
 			testAnisotropic.z = -1
 			// testAnisotropic.scaleX = testAnisotropic.scaleY = testAnisotropic.scaleZ = 30
 			// testAnisotropic.y = -15
-			tScene3D.addChild(testAnisotropic)
-		})
+			tScene3D.addChild( testAnisotropic )
+		} )
 
 
 		var testDLight
 
-		testDLight = RedDirectionalLight(this, '#fff')
+		testDLight = RedDirectionalLight( this, '#fff' )
 		testDLight.x = 3
 		testDLight.y = 3
 		testDLight.z = 3
-		tScene3D.addLight(testDLight)
+		tScene3D.addLight( testDLight )
 
 		tRenderer.renderDebuger.visible = true
-		tRenderer.start(this, function (time) {
+		tRenderer.start( this, function ( time ) {
 			tCamera.z = 5
-			tCamera.lookAt(0, 0, 0)
+			tCamera.lookAt( 0, 0, 0 )
 
 
-		})
+		} )
 
-		console.log(tScene3D)
-	})
+		console.log( tScene3D )
+	} )
 </script>
 </body>
 

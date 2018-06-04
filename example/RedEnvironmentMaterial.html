@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>RedEnvironmentMaterial</title>
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
     />
     <style>
         html,
@@ -21,167 +22,167 @@
 </head>
 
 <body>
-    <canvas id="test" style="border: none;background:red"></canvas>
-    <script>
-        var testUI;
-        document.getElementById('test')
-        RedGL(document.getElementById('test'), function (v) {
-            if (v) {
-                console.log('초기화 성공!')
-                var tWorld, tScene, tCamera, tRenderer;
+<canvas id="test" style="border: none;background:red"></canvas>
+<script>
+	var testUI;
+	document.getElementById( 'test' )
+	RedGL( document.getElementById( 'test' ), function ( v ) {
+		if ( v ) {
+			console.log( '초기화 성공!' )
+			var tWorld, tScene, tCamera, tRenderer;
 
-                // 월드 생성
-                this['world'] = tWorld = RedWorld();
+			// 월드 생성
+			this['world'] = tWorld = RedWorld();
 
-                // 씬 생성
-                tScene = RedScene(this);
+			// 씬 생성
+			tScene = RedScene( this );
 
-                // 카메라 생성
-                tCamera = RedCamera();
-                tCamera.x = 3
-                tCamera.y = 4
-                tCamera.z = 6
-                // 렌더러 생성
-                tRenderer = RedRenderer();
+			// 카메라 생성
+			tCamera = RedCamera();
+			tCamera.x = 3
+			tCamera.y = 4
+			tCamera.z = 6
+			// 렌더러 생성
+			tRenderer = RedRenderer();
 
-                // 뷰생성 및 적용
-                tWorld.addView(RedView('test', tScene, tCamera));
+			// 뷰생성 및 적용
+			tWorld.addView( RedView( 'test', tScene, tCamera ) );
 
-                // 그리드 설정
-                tScene['grid'] = RedGrid(this)
+			// 그리드 설정
+			tScene['grid'] = RedGrid( this )
 
-                // 라이트 설정
-                var tLight = RedDirectionalLight(this)
-                tScene.addLight(tLight)
-                tLight.x = 10
-                tLight.y = 5
-                tLight.z = 5
+			// 라이트 설정
+			var tLight = RedDirectionalLight( this )
+			tScene.addLight( tLight )
+			tLight.x = 10
+			tLight.y = 5
+			tLight.z = 5
 
-                // Mesh 설정
-                var tMesh;
-                var tNormalTexture = RedBitmapTexture(this, '../asset/normalTest.jpg')
-                var tSpecularTexture = RedBitmapTexture(this, '../asset/specular.png')
-                var tDisplacementTexture = RedBitmapTexture(this, '../asset/displacementTest.jpg')
-                var tEnvironmentTexture = RedBitmapCubeTexture(this, [
-                    '../asset/cubemap/posx.png',
-                    '../asset/cubemap/negx.png',
-                    '../asset/cubemap/posy.png',
-                    '../asset/cubemap/negy.png',
-                    '../asset/cubemap/posz.png',
-                    '../asset/cubemap/negz.png'
-                ])
-                var tMaterial = RedEnvironmentMaterial(this, RedBitmapTexture(this, '../asset/draft1.png'), tEnvironmentTexture)
-                var tMaterial2 = RedEnvironmentMaterial(this, RedBitmapTexture(this, '../asset/draft2.png'), tEnvironmentTexture)
-                var tMaterial3 = RedEnvironmentMaterial(this, RedBitmapTexture(this, '../asset/alphaTest.png'), tEnvironmentTexture)
+			// Mesh 설정
+			var tMesh;
+			var tNormalTexture = RedBitmapTexture( this, '../asset/normalTest.jpg' )
+			var tSpecularTexture = RedBitmapTexture( this, '../asset/specular.png' )
+			var tDisplacementTexture = RedBitmapTexture( this, '../asset/displacementTest.jpg' )
+			var tEnvironmentTexture = RedBitmapCubeTexture( this, [
+				'../asset/cubemap/posx.png',
+				'../asset/cubemap/negx.png',
+				'../asset/cubemap/posy.png',
+				'../asset/cubemap/negy.png',
+				'../asset/cubemap/posz.png',
+				'../asset/cubemap/negz.png'
+			] )
+			var tMaterial = RedEnvironmentMaterial( this, RedBitmapTexture( this, '../asset/draft1.png' ), tEnvironmentTexture )
+			var tMaterial2 = RedEnvironmentMaterial( this, RedBitmapTexture( this, '../asset/draft2.png' ), tEnvironmentTexture )
+			var tMaterial3 = RedEnvironmentMaterial( this, RedBitmapTexture( this, '../asset/alphaTest.png' ), tEnvironmentTexture )
 
-                tMesh = RedMesh(this, RedBox(this, 1, 1, 1, 32, 32, 32), tMaterial)
-                tMesh.x = -1.5
-                tScene.addChild(tMesh)
-                tMesh = RedMesh(this, RedBox(this, 1, 1, 1, 32, 32, 32), tMaterial2)
-                tMesh.x = 0
-                tScene.addChild(tMesh)
-                tMesh = RedMesh(this, RedBox(this, 1, 1, 1, 32, 32, 32), tMaterial3)
-                tMesh.x = 1.5
-                tScene.addChild(tMesh)
+			tMesh = RedMesh( this, RedBox( this, 1, 1, 1, 32, 32, 32 ), tMaterial )
+			tMesh.x = -1.5
+			tScene.addChild( tMesh )
+			tMesh = RedMesh( this, RedBox( this, 1, 1, 1, 32, 32, 32 ), tMaterial2 )
+			tMesh.x = 0
+			tScene.addChild( tMesh )
+			tMesh = RedMesh( this, RedBox( this, 1, 1, 1, 32, 32, 32 ), tMaterial3 )
+			tMesh.x = 1.5
+			tScene.addChild( tMesh )
 
-                tMesh = RedMesh(this, RedSphere(this, 0.5, 6, 6, 6), tMaterial)
-                tMesh.x = -1.5
-                tMesh.y = 1.5
-                tScene.addChild(tMesh)
-                tMesh = RedMesh(this, RedSphere(this, 0.5, 6, 6, 6), tMaterial2)
-                tMesh.x = 0
-                tMesh.y = 1.5
-                tScene.addChild(tMesh)
-                tMesh = RedMesh(this, RedSphere(this, 0.5, 6, 6, 6), tMaterial3)
-                tMesh.x = 1.5
-                tMesh.y = 1.5
-                tScene.addChild(tMesh)
+			tMesh = RedMesh( this, RedSphere( this, 0.5, 6, 6, 6 ), tMaterial )
+			tMesh.x = -1.5
+			tMesh.y = 1.5
+			tScene.addChild( tMesh )
+			tMesh = RedMesh( this, RedSphere( this, 0.5, 6, 6, 6 ), tMaterial2 )
+			tMesh.x = 0
+			tMesh.y = 1.5
+			tScene.addChild( tMesh )
+			tMesh = RedMesh( this, RedSphere( this, 0.5, 6, 6, 6 ), tMaterial3 )
+			tMesh.x = 1.5
+			tMesh.y = 1.5
+			tScene.addChild( tMesh )
 
-                tMesh = RedMesh(this, RedPlane(this, 1, 1, 32, 32), tMaterial)
-                tMesh['useCullFace'] = false
-                tMesh.x = -1.5
-                tMesh.y = -1.5
-                tScene.addChild(tMesh)
-                tMesh = RedMesh(this, RedPlane(this, 1, 1, 32, 32), tMaterial2)
-                tMesh['useCullFace'] = false
-                tMesh.x = 0
-                tMesh.y = -1.5
-                tScene.addChild(tMesh)
-                tMesh = RedMesh(this, RedPlane(this, 1, 1, 32, 32), tMaterial3)
-                tMesh['useCullFace'] = false
-                tMesh.x = 1.5
-                tMesh.y = -1.5
-                tScene.addChild(tMesh)
+			tMesh = RedMesh( this, RedPlane( this, 1, 1, 32, 32 ), tMaterial )
+			tMesh['useCullFace'] = false
+			tMesh.x = -1.5
+			tMesh.y = -1.5
+			tScene.addChild( tMesh )
+			tMesh = RedMesh( this, RedPlane( this, 1, 1, 32, 32 ), tMaterial2 )
+			tMesh['useCullFace'] = false
+			tMesh.x = 0
+			tMesh.y = -1.5
+			tScene.addChild( tMesh )
+			tMesh = RedMesh( this, RedPlane( this, 1, 1, 32, 32 ), tMaterial3 )
+			tMesh['useCullFace'] = false
+			tMesh.x = 1.5
+			tMesh.y = -1.5
+			tScene.addChild( tMesh )
 
 
-                // 렌더시작
-                tRenderer.start(this, function (time) {
-                    tCamera.lookAt(0, 0, 0)
-                    var i = tScene.children.length
-                    var t0
-                    while (i--) {
-                        t0 = tScene.children[i]
-                        t0.rotationX += 1
-                        t0.rotationY += 1
-                        t0.rotationZ += 1
-                    }
-                    tCamera.x = Math.sin(time / 3000) * 8
-                    tCamera.y = Math.cos(time / 3000) * 4
-                    tCamera.z = Math.cos(time / 3000) * 8
-                })
+			// 렌더시작
+			tRenderer.start( this, function ( time ) {
+				tCamera.lookAt( 0, 0, 0 )
+				var i = tScene.children.length
+				var t0
+				while ( i-- ) {
+					t0 = tScene.children[i]
+					t0.rotationX += 1
+					t0.rotationY += 1
+					t0.rotationZ += 1
+				}
+				tCamera.x = Math.sin( time / 3000 ) * 8
+				tCamera.y = Math.cos( time / 3000 ) * 4
+				tCamera.z = Math.cos( time / 3000 ) * 8
+			} )
 
-                // 렌더 디버거 활성화
-                tRenderer['renderDebuger']['visible'] = true
-                testUI(this, tCamera, tScene, tMaterial, tMaterial2, tMaterial3, tEnvironmentTexture, tNormalTexture, tSpecularTexture, tDisplacementTexture)
-            } else {
-                console.log('초기화 실패!')
-            }
-        })
-        testUI = function (redGL, tCamera, tScene, tMaterial, tMaterial2, tMaterial3, tEnvironmentTexture, tNormalTexture, tSpecularTexture, tDisplacementTexture) {
-            var gui = new baseTestUI(redGL)
-            gui.initRedGL()
-            gui.initCamera(tCamera)
-            gui.initScene(tScene)
-            var t0 = gui['gui'].addFolder('StandardPhongMaterial')
-            var testStandard = function () {
-                this.normalTexture = false
-                this.specularTexture = false
-                this.displacementTexture = false
-                this.environmentTexture = true
-            }
-            testStandard = new testStandard()
-            t0.add(testStandard, 'environmentTexture').onChange(function (v) {
-                tMaterial['environmentTexture'] = tMaterial2['environmentTexture'] = tMaterial3['environmentTexture'] = v ? tEnvironmentTexture : null
-            })
-            t0.add(tMaterial, 'reflectionPower', 0, 1).onChange(function (v) {
-                tMaterial2['reflectionPower'] = v
-                tMaterial3['reflectionPower'] = v
-            })
-            t0.add(testStandard, 'normalTexture').onChange(function (v) {
-                tMaterial['normalTexture'] = tMaterial2['normalTexture'] = tMaterial3['normalTexture'] = v ? tNormalTexture : null
-            })
-            t0.add(testStandard, 'specularTexture').onChange(function (v) {
-                tMaterial['specularTexture'] = tMaterial2['specularTexture'] = tMaterial3['specularTexture'] = v ? tSpecularTexture : null
-            })
-            t0.add(tMaterial, 'shininess', 1, 128).onChange(function (v) {
-                tMaterial2['shininess'] = v
-                tMaterial3['shininess'] = v
-            })
-            t0.add(tMaterial, 'specularPower', 0.1, 10).onChange(function (v) {
-                tMaterial2['specularPower'] = v
-                tMaterial3['specularPower'] = v
-            })
-            t0.add(testStandard, 'displacementTexture').onChange(function (v) {
-                tMaterial['displacementTexture'] = tMaterial2['displacementTexture'] = tMaterial3['displacementTexture'] = v ? tDisplacementTexture : null
-            })
-            t0.add(tMaterial, 'displacementPower', 0, 2).onChange(function (v) {
-                tMaterial2['displacementPower'] = v
-                tMaterial3['displacementPower'] = v
-            })
+			// 렌더 디버거 활성화
+			tRenderer['renderDebuger']['visible'] = true
+			testUI( this, tCamera, tScene, tMaterial, tMaterial2, tMaterial3, tEnvironmentTexture, tNormalTexture, tSpecularTexture, tDisplacementTexture )
+		} else {
+			console.log( '초기화 실패!' )
+		}
+	} )
+	testUI = function ( redGL, tCamera, tScene, tMaterial, tMaterial2, tMaterial3, tEnvironmentTexture, tNormalTexture, tSpecularTexture, tDisplacementTexture ) {
+		var gui = new baseTestUI( redGL )
+		gui.initRedGL()
+		gui.initCamera( tCamera )
+		gui.initScene( tScene )
+		var t0 = gui['gui'].addFolder( 'StandardPhongMaterial' )
+		var testStandard = function () {
+			this.normalTexture = false
+			this.specularTexture = false
+			this.displacementTexture = false
+			this.environmentTexture = true
+		}
+		testStandard = new testStandard()
+		t0.add( testStandard, 'environmentTexture' ).onChange( function ( v ) {
+			tMaterial['environmentTexture'] = tMaterial2['environmentTexture'] = tMaterial3['environmentTexture'] = v ? tEnvironmentTexture : null
+		} )
+		t0.add( tMaterial, 'reflectionPower', 0, 1 ).onChange( function ( v ) {
+			tMaterial2['reflectionPower'] = v
+			tMaterial3['reflectionPower'] = v
+		} )
+		t0.add( testStandard, 'normalTexture' ).onChange( function ( v ) {
+			tMaterial['normalTexture'] = tMaterial2['normalTexture'] = tMaterial3['normalTexture'] = v ? tNormalTexture : null
+		} )
+		t0.add( testStandard, 'specularTexture' ).onChange( function ( v ) {
+			tMaterial['specularTexture'] = tMaterial2['specularTexture'] = tMaterial3['specularTexture'] = v ? tSpecularTexture : null
+		} )
+		t0.add( tMaterial, 'shininess', 1, 128 ).onChange( function ( v ) {
+			tMaterial2['shininess'] = v
+			tMaterial3['shininess'] = v
+		} )
+		t0.add( tMaterial, 'specularPower', 0.1, 10 ).onChange( function ( v ) {
+			tMaterial2['specularPower'] = v
+			tMaterial3['specularPower'] = v
+		} )
+		t0.add( testStandard, 'displacementTexture' ).onChange( function ( v ) {
+			tMaterial['displacementTexture'] = tMaterial2['displacementTexture'] = tMaterial3['displacementTexture'] = v ? tDisplacementTexture : null
+		} )
+		t0.add( tMaterial, 'displacementPower', 0, 2 ).onChange( function ( v ) {
+			tMaterial2['displacementPower'] = v
+			tMaterial3['displacementPower'] = v
+		} )
 
-            t0.open()
-        }
-    </script>
+		t0.open()
+	}
+</script>
 </body>
 
 </html>

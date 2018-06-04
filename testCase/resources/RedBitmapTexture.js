@@ -188,7 +188,7 @@ RedGL( document.createElement( 'canvas' ), function ( v ) {
 			}, false )
 		),
 		redGroup(
-			"option - max",
+			"option - mag",
 			redTest( "option : 미입력", function ( unit, title ) {
 				try {
 					RedBitmapTexture( tRedGL, '../../asset/alphaTest.png' )
@@ -199,12 +199,12 @@ RedGL( document.createElement( 'canvas' ), function ( v ) {
 					unit.run( false )
 				}
 			}, true ),
-			redTest( "option : max - LINEAR(default)", function ( unit, title ) {
+			redTest( "option : mag - LINEAR(default)", function ( unit, title ) {
 				var t0 = RedBitmapTexture(
 					tRedGL,
 					'../../asset/alphaTest.png',
 					{
-						max: tRedGL.gl.LINEAR
+						mag: tRedGL.gl.LINEAR
 					},
 					function () {
 						tRedGL.gl.bindTexture( tRedGL.gl.TEXTURE_2D, t0['webglTexture'] );
@@ -216,12 +216,12 @@ RedGL( document.createElement( 'canvas' ), function ( v ) {
 				)
 
 			}, tRedGL.gl.LINEAR ),
-			redTest( "option : max - NEAREST", function ( unit, title ) {
+			redTest( "option : mag - NEAREST", function ( unit, title ) {
 				var t0 = RedBitmapTexture(
 					tRedGL,
 					'../../asset/alphaTest.png',
 					{
-						max: tRedGL.gl.NEAREST
+						mag: tRedGL.gl.NEAREST
 					},
 					function () {
 						tRedGL.gl.bindTexture( tRedGL.gl.TEXTURE_2D, t0['webglTexture'] );
@@ -233,13 +233,13 @@ RedGL( document.createElement( 'canvas' ), function ( v ) {
 				)
 
 			}, tRedGL.gl.NEAREST ),
-			redTest( "option : max - NEAREST_MIPMAP_NEAREST (이놈은 허용안됨)", function ( unit, title ) {
+			redTest( "option : mag - NEAREST_MIPMAP_NEAREST (이놈은 허용안됨)", function ( unit, title ) {
 				try {
 					RedBitmapTexture(
 						tRedGL,
 						'../../asset/alphaTest.png',
 						{
-							max: tRedGL.gl.NEAREST_MIPMAP_NEAREST
+							mag: tRedGL.gl.NEAREST_MIPMAP_NEAREST
 						}
 					)
 					unit.run( true )
@@ -249,13 +249,13 @@ RedGL( document.createElement( 'canvas' ), function ( v ) {
 					unit.run( false )
 				}
 			}, false ),
-			redTest( "option : max - LINEAR_MIPMAP_NEAREST (이놈은 허용안됨)", function ( unit, title ) {
+			redTest( "option : mag - LINEAR_MIPMAP_NEAREST (이놈은 허용안됨)", function ( unit, title ) {
 				try {
 					RedBitmapTexture(
 						tRedGL,
 						'../../asset/alphaTest.png',
 						{
-							max: tRedGL.gl.LINEAR_MIPMAP_NEAREST
+							mag: tRedGL.gl.LINEAR_MIPMAP_NEAREST
 						}
 					)
 					unit.run( true )
@@ -265,13 +265,13 @@ RedGL( document.createElement( 'canvas' ), function ( v ) {
 					unit.run( false )
 				}
 			}, false ),
-			redTest( "option : max - NEAREST_MIPMAP_LINEAR (이놈은 허용안됨)", function ( unit, title ) {
+			redTest( "option : mag - NEAREST_MIPMAP_LINEAR (이놈은 허용안됨)", function ( unit, title ) {
 				try {
 					RedBitmapTexture(
 						tRedGL,
 						'../../asset/alphaTest.png',
 						{
-							max: tRedGL.gl.NEAREST_MIPMAP_LINEAR
+							mag: tRedGL.gl.NEAREST_MIPMAP_LINEAR
 						}
 					)
 					unit.run( true )
@@ -281,13 +281,13 @@ RedGL( document.createElement( 'canvas' ), function ( v ) {
 					unit.run( false )
 				}
 			}, false ),
-			redTest( "option : max - LINEAR_MIPMAP_LINEAR (이놈은 허용안됨)", function ( unit, title ) {
+			redTest( "option : mag - LINEAR_MIPMAP_LINEAR (이놈은 허용안됨)", function ( unit, title ) {
 				try {
 					RedBitmapTexture(
 						tRedGL,
 						'../../asset/alphaTest.png',
 						{
-							max: tRedGL.gl.LINEAR_MIPMAP_LINEAR
+							mag: tRedGL.gl.LINEAR_MIPMAP_LINEAR
 						}
 					)
 					unit.run( true )
@@ -297,13 +297,13 @@ RedGL( document.createElement( 'canvas' ), function ( v ) {
 					unit.run( false )
 				}
 			}, false ),
-			redTest( "option : max - 허용되지않는값 입력", function ( unit, title ) {
+			redTest( "option : mag - 허용되지않는값 입력", function ( unit, title ) {
 				try {
 					RedBitmapTexture(
 						tRedGL,
 						'../../asset/alphaTest.png',
 						{
-							max: 'test'
+							mag: 'test'
 						}
 					)
 					unit.run( true )

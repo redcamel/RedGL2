@@ -3,9 +3,6 @@ RedGL2
 
 - Example : https://redcamel.github.io/RedGL2/example/index.html
 - API Document : https://redcamel.github.io/RedGL2/redDoc/index.html#RedGL
-- TestCase : 작성중
+- TestCase : https://redcamel.github.io/RedGL2/testCase/index.html
 
 HardTest : 준비중
-- https://redcamel.github.io/RedGL2/index.html
-- https://redcamel.github.io/RedGL2/test.html
-- https://redcamel.github.io/RedGL2/testAtals.html
