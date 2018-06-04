@@ -2,7 +2,7 @@
   {
     "code": "METHOD",
     "title": "addView",
-    "description": "\n    렌더정보 추가.\n    정상처리된다면 내부적으로 <b>RedView</b>이 생성됨.\n",
+    "description": "\n렌더정보 추가.\n정상처리된다면 내부적으로 <b>RedView</b>이 생성됨.\n",
     "params": {
       "View": [
         {
@@ -11,7 +11,7 @@
         "추가할 RedView Instance"
       ]
     },
-    "example": "\n    var tWorld = RedWorld()\n    tWorld.addView(RedView('testView',RedScene(),RedCamera()))\n",
+    "example": "\nvar tWorld = RedWorld()\ntWorld.addView(RedView('testView',RedScene(),RedCamera()))\n",
     "return": "void"
   },
   {
@@ -26,7 +26,7 @@
         "고유키"
       ]
     },
-    "example": "\n    var tWorld = RedWorld();\n    tWorld.addView(RedView('testView',RedScene(),RedCamera()));\n    console.log(tWorld.getView('testView')) // testView 반환\n    tWorld.delView('testView');\n    console.log(tWorld.getView('testView')) // undefined\n",
+    "example": "\nvar tWorld = RedWorld();\ntWorld.addView(RedView('testView',RedScene(),RedCamera()));\nconsole.log(tWorld.getView('testView')) // testView 반환\ntWorld.delView('testView');\nconsole.log(tWorld.getView('testView')) // undefined\n",
     "return": "void"
   },
   {
@@ -41,7 +41,7 @@
         "고유키"
       ]
     },
-    "example": "\n    var tWorld = RedWorld();\n    tWorld.addView(RedView('testView',RedScene(),RedCamera()));\n    console.log(tWorld.getView('testView')) // testView 반환\n    tWorld.delView('testView');\n    console.log(tWorld.getView('testView')) // undefined\n",
+    "example": "\nvar tWorld = RedWorld();\ntWorld.addView(RedView('testView',RedScene(),RedCamera()));\nconsole.log(tWorld.getView('testView')) // testView 반환\ntWorld.delView('testView');\nconsole.log(tWorld.getView('testView')) // undefined\n",
     "return": "RedView"
   },
   {
@@ -56,7 +56,7 @@
         "고유키"
       ]
     },
-    "example": "\n   // TODO       \n",
+    "example": "\n// TODO\n",
     "return": "Array"
   },
   {
@@ -71,14 +71,14 @@
         "고유키"
       ]
     },
-    "example": "\n    var tWorld = RedWorld();\n    tWorld.addView(RedView('testView',RedScene(),RedCamera()));\n    console.log(tWorld.hasView('testView')) // true\n   \n               ",
+    "example": "\nvar tWorld = RedWorld();\ntWorld.addView(RedView('testView',RedScene(),RedCamera()));\nconsole.log(tWorld.hasView('testView')) // true\n",
     "return": "Boolean"
   },
   {
     "constructorYn": true,
     "title": "RedWorld",
-    "description": "\n    RedWorld Instance 생성자.\n    RedWorld는 RedView를 소유하며 이는 렌더리스트로서 작동한다.. \n",
-    "example": "\n    RedGL(document.getElementById('test'), function(v){\n        // 성공,실패에 따라 v값이 true or false.\n        if(v){\n            // 월드 생성\n            this['world'] = RedWorld();\n        }else{\n            // 초기화실패\n        }\n    })\n",
+    "description": "\nRedWorld Instance 생성자.\nRedWorld는 RedView를 소유하며 이는 렌더리스트로서 작동한다..\n",
+    "example": "\nRedGL(document.getElementById('test'), function(v){\n// 성공,실패에 따라 v값이 true or false.\nif(v){\n// 월드 생성\nthis['world'] = RedWorld();\n}else{\n// 초기화실패\n}\n})\n",
     "return": "RedWorld Instance"
   }
 ]

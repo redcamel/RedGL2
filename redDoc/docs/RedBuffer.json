@@ -3,48 +3,48 @@
     "code": "PROPERTY",
     "title": "bufferType",
     "description": "bufferType 상수",
-    "example": "\n   \n               ",
+    "example": "\n",
     "return": "RedBuffer.ARRAY_BUFFER or RedBuffer.ELEMENT_ARRAY_BUFFER"
   },
   {
     "code": "PROPERTY",
     "title": "data",
     "description": "data",
-    "example": "\n   \n               ",
+    "example": "\n",
     "return": "TypedArray"
   },
   {
     "code": "PROPERTY",
     "title": "drawMode",
     "description": "gl.STATIC_DRAW 상수",
-    "example": "\n   \n               ",
+    "example": "\n",
     "return": "gl.STATIC_DRAW or gl.DYNAMIC_DRAW"
   },
   {
     "code": "PROPERTY",
     "title": "glArrayType",
     "description": "\ndata의 type의 gl.XXX 상수\nex) gl.FLOAT, gl.BYTE\n",
-    "example": "\n   \n               ",
+    "example": "\n",
     "return": "gl.XXX 상수"
   },
   {
     "code": "PROPERTY",
     "title": "glBufferType",
     "description": "bufferType에 대응하는 gl.ARRAY_BUFFER or gl.ELEMENT_ARRAY_BUFFER 상수",
-    "example": "\n   \n               ",
+    "example": "\n",
     "return": "gl.ARRAY_BUFFER or glELEMENT_ARRAY_BUFFER 상수"
   },
   {
     "code": "PROPERTY",
     "title": "key",
     "description": "고유키",
-    "example": "\n   \n               ",
+    "example": "\n",
     "return": "String"
   },
   {
     "constructorYn": true,
     "title": "RedBuffer",
-    "description": "\n    RedBuffer Instance 생성자\n",
+    "description": "\nRedBuffer Instance 생성자\n",
     "params": {
       "redGL": [
         {
@@ -57,24 +57,24 @@
         },
         "고유키"
       ],
-      "data": [
-        {
-          "type": "TypedArray"
-        },
-        "버퍼 구성 데이터"
-      ],
       "bufferType": [
         {
           "type": "String"
         },
         "RedBuffer.ARRAY_BUFFER or RedBuffer.ELEMENT_ARRAY_BUFFER"
       ],
-      "interleaveDefineInfo": [
+      "data": [
+        {
+          "type": "TypedArray"
+        },
+        "버퍼 구성 데이터"
+      ],
+      "interleaveDefineInfoList": [
         {
           "type": "Object"
         },
-        "\n        버퍼의 인터리브 구성 정보\n        RedBuffer.ARRAY_BUFFER 일때만 필요\n        ",
-        "<code>\n        [\n          RedInterleaveInfo('aVertexPosition', 3),\n          RedInterleaveInfo('aTexcoord', 2)\n        ]\n        </code>"
+        "\n버퍼의 인터리브 구성 정보\nRedBuffer.ARRAY_BUFFER 일때만 필요\n",
+        "<code>\n[\nRedInterleaveInfo('aVertexPosition', 3),\nRedInterleaveInfo('aTexcoord', 2)\n]\n</code>"
       ],
       "drawMode": [
         {
@@ -83,25 +83,25 @@
         "ex) gl.STATIC_DRAW"
       ]
     },
-    "example": "\n    var interleaveData, indexData;\n    var tInterleaveBuffer, tIndexBuffer\n    interleaveData = new Float32Array([\n        0.0, 0.5, 0.0, 0.0, 0.5,\n        -0.5, -0.5, 0.0, 0.5, 0.5,\n        0.5, -0.5, 0.0, 0.5, 0.0\n    ]);\n    indexData = new Uint16Array([0, 1, 2])\n    // 인터리브 버퍼생성\n    tInterleaveBuffer = RedBuffer(\n        this, // RedGL Instance\n        'tInterleaveBuffer', // key\n        interleaveData, // data\n        RedBuffer.ARRAY_BUFFER, // bufferType\n        [\n          RedInterleaveInfo('aVertexPosition', 3),\n          RedInterleaveInfo('aTexcoord', 2)\n        ]\n    )\n    // 인덱스 버퍼생성\n    tIndexBuffer = RedBuffer(\n        this, // RedGL Instance\n        'tIndexBuffer', // key\n        indexData,  // data\n        RedBuffer.ELEMENT_ARRAY_BUFFER // bufferType\n    )\n    console.log('인터리브버퍼', tInterleaveBuffer)\n    console.log('인덱스버퍼', tIndexBuffer)\n",
+    "example": "\nvar interleaveData, indexData;\nvar tInterleaveBuffer, tIndexBuffer\ninterleaveData = new Float32Array([\n0.0, 0.5, 0.0, 0.0, 0.5,\n-0.5, -0.5, 0.0, 0.5, 0.5,\n0.5, -0.5, 0.0, 0.5, 0.0\n]);\nindexData = new Uint16Array([0, 1, 2])\n// 인터리브 버퍼생성\ntInterleaveBuffer = RedBuffer(\nthis, // RedGL Instance\n'tInterleaveBuffer', // key\nRedBuffer.ARRAY_BUFFER, // bufferType\ninterleaveData, // data\n[\nRedInterleaveInfo('aVertexPosition', 3),\nRedInterleaveInfo('aTexcoord', 2)\n]\n)\n// 인덱스 버퍼생성\ntIndexBuffer = RedBuffer(\nthis, // RedGL Instance\n'tIndexBuffer', // key\nRedBuffer.ELEMENT_ARRAY_BUFFER, // bufferType\nindexData  // data\n)\nconsole.log('인터리브버퍼', tInterleaveBuffer)\nconsole.log('인덱스버퍼', tIndexBuffer)\n",
     "return": "RedBuffer Instance"
   },
   {
     "code": "CONST",
     "title": "RedBuffer.ARRAY_BUFFER",
-    "description": "\n    ARRAY_BUFFER 버퍼상수\n",
+    "description": "\nARRAY_BUFFER 버퍼상수\n",
     "return": "RedBuffer Instance"
   },
   {
     "code": "CONST",
     "title": "RedBuffer.ELEMENT_ARRAY_BUFFER",
-    "description": "\n    ELEMENT_ARRAY_BUFFER 버퍼상수\n",
+    "description": "\nELEMENT_ARRAY_BUFFER 버퍼상수\n",
     "return": "RedBuffer Instance"
   },
   {
     "code": "METHOD",
     "title": "upload",
-    "description": "\n    버퍼 데이터 갱신\n    기존 버퍼의 타입과 다른 타입의 값이 들어올경우 에러. \n",
+    "description": "\n버퍼 데이터 갱신\n기존 버퍼의 타입과 다른 타입의 값이 들어올경우 에러.\n",
     "params": {
       "data": [
         {
@@ -110,14 +110,14 @@
         "갱신 할 데이터"
       ]
     },
-    "example": "\n    // ... interleaveData 정의 후 tInterleaveBuffer 버퍼를 가정하면 \n    // 아래와 같이 데이터를 변경하고 버퍼데이터를 업데이트 시킬수 있다.\n    interleaveData[0] = Math.sin(time / 1000) * 1\n    interleaveData[2] = Math.cos(time / 1000) * 2\n    // 버퍼정보 업로드\n    tInterleaveBuffer.upload(interleaveData)\n",
+    "example": "\n// ... interleaveData 정의 후 tInterleaveBuffer 버퍼를 가정하면\n// 아래와 같이 데이터를 변경하고 버퍼데이터를 업데이트 시킬수 있다.\ninterleaveData[0] = Math.sin(time / 1000) * 1\ninterleaveData[2] = Math.cos(time / 1000) * 2\n// 버퍼정보 업로드\ntInterleaveBuffer.upload(interleaveData)\n",
     "return": "RedBuffer Instance"
   },
   {
     "code": "PROPERTY",
     "title": "webglBuffer",
     "description": "WebGLBuffer",
-    "example": "\n   \n               ",
+    "example": "\n",
     "return": "WebGLBuffer"
   }
 ]

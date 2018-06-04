@@ -1,10 +1,5 @@
 [
   {
-    "title": "color",
-    "description": "\n    RedProgram Instance\n    직접설정하지 않도록 유의해야함!\n",
-    "return": "RedProgram Instance"
-  },
-  {
     "title": "displacementPower",
     "description": "기본값 : 0",
     "return": "Number"
@@ -20,14 +15,14 @@
   {
     "constructorYn": true,
     "title": "RedColorPhongTextureMaterial",
-    "description": "\n    RedColorPhongTextureMaterial Instance 생성\n",
+    "description": "\nRedColorPhongTextureMaterial Instance 생성\n",
     "params": {
       "redGL": [
         {
           "type": "RedGL"
         }
       ],
-      "color": [
+      "hexColor": [
         {
           "type": "hex"
         }
@@ -58,29 +53,14 @@
     "return": "RedColorPhongTextureMaterial Instance"
   },
   {
-    "code": "METHOD",
-    "title": "setColor",
-    "description": "\n    컬러설정\n",
-    "params": {
-      "hex": [
-        {
-          "type": "hex"
-        },
-        "ex) #fff, #ffffff"
-      ]
-    },
-    "example": "// TODO:",
-    "return": "RedProgram Instance"
-  },
-  {
     "title": "shininess",
     "description": "기본값 : 16",
-    "return": "uint"
+    "return": "Number"
   },
   {
     "title": "specularPower",
     "description": "기본값 : 1",
-    "return": "uint"
+    "return": "Number"
   },
   {
     "title": "specularTexture",

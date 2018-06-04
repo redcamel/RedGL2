@@ -1,10 +1,73 @@
-"use strict";
-redSuite(
-    "RedCamera Test",
-    redGroup(
-        "생성 확인"
-    ),
-    redGroup(
-        "get/set"
-    )
-)
+var i = 1
+RedGL(document.createElement('canvas'), function (v) {
+	var tRedGL = this; console.log(i++,tRedGL);
+	console.log(tRedGL.gl.isContextLost())
+});
+RedGL(document.createElement('canvas'), function (v) {
+	var tRedGL = this; console.log(i++,tRedGL);
+	console.log(tRedGL.gl.isContextLost())
+});
+RedGL(document.createElement('canvas'), function (v) {
+	var tRedGL = this; console.log(i++,tRedGL);
+	console.log(tRedGL.gl.isContextLost())
+});
+RedGL(document.createElement('canvas'), function (v) {
+	var tRedGL = this; console.log(i++,tRedGL);
+	console.log(tRedGL.gl.isContextLost())
+});
+RedGL(document.createElement('canvas'), function (v) {
+	var tRedGL = this; console.log(i++,tRedGL);
+	console.log(tRedGL.gl.isContextLost())
+});
+RedGL(document.createElement('canvas'), function (v) {
+	var tRedGL = this; console.log(i++,tRedGL);
+	console.log(tRedGL.gl.isContextLost())
+});
+RedGL(document.createElement('canvas'), function (v) {
+	var tRedGL = this; console.log(i++,tRedGL);
+	console.log(tRedGL.gl.isContextLost())
+});
+RedGL(document.createElement('canvas'), function (v) {
+	var tRedGL = this; console.log(i++,tRedGL);
+	console.log(tRedGL.gl.isContextLost())
+});
+RedGL(document.createElement('canvas'), function (v) {
+	var tRedGL = this; console.log(i++,tRedGL);
+	console.log(tRedGL.gl.isContextLost())
+});
+RedGL(document.createElement('canvas'), function (v) {
+	var tRedGL = this; console.log(i++,tRedGL);
+	console.log(tRedGL.gl.isContextLost())
+});
+RedGL(document.createElement('canvas'), function (v) {
+	var tRedGL = this; console.log(i++,tRedGL);
+	console.log(tRedGL.gl.isContextLost())
+});
+RedGL(document.createElement('canvas'), function (v) {
+	var tRedGL = this; console.log(i++,tRedGL);
+	console.log(tRedGL.gl.isContextLost())
+});
+RedGL(document.createElement('canvas'), function (v) {
+	var tRedGL = this; console.log(i++,tRedGL);
+	console.log(tRedGL.gl.isContextLost())
+});
+RedGL(document.createElement('canvas'), function (v) {
+	var tRedGL = this; console.log(i++,tRedGL);
+	console.log(tRedGL.gl.isContextLost())
+});
+RedGL(document.createElement('canvas'), function (v) {
+	var tRedGL = this; console.log(i++,tRedGL);
+	console.log(tRedGL.gl.isContextLost())
+});
+RedGL(document.createElement('canvas'), function (v) {
+	var tRedGL = this; console.log(i++,tRedGL);
+	console.log(tRedGL.gl.isContextLost())
+});
+RedGL(document.createElement('canvas'), function (v) {
+	var tRedGL = this; console.log(i++,tRedGL);
+	console.log(tRedGL.gl.isContextLost())
+});
+RedGL(document.createElement('canvas'), function (v) {
+	var tRedGL = this; console.log(i++,tRedGL);
+	console.log(tRedGL.gl.isContextLost())
+});

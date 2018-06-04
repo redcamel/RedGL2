@@ -2,7 +2,7 @@
   {
     "constructorYn": true,
     "title": "RedPostEffect_FXAA",
-    "description": "\n    RedPostEffect_FXAA Instance 생성.\n",
+    "description": "\nRedPostEffect_FXAA Instance 생성.\n",
     "params": {
       "redGL": [
         {

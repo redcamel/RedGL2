@@ -2,12 +2,13 @@
 <html lang="ko">
 
 <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta name="format-detection" content="telephone=no" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
+    <meta charset="utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
     />
     <style>
         html {
@@ -32,76 +33,90 @@
 </head>
 
 <body>
-    <script>
-        (function () {
-            var temp = window.location.href.split('/')
-            var title = document.createElement('div')
-            document.body.appendChild(title)
-            title.style.cssText = 'color:#fff;margin-left:7px;font-size:32px;margin-top:15px;margin-bottom:20px'
-            title.innerHTML = 'RedGL Test Suite'
-        })()
-    </script>
-    <hr style="border:0px;border-top:1px solid #333">
-    <script>
-        var i, testList;
-        testList = [
-            "RedCamera.html",
-            "RedGL.html",
-            "RedView.html",
-            "RedScene.html",
-            "RedShader.html",
-            "RedWorld.html"
-        ],
-            i = testList.length;
-        testList.sort(function (a, b) {
-            if (a > b) return -1
-            if (a < b) return 1
-            return 0
-        })
-        while (i--) {
-            var tFrame, tContainer, tTitle, tStyle;
-            tContainer = document.createElement('span'),
-                document.body.appendChild(tContainer),
-                tStyle = tContainer.style,
-                tStyle.float = "left",
-                tStyle.height = "350px",
-                tStyle.background = '#2c3239',
-                tStyle.margin = "5px",
-                tStyle.boxShadow = "5px 5px 20px rgba(0,0,0,0.3)",
-                tTitle = document.createElement('button'),
-                tContainer.appendChild(tTitle),
-                tTitle.innerHTML = '<a href = "' + testList[i] + '"><div style="padding:15px">' + testList[i] + '</div></a>',
-                tStyle = tTitle.style,
-                tStyle.display = 'block',
-                tStyle.outline = 'none',
-                tStyle.border = '0px',
-                tStyle.width = '100%',
-                tStyle.fontSize = '13px',
-                tStyle.background = '#5b52aa',
-                tStyle.font = "#333",
-                tFrame = document.createElement('iframe'),
-                tFrame.src = testList[i],
-                tStyle = tFrame.style,
-                tStyle.border = "0px",
-                tStyle.width = "300px",
-                tStyle.height = "303px",
-                tContainer.appendChild(tFrame),
-                tFrame.addEventListener('load', (function () {
-                    var t0 = testList[i]
-                    var frame = tFrame
-                    var title = tTitle
-                    var tDate
-                    return function () {
-                        tDate = frame.contentDocument.lastModified
-                        tDate = new Date(tDate)
-                        tDate = tDate.getFullYear() + '.' + (tDate.getMonth() + 1) + '.' + tDate.getDate() + ' ' + tDate.getHours() + ':' + tDate.getMinutes()
-                        title.innerHTML = '<a href = "' + t0 + '"><div style="padding:15px">' + t0 + ' - <span style="color:#ccc;font-size:11px">' + tDate + '</span></div></a>'
-                    }
-                })())
-        }
-    </script>
-    <div style="clear:both"></div>
-    <!-- <hr style="border:0px;border-top:1px solid #222"> -->
+<script>
+	(function () {
+		var temp = window.location.href.split( '/' )
+		var title = document.createElement( 'div' )
+		document.body.appendChild( title )
+		title.style.cssText = 'color:#fff;margin-left:7px;font-size:32px;margin-top:15px;margin-bottom:20px'
+		title.innerHTML = 'RedGL Test Suite'
+	})()
+</script>
+<hr style="border:0px;border-top:1px solid #333">
+<script>
+	var i, testList;
+	testList = [
+		"RedGL.html",
+		"RedScene.html",
+		"RedView.html",
+		"RedWorld.html",
+		"program/RedShader.html",
+		"program/RedProgram.html",
+		'geometry/RedInterleaveInfo.html',
+		"geometry/RedBuffer.html",
+		"geometry/RedGeometry.html",
+		"primitives/RedPlane.html",
+		"primitives/RedBox.html",
+		"primitives/RedSphere.html",
+		"material/checkUniformAndProperty.html",
+		"material/RedColorMaterial.html",
+		"material/RedColorPhongMaterial.html",
+		"material/RedColorPhongTextureMaterial.html",
+		"RedCamera.html"
+	]
+	i = testList.length;
+	//        testList.sort(function (a, b) {
+	//            if (a > b) return -1
+	//            if (a < b) return 1
+	//            return 0
+	//        })
+	testList.forEach( function ( v, index ) {
+		var tFrame, tContainer, tTitle, tStyle;
+		tContainer = document.createElement( 'span' ),
+			document.body.appendChild( tContainer ),
+			tStyle = tContainer.style,
+			tStyle.float = "left",
+			tStyle.height = "350px",
+			tStyle.background = '#2c3239',
+			tStyle.margin = "5px",
+			tStyle.boxShadow = "5px 5px 20px rgba(0,0,0,0.3)",
+			tTitle = document.createElement( 'button' ),
+			tContainer.appendChild( tTitle ),
+			tTitle.innerHTML = '<a href = "' + v + '"><div style="padding:15px">' + v.split( '/' )[v.split( '/' ).length - 1] + '</div></a>',
+			tStyle = tTitle.style,
+			tStyle.display = 'block',
+			tStyle.outline = 'none',
+			tStyle.border = '0px',
+			tStyle.width = '100%',
+			tStyle.fontSize = '13px',
+			tStyle.background = '#5b52aa',
+			tStyle.font = "#333",
+			tFrame = document.createElement( 'iframe' ),
+			tStyle = tFrame.style,
+			tStyle.border = "0px",
+			tStyle.width = "300px",
+			tStyle.height = "303px",
+			tContainer.appendChild( tFrame ),
+			tFrame.addEventListener( 'load', (function () {
+				var t0 = v
+				var frame = tFrame
+				var title = tTitle
+				var tDate
+				return function () {
+					tDate = frame.contentDocument.lastModified
+					tDate = new Date( tDate )
+					tDate = tDate.getFullYear() + '.' + (tDate.getMonth() + 1) + '.' + tDate.getDate() + ' ' + tDate.getHours() + ':' + tDate.getMinutes()
+					title.innerHTML = '<a href = "' + t0 + '"><div style="padding:15px">' + t0.split( '/' )[t0.split( '/' ).length - 1] + ' - <span style="color:#ccc;font-size:11px">' + tDate + '</span></div></a>'
+				}
+			})() );
+		var tSrc = v
+		setTimeout( function () {
+			tFrame.src = tSrc
+		}, index * 500 )
+	} )
+</script>
+<div style="clear:both"></div>
+<!-- <hr style="border:0px;border-top:1px solid #222"> -->
 
 </body>
 

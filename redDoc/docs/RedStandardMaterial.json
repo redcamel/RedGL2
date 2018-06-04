@@ -15,7 +15,7 @@
   {
     "constructorYn": true,
     "title": "RedStandardMaterial",
-    "description": "\n    RedStandardMaterial Instance 생성\n",
+    "description": "\nRedStandardMaterial Instance 생성\n",
     "params": {
       "redGL": [
         {
@@ -43,7 +43,7 @@
         }
       ]
     },
-    "example": "\n    RedStandardMaterial(\n        RedGL Instance, \n        RedBitmapTexture(RedGL Instance, src), // diffuseTexture\n        RedBitmapTexture(RedGL Instance, src), // normalTexture\n        RedBitmapTexture(RedGL Instance, src), // specularTexture\n        RedBitmapTexture(RedGL Instance, src)  // displacementTexture\n    )\n",
+    "example": "\nRedStandardMaterial(\nRedGL Instance,\nRedBitmapTexture(RedGL Instance, src), // diffuseTexture\nRedBitmapTexture(RedGL Instance, src), // normalTexture\nRedBitmapTexture(RedGL Instance, src), // specularTexture\nRedBitmapTexture(RedGL Instance, src)  // displacementTexture\n)\n",
     "return": "RedStandardMaterial Instance"
   },
   {

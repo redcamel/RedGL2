@@ -12,7 +12,7 @@
   {
     "constructorYn": true,
     "title": "RedShader",
-    "description": "\n    RedShader Instance 생성기\n    RedSystemShaderCode 소스와 머징된 RedShader Instance를 생성\n",
+    "description": "\nRedShader Instance 생성기\nRedSystemShaderCode 소스와 머징된 RedShader Instance를 생성\n",
     "params": {
       "redGL": [
         {
@@ -69,7 +69,7 @@
         "버퍼 타입"
       ]
     },
-    "example": "\n    RedShader.haskey(RedGL Instance, '찾고자하는키', RedShader.FRAGMENT or RedShader.VERTEX)\n",
+    "example": "\nRedShader.haskey(RedGL Instance, '찾고자하는키', RedShader.FRAGMENT or RedShader.VERTEX)\n",
     "return": "Boolean"
   },
   {

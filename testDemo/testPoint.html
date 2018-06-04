@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>testPoint</title>
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
     />
     <style>
         html,
@@ -20,8 +21,8 @@
     <script src="../src/RedGL.js"></script>
 
     <script src="../src/frameBuffer/RedFrameBuffer.js"></script>
-    
-    <script src="../src/base/RedBaseContainer.js"></script>
+
+    <script src="../src/base/RedDefinePropertyInfo.js"></script><script src="../src/base/RedBaseContainer.js"></script>
     <script src="../src/base/RedBaseLight.js"></script>
     <script src="../src/base/RedBaseMaterial.js"></script>
     <script src="../src/base/RedBaseObject3D.js"></script>
@@ -38,7 +39,7 @@
     <script src="../src/loader/obj/RedMTLLoader.js"></script>
     <script src="../src/loader/obj/RedOBJLoader.js"></script>
 
-    <script src="../src/material/RedMaterial.js"></script>
+
     <script src="../src/material/RedColorMaterial.js"></script>
     <script src="../src/material/RedColorPhongMaterial.js"></script>
     <script src="../src/material/RedColorPhongTextureMaterial.js"></script>
@@ -48,7 +49,8 @@
     <script src="../src/material/RedStandardMaterial.js"></script>
     <script src="../src/material/system/RedGridMaterial.js"></script>
     <script src="../src/material/RedPointColorMaterial.js"></script>
-    <script src="../src/material/system/RedSkyBoxMaterial.js"></script>     <script src="../src/material/system/RedPostEffectMaterial.js"></script>
+    <script src="../src/material/system/RedSkyBoxMaterial.js"></script>
+    <script src="../src/material/system/RedPostEffectMaterial.js"></script>
 
     <script src="../src/object3D/RedAxis.js"></script>
     <script src="../src/object3D/RedGrid.js"></script>
@@ -63,9 +65,9 @@
     <script src="../src/postEffect/RedPostEffect_Convolution.js"></script>
     <script src="../src/postEffect/RedPostEffect_Invert.js"></script>
     <script src="../src/postEffect/RedPostEffect_Gray.js"></script>
-    <script src="../src/postEffect/RedPostEffect_HueSaturation.js"></script>    
-    <script src="../src/postEffect/RedPostEffect_BrightnessContrast.js"></script>    
-    <script src="../src/postEffect/RedPostEffect_Vignetting.js"></script>        
+    <script src="../src/postEffect/RedPostEffect_HueSaturation.js"></script>
+    <script src="../src/postEffect/RedPostEffect_BrightnessContrast.js"></script>
+    <script src="../src/postEffect/RedPostEffect_Vignetting.js"></script>
     <script src="../src/postEffect/RedPostEffect_Pixelize.js"></script>
     <script src="../src/postEffect/RedPostEffect_ZoomBlur.js"></script>
     <script src="../src/postEffect/RedPostEffect_HalfTone.js"></script>
@@ -96,141 +98,140 @@
 </head>
 
 <body>
-    <canvas id="test" style="border: none;background:red"></canvas>
-    <script>
-        var t = document.getElementById('test')
-        document.body.appendChild(t)
-        RedGL(t, function (v) {
-            var tGL;
-            var tWorld, tScene3D, tCamera
-            var tRenderer;
-            var self;
-            self = this
-            tGL = this.gl;
-            this.world = tWorld = RedWorld();
-            tScene3D = RedScene(this,'#223344');
-            tScene3D.alpha = 0.1
+<canvas id="test" style="border: none;background:red"></canvas>
+<script>
+	var t = document.getElementById('test')
+	document.body.appendChild(t)
+	RedGL(t, function (v) {
+		var tGL;
+		var tWorld, tScene3D, tCamera
+		var tRenderer;
+		var self;
+		self = this
+		tGL = this.gl;
+		this.world = tWorld = RedWorld();
+		tScene3D = RedScene(this, '#223344');
+		tScene3D.alpha = 0.1
 
-            tCamera = RedCamera()
-            tCamera.y = 10
-            tCamera.z = 10
-            tCamera.lookAt(0, 0, 0)
+		tCamera = RedCamera()
+		tCamera.y = 10
+		tCamera.z = 10
+		tCamera.lookAt(0, 0, 0)
 
-            tRenderer = RedRenderer();
-            tWorld.addView(RedView('test', tScene3D, tCamera));
-
-
-            (function () {
-                var testMaterial
-
-                testMaterial = RedPointBitmapMaterial(self, RedBitmapTexture(self, '../asset/particle.png'))
+		tRenderer = RedRenderer();
+		tWorld.addView(RedView('test', tScene3D, tCamera));
 
 
-                var interleaveData
-                interleaveData = []
+		(function () {
+			var testMaterial
 
-                var i = 10000
-                while (i--) {
-                    var t = Math.random() * 100 - 50
-                    interleaveData.push(Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50)
-                    interleaveData.push(Math.random() * 100)
-                }
-                interleaveData = new Float32Array(interleaveData)
-
-                var testParticle = RedPointUnit(
-                    self,
-                    interleaveData,
-                    [
-                        RedInterleaveInfo('aVertexPosition', 3),
-                        RedInterleaveInfo('aPointSize', 1)
-                    ],
-                    testMaterial
-                )
-                testParticle['useDepthTest'] = false
-                // testParticle['depthTestFunc'] = self.gl.LESS
-                testParticle['blendSrc'] = self.gl.SRC_ALPHA
-                testParticle['blendDst'] = self.gl.ONE
-                tScene3D.addChildAt(testParticle, 0)
-            })();
-            (function () {
-                var testMaterial
-                testMaterial = RedPointColorMaterial(self)
-
-                var interleaveData, interleaveData2
-                interleaveData = []
-
-                var i = 100000
-                while (i--) {
-                    var t = Math.random() * 100 - 50
-                    interleaveData.push(Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50)
-                    interleaveData.push(Math.random() * 10)
-                    interleaveData.push(Math.random(), Math.random(), Math.random(), 1)
-                }
-                interleaveData = new Float32Array(interleaveData)
-                var testParticle = RedPointUnit(
-                    self,
-                    interleaveData,
-                    [
-                        RedInterleaveInfo('aVertexPosition', 3),
-                        RedInterleaveInfo('aPointSize', 1),
-                        RedInterleaveInfo('aVertexColor', 4)
-                    ],
-                    testMaterial
-                )
-                tScene3D.addChild(testParticle)
-            })();
-
-            (function () {
-                var testMaterial
-
-                testMaterial = RedPointBitmapMaterial(self, RedBitmapTexture(self, '../asset/alphaTest.png'))
+			testMaterial = RedPointBitmapMaterial(self, RedBitmapTexture(self, '../asset/particle.png'))
 
 
-                var interleaveData
-                interleaveData = []
+			var interleaveData
+			interleaveData = []
 
-                var i = 10000
-                while (i--) {
-                    var t = Math.random() * 100 - 50
-                    interleaveData.push(Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50)
-                    interleaveData.push(Math.random() * 100)
-                }
-                interleaveData = new Float32Array(interleaveData)
+			var i = 10000
+			while (i--) {
+				var t = Math.random() * 100 - 50
+				interleaveData.push(Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50)
+				interleaveData.push(Math.random() * 100)
+			}
+			interleaveData = new Float32Array(interleaveData)
 
-                var testParticle = RedPointUnit(
-                    self,
-                    interleaveData,
-                    [
-                        RedInterleaveInfo('aVertexPosition', 3),
-                        RedInterleaveInfo('aPointSize', 1)
-                    ],
-                    testMaterial
-                )
-                tScene3D.addChild(testParticle)
-            })();
+			var testParticle = RedPointUnit(
+				self,
+				interleaveData,
+				[
+					RedInterleaveInfo('aVertexPosition', 3),
+					RedInterleaveInfo('aPointSize', 1)
+				],
+				testMaterial
+			)
+			testParticle['useDepthTest'] = false
+			// testParticle['depthTestFunc'] = self.gl.LESS
+			testParticle['blendSrc'] = self.gl.SRC_ALPHA
+			testParticle['blendDst'] = self.gl.ONE
+			tScene3D.addChildAt(testParticle, 0)
+		})();
+		(function () {
+			var testMaterial
+			testMaterial = RedPointColorMaterial(self)
+
+			var interleaveData, interleaveData2
+			interleaveData = []
+
+			var i = 100000
+			while (i--) {
+				var t = Math.random() * 100 - 50
+				interleaveData.push(Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50)
+				interleaveData.push(Math.random() * 10)
+				interleaveData.push(Math.random(), Math.random(), Math.random(), 1)
+			}
+			interleaveData = new Float32Array(interleaveData)
+			var testParticle = RedPointUnit(
+				self,
+				interleaveData,
+				[
+					RedInterleaveInfo('aVertexPosition', 3),
+					RedInterleaveInfo('aPointSize', 1),
+					RedInterleaveInfo('aVertexColor', 4)
+				],
+				testMaterial
+			)
+			tScene3D.addChild(testParticle)
+		})();
+
+		(function () {
+			var testMaterial
+
+			testMaterial = RedPointBitmapMaterial(self, RedBitmapTexture(self, '../asset/alphaTest.png'))
 
 
-            tScene3D['grid'] = RedGrid(self)
+			var interleaveData
+			interleaveData = []
+
+			var i = 10000
+			while (i--) {
+				var t = Math.random() * 100 - 50
+				interleaveData.push(Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50)
+				interleaveData.push(Math.random() * 100)
+			}
+			interleaveData = new Float32Array(interleaveData)
+
+			var testParticle = RedPointUnit(
+				self,
+				interleaveData,
+				[
+					RedInterleaveInfo('aVertexPosition', 3),
+					RedInterleaveInfo('aPointSize', 1)
+				],
+				testMaterial
+			)
+			tScene3D.addChild(testParticle)
+		})();
 
 
-
-            tRenderer.start(this, function (time) {
-
-                tCamera.x = Math.sin(time / 3500) * 30
-                tCamera.y = Math.cos(time / 3500) * 30
-                if (tCamera.y < 1) tCamera.y = 1
-                tCamera.z = Math.cos(time / 3500) * 30 + Math.sin(time / 31500) * 30
+		tScene3D['grid'] = RedGrid(self)
 
 
-                tCamera.lookAt(0, 0, 0)
+		tRenderer.start(this, function (time) {
 
-                tRenderer.renderDebuger.visible = true
+			tCamera.x = Math.sin(time / 3500) * 30
+			tCamera.y = Math.cos(time / 3500) * 30
+			if (tCamera.y < 1) tCamera.y = 1
+			tCamera.z = Math.cos(time / 3500) * 30 + Math.sin(time / 31500) * 30
 
-            })
 
-            console.log(tScene3D)
-        })
-    </script>
+			tCamera.lookAt(0, 0, 0)
+
+			tRenderer.renderDebuger.visible = true
+
+		})
+
+		console.log(tScene3D)
+	})
+</script>
 </body>
 
 </html>

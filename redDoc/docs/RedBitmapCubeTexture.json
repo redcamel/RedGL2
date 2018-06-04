@@ -2,7 +2,7 @@
   {
     "constructorYn": true,
     "title": "RedBitmapCubeTexture",
-    "description": "\n    RedBitmapCubeTexture Instance 생성\n",
+    "description": "\nRedBitmapCubeTexture Instance 생성\n",
     "params": {
       "redGL": [
         {
@@ -19,10 +19,10 @@
           "type": "Object"
         },
         "텍스쳐 정의옵션",
-        "\n        <code>\n        {\n            min: gl.LINEAR_MIPMAP_NEAREST,\n            max: gl.LINEAR,\n            wrap_s: gl.REPEAT,\n            wrap_t: gl.REPEAT\n        }\n        </code>\n        "
+        "\n<code>\n{\nmin: gl.LINEAR_MIPMAP_NEAREST,\nmax: gl.LINEAR,\nwrap_s: gl.REPEAT,\nwrap_t: gl.REPEAT\n}\n</code>\n"
       ]
     },
-    "example": "\nRedBitmapCubeTexture( RedGL Instance,  srcList, {\n    min: gl.LINEAR_MIPMAP_NEAREST,\n    max: gl.LINEAR,\n    wrap_s: gl.REPEAT,\n    wrap_t: gl.REPEAT\n})\n",
+    "example": "\nRedBitmapCubeTexture( RedGL Instance,  srcList, {\nmin: gl.LINEAR_MIPMAP_NEAREST,\nmax: gl.LINEAR,\nwrap_s: gl.REPEAT,\nwrap_t: gl.REPEAT\n})\n",
     "return": "RedBitmapCubeTexture Instance"
   }
 ]

@@ -11,7 +11,7 @@
   {
     "constructorYn": true,
     "title": "RedPointBitmapMaterial",
-    "description": "\n    RedPointBitmapMaterial Instance 생성\n",
+    "description": "\nRedPointBitmapMaterial Instance 생성\n",
     "params": {
       "redGL": [
         {

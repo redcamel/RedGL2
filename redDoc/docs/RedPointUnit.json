@@ -2,7 +2,7 @@
   {
     "constructorYn": true,
     "title": "RedPointUnit",
-    "description": "\n    RedPointUnit Instance 생성기\n",
+    "description": "\nRedPointUnit Instance 생성기\n",
     "params": {
       "redGL": [
         {
@@ -14,7 +14,7 @@
           "type": "Array"
         }
       ],
-      "interleaveDefineInfo": [
+      "interleaveDefineInfoList": [
         {
           "type": "Array"
         }

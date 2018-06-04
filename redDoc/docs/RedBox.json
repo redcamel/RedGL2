@@ -2,7 +2,7 @@
   {
     "constructorYn": true,
     "title": "RedBox",
-    "description": "\n    RedBox Instance 생성기.\n    Box 형태의 RedGeometry 생성\n",
+    "description": "\nRedBox Instance 생성기.\nBox 형태의 RedGeometry 생성\n",
     "params": {
       "redGL": [
         {
@@ -46,7 +46,7 @@
         "기본값 : 1"
       ]
     },
-    "example": "\n    RedBox(RedGL Instance);\n    RedBox(RedGL Instance, 1, 1, 1);\n    RedBox(RedGL Instance, 1, 1, 1, 16, 16, 16);\n",
+    "example": "\nRedBox(RedGL Instance);\nRedBox(RedGL Instance, 1, 1, 1);\nRedBox(RedGL Instance, 1, 1, 1, 16, 16, 16);\n",
     "return": "RedBox Instance"
   }
 ]

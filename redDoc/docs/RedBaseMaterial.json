@@ -1,20 +1,14 @@
 [
   {
     "code": "METHOD",
-    "title": "checkProgram",
-    "description": "\n    키에 해당하는 프로그램이 존재할경우 기존것을 리턴하고 \n    없을경우 신규생성함.\n",
-    "return": "void"
-  },
-  {
-    "code": "METHOD",
-    "title": "checkProperty",
-    "description": "\n    소유하고 있는 Program에서 사용하고 있지만 \n    재질이 해당 유니폼에 대응하는 프로퍼티를 소유하고 않는경우를 검출.\n",
+    "title": "checkUniformAndProperty",
+    "description": "\n소유하고 있는 Program에서 사용하고 있지만\n재질이 해당 유니폼에 대응하는 프로퍼티를 소유하고 않는경우를 검출.\n",
     "return": "void"
   },
   {
     "constructorYn": true,
     "title": "RedBaseMaterial",
-    "description": "\n    RedBaseMaterial 기저층\n    프로토타입 확장을 통해서만 사용가능( RedGLUtil.copyProto 사용 )\n    \n            ",
+    "description": "\nRedBaseMaterial 기저층\n프로토타입 확장을 통해서만 사용가능( RedGLUtil.copyProto 사용 )\n",
     "return": "void"
   }
 ]

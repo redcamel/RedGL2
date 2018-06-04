@@ -2,19 +2,19 @@
   {
     "constructorYn": true,
     "title": "RedSystemShaderCode",
-    "description": "\n    쉐이더 기본 정의 코드.\n",
+    "description": "\n쉐이더 기본 정의 코드.\n",
     "return": "RedSystemShaderCode"
   },
   {
     "code": "CONST",
     "title": "RedSystemShaderCode.fShareSource",
-    "description": "\n    프레그먼트 쉐이더 기본 생성코드 리스트\n",
+    "description": "\n프레그먼트 쉐이더 기본 생성코드 리스트\n",
     "return": "Array"
   },
   {
     "code": "CONST",
     "title": "RedSystemShaderCode.vShareSource",
-    "description": "\n    버텍스 쉐이더 기본 생성코드 리스트\n",
+    "description": "\n버텍스 쉐이더 기본 생성코드 리스트\n",
     "return": "Array"
   }
 ]

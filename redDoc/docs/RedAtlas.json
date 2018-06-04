@@ -2,7 +2,7 @@
   {
     "constructorYn": true,
     "title": "Atlas",
-    "description": "\n    Atlas Instance 생성\n",
+    "description": "\nAtlas Instance 생성\n",
     "params": {
       "redGL": [
         {
@@ -20,25 +20,25 @@
         }
       ]
     },
-    "example": "\n    var imgList;\n    imgList = [\n        '../asset/draft1.png',\n        '../asset/draft2.png',\n        '../asset/draft3.png',\n        '../asset/draft4.png',\n        '../asset/draft5.png'\n    ]\n    RedAtlas(\n        RedGL Instance, \n        imgList,\n        function (resultInfo) {\n            console.log(this)\n            console.log(this.getAtlasMap())\n            console.log(this.getAtlasInfoList())\n        }\n    )\n",
+    "example": "\nvar imgList;\nimgList = [\n'../asset/draft1.png',\n'../asset/draft2.png',\n'../asset/draft3.png',\n'../asset/draft4.png',\n'../asset/draft5.png'\n]\nRedAtlas(\nRedGL Instance,\nimgList,\nfunction (resultInfo) {\nconsole.log(this)\nconsole.log(this.getAtlasMap())\nconsole.log(this.getAtlasInfoList())\n}\n)\n",
     "return": "Atlas Instance"
   },
   {
     "code": "METHOD",
     "title": "getAtlasInfoList",
-    "description": "\n    아틀라스정보 리스트\n",
+    "description": "\n아틀라스정보 리스트\n",
     "return": "Array"
   },
   {
     "code": "METHOD",
     "title": "getAtlasMap",
-    "description": "\n    아틀라스정보 반환\n",
+    "description": "\n아틀라스정보 반환\n",
     "return": "Object"
   },
   {
     "code": "METHOD",
     "title": "loadList",
-    "description": "\n    이미지 로더\n",
+    "description": "\n이미지 로더\n",
     "params": {
       "redGL": [
         {

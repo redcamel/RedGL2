@@ -6,7 +6,7 @@
   {
     "constructorYn": true,
     "title": "RedBitmapMaterial",
-    "description": "\n    RedBitmapMaterial Instance 생성\n",
+    "description": "\nRedBitmapMaterial Instance 생성\n",
     "params": {
       "redGL": [
         {
@@ -20,7 +20,7 @@
         "RedBitmapTexture Instance"
       ]
     },
-    "example": "\n    RedBitmapMaterial(RedGL Instance, RedBitmapTexture(RedGL Instance, src))\n",
+    "example": "\nRedBitmapMaterial(RedGL Instance, RedBitmapTexture(RedGL Instance, src))\n",
     "return": "RedBitmapMaterial Instance"
   }
 ]

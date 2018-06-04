@@ -2,7 +2,7 @@
   {
     "constructorYn": true,
     "title": "RedPlane",
-    "description": "\n    RedPlane Instance 생성기.\n    Box 형태의 RedGeometry 생성\n",
+    "description": "\nRedPlane Instance 생성기.\nBox 형태의 RedGeometry 생성\n",
     "params": {
       "redGL": [
         {
@@ -34,7 +34,7 @@
         "기본값 : 1"
       ]
     },
-    "example": "\n    RedPlane(RedGL Instance);\n    RedPlane(RedGL Instance, 1, 1);\n    RedPlane(RedGL Instance, 1, 1, 16, 16);\n",
+    "example": "\nRedPlane(RedGL Instance);\nRedPlane(RedGL Instance, 1, 1);\nRedPlane(RedGL Instance, 1, 1, 16, 16);\n",
     "return": "RedPlane Instance"
   }
 ]

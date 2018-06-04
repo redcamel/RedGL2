@@ -1,18 +1,18 @@
 [
   {
     "title": "centerX",
-    "description": "\n    정중앙 중심의 가로 위치\n    기본값 : 0.0\n",
+    "description": "\n정중앙 중심의 가로 위치\n기본값 : 0.0\n",
     "return": "Number"
   },
   {
     "title": "centerY",
-    "description": "\n    정중앙 중심의 세로 위치\n    기본값 : 0.0\n",
+    "description": "\n정중앙 중심의 세로 위치\n기본값 : 0.0\n",
     "return": "Number"
   },
   {
     "constructorYn": true,
     "title": "RedPostEffect_ZoomBlur",
-    "description": "\n    RedPostEffect_ZoomBlur Instance 생성.\n",
+    "description": "\nRedPostEffect_ZoomBlur Instance 생성.\n",
     "params": {
       "redGL": [
         {
@@ -24,7 +24,7 @@
   },
   {
     "title": "strength",
-    "description": "\n    강도\n    기본값 : 0.15\n",
+    "description": "\n강도\n기본값 : 0.15\n",
     "return": "Number"
   }
 ]

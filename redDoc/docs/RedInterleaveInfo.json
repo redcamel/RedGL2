@@ -2,7 +2,7 @@
   {
     "constructorYn": true,
     "title": "RedInterleaveInfo",
-    "description": "\n    RedInterleaveInfo Instance 생성자\n",
+    "description": "\nRedInterleaveInfo Instance 생성자\n",
     "params": {
       "attributeKey": [
         {
@@ -24,7 +24,7 @@
         "기본값 : false"
       ]
     },
-    "example": "\n    RedInterleaveInfo('aVertexPosition', 3);\n",
+    "example": "\nRedInterleaveInfo('aVertexPosition', 3);\n",
     "return": "RedBuffer Instance"
   }
 ]
