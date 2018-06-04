@@ -98,6 +98,7 @@ gulp.task('make-doc', function () {
 		"src/material/RedBitmapMaterial.js",
 		"src/material/RedPointBitmapMaterial.js",
 		"src/material/RedStandardMaterial.js",
+		"src/material/RedVideoMaterial.js",
 
 		"src/material/system/RedGridMaterial.js",
 		"src/material/RedPointColorMaterial.js",
@@ -149,6 +150,7 @@ gulp.task('make-doc', function () {
 		"src/resources/RedAtlas.js",
 		"src/resources/system/RedAtlasUV.js",
 		"src/resources/RedBitmapTexture.js",
+		"src/resources/RedVideoTexture.js",
 		"src/resources/RedAtlasTexture.js",
 		"src/resources/RedBitmapCubeTexture.js",
 
@@ -217,6 +219,7 @@ gulp.task('combine-js', function () {
 		"src/resources/RedAtlas.js",
 		"src/resources/system/RedAtlasUV.js",
 		"src/resources/RedBitmapTexture.js",
+		"src/resources/RedVideoTexture.js",
 		"src/resources/RedAtlasTexture.js",
 		"src/resources/RedBitmapCubeTexture.js",
 
@@ -234,6 +237,7 @@ gulp.task('combine-js', function () {
 		"src/material/RedBitmapMaterial.js",
 		"src/material/RedPointBitmapMaterial.js",
 		"src/material/RedStandardMaterial.js",
+		"src/material/RedVideoMaterial.js",
 		// 시스템 재질
 		"src/material/system/RedGridMaterial.js",
 		"src/material/RedPointColorMaterial.js",
