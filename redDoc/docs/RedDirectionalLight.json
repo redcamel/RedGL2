@@ -1,7 +1,7 @@
 [
   {
     "title": "alpha",
-    "description": "\n기본값 : 0.1\n",
+    "description": "\n기본값 : 1\n",
     "return": "Number"
   },
   {

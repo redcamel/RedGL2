@@ -268,7 +268,7 @@ gulp.task('combine-js', function () {
 		"src/postEffect/antialiasing/RedPostEffect_FXAA.js"
 	])
 		.pipe(concat(name + '.min.js')) // 병합한다.
-		.pipe(stripDebug())
+		//.pipe(stripDebug())
 		.pipe(uglify(
 			{
 				output: {

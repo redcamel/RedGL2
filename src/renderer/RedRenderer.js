@@ -241,7 +241,7 @@ var RedRenderer;
 						tLocationInfo = tSystemUniformGroup['uAmbientIntensity'];
 						tLocation = tLocationInfo['location'];
 						tUUID = tLocationInfo['_UUID'];
-						tValue = tLightData['intensity'];
+						tValue = tLightData['_intensity'];
 						if ( tLocation && cacheSystemUniform[tUUID] != tValue ) {
 							gl.uniform1f( tLocation, tValue )
 							cacheSystemUniform[tUUID] = tValue
@@ -297,7 +297,7 @@ var RedRenderer;
 
 							tLocationInfo = tSystemUniformGroup['uDirectionalLightIntensity'];
 							tLocation = tLocationInfo['location'];
-							if ( tLocation ) tIntensityList[i] = tLightData['intensity']
+							if ( tLocation ) tIntensityList[i] = tLightData['_intensity']
 						}
 						//
 					}
@@ -358,7 +358,7 @@ var RedRenderer;
 							tDebugObj['x'] = tVector[0];
 							tDebugObj['y'] = tVector[1];
 							tDebugObj['z'] = tVector[2];
-							tDebugObj['scaleX'] = tDebugObj['scaleY'] = tDebugObj['scaleZ'] = tLightData['radius']
+							tDebugObj['scaleX'] = tDebugObj['scaleY'] = tDebugObj['scaleZ'] = tLightData['_radius']
 							tDebugObj['material']['_color'] = tLightData['_color']
 							lightDebugRenderList.push( tDebugObj )
 						}
@@ -382,11 +382,11 @@ var RedRenderer;
 						//
 						tLocationInfo = tSystemUniformGroup['uPointLightIntensity'];
 						tLocation = tLocationInfo['location'];
-						if ( tLocation ) tIntensityList[i] = tLightData['intensity']
+						if ( tLocation ) tIntensityList[i] = tLightData['_intensity']
 						//
 						tLocationInfo = tSystemUniformGroup['uPointLightRadius'];
 						tLocation = tLocationInfo['location'];
-						if ( tLocation ) tRadiusList[i] = tLightData['radius']
+						if ( tLocation ) tRadiusList[i] = tLightData['_radius']
 					}
 					//
 					tLocationInfo = tSystemUniformGroup['uPointLightPosition'];
