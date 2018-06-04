@@ -469,6 +469,29 @@ RedGL( document.createElement( 'canvas' ), function ( v ) {
 					unit.run( false )
 				}
 			}, false )
+		),
+		redGroup(
+			"callback",
+			redTest( "callback : 미입력", function ( unit, title ) {
+				try {
+					RedBitmapTexture( tRedGL, '../../asset/alphaTest.png' )
+					unit.run( true )
+				} catch ( error ) {
+					console.log( '///////////////////////////////////////////////////////////' )
+					console.log( title, '\n', error )
+					unit.run( false )
+				}
+			}, true ),
+			redTest( "callback : 성공테스트", function ( unit, title ) {
+				RedBitmapTexture( tRedGL, '../../asset/alphaTest.png', null, function ( v ) {
+					unit.run( v )
+				} )
+			}, true ),
+			redTest( "callback : 실패테스트", function ( unit, title ) {
+				RedBitmapTexture( tRedGL, '~~~', null, function ( v ) {
+					unit.run( v )
+				} )
+			}, false )
 		)
 	)
 } )

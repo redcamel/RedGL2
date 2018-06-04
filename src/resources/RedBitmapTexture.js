@@ -57,7 +57,7 @@ var RedBitmapTexture;
 		gl.bindTexture( gl.TEXTURE_2D, null );
 	}
 	loadTexture = (function () {
-		return function ( gl, texture, src, option, callBack ) {
+		return function ( gl, self, texture, src, option, callBack ) {
 			var onError, onLoad;
 			var clearEvents;
 			if ( !option ) option = {}
@@ -66,15 +66,15 @@ var RedBitmapTexture;
 				img.removeEventListener( 'load', onLoad );
 			}
 			onError = function () {
+				clearEvents( this );
+				callBack ? callBack.call( self, false ) : 0
 				var msg = "couldn't load image: " + src;
 				RedGLUtil.throwFunc( msg );
-				clearEvents( this );
-				callBack ? callBack( false ) : 0
 			}
 			onLoad = function () {
 				clearEvents( this );
 				makeTexture( gl, texture, this, option );
-				callBack ? callBack( true ) : 0
+				callBack ? callBack.call( self, true ) : 0
 			}
 
 			setEmptyTexture( gl, texture )
@@ -173,10 +173,11 @@ var RedBitmapTexture;
 				)
 			) RedGLUtil.throwFunc( 'RedBitmapTexture : wrap_t 텍스쳐 옵션에서 사용할수 없는값 입력됨.', '입력값 : ' + option['wrap_t'] );
 		}
+
 		this['webglTexture'] = tGL.createTexture();
 		this['atlascoord'] = RedAtlasUV( redGL )
 		this['_UUID'] = RedGL['makeUUID']();
-		if ( src ) loadTexture( tGL, this['webglTexture'], src, option, callBack );
+		if ( src ) loadTexture( tGL, this, this['webglTexture'], src, option, callBack );
 		console.log( this )
 	}
 	RedBitmapTexture.prototype = {};
