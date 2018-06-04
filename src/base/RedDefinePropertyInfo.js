@@ -145,7 +145,7 @@ var RedDefinePropertyInfo;
 	} )
 	Object.defineProperty( RedDefinePropertyInfo, 'alpha', {
 		get: function () {
-			var _v = '#ff2211'
+			var _v = 1
 			return {
 				get: function () { return _v; },
 				set: function ( v ) {

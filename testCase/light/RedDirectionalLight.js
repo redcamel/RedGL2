@@ -114,7 +114,7 @@ RedGL( document.createElement( 'canvas' ), function ( v ) {
 		),
 		redGroup(
 			"intensity",
-			redTest( "생성인자 반영되는지 체크 : 숫자만 허용하는지", function ( unit, title ) {
+			redTest( "생성인자 숫자만 허용하는지", function ( unit, title ) {
 				try {
 					var t0 = RedDirectionalLight( tRedGL );
 					t0['intensity'] = 'test'
@@ -125,7 +125,7 @@ RedGL( document.createElement( 'canvas' ), function ( v ) {
 					unit.run( false )
 				}
 			}, false ),
-			redTest( "생성인자 반영되는지 체크 : 숫자만 허용하는지", function ( unit, title ) {
+			redTest( "생성인자 숫자만 허용하는지", function ( unit, title ) {
 				try {
 					var t0 = RedDirectionalLight( tRedGL );
 					t0['intensity'] = 1
@@ -136,7 +136,7 @@ RedGL( document.createElement( 'canvas' ), function ( v ) {
 					unit.run( false )
 				}
 			}, true ),
-			redTest( "생성인자 반영되는지 체크 : 0이하를 입력하면 0으로 치환되는지", function ( unit, title ) {
+			redTest( "생성인자 0이하를 입력하면 0으로 치환되는지", function ( unit, title ) {
 				try {
 					var t0 = RedDirectionalLight( tRedGL );
 					t0['intensity'] = -1
