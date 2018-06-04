@@ -142,6 +142,15 @@ var RedDefinePropertyInfo;
 				}
 			}
 		})(),
+		videoTextureMust: (function () {
+			return {
+				get: function () { return this['_videoTexture']; },
+				set: function ( v ) {
+					if ( !(v instanceof RedVideoTexture) ) RedGLUtil.throwFunc( 'videoTexture : RedVideoTexture Instance만 허용됩니다.', '입력값 : ' + v )
+					this['_videoTexture'] = v
+				}
+			}
+		})(),
 		skyBoxTexture: (function () {
 			return {
 				get: function () { return this['_skyBoxTexture']; },

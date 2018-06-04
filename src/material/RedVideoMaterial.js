@@ -82,15 +82,15 @@ var RedVideoMaterial;
 		// 유니폼 프로퍼티
 		/**DOC:
 		 {
-			 title :`diffuseTexture`,
+			 title :`videoTexture`,
 			 return : 'RedVideoMaterial'
 		 }
 		 :DOC*/
-		this['_videoTexture'] = videoTexture;
+		this['_videoTexture'] = null;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		//Object.defineProperty( this, 'videoTexture', RedDefinePropertyInfo['videoTexture'] );
-		//this['videoTexture'] = diffuseTexture;
+		Object.defineProperty( this, 'videoTexture', RedDefinePropertyInfo['videoTextureMust'] );
+		this['videoTexture'] = videoTexture;
 		this['program'] = RedProgram['makeProgram']( redGL, PROGRAM_NAME, vSource, fSource );
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkUniformAndProperty();
