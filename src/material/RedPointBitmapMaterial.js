@@ -14,7 +14,7 @@ var RedPointBitmapMaterial;
 	fSource = function () {
 		/* @preserve
 		 precision mediump float;
-		 uniform sampler2D uDiffuseTexture;
+		 uniform sampler2D u_diffuseTexture;
 		 uniform float uAlphaTest;
 		 float fogFactor(float perspectiveFar, float density){
 			 float flog_cord = gl_FragCoord.z / gl_FragCoord.w / perspectiveFar;
@@ -26,7 +26,7 @@ var RedPointBitmapMaterial;
 			return mix(fogColor, currentColor, fogFactor);
 		 }
 		 void main(void) {
-			 vec4 finalColor = texture2D(uDiffuseTexture, vec2(gl_PointCoord.x, - gl_PointCoord.y));
+			 vec4 finalColor = texture2D(u_diffuseTexture, vec2(gl_PointCoord.x, - gl_PointCoord.y));
 			 finalColor.rgb *= finalColor.a;
 			 if(finalColor.a < uAlphaTest) discard;
 			 if(uUseFog) gl_FragColor = fog( fogFactor(uFogDistance, uFogDensity), uFogColor, finalColor);
@@ -55,7 +55,6 @@ var RedPointBitmapMaterial;
 	RedPointBitmapMaterial = function ( redGL, diffuseTexture ) {
 		if ( !(this instanceof RedPointBitmapMaterial) ) return new RedPointBitmapMaterial( redGL, diffuseTexture );
 		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedPointBitmapMaterial : RedGL Instance만 허용됩니다.', redGL )
-		if ( !(diffuseTexture instanceof RedBitmapTexture) ) RedGLUtil.throwFunc( 'RedPointBitmapMaterial : RedBitmapTexture Instance만 허용됩니다.' )
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
 		/**DOC:
@@ -64,9 +63,11 @@ var RedPointBitmapMaterial;
 			 return : 'RedBitmapTexture'
 		 }
 		 :DOC*/
-		this['diffuseTexture'] = diffuseTexture;
+		this['_diffuseTexture'] = diffuseTexture;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
+		Object.defineProperty( this, 'diffuseTexture', RedDefinePropertyInfo['diffuseTexture'] );
+		this['diffuseTexture'] = diffuseTexture;
 		this['program'] = RedProgram['makeProgram']( redGL, PROGRAM_NAME, vSource, fSource );
 		/**DOC:
 		 {
