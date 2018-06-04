@@ -50,9 +50,9 @@ var RedVideoTexture;
 		return function ( gl, self, texture, src, callBack ) {
 			var onError, onLoad;
 			var clearEvents;
-			clearEvents = function ( img ) {
-				img.removeEventListener( 'error', onError );
-				img.removeEventListener( 'load', onLoad );
+			clearEvents = function ( video ) {
+				video.removeEventListener( 'error', onError );
+				video.removeEventListener( 'canplaythrough', onLoad );
 			}
 			onError = function () {
 				clearEvents( this );
