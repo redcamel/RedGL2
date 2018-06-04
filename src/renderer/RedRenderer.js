@@ -903,10 +903,18 @@ var RedRenderer;
 								} else {
 									// console.log('온다2',tUniformLocationInfo['materialPropertyName'],tSamplerIndex,tSamplerIndex)
 									tPrevSamplerIndex == tSamplerIndex ? 0 : gl.activeTexture( gl.TEXTURE0 + (tPrevSamplerIndex = tSamplerIndex) );
-									gl.bindTexture( tRenderType == 'sampler2D' ? gl.TEXTURE_2D : gl.TEXTURE_CUBE_MAP, tUniformValue['webglTexture'] );
+									if ( tUniformValue['_videoDom'] ) {
+										//TODO: 일단 비디오를 우겨넣었으니 정리를 해야함
+										gl.bindTexture( gl.TEXTURE_2D, tUniformValue['webglTexture'] );
+										gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, tUniformValue['_videoDom'] );
+									} else {
+										gl.bindTexture( tRenderType == 'sampler2D' ? gl.TEXTURE_2D : gl.TEXTURE_CUBE_MAP, tUniformValue['webglTexture'] );
+									}
 									tCacheBySamplerIndex[tUUID] == tSamplerIndex ? 0 : gl[tUniformLocationInfo['renderMethod']]( tWebGLUniformLocation, tCacheBySamplerIndex[tUUID] = tSamplerIndex );
 									tCacheBySamplerIndex[tSamplerIndex] = tUniformValue['_UUID'];
+
 								}
+
 
 								// 아틀라스 UV검색
 								if ( tSystemUniformGroup['uAtlascoord']['location'] ) {
@@ -919,7 +927,6 @@ var RedRenderer;
 							} else {
 								// console.log('설마',tUniformLocationInfo['materialPropertyName'])
 								if ( tRenderType == 'sampler2D' ) {
-
 									if ( tCacheBySamplerIndex[tSamplerIndex] == 0 ) {
 									} else {
 										tPrevSamplerIndex == 0 ? 0 : gl.activeTexture( gl.TEXTURE0 );
@@ -928,7 +935,6 @@ var RedRenderer;
 										tCacheBySamplerIndex[tSamplerIndex] = 0;
 										tPrevSamplerIndex = 0;
 									}
-
 								} else {
 									if ( tCacheBySamplerIndex[tSamplerIndex] == 1 ) {
 									} else {

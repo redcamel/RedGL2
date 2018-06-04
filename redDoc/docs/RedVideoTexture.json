@@ -1,0 +1,28 @@
+[
+  {
+    "constructorYn": true,
+    "title": "RedVideoTexture",
+    "description": "\nRedVideoTexture Instance 생성\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ],
+      "src": [
+        {
+          "type": "string"
+        }
+      ],
+      "option": [
+        {
+          "type": "Object"
+        },
+        "텍스쳐 정의옵션",
+        "\n<code>\n{\nmin: this.gl.LINEAR_MIPMAP_NEAREST,\nmax: this.gl.LINEAR,\nwrap_s: this.gl.REPEAT,\nwrap_t: this.gl.REPEAT,\nanisotropic: 16 // 지원가능한경우에만 작동\n}\n</code>\n"
+      ]
+    },
+    "example": "\nRedVideoTexture( RedGL Instance,  src, {\nmin: gl.LINEAR_MIPMAP_NEAREST,\nmax: gl.LINEAR,\nwrap_s: gl.REPEAT,\nwrap_t: gl.REPEAT\n})\n",
+    "return": "RedVideoTexture Instance"
+  }
+]
