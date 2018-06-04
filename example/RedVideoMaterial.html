@@ -2,10 +2,11 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>RedBitmapMaterial</title>
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
+    <title>RedVideoMaterial</title>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
     />
     <style>
         html,
@@ -21,99 +22,99 @@
 </head>
 
 <body>
-    <canvas id="test" style="border: none;background:red"></canvas>
-    <script>
-        var testUI;
-        document.getElementById('test')
-        RedGL(document.getElementById('test'), function (v) {
-            if (v) {
-                console.log('초기화 성공!')
-                var tWorld, tScene, tCamera, tRenderer;
+<canvas id="test" style="border: none;background:red"></canvas>
+<script>
+	var testUI;
+	document.getElementById( 'test' )
+	RedGL( document.getElementById( 'test' ), function ( v ) {
+		if ( v ) {
+			console.log( '초기화 성공!' )
+			var tWorld, tScene, tCamera, tRenderer;
 
-                // 월드 생성
-                this['world'] = tWorld = RedWorld();
+			// 월드 생성
+			this['world'] = tWorld = RedWorld();
 
-                // 씬 생성
-                tScene = RedScene(this);
+			// 씬 생성
+			tScene = RedScene( this );
 
-                // 카메라 생성
-                tCamera = RedCamera();
+			// 카메라 생성
+			tCamera = RedCamera();
 
-                // 렌더러 생성
-                tRenderer = RedRenderer();
+			// 렌더러 생성
+			tRenderer = RedRenderer();
 
-                // 뷰생성 및 적용
-                tWorld.addView(RedView('test', tScene, tCamera));
+			// 뷰생성 및 적용
+			tWorld.addView( RedView( 'test', tScene, tCamera ) );
 
-                // 그리드 설정
-                tScene['grid'] = RedGrid(this)
+			// 그리드 설정
+			tScene['grid'] = RedGrid( this )
 
-                // Mesh 설정
-                var tMesh;
-                var tMaterial = RedBitmapMaterial(this, RedBitmapTexture(this, '../asset/draft1.png'))
-                var tMaterial2 = RedBitmapMaterial(this, RedBitmapTexture(this, '../asset/draft2.png'))
-                var tMaterial3 = RedBitmapMaterial(this, RedBitmapTexture(this, '../asset/alphaTest.png'))
-                tMesh = RedMesh(this, RedBox(this), tMaterial)
-                tMesh.x = -1.5
-                tScene.addChild(tMesh)
-                tMesh = RedMesh(this, RedBox(this), tMaterial2)
-                tMesh.x = 0
-                tScene.addChild(tMesh)
-                tMesh = RedMesh(this, RedBox(this), tMaterial3)
-                tMesh.x = 1.5
-                tScene.addChild(tMesh)
+			// Mesh 설정
+			var tMesh;
+			var tMaterial = RedVideoMaterial( this, RedVideoTexture( this, '../asset/mov_bbb.mp4' ) )
+			var tMaterial2 = RedVideoMaterial( this, RedVideoTexture( this, '../asset/mov_bbb.mp4' ) )
+			var tMaterial3 = RedVideoMaterial( this, RedVideoTexture( this, '../asset/mov_bbb.mp4' ) )
+			tMesh = RedMesh( this, RedBox( this ), tMaterial )
+			tMesh.x = -1.5
+			tScene.addChild( tMesh )
+			tMesh = RedMesh( this, RedBox( this ), tMaterial2 )
+			tMesh.x = 0
+			tScene.addChild( tMesh )
+			tMesh = RedMesh( this, RedBox( this ), tMaterial3 )
+			tMesh.x = 1.5
+			tScene.addChild( tMesh )
 
-                tMesh = RedMesh(this, RedSphere(this, 0.5, 32, 32, 32), tMaterial)
-                tMesh.x = -1.5
-                tMesh.y = 1.5
-                tScene.addChild(tMesh)
-                tMesh = RedMesh(this, RedSphere(this, 0.5, 32, 32, 32), tMaterial2)
-                tMesh.x = 0
-                tMesh.y = 1.5
-                tScene.addChild(tMesh)
-                tMesh = RedMesh(this, RedSphere(this, 0.5, 32, 32, 32), tMaterial3)
-                tMesh.x = 1.5
-                tMesh.y = 1.5
-                tScene.addChild(tMesh)
+			tMesh = RedMesh( this, RedSphere( this, 0.5, 32, 32, 32 ), tMaterial )
+			tMesh.x = -1.5
+			tMesh.y = 1.5
+			tScene.addChild( tMesh )
+			tMesh = RedMesh( this, RedSphere( this, 0.5, 32, 32, 32 ), tMaterial2 )
+			tMesh.x = 0
+			tMesh.y = 1.5
+			tScene.addChild( tMesh )
+			tMesh = RedMesh( this, RedSphere( this, 0.5, 32, 32, 32 ), tMaterial3 )
+			tMesh.x = 1.5
+			tMesh.y = 1.5
+			tScene.addChild( tMesh )
 
-                tMesh = RedMesh(this, RedPlane(this), tMaterial)
-                tMesh['useCullFace'] = false
-                tMesh.x = -1.5
-                tMesh.y = -1.5
-                tScene.addChild(tMesh)
-                tMesh = RedMesh(this, RedPlane(this), tMaterial2)
-                tMesh['useCullFace'] = false
-                tMesh.x = 0
-                tMesh.y = -1.5
-                tScene.addChild(tMesh)
-                tMesh = RedMesh(this, RedPlane(this), tMaterial3)
-                tMesh['useCullFace'] = false
-                tMesh.x = 1.5
-                tMesh.y = -1.5
-                tScene.addChild(tMesh)
+			tMesh = RedMesh( this, RedPlane( this ), tMaterial )
+			tMesh['useCullFace'] = false
+			tMesh.x = -1.5
+			tMesh.y = -1.5
+			tScene.addChild( tMesh )
+			tMesh = RedMesh( this, RedPlane( this ), tMaterial2 )
+			tMesh['useCullFace'] = false
+			tMesh.x = 0
+			tMesh.y = -1.5
+			tScene.addChild( tMesh )
+			tMesh = RedMesh( this, RedPlane( this ), tMaterial3 )
+			tMesh['useCullFace'] = false
+			tMesh.x = 1.5
+			tMesh.y = -1.5
+			tScene.addChild( tMesh )
 
-                // 렌더시작
-                tRenderer.start(this, function (time) {
-                    tCamera.x = Math.sin(time / 2500) * 8
-                    tCamera.y = Math.cos(time / 2500) * 8
-                    tCamera.z = Math.cos(time / 2500) * 8 + Math.sin(time / 2500) * 8
-                    tCamera.lookAt(0, 0, 0)
-                })
+			// 렌더시작
+			tRenderer.start( this, function ( time ) {
+				tCamera.x = Math.sin( time / 2500 ) * 8
+				tCamera.y = Math.cos( time / 2500 ) * 8
+				tCamera.z = Math.cos( time / 2500 ) * 8 + Math.sin( time / 2500 ) * 8
+				tCamera.lookAt( 0, 0, 0 )
+			} )
 
-                // 렌더 디버거 활성화
-                tRenderer['renderDebuger']['visible'] = true
-                testUI(this, tCamera, tScene)
-            } else {
-                console.log('초기화 실패!')
-            }
-        })
-        testUI = function (redGL, tCamera, tScene) {
-            var gui = new baseTestUI(redGL)
-            gui.initRedGL()
-            gui.initCamera(tCamera)
-            gui.initScene(tScene)
-        }
-    </script>
+			// 렌더 디버거 활성화
+			tRenderer['renderDebuger']['visible'] = true
+			testUI( this, tCamera, tScene )
+		} else {
+			console.log( '초기화 실패!' )
+		}
+	} )
+	testUI = function ( redGL, tCamera, tScene ) {
+		var gui = new baseTestUI( redGL )
+		gui.initRedGL()
+		gui.initCamera( tCamera )
+		gui.initScene( tScene )
+	}
+</script>
 </body>
 
 </html>
