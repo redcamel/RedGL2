@@ -42,7 +42,7 @@ var RedFrameBuffer;
 		gl.bindRenderbuffer( gl.RENDERBUFFER, null );
 		gl.bindFramebuffer( gl.FRAMEBUFFER, null );
 
-		// console.log(this)
+		console.log( this )
 	}
 	RedFrameBuffer.prototype = {
 		bind: function ( gl ) {

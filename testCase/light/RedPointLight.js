@@ -114,7 +114,7 @@ RedGL( document.createElement( 'canvas' ), function ( v ) {
 		),
 		redGroup(
 			"intensity",
-			redTest( "생성인자 반영되는지 체크 : 숫자만 허용하는지", function ( unit, title ) {
+			redTest( "숫자만 허용하는지", function ( unit, title ) {
 				try {
 					var t0 = RedPointLight( tRedGL );
 					t0['intensity'] = 'test'
@@ -125,7 +125,7 @@ RedGL( document.createElement( 'canvas' ), function ( v ) {
 					unit.run( false )
 				}
 			}, false ),
-			redTest( "생성인자 반영되는지 체크 : 숫자만 허용하는지", function ( unit, title ) {
+			redTest( "숫자만 허용하는지", function ( unit, title ) {
 				try {
 					var t0 = RedPointLight( tRedGL );
 					t0['intensity'] = 1
@@ -136,11 +136,47 @@ RedGL( document.createElement( 'canvas' ), function ( v ) {
 					unit.run( false )
 				}
 			}, true ),
-			redTest( "생성인자 반영되는지 체크 : 0이하를 입력하면 0으로 치환되는지", function ( unit, title ) {
+			redTest( "0이하를 입력하면 0으로 치환되는지", function ( unit, title ) {
 				try {
 					var t0 = RedPointLight( tRedGL );
 					t0['intensity'] = -1
 					unit.run( t0['intensity'] )
+				} catch ( error ) {
+					console.log( '///////////////////////////////////////////////////////////' )
+					console.log( title, '\n', error )
+					unit.run( false )
+				}
+			}, 0 )
+		),
+		redGroup(
+			"radius",
+			redTest( "숫자만 허용하는지", function ( unit, title ) {
+				try {
+					var t0 = RedPointLight( tRedGL );
+					t0['radius'] = 'test'
+					unit.run( true )
+				} catch ( error ) {
+					console.log( '///////////////////////////////////////////////////////////' )
+					console.log( title, '\n', error )
+					unit.run( false )
+				}
+			}, false ),
+			redTest( "숫자만 허용하는지", function ( unit, title ) {
+				try {
+					var t0 = RedPointLight( tRedGL );
+					t0['radius'] = 1
+					unit.run( true )
+				} catch ( error ) {
+					console.log( '///////////////////////////////////////////////////////////' )
+					console.log( title, '\n', error )
+					unit.run( false )
+				}
+			}, true ),
+			redTest( "0이하를 입력하면 0으로 치환되는지", function ( unit, title ) {
+				try {
+					var t0 = RedPointLight( tRedGL );
+					t0['radius'] = -1
+					unit.run( t0['radius'] )
 				} catch ( error ) {
 					console.log( '///////////////////////////////////////////////////////////' )
 					console.log( title, '\n', error )

@@ -57,7 +57,7 @@ var RedBitmapTexture;
 		gl.bindTexture( gl.TEXTURE_2D, null );
 	}
 	loadTexture = (function () {
-		return function ( gl, texture, src, option ) {
+		return function ( gl, texture, src, option, callBack ) {
 			var onError, onLoad;
 			var clearEvents;
 			if ( !option ) option = {}
@@ -69,10 +69,12 @@ var RedBitmapTexture;
 				var msg = "couldn't load image: " + src;
 				RedGLUtil.throwFunc( msg );
 				clearEvents( this );
+				callBack ? callBack( false ) : 0
 			}
 			onLoad = function () {
 				clearEvents( this );
 				makeTexture( gl, texture, this, option );
+				callBack ? callBack( true ) : 0
 			}
 
 			setEmptyTexture( gl, texture )
@@ -128,15 +130,53 @@ var RedBitmapTexture;
 		 return : 'RedBitmapTexture Instance'
 	 }
 	 :DOC*/
-	RedBitmapTexture = function ( redGL, src, option ) {
-		var gl;
-		if ( !(this instanceof RedBitmapTexture) ) return new RedBitmapTexture( redGL, src, option );
+	RedBitmapTexture = function ( redGL, src, option, callBack ) {
+		var tGL;
+		if ( !(this instanceof RedBitmapTexture) ) return new RedBitmapTexture( redGL, src, option, callBack );
 		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedBitmapTexture : RedGL Instance만 허용됩니다.', redGL );
-		gl = redGL.gl;
-		this['webglTexture'] = gl.createTexture();
+		if ( src && typeof  src != 'string' && !(src instanceof HTMLCanvasElement) ) RedGLUtil.throwFunc( 'RedBitmapTexture : src는 문자열 or Canvas Element만 허용.', '입력값 : ' + src );
+		tGL = redGL.gl;
+
+		if ( option ) {
+			if (
+				option['min']
+				&& !(
+					option['min'] == tGL.LINEAR
+					|| option['min'] == tGL.NEAREST
+					|| option['min'] == tGL.NEAREST_MIPMAP_NEAREST
+					|| option['min'] == tGL.LINEAR_MIPMAP_NEAREST
+					|| option['min'] == tGL.NEAREST_MIPMAP_LINEAR
+					|| option['min'] == tGL.LINEAR_MIPMAP_LINEAR
+				)
+			) RedGLUtil.throwFunc( 'RedBitmapTexture : min 텍스쳐 옵션에서 사용할수 없는값 입력됨.', '입력값 : ' + option['min'] );
+			if (
+				option['max']
+				&& !(
+					option['max'] == tGL.LINEAR
+					|| option['max'] == tGL.NEAREST
+				)
+			) RedGLUtil.throwFunc( 'RedBitmapTexture : max 텍스쳐 옵션에서 사용할수 없는값 입력됨.', '입력값 : ' + option['max'] );
+			if (
+				option['wrap_s']
+				&& !(
+					option['wrap_s'] == tGL.REPEAT
+					|| option['wrap_s'] == tGL.CLAMP_TO_EDGE
+					|| option['wrap_s'] == tGL.MIRRORED_REPEAT
+				)
+			) RedGLUtil.throwFunc( 'RedBitmapTexture : wrap_s 텍스쳐 옵션에서 사용할수 없는값 입력됨.', '입력값 : ' + option['wrap_s'] )
+			if (
+				option['wrap_t']
+				&& !(
+					option['wrap_t'] == tGL.REPEAT
+					|| option['wrap_t'] == tGL.CLAMP_TO_EDGE
+					|| option['wrap_t'] == tGL.MIRRORED_REPEAT
+				)
+			) RedGLUtil.throwFunc( 'RedBitmapTexture : wrap_t 텍스쳐 옵션에서 사용할수 없는값 입력됨.', '입력값 : ' + option['wrap_t'] );
+		}
+		this['webglTexture'] = tGL.createTexture();
 		this['atlascoord'] = RedAtlasUV( redGL )
 		this['_UUID'] = RedGL['makeUUID']();
-		if ( src ) loadTexture( gl, this['webglTexture'], src, option );
+		if ( src ) loadTexture( tGL, this['webglTexture'], src, option, callBack );
 		console.log( this )
 	}
 	RedBitmapTexture.prototype = {};
