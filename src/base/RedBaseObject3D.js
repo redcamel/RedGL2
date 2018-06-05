@@ -11,8 +11,7 @@ var RedBaseObject3D;
 		 return : 'void'
 	 }
 	 :DOC*/
-	RedBaseObject3D = function () {
-	}
+	RedBaseObject3D = function () {}
 	/**DOC:
 	 {
 		 title :`RedBaseObject3D.build`,

@@ -11,8 +11,7 @@ var RedBaseContainer;
 		 return : 'void'
 	 }
 	 :DOC*/
-	RedBaseContainer = function () {
-	}
+	RedBaseContainer = function () {}
 	var prototypeData = {
 		/**DOC:
 		 {
@@ -21,7 +20,7 @@ var RedBaseContainer;
 			 description : `자식추가`,
 			 params:{
 				 child : [
-					 {type:'RedMesh,RedSprite3D,RedLine,RedPointUnit'}
+					 {type:'RedBaseObject3D Instance'}
 				 ]
 			 },
 			 return : 'void'
@@ -30,9 +29,9 @@ var RedBaseContainer;
 		addChild: (function () {
 			var t0;
 			return function (child) {
-				if ( !child instanceof RedBaseObject3D ) RedGLUtil.throwFunc('addChild', 'RedMesh,RedSprite3D,RedLine,RedPointUnit Instance만 가능');
+				if ( !(child instanceof RedBaseObject3D ) ) RedGLUtil.throwFunc('addChild', 'RedBaseObject3D Instance만 가능', '입력값 : ' + child);
 				t0 = this['children'].indexOf(child);
-				if ( t0 != -1 ) child = this['children'].splice(t0, 1);
+				if ( t0 != -1 ) child = this['children'].splice(t0, 1)[0];
 				this['children'].push(child);
 			}
 		})(),
@@ -52,14 +51,15 @@ var RedBaseContainer;
 			 return : 'void'
 		 }
 		 :DOC*/
-		addChildAt: (function () {
-			var t0;
-			return function (child, index) {
-				if ( !child instanceof RedBaseObject3D )RedGLUtil.throwFunc('addChildAt', 'RedBaseObject3D Instance Instance만 가능');
-				t0 = this['children'].indexOf(child);
-				this['children'].splice(t0, 0, child);
+		addChildAt: function (child, index) {
+			if ( typeof index != 'number' ) RedGLUtil.throwFunc('addChildAt', 'index는 숫자만 입력가능', '입력값 : ' + index);
+			if ( !(child instanceof RedBaseObject3D) ) RedGLUtil.throwFunc('addChildAt', 'RedBaseObject3D Instance만 가능', '입력값 : ' + child);
+			if ( this['children'].length >= index ) {
+				if ( index ) this['children'].splice(index, 0, child);
+				else  this['children'].push(child);
 			}
-		})(),
+			else RedGLUtil.throwFunc('addChildAt', '해당인덱스가 현재 children 길이와 같거나 큽니다.', '입력값 : ' + index);
+		},
 		/**DOC:
 		 {
 			 code : 'METHOD',
@@ -94,13 +94,11 @@ var RedBaseContainer;
 			 return : 'void'
 		 }
 		 :DOC*/
-		removeChildAt: (function () {
-			var t0;
-			return function (index) {
-				if ( typeof index != 'number' ) RedGLUtil.throwFunc('removeChildAt', 'index가 Number형이 아님 ');
-				if ( this['children'][index] ) this['children'].splice(t0, 1);
-			}
-		}),
+		removeChildAt: function (index) {
+			if ( typeof index != 'number' ) RedGLUtil.throwFunc('removeChildAt', 'index가 Number형이 아님 ', '입력값 : ' + index);
+			if ( this['children'][index] ) this['children'].splice(index, 1);
+			else RedGLUtil.throwFunc('removeChildAt', 'index 해당인덱스에 위치한 자식이 없음.', '입력값 : ' + index);
+		},
 		/**DOC:
 		 {
 			 code : 'METHOD',

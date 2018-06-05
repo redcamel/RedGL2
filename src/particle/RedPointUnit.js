@@ -27,7 +27,6 @@ var RedPointUnit;
 	 :DOC*/
 	RedPointUnit = function (redGL, interleaveData, interleaveDefineInfoList, material) {
 		if ( !(this instanceof RedPointUnit) ) return new RedPointUnit(redGL, interleaveData, interleaveDefineInfoList, material);
-		if ( !(material instanceof RedPointColorMaterial) && !(material instanceof RedPointBitmapMaterial) ) RedGLUtil.throwFunc('RedPointUnit : material - RedPointColorMaterial Instance or RedPointBitmapMaterial Instance만 허용됩니다.')
 		var tGL;
 		var interleaveBuffer;
 		tGL = redGL.gl
@@ -44,7 +43,7 @@ var RedPointUnit;
 		this['material'] = material
 		this['drawMode'] = tGL.POINTS
 	}
-	RedSprite3D.prototype = new RedBaseContainer()
+	RedPointUnit.prototype = new RedBaseContainer()
 	RedPointUnit.prototype['update'] = function () {
 		//TODO
 	}

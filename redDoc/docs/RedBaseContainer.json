@@ -6,7 +6,7 @@
     "params": {
       "child": [
         {
-          "type": "RedMesh,RedSprite3D,RedLine,RedPointUnit"
+          "type": "RedBaseObject3D Instance"
         }
       ]
     },
