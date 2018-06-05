@@ -55,7 +55,7 @@ var RedPostEffect_Threshold;
 			 title :`threshold`,
 			 description : `
 				 최소 유효값
-				 기본값 : 0.24
+				 기본값 : 128
 			 `,
 			 return : 'Number'
 		 }
