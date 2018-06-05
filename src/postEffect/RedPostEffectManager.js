@@ -19,10 +19,8 @@ var RedPostEffectManager;
 	 :DOC*/
 	RedPostEffectManager = function (redGL) {
 		if ( !(this instanceof RedPostEffectManager) ) return new RedPostEffectManager(redGL);
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedPostEffectManager : RedGL Instance만 허용됩니다.', redGL)
-		var tGL;
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPostEffectManager : RedGL Instance만 허용됩니다.', redGL);
 		var quad;
-		tGL = redGL['gl'];
 		/**DOC:
 		 {
 			title :`frameBuffer`,
@@ -34,22 +32,7 @@ var RedPostEffectManager;
 		}
 		 :DOC*/
 		this['frameBuffer'] = RedFrameBuffer(redGL);
-		(function () {
-			tGL.activeTexture(tGL.TEXTURE0 + 0)
-			tGL.bindTexture(tGL.TEXTURE_2D, tGL.createTexture());
-			// tGL.texImage2D(tGL.TEXTURE_2D, 0, tGL.RGBA, tGL.RGBA, tGL.UNSIGNED_BYTE, source)
-			tGL.pixelStorei(tGL.UNPACK_FLIP_Y_WEBGL, true);
-			tGL.texParameteri(tGL.TEXTURE_2D, tGL.TEXTURE_MIN_FILTER, tGL.NEAREST);
-			tGL.texParameteri(tGL.TEXTURE_2D, tGL.TEXTURE_MAG_FILTER, tGL.NEAREST);
-			tGL.texParameteri(tGL.TEXTURE_2D, tGL.TEXTURE_WRAP_S, tGL.CLAMP_TO_EDGE);
-			tGL.texParameteri(tGL.TEXTURE_2D, tGL.TEXTURE_WRAP_T, tGL.CLAMP_TO_EDGE);
-			try {
-				tGL.generateMipmap(tGL.TEXTURE_2D)
-			} catch ( error ) {
-				console.log('밉맵을 생성할수 없음', source)
-			}
-			tGL.bindTexture(tGL.TEXTURE_2D, null);
-		})();
+		this['_finalMaterial'] = RedPostEffectMaterial(redGL, this['frameBuffer']['texture']);
 		/**DOC:
 		 {
 			title :`postEffectList`,
@@ -66,7 +49,8 @@ var RedPostEffectManager;
 			title :`antialiasing`,
 			code : 'PROPERTY',
 			description : `
-				안티알리어싱 모드 설정
+				안티알리어싱 설정
+				현재는 RedPostEffect_FXAA만 등록가능
 			`,
 			return : 'Array'
 		}
@@ -74,32 +58,17 @@ var RedPostEffectManager;
 		Object.defineProperty(this, 'antialiasing', (function () {
 			var _v = undefined
 			return {
-				get: function () {
-					return _v
-				},
+				get: function () { return _v },
 				set: function (v) {
+					if ( v ) v instanceof RedPostEffect_FXAA || RedGLUtil.throwFunc('RedPostEffectManager : antialiasing - RedPostEffect_FXAA Instance만 허용됩니다.', '입력값 : ' + v)
 					_v = v
 				}
 			}
 		})())
 		this['antialiasing'] = undefined
-		/**DOC:
-		 {
-			title :`finalMaterial`,
-			code : 'PROPERTY',
-			description : `
-				최종 프레임버퍼 렌더링을 담당할 재질.
-			`,
-			return : 'Array'
-		}
-		 :DOC*/
-		this['finalMaterial'] = RedPostEffectMaterial(redGL, this['frameBuffer']['texture']);
-		//
-		this['children'] = [];
-		quad = RedMesh(redGL, RedPlane(redGL), this['finalMaterial']);
+		quad = RedMesh(redGL, RedPlane(redGL), this['_finalMaterial']);
 		quad['useCullFace'] = false;
-		this['children'].push(quad);
-		//
+		this['children'] = [quad];
 		this['_UUID'] = RedGL['makeUUID']();
 		console.log(this);
 	}
@@ -113,13 +82,14 @@ var RedPostEffectManager;
 			`,
 			params : {
 				postEffect : [
-					{type:'RedGL'}
+					{type:'PostEffect Instance'}
 				]
 			},
 			return : 'void'
 		}
 		 :DOC*/
 		addEffect: function (postEffect) {
+			postEffect instanceof RedBaseMaterial || RedGLUtil.throwFunc('RedPostEffectManager : addEffect - RedBaseMaterial Instance만 허용.', '입력값 : ' + postEffect);
 			this['postEffectList'].push(postEffect)
 		},
 		/**DOC:
@@ -131,7 +101,7 @@ var RedPostEffectManager;
 			`,
 			params : {
 				postEffect : [
-					{type:'RedGL'}
+					{type:'PostEffect Instance'}
 				]
 			},
 			return : 'void'
@@ -144,6 +114,19 @@ var RedPostEffectManager;
 				if ( t0 != -1 ) this['postEffectList'].splice(t0, 1);
 			}
 		})(),
+		/**DOC:
+		 {
+			title :`removeAllEffect`,
+			code : 'METHOD',
+			description : `
+				모든 postEffect 제거
+			`,
+			return : 'void'
+		}
+		 :DOC*/
+		removeAllEffect: function () {
+			this['postEffectList'].length = 0
+		},
 		/**DOC:
 		 {
 			title :`bind`,
@@ -160,9 +143,7 @@ var RedPostEffectManager;
 			return : 'void'
 		}
 		 :DOC*/
-		bind: function (gl) {
-			this['frameBuffer'].bind(gl);
-		},
+		bind: function (gl) { this['frameBuffer'].bind(gl); },
 		/**DOC:
 		 {
 			title :`unbind`,
@@ -179,9 +160,7 @@ var RedPostEffectManager;
 			return : 'void'
 		}
 		 :DOC*/
-		unbind: function (gl) {
-			this['frameBuffer'].unbind(gl);
-		}
+		unbind: function (gl) { this['frameBuffer'].unbind(gl); }
 	}
 	Object.freeze(RedPostEffectManager);
 })();

@@ -6,7 +6,7 @@
     "params": {
       "postEffect": [
         {
-          "type": "RedGL"
+          "type": "PostEffect Instance"
         }
       ]
     },
@@ -15,7 +15,7 @@
   {
     "title": "antialiasing",
     "code": "PROPERTY",
-    "description": "\n안티알리어싱 모드 설정\n",
+    "description": "\n안티알리어싱 설정\n현재는 RedPostEffect_FXAA만 등록가능\n",
     "return": "Array"
   },
   {
@@ -30,12 +30,6 @@
       ]
     },
     "return": "void"
-  },
-  {
-    "title": "finalMaterial",
-    "code": "PROPERTY",
-    "description": "\n최종 프레임버퍼 렌더링을 담당할 재질.\n",
-    "return": "Array"
   },
   {
     "title": "frameBuffer",
@@ -63,13 +57,19 @@
     "return": "RedPostEffectManager Instance"
   },
   {
+    "title": "removeAllEffect",
+    "code": "METHOD",
+    "description": "\n모든 postEffect 제거\n",
+    "return": "void"
+  },
+  {
     "title": "removeEffect",
     "code": "METHOD",
     "description": "\npostEffect 제거\n",
     "params": {
       "postEffect": [
         {
-          "type": "RedGL"
+          "type": "PostEffect Instance"
         }
       ]
     },
