@@ -586,14 +586,14 @@ var RedRenderer;
 					})
 					// 이펙트가 존재한다면 최종 이펙트의 프레임버퍼 결과물을 최종으로 렌더링한다.
 					if ( lastFrameBufferTexture != originFrameBufferTexture ) {
-						postEffectManager['finalMaterial']['diffuseTexture'] = lastFrameBufferTexture;
+						postEffectManager['_finalMaterial']['diffuseTexture'] = lastFrameBufferTexture;
 						gl.viewport(viewRect[0], worldRect[3] - viewRect[3] - viewRect[1], viewRect[2], viewRect[3]);
 						gl.scissor(viewRect[0], worldRect[3] - viewRect[3] - viewRect[1], viewRect[2], viewRect[3]);
 						// 최종 재질을 기준으로 필요한 기본 유니폼을 세팅한다.
-						setBaseUniform(gl, postEffectManager['finalMaterial'], viewRect[2], viewRect[3], true)
+						setBaseUniform(gl, postEffectManager['_finalMaterial'], viewRect[2], viewRect[3], true)
 						self.sceneRender(redGL, gl, true, postEffectManager['children'], time, renderInfo);
 					}
-					postEffectManager['finalMaterial']['diffuseTexture'] = postEffectManager['frameBuffer']['texture'];
+					postEffectManager['_finalMaterial']['diffuseTexture'] = postEffectManager['frameBuffer']['texture'];
 				}
 			})()
 		})();
