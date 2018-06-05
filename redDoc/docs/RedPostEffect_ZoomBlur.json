@@ -1,5 +1,10 @@
 [
   {
+    "title": "amount",
+    "description": "\n강도\n기본값 : 0.15\n",
+    "return": "Number"
+  },
+  {
     "title": "centerX",
     "description": "\n정중앙 중심의 가로 위치\n기본값 : 0.0\n",
     "return": "Number"
@@ -21,10 +26,5 @@
       ]
     },
     "return": "RedPostEffect_ZoomBlur Instance"
-  },
-  {
-    "title": "strength",
-    "description": "\n강도\n기본값 : 0.15\n",
-    "return": "Number"
   }
 ]

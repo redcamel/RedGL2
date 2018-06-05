@@ -1,7 +1,7 @@
 [
   {
     "title": "radius",
-    "description": "\n가우시간 블러강도\n기본값 : 20\n",
+    "description": "\n가우시간 블러강도\n기본값 : 1\n",
     "return": "Number"
   },
   {
