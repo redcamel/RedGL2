@@ -70,9 +70,7 @@ var RedPostEffect_Bloom;
 		Object.defineProperty(this, 'blur', (function () {
 			var _v = 1
 			return {
-				get: function () {
-					return _v
-				},
+				get: function () { return _v },
 				set: function (v) {
 					_v = v;
 					this['process'][1]['size'] = _v;
@@ -108,23 +106,19 @@ var RedPostEffect_Bloom;
 			 title :`threshold`,
 			 description : `
 				 최소 유효값
-				 기본값 : 0.3
+				 기본값 : 75
 			 `,
 			 return : 'Number'
 		 }
 		 :DOC*/
 		Object.defineProperty(this, 'threshold', (function () {
-			var _v = 0.3
+			var _v = 100
 			return {
-				get: function () {
-					return _v
-				},
-				set: function (v) {
-					this['process'][0]['threshold'] = _v = v
-				}
+				get: function () { return _v },
+				set: function (v) { this['process'][0]['threshold'] = _v = v }
 			}
 		})())
-		this['threshold'] = 0.3;
+		this['threshold'] = 75;
 		this.updateTexture = function (lastFrameBufferTexture, parentFramBufferTexture) {
 			this['diffuseTexture'] = parentFramBufferTexture;
 			this['blurTexture'] = lastFrameBufferTexture;
@@ -132,6 +126,7 @@ var RedPostEffect_Bloom;
 		this['bind'] = RedPostEffectManager.prototype['bind'];
 		this['unbind'] = RedPostEffectManager.prototype['unbind'];
 		this.checkUniformAndProperty();
+		;
 		console.log(this);
 	}
 	RedPostEffect_Bloom.prototype = new RedBaseMaterial();
