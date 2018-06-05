@@ -212,6 +212,19 @@ RedGL(document.createElement('canvas'), function (v) {
 				console.log(t0)
 				unit.run(t0.children.length)
 			}, 0)
+		),
+		redGroup(
+			"numChildren",
+			redTest("기본 작동확인", function (unit, title) {
+				var t0 = new RedMesh(tRedGL);
+				t0.addChild(RedMesh(tRedGL))
+				t0.addChild(RedMesh(tRedGL))
+				t0.addChild(RedMesh(tRedGL))
+				t0.addChild(RedMesh(tRedGL))
+				t0.addChild(RedMesh(tRedGL))
+				console.log(t0)
+				unit.run(t0.numChildren())
+			}, 5)
 		)
 	)
 })

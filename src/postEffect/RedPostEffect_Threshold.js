@@ -15,11 +15,11 @@ var RedPostEffect_Threshold;
 		/* @preserve
 		 precision highp float;
 		 uniform sampler2D uDiffuseTexture;
-		 uniform float uThreshold;
+		 uniform float u_threshold;
 		 void main() {
 		 vec4 finalColor = texture2D(uDiffuseTexture, vTexcoord);
 		 float v;
-		 if(0.2126 * finalColor.r + 0.7152 * finalColor.g + 0.0722 * finalColor.b >= uThreshold) v = 1.0;
+		 if(0.2126 * finalColor.r + 0.7152 * finalColor.g + 0.0722 * finalColor.b >= u_threshold) v = 1.0;
 		 else v = 0.0;
 		 finalColor.r = finalColor.g = finalColor.b = v;
 		 gl_FragColor = finalColor;
@@ -60,7 +60,21 @@ var RedPostEffect_Threshold;
 			 return : 'Number'
 		 }
 		 :DOC*/
-		this['threshold'] = 0.24;
+		this['_threshold'] = null;
+		Object.defineProperty(this, 'threshold', (function () {
+			var _v = 128
+			return {
+				get: function () { return _v },
+				set: function (v) {
+					if ( typeof v != 'number' ) RedGLUtil.throwFunc('RedPostEffect_Threshold : threshold 숫자만허용함', '입력값 : ' + v);
+					_v = v;
+					if ( _v < 1 ) _v = 1
+					if ( _v > 255 ) _v = 255
+					this['_threshold'] = _v / 255
+				}
+			}
+		})())
+		this['threshold'] = 128
 		this.updateTexture = function (lastFrameBufferTexture) {
 			this['diffuseTexture'] = lastFrameBufferTexture;
 		}

@@ -31,7 +31,7 @@ var RedPostEffect_GaussianBlur;
 			 title :`radius`,
 			 description : `
 				 가우시간 블러강도
-				 기본값 : 20
+				 기본값 : 1
 			 `,
 			 return : 'Number'
 		 }
@@ -39,17 +39,18 @@ var RedPostEffect_GaussianBlur;
 		Object.defineProperty(this, 'radius', (function () {
 			var _v = 1
 			return {
-				get: function () {
-					return _v
-				},
+				get: function () { return _v },
 				set: function (v) {
+					if ( typeof v != 'number' ) RedGLUtil.throwFunc('RedPostEffect_GaussianBlur : radius 숫자만허용함', '입력값 : ' + v);
 					_v = v;
+					if ( _v < 0.1 ) _v = 0.1;
+					if ( _v > 255 ) _v = 255;
 					this['process'][0]['size'] = _v;
 					this['process'][1]['size'] = _v;
 				}
 			}
 		})());
-		this['radius'] = 20;
+		this['radius'] = 1
 		console.log(this);
 	}
 	RedPostEffect_GaussianBlur.prototype = new RedBaseMaterial();

@@ -15,24 +15,25 @@ var RedPostEffect_HueSaturation;
 		/* @preserve
 		 precision mediump float;
 		 uniform sampler2D uDiffuseTexture;
-		 uniform float uHue;
-		 uniform float uSaturation;
+		 uniform float u_hue;
+		 uniform float u_saturation;
 		 void main(void) {
-		 vec4 finalColor = texture2D(uDiffuseTexture, vTexcoord );
-		 float angle = uHue * 3.14159265;
-		 float s = sin(angle), c = cos(angle);
-		 vec3 weights = (vec3(2.0 * c, -sqrt(3.0) * s - c, sqrt(3.0) * s - c) + 1.0) / 3.0;
-		 float len = length(finalColor.rgb);
-		 finalColor.rgb = vec3(
-		 dot(finalColor.rgb, weights.xyz),
-		 dot(finalColor.rgb, weights.zxy),
-		 dot(finalColor.rgb, weights.yzx)
-		 );
+			 vec4 finalColor = texture2D(uDiffuseTexture, vTexcoord );
+			 float angle = u_hue * 3.1415926535897932384626433832795;
+			 float s = sin(angle), c = cos(angle);
+			 vec3 weights = (vec3(2.0 * c, -sqrt(3.0) * s - c, sqrt(3.0) * s - c) + 1.0) / 3.0;
+			 float len = length(finalColor.rgb);
 
-		 float average = (finalColor.r + finalColor.g + finalColor.b) / 3.0;
-		 if (uSaturation > 0.0) finalColor.rgb += (average - finalColor.rgb) * (1.0 - 1.0 / (1.001 - uSaturation));
-		 else finalColor.rgb += (average - finalColor.rgb) * (-uSaturation);
-		 gl_FragColor = finalColor;
+			 finalColor.rgb = vec3(
+				 dot(finalColor.rgb, weights.xyz),
+				 dot(finalColor.rgb, weights.zxy),
+				 dot(finalColor.rgb, weights.yzx)
+			 );
+
+			 float average = (finalColor.r + finalColor.g + finalColor.b) / 3.0;
+			 if (u_saturation > 0.0) finalColor.rgb += (average - finalColor.rgb) * (1.0 - 1.0 / (1.001 - u_saturation));
+			 else finalColor.rgb += (average - finalColor.rgb) * (-u_saturation);
+			 gl_FragColor = finalColor;
 		 }
 		 */
 	}
@@ -66,7 +67,20 @@ var RedPostEffect_HueSaturation;
 			 return : 'Number'
 		 }
 		 :DOC*/
-		this['hue'] = 0;
+		this['_hue'] = 0;
+		Object.defineProperty(this, 'hue', (function () {
+			var _v = 0
+			return {
+				get: function () { return _v },
+				set: function (v) {
+					if ( typeof v != 'number' ) RedGLUtil.throwFunc('RedPostEffect_HueSaturation : hue 숫자만허용함', '입력값 : ' + v);
+					_v = v;
+					if ( _v < -180 ) _v = -180
+					if ( _v > 180 ) _v = 180
+					this['_hue'] = _v / 180
+				}
+			}
+		})())
 		/**DOC:
 		 {
 			 title :`saturation`,
@@ -77,7 +91,20 @@ var RedPostEffect_HueSaturation;
 			 return : 'Number'
 		 }
 		 :DOC*/
-		this['saturation'] = 0;
+		this['_saturation'] = 0;
+		Object.defineProperty(this, 'saturation', (function () {
+			var _v = 0
+			return {
+				get: function () { return _v },
+				set: function (v) {
+					if ( typeof v != 'number' ) RedGLUtil.throwFunc('RedPostEffect_HueSaturation : saturation 숫자만허용함', '입력값 : ' + v);
+					_v = v;
+					if ( _v < -100 ) _v = -100
+					if ( _v > 100 ) _v = 100
+					this['_saturation'] = _v / 100
+				}
+			}
+		})())
 		/////////////////////////////////////////
 		// 일반 프로퍼티
 		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);

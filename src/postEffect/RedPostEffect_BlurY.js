@@ -6,9 +6,9 @@ var RedPostEffect_BlurY;
 	vSource = function () {
 		/* @preserve
 		 void main(void) {
-		 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
-		 vResolution = uResolution;
-		 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
+			 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
+			 vResolution = uResolution;
+			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
 		 }
 		 */
 	}
@@ -16,27 +16,27 @@ var RedPostEffect_BlurY;
 		/* @preserve
 		 precision mediump float;
 		 uniform sampler2D uDiffuseTexture;
-		 uniform float uSize;
+		 uniform float u_size;
 		 float random(vec3 scale, float seed) {
-		 return fract(sin(dot(gl_FragCoord.xyz + seed, scale)) * 43758.5453 + seed);
+			 return fract(sin(dot(gl_FragCoord.xyz + seed, scale)) * 43758.5453 + seed);
 		 }
 		 void main() {
-		 vec4 finalColor = vec4(0.0);
-		 vec2 delta;
-		 float total = 0.0;
-		 float offset = random(vec3(12.9898, 78.233, 151.7182), 0.0);
-		 delta = vec2(0.0, uSize/vResolution.y);
-		 for (float t = -10.0; t <= 10.0; t++) {
-		 float percent = (t + offset - 0.5) / 10.0;
-		 float weight = 1.0 - abs(percent);
-		 vec4 sample = texture2D(uDiffuseTexture, vTexcoord + delta * percent);
-		 sample.rgb *= sample.a;
-		 finalColor += sample * weight;
-		 total += weight;
-		 }
-		 finalColor = finalColor / total;
-		 finalColor.rgb /= finalColor.a + 0.00001;
-		 gl_FragColor =   finalColor ;
+			 vec4 finalColor = vec4(0.0);
+			 vec2 delta;
+			 float total = 0.0;
+			 float offset = random(vec3(12.9898, 78.233, 151.7182), 0.0);
+			 delta = vec2(0.0, u_size/vResolution.y);
+			 for (float t = -10.0; t <= 10.0; t++) {
+				 float percent = (t + offset - 0.5) / 10.0;
+				 float weight = 1.0 - abs(percent);
+				 vec4 sample = texture2D(uDiffuseTexture, vTexcoord + delta * percent);
+				 sample.rgb *= sample.a;
+				 finalColor += sample * weight;
+				 total += weight;
+			 }
+			 finalColor = finalColor / total;
+			 finalColor.rgb /= finalColor.a + 0.00001;
+			 gl_FragColor =   finalColor ;
 		 }
 		 */
 	}
@@ -70,7 +70,19 @@ var RedPostEffect_BlurY;
 			 return : 'Number'
 		 }
 		 :DOC*/
-		this['size'] = 50;
+		this['_size'] = 50;
+		Object.defineProperty(this, 'size', (function () {
+			var _v = 50
+			return {
+				get: function () { return _v },
+				set: function (v) {
+					if ( typeof v != 'number' ) RedGLUtil.throwFunc('RedPostEffect_BlurY : size 숫자만허용함', '입력값 : ' + v);
+					_v = v;
+					if ( _v < 0 ) _v = 0;
+					this['_size'] = _v;
+				}
+			}
+		})());
 		/////////////////////////////////////////
 		// 일반 프로퍼티
 		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
