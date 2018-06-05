@@ -58,12 +58,7 @@ var RedAxis;
 		//
 		this['_UUID'] = RedGL['makeUUID']();
 	}
-	/**DOC:
-	 {
-		 copyProto : 'RedBaseContainer'
-	 }
-	 :DOC*/
-	RedGLUtil['copyProto'](RedAxis, RedBaseContainer);
 
+	RedAxis.prototype = new RedBaseContainer();
 	Object.freeze(RedAxis);
 })();

@@ -44,8 +44,7 @@ var RedPointUnit;
 		this['material'] = material
 		this['drawMode'] = tGL.POINTS
 	}
-	RedGLUtil['copyProto'](RedPointUnit, RedBaseContainer);
-	RedGLUtil['copyProto'](RedPointUnit, RedBaseObject3D);
+	RedSprite3D.prototype = new RedBaseContainer()
 	RedPointUnit.prototype['update'] = function () {
 		//TODO
 	}

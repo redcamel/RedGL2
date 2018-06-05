@@ -27,8 +27,5 @@
     },
     "example": "\nvar tScene;\nvar tSprite3D;\ntScene = RedScene();\ntSprite3D = RedSprite3D(RedGL Instance, RedColorMaterial(RedGL Instance))\ntScene.addChild(tSprite3D)\n",
     "return": "RedSprite3D Instance"
-  },
-  {
-    "copyProto": "RedBaseContainer"
   }
 ]

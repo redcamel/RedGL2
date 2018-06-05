@@ -93,8 +93,5 @@
     "title": "useFog",
     "description": "\n안개 사용여부\n초기값 true\n",
     "return": "Boolean"
-  },
-  {
-    "copyProto": "RedBaseContainer"
   }
 ]

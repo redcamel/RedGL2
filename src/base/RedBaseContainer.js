@@ -7,15 +7,13 @@ var RedBaseContainer;
 		 title :`RedBaseContainer`,
 		 description : `
 			 DisplayContainer 기저층
-			 프로토타입 확장을 통해서만 사용가능(RedGLUtil.copyProto 사용)
 		 `,
 		 return : 'void'
 	 }
 	 :DOC*/
 	RedBaseContainer = function () {
-		RedGLUtil.throwFunc('RedBaseContainer : 생성자/직접실행으로 사용 할 수 없습니다.')
 	}
-	RedBaseContainer.prototype = {
+	var prototypeData = {
 		/**DOC:
 		 {
 			 code : 'METHOD',
@@ -32,12 +30,7 @@ var RedBaseContainer;
 		addChild: (function () {
 			var t0;
 			return function (child) {
-				if (
-					!(child instanceof RedMesh)
-					&& !(child instanceof RedSprite3D)
-					&& !(child instanceof RedLine)
-					&& !(child instanceof RedPointUnit)
-				) RedGLUtil.throwFunc('addChild', 'RedMesh,RedSprite3D,RedLine,RedPointUnit Instance만 가능');
+				if ( !child instanceof RedBaseObject3D ) RedGLUtil.throwFunc('addChild', 'RedMesh,RedSprite3D,RedLine,RedPointUnit Instance만 가능');
 				t0 = this['children'].indexOf(child);
 				if ( t0 != -1 ) child = this['children'].splice(t0, 1);
 				this['children'].push(child);
@@ -50,7 +43,7 @@ var RedBaseContainer;
 			 description : `인덱스 위치에 자식을 추가`,
 			 params:{
 				 child : [
-					 {type:'RedMesh,RedSprite3D,RedLine,RedPointUnit'}
+					 {type:'RedBaseObject3D Instance'}
 				 ],
 				 index : [
 					 {type:'uint'}
@@ -62,12 +55,7 @@ var RedBaseContainer;
 		addChildAt: (function () {
 			var t0;
 			return function (child, index) {
-				if (
-					!(child instanceof RedMesh)
-					&& !(child instanceof RedSprite3D)
-					&& !(child instanceof RedLine)
-					&& !(child instanceof RedPointUnit)
-				) RedGLUtil.throwFunc('addChildAt', 'RedMesh,RedSprite3D,RedLine,RedPointUnit Instance만 가능');
+				if ( !child instanceof RedBaseObject3D )RedGLUtil.throwFunc('addChildAt', 'RedBaseObject3D Instance Instance만 가능');
 				t0 = this['children'].indexOf(child);
 				this['children'].splice(t0, 0, child);
 			}
@@ -79,7 +67,7 @@ var RedBaseContainer;
 			 description : `해당 자식을 제거`,
 			 params:{
 				 child : [
-					 {type:'RedMesh,RedSprite3D,RedLine,RedPointUnit'}
+					 {type:'RedBaseObject3D Instance'}
 				 ]
 			 },
 			 return : 'void'
@@ -134,7 +122,7 @@ var RedBaseContainer;
 					 {type:'uint'}
 				 ]
 			 },
-			 return : 'RedMesh,RedSprite3D,RedLine,RedPointUnit'
+			 return : 'RedBaseObject3D Instance'
 		 }
 		 :DOC*/
 		getChildAt: function (index) {
@@ -148,7 +136,7 @@ var RedBaseContainer;
 			 description : `해당객체의 인덱스 번호를 반환`,
 			 params:{
 				 child : [
-					 {type:'RedMesh,RedSprite3D,RedLine,RedPointUnit'}
+					 {type:'RedBaseObject3D Instance'}
 				 ]
 			 },
 			 return : 'int'
@@ -170,7 +158,7 @@ var RedBaseContainer;
 			 description : `numChildren`,
 			 params:{
 				 target : [
-					 {type:'RedMesh,RedSprite3D,RedLine,RedPointUnit'}
+					 {type:'RedBaseObject3D Instance'}
 				 ]
 			 },
 
@@ -181,11 +169,7 @@ var RedBaseContainer;
 			return this['children'].length;
 		}
 	};
-	/**DOC:
-	 {
-		 copyProto : 'RedBaseObject3D'
-	 }
-	 :DOC*/
-	RedGLUtil['copyProto'](RedBaseContainer, RedBaseObject3D);
+	RedBaseContainer.prototype = new RedBaseObject3D()
+	for ( var k in prototypeData ) RedBaseContainer.prototype[k] = prototypeData[k];
 	Object.freeze(RedBaseContainer);
 })();

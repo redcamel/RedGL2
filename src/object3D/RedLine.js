@@ -120,12 +120,6 @@ var RedLine;
 		// Object.seal(RedLine);
 		// console.log(this);
 	}
-	/**DOC:
-	 {
-		 copyProto : 'RedBaseContainer'
-	 }
-	 :DOC*/
-	RedGLUtil['copyProto'](RedLine, RedBaseContainer);
-
+	RedLine.prototype = new RedBaseContainer();
 	Object.freeze(RedLine);
 })();

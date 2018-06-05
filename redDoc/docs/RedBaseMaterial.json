@@ -8,7 +8,7 @@
   {
     "constructorYn": true,
     "title": "RedBaseMaterial",
-    "description": "\nRedBaseMaterial 기저층\n프로토타입 확장을 통해서만 사용가능( RedGLUtil.copyProto 사용 )\n",
+    "description": "\nRedBaseMaterial 기저층\n",
     "return": "void"
   }
 ]

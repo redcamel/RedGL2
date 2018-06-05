@@ -79,11 +79,6 @@ var RedGrid;
 		this['drawMode'] = tGL.LINES
 		this['_UUID'] = RedGL['makeUUID']();
 	}
-	/**DOC:
-	 {
-		 copyProto : 'RedBaseContainer'
-	 }
-	 :DOC*/
-	RedGLUtil['copyProto'](RedGrid, RedBaseContainer);
+	RedGrid.prototype = new RedBaseContainer();
 	Object.freeze(RedGrid);
 })();

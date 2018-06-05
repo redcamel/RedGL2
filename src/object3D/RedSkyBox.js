@@ -40,11 +40,6 @@ var RedSkyBox;
 		this['material'] = RedSkyBoxMaterial(redGL, RedBitmapCubeTexture(redGL, srcList));
 		this['_UUID'] = RedGL['makeUUID']();
 	}
-	/**DOC:
-	 {
-		 copyProto : 'RedBaseObject3D'
-	 }
-	 :DOC*/
-	RedGLUtil['copyProto'](RedSkyBox, RedBaseObject3D);
+	RedSkyBox.prototype = new RedBaseObject3D();
 	Object.freeze(RedSkyBox);
 })();

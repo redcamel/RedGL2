@@ -53,11 +53,6 @@ var RedMesh;
 		this['material'] = material;
 		this['_UUID'] = RedGL['makeUUID']();
 	}
-	/**DOC:
-	 {
-		 copyProto : 'RedBaseContainer'
-	 }
-	 :DOC*/
-	RedGLUtil['copyProto'](RedMesh, RedBaseContainer);
+	RedMesh.prototype = new RedBaseContainer();
 	Object.freeze(RedMesh);
 })();

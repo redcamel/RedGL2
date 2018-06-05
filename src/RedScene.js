@@ -242,7 +242,7 @@ var RedScene;
 		this['_UUID'] = RedGL['makeUUID']();
 		console.log(this)
 	};
-	RedScene.prototype = {
+	var prototypeData = {
 		_r: 0,
 		_g: 0,
 		_b: 0,
@@ -309,11 +309,7 @@ var RedScene;
 			}
 		})()
 	};
-	/**DOC:
-	 {
-		 copyProto : 'RedBaseContainer'
-	 }
-	 :DOC*/
-	RedGLUtil['copyProto'](RedScene, RedBaseContainer)
+	RedScene.prototype = new RedBaseContainer();
+	for(var k in prototypeData) RedScene.prototype[k] = prototypeData[k];
 	Object.freeze(RedScene);
 })();

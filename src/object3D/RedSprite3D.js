@@ -55,11 +55,6 @@ var RedSprite3D;
 		this['useCullFace'] = false
 		this['_UUID'] = RedGL['makeUUID']();
 	}
-	/**DOC:
-	 {
-		 copyProto : 'RedBaseContainer'
-	 }
-	 :DOC*/
-	RedGLUtil['copyProto'](RedSprite3D, RedBaseContainer);
+	RedSprite3D.prototype = new RedBaseContainer();
 	Object.freeze(RedSprite3D);
 })();
