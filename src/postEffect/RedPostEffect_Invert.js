@@ -52,12 +52,11 @@ var RedPostEffect_Invert;
 		this.updateTexture = function (lastFrameBufferTexture) {
 			this['diffuseTexture'] = lastFrameBufferTexture;
 		}
-		this['bind'] = RedPostEffectManager.prototype['bind'];
-		this['unbind'] = RedPostEffectManager.prototype['unbind'];
 		this.checkUniformAndProperty();
-		;
 		console.log(this);
 	}
 	RedPostEffect_Invert.prototype = new RedBaseMaterial();
+	RedPostEffect_Invert.prototype['bind'] = RedPostEffectManager.prototype['bind'];
+	RedPostEffect_Invert.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
 	Object.freeze(RedPostEffect_Invert);
 })();

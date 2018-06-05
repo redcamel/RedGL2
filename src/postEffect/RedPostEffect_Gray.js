@@ -50,12 +50,11 @@ var RedPostEffect_Gray;
 		this.updateTexture = function (lastFrameBufferTexture) {
 			this['diffuseTexture'] = lastFrameBufferTexture;
 		}
-		this['bind'] = RedPostEffectManager.prototype['bind'];
-		this['unbind'] = RedPostEffectManager.prototype['unbind'];
 		this.checkUniformAndProperty();
-		;
 		console.log(this);
 	}
 	RedPostEffect_Gray.prototype = new RedBaseMaterial();
+	RedPostEffect_Gray.prototype['bind'] = RedPostEffectManager.prototype['bind'];
+	RedPostEffect_Gray.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
 	Object.freeze(RedPostEffect_Gray);
 })();

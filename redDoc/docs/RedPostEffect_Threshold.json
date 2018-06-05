@@ -14,7 +14,7 @@
   },
   {
     "title": "threshold",
-    "description": "\n최소 유효값\n기본값 : 0.24\n",
+    "description": "\n최소 유효값\n기본값 : 128\n",
     "return": "Number"
   }
 ]

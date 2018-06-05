@@ -103,15 +103,14 @@ var RedPostEffect_SSAO;
 			this['diffuseTexture'] = parentFramBufferTexture;
 			this['ssaoTexture'] = lastFrameBufferTexture;
 		}
-		this['bind'] = RedPostEffectManager.prototype['bind'];
-		this['unbind'] = RedPostEffectManager.prototype['unbind'];
 		this.checkUniformAndProperty();
-		;
 		console.log(this);
 	}
 	RedPostEffect_SSAO['ONLY_SSAO'] = 0
 	RedPostEffect_SSAO['ONLY_COLOR'] = 1
 	RedPostEffect_SSAO['COLOR_SSAO'] = 2
 	RedPostEffect_SSAO.prototype = new RedBaseMaterial();
+	RedPostEffect_SSAO.prototype['bind'] = RedPostEffectManager.prototype['bind'];
+	RedPostEffect_SSAO.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
 	Object.freeze(RedPostEffect_SSAO);
 })();

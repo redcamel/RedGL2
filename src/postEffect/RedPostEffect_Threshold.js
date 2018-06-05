@@ -78,12 +78,11 @@ var RedPostEffect_Threshold;
 		this.updateTexture = function (lastFrameBufferTexture) {
 			this['diffuseTexture'] = lastFrameBufferTexture;
 		}
-		this['bind'] = RedPostEffectManager.prototype['bind'];
-		this['unbind'] = RedPostEffectManager.prototype['unbind'];
 		this.checkUniformAndProperty();
-		;
 		console.log(this);
 	}
 	RedPostEffect_Threshold.prototype = new RedBaseMaterial();
+	RedPostEffect_Threshold.prototype['bind'] = RedPostEffectManager.prototype['bind'];
+	RedPostEffect_Threshold.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
 	Object.freeze(RedPostEffect_Threshold);
 })();

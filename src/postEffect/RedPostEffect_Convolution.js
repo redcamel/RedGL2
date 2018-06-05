@@ -98,13 +98,13 @@ var RedPostEffect_Convolution;
 		this.updateTexture = function (lastFrameBufferTexture) {
 			this['diffuseTexture'] = lastFrameBufferTexture;
 		}
-		this['bind'] = RedPostEffectManager.prototype['bind'];
-		this['unbind'] = RedPostEffectManager.prototype['unbind'];
 		this.checkUniformAndProperty();
 		;
 		console.log(this);
 	}
 	RedPostEffect_Convolution.prototype = new RedBaseMaterial();
+	RedPostEffect_Convolution.prototype['bind'] = RedPostEffectManager.prototype['bind'];
+	RedPostEffect_Convolution.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
 	/**DOC:
 	 {
 		 title :`RedPostEffect_Convolution.NORMAL`,
