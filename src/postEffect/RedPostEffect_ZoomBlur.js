@@ -17,7 +17,7 @@ var RedPostEffect_ZoomBlur;
 		 uniform sampler2D uDiffuseTexture;
 		 uniform float uCenterX;
 		 uniform float uCenterY;
-		 uniform float uStrength;
+		 uniform float u_amount;
 		 float random(vec3 scale, float seed) {
 		 return fract(sin(dot(gl_FragCoord.xyz + seed, scale)) * 43758.5453 + seed);
 		 }
@@ -31,7 +31,7 @@ var RedPostEffect_ZoomBlur;
 		 for (float t = 0.0; t <= 30.0; t++) {
 		 float percent = (t + offset) / 30.0;
 		 float weight = 3.0 * (percent - percent * percent);
-		 vec4 sample = texture2D(uDiffuseTexture, vTexcoord + toCenter * percent * uStrength );
+		 vec4 sample = texture2D(uDiffuseTexture, vTexcoord + toCenter * percent * u_amount );
 		 sample.rgb *= sample.a;
 		 finalColor += sample * weight;
 		 total += weight;
@@ -85,7 +85,7 @@ var RedPostEffect_ZoomBlur;
 		this['centerY'] = 0.0;
 		/**DOC:
 		 {
-			 title :`strength`,
+			 title :`amount`,
 			 description : `
 				 강도
 				 기본값 : 0.15
@@ -93,7 +93,21 @@ var RedPostEffect_ZoomBlur;
 			 return : 'Number'
 		 }
 		 :DOC*/
-		this['strength'] = 0.15;
+		this['_amount'] = null;
+		Object.defineProperty(this, 'amount', (function () {
+			var _v = 0
+			return {
+				get: function () { return _v },
+				set: function (v) {
+					if ( typeof v != 'number' ) RedGLUtil.throwFunc('RedPostEffect_ZoomBlur : amount 숫자만허용함', '입력값 : ' + v);
+					_v = v;
+					if ( _v < 1 ) _v = 1
+					if ( _v > 100 ) _v = 100
+					this['_amount'] = _v / 100
+				}
+			}
+		})());
+		this['amount'] = 38
 		/////////////////////////////////////////
 		// 일반 프로퍼티
 		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);

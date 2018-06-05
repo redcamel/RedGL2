@@ -163,7 +163,7 @@ var RedBaseContainer;
 			 return : 'uint'
 		 }
 		 :DOC*/
-		numChildren: function (target) {
+		numChildren: function () {
 			return this['children'].length;
 		}
 	};
