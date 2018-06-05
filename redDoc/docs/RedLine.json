@@ -55,11 +55,5 @@
     "title": "upload",
     "description": "\naddPoint로 포인트 추가후 실제 버퍼 반영할떄 사용\n",
     "return": "void"
-  },
-  {
-    "copyProto": "RedBaseContainer"
-  },
-  {
-    "copyProto": "RedBaseObject3D"
   }
 ]

@@ -138,12 +138,12 @@ var RedColorPhongTextureMaterial;
 		 return : 'RedColorPhongTextureMaterial Instance'
 	 }
 	 :DOC*/
-	RedColorPhongTextureMaterial = function ( redGL, hexColor, alpha, normalTexture, specularTexture, displacementTexture ) {
-		if ( !(this instanceof RedColorPhongTextureMaterial) ) return new RedColorPhongTextureMaterial( redGL, hexColor, alpha, normalTexture, specularTexture, displacementTexture );
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedColorPhongTextureMaterial : RedGL Instance만 허용됩니다.', '입력값 : ' + redGL );
+	RedColorPhongTextureMaterial = function (redGL, hexColor, alpha, normalTexture, specularTexture, displacementTexture) {
+		if ( !(this instanceof RedColorPhongTextureMaterial) ) return new RedColorPhongTextureMaterial(redGL, hexColor, alpha, normalTexture, specularTexture, displacementTexture);
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedColorPhongTextureMaterial : RedGL Instance만 허용됩니다.', '입력값 : ' + redGL);
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
-		this['_color'] = new Float32Array( 4 );
+		this['_color'] = new Float32Array(4);
 		/**DOC:
 		 {
 			 title :`normalTexture`,
@@ -191,25 +191,25 @@ var RedColorPhongTextureMaterial;
 		this['_displacementPower'] = 0
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		Object.defineProperty( this, 'color', RedDefinePropertyInfo['color'] );
-		Object.defineProperty( this, 'alpha', RedDefinePropertyInfo['alpha'] );
-		Object.defineProperty( this, 'shininess', RedDefinePropertyInfo['shininess'] );
-		Object.defineProperty( this, 'specularPower', RedDefinePropertyInfo['specularPower'] );
-		Object.defineProperty( this, 'displacementPower', RedDefinePropertyInfo['displacementPower'] );
-		Object.defineProperty( this, 'normalTexture', RedDefinePropertyInfo['normalTexture'] );
-		Object.defineProperty( this, 'specularTexture', RedDefinePropertyInfo['specularTexture'] );
-		Object.defineProperty( this, 'displacementTexture', RedDefinePropertyInfo['displacementTexture'] );
+		Object.defineProperty(this, 'color', RedDefinePropertyInfo['color']);
+		Object.defineProperty(this, 'alpha', RedDefinePropertyInfo['alpha']);
+		Object.defineProperty(this, 'shininess', RedDefinePropertyInfo['shininess']);
+		Object.defineProperty(this, 'specularPower', RedDefinePropertyInfo['specularPower']);
+		Object.defineProperty(this, 'displacementPower', RedDefinePropertyInfo['displacementPower']);
+		Object.defineProperty(this, 'normalTexture', RedDefinePropertyInfo['normalTexture']);
+		Object.defineProperty(this, 'specularTexture', RedDefinePropertyInfo['specularTexture']);
+		Object.defineProperty(this, 'displacementTexture', RedDefinePropertyInfo['displacementTexture']);
 		this['alpha'] = alpha == undefined ? 1 : alpha;
 		this['color'] = hexColor ? hexColor : '#ff0000'
 		this['normalTexture'] = normalTexture;
 		this['specularTexture'] = specularTexture;
 		this['displacementTexture'] = displacementTexture;
-		this['program'] = RedProgram['makeProgram']( redGL, PROGRAM_NAME, vSource, fSource );
+		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkUniformAndProperty();
 		;
-		console.log( this );
+		console.log(this);
 	}
-	RedColorPhongTextureMaterial.prototype = RedBaseMaterial.prototype
-	Object.freeze( RedColorPhongTextureMaterial )
+	RedColorPhongTextureMaterial.prototype = new RedBaseMaterial()
+	Object.freeze(RedColorPhongTextureMaterial)
 })();

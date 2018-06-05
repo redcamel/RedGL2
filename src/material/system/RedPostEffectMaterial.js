@@ -43,9 +43,9 @@ var RedPostEffectMaterial;
 		 return : 'RedPostEffectMaterial Instance'
 	 }
 	 :DOC*/
-	RedPostEffectMaterial = function ( redGL, diffuseTexture ) {
-		if ( !(this instanceof RedPostEffectMaterial) ) return new RedPostEffectMaterial( redGL, diffuseTexture );
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedPostEffectMaterial : RedGL Instance만 허용됩니다.', redGL )
+	RedPostEffectMaterial = function (redGL, diffuseTexture) {
+		if ( !(this instanceof RedPostEffectMaterial) ) return new RedPostEffectMaterial(redGL, diffuseTexture);
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedPostEffectMaterial : RedGL Instance만 허용됩니다.', redGL)
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
 		/**DOC:
@@ -57,13 +57,13 @@ var RedPostEffectMaterial;
 		this['_diffuseTexture'] = null
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		Object.defineProperty( this, 'diffuseTexture', RedDefinePropertyInfo['diffuseTexture'] );
+		Object.defineProperty(this, 'diffuseTexture', RedDefinePropertyInfo['diffuseTexture']);
 		this['diffuseTexture'] = diffuseTexture;
-		this['program'] = RedProgram['makeProgram']( redGL, PROGRAM_NAME, vSource, fSource );
+		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkUniformAndProperty();
-		console.log( this )
+		console.log(this)
 	}
-	RedPostEffectMaterial.prototype = RedBaseMaterial.prototype
-	Object.freeze( RedPostEffectMaterial )
+	RedPostEffectMaterial.prototype = new RedBaseMaterial()
+	Object.freeze(RedPostEffectMaterial)
 })();

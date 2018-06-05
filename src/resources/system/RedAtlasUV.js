@@ -1,7 +1,7 @@
 "use strict";
 var RedAtlasUV;
 (function () {
-	var baseUV = new Float32Array( [0, 0, 1, 1] )
+	var baseUV = new Float32Array([0, 0, 1, 1])
 	var checkMap = {}
 	var tKey
 	var t0
@@ -25,9 +25,9 @@ var RedAtlasUV;
 		 return : 'RedAtlasTexture Instance'
 	 }
 	 :DOC*/
-	RedAtlasUV = function ( redGL, rect ) {
-		if ( !(this instanceof RedAtlasUV) ) return new RedAtlasUV( redGL, rect );
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedAtlasUV : RedGL Instance만 허용됩니다.', redGL );
+	RedAtlasUV = function (redGL, rect) {
+		if ( !(this instanceof RedAtlasUV) ) return new RedAtlasUV(redGL, rect);
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedAtlasUV : RedGL Instance만 허용됩니다.', redGL);
 		if ( rect ) {
 			t0 = [
 				rect[0][0],
@@ -39,9 +39,8 @@ var RedAtlasUV;
 			if ( checkMap[tKey] ) this['data'] = checkMap[tKey]
 			else this['data'] = checkMap[tKey] = t0, this['data']['_UUID'] = RedGL.makeUUID()
 		} else this['data'] = baseUV
-
 		// console.log(this)
 	}
 	RedAtlasUV.prototype = {};
-	Object.freeze( RedAtlasUV );
+	Object.freeze(RedAtlasUV);
 })();

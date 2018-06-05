@@ -40,24 +40,24 @@ var RedPostEffect_Invert;
 		 return : 'RedPostEffect_Invert Instance'
 	 }
 	 :DOC*/
-	RedPostEffect_Invert = function ( redGL ) {
-		if ( !(this instanceof RedPostEffect_Invert) ) return new RedPostEffect_Invert( redGL );
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedPostEffect_Invert : RedGL Instance만 허용됩니다.', redGL );
-		this['frameBuffer'] = RedFrameBuffer( redGL );
+	RedPostEffect_Invert = function (redGL) {
+		if ( !(this instanceof RedPostEffect_Invert) ) return new RedPostEffect_Invert(redGL);
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedPostEffect_Invert : RedGL Instance만 허용됩니다.', redGL);
+		this['frameBuffer'] = RedFrameBuffer(redGL);
 		this['diffuseTexture'] = null;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = RedProgram['makeProgram']( redGL, PROGRAM_NAME, vSource, fSource );
+		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		this['_UUID'] = RedGL['makeUUID']();
-		this.updateTexture = function ( lastFrameBufferTexture ) {
+		this.updateTexture = function (lastFrameBufferTexture) {
 			this['diffuseTexture'] = lastFrameBufferTexture;
 		}
 		this['bind'] = RedPostEffectManager.prototype['bind'];
 		this['unbind'] = RedPostEffectManager.prototype['unbind'];
 		this.checkUniformAndProperty();
 		;
-		console.log( this );
+		console.log(this);
 	}
-	RedPostEffect_Invert.prototype = RedBaseMaterial.prototype;
-	Object.freeze( RedPostEffect_Invert );
+	RedPostEffect_Invert.prototype = new RedBaseMaterial();
+	Object.freeze(RedPostEffect_Invert);
 })();

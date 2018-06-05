@@ -38,10 +38,10 @@ var RedLine;
 		 return : 'RedLine Instance'
 	 }
 	 :DOC*/
-	RedLine = function ( redGL, material ) {
-		if ( !(this instanceof RedLine) ) return new RedLine( redGL, material );
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedLine : RedGL Instance만 허용됩니다.', redGL )
-		if ( !(material instanceof RedColorMaterial) ) RedGLUtil.throwFunc( 'RedLine : RedColorMaterial Instance만 허용됩니다.' )
+	RedLine = function (redGL, material) {
+		if ( !(this instanceof RedLine) ) return new RedLine(redGL, material);
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedLine : RedGL Instance만 허용됩니다.', redGL)
+		if ( !(material instanceof RedColorMaterial) ) RedGLUtil.throwFunc('RedLine : RedColorMaterial Instance만 허용됩니다.')
 		var tGL;
 		var interleaveData, indexData
 		var interleaveBuffer, indexBuffer
@@ -52,18 +52,17 @@ var RedLine;
 			redGL,
 			'RedLine_InterleaveBuffer_' + this['_UUID'],
 			RedBuffer.ARRAY_BUFFER,
-			new Float32Array( interleaveData ),
+			new Float32Array(interleaveData),
 			[
-				RedInterleaveInfo( 'aVertexPosition', 3 )
+				RedInterleaveInfo('aVertexPosition', 3)
 			]
 		)
 		indexBuffer = RedBuffer(
 			redGL,
 			'RedLine_indexBuffer_' + this['_UUID'],
 			RedBuffer.ELEMENT_ARRAY_BUFFER,
-			new Uint16Array( indexData )
+			new Uint16Array(indexData)
 		)
-
 		/**DOC:
 		 {
 			 title :`addPoint`,
@@ -78,10 +77,10 @@ var RedLine;
 			 return : 'void'
 		 }
 		 :DOC*/
-		this['addPoint'] = function ( x, y, z ) {
+		this['addPoint'] = function (x, y, z) {
 			var t = interleaveData.length / 3
-			interleaveData.push( x, y, z )
-			indexData.push( t )
+			interleaveData.push(x, y, z)
+			indexData.push(t)
 			this['upload']()
 		}
 		/**DOC:
@@ -94,13 +93,12 @@ var RedLine;
 		 }
 		 :DOC*/
 		this['upload'] = function () {
-			interleaveBuffer['upload']( new Float32Array( interleaveData ) );
-			indexBuffer['upload']( new Uint16Array( indexData ) );
+			interleaveBuffer['upload'](new Float32Array(interleaveData));
+			indexBuffer['upload'](new Uint16Array(indexData));
 		}
-
 		tGL = redGL.gl;
-		RedBaseObject3D['build'].call( this, tGL )
-		this['geometry'] = RedGeometry( interleaveBuffer, indexBuffer );
+		RedBaseObject3D['build'].call(this, tGL)
+		this['geometry'] = RedGeometry(interleaveBuffer, indexBuffer);
 		/**DOC:
 		 {
 			 title :`material`,
@@ -119,21 +117,9 @@ var RedLine;
 		 }
 		 :DOC*/
 		this['drawMode'] = tGL.LINE_STRIP
-
 		// Object.seal(RedLine);
 		// console.log(this);
 	}
-	/**DOC:
-	 {
-		 copyProto : 'RedBaseContainer'
-	 }
-	 :DOC*/
-	RedGLUtil['copyProto']( RedLine, RedBaseContainer );
-	/**DOC:
-	 {
-		 copyProto : 'RedBaseObject3D'
-	 }
-	 :DOC*/
-	RedGLUtil['copyProto']( RedLine, RedBaseObject3D );
-	Object.freeze( RedLine );
+	RedLine.prototype = new RedBaseContainer();
+	Object.freeze(RedLine);
 })();

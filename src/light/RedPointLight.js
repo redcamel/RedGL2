@@ -26,11 +26,11 @@ var RedPointLight;
 		 return : 'RedPointLight Instance'
 	 }
 	 :DOC*/
-	RedPointLight = function ( redGL, hexColor, alpha ) {
-		if ( !(this instanceof RedPointLight) ) return new RedPointLight( redGL, hexColor, alpha );
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedPointLight : RedGL Instance만 허용됩니다.', '입력값 : ' + redGL );
+	RedPointLight = function (redGL, hexColor, alpha) {
+		if ( !(this instanceof RedPointLight) ) return new RedPointLight(redGL, hexColor, alpha);
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedPointLight : RedGL Instance만 허용됩니다.', '입력값 : ' + redGL);
 		// 유니폼 프로퍼티
-		this['_color'] = new Float32Array( 4 )
+		this['_color'] = new Float32Array(4)
 		/**DOC:
 		 {
 			 title :`intensity`,
@@ -52,8 +52,8 @@ var RedPointLight;
 			 return : 'Number'
 		 }
 		 :DOC*/
-		Object.defineProperty( this, 'alpha', RedDefinePropertyInfo['alpha'] );
-		Object.defineProperty( this, 'color', RedDefinePropertyInfo['color'] );
+		Object.defineProperty(this, 'alpha', RedDefinePropertyInfo['alpha']);
+		Object.defineProperty(this, 'color', RedDefinePropertyInfo['color']);
 		this['alpha'] = alpha == undefined ? 1 : alpha
 		this['color'] = hexColor ? hexColor : '#fff'
 		/**DOC:
@@ -99,10 +99,10 @@ var RedPointLight;
 		 }
 		 :DOC*/
 		this['debug'] = false
-		this['debugObject'] = RedMesh( redGL, RedSphere( redGL, 1, 16, 16, 16 ), RedColorMaterial( redGL ) )
+		this['debugObject'] = RedMesh(redGL, RedSphere(redGL, 1, 16, 16, 16), RedColorMaterial(redGL))
 		this['debugObject']['drawMode'] = redGL.gl.LINE_STRIP
 		this['_UUID'] = RedGL['makeUUID']();
-		console.log( this )
+		console.log(this)
 	}
 	/**DOC:
 	 {
@@ -121,20 +121,18 @@ var RedPointLight;
 		 return : 'String'
 	 }
 	 :DOC*/
-	Object.defineProperty( RedPointLight.prototype, 'type', {
+	Object.defineProperty(RedPointLight.prototype, 'type', {
 		configurable: false,
 		writable: false,
 		value: RedPointLight['type']
-	} )
-	Object.defineProperty( RedPointLight.prototype, 'radius', {
+	})
+	Object.defineProperty(RedPointLight.prototype, 'radius', {
 		get: function () { return this['_radius']; },
-		set: function ( v ) {
-			if ( typeof v != 'number' ) RedGLUtil.throwFunc( 'radius : 숫자만 허용함.' )
+		set: function (v) {
+			if ( typeof v != 'number' ) RedGLUtil.throwFunc('radius : 숫자만 허용함.')
 			if ( v < 0 ) v = 0;
 			this['_radius'] = v
 		}
-	} );
-
-	Object.freeze( RedPointLight )
-
+	});
+	Object.freeze(RedPointLight)
 })()

@@ -23,10 +23,11 @@
     <script src="../src/frameBuffer/RedFrameBuffer.js"></script>
 
     <script src="../src/base/RedDefinePropertyInfo.js"></script>
+    <script src="../src/base/RedBaseObject3D.js"></script>
     <script src="../src/base/RedBaseContainer.js"></script>
     <script src="../src/base/RedBaseLight.js"></script>
     <script src="../src/base/RedBaseMaterial.js"></script>
-    <script src="../src/base/RedBaseObject3D.js"></script>
+
 
     <script src="../src/geometry/RedBuffer.js"></script>
     <script src="../src/geometry/RedGeometry.js"></script>
@@ -88,6 +89,7 @@
 
     <script src="../src/resources/RedAtlas.js"></script>
     <script src="../src/resources/system/RedAtlasUV.js"></script>
+    <script src="../src/resources/system/RedTextureOptionChecker.js"></script>
     <script src="../src/resources/RedBitmapTexture.js"></script>
     <script src="../src/resources/RedVideoTexture.js"></script>
     <script src="../src/resources/RedAtlasTexture.js"></script>
@@ -103,9 +105,9 @@
 <body>
 <canvas id="test" style="border: none;background:red"></canvas>
 <script>
-	var t = document.getElementById( 'test' )
-	document.body.appendChild( t )
-	RedGL( t, function ( v ) {
+	var t = document.getElementById('test')
+	document.body.appendChild(t)
+	RedGL(t, function (v) {
 		var tGL;
 		var tWorld, tScene3D, tCamera
 		var tRenderer;
@@ -113,67 +115,59 @@
 		self = this
 		tGL = this.gl;
 		this.world = tWorld = RedWorld();
-		tScene3D = RedScene( this );
+		tScene3D = RedScene(this);
 		tCamera = RedCamera();
 		tRenderer = RedRenderer();
-		tWorld.addView( RedView( 'test', tScene3D, tCamera ) );
-		RedView( 'test' ).setSize( '100%', '100%' )
-		RedView( 'test' ).setLocation( '0%', '0%' )
+		tWorld.addView(RedView('test', tScene3D, tCamera));
+		RedView('test').setSize('100%', '100%')
+		RedView('test').setLocation('0%', '0%')
 		tScene3D.skyBox =
-			RedSkyBox( this, [
+			RedSkyBox(this, [
 				'../asset/cubemap/posx.png',
 				'../asset/cubemap/negx.png',
 				'../asset/cubemap/posy.png',
 				'../asset/cubemap/negy.png',
 				'../asset/cubemap/posz.png',
 				'../asset/cubemap/negz.png'
-			] );
-
+			]);
 		var testDLight
-
-		testDLight = RedDirectionalLight( this, '#fff' )
+		testDLight = RedDirectionalLight(this, '#fff')
 		testDLight.x = 3
 		testDLight.y = 3
 		testDLight.z = 3
-		tScene3D.addLight( testDLight )
-
+		tScene3D.addLight(testDLight)
 		var testMaterials = []
 		var imgList = []
 		for ( var i = 0; i < 10; i++ ) {
-			imgList.push( '../asset/draft' + (i % 5 + 1) + '.png?test=' + Math.random() )
-
+			imgList.push('../asset/draft' + (i % 5 + 1) + '.png?test=' + Math.random())
 		}
-
-		RedAtlas( this, imgList,
-			function ( v ) {
-				console.log( '~~~~~~~~~~~~~~~', v )
+		RedAtlas(this, imgList,
+			function (v) {
+				console.log('~~~~~~~~~~~~~~~', v)
 				for ( var k in v['atlasMap'] ) {
 
 					// console.log( v['atlasMap'][k]['atlas']['canvas'])
 					testMaterials.push(
 						RedBitmapMaterial(
 							self,
-							RedAtlasTexture( self, k )
+							RedAtlasTexture(self, k)
 						)
 					)
 				}
 				var i = 5000
-				var geo = RedBox( self )
+				var geo = RedBox(self)
 				while ( i-- ) {
-					var testMesh = RedMesh( self, geo, testMaterials[i % imgList.length] )
+					var testMesh = RedMesh(self, geo, testMaterials[i % imgList.length])
 					testMesh.x = Math.random() * 100 - 50
 					testMesh.y = Math.random() * 100 - 50
 					testMesh.z = Math.random() * 100 - 50
-					tScene3D.addChild( testMesh )
+					tScene3D.addChild(testMesh)
 				}
-
-				console.log( testMaterials )
+				console.log(testMaterials)
 			}
 		)
-
 		tRenderer.renderDebuger.visible = true
-
-		tRenderer.start( this, function ( time ) {
+		tRenderer.start(this, function (time) {
 			i = tScene3D.children.length
 			while ( i-- ) {
 				if ( i == 0 ) break
@@ -182,18 +176,13 @@
 				testMesh.rotationY += 1
 				testMesh.rotationZ += 1
 			}
-
-
-			tCamera.x = Math.sin( time / 3500 ) * 20
-			tCamera.y = Math.cos( time / 3500 ) * 20
-			tCamera.z = Math.cos( time / 3500 ) * 20
-			tCamera.lookAt( 0, 0, 0 )
-
-
-		} )
-
-		console.log( tScene3D )
-	} )
+			tCamera.x = Math.sin(time / 3500) * 20
+			tCamera.y = Math.cos(time / 3500) * 20
+			tCamera.z = Math.cos(time / 3500) * 20
+			tCamera.lookAt(0, 0, 0)
+		})
+		console.log(tScene3D)
+	})
 </script>
 </body>
 

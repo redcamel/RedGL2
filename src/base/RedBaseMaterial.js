@@ -7,14 +7,12 @@ var RedBaseMaterial;
 		 title :`RedBaseMaterial`,
 		 description : `
 			 RedBaseMaterial 기저층
-			 프로토타입 확장을 통해서만 사용가능( RedGLUtil.copyProto 사용 )
 
 		 `,
 		 return : 'void'
 	 }
 	 :DOC*/
 	RedBaseMaterial = function () {
-		RedGLUtil.throwFunc( 'RedBaseMaterial : 생성자/직접실행으로 사용 할 수 없습니다.' )
 	}
 	RedBaseMaterial.prototype = {
 		/**DOC:
@@ -36,11 +34,11 @@ var RedBaseMaterial;
 			while ( i2-- ) {
 				tUniformLocationInfo = tUniformGroup[i2];
 				tWebGLUniformLocation = tUniformLocationInfo['location'];
-				if ( tWebGLUniformLocation && !this.hasOwnProperty( tUniformLocationInfo['materialPropertyName'] ) ) {
-					RedGLUtil.throwFunc( 'Material에 ', tUniformLocationInfo['materialPropertyName'], '이 정의 되지않았습니다.' )
+				if ( tWebGLUniformLocation && !this.hasOwnProperty(tUniformLocationInfo['materialPropertyName']) ) {
+					RedGLUtil.throwFunc('Material에 ', tUniformLocationInfo['materialPropertyName'], '이 정의 되지않았습니다.')
 				}
 			}
 		}
 	}
-	Object.freeze( RedBaseMaterial )
+	Object.freeze(RedBaseMaterial)
 })();

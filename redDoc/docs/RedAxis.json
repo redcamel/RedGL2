@@ -12,11 +12,5 @@
     },
     "example": "\nvar tScene;\ntScene = RedScene();\ntScene['axis'] = RedAxis(redGL Instance)\n",
     "return": "RedAxis Instance"
-  },
-  {
-    "copyProto": "RedBaseContainer"
-  },
-  {
-    "copyProto": "RedBaseObject3D"
   }
 ]

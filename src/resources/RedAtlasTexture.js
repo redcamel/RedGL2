@@ -45,15 +45,15 @@ var RedAtlasTexture;
 	 }
 	 :DOC*/
 	var t0;
-	RedAtlasTexture = function ( redGL, key ) {
-		if ( !(this instanceof RedAtlasTexture) ) return new RedAtlasTexture( redGL, key );
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedAtlasTexture : RedGL Instance만 허용됩니다.', redGL );
+	RedAtlasTexture = function (redGL, key) {
+		if ( !(this instanceof RedAtlasTexture) ) return new RedAtlasTexture(redGL, key);
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedAtlasTexture : RedGL Instance만 허용됩니다.', redGL);
 		t0 = redGL['_datas']['RedAtlas']['atlasMap'][key]
 		this['webglTexture'] = t0['atlas']['texture']['webglTexture']
-		this['atlascoord'] = RedAtlasUV( redGL, t0['rect'] )
+		this['atlascoord'] = RedAtlasUV(redGL, t0['rect'])
 		this['_UUID'] = t0['atlas']['_UUID']
-		console.log( this )
+		console.log(this)
 	}
 	RedAtlasTexture.prototype = RedBitmapTexture.prototype;
-	Object.freeze( RedAtlasTexture );
+	Object.freeze(RedAtlasTexture);
 })();

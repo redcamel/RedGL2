@@ -66,10 +66,10 @@ var RedPostEffect_HalfTone;
 	 }
 	 :DOC*/
 	//TODO: 각각의 값을 정의해봐야겠군....의미가 아리까리..
-	RedPostEffect_HalfTone = function ( redGL ) {
-		if ( !(this instanceof RedPostEffect_HalfTone) ) return new RedPostEffect_HalfTone( redGL );
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedPostEffect_HalfTone : RedGL Instance만 허용됩니다.', redGL )
-		this['frameBuffer'] = RedFrameBuffer( redGL );
+	RedPostEffect_HalfTone = function (redGL) {
+		if ( !(this instanceof RedPostEffect_HalfTone) ) return new RedPostEffect_HalfTone(redGL);
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedPostEffect_HalfTone : RedGL Instance만 허용됩니다.', redGL)
+		this['frameBuffer'] = RedFrameBuffer(redGL);
 		this['diffuseTexture'] = null;
 		this['centerX'] = 0.0;
 		this['centerY'] = 0.0;
@@ -78,17 +78,17 @@ var RedPostEffect_HalfTone;
 		this['grayMode'] = false;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = RedProgram['makeProgram']( redGL, PROGRAM_NAME, vSource, fSource );
+		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		this['_UUID'] = RedGL['makeUUID']();
-		this.updateTexture = function ( lastFrameBufferTexture ) {
+		this.updateTexture = function (lastFrameBufferTexture) {
 			this['diffuseTexture'] = lastFrameBufferTexture
 		}
 		this['bind'] = RedPostEffectManager.prototype['bind'];
 		this['unbind'] = RedPostEffectManager.prototype['unbind'];
 		this.checkUniformAndProperty();
 		;
-		console.log( this );
+		console.log(this);
 	}
-	RedPostEffect_HalfTone.prototype = RedBaseMaterial.prototype;
-	Object.freeze( RedPostEffect_HalfTone );
+	RedPostEffect_HalfTone.prototype = new RedBaseMaterial();
+	Object.freeze(RedPostEffect_HalfTone);
 })();

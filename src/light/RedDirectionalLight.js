@@ -26,11 +26,11 @@ var RedDirectionalLight;
 		 return : 'RedDirectionalLight Instance'
 	 }
 	 :DOC*/
-	RedDirectionalLight = function ( redGL, hexColor, alpha ) {
-		if ( !(this instanceof RedDirectionalLight) ) return new RedDirectionalLight( redGL, hexColor, alpha );
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedDirectionalLight : RedGL Instance만 허용됩니다.', '입력값 : ' + redGL );
+	RedDirectionalLight = function (redGL, hexColor, alpha) {
+		if ( !(this instanceof RedDirectionalLight) ) return new RedDirectionalLight(redGL, hexColor, alpha);
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedDirectionalLight : RedGL Instance만 허용됩니다.', '입력값 : ' + redGL);
 		// 유니폼 프로퍼티
-		this['_color'] = new Float32Array( 4 )
+		this['_color'] = new Float32Array(4)
 		/**DOC:
 		 {
 			 title :`intensity`,
@@ -42,7 +42,6 @@ var RedDirectionalLight;
 		 }
 		 :DOC*/
 		this['_intensity'] = 1
-
 		// 일반 프로퍼티
 		/**DOC:
 		 {
@@ -53,8 +52,8 @@ var RedDirectionalLight;
 			 return : 'Number'
 		 }
 		 :DOC*/
-		Object.defineProperty( this, 'alpha', RedDefinePropertyInfo['alpha'] );
-		Object.defineProperty( this, 'color', RedDefinePropertyInfo['color'] );
+		Object.defineProperty(this, 'alpha', RedDefinePropertyInfo['alpha']);
+		Object.defineProperty(this, 'color', RedDefinePropertyInfo['color']);
 		this['alpha'] = alpha == undefined ? 1 : alpha
 		this['color'] = hexColor ? hexColor : '#fff'
 		/**DOC:
@@ -109,7 +108,7 @@ var RedDirectionalLight;
 				)
 			)
 		)
-		console.log( this )
+		console.log(this)
 	}
 	/**DOC:
 	 {
@@ -128,11 +127,10 @@ var RedDirectionalLight;
 		 return : 'String'
 	 }
 	 :DOC*/
-	Object.defineProperty( RedDirectionalLight.prototype, 'type', {
+	Object.defineProperty(RedDirectionalLight.prototype, 'type', {
 		configurable: false,
 		writable: false,
 		value: RedDirectionalLight['type']
-	} )
-	Object.freeze( RedDirectionalLight )
-
+	})
+	Object.freeze(RedDirectionalLight)
 })()

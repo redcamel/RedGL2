@@ -6,19 +6,19 @@ var RedProgram;
 	makeProgram = (function () {
 		var program;
 		var tVMap, tFMap, k;
-		return function ( gl, key, vs, fs ) {
+		return function (gl, key, vs, fs) {
 			program = gl.createProgram();
-			gl.attachShader( program, vs['webglShader'] );
-			gl.attachShader( program, fs['webglShader'] );
+			gl.attachShader(program, vs['webglShader']);
+			gl.attachShader(program, fs['webglShader']);
 			tVMap = vs['parseData']['uniform']['map'];
 			tFMap = fs['parseData']['uniform']['map'];
-			for ( k in tVMap ) if ( tFMap[k] ) RedGLUtil.throwFunc( "vertexShader와 fragmentShader에 중복된 유니폼 선언이 존재함.", "중복선언 : " + k );
-			gl.linkProgram( program );
-			if ( !gl.getProgramParameter( program, gl.LINK_STATUS ) ) RedGLUtil.throwFunc( "RedProgram : 프로그램을 초기화 할 수 없습니다." );
+			for ( k in tVMap ) if ( tFMap[k] ) RedGLUtil.throwFunc("vertexShader와 fragmentShader에 중복된 유니폼 선언이 존재함.", "중복선언 : " + k);
+			gl.linkProgram(program);
+			if ( !gl.getProgramParameter(program, gl.LINK_STATUS) ) RedGLUtil.throwFunc("RedProgram : 프로그램을 초기화 할 수 없습니다.");
 			program['key'] = key;
 			program['vShaderKey'] = vs['key'];
 			program['fShaderKey'] = fs['key'];
-			gl.useProgram( program );
+			gl.useProgram(program);
 			return program;
 		}
 	})();
@@ -29,30 +29,28 @@ var RedProgram;
 		};
 		UniformLocationInfo = function () {
 		};
-
-		return function ( self, gl, shader ) {
+		return function (self, gl, shader) {
 			if ( shader['parseData']['attribute'] ) {
-				shader['parseData']['attribute']['list'].forEach( function ( v ) {
+				shader['parseData']['attribute']['list'].forEach(function (v) {
 					var t0 = new AttributeLocationInfo();
 					t0['_UUID'] = RedGL.makeUUID()
-					t0['location'] = gl.getAttribLocation( self['webglProgram'], v['name'] );
+					t0['location'] = gl.getAttribLocation(self['webglProgram'], v['name']);
 					if ( t0['location'] == -1 ) t0['msg'] = '쉐이더 main 함수에서 사용되고 있지 않음';
 					t0['attributeType'] = v['attributeType'];
 					t0['name'] = v['name'];
 					t0['enabled'] = false;
-					if ( t0['location'] != -1 ) self['attributeLocation'].push( t0 );
+					if ( t0['location'] != -1 ) self['attributeLocation'].push(t0);
 					self['attributeLocation'][v['name']] = t0;
 					// Object.seal(t0);
-
-				} )
+				})
 			}
 			if ( shader['parseData']['uniform'] ) {
-				shader['parseData']['uniform']['list'].forEach( function ( v ) {
+				shader['parseData']['uniform']['list'].forEach(function (v) {
 					var t0 = new UniformLocationInfo();
 					t0['_UUID'] = RedGL.makeUUID()
 					// console.log(v)
 					// console.log(v['name'],tGL.getUniformLocation(self['webglProgram'], v['name']))
-					t0['location'] = gl.getUniformLocation( self['webglProgram'], v['name'] );
+					t0['location'] = gl.getUniformLocation(self['webglProgram'], v['name']);
 					t0['uniformType'] = v['uniformType'];
 					// renderType 조사
 					var arrayNum, tRenderType, tRenderMethod;
@@ -133,26 +131,23 @@ var RedProgram;
 							tRenderType = 'bool';
 							tRenderMethod = 'uniform1i';
 							break
-
 					}
 					t0['renderType'] = tRenderType
 					t0['renderMethod'] = tRenderMethod
-
 					//
 					t0['name'] = v['name']
-					t0['materialPropertyName'] = v['name'].charAt( 1 ).toLowerCase() + v['name'].substr( 2 )
+					t0['materialPropertyName'] = v['name'].charAt(1).toLowerCase() + v['name'].substr(2)
 					t0['arrayNum'] = v['arrayNum']
 					if ( !t0['location'] ) t0['msg'] = '쉐이더 main 함수에서 사용되고 있지 않음';
 					if ( v['systemUniformYn'] ) {
-						if ( t0['location'] ) self['systemUniformLocation'].push( t0 )
+						if ( t0['location'] ) self['systemUniformLocation'].push(t0)
 						self['systemUniformLocation'][v['name']] = t0
 					} else {
-						if ( t0['location'] ) self['uniformLocation'].push( t0 )
+						if ( t0['location'] ) self['uniformLocation'].push(t0)
 						self['uniformLocation'][v['name']] = t0
 					}
 					// Object.seal(t0)
-				} )
-
+				})
 			}
 		}
 	})();
@@ -183,29 +178,26 @@ var RedProgram;
 		 return : 'RedProgram Instance'
 	 }
 	 :DOC*/
-	RedProgram = function ( redGL, key, vSource, fSource ) {
+	RedProgram = function (redGL, key, vSource, fSource) {
 		var tGL;
 		var hasKey;
-		if ( !(this instanceof RedProgram) ) return new RedProgram( redGL, key, vSource, fSource )
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedProgram : RedGL Instance만 허용됩니다.', '입력값 : ' + redGL );
-		if ( typeof key != 'string' ) RedGLUtil.throwFunc( 'RedProgram : key - 문자열만 허용됩니다.', '입력값 : ' + key );
-
+		if ( !(this instanceof RedProgram) ) return new RedProgram(redGL, key, vSource, fSource)
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedProgram : RedGL Instance만 허용됩니다.', '입력값 : ' + redGL);
+		if ( typeof key != 'string' ) RedGLUtil.throwFunc('RedProgram : key - 문자열만 허용됩니다.', '입력값 : ' + key);
 		tGL = redGL.gl;
 		// 데이터 공간확보
 		if ( !redGL['_datas']['RedProgram'] ) redGL['_datas']['RedProgram'] = {};
-		hasKey = RedProgram.hasKey( redGL, key )
-
+		hasKey = RedProgram.hasKey(redGL, key)
 		var vertexShader, fragmentShader;
 		if ( hasKey ) {
 			return redGL['_datas']['RedProgram'][key]
 		} else {
-			vertexShader = vSource ? RedShader( redGL, key + '_VS', RedShader['VERTEX'], vSource ) : null
-			fragmentShader = fSource ? RedShader( redGL, key + '_FS', RedShader['FRAGMENT'], fSource ) : null
-			if ( !vertexShader || !fragmentShader ) RedGLUtil.throwFunc( 'RedProgram : 신규 생성시 vertexShader, fragmentShader 모두 입력해야함.' );
+			vertexShader = vSource ? RedShader(redGL, key + '_VS', RedShader['VERTEX'], vSource) : null
+			fragmentShader = fSource ? RedShader(redGL, key + '_FS', RedShader['FRAGMENT'], fSource) : null
+			if ( !vertexShader || !fragmentShader ) RedGLUtil.throwFunc('RedProgram : 신규 생성시 vertexShader, fragmentShader 모두 입력해야함.');
 			else redGL['_datas']['RedProgram'][key] = this;
-			console.log( '신규생성', key )
+			console.log('신규생성', key)
 		}
-
 		/**DOC:
 		 {
 			 title :`key`,
@@ -221,7 +213,7 @@ var RedProgram;
 			 return : 'WebGLShader'
 		 }
 		 :DOC*/
-		this['webglProgram'] = makeProgram( tGL, key, vertexShader, fragmentShader );
+		this['webglProgram'] = makeProgram(tGL, key, vertexShader, fragmentShader);
 		/**DOC:
 		 {
 			 title :`attributeLocation`,
@@ -247,12 +239,12 @@ var RedProgram;
 		 :DOC*/
 		this['systemUniformLocation'] = [];
 		// 쉐이더 로케이션 찾기
-		tGL.useProgram( this['webglProgram'] )
+		tGL.useProgram(this['webglProgram'])
 		samplerIndex = 2
-		updateLocation( this, tGL, vertexShader );
-		updateLocation( this, tGL, fragmentShader );
+		updateLocation(this, tGL, vertexShader);
+		updateLocation(this, tGL, fragmentShader);
 		this['_UUID'] = RedGL['makeUUID']();
-		console.log( this )
+		console.log(this)
 	}
 	RedProgram.prototype = {};
 	/**DOC:
@@ -275,16 +267,16 @@ var RedProgram;
 		 return : 'Boolean'
 	 }
 	 :DOC*/
-	RedProgram['hasKey'] = function ( redGL, key ) {
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedProgram : RedGL Instance만 허용됩니다.', '입력값 : ' + redGL );
+	RedProgram['hasKey'] = function (redGL, key) {
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedProgram : RedGL Instance만 허용됩니다.', '입력값 : ' + redGL);
 		if ( !redGL['_datas']['RedProgram'] ) redGL['_datas']['RedProgram'] = {};
 		return redGL['_datas']['RedProgram'][key] ? true : false
 	}
-	RedProgram['makeProgram'] = function ( redGL, programName, vSource, fSource ) {
-		vSource = RedGLUtil.getStrFromComment( vSource.toString() );
-		fSource = RedGLUtil.getStrFromComment( fSource.toString() );
+	RedProgram['makeProgram'] = function (redGL, programName, vSource, fSource) {
+		vSource = RedGLUtil.getStrFromComment(vSource.toString());
+		fSource = RedGLUtil.getStrFromComment(fSource.toString());
 		// console.log(vSource, fSource)
-		return RedProgram( redGL, programName, vSource, fSource )
+		return RedProgram(redGL, programName, vSource, fSource)
 	}
-	Object.freeze( RedProgram )
+	Object.freeze(RedProgram)
 })();

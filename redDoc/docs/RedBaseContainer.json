@@ -19,7 +19,7 @@
     "params": {
       "child": [
         {
-          "type": "RedMesh,RedSprite3D,RedLine,RedPointUnit"
+          "type": "RedBaseObject3D Instance"
         }
       ],
       "index": [
@@ -41,7 +41,7 @@
         }
       ]
     },
-    "return": "RedMesh,RedSprite3D,RedLine,RedPointUnit"
+    "return": "RedBaseObject3D Instance"
   },
   {
     "code": "METHOD",
@@ -50,7 +50,7 @@
     "params": {
       "child": [
         {
-          "type": "RedMesh,RedSprite3D,RedLine,RedPointUnit"
+          "type": "RedBaseObject3D Instance"
         }
       ]
     },
@@ -63,7 +63,7 @@
     "params": {
       "target": [
         {
-          "type": "RedMesh,RedSprite3D,RedLine,RedPointUnit"
+          "type": "RedBaseObject3D Instance"
         }
       ]
     },
@@ -72,7 +72,7 @@
   {
     "constructorYn": true,
     "title": "RedBaseContainer",
-    "description": "\nDisplayContainer 기저층\n프로토타입 확장을 통해서만 사용가능(RedGLUtil.copyProto 사용)\n",
+    "description": "\nDisplayContainer 기저층\n",
     "return": "void"
   },
   {
@@ -82,7 +82,7 @@
     "params": {
       "child": [
         {
-          "type": "RedMesh,RedSprite3D,RedLine,RedPointUnit"
+          "type": "RedBaseObject3D Instance"
         }
       ]
     },

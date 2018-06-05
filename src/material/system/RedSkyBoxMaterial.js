@@ -57,10 +57,9 @@ var RedSkyBoxMaterial;
 		 return : 'RedSkyBoxMaterial Instance'
 	 }
 	 :DOC*/
-	RedSkyBoxMaterial = function ( redGL, skyBoxTexture ) {
-		if ( !(this instanceof RedSkyBoxMaterial) ) return new RedSkyBoxMaterial( redGL, skyBoxTexture );
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedSkyBoxMaterial : RedGL Instance만 허용됩니다.', redGL )
-		if ( skyBoxTexture && !(skyBoxTexture instanceof RedBitmapCubeTexture) ) RedGLUtil.throwFunc( 'RedSkyBoxMaterial : skyBoxTexture - RedBitmapCubeTexture Instance만 허용됩니다.' )
+	RedSkyBoxMaterial = function (redGL, skyBoxTexture) {
+		if ( !(this instanceof RedSkyBoxMaterial) ) return new RedSkyBoxMaterial(redGL, skyBoxTexture);
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedSkyBoxMaterial : RedGL Instance만 허용됩니다.', redGL)
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
 		/**DOC:
@@ -72,13 +71,13 @@ var RedSkyBoxMaterial;
 		this['_skyBoxTexture'] = null;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		Object.defineProperty( this, 'skyBoxTexture', RedDefinePropertyInfo['skyBoxTexture'] );
+		Object.defineProperty(this, 'skyBoxTexture', RedDefinePropertyInfo['skyBoxTexture']);
 		this['skyBoxTexture'] = skyBoxTexture;
-		this['program'] = RedProgram['makeProgram']( redGL, PROGRAM_NAME, vSource, fSource );
+		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkUniformAndProperty();
-		console.log( this )
+		console.log(this)
 	}
-	RedSkyBoxMaterial.prototype = RedBaseMaterial.prototype
-	Object.freeze( RedSkyBoxMaterial )
+	RedSkyBoxMaterial.prototype = new RedBaseMaterial()
+	Object.freeze(RedSkyBoxMaterial)
 })();

@@ -8,9 +8,9 @@ var RedSphere;
 		var index
 		var grid = [];
 		var a, b, c, d;
-		var vertex = new Float32Array( [0, 0, 0] )
-		var normal = new Float32Array( [0, 0, 0] )
-		return function ( redGL, type, radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength ) {
+		var vertex = new Float32Array([0, 0, 0])
+		var normal = new Float32Array([0, 0, 0])
+		return function (redGL, type, radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength) {
 			thetaEnd = thetaStart + thetaLength;
 			ix, iy;
 			index = 0;
@@ -19,7 +19,6 @@ var RedSphere;
 			normal[0] = 0, normal[1] = 0, normal[2] = 0
 			////////////////////////////////////////////////////////////////////////////
 			// 데이터 생성!
-
 			// buffers Data
 			var interleaveData = [];
 			var indexData = [];
@@ -30,21 +29,21 @@ var RedSphere;
 				for ( ix = 0; ix <= widthSegments; ix++ ) {
 					var u = ix / widthSegments;
 					// vertex
-					vertex.x = -radius * Math.cos( phiStart + u * phiLength ) * Math.sin( thetaStart + v * thetaLength );
-					vertex.y = radius * Math.cos( thetaStart + v * thetaLength );
-					vertex.z = radius * Math.sin( phiStart + u * phiLength ) * Math.sin( thetaStart + v * thetaLength );
-					interleaveData.push( vertex.x, vertex.y, vertex.z );
+					vertex.x = -radius * Math.cos(phiStart + u * phiLength) * Math.sin(thetaStart + v * thetaLength);
+					vertex.y = radius * Math.cos(thetaStart + v * thetaLength);
+					vertex.z = radius * Math.sin(phiStart + u * phiLength) * Math.sin(thetaStart + v * thetaLength);
+					interleaveData.push(vertex.x, vertex.y, vertex.z);
 					// normal
 					normal[0] = vertex.x;
 					normal[1] = vertex.y;
 					normal[2] = vertex.z;
-					vec3.normalize( normal, normal );
-					interleaveData.push( normal[0], normal[1], normal[2] );
+					vec3.normalize(normal, normal);
+					interleaveData.push(normal[0], normal[1], normal[2]);
 					// uv
-					interleaveData.push( u, 1 - v );
-					verticesRow.push( index++ );
+					interleaveData.push(u, 1 - v);
+					verticesRow.push(index++);
 				}
-				grid.push( verticesRow );
+				grid.push(verticesRow);
 			}
 			// indices
 			for ( iy = 0; iy < heightSegments; iy++ ) {
@@ -53,8 +52,8 @@ var RedSphere;
 					b = grid[iy][ix]
 					c = grid[iy + 1][ix]
 					d = grid[iy + 1][ix + 1]
-					if ( iy !== 0 || thetaStart > 0 ) indexData.push( a, b, d )
-					if ( iy !== heightSegments - 1 || thetaEnd < Math.PI ) indexData.push( b, c, d )
+					if ( iy !== 0 || thetaStart > 0 ) indexData.push(a, b, d)
+					if ( iy !== heightSegments - 1 || thetaEnd < Math.PI ) indexData.push(b, c, d)
 				}
 			}
 			////////////////////////////////////////////////////////////////////////////
@@ -67,18 +66,18 @@ var RedSphere;
 					redGL,
 					type + '_interleaveBuffer',
 					RedBuffer.ARRAY_BUFFER,
-					new Float32Array( interleaveData ),
+					new Float32Array(interleaveData),
 					[
-						RedInterleaveInfo( 'aVertexPosition', 3 ),
-						RedInterleaveInfo( 'aVertexNormal', 3 ),
-						RedInterleaveInfo( 'aTexcoord', 2 )
+						RedInterleaveInfo('aVertexPosition', 3),
+						RedInterleaveInfo('aVertexNormal', 3),
+						RedInterleaveInfo('aTexcoord', 2)
 					]
 				),
 				indexBuffer: RedBuffer(
 					redGL,
 					type + '_indexBuffer',
 					RedBuffer.ELEMENT_ARRAY_BUFFER,
-					new Uint16Array( indexData )
+					new Uint16Array(indexData)
 				)
 			}
 		}
@@ -128,13 +127,13 @@ var RedSphere;
 		 return : 'RedSphere Instance'
 	 }
 	 :DOC*/
-	RedSphere = function ( redGL, radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength ) {
-		if ( !(this instanceof RedSphere) ) return new RedSphere( redGL, radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength );
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedPrimitive : RedGL Instance만 허용됩니다.', redGL );
+	RedSphere = function (redGL, radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength) {
+		if ( !(this instanceof RedSphere) ) return new RedSphere(redGL, radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength);
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedPrimitive : RedGL Instance만 허용됩니다.', redGL);
 		var tType, tPrimitiveData;
 		radius = radius || 1;
-		widthSegments = Math.max( 3, Math.floor( widthSegments ) || 8 );
-		heightSegments = Math.max( 2, Math.floor( heightSegments ) || 6 );
+		widthSegments = Math.max(3, Math.floor(widthSegments) || 8);
+		heightSegments = Math.max(2, Math.floor(heightSegments) || 6);
 		phiStart = phiStart !== undefined ? phiStart : 0;
 		phiLength = phiLength !== undefined ? phiLength : Math.PI * 2;
 		thetaStart = thetaStart !== undefined ? thetaStart : 0;
@@ -145,12 +144,12 @@ var RedSphere;
 		if ( redGL['_datas']['Primitives'][tType] ) return redGL['_datas']['Primitives'][tType];
 		else redGL['_datas']['Primitives'][tType] = this;
 		//
-		tPrimitiveData = makeData( redGL, tType, radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength );
+		tPrimitiveData = makeData(redGL, tType, radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength);
 		this['interleaveBuffer'] = tPrimitiveData['interleaveBuffer'];
 		this['indexBuffer'] = tPrimitiveData['indexBuffer'];
 		this['_UUID'] = RedGL['makeUUID']();
-		console.log( this )
+		console.log(this)
 	}
 	RedSphere.prototype = RedGeometry.prototype;
-	Object.freeze( RedSphere );
+	Object.freeze(RedSphere);
 })()

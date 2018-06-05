@@ -75,9 +75,9 @@ var RedVideoMaterial;
 		 return : 'RedVideoMaterial Instance'
 	 }
 	 :DOC*/
-	RedVideoMaterial = function ( redGL, videoTexture ) {
-		if ( !(this instanceof RedVideoMaterial) ) return new RedVideoMaterial( redGL, videoTexture );
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedVideoMaterial : RedGL Instance만 허용됩니다.', redGL )
+	RedVideoMaterial = function (redGL, videoTexture) {
+		if ( !(this instanceof RedVideoMaterial) ) return new RedVideoMaterial(redGL, videoTexture);
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedVideoMaterial : RedGL Instance만 허용됩니다.', redGL)
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
 		/**DOC:
@@ -89,13 +89,13 @@ var RedVideoMaterial;
 		this['_videoTexture'] = null;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		Object.defineProperty( this, 'videoTexture', RedDefinePropertyInfo['videoTextureMust'] );
+		Object.defineProperty(this, 'videoTexture', RedDefinePropertyInfo['videoTextureMust']);
 		this['videoTexture'] = videoTexture;
-		this['program'] = RedProgram['makeProgram']( redGL, PROGRAM_NAME, vSource, fSource );
+		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkUniformAndProperty();
-		console.log( this )
+		console.log(this)
 	}
-	RedVideoMaterial.prototype = RedBaseMaterial.prototype
-	Object.freeze( RedVideoMaterial )
+	RedVideoMaterial.prototype = new RedBaseMaterial()
+	Object.freeze(RedVideoMaterial)
 })();

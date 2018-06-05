@@ -29,11 +29,5 @@
     },
     "example": "\nvar tScene;\ntScene = RedScene();\ntScene['grid'] = RedGrid(redGL Instance)\n",
     "return": "RedGrid Instance"
-  },
-  {
-    "copyProto": "RedBaseContainer"
-  },
-  {
-    "copyProto": "RedBaseObject3D"
   }
 ]

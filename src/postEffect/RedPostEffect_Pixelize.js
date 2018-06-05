@@ -46,10 +46,10 @@ var RedPostEffect_Pixelize;
 		 return : 'RedPostEffect_Pixelize Instance'
 	 }
 	 :DOC*/
-	RedPostEffect_Pixelize = function ( redGL ) {
-		if ( !(this instanceof RedPostEffect_Pixelize) ) return new RedPostEffect_Pixelize( redGL );
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedPostEffect_Pixelize : RedGL Instance만 허용됩니다.', redGL );
-		this['frameBuffer'] = RedFrameBuffer( redGL );
+	RedPostEffect_Pixelize = function (redGL) {
+		if ( !(this instanceof RedPostEffect_Pixelize) ) return new RedPostEffect_Pixelize(redGL);
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedPostEffect_Pixelize : RedGL Instance만 허용됩니다.', redGL);
+		this['frameBuffer'] = RedFrameBuffer(redGL);
 		this['diffuseTexture'] = null;
 		/**DOC:
 		 {
@@ -75,17 +75,17 @@ var RedPostEffect_Pixelize;
 		this['height'] = 5;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = RedProgram['makeProgram']( redGL, PROGRAM_NAME, vSource, fSource );
+		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		this['_UUID'] = RedGL['makeUUID']();
-		this.updateTexture = function ( lastFrameBufferTexture ) {
+		this.updateTexture = function (lastFrameBufferTexture) {
 			this['diffuseTexture'] = lastFrameBufferTexture;
 		}
 		this['bind'] = RedPostEffectManager.prototype['bind'];
 		this['unbind'] = RedPostEffectManager.prototype['unbind'];
 		this.checkUniformAndProperty();
 		;
-		console.log( this );
+		console.log(this);
 	}
-	RedPostEffect_Pixelize.prototype = RedBaseMaterial.prototype;
-	Object.freeze( RedPostEffect_Pixelize );
+	RedPostEffect_Pixelize.prototype = new RedBaseMaterial();
+	Object.freeze(RedPostEffect_Pixelize);
 })();

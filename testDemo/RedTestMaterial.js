@@ -2,9 +2,9 @@
 var RedTestMaterial;
 (function () {
 	var makeProgram;
-	RedTestMaterial = function ( redGL ) {
-		if ( !(this instanceof RedTestMaterial) ) return new RedTestMaterial( redGL );
-		this['program'] = makeProgram( redGL )
+	RedTestMaterial = function (redGL) {
+		if ( !(this instanceof RedTestMaterial) ) return new RedTestMaterial(redGL);
+		this['program'] = makeProgram(redGL)
 		// 유니폼 프로퍼티
 		this['floatTest'] = 1
 		this['floatTest2'] = [1, 2, 3, 4, 5]
@@ -15,8 +15,8 @@ var RedTestMaterial;
 		// 일반 프로퍼티
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkUniformAndProperty();
-		Object.seal( this )
-		console.log( this )
+		Object.seal(this)
+		console.log(this)
 	}
 	makeProgram = (function () {
 		var vSource, fSource;
@@ -54,15 +54,13 @@ var RedTestMaterial;
 			 }
 			 */
 		}
-		vSource = RedGLUtil.getStrFromComment( vSource.toString() );
-		fSource = RedGLUtil.getStrFromComment( fSource.toString() );
+		vSource = RedGLUtil.getStrFromComment(vSource.toString());
+		fSource = RedGLUtil.getStrFromComment(fSource.toString());
 		PROGRAM_NAME = 'testrProgram';
-		return function ( redGL ) {
-			return RedProgram( redGL, PROGRAM_NAME, vSource, fSource )
-
+		return function (redGL) {
+			return RedProgram(redGL, PROGRAM_NAME, vSource, fSource)
 		}
 	})()
-
 	RedTestMaterial.prototype = RedBaseMaterial.prototype
-	Object.freeze( RedTestMaterial )
+	Object.freeze(RedTestMaterial)
 })();

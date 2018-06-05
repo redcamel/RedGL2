@@ -52,7 +52,7 @@
   {
     "constructorYn": true,
     "title": "RedBaseObject3D",
-    "description": "\nRedBaseObject3D 기저층\n프로토타입 확장을 통해서만 사용가능( RedGLUtil.copyProto 사용 )\n",
+    "description": "\nRedBaseObject3D 기저층\n",
     "return": "void"
   },
   {

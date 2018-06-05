@@ -61,20 +61,19 @@ var RedPostEffect_DoF_DepthMaterial;
 		 return : 'RedPostEffect_DoF_DepthMaterial Instance'
 	 }
 	 :DOC*/
-	RedPostEffect_DoF_DepthMaterial = function ( redGL ) {
-		if ( !(this instanceof RedPostEffect_DoF_DepthMaterial) ) return new RedPostEffect_DoF_DepthMaterial( redGL );
+	RedPostEffect_DoF_DepthMaterial = function (redGL) {
+		if ( !(this instanceof RedPostEffect_DoF_DepthMaterial) ) return new RedPostEffect_DoF_DepthMaterial(redGL);
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
-
 		this['focusLength'] = 15
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = RedProgram['makeProgram']( redGL, PROGRAM_NAME, vSource, fSource );
+		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkUniformAndProperty();
 		;
-		console.log( this );
+		console.log(this);
 	}
 	RedPostEffect_DoF_DepthMaterial.prototype = RedBaseMaterial.prototype
-	Object.freeze( RedPostEffect_DoF_DepthMaterial )
+	Object.freeze(RedPostEffect_DoF_DepthMaterial)
 })();
