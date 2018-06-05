@@ -32,8 +32,5 @@
   },
   {
     "copyProto": "RedBaseContainer"
-  },
-  {
-    "copyProto": "RedBaseObject3D"
   }
 ]

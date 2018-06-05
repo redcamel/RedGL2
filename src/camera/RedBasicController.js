@@ -19,9 +19,9 @@ var RedBasicController;
 		 return : 'RedBasicController Instance'
 	 }
 	 :DOC*/
-	RedBasicController = function ( redGL ) {
+	RedBasicController = function (redGL) {
 		var self;
-		if ( !(this instanceof RedBasicController) ) return new RedBasicController( redGL );
+		if ( !(this instanceof RedBasicController) ) return new RedBasicController(redGL);
 		self = this;
 		this['keyBuffer'] = {}
 		/**DOC:
@@ -85,87 +85,85 @@ var RedBasicController;
 			 return : 'Number'
 		 }
 		 :DOC*/
-		Object.defineProperty( this, 'x', (function () {
+		Object.defineProperty(this, 'x', (function () {
 			return {
 				get: function () {
 					return this['_targetObject']['x']
 				},
-				set: function ( v ) {
+				set: function (v) {
 					this['_targetObject']['x'] = v
 					this['_desirePosition'][0] = v
-
 				}
 			}
-		})() );
+		})());
 		/**DOC:
 		 {
 			 title :`y`,
 			 return : 'Number'
 		 }
 		 :DOC*/
-		Object.defineProperty( this, 'y', (function () {
+		Object.defineProperty(this, 'y', (function () {
 			return {
 				get: function () {
 					return this['_targetObject']['y']
 				},
-				set: function ( v ) {
+				set: function (v) {
 					this['_targetObject']['y'] = v
 					this['_desirePosition'][1] = v
 				}
 			}
-		})() );
+		})());
 		/**DOC:
 		 {
 			 title :`z`,
 			 return : 'Number'
 		 }
 		 :DOC*/
-		Object.defineProperty( this, 'z', (function () {
+		Object.defineProperty(this, 'z', (function () {
 			return {
 				get: function () {
 					return this['_targetObject']['z']
 				},
-				set: function ( v ) {
+				set: function (v) {
 					this['_targetObject']['z'] = v
 					this['_desirePosition'][2] = v
 				}
 			}
-		})() );
+		})());
 		/**DOC:
 		 {
 			 title :`tilt`,
 			 return : 'Number'
 		 }
 		 :DOC*/
-		Object.defineProperty( this, 'tilt', (function () {
+		Object.defineProperty(this, 'tilt', (function () {
 			return {
 				get: function () {
 					return this['_desireTilt']
 				},
-				set: function ( v ) {
+				set: function (v) {
 					this['_targetObject']['rotationX'] = v
 					this['_desireTilt'] = v
-
 				}
 			}
-		})() );
+		})());
 		/**DOC:
 		 {
 			 title :`pan`,
 			 return : 'Number'
 		 }
 		 :DOC*/
-		Object.defineProperty( this, 'pan', (function () {
+		Object.defineProperty(this, 'pan', (function () {
 			return {
 				get: function () {
 					return this['_desirePan']
 				},
-				set: function ( v ) {
+				set: function (v) {
 					this['_targetObject']['rotationY'] = v
 					this['_desirePan'] = v
 				}
 			}
-		})() );
+		})());
 		/**DOC:
 		 {
 			 title :`camera`,
@@ -176,7 +174,6 @@ var RedBasicController;
 		 }
 		 :DOC*/
 		this['camera'] = RedCamera()
-
 		/**DOC:
 		 {
 			 title :`keyNameMapper`,
@@ -216,11 +213,10 @@ var RedBasicController;
 			turnDown: 'f',
 		};
 		this['_desirePosition'] = [0, 0, 0];
-		this['_targetObject'] = RedMesh( redGL )
+		this['_targetObject'] = RedMesh(redGL)
 		this['_desirePan'] = 0;
 		this['_desireTilt'] = 0;
-
-		(function ( self ) {
+		(function (self) {
 			var HD_keyDown;
 			var HD_keyUp
 			var HD_down, HD_Move, HD_up;
@@ -228,35 +224,34 @@ var RedBasicController;
 			var mX, mY;
 			sX = 0, sY = 0
 			mX = 0, mY = 0
-			HD_keyDown = function ( e ) {
+			HD_keyDown = function (e) {
 				self['keyBuffer'][e['key']] = 1
 			}
-			HD_keyUp = function ( e ) {
+			HD_keyUp = function (e) {
 				self['keyBuffer'][e['key']] = 0
 			}
-			HD_down = function ( e ) {
+			HD_down = function (e) {
 				sX = e['x'], sY = e['y'];
-				redGL['_canvas'].addEventListener( 'mousemove', HD_Move )
-				window.addEventListener( 'mouseup', HD_up )
+				redGL['_canvas'].addEventListener('mousemove', HD_Move)
+				window.addEventListener('mouseup', HD_up)
 			}
-			HD_Move = function ( e ) {
+			HD_Move = function (e) {
 				mX = e['x'] - sX, mY = e['y'] - sY;
 				sX = e['x'], sY = e['y'];
 				self['_desirePan'] -= mX * self['speedRotation'] * 0.1;
 				self['_desireTilt'] -= mY * self['speedRotation'] * 0.1;
 			}
 			HD_up = function () {
-				redGL['_canvas'].removeEventListener( 'mousemove', HD_Move );
-				window.removeEventListener( 'mouseup', HD_up );
+				redGL['_canvas'].removeEventListener('mousemove', HD_Move);
+				window.removeEventListener('mouseup', HD_up);
 			}
-			window.addEventListener( 'keydown', HD_keyDown );
-			window.addEventListener( 'keyup', HD_keyUp );
-			redGL['_canvas'].addEventListener( 'mousedown', HD_down );
-		})( this );
-
+			window.addEventListener('keydown', HD_keyDown);
+			window.addEventListener('keyup', HD_keyUp);
+			redGL['_canvas'].addEventListener('mousedown', HD_down);
+		})(this);
 	};
 	RedBasicController.prototype['update'] = (function () {
-		var up = new Float32Array( [0, 1, 0] );
+		var up = new Float32Array([0, 1, 0]);
 		var tPan, tTilt
 		var targetObject;
 		var move, rotate;
@@ -275,7 +270,7 @@ var RedBasicController;
 		tMTX1 = mat4.create()
 		displacementVec3 = vec3.create()
 		currentAcceleration = 0
-		return function ( time ) {
+		return function (time) {
 			tPan = 0;
 			tTilt = 0;
 			move = false;
@@ -291,7 +286,6 @@ var RedBasicController;
 			displacementVec3[0] = 0;
 			displacementVec3[1] = 0;
 			displacementVec3[2] = 0;
-
 			// 움직임 체크
 			if ( tkeyBuffer[tKeyNameMapper['turnLeft']] ) rotate = true, tPan = tSpeedRotation;
 			if ( tkeyBuffer[tKeyNameMapper['turnRight']] ) rotate = true, tPan = -tSpeedRotation;
@@ -303,7 +297,6 @@ var RedBasicController;
 			if ( tkeyBuffer[tKeyNameMapper['moveRight']] ) move = true, displacementVec3[0] = currentAcceleration * tSpeed;
 			if ( tkeyBuffer[tKeyNameMapper['moveUp']] ) move = true, displacementVec3[1] = currentAcceleration * tSpeed;
 			if ( tkeyBuffer[tKeyNameMapper['moveDown']] ) move = true, displacementVec3[1] = -currentAcceleration * tSpeed;
-
 			// 가속도 계산
 			if ( rotate || move ) {
 				currentAcceleration += 0.1
@@ -322,52 +315,44 @@ var RedBasicController;
 			// pan,tilt 타겟오브젝트에 반영
 			targetObject['rotationY'] += (this['_desirePan'] - targetObject['rotationY']) * tDelayRotation
 			targetObject['rotationX'] += (this['_desireTilt'] - targetObject['rotationX']) * tDelayRotation
-
 			if ( move || rotate ) {
 				tMTX0 = targetObject['matrix'];
 				// 이동 매트릭스구함
-				mat4.identity( displacementMTX );
-				mat4.rotateY( displacementMTX, displacementMTX, targetObject['rotationY'] * Math.PI / 180 );
-				mat4.rotateX( displacementMTX, displacementMTX, targetObject['rotationX'] * Math.PI / 180 );
-				mat4.translate( displacementMTX, displacementMTX, displacementVec3 );
+				mat4.identity(displacementMTX);
+				mat4.rotateY(displacementMTX, displacementMTX, targetObject['rotationY'] * Math.PI / 180);
+				mat4.rotateX(displacementMTX, displacementMTX, targetObject['rotationX'] * Math.PI / 180);
+				mat4.translate(displacementMTX, displacementMTX, displacementVec3);
 				// 오브젝트에 적용할 x,y,z를 찾아냄
-				mat4.identity( tMTX0 )
-				mat4.translate( tMTX0, tMTX0, [targetObject['x'], targetObject['y'], targetObject['z']] )
-				mat4.multiply( tMTX0, tMTX0, displacementMTX )
-
+				mat4.identity(tMTX0)
+				mat4.translate(tMTX0, tMTX0, [targetObject['x'], targetObject['y'], targetObject['z']])
+				mat4.multiply(tMTX0, tMTX0, displacementMTX)
 				tDesirePosition[0] = tMTX0[12]
 				tDesirePosition[1] = tMTX0[13]
 				tDesirePosition[2] = tMTX0[14]
 			}
-
 			// 이동 계산
 			targetObject['x'] += (tDesirePosition[0] - targetObject['x']) * tDelay
 			targetObject['y'] += (tDesirePosition[1] - targetObject['y']) * tDelay
 			targetObject['z'] += (tDesirePosition[2] - targetObject['z']) * tDelay
-
 			// pan,tilt 타겟오브젝트에 반영
 			targetObject['rotationY'] += (this['_desirePan'] - targetObject['rotationY']) * tDelayRotation
 			targetObject['rotationX'] += (this['_desireTilt'] - targetObject['rotationX']) * tDelayRotation
-
 			// 타겟 오브젝트 최종적용
 			tMTX0 = targetObject['matrix'];
-			mat4.identity( tMTX0 )
-			mat4.translate( tMTX0, tMTX0, [targetObject['x'], targetObject['y'], targetObject['z']] )
-			mat4.rotateY( tMTX0, tMTX0, targetObject['rotationY'] * Math.PI / 180 );
-			mat4.rotateX( tMTX0, tMTX0, targetObject['rotationX'] * Math.PI / 180 );
-
+			mat4.identity(tMTX0)
+			mat4.translate(tMTX0, tMTX0, [targetObject['x'], targetObject['y'], targetObject['z']])
+			mat4.rotateY(tMTX0, tMTX0, targetObject['rotationY'] * Math.PI / 180);
+			mat4.rotateX(tMTX0, tMTX0, targetObject['rotationX'] * Math.PI / 180);
 			// 카메라를 오브젝트 바로 뒤에 위치시킴
-			tMTX1 = mat4.clone( tMTX0 )
-			mat4.translate( tMTX1, tMTX1, [0, 0, 0.01] )
+			tMTX1 = mat4.clone(tMTX0)
+			mat4.translate(tMTX1, tMTX1, [0, 0, 0.01])
 			tCamera['x'] = tMTX1[12]
 			tCamera['y'] = tMTX1[13]
 			tCamera['z'] = tMTX1[14]
-
 			// 카메라는 대상 오브젝트를 바라봄
-			tCamera.lookAt( targetObject['x'], targetObject['y'], targetObject['z'] )
-			console.log( 'RedBasicController update' )
+			tCamera.lookAt(targetObject['x'], targetObject['y'], targetObject['z'])
+			console.log('RedBasicController update')
 		}
 	})();
-
-	Object.freeze( RedBasicController );
+	Object.freeze(RedBasicController);
 })();

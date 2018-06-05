@@ -52,9 +52,9 @@ var RedPointBitmapMaterial;
 		 return : 'RedPointBitmapMaterial Instance'
 	 }
 	 :DOC*/
-	RedPointBitmapMaterial = function ( redGL, diffuseTexture ) {
-		if ( !(this instanceof RedPointBitmapMaterial) ) return new RedPointBitmapMaterial( redGL, diffuseTexture );
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedPointBitmapMaterial : RedGL Instance만 허용됩니다.', redGL )
+	RedPointBitmapMaterial = function (redGL, diffuseTexture) {
+		if ( !(this instanceof RedPointBitmapMaterial) ) return new RedPointBitmapMaterial(redGL, diffuseTexture);
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedPointBitmapMaterial : RedGL Instance만 허용됩니다.', redGL)
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
 		/**DOC:
@@ -66,9 +66,9 @@ var RedPointBitmapMaterial;
 		this['_diffuseTexture'] = diffuseTexture;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		Object.defineProperty( this, 'diffuseTexture', RedDefinePropertyInfo['diffuseTexture'] );
+		Object.defineProperty(this, 'diffuseTexture', RedDefinePropertyInfo['diffuseTexture']);
 		this['diffuseTexture'] = diffuseTexture;
-		this['program'] = RedProgram['makeProgram']( redGL, PROGRAM_NAME, vSource, fSource );
+		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		/**DOC:
 		 {
 			 title :`alphaTest`,
@@ -82,9 +82,8 @@ var RedPointBitmapMaterial;
 		this['alphaTest'] = 0.00001
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkUniformAndProperty();
-
-		console.log( this )
+		console.log(this)
 	}
-	RedPointBitmapMaterial.prototype = RedBaseMaterial.prototype
-	Object.freeze( RedPointBitmapMaterial )
+	RedPointBitmapMaterial.prototype = new RedBaseMaterial()
+	Object.freeze(RedPointBitmapMaterial)
 })();

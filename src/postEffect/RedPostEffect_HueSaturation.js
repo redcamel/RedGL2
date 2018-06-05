@@ -1,5 +1,4 @@
 "use strict";
-
 var RedPostEffect_HueSaturation;
 (function () {
 	var vSource, fSource;
@@ -52,10 +51,10 @@ var RedPostEffect_HueSaturation;
 		 return : 'RedPostEffect_HueSaturation Instance'
 	 }
 	 :DOC*/
-	RedPostEffect_HueSaturation = function ( redGL ) {
-		if ( !(this instanceof RedPostEffect_HueSaturation) ) return new RedPostEffect_HueSaturation( redGL );
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedPostEffect_HueSaturation : RedGL Instance만 허용됩니다.', redGL );
-		this['frameBuffer'] = RedFrameBuffer( redGL );
+	RedPostEffect_HueSaturation = function (redGL) {
+		if ( !(this instanceof RedPostEffect_HueSaturation) ) return new RedPostEffect_HueSaturation(redGL);
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedPostEffect_HueSaturation : RedGL Instance만 허용됩니다.', redGL);
+		this['frameBuffer'] = RedFrameBuffer(redGL);
 		this['diffuseTexture'] = null;
 		/**DOC:
 		 {
@@ -81,17 +80,17 @@ var RedPostEffect_HueSaturation;
 		this['saturation'] = 0;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = RedProgram['makeProgram']( redGL, PROGRAM_NAME, vSource, fSource );
+		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		this['_UUID'] = RedGL['makeUUID']();
-		this.updateTexture = function ( lastFrameBufferTexture ) {
+		this.updateTexture = function (lastFrameBufferTexture) {
 			this['diffuseTexture'] = lastFrameBufferTexture;
 		}
 		this['bind'] = RedPostEffectManager.prototype['bind'];
 		this['unbind'] = RedPostEffectManager.prototype['unbind'];
 		this.checkUniformAndProperty();
 		;
-		console.log( this );
+		console.log(this);
 	}
 	RedPostEffect_HueSaturation.prototype = RedBaseMaterial.prototype
-	Object.freeze( RedPostEffect_HueSaturation );
+	Object.freeze(RedPostEffect_HueSaturation);
 })();

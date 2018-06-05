@@ -17,9 +17,9 @@ var RedPostEffectManager;
 		 return : 'RedPostEffectManager Instance'
 	 }
 	 :DOC*/
-	RedPostEffectManager = function ( redGL ) {
-		if ( !(this instanceof RedPostEffectManager) ) return new RedPostEffectManager( redGL );
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedPostEffectManager : RedGL Instance만 허용됩니다.', redGL )
+	RedPostEffectManager = function (redGL) {
+		if ( !(this instanceof RedPostEffectManager) ) return new RedPostEffectManager(redGL);
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedPostEffectManager : RedGL Instance만 허용됩니다.', redGL)
 		var tGL;
 		var quad;
 		tGL = redGL['gl'];
@@ -33,22 +33,22 @@ var RedPostEffectManager;
 			return : 'RedFrameBuffer Instance'
 		}
 		 :DOC*/
-		this['frameBuffer'] = RedFrameBuffer( redGL );
+		this['frameBuffer'] = RedFrameBuffer(redGL);
 		(function () {
-			tGL.activeTexture( tGL.TEXTURE0 + 0 )
-			tGL.bindTexture( tGL.TEXTURE_2D, tGL.createTexture() );
+			tGL.activeTexture(tGL.TEXTURE0 + 0)
+			tGL.bindTexture(tGL.TEXTURE_2D, tGL.createTexture());
 			// tGL.texImage2D(tGL.TEXTURE_2D, 0, tGL.RGBA, tGL.RGBA, tGL.UNSIGNED_BYTE, source)
-			tGL.pixelStorei( tGL.UNPACK_FLIP_Y_WEBGL, true );
-			tGL.texParameteri( tGL.TEXTURE_2D, tGL.TEXTURE_MIN_FILTER, tGL.NEAREST );
-			tGL.texParameteri( tGL.TEXTURE_2D, tGL.TEXTURE_MAG_FILTER, tGL.NEAREST );
-			tGL.texParameteri( tGL.TEXTURE_2D, tGL.TEXTURE_WRAP_S, tGL.CLAMP_TO_EDGE );
-			tGL.texParameteri( tGL.TEXTURE_2D, tGL.TEXTURE_WRAP_T, tGL.CLAMP_TO_EDGE );
+			tGL.pixelStorei(tGL.UNPACK_FLIP_Y_WEBGL, true);
+			tGL.texParameteri(tGL.TEXTURE_2D, tGL.TEXTURE_MIN_FILTER, tGL.NEAREST);
+			tGL.texParameteri(tGL.TEXTURE_2D, tGL.TEXTURE_MAG_FILTER, tGL.NEAREST);
+			tGL.texParameteri(tGL.TEXTURE_2D, tGL.TEXTURE_WRAP_S, tGL.CLAMP_TO_EDGE);
+			tGL.texParameteri(tGL.TEXTURE_2D, tGL.TEXTURE_WRAP_T, tGL.CLAMP_TO_EDGE);
 			try {
-				tGL.generateMipmap( tGL.TEXTURE_2D )
+				tGL.generateMipmap(tGL.TEXTURE_2D)
 			} catch ( error ) {
-				console.log( '밉맵을 생성할수 없음', source )
+				console.log('밉맵을 생성할수 없음', source)
 			}
-			tGL.bindTexture( tGL.TEXTURE_2D, null );
+			tGL.bindTexture(tGL.TEXTURE_2D, null);
 		})();
 		/**DOC:
 		 {
@@ -71,17 +71,17 @@ var RedPostEffectManager;
 			return : 'Array'
 		}
 		 :DOC*/
-		Object.defineProperty( this, 'antialiasing', (function () {
+		Object.defineProperty(this, 'antialiasing', (function () {
 			var _v = undefined
 			return {
 				get: function () {
 					return _v
 				},
-				set: function ( v ) {
+				set: function (v) {
 					_v = v
 				}
 			}
-		})() )
+		})())
 		this['antialiasing'] = undefined
 		/**DOC:
 		 {
@@ -93,15 +93,15 @@ var RedPostEffectManager;
 			return : 'Array'
 		}
 		 :DOC*/
-		this['finalMaterial'] = RedPostEffectMaterial( redGL, this['frameBuffer']['texture'] );
+		this['finalMaterial'] = RedPostEffectMaterial(redGL, this['frameBuffer']['texture']);
 		//
 		this['children'] = [];
-		quad = RedMesh( redGL, RedPlane( redGL ), this['finalMaterial'] );
+		quad = RedMesh(redGL, RedPlane(redGL), this['finalMaterial']);
 		quad['useCullFace'] = false;
-		this['children'].push( quad );
+		this['children'].push(quad);
 		//
 		this['_UUID'] = RedGL['makeUUID']();
-		console.log( this );
+		console.log(this);
 	}
 	RedPostEffectManager.prototype = {
 		/**DOC:
@@ -119,8 +119,8 @@ var RedPostEffectManager;
 			return : 'void'
 		}
 		 :DOC*/
-		addEffect: function ( postEffect ) {
-			this['postEffectList'].push( postEffect )
+		addEffect: function (postEffect) {
+			this['postEffectList'].push(postEffect)
 		},
 		/**DOC:
 		 {
@@ -139,9 +139,9 @@ var RedPostEffectManager;
 		 :DOC*/
 		removeEffect: (function () {
 			var t0;
-			return function ( postEffect ) {
-				t0 = this['postEffectList'].indexOf( postEffect );
-				if ( t0 != -1 ) this['postEffectList'].splice( t0, 1 );
+			return function (postEffect) {
+				t0 = this['postEffectList'].indexOf(postEffect);
+				if ( t0 != -1 ) this['postEffectList'].splice(t0, 1);
 			}
 		})(),
 		/**DOC:
@@ -160,8 +160,8 @@ var RedPostEffectManager;
 			return : 'void'
 		}
 		 :DOC*/
-		bind: function ( gl ) {
-			this['frameBuffer'].bind( gl );
+		bind: function (gl) {
+			this['frameBuffer'].bind(gl);
 		},
 		/**DOC:
 		 {
@@ -179,9 +179,9 @@ var RedPostEffectManager;
 			return : 'void'
 		}
 		 :DOC*/
-		unbind: function ( gl ) {
-			this['frameBuffer'].unbind( gl );
+		unbind: function (gl) {
+			this['frameBuffer'].unbind(gl);
 		}
 	}
-	Object.freeze( RedPostEffectManager );
+	Object.freeze(RedPostEffectManager);
 })();

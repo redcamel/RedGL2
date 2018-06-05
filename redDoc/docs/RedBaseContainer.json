@@ -106,5 +106,8 @@
       ]
     },
     "return": "void"
+  },
+  {
+    "copyProto": "RedBaseObject3D"
   }
 ]

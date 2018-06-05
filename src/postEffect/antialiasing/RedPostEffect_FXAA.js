@@ -81,25 +81,24 @@ var RedPostEffect_FXAA;
 		 return : 'RedPostEffect_FXAA Instance'
 	 }
 	 :DOC*/
-	RedPostEffect_FXAA = function ( redGL ) {
-		if ( !(this instanceof RedPostEffect_FXAA) ) return new RedPostEffect_FXAA( redGL );
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedPostEffect_FXAA : RedGL Instance만 허용됩니다.', redGL )
-		this['frameBuffer'] = RedFrameBuffer( redGL );
+	RedPostEffect_FXAA = function (redGL) {
+		if ( !(this instanceof RedPostEffect_FXAA) ) return new RedPostEffect_FXAA(redGL);
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedPostEffect_FXAA : RedGL Instance만 허용됩니다.', redGL)
+		this['frameBuffer'] = RedFrameBuffer(redGL);
 		this['diffuseTexture'] = null;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = RedProgram['makeProgram']( redGL, PROGRAM_NAME, vSource, fSource );
+		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		this['_UUID'] = RedGL['makeUUID']();
-
-		this.updateTexture = function ( lastFrameBufferTexture ) {
+		this.updateTexture = function (lastFrameBufferTexture) {
 			this['diffuseTexture'] = lastFrameBufferTexture;
 		}
 		this['bind'] = RedPostEffectManager.prototype['bind'];
 		this['unbind'] = RedPostEffectManager.prototype['unbind'];
 		this.checkUniformAndProperty();
 		;
-		console.log( this );
+		console.log(this);
 	}
-	RedPostEffect_FXAA.prototype = RedBaseMaterial.prototype;
-	Object.freeze( RedPostEffect_FXAA );
+	RedPostEffect_FXAA.prototype = new RedBaseMaterial();
+	Object.freeze(RedPostEffect_FXAA);
 })();

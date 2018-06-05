@@ -72,10 +72,10 @@ gulp.task( 'make-doc', function () {
 		"src/RedGL.js",
 
 		"src/base/RedDefinePropertyInfo.js",
+		"src/base/RedBaseObject3D.js",
 		"src/base/RedBaseContainer.js",
 		"src/base/RedBaseLight.js",
 		"src/base/RedBaseMaterial.js",
-		"src/base/RedBaseObject3D.js",
 
 		"src/frameBuffer/RedFrameBuffer.js",
 
@@ -149,6 +149,7 @@ gulp.task( 'make-doc', function () {
 
 		"src/resources/RedAtlas.js",
 		"src/resources/system/RedAtlasUV.js",
+		'src/resources/system/RedTextureOptionChecker.js',
 		"src/resources/RedBitmapTexture.js",
 		"src/resources/RedVideoTexture.js",
 		"src/resources/RedAtlasTexture.js",
@@ -176,10 +177,10 @@ gulp.task( 'combine-js', function () {
 		"src/RedGL.js",
 
 		"src/base/RedDefinePropertyInfo.js",
+		"src/base/RedBaseObject3D.js",
 		"src/base/RedBaseContainer.js",
 		"src/base/RedBaseLight.js",
 		"src/base/RedBaseMaterial.js",
-		"src/base/RedBaseObject3D.js",
 
 		"src/frameBuffer/RedFrameBuffer.js",
 
@@ -218,6 +219,7 @@ gulp.task( 'combine-js', function () {
 
 		"src/resources/RedAtlas.js",
 		"src/resources/system/RedAtlasUV.js",
+		'src/resources/system/RedTextureOptionChecker.js',
 		"src/resources/RedBitmapTexture.js",
 		"src/resources/RedVideoTexture.js",
 		"src/resources/RedAtlasTexture.js",
@@ -268,7 +270,7 @@ gulp.task( 'combine-js', function () {
 		"src/postEffect/antialiasing/RedPostEffect_FXAA.js"
 	] )
 		.pipe( concat( name + '.min.js' ) ) // 병합한다.
-		.pipe( stripDebug() )
+		// .pipe( stripDebug() )
 		.pipe( uglify(
 			{
 				output: {

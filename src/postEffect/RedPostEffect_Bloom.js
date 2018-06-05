@@ -42,20 +42,20 @@ var RedPostEffect_Bloom;
 		 return : 'RedPostEffect_Bloom Instance'
 	 }
 	 :DOC*/
-	RedPostEffect_Bloom = function ( redGL ) {
-		if ( !(this instanceof RedPostEffect_Bloom) ) return new RedPostEffect_Bloom( redGL );
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedPostEffect_Bloom : RedGL Instance만 허용됩니다.', redGL )
-		this['frameBuffer'] = RedFrameBuffer( redGL );
+	RedPostEffect_Bloom = function (redGL) {
+		if ( !(this instanceof RedPostEffect_Bloom) ) return new RedPostEffect_Bloom(redGL);
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedPostEffect_Bloom : RedGL Instance만 허용됩니다.', redGL)
+		this['frameBuffer'] = RedFrameBuffer(redGL);
 		this['diffuseTexture'] = null;
 		this['blurTexture'] = null;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = RedProgram['makeProgram']( redGL, PROGRAM_NAME, vSource, fSource );
+		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		this['_UUID'] = RedGL['makeUUID']();
 		this['process'] = [
-			RedPostEffect_BloomThreshold( redGL ),
-			RedPostEffect_BlurX( redGL ),
-			RedPostEffect_BlurY( redGL )
+			RedPostEffect_BloomThreshold(redGL),
+			RedPostEffect_BlurX(redGL),
+			RedPostEffect_BlurY(redGL)
 		]
 		/**DOC:
 		 {
@@ -67,19 +67,19 @@ var RedPostEffect_Bloom;
 			 return : 'Number'
 		 }
 		 :DOC*/
-		Object.defineProperty( this, 'blur', (function () {
+		Object.defineProperty(this, 'blur', (function () {
 			var _v = 1
 			return {
 				get: function () {
 					return _v
 				},
-				set: function ( v ) {
+				set: function (v) {
 					_v = v;
 					this['process'][1]['size'] = _v;
 					this['process'][2]['size'] = _v;
 				}
 			}
-		})() );
+		})());
 		this['blur'] = 20;
 		/**DOC:
 		 {
@@ -113,19 +113,19 @@ var RedPostEffect_Bloom;
 			 return : 'Number'
 		 }
 		 :DOC*/
-		Object.defineProperty( this, 'threshold', (function () {
+		Object.defineProperty(this, 'threshold', (function () {
 			var _v = 0.3
 			return {
 				get: function () {
 					return _v
 				},
-				set: function ( v ) {
+				set: function (v) {
 					this['process'][0]['threshold'] = _v = v
 				}
 			}
-		})() )
+		})())
 		this['threshold'] = 0.3;
-		this.updateTexture = function ( lastFrameBufferTexture, parentFramBufferTexture ) {
+		this.updateTexture = function (lastFrameBufferTexture, parentFramBufferTexture) {
 			this['diffuseTexture'] = parentFramBufferTexture;
 			this['blurTexture'] = lastFrameBufferTexture;
 		}
@@ -133,8 +133,8 @@ var RedPostEffect_Bloom;
 		this['unbind'] = RedPostEffectManager.prototype['unbind'];
 		this.checkUniformAndProperty();
 		;
-		console.log( this );
+		console.log(this);
 	}
-	RedPostEffect_Bloom.prototype = RedBaseMaterial.prototype;
-	Object.freeze( RedPostEffect_Bloom );
+	RedPostEffect_Bloom.prototype = new RedBaseMaterial();
+	Object.freeze(RedPostEffect_Bloom);
 })();

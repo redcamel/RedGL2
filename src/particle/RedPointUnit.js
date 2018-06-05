@@ -25,15 +25,13 @@ var RedPointUnit;
 		 return : 'RedProgram Instance'
 	 }
 	 :DOC*/
-	RedPointUnit = function ( redGL, interleaveData, interleaveDefineInfoList, material ) {
-		if ( !(this instanceof RedPointUnit) ) return new RedPointUnit( redGL, interleaveData, interleaveDefineInfoList, material );
-		if ( !(material instanceof RedPointColorMaterial) && !(material instanceof RedPointBitmapMaterial) ) RedGLUtil.throwFunc( 'RedPointUnit : material - RedPointColorMaterial Instance or RedPointBitmapMaterial Instance만 허용됩니다.' )
-
+	RedPointUnit = function (redGL, interleaveData, interleaveDefineInfoList, material) {
+		if ( !(this instanceof RedPointUnit) ) return new RedPointUnit(redGL, interleaveData, interleaveDefineInfoList, material);
+		if ( !(material instanceof RedPointColorMaterial) && !(material instanceof RedPointBitmapMaterial) ) RedGLUtil.throwFunc('RedPointUnit : material - RedPointColorMaterial Instance or RedPointBitmapMaterial Instance만 허용됩니다.')
 		var tGL;
 		var interleaveBuffer;
 		tGL = redGL.gl
-
-		RedBaseObject3D['build'].call( this, tGL )
+		RedBaseObject3D['build'].call(this, tGL)
 		this['_UUID'] = RedGL['makeUUID']();
 		interleaveBuffer = RedBuffer(
 			redGL,
@@ -42,15 +40,14 @@ var RedPointUnit;
 			interleaveData,
 			interleaveDefineInfoList
 		)
-		this['geometry'] = RedGeometry( interleaveBuffer )
+		this['geometry'] = RedGeometry(interleaveBuffer)
 		this['material'] = material
 		this['drawMode'] = tGL.POINTS
-
 	}
-	RedGLUtil['copyProto']( RedPointUnit, RedBaseContainer );
-	RedGLUtil['copyProto']( RedPointUnit, RedBaseObject3D );
+	RedGLUtil['copyProto'](RedPointUnit, RedBaseContainer);
+	RedGLUtil['copyProto'](RedPointUnit, RedBaseObject3D);
 	RedPointUnit.prototype['update'] = function () {
 		//TODO
 	}
-	Object.freeze( RedPointUnit );
+	Object.freeze(RedPointUnit);
 })();

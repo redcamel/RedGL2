@@ -29,38 +29,36 @@ var RedMTLLoader;
 		 return : 'void'
 	 }
 	 :DOC*/
-	RedMTLLoader = function ( redGL, path, fileName, callback ) {
-		if ( (!(this instanceof RedMTLLoader)) ) return new RedMTLLoader( redGL, path, fileName, callback )
-		console.log( '~~~~~~~~~~~' )
+	RedMTLLoader = function (redGL, path, fileName, callback) {
+		if ( (!(this instanceof RedMTLLoader)) ) return new RedMTLLoader(redGL, path, fileName, callback)
+		console.log('~~~~~~~~~~~')
 		var self = this;
 		var request = new XMLHttpRequest();
-		request.open( "GET", path + fileName, true );
-		request.setRequestHeader( "Content-Type", "application/x-www-form-urlencoded; charset=UTF-8" )
+		request.open("GET", path + fileName, true);
+		request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
 		request.onreadystatechange = function () {
 			if ( request.readyState == 4 ) {
 				self['complete'] = true
 				if ( request.status == 200 ) {
 					var data;
-					data = parser( self, redGL, request.responseText )
+					data = parser(self, redGL, request.responseText)
 					self['parseData'] = data
 				} else {
 					self['parseData'] = new RedMTLResult()
 				}
-				if ( callback ) callback( self['parseData'] )
-
-
+				if ( callback ) callback(self['parseData'])
 			}
 		}
-		request.addEventListener( 'error', function ( e ) {
-			console.log( '에럿', e )
-		} )
+		request.addEventListener('error', function (e) {
+			console.log('에럿', e)
+		})
 		request.send();
 		this['path'] = path;
 		this['fileName'] = fileName;
 		this['complete'] = false;
 		this['parseData'] = null;
 	}
-	parser = function ( target, redGL, data ) {
+	parser = function (target, redGL, data) {
 		var info, resultInfo;
 		var lines;
 		var reg_newmtl, reg_Ns, reg_Ka, reg_Kd, reg_Ks, reg_Ni, reg_d, reg_illum, reg_map_Kd, reg_map_Ns, reg_map_Ks, red_map_bump;
@@ -78,14 +76,14 @@ var RedMTLLoader;
 		reg_map_Ks = /^(map_Ks )/;
 		reg_map_Ns = /^(map_Ns )/;
 		red_map_bump = /^(map_bump )/;
-		data = data.replace( /^\#[\s\S]+?\n/g, '' );
-		lines = data.split( "\n" );
+		data = data.replace(/^\#[\s\S]+?\n/g, '');
+		lines = data.split("\n");
 		// 재질 정보 정의
-		lines.forEach( function ( line ) {
-			if ( reg_newmtl.test( line ) ) {
+		lines.forEach(function (line) {
+			if ( reg_newmtl.test(line) ) {
 				// console.log(line)
 				var tName;
-				tName = line.replace( 'newmtl ', '' ).trim();
+				tName = line.replace('newmtl ', '').trim();
 				currentMaterialInfo = {
 					name: tName
 				};
@@ -93,28 +91,26 @@ var RedMTLLoader;
 			}
 
 			// 암비안트
-			else if ( reg_Ka.test( line ) ) currentMaterialInfo['Ka'] = line.replace( 'Ka ', '' ).split( ' ' )
+			else if ( reg_Ka.test(line) ) currentMaterialInfo['Ka'] = line.replace('Ka ', '').split(' ')
 			// 디퓨즈
-			else if ( reg_Kd.test( line ) ) currentMaterialInfo['Kd'] = line.replace( 'Kd ', '' ).split( ' ' )
+			else if ( reg_Kd.test(line) ) currentMaterialInfo['Kd'] = line.replace('Kd ', '').split(' ')
 			// 스페큘러
-			else if ( reg_Ks.test( line ) ) currentMaterialInfo['Ks'] = line.replace( 'Ks ', '' ).split( ' ' )
+			else if ( reg_Ks.test(line) ) currentMaterialInfo['Ks'] = line.replace('Ks ', '').split(' ')
 			//uShininess
-			else if ( reg_Ns.test( line ) ) currentMaterialInfo['Ns'] = +line.replace( 'Ns ', '' )
+			else if ( reg_Ns.test(line) ) currentMaterialInfo['Ns'] = +line.replace('Ns ', '')
 			// 굴절률
-			else if ( reg_Ni.test( line ) ) currentMaterialInfo['Ni'] = +line.replace( 'Ni ', '' )
+			else if ( reg_Ni.test(line) ) currentMaterialInfo['Ni'] = +line.replace('Ni ', '')
 			// 디졸브라는데 뭐래 -_-
-			else if ( reg_d.test( line ) ) currentMaterialInfo['d'] = +line.replace( 'd ', '' )
-			else if ( reg_illum.test( line ) ) {
+			else if ( reg_d.test(line) ) currentMaterialInfo['d'] = +line.replace('d ', '')
+			else if ( reg_illum.test(line) ) {
 				// illum illum_#
-
 				// The "illum" statement specifies the illumination model to use in the
 				// material.  Illumination models are mathematical equations that represent
 				// various material lighting and shading effects.
-
 				// "illum_#"can be a number from 0 to 10.  The illumination models are
 				// summarized below; for complete descriptions see "Illumination models" on
 				// page 5-30.
-				currentMaterialInfo['illum'] = +line.replace( 'illum ', '' )
+				currentMaterialInfo['illum'] = +line.replace('illum ', '')
 				switch ( currentMaterialInfo['illum'] ) {
 					case 0:
 						// 0		Color on and Ambient off
@@ -158,19 +154,17 @@ var RedMTLLoader;
 			// map_Ns lemur_spec.tga      # specular highlight component
 			// map_d lemur_alpha.tga      # the alpha texture map
 			// map_bump lemur_bump.tga    # some implementations use 'map_bump' instead of 'bump' below
-			else if ( reg_map_Kd.test( line ) ) currentMaterialInfo['map_Kd'] = target['path'] + line.replace( 'map_Kd ', '' )
-			else if ( reg_map_Ns.test( line ) ) currentMaterialInfo['map_Ns'] = target['path'] + line.replace( 'map_Ns ', '' )
+			else if ( reg_map_Kd.test(line) ) currentMaterialInfo['map_Kd'] = target['path'] + line.replace('map_Kd ', '')
+			else if ( reg_map_Ns.test(line) ) currentMaterialInfo['map_Ns'] = target['path'] + line.replace('map_Ns ', '')
 			// else if (reg_map_Ks.test(line)) currentMaterialInfo['map_Ks'] = target['path'] + line.replace('map_Ks ', '')
-			else if ( red_map_bump.test( line ) ) currentMaterialInfo['map_bump'] = target['path'] + (line.replace( 'map_bump ', '' ).split( ' ' )[2])
-
-		} )
-
+			else if ( red_map_bump.test(line) ) currentMaterialInfo['map_bump'] = target['path'] + (line.replace('map_bump ', '').split(' ')[2])
+		})
 		resultInfo = new RedMTLResult()
 		for ( var k in info ) {
 			resultInfo[k] = info[k]
 		}
-		console.log( resultInfo )
+		console.log(resultInfo)
 		return resultInfo
 	}
-	Object.freeze( RedMTLLoader )
+	Object.freeze(RedMTLLoader)
 })()

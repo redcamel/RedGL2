@@ -47,81 +47,71 @@ var RedPostEffect_SSAO;
 		 return : 'RedPostEffect_SSAO Instance'
 	 }
 	 :DOC*/
-	RedPostEffect_SSAO = function ( redGL ) {
-		if ( !(this instanceof RedPostEffect_SSAO) ) return new RedPostEffect_SSAO( redGL );
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedPostEffect_SSAO : RedGL Instance만 허용됩니다.', redGL )
-		this['frameBuffer'] = RedFrameBuffer( redGL );
+	RedPostEffect_SSAO = function (redGL) {
+		if ( !(this instanceof RedPostEffect_SSAO) ) return new RedPostEffect_SSAO(redGL);
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedPostEffect_SSAO : RedGL Instance만 허용됩니다.', redGL)
+		this['frameBuffer'] = RedFrameBuffer(redGL);
 		this['diffuseTexture'] = null;
 		this['ssaoTexture'] = null;
-
 		/////////////////////////////////////////
 		// 일반 프로퍼티
 		var point;
-
-		point = RedPostEffect_SSAO_PointMaker( redGL )
-
+		point = RedPostEffect_SSAO_PointMaker(redGL)
 		this['process'] = [
 			point
 		]
-
 		this['mode'] = RedPostEffect_SSAO.COLOR_SSAO
-
-		Object.defineProperty( this, 'blur', (function () {
+		Object.defineProperty(this, 'blur', (function () {
 			var _v = 1
 			return {
 				get: function () {
 					return _v
 				},
-				set: function ( v ) {
+				set: function (v) {
 					_v = v;
 					point['subFrameBufferInfo']['process'][0]['size'] = _v;
 					point['subFrameBufferInfo']['process'][1]['size'] = _v;
 				}
 			}
-		})() );
+		})());
 		this['blur'] = 5
-
-		Object.defineProperty( this, 'range', (function () {
-
+		Object.defineProperty(this, 'range', (function () {
 			return {
 				get: function () {
 					return point['range']
 				},
-				set: function ( v ) {
+				set: function (v) {
 					point['range'] = v;
 				}
 			}
-		})() );
+		})());
 		this['range'] = 15
-		Object.defineProperty( this, 'factor2', (function () {
+		Object.defineProperty(this, 'factor2', (function () {
 			return {
 				get: function () {
 					return point['factor2']
 				},
-				set: function ( v ) {
+				set: function (v) {
 					point['factor2'] = v;
 				}
 			}
-		})() );
+		})());
 		this['factor2'] = 0.4
-
-		this['program'] = RedProgram['makeProgram']( redGL, PROGRAM_NAME, vSource, fSource );
+		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		this['_UUID'] = RedGL['makeUUID']();
-
-		this.updateTexture = function ( lastFrameBufferTexture, parentFramBufferTexture ) {
+		this.updateTexture = function (lastFrameBufferTexture, parentFramBufferTexture) {
 			this['diffuseTexture'] = parentFramBufferTexture;
 			this['ssaoTexture'] = lastFrameBufferTexture;
 		}
-
 		this['bind'] = RedPostEffectManager.prototype['bind'];
 		this['unbind'] = RedPostEffectManager.prototype['unbind'];
 		this.checkUniformAndProperty();
 		;
-		console.log( this );
+		console.log(this);
 	}
 	RedPostEffect_SSAO['ONLY_SSAO'] = 0
 	RedPostEffect_SSAO['ONLY_COLOR'] = 1
 	RedPostEffect_SSAO['COLOR_SSAO'] = 2
-	RedPostEffect_SSAO.prototype = RedBaseMaterial.prototype;
-	Object.freeze( RedPostEffect_SSAO );
+	RedPostEffect_SSAO.prototype = new RedBaseMaterial();
+	Object.freeze(RedPostEffect_SSAO);
 })();

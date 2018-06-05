@@ -55,10 +55,10 @@ var RedPostEffect_BlurY;
 		 return : 'RedPostEffect_BlurY Instance'
 	 }
 	 :DOC*/
-	RedPostEffect_BlurY = function ( redGL ) {
-		if ( !(this instanceof RedPostEffect_BlurY) ) return new RedPostEffect_BlurY( redGL );
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedPostEffect_BlurY : RedGL Instance만 허용됩니다.', redGL );
-		this['frameBuffer'] = RedFrameBuffer( redGL );
+	RedPostEffect_BlurY = function (redGL) {
+		if ( !(this instanceof RedPostEffect_BlurY) ) return new RedPostEffect_BlurY(redGL);
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedPostEffect_BlurY : RedGL Instance만 허용됩니다.', redGL);
+		this['frameBuffer'] = RedFrameBuffer(redGL);
 		this['diffuseTexture'] = null;
 		/**DOC:
 		 {
@@ -73,17 +73,17 @@ var RedPostEffect_BlurY;
 		this['size'] = 50;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = RedProgram['makeProgram']( redGL, PROGRAM_NAME, vSource, fSource );
+		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		this['_UUID'] = RedGL['makeUUID']();
-		this.updateTexture = function ( lastFrameBufferTexture ) {
+		this.updateTexture = function (lastFrameBufferTexture) {
 			this['diffuseTexture'] = lastFrameBufferTexture;
 		}
 		this['bind'] = RedPostEffectManager.prototype['bind'];
 		this['unbind'] = RedPostEffectManager.prototype['unbind'];
 		this.checkUniformAndProperty();
 		;
-		console.log( this );
+		console.log(this);
 	}
-	RedPostEffect_BlurY.prototype = RedBaseMaterial.prototype;
-	Object.freeze( RedPostEffect_BlurY );
+	RedPostEffect_BlurY.prototype = new RedBaseMaterial();
+	Object.freeze(RedPostEffect_BlurY);
 })();

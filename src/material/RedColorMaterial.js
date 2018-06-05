@@ -78,24 +78,24 @@ var RedColorMaterial;
 		 return : 'RedColorMaterial Instance'
 	 }
 	 :DOC*/
-	RedColorMaterial = function ( redGL, hexColor, alpha ) {
-		if ( !(this instanceof RedColorMaterial) ) return new RedColorMaterial( redGL, hexColor, alpha );
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedColorMaterial : RedGL Instance만 허용됩니다.', '입력값 : ' + redGL );
+	RedColorMaterial = function (redGL, hexColor, alpha) {
+		if ( !(this instanceof RedColorMaterial) ) return new RedColorMaterial(redGL, hexColor, alpha);
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedColorMaterial : RedGL Instance만 허용됩니다.', '입력값 : ' + redGL);
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
-		this['_color'] = new Float32Array( 4 );
+		this['_color'] = new Float32Array(4);
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		Object.defineProperty( this, 'color', RedDefinePropertyInfo['color'] );
-		Object.defineProperty( this, 'alpha', RedDefinePropertyInfo['alpha'] );
+		Object.defineProperty(this, 'color', RedDefinePropertyInfo['color']);
+		Object.defineProperty(this, 'alpha', RedDefinePropertyInfo['alpha']);
 		this['alpha'] = alpha == undefined ? 1 : alpha;
 		this['color'] = hexColor ? hexColor : '#ff0000'
-		this['program'] = RedProgram['makeProgram']( redGL, PROGRAM_NAME, vSource, fSource );
+		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkUniformAndProperty();
 		;
-		console.log( this );
+		console.log(this);
 	}
-	RedColorMaterial.prototype = RedBaseMaterial.prototype
-	Object.freeze( RedColorMaterial )
+	RedColorMaterial.prototype = new RedBaseMaterial()
+	Object.freeze(RedColorMaterial)
 })();

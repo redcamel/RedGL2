@@ -75,9 +75,9 @@ var RedBitmapMaterial;
 		 return : 'RedBitmapMaterial Instance'
 	 }
 	 :DOC*/
-	RedBitmapMaterial = function ( redGL, diffuseTexture ) {
-		if ( !(this instanceof RedBitmapMaterial) ) return new RedBitmapMaterial( redGL, diffuseTexture );
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedBitmapMaterial : RedGL Instance만 허용됩니다.', redGL )
+	RedBitmapMaterial = function (redGL, diffuseTexture) {
+		if ( !(this instanceof RedBitmapMaterial) ) return new RedBitmapMaterial(redGL, diffuseTexture);
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedBitmapMaterial : RedGL Instance만 허용됩니다.', redGL)
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
 		/**DOC:
@@ -89,13 +89,13 @@ var RedBitmapMaterial;
 		this['_diffuseTexture'] = null;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		Object.defineProperty( this, 'diffuseTexture', RedDefinePropertyInfo['diffuseTextureMust'] );
+		Object.defineProperty(this, 'diffuseTexture', RedDefinePropertyInfo['diffuseTextureMust']);
 		this['diffuseTexture'] = diffuseTexture;
-		this['program'] = RedProgram['makeProgram']( redGL, PROGRAM_NAME, vSource, fSource );
+		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkUniformAndProperty();
-		console.log( this )
+		console.log(this)
 	}
-	RedBitmapMaterial.prototype = RedBaseMaterial.prototype
-	Object.freeze( RedBitmapMaterial )
+	RedBitmapMaterial.prototype = new RedBaseMaterial()
+	Object.freeze(RedBitmapMaterial)
 })();

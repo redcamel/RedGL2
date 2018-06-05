@@ -24,14 +24,14 @@ var RedGeometry;
 		 return : 'RedGeometry Instance'
 	 }
 	 :DOC*/
-	RedGeometry = function ( interleaveBuffer, indexBuffer ) {
-		if ( !(this instanceof RedGeometry) ) return new RedGeometry( interleaveBuffer, indexBuffer )
-		if ( !(interleaveBuffer instanceof RedBuffer) ) RedGLUtil.throwFunc( 'RedGeometry : interleaveBuffer - RedBuffer Instance만 허용.', interleaveBuffer )
-		if ( !(interleaveBuffer['bufferType'] == RedBuffer.ARRAY_BUFFER) ) RedGLUtil.throwFunc( 'RedGeometry : interleaveBuffer - RedBuffer.ARRAY_BUFFER 타입만 허용.', interleaveBuffer )
+	RedGeometry = function (interleaveBuffer, indexBuffer) {
+		if ( !(this instanceof RedGeometry) ) return new RedGeometry(interleaveBuffer, indexBuffer)
+		if ( !(interleaveBuffer instanceof RedBuffer) ) RedGLUtil.throwFunc('RedGeometry : interleaveBuffer - RedBuffer Instance만 허용.', interleaveBuffer)
+		if ( !(interleaveBuffer['bufferType'] == RedBuffer.ARRAY_BUFFER) ) RedGLUtil.throwFunc('RedGeometry : interleaveBuffer - RedBuffer.ARRAY_BUFFER 타입만 허용.', interleaveBuffer)
 		if ( indexBuffer ) {
-			if ( !interleaveBuffer ) RedGLUtil.throwFunc( 'RedGeometry : indexBuffer는 반드시 interleaveBuffer와 쌍으로 입력되어야함.', indexBuffer )
-			if ( !(indexBuffer instanceof RedBuffer) ) RedGLUtil.throwFunc( 'RedGeometry : indexBuffer - RedBuffer Instance만 허용.', indexBuffer )
-			if ( !(indexBuffer['bufferType'] == RedBuffer.ELEMENT_ARRAY_BUFFER) ) RedGLUtil.throwFunc( 'RedGeometry : indexBuffer - RedBuffer.ELEMENT_ARRAY_BUFFER 타입만 허용.', indexBuffer )
+			if ( !interleaveBuffer ) RedGLUtil.throwFunc('RedGeometry : indexBuffer는 반드시 interleaveBuffer와 쌍으로 입력되어야함.', indexBuffer)
+			if ( !(indexBuffer instanceof RedBuffer) ) RedGLUtil.throwFunc('RedGeometry : indexBuffer - RedBuffer Instance만 허용.', indexBuffer)
+			if ( !(indexBuffer['bufferType'] == RedBuffer.ELEMENT_ARRAY_BUFFER) ) RedGLUtil.throwFunc('RedGeometry : indexBuffer - RedBuffer.ELEMENT_ARRAY_BUFFER 타입만 허용.', indexBuffer)
 		}
 		/**DOC:
 		 {
@@ -50,5 +50,5 @@ var RedGeometry;
 		this['_UUID'] = RedGL['makeUUID']();
 		// Object.freeze(this)
 	}
-	Object.freeze( RedGeometry );
+	Object.freeze(RedGeometry);
 })()

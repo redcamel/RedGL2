@@ -22,10 +22,11 @@
     <script src="../src/RedGL.js"></script>
 
     <script src="../src/base/RedDefinePropertyInfo.js"></script>
+    <script src="../src/base/RedBaseObject3D.js"></script>
     <script src="../src/base/RedBaseContainer.js"></script>
     <script src="../src/base/RedBaseLight.js"></script>
     <script src="../src/base/RedBaseMaterial.js"></script>
-    <script src="../src/base/RedBaseObject3D.js"></script>
+
 
     <script src="../src/geometry/RedBuffer.js"></script>
     <script src="../src/geometry/RedGeometry.js"></script>
@@ -106,6 +107,7 @@
 
     <script src="../src/resources/RedAtlas.js"></script>
     <script src="../src/resources/system/RedAtlasUV.js"></script>
+    <script src="../src/resources/system/RedTextureOptionChecker.js"></script>
     <script src="../src/resources/RedBitmapTexture.js"></script>
     <script src="../src/resources/RedVideoTexture.js"></script>
     <script src="../src/resources/RedAtlasTexture.js"></script>
@@ -123,10 +125,9 @@
 <body>
 <canvas id="test" style="border: none;background:red"></canvas>
 <script>
-	document.getElementById( 'test' )
-	RedGL( document.getElementById( 'test' ), function ( v ) {
-
-		console.log( v )
+	document.getElementById('test')
+	RedGL(document.getElementById('test'), function (v) {
+		console.log(v)
 		var tGL;
 		var tWorld, tScene3D, tCamera
 		var tRenderer;
@@ -134,74 +135,64 @@
 		self = this
 		tGL = this.gl;
 		this.world = tWorld = RedWorld();
-		tScene3D = RedScene( this );
-
+		tScene3D = RedScene(this);
 		// tScene3D['useFog'] = true
-
-		tCamera = RedBasicController( this );
+		tCamera = RedBasicController(this);
 		tCamera.tilt = -45
 		tRenderer = RedRenderer();
-		tWorld.addView( RedView( 'test', tScene3D, tCamera ) );
-		RedView( 'test' ).setSize( '100%', '100%' )
-		RedView( 'test' ).setLocation( '0%', '0%' )
+		tWorld.addView(RedView('test', tScene3D, tCamera));
+		RedView('test').setSize('100%', '100%')
+		RedView('test').setLocation('0%', '0%')
 		this.renderScale = 1
-
 		var testDLight, testALight, testPLight;
-		testDLight = RedDirectionalLight( this )
+		testDLight = RedDirectionalLight(this)
 		testDLight.x = 3
 		testDLight.y = 2
 		testDLight.z = 3
 		testDLight.debug = true
-		tScene3D.addLight( testDLight )
-
-		var bloom = RedPostEffect_Bloom( this )
-		tScene3D['postEffectManager'].addEffect( bloom )
-		var dof = RedPostEffect_DoF( this )
-		tScene3D['postEffectManager'].addEffect( dof )
-
-
+		tScene3D.addLight(testDLight)
+		var bloom = RedPostEffect_Bloom(this)
+		tScene3D['postEffectManager'].addEffect(bloom)
+		var dof = RedPostEffect_DoF(this)
+		tScene3D['postEffectManager'].addEffect(dof)
 		tScene3D.skyBox =
-			RedSkyBox( this, [
+			RedSkyBox(this, [
 				'../asset/cubemap/posx.png',
 				'../asset/cubemap/negx.png',
 				'../asset/cubemap/posy.png',
 				'../asset/cubemap/negy.png',
 				'../asset/cubemap/posz.png',
 				'../asset/cubemap/negz.png'
-			] );
-
+			]);
 		// tScene3D['grid'] = RedGrid(self)
 		var i = 10
 		var max = 10
 		var j
 		var k
 		var tMesh;
-		var tGeo = RedSphere( self, 0.5, 16, 16, 16 )
+		var tGeo = RedSphere(self, 0.5, 16, 16, 16)
 		var tMat = RedStandardMaterial(
 			self,
-			RedBitmapTexture( self, '../asset/crate.png' ),
-			RedBitmapTexture( self, '../asset/normalTest.jpg' ),
-			RedBitmapTexture( self, '../asset/brick_roughness.jpg' )
+			RedBitmapTexture(self, '../asset/crate.png'),
+			RedBitmapTexture(self, '../asset/normalTest.jpg'),
+			RedBitmapTexture(self, '../asset/brick_roughness.jpg')
 		)
 		tMat.shininess = 32
 		while ( i-- ) {
-
 			j = 10
 			while ( j-- ) {
 				k = 10
 				while ( k-- ) {
-					tMesh = RedMesh( self, tGeo, tMat )
+					tMesh = RedMesh(self, tGeo, tMat)
 					tMesh.x = (i - 5) * 2
 					tMesh.y = (j - 5) * 2
 					tMesh.z = (k - 5) * 2
-					tScene3D.addChild( tMesh )
+					tScene3D.addChild(tMesh)
 				}
 			}
 		}
-
-
 		tRenderer.renderDebuger.visible = true
-		tRenderer.start( this, function ( time ) {
+		tRenderer.start(this, function (time) {
 			i = tScene3D.children.length
 			while ( i-- ) {
 				if ( i == 0 ) break
@@ -210,21 +201,16 @@
 				testMesh.rotationY += 0.1
 				testMesh.rotationZ += 0.1
 			}
-		} )
-
-		this['gui'] = new dat.GUI( {
+		})
+		this['gui'] = new dat.GUI({
 			name: 'test'
-		} );
-		var t0 = this['gui'].addFolder( 'dof' )
-
-		t0.add( dof, 'blur', 0, 100 )
-		t0.add( dof, 'focusLength', 0, 100 )
-
+		});
+		var t0 = this['gui'].addFolder('dof')
+		t0.add(dof, 'blur', 0, 100)
+		t0.add(dof, 'focusLength', 0, 100)
 		t0.open()
-
-
-		console.log( tScene3D )
-	} )
+		console.log(tScene3D)
+	})
 </script>
 </body>
 

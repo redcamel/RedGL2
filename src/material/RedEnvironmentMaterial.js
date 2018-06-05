@@ -148,12 +148,12 @@ var RedEnvironmentMaterial;
 		 return : 'RedEnvironmentMaterial Instance'
 	 }
 	 :DOC*/
-	RedEnvironmentMaterial = function ( redGL,
-	                                    diffuseTexture,
-	                                    environmentTexture,
-	                                    normalTexture,
-	                                    specularTexture,
-	                                    displacementTexture ) {
+	RedEnvironmentMaterial = function (redGL,
+	                                   diffuseTexture,
+	                                   environmentTexture,
+	                                   normalTexture,
+	                                   specularTexture,
+	                                   displacementTexture) {
 		if ( !(this instanceof RedEnvironmentMaterial) ) return new RedEnvironmentMaterial(
 			redGL,
 			diffuseTexture,
@@ -162,8 +162,8 @@ var RedEnvironmentMaterial;
 			specularTexture,
 			displacementTexture
 		);
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedEnvironmentMaterial : RedGL Instance만 허용됩니다.', redGL )
-		if ( environmentTexture && !(environmentTexture instanceof RedBitmapCubeTexture) ) RedGLUtil.throwFunc( 'RedEnvironmentMaterial : environmentTexture - RedBitmapCubeTexture Instance만 허용됩니다.' )
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedEnvironmentMaterial : RedGL Instance만 허용됩니다.', redGL)
+		if ( environmentTexture && !(environmentTexture instanceof RedBitmapCubeTexture) ) RedGLUtil.throwFunc('RedEnvironmentMaterial : environmentTexture - RedBitmapCubeTexture Instance만 허용됩니다.')
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
 		/**DOC:
@@ -235,26 +235,25 @@ var RedEnvironmentMaterial;
 		this['_displacementPower'] = 0
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		Object.defineProperty( this, 'diffuseTexture', RedDefinePropertyInfo['diffuseTexture'] );
-		Object.defineProperty( this, 'environmentTexture', RedDefinePropertyInfo['environmentTextureMust'] );
-		Object.defineProperty( this, 'normalTexture', RedDefinePropertyInfo['normalTexture'] );
-		Object.defineProperty( this, 'specularTexture', RedDefinePropertyInfo['specularTexture'] );
-		Object.defineProperty( this, 'displacementTexture', RedDefinePropertyInfo['displacementTexture'] );
-		Object.defineProperty( this, 'shininess', RedDefinePropertyInfo['shininess'] );
-		Object.defineProperty( this, 'specularPower', RedDefinePropertyInfo['specularPower'] );
-		Object.defineProperty( this, 'reflectionPower', RedDefinePropertyInfo['reflectionPower'] );
-		Object.defineProperty( this, 'displacementPower', RedDefinePropertyInfo['displacementPower'] );
+		Object.defineProperty(this, 'diffuseTexture', RedDefinePropertyInfo['diffuseTexture']);
+		Object.defineProperty(this, 'environmentTexture', RedDefinePropertyInfo['environmentTextureMust']);
+		Object.defineProperty(this, 'normalTexture', RedDefinePropertyInfo['normalTexture']);
+		Object.defineProperty(this, 'specularTexture', RedDefinePropertyInfo['specularTexture']);
+		Object.defineProperty(this, 'displacementTexture', RedDefinePropertyInfo['displacementTexture']);
+		Object.defineProperty(this, 'shininess', RedDefinePropertyInfo['shininess']);
+		Object.defineProperty(this, 'specularPower', RedDefinePropertyInfo['specularPower']);
+		Object.defineProperty(this, 'reflectionPower', RedDefinePropertyInfo['reflectionPower']);
+		Object.defineProperty(this, 'displacementPower', RedDefinePropertyInfo['displacementPower']);
 		this['diffuseTexture'] = diffuseTexture;
 		this['environmentTexture'] = environmentTexture;
 		this['normalTexture'] = normalTexture;
 		this['specularTexture'] = specularTexture;
 		this['displacementTexture'] = displacementTexture;
-		this['program'] = RedProgram['makeProgram']( redGL, PROGRAM_NAME, vSource, fSource );
+		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkUniformAndProperty();
-		console.log( this )
-
+		console.log(this)
 	}
-	RedEnvironmentMaterial.prototype = RedBaseMaterial.prototype
-	Object.freeze( RedEnvironmentMaterial )
+	RedEnvironmentMaterial.prototype = new RedBaseMaterial()
+	Object.freeze(RedEnvironmentMaterial)
 })();

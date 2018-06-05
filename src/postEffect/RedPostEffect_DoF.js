@@ -50,28 +50,25 @@ var RedPostEffect_DoF;
 		 return : 'RedPostEffect_DoF Instance'
 	 }
 	 :DOC*/
-	RedPostEffect_DoF = function ( redGL ) {
-		if ( !(this instanceof RedPostEffect_DoF) ) return new RedPostEffect_DoF( redGL );
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedPostEffect_DoF : RedGL Instance만 허용됩니다.', redGL )
-
+	RedPostEffect_DoF = function (redGL) {
+		if ( !(this instanceof RedPostEffect_DoF) ) return new RedPostEffect_DoF(redGL);
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedPostEffect_DoF : RedGL Instance만 허용됩니다.', redGL)
 		this['subFrameBufferInfo'] = {
-			frameBuffer: RedFrameBuffer( redGL ),
-			renderMaterial: RedPostEffect_DoF_DepthMaterial( redGL ),
+			frameBuffer: RedFrameBuffer(redGL),
+			renderMaterial: RedPostEffect_DoF_DepthMaterial(redGL),
 			process: []
 		}
-
-		this['frameBuffer'] = RedFrameBuffer( redGL );
-
+		this['frameBuffer'] = RedFrameBuffer(redGL);
 		this['diffuseTexture'] = null;
 		this['blurTexture'] = null;
 		this['depthTexture'] = null;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = RedProgram['makeProgram']( redGL, PROGRAM_NAME, vSource, fSource );
+		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		this['_UUID'] = RedGL['makeUUID']();
 		this['process'] = [
-			RedPostEffect_BlurX( redGL ),
-			RedPostEffect_BlurY( redGL )
+			RedPostEffect_BlurX(redGL),
+			RedPostEffect_BlurY(redGL)
 		]
 		/**DOC:
 		 {
@@ -83,16 +80,16 @@ var RedPostEffect_DoF;
 			 return : 'Number'
 		 }
 		 :DOC*/
-		Object.defineProperty( this, 'focusLength', (function () {
+		Object.defineProperty(this, 'focusLength', (function () {
 			return {
 				get: function () {
 					return this['subFrameBufferInfo']['renderMaterial']['focusLength']
 				},
-				set: function ( v ) {
+				set: function (v) {
 					this['subFrameBufferInfo']['renderMaterial']['focusLength'] = v
 				}
 			}
-		})() );
+		})());
 		/**DOC:
 		 {
 			 title :`blur`,
@@ -103,32 +100,31 @@ var RedPostEffect_DoF;
 			 return : 'Number'
 		 }
 		 :DOC*/
-		Object.defineProperty( this, 'blur', (function () {
+		Object.defineProperty(this, 'blur', (function () {
 			var _v = 1
 			return {
 				get: function () {
 					return _v
 				},
-				set: function ( v ) {
+				set: function (v) {
 					_v = v;
 					this['process'][0]['size'] = _v;
 					this['process'][1]['size'] = _v;
 				}
 			}
-		})() );
+		})());
 		this['blur'] = 10
-		this.updateTexture = function ( lastFrameBufferTexture, parentFramBufferTexture ) {
+		this.updateTexture = function (lastFrameBufferTexture, parentFramBufferTexture) {
 			this['diffuseTexture'] = parentFramBufferTexture;
 			this['blurTexture'] = lastFrameBufferTexture;
 			this['depthTexture'] = this['subFrameBufferInfo']['frameBuffer']['texture']
 		}
 		this['bind'] = RedPostEffectManager.prototype['bind'];
 		this['unbind'] = RedPostEffectManager.prototype['unbind'];
-
 		this.checkUniformAndProperty();
 		;
-		console.log( this );
+		console.log(this);
 	}
-	RedPostEffect_DoF.prototype = RedBaseMaterial.prototype;
-	Object.freeze( RedPostEffect_DoF );
+	RedPostEffect_DoF.prototype = new RedBaseMaterial();
+	Object.freeze(RedPostEffect_DoF);
 })();

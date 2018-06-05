@@ -54,10 +54,10 @@ var RedPostEffect_Convolution;
 		 return : 'RedPostEffect_Convolution Instance'
 	 }
 	 :DOC*/
-	RedPostEffect_Convolution = function ( redGL, kernel ) {
-		if ( !(this instanceof RedPostEffect_Convolution) ) return new RedPostEffect_Convolution( redGL, kernel );
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedPostEffect_Convolution : RedGL Instance만 허용됩니다.', redGL );
-		this['frameBuffer'] = RedFrameBuffer( redGL );
+	RedPostEffect_Convolution = function (redGL, kernel) {
+		if ( !(this instanceof RedPostEffect_Convolution) ) return new RedPostEffect_Convolution(redGL, kernel);
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedPostEffect_Convolution : RedGL Instance만 허용됩니다.', redGL);
+		this['frameBuffer'] = RedFrameBuffer(redGL);
 		this['diffuseTexture'] = null;
 		/**DOC:
 		 {
@@ -69,19 +69,19 @@ var RedPostEffect_Convolution;
 		 }
 		 :DOC*/
 		this['kernel'] = kernel;
-		Object.defineProperty( this, 'kernel', (function () {
+		Object.defineProperty(this, 'kernel', (function () {
 			var _v;
 			return {
 				get: function () {
 					if ( !_v ) _v = RedPostEffect_Convolution['NORMAL']
 					return _v
 				},
-				set: function ( v ) {
+				set: function (v) {
 					_v = v
 				}
 			}
-		})() );
-		Object.defineProperty( this, 'kernelWeight', (function () {
+		})());
+		Object.defineProperty(this, 'kernelWeight', (function () {
 			var sum;
 			return {
 				get: function () {
@@ -90,21 +90,21 @@ var RedPostEffect_Convolution;
 					return sum;
 				}
 			}
-		})() );
+		})());
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = RedProgram['makeProgram']( redGL, PROGRAM_NAME, vSource, fSource );
+		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		this['_UUID'] = RedGL['makeUUID']();
-		this.updateTexture = function ( lastFrameBufferTexture ) {
+		this.updateTexture = function (lastFrameBufferTexture) {
 			this['diffuseTexture'] = lastFrameBufferTexture;
 		}
 		this['bind'] = RedPostEffectManager.prototype['bind'];
 		this['unbind'] = RedPostEffectManager.prototype['unbind'];
 		this.checkUniformAndProperty();
 		;
-		console.log( this );
+		console.log(this);
 	}
-	RedPostEffect_Convolution.prototype = RedBaseMaterial.prototype;
+	RedPostEffect_Convolution.prototype = new RedBaseMaterial();
 	/**DOC:
 	 {
 		 title :`RedPostEffect_Convolution.NORMAL`,
@@ -210,5 +210,5 @@ var RedPostEffect_Convolution;
 		-1, 1, 1,
 		0, 1, 2
 	]
-	Object.freeze( RedPostEffect_Convolution );
+	Object.freeze(RedPostEffect_Convolution);
 })();

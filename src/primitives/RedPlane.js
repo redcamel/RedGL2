@@ -10,9 +10,9 @@ var RedPlane;
 		var ix, iy;
 		var tX, tY;
 		var a, b, c, d;
-		return function ( redGL, type, width, height, wSegments, hSegments ) {
+		return function (redGL, type, width, height, wSegments, hSegments) {
 			width_half = width / 2, height_half = height / 2
-			gridX = Math.floor( wSegments ) || 1, gridY = Math.floor( hSegments ) || 1
+			gridX = Math.floor(wSegments) || 1, gridY = Math.floor(hSegments) || 1
 			gridX1 = gridX + 1, gridY1 = gridY + 1
 			segment_width = width / gridX, segment_height = height / gridY
 			////////////////////////////////////////////////////////////////////////////
@@ -26,7 +26,7 @@ var RedPlane;
 				for ( ix = 0; ix < gridX1; ix++ ) {
 					tX = ix * segment_width - width_half,
 						// position, normal, texcoord
-						interleaveData.push( tX, -tY, 0, 0, 0, 1, ix / gridX, 1 - (iy / gridY) )
+						interleaveData.push(tX, -tY, 0, 0, 0, 1, ix / gridX, 1 - (iy / gridY))
 				}
 			}
 			// indexData
@@ -36,7 +36,7 @@ var RedPlane;
 						b = ix + gridX1 * (iy + 1),
 						c = (ix + 1) + gridX1 * (iy + 1),
 						d = (ix + 1) + gridX1 * iy,
-						indexData.push( a, b, d, b, c, d )
+						indexData.push(a, b, d, b, c, d)
 				}
 			}
 			////////////////////////////////////////////////////////////////////////////
@@ -48,18 +48,18 @@ var RedPlane;
 					redGL,
 					type + '_interleaveBuffer',
 					RedBuffer.ARRAY_BUFFER,
-					new Float32Array( interleaveData ),
+					new Float32Array(interleaveData),
 					[
-						RedInterleaveInfo( 'aVertexPosition', 3 ),
-						RedInterleaveInfo( 'aVertexNormal', 3 ),
-						RedInterleaveInfo( 'aTexcoord', 2 )
+						RedInterleaveInfo('aVertexPosition', 3),
+						RedInterleaveInfo('aVertexNormal', 3),
+						RedInterleaveInfo('aTexcoord', 2)
 					]
 				),
 				indexBuffer: RedBuffer(
 					redGL,
 					type + '_indexBuffer',
 					RedBuffer.ELEMENT_ARRAY_BUFFER,
-					new Uint16Array( indexData )
+					new Uint16Array(indexData)
 				)
 			}
 		}
@@ -101,9 +101,9 @@ var RedPlane;
 		 return : 'RedPlane Instance'
 	 }
 	 :DOC*/
-	RedPlane = function ( redGL, width, height, wSegments, hSegments ) {
-		if ( !(this instanceof RedPlane) ) return new RedPlane( redGL, width, height, wSegments, hSegments );
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedPlane : RedGL Instance만 허용됩니다.', redGL );
+	RedPlane = function (redGL, width, height, wSegments, hSegments) {
+		if ( !(this instanceof RedPlane) ) return new RedPlane(redGL, width, height, wSegments, hSegments);
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedPlane : RedGL Instance만 허용됩니다.', redGL);
 		var tType, tPrimitiveData;
 		width = width || 1, height = height || 1;
 		wSegments = wSegments || 1, hSegments = hSegments || 1;
@@ -113,12 +113,12 @@ var RedPlane;
 		if ( redGL['_datas']['Primitives'][tType] ) return redGL['_datas']['Primitives'][tType];
 		else redGL['_datas']['Primitives'][tType] = this;
 		//
-		tPrimitiveData = makeData( redGL, tType, width, height, wSegments, hSegments );
+		tPrimitiveData = makeData(redGL, tType, width, height, wSegments, hSegments);
 		this['interleaveBuffer'] = tPrimitiveData['interleaveBuffer'];
 		this['indexBuffer'] = tPrimitiveData['indexBuffer'];
 		this['_UUID'] = RedGL['makeUUID']();
-		console.log( this );
+		console.log(this);
 	}
 	RedPlane.prototype = RedGeometry.prototype;
-	Object.freeze( RedPlane );
+	Object.freeze(RedPlane);
 })()

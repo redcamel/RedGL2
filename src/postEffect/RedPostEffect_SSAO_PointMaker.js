@@ -116,39 +116,34 @@ var RedPostEffect_SSAO_PointMaker;
 		 return : 'RedPostEffect_SSAO_PointMaker Instance'
 	 }
 	 :DOC*/
-	RedPostEffect_SSAO_PointMaker = function ( redGL ) {
-		if ( !(this instanceof RedPostEffect_SSAO_PointMaker) ) return new RedPostEffect_SSAO_PointMaker( redGL );
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc( 'RedPostEffect_SSAO_PointMaker : RedGL Instance만 허용됩니다.', redGL )
-		this['frameBuffer'] = RedFrameBuffer( redGL );
+	RedPostEffect_SSAO_PointMaker = function (redGL) {
+		if ( !(this instanceof RedPostEffect_SSAO_PointMaker) ) return new RedPostEffect_SSAO_PointMaker(redGL);
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedPostEffect_SSAO_PointMaker : RedGL Instance만 허용됩니다.', redGL)
+		this['frameBuffer'] = RedFrameBuffer(redGL);
 		this['subFrameBufferInfo'] = {
-			frameBuffer: RedFrameBuffer( redGL ),
-			renderMaterial: RedPostEffect_SSAO_DepthMaterial( redGL ),
+			frameBuffer: RedFrameBuffer(redGL),
+			renderMaterial: RedPostEffect_SSAO_DepthMaterial(redGL),
 			process: [
-				RedPostEffect_BlurX( redGL ),
-				RedPostEffect_BlurY( redGL )
+				RedPostEffect_BlurX(redGL),
+				RedPostEffect_BlurY(redGL)
 			]
 		}
-
 		this['depthTexture'] = null;
 		this['range'] = 10;
 		this['factor2'] = 0.2;
-
-
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = RedProgram['makeProgram']( redGL, PROGRAM_NAME, vSource, fSource );
+		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		this['_UUID'] = RedGL['makeUUID']();
-
-
-		this.updateTexture = function ( lastFrameBufferTexture, parentFramBufferTexture ) {
+		this.updateTexture = function (lastFrameBufferTexture, parentFramBufferTexture) {
 			this['depthTexture'] = this['subFrameBufferInfo']['frameBuffer']['texture'];
 		}
 		this['bind'] = RedPostEffectManager.prototype['bind'];
 		this['unbind'] = RedPostEffectManager.prototype['unbind'];
 		this.checkUniformAndProperty();
 		;
-		console.log( this );
+		console.log(this);
 	}
-	RedPostEffect_SSAO_PointMaker.prototype = RedBaseMaterial.prototype;
-	Object.freeze( RedPostEffect_SSAO_PointMaker );
+	RedPostEffect_SSAO_PointMaker.prototype = new RedBaseMaterial();
+	Object.freeze(RedPostEffect_SSAO_PointMaker);
 })();

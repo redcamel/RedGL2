@@ -36,26 +36,24 @@ var RedView;
 		 return : 'RedView Instance'
 	 }
 	 :DOC*/
-	RedView = function ( key, scene, camera ) {
+	RedView = function (key, scene, camera) {
 		if ( ViewMap[key] ) {
-			if ( scene || camera ) RedGLUtil.throwFunc( 'RedView : ' + key, '는 이미 생성된 RedView key입니다.', '입력값 : ' + key )
+			if ( scene || camera ) RedGLUtil.throwFunc('RedView : ' + key, '는 이미 생성된 RedView key입니다.', '입력값 : ' + key)
 			else return ViewMap[key]
 		}
-		if ( !(this instanceof RedView) ) return new RedView( key, scene, camera );
-		if ( !(typeof key == 'string') ) RedGLUtil.throwFunc( 'RedView : key : 문자열만 허용', '입력값 : ' + key )
-		if ( !scene && !camera ) RedGLUtil.throwFunc( 'RedView : 존재하지 않는 key입니다.', '입력값 : ' + key )
-		if ( scene && !(scene instanceof RedScene) ) RedGLUtil.throwFunc( 'RedView : RedScene Instance만 허용', '입력값 : ' + scene )
+		if ( !(this instanceof RedView) ) return new RedView(key, scene, camera);
+		if ( !(typeof key == 'string') ) RedGLUtil.throwFunc('RedView : key : 문자열만 허용', '입력값 : ' + key)
+		if ( !scene && !camera ) RedGLUtil.throwFunc('RedView : 존재하지 않는 key입니다.', '입력값 : ' + key)
+		if ( scene && !(scene instanceof RedScene) ) RedGLUtil.throwFunc('RedView : RedScene Instance만 허용', '입력값 : ' + scene)
 		//TODO: 카메라 컨트롤러 벨리데이션 어쩔껀지 결정해야함
-		if ( !camera ) RedGLUtil.throwFunc( 'RedView : RedCamera or XXController Instance만 허용', '입력값 : ' + camera )
+		if ( !camera ) RedGLUtil.throwFunc('RedView : RedCamera or XXController Instance만 허용', '입력값 : ' + camera)
 		else {
 			if (
 				!(camera instanceof RedCamera)
 				&& !(camera instanceof RedBasicController)
 				&& !(camera instanceof RedObitController)
-
-			) RedGLUtil.throwFunc( 'RedView : RedCamera or XXController Instance만 허용' )
+			) RedGLUtil.throwFunc('RedView : RedCamera or XXController Instance만 허용')
 		}
-
 		/**DOC:
 		 {
 			 title :`key`,
@@ -86,7 +84,7 @@ var RedView;
 		this['_y'] = 0;
 		this['_viewRect'] = [0, 0, 0, 0];
 		ViewMap[key] = this;
-		console.log( this );
+		console.log(this);
 	};
 	RedView.prototype = {
 		/**DOC:
@@ -108,7 +106,7 @@ var RedView;
 			 return : 'void'
 		 }
 		 :DOC*/
-		setSize: function ( w, h ) {
+		setSize: function (w, h) {
 			this['_width'] = w != undefined ? w : '100%';
 			this['_height'] = h != undefined ? h : '100%';
 		},
@@ -131,10 +129,10 @@ var RedView;
 			 return : 'void'
 		 }
 		 :DOC*/
-		setLocation: function ( x, y ) {
+		setLocation: function (x, y) {
 			this['_x'] = x != undefined ? x : 0;
 			this['_y'] = y != undefined ? y : 0;
 		}
 	}
-	Object.freeze( RedView );
+	Object.freeze(RedView);
 })();

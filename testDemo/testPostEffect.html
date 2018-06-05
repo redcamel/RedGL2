@@ -22,10 +22,11 @@
     <script src="../src/RedGL.js"></script>
 
     <script src="../src/base/RedDefinePropertyInfo.js"></script>
+    <script src="../src/base/RedBaseObject3D.js"></script>
     <script src="../src/base/RedBaseContainer.js"></script>
     <script src="../src/base/RedBaseLight.js"></script>
     <script src="../src/base/RedBaseMaterial.js"></script>
-    <script src="../src/base/RedBaseObject3D.js"></script>
+
 
     <script src="../src/geometry/RedBuffer.js"></script>
     <script src="../src/geometry/RedGeometry.js"></script>
@@ -100,6 +101,7 @@
 
     <script src="../src/resources/RedAtlas.js"></script>
     <script src="../src/resources/system/RedAtlasUV.js"></script>
+    <script src="../src/resources/system/RedTextureOptionChecker.js"></script>
     <script src="../src/resources/RedBitmapTexture.js"></script>
     <script src="../src/resources/RedVideoTexture.js"></script>
     <script src="../src/resources/RedAtlasTexture.js"></script>
@@ -117,10 +119,9 @@
 <body>
 <canvas id="test" style="border: none;background:red"></canvas>
 <script>
-	document.getElementById( 'test' )
-	RedGL( document.getElementById( 'test' ), function ( v ) {
-
-		console.log( v )
+	document.getElementById('test')
+	RedGL(document.getElementById('test'), function (v) {
+		console.log(v)
 		var tGL;
 		var tWorld, tScene3D, tCamera
 		var tRenderer;
@@ -128,41 +129,34 @@
 		self = this
 		tGL = this.gl;
 		this.world = tWorld = RedWorld();
-		tScene3D = RedScene( this );
-
+		tScene3D = RedScene(this);
 		// tScene3D['useFog'] = true
-
-		tCamera = RedObitController( this );
+		tCamera = RedObitController(this);
 		tCamera.tilt = -45
 		tRenderer = RedRenderer();
-		tWorld.addView( RedView( 'test', tScene3D, tCamera ) );
-		RedView( 'test' ).setSize( '100%', '100%' )
-		RedView( 'test' ).setLocation( '0%', '0%' )
+		tWorld.addView(RedView('test', tScene3D, tCamera));
+		RedView('test').setSize('100%', '100%')
+		RedView('test').setLocation('0%', '0%')
 		this.renderScale = 1
-
 		var testDLight, testALight, testPLight;
-		testDLight = RedDirectionalLight( this )
+		testDLight = RedDirectionalLight(this)
 		testDLight.x = 3
 		testDLight.y = 2
 		testDLight.z = 3
 		testDLight.debug = true
-		tScene3D.addLight( testDLight )
-
-
+		tScene3D.addLight(testDLight)
 		// tScene3D['postEffectManager'].addEffect(RedPostEffect_Invert(this))
 		// tScene3D['postEffectManager'].addEffect(RedPostEffect_Blur(this))
 		// tScene3D['postEffectManager'].addEffect(RedPostEffect_Gray(this))
 		// tScene3D['postEffectManager'].addEffect(RedPostEffect_Pixelize(this))
-
 		// tScene3D['postEffectManager'].addEffect(RedPostEffect_Convolution(this,RedPostEffect_Convolution['EMBOSS']))
 		// tScene3D['postEffectManager'].addEffect(RedPostEffect_BlurX(this))
 		// tScene3D['postEffectManager'].addEffect(RedPostEffect_BlurY(this))
-		var bloom = RedPostEffect_Bloom( this )
+		var bloom = RedPostEffect_Bloom(this)
 		bloom['frameBuffer']['width'] = 1024
 		bloom['frameBuffer']['height'] = 1024
-		tScene3D['postEffectManager'].addEffect( bloom )
-
-		var film = RedPostEffect_Film( this )
+		tScene3D['postEffectManager'].addEffect(bloom)
+		var film = RedPostEffect_Film(this)
 		bloom['frameBuffer']['width'] = 2048
 		bloom['frameBuffer']['height'] = 2048
 		// tScene3D['postEffectManager'].addEffect(film)
@@ -171,61 +165,51 @@
 		// tScene3D['postEffectManager'].addEffect(RedPostEffect_BrightnessContrast(this))
 		// tScene3D['postEffectManager'].addEffect(RedPostEffect_ZoomBlur(this))
 		// tScene3D['postEffectManager'].addEffect(RedPostEffect_HalfTone(this))
-
-
 		tScene3D.skyBox =
-			RedSkyBox( this, [
+			RedSkyBox(this, [
 				'../asset/cubemap/posx.png',
 				'../asset/cubemap/negx.png',
 				'../asset/cubemap/posy.png',
 				'../asset/cubemap/negy.png',
 				'../asset/cubemap/posz.png',
 				'../asset/cubemap/negz.png'
-			] );
-
+			]);
 		// tScene3D['grid'] = RedGrid(self)
-		RedOBJLoader( this, '../asset/obj/', 'female.obj', function ( v ) {
-			console.log( '호잇!', v )
+		RedOBJLoader(this, '../asset/obj/', 'female.obj', function (v) {
+			console.log('호잇!', v)
 			var i = 1
 			while ( i-- ) {
 				var t0;
-				t0 = RedMesh( self )
+				t0 = RedMesh(self)
 				t0['children'] = v['resultMesh']['children'].concat()
 				t0.scaleX = t0.scaleY = t0.scaleZ = 0.03
-				tScene3D.addChild( t0 )
-
+				tScene3D.addChild(t0)
 			}
-
 			var i = 10
 			var max = 10
 			var j
 			var tMesh;
-			var tGeo = RedSphere( self, 1, 32, 32, 32 )
+			var tGeo = RedSphere(self, 1, 32, 32, 32)
 			var tMat = RedStandardMaterial(
 				self,
-				RedBitmapTexture( self, '../asset/crate.png' ),
-				RedBitmapTexture( self, '../asset/normalTest.jpg' ),
-				RedBitmapTexture( self, '../asset/brick_roughness.jpg' )
+				RedBitmapTexture(self, '../asset/crate.png'),
+				RedBitmapTexture(self, '../asset/normalTest.jpg'),
+				RedBitmapTexture(self, '../asset/brick_roughness.jpg')
 			)
 			tMat.shininess = 32
 			while ( i-- ) {
-
 				j = 10
 				while ( j-- ) {
-					tMesh = RedMesh( self, tGeo, tMat )
-					tMesh.x = Math.sin( Math.PI * 2 / (max - 1) * i ) * j * 3
-					tMesh.z = Math.cos( Math.PI * 2 / (max - 1) * i ) * j * 3
-					tScene3D.addChild( tMesh )
+					tMesh = RedMesh(self, tGeo, tMat)
+					tMesh.x = Math.sin(Math.PI * 2 / (max - 1) * i) * j * 3
+					tMesh.z = Math.cos(Math.PI * 2 / (max - 1) * i) * j * 3
+					tScene3D.addChild(tMesh)
 				}
 			}
-
 			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.025
-
-		} )
-
-
+		})
 		tRenderer.renderDebuger.visible = true
-		tRenderer.start( this, function ( time ) {
+		tRenderer.start(this, function (time) {
 			i = tScene3D.children.length
 			while ( i-- ) {
 				if ( i == 0 ) break
@@ -234,27 +218,24 @@
 				testMesh.rotationY += 0.1
 				testMesh.rotationZ += 0.1
 			}
-
-			film['scanlineCount'] = Math.sin( time / 1000 ) / 3.14 * 2048 + 2048
-		} )
-
-		this['gui'] = new dat.GUI( {
+			film['scanlineCount'] = Math.sin(time / 1000) / 3.14 * 2048 + 2048
+		})
+		this['gui'] = new dat.GUI({
 			name: 'test'
-		} );
-		var t0 = this['gui'].addFolder( 'bloom' )
-		t0.add( bloom, 'exposure', 0, 2 )
-		t0.add( bloom, 'bloomStrength', 0, 2 )
-		t0.add( bloom, 'blur', 0, 100 )
+		});
+		var t0 = this['gui'].addFolder('bloom')
+		t0.add(bloom, 'exposure', 0, 2)
+		t0.add(bloom, 'bloomStrength', 0, 2)
+		t0.add(bloom, 'blur', 0, 100)
 		t0.open()
-		t0 = this['gui'].addFolder( 'film' )
-		t0.add( film, 'scanlineIntensity', 0, 1 )
-		t0.add( film, 'noiseIntensity', 0, 1 )
-		t0.add( film, 'scanlineCount', 0, 4096 )
-		t0.add( film, 'gray', false, true )
+		t0 = this['gui'].addFolder('film')
+		t0.add(film, 'scanlineIntensity', 0, 1)
+		t0.add(film, 'noiseIntensity', 0, 1)
+		t0.add(film, 'scanlineCount', 0, 4096)
+		t0.add(film, 'gray', false, true)
 		t0.open()
-
-		console.log( tScene3D )
-	} )
+		console.log(tScene3D)
+	})
 </script>
 </body>
 
