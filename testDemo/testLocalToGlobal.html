@@ -136,7 +136,7 @@
 //				'../asset/cubemap/posz.png',
 //				'../asset/cubemap/negz.png'
 //			]);
-		var testMesh, testMesh2, testMesh3
+		var testMesh, testMesh2, testMesh3, testMesh4
 		testMesh = RedMesh(self, RedBox(self), testMaterial)
 		testMesh.x = 1
 		testMesh.y = 1
@@ -177,6 +177,18 @@
 			'position:absolute;top:0px;left:0px;color:#fff;font-size:12px;background:rgba(0,0,0,0.6)'
 		worldToScreenBox.innerHTML = 'worldToScreen Test'
 		document.body.appendChild(worldToScreenBox)
+		function get2dPoint(point3D, viewMatrix, projectionMatrix, width, height) {
+			var viewProjectionMatrix = projectionMatrix * viewMatrix;
+			//transform world to clipping coordinates
+
+			point3D = projectionMatrix.multiply(point3D,);
+			var winX = Math.round((( point3D[0] + 1 ) / 2.0) * width);
+			//we calculate -point3D.getY() because the screen Y axis is
+			//oriented top->down
+			var winY = Math.round((( 1 - point3D[1] ) / 2.0) * height);
+			return [winX, winY]
+		}
+
 		tRenderer.renderDebuger.visible = true
 		tRenderer.start(this, function (time) {
 			// testInterleaveBuffer.upload(interleaveData)
@@ -187,6 +199,7 @@
 			//     testMesh.rotationY += 1
 			//     testMesh.rotationZ += 1
 			// }
+			get2dPoint([testMesh.x, testMesh.y, testMesh.z], testMesh.matrix, tCamera.perspectiveMTX, self.gl.drawingBufferWidth, self.gl.drawingBufferHeight)
 			testMesh.rotationX += 1
 			testMesh.rotationY += 1
 			testMesh.rotationZ += 1

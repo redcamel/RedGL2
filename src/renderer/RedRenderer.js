@@ -129,9 +129,10 @@ var RedRenderer;
 					if ( tLocationInfo ) {
 						tLocation = tLocationInfo['location'];
 						tUUID = tLocationInfo['_UUID']
-						if ( tLocation && cacheSystemUniform[tUUID] != time ) {
+						// if ( tLocation && cacheSystemUniform[tUUID] != time ) {
+						if ( tLocation ) {
 							gl.uniform1f(tLocation, time);
-							cacheSystemUniform[tUUID] = time;
+							// cacheSystemUniform[tUUID] = time;
 						}
 					}
 					//
@@ -1077,7 +1078,7 @@ var RedRenderer;
 					// 뎁스테스트 사용여부 캐싱처리
 					tCacheState['useDepthTest'] != tMesh['useDepthTest'] ? (tCacheState['useDepthTest'] = tMesh['useDepthTest']) ? gl.enable(gl.DEPTH_TEST) : gl.disable(gl.DEPTH_TEST) : 0;
 					// 뎁스테스팅 캐싱처리
-					tCacheState['depthTestFunc'] != tMesh['depthTestFunc'] ? gl.depthFunc(tMesh['depthTestFunc']) : 0;
+					tCacheState['depthTestFunc'] != tMesh['depthTestFunc'] ? gl.depthFunc(tCacheState['depthTestFunc'] = tMesh['depthTestFunc']) : 0;
 					// 블렌딩 사용여부 캐싱처리
 					tCacheState['useBlendMode'] != tMesh['useBlendMode'] ? (tCacheState['useBlendMode'] = tMesh['useBlendMode']) ? gl.enable(gl.BLEND) : gl.disable(gl.BLEND) : 0;
 					// 블렌딩팩터 캐싱처리
