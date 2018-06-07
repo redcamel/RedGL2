@@ -76,9 +76,7 @@ var RedPostEffect_Convolution;
 					if ( !_v ) _v = RedPostEffect_Convolution['NORMAL']
 					return _v
 				},
-				set: function (v) {
-					_v = v
-				}
+				set: function (v) { _v = v }
 			}
 		})());
 		Object.defineProperty(this, 'kernelWeight', (function () {
@@ -99,7 +97,6 @@ var RedPostEffect_Convolution;
 			this['diffuseTexture'] = lastFrameBufferTexture;
 		}
 		this.checkUniformAndProperty();
-		;
 		console.log(this);
 	}
 	RedPostEffect_Convolution.prototype = new RedBaseMaterial();

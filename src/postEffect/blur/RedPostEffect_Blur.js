@@ -66,7 +66,6 @@ var RedPostEffect_Blur;
 			this['diffuseTexture'] = lastFrameBufferTexture;
 		}
 		this.checkUniformAndProperty();
-		;
 		console.log(this);
 	}
 	RedPostEffect_Blur.prototype = new RedBaseMaterial();

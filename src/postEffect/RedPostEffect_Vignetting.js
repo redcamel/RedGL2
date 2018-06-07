@@ -16,11 +16,11 @@ var RedPostEffect_Vignetting;
 		 precision mediump float;
 		 uniform sampler2D uDiffuseTexture;
 		 uniform float uSize;
-		 uniform float uIndensity;
+		 uniform float uIntensity ;
 		 void main(void) {
 		 vec4 finalColor = texture2D(uDiffuseTexture, vTexcoord );
 		 float dist = distance(vTexcoord, vec2(0.5, 0.5));
-		 finalColor.rgb *= smoothstep(0.8, uSize * 0.799, dist * (uIndensity + uSize));
+		 finalColor.rgb *= smoothstep(0.8, uSize * 0.799, dist * (uIntensity + uSize));
 		 gl_FragColor = finalColor;
 		 }
 		 */
@@ -66,7 +66,7 @@ var RedPostEffect_Vignetting;
 		 return : 'Number'
 		 }
 		 :DOC*/
-		this['indensity'] = 0.85;
+		this['intensity'] = 0.85;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
 		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
