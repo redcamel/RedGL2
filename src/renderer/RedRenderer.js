@@ -114,6 +114,17 @@ var RedRenderer;
 			var tLocationInfo, tLocation, tUUID, tViewRect;
 			var cacheSystemUniform;
 			var tFogColor = [];
+			var getValueStr, tValueStr;
+			getValueStr = function (v) {
+				var t0 = [];
+				var i;
+				if ( v.buffer ) {
+					i = v.length
+					while ( i-- ) t0[i] = v[i]
+					t0 = t0.join(',')
+					return t0
+				} else return v
+			}
 			cacheSystemUniform = []
 			return function (redGL, time, scene, camera, viewRect) {
 				gl = redGL.gl;
@@ -140,9 +151,10 @@ var RedRenderer;
 						tLocation = tLocationInfo['location'];
 						tUUID = tLocationInfo['_UUID'];
 						tViewRect = [viewRect[2], viewRect[3]]
-						if ( tLocation && cacheSystemUniform[tUUID] != tViewRect.toString() ) {
+						tValueStr = getValueStr(tViewRect)
+						if ( tLocation && cacheSystemUniform[tUUID] != tValueStr ) {
 							gl.uniform2fv(tLocation, tViewRect);
-							cacheSystemUniform[tUUID] = tViewRect.toString()
+							cacheSystemUniform[tUUID] = tValueStr
 						}
 					}
 					tLocationInfo = tSystemUniformGroup['uUseFog'];
@@ -176,9 +188,10 @@ var RedRenderer;
 						tFogColor[3] = 1;
 						tValue = tFogColor;
 						tUUID = tLocationInfo['_UUID'];
-						if ( tLocation && cacheSystemUniform[tUUID] != tValue.toString() ) {
+						tValueStr = getValueStr(tValue)
+						if ( tLocation && cacheSystemUniform[tUUID] != tValueStr ) {
 							gl.uniform4fv(tLocation, tValue)
-							cacheSystemUniform[tUUID] = tValue.toString()
+							cacheSystemUniform[tUUID] = tValueStr
 						}
 					}
 					//
@@ -198,9 +211,10 @@ var RedRenderer;
 						tLocation = tLocationInfo['location'];
 						tValue = camera['matrix'];
 						tUUID = tLocationInfo['_UUID'];
-						if ( tLocation && cacheSystemUniform[tUUID] != tValue.toString() ) {
+						tValueStr = getValueStr(tValue)
+						if ( tLocation && cacheSystemUniform[tUUID] != tValueStr ) {
 							gl.uniformMatrix4fv(tLocation, false, tValue);
-							cacheSystemUniform[tUUID] = tValue.toString()
+							cacheSystemUniform[tUUID] = tValueStr
 						}
 					}
 					//
@@ -209,9 +223,10 @@ var RedRenderer;
 						tLocation = tLocationInfo['location'];
 						tValue = camera['perspectiveMTX'];
 						tUUID = tLocationInfo['_UUID'];
-						if ( tLocation && cacheSystemUniform[tUUID] != tValue.toString() ) {
+						tValueStr = getValueStr(tValue)
+						if ( tLocation && cacheSystemUniform[tUUID] != tValueStr ) {
 							gl.uniformMatrix4fv(tLocation, false, tValue);
-							cacheSystemUniform[tUUID] = tValue.toString()
+							cacheSystemUniform[tUUID] = tValueStr
 						}
 					}
 					//
@@ -224,11 +239,11 @@ var RedRenderer;
 						tLocation = tLocationInfo['location'];
 						tUUID = tLocationInfo['_UUID'];
 						tValue = tLightData['_color'];
-						if ( tLocation && cacheSystemUniform[tUUID] != tValue.toString() ) {
+						tValueStr = getValueStr(tValue)
+						if ( tLocation && cacheSystemUniform[tUUID] != tValueStr ) {
 							gl.uniform4fv(tLocation, tValue)
-							cacheSystemUniform[tUUID] = tValue.toString()
+							cacheSystemUniform[tUUID] = tValueStr
 						}
-						;
 						//
 						tLocationInfo = tSystemUniformGroup['uAmbientIntensity'];
 						tLocation = tLocationInfo['location'];
@@ -238,7 +253,6 @@ var RedRenderer;
 							gl.uniform1f(tLocation, tValue)
 							cacheSystemUniform[tUUID] = tValue
 						}
-						;
 					}
 					// 디렉셔널 라이트 업데이트
 					var tDirectionnalPositionList, tColorList, tIntensityList;
@@ -295,9 +309,10 @@ var RedRenderer;
 						tLocation = tLocationInfo['location'];
 						tUUID = tLocationInfo['_UUID'];
 						tValue = tDirectionnalPositionList;
-						if ( tLocation && cacheSystemUniform[tUUID] != tValue.toString() ) {
+						tValueStr = getValueStr(tValue)
+						if ( tLocation && cacheSystemUniform[tUUID] != tValueStr ) {
 							gl.uniform3fv(tLocation, tValue);
-							cacheSystemUniform[tUUID] = tValue.toString()
+							cacheSystemUniform[tUUID] = tValueStr
 						}
 					}
 					//
@@ -305,18 +320,20 @@ var RedRenderer;
 					tLocation = tLocationInfo['location'];
 					tUUID = tLocationInfo['_UUID'];
 					tValue = tColorList;
-					if ( tLocation && cacheSystemUniform[tUUID] != tValue.toString() ) {
+					tValueStr = getValueStr(tValue)
+					if ( tLocation && cacheSystemUniform[tUUID] != tValueStr ) {
 						gl.uniform4fv(tLocation, tValue);
-						cacheSystemUniform[tUUID] = tValue.toString()
+						cacheSystemUniform[tUUID] = tValueStr
 					}
 					//
 					tLocationInfo = tSystemUniformGroup['uDirectionalLightIntensity'];
 					tLocation = tLocationInfo['location'];
 					tUUID = tLocationInfo['_UUID'];
 					tValue = tIntensityList;
-					if ( tLocation && cacheSystemUniform[tUUID] != tValue.toString() ) {
+					tValueStr = getValueStr(tValue)
+					if ( tLocation && cacheSystemUniform[tUUID] != tValueStr ) {
 						gl.uniform1fv(tLocation, tValue)
-						cacheSystemUniform[tUUID] = tValue.toString()
+						cacheSystemUniform[tUUID] = tValueStr
 					}
 					//
 					tLocationInfo = tSystemUniformGroup['uDirectionalLightNum'];
@@ -380,36 +397,40 @@ var RedRenderer;
 					tLocation = tLocationInfo['location'];
 					tUUID = tLocationInfo['_UUID'];
 					tValue = tPointPositionList;
-					if ( tLocation && cacheSystemUniform[tUUID] != tValue.toString() ) {
+					tValueStr = getValueStr(tValue)
+					if ( tLocation && cacheSystemUniform[tUUID] != tValueStr ) {
 						gl.uniform3fv(tLocation, tValue);
-						cacheSystemUniform[tUUID] = tValue.toString()
+						cacheSystemUniform[tUUID] = tValueStr
 					}
 					//
 					tLocationInfo = tSystemUniformGroup['uPointLightColor'];
 					tLocation = tLocationInfo['location'];
 					tUUID = tLocationInfo['_UUID'];
 					tValue = tColorList;
-					if ( tLocation && cacheSystemUniform[tUUID] != tValue.toString() ) {
+					tValueStr = getValueStr(tValue)
+					if ( tLocation && cacheSystemUniform[tUUID] != tValueStr ) {
 						gl.uniform4fv(tLocation, tValue);
-						cacheSystemUniform[tUUID] = tValue.toString()
+						cacheSystemUniform[tUUID] = tValueStr
 					}
 					//
 					tLocationInfo = tSystemUniformGroup['uPointLightIntensity'];
 					tLocation = tLocationInfo['location'];
 					tUUID = tLocationInfo['_UUID'];
 					tValue = tIntensityList;
-					if ( tLocation && cacheSystemUniform[tUUID] != tValue.toString() ) {
+					tValueStr = getValueStr(tValue)
+					if ( tLocation && cacheSystemUniform[tUUID] != tValueStr ) {
 						gl.uniform1fv(tLocation, tValue)
-						cacheSystemUniform[tUUID] = tValue.toString()
+						cacheSystemUniform[tUUID] = tValueStr
 					}
 					//
 					tLocationInfo = tSystemUniformGroup['uPointLightRadius'];
 					tLocation = tLocationInfo['location'];
 					tUUID = tLocationInfo['_UUID'];
 					tValue = tRadiusList;
-					if ( tLocation && cacheSystemUniform[tUUID] != tValue.toString() ) {
+					tValueStr = getValueStr(tValue)
+					if ( tLocation && cacheSystemUniform[tUUID] != tValueStr ) {
 						gl.uniform1fv(tLocation, tValue)
-						cacheSystemUniform[tUUID] = tValue.toString()
+						cacheSystemUniform[tUUID] = tValueStr
 					}
 					//
 					tLocationInfo = tSystemUniformGroup['uPointLightNum'];
@@ -1078,7 +1099,7 @@ var RedRenderer;
 					// 뎁스테스트 사용여부 캐싱처리
 					tCacheState['useDepthTest'] != tMesh['useDepthTest'] ? (tCacheState['useDepthTest'] = tMesh['useDepthTest']) ? gl.enable(gl.DEPTH_TEST) : gl.disable(gl.DEPTH_TEST) : 0;
 					// 뎁스테스팅 캐싱처리
-					tCacheState['depthTestFunc'] != tMesh['depthTestFunc'] ? gl.depthFunc(tMesh['depthTestFunc']) : 0;
+					tCacheState['depthTestFunc'] != tMesh['depthTestFunc'] ? gl.depthFunc(tCacheState['depthTestFunc'] = tMesh['depthTestFunc']) : 0;
 					// 블렌딩 사용여부 캐싱처리
 					tCacheState['useBlendMode'] != tMesh['useBlendMode'] ? (tCacheState['useBlendMode'] = tMesh['useBlendMode']) ? gl.enable(gl.BLEND) : gl.disable(gl.BLEND) : 0;
 					// 블렌딩팩터 캐싱처리
