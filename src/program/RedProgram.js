@@ -13,8 +13,14 @@ var RedProgram;
 			tVMap = vs['parseData']['uniform']['map'];
 			tFMap = fs['parseData']['uniform']['map'];
 			for ( k in tVMap ) if ( tFMap[k] ) RedGLUtil.throwFunc("vertexShader와 fragmentShader에 중복된 유니폼 선언이 존재함.", "중복선언 : " + k);
-			gl.linkProgram(program);
-			if ( !gl.getProgramParameter(program, gl.LINK_STATUS) ) RedGLUtil.throwFunc("RedProgram : 프로그램을 초기화 할 수 없습니다.");
+			gl.linkProgram(program);;
+			if ( !gl.getProgramParameter(program, gl.LINK_STATUS) ) RedGLUtil.throwFunc("RedProgram : 프로그램을 초기화 할 수 없습니다.",gl.getProgramInfoLog(program));
+
+			// const numUniforms = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS);
+			// for (let i = 0; i < numUniforms; ++i) {
+			// 	const info = gl.getActiveUniform(program, i);
+			// 	console.log('name:', info.name, 'type:', info.type, 'size:', info.size);
+			// }
 			program['key'] = key;
 			program['vShaderKey'] = vs['key'];
 			program['fShaderKey'] = fs['key'];

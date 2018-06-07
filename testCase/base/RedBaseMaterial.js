@@ -136,8 +136,7 @@ RedGL( document.createElement( 'canvas' ), function ( v ) {
 							/* @preserve
 							uniform float uTestFloat;
 							void main(void) {
-								uTestFloat;
-								gl_Position = vec4(1.0);
+								gl_Position = vec4(uTestFloat);
 							}
 							 */
 						}

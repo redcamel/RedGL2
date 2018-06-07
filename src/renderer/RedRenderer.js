@@ -114,6 +114,17 @@ var RedRenderer;
 			var tLocationInfo, tLocation, tUUID, tViewRect;
 			var cacheSystemUniform;
 			var tFogColor = [];
+			var getValueStr, tValueStr;
+			getValueStr = function (v) {
+				var t0 = [];
+				var i;
+				if ( v.buffer ) {
+					i = v.length
+					while ( i-- ) t0[i] = v[i]
+					t0 = t0.join(',')
+					return t0
+				} else return v
+			}
 			cacheSystemUniform = []
 			return function (redGL, time, scene, camera, viewRect) {
 				gl = redGL.gl;
@@ -129,10 +140,9 @@ var RedRenderer;
 					if ( tLocationInfo ) {
 						tLocation = tLocationInfo['location'];
 						tUUID = tLocationInfo['_UUID']
-						// if ( tLocation && cacheSystemUniform[tUUID] != time ) {
-						if ( tLocation ) {
+						if ( tLocation && cacheSystemUniform[tUUID] != time ) {
 							gl.uniform1f(tLocation, time);
-							// cacheSystemUniform[tUUID] = time;
+							cacheSystemUniform[tUUID] = time;
 						}
 					}
 					//
@@ -141,9 +151,10 @@ var RedRenderer;
 						tLocation = tLocationInfo['location'];
 						tUUID = tLocationInfo['_UUID'];
 						tViewRect = [viewRect[2], viewRect[3]]
-						if ( tLocation && cacheSystemUniform[tUUID] != tViewRect.toString() ) {
+						tValueStr = getValueStr(tViewRect)
+						if ( tLocation && cacheSystemUniform[tUUID] != tValueStr ) {
 							gl.uniform2fv(tLocation, tViewRect);
-							cacheSystemUniform[tUUID] = tViewRect.toString()
+							cacheSystemUniform[tUUID] = tValueStr
 						}
 					}
 					tLocationInfo = tSystemUniformGroup['uUseFog'];
@@ -177,9 +188,10 @@ var RedRenderer;
 						tFogColor[3] = 1;
 						tValue = tFogColor;
 						tUUID = tLocationInfo['_UUID'];
-						if ( tLocation && cacheSystemUniform[tUUID] != tValue.toString() ) {
+						tValueStr = getValueStr(tValue)
+						if ( tLocation && cacheSystemUniform[tUUID] != tValueStr ) {
 							gl.uniform4fv(tLocation, tValue)
-							cacheSystemUniform[tUUID] = tValue.toString()
+							cacheSystemUniform[tUUID] = tValueStr
 						}
 					}
 					//
@@ -199,9 +211,10 @@ var RedRenderer;
 						tLocation = tLocationInfo['location'];
 						tValue = camera['matrix'];
 						tUUID = tLocationInfo['_UUID'];
-						if ( tLocation && cacheSystemUniform[tUUID] != tValue.toString() ) {
+						tValueStr = getValueStr(tValue)
+						if ( tLocation && cacheSystemUniform[tUUID] != tValueStr ) {
 							gl.uniformMatrix4fv(tLocation, false, tValue);
-							cacheSystemUniform[tUUID] = tValue.toString()
+							cacheSystemUniform[tUUID] = tValueStr
 						}
 					}
 					//
@@ -210,9 +223,10 @@ var RedRenderer;
 						tLocation = tLocationInfo['location'];
 						tValue = camera['perspectiveMTX'];
 						tUUID = tLocationInfo['_UUID'];
-						if ( tLocation && cacheSystemUniform[tUUID] != tValue.toString() ) {
+						tValueStr = getValueStr(tValue)
+						if ( tLocation && cacheSystemUniform[tUUID] != tValueStr ) {
 							gl.uniformMatrix4fv(tLocation, false, tValue);
-							cacheSystemUniform[tUUID] = tValue.toString()
+							cacheSystemUniform[tUUID] = tValueStr
 						}
 					}
 					//
@@ -225,11 +239,11 @@ var RedRenderer;
 						tLocation = tLocationInfo['location'];
 						tUUID = tLocationInfo['_UUID'];
 						tValue = tLightData['_color'];
-						if ( tLocation && cacheSystemUniform[tUUID] != tValue.toString() ) {
+						tValueStr = getValueStr(tValue)
+						if ( tLocation && cacheSystemUniform[tUUID] != tValueStr ) {
 							gl.uniform4fv(tLocation, tValue)
-							cacheSystemUniform[tUUID] = tValue.toString()
+							cacheSystemUniform[tUUID] = tValueStr
 						}
-						;
 						//
 						tLocationInfo = tSystemUniformGroup['uAmbientIntensity'];
 						tLocation = tLocationInfo['location'];
@@ -239,7 +253,6 @@ var RedRenderer;
 							gl.uniform1f(tLocation, tValue)
 							cacheSystemUniform[tUUID] = tValue
 						}
-						;
 					}
 					// 디렉셔널 라이트 업데이트
 					var tDirectionnalPositionList, tColorList, tIntensityList;
@@ -296,9 +309,10 @@ var RedRenderer;
 						tLocation = tLocationInfo['location'];
 						tUUID = tLocationInfo['_UUID'];
 						tValue = tDirectionnalPositionList;
-						if ( tLocation && cacheSystemUniform[tUUID] != tValue.toString() ) {
+						tValueStr = getValueStr(tValue)
+						if ( tLocation && cacheSystemUniform[tUUID] != tValueStr ) {
 							gl.uniform3fv(tLocation, tValue);
-							cacheSystemUniform[tUUID] = tValue.toString()
+							cacheSystemUniform[tUUID] = tValueStr
 						}
 					}
 					//
@@ -306,18 +320,20 @@ var RedRenderer;
 					tLocation = tLocationInfo['location'];
 					tUUID = tLocationInfo['_UUID'];
 					tValue = tColorList;
-					if ( tLocation && cacheSystemUniform[tUUID] != tValue.toString() ) {
+					tValueStr = getValueStr(tValue)
+					if ( tLocation && cacheSystemUniform[tUUID] != tValueStr ) {
 						gl.uniform4fv(tLocation, tValue);
-						cacheSystemUniform[tUUID] = tValue.toString()
+						cacheSystemUniform[tUUID] = tValueStr
 					}
 					//
 					tLocationInfo = tSystemUniformGroup['uDirectionalLightIntensity'];
 					tLocation = tLocationInfo['location'];
 					tUUID = tLocationInfo['_UUID'];
 					tValue = tIntensityList;
-					if ( tLocation && cacheSystemUniform[tUUID] != tValue.toString() ) {
+					tValueStr = getValueStr(tValue)
+					if ( tLocation && cacheSystemUniform[tUUID] != tValueStr ) {
 						gl.uniform1fv(tLocation, tValue)
-						cacheSystemUniform[tUUID] = tValue.toString()
+						cacheSystemUniform[tUUID] = tValueStr
 					}
 					//
 					tLocationInfo = tSystemUniformGroup['uDirectionalLightNum'];
@@ -381,36 +397,40 @@ var RedRenderer;
 					tLocation = tLocationInfo['location'];
 					tUUID = tLocationInfo['_UUID'];
 					tValue = tPointPositionList;
-					if ( tLocation && cacheSystemUniform[tUUID] != tValue.toString() ) {
+					tValueStr = getValueStr(tValue)
+					if ( tLocation && cacheSystemUniform[tUUID] != tValueStr ) {
 						gl.uniform3fv(tLocation, tValue);
-						cacheSystemUniform[tUUID] = tValue.toString()
+						cacheSystemUniform[tUUID] = tValueStr
 					}
 					//
 					tLocationInfo = tSystemUniformGroup['uPointLightColor'];
 					tLocation = tLocationInfo['location'];
 					tUUID = tLocationInfo['_UUID'];
 					tValue = tColorList;
-					if ( tLocation && cacheSystemUniform[tUUID] != tValue.toString() ) {
+					tValueStr = getValueStr(tValue)
+					if ( tLocation && cacheSystemUniform[tUUID] != tValueStr ) {
 						gl.uniform4fv(tLocation, tValue);
-						cacheSystemUniform[tUUID] = tValue.toString()
+						cacheSystemUniform[tUUID] = tValueStr
 					}
 					//
 					tLocationInfo = tSystemUniformGroup['uPointLightIntensity'];
 					tLocation = tLocationInfo['location'];
 					tUUID = tLocationInfo['_UUID'];
 					tValue = tIntensityList;
-					if ( tLocation && cacheSystemUniform[tUUID] != tValue.toString() ) {
+					tValueStr = getValueStr(tValue)
+					if ( tLocation && cacheSystemUniform[tUUID] != tValueStr ) {
 						gl.uniform1fv(tLocation, tValue)
-						cacheSystemUniform[tUUID] = tValue.toString()
+						cacheSystemUniform[tUUID] = tValueStr
 					}
 					//
 					tLocationInfo = tSystemUniformGroup['uPointLightRadius'];
 					tLocation = tLocationInfo['location'];
 					tUUID = tLocationInfo['_UUID'];
 					tValue = tRadiusList;
-					if ( tLocation && cacheSystemUniform[tUUID] != tValue.toString() ) {
+					tValueStr = getValueStr(tValue)
+					if ( tLocation && cacheSystemUniform[tUUID] != tValueStr ) {
 						gl.uniform1fv(tLocation, tValue)
-						cacheSystemUniform[tUUID] = tValue.toString()
+						cacheSystemUniform[tUUID] = tValueStr
 					}
 					//
 					tLocationInfo = tSystemUniformGroup['uPointLightNum'];
@@ -867,7 +887,8 @@ var RedRenderer;
 									if ( tUniformValue['_videoDom'] ) {
 										//TODO: 일단 비디오를 우겨넣었으니 정리를 해야함
 										gl.bindTexture(gl.TEXTURE_2D, tUniformValue['webglTexture']);
-										gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, tUniformValue['_videoDom']);
+										if ( tUniformValue['_videoDom']['loaded'] ) gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, tUniformValue['_videoDom'])
+										else gl.bindTexture(gl.TEXTURE_2D, tUniformValue['webglTexture']);
 									} else {
 										gl.bindTexture(tRenderType == 'sampler2D' ? gl.TEXTURE_2D : gl.TEXTURE_CUBE_MAP, tUniformValue['webglTexture']);
 									}

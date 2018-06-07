@@ -113,7 +113,7 @@ RedGL(document.createElement('canvas'), function (v) {
 					console.log(title, '\n', error)
 					unit.run(false)
 				}
-			}, false),
+			}, false)
 		),
 		redGroup(
 			"removeChild",
