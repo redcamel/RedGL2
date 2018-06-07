@@ -29,7 +29,7 @@
   },
   {
     "title": "threshold",
-    "description": "\n최소 유효값\n기본값 : 0.3\n",
+    "description": "\n최소 유효값\n기본값 : 75\n",
     "return": "Number"
   }
 ]

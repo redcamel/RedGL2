@@ -115,11 +115,11 @@ var RedPostEffect_ZoomBlur;
 		this.updateTexture = function (lastFrameBufferTexture) {
 			this['diffuseTexture'] = lastFrameBufferTexture
 		}
-		this['bind'] = RedPostEffectManager.prototype['bind'];
-		this['unbind'] = RedPostEffectManager.prototype['unbind'];
 		this.checkUniformAndProperty();
 		console.log(this);
 	}
 	RedPostEffect_ZoomBlur.prototype = new RedBaseMaterial();
+	RedPostEffect_ZoomBlur.prototype['bind'] = RedPostEffectManager.prototype['bind'];
+	RedPostEffect_ZoomBlur.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
 	Object.freeze(RedPostEffect_ZoomBlur);
 })();

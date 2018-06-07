@@ -112,12 +112,11 @@ var RedPostEffect_HueSaturation;
 		this.updateTexture = function (lastFrameBufferTexture) {
 			this['diffuseTexture'] = lastFrameBufferTexture;
 		}
-		this['bind'] = RedPostEffectManager.prototype['bind'];
-		this['unbind'] = RedPostEffectManager.prototype['unbind'];
 		this.checkUniformAndProperty();
-		;
 		console.log(this);
 	}
 	RedPostEffect_HueSaturation.prototype = RedBaseMaterial.prototype
+	RedPostEffect_HueSaturation.prototype['bind'] = RedPostEffectManager.prototype['bind'];
+	RedPostEffect_HueSaturation.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
 	Object.freeze(RedPostEffect_HueSaturation);
 })();

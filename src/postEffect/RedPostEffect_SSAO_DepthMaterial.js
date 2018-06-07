@@ -104,9 +104,10 @@ var RedPostEffect_SSAO_DepthMaterial;
 		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkUniformAndProperty();
-		;
 		console.log(this);
 	}
 	RedPostEffect_SSAO_DepthMaterial.prototype = RedBaseMaterial.prototype
+	RedPostEffect_SSAO_DepthMaterial.prototype['bind'] = RedPostEffectManager.prototype['bind'];
+	RedPostEffect_SSAO_DepthMaterial.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
 	Object.freeze(RedPostEffect_SSAO_DepthMaterial)
 })();

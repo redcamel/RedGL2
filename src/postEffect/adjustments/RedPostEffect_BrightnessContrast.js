@@ -101,11 +101,11 @@ var RedPostEffect_BrightnessContrast;
 		this.updateTexture = function (lastFrameBufferTexture) {
 			this['diffuseTexture'] = lastFrameBufferTexture;
 		}
-		this['bind'] = RedPostEffectManager.prototype['bind'];
-		this['unbind'] = RedPostEffectManager.prototype['unbind'];
 		this.checkUniformAndProperty();
 		console.log(this);
 	}
 	RedPostEffect_BrightnessContrast.prototype = new RedBaseMaterial();
+	RedPostEffect_BrightnessContrast.prototype['bind'] = RedPostEffectManager.prototype['bind'];
+	RedPostEffect_BrightnessContrast.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
 	Object.freeze(RedPostEffect_BrightnessContrast);
 })();

@@ -122,12 +122,11 @@ var RedPostEffect_Film;
 		this.updateTexture = function (lastFrameBufferTexture) {
 			this['diffuseTexture'] = lastFrameBufferTexture;
 		}
-		this['bind'] = RedPostEffectManager.prototype['bind'];
-		this['unbind'] = RedPostEffectManager.prototype['unbind'];
 		this.checkUniformAndProperty();
-		;
 		console.log(this);
 	}
 	RedPostEffect_Film.prototype = new RedBaseMaterial();
+	RedPostEffect_Film.prototype['bind'] = RedPostEffectManager.prototype['bind'];
+	RedPostEffect_Film.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
 	Object.freeze(RedPostEffect_Film);
 })();

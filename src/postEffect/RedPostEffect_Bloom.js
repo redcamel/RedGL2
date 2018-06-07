@@ -123,12 +123,11 @@ var RedPostEffect_Bloom;
 			this['diffuseTexture'] = parentFramBufferTexture;
 			this['blurTexture'] = lastFrameBufferTexture;
 		}
-		this['bind'] = RedPostEffectManager.prototype['bind'];
-		this['unbind'] = RedPostEffectManager.prototype['unbind'];
 		this.checkUniformAndProperty();
-		;
 		console.log(this);
 	}
 	RedPostEffect_Bloom.prototype = new RedBaseMaterial();
+	RedPostEffect_Bloom.prototype['bind'] = RedPostEffectManager.prototype['bind'];
+	RedPostEffect_Bloom.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
 	Object.freeze(RedPostEffect_Bloom);
 })();
