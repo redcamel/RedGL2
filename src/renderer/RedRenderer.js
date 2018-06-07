@@ -118,12 +118,13 @@ var RedRenderer;
 			getValueStr = function (v) {
 				var t0 = [];
 				var i;
-				if ( v.buffer ) {
+				if ( v.buffer || v instanceof Array ) {
 					i = v.length
 					while ( i-- ) t0[i] = v[i]
 					t0 = t0.join(',')
 					return t0
-				} else return v
+				}
+				else return v
 			}
 			cacheSystemUniform = []
 			return function (redGL, time, scene, camera, viewRect) {
@@ -746,6 +747,14 @@ var RedRenderer;
 		var tPrevIndexBuffer_UUID;
 		var tPrevInterleaveBuffer_UUID;
 		var tPrevSamplerIndex;
+		var getArrayDataStr = function (v) {
+			var t0 = [];
+			var i;
+			i = v.length
+			while ( i-- ) t0[i] = v[i]
+			t0 = t0.join(',')
+			return t0
+		}
 		draw = function (redGL,
 		                 gl,
 		                 children,
@@ -1158,6 +1167,7 @@ var RedRenderer;
 			}
 		}
 		return function (redGL, gl, orthographicYn, children, time, renderResultObj, subSceneMaterial) {
+			// TODO: 이제 아래부분을 날릴수 있을것 같은데? 체크해봐야함
 			if ( this['cacheState']['pointSize'] == undefined ) this['cacheState']['pointSize'] = null
 			if ( !this['cacheState']['useCullFace'] ) this['cacheState']['useCullFace'] = null
 			if ( !this['cacheState']['cullFace'] ) this['cacheState']['cullFace'] = null
