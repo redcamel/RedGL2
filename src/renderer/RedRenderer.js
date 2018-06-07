@@ -548,8 +548,10 @@ var RedRenderer;
 					// 프레임 버퍼 정보를 캐싱
 					lastFrameBufferTexture = originFrameBufferTexture = postEffectManager['frameBuffer']['texture'];
 					// 최종결과는 드로잉버퍼사이즈로 한다.
-					postEffectManager['frameBuffer']['width'] = gl.drawingBufferWidth
-					postEffectManager['frameBuffer']['height'] = gl.drawingBufferHeight
+					// postEffectManager['frameBuffer']['width'] = gl.drawingBufferWidth
+					// postEffectManager['frameBuffer']['height'] = gl.drawingBufferHeight
+					postEffectManager['frameBuffer']['width'] = viewRect[2]
+					postEffectManager['frameBuffer']['height'] = viewRect[3]
 					// 포스트 이펙트를 돌면서 갱신해나간다.
 					var tList = postEffectManager['postEffectList'].concat();
 					if ( postEffectManager['antialiasing'] ) tList.push(postEffectManager['antialiasing']);
@@ -677,7 +679,7 @@ var RedRenderer;
 					tCamera['update']()
 					tCamera = tCamera['camera']
 				}
-				if(tCamera['autoUpdateMatrix']) tCamera['update']()
+				if(tCamera['autoUpdateMatrix'])tCamera['update']()
 				perspectiveMTX = tCamera['perspectiveMTX']
 				// view 에 적용할 카메라 퍼스펙티브를 계산
 				mat4.identity(perspectiveMTX);
