@@ -40,7 +40,6 @@ var RedFrameBuffer;
 	}
 	RedFrameBuffer.prototype = {
 		bind: function (gl) {
-			if ( !(gl instanceof WebGLRenderingContext) ) RedGLUtil.throwFunc('RedFrameBuffer : bind - WebGLRenderingContext Instance만 허용됩니다.', gl)
 			gl.bindFramebuffer(gl.FRAMEBUFFER, this['webglFrameBuffer']);
 			gl.activeTexture(gl.TEXTURE0)
 			gl.bindTexture(gl.TEXTURE_2D, this['texture']['webglTexture']);
@@ -57,7 +56,6 @@ var RedFrameBuffer;
 			gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, this['webglRenderBuffer']);
 		},
 		unbind: function (gl) {
-			if ( !(gl instanceof WebGLRenderingContext) ) RedGLUtil.throwFunc('RedFrameBuffer : bind - WebGLRenderingContext Instance만 허용됩니다.', gl)
 			gl.bindTexture(gl.TEXTURE_2D, null);
 			gl.bindRenderbuffer(gl.RENDERBUFFER, null);
 			gl.bindFramebuffer(gl.FRAMEBUFFER, null);
