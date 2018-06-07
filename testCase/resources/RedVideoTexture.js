@@ -47,7 +47,10 @@ RedGL( document.createElement( 'canvas' ), function ( v ) {
 			}, false ),
 			redTest( "src : HTMLVideoElement 입력", function ( unit, title ) {
 				try {
-					RedVideoTexture( tRedGL, document.createElement( 'video' ) )
+					var t0 = document.createElement( 'video' )
+					t0.src = '../../asset/mov_bbb.mp4'
+					console.log(t0)
+					RedVideoTexture( tRedGL,t0  )
 					unit.run( true )
 				} catch ( error ) {
 					console.log( '///////////////////////////////////////////////////////////' )

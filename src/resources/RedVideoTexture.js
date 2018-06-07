@@ -63,15 +63,28 @@ var RedVideoTexture;
 			onLoad = function () {
 				clearEvents(this);
 				this.play()
+				self['_videoDom']['loaded'] = true
 				makeTexture(gl, texture, this);
 				callBack ? callBack.call(self, true) : 0
 			}
 			setEmptyTexture(gl, texture)
-			if ( src instanceof HTMLVideoElement ) makeTexture(gl, texture, src)
+			if ( src instanceof HTMLVideoElement ) {
+				var video = src
+				// video.crossOrigin = 'anonymous'
+				video.loop = 1
+				video.muted = true
+				video.setAttribute('autoplay', '');
+				//document.body.appendChild(video)
+				video.style = 'position:absolute;top:0px;left:0px;z-index:200'
+				self['_videoDom'] = video
+				self['_videoDom']['loaded'] = false
+				video.addEventListener('error', onError);
+				video.addEventListener('canplaythrough', onLoad);
+			}
 			else {
 				var video;
 				video = document.createElement(('video'))
-				video.crossOrigin = 'anonymous'
+				// video.crossOrigin = 'anonymous'
 				video.src = src;
 				video.loop = 1
 				video.muted = true
@@ -79,6 +92,7 @@ var RedVideoTexture;
 				//document.body.appendChild(video)
 				video.style = 'position:absolute;top:0px;left:0px;z-index:200'
 				self['_videoDom'] = video
+				self['_videoDom']['loaded'] = false
 				video.addEventListener('error', onError);
 				video.addEventListener('canplaythrough', onLoad);
 			}

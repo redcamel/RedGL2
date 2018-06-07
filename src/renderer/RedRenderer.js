@@ -129,10 +129,9 @@ var RedRenderer;
 					if ( tLocationInfo ) {
 						tLocation = tLocationInfo['location'];
 						tUUID = tLocationInfo['_UUID']
-						// if ( tLocation && cacheSystemUniform[tUUID] != time ) {
-						if ( tLocation ) {
+						if ( tLocation && cacheSystemUniform[tUUID] != time ) {
 							gl.uniform1f(tLocation, time);
-							// cacheSystemUniform[tUUID] = time;
+							cacheSystemUniform[tUUID] = time;
 						}
 					}
 					//
@@ -867,7 +866,8 @@ var RedRenderer;
 									if ( tUniformValue['_videoDom'] ) {
 										//TODO: 일단 비디오를 우겨넣었으니 정리를 해야함
 										gl.bindTexture(gl.TEXTURE_2D, tUniformValue['webglTexture']);
-										gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, tUniformValue['_videoDom']);
+										if ( tUniformValue['_videoDom']['loaded'] ) gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, tUniformValue['_videoDom'])
+										else gl.bindTexture(gl.TEXTURE_2D, tUniformValue['webglTexture']);
 									} else {
 										gl.bindTexture(tRenderType == 'sampler2D' ? gl.TEXTURE_2D : gl.TEXTURE_CUBE_MAP, tUniformValue['webglTexture']);
 									}
@@ -1078,7 +1078,7 @@ var RedRenderer;
 					// 뎁스테스트 사용여부 캐싱처리
 					tCacheState['useDepthTest'] != tMesh['useDepthTest'] ? (tCacheState['useDepthTest'] = tMesh['useDepthTest']) ? gl.enable(gl.DEPTH_TEST) : gl.disable(gl.DEPTH_TEST) : 0;
 					// 뎁스테스팅 캐싱처리
-					tCacheState['depthTestFunc'] != tMesh['depthTestFunc'] ? gl.depthFunc(tCacheState['depthTestFunc'] = tMesh['depthTestFunc']) : 0;
+					tCacheState['depthTestFunc'] != tMesh['depthTestFunc'] ? gl.depthFunc(tMesh['depthTestFunc']) : 0;
 					// 블렌딩 사용여부 캐싱처리
 					tCacheState['useBlendMode'] != tMesh['useBlendMode'] ? (tCacheState['useBlendMode'] = tMesh['useBlendMode']) ? gl.enable(gl.BLEND) : gl.disable(gl.BLEND) : 0;
 					// 블렌딩팩터 캐싱처리
