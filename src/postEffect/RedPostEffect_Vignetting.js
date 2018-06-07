@@ -16,7 +16,7 @@ var RedPostEffect_Vignetting;
 		 precision mediump float;
 		 uniform sampler2D uDiffuseTexture;
 		 uniform float uSize;
-		 uniform float uIntensity ;
+		 uniform float uIntensity;
 		 void main(void) {
 		 vec4 finalColor = texture2D(uDiffuseTexture, vTexcoord );
 		 float dist = distance(vTexcoord, vec2(0.5, 0.5));
