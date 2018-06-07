@@ -677,7 +677,7 @@ var RedRenderer;
 					tCamera['update']()
 					tCamera = tCamera['camera']
 				}
-				tCamera['update']()
+				if(tCamera['autoUpdateMatrix']) tCamera['update']()
 				perspectiveMTX = tCamera['perspectiveMTX']
 				// view 에 적용할 카메라 퍼스펙티브를 계산
 				mat4.identity(perspectiveMTX);
