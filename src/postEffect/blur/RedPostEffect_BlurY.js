@@ -70,19 +70,8 @@ var RedPostEffect_BlurY;
 			 return : 'Number'
 		 }
 		 :DOC*/
-		this['_size'] = 50;
-		Object.defineProperty(this, 'size', (function () {
-			var _v = 50
-			return {
-				get: function () { return _v },
-				set: function (v) {
-					if ( typeof v != 'number' ) RedGLUtil.throwFunc('RedPostEffect_BlurY : size 숫자만허용함', '입력값 : ' + v);
-					_v = v;
-					if ( _v < 0 ) _v = 0;
-					this['_size'] = _v;
-				}
-			}
-		})());
+		this['_size'] = null;
+		this['size'] = 50
 		/////////////////////////////////////////
 		// 일반 프로퍼티
 		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
@@ -96,5 +85,6 @@ var RedPostEffect_BlurY;
 	RedPostEffect_BlurY.prototype = new RedBaseMaterial();
 	RedPostEffect_BlurY.prototype['bind'] = RedPostEffectManager.prototype['bind'];
 	RedPostEffect_BlurY.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
+	Object.defineProperty(RedPostEffect_BlurY.prototype, 'size', RedDefinePropertyInfo['size']);
 	Object.freeze(RedPostEffect_BlurY);
 })();

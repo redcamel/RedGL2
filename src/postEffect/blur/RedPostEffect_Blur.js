@@ -6,9 +6,9 @@ var RedPostEffect_Blur;
 	vSource = function () {
 		/* @preserve
 		 void main(void) {
-		 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
-		 vResolution = uResolution;
-		 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
+			 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
+			 vResolution = uResolution;
+			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
 		 }
 		 */
 	}
@@ -17,24 +17,24 @@ var RedPostEffect_Blur;
 		 precision mediump float;
 		 uniform sampler2D uDiffuseTexture;
 		 void main(void) {
-		 vec2 px = vec2(1.0/vResolution.x, 1.0/vResolution.y);
-		 vec4 finalColor = vec4(0.0);
-		 finalColor += texture2D(uDiffuseTexture, vTexcoord + vec2(-7.0*px.x, -7.0*px.y))*0.0044299121055113265;
-		 finalColor += texture2D(uDiffuseTexture, vTexcoord + vec2(-6.0*px.x, -6.0*px.y))*0.00895781211794;
-		 finalColor += texture2D(uDiffuseTexture, vTexcoord + vec2(-5.0*px.x, -5.0*px.y))*0.0215963866053;
-		 finalColor += texture2D(uDiffuseTexture, vTexcoord + vec2(-4.0*px.x, -4.0*px.y))*0.0443683338718;
-		 finalColor += texture2D(uDiffuseTexture, vTexcoord + vec2(-3.0*px.x, -3.0*px.y))*0.0776744219933;
-		 finalColor += texture2D(uDiffuseTexture, vTexcoord + vec2(-2.0*px.x, -2.0*px.y))*0.115876621105;
-		 finalColor += texture2D(uDiffuseTexture, vTexcoord + vec2(-1.0*px.x, -1.0*px.y))*0.147308056121;
-		 finalColor += texture2D(uDiffuseTexture, vTexcoord                             )*0.159576912161;
-		 finalColor += texture2D(uDiffuseTexture, vTexcoord + vec2( 1.0*px.x,  1.0*px.y))*0.147308056121;
-		 finalColor += texture2D(uDiffuseTexture, vTexcoord + vec2( 2.0*px.x,  2.0*px.y))*0.115876621105;
-		 finalColor += texture2D(uDiffuseTexture, vTexcoord + vec2( 3.0*px.x,  3.0*px.y))*0.0776744219933;
-		 finalColor += texture2D(uDiffuseTexture, vTexcoord + vec2( 4.0*px.x,  4.0*px.y))*0.0443683338718;
-		 finalColor += texture2D(uDiffuseTexture, vTexcoord + vec2( 5.0*px.x,  5.0*px.y))*0.0215963866053;
-		 finalColor += texture2D(uDiffuseTexture, vTexcoord + vec2( 6.0*px.x,  6.0*px.y))*0.00895781211794;
-		 finalColor += texture2D(uDiffuseTexture, vTexcoord + vec2( 7.0*px.x,  7.0*px.y))*0.0044299121055113265;
-		 gl_FragColor = finalColor;
+			 vec2 px = vec2(1.0/vResolution.x, 1.0/vResolution.y);
+			 vec4 finalColor = vec4(0.0);
+			 finalColor += texture2D(uDiffuseTexture, vTexcoord + vec2(-7.0*px.x, -7.0*px.y))*0.0044299121055113265;
+			 finalColor += texture2D(uDiffuseTexture, vTexcoord + vec2(-6.0*px.x, -6.0*px.y))*0.00895781211794;
+			 finalColor += texture2D(uDiffuseTexture, vTexcoord + vec2(-5.0*px.x, -5.0*px.y))*0.0215963866053;
+			 finalColor += texture2D(uDiffuseTexture, vTexcoord + vec2(-4.0*px.x, -4.0*px.y))*0.0443683338718;
+			 finalColor += texture2D(uDiffuseTexture, vTexcoord + vec2(-3.0*px.x, -3.0*px.y))*0.0776744219933;
+			 finalColor += texture2D(uDiffuseTexture, vTexcoord + vec2(-2.0*px.x, -2.0*px.y))*0.115876621105;
+			 finalColor += texture2D(uDiffuseTexture, vTexcoord + vec2(-1.0*px.x, -1.0*px.y))*0.147308056121;
+			 finalColor += texture2D(uDiffuseTexture, vTexcoord                             )*0.159576912161;
+			 finalColor += texture2D(uDiffuseTexture, vTexcoord + vec2( 1.0*px.x,  1.0*px.y))*0.147308056121;
+			 finalColor += texture2D(uDiffuseTexture, vTexcoord + vec2( 2.0*px.x,  2.0*px.y))*0.115876621105;
+			 finalColor += texture2D(uDiffuseTexture, vTexcoord + vec2( 3.0*px.x,  3.0*px.y))*0.0776744219933;
+			 finalColor += texture2D(uDiffuseTexture, vTexcoord + vec2( 4.0*px.x,  4.0*px.y))*0.0443683338718;
+			 finalColor += texture2D(uDiffuseTexture, vTexcoord + vec2( 5.0*px.x,  5.0*px.y))*0.0215963866053;
+			 finalColor += texture2D(uDiffuseTexture, vTexcoord + vec2( 6.0*px.x,  6.0*px.y))*0.00895781211794;
+			 finalColor += texture2D(uDiffuseTexture, vTexcoord + vec2( 7.0*px.x,  7.0*px.y))*0.0044299121055113265;
+			 gl_FragColor = finalColor;
 		 }
 		 */
 	}

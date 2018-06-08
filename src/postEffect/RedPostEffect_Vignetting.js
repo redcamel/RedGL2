@@ -6,8 +6,8 @@ var RedPostEffect_Vignetting;
 	vSource = function () {
 		/* @preserve
 		 void main(void) {
-		 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
-		 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
+		    vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
+		    gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
 		 }
 		 */
 	}
@@ -15,13 +15,13 @@ var RedPostEffect_Vignetting;
 		/* @preserve
 		 precision mediump float;
 		 uniform sampler2D uDiffuseTexture;
-		 uniform float uSize;
-		 uniform float uIntensity;
+		 uniform float u_size;
+		 uniform float u_intensity;
 		 void main(void) {
-		 vec4 finalColor = texture2D(uDiffuseTexture, vTexcoord );
-		 float dist = distance(vTexcoord, vec2(0.5, 0.5));
-		 finalColor.rgb *= smoothstep(0.8, uSize * 0.799, dist * (uIntensity + uSize));
-		 gl_FragColor = finalColor;
+			 vec4 finalColor = texture2D(uDiffuseTexture, vTexcoord );
+			 float dist = distance(vTexcoord, vec2(0.5, 0.5));
+			 finalColor.rgb *= smoothstep(0.8, u_size * 0.799, dist * (u_intensity + u_size));
+			 gl_FragColor = finalColor;
 		 }
 		 */
 	}
@@ -55,10 +55,11 @@ var RedPostEffect_Vignetting;
 			 return : 'Number'
 		 }
 		 :DOC*/
-		this['size'] = 0.1;
+		this['_size'] = null;
+		this['size'] = 0.1
 		/**DOC:
 		 {
-			 title :`size`,
+			 title :`_intensity`,
 			 description : `
 				 비네팅 강도
 				 기본값 : 0.85
@@ -66,6 +67,7 @@ var RedPostEffect_Vignetting;
 		 return : 'Number'
 		 }
 		 :DOC*/
+		this['_intensity'] = null
 		this['intensity'] = 0.85;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
@@ -80,5 +82,7 @@ var RedPostEffect_Vignetting;
 	RedPostEffect_Vignetting.prototype = new RedBaseMaterial();
 	RedPostEffect_Vignetting.prototype['bind'] = RedPostEffectManager.prototype['bind'];
 	RedPostEffect_Vignetting.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
+	Object.defineProperty(RedPostEffect_Vignetting.prototype, 'intensity', RedDefinePropertyInfo['intensity']);
+	Object.defineProperty(RedPostEffect_Vignetting.prototype, 'size', RedDefinePropertyInfo['size']);
 	Object.freeze(RedPostEffect_Vignetting);
 })();

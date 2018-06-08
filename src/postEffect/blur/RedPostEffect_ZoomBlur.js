@@ -6,8 +6,8 @@ var RedPostEffect_ZoomBlur;
 	vSource = function () {
 		/* @preserve
 		 void main(void) {
-		 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
-		 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
+			 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
+			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
 		 }
 		 */
 	}
@@ -19,25 +19,25 @@ var RedPostEffect_ZoomBlur;
 		 uniform float uCenterY;
 		 uniform float u_amount;
 		 float random(vec3 scale, float seed) {
-		 return fract(sin(dot(gl_FragCoord.xyz + seed, scale)) * 43758.5453 + seed);
+		    return fract(sin(dot(gl_FragCoord.xyz + seed, scale)) * 43758.5453 + seed);
 		 }
 		 void main(void) {
-		 vec4 finalColor = vec4(0.0);
-		 vec2 center = vec2(uCenterX+0.5,-uCenterY+0.5);
-		 vec2 toCenter = center - vTexcoord ;
-		 float offset = random(vec3(12.9898, 78.233, 151.7182), 0.0);
-		 float total = 0.0;
+			 vec4 finalColor = vec4(0.0);
+			 vec2 center = vec2(uCenterX+0.5,-uCenterY+0.5);
+			 vec2 toCenter = center - vTexcoord ;
+			 float offset = random(vec3(12.9898, 78.233, 151.7182), 0.0);
+			 float total = 0.0;
 
-		 for (float t = 0.0; t <= 30.0; t++) {
-		 float percent = (t + offset) / 30.0;
-		 float weight = 3.0 * (percent - percent * percent);
-		 vec4 sample = texture2D(uDiffuseTexture, vTexcoord + toCenter * percent * u_amount );
-		 sample.rgb *= sample.a;
-		 finalColor += sample * weight;
-		 total += weight;
-		 }
-		 gl_FragColor = finalColor / total;
-		 gl_FragColor.rgb /= gl_FragColor.a + 0.00001;
+			 for (float t = 0.0; t <= 30.0; t++) {
+				 float percent = (t + offset) / 30.0;
+				 float weight = 3.0 * (percent - percent * percent);
+				 vec4 sample = texture2D(uDiffuseTexture, vTexcoord + toCenter * percent * u_amount );
+				 sample.rgb *= sample.a;
+				 finalColor += sample * weight;
+				 total += weight;
+			 }
+			 gl_FragColor = finalColor / total;
+			 gl_FragColor.rgb /= gl_FragColor.a + 0.00001;
 		 }
 		 */
 	}

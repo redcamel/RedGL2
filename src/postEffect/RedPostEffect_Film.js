@@ -6,9 +6,9 @@ var RedPostEffect_Film;
 	vSource = function () {
 		/* @preserve
 		 void main(void) {
-		 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
-		 vTime = uTime;
-		 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
+			 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
+			 vTime = uTime;
+			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
 		 }
 		 */
 	}
@@ -18,11 +18,11 @@ var RedPostEffect_Film;
 		 uniform bool uGrayMode;
 		 uniform sampler2D uDiffuseTexture;
 		 // noise effect intensity value (0 = no effect, 1 = full effect)
-		 uniform float uNoiseIntensity;
+		 uniform float u_noiseIntensity;
 		 // scanlines effect intensity value (0 = no effect, 1 = full effect)
-		 uniform float uScanlineIntensity;
+		 uniform float u_scanlineIntensity;
 		 // scanlines effect count value (0 = no effect, 4096 = full effect)
-		 uniform float uScanlineCount;
+		 uniform float u_scanlineCount;
 
 		 void main() {
 		 // sample the source
@@ -37,13 +37,13 @@ var RedPostEffect_Film;
 		 vec3 finalColor = diffuseColor.rgb + diffuseColor.rgb * clamp( 0.1 + dx * 100.0, 0.0, 1.0 );
 
 		 // get us a sine and cosine
-		 vec2 sc = vec2( sin( vTexcoord.y * uScanlineCount ), cos( vTexcoord.y * uScanlineCount ) );
+		 vec2 sc = vec2( sin( vTexcoord.y * u_scanlineCount ), cos( vTexcoord.y * u_scanlineCount ) );
 
 		 // add scanlines
-		 finalColor += diffuseColor.rgb * vec3( sc.x, sc.y, sc.x ) * uScanlineIntensity;
+		 finalColor += diffuseColor.rgb * vec3( sc.x, sc.y, sc.x ) * u_scanlineIntensity;
 
 		 // interpolate between source and result by intensity
-		 finalColor = diffuseColor.rgb + clamp( uNoiseIntensity, 0.0, 1.0 ) * ( finalColor - diffuseColor.rgb );
+		 finalColor = diffuseColor.rgb + clamp( u_noiseIntensity, 0.0, 1.0 ) * ( finalColor - diffuseColor.rgb );
 
 		 // convert to grayscale if desired
 		 if( uGrayMode ) finalColor = vec3( finalColor.r * 0.3 + finalColor.g * 0.59 + finalColor.b * 0.11 );
@@ -66,7 +66,7 @@ var RedPostEffect_Film;
 		 return : 'RedPostEffect_Film Instance'
 	 }
 	 :DOC*/
-	RedPostEffect_Film = function (redGL, width, height) {
+	RedPostEffect_Film = function (redGL) {
 		if ( !(this instanceof RedPostEffect_Film) ) return new RedPostEffect_Film(redGL);
 		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedPostEffect_Film : RedGL Instance만 허용됩니다.', redGL);
 		this['frameBuffer'] = RedFrameBuffer(redGL);
@@ -92,7 +92,7 @@ var RedPostEffect_Film;
 			 return : 'Number'
 		 }
 		 :DOC*/
-		this['scanlineIntensity'] = 0.5;
+		this['_scanlineIntensity'] = null, this['scanlineIntensity'] = 0.5;
 		/**DOC:
 		 {
 			 title :`noiseIntensity`,
@@ -103,7 +103,7 @@ var RedPostEffect_Film;
 			 return : 'Number'
 		 }
 		 :DOC*/
-		this['noiseIntensity'] = 0.5;
+		this['_noiseIntensity'] = null, this['noiseIntensity'] = 0.5;
 		/**DOC:
 		 {
 			 title :`scanlineCount`,
@@ -114,7 +114,7 @@ var RedPostEffect_Film;
 			 return : 'Number'
 		 }
 		 :DOC*/
-		this['scanlineCount'] = 2048;
+		this['_scanlineCount'] = null, this['scanlineCount'] = 2048;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
 		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
@@ -128,5 +128,29 @@ var RedPostEffect_Film;
 	RedPostEffect_Film.prototype = new RedBaseMaterial();
 	RedPostEffect_Film.prototype['bind'] = RedPostEffectManager.prototype['bind'];
 	RedPostEffect_Film.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
+	Object.defineProperty(RedPostEffect_Film.prototype, 'scanlineIntensity', {
+		get: function () { return this['_scanlineIntensity'] },
+		set: function (v) {
+			if ( typeof v != 'number' ) RedGLUtil.throwFunc('RedPostEffect_Film : scanlineIntensity 숫자만허용함', '입력값 : ' + v);
+			if ( v < 0 ) v = 0;
+			this['_scanlineIntensity'] = v;
+		}
+	});
+	Object.defineProperty(RedPostEffect_Film.prototype, 'noiseIntensity', {
+		get: function () { return this['_noiseIntensity'] },
+		set: function (v) {
+			if ( typeof v != 'number' ) RedGLUtil.throwFunc('RedPostEffect_Film : noiseIntensity 숫자만허용함', '입력값 : ' + v);
+			if ( v < 0 ) v = 0;
+			this['_noiseIntensity'] = v;
+		}
+	});
+	Object.defineProperty(RedPostEffect_Film.prototype, 'scanlineCount', {
+		get: function () { return this['_scanlineCount'] },
+		set: function (v) {
+			if ( typeof v != 'number' ) RedGLUtil.throwFunc('RedPostEffect_Film : scanlineCount 숫자만허용함', '입력값 : ' + v);
+			if ( v < 0 ) v = 0;
+			this['_scanlineCount'] = v;
+		}
+	});
 	Object.freeze(RedPostEffect_Film);
 })();

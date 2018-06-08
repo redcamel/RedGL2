@@ -29,13 +29,6 @@ var RedBaseLight;
 		//})(),
 		//_castingList: [],
 	}
-	Object.defineProperty(RedBaseLight.prototype, 'intensity', {
-		get: function () { return this['_intensity']; },
-		set: function (v) {
-			if ( typeof v != 'number' ) RedGLUtil.throwFunc('intensity : 숫자만 허용함.')
-			if ( v < 0 ) v = 0;
-			this['_intensity'] = v
-		}
-	});
+	Object.defineProperty(RedBaseLight.prototype, 'intensity', RedDefinePropertyInfo['intensity']);
 	Object.freeze(RedBaseLight)
 })();

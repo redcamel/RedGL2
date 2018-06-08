@@ -93,11 +93,11 @@ var RedPostEffect_FXAA;
 		this.updateTexture = function (lastFrameBufferTexture) {
 			this['diffuseTexture'] = lastFrameBufferTexture;
 		}
-		this['bind'] = RedPostEffectManager.prototype['bind'];
-		this['unbind'] = RedPostEffectManager.prototype['unbind'];
 		this.checkUniformAndProperty();
 		console.log(this);
 	}
 	RedPostEffect_FXAA.prototype = new RedBaseMaterial();
+	RedPostEffect_FXAA.prototype['bind'] = RedPostEffectManager.prototype['bind'];
+	RedPostEffect_FXAA.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
 	Object.freeze(RedPostEffect_FXAA);
 })();
