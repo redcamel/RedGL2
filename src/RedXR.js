@@ -11,7 +11,10 @@ var RedXR;
 					session.addEventListener('end', e => xrButton.setSession(null));
 					start(session);
 				}),
-				onEndSession: session => session.end()
+				onEndSession: session => {
+					document.querySelector('canvas').style.display = 'none'
+					session.end()
+				}
 			});
 			[canvas, xrButton.domElement].forEach(el => document.body.appendChild(el));
 			if ( navigator.xr ) {
@@ -21,6 +24,7 @@ var RedXR;
 			const start = session => {
 				const start = isOK => {
 					if ( !isOK ) return console.log('error');
+					canvas.style.display = 'block'
 					var camL = RedCamera()
 					var camR = RedCamera()
 					var renderer = RedRenderer(redGL)
@@ -29,12 +33,15 @@ var RedXR;
 					redGL.world = world
 					renderer.world = redGL.world;
 					camL.autoUpdateMatrix = camR.autoUpdateMatrix = false;
-					world.addView(RedView('left', scene, camL));
-					RedView('left').setSize('50%', '100%');
-					RedView('left').setLocation('0%', '0%');
-					world.addView(RedView('right', scene, camR));
-					RedView('right').setSize('50%', '100%');
-					RedView('right').setLocation('50%', '0%');
+					var tUUID = +RedGL.makeUUID()
+					var tLeftViewName = 'left' + tUUID
+					var tRightViewName = 'right' + tUUID
+					world.addView(RedView(tLeftViewName, scene, camL));
+					RedView(tLeftViewName).setSize('50%', '100%');
+					RedView(tLeftViewName).setLocation('0%', '0%');
+					world.addView(RedView('right' + tUUID, scene, camR));
+					RedView(tRightViewName).setSize('50%', '100%');
+					RedView(tRightViewName).setLocation('50%', '0%');
 					var resultObject = {
 						world: world,
 						scene: scene
