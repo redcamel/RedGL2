@@ -58,7 +58,7 @@ var RedXR;
 									cam.matrix = pose.getViewMatrix(view);
 								}
 								frameUpdater(t)
-								renderer.worldRender(redGL, t);
+								renderer.render(redGL, t);
 							}
 							session.requestAnimationFrame(onframe);
 						}

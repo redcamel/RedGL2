@@ -70,6 +70,29 @@ var RedRenderer;
 		/**DOC:
 		 {
 			 code:`METHOD`,
+			 title :`render`,
+			 description : `
+				 단일 프레임 렌더
+			 `,
+			 params : {
+				 redGL : [
+					 {type : "RedGL"}
+				 ],
+				 time : [
+					 {type : "Number"},
+					 'time'
+				 ]
+			 },
+			 return : 'void'
+		 }
+		 :DOC*/
+		render: function (redGL, time) {
+			this.worldRender(redGL, time);
+			this.world = redGL.world;
+		},
+		/**DOC:
+		 {
+			 code:`METHOD`,
 			 title :`stop`,
 			 description : `
 				 렌더 중지
@@ -679,7 +702,7 @@ var RedRenderer;
 					tCamera['update']()
 					tCamera = tCamera['camera']
 				}
-				if(tCamera['autoUpdateMatrix'])tCamera['update']()
+				if ( tCamera['autoUpdateMatrix'] ) tCamera['update']()
 				perspectiveMTX = tCamera['perspectiveMTX']
 				// view 에 적용할 카메라 퍼스펙티브를 계산
 				mat4.identity(perspectiveMTX);
