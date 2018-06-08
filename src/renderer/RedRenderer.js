@@ -496,11 +496,10 @@ var RedRenderer;
 				var tLocationInfo;
 				var tSystemUniformLocation;
 				var tLocation;
-				var tValue;
-				var tViewRect;
+				var tResolution;
 				var tMTX;
 				tMTX = mat4.create()
-				tViewRect = new Float32Array(2)
+				tResolution = new Float32Array(2)
 				return function (gl, effect, width, height, finalYn) {
 					// 최종메쉬의 재질을 현재 이펙트로 변경
 					tMaterial = tPostEffectMesh['_material'] = effect;
@@ -527,9 +526,9 @@ var RedRenderer;
 					tLocationInfo = tSystemUniformLocation['uResolution'];
 					tLocation = tLocationInfo['location'];
 					if ( tLocation ) {
-						tViewRect[0] = width;
-						tViewRect[1] = height;
-						gl.uniform2fv(tLocation, tViewRect);
+						tResolution[0] = width;
+						tResolution[1] = height;
+						gl.uniform2fv(tLocation, tResolution);
 					}
 					// 최종 드로잉일 경우 만 필요
 					if ( finalYn ) {
@@ -545,14 +544,13 @@ var RedRenderer;
 				var originFrameBufferTexture;
 				var lastFrameBufferTexture;
 				var setViewportScissorAndBaseUniform;
-				var setViewport
 				var pWidth, pHeight;
 				setViewportScissorAndBaseUniform = (function () {
 					var tWidth, tHeight;
-					return function (gl, tEffect, force) {
+					return function (gl, tEffect) {
 						tWidth = tEffect['frameBuffer']['width'];
 						tHeight = tEffect['frameBuffer']['height'];
-						if ( pWidth != tWidth || pHeight != tHeight || force ) {
+						if ( pWidth != tWidth || pHeight != tHeight ) {
 							gl.viewport(0, 0, tWidth, tHeight);
 							gl.scissor(0, 0, tWidth, tHeight);
 						}
@@ -952,6 +950,7 @@ var RedRenderer;
 								}
 							}
 						} else {
+							var t0
 							tUniformValue == undefined ? RedGLUtil.throwFunc('RedRenderer : Material에 ', tUniformLocationInfo['materialPropertyName'], '이 정의 되지않았습니다.') : 0;
 							tRenderType == 'float' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue) :
 								tRenderType == 'int' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue) :
