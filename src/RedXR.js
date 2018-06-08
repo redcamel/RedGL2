@@ -35,14 +35,12 @@ var RedXR;
 					world.addView(RedView('right', scene, camR));
 					RedView('right').setSize('50%', '100%');
 					RedView('right').setLocation('50%', '0%');
-
 					var resultObject = {
-						world : world,
-						scene : scene
+						world: world,
+						scene: scene
 					}
 					Object.freeze(resultObject)
-					if ( callback ) callback.call(redGL,resultObject)
-
+					if ( callback ) callback.call(redGL, resultObject)
 					session.baseLayer = new XRWebGLLayer(session, redGL.gl);
 					session.requestFrameOfReference('eyeLevel').then(frameOfRef => {
 						const onframe = (t, frame) => {

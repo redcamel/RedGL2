@@ -175,7 +175,7 @@ var RedRenderer;
 						tLocation = tLocationInfo['location'];
 						tUUID = tLocationInfo['_UUID'];
 						tViewRect = [viewRect[2], viewRect[3]]
-						tValueStr = getValueStr(tViewRect)
+						tValueStr = JSON.stringify(tViewRect)
 						if ( tLocation && cacheSystemUniform[tUUID] != tValueStr ) {
 							gl.uniform2fv(tLocation, tViewRect);
 							cacheSystemUniform[tUUID] = tValueStr
@@ -235,7 +235,7 @@ var RedRenderer;
 						tLocation = tLocationInfo['location'];
 						tValue = camera['matrix'];
 						tUUID = tLocationInfo['_UUID'];
-						tValueStr = getValueStr(tValue)
+						tValueStr = JSON.stringify(tValue)
 						if ( tLocation && cacheSystemUniform[tUUID] != tValueStr ) {
 							gl.uniformMatrix4fv(tLocation, false, tValue);
 							cacheSystemUniform[tUUID] = tValueStr
@@ -247,7 +247,7 @@ var RedRenderer;
 						tLocation = tLocationInfo['location'];
 						tValue = camera['perspectiveMTX'];
 						tUUID = tLocationInfo['_UUID'];
-						tValueStr = getValueStr(tValue)
+						tValueStr = JSON.stringify(tValue)
 						if ( tLocation && cacheSystemUniform[tUUID] != tValueStr ) {
 							gl.uniformMatrix4fv(tLocation, false, tValue);
 							cacheSystemUniform[tUUID] = tValueStr
@@ -263,7 +263,7 @@ var RedRenderer;
 						tLocation = tLocationInfo['location'];
 						tUUID = tLocationInfo['_UUID'];
 						tValue = tLightData['_color'];
-						tValueStr = getValueStr(tValue)
+						tValueStr = JSON.stringify(tValue)
 						if ( tLocation && cacheSystemUniform[tUUID] != tValueStr ) {
 							gl.uniform4fv(tLocation, tValue)
 							cacheSystemUniform[tUUID] = tValueStr
@@ -333,7 +333,7 @@ var RedRenderer;
 						tLocation = tLocationInfo['location'];
 						tUUID = tLocationInfo['_UUID'];
 						tValue = tDirectionnalPositionList;
-						tValueStr = getValueStr(tValue)
+						tValueStr = JSON.stringify(tValue)
 						if ( tLocation && cacheSystemUniform[tUUID] != tValueStr ) {
 							gl.uniform3fv(tLocation, tValue);
 							cacheSystemUniform[tUUID] = tValueStr
@@ -344,7 +344,7 @@ var RedRenderer;
 					tLocation = tLocationInfo['location'];
 					tUUID = tLocationInfo['_UUID'];
 					tValue = tColorList;
-					tValueStr = getValueStr(tValue)
+					tValueStr = JSON.stringify(tValue)
 					if ( tLocation && cacheSystemUniform[tUUID] != tValueStr ) {
 						gl.uniform4fv(tLocation, tValue);
 						cacheSystemUniform[tUUID] = tValueStr
@@ -354,7 +354,7 @@ var RedRenderer;
 					tLocation = tLocationInfo['location'];
 					tUUID = tLocationInfo['_UUID'];
 					tValue = tIntensityList;
-					tValueStr = getValueStr(tValue)
+					tValueStr = JSON.stringify(tValue)
 					if ( tLocation && cacheSystemUniform[tUUID] != tValueStr ) {
 						gl.uniform1fv(tLocation, tValue)
 						cacheSystemUniform[tUUID] = tValueStr
@@ -421,7 +421,7 @@ var RedRenderer;
 					tLocation = tLocationInfo['location'];
 					tUUID = tLocationInfo['_UUID'];
 					tValue = tPointPositionList;
-					tValueStr = getValueStr(tValue)
+					tValueStr = JSON.stringify(tValue)
 					if ( tLocation && cacheSystemUniform[tUUID] != tValueStr ) {
 						gl.uniform3fv(tLocation, tValue);
 						cacheSystemUniform[tUUID] = tValueStr
@@ -431,7 +431,7 @@ var RedRenderer;
 					tLocation = tLocationInfo['location'];
 					tUUID = tLocationInfo['_UUID'];
 					tValue = tColorList;
-					tValueStr = getValueStr(tValue)
+					tValueStr = JSON.stringify(tValue)
 					if ( tLocation && cacheSystemUniform[tUUID] != tValueStr ) {
 						gl.uniform4fv(tLocation, tValue);
 						cacheSystemUniform[tUUID] = tValueStr
@@ -441,7 +441,7 @@ var RedRenderer;
 					tLocation = tLocationInfo['location'];
 					tUUID = tLocationInfo['_UUID'];
 					tValue = tIntensityList;
-					tValueStr = getValueStr(tValue)
+					tValueStr = JSON.stringify(tValue)
 					if ( tLocation && cacheSystemUniform[tUUID] != tValueStr ) {
 						gl.uniform1fv(tLocation, tValue)
 						cacheSystemUniform[tUUID] = tValueStr
@@ -451,7 +451,7 @@ var RedRenderer;
 					tLocation = tLocationInfo['location'];
 					tUUID = tLocationInfo['_UUID'];
 					tValue = tRadiusList;
-					tValueStr = getValueStr(tValue)
+					tValueStr = JSON.stringify(tValue)
 					if ( tLocation && cacheSystemUniform[tUUID] != tValueStr ) {
 						gl.uniform1fv(tLocation, tValue)
 						cacheSystemUniform[tUUID] = tValueStr
@@ -772,14 +772,6 @@ var RedRenderer;
 		var tPrevIndexBuffer_UUID;
 		var tPrevInterleaveBuffer_UUID;
 		var tPrevSamplerIndex;
-		var getArrayDataStr = function (v) {
-			var t0 = [];
-			var i;
-			i = v.length
-			while ( i-- ) t0[i] = v[i]
-			t0 = t0.join(',')
-			return t0
-		}
 		draw = function (redGL,
 		                 gl,
 		                 children,
@@ -963,11 +955,8 @@ var RedRenderer;
 							tUniformValue == undefined ? RedGLUtil.throwFunc('RedRenderer : Material에 ', tUniformLocationInfo['materialPropertyName'], '이 정의 되지않았습니다.') : 0;
 							tRenderType == 'float' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue) :
 								tRenderType == 'int' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue) :
-									tRenderType == 'bool' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
-										// : tRenderType == 'vec' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue)
-										//TODO: 이걸해결해야하는군..
-										:
-										tRenderType == 'vec' ? gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue) :
+									tRenderType == 'bool' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue) :
+										tRenderType == 'vec' ? gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tUniformValue) :
 											tRenderType == 'mat' ? gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, false, tUniformValue) :
 												RedGLUtil.throwFunc('RedRenderer : 처리할수없는 타입입니다.', 'tRenderType -', tRenderType)
 						}
@@ -1069,7 +1058,9 @@ var RedRenderer;
 				}
 				/////////////////////////////////////////////////////////////////////////
 				/////////////////////////////////////////////////////////////////////////
-				if ( tGeometry ) gl.uniformMatrix4fv(tSystemUniformGroup['uMMatrix']['location'], false, tMVMatrix)
+				if ( tGeometry ) {
+					gl.uniformMatrix4fv(tSystemUniformGroup['uMMatrix']['location'], false, tMVMatrix)
+				}
 				/////////////////////////////////////////////////////////////////////////
 				/////////////////////////////////////////////////////////////////////////
 				// 노말매트릭스를 사용할경우
