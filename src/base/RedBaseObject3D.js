@@ -201,6 +201,7 @@ var RedBaseObject3D;
 		 }
 		 :DOC*/
 		this['matrix'] = mat4.create();
+		this['autoUpdateMatrix'] = true
 		/**DOC:
 		 {
 			title :`normalMatrix`,

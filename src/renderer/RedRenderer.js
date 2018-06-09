@@ -965,7 +965,7 @@ var RedRenderer;
 				/////////////////////////////////////////////////////////////////////////
 				// tMVMatrix
 				// tMVMatrix 초기화
-				if ( !tMesh['skeletonYn'] ) {
+				if (tMesh['autoUpdateMatrix']) {
 					tMVMatrix[0] = 1, tMVMatrix[1] = 0, tMVMatrix[2] = 0, tMVMatrix[3] = 0,
 						tMVMatrix[4] = 0, tMVMatrix[5] = 1, tMVMatrix[6] = 0, tMVMatrix[7] = 0,
 						tMVMatrix[8] = 0, tMVMatrix[9] = 0, tMVMatrix[10] = 1, tMVMatrix[11] = 0,
