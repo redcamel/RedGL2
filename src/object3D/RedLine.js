@@ -83,6 +83,11 @@ var RedLine;
 			indexData.push(t)
 			this['upload']()
 		}
+		this['removeAllPoint'] = function(){
+			interleaveData.length= 0
+			indexData.length= 0
+			this['upload']()
+		}
 		/**DOC:
 		 {
 			 title :`upload`,
