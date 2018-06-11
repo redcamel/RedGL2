@@ -25,23 +25,23 @@ var RedTestMaterial;
 			/* @preserve
 			 varying vec4 vColor;
 			 uniform float uFloatTest;
-			 uniform float uFloatTest2[10];
+			 uniform float uFloatTest2[5];
 			 uniform int uIntTest;
-			 uniform int uIntTest2[10];
+			 uniform int uIntTest2[5];
 			 uniform vec4 uVec4Test;
 			 uniform mat4 uMat4Test;
 			 void main(void) {
-			 vColor = aVertexColor;
-			 vColor.r= sin(uTime*0.01);
-			 uFloatTest;
-			 uFloatTest2;
-			 uIntTest;
-			 uIntTest2;
-			 uVec4Test;
-			 uMat4Test;
-			 uResolution;
-			 gl_PointSize = aPointSize;
-			 gl_Position = uPMatrix * uCameraMatrix * uMMatrix * vec4(aVertexPosition, 1.0);
+				 vColor = aVertexColor;
+				 vColor.r= sin(uTime*0.01);
+				 uFloatTest;
+				 uFloatTest2[0];
+				 uIntTest;
+				 uIntTest2[0];
+				 uVec4Test;
+				 uMat4Test;
+				 uResolution;
+				 gl_PointSize = aPointSize;
+				 gl_Position = uPMatrix * uCameraMatrix * uMMatrix * vec4(aVertexPosition, 1.0);
 			 }
 			 */
 		}
