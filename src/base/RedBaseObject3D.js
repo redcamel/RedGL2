@@ -219,6 +219,7 @@ var RedBaseObject3D;
 		 }
 		 :DOC*/
 		this['children'] = []
+		this['sprite3DYn'] =false
 		this['_geometry'] = null;
 		Object.defineProperty(this, 'geometry', RedDefinePropertyInfo['geometry']);
 		this['_material'] = null;

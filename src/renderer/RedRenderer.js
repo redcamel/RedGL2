@@ -21,13 +21,13 @@ var RedRenderer;
 		this['_tickKey'] = null;
 		this['_callback'] = null;
 		this['_UUID'] = RedGL['makeUUID']();
-		this['renderInfo'] = {}
-		this['cacheUniformInfo'] = []
-		this['cacheAttrInfo'] = []
-		this['cacheBySamplerIndex'] = []
-		this['cacheState'] = []
-		this['renderDebuger'] = RedRenderDebuger()
-		console.log(this)
+		this['renderInfo'] = {};
+		this['cacheUniformInfo'] = [];
+		this['cacheAttrInfo'] = [];
+		this['cacheBySamplerIndex'] = [];
+		this['cacheState'] = [];
+		this['renderDebuger'] = RedRenderDebuger();
+		console.log(this);
 	};
 	RedRenderer.prototype = {
 		/**DOC:
@@ -62,9 +62,9 @@ var RedRenderer;
 				if ( !(redGL.world instanceof RedWorld) ) RedGLUtil.throwFunc('RedWorld Instance만 허용');
 				self = this;
 				self.world = redGL.world;
-				tRedGL = redGL
+				tRedGL = redGL;
 				self['_tickKey'] = requestAnimationFrame(tick);
-				self['_callback'] = callback
+				self['_callback'] = callback;
 			}
 		})(),
 		/**DOC:
@@ -87,6 +87,7 @@ var RedRenderer;
 		 }
 		 :DOC*/
 		render: function (redGL, time) {
+			if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedGL Instance만 허용');
 			this.worldRender(redGL, time);
 			this.world = redGL.world;
 		},
@@ -100,9 +101,7 @@ var RedRenderer;
 			 return : 'void'
 		 }
 		 :DOC*/
-		stop: function () {
-			cancelAnimationFrame(this['_tickKey'])
-		}
+		stop: function () { cancelAnimationFrame(this['_tickKey']) }
 	};
 	// 캐시관련
 	var prevProgram_UUID;
@@ -657,7 +656,7 @@ var RedRenderer;
 			glInitialize(gl);
 			// console.log("worldRender", v['key'], t0)
 			self['renderInfo'] = {}
-			this['cacheAttrInfo'].length = 0
+			self['cacheAttrInfo'].length = 0
 			self['world']['_viewList'].forEach(function (tView) {
 				///////////////////////////////////
 				// view의 위치/크기결정
@@ -668,7 +667,6 @@ var RedRenderer;
 				tViewRect[3] = tView['_height'];
 				tCamera = tView['camera'];
 				tScene = tView['scene']
-				// tCamera['updateMatrix']()
 				// 위치/크기의 % 여부를 파싱
 				valueParser(tViewRect);
 				//
@@ -782,14 +780,12 @@ var RedRenderer;
 		                 tCacheState,
 		                 parentMTX,
 		                 subSceneMaterial) {
-			var tMesh;
-			var k, i, i2;
+			var i, i2;
 			// 오쏘고날 스케일 비율
 			var orthographicYnScale = orthographicYn ? 1 : 1
 			//
 			var BYTES_PER_ELEMENT;
-			;
-			var CONVERT_RADIAN
+			var CONVERT_RADIAN;
 			//
 			var tMesh;
 			var tGeometry;
@@ -804,7 +800,7 @@ var RedRenderer;
 			var tMVMatrix, tNMatrix
 			var tUUID, noChangeUniform;
 			var tSamplerIndex;
-			var tSpriteYn;
+			var tSprite3DYn;
 			// matix 관련
 			var a,
 				aSx, aSy, aSz, aCx, aCy, aCz, tRx, tRy, tRz,
@@ -813,7 +809,6 @@ var RedRenderer;
 				b00, b01, b02, b10, b11, b12, b20, b21, b22,
 				aX, aY, aZ,
 				inverse_c, inverse_d, inverse_e, inverse_g, inverse_f, inverse_h, inverse_i, inverse_j, inverse_k, inverse_l, inverse_n, inverse_o, inverse_A, inverse_m, inverse_p, inverse_r, inverse_s, inverse_B, inverse_t, inverse_u, inverse_v, inverse_w, inverse_x, inverse_y, inverse_z, inverse_C, inverse_D, inverse_E, inverse_q;
-			var eyex, eyey, eyez, upx, upy, upz, z0, z1, z2, targetToLength, x0, x1, x2
 			// sin,cos 관련
 			var SIN, COS, tRadian, CPI, CPI2, C225, C127, C045, C157;
 			//////////////// 변수값 할당 ////////////////
@@ -834,7 +829,7 @@ var RedRenderer;
 				tMVMatrix = tMesh['matrix']
 				tNMatrix = tMesh['normalMatrix']
 				tGeometry = tMesh['_geometry']
-				tSpriteYn = tMesh instanceof RedSprite3D
+				tSprite3DYn = tMesh['sprite3DYn']
 				if ( tGeometry ) {
 					tMaterial = subSceneMaterial ? subSceneMaterial : tMesh['_material']
 					prevProgram_UUID == tMaterial['program']['_UUID'] ? 0 : gl.useProgram(tMaterial['program']['webglProgram'])
@@ -950,7 +945,6 @@ var RedRenderer;
 								}
 							}
 						} else {
-							var t0
 							tUniformValue == undefined ? RedGLUtil.throwFunc('RedRenderer : Material에 ', tUniformLocationInfo['materialPropertyName'], '이 정의 되지않았습니다.') : 0;
 							tRenderType == 'float' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue) :
 								tRenderType == 'int' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue) :
@@ -965,7 +959,7 @@ var RedRenderer;
 				/////////////////////////////////////////////////////////////////////////
 				// tMVMatrix
 				// tMVMatrix 초기화
-				if (tMesh['autoUpdateMatrix']) {
+				if ( tMesh['autoUpdateMatrix'] ) {
 					tMVMatrix[0] = 1, tMVMatrix[1] = 0, tMVMatrix[2] = 0, tMVMatrix[3] = 0,
 						tMVMatrix[4] = 0, tMVMatrix[5] = 1, tMVMatrix[6] = 0, tMVMatrix[7] = 0,
 						tMVMatrix[8] = 0, tMVMatrix[9] = 0, tMVMatrix[10] = 1, tMVMatrix[11] = 0,
@@ -978,7 +972,7 @@ var RedRenderer;
 						a[14] = a[2] * aX + a[6] * aY + a[10] * aZ + a[14],
 						a[15] = a[3] * aX + a[7] * aY + a[11] * aZ + a[15],
 						// tMVMatrix rotate
-						tSpriteYn ?
+						tSprite3DYn ?
 							(tRx = 0 * CONVERT_RADIAN, tRy = 0 * CONVERT_RADIAN, tRz = 0) :
 							(tRx = tMesh['rotationX'] * CONVERT_RADIAN, tRy = tMesh['rotationY'] * CONVERT_RADIAN, tRz = tMesh['rotationZ'] * CONVERT_RADIAN),
 						/////////////////////////
@@ -1134,7 +1128,7 @@ var RedRenderer;
 					}
 					if ( tSystemUniformGroup['uSprite3DYn']['location'] ) {
 						tUUID = tSystemUniformGroup['uSprite3DYn']['_UUID']
-						tUniformValue = tSpriteYn
+						tUniformValue = tSprite3DYn
 						if ( tCacheUniformInfo[tUUID] != tUniformValue ) {
 							gl[tSystemUniformGroup['uSprite3DYn']['renderMethod']](tSystemUniformGroup['uSprite3DYn']['location'], tUniformValue)
 							tCacheUniformInfo[tUUID] = tUniformValue

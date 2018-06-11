@@ -52,6 +52,7 @@ var RedSprite3D;
 		 }
 		 :DOC*/
 		this['perspectiveScale'] = true
+		this['sprite3DYn'] = true
 		this['useCullFace'] = false
 		this['_UUID'] = RedGL['makeUUID']();
 	}
