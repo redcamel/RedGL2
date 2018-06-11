@@ -199,7 +199,8 @@ var RedPostEffectManager;
 						tUUID = tLocationInfo['_UUID']
 						if ( tLocation ) {
 							mat4.ortho(
-								tPerspectiveMTX, -0.5, // left
+								tPerspectiveMTX,
+								-0.5, // left
 								0.5, // right
 								-0.5, // bottom
 								0.5, // top,
@@ -328,10 +329,10 @@ var RedPostEffectManager;
 					// 프레임 버퍼 정보를 캐싱
 					lastFrameBufferTexture = originFrameBufferTexture = self['frameBuffer']['texture'];
 					// 최종결과는 드로잉버퍼사이즈로 한다.
-					// self['frameBuffer']['width'] = gl.drawingBufferWidth
-					// self['frameBuffer']['height'] = gl.drawingBufferHeight
-					self['frameBuffer']['width'] = tViewRect[2]
-					self['frameBuffer']['height'] = tViewRect[3]
+					self['frameBuffer']['width'] = gl.drawingBufferWidth
+					self['frameBuffer']['height'] = gl.drawingBufferHeight
+					// self['frameBuffer']['width'] = tViewRect[2]
+					// self['frameBuffer']['height'] = tViewRect[3]
 					// 포스트 이펙트를 돌면서 갱신해나간다.
 					tEffectList = self['postEffectList'].concat();
 					// 안티알리어싱 모드가 적용되어있으면 추가한다.
