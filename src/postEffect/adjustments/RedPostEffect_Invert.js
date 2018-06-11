@@ -6,8 +6,8 @@ var RedPostEffect_Invert;
 	vSource = function () {
 		/* @preserve
 		 void main(void) {
-		 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
-		 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
+			 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
+			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
 		 }
 		 */
 	}
@@ -17,11 +17,11 @@ var RedPostEffect_Invert;
 		 uniform sampler2D uDiffuseTexture;
 
 		 void main(void) {
-		 vec4 finalColor = texture2D(uDiffuseTexture, vTexcoord);
-		 finalColor.r = 1.0 - finalColor.r;
-		 finalColor.g = 1.0 - finalColor.g;
-		 finalColor.b = 1.0 - finalColor.b;
-		 gl_FragColor = finalColor;
+			 vec4 finalColor = texture2D(uDiffuseTexture, vTexcoord);
+			 finalColor.r = 1.0 - finalColor.r;
+			 finalColor.g = 1.0 - finalColor.g;
+			 finalColor.b = 1.0 - finalColor.b;
+			 gl_FragColor = finalColor;
 		 }
 		 */
 	}

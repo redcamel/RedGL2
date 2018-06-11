@@ -1,0 +1,53 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>다중뷰</title>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
+    />
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+    </style>
+    <script src="https://immersive-web.github.io/webxr-samples/js/webxr-button.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/webxr-polyfill@latest/build/webxr-polyfill.js"></script>
+    <script src="dat.gui.min.js"></script>
+    <script src="baseTestUI.js"></script>
+    <script src="../release/RedGL.min.js"></script>
+</head>
+
+<body>
+<canvas id="test" style="border: none;background:red"></canvas>
+<script>
+	var t = document.getElementById('test')
+	document.body.appendChild(t)
+	var testMesh
+	RedXR(t,
+		function (v) {
+			console.log(this)
+			console.log(v)
+			testMesh = RedMesh(this, RedSphere(this), RedColorMaterial(this))
+			testMesh.z = -10
+			testMesh.drawMode = this.gl.POINTS
+			testMesh.pointSize = 5
+			v['scene'].addChild(testMesh)
+			v['scene']['postEffectManager'].addEffect(RedPostEffect_Gray(this))
+		},
+		function (time) {
+//			console.log(time)
+			testMesh.rotationX += 1
+			testMesh.rotationY += 1
+			testMesh.rotationZ += 1
+		}
+	)
+</script>
+</body>
+
+</html>

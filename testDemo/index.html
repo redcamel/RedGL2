@@ -314,7 +314,7 @@
 			testLine.rotationZ = Math.random() * 360
 			testLine.x = 500
 			testLine.y = 300
-			testLine.upload()
+
 			tScene2D.addChild(testLine)
 		}
 		JsonModelLoader(this, 'testJsonModel', '../asset/teapot.json', function (interleaveBuffer, indexBuffer) {
@@ -335,7 +335,7 @@
 			testMaterial['floatTest'] = time
 			interleaveData[0] = Math.sin(time / 1000) * 3
 			interleaveData[2] = Math.cos(time / 1000) * 3
-			// testInterleaveBuffer.upload(interleaveData)
+			 testInterleaveBuffer.upload(interleaveData)
 			i = tScene3D.children.length
 			while ( i-- ) {
 				testMesh = tScene3D.children[i]

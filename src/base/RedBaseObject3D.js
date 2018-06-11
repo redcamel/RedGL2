@@ -100,7 +100,7 @@ var RedBaseObject3D;
 			 return : 'gl 상수'
 		 }
 		 :DOC*/
-		this['blendSrc'] = gl.ONE
+		this['blendSrc'] = gl.SRC_ALPHA
 		/**DOC:
 		 {
 			 title :`blendDst`,
@@ -201,6 +201,7 @@ var RedBaseObject3D;
 		 }
 		 :DOC*/
 		this['matrix'] = mat4.create();
+		this['autoUpdateMatrix'] = true
 		/**DOC:
 		 {
 			title :`normalMatrix`,
@@ -218,6 +219,7 @@ var RedBaseObject3D;
 		 }
 		 :DOC*/
 		this['children'] = []
+		this['sprite3DYn'] =false
 		this['_geometry'] = null;
 		Object.defineProperty(this, 'geometry', RedDefinePropertyInfo['geometry']);
 		this['_material'] = null;

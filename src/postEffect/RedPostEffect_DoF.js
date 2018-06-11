@@ -7,10 +7,9 @@ var RedPostEffect_DoF;
 		/* @preserve
 
 		 void main(void) {
-		 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
-		 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
-
-		 }
+			 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
+			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
+         }
 		 */
 	}
 	fSource = function () {
@@ -19,19 +18,14 @@ var RedPostEffect_DoF;
 		 uniform sampler2D uDiffuseTexture;
 		 uniform sampler2D uBlurTexture;
 		 uniform sampler2D uDepthTexture;
-
-
-
 		 uniform float uDistance;
 		 void main() {
-		 vec4 finalColor = texture2D(uDiffuseTexture, vTexcoord);
-		 vec4 blurColor = texture2D(uBlurTexture, vTexcoord);
-		 vec4 depthColor = texture2D(uDepthTexture, vTexcoord);
-		 finalColor.rgb *= (depthColor.r);
-		 blurColor.rgb *= (1.0-depthColor.r);
-		 gl_FragColor =  (finalColor + blurColor) ;
-
-
+			 vec4 finalColor = texture2D(uDiffuseTexture, vTexcoord);
+			 vec4 blurColor = texture2D(uBlurTexture, vTexcoord);
+			 vec4 depthColor = texture2D(uDepthTexture, vTexcoord);
+			 finalColor.rgb *= (depthColor.r);
+			 blurColor.rgb *= (1.0-depthColor.r);
+			 gl_FragColor =  (finalColor + blurColor) ;
 		 }
 		 */
 	}
@@ -90,6 +84,7 @@ var RedPostEffect_DoF;
 				}
 			}
 		})());
+		this['focusLength'] = 15
 		/**DOC:
 		 {
 			 title :`blur`,

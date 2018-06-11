@@ -2,7 +2,7 @@
 var RedProgram;
 (function () {
 	var makeProgram, updateLocation;
-	var samplerIndex;
+	var samplerIndex,maxSamplerIndex;
 	makeProgram = (function () {
 		var program;
 		var tVMap, tFMap, k;
@@ -13,9 +13,9 @@ var RedProgram;
 			tVMap = vs['parseData']['uniform']['map'];
 			tFMap = fs['parseData']['uniform']['map'];
 			for ( k in tVMap ) if ( tFMap[k] ) RedGLUtil.throwFunc("vertexShader와 fragmentShader에 중복된 유니폼 선언이 존재함.", "중복선언 : " + k);
-			gl.linkProgram(program);;
-			if ( !gl.getProgramParameter(program, gl.LINK_STATUS) ) RedGLUtil.throwFunc("RedProgram : 프로그램을 초기화 할 수 없습니다.",gl.getProgramInfoLog(program));
-
+			gl.linkProgram(program);
+			;
+			if ( !gl.getProgramParameter(program, gl.LINK_STATUS) ) RedGLUtil.throwFunc("RedProgram : 프로그램을 초기화 할 수 없습니다.", gl.getProgramInfoLog(program));
 			// const numUniforms = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS);
 			// for (let i = 0; i < numUniforms; ++i) {
 			// 	const info = gl.getActiveUniform(program, i);
@@ -68,22 +68,22 @@ var RedProgram;
 							t0['samplerIndex'] = samplerIndex
 							samplerIndex++
 							//TODO: IOS가 아닐경우 늘리자
-							if ( samplerIndex == 8 ) samplerIndex = 2
+							if ( samplerIndex == maxSamplerIndex ) samplerIndex = 2
 							break
 						case 'samplerCube':
 							tRenderType = 'samplerCube';
 							tRenderMethod = 'uniform1i';
 							t0['samplerIndex'] = samplerIndex
 							samplerIndex++
-							if ( samplerIndex == 8 ) samplerIndex = 2
+							if ( samplerIndex == maxSamplerIndex ) samplerIndex = 2
 							break
 						case 'float':
 							tRenderType = 'float';
-							tRenderMethod = 'uniform1f';
+							tRenderMethod = arrayNum ? 'uniform1fv' : 'uniform1f';
 							break
 						case 'int':
 							tRenderType = 'int';
-							tRenderMethod = 'uniform1i';
+							tRenderMethod = arrayNum ? 'uniform1iv' : 'uniform1i';
 							break
 						case 'mat4':
 							tRenderType = 'mat';
@@ -135,7 +135,7 @@ var RedProgram;
 							break
 						case 'bool':
 							tRenderType = 'bool';
-							tRenderMethod = 'uniform1i';
+							tRenderMethod = arrayNum ? 'uniform1iv' : 'uniform1i';
 							break
 					}
 					t0['renderType'] = tRenderType
@@ -247,6 +247,7 @@ var RedProgram;
 		// 쉐이더 로케이션 찾기
 		tGL.useProgram(this['webglProgram'])
 		samplerIndex = 2
+		maxSamplerIndex = redGL._detect['MAX_COMBINED_TEXTURE_IMAGE_UNITS']
 		updateLocation(this, tGL, vertexShader);
 		updateLocation(this, tGL, fragmentShader);
 		this['_UUID'] = RedGL['makeUUID']();

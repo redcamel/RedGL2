@@ -133,6 +133,7 @@ var RedCamera;
 		 }
 		 :DOC*/
 		this['perspectiveMTX'] = mat4.create();
+		this['autoUpdateMatrix'] = true
 		this['_UUID'] = RedGL['makeUUID']();
 	};
 	/**DOC:

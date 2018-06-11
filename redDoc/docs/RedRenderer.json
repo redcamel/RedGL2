@@ -8,6 +8,25 @@
   },
   {
     "code": "METHOD",
+    "title": "render",
+    "description": "\n단일 프레임 렌더\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ],
+      "time": [
+        {
+          "type": "Number"
+        },
+        "time"
+      ]
+    },
+    "return": "void"
+  },
+  {
+    "code": "METHOD",
     "title": "start",
     "description": "\n렌더 시작\n",
     "params": {

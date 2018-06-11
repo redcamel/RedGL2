@@ -6,9 +6,9 @@ var RedPostEffect_Gray;
 	vSource = function () {
 		/* @preserve
 		 void main(void) {
-		 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
-		 vResolution = uResolution;
-		 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
+			 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
+			 vResolution = uResolution;
+			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
 		 }
 		 */
 	}
@@ -17,9 +17,9 @@ var RedPostEffect_Gray;
 		 precision mediump float;
 		 uniform sampler2D uDiffuseTexture;
 		 void main(void) {
-		 vec4 finalColor = texture2D(uDiffuseTexture, vTexcoord);
-		 highp float gray = (finalColor.r  + finalColor.g + finalColor.b)/3.0;
-		 gl_FragColor = vec4( gray, gray, gray, 1.0);
+			 vec4 finalColor = texture2D(uDiffuseTexture, vTexcoord);
+			 highp float gray = (finalColor.r  + finalColor.g + finalColor.b)/3.0;
+			 gl_FragColor = vec4( gray, gray, gray, 1.0);
 		 }
 		 */
 	}

@@ -44,8 +44,5 @@ var RedPointUnit;
 		this['drawMode'] = tGL.POINTS
 	}
 	RedPointUnit.prototype = new RedBaseContainer()
-	RedPointUnit.prototype['update'] = function () {
-		//TODO
-	}
 	Object.freeze(RedPointUnit);
 })();

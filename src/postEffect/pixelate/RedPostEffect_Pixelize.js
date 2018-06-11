@@ -6,9 +6,9 @@ var RedPostEffect_Pixelize;
 	vSource = function () {
 		/* @preserve
 		 void main(void) {
-		 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
-		 vResolution = uResolution;
-		 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
+			 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
+			 vResolution = uResolution;
+			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
 		 }
 		 */
 	}
@@ -16,18 +16,18 @@ var RedPostEffect_Pixelize;
 		/* @preserve
 		 precision mediump float;
 		 uniform sampler2D uDiffuseTexture;
-		 uniform float uWidth;
-		 uniform float uHeight;
+		 uniform float u_width;
+		 uniform float u_height;
 		 void main(void) {
-		 vec4 finalColor;
-		 float dx = 1.0/vResolution.x * uWidth;
-		 float dy = 1.0/vResolution.y * uHeight;
-		 vec2 coord = vec2(
-		 dx * (floor(vTexcoord.x / dx) + 0.5),
-		 dy * (floor(vTexcoord.y / dy) + 0.5)
-		 );
-		 finalColor = texture2D(uDiffuseTexture, coord);
-		 gl_FragColor = finalColor;
+			 vec4 finalColor;
+			 float dx = 1.0/vResolution.x * u_width;
+			 float dy = 1.0/vResolution.y * u_height;
+			 vec2 coord = vec2(
+				 dx * (floor(vTexcoord.x / dx) + 0.5),
+				 dy * (floor(vTexcoord.y / dy) + 0.5)
+			 );
+			 finalColor = texture2D(uDiffuseTexture, coord);
+			 gl_FragColor = finalColor;
 		 }
 		 */
 	}
@@ -61,6 +61,7 @@ var RedPostEffect_Pixelize;
 			 return : 'Number'
 		 }
 		 :DOC*/
+		this['_width'] = null;
 		this['width'] = 5;
 		/**DOC:
 		 {
@@ -72,6 +73,7 @@ var RedPostEffect_Pixelize;
 			 return : 'Number'
 		 }
 		 :DOC*/
+		this['_height'] = null;
 		this['height'] = 5;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
@@ -86,5 +88,7 @@ var RedPostEffect_Pixelize;
 	RedPostEffect_Pixelize.prototype = new RedBaseMaterial();
 	RedPostEffect_Pixelize.prototype['bind'] = RedPostEffectManager.prototype['bind'];
 	RedPostEffect_Pixelize.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
+	Object.defineProperty(RedPostEffect_Pixelize.prototype, 'width', RedDefinePropertyInfo['width']);
+	Object.defineProperty(RedPostEffect_Pixelize.prototype, 'height', RedDefinePropertyInfo['height']);
 	Object.freeze(RedPostEffect_Pixelize);
 })();

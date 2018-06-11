@@ -6,8 +6,8 @@ var RedPostEffect_BrightnessContrast;
 	vSource = function () {
 		/* @preserve
 		 void main(void) {
-		 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
-		 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
+			 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
+			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
 		 }
 		 */
 	}
@@ -18,11 +18,11 @@ var RedPostEffect_BrightnessContrast;
 		 uniform float u_brightness;
 		 uniform float u_contrast;
 		 void main(void) {
-		 vec4 finalColor = texture2D(uDiffuseTexture, vTexcoord );
-		 if (u_contrast > 0.0) finalColor.rgb = (finalColor.rgb - 0.5) / (1.0 - u_contrast) + 0.5;
-		 else finalColor.rgb = (finalColor.rgb - 0.5) * (1.0 + u_contrast) + 0.5;
-		 finalColor.rgb += u_brightness;
-		 gl_FragColor = finalColor;
+			 vec4 finalColor = texture2D(uDiffuseTexture, vTexcoord );
+			 if (u_contrast > 0.0) finalColor.rgb = (finalColor.rgb - 0.5) / (1.0 - u_contrast) + 0.5;
+			 else finalColor.rgb = (finalColor.rgb - 0.5) * (1.0 + u_contrast) + 0.5;
+			 finalColor.rgb += u_brightness;
+			 gl_FragColor = finalColor;
 		 }
 		 */
 	}

@@ -2,6 +2,38 @@
 var RedDefinePropertyInfo;
 (function () {
 	RedDefinePropertyInfo = {
+		width: {
+			get: function () { return this['_width']; },
+			set: function (v) {
+				if ( typeof v != 'number' ) RedGLUtil.throwFunc('width : 숫자만 허용함.')
+				if ( v < 0 ) v = 0;
+				this['_width'] = v
+			}
+		},
+		height: {
+			get: function () { return this['_height']; },
+			set: function (v) {
+				if ( typeof v != 'number' ) RedGLUtil.throwFunc('height : 숫자만 허용함.')
+				if ( v < 0 ) v = 0;
+				this['_height'] = v
+			}
+		},
+		size: {
+			get: function () { return this['_size']; },
+			set: function (v) {
+				if ( typeof v != 'number' ) RedGLUtil.throwFunc('size : 숫자만 허용함.')
+				if ( v < 0 ) v = 0;
+				this['_size'] = v
+			}
+		},
+		intensity: {
+			get: function () { return this['_intensity']; },
+			set: function (v) {
+				if ( typeof v != 'number' ) RedGLUtil.throwFunc('intensity : 숫자만 허용함.')
+				if ( v < 0 ) v = 0;
+				this['_intensity'] = v
+			}
+		},
 		shininess: (function () {
 			return {
 				get: function () { return this['_shininess']; },

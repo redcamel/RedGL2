@@ -6,8 +6,8 @@ var RedPostEffect_BloomThreshold;
 	vSource = function () {
 		/* @preserve
 		 void main(void) {
-		 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
-		 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
+			 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
+			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
 		 }
 		 */
 	}
@@ -18,9 +18,9 @@ var RedPostEffect_BloomThreshold;
 		 uniform float u_threshold;
 
 		 void main() {
-		 vec4 finalColor = texture2D(uDiffuseTexture, vTexcoord);
-		 if(0.2126 * finalColor.r + 0.7152 * finalColor.g + 0.0722 * finalColor.b < u_threshold)  finalColor.r = finalColor.g = finalColor.b = 0.0;
-		 gl_FragColor = finalColor;
+			 vec4 finalColor = texture2D(uDiffuseTexture, vTexcoord);
+			 if(0.2126 * finalColor.r + 0.7152 * finalColor.g + 0.0722 * finalColor.b < u_threshold)  finalColor.r = finalColor.g = finalColor.b = 0.0;
+			 gl_FragColor = finalColor;
 		 }
 		 */
 	}

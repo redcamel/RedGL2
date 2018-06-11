@@ -48,6 +48,7 @@ var RedGL;
 		return function (canvas, option) {
 			initOption = JSON.parse(JSON.stringify(OPTION));
 			if ( option ) for ( i in option ) initOption[i] = option[i];
+
 			i = checkList.length;
 			while ( i-- ) {
 				if ( tContext = canvas.getContext(tKey = checkList[i], initOption) ) {
@@ -117,7 +118,7 @@ var RedGL;
 	RedGL = function (canvas, callback, option) {
 		var _tGL, _self;
 		var _fullMode, _renderScale;
-		if ( !(this instanceof RedGL) ) return new RedGL(canvas, callback);
+		if ( !(this instanceof RedGL) ) return new RedGL(canvas, callback,option);
 		if ( !(canvas instanceof Element) || (canvas['tagName'] != 'CANVAS') ) RedGLUtil.throwFunc('RedGL : Canvas Element만 허용');
 		_self = this;
 		_fullMode = true;
@@ -179,7 +180,7 @@ var RedGL;
 		this['_canvas'] = canvas;
 		this['_width'] = 500;
 		this['_height'] = 500;
-		this['gl'] = _tGL = getGL(canvas);
+		this['gl'] = _tGL = getGL(canvas,option);
 		if ( _tGL ) this['_detect'] = redGLDetect(_tGL, option);
 		this['_datas'] = {};
 		this['_UUID'] = RedGL['makeUUID']();
