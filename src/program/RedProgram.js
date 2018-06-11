@@ -3,6 +3,7 @@ var RedProgram;
 (function () {
 	var makeProgram, updateLocation;
 	var samplerIndex,maxSamplerIndex;
+	samplerIndex = 2
 	makeProgram = (function () {
 		var program;
 		var tVMap, tFMap, k;
@@ -138,6 +139,7 @@ var RedProgram;
 							tRenderMethod = arrayNum ? 'uniform1iv' : 'uniform1i';
 							break
 					}
+					console.log('samplerIndex',samplerIndex)
 					t0['renderType'] = tRenderType
 					t0['renderMethod'] = tRenderMethod
 					//
@@ -246,7 +248,6 @@ var RedProgram;
 		this['systemUniformLocation'] = [];
 		// 쉐이더 로케이션 찾기
 		tGL.useProgram(this['webglProgram'])
-		samplerIndex = 2
 		maxSamplerIndex = redGL._detect['MAX_COMBINED_TEXTURE_IMAGE_UNITS']
 		updateLocation(this, tGL, vertexShader);
 		updateLocation(this, tGL, fragmentShader);
