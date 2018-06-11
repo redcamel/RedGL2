@@ -318,6 +318,39 @@ RedGL(document.createElement('canvas'), function (v) {
 				// 유닛테스트
 				unit.run(tInfo['uniformType'] + '_' + tInfo['renderType'] + '_' + tInfo['renderMethod'] + '_' + getValueStr(returnValue) + '_' + getValueStr(returnValueArray))
 			}, 'float_float_uniform1f_1.5_-1.5'),
+			redTest("uniformType : float / renderType : float / renderMethod : uniform1fv", function (unit, title) {
+				var vSource, fSource;
+				vSource = function () {
+					/* @preserve
+					 uniform float uFloatTest[5];
+					 void main(void) {
+						 gl_Position = vec4(uFloatTest[0]);
+					 }
+					 */
+				}
+				fSource = function () {
+					/* @preserve
+					 precision mediump float;
+					 void main(void) {
+					    gl_FragColor = vec4(1.0);
+					 }
+					 */
+				};
+				vSource = RedGLUtil.getStrFromComment(vSource.toString());
+				fSource = RedGLUtil.getStrFromComment(fSource.toString());
+				var t0 = RedProgram(tRedGL, 'testShaderProgram' + RedGL.makeUUID(), vSource, fSource);
+				console.log(t0)
+				// 값리턴 테스트
+				var returnValue, returnValueArray;
+				var tInfo = t0['uniformLocation']['uFloatTest']
+				tRedGL.gl.useProgram(t0.webglProgram)
+				tRedGL.gl[tInfo['renderMethod']](tInfo['location'], [1.5])
+				returnValue = tRedGL.gl.getUniform(t0.webglProgram, tInfo['location'])
+				tRedGL.gl[tInfo['renderMethod']](tInfo['location'], [-1.5])
+				returnValueArray = tRedGL.gl.getUniform(t0.webglProgram, tInfo['location'])
+				// 유닛테스트
+				unit.run(tInfo['uniformType'] + '_' + tInfo['renderType'] + '_' + tInfo['renderMethod'] + '_' + getValueStr(returnValue) + '_' + getValueStr(returnValueArray))
+			}, 'float_float_uniform1fv_1.5_-1.5'),
 			redTest("uniformType : bool / renderType : bool  / renderMethod : uniform1i", function (unit, title) {
 				var vSource, fSource;
 				vSource = function () {
@@ -351,6 +384,39 @@ RedGL(document.createElement('canvas'), function (v) {
 				// 유닛테스트
 				unit.run(tInfo['uniformType'] + '_' + tInfo['renderType'] + '_' + tInfo['renderMethod'] + '_' + getValueStr(returnValue) + '_' + getValueStr(returnValueArray))
 			}, 'bool_bool_uniform1i_true_false'),
+			redTest("uniformType : bool / renderType : bool  / renderMethod : uniform1i", function (unit, title) {
+				var vSource, fSource;
+				vSource = function () {
+					/* @preserve
+					 uniform bool uBoolTest[4];
+					 void main(void) {
+					    if(uBoolTest[0]) gl_Position = vec4(1.0);
+					 }
+					 */
+				}
+				fSource = function () {
+					/* @preserve
+					 precision mediump float;
+					 void main(void) {
+					    gl_FragColor = vec4(1.0);
+					 }
+					 */
+				};
+				vSource = RedGLUtil.getStrFromComment(vSource.toString());
+				fSource = RedGLUtil.getStrFromComment(fSource.toString());
+				var t0 = RedProgram(tRedGL, 'testShaderProgram' + RedGL.makeUUID(), vSource, fSource);
+				console.log(t0)
+				// 값리턴 테스트
+				var returnValue, returnValueArray;
+				var tInfo = t0['uniformLocation']['uBoolTest']
+				tRedGL.gl.useProgram(t0.webglProgram)
+				tRedGL.gl[tInfo['renderMethod']](tInfo['location'], [true])
+				returnValue = tRedGL.gl.getUniform(t0.webglProgram, tInfo['location'])
+				tRedGL.gl[tInfo['renderMethod']](tInfo['location'], [false])
+				returnValueArray = tRedGL.gl.getUniform(t0.webglProgram, tInfo['location'])
+				// 유닛테스트
+				unit.run(tInfo['uniformType'] + '_' + tInfo['renderType'] + '_' + tInfo['renderMethod'] + '_' + getValueStr(returnValue) + '_' + getValueStr(returnValueArray))
+			}, 'bool_bool_uniform1iv_true_false'),
 			redTest("uniformType : vec2 / renderType : vec / renderMethod : uniform2fv", function (unit, title) {
 				var vSource, fSource;
 				vSource = function () {

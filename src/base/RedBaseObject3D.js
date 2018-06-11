@@ -100,7 +100,7 @@ var RedBaseObject3D;
 			 return : 'gl 상수'
 		 }
 		 :DOC*/
-		this['blendSrc'] = gl.ONE
+		this['blendSrc'] = gl.SRC_ALPHA
 		/**DOC:
 		 {
 			 title :`blendDst`,

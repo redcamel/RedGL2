@@ -160,7 +160,199 @@ var RedPostEffectManager;
 			return : 'void'
 		}
 		 :DOC*/
-		unbind: function (gl) { this['frameBuffer'].unbind(gl); }
+		unbind: function (gl) { this['frameBuffer'].unbind(gl); },
+		render: (function () {
+			var tQuadMesh;
+			var originFrameBufferTexture;
+			var lastFrameBufferTexture;
+			var setViewportScissorAndBaseUniform;
+			var prevWidth, prevHeight;
+			var tScene, tCamera, tViewRect, tWorldRect;
+			var draw;
+			var setSystemUniform;
+			var tCacheSystemUniformInfo;
+			setSystemUniform = (function () {
+				var tProgram;
+				var tLocationInfo;
+				var tSystemUniformLocation;
+				var tLocation;
+				var tUUID;
+				var tResolution;
+				var tPerspectiveMTX;
+				var tCameraMTX;
+				var tValueStr;
+				tPerspectiveMTX = mat4.create();
+				tCameraMTX = mat4.create();
+				tResolution = new Float32Array(2);
+				return function (gl, tCamera, effect, width, height, finalYn) {
+					// 최종메쉬의 재질을 현재 이펙트로 변경
+					tQuadMesh['_material'] = effect;
+					// 프로그램을 변경
+					tProgram = tQuadMesh['_material']['program']
+					gl.useProgram(tProgram['webglProgram'])
+					// 시스템 유니폼중 업데이트 해야할 목록 처리
+					tSystemUniformLocation = tProgram['systemUniformLocation'];
+					// 퍼스펙티브 매트릭스 처리
+					tLocationInfo = tSystemUniformLocation['uPMatrix'];
+					if ( tLocationInfo ) {
+						tLocation = tLocationInfo['location'];
+						tUUID = tLocationInfo['_UUID']
+						if ( tLocation ) {
+							mat4.ortho(
+								tPerspectiveMTX, -0.5, // left
+								0.5, // right
+								-0.5, // bottom
+								0.5, // top,
+								-tCamera['farClipping'],
+								tCamera['farClipping']
+							)
+							tValueStr = JSON.stringify(tPerspectiveMTX)
+							if ( tCacheSystemUniformInfo[tUUID] != tValueStr ) {
+								gl.uniformMatrix4fv(tLocation, false, tPerspectiveMTX);
+								tCacheSystemUniformInfo[tUUID] = tValueStr;
+							}
+						}
+					}
+					// 레졸루션 정보 처리
+					tLocationInfo = tSystemUniformLocation['uResolution'];
+					if ( tLocationInfo ) {
+						tLocation = tLocationInfo['location'];
+						tUUID = tLocationInfo['_UUID']
+						if ( tLocation ) {
+							tResolution[0] = width;
+							tResolution[1] = height;
+							tValueStr = JSON.stringify(tResolution)
+							if ( tCacheSystemUniformInfo[tUUID] != tValueStr ) {
+								gl.uniform2fv(tLocation, tResolution);
+								tCacheSystemUniformInfo[tUUID] = tValueStr;
+							}
+						}
+						// 최종 드로잉일 경우 만 필요
+						if ( finalYn ) {
+							// 카메라 매트릭스 처리
+							tLocationInfo = tSystemUniformLocation['uCameraMatrix'];
+							if ( tLocationInfo ) {
+								tLocation = tLocationInfo['location'];
+								tUUID = tLocationInfo['_UUID']
+								if ( tLocation ) {
+									tValueStr = JSON.stringify(tCameraMTX)
+									if ( tCacheSystemUniformInfo[tUUID] != tValueStr ) {
+										gl.uniformMatrix4fv(tLocation, false, tCameraMTX);
+										tCacheSystemUniformInfo[tUUID] = tValueStr;
+									}
+								}
+							}
+						}
+					}
+				}
+			})();
+			setViewportScissorAndBaseUniform = (function () {
+				var tWidth, tHeight;
+				return function (gl, tCamera, tEffect) {
+					tWidth = tEffect['frameBuffer']['width'];
+					tHeight = tEffect['frameBuffer']['height'];
+					if ( prevWidth != tWidth || prevHeight != tHeight ) {
+						gl.viewport(0, 0, tWidth, tHeight);
+						gl.scissor(0, 0, tWidth, tHeight);
+					}
+					// 해당 이펙트의 프레임버퍼 유니폼 정보 업데이트
+					setSystemUniform(gl, tCamera, tEffect, tWidth, tHeight)
+					prevWidth = tWidth
+					prevHeight = tHeight
+				}
+			})();
+			draw = function (redGL, effect, postEffectChildren, redScene, redRenderer, time, renderInfo) {
+				// console.log('Render Effect', v)
+				var tParentFrameBufferTexture;
+				var tSubFrameBufferInfo; // 서브에서 씬자체를 그려야할때 사용;
+				var tGL;
+				tGL = redGL.gl;
+				tSubFrameBufferInfo = effect['tSubFrameBufferInfo'];
+				// 이펙트 최종결과를 생성하기전 전처리 진행
+				if ( effect['process'] && effect['process'].length ) {
+					tParentFrameBufferTexture = lastFrameBufferTexture
+					effect['process'].forEach(function (effect) {
+						draw(redGL, effect, postEffectChildren, redScene, redRenderer, time, renderInfo)
+					})
+				}
+				// 이펙트 서브신버퍼를 사용한다면 그림
+				if ( tSubFrameBufferInfo ) {
+					tSubFrameBufferInfo['frameBuffer'].bind(tGL);
+					tGL.viewport(0, 0, tSubFrameBufferInfo['frameBuffer']['width'], tSubFrameBufferInfo['frameBuffer']['height']);
+					tGL.scissor(0, 0, tSubFrameBufferInfo['frameBuffer']['width'], tSubFrameBufferInfo['frameBuffer']['height']);
+					tGL.clear(tGL.COLOR_BUFFER_BIT | tGL.DEPTH_BUFFER_BIT);
+					redRenderer.sceneRender(redGL, tGL, tCamera['orthographicYn'], redScene['children'], time, renderInfo, tSubFrameBufferInfo['renderMaterial']);
+					tSubFrameBufferInfo['frameBuffer'].unbind(tGL);
+					prevWidth = tSubFrameBufferInfo['frameBuffer']['width']
+					prevHeight = tSubFrameBufferInfo['frameBuffer']['height']
+				}
+				// 이펙트 처리
+				if ( effect['frameBuffer'] ) {
+					setViewportScissorAndBaseUniform(tGL, tCamera, effect)
+					// 해당 이펙트의 프레임 버퍼를 바인딩
+					effect.bind(tGL);
+					// 해당 이펙트의 기본 텍스쳐를 지난 이펙트의 최종 텍스쳐로 업로드
+					effect.updateTexture(
+						lastFrameBufferTexture,
+						tParentFrameBufferTexture
+					);
+					// 해당 이펙트를 렌더링하고
+					redRenderer.sceneRender(redGL, tGL, true, postEffectChildren, time, renderInfo);
+					// 해당 이펙트의 프레임 버퍼를 언바인딩한다.
+					effect.unbind(tGL)
+					// 현재 이펙트를 최종 텍스쳐로 기록하고 다음 이펙트가 있을경우 활용한다.
+					lastFrameBufferTexture = effect['frameBuffer']['texture']
+					// console.log(effect)
+				}
+				// 서브 신버퍼에 프로세스 처리
+				if ( tSubFrameBufferInfo && tSubFrameBufferInfo['process'] ) {
+					tSubFrameBufferInfo['process'].forEach(function (effect) {
+						draw(redGL, effect, postEffectChildren, redScene, redRenderer, time, renderInfo)
+					})
+				}
+			};
+			return (function () {
+				var self;
+				var tEffectList;
+				return function (redGL, gl, redRenderer, redView, time, renderInfo) {
+					self = this;
+					prevWidth = null, prevHeight = null;
+					tScene = redView['scene'];
+					tCamera = redView['camera'] instanceof RedCamera ? redView['camera'] : redView['camera']['camera'];
+					tViewRect = redView['_viewRect'];
+					tWorldRect = redRenderer['worldRect']
+					tCacheSystemUniformInfo = redRenderer['cacheSystemUniformInfo']
+					// 포스트 이펙터 언바인딩
+					self.unbind(gl);
+					tQuadMesh = self['children'][0]
+					// 프레임 버퍼 정보를 캐싱
+					lastFrameBufferTexture = originFrameBufferTexture = self['frameBuffer']['texture'];
+					// 최종결과는 드로잉버퍼사이즈로 한다.
+					// self['frameBuffer']['width'] = gl.drawingBufferWidth
+					// self['frameBuffer']['height'] = gl.drawingBufferHeight
+					self['frameBuffer']['width'] = tViewRect[2]
+					self['frameBuffer']['height'] = tViewRect[3]
+					// 포스트 이펙트를 돌면서 갱신해나간다.
+					tEffectList = self['postEffectList'].concat();
+					// 안티알리어싱 모드가 적용되어있으면 추가한다.
+					if ( self['antialiasing'] ) tEffectList.push(self['antialiasing']);
+					// 이펙트 렌더
+					tEffectList.forEach(function (effect) {
+						draw(redGL, effect, self['children'], tScene, redRenderer, time, renderInfo)
+					})
+					// 이펙트가 존재한다면 최종 이펙트의 프레임버퍼 결과물을 최종으로 렌더링한다.
+					if ( lastFrameBufferTexture != originFrameBufferTexture ) {
+						self['_finalMaterial']['diffuseTexture'] = lastFrameBufferTexture;
+						gl.viewport(tViewRect[0], tWorldRect[3] - tViewRect[3] - tViewRect[1], tViewRect[2], tViewRect[3]);
+						gl.scissor(tViewRect[0], tWorldRect[3] - tViewRect[3] - tViewRect[1], tViewRect[2], tViewRect[3]);
+						// 최종 재질을 기준으로 필요한 기본 유니폼을 세팅한다.
+						setSystemUniform(gl, tCamera, self['_finalMaterial'], tViewRect[2], tViewRect[3], true)
+						redRenderer.sceneRender(redGL, gl, true, self['children'], time, renderInfo);
+					}
+					self['_finalMaterial']['diffuseTexture'] = self['frameBuffer']['texture'];
+				}
+			})();
+		})()
 	}
 	Object.freeze(RedPostEffectManager);
 })();

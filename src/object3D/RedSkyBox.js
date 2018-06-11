@@ -38,6 +38,7 @@ var RedSkyBox;
 		RedBaseObject3D['build'].call(this, redGL.gl)
 		this['geometry'] = RedBox(redGL);
 		this['material'] = RedSkyBoxMaterial(redGL, RedBitmapCubeTexture(redGL, srcList));
+		this['cullFace'] = redGL.gl.FRONT
 		this['_UUID'] = RedGL['makeUUID']();
 	}
 	RedSkyBox.prototype = new RedBaseObject3D();
