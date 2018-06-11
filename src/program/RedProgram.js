@@ -2,7 +2,7 @@
 var RedProgram;
 (function () {
 	var makeProgram, updateLocation;
-	var samplerIndex;
+	var samplerIndex,maxSamplerIndex;
 	makeProgram = (function () {
 		var program;
 		var tVMap, tFMap, k;
@@ -68,14 +68,14 @@ var RedProgram;
 							t0['samplerIndex'] = samplerIndex
 							samplerIndex++
 							//TODO: IOS가 아닐경우 늘리자
-							if ( samplerIndex == 8 ) samplerIndex = 2
+							if ( samplerIndex == maxSamplerIndex ) samplerIndex = 2
 							break
 						case 'samplerCube':
 							tRenderType = 'samplerCube';
 							tRenderMethod = 'uniform1i';
 							t0['samplerIndex'] = samplerIndex
 							samplerIndex++
-							if ( samplerIndex == 8 ) samplerIndex = 2
+							if ( samplerIndex == maxSamplerIndex ) samplerIndex = 2
 							break
 						case 'float':
 							tRenderType = 'float';
@@ -247,6 +247,7 @@ var RedProgram;
 		// 쉐이더 로케이션 찾기
 		tGL.useProgram(this['webglProgram'])
 		samplerIndex = 2
+		maxSamplerIndex = redGL._detect['MAX_COMBINED_TEXTURE_IMAGE_UNITS']
 		updateLocation(this, tGL, vertexShader);
 		updateLocation(this, tGL, fragmentShader);
 		this['_UUID'] = RedGL['makeUUID']();

@@ -135,7 +135,7 @@ var RedRenderer;
 			var tProgram;
 			var tSystemUniformGroup;
 			var gl;
-			var tLocationInfo, tLocation, tUUID, tViewRect;
+			var tLocationInfo, tLocation, tUUID;
 			var tValueStr;
 			var tDirectionalPositionList, tColorList, tIntensityList;
 			var tPointPositionList, tRadiusList;
@@ -635,9 +635,9 @@ var RedRenderer;
 							}
 						} else {
 							tUniformValue == undefined ? RedGLUtil.throwFunc('RedRenderer : Material에 ', tUniformLocationInfo['materialPropertyName'], '이 정의 되지않았습니다.') : 0;
-							tRenderType == 'float' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue) :
-								tRenderType == 'int' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue) :
-									tRenderType == 'bool' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue) :
+							tRenderType == 'float' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue.length ? 0 : tUniformValue) :
+								tRenderType == 'int' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue.length ? 0 : tUniformValue) :
+									tRenderType == 'bool' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheUniformInfo[tUUID] = tUniformValue.length ? 0 : tUniformValue) :
 										tRenderType == 'vec' ? gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tUniformValue) :
 											tRenderType == 'mat' ? gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, false, tUniformValue) :
 												RedGLUtil.throwFunc('RedRenderer : 처리할수없는 타입입니다.', 'tRenderType -', tRenderType)
@@ -746,7 +746,8 @@ var RedRenderer;
 				/////////////////////////////////////////////////////////////////////////
 				/////////////////////////////////////////////////////////////////////////
 				// 노말매트릭스를 사용할경우
-				if ( tGeometry && tSystemUniformGroup['uNMatrix']['location'] ) {
+				if ( tGeometry && tMesh['autoUpdateMatrix'] && tSystemUniformGroup['uNMatrix']['location'] ) {
+
 					//클론
 					// mat4Inverse
 					inverse_c = tMVMatrix[0], inverse_d = tMVMatrix[1], inverse_e = tMVMatrix[2], inverse_g = tMVMatrix[3],
@@ -788,9 +789,11 @@ var RedRenderer;
 						a12 = tNMatrix[6], a13 = tNMatrix[7], a23 = tNMatrix[11],
 						tNMatrix[1] = tNMatrix[4], tNMatrix[2] = tNMatrix[8], tNMatrix[3] = tNMatrix[12], tNMatrix[4] = a01, tNMatrix[6] = tNMatrix[9],
 						tNMatrix[7] = tNMatrix[13], tNMatrix[8] = a02, tNMatrix[9] = a12, tNMatrix[11] = tNMatrix[14],
-						tNMatrix[12] = a03, tNMatrix[13] = a13, tNMatrix[14] = a23,
-						// uNMatrix 입력
-						gl.uniformMatrix4fv(tSystemUniformGroup['uNMatrix']['location'], false, tNMatrix)
+						tNMatrix[12] = a03, tNMatrix[13] = a13, tNMatrix[14] = a23
+				}
+				if ( tSystemUniformGroup && tMesh['autoUpdateMatrix'] && tSystemUniformGroup['uNMatrix']['location'] ) {
+					// uNMatrix 입력
+					gl.uniformMatrix4fv(tSystemUniformGroup['uNMatrix']['location'], false, tNMatrix)
 				}
 				if ( tGeometry ) {
 					/////////////////////////////////////////////////////////////////////////

@@ -227,19 +227,19 @@ var RedPostEffectManager;
 								tCacheSystemUniformInfo[tUUID] = tValueStr;
 							}
 						}
-						// 최종 드로잉일 경우 만 필요
-						if ( finalYn ) {
-							// 카메라 매트릭스 처리
-							tLocationInfo = tSystemUniformLocation['uCameraMatrix'];
-							if ( tLocationInfo ) {
-								tLocation = tLocationInfo['location'];
-								tUUID = tLocationInfo['_UUID']
-								if ( tLocation ) {
-									tValueStr = JSON.stringify(tCameraMTX)
-									if ( tCacheSystemUniformInfo[tUUID] != tValueStr ) {
-										gl.uniformMatrix4fv(tLocation, false, tCameraMTX);
-										tCacheSystemUniformInfo[tUUID] = tValueStr;
-									}
+					}
+					// 최종 드로잉일 경우 만 필요
+					if ( finalYn ) {
+						// 카메라 매트릭스 처리
+						tLocationInfo = tSystemUniformLocation['uCameraMatrix'];
+						if ( tLocationInfo ) {
+							tLocation = tLocationInfo['location'];
+							tUUID = tLocationInfo['_UUID']
+							if ( tLocation ) {
+								tValueStr = JSON.stringify(tCameraMTX)
+								if ( tCacheSystemUniformInfo[tUUID] != tValueStr ) {
+									gl.uniformMatrix4fv(tLocation, false, tCameraMTX);
+									tCacheSystemUniformInfo[tUUID] = tValueStr;
 								}
 							}
 						}
