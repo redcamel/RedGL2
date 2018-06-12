@@ -54,6 +54,7 @@ var RedFrameBuffer;
 			// 프레임버퍼 세팅
 			gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this['texture']['webglTexture'], 0);
 			gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, this['webglRenderBuffer']);
+
 		},
 		unbind: function (gl) {
 			gl.bindTexture(gl.TEXTURE_2D, null);

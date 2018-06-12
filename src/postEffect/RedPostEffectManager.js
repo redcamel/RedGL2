@@ -276,10 +276,10 @@ var RedPostEffectManager;
 						draw(redGL, effect, postEffectChildren, redScene, redRenderer, time, renderInfo)
 					})
 				}
+
 				// 이펙트 서브신버퍼를 사용한다면 그림
 				if ( tSubFrameBufferInfo ) {
 					tSubFrameBufferInfo['frameBuffer'].bind(tGL);
-
 					tGL.viewport(0, 0, tSubFrameBufferInfo['frameBuffer']['width'], tSubFrameBufferInfo['frameBuffer']['height']);
 					tGL.scissor(0, 0, tSubFrameBufferInfo['frameBuffer']['width'], tSubFrameBufferInfo['frameBuffer']['height']);
 					tGL.clear(tGL.COLOR_BUFFER_BIT | tGL.DEPTH_BUFFER_BIT);
@@ -305,6 +305,8 @@ var RedPostEffectManager;
 					// 현재 이펙트를 최종 텍스쳐로 기록하고 다음 이펙트가 있을경우 활용한다.
 					lastFrameBufferTexture = effect['frameBuffer']['texture']
 					// console.log(effect)
+
+
 				}
 				// 서브 신버퍼에 프로세스 처리
 				if ( tSubFrameBufferInfo && tSubFrameBufferInfo['process'] ) {
@@ -312,6 +314,7 @@ var RedPostEffectManager;
 						draw(redGL, effect, postEffectChildren, redScene, redRenderer, time, renderInfo)
 					})
 				}
+
 			};
 			return (function () {
 				var self;
