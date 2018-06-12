@@ -6,9 +6,9 @@ var RedPostEffect_Convolution;
 	vSource = function () {
 		/* @preserve
 		 void main(void) {
-		 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
-		 vResolution = uResolution;
-		 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
+			 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
+			 vResolution = uResolution;
+			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
 		 }
 		 */
 	}
@@ -19,23 +19,23 @@ var RedPostEffect_Convolution;
 		 uniform mat3 uKernel;
 		 uniform float uKernelWeight;
 		 void main(void) {
-		 vec2 perPX = vec2(1.0/vResolution.x, 1.0/vResolution.y);
-		 vec4 finalColor = vec4(0.0);
-		 finalColor += texture2D(uDiffuseTexture, vTexcoord + perPX * vec2(-1.0, -1.0)) * uKernel[0][0] ;
-		 finalColor += texture2D(uDiffuseTexture, vTexcoord + perPX * vec2( 0.0, -1.0)) * uKernel[0][1] ;
-		 finalColor += texture2D(uDiffuseTexture, vTexcoord + perPX * vec2( 1.0, -1.0)) * uKernel[0][2] ;
-		 finalColor += texture2D(uDiffuseTexture, vTexcoord + perPX * vec2(-1.0,  0.0)) * uKernel[1][0] ;
-		 finalColor += texture2D(uDiffuseTexture, vTexcoord + perPX * vec2( 0.0,  0.0)) * uKernel[1][1] ;
-		 finalColor += texture2D(uDiffuseTexture, vTexcoord + perPX * vec2( 1.0,  0.0)) * uKernel[1][2] ;
-		 finalColor += texture2D(uDiffuseTexture, vTexcoord + perPX * vec2(-1.0,  1.0)) * uKernel[2][0] ;
-		 finalColor += texture2D(uDiffuseTexture, vTexcoord + perPX * vec2( 0.0,  1.0)) * uKernel[2][1] ;
-		 finalColor += texture2D(uDiffuseTexture, vTexcoord + perPX * vec2( 1.0,  1.0)) * uKernel[2][2] ;
-		 highp float weight;
-		 weight = uKernelWeight;
-		 if (0.01 > weight) {
-		 weight = 1.0;
-		 }
-		 gl_FragColor = vec4((finalColor / uKernelWeight).rgb, 1.0);
+			 vec2 perPX = vec2(1.0/vResolution.x, 1.0/vResolution.y);
+			 vec4 finalColor = vec4(0.0);
+			 finalColor += texture2D(uDiffuseTexture, vTexcoord + perPX * vec2(-1.0, -1.0)) * uKernel[0][0] ;
+			 finalColor += texture2D(uDiffuseTexture, vTexcoord + perPX * vec2( 0.0, -1.0)) * uKernel[0][1] ;
+			 finalColor += texture2D(uDiffuseTexture, vTexcoord + perPX * vec2( 1.0, -1.0)) * uKernel[0][2] ;
+			 finalColor += texture2D(uDiffuseTexture, vTexcoord + perPX * vec2(-1.0,  0.0)) * uKernel[1][0] ;
+			 finalColor += texture2D(uDiffuseTexture, vTexcoord + perPX * vec2( 0.0,  0.0)) * uKernel[1][1] ;
+			 finalColor += texture2D(uDiffuseTexture, vTexcoord + perPX * vec2( 1.0,  0.0)) * uKernel[1][2] ;
+			 finalColor += texture2D(uDiffuseTexture, vTexcoord + perPX * vec2(-1.0,  1.0)) * uKernel[2][0] ;
+			 finalColor += texture2D(uDiffuseTexture, vTexcoord + perPX * vec2( 0.0,  1.0)) * uKernel[2][1] ;
+			 finalColor += texture2D(uDiffuseTexture, vTexcoord + perPX * vec2( 1.0,  1.0)) * uKernel[2][2] ;
+			 highp float weight;
+			 weight = uKernelWeight;
+			 if (0.01 > weight) {
+			    weight = 1.0;
+			 }
+			 gl_FragColor = vec4((finalColor / uKernelWeight).rgb, 1.0);
 		 }
 		 */
 	}

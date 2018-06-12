@@ -268,7 +268,7 @@ var RedPostEffectManager;
 				var tSubFrameBufferInfo; // 서브에서 씬자체를 그려야할때 사용;
 				var tGL;
 				tGL = redGL.gl;
-				tSubFrameBufferInfo = effect['tSubFrameBufferInfo'];
+				tSubFrameBufferInfo = effect['subFrameBufferInfo'];
 				// 이펙트 최종결과를 생성하기전 전처리 진행
 				if ( effect['process'] && effect['process'].length ) {
 					tParentFrameBufferTexture = lastFrameBufferTexture
@@ -279,6 +279,7 @@ var RedPostEffectManager;
 				// 이펙트 서브신버퍼를 사용한다면 그림
 				if ( tSubFrameBufferInfo ) {
 					tSubFrameBufferInfo['frameBuffer'].bind(tGL);
+
 					tGL.viewport(0, 0, tSubFrameBufferInfo['frameBuffer']['width'], tSubFrameBufferInfo['frameBuffer']['height']);
 					tGL.scissor(0, 0, tSubFrameBufferInfo['frameBuffer']['width'], tSubFrameBufferInfo['frameBuffer']['height']);
 					tGL.clear(tGL.COLOR_BUFFER_BIT | tGL.DEPTH_BUFFER_BIT);

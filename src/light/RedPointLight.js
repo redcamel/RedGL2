@@ -41,7 +41,7 @@ var RedPointLight;
 			 return : 'Number'
 		 }
 		 :DOC*/
-		this['_intensity'] = 1
+		this['intensity'] = 1
 		// 일반 프로퍼티
 		/**DOC:
 		 {
@@ -90,7 +90,7 @@ var RedPointLight;
 			 return : 'Number'
 		 }
 		 :DOC*/
-		this['_radius'] = 1
+		this['radius'] = 1
 		/**DOC:
 		 {
 			 title :`debug`,
@@ -126,13 +126,6 @@ var RedPointLight;
 		writable: false,
 		value: RedPointLight['type']
 	})
-	Object.defineProperty(RedPointLight.prototype, 'radius', {
-		get: function () { return this['_radius']; },
-		set: function (v) {
-			if ( typeof v != 'number' ) RedGLUtil.throwFunc('radius : 숫자만 허용함.')
-			if ( v < 0 ) v = 0;
-			this['_radius'] = v
-		}
-	});
+	RedDefinePropertyInfo.definePrototype('RedPointLight', 'radius', 'number', {'min': 0});
 	Object.freeze(RedPointLight)
 })()

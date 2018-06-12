@@ -578,12 +578,12 @@ var RedRenderer;
 					if ( postEffectManager['antialiasing'] ) tList.push(postEffectManager['antialiasing']);
 					var draw = function (effect) {
 						// console.log('Render Effect', v)
-						var parentFramBufferTexture
+						var parentFrameBufferTexture
 						var subFrameBufferInfo;
 						subFrameBufferInfo = effect['subFrameBufferInfo'];
 						// 이펙트 전처리 진행
 						if ( effect['process'] && effect['process'].length ) {
-							parentFramBufferTexture = lastFrameBufferTexture
+							parentFrameBufferTexture = lastFrameBufferTexture
 							effect['process'].forEach(function (effect) {
 								draw(effect)
 							})
@@ -609,7 +609,7 @@ var RedRenderer;
 							// 해당 이펙트의 기본 텍스쳐를 지난 이펙트의 최종 텍스쳐로 업로드
 							effect.updateTexture(
 								lastFrameBufferTexture,
-								parentFramBufferTexture
+								parentFrameBufferTexture
 							);
 							// 해당 이펙트를 렌더링하고
 							self.sceneRender(redGL, gl, true, postEffectManager['children'], time, renderInfo);

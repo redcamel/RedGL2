@@ -44,7 +44,7 @@ RedGL( document.createElement( 'canvas' ), function ( v ) {
 							return RedProgram( redGL, PROGRAM_NAME, vSource, fSource )
 						}
 					})()
-					TestMaterial.prototype = RedBaseMaterial.prototype
+					TestMaterial.prototype = new RedBaseMaterial()
 					Object.freeze( TestMaterial )
 				})();
 				try {
@@ -100,7 +100,7 @@ RedGL( document.createElement( 'canvas' ), function ( v ) {
 							return RedProgram( redGL, PROGRAM_NAME, vSource, fSource )
 						}
 					})()
-					TestMaterial.prototype = RedBaseMaterial.prototype
+					TestMaterial.prototype = new RedBaseMaterial()
 					Object.freeze( TestMaterial )
 				})();
 				try {
@@ -155,7 +155,7 @@ RedGL( document.createElement( 'canvas' ), function ( v ) {
 							return RedProgram( redGL, PROGRAM_NAME, vSource, fSource )
 						}
 					})()
-					TestMaterial.prototype = RedBaseMaterial.prototype
+					TestMaterial.prototype = new RedBaseMaterial()
 					Object.freeze( TestMaterial )
 				})();
 				try {

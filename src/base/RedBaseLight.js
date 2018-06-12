@@ -29,6 +29,6 @@ var RedBaseLight;
 		//})(),
 		//_castingList: [],
 	}
-	Object.defineProperty(RedBaseLight.prototype, 'intensity', RedDefinePropertyInfo['intensity']);
+	RedDefinePropertyInfo.definePrototype('RedBaseLight', 'intensity', 'number', {'min': 0});
 	Object.freeze(RedBaseLight)
 })();

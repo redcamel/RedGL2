@@ -50,13 +50,11 @@ var RedPostEffect_Bloom;
 		this['blurTexture'] = null;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
-		this['_UUID'] = RedGL['makeUUID']();
 		this['process'] = [
 			RedPostEffect_BloomThreshold(redGL),
 			RedPostEffect_BlurX(redGL),
 			RedPostEffect_BlurY(redGL)
-		]
+		];
 		/**DOC:
 		 {
 			 title :`blur`,
@@ -119,15 +117,19 @@ var RedPostEffect_Bloom;
 			}
 		})())
 		this['threshold'] = 75;
-		this.updateTexture = function (lastFrameBufferTexture, parentFramBufferTexture) {
-			this['diffuseTexture'] = parentFramBufferTexture;
+		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
+		this['_UUID'] = RedGL['makeUUID']();
+		this.updateTexture = function (lastFrameBufferTexture, parentFrameBufferTexture) {
+			this['diffuseTexture'] = parentFrameBufferTexture;
 			this['blurTexture'] = lastFrameBufferTexture;
 		}
-		this.checkUniformAndProperty();
 		console.log(this);
+		this.checkUniformAndProperty();
 	}
 	RedPostEffect_Bloom.prototype = new RedBaseMaterial();
 	RedPostEffect_Bloom.prototype['bind'] = RedPostEffectManager.prototype['bind'];
 	RedPostEffect_Bloom.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
+	RedDefinePropertyInfo.definePrototype('RedPostEffect_Bloom', 'exposure', 'number', {'min': 0});
+	RedDefinePropertyInfo.definePrototype('RedPostEffect_Bloom', 'bloomStrength', 'number', {'min': 0});
 	Object.freeze(RedPostEffect_Bloom);
 })();

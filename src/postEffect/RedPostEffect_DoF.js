@@ -58,8 +58,7 @@ var RedPostEffect_DoF;
 		this['depthTexture'] = null;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
-		this['_UUID'] = RedGL['makeUUID']();
+
 		this['process'] = [
 			RedPostEffect_BlurX(redGL),
 			RedPostEffect_BlurY(redGL)
@@ -98,9 +97,7 @@ var RedPostEffect_DoF;
 		Object.defineProperty(this, 'blur', (function () {
 			var _v = 1
 			return {
-				get: function () {
-					return _v
-				},
+				get: function () { return _v },
 				set: function (v) {
 					_v = v;
 					this['process'][0]['size'] = _v;
@@ -109,16 +106,19 @@ var RedPostEffect_DoF;
 			}
 		})());
 		this['blur'] = 10
-		this.updateTexture = function (lastFrameBufferTexture, parentFramBufferTexture) {
-			this['diffuseTexture'] = parentFramBufferTexture;
+		this.updateTexture = function (lastFrameBufferTexture, parentFrameBufferTexture) {
+			this['diffuseTexture'] = parentFrameBufferTexture;
 			this['blurTexture'] = lastFrameBufferTexture;
 			this['depthTexture'] = this['subFrameBufferInfo']['frameBuffer']['texture']
 		}
+		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
+		this['_UUID'] = RedGL['makeUUID']();
 		this.checkUniformAndProperty();
 		console.log(this);
 	}
 	RedPostEffect_DoF.prototype = new RedBaseMaterial();
 	RedPostEffect_DoF.prototype['bind'] = RedPostEffectManager.prototype['bind'];
 	RedPostEffect_DoF.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
+	RedDefinePropertyInfo.definePrototype('RedPostEffect_DoF', 'focusLength', 'number', {'min': 0});
 	Object.freeze(RedPostEffect_DoF);
 })();

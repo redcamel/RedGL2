@@ -86,16 +86,15 @@ var RedBitmapMaterial;
 			 return : 'RedBitmapMaterial'
 		 }
 		 :DOC*/
-		this['_diffuseTexture'] = null;
+		this['diffuseTexture'] = diffuseTexture;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		Object.defineProperty(this, 'diffuseTexture', RedDefinePropertyInfo['diffuseTextureMust']);
-		this['diffuseTexture'] = diffuseTexture;
 		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkUniformAndProperty();
 		console.log(this)
 	}
 	RedBitmapMaterial.prototype = new RedBaseMaterial()
+	RedDefinePropertyInfo.definePrototype('RedBitmapMaterial', 'diffuseTexture', 'sampler2D', {essential: true});
 	Object.freeze(RedBitmapMaterial)
 })();

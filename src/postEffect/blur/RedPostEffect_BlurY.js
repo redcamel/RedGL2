@@ -70,7 +70,6 @@ var RedPostEffect_BlurY;
 			 return : 'Number'
 		 }
 		 :DOC*/
-		this['_size'] = null;
 		this['size'] = 50
 		/////////////////////////////////////////
 		// 일반 프로퍼티
@@ -85,6 +84,6 @@ var RedPostEffect_BlurY;
 	RedPostEffect_BlurY.prototype = new RedBaseMaterial();
 	RedPostEffect_BlurY.prototype['bind'] = RedPostEffectManager.prototype['bind'];
 	RedPostEffect_BlurY.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
-	Object.defineProperty(RedPostEffect_BlurY.prototype, 'size', RedDefinePropertyInfo['size']);
+	RedDefinePropertyInfo.definePrototype( 'RedPostEffect_BlurY', 'size', 'number',{'min': 0})
 	Object.freeze(RedPostEffect_BlurY);
 })();

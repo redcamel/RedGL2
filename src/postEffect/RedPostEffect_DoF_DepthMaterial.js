@@ -38,8 +38,8 @@ var RedPostEffect_DoF_DepthMaterial;
 		 uniform float uFocusLength;
 
 		 void main(void) {
-		 float depth = 1.0 - gl_FragCoord.z / gl_FragCoord.w / uFocusLength;
-		 gl_FragColor = vec4(depth, depth, depth, 1.0);
+			 float depth = 1.0 - gl_FragCoord.z / gl_FragCoord.w / uFocusLength;
+			 gl_FragColor = vec4(depth, depth, depth, 1.0);
 		 }
 		 */
 	}
@@ -71,9 +71,9 @@ var RedPostEffect_DoF_DepthMaterial;
 		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkUniformAndProperty();
-		;
 		console.log(this);
 	}
-	RedPostEffect_DoF_DepthMaterial.prototype = RedBaseMaterial.prototype
+	RedPostEffect_DoF_DepthMaterial.prototype = new RedBaseMaterial()
+	RedDefinePropertyInfo.definePrototype('RedPostEffect_DoF_DepthMaterial', 'focusLength', 'number', {'min': 0});
 	Object.freeze(RedPostEffect_DoF_DepthMaterial)
 })();

@@ -41,7 +41,7 @@ var RedAmbientLight;
 			 return : 'Number'
 		 }
 		 :DOC*/
-		this['_intensity'] = 1
+		this['intensity'] = 1
 		// 일반 프로퍼티
 		/**DOC:
 		 {

@@ -86,16 +86,15 @@ var RedVideoMaterial;
 			 return : 'RedVideoMaterial'
 		 }
 		 :DOC*/
-		this['_videoTexture'] = null;
+		this['videoTexture'] = videoTexture;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		Object.defineProperty(this, 'videoTexture', RedDefinePropertyInfo['videoTextureMust']);
-		this['videoTexture'] = videoTexture;
 		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkUniformAndProperty();
 		console.log(this)
 	}
 	RedVideoMaterial.prototype = new RedBaseMaterial()
+	RedDefinePropertyInfo.definePrototype('RedVideoMaterial', 'videoTexture', 'samplerVideo', {essential: true});
 	Object.freeze(RedVideoMaterial)
 })();
