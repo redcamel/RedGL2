@@ -2,155 +2,6 @@
 var RedDefinePropertyInfo;
 (function () {
 	RedDefinePropertyInfo = {
-		width: {
-			get: function () { return this['_width']; },
-			set: function (v) {
-				if ( typeof v != 'number' ) RedGLUtil.throwFunc('width : 숫자만 허용함.')
-				if ( v < 0 ) v = 0;
-				this['_width'] = v
-			}
-		},
-		height: {
-			get: function () { return this['_height']; },
-			set: function (v) {
-				if ( typeof v != 'number' ) RedGLUtil.throwFunc('height : 숫자만 허용함.')
-				if ( v < 0 ) v = 0;
-				this['_height'] = v
-			}
-		},
-		size: {
-			get: function () { return this['_size']; },
-			set: function (v) {
-				if ( typeof v != 'number' ) RedGLUtil.throwFunc('size : 숫자만 허용함.')
-				if ( v < 0 ) v = 0;
-				this['_size'] = v
-			}
-		},
-		intensity: {
-			get: function () { return this['_intensity']; },
-			set: function (v) {
-				if ( typeof v != 'number' ) RedGLUtil.throwFunc('intensity : 숫자만 허용함.')
-				if ( v < 0 ) v = 0;
-				this['_intensity'] = v
-			}
-		},
-		shininess: (function () {
-			return {
-				get: function () { return this['_shininess']; },
-				set: function (v) {
-					if ( typeof v != 'number' ) RedGLUtil.throwFunc('shininess : 숫자만 허용함.')
-					this['_shininess'] = v
-				}
-			}
-		})(),
-		specularPower: (function () {
-			return {
-				get: function () { return this['_specularPower']; },
-				set: function (v) {
-					if ( typeof v != 'number' ) RedGLUtil.throwFunc('specularPower : 숫자만 허용함.')
-					this['_specularPower'] = v
-				}
-			}
-		})(),
-		reflectionPower: (function () {
-			return {
-				get: function () { return this['_reflectionPower']; },
-				set: function (v) {
-					if ( typeof v != 'number' ) RedGLUtil.throwFunc('reflectionPower : 숫자만 허용함.')
-					this['_reflectionPower'] = v
-				}
-			}
-		})(),
-		displacementPower: (function () {
-			return {
-				get: function () { return this['_displacementPower']; },
-				set: function (v) {
-					if ( typeof v != 'number' ) RedGLUtil.throwFunc('displacementPower : 숫자만 허용함.')
-					this['_displacementPower'] = v
-				}
-			}
-		})(),
-		diffuseTexture: (function () {
-			return {
-				get: function () { return this['_diffuseTexture']; },
-				set: function (v) {
-					if ( v && !(v instanceof RedBitmapTexture) ) RedGLUtil.throwFunc('diffuseTexture : RedBitmapTexture Instance만 허용됩니다.', '입력값 : ' + v)
-					this['_diffuseTexture'] = v
-				}
-			}
-		})(),
-		diffuseTextureMust: (function () {
-			return {
-				get: function () { return this['_diffuseTexture']; },
-				set: function (v) {
-					if ( !(v instanceof RedBitmapTexture) ) RedGLUtil.throwFunc('diffuseTexture : RedBitmapTexture Instance만 허용됩니다.', '입력값 : ' + v)
-					this['_diffuseTexture'] = v
-				}
-			}
-		})(),
-		environmentTexture: (function () {
-			return {
-				get: function () { return this['_environmentTexture']; },
-				set: function (v) {
-					if ( v && !(v instanceof RedBitmapCubeTexture) ) RedGLUtil.throwFunc('environmentTexture : RedBitmapCubeTexture Instance만 허용됩니다.', '입력값 : ' + v)
-					this['_environmentTexture'] = v
-				}
-			}
-		})(),
-		environmentTextureMust: (function () {
-			return {
-				get: function () { return this['_environmentTexture']; },
-				set: function (v) {
-					if ( !(v instanceof RedBitmapCubeTexture) ) RedGLUtil.throwFunc('environmentTexture : RedBitmapCubeTexture Instance만 허용됩니다.', '입력값 : ' + v)
-					this['_environmentTexture'] = v
-				}
-			}
-		})(),
-		normalTexture: (function () {
-			return {
-				get: function () { return this['_normalTexture']; },
-				set: function (v) {
-					if ( v && !(v instanceof RedBitmapTexture) ) RedGLUtil.throwFunc('normalTexture : RedBitmapTexture Instance만 허용됩니다.', '입력값 : ' + v)
-					this['_normalTexture'] = v
-				}
-			}
-		})(),
-		specularTexture: (function () {
-			return {
-				get: function () { return this['_specularTexture']; },
-				set: function (v) {
-					if ( v && !(v instanceof RedBitmapTexture) ) RedGLUtil.throwFunc('specularTexture : RedBitmapTexture Instance만 허용됩니다.', '입력값 : ' + v)
-					this['_specularTexture'] = v
-				}
-			}
-		})(),
-		displacementTexture: (function () {
-			return {
-				get: function () { return this['_displacementTexture']; },
-				set: function (v) {
-					if ( v && !(v instanceof RedBitmapTexture) ) RedGLUtil.throwFunc('displacementTexture : RedBitmapTexture Instance만 허용됩니다.', '입력값 : ' + v)
-					this['_displacementTexture'] = v
-				}
-			}
-		})(),
-		videoTextureMust: (function () {
-			return {
-				get: function () { return this['_videoTexture']; },
-				set: function (v) {
-					if ( !(v instanceof RedVideoTexture) ) RedGLUtil.throwFunc('videoTexture : RedVideoTexture Instance만 허용됩니다.', '입력값 : ' + v)
-					this['_videoTexture'] = v
-				}
-			}
-		})(),
-		skyBoxTexture: (function () {
-			return {
-				get: function () { return this['_skyBoxTexture']; },
-				set: function (v) {
-					if ( v && !(v instanceof RedBitmapCubeTexture) ) RedGLUtil.throwFunc('skyBoxTexture : RedBitmapCubeTexture Instance만 허용됩니다.', '입력값 : ' + v)
-					this['_skyBoxTexture'] = v
-				}
-			}
-		})(),
 		//Object3D
 		geometry: (function () {
 			return {
@@ -187,7 +38,101 @@ var RedDefinePropertyInfo;
 					this['_material'] = v
 				}
 			}
-		})(),
+		})()
+	}
+	var maker;
+	maker = function (targetObject, clsName, name, type, option) {
+		var result;
+		var samplerTypeKey
+		if ( targetObject.hasOwnProperty(name) ) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : 이미 정의된 속성')
+		switch ( type ) {
+			case 'number' :
+				if ( option ) {
+					var min = option['min']
+					var max = option['max']
+					if ( option.hasOwnProperty('min') && option.hasOwnProperty('max') ) {
+						result = {
+							get: function () { return this['_' + name]; },
+							set: function (v) {
+								if ( typeof v != 'number' ) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : 숫자만 허용함.')
+								if ( v < min ) v = min;
+								if ( v > max ) v = max;
+								this['_' + name] = v
+							}
+						}
+					} else {
+						if ( option.hasOwnProperty('min') ) {
+							result = {
+								get: function () { return this['_' + name]; },
+								set: function (v) {
+									if ( typeof v != 'number' ) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : 숫자만 허용함.')
+									if ( v < min ) v = min;
+									this['_' + name] = v
+								}
+							}
+						} else if ( option.hasOwnProperty('max') ) {
+							result = {
+								get: function () { return this['_' + name]; },
+								set: function (v) {
+									if ( typeof v != 'number' ) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : 숫자만 허용함.')
+									if ( v > max ) v = max;
+									this['_' + name] = v
+								}
+							}
+						}
+					}
+				} else {
+					result = {
+						get: function () { return this['_' + name]; },
+						set: function (v) {
+							if ( typeof v != 'number' ) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : 숫자만 허용함.')
+							this['_' + name] = v
+						}
+					}
+				}
+				break
+			case 'sampler2D' :
+				samplerTypeKey = 'RedBitmapTexture';
+				break
+			case 'samplerCube' :
+				samplerTypeKey = 'RedBitmapCubeTexture';
+				break
+			case 'samplerVideo' :
+				samplerTypeKey = 'RedVideoTexture';
+				break
+			case 'samplerVideo' :
+				samplerTypeKey = 'RedVideoTexture';
+				break
+			default :
+				RedGLUtil.throwFunc(name + ' - ' + 'type : ' + +name + ' : 정의할수없는 타입입니다.')
+				break
+		}
+		if ( samplerTypeKey ) {
+			var samplerCls = window[samplerTypeKey]
+			console.log(samplerTypeKey, samplerCls)
+			if ( option && option['essential'] ) {
+				result = {
+					get: function () { return this['_' + name]; },
+					set: function (v) {
+						if ( !(v instanceof samplerCls) ) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : ' + samplerTypeKey + ' Instance만 허용.', '입력값 : ' + v)
+						this['_' + name] = v
+					}
+				}
+			} else {
+				result = {
+					get: function () { return this['_' + name]; },
+					set: function (v) {
+						if ( v && !(v instanceof samplerCls) ) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : ' + samplerTypeKey + ' Instance만 허용.', '입력값 : ' + v)
+						this['_' + name] = v
+					}
+				}
+			}
+		}
+		targetObject['_' + name] = null
+		Object.defineProperty(targetObject, name, result)
+	}
+	RedDefinePropertyInfo['definePrototype'] = function (clsName, name, type, option) {
+		maker(window[clsName]['prototype'], clsName, name, type, option)
 	}
 	Object.defineProperty(RedDefinePropertyInfo, 'color', {
 		get: function () {

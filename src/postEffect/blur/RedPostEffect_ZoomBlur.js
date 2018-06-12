@@ -121,5 +121,8 @@ var RedPostEffect_ZoomBlur;
 	RedPostEffect_ZoomBlur.prototype = new RedBaseMaterial();
 	RedPostEffect_ZoomBlur.prototype['bind'] = RedPostEffectManager.prototype['bind'];
 	RedPostEffect_ZoomBlur.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
+	RedDefinePropertyInfo.definePrototype('RedPostEffect_ZoomBlur', 'centerX', 'number')
+	RedDefinePropertyInfo.definePrototype('RedPostEffect_ZoomBlur', 'centerY', 'number')
+	RedDefinePropertyInfo.definePrototype('RedPostEffect_ZoomBlur', 'size', 'number',{'min': 0})
 	Object.freeze(RedPostEffect_ZoomBlur);
 })();

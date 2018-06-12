@@ -12,8 +12,7 @@ var RedBaseMaterial;
 		 return : 'void'
 	 }
 	 :DOC*/
-	RedBaseMaterial = function () {
-	}
+	RedBaseMaterial = function () {}
 	RedBaseMaterial.prototype = {
 		/**DOC:
 		 {
@@ -34,8 +33,8 @@ var RedBaseMaterial;
 			while ( i2-- ) {
 				tUniformLocationInfo = tUniformGroup[i2];
 				tWebGLUniformLocation = tUniformLocationInfo['location'];
-				if ( tWebGLUniformLocation && !this.hasOwnProperty(tUniformLocationInfo['materialPropertyName']) ) {
-					RedGLUtil.throwFunc('Material에 ', tUniformLocationInfo['materialPropertyName'], '이 정의 되지않았습니다.')
+				if ( tWebGLUniformLocation && !(tUniformLocationInfo['materialPropertyName'] in this) ) {
+					RedGLUtil.throwFunc(this['program']['key'] + '- ', tUniformLocationInfo['materialPropertyName'], '속성이 정의 되지않았습니다.')
 				}
 			}
 		}

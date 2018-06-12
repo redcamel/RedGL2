@@ -125,7 +125,7 @@ var RedColorPhongMaterial;
 			 return : 'shininess'
 		 }
 		 :DOC*/
-		this['_shininess'] = 16
+		this['shininess'] = 16
 		/**DOC:
 		 {
 			 title :`specularPower`,
@@ -133,13 +133,11 @@ var RedColorPhongMaterial;
 			 return : 'Number'
 		 }
 		 :DOC*/
-		this['_specularPower'] = 1
+		this['specularPower'] = 1
 		/////////////////////////////////////////
 		// 일반 프로퍼티
 		Object.defineProperty(this, 'color', RedDefinePropertyInfo['color']);
 		Object.defineProperty(this, 'alpha', RedDefinePropertyInfo['alpha']);
-		Object.defineProperty(this, 'shininess', RedDefinePropertyInfo['shininess']);
-		Object.defineProperty(this, 'specularPower', RedDefinePropertyInfo['specularPower']);
 		this['alpha'] = alpha == undefined ? 1 : alpha;
 		this['color'] = hexColor ? hexColor : '#ff0000'
 		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
@@ -148,5 +146,7 @@ var RedColorPhongMaterial;
 		console.log(this);
 	}
 	RedColorPhongMaterial.prototype = new RedBaseMaterial()
+	RedDefinePropertyInfo.definePrototype('RedColorPhongMaterial', 'shininess', 'number', {'min': 0});
+	RedDefinePropertyInfo.definePrototype('RedColorPhongMaterial', 'specularPower', 'number', {'min': 0});
 	Object.freeze(RedColorPhongMaterial)
 })();

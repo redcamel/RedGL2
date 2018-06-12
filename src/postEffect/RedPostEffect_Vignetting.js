@@ -55,7 +55,6 @@ var RedPostEffect_Vignetting;
 			 return : 'Number'
 		 }
 		 :DOC*/
-		this['_size'] = null;
 		this['size'] = 0.1
 		/**DOC:
 		 {
@@ -67,7 +66,6 @@ var RedPostEffect_Vignetting;
 		 return : 'Number'
 		 }
 		 :DOC*/
-		this['_intensity'] = null
 		this['intensity'] = 0.85;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
@@ -82,7 +80,7 @@ var RedPostEffect_Vignetting;
 	RedPostEffect_Vignetting.prototype = new RedBaseMaterial();
 	RedPostEffect_Vignetting.prototype['bind'] = RedPostEffectManager.prototype['bind'];
 	RedPostEffect_Vignetting.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
-	Object.defineProperty(RedPostEffect_Vignetting.prototype, 'intensity', RedDefinePropertyInfo['intensity']);
-	Object.defineProperty(RedPostEffect_Vignetting.prototype, 'size', RedDefinePropertyInfo['size']);
+	RedDefinePropertyInfo.definePrototype('RedPostEffect_Vignetting', 'intensity', 'number', {'min': 0});
+	RedDefinePropertyInfo.definePrototype('RedPostEffect_Vignetting', 'size', 'number', {'min': 0});
 	Object.freeze(RedPostEffect_Vignetting);
 })();

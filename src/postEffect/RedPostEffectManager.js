@@ -199,7 +199,8 @@ var RedPostEffectManager;
 						tUUID = tLocationInfo['_UUID']
 						if ( tLocation ) {
 							mat4.ortho(
-								tPerspectiveMTX, -0.5, // left
+								tPerspectiveMTX,
+								-0.5, // left
 								0.5, // right
 								-0.5, // bottom
 								0.5, // top,
@@ -267,7 +268,7 @@ var RedPostEffectManager;
 				var tSubFrameBufferInfo; // 서브에서 씬자체를 그려야할때 사용;
 				var tGL;
 				tGL = redGL.gl;
-				tSubFrameBufferInfo = effect['tSubFrameBufferInfo'];
+				tSubFrameBufferInfo = effect['subFrameBufferInfo'];
 				// 이펙트 최종결과를 생성하기전 전처리 진행
 				if ( effect['process'] && effect['process'].length ) {
 					tParentFrameBufferTexture = lastFrameBufferTexture
@@ -275,6 +276,7 @@ var RedPostEffectManager;
 						draw(redGL, effect, postEffectChildren, redScene, redRenderer, time, renderInfo)
 					})
 				}
+
 				// 이펙트 서브신버퍼를 사용한다면 그림
 				if ( tSubFrameBufferInfo ) {
 					tSubFrameBufferInfo['frameBuffer'].bind(tGL);
@@ -303,6 +305,8 @@ var RedPostEffectManager;
 					// 현재 이펙트를 최종 텍스쳐로 기록하고 다음 이펙트가 있을경우 활용한다.
 					lastFrameBufferTexture = effect['frameBuffer']['texture']
 					// console.log(effect)
+
+
 				}
 				// 서브 신버퍼에 프로세스 처리
 				if ( tSubFrameBufferInfo && tSubFrameBufferInfo['process'] ) {
@@ -310,6 +314,7 @@ var RedPostEffectManager;
 						draw(redGL, effect, postEffectChildren, redScene, redRenderer, time, renderInfo)
 					})
 				}
+
 			};
 			return (function () {
 				var self;
@@ -328,10 +333,10 @@ var RedPostEffectManager;
 					// 프레임 버퍼 정보를 캐싱
 					lastFrameBufferTexture = originFrameBufferTexture = self['frameBuffer']['texture'];
 					// 최종결과는 드로잉버퍼사이즈로 한다.
-					// self['frameBuffer']['width'] = gl.drawingBufferWidth
-					// self['frameBuffer']['height'] = gl.drawingBufferHeight
-					self['frameBuffer']['width'] = tViewRect[2]
-					self['frameBuffer']['height'] = tViewRect[3]
+					self['frameBuffer']['width'] = gl.drawingBufferWidth
+					self['frameBuffer']['height'] = gl.drawingBufferHeight
+					// self['frameBuffer']['width'] = tViewRect[2]
+					// self['frameBuffer']['height'] = tViewRect[3]
 					// 포스트 이펙트를 돌면서 갱신해나간다.
 					tEffectList = self['postEffectList'].concat();
 					// 안티알리어싱 모드가 적용되어있으면 추가한다.

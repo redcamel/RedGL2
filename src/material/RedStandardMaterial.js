@@ -147,28 +147,28 @@ var RedStandardMaterial;
 			 return : 'RedBitmapTexture'
 		 }
 		 :DOC*/
-		this['_diffuseTexture'] = null;
+		this['diffuseTexture'] = diffuseTexture;
 		/**DOC:
 		 {
 			 title :`normalTexture`,
 			 return : 'RedBitmapTexture'
 		 }
 		 :DOC*/
-		this['_normalTexture'] = null;
+		this['normalTexture'] = normalTexture;
 		/**DOC:
 		 {
 			 title :`specularTexture`,
 			 return : 'RedBitmapTexture'
 		 }
 		 :DOC*/
-		this['_specularTexture'] = null
+		this['specularTexture'] = specularTexture
 		/**DOC:
 		 {
 			 title :`shininess`,
 			 return : 'RedBitmapTexture'
 		 }
 		 :DOC*/
-		this['_displacementTexture'] = null;
+		this['displacementTexture'] = displacementTexture;
 		/**DOC:
 		 {
 			 title :`shininess`,
@@ -176,7 +176,7 @@ var RedStandardMaterial;
 			 return : 'number'
 		 }
 		 :DOC*/
-		this['_shininess'] = 16
+		this['shininess'] = 16
 		/**DOC:
 		 {
 			 title :`specularPower`,
@@ -184,7 +184,7 @@ var RedStandardMaterial;
 			 return : 'number'
 		 }
 		 :DOC*/
-		this['_specularPower'] = 1
+		this['specularPower'] = 1
 		/**DOC:
 		 {
 			 title :`displacementPower`,
@@ -192,25 +192,21 @@ var RedStandardMaterial;
 			 return : 'Number'
 		 }
 		 :DOC*/
-		this['_displacementPower'] = 0
+		this['displacementPower'] = 0
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		Object.defineProperty(this, 'diffuseTexture', RedDefinePropertyInfo['diffuseTextureMust']);
-		Object.defineProperty(this, 'normalTexture', RedDefinePropertyInfo['normalTexture']);
-		Object.defineProperty(this, 'specularTexture', RedDefinePropertyInfo['specularTexture']);
-		Object.defineProperty(this, 'displacementTexture', RedDefinePropertyInfo['displacementTexture']);
-		Object.defineProperty(this, 'shininess', RedDefinePropertyInfo['shininess']);
-		Object.defineProperty(this, 'specularPower', RedDefinePropertyInfo['specularPower']);
-		Object.defineProperty(this, 'displacementPower', RedDefinePropertyInfo['displacementPower']);
-		this['diffuseTexture'] = diffuseTexture;
-		this['normalTexture'] = normalTexture;
-		this['specularTexture'] = specularTexture;
-		this['displacementTexture'] = displacementTexture;
 		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkUniformAndProperty();
 		console.log(this)
 	}
 	RedStandardMaterial.prototype = new RedBaseMaterial()
+	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'diffuseTexture', 'sampler2D', {essential: true});
+	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'normalTexture', 'sampler2D');
+	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'specularTexture', 'sampler2D');
+	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'displacementTexture', 'sampler2D');
+	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'shininess', 'number', {'min': 0});
+	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'specularPower', 'number', {'min': 0});
+	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'displacementPower', 'number', {'min': 0});
 	Object.freeze(RedStandardMaterial)
 })();

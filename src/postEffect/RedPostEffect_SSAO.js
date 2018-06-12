@@ -99,8 +99,8 @@ var RedPostEffect_SSAO;
 		this['factor2'] = 0.4
 		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		this['_UUID'] = RedGL['makeUUID']();
-		this.updateTexture = function (lastFrameBufferTexture, parentFramBufferTexture) {
-			this['diffuseTexture'] = parentFramBufferTexture;
+		this.updateTexture = function (lastFrameBufferTexture, parentFrameBufferTexture) {
+			this['diffuseTexture'] = parentFrameBufferTexture;
 			this['ssaoTexture'] = lastFrameBufferTexture;
 		}
 		this.checkUniformAndProperty();

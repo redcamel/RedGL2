@@ -93,7 +93,6 @@ var RedColorMaterial;
 		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkUniformAndProperty();
-		;
 		console.log(this);
 	}
 	RedColorMaterial.prototype = new RedBaseMaterial()

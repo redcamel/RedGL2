@@ -68,16 +68,15 @@ var RedSkyBoxMaterial;
 			 return : 'RedBitmapCubeTexture'
 		 }
 		 :DOC*/
-		this['_skyBoxTexture'] = null;
+		this['skyBoxTexture'] = skyBoxTexture;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		Object.defineProperty(this, 'skyBoxTexture', RedDefinePropertyInfo['skyBoxTexture']);
-		this['skyBoxTexture'] = skyBoxTexture;
 		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkUniformAndProperty();
 		console.log(this)
 	}
 	RedSkyBoxMaterial.prototype = new RedBaseMaterial()
+	RedDefinePropertyInfo.definePrototype('RedSkyBoxMaterial', 'skyBoxTexture', 'samplerCube', {essential: true});
 	Object.freeze(RedSkyBoxMaterial)
 })();

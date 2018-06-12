@@ -24,7 +24,8 @@ var RedRenderer;
 		this['renderInfo'] = {};
 		this['cacheUniformInfo'] = [];
 		this['cacheAttrInfo'] = [];
-		this['cacheBySamplerIndex'] = [];
+		this['cacheSamplerIndex'] = [];
+		this['cacheTexture'] = []
 		this['cacheState'] = [];
 		this['cacheSystemUniformInfo'] = []
 		this['renderDebuger'] = RedRenderDebuger();
@@ -465,7 +466,8 @@ var RedRenderer;
 		                 renderResultObj,
 		                 tCacheInterleaveBuffer,
 		                 tCacheUniformInfo,
-		                 tCacheBySamplerIndex,
+		                 tCacheSamplerIndex,
+		                 tCacheTexture,
 		                 tCacheState,
 		                 parentMTX,
 		                 subSceneMaterial) {
@@ -587,7 +589,7 @@ var RedRenderer;
 							if ( tUniformValue ) {
 								// console.log(tUniformLocationInfo['materialPropertyName'],tUniformValue)
 								// console.log(tUniformLocationInfo)
-								if ( tCacheBySamplerIndex[tSamplerIndex] == tUniformValue['_UUID'] ) {
+								if ( tCacheTexture[tSamplerIndex] == tUniformValue['_UUID'] ) {
 									// console.log('온다',tUniformLocationInfo['materialPropertyName'],tSamplerIndex,tSamplerIndex)
 								} else {
 									// console.log('온다2',tUniformLocationInfo['materialPropertyName'],tSamplerIndex,tSamplerIndex)
@@ -600,8 +602,8 @@ var RedRenderer;
 									} else {
 										gl.bindTexture(tRenderType == 'sampler2D' ? gl.TEXTURE_2D : gl.TEXTURE_CUBE_MAP, tUniformValue['webglTexture']);
 									}
-									tCacheBySamplerIndex[tUUID] == tSamplerIndex ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheBySamplerIndex[tUUID] = tSamplerIndex);
-									tCacheBySamplerIndex[tSamplerIndex] = tUniformValue['_UUID'];
+									tCacheSamplerIndex[tUUID] == tSamplerIndex ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheSamplerIndex[tUUID] = tSamplerIndex);
+									tCacheTexture[tSamplerIndex] = tUniformValue['_UUID'];
 								}
 								// 아틀라스 UV검색
 								if ( tSystemUniformGroup['uAtlascoord']['location'] ) {
@@ -614,30 +616,30 @@ var RedRenderer;
 							} else {
 								// console.log('설마',tUniformLocationInfo['materialPropertyName'])
 								if ( tRenderType == 'sampler2D' ) {
-									if ( tCacheBySamplerIndex[tSamplerIndex] == 0 ) {
+									if ( tCacheTexture[tSamplerIndex] == 0 ) {
 									} else {
 										tPrevSamplerIndex == 0 ? 0 : gl.activeTexture(gl.TEXTURE0);
 										gl.bindTexture(gl.TEXTURE_2D, redGL['_datas']['emptyTexture']['2d']['webglTexture']);
-										tCacheBySamplerIndex[tUUID] == 0 ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheBySamplerIndex[tUUID] = 0);
-										tCacheBySamplerIndex[tSamplerIndex] = 0;
+										tCacheSamplerIndex[tUUID] == 0 ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheSamplerIndex[tUUID] = 0);
+										tCacheTexture[tSamplerIndex] = 0;
 										tPrevSamplerIndex = 0;
 									}
 								} else {
-									if ( tCacheBySamplerIndex[tSamplerIndex] == 1 ) {
+									if ( tCacheTexture[tSamplerIndex] == 1 ) {
 									} else {
 										tPrevSamplerIndex == 1 ? 0 : gl.activeTexture(gl.TEXTURE0 + 1);
 										gl.bindTexture(gl.TEXTURE_CUBE_MAP, redGL['_datas']['emptyTexture']['3d']['webglTexture']);
-										tCacheBySamplerIndex[tUUID] == 1 ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheBySamplerIndex[tUUID] = 1);
-										tCacheBySamplerIndex[tSamplerIndex] = 1;
+										tCacheSamplerIndex[tUUID] == 1 ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheSamplerIndex[tUUID] = 1);
+										tCacheTexture[tSamplerIndex] = 1;
 										tPrevSamplerIndex = 1;
 									}
 								}
 							}
 						} else {
 							tUniformValue == undefined ? RedGLUtil.throwFunc('RedRenderer : Material에 ', tUniformLocationInfo['materialPropertyName'], '이 정의 되지않았습니다.') : 0;
-							tRenderType == 'float' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue,tUniformValue)) :
-								tRenderType == 'int' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue,tUniformValue)) :
-									tRenderType == 'bool' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue,tUniformValue)) :
+							tRenderType == 'float' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue, tUniformValue)) :
+								tRenderType == 'int' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue, tUniformValue)) :
+									tRenderType == 'bool' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue, tUniformValue)) :
 										tRenderType == 'vec' ? gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tUniformValue) :
 											tRenderType == 'mat' ? gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, false, tUniformValue) :
 												RedGLUtil.throwFunc('RedRenderer : 처리할수없는 타입입니다.', 'tRenderType -', tRenderType)
@@ -735,14 +737,10 @@ var RedRenderer;
 									tMVMatrix[14] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
 									tMVMatrix[15] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33
 							) : 0
-				} else {
-					a = tMVMatrix
-				}
+				} else    a = tMVMatrix
 				/////////////////////////////////////////////////////////////////////////
 				/////////////////////////////////////////////////////////////////////////
-				if ( tGeometry ) {
-					gl.uniformMatrix4fv(tSystemUniformGroup['uMMatrix']['location'], false, tMVMatrix)
-				}
+				if ( tGeometry ) gl.uniformMatrix4fv(tSystemUniformGroup['uMMatrix']['location'], false, tMVMatrix)
 				/////////////////////////////////////////////////////////////////////////
 				/////////////////////////////////////////////////////////////////////////
 				// 노말매트릭스를 사용할경우
@@ -859,7 +857,8 @@ var RedRenderer;
 						renderResultObj,
 						tCacheInterleaveBuffer,
 						tCacheUniformInfo,
-						tCacheBySamplerIndex,
+						tCacheSamplerIndex,
+						tCacheTexture,
 						tCacheState,
 						tMVMatrix,
 						subSceneMaterial
@@ -868,7 +867,6 @@ var RedRenderer;
 			}
 		}
 		return function (redGL, gl, orthographicYn, children, time, renderResultObj, subSceneMaterial) {
-			// TODO: 이제 아래부분을 날릴수 있을것 같은데? 체크해봐야함
 			// if ( this['cacheState']['pointSize'] == undefined ) this['cacheState']['pointSize'] = null
 			// if ( !this['cacheState']['useCullFace'] ) this['cacheState']['useCullFace'] = null
 			// if ( !this['cacheState']['cullFace'] ) this['cacheState']['cullFace'] = null
@@ -877,7 +875,8 @@ var RedRenderer;
 			// if ( !this['cacheState']['useBlendMode'] ) this['cacheState']['useBlendMode'] = null
 			// if ( !this['cacheState']['blendSrc'] ) this['cacheState']['blendSrc'] = null
 			// if ( !this['cacheState']['blendDst'] ) this['cacheState']['blendDst'] = null
-			this['cacheBySamplerIndex'].length = 0
+			// this['cacheSamplerIndex'].length = 0
+			this['cacheTexture'].length = 0
 			draw(
 				redGL,
 				gl,
@@ -887,7 +886,8 @@ var RedRenderer;
 				renderResultObj,
 				this['cacheAttrInfo'],
 				this['cacheUniformInfo'],
-				this['cacheBySamplerIndex'],
+				this['cacheSamplerIndex'],
+				this['cacheTexture'],
 				this['cacheState'],
 				undefined,
 				subSceneMaterial

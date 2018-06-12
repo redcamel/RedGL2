@@ -92,7 +92,7 @@ var RedPostEffect_Film;
 			 return : 'Number'
 		 }
 		 :DOC*/
-		this['_scanlineIntensity'] = null, this['scanlineIntensity'] = 0.5;
+		this['scanlineIntensity'] = 0.5;
 		/**DOC:
 		 {
 			 title :`noiseIntensity`,
@@ -103,7 +103,7 @@ var RedPostEffect_Film;
 			 return : 'Number'
 		 }
 		 :DOC*/
-		this['_noiseIntensity'] = null, this['noiseIntensity'] = 0.5;
+		this['noiseIntensity'] = 0.5;
 		/**DOC:
 		 {
 			 title :`scanlineCount`,
@@ -114,7 +114,7 @@ var RedPostEffect_Film;
 			 return : 'Number'
 		 }
 		 :DOC*/
-		this['_scanlineCount'] = null, this['scanlineCount'] = 2048;
+		this['scanlineCount'] = 2048;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
 		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
@@ -128,29 +128,8 @@ var RedPostEffect_Film;
 	RedPostEffect_Film.prototype = new RedBaseMaterial();
 	RedPostEffect_Film.prototype['bind'] = RedPostEffectManager.prototype['bind'];
 	RedPostEffect_Film.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
-	Object.defineProperty(RedPostEffect_Film.prototype, 'scanlineIntensity', {
-		get: function () { return this['_scanlineIntensity'] },
-		set: function (v) {
-			if ( typeof v != 'number' ) RedGLUtil.throwFunc('RedPostEffect_Film : scanlineIntensity 숫자만허용함', '입력값 : ' + v);
-			if ( v < 0 ) v = 0;
-			this['_scanlineIntensity'] = v;
-		}
-	});
-	Object.defineProperty(RedPostEffect_Film.prototype, 'noiseIntensity', {
-		get: function () { return this['_noiseIntensity'] },
-		set: function (v) {
-			if ( typeof v != 'number' ) RedGLUtil.throwFunc('RedPostEffect_Film : noiseIntensity 숫자만허용함', '입력값 : ' + v);
-			if ( v < 0 ) v = 0;
-			this['_noiseIntensity'] = v;
-		}
-	});
-	Object.defineProperty(RedPostEffect_Film.prototype, 'scanlineCount', {
-		get: function () { return this['_scanlineCount'] },
-		set: function (v) {
-			if ( typeof v != 'number' ) RedGLUtil.throwFunc('RedPostEffect_Film : scanlineCount 숫자만허용함', '입력값 : ' + v);
-			if ( v < 0 ) v = 0;
-			this['_scanlineCount'] = v;
-		}
-	});
+	RedDefinePropertyInfo.definePrototype('RedPostEffect_Film', 'scanlineIntensity', 'number', {'min': 0});
+	RedDefinePropertyInfo.definePrototype('RedPostEffect_Film', 'noiseIntensity', 'number', {'min': 0});
+	RedDefinePropertyInfo.definePrototype('RedPostEffect_Film', 'scanlineCount', 'number', {'min': 0});
 	Object.freeze(RedPostEffect_Film);
 })();

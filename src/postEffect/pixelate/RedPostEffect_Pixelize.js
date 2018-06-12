@@ -61,7 +61,6 @@ var RedPostEffect_Pixelize;
 			 return : 'Number'
 		 }
 		 :DOC*/
-		this['_width'] = null;
 		this['width'] = 5;
 		/**DOC:
 		 {
@@ -73,7 +72,6 @@ var RedPostEffect_Pixelize;
 			 return : 'Number'
 		 }
 		 :DOC*/
-		this['_height'] = null;
 		this['height'] = 5;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
@@ -88,7 +86,7 @@ var RedPostEffect_Pixelize;
 	RedPostEffect_Pixelize.prototype = new RedBaseMaterial();
 	RedPostEffect_Pixelize.prototype['bind'] = RedPostEffectManager.prototype['bind'];
 	RedPostEffect_Pixelize.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
-	Object.defineProperty(RedPostEffect_Pixelize.prototype, 'width', RedDefinePropertyInfo['width']);
-	Object.defineProperty(RedPostEffect_Pixelize.prototype, 'height', RedDefinePropertyInfo['height']);
+	RedDefinePropertyInfo.definePrototype('RedPostEffect_Pixelize', 'width', 'number',{'min': 0})
+	RedDefinePropertyInfo.definePrototype('RedPostEffect_Pixelize', 'height', 'number',{'min': 0})
 	Object.freeze(RedPostEffect_Pixelize);
 })();

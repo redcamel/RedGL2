@@ -93,19 +93,6 @@ var RedScene;
 		 }
 		 :DOC*/
 		this['fogDensity'] = 0.5
-		Object.defineProperty(this, 'fogDensity', (function () {
-			var _v = 0.5
-			return {
-				get: function () {
-					return _v
-				},
-				set: function (v) {
-					if ( typeof v != 'number' ) RedGLUtil.throwFunc('RedScene : fogDensity 숫자만허용함', '입력값 : ' + v);
-					if ( v < 0 ) v = 0;
-					_v = v
-				}
-			}
-		})());
 		/**DOC:
 		 {
 			 title :`fogDistance`,
@@ -116,19 +103,7 @@ var RedScene;
 			 return : 'Number'
 		 }
 		 :DOC*/
-		Object.defineProperty(this, 'fogDistance', (function () {
-			var _v = 25
-			return {
-				get: function () {
-					return _v
-				},
-				set: function (v) {
-					if ( typeof v != 'number' ) RedGLUtil.throwFunc('RedScene : fogDistance 숫자만허용함', '입력값 : ' + v);
-					if ( v < 0 ) v = 0;
-					_v = v
-				}
-			}
-		})());
+		this['fogDistance'] = 25
 		/**DOC:
 		 {
 			 title :`fogColor`,
@@ -142,9 +117,7 @@ var RedScene;
 			var _v = '#ffffff'
 			var t0;
 			return {
-				get: function () {
-					return _v
-				},
+				get: function () { return _v },
 				set: function (hex) {
 					_v = hex ? hex : '#ffffff';
 					if ( typeof _v != 'string' ) RedGLUtil.throwFunc('RedScene : fogColor hex 문자열만 허용함', '입력값 : ' + _v)
@@ -177,9 +150,7 @@ var RedScene;
 		 }
 		 :DOC*/
 		Object.defineProperty(this, 'skyBox', {
-			get: function () {
-				return _skyBoxMesh
-			},
+			get: function () { return _skyBoxMesh },
 			set: function (v) {
 				if ( !(v instanceof RedSkyBox) && v ) RedGLUtil.throwFunc('RedScene : RedSkyBox Instance만 허용됩니다.')
 				_skyBoxMesh = v;
@@ -196,9 +167,7 @@ var RedScene;
 		 }
 		 :DOC*/
 		Object.defineProperty(this, 'grid', {
-			get: function () {
-				return _gridMesh
-			},
+			get: function () { return _gridMesh },
 			set: function (v) {
 				if ( !(v instanceof RedGrid) && v ) RedGLUtil.throwFunc('RedScene : RedGrid Instance만 허용됩니다.')
 				_gridMesh = v;
@@ -215,9 +184,7 @@ var RedScene;
 		 }
 		 :DOC*/
 		Object.defineProperty(this, 'axis', {
-			get: function () {
-				return _axisMesh
-			},
+			get: function () { return _axisMesh },
 			set: function (v) {
 				if ( !(v instanceof RedAxis) && v ) RedGLUtil.throwFunc('RedScene : RedAxis Instance만 허용됩니다.')
 				_axisMesh = v;
@@ -310,6 +277,8 @@ var RedScene;
 		})()
 	};
 	RedScene.prototype = new RedBaseContainer();
-	for(var k in prototypeData) RedScene.prototype[k] = prototypeData[k];
+	for ( var k in prototypeData ) RedScene.prototype[k] = prototypeData[k];
+	RedDefinePropertyInfo.definePrototype('RedScene', 'fogDensity', 'number', {'min': 0});
+	RedDefinePropertyInfo.definePrototype('RedScene', 'fogDistance', 'number', {'min': 0})
 	Object.freeze(RedScene);
 })();

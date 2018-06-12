@@ -70,10 +70,10 @@ var RedPostEffect_HalfTone;
 		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedPostEffect_HalfTone : RedGL Instance만 허용됩니다.', redGL)
 		this['frameBuffer'] = RedFrameBuffer(redGL);
 		this['diffuseTexture'] = null;
-		this['_centerX'] = null, this['centerX'] = 0.0;
-		this['_centerY'] = null, this['centerY'] = 0.0;
-		this['_angle'] = null, this['angle'] = 0;
-		this['_radius'] = null, this['radius'] = 2;
+		this['centerX'] = 0.0;
+		this['centerY'] = 0.0;
+		this['angle'] = 0;
+		this['radius'] = 2;
 		this['grayMode'] = false;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
@@ -88,37 +88,9 @@ var RedPostEffect_HalfTone;
 	RedPostEffect_HalfTone.prototype = new RedBaseMaterial();
 	RedPostEffect_HalfTone.prototype['bind'] = RedPostEffectManager.prototype['bind'];
 	RedPostEffect_HalfTone.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
-	Object.defineProperty(RedPostEffect_HalfTone.prototype, 'centerX', {
-		get: function () { return this['_centerX'] },
-		set: function (v) {
-			if ( typeof v != 'number' ) RedGLUtil.throwFunc('RedPostEffect_HalfTone : centerX 숫자만허용함', '입력값 : ' + v);
-			if ( v < 0 ) v = 0;
-			this['_centerX'] = v;
-		}
-	});
-	Object.defineProperty(RedPostEffect_HalfTone.prototype, 'centerY', {
-		get: function () { return this['_centerY'] },
-		set: function (v) {
-			if ( typeof v != 'number' ) RedGLUtil.throwFunc('RedPostEffect_HalfTone : centerY 숫자만허용함', '입력값 : ' + v);
-			if ( v < 0 ) v = 0;
-			this['_centerY'] = v;
-		}
-	});
-	Object.defineProperty(RedPostEffect_HalfTone.prototype, 'angle', {
-		get: function () { return this['_angle'] },
-		set: function (v) {
-			if ( typeof v != 'number' ) RedGLUtil.throwFunc('RedPostEffect_HalfTone : angle 숫자만허용함', '입력값 : ' + v);
-			if ( v < 0 ) v = 0;
-			this['_angle'] = v;
-		}
-	});
-	Object.defineProperty(RedPostEffect_HalfTone.prototype, 'radius', {
-		get: function () { return this['_radius'] },
-		set: function (v) {
-			if ( typeof v != 'number' ) RedGLUtil.throwFunc('RedPostEffect_HalfTone : radius 숫자만허용함', '입력값 : ' + v);
-			if ( v < 0 ) v = 0;
-			this['_radius'] = v;
-		}
-	});
+	RedDefinePropertyInfo.definePrototype('RedPostEffect_HalfTone', 'centerX', 'number')
+	RedDefinePropertyInfo.definePrototype('RedPostEffect_HalfTone', 'centerY', 'number')
+	RedDefinePropertyInfo.definePrototype('RedPostEffect_HalfTone', 'angle', 'number')
+	RedDefinePropertyInfo.definePrototype('RedPostEffect_HalfTone', 'radius', 'number', {'min': 0})
 	Object.freeze(RedPostEffect_HalfTone);
 })();
