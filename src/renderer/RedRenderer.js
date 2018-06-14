@@ -518,6 +518,7 @@ var RedRenderer;
 				renderResultObj['call']++
 				tMesh = children[i]
 				tMVMatrix = tMesh['matrix']
+
 				tNMatrix = tMesh['normalMatrix']
 				tGeometry = tMesh['_geometry']
 				tSprite3DYn = tMesh['sprite3DYn']
@@ -587,12 +588,8 @@ var RedRenderer;
 							tSamplerIndex = tUniformLocationInfo['samplerIndex']
 							// samplerIndex : 0,1 번은 생성용으로 쓴다.
 							if ( tUniformValue ) {
-								// console.log(tUniformLocationInfo['materialPropertyName'],tUniformValue)
-								// console.log(tUniformLocationInfo)
-								if ( tCacheTexture[tSamplerIndex] == tUniformValue['_UUID'] ) {
-									// console.log('온다',tUniformLocationInfo['materialPropertyName'],tSamplerIndex,tSamplerIndex)
+								if ( tCacheTexture[tSamplerIndex] && tCacheTexture[tSamplerIndex] == tUniformValue['_UUID'] ) {
 								} else {
-									// console.log('온다2',tUniformLocationInfo['materialPropertyName'],tSamplerIndex,tSamplerIndex)
 									tPrevSamplerIndex == tSamplerIndex ? 0 : gl.activeTexture(gl.TEXTURE0 + (tPrevSamplerIndex = tSamplerIndex));
 									if ( tUniformValue['_videoDom'] ) {
 										//TODO: 일단 비디오를 우겨넣었으니 정리를 해야함
@@ -603,6 +600,7 @@ var RedRenderer;
 										gl.bindTexture(tRenderType == 'sampler2D' ? gl.TEXTURE_2D : gl.TEXTURE_CUBE_MAP, tUniformValue['webglTexture']);
 									}
 									tCacheSamplerIndex[tUUID] == tSamplerIndex ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheSamplerIndex[tUUID] = tSamplerIndex);
+									gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheSamplerIndex[tUUID] = tSamplerIndex)
 									tCacheTexture[tSamplerIndex] = tUniformValue['_UUID'];
 								}
 								// 아틀라스 UV검색
@@ -650,7 +648,10 @@ var RedRenderer;
 				/////////////////////////////////////////////////////////////////////////
 				// tMVMatrix
 				// tMVMatrix 초기화
+
+
 				if ( tMesh['autoUpdateMatrix'] ) {
+
 					tMVMatrix[0] = 1, tMVMatrix[1] = 0, tMVMatrix[2] = 0, tMVMatrix[3] = 0,
 						tMVMatrix[4] = 0, tMVMatrix[5] = 1, tMVMatrix[6] = 0, tMVMatrix[7] = 0,
 						tMVMatrix[8] = 0, tMVMatrix[9] = 0, tMVMatrix[10] = 1, tMVMatrix[11] = 0,
@@ -737,7 +738,7 @@ var RedRenderer;
 									tMVMatrix[14] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
 									tMVMatrix[15] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33
 							) : 0
-				} else    a = tMVMatrix
+				}
 				/////////////////////////////////////////////////////////////////////////
 				/////////////////////////////////////////////////////////////////////////
 				if ( tGeometry ) gl.uniformMatrix4fv(tSystemUniformGroup['uMMatrix']['location'], false, tMVMatrix)
@@ -745,7 +746,6 @@ var RedRenderer;
 				/////////////////////////////////////////////////////////////////////////
 				// 노말매트릭스를 사용할경우
 				if ( tGeometry && tMesh['autoUpdateMatrix'] && tSystemUniformGroup['uNMatrix']['location'] ) {
-
 					//클론
 					// mat4Inverse
 					inverse_c = tMVMatrix[0], inverse_d = tMVMatrix[1], inverse_e = tMVMatrix[2], inverse_g = tMVMatrix[3],
