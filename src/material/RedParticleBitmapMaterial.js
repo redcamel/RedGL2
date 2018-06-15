@@ -2,7 +2,7 @@
 var RedParticleBitmapMaterial;
 (function () {
 	var vSource, fSource;
-	var PROGRAM_NAME = 'RedParticleBitmapProgram';
+	var PROGRAM_NAME = 'particleBitmapProgram';
 	vSource = function () {
 		/* @preserve
 		 varying vec4 vColor;

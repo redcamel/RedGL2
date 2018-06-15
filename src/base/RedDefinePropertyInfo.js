@@ -13,7 +13,6 @@ var RedDefinePropertyInfo;
 						if ( v && !(v instanceof RedGeometry) ) RedGLUtil.throwFunc('geometry : RedGeometry Instance만 허용됩니다.', '입력값 : ' + v)
 					}
 					this['_geometry'] = v
-					this['_geometryBinded'] = false
 				}
 			}
 		})(),
@@ -33,7 +32,11 @@ var RedDefinePropertyInfo;
 						if ( !(v instanceof RedPointColorMaterial) && !(v instanceof RedPointBitmapMaterial) ) {
 							RedGLUtil.throwFunc('RedPointUnit : material - RedPointColorMaterial Instance or RedPointBitmapMaterial Instance만 허용됩니다.')
 						}
-					} else {
+					} else if ( this instanceof RedParticleEmitter ) {
+						if (!(v instanceof RedParticleColorMaterial) && !(v instanceof RedParticleBitmapMaterial) ) {
+							RedGLUtil.throwFunc('RedParticleEmitter : material - RedParticleColorMaterial Instance or RedParticleBitmapMaterial Instance만 허용됩니다.')
+						}
+					}else {
 						if ( v && !(v instanceof RedBaseMaterial) ) RedGLUtil.throwFunc('material : RedBaseMaterial Instance만 허용됩니다.', '입력값 : ' + v)
 					}
 					this['_material'] = v

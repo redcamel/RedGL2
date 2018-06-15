@@ -16,15 +16,15 @@ var RedParticleUnit;
 		 return : 'RedProgram Instance'
 	 }
 	 :DOC*/
-	RedParticleUnit = function (life, age) {
+	RedParticleUnit = function (lifeTime) {
 		this['startTime'] = null;
-		this['age'] = age || 0;
-		this['lifeTime'] = 1000;
-		this['dead'] = false;
-		this['scaleUp'] = 0.3
-		this['movementX'] = (Math.random()-0.5) * 0.05
-		this['movementY'] = (Math.random()-0.5) * 0.05
-		this['movementZ'] = (Math.random()-0.5) * 0.05
+		this['age'] = 0;
+		this['lifeTime'] = lifeTime.length == 2 ? Math.random() * (lifeTime[1] - lifeTime[0]) + lifeTime[0] : lifeTime[0]
+		this['scaleUp'] = 0.1
+		this['movementX'] = (Math.random() - 0.5) * 0.1
+		this['movementY'] = (Math.random() - 0.5) * 0.1
+		this['movementZ'] = (Math.random() - 0.5) * 0.1
+		this['gravityVelocity'] = 0
 	}
 	Object.freeze(RedParticleUnit);
 })();
