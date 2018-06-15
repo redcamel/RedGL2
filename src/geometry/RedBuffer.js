@@ -253,6 +253,7 @@ var RedBuffer;
 		 }
 		 :DOC*/
 		this['webglBuffer'] = tGL.createBuffer();
+		this['_binded'] = false
 		this['_UUID'] = RedGL['makeUUID']();
 		/**DOC:
 		 {

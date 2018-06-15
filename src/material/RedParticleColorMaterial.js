@@ -1,8 +1,8 @@
 "use strict";
-var RedPointColorMaterial;
+var RedParticleColorMaterial;
 (function () {
 	var vSource, fSource;
-	var PROGRAM_NAME = 'pointColorProgram';
+	var PROGRAM_NAME = 'particleColorProgram';
 	vSource = function () {
 		/* @preserve
 		 varying vec4 vColor;
@@ -40,21 +40,21 @@ var RedPointColorMaterial;
 	/**DOC:
 	 {
 		 constructorYn : true,
-		 title :`RedPointColorMaterial`,
+		 title :`RedParticleColorMaterial`,
 		 description : `
-			 RedPointColorMaterial Instance 생성
+			 RedParticleColorMaterial Instance 생성
 		 `,
 		 params : {
 			 redGL : [
 				 {type:'RedGL'}
 			 ]
 		 },
-		 return : 'RedPointColorMaterial Instance'
+		 return : 'RedParticleColorMaterial Instance'
 	 }
 	 :DOC*/
-	RedPointColorMaterial = function (redGL) {
-		if ( !(this instanceof RedPointColorMaterial) ) return new RedPointColorMaterial(redGL);
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedPointColorMaterial : RedGL Instance만 허용됩니다.', redGL)
+	RedParticleColorMaterial = function (redGL) {
+		if ( !(this instanceof RedParticleColorMaterial) ) return new RedParticleColorMaterial(redGL);
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedParticleColorMaterial : RedGL Instance만 허용됩니다.', redGL)
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
 		/////////////////////////////////////////
@@ -64,6 +64,6 @@ var RedPointColorMaterial;
 		this.checkUniformAndProperty();
 		console.log(this)
 	}
-	RedPointColorMaterial.prototype = new RedBaseMaterial()
-	Object.freeze(RedPointColorMaterial)
+	RedParticleColorMaterial.prototype = new RedBaseMaterial()
+	Object.freeze(RedParticleColorMaterial)
 })();

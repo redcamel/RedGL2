@@ -495,7 +495,7 @@ var RedRenderer;
 			var tSamplerIndex;
 			var tSprite3DYn;
 			var tCameraPosition;
-			var tLODData, tLODx, tLODy, tLODz, tLODdistance
+			var tLODData
 			// matix 관련
 			var a,
 				aSx, aSy, aSz, aCx, aCy, aCz, tRx, tRy, tRz,
@@ -506,7 +506,6 @@ var RedRenderer;
 				inverse_c, inverse_d, inverse_e, inverse_g, inverse_f, inverse_h, inverse_i, inverse_j, inverse_k, inverse_l, inverse_n, inverse_o, inverse_A, inverse_m, inverse_p, inverse_r, inverse_s, inverse_B, inverse_t, inverse_u, inverse_v, inverse_w, inverse_x, inverse_y, inverse_z, inverse_C, inverse_D, inverse_E, inverse_q;
 			// sin,cos 관련
 			var SIN, COS, tRadian, CPI, CPI2, C225, C127, C045, C157;
-			var k;
 			//////////////// 변수값 할당 ////////////////
 			BYTES_PER_ELEMENT = Float32Array.BYTES_PER_ELEMENT;
 			CONVERT_RADIAN = Math.PI / 180
@@ -525,14 +524,16 @@ var RedRenderer;
 				tMesh = children[i]
 				tMVMatrix = tMesh['matrix']
 				if ( tMesh['useLOD'] ) {
-					tLODx = tCameraPosition[0] - tMesh.x;
-					tLODy = tCameraPosition[1] - tMesh.y;
-					tLODz = tCameraPosition[2] - tMesh.z
-					tLODdistance = Math.abs(Math.sqrt(tLODx * tLODx + tLODy * tLODy + tLODz * tLODz));
+					var x = tCameraPosition[0] - tMesh.x;
+					var y = tCameraPosition[1] - tMesh.y;
+					var z = tCameraPosition[2] - tMesh.z
+					var distance = Math.abs(Math.sqrt(x * x + y * y + z * z));
 					tLODInfo = tMesh['_lodLevels']
-					for ( k in tLODInfo ) {
-						tLODData = tLODInfo[k];
-						if ( tLODData['distance'] < tLODdistance ) tMesh['_geometry'] = tLODData['geometry'], tMesh['_material'] = tLODData['material']
+					for ( var k in tLODInfo ) {
+						tLODData = tLODInfo[k]
+						if ( tLODData['distance'] < distance ) {
+							tMesh['_geometry'] = tLODData['geometry'],tMesh['_material'] = tLODData['material']
+						}
 					}
 				}
 				tNMatrix = tMesh['normalMatrix']
