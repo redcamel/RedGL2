@@ -41,6 +41,7 @@
     <script src="../src/resources/RedBitmapCubeTexture.js"></script>
     <!--재질-->
     <script src="../src/base/RedBaseMaterial.js"></script>
+    <script src="RedTestMaterial.js"></script>
     <script src="../src/material/RedColorMaterial.js"></script>
     <script src="../src/material/RedColorPhongMaterial.js"></script>
     <script src="../src/material/RedColorPhongTextureMaterial.js"></script>
@@ -143,11 +144,11 @@
 		testMaterial = RedTestMaterial(this)
 		var interleaveData, interleaveData2
 		interleaveData = []
-		var i = 1000000
+		var i = 50000
 		while ( i-- ) {
 			var t = Math.random() * 100 - 50
 			interleaveData.push(Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50)
-			interleaveData.push(Math.random() * 2)
+			interleaveData.push(Math.random() * 10)
 			interleaveData.push(Math.random(), Math.random(), Math.random(), 1)
 		}
 		interleaveData = new Float32Array(interleaveData)
@@ -175,10 +176,20 @@
 		tScene3D.addChild(testMesh)
 		tRenderer.renderDebuger.visible = true
 		tRenderer.start(this, function (time) {
-			tCamera.x = Math.sin(time / 1500) * 30
-			tCamera.y = Math.cos(time / 1500) * 30
+			tCamera.x = Math.sin(time / 15000) * 30
+			tCamera.y = Math.cos(time / 15000) * 30
+			var i = 1000000
+			var tSin = Math.sin(time/500) / 10
+			var tCos = Math.cos(time/700)/ 10
+			while ( i-- ) {
+
+				interleaveData[i* 8 +0] +=tSin
+				interleaveData[i* 8 +1] +=tCos
+				interleaveData[i* 8 +2] +=tSin+tCos
+			}
+			testInterleaveBuffer['upload'](interleaveData)
 			if ( tCamera.y < 1 ) tCamera.y = 1
-			tCamera.z = Math.cos(time / 1500) * 30 + Math.sin(time / 1500) * 30
+			tCamera.z = Math.cos(time / 15000) * 30 + Math.sin(time / 15000) * 30
 			tCamera.lookAt(0, 0, 0)
 		})
 		console.log(tScene3D)

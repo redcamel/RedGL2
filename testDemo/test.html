@@ -132,13 +132,13 @@
 		tGL = this.gl;
 		this.world = tWorld = RedWorld();
 		tScene3D = RedScene(this);
-		tScene3D['postEffectManager'].addEffect(RedPostEffect_Invert(this))
+//		tScene3D['postEffectManager'].addEffect(RedPostEffect_Invert(this))
 		// tScene3D['postEffectManager'].addEffect(RedPostEffect_Blur(this))
-		tScene3D['postEffectManager'].addEffect(RedPostEffect_Gray(this))
+//		tScene3D['postEffectManager'].addEffect(RedPostEffect_Gray(this))
 		// tScene3D['postEffectManager'].addEffect(RedPostEffect_Pixelize(this))
 		// tScene3D['postEffectManager'].addEffect(RedPostEffect_Convolution(this,RedPostEffect_Convolution['EMBOSS']))
 		// tScene3D['postEffectManager'].addEffect(RedPostEffect_HueSaturation(this))
-		tScene3D['postEffectManager'].addEffect(RedPostEffect_Vignetting(this))
+//		tScene3D['postEffectManager'].addEffect(RedPostEffect_Vignetting(this))
 		// tScene3D['postEffectManager'].addEffect(RedPostEffect_BrightnessContrast(this))
 		var zoomBlur = RedPostEffect_ZoomBlur(this)
 		tScene3D['postEffectManager'].addEffect(zoomBlur)
@@ -204,7 +204,7 @@
 			while ( i-- ) {
 				var t = Math.random() * 100 - 50
 				interleaveData.push(Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50)
-				interleaveData.push(Math.random() * 5)
+				interleaveData.push(Math.random() * 1)
 				interleaveData.push(Math.random(), Math.random(), Math.random(), 1)
 			}
 			interleaveData = new Float32Array(interleaveData)
@@ -228,7 +228,7 @@
 			var i = 100000
 			while ( i-- ) {
 				interleaveData.push(Math.random() * 150 - 75, Math.random() * 150 - 75, Math.random() * 150 - 75)
-				interleaveData.push(Math.random() * 100)
+				interleaveData.push(Math.random() * 5)
 				interleaveData.push(Math.random(), Math.random(), Math.random(), 1)
 			}
 			interleaveData = new Float32Array(interleaveData)
@@ -304,7 +304,7 @@
 		tRenderer.renderDebuger.visible = true
 		tRenderer.start(this, function (time) {
 			// testInterleaveBuffer.upload(interleaveData)
-			i = tScene3D.children.length
+			var i = tScene3D.children.length
 			while ( i-- ) {
 				if ( i == 0 ) break
 				testMesh = tScene3D.children[i]
@@ -329,7 +329,7 @@
 			testPLight2.z = Math.cos(time / 1500) * 18.5
 			zoomBlur.centerX = Math.sin(time / 1000) / 3.14
 			zoomBlur.centerY = Math.sin(time / 1000) / 3.14
-			zoomBlur.strength = Math.sin(time / 500) / 3.14 / 2
+			zoomBlur.amount = Math.abs(Math.sin(time / 500)) / 3.14 * 100
 		})
 		console.log(tScene3D)
 	})

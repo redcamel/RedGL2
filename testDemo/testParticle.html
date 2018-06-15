@@ -46,6 +46,8 @@
     <script src="../src/material/RedColorPhongTextureMaterial.js"></script>
     <script src="../src/material/RedEnvironmentMaterial.js"></script>
     <script src="../src/material/RedBitmapMaterial.js"></script>
+
+    <script src="../src/material/RedParticleBitmapMaterial.js"></script>
     <script src="../src/material/RedPointBitmapMaterial.js"></script>
     <script src="../src/material/RedStandardMaterial.js"></script>
     <script src="../src/material/RedVideoMaterial.js"></script>
@@ -70,6 +72,8 @@
     <script src="../src/object3D/RedSprite3D.js"></script>
     <!--//-->
     <script src="../src/particle/RedPointUnit.js"></script>
+    <script src="../src/particle/RedParticleUnit.js"></script>
+    <script src="../src/particle/RedParticleEmitter.js"></script>
     <!--//-->
     <script src="../src/primitives/RedBox.js"></script>
     <script src="../src/primitives/RedPlane.js"></script>
@@ -133,95 +137,36 @@
 		this.world = tWorld = RedWorld();
 		tScene3D = RedScene(this, '#223344');
 		tScene3D.alpha = 0.1
-		tCamera = RedCamera()
-		tCamera.y = 10
-		tCamera.z = 10
-		tCamera.lookAt(0, 0, 0)
+		tCamera = RedObitController(self)
+		tCamera.distance = 50
 		tRenderer = RedRenderer();
 		tWorld.addView(RedView('test', tScene3D, tCamera));
-		(function () {
-			var testMaterial
-			testMaterial = RedPointBitmapMaterial(self, RedBitmapTexture(self, '../asset/particle.png'))
-			var interleaveData
-			interleaveData = []
-			var i = 20000
-			while ( i-- ) {
-				var t = Math.random() * 100 - 50
-				interleaveData.push(Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50)
-				interleaveData.push(Math.random() * 10)
-			}
-			interleaveData = new Float32Array(interleaveData)
-			var testParticle = RedPointUnit(
-				self,
-				interleaveData,
-				[
-					RedInterleaveInfo('aVertexPosition', 3),
-					RedInterleaveInfo('aPointSize', 1)
-				],
-				testMaterial
-			)
-			testParticle['useDepthTest'] = false
-			// testParticle['depthTestFunc'] = self.gl.LESS
-			testParticle['blendSrc'] = self.gl.SRC_ALPHA
-			testParticle['blendDst'] = self.gl.ONE
-			tScene3D.addChildAt(testParticle, 0)
-		})();
-		(function () {
-			var testMaterial
-			testMaterial = RedPointColorMaterial(self)
-			var interleaveData, interleaveData2
-			interleaveData = []
-			var i = 10000
-			while ( i-- ) {
-				var t = Math.random() * 100 - 50
-				interleaveData.push(Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50)
-				interleaveData.push(Math.random() * 1)
-				interleaveData.push(Math.random(), Math.random(), Math.random(), 1)
-			}
-			interleaveData = new Float32Array(interleaveData)
-			var testParticle = RedPointUnit(
-				self,
-				interleaveData,
-				[
-					RedInterleaveInfo('aVertexPosition', 3),
-					RedInterleaveInfo('aPointSize', 1),
-					RedInterleaveInfo('aVertexColor', 4)
-				],
-				testMaterial
-			)
-			tScene3D.addChild(testParticle)
-		})();
-		(function () {
-			var testMaterial
-			testMaterial = RedPointBitmapMaterial(self, RedBitmapTexture(self, '../asset/alphaTest.png'))
-			var interleaveData
-			interleaveData = []
-			var i = 20000
-			while ( i-- ) {
-				var t = Math.random() * 100 - 50
-				interleaveData.push(Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50)
-				interleaveData.push(Math.random() * 10)
-			}
-			interleaveData = new Float32Array(interleaveData)
-			var testParticle = RedPointUnit(
-				self,
-				interleaveData,
-				[
-					RedInterleaveInfo('aVertexPosition', 3),
-					RedInterleaveInfo('aPointSize', 1)
-				],
-				testMaterial
-			)
-			tScene3D.addChild(testParticle)
-		})();
+
+		var testParticle = new RedParticleEmitter(this)
+		var testParticle2 = new RedParticleEmitter(this)
+        var tMesh = RedMesh(this, RedSphere(this,0.1),RedColorMaterial(this))
+		var tMesh2 = RedMesh(this, RedSphere(this,0.1),RedColorMaterial(this))
+		console.log(testParticle)
 		tScene3D['grid'] = RedGrid(self)
+        tScene3D.addChild(tMesh)
+		tMesh.addChild(testParticle)
+		tScene3D.addChild(tMesh2)
+		tMesh2.addChild(testParticle2)
+
+
+
 		tRenderer.start(this, function (time) {
-			tCamera.x = Math.sin(time / 3500) * 30
-			tCamera.y = Math.cos(time / 3500) * 30
-			if ( tCamera.y < 1 ) tCamera.y = 1
-			tCamera.z = Math.cos(time / 3500) * 30 + Math.sin(time / 31500) * 30
-			tCamera.lookAt(0, 0, 0)
 			tRenderer.renderDebuger.visible = true
+			testParticle.x = tMesh.x = Math.sin(time/500)*15
+			testParticle.y = tMesh.y = Math.cos(time/500)*15
+			testParticle.z = tMesh.z = Math.cos(time/200)+Math.sin(time/1500)*15
+
+			testParticle2.x = tMesh2.x = -Math.sin(time/300)*6
+			testParticle2.y = tMesh2.y = Math.cos(time/1500)*6
+			testParticle2.z = tMesh2.z = Math.cos(time/1200)*6+Math.sin(time/1500)*3
+
+			testParticle.update(time)
+			testParticle2.update(time)
 		})
 		console.log(tScene3D)
 	})

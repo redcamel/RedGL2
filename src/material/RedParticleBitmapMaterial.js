@@ -1,17 +1,19 @@
 "use strict";
-var RedPointBitmapMaterial;
+var RedParticleBitmapMaterial;
 (function () {
 	var vSource, fSource;
-	var PROGRAM_NAME = 'pointBitmapProgram';
+	var PROGRAM_NAME = 'RedParticleBitmapProgram';
 	vSource = function () {
 		/* @preserve
+		 varying vec4 vColor;
 		 const float cSIZE_MULTIPLIER = 300.0;
 		 float spriteDist;
 		 void main(void) {
-			 gl_Position = uPMatrix * uCameraMatrix* uMMatrix * vec4(aVertexPosition, 1.0);
-			 if (gl_Position.w == 0.0) spriteDist = 0.00001;
-		     spriteDist = gl_Position.w;
-		     gl_PointSize = (((aPointSize * cSIZE_MULTIPLIER * (uResolution.x/uResolution.y)) / spriteDist) * (uResolution.x/uResolution.y));
+	        gl_Position = uPMatrix * uCameraMatrix* uMMatrix * vec4(aVertexPosition, 1.0);
+		    if (gl_Position.w == 0.0) spriteDist = 0.00001;
+		    spriteDist = gl_Position.w;
+		    gl_PointSize = (((aPointSize * cSIZE_MULTIPLIER * (uResolution.x/uResolution.y)) / spriteDist) * (uResolution.x/uResolution.y));
+			vColor = aVertexColor;
 		 }
 		 */
 	}
@@ -20,6 +22,7 @@ var RedPointBitmapMaterial;
 		 precision mediump float;
 		 uniform sampler2D u_diffuseTexture;
 		 uniform float uAlphaTest;
+	     varying vec4 vColor;
 		 float fogFactor(float perspectiveFar, float density){
 			 float flog_cord = gl_FragCoord.z / gl_FragCoord.w / perspectiveFar;
 			 float fog = flog_cord * density;
@@ -31,7 +34,10 @@ var RedPointBitmapMaterial;
 		 }
 		 void main(void) {
 			 vec4 finalColor = texture2D(u_diffuseTexture, vec2(gl_PointCoord.x, - gl_PointCoord.y));
-			 finalColor.rgb *= finalColor.a;
+		     finalColor.rgb *= finalColor.a;
+			 finalColor.rgb += vColor.rgb;
+			 finalColor.rgb *= vColor.a;
+			 finalColor.a = finalColor.a;
 			 if(finalColor.a < uAlphaTest) discard;
 			 if(uUseFog) gl_FragColor = fog( fogFactor(uFogDistance, uFogDensity), uFogColor, finalColor);
 			 else gl_FragColor = finalColor;
@@ -41,9 +47,9 @@ var RedPointBitmapMaterial;
 	/**DOC:
 	 {
 		 constructorYn : true,
-		 title :`RedPointBitmapMaterial`,
+		 title :`RedParticleBitmapMaterial`,
 		 description : `
-			 RedPointBitmapMaterial Instance 생성
+			 RedParticleBitmapMaterial Instance 생성
 		 `,
 		 params : {
 			 redGL : [
@@ -53,12 +59,12 @@ var RedPointBitmapMaterial;
 				 {type:'RedBitmapTexture'}
 			 ]
 		 },
-		 return : 'RedPointBitmapMaterial Instance'
+		 return : 'RedParticleBitmapMaterial Instance'
 	 }
 	 :DOC*/
-	RedPointBitmapMaterial = function (redGL, diffuseTexture) {
-		if ( !(this instanceof RedPointBitmapMaterial) ) return new RedPointBitmapMaterial(redGL, diffuseTexture);
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedPointBitmapMaterial : RedGL Instance만 허용됩니다.', redGL)
+	RedParticleBitmapMaterial = function (redGL, diffuseTexture) {
+		if ( !(this instanceof RedParticleBitmapMaterial) ) return new RedParticleBitmapMaterial(redGL, diffuseTexture);
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedParticleBitmapMaterial : RedGL Instance만 허용됩니다.', redGL)
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
 		/**DOC:
@@ -81,12 +87,12 @@ var RedPointBitmapMaterial;
 			 return : 'Number'
 		 }
 		 :DOC*/
-		this['alphaTest'] = 0.1
+		this['alphaTest'] = 0.01
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkUniformAndProperty();
 		console.log(this)
 	}
-	RedPointBitmapMaterial.prototype = new RedBaseMaterial()
-	RedDefinePropertyInfo.definePrototype('RedPointBitmapMaterial', 'diffuseTexture', 'sampler2D', {essential: true});
-	Object.freeze(RedPointBitmapMaterial)
+	RedParticleBitmapMaterial.prototype = new RedBaseMaterial()
+	RedDefinePropertyInfo.definePrototype('RedParticleBitmapMaterial', 'diffuseTexture', 'sampler2D', {essential: true});
+	Object.freeze(RedParticleBitmapMaterial)
 })();
