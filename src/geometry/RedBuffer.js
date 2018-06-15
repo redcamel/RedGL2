@@ -253,6 +253,7 @@ var RedBuffer;
 		 }
 		 :DOC*/
 		this['webglBuffer'] = tGL.createBuffer();
+		this['_geometryBinded'] = false
 		this['_UUID'] = RedGL['makeUUID']();
 		/**DOC:
 		 {
@@ -283,8 +284,9 @@ var RedBuffer;
 			if ( this['glArrayType'] == getGlDataTypeByTypeArray(tGL, bufferType, data) ) {
 				this['data'] = data
 				tGL.bindBuffer(this['glBufferType'], this['webglBuffer']);
-				tGL.bufferData(this['glBufferType'], this['data'], this['drawMode']);
+				this['_geometryBinded'] ? tGL.bufferSubData(this['glBufferType'], 0, this['data'])  :tGL.bufferData(this['glBufferType'], this['data'], this['drawMode']);
 				parseInterleaveDefineInfo(this, this['bufferType'], this['data'], this['interleaveDefineInfoList']);
+				this['_geometryBinded'] = true
 			} else RedGLUtil.throwFunc('RedBuffer : upload - data형식이 기존 형식과 다름', data)
 		}
 		this['upload'](this['data']);

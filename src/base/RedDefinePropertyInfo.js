@@ -13,6 +13,7 @@ var RedDefinePropertyInfo;
 						if ( v && !(v instanceof RedGeometry) ) RedGLUtil.throwFunc('geometry : RedGeometry Instance만 허용됩니다.', '입력값 : ' + v)
 					}
 					this['_geometry'] = v
+					this['_geometryBinded'] = false
 				}
 			}
 		})(),
