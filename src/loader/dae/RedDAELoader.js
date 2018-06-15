@@ -355,18 +355,18 @@ var RedDAELoader;
 				// 버퍼데이터생성
 				var idxMap = {}
 				t_indexDataIndex.forEach(function (v, index) {
-					tInterleaveBufferData[index * 8 + 0] = pointInfo['pointList'][v][0]
-					tInterleaveBufferData[index * 8 + 1] = pointInfo['pointList'][v][1]
-					tInterleaveBufferData[index * 8 + 2] = pointInfo['pointList'][v][2]
+					tInterleaveBufferData[v * 8 + 0] = pointInfo['pointList'][v][0]
+					tInterleaveBufferData[v * 8 + 1] = pointInfo['pointList'][v][1]
+					tInterleaveBufferData[v * 8 + 2] = pointInfo['pointList'][v][2]
 					// 해당인덱스에 해당하는 인터리브 버퍼상의 위치
 					if ( !idxMap[v] ) idxMap[v] = []
 					idxMap[v].push(index)
-					tInterleaveBufferData[index * 8 + 3] = pointInfo['normalPointList'][t_normalDataindex[index]][0]
-					tInterleaveBufferData[index * 8 + 4] = pointInfo['normalPointList'][t_normalDataindex[index]][1]
-					tInterleaveBufferData[index * 8 + 5] = pointInfo['normalPointList'][t_normalDataindex[index]][2]
-					tInterleaveBufferData[index * 8 + 6] = pointInfo['uvPointList'][t_coordDataIndex[index]][0]
-					tInterleaveBufferData[index * 8 + 7] = pointInfo['uvPointList'][t_coordDataIndex[index]][1]
-					tResultIndexData.push(index)
+					tInterleaveBufferData[v * 8 + 3] = pointInfo['normalPointList'][t_normalDataindex[index]][0]
+					tInterleaveBufferData[v * 8 + 4] = pointInfo['normalPointList'][t_normalDataindex[index]][1]
+					tInterleaveBufferData[v * 8 + 5] = pointInfo['normalPointList'][t_normalDataindex[index]][2]
+					tInterleaveBufferData[v * 8 + 6] = pointInfo['uvPointList'][t_coordDataIndex[index]][0]
+					tInterleaveBufferData[v * 8 + 7] = pointInfo['uvPointList'][t_coordDataIndex[index]][1]
+					tResultIndexData.push(v)
 				})
 				// 버퍼생성
 				tInterleaveBuffer = RedBuffer(
@@ -439,7 +439,10 @@ var RedDAELoader;
 							})
 							mat4.transpose(skeletonMatrix, skeletonMatrix, skeletonMatrix)
 							// console.log(mtxList)
+							controllerInfo[aniInfo[k]['target']]['skeleton']['autoUpdateMatrix'] = false
+							controllerInfo[aniInfo[k]['target']]['autoUpdateMatrix'] = false
 							controllerInfo[aniInfo[k]['target']]['skeleton']['matrix'] = skeletonMatrix
+							controllerInfo[aniInfo[k]['target']]['matrix'] = skeletonMatrix
 							var tControllIndex = controllerInfo2['jointNamePositionIndex'][aniInfo[k]['target']]
 							var tInversePose = controllerInfo2['jointInverseBindPoses'][tControllIndex]
 							mtxMap[tControllIndex] = {
@@ -453,8 +456,51 @@ var RedDAELoader;
 						}
 						i++
 					}
-					// console.log(mtxMap)
-					var time = (new Date()).getTime()
+					// 일단 전체 포인트에 대한 초기화는 이렇게 가능하고..
+					t_indexDataIndex.forEach(function (v, index) {
+						tInterleaveBuffer['data'][v * 8 + 0] = pointInfo['pointList'][v][0]
+						tInterleaveBuffer['data'][v * 8 + 1] = pointInfo['pointList'][v][1]
+						tInterleaveBuffer['data'][v * 8 + 2] = pointInfo['pointList'][v][2]
+					})
+					// 뼈대 가중치에서 처리함
+					var t1
+					var total = 0
+					t_indexDataIndex.forEach(function (v2, index) {
+						// if(index>0) return
+						v2 = v2
+						total = 0
+						var totalRAtio = 0
+						var finalMTX = mat4.create()
+						var t = (new Date()).getTime() / 500
+						for ( var k2 in controllerInfo2['parsedVertexJointWeights'][v2] ) {
+							var t2 = mat4.create()
+							var tRadio = controllerInfo2['parsedVertexJointWeights'][v2][k2]
+							// console.log(controllerInfo2['parsedVertexJointWeights'][v2])
+							// console.log(controllerInfo2['bindShapeMatrix'])
+							// console.log( mtxMap[k2]['skeletonMatrix'])
+							// 원본좌표
+							var t0 = [
+								1, 0, 0, 0,
+								0, 1, 0, 0,
+								0, 0, 1, 0,
+								pointInfo['pointList'][v2][0]-mtxMap[k2]['skeletonMatrix'][12],
+								pointInfo['pointList'][v2][1]-mtxMap[k2]['skeletonMatrix'][13],
+								pointInfo['pointList'][v2][2]-mtxMap[k2]['skeletonMatrix'][14],
+								1
+							]
+							// var t2 = mat4.clone(mtxMap[k2]['skeletonMatrix'])
+							totalRAtio += tRadio
+							mat4.scale(t2, t2, [tRadio, tRadio, tRadio])
+							mat4.multiply(t0, t0, t2)
+
+							// mat4.translate(t2, t2, [-t2[12], -t2[13], -t2[14]])
+							mat4.add(finalMTX, finalMTX, t0)
+							total++
+						}
+						totalRAtio = totalRAtio / total
+						tInterleaveBuffer['data'][v2 * 8 + 0] = (finalMTX[12])
+						tInterleaveBuffer['data'][v2 * 8 + 2] = (finalMTX[14]) * totalRAtio
+					})
 					tResultMesh['geometry']['interleaveBuffer'].upload(tInterleaveBuffer['data'])
 					aniIndex++
 					if ( aniMax == aniIndex ) aniIndex = 0

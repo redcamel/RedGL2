@@ -219,13 +219,39 @@ var RedBaseObject3D;
 		 }
 		 :DOC*/
 		this['children'] = []
-		this['sprite3DYn'] =false
+		this['sprite3DYn'] = false
+		this['useLOD'] = false
+		this['_lodLevels'] = {
+			/* 1: {
+				geometry : ~~,
+				material : ~~~
+				둘중하나는 있어야하며
+				하나만 입력할경우 없는쪽은 오리지날 속성이 부여된다.
+			}
+			*/
+		}
 		this['_geometry'] = null;
 		Object.defineProperty(this, 'geometry', RedDefinePropertyInfo['geometry']);
 		this['_material'] = null;
 		Object.defineProperty(this, 'material', RedDefinePropertyInfo['material']);
 	}
 	RedBaseObject3D.prototype = {
+		addLOD: (function () {
+			var tData;
+			return function (level, distance, geometry, material) {
+				geometry || material || RedGL.throwFunc('RedBaseObject3D - addLOD : geometry, material 둘중하나는 반드시 입력되어야함')
+				tData = {
+					level: level,
+					distance: distance,
+					geometry: geometry ? geometry : this['geometry'],
+					material: material ? material : this['material']
+				}
+				this['_lodLevels'][level] = tData
+			}
+		})(),
+		removeLOD: function (level) {
+			delete this['_lodLevels'][level]
+		},
 		/**DOC:
 		 {
 			 title :`localToWorld`,

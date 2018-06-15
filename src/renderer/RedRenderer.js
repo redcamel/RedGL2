@@ -395,7 +395,8 @@ var RedRenderer;
 				mat4.identity(perspectiveMTX);
 				if ( tCamera['orthographicYn'] ) {
 					mat4.ortho(
-						perspectiveMTX, -0.5, // left
+						perspectiveMTX,
+						-0.5, // left
 						0.5, // right
 						-0.5, // bottom
 						0.5, // top,
@@ -481,6 +482,7 @@ var RedRenderer;
 			var tMesh;
 			var tGeometry;
 			var tMaterial;
+			var tLODInfo;
 			var tInterleaveDefineInfo;
 			var tAttrGroup, tUniformGroup, tSystemUniformGroup;
 			var tInterleaveDefineUnit
@@ -492,6 +494,8 @@ var RedRenderer;
 			var tUUID, noChangeUniform;
 			var tSamplerIndex;
 			var tSprite3DYn;
+			var tCameraPosition;
+			var tLODData, tLODx, tLODy, tLODz, tLODdistance
 			// matix 관련
 			var a,
 				aSx, aSy, aSz, aCx, aCy, aCz, tRx, tRy, tRz,
@@ -502,6 +506,7 @@ var RedRenderer;
 				inverse_c, inverse_d, inverse_e, inverse_g, inverse_f, inverse_h, inverse_i, inverse_j, inverse_k, inverse_l, inverse_n, inverse_o, inverse_A, inverse_m, inverse_p, inverse_r, inverse_s, inverse_B, inverse_t, inverse_u, inverse_v, inverse_w, inverse_x, inverse_y, inverse_z, inverse_C, inverse_D, inverse_E, inverse_q;
 			// sin,cos 관련
 			var SIN, COS, tRadian, CPI, CPI2, C225, C127, C045, C157;
+			var k;
 			//////////////// 변수값 할당 ////////////////
 			BYTES_PER_ELEMENT = Float32Array.BYTES_PER_ELEMENT;
 			CONVERT_RADIAN = Math.PI / 180
@@ -514,10 +519,22 @@ var RedRenderer;
 			//////////////// 렌더시작 ////////////////
 			tPrevSamplerIndex = null
 			i = children.length
+			tCameraPosition = [tCamera.x, tCamera.y, tCamera.z]
 			while ( i-- ) {
 				renderResultObj['call']++
 				tMesh = children[i]
 				tMVMatrix = tMesh['matrix']
+				if ( tMesh['useLOD'] ) {
+					tLODx = tCameraPosition[0] - tMesh.x;
+					tLODy = tCameraPosition[1] - tMesh.y;
+					tLODz = tCameraPosition[2] - tMesh.z
+					tLODdistance = Math.abs(Math.sqrt(tLODx * tLODx + tLODy * tLODy + tLODz * tLODz));
+					tLODInfo = tMesh['_lodLevels']
+					for ( k in tLODInfo ) {
+						tLODData = tLODInfo[k];
+						if ( tLODData['distance'] < tLODdistance ) tMesh['_geometry'] = tLODData['geometry'], tMesh['_material'] = tLODData['material']
+					}
+				}
 				tNMatrix = tMesh['normalMatrix']
 				tGeometry = tMesh['_geometry']
 				tSprite3DYn = tMesh['sprite3DYn']
@@ -587,12 +604,8 @@ var RedRenderer;
 							tSamplerIndex = tUniformLocationInfo['samplerIndex']
 							// samplerIndex : 0,1 번은 생성용으로 쓴다.
 							if ( tUniformValue ) {
-								// console.log(tUniformLocationInfo['materialPropertyName'],tUniformValue)
-								// console.log(tUniformLocationInfo)
-								if ( tCacheTexture[tSamplerIndex] == tUniformValue['_UUID'] ) {
-									// console.log('온다',tUniformLocationInfo['materialPropertyName'],tSamplerIndex,tSamplerIndex)
+								if ( tCacheTexture[tSamplerIndex] && tCacheTexture[tSamplerIndex] == tUniformValue['_UUID'] ) {
 								} else {
-									// console.log('온다2',tUniformLocationInfo['materialPropertyName'],tSamplerIndex,tSamplerIndex)
 									tPrevSamplerIndex == tSamplerIndex ? 0 : gl.activeTexture(gl.TEXTURE0 + (tPrevSamplerIndex = tSamplerIndex));
 									if ( tUniformValue['_videoDom'] ) {
 										//TODO: 일단 비디오를 우겨넣었으니 정리를 해야함
@@ -603,6 +616,7 @@ var RedRenderer;
 										gl.bindTexture(tRenderType == 'sampler2D' ? gl.TEXTURE_2D : gl.TEXTURE_CUBE_MAP, tUniformValue['webglTexture']);
 									}
 									tCacheSamplerIndex[tUUID] == tSamplerIndex ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheSamplerIndex[tUUID] = tSamplerIndex);
+									gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheSamplerIndex[tUUID] = tSamplerIndex)
 									tCacheTexture[tSamplerIndex] = tUniformValue['_UUID'];
 								}
 								// 아틀라스 UV검색
@@ -737,7 +751,7 @@ var RedRenderer;
 									tMVMatrix[14] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
 									tMVMatrix[15] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33
 							) : 0
-				} else    a = tMVMatrix
+				}
 				/////////////////////////////////////////////////////////////////////////
 				/////////////////////////////////////////////////////////////////////////
 				if ( tGeometry ) gl.uniformMatrix4fv(tSystemUniformGroup['uMMatrix']['location'], false, tMVMatrix)
@@ -745,7 +759,6 @@ var RedRenderer;
 				/////////////////////////////////////////////////////////////////////////
 				// 노말매트릭스를 사용할경우
 				if ( tGeometry && tMesh['autoUpdateMatrix'] && tSystemUniformGroup['uNMatrix']['location'] ) {
-
 					//클론
 					// mat4Inverse
 					inverse_c = tMVMatrix[0], inverse_d = tMVMatrix[1], inverse_e = tMVMatrix[2], inverse_g = tMVMatrix[3],
