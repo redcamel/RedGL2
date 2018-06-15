@@ -159,14 +159,14 @@ var RedCamera;
 	})();
 	RedCamera.prototype['lookAt'] = (function () {
 		var up = new Float32Array([0, 1, 0]);
-		var RedProgramosition = []
+		var tPosition = []
 		return function (x, y, z) {
-			RedProgramosition[0] = this['targetX'] = x
-			RedProgramosition[1] = this['targetY'] = y
-			RedProgramosition[2] = this['targetZ'] = z
+			tPosition[0] = this['targetX'] = x
+			tPosition[1] = this['targetY'] = y
+			tPosition[2] = this['targetZ'] = z
 			//out, eye, center, up
 			mat4.identity(this['matrix'])
-			mat4.lookAt(this['matrix'], [this.x, this.y, this.z], RedProgramosition, up);
+			mat4.lookAt(this['matrix'], [this.x, this.y, this.z], tPosition, up);
 		}
 	})();
 	Object.freeze(RedCamera);

@@ -395,7 +395,8 @@ var RedRenderer;
 				mat4.identity(perspectiveMTX);
 				if ( tCamera['orthographicYn'] ) {
 					mat4.ortho(
-						perspectiveMTX, -0.5, // left
+						perspectiveMTX,
+						-0.5, // left
 						0.5, // right
 						-0.5, // bottom
 						0.5, // top,
@@ -481,6 +482,7 @@ var RedRenderer;
 			var tMesh;
 			var tGeometry;
 			var tMaterial;
+			var tLODInfo;
 			var tInterleaveDefineInfo;
 			var tAttrGroup, tUniformGroup, tSystemUniformGroup;
 			var tInterleaveDefineUnit
@@ -492,6 +494,8 @@ var RedRenderer;
 			var tUUID, noChangeUniform;
 			var tSamplerIndex;
 			var tSprite3DYn;
+			var tCameraPosition;
+			var tLODData, tLODx, tLODy, tLODz, tLODdistance
 			// matix 관련
 			var a,
 				aSx, aSy, aSz, aCx, aCy, aCz, tRx, tRy, tRz,
@@ -502,6 +506,7 @@ var RedRenderer;
 				inverse_c, inverse_d, inverse_e, inverse_g, inverse_f, inverse_h, inverse_i, inverse_j, inverse_k, inverse_l, inverse_n, inverse_o, inverse_A, inverse_m, inverse_p, inverse_r, inverse_s, inverse_B, inverse_t, inverse_u, inverse_v, inverse_w, inverse_x, inverse_y, inverse_z, inverse_C, inverse_D, inverse_E, inverse_q;
 			// sin,cos 관련
 			var SIN, COS, tRadian, CPI, CPI2, C225, C127, C045, C157;
+			var k;
 			//////////////// 변수값 할당 ////////////////
 			BYTES_PER_ELEMENT = Float32Array.BYTES_PER_ELEMENT;
 			CONVERT_RADIAN = Math.PI / 180
@@ -514,11 +519,22 @@ var RedRenderer;
 			//////////////// 렌더시작 ////////////////
 			tPrevSamplerIndex = null
 			i = children.length
+			tCameraPosition = [tCamera.x, tCamera.y, tCamera.z]
 			while ( i-- ) {
 				renderResultObj['call']++
 				tMesh = children[i]
 				tMVMatrix = tMesh['matrix']
-
+				if ( tMesh['useLOD'] ) {
+					tLODx = tCameraPosition[0] - tMesh.x;
+					tLODy = tCameraPosition[1] - tMesh.y;
+					tLODz = tCameraPosition[2] - tMesh.z
+					tLODdistance = Math.abs(Math.sqrt(tLODx * tLODx + tLODy * tLODy + tLODz * tLODz));
+					tLODInfo = tMesh['_lodLevels']
+					for ( k in tLODInfo ) {
+						tLODData = tLODInfo[k];
+						if ( tLODData['distance'] < tLODdistance ) tMesh['_geometry'] = tLODData['geometry'], tMesh['_material'] = tLODData['material']
+					}
+				}
 				tNMatrix = tMesh['normalMatrix']
 				tGeometry = tMesh['_geometry']
 				tSprite3DYn = tMesh['sprite3DYn']
@@ -648,10 +664,7 @@ var RedRenderer;
 				/////////////////////////////////////////////////////////////////////////
 				// tMVMatrix
 				// tMVMatrix 초기화
-
-
 				if ( tMesh['autoUpdateMatrix'] ) {
-
 					tMVMatrix[0] = 1, tMVMatrix[1] = 0, tMVMatrix[2] = 0, tMVMatrix[3] = 0,
 						tMVMatrix[4] = 0, tMVMatrix[5] = 1, tMVMatrix[6] = 0, tMVMatrix[7] = 0,
 						tMVMatrix[8] = 0, tMVMatrix[9] = 0, tMVMatrix[10] = 1, tMVMatrix[11] = 0,
