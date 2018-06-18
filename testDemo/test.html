@@ -49,6 +49,7 @@
     <script src="../src/material/RedParticleColorMaterial.js"></script>
     <script src="../src/material/RedParticleBitmapMaterial.js"></script>
     <script src="../src/material/RedPointBitmapMaterial.js"></script>
+    <script src="../src/material/RedSheetMaterial.js"></script>
     <script src="../src/material/RedStandardMaterial.js"></script>
     <script src="../src/material/RedVideoMaterial.js"></script>
     <!--//-->
@@ -145,7 +146,7 @@
 //		tScene3D['postEffectManager'].addEffect(RedPostEffect_Vignetting(this))
 		// tScene3D['postEffectManager'].addEffect(RedPostEffect_BrightnessContrast(this))
 		var zoomBlur = RedPostEffect_ZoomBlur(this)
-//		tScene3D['postEffectManager'].addEffect(zoomBlur)
+		tScene3D['postEffectManager'].addEffect(zoomBlur)
 		// tScene3D['postEffectManager'].addEffect(RedPostEffect_HalfTone(this))
 //		tScene3D['postEffectManager'].addEffect( RedPostEffect_Bloom( this ) )
 		tCamera = RedCamera();
@@ -208,7 +209,7 @@
 			while ( i-- ) {
 				var t = Math.random() * 100 - 50
 				interleaveData.push(Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50)
-				interleaveData.push(Math.random() * 1)
+				interleaveData.push(Math.random() * 5)
 				interleaveData.push(Math.random(), Math.random(), Math.random(), 1)
 			}
 			interleaveData = new Float32Array(interleaveData)
@@ -232,7 +233,7 @@
 			var i = 100000
 			while ( i-- ) {
 				interleaveData.push(Math.random() * 150 - 75, Math.random() * 150 - 75, Math.random() * 150 - 75)
-				interleaveData.push(Math.random() * 5)
+				interleaveData.push(Math.random() * 50)
 				interleaveData.push(Math.random(), Math.random(), Math.random(), 1)
 			}
 			interleaveData = new Float32Array(interleaveData)

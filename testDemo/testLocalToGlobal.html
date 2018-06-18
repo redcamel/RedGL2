@@ -49,6 +49,7 @@
     <script src="../src/material/RedParticleColorMaterial.js"></script>
     <script src="../src/material/RedParticleBitmapMaterial.js"></script>
     <script src="../src/material/RedPointBitmapMaterial.js"></script>
+    <script src="../src/material/RedSheetMaterial.js"></script>
     <script src="../src/material/RedStandardMaterial.js"></script>
     <script src="../src/material/RedVideoMaterial.js"></script>
     <!--//-->
@@ -199,7 +200,6 @@
 		function get2dPoint(point3D, viewMatrix, projectionMatrix, width, height) {
 			var viewProjectionMatrix = projectionMatrix * viewMatrix;
 			//transform world to clipping coordinates
-
 			point3D = projectionMatrix.multiply(point3D,);
 			var winX = Math.round((( point3D[0] + 1 ) / 2.0) * width);
 			//we calculate -point3D.getY() because the screen Y axis is

@@ -207,6 +207,7 @@ var RedPostEffectManager;
 								-tCamera['farClipping'],
 								tCamera['farClipping']
 							)
+							mat4.scale(tPerspectiveMTX, tPerspectiveMTX, [1, -1 , 1]);
 							tValueStr = JSON.stringify(tPerspectiveMTX)
 							if ( tCacheSystemUniformInfo[tUUID] != tValueStr ) {
 								gl.uniformMatrix4fv(tLocation, false, tPerspectiveMTX);

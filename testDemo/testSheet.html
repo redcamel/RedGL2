@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>RedOBJLoader</title>
+    <title>testTexture</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -49,6 +49,7 @@
     <script src="../src/material/RedParticleColorMaterial.js"></script>
     <script src="../src/material/RedParticleBitmapMaterial.js"></script>
     <script src="../src/material/RedPointBitmapMaterial.js"></script>
+    <script src="../src/material/RedSheetMaterial.js"></script>
     <script src="../src/material/RedStandardMaterial.js"></script>
     <script src="../src/material/RedVideoMaterial.js"></script>
     <!--//-->
@@ -125,44 +126,24 @@
 <body>
 <canvas id="test" style="border: none;background:red"></canvas>
 <script>
-	document.getElementById('test')
-	RedGL(document.getElementById('test'), function (v) {
-		console.log(v)
+	var t = document.getElementById('test')
+	document.body.appendChild(t)
+	RedGL(t, function (v) {
 		var tGL;
-		var tWorld, tScene3D, tCamera
+		var tWorld, tScene, tCamera
 		var tRenderer;
 		var self;
 		self = this
 		tGL = this.gl;
 		this.world = tWorld = RedWorld();
-		tScene3D = RedScene(this);
+		tScene = RedScene(this);
 		tCamera = RedCamera();
+		tCamera.oth
 		tRenderer = RedRenderer();
-		tWorld.addView(RedView('test', tScene3D, tCamera));
+		tWorld.addView(RedView('test', tScene, tCamera));
 		RedView('test').setSize('100%', '100%')
 		RedView('test').setLocation('0%', '0%')
-		this.renderScale = 1
-		var testDLight, testALight, testPLight;
-		testDLight = RedDirectionalLight(this, '#fff', 1)
-		testDLight.x = 3
-		testDLight.y = 2
-		testDLight.z = 3
-		testDLight.debug = true
-		tScene3D.addLight(testDLight)
-		testDLight = RedDirectionalLight(this, '#ff00ff', 0.2)
-		testDLight.x = -3
-		testDLight.y = 2
-		testDLight.z = -3
-		testDLight.debug = true
-		tScene3D.addLight(testDLight)
-		testPLight = RedPointLight(this, '#00ff00', 0.5)
-		testPLight.x = -3
-		testPLight.y = -3
-		testPLight.z = -3
-		testPLight['radius'] = 1
-		testPLight['intensity'] = 1
-		tScene3D.addLight(testPLight)
-		tScene3D.skyBox =
+		tScene.skyBox =
 			RedSkyBox(this, [
 				'../asset/cubemap/posx.png',
 				'../asset/cubemap/negx.png',
@@ -171,64 +152,69 @@
 				'../asset/cubemap/posz.png',
 				'../asset/cubemap/negz.png'
 			]);
-		tScene3D['grid'] = RedGrid(self)
-		RedOBJLoader(this, '../asset/obj/gun/', 'Handgun_obj.obj', function (v) {
-			console.log('호잇!', v)
-			tScene3D.addChild(v['resultMesh'])
-			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 2
-			v['resultMesh'].z = -2
+		var mat = RedSheetMaterial(this, RedBitmapTexture(this, '../asset/sheet/spriteSheet.png'), 24, 5, 3, 15)
+		var tMesh = RedMesh(this, RedPlane(this), mat)
+		console.log(mat)
+		tMesh.y = 1
+		tScene.addChild(tMesh)
+		var mat = RedSheetMaterial(this, RedBitmapTexture(this, '../asset/sheet/spriteSheet2.png'), 24, 6, 4, 24)
+		var tMesh = RedMesh(this, RedPlane(this), mat)
+		console.log(mat)
+		tMesh.y = -1
+		tScene.addChild(tMesh)
+		var mat = RedSheetMaterial(this, RedBitmapTexture(this, '../asset/sheet/walk.png'), 24, 8, 1, 8)
+		var tMesh = RedMesh(this, RedPlane(this), mat)
+		console.log(mat)
+		tMesh.scaleX = tMesh.scaleY = 0.5
+		tScene.addChild(tMesh)
+		mat.addAction('idle', {
+			texture: RedBitmapTexture(this, '../asset/sheet/walk.png'),
+			segmentW: 8,
+			segmentH: 1,
+			totalFrame: 8,
+			frameRate: 24
 		})
-		RedOBJLoader(this, '../asset/obj/rabbit/', 'Rabbit.obj', function (v) {
-			console.log('호잇!', v)
-			tScene3D.addChild(v['resultMesh'])
-			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 2
+		mat.addAction('attack', {
+			texture: RedBitmapTexture(this, '../asset/sheet/atack.png'),
+			segmentW: 6,
+			segmentH: 1,
+			totalFrame: 6,
+			frameRate: 24
 		})
-		RedOBJLoader(this, '../asset/obj/', 'female.obj', function (v) {
-			console.log('호잇!', v)
-			var i = 100
-			while ( i-- ) {
-				var t0;
-				t0 = RedMesh(self)
-				t0['children'] = v['resultMesh']['children'].concat()
-				t0.x = Math.random() * 300 - 150
-				t0.z = Math.random() * 300 - 150
-				t0.scaleX = t0.scaleY = t0.scaleZ = 0.01
-				tScene3D.addChild(t0)
+		mat.addAction('jump', {
+			texture: RedBitmapTexture(this, '../asset/sheet/jump.png'),
+			segmentW: 8,
+			segmentH: 1,
+			totalFrame: 8,
+			frameRate: 24
+		})
+		var testState = {}
+		window.addEventListener('keydown', function (e) {
+			if ( e.keyCode == 83 ) {
+				if ( !testState['down'] ) mat.setAction('attack')
+				testState['down'] = true
 			}
-			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.025
+			if ( e.keyCode == 32 ) {
+				if ( !testState['space'] ) mat.setAction('jump')
+				testState['space'] = true
+			}
 		})
-		RedOBJLoader(this, '../asset/obj/', 'WaltHead.obj', function (v) {
-			console.log('호잇!', v)
-			tScene3D.addChild(v['resultMesh'])
-			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.025
-			v['resultMesh'].x = 3
-		})
-		RedOBJLoader(this, '../asset/obj/', 'cube.obj', function (v) {
-			console.log('호잇!', v)
-			tScene3D.addChild(v['resultMesh'])
-			v['resultMesh'].x = -4
-		})
-		RedOBJLoader(this, '../asset/obj/', 'tree.obj', function (v) {
-			console.log('호잇!', v)
-			tScene3D.addChild(v['resultMesh'])
-			v['resultMesh'].z = 3
+		window.addEventListener('keyup', function (e) {
+			if ( e.keyCode == 83 ) {
+				mat.setAction('idle')
+				testState['down'] = false
+			}
+			if ( e.keyCode == 32 ) {
+				mat.setAction('idle')
+				testState['space'] = false
+			}
 		})
 		tRenderer.renderDebuger.visible = true
 		tRenderer.start(this, function (time) {
-			testDLight.x = Math.sin(time / 1000) * 2
-			testDLight.y = Math.cos(time / 1000) * 2
-			testDLight.z = Math.cos(time / 1000) * 2
-			testPLight.x = Math.sin(time / 1500) * 2
-			testPLight.y = Math.cos(time / 1500) * 2
-			testPLight.z = Math.cos(time / 1500) * 2
-			testPLight.debug = true
-			// testDLight.debug = true
-			tCamera.x = Math.sin(time / 1500) * 8
-			tCamera.y = 2
-			tCamera.z = Math.cos(time / 1500) * 8
+			tCamera.z = 5
 			tCamera.lookAt(0, 0, 0)
 		})
-		console.log(tScene3D)
+		console.log(tScene)
 	})
 </script>
 </body>

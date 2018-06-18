@@ -4,6 +4,17 @@ var RedBitmapTexture;
 	var setEmptyTexture;
 	var loadTexture;
 	var makeTexture
+	var MAX_TEXTURE_SIZE;
+	var isPowerOf2 = function (v) {
+		return (v & (v - 1)) == 0;
+	}
+	var nextHighestPowerOfTwo = function (v) {
+		--v;
+		for ( var i = 1; i < 32; i <<= 1 ) {
+			v = v | v >> i;
+		}
+		return v + 1;
+	}
 	setEmptyTexture = function (gl, texture) {
 		gl.activeTexture(gl.TEXTURE0 + 0)
 		gl.bindTexture(gl.TEXTURE_2D, texture);
@@ -73,8 +84,25 @@ var RedBitmapTexture;
 			}
 			onLoad = function () {
 				clearEvents(this);
-				makeTexture(gl, texture, this, option);
-				callBack ? callBack.call(self, true) : 0
+				var tSource = this;
+				var tW, tH
+				if ( tSource instanceof HTMLImageElement ) {
+					if ( !isPowerOf2(tSource.width) || !isPowerOf2(tSource.height) ) {
+						var canvas = document.createElement("canvas");
+						var ctx = canvas.getContext("2d");
+						tW = nextHighestPowerOfTwo(tSource.width)
+						tH = nextHighestPowerOfTwo(tSource.height)
+						if ( tW > MAX_TEXTURE_SIZE ) tW = MAX_TEXTURE_SIZE;
+						if ( tH > MAX_TEXTURE_SIZE ) tH = MAX_TEXTURE_SIZE;
+						canvas.width = tW;
+						canvas.height = tH;
+						ctx.drawImage(tSource, 0, 0, tW, tH);
+						console.log(canvas)
+						tSource = canvas
+					}
+				}
+				makeTexture(gl, texture, tSource, option);
+				callBack ? callBack.call(this, true) : 0
 			}
 			setEmptyTexture(gl, texture)
 			if ( src instanceof HTMLCanvasElement ) makeTexture(gl, texture, src, option)
@@ -131,6 +159,7 @@ var RedBitmapTexture;
 	 :DOC*/
 	RedBitmapTexture = function (redGL, src, option, callBack) {
 		var tGL;
+		MAX_TEXTURE_SIZE = redGL['_detect']['MAX_TEXTURE_SIZE']
 		if ( !(this instanceof RedBitmapTexture) ) return new RedBitmapTexture(redGL, src, option, callBack);
 		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedBitmapTexture : RedGL Instance만 허용됩니다.', redGL);
 		if ( src && typeof  src != 'string' && !(src instanceof HTMLCanvasElement) ) RedGLUtil.throwFunc('RedBitmapTexture : src는 문자열 or Canvas Element만 허용.', '입력값 : ' + src);

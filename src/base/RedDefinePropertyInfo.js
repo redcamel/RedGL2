@@ -21,8 +21,8 @@ var RedDefinePropertyInfo;
 				get: function () { return this['_material']; },
 				set: function (v) {
 					if ( this instanceof RedSprite3D ) {
-						if ( !(v instanceof RedColorMaterial) && !(v instanceof RedBitmapMaterial) ) {
-							RedGLUtil.throwFunc('RedSprite3D : RedColorMaterial or RedBitmapMaterial Instance만 허용됩니다.', '입력값 : ' + v)
+						if ( !(v instanceof RedColorMaterial) && !(v instanceof RedBitmapMaterial) && !(v instanceof RedSheetMaterial) ) {
+							RedGLUtil.throwFunc('RedSprite3D : RedColorMaterial or RedBitmapMaterial or RedSheetMaterial Instance만 허용됩니다.', '입력값 : ' + v)
 						}
 					} else if ( this instanceof RedSkyBox ) {
 						if ( !(v instanceof RedSkyBoxMaterial) ) {
@@ -33,10 +33,10 @@ var RedDefinePropertyInfo;
 							RedGLUtil.throwFunc('RedPointUnit : material - RedPointColorMaterial Instance or RedPointBitmapMaterial Instance만 허용됩니다.')
 						}
 					} else if ( this instanceof RedParticleEmitter ) {
-						if (!(v instanceof RedParticleColorMaterial) && !(v instanceof RedParticleBitmapMaterial) ) {
+						if ( !(v instanceof RedParticleColorMaterial) && !(v instanceof RedParticleBitmapMaterial) ) {
 							RedGLUtil.throwFunc('RedParticleEmitter : material - RedParticleColorMaterial Instance or RedParticleBitmapMaterial Instance만 허용됩니다.')
 						}
-					}else {
+					} else {
 						if ( v && !(v instanceof RedBaseMaterial) ) RedGLUtil.throwFunc('material : RedBaseMaterial Instance만 허용됩니다.', '입력값 : ' + v)
 					}
 					this['_material'] = v
@@ -50,6 +50,16 @@ var RedDefinePropertyInfo;
 		var samplerTypeKey
 		if ( targetObject.hasOwnProperty(name) ) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : 이미 정의된 속성')
 		switch ( type ) {
+			case 'boolean' :
+				option = option ? option : true
+				result = {
+					get: function () { return this['_' + name]; },
+					set: function (v) {
+						if ( typeof v != 'boolean' ) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : boolean만 허용함.')
+						this['_' + name] = v
+					}
+				}
+				break
 			case 'number' :
 				if ( option ) {
 					var min = option['min']

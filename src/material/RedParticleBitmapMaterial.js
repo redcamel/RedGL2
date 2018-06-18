@@ -1,5 +1,8 @@
 "use strict";
 var RedParticleBitmapMaterial;
+//////////////////////////////////////////////////////////
+// 연구중
+//////////////////////////////////////////////////////////
 (function () {
 	var vSource, fSource;
 	var PROGRAM_NAME = 'particleBitmapProgram';
@@ -7,7 +10,7 @@ var RedParticleBitmapMaterial;
 		/* @preserve
 		 varying vec4 vColor;
 		 void main(void) {
-	        gl_Position = uPMatrix * uCameraMatrix* uMMatrix * vec4(aVertexPosition, 1.0);
+	        gl_Position = uPMatrix * uCameraMatrix * vec4(aVertexPosition, 1.0);
 			gl_PointSize = aPointSize;
 			vColor = aVertexColor;
 		 }

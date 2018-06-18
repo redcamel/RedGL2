@@ -93,6 +93,7 @@ gulp.task('make-doc', function () {
 		"src/material/RedParticleColorMaterial.js",
 		"src/material/RedParticleBitmapMaterial.js",
 		"src/material/RedPointBitmapMaterial.js",
+		"src/material/RedSheetMaterial.js",
 		"src/material/RedStandardMaterial.js",
 		"src/material/RedVideoMaterial.js",
 		"src/material/system/RedGridMaterial.js",
@@ -190,6 +191,7 @@ gulp.task('combine-js', function () {
 		"src/material/RedParticleColorMaterial.js",
 		"src/material/RedParticleBitmapMaterial.js",
 		"src/material/RedPointBitmapMaterial.js",
+		"src/material/RedSheetMaterial.js",
 		"src/material/RedStandardMaterial.js",
 		"src/material/RedVideoMaterial.js",
 		//
