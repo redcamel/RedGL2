@@ -145,7 +145,7 @@
 //		tScene3D['postEffectManager'].addEffect(RedPostEffect_Vignetting(this))
 		// tScene3D['postEffectManager'].addEffect(RedPostEffect_BrightnessContrast(this))
 		var zoomBlur = RedPostEffect_ZoomBlur(this)
-		tScene3D['postEffectManager'].addEffect(zoomBlur)
+//		tScene3D['postEffectManager'].addEffect(zoomBlur)
 		// tScene3D['postEffectManager'].addEffect(RedPostEffect_HalfTone(this))
 //		tScene3D['postEffectManager'].addEffect( RedPostEffect_Bloom( this ) )
 		tCamera = RedCamera();
@@ -331,9 +331,9 @@
 			testPLight2.x = Math.sin(time / 1500) * 18.5
 			testPLight2.y = 0
 			testPLight2.z = Math.cos(time / 1500) * 18.5
-			zoomBlur.centerX = Math.sin(time / 1000) / 3.14
-			zoomBlur.centerY = Math.sin(time / 1000) / 3.14
-			zoomBlur.amount = Math.abs(Math.sin(time / 500)) / 3.14 * 100
+//			zoomBlur.centerX = Math.sin(time / 1000) / 3.14
+//			zoomBlur.centerY = Math.sin(time / 1000) / 3.14
+			zoomBlur.amount = Math.sin(time / 500) * 38
 		})
 		console.log(tScene3D)
 	})

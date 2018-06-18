@@ -6,13 +6,9 @@ var RedParticleBitmapMaterial;
 	vSource = function () {
 		/* @preserve
 		 varying vec4 vColor;
-		 const float cSIZE_MULTIPLIER = 300.0;
-		 float spriteDist;
 		 void main(void) {
 	        gl_Position = uPMatrix * uCameraMatrix* uMMatrix * vec4(aVertexPosition, 1.0);
-		    if (gl_Position.w == 0.0) spriteDist = 0.00001;
-		    spriteDist = gl_Position.w;
-		    gl_PointSize = (((aPointSize * cSIZE_MULTIPLIER * (uResolution.x/uResolution.y)) / spriteDist) * (uResolution.x/uResolution.y));
+			gl_PointSize = aPointSize;
 			vColor = aVertexColor;
 		 }
 		 */
