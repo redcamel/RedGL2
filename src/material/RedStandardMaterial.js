@@ -7,13 +7,18 @@ var RedStandardMaterial;
 		/* @preserve
 		 uniform sampler2D u_displacementTexture;
 		 uniform float u_displacementPower;
+		 uniform float u_displacementFlowSpeedX;
+		 uniform float u_displacementFlowSpeedY;
 
 		 varying vec4 vVertexPositionEye4;
 		 void main(void) {
 			 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
 			 vVertexNormal = vec3(uNMatrix * vec4(aVertexNormal,1.0));
 			 vVertexPositionEye4 = uMMatrix * vec4(aVertexPosition, 1.0);
-			 vVertexPositionEye4.xyz += normalize(vVertexNormal) * texture2D(u_displacementTexture, vTexcoord).x * u_displacementPower ;
+			 vVertexPositionEye4.xyz += normalize(vVertexNormal) * texture2D(u_displacementTexture, vTexcoord + vec2(
+			    u_displacementFlowSpeedX * (uTime/1000.0),
+			    u_displacementFlowSpeedY * (uTime/1000.0)
+		    )).x * u_displacementPower ;
 
 			 gl_PointSize = uPointSize;
 			 gl_Position = uPMatrix * uCameraMatrix * vVertexPositionEye4;
@@ -193,6 +198,8 @@ var RedStandardMaterial;
 		 }
 		 :DOC*/
 		this['displacementPower'] = 0
+		this['displacementFlowSpeedX'] = 0
+		this['displacementFlowSpeedY'] = 0
 		/////////////////////////////////////////
 		// 일반 프로퍼티
 		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
@@ -208,5 +215,7 @@ var RedStandardMaterial;
 	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'shininess', 'number', {'min': 0});
 	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'specularPower', 'number', {'min': 0});
 	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'displacementPower', 'number', {'min': 0});
+	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'displacementFlowSpeedX', 'number');
+	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'displacementFlowSpeedY', 'number');
 	Object.freeze(RedStandardMaterial)
 })();
