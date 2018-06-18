@@ -219,7 +219,6 @@ var RedBaseObject3D;
 		 }
 		 :DOC*/
 		this['children'] = []
-		this['sprite3DYn'] = false
 		this['useLOD'] = false
 		this['_lodLevels'] = {
 			/* 1: {

@@ -474,7 +474,7 @@ var RedRenderer;
 		                 subSceneMaterial) {
 			var i, i2;
 			// 오쏘고날 스케일 비율
-			var orthographicYnScale = orthographicYn ? 1 : 1
+			var orthographicYnScale = orthographicYn ? -1 : 1
 			//
 			var BYTES_PER_ELEMENT;
 			var CONVERT_RADIAN;
@@ -523,6 +523,7 @@ var RedRenderer;
 				renderResultObj['call']++
 				tMesh = children[i]
 				tMVMatrix = tMesh['matrix']
+				// LOD체크
 				if ( tMesh['useLOD'] ) {
 					var x = tCameraPosition[0] - tMesh.x;
 					var y = tCameraPosition[1] - tMesh.y;
@@ -532,15 +533,38 @@ var RedRenderer;
 					for ( var k in tLODInfo ) {
 						tLODData = tLODInfo[k]
 						if ( tLODData['distance'] < distance ) {
-							tMesh['_geometry'] = tLODData['geometry'],tMesh['_material'] = tLODData['material']
+							tMesh['_geometry'] = tLODData['geometry'], tMesh['_material'] = tLODData['material']
 						}
 					}
 				}
 				tNMatrix = tMesh['normalMatrix']
 				tGeometry = tMesh['_geometry']
-				tSprite3DYn = tMesh['sprite3DYn']
+				tSprite3DYn = tMesh['_sprite3DYn']
 				if ( tGeometry ) {
 					tMaterial = subSceneMaterial ? subSceneMaterial : tMesh['_material']
+					// SpriteSheet체크
+					if ( tMaterial instanceof RedSheetMaterial ) {
+						if ( !tMaterial['_nextFrameTime'] ) tMaterial['_nextFrameTime'] = tMaterial['_perFrameTime'] + time
+						if ( tMaterial['_playYn'] && tMaterial['_nextFrameTime'] < time ) {
+							var gapFrame = parseInt((time - tMaterial['_nextFrameTime']) / tMaterial['_perFrameTime']);
+							gapFrame = gapFrame || 1
+							tMaterial['_nextFrameTime'] = tMaterial['_perFrameTime'] + time;
+							tMaterial['currentIndex'] += gapFrame;
+							if ( tMaterial['currentIndex'] >= tMaterial['totalFrame'] ) {
+								if ( tMaterial['_loop'] ) {
+									tMaterial['_playYn'] = true
+									tMaterial['currentIndex'] = 0;
+								} else {
+									tMaterial['_playYn'] = false
+									tMaterial['currentIndex'] = tMaterial['totalFrame'] - 1
+								}
+							}
+						}
+						tMaterial['_sheetRect'][0] = 1 / tMaterial['_segmentW']
+						tMaterial['_sheetRect'][1] = 1 / tMaterial['_segmentH']
+						tMaterial['_sheetRect'][2] = (tMaterial['currentIndex'] % tMaterial['_segmentW']) / tMaterial['_segmentW']
+						tMaterial['_sheetRect'][3] = Math.floor(tMaterial['currentIndex'] / tMaterial['_segmentH']) / tMaterial['_segmentH']
+					}
 					prevProgram_UUID == tMaterial['program']['_UUID'] ? 0 : gl.useProgram(tMaterial['program']['webglProgram'])
 					prevProgram_UUID = tMaterial['program']['_UUID']
 					// 업데이트할 어트리뷰트와 유니폼 정보를 가져옴

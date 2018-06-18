@@ -49,6 +49,7 @@
     <script src="../src/material/RedParticleColorMaterial.js"></script>
     <script src="../src/material/RedParticleBitmapMaterial.js"></script>
     <script src="../src/material/RedPointBitmapMaterial.js"></script>
+    <script src="../src/material/RedSheetMaterial.js"></script>
     <script src="../src/material/RedStandardMaterial.js"></script>
     <script src="../src/material/RedVideoMaterial.js"></script>
     <!--//-->
@@ -182,13 +183,12 @@
 			tCamera.x = Math.sin(time / 15000) * 30
 			tCamera.y = Math.cos(time / 15000) * 30
 			var i = 1000000
-			var tSin = Math.sin(time/500) / 10
-			var tCos = Math.cos(time/700)/ 10
+			var tSin = Math.sin(time / 500) / 10
+			var tCos = Math.cos(time / 700) / 10
 			while ( i-- ) {
-
-				interleaveData[i* 8 +0] +=tSin
-				interleaveData[i* 8 +1] +=tCos
-				interleaveData[i* 8 +2] +=tSin+tCos
+				interleaveData[i * 8 + 0] += tSin
+				interleaveData[i * 8 + 1] += tCos
+				interleaveData[i * 8 + 2] += tSin + tCos
 			}
 			testInterleaveBuffer['upload'](interleaveData)
 			if ( tCamera.y < 1 ) tCamera.y = 1

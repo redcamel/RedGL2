@@ -49,6 +49,7 @@
     <script src="../src/material/RedParticleColorMaterial.js"></script>
     <script src="../src/material/RedParticleBitmapMaterial.js"></script>
     <script src="../src/material/RedPointBitmapMaterial.js"></script>
+    <script src="../src/material/RedSheetMaterial.js"></script>
     <script src="../src/material/RedStandardMaterial.js"></script>
     <script src="../src/material/RedVideoMaterial.js"></script>
     <!--//-->
@@ -145,7 +146,7 @@
 			max: 1000,
 			emitCount: 50,
 			lifeTime: [1000, 2000],
-			gravity: 9.8 / 1000
+			gravity: 9.8 / 1000,
 		}
 		var testParticle = new RedParticleEmitter(this, aa, RedParticleBitmapMaterial(this, RedBitmapTexture(this, '../asset/particle.png')))
 		var testParticle2 = new RedParticleEmitter(this, aa, RedParticleColorMaterial(this))

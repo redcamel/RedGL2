@@ -49,6 +49,7 @@
     <script src="../src/material/RedParticleColorMaterial.js"></script>
     <script src="../src/material/RedParticleBitmapMaterial.js"></script>
     <script src="../src/material/RedPointBitmapMaterial.js"></script>
+    <script src="../src/material/RedSheetMaterial.js"></script>
     <script src="../src/material/RedStandardMaterial.js"></script>
     <script src="../src/material/RedVideoMaterial.js"></script>
     <!--//-->
@@ -201,8 +202,10 @@
 				self,
 				RedBitmapTexture(self, '../asset/crate.png'),
 				RedBitmapTexture(self, '../asset/normalTest.jpg'),
-				RedBitmapTexture(self, '../asset/brick_roughness.jpg')
+				RedBitmapTexture(self, '../asset/brick_roughness.jpg'),
+				RedBitmapTexture(self, '../asset/displacementTest.jpg')
 			)
+			tMat.displacementPower =0.3
 			tMat.shininess = 32
 			while ( i-- ) {
 				j = 10

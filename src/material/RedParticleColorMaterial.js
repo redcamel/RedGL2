@@ -1,5 +1,8 @@
 "use strict";
 var RedParticleColorMaterial;
+//////////////////////////////////////////////////////////
+// 연구중
+//////////////////////////////////////////////////////////
 (function () {
 	var vSource, fSource;
 	var PROGRAM_NAME = 'particleColorProgram';
@@ -8,7 +11,7 @@ var RedParticleColorMaterial;
 		 varying vec4 vColor;
 		 void main(void) {
 			 vColor = aVertexColor;
-			 gl_Position = uPMatrix * uCameraMatrix* uMMatrix * vec4(aVertexPosition, 1.0);
+			 gl_Position = uPMatrix * uCameraMatrix* vec4(aVertexPosition, 1.0);
 			 gl_PointSize = aPointSize;
 		 }
 		 */

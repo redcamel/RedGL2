@@ -152,6 +152,14 @@
 			tMaterial2['displacementPower'] = v
 			tMaterial3['displacementPower'] = v
 		} )
+		t0.add( tMaterial, 'displacementFlowSpeedX', 0, 0.3,0.001 ).onChange( function ( v ) {
+			tMaterial2['displacementFlowSpeedX'] = v
+			tMaterial3['displacementFlowSpeedX'] = v
+		} )
+		t0.add( tMaterial, 'displacementFlowSpeedY', 0, 0.3,0.001 ).onChange( function ( v ) {
+			tMaterial2['displacementFlowSpeedY'] = v
+			tMaterial3['displacementFlowSpeedY'] = v
+		} )
 		t0.open()
 	}
 </script>

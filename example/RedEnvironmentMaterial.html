@@ -126,9 +126,9 @@
 					t0.rotationY += 1
 					t0.rotationZ += 1
 				}
-				tCamera.x = Math.sin( time / 3000 ) * 8
-				tCamera.y = Math.cos( time / 3000 ) * 4
-				tCamera.z = Math.cos( time / 3000 ) * 8
+//				tCamera.x = Math.sin( time / 3000 ) * 8
+//				tCamera.y = Math.cos( time / 3000 ) * 4
+//				tCamera.z = Math.cos( time / 3000 ) * 8
 			} )
 
 			// 렌더 디버거 활성화
@@ -143,7 +143,7 @@
 		gui.initRedGL()
 		gui.initCamera( tCamera )
 		gui.initScene( tScene )
-		var t0 = gui['gui'].addFolder( 'StandardPhongMaterial' )
+		var t0 = gui['gui'].addFolder( 'StandardMaterial' )
 		var testStandard = function () {
 			this.normalTexture = false
 			this.specularTexture = false
@@ -179,7 +179,14 @@
 			tMaterial2['displacementPower'] = v
 			tMaterial3['displacementPower'] = v
 		} )
-
+		t0.add( tMaterial, 'displacementFlowSpeedX', 0, 0.3,0.001 ).onChange( function ( v ) {
+			tMaterial2['displacementFlowSpeedX'] = v
+			tMaterial3['displacementFlowSpeedX'] = v
+		} )
+		t0.add( tMaterial, 'displacementFlowSpeedY', 0, 0.3,0.001 ).onChange( function ( v ) {
+			tMaterial2['displacementFlowSpeedY'] = v
+			tMaterial3['displacementFlowSpeedY'] = v
+		} )
 		t0.open()
 	}
 </script>

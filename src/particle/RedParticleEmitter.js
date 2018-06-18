@@ -1,4 +1,7 @@
 "use strict";
+//////////////////////////////////////////////////////////
+// 연구중
+//////////////////////////////////////////////////////////
 var RedParticleEmitter;
 (function () {
 	/**DOC:
@@ -71,18 +74,20 @@ var RedParticleEmitter;
 				lifeRatio = tParticle['age'] / tParticle['lifeTime']
 				tIndex = i * 8
 				if ( lifeRatio < 1 ) {
-					this['_interleaveData'][tIndex + 0] += tParticle.movementX
-					this['_interleaveData'][tIndex + 1] += tParticle.movementY + tParticle['gravityVelocity']
-					this['_interleaveData'][tIndex + 2] += tParticle.movementZ
-					this['_interleaveData'][tIndex + 3] += tParticle.scaleUp
-					this['_interleaveData'][tIndex + 7] = 1 - lifeRatio
+					tParticle['scaleVelocity'] += -this['info']['scaleVelocity'] * tParticle['age'] / 1000
 					tParticle['gravityVelocity'] += -this['info']['gravity'] * tParticle['age'] / 1000
+					this['_interleaveData'][tIndex + 0] += tParticle['movementX']
+					this['_interleaveData'][tIndex + 1] += tParticle['movementY'] + tParticle['gravityVelocity']
+					this['_interleaveData'][tIndex + 2] += tParticle['movementZ']
+					this['_interleaveData'][tIndex + 3] += tParticle['scaleUp']
+					this['_interleaveData'][tIndex + 7] = 1 - lifeRatio
 				} else {
 					this['_interleaveData'][tIndex + 0] = this.x
 					this['_interleaveData'][tIndex + 1] = this.y
 					this['_interleaveData'][tIndex + 2] = this.z
 					this['_interleaveData'][tIndex + 3] = 0
 					this['_interleaveData'][tIndex + 7] = 0
+
 					tParticle['gravityVelocity'] = 0
 					tParticle['startTime'] = null
 					tParticle['age'] = -1

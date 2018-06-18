@@ -9,13 +9,18 @@ var RedColorPhongTextureMaterial;
 		 varying vec4 vColor;
 		 uniform sampler2D u_displacementTexture;
 		 uniform float u_displacementPower;
+	     uniform float u_displacementFlowSpeedX;
+		 uniform float u_displacementFlowSpeedY;
 		 varying vec4 vVertexPositionEye4;
 		 void main(void) {
 			 vColor = u_color;
 			 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
 			 vVertexNormal = vec3(uNMatrix * vec4(aVertexNormal,1.0));
 			 vVertexPositionEye4 = uMMatrix * vec4(aVertexPosition, 1.0);
-			 vVertexPositionEye4.xyz += normalize(vVertexNormal) * texture2D(u_displacementTexture, vTexcoord).x * u_displacementPower ;
+			  vVertexPositionEye4.xyz += normalize(vVertexNormal) * texture2D(u_displacementTexture, vTexcoord + vec2(
+			    u_displacementFlowSpeedX * (uTime/1000.0),
+			    u_displacementFlowSpeedY * (uTime/1000.0)
+		    )).x * u_displacementPower ;
 			 gl_PointSize = uPointSize;
 			 gl_Position = uPMatrix * uCameraMatrix* vVertexPositionEye4;
 		 }
@@ -189,6 +194,9 @@ var RedColorPhongTextureMaterial;
 		 }
 		 :DOC*/
 		this['displacementPower'] = 0
+
+		this['displacementFlowSpeedX'] = 0
+		this['displacementFlowSpeedY'] = 0
 		/////////////////////////////////////////
 		// 일반 프로퍼티
 		Object.defineProperty(this, 'color', RedDefinePropertyInfo['color']);
@@ -198,7 +206,6 @@ var RedColorPhongTextureMaterial;
 		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkUniformAndProperty();
-		;
 		console.log(this);
 	}
 	RedColorPhongTextureMaterial.prototype = new RedBaseMaterial()
@@ -208,5 +215,7 @@ var RedColorPhongTextureMaterial;
 	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'shininess', 'number', {'min': 0});
 	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'specularPower', 'number', {'min': 0});
 	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'displacementPower', 'number', {'min': 0});
+	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'displacementFlowSpeedX', 'number');
+	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'displacementFlowSpeedY', 'number');
 	Object.freeze(RedColorPhongTextureMaterial)
 })();
