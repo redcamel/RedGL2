@@ -239,12 +239,14 @@
 			console.log('호잇!', v)
 			tScene3D.addChild(v['resultMesh'])
 			v['resultMesh'].x = -15
+			tShadow.addCasting(v['resultMesh'])
 		})
 		RedOBJLoader(this, '../asset/obj/', 'tree.obj', function (v) {
 			console.log('호잇!', v)
 			tScene3D.addChild(v['resultMesh'])
 			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 20
 			v['resultMesh'].z = 20
+			tShadow.addCasting(v['resultMesh'])
 		})
 		tRenderer.renderDebuger.visible = true
 		var rS = new rStats();
