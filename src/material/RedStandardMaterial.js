@@ -26,7 +26,7 @@ var RedStandardMaterial;
 
 			 vResolution = uResolution;
 		     mat4 texUnitConverter = mat4(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.5, 0.5, 0.5, 1.0);
-			 vShadowPos = texUnitConverter  *  uLightMatrix * uMMatrix * vec4(aVertexPosition, 1.0);
+			 vShadowPos = texUnitConverter  *  uDirectionalShadowLightMatrix * uMMatrix * vec4(aVertexPosition, 1.0);
 		 }
 		 */
 	}

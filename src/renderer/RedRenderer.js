@@ -164,7 +164,8 @@ var RedRenderer;
 				uPointLightColor: [],
 				uPointLightIntensity: [],
 				uPointLightRadius: [],
-				uPointLightNum: []
+				uPointLightNum: [],
+				uDirectionalShadowTexture: false
 			}
 			return function (redGL, time, scene, camera, viewRect) {
 				gl = redGL.gl;
@@ -174,7 +175,33 @@ var RedRenderer;
 					gl.useProgram(tProgram['webglProgram']);
 					prevProgram_UUID = tProgram['_UUID'];
 					tSystemUniformGroup = tProgram['systemUniformLocation'];
-					//
+					// 디렉셔널 쉐도우 라이트 매트릭스
+					tLocationInfo = tSystemUniformGroup['uDirectionalShadowLightMatrix'];
+					tLocation = tLocationInfo['location'];
+					tUUID = tLocationInfo['_UUID'];
+					if ( tLocation ) {
+						var lightMatrix, tSize, lightProjectionMatrix, tPosition;
+						var tLight;
+						lightMatrix = mat4.create()
+						if ( scene['shadowManager']['_directionalShadow'] ) {
+							tSize = scene['shadowManager']['_directionalShadow']['size'];
+							tLight = scene['shadowManager']['_directionalShadow']['_light']
+							lightProjectionMatrix = mat4.ortho([], -tSize, tSize, -tSize, tSize, -tSize, tSize)
+							tPosition = vec3.create()
+							if ( tLight ) {
+								vec3.set(tPosition, -tLight.x, -tLight.y, -tLight.z)
+								vec3.normalize(tPosition, tPosition)
+								mat4.lookAt(
+									lightMatrix,
+									tPosition,
+									[0, 0, 0],
+									[0, 1, 0]
+								)
+								mat4.multiply(lightMatrix, lightProjectionMatrix, lightMatrix)
+								gl.uniformMatrix4fv(tLocation, false, lightMatrix);
+							}
+						}
+					}
 					// 디렉셔널 쉐도우 텍스쳐
 					tLocationInfo = tSystemUniformGroup['uDirectionalShadowTexture']
 					if ( tLocationInfo ) {
@@ -323,36 +350,6 @@ var RedRenderer;
 								this['cacheSystemUniformInfo'][tUUID] = tValueStr;
 							}
 						}
-					}
-					// console.log(k, tSystemUniformGroup)
-					tLocationInfo = tSystemUniformGroup['uLightMatrix'];
-					tLocation = tLocationInfo['location'];
-					tUUID = tLocationInfo['_UUID'];
-					if ( tLocation ) {
-						var lightMatrix;
-						lightMatrix = mat4.create()
-						var size = 30
-						var lightProjectionMatrix = mat4.ortho(
-							[], -size, size, -size, size, -size, size
-						)
-						var aa = vec3.create()
-						vec3.set(
-							aa,
-							-scene['_lightInfo'][RedDirectionalLight['type']][0].x,
-							-scene['_lightInfo'][RedDirectionalLight['type']][0].y,
-							-scene['_lightInfo'][RedDirectionalLight['type']][0].z
-						)
-						vec3.normalize(aa, aa)
-						mat4.lookAt(
-							lightMatrix,
-							aa,
-							[
-								0, 0, 0
-							],
-							[0, 1, 0]
-						)
-						mat4.multiply(lightMatrix, lightProjectionMatrix, lightMatrix)
-						gl.uniformMatrix4fv(tLocation, false, lightMatrix);
 					}
 				}
 				return lightDebugRenderList

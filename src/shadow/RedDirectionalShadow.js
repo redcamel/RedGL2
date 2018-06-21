@@ -7,7 +7,6 @@ var RedDirectionalShadow;
 		 title :`RedDirectionalShadow`,
 		 description : `
 			 RedDirectionalShadow Instance 생성.
-			 RedScene 생성시 내부속성으로 자동생성됨.
 		 `,
 		 params : {
 			 redGL : [
@@ -17,38 +16,32 @@ var RedDirectionalShadow;
 		 return : 'RedDirectionalShadow Instance'
 	 }
 	 :DOC*/
-	RedDirectionalShadow = function (redGL,light) {
-		if ( !(this instanceof RedDirectionalShadow) ) return new RedDirectionalShadow(redGL,light);
+	RedDirectionalShadow = function (redGL, light) {
+		if ( !(this instanceof RedDirectionalShadow) ) return new RedDirectionalShadow(redGL, light);
 		redGL instanceof RedGL || RedGLUtil.throwFunc('RedDirectionalShadow : RedGL Instance만 허용됩니다.', redGL);
-		/**DOC:
-		 {
-			title :`lightList`,
-			code : 'PROPERTY',
-			description : `
-				이펙트 리스트
-			`,
-			return : 'Array'
-		}
-		 :DOC*/
 		this['_directionalShadowMaterial'] = RedDirectionalShadowMaterial(redGL)
 		this['frameBuffer'] = RedFrameBuffer(redGL);
 		this['light'] = light;
-		this['width'] = 2048
-		this['height'] = 2048
+		this['width'] = 2048;
+		this['height'] = 2048;
+		this['size'] = 20
 		this['_UUID'] = RedGL['makeUUID']();
 		this['_castingList'] = []
 		console.log(this);
 	}
-	RedDirectionalShadow.prototype['addCasting'] = function(v){
+	RedDirectionalShadow.prototype['addCasting'] = function (v) {
 		if ( !(v instanceof RedBaseObject3D ) ) RedGLUtil.throwFunc('addCasting', 'RedBaseObject3D Instance만 가능', '입력값 : ' + v);
 		this['_castingList'].push(v)
-		v['_directionalShadowCastingYn'] = true
 	}
-	RedDirectionalShadow.prototype['removeCasting'] = function(v){
-		v['_directionalShadowCastingYn'] = false
-		//TODO:
-	}
-
+	RedDirectionalShadow.prototype['removeCasting'] = (function () {
+		var t0;
+		return function (v) {
+			t0 = this['_castingList'].indexOf(v);
+			if ( t0 == -1 ) RedGLUtil.throwFunc('removeChild', '존재하지 않는 RedMesh를 삭제하려고 함');
+			else this['_castingList'].splice(t0, 1);
+			//TODO:
+		}
+	})()
 	Object.defineProperty(RedDirectionalShadow.prototype, 'light', {
 		get: function () { return this['_light']},
 		set: function (v) {
@@ -56,7 +49,8 @@ var RedDirectionalShadow;
 			this['_light'] = v
 		}
 	})
-	RedDefinePropertyInfo.definePrototype('RedDirectionalShadow', 'width', 'number', {'min': 0});
-	RedDefinePropertyInfo.definePrototype('RedDirectionalShadow', 'height', 'number', {'min': 0});
+	RedDefinePropertyInfo.definePrototype('RedDirectionalShadow', 'width', 'number', {'min': 1});
+	RedDefinePropertyInfo.definePrototype('RedDirectionalShadow', 'height', 'number', {'min': 1});
+	RedDefinePropertyInfo.definePrototype('RedDirectionalShadow', 'size', 'number', {'min': 1});
 	Object.freeze(RedDirectionalShadow);
 })();

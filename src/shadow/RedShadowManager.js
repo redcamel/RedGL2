@@ -27,25 +27,24 @@ var RedShadowManager;
 		render: (function () {
 			var gl;
 			var tViewRect, tWorldRect;
-			var tShadow;
+			var tDirectionalShadow;
 			var tWidth, tHeight
 			return function (redGL, redRenderer, tView, time, renderInfo) {
-				tShadow = this['_directionalShadow']
-
-				if ( tShadow ) {
+				tDirectionalShadow = this['_directionalShadow']
+				//TODO: 개별 쉐도우객체가 렌더를 가져가야함
+				if ( tDirectionalShadow ) {
 					gl = redGL.gl
-					gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 					tWorldRect = redRenderer['worldRect']
 					tViewRect = tView['_viewRect']
-					tWidth = tShadow['width']
-					tHeight = tShadow['height']
-					tShadow['frameBuffer'].width = tWidth
-					tShadow['frameBuffer'].height = tHeight
-					tShadow['frameBuffer'].bind(redGL.gl)
+					tWidth = tDirectionalShadow['width']
+					tHeight = tDirectionalShadow['height']
+					tDirectionalShadow['frameBuffer'].width = tWidth
+					tDirectionalShadow['frameBuffer'].height = tHeight
+					tDirectionalShadow['frameBuffer'].bind(redGL.gl)
 					gl.viewport(0, 0, tWidth, tHeight);
 					gl.scissor(0, 0, tWidth, tHeight);
-					redRenderer.sceneRender(redGL, redGL.gl, tView['camera']['orthographicYn'], tShadow['_castingList'], time, renderInfo, tShadow['_directionalShadowMaterial']);
-					tShadow['frameBuffer'].unbind(redGL.gl)
+					redRenderer.sceneRender(redGL, redGL.gl, tView['camera']['orthographicYn'], tDirectionalShadow['_castingList'], time, renderInfo, tDirectionalShadow['_directionalShadowMaterial']);
+					tDirectionalShadow['frameBuffer'].unbind(redGL.gl)
 					gl.viewport(tViewRect[0], tWorldRect[3] - tViewRect[3] - tViewRect[1], tViewRect[2], tViewRect[3]);
 					gl.scissor(tViewRect[0], tWorldRect[3] - tViewRect[3] - tViewRect[1], tViewRect[2], tViewRect[3]);
 				}
