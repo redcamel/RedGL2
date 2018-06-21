@@ -201,6 +201,7 @@ var RedScene;
 		 }
 		 :DOC*/
 		this['postEffectManager'] = RedPostEffectManager(redGL)
+		this['shadowManager'] = RedShadowManager(redGL)
 		this['_lightInfo'] = {
 			RedAmbientLight: null,
 			RedDirectionalLight: [],

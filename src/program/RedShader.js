@@ -120,11 +120,12 @@ var RedShader;
 							if ( tName.charAt(1) != tName.charAt(1).toUpperCase() ) RedGLUtil.throwFunc('RedShader : varying의 두번째 글자는 대문자 시작해야합니다.', tName)
 							break
 						case 'const':
-							if ( tName.charAt(0) != 'c' ) RedGLUtil.throwFunc('RedShader : const의 첫글자는 c로 시작해야합니다.', tName)
-							if ( tName.charAt(1) != tName.charAt(1).toUpperCase() ) RedGLUtil.throwFunc('RedShader : const의 두번째 글자는 대문자 시작해야합니다.', tName)
+							// if ( tName.charAt(0) != 'c' ) RedGLUtil.throwFunc('RedShader : const의 첫글자는 c로 시작해야합니다.', tName)
+							// if ( tName.charAt(1) != tName.charAt(1).toUpperCase() ) RedGLUtil.throwFunc('RedShader : const의 두번째 글자는 대문자 시작해야합니다.', tName)
 							break
 						default:
-							RedGLUtil.throwFunc('RedShader : 체크되지 못하는값인데 뭐냐', tName)
+							// RedGLUtil.throwFunc('RedShader : 체크되지 못하는값인데 뭐냐', tName)
+							console.log('RedShader : 체크되지 못하는값인데 뭐냐', tName)
 							break
 					}
 				} else {

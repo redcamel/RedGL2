@@ -175,6 +175,23 @@ var RedRenderer;
 					prevProgram_UUID = tProgram['_UUID'];
 					tSystemUniformGroup = tProgram['systemUniformLocation'];
 					//
+					// 디렉셔널 쉐도우 텍스쳐
+					tLocationInfo = tSystemUniformGroup['uDirectionalShadowTexture']
+					if ( tLocationInfo ) {
+						tLocation = tLocationInfo['location'];
+						if ( tLocation ) {
+							tUUID = tLocationInfo['_UUID']
+							if ( scene['shadowManager']['_directionalShadow'] ) tValue = scene['shadowManager']['directionalShadow']['frameBuffer']['texture']
+							else tValue = redGL['_datas']['emptyTexture']['2d']
+							var tSamplerIndex = tLocationInfo['samplerIndex']
+							gl.activeTexture(gl.TEXTURE0 + tSamplerIndex);
+							gl.bindTexture(gl.TEXTURE_2D, tValue['webglTexture']);
+							gl[tLocationInfo['renderMethod']](tLocation, tSamplerIndex)
+						}
+					}
+					// 디렉셔널 쉐도우 사용여부
+					updateSystemUniformInfo['uUseDirectionalShadow'] = scene['shadowManager']['_directionalShadow'] ? true : false;
+					//
 					updateSystemUniformInfo['uTime'] = time;
 					updateSystemUniformInfo['uResolution'][0] = viewRect[2];
 					updateSystemUniformInfo['uResolution'][1] = viewRect[3];
@@ -307,6 +324,36 @@ var RedRenderer;
 							}
 						}
 					}
+					// console.log(k, tSystemUniformGroup)
+					tLocationInfo = tSystemUniformGroup['uLightMatrix'];
+					tLocation = tLocationInfo['location'];
+					tUUID = tLocationInfo['_UUID'];
+					if ( tLocation ) {
+						var lightMatrix;
+						lightMatrix = mat4.create()
+						var size = 30
+						var lightProjectionMatrix = mat4.ortho(
+							[], -size, size, -size, size, -size, size
+						)
+						var aa = vec3.create()
+						vec3.set(
+							aa,
+							-scene['_lightInfo'][RedDirectionalLight['type']][0].x,
+							-scene['_lightInfo'][RedDirectionalLight['type']][0].y,
+							-scene['_lightInfo'][RedDirectionalLight['type']][0].z
+						)
+						vec3.normalize(aa, aa)
+						mat4.lookAt(
+							lightMatrix,
+							aa,
+							[
+								0, 0, 0
+							],
+							[0, 1, 0]
+						)
+						mat4.multiply(lightMatrix, lightProjectionMatrix, lightMatrix)
+						gl.uniformMatrix4fv(tLocation, false, lightMatrix);
+					}
 				}
 				return lightDebugRenderList
 			}
@@ -419,6 +466,21 @@ var RedRenderer;
 					gl.enable(gl.CULL_FACE);
 					self['cacheState']['useCullFace'] = true
 				}
+				// 디렉셔널 쉐도우 렌더
+				if ( tScene['shadowManager']['_directionalShadow'] ) {
+					updateSystemUniform.apply(self, [redGL, time, tScene, tCamera, tViewRect])
+					gl.enable(gl.BLEND);
+					gl.blendFunc(gl.ONE, gl.ONE);
+					self['cacheState']['useBlendMode'] = true
+					self['cacheState']['blendSrc'] = gl.ONE
+					self['cacheState']['blendDst'] = gl.ONE
+					tScene['shadowManager']['render'](redGL, self, tView, time, tRenderInfo)
+					gl.enable(gl.BLEND);
+					gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+					self['cacheState']['useBlendMode'] = true
+					self['cacheState']['blendSrc'] = gl.SRC_ALPHA
+					self['cacheState']['blendDst'] = gl.ONE_MINUS_SRC_ALPHA
+				}
 				// 포스트이펙트 확인
 				if ( tScene['postEffectManager']['postEffectList'].length ) {
 					tScene['postEffectManager'].bind(gl);
@@ -493,7 +555,7 @@ var RedRenderer;
 			var tMVMatrix, tNMatrix
 			var tUUID, noChangeUniform;
 			var tSamplerIndex;
-			var tSprite3DYn;
+			var tSprite3DYn, tDirectionalShadowMaterialYn;
 			var tCameraPosition;
 			var tLODData
 			// matix 관련
@@ -542,6 +604,7 @@ var RedRenderer;
 				tSprite3DYn = tMesh['_sprite3DYn']
 				if ( tGeometry ) {
 					tMaterial = subSceneMaterial ? subSceneMaterial : tMesh['_material']
+					tDirectionalShadowMaterialYn = tMaterial instanceof RedDirectionalShadowMaterial;
 					// SpriteSheet체크
 					if ( tMaterial instanceof RedSheetMaterial ) {
 						if ( !tMaterial['_nextFrameTime'] ) tMaterial['_nextFrameTime'] = tMaterial['_perFrameTime'] + time
@@ -675,7 +738,7 @@ var RedRenderer;
 								}
 							}
 						} else {
-							tUniformValue == undefined ? RedGLUtil.throwFunc('RedRenderer : Material에 ', tUniformLocationInfo['materialPropertyName'], '이 정의 되지않았습니다.') : 0;
+							// tUniformValue == undefined ? RedGLUtil.throwFunc('RedRenderer : Material에 ', tUniformLocationInfo['materialPropertyName'], '이 정의 되지않았습니다.') : 0;
 							tRenderType == 'float' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue, tUniformValue)) :
 								tRenderType == 'int' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue, tUniformValue)) :
 									tRenderType == 'bool' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue, tUniformValue)) :
@@ -847,12 +910,14 @@ var RedRenderer;
 					// 뎁스테스팅 캐싱처리
 					tCacheState['depthTestFunc'] != tMesh['depthTestFunc'] ? gl.depthFunc(tCacheState['depthTestFunc'] = tMesh['depthTestFunc']) : 0;
 					// 블렌딩 사용여부 캐싱처리
-					tCacheState['useBlendMode'] != tMesh['useBlendMode'] ? (tCacheState['useBlendMode'] = tMesh['useBlendMode']) ? gl.enable(gl.BLEND) : gl.disable(gl.BLEND) : 0;
-					// 블렌딩팩터 캐싱처리
-					if ( tCacheState['blendSrc'] != tMesh['blendSrc'] || tCacheState['blendDst'] != tMesh['blendDst'] ) {
-						gl.blendFunc(tMesh['blendSrc'], tMesh['blendDst'])
-						tCacheState['blendSrc'] = tMesh['blendSrc']
-						tCacheState['blendDst'] = tMesh['blendDst']
+					if ( !tDirectionalShadowMaterialYn ) {
+						tCacheState['useBlendMode'] != tMesh['useBlendMode'] ? (tCacheState['useBlendMode'] = tMesh['useBlendMode']) ? gl.enable(gl.BLEND) : gl.disable(gl.BLEND) : 0;
+						// 블렌딩팩터 캐싱처리
+						if ( tCacheState['blendSrc'] != tMesh['blendSrc'] || tCacheState['blendDst'] != tMesh['blendDst'] ) {
+							gl.blendFunc(tMesh['blendSrc'], tMesh['blendDst'])
+							tCacheState['blendSrc'] = tMesh['blendSrc']
+							tCacheState['blendDst'] = tMesh['blendDst']
+						}
 					}
 					if ( tSystemUniformGroup['uSprite3DYn']['location'] ) {
 						tUUID = tSystemUniformGroup['uSprite3DYn']['_UUID']
