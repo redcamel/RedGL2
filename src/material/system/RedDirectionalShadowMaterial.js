@@ -14,20 +14,20 @@ var RedDirectionalShadowMaterial;
 		/* @preserve
 		precision mediump float;
 		vec4 encodeFloat (float depth) {
-			const vec4 bitShift = vec4(
+			const vec4 cBitShift = vec4(
 			    256 * 256 * 256,
 			    256 * 256,
 			    256,
 			    1.0
 			);
-			const vec4 bitMask = vec4(
+			const vec4 cBitMask = vec4(
 			    0,
 			    1.0 / 256.0,
 			    1.0 / 256.0,
 			    1.0 / 256.0
 			);
-			vec4 comp = fract(depth * bitShift);
-			comp -= comp.xxyz * bitMask;
+			vec4 comp = fract(depth * cBitShift);
+			comp -= comp.xxyz * cBitMask;
 			return comp;
 		}
 		void main(void) {

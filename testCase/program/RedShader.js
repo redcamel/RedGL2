@@ -271,7 +271,33 @@ RedGL( document.createElement( 'canvas' ), function ( v ) {
 			}, false )
 		),
 		redGroup(
+			"4자리 선언 확인",
+			redTest( "유니폼 선언 형식 확인 : highp 같이 4자리 선언확인", function ( unit, title ) {
+				var source;
+				source = function () {
+					/* @preserve
+					 uniform highp vec3 uTest;
+					 void main(void) {
+					 gl_Position = vec4(1.0);
+					 }
+					 */
+				}
+				source = RedGLUtil.getStrFromComment( source.toString() );
+				try {
+					var t0 = RedShader( tRedGL, 'uniformTestShader' + RedGL.makeUUID(), RedShader.VERTEX, source );
+					console.log('확인!',t0)
+					unit.run( true )
+				} catch ( error ) {
+					console.log( '///////////////////////////////////////////////////////////' )
+					console.log( title, '\n', error )
+
+					unit.run( false )
+				}
+			}, true )
+		),
+		redGroup(
 			"유니폼 체크 확인",
+
 			redTest( "유니폼 이름 형식 확인 : 유니폼은 uXxxxx형태로 선언되어야함. - 실패테스트( uniform vec3 test; )", function ( unit, title ) {
 				var source;
 				source = function () {
