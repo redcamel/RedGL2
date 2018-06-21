@@ -11,6 +11,7 @@ var RedStandardMaterial;
 		 uniform float u_displacementFlowSpeedY;
 
 		 varying vec4 vVertexPositionEye4;
+		 varying vec4 vShadowPos;
 		 void main(void) {
 			 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
 			 vVertexNormal = vec3(uNMatrix * vec4(aVertexNormal,1.0));
@@ -22,6 +23,10 @@ var RedStandardMaterial;
 
 			 gl_PointSize = uPointSize;
 			 gl_Position = uPMatrix * uCameraMatrix * vVertexPositionEye4;
+
+			 vResolution = uResolution;
+		     mat4 texUnitConverter = mat4(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.5, 0.5, 0.5, 1.0);
+			 vShadowPos = texUnitConverter  *  uLightMatrix * uMMatrix * vec4(aVertexPosition, 1.0);
 		 }
 		 */
 	}
@@ -36,6 +41,7 @@ var RedStandardMaterial;
 		 uniform float u_specularPower;
 
 		 varying vec4 vVertexPositionEye4;
+		 varying vec4 vShadowPos;
 		 float fogFactor(float perspectiveFar, float density){
 			 float flog_cord = gl_FragCoord.z / gl_FragCoord.w / perspectiveFar;
 			 float fog = flog_cord * density;
@@ -45,6 +51,17 @@ var RedStandardMaterial;
 		 vec4 fog(float fogFactor, vec4 fogColor, vec4 currentColor) {
 			return mix(fogColor, currentColor, fogFactor);
 		 }
+	    float decodeFloat (vec4 color) {
+            const vec4 bitShift = vec4(
+                1.0 / (256.0 * 256.0 * 256.0),
+                1.0 / (256.0 * 256.0),
+                1.0 / 256.0,
+                1
+            );
+            return dot(color, bitShift);
+            }
+
+
 		 void main(void) {
 			 vec4 la = uAmbientLightColor * uAmbientLightColor.a;
 			 vec4 ld = vec4(0.0, 0.0, 0.0, 1.0);
@@ -53,6 +70,37 @@ var RedStandardMaterial;
 			 vec4 texelColor = texture2D(u_diffuseTexture, vTexcoord);
 			 texelColor.rgb *= texelColor.a;
 			 if(texelColor.a ==0.0) discard;
+
+			///////////////////////////////////////////////////////////////////////////////////////
+			if(uUseDirectionalShadow){
+				vec3 fragmentDepth = vShadowPos.xyz;
+	            float shadowAcneRemover = 0.0007;
+	            fragmentDepth.z -= shadowAcneRemover;
+
+	            float texelSizeX =  1.0/vResolution.x;
+				float texelSizeY =  1.0/vResolution.y;
+			    float texelSize = 1.0 / 1024.0;
+				float amountInLight = 0.0;
+
+				for (int x = -1; x <= 1; x++) {
+				    for (int y = -1; y <= 1; y++) {
+				        vec2 tUV = fragmentDepth.xy + vec2(x, y) * vec2(texelSizeX,texelSizeY);
+	                    if(tUV.x<0.0) continue;
+	                    if(tUV.x>1.0) continue;
+	                    if(tUV.y<0.0) continue;
+	                    if(tUV.y>1.0) continue;
+				        float texelDepth = decodeFloat(texture2D(uDirectionalShadowTexture,tUV));
+				        if (fragmentDepth.z < texelDepth) {
+				            amountInLight += 0.5;
+				        }
+				       // texelColor =  texture2D(uDirectionalShadowTexture,tUV);
+				    }
+				}
+				amountInLight /= 9.0;
+				texelColor.rgb *= (1.0-amountInLight);
+			}
+			///////////////////////////////////////////////////////////////////////////////////////
+
 
 			 vec3 N = normalize(vVertexNormal);
 			 vec4 normalColor = texture2D(u_normalTexture, vTexcoord);
@@ -97,11 +145,16 @@ var RedStandardMaterial;
 				 }
 			 }
 
+
 			 vec4 finalColor = la * uAmbientIntensity + ld + ls;
 			 finalColor.rgb *= texelColor.a;
 			 finalColor.a = texelColor.a;
 			 if(uUseFog) gl_FragColor = fog( fogFactor(uFogDistance, uFogDensity), uFogColor, finalColor);
 			 else gl_FragColor = finalColor;
+
+
+
+
 		 }
 		 */
 	}

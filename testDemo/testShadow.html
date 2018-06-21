@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>testTexture</title>
+    <title>testDoF - DepthPass 단계전까지 보류</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -14,8 +14,10 @@
             margin: 0;
             padding: 0;
             overflow: hidden;
+            color: #fff
         }
     </style>
+
     <script src="../example/dat.gui.min.js"></script>
     <script src="../src/gl-matrix-min.js"></script>
     <script src="../src/RedGLUtil.js"></script>
@@ -125,14 +127,16 @@
     <script src="../src/postEffect/RedPostEffect_Film.js"></script>
     <script src="../src/postEffect/RedPostEffect_Vignetting.js"></script>
     <script src="../src/postEffect/antialiasing/RedPostEffect_FXAA.js"></script>
+    <script src="rStats.js"></script>
+    <link href="rStats.css" rel="stylesheet">
 </head>
 
 <body>
 <canvas id="test" style="border: none;background:red"></canvas>
 <script>
-	var t = document.getElementById('test')
-	document.body.appendChild(t)
-	RedGL(t, function (v) {
+	document.getElementById('test')
+	RedGL(document.getElementById('test'), function (v) {
+		console.log(v)
 		var tGL;
 		var tWorld, tScene3D, tCamera
 		var tRenderer;
@@ -141,15 +145,23 @@
 		tGL = this.gl;
 		this.world = tWorld = RedWorld();
 		tScene3D = RedScene(this);
+		// tScene3D['useFog'] = true
 		tCamera = RedObitController(this);
+		tCamera.tilt = -45
 		tRenderer = RedRenderer();
 		tWorld.addView(RedView('test', tScene3D, tCamera));
 		RedView('test').setSize('100%', '100%')
 		RedView('test').setLocation('0%', '0%')
-		var testMaterial = RedVideoMaterial(
-			this,
-			RedVideoTexture(this, '../asset/mov_bbb.mp4')
-		)
+		this.renderScale = 1
+		var testDLight, testALight, testPLight;
+		testDLight = RedDirectionalLight(this)
+		testDLight.x = 3
+		testDLight.y = 20
+		testDLight.z = 3
+		testDLight.debug = true
+		tScene3D.addLight(testDLight)
+		var bloom = RedPostEffect_Bloom(this)
+		tScene3D['postEffectManager'].addEffect(bloom)
 		tScene3D.skyBox =
 			RedSkyBox(this, [
 				'../asset/cubemap/posx.png',
@@ -159,18 +171,113 @@
 				'../asset/cubemap/posz.png',
 				'../asset/cubemap/negz.png'
 			]);
-		var testMesh = RedMesh(self, RedBox(this), testMaterial)
-		tScene3D.addChild(testMesh)
-		var testDLight
-		testDLight = RedDirectionalLight(this, '#fff')
-		testDLight.x = 3
-		testDLight.y = 3
-		testDLight.z = 3
-		tScene3D.addLight(testDLight)
-		tRenderer.renderDebuger.visible = true
-		tRenderer.start(this, function (time) {
+		// tScene3D['grid'] = RedGrid(self)
+		var tShadow = RedDirectionalShadow(this, testDLight)
+		tScene3D.shadowManager.directionalShadow = tShadow
+		var max = i = 250
+		var j
+		var k
+		var tMesh;
+		var tGeo = RedSphere(self)
+		var tMat = RedStandardMaterial(
+			self,
+			RedBitmapTexture(self, '../asset/crate.png')
+		)
+		var tMat2 = RedColorMaterial(
+			self
+		)
+		var tMat3 = RedColorPhongMaterial(
+			self
+		)
+		while ( i-- ) {
+			tMat.shininess = 8
+			tMesh = RedMesh(self, tGeo, Math.random() < 0.5 ? tMat : Math.random() < 0.5 ? tMat2 : tMat3)
+			tMesh.scaleX = tMesh.scaleY = tMesh.scaleZ = 1
+			tMesh.rotationX = tMesh.rotationY = tMesh.rotationZ = Math.random() * 360
+			tMesh.x = Math.random() * 50 - 25
+			tMesh.y = Math.random() * 20 - 10
+			tMesh.z = Math.random() * 50 - 25
+			if ( Math.random() < 0.5 ) tMesh.drawMode = self.gl.LINES
+			tScene3D.addChild(tMesh)
+			tShadow.addCasting(tMesh)
+		}
+		var tGeo = RedBox(self, 10, 10, 10, 50, 50, 50)
+		var tMesh2 = RedMesh(self, tGeo, tMat)
+		tMesh2.scaleX = tMesh2.scaleY = tMesh2.scaleZ = 5
+		tMesh2.y = -25
+		tScene3D.addChild(tMesh2)
+		var aaaa
+		RedOBJLoader(this, '../asset/obj/rabbit/', 'Rabbit.obj', function (v) {
+			console.log('호잇!', v)
+			tScene3D.addChild(v['resultMesh'])
+			tShadow.addCasting(v['resultMesh'])
+			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 10
 		})
-		console.log(tScene3D)
+		RedOBJLoader(this, '../asset/obj/', 'female.obj', function (v) {
+			console.log('호잇!', v)
+			var i = 25
+			while ( i-- ) {
+				var t0;
+				t0 = RedMesh(self)
+				t0['children'] = v['resultMesh']['children'].concat()
+				t0.x = Math.random() * 30 - 15
+				t0.z = Math.random() * 30 - 15
+				t0.scaleX = t0.scaleY = t0.scaleZ = 0.05
+				tShadow.addCasting(t0)
+				tScene3D.addChild(t0)
+			}
+		})
+		RedOBJLoader(this, '../asset/obj/', 'WaltHead.obj', function (v) {
+			console.log('호잇!', v)
+			tScene3D.addChild(v['resultMesh'])
+			tShadow.addCasting(v['resultMesh'])
+			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.25
+			v['resultMesh'].x = 15
+		})
+		RedOBJLoader(this, '../asset/obj/', 'cube.obj', function (v) {
+			console.log('호잇!', v)
+			tScene3D.addChild(v['resultMesh'])
+			v['resultMesh'].x = -15
+		})
+		RedOBJLoader(this, '../asset/obj/', 'tree.obj', function (v) {
+			console.log('호잇!', v)
+			tScene3D.addChild(v['resultMesh'])
+			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 20
+			v['resultMesh'].z = 20
+		})
+		tRenderer.renderDebuger.visible = true
+		var rS = new rStats();
+		rS('frame').start();
+		tRenderer.start(this, function (time) {
+			testDLight.x = Math.sin(time / 1000) * 30
+			testDLight.z = Math.cos(time / 1000) * 30
+			testDLight.y = 30
+//			tScene3D['children'][0].x = Math.sin(time / 1000)*6
+//			tScene3D['children'][0].z = Math.cos(time / 1000)
+			var i = tScene3D.children.length
+			while ( i-- ) {
+				if ( tMesh2 == tScene3D.children[i] || aaaa == tScene3D.children[i] ) {
+				} else {
+					tScene3D['children'][i].rotationY -= 1
+				}
+			}
+			rS('frame').end();
+			rS().update();
+			rS('frame').start();
+		})
+		this['gui'] = new dat.GUI({
+			name: 'test'
+		});
+		var t0 = this['gui'].addFolder('bloom')
+		t0.add(bloom, 'exposure', 0, 2)
+		t0.add(bloom, 'bloomStrength', 0, 2)
+		t0.add(bloom, 'blur', 0, 100)
+		t0.add(bloom, 'threshold', 0, 100)
+		t0.open()
+		var t0 = this['gui'].addFolder('directionalShadow')
+		t0.add(tShadow, 'width', 1, 4086)
+		t0.add(tShadow, 'height', 1, 4086)
+		t0.open()
 	})
 </script>
 </body>

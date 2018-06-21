@@ -41,6 +41,7 @@ var RedGL;
 		}
 		EXT_KEY_LIST = [
 			'OES_element_index_uint',
+			'OES_standard_derivatives',
 			'EXT_texture_filter_anisotropic'
 		]
 		// checkList = 'webkit-3d,moz-webgl,3d,experimental-webgl,webgl,webgl2'.split(',')

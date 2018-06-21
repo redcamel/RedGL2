@@ -17,10 +17,10 @@ var RedColorPhongTextureMaterial;
 			 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
 			 vVertexNormal = vec3(uNMatrix * vec4(aVertexNormal,1.0));
 			 vVertexPositionEye4 = uMMatrix * vec4(aVertexPosition, 1.0);
-			  vVertexPositionEye4.xyz += normalize(vVertexNormal) * texture2D(u_displacementTexture, vTexcoord + vec2(
+		     vVertexPositionEye4.xyz += normalize(vVertexNormal) * texture2D(u_displacementTexture, vTexcoord + vec2(
 			    u_displacementFlowSpeedX * (uTime/1000.0),
 			    u_displacementFlowSpeedY * (uTime/1000.0)
-		    )).x * u_displacementPower ;
+		     )).x * u_displacementPower ;
 			 gl_PointSize = uPointSize;
 			 gl_Position = uPMatrix * uCameraMatrix* vVertexPositionEye4;
 		 }
@@ -203,9 +203,13 @@ var RedColorPhongTextureMaterial;
 		Object.defineProperty(this, 'alpha', RedDefinePropertyInfo['alpha']);
 		this['alpha'] = alpha == undefined ? 1 : alpha;
 		this['color'] = hexColor ? hexColor : '#ff0000'
+		this['normalTexture'] = normalTexture;
+		this['specularTexture'] = specularTexture;
+		this['displacementTexture'] = displacementTexture;
 		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkUniformAndProperty();
+		;
 		console.log(this);
 	}
 	RedColorPhongTextureMaterial.prototype = new RedBaseMaterial()

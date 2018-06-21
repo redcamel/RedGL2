@@ -41,7 +41,8 @@ var RedSystemShaderCode;
 			'uniform mat4 uPMatrix',
 			'uniform mat4 uCameraMatrix',
 			'uniform bool uSprite3DYn', // sprite3d인지 아닌지
-			'uniform bool uPerspectiveScale'
+			'uniform bool uPerspectiveScale',
+			'uniform mat4 uLightMatrix'
 		],
 		/**DOC:
 		 {
@@ -79,6 +80,9 @@ var RedSystemShaderCode;
 			// 암비안트
 			'uniform vec4 uAmbientLightColor',
 			'uniform float uAmbientIntensity',
+			// shadow
+			'uniform sampler2D uDirectionalShadowTexture',
+			'uniform bool uUseDirectionalShadow'
 		],
 		systemUniform: {}
 	};

@@ -421,90 +421,105 @@ var RedDAELoader;
 					if ( visualSceneInfo[target]['parent'] ) makeMatrix(list, visualSceneInfo[target]['parent']['name'])
 				}
 				console.log('idxMap', idxMap)
-				setInterval(function () {
-					// console.log()
-					var i = 0
-					var mtxMap = {}
-					for ( var k in aniInfo ) {
-						if ( aniInfo[k]['target'] && controllerInfo[aniInfo[k]['target']] ) {
-							var skeletonMatrix = mat4.create()
-							var parentMTX2 = mat4.create()
-							var mtxList = []
-							makeMatrix(mtxList, aniInfo[k]['target'])
-							// mtxList.reverse()
-							// console.log('mtxList',mtxList)
-							mtxList.forEach(function (v, index) {
-								mat4.multiply(skeletonMatrix, skeletonMatrix, v['matrix'])
-								parentMTX2 = mat4.clone(v['matrix'])
-							})
-							mat4.transpose(skeletonMatrix, skeletonMatrix, skeletonMatrix)
-							// console.log(mtxList)
-							controllerInfo[aniInfo[k]['target']]['skeleton']['autoUpdateMatrix'] = false
-							controllerInfo[aniInfo[k]['target']]['autoUpdateMatrix'] = false
-							controllerInfo[aniInfo[k]['target']]['skeleton']['matrix'] = skeletonMatrix
-							controllerInfo[aniInfo[k]['target']]['matrix'] = skeletonMatrix
-							var tControllIndex = controllerInfo2['jointNamePositionIndex'][aniInfo[k]['target']]
-							var tInversePose = controllerInfo2['jointInverseBindPoses'][tControllIndex]
-							mtxMap[tControllIndex] = {
-								jointNamePositionIndex: tControllIndex,
-								inversePose: tInversePose,
-								skeletonMatrix: skeletonMatrix,
-								parentMTX2: parentMTX2,
-								tMatrix: mtxList[0],
-								bindShapeMatrix: controllerInfo2['bindShapeMatrix']
-							}
-						}
-						i++
-					}
-					// 일단 전체 포인트에 대한 초기화는 이렇게 가능하고..
-					t_indexDataIndex.forEach(function (v, index) {
-						tInterleaveBuffer['data'][v * 8 + 0] = pointInfo['pointList'][v][0]
-						tInterleaveBuffer['data'][v * 8 + 1] = pointInfo['pointList'][v][1]
-						tInterleaveBuffer['data'][v * 8 + 2] = pointInfo['pointList'][v][2]
-					})
-					// 뼈대 가중치에서 처리함
-					var t1
-					var total = 0
-					t_indexDataIndex.forEach(function (v2, index) {
-						// if(index>0) return
-						v2 = v2
-						total = 0
-						var totalRAtio = 0
-						var finalMTX = mat4.create()
-						var t = (new Date()).getTime() / 500
-						for ( var k2 in controllerInfo2['parsedVertexJointWeights'][v2] ) {
-							var t2 = mat4.create()
-							var tRadio = controllerInfo2['parsedVertexJointWeights'][v2][k2]
-							// console.log(controllerInfo2['parsedVertexJointWeights'][v2])
-							// console.log(controllerInfo2['bindShapeMatrix'])
-							// console.log( mtxMap[k2]['skeletonMatrix'])
-							// 원본좌표
-							var t0 = [
-								1, 0, 0, 0,
-								0, 1, 0, 0,
-								0, 0, 1, 0,
-								pointInfo['pointList'][v2][0]-mtxMap[k2]['skeletonMatrix'][12],
-								pointInfo['pointList'][v2][1]-mtxMap[k2]['skeletonMatrix'][13],
-								pointInfo['pointList'][v2][2]-mtxMap[k2]['skeletonMatrix'][14],
-								1
-							]
-							// var t2 = mat4.clone(mtxMap[k2]['skeletonMatrix'])
-							totalRAtio += tRadio
-							mat4.scale(t2, t2, [tRadio, tRadio, tRadio])
-							mat4.multiply(t0, t0, t2)
-
-							// mat4.translate(t2, t2, [-t2[12], -t2[13], -t2[14]])
-							mat4.add(finalMTX, finalMTX, t0)
-							total++
-						}
-						totalRAtio = totalRAtio / total
-						tInterleaveBuffer['data'][v2 * 8 + 0] = (finalMTX[12])
-						tInterleaveBuffer['data'][v2 * 8 + 2] = (finalMTX[14]) * totalRAtio
-					})
-					tResultMesh['geometry']['interleaveBuffer'].upload(tInterleaveBuffer['data'])
-					aniIndex++
-					if ( aniMax == aniIndex ) aniIndex = 0
-				}, 16)
+				// setInterval(function () {
+				// 	// console.log()
+				// 	var i = 0
+				// 	var mtxMap = {}
+				// 	for ( var k in aniInfo ) {
+				// 		if ( aniInfo[k]['target'] && controllerInfo[aniInfo[k]['target']] ) {
+				// 			var skeletonMatrix = mat4.create()
+				// 			var parentMTX2 = mat4.create()
+				// 			var mtxList = []
+				// 			makeMatrix(mtxList, aniInfo[k]['target'])
+				// 			// mtxList.reverse()
+				// 			// console.log('mtxList',mtxList)
+				// 			mtxList.forEach(function (v, index) {
+				// 				mat4.multiply(skeletonMatrix, skeletonMatrix, v['matrix'])
+				// 				parentMTX2 = mat4.clone(v['matrix'])
+				// 			})
+				// 			mat4.transpose(skeletonMatrix, skeletonMatrix, skeletonMatrix)
+				// 			// console.log(mtxList)
+				// 			controllerInfo[aniInfo[k]['target']]['skeleton']['autoUpdateMatrix'] = false
+				// 			controllerInfo[aniInfo[k]['target']]['autoUpdateMatrix'] = false
+				// 			controllerInfo[aniInfo[k]['target']]['skeleton']['matrix'] = skeletonMatrix
+				// 			controllerInfo[aniInfo[k]['target']]['matrix'] = skeletonMatrix
+				// 			var tControllIndex = controllerInfo2['jointNamePositionIndex'][aniInfo[k]['target']]
+				// 			var tInversePose = controllerInfo2['jointInverseBindPoses'][tControllIndex]
+				// 			if(!mtxMap[tControllIndex]){
+				// 				mtxMap[tControllIndex] = {
+				// 					jointNamePositionIndex: tControllIndex,
+				// 					inversePose: tInversePose,
+				// 					skeletonMatrix: skeletonMatrix,
+				// 					parentMTX2: parentMTX2,
+				// 					tMatrix: mtxList[0],
+				// 					bindShapeMatrix: controllerInfo2['bindShapeMatrix']
+				// 				}
+				// 			}
+				//
+				// 		}
+				// 		i++
+				// 	}
+				// 	// 일단 전체 포인트에 대한 초기화는 이렇게 가능하고..
+				// 	t_indexDataIndex.forEach(function (v, index) {
+				// 		tInterleaveBuffer['data'][v * 8 + 0] = pointInfo['pointList'][v][0]
+				// 		tInterleaveBuffer['data'][v * 8 + 1] = pointInfo['pointList'][v][1]
+				// 		tInterleaveBuffer['data'][v * 8 + 2] = pointInfo['pointList'][v][2]
+				// 	})
+				// 	// 뼈대 가중치에서 처리함
+				// 	var t1
+				// 	var total = 0
+				// 	var tMap = {}
+				// 	t_indexDataIndex.forEach(function (v2, index) {
+				// 		if ( tMap[v2] ) return
+				// 		tMap[v2] = 1
+				// 		// if(index>0) return
+				// 		v2 = v2
+				// 		total = 0
+				// 		var totalRAtio = 0
+				// 		var finalMTX = mat4.create()
+				// 		var t = (new Date()).getTime() / 500
+				// 		for ( var k2 in controllerInfo2['parsedVertexJointWeights'][v2] ) {
+				// 			var t2 = mat4.create()
+				// 			var tRadio = controllerInfo2['parsedVertexJointWeights'][v2][k2]
+				// 			// console.log(controllerInfo2['parsedVertexJointWeights'][v2])
+				// 			// console.log(controllerInfo2['bindShapeMatrix'])
+				// 			// console.log( mtxMap[k2]['skeletonMatrix'])
+				//
+				// 			// 원본좌표
+				// 			var t0 = [
+				// 				1, 0, 0, 0,
+				// 				0, 1, 0, 0,
+				// 				0, 0, 1, 0,
+				// 				0, 0, 0, 1
+				// 			]
+				// 			var t2 = mat4.clone(mtxMap[k2]['skeletonMatrix'])
+				// 			mat4.multiply(t0, t0, t2)
+				//
+				//
+				//
+				// 			mat4.scale(t2, t2, [tRadio, tRadio, tRadio])
+				//
+				// 			mat4.add(finalMTX, finalMTX, t0)
+				//
+				// 			total++
+				// 			totalRAtio+=tRadio
+				// 		}
+				//
+				// 		var ttt = [
+				// 			pointInfo['pointList'][v2][0],
+				// 			pointInfo['pointList'][v2][1],
+				// 			pointInfo['pointList'][v2][2],
+				// 		]
+				// 		vec3.transformMat4(ttt, ttt, finalMTX)
+				// 		totalRAtio = totalRAtio / total
+				// 		tInterleaveBuffer['data'][v2 * 8 + 0] = ttt[0]
+				// 		tInterleaveBuffer['data'][v2 * 8 + 1] = ttt[1]
+				// 		tInterleaveBuffer['data'][v2 * 8 + 2] = ttt[2]
+				// 	})
+				// 	tResultMesh['geometry']['interleaveBuffer'].upload(tInterleaveBuffer['data'])
+				// 	aniIndex++
+				// 	if ( aniMax == aniIndex ) aniIndex = 0
+				// }, 16)
 			})
 		})
 	}
