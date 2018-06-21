@@ -250,7 +250,7 @@
 		})
 		tRenderer.renderDebuger.visible = true
 		var rS = new rStats();
-		rS('frame').start();
+		rS('total').start();
 		tRenderer.start(this, function (time) {
 			testDLight.x = Math.sin(time / 1000) * 30
 			testDLight.z = Math.cos(time / 1000) * 30
@@ -264,9 +264,9 @@
 					tScene3D['children'][i].rotationY -= 1
 				}
 			}
-			rS('frame').end();
+			rS('total').end();
 			rS().update();
-			rS('frame').start();
+			rS('total').start();
 		})
 		this['gui'] = new dat.GUI({
 			name: 'test'

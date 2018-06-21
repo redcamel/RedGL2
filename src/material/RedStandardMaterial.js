@@ -11,7 +11,7 @@ var RedStandardMaterial;
 		 uniform float u_displacementFlowSpeedY;
 
 		 varying vec4 vVertexPositionEye4;
-		 varying vec4 vShadowPos;
+		 varying highp vec4 vShadowPos;
 		 void main(void) {
 			 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
 			 vVertexNormal = vec3(uNMatrix * vec4(aVertexNormal,1.0));
@@ -41,7 +41,7 @@ var RedStandardMaterial;
 		 uniform float u_specularPower;
 
 		 varying vec4 vVertexPositionEye4;
-		 varying vec4 vShadowPos;
+		 varying highp vec4 vShadowPos;
 		 float fogFactor(float perspectiveFar, float density){
 			 float flog_cord = gl_FragCoord.z / gl_FragCoord.w / perspectiveFar;
 			 float fog = flog_cord * density;
@@ -52,13 +52,13 @@ var RedStandardMaterial;
 			return mix(fogColor, currentColor, fogFactor);
 		 }
 	    float decodeFloat (vec4 color) {
-            const vec4 bitShift = vec4(
+            const vec4 cBitShift = vec4(
                 1.0 / (256.0 * 256.0 * 256.0),
                 1.0 / (256.0 * 256.0),
                 1.0 / 256.0,
                 1
             );
-            return dot(color, bitShift);
+            return dot(color, cBitShift);
             }
 
 

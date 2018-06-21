@@ -145,18 +145,32 @@
 		tWorld.addView(RedView('test', tScene3D, tCamera));
 		RedView('test').setSize('100%', '100%')
 		RedView('test').setLocation('0%', '0%')
+
+		var source;
+		source = function () {
+			/* @preserve
+             uniform highp vec3 uTest;
+             void main(void) {
+             gl_Position = vec4(1.0);
+             }
+             */
+		}
+		source = RedGLUtil.getStrFromComment( source.toString() );
+		RedShader( this, 'uniformTestShader' + RedGL.makeUUID(), RedShader.VERTEX, source );
+
+
 		// RedShader(this, 'test', RedShader.VERTEX)
-		RedShader(this, 'testVs', RedShader.VERTEX, 'vec3 test; void main(){}')
-		RedShader(this, 'testFs', RedShader.FRAGMENT,
-			'precision mediump float;vec3 test; void main(){test;}')
-		// RedShader(this, 'test', RedShader.VERTEX, 'vec3 test; void main(){}')
-		RedProgram(
-			this,
-			'testProgram',
-			RedShader(this, 'testVs', RedShader.VERTEX),
-			RedShader(this, 'testFs', RedShader.FRAGMENT)
-		)
-		console.log('검색', RedProgram(this, 'testProgram'))
+//		RedShader(this, 'testVs', RedShader.VERTEX, 'vec3 test; void main(){}')
+//		RedShader(this, 'testFs', RedShader.FRAGMENT,
+//			'precision mediump float;vec3 test; void main(){test;}')
+//		// RedShader(this, 'test', RedShader.VERTEX, 'vec3 test; void main(){}')
+//		RedProgram(
+//			this,
+//			'testProgram',
+//			RedShader(this, 'testVs', RedShader.VERTEX),
+//			RedShader(this, 'testFs', RedShader.FRAGMENT)
+//		)
+//		console.log('검색', RedProgram(this, 'testProgram'))
 		// this.renderScale = 1
 		var testMaterial
 		testMaterial = RedStandardMaterial(
@@ -175,38 +189,39 @@
 			this,
 			RedBitmapTexture(this, '../asset/crate.png')
 		)
-		RedColorMaterial(this)
-		RedColorMaterial(this)
-		RedColorPhongTextureMaterial(this)
-		RedColorPhongTextureMaterial(this)
-		RedEnvironmentMaterial(this, RedBitmapTexture(this, '../asset/crate.png'))
-		RedEnvironmentMaterial(this, RedBitmapTexture(this, '../asset/crate.png'))
-		RedPointBitmapMaterial(this, RedBitmapTexture(this, '../asset/crate.png'))
-		RedPointBitmapMaterial(this, RedBitmapTexture(this, '../asset/crate.png'))
-		RedPointColorMaterial(this)
-		RedPointColorMaterial(this)
-		RedGridMaterial(this)
-		RedGridMaterial(this)
-		RedSkyBoxMaterial(this,
-			RedBitmapCubeTexture(this, [
-				'../asset/cubemap/posx.png',
-				'../asset/cubemap/negx.png',
-				'../asset/cubemap/posy.png',
-				'../asset/cubemap/negy.png',
-				'../asset/cubemap/posz.png',
-				'../asset/cubemap/negz.png'
-			])
-		)
-		RedSkyBoxMaterial(this,
-			RedBitmapCubeTexture(this, [
-				'../asset/cubemap/posx.png',
-				'../asset/cubemap/negx.png',
-				'../asset/cubemap/posy.png',
-				'../asset/cubemap/negy.png',
-				'../asset/cubemap/posz.png',
-				'../asset/cubemap/negz.png'
-			])
-		)
+
+//		RedColorMaterial(this)
+//		RedColorMaterial(this)
+//		RedColorPhongTextureMaterial(this)
+//		RedColorPhongTextureMaterial(this)
+//		RedEnvironmentMaterial(this, RedBitmapTexture(this, '../asset/crate.png'))
+//		RedEnvironmentMaterial(this, RedBitmapTexture(this, '../asset/crate.png'))
+//		RedPointBitmapMaterial(this, RedBitmapTexture(this, '../asset/crate.png'))
+//		RedPointBitmapMaterial(this, RedBitmapTexture(this, '../asset/crate.png'))
+//		RedPointColorMaterial(this)
+//		RedPointColorMaterial(this)
+//		RedGridMaterial(this)
+//		RedGridMaterial(this)
+//		RedSkyBoxMaterial(this,
+//			RedBitmapCubeTexture(this, [
+//				'../asset/cubemap/posx.png',
+//				'../asset/cubemap/negx.png',
+//				'../asset/cubemap/posy.png',
+//				'../asset/cubemap/negy.png',
+//				'../asset/cubemap/posz.png',
+//				'../asset/cubemap/negz.png'
+//			])
+//		)
+//		RedSkyBoxMaterial(this,
+//			RedBitmapCubeTexture(this, [
+//				'../asset/cubemap/posx.png',
+//				'../asset/cubemap/negx.png',
+//				'../asset/cubemap/posy.png',
+//				'../asset/cubemap/negy.png',
+//				'../asset/cubemap/posz.png',
+//				'../asset/cubemap/negz.png'
+//			])
+//		)
 		// JsonModelLoader(this, 'testJsonModel', '../asset/teapot.json', function (interleaveBuffer, indexBuffer) {
 		//     console.log('호잇!', interleaveBuffer, indexBuffer)
 		//     var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer), testMaterial)

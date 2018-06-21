@@ -90,10 +90,19 @@ var RedShader;
 				var tData;
 				var tType, tName, tDataType, tArrayNum, tValue;
 				var tInputData;
+				var tPrecision
 				v = v.trim()
 				source = source.replace(v + ';', '')
 				// console.log(source)
 				tData = v.split(' ')
+
+				if(tData[1] == 'highp' || tData[1] == 'mediump' || tData[1] == 'lowp') {
+					var temp;
+					temp = tData[1]
+					tData.splice(1,1)
+					tData.push(temp)
+					tPrecision = temp
+				}
 				// console.log(v,tData)
 				if ( tData[2] ) {
 					// 정의인경우
@@ -120,8 +129,8 @@ var RedShader;
 							if ( tName.charAt(1) != tName.charAt(1).toUpperCase() ) RedGLUtil.throwFunc('RedShader : varying의 두번째 글자는 대문자 시작해야합니다.', tName)
 							break
 						case 'const':
-							// if ( tName.charAt(0) != 'c' ) RedGLUtil.throwFunc('RedShader : const의 첫글자는 c로 시작해야합니다.', tName)
-							// if ( tName.charAt(1) != tName.charAt(1).toUpperCase() ) RedGLUtil.throwFunc('RedShader : const의 두번째 글자는 대문자 시작해야합니다.', tName)
+							if ( tName.charAt(0) != 'c' ) RedGLUtil.throwFunc('RedShader : const의 첫글자는 c로 시작해야합니다.', tName)
+							if ( tName.charAt(1) != tName.charAt(1).toUpperCase() ) RedGLUtil.throwFunc('RedShader : const의 두번째 글자는 대문자 시작해야합니다.', tName)
 							break
 						default:
 							// RedGLUtil.throwFunc('RedShader : 체크되지 못하는값인데 뭐냐', tName)
@@ -141,6 +150,7 @@ var RedShader;
 					name: tName,
 					arrayNum: tArrayNum,
 					value: tValue,
+					precision : tPrecision,
 					systemUniformYn: RedSystemShaderCode.systemUniform[tArrayNum ? tName + '[' + tArrayNum + ']' : tName] ? true : false
 				};
 				if ( tType == 'uniform' ) tInputData['uniformType'] = tDataType;
