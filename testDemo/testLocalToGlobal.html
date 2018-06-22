@@ -138,10 +138,9 @@
 		var tRenderer;
 		var self;
 		self = this
-		tGL = this.gl;
 		this.world = tWorld = RedWorld();
 		tScene3D = RedScene(this, '#00ff00');
-		tCamera = RedCamera();
+		tCamera = RedObitController(this);
 		tRenderer = RedRenderer();
 		tWorld.addView(RedView('test', tScene3D, tCamera));
 		RedView('test').setSize('100%', '100%')
@@ -151,42 +150,36 @@
 			this,
 			RedBitmapTexture(this, '../asset/crate.png')
 		)
-//		tScene3D.skyBox =
-//			RedSkyBox(this, [
-//				'../asset/cubemap/posx.png',
-//				'../asset/cubemap/negx.png',
-//				'../asset/cubemap/posy.png',
-//				'../asset/cubemap/negy.png',
-//				'../asset/cubemap/posz.png',
-//				'../asset/cubemap/negz.png'
-//			]);
+		tScene3D.skyBox =
+			RedSkyBox(this, [
+				'../asset/cubemap/posx.png',
+				'../asset/cubemap/negx.png',
+				'../asset/cubemap/posy.png',
+				'../asset/cubemap/negy.png',
+				'../asset/cubemap/posz.png',
+				'../asset/cubemap/negz.png'
+			]);
 		var testMesh, testMesh2, testMesh3, testMesh4
 		testMesh = RedMesh(self, RedBox(self), testMaterial)
 		testMesh.x = 1
 		testMesh.y = 1
 		testMesh.z = 1
 		tScene3D.addChild(testMesh)
-		testMesh2 = RedMesh(self, RedBox(self), testMaterial)
+		/////////////////////////////////////////////////////////
+		testMesh2 = RedMesh(self, RedSphere(self, 0.5, 16, 16, 16), testMaterial)
 		testMesh2.x = -2
 		testMesh.addChild(testMesh2)
-		testMesh3 = RedMesh(self, RedBox(self), RedColorMaterial(self))
+		/////////////////////////////////////////////////////////
+		testMesh3 = RedMesh(self, RedSphere(self, 0.5, 16, 16, 16), RedColorMaterial(self))
 		testMesh3.scaleX = testMesh3.scaleY = testMesh3.scaleZ = 1.1
 		tScene3D.addChild(testMesh3)
-		testMesh4 = RedMesh(self, RedBox(self), RedColorMaterial(self, '#00ff00'))
+		/////////////////////////////////////////////////////////
+		testMesh4 = RedMesh(self, RedSphere(self, 0.5, 16, 16, 16), RedColorMaterial(self, '#00ff00'))
 		testMesh4.scaleX = testMesh4.scaleY = testMesh4.scaleZ = 1
 		testMesh4.x = 2
 		testMesh.addChild(testMesh4)
-		var testMesh5
-		JsonModelLoader(this, 'testJsonModel', '../asset/bunny.json', function (interleaveBuffer, indexBuffer) {
-			testMesh5 = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer),
-				RedColorPhongTextureMaterial(
-					self
-				))
-			testMesh5.scaleX = testMesh5.scaleY = testMesh5.scaleZ = 0.3
-			tScene3D.addChild(testMesh5)
-			tScene3D['grid'] = RedGrid(self)
-			// tScene3D['axis'] = RedAxis(self)
-		})
+		/////////////////////////////////////////////////////////
+		tScene3D['grid'] = RedGrid(self)
 		var testDLight, testALight;
 		testDLight = RedDirectionalLight(this, '#fff')
 		testDLight.x = 3
@@ -195,67 +188,75 @@
 		tScene3D.addLight(testDLight)
 		testALight = RedAmbientLight(this)
 		tScene3D.addLight(testALight)
-		var worldToScreenBox;
-		worldToScreenBox = document.createElement('div')
-		worldToScreenBox.style.cssText =
-			'position:absolute;top:0px;left:0px;color:#fff;font-size:12px;background:rgba(0,0,0,0.6)'
-		worldToScreenBox.innerHTML = 'worldToScreen Test'
-		document.body.appendChild(worldToScreenBox)
-		function get2dPoint(point3D, viewMatrix, projectionMatrix, width, height) {
-			var viewProjectionMatrix = projectionMatrix * viewMatrix;
-			//transform world to clipping coordinates
-			point3D = projectionMatrix.multiply(point3D,);
-			var winX = Math.round((( point3D[0] + 1 ) / 2.0) * width);
-			//we calculate -point3D.getY() because the screen Y axis is
-			//oriented top->down
-			var winY = Math.round((( 1 - point3D[1] ) / 2.0) * height);
-			return [winX, winY]
-		}
 
+		tScene3D['axis'] = RedAxis(self)
+		RedAxis(self)
+		////////////////////////
+		var getScreenPointBox, getScreenPointBox2;
+		var localToWorldBox3
+		var worldToLocalBox4;
+		getScreenPointBox = document.createElement('div')
+		getScreenPointBox.style.cssText =
+			'position:absolute;top:0px;left:0px;color:#fff;font-size:12px;background:rgba(0,0,0,0.6);padding:10px;min-width:200px'
+		getScreenPointBox.innerHTML = 'getScreenPointBox Test'
+		document.body.appendChild(getScreenPointBox)
+		getScreenPointBox2 = document.createElement('div')
+		getScreenPointBox2.style.cssText =
+			'position:absolute;top:0px;left:0px;color:#fff;font-size:12px;background:rgba(0,0,0,0.6);padding:10px;min-width:200px'
+		getScreenPointBox2.innerHTML = 'getScreenPointBox2 Test'
+		document.body.appendChild(getScreenPointBox2)
+		localToWorldBox3 = document.createElement('div')
+		localToWorldBox3.style.cssText =
+			'position:absolute;top:0px;left:0px;color:#fff;font-size:12px;background:rgba(0,100,100,0.6);padding:10px;min-width:200px'
+		localToWorldBox3.innerHTML = 'localToWorldBox3 Test'
+		document.body.appendChild(localToWorldBox3)
+		worldToLocalBox4 = document.createElement('div')
+		worldToLocalBox4.style.cssText =
+			'position:absolute;top:0px;left:0px;color:#fff;font-size:12px;background:rgba(0,0,100,0.6);padding:10px;min-width:200px'
+		worldToLocalBox4.innerHTML = 'worldToLocalBox Test'
+		document.body.appendChild(worldToLocalBox4)
+		////////////////////////
 		tRenderer.renderDebuger.visible = true
 		tRenderer.start(this, function (time) {
-			// testInterleaveBuffer.upload(interleaveData)
-			// i = tScene3D.children.length
-			// while (i--) {
-			//     testMesh = tScene3D.children[i]
-			//     testMesh.rotationX += 1
-			//     testMesh.rotationY += 1
-			//     testMesh.rotationZ += 1
-			// }
-			get2dPoint([testMesh.x, testMesh.y, testMesh.z], testMesh.matrix, tCamera.perspectiveMTX, self.gl.drawingBufferWidth, self.gl.drawingBufferHeight)
-			testMesh.rotationX += 1
-			testMesh.rotationY += 1
-			testMesh.rotationZ += 1
-			testMesh2.rotationX += 0.5
-			testMesh2.rotationY += 0.5
-			testMesh2.rotationZ += 0.5
-			if ( testMesh5 ) {
-				testMesh5.rotationX += 0.5
-				testMesh5.rotationY += 0.5
-				testMesh5.rotationZ += 0.5
-			}
-			// console.log(testMesh2.localToWorld(-2, 0, 0))
-			testMesh3.x = testMesh2.localToWorld(-1, 1, 0)[0]
-			testMesh3.y = testMesh2.localToWorld(-1, 1, 0)[1]
-			testMesh3.z = testMesh2.localToWorld(-1, 1, 0)[2]
-			testDLight.x = Math.sin(time / 1500) * 1
-			testDLight.y = 5
-			testDLight.z = Math.cos(time / 1500) * 1
-			// console.log(testMesh4.worldToLocal(2, 2, 2))
-			testMesh4.x = testMesh4.worldToLocal(3, 0, 1)[0]
-			testMesh4.y = testMesh4.worldToLocal(3, 0, 1)[1]
-			testMesh4.z = testMesh4.worldToLocal(3, 0, 1)[2]
-			//   var testPosition = [Math.sin(time / 1500) * 5, 0, Math.cos(time / 1500) * 5]
-			// testMesh4.x = testMesh4.worldToLocal(testPosition[0], testPosition[1], testPosition[2])[0]
-			// testMesh4.y = testMesh4.worldToLocal(testPosition[0], testPosition[1], testPosition[2])[1]
-			// testMesh4.z = testMesh4.worldToLocal(testPosition[0], testPosition[1], testPosition[2])[2]
-			tCamera.y = 20
-			tCamera.z = 50
-			// tCamera.x = Math.sin(time / 1500) * 30
-			// tCamera.y = Math.cos(time / 1500) * 30
-			// if(tCamera.y<1) tCamera.y = 1
-			// tCamera.z = Math.cos(time / 1500) * 30 + Math.sin(time / 1500) * 30
-			tCamera.lookAt(0, 0, 0)
+			var testPoint = testMesh.getScreenPoint(RedView('test'))
+			getScreenPointBox.style.top = testPoint[1]
+			getScreenPointBox.style.left = testPoint[0]
+			getScreenPointBox.innerHTML = 'testMesh / getScreenPointBox Test<br>screen X : ' + testPoint[0] + '<br>' + 'screen Y : ' + testPoint[1]
+			testMesh.rotationX += 0.2
+			testMesh.rotationY += 0.2
+			testMesh.rotationZ += 0.2
+			////////////////////////////////////////////////////////////////////////////////////
+			var testPoint2 = testMesh2.getScreenPoint(RedView('test'))
+			getScreenPointBox2.style.top = testPoint2[1]
+			getScreenPointBox2.style.left = testPoint2[0]
+			getScreenPointBox2.innerHTML = 'testMesh2 / getScreenPointBox2 Test<br>screen X : ' + testPoint2[0] + '<br>' + 'screen Y : ' + testPoint2[1]
+			testMesh2.rotationX += 0.2
+			testMesh2.rotationY += 0.2
+			testMesh2.rotationZ += 0.2
+			////////////////////////////////////////////////////////////////////////////////////
+			var testLocalInput3 = [-1, 1, 0]
+			var testLocalToWorld3 = testMesh2.localToWorld(testLocalInput3[0], testLocalInput3[1], testLocalInput3[2])
+			var testPoint3 = testMesh3.getScreenPoint(RedView('test'))
+			testMesh3.x = testLocalToWorld3[0]
+			testMesh3.y = testLocalToWorld3[1]
+			testMesh3.z = testLocalToWorld3[2]
+			localToWorldBox3.style.top = testPoint3[1]
+			localToWorldBox3.style.left = testPoint3[0]
+			localToWorldBox3.innerHTML = 'tesMesh3 / localToWorldBox3 Test<br>testMesh2.localToWorld(-1,1,0)<br>'
+				+ '<br>world X : ' + testLocalToWorld3[0] + '<br>' + 'world Y : ' + testLocalToWorld3[1] + '<br>' + 'world Z : ' + testLocalToWorld3[2]
+				+ '<br>screen X : ' + testPoint3[0] + '<br>' + 'screen Y : ' + testPoint3[1]
+			////////////////////////////////////////////////////////////////////////////////////
+			var testWolrdInput4 = [3, 0, 1]
+			var testWorldToLocal4 = testMesh4.worldToLocal(testWolrdInput4[0], testWolrdInput4[1], testWolrdInput4[2])
+			var testPoint4 = testMesh4.getScreenPoint(RedView('test'))
+			testMesh4.x = testWorldToLocal4[0]
+			testMesh4.y = testWorldToLocal4[1]
+			testMesh4.z = testWorldToLocal4[2]
+			worldToLocalBox4.style.top = testPoint4[1]
+			worldToLocalBox4.style.left = testPoint4[0]
+			worldToLocalBox4.innerHTML = 'testMesh4 / worldToLocalBox4 Test<br>input world X: ' + testWolrdInput4[0] + '<br>' + 'input world Y : ' + testWolrdInput4[1] + '<br>' + 'input world Z : ' + testWolrdInput4[2]
+				+ '<br>local X: ' + testWorldToLocal4[0] + '<br>' + 'local Y : ' + testWorldToLocal4[1] + '<br>' + 'local Z : ' + testWorldToLocal4[2]
+			////////////////////////////////////////////////////////////////////////////////////
 		})
 		console.log(tScene3D)
 	})
