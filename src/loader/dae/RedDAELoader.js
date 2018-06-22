@@ -295,6 +295,7 @@ var RedDAELoader;
 		var parse;
 		parse = function (map, parentTargetInfo, list, targetList) {
 			targetList.forEach(function (target) {
+
 				var tInfo;
 				var tSubTargetList = []
 				var i = target.children.length
@@ -396,31 +397,31 @@ var RedDAELoader;
 				// 대상 메쉬를 결과메쉬에 추가
 				tRedDAELoader['resultMesh'].addChild(tResultMesh)
 				// 씬해석
-				visualSceneInfo = parseVisualSceneInfo(rawData)
+				// visualSceneInfo = parseVisualSceneInfo(rawData)
 				// 애니메이션해석
-				aniInfo = parseAnimation(rawData)
+				// aniInfo = parseAnimation(rawData)
 				// 콘트롤러해석
-				controllerInfo = parseController(redGL, rawData, tRedDAELoader['resultMesh'], tResultMesh)
-				controllerInfo2 = parseController2(rawData)
-				var aniIndex = 0
-				var aniMax = aniInfo['Armature_mixamorig_HeadTop_End_pose_matrix']['time'].length
-				// console.log('idxMap',idxMap)
-				var makeMatrix = function (list, target) {
-					// console.log('뭐가오나',visualSceneInfo[target])
-					var tAniMatrix;
-					for ( var k in aniInfo ) {
-						if ( aniInfo[k]['target'] == controllerInfo[target]['name'] ) {
-							tAniMatrix = aniInfo[k]['matrix'][aniIndex];
-							break
-						}
-					}
-					list.push({
-						name: controllerInfo[target]['name'],
-						matrix: tAniMatrix
-					})
-					if ( visualSceneInfo[target]['parent'] ) makeMatrix(list, visualSceneInfo[target]['parent']['name'])
-				}
-				console.log('idxMap', idxMap)
+				// controllerInfo = parseController(redGL, rawData, tRedDAELoader['resultMesh'], tResultMesh)
+				// controllerInfo2 = parseController2(rawData)
+				// var aniIndex = 0
+				// var aniMax = aniInfo['Armature_mixamorig_HeadTop_End_pose_matrix']['time'].length
+				// // console.log('idxMap',idxMap)
+				// var makeMatrix = function (list, target) {
+				// 	// console.log('뭐가오나',visualSceneInfo[target])
+				// 	var tAniMatrix;
+				// 	for ( var k in aniInfo ) {
+				// 		if ( aniInfo[k]['target'] == controllerInfo[target]['name'] ) {
+				// 			tAniMatrix = aniInfo[k]['matrix'][aniIndex];
+				// 			break
+				// 		}
+				// 	}
+				// 	list.push({
+				// 		name: controllerInfo[target]['name'],
+				// 		matrix: tAniMatrix
+				// 	})
+				// 	if ( visualSceneInfo[target]['parent'] ) makeMatrix(list, visualSceneInfo[target]['parent']['name'])
+				// }
+				// console.log('idxMap', idxMap)
 				// setInterval(function () {
 				// 	// console.log()
 				// 	var i = 0

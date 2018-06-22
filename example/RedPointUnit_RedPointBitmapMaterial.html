@@ -54,7 +54,7 @@
 				var i;
 				var interleaveData;
 				interleaveData = [];
-				i = 100000
+				i = 10000
 				while ( i-- ) {
 					// position
 					interleaveData.push( Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50 )
@@ -72,7 +72,6 @@
 					],
 					RedPointBitmapMaterial( redGL, RedBitmapTexture( redGL, '../asset/particle.png' ) )
 				)
-				testParticle['useDepthTest'] = false
 				testParticle['blendSrc'] = redGL.gl.SRC_ALPHA
 				testParticle['blendDst'] = redGL.gl.ONE
 				tScene.addChild( testParticle )
@@ -88,18 +87,14 @@
 					RedPointBitmapMaterial( redGL, RedBitmapTexture( redGL, '../asset/alphaTest.png' ) )
 				)
 				testParticle2.rotationX = Math.random() * 360
-				// testParticle2['useDepthTest'] = false
-				testParticle2['depthFunc'] = redGL.gl.LEQUAL
-				// testParticle2['blendSrc'] = redGL.gl.SRC_ALPHA
-				// testParticle2['blendDst'] = redGL.gl.ONE
 				tScene.addChild( testParticle2 )
 			})( this );
 
 			// 렌더시작
 			tRenderer.start( this, function ( time ) {
-				tCamera.x = Math.sin( time / 3000 ) * 10
-				tCamera.y = Math.cos( time / 3000 ) * 10
-				tCamera.z = Math.cos( time / 3000 ) * 5 + Math.sin( time / 3000 ) * 5
+				tCamera.x = Math.sin( time / 3000 ) * 20
+				tCamera.y = Math.cos( time / 3000 ) * 20
+				tCamera.z = Math.cos( time / 3000 ) * 20 + Math.sin( time / 3000 ) * 5
 
 				tCamera.lookAt( 0, 0, 0 )
 			} )
@@ -107,6 +102,29 @@
 			// 렌더 디버거 활성화
 			tRenderer['renderDebuger']['visible'] = true
 			testUI( this, tCamera, tScene )
+			/////////////////////////////////
+			var testDLight;
+			var self = this
+			testDLight = RedDirectionalLight(this, '#fff')
+			testDLight.x = 3
+			testDLight.y = 3
+			testDLight.z = 3
+			tScene.addLight(testDLight);
+			RedOBJLoader(this, '../asset/obj/', 'female.obj', function (v) {
+				console.log('호잇!', v)
+				var i = 100
+				while ( i-- ) {
+					var t0;
+					t0 = RedMesh(self)
+					t0['children'] = v['resultMesh']['children'].concat()
+					t0.x = Math.random() * 30 - 15
+					t0.z = Math.random() * 30 - 15
+					t0.scaleX = t0.scaleY = t0.scaleZ = 0.01
+					tScene.addChild(t0)
+				}
+				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.05
+				tScene.addChild(v['resultMesh'])
+			})
 		} else {
 			console.log( '초기화 실패!' )
 		}

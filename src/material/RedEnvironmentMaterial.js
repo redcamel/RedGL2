@@ -35,6 +35,7 @@ var RedEnvironmentMaterial;
 		 uniform sampler2D u_specularTexture;
 		 uniform samplerCube u_environmentTexture;
 
+         uniform float u_normalPower;
 		 uniform float u_shininess;
 		 uniform float u_specularPower;
 		 uniform float u_reflectionPower;
@@ -61,7 +62,7 @@ var RedEnvironmentMaterial;
 
 			 vec3 N = normalize(vVertexNormal);
 			 vec4 normalColor = texture2D(u_normalTexture, vTexcoord);
-			 if(normalColor.a != 0.0) N = normalize(2.0 * (N + normalColor.rgb  - 0.5));
+			 if(normalColor.a != 0.0) N = normalize(2.0 * (N + normalColor.rgb * u_normalPower  - 0.5));
 
 			 vec4 reflectionColor = textureCube(u_environmentTexture, 2.0 * dot(vReflectionCubeCoord,vVertexNormal) * vVertexNormal - vReflectionCubeCoord);
 			 texelColor = texelColor * (1.0 - u_reflectionPower) + reflectionColor * u_reflectionPower;
@@ -208,6 +209,14 @@ var RedEnvironmentMaterial;
 		this['displacementTexture'] = displacementTexture;
 		/**DOC:
 		 {
+			 title :`normalPower`,
+			 description : `기본값 : 1`,
+			 return : 'number'
+		 }
+		 :DOC*/
+		this['normalPower'] = 1
+		/**DOC:
+		 {
 			 title :`shininess`,
 			 description : `기본값 : 16`,
 			 return : 'Number'
@@ -253,6 +262,7 @@ var RedEnvironmentMaterial;
 	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'normalTexture', 'sampler2D');
 	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'specularTexture', 'sampler2D');
 	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'displacementTexture', 'sampler2D');
+	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'normalPower', 'number', {'min': 0});
 	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'shininess', 'number', {'min': 0});
 	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'specularPower', 'number', {'min': 0});
 	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'reflectionPower', 'number', {'min': 0});

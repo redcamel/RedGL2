@@ -463,6 +463,8 @@ var RedRenderer;
 					gl.enable(gl.CULL_FACE);
 					self['cacheState']['useCullFace'] = true
 				}
+				// 뎁스마스크 원상복구
+				gl.depthMask(self['cacheState']['useDepthMask'] = true);
 				// 디렉셔널 쉐도우 렌더
 				if ( tScene['shadowManager']['_directionalShadow'] ) {
 					updateSystemUniform.apply(self, [redGL, time, tScene, tCamera, tViewRect])
@@ -735,7 +737,7 @@ var RedRenderer;
 								}
 							}
 						} else {
-							// tUniformValue == undefined ? RedGLUtil.throwFunc('RedRenderer : Material에 ', tUniformLocationInfo['materialPropertyName'], '이 정의 되지않았습니다.') : 0;
+							tUniformValue == undefined ? RedGLUtil.throwFunc('RedRenderer : Material에 ', tUniformLocationInfo['materialPropertyName'], '이 정의 되지않았습니다.') : 0;
 							tRenderType == 'float' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue, tUniformValue)) :
 								tRenderType == 'int' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue, tUniformValue)) :
 									tRenderType == 'bool' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue, tUniformValue)) :
@@ -902,6 +904,8 @@ var RedRenderer;
 					tCacheState['useCullFace'] != tMesh['useCullFace'] ? (tCacheState['useCullFace'] = tMesh['useCullFace']) ? gl.enable(gl.CULL_FACE) : gl.disable(gl.CULL_FACE) : 0;
 					// 컬페이스 캐싱처리
 					tCacheState['cullFace'] != tMesh['cullFace'] ? gl.cullFace(tCacheState['cullFace'] = tMesh['cullFace']) : 0;
+					// 뎁스마스크처리
+					tCacheState['useDepthMask'] != tMesh['useDepthMask'] ? gl.depthMask(tCacheState['useDepthMask'] = tMesh['useDepthMask']) : 0;
 					// 뎁스테스트 사용여부 캐싱처리
 					tCacheState['useDepthTest'] != tMesh['useDepthTest'] ? (tCacheState['useDepthTest'] = tMesh['useDepthTest']) ? gl.enable(gl.DEPTH_TEST) : gl.disable(gl.DEPTH_TEST) : 0;
 					// 뎁스테스팅 캐싱처리

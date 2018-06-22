@@ -59,6 +59,17 @@ var RedBaseObject3D;
 		this['cullFace'] = gl.BACK
 		/**DOC:
 		 {
+			 title :`useDepthMask`,
+			 description : `
+				 뎁스 테스트 사용여부
+				 기본값 : true
+			 `,
+			 return : 'Boolean'
+		 }
+		 :DOC*/
+		this['useDepthMask'] = true
+		/**DOC:
+		 {
 			 title :`useDepthTest`,
 			 description : `
 				 뎁스 테스트 사용여부

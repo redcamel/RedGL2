@@ -38,10 +38,10 @@
 			tScene = RedScene( this );
 
 			// 카메라 생성
-			tCamera = RedCamera();
-			tCamera.x = 3
-			tCamera.y = 4
-			tCamera.z = 6
+			tCamera = RedObitController(this);
+			tCamera.pan = 45
+			tCamera.tilt = -45
+			tCamera.distance = 5
 			// 렌더러 생성
 			tRenderer = RedRenderer();
 
@@ -117,7 +117,7 @@
 
 			// 렌더시작
 			tRenderer.start( this, function ( time ) {
-				tCamera.lookAt( 0, 0, 0 )
+
 				var i = tScene.children.length
 				var t0
 				while ( i-- ) {
@@ -141,9 +141,8 @@
 	testUI = function ( redGL, tCamera, tScene, tMaterial, tMaterial2, tMaterial3, tEnvironmentTexture, tNormalTexture, tSpecularTexture, tDisplacementTexture ) {
 		var gui = new baseTestUI( redGL )
 		gui.initRedGL()
-		gui.initCamera( tCamera )
 		gui.initScene( tScene )
-		var t0 = gui['gui'].addFolder( 'StandardMaterial' )
+		var t0 = gui['gui'].addFolder( 'RedEnvironmentMaterial' )
 		var testStandard = function () {
 			this.normalTexture = false
 			this.specularTexture = false
@@ -163,6 +162,10 @@
 		} )
 		t0.add( testStandard, 'specularTexture' ).onChange( function ( v ) {
 			tMaterial['specularTexture'] = tMaterial2['specularTexture'] = tMaterial3['specularTexture'] = v ? tSpecularTexture : null
+		} )
+		t0.add( tMaterial, 'normalPower', 0, 3 ).onChange( function ( v ) {
+			tMaterial2['normalPower'] = v
+			tMaterial3['normalPower'] = v
 		} )
 		t0.add( tMaterial, 'shininess', 1, 128 ).onChange( function ( v ) {
 			tMaterial2['shininess'] = v
