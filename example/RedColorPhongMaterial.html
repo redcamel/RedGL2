@@ -38,7 +38,10 @@
 			tScene = RedScene( this );
 
 			// 카메라 생성
-			tCamera = RedCamera();
+			tCamera = RedObitController(this);
+			tCamera.pan = 45
+			tCamera.tilt = -45
+			tCamera.distance = 10
 
 			// 렌더러 생성
 			tRenderer = RedRenderer();
@@ -79,7 +82,6 @@
 				tCamera.x = Math.sin( time / 1500 ) * 10
 				tCamera.y = Math.cos( time / 1500 ) * 10
 				tCamera.z = Math.cos( time / 1500 ) * 15 + Math.sin( time / 1500 ) * 15
-				tCamera.lookAt( 0, 0, 0 )
 			} )
 
 			// 렌더 디버거 활성화
@@ -95,7 +97,6 @@
 		console.log( 'test' )
 		var gui = new baseTestUI( redGL )
 		gui.initRedGL()
-		gui.initCamera( tCamera )
 		gui.initScene( tScene )
 		var test = {
 			drawMode: 'TRIANGLES',
@@ -109,11 +110,15 @@
 			this.specularTexture = false
 			this.displacementTexture = false
 			this.shininess = 16
+			this.normalPower = 1
 			this.specularPower = 1
 		}
 		testColorPhong = new testColorPhong()
 		t0.addColor( testColorPhong, 'color' ).onChange( function ( v ) {
 			tMaterial3.color = v
+		} )
+		t0.add( testColorPhong, 'normalPower', 0, 3 ).onChange( function ( v ) {
+			tMaterial2['normalPower'] = v
 		} )
 		t0.add( testColorPhong, 'shininess', 1, 128 ).onChange( function ( v ) {
 			tMaterial3['shininess'] = v

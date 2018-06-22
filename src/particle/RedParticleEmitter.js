@@ -38,10 +38,10 @@ var RedParticleEmitter;
 			]
 		))
 		this['material'] = material
-		this['useDepthTest'] = false
 		this['drawMode'] = redGL.gl.POINTS
 		this['blendSrc'] = redGL.gl.SRC_ALPHA
 		this['blendDst'] = redGL.gl.ONE
+		this['useDepthMask'] = false
 		this['_UUID'] = RedGL['makeUUID']();
 	}
 	RedParticleEmitter.prototype = new RedBaseContainer();

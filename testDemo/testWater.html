@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>testPoint</title>
+    <title>testTexture</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -140,118 +140,47 @@
 		self = this
 		tGL = this.gl;
 		this.world = tWorld = RedWorld();
-		tScene3D = RedScene(this, '#223344');
-		tScene3D.alpha = 0.1
-		tCamera = RedCamera()
-		tCamera.y = 10
-		tCamera.z = 10
-		tCamera.lookAt(0, 0, 0)
+		tScene3D = RedScene(this);
+		tCamera = RedObitController(this);
 		tRenderer = RedRenderer();
 		tWorld.addView(RedView('test', tScene3D, tCamera));
-		var testDLight;
+		RedView('test').setSize('100%', '100%')
+		RedView('test').setLocation('0%', '0%')
+		var testMaterial = RedColorPhongTextureMaterial(
+			this,
+			'#0000ff',
+			1,
+			RedBitmapTexture(this, '../asset/waterNormal.jpg'),
+			null,
+		)
+		testMaterial.displacementPower = 0.1
+		testMaterial.displacementFlowSpeedX = 0.2
+		testMaterial.displacementFlowSpeedY = 0.2
+		tScene3D.skyBox =
+			RedSkyBox(this, [
+				'../asset/cubemap/posx.png',
+				'../asset/cubemap/negx.png',
+				'../asset/cubemap/posy.png',
+				'../asset/cubemap/negy.png',
+				'../asset/cubemap/posz.png',
+				'../asset/cubemap/negz.png'
+			]);
+		var testMesh = RedMesh(self, RedPlane(this, 1000, 1000, 200, 200), testMaterial)
+		tCamera.tilt = -45
+		tCamera.distance = 50
+		tScene3D.useFog = true
+		tScene3D.fogDistance = 300
+		tScene3D.fogDensity = 0.5
+		testMesh.rotationX = 90
+		tScene3D.addChild(testMesh)
+		var testDLight
 		testDLight = RedDirectionalLight(this, '#fff')
-		testDLight.x = 3
-		testDLight.y = 3
-		testDLight.z = 3
-		tScene3D.addLight(testDLight);
-		(function () {
-			var testMaterial
-			testMaterial = RedPointBitmapMaterial(self, RedBitmapTexture(self, '../asset/particle.png'))
-			var interleaveData
-			interleaveData = []
-			var i = 20000
-			while ( i-- ) {
-				var t = Math.random() * 100 - 50
-				interleaveData.push(Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50)
-				interleaveData.push(Math.random() * 50)
-			}
-			interleaveData = new Float32Array(interleaveData)
-			var testParticle = RedPointUnit(
-				self,
-				interleaveData,
-				[
-					RedInterleaveInfo('aVertexPosition', 3),
-					RedInterleaveInfo('aPointSize', 1)
-				],
-				testMaterial
-			)
-//			testParticle['useDepthTest'] = false
-
-			testParticle['blendSrc'] = self.gl.SRC_ALPHA
-			testParticle['blendDst'] = self.gl.ONE
-			tScene3D.addChildAt(testParticle, 0)
-		})();
-		(function () {
-			var testMaterial
-			testMaterial = RedPointColorMaterial(self)
-			var interleaveData, interleaveData2
-			interleaveData = []
-			var i = 10000
-			while ( i-- ) {
-				var t = Math.random() * 100 - 50
-				interleaveData.push(Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50)
-				interleaveData.push(Math.random() * 1)
-				interleaveData.push(Math.random(), Math.random(), Math.random(), 1)
-			}
-			interleaveData = new Float32Array(interleaveData)
-			var testParticle = RedPointUnit(
-				self,
-				interleaveData,
-				[
-					RedInterleaveInfo('aVertexPosition', 3),
-					RedInterleaveInfo('aPointSize', 1),
-					RedInterleaveInfo('aVertexColor', 4)
-				],
-				testMaterial
-			)
-			tScene3D.addChild(testParticle)
-		})();
-		(function () {
-			var testMaterial
-			testMaterial = RedPointBitmapMaterial(self, RedBitmapTexture(self, '../asset/alphaTest.png'))
-			var interleaveData
-			interleaveData = []
-			var i = 20000
-			while ( i-- ) {
-				var t = Math.random() * 100 - 50
-				interleaveData.push(Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50)
-				interleaveData.push(Math.random() * 10)
-			}
-			interleaveData = new Float32Array(interleaveData)
-			var testParticle = RedPointUnit(
-				self,
-				interleaveData,
-				[
-					RedInterleaveInfo('aVertexPosition', 3),
-					RedInterleaveInfo('aPointSize', 1)
-				],
-				testMaterial
-			)
-			tScene3D.addChild(testParticle)
-		})();
-		RedOBJLoader(this, '../asset/obj/', 'female.obj', function (v) {
-			console.log('호잇!', v)
-			var i = 100
-			while ( i-- ) {
-				var t0;
-				t0 = RedMesh(self)
-				t0['children'] = v['resultMesh']['children'].concat()
-				t0.x = Math.random() * 30 - 15
-				t0.z = Math.random() * 30 - 15
-				t0.scaleX = t0.scaleY = t0.scaleZ = 0.01
-				tScene3D.addChild(t0)
-			}
-			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.1
-			tScene3D.addChild(v['resultMesh'])
-		})
-		tScene3D['grid'] = RedGrid(self)
+		testDLight.x = 30
+		testDLight.y = 30
+		testDLight.z = 30
+		tScene3D.addLight(testDLight)
+		tRenderer.renderDebuger.visible = true
 		tRenderer.start(this, function (time) {
-			tCamera.x = Math.sin(time / 3500) * 30
-			tCamera.y = Math.cos(time / 3500) * 30
-			if ( tCamera.y < 1 ) tCamera.y = 1
-			tCamera.z = Math.cos(time / 3500) * 30 + Math.sin(time / 31500) * 30
-			tCamera.lookAt(0, 0, 0)
-			tRenderer.renderDebuger.visible = true
 		})
 		console.log(tScene3D)
 	})

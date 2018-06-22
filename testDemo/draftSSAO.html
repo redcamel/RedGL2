@@ -124,6 +124,9 @@
     <script src="../src/postEffect/RedPostEffect_DoF_DepthMaterial.js"></script>
     <script src="../src/postEffect/RedPostEffect_Film.js"></script>
     <script src="../src/postEffect/RedPostEffect_Vignetting.js"></script>
+    <script src="../src/postEffect/RedPostEffect_SSAO.js"></script>
+    <script src="../src/postEffect/RedPostEffect_SSAO_DepthMaterial.js"></script>
+    <script src="../src/postEffect/RedPostEffect_SSAO_PointMaker.js"></script>
     <script src="../src/postEffect/antialiasing/RedPostEffect_FXAA.js"></script>
 </head>
 
@@ -156,10 +159,11 @@
 		testDLight.y = 2
 		testDLight.z = 3
 		testDLight.debug = true
-		testDLight.intensity = 1.5
+//		testDLight.intensity = 1.5
 		tScene3D.addLight(testDLight)
 		// var ssao = RedPostEffect_SSAO_PointMaker(this)
 		var ssao = RedPostEffect_SSAO(this)
+        ssao.mode = RedPostEffect_SSAO.ONLY_SSAO
 		tScene3D['postEffectManager'].addEffect(ssao)
 		// var bloom = RedPostEffect_Bloom(this)
 		// tScene3D['postEffectManager'].addEffect(bloom)
@@ -173,7 +177,7 @@
 				'../asset/cubemap/negz.png'
 			]);
 		// tScene3D['grid'] = RedGrid(self)
-		var i = 1000
+		var i = 100
 		var j
 		var k
 		var tMesh;
@@ -220,8 +224,16 @@
 		//     v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.05
 		//     tScene3D.addChild( v['resultMesh'])
 		// })
+
+
+
 		tRenderer.renderDebuger.visible = true
 		tRenderer.start(this, function (time) {
+
+			testDLight.x = Math.sin(time/1000) *10
+			testDLight.y = 25
+			testDLight.z = Math.sin(time/1000) *25
+
 			i = tScene3D.children.length
 			while ( i-- ) {
 				if ( i == 0 ) break
@@ -248,7 +260,7 @@
 		t0.add(ssao, 'factor2', 0.0, 2)
 		// t0.add(ssao, 'contrast', -1, 1)
 		var test = {
-			mode: 'COLOR_SSAO'
+			mode: 'ONLY_SSAO'
 		}
 		t0.add(test, 'mode', ['ONLY_SSAO', 'ONLY_COLOR', 'COLOR_SSAO']).onChange(function (v) {
 			ssao['mode'] = RedPostEffect_SSAO[v]

@@ -146,6 +146,27 @@
 		tCamera.distance = 50
 		tRenderer = RedRenderer();
 		tWorld.addView(RedView('test', tScene3D, tCamera));
+		var testDLight;
+		testDLight = RedDirectionalLight(this, '#fff')
+		testDLight.x = 3
+		testDLight.y = 3
+		testDLight.z = 3
+		tScene3D.addLight(testDLight);
+		RedOBJLoader(this, '../asset/obj/', 'female.obj', function (v) {
+			console.log('호잇!', v)
+			var i = 100
+			while ( i-- ) {
+				var t0;
+				t0 = RedMesh(self)
+				t0['children'] = v['resultMesh']['children'].concat()
+				t0.x = Math.random() * 30 - 15
+				t0.z = Math.random() * 30 - 15
+				t0.scaleX = t0.scaleY = t0.scaleZ = 0.01
+				tScene3D.addChild(t0)
+			}
+			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.1
+			tScene3D.addChild(v['resultMesh'])
+		})
 		var aa = {
 			max: 1000,
 			emitCount: 50,
@@ -164,9 +185,9 @@
 		tMesh2.addChild(testParticle2)
 		tRenderer.start(this, function (time) {
 			tRenderer.renderDebuger.visible = true
-			testParticle.x = tMesh.x = Math.sin(time / 500) * 15
-			testParticle.y = tMesh.y = Math.cos(time / 500) * 15
-			testParticle.z = tMesh.z = Math.cos(time / 200) + Math.sin(time / 1500) * 15
+			testParticle.x = tMesh.x = Math.sin(time / 500) * 10
+			testParticle.y = 7.5
+			testParticle.z = tMesh.z = Math.cos(time / 500) * 10
 			testParticle2.x = tMesh2.x = -Math.sin(time / 300) * 6
 			testParticle2.y = tMesh2.y = Math.cos(time / 1500) * 6
 			testParticle2.z = tMesh2.z = Math.cos(time / 1200) * 6 + Math.sin(time / 1500) * 3

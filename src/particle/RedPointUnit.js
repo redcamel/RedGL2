@@ -42,6 +42,7 @@ var RedPointUnit;
 		this['geometry'] = RedGeometry(interleaveBuffer)
 		this['material'] = material
 		this['drawMode'] = tGL.POINTS
+		this['useDepthMask'] = false
 	}
 	RedPointUnit.prototype = new RedBaseContainer()
 	Object.freeze(RedPointUnit);

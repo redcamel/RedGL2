@@ -32,6 +32,7 @@ var RedColorPhongTextureMaterial;
 		 uniform sampler2D u_normalTexture;
 		 uniform sampler2D u_specularTexture;
 
+		 uniform float u_normalPower;
 		 uniform float u_shininess;
 		 uniform float u_specularPower;
 
@@ -57,7 +58,7 @@ var RedColorPhongTextureMaterial;
 
 			 vec3 N = normalize(vVertexNormal);
 			 vec4 normalColor = texture2D(u_normalTexture, vTexcoord);
-			 if(normalColor.a != 0.0) N = normalize(2.0 * (N + normalColor.rgb  - 0.5));
+			 if(normalColor.a != 0.0) N = normalize(2.0 * (N + normalColor.rgb * u_normalPower  - 0.5));
 
 			 vec4 specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);
 			 float specularTextureValue = 1.0;
@@ -172,6 +173,14 @@ var RedColorPhongTextureMaterial;
 		this['displacementTexture'] = displacementTexture;
 		/**DOC:
 		 {
+			 title :`normalPower`,
+			 description : `기본값 : 1`,
+			 return : 'number'
+		 }
+		 :DOC*/
+		this['normalPower'] = 1
+		/**DOC:
+		 {
 			 title :`shininess`,
 			 description : `기본값 : 16`,
 			 return : 'Number'
@@ -194,7 +203,6 @@ var RedColorPhongTextureMaterial;
 		 }
 		 :DOC*/
 		this['displacementPower'] = 0
-
 		this['displacementFlowSpeedX'] = 0
 		this['displacementFlowSpeedY'] = 0
 		/////////////////////////////////////////
@@ -216,6 +224,7 @@ var RedColorPhongTextureMaterial;
 	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'normalTexture', 'sampler2D');
 	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'specularTexture', 'sampler2D');
 	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'displacementTexture', 'sampler2D');
+	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'normalPower', 'number', {'min': 0});
 	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'shininess', 'number', {'min': 0});
 	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'specularPower', 'number', {'min': 0});
 	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'displacementPower', 'number', {'min': 0});

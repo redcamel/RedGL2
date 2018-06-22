@@ -7,10 +7,9 @@ var RedPostEffect_SSAO;
 		/* @preserve
 
 		 void main(void) {
-		 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
-		 vTime = uTime;
-		 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
-
+			 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
+			 vTime = uTime;
+			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
 		 }
 		 */
 	}
@@ -21,14 +20,14 @@ var RedPostEffect_SSAO;
 		 uniform sampler2D uSsaoTexture;
 		 uniform float uMode;
 		 void main() {
-		 vec4 finalColor = texture2D(uDiffuseTexture, vTexcoord);
-		 vec4 ssaoColor = texture2D(uSsaoTexture, vTexcoord);
-		 if(uMode == 0.0) gl_FragColor = ssaoColor;
-		 else if(uMode == 1.0) gl_FragColor = finalColor;
-		 else if(uMode == 2.0) {
-		 finalColor.rgb *= ssaoColor.r;
-		 gl_FragColor = finalColor;
-		 };
+			 vec4 finalColor = texture2D(uDiffuseTexture, vTexcoord);
+			 vec4 ssaoColor = texture2D(uSsaoTexture, vTexcoord);
+			 if(uMode == 0.0) gl_FragColor = ssaoColor;
+			 else if(uMode == 1.0) gl_FragColor = finalColor;
+			 else if(uMode == 2.0) {
+				 finalColor.rgb *= ssaoColor.r;
+				 gl_FragColor = finalColor;
+			 };
 		 }
 		 */
 	}
@@ -58,7 +57,9 @@ var RedPostEffect_SSAO;
 		var point;
 		point = RedPostEffect_SSAO_PointMaker(redGL)
 		this['process'] = [
-			point
+			point,
+			RedPostEffect_BlurX(redGL),
+			RedPostEffect_BlurY(redGL)
 		]
 		this['mode'] = RedPostEffect_SSAO.COLOR_SSAO
 		Object.defineProperty(this, 'blur', (function () {
@@ -69,8 +70,8 @@ var RedPostEffect_SSAO;
 				},
 				set: function (v) {
 					_v = v;
-					point['subFrameBufferInfo']['process'][0]['size'] = _v;
-					point['subFrameBufferInfo']['process'][1]['size'] = _v;
+					this['process'][1]['size'] = _v;
+					this['process'][2]['size'] = _v;
 				}
 			}
 		})());

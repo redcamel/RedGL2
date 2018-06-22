@@ -25,84 +25,95 @@
 <canvas id="test" style="border: none;background:red"></canvas>
 <script>
 	var testUI;
-	document.getElementById( 'test' )
-	RedGL( document.getElementById( 'test' ), function ( v ) {
+	document.getElementById('test')
+	RedGL(document.getElementById('test'), function (v) {
 		if ( v ) {
-			console.log( '초기화 성공!' )
+			console.log('초기화 성공!')
 			var tWorld, tScene, tCamera, tRenderer;
-
 			// 월드 생성
 			this['world'] = tWorld = RedWorld();
-
 			// 씬 생성
-			tScene = RedScene( this );
-
+			tScene = RedScene(this);
 			// 카메라 생성
 			tCamera = RedCamera();
-
 			// 렌더러 생성
 			tRenderer = RedRenderer();
-
 			// 뷰생성 및 적용
-			tWorld.addView( RedView( 'test', tScene, tCamera ) );
-
+			tWorld.addView(RedView('test', tScene, tCamera));
 			// 그리드 설정
-			tScene['grid'] = RedGrid( this );
-
+			tScene['grid'] = RedGrid(this);
 			// RedPointUnit 설정
-			(function ( redGL ) {
+			(function (redGL) {
 				var i;
 				var interleaveData;
 				interleaveData = [];
 				i = 100000
 				while ( i-- ) {
 					// position
-					interleaveData.push( Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50 )
+					interleaveData.push(Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50)
 					// pointSize
-					interleaveData.push( Math.random()*10 )
+					interleaveData.push(Math.random() * 10)
 					// color
-					interleaveData.push( Math.random(), Math.random(), Math.random(), 1 )
+					interleaveData.push(Math.random(), Math.random(), Math.random(), 1)
 				}
-				interleaveData = new Float32Array( interleaveData )
-
+				interleaveData = new Float32Array(interleaveData)
 				var testParticle = RedPointUnit(
 					redGL,
 					interleaveData,
 					[
-						RedInterleaveInfo( 'aVertexPosition', 3 ),
-						RedInterleaveInfo( 'aPointSize', 1 ),
-						RedInterleaveInfo( 'aVertexColor', 4 )
+						RedInterleaveInfo('aVertexPosition', 3),
+						RedInterleaveInfo('aPointSize', 1),
+						RedInterleaveInfo('aVertexColor', 4)
 					],
-					RedPointColorMaterial( redGL )
+					RedPointColorMaterial(redGL)
 					// RedPointBitmapMaterial(redGL, RedBitmapTexture(redGL, '../asset/particle.png'))
 				)
-				testParticle['useDepthTest'] = false
-				testParticle['blendSrc'] = redGL.gl.SRC_ALPHA
+				testParticle['blendSrc'] = redGL.gl.ONE
 				testParticle['blendDst'] = redGL.gl.ONE
-				tScene.addChild( testParticle )
-			})( this );
-
+				tScene.addChild(testParticle)
+			})(this);
 			// 렌더시작
-			tRenderer.start( this, function ( time ) {
-				tCamera.x = Math.sin( time / 3000 ) * 10
-				tCamera.y = Math.cos( time / 3000 ) * 10
-				tCamera.z = Math.cos( time / 3000 ) * 5 + Math.sin( time / 3000 ) * 5
-
-				tCamera.lookAt( 0, 0, 0 )
-			} )
-
+			tRenderer.start(this, function (time) {
+				tCamera.x = Math.sin(time / 3000) * 10
+				tCamera.y = Math.cos(time / 3000) * 10
+				tCamera.z = Math.cos(time / 3000) * 5 + Math.sin(time / 3000) * 5
+				tCamera.lookAt(0, 0, 0)
+			})
 			// 렌더 디버거 활성화
 			tRenderer['renderDebuger']['visible'] = true
-			testUI( this, tCamera, tScene )
+			testUI(this, tCamera, tScene)
+            /////////////////////////////////
+			var testDLight;
+			var self = this
+			testDLight = RedDirectionalLight(this, '#fff')
+			testDLight.x = 3
+			testDLight.y = 3
+			testDLight.z = 3
+			tScene.addLight(testDLight);
+			RedOBJLoader(this, '../asset/obj/', 'female.obj', function (v) {
+				console.log('호잇!', v)
+				var i = 100
+				while ( i-- ) {
+					var t0;
+					t0 = RedMesh(self)
+					t0['children'] = v['resultMesh']['children'].concat()
+					t0.x = Math.random() * 30 - 15
+					t0.z = Math.random() * 30 - 15
+					t0.scaleX = t0.scaleY = t0.scaleZ = 0.01
+					tScene.addChild(t0)
+				}
+				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.05
+				tScene.addChild(v['resultMesh'])
+			})
 		} else {
-			console.log( '초기화 실패!' )
+			console.log('초기화 실패!')
 		}
-	} )
-	testUI = function ( redGL, tCamera, tScene ) {
-		var gui = new baseTestUI( redGL )
+	})
+	testUI = function (redGL, tCamera, tScene) {
+		var gui = new baseTestUI(redGL)
 		gui.initRedGL()
-		gui.initCamera( tCamera )
-		gui.initScene( tScene )
+		gui.initCamera(tCamera)
+		gui.initScene(tScene)
 	}
 </script>
 </body>
