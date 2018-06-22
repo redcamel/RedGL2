@@ -6,7 +6,7 @@ var RedDirectionalShadowMaterial;
 	vSource = function () {
 		/* @preserve
 		 void main(void) {
-			 gl_Position =  uLightMatrix *  uMMatrix * vec4(aVertexPosition, 1.0);
+			 gl_Position =  uDirectionalShadowLightMatrix *  uMMatrix * vec4(aVertexPosition, 1.0);
 		 }
 		 */
 	}

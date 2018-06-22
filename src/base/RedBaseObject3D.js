@@ -305,6 +305,42 @@ var RedBaseObject3D;
 					t1[8] * x + t1[9] * y + t1[10] * z + t1[11]
 				]
 			}
+		})(),
+		/**DOC:
+		 {
+			 title :`getScreenPoint`,
+			 code : 'METHOD',
+			 description : `
+				 스크린좌표반환
+			 `,
+			 return : 'Array'
+		 }
+		 :DOC*/
+		getScreenPoint: (function () {
+			var resultMTX = mat4.create()
+			var tCamera, tViewRect
+			var resultPosition;
+			resultPosition = {
+				x: 0,
+				y: 0,
+				z: 0,
+				w: 0,
+			}
+			return function (redView) {
+				mat4.identity(resultMTX);
+				tCamera = redView['camera'];
+				tViewRect = redView['_viewRect'];
+				if ( !(tCamera instanceof RedCamera ) ) tCamera = tCamera.camera;
+				mat4.multiply(resultMTX, tCamera.perspectiveMTX, tCamera.matrix);
+				mat4.multiply(resultMTX, resultMTX, this['matrix']);
+				resultPosition.x = resultMTX[12];
+				resultPosition.y = resultMTX[13];
+				resultPosition.z = resultMTX[14];
+				resultPosition.w = resultMTX[15];
+				resultPosition.x = resultPosition.x * 0.5 / resultPosition.w + 0.5;
+				resultPosition.y = resultPosition.y * 0.5 / resultPosition.w + 0.5;
+				return [tViewRect[0] + resultPosition.x * tViewRect[2], tViewRect[1] + (1 - resultPosition.y) * tViewRect[3]]
+			}
 		})()
 	}
 	Object.freeze(RedBaseObject3D);

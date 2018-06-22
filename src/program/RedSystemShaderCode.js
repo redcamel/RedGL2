@@ -42,7 +42,7 @@ var RedSystemShaderCode;
 			'uniform mat4 uCameraMatrix',
 			'uniform bool uSprite3DYn', // sprite3d인지 아닌지
 			'uniform bool uPerspectiveScale',
-			'uniform mat4 uLightMatrix'
+			'uniform mat4 uDirectionalShadowLightMatrix'
 		],
 		/**DOC:
 		 {
