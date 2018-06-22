@@ -339,7 +339,10 @@ var RedBaseObject3D;
 				resultPosition.w = resultMTX[15];
 				resultPosition.x = resultPosition.x * 0.5 / resultPosition.w + 0.5;
 				resultPosition.y = resultPosition.y * 0.5 / resultPosition.w + 0.5;
-				return [tViewRect[0] + resultPosition.x * tViewRect[2], tViewRect[1] + (1 - resultPosition.y) * tViewRect[3]]
+				return [
+					(tViewRect[0] + resultPosition.x * tViewRect[2]) / window.devicePixelRatio,
+					(tViewRect[1] + (1 - resultPosition.y) * tViewRect[3]) / window.devicePixelRatio
+				]
 			}
 		})()
 	}
