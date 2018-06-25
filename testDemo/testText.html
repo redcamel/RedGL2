@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>testParticle</title>
+    <title>testText</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -73,6 +73,8 @@
     <script src="../src/object3D/RedSkyBox.js"></script>
     <script src="../src/object3D/RedSprite3D.js"></script>
     <!--//-->
+    <script src="../src/text/RedText.js"></script>
+    <!--//-->
     <script src="../src/particle/RedPointUnit.js"></script>
     <script src="../src/particle/RedParticleUnit.js"></script>
     <script src="../src/particle/RedParticleEmitter.js"></script>
@@ -128,6 +130,15 @@
 </head>
 
 <body>
+<svg width="256" height="512" xmlns="http://www.w3.org/2000/svg" style="z-index:10;position:absolute;top:0px;left:0px">
+    <foreignObject width="100%" height="100%">
+        <div xmlns="http://www.w3.org/1999/xhtml" style="word-break: break-all;font-size:40px;color:#fff">
+            Here is a <strong>paragraph</strong> that requires <em>word wrap</em>
+            한글도
+            길어지면 어떻게되나길어지면 어떻게되나길어지면 어떻게되나길어지면 어어떻게되나길어지면 어떻게되나길어지면 어어떻게되나길어지면 어떻게되나길어지면 어어떻게되나길어지면 어떻게되나길어지면 어떻게되나
+        </div>
+    </foreignObject>
+</svg>
 <canvas id="test" style="border: none;background:red"></canvas>
 <script>
 	var t = document.getElementById('test')
@@ -140,18 +151,12 @@
 		self = this
 		tGL = this.gl;
 		this.world = tWorld = RedWorld();
-		tScene3D = RedScene(this, '#223344');
-		tScene3D.alpha = 0.1
-		tCamera = RedObitController(self)
-		tCamera.distance = 50
+		tScene3D = RedScene(this);
+		tCamera = RedObitController(this);
 		tRenderer = RedRenderer();
 		tWorld.addView(RedView('test', tScene3D, tCamera));
-		var testDLight;
-		testDLight = RedDirectionalLight(this, '#fff')
-		testDLight.x = 3
-		testDLight.y = 3
-		testDLight.z = 3
-		tScene3D.addLight(testDLight);
+		RedView('test').setSize('100%', '100%')
+		RedView('test').setLocation('0%', '0%')
 		tScene3D.skyBox =
 			RedSkyBox(this, [
 				'../asset/cubemap/posx.png',
@@ -161,47 +166,55 @@
 				'../asset/cubemap/posz.png',
 				'../asset/cubemap/negz.png'
 			]);
-		RedOBJLoader(this, '../asset/obj/', 'female.obj', function (v) {
-			console.log('호잇!', v)
-			var i = 100
-			while ( i-- ) {
-				var t0;
-				t0 = RedMesh(self)
-				t0['children'] = v['resultMesh']['children'].concat()
-				t0.x = Math.random() * 30 - 15
-				t0.z = Math.random() * 30 - 15
-				t0.scaleX = t0.scaleY = t0.scaleZ = 0.01
-				tScene3D.addChild(t0)
-			}
-			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.1
-			tScene3D.addChild(v['resultMesh'])
-		})
-		var aa = {
-			max: 1000,
-			emitCount: 50,
-			lifeTime: [1000, 2000],
-			gravity: 9.8 / 1000,
+		var testTet = RedText(self, RedBox(this))
+		tScene3D.addChild(testTet)
+		testTet.z = 0.51
+		var i = 100
+		while ( i-- ) {
+			var testTet = RedText(self, RedBox(this))
+			tScene3D.addChild(testTet)
+			testTet.x = Math.random() * 20 - 10
+			testTet.y = Math.random() * 20 - 10
+			testTet.z = Math.random() * 20 - 10
+			testTet.rotationX = testTet.rotationY = testTet.rotationZ = Math.random() * 360
+			testTet.useCullFace = false
 		}
-		var testParticle = new RedParticleEmitter(this, aa, RedParticleBitmapMaterial(this, RedBitmapTexture(this, '../asset/particle.png')))
-		var testParticle2 = new RedParticleEmitter(this, aa, RedParticleColorMaterial(this))
-		var tMesh = RedMesh(this, RedSphere(this, 0.1), RedColorMaterial(this))
-		var tMesh2 = RedMesh(this, RedSphere(this, 0.1), RedColorMaterial(this))
-		console.log(testParticle)
-		tScene3D['grid'] = RedGrid(self)
-		tScene3D.addChild(tMesh)
-		tMesh.addChild(testParticle)
-		tScene3D.addChild(tMesh2)
-		tMesh2.addChild(testParticle2)
+		var i = 100
+		while ( i-- ) {
+
+			var testTet = RedMesh(self, RedBox(this), RedColorPhongMaterial(this))
+			tScene3D.addChild(testTet)
+			testTet.x = Math.random() * 20 - 10
+			testTet.y = Math.random() * 20 - 10
+			testTet.z = Math.random() * 20 - 10
+			testTet.rotationX = testTet.rotationY = testTet.rotationZ = Math.random() * 360
+		}
+
+		/////////
+		var testMaterial = RedVideoMaterial(
+			this,
+			RedVideoTexture(this, '../asset/mov_bbb.mp4')
+		)
+		tScene3D.skyBox =
+			RedSkyBox(this, [
+				'../asset/cubemap/posx.png',
+				'../asset/cubemap/negx.png',
+				'../asset/cubemap/posy.png',
+				'../asset/cubemap/negy.png',
+				'../asset/cubemap/posz.png',
+				'../asset/cubemap/negz.png'
+			]);
+		var testMesh = RedMesh(self, RedBox(this), testMaterial)
+		tScene3D.addChild(testMesh)
+		/////////
+		var testDLight
+		testDLight = RedDirectionalLight(this, '#fff')
+		testDLight.x = 3
+		testDLight.y = 3
+		testDLight.z = 3
+		tScene3D.addLight(testDLight)
+		tRenderer.renderDebuger.visible = true
 		tRenderer.start(this, function (time) {
-			tRenderer.renderDebuger.visible = true
-			testParticle.x = tMesh.x = Math.sin(time / 500) * 10
-			testParticle.y = 7.5
-			testParticle.z = tMesh.z = Math.cos(time / 500) * 10
-			testParticle2.x = tMesh2.x = -Math.sin(time / 300) * 6
-			testParticle2.y = tMesh2.y = Math.cos(time / 1500) * 6
-			testParticle2.z = tMesh2.z = Math.cos(time / 1200) * 6 + Math.sin(time / 1500) * 3
-			testParticle.update(time)
-			testParticle2.update(time)
 		})
 		console.log(tScene3D)
 	})
