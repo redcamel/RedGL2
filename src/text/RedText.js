@@ -29,10 +29,12 @@ var RedText;
 		self['_cvs'].style['width'] = 2 + 'px'
 		self['_cvs'].style['height'] = 2 + 'px'
 		/////////////////////
-		this['blendSrc'] = redGL.gl.SRC_ALPHA
+		this['blendSrc'] = redGL.gl.ONE
 		this['blendDst'] = redGL.gl.ONE_MINUS_SRC_ALPHA
 		this['useDepthMask'] = false
-		// this['_sprite3DYn'] = true
+		this['useCullFace'] = false
+		this['_sprite3DYn'] = false
+		this['perspectiveScale'] = true
 		this['geometry'] = RedPlane(redGL, 1, 1, 0);
 		this['material'] = RedBitmapMaterial(redGL, RedBitmapTexture(redGL, this['_cvs']))
 		var nextHighestPowerOfTwo = function (v) {
@@ -96,22 +98,21 @@ var RedText;
 			var tW, tH
 			tW = nextHighestPowerOfTwo(document.querySelector('svg').getAttribute('width'))
 			tH = nextHighestPowerOfTwo(document.querySelector('svg').getAttribute('height'))
-			console.log(tW, tH)
+			// console.log(tW, tH)
 			self['_cvs'].style['width'] = tW + 'px'
 			self['_cvs'].style['height'] = tH + 'px'
 			self['_cvs']['width'] = tW
 			self['_cvs']['height'] = tH
-			// self['_ctx'].fillStyle = 'rgba(0,0,0,0.1)'
+			// self['_ctx'].fillStyle = 'rgba(0,0,0,0)'
 			self['_ctx'].fillStyle = 'rgba(' + Math.random()*256 + ',' + Math.random()*256+ ',' + Math.random()*256 + ',0.5)'
 			self['_ctx'].fillRect(0, 0, tW, tH);
 			self['_ctx'].drawImage(img, 0, 0, tW, tH);
 			self.scaleX = 1
-			self.scaleY = tH / tW
+			self.scaleY = document.querySelector('svg').getAttribute('height')/document.querySelector('svg').getAttribute('width')
 			self['material'].diffuseTexture = RedBitmapTexture(redGL, self['_cvs'], {
 				min: redGL.gl.LINEAR,
 				mag: redGL.gl.LINEAR
 			})
-			console.log('오긴하나');
 		};
 		// document.querySelector('foreignObject').textContent='test'
 		console.log(document.querySelector('svg').outerHTML)
