@@ -44,57 +44,8 @@ var RedText;
 			}
 			return v + 1;
 		}
-		var createMultilineText = function (ctx, textToWrite, maxWidth, text) {
-			textToWrite = textToWrite.replace("\n", " ");
-			var currentText = textToWrite;
-			var futureText;
-			var subWidth = 0;
-			var maxLineWidth = 0;
-			var wordArray = textToWrite.split(" ");
-			var wordsInCurrent, wordArrayLength;
-			wordsInCurrent = wordArrayLength = wordArray.length;
-			// Reduce currentText until it is less than maxWidth or is a single word
-			// futureText var keeps track of text not yet written to a text line
-			while ( ctx['measureText'](ctx, currentText) > maxWidth && wordsInCurrent > 1 ) {
-				wordsInCurrent--;
-				var linebreak = false;
-				currentText = futureText = "";
-				for ( var i = 0; i < wordArrayLength; i++ ) {
-					if ( i < wordsInCurrent ) {
-						currentText += wordArray[i];
-						if ( i + 1 < wordsInCurrent ) {
-							currentText += " ";
-						}
-					}
-					else {
-						futureText += wordArray[i];
-						if ( i + 1 < wordArrayLength ) {
-							futureText += " ";
-						}
-					}
-				}
-			}
-			text.push(currentText); // Write this line of text to the array
-			maxLineWidth = ctx['measureText'](ctx, currentText);
-			// If there is any text left to be written call the function again
-			if ( futureText ) {
-				subWidth = createMultilineText(ctx, futureText, maxWidth, text);
-				if ( subWidth > maxLineWidth ) {
-					maxLineWidth = subWidth;
-				}
-			}
-			// Return the maximum line width
-			return maxLineWidth;
-		}
 		var img = new Image();
 		img.onload = function () {
-			var text = [];
-			var textX, textY;
-			var textToWrite = "HTML5 Rocks! HTML5 Rocks! HTML5 Rocks!";
-			var textHeight = 40;
-			var maxWidth = 6;
-			self['_ctx'].fontSize = textHeight + "px";
-			maxWidth = createMultilineText(self['_ctx'], textToWrite, maxWidth, text);
 			var tW, tH
 			tW = nextHighestPowerOfTwo(document.querySelector('svg').getAttribute('width'))
 			tH = nextHighestPowerOfTwo(document.querySelector('svg').getAttribute('height'))
@@ -114,9 +65,12 @@ var RedText;
 				mag: redGL.gl.LINEAR
 			})
 		};
-		// document.querySelector('foreignObject').textContent='test'
-		console.log(document.querySelector('svg').outerHTML)
-		img.src = 'data:image/svg+xml;charset=utf-8,' + (document.querySelector('svg').outerHTML);
+		document.querySelector('svg foreignObject div').style.fontSize = Math.random()*100 + 'px'
+		document.querySelector('svg foreignObject div').style.color = 'rgba(' + Math.random()*256 + ',' + Math.random()*256+ ',' + Math.random()*256 + ',1)'
+		document.querySelector('svg foreignObject div').innerHTML = 'Here is a <strong>paragraph</strong> that requires <em>word wrap</em>' +
+			'<p xmlns="http://www.w3.org/1999/xhtml">길어져라길어져라길어져라길어져라길어져라길어져라길어져라길어져라' +
+			Math.random()
+		img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(document.querySelector('svg').outerHTML);
 		this['_UUID'] = RedGL['makeUUID']();
 		console.log(this);
 	}

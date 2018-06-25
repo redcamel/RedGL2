@@ -130,11 +130,9 @@
 </head>
 
 <body>
-<svg width="256" height="512" xmlns="http://www.w3.org/2000/svg" style="z-index:10;position:absolute;top:0px;left:0px">
-    <foreignObject width="100%" height="100%" style="position: relative;">
-        <div xmlns="http://www.w3.org/1999/xhtml" style="word-break: break-all;font-size:70px;color:#fff;padding:20px;">
-            Here is a <strong>paragraph</strong> that requires <em>word wrap</em>
-            길어져라길어져라길어져라길어져라
+<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg" style="z-index:10;position:absolute;top:0px;left:0px">
+    <foreignObject width="100%" height="100%" >
+        <div xmlns="http://www.w3.org/1999/xhtml" style=";word-break: break-all;color:#fff;padding:20px;">
 
         </div>
     </foreignObject>
@@ -180,16 +178,16 @@
 			testTet.rotationX = testTet.rotationY = testTet.rotationZ = Math.random() * 360
 			testTet.useCullFace = false
 		}
-		var i = 1
-//		while ( i-- ) {
-//
-//			var testTet = RedMesh(self, RedBox(this), RedColorPhongMaterial(this))
-//			tScene3D.addChild(testTet)
-//			testTet.x = Math.random() * 20 - 10
-//			testTet.y = Math.random() * 20 - 10
-//			testTet.z = Math.random() * 20 - 10
-//			testTet.rotationX = testTet.rotationY = testTet.rotationZ = Math.random() * 360
-//		}
+		var i = 100
+		while ( i-- ) {
+
+			var testTet = RedMesh(self, RedBox(this), RedColorPhongMaterial(this))
+			tScene3D.addChild(testTet)
+			testTet.x = Math.random() * 20 - 10
+			testTet.y = Math.random() * 20 - 10
+			testTet.z = Math.random() * 20 - 10
+			testTet.rotationX = testTet.rotationY = testTet.rotationZ = Math.random() * 360
+		}
 
 		/////////
 		var testMaterial = RedVideoMaterial(

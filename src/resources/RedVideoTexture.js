@@ -90,7 +90,7 @@ var RedVideoTexture;
 				video.muted = true
 				video.setAttribute('autoplay', '');
 				//document.body.appendChild(video)
-				video.style = 'position:absolute;top:0px;left:0px;z-index:200'
+				video.style.cssText = 'position:absolute;top:0px;left:0px;z-index:200'
 				self['_videoDom'] = video
 				self['_videoDom']['loaded'] = false
 				video.addEventListener('error', onError);
