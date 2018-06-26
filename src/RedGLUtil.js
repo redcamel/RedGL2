@@ -122,7 +122,17 @@ var RedGLUtil;
 				if ( t0 ) return t0[0].replace(/\/\*|\*\//g, '').trim();
 				else RedGLUtil.throwFunc('getStrFromComment : 해석할 불가능한 값', source)
 			}
+		})(),
+		isPowerOf2 : function (v) { return (v & (v - 1)) == 0; },
+		nextHighestPowerOfTwo: (function () {
+			var i;
+			return function (v) {
+				--v;
+				for ( i = 1; i < 32; i <<= 1 ) v = v | v >> i;
+				return v + 1;
+			}
 		})()
-	};
+}
+	;
 	Object.freeze(RedGLUtil);
 })();

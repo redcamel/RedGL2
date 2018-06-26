@@ -130,15 +130,6 @@
 </head>
 
 <body>
-<svg width="256" height="512" xmlns="http://www.w3.org/2000/svg" style="z-index:10;position:absolute;top:0px;left:0px">
-    <foreignObject width="100%" height="100%">
-        <div xmlns="http://www.w3.org/1999/xhtml" style="word-break: break-all;font-size:40px;color:#fff">
-            Here is a <strong>paragraph</strong> that requires <em>word wrap</em>
-            한글도
-            길어지면 어떻게되나길어지면 어떻게되나길어지면 어떻게되나길어지면 어어떻게되나길어지면 어떻게되나길어지면 어어떻게되나길어지면 어떻게되나길어지면 어어떻게되나길어지면 어떻게되나길어지면 어떻게되나
-        </div>
-    </foreignObject>
-</svg>
 <canvas id="test" style="border: none;background:red"></canvas>
 <script>
 	var t = document.getElementById('test')
@@ -153,6 +144,8 @@
 		this.world = tWorld = RedWorld();
 		tScene3D = RedScene(this);
 		tCamera = RedObitController(this);
+		tCamera.distance = 2
+		tCamera.speedDistance = 0.1
 		tRenderer = RedRenderer();
 		tWorld.addView(RedView('test', tScene3D, tCamera));
 		RedView('test').setSize('100%', '100%')
@@ -166,22 +159,36 @@
 				'../asset/cubemap/posz.png',
 				'../asset/cubemap/negz.png'
 			]);
-		var testTet = RedText(self, RedBox(this))
-		tScene3D.addChild(testTet)
-		testTet.z = 0.51
+		var testRedText = RedText(self, RedBox(this))
+		var str = ('<div >Here is a <strong>paragraph</strong> that requires <em>word wrap</em>' +
+		'<br>br태그는 빈 div로 치환함<br>' +
+		'hr태그는 안됨' +
+		'<pre>pre test      test pre</pre>' +
+		'<h1 style="color:#2233aa">My First Heading</h1>' +
+		'<h2 style="color:red">Heading 2</h2><h3 style="color:#fff">Heading 3</h3><h4>Heading 4</h4><h5>Heading 5</h5><h6>Heading 6</h6>' +
+		'<p>My first paragraph.</p>' +
+		'<ul><li>Coffee</li><li>Tea</li><li>Milk</li></ul>' +
+		'<button>this is Button</button><br>' +
+		Math.random())
+		testRedText.text = str
+		testRedText.width = 360
+		testRedText.height = 1024
+		testRedText.scaleX = testRedText.scaleY = testRedText.scaleZ = 1
+		tScene3D.addChild(testRedText)
+		testRedText.z = 0.55
 		var i = 100
 		while ( i-- ) {
 			var testTet = RedText(self, RedBox(this))
+			testTet.text = str
+			testTet.background =  'rgba(' + Math.random() * 256 + ',' + Math.random() * 256 + ',' + Math.random() * 256 + ',0.5)'
 			tScene3D.addChild(testTet)
-			testTet.x = Math.random() * 20 - 10
-			testTet.y = Math.random() * 20 - 10
-			testTet.z = Math.random() * 20 - 10
+			testTet.x = Math.random() * 3 - 1.5
+			testTet.y = Math.random() * 3 - 1.5
+			testTet.z = Math.random() * 3 - 1.5
 			testTet.rotationX = testTet.rotationY = testTet.rotationZ = Math.random() * 360
-			testTet.useCullFace = false
 		}
-		var i = 100
+		var i = 0
 		while ( i-- ) {
-
 			var testTet = RedMesh(self, RedBox(this), RedColorPhongMaterial(this))
 			tScene3D.addChild(testTet)
 			testTet.x = Math.random() * 20 - 10
@@ -189,7 +196,6 @@
 			testTet.z = Math.random() * 20 - 10
 			testTet.rotationX = testTet.rotationY = testTet.rotationZ = Math.random() * 360
 		}
-
 		/////////
 		var testMaterial = RedVideoMaterial(
 			this,
@@ -217,6 +223,62 @@
 		tRenderer.start(this, function (time) {
 		})
 		console.log(tScene3D)
+		this['gui'] = new dat.GUI({
+			name: 'RedText'
+		});
+		var t0 = this['gui'].addFolder('RedText')
+		var testData = {
+			background: testRedText.background,
+			color: testRedText.color
+		}
+		t0.add(testRedText, 'width', 2, 2048, 1)
+		t0.add(testRedText, 'height', 2, 2048, 1);
+		t0.add(testRedText, 'padding', 0, 100, 0.1)
+		t0.add(testRedText, 'fontFamily', ['Arial', 'Times New Roman', 'Times', 'serif']);
+		t0.add(testRedText, 'fontSize', 0, 100, 0.1)
+		t0.add(testRedText, 'fontWeight', ['normal', 'bold']);
+		t0.add(testRedText, 'lineHeight', 0, 100, 0.1)
+		t0.add(testRedText, 'letterSpacing', 0, 4, 0.01)
+		t0.add(testRedText, 'wordBreak', ['normal', 'break-all', 'break-word', 'keep-all', 'unset'])
+		t0.add(testRedText, 'verticalAlign', ['top', 'middle', 'bottom']);
+		t0.add(testRedText, 'textAlign', ['left', 'center', 'right']);
+		['color'].forEach(function (k) {
+			t0.addColor(testData, k).onChange(function (v) {
+				testRedText[k] = v
+			})
+		});
+		t0.open()
+		var t0, t1;
+		t0 = document.createElement('div')
+		t0.style.position = 'absolute'
+		t0.style.bottom = '10px'
+		t0.style.right = '10px'
+		document.body.appendChild(t0)
+		t1 = document.createElement('div')
+		t1.style.position = 'absolute'
+		t1.style.width = '500px'
+		t1.style.bottom = '225px'
+		t1.style.right = '10px'
+		t1.style.fontWeight = 'bold'
+		t1.innerHTML = 'TextContent or HTML'
+        t1.style.textShadow = '1px 1px 0px rgba(255,255,255,0.4)'
+		t0.appendChild(t1)
+		t1 = document.createElement('div')
+		t1.setAttribute('contenteditable', true)
+		t1.textContent = testRedText.text
+		t1.style.position = 'absolute'
+		t1.style.bottom = '0px'
+		t1.style.right = '0px'
+		t1.style.width = '500px'
+		t1.style.height = '200px'
+		t1.style.padding = '10px'
+		t1.style.fontSize = '12px'
+		t1.style.background = 'rgba(255,255,255,0.5)'
+		t0.appendChild(t1)
+		t1.addEventListener('input', function () {
+			console.log('testset')
+			testRedText['text'] = this.textContent
+		})
 	})
 </script>
 </body>

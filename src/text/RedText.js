@@ -1,6 +1,29 @@
 "use strict";
 var RedText;
 (function () {
+	var setTexture;
+	var setStylePrototype;
+	setStylePrototype = (function () {
+		return function (target, k, baseValue) {
+			var tStyle;
+			tStyle = target['_svg'].querySelector('td').style
+			target['_' + k] = baseValue
+			Object.defineProperty(target, k, {
+				get: function () { return target['_' + k]},
+				set: function (v) {
+					target['_' + k] = v
+					tStyle[k] = typeof v == 'number' ? (v += 'px') : v
+					setTexture(target)
+				}
+			})
+			target[k] = baseValue
+		}
+	})();
+	setTexture = function (target) {
+		target['_svg'].viewBox.baseVal.width = target['_width']
+		target['_svg'].viewBox.baseVal.height = target['_height']
+		target['_img'].src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(target['_svg'].outerHTML);
+	}
 	/**DOC:
 	 {
 		 constructorYn : true,
@@ -21,117 +44,114 @@ var RedText;
 		if ( !(this instanceof RedText) ) return new RedText(redGL);
 		redGL instanceof RedGL || RedGLUtil.throwFunc('RedText : RedGL Instance만 허용됩니다.', redGL);
 		RedBaseObject3D['build'].call(this, redGL.gl)
-		this['_cvs'] = document.createElement('canvas');
-		this['_ctx'] = this['_cvs'].getContext('2d');
 		var self = this
-		self['_cvs']['width'] = 2
-		self['_cvs']['height'] = 2
-		self['_cvs'].style['width'] = 2 + 'px'
-		self['_cvs'].style['height'] = 2 + 'px'
+		this['_cvs'] = document.createElement('canvas');
+		// document.body.appendChild(this['_cvs'])
+		this['_ctx'] = this['_cvs'].getContext('2d');
+		this['_cvs']['width'] = 2, this['_cvs']['height'] = 2
+		this['_svg'] = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+		this['_svg'].setAttribute('xmlns', "http://www.w3.org/2000/svg")
+		this['_svg'].style = 'position:absolute;top:0px;left:0px'
+		this['_svg'].innerHTML = '<foreignObject width="100%" height="100%" >' +
+			'   <table xmlns="http://www.w3.org/1999/xhtml" style="position:table;top:0px;left:0px;width:100%;height:100%">' +
+			'       <tr xmlns="http://www.w3.org/1999/xhtml">' +
+			'       <td xmlns="http://www.w3.org/1999/xhtml" style="overflow:hidden" > </td>' +
+			'       </tr>' +
+			'   </table>' +
+			'</foreignObject>'
+		// document.body.appendChild(this['_svg'])
 		/////////////////////
-		this['blendSrc'] = redGL.gl.SRC_ALPHA
-		this['blendDst'] = redGL.gl.ONE_MINUS_SRC_ALPHA
-		this['useDepthMask'] = false
-		// this['_sprite3DYn'] = true
+		this['_img'] = new Image()
+		this['_width'] = 256
+		this['_height'] = 512
+		setStylePrototype(this, 'padding', 0);
+
+		setStylePrototype(this, 'background', '');
+		setStylePrototype(this, 'color', '#000');
+
+		setStylePrototype(this, 'fontFamily', 'Arial');
+		setStylePrototype(this, 'fontSize', 16);
+		setStylePrototype(this, 'fontWeight', 'normal');
+		setStylePrototype(this, 'lineHeight', 16*1.5);
+		setStylePrototype(this, 'letterSpacing', 0);
+		setStylePrototype(this, 'wordBreak', 'break-all');
+
+		setStylePrototype(this, 'verticalAlign', 'middle');
+		setStylePrototype(this, 'textAlign', 'center');
+		//////////////////////
 		this['geometry'] = RedPlane(redGL, 1, 1, 0);
 		this['material'] = RedBitmapMaterial(redGL, RedBitmapTexture(redGL, this['_cvs']))
-		var nextHighestPowerOfTwo = function (v) {
-			--v;
-			for ( var i = 1; i < 32; i <<= 1 ) {
-				v = v | v >> i;
-			}
-			return v + 1;
-		}
-		var createMultilineText = function (ctx, textToWrite, maxWidth, text) {
-			textToWrite = textToWrite.replace("\n", " ");
-			var currentText = textToWrite;
-			var futureText;
-			var subWidth = 0;
-			var maxLineWidth = 0;
-			var wordArray = textToWrite.split(" ");
-			var wordsInCurrent, wordArrayLength;
-			wordsInCurrent = wordArrayLength = wordArray.length;
-			// Reduce currentText until it is less than maxWidth or is a single word
-			// futureText var keeps track of text not yet written to a text line
-			while ( ctx['measureText'](ctx, currentText) > maxWidth && wordsInCurrent > 1 ) {
-				wordsInCurrent--;
-				var linebreak = false;
-				currentText = futureText = "";
-				for ( var i = 0; i < wordArrayLength; i++ ) {
-					if ( i < wordsInCurrent ) {
-						currentText += wordArray[i];
-						if ( i + 1 < wordsInCurrent ) {
-							currentText += " ";
-						}
-					}
-					else {
-						futureText += wordArray[i];
-						if ( i + 1 < wordArrayLength ) {
-							futureText += " ";
-						}
-					}
-				}
-			}
-			text.push(currentText); // Write this line of text to the array
-			maxLineWidth = ctx['measureText'](ctx, currentText);
-			// If there is any text left to be written call the function again
-			if ( futureText ) {
-				subWidth = createMultilineText(ctx, futureText, maxWidth, text);
-				if ( subWidth > maxLineWidth ) {
-					maxLineWidth = subWidth;
-				}
-			}
-			// Return the maximum line width
-			return maxLineWidth;
-		}
-		var img = new Image();
-		img.onload = function () {
-			var text = [];
-			var textX, textY;
-			var textToWrite = "HTML5 Rocks! HTML5 Rocks! HTML5 Rocks!";
-			var textHeight = 40;
-			var maxWidth = 6;
-			self['_ctx'].fontSize = textHeight + "px";
-			maxWidth = createMultilineText(self['_ctx'], textToWrite, maxWidth, text);
+		//////////////////////
+		this['blendSrc'] = redGL.gl.ONE
+		this['blendDst'] = redGL.gl.ONE_MINUS_SRC_ALPHA
+		this['useDepthMask'] = false
+		this['useCullFace'] = false
+		this['_sprite3DYn'] = false
+		this['perspectiveScale'] = true
+		//////////////////////
+		this['_img'].onload = function () {
 			var tW, tH
-			tW = nextHighestPowerOfTwo(document.querySelector('svg').getAttribute('width'))
-			tH = nextHighestPowerOfTwo(document.querySelector('svg').getAttribute('height'))
+			var tW1, tH1
+			tW = self['_width']
+			tH = self['_height']
+			console.log(tW, tW1)
+			// tW = RedGLUtil.nextHighestPowerOfTwo(tW)
+			// tH = RedGLUtil.nextHighestPowerOfTwo(tH)
 			console.log(tW, tH)
-			self['_cvs'].style['width'] = tW + 'px'
-			self['_cvs'].style['height'] = tH + 'px'
 			self['_cvs']['width'] = tW
-			self['_cvs']['height'] = tH
-			// self['_ctx'].fillStyle = 'rgba(0,0,0,0.1)'
-			self['_ctx'].fillStyle = 'rgba(' + Math.random()*256 + ',' + Math.random()*256+ ',' + Math.random()*256 + ',0.5)'
-			self['_ctx'].fillRect(0, 0, tW, tH);
-			self['_ctx'].drawImage(img, 0, 0, tW, tH);
-			self.scaleX = 1
-			self.scaleY = tH / tW
+			self['_cvs']['height'] = tH;
+			console.log(self['_cvs'])
+			// self['_ctx'].fillStyle = 'rgba(' + Math.random() * 256 + ',' + Math.random() * 256 + ',' + Math.random() * 256 + ',0.5)'
+			// self['_ctx'].fillRect(0, 0, tW, tH);
+			self['_ctx'].fillStyle = 'rgba(0,0,0,0)'
+			self['_ctx'].clearRect(0, 0, tW, tH);
+			console.log(self['_height'])
+			self['scaleX'] = self['_width'] / redGL.gl.drawingBufferWidth
+			self['scaleY'] = self['_height'] / redGL.gl.drawingBufferHeight
+			self['_ctx'].drawImage(self['_img'], 0, 0, tW, tH);
 			self['material'].diffuseTexture = RedBitmapTexture(redGL, self['_cvs'], {
 				min: redGL.gl.LINEAR,
-				mag: redGL.gl.LINEAR
+				mag: redGL.gl.LINEAR,
+				wrap_s: redGL.gl.CLAMP_TO_EDGE,
+				wrap_t: redGL.gl.CLAMP_TO_EDGE
 			})
-			console.log('오긴하나');
 		};
-		// document.querySelector('foreignObject').textContent='test'
-		console.log(document.querySelector('svg').outerHTML)
-		img.src = 'data:image/svg+xml;charset=utf-8,' + (document.querySelector('svg').outerHTML);
 		this['_UUID'] = RedGL['makeUUID']();
 		console.log(this);
 	}
 	RedText.prototype = new RedBaseObject3D();
+	Object.defineProperty(RedText.prototype, 'width', {
+		get: function () { return this['_width']},
+		set: function (v) {
+			typeof v == 'number' || RedGLUtil.throwFunc('RedText - width : number만 허용', v);
+			if ( v < 2 ) v = 2
+			this['_width'] = v
+			setTexture(this)
+		}
+	})
+	Object.defineProperty(RedText.prototype, 'height', {
+		get: function () { return this['_height']},
+		set: function (v) {
+			typeof v == 'number' || RedGLUtil.throwFunc('RedText - width : number만 허용', v);
+			if ( v < 2 ) v = 2
+			this['_height'] = v
+			setTexture(this)
+		}
+	})
 	Object.defineProperty(RedText.prototype, 'text', {
 		get: function () { return this['_text']},
 		set: (function () {
-			var tCtx;
-			var tSize;
+			var tSVG, tHTMLContainer;
 			return function (v) {
-				tCtx = this['_ctx'];
-				tSize = tCtx.measureText(v);
-				this['_cvs'].style.width = tSize
-				this['_cvs'].style.height = tSize
-				tCtx.fillText(v, 0, 0);
-				this['_text'] = v
+				tSVG = this['_svg'];
+				tHTMLContainer = tSVG.querySelector('foreignObject td');
+				this['_text'] = v.replace(/\<br\>/gi, '<div/>')
+				// console.log(this['_svg'].querySelector('foreignObject div'))
+				// console.log(this['_svg'].width)
+				// this['_svg'].setAttribute('width', 100000);
+				// this['_svg'].setAttribute('height', 100000);
+				tHTMLContainer.innerHTML = this['_text'];
+				setTexture(this)
 			}
 		})()
 	})

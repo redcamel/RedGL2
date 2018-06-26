@@ -425,8 +425,8 @@ var RedRenderer;
 					gl.clearColor(tScene['_r'], tScene['_g'], tScene['_b'], 1);
 					gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 				} else {
-					gl.clearColor(0, 0, 0, 0);
-					gl.clear(gl.DEPTH_BUFFER_BIT);
+					gl.clearColor(0, 0, 0, 1);
+					gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 				}
 				if ( !(tCamera instanceof RedCamera) ) {
 					// 카메라 형식이 아닌경우 컨트롤러로 판단함
@@ -465,6 +465,7 @@ var RedRenderer;
 				}
 				// 뎁스마스크 원상복구
 				gl.depthMask(self['cacheState']['useDepthMask'] = true);
+				
 				// 디렉셔널 쉐도우 렌더
 				if ( tScene['shadowManager']['_directionalShadow'] ) {
 					updateSystemUniform.apply(self, [redGL, time, tScene, tCamera, tViewRect])
