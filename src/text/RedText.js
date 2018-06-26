@@ -20,10 +20,10 @@ var RedText;
 		}
 	})();
 	setTexture = function (target) {
-		target['_svg'].setAttribute('width', target['_width'])
-		target['_svg'].setAttribute('height', target['_height'])
-		target['_svg'].viewBox.baseVal.width = target['_width']
-		target['_svg'].viewBox.baseVal.height = target['_height']
+		target['_svg'].setAttribute('width', target['_svg']['viewBox']['baseVal'].width = target['_width'])
+		target['_svg'].setAttribute('height', target['_svg']['viewBox']['baseVal'].height = target['_height'])
+		target['_svg'].querySelector('foreignObject').setAttribute('height', target['_height'])
+		target['_svg'].querySelector('table').style.height = target['_height'] + 'px'
 		target['_img'].src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(target['_svg'].outerHTML);
 	}
 	/**DOC:
@@ -47,15 +47,16 @@ var RedText;
 		redGL instanceof RedGL || RedGLUtil.throwFunc('RedText : RedGL Instance만 허용됩니다.', redGL);
 		RedBaseObject3D['build'].call(this, redGL.gl)
 		var self = this
+		// 이미지 생성용 캔버스
 		this['_cvs'] = document.createElement('canvas');
-		// document.body.appendChild(this['_cvs'])
 		this['_ctx'] = this['_cvs'].getContext('2d');
 		this['_cvs']['width'] = 2, this['_cvs']['height'] = 2
+		// SVG 생성
 		this['_svg'] = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
 		this['_svg'].setAttribute('xmlns', "http://www.w3.org/2000/svg")
-		this['_svg'].style = 'position:absolute;top:0px;left:0px;text-align:center'
-		this['_svg'].innerHTML = '<foreignObject  style="width:100%;height:100%" >' +
-			'   <table xmlns="http://www.w3.org/1999/xhtml" style="position:fixed;top:0px;left:0px;width:100%;height:100%;table-layout:fixed">' +
+		this['_svg'].style = 'position:absolute;top:0px;left:0px;text-align:center;z-index:10'
+		this['_svg'].innerHTML = '<foreignObject  width="100%" style="position:absolute;top:0px;left:0px">' +
+			'   <table xmlns="http://www.w3.org/1999/xhtml" style="position:table;top:0px;left:0px;width:100%;table-layout:fixed">' +
 			'       <tr xmlns="http://www.w3.org/1999/xhtml">' +
 			'       <td xmlns="http://www.w3.org/1999/xhtml"  > </td>' +
 			'       </tr>' +
@@ -63,15 +64,17 @@ var RedText;
 			'</foreignObject>'
 		// document.body.appendChild(this['_svg'])
 		/////////////////////
-		this['_img'] = new Image()
-		this['_width'] = 256
-		this['_height'] = 512
+		this['_img'] = new Image();
+		this['_width'] = 256;
+		this['_height'] = 512;
+		// 기본 스타일 프로퍼티
 		setStylePrototype(this, 'padding', 0);
 		setStylePrototype(this, 'background', '');
 		setStylePrototype(this, 'color', '#000');
 		setStylePrototype(this, 'fontFamily', 'Arial');
 		setStylePrototype(this, 'fontSize', 16);
 		setStylePrototype(this, 'fontWeight', 'normal');
+		setStylePrototype(this, 'fontStyle', 'normal');
 		setStylePrototype(this, 'lineHeight', 16 * 1.5);
 		setStylePrototype(this, 'letterSpacing', 0);
 		setStylePrototype(this, 'wordBreak', 'break-all');
@@ -86,26 +89,18 @@ var RedText;
 		this['useDepthMask'] = false
 		this['useCullFace'] = false
 		this['_sprite3DYn'] = false
-		this['perspectiveScale'] = true
+		this['perspectiveScale'] = false
 		//////////////////////
 		this['_img'].onload = function () {
 			var tW, tH
-			var tW1, tH1
 			tW = self['_width']
 			tH = self['_height']
-			// tW = RedGLUtil.nextHighestPowerOfTwo(tW)
-			// tH = RedGLUtil.nextHighestPowerOfTwo(tH)
 			console.log(tW, tH)
 			self['_cvs']['width'] = tW
 			self['_cvs']['height'] = tH;
-			console.log(self['_cvs'])
-			// self['_ctx'].fillStyle = 'rgba(' + Math.random() * 256 + ',' + Math.random() * 256 + ',' + Math.random() * 256 + ',0.5)'
-			// self['_ctx'].fillRect(0, 0, tW, tH);
-			self['_ctx'].fillStyle = 'rgba(0,0,0,0)'
 			self['_ctx'].clearRect(0, 0, tW, tH);
-			console.log(self['_height'])
 			self['scaleX'] = self['_width'] / redGL.gl.drawingBufferWidth
-			self['scaleY'] = self['_height'] / redGL.gl.drawingBufferHeight
+			self['scaleY'] = self['_height'] / redGL.gl.drawingBufferWidth
 			self['_ctx'].drawImage(self['_img'], 0, 0, tW, tH);
 			self['material'].diffuseTexture = RedBitmapTexture(redGL, self['_cvs'], {
 				min: redGL.gl.LINEAR,
