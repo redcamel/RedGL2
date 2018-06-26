@@ -171,6 +171,7 @@
 		'<button>this is Button</button><br>' +
 		Math.random())
 		testRedText.text = str
+		testRedText.background = 'rgba(255,0,0,0.1)'
 		testRedText.width = 360
 		testRedText.height = 1024
 		testRedText.scaleX = testRedText.scaleY = testRedText.scaleZ = 1
@@ -180,6 +181,8 @@
 		while ( i-- ) {
 			var testTet = RedText(self, RedBox(this))
 			testTet.text = str
+			testTet.width = Math.random()*512+128
+			testTet.height = Math.random()*512
 			testTet.background =  'rgba(' + Math.random() * 256 + ',' + Math.random() * 256 + ',' + Math.random() * 256 + ',0.5)'
 			tScene3D.addChild(testTet)
 			testTet.x = Math.random() * 3 - 1.5
@@ -231,7 +234,7 @@
 			background: testRedText.background,
 			color: testRedText.color
 		}
-		t0.add(testRedText, 'width', 2, 2048, 1)
+		t0.add(testRedText, 'width', 2, 512, 1)
 		t0.add(testRedText, 'height', 2, 2048, 1);
 		t0.add(testRedText, 'padding', 0, 100, 0.1)
 		t0.add(testRedText, 'fontFamily', ['Arial', 'Times New Roman', 'Times', 'serif']);
