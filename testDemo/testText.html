@@ -181,9 +181,9 @@
 		while ( i-- ) {
 			var testTet = RedText(self, RedBox(this))
 			testTet.text = str
-			testTet.width = Math.random()*512+128
-			testTet.height = Math.random()*512
-			testTet.background =  'rgba(' + Math.random() * 256 + ',' + Math.random() * 256 + ',' + Math.random() * 256 + ',0.5)'
+			testTet.width = Math.random() * 512 + 128
+			testTet.height = Math.random() * 512
+			testTet.background = 'rgba(' + Math.random() * 256 + ',' + Math.random() * 256 + ',' + Math.random() * 256 + ',0.5)'
 			tScene3D.addChild(testTet)
 			testTet.x = Math.random() * 3 - 1.5
 			testTet.y = Math.random() * 3 - 1.5
@@ -232,7 +232,9 @@
 		var t0 = this['gui'].addFolder('RedText')
 		var testData = {
 			background: testRedText.background,
-			color: testRedText.color
+			color: testRedText.color,
+			sprite3DMode: false,
+			perspectiveScale : false
 		}
 		t0.add(testRedText, 'width', 2, 512, 1)
 		t0.add(testRedText, 'height', 2, 2048, 1);
@@ -240,11 +242,22 @@
 		t0.add(testRedText, 'fontFamily', ['Arial', 'Times New Roman', 'Times', 'serif']);
 		t0.add(testRedText, 'fontSize', 0, 100, 0.1)
 		t0.add(testRedText, 'fontWeight', ['normal', 'bold']);
+		t0.add(testRedText, 'fontStyle', ['normal', 'italic']);
 		t0.add(testRedText, 'lineHeight', 0, 100, 0.1)
 		t0.add(testRedText, 'letterSpacing', 0, 4, 0.01)
 		t0.add(testRedText, 'wordBreak', ['normal', 'break-all', 'break-word', 'keep-all', 'unset'])
 		t0.add(testRedText, 'verticalAlign', ['top', 'middle', 'bottom']);
 		t0.add(testRedText, 'textAlign', ['left', 'center', 'right']);
+		t0.add(testData, 'sprite3DMode').onChange(function (v) {
+			tScene3D.children.forEach(function (redText) {
+				if(redText instanceof RedText) redText._sprite3DYn = v
+			})
+		});
+		t0.add(testData, 'perspectiveScale').onChange(function (v) {
+			tScene3D.children.forEach(function (redText) {
+				if(redText instanceof RedText) redText.perspectiveScale = v
+			})
+		});
 		['color'].forEach(function (k) {
 			t0.addColor(testData, k).onChange(function (v) {
 				testRedText[k] = v
@@ -264,7 +277,7 @@
 		t1.style.right = '10px'
 		t1.style.fontWeight = 'bold'
 		t1.innerHTML = 'TextContent or HTML'
-        t1.style.textShadow = '1px 1px 0px rgba(255,255,255,0.4)'
+		t1.style.textShadow = '1px 1px 0px rgba(255,255,255,0.4)'
 		t0.appendChild(t1)
 		t1 = document.createElement('div')
 		t1.setAttribute('contenteditable', true)
