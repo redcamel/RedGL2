@@ -13,6 +13,11 @@
     "return": "RedBitmapCubeTexture"
   },
   {
+    "title": "normalPower",
+    "description": "기본값 : 1",
+    "return": "number"
+  },
+  {
     "title": "normalTexture",
     "return": "RedBitmapTexture"
   },
@@ -62,12 +67,12 @@
   },
   {
     "title": "shininess",
-    "return": "RedBitmapTexture"
+    "description": "기본값 : 16",
+    "return": "Number"
   },
   {
     "title": "shininess",
-    "description": "기본값 : 16",
-    "return": "Number"
+    "return": "RedBitmapTexture"
   },
   {
     "title": "specularPower",

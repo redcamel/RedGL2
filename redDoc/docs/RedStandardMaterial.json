@@ -9,6 +9,11 @@
     "return": "Number"
   },
   {
+    "title": "normalPower",
+    "description": "기본값 : 1",
+    "return": "number"
+  },
+  {
     "title": "normalTexture",
     "return": "RedBitmapTexture"
   },

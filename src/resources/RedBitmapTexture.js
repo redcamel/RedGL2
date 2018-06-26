@@ -5,16 +5,7 @@ var RedBitmapTexture;
 	var loadTexture;
 	var makeTexture
 	var MAX_TEXTURE_SIZE;
-	var isPowerOf2 = function (v) {
-		return (v & (v - 1)) == 0;
-	}
-	var nextHighestPowerOfTwo = function (v) {
-		--v;
-		for ( var i = 1; i < 32; i <<= 1 ) {
-			v = v | v >> i;
-		}
-		return v + 1;
-	}
+	var
 	setEmptyTexture = function (gl, texture) {
 		gl.activeTexture(gl.TEXTURE0 + 0)
 		gl.bindTexture(gl.TEXTURE_2D, texture);
@@ -87,11 +78,11 @@ var RedBitmapTexture;
 				var tSource = this;
 				var tW, tH
 				if ( tSource instanceof HTMLImageElement ) {
-					if ( !isPowerOf2(tSource.width) || !isPowerOf2(tSource.height) ) {
+					if ( !RedGLUtil.isPowerOf2(tSource.width) || !RedGLUtil.isPowerOf2(tSource.height) ) {
 						var canvas = document.createElement("canvas");
 						var ctx = canvas.getContext("2d");
-						tW = nextHighestPowerOfTwo(tSource.width)
-						tH = nextHighestPowerOfTwo(tSource.height)
+						tW = RedGLUtil.nextHighestPowerOfTwo(tSource.width)
+						tH = RedGLUtil.nextHighestPowerOfTwo(tSource.height)
 						if ( tW > MAX_TEXTURE_SIZE ) tW = MAX_TEXTURE_SIZE;
 						if ( tH > MAX_TEXTURE_SIZE ) tH = MAX_TEXTURE_SIZE;
 						canvas.width = tW;

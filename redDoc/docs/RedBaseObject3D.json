@@ -29,6 +29,12 @@
     "return": "gl 상수"
   },
   {
+    "title": "getScreenPoint",
+    "code": "METHOD",
+    "description": "\n스크린좌표반환\n",
+    "return": "Array"
+  },
+  {
     "title": "localToWorld",
     "code": "METHOD",
     "description": "\n로컬좌표를 RedWorld 좌표로 변경\n",
@@ -101,6 +107,11 @@
   {
     "title": "useCullFace",
     "description": "\n컬링 사용여부\n기본값 : true\n",
+    "return": "Boolean"
+  },
+  {
+    "title": "useDepthMask",
+    "description": "\n뎁스 테스트 사용여부\n기본값 : true\n",
     "return": "Boolean"
   },
   {
