@@ -20,6 +20,8 @@ var RedText;
 		}
 	})();
 	setTexture = function (target) {
+		target['_svg'].setAttribute('width', target['_width'])
+		target['_svg'].setAttribute('height', target['_height'])
 		target['_svg'].viewBox.baseVal.width = target['_width']
 		target['_svg'].viewBox.baseVal.height = target['_height']
 		target['_img'].src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(target['_svg'].outerHTML);
@@ -51,11 +53,11 @@ var RedText;
 		this['_cvs']['width'] = 2, this['_cvs']['height'] = 2
 		this['_svg'] = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
 		this['_svg'].setAttribute('xmlns', "http://www.w3.org/2000/svg")
-		this['_svg'].style = 'position:absolute;top:0px;left:0px'
-		this['_svg'].innerHTML = '<foreignObject width="100%" height="100%" >' +
-			'   <table xmlns="http://www.w3.org/1999/xhtml" style="position:table;top:0px;left:0px;width:100%;height:100%">' +
+		this['_svg'].style = 'position:absolute;top:0px;left:0px;text-align:center'
+		this['_svg'].innerHTML = '<foreignObject  style="width:100%;height:100%" >' +
+			'   <table xmlns="http://www.w3.org/1999/xhtml" style="position:fixed;top:0px;left:0px;width:100%;height:100%;table-layout:fixed">' +
 			'       <tr xmlns="http://www.w3.org/1999/xhtml">' +
-			'       <td xmlns="http://www.w3.org/1999/xhtml" style="overflow:hidden" > </td>' +
+			'       <td xmlns="http://www.w3.org/1999/xhtml"  > </td>' +
 			'       </tr>' +
 			'   </table>' +
 			'</foreignObject>'
@@ -65,17 +67,14 @@ var RedText;
 		this['_width'] = 256
 		this['_height'] = 512
 		setStylePrototype(this, 'padding', 0);
-
 		setStylePrototype(this, 'background', '');
 		setStylePrototype(this, 'color', '#000');
-
 		setStylePrototype(this, 'fontFamily', 'Arial');
 		setStylePrototype(this, 'fontSize', 16);
 		setStylePrototype(this, 'fontWeight', 'normal');
-		setStylePrototype(this, 'lineHeight', 16*1.5);
+		setStylePrototype(this, 'lineHeight', 16 * 1.5);
 		setStylePrototype(this, 'letterSpacing', 0);
 		setStylePrototype(this, 'wordBreak', 'break-all');
-
 		setStylePrototype(this, 'verticalAlign', 'middle');
 		setStylePrototype(this, 'textAlign', 'center');
 		//////////////////////
@@ -94,7 +93,6 @@ var RedText;
 			var tW1, tH1
 			tW = self['_width']
 			tH = self['_height']
-			console.log(tW, tW1)
 			// tW = RedGLUtil.nextHighestPowerOfTwo(tW)
 			// tH = RedGLUtil.nextHighestPowerOfTwo(tH)
 			console.log(tW, tH)
