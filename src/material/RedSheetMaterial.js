@@ -2,7 +2,7 @@
 var RedSheetMaterial;
 (function () {
 	var vSource, fSource;
-	var PROGRAM_NAME = 'bitmapProgram';
+	var PROGRAM_NAME = 'RedSheetMaterial_Program';
 	vSource = function () {
 		/* @preserve
 		mat4 calSprite3D(mat4 cameraMTX, mat4 mvMatrix){
@@ -106,6 +106,7 @@ var RedSheetMaterial;
 		this['loop'] = true
 		this['_aniMap'] = {}
 		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
+		this['__RedSheetMaterialYn'] = true
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkUniformAndProperty();
 		console.log(this)

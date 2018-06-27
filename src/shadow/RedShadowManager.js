@@ -43,7 +43,7 @@ var RedShadowManager;
 					tDirectionalShadow['frameBuffer'].bind(redGL.gl)
 					gl.viewport(0, 0, tWidth, tHeight);
 					gl.scissor(0, 0, tWidth, tHeight);
-					redRenderer.sceneRender(redGL, redGL.gl, tView['camera']['orthographicYn'], tDirectionalShadow['_castingList'], time, renderInfo, tDirectionalShadow['_directionalShadowMaterial']);
+					redRenderer.sceneRender(redGL, tView['camera'],tView['camera']['orthographicYn'], tDirectionalShadow['_castingList'], time, renderInfo, tDirectionalShadow['_directionalShadowMaterial']);
 					tDirectionalShadow['frameBuffer'].unbind(redGL.gl)
 					gl.viewport(tViewRect[0], tWorldRect[3] - tViewRect[3] - tViewRect[1], tViewRect[2], tViewRect[3]);
 					gl.scissor(tViewRect[0], tWorldRect[3] - tViewRect[3] - tViewRect[1], tViewRect[2], tViewRect[3]);

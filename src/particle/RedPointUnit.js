@@ -37,7 +37,8 @@ var RedPointUnit;
 			'RedPointUnit_' + this['_UUID'],
 			RedBuffer.ARRAY_BUFFER,
 			interleaveData,
-			interleaveDefineInfoList
+			interleaveDefineInfoList,
+			redGL.gl.DYNAMIC_DRAW
 		)
 		this['geometry'] = RedGeometry(interleaveBuffer)
 		this['material'] = material
