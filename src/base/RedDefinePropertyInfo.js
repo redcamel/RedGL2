@@ -123,7 +123,7 @@ var RedDefinePropertyInfo;
 		}
 		if ( samplerTypeKey ) {
 			var samplerCls = window[samplerTypeKey]
-			console.log(samplerTypeKey, samplerCls)
+			// console.log(samplerTypeKey, samplerCls)
 			if ( option && option['essential'] ) {
 				result = {
 					get: function () { return this['_' + name]; },

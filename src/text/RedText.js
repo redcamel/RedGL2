@@ -102,6 +102,7 @@ var RedText;
 			self['scaleX'] = self['_width'] / redGL.gl.drawingBufferWidth
 			self['scaleY'] = self['_height'] / redGL.gl.drawingBufferWidth
 			self['_ctx'].drawImage(self['_img'], 0, 0, tW, tH);
+			// TODO: 같은 크기일경우 subData로 밀어넣을수 있도록 변경
 			self['material'].diffuseTexture = RedBitmapTexture(redGL, self['_cvs'], {
 				min: redGL.gl.LINEAR,
 				mag: redGL.gl.LINEAR,

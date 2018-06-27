@@ -22,14 +22,12 @@ var RedRenderer;
 		this['_callback'] = null;
 		this['_UUID'] = RedGL['makeUUID']();
 		this['renderInfo'] = {};
+		this['cacheUniformInfo'] = [];
+		this['cacheAttrInfo'] = [];
+		this['cacheSamplerIndex'] = [];
+		this['cacheTexture'] = []
 		this['cacheState'] = [];
-		this['cacheInfo'] = {
-			cacheUniformInfo: [],
-			cacheAttrInfo: [],
-			cacheSamplerIndex: [],
-			cacheTexture: [],
-			cacheSystemUniformInfo: []
-		};
+		this['cacheSystemUniformInfo'] = []
 		this['renderDebuger'] = RedRenderDebuger();
 		this['worldRect'] = []
 		this['_glInitialized'] = false
@@ -111,8 +109,11 @@ var RedRenderer;
 	};
 	// 캐시관련
 	var prevProgram_UUID;
+	var tCamera
+	var tScene;
 	RedRenderer.prototype.worldRender = (function () {
 		var tWorldRect;
+		var perspectiveMTX;
 		var self;
 		var valueParser;
 		var updateSystemUniform;
@@ -344,9 +345,9 @@ var RedRenderer;
 							tUUID = tLocationInfo['_UUID']
 							tValue = updateSystemUniformInfo[k2]
 							tValueStr = JSON.stringify(tValue)
-							if ( tLocation && this['cacheInfo']['cacheSystemUniformInfo'][tUUID] != tValueStr ) {
+							if ( tLocation && this['cacheSystemUniformInfo'][tUUID] != tValueStr ) {
 								tLocationInfo['renderType'] == 'mat' ? gl[tLocationInfo['renderMethod']](tLocation, false, tValue) : gl[tLocationInfo['renderMethod']](tLocation, tValue);
-								this['cacheInfo']['cacheSystemUniformInfo'][tUUID] = tValueStr;
+								this['cacheSystemUniformInfo'][tUUID] = tValueStr;
 							}
 						}
 					}
@@ -376,25 +377,22 @@ var RedRenderer;
 		return function (redGL, time) {
 			var gl;
 			var tViewRect;
-			var tScene;
 			var tRenderInfo
-			var tPerspectiveMTX;
-			var tCamera
 			gl = redGL.gl;
 			self = this;
 			// 캔버스 사이즈 적용
 			tWorldRect = self['worldRect']
-			tWorldRect[0] = 0;
-			tWorldRect[1] = 0;
-			tWorldRect[2] = gl.drawingBufferWidth;
-			tWorldRect[3] = gl.drawingBufferHeight;
+			self['worldRect'][0] = 0;
+			self['worldRect'][1] = 0;
+			self['worldRect'][2] = gl.drawingBufferWidth;
+			self['worldRect'][3] = gl.drawingBufferHeight;
 			gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
 			gl.scissor(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
 			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 			if ( !self['_glInitialized'] ) glInitialize(gl), self['_glInitialized'] = true
 			// console.log("worldRender", v['key'], t0)
 			self['renderInfo'] = {}
-			self['cacheInfo']['cacheAttrInfo'].length = 0
+			self['cacheAttrInfo'].length = 0
 			self['world']['_viewList'].forEach(function (tView) {
 				///////////////////////////////////
 				// view의 위치/크기결정
@@ -407,7 +405,7 @@ var RedRenderer;
 				tScene = tView['scene']
 				// 위치/크기의 % 여부를 파싱
 				valueParser(tViewRect);
-				// 현재뷰에 대한 렌더 디버깅 정보
+				//
 				tRenderInfo = self['renderInfo'][tView['key']] = {
 					orthographicYn: tCamera['orthographicYn'],
 					x: tView['_x'],
@@ -421,10 +419,9 @@ var RedRenderer;
 					key: tView['key'],
 					call: 0
 				}
-				// viewport 크기설정
+				// viewport 설정
 				gl.viewport(tViewRect[0], tWorldRect[3] - tViewRect[3] - tViewRect[1], tViewRect[2], tViewRect[3]);
 				gl.scissor(tViewRect[0], tWorldRect[3] - tViewRect[3] - tViewRect[1], tViewRect[2], tViewRect[3]);
-				// 배경 설정
 				if ( tScene['useBackgroundColor'] ) {
 					gl.clearColor(tScene['_r'], tScene['_g'], tScene['_b'], 1);
 					gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -432,20 +429,18 @@ var RedRenderer;
 					gl.clearColor(0, 0, 0, 1);
 					gl.clear(gl.DEPTH_BUFFER_BIT);
 				}
-				// 카메라 메트릭스 설정
 				if ( !(tCamera instanceof RedCamera) ) {
 					// 카메라 형식이 아닌경우 컨트롤러로 판단함
 					tCamera['update']()
 					tCamera = tCamera['camera']
 				}
 				if ( tCamera['autoUpdateMatrix'] ) tCamera['update']()
-				// 퍼스펙티브 매트릭스 설정
+				perspectiveMTX = tCamera['perspectiveMTX']
 				// view 에 적용할 카메라 퍼스펙티브를 계산
-				tPerspectiveMTX = tCamera['perspectiveMTX'];
-				mat4.identity(tPerspectiveMTX);
+				mat4.identity(perspectiveMTX);
 				if ( tCamera['orthographicYn'] ) {
 					mat4.ortho(
-						tPerspectiveMTX,
+						perspectiveMTX,
 						-0.5, // left
 						0.5, // right
 						-0.5, // bottom
@@ -453,14 +448,14 @@ var RedRenderer;
 						-tCamera['farClipping'],
 						tCamera['farClipping']
 					)
-					mat4.translate(tPerspectiveMTX, tPerspectiveMTX, [-0.5, 0.5, 0])
-					mat4.scale(tPerspectiveMTX, tPerspectiveMTX, [1 / tViewRect[2], -1 / tViewRect[3], 1]);
+					mat4.translate(perspectiveMTX, perspectiveMTX, [-0.5, 0.5, 0])
+					mat4.scale(perspectiveMTX, perspectiveMTX, [1 / tViewRect[2], -1 / tViewRect[3], 1]);
 					mat4.identity(tCamera['matrix'])
 					gl.disable(gl.CULL_FACE);
 					self['cacheState']['useCullFace'] = false
 				} else {
 					mat4.perspective(
-						tPerspectiveMTX,
+						perspectiveMTX,
 						tCamera['fov'] * Math.PI / 180,
 						tViewRect[2] / tViewRect[3],
 						tCamera['nearClipping'],
@@ -470,7 +465,7 @@ var RedRenderer;
 					self['cacheState']['useCullFace'] = true
 				}
 				// 뎁스마스크 원상복구
-				self['cacheState']['useDepthMask'] ? 0 : gl.depthMask(self['cacheState']['useDepthMask'] = true);
+				gl.depthMask(self['cacheState']['useDepthMask'] = true);
 				// 디렉셔널 쉐도우 렌더
 				if ( tScene['shadowManager']['_directionalShadow'] ) {
 					updateSystemUniform.apply(self, [redGL, time, tScene, tCamera, tViewRect])
@@ -490,7 +485,7 @@ var RedRenderer;
 				if ( tScene['postEffectManager']['postEffectList'].length ) {
 					tScene['postEffectManager'].bind(gl);
 					mat4.perspective(
-						tPerspectiveMTX,
+						perspectiveMTX,
 						tCamera['fov'] * Math.PI / 180,
 						tScene['postEffectManager']['frameBuffer']['width'] / tScene['postEffectManager']['frameBuffer']['height'],
 						tCamera['nearClipping'],
@@ -504,18 +499,18 @@ var RedRenderer;
 				updateSystemUniform.apply(self, [redGL, time, tScene, tCamera, tViewRect])
 				if ( tScene['skyBox'] ) {
 					tScene['skyBox']['scaleX'] = tScene['skyBox']['scaleY'] = tScene['skyBox']['scaleZ'] = tCamera['farClipping']
-					self.sceneRender(redGL, tCamera, tCamera['orthographicYn'], [tScene['skyBox']], time, tRenderInfo);
+					self.sceneRender(redGL, gl, tCamera['orthographicYn'], [tScene['skyBox']], time, tRenderInfo);
 					gl.clear(gl.DEPTH_BUFFER_BIT);
 				}
 				// 그리드가 있으면 그림
-				if ( tScene['grid'] ) self.sceneRender(redGL, tCamera, tCamera['orthographicYn'], [tScene['grid']], time, tRenderInfo);
+				if ( tScene['grid'] ) self.sceneRender(redGL, gl, tCamera['orthographicYn'], [tScene['grid']], time, tRenderInfo);
 				// 씬렌더 호출
-				self.sceneRender(redGL, tCamera, tCamera['orthographicYn'], tScene['children'], time, tRenderInfo);
+				self.sceneRender(redGL, gl, tCamera['orthographicYn'], tScene['children'], time, tRenderInfo);
 				// asix가 있으면 그림
-				if ( tScene['axis'] ) self.sceneRender(redGL, tCamera, tCamera['orthographicYn'], tScene['axis']['children'], time, tRenderInfo);
+				if ( tScene['axis'] ) self.sceneRender(redGL, gl, tCamera['orthographicYn'], tScene['axis']['children'], time, tRenderInfo);
 				// 디버깅 라이트 업데이트
-				if ( lightDebugRenderList.length ) self.sceneRender(redGL, tCamera, tCamera['orthographicYn'], lightDebugRenderList, time, tRenderInfo);
-				// 포스트이펙트 최종렌더
+				if ( lightDebugRenderList.length ) self.sceneRender(redGL, gl, tCamera['orthographicYn'], lightDebugRenderList, time, tRenderInfo);
+				// 포스트이펙트 렌더
 				if ( tScene['postEffectManager']['postEffectList'].length ) tScene['postEffectManager'].render(redGL, gl, self, tView, time, tRenderInfo)
 			})
 			if ( this['renderDebuger']['visible'] ) this['renderDebuger'].update(redGL, self['renderInfo'])
@@ -527,22 +522,19 @@ var RedRenderer;
 		var tPrevInterleaveBuffer_UUID;
 		var tPrevSamplerIndex;
 		draw = function (redGL,
+		                 gl,
 		                 children,
-		                 camera,
 		                 orthographicYn,
 		                 time,
 		                 renderResultObj,
-		                 tCacheInfo,
+		                 tCacheInterleaveBuffer,
+		                 tCacheUniformInfo,
+		                 tCacheSamplerIndex,
+		                 tCacheTexture,
 		                 tCacheState,
 		                 parentMTX,
 		                 subSceneMaterial) {
 			var i, i2;
-			// 캐쉬관련
-			var tGL = redGL.gl
-			var tCacheInterleaveBuffer = tCacheInfo['cacheAttrInfo'];
-			var tCacheUniformInfo = tCacheInfo['cacheUniformInfo'];
-			var tCacheSamplerIndex = tCacheInfo['cacheSamplerIndex'];
-			var tCacheTexture = tCacheInfo['cacheTexture'];
 			// 오쏘고날 스케일 비율
 			var orthographicYnScale = orthographicYn ? -1 : 1
 			//
@@ -564,6 +556,7 @@ var RedRenderer;
 			var tUUID, noChangeUniform;
 			var tSamplerIndex;
 			var tSprite3DYn, tDirectionalShadowMaterialYn;
+			var tCameraPosition;
 			var tLODData
 			// matix 관련
 			var a,
@@ -574,42 +567,46 @@ var RedRenderer;
 				aX, aY, aZ,
 				inverse_c, inverse_d, inverse_e, inverse_g, inverse_f, inverse_h, inverse_i, inverse_j, inverse_k, inverse_l, inverse_n, inverse_o, inverse_A, inverse_m, inverse_p, inverse_r, inverse_s, inverse_B, inverse_t, inverse_u, inverse_v, inverse_w, inverse_x, inverse_y, inverse_z, inverse_C, inverse_D, inverse_E, inverse_q;
 			// sin,cos 관련
-			var tRadian, CPI, CPI2, C225, C127, C045, C157;
-			// LOD 관련
-			var lodX, lodY, lodZ, lodDistance;
+			var SIN, COS, tRadian, CPI, CPI2, C225, C127, C045, C157;
 			//////////////// 변수값 할당 ////////////////
 			BYTES_PER_ELEMENT = Float32Array.BYTES_PER_ELEMENT;
 			CONVERT_RADIAN = Math.PI / 180
-			CPI = 3.141592653589793, CPI2 = 6.283185307179586, C225 = 0.225, C127 = 1.27323954, C045 = 0.405284735, C157 = 1.5707963267948966;
+			CPI = 3.141592653589793,
+				CPI2 = 6.283185307179586,
+				C225 = 0.225,
+				C127 = 1.27323954,
+				C045 = 0.405284735,
+				C157 = 1.5707963267948966;
 			//////////////// 렌더시작 ////////////////
+			tPrevSamplerIndex = null
 			i = children.length
+			tCameraPosition = [tCamera.x, tCamera.y, tCamera.z]
 			while ( i-- ) {
-				renderResultObj['call']++;
-				tMesh = children[i];
-				tMVMatrix = tMesh['matrix'];
-				tNMatrix = tMesh['normalMatrix'];
-				tGeometry = tMesh['_geometry'];
-				tSprite3DYn = tMesh['_sprite3DYn'];
+				renderResultObj['call']++
+				tMesh = children[i]
+				tMVMatrix = tMesh['matrix']
 				// LOD체크
 				if ( tMesh['useLOD'] ) {
-					lodX = camera.x - tMesh.x;
-					lodY = camera.y - tMesh.y;
-					lodZ = camera.z - tMesh.z
-					lodDistance = Math.abs(Math.sqrt(lodX * lodX + lodY * lodY + lodZ * lodZ));
+					var x = tCameraPosition[0] - tMesh.x;
+					var y = tCameraPosition[1] - tMesh.y;
+					var z = tCameraPosition[2] - tMesh.z
+					var distance = Math.abs(Math.sqrt(x * x + y * y + z * z));
 					tLODInfo = tMesh['_lodLevels']
 					for ( var k in tLODInfo ) {
 						tLODData = tLODInfo[k]
-						if ( tLODData['distance'] < lodDistance ) {
-							tMesh['_geometry'] = tLODData['geometry'];
-							tMesh['_material'] = tLODData['material'];
+						if ( tLODData['distance'] < distance ) {
+							tMesh['_geometry'] = tLODData['geometry'], tMesh['_material'] = tLODData['material']
 						}
 					}
 				}
+				tNMatrix = tMesh['normalMatrix']
+				tGeometry = tMesh['_geometry']
+				tSprite3DYn = tMesh['_sprite3DYn']
 				if ( tGeometry ) {
-					tMaterial = subSceneMaterial ? subSceneMaterial : tMesh['_material'];
-					tDirectionalShadowMaterialYn = tMaterial['__RedDirectionalShadowYn'];
+					tMaterial = subSceneMaterial ? subSceneMaterial : tMesh['_material']
+					tDirectionalShadowMaterialYn = tMaterial instanceof RedDirectionalShadowMaterial;
 					// SpriteSheet체크
-					if ( tMaterial['__RedSheetMaterialYn'] ) {
+					if ( tMaterial instanceof RedSheetMaterial ) {
 						if ( !tMaterial['_nextFrameTime'] ) tMaterial['_nextFrameTime'] = tMaterial['_perFrameTime'] + time
 						if ( tMaterial['_playYn'] && tMaterial['_nextFrameTime'] < time ) {
 							var gapFrame = parseInt((time - tMaterial['_nextFrameTime']) / tMaterial['_perFrameTime']);
@@ -617,40 +614,44 @@ var RedRenderer;
 							tMaterial['_nextFrameTime'] = tMaterial['_perFrameTime'] + time;
 							tMaterial['currentIndex'] += gapFrame;
 							if ( tMaterial['currentIndex'] >= tMaterial['totalFrame'] ) {
-								if ( tMaterial['_loop'] ) tMaterial['_playYn'] = true, tMaterial['currentIndex'] = 0;
-								else tMaterial['_playYn'] = false, tMaterial['currentIndex'] = tMaterial['totalFrame'] - 1
+								if ( tMaterial['_loop'] ) {
+									tMaterial['_playYn'] = true
+									tMaterial['currentIndex'] = 0;
+								} else {
+									tMaterial['_playYn'] = false
+									tMaterial['currentIndex'] = tMaterial['totalFrame'] - 1
+								}
 							}
 						}
-						tMaterial['_sheetRect'][0] = 1 / tMaterial['_segmentW'];
-						tMaterial['_sheetRect'][1] = 1 / tMaterial['_segmentH'];
-						tMaterial['_sheetRect'][2] = (tMaterial['currentIndex'] % tMaterial['_segmentW']) / tMaterial['_segmentW'];
-						tMaterial['_sheetRect'][3] = Math.floor(tMaterial['currentIndex'] / tMaterial['_segmentH']) / tMaterial['_segmentH'];
+						tMaterial['_sheetRect'][0] = 1 / tMaterial['_segmentW']
+						tMaterial['_sheetRect'][1] = 1 / tMaterial['_segmentH']
+						tMaterial['_sheetRect'][2] = (tMaterial['currentIndex'] % tMaterial['_segmentW']) / tMaterial['_segmentW']
+						tMaterial['_sheetRect'][3] = Math.floor(tMaterial['currentIndex'] / tMaterial['_segmentH']) / tMaterial['_segmentH']
 					}
-					// 재질 캐싱
-					prevProgram_UUID == tMaterial['program']['_UUID'] ? 0 : tGL.useProgram(tMaterial['program']['webglProgram'])
+					prevProgram_UUID == tMaterial['program']['_UUID'] ? 0 : gl.useProgram(tMaterial['program']['webglProgram'])
 					prevProgram_UUID = tMaterial['program']['_UUID']
 					// 업데이트할 어트리뷰트와 유니폼 정보를 가져옴
 					tAttrGroup = tMaterial['program']['attributeLocation'];
 					tUniformGroup = tMaterial['program']['uniformLocation'];
 					tSystemUniformGroup = tMaterial['program']['systemUniformLocation'];
 					// 버퍼를 찾는다.
-					tInterleaveBuffer = tGeometry['interleaveBuffer']; // 인터리브 버퍼
-					tIndexBufferInfo = tGeometry['indexBuffer']; // 엘리먼트 버퍼
+					tInterleaveBuffer = tGeometry['interleaveBuffer'] // 인터리브 버퍼
+					tIndexBufferInfo = tGeometry['indexBuffer'] // 엘리먼트 버퍼
 					/////////////////////////////////////////////////////////////////////////
 					/////////////////////////////////////////////////////////////////////////
 					// interleaveDefineInfoList 정보를 가져온다.
-					tInterleaveDefineInfo = tInterleaveBuffer['interleaveDefineInfoList'];
+					tInterleaveDefineInfo = tInterleaveBuffer['interleaveDefineInfoList']
 					// 버퍼의 UUID
-					tUUID = tInterleaveBuffer['_UUID'];
+					tUUID = tInterleaveBuffer['_UUID']
 					// 프로그램의 어트리뷰트를 순환한다.
-					i2 = tAttrGroup.length;
+					i2 = tAttrGroup.length
 					while ( i2-- ) {
 						// 대상 어트리뷰트의 로케이션 정보를 구함
-						tAttributeLocationInfo = tAttrGroup[i2];
+						tAttributeLocationInfo = tAttrGroup[i2]
 						// 대상 어트리뷰트의 이름으로 interleaveDefineInfoList에서 단위 인터리브 정보를 가져온다.
-						tInterleaveDefineUnit = tInterleaveDefineInfo[tAttributeLocationInfo['name']];
-						// 실제 버퍼 바인딩하고
-						tPrevInterleaveBuffer_UUID == tUUID ? 0 : tGL.bindBuffer(tGL.ARRAY_BUFFER, tInterleaveBuffer['webglBuffer']);
+						tInterleaveDefineUnit = tInterleaveDefineInfo[tAttributeLocationInfo['name']]
+						// 실제 버퍼 바인딩하고 //TODO: 이놈은 검증해야함
+						tPrevInterleaveBuffer_UUID == tUUID ? 0 : gl.bindBuffer(gl.ARRAY_BUFFER, tInterleaveBuffer['webglBuffer']);
 						tPrevInterleaveBuffer_UUID = tUUID;
 						/*
 						 어트리뷰트 정보매칭이 안되는 녀석은 무시한다
@@ -661,9 +662,8 @@ var RedRenderer;
 							tWebGLAttributeLocation = tAttributeLocationInfo['location']
 							if ( tCacheInterleaveBuffer[tWebGLAttributeLocation] != tInterleaveDefineUnit['_UUID'] ) {
 								// 해당로케이션을 활성화된적이없으면 활성화 시킨다
-								tAttributeLocationInfo['enabled'] ? 0 : tGL.enableVertexAttribArray(tWebGLAttributeLocation);
-								tAttributeLocationInfo['enabled'] = true;
-								tGL.vertexAttribPointer(
+								tAttributeLocationInfo['enabled'] ? 0 : (gl.enableVertexAttribArray(tWebGLAttributeLocation), tAttributeLocationInfo['enabled'] = true);
+								gl.vertexAttribPointer(
 									tWebGLAttributeLocation,
 									tInterleaveDefineUnit['size'],
 									tInterleaveBuffer['glArrayType'],
@@ -679,7 +679,7 @@ var RedRenderer;
 					/////////////////////////////////////////////////////////////////////////
 					/////////////////////////////////////////////////////////////////////////
 					// 유니폼 업데이트
-					i2 = tUniformGroup.length;
+					i2 = tUniformGroup.length
 					while ( i2-- ) {
 						tUniformLocationInfo = tUniformGroup[i2];
 						tWebGLUniformLocation = tUniformLocationInfo['location'];
@@ -691,24 +691,24 @@ var RedRenderer;
 							tSamplerIndex = tUniformLocationInfo['samplerIndex']
 							// samplerIndex : 0,1 번은 생성용으로 쓴다.
 							if ( tUniformValue ) {
-								if ( tCacheTexture[tSamplerIndex] == tUniformValue['_UUID'] ) {
+								if ( tCacheTexture[tSamplerIndex] && tCacheTexture[tSamplerIndex] == tUniformValue['_UUID'] ) {
 								} else {
-									tPrevSamplerIndex == tSamplerIndex ? 0 : tGL.activeTexture(tGL.TEXTURE0 + (tPrevSamplerIndex = tSamplerIndex));
+									tPrevSamplerIndex == tSamplerIndex ? 0 : gl.activeTexture(gl.TEXTURE0 + (tPrevSamplerIndex = tSamplerIndex));
 									if ( tUniformValue['_videoDom'] ) {
 										//TODO: 일단 비디오를 우겨넣었으니 정리를 해야함
-										tGL.bindTexture(tGL.TEXTURE_2D, tUniformValue['webglTexture']);
-										if ( tUniformValue['_videoDom']['loaded'] ) tGL.texImage2D(tGL.TEXTURE_2D, 0, tGL.RGBA, tGL.RGBA, tGL.UNSIGNED_BYTE, tUniformValue['_videoDom'])
+										gl.bindTexture(gl.TEXTURE_2D, tUniformValue['webglTexture']);
+										if ( tUniformValue['_videoDom']['loaded'] ) gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, tUniformValue['_videoDom'])
 									} else {
-										tGL.bindTexture(tRenderType == 'sampler2D' ? tGL.TEXTURE_2D : tGL.TEXTURE_CUBE_MAP, tUniformValue['webglTexture']);
+										gl.bindTexture(tRenderType == 'sampler2D' ? gl.TEXTURE_2D : gl.TEXTURE_CUBE_MAP, tUniformValue['webglTexture']);
 									}
-									tCacheSamplerIndex[tUUID] == tSamplerIndex ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheSamplerIndex[tUUID] = tSamplerIndex);
+									tCacheSamplerIndex[tUUID] == tSamplerIndex ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheSamplerIndex[tUUID] = tSamplerIndex);
 									tCacheTexture[tSamplerIndex] = tUniformValue['_UUID'];
 								}
 								// 아틀라스 UV검색
 								if ( tSystemUniformGroup['uAtlascoord']['location'] ) {
 									tUUID = tSystemUniformGroup['uAtlascoord']['_UUID']
 									if ( tCacheUniformInfo[tUUID] != tUniformValue['atlascoord']['data']['_UUID'] ) {
-										tGL.uniform4fv(tSystemUniformGroup['uAtlascoord']['location'], tUniformValue['atlascoord']['data'])
+										gl.uniform4fv(tSystemUniformGroup['uAtlascoord']['location'], tUniformValue['atlascoord']['data'])
 										tCacheUniformInfo[tUUID] = tUniformValue['atlascoord']['data']['_UUID']
 									}
 								}
@@ -717,18 +717,18 @@ var RedRenderer;
 								if ( tRenderType == 'sampler2D' ) {
 									if ( tCacheTexture[tSamplerIndex] == 0 ) {
 									} else {
-										tPrevSamplerIndex == 0 ? 0 : tGL.activeTexture(tGL.TEXTURE0);
-										tGL.bindTexture(tGL.TEXTURE_2D, redGL['_datas']['emptyTexture']['2d']['webglTexture']);
-										tCacheSamplerIndex[tUUID] == 0 ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheSamplerIndex[tUUID] = 0);
+										tPrevSamplerIndex == 0 ? 0 : gl.activeTexture(gl.TEXTURE0);
+										gl.bindTexture(gl.TEXTURE_2D, redGL['_datas']['emptyTexture']['2d']['webglTexture']);
+										tCacheSamplerIndex[tUUID] == 0 ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheSamplerIndex[tUUID] = 0);
 										tCacheTexture[tSamplerIndex] = 0;
 										tPrevSamplerIndex = 0;
 									}
 								} else {
 									if ( tCacheTexture[tSamplerIndex] == 1 ) {
 									} else {
-										tPrevSamplerIndex == 1 ? 0 : tGL.activeTexture(tGL.TEXTURE0 + 1);
-										tGL.bindTexture(tGL.TEXTURE_CUBE_MAP, redGL['_datas']['emptyTexture']['3d']['webglTexture']);
-										tCacheSamplerIndex[tUUID] == 1 ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheSamplerIndex[tUUID] = 1);
+										tPrevSamplerIndex == 1 ? 0 : gl.activeTexture(gl.TEXTURE0 + 1);
+										gl.bindTexture(gl.TEXTURE_CUBE_MAP, redGL['_datas']['emptyTexture']['3d']['webglTexture']);
+										tCacheSamplerIndex[tUUID] == 1 ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheSamplerIndex[tUUID] = 1);
 										tCacheTexture[tSamplerIndex] = 1;
 										tPrevSamplerIndex = 1;
 									}
@@ -737,12 +737,11 @@ var RedRenderer;
 						} else {
 							tUniformValue == undefined ? RedGLUtil.throwFunc('RedRenderer : Material에 ', tUniformLocationInfo['materialPropertyName'], '이 정의 되지않았습니다.') : 0;
 							noChangeUniform = tCacheUniformInfo[tUUID] == tUniformValue;
-							//TODO: 비교계산을 줄일수는 없을까...
-							tRenderType == 'float' ? noChangeUniform ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue, tUniformValue)) :
-								tRenderType == 'int' ? noChangeUniform ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue, tUniformValue)) :
-									tRenderType == 'bool' ? noChangeUniform ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue, tUniformValue)) :
-										tRenderType == 'vec' ? tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tUniformValue) :
-											tRenderType == 'mat' ? tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, false, tUniformValue) :
+							tRenderType == 'float' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue, tUniformValue)) :
+								tRenderType == 'int' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue, tUniformValue)) :
+									tRenderType == 'bool' ? noChangeUniform ? 0 : gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue, tUniformValue)) :
+										tRenderType == 'vec' ? gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tUniformValue) :
+											tRenderType == 'mat' ? gl[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, false, tUniformValue) :
 												RedGLUtil.throwFunc('RedRenderer : 처리할수없는 타입입니다.', 'tRenderType -', tRenderType)
 						}
 					}
@@ -841,7 +840,7 @@ var RedRenderer;
 				}
 				/////////////////////////////////////////////////////////////////////////
 				/////////////////////////////////////////////////////////////////////////
-				if ( tGeometry ) tGL.uniformMatrix4fv(tSystemUniformGroup['uMMatrix']['location'], false, tMVMatrix)
+				if ( tGeometry ) gl.uniformMatrix4fv(tSystemUniformGroup['uMMatrix']['location'], false, tMVMatrix)
 				/////////////////////////////////////////////////////////////////////////
 				/////////////////////////////////////////////////////////////////////////
 				// 노말매트릭스를 사용할경우
@@ -891,45 +890,46 @@ var RedRenderer;
 				}
 				if ( tSystemUniformGroup && tMesh['autoUpdateMatrix'] && tSystemUniformGroup['uNMatrix']['location'] ) {
 					// uNMatrix 입력
-					tGL.uniformMatrix4fv(tSystemUniformGroup['uNMatrix']['location'], false, tNMatrix)
+					gl.uniformMatrix4fv(tSystemUniformGroup['uNMatrix']['location'], false, tNMatrix)
 				}
 				if ( tGeometry ) {
 					/////////////////////////////////////////////////////////////////////////
 					/////////////////////////////////////////////////////////////////////////
 					// 상태처리
+					if ( tSystemUniformGroup['uPointSize']['location'] ) {
+						tCacheState['pointSize'] != tMesh['pointSize'] ? gl.uniform1f(tSystemUniformGroup['uPointSize']['location'], tCacheState['pointSize'] = tMesh['pointSize']) : 0
+					}
 					// 컬페이스 사용여부 캐싱처리
-					tCacheState['useCullFace'] != tMesh['useCullFace'] ? (tCacheState['useCullFace'] = tMesh['useCullFace']) ? tGL.enable(tGL.CULL_FACE) : tGL.disable(tGL.CULL_FACE) : 0;
+					tCacheState['useCullFace'] != tMesh['useCullFace'] ? (tCacheState['useCullFace'] = tMesh['useCullFace']) ? gl.enable(gl.CULL_FACE) : gl.disable(gl.CULL_FACE) : 0;
 					// 컬페이스 캐싱처리
-					tCacheState['cullFace'] != tMesh['cullFace'] ? tGL.cullFace(tCacheState['cullFace'] = tMesh['cullFace']) : 0;
+					tCacheState['cullFace'] != tMesh['cullFace'] ? gl.cullFace(tCacheState['cullFace'] = tMesh['cullFace']) : 0;
 					// 뎁스마스크처리
-					tCacheState['useDepthMask'] != tMesh['useDepthMask'] ? tGL.depthMask(tCacheState['useDepthMask'] = tMesh['useDepthMask']) : 0;
+					tCacheState['useDepthMask'] != tMesh['useDepthMask'] ? gl.depthMask(tCacheState['useDepthMask'] = tMesh['useDepthMask']) : 0;
 					// 뎁스테스트 사용여부 캐싱처리
-					tCacheState['useDepthTest'] != tMesh['useDepthTest'] ? (tCacheState['useDepthTest'] = tMesh['useDepthTest']) ? tGL.enable(tGL.DEPTH_TEST) : tGL.disable(tGL.DEPTH_TEST) : 0;
+					tCacheState['useDepthTest'] != tMesh['useDepthTest'] ? (tCacheState['useDepthTest'] = tMesh['useDepthTest']) ? gl.enable(gl.DEPTH_TEST) : gl.disable(gl.DEPTH_TEST) : 0;
 					// 뎁스테스팅 캐싱처리
-					tCacheState['depthTestFunc'] != tMesh['depthTestFunc'] ? tGL.depthFunc(tCacheState['depthTestFunc'] = tMesh['depthTestFunc']) : 0;
+					tCacheState['depthTestFunc'] != tMesh['depthTestFunc'] ? gl.depthFunc(tCacheState['depthTestFunc'] = tMesh['depthTestFunc']) : 0;
 					// 블렌딩 사용여부 캐싱처리
 					if ( !tDirectionalShadowMaterialYn ) {
-						tCacheState['useBlendMode'] != tMesh['useBlendMode'] ? (tCacheState['useBlendMode'] = tMesh['useBlendMode']) ? tGL.enable(tGL.BLEND) : tGL.disable(tGL.BLEND) : 0;
+						tCacheState['useBlendMode'] != tMesh['useBlendMode'] ? (tCacheState['useBlendMode'] = tMesh['useBlendMode']) ? gl.enable(gl.BLEND) : gl.disable(gl.BLEND) : 0;
 						// 블렌딩팩터 캐싱처리
 						if ( tCacheState['blendSrc'] != tMesh['blendSrc'] || tCacheState['blendDst'] != tMesh['blendDst'] ) {
-							tGL.blendFunc(tMesh['blendSrc'], tMesh['blendDst']);
-							tCacheState['blendSrc'] = tMesh['blendSrc'];
-							tCacheState['blendDst'] = tMesh['blendDst'];
+							gl.blendFunc(tMesh['blendSrc'], tMesh['blendDst'])
+							tCacheState['blendSrc'] = tMesh['blendSrc']
+							tCacheState['blendDst'] = tMesh['blendDst']
 						}
-					}
-					if ( tSystemUniformGroup['uPointSize']['location'] ) {
-						tCacheState['pointSize'] != tMesh['pointSize'] ? tGL.uniform1f(tSystemUniformGroup['uPointSize']['location'], tCacheState['pointSize'] = tMesh['pointSize']) : 0;
 					}
 					if ( tSystemUniformGroup['uSprite3DYn']['location'] ) {
 						tUUID = tSystemUniformGroup['uSprite3DYn']['_UUID']
-						if ( tCacheUniformInfo[tUUID] != tSprite3DYn ) {
-							tGL[tSystemUniformGroup['uSprite3DYn']['renderMethod']](tSystemUniformGroup['uSprite3DYn']['location'], tSprite3DYn)
-							tCacheUniformInfo[tUUID] = tSprite3DYn
+						tUniformValue = tSprite3DYn
+						if ( tCacheUniformInfo[tUUID] != tUniformValue ) {
+							gl[tSystemUniformGroup['uSprite3DYn']['renderMethod']](tSystemUniformGroup['uSprite3DYn']['location'], tUniformValue)
+							tCacheUniformInfo[tUUID] = tUniformValue
 						}
 						tUUID = tSystemUniformGroup['uPerspectiveScale']['_UUID']
 						tUniformValue = tMesh['perspectiveScale']
 						if ( tCacheUniformInfo[tUUID] != tUniformValue ) {
-							tGL[tSystemUniformGroup['uPerspectiveScale']['renderMethod']](tSystemUniformGroup['uPerspectiveScale']['location'], tUniformValue)
+							gl[tSystemUniformGroup['uPerspectiveScale']['renderMethod']](tSystemUniformGroup['uPerspectiveScale']['location'], tUniformValue)
 							tCacheUniformInfo[tUUID] = tUniformValue
 						}
 					}
@@ -937,23 +937,39 @@ var RedRenderer;
 					/////////////////////////////////////////////////////////////////////////
 					// 드로우
 					if ( tIndexBufferInfo ) {
-						tPrevIndexBuffer_UUID == tIndexBufferInfo['_UUID'] ? 0 : tGL.bindBuffer(tGL.ELEMENT_ARRAY_BUFFER, tIndexBufferInfo['webglBuffer'])
+						tPrevIndexBuffer_UUID == tIndexBufferInfo['_UUID'] ? 0 : gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, tIndexBufferInfo['webglBuffer'])
 						//enum mode, long count, enum type, long offset
-						tGL.drawElements(
+						gl.drawElements(
 							tMesh['drawMode'],
 							tIndexBufferInfo['pointNum'],
 							tIndexBufferInfo['glArrayType'],
 							0
 						);
 						tPrevIndexBuffer_UUID = tIndexBufferInfo['_UUID'];
-					} else tGL.drawArrays(tMesh['drawMode'], 0, tInterleaveBuffer['pointNum'])
+					} else gl.drawArrays(tMesh['drawMode'], 0, tInterleaveBuffer['pointNum'])
 				}
 				/////////////////////////////////////////////////////////////////////////
 				/////////////////////////////////////////////////////////////////////////
-				tMesh['children'].length ? draw(redGL, tMesh['children'], camera, orthographicYn, time, renderResultObj, tCacheInfo, tCacheState, tMVMatrix, subSceneMaterial) : 0;
+				if ( tMesh['children'].length ) {
+					draw(
+						redGL,
+						gl,
+						tMesh['children'],
+						orthographicYn,
+						time,
+						renderResultObj,
+						tCacheInterleaveBuffer,
+						tCacheUniformInfo,
+						tCacheSamplerIndex,
+						tCacheTexture,
+						tCacheState,
+						tMVMatrix,
+						subSceneMaterial
+					)
+				}
 			}
 		}
-		return function (redGL, camera, orthographicYn, children, time, renderResultObj, subSceneMaterial) {
+		return function (redGL, gl, orthographicYn, children, time, renderResultObj, subSceneMaterial) {
 			// if ( this['cacheState']['pointSize'] == undefined ) this['cacheState']['pointSize'] = null
 			// if ( !this['cacheState']['useCullFace'] ) this['cacheState']['useCullFace'] = null
 			// if ( !this['cacheState']['cullFace'] ) this['cacheState']['cullFace'] = null
@@ -964,18 +980,18 @@ var RedRenderer;
 			// if ( !this['cacheState']['blendSrc'] ) this['cacheState']['blendSrc'] = null
 			// if ( !this['cacheState']['blendDst'] ) this['cacheState']['blendDst'] = null
 			// this['cacheSamplerIndex'].length = 0
-			this['cacheInfo']['cacheTexture'].length = 0
-			tPrevIndexBuffer_UUID = null;
-			tPrevInterleaveBuffer_UUID = null;
-			tPrevSamplerIndex = null;
+			this['cacheTexture'].length = 0
 			draw(
 				redGL,
+				gl,
 				children,
-				camera,
 				orthographicYn,
 				time,
 				renderResultObj,
-				this['cacheInfo'],
+				this['cacheAttrInfo'],
+				this['cacheUniformInfo'],
+				this['cacheSamplerIndex'],
+				this['cacheTexture'],
 				this['cacheState'],
 				undefined,
 				subSceneMaterial

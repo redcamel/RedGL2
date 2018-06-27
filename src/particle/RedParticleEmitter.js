@@ -35,7 +35,8 @@ var RedParticleEmitter;
 				RedInterleaveInfo('aVertexPosition', 3),
 				RedInterleaveInfo('aPointSize', 1),
 				RedInterleaveInfo('aVertexColor', 4)
-			]
+			],
+			redGL.gl.DYNAMIC_DRAW
 		))
 		this['material'] = material
 		this['drawMode'] = redGL.gl.POINTS

@@ -42,10 +42,11 @@ var RedGL;
 		EXT_KEY_LIST = [
 			'OES_element_index_uint',
 			'OES_standard_derivatives',
-			'EXT_texture_filter_anisotropic'
+			'EXT_texture_filter_anisotropic',
+			'WEBGL_compressed_texture_s3tc'
 		]
-		// checkList = 'webkit-3d,moz-webgl,3d,experimental-webgl,webgl,webgl2'.split(',')
-		checkList = 'webkit-3d,moz-webgl,3d,experimental-webgl,webgl'.split(',');
+		checkList = 'webkit-3d,moz-webgl,3d,experimental-webgl,webgl,webgl2'.split(',')
+		// checkList = 'webkit-3d,moz-webgl,3d,experimental-webgl,webgl'.split(',');
 		return function (canvas, option) {
 			initOption = JSON.parse(JSON.stringify(OPTION));
 			if ( option ) for ( i in option ) initOption[i] = option[i];
