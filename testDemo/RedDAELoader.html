@@ -23,6 +23,11 @@
     <script src="../src/RedXR.js"></script>
     <!--//-->
     <script src="../src/base/RedDefinePropertyInfo.js"></script>
+    <script src="../src/base/RedBaseObject3D.js"></script>
+    <script src="../src/base/RedBaseContainer.js"></script>
+    <script src="../src/base/RedBaseLight.js"></script>
+    <script src="../src/base/RedBaseTexture.js"></script>
+    <script src="../src/base/RedBaseMaterial.js"></script>
     <!--//-->
     <script src="../src/frameBuffer/RedFrameBuffer.js"></script>
     <!--//-->
@@ -36,11 +41,11 @@
     <script src="../src/resources/system/RedAtlasUV.js"></script>
     <script src="../src/resources/system/RedTextureOptionChecker.js"></script>
     <script src="../src/resources/RedBitmapTexture.js"></script>
+    <script src="../src/resources/RedDDSTexture.js"></script>
     <script src="../src/resources/RedVideoTexture.js"></script>
     <script src="../src/resources/RedAtlasTexture.js"></script>
     <script src="../src/resources/RedBitmapCubeTexture.js"></script>
     <!--재질-->
-    <script src="../src/base/RedBaseMaterial.js"></script>
     <script src="../src/material/RedColorMaterial.js"></script>
     <script src="../src/material/RedColorPhongMaterial.js"></script>
     <script src="../src/material/RedColorPhongTextureMaterial.js"></script>
@@ -58,9 +63,6 @@
     <script src="../src/base/RedBaseContainer.js"></script>
     <script src="../src/base/RedBaseLight.js"></script>
     <!--//-->
-    <script src="../src/light/RedAmbientLight.js"></script>
-    <script src="../src/light/RedDirectionalLight.js"></script>
-    <script src="../src/light/RedPointLight.js"></script>
     <!--//-->
     <script src="../src/loader/JsonModelLoader.js"></script>
     <script src="../src/loader/obj/RedMTLLoader.js"></script>
@@ -181,14 +183,13 @@
 		//         '../asset/cubemap/negz.png'
 		//     ]);
 		tScene3D['grid'] = RedGrid(self)
-		 RedDAELoader(this, '../asset/dae/', 'test1.dae', function (v) {
-		     console.log('호잇!', v)
-		     tScene3D.addChild(v['resultMesh'])
-		     v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.1
-		     v['resultMesh'].y = -2
-		     // v['resultMesh'].rotationX = 90
-		 })
-
+		RedDAELoader(this, '../asset/dae/', 'test1.dae', function (v) {
+			console.log('호잇!', v)
+			tScene3D.addChild(v['resultMesh'])
+			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.1
+			v['resultMesh'].y = -2
+			// v['resultMesh'].rotationX = 90
+		})
 		tRenderer.renderDebuger.visible = true
 		tRenderer.start(this, function (time) {
 			testDLight.x = Math.sin(time / 1000) * 2

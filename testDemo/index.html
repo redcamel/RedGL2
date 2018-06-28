@@ -23,6 +23,11 @@
     <script src="../src/RedXR.js"></script>
     <!--//-->
     <script src="../src/base/RedDefinePropertyInfo.js"></script>
+    <script src="../src/base/RedBaseObject3D.js"></script>
+    <script src="../src/base/RedBaseContainer.js"></script>
+    <script src="../src/base/RedBaseLight.js"></script>
+    <script src="../src/base/RedBaseTexture.js"></script>
+    <script src="../src/base/RedBaseMaterial.js"></script>
     <!--//-->
     <script src="../src/frameBuffer/RedFrameBuffer.js"></script>
     <!--//-->
@@ -36,11 +41,11 @@
     <script src="../src/resources/system/RedAtlasUV.js"></script>
     <script src="../src/resources/system/RedTextureOptionChecker.js"></script>
     <script src="../src/resources/RedBitmapTexture.js"></script>
+    <script src="../src/resources/RedDDSTexture.js"></script>
     <script src="../src/resources/RedVideoTexture.js"></script>
     <script src="../src/resources/RedAtlasTexture.js"></script>
     <script src="../src/resources/RedBitmapCubeTexture.js"></script>
     <!--재질-->
-    <script src="../src/base/RedBaseMaterial.js"></script>
     <script src="RedTestMaterial.js"></script>
     <script src="../src/material/RedColorMaterial.js"></script>
     <script src="../src/material/RedColorPhongMaterial.js"></script>
@@ -54,10 +59,6 @@
     <script src="../src/material/RedSheetMaterial.js"></script>
     <script src="../src/material/RedStandardMaterial.js"></script>
     <script src="../src/material/RedVideoMaterial.js"></script>
-    <!--//-->
-    <script src="../src/base/RedBaseObject3D.js"></script>
-    <script src="../src/base/RedBaseContainer.js"></script>
-    <script src="../src/base/RedBaseLight.js"></script>
     <!--//-->
     <script src="../src/light/RedAmbientLight.js"></script>
     <script src="../src/light/RedDirectionalLight.js"></script>
@@ -177,7 +178,7 @@
 		// tScene3D['postEffectManager'].addEffect(RedPostEffect_HueSaturation(this))
 		tScene3D['postEffectManager'].addEffect(RedPostEffect_Vignetting(this))
 		// tScene3D['postEffectManager'].addEffect(RedPostEffect_BrightnessContrast(this))
-		 tScene3D['postEffectManager'].addEffect(RedPostEffect_ZoomBlur(this))
+		tScene3D['postEffectManager'].addEffect(RedPostEffect_ZoomBlur(this))
 		// tScene3D['postEffectManager'].addEffect(RedPostEffect_HalfTone(this))
 		var testMaterial, testMaterial2, testMaterial3, testMaterial4, testMaterial5, testMaterial6,
 			testMaterial7, testMaterial8

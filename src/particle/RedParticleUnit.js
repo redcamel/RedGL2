@@ -23,10 +23,10 @@ var RedParticleUnit;
 		this['startTime'] = null;
 		this['age'] = 0;
 		this['lifeTime'] = lifeTime.length == 2 ? Math.random() * (lifeTime[1] - lifeTime[0]) + lifeTime[0] : lifeTime[0]
-		this['scaleUp'] = 0.5
-		this['movementX'] = (Math.random() - 0.5) * 0.1
-		this['movementY'] = (Math.random() - 0.5) * 0.1
-		this['movementZ'] = (Math.random() - 0.5) * 0.1
+		this['scaleUp'] = 0.1
+		this['movementX'] = (Math.random() - 0.5) * 0.05
+		this['movementY'] = (Math.random() - 0.5) * 0.05
+		this['movementZ'] = (Math.random() - 0.5) * 0.05
 		this['gravityVelocity'] = 0
 	}
 	Object.freeze(RedParticleUnit);
