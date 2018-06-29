@@ -41,6 +41,7 @@ var RedView;
 			if ( scene || camera ) RedGLUtil.throwFunc('RedView : ' + key, '는 이미 생성된 RedView key입니다.', '입력값 : ' + key)
 			else return ViewMap[key]
 		}
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedScene : RedGL Instance만 허용됩니다.', redGL);
 		if ( !(this instanceof RedView) ) return new RedView(key, redGL, scene, camera);
 		if ( !(typeof key == 'string') ) RedGLUtil.throwFunc('RedView : key : 문자열만 허용', '입력값 : ' + key)
 		if ( !scene && !camera ) RedGLUtil.throwFunc('RedView : 존재하지 않는 key입니다.', '입력값 : ' + key)

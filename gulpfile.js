@@ -106,6 +106,8 @@ gulp.task('make-doc', function () {
 		// 쉐도우
 		"src/shadow/RedDirectionalShadow.js",
 		"src/shadow/RedShadowManager.js",
+		// 텍스트
+		"src/text/RedText.js",
 		"src/object3D/RedAxis.js",
 		"src/object3D/RedGrid.js",
 		"src/object3D/RedMesh.js",
@@ -254,6 +256,8 @@ gulp.task('combine-js', function () {
 		// 쉐도우
 		"src/shadow/RedDirectionalShadow.js",
 		"src/shadow/RedShadowManager.js",
+		// 텍스트
+		"src/text/RedText.js",
 		// 이펙트
 		"src/postEffect/RedPostEffectManager.js",
 		"src/postEffect/RedPostEffect_Bloom.js",

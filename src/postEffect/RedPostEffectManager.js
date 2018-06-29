@@ -208,7 +208,6 @@ var RedPostEffectManager;
 								tCamera['farClipping']
 							)
 							mat4.scale(tPerspectiveMTX, tPerspectiveMTX, [1, -1, 1]);
-
 							tValueStr = JSON.stringify(tPerspectiveMTX)
 							if ( tCacheSystemUniformInfo[tUUID] != tValueStr ) {
 								gl.uniformMatrix4fv(tLocation, false, tPerspectiveMTX);
@@ -267,10 +266,9 @@ var RedPostEffectManager;
 			draw = function (redGL, effect, postEffectChildren, redScene, redRenderer, time, renderInfo) {
 				// console.log('Render Effect', v)
 				var tParentFrameBufferTexture;
-				var tSubFrameBufferInfo; // 서브에서 씬자체를 그려야할때 사용;
+				var tSubFrameBufferLigt; // 서브에서 씬자체를 그려야할때 사용;
 				var tGL;
 				tGL = redGL.gl;
-				tSubFrameBufferInfo = effect['subFrameBufferInfo'];
 				// 이펙트 최종결과를 생성하기전 전처리 진행
 				if ( effect['process'] && effect['process'].length ) {
 					tParentFrameBufferTexture = lastFrameBufferTexture
@@ -279,17 +277,24 @@ var RedPostEffectManager;
 					})
 				}
 				// 이펙트 서브신버퍼를 사용한다면 그림
-				if ( tSubFrameBufferInfo ) {
-					tSubFrameBufferInfo['frameBuffer']['width'] = tViewRect[2]
-					tSubFrameBufferInfo['frameBuffer']['height'] = tViewRect[3]
-					tSubFrameBufferInfo['frameBuffer'].bind(tGL);
-					tGL.viewport(0, 0, tViewRect[2], tViewRect[3]);
-					tGL.scissor(0, 0, tViewRect[2], tViewRect[3]);
-					tGL.clear(tGL.COLOR_BUFFER_BIT | tGL.DEPTH_BUFFER_BIT);
-					redRenderer.sceneRender(redGL, tCamera, tCamera['orthographicYn'], redScene['children'], time, renderInfo, tSubFrameBufferInfo['renderMaterial']);
-					tSubFrameBufferInfo['frameBuffer'].unbind(tGL);
-					prevWidth = tSubFrameBufferInfo['frameBuffer']['width']
-					prevHeight = tSubFrameBufferInfo['frameBuffer']['height']
+				tSubFrameBufferLigt = effect['subFrameBufferList']
+				if ( tSubFrameBufferLigt && tSubFrameBufferLigt.length ) {
+					tSubFrameBufferLigt.forEach(function (v) {
+						v['frameBuffer']['width'] = tViewRect[2]
+						v['frameBuffer']['height'] = tViewRect[3]
+						v['frameBuffer'].bind(tGL);
+						tGL.clear(tGL.COLOR_BUFFER_BIT | tGL.DEPTH_BUFFER_BIT);
+						redRenderer.sceneRender(redGL, tCamera, tCamera['orthographicYn'], redScene['children'], time, renderInfo, v['renderMaterial']);
+						v['frameBuffer'].unbind(tGL);
+						prevWidth = v['frameBuffer']['width']
+						prevHeight = v['frameBuffer']['height']
+						// 서브 신버퍼에 프로세스 처리
+						if ( v['process'] && v['process'].length ) {
+							v['process'].forEach(function (effect) {
+								draw(redGL, effect, postEffectChildren, redScene, redRenderer, time, renderInfo)
+							})
+						}
+					})
 				}
 				// 이펙트 처리
 				if ( effect['frameBuffer'] ) {
@@ -308,12 +313,6 @@ var RedPostEffectManager;
 					// 현재 이펙트를 최종 텍스쳐로 기록하고 다음 이펙트가 있을경우 활용한다.
 					lastFrameBufferTexture = effect['frameBuffer']['texture']
 					// console.log(effect)
-				}
-				// 서브 신버퍼에 프로세스 처리
-				if ( tSubFrameBufferInfo && tSubFrameBufferInfo['process'] ) {
-					tSubFrameBufferInfo['process'].forEach(function (effect) {
-						draw(redGL, effect, postEffectChildren, redScene, redRenderer, time, renderInfo)
-					})
 				}
 			};
 			return (function () {

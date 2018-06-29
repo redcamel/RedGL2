@@ -45,6 +45,11 @@
 			tRenderer = RedRenderer();
 			// 뷰생성 및 적용
 			tWorld.addView(RedView('test', this, tScene, tController));
+			tWorld.addView(RedView('test2', this, tScene, tController));
+			RedView('test').setSize('50%', '100%')
+			RedView('test').setLocation('0%', '0%')
+			RedView('test2').setSize('50%', '100%')
+			RedView('test2').setLocation('50%', '0%')
 			// 라이트 설정
 			var testDLight, testALight, testPLight;
 			testDLight = RedDirectionalLight(this, '#fff', 1)
@@ -95,6 +100,7 @@
 			var effect;
 			effect = RedPostEffect_Gray(this);
 			RedView('test')['postEffectManager'].addEffect(effect)
+			RedView('test2')['postEffectManager'].addEffect(effect)
 			var fxaa
 			RedView('test')['postEffectManager']['antialiasing'] = fxaa = RedPostEffect_FXAA(this)
 			testUI(this, tScene, effect, fxaa)
