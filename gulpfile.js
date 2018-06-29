@@ -74,6 +74,7 @@ gulp.task('make-doc', function () {
 		"src/base/RedBaseObject3D.js",
 		"src/base/RedBaseContainer.js",
 		"src/base/RedBaseLight.js",
+		"src/base/RedBaseTexture.js",
 		"src/base/RedBaseMaterial.js",
 		"src/frameBuffer/RedFrameBuffer.js",
 		"src/geometry/RedBuffer.js",
@@ -85,6 +86,7 @@ gulp.task('make-doc', function () {
 		"src/loader/JsonModelLoader.js",
 		"src/loader/obj/RedMTLLoader.js",
 		"src/loader/obj/RedOBJLoader.js",
+		"src/loader/dae/RedDAELoader.js",
 		"src/material/RedColorMaterial.js",
 		"src/material/RedColorPhongMaterial.js",
 		"src/material/RedColorPhongTextureMaterial.js",
@@ -149,6 +151,7 @@ gulp.task('make-doc', function () {
 		"src/resources/RedVideoTexture.js",
 		"src/resources/RedAtlasTexture.js",
 		"src/resources/RedBitmapCubeTexture.js",
+		"src/resources/RedDDSTexture.js",
 		"src/RedView.js",
 		"src/RedWorld.js",
 		"src/RedScene.js",
@@ -170,6 +173,10 @@ gulp.task('combine-js', function () {
 		"src/RedXR.js",
 		//
 		"src/base/RedDefinePropertyInfo.js",
+		"src/base/RedBaseTexture.js",
+		"src/base/RedBaseObject3D.js",
+		"src/base/RedBaseContainer.js",
+		"src/base/RedBaseLight.js",
 		//
 		"src/frameBuffer/RedFrameBuffer.js",
 		//
@@ -185,6 +192,7 @@ gulp.task('combine-js', function () {
 		"src/resources/RedBitmapTexture.js",
 		"src/resources/RedVideoTexture.js",
 		"src/resources/RedAtlasTexture.js",
+		"src/resources/RedDDSTexture.js",
 		"src/resources/RedBitmapCubeTexture.js",
 		// 재질
 		"src/material/RedColorMaterial.js",
@@ -200,10 +208,6 @@ gulp.task('combine-js', function () {
 		"src/material/RedStandardMaterial.js",
 		"src/material/RedVideoMaterial.js",
 		//
-		"src/base/RedBaseObject3D.js",
-		"src/base/RedBaseContainer.js",
-		"src/base/RedBaseLight.js",
-		//
 		"src/light/RedAmbientLight.js",
 		"src/light/RedDirectionalLight.js",
 		"src/light/RedPointLight.js",
@@ -211,6 +215,7 @@ gulp.task('combine-js', function () {
 		"src/loader/JsonModelLoader.js",
 		"src/loader/obj/RedMTLLoader.js",
 		"src/loader/obj/RedOBJLoader.js",
+		"src/loader/dae/RedDAELoader.js",
 		//
 		"src/object3D/RedAxis.js",
 		"src/object3D/RedGrid.js",

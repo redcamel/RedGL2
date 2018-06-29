@@ -375,7 +375,6 @@ var RedRenderer;
 		};
 		return function (redGL, time) {
 			var gl;
-			var tViewRect;
 			var tScene;
 			var tRenderInfo
 			var tPerspectiveMTX;
@@ -396,8 +395,10 @@ var RedRenderer;
 			self['renderInfo'] = {}
 			self['cacheInfo']['cacheAttrInfo'].length = 0
 			self['world']['_viewList'].forEach(function (tView) {
+
 				///////////////////////////////////
 				// view의 위치/크기결정
+				var tViewRect;
 				tViewRect = tView['_viewRect']
 				tViewRect[0] = tView['_x'];
 				tViewRect[1] = tView['_y'];
@@ -487,17 +488,17 @@ var RedRenderer;
 					self['cacheState']['blendDst'] = gl.ONE_MINUS_SRC_ALPHA
 				}
 				// 포스트이펙트 확인
-				if ( tScene['postEffectManager']['postEffectList'].length ) {
-					tScene['postEffectManager'].bind(gl);
+				if ( tView['postEffectManager']['postEffectList'].length ) {
+					tView['postEffectManager'].bind(gl);
 					mat4.perspective(
 						tPerspectiveMTX,
 						tCamera['fov'] * Math.PI / 180,
-						tScene['postEffectManager']['frameBuffer']['width'] / tScene['postEffectManager']['frameBuffer']['height'],
+						tView['postEffectManager']['frameBuffer']['width'] / tView['postEffectManager']['frameBuffer']['height'],
 						tCamera['nearClipping'],
 						tCamera['farClipping']
 					);
-					gl.viewport(0, 0, tScene['postEffectManager']['frameBuffer']['width'], tScene['postEffectManager']['frameBuffer']['height']);
-					gl.scissor(0, 0, tScene['postEffectManager']['frameBuffer']['width'], tScene['postEffectManager']['frameBuffer']['height']);
+					gl.viewport(0, 0, tView['postEffectManager']['frameBuffer']['width'], tView['postEffectManager']['frameBuffer']['height']);
+					gl.scissor(0, 0, tView['postEffectManager']['frameBuffer']['width'], tView['postEffectManager']['frameBuffer']['height']);
 				}
 				///////////////////////////////
 				// 실제렌더 계산
@@ -516,7 +517,7 @@ var RedRenderer;
 				// 디버깅 라이트 업데이트
 				if ( lightDebugRenderList.length ) self.sceneRender(redGL, tCamera, tCamera['orthographicYn'], lightDebugRenderList, time, tRenderInfo);
 				// 포스트이펙트 최종렌더
-				if ( tScene['postEffectManager']['postEffectList'].length ) tScene['postEffectManager'].render(redGL, gl, self, tView, time, tRenderInfo)
+				if ( tView['postEffectManager']['postEffectList'].length ) tView['postEffectManager'].render(redGL, gl, self, tView, time, tRenderInfo)
 			})
 			if ( this['renderDebuger']['visible'] ) this['renderDebuger'].update(redGL, self['renderInfo'])
 		}

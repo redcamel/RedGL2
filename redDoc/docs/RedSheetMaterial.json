@@ -1,0 +1,26 @@
+[
+  {
+    "title": "diffuseTexture",
+    "return": "RedSheetMaterial"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedSheetMaterial",
+    "description": "\nRedSheetMaterial Instance 생성\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ],
+      "diffuseTexture": [
+        {
+          "type": "RedBitmapTexture"
+        },
+        "RedBitmapTexture Instance"
+      ]
+    },
+    "example": "\nRedSheetMaterial(RedGL Instance, RedBitmapTexture(RedGL Instance, src))\n",
+    "return": "RedSheetMaterial Instance"
+  }
+]

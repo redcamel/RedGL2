@@ -12,6 +12,8 @@ var RedStandardMaterial;
 
 		 varying vec4 vVertexPositionEye4;
 		 varying highp vec4 vShadowPos;
+		 const mat4 cTexUnitConverter = mat4(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.5, 0.5, 0.5, 1.0);
+		 varying float vUseDirectionalShadow;
 		 void main(void) {
 			 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
 			 vVertexNormal = vec3(uNMatrix * vec4(aVertexNormal,1.0));
@@ -25,8 +27,10 @@ var RedStandardMaterial;
 			 gl_Position = uPMatrix * uCameraMatrix * vVertexPositionEye4;
 
 			 vResolution = uResolution;
-		     mat4 texUnitConverter = mat4(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.5, 0.5, 0.5, 1.0);
-			 vShadowPos = texUnitConverter  *  uDirectionalShadowLightMatrix * uMMatrix * vec4(aVertexPosition, 1.0);
+			 if(uUseDirectionalShadow){
+			    vShadowPos = cTexUnitConverter  *  uDirectionalShadowLightMatrix * uMMatrix * vec4(aVertexPosition, 1.0);
+			    vUseDirectionalShadow = 1.0;
+			 }
 		 }
 		 */
 	}
@@ -44,6 +48,7 @@ var RedStandardMaterial;
 
 		 varying vec4 vVertexPositionEye4;
 		 varying highp vec4 vShadowPos;
+		 varying float vUseDirectionalShadow;
 		 float fogFactor(float perspectiveFar, float density){
 			 float flog_cord = gl_FragCoord.z / gl_FragCoord.w / perspectiveFar;
 			 float fog = flog_cord * density;
@@ -74,7 +79,7 @@ var RedStandardMaterial;
 			 if(texelColor.a ==0.0) discard;
 
 			///////////////////////////////////////////////////////////////////////////////////////
-			if(uUseDirectionalShadow){
+			if(vUseDirectionalShadow != 0.0){
 				vec3 fragmentDepth = vShadowPos.xyz;
 	            float shadowAcneRemover = 0.0007;
 	            fragmentDepth.z -= shadowAcneRemover;
@@ -153,10 +158,6 @@ var RedStandardMaterial;
 			 finalColor.a = texelColor.a;
 			 if(uUseFog) gl_FragColor = fog( fogFactor(uFogDistance, uFogDensity), uFogColor, finalColor);
 			 else gl_FragColor = finalColor;
-
-
-
-
 		 }
 		 */
 	}

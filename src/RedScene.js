@@ -191,16 +191,7 @@ var RedScene;
 				return _axisMesh
 			}
 		})
-		/**DOC:
-		 {
-			 title :`postEffectManager`,
-			 description : `
-				 postEffectManager
-			 `,
-			 return : 'RedPostEffectManager Instance'
-		 }
-		 :DOC*/
-		this['postEffectManager'] = RedPostEffectManager(redGL)
+
 		this['shadowManager'] = RedShadowManager(redGL)
 		this['_lightInfo'] = {
 			RedAmbientLight: null,

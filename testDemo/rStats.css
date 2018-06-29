@@ -1,4 +1,4 @@
-.alarm{
+.alarm {
     color: #b70000;
     text-shadow: 0 0 0 #b70000,
     0 0 1px #fff,
@@ -11,7 +11,7 @@
     0 0 4px #fff;
 }
 
-.rs-base{
+.rs-base {
     position: absolute;
     z-index: 10000;
     padding: 10px;
@@ -25,7 +25,7 @@
     overflow: hidden;
 }
 
-.rs-base h1{
+.rs-base h1 {
     margin: 0;
     padding: 0;
     font-size: 1.4em;
@@ -34,44 +34,44 @@
     cursor: pointer;
 }
 
-.rs-base div.rs-group{
+.rs-base div.rs-group {
     margin-bottom: 10px;
 }
 
-.rs-base div.rs-group.hidden{
+.rs-base div.rs-group.hidden {
     display: none;
 }
 
-.rs-base div.rs-fraction{
+.rs-base div.rs-fraction {
     position: relative;
     margin-bottom: 5px;
 }
 
-.rs-base div.rs-fraction p{
+.rs-base div.rs-fraction p {
     width: 120px;
     text-align: right;
     margin: 0;
     padding: 0;
 }
 
-.rs-base div.rs-legend{
+.rs-base div.rs-legend {
     position: absolute;
     line-height: 1em;
 }
 
-.rs-base div.rs-counter-base{
+.rs-base div.rs-counter-base {
     position: relative;
     margin: 2px 0;
     height: 1em;
 }
 
-.rs-base span.rs-counter-id{
+.rs-base span.rs-counter-id {
     position: absolute;
     left: 0;
     top: 0;
 }
 
-.rs-base div.rs-counter-value{
+.rs-base div.rs-counter-value {
     position: absolute;
     left: 90px;
     width: 30px;
@@ -80,7 +80,7 @@
     text-align: right;
 }
 
-.rs-base canvas.rs-canvas{
+.rs-base canvas.rs-canvas {
     position: absolute;
     right: 0;
 }

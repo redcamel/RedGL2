@@ -1,0 +1,15 @@
+[
+  {
+    "constructorYn": true,
+    "title": "RedParticleColorMaterial",
+    "description": "\nRedParticleColorMaterial Instance 생성\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ]
+    },
+    "return": "RedParticleColorMaterial Instance"
+  }
+]

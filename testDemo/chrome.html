@@ -1,0 +1,205 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>RedEnvironmentMaterial</title>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
+    />
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+    </style>
+    <script src="../release/RedGL.min.js"></script>
+</head>
+
+<body>
+<canvas id="test" style="border: none;background:red"></canvas>
+<script>
+	var testUI;
+	document.getElementById('test')
+	RedGL(document.getElementById('test'), function (v) {
+		if ( v ) {
+			console.log('초기화 성공!')
+			var tWorld, tScene, tCamera, tRenderer;
+			var self = this
+			// 월드 생성
+			this['world'] = tWorld = RedWorld();
+			// 씬 생성
+			tScene = RedScene(this);
+			// 카메라 생성
+			tCamera = RedObitController(this);
+			tCamera.distance = 10
+			// 렌더러 생성
+			tRenderer = RedRenderer();
+			// 뷰생성 및 적용
+			tWorld.addView(RedView('test', this, tScene, tCamera));
+			tScene.useFog = true
+			tScene.fogColor = '#000'
+			tScene.fogDensity = 0.2
+			tScene.fogDistance = 1500
+			RedView('test').setSize('100%', 500)
+			// 그리드 설정
+//			tScene['grid'] = RedGrid(this)
+			// 라이트 설정
+			var tLight = RedDirectionalLight(this)
+			tScene.addLight(tLight)
+			tLight.x = 10
+			tLight.y = 5
+			tLight.z = 5
+			var tLight2 = RedDirectionalLight(this)
+			tScene.addLight(tLight2)
+			tLight2.x = -10
+			tLight2.y = 5
+			tLight2.z = 5
+			var tLight3 = RedDirectionalLight(this)
+			tScene.addLight(tLight3)
+			tLight3.x = 0
+			tLight3.y = 20
+			tLight3.z = -10
+			var tLight4 = RedDirectionalLight(this)
+			tScene.addLight(tLight4)
+			tLight4.x = 0
+			tLight4.y = -20
+			tLight4.z = -10
+			tScene.skyBox =
+				RedSkyBox(this, [
+					'../asset/cubemap/SwedishRoyalCastle/px.jpg',
+					'../asset/cubemap/SwedishRoyalCastle/nx.jpg',
+					'../asset/cubemap/SwedishRoyalCastle/ny.jpg',
+					'../asset/cubemap/SwedishRoyalCastle/py.jpg',
+					'../asset/cubemap/SwedishRoyalCastle/pz.jpg',
+					'../asset/cubemap/SwedishRoyalCastle/nz.jpg'
+				]);
+			// Mesh 설정
+			var tEnvironmentTexture = RedBitmapCubeTexture(this, [
+				'../asset/cubemap/SwedishRoyalCastle/px.jpg',
+				'../asset/cubemap/SwedishRoyalCastle/nx.jpg',
+				'../asset/cubemap/SwedishRoyalCastle/ny.jpg',
+				'../asset/cubemap/SwedishRoyalCastle/py.jpg',
+				'../asset/cubemap/SwedishRoyalCastle/pz.jpg',
+				'../asset/cubemap/SwedishRoyalCastle/nz.jpg'
+			])
+			var tMaterialR = RedEnvironmentMaterial(
+				this, RedBitmapTexture(this, '../asset/r.png'),
+				tEnvironmentTexture,
+			)
+			var tMaterialG = RedEnvironmentMaterial(
+				this, RedBitmapTexture(this, '../asset/g.png'),
+				tEnvironmentTexture
+			)
+			var tMaterialY = RedEnvironmentMaterial(
+				this, RedBitmapTexture(this, '../asset/y.png'),
+				tEnvironmentTexture
+			)
+			var tMaterialB = RedEnvironmentMaterial(
+				this, RedBitmapTexture(this, '../asset/b.png'),
+				tEnvironmentTexture
+			)
+			var innerMaterial = RedEnvironmentMaterial(
+				this, RedBitmapTexture(this, '../asset/r.png'),
+				tEnvironmentTexture
+			)
+			tMaterialR.reflectionPower = tMaterialG.reflectionPower = tMaterialB.reflectionPower = tMaterialY.reflectionPower = 0.5
+			tMaterialB.reflectionPower = 0.1
+			tMaterialR.shininess = tMaterialG.shininess = tMaterialB.shininess = tMaterialY.shininess = 92
+			var tModel, tModel2
+			RedOBJLoader(this, '../asset/obj/chrome/', 'chrome.obj', function (v) {
+				tModel = v['resultMesh']
+				tModel.useCullFace = false
+//				tMesh.drawMode = self.gl.POINTS
+				tModel.removeChild(tModel['children'][3])
+				tModel.children[0].material = tMaterialG
+				tModel.children[1].material = tMaterialY
+				tModel.children[2].material = tMaterialR
+				tModel.children[3].material = tMaterialB
+				console.log(v)
+//				tMesh.scaleX = tMesh.scaleY = v['resultMesh'].scaleZ = 0.025
+				tScene.addChild(tModel)
+			})
+			RedOBJLoader(this, '../asset/obj/chrome/', 'chrome.obj', function (v) {
+				tModel2 = v['resultMesh']
+				tModel2.useCullFace = false
+				tModel2.removeChild(tModel2['children'][3])
+				tModel2.children[0].material = innerMaterial
+				tModel2.children[1].material = innerMaterial
+				tModel2.children[2].material = innerMaterial
+				tModel2.children[3].material = innerMaterial
+				console.log(v)
+//				tMesh.scaleX = tMesh.scaleY = v['resultMesh'].scaleZ = 0.025
+				tScene.addChild(tModel2)
+				tModel2.scaleX = tModel2.scaleY = tModel2.scaleZ = 0.8
+			});
+			var tPointCloud
+			(function () {
+				var testMaterial
+				testMaterial = RedPointBitmapMaterial(self, RedBitmapTexture(self, '../asset/particle.png'))
+				var interleaveData
+				interleaveData = []
+				var i = 200000
+				while ( i-- ) {
+					interleaveData.push(Math.random() * 50 - 25, Math.random() * 50 - 25, Math.random() * 50 - 25)
+					interleaveData.push(Math.random() * 6)
+				}
+				interleaveData = new Float32Array(interleaveData)
+				tPointCloud = RedPointUnit(
+					self,
+					interleaveData,
+					[
+						RedInterleaveInfo('aVertexPosition', 3),
+						RedInterleaveInfo('aPointSize', 1)
+					],
+					testMaterial
+				)
+//			testParticle['useDepthTest'] = false
+				tPointCloud['blendSrc'] = self.gl.SRC_ALPHA
+				tPointCloud['blendDst'] = self.gl.ONE
+				tScene.addChildAt(tPointCloud, 0)
+			})();
+			///////////////////////////
+			var aa = {
+				max: 10000,
+				emitCount: 100,
+				lifeTime: [500, 2000],
+				gravity: 0,
+			}
+			var testParticle = new RedParticleEmitter(this, aa, RedParticleBitmapMaterial(this, RedBitmapTexture(this, '../asset/particle.png')))
+			var tMesh = RedMesh(this, RedSphere(this, 0.05), RedColorPhongMaterial(this))
+			tScene.addChild(tMesh)
+			tMesh.addChild(testParticle)
+			///////////////////////////
+			// 렌더시작
+			tRenderer.start(this, function (time) {
+				if ( tModel ) tModel.rotationZ += 0.3
+				if ( tModel2 ) {
+					tModel2.rotationX += 0.16
+					tModel2.rotationY += 0.16
+					tModel2.rotationZ += 0.16
+				}
+				tCamera.pan += 0.1
+//				tLight.x = Math.sin(time / 1000) * 5
+//				tLight.z = Math.cos(time / 1000) * 5
+//				tLight2.x = -Math.sin(time / 1000) * 5
+//				tLight2.z = -Math.cos(time / 1000) * 5
+				tPointCloud.rotationX += 0.01
+				tPointCloud.rotationY += 0.01
+				tPointCloud.rotationZ += 0.01
+				testParticle.x = tMesh.x = Math.sin(time / 500) * 3
+				testParticle.y = tMesh.y = Math.sin(time / 1500) * 3
+				testParticle.z = tMesh.z = Math.cos(time / 500) * 3
+				testParticle.update(time)
+			})
+		} else {
+			console.log('초기화 실패!')
+		}
+	})
+</script>
+</body>
+
+</html>

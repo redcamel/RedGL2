@@ -106,13 +106,10 @@ var RedDefinePropertyInfo;
 				}
 				break
 			case 'sampler2D' :
-				samplerTypeKey = 'RedBitmapTexture';
+				samplerTypeKey = 'RedBaseTexture';
 				break
 			case 'samplerCube' :
 				samplerTypeKey = 'RedBitmapCubeTexture';
-				break
-			case 'samplerVideo' :
-				samplerTypeKey = 'RedVideoTexture';
 				break
 			case 'samplerVideo' :
 				samplerTypeKey = 'RedVideoTexture';
