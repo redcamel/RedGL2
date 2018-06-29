@@ -107,11 +107,13 @@ var RedPostEffect_SSAO_PointMaker;
 		if ( !(this instanceof RedPostEffect_SSAO_PointMaker) ) return new RedPostEffect_SSAO_PointMaker(redGL);
 		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedPostEffect_SSAO_PointMaker : RedGL Instance만 허용됩니다.', redGL)
 		this['frameBuffer'] = RedFrameBuffer(redGL);
-		this['subFrameBufferInfo'] = {
-			frameBuffer: RedFrameBuffer(redGL),
-			renderMaterial: RedPostEffect_SSAO_DepthMaterial(redGL),
-			process: []
-		}
+		this['subFrameBufferList'] = [
+			{
+				frameBuffer: RedFrameBuffer(redGL),
+				renderMaterial: RedPostEffect_SSAO_DepthMaterial(redGL),
+				process: []
+			}
+		]
 		this['depthTexture'] = null;
 		this['range'] = 10;
 		this['factor2'] = 0.2;
@@ -120,7 +122,7 @@ var RedPostEffect_SSAO_PointMaker;
 		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		this['_UUID'] = RedGL['makeUUID']();
 		this.updateTexture = function (lastFrameBufferTexture, parentFrameBufferTexture) {
-			this['depthTexture'] = this['subFrameBufferInfo']['frameBuffer']['texture'];
+			this['depthTexture'] = this['subFrameBufferList'][0]['frameBuffer']['texture'];
 		}
 		this['bind'] = RedPostEffectManager.prototype['bind'];
 		this['unbind'] = RedPostEffectManager.prototype['unbind'];
