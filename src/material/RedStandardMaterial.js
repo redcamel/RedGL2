@@ -158,10 +158,6 @@ var RedStandardMaterial;
 			 finalColor.a = texelColor.a;
 			 if(uUseFog) gl_FragColor = fog( fogFactor(uFogDistance, uFogDensity), uFogColor, finalColor);
 			 else gl_FragColor = finalColor;
-
-
-
-
 		 }
 		 */
 	}

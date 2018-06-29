@@ -136,7 +136,7 @@
 	document.body.appendChild(t)
 	RedGL(t, function (v) {
 		var tGL;
-		var tWorld, tScene2D, tScene3D, tScene3D_2, tCamera, tCamera2, tCamera3;
+		var tWorld, tScene2D, tScene3D, tScene3D_2,tScene3D_3, tCamera, tCamera2, tCamera3;
 		var tRenderer;
 		var self;
 		self = this
@@ -147,6 +147,7 @@
 		tScene3D_2 = RedScene(this);
 		tScene3D_2.useBackgroundColor = false
 		tScene2D = RedScene(this);
+		tScene3D_3= RedScene(this);
 		tCamera = RedCamera();
 		tCamera2 = RedCamera();
 		tCamera3 = RedCamera();
@@ -155,11 +156,11 @@
 		tWorld.addView(RedView('test', tScene2D, tCamera));
 		tWorld.addView(RedView('test2', tScene3D, tCamera2));
 		tWorld.addView(RedView('test3', tScene3D_2, tCamera3));
-		tWorld.addView(RedView('test4', tScene3D, tCamera3));
+		tWorld.addView(RedView('test4', tScene3D_3, tCamera3));
 		RedView('test2').setSize('25%', '25%')
 		RedView('test3').setSize('35%', '25%')
 		RedView('test3').setLocation('0%', '50%')
-		RedView('test4').setSize('50%', '50%')
+		RedView('test4').setSize('100%', '100%')
 		RedView('test4').setLocation('50%', '50%')
 		// tScene3D.skyBox =
 		//     RedSkyBox(this, [
@@ -172,13 +173,14 @@
 		//     ])
 		// tScene3D['postEffectManager'].addEffect(RedPostEffect_Invert(this))
 		// tScene3D['postEffectManager'].addEffect(RedPostEffect_Blur(this))
-//		tScene3D['postEffectManager'].addEffect(RedPostEffect_Gray(this))
+		tScene3D['postEffectManager'].addEffect(RedPostEffect_Gray(this))
+		tScene3D_3['postEffectManager'].addEffect(RedPostEffect_Gray(this))
 		// tScene3D['postEffectManager'].addEffect(RedPostEffect_Pixelize(this))
 		// tScene3D['postEffectManager'].addEffect(RedPostEffect_Convolution(this, RedPostEffect_Convolution['EMBOSS']))
 		// tScene3D['postEffectManager'].addEffect(RedPostEffect_HueSaturation(this))
-		tScene3D['postEffectManager'].addEffect(RedPostEffect_Vignetting(this))
+//		tScene3D['postEffectManager'].addEffect(RedPostEffect_Vignetting(this))
 		// tScene3D['postEffectManager'].addEffect(RedPostEffect_BrightnessContrast(this))
-		tScene3D['postEffectManager'].addEffect(RedPostEffect_ZoomBlur(this))
+//		tScene3D['postEffectManager'].addEffect(RedPostEffect_ZoomBlur(this))
 		// tScene3D['postEffectManager'].addEffect(RedPostEffect_HalfTone(this))
 		var testMaterial, testMaterial2, testMaterial3, testMaterial4, testMaterial5, testMaterial6,
 			testMaterial7, testMaterial8
@@ -269,6 +271,7 @@
 			testMesh.rotationZ = Math.random() * 360
 			tScene3D.addChild(testMesh)
 			tScene3D_2.addChild(testMesh)
+			tScene3D_3.addChild(testMesh)
 			// if (Math.random() > 0.8) {
 			//     subTest = RedMesh(this, boxGeo, testMaterial2)
 			//     subTest.scaleX = subTest.scaleY = subTest.scaleZ = 0.5
