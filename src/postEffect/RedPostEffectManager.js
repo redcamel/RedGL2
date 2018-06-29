@@ -208,7 +208,6 @@ var RedPostEffectManager;
 								tCamera['farClipping']
 							)
 							mat4.scale(tPerspectiveMTX, tPerspectiveMTX, [1, -1, 1]);
-
 							tValueStr = JSON.stringify(tPerspectiveMTX)
 							if ( tCacheSystemUniformInfo[tUUID] != tValueStr ) {
 								gl.uniformMatrix4fv(tLocation, false, tPerspectiveMTX);
@@ -283,13 +282,17 @@ var RedPostEffectManager;
 					tSubFrameBufferInfo['frameBuffer']['width'] = tViewRect[2]
 					tSubFrameBufferInfo['frameBuffer']['height'] = tViewRect[3]
 					tSubFrameBufferInfo['frameBuffer'].bind(tGL);
-					tGL.viewport(0, 0, tViewRect[2], tViewRect[3]);
-					tGL.scissor(0, 0, tViewRect[2], tViewRect[3]);
 					tGL.clear(tGL.COLOR_BUFFER_BIT | tGL.DEPTH_BUFFER_BIT);
 					redRenderer.sceneRender(redGL, tCamera, tCamera['orthographicYn'], redScene['children'], time, renderInfo, tSubFrameBufferInfo['renderMaterial']);
 					tSubFrameBufferInfo['frameBuffer'].unbind(tGL);
 					prevWidth = tSubFrameBufferInfo['frameBuffer']['width']
 					prevHeight = tSubFrameBufferInfo['frameBuffer']['height']
+				}
+				// 서브 신버퍼에 프로세스 처리
+				if ( tSubFrameBufferInfo && tSubFrameBufferInfo['process'] ) {
+					tSubFrameBufferInfo['process'].forEach(function (effect) {
+						draw(redGL, effect, postEffectChildren, redScene, redRenderer, time, renderInfo)
+					})
 				}
 				// 이펙트 처리
 				if ( effect['frameBuffer'] ) {
@@ -308,12 +311,6 @@ var RedPostEffectManager;
 					// 현재 이펙트를 최종 텍스쳐로 기록하고 다음 이펙트가 있을경우 활용한다.
 					lastFrameBufferTexture = effect['frameBuffer']['texture']
 					// console.log(effect)
-				}
-				// 서브 신버퍼에 프로세스 처리
-				if ( tSubFrameBufferInfo && tSubFrameBufferInfo['process'] ) {
-					tSubFrameBufferInfo['process'].forEach(function (effect) {
-						draw(redGL, effect, postEffectChildren, redScene, redRenderer, time, renderInfo)
-					})
 				}
 			};
 			return (function () {
