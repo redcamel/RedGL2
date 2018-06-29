@@ -36,12 +36,12 @@ var RedView;
 		 return : 'RedView Instance'
 	 }
 	 :DOC*/
-	RedView = function (key, scene, camera) {
+	RedView = function (key, redGL, scene, camera) {
 		if ( ViewMap[key] ) {
 			if ( scene || camera ) RedGLUtil.throwFunc('RedView : ' + key, '는 이미 생성된 RedView key입니다.', '입력값 : ' + key)
 			else return ViewMap[key]
 		}
-		if ( !(this instanceof RedView) ) return new RedView(key, scene, camera);
+		if ( !(this instanceof RedView) ) return new RedView(key, redGL, scene, camera);
 		if ( !(typeof key == 'string') ) RedGLUtil.throwFunc('RedView : key : 문자열만 허용', '입력값 : ' + key)
 		if ( !scene && !camera ) RedGLUtil.throwFunc('RedView : 존재하지 않는 key입니다.', '입력값 : ' + key)
 		if ( scene && !(scene instanceof RedScene) ) RedGLUtil.throwFunc('RedView : RedScene Instance만 허용', '입력값 : ' + scene)
@@ -70,6 +70,16 @@ var RedView;
 		 }
 		 :DOC*/
 		this['scene'] = scene;
+		/**DOC:
+		 {
+			 title :`postEffectManager`,
+			 description : `
+				 postEffectManager
+			 `,
+			 return : 'RedPostEffectManager Instance'
+		 }
+		 :DOC*/
+		this['postEffectManager'] = RedPostEffectManager(redGL)
 		/**DOC:
 		 {
 			 title :`camera`,

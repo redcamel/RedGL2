@@ -25,54 +25,42 @@
 <canvas id="test" style="border: none;background:red"></canvas>
 <script>
 	var testUI;
-	document.getElementById( 'test' )
-	RedGL( document.getElementById( 'test' ), function ( v ) {
+	document.getElementById('test')
+	RedGL(document.getElementById('test'), function (v) {
 		if ( v ) {
-			console.log( '초기화 성공!' )
+			console.log('초기화 성공!')
 			var tWorld, tScene3D, tCamera, tRenderer;
-
 			// 월드 생성
 			this['world'] = tWorld = RedWorld();
-
 			// 씬 생성
-			tScene3D = RedScene( this );
-
+			tScene3D = RedScene(this);
 			// 카메라 생성
 			tCamera = RedCamera();
-
 			// 렌더러 생성
 			tRenderer = RedRenderer();
-
 			// 뷰생성 및 적용
-			tWorld.addView( RedView( 'test', tScene3D, tCamera ) );
-
+			tWorld.addView(RedView('test',this, tScene3D, tCamera));
 			// 그리드 설정
-			tScene3D['grid'] = RedGrid( this )
-
-
+			tScene3D['grid'] = RedGrid(this)
 			// 렌더시작
-			tRenderer.start( this, function ( time ) {
-				tCamera.x = Math.sin( time / 1500 ) * 10
-				tCamera.y = Math.cos( time / 1500 ) * 10
-				tCamera.z = Math.cos( time / 1500 ) * 15 + Math.sin( time / 1500 ) * 15
-				tCamera.lookAt( 0, 0, 0 )
-			} )
-
+			tRenderer.start(this, function (time) {
+				tCamera.x = Math.sin(time / 1500) * 10
+				tCamera.y = Math.cos(time / 1500) * 10
+				tCamera.z = Math.cos(time / 1500) * 15 + Math.sin(time / 1500) * 15
+				tCamera.lookAt(0, 0, 0)
+			})
 			// 렌더 디버거 활성화
 			tRenderer['renderDebuger']['visible'] = true
-
 			//
-			testUI( this )
+			testUI(this)
 		} else {
-			console.log( '초기화 실패!' )
+			console.log('초기화 실패!')
 		}
-	} )
-	testUI = function ( redGL ) {
-		console.log( 'test' )
-		var gui = new baseTestUI( redGL )
+	})
+	testUI = function (redGL) {
+		console.log('test')
+		var gui = new baseTestUI(redGL)
 		gui.initRedGL().open()
-
-
 	}
 </script>
 </body>

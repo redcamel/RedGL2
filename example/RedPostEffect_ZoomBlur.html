@@ -44,7 +44,7 @@
 			// 렌더러 생성
 			tRenderer = RedRenderer();
 			// 뷰생성 및 적용
-			tWorld.addView(RedView('test', tScene, tController));
+			tWorld.addView(RedView('test', this, tScene, tController));
 			// 라이트 설정
 			var testDLight, testALight, testPLight;
 			testDLight = RedDirectionalLight(this, '#fff', 1)
@@ -94,7 +94,7 @@
 			// 이펙트 적용
 			var effect;
 			effect = RedPostEffect_ZoomBlur(this);
-			tScene['postEffectManager'].addEffect(effect)
+			RedView('test')['postEffectManager'].addEffect(effect)
 			testUI(this, tScene, effect)
 		} else {
 			console.log('초기화 실패!')

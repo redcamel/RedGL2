@@ -147,7 +147,7 @@
 		tScene3D = RedScene(this);
 		tCamera = RedObitController(this);
 		tRenderer = RedRenderer();
-		tWorld.addView(RedView('test', tScene3D, tCamera));
+		tWorld.addView(RedView('test', this,tScene3D, tCamera));
 		RedView('test').setSize('100%', '100%')
 		RedView('test').setLocation('0%', '0%')
 		var t0 = RedMesh(this, RedPlane(this), RedBitmapMaterial(this, RedDDSTexture(this, '../asset/dxt/test_dxt1.dds')))

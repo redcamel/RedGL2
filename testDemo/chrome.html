@@ -39,7 +39,7 @@
 			// 렌더러 생성
 			tRenderer = RedRenderer();
 			// 뷰생성 및 적용
-			tWorld.addView(RedView('test', tScene, tCamera));
+			tWorld.addView(RedView('test', this, tScene, tCamera));
 			tScene.useFog = true
 			tScene.fogColor = '#000'
 			tScene.fogDensity = 0.2

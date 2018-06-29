@@ -25,85 +25,73 @@
 <canvas id="test" style="border: none;background:red"></canvas>
 <script>
 	var testUI;
-	document.getElementById( 'test' )
-	RedGL( document.getElementById( 'test' ), function ( v ) {
+	document.getElementById('test')
+	RedGL(document.getElementById('test'), function (v) {
 		if ( v ) {
-			console.log( '초기화 성공!' )
+			console.log('초기화 성공!')
 			var tWorld, tScene, tCamera, tRenderer;
-
 			// 월드 생성
 			this['world'] = tWorld = RedWorld();
-
 			// 씬 생성
-			tScene = RedScene( this );
-
+			tScene = RedScene(this);
 			// 카메라 생성
 			tCamera = RedObitController(this);
 			tCamera.pan = 45
 			tCamera.tilt = -45
 			tCamera.distance = 10
-
 			// 렌더러 생성
 			tRenderer = RedRenderer();
-
 			// 뷰생성 및 적용
-			tWorld.addView( RedView( 'test', tScene, tCamera ) );
-
+			tWorld.addView(RedView('test', this,tScene, tCamera));
 			// 그리드 설정
-			tScene['grid'] = RedGrid( this )
-
+			tScene['grid'] = RedGrid(this)
 			// 라이트 설정
-			var tLight = RedDirectionalLight( this )
-			tScene.addLight( tLight )
+			var tLight = RedDirectionalLight(this)
+			tScene.addLight(tLight)
 			tLight.x = 10
 			tLight.y = 10
 			tLight.z = 10
-
 			// Box 설정
 			var tSphere, tSphere2, tSphere3;
-			var tMaterial = RedColorMaterial( this, '#ff0000' )
-			var tMaterial2 = RedColorPhongTextureMaterial( this, '#ff0000' )
-			var tMaterial3 = RedColorPhongMaterial( this, '#ff0000' )
-			var tNormalTexture = RedBitmapTexture( this, '../asset/normalTest.jpg' )
-			var tSpecularTexture = RedBitmapTexture( this, '../asset/specular.png' )
-			var tDisplacementTexture = RedBitmapTexture( this, '../asset/displacementTest.jpg' )
-			tSphere = RedMesh( this, RedSphere( this, 1, 32, 32, 32 ), tMaterial )
+			var tMaterial = RedColorMaterial(this, '#ff0000')
+			var tMaterial2 = RedColorPhongTextureMaterial(this, '#ff0000')
+			var tMaterial3 = RedColorPhongMaterial(this, '#ff0000')
+			var tNormalTexture = RedBitmapTexture(this, '../asset/normalTest.jpg')
+			var tSpecularTexture = RedBitmapTexture(this, '../asset/specular.png')
+			var tDisplacementTexture = RedBitmapTexture(this, '../asset/displacementTest.jpg')
+			tSphere = RedMesh(this, RedSphere(this, 1, 32, 32, 32), tMaterial)
 			tSphere.x = 0
-			tScene.addChild( tSphere )
-			tSphere2 = RedMesh( this, RedSphere( this, 1, 32, 32, 32 ), tMaterial2 )
+			tScene.addChild(tSphere)
+			tSphere2 = RedMesh(this, RedSphere(this, 1, 32, 32, 32), tMaterial2)
 			tSphere2.x = 3
-			tScene.addChild( tSphere2 )
-			tSphere3 = RedMesh( this, RedSphere( this, 1, 32, 32, 32 ), tMaterial3 )
+			tScene.addChild(tSphere2)
+			tSphere3 = RedMesh(this, RedSphere(this, 1, 32, 32, 32), tMaterial3)
 			tSphere3.x = -3
-			tScene.addChild( tSphere3 )
-
+			tScene.addChild(tSphere3)
 			// 렌더시작
-			tRenderer.start( this, function ( time ) {
-				tCamera.x = Math.sin( time / 1500 ) * 10
-				tCamera.y = Math.cos( time / 1500 ) * 10
-				tCamera.z = Math.cos( time / 1500 ) * 15 + Math.sin( time / 1500 ) * 15
-			} )
-
+			tRenderer.start(this, function (time) {
+				tCamera.x = Math.sin(time / 1500) * 10
+				tCamera.y = Math.cos(time / 1500) * 10
+				tCamera.z = Math.cos(time / 1500) * 15 + Math.sin(time / 1500) * 15
+			})
 			// 렌더 디버거 활성화
 			tRenderer['renderDebuger']['visible'] = true
-
 			//
-			testUI( this, tCamera, tScene, tMaterial, tMaterial2, tMaterial3, tNormalTexture, tSpecularTexture, tDisplacementTexture )
+			testUI(this, tCamera, tScene, tMaterial, tMaterial2, tMaterial3, tNormalTexture, tSpecularTexture, tDisplacementTexture)
 		} else {
-			console.log( '초기화 실패!' )
+			console.log('초기화 실패!')
 		}
-	} )
-	testUI = function ( redGL, tCamera, tScene, tMaterial, tMaterial2, tMaterial3, tNormalTexture, tSpecularTexture, tDisplacementTexture ) {
-		console.log( 'test' )
-		var gui = new baseTestUI( redGL )
+	})
+	testUI = function (redGL, tCamera, tScene, tMaterial, tMaterial2, tMaterial3, tNormalTexture, tSpecularTexture, tDisplacementTexture) {
+		console.log('test')
+		var gui = new baseTestUI(redGL)
 		gui.initRedGL()
-		gui.initScene( tScene )
+		gui.initScene(tScene)
 		var test = {
 			drawMode: 'TRIANGLES',
 			pointSize: 1
-
 		}
-		var t0 = gui['gui'].addFolder( 'colorPhongMaterial' )
+		var t0 = gui['gui'].addFolder('colorPhongMaterial')
 		var testColorPhong = function () {
 			this.color = '#ff0000'
 			this.normalTexture = false
@@ -114,36 +102,36 @@
 			this.specularPower = 1
 		}
 		testColorPhong = new testColorPhong()
-		t0.addColor( testColorPhong, 'color' ).onChange( function ( v ) {
+		t0.addColor(testColorPhong, 'color').onChange(function (v) {
 			tMaterial3.color = v
-		} )
-		t0.add( testColorPhong, 'normalPower', 0, 3 ).onChange( function ( v ) {
+		})
+		t0.add(testColorPhong, 'normalPower', 0, 3).onChange(function (v) {
 			tMaterial2['normalPower'] = v
-		} )
-		t0.add( testColorPhong, 'shininess', 1, 128 ).onChange( function ( v ) {
+		})
+		t0.add(testColorPhong, 'shininess', 1, 128).onChange(function (v) {
 			tMaterial3['shininess'] = v
-		} )
-		t0.add( testColorPhong, 'specularPower', 0.1, 10 ).onChange( function ( v ) {
+		})
+		t0.add(testColorPhong, 'specularPower', 0.1, 10).onChange(function (v) {
 			tMaterial3['specularPower'] = v
-		} )
-		t0.add( testColorPhong, 'normalTexture' ).onChange( function ( v ) {
+		})
+		t0.add(testColorPhong, 'normalTexture').onChange(function (v) {
 			tMaterial2['_normalTexture'] = v ? tNormalTexture : null
-		} )
-		t0.add( testColorPhong, 'specularTexture' ).onChange( function ( v ) {
+		})
+		t0.add(testColorPhong, 'specularTexture').onChange(function (v) {
 			tMaterial2['_specularTexture'] = v ? tSpecularTexture : null
-		} )
-		t0.add( testColorPhong, 'displacementTexture' ).onChange( function ( v ) {
+		})
+		t0.add(testColorPhong, 'displacementTexture').onChange(function (v) {
 			tMaterial2['_displacementTexture'] = v ? tDisplacementTexture : null
-		} )
-		t0.add( tMaterial2, 'displacementPower', 0, 2 ).onChange( function ( v ) {
+		})
+		t0.add(tMaterial2, 'displacementPower', 0, 2).onChange(function (v) {
 			tMaterial2['displacementPower'] = v
-		} )
-		t0.add( tMaterial2, 'displacementFlowSpeedX', 0, 0.3,0.001 ).onChange( function ( v ) {
+		})
+		t0.add(tMaterial2, 'displacementFlowSpeedX', 0, 0.3, 0.001).onChange(function (v) {
 			tMaterial2['displacementFlowSpeedX'] = v
-		} )
-		t0.add( tMaterial2, 'displacementFlowSpeedY', 0, 0.3,0.001 ).onChange( function ( v ) {
+		})
+		t0.add(tMaterial2, 'displacementFlowSpeedY', 0, 0.3, 0.001).onChange(function (v) {
 			tMaterial2['displacementFlowSpeedY'] = v
-		} )
+		})
 		t0.open()
 	}
 </script>

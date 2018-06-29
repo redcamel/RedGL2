@@ -25,32 +25,25 @@
 <canvas id="test" style="border: none;background:red"></canvas>
 <script>
 	var testUI;
-	document.getElementById( 'test' )
-	RedGL( document.getElementById( 'test' ), function ( v ) {
+	document.getElementById('test')
+	RedGL(document.getElementById('test'), function (v) {
 		if ( v ) {
-			console.log( '초기화 성공!' )
+			console.log('초기화 성공!')
 			var tWorld, tScene, tCamera, tRenderer;
-
 			// 월드 생성
 			this['world'] = tWorld = RedWorld();
-
 			// 씬 생성
-			tScene = RedScene( this );
-
+			tScene = RedScene(this);
 			// 카메라 생성
 			tCamera = RedCamera();
-
 			// 렌더러 생성
 			tRenderer = RedRenderer();
-
 			// 뷰생성 및 적용
-			tWorld.addView( RedView( 'test', tScene, tCamera ) );
-
+			tWorld.addView(RedView('test', this,tScene, tCamera));
 			// 그리드 설정
-			tScene['grid'] = RedGrid( this );
-
+			tScene['grid'] = RedGrid(this);
 			// Atlas 설정
-			(function ( redGL ) {
+			(function (redGL) {
 				var testMaterials = []
 				var imgList;
 				var i;
@@ -61,55 +54,51 @@
 					'../asset/draft4.png',
 					'../asset/draft5.png'
 				]
-				RedAtlas( redGL, imgList,
-					function ( resultInfo ) {
+				RedAtlas(redGL, imgList,
+					function (resultInfo) {
 						// 아틀라스 생성 완료후 아틀라스 텍스쳐를 생성한다.
-						console.log( resultInfo )
+						console.log(resultInfo)
 						for ( var k in resultInfo['atlasMap'] ) {
-							console.log( '아틀라스키', k )
+							console.log('아틀라스키', k)
 							testMaterials.push(
 								RedBitmapMaterial(
 									redGL,
 									// 아틀라스 텍스쳐 생성
-									RedAtlasTexture( redGL, k )
+									RedAtlasTexture(redGL, k)
 								)
 							)
 						}
-
 						i = 5
 						while ( i-- ) {
-							var tMesh = RedMesh( redGL, RedBox( redGL ), testMaterials[i % imgList.length] )
+							var tMesh = RedMesh(redGL, RedBox(redGL), testMaterials[i % imgList.length])
 							tMesh.x = i * 2 - 4
-							tScene.addChild( tMesh )
+							tScene.addChild(tMesh)
 						}
-						console.log( this )
-						console.log( this.getAtlasMap() )
-						console.log( this.getAtlasInfoList() )
+						console.log(this)
+						console.log(this.getAtlasMap())
+						console.log(this.getAtlasInfoList())
 					}
 				)
-			})( this );
-
+			})(this);
 			// 렌더시작
-			tRenderer.start( this, function ( time ) {
-				tCamera.x = Math.sin( time / 1500 ) * 10
-				tCamera.y = Math.cos( time / 1500 ) * 10
-				tCamera.z = Math.cos( time / 1500 ) * 10 + Math.sin( time / 1500 ) * 10
-
-				tCamera.lookAt( 0, 0, 0 )
-			} )
-
+			tRenderer.start(this, function (time) {
+				tCamera.x = Math.sin(time / 1500) * 10
+				tCamera.y = Math.cos(time / 1500) * 10
+				tCamera.z = Math.cos(time / 1500) * 10 + Math.sin(time / 1500) * 10
+				tCamera.lookAt(0, 0, 0)
+			})
 			// 렌더 디버거 활성화
 			tRenderer['renderDebuger']['visible'] = true
-			testUI( this, tCamera, tScene )
+			testUI(this, tCamera, tScene)
 		} else {
-			console.log( '초기화 실패!' )
+			console.log('초기화 실패!')
 		}
-	} )
-	testUI = function ( redGL, tCamera, tScene ) {
-		var gui = new baseTestUI( redGL )
+	})
+	testUI = function (redGL, tCamera, tScene) {
+		var gui = new baseTestUI(redGL)
 		gui.initRedGL()
-		gui.initCamera( tCamera )
-		gui.initScene( tScene )
+		gui.initCamera(tCamera)
+		gui.initScene(tScene)
 	}
 </script>
 </body>

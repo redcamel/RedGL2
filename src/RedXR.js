@@ -37,10 +37,10 @@ let RedXR;
 					const tUUID = +RedGL.makeUUID()
 					const tLeftViewName = 'left' + tUUID
 					const tRightViewName = 'right' + tUUID
-					world.addView(RedView(tLeftViewName, scene, camL));
+					world.addView(RedView(tLeftViewName, redGL, scene, camL));
 					RedView(tLeftViewName).setSize('50%', '100%');
 					RedView(tLeftViewName).setLocation('0%', '0%');
-					world.addView(RedView('right' + tUUID, scene, camR));
+					world.addView(RedView('right' + tUUID, redGL, scene, camR));
 					RedView(tRightViewName).setSize('50%', '100%');
 					RedView(tRightViewName).setLocation('50%', '0%');
 					const resultObject = {

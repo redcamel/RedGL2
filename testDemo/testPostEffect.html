@@ -40,7 +40,8 @@
     <script src="../src/resources/RedAtlas.js"></script>
     <script src="../src/resources/system/RedAtlasUV.js"></script>
     <script src="../src/resources/system/RedTextureOptionChecker.js"></script>
-    <script src="../src/resources/RedBitmapTexture.js"></script><script src="../src/resources/RedDDSTexture.js"></script>
+    <script src="../src/resources/RedBitmapTexture.js"></script>
+    <script src="../src/resources/RedDDSTexture.js"></script>
     <script src="../src/resources/RedVideoTexture.js"></script>
     <script src="../src/resources/RedAtlasTexture.js"></script>
     <script src="../src/resources/RedBitmapCubeTexture.js"></script>
@@ -146,7 +147,7 @@
 		tCamera = RedObitController(this);
 		tCamera.tilt = -45
 		tRenderer = RedRenderer();
-		tWorld.addView(RedView('test', tScene3D, tCamera));
+		tWorld.addView(RedView('test', this,tScene3D, tCamera));
 		RedView('test').setSize('100%', '100%')
 		RedView('test').setLocation('0%', '0%')
 		this.renderScale = 1
@@ -157,26 +158,26 @@
 		testDLight.z = 3
 		testDLight.debug = true
 		tScene3D.addLight(testDLight)
-		// tScene3D['postEffectManager'].addEffect(RedPostEffect_Invert(this))
-		// tScene3D['postEffectManager'].addEffect(RedPostEffect_Blur(this))
-		// tScene3D['postEffectManager'].addEffect(RedPostEffect_Gray(this))
-		// tScene3D['postEffectManager'].addEffect(RedPostEffect_Pixelize(this))
-		// tScene3D['postEffectManager'].addEffect(RedPostEffect_Convolution(this,RedPostEffect_Convolution['EMBOSS']))
-		// tScene3D['postEffectManager'].addEffect(RedPostEffect_BlurX(this))
-		// tScene3D['postEffectManager'].addEffect(RedPostEffect_BlurY(this))
+		// RedView('test')['postEffectManager'].addEffect(RedPostEffect_Invert(this))
+		// RedView('test')['postEffectManager'].addEffect(RedPostEffect_Blur(this))
+		// RedView('test')['postEffectManager'].addEffect(RedPostEffect_Gray(this))
+		// RedView('test')['postEffectManager'].addEffect(RedPostEffect_Pixelize(this))
+		// RedView('test')['postEffectManager'].addEffect(RedPostEffect_Convolution(this,RedPostEffect_Convolution['EMBOSS']))
+		// RedView('test')['postEffectManager'].addEffect(RedPostEffect_BlurX(this))
+		// RedView('test')['postEffectManager'].addEffect(RedPostEffect_BlurY(this))
 		var bloom = RedPostEffect_Bloom(this)
 		bloom['frameBuffer']['width'] = 1024
 		bloom['frameBuffer']['height'] = 1024
-		tScene3D['postEffectManager'].addEffect(bloom)
+		RedView('test')['postEffectManager'].addEffect(bloom)
 		var film = RedPostEffect_Film(this)
 		bloom['frameBuffer']['width'] = 2048
 		bloom['frameBuffer']['height'] = 2048
-		// tScene3D['postEffectManager'].addEffect(film)
-		// tScene3D['postEffectManager'].addEffect(RedPostEffect_HueSaturation(this))
-		// tScene3D['postEffectManager'].addEffect(RedPostEffect_Vignetting(this))
-		// tScene3D['postEffectManager'].addEffect(RedPostEffect_BrightnessContrast(this))
-		// tScene3D['postEffectManager'].addEffect(RedPostEffect_ZoomBlur(this))
-		// tScene3D['postEffectManager'].addEffect(RedPostEffect_HalfTone(this))
+		// RedView('test')['postEffectManager'].addEffect(film)
+		// RedView('test')['postEffectManager'].addEffect(RedPostEffect_HueSaturation(this))
+		// RedView('test')['postEffectManager'].addEffect(RedPostEffect_Vignetting(this))
+		// RedView('test')['postEffectManager'].addEffect(RedPostEffect_BrightnessContrast(this))
+		// RedView('test')['postEffectManager'].addEffect(RedPostEffect_ZoomBlur(this))
+		// RedView('test')['postEffectManager'].addEffect(RedPostEffect_HalfTone(this))
 		tScene3D.skyBox =
 			RedSkyBox(this, [
 				'../asset/cubemap/posx.png',
