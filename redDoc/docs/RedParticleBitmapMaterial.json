@@ -1,0 +1,29 @@
+[
+  {
+    "title": "alphaTest",
+    "description": "\n기본값 : 0.0001\n해당값보다 알파값이 작을경우 discard 처리됨.\n",
+    "return": "Number"
+  },
+  {
+    "title": "diffuseTexture",
+    "return": "RedBitmapTexture"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedParticleBitmapMaterial",
+    "description": "\nRedParticleBitmapMaterial Instance 생성\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ],
+      "diffuseTexture": [
+        {
+          "type": "RedBitmapTexture"
+        }
+      ]
+    },
+    "return": "RedParticleBitmapMaterial Instance"
+  }
+]

@@ -46,7 +46,7 @@ var RedGL;
 			'WEBGL_compressed_texture_s3tc'
 		]
 		checkList = 'webkit-3d,moz-webgl,3d,experimental-webgl,webgl,webgl2'.split(',')
-		// checkList = 'webkit-3d,moz-webgl,3d,experimental-webgl,webgl'.split(',');
+		checkList = 'webkit-3d,moz-webgl,3d,experimental-webgl,webgl'.split(',');
 		return function (canvas, option) {
 			initOption = JSON.parse(JSON.stringify(OPTION));
 			if ( option ) for ( i in option ) initOption[i] = option[i];

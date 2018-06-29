@@ -396,6 +396,10 @@ var RedRenderer;
 			self['renderInfo'] = {}
 			self['cacheInfo']['cacheAttrInfo'].length = 0
 			self['world']['_viewList'].forEach(function (tView) {
+				redGL.gl.activeTexture(redGL.gl.TEXTURE0 + 0)
+				redGL.gl.bindTexture(redGL.gl.TEXTURE_2D, redGL['_datas']['emptyTexture']['2d']['webglTexture']);
+				redGL.gl.activeTexture(redGL.gl.TEXTURE0 + 1)
+				redGL.gl.bindTexture(redGL.gl.TEXTURE_CUBE_MAP, redGL['_datas']['emptyTexture']['3d']['webglTexture']);
 				///////////////////////////////////
 				// view의 위치/크기결정
 				tViewRect = tView['_viewRect']
@@ -968,6 +972,7 @@ var RedRenderer;
 			tPrevIndexBuffer_UUID = null;
 			tPrevInterleaveBuffer_UUID = null;
 			tPrevSamplerIndex = null;
+
 			draw(
 				redGL,
 				children,

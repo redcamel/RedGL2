@@ -1,0 +1,8 @@
+[
+  {
+    "constructorYn": true,
+    "title": "RedBaseTexture",
+    "description": "\nRedBaseTexture 기저층\n",
+    "return": "void"
+  }
+]

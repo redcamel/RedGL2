@@ -1,0 +1,16 @@
+[
+  {
+    "constructorYn": true,
+    "title": "RedDirectionalShadowMaterial",
+    "description": "\nRedDirectionalShadowMaterial Instance 생성\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ]
+    },
+    "example": "\nRedDirectionalShadowMaterial(RedGL Instance, RedBitmapTexture(RedGL Instance, src))\n",
+    "return": "RedDirectionalShadowMaterial Instance"
+  }
+]

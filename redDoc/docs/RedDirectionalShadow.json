@@ -1,0 +1,15 @@
+[
+  {
+    "constructorYn": true,
+    "title": "RedDirectionalShadow",
+    "description": "\nRedDirectionalShadow Instance 생성.\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ]
+    },
+    "return": "RedDirectionalShadow Instance"
+  }
+]
