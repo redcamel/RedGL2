@@ -179,7 +179,7 @@
 //		RedView('test')['postEffectManager'].addEffect(RedPostEffect_Vignetting(this))
 		// RedView('test')['postEffectManager'].addEffect(RedPostEffect_BrightnessContrast(this))
 		var zoomBlur = RedPostEffect_ZoomBlur(this)
-		RedView('test')['postEffectManager'].addEffect(zoomBlur)
+//		RedView('test')['postEffectManager'].addEffect(zoomBlur)
 		// RedView('test')['postEffectManager'].addEffect(RedPostEffect_HalfTone(this))
 //		RedView('test')['postEffectManager'].addEffect( RedPostEffect_Bloom( this ) )
 		var testMaterial
@@ -213,7 +213,7 @@
 			testMaterial = RedPointColorMaterial(self)
 			var interleaveData, interleaveData2
 			interleaveData = []
-			var i = 100000
+			var i = 1
 			while ( i-- ) {
 				var t = Math.random() * 100 - 50
 				interleaveData.push(Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50)
@@ -238,7 +238,7 @@
 			testMaterial = RedPointBitmapMaterial(self, RedBitmapTexture(self, '../asset/alphaTest.png'))
 			var interleaveData
 			interleaveData = []
-			var i = 100000
+			var i = 1
 			while ( i-- ) {
 				interleaveData.push(Math.random() * 150 - 75, Math.random() * 150 - 75, Math.random() * 150 - 75)
 				interleaveData.push(Math.random() * 50)
@@ -259,7 +259,7 @@
 		})();
 		JsonModelLoader(this, 'testJsonModel', '../asset/teapot.json', function (interleaveBuffer, indexBuffer) {
 			console.log('호잇!', interleaveBuffer, indexBuffer)
-			var i = 5000
+			var i = 7000
 			while ( i-- ) {
 				var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer), testMaterial)
 				testMesh.x = Math.random() * 250 - 125
