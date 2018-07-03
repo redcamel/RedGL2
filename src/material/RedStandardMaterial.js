@@ -3,25 +3,29 @@ var RedStandardMaterial;
 (function () {
 	var vSource, fSource;
 	var PROGRAM_NAME = 'standardProgram';
+	var PROGRAM_OPTION_LIST = ['normalTexture', 'specularTexture', 'displacementTexture']
 	vSource = function () {
 		/* @preserve
-		 uniform sampler2D u_displacementTexture;
-		 uniform float u_displacementPower;
-		 uniform float u_displacementFlowSpeedX;
-		 uniform float u_displacementFlowSpeedY;
+		 //#displacementTexture# uniform sampler2D u_displacementTexture;
+		 //#displacementTexture# uniform float u_displacementPower;
+	     //#displacementTexture# uniform float u_displacementFlowSpeedX;
+		 //#displacementTexture# uniform float u_displacementFlowSpeedY;
 
 		 varying vec4 vVertexPositionEye4;
+
 		 varying highp vec4 vShadowPos;
-		 const mat4 cTexUnitConverter = mat4(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.5, 0.5, 0.5, 1.0);
 		 varying float vUseDirectionalShadow;
+		 const mat4 cTexUnitConverter = mat4(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.5, 0.5, 0.5, 1.0);
+
 		 void main(void) {
 			 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
 			 vVertexNormal = vec3(uNMatrix * vec4(aVertexNormal,1.0));
 			 vVertexPositionEye4 = uMMatrix * vec4(aVertexPosition, 1.0);
-			 vVertexPositionEye4.xyz += normalize(vVertexNormal) * texture2D(u_displacementTexture, vTexcoord + vec2(
-			    u_displacementFlowSpeedX * (uTime/1000.0),
-			    u_displacementFlowSpeedY * (uTime/1000.0)
-		    )).x * u_displacementPower ;
+
+			 //#displacementTexture# vVertexPositionEye4.xyz += normalize(vVertexNormal) * texture2D(u_displacementTexture, vTexcoord + vec2(
+			 //#displacementTexture#    u_displacementFlowSpeedX * (uTime/1000.0),
+			 //#displacementTexture#    u_displacementFlowSpeedY * (uTime/1000.0)
+		     //#displacementTexture# )).x * u_displacementPower ;
 
 			 gl_PointSize = uPointSize;
 			 gl_Position = uPMatrix * uCameraMatrix * vVertexPositionEye4;
@@ -38,11 +42,11 @@ var RedStandardMaterial;
 		/* @preserve
 		 precision mediump float;
 		 uniform sampler2D u_diffuseTexture;
-		 uniform sampler2D u_normalTexture;
-		 uniform sampler2D u_specularTexture;
+		 //#normalTexture# uniform sampler2D u_normalTexture;
+		 //#specularTexture# uniform sampler2D u_specularTexture;
 
 
-		 uniform float u_normalPower;
+		 //#normalTexture# uniform float u_normalPower;
 		 uniform float u_shininess;
 		 uniform float u_specularPower;
 
@@ -110,12 +114,12 @@ var RedStandardMaterial;
 
 
 			 vec3 N = normalize(vVertexNormal);
-			 vec4 normalColor = texture2D(u_normalTexture, vTexcoord);
-			 if(normalColor.a != 0.0) N = normalize(2.0 * (N + normalColor.rgb * u_normalPower  - 0.5));
+			 //#normalTexture# vec4 normalColor = texture2D(u_normalTexture, vTexcoord);
+			 //#normalTexture# if(normalColor.a != 0.0) N = normalize(2.0 * (N + normalColor.rgb * u_normalPower  - 0.5));
 
 			 vec4 specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);
 			 float specularTextureValue = 1.0;
-			 specularTextureValue = texture2D(u_specularTexture, vTexcoord).r;
+			 //#specularTexture# specularTextureValue = texture2D(u_specularTexture, vTexcoord).r;
 			 float specular;
 
 			 vec3 L;
@@ -200,6 +204,8 @@ var RedStandardMaterial;
 	RedStandardMaterial = function (redGL, diffuseTexture, normalTexture, specularTexture, displacementTexture) {
 		if ( !(this instanceof RedStandardMaterial) ) return new RedStandardMaterial(redGL, diffuseTexture, normalTexture, specularTexture, displacementTexture);
 		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedStandardMaterial : RedGL Instance만 허용됩니다.', redGL)
+		this['_programList'] =[]
+		this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource, PROGRAM_OPTION_LIST)
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
 		/**DOC:
@@ -266,16 +272,23 @@ var RedStandardMaterial;
 		this['displacementFlowSpeedY'] = 0
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkUniformAndProperty();
 		console.log(this)
 	}
+	var samplerOption = {
+		callback: function () {
+			this.searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST)
+		}
+	}
 	RedStandardMaterial.prototype = new RedBaseMaterial()
-	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'diffuseTexture', 'sampler2D', {essential: true});
-	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'normalTexture', 'sampler2D');
-	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'specularTexture', 'sampler2D');
-	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'displacementTexture', 'sampler2D');
+	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'diffuseTexture', 'sampler2D', {
+		essential: true,
+		callback: samplerOption.callback
+	});
+	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'normalTexture', 'sampler2D', samplerOption);
+	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'specularTexture', 'sampler2D', samplerOption);
+	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'displacementTexture', 'sampler2D', samplerOption);
 	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'normalPower', 'number', {'min': 0});
 	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'shininess', 'number', {'min': 0});
 	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'specularPower', 'number', {'min': 0});

@@ -14,6 +14,41 @@ var RedBaseMaterial;
 	 :DOC*/
 	RedBaseMaterial = function () {}
 	RedBaseMaterial.prototype = {
+		makeProgramList: (function () {
+			var makeList;
+			makeList = function (target, basekey, redgl, programName, vSource, fSource, programOptionList) {
+				programOptionList = programOptionList.concat();
+				programOptionList.sort()
+				programOptionList.forEach(function (k, index) {
+					k = basekey == '' ? k : (basekey + '_' + k)
+					target['_programList'].push(RedProgram['makeProgram'](redgl, programName, vSource, fSource, k.split('_')))
+					makeList(target, k, redgl, programName, vSource, fSource, (programOptionList.concat()).slice(index + 1))
+				})
+				console.log(programOptionList)
+			}
+			return function (target, redGL, programName, vSource, fSource, programOptionList) {
+				makeList(target, '', redGL, programName, vSource, fSource, programOptionList)
+				target['_programList'].push(RedProgram['makeProgram'](redGL, programName, vSource, fSource))
+				target.searchProgram(programName, programOptionList)
+			}
+		})(),
+		searchProgram: (function () {
+			return function (PROGRAM_NAME, keyList) {
+				var t0, self
+				t0 = []
+				self = this;
+				keyList.forEach(function (key) { if ( self[key] ) t0.push(key)})
+				console.log(keyList)
+				if ( t0.length ) t0.sort(), t0 = PROGRAM_NAME + '_' + t0.join('_')
+				else t0 = PROGRAM_NAME
+				console.log('찾아야할프로그램', t0)
+				console.log(this)
+				this['program'] = this['_programList'].filter(function (v) {
+					if ( v['key'] == t0 ) return true
+				})[0]
+				console.log('현재프로그램', this['program'])
+			}
+		})(),
 		/**DOC:
 		 {
 			 code : 'METHOD',

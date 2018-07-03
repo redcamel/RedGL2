@@ -10,6 +10,11 @@
     "return": "String"
   },
   {
+    "title": "postEffectManager",
+    "description": "\npostEffectManager\n",
+    "return": "RedPostEffectManager Instance"
+  },
+  {
     "constructorYn": true,
     "title": "RedView",
     "description": "\n고유 키를 기반으로 <b>RedScene</b>과 <b>RedCamera를</b> 쌍으로 하는 정보를 소유.\n<b>RedWorld</b>에 등록되어지며 실제 렌더링시 필요한 그려질 크기와 위치를 결정한다.\n",

@@ -3,24 +3,29 @@ var RedColorPhongTextureMaterial;
 (function () {
 	var vSource, fSource;
 	var PROGRAM_NAME = 'colorPhongTextureProgram';
+	var PROGRAM_OPTION_LIST = ['normalTexture', 'specularTexture', 'displacementTexture']
 	vSource = function () {
 		/* @preserve
 		 uniform vec4 u_color;
 		 varying vec4 vColor;
-		 uniform sampler2D u_displacementTexture;
-		 uniform float u_displacementPower;
-	     uniform float u_displacementFlowSpeedX;
-		 uniform float u_displacementFlowSpeedY;
+
+		 //#displacementTexture# uniform sampler2D u_displacementTexture;
+		 //#displacementTexture# uniform float u_displacementPower;
+	     //#displacementTexture# uniform float u_displacementFlowSpeedX;
+		 //#displacementTexture# uniform float u_displacementFlowSpeedY;
+
 		 varying vec4 vVertexPositionEye4;
 		 void main(void) {
 			 vColor = u_color;
 			 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
 			 vVertexNormal = vec3(uNMatrix * vec4(aVertexNormal,1.0));
 			 vVertexPositionEye4 = uMMatrix * vec4(aVertexPosition, 1.0);
-		     vVertexPositionEye4.xyz += normalize(vVertexNormal) * texture2D(u_displacementTexture, vTexcoord + vec2(
-			    u_displacementFlowSpeedX * (uTime/1000.0),
-			    u_displacementFlowSpeedY * (uTime/1000.0)
-		     )).x * u_displacementPower ;
+
+		     //#displacementTexture# vVertexPositionEye4.xyz += normalize(vVertexNormal) * texture2D(u_displacementTexture, vTexcoord + vec2(
+			 //#displacementTexture#    u_displacementFlowSpeedX * (uTime/1000.0),
+			 //#displacementTexture#    u_displacementFlowSpeedY * (uTime/1000.0)
+		     //#displacementTexture# )).x * u_displacementPower ;
+
 			 gl_PointSize = uPointSize;
 			 gl_Position = uPMatrix * uCameraMatrix* vVertexPositionEye4;
 		 }
@@ -29,10 +34,10 @@ var RedColorPhongTextureMaterial;
 	fSource = function () {
 		/* @preserve
 		 precision mediump float;
-		 uniform sampler2D u_normalTexture;
-		 uniform sampler2D u_specularTexture;
+		 //#normalTexture# uniform sampler2D u_normalTexture;
+		 //#specularTexture# uniform sampler2D u_specularTexture;
 
-		 uniform float u_normalPower;
+		 //#normalTexture# uniform float u_normalPower;
 		 uniform float u_shininess;
 		 uniform float u_specularPower;
 
@@ -57,12 +62,12 @@ var RedColorPhongTextureMaterial;
 			 // texelColor.rgb *= texelColor.a;
 
 			 vec3 N = normalize(vVertexNormal);
-			 vec4 normalColor = texture2D(u_normalTexture, vTexcoord);
-			 if(normalColor.a != 0.0) N = normalize(2.0 * (N + normalColor.rgb * u_normalPower  - 0.5));
+			 //#normalTexture# vec4 normalColor = texture2D(u_normalTexture, vTexcoord);
+			 //#normalTexture# if(normalColor.a != 0.0) N = normalize(2.0 * (N + normalColor.rgb * u_normalPower  - 0.5));
 
 			 vec4 specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);
 			 float specularTextureValue = 1.0;
-			 specularTextureValue = texture2D(u_specularTexture, vTexcoord).r;
+			 //#specularTexture# specularTextureValue = texture2D(u_specularTexture, vTexcoord).r;
 			 float specular;
 
 			 vec3 L;
@@ -147,6 +152,8 @@ var RedColorPhongTextureMaterial;
 	RedColorPhongTextureMaterial = function (redGL, hexColor, alpha, normalTexture, specularTexture, displacementTexture) {
 		if ( !(this instanceof RedColorPhongTextureMaterial) ) return new RedColorPhongTextureMaterial(redGL, hexColor, alpha, normalTexture, specularTexture, displacementTexture);
 		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedColorPhongTextureMaterial : RedGL Instance만 허용됩니다.', '입력값 : ' + redGL);
+		this['_programList'] = []
+		this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource, PROGRAM_OPTION_LIST)
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
 		this['_color'] = new Float32Array(4);
@@ -214,16 +221,19 @@ var RedColorPhongTextureMaterial;
 		this['normalTexture'] = normalTexture;
 		this['specularTexture'] = specularTexture;
 		this['displacementTexture'] = displacementTexture;
-		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkUniformAndProperty();
-		;
 		console.log(this);
 	}
+	var samplerOption = {
+		callback: function () {
+			this.searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST)
+		}
+	}
 	RedColorPhongTextureMaterial.prototype = new RedBaseMaterial()
-	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'normalTexture', 'sampler2D');
-	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'specularTexture', 'sampler2D');
-	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'displacementTexture', 'sampler2D');
+	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'normalTexture', 'sampler2D', samplerOption);
+	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'specularTexture', 'sampler2D', samplerOption);
+	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'displacementTexture', 'sampler2D', samplerOption);
 	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'normalPower', 'number', {'min': 0});
 	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'shininess', 'number', {'min': 0});
 	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'specularPower', 'number', {'min': 0});

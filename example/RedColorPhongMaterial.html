@@ -115,13 +115,13 @@
 			tMaterial3['specularPower'] = v
 		})
 		t0.add(testColorPhong, 'normalTexture').onChange(function (v) {
-			tMaterial2['_normalTexture'] = v ? tNormalTexture : null
+			tMaterial2['normalTexture'] = v ? tNormalTexture : null
 		})
 		t0.add(testColorPhong, 'specularTexture').onChange(function (v) {
-			tMaterial2['_specularTexture'] = v ? tSpecularTexture : null
+			tMaterial2['specularTexture'] = v ? tSpecularTexture : null
 		})
 		t0.add(testColorPhong, 'displacementTexture').onChange(function (v) {
-			tMaterial2['_displacementTexture'] = v ? tDisplacementTexture : null
+			tMaterial2['displacementTexture'] = v ? tDisplacementTexture : null
 		})
 		t0.add(tMaterial2, 'displacementPower', 0, 2).onChange(function (v) {
 			tMaterial2['displacementPower'] = v

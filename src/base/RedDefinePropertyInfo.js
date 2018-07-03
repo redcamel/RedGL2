@@ -127,6 +127,7 @@ var RedDefinePropertyInfo;
 					set: function (v) {
 						if ( !(v instanceof samplerCls) ) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : ' + samplerTypeKey + ' Instance만 허용.', '입력값 : ' + v)
 						this['_' + name] = v
+						if ( option && option['callback'] ) option['callback'].call(this)
 					}
 				}
 			} else {
@@ -135,6 +136,7 @@ var RedDefinePropertyInfo;
 					set: function (v) {
 						if ( v && !(v instanceof samplerCls) ) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : ' + samplerTypeKey + ' Instance만 허용.', '입력값 : ' + v)
 						this['_' + name] = v
+						if ( option && option['callback'] ) option['callback'].call(this)
 					}
 				}
 			}

@@ -174,13 +174,13 @@
 
 					// console.log( v['atlasMap'][k]['atlas']['canvas'])
 					testMaterials.push(
-						RedBitmapMaterial(
+						RedStandardMaterial(
 							self,
 							RedAtlasTexture(self, k)
 						)
 					)
 				}
-				var i = 5000
+				var i = 7000
 				var geo = RedBox(self)
 				while ( i-- ) {
 					var testMesh = RedMesh(self, geo, testMaterials[i % imgList.length])

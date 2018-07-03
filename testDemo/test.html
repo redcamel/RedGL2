@@ -194,10 +194,15 @@
 				'../asset/cubemap/posz.png',
 				'../asset/cubemap/negz.png'
 			])
-			, RedBitmapTexture(this, '../asset/normalTest.jpg')
-			, RedBitmapTexture(this, '../asset/specular.png')
-			, RedBitmapTexture(this, '../asset/displacementTest.jpg')
+//			, RedBitmapTexture(this, '../asset/normalTest.jpg')
+//			, RedBitmapTexture(this, '../asset/specular.png')
+//			, RedBitmapTexture(this, '../asset/displacementTest.jpg')
 		)
+		testMaterial.normalTexture = null
+		testMaterial.specularTexture = null
+		testMaterial.displace = null
+
+
 		tScene3D.skyBox =
 			RedSkyBox(this, [
 				'../asset/cubemap/posx.png',
