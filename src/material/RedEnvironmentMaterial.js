@@ -59,8 +59,9 @@ var RedEnvironmentMaterial;
 			 vec4 ld = vec4(0.0, 0.0, 0.0, 1.0);
 			 vec4 ls = vec4(0.0, 0.0, 0.0, 1.0);
 
-			 vec4 texelColor = texture2D(u_diffuseTexture, vTexcoord);
-			 texelColor.rgb *= texelColor.a;
+			 vec4 texelColor = vec4(0.0,0.0,0.0,0.0);
+			 //#diffuseTexture# texelColor = texture2D(u_diffuseTexture, vTexcoord);
+			 //#diffuseTexture# texelColor.rgb *= texelColor.a;
 
 			 vec3 N = normalize(vVertexNormal);
 			 //#normalTexture# vec4 normalColor = texture2D(u_normalTexture, vTexcoord);
@@ -265,7 +266,7 @@ var RedEnvironmentMaterial;
 			this.searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST)
 		}
 	}
-	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'diffuseTexture', 'sampler2D');
+	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'diffuseTexture', 'sampler2D',samplerOption);
 	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'environmentTexture', 'samplerCube', {
 		essential: true,
 		callback: samplerOption.callback
