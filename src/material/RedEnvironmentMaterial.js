@@ -55,6 +55,7 @@ var RedEnvironmentMaterial;
 		 vec4 fog(float fogFactor, vec4 fogColor, vec4 currentColor) {
 			return mix(fogColor, currentColor, fogFactor);
 		 }
+
 		 vec4 la;
 		 vec4 ld;
 		 vec4 ls;
@@ -74,7 +75,7 @@ var RedEnvironmentMaterial;
 			 ld = vec4(0.0, 0.0, 0.0, 1.0);
 			 ls = vec4(0.0, 0.0, 0.0, 1.0);
 
-			 texelColor = vec4(0.0,0.0,0.0,0.0);
+			 // texelColor = vec4(0.0,0.0,0.0,0.0);
 			 //#diffuseTexture# texelColor = texture2D(u_diffuseTexture, vTexcoord);
 			 //#diffuseTexture# texelColor.rgb *= texelColor.a;
 
@@ -83,7 +84,8 @@ var RedEnvironmentMaterial;
 			 //#normalTexture# if(normalColor.a != 0.0) N = normalize(2.0 * (N + normalColor.rgb * u_normalPower  - 0.5));
 
 			 reflectionColor = textureCube(u_environmentTexture, 2.0 * dot(vReflectionCubeCoord, vVertexNormal) * vVertexNormal - vReflectionCubeCoord);
-			 texelColor = texelColor * (1.0 - u_reflectionPower) + reflectionColor * u_reflectionPower;
+			 // texelColor = texelColor * (1.0 - u_reflectionPower) + reflectionColor * u_reflectionPower;
+			 texelColor = mix(texelColor,reflectionColor ,u_reflectionPower);
 
 			 specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);
 			 specularTextureValue = 1.0;
@@ -118,7 +120,7 @@ var RedEnvironmentMaterial;
 			 finalColor = la * uAmbientIntensity + ld + ls;
 			 finalColor.rgb *= texelColor.a;
 			 finalColor.a = texelColor.a;
-             if(uUseFog) gl_FragColor = fog( fogFactor(uFogDistance, uFogDensity), uFogColor, finalColor);
+			 if(uUseFog) gl_FragColor = fog( fogFactor(uFogDistance, uFogDensity), uFogColor, finalColor);
 			 else gl_FragColor = finalColor;
 		 }
 		 */
