@@ -127,6 +127,7 @@
     <script src="../src/postEffect/RedPostEffect_Vignetting.js"></script>
     <script src="../src/postEffect/RedPostEffect_SSAO.js"></script>
     <script src="../src/postEffect/RedPostEffect_SSAO_DepthMaterial.js"></script>
+
     <script src="../src/postEffect/RedPostEffect_SSAO_PointMaker.js"></script>
     <script src="../src/postEffect/antialiasing/RedPostEffect_FXAA.js"></script>
 </head>
@@ -156,6 +157,14 @@
 		this.renderScale = 1
 		var testDLight, testALight, testPLight;
 		testDLight = RedDirectionalLight(this)
+		testDLight.x = -3
+		testDLight.y = -2
+		testDLight.z = -3
+		testDLight.debug = true
+//		testDLight.intensity = 1.5
+		tScene3D.addLight(testDLight)
+		var testDLight, testALight, testPLight;
+		testDLight = RedDirectionalLight(this)
 		testDLight.x = 3
 		testDLight.y = 2
 		testDLight.z = 3
@@ -177,60 +186,68 @@
 				'../asset/cubemap/posz.png',
 				'../asset/cubemap/negz.png'
 			]);
-		// tScene3D['grid'] = RedGrid(self)
-		var i = 100
-		var j
-		var k
-		var tMesh;
-		// var tGeo = RedSphere(self, 0.5,  16, 16, 16)
-		var tMat = RedColorMaterial(
-			self
+		var testMaterial, testMaterial2
+		testMaterial = RedEnvironmentMaterial(
+			this,
+			RedBitmapTexture(this, '../asset/crate.png'),
+			RedBitmapCubeTexture(this, [
+				'../asset/cubemap/posx.png',
+				'../asset/cubemap/negx.png',
+				'../asset/cubemap/posy.png',
+				'../asset/cubemap/negy.png',
+				'../asset/cubemap/posz.png',
+				'../asset/cubemap/negz.png'
+			]),
+			RedBitmapTexture(this, '../asset/normalTest.jpg'),
+			RedBitmapTexture(this, '../asset/specular.png'),
+			RedBitmapTexture(this, '../asset/displacementTest.jpg')
 		)
-		var tMat2 = RedStandardMaterial(
-			self,
-			RedBitmapTexture(self, '../asset/crate.png')
+		testMaterial2 = RedBitmapMaterial(
+			this,
+			RedBitmapTexture(this, '../asset/alphaTest.png')
 		)
-		var tMat3 = RedStandardMaterial(
-			self,
-			RedBitmapTexture(self, '../asset/grass.jpg')
-		)
-		tMat.shininess = 32
-		while ( i-- ) {
-			var t = Math.random() * 10
-			var tGeo = RedBox(self, t, t, t, 30, 30, 30)
-			tMesh = RedMesh(self, tGeo, tMat2)
-			tMesh.x = Math.random() * 200 - 100
-			tMesh.y = Math.random() * 3
-			tMesh.z = Math.random() * 200 - 100
-			tMesh.rotationX = tMesh.rotationY = tMesh.rotationZ = Math.random() * 360
-			tScene3D.addChild(tMesh)
-		}
-		RedOBJLoader(this, '../asset/obj/', 'female.obj', function (v) {
-			console.log('호잇!', v)
-			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.1
-			tScene3D.addChild(v['resultMesh'])
+		JsonModelLoader(this, 'testJsonModel', '../asset/teapot.json', function (interleaveBuffer, indexBuffer) {
+			console.log('호잇!', interleaveBuffer, indexBuffer)
+			var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer), RedColorPhongMaterial(self))
+			// var testMesh = RedMesh(self, RedBox(self), testMaterial)
+			testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.3
+			testMesh.y = 2.2
+			// var testMesh = RedMesh(self,RedPlane(self),testMaterial)
+			// testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 1
+			// testMesh.scaleY  =
+			tScene3D.addChild(testMesh)
+
+			var i = 10
+			while ( i-- ) {
+				// var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer),
+				//     testMaterial)
+				var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer), testMaterial)
+				testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.3
+				tScene3D.addChild(testMesh)
+				testMesh.x = Math.sin(Math.PI * 2 / 10 * i) * 10
+				testMesh.z = Math.cos(Math.PI * 2 / 10 * i) * 10
+				testMesh.y = 2.2
+				tScene3D.addChild(testMesh)
+			}
+			tScene3D['grid'] = RedGrid(self)
 		})
-		var tGeo = RedBox(self, t, t, t, 100, 100, 100)
-		tMesh = RedMesh(self, tGeo, tMat)
+		var tGeo = RedBox(self, 1,5,1, 1, 1, 1)
+		var tMesh = RedMesh(self, tGeo, testMaterial2)
 		tScene3D.addChild(tMesh)
-		tMesh.material = tMat3
+		tMesh.material = RedColorPhongMaterial(self)
 		tMesh.x = 0
 		tMesh.z = 0
 		tMesh.rotationX = tMesh.rotationY = tMesh.rotationZ = 0
 		tMesh.scaleX = 100
 		tMesh.scaleY = 0.1
 		tMesh.scaleZ = 100
-		// RedOBJLoader(this, '../asset/obj/', 'female.obj', function (v) {
-		//     console.log('호잇!', v)
-		//     v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.05
-		//     tScene3D.addChild( v['resultMesh'])
-		// })
+
 		tRenderer.renderDebuger.visible = true
 		tRenderer.start(this, function (time) {
-			testDLight.x = Math.sin(time / 1000) * 10
+			testDLight.x = Math.sin(time / 1000) * 25
 			testDLight.y = 25
-			testDLight.z = Math.sin(time / 1000) * 25
-			i = tScene3D.children.length
+			testDLight.z = Math.cos(time / 1000) * 25
+			var i = tScene3D.children.length
 			while ( i-- ) {
 				if ( i == 0 ) break
 				testMesh = tScene3D.children[i]
@@ -252,13 +269,13 @@
 		// })
 		var t0 = this['gui'].addFolder('ssao')
 		t0.add(ssao, 'blur', 0.0, 30)
-		t0.add(ssao, 'range', 0, 50)
-		t0.add(ssao, 'factor2', 0.0, 2)
+		t0.add(ssao, 'range', 0, 300)
+		t0.add(ssao, 'factor2', 0, 10)
 		// t0.add(ssao, 'contrast', -1, 1)
 		var test = {
 			mode: 'ONLY_SSAO'
 		}
-		t0.add(test, 'mode', ['ONLY_SSAO', 'ONLY_COLOR', 'COLOR_SSAO']).onChange(function (v) {
+		t0.add(test, 'mode', ['ONLY_SSAO', 'ONLY_NORMAL', 'ONLY_COLOR', 'COLOR_SSAO']).onChange(function (v) {
 			ssao['mode'] = RedPostEffect_SSAO[v]
 		})
 		t0.open()

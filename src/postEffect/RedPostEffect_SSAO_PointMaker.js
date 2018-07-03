@@ -52,37 +52,47 @@ var RedPostEffect_SSAO_PointMaker;
              vec2 perPX = vec2(1.0/vResolution.x, 1.0/vResolution.y);
              vec2 tTexcoord = gl_FragCoord.xy * perPX ;
 
+
 		     // 일단 뎁스산출
 			 vec4 depthColor = texture2D(uDepthTexture, tTexcoord);
 			 float depth = unpack_depth2(depthColor);
 
 		     // 샘플추출
-			 const int cSAMPLES = 20;
+			 const int cSAMPLES = 16;
 			 float ao = 0.0;
-			 float rand = random(vec3(tTexcoord, 0.0), depth) * uRange  ;
 
 			for (int i = 0; i < cSAMPLES; ++i) {
 				vec2 offset;
 				float x;
 				float y;
-				x = random(vec3(tTexcoord, 0.0), depth) * uRange ;
-				y = random(vec3(tTexcoord, 0.0), depth) * uRange ;
-				offset = vec2(x,y) * perPX;
-				vec2 tLocation2 = tTexcoord + offset   ;
+				x = sin(6.28/float(cSAMPLES) * float(i))/3.14 * uRange * random(gl_FragCoord.xyz,0.0) ;
+				y = cos(6.28/float(cSAMPLES) * float(i))/3.14 * uRange * random(gl_FragCoord.xyz,0.0);
+				offset = vec2(x,y) * perPX ;
+				vec2 tLocation2 = tTexcoord + offset  ;
 				// if(tLocation2.x <0.0) continue;
 				// else if(tLocation2.x >1.0) continue;
 				// else if(tLocation2.y <0.0) continue;
 				// else if(tLocation2.y >1.0) continue;
 				// else {
 					float sampleDepth = unpack_depth2(texture2D(uDepthTexture, tLocation2));
-					if(abs((sampleDepth - depth)) < 0.1){
-						if(sampleDepth > depth) ao+= 1.0/(float(cSAMPLES)) * (normalize(sampleDepth - depth));
+					if(((sampleDepth - depth)) < 0.025){
+						float distanceLength = abs(sampleDepth - depth);
+						float attenuation = 1.0 + 1.0 / (0.01 + 0.02 * distanceLength + 0.03 * distanceLength * distanceLength);
+						if(sampleDepth > depth) ao+=  1.0;
+
 					}
 				// }
 			}
-			 ao = 1.0 - ao;
+			 ao /= float(cSAMPLES);
 			 ao = pow(ao, uFactor2);
-			 gl_FragColor = vec4(ao,ao,ao,1.0);
+			 ao = 1.0 - ao;
+			 vec4 finalColor = vec4(ao,ao,ao,1.0);
+			 float u_contrast = 0.0;
+			 if (u_contrast > 0.0) finalColor.rgb = (finalColor.rgb - 0.5) / (1.0 - u_contrast) + 0.5;
+			 else finalColor.rgb = (finalColor.rgb - 0.5) * (1.0 + u_contrast) + 0.5;
+
+			 if(depth<0.1) gl_FragColor = finalColor;
+			 else gl_FragColor = vec4(1.0);
 			 // gl_FragColor += depthColor;
 
 		 }
@@ -115,6 +125,7 @@ var RedPostEffect_SSAO_PointMaker;
 			}
 		]
 		this['depthTexture'] = null;
+		this['normalTexture'] = null;
 		this['range'] = 10;
 		this['factor2'] = 0.2;
 		/////////////////////////////////////////

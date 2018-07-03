@@ -23,8 +23,8 @@ var RedPostEffect_SSAO;
 			 vec4 finalColor = texture2D(uDiffuseTexture, vTexcoord);
 			 vec4 ssaoColor = texture2D(uSsaoTexture, vTexcoord);
 			 if(uMode == 0.0) gl_FragColor = ssaoColor;
-			 else if(uMode == 1.0) gl_FragColor = finalColor;
-			 else if(uMode == 2.0) {
+			 else if(uMode == 2.0) gl_FragColor = finalColor;
+			 else if(uMode == 3.0) {
 				 finalColor.rgb *= ssaoColor.r;
 				 gl_FragColor = finalColor;
 			 };
@@ -59,6 +59,8 @@ var RedPostEffect_SSAO;
 		this['process'] = [
 			point,
 			RedPostEffect_BlurX(redGL),
+			RedPostEffect_BlurY(redGL),
+			RedPostEffect_BlurX(redGL),
 			RedPostEffect_BlurY(redGL)
 		]
 		this['mode'] = RedPostEffect_SSAO.COLOR_SSAO
@@ -72,10 +74,12 @@ var RedPostEffect_SSAO;
 					_v = v;
 					this['process'][1]['size'] = _v;
 					this['process'][2]['size'] = _v;
+					this['process'][3]['size'] = _v;
+					this['process'][4]['size'] = _v;
 				}
 			}
 		})());
-		this['blur'] = 5
+		this['blur'] = 30
 		Object.defineProperty(this, 'range', (function () {
 			return {
 				get: function () {
@@ -86,7 +90,7 @@ var RedPostEffect_SSAO;
 				}
 			}
 		})());
-		this['range'] = 15
+		this['range'] = 300
 		Object.defineProperty(this, 'factor2', (function () {
 			return {
 				get: function () {
@@ -97,7 +101,7 @@ var RedPostEffect_SSAO;
 				}
 			}
 		})());
-		this['factor2'] = 0.4
+		this['factor2'] = 4.25
 		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		this['_UUID'] = RedGL['makeUUID']();
 		this.updateTexture = function (lastFrameBufferTexture, parentFrameBufferTexture) {
@@ -108,8 +112,9 @@ var RedPostEffect_SSAO;
 		console.log(this);
 	}
 	RedPostEffect_SSAO['ONLY_SSAO'] = 0
-	RedPostEffect_SSAO['ONLY_COLOR'] = 1
-	RedPostEffect_SSAO['COLOR_SSAO'] = 2
+	RedPostEffect_SSAO['ONLY_NORMAL'] = 1
+	RedPostEffect_SSAO['ONLY_COLOR'] = 2
+	RedPostEffect_SSAO['COLOR_SSAO'] = 3
 	RedPostEffect_SSAO.prototype = new RedBaseMaterial();
 	RedPostEffect_SSAO.prototype['bind'] = RedPostEffectManager.prototype['bind'];
 	RedPostEffect_SSAO.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];

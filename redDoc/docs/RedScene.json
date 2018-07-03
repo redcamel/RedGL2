@@ -50,11 +50,6 @@
     "return": "RedGrid Instance"
   },
   {
-    "title": "postEffectManager",
-    "description": "\npostEffectManager\n",
-    "return": "RedPostEffectManager Instance"
-  },
-  {
     "constructorYn": true,
     "title": "RedScene",
     "description": "\nRedScene Instance 생성자.\n",
