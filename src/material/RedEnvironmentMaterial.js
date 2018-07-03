@@ -3,23 +3,26 @@ var RedEnvironmentMaterial;
 (function () {
 	var vSource, fSource;
 	var PROGRAM_NAME = 'environmentProgram';
+	var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'specularTexture', 'displacementTexture']
 	vSource = function () {
 		/* @preserve
 		 varying vec4 vVertexPositionEye4;
 		 varying vec3 vReflectionCubeCoord;
-		 uniform sampler2D u_displacementTexture;
-		 uniform float u_displacementPower;
-	     uniform float u_displacementFlowSpeedX;
-		 uniform float u_displacementFlowSpeedY;
+		 //#displacementTexture# uniform sampler2D u_displacementTexture;
+		 //#displacementTexture# uniform float u_displacementPower;
+	     //#displacementTexture# uniform float u_displacementFlowSpeedX;
+		 //#displacementTexture# uniform float u_displacementFlowSpeedY;
 
 		 void main(void) {
 			 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
 			 vVertexNormal = vec3(uNMatrix * vec4(aVertexNormal,1.0));
 			 vVertexPositionEye4 = uMMatrix * vec4(aVertexPosition, 1.0);
-			  vVertexPositionEye4.xyz += normalize(vVertexNormal) * texture2D(u_displacementTexture, vTexcoord + vec2(
-			    u_displacementFlowSpeedX * (uTime/1000.0),
-			    u_displacementFlowSpeedY * (uTime/1000.0)
-		    )).x * u_displacementPower ;
+
+			 //#displacementTexture# vVertexPositionEye4.xyz += normalize(vVertexNormal) * texture2D(u_displacementTexture, vTexcoord + vec2(
+			 //#displacementTexture#    u_displacementFlowSpeedX * (uTime/1000.0),
+			 //#displacementTexture#    u_displacementFlowSpeedY * (uTime/1000.0)
+		     //#displacementTexture# )).x * u_displacementPower ;
+
 			 vReflectionCubeCoord = -vVertexPositionEye4.xyz;
 
 			 gl_PointSize = uPointSize;
@@ -31,11 +34,11 @@ var RedEnvironmentMaterial;
 		/* @preserve
 		 precision mediump float;
 		 uniform sampler2D u_diffuseTexture;
-		 uniform sampler2D u_normalTexture;
-		 uniform sampler2D u_specularTexture;
+		 //#normalTexture# uniform sampler2D u_normalTexture;
+		 //#specularTexture# uniform sampler2D u_specularTexture;
 		 uniform samplerCube u_environmentTexture;
 
-         uniform float u_normalPower;
+         //#normalTexture# uniform float u_normalPower;
 		 uniform float u_shininess;
 		 uniform float u_specularPower;
 		 uniform float u_reflectionPower;
@@ -58,18 +61,17 @@ var RedEnvironmentMaterial;
 
 			 vec4 texelColor = texture2D(u_diffuseTexture, vTexcoord);
 			 texelColor.rgb *= texelColor.a;
-			 if(texelColor.a ==0.0) discard;
 
 			 vec3 N = normalize(vVertexNormal);
-			 vec4 normalColor = texture2D(u_normalTexture, vTexcoord);
-			 if(normalColor.a != 0.0) N = normalize(2.0 * (N + normalColor.rgb * u_normalPower  - 0.5));
+			 //#normalTexture# vec4 normalColor = texture2D(u_normalTexture, vTexcoord);
+			 //#normalTexture# if(normalColor.a != 0.0) N = normalize(2.0 * (N + normalColor.rgb * u_normalPower  - 0.5));
 
 			 vec4 reflectionColor = textureCube(u_environmentTexture, 2.0 * dot(vReflectionCubeCoord,vVertexNormal) * vVertexNormal - vReflectionCubeCoord);
 			 texelColor = texelColor * (1.0 - u_reflectionPower) + reflectionColor * u_reflectionPower;
 
 			 vec4 specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);
 			 float specularTextureValue = 1.0;
-			 specularTextureValue = texture2D(u_specularTexture, vTexcoord).r;
+			 //#specularTexture#  specularTextureValue = texture2D(u_specularTexture, vTexcoord).r;
 			 float specular;
 
 			 vec3 L;
@@ -109,7 +111,7 @@ var RedEnvironmentMaterial;
 			 vec4 finalColor = la * uAmbientIntensity + ld + ls;
 			 finalColor.rgb *= texelColor.a;
 			 finalColor.a = texelColor.a;
-			 if(uUseFog) gl_FragColor = fog( fogFactor(uFogDistance, uFogDensity), uFogColor, finalColor);
+             if(uUseFog) gl_FragColor = fog( fogFactor(uFogDistance, uFogDensity), uFogColor, finalColor);
 			 else gl_FragColor = finalColor;
 		 }
 		 */
@@ -170,6 +172,8 @@ var RedEnvironmentMaterial;
 		);
 		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedEnvironmentMaterial : RedGL Instance만 허용됩니다.', redGL)
 		if ( environmentTexture && !(environmentTexture instanceof RedBitmapCubeTexture) ) RedGLUtil.throwFunc('RedEnvironmentMaterial : environmentTexture - RedBitmapCubeTexture Instance만 허용됩니다.')
+		this['_programList'] = []
+		this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource, PROGRAM_OPTION_LIST)
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
 		/**DOC:
@@ -251,17 +255,24 @@ var RedEnvironmentMaterial;
 		this['displacementFlowSpeedY'] = 0
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkUniformAndProperty();
 		console.log(this)
 	}
 	RedEnvironmentMaterial.prototype = new RedBaseMaterial()
+	var samplerOption = {
+		callback: function () {
+			this.searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST)
+		}
+	}
 	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'diffuseTexture', 'sampler2D');
-	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'environmentTexture', 'samplerCube', {essential: true});
-	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'normalTexture', 'sampler2D');
-	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'specularTexture', 'sampler2D');
-	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'displacementTexture', 'sampler2D');
+	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'environmentTexture', 'samplerCube', {
+		essential: true,
+		callback: samplerOption.callback
+	});
+	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'normalTexture', 'sampler2D', samplerOption);
+	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'specularTexture', 'sampler2D', samplerOption);
+	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'displacementTexture', 'sampler2D', samplerOption);
 	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'normalPower', 'number', {'min': 0});
 	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'shininess', 'number', {'min': 0});
 	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'specularPower', 'number', {'min': 0});

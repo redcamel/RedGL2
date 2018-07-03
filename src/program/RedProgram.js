@@ -2,7 +2,7 @@
 var RedProgram;
 (function () {
 	var makeProgram, updateLocation;
-	var samplerIndex,maxSamplerIndex;
+	var samplerIndex, maxSamplerIndex;
 	samplerIndex = 2
 	makeProgram = (function () {
 		var program;
@@ -139,7 +139,7 @@ var RedProgram;
 							tRenderMethod = arrayNum ? 'uniform1iv' : 'uniform1i';
 							break
 					}
-					console.log('samplerIndex',samplerIndex)
+					console.log('samplerIndex', samplerIndex)
 					t0['renderType'] = tRenderType
 					t0['renderMethod'] = tRenderMethod
 					//
@@ -280,9 +280,22 @@ var RedProgram;
 		if ( !redGL['_datas']['RedProgram'] ) redGL['_datas']['RedProgram'] = {};
 		return redGL['_datas']['RedProgram'][key] ? true : false
 	}
-	RedProgram['makeProgram'] = function (redGL, programName, vSource, fSource) {
+	RedProgram['makeProgram'] = function (redGL, programName, vSource, fSource, option) {
 		vSource = RedGLUtil.getStrFromComment(vSource.toString());
 		fSource = RedGLUtil.getStrFromComment(fSource.toString());
+		if ( option ) {
+			option.sort()
+			programName += '_' + option.join('_');
+			var i = option.length
+			// option에 해당하는 주석을 코드로 전환시킨다.
+			while ( i-- ) {
+				var t0 = new RegExp('\/\/\#' + option[i] + '\#', 'gi')
+				// console.log(t0)
+				vSource = vSource.replace(t0, '')
+				fSource = fSource.replace(t0, '')
+			}
+		}
+		// console.log(programName)
 		// console.log(vSource, fSource)
 		return RedProgram(redGL, programName, vSource, fSource)
 	}
