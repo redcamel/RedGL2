@@ -92,7 +92,7 @@ var RedEnvironmentMaterial;
 
 			 for(int i=0; i<cDIRETIONAL_MAX; i++){
 				 if(i == uDirectionalLightNum) break;
-				 L = -uDirectionalLightPosition[i];
+				 L = normalize(-uDirectionalLightPosition[i]);
 				 lambertTerm = dot(N,-L);
 				 if(lambertTerm > 0.0){
 					 ld += uDirectionalLightColor[i] * texelColor * lambertTerm * uDirectionalLightIntensity[i] * uDirectionalLightColor[i].a;
@@ -107,6 +107,7 @@ var RedEnvironmentMaterial;
 				 distanceLength = length(L);
 				 if(uPointLightRadius[i]> distanceLength){
 					 attenuation = 1.0 / (0.01 + 0.02 * distanceLength + 0.03 * distanceLength * distanceLength);
+					 L = normalize(L);
 					 lambertTerm = dot(N,-L);
 					 if(lambertTerm > 0.0){
 						 ld += uPointLightColor[i] * texelColor * lambertTerm * attenuation * uPointLightIntensity[i] * uPointLightColor[i].a;
@@ -119,8 +120,9 @@ var RedEnvironmentMaterial;
 			 finalColor = la * uAmbientIntensity + ld + ls;
 			 finalColor.rgb *= texelColor.a;
 			 finalColor.a = texelColor.a;
-			 if(uUseFog) gl_FragColor = fog( fogFactor(uFogDistance, uFogDensity), uFogColor, finalColor);
-			 else gl_FragColor = finalColor;
+			 // if(uUseFog) gl_FragColor = fog( fogFactor(uFogDistance, uFogDensity), uFogColor, finalColor);
+			 // else gl_FragColor = finalColor;
+			 gl_FragColor = finalColor;
 		 }
 		 */
 	}
@@ -273,7 +275,7 @@ var RedEnvironmentMaterial;
 			this.searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST)
 		}
 	}
-	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'diffuseTexture', 'sampler2D',samplerOption);
+	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'diffuseTexture', 'sampler2D', samplerOption);
 	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'environmentTexture', 'samplerCube', {
 		essential: true,
 		callback: samplerOption.callback

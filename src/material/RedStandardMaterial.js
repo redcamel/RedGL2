@@ -137,7 +137,7 @@ var RedStandardMaterial;
 
 			 for(int i=0; i<cDIRETIONAL_MAX; i++){
 				 if(i == uDirectionalLightNum) break;
-				 L = -uDirectionalLightPosition[i];
+				 L = normalize(-uDirectionalLightPosition[i]);
 				 lambertTerm = dot(N,-L);
 				 if(lambertTerm > 0.0){
 					 ld += uDirectionalLightColor[i] * texelColor * lambertTerm * uDirectionalLightIntensity[i] * uDirectionalLightColor[i].a;
@@ -152,6 +152,7 @@ var RedStandardMaterial;
 				 distanceLength = length(L);
 				 if(uPointLightRadius[i]> distanceLength){
 					 attenuation = 1.0 / (0.01 + 0.02 * distanceLength + 0.03 * distanceLength * distanceLength);
+				     L = normalize(L);
 					 lambertTerm = dot(N,-L);
 					 if(lambertTerm > 0.0){
 						 ld += uPointLightColor[i] * texelColor * lambertTerm * attenuation * uPointLightIntensity[i] * uPointLightColor[i].a;
