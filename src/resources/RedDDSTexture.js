@@ -258,14 +258,14 @@ var RedDDSTexture;
 			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, option['mag'] ? option['mag'] : gl.LINEAR);
 			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
 			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-			if ( gl['glExtension']['EXT_texture_filter_anisotropic'] && option['anisotropic'] ) {
-				gl.texParameterf(gl.TEXTURE_2D, gl['glExtension']['EXT_texture_filter_anisotropic'].TEXTURE_MAX_ANISOTROPY_EXT, option['anisotropic']);
-			}
-			try {
-				gl.generateMipmap(gl.TEXTURE_2D)
-			} catch ( error ) {
-				console.log('밉맵을 생성할수 없음', source)
-			}
+			// if ( gl['glExtension']['EXT_texture_filter_anisotropic'] && option['anisotropic'] ) {
+			// 	gl.texParameterf(gl.TEXTURE_2D, gl['glExtension']['EXT_texture_filter_anisotropic'].TEXTURE_MAX_ANISOTROPY_EXT, option['anisotropic']);
+			// }
+			// try {
+			// 	// gl.generateMipmap(gl.TEXTURE_2D)
+			// } catch ( error ) {
+			// 	// console.log('밉맵을 생성할수 없음', source)
+			// }
 			gl.bindTexture(gl.TEXTURE_2D, null);
 			if ( callback ) callback(true);
 		};

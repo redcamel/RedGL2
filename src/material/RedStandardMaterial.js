@@ -6,10 +6,10 @@ var RedStandardMaterial;
 	var PROGRAM_OPTION_LIST = ['normalTexture', 'specularTexture', 'displacementTexture']
 	vSource = function () {
 		/* @preserve
-		 //#displacementTexture# uniform sampler2D u_displacementTexture;
-		 //#displacementTexture# uniform float u_displacementPower;
-	     //#displacementTexture# uniform float u_displacementFlowSpeedX;
-		 //#displacementTexture# uniform float u_displacementFlowSpeedY;
+		 //#define#displacementTexture# uniform sampler2D u_displacementTexture;
+		 //#define#displacementTexture# uniform float u_displacementPower;
+	     //#define#displacementTexture# uniform float u_displacementFlowSpeedX;
+		 //#define#displacementTexture# uniform float u_displacementFlowSpeedY;
 
 		 varying vec4 vVertexPositionEye4;
 
@@ -19,13 +19,14 @@ var RedStandardMaterial;
 
 		 void main(void) {
 			 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
+			 //#atlasMode
 			 vVertexNormal = vec3(uNMatrix * vec4(aVertexNormal,1.0));
 			 vVertexPositionEye4 = uMMatrix * vec4(aVertexPosition, 1.0);
 
-			 //#displacementTexture# vVertexPositionEye4.xyz += normalize(vVertexNormal) * texture2D(u_displacementTexture, vTexcoord + vec2(
-			 //#displacementTexture#    u_displacementFlowSpeedX * (uTime/1000.0),
-			 //#displacementTexture#    u_displacementFlowSpeedY * (uTime/1000.0)
-		     //#displacementTexture# )).x * u_displacementPower ;
+			 //#define#displacementTexture# vVertexPositionEye4.xyz += normalize(vVertexNormal) * texture2D(u_displacementTexture, vTexcoord + vec2(
+			 //#define#displacementTexture#    u_displacementFlowSpeedX * (uTime/1000.0),
+			 //#define#displacementTexture#    u_displacementFlowSpeedY * (uTime/1000.0)
+		     //#define#displacementTexture# )).x * u_displacementPower ;
 
 			 gl_PointSize = uPointSize;
 			 gl_Position = uPMatrix * uCameraMatrix * vVertexPositionEye4;
@@ -42,11 +43,11 @@ var RedStandardMaterial;
 		/* @preserve
 		 precision mediump float;
 		 uniform sampler2D u_diffuseTexture;
-		 //#normalTexture# uniform sampler2D u_normalTexture;
-		 //#specularTexture# uniform sampler2D u_specularTexture;
+		 //#define#normalTexture# uniform sampler2D u_normalTexture;
+		 //#define#specularTexture# uniform sampler2D u_specularTexture;
 
 
-		 //#normalTexture# uniform float u_normalPower;
+		 //#define#normalTexture# uniform float u_normalPower;
 		 uniform float u_shininess;
 		 uniform float u_specularPower;
 
@@ -91,10 +92,11 @@ var RedStandardMaterial;
 			 ls = vec4(0.0, 0.0, 0.0, 1.0);
 
 			 texelColor = texture2D(u_diffuseTexture, vTexcoord);
-			 texelColor.rgb *= texelColor.a;
-			 if(texelColor.a ==0.0) discard;
+			 // texelColor.rgb *= texelColor.a;
+			 // if(texelColor.a ==0.0) discard;
 
 			///////////////////////////////////////////////////////////////////////////////////////
+
 			if(vUseDirectionalShadow != 0.0){
 				vec3 fragmentDepth = vShadowPos.xyz;
 	            float shadowAcneRemover = 0.0007;
@@ -125,34 +127,34 @@ var RedStandardMaterial;
 			///////////////////////////////////////////////////////////////////////////////////////
 
 			 N = normalize(vVertexNormal);
-			 //#normalTexture# vec4 normalColor = texture2D(u_normalTexture, vTexcoord);
-			 //#normalTexture# if(normalColor.a != 0.0) N = normalize(2.0 * (N + normalColor.rgb * u_normalPower  - 0.5));
+			 //#define#normalTexture# vec4 normalColor = texture2D(u_normalTexture, vTexcoord);
+			 //#define#normalTexture# if(normalColor.a != 0.0) N = normalize(2.0 * (N + normalColor.rgb * u_normalPower  - 0.5));
 
 			 specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);
 			 specularTextureValue = 1.0;
-			 //#specularTexture# specularTextureValue = texture2D(u_specularTexture, vTexcoord).r;
+			 //#define#specularTexture# specularTextureValue = texture2D(u_specularTexture, vTexcoord).r;
 
 
 			 for(int i=0; i<cDIRETIONAL_MAX; i++){
 				 if(i == uDirectionalLightNum) break;
-				 L = normalize(-uDirectionalLightPosition[i]);
+				 L = -uDirectionalLightPosition[i];
 				 lambertTerm = dot(N,-L);
 				 if(lambertTerm > 0.0){
-					 ld += (uDirectionalLightColor[i] * texelColor * lambertTerm * uDirectionalLightIntensity[i]) * uDirectionalLightColor[i].a;
+					 ld += uDirectionalLightColor[i] * texelColor * lambertTerm * uDirectionalLightIntensity[i] * uDirectionalLightColor[i].a;
 					 specular = pow( max(dot(reflect(L, N), -L), 0.0), u_shininess);
 					 ls +=  specularLightColor * specular * u_specularPower * specularTextureValue * uDirectionalLightIntensity[i];
 				 }
 			 }
+
 			 for(int i=0;i<cPOINT_MAX;i++){
 				 if(i== uPointLightNum) break;
 				 L =  -uPointLightPosition[i] + vVertexPositionEye4.xyz;
 				 distanceLength = length(L);
 				 if(uPointLightRadius[i]> distanceLength){
 					 attenuation = 1.0 / (0.01 + 0.02 * distanceLength + 0.03 * distanceLength * distanceLength);
-					 L = normalize(L);
 					 lambertTerm = dot(N,-L);
 					 if(lambertTerm > 0.0){
-						 ld += (uPointLightColor[i] * texelColor * lambertTerm * attenuation * uPointLightIntensity[i]) * uPointLightColor[i].a;
+						 ld += uPointLightColor[i] * texelColor * lambertTerm * attenuation * uPointLightIntensity[i] * uPointLightColor[i].a;
 						 specular = pow( max(dot(reflect(L, N), -L), 0.0), u_shininess);
 						 ls +=  specularLightColor * specular * u_specularPower * specularTextureValue * uPointLightIntensity[i] ;
 					 }

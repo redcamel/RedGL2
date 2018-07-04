@@ -289,7 +289,7 @@ var RedProgram;
 			var i = option.length
 			// option에 해당하는 주석을 코드로 전환시킨다.
 			while ( i-- ) {
-				var t0 = new RegExp('\/\/\#' + option[i] + '\#', 'gi')
+				var t0 = new RegExp('\/\/\#define\#' + option[i] + '\#', 'gi')
 				// console.log(t0)
 				vSource = vSource.replace(t0, '')
 				fSource = fSource.replace(t0, '')

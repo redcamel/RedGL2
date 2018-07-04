@@ -1,0 +1,15 @@
+[
+  {
+    "constructorYn": true,
+    "title": "RedText",
+    "description": "\nRedText Instance 생성.\nRedScene 생성시 내부속성으로 자동생성됨.\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ]
+    },
+    "return": "RedText Instance"
+  }
+]

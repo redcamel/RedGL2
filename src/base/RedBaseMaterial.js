@@ -12,7 +12,9 @@ var RedBaseMaterial;
 		 return : 'void'
 	 }
 	 :DOC*/
-	RedBaseMaterial = function () {}
+	RedBaseMaterial = function () {
+		this['_atlasMode'] = false
+	}
 	RedBaseMaterial.prototype = {
 		makeProgramList: (function () {
 			var makeList;
@@ -24,7 +26,7 @@ var RedBaseMaterial;
 					target['_programList'].push(RedProgram['makeProgram'](redgl, programName, vSource, fSource, k.split('_')))
 					makeList(target, k, redgl, programName, vSource, fSource, (programOptionList.concat()).slice(index + 1))
 				})
-				console.log(programOptionList)
+				// console.log(programOptionList)
 			}
 			return function (target, redGL, programName, vSource, fSource, programOptionList) {
 				makeList(target, '', redGL, programName, vSource, fSource, programOptionList)
@@ -35,14 +37,21 @@ var RedBaseMaterial;
 		searchProgram: (function () {
 			return function (PROGRAM_NAME, keyList) {
 				var t0, self
+				var atlasMode = false
 				t0 = []
 				self = this;
-				keyList.forEach(function (key) { if ( self[key] ) t0.push(key)})
-				console.log(keyList)
+				keyList.forEach(function (key) {
+					if ( self[key] ) {
+						t0.push(key)
+						if ( self[key] instanceof RedAtlasTexture ) atlasMode = true
+					}
+				})
+				// console.log(keyList)
+				if(atlasMode) t0.push('atlasMode')
 				if ( t0.length ) t0.sort(), t0 = PROGRAM_NAME + '_' + t0.join('_')
 				else t0 = PROGRAM_NAME
-				console.log('찾아야할프로그램', t0)
-				console.log(this)
+				// console.log('찾아야할프로그램', t0)
+				// console.log(this)
 				this['program'] = this['_programList'].filter(function (v) {
 					if ( v['key'] == t0 ) return true
 				})[0]
