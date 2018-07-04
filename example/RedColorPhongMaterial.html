@@ -54,7 +54,7 @@
 			// Box 설정
 			var tSphere, tSphere2, tSphere3;
 			var tMaterial = RedColorMaterial(this, '#ff0000')
-			var tMaterial2 = RedColorPhongMaterial(this, '#ff0000')
+			var tMaterial2 = RedColorPhongTextureMaterial(this, '#ff0000')
 			var tMaterial3 = RedColorPhongMaterial(this, '#ff0000')
 			var tNormalTexture = RedBitmapTexture(this, '../asset/normalTest.jpg')
 			var tSpecularTexture = RedBitmapTexture(this, '../asset/specular.png')
@@ -82,7 +82,7 @@
 			console.log('초기화 실패!')
 		}
 	})
-	testUI = function (redGL, tCamera, tScene, tMaterial, tMaterial2, tMaterial3, tNormalTexture, tSpecularTexture, tDisplacementTexture) {
+	testUI = function (redGL, tCamera, tScene, tMaterial, testColorPhongTextureMaterial, testColorPhongMaterial, tNormalTexture, tSpecularTexture, tDisplacementTexture) {
 		console.log('test')
 		var gui = new baseTestUI(redGL)
 		gui.initRedGL()
@@ -103,34 +103,37 @@
 		}
 		testColorPhong = new testColorPhong()
 		t0.addColor(testColorPhong, 'color').onChange(function (v) {
-			tMaterial3.color = v
+			testColorPhongMaterial.color = v
 		})
 		t0.add(testColorPhong, 'normalPower', 0, 3).onChange(function (v) {
-			tMaterial2['normalPower'] = v
+			testColorPhongTextureMaterial['normalPower'] = v
+			testColorPhongMaterial['normalPower'] = v
 		})
 		t0.add(testColorPhong, 'shininess', 1, 128).onChange(function (v) {
-			tMaterial3['shininess'] = v
+			testColorPhongTextureMaterial['shininess'] = v
+			testColorPhongMaterial['shininess'] = v
 		})
 		t0.add(testColorPhong, 'specularPower', 0.1, 10).onChange(function (v) {
-			tMaterial3['specularPower'] = v
+			testColorPhongTextureMaterial['specularPower'] = v
+			testColorPhongMaterial['specularPower'] = v
 		})
 		t0.add(testColorPhong, 'normalTexture').onChange(function (v) {
-			tMaterial2['normalTexture'] = v ? tNormalTexture : null
+			testColorPhongTextureMaterial['normalTexture'] = v ? tNormalTexture : null
 		})
 		t0.add(testColorPhong, 'specularTexture').onChange(function (v) {
-			tMaterial2['specularTexture'] = v ? tSpecularTexture : null
+			testColorPhongTextureMaterial['specularTexture'] = v ? tSpecularTexture : null
 		})
 		t0.add(testColorPhong, 'displacementTexture').onChange(function (v) {
-			tMaterial2['displacementTexture'] = v ? tDisplacementTexture : null
+			testColorPhongTextureMaterial['displacementTexture'] = v ? tDisplacementTexture : null
 		})
-		t0.add(tMaterial2, 'displacementPower', 0, 2).onChange(function (v) {
-			tMaterial2['displacementPower'] = v
+		t0.add(testColorPhongTextureMaterial, 'displacementPower', 0, 2).onChange(function (v) {
+			testColorPhongTextureMaterial['displacementPower'] = v
 		})
-		t0.add(tMaterial2, 'displacementFlowSpeedX', 0, 0.3, 0.001).onChange(function (v) {
-			tMaterial2['displacementFlowSpeedX'] = v
+		t0.add(testColorPhongTextureMaterial, 'displacementFlowSpeedX', 0, 0.3, 0.001).onChange(function (v) {
+			testColorPhongTextureMaterial['displacementFlowSpeedX'] = v
 		})
-		t0.add(tMaterial2, 'displacementFlowSpeedY', 0, 0.3, 0.001).onChange(function (v) {
-			tMaterial2['displacementFlowSpeedY'] = v
+		t0.add(testColorPhongTextureMaterial, 'displacementFlowSpeedY', 0, 0.3, 0.001).onChange(function (v) {
+			testColorPhongTextureMaterial['displacementFlowSpeedY'] = v
 		})
 		t0.open()
 	}

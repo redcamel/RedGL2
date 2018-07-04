@@ -394,6 +394,13 @@ var RedRenderer;
 			// console.log("worldRender", v['key'], t0)
 			self['renderInfo'] = {}
 			self['cacheInfo']['cacheAttrInfo'].length = 0
+
+			// 일단 0번과 1번텍스트는 무조건 체운다.
+			redGL.gl.activeTexture(redGL.gl.TEXTURE0);
+			redGL.gl.bindTexture(redGL.gl.TEXTURE_2D, redGL['_datas']['emptyTexture']['2d']['webglTexture']);
+			redGL.gl.activeTexture(redGL.gl.TEXTURE0+1);
+			redGL.gl.bindTexture(redGL.gl.TEXTURE_CUBE_MAP, redGL['_datas']['emptyTexture']['3d']['webglTexture']);
+
 			self['world']['_viewList'].forEach(function (tView) {
 
 				///////////////////////////////////
