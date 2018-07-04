@@ -31,7 +31,7 @@ RedGL(document.createElement('canvas'), function (v) {
 				}
 			}, false),
 			redTest("RedScene instance 생성시 postEffectManager속성에 RedPostEffectManager Instance가 생김 ", function (unit, title) {
-				var t0 = RedScene(tRedGL)
+				var t0 = RedView('test',tRedGL,RedScene(tRedGL),RedCamera())
 				unit.run(t0['postEffectManager'] instanceof RedPostEffectManager)
 			}, true)
 		),

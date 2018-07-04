@@ -34,6 +34,8 @@ var RedBaseTexture;
 					]
 				)
 			)
+			// 픽셀 플립 기본설정
+			gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
 			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
 			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
@@ -41,8 +43,6 @@ var RedBaseTexture;
 			gl.generateMipmap(gl.TEXTURE_2D);
 			gl.pixelStorei(gl.UNPACK_ALIGNMENT, 4);
 			gl.bindTexture(gl.TEXTURE_2D, null);
-			// 픽셀 플립 기본설정
-			gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
 		}
 	}
 	Object.freeze(RedBaseTexture)

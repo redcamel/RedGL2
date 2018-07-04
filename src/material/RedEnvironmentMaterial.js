@@ -8,20 +8,20 @@ var RedEnvironmentMaterial;
 		/* @preserve
 		 varying vec4 vVertexPositionEye4;
 		 varying vec3 vReflectionCubeCoord;
-		 //#displacementTexture# uniform sampler2D u_displacementTexture;
-		 //#displacementTexture# uniform float u_displacementPower;
-	     //#displacementTexture# uniform float u_displacementFlowSpeedX;
-		 //#displacementTexture# uniform float u_displacementFlowSpeedY;
+		 //#define#displacementTexture# uniform sampler2D u_displacementTexture;
+		 //#define#displacementTexture# uniform float u_displacementPower;
+	     //#define#displacementTexture# uniform float u_displacementFlowSpeedX;
+		 //#define#displacementTexture# uniform float u_displacementFlowSpeedY;
 
 		 void main(void) {
 			 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
-			 vVertexNormal = vec3(uNMatrix * vec4(aVertexNormal,1.0));
+			 vVertexNormal = (uNMatrix * vec4(aVertexNormal,1.0)).xyz;
 			 vVertexPositionEye4 = uMMatrix * vec4(aVertexPosition, 1.0);
 
-			 //#displacementTexture# vVertexPositionEye4.xyz += normalize(vVertexNormal) * texture2D(u_displacementTexture, vTexcoord + vec2(
-			 //#displacementTexture#    u_displacementFlowSpeedX * (uTime/1000.0),
-			 //#displacementTexture#    u_displacementFlowSpeedY * (uTime/1000.0)
-		     //#displacementTexture# )).x * u_displacementPower ;
+			 //#define#displacementTexture# vVertexPositionEye4.xyz += normalize(vVertexNormal) * texture2D(u_displacementTexture, vTexcoord + vec2(
+			 //#define#displacementTexture#    u_displacementFlowSpeedX * (uTime/1000.0),
+			 //#define#displacementTexture#    u_displacementFlowSpeedY * (uTime/1000.0)
+		     //#define#displacementTexture# )).x * u_displacementPower ;
 
 			 vReflectionCubeCoord = -vVertexPositionEye4.xyz;
 
@@ -33,12 +33,12 @@ var RedEnvironmentMaterial;
 	fSource = function () {
 		/* @preserve
 		 precision mediump float;
-		 //#diffuseTexture# uniform sampler2D u_diffuseTexture;
-		 //#normalTexture# uniform sampler2D u_normalTexture;
-		 //#specularTexture# uniform sampler2D u_specularTexture;
+		 //#define#diffuseTexture# uniform sampler2D u_diffuseTexture;
+		 //#define#normalTexture# uniform sampler2D u_normalTexture;
+		 //#define#specularTexture# uniform sampler2D u_specularTexture;
 		 uniform samplerCube u_environmentTexture;
 
-         //#normalTexture# uniform float u_normalPower;
+         //#define#normalTexture# uniform float u_normalPower;
 		 uniform float u_shininess;
 		 uniform float u_specularPower;
 		 uniform float u_reflectionPower;
@@ -75,21 +75,20 @@ var RedEnvironmentMaterial;
 			 ld = vec4(0.0, 0.0, 0.0, 1.0);
 			 ls = vec4(0.0, 0.0, 0.0, 1.0);
 
-			 // texelColor = vec4(0.0,0.0,0.0,0.0);
-			 //#diffuseTexture# texelColor = texture2D(u_diffuseTexture, vTexcoord);
-			 //#diffuseTexture# texelColor.rgb *= texelColor.a;
+			 texelColor = vec4(0.0,0.0,0.0,0.0);
+			 //#define#diffuseTexture# texelColor = texture2D(u_diffuseTexture, vTexcoord);
+			 //#define#diffuseTexture# texelColor.rgb *= texelColor.a;
 
 			 N = normalize(vVertexNormal);
-			 //#normalTexture# vec4 normalColor = texture2D(u_normalTexture, vTexcoord);
-			 //#normalTexture# if(normalColor.a != 0.0) N = normalize(2.0 * (N + normalColor.rgb * u_normalPower  - 0.5));
+			 //#define#normalTexture# vec4 normalColor = texture2D(u_normalTexture, vTexcoord);
+			 //#define#normalTexture# if(normalColor.a != 0.0) N = normalize(2.0 * (N + normalColor.rgb * u_normalPower  - 0.5));
 
 			 reflectionColor = textureCube(u_environmentTexture, 2.0 * dot(vReflectionCubeCoord, vVertexNormal) * vVertexNormal - vReflectionCubeCoord);
-			 // texelColor = texelColor * (1.0 - u_reflectionPower) + reflectionColor * u_reflectionPower;
 			 texelColor = mix(texelColor,reflectionColor ,u_reflectionPower);
 
 			 specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);
 			 specularTextureValue = 1.0;
-			 //#specularTexture#  specularTextureValue = texture2D(u_specularTexture, vTexcoord).r;
+			 //#define#specularTexture#  specularTextureValue = texture2D(u_specularTexture, vTexcoord).r;
 
 			 for(int i=0; i<cDIRETIONAL_MAX; i++){
 				 if(i == uDirectionalLightNum) break;
@@ -98,7 +97,7 @@ var RedEnvironmentMaterial;
 				 if(lambertTerm > 0.0){
 					 ld += uDirectionalLightColor[i] * texelColor * lambertTerm * uDirectionalLightIntensity[i] * uDirectionalLightColor[i].a;
 					 specular = pow( max(dot(reflect(L, N), -L), 0.0), u_shininess);
-					 ls +=  specularLightColor * specular * u_specularPower * specularTextureValue * uDirectionalLightIntensity[i];
+					 ls +=  specularLightColor * pow( max(dot(reflect(L, N), -L), 0.0), u_shininess) * u_specularPower * specularTextureValue * uDirectionalLightIntensity[i];
 				 }
 			 }
 

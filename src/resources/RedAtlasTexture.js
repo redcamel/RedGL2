@@ -54,6 +54,6 @@ var RedAtlasTexture;
 		this['_UUID'] = t0['atlas']['_UUID']
 		console.log(this)
 	}
-	RedAtlasTexture.prototype = RedBitmapTexture.prototype;
+	RedAtlasTexture.prototype = new RedBaseTexture();
 	Object.freeze(RedAtlasTexture);
 })();

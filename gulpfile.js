@@ -89,7 +89,6 @@ gulp.task('make-doc', function () {
 		"src/loader/dae/RedDAELoader.js",
 		"src/material/RedColorMaterial.js",
 		"src/material/RedColorPhongMaterial.js",
-		"src/material/RedColorPhongTextureMaterial.js",
 		"src/material/RedEnvironmentMaterial.js",
 		"src/material/RedBitmapMaterial.js",
 		"src/material/RedParticleColorMaterial.js",
@@ -199,7 +198,6 @@ gulp.task('combine-js', function () {
 		// 재질
 		"src/material/RedColorMaterial.js",
 		"src/material/RedColorPhongMaterial.js",
-		"src/material/RedColorPhongTextureMaterial.js",
 		"src/material/RedEnvironmentMaterial.js",
 		"src/material/RedBitmapMaterial.js",
 		"src/material/RedParticleColorMaterial.js",
@@ -278,6 +276,7 @@ gulp.task('combine-js', function () {
 		"src/postEffect/RedPostEffect_DoF.js",
 		"src/postEffect/RedPostEffect_DoF_DepthMaterial.js",
 		"src/postEffect/RedPostEffect_Film.js",
+		"src/postEffect/RedPostEffect_Vignetting.js",
 		"src/postEffect/RedPostEffect_Vignetting.js",
 		"src/postEffect/antialiasing/RedPostEffect_FXAA.js"
 	])

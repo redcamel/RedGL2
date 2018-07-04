@@ -110,7 +110,7 @@ var RedOBJLoader;
 						r = tMtlData['Kd'][0] * 255;
 						g = tMtlData['Kd'][1] * 255;
 						b = tMtlData['Kd'][2] * 255;
-						if ( ableLight ) tMaterial = RedColorPhongTextureMaterial(redGL, RedGLUtil.rgb2hex(r, g, b));
+						if ( ableLight ) tMaterial = RedColorPhongMaterial(redGL, RedGLUtil.rgb2hex(r, g, b));
 						else {
 							if ( tMeshData['ableNormal'] ) tMaterial = RedColorPhongMaterial(redGL, RedGLUtil.rgb2hex(r, g, b));
 							else tMaterial = RedColorMaterial(redGL, RedGLUtil.rgb2hex(r, g, b));
@@ -179,7 +179,7 @@ var RedOBJLoader;
 					}
 				}
 				var tempMaterial;
-				if ( tData['resultUV'].length && tData['resultNormal'].length ) tempMaterial = RedColorPhongTextureMaterial(redGL, '#00ff00')
+				if ( tData['resultUV'].length && tData['resultNormal'].length ) tempMaterial = RedColorPhongMaterial(redGL, '#00ff00')
 				else {
 					if ( tData['resultNormal'] ) tempMaterial = RedColorPhongMaterial(redGL, '#00ff00')
 					else tempMaterial = RedColorMaterial(redGL, '#0000ff')
