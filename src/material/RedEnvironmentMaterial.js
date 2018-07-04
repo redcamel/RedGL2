@@ -83,7 +83,7 @@ var RedEnvironmentMaterial;
 			 //#define#normalTexture# vec4 normalColor = texture2D(u_normalTexture, vTexcoord);
 			 //#define#normalTexture# if(normalColor.a != 0.0) N = normalize(2.0 * (N + normalColor.rgb * u_normalPower  - 0.5));
 
-			 reflectionColor = textureCube(u_environmentTexture, 2.0 * dot(vReflectionCubeCoord, vVertexNormal) * vVertexNormal - vReflectionCubeCoord);
+			 reflectionColor = textureCube(u_environmentTexture, 2.0 * dot(vReflectionCubeCoord, N) * N - vReflectionCubeCoord);
 			 texelColor = mix(texelColor,reflectionColor ,u_reflectionPower);
 
 			 specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);
@@ -92,7 +92,7 @@ var RedEnvironmentMaterial;
 
 			 for(int i=0; i<cDIRETIONAL_MAX; i++){
 				 if(i == uDirectionalLightNum) break;
-				 L = -uDirectionalLightPosition[i];
+				 L = normalize(-uDirectionalLightPosition[i]);
 				 lambertTerm = dot(N,-L);
 				 if(lambertTerm > 0.0){
 					 ld += uDirectionalLightColor[i] * texelColor * lambertTerm * uDirectionalLightIntensity[i] * uDirectionalLightColor[i].a;
@@ -107,6 +107,7 @@ var RedEnvironmentMaterial;
 				 distanceLength = length(L);
 				 if(uPointLightRadius[i]> distanceLength){
 					 attenuation = 1.0 / (0.01 + 0.02 * distanceLength + 0.03 * distanceLength * distanceLength);
+					 L = normalize(L);
 					 lambertTerm = dot(N,-L);
 					 if(lambertTerm > 0.0){
 						 ld += uPointLightColor[i] * texelColor * lambertTerm * attenuation * uPointLightIntensity[i] * uPointLightColor[i].a;

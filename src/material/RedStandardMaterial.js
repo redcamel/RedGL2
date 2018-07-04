@@ -92,8 +92,8 @@ var RedStandardMaterial;
 			 ls = vec4(0.0, 0.0, 0.0, 1.0);
 
 			 texelColor = texture2D(u_diffuseTexture, vTexcoord);
-			 // texelColor.rgb *= texelColor.a;
-			 // if(texelColor.a ==0.0) discard;
+			 texelColor.rgb *= texelColor.a;
+			 if(texelColor.a ==0.0) discard;
 
 			///////////////////////////////////////////////////////////////////////////////////////
 
@@ -135,14 +135,14 @@ var RedStandardMaterial;
 			 //#define#specularTexture# specularTextureValue = texture2D(u_specularTexture, vTexcoord).r;
 
 
-			 for(int i=0; i<cDIRETIONAL_MAX; i++){
+			for(int i=0; i<cDIRETIONAL_MAX; i++){
 				 if(i == uDirectionalLightNum) break;
-				 L = -uDirectionalLightPosition[i];
+				 L = normalize(-uDirectionalLightPosition[i]);
 				 lambertTerm = dot(N,-L);
 				 if(lambertTerm > 0.0){
 					 ld += uDirectionalLightColor[i] * texelColor * lambertTerm * uDirectionalLightIntensity[i] * uDirectionalLightColor[i].a;
 					 specular = pow( max(dot(reflect(L, N), -L), 0.0), u_shininess);
-					 ls +=  specularLightColor * specular * u_specularPower * specularTextureValue * uDirectionalLightIntensity[i];
+					 ls +=  specularLightColor * pow( max(dot(reflect(L, N), -L), 0.0), u_shininess) * u_specularPower * specularTextureValue * uDirectionalLightIntensity[i];
 				 }
 			 }
 
@@ -152,6 +152,7 @@ var RedStandardMaterial;
 				 distanceLength = length(L);
 				 if(uPointLightRadius[i]> distanceLength){
 					 attenuation = 1.0 / (0.01 + 0.02 * distanceLength + 0.03 * distanceLength * distanceLength);
+					 L = normalize(L);
 					 lambertTerm = dot(N,-L);
 					 if(lambertTerm > 0.0){
 						 ld += uPointLightColor[i] * texelColor * lambertTerm * attenuation * uPointLightIntensity[i] * uPointLightColor[i].a;

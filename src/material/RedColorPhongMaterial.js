@@ -89,14 +89,14 @@ var RedColorPhongMaterial;
 				 L = normalize(-uDirectionalLightPosition[i]);
 				 lambertTerm = dot(N,-L);
 				 if(lambertTerm > 0.0){
-					 ld += (uDirectionalLightColor[i] * texelColor * lambertTerm * uDirectionalLightIntensity[i]) * uDirectionalLightColor[i].a;
+					 ld += uDirectionalLightColor[i] * texelColor * lambertTerm * uDirectionalLightIntensity[i] * uDirectionalLightColor[i].a;
 					 specular = pow( max(dot(reflect(L, N), -L), 0.0), u_shininess);
-					 ls +=  specularLightColor * specular * u_specularPower * specularTextureValue * uDirectionalLightIntensity[i];
+					 ls +=  specularLightColor * pow( max(dot(reflect(L, N), -L), 0.0), u_shininess) * u_specularPower * specularTextureValue * uDirectionalLightIntensity[i];
 				 }
 			 }
 
 			 for(int i=0;i<cPOINT_MAX;i++){
-			 if(i== uPointLightNum) break;
+				 if(i== uPointLightNum) break;
 				 L =  -uPointLightPosition[i] + vVertexPositionEye4.xyz;
 				 distanceLength = length(L);
 				 if(uPointLightRadius[i]> distanceLength){
@@ -104,7 +104,7 @@ var RedColorPhongMaterial;
 					 L = normalize(L);
 					 lambertTerm = dot(N,-L);
 					 if(lambertTerm > 0.0){
-						 ld += (uPointLightColor[i] * texelColor * lambertTerm * attenuation * uPointLightIntensity[i]) * uPointLightColor[i].a;
+						 ld += uPointLightColor[i] * texelColor * lambertTerm * attenuation * uPointLightIntensity[i] * uPointLightColor[i].a;
 						 specular = pow( max(dot(reflect(L, N), -L), 0.0), u_shininess);
 						 ls +=  specularLightColor * specular * u_specularPower * specularTextureValue * uPointLightIntensity[i] ;
 					 }
