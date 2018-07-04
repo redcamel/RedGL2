@@ -295,7 +295,6 @@ var RedDAELoader;
 		var parse;
 		parse = function (map, parentTargetInfo, list, targetList) {
 			targetList.forEach(function (target) {
-
 				var tInfo;
 				var tSubTargetList = []
 				var i = target.children.length
@@ -397,30 +396,47 @@ var RedDAELoader;
 				// 대상 메쉬를 결과메쉬에 추가
 				tRedDAELoader['resultMesh'].addChild(tResultMesh)
 				// 씬해석
-				// visualSceneInfo = parseVisualSceneInfo(rawData)
+				visualSceneInfo = parseVisualSceneInfo(rawData)
 				// 애니메이션해석
-				// aniInfo = parseAnimation(rawData)
+				aniInfo = parseAnimation(rawData)
 				// 콘트롤러해석
-				// controllerInfo = parseController(redGL, rawData, tRedDAELoader['resultMesh'], tResultMesh)
-				// controllerInfo2 = parseController2(rawData)
-				// var aniIndex = 0
-				// var aniMax = aniInfo['Armature_mixamorig_HeadTop_End_pose_matrix']['time'].length
-				// // console.log('idxMap',idxMap)
-				// var makeMatrix = function (list, target) {
-				// 	// console.log('뭐가오나',visualSceneInfo[target])
-				// 	var tAniMatrix;
-				// 	for ( var k in aniInfo ) {
-				// 		if ( aniInfo[k]['target'] == controllerInfo[target]['name'] ) {
-				// 			tAniMatrix = aniInfo[k]['matrix'][aniIndex];
-				// 			break
-				// 		}
-				// 	}
-				// 	list.push({
-				// 		name: controllerInfo[target]['name'],
-				// 		matrix: tAniMatrix
-				// 	})
-				// 	if ( visualSceneInfo[target]['parent'] ) makeMatrix(list, visualSceneInfo[target]['parent']['name'])
-				// }
+				controllerInfo = parseController(redGL, rawData, tRedDAELoader['resultMesh'], tResultMesh)
+				controllerInfo2 = parseController2(rawData)
+				var aniIndex = 0
+				var aniMax = aniInfo['Armature_mixamorig_HeadTop_End_pose_matrix']['time'].length
+				// console.log('idxMap',idxMap)
+				var makeMatrix = function (list, target) {
+					// console.log('뭐가오나',visualSceneInfo[target])
+					var tAniMatrix;
+					for ( var k in aniInfo ) {
+						if ( aniInfo[k]['target'] == controllerInfo[target]['name'] ) {
+							tAniMatrix = aniInfo[k]['matrix'][aniIndex];
+							break
+						}
+					}
+					list.push({
+						name: controllerInfo[target]['name'],
+						matrix: tAniMatrix
+					})
+					if ( visualSceneInfo[target]['parent'] ) makeMatrix(list, visualSceneInfo[target]['parent']['name'])
+				}
+				var makeMatrix2 = function (list, target) {
+					// console.log('뭐가오나',visualSceneInfo[target])
+					var tAniMatrix;
+					for ( var k in aniInfo ) {
+						if ( aniInfo[k]['target'] == controllerInfo[target]['name'] ) {
+							tAniMatrix = aniInfo[k]['matrix'][aniIndex];
+							break
+						}
+					}
+					if ( tAniMatrix ) {
+						list.push({
+							name: controllerInfo[target]['name'],
+							matrix: controllerInfo[target]['matrix']
+						})
+						if ( visualSceneInfo[target]['parent'] ) makeMatrix2(list, visualSceneInfo[target]['parent']['name'])
+					}
+				}
 				// console.log('idxMap', idxMap)
 				// setInterval(function () {
 				// 	// console.log()
@@ -429,94 +445,130 @@ var RedDAELoader;
 				// 	for ( var k in aniInfo ) {
 				// 		if ( aniInfo[k]['target'] && controllerInfo[aniInfo[k]['target']] ) {
 				// 			var skeletonMatrix = mat4.create()
+				// 			var poseMatrix = mat4.create()
 				// 			var parentMTX2 = mat4.create()
-				// 			var mtxList = []
-				// 			makeMatrix(mtxList, aniInfo[k]['target'])
-				// 			// mtxList.reverse()
-				// 			// console.log('mtxList',mtxList)
-				// 			mtxList.forEach(function (v, index) {
+				// 			var aniMtxList = []
+				// 			var poseMtxList = []
+				// 			makeMatrix(aniMtxList, aniInfo[k]['target'])
+				// 			aniMtxList.forEach(function (v, index) {
 				// 				mat4.multiply(skeletonMatrix, skeletonMatrix, v['matrix'])
 				// 				parentMTX2 = mat4.clone(v['matrix'])
 				// 			})
+				// 			makeMatrix2(poseMtxList, aniInfo[k]['target'])
+				// 			poseMtxList.forEach(function (v, index) {
+				// 				// console.log(v)
+				// 				mat4.multiply(poseMatrix, poseMatrix, v['matrix'])
+				// 			})
 				// 			mat4.transpose(skeletonMatrix, skeletonMatrix, skeletonMatrix)
+				// 			mat4.invert(poseMatrix, poseMatrix, poseMatrix)
 				// 			// console.log(mtxList)
 				// 			controllerInfo[aniInfo[k]['target']]['skeleton']['autoUpdateMatrix'] = false
 				// 			controllerInfo[aniInfo[k]['target']]['autoUpdateMatrix'] = false
 				// 			controllerInfo[aniInfo[k]['target']]['skeleton']['matrix'] = skeletonMatrix
-				// 			controllerInfo[aniInfo[k]['target']]['matrix'] = skeletonMatrix
-				// 			var tControllIndex = controllerInfo2['jointNamePositionIndex'][aniInfo[k]['target']]
-				// 			var tInversePose = controllerInfo2['jointInverseBindPoses'][tControllIndex]
-				// 			if(!mtxMap[tControllIndex]){
-				// 				mtxMap[tControllIndex] = {
-				// 					jointNamePositionIndex: tControllIndex,
-				// 					inversePose: tInversePose,
+				// 			// controllerInfo[aniInfo[k]['target']]['matrix'] = skeletonMatrix
+				// 			var jointNamePositionIndex = controllerInfo2['jointNamePositionIndex'][aniInfo[k]['target']]
+				// 			var jointInverseBindPoses = controllerInfo2['jointInverseBindPoses'][jointNamePositionIndex]
+				// 			if ( !mtxMap[jointNamePositionIndex] ) {
+				// 				mtxMap[jointNamePositionIndex] = {
+				// 					jointNamePositionIndex: jointNamePositionIndex,
+				// 					jointInverseBindPoses: jointInverseBindPoses,
 				// 					skeletonMatrix: skeletonMatrix,
-				// 					parentMTX2: parentMTX2,
-				// 					tMatrix: mtxList[0],
+				// 					poseMtxList: poseMatrix,
+				// 					name: aniMtxList[0]['name'],
+				// 					matrix: controllerInfo[aniInfo[k]['target']]['matrix'],
+				// 					aniMatrix: aniMtxList[0]['matrix'],
 				// 					bindShapeMatrix: controllerInfo2['bindShapeMatrix']
 				// 				}
 				// 			}
-				//
 				// 		}
 				// 		i++
 				// 	}
-				// 	// 일단 전체 포인트에 대한 초기화는 이렇게 가능하고..
+				// 	// console.log(mtxMap)
+				// 	// // 일단 전체 포인트에 대한 초기화는 이렇게 가능하고..
 				// 	t_indexDataIndex.forEach(function (v, index) {
 				// 		tInterleaveBuffer['data'][v * 8 + 0] = pointInfo['pointList'][v][0]
 				// 		tInterleaveBuffer['data'][v * 8 + 1] = pointInfo['pointList'][v][1]
 				// 		tInterleaveBuffer['data'][v * 8 + 2] = pointInfo['pointList'][v][2]
 				// 	})
 				// 	// 뼈대 가중치에서 처리함
-				// 	var t1
-				// 	var total = 0
-				// 	var tMap = {}
-				// 	t_indexDataIndex.forEach(function (v2, index) {
-				// 		if ( tMap[v2] ) return
-				// 		tMap[v2] = 1
-				// 		// if(index>0) return
-				// 		v2 = v2
-				// 		total = 0
-				// 		var totalRAtio = 0
+				// 	controllerInfo2['parsedVertexJointWeights'].forEach(function (v, currentVertexIndex) {
 				// 		var finalMTX = mat4.create()
-				// 		var t = (new Date()).getTime() / 500
-				// 		for ( var k2 in controllerInfo2['parsedVertexJointWeights'][v2] ) {
-				// 			var t2 = mat4.create()
-				// 			var tRadio = controllerInfo2['parsedVertexJointWeights'][v2][k2]
-				// 			// console.log(controllerInfo2['parsedVertexJointWeights'][v2])
-				// 			// console.log(controllerInfo2['bindShapeMatrix'])
-				// 			// console.log( mtxMap[k2]['skeletonMatrix'])
-				//
-				// 			// 원본좌표
-				// 			var t0 = [
+				// 		for ( var boneIndex in v ) {
+				// 			var tBoneWeight = v[boneIndex]
+				// 			var result = mat4.create()
+				// 			// mat4.multiply(result, result, mtxMap[boneIndex]['bindShapeMatrix'])
+				// 			// mat4.multiply(result, result, mtxMap[boneIndex]['jointInverseBindPoses'])
+				// 			var originLocation = [
 				// 				1, 0, 0, 0,
 				// 				0, 1, 0, 0,
 				// 				0, 0, 1, 0,
-				// 				0, 0, 0, 1
+				// 				pointInfo['pointList'][currentVertexIndex][0],
+				// 				pointInfo['pointList'][currentVertexIndex][1],
+				// 				pointInfo['pointList'][currentVertexIndex][2],
+				// 				1
 				// 			]
-				// 			var t2 = mat4.clone(mtxMap[k2]['skeletonMatrix'])
-				// 			mat4.multiply(t0, t0, t2)
 				//
-				//
-				//
-				// 			mat4.scale(t2, t2, [tRadio, tRadio, tRadio])
-				//
-				// 			mat4.add(finalMTX, finalMTX, t0)
-				//
-				// 			total++
-				// 			totalRAtio+=tRadio
+				// 			mat4.multiply(result, result, originLocation)
+				// 			// mat4.multiply(result, result, mtxMap[boneIndex]['skeletonMatrix'])
+				// 			mat4.multiply(result, result, mtxMap[boneIndex]['bindShapeMatrix'])
+				// 			mat4.multiply(result, result, mtxMap[boneIndex]['jointInverseBindPoses'])
+				// 			// 위치 매트릭스
+				// 			mat4.multiplyScalar(result, result, tBoneWeight)
+				// 			if(currentVertexIndex==0){
+				// 				// console.log(mtxMap[boneIndex]['poseMtxList'])
+				// 			}
+				// 			// mat4.scale(result, result, [tBoneWeight, tBoneWeight, tBoneWeight])
+				// 			mat4.add(finalMTX, finalMTX, result)
 				// 		}
 				//
-				// 		var ttt = [
-				// 			pointInfo['pointList'][v2][0],
-				// 			pointInfo['pointList'][v2][1],
-				// 			pointInfo['pointList'][v2][2],
-				// 		]
-				// 		vec3.transformMat4(ttt, ttt, finalMTX)
-				// 		totalRAtio = totalRAtio / total
-				// 		tInterleaveBuffer['data'][v2 * 8 + 0] = ttt[0]
-				// 		tInterleaveBuffer['data'][v2 * 8 + 1] = ttt[1]
-				// 		tInterleaveBuffer['data'][v2 * 8 + 2] = ttt[2]
+				// 		tInterleaveBuffer['data'][currentVertexIndex * 8 + 0] = finalMTX[12]
+				// 		tInterleaveBuffer['data'][currentVertexIndex * 8 + 1] = finalMTX[13]
+				// 		tInterleaveBuffer['data'][currentVertexIndex * 8 + 2] = finalMTX[14]
+				//
 				// 	})
+				// 	// t_indexDataIndex.forEach(function (v2, index) {
+				// 	// 	var finalMTX = mat4.create()
+				// 	// 	// 버텍스당 본을 찾아냄
+				// 	// 	for ( var currentVertexIndex in controllerInfo2['parsedVertexJointWeights'][v2] ) {
+				// 	// 		// 본의 가중치를 구함
+				// 	// 		var tBoneWeight = controllerInfo2['parsedVertexJointWeights'][v2][currentVertexIndex]
+				// 	// 		// console.log(controllerInfo2['parsedVertexJointWeights'][v2])
+				// 	// 		// console.log(controllerInfo2['bindShapeMatrix'])
+				// 	// 		// console.log( mtxMap[k2]['skeletonMatrix'])
+				// 	// 		// 원본좌표를 옮김
+				// 	// 		var result = mat4.create()
+				// 	// 		var originLocation = [
+				// 	// 			1, 0, 0, 0,
+				// 	// 			0, 1, 0, 0,
+				// 	// 			0, 0, 1, 0,
+				// 	// 			pointInfo['pointList'][currentVertexIndex][0],
+				// 	// 			pointInfo['pointList'][currentVertexIndex][1],
+				// 	// 			pointInfo['pointList'][currentVertexIndex][2],
+				// 	// 			1
+				// 	// 		]
+				// 	// 		// 위치 매트릭스
+				// 	// 		mat4.multiply(result, result, originLocation)
+				// 	// 		mat4.multiply(result, result, mtxMap[currentVertexIndex]['jointInverseBindPoses'])
+				// 	// 		mat4.multiply(result, result, mtxMap[currentVertexIndex]['matrix'])
+				// 	// 		mat4.scale(result, result, [tBoneWeight, tBoneWeight, tBoneWeight])
+				// 	// 		mat4.add(finalMTX,finalMTX,result)
+				// 	// 	}
+				// 	// 	tInterleaveBuffer['data'][v2 * 8 + 0] = finalMTX[12]
+				// 	// 	tInterleaveBuffer['data'][v2 * 8 + 1] = finalMTX[13]
+				// 	// 	tInterleaveBuffer['data'][v2 * 8 + 2] = finalMTX[14]
+				// 	//
+				// 	//
+				// 	// 	// var ttt = [
+				// 	// 	// 	pointInfo['pointList'][v2][0],
+				// 	// 	// 	pointInfo['pointList'][v2][1],
+				// 	// 	// 	pointInfo['pointList'][v2][2],
+				// 	// 	// ]
+				// 	// 	// vec3.transformMat4(ttt, ttt, finalMTX)
+				// 	// 	// totalRAtio = totalRAtio / total
+				// 	// 	// tInterleaveBuffer['data'][v2 * 8 + 0] = ttt[0]
+				// 	// 	// tInterleaveBuffer['data'][v2 * 8 + 1] = ttt[1]
+				// 	// 	// tInterleaveBuffer['data'][v2 * 8 + 2] = ttt[2]
+				// 	// })
 				// 	tResultMesh['geometry']['interleaveBuffer'].upload(tInterleaveBuffer['data'])
 				// 	aniIndex++
 				// 	if ( aniMax == aniIndex ) aniIndex = 0
