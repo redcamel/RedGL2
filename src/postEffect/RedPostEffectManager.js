@@ -266,7 +266,7 @@ var RedPostEffectManager;
 			draw = function (redGL, effect, postEffectChildren, redScene, redRenderer, time, renderInfo) {
 				// console.log('Render Effect', v)
 				var tParentFrameBufferTexture;
-				var tSubFrameBufferLigt; // 서브에서 씬자체를 그려야할때 사용;
+				var tSubFrameBufferList; // 서브에서 씬자체를 그려야할때 사용;
 				var tGL;
 				tGL = redGL.gl;
 				// 이펙트 최종결과를 생성하기전 전처리 진행
@@ -277,9 +277,9 @@ var RedPostEffectManager;
 					})
 				}
 				// 이펙트 서브신버퍼를 사용한다면 그림
-				tSubFrameBufferLigt = effect['subFrameBufferList']
-				if ( tSubFrameBufferLigt && tSubFrameBufferLigt.length ) {
-					tSubFrameBufferLigt.forEach(function (v) {
+				tSubFrameBufferList = effect['subFrameBufferList']
+				if ( tSubFrameBufferList && tSubFrameBufferList.length ) {
+					tSubFrameBufferList.forEach(function (v) {
 						v['frameBuffer']['width'] = tViewRect[2]
 						v['frameBuffer']['height'] = tViewRect[3]
 						v['frameBuffer'].bind(tGL);

@@ -49,6 +49,7 @@
 
     <script src="../src/material/RedColorMaterial.js"></script>
     <script src="../src/material/RedColorPhongMaterial.js"></script>
+    <script src="../src/material/RedColorPhongTextureMaterial.js"></script>
     <script src="../src/material/RedEnvironmentMaterial.js"></script>
     <script src="../src/material/RedBitmapMaterial.js"></script>
     <script src="../src/material/RedParticleColorMaterial.js"></script>
@@ -164,21 +165,20 @@
 				'../asset/cubemap/posz.png',
 				'../asset/cubemap/negz.png'
 			]);
-		var i = 8000
+		var i = 1000
 		var tt = RedDDSTexture(this, '../asset/dxt/test_dxt1.dds')
 		var tt1 = RedBitmapTexture(this, '../asset/normalTest.jpg')
 		var tt2 = RedBitmapTexture(this, '../asset/specular.png')
 		var tt3 = RedBitmapTexture(this, '../asset/displacementTest.jpg')
 		var tGeo = RedBox(this, 1, 1, 1, 5, 5, 5)
-        var tmat = RedStandardMaterial(
-	        this,
-	        tt,
-//				tt1,
-//				tt2,
-//				tt3
-        )
 		while ( i-- ) {
-			var t1 = RedMesh(this, tGeo, tmat)
+			var t1 = RedMesh(this, tGeo, RedStandardMaterial(
+				this,
+				tt,
+				tt1,
+				tt2,
+				tt3
+			))
 			t1.material.displacementPower = 0.5
 			t1.x = Math.random() * 100 - 50
 			t1.y = Math.random() * 100 - 50

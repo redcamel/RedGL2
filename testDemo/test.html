@@ -49,6 +49,7 @@
 
     <script src="../src/material/RedColorMaterial.js"></script>
     <script src="../src/material/RedColorPhongMaterial.js"></script>
+    <script src="../src/material/RedColorPhongTextureMaterial.js"></script>
     <script src="../src/material/RedEnvironmentMaterial.js"></script>
     <script src="../src/material/RedBitmapMaterial.js"></script>
     <script src="../src/material/RedParticleColorMaterial.js"></script>
@@ -184,8 +185,7 @@
 		var testMaterial
 		testMaterial = RedEnvironmentMaterial(
 			this,
-//			RedBitmapTexture(this, '../asset/crate.png'),
-			null,
+			RedBitmapTexture(this, '../asset/crate.png'),
 			RedBitmapCubeTexture(this, [
 				'../asset/cubemap/posx.png',
 				'../asset/cubemap/negx.png',
@@ -237,7 +237,7 @@
 			testMaterial = RedPointBitmapMaterial(self, RedBitmapTexture(self, '../asset/alphaTest.png'))
 			var interleaveData
 			interleaveData = []
-			var i = 1000000
+			var i = 100000
 			while ( i-- ) {
 				interleaveData.push(Math.random() * 150 - 75, Math.random() * 150 - 75, Math.random() * 150 - 75)
 				interleaveData.push(Math.random() * 50)
@@ -258,7 +258,7 @@
 		})();
 		JsonModelLoader(this, 'testJsonModel', '../asset/teapot.json', function (interleaveBuffer, indexBuffer) {
 			console.log('호잇!', interleaveBuffer, indexBuffer)
-			var i = 5000
+			var i = 7000
 			while ( i-- ) {
 				var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer), testMaterial)
 				testMesh.x = Math.random() * 250 - 125

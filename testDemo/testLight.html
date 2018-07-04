@@ -48,6 +48,7 @@
     <!--재질-->
     <script src="../src/material/RedColorMaterial.js"></script>
     <script src="../src/material/RedColorPhongMaterial.js"></script>
+    <script src="../src/material/RedColorPhongTextureMaterial.js"></script>
     <script src="../src/material/RedEnvironmentMaterial.js"></script>
     <script src="../src/material/RedBitmapMaterial.js"></script>
     <script src="../src/material/RedParticleColorMaterial.js"></script>
@@ -146,7 +147,6 @@
 		tController.distance = 20
 		tRenderer = RedRenderer();
 		tWorld.addView(RedView('test',this, tScene3D, tController));
-
 		RedView('test').setSize('100%', '100%')
 		RedView('test').setLocation('0%', '0%')
 		this.renderScale = 1
@@ -163,10 +163,9 @@
 				'../asset/cubemap/negz.png'
 			]),
 			RedBitmapTexture(this, '../asset/normalTest.jpg'),
-//			RedBitmapTexture(this, '../asset/specular.png'),
-//			RedBitmapTexture(this, '../asset/displacementTest.jpg')
+			RedBitmapTexture(this, '../asset/specular.png'),
+			RedBitmapTexture(this, '../asset/displacementTest.jpg')
 		)
-//		testMaterial.normalPower=0.5
 		testMaterial2 = RedBitmapMaterial(
 			this,
 			RedBitmapTexture(this, '../asset/alphaTest.png')

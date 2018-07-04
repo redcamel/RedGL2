@@ -1,23 +1,5 @@
 [
   {
-    "title": "displacementPower",
-    "description": "기본값 : 0",
-    "return": "Number"
-  },
-  {
-    "title": "displacementTexture",
-    "return": "RedBitmapTexture"
-  },
-  {
-    "title": "normalPower",
-    "description": "기본값 : 1",
-    "return": "number"
-  },
-  {
-    "title": "normalTexture",
-    "return": "RedBitmapTexture"
-  },
-  {
     "constructorYn": true,
     "title": "RedColorPhongMaterial",
     "description": "\nRedColorPhongMaterial Instance 생성\n",
@@ -37,38 +19,19 @@
           "type": "number"
         },
         "알파값"
-      ],
-      "normalTexture": [
-        {
-          "type": "RedBitmapTexture"
-        }
-      ],
-      "specularTexture": [
-        {
-          "type": "RedBitmapTexture"
-        }
-      ],
-      "displacementTexture": [
-        {
-          "type": "RedBitmapTexture"
-        }
       ]
     },
-    "example": "\nRedColorPhongMaterial(RedGL Instance, hex, alpha, normalTexture, specularTexture)\n",
+    "example": "\nRedColorPhongMaterial(RedGL Instance, hex, alpha)\n",
     "return": "RedColorPhongMaterial Instance"
   },
   {
     "title": "shininess",
     "description": "기본값 : 16",
-    "return": "Number"
+    "return": "shininess"
   },
   {
     "title": "specularPower",
     "description": "기본값 : 1",
     "return": "Number"
-  },
-  {
-    "title": "specularTexture",
-    "return": "RedBitmapTexture"
   }
 ]

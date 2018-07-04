@@ -19,8 +19,8 @@
   },
   {
     "constructorYn": true,
-    "title": "RedColorPhongMaterial",
-    "description": "\nRedColorPhongMaterial Instance 생성\n",
+    "title": "RedColorPhongTextureMaterial",
+    "description": "\nRedColorPhongTextureMaterial Instance 생성\n",
     "params": {
       "redGL": [
         {
@@ -54,8 +54,8 @@
         }
       ]
     },
-    "example": "\nRedColorPhongMaterial(RedGL Instance, hex, alpha, normalTexture, specularTexture)\n",
-    "return": "RedColorPhongMaterial Instance"
+    "example": "\nRedColorPhongTextureMaterial(RedGL Instance, hex, alpha, normalTexture, specularTexture)\n",
+    "return": "RedColorPhongTextureMaterial Instance"
   },
   {
     "title": "shininess",
