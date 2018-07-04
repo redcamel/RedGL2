@@ -136,9 +136,7 @@
 			this.environmentTexture = true
 		}
 		testStandard = new testStandard()
-		t0.add(testStandard, 'environmentTexture').onChange(function (v) {
-			tMaterial['environmentTexture'] = tMaterial2['environmentTexture'] = tMaterial3['environmentTexture'] = v ? tEnvironmentTexture : null
-		})
+
 		t0.add(tMaterial, 'reflectionPower', 0, 1).onChange(function (v) {
 			tMaterial2['reflectionPower'] = v
 			tMaterial3['reflectionPower'] = v
@@ -164,7 +162,7 @@
 		t0.add(testStandard, 'displacementTexture').onChange(function (v) {
 			tMaterial['displacementTexture'] = tMaterial2['displacementTexture'] = tMaterial3['displacementTexture'] = v ? tDisplacementTexture : null
 		})
-		t0.add(tMaterial, 'displacementPower', 0, 2).onChange(function (v) {
+		t0.add(tMaterial, 'displacementPower', 0, 2,0.1).onChange(function (v) {
 			tMaterial2['displacementPower'] = v
 			tMaterial3['displacementPower'] = v
 		})

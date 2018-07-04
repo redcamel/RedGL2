@@ -83,7 +83,7 @@ var RedEnvironmentMaterial;
 			 //#define#normalTexture# vec4 normalColor = texture2D(u_normalTexture, vTexcoord);
 			 //#define#normalTexture# if(normalColor.a != 0.0) N = normalize(2.0 * (N + normalColor.rgb * u_normalPower  - 0.5));
 
-			 reflectionColor = textureCube(u_environmentTexture, 2.0 * dot(vReflectionCubeCoord, vVertexNormal) * vVertexNormal - vReflectionCubeCoord);
+			 reflectionColor = textureCube(u_environmentTexture, 2.0 * dot(vReflectionCubeCoord, N) * N - vReflectionCubeCoord);
 			 texelColor = mix(texelColor,reflectionColor ,u_reflectionPower);
 
 			 specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);
@@ -120,9 +120,8 @@ var RedEnvironmentMaterial;
 			 finalColor = la * uAmbientIntensity + ld + ls;
 			 finalColor.rgb *= texelColor.a;
 			 finalColor.a = texelColor.a;
-			 // if(uUseFog) gl_FragColor = fog( fogFactor(uFogDistance, uFogDensity), uFogColor, finalColor);
-			 // else gl_FragColor = finalColor;
-			 gl_FragColor = finalColor;
+			 if(uUseFog) gl_FragColor = fog( fogFactor(uFogDistance, uFogDensity), uFogColor, finalColor);
+			 else gl_FragColor = finalColor;
 		 }
 		 */
 	}
@@ -275,7 +274,7 @@ var RedEnvironmentMaterial;
 			this.searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST)
 		}
 	}
-	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'diffuseTexture', 'sampler2D', samplerOption);
+	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'diffuseTexture', 'sampler2D',samplerOption);
 	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'environmentTexture', 'samplerCube', {
 		essential: true,
 		callback: samplerOption.callback
