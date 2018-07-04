@@ -12,9 +12,7 @@ var RedBaseMaterial;
 		 return : 'void'
 	 }
 	 :DOC*/
-	RedBaseMaterial = function () {
-		this['_atlasMode'] = false
-	}
+	RedBaseMaterial = function () {}
 	RedBaseMaterial.prototype = {
 		makeProgramList: (function () {
 			var makeList;
@@ -37,17 +35,12 @@ var RedBaseMaterial;
 		searchProgram: (function () {
 			return function (PROGRAM_NAME, keyList) {
 				var t0, self
-				var atlasMode = false
 				t0 = []
 				self = this;
 				keyList.forEach(function (key) {
-					if ( self[key] ) {
-						t0.push(key)
-						if ( self[key] instanceof RedAtlasTexture ) atlasMode = true
-					}
+					if ( self[key] ) t0.push(key)
 				})
 				// console.log(keyList)
-				if(atlasMode) t0.push('atlasMode')
 				if ( t0.length ) t0.sort(), t0 = PROGRAM_NAME + '_' + t0.join('_')
 				else t0 = PROGRAM_NAME
 				// console.log('찾아야할프로그램', t0)

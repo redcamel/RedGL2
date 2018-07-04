@@ -573,6 +573,7 @@ var RedRenderer;
 			var tSamplerIndex;
 			var tSprite3DYn, tDirectionalShadowMaterialYn;
 			var tLODData
+			var tProgram
 			// matix 관련
 			var a,
 				aSx, aSy, aSz, aCx, aCy, aCz, tRx, tRy, tRz,
@@ -635,12 +636,13 @@ var RedRenderer;
 						tMaterial['_sheetRect'][3] = Math.floor(tMaterial['currentIndex'] / tMaterial['_segmentH']) / tMaterial['_segmentH'];
 					}
 					// 재질 캐싱
-					prevProgram_UUID == tMaterial['program']['_UUID'] ? 0 : tGL.useProgram(tMaterial['program']['webglProgram'])
-					prevProgram_UUID = tMaterial['program']['_UUID']
+					tProgram = tMaterial['program']
+					prevProgram_UUID == tProgram['_UUID'] ? 0 : tGL.useProgram(tProgram['webglProgram'])
+					prevProgram_UUID = tProgram['_UUID']
 					// 업데이트할 어트리뷰트와 유니폼 정보를 가져옴
-					tAttrGroup = tMaterial['program']['attributeLocation'];
-					tUniformGroup = tMaterial['program']['uniformLocation'];
-					tSystemUniformGroup = tMaterial['program']['systemUniformLocation'];
+					tAttrGroup = tProgram['attributeLocation'];
+					tUniformGroup = tProgram['uniformLocation'];
+					tSystemUniformGroup = tProgram['systemUniformLocation'];
 					// 버퍼를 찾는다.
 					tInterleaveBuffer = tGeometry['interleaveBuffer']; // 인터리브 버퍼
 					tIndexBufferInfo = tGeometry['indexBuffer']; // 엘리먼트 버퍼
