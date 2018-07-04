@@ -275,10 +275,10 @@ var RedGL;
 				} else {
 					if ( width == undefined ) RedGLUtil.throwFunc('RedGL setSize : width가 입력되지 않았습니다.')
 					if ( height == undefined ) RedGLUtil.throwFunc('RedGL setSize : height가 입력되지 않았습니다.')
-					if ( typeof width == 'string' && width.indexOf('%') != -1 ) RedGLUtil.throwFunc('RedGL setSize : width는 %로 입력할수 없음.')
-					if ( typeof height == 'string' && height.indexOf('%') != -1 ) RedGLUtil.throwFunc('RedGL setSize: height는 %로 입력할수 없음.')
-					this['_width'] = W = width;
-					this['_height'] = H = height;
+					W = this['_width'] = width
+					H = this['_height'] = height
+					if ( typeof W != 'number' ) W = (document.documentElement ? document.documentElement.clientWidth : document.body.clientWidth) * parseFloat(W) / 100
+					if ( typeof H != 'number' ) H = window.innerHeight * parseFloat(H) / 100
 				}
 				ratio = window['devicePixelRatio'] || 1;
 				tCanvas = this['_canvas'];
