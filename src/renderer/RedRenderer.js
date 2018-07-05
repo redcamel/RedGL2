@@ -120,17 +120,20 @@ var RedRenderer;
 		var lightDebugRenderList;
 		lightDebugRenderList = []
 		// 숫자면 숫자로 %면 월드대비 수치로 변경해줌
-		valueParser = function (rect) {
-			rect.forEach(function (v, index) {
-				if ( typeof rect[index] == 'number' ) rect[index] = v;
-				else {
-					if ( index < 2 ) rect[index] = tWorldRect[index + 2] * parseFloat(rect[index]) / 100
-					else rect[index] = tWorldRect[index] * parseFloat(rect[index]) / 100
+		valueParser = (function () {
+			var i;
+			return function (rect) {
+				i = rect.length;
+				while ( i-- ) {
+					if ( typeof rect[i] == 'number' ) rect[i] = rect[i];
+					else {
+						if ( i < 2 ) rect[i] = tWorldRect[i + 2] * parseFloat(rect[i]) / 100
+						else rect[i] = tWorldRect[i] * parseFloat(rect[i]) / 100
+					}
 				}
-				;
-			})
-			return rect;
-		}
+				return rect;
+			}
+		})();
 		updateSystemUniform = (function () {
 			var tProgram;
 			var tSystemUniformGroup;
@@ -379,6 +382,10 @@ var RedRenderer;
 			var tRenderInfo
 			var tPerspectiveMTX;
 			var tCamera
+			var i;
+			var len;
+			var tView;
+			var tViewRect;
 			gl = redGL.gl;
 			self = this;
 			// 캔버스 사이즈 적용
@@ -399,10 +406,9 @@ var RedRenderer;
 			redGL.gl.bindTexture(redGL.gl.TEXTURE_2D, redGL['_datas']['emptyTexture']['2d']['webglTexture']);
 			redGL.gl.activeTexture(redGL.gl.TEXTURE0 + 1);
 			redGL.gl.bindTexture(redGL.gl.TEXTURE_CUBE_MAP, redGL['_datas']['emptyTexture']['3d']['webglTexture']);
-			var i = self['world']['_viewList'].length
-			var tView;
-			var tViewRect;
-			while ( i-- ) {
+			i = 0;
+			len = self['world']['_viewList'].length
+			for ( i; i < len; i++ ) {
 				// self['world']['_viewList'].forEach(function (tView) {
 				tView = self['world']['_viewList'][i]
 				///////////////////////////////////
