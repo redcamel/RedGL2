@@ -504,13 +504,13 @@ var RedRenderer;
 				// 포스트이펙트 확인
 				if ( tView['postEffectManager']['postEffectList'].length ) {
 					tView['postEffectManager'].bind(gl);
-					mat4.perspective(
-						tPerspectiveMTX,
-						tCamera['fov'] * Math.PI / 180,
-						tView['postEffectManager']['frameBuffer']['width'] / tView['postEffectManager']['frameBuffer']['height'],
-						tCamera['nearClipping'],
-						tCamera['farClipping']
-					);
+					// mat4.perspective(
+					// 	tPerspectiveMTX,
+					// 	tCamera['fov'] * Math.PI / 180,
+					// 	tView['postEffectManager']['frameBuffer']['width'] / tView['postEffectManager']['frameBuffer']['height'],
+					// 	tCamera['nearClipping'],
+					// 	tCamera['farClipping']
+					// );
 					gl.viewport(0, 0, tView['postEffectManager']['frameBuffer']['width'], tView['postEffectManager']['frameBuffer']['height']);
 					gl.scissor(0, 0, tView['postEffectManager']['frameBuffer']['width'], tView['postEffectManager']['frameBuffer']['height']);
 				}
@@ -716,9 +716,7 @@ var RedRenderer;
 										//TODO: 일단 비디오를 우겨넣었으니 정리를 해야함
 										tGL.bindTexture(tGL.TEXTURE_2D, tUniformValue['webglTexture']);
 										if ( tUniformValue['_videoDom']['loaded'] ) tGL.texImage2D(tGL.TEXTURE_2D, 0, tGL.RGBA, tGL.RGBA, tGL.UNSIGNED_BYTE, tUniformValue['_videoDom'])
-									} else {
-										tGL.bindTexture(tRenderType == 'sampler2D' ? tGL.TEXTURE_2D : tGL.TEXTURE_CUBE_MAP, tUniformValue['webglTexture']);
-									}
+									} else tGL.bindTexture(tRenderType == 'sampler2D' ? tGL.TEXTURE_2D : tGL.TEXTURE_CUBE_MAP, tUniformValue['webglTexture']);
 									tCacheSamplerIndex[tUUID] == tSamplerIndex ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheSamplerIndex[tUUID] = tSamplerIndex);
 									tCacheTexture[tSamplerIndex] = tUniformValue['_UUID'];
 								}
@@ -756,9 +754,9 @@ var RedRenderer;
 							tUniformValue == undefined ? RedGLUtil.throwFunc('RedRenderer : Material에 ', tUniformLocationInfo['materialPropertyName'], '이 정의 되지않았습니다.') : 0;
 							noChangeUniform = tCacheUniformInfo[tUUID] == tUniformValue;
 							//TODO: 비교계산을 줄일수는 없을까...
-							tRenderType == 'float' ? noChangeUniform ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue, tUniformValue)) :
-								tRenderType == 'int' ? noChangeUniform ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue, tUniformValue)) :
-									tRenderType == 'bool' ? noChangeUniform ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue, tUniformValue)) :
+							tRenderType == 'float' || tRenderType == 'int' || tRenderType == 'bool' ? noChangeUniform ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue, tUniformValue)) :
+								// tRenderType == 'int' ? noChangeUniform ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue, tUniformValue)) :
+								// 	tRenderType == 'bool' ? noChangeUniform ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue, tUniformValue)) :
 										tRenderType == 'vec' ? tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tUniformValue) :
 											tRenderType == 'mat' ? tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, false, tUniformValue) :
 												RedGLUtil.throwFunc('RedRenderer : 처리할수없는 타입입니다.', 'tRenderType -', tRenderType)
