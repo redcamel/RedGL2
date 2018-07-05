@@ -62,7 +62,6 @@ var RedSystemShaderCode;
 			'varying float vTime',
 			'varying vec2 vResolution',
 			// fog
-			'uniform bool uUseFog',
 			'uniform float uFogDistance',
 			'uniform float uFogDensity',
 			'uniform vec4 uFogColor',

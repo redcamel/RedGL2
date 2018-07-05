@@ -84,6 +84,6 @@ var RedPostEffect_BlurY;
 	RedPostEffect_BlurY.prototype = new RedBaseMaterial();
 	RedPostEffect_BlurY.prototype['bind'] = RedPostEffectManager.prototype['bind'];
 	RedPostEffect_BlurY.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
-	RedDefinePropertyInfo.definePrototype( 'RedPostEffect_BlurY', 'size', 'number',{'min': 0})
+	RedDefinePropertyInfo.definePrototype('RedPostEffect_BlurY', 'size', 'number', {'min': 0})
 	Object.freeze(RedPostEffect_BlurY);
 })();

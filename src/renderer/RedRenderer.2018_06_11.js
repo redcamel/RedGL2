@@ -1,4 +1,3 @@
-
 "use strict";
 var RedRenderer;
 //TODO: 캐싱전략을 좀더 고도화하는게 좋을듯

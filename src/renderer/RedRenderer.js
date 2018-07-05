@@ -150,7 +150,6 @@ var RedRenderer;
 			updateSystemUniformInfo = {
 				uTime: 0,
 				uResolution: [0, 0],
-				uUseFog: false,
 				uFogDensity: 0,
 				uFogColor: [0, 0, 0, 0],
 				uFogDistance: 0,
@@ -224,7 +223,6 @@ var RedRenderer;
 					updateSystemUniformInfo['uTime'] = time;
 					updateSystemUniformInfo['uResolution'][0] = viewRect[2];
 					updateSystemUniformInfo['uResolution'][1] = viewRect[3];
-					updateSystemUniformInfo['uUseFog'] = scene['useFog'] ? true : false;
 					updateSystemUniformInfo['uFogDensity'] = scene['fogDensity'];
 					updateSystemUniformInfo['uFogColor'][0] = scene['_fogR'];
 					updateSystemUniformInfo['uFogColor'][1] = scene['_fogG'];
@@ -519,17 +517,17 @@ var RedRenderer;
 				updateSystemUniform.apply(self, [redGL, time, tScene, tCamera, tViewRect])
 				if ( tScene['skyBox'] ) {
 					tScene['skyBox']['scaleX'] = tScene['skyBox']['scaleY'] = tScene['skyBox']['scaleZ'] = tCamera['farClipping']
-					self.sceneRender(redGL, tCamera, tCamera['orthographicYn'], [tScene['skyBox']], time, tRenderInfo);
+					self.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], [tScene['skyBox']], time, tRenderInfo);
 					gl.clear(gl.DEPTH_BUFFER_BIT);
 				}
 				// 그리드가 있으면 그림
-				if ( tScene['grid'] ) self.sceneRender(redGL, tCamera, tCamera['orthographicYn'], [tScene['grid']], time, tRenderInfo);
+				if ( tScene['grid'] ) self.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], [tScene['grid']], time, tRenderInfo);
 				// 씬렌더 호출
-				self.sceneRender(redGL, tCamera, tCamera['orthographicYn'], tScene['children'], time, tRenderInfo);
+				self.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], tScene['children'], time, tRenderInfo);
 				// asix가 있으면 그림
-				if ( tScene['axis'] ) self.sceneRender(redGL, tCamera, tCamera['orthographicYn'], tScene['axis']['children'], time, tRenderInfo);
+				if ( tScene['axis'] ) self.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], tScene['axis']['children'], time, tRenderInfo);
 				// 디버깅 라이트 업데이트
-				if ( lightDebugRenderList.length ) self.sceneRender(redGL, tCamera, tCamera['orthographicYn'], lightDebugRenderList, time, tRenderInfo);
+				if ( lightDebugRenderList.length ) self.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], lightDebugRenderList, time, tRenderInfo);
 				// 포스트이펙트 최종렌더
 				if ( tView['postEffectManager']['postEffectList'].length ) tView['postEffectManager'].render(redGL, gl, self, tView, time, tRenderInfo)
 				// })
@@ -543,6 +541,7 @@ var RedRenderer;
 		var tPrevInterleaveBuffer_UUID;
 		var tPrevSamplerIndex;
 		draw = function (redGL,
+		                 scene,
 		                 children,
 		                 camera,
 		                 orthographicYn,
@@ -645,6 +644,9 @@ var RedRenderer;
 					}
 					// 재질 캐싱
 					tProgram = tMaterial['program']
+					if ( scene['useFog'] && tMaterial['_programList'] ) {
+						if ( tMaterial['_programList']['fog'][tMaterial['program']['key']] ) tProgram = tMaterial['_programList']['fog'][tMaterial['program']['key']]
+					}
 					prevProgram_UUID == tProgram['_UUID'] ? 0 : tGL.useProgram(tProgram['webglProgram'])
 					prevProgram_UUID = tProgram['_UUID']
 					// 업데이트할 어트리뷰트와 유니폼 정보를 가져옴
@@ -757,9 +759,9 @@ var RedRenderer;
 							tRenderType == 'float' || tRenderType == 'int' || tRenderType == 'bool' ? noChangeUniform ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue, tUniformValue)) :
 								// tRenderType == 'int' ? noChangeUniform ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue, tUniformValue)) :
 								// 	tRenderType == 'bool' ? noChangeUniform ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue, tUniformValue)) :
-										tRenderType == 'vec' ? tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tUniformValue) :
-											tRenderType == 'mat' ? tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, false, tUniformValue) :
-												RedGLUtil.throwFunc('RedRenderer : 처리할수없는 타입입니다.', 'tRenderType -', tRenderType)
+								tRenderType == 'vec' ? tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tUniformValue) :
+									tRenderType == 'mat' ? tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, false, tUniformValue) :
+										RedGLUtil.throwFunc('RedRenderer : 처리할수없는 타입입니다.', 'tRenderType -', tRenderType)
 						}
 					}
 				}
@@ -966,10 +968,10 @@ var RedRenderer;
 				}
 				/////////////////////////////////////////////////////////////////////////
 				/////////////////////////////////////////////////////////////////////////
-				tMesh['children'].length ? draw(redGL, tMesh['children'], camera, orthographicYn, time, renderResultObj, tCacheInfo, tCacheState, tMVMatrix, subSceneMaterial) : 0;
+				tMesh['children'].length ? draw(redGL, scene, tMesh['children'], camera, orthographicYn, time, renderResultObj, tCacheInfo, tCacheState, tMVMatrix, subSceneMaterial) : 0;
 			}
 		}
-		return function (redGL, camera, orthographicYn, children, time, renderResultObj, subSceneMaterial) {
+		return function (redGL, scene, camera, orthographicYn, children, time, renderResultObj, subSceneMaterial) {
 			// if ( this['cacheState']['pointSize'] == undefined ) this['cacheState']['pointSize'] = null
 			// if ( !this['cacheState']['useCullFace'] ) this['cacheState']['useCullFace'] = null
 			// if ( !this['cacheState']['cullFace'] ) this['cacheState']['cullFace'] = null
@@ -986,6 +988,7 @@ var RedRenderer;
 			tPrevSamplerIndex = null;
 			draw(
 				redGL,
+				scene,
 				children,
 				camera,
 				orthographicYn,

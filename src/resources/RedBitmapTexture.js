@@ -62,7 +62,6 @@ var RedBitmapTexture;
 				makeTexture(gl, texture, tSource, option);
 				callBack ? callBack.call(this, true) : 0
 			}
-
 			if ( src instanceof HTMLCanvasElement ) makeTexture(gl, texture, src, option)
 			else {
 				var img;

@@ -38,8 +38,9 @@ var RedParticleBitmapMaterial;
 			 finalColor.rgb *= vColor.a;
 			 finalColor.a = finalColor.a;
 			 if(finalColor.a < uAlphaTest) discard;
-			 if(uUseFog) gl_FragColor = fog( fogFactor(uFogDistance, uFogDensity), uFogColor, finalColor);
-			 else gl_FragColor = finalColor;
+			 gl_FragColor = finalColor;
+			 //#define#fog#false# gl_FragColor = finalColor;
+			 //#define#fog#true# gl_FragColor = fog( fogFactor(uFogDistance, uFogDensity), uFogColor, finalColor);
 		 }
 		 */
 	}
@@ -64,6 +65,7 @@ var RedParticleBitmapMaterial;
 	RedParticleBitmapMaterial = function (redGL, diffuseTexture) {
 		if ( !(this instanceof RedParticleBitmapMaterial) ) return new RedParticleBitmapMaterial(redGL, diffuseTexture);
 		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedParticleBitmapMaterial : RedGL Instance만 허용됩니다.', redGL)
+		this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource)
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
 		/**DOC:
@@ -75,7 +77,6 @@ var RedParticleBitmapMaterial;
 		this['diffuseTexture'] = diffuseTexture;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		/**DOC:
 		 {
 			 title :`alphaTest`,

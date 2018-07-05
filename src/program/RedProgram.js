@@ -283,18 +283,27 @@ var RedProgram;
 	RedProgram['makeProgram'] = function (redGL, programName, vSource, fSource, option) {
 		vSource = RedGLUtil.getStrFromComment(vSource.toString());
 		fSource = RedGLUtil.getStrFromComment(fSource.toString());
+		var hasFog = false
 		if ( option ) {
 			option.sort()
 			programName += '_' + option.join('_');
 			var i = option.length
 			// option에 해당하는 주석을 코드로 전환시킨다.
 			while ( i-- ) {
+				if ( option[i] == 'fog' ) {
+					hasFog = true;
+					continue
+				}
 				var t0 = new RegExp('\/\/\#define\#' + option[i] + '\#', 'gi')
 				// console.log(t0)
 				vSource = vSource.replace(t0, '')
 				fSource = fSource.replace(t0, '')
 			}
 		}
+		// 포그처리
+		var t0 = new RegExp('\/\/\#define\#fog\#' + (hasFog ? 'true' : 'false') + '\#', 'gi')
+		vSource = vSource.replace(t0, '')
+		fSource = fSource.replace(t0, '')
 		// console.log(programName)
 		// console.log(vSource, fSource)
 		return RedProgram(redGL, programName, vSource, fSource)

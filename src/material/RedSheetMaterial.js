@@ -53,8 +53,9 @@ var RedSheetMaterial;
 			 vec4 finalColor = texture2D(u_diffuseTexture, vTexcoord);
 			 finalColor.rgb *= finalColor.a;
 			 if(finalColor.a ==0.0) discard;
-			 if(uUseFog) gl_FragColor = fog( fogFactor(uFogDistance, uFogDensity), uFogColor, finalColor);
-			 else gl_FragColor = finalColor;
+			 gl_FragColor = finalColor;
+			 //#define#fog#false# gl_FragColor = finalColor;
+			 //#define#fog#true# gl_FragColor = fog( fogFactor(uFogDistance, uFogDensity), uFogColor, finalColor);
 		 }
 		 */
 	}
@@ -83,6 +84,7 @@ var RedSheetMaterial;
 	RedSheetMaterial = function (redGL, diffuseTexture, frameRate, segmentW, segmentH, totalFrame) {
 		if ( !(this instanceof RedSheetMaterial) ) return new RedSheetMaterial(redGL, diffuseTexture, frameRate, segmentW, segmentH, totalFrame);
 		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedSheetMaterial : RedGL Instance만 허용됩니다.', redGL)
+		this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource)
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
 		/**DOC:
@@ -105,7 +107,6 @@ var RedSheetMaterial;
 		this['currentIndex'] = 0;
 		this['loop'] = true
 		this['_aniMap'] = {}
-		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		this['__RedSheetMaterialYn'] = true
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkUniformAndProperty();

@@ -86,7 +86,7 @@ var RedPostEffect_Pixelize;
 	RedPostEffect_Pixelize.prototype = new RedBaseMaterial();
 	RedPostEffect_Pixelize.prototype['bind'] = RedPostEffectManager.prototype['bind'];
 	RedPostEffect_Pixelize.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_Pixelize', 'width', 'number',{'min': 0})
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_Pixelize', 'height', 'number',{'min': 0})
+	RedDefinePropertyInfo.definePrototype('RedPostEffect_Pixelize', 'width', 'number', {'min': 0})
+	RedDefinePropertyInfo.definePrototype('RedPostEffect_Pixelize', 'height', 'number', {'min': 0})
 	Object.freeze(RedPostEffect_Pixelize);
 })();

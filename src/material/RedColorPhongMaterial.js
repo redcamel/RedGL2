@@ -88,8 +88,9 @@ var RedColorPhongMaterial;
 			 vec4 finalColor = la * uAmbientIntensity + ld + ls;
 			 finalColor.rgb *= texelColor.a;
 			 finalColor.a = texelColor.a;
-			 if(uUseFog) gl_FragColor = fog( fogFactor(uFogDistance, uFogDensity), uFogColor, finalColor);
-			 else gl_FragColor = finalColor;
+			 gl_FragColor = finalColor;
+			 //#define#fog#false# gl_FragColor = finalColor;
+			 //#define#fog#true# gl_FragColor = fog( fogFactor(uFogDistance, uFogDensity), uFogColor, finalColor);
 		 }
 		 */
 	}
@@ -121,6 +122,7 @@ var RedColorPhongMaterial;
 	RedColorPhongMaterial = function (redGL, hexColor, alpha) {
 		if ( !(this instanceof RedColorPhongMaterial) ) return new RedColorPhongMaterial(redGL, hexColor, alpha);
 		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedColorPhongMaterial : RedGL Instance만 허용됩니다.', '입력값 : ' + redGL);
+		this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource)
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
 		this['_color'] = new Float32Array(4);
@@ -146,7 +148,6 @@ var RedColorPhongMaterial;
 		Object.defineProperty(this, 'alpha', RedDefinePropertyInfo['alpha']);
 		this['alpha'] = alpha == undefined ? 1 : alpha;
 		this['color'] = hexColor ? hexColor : '#ff0000'
-		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkUniformAndProperty();
 		console.log(this);
