@@ -268,33 +268,35 @@ var RedPostEffectManager;
 				var tParentFrameBufferTexture;
 				var tSubFrameBufferList; // 서브에서 씬자체를 그려야할때 사용;
 				var tGL;
+				var i, len;
+				var i2, len2, tSubScene;
 				tGL = redGL.gl;
 				// 이펙트 최종결과를 생성하기전 전처리 진행
 				if ( effect['process'] && effect['process'].length ) {
 					tParentFrameBufferTexture = lastFrameBufferTexture
-					effect['process'].forEach(function (effect) {
-						draw(redGL, effect, postEffectChildren, redScene, redRenderer, time, renderInfo)
-					})
+					i = 0, len = effect['process'].length
+					for ( i; i < len; i++ )  draw(redGL, effect['process'][i], postEffectChildren, redScene, redRenderer, time, renderInfo);
 				}
 				// 이펙트 서브신버퍼를 사용한다면 그림
 				tSubFrameBufferList = effect['subFrameBufferList']
 				if ( tSubFrameBufferList && tSubFrameBufferList.length ) {
-					tSubFrameBufferList.forEach(function (v) {
-						v['frameBuffer']['width'] = tViewRect[2]
-						v['frameBuffer']['height'] = tViewRect[3]
-						v['frameBuffer'].bind(tGL);
+					i2 = 0, len2 = tSubFrameBufferList.length
+					for ( i2; i2 < len2; i2++ ) {
+						tSubScene = tSubFrameBufferList[i2];
+						tSubScene['frameBuffer']['width'] = tViewRect[2]
+						tSubScene['frameBuffer']['height'] = tViewRect[3]
+						tSubScene['frameBuffer'].bind(tGL);
 						tGL.clear(tGL.COLOR_BUFFER_BIT | tGL.DEPTH_BUFFER_BIT);
-						redRenderer.sceneRender(redGL, tCamera, tCamera['orthographicYn'], redScene['children'], time, renderInfo, v['renderMaterial']);
-						v['frameBuffer'].unbind(tGL);
-						prevWidth = v['frameBuffer']['width']
-						prevHeight = v['frameBuffer']['height']
+						redRenderer.sceneRender(redGL, tCamera, tCamera['orthographicYn'], redScene['children'], time, renderInfo, tSubScene['renderMaterial']);
+						tSubScene['frameBuffer'].unbind(tGL);
+						prevWidth = tSubScene['frameBuffer']['width']
+						prevHeight = tSubScene['frameBuffer']['height']
 						// 서브 신버퍼에 프로세스 처리
-						if ( v['process'] && v['process'].length ) {
-							v['process'].forEach(function (effect) {
-								draw(redGL, effect, postEffectChildren, redScene, redRenderer, time, renderInfo)
-							})
+						if ( tSubScene['process'] && tSubScene['process'].length ) {
+							i = 0, len = tSubScene['process'].length
+							for ( i; i < len; i++ ) draw(redGL, tSubScene['process'][i], postEffectChildren, redScene, redRenderer, time, renderInfo)
 						}
-					})
+					}
 				}
 				// 이펙트 처리
 				if ( effect['frameBuffer'] ) {
@@ -318,6 +320,7 @@ var RedPostEffectManager;
 			return (function () {
 				var self;
 				var tEffectList;
+				var i, len;
 				return function (redGL, gl, redRenderer, redView, time, renderInfo) {
 					self = this;
 					prevWidth = null, prevHeight = null;
@@ -341,9 +344,8 @@ var RedPostEffectManager;
 					// 안티알리어싱 모드가 적용되어있으면 추가한다.
 					if ( self['antialiasing'] ) tEffectList.push(self['antialiasing']);
 					// 이펙트 렌더
-					tEffectList.forEach(function (effect) {
-						draw(redGL, effect, self['children'], tScene, redRenderer, time, renderInfo)
-					})
+					i = 0, len = tEffectList.length
+					for ( i; i < len; i++ ) draw(redGL, tEffectList[i], self['children'], tScene, redRenderer, time, renderInfo);
 					// 이펙트가 존재한다면 최종 이펙트의 프레임버퍼 결과물을 최종으로 렌더링한다.
 					if ( lastFrameBufferTexture != originFrameBufferTexture ) {
 						self['_finalMaterial']['diffuseTexture'] = lastFrameBufferTexture;
