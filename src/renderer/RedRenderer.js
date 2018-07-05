@@ -394,18 +394,19 @@ var RedRenderer;
 			// console.log("worldRender", v['key'], t0)
 			self['renderInfo'] = {}
 			self['cacheInfo']['cacheAttrInfo'].length = 0
-
 			// 일단 0번과 1번텍스트는 무조건 체운다.
 			redGL.gl.activeTexture(redGL.gl.TEXTURE0);
 			redGL.gl.bindTexture(redGL.gl.TEXTURE_2D, redGL['_datas']['emptyTexture']['2d']['webglTexture']);
-			redGL.gl.activeTexture(redGL.gl.TEXTURE0+1);
+			redGL.gl.activeTexture(redGL.gl.TEXTURE0 + 1);
 			redGL.gl.bindTexture(redGL.gl.TEXTURE_CUBE_MAP, redGL['_datas']['emptyTexture']['3d']['webglTexture']);
-
-			self['world']['_viewList'].forEach(function (tView) {
-
+			var i = self['world']['_viewList'].length
+			var tView;
+			var tViewRect;
+			while ( i-- ) {
+				// self['world']['_viewList'].forEach(function (tView) {
+				tView = self['world']['_viewList'][i]
 				///////////////////////////////////
 				// view의 위치/크기결정
-				var tViewRect;
 				tViewRect = tView['_viewRect']
 				tViewRect[0] = tView['_x'];
 				tViewRect[1] = tView['_y'];
@@ -525,7 +526,8 @@ var RedRenderer;
 				if ( lightDebugRenderList.length ) self.sceneRender(redGL, tCamera, tCamera['orthographicYn'], lightDebugRenderList, time, tRenderInfo);
 				// 포스트이펙트 최종렌더
 				if ( tView['postEffectManager']['postEffectList'].length ) tView['postEffectManager'].render(redGL, gl, self, tView, time, tRenderInfo)
-			})
+				// })
+			}
 			if ( this['renderDebuger']['visible'] ) this['renderDebuger'].update(redGL, self['renderInfo'])
 		}
 	})();
@@ -573,6 +575,7 @@ var RedRenderer;
 			var tSamplerIndex;
 			var tSprite3DYn, tDirectionalShadowMaterialYn;
 			var tLODData
+			var tProgram
 			// matix 관련
 			var a,
 				aSx, aSy, aSz, aCx, aCy, aCz, tRx, tRy, tRz,
@@ -635,12 +638,13 @@ var RedRenderer;
 						tMaterial['_sheetRect'][3] = Math.floor(tMaterial['currentIndex'] / tMaterial['_segmentH']) / tMaterial['_segmentH'];
 					}
 					// 재질 캐싱
-					prevProgram_UUID == tMaterial['program']['_UUID'] ? 0 : tGL.useProgram(tMaterial['program']['webglProgram'])
-					prevProgram_UUID = tMaterial['program']['_UUID']
+					tProgram = tMaterial['program']
+					prevProgram_UUID == tProgram['_UUID'] ? 0 : tGL.useProgram(tProgram['webglProgram'])
+					prevProgram_UUID = tProgram['_UUID']
 					// 업데이트할 어트리뷰트와 유니폼 정보를 가져옴
-					tAttrGroup = tMaterial['program']['attributeLocation'];
-					tUniformGroup = tMaterial['program']['uniformLocation'];
-					tSystemUniformGroup = tMaterial['program']['systemUniformLocation'];
+					tAttrGroup = tProgram['attributeLocation'];
+					tUniformGroup = tProgram['uniformLocation'];
+					tSystemUniformGroup = tProgram['systemUniformLocation'];
 					// 버퍼를 찾는다.
 					tInterleaveBuffer = tGeometry['interleaveBuffer']; // 인터리브 버퍼
 					tIndexBufferInfo = tGeometry['indexBuffer']; // 엘리먼트 버퍼

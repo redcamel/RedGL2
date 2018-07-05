@@ -19,7 +19,6 @@ var RedStandardMaterial;
 
 		 void main(void) {
 			 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
-			 //#atlasMode
 			 vVertexNormal = vec3(uNMatrix * vec4(aVertexNormal,1.0));
 			 vVertexPositionEye4 = uMMatrix * vec4(aVertexPosition, 1.0);
 
