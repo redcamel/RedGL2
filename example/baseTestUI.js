@@ -76,6 +76,7 @@ baseTestUI.prototype = {
 			axis: scene['axis'] ? true : false,
 			skyBox: scene['skyBox'] ? true : false,
 		}
+		t0.add(scene, 'useFog', true, false)
 		t0.add(scene, 'useBackgroundColor', true, false)
 		t0.addColor(test, 'backgroundColor').onChange(function (v) {
 			scene['backgroundColor'] = v

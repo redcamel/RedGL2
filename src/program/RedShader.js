@@ -95,11 +95,10 @@ var RedShader;
 				source = source.replace(v + ';', '')
 				// console.log(source)
 				tData = v.split(' ')
-
-				if(tData[1] == 'highp' || tData[1] == 'mediump' || tData[1] == 'lowp') {
+				if ( tData[1] == 'highp' || tData[1] == 'mediump' || tData[1] == 'lowp' ) {
 					var temp;
 					temp = tData[1]
-					tData.splice(1,1)
+					tData.splice(1, 1)
 					tData.push(temp)
 					tPrecision = temp
 				}
@@ -150,7 +149,7 @@ var RedShader;
 					name: tName,
 					arrayNum: tArrayNum,
 					value: tValue,
-					precision : tPrecision,
+					precision: tPrecision,
 					systemUniformYn: RedSystemShaderCode.systemUniform[tArrayNum ? tName + '[' + tArrayNum + ']' : tName] ? true : false
 				};
 				if ( tType == 'uniform' ) tInputData['uniformType'] = tDataType;

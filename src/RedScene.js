@@ -191,7 +191,6 @@ var RedScene;
 				return _axisMesh
 			}
 		})
-
 		this['shadowManager'] = RedShadowManager(redGL)
 		this['_lightInfo'] = {
 			RedAmbientLight: null,

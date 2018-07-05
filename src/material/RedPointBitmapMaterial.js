@@ -30,8 +30,9 @@ var RedPointBitmapMaterial;
 			 vec4 finalColor = texture2D(u_diffuseTexture, vec2(gl_PointCoord.x, - gl_PointCoord.y));
 			 finalColor.rgb *= finalColor.a;
 			 if(finalColor.a < uAlphaTest) discard;
-			 if(uUseFog) gl_FragColor = fog( fogFactor(uFogDistance, uFogDensity), uFogColor, finalColor);
-			 else gl_FragColor = finalColor;
+			 gl_FragColor = finalColor;
+			 //#define#fog#false# gl_FragColor = finalColor;
+			 //#define#fog#true# gl_FragColor = fog( fogFactor(uFogDistance, uFogDensity), uFogColor, finalColor);
 		 }
 		 */
 	}
@@ -56,6 +57,7 @@ var RedPointBitmapMaterial;
 	RedPointBitmapMaterial = function (redGL, diffuseTexture) {
 		if ( !(this instanceof RedPointBitmapMaterial) ) return new RedPointBitmapMaterial(redGL, diffuseTexture);
 		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedPointBitmapMaterial : RedGL Instance만 허용됩니다.', redGL)
+		this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource)
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
 		/**DOC:
@@ -67,7 +69,6 @@ var RedPointBitmapMaterial;
 		this['diffuseTexture'] = diffuseTexture;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		/**DOC:
 		 {
 			 title :`alphaTest`,

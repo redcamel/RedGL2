@@ -88,7 +88,6 @@ var RedParticleEmitter;
 					this['_interleaveData'][tIndex + 2] = this.z
 					this['_interleaveData'][tIndex + 3] = 0
 					this['_interleaveData'][tIndex + 7] = 0
-
 					tParticle['gravityVelocity'] = 0
 					tParticle['startTime'] = null
 					tParticle['age'] = -1
