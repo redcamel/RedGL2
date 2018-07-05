@@ -394,18 +394,19 @@ var RedRenderer;
 			// console.log("worldRender", v['key'], t0)
 			self['renderInfo'] = {}
 			self['cacheInfo']['cacheAttrInfo'].length = 0
-
 			// 일단 0번과 1번텍스트는 무조건 체운다.
 			redGL.gl.activeTexture(redGL.gl.TEXTURE0);
 			redGL.gl.bindTexture(redGL.gl.TEXTURE_2D, redGL['_datas']['emptyTexture']['2d']['webglTexture']);
-			redGL.gl.activeTexture(redGL.gl.TEXTURE0+1);
+			redGL.gl.activeTexture(redGL.gl.TEXTURE0 + 1);
 			redGL.gl.bindTexture(redGL.gl.TEXTURE_CUBE_MAP, redGL['_datas']['emptyTexture']['3d']['webglTexture']);
-
-			self['world']['_viewList'].forEach(function (tView) {
-
+			var i = self['world']['_viewList'].length
+			var tView;
+			var tViewRect;
+			while ( i-- ) {
+				// self['world']['_viewList'].forEach(function (tView) {
+				tView = self['world']['_viewList'][i]
 				///////////////////////////////////
 				// view의 위치/크기결정
-				var tViewRect;
 				tViewRect = tView['_viewRect']
 				tViewRect[0] = tView['_x'];
 				tViewRect[1] = tView['_y'];
@@ -525,7 +526,8 @@ var RedRenderer;
 				if ( lightDebugRenderList.length ) self.sceneRender(redGL, tCamera, tCamera['orthographicYn'], lightDebugRenderList, time, tRenderInfo);
 				// 포스트이펙트 최종렌더
 				if ( tView['postEffectManager']['postEffectList'].length ) tView['postEffectManager'].render(redGL, gl, self, tView, time, tRenderInfo)
-			})
+				// })
+			}
 			if ( this['renderDebuger']['visible'] ) this['renderDebuger'].update(redGL, self['renderInfo'])
 		}
 	})();
