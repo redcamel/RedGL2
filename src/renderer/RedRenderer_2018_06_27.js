@@ -601,7 +601,7 @@ var RedRenderer;
 				}
 				tNMatrix = tMesh['normalMatrix']
 				tGeometry = tMesh['_geometry']
-				tSprite3DYn = tMesh['_sprite3DYn']
+				tSprite3DYn = tMesh['sprite3DYn']
 				if ( tGeometry ) {
 					tMaterial = subSceneMaterial ? subSceneMaterial : tMesh['_material']
 					tDirectionalShadowMaterialYn = tMaterial instanceof RedDirectionalShadowMaterial;

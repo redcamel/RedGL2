@@ -27,10 +27,7 @@ var RedBaseMaterial;
 					// 일반 프로그램생성
 					if ( !target['_programList']['basic'][programName + '_' + tKey] ) {
 						target['_programList']['basic'][programName + '_' + tKey] = RedProgram['makeProgram'](redGL, programName, vSource, fSource, tKey.split('_'))
-					}
-					// 포그 프로그램생성
-					if ( !target['_programList']['fog'][programName + '_' + tKey] ) {
-						target['_programList']['fog'][programName + '_' + tKey] = RedProgram['makeProgram'](redGL, programName, vSource, fSource, (tKey + '_fog').split('_'))
+						target['_programList']['basic'][programName + '_' + tKey]['subProgram_fog'] = RedProgram['makeProgram'](redGL, programName, vSource, fSource, (tKey + '_fog').split('_'))
 					}
 					makeList(target, tKey, redGL, programName, vSource, fSource, (programOptionList.concat()).slice(i + 1))
 				}
@@ -39,15 +36,14 @@ var RedBaseMaterial;
 			return function (target, redGL, programName, vSource, fSource, programOptionList) {
 				if ( !programOptionList ) programOptionList = []
 				target['_programList'] = {
-					basic: {},
-					fog: {}
+					basic: {}
 				}
 				makeList(target, '', redGL, programName, vSource, fSource, programOptionList)
 				// console.log(target['_programList'])
 				// 일반 프로그램생성
 				target['_programList']['basic'][programName] = RedProgram['makeProgram'](redGL, programName, vSource, fSource)
 				// 포그 프로그램생성
-				target['_programList']['fog'][programName] = RedProgram['makeProgram'](redGL, programName, vSource, fSource, ['fog'])
+				target['_programList']['basic'][programName]['subProgram_fog'] = RedProgram['makeProgram'](redGL, programName, vSource, fSource, ['fog'])
 				// sprite3D 프로그램생성
 				target['program'] = target['_programList']['basic'][programName]
 			}
@@ -66,7 +62,7 @@ var RedBaseMaterial;
 				if ( t0.length ) t0.sort(), t0 = PROGRAM_NAME + '_' + t0.join('_')
 				else t0 = PROGRAM_NAME
 				this['program'] = this['_programList']['basic'][t0];
-				console.log('현재프로그램', this['program'])
+				// console.log('현재프로그램', this['program'])
 			}
 		})(),
 		/**DOC:

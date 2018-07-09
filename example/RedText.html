@@ -115,12 +115,12 @@
 		t0.add(testRedText, 'verticalAlign', ['top', 'middle', 'bottom']);
 		t0.add(testRedText, 'textAlign', ['left', 'center', 'right']);
 		t0.add(testData, 'sprite3DMode').onChange(function (v) {
-			tScene3D.children.forEach(function (redText) {
-				if ( redText instanceof RedText ) redText._sprite3DYn = v
+			tScene.children.forEach(function (redText) {
+				if ( redText instanceof RedText ) redText.sprite3DYn = v
 			})
 		});
 		t0.add(testData, 'perspectiveScale').onChange(function (v) {
-			tScene3D.children.forEach(function (redText) {
+			tScene.children.forEach(function (redText) {
 				if ( redText instanceof RedText ) redText.perspectiveScale = v
 			})
 		});

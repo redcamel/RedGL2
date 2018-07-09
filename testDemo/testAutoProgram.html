@@ -250,11 +250,12 @@
 		var t0 = this['gui'].addFolder('autoProgramTest')
 		t0.autoPlace = false
 		var tList = []
-        for(var k in testMaterial._programList['basic']){
-	        tList.push(testMaterial._programList['basic'][k]['key'].replace('environmentProgram_', ''))
-        }
+		for ( var k in testMaterial._programList['basic'] ) {
+			if ( k.indexOf('fog') > -1 || k.indexOf('sprite3D') > -1 ) continue
+			tList.push(testMaterial._programList['basic'][k]['key'].replace('environmentProgram_', ''))
+		}
+		t0.add(tScene3D, 'useFog', true, false)
 
-		t0.add(tScene3D, 'useFog', true,false)
 		t0.add(testData, 'state', tList).onChange(function (v) {
 			v = v.split('_')
 			testMaterial.diffuseTexture = null
