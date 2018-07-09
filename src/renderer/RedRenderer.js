@@ -576,11 +576,11 @@ var RedRenderer;
 			var tUniformValue
 			var tRenderType;
 			var tMVMatrix, tNMatrix
-			var tUUID, noChangeUniform;
+			var tUUID;
 			var tSamplerIndex;
 			var tSprite3DYn, tDirectionalShadowMaterialYn;
 			var tLODData
-			var tProgram
+			var tProgram;
 			// matix 관련
 			var a,
 				aSx, aSy, aSz, aCx, aCy, aCz, tRx, tRy, tRz,
@@ -605,7 +605,7 @@ var RedRenderer;
 				tMVMatrix = tMesh['matrix'];
 				tNMatrix = tMesh['normalMatrix'];
 				tGeometry = tMesh['_geometry'];
-				tSprite3DYn = tMesh['_sprite3DYn'];
+				tSprite3DYn = tMesh['sprite3DYn'];
 				// LOD체크
 				if ( tMesh['useLOD'] ) {
 					lodX = camera.x - tMesh.x;
@@ -643,10 +643,9 @@ var RedRenderer;
 						tMaterial['_sheetRect'][3] = Math.floor(tMaterial['currentIndex'] / tMaterial['_segmentH']) / tMaterial['_segmentH'];
 					}
 					// 재질 캐싱
-					tProgram = tMaterial['program']
-					if ( scene['useFog'] && tMaterial['_programList'] ) {
-						if ( tMaterial['_programList']['fog'][tMaterial['program']['key']] ) tProgram = tMaterial['_programList']['fog'][tMaterial['program']['key']]
-					}
+					tProgram = tMaterial['program'];
+					// fog Program 판단
+					scene['useFog'] ? tProgram = tProgram['subProgram_fog'] ? tProgram['subProgram_fog'] : tProgram : 0;
 					prevProgram_UUID == tProgram['_UUID'] ? 0 : tGL.useProgram(tProgram['webglProgram'])
 					prevProgram_UUID = tProgram['_UUID']
 					// 업데이트할 어트리뷰트와 유니폼 정보를 가져옴
@@ -682,7 +681,7 @@ var RedRenderer;
 							if ( tCacheInterleaveBuffer[tWebGLAttributeLocation] != tInterleaveDefineUnit['_UUID'] ) {
 								// 해당로케이션을 활성화된적이없으면 활성화 시킨다
 								tAttributeLocationInfo['enabled'] ? 0 : tGL.enableVertexAttribArray(tWebGLAttributeLocation);
-								tAttributeLocationInfo['enabled'] = true;
+								tAttributeLocationInfo['enabled'] = 1;
 								tGL.vertexAttribPointer(
 									tWebGLAttributeLocation,
 									tInterleaveDefineUnit['size'],
@@ -735,8 +734,8 @@ var RedRenderer;
 								if ( tRenderType == 'sampler2D' ) {
 									if ( tCacheTexture[tSamplerIndex] == 0 ) {
 									} else {
-										tPrevSamplerIndex == 0 ? 0 : tGL.activeTexture(tGL.TEXTURE0);
-										tGL.bindTexture(tGL.TEXTURE_2D, redGL['_datas']['emptyTexture']['2d']['webglTexture']);
+										// tPrevSamplerIndex == 0 ? 0 : tGL.activeTexture(tGL.TEXTURE0);
+										// tGL.bindTexture(tGL.TEXTURE_2D, redGL['_datas']['emptyTexture']['2d']['webglTexture']);
 										tCacheSamplerIndex[tUUID] == 0 ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheSamplerIndex[tUUID] = 0);
 										tCacheTexture[tSamplerIndex] = 0;
 										tPrevSamplerIndex = 0;
@@ -744,8 +743,8 @@ var RedRenderer;
 								} else {
 									if ( tCacheTexture[tSamplerIndex] == 1 ) {
 									} else {
-										tPrevSamplerIndex == 1 ? 0 : tGL.activeTexture(tGL.TEXTURE0 + 1);
-										tGL.bindTexture(tGL.TEXTURE_CUBE_MAP, redGL['_datas']['emptyTexture']['3d']['webglTexture']);
+										// tPrevSamplerIndex == 1 ? 0 : tGL.activeTexture(tGL.TEXTURE0 + 1);
+										// tGL.bindTexture(tGL.TEXTURE_CUBE_MAP, redGL['_datas']['emptyTexture']['3d']['webglTexture']);
 										tCacheSamplerIndex[tUUID] == 1 ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheSamplerIndex[tUUID] = 1);
 										tCacheTexture[tSamplerIndex] = 1;
 										tPrevSamplerIndex = 1;
@@ -754,9 +753,8 @@ var RedRenderer;
 							}
 						} else {
 							tUniformValue == undefined ? RedGLUtil.throwFunc('RedRenderer : Material에 ', tUniformLocationInfo['materialPropertyName'], '이 정의 되지않았습니다.') : 0;
-							noChangeUniform = tCacheUniformInfo[tUUID] == tUniformValue;
 							//TODO: 비교계산을 줄일수는 없을까...
-							tRenderType == 'float' || tRenderType == 'int' || tRenderType == 'bool' ? noChangeUniform ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue, tUniformValue)) :
+							tRenderType == 'float' || tRenderType == 'mat' || tRenderType == 'bool' ? tCacheUniformInfo[tUUID] == tUniformValue ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue, tUniformValue)) :
 								// tRenderType == 'int' ? noChangeUniform ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue, tUniformValue)) :
 								// 	tRenderType == 'bool' ? noChangeUniform ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue, tUniformValue)) :
 								tRenderType == 'vec' ? tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tUniformValue) :
@@ -783,7 +781,7 @@ var RedRenderer;
 						a[15] = a[3] * aX + a[7] * aY + a[11] * aZ + a[15],
 						// tMVMatrix rotate
 						tSprite3DYn ?
-							(tRx = 0 * CONVERT_RADIAN, tRy = 0 * CONVERT_RADIAN, tRz = 0) :
+							(tRx = 0 , tRy = 0 , tRz = 0 ) :
 							(tRx = tMesh['rotationX'] * CONVERT_RADIAN, tRy = tMesh['rotationY'] * CONVERT_RADIAN, tRz = tMesh['rotationZ'] * CONVERT_RADIAN),
 						/////////////////////////
 						tRadian = tRx % CPI2,
@@ -859,7 +857,9 @@ var RedRenderer;
 				}
 				/////////////////////////////////////////////////////////////////////////
 				/////////////////////////////////////////////////////////////////////////
-				if ( tGeometry ) tGL.uniformMatrix4fv(tSystemUniformGroup['uMMatrix']['location'], false, tMVMatrix)
+				if ( tGeometry ) {
+					tGL.uniformMatrix4fv(tSystemUniformGroup['uMMatrix']['location'], false, tMVMatrix)
+				}
 				/////////////////////////////////////////////////////////////////////////
 				/////////////////////////////////////////////////////////////////////////
 				// 노말매트릭스를 사용할경우
@@ -940,9 +940,10 @@ var RedRenderer;
 					}
 					if ( tSystemUniformGroup['uSprite3DYn']['location'] ) {
 						tUUID = tSystemUniformGroup['uSprite3DYn']['_UUID']
-						if ( tCacheUniformInfo[tUUID] != tSprite3DYn ) {
-							tGL[tSystemUniformGroup['uSprite3DYn']['renderMethod']](tSystemUniformGroup['uSprite3DYn']['location'], tSprite3DYn)
-							tCacheUniformInfo[tUUID] = tSprite3DYn
+						tUniformValue = tSprite3DYn
+						if ( tCacheUniformInfo[tUUID] != tUniformValue ) {
+							tGL[tSystemUniformGroup['uSprite3DYn']['renderMethod']](tSystemUniformGroup['uSprite3DYn']['location'], tUniformValue)
+							tCacheUniformInfo[tUUID] = tUniformValue
 						}
 						tUUID = tSystemUniformGroup['uPerspectiveScale']['_UUID']
 						tUniformValue = tMesh['perspectiveScale']

@@ -78,7 +78,7 @@ var RedBitmapMaterial;
 	RedBitmapMaterial = function (redGL, diffuseTexture) {
 		if ( !(this instanceof RedBitmapMaterial) ) return new RedBitmapMaterial(redGL, diffuseTexture);
 		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedBitmapMaterial : RedGL Instance만 허용됩니다.', redGL)
-
+		this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource)
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
 		/**DOC:
@@ -90,7 +90,6 @@ var RedBitmapMaterial;
 		this['diffuseTexture'] = diffuseTexture;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		this['_UUID'] = RedGL['makeUUID']();
 		this.checkUniformAndProperty();
 		console.log(this)

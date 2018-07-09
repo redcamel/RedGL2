@@ -88,7 +88,7 @@ var RedText;
 		this['blendDst'] = redGL.gl.ONE_MINUS_SRC_ALPHA
 		this['useDepthMask'] = false
 		this['useCullFace'] = false
-		this['_sprite3DYn'] = false
+		this['sprite3DYn'] = false
 		this['perspectiveScale'] = false
 		//////////////////////
 		this['_img'].onload = function () {

@@ -21,7 +21,11 @@ var RedDefinePropertyInfo;
 				get: function () { return this['_material']; },
 				set: function (v) {
 					if ( this instanceof RedSprite3D ) {
-						if ( !(v instanceof RedColorMaterial) && !(v instanceof RedBitmapMaterial) && !(v instanceof RedSheetMaterial) ) {
+						if (
+							!(v instanceof RedColorMaterial)
+							&& !(v instanceof RedBitmapMaterial)
+							&& !(v instanceof RedSheetMaterial)
+						) {
 							RedGLUtil.throwFunc('RedSprite3D : RedColorMaterial or RedBitmapMaterial or RedSheetMaterial Instance만 허용됩니다.', '입력값 : ' + v)
 						}
 					} else if ( this instanceof RedSkyBox ) {

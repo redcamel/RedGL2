@@ -139,7 +139,7 @@ var RedProgram;
 							tRenderMethod = arrayNum ? 'uniform1iv' : 'uniform1i';
 							break
 					}
-					console.log('samplerIndex', samplerIndex)
+					// console.log('samplerIndex', samplerIndex)
 					t0['renderType'] = tRenderType
 					t0['renderMethod'] = tRenderMethod
 					//
@@ -290,10 +290,8 @@ var RedProgram;
 			var i = option.length
 			// option에 해당하는 주석을 코드로 전환시킨다.
 			while ( i-- ) {
-				if ( option[i] == 'fog' ) {
-					hasFog = true;
-					continue
-				}
+				if ( option[i] == 'fog' ) hasFog = true;
+				if ( option[i] == 'fog'  ) continue;
 				var t0 = new RegExp('\/\/\#define\#' + option[i] + '\#', 'gi')
 				// console.log(t0)
 				vSource = vSource.replace(t0, '')
