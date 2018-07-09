@@ -168,6 +168,11 @@ var RedRenderer;
 				uPointLightNum: [],
 				uDirectionalShadowTexture: false
 			}
+			var lightMatrix, tSize, lightProjectionMatrix, tPosition;
+			var tLight;
+			tPosition = new Float32Array(3)
+			lightMatrix = new Float32Array(16)
+			lightProjectionMatrix = new Float32Array(16)
 			return function (redGL, time, scene, camera, viewRect) {
 				gl = redGL.gl;
 				lightDebugRenderList.length = 0
@@ -181,16 +186,22 @@ var RedRenderer;
 					tLocation = tLocationInfo['location'];
 					tUUID = tLocationInfo['_UUID'];
 					if ( tLocation ) {
-						var lightMatrix, tSize, lightProjectionMatrix, tPosition;
-						var tLight;
-						lightMatrix = mat4.create()
+						lightMatrix[1] = lightMatrix[2] = lightMatrix[3] =
+							lightMatrix[4] = lightMatrix[6] = lightMatrix[7] =
+								lightMatrix[8] = lightMatrix[9] = lightMatrix[11] =
+									lightMatrix[12] = lightMatrix[13] = lightMatrix[14] = 0
+						lightMatrix[0] = lightMatrix[5] = lightMatrix[10] = lightMatrix[15] = 1
 						if ( scene['shadowManager']['_directionalShadow'] ) {
 							tSize = scene['shadowManager']['_directionalShadow']['size'];
 							tLight = scene['shadowManager']['_directionalShadow']['_light']
-							lightProjectionMatrix = mat4.ortho([], -tSize, tSize, -tSize, tSize, -tSize, tSize)
-							tPosition = vec3.create()
+							mat4.ortho(lightProjectionMatrix, -tSize, tSize, -tSize, tSize, -tSize, tSize)
+							tPosition[0] = 0
+							tPosition[1] = 0
+							tPosition[2] = 0
 							if ( tLight ) {
-								vec3.set(tPosition, -tLight.x, -tLight.y, -tLight.z)
+								tPosition[0] = -tLight.x
+								tPosition[1] = -tLight.y
+								tPosition[2] = -tLight.z
 								vec3.normalize(tPosition, tPosition)
 								mat4.lookAt(
 									lightMatrix,
@@ -657,44 +668,47 @@ var RedRenderer;
 					tIndexBufferInfo = tGeometry['indexBuffer']; // 엘리먼트 버퍼
 					/////////////////////////////////////////////////////////////////////////
 					/////////////////////////////////////////////////////////////////////////
-					// interleaveDefineInfoList 정보를 가져온다.
-					tInterleaveDefineInfo = tInterleaveBuffer['interleaveDefineInfoList'];
+
 					// 버퍼의 UUID
 					tUUID = tInterleaveBuffer['_UUID'];
-					// 프로그램의 어트리뷰트를 순환한다.
-					i2 = tAttrGroup.length;
-					while ( i2-- ) {
-						// 대상 어트리뷰트의 로케이션 정보를 구함
-						tAttributeLocationInfo = tAttrGroup[i2];
-						// 대상 어트리뷰트의 이름으로 interleaveDefineInfoList에서 단위 인터리브 정보를 가져온다.
-						tInterleaveDefineUnit = tInterleaveDefineInfo[tAttributeLocationInfo['name']];
-						// 실제 버퍼 바인딩하고
-						tPrevInterleaveBuffer_UUID == tUUID ? 0 : tGL.bindBuffer(tGL.ARRAY_BUFFER, tInterleaveBuffer['webglBuffer']);
-						tPrevInterleaveBuffer_UUID = tUUID;
-						/*
-						 어트리뷰트 정보매칭이 안되는 녀석은 무시한다
-						 이경우는 버퍼상에는 존재하지만 프로그램에서 사용하지 않는경우이다.
-						 */
-						if ( tAttributeLocationInfo && tInterleaveDefineUnit ) {
-							// webgl location도 알아낸다.
-							tWebGLAttributeLocation = tAttributeLocationInfo['location']
-							if ( tCacheInterleaveBuffer[tWebGLAttributeLocation] != tInterleaveDefineUnit['_UUID'] ) {
-								// 해당로케이션을 활성화된적이없으면 활성화 시킨다
-								tAttributeLocationInfo['enabled'] ? 0 : tGL.enableVertexAttribArray(tWebGLAttributeLocation);
-								tAttributeLocationInfo['enabled'] = 1;
-								tGL.vertexAttribPointer(
-									tWebGLAttributeLocation,
-									tInterleaveDefineUnit['size'],
-									tInterleaveBuffer['glArrayType'],
-									tInterleaveDefineUnit['normalize'],
-									tInterleaveBuffer['stride'] * BYTES_PER_ELEMENT, //stride
-									tInterleaveDefineUnit['offset'] * BYTES_PER_ELEMENT //offset
-								)
-								// 상태 캐싱
-								tCacheInterleaveBuffer[tWebGLAttributeLocation] = tInterleaveDefineUnit['_UUID']
+					// 실제 버퍼 바인딩하고
+					if ( tPrevInterleaveBuffer_UUID != tUUID ) {
+						tGL.bindBuffer(tGL.ARRAY_BUFFER, tInterleaveBuffer['webglBuffer']);
+						// 프로그램의 어트리뷰트를 순환한다.
+						i2 = tAttrGroup.length;
+						// interleaveDefineInfoList 정보를 가져온다.
+						tInterleaveDefineInfo = tInterleaveBuffer['interleaveDefineInfoList'];
+						while ( i2-- ) {
+							// 대상 어트리뷰트의 로케이션 정보를 구함
+							tAttributeLocationInfo = tAttrGroup[i2];
+							// 대상 어트리뷰트의 이름으로 interleaveDefineInfoList에서 단위 인터리브 정보를 가져온다.
+							tInterleaveDefineUnit = tInterleaveDefineInfo[tAttributeLocationInfo['name']];
+							/*
+							 어트리뷰트 정보매칭이 안되는 녀석은 무시한다
+							 이경우는 버퍼상에는 존재하지만 프로그램에서 사용하지 않는경우이다.
+							 */
+							if ( tAttributeLocationInfo && tInterleaveDefineUnit ) {
+								// webgl location도 알아낸다.
+								tWebGLAttributeLocation = tAttributeLocationInfo['location']
+								if ( tCacheInterleaveBuffer[tWebGLAttributeLocation] != tInterleaveDefineUnit['_UUID'] ) {
+									// 해당로케이션을 활성화된적이없으면 활성화 시킨다
+									tAttributeLocationInfo['enabled'] ? 0 : tGL.enableVertexAttribArray(tWebGLAttributeLocation);
+									tAttributeLocationInfo['enabled'] = 1;
+									tGL.vertexAttribPointer(
+										tWebGLAttributeLocation,
+										tInterleaveDefineUnit['size'],
+										tInterleaveBuffer['glArrayType'],
+										tInterleaveDefineUnit['normalize'],
+										tInterleaveBuffer['stride'] * BYTES_PER_ELEMENT, //stride
+										tInterleaveDefineUnit['offset'] * BYTES_PER_ELEMENT //offset
+									);
+									// 상태 캐싱
+									tCacheInterleaveBuffer[tWebGLAttributeLocation] = tInterleaveDefineUnit['_UUID']
+								}
 							}
 						}
 					}
+					tPrevInterleaveBuffer_UUID = tUUID;
 					/////////////////////////////////////////////////////////////////////////
 					/////////////////////////////////////////////////////////////////////////
 					// 유니폼 업데이트
@@ -710,8 +724,7 @@ var RedRenderer;
 							tSamplerIndex = tUniformLocationInfo['samplerIndex']
 							// samplerIndex : 0,1 번은 생성용으로 쓴다.
 							if ( tUniformValue ) {
-								if ( tCacheTexture[tSamplerIndex] == tUniformValue['_UUID'] ) {
-								} else {
+								if ( tCacheTexture[tSamplerIndex] != tUniformValue['_UUID'] ) {
 									tPrevSamplerIndex == tSamplerIndex ? 0 : tGL.activeTexture(tGL.TEXTURE0 + (tPrevSamplerIndex = tSamplerIndex));
 									if ( tUniformValue['_videoDom'] ) {
 										//TODO: 일단 비디오를 우겨넣었으니 정리를 해야함
@@ -729,11 +742,12 @@ var RedRenderer;
 										tCacheUniformInfo[tUUID] = tUniformValue['atlascoord']['data']['_UUID']
 									}
 								}
-							} else {
+							}
+							else {
+								//TODO: 이제는 이놈들을 날릴수있을듯한데...
 								// console.log('설마',tUniformLocationInfo['materialPropertyName'])
 								if ( tRenderType == 'sampler2D' ) {
-									if ( tCacheTexture[tSamplerIndex] == 0 ) {
-									} else {
+									if ( tCacheTexture[tSamplerIndex] != 0 ) {
 										// tPrevSamplerIndex == 0 ? 0 : tGL.activeTexture(tGL.TEXTURE0);
 										// tGL.bindTexture(tGL.TEXTURE_2D, redGL['_datas']['emptyTexture']['2d']['webglTexture']);
 										tCacheSamplerIndex[tUUID] == 0 ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheSamplerIndex[tUUID] = 0);
@@ -741,8 +755,7 @@ var RedRenderer;
 										tPrevSamplerIndex = 0;
 									}
 								} else {
-									if ( tCacheTexture[tSamplerIndex] == 1 ) {
-									} else {
+									if ( tCacheTexture[tSamplerIndex] != 1 ) {
 										// tPrevSamplerIndex == 1 ? 0 : tGL.activeTexture(tGL.TEXTURE0 + 1);
 										// tGL.bindTexture(tGL.TEXTURE_CUBE_MAP, redGL['_datas']['emptyTexture']['3d']['webglTexture']);
 										tCacheSamplerIndex[tUUID] == 1 ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheSamplerIndex[tUUID] = 1);
@@ -754,7 +767,7 @@ var RedRenderer;
 						} else {
 							tUniformValue == undefined ? RedGLUtil.throwFunc('RedRenderer : Material에 ', tUniformLocationInfo['materialPropertyName'], '이 정의 되지않았습니다.') : 0;
 							//TODO: 비교계산을 줄일수는 없을까...
-							tRenderType == 'float' || tRenderType == 'mat' || tRenderType == 'bool' ? tCacheUniformInfo[tUUID] == tUniformValue ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue, tUniformValue)) :
+							tRenderType == 'float' || tRenderType == 'int' || tRenderType == 'bool' ? tCacheUniformInfo[tUUID] == tUniformValue ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue, tUniformValue)) :
 								// tRenderType == 'int' ? noChangeUniform ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue, tUniformValue)) :
 								// 	tRenderType == 'bool' ? noChangeUniform ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue, tUniformValue)) :
 								tRenderType == 'vec' ? tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tUniformValue) :
@@ -857,9 +870,7 @@ var RedRenderer;
 				}
 				/////////////////////////////////////////////////////////////////////////
 				/////////////////////////////////////////////////////////////////////////
-				if ( tGeometry ) {
-					tGL.uniformMatrix4fv(tSystemUniformGroup['uMMatrix']['location'], false, tMVMatrix)
-				}
+				if ( tGeometry ) tGL.uniformMatrix4fv(tSystemUniformGroup['uMMatrix']['location'], false, tMVMatrix)
 				/////////////////////////////////////////////////////////////////////////
 				/////////////////////////////////////////////////////////////////////////
 				// 노말매트릭스를 사용할경우
@@ -918,27 +929,17 @@ var RedRenderer;
 					// 컬페이스 사용여부 캐싱처리
 					tCacheState['useCullFace'] != tMesh['useCullFace'] ? (tCacheState['useCullFace'] = tMesh['useCullFace']) ? tGL.enable(tGL.CULL_FACE) : tGL.disable(tGL.CULL_FACE) : 0;
 					// 컬페이스 캐싱처리
-					tCacheState['cullFace'] != tMesh['cullFace'] ? tGL.cullFace(tCacheState['cullFace'] = tMesh['cullFace']) : 0;
+					tCacheState['useCullFace'] ? tCacheState['cullFace'] != tMesh['cullFace'] ? tGL.cullFace(tCacheState['cullFace'] = tMesh['cullFace']) : 0 : 0;
 					// 뎁스마스크처리
 					tCacheState['useDepthMask'] != tMesh['useDepthMask'] ? tGL.depthMask(tCacheState['useDepthMask'] = tMesh['useDepthMask']) : 0;
 					// 뎁스테스트 사용여부 캐싱처리
 					tCacheState['useDepthTest'] != tMesh['useDepthTest'] ? (tCacheState['useDepthTest'] = tMesh['useDepthTest']) ? tGL.enable(tGL.DEPTH_TEST) : tGL.disable(tGL.DEPTH_TEST) : 0;
 					// 뎁스테스팅 캐싱처리
-					tCacheState['depthTestFunc'] != tMesh['depthTestFunc'] ? tGL.depthFunc(tCacheState['depthTestFunc'] = tMesh['depthTestFunc']) : 0;
-					// 블렌딩 사용여부 캐싱처리
-					if ( !tDirectionalShadowMaterialYn ) {
-						tCacheState['useBlendMode'] != tMesh['useBlendMode'] ? (tCacheState['useBlendMode'] = tMesh['useBlendMode']) ? tGL.enable(tGL.BLEND) : tGL.disable(tGL.BLEND) : 0;
-						// 블렌딩팩터 캐싱처리
-						if ( tCacheState['blendSrc'] != tMesh['blendSrc'] || tCacheState['blendDst'] != tMesh['blendDst'] ) {
-							tGL.blendFunc(tMesh['blendSrc'], tMesh['blendDst']);
-							tCacheState['blendSrc'] = tMesh['blendSrc'];
-							tCacheState['blendDst'] = tMesh['blendDst'];
-						}
-					}
-					if ( tSystemUniformGroup['uPointSize']['location'] ) {
+					tCacheState['useDepthTest'] ? tCacheState['depthTestFunc'] != tMesh['depthTestFunc'] ? tGL.depthFunc(tCacheState['depthTestFunc'] = tMesh['depthTestFunc']) : 0 : 0;
+					if ( tSystemUniformGroup['uPointSize']['use'] ) {
 						tCacheState['pointSize'] != tMesh['pointSize'] ? tGL.uniform1f(tSystemUniformGroup['uPointSize']['location'], tCacheState['pointSize'] = tMesh['pointSize']) : 0;
 					}
-					if ( tSystemUniformGroup['uSprite3DYn']['location'] ) {
+					if ( tSystemUniformGroup['uSprite3DYn']['use'] ) {
 						tUUID = tSystemUniformGroup['uSprite3DYn']['_UUID']
 						tUniformValue = tSprite3DYn
 						if ( tCacheUniformInfo[tUUID] != tUniformValue ) {
@@ -950,6 +951,16 @@ var RedRenderer;
 						if ( tCacheUniformInfo[tUUID] != tUniformValue ) {
 							tGL[tSystemUniformGroup['uPerspectiveScale']['renderMethod']](tSystemUniformGroup['uPerspectiveScale']['location'], tUniformValue)
 							tCacheUniformInfo[tUUID] = tUniformValue
+						}
+					}
+					// // 블렌딩 사용여부 캐싱처리
+					if ( !tDirectionalShadowMaterialYn ) {
+						tCacheState['useBlendMode'] != tMesh['useBlendMode'] ? (tCacheState['useBlendMode'] = tMesh['useBlendMode']) ? tGL.enable(tGL.BLEND) : tGL.disable(tGL.BLEND) : 0;
+						// 블렌딩팩터 캐싱처리
+						if ( tCacheState['blendSrc'] != tMesh['blendSrc'] || tCacheState['blendDst'] != tMesh['blendDst'] ) {
+							tGL.blendFunc(tMesh['blendSrc'], tMesh['blendDst']);
+							tCacheState['blendSrc'] = tMesh['blendSrc'];
+							tCacheState['blendDst'] = tMesh['blendDst'];
 						}
 					}
 					/////////////////////////////////////////////////////////////////////////
@@ -970,6 +981,7 @@ var RedRenderer;
 				/////////////////////////////////////////////////////////////////////////
 				/////////////////////////////////////////////////////////////////////////
 				tMesh['children'].length ? draw(redGL, scene, tMesh['children'], camera, orthographicYn, time, renderResultObj, tCacheInfo, tCacheState, tMVMatrix, subSceneMaterial) : 0;
+
 			}
 		}
 		return function (redGL, scene, camera, orthographicYn, children, time, renderResultObj, subSceneMaterial) {
@@ -984,9 +996,20 @@ var RedRenderer;
 			// if ( !this['cacheState']['blendDst'] ) this['cacheState']['blendDst'] = null
 			// this['cacheSamplerIndex'].length = 0
 			this['cacheInfo']['cacheTexture'].length = 0
+			// this['cacheInfo']['cacheTexture'][39] = null
+			// console.log(this['cacheInfo']['cacheSamplerIndex'])
 			tPrevIndexBuffer_UUID = null;
 			tPrevInterleaveBuffer_UUID = null;
 			tPrevSamplerIndex = null;
+			//TODO: 소팅까지해버리자
+			if ( !scene['sorted'] ) {
+				scene['sorted'] = true
+				children.sort(function (a, b) {
+					if ( a['geometry']['interleaveBuffer'] < b['geometry']['interleaveBuffer'] ) return -1
+					if ( a['geometry']['interleaveBuffer'] > b['geometry']['interleaveBuffer'] ) return 1
+					return 0
+				})
+			}
 			draw(
 				redGL,
 				scene,

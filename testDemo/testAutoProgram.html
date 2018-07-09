@@ -255,6 +255,7 @@
 			tList.push(testMaterial._programList['basic'][k]['key'].replace('environmentProgram_', ''))
 		}
 		t0.add(tScene3D, 'useFog', true, false)
+
 		t0.add(testData, 'state', tList).onChange(function (v) {
 			v = v.split('_')
 			testMaterial.diffuseTexture = null

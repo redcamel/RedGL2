@@ -42,7 +42,8 @@ var RedProgram;
 					var t0 = new AttributeLocationInfo();
 					t0['_UUID'] = RedGL.makeUUID()
 					t0['location'] = gl.getAttribLocation(self['webglProgram'], v['name']);
-					if ( t0['location'] == -1 ) t0['msg'] = '쉐이더 main 함수에서 사용되고 있지 않음';
+					if ( t0['location'] == -1 ) t0['msg'] = '쉐이더 main 함수에서 사용되고 있지 않음', t0['use'] = false;
+					else t0['use'] = true
 					t0['attributeType'] = v['attributeType'];
 					t0['name'] = v['name'];
 					t0['enabled'] = false;
@@ -146,7 +147,8 @@ var RedProgram;
 					t0['name'] = v['name']
 					t0['materialPropertyName'] = v['name'].charAt(1).toLowerCase() + v['name'].substr(2)
 					t0['arrayNum'] = v['arrayNum']
-					if ( !t0['location'] ) t0['msg'] = '쉐이더 main 함수에서 사용되고 있지 않음';
+					if ( !t0['location'] ) t0['msg'] = '쉐이더 main 함수에서 사용되고 있지 않음', t0['use'] = false;
+					else t0['use'] = true
 					if ( v['systemUniformYn'] ) {
 						if ( t0['location'] ) self['systemUniformLocation'].push(t0)
 						self['systemUniformLocation'][v['name']] = t0
