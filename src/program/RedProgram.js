@@ -61,11 +61,13 @@ var RedProgram;
 					t0['location'] = gl.getUniformLocation(self['webglProgram'], v['name']);
 					t0['uniformType'] = v['uniformType'];
 					// renderType 조사
-					var arrayNum, tRenderType, tRenderMethod;
+					var arrayNum, tRenderType,tRenderTypeIndex, tRenderMethod;
 					arrayNum = v['arrayNum']
+					tRenderTypeIndex = 100000
 					switch ( v['uniformType'] ) {
 						case 'sampler2D':
 							tRenderType = 'sampler2D';
+							tRenderTypeIndex = 0
 							tRenderMethod = 'uniform1i';
 							t0['samplerIndex'] = samplerIndex
 							samplerIndex++
@@ -74,6 +76,7 @@ var RedProgram;
 							break
 						case 'samplerCube':
 							tRenderType = 'samplerCube';
+							tRenderTypeIndex = 1
 							tRenderMethod = 'uniform1i';
 							t0['samplerIndex'] = samplerIndex
 							samplerIndex++
@@ -81,68 +84,84 @@ var RedProgram;
 							break
 						case 'float':
 							tRenderType = 'float';
+							tRenderTypeIndex = 11
 							tRenderMethod = arrayNum ? 'uniform1fv' : 'uniform1f';
 							break
 						case 'int':
 							tRenderType = 'int';
+							tRenderTypeIndex = 12
 							tRenderMethod = arrayNum ? 'uniform1iv' : 'uniform1i';
 							break
-						case 'mat4':
-							tRenderType = 'mat';
-							tRenderMethod = 'uniformMatrix4fv';
-							break
-						case 'mat3':
-							tRenderType = 'mat';
-							tRenderMethod = 'uniformMatrix3fv';
-							break
-						case 'mat2':
-							tRenderType = 'mat';
-							tRenderMethod = 'uniformMatrix2fv';
+						case 'bool':
+							tRenderType = 'bool';
+							tRenderTypeIndex = 13
+							tRenderMethod = arrayNum ? 'uniform1iv' : 'uniform1i';
 							break
 						case 'vec4':
 							tRenderType = 'vec';
+							tRenderTypeIndex = 14
 							tRenderMethod = 'uniform4fv';
 							break
 						case 'vec3':
 							tRenderType = 'vec';
+							tRenderTypeIndex = 15
 							tRenderMethod = 'uniform3fv';
 							break
 						case 'vec2':
 							tRenderType = 'vec';
+							tRenderTypeIndex = 16
 							tRenderMethod = 'uniform2fv';
 							break
 						case 'ivec4':
 							tRenderType = 'vec';
+							tRenderTypeIndex = 17
 							tRenderMethod = 'uniform4iv';
 							break
 						case 'ivec3':
 							tRenderType = 'vec';
+							tRenderTypeIndex = 18
 							tRenderMethod = 'uniform3iv';
 							break
 						case 'ivec2':
 							tRenderType = 'vec';
+							tRenderTypeIndex = 19
 							tRenderMethod = 'uniform2iv';
 							break
 						case 'bvec4':
 							tRenderType = 'vec';
+							tRenderTypeIndex = 20
 							tRenderMethod = 'uniform4iv';
 							break
 						case 'bvec3':
 							tRenderType = 'vec';
+							tRenderTypeIndex = 21
 							tRenderMethod = 'uniform3iv';
 							break
 						case 'bvec2':
 							tRenderType = 'vec';
+							tRenderTypeIndex = 22
 							tRenderMethod = 'uniform2iv';
 							break
-						case 'bool':
-							tRenderType = 'bool';
-							tRenderMethod = arrayNum ? 'uniform1iv' : 'uniform1i';
+						case 'mat4':
+							tRenderType = 'mat';
+							tRenderTypeIndex = 23
+							tRenderMethod = 'uniformMatrix4fv';
+							break
+						case 'mat3':
+							tRenderType = 'mat';
+							tRenderTypeIndex = 24
+							tRenderMethod = 'uniformMatrix3fv';
+							break
+						case 'mat2':
+							tRenderType = 'mat';
+							tRenderTypeIndex = 25
+							tRenderMethod = 'uniformMatrix2fv';
 							break
 					}
 					// console.log('samplerIndex', samplerIndex)
 					t0['renderType'] = tRenderType
 					t0['renderMethod'] = tRenderMethod
+					t0['renderTypeIndex'] = tRenderTypeIndex
 					//
 					t0['name'] = v['name']
 					t0['materialPropertyName'] = v['name'].charAt(1).toLowerCase() + v['name'].substr(2)
