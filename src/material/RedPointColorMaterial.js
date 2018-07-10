@@ -28,7 +28,7 @@ var RedPointColorMaterial;
 		 }
 		 void main(void) {
 			 vec4 finalColor = vColor * vColor.a;
-			 gl_FragColor = finalColor;
+
 			 //#define#fog#false# gl_FragColor = finalColor;
 			 //#define#fog#true# gl_FragColor = fog( fogFactor(uFogDistance, uFogDensity), uFogColor, finalColor);
 		 }

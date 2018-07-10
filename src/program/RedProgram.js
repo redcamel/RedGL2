@@ -61,7 +61,7 @@ var RedProgram;
 					t0['location'] = gl.getUniformLocation(self['webglProgram'], v['name']);
 					t0['uniformType'] = v['uniformType'];
 					// renderType 조사
-					var arrayNum, tRenderType,tRenderTypeIndex, tRenderMethod;
+					var arrayNum, tRenderType, tRenderTypeIndex, tRenderMethod;
 					arrayNum = v['arrayNum']
 					tRenderTypeIndex = 100000
 					switch ( v['uniformType'] ) {
@@ -84,77 +84,77 @@ var RedProgram;
 							break
 						case 'float':
 							tRenderType = 'float';
-							tRenderTypeIndex = 11
+							tRenderTypeIndex = arrayNum ? 12 : 11;
 							tRenderMethod = arrayNum ? 'uniform1fv' : 'uniform1f';
 							break
 						case 'int':
 							tRenderType = 'int';
-							tRenderTypeIndex = 12
+							tRenderTypeIndex = arrayNum ? 12 : 11;
 							tRenderMethod = arrayNum ? 'uniform1iv' : 'uniform1i';
 							break
 						case 'bool':
 							tRenderType = 'bool';
-							tRenderTypeIndex = 13
+							tRenderTypeIndex = arrayNum ? 12 : 11;
 							tRenderMethod = arrayNum ? 'uniform1iv' : 'uniform1i';
 							break
 						case 'vec4':
 							tRenderType = 'vec';
-							tRenderTypeIndex = 14
+							tRenderTypeIndex = 12
 							tRenderMethod = 'uniform4fv';
 							break
 						case 'vec3':
 							tRenderType = 'vec';
-							tRenderTypeIndex = 15
+							tRenderTypeIndex = 12
 							tRenderMethod = 'uniform3fv';
 							break
 						case 'vec2':
 							tRenderType = 'vec';
-							tRenderTypeIndex = 16
+							tRenderTypeIndex = 12
 							tRenderMethod = 'uniform2fv';
 							break
 						case 'ivec4':
 							tRenderType = 'vec';
-							tRenderTypeIndex = 17
+							tRenderTypeIndex = 12
 							tRenderMethod = 'uniform4iv';
 							break
 						case 'ivec3':
 							tRenderType = 'vec';
-							tRenderTypeIndex = 18
+							tRenderTypeIndex = 12
 							tRenderMethod = 'uniform3iv';
 							break
 						case 'ivec2':
 							tRenderType = 'vec';
-							tRenderTypeIndex = 19
+							tRenderTypeIndex = 12
 							tRenderMethod = 'uniform2iv';
 							break
 						case 'bvec4':
 							tRenderType = 'vec';
-							tRenderTypeIndex = 20
+							tRenderTypeIndex = 12
 							tRenderMethod = 'uniform4iv';
 							break
 						case 'bvec3':
 							tRenderType = 'vec';
-							tRenderTypeIndex = 21
+							tRenderTypeIndex = 12
 							tRenderMethod = 'uniform3iv';
 							break
 						case 'bvec2':
 							tRenderType = 'vec';
-							tRenderTypeIndex = 22
+							tRenderTypeIndex = 12
 							tRenderMethod = 'uniform2iv';
 							break
 						case 'mat4':
 							tRenderType = 'mat';
-							tRenderTypeIndex = 23
+							tRenderTypeIndex = 13
 							tRenderMethod = 'uniformMatrix4fv';
 							break
 						case 'mat3':
 							tRenderType = 'mat';
-							tRenderTypeIndex = 24
+							tRenderTypeIndex = 13
 							tRenderMethod = 'uniformMatrix3fv';
 							break
 						case 'mat2':
 							tRenderType = 'mat';
-							tRenderTypeIndex = 25
+							tRenderTypeIndex = 13
 							tRenderMethod = 'uniformMatrix2fv';
 							break
 					}
@@ -305,6 +305,7 @@ var RedProgram;
 		vSource = RedGLUtil.getStrFromComment(vSource.toString());
 		fSource = RedGLUtil.getStrFromComment(fSource.toString());
 		var hasFog = false
+		var hasSprite3D = false
 		if ( option ) {
 			option.sort()
 			programName += '_' + option.join('_');
@@ -312,7 +313,8 @@ var RedProgram;
 			// option에 해당하는 주석을 코드로 전환시킨다.
 			while ( i-- ) {
 				if ( option[i] == 'fog' ) hasFog = true;
-				if ( option[i] == 'fog'  ) continue;
+				if ( option[i] == 'sprite3D' ) hasSprite3D = true;
+				if ( option[i] == 'fog' || option[i] == 'sprite3D' ) continue;
 				var t0 = new RegExp('\/\/\#define\#' + option[i] + '\#', 'gi')
 				// console.log(t0)
 				vSource = vSource.replace(t0, '')
@@ -321,6 +323,9 @@ var RedProgram;
 		}
 		// 포그처리
 		var t0 = new RegExp('\/\/\#define\#fog\#' + (hasFog ? 'true' : 'false') + '\#', 'gi')
+		vSource = vSource.replace(t0, '')
+		fSource = fSource.replace(t0, '')
+		var t0 = new RegExp('\/\/\#define\#sprite3D\#' + (hasSprite3D ? 'true' : 'false') + '\#', 'gi')
 		vSource = vSource.replace(t0, '')
 		fSource = fSource.replace(t0, '')
 		// console.log(programName)

@@ -30,7 +30,7 @@ var RedPointBitmapMaterial;
 			 vec4 finalColor = texture2D(u_diffuseTexture, vec2(gl_PointCoord.x, - gl_PointCoord.y));
 			 finalColor.rgb *= finalColor.a;
 			 if(finalColor.a < uAlphaTest) discard;
-			 gl_FragColor = finalColor;
+
 			 //#define#fog#false# gl_FragColor = finalColor;
 			 //#define#fog#true# gl_FragColor = fog( fogFactor(uFogDistance, uFogDensity), uFogColor, finalColor);
 		 }

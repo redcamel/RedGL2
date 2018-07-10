@@ -173,10 +173,40 @@ var RedRenderer;
 			tPosition = new Float32Array(3)
 			lightMatrix = new Float32Array(16)
 			lightProjectionMatrix = new Float32Array(16)
+			var programNum = 0
 			return function (redGL, time, scene, camera, viewRect) {
 				gl = redGL.gl;
 				lightDebugRenderList.length = 0
+				// console.log('programNum', programNum)
+				programNum = 0
+				lightMatrix[1] = lightMatrix[2] = lightMatrix[3] =
+					lightMatrix[4] = lightMatrix[6] = lightMatrix[7] =
+						lightMatrix[8] = lightMatrix[9] = lightMatrix[11] =
+							lightMatrix[12] = lightMatrix[13] = lightMatrix[14] = 0
+				lightMatrix[0] = lightMatrix[5] = lightMatrix[10] = lightMatrix[15] = 1
+				if ( scene['shadowManager']['_directionalShadow'] ) {
+					tSize = scene['shadowManager']['_directionalShadow']['size'];
+					tLight = scene['shadowManager']['_directionalShadow']['_light']
+					mat4.ortho(lightProjectionMatrix, -tSize, tSize, -tSize, tSize, -tSize, tSize)
+					tPosition[0] = 0
+					tPosition[1] = 0
+					tPosition[2] = 0
+					if ( tLight ) {
+						tPosition[0] = -tLight.x
+						tPosition[1] = -tLight.y
+						tPosition[2] = -tLight.z
+						vec3.normalize(tPosition, tPosition)
+						mat4.lookAt(
+							lightMatrix,
+							tPosition,
+							[0, 0, 0],
+							[0, 1, 0]
+						)
+						mat4.multiply(lightMatrix, lightProjectionMatrix, lightMatrix)
+					}
+				}
 				for ( var k in redGL['_datas']['RedProgram'] ) {
+					programNum++
 					tProgram = redGL['_datas']['RedProgram'][k];
 					gl.useProgram(tProgram['webglProgram']);
 					prevProgram_UUID = tProgram['_UUID'];
@@ -186,32 +216,8 @@ var RedRenderer;
 					tLocation = tLocationInfo['location'];
 					tUUID = tLocationInfo['_UUID'];
 					if ( tLocation ) {
-						lightMatrix[1] = lightMatrix[2] = lightMatrix[3] =
-							lightMatrix[4] = lightMatrix[6] = lightMatrix[7] =
-								lightMatrix[8] = lightMatrix[9] = lightMatrix[11] =
-									lightMatrix[12] = lightMatrix[13] = lightMatrix[14] = 0
-						lightMatrix[0] = lightMatrix[5] = lightMatrix[10] = lightMatrix[15] = 1
 						if ( scene['shadowManager']['_directionalShadow'] ) {
-							tSize = scene['shadowManager']['_directionalShadow']['size'];
-							tLight = scene['shadowManager']['_directionalShadow']['_light']
-							mat4.ortho(lightProjectionMatrix, -tSize, tSize, -tSize, tSize, -tSize, tSize)
-							tPosition[0] = 0
-							tPosition[1] = 0
-							tPosition[2] = 0
-							if ( tLight ) {
-								tPosition[0] = -tLight.x
-								tPosition[1] = -tLight.y
-								tPosition[2] = -tLight.z
-								vec3.normalize(tPosition, tPosition)
-								mat4.lookAt(
-									lightMatrix,
-									tPosition,
-									[0, 0, 0],
-									[0, 1, 0]
-								)
-								mat4.multiply(lightMatrix, lightProjectionMatrix, lightMatrix)
-								gl.uniformMatrix4fv(tLocation, false, lightMatrix);
-							}
+							if ( tLight ) gl.uniformMatrix4fv(tLocation, false, lightMatrix);
 						}
 					}
 					// 디렉셔널 쉐도우 텍스쳐
@@ -432,19 +438,19 @@ var RedRenderer;
 				// 위치/크기의 % 여부를 파싱
 				valueParser(tViewRect);
 				// 현재뷰에 대한 렌더 디버깅 정보
-				tRenderInfo = self['renderInfo'][tView['key']] = {
-					orthographicYn: tCamera['orthographicYn'],
-					x: tView['_x'],
-					y: tView['_y'],
-					width: tView['_width'],
-					height: tView['_height'],
-					viewRectX: tViewRect[0],
-					viewRectY: tViewRect[1],
-					viewRectWidth: tViewRect[2],
-					viewRectHeight: tViewRect[3],
-					key: tView['key'],
-					call: 0
-				}
+				if ( !self['renderInfo'][tView['key']] ) self['renderInfo'][tView['key']] = {}
+				tRenderInfo = self['renderInfo'][tView['key']]
+				tRenderInfo['orthographicYn'] = tCamera['orthographicYn']
+				tRenderInfo['x'] = tView['_x']
+				tRenderInfo['y'] = tView['_y']
+				tRenderInfo['width'] = tView['_width']
+				tRenderInfo['height'] = tView['_height']
+				tRenderInfo['viewRectX'] = tViewRect[0]
+				tRenderInfo['viewRectY'] = tViewRect[1]
+				tRenderInfo['viewRectWidth'] = tViewRect[2]
+				tRenderInfo['viewRectHeight'] = tViewRect[3]
+				tRenderInfo['key'] = tView['key']
+				tRenderInfo['call'] = 0
 				// viewport 크기설정
 				gl.viewport(tViewRect[0], tWorldRect[3] - tViewRect[3] - tViewRect[1], tViewRect[2], tViewRect[3]);
 				gl.scissor(tViewRect[0], tWorldRect[3] - tViewRect[3] - tViewRect[1], tViewRect[2], tViewRect[3]);
@@ -570,27 +576,21 @@ var RedRenderer;
 			var tCacheSamplerIndex = tCacheInfo['cacheSamplerIndex'];
 			var tCacheTexture = tCacheInfo['cacheTexture'];
 			// 오쏘고날 스케일 비율
-			var orthographicYnScale = orthographicYn ? -1 : 1
+			var orthographicYnScale = orthographicYn ? -1 : 1;
 			//
-			var BYTES_PER_ELEMENT;
-			var CONVERT_RADIAN;
+			var BYTES_PER_ELEMENT, CONVERT_RADIAN;
 			//
-			var tMesh;
-			var tGeometry;
-			var tMaterial;
+			var tMesh, tGeometry, tMaterial;
 			var tLODInfo;
-			var tInterleaveDefineInfo;
-			var tAttrGroup, tUniformGroup, tSystemUniformGroup;
-			var tInterleaveDefineUnit
-			var tUniformLocationInfo, tAttributeLocationInfo, tWebGLUniformLocation, tWebGLAttributeLocation;
+			var tAttrGroup, tAttributeLocationInfo, tInterleaveDefineInfo, tInterleaveDefineUnit;
+			var tUniformGroup, tSystemUniformGroup, tUniformLocationInfo, tWebGLUniformLocation, tWebGLAttributeLocation;
 			var tInterleaveBuffer, tIndexBufferInfo;
 			var tUniformValue
-			var tRenderType;
+			var tRenderType, tRenderTypeIndex;
 			var tMVMatrix, tNMatrix
 			var tUUID;
 			var tSamplerIndex;
-			var tSprite3DYn, tDirectionalShadowMaterialYn;
-			var tLODData
+			var tSprite3DYn, tLODData, tDirectionalShadowMaterialYn;
 			var tProgram;
 			// matix 관련
 			var a,
@@ -606,7 +606,7 @@ var RedRenderer;
 			var lodX, lodY, lodZ, lodDistance;
 			//////////////// 변수값 할당 ////////////////
 			BYTES_PER_ELEMENT = Float32Array.BYTES_PER_ELEMENT;
-			CONVERT_RADIAN = Math.PI / 180
+			CONVERT_RADIAN = Math.PI / 180;
 			CPI = 3.141592653589793, CPI2 = 6.283185307179586, C225 = 0.225, C127 = 1.27323954, C045 = 0.405284735, C157 = 1.5707963267948966;
 			//////////////// 렌더시작 ////////////////
 			i = children.length
@@ -654,9 +654,12 @@ var RedRenderer;
 						tMaterial['_sheetRect'][3] = Math.floor(tMaterial['currentIndex'] / tMaterial['_segmentH']) / tMaterial['_segmentH'];
 					}
 					// 재질 캐싱
-					tProgram = tMaterial['program'];
 					// fog Program 판단
-					scene['useFog'] ? tProgram = tProgram['subProgram_fog'] ? tProgram['subProgram_fog'] : tProgram : 0;
+					tProgram = tMaterial['program']
+					if ( scene['useFog'] ) tProgram = tMaterial['_programList']['fog'][tMaterial['program']['key']]
+					if ( tSprite3DYn ) tProgram = tMaterial['_programList']['sprite3D'][tMaterial['program']['key']]
+					// if ( scene['useFog'] && tSprite3DYn ) tProgram = tMaterial['program']['subProgram_fog_sprite3D']
+					//
 					prevProgram_UUID == tProgram['_UUID'] ? 0 : tGL.useProgram(tProgram['webglProgram'])
 					prevProgram_UUID = tProgram['_UUID']
 					// 업데이트할 어트리뷰트와 유니폼 정보를 가져옴
@@ -668,47 +671,42 @@ var RedRenderer;
 					tIndexBufferInfo = tGeometry['indexBuffer']; // 엘리먼트 버퍼
 					/////////////////////////////////////////////////////////////////////////
 					/////////////////////////////////////////////////////////////////////////
-
 					// 버퍼의 UUID
 					tUUID = tInterleaveBuffer['_UUID'];
 					// 실제 버퍼 바인딩하고
-					if ( tPrevInterleaveBuffer_UUID != tUUID ) {
-						tGL.bindBuffer(tGL.ARRAY_BUFFER, tInterleaveBuffer['webglBuffer']);
-						// 프로그램의 어트리뷰트를 순환한다.
-						i2 = tAttrGroup.length;
-						// interleaveDefineInfoList 정보를 가져온다.
-						tInterleaveDefineInfo = tInterleaveBuffer['interleaveDefineInfoList'];
-						while ( i2-- ) {
-							// 대상 어트리뷰트의 로케이션 정보를 구함
-							tAttributeLocationInfo = tAttrGroup[i2];
-							// 대상 어트리뷰트의 이름으로 interleaveDefineInfoList에서 단위 인터리브 정보를 가져온다.
-							tInterleaveDefineUnit = tInterleaveDefineInfo[tAttributeLocationInfo['name']];
-							/*
-							 어트리뷰트 정보매칭이 안되는 녀석은 무시한다
-							 이경우는 버퍼상에는 존재하지만 프로그램에서 사용하지 않는경우이다.
-							 */
-							if ( tAttributeLocationInfo && tInterleaveDefineUnit ) {
-								// webgl location도 알아낸다.
-								tWebGLAttributeLocation = tAttributeLocationInfo['location']
-								if ( tCacheInterleaveBuffer[tWebGLAttributeLocation] != tInterleaveDefineUnit['_UUID'] ) {
-									// 해당로케이션을 활성화된적이없으면 활성화 시킨다
-									tAttributeLocationInfo['enabled'] ? 0 : tGL.enableVertexAttribArray(tWebGLAttributeLocation);
-									tAttributeLocationInfo['enabled'] = 1;
-									tGL.vertexAttribPointer(
-										tWebGLAttributeLocation,
-										tInterleaveDefineUnit['size'],
-										tInterleaveBuffer['glArrayType'],
-										tInterleaveDefineUnit['normalize'],
-										tInterleaveBuffer['stride'] * BYTES_PER_ELEMENT, //stride
-										tInterleaveDefineUnit['offset'] * BYTES_PER_ELEMENT //offset
-									);
-									// 상태 캐싱
-									tCacheInterleaveBuffer[tWebGLAttributeLocation] = tInterleaveDefineUnit['_UUID']
-								}
-							}
+					// 프로그램의 어트리뷰트를 순환한다.
+					i2 = tAttrGroup.length;
+					// interleaveDefineInfoList 정보를 가져온다.
+					tInterleaveDefineInfo = tInterleaveBuffer['interleaveDefineInfoList'];
+					tPrevInterleaveBuffer_UUID == tUUID ? 0 : tGL.bindBuffer(tGL.ARRAY_BUFFER, tInterleaveBuffer['webglBuffer']);
+					tPrevInterleaveBuffer_UUID = tUUID;
+					while ( i2-- ) {
+						// 대상 어트리뷰트의 로케이션 정보를 구함
+						tAttributeLocationInfo = tAttrGroup[i2];
+						// 대상 어트리뷰트의 이름으로 interleaveDefineInfoList에서 단위 인터리브 정보를 가져온다.
+						tInterleaveDefineUnit = tInterleaveDefineInfo[tAttributeLocationInfo['name']];
+						/*
+						 어트리뷰트 정보매칭이 안되는 녀석은 무시한다
+						 이경우는 버퍼상에는 존재하지만 프로그램에서 사용하지 않는경우이다.
+						*/
+						// webgl location도 알아낸다.
+						tWebGLAttributeLocation = tAttributeLocationInfo['location']
+						if ( tInterleaveDefineUnit && tCacheInterleaveBuffer[tWebGLAttributeLocation] != tInterleaveDefineUnit['_UUID'] ) {
+							// 해당로케이션을 활성화된적이없으면 활성화 시킨다
+							tAttributeLocationInfo['enabled'] ? 0 : tGL.enableVertexAttribArray(tWebGLAttributeLocation);
+							tAttributeLocationInfo['enabled'] = 1;
+							tGL.vertexAttribPointer(
+								tWebGLAttributeLocation,
+								tInterleaveDefineUnit['size'],
+								tInterleaveBuffer['glArrayType'],
+								tInterleaveDefineUnit['normalize'],
+								tInterleaveBuffer['stride'] * BYTES_PER_ELEMENT, //stride
+								tInterleaveDefineUnit['offset'] * BYTES_PER_ELEMENT //offset
+							);
+							// 상태 캐싱
+							tCacheInterleaveBuffer[tWebGLAttributeLocation] = tInterleaveDefineUnit['_UUID']
 						}
 					}
-					tPrevInterleaveBuffer_UUID = tUUID;
 					/////////////////////////////////////////////////////////////////////////
 					/////////////////////////////////////////////////////////////////////////
 					// 유니폼 업데이트
@@ -717,11 +715,12 @@ var RedRenderer;
 						tUniformLocationInfo = tUniformGroup[i2];
 						tWebGLUniformLocation = tUniformLocationInfo['location'];
 						tUUID = tUniformLocationInfo['_UUID'];
+						tRenderTypeIndex = tUniformLocationInfo['renderTypeIndex'];
 						tRenderType = tUniformLocationInfo['renderType'];
 						tUniformValue = tMaterial[tUniformLocationInfo['materialPropertyName']];
 						// console.log(tCacheInfo)
 						if ( tRenderType == 'sampler2D' || tRenderType == 'samplerCube' ) {
-							tSamplerIndex = tUniformLocationInfo['samplerIndex']
+							tSamplerIndex = tUniformLocationInfo['samplerIndex'];
 							// samplerIndex : 0,1 번은 생성용으로 쓴다.
 							if ( tUniformValue ) {
 								if ( tCacheTexture[tSamplerIndex] != tUniformValue['_UUID'] ) {
@@ -731,7 +730,7 @@ var RedRenderer;
 										tGL.bindTexture(tGL.TEXTURE_2D, tUniformValue['webglTexture']);
 										if ( tUniformValue['_videoDom']['loaded'] ) tGL.texImage2D(tGL.TEXTURE_2D, 0, tGL.RGBA, tGL.RGBA, tGL.UNSIGNED_BYTE, tUniformValue['_videoDom'])
 									} else tGL.bindTexture(tRenderType == 'sampler2D' ? tGL.TEXTURE_2D : tGL.TEXTURE_CUBE_MAP, tUniformValue['webglTexture']);
-									tCacheSamplerIndex[tUUID] == tSamplerIndex ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheSamplerIndex[tUUID] = tSamplerIndex);
+									tCacheSamplerIndex[tUUID] == tSamplerIndex ? 0 : tGL.uniform1i(tWebGLUniformLocation, tCacheSamplerIndex[tUUID] = tSamplerIndex);
 									tCacheTexture[tSamplerIndex] = tUniformValue['_UUID'];
 								}
 								// 아틀라스 UV검색
@@ -744,13 +743,13 @@ var RedRenderer;
 								}
 							}
 							else {
-								//TODO: 이제는 이놈들을 날릴수있을듯한데...
+								// TODO: 이제는 이놈들을 날릴수있을듯한데...
 								// console.log('설마',tUniformLocationInfo['materialPropertyName'])
 								if ( tRenderType == 'sampler2D' ) {
 									if ( tCacheTexture[tSamplerIndex] != 0 ) {
 										// tPrevSamplerIndex == 0 ? 0 : tGL.activeTexture(tGL.TEXTURE0);
 										// tGL.bindTexture(tGL.TEXTURE_2D, redGL['_datas']['emptyTexture']['2d']['webglTexture']);
-										tCacheSamplerIndex[tUUID] == 0 ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheSamplerIndex[tUUID] = 0);
+										tCacheSamplerIndex[tUUID] == 0 ? 0 : tGL.uniform1i(tWebGLUniformLocation, tCacheSamplerIndex[tUUID] = 0);
 										tCacheTexture[tSamplerIndex] = 0;
 										tPrevSamplerIndex = 0;
 									}
@@ -758,7 +757,7 @@ var RedRenderer;
 									if ( tCacheTexture[tSamplerIndex] != 1 ) {
 										// tPrevSamplerIndex == 1 ? 0 : tGL.activeTexture(tGL.TEXTURE0 + 1);
 										// tGL.bindTexture(tGL.TEXTURE_CUBE_MAP, redGL['_datas']['emptyTexture']['3d']['webglTexture']);
-										tCacheSamplerIndex[tUUID] == 1 ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tCacheSamplerIndex[tUUID] = 1);
+										tCacheSamplerIndex[tUUID] == 1 ? 0 : tGL.uniform1i(tWebGLUniformLocation, tCacheSamplerIndex[tUUID] = 1);
 										tCacheTexture[tSamplerIndex] = 1;
 										tPrevSamplerIndex = 1;
 									}
@@ -767,12 +766,15 @@ var RedRenderer;
 						} else {
 							tUniformValue == undefined ? RedGLUtil.throwFunc('RedRenderer : Material에 ', tUniformLocationInfo['materialPropertyName'], '이 정의 되지않았습니다.') : 0;
 							//TODO: 비교계산을 줄일수는 없을까...
-							tRenderType == 'float' || tRenderType == 'int' || tRenderType == 'bool' ? tCacheUniformInfo[tUUID] == tUniformValue ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue, tUniformValue)) :
-								// tRenderType == 'int' ? noChangeUniform ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue, tUniformValue)) :
-								// 	tRenderType == 'bool' ? noChangeUniform ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue, tUniformValue)) :
-								tRenderType == 'vec' ? tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tUniformValue) :
-									tRenderType == 'mat' ? tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, false, tUniformValue) :
-										RedGLUtil.throwFunc('RedRenderer : 처리할수없는 타입입니다.', 'tRenderType -', tRenderType)
+							tRenderTypeIndex < 13 ? tCacheUniformInfo[tUUID] == tUniformValue ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tRenderTypeIndex == 12 ? null : tUniformValue, tUniformValue)) :
+								tRenderTypeIndex == 13 ? tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, false, tUniformValue) :
+									RedGLUtil.throwFunc('RedRenderer : 처리할수없는 타입입니다.', 'tRenderType -', tRenderType)
+							// tRenderType == 'float' || tRenderType == 'int' || tRenderType == 'bool' ? tCacheUniformInfo[tUUID] == tUniformValue ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue, tUniformValue)) :
+							// 	// tRenderType == 'int' ? noChangeUniform ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue, tUniformValue)) :
+							// 	// 	tRenderType == 'bool' ? noChangeUniform ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue, tUniformValue)) :
+							// 	tRenderType == 'vec' ? tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tUniformValue) :
+							// 		tRenderType == 'mat' ? tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, false, tUniformValue) :
+							// 			RedGLUtil.throwFunc('RedRenderer : 처리할수없는 타입입니다.', 'tRenderType -', tRenderType)
 						}
 					}
 				}
@@ -794,7 +796,7 @@ var RedRenderer;
 						a[15] = a[3] * aX + a[7] * aY + a[11] * aZ + a[15],
 						// tMVMatrix rotate
 						tSprite3DYn ?
-							(tRx = 0 , tRy = 0 , tRz = 0 ) :
+							(tRx = tRy = tRz = 0 ) :
 							(tRx = tMesh['rotationX'] * CONVERT_RADIAN, tRy = tMesh['rotationY'] * CONVERT_RADIAN, tRz = tMesh['rotationZ'] * CONVERT_RADIAN),
 						/////////////////////////
 						tRadian = tRx % CPI2,
@@ -866,7 +868,8 @@ var RedRenderer;
 									tMVMatrix[13] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
 									tMVMatrix[14] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
 									tMVMatrix[15] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33
-							) : 0
+							) : 0;
+
 				}
 				/////////////////////////////////////////////////////////////////////////
 				/////////////////////////////////////////////////////////////////////////
@@ -874,7 +877,7 @@ var RedRenderer;
 				/////////////////////////////////////////////////////////////////////////
 				/////////////////////////////////////////////////////////////////////////
 				// 노말매트릭스를 사용할경우
-				if ( tGeometry && tMesh['autoUpdateMatrix'] && tSystemUniformGroup['uNMatrix']['location'] ) {
+				if ( tGeometry && tSystemUniformGroup && tSystemUniformGroup['uNMatrix']['location'] ) {
 					//클론
 					// mat4Inverse
 					inverse_c = tMVMatrix[0], inverse_d = tMVMatrix[1], inverse_e = tMVMatrix[2], inverse_g = tMVMatrix[3],
@@ -916,11 +919,9 @@ var RedRenderer;
 						a12 = tNMatrix[6], a13 = tNMatrix[7], a23 = tNMatrix[11],
 						tNMatrix[1] = tNMatrix[4], tNMatrix[2] = tNMatrix[8], tNMatrix[3] = tNMatrix[12], tNMatrix[4] = a01, tNMatrix[6] = tNMatrix[9],
 						tNMatrix[7] = tNMatrix[13], tNMatrix[8] = a02, tNMatrix[9] = a12, tNMatrix[11] = tNMatrix[14],
-						tNMatrix[12] = a03, tNMatrix[13] = a13, tNMatrix[14] = a23
-				}
-				if ( tSystemUniformGroup && tMesh['autoUpdateMatrix'] && tSystemUniformGroup['uNMatrix']['location'] ) {
-					// uNMatrix 입력
-					tGL.uniformMatrix4fv(tSystemUniformGroup['uNMatrix']['location'], false, tNMatrix)
+						tNMatrix[12] = a03, tNMatrix[13] = a13, tNMatrix[14] = a23,
+						// uNMatrix 입력
+						tGL.uniformMatrix4fv(tSystemUniformGroup['uNMatrix']['location'], false, tNMatrix)
 				}
 				if ( tGeometry ) {
 					/////////////////////////////////////////////////////////////////////////
@@ -939,7 +940,7 @@ var RedRenderer;
 					if ( tSystemUniformGroup['uPointSize']['use'] ) {
 						tCacheState['pointSize'] != tMesh['pointSize'] ? tGL.uniform1f(tSystemUniformGroup['uPointSize']['location'], tCacheState['pointSize'] = tMesh['pointSize']) : 0;
 					}
-					if ( tSystemUniformGroup['uSprite3DYn']['use'] ) {
+					if ( tSprite3DYn ) {
 						tUUID = tSystemUniformGroup['uSprite3DYn']['_UUID']
 						tUniformValue = tSprite3DYn
 						if ( tCacheUniformInfo[tUUID] != tUniformValue ) {
@@ -981,7 +982,6 @@ var RedRenderer;
 				/////////////////////////////////////////////////////////////////////////
 				/////////////////////////////////////////////////////////////////////////
 				tMesh['children'].length ? draw(redGL, scene, tMesh['children'], camera, orthographicYn, time, renderResultObj, tCacheInfo, tCacheState, tMVMatrix, subSceneMaterial) : 0;
-				
 			}
 		}
 		return function (redGL, scene, camera, orthographicYn, children, time, renderResultObj, subSceneMaterial) {
@@ -1001,15 +1001,17 @@ var RedRenderer;
 			tPrevIndexBuffer_UUID = null;
 			tPrevInterleaveBuffer_UUID = null;
 			tPrevSamplerIndex = null;
-			//TODO: 소팅까지해버리자
-			if ( !scene['sorted'] ) {
-				scene['sorted'] = true
-				children.sort(function (a, b) {
-					if ( a['geometry']['interleaveBuffer'] < b['geometry']['interleaveBuffer'] ) return -1
-					if ( a['geometry']['interleaveBuffer'] > b['geometry']['interleaveBuffer'] ) return 1
-					return 0
-				})
-			}
+			// TODO: 소팅을 도입할수도있겠는데?
+			// if ( !scene['sorted'] ) {
+			// 	scene['sorted'] = true
+			// 	children.sort(function (a, b) {
+			// 		if ( a['_geometry']['interleaveBuffer'] < b['_geometry']['interleaveBuffer'] ) return -1
+			// 		if ( a['_geometry']['interleaveBuffer'] > b['_geometry']['interleaveBuffer'] ) return 1
+			// 		if ( a['_material']['program']['_UUID'] < b['_material']['program']['_UUID'] ) return -1
+			// 		if ( a['_material']['program']['_UUID'] > b['_material']['program']['_UUID'] ) return 1
+			// 		return 0
+			// 	})
+			// }
 			draw(
 				redGL,
 				scene,
@@ -1026,4 +1028,5 @@ var RedRenderer;
 		}
 	})()
 	Object.freeze(RedRenderer);
-})();
+})
+();

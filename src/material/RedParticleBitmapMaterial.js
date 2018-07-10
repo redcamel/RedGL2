@@ -38,7 +38,7 @@ var RedParticleBitmapMaterial;
 			 finalColor.rgb *= vColor.a;
 			 finalColor.a = finalColor.a;
 			 if(finalColor.a < uAlphaTest) discard;
-			 gl_FragColor = finalColor;
+
 			 //#define#fog#false# gl_FragColor = finalColor;
 			 //#define#fog#true# gl_FragColor = fog( fogFactor(uFogDistance, uFogDensity), uFogColor, finalColor);
 		 }

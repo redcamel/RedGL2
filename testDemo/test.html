@@ -170,18 +170,18 @@
 		tWorld.addView(RedView('test', this, tScene3D, tCamera));
 		RedView('test').setSize('100%', '100%')
 		RedView('test').setLocation('0%', '0%')
-//		RedView('test')['postEffectManager'].addEffect(RedPostEffect_Invert(this))
-		// RedView('test')['postEffectManager'].addEffect(RedPostEffect_Blur(this))
-//		RedView('test')['postEffectManager'].addEffect(RedPostEffect_Gray(this))
-		// RedView('test')['postEffectManager'].addEffect(RedPostEffect_Pixelize(this))
-		// RedView('test')['postEffectManager'].addEffect(RedPostEffect_Convolution(this,RedPostEffect_Convolution['EMBOSS']))
-		// RedView('test')['postEffectManager'].addEffect(RedPostEffect_HueSaturation(this))
-//		RedView('test')['postEffectManager'].addEffect(RedPostEffect_Vignetting(this))
-		// RedView('test')['postEffectManager'].addEffect(RedPostEffect_BrightnessContrast(this))
+		RedView('test')['postEffectManager'].addEffect(RedPostEffect_Invert(this))
+		 RedView('test')['postEffectManager'].addEffect(RedPostEffect_Blur(this))
+		RedView('test')['postEffectManager'].addEffect(RedPostEffect_Gray(this))
+		 RedView('test')['postEffectManager'].addEffect(RedPostEffect_Pixelize(this))
+		 RedView('test')['postEffectManager'].addEffect(RedPostEffect_Convolution(this,RedPostEffect_Convolution['EMBOSS']))
+		 RedView('test')['postEffectManager'].addEffect(RedPostEffect_HueSaturation(this))
+		RedView('test')['postEffectManager'].addEffect(RedPostEffect_Vignetting(this))
+		 RedView('test')['postEffectManager'].addEffect(RedPostEffect_BrightnessContrast(this))
 		var zoomBlur = RedPostEffect_ZoomBlur(this)
 		RedView('test')['postEffectManager'].addEffect(zoomBlur)
-		// RedView('test')['postEffectManager'].addEffect(RedPostEffect_HalfTone(this))
-//		RedView('test')['postEffectManager'].addEffect( RedPostEffect_Bloom( this ) )
+		 RedView('test')['postEffectManager'].addEffect(RedPostEffect_HalfTone(this))
+		RedView('test')['postEffectManager'].addEffect( RedPostEffect_Bloom( this ) )
 		var testMaterial
 		testMaterial = RedEnvironmentMaterial(
 			this,

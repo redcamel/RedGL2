@@ -53,7 +53,7 @@ var RedSheetMaterial;
 			 vec4 finalColor = texture2D(u_diffuseTexture, vTexcoord);
 			 finalColor.rgb *= finalColor.a;
 			 if(finalColor.a ==0.0) discard;
-			 gl_FragColor = finalColor;
+
 			 //#define#fog#false# gl_FragColor = finalColor;
 			 //#define#fog#true# gl_FragColor = fog( fogFactor(uFogDistance, uFogDensity), uFogColor, finalColor);
 		 }

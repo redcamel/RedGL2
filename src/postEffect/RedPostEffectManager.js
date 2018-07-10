@@ -44,6 +44,7 @@ var RedPostEffectManager;
 		}
 		 :DOC*/
 		this['postEffectList'] = [];
+		this['_renderingNum'] = 0
 		/**DOC:
 		 {
 			title :`antialiasing`,

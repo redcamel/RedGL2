@@ -21,13 +21,14 @@ var RedBitmapMaterial;
 		void main(void) {
 			vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
 			gl_PointSize = uPointSize;
-			if(uSprite3DYn) {
-				gl_Position = uPMatrix * calSprite3D(uCameraMatrix , uMMatrix) *  vec4(aVertexPosition, 1.0);
-				if(!uPerspectiveScale){
-					gl_Position /= gl_Position.w;
-					gl_Position.xy += aVertexPosition.xy * vec2(uMMatrix[0][0],uMMatrix[1][1]);
-				}
-			} else gl_Position = uPMatrix * uCameraMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
+
+			 gl_Position = uPMatrix * calSprite3D(uCameraMatrix , uMMatrix) *  vec4(aVertexPosition, 1.0);
+			 if(!uPerspectiveScale){
+			    gl_Position /= gl_Position.w;
+			    gl_Position.xy += aVertexPosition.xy * vec2(uMMatrix[0][0],uMMatrix[1][1]);
+			 }
+
+			 gl_Position = uPMatrix * uCameraMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
 		}
 		 */
 	}
@@ -48,8 +49,9 @@ var RedBitmapMaterial;
 			 vec4 finalColor = texture2D(u_diffuseTexture, vTexcoord);
 			 finalColor.rgb *= finalColor.a;
 			 if(finalColor.a ==0.0) discard;
-			 gl_FragColor = finalColor;
-			 //#define#fog# gl_FragColor = fog( fogFactor(uFogDistance, uFogDensity), uFogColor, finalColor);
+
+			 //#define#fog#false# gl_FragColor = finalColor;
+			 //#define#fog#true# gl_FragColor = fog( fogFactor(uFogDistance, uFogDensity), uFogColor, finalColor);
 		 }
 		 */
 	}
