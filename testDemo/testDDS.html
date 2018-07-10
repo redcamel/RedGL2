@@ -147,7 +147,7 @@
 		tScene3D = RedScene(this);
 		tCamera = RedObitController(this);
 		tRenderer = RedRenderer();
-		tWorld.addView(RedView('test', this,tScene3D, tCamera));
+		tWorld.addView(RedView('test', this, tScene3D, tCamera));
 		RedView('test').setSize('100%', '100%')
 		RedView('test').setLocation('0%', '0%')
 		var t0 = RedMesh(this, RedPlane(this), RedBitmapMaterial(this, RedDDSTexture(this, '../asset/dxt/test_dxt1.dds')))
@@ -165,20 +165,21 @@
 				'../asset/cubemap/posz.png',
 				'../asset/cubemap/negz.png'
 			]);
-		var i = 1000
-		var tt = RedDDSTexture(this, '../asset/dxt/test_dxt1.dds')
+		var i = 9000
+		var tt = RedDDSTexture(this, '../asset/dxt/test_dxt5.dds')
 		var tt1 = RedBitmapTexture(this, '../asset/normalTest.jpg')
 		var tt2 = RedBitmapTexture(this, '../asset/specular.png')
 		var tt3 = RedBitmapTexture(this, '../asset/displacementTest.jpg')
-		var tGeo = RedBox(this, 1, 1, 1, 5, 5, 5)
+		var tGeo = RedSphere(this, 1, 16, 16, 16)
+		var tMat = RedStandardMaterial(
+			this,
+			tt,
+			tt1,
+//	        tt2,
+//	        tt3
+		)
 		while ( i-- ) {
-			var t1 = RedMesh(this, tGeo, RedStandardMaterial(
-				this,
-				tt,
-				tt1,
-				tt2,
-				tt3
-			))
+			var t1 = RedMesh(this, tGeo, tMat)
 			t1.material.displacementPower = 0.5
 			t1.x = Math.random() * 100 - 50
 			t1.y = Math.random() * 100 - 50

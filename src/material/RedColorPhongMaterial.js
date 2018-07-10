@@ -88,7 +88,7 @@ var RedColorPhongMaterial;
 			 vec4 finalColor = la * uAmbientIntensity + ld + ls;
 			 finalColor.rgb *= texelColor.a;
 			 finalColor.a = texelColor.a;
-			 gl_FragColor = finalColor;
+
 			 //#define#fog#false# gl_FragColor = finalColor;
 			 //#define#fog#true# gl_FragColor = fog( fogFactor(uFogDistance, uFogDensity), uFogColor, finalColor);
 		 }
