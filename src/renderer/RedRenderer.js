@@ -179,6 +179,32 @@ var RedRenderer;
 				lightDebugRenderList.length = 0
 				// console.log('programNum', programNum)
 				programNum = 0
+				lightMatrix[1] = lightMatrix[2] = lightMatrix[3] =
+					lightMatrix[4] = lightMatrix[6] = lightMatrix[7] =
+						lightMatrix[8] = lightMatrix[9] = lightMatrix[11] =
+							lightMatrix[12] = lightMatrix[13] = lightMatrix[14] = 0
+				lightMatrix[0] = lightMatrix[5] = lightMatrix[10] = lightMatrix[15] = 1
+				if ( scene['shadowManager']['_directionalShadow'] ) {
+					tSize = scene['shadowManager']['_directionalShadow']['size'];
+					tLight = scene['shadowManager']['_directionalShadow']['_light']
+					mat4.ortho(lightProjectionMatrix, -tSize, tSize, -tSize, tSize, -tSize, tSize)
+					tPosition[0] = 0
+					tPosition[1] = 0
+					tPosition[2] = 0
+					if ( tLight ) {
+						tPosition[0] = -tLight.x
+						tPosition[1] = -tLight.y
+						tPosition[2] = -tLight.z
+						vec3.normalize(tPosition, tPosition)
+						mat4.lookAt(
+							lightMatrix,
+							tPosition,
+							[0, 0, 0],
+							[0, 1, 0]
+						)
+						mat4.multiply(lightMatrix, lightProjectionMatrix, lightMatrix)
+					}
+				}
 				for ( var k in redGL['_datas']['RedProgram'] ) {
 					programNum++
 					tProgram = redGL['_datas']['RedProgram'][k];
@@ -190,32 +216,8 @@ var RedRenderer;
 					tLocation = tLocationInfo['location'];
 					tUUID = tLocationInfo['_UUID'];
 					if ( tLocation ) {
-						lightMatrix[1] = lightMatrix[2] = lightMatrix[3] =
-							lightMatrix[4] = lightMatrix[6] = lightMatrix[7] =
-								lightMatrix[8] = lightMatrix[9] = lightMatrix[11] =
-									lightMatrix[12] = lightMatrix[13] = lightMatrix[14] = 0
-						lightMatrix[0] = lightMatrix[5] = lightMatrix[10] = lightMatrix[15] = 1
 						if ( scene['shadowManager']['_directionalShadow'] ) {
-							tSize = scene['shadowManager']['_directionalShadow']['size'];
-							tLight = scene['shadowManager']['_directionalShadow']['_light']
-							mat4.ortho(lightProjectionMatrix, -tSize, tSize, -tSize, tSize, -tSize, tSize)
-							tPosition[0] = 0
-							tPosition[1] = 0
-							tPosition[2] = 0
-							if ( tLight ) {
-								tPosition[0] = -tLight.x
-								tPosition[1] = -tLight.y
-								tPosition[2] = -tLight.z
-								vec3.normalize(tPosition, tPosition)
-								mat4.lookAt(
-									lightMatrix,
-									tPosition,
-									[0, 0, 0],
-									[0, 1, 0]
-								)
-								mat4.multiply(lightMatrix, lightProjectionMatrix, lightMatrix)
-								gl.uniformMatrix4fv(tLocation, false, lightMatrix);
-							}
+							if ( tLight ) gl.uniformMatrix4fv(tLocation, false, lightMatrix);
 						}
 					}
 					// 디렉셔널 쉐도우 텍스쳐
@@ -655,7 +657,7 @@ var RedRenderer;
 					// fog Program 판단
 					tProgram = tMaterial['program']
 					if ( scene['useFog'] ) tProgram = tMaterial['_programList']['fog'][tMaterial['program']['key']]
-					// if ( tSprite3DYn ) tProgram = tMaterial['_programList']['sprite3D'][tMaterial['program']['key']]
+					if ( tSprite3DYn ) tProgram = tMaterial['_programList']['sprite3D'][tMaterial['program']['key']]
 					// if ( scene['useFog'] && tSprite3DYn ) tProgram = tMaterial['program']['subProgram_fog_sprite3D']
 					//
 					prevProgram_UUID == tProgram['_UUID'] ? 0 : tGL.useProgram(tProgram['webglProgram'])
@@ -867,59 +869,60 @@ var RedRenderer;
 									tMVMatrix[14] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
 									tMVMatrix[15] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33
 							) : 0;
-					// 노말매트릭스를 사용할경우
-					if ( tSystemUniformGroup['uNMatrix']['location'] ) {
-						//클론
-						// mat4Inverse
-						inverse_c = tMVMatrix[0], inverse_d = tMVMatrix[1], inverse_e = tMVMatrix[2], inverse_g = tMVMatrix[3],
-							inverse_f = tMVMatrix[4], inverse_h = tMVMatrix[5], inverse_i = tMVMatrix[6], inverse_j = tMVMatrix[7],
-							inverse_k = tMVMatrix[8], inverse_l = tMVMatrix[9], inverse_n = tMVMatrix[10], inverse_o = tMVMatrix[11],
-							inverse_m = tMVMatrix[12], inverse_p = tMVMatrix[13], inverse_r = tMVMatrix[14], inverse_s = tMVMatrix[15],
-							inverse_A = inverse_c * inverse_h - inverse_d * inverse_f,
-							inverse_B = inverse_c * inverse_i - inverse_e * inverse_f,
-							inverse_t = inverse_c * inverse_j - inverse_g * inverse_f,
-							inverse_u = inverse_d * inverse_i - inverse_e * inverse_h,
-							inverse_v = inverse_d * inverse_j - inverse_g * inverse_h,
-							inverse_w = inverse_e * inverse_j - inverse_g * inverse_i,
-							inverse_x = inverse_k * inverse_p - inverse_l * inverse_m,
-							inverse_y = inverse_k * inverse_r - inverse_n * inverse_m,
-							inverse_z = inverse_k * inverse_s - inverse_o * inverse_m,
-							inverse_C = inverse_l * inverse_r - inverse_n * inverse_p,
-							inverse_D = inverse_l * inverse_s - inverse_o * inverse_p,
-							inverse_E = inverse_n * inverse_s - inverse_o * inverse_r,
-							inverse_q = inverse_A * inverse_E - inverse_B * inverse_D + inverse_t * inverse_C + inverse_u * inverse_z - inverse_v * inverse_y + inverse_w * inverse_x,
-							inverse_q = 1 / inverse_q,
-							tNMatrix[0] = (inverse_h * inverse_E - inverse_i * inverse_D + inverse_j * inverse_C) * inverse_q,
-							tNMatrix[1] = (-inverse_d * inverse_E + inverse_e * inverse_D - inverse_g * inverse_C) * inverse_q,
-							tNMatrix[2] = (inverse_p * inverse_w - inverse_r * inverse_v + inverse_s * inverse_u) * inverse_q,
-							tNMatrix[3] = (-inverse_l * inverse_w + inverse_n * inverse_v - inverse_o * inverse_u) * inverse_q,
-							tNMatrix[4] = (-inverse_f * inverse_E + inverse_i * inverse_z - inverse_j * inverse_y) * inverse_q,
-							tNMatrix[5] = (inverse_c * inverse_E - inverse_e * inverse_z + inverse_g * inverse_y) * inverse_q,
-							tNMatrix[6] = (-inverse_m * inverse_w + inverse_r * inverse_t - inverse_s * inverse_B) * inverse_q,
-							tNMatrix[7] = (inverse_k * inverse_w - inverse_n * inverse_t + inverse_o * inverse_B) * inverse_q,
-							tNMatrix[8] = (inverse_f * inverse_D - inverse_h * inverse_z + inverse_j * inverse_x) * inverse_q,
-							tNMatrix[9] = (-inverse_c * inverse_D + inverse_d * inverse_z - inverse_g * inverse_x) * inverse_q,
-							tNMatrix[10] = (inverse_m * inverse_v - inverse_p * inverse_t + inverse_s * inverse_A) * inverse_q,
-							tNMatrix[11] = (-inverse_k * inverse_v + inverse_l * inverse_t - inverse_o * inverse_A) * inverse_q,
-							tNMatrix[12] = (-inverse_f * inverse_C + inverse_h * inverse_y - inverse_i * inverse_x) * inverse_q,
-							tNMatrix[13] = (inverse_c * inverse_C - inverse_d * inverse_y + inverse_e * inverse_x) * inverse_q,
-							tNMatrix[14] = (-inverse_m * inverse_u + inverse_p * inverse_B - inverse_r * inverse_A) * inverse_q,
-							tNMatrix[15] = (inverse_k * inverse_u - inverse_l * inverse_B + inverse_n * inverse_A) * inverse_q,
-							// transpose
-							a01 = tNMatrix[1], a02 = tNMatrix[2], a03 = tNMatrix[3],
-							a12 = tNMatrix[6], a13 = tNMatrix[7], a23 = tNMatrix[11],
-							tNMatrix[1] = tNMatrix[4], tNMatrix[2] = tNMatrix[8], tNMatrix[3] = tNMatrix[12], tNMatrix[4] = a01, tNMatrix[6] = tNMatrix[9],
-							tNMatrix[7] = tNMatrix[13], tNMatrix[8] = a02, tNMatrix[9] = a12, tNMatrix[11] = tNMatrix[14],
-							tNMatrix[12] = a03, tNMatrix[13] = a13, tNMatrix[14] = a23,
-							// uNMatrix 입력
-							tGL.uniformMatrix4fv(tSystemUniformGroup['uNMatrix']['location'], false, tNMatrix)
-					}
+
 				}
 				/////////////////////////////////////////////////////////////////////////
 				/////////////////////////////////////////////////////////////////////////
 				if ( tGeometry ) tGL.uniformMatrix4fv(tSystemUniformGroup['uMMatrix']['location'], false, tMVMatrix)
 				/////////////////////////////////////////////////////////////////////////
 				/////////////////////////////////////////////////////////////////////////
+				// 노말매트릭스를 사용할경우
+				if ( tGeometry && tSystemUniformGroup && tSystemUniformGroup['uNMatrix']['location'] ) {
+					//클론
+					// mat4Inverse
+					inverse_c = tMVMatrix[0], inverse_d = tMVMatrix[1], inverse_e = tMVMatrix[2], inverse_g = tMVMatrix[3],
+						inverse_f = tMVMatrix[4], inverse_h = tMVMatrix[5], inverse_i = tMVMatrix[6], inverse_j = tMVMatrix[7],
+						inverse_k = tMVMatrix[8], inverse_l = tMVMatrix[9], inverse_n = tMVMatrix[10], inverse_o = tMVMatrix[11],
+						inverse_m = tMVMatrix[12], inverse_p = tMVMatrix[13], inverse_r = tMVMatrix[14], inverse_s = tMVMatrix[15],
+						inverse_A = inverse_c * inverse_h - inverse_d * inverse_f,
+						inverse_B = inverse_c * inverse_i - inverse_e * inverse_f,
+						inverse_t = inverse_c * inverse_j - inverse_g * inverse_f,
+						inverse_u = inverse_d * inverse_i - inverse_e * inverse_h,
+						inverse_v = inverse_d * inverse_j - inverse_g * inverse_h,
+						inverse_w = inverse_e * inverse_j - inverse_g * inverse_i,
+						inverse_x = inverse_k * inverse_p - inverse_l * inverse_m,
+						inverse_y = inverse_k * inverse_r - inverse_n * inverse_m,
+						inverse_z = inverse_k * inverse_s - inverse_o * inverse_m,
+						inverse_C = inverse_l * inverse_r - inverse_n * inverse_p,
+						inverse_D = inverse_l * inverse_s - inverse_o * inverse_p,
+						inverse_E = inverse_n * inverse_s - inverse_o * inverse_r,
+						inverse_q = inverse_A * inverse_E - inverse_B * inverse_D + inverse_t * inverse_C + inverse_u * inverse_z - inverse_v * inverse_y + inverse_w * inverse_x,
+						inverse_q = 1 / inverse_q,
+						tNMatrix[0] = (inverse_h * inverse_E - inverse_i * inverse_D + inverse_j * inverse_C) * inverse_q,
+						tNMatrix[1] = (-inverse_d * inverse_E + inverse_e * inverse_D - inverse_g * inverse_C) * inverse_q,
+						tNMatrix[2] = (inverse_p * inverse_w - inverse_r * inverse_v + inverse_s * inverse_u) * inverse_q,
+						tNMatrix[3] = (-inverse_l * inverse_w + inverse_n * inverse_v - inverse_o * inverse_u) * inverse_q,
+						tNMatrix[4] = (-inverse_f * inverse_E + inverse_i * inverse_z - inverse_j * inverse_y) * inverse_q,
+						tNMatrix[5] = (inverse_c * inverse_E - inverse_e * inverse_z + inverse_g * inverse_y) * inverse_q,
+						tNMatrix[6] = (-inverse_m * inverse_w + inverse_r * inverse_t - inverse_s * inverse_B) * inverse_q,
+						tNMatrix[7] = (inverse_k * inverse_w - inverse_n * inverse_t + inverse_o * inverse_B) * inverse_q,
+						tNMatrix[8] = (inverse_f * inverse_D - inverse_h * inverse_z + inverse_j * inverse_x) * inverse_q,
+						tNMatrix[9] = (-inverse_c * inverse_D + inverse_d * inverse_z - inverse_g * inverse_x) * inverse_q,
+						tNMatrix[10] = (inverse_m * inverse_v - inverse_p * inverse_t + inverse_s * inverse_A) * inverse_q,
+						tNMatrix[11] = (-inverse_k * inverse_v + inverse_l * inverse_t - inverse_o * inverse_A) * inverse_q,
+						tNMatrix[12] = (-inverse_f * inverse_C + inverse_h * inverse_y - inverse_i * inverse_x) * inverse_q,
+						tNMatrix[13] = (inverse_c * inverse_C - inverse_d * inverse_y + inverse_e * inverse_x) * inverse_q,
+						tNMatrix[14] = (-inverse_m * inverse_u + inverse_p * inverse_B - inverse_r * inverse_A) * inverse_q,
+						tNMatrix[15] = (inverse_k * inverse_u - inverse_l * inverse_B + inverse_n * inverse_A) * inverse_q,
+						// transpose
+						a01 = tNMatrix[1], a02 = tNMatrix[2], a03 = tNMatrix[3],
+						a12 = tNMatrix[6], a13 = tNMatrix[7], a23 = tNMatrix[11],
+						tNMatrix[1] = tNMatrix[4], tNMatrix[2] = tNMatrix[8], tNMatrix[3] = tNMatrix[12], tNMatrix[4] = a01, tNMatrix[6] = tNMatrix[9],
+						tNMatrix[7] = tNMatrix[13], tNMatrix[8] = a02, tNMatrix[9] = a12, tNMatrix[11] = tNMatrix[14],
+						tNMatrix[12] = a03, tNMatrix[13] = a13, tNMatrix[14] = a23,
+						// uNMatrix 입력
+						tGL.uniformMatrix4fv(tSystemUniformGroup['uNMatrix']['location'], false, tNMatrix)
+				}
 				if ( tGeometry ) {
 					/////////////////////////////////////////////////////////////////////////
 					/////////////////////////////////////////////////////////////////////////
