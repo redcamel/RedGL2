@@ -146,6 +146,7 @@ gulp.task('make-doc', function () {
 		"src/program/RedShader.js",
 		"src/renderer/RedRenderer.js",
 		"src/renderer/system/RedRenderDebuger.js",
+		"src/renderer/system/RedSystemUniformUpdater.js",
 		"src/resources/RedAtlas.js",
 		"src/resources/system/RedAtlasUV.js",
 		'src/resources/system/RedTextureOptionChecker.js',
@@ -240,6 +241,7 @@ gulp.task('combine-js', function () {
 		//
 		"src/renderer/RedRenderer.js",
 		"src/renderer/system/RedRenderDebuger.js",
+		"src/renderer/system/RedSystemUniformUpdater.js",
 		//
 		"src/RedView.js",
 		"src/RedWorld.js",

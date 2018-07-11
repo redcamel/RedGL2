@@ -90,6 +90,7 @@
     <!--//-->
     <script src="../src/renderer/RedRenderer.js"></script>
     <script src="../src/renderer/system/RedRenderDebuger.js"></script>
+    <script src="../src/renderer/system/RedSystemUniformUpdater.js"></script>
     <!--//-->
     <script src="../src/RedView.js"></script>
     <script src="../src/RedWorld.js"></script>
@@ -253,11 +254,11 @@
 		var rS = new rStats();
 		rS('total').start();
 		tRenderer.start(this, function (time) {
-//			testDLight.x = Math.sin(time / 1000) * 30
-//			testDLight.z = Math.cos(time / 1000) * 30
-//			testDLight.y = 30
-//			tScene3D['children'][0].x = Math.sin(time / 1000)*6
-//			tScene3D['children'][0].z = Math.cos(time / 1000)
+			testDLight.x = Math.sin(time / 1000) * 30
+			testDLight.z = Math.cos(time / 1000) * 30
+			testDLight.y = 30
+			tScene3D['children'][0].x = Math.sin(time / 1000)*6
+			tScene3D['children'][0].z = Math.cos(time / 1000)
 			var i = tScene3D.children.length
 			while ( i-- ) {
 				if ( tMesh2 == tScene3D.children[i] || aaaa == tScene3D.children[i] ) {

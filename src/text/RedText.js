@@ -88,7 +88,6 @@ var RedText;
 		this['blendDst'] = redGL.gl.ONE_MINUS_SRC_ALPHA
 		this['useDepthMask'] = false
 		this['useCullFace'] = false
-		this['_sprite3DYn'] = false
 		this['perspectiveScale'] = false
 		//////////////////////
 		this['_img'].onload = function () {
@@ -114,6 +113,7 @@ var RedText;
 		console.log(this);
 	}
 	RedText.prototype = new RedBaseObject3D();
+	RedDefinePropertyInfo.definePrototype('RedText', 'sprite3DYn', 'boolean', false);
 	Object.defineProperty(RedText.prototype, 'width', {
 		get: function () { return this['_width']},
 		set: function (v) {

@@ -88,6 +88,7 @@
     <!--//-->
     <script src="../src/renderer/RedRenderer.js"></script>
     <script src="../src/renderer/system/RedRenderDebuger.js"></script>
+    <script src="../src/renderer/system/RedSystemUniformUpdater.js"></script>
     <!--//-->
     <script src="../src/RedView.js"></script>
     <script src="../src/RedWorld.js"></script>
@@ -146,7 +147,7 @@
 		tCamera = RedObitController(this);
 		tCamera.tilt = -45
 		tRenderer = RedRenderer();
-		tWorld.addView(RedView('test', this,tScene3D, tCamera));
+		tWorld.addView(RedView('test', this, tScene3D, tCamera));
 		RedView('test').setSize('100%', '100%')
 		RedView('test').setLocation('0%', '0%')
 		this.renderScale = 1

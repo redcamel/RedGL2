@@ -47,6 +47,7 @@ var RedStandardMaterial;
 		 uniform float u_specularPower;
 
 		 varying vec4 vVertexPositionEye4;
+         float cShadowAcneRemover = 0.0007;
 
 		 float fogFactor(float perspectiveFar, float density){
 			 float flog_cord = gl_FragCoord.z / gl_FragCoord.w / perspectiveFar;
@@ -93,25 +94,18 @@ var RedStandardMaterial;
 
 			if(vUseDirectionalShadow != 0.0){
 				vec3 fragmentDepth = vShadowPos.xyz;
-	            float shadowAcneRemover = 0.0007;
-	            fragmentDepth.z -= shadowAcneRemover;
-
-	            float texelSizeX =  1.0/vResolution.x;
-				float texelSizeY =  1.0/vResolution.y;
-			    float texelSize = 1.0 / 1024.0;
+	            fragmentDepth.z -= cShadowAcneRemover;
 				float amountInLight = 0.0;
 
 				for (int x = -1; x <= 1; x++) {
 				    for (int y = -1; y <= 1; y++) {
-				        vec2 tUV = fragmentDepth.xy + vec2(x, y) * vec2(texelSizeX,texelSizeY);
+				        vec2 tUV = fragmentDepth.xy + vec2(float(x)/vResolution.x, float(y)/vResolution.y) ;
 	                    if(tUV.x<0.0) continue;
 	                    if(tUV.x>1.0) continue;
 	                    if(tUV.y<0.0) continue;
 	                    if(tUV.y>1.0) continue;
 				        float texelDepth = decodeFloat(texture2D(uDirectionalShadowTexture,tUV));
-				        if (fragmentDepth.z < texelDepth) {
-				            amountInLight += 0.5;
-				        }
+				        if (fragmentDepth.z < texelDepth) amountInLight += 0.5;
 				       // texelColor =  texture2D(uDirectionalShadowTexture,tUV);
 				    }
 				}
