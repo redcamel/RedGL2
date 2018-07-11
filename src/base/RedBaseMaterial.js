@@ -29,7 +29,8 @@ var RedBaseMaterial;
 						//TODO: 이걸 자동화하는데..... 렌더러에서 가장 쉽게 찾을수 있는 구조를 찾아야함.
 						target['_programList']['basic'][programName + '_' + tKey] = RedProgram['makeProgram'](redGL, programName, vSource, fSource, tKey.split('_'))
 						target['_programList']['fog'][programName + '_' + tKey] = RedProgram['makeProgram'](redGL, programName, vSource, fSource, (tKey + '_fog').split('_'))
-						// target['_programList']['sprite3D'][programName + '_' + tKey] = RedProgram['makeProgram'](redGL, programName, vSource, fSource, (tKey + '_sprite3D').split('_'))
+						target['_programList']['sprite3D'][programName + '_' + tKey] = RedProgram['makeProgram'](redGL, programName, vSource, fSource, (tKey + '_sprite3D').split('_'))
+						target['_programList']['fog_sprite3D'][programName + '_' + tKey] = RedProgram['makeProgram'](redGL, programName, vSource, fSource, (tKey + 'fog_sprite3D').split('_'))
 					}
 					makeList(target, tKey, redGL, programName, vSource, fSource, (programOptionList.concat()).slice(i + 1))
 				}
@@ -37,10 +38,12 @@ var RedBaseMaterial;
 			}
 			return function (target, redGL, programName, vSource, fSource, programOptionList) {
 				if ( !programOptionList ) programOptionList = []
+				target['basicProgram'] = {}
 				target['_programList'] = {
 					basic: {},
 					fog: {},
-					sprite3D: {}
+					sprite3D: {},
+					fog_sprite3D:{}
 				}
 				makeList(target, '', redGL, programName, vSource, fSource, programOptionList)
 				// console.log(target['_programList'])
@@ -48,7 +51,8 @@ var RedBaseMaterial;
 				target['_programList']['basic'][programName] = RedProgram['makeProgram'](redGL, programName, vSource, fSource)
 				// 포그 프로그램생성
 				target['_programList']['fog'][programName] = RedProgram['makeProgram'](redGL, programName, vSource, fSource, ['fog'])
-				// target['_programList']['sprite3D'][programName] = RedProgram['makeProgram'](redGL, programName, vSource, fSource, ['sprite3D'])
+				target['_programList']['sprite3D'][programName] = RedProgram['makeProgram'](redGL, programName, vSource, fSource, ['sprite3D'])
+				target['_programList']['fog_sprite3D'][programName] = RedProgram['makeProgram'](redGL, programName, vSource, fSource, ['fog', 'sprite3D'])
 				// sprite3D 프로그램생성
 				target['program'] = target['_programList']['basic'][programName]
 			}

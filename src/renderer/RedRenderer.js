@@ -143,30 +143,31 @@ var RedRenderer;
 			var tDirectionalPositionList, tColorList, tIntensityList;
 			var tPointPositionList, tRadiusList;
 			var tVector;
-			var i, tList;
+			var i, tList, k;
 			var tLightData, tDebugObj;
 			var tValue
 			var updateSystemUniformInfo
+			var needUpdateSystemUniformInfo
 			updateSystemUniformInfo = {
-				uTime: 0,
-				uResolution: [0, 0],
-				uFogDensity: 0,
-				uFogColor: [0, 0, 0, 0],
-				uFogDistance: 0,
-				uCameraMatrix: null,
-				uPMatrix: null,
-				uAmbientLightColor: [0, 0, 0, 0],
-				uAmbientIntensity: 1,
-				uDirectionalLightPosition: [],
-				uDirectionalLightColor: [],
-				uDirectionalLightIntensity: [],
-				uDirectionalLightNum: [],
-				uPointLightPosition: [],
-				uPointLightColor: [],
-				uPointLightIntensity: [],
-				uPointLightRadius: [],
-				uPointLightNum: [],
-				uDirectionalShadowTexture: false
+				uTime: {needUpdate: true, cacheData: null, data: 0},
+				uResolution: {needUpdate: true, cacheData: null, data: new Float32Array([0, 0])},
+				uFogDensity: {needUpdate: true, cacheData: null, data: 0},
+				uFogColor: {needUpdate: true, cacheData: null, data: new Float32Array([0, 0, 0, 0])},
+				uFogDistance: {needUpdate: true, cacheData: null, data: 0},
+				uCameraMatrix: {needUpdate: true, cacheData: null, data: null},
+				uPMatrix: {needUpdate: true, cacheData: null, data: null},
+				uAmbientLightColor: {needUpdate: true, cacheData: null, data: new Float32Array([0, 0, 0, 0])},
+				uAmbientIntensity: {needUpdate: true, cacheData: null, data: 1},
+				uDirectionalLightPosition: {needUpdate: true, cacheData: null, data: []},
+				uDirectionalLightColor: {needUpdate: true, cacheData: null, data: []},
+				uDirectionalLightIntensity: {needUpdate: true, cacheData: null, data: []},
+				uDirectionalLightNum: {needUpdate: true, cacheData: null, data: 0},
+				uPointLightPosition: {needUpdate: true, cacheData: null, data: []},
+				uPointLightColor: {needUpdate: true, cacheData: null, data: []},
+				uPointLightIntensity: {needUpdate: true, cacheData: null, data: []},
+				uPointLightRadius: {needUpdate: true, cacheData: null, data: []},
+				uPointLightNum: {needUpdate: true, cacheData: null, data: 0},
+				uUseDirectionalShadow: {needUpdate: true, cacheData: null, data: false},
 			}
 			var lightMatrix, tSize, lightProjectionMatrix, tPosition;
 			var tLight;
@@ -174,37 +175,192 @@ var RedRenderer;
 			lightMatrix = new Float32Array(16)
 			lightProjectionMatrix = new Float32Array(16)
 			var programNum = 0
+			var changeProgramNum
 			return function (redGL, time, scene, camera, viewRect) {
+				needUpdateSystemUniformInfo = {}
 				gl = redGL.gl;
 				lightDebugRenderList.length = 0
 				// console.log('programNum', programNum)
+				changeProgramNum = programNum != redGL['_datas']['RedProgramList'].length
 				programNum = 0
-				lightMatrix[1] = lightMatrix[2] = lightMatrix[3] =
-					lightMatrix[4] = lightMatrix[6] = lightMatrix[7] =
-						lightMatrix[8] = lightMatrix[9] = lightMatrix[11] =
-							lightMatrix[12] = lightMatrix[13] = lightMatrix[14] = 0
-				lightMatrix[0] = lightMatrix[5] = lightMatrix[10] = lightMatrix[15] = 1
-				if ( scene['shadowManager']['_directionalShadow'] ) {
-					tSize = scene['shadowManager']['_directionalShadow']['size'];
-					tLight = scene['shadowManager']['_directionalShadow']['_light']
-					mat4.ortho(lightProjectionMatrix, -tSize, tSize, -tSize, tSize, -tSize, tSize)
-					tPosition[0] = 0
-					tPosition[1] = 0
-					tPosition[2] = 0
-					if ( tLight ) {
-						tPosition[0] = -tLight.x
-						tPosition[1] = -tLight.y
-						tPosition[2] = -tLight.z
-						vec3.normalize(tPosition, tPosition)
-						mat4.lookAt(
-							lightMatrix,
-							tPosition,
-							[0, 0, 0],
-							[0, 1, 0]
-						)
-						mat4.multiply(lightMatrix, lightProjectionMatrix, lightMatrix)
+				// 데이터 업데이트
+				if ( updateSystemUniformInfo['uTime']['cacheData'] != time ) {
+					needUpdateSystemUniformInfo['uTime'] = updateSystemUniformInfo['uTime']['data'] = time;
+					updateSystemUniformInfo['uTime']['cacheData'] = time;
+				}
+				//
+				tValueStr = JSON.stringify(viewRect);
+				if ( updateSystemUniformInfo['uResolution']['cacheData'] != tValueStr || changeProgramNum ) {
+					updateSystemUniformInfo['uResolution']['data'][0] = viewRect[2];
+					updateSystemUniformInfo['uResolution']['data'][1] = viewRect[3];
+					needUpdateSystemUniformInfo['uResolution'] = updateSystemUniformInfo['uResolution']['data']
+					updateSystemUniformInfo['uResolution']['cacheData'] = tValueStr;
+				}
+				tValueStr = scene['fogDensity']
+				if ( updateSystemUniformInfo['uFogDensity']['cacheData'] != tValueStr || changeProgramNum ) {
+					needUpdateSystemUniformInfo['uFogDensity'] = updateSystemUniformInfo['uFogDensity']['data'] = tValueStr;
+					updateSystemUniformInfo['uFogDensity']['cacheData'] = tValueStr;
+				}
+				//
+				tValueStr = scene['_fogR'] + '_' + scene['_fogG'] + '_' + scene['_fogB'] + '_' + 1
+				if ( updateSystemUniformInfo['uFogColor']['cacheData'] != tValueStr || changeProgramNum ) {
+					updateSystemUniformInfo['uFogColor']['data'][0] = scene['_fogR'];
+					updateSystemUniformInfo['uFogColor']['data'][1] = scene['_fogG'];
+					updateSystemUniformInfo['uFogColor']['data'][2] = scene['_fogB'];
+					updateSystemUniformInfo['uFogColor']['data'][3] = 1;
+					needUpdateSystemUniformInfo['uFogColor'] = updateSystemUniformInfo['uFogColor']['data']
+					updateSystemUniformInfo['uFogColor']['cacheData'] = tValueStr;
+				}
+				//
+				tValueStr = scene['uFogDistance']
+				if ( updateSystemUniformInfo['uFogDistance']['cacheData'] != tValueStr || changeProgramNum ) {
+					needUpdateSystemUniformInfo['uFogDistance'] = updateSystemUniformInfo['uFogDistance']['data'] = tValueStr;
+					updateSystemUniformInfo['uFogDistance']['cacheData'] = tValueStr;
+				}
+				//
+				tValueStr = JSON.stringify(camera['matrix']);
+				if ( updateSystemUniformInfo['uCameraMatrix']['cacheData'] != tValueStr || changeProgramNum ) {
+					needUpdateSystemUniformInfo['uCameraMatrix'] = updateSystemUniformInfo['uCameraMatrix']['data'] = camera['matrix'];
+					updateSystemUniformInfo['uCameraMatrix']['cacheData'] = tValueStr;
+				}
+				//
+				tValueStr = JSON.stringify(camera['perspectiveMTX']);
+				if ( updateSystemUniformInfo['uPMatrix']['cacheData'] != tValueStr || changeProgramNum ) {
+					needUpdateSystemUniformInfo['uPMatrix'] = updateSystemUniformInfo['uPMatrix']['data'] = camera['perspectiveMTX'];
+					updateSystemUniformInfo['uPMatrix']['cacheData'] = tValueStr;
+				}
+				// 암비안트 라이트 업데이트
+				if ( tLightData = scene['_lightInfo'][RedAmbientLight['type']] ) {
+					tValueStr = JSON.stringify(tLightData['_color']);
+					if ( updateSystemUniformInfo['uAmbientLightColor']['cacheData'] != tValueStr || changeProgramNum ) {
+						needUpdateSystemUniformInfo['uAmbientLightColor'] = updateSystemUniformInfo['uAmbientLightColor']['data'] = tLightData['_color'];
+						updateSystemUniformInfo['uAmbientLightColor']['cacheData'] = tValueStr;
+					}
+					//
+					tValueStr = scene['uAmbientIntensity']
+					if ( updateSystemUniformInfo['uAmbientIntensity']['cacheData'] != tValueStr || changeProgramNum ) {
+						needUpdateSystemUniformInfo['uAmbientIntensity'] = updateSystemUniformInfo['uAmbientIntensity']['data'] = tLightData['_intensity'];
+						updateSystemUniformInfo['uAmbientIntensity']['cacheData'] = tValueStr;
 					}
 				}
+				// 디렉셔널 라이트 업데이트
+				tVector = vec3.create()
+				tDirectionalPositionList = new Float32Array(3 * 3)
+				tColorList = new Float32Array(4 * 3)
+				tIntensityList = new Float32Array(3)
+				tList = scene['_lightInfo'][RedDirectionalLight['type']];
+				i = tList.length;
+				while ( i-- ) {
+					tLightData = tList[i];
+					vec3.set(tVector, tLightData['x'], tLightData['y'], tLightData['z'])
+					if ( tLightData['debug'] ) {
+						tDebugObj = tLightData['debugObject'];
+						tDebugObj['x'] = tVector[0];
+						tDebugObj['y'] = tVector[1];
+						tDebugObj['z'] = tVector[2];
+						tDebugObj['_material']['_color'] = tLightData['_color']
+						lightDebugRenderList.push(tDebugObj)
+					}
+					//
+					vec3.normalize(tVector, tVector)
+					tDirectionalPositionList[0 + 3 * i] = tVector[0];
+					tDirectionalPositionList[1 + 3 * i] = tVector[1];
+					tDirectionalPositionList[2 + 3 * i] = tVector[2];
+					//
+					tColorList[0 + 4 * i] = tLightData['_color'][0];
+					tColorList[1 + 4 * i] = tLightData['_color'][1];
+					tColorList[2 + 4 * i] = tLightData['_color'][2];
+					tColorList[3 + 4 * i] = tLightData['_color'][3];
+					tIntensityList[i] = tLightData['_intensity']
+				}
+				//
+				tValueStr = JSON.stringify(tDirectionalPositionList);
+				if ( updateSystemUniformInfo['uDirectionalLightPosition']['cacheData'] != tValueStr || changeProgramNum ) {
+					needUpdateSystemUniformInfo['uDirectionalLightPosition'] = updateSystemUniformInfo['uDirectionalLightPosition']['data'] = tDirectionalPositionList;
+					updateSystemUniformInfo['uDirectionalLightPosition']['cacheData'] = tValueStr;
+				}
+				//
+				tValueStr = JSON.stringify(tColorList);
+				if ( updateSystemUniformInfo['uDirectionalLightColor']['cacheData'] != tValueStr || changeProgramNum ) {
+					needUpdateSystemUniformInfo['uDirectionalLightColor'] = updateSystemUniformInfo['uDirectionalLightColor']['data'] = tColorList;
+					updateSystemUniformInfo['uDirectionalLightColor']['cacheData'] = tValueStr;
+				}
+				//
+				tValueStr = JSON.stringify(tIntensityList);
+				if ( updateSystemUniformInfo['uDirectionalLightIntensity']['cacheData'] != tValueStr || changeProgramNum ) {
+					needUpdateSystemUniformInfo['uDirectionalLightIntensity'] = updateSystemUniformInfo['uDirectionalLightIntensity']['data'] = tIntensityList;
+					updateSystemUniformInfo['uDirectionalLightIntensity']['cacheData'] = tValueStr;
+				}
+				//
+				tValueStr = tList.length;
+				if ( updateSystemUniformInfo['uDirectionalLightNum']['cacheData'] != tValueStr || changeProgramNum ) {
+					needUpdateSystemUniformInfo['uDirectionalLightNum'] = updateSystemUniformInfo['uDirectionalLightNum']['data'] = tValueStr;
+					updateSystemUniformInfo['uDirectionalLightNum']['cacheData'] = tValueStr;
+				}
+				// 포인트 라이트 업데이트
+				tVector = vec3.create()
+				tPointPositionList = new Float32Array(3 * 5)
+				tColorList = new Float32Array(4 * 5)
+				tIntensityList = new Float32Array(5)
+				tRadiusList = new Float32Array(5)
+				tList = scene['_lightInfo'][RedPointLight['type']];
+				i = tList.length;
+				while ( i-- ) {
+					tLightData = tList[i];
+					vec3.set(tVector, tLightData['x'], tLightData['y'], tLightData['z'])
+					if ( tLightData['debug'] ) {
+						tDebugObj = tLightData['debugObject'];
+						tDebugObj['x'] = tVector[0];
+						tDebugObj['y'] = tVector[1];
+						tDebugObj['z'] = tVector[2];
+						tDebugObj['scaleX'] = tDebugObj['scaleY'] = tDebugObj['scaleZ'] = tLightData['_radius']
+						tDebugObj['_material']['_color'] = tLightData['_color']
+						lightDebugRenderList.push(tDebugObj)
+					}
+					//
+					tPointPositionList[0 + 3 * i] = tVector[0];
+					tPointPositionList[1 + 3 * i] = tVector[1];
+					tPointPositionList[2 + 3 * i] = tVector[2];
+					tColorList[0 + 4 * i] = tLightData['_color'][0];
+					tColorList[1 + 4 * i] = tLightData['_color'][1];
+					tColorList[2 + 4 * i] = tLightData['_color'][2];
+					tColorList[3 + 4 * i] = tLightData['_color'][3];
+					//
+					tIntensityList[i] = tLightData['_intensity']
+					//
+					tRadiusList[i] = tLightData['_radius']
+				}
+				//
+				tValueStr = JSON.stringify(tPointPositionList);
+				if ( updateSystemUniformInfo['uPointLightPosition']['cacheData'] != tValueStr || changeProgramNum ) {
+					needUpdateSystemUniformInfo['uPointLightPosition'] = updateSystemUniformInfo['uPointLightPosition']['data'] = tPointPositionList;
+					updateSystemUniformInfo['uPointLightPosition']['cacheData'] = tValueStr;
+				}
+				//
+				tValueStr = JSON.stringify(tColorList);
+				if ( updateSystemUniformInfo['uPointLightColor']['cacheData'] != tValueStr || changeProgramNum ) {
+					needUpdateSystemUniformInfo['uPointLightColor'] = updateSystemUniformInfo['uPointLightColor']['data'] = tColorList;
+					updateSystemUniformInfo['uPointLightColor']['cacheData'] = tValueStr;
+				}
+				//
+				tValueStr = JSON.stringify(tIntensityList);
+				if ( updateSystemUniformInfo['uPointLightIntensity']['cacheData'] != tValueStr || changeProgramNum ) {
+					needUpdateSystemUniformInfo['uPointLightIntensity'] = updateSystemUniformInfo['uPointLightIntensity']['data'] = tIntensityList;
+					updateSystemUniformInfo['uPointLightIntensity']['cacheData'] = tValueStr;
+				}
+				//
+				tValueStr = JSON.stringify(tRadiusList);
+				if ( updateSystemUniformInfo['uPointLightRadius']['cacheData'] != tValueStr || changeProgramNum ) {
+					needUpdateSystemUniformInfo['uPointLightRadius'] = updateSystemUniformInfo['uPointLightRadius']['data'] = tRadiusList;
+					updateSystemUniformInfo['uPointLightRadius']['cacheData'] = tValueStr;
+				}
+				//
+				tValueStr = tList.length;
+				if ( updateSystemUniformInfo['uPointLightNum']['cacheData'] != tValueStr || changeProgramNum ) {
+					needUpdateSystemUniformInfo['uPointLightNum'] = updateSystemUniformInfo['uPointLightNum']['data'] = tValueStr;
+					updateSystemUniformInfo['uPointLightNum']['cacheData'] = tValueStr;
+				}
+				// 실제업데이트
 				for ( var k in redGL['_datas']['RedProgram'] ) {
 					programNum++
 					tProgram = redGL['_datas']['RedProgram'][k];
@@ -217,7 +373,31 @@ var RedRenderer;
 					tUUID = tLocationInfo['_UUID'];
 					if ( tLocation ) {
 						if ( scene['shadowManager']['_directionalShadow'] ) {
-							if ( tLight ) gl.uniformMatrix4fv(tLocation, false, lightMatrix);
+							lightMatrix[1] = lightMatrix[2] = lightMatrix[3] =
+								lightMatrix[4] = lightMatrix[6] = lightMatrix[7] =
+									lightMatrix[8] = lightMatrix[9] = lightMatrix[11] =
+										lightMatrix[12] = lightMatrix[13] = lightMatrix[14] = 0
+							lightMatrix[0] = lightMatrix[5] = lightMatrix[10] = lightMatrix[15] = 1
+							tSize = scene['shadowManager']['_directionalShadow']['size'];
+							tLight = scene['shadowManager']['_directionalShadow']['_light']
+							mat4.ortho(lightProjectionMatrix, -tSize, tSize, -tSize, tSize, -tSize, tSize)
+							tPosition[0] = 0
+							tPosition[1] = 0
+							tPosition[2] = 0
+							if ( tLight ) {
+								tPosition[0] = -tLight.x
+								tPosition[1] = -tLight.y
+								tPosition[2] = -tLight.z
+								vec3.normalize(tPosition, tPosition)
+								mat4.lookAt(
+									lightMatrix,
+									tPosition,
+									[0, 0, 0],
+									[0, 1, 0]
+								)
+								mat4.multiply(lightMatrix, lightProjectionMatrix, lightMatrix)
+								gl.uniformMatrix4fv(tLocation, false, lightMatrix);
+							}
 						}
 					}
 					// 디렉셔널 쉐도우 텍스쳐
@@ -235,141 +415,27 @@ var RedRenderer;
 						}
 					}
 					// 디렉셔널 쉐도우 사용여부
-					updateSystemUniformInfo['uUseDirectionalShadow'] = scene['shadowManager']['_directionalShadow'] ? true : false;
-					//
-					updateSystemUniformInfo['uTime'] = time;
-					updateSystemUniformInfo['uResolution'][0] = viewRect[2];
-					updateSystemUniformInfo['uResolution'][1] = viewRect[3];
-					updateSystemUniformInfo['uFogDensity'] = scene['fogDensity'];
-					updateSystemUniformInfo['uFogColor'][0] = scene['_fogR'];
-					updateSystemUniformInfo['uFogColor'][1] = scene['_fogG'];
-					updateSystemUniformInfo['uFogColor'][2] = scene['_fogB'];
-					updateSystemUniformInfo['uFogColor'][3] = 1;
-					updateSystemUniformInfo['uFogDistance'] = scene['fogDistance'];
-					updateSystemUniformInfo['uCameraMatrix'] = camera['matrix'];
-					updateSystemUniformInfo['uPMatrix'] = camera['perspectiveMTX'];
-					// 암비안트 라이트 업데이트
-					if ( tLightData = scene['_lightInfo'][RedAmbientLight['type']] ) {
-						updateSystemUniformInfo['uAmbientLightColor'] = tLightData['_color'];
-						updateSystemUniformInfo['uAmbientIntensity'] = tLightData['_intensity'];
+					tValueStr = scene['shadowManager']['_directionalShadow'] ? true : false;
+					if ( updateSystemUniformInfo['uUseDirectionalShadow']['cacheData'] != tValueStr || changeProgramNum ) {
+						needUpdateSystemUniformInfo['uUseDirectionalShadow'] = updateSystemUniformInfo['uUseDirectionalShadow']['data'] = tValueStr;
+						updateSystemUniformInfo['uUseDirectionalShadow']['cacheData'] = tValueStr;
 					}
-					// 디렉셔널 라이트 업데이트
-					tVector = vec3.create()
-					tDirectionalPositionList = new Float32Array(3 * 3)
-					tColorList = new Float32Array(4 * 3)
-					tIntensityList = new Float32Array(3)
-					tList = scene['_lightInfo'][RedDirectionalLight['type']];
-					i = tList.length;
-					while ( i-- ) {
-						tLightData = tList[i];
-						vec3.set(tVector, tLightData['x'], tLightData['y'], tLightData['z'])
-						if ( tLightData['debug'] ) {
-							tDebugObj = tLightData['debugObject'];
-							tDebugObj['x'] = tVector[0];
-							tDebugObj['y'] = tVector[1];
-							tDebugObj['z'] = tVector[2];
-							tDebugObj['_material']['_color'] = tLightData['_color']
-							lightDebugRenderList.push(tDebugObj)
-						}
-						//
-						tLocationInfo = tSystemUniformGroup['uDirectionalLightPosition'];
-						if ( tLocationInfo ) {
-							tLocation = tLocationInfo['location'];
-							if ( tLocation ) {
-								vec3.normalize(tVector, tVector)
-								tDirectionalPositionList[0 + 3 * i] = tVector[0];
-								tDirectionalPositionList[1 + 3 * i] = tVector[1];
-								tDirectionalPositionList[2 + 3 * i] = tVector[2];
-							}
-						}
-						//
-						tLocationInfo = tSystemUniformGroup['uDirectionalLightColor'];
-						if ( tLocationInfo ) {
-							tLocation = tLocationInfo['location'];
-							if ( tLocation ) {
-								tColorList[0 + 4 * i] = tLightData['_color'][0];
-								tColorList[1 + 4 * i] = tLightData['_color'][1];
-								tColorList[2 + 4 * i] = tLightData['_color'][2];
-								tColorList[3 + 4 * i] = tLightData['_color'][3];
-							}
-						}
-						if ( tLocationInfo ) {
-							tLocationInfo = tSystemUniformGroup['uDirectionalLightIntensity'];
-							tLocation = tLocationInfo['location'];
-							if ( tLocation ) tIntensityList[i] = tLightData['_intensity']
-						}
-					}
-					updateSystemUniformInfo['uDirectionalLightPosition'] = tDirectionalPositionList;
-					updateSystemUniformInfo['uDirectionalLightColor'] = tColorList;
-					updateSystemUniformInfo['uDirectionalLightIntensity'] = tIntensityList;
-					updateSystemUniformInfo['uDirectionalLightNum'] = tList.length;
-					// 포인트 라이트 업데이트
-					tVector = vec3.create()
-					tPointPositionList = new Float32Array(3 * 5)
-					tColorList = new Float32Array(4 * 5)
-					tIntensityList = new Float32Array(5)
-					tRadiusList = new Float32Array(5)
-					tList = scene['_lightInfo'][RedPointLight['type']];
-					i = tList.length;
-					while ( i-- ) {
-						tLightData = tList[i];
-						vec3.set(tVector, tLightData['x'], tLightData['y'], tLightData['z'])
-						if ( tLightData['debug'] ) {
-							tDebugObj = tLightData['debugObject'];
-							tDebugObj['x'] = tVector[0];
-							tDebugObj['y'] = tVector[1];
-							tDebugObj['z'] = tVector[2];
-							tDebugObj['scaleX'] = tDebugObj['scaleY'] = tDebugObj['scaleZ'] = tLightData['_radius']
-							tDebugObj['_material']['_color'] = tLightData['_color']
-							lightDebugRenderList.push(tDebugObj)
-						}
-						//
-						tLocationInfo = tSystemUniformGroup['uPointLightPosition'];
-						tLocation = tLocationInfo['location'];
-						if ( tLocation ) {
-							tPointPositionList[0 + 3 * i] = tVector[0];
-							tPointPositionList[1 + 3 * i] = tVector[1];
-							tPointPositionList[2 + 3 * i] = tVector[2];
-						}
-						//
-						tLocationInfo = tSystemUniformGroup['uPointLightColor'];
-						tLocation = tLocationInfo['location'];
-						if ( tLocation ) {
-							tColorList[0 + 4 * i] = tLightData['_color'][0];
-							tColorList[1 + 4 * i] = tLightData['_color'][1];
-							tColorList[2 + 4 * i] = tLightData['_color'][2];
-							tColorList[3 + 4 * i] = tLightData['_color'][3];
-						}
-						//
-						tLocationInfo = tSystemUniformGroup['uPointLightIntensity'];
-						tLocation = tLocationInfo['location'];
-						if ( tLocation ) tIntensityList[i] = tLightData['_intensity']
-						//
-						tLocationInfo = tSystemUniformGroup['uPointLightRadius'];
-						tLocation = tLocationInfo['location'];
-						if ( tLocation ) tRadiusList[i] = tLightData['_radius']
-					}
-					updateSystemUniformInfo['uPointLightPosition'] = tPointPositionList;
-					updateSystemUniformInfo['uPointLightColor'] = tColorList;
-					updateSystemUniformInfo['uPointLightIntensity'] = tIntensityList;
-					updateSystemUniformInfo['uPointLightRadius'] = tRadiusList;
-					updateSystemUniformInfo['uPointLightNum'] = tList.length;
 					// 업데이트
-					for ( var k2 in updateSystemUniformInfo ) {
+					// console.log('~~~~~~~~~~~~~~', k)
+					var tt = this['cacheInfo']['cacheSystemUniformInfo']
+					for ( var k2 in needUpdateSystemUniformInfo ) {
 						tLocationInfo = tSystemUniformGroup[k2];
-						if ( tLocationInfo ) {
-							tLocation = tLocationInfo['location'];
+						// if ( tLocationInfo ) {
+						tLocation = tLocationInfo['location'];
+						if ( tLocation ) {
 							tUUID = tLocationInfo['_UUID']
-							tValue = updateSystemUniformInfo[k2]
-							tValueStr = JSON.stringify(tValue)
-							if ( tLocation && this['cacheInfo']['cacheSystemUniformInfo'][tUUID] != tValueStr ) {
-								tLocationInfo['renderType'] == 'mat' ? gl[tLocationInfo['renderMethod']](tLocation, false, tValue) : gl[tLocationInfo['renderMethod']](tLocation, tValue);
-								this['cacheInfo']['cacheSystemUniformInfo'][tUUID] = tValueStr;
-							}
+							tValue = needUpdateSystemUniformInfo[k2]
+							tLocationInfo['renderType'] == 'mat' ? gl[tLocationInfo['renderMethod']](tLocation, false, tValue) : gl[tLocationInfo['renderMethod']](tLocation, tValue);
+							tt[tUUID] = tValueStr;
 						}
+						// }
 					}
 				}
-				return lightDebugRenderList
 			}
 		})();
 		glInitialize = function (gl) {
@@ -656,9 +722,9 @@ var RedRenderer;
 					// 재질 캐싱
 					// fog Program 판단
 					tProgram = tMaterial['program']
-					if ( scene['useFog'] ) tProgram = tMaterial['_programList']['fog'][tMaterial['program']['key']]
-					// if ( tSprite3DYn ) tProgram = tMaterial['_programList']['sprite3D'][tMaterial['program']['key']]
-					// if ( scene['useFog'] && tSprite3DYn ) tProgram = tMaterial['program']['subProgram_fog_sprite3D']
+					if ( scene['useFog'] && tSprite3DYn ) tProgram = tMaterial['_programList']['fog_sprite3D'][tMaterial['program']['key']]
+					else if ( tSprite3DYn ) tProgram = tMaterial['_programList']['sprite3D'][tMaterial['program']['key']]
+					else if ( scene['useFog'] ) tProgram = tMaterial['_programList']['fog'][tMaterial['program']['key']]
 					//
 					prevProgram_UUID == tProgram['_UUID'] ? 0 : tGL.useProgram(tProgram['webglProgram'])
 					prevProgram_UUID = tProgram['_UUID']
@@ -869,7 +935,6 @@ var RedRenderer;
 									tMVMatrix[14] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
 									tMVMatrix[15] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33
 							) : 0;
-
 				}
 				/////////////////////////////////////////////////////////////////////////
 				/////////////////////////////////////////////////////////////////////////
@@ -982,7 +1047,6 @@ var RedRenderer;
 				/////////////////////////////////////////////////////////////////////////
 				/////////////////////////////////////////////////////////////////////////
 				tMesh['children'].length ? draw(redGL, scene, tMesh['children'], camera, orthographicYn, time, renderResultObj, tCacheInfo, tCacheState, tMVMatrix, subSceneMaterial) : 0;
-
 			}
 		}
 		return function (redGL, scene, camera, orthographicYn, children, time, renderResultObj, subSceneMaterial) {
@@ -1002,7 +1066,6 @@ var RedRenderer;
 			tPrevIndexBuffer_UUID = null;
 			tPrevInterleaveBuffer_UUID = null;
 			tPrevSamplerIndex = null;
-
 			draw(
 				redGL,
 				scene,

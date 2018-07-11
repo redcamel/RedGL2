@@ -202,7 +202,7 @@
 			]);
 		JsonModelLoader(this, 'testJsonModel', '../asset/teapot.json', function (interleaveBuffer, indexBuffer) {
 			console.log('호잇!', interleaveBuffer, indexBuffer)
-			var i = 8500
+			var i = 9000
 			while ( i-- ) {
 				var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer), testMaterial)
 				testMesh.x = Math.random() * 250 - 125
@@ -256,7 +256,14 @@
 			tList.push(testMaterial._programList['basic'][k]['key'].replace('environmentProgram_', ''))
 		}
 		t0.add(tScene3D, 'useFog', true, false)
-		t
+		t0.add(testData, 'sprite3DYn', true, false).onChange(function(v){
+			var i = tScene3D.children.length
+			while ( i-- ) {
+				testMesh = tScene3D.children[i]
+				testMesh.sprite3DYn = v
+			}
+        })
+
 		t0.add(testData, 'state', tList).onChange(function (v) {
 			v = v.split('_')
 			testMaterial.diffuseTexture = null
