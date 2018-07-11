@@ -15,7 +15,6 @@ var RedProgram;
 			tFMap = fs['parseData']['uniform']['map'];
 			for ( k in tVMap ) if ( tFMap[k] ) RedGLUtil.throwFunc("vertexShader와 fragmentShader에 중복된 유니폼 선언이 존재함.", "중복선언 : " + k);
 			gl.linkProgram(program);
-			;
 			if ( !gl.getProgramParameter(program, gl.LINK_STATUS) ) RedGLUtil.throwFunc("RedProgram : 프로그램을 초기화 할 수 없습니다.", gl.getProgramInfoLog(program));
 			// const numUniforms = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS);
 			// for (let i = 0; i < numUniforms; ++i) {
@@ -215,7 +214,7 @@ var RedProgram;
 		if ( typeof key != 'string' ) RedGLUtil.throwFunc('RedProgram : key - 문자열만 허용됩니다.', '입력값 : ' + key);
 		tGL = redGL.gl;
 		// 데이터 공간확보
-		if ( !redGL['_datas']['RedProgram'] ) redGL['_datas']['RedProgram'] = {};
+		if ( !redGL['_datas']['RedProgram'] ) redGL['_datas']['RedProgram'] = {}, redGL['_datas']['RedProgramList'] = [];
 		hasKey = RedProgram.hasKey(redGL, key)
 		var vertexShader, fragmentShader;
 		if ( hasKey ) {
@@ -225,6 +224,7 @@ var RedProgram;
 			fragmentShader = fSource ? RedShader(redGL, key + '_FS', RedShader['FRAGMENT'], fSource) : null
 			if ( !vertexShader || !fragmentShader ) RedGLUtil.throwFunc('RedProgram : 신규 생성시 vertexShader, fragmentShader 모두 입력해야함.');
 			else redGL['_datas']['RedProgram'][key] = this;
+			redGL['_datas']['RedProgramList'].push(this)
 			console.log('신규생성', key)
 		}
 		/**DOC:
@@ -298,7 +298,7 @@ var RedProgram;
 	 :DOC*/
 	RedProgram['hasKey'] = function (redGL, key) {
 		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedProgram : RedGL Instance만 허용됩니다.', '입력값 : ' + redGL);
-		if ( !redGL['_datas']['RedProgram'] ) redGL['_datas']['RedProgram'] = {};
+		if ( !redGL['_datas']['RedProgram'] ) redGL['_datas']['RedProgram'] = {}, redGL['_datas']['RedProgramList'] = [];
 		return redGL['_datas']['RedProgram'][key] ? true : false
 	}
 	RedProgram['makeProgram'] = function (redGL, programName, vSource, fSource, option) {
