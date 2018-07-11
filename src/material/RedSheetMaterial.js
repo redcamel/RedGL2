@@ -20,7 +20,7 @@ var RedSheetMaterial;
 		}
 		uniform vec4 u_sheetRect;
 		void main(void) {
-			vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
+			vTexcoord = aTexcoord;
 			vTexcoord = vec2(
 				vTexcoord.s * u_sheetRect.x + u_sheetRect.z,
 				vTexcoord.t * u_sheetRect.y - u_sheetRect.w

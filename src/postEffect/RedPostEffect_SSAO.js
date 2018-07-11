@@ -7,7 +7,7 @@ var RedPostEffect_SSAO;
 		/* @preserve
 
 		 void main(void) {
-			 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
+			 vTexcoord = aTexcoord;
 			 vTime = uTime;
 			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
 		 }

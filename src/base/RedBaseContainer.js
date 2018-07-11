@@ -11,8 +11,29 @@ var RedBaseContainer;
 		 return : 'void'
 	 }
 	 :DOC*/
-	RedBaseContainer = function () {}
+	RedBaseContainer = function () {
+		this['autoSort'] = false
+	}
 	var prototypeData = {
+		sortGeometry: function () {
+			//TODO: 서브재귀정렬도 포함할껀지 결정해야함
+			this.children.sort(function (a, b) {
+				if ( a['_geometry']['interleaveBuffer'] < b['_geometry']['interleaveBuffer'] ) return -1
+				if ( a['_geometry']['interleaveBuffer'] > b['_geometry']['interleaveBuffer'] ) return 1
+				return 0
+			})
+		},
+		sortMaterial: function () {
+			//TODO: 서브재귀정렬도 포함할껀지 결정해야함
+			this.children.sort(function (a, b) {
+				if ( a['_material']['program']['_UUID'] < b['_material']['program']['_UUID'] ) return -1
+				if ( a['_material']['program']['_UUID'] > b['_material']['program']['_UUID'] ) return 1
+				return 0
+			})
+		},
+		sortGeometryAndMaterial : function(){
+			//TODO: 정의해야함	
+		},
 		/**DOC:
 		 {
 			 code : 'METHOD',

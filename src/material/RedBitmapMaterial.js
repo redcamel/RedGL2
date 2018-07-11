@@ -19,16 +19,17 @@ var RedBitmapMaterial;
 			return tMTX * cacheScale;
 		}
 		void main(void) {
-			vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
+			vTexcoord = aTexcoord;
 			gl_PointSize = uPointSize;
 
 			 gl_Position = uPMatrix * calSprite3D(uCameraMatrix , uMMatrix) *  vec4(aVertexPosition, 1.0);
-			 if(!uPerspectiveScale){
-			    gl_Position /= gl_Position.w;
-			    gl_Position.xy += aVertexPosition.xy * vec2(uMMatrix[0][0],uMMatrix[1][1]);
-			 }
-
-			 gl_Position = uPMatrix * uCameraMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
+			if(uSprite3DYn) {
+				gl_Position = uPMatrix * calSprite3D(uCameraMatrix , uMMatrix) *  vec4(aVertexPosition, 1.0);
+				if(!uPerspectiveScale){
+					gl_Position /= gl_Position.w;
+					gl_Position.xy += aVertexPosition.xy * vec2(uMMatrix[0][0],uMMatrix[1][1]);
+				}
+			} else gl_Position = uPMatrix * uCameraMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
 		}
 		 */
 	}

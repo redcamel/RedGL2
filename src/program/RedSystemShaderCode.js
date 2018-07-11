@@ -31,7 +31,7 @@ var RedSystemShaderCode;
 			'uniform float uPointSize',
 			'attribute vec2 aTexcoord',
 			'varying vec2 vTexcoord',
-			'uniform vec4 uAtlascoord',
+			// 'uniform vec4 uAtlascoord',
 			'uniform float uTime',
 			'varying float vTime',
 			'uniform vec2 uResolution',

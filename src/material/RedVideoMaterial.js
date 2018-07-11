@@ -19,7 +19,7 @@ var RedVideoMaterial;
 			return tMTX * cacheScale;
 		}
 		void main(void) {
-			vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
+			vTexcoord = aTexcoord;
 			gl_PointSize = uPointSize;
 			if(uSprite3DYn) {
 				gl_Position = uPMatrix * calSprite3D(uCameraMatrix , uMMatrix) *  vec4(aVertexPosition, 1.0);

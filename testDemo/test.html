@@ -258,7 +258,7 @@
 		})();
 		JsonModelLoader(this, 'testJsonModel', '../asset/teapot.json', function (interleaveBuffer, indexBuffer) {
 			console.log('호잇!', interleaveBuffer, indexBuffer)
-			var i = 5000
+			var i = 6000
 			while ( i-- ) {
 				var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer), testMaterial)
 				testMesh.x = Math.random() * 250 - 125
@@ -314,6 +314,7 @@
 			}
 		})
 		tRenderer.renderDebuger.visible = true
+		tScene3D.sortGeometry()
 		tRenderer.start(this, function (time) {
 			// testInterleaveBuffer.upload(interleaveData)
 			var i = tScene3D.children.length

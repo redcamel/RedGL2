@@ -6,7 +6,7 @@ var RedPostEffect_Pixelize;
 	vSource = function () {
 		/* @preserve
 		 void main(void) {
-			 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
+			 vTexcoord = aTexcoord;
 			 vResolution = uResolution;
 			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
 		 }
