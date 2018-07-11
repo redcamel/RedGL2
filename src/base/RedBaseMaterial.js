@@ -38,22 +38,25 @@ var RedBaseMaterial;
 			}
 			return function (target, redGL, programName, vSource, fSource, programOptionList) {
 				if ( !programOptionList ) programOptionList = []
-				target['basicProgram'] = {}
-				target['_programList'] = {
-					basic: {},
-					fog: {},
-					sprite3D: {},
-					fog_sprite3D:{}
+				if ( !redGL['_datas']['RedProgramGroup'] ) redGL['_datas']['RedProgramGroup'] = {}
+				if ( redGL['_datas']['RedProgramGroup'][programName] ) target['_programList'] = redGL['_datas']['RedProgramGroup'][programName], console.log('캐싱프로그램그룹사용 :', programName)
+				else {
+					target['_programList'] = {
+						basic: {},
+						fog: {},
+						sprite3D: {},
+						fog_sprite3D: {}
+					}
+					makeList(target, '', redGL, programName, vSource, fSource, programOptionList)
+					// console.log(target['_programList'])
+					// 일반 프로그램생성
+					target['_programList']['basic'][programName] = RedProgram['makeProgram'](redGL, programName, vSource, fSource)
+					target['_programList']['fog'][programName] = RedProgram['makeProgram'](redGL, programName, vSource, fSource, ['fog'])
+					target['_programList']['sprite3D'][programName] = RedProgram['makeProgram'](redGL, programName, vSource, fSource, ['sprite3D'])
+					target['_programList']['fog_sprite3D'][programName] = RedProgram['makeProgram'](redGL, programName, vSource, fSource, ['fog', 'sprite3D'])
+					// 그룹데이터 캐싱
+					redGL['_datas']['RedProgramGroup'][programName] = target['_programList']
 				}
-				makeList(target, '', redGL, programName, vSource, fSource, programOptionList)
-				// console.log(target['_programList'])
-				// 일반 프로그램생성
-				target['_programList']['basic'][programName] = RedProgram['makeProgram'](redGL, programName, vSource, fSource)
-				// 포그 프로그램생성
-				target['_programList']['fog'][programName] = RedProgram['makeProgram'](redGL, programName, vSource, fSource, ['fog'])
-				target['_programList']['sprite3D'][programName] = RedProgram['makeProgram'](redGL, programName, vSource, fSource, ['sprite3D'])
-				target['_programList']['fog_sprite3D'][programName] = RedProgram['makeProgram'](redGL, programName, vSource, fSource, ['fog', 'sprite3D'])
-				// sprite3D 프로그램생성
 				target['program'] = target['_programList']['basic'][programName]
 			}
 		})(),

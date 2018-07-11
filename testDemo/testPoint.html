@@ -88,6 +88,7 @@
     <!--//-->
     <script src="../src/renderer/RedRenderer.js"></script>
     <script src="../src/renderer/system/RedRenderDebuger.js"></script>
+    <script src="../src/renderer/system/RedSystemUniformUpdater.js"></script>
     <!--//-->
     <script src="../src/RedView.js"></script>
     <script src="../src/RedWorld.js"></script>
@@ -148,7 +149,7 @@
 		tCamera.z = 10
 		tCamera.lookAt(0, 0, 0)
 		tRenderer = RedRenderer();
-		tWorld.addView(RedView('test', this,tScene3D, tCamera));
+		tWorld.addView(RedView('test', this, tScene3D, tCamera));
 		var testDLight;
 		testDLight = RedDirectionalLight(this, '#fff')
 		testDLight.x = 3

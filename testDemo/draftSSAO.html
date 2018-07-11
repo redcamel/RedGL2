@@ -88,6 +88,7 @@
     <!--//-->
     <script src="../src/renderer/RedRenderer.js"></script>
     <script src="../src/renderer/system/RedRenderDebuger.js"></script>
+    <script src="../src/renderer/system/RedSystemUniformUpdater.js"></script>
     <!--//-->
     <script src="../src/RedView.js"></script>
     <script src="../src/RedWorld.js"></script>
@@ -216,7 +217,6 @@
 			// testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 1
 			// testMesh.scaleY  =
 			tScene3D.addChild(testMesh)
-
 			var i = 10
 			while ( i-- ) {
 				// var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer),
@@ -231,7 +231,7 @@
 			}
 			tScene3D['grid'] = RedGrid(self)
 		})
-		var tGeo = RedBox(self, 1,5,1, 1, 1, 1)
+		var tGeo = RedBox(self, 1, 5, 1, 1, 1, 1)
 		var tMesh = RedMesh(self, tGeo, testMaterial2)
 		tScene3D.addChild(tMesh)
 		tMesh.material = RedColorPhongMaterial(self)
@@ -241,7 +241,6 @@
 		tMesh.scaleX = 100
 		tMesh.scaleY = 0.1
 		tMesh.scaleZ = 100
-
 		tRenderer.renderDebuger.visible = true
 		tRenderer.start(this, function (time) {
 			testDLight.x = Math.sin(time / 1000) * 25

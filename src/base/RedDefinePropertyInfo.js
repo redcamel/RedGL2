@@ -56,7 +56,7 @@ var RedDefinePropertyInfo;
 		if ( targetObject.hasOwnProperty(name) ) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : 이미 정의된 속성')
 		switch ( type ) {
 			case 'boolean' :
-				option = option ? option : true
+				option = option != undefined ? option : true
 				result = {
 					get: function () { return this['_' + name]; },
 					set: function (v) {
@@ -120,7 +120,7 @@ var RedDefinePropertyInfo;
 				samplerTypeKey = 'RedVideoTexture';
 				break
 			default :
-				RedGLUtil.throwFunc(name + ' - ' + 'type : ' + +name + ' : 정의할수없는 타입입니다.')
+				RedGLUtil.throwFunc(name + ' - ' + 'type : ' + type + ' / ' + name + ' : 정의할수없는 타입입니다.')
 				break
 		}
 		if ( samplerTypeKey ) {
