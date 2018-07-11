@@ -657,7 +657,7 @@ var RedRenderer;
 					// fog Program 판단
 					tProgram = tMaterial['program']
 					if ( scene['useFog'] ) tProgram = tMaterial['_programList']['fog'][tMaterial['program']['key']]
-					if ( tSprite3DYn ) tProgram = tMaterial['_programList']['sprite3D'][tMaterial['program']['key']]
+					// if ( tSprite3DYn ) tProgram = tMaterial['_programList']['sprite3D'][tMaterial['program']['key']]
 					// if ( scene['useFog'] && tSprite3DYn ) tProgram = tMaterial['program']['subProgram_fog_sprite3D']
 					//
 					prevProgram_UUID == tProgram['_UUID'] ? 0 : tGL.useProgram(tProgram['webglProgram'])
@@ -733,14 +733,14 @@ var RedRenderer;
 									tCacheSamplerIndex[tUUID] == tSamplerIndex ? 0 : tGL.uniform1i(tWebGLUniformLocation, tCacheSamplerIndex[tUUID] = tSamplerIndex);
 									tCacheTexture[tSamplerIndex] = tUniformValue['_UUID'];
 								}
-								// 아틀라스 UV검색
-								if ( tSystemUniformGroup['uAtlascoord']['location'] ) {
-									tUUID = tSystemUniformGroup['uAtlascoord']['_UUID']
-									if ( tCacheUniformInfo[tUUID] != tUniformValue['atlascoord']['data']['_UUID'] ) {
-										tGL.uniform4fv(tSystemUniformGroup['uAtlascoord']['location'], tUniformValue['atlascoord']['data'])
-										tCacheUniformInfo[tUUID] = tUniformValue['atlascoord']['data']['_UUID']
-									}
-								}
+								// // 아틀라스 UV검색
+								// if ( tSystemUniformGroup['uAtlascoord']['location'] ) {
+								// 	tUUID = tSystemUniformGroup['uAtlascoord']['_UUID']
+								// 	if ( tCacheUniformInfo[tUUID] != tUniformValue['atlascoord']['data']['_UUID'] ) {
+								// 		tGL.uniform4fv(tSystemUniformGroup['uAtlascoord']['location'], tUniformValue['atlascoord']['data'])
+								// 		tCacheUniformInfo[tUUID] = tUniformValue['atlascoord']['data']['_UUID']
+								// 	}
+								// }
 							}
 							else {
 								// TODO: 이제는 이놈들을 날릴수있을듯한데...
@@ -940,7 +940,7 @@ var RedRenderer;
 					if ( tSystemUniformGroup['uPointSize']['use'] ) {
 						tCacheState['pointSize'] != tMesh['pointSize'] ? tGL.uniform1f(tSystemUniformGroup['uPointSize']['location'], tCacheState['pointSize'] = tMesh['pointSize']) : 0;
 					}
-					if ( tSprite3DYn ) {
+					if ( tSystemUniformGroup['uSprite3DYn']['location'] ) {
 						tUUID = tSystemUniformGroup['uSprite3DYn']['_UUID']
 						tUniformValue = tSprite3DYn
 						if ( tCacheUniformInfo[tUUID] != tUniformValue ) {
@@ -982,6 +982,7 @@ var RedRenderer;
 				/////////////////////////////////////////////////////////////////////////
 				/////////////////////////////////////////////////////////////////////////
 				tMesh['children'].length ? draw(redGL, scene, tMesh['children'], camera, orthographicYn, time, renderResultObj, tCacheInfo, tCacheState, tMVMatrix, subSceneMaterial) : 0;
+
 			}
 		}
 		return function (redGL, scene, camera, orthographicYn, children, time, renderResultObj, subSceneMaterial) {
@@ -1001,17 +1002,7 @@ var RedRenderer;
 			tPrevIndexBuffer_UUID = null;
 			tPrevInterleaveBuffer_UUID = null;
 			tPrevSamplerIndex = null;
-			// TODO: 소팅을 도입할수도있겠는데?
-			// if ( !scene['sorted'] ) {
-			// 	scene['sorted'] = true
-			// 	children.sort(function (a, b) {
-			// 		if ( a['_geometry']['interleaveBuffer'] < b['_geometry']['interleaveBuffer'] ) return -1
-			// 		if ( a['_geometry']['interleaveBuffer'] > b['_geometry']['interleaveBuffer'] ) return 1
-			// 		if ( a['_material']['program']['_UUID'] < b['_material']['program']['_UUID'] ) return -1
-			// 		if ( a['_material']['program']['_UUID'] > b['_material']['program']['_UUID'] ) return 1
-			// 		return 0
-			// 	})
-			// }
+
 			draw(
 				redGL,
 				scene,

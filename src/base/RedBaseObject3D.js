@@ -230,6 +230,7 @@ var RedBaseObject3D;
 		 }
 		 :DOC*/
 		this['children'] = []
+
 		this['useLOD'] = false
 		this['_lodLevels'] = {
 			/* 1: {

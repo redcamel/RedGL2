@@ -18,7 +18,7 @@ var RedStandardMaterial;
 		 const mat4 cTexUnitConverter = mat4(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.5, 0.5, 0.5, 1.0);
 
 		 void main(void) {
-			 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
+			 vTexcoord = aTexcoord;
 			 vVertexNormal = vec3(uNMatrix * vec4(aVertexNormal,1.0));
 			 vVertexPositionEye4 = uMMatrix * vec4(aVertexPosition, 1.0);
 

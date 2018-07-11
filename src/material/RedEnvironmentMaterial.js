@@ -14,7 +14,7 @@ var RedEnvironmentMaterial;
 		 //#define#displacementTexture# uniform float u_displacementFlowSpeedY;
 
 		 void main(void) {
-			 vTexcoord = uAtlascoord.xy + aTexcoord * uAtlascoord.zw;
+			 vTexcoord = aTexcoord;
 			 vVertexNormal = (uNMatrix * vec4(aVertexNormal,1.0)).xyz;
 			 vVertexPositionEye4 = uMMatrix * vec4(aVertexPosition, 1.0);
 
