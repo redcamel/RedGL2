@@ -40,11 +40,13 @@ var RedSystemShaderCode;
 			'uniform mat4 uNMatrix',
 			'uniform mat4 uPMatrix',
 			'uniform mat4 uCameraMatrix',
-			'uniform bool uSprite3DYn', // sprite3d인지 아닌지
 			'uniform bool uPerspectiveScale',
 			// shadow
 			'uniform mat4 uDirectionalShadowLightMatrix',
-			'uniform bool uUseDirectionalShadow'
+			'uniform bool uUseDirectionalShadow',
+			'varying highp vec4 vShadowPos',
+			'varying float vUseDirectionalShadow',
+			'const mat4 cTexUnitConverter = mat4(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.5, 0.5, 0.5, 1.0)'
 		],
 		/**DOC:
 		 {
@@ -67,22 +69,24 @@ var RedSystemShaderCode;
 			'uniform vec4 uFogColor',
 			// 디렉셔널
 			'const int cDIRETIONAL_MAX = 3',
-			'uniform vec3 uDirectionalLightPosition[3]',
-			'uniform vec4 uDirectionalLightColor[3]',
-			'uniform float uDirectionalLightIntensity[3]',
+			'uniform vec3 uDirectionalLightPositionList[3]',
+			'uniform vec4 uDirectionalLightColorList[3]',
+			'uniform float uDirectionalLightIntensityList[3]',
 			'uniform int uDirectionalLightNum',
 			//포인트라이트
 			'const int cPOINT_MAX = 5',
-			'uniform vec3 uPointLightPosition[5]',
-			'uniform vec4 uPointLightColor[5]',
-			'uniform float uPointLightRadius[5]',
-			'uniform float uPointLightIntensity[5]',
+			'uniform vec3 uPointLightPositionList[5]',
+			'uniform vec4 uPointLightColorList[5]',
+			'uniform float uPointLightRadiusList[5]',
+			'uniform float uPointLightIntensityList[5]',
 			'uniform int uPointLightNum',
 			// 암비안트
 			'uniform vec4 uAmbientLightColor',
 			'uniform float uAmbientIntensity',
 			// shadow
-			'uniform sampler2D uDirectionalShadowTexture'
+			'uniform sampler2D uDirectionalShadowTexture',
+			'varying highp vec4 vShadowPos',
+			'varying float vUseDirectionalShadow',
 		],
 		systemUniform: {}
 	};

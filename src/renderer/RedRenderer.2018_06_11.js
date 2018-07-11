@@ -298,7 +298,7 @@ var RedRenderer;
 							lightDebugRenderList.push(tDebugObj)
 						}
 						//
-						tLocationInfo = tSystemUniformGroup['uDirectionalLightPosition'];
+						tLocationInfo = tSystemUniformGroup['uDirectionalLightPositionList'];
 						if ( tLocationInfo ) {
 							tLocation = tLocationInfo['location'];
 							if ( tLocation ) {
@@ -309,7 +309,7 @@ var RedRenderer;
 							}
 						}
 						//
-						tLocationInfo = tSystemUniformGroup['uDirectionalLightColor'];
+						tLocationInfo = tSystemUniformGroup['uDirectionalLightColorList'];
 						if ( tLocationInfo ) {
 							tLocation = tLocationInfo['location'];
 							if ( tLocation ) {
@@ -320,14 +320,14 @@ var RedRenderer;
 							}
 						}
 						if ( tLocationInfo ) {
-							tLocationInfo = tSystemUniformGroup['uDirectionalLightIntensity'];
+							tLocationInfo = tSystemUniformGroup['uDirectionalLightIntensityList'];
 							tLocation = tLocationInfo['location'];
 							if ( tLocation ) tIntensityList[i] = tLightData['_intensity']
 						}
 						//
 					}
 					//
-					tLocationInfo = tSystemUniformGroup['uDirectionalLightPosition'];
+					tLocationInfo = tSystemUniformGroup['uDirectionalLightPositionList'];
 					if ( tLocationInfo ) {
 						tLocation = tLocationInfo['location'];
 						tUUID = tLocationInfo['_UUID'];
@@ -339,7 +339,7 @@ var RedRenderer;
 						}
 					}
 					//
-					tLocationInfo = tSystemUniformGroup['uDirectionalLightColor'];
+					tLocationInfo = tSystemUniformGroup['uDirectionalLightColorList'];
 					tLocation = tLocationInfo['location'];
 					tUUID = tLocationInfo['_UUID'];
 					tValue = tColorList;
@@ -349,7 +349,7 @@ var RedRenderer;
 						cacheSystemUniform[tUUID] = tValueStr
 					}
 					//
-					tLocationInfo = tSystemUniformGroup['uDirectionalLightIntensity'];
+					tLocationInfo = tSystemUniformGroup['uDirectionalLightIntensityList'];
 					tLocation = tLocationInfo['location'];
 					tUUID = tLocationInfo['_UUID'];
 					tValue = tIntensityList;
@@ -390,7 +390,7 @@ var RedRenderer;
 							lightDebugRenderList.push(tDebugObj)
 						}
 						//
-						tLocationInfo = tSystemUniformGroup['uPointLightPosition'];
+						tLocationInfo = tSystemUniformGroup['uPointLightPositionList'];
 						tLocation = tLocationInfo['location'];
 						if ( tLocation ) {
 							tPointPositionList[0 + 3 * i] = tVector[0];
@@ -398,7 +398,7 @@ var RedRenderer;
 							tPointPositionList[2 + 3 * i] = tVector[2];
 						}
 						//
-						tLocationInfo = tSystemUniformGroup['uPointLightColor'];
+						tLocationInfo = tSystemUniformGroup['uPointLightColorList'];
 						tLocation = tLocationInfo['location'];
 						if ( tLocation ) {
 							tColorList[0 + 4 * i] = tLightData['_color'][0];
@@ -407,16 +407,16 @@ var RedRenderer;
 							tColorList[3 + 4 * i] = tLightData['_color'][3];
 						}
 						//
-						tLocationInfo = tSystemUniformGroup['uPointLightIntensity'];
+						tLocationInfo = tSystemUniformGroup['uPointLightIntensityList'];
 						tLocation = tLocationInfo['location'];
 						if ( tLocation ) tIntensityList[i] = tLightData['_intensity']
 						//
-						tLocationInfo = tSystemUniformGroup['uPointLightRadius'];
+						tLocationInfo = tSystemUniformGroup['uPointLightRadiusList'];
 						tLocation = tLocationInfo['location'];
 						if ( tLocation ) tRadiusList[i] = tLightData['_radius']
 					}
 					//
-					tLocationInfo = tSystemUniformGroup['uPointLightPosition'];
+					tLocationInfo = tSystemUniformGroup['uPointLightPositionList'];
 					tLocation = tLocationInfo['location'];
 					tUUID = tLocationInfo['_UUID'];
 					tValue = tPointPositionList;
@@ -426,7 +426,7 @@ var RedRenderer;
 						cacheSystemUniform[tUUID] = tValueStr
 					}
 					//
-					tLocationInfo = tSystemUniformGroup['uPointLightColor'];
+					tLocationInfo = tSystemUniformGroup['uPointLightColorList'];
 					tLocation = tLocationInfo['location'];
 					tUUID = tLocationInfo['_UUID'];
 					tValue = tColorList;
@@ -436,7 +436,7 @@ var RedRenderer;
 						cacheSystemUniform[tUUID] = tValueStr
 					}
 					//
-					tLocationInfo = tSystemUniformGroup['uPointLightIntensity'];
+					tLocationInfo = tSystemUniformGroup['uPointLightIntensityList'];
 					tLocation = tLocationInfo['location'];
 					tUUID = tLocationInfo['_UUID'];
 					tValue = tIntensityList;
@@ -446,7 +446,7 @@ var RedRenderer;
 						cacheSystemUniform[tUUID] = tValueStr
 					}
 					//
-					tLocationInfo = tSystemUniformGroup['uPointLightRadius'];
+					tLocationInfo = tSystemUniformGroup['uPointLightRadiusList'];
 					tLocation = tLocationInfo['location'];
 					tUUID = tLocationInfo['_UUID'];
 					tValue = tRadiusList;
@@ -829,7 +829,7 @@ var RedRenderer;
 				tMVMatrix = tMesh['matrix']
 				tNMatrix = tMesh['normalMatrix']
 				tGeometry = tMesh['_geometry']
-				tSprite3DYn = tMesh['sprite3DYn']
+				tSprite3DYn = tMesh['_sprite3DYn']
 				if ( tGeometry ) {
 					tMaterial = subSceneMaterial ? subSceneMaterial : tMesh['_material']
 					prevProgram_UUID == tMaterial['program']['_UUID'] ? 0 : gl.useProgram(tMaterial['program']['webglProgram'])

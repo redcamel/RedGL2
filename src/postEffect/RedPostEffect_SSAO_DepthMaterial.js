@@ -23,14 +23,12 @@ var RedPostEffect_SSAO_DepthMaterial;
 		 void main(void) {
 
 			 gl_PointSize = uPointSize;
-			 if(uSprite3DYn) {
-				 gl_Position = uPMatrix * calSprite3D(uCameraMatrix , uMMatrix) *  vec4(aVertexPosition, 1.0);
-				 if(!uPerspectiveScale){
-					 gl_Position /= gl_Position.w;
-					 gl_Position.xy += aVertexPosition.xy * vec2(uMMatrix[0][0],uMMatrix[1][1]);
-				 }
-			 }
-			 else gl_Position = uPMatrix * uCameraMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
+			 //#define#sprite3D#true# gl_Position = uPMatrix * calSprite3D(uCameraMatrix , uMMatrix) *  vec4(aVertexPosition, 1.0);
+			//#define#sprite3D#true# if(!uPerspectiveScale){
+			//#define#sprite3D#true#   gl_Position /= gl_Position.w;
+			//#define#sprite3D#true#   gl_Position.xy += aVertexPosition.xy * vec2(uMMatrix[0][0],uMMatrix[1][1] * uResolution.x/uResolution.y);
+			//#define#sprite3D#true# }
+			//#define#sprite3D#false# gl_Position = uPMatrix * uCameraMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
 			 mat4 test = uPMatrix * uCameraMatrix;
 			 vCameraPosition = vec3(test[3][0], test[3][1], test[3][2]);
 

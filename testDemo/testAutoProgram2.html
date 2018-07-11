@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>draftShadow</title>
+    <title>testAutoProgram</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -14,10 +14,8 @@
             margin: 0;
             padding: 0;
             overflow: hidden;
-            color: #fff
         }
     </style>
-
     <script src="../example/dat.gui.min.js"></script>
     <script src="../src/gl-matrix-min.js"></script>
     <script src="../src/RedGLUtil.js"></script>
@@ -48,8 +46,8 @@
     <script src="../src/resources/RedAtlasTexture.js"></script>
     <script src="../src/resources/RedBitmapCubeTexture.js"></script>
     <!--재질-->
+
     <script src="../src/material/RedColorMaterial.js"></script>
-    <script src="../src/material/RedColorPhongMaterial.js"></script>
     <script src="../src/material/RedColorPhongTextureMaterial.js"></script>
     <script src="../src/material/RedEnvironmentMaterial.js"></script>
     <script src="../src/material/RedBitmapMaterial.js"></script>
@@ -60,6 +58,7 @@
     <script src="../src/material/RedSheetMaterial.js"></script>
     <script src="../src/material/RedStandardMaterial.js"></script>
     <script src="../src/material/RedVideoMaterial.js"></script>
+
     <!--//-->
     <script src="../src/light/RedAmbientLight.js"></script>
     <script src="../src/light/RedDirectionalLight.js"></script>
@@ -128,16 +127,17 @@
     <script src="../src/postEffect/RedPostEffect_Film.js"></script>
     <script src="../src/postEffect/RedPostEffect_Vignetting.js"></script>
     <script src="../src/postEffect/antialiasing/RedPostEffect_FXAA.js"></script>
-    <script src="rStats.js"></script>
-    <link href="rStats.css" rel="stylesheet">
 </head>
 
 <body>
 <canvas id="test" style="border: none;background:red"></canvas>
+<div id='program' style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:20px;color:#fff">
+    testest
+</div>
 <script>
-	document.getElementById('test')
-	RedGL(document.getElementById('test'), function (v) {
-		console.log(v)
+	var t = document.getElementById('test')
+	document.body.appendChild(t)
+	RedGL(t, function (v) {
 		var tGL;
 		var tWorld, tScene3D, tCamera
 		var tRenderer;
@@ -146,24 +146,43 @@
 		tGL = this.gl;
 		this.world = tWorld = RedWorld();
 		tScene3D = RedScene(this);
-		// tScene3D['useFog'] = true
-		tCamera = RedObitController(this);
-		tCamera.tilt = -45
-		tCamera.distance = 100
+		tCamera = RedObitController(this)
+		var testDLight, testALight;
+		testDLight = RedDirectionalLight(this, '#fff')
+		testALight = RedAmbientLight(this, '#111', 1)
+		tScene3D.addLight(testALight)
+		tScene3D.addLight(testDLight)
+		var testPLight = RedPointLight(this, '#ff0000')
+		testPLight.x = -3
+		testPLight.y = -3
+		testPLight.z = -3
+		testPLight['radius'] = 4
+		testPLight['intensity'] = 1
+		testPLight.debug = true
+		tScene3D.addLight(testPLight)
+		var testPLight2 = RedPointLight(this, '#00ff00')
+		testPLight2.x = -3
+		testPLight2.y = -3
+		testPLight2.z = -3
+		testPLight2['radius'] = 10
+		testPLight2['intensity'] = 1
+		testPLight2.debug = true
+		tScene3D.addLight(testPLight2)
 		tRenderer = RedRenderer();
 		tWorld.addView(RedView('test', this, tScene3D, tCamera));
 		RedView('test').setSize('100%', '100%')
 		RedView('test').setLocation('0%', '0%')
-		this.renderScale = 1
-		var testDLight, testALight, testPLight;
-		testDLight = RedDirectionalLight(this)
-		testDLight.x = 13
-		testDLight.y = 20
-		testDLight.z = 13
-		testDLight.debug = true
-		tScene3D.addLight(testDLight)
-		var bloom = RedPostEffect_Bloom(this)
-		RedView('test')['postEffectManager'].addEffect(bloom)
+		var testMaterial
+		var testTextureMap = {
+			diffuseTexture: RedBitmapTexture(this, '../asset/crate.png')
+		}
+		testMaterial = RedBitmapMaterial(
+			this,
+			testTextureMap['diffuseTexture']
+		)
+//		testMaterial = RedColorMaterial(this)
+//		testMaterial = RedVideoMaterial(this,RedVideoTexture(this,'../asset/mov_bbb.mp4'))
+//		testMaterial = RedSheetMaterial(this,testTextureMap['diffuseTexture'],60,5,1,25)
 		tScene3D.skyBox =
 			RedSkyBox(this, [
 				'../asset/cubemap/posx.png',
@@ -173,116 +192,76 @@
 				'../asset/cubemap/posz.png',
 				'../asset/cubemap/negz.png'
 			]);
-		// tScene3D['grid'] = RedGrid(self)
-		var tShadow = RedDirectionalShadow(this, testDLight)
-		tScene3D.shadowManager.directionalShadow = tShadow
-		var max = i = 250
-		var j
-		var k
-		var tMesh;
-		var tGeo = RedSphere(self)
-		var tMat = RedStandardMaterial(
-			self,
-			RedBitmapTexture(self, '../asset/crate.png')
-		)
-		var tMat2 = RedColorMaterial(
-			self
-		)
-		var tMat3 = RedColorPhongMaterial(
-			self
-		)
-		while ( i-- ) {
-			tMat.shininess = 8
-			tMesh = RedMesh(self, tGeo, Math.random() < 0.5 ? tMat : Math.random() < 0.5 ? tMat2 : tMat3)
-			tMesh.scaleX = tMesh.scaleY = tMesh.scaleZ = 1
-			tMesh.rotationX = tMesh.rotationY = tMesh.rotationZ = Math.random() * 360
-			tMesh.x = Math.random() * 50 - 25
-			tMesh.y = Math.random() * 20 - 10
-			tMesh.z = Math.random() * 50 - 25
-			if ( Math.random() < 0.5 ) tMesh.drawMode = self.gl.LINES
-			tScene3D.addChild(tMesh)
-			tShadow.addCasting(tMesh)
-		}
-		var tGeo = RedBox(self, 10, 10, 10, 50, 50, 50)
-		var tMesh2 = RedMesh(self, tGeo, tMat)
-		tMesh2.scaleX = tMesh2.scaleY = tMesh2.scaleZ = 5
-		tMesh2.y = -25
-		tScene3D.addChild(tMesh2)
-		var aaaa
-		RedOBJLoader(this, '../asset/obj/rabbit/', 'Rabbit.obj', function (v) {
-			console.log('호잇!', v)
-			tScene3D.addChild(v['resultMesh'])
-			tShadow.addCasting(v['resultMesh'])
-			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 10
-		})
-		RedOBJLoader(this, '../asset/obj/', 'female.obj', function (v) {
-			console.log('호잇!', v)
-			var i = 25
+		JsonModelLoader(this, 'testJsonModel', '../asset/teapot.json', function (interleaveBuffer, indexBuffer) {
+			console.log('호잇!', interleaveBuffer, indexBuffer)
+			var i = 1000
 			while ( i-- ) {
-				var t0;
-				t0 = RedMesh(self)
-				t0['children'] = v['resultMesh']['children'].concat()
-				t0.x = Math.random() * 30 - 15
-				t0.z = Math.random() * 30 - 15
-				t0.scaleX = t0.scaleY = t0.scaleZ = 0.05
-				tShadow.addCasting(t0)
-				tScene3D.addChild(t0)
+				var testMesh = RedSprite3D(self, testMaterial)
+				testMesh.x = Math.random() * 250 - 125
+				testMesh.y = Math.random() * 250 - 125
+				testMesh.z = Math.random() * 250 - 125
+				testMesh.rotationX = Math.random() * 360
+				testMesh.rotationY = Math.random() * 360
+				testMesh.rotationZ = Math.random() * 360
+				tScene3D.addChild(testMesh)
 			}
-		})
-		RedOBJLoader(this, '../asset/obj/', 'WaltHead.obj', function (v) {
-			console.log('호잇!', v)
-			tScene3D.addChild(v['resultMesh'])
-			tShadow.addCasting(v['resultMesh'])
-			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.25
-			v['resultMesh'].x = 15
-		})
-		RedOBJLoader(this, '../asset/obj/', 'cube.obj', function (v) {
-			console.log('호잇!', v)
-			tScene3D.addChild(v['resultMesh'])
-			v['resultMesh'].x = -15
-			tShadow.addCasting(v['resultMesh'])
-		})
-		RedOBJLoader(this, '../asset/obj/', 'tree.obj', function (v) {
-			console.log('호잇!', v)
-			tScene3D.addChild(v['resultMesh'])
-			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 20
-			v['resultMesh'].z = 20
-			tShadow.addCasting(v['resultMesh'])
 		})
 		tRenderer.renderDebuger.visible = true
-		var rS = new rStats();
-		rS('total').start();
+		var tProgramDom = document.querySelector('#program')
 		tRenderer.start(this, function (time) {
-//			testDLight.x = Math.sin(time / 1000) * 30
-//			testDLight.z = Math.cos(time / 1000) * 30
-//			testDLight.y = 30
-//			tScene3D['children'][0].x = Math.sin(time / 1000)*6
-//			tScene3D['children'][0].z = Math.cos(time / 1000)
+			// testInterleaveBuffer.upload(interleaveData)
 			var i = tScene3D.children.length
-			while ( i-- ) {
-				if ( tMesh2 == tScene3D.children[i] || aaaa == tScene3D.children[i] ) {
-				} else {
-					tScene3D['children'][i].rotationY -= 1
-				}
-			}
-			rS('total').end();
-			rS().update();
-			rS('total').start();
+//			while ( i-- ) {
+//				if ( i == 0 ) break
+//				testMesh = tScene3D.children[i]
+//				testMesh.rotationX += 0.1
+//				testMesh.rotationY += 0.1
+//				testMesh.rotationZ += 0.1
+//			}
+			tProgramDom.innerHTML = '현재프로그램 : ' + testMaterial['program']['key']
+			testDLight.x = Math.sin(time / 1500) * 10
+			testDLight.y = Math.cos(time / 1500) * 10
+			testDLight.z = Math.cos(time / 1500) * 10
+			testMaterial['displacementPower'] = Math.sin(time / 100)
+			// tCamera.z = 20
+			// tCamera.lookAt(0, 0, 0)
+			testPLight.x = -Math.sin(time / 1500) * 5
+			testPLight.y = 2
+			testPLight.z = -Math.cos(time / 1500) * 5
+			testPLight2.x = Math.sin(time / 1500) * 18.5
+			testPLight2.y = 0
+			testPLight2.z = Math.cos(time / 1500) * 18.5
 		})
 		this['gui'] = new dat.GUI({
 			name: 'test'
 		});
-		var t0 = this['gui'].addFolder('bloom')
-		t0.add(bloom, 'exposure', 0, 2)
-		t0.add(bloom, 'bloomStrength', 0, 2)
-		t0.add(bloom, 'blur', 0, 100)
-		t0.add(bloom, 'threshold', 0, 100)
+		var testData = {
+			state: testMaterial.program.key,
+			sprite3DYn: true,
+			perspectiveScale: true
+		}
+		var t0 = this['gui'].addFolder('autoProgramTest')
+		t0.autoPlace = false
+		t0.add(tScene3D, 'useFog', true, false)
+		t0.add(testData, 'sprite3DYn', true, false).onChange(function (v) {
+			var i = tScene3D.children.length
+			var testMesh
+			while ( i-- ) {
+				testMesh = tScene3D.children[i]
+				testMesh.sprite3DYn = v
+			}
+			tCamera.distance = 10
+		})
+		t0.add(testData, 'perspectiveScale', true, false).onChange(function (v) {
+			var i = tScene3D.children.length
+			var testMesh
+			while ( i-- ) {
+				testMesh = tScene3D.children[i]
+				testMesh.perspectiveScale = v
+			}
+		})
 		t0.open()
-		var t0 = this['gui'].addFolder('directionalShadow')
-		t0.add(tShadow, 'width', 1, 4086)
-		t0.add(tShadow, 'height', 1, 4086)
-		t0.add(tShadow, 'size', 1, 100)
-		t0.open()
+		console.log(tScene3D)
 	})
 </script>
 </body>
