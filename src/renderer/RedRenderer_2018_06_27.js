@@ -156,14 +156,14 @@ var RedRenderer;
 				uPMatrix: null,
 				uAmbientLightColor: [0, 0, 0, 0],
 				uAmbientIntensity: 1,
-				uDirectionalLightPosition: [],
-				uDirectionalLightColor: [],
-				uDirectionalLightIntensity: [],
+				uDirectionalLightPositionList: [],
+				uDirectionalLightColorList: [],
+				uDirectionalLightIntensityList: [],
 				uDirectionalLightNum: [],
-				uPointLightPosition: [],
-				uPointLightColor: [],
-				uPointLightIntensity: [],
-				uPointLightRadius: [],
+				uPointLightPositionList: [],
+				uPointLightColorList: [],
+				uPointLightIntensityList: [],
+				uPointLightRadiusList: [],
 				uPointLightNum: [],
 				uDirectionalShadowTexture: false
 			}
@@ -255,7 +255,7 @@ var RedRenderer;
 							lightDebugRenderList.push(tDebugObj)
 						}
 						//
-						tLocationInfo = tSystemUniformGroup['uDirectionalLightPosition'];
+						tLocationInfo = tSystemUniformGroup['uDirectionalLightPositionList'];
 						if ( tLocationInfo ) {
 							tLocation = tLocationInfo['location'];
 							if ( tLocation ) {
@@ -266,7 +266,7 @@ var RedRenderer;
 							}
 						}
 						//
-						tLocationInfo = tSystemUniformGroup['uDirectionalLightColor'];
+						tLocationInfo = tSystemUniformGroup['uDirectionalLightColorList'];
 						if ( tLocationInfo ) {
 							tLocation = tLocationInfo['location'];
 							if ( tLocation ) {
@@ -277,14 +277,14 @@ var RedRenderer;
 							}
 						}
 						if ( tLocationInfo ) {
-							tLocationInfo = tSystemUniformGroup['uDirectionalLightIntensity'];
+							tLocationInfo = tSystemUniformGroup['uDirectionalLightIntensityList'];
 							tLocation = tLocationInfo['location'];
 							if ( tLocation ) tIntensityList[i] = tLightData['_intensity']
 						}
 					}
-					updateSystemUniformInfo['uDirectionalLightPosition'] = tDirectionalPositionList;
-					updateSystemUniformInfo['uDirectionalLightColor'] = tColorList;
-					updateSystemUniformInfo['uDirectionalLightIntensity'] = tIntensityList;
+					updateSystemUniformInfo['uDirectionalLightPositionList'] = tDirectionalPositionList;
+					updateSystemUniformInfo['uDirectionalLightColorList'] = tColorList;
+					updateSystemUniformInfo['uDirectionalLightIntensityList'] = tIntensityList;
 					updateSystemUniformInfo['uDirectionalLightNum'] = tList.length;
 					// 포인트 라이트 업데이트
 					tVector = vec3.create()
@@ -307,7 +307,7 @@ var RedRenderer;
 							lightDebugRenderList.push(tDebugObj)
 						}
 						//
-						tLocationInfo = tSystemUniformGroup['uPointLightPosition'];
+						tLocationInfo = tSystemUniformGroup['uPointLightPositionList'];
 						tLocation = tLocationInfo['location'];
 						if ( tLocation ) {
 							tPointPositionList[0 + 3 * i] = tVector[0];
@@ -315,7 +315,7 @@ var RedRenderer;
 							tPointPositionList[2 + 3 * i] = tVector[2];
 						}
 						//
-						tLocationInfo = tSystemUniformGroup['uPointLightColor'];
+						tLocationInfo = tSystemUniformGroup['uPointLightColorList'];
 						tLocation = tLocationInfo['location'];
 						if ( tLocation ) {
 							tColorList[0 + 4 * i] = tLightData['_color'][0];
@@ -324,18 +324,18 @@ var RedRenderer;
 							tColorList[3 + 4 * i] = tLightData['_color'][3];
 						}
 						//
-						tLocationInfo = tSystemUniformGroup['uPointLightIntensity'];
+						tLocationInfo = tSystemUniformGroup['uPointLightIntensityList'];
 						tLocation = tLocationInfo['location'];
 						if ( tLocation ) tIntensityList[i] = tLightData['_intensity']
 						//
-						tLocationInfo = tSystemUniformGroup['uPointLightRadius'];
+						tLocationInfo = tSystemUniformGroup['uPointLightRadiusList'];
 						tLocation = tLocationInfo['location'];
 						if ( tLocation ) tRadiusList[i] = tLightData['_radius']
 					}
-					updateSystemUniformInfo['uPointLightPosition'] = tPointPositionList;
-					updateSystemUniformInfo['uPointLightColor'] = tColorList;
-					updateSystemUniformInfo['uPointLightIntensity'] = tIntensityList;
-					updateSystemUniformInfo['uPointLightRadius'] = tRadiusList;
+					updateSystemUniformInfo['uPointLightPositionList'] = tPointPositionList;
+					updateSystemUniformInfo['uPointLightColorList'] = tColorList;
+					updateSystemUniformInfo['uPointLightIntensityList'] = tIntensityList;
+					updateSystemUniformInfo['uPointLightRadiusList'] = tRadiusList;
 					updateSystemUniformInfo['uPointLightNum'] = tList.length;
 					// 업데이트
 					for ( var k2 in updateSystemUniformInfo ) {
@@ -601,7 +601,7 @@ var RedRenderer;
 				}
 				tNMatrix = tMesh['normalMatrix']
 				tGeometry = tMesh['_geometry']
-				tSprite3DYn = tMesh['sprite3DYn']
+				tSprite3DYn = tMesh['_sprite3DYn']
 				if ( tGeometry ) {
 					tMaterial = subSceneMaterial ? subSceneMaterial : tMesh['_material']
 					tDirectionalShadowMaterialYn = tMaterial instanceof RedDirectionalShadowMaterial;

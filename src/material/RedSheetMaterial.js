@@ -26,13 +26,12 @@ var RedSheetMaterial;
 				vTexcoord.t * u_sheetRect.y - u_sheetRect.w
 			);
 			gl_PointSize = uPointSize;
-			if(uSprite3DYn) {
-				gl_Position = uPMatrix * calSprite3D(uCameraMatrix , uMMatrix) *  vec4(aVertexPosition, 1.0);
-				if(!uPerspectiveScale){
-					gl_Position /= gl_Position.w;
-					gl_Position.xy += aVertexPosition.xy * vec2(uMMatrix[0][0],uMMatrix[1][1]);
-				}
-			} else gl_Position = uPMatrix * uCameraMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
+			//#define#sprite3D#true# gl_Position = uPMatrix * calSprite3D(uCameraMatrix , uMMatrix) *  vec4(aVertexPosition, 1.0);
+			//#define#sprite3D#true# if(!uPerspectiveScale){
+			//#define#sprite3D#true#   gl_Position /= gl_Position.w;
+			//#define#sprite3D#true#   gl_Position.xy += aVertexPosition.xy * vec2(uMMatrix[0][0],uMMatrix[1][1] * uResolution.x/uResolution.y);
+			//#define#sprite3D#true# }
+			//#define#sprite3D#false# gl_Position = uPMatrix * uCameraMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
 		}
 		 */
 	}
@@ -84,6 +83,10 @@ var RedSheetMaterial;
 	RedSheetMaterial = function (redGL, diffuseTexture, frameRate, segmentW, segmentH, totalFrame) {
 		if ( !(this instanceof RedSheetMaterial) ) return new RedSheetMaterial(redGL, diffuseTexture, frameRate, segmentW, segmentH, totalFrame);
 		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedSheetMaterial : RedGL Instance만 허용됩니다.', redGL)
+		frameRate = frameRate || 60
+		segmentW = segmentW || 1
+		segmentH = segmentH || 1
+		totalFrame = totalFrame || 1
 		this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource)
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티

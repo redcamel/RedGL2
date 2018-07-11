@@ -202,7 +202,7 @@
 			]);
 		JsonModelLoader(this, 'testJsonModel', '../asset/teapot.json', function (interleaveBuffer, indexBuffer) {
 			console.log('호잇!', interleaveBuffer, indexBuffer)
-			var i = 9000
+			var i = 7000
 			while ( i-- ) {
 				var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer), testMaterial)
 				testMesh.x = Math.random() * 250 - 125
@@ -219,7 +219,7 @@
 		var tProgramDom = document.querySelector('#program')
 		tRenderer.start(this, function (time) {
 			// testInterleaveBuffer.upload(interleaveData)
-			var i = tScene3D.children.length
+//			var i = tScene3D.children.length
 //			while ( i-- ) {
 //				if ( i == 0 ) break
 //				testMesh = tScene3D.children[i]
@@ -227,7 +227,7 @@
 //				testMesh.rotationY += 0.1
 //				testMesh.rotationZ += 0.1
 //			}
-			tProgramDom.innerHTML = '현재프로그램 : ' + testMaterial['program']['key']
+			tProgramDom.innerHTML = '현재프로그램 : ' + (tScene3D['useFog'] ? testMaterial['_programList']['fog'][testMaterial['program']['key']]['key'] : testMaterial['program']['key'])
 			testDLight.x = Math.sin(time / 1500) * 10
 			testDLight.y = Math.cos(time / 1500) * 10
 			testDLight.z = Math.cos(time / 1500) * 10
@@ -246,7 +246,21 @@
 		});
 		var testData = {
 			state: testMaterial.program.key,
-			sprite3DYn: false
+			sprite3DYn: false,
+			addSphere500: function () {
+				var i = 500
+				while ( i-- ) {
+					var testMesh = RedMesh(self, RedSphere(self, 5, 16, 16, 16), testMaterial)
+					testMesh.x = Math.random() * 250 - 125
+					testMesh.y = Math.random() * 250 - 125
+					testMesh.z = Math.random() * 250 - 125
+					testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.3
+					testMesh.rotationX = Math.random() * 360
+					testMesh.rotationY = Math.random() * 360
+					testMesh.rotationZ = Math.random() * 360
+					tScene3D.addChild(testMesh)
+				}
+			}
 		}
 		var t0 = this['gui'].addFolder('autoProgramTest')
 		t0.autoPlace = false
@@ -256,14 +270,6 @@
 			tList.push(testMaterial._programList['basic'][k]['key'].replace('environmentProgram_', ''))
 		}
 		t0.add(tScene3D, 'useFog', true, false)
-		t0.add(testData, 'sprite3DYn', true, false).onChange(function(v){
-			var i = tScene3D.children.length
-			while ( i-- ) {
-				testMesh = tScene3D.children[i]
-				testMesh.sprite3DYn = v
-			}
-        })
-
 		t0.add(testData, 'state', tList).onChange(function (v) {
 			v = v.split('_')
 			testMaterial.diffuseTexture = null
@@ -275,6 +281,7 @@
 			})
 			console.log(v)
 		})
+		t0.add(testData, 'addSphere500')
 		t0.open()
 		console.log(tScene3D)
 	})

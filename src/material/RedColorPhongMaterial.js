@@ -62,26 +62,26 @@ var RedColorPhongMaterial;
 
 			 for(int i=0; i<cDIRETIONAL_MAX; i++){
 				 if(i == uDirectionalLightNum) break;
-				 L = normalize(-uDirectionalLightPosition[i]);
+				 L = normalize(-uDirectionalLightPositionList[i]);
 				 lambertTerm = dot(N,-L);
 				 if(lambertTerm > 0.0){
-					 ld += uDirectionalLightColor[i] * texelColor * lambertTerm * uDirectionalLightIntensity[i] * uDirectionalLightColor[i].a;
+					 ld += uDirectionalLightColorList[i] * texelColor * lambertTerm * uDirectionalLightIntensityList[i] * uDirectionalLightColorList[i].a;
 					 specular = pow( max(dot(reflect(L, N), -L), 0.0), u_shininess);
-					 ls +=  specularLightColor * specular * u_specularPower * specularTextureValue * uDirectionalLightIntensity[i];
+					 ls +=  specularLightColor * specular * u_specularPower * specularTextureValue * uDirectionalLightIntensityList[i];
 				 }
 			 }
 			 for(int i=0;i<cPOINT_MAX;i++){
 				 if(i== uPointLightNum) break;
-				 L =  -uPointLightPosition[i] + vVertexPositionEye4.xyz;
+				 L =  -uPointLightPositionList[i] + vVertexPositionEye4.xyz;
 				 distanceLength = length(L);
-				 if(uPointLightRadius[i]> distanceLength){
+				 if(uPointLightRadiusList[i]> distanceLength){
 					 attenuation = 1.0 / (0.01 + 0.02 * distanceLength + 0.03 * distanceLength * distanceLength);
 					 L = normalize(L);
 					 lambertTerm = dot(N,-L);
 					 if(lambertTerm > 0.0){
-						 ld += uPointLightColor[i] * texelColor * lambertTerm * attenuation * uPointLightIntensity[i] * uPointLightColor[i].a;
+						 ld += uPointLightColorList[i] * texelColor * lambertTerm * attenuation * uPointLightIntensityList[i] * uPointLightColorList[i].a;
 						 specular = pow( max(dot( reflect(L, N), -L), 0.0), u_shininess);
-						 ls +=  specularLightColor * specular * u_specularPower * specularTextureValue * uPointLightIntensity[i] ;
+						 ls +=  specularLightColor * specular * u_specularPower * specularTextureValue * uPointLightIntensityList[i] ;
 					 }
 				 }
 			 }
