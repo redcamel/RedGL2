@@ -369,6 +369,10 @@ var RedRenderer;
 			var tRadian, CPI, CPI2, C225, C127, C045, C157;
 			// LOD 관련
 			var lodX, lodY, lodZ, lodDistance;
+			// 프로그램 성택관련
+			var tUseDirectionalShadow
+			var tProgramList;
+			var tBaseProgramKey;
 			//////////////// 변수값 할당 ////////////////
 			BYTES_PER_ELEMENT = Float32Array.BYTES_PER_ELEMENT;
 			CONVERT_RADIAN = Math.PI / 180;
@@ -421,9 +425,23 @@ var RedRenderer;
 					// 재질 캐싱
 					// Program 판단
 					//TODO: 프로그램 생성로직정리후 선택로직 확정
-					scene['useFog'] && tSprite3DYn ? tProgram = tMaterial['_programList']['fog_sprite3D'][tMaterial['program']['key']] :
-						tSprite3DYn ? tProgram = tMaterial['_programList']['sprite3D'][tMaterial['program']['key']] :
-							scene['useFog'] ? tProgram = tMaterial['_programList']['fog'][tMaterial['program']['key']] : tProgram = tMaterial['program']
+					tUseDirectionalShadow = scene['shadowManager']['_directionalShadow'];
+					tProgram = tMaterial['program']
+					tBaseProgramKey = tProgram['key']
+					tProgramList = tMaterial['_programList']
+					if ( tProgramList ) {
+						if ( tUseDirectionalShadow ) {
+							if ( scene['useFog'] && tSprite3DYn ) tProgram = tProgramList['directionalShadow_fog_sprite3D'][tBaseProgramKey]
+							else if ( tSprite3DYn ) tProgram = tProgramList['directionalShadow_sprite3D'][tBaseProgramKey]
+							else if ( scene['useFog'] ) tProgram = tProgramList['directionalShadow_fog'][tBaseProgramKey]
+							else tProgram = tProgramList['directionalShadow'][tBaseProgramKey]
+						}
+						else {
+							if ( scene['useFog'] && tSprite3DYn ) tProgram = tProgramList['fog_sprite3D'][tBaseProgramKey]
+							else if ( tSprite3DYn ) tProgram = tProgramList['sprite3D'][tBaseProgramKey]
+							else if ( scene['useFog'] ) tProgram = tProgramList['fog'][tBaseProgramKey]
+						}
+					}
 					//
 					prevProgram_UUID == tProgram['_UUID'] ? 0 : tGL.useProgram(tProgram['webglProgram'])
 					prevProgram_UUID = tProgram['_UUID']

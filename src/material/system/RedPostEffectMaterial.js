@@ -2,7 +2,7 @@
 var RedPostEffectMaterial;
 (function () {
 	var vSource, fSource;
-	var PROGRAM_NAME = 'RedPostEffectMaterial_Program';
+	var PROGRAM_NAME = 'RedPostEffectMaterialProgram';
 	vSource = function () {
 		/* @preserve
 		 void main(void) {

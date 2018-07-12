@@ -2,7 +2,7 @@
 var RedPostEffect_Threshold;
 (function () {
 	var vSource, fSource;
-	var PROGRAM_NAME = 'RedPostEffect_Threshold_Program';
+	var PROGRAM_NAME = 'RedPostEffectThresholdProgram';
 	vSource = function () {
 		/* @preserve
 		 void main(void) {

@@ -26,11 +26,11 @@ var RedStandardMaterial;
 			 gl_PointSize = uPointSize;
 			 gl_Position = uPMatrix * uCameraMatrix * vVertexPositionEye4;
 
-			 if(uUseDirectionalShadow){
-		        vResolution = uResolution;
-			    vShadowPos = cTexUnitConverter  *  uDirectionalShadowLightMatrix * uMMatrix * vec4(aVertexPosition, 1.0);
-			    vUseDirectionalShadow = 1.0;
-			 }
+
+		     //#define#directionalShadow#true# vResolution = uResolution;
+			 //#define#directionalShadow#true# vShadowPos = cTexUnitConverter  *  uDirectionalShadowLightMatrix * uMMatrix * vec4(aVertexPosition, 1.0);
+
+
 		 }
 		 */
 	}
@@ -92,26 +92,25 @@ var RedStandardMaterial;
 
 			///////////////////////////////////////////////////////////////////////////////////////
 
-			if(vUseDirectionalShadow != 0.0){
-				vec3 fragmentDepth = vShadowPos.xyz;
-	            fragmentDepth.z -= cShadowAcneRemover;
-				float amountInLight = 0.0;
 
-				for (int x = -1; x <= 1; x++) {
-				    for (int y = -1; y <= 1; y++) {
-				        vec2 tUV = fragmentDepth.xy + vec2(float(x)/vResolution.x, float(y)/vResolution.y) ;
-	                    if(tUV.x<0.0) continue;
-	                    if(tUV.x>1.0) continue;
-	                    if(tUV.y<0.0) continue;
-	                    if(tUV.y>1.0) continue;
-				        float texelDepth = decodeFloat(texture2D(uDirectionalShadowTexture,tUV));
-				        if (fragmentDepth.z < texelDepth) amountInLight += 0.5;
-				       // texelColor =  texture2D(uDirectionalShadowTexture,tUV);
-				    }
-				}
-				amountInLight /= 9.0;
-				texelColor.rgb *= (1.0-amountInLight);
-			}
+			//#define#directionalShadow#true#	vec3 fragmentDepth = vShadowPos.xyz;
+	        //#define#directionalShadow#true#    fragmentDepth.z -= cShadowAcneRemover;
+			//#define#directionalShadow#true#	float amountInLight = 0.0;
+			//#define#directionalShadow#true#	for (int x = -1; x <= 1; x++) {
+			//#define#directionalShadow#true#	    for (int y = -1; y <= 1; y++) {
+			//#define#directionalShadow#true#	        vec2 tUV = fragmentDepth.xy + vec2(float(x)/vResolution.x, float(y)/vResolution.y) ;
+	        //#define#directionalShadow#true#            if(tUV.x<0.0) continue;
+	        //#define#directionalShadow#true#            if(tUV.x>1.0) continue;
+	        //#define#directionalShadow#true#            if(tUV.y<0.0) continue;
+	        //#define#directionalShadow#true#            if(tUV.y>1.0) continue;
+			//#define#directionalShadow#true#	        float texelDepth = decodeFloat(texture2D(uDirectionalShadowTexture,tUV));
+			//#define#directionalShadow#true#	        if (fragmentDepth.z < texelDepth) amountInLight += 0.5;
+			//#define#directionalShadow#true#	       // texelColor =  texture2D(uDirectionalShadowTexture,tUV);
+			//#define#directionalShadow#true#	    }
+			//#define#directionalShadow#true#	}
+			//#define#directionalShadow#true#	amountInLight /= 9.0;
+			//#define#directionalShadow#true#	texelColor.rgb *= (1.0-amountInLight);
+
 			///////////////////////////////////////////////////////////////////////////////////////
 
 			 N = normalize(vVertexNormal);

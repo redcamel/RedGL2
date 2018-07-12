@@ -2,7 +2,7 @@
 var RedBitmapMaterial;
 (function () {
 	var vSource, fSource;
-	var PROGRAM_NAME = 'RedBitmapMaterial_Program';
+	var PROGRAM_NAME = 'RedBitmapMaterialProgram';
 	vSource = function () {
 		/* @preserve
 		mat4 calSprite3D(mat4 cameraMTX, mat4 mvMatrix){

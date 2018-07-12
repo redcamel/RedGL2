@@ -43,9 +43,7 @@ var RedSystemShaderCode;
 			'uniform bool uPerspectiveScale',
 			// shadow
 			'uniform mat4 uDirectionalShadowLightMatrix',
-			'uniform bool uUseDirectionalShadow',
 			'varying highp vec4 vShadowPos',
-			'varying float vUseDirectionalShadow',
 			'const mat4 cTexUnitConverter = mat4(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.5, 0.5, 0.5, 1.0)'
 		],
 		/**DOC:
@@ -86,7 +84,6 @@ var RedSystemShaderCode;
 			// shadow
 			'uniform sampler2D uDirectionalShadowTexture',
 			'varying highp vec4 vShadowPos',
-			'varying float vUseDirectionalShadow',
 		],
 		systemUniform: {}
 	};

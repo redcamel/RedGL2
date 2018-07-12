@@ -2,7 +2,7 @@
 var RedPostEffect_SSAO_PointMaker;
 (function () {
 	var vSource, fSource;
-	var PROGRAM_NAME = 'RedPostEffect_SSAO_PointMaker_Program';
+	var PROGRAM_NAME = 'RedPostEffectSSAO_PointMakerProgram';
 	vSource = function () {
 		/* @preserve
 

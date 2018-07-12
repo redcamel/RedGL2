@@ -302,10 +302,12 @@ var RedProgram;
 		return redGL['_datas']['RedProgram'][key] ? true : false
 	}
 	RedProgram['makeProgram'] = function (redGL, programName, vSource, fSource, option) {
+		if ( programName.indexOf('_') > -1 ) RedGLUtil.throwFunc('RedProgram : 프로그램이름에 _ 는 허용하지 않음.', '입력값 : ' + programName);
 		vSource = RedGLUtil.getStrFromComment(vSource.toString());
 		fSource = RedGLUtil.getStrFromComment(fSource.toString());
 		var hasFog = false
 		var hasSprite3D = false
+		var hasDirectionalShadow = false
 		if ( option ) {
 			option.sort()
 			programName += '_' + option.join('_');
@@ -314,7 +316,8 @@ var RedProgram;
 			while ( i-- ) {
 				if ( option[i] == 'fog' ) hasFog = true;
 				if ( option[i] == 'sprite3D' ) hasSprite3D = true;
-				if ( option[i] == 'fog' || option[i] == 'sprite3D' ) continue;
+				if ( option[i] == 'directionalShadow' ) hasDirectionalShadow = true;
+				if ( option[i] == 'fog' || option[i] == 'sprite3D' || option[i] == 'directionalShadow' ) continue;
 				var t0 = new RegExp('\/\/\#define\#' + option[i] + '\#', 'gi')
 				// console.log(t0)
 				vSource = vSource.replace(t0, '')
@@ -326,6 +329,9 @@ var RedProgram;
 		vSource = vSource.replace(t0, '')
 		fSource = fSource.replace(t0, '')
 		var t0 = new RegExp('\/\/\#define\#sprite3D\#' + (hasSprite3D ? 'true' : 'false') + '\#', 'gi')
+		vSource = vSource.replace(t0, '')
+		fSource = fSource.replace(t0, '')
+		var t0 = new RegExp('\/\/\#define\#directionalShadow\#' + (hasDirectionalShadow ? 'true' : 'false') + '\#', 'gi')
 		vSource = vSource.replace(t0, '')
 		fSource = fSource.replace(t0, '')
 		// console.log(programName)

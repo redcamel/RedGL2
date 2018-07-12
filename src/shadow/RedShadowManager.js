@@ -54,7 +54,7 @@ var RedShadowManager;
 	Object.defineProperty(RedShadowManager.prototype, 'directionalShadow', {
 		get: function () { return this['_directionalShadow']},
 		set: function (v) {
-			(v && v instanceof RedDirectionalShadow) || RedGLUtil.throwFunc('RedShadowManager - directionalShadow : RedDirectionalShadow Instance만 허용됩니다.', v);
+			(!v || v instanceof RedDirectionalShadow) || RedGLUtil.throwFunc('RedShadowManager - directionalShadow : RedDirectionalShadow Instance만 허용됩니다.', v);
 			this['_directionalShadow'] = v
 		}
 	})

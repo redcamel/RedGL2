@@ -30,7 +30,11 @@ var RedBaseMaterial;
 						target['_programList']['basic'][programName + '_' + tKey] = RedProgram['makeProgram'](redGL, programName, vSource, fSource, tKey.split('_'))
 						target['_programList']['fog'][programName + '_' + tKey] = RedProgram['makeProgram'](redGL, programName, vSource, fSource, (tKey + '_fog').split('_'))
 						target['_programList']['sprite3D'][programName + '_' + tKey] = RedProgram['makeProgram'](redGL, programName, vSource, fSource, (tKey + '_sprite3D').split('_'))
-						target['_programList']['fog_sprite3D'][programName + '_' + tKey] = RedProgram['makeProgram'](redGL, programName, vSource, fSource, (tKey + 'fog_sprite3D').split('_'))
+						target['_programList']['fog_sprite3D'][programName + '_' + tKey] = RedProgram['makeProgram'](redGL, programName, vSource, fSource, (tKey + '_fog_sprite3D').split('_'))
+						target['_programList']['directionalShadow'][programName + '_' + tKey] = RedProgram['makeProgram'](redGL, programName, vSource, fSource, (tKey + '_directionalShadow').split('_'))
+						target['_programList']['directionalShadow_fog'][programName + '_' + tKey] = RedProgram['makeProgram'](redGL, programName, vSource, fSource, (tKey + '_directionalShadow_fog').split('_'))
+						target['_programList']['directionalShadow_sprite3D'][programName + '_' + tKey] = RedProgram['makeProgram'](redGL, programName, vSource, fSource, (tKey + '_directionalShadow_sprite3D').split('_'))
+						target['_programList']['directionalShadow_fog_sprite3D'][programName + '_' + tKey] = RedProgram['makeProgram'](redGL, programName, vSource, fSource, (tKey + '_directionalShadow_fog_sprite3D').split('_'))
 					}
 					makeList(target, tKey, redGL, programName, vSource, fSource, (programOptionList.concat()).slice(i + 1))
 				}
@@ -45,7 +49,11 @@ var RedBaseMaterial;
 						basic: {},
 						fog: {},
 						sprite3D: {},
-						fog_sprite3D: {}
+						fog_sprite3D: {},
+						directionalShadow: {},
+						directionalShadow_fog: {},
+						directionalShadow_sprite3D: {},
+						directionalShadow_fog_sprite3D: {}
 					}
 					makeList(target, '', redGL, programName, vSource, fSource, programOptionList)
 					// console.log(target['_programList'])
@@ -54,6 +62,10 @@ var RedBaseMaterial;
 					target['_programList']['fog'][programName] = RedProgram['makeProgram'](redGL, programName, vSource, fSource, ['fog'])
 					target['_programList']['sprite3D'][programName] = RedProgram['makeProgram'](redGL, programName, vSource, fSource, ['sprite3D'])
 					target['_programList']['fog_sprite3D'][programName] = RedProgram['makeProgram'](redGL, programName, vSource, fSource, ['fog', 'sprite3D'])
+					target['_programList']['directionalShadow'][programName] = RedProgram['makeProgram'](redGL, programName, vSource, fSource, ['directionalShadow'])
+					target['_programList']['directionalShadow_fog'][programName] = RedProgram['makeProgram'](redGL, programName, vSource, fSource, ['fog', 'directionalShadow'])
+					target['_programList']['directionalShadow_sprite3D'][programName] = RedProgram['makeProgram'](redGL, programName, vSource, fSource, ['sprite3D', 'directionalShadow'])
+					target['_programList']['directionalShadow_fog_sprite3D'][programName] = RedProgram['makeProgram'](redGL, programName, vSource, fSource, ['fog', 'directionalShadow', 'sprite3D'])
 					// 그룹데이터 캐싱
 					redGL['_datas']['RedProgramGroup'][programName] = target['_programList']
 				}

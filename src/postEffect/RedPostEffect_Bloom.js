@@ -2,7 +2,7 @@
 var RedPostEffect_Bloom;
 (function () {
 	var vSource, fSource;
-	var PROGRAM_NAME = 'RedPostEffect_Bloom_Program';
+	var PROGRAM_NAME = 'RedPostEffectBloomProgram';
 	vSource = function () {
 		/* @preserve
 		 void main(void) {

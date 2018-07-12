@@ -24,7 +24,7 @@ var RedPostEffect_BloomThreshold;
 		 }
 		 */
 	}
-	PROGRAM_NAME = 'RedPostEffect_BloomThreshold_Program';
+	PROGRAM_NAME = 'RedPostEffectBloomThresholdProgram';
 	/**DOC:
 	 {
 		 constructorYn : true,

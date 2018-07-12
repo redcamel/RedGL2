@@ -2,7 +2,7 @@
 var RedPostEffect_Vignetting;
 (function () {
 	var vSource, fSource;
-	var PROGRAM_NAME = 'RedPostEffect_Vignetting_Program';
+	var PROGRAM_NAME = 'RedPostEffectVignettingProgram';
 	vSource = function () {
 		/* @preserve
 		 void main(void) {

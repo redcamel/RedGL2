@@ -2,7 +2,7 @@
 var RedPostEffect_DoF_DepthMaterial;
 (function () {
 	var vSource, fSource;
-	var PROGRAM_NAME = 'RedPostEffect_DoF_depthProgram';
+	var PROGRAM_NAME = 'RedPostEffectDoFdepthProgram';
 	vSource = function () {
 		/* @preserve
 		 mat4 calSprite3D(mat4 cameraMTX, mat4 mvMatrix){

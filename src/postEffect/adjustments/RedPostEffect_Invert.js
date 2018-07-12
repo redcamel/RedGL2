@@ -2,7 +2,7 @@
 var RedPostEffect_Invert;
 (function () {
 	var vSource, fSource;
-	var PROGRAM_NAME = 'RedPostEffect_Invert_Program';
+	var PROGRAM_NAME = 'RedPostEffectInvertProgram';
 	vSource = function () {
 		/* @preserve
 		 void main(void) {

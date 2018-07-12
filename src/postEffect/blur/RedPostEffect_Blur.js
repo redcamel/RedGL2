@@ -2,7 +2,7 @@
 var RedPostEffect_Blur;
 (function () {
 	var vSource, fSource;
-	var PROGRAM_NAME = 'RedPostEffect_Blur_Program';
+	var PROGRAM_NAME = 'RedPostEffectBlurProgram';
 	vSource = function () {
 		/* @preserve
 		 void main(void) {

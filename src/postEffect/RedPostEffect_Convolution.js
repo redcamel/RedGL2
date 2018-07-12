@@ -2,7 +2,7 @@
 var RedPostEffect_Convolution;
 (function () {
 	var vSource, fSource;
-	var PROGRAM_NAME = 'RedPostEffect_Convolution_Program';
+	var PROGRAM_NAME = 'RedPostEffectConvolutionProgram';
 	vSource = function () {
 		/* @preserve
 		 void main(void) {

@@ -2,7 +2,7 @@
 var RedPostEffect_SSAO_DepthMaterial;
 (function () {
 	var vSource, fSource;
-	var PROGRAM_NAME = 'RedPostEffect_SSAO_depthProgram';
+	var PROGRAM_NAME = 'RedPostEffectSSAOdepthProgram';
 	vSource = function () {
 		/* @preserve
 		 varying vec3 vCameraPosition;

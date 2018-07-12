@@ -2,7 +2,7 @@
 var RedPostEffect_HalfTone;
 (function () {
 	var vSource, fSource;
-	var PROGRAM_NAME = 'RedPostEffect_HalfTone_Program';
+	var PROGRAM_NAME = 'RedPostEffectHalfToneProgram';
 	vSource = function () {
 		/* @preserve
 		 void main(void) {

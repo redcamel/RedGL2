@@ -2,7 +2,7 @@
 var RedSheetMaterial;
 (function () {
 	var vSource, fSource;
-	var PROGRAM_NAME = 'RedSheetMaterial_Program';
+	var PROGRAM_NAME = 'RedSheetMaterialProgram';
 	vSource = function () {
 		/* @preserve
 		mat4 calSprite3D(mat4 cameraMTX, mat4 mvMatrix){

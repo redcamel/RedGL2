@@ -2,7 +2,7 @@
 var RedPostEffect_DoF;
 (function () {
 	var vSource, fSource;
-	var PROGRAM_NAME = 'RedPostEffect_DoF_Program';
+	var PROGRAM_NAME = 'RedPostEffectDoFProgram';
 	vSource = function () {
 		/* @preserve
 
