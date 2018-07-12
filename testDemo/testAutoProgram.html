@@ -222,14 +222,14 @@
 		var tProgramDom = document.querySelector('#program')
 		tRenderer.start(this, function (time) {
 			// testInterleaveBuffer.upload(interleaveData)
-//			var i = tScene3D.children.length
-//			while ( i-- ) {
-//				if ( i == 0 ) break
-//				testMesh = tScene3D.children[i]
-//				testMesh.rotationX += 0.1
-//				testMesh.rotationY += 0.1
-//				testMesh.rotationZ += 0.1
-//			}
+			var i = tScene3D.children.length
+			while ( i-- ) {
+				if ( i == 0 ) break
+				testMesh = tScene3D.children[i]
+				testMesh.rotationX += 0.3
+				testMesh.rotationY += 0.3
+				testMesh.rotationZ += 0.3
+			}
 			tProgramDom.innerHTML = '현재프로그램 : ' + (tScene3D['useFog'] ? testMaterial['_programList']['fog'][testMaterial['program']['key']]['key'] : testMaterial['program']['key'])
 			testDLight.x = Math.sin(time / 1500) * 10
 			testDLight.y = Math.cos(time / 1500) * 10
