@@ -2,7 +2,7 @@
 var RedPostEffect_SSAO_PointMaker;
 (function () {
 	var vSource, fSource;
-	var PROGRAM_NAME = 'RedPostEffectSSAO_PointMakerProgram';
+	var PROGRAM_NAME = 'RedPostEffectSSAOPointMakerProgram';
 	vSource = function () {
 		/* @preserve
 
@@ -58,15 +58,15 @@ var RedPostEffect_SSAO_PointMaker;
 			 float depth = unpack_depth2(depthColor);
 
 		     // 샘플추출
-			 const int cSAMPLES = 16;
+			 const int cSAMPLES = 24;
 			 float ao = 0.0;
 
 			for (int i = 0; i < cSAMPLES; ++i) {
 				vec2 offset;
 				float x;
 				float y;
-				x = sin(6.28/float(cSAMPLES) * float(i))/3.14 * uRange * random(gl_FragCoord.xyz,0.0) ;
-				y = cos(6.28/float(cSAMPLES) * float(i))/3.14 * uRange * random(gl_FragCoord.xyz,0.0);
+				x = sin(6.28/float(cSAMPLES) * float(i))/3.14 * uRange * random(vec3(tTexcoord+gl_FragCoord.xy,gl_FragCoord.z),0.0) ;
+				y = cos(6.28/float(cSAMPLES) * float(i))/3.14 * uRange * random(vec3(tTexcoord+gl_FragCoord.xy,gl_FragCoord.z),0.0);
 				offset = vec2(x,y) * perPX ;
 				vec2 tLocation2 = tTexcoord + offset  ;
 				// if(tLocation2.x <0.0) continue;
@@ -75,7 +75,7 @@ var RedPostEffect_SSAO_PointMaker;
 				// else if(tLocation2.y >1.0) continue;
 				// else {
 					float sampleDepth = unpack_depth2(texture2D(uDepthTexture, tLocation2));
-					if(((sampleDepth - depth)) < 0.025){
+					if((abs(sampleDepth - depth)) < 0.3){
 						float distanceLength = abs(sampleDepth - depth);
 						float attenuation = 1.0 + 1.0 / (0.01 + 0.02 * distanceLength + 0.03 * distanceLength * distanceLength);
 						if(sampleDepth > depth) ao+=  1.0;
@@ -87,7 +87,7 @@ var RedPostEffect_SSAO_PointMaker;
 			 ao = pow(ao, uFactor2);
 			 ao = 1.0 - ao;
 			 vec4 finalColor = vec4(ao,ao,ao,1.0);
-			 float u_contrast = 0.0;
+			 float u_contrast = 0.75;
 			 if (u_contrast > 0.0) finalColor.rgb = (finalColor.rgb - 0.5) / (1.0 - u_contrast) + 0.5;
 			 else finalColor.rgb = (finalColor.rgb - 0.5) * (1.0 + u_contrast) + 0.5;
 

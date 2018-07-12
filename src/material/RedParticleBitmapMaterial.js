@@ -11,7 +11,7 @@ var RedParticleBitmapMaterial;
 		 varying vec4 vColor;
 		 void main(void) {
 	        gl_Position = uPMatrix * uCameraMatrix * vec4(aVertexPosition, 1.0);
-			gl_PointSize = aPointSize;
+			gl_PointSize = aPointSize/gl_Position.w * uResolution.y;
 			vColor = aVertexColor;
 		 }
 		 */

@@ -15,7 +15,11 @@ var RedBaseContainer;
 		this['autoSort'] = false
 	}
 	var prototypeData = {
-		sortGeometry: function () {
+		sortGeometry: function (recursive) {
+			if ( recursive ) {
+				var i = this.children.length
+				while ( i-- ) this.children[i].sortGeometry(recursive)
+			}
 			this.children.sort(function (a, b) {
 				a = a['_geometry']['interleaveBuffer']['_UUID']
 				b = b['_geometry']['interleaveBuffer']['_UUID']
@@ -24,7 +28,11 @@ var RedBaseContainer;
 				return 0
 			})
 		},
-		sortMaterial: function () {
+		sortMaterial: function (recursive) {
+			if ( recursive ) {
+				var i = this.children.length
+				while ( i-- ) this.children[i].sortMaterial(recursive)
+			}
 			this.children.sort(function (a, b) {
 				a = a['_material']['program']['_UUID']
 				b = b['_material']['program']['_UUID']
@@ -33,8 +41,12 @@ var RedBaseContainer;
 				return 0
 			})
 		},
-		sortGeometryAndMaterial: function () {
+		sortGeometryAndMaterial: function (recursive) {
 			//TODO: 정의,검증 해야함
+			if ( recursive ) {
+				var i = this.children.length
+				while ( i-- ) this.children[i].sortGeometryAndMaterial(recursive)
+			}
 			this.children.sort(function (a, b) {
 				a = a['_geometry']['interleaveBuffer']['_UUID']
 				b = b['_geometry']['interleaveBuffer']['_UUID']

@@ -163,47 +163,40 @@
 				'../asset/cubemap/posz.png',
 				'../asset/cubemap/negz.png'
 			]);
-		RedOBJLoader(this, '../asset/obj/', 'female.obj', function (v) {
-			console.log('호잇!', v)
-			var i = 100
-			while ( i-- ) {
-				var t0;
-				t0 = RedMesh(self)
-				t0['children'] = v['resultMesh']['children'].concat()
-				t0.x = Math.random() * 30 - 15
-				t0.z = Math.random() * 30 - 15
-				t0.scaleX = t0.scaleY = t0.scaleZ = 0.01
-				tScene3D.addChild(t0)
-			}
-			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.1
-			tScene3D.addChild(v['resultMesh'])
-		})
+//		RedOBJLoader(this, '../asset/obj/', 'female.obj', function (v) {
+//			console.log('호잇!', v)
+//			var i = 1
+//			while ( i-- ) {
+//				var t0;
+//				t0 = RedMesh(self)
+//				t0['children'] = v['resultMesh']['children'].concat()
+//				t0.x = Math.random() * 30 - 15
+//				t0.z = Math.random() * 30 - 15
+//				t0.scaleX = t0.scaleY = t0.scaleZ = 0.01
+//				tScene3D.addChild(t0)
+//			}
+//			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.1
+//			tScene3D.addChild(v['resultMesh'])
+//		})
 		var aa = {
-			max: 1000,
-			emitCount: 50,
-			lifeTime: [1000, 2000],
-			gravity: 9.8 / 1000,
+			max: 10000,
+			emitCount: 10,
+			lifeTime: [1000, 1500],
+			particle: {
+				scale: {start: 0, end: 3},
+				movementX: {start: [-0.5, 0.5], end: [-5, 5]},
+				movementY: {start: [-0.5, 0.5], end: [-5, 5]},
+				movementZ: {start: [-0.5, 0.5], end: [-5, 5]},
+				alpha: {start: 1.0, end: 0.0}
+			}
 		}
 		var testParticle = new RedParticleEmitter(this, aa, RedParticleBitmapMaterial(this, RedBitmapTexture(this, '../asset/particle.png')))
-		var testParticle2 = new RedParticleEmitter(this, aa, RedParticleColorMaterial(this))
-		var tMesh = RedMesh(this, RedSphere(this, 0.1), RedColorMaterial(this))
-		var tMesh2 = RedMesh(this, RedSphere(this, 0.1), RedColorMaterial(this))
+		tScene3D.addChild(testParticle)
 		console.log(testParticle)
 		tScene3D['grid'] = RedGrid(self)
-		tScene3D.addChild(tMesh)
-		tMesh.addChild(testParticle)
-		tScene3D.addChild(tMesh2)
-		tMesh2.addChild(testParticle2)
 		tRenderer.start(this, function (time) {
 			tRenderer.renderDebuger.visible = true
-			testParticle.x = tMesh.x = Math.sin(time / 500) * 10
-			testParticle.y = 7.5
-			testParticle.z = tMesh.z = Math.cos(time / 500) * 10
-			testParticle2.x = tMesh2.x = -Math.sin(time / 300) * 6
-			testParticle2.y = tMesh2.y = Math.cos(time / 1500) * 6
-			testParticle2.z = tMesh2.z = Math.cos(time / 1200) * 6 + Math.sin(time / 1500) * 3
 			testParticle.update(time)
-			testParticle2.update(time)
 		})
 		console.log(tScene3D)
 	})
