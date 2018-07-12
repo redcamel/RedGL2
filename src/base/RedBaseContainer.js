@@ -34,7 +34,21 @@ var RedBaseContainer;
 			})
 		},
 		sortGeometryAndMaterial: function () {
-			//TODO: 정의해야함	
+			//TODO: 정의,검증 해야함
+			this.children.sort(function (a, b) {
+				a = a['_geometry']['interleaveBuffer']['_UUID']
+				b = b['_geometry']['interleaveBuffer']['_UUID']
+				if ( a == b ) {
+					var a2 = a['_material']['program']['_UUID']
+					var b2 = b['_material']['program']['_UUID']
+					if ( a2 < b2 ) return -1
+					if ( a2 > b2 ) return 1
+					return 0
+				}
+				if ( a < b ) return -1
+				if ( a > b ) return 1
+				return 0
+			})
 		},
 		/**DOC:
 		 {
