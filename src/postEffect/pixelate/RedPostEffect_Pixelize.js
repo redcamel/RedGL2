@@ -2,7 +2,7 @@
 var RedPostEffect_Pixelize;
 (function () {
 	var vSource, fSource;
-	var PROGRAM_NAME = 'RedPostEffect_Pixelize_Program';
+	var PROGRAM_NAME = 'RedPostEffectPixelizeProgram';
 	vSource = function () {
 		/* @preserve
 		 void main(void) {

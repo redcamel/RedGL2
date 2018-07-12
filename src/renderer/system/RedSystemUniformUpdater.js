@@ -52,8 +52,7 @@ var RedSystemUniformUpdater;
 				uPointLightColorList: {cacheData: null, data: []},
 				uPointLightIntensityList: {cacheData: null, data: []},
 				uPointLightRadiusList: {cacheData: null, data: []},
-				uPointLightNum: {cacheData: null, data: 0},
-				uUseDirectionalShadow: {cacheData: null, data: false},
+				uPointLightNum: {cacheData: null, data: 0}
 			}
 			// 디렉셔널 쉐도우 관련
 			tDirectionalShadowLightPosition = new Float32Array(3)
@@ -275,13 +274,7 @@ var RedSystemUniformUpdater;
 					needUpdateUniformInfo['uPointLightNum'] = tCheckData['data'] = tValueStr;
 					tCheckData['cacheData'] = tValueStr;
 				}
-				// 디렉셔널 쉐도우 사용여부
-				tValueStr = tScene['shadowManager']['_directionalShadow'] ? true : false;
-				tCheckData = checkUniformInfo['uUseDirectionalShadow']
-				if ( tCheckData['cacheData'] != tValueStr || changedProgramNum ) {
-					needUpdateUniformInfo['uUseDirectionalShadow'] = tCheckData['data'] = tValueStr;
-					tCheckData['cacheData'] = tValueStr;
-				}
+
 				// 디렉셔널 쉐도우 라이트 매트릭스 계산
 				if ( tScene['shadowManager']['_directionalShadow'] ) {
 					tDirectionalShadowLightMatrix[1] = tDirectionalShadowLightMatrix[2] = tDirectionalShadowLightMatrix[3] = tDirectionalShadowLightMatrix[4] = tDirectionalShadowLightMatrix[6] = tDirectionalShadowLightMatrix[7] = tDirectionalShadowLightMatrix[8] = tDirectionalShadowLightMatrix[9] = tDirectionalShadowLightMatrix[11] = tDirectionalShadowLightMatrix[12] = tDirectionalShadowLightMatrix[13] = tDirectionalShadowLightMatrix[14] = 0

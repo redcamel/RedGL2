@@ -2,7 +2,7 @@
 var RedPostEffect_Gray;
 (function () {
 	var vSource, fSource;
-	var PROGRAM_NAME = 'RedPostEffect_Gray_Program';
+	var PROGRAM_NAME = 'RedPostEffectGrayProgram';
 	vSource = function () {
 		/* @preserve
 		 void main(void) {

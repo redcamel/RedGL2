@@ -2,7 +2,7 @@
 var RedPostEffect_BrightnessContrast;
 (function () {
 	var vSource, fSource;
-	var PROGRAM_NAME = 'RedPostEffect_BrightnessContrast_Program';
+	var PROGRAM_NAME = 'RedPostEffectBrightnessContrastProgram';
 	vSource = function () {
 		/* @preserve
 		 void main(void) {

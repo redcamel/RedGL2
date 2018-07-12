@@ -2,7 +2,7 @@
 var RedDirectionalShadowMaterial;
 (function () {
 	var vSource, fSource;
-	var PROGRAM_NAME = 'RedDirectionalShadowMaterial_Program';
+	var PROGRAM_NAME = 'RedDirectionalShadowMaterialProgram';
 	vSource = function () {
 		/* @preserve
 		 void main(void) {

@@ -150,7 +150,7 @@
 		// tScene3D['useFog'] = true
 		tCamera = RedObitController(this);
 		tCamera.tilt = -45
-		tCamera.distance = 100
+		tCamera.distance = 50
 		tRenderer = RedRenderer();
 		tWorld.addView(RedView('test', this, tScene3D, tCamera));
 		RedView('test').setSize('100%', '100%')
@@ -175,6 +175,7 @@
 				'../asset/cubemap/negz.png'
 			]);
 		// tScene3D['grid'] = RedGrid(self)
+		tScene3D.fogDistance =100
 		var tShadow = RedDirectionalShadow(this, testDLight)
 		tScene3D.shadowManager.directionalShadow = tShadow
 		var max = i = 250
@@ -204,10 +205,10 @@
 			tScene3D.addChild(tMesh)
 			tShadow.addCasting(tMesh)
 		}
-		var tGeo = RedBox(self, 10, 10, 10, 50, 50, 50)
+		var tGeo = RedBox(self, 100, 100, 100)
 		var tMesh2 = RedMesh(self, tGeo, tMat)
-		tMesh2.scaleX = tMesh2.scaleY = tMesh2.scaleZ = 5
-		tMesh2.y = -25
+		tMesh2.scaleX = tMesh2.scaleY = tMesh2.scaleZ = 1
+		tMesh2.y = -50
 		tScene3D.addChild(tMesh2)
 		var aaaa
 		RedOBJLoader(this, '../asset/obj/rabbit/', 'Rabbit.obj', function (v) {
@@ -257,7 +258,7 @@
 			testDLight.x = Math.sin(time / 1000) * 30
 			testDLight.z = Math.cos(time / 1000) * 30
 			testDLight.y = 30
-			tScene3D['children'][0].x = Math.sin(time / 1000)*6
+			tScene3D['children'][0].x = Math.sin(time / 1000) * 6
 			tScene3D['children'][0].z = Math.cos(time / 1000)
 			var i = tScene3D.children.length
 			while ( i-- ) {
@@ -273,17 +274,34 @@
 		this['gui'] = new dat.GUI({
 			name: 'test'
 		});
+		var testBloom = {
+			useBloom : true
+        }
 		var t0 = this['gui'].addFolder('bloom')
 		t0.add(bloom, 'exposure', 0, 2)
 		t0.add(bloom, 'bloomStrength', 0, 2)
 		t0.add(bloom, 'blur', 0, 100)
 		t0.add(bloom, 'threshold', 0, 100)
+		t0.add(testBloom, 'useBloom').onChange(function (v) {
+			v ? RedView('test').postEffectManager.addEffect(bloom) : RedView('test').postEffectManager.removeEffect(bloom)
+
+		})
+
 		t0.open()
 		var t0 = this['gui'].addFolder('directionalShadow')
 		t0.add(tShadow, 'width', 1, 4086)
 		t0.add(tShadow, 'height', 1, 4086)
 		t0.add(tShadow, 'size', 1, 100)
+		var testData = {
+			useShadow: true
+		}
+		t0.add(testData, 'useShadow').onChange(function (v) {
+			tScene3D.shadowManager.directionalShadow = v ? tShadow : null
+		})
 		t0.open()
+		var t0 = this['gui'].addFolder('scene')
+		t0.add(tScene3D, 'useFog')
+		t0.open
 	})
 </script>
 </body>

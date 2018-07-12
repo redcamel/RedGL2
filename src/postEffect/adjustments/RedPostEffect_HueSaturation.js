@@ -2,7 +2,7 @@
 var RedPostEffect_HueSaturation;
 (function () {
 	var vSource, fSource;
-	var PROGRAM_NAME = 'RedPostEffect_HueSaturation_Program';
+	var PROGRAM_NAME = 'RedPostEffectHueSaturationProgram';
 	vSource = function () {
 		/* @preserve
 		 void main(void) {

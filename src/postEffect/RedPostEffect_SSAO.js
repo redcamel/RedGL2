@@ -2,7 +2,7 @@
 var RedPostEffect_SSAO;
 (function () {
 	var vSource, fSource;
-	var PROGRAM_NAME = 'RedPostEffect_SSAO_Program';
+	var PROGRAM_NAME = 'RedPostEffectSSAOProgram';
 	vSource = function () {
 		/* @preserve
 

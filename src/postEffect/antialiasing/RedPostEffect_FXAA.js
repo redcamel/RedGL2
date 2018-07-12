@@ -2,7 +2,7 @@
 var RedPostEffect_FXAA;
 (function () {
 	var vSource, fSource;
-	var PROGRAM_NAME = 'RedPostEffect_FXAA_Program';
+	var PROGRAM_NAME = 'RedPostEffectFXAAProgram';
 	vSource = function () {
 		/* @preserve
 		 void main(void) {

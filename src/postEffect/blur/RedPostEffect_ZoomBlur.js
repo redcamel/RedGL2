@@ -2,7 +2,7 @@
 var RedPostEffect_ZoomBlur;
 (function () {
 	var vSource, fSource;
-	var PROGRAM_NAME = 'RedPostEffect_ZoomBlur_Program';
+	var PROGRAM_NAME = 'RedPostEffectZoomBlurProgram';
 	vSource = function () {
 		/* @preserve
 		 void main(void) {

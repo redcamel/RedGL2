@@ -2,7 +2,7 @@
 var RedColorPhongMaterial;
 (function () {
 	var vSource, fSource;
-	var PROGRAM_NAME = 'colorPhong_Program';
+	var PROGRAM_NAME = 'colorPhongProgram';
 	vSource = function () {
 		/* @preserve
 		 uniform vec4 u_color;

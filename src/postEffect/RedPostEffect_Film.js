@@ -2,7 +2,7 @@
 var RedPostEffect_Film;
 (function () {
 	var vSource, fSource;
-	var PROGRAM_NAME = 'RedPostEffect_Film_Program';
+	var PROGRAM_NAME = 'RedPostEffectFilmProgram';
 	vSource = function () {
 		/* @preserve
 		 void main(void) {
