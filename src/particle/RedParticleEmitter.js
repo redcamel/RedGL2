@@ -45,13 +45,62 @@ var RedParticleEmitter;
 		this['useDepthMask'] = false
 		this['_UUID'] = RedGL['makeUUID']();
 	}
+	RedParticleEmitter.QuintIn = 1;
+	RedParticleEmitter.QuintOut = 2;
+	RedParticleEmitter.QuintInOut = 3;
+	//
+	RedParticleEmitter.BackIn = 4;
+	RedParticleEmitter.BackOut = 5;
+	RedParticleEmitter.BackInOut = 6;
+	//
+	RedParticleEmitter.CircIn = 7;
+	RedParticleEmitter.CircOut = 8;
+	RedParticleEmitter.CircInOut = 9;
+	//
+	RedParticleEmitter.CubicIn = 10;
+	RedParticleEmitter.CubicOut = 11;
+	RedParticleEmitter.CubicInOut = 12;
+	//
+	RedParticleEmitter.ExpoIn = 13;
+	RedParticleEmitter.ExpoOut = 14;
+	RedParticleEmitter.ExpoInOut = 15;
+	//
+	RedParticleEmitter.QuadIn = 16;
+	RedParticleEmitter.QuadOut = 17;
+	RedParticleEmitter.QuadInOut = 18;
+	//
+	RedParticleEmitter.QuartIn = 19;
+	RedParticleEmitter.QuartOut = 20;
+	RedParticleEmitter.QuartInOut = 21;
+	//
+	RedParticleEmitter.SineIn = 22;
+	RedParticleEmitter.SineOut = 23;
+	RedParticleEmitter.SineInOut = 24;
+	RedParticleEmitter.ElasticIn = 25;
+	RedParticleEmitter.ElasticOut = 26;
+	RedParticleEmitter.ElasticInOut = 27;
 	RedParticleEmitter.prototype = new RedBaseContainer();
 	RedParticleEmitter.prototype['update'] = (function () {
-		var i, i2, tParticle
-		var lifeRatio;
-		var tIndex;
-		var tInfo, tInfoParticle, newParticle;
 		return function (time) {
+			var POW, SIN, COS, SQRT, PI, PI2, HPI
+			var i, i2, tParticle
+			var lifeRatio;
+			var tIndex;
+			var tInfo, tInfoParticle, newParticle;
+			///
+			var tEase;
+			var tTweenKeyList;
+			var tTweenKey;
+			var tTargetIndex;
+			var n;
+			//
+			POW = Math.pow
+			SIN = Math.sin
+			COS = Math.cos
+			SQRT = Math.sqrt
+			PI = Math.PI
+			HPI = PI * 0.5
+			PI2 = PI * 2
 			i = this['list']['length']
 			// 맥스보다 갯수가 적으면 추가함
 			tInfo = this['info'];
@@ -63,7 +112,8 @@ var RedParticleEmitter;
 					newParticle = this['list'][i + i2] = new RedParticleUnit(tInfo['lifeTime'])
 					this['_interleaveData'].push(this.x, this.y, this.z)
 					this['_interleaveData'].push(0)
-					this['_interleaveData'].push(Math.random(), Math.random(), Math.random(), 1)
+					if ( tInfo['tint'] == 'random' ) this['_interleaveData'].push(Math.random(), Math.random(), Math.random(), 1)
+					else this['_interleaveData'].push(tInfo['tint'][0], tInfo['tint'][1], tInfo['tint'][2], 1)
 					// 룰추가
 					if ( tInfo['particle'] ) {
 						if ( tInfoParticle['movementX'] ) newParticle.addRule('movementX', tInfoParticle['movementX'])
@@ -86,39 +136,119 @@ var RedParticleEmitter;
 				lifeRatio = tParticle['age'] / tParticle['lifeTime']
 				tIndex = i * 8
 				if ( lifeRatio < 1 ) {
-					// [
-					// 	option['start'], // 시작값
-					// 	option['end'], // 종료값
-					// 	option['start'] // 현재값
-					// ]
 					//////////////////////////////////
 					//////////////////////////////////
-					var n = lifeRatio;
+					n = lifeRatio;
 					////////////////////////
-					// QuintIn
-					// n = ((n = n * 2) < 1) ? n * n * 0.5 : 0.5 * ((2 - (n -= 1)) * n + 1)
-					// QuadOut
-					n = ((2 - n) * n)
-					// QuadInOut
-					// n = ((n = n * 2) < 1) ? n * n * 0.5 : 0.5 * ((2 - (n -= 1)) * n + 1)
-					// var POW = Math.pow
-					// n = ((n = n * 2) < 1) ? (n == 0.0 ? 0.0 : 0.5 * POW(2, 10 * (n - 1))) : (n == 2.0 ? 1.0 : -0.5 * POW(2, -10 * (n - 1)) + 1)
 					if ( !tParticle['startCenter'] ) tParticle['startCenter'] = [this.x, this.y, this.z]
-					if ( tParticle['movementX'] ) this['_interleaveData'][tIndex + 0] = tParticle['startCenter'][0] + (tParticle['movementX']['start'] + (tParticle['movementX']['gap']) * n)
-					if ( tParticle['movementY'] ) this['_interleaveData'][tIndex + 1] = tParticle['startCenter'][1] + (tParticle['movementY']['start'] + (tParticle['movementY']['gap']) * n)
-					if ( tParticle['movementZ'] ) this['_interleaveData'][tIndex + 2] = tParticle['startCenter'][2] + (tParticle['movementZ']['start'] + (tParticle['movementZ']['gap']) * n)
-					if ( tParticle['scale'] ) {
-						this['_interleaveData'][tIndex + 3] = tParticle['scale']['start'] + (tParticle['scale']['gap'] ) * n
-					}
-					if ( tParticle['alpha'] ) {
-						this['_interleaveData'][tIndex + 7] = tParticle['alpha']['start'] + (tParticle['alpha']['gap'] ) * n
+					tTweenKeyList = 'movementX,movementY,movementZ,scale,alpha'.split(',')
+					i2 = tTweenKeyList.length
+					while ( i2-- ) {
+						tTweenKey = tTweenKeyList[i2]
+						n = lifeRatio;
+						// 트윈을 여기서 결정
+						tEase = tParticle[tTweenKey]['ease']
+						if ( tEase ) {
+							// QuintIn
+							tEase == 1 ? n = n * n * n * n * n :
+								// QuintOut
+								tEase == 2 ? n = ((n -= 1) * n * n * n * n) + 1 :
+									// QuintInOut
+									tEase == 3 ? n = ((n = n * 2) < 1) ? n * n * n * n * n * 0.5 : 0.5 * ((n -= 2) * n * n * n * n + 2) :
+										////////////////////////
+										// BackIn
+										tEase == 4 ? n = n * n * (n * 1.70158 + n - 1.70158) :
+											// BackOut
+											tEase == 5 ? n = (n -= 1) * n * (n * 1.70158 + n + 1.70158) + 1 :
+												// BackInOut
+												tEase == 6 ? n = ((n = n * 2) < 1) ? 0.5 * n * n * (n * 1.70158 + n - 1.70158) : 0.5 * (n -= 2) * n * (n * 1.70158 + n + 1.70158) + 1 :
+													////////////////////////
+													// CircIn
+													tEase == 7 ? n = -1 * (SQRT(1 - n * n) - 1) :
+														// CircOut
+														tEase == 8 ? n = SQRT(1 - (n -= 1) * n) :
+															// CircInOut
+															tEase == 9 ? n = ((n = n * 2) < 1) ? -0.5 * (SQRT(1 - n * n) - 1) : 0.5 * SQRT(1 - (n -= 2) * n) + 0.5 :
+																////////////////////////
+																// CubicIn
+																tEase == 10 ? n = n * n * n :
+																	// CubicOut
+																	tEase == 11 ? n = ((n -= 1) * n * n) + 1 :
+																		// CubicInOut
+																		tEase == 12 ? n = ((n = n * 2) < 1) ? n * n * n * 0.5 : 0.5 * ((n -= 2) * n * n + 2) :
+																			////////////////////////
+																			// ExpoIn
+																			tEase == 13 ? n = n == 0.0 ? 0.0 : POW(2, 10 * (n - 1)) :
+																				// ExpoOut
+																				tEase == 14 ? n = n == 1.0 ? 1.0 : -POW(2, -10 * n) + 1 :
+																					// ExpoInOut
+																					tEase == 15 ? n = ((n = n * 2) < 1) ? (n == 0.0 ? 0.0 : 0.5 * POW(2, 10 * (n - 1))) : (n == 2.0 ? 1.0 : -0.5 * POW(2, -10 * (n - 1)) + 1) :
+																						////////////////////////
+																						// QuadIn
+																						tEase == 16 ? n = n * n :
+																							// QuadOut
+																							tEase == 17 ? n = ((2 - n) * n) :
+																								// QuadInOut
+																								tEase == 18 ? n = ((n = n * 2) < 1) ? n * n * 0.5 : 0.5 * ((2 - (n -= 1)) * n + 1) :
+																									////////////////////////
+																									// QuartIn
+																									tEase == 19 ? n = n * n * n * n :
+																										// QuartOut
+																										tEase == 20 ? n = 1 - ((n -= 1) * n * n * n) :
+																											// QuartInOut
+																											tEase == 21 ? n = ((n = n * 2) < 1) ? n * n * n * n * 0.5 : 1 - ((n -= 2) * n * n * n * 0.5) :
+																												////////////////////////
+																												// SineIn
+																												tEase == 22 ? n = -COS(n * HPI) + 1 :
+																													// SineOut
+																													tEase == 23 ? n = SIN(n * HPI) :
+																														// SineInOut
+																														tEase == 24 ? n = (-COS(n * PI) + 1) * 0.5 :
+																															////////////////////////
+																															// ElasticIn
+																															tEase == 25 ? n = n === 0.0 ? 0.0 : n === 1.0 ? 1.0 : -1 * POW(2, 10 * (n -= 1)) * SIN((n - 0.075) * (PI2) / 0.3) :
+																																// ElasticOut
+																																tEase == 26 ? n = n === 0.0 ? 0.0 : n === 1.0 ? 1.0 : POW(2, -10 * n) * SIN((n - 0.075) * (PI2) / 0.3) + 1 :
+																																	// ElasticInOut
+																																	tEase == 27 ? n =
+																																			(
+																																				(n === 0.0 ? 0.0 : (n === 1.0 ? 1.0 : n *= 2)),
+																																					(n < 1) ?
+																																						-0.5 * POW(2, 10 * (n -= 1)) * SIN((n - 0.075) * (PI2) / 0.3) :
+																																						0.5 * POW(2, -10 * (n -= 1)) * SIN((n - 0.075) * (PI2) / 0.3) + 1
+																																			) :
+																																		n;
+						}
+						if ( tTweenKey == 'movementX' ) tTargetIndex = 0
+						if ( tTweenKey == 'movementY' ) tTargetIndex = 1
+						if ( tTweenKey == 'movementZ' ) tTargetIndex = 2
+						if ( tTweenKey == 'scale' ) tTargetIndex = 3
+						if ( tTweenKey == 'alpha' ) tTargetIndex = 7
+						if ( tTargetIndex < 3 ) {
+							this['_interleaveData'][tIndex + tTargetIndex] = tParticle['startCenter'][tTargetIndex] + tParticle[tTweenKey]['start'] + tParticle[tTweenKey]['gap'] * n
+						} else {
+							this['_interleaveData'][tIndex + tTargetIndex] = tParticle[tTweenKey]['start'] + tParticle[tTweenKey]['gap'] * n
+						}
+						// 중력계산
+						if ( tInfo['gravity'] ) tParticle['_gravitySum'] -= tInfo['gravity']
+						this['_interleaveData'][tIndex + 1] += tParticle['_gravitySum']
 					}
 				} else {
 					this['_interleaveData'][tIndex + 0] = tParticle['startCenter'][0] = this.x
 					this['_interleaveData'][tIndex + 1] = tParticle['startCenter'][1] = this.y
 					this['_interleaveData'][tIndex + 2] = tParticle['startCenter'][2] = this.z
 					this['_interleaveData'][tIndex + 3] = tParticle['scale']['start']
+					if ( tInfo['tint'] == 'random' ) {
+						this['_interleaveData'][tIndex + 4] = Math.random()
+						this['_interleaveData'][tIndex + 5] = Math.random()
+						this['_interleaveData'][tIndex + 6] = Math.random()
+					} else {
+						this['_interleaveData'][tIndex + 4] = tInfo['tint'][0]
+						this['_interleaveData'][tIndex + 5] = tInfo['tint'][1]
+						this['_interleaveData'][tIndex + 6] = tInfo['tint'][2]
+					}
 					this['_interleaveData'][tIndex + 7] = tParticle['alpha']['start']
+					tParticle['_gravitySum'] = 0
 					tParticle['startTime'] = null
 					tParticle['age'] = -1
 				}

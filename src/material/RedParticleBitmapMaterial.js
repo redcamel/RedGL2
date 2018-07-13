@@ -81,7 +81,7 @@ var RedParticleBitmapMaterial;
 		 {
 			 title :`alphaTest`,
 			 description : `
-			 기본값 : 0.0001
+			 기본값 : 0.01
 			 해당값보다 알파값이 작을경우 discard 처리됨.
 			 `,
 			 return : 'Number'

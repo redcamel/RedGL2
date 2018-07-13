@@ -154,15 +154,15 @@
 		testDLight.y = 3
 		testDLight.z = 3
 		tScene3D.addLight(testDLight);
-		tScene3D.skyBox =
-			RedSkyBox(this, [
-				'../asset/cubemap/posx.png',
-				'../asset/cubemap/negx.png',
-				'../asset/cubemap/posy.png',
-				'../asset/cubemap/negy.png',
-				'../asset/cubemap/posz.png',
-				'../asset/cubemap/negz.png'
-			]);
+//		tScene3D.skyBox =
+//			RedSkyBox(this, [
+//				'../asset/cubemap/posx.png',
+//				'../asset/cubemap/negx.png',
+//				'../asset/cubemap/posy.png',
+//				'../asset/cubemap/negy.png',
+//				'../asset/cubemap/posz.png',
+//				'../asset/cubemap/negz.png'
+//			]);
 //		RedOBJLoader(this, '../asset/obj/', 'female.obj', function (v) {
 //			console.log('호잇!', v)
 //			var i = 1
@@ -179,16 +179,17 @@
 //			tScene3D.addChild(v['resultMesh'])
 //		})
 		var aa = {
-			max: 10000,
-			emitCount: 10,
+			max: 250,
+			emitCount: 5,
 			lifeTime: [1000, 1500],
 			particle: {
-				scale: {start: 0, end: 3},
-				movementX: {start: [-0.5, 0.5], end: [-5, 5]},
-				movementY: {start: [-0.5, 0.5], end: [-5, 5]},
-				movementZ: {start: [-0.5, 0.5], end: [-5, 5]},
-				alpha: {start: 1.0, end: 0.0}
-			}
+				scale: {start: 0.5, end: [8, 15], ease: RedParticleEmitter.QuadInOut},
+				movementX: {start: [-0.1, 0.1], end: [-15, 15], ease: RedParticleEmitter.QuadInOut},
+				movementY: {start: [-0.1, 0.1], end: [0, 15], ease: RedParticleEmitter.QuadInOut},
+				movementZ: {start: [-0.1, 0.1], end: [-15, 15], ease: RedParticleEmitter.QuadOut},
+				alpha: {start: 1.0, end: 0.0, ease: RedParticleEmitter.QuadInOut}
+			},
+			gravity : 1
 		}
 		var testParticle = new RedParticleEmitter(this, aa, RedParticleBitmapMaterial(this, RedBitmapTexture(this, '../asset/particle.png')))
 		tScene3D.addChild(testParticle)
@@ -196,6 +197,9 @@
 		tScene3D['grid'] = RedGrid(self)
 		tRenderer.start(this, function (time) {
 			tRenderer.renderDebuger.visible = true
+//			testParticle.x = Math.sin(time / 500) * 10
+//			testParticle.y = Math.sin(time / 500) * 10
+//			testParticle.z = Math.cos(time / 500) * 10
 			testParticle.update(time)
 		})
 		console.log(tScene3D)
