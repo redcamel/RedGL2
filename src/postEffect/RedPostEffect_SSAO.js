@@ -58,10 +58,9 @@ var RedPostEffect_SSAO;
 		point = RedPostEffect_SSAO_PointMaker(redGL)
 		this['process'] = [
 			point,
-			RedPostEffect_BlurX(redGL),
-			RedPostEffect_BlurY(redGL),
-			RedPostEffect_BlurX(redGL),
-			RedPostEffect_BlurY(redGL)
+			RedPostEffect_GaussianBlur(redGL),
+			RedPostEffect_Blur(redGL),
+			RedPostEffect_Blur(redGL)
 		]
 		this['mode'] = RedPostEffect_SSAO.COLOR_SSAO
 		Object.defineProperty(this, 'blur', (function () {
@@ -72,10 +71,7 @@ var RedPostEffect_SSAO;
 				},
 				set: function (v) {
 					_v = v;
-					this['process'][1]['size'] = _v;
-					this['process'][2]['size'] = _v;
-					this['process'][3]['size'] = _v;
-					this['process'][4]['size'] = _v;
+					this['process'][1]['radius'] = _v;
 				}
 			}
 		})());

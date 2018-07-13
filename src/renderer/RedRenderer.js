@@ -59,6 +59,7 @@ var RedRenderer;
 			var tick;
 			var self, tRedGL;
 			tick = function (time) {
+				//TODO: 시간보정을 굳이 할피요가 있을까..
 				self.worldRender(tRedGL, time);
 				self['_callback'] ? self['_callback'](time) : 0
 				self['_tickKey'] = requestAnimationFrame(tick);
@@ -69,8 +70,8 @@ var RedRenderer;
 				self = this;
 				self.world = redGL.world;
 				tRedGL = redGL;
-				self['_tickKey'] = requestAnimationFrame(tick);
 				self['_callback'] = callback;
+				self['_tickKey'] = requestAnimationFrame(tick);
 			}
 		})(),
 		/**DOC:

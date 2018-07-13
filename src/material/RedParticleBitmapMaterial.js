@@ -11,7 +11,7 @@ var RedParticleBitmapMaterial;
 		 varying vec4 vColor;
 		 void main(void) {
 	        gl_Position = uPMatrix * uCameraMatrix * vec4(aVertexPosition, 1.0);
-			gl_PointSize = aPointSize;
+			gl_PointSize = aPointSize/gl_Position.w * uResolution.y;
 			vColor = aVertexColor;
 		 }
 		 */
@@ -81,7 +81,7 @@ var RedParticleBitmapMaterial;
 		 {
 			 title :`alphaTest`,
 			 description : `
-			 기본값 : 0.0001
+			 기본값 : 0.01
 			 해당값보다 알파값이 작을경우 discard 처리됨.
 			 `,
 			 return : 'Number'

@@ -90,6 +90,8 @@
     <script src="../src/renderer/RedRenderer.js"></script>
     <script src="../src/renderer/system/RedRenderDebuger.js"></script>
     <script src="../src/renderer/system/RedSystemUniformUpdater.js"></script>
+
+
     <!--//-->
     <script src="../src/RedView.js"></script>
     <script src="../src/RedWorld.js"></script>
@@ -175,15 +177,23 @@
 		RedView('test').setLocation('0%', '0%')
 		var testMaterial
 		var testTextureMap = {
-			diffuseTexture: RedBitmapTexture(this, '../asset/crate.png')
+			diffuseTexture: RedBitmapTexture(this, '../asset/crate.png'),
+			normalTexture: RedBitmapTexture(this, '../asset/normalTest.jpg'),
+			specularTexture: RedBitmapTexture(this, '../asset/specular.png'),
+			displacementTexture: RedBitmapTexture(this, '../asset/displacementTest.jpg')
 		}
-		testMaterial = RedBitmapMaterial(
+		testMaterial = RedEnvironmentMaterial(
 			this,
-			testTextureMap['diffuseTexture']
+			null,
+			RedBitmapCubeTexture(this, [
+				'../asset/cubemap/posx.png',
+				'../asset/cubemap/negx.png',
+				'../asset/cubemap/posy.png',
+				'../asset/cubemap/negy.png',
+				'../asset/cubemap/posz.png',
+				'../asset/cubemap/negz.png'
+			])
 		)
-//		testMaterial = RedColorMaterial(this)
-//		testMaterial = RedVideoMaterial(this,RedVideoTexture(this,'../asset/mov_bbb.mp4'))
-//		testMaterial = RedSheetMaterial(this,testTextureMap['diffuseTexture'],60,5,1,25)
 		tScene3D.skyBox =
 			RedSkyBox(this, [
 				'../asset/cubemap/posx.png',
@@ -195,31 +205,46 @@
 			]);
 		JsonModelLoader(this, 'testJsonModel', '../asset/teapot.json', function (interleaveBuffer, indexBuffer) {
 			console.log('호잇!', interleaveBuffer, indexBuffer)
-			var i = 1000
+			var i = 8500/2
 			while ( i-- ) {
-				var testMesh = RedSprite3D(self, testMaterial)
+				var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer), testMaterial)
 				testMesh.x = Math.random() * 250 - 125
 				testMesh.y = Math.random() * 250 - 125
 				testMesh.z = Math.random() * 250 - 125
+				testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.3
+				testMesh.rotationX = Math.random() * 360
+				testMesh.rotationY = Math.random() * 360
+				testMesh.rotationZ = Math.random() * 360
+				tScene3D.addChild(testMesh)
+
+				var testMesh = RedMesh(self, RedBox(self), testMaterial)
+				testMesh.x = Math.random() * 250 - 125
+				testMesh.y = Math.random() * 250 - 125
+				testMesh.z = Math.random() * 250 - 125
+				testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 2.5
 				testMesh.rotationX = Math.random() * 360
 				testMesh.rotationY = Math.random() * 360
 				testMesh.rotationZ = Math.random() * 360
 				tScene3D.addChild(testMesh)
 			}
+
+//			tScene3D.sortGeometry()
 		})
+
+
 		tRenderer.renderDebuger.visible = true
 		var tProgramDom = document.querySelector('#program')
 		tRenderer.start(this, function (time) {
 			// testInterleaveBuffer.upload(interleaveData)
 			var i = tScene3D.children.length
-//			while ( i-- ) {
-//				if ( i == 0 ) break
-//				testMesh = tScene3D.children[i]
-//				testMesh.rotationX += 0.1
-//				testMesh.rotationY += 0.1
-//				testMesh.rotationZ += 0.1
-//			}
-			tProgramDom.innerHTML = '현재프로그램 : ' + testMaterial['program']['key']
+			while ( i-- ) {
+				if ( i == 0 ) break
+				testMesh = tScene3D.children[i]
+				testMesh.rotationX += 0.3
+				testMesh.rotationY += 0.3
+				testMesh.rotationZ += 0.3
+			}
+			tProgramDom.innerHTML = '현재프로그램 : ' + (tScene3D['useFog'] ? testMaterial['_programList']['fog'][testMaterial['program']['key']]['key'] : testMaterial['program']['key'])
 			testDLight.x = Math.sin(time / 1500) * 10
 			testDLight.y = Math.cos(time / 1500) * 10
 			testDLight.z = Math.cos(time / 1500) * 10
@@ -238,29 +263,46 @@
 		});
 		var testData = {
 			state: testMaterial.program.key,
-			sprite3DYn: true,
-			perspectiveScale: true
+			sprite3DYn: false,
+			addSphere500: function () {
+				var i = 500
+				while ( i-- ) {
+					var testMesh = RedMesh(self, RedSphere(self, 5, 16, 16, 16), testMaterial)
+					testMesh.x = Math.random() * 250 - 125
+					testMesh.y = Math.random() * 250 - 125
+					testMesh.z = Math.random() * 250 - 125
+					testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.3
+					testMesh.rotationX = Math.random() * 360
+					testMesh.rotationY = Math.random() * 360
+					testMesh.rotationZ = Math.random() * 360
+					tScene3D.addChild(testMesh)
+				}
+			},
+			sortGeometry : function(){
+				tScene3D.sortGeometry()
+			}
 		}
 		var t0 = this['gui'].addFolder('autoProgramTest')
 		t0.autoPlace = false
+		var tList = []
+		for ( var k in testMaterial._programList['basic'] ) {
+			if ( k.indexOf('fog') > -1 || k.indexOf('sprite3D') > -1 ) continue
+			tList.push(testMaterial._programList['basic'][k]['key'].replace('environmentProgram_', ''))
+		}
 		t0.add(tScene3D, 'useFog', true, false)
-		t0.add(testData, 'sprite3DYn', true, false).onChange(function (v) {
-			var i = tScene3D.children.length
-			var testMesh
-			while ( i-- ) {
-				testMesh = tScene3D.children[i]
-				testMesh._sprite3DYn = v
-			}
-			tCamera.distance = 10
+		t0.add(testData, 'state', tList).onChange(function (v) {
+			v = v.split('_')
+			testMaterial.diffuseTexture = null
+			testMaterial.normalTexture = null
+			testMaterial.displacementTexture = null
+			testMaterial.specularTexture = null
+			v.forEach(function (k) {
+				testMaterial[k] = testTextureMap[k]
+			})
+			console.log(v)
 		})
-		t0.add(testData, 'perspectiveScale', true, false).onChange(function (v) {
-			var i = tScene3D.children.length
-			var testMesh
-			while ( i-- ) {
-				testMesh = tScene3D.children[i]
-				testMesh.perspectiveScale = v
-			}
-		})
+		t0.add(testData, 'addSphere500')
+		t0.add(tScene3D, 'sortGeometry')
 		t0.open()
 		console.log(tScene3D)
 	})

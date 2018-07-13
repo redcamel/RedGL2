@@ -12,7 +12,7 @@ var RedParticleColorMaterial;
 		 void main(void) {
 			 vColor = aVertexColor;
 			 gl_Position = uPMatrix * uCameraMatrix* vec4(aVertexPosition, 1.0);
-			 gl_PointSize = aPointSize;
+	         gl_PointSize = aPointSize/gl_Position.w * uResolution.y;
 		 }
 		 */
 	}

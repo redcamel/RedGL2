@@ -166,8 +166,8 @@
 				'../asset/cubemap/posz.png',
 				'../asset/cubemap/negz.png'
 			]);
-		var i = 9000
-		var tt = RedDDSTexture(this, '../asset/dxt/test_dxt5.dds')
+		var i = 8500
+		var tt = RedDDSTexture(this, '../asset/dxt/test_dxt1.dds')
 		var tt1 = RedBitmapTexture(this, '../asset/normalTest.jpg')
 		var tt2 = RedBitmapTexture(this, '../asset/specular.png')
 		var tt3 = RedBitmapTexture(this, '../asset/displacementTest.jpg')
@@ -175,9 +175,10 @@
 		var tMat = RedStandardMaterial(
 			this,
 			tt,
-//			tt1,
+			tt1,
 //	        tt2,
-//	        tt3
+            null,
+	        tt3
 		)
 		while ( i-- ) {
 			var t1 = RedMesh(this, tGeo, tMat)

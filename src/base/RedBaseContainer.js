@@ -15,24 +15,52 @@ var RedBaseContainer;
 		this['autoSort'] = false
 	}
 	var prototypeData = {
-		sortGeometry: function () {
-			//TODO: 서브재귀정렬도 포함할껀지 결정해야함
+		sortGeometry: function (recursive) {
+			if ( recursive ) {
+				var i = this.children.length
+				while ( i-- ) this.children[i].sortGeometry(recursive)
+			}
 			this.children.sort(function (a, b) {
-				if ( a['_geometry']['interleaveBuffer'] < b['_geometry']['interleaveBuffer'] ) return -1
-				if ( a['_geometry']['interleaveBuffer'] > b['_geometry']['interleaveBuffer'] ) return 1
+				a = a['_geometry']['interleaveBuffer']['_UUID']
+				b = b['_geometry']['interleaveBuffer']['_UUID']
+				if ( a < b ) return -1
+				if ( a > b ) return 1
 				return 0
 			})
 		},
-		sortMaterial: function () {
-			//TODO: 서브재귀정렬도 포함할껀지 결정해야함
+		sortMaterial: function (recursive) {
+			if ( recursive ) {
+				var i = this.children.length
+				while ( i-- ) this.children[i].sortMaterial(recursive)
+			}
 			this.children.sort(function (a, b) {
-				if ( a['_material']['program']['_UUID'] < b['_material']['program']['_UUID'] ) return -1
-				if ( a['_material']['program']['_UUID'] > b['_material']['program']['_UUID'] ) return 1
+				a = a['_material']['program']['_UUID']
+				b = b['_material']['program']['_UUID']
+				if ( a < b ) return -1
+				if ( a > b ) return 1
 				return 0
 			})
 		},
-		sortGeometryAndMaterial : function(){
-			//TODO: 정의해야함	
+		sortGeometryAndMaterial: function (recursive) {
+			//TODO: 정의,검증 해야함
+			if ( recursive ) {
+				var i = this.children.length
+				while ( i-- ) this.children[i].sortGeometryAndMaterial(recursive)
+			}
+			this.children.sort(function (a, b) {
+				a = a['_geometry']['interleaveBuffer']['_UUID']
+				b = b['_geometry']['interleaveBuffer']['_UUID']
+				if ( a == b ) {
+					var a2 = a['_material']['program']['_UUID']
+					var b2 = b['_material']['program']['_UUID']
+					if ( a2 < b2 ) return -1
+					if ( a2 > b2 ) return 1
+					return 0
+				}
+				if ( a < b ) return -1
+				if ( a > b ) return 1
+				return 0
+			})
 		},
 		/**DOC:
 		 {
