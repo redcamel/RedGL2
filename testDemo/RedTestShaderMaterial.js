@@ -90,7 +90,7 @@ var RedTestShaderMaterial;
 			 }
 			 void main(void) {
 				float xSize = 8.0;
-				float ySize = 8.0;
+				float ySize = 32.0;
 				vec3 cloudEffect = clouds(vTexcoord.x * xSize, vTexcoord.y * ySize);
                 vec3 finalColor = cloudEffect + vec3(.5, .8, 0.95);
 				gl_FragColor = fog( fogFactor(uFogDistance, uFogDensity), uFogColor, vec4(finalColor,1.0));

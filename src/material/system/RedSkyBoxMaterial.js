@@ -27,7 +27,6 @@ var RedSkyBoxMaterial;
 		 }
 		 void main(void) {
 			 vec4 finalColor = textureCube(u_skyBoxTexture, vReflectionCubeCoord);
-			 gl_FragColor = finalColor;
 			 //#define#fog#false# gl_FragColor = finalColor;
 			 //#define#fog#true# gl_FragColor = fog( fogFactor(uFogDistance, uFogDensity), uFogColor, finalColor);
 		 }

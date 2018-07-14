@@ -58,9 +58,7 @@ var RedPostEffect_SSAO;
 		point = RedPostEffect_SSAO_PointMaker(redGL)
 		this['process'] = [
 			point,
-			RedPostEffect_GaussianBlur(redGL),
-			RedPostEffect_Blur(redGL),
-			RedPostEffect_Blur(redGL)
+			RedPostEffect_GaussianBlur(redGL)
 		]
 		this['mode'] = RedPostEffect_SSAO.COLOR_SSAO
 		Object.defineProperty(this, 'blur', (function () {
