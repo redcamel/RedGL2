@@ -16,84 +16,146 @@ var RedTestShaderMaterial;
 		var PROGRAM_NAME;
 		vSource = function () {
 			/* @preserve
+			varying vec3 vPosition;
 			 void main(void) {
 			 	 vTexcoord = aTexcoord;
 			 	 vTime = uTime;
-				 gl_Position = uPMatrix * uCameraMatrix * uMMatrix * vec4(aVertexPosition, 1.0);
+				 gl_Position = uPMatrix * uMMatrix * vec4(aVertexPosition, 1.0);
+				 vPosition = gl_Position.xyz;
 			 }
 			 */
 		}
 		fSource = function () {
 			/* @preserve
 			 precision mediump float;
+#define PI 3.141592
+#define iSteps 16
+#define jSteps 8
 
+vec2 rsi(vec3 r0, vec3 rd, float sr) {
+    // ray-sphere intersection that assumes
+    // the sphere is centered at the origin.
+    // No intersection when result.x > result.y
+    float a = dot(rd, rd);
+    float b = 2.0 * dot(rd, r0);
+    float c = dot(r0, r0) - (sr * sr);
+    float d = (b*b) - 4.0*a*c;
+    if (d < 0.0) return vec2(1e5,-1e5);
+    return vec2(
+        (-b - sqrt(d))/(2.0*a),
+        (-b + sqrt(d))/(2.0*a)
+    );
+}
 
-			//////////////////////////////
-			// Noise
-			vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
-			vec4 mod289(vec4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
-			vec4 permute(vec4 x) { return mod289(((x*34.0)+1.0)*x); }
-			vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
-			vec3 fade(vec3 t) { return t*t*t*(t*(t*6.0-15.0)+10.0); }
-			float noise(vec3 P) {
-			    vec3 i0 = mod289(floor(P)), i1 = mod289(i0 + vec3(1.0));
-			    vec3 f0 = fract(P), f1 = f0 - vec3(1.0), f = fade(f0);
-			    vec4 ix = vec4(i0.x, i1.x, i0.x, i1.x), iy = vec4(i0.yy, i1.yy);
-			    vec4 iz0 = i0.zzzz, iz1 = i1.zzzz;
-			    vec4 ixy = permute(permute(ix) + iy), ixy0 = permute(ixy + iz0), ixy1 = permute(ixy + iz1);
-			    vec4 gx0 = ixy0 * (1.0 / 7.0), gy0 = fract(floor(gx0) * (1.0 / 7.0)) - 0.5;
-			    vec4 gx1 = ixy1 * (1.0 / 7.0), gy1 = fract(floor(gx1) * (1.0 / 7.0)) - 0.5;
-			    gx0 = fract(gx0); gx1 = fract(gx1);
-			    vec4 gz0 = vec4(0.5) - abs(gx0) - abs(gy0), sz0 = step(gz0, vec4(0.0));
-			    vec4 gz1 = vec4(0.5) - abs(gx1) - abs(gy1), sz1 = step(gz1, vec4(0.0));
-			    gx0 -= sz0 * (step(0.0, gx0) - 0.5); gy0 -= sz0 * (step(0.0, gy0) - 0.5);
-			    gx1 -= sz1 * (step(0.0, gx1) - 0.5); gy1 -= sz1 * (step(0.0, gy1) - 0.5);
-			    vec3 g0 = vec3(gx0.x,gy0.x,gz0.x), g1 = vec3(gx0.y,gy0.y,gz0.y),
-			        g2 = vec3(gx0.z,gy0.z,gz0.z), g3 = vec3(gx0.w,gy0.w,gz0.w),
-			        g4 = vec3(gx1.x,gy1.x,gz1.x), g5 = vec3(gx1.y,gy1.y,gz1.y),
-			        g6 = vec3(gx1.z,gy1.z,gz1.z), g7 = vec3(gx1.w,gy1.w,gz1.w);
-			    vec4 norm0 = taylorInvSqrt(vec4(dot(g0,g0), dot(g2,g2), dot(g1,g1), dot(g3,g3)));
-			    vec4 norm1 = taylorInvSqrt(vec4(dot(g4,g4), dot(g6,g6), dot(g5,g5), dot(g7,g7)));
-			    g0 *= norm0.x; g2 *= norm0.y; g1 *= norm0.z; g3 *= norm0.w;
-			    g4 *= norm1.x; g6 *= norm1.y; g5 *= norm1.z; g7 *= norm1.w;
-			    vec4 nz = mix(vec4(dot(g0, vec3(f0.x, f0.y, f0.z)), dot(g1, vec3(f1.x, f0.y, f0.z)),
-			        dot(g2, vec3(f0.x, f1.y, f0.z)), dot(g3, vec3(f1.x, f1.y, f0.z))),
-			        vec4(dot(g4, vec3(f0.x, f0.y, f1.z)), dot(g5, vec3(f1.x, f0.y, f1.z)),
-			            dot(g6, vec3(f0.x, f1.y, f1.z)), dot(g7, vec3(f1.x, f1.y, f1.z))), f.z);
-			    return 2.2 * mix(mix(nz.x,nz.z,f.y), mix(nz.y,nz.w,f.y), f.x);
-			}
-			float noise(vec2 P) { return noise(vec3(P, 0.0)); }
+vec3 atmosphere(vec3 r, vec3 r0, vec3 pSun, float iSun, float rPlanet, float rAtmos, vec3 kRlh, float kMie, float shRlh, float shMie, float g) {
+    // Normalize the sun and view directions.
+    pSun = normalize(pSun);
+    r = normalize(r);
 
-			float turbulence(vec3 P) {
-			    float f = 0., s = 1.;
-			    for (int i = 0 ; i < 9 ; i++) {
-			        f += abs(noise(s * P)) / s;
-			        s *= 2.;
-			        P = vec3(.866 * P.x + .5 * P.z, P.y + 100., -.5 * P.x + .866 * P.z);
-			    }
-			    return f;
-			}
+    // Calculate the step size of the primary ray.
+    vec2 p = rsi(r0, r, rAtmos);
+    if (p.x > p.y) return vec3(0,0,0);
+    p.y = min(p.y, rsi(r0, r, rPlanet).x);
+    float iStepSize = (p.y - p.x) / float(iSteps);
 
-			vec3 clouds(float x, float y) {
-			    float L = turbulence(vec3(x + vTime/30000.0, y + vTime/10000.0, vTime/1000.0 * .1));
-			    return vec3(noise(vec3(.5, .5, L) * .7));
-			}
-			//////////////////////////////
-			float fogFactor(float perspectiveFar, float density){
-			 float flog_cord = gl_FragCoord.z / gl_FragCoord.w / perspectiveFar;
-			 float fog = flog_cord * density;
-			 if(1.0 - fog < 0.0) discard;
-			 return clamp(1.0 - fog, 0.0,  1.0);
-			 }
-			 vec4 fog(float fogFactor, vec4 fogColor, vec4 currentColor) {
-				return mix(fogColor, currentColor, fogFactor);
-			 }
+    // Initialize the primary ray time.
+    float iTime = 0.0;
+
+    // Initialize accumulators for Rayleigh and Mie scattering.
+    vec3 totalRlh = vec3(0,0,0);
+    vec3 totalMie = vec3(0,0,0);
+
+    // Initialize optical depth accumulators for the primary ray.
+    float iOdRlh = 0.0;
+    float iOdMie = 0.0;
+
+    // Calculate the Rayleigh and Mie phases.
+    float mu = dot(r, pSun);
+    float mumu = mu * mu;
+    float gg = g * g;
+    float pRlh = 3.0 / (16.0 * PI) * (1.0 + mumu);
+    float pMie = 3.0 / (8.0 * PI) * ((1.0 - gg) * (mumu + 1.0)) / (pow(1.0 + gg - 2.0 * mu * g, 1.5) * (2.0 + gg));
+
+    // Sample the primary ray.
+    for (int i = 0; i < iSteps; i++) {
+
+        // Calculate the primary ray sample position.
+        vec3 iPos = r0 + r * (iTime + iStepSize * 0.5);
+
+        // Calculate the height of the sample.
+        float iHeight = length(iPos) - rPlanet;
+
+        // Calculate the optical depth of the Rayleigh and Mie scattering for this step.
+        float odStepRlh = exp(-iHeight / shRlh) * iStepSize;
+        float odStepMie = exp(-iHeight / shMie) * iStepSize;
+
+        // Accumulate optical depth.
+        iOdRlh += odStepRlh;
+        iOdMie += odStepMie;
+
+        // Calculate the step size of the secondary ray.
+        float jStepSize = rsi(iPos, pSun, rAtmos).y / float(jSteps);
+
+        // Initialize the secondary ray time.
+        float jTime = 0.0;
+
+        // Initialize optical depth accumulators for the secondary ray.
+        float jOdRlh = 0.0;
+        float jOdMie = 0.0;
+
+        // Sample the secondary ray.
+        for (int j = 0; j < jSteps; j++) {
+
+            // Calculate the secondary ray sample position.
+            vec3 jPos = iPos + pSun * (jTime + jStepSize * 0.5);
+
+            // Calculate the height of the sample.
+            float jHeight = length(jPos) - rPlanet;
+
+            // Accumulate the optical depth.
+            jOdRlh += exp(-jHeight / shRlh) * jStepSize;
+            jOdMie += exp(-jHeight / shMie) * jStepSize;
+
+            // Increment the secondary ray time.
+            jTime += jStepSize;
+        }
+
+        // Calculate attenuation.
+        vec3 attn = exp(-(kMie * (iOdMie + jOdMie) + kRlh * (iOdRlh + jOdRlh)));
+
+        // Accumulate scattering.
+        totalRlh += odStepRlh * attn;
+        totalMie += odStepMie * attn;
+
+        // Increment the primary ray time.
+        iTime += iStepSize;
+
+    }
+
+    // Calculate and return the final color.
+    return iSun * (pRlh * kRlh * totalRlh + pMie * kMie * totalMie);
+}
+varying vec3 vPosition;
 			 void main(void) {
-				float xSize = 8.0;
-				float ySize = 8.0;
-				vec3 cloudEffect = clouds(vTexcoord.x * xSize, vTexcoord.y * ySize);
-                vec3 finalColor = cloudEffect + vec3(.5, .8, 0.95);
-				gl_FragColor = fog( fogFactor(uFogDistance, uFogDensity), uFogColor, vec4(finalColor,1.0));
+			 vec3 uSunPos = uDirectionalLightPositionList[0];
+				vec3 color = atmosphere(
+		        normalize(vPosition),           // normalized ray direction
+		        vec3(0,6372e3,0),               // ray origin
+		        uSunPos,                        // position of the sun
+		        100.0,                           // intensity of the sun
+		        6371e3,                         // radius of the planet in meters
+		        6471e3,                         // radius of the atmosphere in meters
+		        vec3(5.5e-6, 13.0e-6, 22.4e-6), // Rayleigh scattering coefficient
+		        21e-6,                          // Mie scattering coefficient
+		        5000.0,                            // Rayleigh scale height
+		        1.2e3,                          // Mie scale height
+		        0.958                           // Mie preferred scattering direction
+		    );
+
+		    // Apply exposure.
+		    color = 1.0 - exp(-1.0 * color);
+
+		    gl_FragColor = vec4(color, 1);
 			 }
 			 */
 		}

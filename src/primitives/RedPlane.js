@@ -59,7 +59,7 @@ var RedPlane;
 					redGL,
 					type + '_indexBuffer',
 					RedBuffer.ELEMENT_ARRAY_BUFFER,
-					new Uint16Array(indexData)
+					new Uint32Array(indexData)
 				)
 			}
 		}
