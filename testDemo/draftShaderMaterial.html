@@ -107,8 +107,8 @@
     <script src="../src/shadow/RedShadowManager.js"></script>
     <!--이펙트-->
     <script src="../src/postEffect/RedPostEffectManager.js"></script>
-    <script src="../src/postEffect/RedPostEffect_Bloom.js"></script>
-    <script src="../src/postEffect/RedPostEffect_BloomThreshold.js"></script>
+    <script src="../src/postEffect/bloom/RedPostEffect_Bloom.js"></script>
+    <script src="../src/postEffect/bloom/RedPostEffect_BloomThreshold.js"></script>
     <script src="../src/postEffect/blur/RedPostEffect_Blur.js"></script>
     <script src="../src/postEffect/blur/RedPostEffect_BlurX.js"></script>
     <script src="../src/postEffect/blur/RedPostEffect_BlurY.js"></script>
@@ -122,8 +122,8 @@
     <script src="../src/postEffect/pixelate/RedPostEffect_HalfTone.js"></script>
     <script src="../src/postEffect/pixelate/RedPostEffect_Pixelize.js"></script>
     <script src="../src/postEffect/RedPostEffect_Convolution.js"></script>
-    <script src="../src/postEffect/RedPostEffect_DoF.js"></script>
-    <script src="../src/postEffect/RedPostEffect_DoF_DepthMaterial.js"></script>
+    <script src="../src/postEffect/dof/RedPostEffect_DoF.js"></script>
+    <script src="../src/postEffect/dof/RedPostEffect_DoF_DepthMaterial.js"></script>
     <script src="../src/postEffect/RedPostEffect_Film.js"></script>
     <script src="../src/postEffect/RedPostEffect_Vignetting.js"></script>
     <script src="../src/postEffect/RedPostEffect_SSAO.js"></script>
@@ -132,7 +132,9 @@
     <script src="../src/postEffect/RedPostEffect_SSAO_PointMaker.js"></script>
     <script src="../src/postEffect/antialiasing/RedPostEffect_FXAA.js"></script>
 
-    <script src="RedTestShaderMaterial.js"></script>
+    <script src="RedTestShaderMaterial2.js"></script>
+    <script src="../src/primitives/RedGround.js"></script>
+    <script src="RedNoise.js"></script>
 </head>
 
 <body>
@@ -152,22 +154,28 @@
 		// tScene3D['useFog'] = true
 		tCamera = RedObitController(this);
 		tCamera.tilt = -45
-		tCamera.distance = 40
+		tCamera.distance = 1000
+		tCamera.speedDistance = 25
 		tRenderer = RedRenderer();
 		tWorld.addView(RedView('test', this, tScene3D, tCamera));
 		RedView('test').setSize('100%', '100%')
 		RedView('test').setLocation('0%', '0%')
 		this.renderScale = 1
 		var testDLight, testALight, testPLight;
-		testDLight = RedDirectionalLight(this)
-		testDLight.x = -3
-		testDLight.y = -2
-		testDLight.z = -3
-		testDLight.debug = true
+		testDLight = RedDirectionalLight(this, '#ff00ff', 0.3)
+		testDLight.x = -30
+		testDLight.y = 20
+		testDLight.z = -30
 //		testDLight.intensity = 1.5
 		tScene3D.addLight(testDLight)
-		tScene3D.useFog = true
-		tScene3D.fogDistance = 750
+		testDLight = RedDirectionalLight(this)
+		testDLight.x = -3
+		testDLight.y = 2
+		testDLight.z = -3
+//		testDLight.intensity = 1.5
+		tScene3D.addLight(testDLight)
+//		tScene3D.useFog = true
+		tScene3D.fogDistance = 2500
 		tScene3D.skyBox =
 			RedSkyBox(this, [
 				'../asset/cubemap/posx.png',
@@ -179,20 +187,70 @@
 			]);
 		var testMaterial
 		testMaterial = RedTestShaderMaterial(this)
-		var tGeo = RedBox(self, 2000, 0.1, 2000, 1, 1, 1)
-		var tMesh = RedMesh(self, tGeo, testMaterial)
+		var tGeo = RedGround(self, 1000, 1000, 100, 100)
+		var tMesh = RedMesh(self, tGeo, RedStandardMaterial(
+			this,
+			RedBitmapTexture(this, '../asset/grass.jpg')
+			)
+		)
+		tMesh.useCullFace = false
+		tMesh.pointSize = 2
+//		tMesh.drawMode = this.gl.LINES
 		tScene3D.addChild(tMesh)
 		tRenderer.renderDebuger.visible = true
+		var tShadow = RedDirectionalShadow(this, testDLight)
+		tShadow.size = 1000
+		tScene3D.shadowManager.directionalShadow = tShadow
+		var i = 50
+		while ( i-- ) {
+			var tMesh2 = RedMesh(self, RedSphere(this, Math.random() * 25 + 5, 32, 32, 32), RedStandardMaterial(this, RedBitmapTexture(this, '../asset/crate.png')))
+			tMesh2.y = 100 + Math.random() * 50
+			tMesh2.x = Math.random() * 800 - 400
+			tMesh2.z = Math.random() * 800 - 400
+			tMesh2.useCullFace = false
+			tScene3D.addChild(tMesh2)
+			tShadow.addCasting(tMesh2)
+		}
 		tRenderer.start(this, function (time) {
-			testDLight.x = Math.sin(time / 1000) * 25
-			testDLight.y = 25
-			testDLight.z = Math.cos(time / 1000) * 25
-			var i = tScene3D.children.length
-			while ( i-- ) {
-				if ( i == 0 ) break
-				testMesh = tScene3D.children[i]
-			}
+			testDLight.x = Math.sin(time / 1000) * 100
+			testDLight.y = 200
+			testDLight.z = Math.cos(time / 1000) * 100
 		})
+		this['gui'] = new dat.GUI({
+			name: 'test'
+		});
+		var t0 = this['gui'].addFolder('dof')
+		var testGeo = {
+			divisionX: 100,
+			divisionY: 100,
+			seed: 1,
+			testSeedX: 1,
+			testSeedY: 1,
+			maxHeight: 100,
+			drawMode: 'TRIANGLES'
+		}
+		t0.add(testGeo, 'divisionX', 0, 200).onChange(function (v) {
+			tMesh.geometry = RedGround(self, 1000, 1000, v, v, testGeo.seed, testGeo.testSeedX, testGeo.testSeedY, testGeo.maxHeight)
+		})
+		t0.add(testGeo, 'divisionY', 0, 200).onChange(function (v) {
+			tMesh.geometry = RedGround(self, 1000, 1000, v, v, testGeo.seed, testGeo.testSeedX, testGeo.testSeedY, testGeo.maxHeight)
+		})
+		t0.add(testGeo, 'seed', 0, 1, 0.001).onChange(function (v) {
+			tMesh.geometry = RedGround(self, 1000, 1000, testGeo.divisionX, testGeo.divisionY, v, testGeo.testSeedX, testGeo.testSeedY, testGeo.maxHeight)
+		})
+		t0.add(testGeo, 'testSeedX', 0.1, 10, 0.001).onChange(function (v) {
+			tMesh.geometry = RedGround(self, 1000, 1000, testGeo.divisionX, testGeo.divisionY, testGeo.seed, v, testGeo.testSeedY, testGeo.maxHeight)
+		})
+		t0.add(testGeo, 'testSeedY', 0.1, 10, 0.001).onChange(function (v) {
+			tMesh.geometry = RedGround(self, 1000, 1000, testGeo.divisionX, testGeo.divisionY, testGeo.seed, testGeo.testSeedX, v, testGeo.maxHeight)
+		})
+		t0.add(testGeo, 'maxHeight', 1, 300, 0.1).onChange(function (v) {
+			tMesh.geometry = RedGround(self, 1000, 1000, testGeo.divisionX, testGeo.divisionY, testGeo.seed, testGeo.testSeedX, testGeo.testSeedY, v)
+		})
+		t0.add(testGeo, 'drawMode', ['TRIANGLES', 'LINES', 'POINTS']).onChange(function (v) {
+			tMesh.drawMode = self.gl[v]
+		})
+		t0.open()
 		console.log(tScene3D)
 	})
 </script>

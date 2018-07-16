@@ -104,7 +104,7 @@ var RedStandardMaterial;
 	        //#define#directionalShadow#true#            if(tUV.y<0.0) continue;
 	        //#define#directionalShadow#true#            if(tUV.y>1.0) continue;
 			//#define#directionalShadow#true#	        float texelDepth = decodeFloat(texture2D(uDirectionalShadowTexture,tUV));
-			//#define#directionalShadow#true#	        if (fragmentDepth.z < texelDepth) amountInLight += 0.5;
+			//#define#directionalShadow#true#	        if (fragmentDepth.z < texelDepth ) amountInLight += 0.5;
 			//#define#directionalShadow#true#	       // texelColor =  texture2D(uDirectionalShadowTexture,tUV);
 			//#define#directionalShadow#true#	    }
 			//#define#directionalShadow#true#	}
