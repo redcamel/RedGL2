@@ -7,7 +7,7 @@ var RedGround;
 		var gridX, gridY;
 		var gridX1, gridY1;
 		var segment_width, segment_height;
-		var ix, iy;
+		var jj, ii;
 		var tX, tZ;
 		var a, b, c, d;
 		var calculateNormals = function (vs, ind) {
@@ -71,23 +71,35 @@ var RedGround;
 			_v = []
 			_n = []
 			var noise = new RedNoise(seed)
-			for ( iy = 0; iy < gridY1; iy++ ) {
-				tZ = iy * segment_height - height_half;
-				for ( ix = 0; ix < gridX1; ix++ ) {
-					tX = ix * segment_width - width_half
+			for ( ii = 0; ii < gridY1; ii++ ) {
+				tZ = ii * segment_height - height_half;
+				for ( jj = 0; jj < gridX1; jj++ ) {
+					tX = jj * segment_width - width_half
 					// position, normal, texcoord
-					var tY = noise.noise2D(tX * seedX / width, tZ * seedY / height) * maxHeight
+					// persistence 지속성
+					// frequency 진동수
+					var tY = noise.noise2D(ii / wSegments, jj / hSegments)
+					var si = 0,si2 = 1
+					for ( si; si < seedX; si++ ) {
+						si2 *= 2
+						tY += noise.noise2D((ii + wSegments * si2) / (hSegments / si2), jj / (hSegments / si2)) * Math.pow(0.5, si+1)
+					}
+					// tY +=  noise.noise2D((ii + wSegments* 2)  / (hSegments/2), jj / (hSegments/2)) * Math.pow(0.5, 1)
+					// tY += noise.noise2D((ii + wSegments * 4) / (hSegments/4), jj / (hSegments/4)) * Math.pow(0.5, 2)
+					// tY += noise.noise2D((ii + wSegments * 8) / (hSegments/8), jj / (hSegments/8)) * Math.pow(0.5, 3)
+					// tY += noise.noise2D((ii + wSegments* 16)  /(hSegments/16), jj / (hSegments/16)) * Math.pow(0.5, 4)
+					tY *= maxHeight
 					_v.push(tX, tY, tZ)
-					interleaveData.push(tX, tY, tZ, 0, 0, 1, ix / gridX, 1 - (iy / gridY))
+					interleaveData.push(tX, tY, tZ, 0, 0, 1, jj / gridX, 1 - (ii / gridY))
 				}
 			}
 			// indexData
-			for ( iy = 0; iy < gridY; iy++ ) {
-				for ( ix = 0; ix < gridX; ix++ ) {
-					a = ix + gridX1 * iy,
-						b = ix + gridX1 * (iy + 1),
-						c = (ix + 1) + gridX1 * (iy + 1),
-						d = (ix + 1) + gridX1 * iy,
+			for ( ii = 0; ii < gridY; ii++ ) {
+				for ( jj = 0; jj < gridX; jj++ ) {
+					a = jj + gridX1 * ii,
+						b = jj + gridX1 * (ii + 1),
+						c = (jj + 1) + gridX1 * (ii + 1),
+						d = (jj + 1) + gridX1 * ii,
 						indexData.push(b, c, d, a, b, d)
 				}
 			}
@@ -169,16 +181,16 @@ var RedGround;
 		width = width || 1, height = height || 1;
 		wSegments = wSegments || 1, hSegments = hSegments || 1;
 		seed = seed || 1
-		seedX = seedX || 1
+		seedX = seedX || 0.4
 		seedY = seedY || 1
-		maxHeight = maxHeight || 100
+		maxHeight = maxHeight || 500
 		tType = 'RedGround' + '_' + width + '_' + height + '_' + wSegments + '_' + hSegments + '_' + seed + '_' + seedX + '_' + seedY + '_' + maxHeight;
 		// 유일키 방어
 		if ( !redGL['_datas']['Primitives'] ) redGL['_datas']['Primitives'] = {};
 		if ( redGL['_datas']['Primitives'][tType] ) return redGL['_datas']['Primitives'][tType];
 		else redGL['_datas']['Primitives'][tType] = this;
 		//
-		tPrimitiveData = makeData(redGL, tType, width, height, wSegments, hSegments, seed, seedX,seedY,maxHeight);
+		tPrimitiveData = makeData(redGL, tType, width, height, wSegments, hSegments, seed, seedX, seedY, maxHeight);
 		this['interleaveBuffer'] = tPrimitiveData['interleaveBuffer'];
 		this['indexBuffer'] = tPrimitiveData['indexBuffer'];
 		this['_UUID'] = RedGL['makeUUID']();

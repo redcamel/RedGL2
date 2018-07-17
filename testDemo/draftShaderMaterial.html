@@ -154,7 +154,7 @@
 		// tScene3D['useFog'] = true
 		tCamera = RedObitController(this);
 		tCamera.tilt = -45
-		tCamera.distance = 1000
+		tCamera.distance = 1500
 		tCamera.speedDistance = 25
 		tRenderer = RedRenderer();
 		tWorld.addView(RedView('test', this, tScene3D, tCamera));
@@ -187,14 +187,15 @@
 			]);
 		var testMaterial
 		testMaterial = RedTestShaderMaterial(this)
-		var tGeo = RedGround(self, 1000, 1000, 100, 100)
+		var tGeo = RedGround(self, 3000, 3000, 100, 100,0.5,4)
 		var tMesh = RedMesh(self, tGeo, RedStandardMaterial(
 			this,
 			RedBitmapTexture(this, '../asset/grass.jpg')
 			)
 		)
-		tMesh.useCullFace = false
+//		tMesh.useCullFace = false
 		tMesh.pointSize = 2
+		tMesh.material.specularPower = 0.1
 //		tMesh.drawMode = this.gl.LINES
 		tScene3D.addChild(tMesh)
 		tRenderer.renderDebuger.visible = true
@@ -207,14 +208,14 @@
 			tMesh2.y = 100 + Math.random() * 50
 			tMesh2.x = Math.random() * 800 - 400
 			tMesh2.z = Math.random() * 800 - 400
-			tMesh2.useCullFace = false
+//			tMesh2.useCullFace = false
 			tScene3D.addChild(tMesh2)
 			tShadow.addCasting(tMesh2)
 		}
 		tRenderer.start(this, function (time) {
-			testDLight.x = Math.sin(time / 1000) * 100
+			testDLight.x = Math.sin(time / 3000) * 100
 			testDLight.y = 200
-			testDLight.z = Math.cos(time / 1000) * 100
+			testDLight.z = Math.cos(time / 3000) * 100
 		})
 		this['gui'] = new dat.GUI({
 			name: 'test'
@@ -224,28 +225,28 @@
 			divisionX: 100,
 			divisionY: 100,
 			seed: 1,
-			testSeedX: 1,
+			testSeedX:4,
 			testSeedY: 1,
-			maxHeight: 100,
+			maxHeight: 500,
 			drawMode: 'TRIANGLES'
 		}
 		t0.add(testGeo, 'divisionX', 0, 200).onChange(function (v) {
-			tMesh.geometry = RedGround(self, 1000, 1000, v, v, testGeo.seed, testGeo.testSeedX, testGeo.testSeedY, testGeo.maxHeight)
+			tMesh.geometry = RedGround(self, 3000, 3000, v, v, testGeo.seed, testGeo.testSeedX, testGeo.testSeedY, testGeo.maxHeight)
 		})
 		t0.add(testGeo, 'divisionY', 0, 200).onChange(function (v) {
-			tMesh.geometry = RedGround(self, 1000, 1000, v, v, testGeo.seed, testGeo.testSeedX, testGeo.testSeedY, testGeo.maxHeight)
+			tMesh.geometry = RedGround(self, 3000, 3000, v, v, testGeo.seed, testGeo.testSeedX, testGeo.testSeedY, testGeo.maxHeight)
 		})
 		t0.add(testGeo, 'seed', 0, 1, 0.001).onChange(function (v) {
-			tMesh.geometry = RedGround(self, 1000, 1000, testGeo.divisionX, testGeo.divisionY, v, testGeo.testSeedX, testGeo.testSeedY, testGeo.maxHeight)
+			tMesh.geometry = RedGround(self, 3000, 3000, testGeo.divisionX, testGeo.divisionY, v, testGeo.testSeedX, testGeo.testSeedY, testGeo.maxHeight)
 		})
-		t0.add(testGeo, 'testSeedX', 0.1, 10, 0.001).onChange(function (v) {
-			tMesh.geometry = RedGround(self, 1000, 1000, testGeo.divisionX, testGeo.divisionY, testGeo.seed, v, testGeo.testSeedY, testGeo.maxHeight)
+		t0.add(testGeo, 'testSeedX', 1, 8, 1).onChange(function (v) {
+			tMesh.geometry = RedGround(self, 3000, 3000, testGeo.divisionX, testGeo.divisionY, testGeo.seed, v, testGeo.testSeedY, testGeo.maxHeight)
 		})
-		t0.add(testGeo, 'testSeedY', 0.1, 10, 0.001).onChange(function (v) {
-			tMesh.geometry = RedGround(self, 1000, 1000, testGeo.divisionX, testGeo.divisionY, testGeo.seed, testGeo.testSeedX, v, testGeo.maxHeight)
-		})
-		t0.add(testGeo, 'maxHeight', 1, 300, 0.1).onChange(function (v) {
-			tMesh.geometry = RedGround(self, 1000, 1000, testGeo.divisionX, testGeo.divisionY, testGeo.seed, testGeo.testSeedX, testGeo.testSeedY, v)
+//		t0.add(testGeo, 'testSeedY', 0.1, 10, 0.001).onChange(function (v) {
+//			tMesh.geometry = RedGround(self, 3000, 3000, testGeo.divisionX, testGeo.divisionY, testGeo.seed, testGeo.testSeedX, v, testGeo.maxHeight)
+//		})
+		t0.add(testGeo, 'maxHeight', 1, 1000, 0.1).onChange(function (v) {
+			tMesh.geometry = RedGround(self, 3000, 3000, testGeo.divisionX, testGeo.divisionY, testGeo.seed, testGeo.testSeedX, testGeo.testSeedY, v)
 		})
 		t0.add(testGeo, 'drawMode', ['TRIANGLES', 'LINES', 'POINTS']).onChange(function (v) {
 			tMesh.drawMode = self.gl[v]

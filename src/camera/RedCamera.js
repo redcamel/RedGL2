@@ -83,7 +83,7 @@ var RedCamera;
 			 return : 'Number'
 		 }
 		 :DOC*/
-		this['fov'] = 45;
+		this['fov'] = 60;
 		/**DOC:
 		 {
 			 code:`PROPERTY`,
