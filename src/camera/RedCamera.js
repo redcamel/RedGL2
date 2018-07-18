@@ -88,20 +88,20 @@ var RedCamera;
 		 {
 			 code:`PROPERTY`,
 			 title :`nearClipping`,
-			 description : `기본값 - 0.01`,
+			 description : `기본값 - 0.1`,
 			 return : 'Number'
 		 }
 		 :DOC*/
-		this['nearClipping'] = 0.01;
+		this['nearClipping'] = 0.1;
 		/**DOC:
 		 {
 			 code:`PROPERTY`,
 			 title :`farClipping`,
-			 description : `기본값 : 10000`,
+			 description : `기본값 : 100000`,
 			 return : 'Number'
 		 }
 		 :DOC*/
-		this['farClipping'] = 10000;
+		this['farClipping'] = 100000;
 		/**DOC:
 		 {
 			 code:`PROPERTY`,

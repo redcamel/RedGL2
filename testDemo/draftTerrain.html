@@ -154,8 +154,8 @@
 		// tScene3D['useFog'] = true
 		tCamera = RedObitController(this);
 		tCamera.tilt = -45
-		tCamera.distance = 1500
-		tCamera.speedDistance = 100
+		tCamera.distance = 1000
+		tCamera.speedDistance = 50
 		tRenderer = RedRenderer();
 		tWorld.addView(RedView('test', this, tScene3D, tCamera));
 		RedView('test').setSize('100%', '100%')
@@ -174,7 +174,7 @@
 		testDLight.z = -3
 //		testDLight.intensity = 1.5
 		tScene3D.addLight(testDLight)
-		tScene3D.useFog = true
+//		tScene3D.useFog = true
 		tScene3D.fogDistance = 2048
 		tScene3D.fogDensity = 0.3
 		tScene3D.skyBox =
@@ -188,26 +188,26 @@
 			]);
 		var testMaterial
 		testMaterial = RedTestShaderMaterial(this)
-		var tMesh;
 		///////////////////////////////////
 		var testGeo = {
 			divisionX: 128,
 			divisionY: 128,
-			sizeX: 1024,
-			sizeY: 1024,
+			sizeX: 512,
+			sizeY: 512,
 			seed: 1,
-			testSeedX: 4,
-			testSeedY: 2500,
+			testSeedX: 8,
+			testSeedY: 4000,
 			maxHeight: 650,
 			drawMode: 'TRIANGLES'
 		}
+
 		var meshList = []
 		////////////////////////////////////
 		tRenderer.renderDebuger.visible = true
 		tRenderer.start(this, function (time) {
-			testDLight.x = Math.sin(time / 3000) * 100
-			testDLight.y = 200
-			testDLight.z = Math.cos(time / 3000) * 100
+			testDLight.x = Math.sin(time / 1000) * 500
+			testDLight.y = 1000
+			testDLight.z = Math.cos(time / 1000) * 500
 		})
 		this['gui'] = new dat.GUI({
 			name: 'test'
@@ -217,15 +217,110 @@
 			[0, 0],
 			[0, -testGeo.sizeY],
 			[0, testGeo.sizeY],
+			[0, -testGeo.sizeY * 2],
+			[0, testGeo.sizeY * 2],
 			//
 			[-testGeo.sizeX, 0],
+			[-testGeo.sizeX * 2, 0],
 			[-testGeo.sizeX, -testGeo.sizeY],
 			[-testGeo.sizeX, testGeo.sizeY],
+			[-testGeo.sizeX, -testGeo.sizeY * 2],
+			[-testGeo.sizeX, testGeo.sizeY * 2],
+			[-testGeo.sizeX * 2, -testGeo.sizeY],
+			[-testGeo.sizeX * 2, testGeo.sizeY],
+			[-testGeo.sizeX * 2, -testGeo.sizeY * 2],
+			[-testGeo.sizeX * 2, testGeo.sizeY * 2],
 			//
 			[testGeo.sizeX, 0],
+			[testGeo.sizeX * 2, 0],
 			[testGeo.sizeX, -testGeo.sizeY],
-			[testGeo.sizeX, testGeo.sizeY]
+			[testGeo.sizeX, testGeo.sizeY],
+			[testGeo.sizeX, -testGeo.sizeY * 2],
+			[testGeo.sizeX, testGeo.sizeY * 2],
+			[testGeo.sizeX * 2, -testGeo.sizeY],
+			[testGeo.sizeX * 2, testGeo.sizeY],
+			[testGeo.sizeX * 2, -testGeo.sizeY * 2],
+			[testGeo.sizeX * 2, testGeo.sizeY * 2]
 		];
+		var updateTest = function (v) {
+			testLocationInfo = [
+				[0, 0],
+				[0, -testGeo.sizeY],
+				[0, testGeo.sizeY],
+				[0, -testGeo.sizeY * 2],
+				[0, testGeo.sizeY * 2],
+				//
+				[-testGeo.sizeX, 0],
+				[-testGeo.sizeX * 2, 0],
+				[-testGeo.sizeX, -testGeo.sizeY],
+				[-testGeo.sizeX, testGeo.sizeY],
+				[-testGeo.sizeX, -testGeo.sizeY * 2],
+				[-testGeo.sizeX, testGeo.sizeY * 2],
+				[-testGeo.sizeX * 2, -testGeo.sizeY],
+				[-testGeo.sizeX * 2, testGeo.sizeY],
+				[-testGeo.sizeX * 2, -testGeo.sizeY * 2],
+				[-testGeo.sizeX * 2, testGeo.sizeY * 2],
+				//
+				[testGeo.sizeX, 0],
+				[testGeo.sizeX * 2, 0],
+				[testGeo.sizeX, -testGeo.sizeY],
+				[testGeo.sizeX, testGeo.sizeY],
+				[testGeo.sizeX, -testGeo.sizeY * 2],
+				[testGeo.sizeX, testGeo.sizeY * 2],
+				[testGeo.sizeX * 2, -testGeo.sizeY],
+				[testGeo.sizeX * 2, testGeo.sizeY],
+				[testGeo.sizeX * 2, -testGeo.sizeY * 2],
+				[testGeo.sizeX * 2, testGeo.sizeY * 2]
+			];
+			var i = testLocationInfo.length
+			while ( i-- ) {
+				var tMesh = meshList[i]
+				tMesh.useLOD = true
+				tMesh.x = testLocationInfo[i][0]
+				tMesh.z = testLocationInfo[i][1]
+				tMesh.addLOD(0, 1024, RedGround(
+					self,
+					testGeo.sizeX, testGeo.sizeY,
+					testGeo.divisionX, testGeo.divisionY,
+					testGeo.seed, testGeo.testSeedX, testGeo.testSeedY,
+					testGeo.maxHeight,
+					testLocationInfo[i][0], testLocationInfo[i][1]
+				))
+				tMesh.addLOD(1, 1024 * 2, tMesh.geometry = RedGround(
+					self,
+					testGeo.sizeX, testGeo.sizeY,
+					testGeo.divisionX / 2, testGeo.divisionY / 2,
+					testGeo.seed, testGeo.testSeedX, testGeo.testSeedY,
+					testGeo.maxHeight,
+					testLocationInfo[i][0], testLocationInfo[i][1]
+				))
+				tMesh.addLOD(2, 1024 * 3, tMesh.geometry = RedGround(
+					self,
+					testGeo.sizeX, testGeo.sizeY,
+					testGeo.divisionX / 4, testGeo.divisionY / 4,
+					testGeo.seed, testGeo.testSeedX, testGeo.testSeedY,
+					testGeo.maxHeight,
+					testLocationInfo[i][0], testLocationInfo[i][1]
+				))
+				tMesh.addLOD(3, 1024 * 4, tMesh.geometry = RedGround(
+					self,
+					testGeo.sizeX, testGeo.sizeY,
+					testGeo.divisionX / 8, testGeo.divisionY / 8,
+					testGeo.seed, testGeo.testSeedX, testGeo.testSeedY,
+					testGeo.maxHeight,
+					testLocationInfo[i][0], testLocationInfo[i][1]
+				))
+				tMesh.addLOD(4, 1024 * 5, tMesh.geometry = RedGround(
+					self,
+					testGeo.sizeX, testGeo.sizeY,
+					testGeo.divisionX / 16, testGeo.divisionY / 16,
+					testGeo.seed, testGeo.testSeedX, testGeo.testSeedY,
+					testGeo.maxHeight,
+					testLocationInfo[i][0], testLocationInfo[i][1]
+				))
+				console.log(testLocationInfo[i])
+			}
+		}
 		testLocationInfo.forEach(function (v) {
 			var tGeo = RedGround(
 				self,
@@ -236,42 +331,16 @@
 			)
 			var tMesh = RedMesh(self, tGeo, RedStandardMaterial(
 				self,
-				RedBitmapTexture(self, '../asset/grass.jpg')
+				RedBitmapTexture(self, '../asset/grass.jpg'),
+				RedBitmapTexture(self, '../asset/noise_normal.jpg')
 				)
 			)
 			tMesh.pointSize = 2
-			tMesh.material.specularPower = 0.1
+			tMesh.material.specularPower = 0.2
 			tScene3D.addChild(tMesh)
 			meshList.push(tMesh)
 		})
-		var updateTest = function (v) {
-			testLocationInfo = [
-				[0, 0],
-				[0, -testGeo.sizeY],
-				[0, testGeo.sizeY],
-				//
-				[-testGeo.sizeX, 0],
-				[-testGeo.sizeX, -testGeo.sizeY],
-				[-testGeo.sizeX, testGeo.sizeY],
-				//
-				[testGeo.sizeX, 0],
-				[testGeo.sizeX, -testGeo.sizeY],
-				[testGeo.sizeX, testGeo.sizeY]
-			];
-			var i = testLocationInfo.length
-			while ( i-- ) {
-
-				meshList[i].geometry = RedGround(
-					self,
-					testGeo.sizeX, testGeo.sizeY,
-					testGeo.divisionX, testGeo.divisionY,
-					testGeo.seed, testGeo.testSeedX, testGeo.testSeedY,
-					testGeo.maxHeight,
-					testLocationInfo[i][0], testLocationInfo[i][1]
-				)
-				console.log(testLocationInfo[i])
-			}
-		}
+		updateTest()
 		t0.add(testGeo, 'sizeX', 0, 5000).onChange(function (v) {
 			updateTest(v)
 		})
