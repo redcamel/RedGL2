@@ -299,7 +299,10 @@ var RedRenderer;
 				// 실제렌더 계산
 				updateSystemUniform.apply(self, [redGL, time, tView])
 				if ( tScene['skyBox'] ) {
-					tScene['skyBox']['scaleX'] = tScene['skyBox']['scaleY'] = tScene['skyBox']['scaleZ'] = tCamera['farClipping']
+					tScene['skyBox']['x'] = tCamera.x
+					tScene['skyBox']['y'] = tCamera.y
+					tScene['skyBox']['z'] = tCamera.z
+					tScene['skyBox']['scaleX'] = tScene['skyBox']['scaleY'] = tScene['skyBox']['scaleZ'] = tCamera['farClipping']*0.6
 					self.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], [tScene['skyBox']], time, tRenderInfo);
 					gl.clear(gl.DEPTH_BUFFER_BIT);
 				}

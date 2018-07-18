@@ -74,17 +74,19 @@ var RedGround;
 			locationZ = locationZ || 0
 			console.log('~location', locationZ)
 			for ( ii = 0; ii < gridY1; ii++ ) {
-				tZ = (ii) * segment_height - height_half + locationZ;
+				tZ = (ii) * segment_height - height_half;
 				for ( jj = 0; jj < gridX1; jj++ ) {
-					tX = jj * segment_width - width_half + locationX
+					tX = jj * segment_width - width_half
 					// position, normal, texcoord
 					// persistence 지속성
 					// frequency 진동수
-					var tY = noise.noise2D((tX) / Math.pow(seedY, 2), (tZ) / Math.pow(seedY, 4))
+					var tZ2 = tZ+ locationZ
+					var tX2 = tX+ locationX
+					var tY = noise.noise2D((tX2) / Math.pow(seedY, 2), (tZ2) / Math.pow(seedY, 4))
 					var si = 0, si2 = 1
 					for ( si; si < seedX; si++ ) {
 						si2 *= 2
-						tY += noise.noise2D(((tX) + seedY * si2) / (seedY / si2), (tZ) / (seedY / si2)) * Math.pow(0.5, si + 1)
+						tY += noise.noise2D(((tX2) + seedY * si2) / (seedY / si2), (tZ2) / (seedY / si2)) * Math.pow(0.5, si + 1)
 					}
 					// tY +=  noise.noise2D((ii + wSegments* 2)  / (hSegments/2), jj / (hSegments/2)) * Math.pow(0.5, 1)
 					// tY += noise.noise2D((ii + wSegments * 4) / (hSegments/4), jj / (hSegments/4)) * Math.pow(0.5, 2)
@@ -113,7 +115,7 @@ var RedGround;
 				interleaveData[tIndex * 8 + 4] = _n[tIndex * 3 + 1]
 				interleaveData[tIndex * 8 + 5] = _n[tIndex * 3 + 2]
 			}
-			console.log(interleaveData)
+			// console.log(interleaveData)
 			////////////////////////////////////////////////////////////////////////////
 			return {
 				interleaveData: interleaveData,
@@ -196,7 +198,7 @@ var RedGround;
 		this['interleaveBuffer'] = tPrimitiveData['interleaveBuffer'];
 		this['indexBuffer'] = tPrimitiveData['indexBuffer'];
 		this['_UUID'] = RedGL['makeUUID']();
-		console.log(this);
+		// console.log(this);
 	}
 	RedGround.prototype = RedGeometry.prototype;
 	Object.freeze(RedGround);
