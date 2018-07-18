@@ -174,91 +174,136 @@
 		testDLight.z = -3
 //		testDLight.intensity = 1.5
 		tScene3D.addLight(testDLight)
-//		tScene3D.useFog = true
-		tScene3D.fogDistance = 2500
-//		tScene3D.skyBox =
-//			RedSkyBox(this, [
-//				'../asset/cubemap/posx.png',
-//				'../asset/cubemap/negx.png',
-//				'../asset/cubemap/posy.png',
-//				'../asset/cubemap/negy.png',
-//				'../asset/cubemap/posz.png',
-//				'../asset/cubemap/negz.png'
-//			]);
+		tScene3D.useFog = true
+		tScene3D.fogDistance = 2048
+		tScene3D.fogDensity = 0.3
+		tScene3D.skyBox =
+			RedSkyBox(this, [
+				'../asset/cubemap/posx.png',
+				'../asset/cubemap/negx.png',
+				'../asset/cubemap/posy.png',
+				'../asset/cubemap/negy.png',
+				'../asset/cubemap/posz.png',
+				'../asset/cubemap/negz.png'
+			]);
 		var testMaterial
 		testMaterial = RedTestShaderMaterial(this)
-		var tGeo = RedGround(self, 3000, 3000, 100, 100, 0.5, 4)
-		var tMesh = RedMesh(self, tGeo, RedStandardMaterial(
-			this,
-			RedBitmapTexture(this, '../asset/grass.jpg')
-			)
-		)
-//		tMesh.useCullFace = false
-		tMesh.pointSize = 2
-		tMesh.material.specularPower = 0.1
-//		tMesh.drawMode = this.gl.LINES
-		tScene3D.addChild(tMesh)
-		tRenderer.renderDebuger.visible = true
-		var tShadow = RedDirectionalShadow(this, testDLight)
-		tShadow.size = 1000
-		tScene3D.shadowManager.directionalShadow = tShadow
-		var i = 50
-		while ( i-- ) {
-			var tMesh2 = RedMesh(self, RedSphere(this, Math.random() * 25 + 5, 32, 32, 32), RedStandardMaterial(this, RedBitmapTexture(this, '../asset/crate.png')))
-			tMesh2.y = 200 + Math.random() * 50
-			tMesh2.x = Math.random() * 800 - 400
-			tMesh2.z = Math.random() * 800 - 400
-//			tMesh2.useCullFace = false
-			tScene3D.addChild(tMesh2)
-			tShadow.addCasting(tMesh2)
+		var tMesh;
+		///////////////////////////////////
+		var testGeo = {
+			divisionX: 128,
+			divisionY: 128,
+			sizeX: 1024,
+			sizeY: 1024,
+			seed: 1,
+			testSeedX: 4,
+			testSeedY: 2500,
+			maxHeight: 650,
+			drawMode: 'TRIANGLES'
 		}
+		var meshList = []
+		////////////////////////////////////
+		tRenderer.renderDebuger.visible = true
 		tRenderer.start(this, function (time) {
 			testDLight.x = Math.sin(time / 3000) * 100
 			testDLight.y = 200
 			testDLight.z = Math.cos(time / 3000) * 100
-			tMesh.geometry = RedGround(self, testGeo.sizeX, testGeo.sizeY, testGeo.divisionX, testGeo.divisionY, testGeo.seed, testGeo.testSeedX, testGeo.testSeedY, testGeo.maxHeight, time)
 		})
 		this['gui'] = new dat.GUI({
 			name: 'test'
 		});
 		var t0 = this['gui'].addFolder('dof')
-		var testGeo = {
-			divisionX: 100,
-			divisionY: 100,
-			sizeX: 3000,
-			sizeY: 3000,
-			seed: 1,
-			testSeedX: 4,
-			testSeedY: 1,
-			maxHeight: 500,
-			drawMode: 'TRIANGLES'
+		var testLocationInfo = [
+			[0, 0],
+			[0, -testGeo.sizeY],
+			[0, testGeo.sizeY],
+			//
+			[-testGeo.sizeX, 0],
+			[-testGeo.sizeX, -testGeo.sizeY],
+			[-testGeo.sizeX, testGeo.sizeY],
+			//
+			[testGeo.sizeX, 0],
+			[testGeo.sizeX, -testGeo.sizeY],
+			[testGeo.sizeX, testGeo.sizeY]
+		];
+		testLocationInfo.forEach(function (v) {
+			var tGeo = RedGround(
+				self,
+				testGeo.sizeX, testGeo.sizeY,
+				testGeo.divisionX, testGeo.divisionY,
+				testGeo.seed, testGeo.testSeedX, testGeo.testSeedY,
+				testGeo.maxHeight, v[0], v[1]
+			)
+			var tMesh = RedMesh(self, tGeo, RedStandardMaterial(
+				self,
+				RedBitmapTexture(self, '../asset/grass.jpg')
+				)
+			)
+			tMesh.pointSize = 2
+			tMesh.material.specularPower = 0.1
+			tScene3D.addChild(tMesh)
+			meshList.push(tMesh)
+		})
+		var updateTest = function (v) {
+			testLocationInfo = [
+				[0, 0],
+				[0, -testGeo.sizeY],
+				[0, testGeo.sizeY],
+				//
+				[-testGeo.sizeX, 0],
+				[-testGeo.sizeX, -testGeo.sizeY],
+				[-testGeo.sizeX, testGeo.sizeY],
+				//
+				[testGeo.sizeX, 0],
+				[testGeo.sizeX, -testGeo.sizeY],
+				[testGeo.sizeX, testGeo.sizeY]
+			];
+			var i = testLocationInfo.length
+			while ( i-- ) {
+
+				meshList[i].geometry = RedGround(
+					self,
+					testGeo.sizeX, testGeo.sizeY,
+					testGeo.divisionX, testGeo.divisionY,
+					testGeo.seed, testGeo.testSeedX, testGeo.testSeedY,
+					testGeo.maxHeight,
+					testLocationInfo[i][0], testLocationInfo[i][1]
+				)
+				console.log(testLocationInfo[i])
+			}
 		}
 		t0.add(testGeo, 'sizeX', 0, 5000).onChange(function (v) {
-			tMesh.geometry = RedGround(self, v, testGeo.sizeY, testGeo.divisionX, testGeo.divisionY, testGeo.seed, testGeo.testSeedX, testGeo.testSeedY, testGeo.maxHeight)
+			updateTest(v)
 		})
 		t0.add(testGeo, 'sizeY', 0, 5000).onChange(function (v) {
-			tMesh.geometry = RedGround(self, testGeo.sizeX, v, testGeo.divisionX, testGeo.divisionY, testGeo.seed, testGeo.testSeedX, testGeo.testSeedY, testGeo.maxHeight)
+			updateTest(v)
 		})
 		t0.add(testGeo, 'divisionX', 0, 200).onChange(function (v) {
-			tMesh.geometry = RedGround(self, testGeo.sizeX, testGeo.sizeY, v, testGeo.divisionY, testGeo.seed, testGeo.testSeedX, testGeo.testSeedY, testGeo.maxHeight)
+			updateTest(v)
 		})
 		t0.add(testGeo, 'divisionY', 0, 200).onChange(function (v) {
-			tMesh.geometry = RedGround(self, testGeo.sizeX, testGeo.sizeY, testGeo.divisionX, v, testGeo.seed, testGeo.testSeedX, testGeo.testSeedY, testGeo.maxHeight)
+			updateTest(v)
 		})
 		t0.add(testGeo, 'seed', 0, 0.1, 0.001).onChange(function (v) {
-			tMesh.geometry = RedGround(self, testGeo.sizeX, testGeo.sizeY, testGeo.divisionX, testGeo.divisionY, v, testGeo.testSeedX, testGeo.testSeedY, testGeo.maxHeight)
+			updateTest(v)
 		})
 		t0.add(testGeo, 'testSeedX', 1, 8, 1).onChange(function (v) {
-			tMesh.geometry = RedGround(self, testGeo.sizeX, testGeo.sizeY, testGeo.divisionX, testGeo.divisionY, testGeo.seed, v, testGeo.testSeedY, testGeo.maxHeight)
+			updateTest(v)
+		})
+		t0.add(testGeo, 'testSeedY', 1, 10000, 0.001).onChange(function (v) {
+			updateTest(v)
 		})
 //		t0.add(testGeo, 'testSeedY', 0.1, 10, 0.001).onChange(function (v) {
 //			tMesh.geometry = RedGround(self, 3000, 3000, testGeo.divisionX, testGeo.divisionY, testGeo.seed, testGeo.testSeedX, v, testGeo.maxHeight)
 //		})
 		t0.add(testGeo, 'maxHeight', 1, 1000, 0.1).onChange(function (v) {
-			tMesh.geometry = RedGround(self, testGeo.sizeX, testGeo.sizeY, testGeo.divisionX, testGeo.divisionY, testGeo.seed, testGeo.testSeedX, testGeo.testSeedY, v)
+			updateTest(v)
 		})
 		t0.add(testGeo, 'drawMode', ['TRIANGLES', 'LINES', 'POINTS']).onChange(function (v) {
-			tMesh.drawMode = self.gl[v]
+			var i = testLocationInfo.length
+			while ( i-- ) {
+				meshList[i].drawMode = self.gl[v]
+			}
 		})
 		t0.open()
 		console.log(tScene3D)
