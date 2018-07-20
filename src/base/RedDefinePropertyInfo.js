@@ -55,12 +55,23 @@ var RedDefinePropertyInfo;
 		var samplerTypeKey
 		if ( targetObject.hasOwnProperty(name) ) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : 이미 정의된 속성')
 		switch ( type ) {
+			case 'hex' :
+				result = {
+					get: function () { return this['_' + name]; },
+					set: function (v) {
+						typeof v == 'string' || RedGLUtil.throwFunc(clsName + ' - ' + name + ' 문자열만 허용함', '입력값 : ' + v);
+						RedGLUtil.regHex(v) || RedGLUtil.throwFunc(clsName + ' - ' + name + ' : hex 형식만 허용함.'+ v)
+						this['_' + name] = v
+						if ( option && option['callback'] ) option['callback'].call(this, v)
+					}
+				}
+				break
 			case 'boolean' :
 				option = option != undefined ? option : true
 				result = {
 					get: function () { return this['_' + name]; },
 					set: function (v) {
-						if ( typeof v != 'boolean' ) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : boolean만 허용함.')
+						if ( typeof v != 'boolean' ) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : boolean만 허용함.'+ v)
 						this['_' + name] = v
 						if ( option && option['callback'] ) option['callback'].call(this, v)
 					}

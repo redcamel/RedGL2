@@ -78,7 +78,6 @@ baseTestUI.prototype = {
 			axis: scene['axis'] ? true : false,
 			skyBox: scene['skyBox'] ? true : false,
 		}
-		t0.add(scene, 'useFog', true, false)
 		t0.add(scene, 'useBackgroundColor')
 		t0.addColor(test, 'backgroundColor').onChange(function (v) {
 			scene['backgroundColor'] = v
@@ -100,70 +99,80 @@ baseTestUI.prototype = {
 				]) : null
 		})
 		t0.open()
-		t0 = this['gui'].addFolder('grid')
-		var testGrid = {
-			grid: true,
-			size: 100,
-			divisions: 100,
-			color1: '#cccccc',
-			color2: '#666666'
-		}
-		t0.add(testGrid, 'grid').onChange(function (v) {
-			scene['grid'] = v ? RedGrid(self['redGL'], testGrid['size'], testGrid['divisions'], testGrid['color1'], testGrid['color2']) : null
-		})
-		t0.add(testGrid, 'size', 1, 200).onChange(function (v) {
-			if ( testGrid['grid'] ) {
-				scene['grid'] = RedGrid(self['redGL'], testGrid['size'], testGrid['divisions'], testGrid['color1'], testGrid['color2'])
-			}
-		})
-		t0.add(testGrid, 'divisions', 1, 200, 2).onChange(function (v) {
-			if ( testGrid['grid'] ) {
-				scene['grid'] = RedGrid(self['redGL'], testGrid['size'], testGrid['divisions'], testGrid['color1'], testGrid['color2'])
-			}
-		})
-		t0.addColor(testGrid, 'color1').onChange(function (v) {
-			if ( testGrid['grid'] ) {
-				scene['grid'] = RedGrid(self['redGL'], testGrid['size'], testGrid['divisions'], testGrid['color1'], testGrid['color2'])
-			}
-		})
-		t0.addColor(testGrid, 'color2').onChange(function (v) {
-			if ( testGrid['grid'] ) {
-				scene['grid'] = RedGrid(self['redGL'], testGrid['size'], testGrid['divisions'], testGrid['color1'], testGrid['color2'])
-			}
-		})
-		return t0
-	},
-	initFog: function (scene) {
-		var t0 = this['gui'].addFolder('scene')
-		var self = this
-		var test = {
-			fogColor: '#ffffff'
-		}
-		t0.add(scene, 'useFog', true, false)
+		t0 = t0.addFolder('fog')
+		t0.open()
+		t0.add(scene, 'useFog')
 		t0.add(scene, 'fogDensity', 0, 1)
-		t0.add(scene, 'fogDistance', 0, 100)
-		t0.addColor(test, 'fogColor').onChange(function (v) {
-			scene['fogColor'] = v
-			scene['fogColor'] = v
-			self['gui'].updateDisplay()
-		})
-		return t0
-	},
-	initView: function (view) {
-		var t0 = this['gui'].addFolder('view')
-		var self = this
-		var test = {
-			setLocationTest1: function () {
-				view.setLocation(200, 200)
-				self['gui'].updateDisplay()
+		t0.add(scene, 'fogDistance', 0, 50000)
+		t0.addColor(scene, 'fogColor')
+				t0 = t0.addFolder('grid')
+				var testGrid = {
+					grid: true,
+					size: 100,
+					divisions: 100,
+					color1: '#cccccc',
+					color2: '#666666'
+				}
+				t0.add(testGrid, 'grid').onChange(function (v) {
+					scene['grid'] = v ? RedGrid(self['redGL'], testGrid['size'], testGrid['divisions'], testGrid['color1'], testGrid['color2']) : null
+				})
+				t0.add(testGrid, 'size', 1, 200).onChange(function (v) {
+					if ( testGrid['grid'] ) {
+						scene['grid'] = RedGrid(self['redGL'], testGrid['size'], testGrid['divisions'], testGrid['color1'], testGrid['color2'])
+					}
+				})
+				t0.add(testGrid, 'divisions', 1, 200, 2).onChange(function (v) {
+					if ( testGrid['grid'] ) {
+						scene['grid'] = RedGrid(self['redGL'], testGrid['size'], testGrid['divisions'], testGrid['color1'], testGrid['color2'])
+					}
+				})
+				t0.addColor(testGrid, 'color1').onChange(function (v) {
+					if ( testGrid['grid'] ) {
+						scene['grid'] = RedGrid(self['redGL'], testGrid['size'], testGrid['divisions'], testGrid['color1'], testGrid['color2'])
+					}
+				})
+				t0.addColor(testGrid, 'color2').onChange(function (v) {
+					if ( testGrid['grid'] ) {
+						scene['grid'] = RedGrid(self['redGL'], testGrid['size'], testGrid['divisions'], testGrid['color1'], testGrid['color2'])
+					}
+				})
+				return t0
 			},
-			setLocationTest2: function () {
-				view.setLocation(100, 400)
-				self['gui'].updateDisplay()
+			initFog
+		:
+		function (scene) {
+			var t0 = this['gui'].addFolder('scene')
+			var self = this
+			var test = {
+				fogColor: '#ffffff'
 			}
+			t0.add(scene, 'useFog', true, false)
+			t0.add(scene, 'fogDensity', 0, 1)
+			t0.add(scene, 'fogDistance', 0, 100)
+			t0.addColor(test, 'fogColor').onChange(function (v) {
+				scene['fogColor'] = v
+				scene['fogColor'] = v
+				self['gui'].updateDisplay()
+			})
+			return t0
 		}
-		t0.add(test, 'setLocationTest1').name('setLocation(200,200)');
-		t0.add(test, 'setLocationTest2').name('setLocation(100,400)')
-		return t0
+
+		,
+		initView: function (view) {
+			var t0 = this['gui'].addFolder('view')
+			var self = this
+			var test = {
+				setLocationTest1: function () {
+					view.setLocation(200, 200)
+					self['gui'].updateDisplay()
+				},
+				setLocationTest2: function () {
+					view.setLocation(100, 400)
+					self['gui'].updateDisplay()
+				}
+			}
+			t0.add(test, 'setLocationTest1').name('setLocation(200,200)');
+			t0.add(test, 'setLocationTest2').name('setLocation(100,400)')
+			return t0
+		}
 	}
-}
