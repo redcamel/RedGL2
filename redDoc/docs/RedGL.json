@@ -1,12 +1,5 @@
 [
   {
-    "title": "fullMode",
-    "code": "PROPERTY",
-    "description": "\n기본값 : true\n캔버스크기를 화면 전체사이즈로 설정할지 여부\n",
-    "example": "\nRedGL(document.getElementById('test'), function (v) {\nthis.fullMode = false // 기본값 true\n})\n",
-    "return": "Boolean"
-  },
-  {
     "constructorYn": true,
     "title": "RedGL",
     "description": "\nRedGL Instance 생성자.\nWebGL 초기화를 담당하며, 단일 월드를 소유한다.\n",
@@ -51,7 +44,7 @@
   {
     "title": "setSize",
     "code": "METHOD",
-    "description": "\nRedGL Instance의 Canvas 사이즈 설정\nfullMode 속성이 false일때만 적용.\npx 단위만 입력가능.\n",
+    "description": "\nRedGL Instance의 Canvas 사이즈 설정\npx, %단위만 입력가능.\n",
     "example": "\nRedGL(document.getElementById('test'), function(v){\nif(v){\n// 초기화 성공\nthis.setSize(200,200)\n}else{\n// 초기화실패\n}\n})\n",
     "return": "void"
   }

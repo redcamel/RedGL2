@@ -2,7 +2,7 @@
   {
     "code": "PROPERTY",
     "title": "farClipping",
-    "description": "기본값 : 10000",
+    "description": "기본값 : 100000",
     "return": "Number"
   },
   {
@@ -43,7 +43,7 @@
   {
     "code": "PROPERTY",
     "title": "nearClipping",
-    "description": "기본값 - 0.01",
+    "description": "기본값 - 0.1",
     "return": "Number"
   },
   {
