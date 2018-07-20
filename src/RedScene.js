@@ -134,17 +134,10 @@ var RedScene;
 		 return : 'void'
 	 }
 	 :DOC*/
-	Object.defineProperty(RedScene.prototype, 'backgroundColor', {
-		get: function () {
-			return this['_backgroundColor'];
-		},
-		set: (function () {
+	RedDefinePropertyInfo.definePrototype('RedScene', 'backgroundColor', 'hex', {
+		callback : (function(){
 			var t0;
-			return function (hex) {
-				hex = hex ? hex : '#000000';
-				if ( typeof hex != 'string' ) RedGLUtil.throwFunc('RedScene : backgroundColor hex 문자열만 허용함', '입력값 : ' + hex);
-				if ( !RedGLUtil.regHex(hex) ) RedGLUtil.throwFunc('RedScene : backgroundColor hex 형식을 사용해야함', '입력값 : ' + hex);
-				this['_backgroundColor'] = hex;
+			return function(){
 				t0 = RedGLUtil.hexToRGB.call(this, this['_backgroundColor']);
 				this['_r'] = t0[0];
 				this['_g'] = t0[1];
@@ -205,22 +198,17 @@ var RedScene;
 		 return : 'hex'
 	 }
 	 :DOC*/
-	Object.defineProperty(RedScene.prototype, 'fogColor', {
-		get: function () { return this['_fogColor'] },
-		set: (function () {
+	RedDefinePropertyInfo.definePrototype('RedScene', 'fogColor', 'hex', {
+		callback : (function(){
 			var t0;
-			return function (hex) {
-				hex = hex ? hex : '#ffffff';
-				if ( typeof hex != 'string' ) RedGLUtil.throwFunc('RedScene : fogColor hex 문자열만 허용함', '입력값 : ' + hex);
-				if ( !RedGLUtil.regHex(hex) ) RedGLUtil.throwFunc('RedScene : fogColor hex 형식을 사용해야함', '입력값 : ' + hex);
-				this['_fogColor'] = hex
+			return function(){
 				t0 = RedGLUtil.hexToRGB.call(this, this['_fogColor']);
 				this['_fogR'] = t0[0];
 				this['_fogG'] = t0[1];
 				this['_fogB'] = t0[2];
 			}
 		})()
-	});
+	})
 	/**DOC:
 	 {
 		 title :`skyBox`,
