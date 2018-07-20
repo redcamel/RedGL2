@@ -134,7 +134,7 @@ RedGL(document.createElement('canvas'), function (v) {
 				var t0 = RedPostEffectManager(tRedGL);
 				t0['antialiasing'] = null
 				unit.run(t0['antialiasing'])
-			}, null),
+			}, null)
 		),
 		redGroup(
 			"bind, unbind",
@@ -184,7 +184,7 @@ RedGL(document.createElement('canvas'), function (v) {
 				console.log(tGL.getParameter(tGL.RENDERBUFFER_BINDING))
 				unit.run(tGL.getParameter(tGL.RENDERBUFFER_BINDING) == t0['frameBuffer']['webglRenderBuffer'])
 				t0.unbind(tGL)
-			}, true),
+			}, true)
 		)
 	)
 })

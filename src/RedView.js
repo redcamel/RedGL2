@@ -17,6 +17,9 @@ var RedView;
 				 '고유키',
 				 '기존에 존재하는 키일경우 <b>캐쉬된 Instance</b>를 반환'
 			 ],
+			 redGL : [
+			    {type:'RedGL'},
+			 ],
 			 scene :[
 				 {type:'RedScene'},
 				 'RedScene'
@@ -30,31 +33,31 @@ var RedView;
 			 var tWorld, tScene, tCamera;
 			 tScene = RedScene(); // 씬생성
 			 tCamera = RedCamera(); // 카메라생성
-			 RedView('test', tScene, tCamera); // test라는 키값을 가진 RedView 생성
-			 RedView('test2', tScene, tCamera); // test2라는 키값을 가진 RedView 생성
+			 RedView('test', RedGL Instance, tScene, tCamera); // test라는 키값을 가진 RedView 생성
+			 RedView('test2',RedGL Instance, tScene, tCamera); // test2라는 키값을 가진 RedView 생성
 		 `,
 		 return : 'RedView Instance'
 	 }
 	 :DOC*/
 	RedView = function (key, redGL, scene, camera) {
 		if ( ViewMap[key] ) {
-			if ( scene || camera ) RedGLUtil.throwFunc('RedView : ' + key, '는 이미 생성된 RedView key입니다.', '입력값 : ' + key)
+			if ( scene || camera ) RedGLUtil.throwFunc('RedView : ' + key, '는 이미 생성된 RedView key입니다.', '입력값 : ' + key);
 			else return ViewMap[key]
 		}
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedScene : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedScene : RedGL Instance만 허용됩니다.', redGL);
 		if ( !(this instanceof RedView) ) return new RedView(key, redGL, scene, camera);
-		if ( !(typeof key == 'string') ) RedGLUtil.throwFunc('RedView : key : 문자열만 허용', '입력값 : ' + key)
-		if ( !scene && !camera ) RedGLUtil.throwFunc('RedView : 존재하지 않는 key입니다.', '입력값 : ' + key)
-		if ( scene && !(scene instanceof RedScene) ) RedGLUtil.throwFunc('RedView : RedScene Instance만 허용', '입력값 : ' + scene)
+		typeof key == 'string' || RedGLUtil.throwFunc('RedView : key : 문자열만 허용', '입력값 : ' + key);
+		if ( !scene && !camera ) RedGLUtil.throwFunc('RedView : 존재하지 않는 key입니다.', '입력값 : ' + key);
+		if ( scene && !(scene instanceof RedScene) ) RedGLUtil.throwFunc('RedView : RedScene Instance만 허용', '입력값 : ' + scene);
 		//TODO: 카메라 컨트롤러 벨리데이션 어쩔껀지 결정해야함
-		if ( !camera ) RedGLUtil.throwFunc('RedView : RedCamera or XXController Instance만 허용', '입력값 : ' + camera)
-		else {
+		if ( camera ) {
 			if (
 				!(camera instanceof RedCamera)
 				&& !(camera instanceof RedBasicController)
 				&& !(camera instanceof RedObitController)
 			) RedGLUtil.throwFunc('RedView : RedCamera or XXController Instance만 허용')
 		}
+		else RedGLUtil.throwFunc('RedView : RedCamera or XXController Instance만 허용', '입력값 : ' + camera);
 		/**DOC:
 		 {
 			 title :`key`,
@@ -80,7 +83,7 @@ var RedView;
 			 return : 'RedPostEffectManager Instance'
 		 }
 		 :DOC*/
-		this['postEffectManager'] = RedPostEffectManager(redGL)
+		this['postEffectManager'] = RedPostEffectManager(redGL);
 		/**DOC:
 		 {
 			 title :`camera`,
@@ -144,6 +147,6 @@ var RedView;
 			this['_x'] = x != undefined ? x : 0;
 			this['_y'] = y != undefined ? y : 0;
 		}
-	}
+	};
 	Object.freeze(RedView);
 })();

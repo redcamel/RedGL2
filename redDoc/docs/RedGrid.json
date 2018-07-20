@@ -1,8 +1,42 @@
 [
   {
-    "title": "drawMode",
-    "description": "\n기본값 : gl.LINES\n",
-    "return": "gl 상수"
+    "title": "color1",
+    "description": "color1",
+    "params": {
+      "size": [
+        {
+          "type": "hex"
+        },
+        "기준선 컬러"
+      ]
+    },
+    "return": "Number"
+  },
+  {
+    "title": "color2",
+    "description": "color2",
+    "params": {
+      "size": [
+        {
+          "type": "hex"
+        },
+        "격자 컬러"
+      ]
+    },
+    "return": "Number"
+  },
+  {
+    "title": "divisions",
+    "description": "divisions",
+    "params": {
+      "size": [
+        {
+          "type": "uint"
+        },
+        "격자 수"
+      ]
+    },
+    "return": "Number"
   },
   {
     "constructorYn": true,
@@ -25,9 +59,34 @@
           "type": "uint"
         },
         "격자 수"
+      ],
+      "color1": [
+        {
+          "type": "hex"
+        },
+        "기준선 컬러"
+      ],
+      "color2": [
+        {
+          "type": "hex"
+        },
+        "격자선 컬러"
       ]
     },
     "example": "\nvar tScene;\ntScene = RedScene();\ntScene['grid'] = RedGrid(redGL Instance)\n",
     "return": "RedGrid Instance"
+  },
+  {
+    "title": "size",
+    "description": "size",
+    "params": {
+      "size": [
+        {
+          "type": "uint"
+        },
+        "격자 크기"
+      ]
+    },
+    "return": "Number"
   }
 ]

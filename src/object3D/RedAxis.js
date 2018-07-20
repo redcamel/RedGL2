@@ -23,7 +23,7 @@ var RedAxis;
 	 :DOC*/
 	RedAxis = function (redGL) {
 		if ( !(this instanceof RedAxis) ) return new RedAxis(redGL);
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedAxis : RedGL Instance만 허용됩니다.', redGL)
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedAxis : RedGL Instance만 허용됩니다.', redGL)
 		var root;
 		var xAxis, yAxis, zAxis;
 		RedBaseObject3D['build'].call(this, redGL.gl)

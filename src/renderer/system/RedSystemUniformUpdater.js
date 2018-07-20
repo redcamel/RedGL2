@@ -37,9 +37,9 @@ var RedSystemUniformUpdater;
 			checkUniformInfo = {
 				uTime: {cacheData: null, data: 0},
 				uResolution: {cacheData: null, data: new Float32Array([0, 0])},
-				uFogDensity: {cacheData: null, data: 0},
+				u_FogDensity: {cacheData: null, data: 0},
 				uFogColor: {cacheData: null, data: new Float32Array([0, 0, 0, 0])},
-				uFogDistance: {cacheData: null, data: 0},
+				u_FogDistance: {cacheData: null, data: 0},
 				uCameraMatrix: {cacheData: null, data: null},
 				uPMatrix: {cacheData: null, data: null},
 				uAmbientLightColor: {cacheData: null, data: new Float32Array([0, 0, 0, 0])},
@@ -99,10 +99,10 @@ var RedSystemUniformUpdater;
 					tCheckData['cacheData'] = tValueStr;
 				}
 				// 안개밀도 업데이트
-				tValueStr = tScene['fogDensity']
-				tCheckData = checkUniformInfo['uFogDensity']
+				tValueStr = tScene['_fogDensity']
+				tCheckData = checkUniformInfo['u_FogDensity']
 				if ( tCheckData['cacheData'] != tValueStr || changedProgramNum ) {
-					needUpdateUniformInfo['uFogDensity'] = tCheckData['data'] = tValueStr;
+					needUpdateUniformInfo['u_FogDensity'] = tCheckData['data'] = tValueStr;
 					tCheckData['cacheData'] = tValueStr;
 				}
 				// 안개색상 업데이트
@@ -117,10 +117,10 @@ var RedSystemUniformUpdater;
 					tCheckData['cacheData'] = tValueStr;
 				}
 				// 안개 가시거리 업데이트
-				tValueStr = tScene['fogDistance']
-				tCheckData = checkUniformInfo['uFogDistance']
+				tValueStr = tScene['_fogDistance']
+				tCheckData = checkUniformInfo['u_FogDistance']
 				if ( tCheckData['cacheData'] != tValueStr || changedProgramNum ) {
-					needUpdateUniformInfo['uFogDistance'] = tCheckData['data'] = tValueStr;
+					needUpdateUniformInfo['u_FogDistance'] = tCheckData['data'] = tValueStr;
 					tCheckData['cacheData'] = tValueStr;
 				}
 				// 카메라 매트릭스 업데이트

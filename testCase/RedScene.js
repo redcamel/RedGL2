@@ -322,6 +322,6 @@ RedGL(document.createElement('canvas'), function (v) {
 				t0['skyBox'] = null;
 				unit.run(t0['skyBox'])
 			}, null)
-		),
+		)
 	)
 })

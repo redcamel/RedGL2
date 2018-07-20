@@ -26,6 +26,11 @@
         "고유키",
         "기존에 존재하는 키일경우 <b>캐쉬된 Instance</b>를 반환"
       ],
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ],
       "scene": [
         {
           "type": "RedScene"
@@ -39,7 +44,7 @@
         "RedCamera"
       ]
     },
-    "example": "\nvar tWorld, tScene, tCamera;\ntScene = RedScene(); // 씬생성\ntCamera = RedCamera(); // 카메라생성\nRedView('test', tScene, tCamera); // test라는 키값을 가진 RedView 생성\nRedView('test2', tScene, tCamera); // test2라는 키값을 가진 RedView 생성\n",
+    "example": "\nvar tWorld, tScene, tCamera;\ntScene = RedScene(); // 씬생성\ntCamera = RedCamera(); // 카메라생성\nRedView('test', RedGL Instance, tScene, tCamera); // test라는 키값을 가진 RedView 생성\nRedView('test2',RedGL Instance, tScene, tCamera); // test2라는 키값을 가진 RedView 생성\n",
     "return": "RedView Instance"
   },
   {
