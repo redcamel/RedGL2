@@ -3,9 +3,10 @@
 RedGL( document.createElement( 'canvas' ), function ( v ) {
 	var tWorld, tScene, tCamera;
 	var tView;
+	var tRedGL = this
 	tScene = new RedScene( this );
 	tCamera = new RedCamera();
-	tView = new RedView( 'tView', tScene, tCamera )
+	tView = new RedView( 'tView',this, tScene, tCamera )
 	console.log( tView )
 	redSuite(
 		"RedView Test",
@@ -13,17 +14,17 @@ RedGL( document.createElement( 'canvas' ), function ( v ) {
 			"생성 확인",
 			redTest( "new 생성확인", function ( unit, title ) {
 				var t0;
-				t0 = new RedView( 'testView', tScene, tCamera )
+				t0 = new RedView( 'testView',tRedGL, tScene, tCamera )
 				unit.run( t0 instanceof RedView )
 			}, true ),
 			redTest( "함수실행 생성확인", function ( unit, title ) {
 				var t0;
-				t0 = RedView( 'testView2', tScene, tCamera )
+				t0 = RedView( 'testView2', tRedGL,tScene, tCamera )
 				unit.run( t0 instanceof RedView )
 			}, true ),
 			redTest( "인자확인 : 생성키 중복 방지확인", function ( unit, title ) {
 				try {
-					RedView( 'testView2', tScene, tCamera )
+					RedView( 'testView2', tRedGL,tScene, tCamera )
 					unit.run( true )
 				} catch ( error ) {
 					console.log( '///////////////////////////////////////////////////////////' )
@@ -35,7 +36,7 @@ RedGL( document.createElement( 'canvas' ), function ( v ) {
 
 			redTest( "인자확인 : scene이 RedScene이 아닐떄", function ( unit, title ) {
 				try {
-					RedView( 'testScene', 1, tCamera )
+					RedView( 'testScene', tRedGL,1, tCamera )
 					unit.run( true )
 				} catch ( error ) {
 					console.log( '///////////////////////////////////////////////////////////' )
@@ -46,7 +47,7 @@ RedGL( document.createElement( 'canvas' ), function ( v ) {
 			}, false ),
 			redTest( "인자확인 : camera가 RedCameara가 아닐떄", function ( unit, title ) {
 				try {
-					RedView( 'testScene', tScene, 1 )
+					RedView( 'testScene', tRedGL,tScene, 1 )
 					unit.run( true )
 				} catch ( error ) {
 					console.log( '///////////////////////////////////////////////////////////' )
@@ -76,7 +77,7 @@ RedGL( document.createElement( 'canvas' ), function ( v ) {
 			"setSize",
 			redTest( "setSize : Number, Number", function ( unit, title ) {
 				var t0;
-				t0 = RedView( 'testSetSize', tScene, tCamera )
+				t0 = RedView( 'testSetSize',tRedGL, tScene, tCamera )
 				t0.setSize( 50, 50 )
 				unit.run( t0['_width'] + '_' + t0['_height'] )
 			}, '50_50' ),
@@ -103,7 +104,7 @@ RedGL( document.createElement( 'canvas' ), function ( v ) {
 			"setLocation",
 			redTest( "setLocation : Number, Number", function ( unit, title ) {
 				var t0;
-				t0 = RedView( 'testSetLocation', tScene, tCamera )
+				t0 = RedView( 'testSetLocation', tRedGL,tScene, tCamera )
 				t0.setLocation( 30, 30 )
 				unit.run( t0['_x'] + '_' + t0['_y'] )
 			}, '30_30' ),

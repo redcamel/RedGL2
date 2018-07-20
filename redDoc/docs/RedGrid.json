@@ -25,6 +25,18 @@
           "type": "uint"
         },
         "격자 수"
+      ],
+      "color1": [
+        {
+          "type": "hex"
+        },
+        "기준선 컬러"
+      ],
+      "color2": [
+        {
+          "type": "hex"
+        },
+        "격자선 컬러"
       ]
     },
     "example": "\nvar tScene;\ntScene = RedScene();\ntScene['grid'] = RedGrid(redGL Instance)\n",

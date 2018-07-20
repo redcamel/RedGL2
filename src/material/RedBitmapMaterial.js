@@ -50,7 +50,7 @@ var RedBitmapMaterial;
 			 if(finalColor.a ==0.0) discard;
 
 			 //#define#fog#false# gl_FragColor = finalColor;
-			 //#define#fog#true# gl_FragColor = fog( fogFactor(uFogDistance, uFogDensity), uFogColor, finalColor);
+			 //#define#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
 		 }
 		 */
 	}

@@ -63,14 +63,14 @@ var RedGL;
 		// 1번은 3D 텍스쳐 생성용공간
 		while ( i-- ) {
 			if ( i == 1 ) {
-				gl.activeTexture(gl.TEXTURE0 + 1)
+				gl.activeTexture(gl.TEXTURE0 + 1);
 				gl.bindTexture(gl.TEXTURE_CUBE_MAP, emptyCubeTexture['webglTexture']);
 			} else {
 				gl.activeTexture(gl.TEXTURE0 + i);
 				gl.bindTexture(gl.TEXTURE_2D, emptyTexture['webglTexture']);
 			}
 		}
-	}
+	};
 	/**DOC:
 	 {
 		 constructorYn : true,
@@ -201,7 +201,7 @@ var RedGL;
 				W = this['_width'] = width;
 				H = this['_height'] = height;
 				if ( typeof W != 'number' ) W = (document.documentElement ? document.documentElement.clientWidth : document.body.clientWidth) * parseFloat(W) / 100;
-				if ( typeof H != 'number' ) H = window.innerHeight * parseFloat(H) / 100
+				if ( typeof H != 'number' ) H = window.innerHeight * parseFloat(H) / 100;
 				ratio = window['devicePixelRatio'] || 1;
 				tCVS = this['_canvas'];
 				if ( prevW != W || prevH != H || force ) {
@@ -238,7 +238,7 @@ var RedGL;
 		'min': 0.1,
 		'max': 1,
 		'callback': function () {
-			this.setSize(this['_width'], this['_height'], true)
+			this.setSize(this['_width'], this['_height'], true);
 		}
 	});
 	Object.freeze(RedGL);

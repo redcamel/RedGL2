@@ -62,8 +62,8 @@ var RedSystemShaderCode;
 			'varying float vTime',
 			'varying vec2 vResolution',
 			// fog
-			'uniform float uFogDistance',
-			'uniform float uFogDensity',
+			'uniform float u_FogDistance',
+			'uniform float u_FogDensity',
 			'uniform vec4 uFogColor',
 			// 디렉셔널
 			'const int cDIRETIONAL_MAX = 3',

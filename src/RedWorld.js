@@ -54,7 +54,7 @@ var RedWorld;
 		 }
 		 :DOC*/
 		addView: function (redView) {
-			if ( !(redView instanceof RedView) ) RedGLUtil.throwFunc('RedWorld :addView Instance만 허용함.', '입력값 : ' + redView)
+			redView instanceof RedView || RedGLUtil.throwFunc('RedWorld :addView Instance만 허용함.', '입력값 : ' + redView);
 			this['_viewMap'][redView['key']] = redView;
 			this['_viewList'].push(redView);
 		},
@@ -80,7 +80,7 @@ var RedWorld;
 		 }
 		 :DOC*/
 		getView: function (key) {
-			if ( typeof key != 'string' ) RedGLUtil.throwFunc('RedWorld :getView 문자열만 허용함.', '입력값 : ' + key)
+			typeof key == 'string' || RedGLUtil.throwFunc('RedWorld :getView 문자열만 허용함.', '입력값 : ' + key);
 			return this['_viewMap'][key]
 		},
 		/**DOC:
@@ -104,15 +104,17 @@ var RedWorld;
 			 return : 'void'
 		 }
 		 :DOC*/
-		delView: function (key) {
-			if ( typeof key != 'string' ) RedGLUtil.throwFunc('RedWorld :delView 문자열만 허용함.', '입력값 : ' + key)
-			var t0, t1
-			if ( t0 = this['_viewMap'][key] ) {
-				t1 = this['_viewList'].indexOf(t0);
-				this['_viewList'].splice(t1, 1)
-				delete this['_viewMap'][key]
+		delView: (function () {
+			var t0, t1;
+			return function (key) {
+				typeof key == 'string' || RedGLUtil.throwFunc('RedWorld :delView 문자열만 허용함.', '입력값 : ' + key);
+				if ( t0 = this['_viewMap'][key] ) {
+					t1 = this['_viewList'].indexOf(t0);
+					this['_viewList'].splice(t1, 1);
+					delete this['_viewMap'][key];
+				}
 			}
-		},
+		})(),
 		/**DOC:
 		 {
 			 code:`METHOD`,
@@ -133,8 +135,8 @@ var RedWorld;
 		 }
 		 :DOC*/
 		hasView: function (key) {
-			if ( typeof key != 'string' ) RedGLUtil.throwFunc('RedWorld :hasView 문자열만 허용함.', '입력값 : ' + key)
-			return this['_viewMap'][key] ? true : false
+			typeof key == 'string' || RedGLUtil.throwFunc('RedWorld :hasView 문자열만 허용함.', '입력값 : ' + key);
+			return this['_viewMap'][key] ? true : false;
 		},
 		/**DOC:
 		 {
