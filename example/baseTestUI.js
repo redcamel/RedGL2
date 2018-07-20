@@ -99,6 +99,7 @@ baseTestUI.prototype = {
 					'../asset/cubemap/negz.png'
 				]) : null
 		})
+		t0.open()
 		t0 = this['gui'].addFolder('grid')
 		var testGrid = {
 			grid: true,

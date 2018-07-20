@@ -50,15 +50,6 @@ var RedGrid;
 		this['color2'] = color2 || '#666666';
 		this['geometry'] = this['_makeGeometry']();
 		this['material'] = RedGridMaterial(redGL);
-		/**DOC:
-		 {
-			 title :`drawMode`,
-			 description : `
-				 기본값 : gl.LINES
-			 `,
-			 return : 'gl 상수'
-		 }
-		 :DOC*/
 		this['drawMode'] = tGL.LINES;
 		this['_UUID'] = RedGL['makeUUID']();
 		console.log(this);
@@ -98,14 +89,53 @@ var RedGrid;
 		}
 	})();
 	RedGrid.prototype['_update'] = function () { this['geometry'] = this['_makeGeometry']() };
+	/**DOC:
+	 {
+		 title :`size`,
+		 description : `size`,
+		 params : {
+			 size : [
+				 {type:'uint'},
+				 `격자 크기`
+			 ]
+		 },
+		 return : 'Number'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedGrid', 'size', 'number', {
 		'min': 1,
 		'callback': function () {this['_update']()}
 	});
+	/**DOC:
+	 {
+		 title :`divisions`,
+		 description : `divisions`,
+		 params : {
+			 size : [
+				 {type:'uint'},
+				 `격자 수`
+			 ]
+		 },
+		 return : 'Number'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedGrid', 'divisions', 'number', {
 		'min': 1,
 		'callback': function () {this['_update']()}
 	});
+	/**DOC:
+	 {
+		 title :`color1`,
+		 description : `color1`,
+		 params : {
+			 size : [
+				 {type:'hex'},
+				 `기준선 컬러`
+			 ]
+		 },
+		 return : 'Number'
+	 }
+	 :DOC*/
 	Object.defineProperty(RedGrid.prototype, 'color1', {
 		get: function () { return this['_color1']},
 		set: function (hex) {
@@ -114,6 +144,19 @@ var RedGrid;
 			return this['_color1']
 		}
 	});
+	/**DOC:
+	 {
+		 title :`color2`,
+		 description : `color2`,
+		 params : {
+			 size : [
+				 {type:'hex'},
+				 `격자 컬러`
+			 ]
+		 },
+		 return : 'Number'
+	 }
+	 :DOC*/
 	Object.defineProperty(RedGrid.prototype, 'color2', {
 		get: function () { return this['_color2']},
 		set: function (hex) {
