@@ -76,6 +76,7 @@ gulp.task('make-doc', function () {
 		"src/base/RedBaseLight.js",
 		"src/base/RedBaseTexture.js",
 		"src/base/RedBaseMaterial.js",
+		"src/detect/RedGLDetect.js",
 		"src/frameBuffer/RedFrameBuffer.js",
 		"src/geometry/RedBuffer.js",
 		"src/geometry/RedGeometry.js",
@@ -172,11 +173,12 @@ gulp.task('make-doc', function () {
 gulp.task('combine-js', function () {
 	gulp.src([
 		"src/gl-matrix-min.js",
+		"src/base/RedDefinePropertyInfo.js",
+		"src/detect/RedGLDetect.js",
 		"src/RedGLUtil.js",
 		"src/RedGL.js",
 		"src/RedXR.js",
 		//
-		"src/base/RedDefinePropertyInfo.js",
 		"src/base/RedBaseTexture.js",
 		"src/base/RedBaseObject3D.js",
 		"src/base/RedBaseContainer.js",
@@ -231,7 +233,7 @@ gulp.task('combine-js', function () {
 		"src/particle/RedPointUnit.js",
 		"src/particle/RedParticleUnit.js",
 		"src/particle/RedParticleEmitter.js",
-		//
+
 		"src/primitives/RedBox.js",
 		"src/primitives/RedPlane.js",
 		"src/primitives/RedSphere.js",
@@ -239,7 +241,7 @@ gulp.task('combine-js', function () {
 		"src/program/RedProgram.js",
 		"src/program/RedSystemShaderCode.js",
 		"src/program/RedShader.js",
-		//
+
 		"src/renderer/RedRenderer.js",
 		"src/renderer/system/RedRenderDebuger.js",
 		"src/renderer/system/RedSystemUniformUpdater.js",
@@ -261,7 +263,7 @@ gulp.task('combine-js', function () {
 		"src/shadow/RedShadowManager.js",
 		// 텍스트
 		"src/text/RedText.js",
-		// 이펙트
+		//이펙트
 		"src/postEffect/RedPostEffectManager.js",
 		"src/postEffect/bloom/RedPostEffect_Bloom.js",
 		"src/postEffect/bloom/RedPostEffect_BloomThreshold.js",

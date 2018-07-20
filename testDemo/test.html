@@ -19,10 +19,11 @@
     <script src="../example/dat.gui.min.js"></script>
     <script src="../src/gl-matrix-min.js"></script>
     <script src="../src/RedGLUtil.js"></script>
+    <script src="../src/detect/RedGLDetect.js"></script><script src="../src/base/RedDefinePropertyInfo.js"></script>
     <script src="../src/RedGL.js"></script>
     <script src="../src/RedXR.js"></script>
     <!--//-->
-    <script src="../src/base/RedDefinePropertyInfo.js"></script>
+
     <script src="../src/base/RedBaseObject3D.js"></script>
     <script src="../src/base/RedBaseContainer.js"></script>
     <script src="../src/base/RedBaseLight.js"></script>
@@ -217,7 +218,7 @@
 			while ( i-- ) {
 				var t = Math.random() * 100 - 50
 				interleaveData.push(Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50)
-				interleaveData.push(Math.random() * 5)
+				interleaveData.push(Math.random() * 0.1)
 				interleaveData.push(Math.random(), Math.random(), Math.random(), 1)
 			}
 			interleaveData = new Float32Array(interleaveData)
@@ -241,7 +242,7 @@
 			var i = 100000
 			while ( i-- ) {
 				interleaveData.push(Math.random() * 150 - 75, Math.random() * 150 - 75, Math.random() * 150 - 75)
-				interleaveData.push(Math.random() * 50)
+				interleaveData.push(Math.random() * 2)
 				interleaveData.push(Math.random(), Math.random(), Math.random(), 1)
 			}
 			interleaveData = new Float32Array(interleaveData)

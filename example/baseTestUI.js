@@ -10,21 +10,23 @@ baseTestUI.prototype = {
 		var self = this
 		var redGLTest = {
 			setSizeTest1: function () {
-				self['redGL'].fullMode = false
 				self['redGL'].setSize(300, 300)
 				self['gui'].updateDisplay()
 			},
 			setSizeTest2: function () {
-				self['redGL'].fullMode = false
 				self['redGL'].setSize(600, 300)
+				self['gui'].updateDisplay()
+			},
+			setSizeTest3: function () {
+				self['redGL'].setSize('100%', '100%')
 				self['gui'].updateDisplay()
 			}
 		}
 		var t0 = self['gui'].addFolder('RedGL')
 		t0.add(self['redGL'], 'renderScale', 0.1, 1);
-		t0.add(self['redGL'], 'fullMode', true, false, true);
 		t0.add(redGLTest, 'setSizeTest1').name('setSize(300,300)');
 		t0.add(redGLTest, 'setSizeTest2').name('setSize(600,300)');
+		t0.add(redGLTest, 'setSizeTest3').name('setSize(100%,100%)');
 		return t0
 	},
 	initCamera: function (camera) {

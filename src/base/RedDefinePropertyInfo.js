@@ -62,6 +62,7 @@ var RedDefinePropertyInfo;
 					set: function (v) {
 						if ( typeof v != 'boolean' ) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : boolean만 허용함.')
 						this['_' + name] = v
+						if ( option && option['callback'] ) option['callback'].call(this, v)
 					}
 				}
 				break
@@ -77,6 +78,7 @@ var RedDefinePropertyInfo;
 								if ( v < min ) v = min;
 								if ( v > max ) v = max;
 								this['_' + name] = v
+								if ( option && option['callback'] ) option['callback'].call(this, v)
 							}
 						}
 					} else {
@@ -87,6 +89,7 @@ var RedDefinePropertyInfo;
 									if ( typeof v != 'number' ) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : 숫자만 허용함.')
 									if ( v < min ) v = min;
 									this['_' + name] = v
+									if ( option && option['callback'] ) option['callback'].call(this, v)
 								}
 							}
 						} else if ( option.hasOwnProperty('max') ) {
@@ -96,6 +99,7 @@ var RedDefinePropertyInfo;
 									if ( typeof v != 'number' ) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : 숫자만 허용함.')
 									if ( v > max ) v = max;
 									this['_' + name] = v
+									if ( option && option['callback'] ) option['callback'].call(this, v)
 								}
 							}
 						}
