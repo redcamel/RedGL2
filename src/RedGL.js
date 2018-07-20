@@ -2,24 +2,7 @@
 var RedGL;
 (function () {
 	var getGL;
-	var redGLDetect;
-	/*
-	 webgl 관련 디텍팅
-	 */
-	redGLDetect = (function () {
-		var checkList, i, k;
-		return function (gl) {
-			if ( !(this instanceof redGLDetect) ) return new redGLDetect(gl);
-			checkList = (
-				'VENDOR,VERSION,SHADING_LANGUAGE_VERSION,RENDERER,MAX_VERTEX_ATTRIBS,MAX_VARYING_VECTORS,MAX_VERTEX_UNIFORM_VECTORS,' +
-				'MAX_VERTEX_TEXTURE_IMAGE_UNITS,MAX_FRAGMENT_UNIFORM_VECTORS,MAX_TEXTURE_SIZE,MAX_CUBE_MAP_TEXTURE_SIZE,' +
-				'MAX_COMBINED_TEXTURE_IMAGE_UNITS,MAX_TEXTURE_IMAGE_UNITS,MAX_RENDERBUFFER_SIZE,MAX_VIEWPORT_DIMS,' +
-				'RED_BITS,GREEN_BITS,BLUE_BITS,ALPHA_BITS,DEPTH_BITS,STENCIL_BITS'
-			).split(',');
-			i = checkList.length;
-			while ( i-- ) this[k = checkList[i]] = gl.getParameter(gl[k]);
-		}
-	})();
+	var setEmptyTextures;
 	/*
 	 gl 컨텍스트 찾기
 	 */
@@ -58,12 +41,36 @@ var RedGL;
 						tContext['glExtension'][extensionKey] = tContext.getExtension(extensionKey);
 						console.log('확장여부 ' + extensionKey + ' :', tContext['glExtension'][extensionKey])
 					});
-					return tContext['version'] = tKey, tContext;
+					tContext['version'] = tKey;
+					return tContext;
 				}
 			}
 			return null;
 		}
 	})();
+	setEmptyTextures = function (redGL, gl) {
+		var i;
+		var emptyTexture, emptyCubeTexture, src;
+		i = redGL['_detect']['MAX_COMBINED_TEXTURE_IMAGE_UNITS'];
+		src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYxIDY0LjE0MDk0OSwgMjAxMC8xMi8wNy0xMDo1NzowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNS4xIFdpbmRvd3MiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NzMxRDhBQzRFNUZFMTFFN0IxMDVGNEEzQjQ0RjAwRDIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NzMxRDhBQzVFNUZFMTFFN0IxMDVGNEEzQjQ0RjAwRDIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo3MzFEOEFDMkU1RkUxMUU3QjEwNUY0QTNCNDRGMDBEMiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo3MzFEOEFDM0U1RkUxMUU3QjEwNUY0QTNCNDRGMDBEMiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PuojYFUAAAAQSURBVHjaYvj//z8DQIABAAj8Av7bok0WAAAAAElFTkSuQmCC';
+		emptyTexture = RedBitmapTexture(redGL, src);
+		emptyCubeTexture = RedBitmapCubeTexture(redGL, [src, src, src, src, src, src]);
+		redGL['_datas']['emptyTexture'] = {
+			'2d': emptyTexture,
+			'3d': emptyCubeTexture
+		};
+		// 0번은 2D 텍스쳐 생성용공간
+		// 1번은 3D 텍스쳐 생성용공간
+		while ( i-- ) {
+			if ( i == 1 ) {
+				gl.activeTexture(gl.TEXTURE0 + 1)
+				gl.bindTexture(gl.TEXTURE_CUBE_MAP, emptyCubeTexture['webglTexture']);
+			} else {
+				gl.activeTexture(gl.TEXTURE0 + i);
+				gl.bindTexture(gl.TEXTURE_2D, emptyTexture['webglTexture']);
+			}
+		}
+	}
 	/**DOC:
 	 {
 		 constructorYn : true,
@@ -118,49 +125,26 @@ var RedGL;
 	 :DOC*/
 	RedGL = function (canvas, callback, option) {
 		if ( !(this instanceof RedGL) ) return new RedGL(canvas, callback, option);
-		if ( !(canvas instanceof Element) || (canvas['tagName'] != 'CANVAS') ) RedGLUtil.throwFunc('RedGL : Canvas Element만 허용');
+		canvas instanceof Element && canvas['tagName'] == 'CANVAS' || RedGLUtil.throwFunc('RedGL : Canvas Element만 허용');
 		var tGL, self;
-		self = this;
-		this['_canvas'] = canvas;
-		this['gl'] = tGL = getGL(canvas, option);
-		if ( tGL ) this['_detect'] = redGLDetect(tGL, option);
 		this['_datas'] = {};
 		this['_width'] = '100%';
 		this['_height'] = '100%';
-		this['_UUID'] = RedGL['makeUUID']();
 		this['_renderScale'] = 1;
 		//
+		this['_canvas'] = canvas;
+		this['gl'] = tGL = getGL(canvas, option);
+		if ( tGL ) this['_detect'] = RedGLDetect(tGL);
+		this['_UUID'] = RedGL['makeUUID']();
+		//
+		self = this;
 		requestAnimationFrame(function () {
 			window.addEventListener('resize', function () {
 				self.setSize(self['_width'], self['_height'])
 			});
-			// 리사이즈를 초기에 한번 실행.
-			self.setSize(self['_width'], self['_height']);
-			// 빈텍스쳐를 미리 체워둔다.
-			var t0, t1;
-			var i = self['_detect']['MAX_COMBINED_TEXTURE_IMAGE_UNITS'];
-			console.log("_self['_detect']['MAX_COMBINED_TEXTURE_IMAGE_UNITS']", self['_detect']['MAX_COMBINED_TEXTURE_IMAGE_UNITS']);
-			var src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYxIDY0LjE0MDk0OSwgMjAxMC8xMi8wNy0xMDo1NzowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNS4xIFdpbmRvd3MiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NzMxRDhBQzRFNUZFMTFFN0IxMDVGNEEzQjQ0RjAwRDIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NzMxRDhBQzVFNUZFMTFFN0IxMDVGNEEzQjQ0RjAwRDIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo3MzFEOEFDMkU1RkUxMUU3QjEwNUY0QTNCNDRGMDBEMiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo3MzFEOEFDM0U1RkUxMUU3QjEwNUY0QTNCNDRGMDBEMiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PuojYFUAAAAQSURBVHjaYvj//z8DQIABAAj8Av7bok0WAAAAAElFTkSuQmCC';
-			t0 = RedBitmapTexture(self, src);
-			t1 = RedBitmapCubeTexture(self, [src, src, src, src, src, src]);
-			self['_datas']['emptyTexture'] = {
-				'2d': t0,
-				'3d': t1
-			};
-			while ( i-- ) {
-				// 0번은 2D 공백텍스쳐로 사용할예정
-				// 1번은 3D 공백텍스쳐로 사용할예정
-				console.log(i);
-				if ( i == 1 ) {
-					tGL.activeTexture(tGL.TEXTURE0 + 1);
-					tGL.bindTexture(tGL.TEXTURE_CUBE_MAP, t1['webglTexture']);
-				} else {
-					tGL.activeTexture(tGL.TEXTURE0 + i);
-					tGL.bindTexture(tGL.TEXTURE_2D, t0['webglTexture']);
-				}
-			}
-			// 콜백이 있으면 실행
-			callback ? callback.call(self, tGL ? true : false) : 0;
+			self.setSize(self['_width'], self['_height']); // 리사이즈를 초기에 한번 실행.
+			setEmptyTextures(self, tGL); // 빈텍스쳐를 미리 체워둔다.
+			callback ? callback.call(self, tGL ? true : false) : 0; // 콜백이 있으면 실행
 		});
 		console.log(this)
 	};
@@ -209,7 +193,7 @@ var RedGL;
 			var W, H;
 			var prevW, prevH;
 			var ratio;
-			var tCanvas;
+			var tCVS;
 			prevW = 0, prevH = 0;
 			return function (width, height, force) {
 				if ( width == undefined ) RedGLUtil.throwFunc('RedGL setSize : width가 입력되지 않았습니다.');
@@ -219,12 +203,12 @@ var RedGL;
 				if ( typeof W != 'number' ) W = (document.documentElement ? document.documentElement.clientWidth : document.body.clientWidth) * parseFloat(W) / 100;
 				if ( typeof H != 'number' ) H = window.innerHeight * parseFloat(H) / 100
 				ratio = window['devicePixelRatio'] || 1;
-				tCanvas = this['_canvas'];
+				tCVS = this['_canvas'];
 				if ( prevW != W || prevH != H || force ) {
-					tCanvas.width = W * ratio * this._renderScale;
-					tCanvas.height = H * ratio * this._renderScale;
-					tCanvas.style.width = W;
-					tCanvas.style.height = H;
+					tCVS.width = W * ratio * this['_renderScale'];
+					tCVS.height = H * ratio * this['_renderScale'];
+					tCVS.style.width = W;
+					tCVS.style.height = H;
 					console.log('RedGL canvas setSize : ', this.gl.drawingBufferWidth, this.gl.drawingBufferHeight);
 					prevW = W;
 					prevH = H;
@@ -252,6 +236,7 @@ var RedGL;
 	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedGL', 'renderScale', 'number', {
 		'min': 0.1,
+		'max': 1,
 		'callback': function () {
 			this.setSize(this['_width'], this['_height'], true)
 		}

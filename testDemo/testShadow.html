@@ -21,10 +21,11 @@
     <script src="../example/dat.gui.min.js"></script>
     <script src="../src/gl-matrix-min.js"></script>
     <script src="../src/RedGLUtil.js"></script>
+    <script src="../src/detect/RedGLDetect.js"></script><script src="../src/base/RedDefinePropertyInfo.js"></script>
     <script src="../src/RedGL.js"></script>
     <script src="../src/RedXR.js"></script>
     <!--//-->
-    <script src="../src/base/RedDefinePropertyInfo.js"></script>
+
     <script src="../src/base/RedBaseObject3D.js"></script>
     <script src="../src/base/RedBaseContainer.js"></script>
     <script src="../src/base/RedBaseLight.js"></script>
@@ -175,7 +176,7 @@
 				'../asset/cubemap/negz.png'
 			]);
 		// tScene3D['grid'] = RedGrid(self)
-		tScene3D.fogDistance =100
+		tScene3D.fogDistance = 100
 		var tShadow = RedDirectionalShadow(this, testDLight)
 		tScene3D.shadowManager.directionalShadow = tShadow
 		var max = i = 250
@@ -275,8 +276,8 @@
 			name: 'test'
 		});
 		var testBloom = {
-			useBloom : true
-        }
+			useBloom: true
+		}
 		var t0 = this['gui'].addFolder('bloom')
 		t0.add(bloom, 'exposure', 0, 2)
 		t0.add(bloom, 'bloomStrength', 0, 2)
@@ -284,9 +285,7 @@
 		t0.add(bloom, 'threshold', 0, 100)
 		t0.add(testBloom, 'useBloom').onChange(function (v) {
 			v ? RedView('test').postEffectManager.addEffect(bloom) : RedView('test').postEffectManager.removeEffect(bloom)
-
 		})
-
 		t0.open()
 		var t0 = this['gui'].addFolder('directionalShadow')
 		t0.add(tShadow, 'width', 1, 4086)

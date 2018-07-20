@@ -76,6 +76,7 @@ gulp.task('make-doc', function () {
 		"src/base/RedBaseLight.js",
 		"src/base/RedBaseTexture.js",
 		"src/base/RedBaseMaterial.js",
+		"src/detect/RedGLDetect.js",
 		"src/frameBuffer/RedFrameBuffer.js",
 		"src/geometry/RedBuffer.js",
 		"src/geometry/RedGeometry.js",
@@ -173,6 +174,7 @@ gulp.task('combine-js', function () {
 	gulp.src([
 		"src/gl-matrix-min.js",
 		"src/base/RedDefinePropertyInfo.js",
+		"src/detect/RedGLDetect.js",
 		"src/RedGLUtil.js",
 		"src/RedGL.js",
 		"src/RedXR.js",
