@@ -150,7 +150,7 @@ var RedGL;
 		else return callback ? callback.call(self, tGL ? true : false) : 0;
 		//
 		this['_UUID'] = RedGL['makeUUID']();
-		RedSystemShaderCode.init()
+		if ( RedSystemShaderCode['init'] ) RedSystemShaderCode.init();
 		//
 		requestAnimationFrame(function () {
 			window.addEventListener('resize', function () {

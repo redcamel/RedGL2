@@ -30,11 +30,9 @@ var RedView;
 			 ]
 		 },
 		 example : `
-			 var tWorld, tScene, tCamera;
-			 tScene = RedScene(); // 씬생성
-			 tCamera = RedCamera(); // 카메라생성
-			 RedView('test', RedGL Instance, tScene, tCamera); // test라는 키값을 가진 RedView 생성
-			 RedView('test2',RedGL Instance, tScene, tCamera); // test2라는 키값을 가진 RedView 생성
+			 var tWorld;
+			 RedView('test', RedGL Instance, RedScene Instance, RedCamera Instance); // test라는 키값을 가진 RedView 생성
+			 RedView('test2',RedGL Instance, RedScene Instance, RedCamera Instance); // test2라는 키값을 가진 RedView 생성
 		 `,
 		 return : 'RedView Instance'
 	 }
@@ -42,7 +40,7 @@ var RedView;
 	RedView = function (key, redGL, scene, camera) {
 		if ( ViewMap[key] ) {
 			if ( scene || camera ) RedGLUtil.throwFunc('RedView : ' + key, '는 이미 생성된 RedView key입니다.', '입력값 : ' + key);
-			else return ViewMap[key]
+			else return ViewMap[key];
 		}
 		redGL instanceof RedGL || RedGLUtil.throwFunc('RedScene : RedGL Instance만 허용됩니다.', redGL);
 		if ( !(this instanceof RedView) ) return new RedView(key, redGL, scene, camera);
@@ -107,22 +105,30 @@ var RedView;
 			 title :`setSize`,
 			 description : `
 				  씬의 사이즈를 결정.
-				  px, % 단위를 받음
+				  px, % 단위를 받음.
 			 `,
 			 example : `
-				  var tWorld, tScene, tCamera;
-				  tScene = RedScene(); // 씬생성
-				  tCamera = RedCamera(); // 카메라생성
-				  RedView('test', tScene, tCamera); // test라는 키값을 가진 RedView 생성
+				  var tWorld;
+				  RedView('test', RedGL Instance, RedScene Instance, RedCamera Instance); // test라는 키값을 가진 RedView 생성
 				  RedView('test').setSize(100,100);
 				  RedView('test').setSize('50%',100);
 			 `,
 			 return : 'void'
 		 }
 		 :DOC*/
-		setSize: function (w, h) {
-			this['_width'] = w != undefined ? w : '100%';
-			this['_height'] = h != undefined ? h : '100%';
+		setSize: function (width, height) {
+			if ( width == undefined ) RedGLUtil.throwFunc('RedView setSize : width가 입력되지 않았습니다.');
+			if ( height == undefined ) RedGLUtil.throwFunc('RedView setSize : height가 입력되지 않았습니다.');
+			if ( typeof width == 'number' ) this['_width'] = width < 0 ? 0 : width;
+			else {
+				if ( width.indexOf('%') > -1 && (+width.replace('%', '') >= 0) ) this['_width'] = width;
+				else RedGLUtil.throwFunc('RedView setSize : width는 0이상의 숫자나 %만 허용.', width);
+			}
+			if ( typeof height == 'number' ) this['_height'] = height < 0 ? 0 : height;
+			else {
+				if ( height.indexOf('%') > -1 && (+height.replace('%', '') >= 0) ) this['_height'] = height;
+				else RedGLUtil.throwFunc('RedView setSize : height는 0이상의 숫자나 %만 허용.', height);
+			}
 		},
 		/**DOC:
 		 {
@@ -130,13 +136,12 @@ var RedView;
 			 title :`setLocation`,
 			 description : `
 				 씬의 위치를 결정.
-				 px, % 단위를 받음
+				 px, % 단위를 받음.
 			 `,
 			 example : `
-				  var tWorld, tScene, tCamera;
-				  tScene = RedScene(); // 씬생성
+				  var tWorld;
 				  tCamera = RedCamera(); // 카메라생성
-				  RedView('test', tScene, tCamera); // test라는 키값을 가진 RedView 생성
+				  RedView('test', RedGL Instance, RedScene Instance, RedCamera Instance); // test라는 키값을 가진 RedView 생성
 				  RedView('test').setLocation(100,100);
 				  RedView('test').setLocation('50%',100);
 			 `,
@@ -144,8 +149,18 @@ var RedView;
 		 }
 		 :DOC*/
 		setLocation: function (x, y) {
-			this['_x'] = x != undefined ? x : 0;
-			this['_y'] = y != undefined ? y : 0;
+			if ( x == undefined ) RedGLUtil.throwFunc('RedView setLocation : x가 입력되지 않았습니다.');
+			if ( y == undefined ) RedGLUtil.throwFunc('RedView setLocation : y가 입력되지 않았습니다.');
+			if ( typeof x == 'number' ) this['_x'] = x < 0 ? 0 : x;
+			else {
+				if ( x.indexOf('%') > -1 && (+x.replace('%', '') >= 0) ) this['_x'] = x;
+				else RedGLUtil.throwFunc('RedView setLocation : x는 0이상의 숫자나 %만 허용.', x);
+			}
+			if ( typeof y == 'number' ) this['_y'] = y < 0 ? 0 : y;
+			else {
+				if ( y.indexOf('%') > -1 && (+y.replace('%', '') >= 0) ) this['_y'] = y;
+				else RedGLUtil.throwFunc('RedView setLocation : y는 0이상의 숫자나 %만 허용.', y);
+			}
 		}
 	};
 	Object.freeze(RedView);
