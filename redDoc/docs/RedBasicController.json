@@ -10,6 +10,11 @@
     "return": "Number"
   },
   {
+    "title": "delayRotation",
+    "description": "\n회전 지연 속도\n기본값 : 0.1\n",
+    "return": "Number"
+  },
+  {
     "title": "keyNameMapper",
     "description": "\n이동, 회전에 대한 기본 키맵퍼\n기본값 :\n<code>\nthis['keyNameMapper'] = {\nmoveForward: 'w',\nmoveBack: 's',\nmoveLeft: 'a',\nmoveRight: 'd',\nmoveUp: 't',\nmoveDown: 'g',\n//\nturnLeft: 'q',\nturnRight: 'e',\nturnUp: 'r',\nturnDown: 'f',\n}\n</code>\n",
     "return": "Object"
@@ -40,11 +45,6 @@
   {
     "title": "speed",
     "description": "\n이동 속도\n기본값 : 1\n",
-    "return": "Number"
-  },
-  {
-    "title": "speedRotation",
-    "description": "\n회전 지연 속도\n기본값 : 0.1\n",
     "return": "Number"
   },
   {

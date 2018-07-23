@@ -80,6 +80,7 @@ var RedObitController;
 		})(this);
 	};
 	RedObitController.prototype = new RedBaseController();
+
 	/**DOC:
 	 {
 		 title :`centerX`,
@@ -101,6 +102,13 @@ var RedObitController;
 	 }
 	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedObitController', 'centerZ', 'number');
+	/**DOC:
+	 {
+		 title :`distance`,
+		 return : 'Number'
+	 }
+	 :DOC*/
+	RedDefinePropertyInfo.definePrototype('RedObitController', 'distance', 'number',{min: 1});
 	/**DOC:
 	 {
 		 title :`speedDistance`,
@@ -193,7 +201,7 @@ var RedObitController;
 			tMTX0 = tCamera['matrix'];
 			this['_currentPan'] += (this['_pan'] - this['_currentPan']) * tDelayRotation;
 			this['_currentTilt'] += (this['_tilt'] - this['_currentTilt']) * tDelayRotation;
-			this['_currentDistance'] += (this['distance'] - this['_currentDistance']) * this['_delayDistance'];
+			this['_currentDistance'] += (this['_distance'] - this['_currentDistance']) * this['_delayDistance'];
 			mat4.identity(tMTX0);
 			mat4.rotateY(tMTX0, tMTX0, this['_currentPan'] * PER_PI);
 			mat4.rotateX(tMTX0, tMTX0, this['_currentTilt'] * PER_PI);

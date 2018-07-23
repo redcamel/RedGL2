@@ -27,6 +27,10 @@
     "return": "Number"
   },
   {
+    "title": "distance",
+    "return": "Number"
+  },
+  {
     "title": "maxTilt",
     "description": "\n기본값 : 90\n",
     "return": "Number"
