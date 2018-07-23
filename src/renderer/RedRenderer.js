@@ -222,7 +222,8 @@ var RedRenderer;
 				gl.scissor(tViewRect[0], tWorldRect[3] - tViewRect[3] - tViewRect[1], tViewRect[2], tViewRect[3]);
 				// 배경 설정
 				if ( tScene['_useBackgroundColor'] ) {
-					gl.clearColor(tScene['_r'], tScene['_g'], tScene['_b'], 1);
+					if ( tScene['_useFog'] ) gl.clearColor(tScene['_fogR'], tScene['_fogG'], tScene['_fogB'], 1);
+					else gl.clearColor(tScene['_r'], tScene['_g'], tScene['_b'], 1);
 					gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 				} else {
 					gl.clearColor(0, 0, 0, 1);
@@ -302,7 +303,7 @@ var RedRenderer;
 					tScene['skyBox']['x'] = tCamera.x
 					tScene['skyBox']['y'] = tCamera.y
 					tScene['skyBox']['z'] = tCamera.z
-					tScene['skyBox']['scaleX'] = tScene['skyBox']['scaleY'] = tScene['skyBox']['scaleZ'] = tCamera['farClipping']*0.6
+					tScene['skyBox']['scaleX'] = tScene['skyBox']['scaleY'] = tScene['skyBox']['scaleZ'] = tCamera['farClipping'] * 0.6
 					self.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], [tScene['skyBox']], time, tRenderInfo);
 					gl.clear(gl.DEPTH_BUFFER_BIT);
 				}
@@ -435,15 +436,15 @@ var RedRenderer;
 					tProgramList = tMaterial['_programList']
 					if ( tProgramList ) {
 						if ( tUseDirectionalShadow ) {
-							if ( scene['useFog'] && tSprite3DYn ) tProgram = tProgramList['directionalShadow_fog_sprite3D'][tBaseProgramKey]
+							if ( scene['_useFog'] && tSprite3DYn ) tProgram = tProgramList['directionalShadow_fog_sprite3D'][tBaseProgramKey]
 							else if ( tSprite3DYn ) tProgram = tProgramList['directionalShadow_sprite3D'][tBaseProgramKey]
-							else if ( scene['useFog'] ) tProgram = tProgramList['directionalShadow_fog'][tBaseProgramKey]
+							else if ( scene['_useFog'] ) tProgram = tProgramList['directionalShadow_fog'][tBaseProgramKey]
 							else tProgram = tProgramList['directionalShadow'][tBaseProgramKey]
 						}
 						else {
-							if ( scene['useFog'] && tSprite3DYn ) tProgram = tProgramList['fog_sprite3D'][tBaseProgramKey]
+							if ( scene['_useFog'] && tSprite3DYn ) tProgram = tProgramList['fog_sprite3D'][tBaseProgramKey]
 							else if ( tSprite3DYn ) tProgram = tProgramList['sprite3D'][tBaseProgramKey]
-							else if ( scene['useFog'] ) tProgram = tProgramList['fog'][tBaseProgramKey]
+							else if ( scene['_useFog'] ) tProgram = tProgramList['fog'][tBaseProgramKey]
 						}
 					}
 					//
