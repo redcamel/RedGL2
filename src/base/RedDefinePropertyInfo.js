@@ -8,7 +8,7 @@ var RedDefinePropertyInfo;
 				get: function () { return this['_geometry']; },
 				set: function (v) {
 					if ( this instanceof RedSkyBox ) {
-						if ( !(v instanceof RedBox) ) RedGLUtil.throwFunc('RedSkyBox : geometry - RedBox Instance만 허용됩니다.', '입력값 : ' + v)
+						v instanceof RedBox || RedGLUtil.throwFunc('RedSkyBox : geometry - RedBox Instance만 허용됩니다.', '입력값 : ' + v)
 					} else {
 						if ( v && !(v instanceof RedGeometry) ) RedGLUtil.throwFunc('geometry : RedGeometry Instance만 허용됩니다.', '입력값 : ' + v)
 					}
@@ -60,7 +60,7 @@ var RedDefinePropertyInfo;
 					get: function () { return this['_' + name]; },
 					set: function (v) {
 						typeof v == 'string' || RedGLUtil.throwFunc(clsName + ' - ' + name + ' 문자열만 허용함', '입력값 : ' + v);
-						RedGLUtil.regHex(v) || RedGLUtil.throwFunc(clsName + ' - ' + name + ' : hex 형식만 허용함.'+ v)
+						RedGLUtil.regHex(v) || RedGLUtil.throwFunc(clsName + ' - ' + name + ' : hex 형식만 허용함.' + v)
 						this['_' + name] = v
 						if ( option && option['callback'] ) option['callback'].call(this, v)
 					}
@@ -71,7 +71,7 @@ var RedDefinePropertyInfo;
 				result = {
 					get: function () { return this['_' + name]; },
 					set: function (v) {
-						if ( typeof v != 'boolean' ) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : boolean만 허용함.'+ v)
+						if ( typeof v != 'boolean' ) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : boolean만 허용함.' + v)
 						this['_' + name] = v
 						if ( option && option['callback'] ) option['callback'].call(this, v)
 					}

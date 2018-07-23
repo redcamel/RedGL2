@@ -11,8 +11,8 @@ var RedBaseLight;
 		 return : 'void'
 	 }
 	 :DOC*/
-	RedBaseLight = function () {}
-	RedBaseLight.prototype = {}
+	RedBaseLight = function () {};
+	RedBaseLight.prototype = {};
 	RedDefinePropertyInfo.definePrototype('RedBaseLight', 'intensity', 'number', {'min': 0});
-	Object.freeze(RedBaseLight)
+	Object.freeze(RedBaseLight);
 })();

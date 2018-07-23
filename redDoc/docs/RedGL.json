@@ -22,6 +22,13 @@
         },
         "초기화 옵션을 지정한다.",
         "\n<code>\n// 초기값\n{\nalpha: false,\ndepth: true,\nstencil: false,\nantialias: true,\npremultipliedAlpha: false,\npreserveDrawingBuffer: false,\npowerPreference: 'default', // default, high-performance, low-power\nfailIfMajorPerformanceCaveat: false\n}\n</code>\n"
+      ],
+      "targetContext": [
+        {
+          "type": "String"
+        },
+        "컨텍스트 키를 명시적으로 지정할 경우 사용",
+        "입력하지 않을경우 webkit-3d,moz-webgl,3d,experimental-webgl,webgl,webgl2 중에서 가장 높은 값으로 선택됨"
       ]
     },
     "example": "\n// 기초 초기화\nRedGL(document.getElementById('test'), function(v){\n// 콜백내용\n// 성공,실패에 따라 v값이 true or false.\nif(v){\n// 초기화 성공\n}else{\n// 초기화실패\n}\n})\n",

@@ -7,7 +7,7 @@ var RedGL;
 	 gl 컨텍스트 찾기
 	 */
 	getGL = (function () {
-		var checkList; // 체크할 리스트
+		var CHECK_CONTEXT_LIST, tCheckContextList; // 체크할 리스트
 		var OPTION; // 기본초기화 옵션 리스트
 		var tContext, tKey, i;
 		var initOption;
@@ -28,14 +28,19 @@ var RedGL;
 			'EXT_texture_filter_anisotropic',
 			'WEBGL_compressed_texture_s3tc'
 		];
-		checkList = 'webkit-3d,moz-webgl,3d,experimental-webgl,webgl,webgl2'.split(',');
-		// checkList = 'webkit-3d,moz-webgl,3d,experimental-webgl,webgl'.split(',');
-		return function (canvas, option) {
+		CHECK_CONTEXT_LIST = 'webkit-3d,moz-webgl,3d,experimental-webgl,webgl,webgl2'.split(',');
+		// checkContextList = 'webkit-3d,moz-webgl,3d,experimental-webgl,webgl'.split(',');
+		tCheckContextList = [];
+		return function (canvas, option, targetContext) {
 			initOption = JSON.parse(JSON.stringify(OPTION));
 			if ( option ) for ( i in option ) initOption[i] = option[i];
-			i = checkList.length;
+			if ( targetContext ) {
+				tCheckContextList.length = 0
+				tCheckContextList.push(targetContext)
+			} else tCheckContextList = CHECK_CONTEXT_LIST.concat();
+			i = tCheckContextList.length;
 			while ( i-- ) {
-				if ( tContext = canvas.getContext(tKey = checkList[i], initOption) ) {
+				if ( tContext = canvas.getContext(tKey = tCheckContextList[i], initOption) ) {
 					tContext['glExtension'] = {};
 					EXT_KEY_LIST.forEach(function (extensionKey) {
 						tContext['glExtension'][extensionKey] = tContext.getExtension(extensionKey);
@@ -52,7 +57,7 @@ var RedGL;
 		var i;
 		var emptyTexture, emptyCubeTexture, src;
 		i = redGL['_detect']['MAX_COMBINED_TEXTURE_IMAGE_UNITS'];
-		src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYxIDY0LjE0MDk0OSwgMjAxMC8xMi8wNy0xMDo1NzowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNS4xIFdpbmRvd3MiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NzMxRDhBQzRFNUZFMTFFN0IxMDVGNEEzQjQ0RjAwRDIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NzMxRDhBQzVFNUZFMTFFN0IxMDVGNEEzQjQ0RjAwRDIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo3MzFEOEFDMkU1RkUxMUU3QjEwNUY0QTNCNDRGMDBEMiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo3MzFEOEFDM0U1RkUxMUU3QjEwNUY0QTNCNDRGMDBEMiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PuojYFUAAAAQSURBVHjaYvj//z8DQIABAAj8Av7bok0WAAAAAElFTkSuQmCC';
+		src = RedBaseTexture.EMPTY_BASE64;
 		emptyTexture = RedBitmapTexture(redGL, src);
 		emptyCubeTexture = RedBitmapCubeTexture(redGL, [src, src, src, src, src, src]);
 		redGL['_datas']['emptyTexture'] = {
@@ -107,6 +112,11 @@ var RedGL;
 				 </code>
 				 `
 			 ],
+			 targetContext : [
+			    {type:'String'},
+			    `컨텍스트 키를 명시적으로 지정할 경우 사용`,
+			    `입력하지 않을경우 webkit-3d,moz-webgl,3d,experimental-webgl,webgl,webgl2 중에서 가장 높은 값으로 선택됨`
+			 ]
 		 },
 		 example : `
 			 // 기초 초기화
@@ -123,21 +133,25 @@ var RedGL;
 		 return : 'RedGL Instance'
 	 }
 	 :DOC*/
-	RedGL = function (canvas, callback, option) {
-		if ( !(this instanceof RedGL) ) return new RedGL(canvas, callback, option);
+	RedGL = function (canvas, callback, option, targetContext) {
+		if ( !(this instanceof RedGL) ) return new RedGL(canvas, callback, option, targetContext);
 		canvas instanceof Element && canvas['tagName'] == 'CANVAS' || RedGLUtil.throwFunc('RedGL : Canvas Element만 허용');
 		var tGL, self;
+		self = this;
 		this['_datas'] = {};
 		this['_width'] = '100%';
 		this['_height'] = '100%';
 		this['_renderScale'] = 1;
+		this['_viewRect'] = [0, 0, 0, 0];
 		//
 		this['_canvas'] = canvas;
-		this['gl'] = tGL = getGL(canvas, option);
+		this['gl'] = tGL = getGL(canvas, option, targetContext);
 		if ( tGL ) this['_detect'] = RedGLDetect(tGL);
-		this['_UUID'] = RedGL['makeUUID']();
+		else return callback ? callback.call(self, tGL ? true : false) : 0;
 		//
-		self = this;
+		this['_UUID'] = RedGL['makeUUID']();
+		RedSystemShaderCode.init()
+		//
 		requestAnimationFrame(function () {
 			window.addEventListener('resize', function () {
 				self.setSize(self['_width'], self['_height'])
@@ -200,8 +214,14 @@ var RedGL;
 				if ( height == undefined ) RedGLUtil.throwFunc('RedGL setSize : height가 입력되지 않았습니다.');
 				W = this['_width'] = width;
 				H = this['_height'] = height;
-				if ( typeof W != 'number' ) W = (document.documentElement ? document.documentElement.clientWidth : document.body.clientWidth) * parseFloat(W) / 100;
-				if ( typeof H != 'number' ) H = window.innerHeight * parseFloat(H) / 100;
+				if ( typeof W != 'number' ) {
+					if ( W.indexOf('%') > -1 ) W = (document.documentElement ? document.documentElement.clientWidth : document.body.clientWidth) * parseFloat(W) / 100;
+					else RedGLUtil.throwFunc('RedGL setSize : width는 0이상의 숫자나 %만 허용.', W);
+				}
+				if ( typeof H != 'number' ) {
+					if ( H.indexOf('%') > -1 ) H = window.innerHeight * parseFloat(H) / 100;
+					else RedGLUtil.throwFunc('RedGL setSize : height는 0이상의 숫자나 %만 허용.', H);
+				}
 				ratio = window['devicePixelRatio'] || 1;
 				tCVS = this['_canvas'];
 				if ( prevW != W || prevH != H || force ) {
@@ -213,6 +233,8 @@ var RedGL;
 					prevW = W;
 					prevH = H;
 				}
+				this['_viewRect'][2] = prevW;
+				this['_viewRect'][3] = prevH;
 			}
 		})()
 	};

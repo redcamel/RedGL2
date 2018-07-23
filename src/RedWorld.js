@@ -10,15 +10,7 @@ var RedWorld;
 			 RedWorld는 RedView를 소유하며 이는 렌더리스트로서 작동한다..
 		 `,
 		 example : `
-			 RedGL(document.getElementById('test'), function(v){
-				 // 성공,실패에 따라 v값이 true or false.
-				 if(v){
-					 // 월드 생성
-					 this['world'] = RedWorld();
-				 }else{
-					 // 초기화실패
-				 }
-			 })
+			 RedWorld();
 		 `,
 		 return : 'RedWorld Instance'
 	 }
@@ -36,10 +28,7 @@ var RedWorld;
 		 {
 			 code:`METHOD`,
 			 title :`addView`,
-			 description : `
-				 렌더정보 추가.
-				 정상처리된다면 내부적으로 <b>RedView</b>이 생성됨.
-			 `,
+			 description : `getViewList`,
 			 params : {
 				 View :[
 					 {type:'RedView'},
@@ -48,7 +37,7 @@ var RedWorld;
 			 },
 			 example : `
 				 var tWorld = RedWorld()
-				 tWorld.addView(RedView('testView',RedScene(),RedCamera()))
+				 tWorld.addView( RedView(keyName, RedGL Instance ,RedScene Instance, RedCamera Instance) )
 			`,
 			 return : 'void'
 		 }
@@ -62,7 +51,7 @@ var RedWorld;
 		 {
 			 code:`METHOD`,
 			 title :`getView`,
-			 description : `고유키 기반 렌더정보 검색`,
+			 description : `고유키 기반 뷰 검색`,
 			 params : {
 				 key :[
 					 {type:'String'},
@@ -71,10 +60,10 @@ var RedWorld;
 			 },
 			 example : `
 				 var tWorld = RedWorld();
-				 tWorld.addView(RedView('testView',RedScene(),RedCamera()));
-				 console.log(tWorld.getView('testView')) // testView 반환
+				 tWorld.addView( RedView('testView', RedGL Instance ,RedScene Instance, RedCamera Instance) );
+				 console.log( tWorld.getView('testView') ); // testView 반환
 				 tWorld.delView('testView');
-				 console.log(tWorld.getView('testView')) // undefined
+				 console.log( tWorld.getView('testView') ); // undefined
 			`,
 			 return : 'RedView'
 		 }
@@ -87,7 +76,7 @@ var RedWorld;
 		 {
 			 code:`METHOD`,
 			 title :`delView`,
-			 description : `렌더정보 삭제`,
+			 description : `고유키 기반 뷰 삭제`,
 			 params : {
 				 key :[
 					 {type:'String'},
@@ -96,10 +85,10 @@ var RedWorld;
 			 },
 			 example : `
 				 var tWorld = RedWorld();
-				 tWorld.addView(RedView('testView',RedScene(),RedCamera()));
-				 console.log(tWorld.getView('testView')) // testView 반환
+				 tWorld.addView( RedView('testView', RedGL Instance ,RedScene Instance, RedCamera Instance) );
+				 console.log( tWorld.getView('testView') ); // testView 반환
 				 tWorld.delView('testView');
-				 console.log(tWorld.getView('testView')) // undefined
+				 console.log( tWorld.getView('testView') ); // undefined
 			`,
 			 return : 'void'
 		 }
@@ -119,7 +108,7 @@ var RedWorld;
 		 {
 			 code:`METHOD`,
 			 title :`hasView`,
-			 description : `고유키 기반 렌더정보 존재여부`,
+			 description : `고유키 기반 뷰 존재여부 반환.`,
 			 params : {
 				 key :[
 					 {type:'String'},
@@ -128,7 +117,7 @@ var RedWorld;
 			 },
 			 example : `
 				 var tWorld = RedWorld();
-				 tWorld.addView(RedView('testView',RedScene(),RedCamera()));
+				 tWorld.addView( RedView('testView', RedGL Instance ,RedScene Instance, RedCamera Instance) );
 				 console.log(tWorld.hasView('testView')) // true
 			`,
 			 return : 'Boolean'
@@ -150,7 +139,9 @@ var RedWorld;
 				 ]
 			 },
 			 example : `
-				// TODO
+				 var tWorld = RedWorld();
+				 tWorld.addView( RedView('testView', RedGL Instance ,RedScene Instance, RedCamera Instance) );
+				 console.log(tWorld.getViewList())
 			`,
 			 return : 'Array'
 		 }

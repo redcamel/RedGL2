@@ -48,14 +48,14 @@ var RedGrid;
 		this['divisions'] = divisions || 100;
 		this['color1'] = color1 || '#cccccc';
 		this['color2'] = color2 || '#666666';
-		this['geometry'] = this['_makeGeometry']();
+		this['geometry'] = this['_makeGridGeometry']();
 		this['material'] = RedGridMaterial(redGL);
 		this['drawMode'] = tGL.LINES;
 		this['_UUID'] = RedGL['makeUUID']();
 		console.log(this);
 	};
 	RedGrid.prototype = new RedBaseContainer();
-	RedGrid.prototype['_makeGeometry'] = (function () {
+	RedGrid.prototype['_makeGridGeometry'] = (function () {
 		var center, step, halfSize;
 		var i, k, tColor;
 		return function () {
@@ -88,7 +88,7 @@ var RedGrid;
 			}
 		}
 	})();
-	RedGrid.prototype['_update'] = function () { this['geometry'] = this['_makeGeometry']() };
+	RedGrid.prototype['_update'] = function () { this['geometry'] = this['_makeGridGeometry']() };
 	/**DOC:
 	 {
 		 title :`size`,

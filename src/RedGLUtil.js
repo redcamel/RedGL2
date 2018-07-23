@@ -23,7 +23,7 @@ var RedGLUtil;
 		 }
 		 :DOC*/
 		throwFunc: function () {
-			throw Array.prototype.slice.call(arguments).join(' ')
+			throw 'RedGL Error : ' + Array.prototype.slice.call(arguments).join(' ')
 		},
 		/**DOC:
 		 {
@@ -123,7 +123,7 @@ var RedGLUtil;
 				else RedGLUtil.throwFunc('getStrFromComment : 해석할 불가능한 값', source)
 			}
 		})(),
-		isPowerOf2 : function (v) { return (v & (v - 1)) == 0; },
+		isPowerOf2: function (v) { return (v & (v - 1)) == 0; },
 		nextHighestPowerOfTwo: (function () {
 			var i;
 			return function (v) {
@@ -132,7 +132,7 @@ var RedGLUtil;
 				return v + 1;
 			}
 		})()
-}
+	}
 	;
 	Object.freeze(RedGLUtil);
 })();

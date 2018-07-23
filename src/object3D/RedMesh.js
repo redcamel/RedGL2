@@ -33,8 +33,8 @@ var RedMesh;
 	 :DOC*/
 	RedMesh = function (redGL, geometry, material) {
 		if ( !(this instanceof RedMesh) ) return new RedMesh(redGL, geometry, material);
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedMesh : RedGL Instance만 허용됩니다.', redGL)
-		RedBaseObject3D['build'].call(this, redGL.gl)
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedMesh : RedGL Instance만 허용됩니다.', redGL);
+		RedBaseObject3D['build'].call(this, redGL.gl);
 		/**DOC:
 		 {
 			 title :`geometry`,
@@ -52,7 +52,7 @@ var RedMesh;
 		 :DOC*/
 		this['material'] = material;
 		this['_UUID'] = RedGL['makeUUID']();
-	}
+	};
 	RedMesh.prototype = new RedBaseContainer();
 	Object.freeze(RedMesh);
 })();

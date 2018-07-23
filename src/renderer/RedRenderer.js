@@ -726,11 +726,11 @@ var RedRenderer;
 					if ( tSystemUniformGroup['uPointSize']['use'] ) {
 						tCacheState['pointSize'] != tMesh['pointSize'] ? tGL.uniform1f(tSystemUniformGroup['uPointSize']['location'], tCacheState['pointSize'] = tMesh['pointSize']) : 0;
 					}
-					if ( tSystemUniformGroup['uPerspectiveScale']['location'] ) {
-						tUUID = tSystemUniformGroup['uPerspectiveScale']['_UUID']
-						tUniformValue = tMesh['perspectiveScale']
+					if ( tSystemUniformGroup['u_PerspectiveScale']['location'] ) {
+						tUUID = tSystemUniformGroup['u_PerspectiveScale']['_UUID']
+						tUniformValue = tMesh['_perspectiveScale']
 						if ( tCacheUniformInfo[tUUID] != tUniformValue ) {
-							tGL[tSystemUniformGroup['uPerspectiveScale']['renderMethod']](tSystemUniformGroup['uPerspectiveScale']['location'], tUniformValue)
+							tGL[tSystemUniformGroup['u_PerspectiveScale']['renderMethod']](tSystemUniformGroup['u_PerspectiveScale']['location'], tUniformValue)
 							tCacheUniformInfo[tUUID] = tUniformValue
 						}
 					}

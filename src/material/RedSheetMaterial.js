@@ -27,7 +27,7 @@ var RedSheetMaterial;
 			);
 			gl_PointSize = uPointSize;
 			//#define#sprite3D#true# gl_Position = uPMatrix * calSprite3D(uCameraMatrix , uMMatrix) *  vec4(aVertexPosition, 1.0);
-			//#define#sprite3D#true# if(!uPerspectiveScale){
+			//#define#sprite3D#true# if(!u_PerspectiveScale){
 			//#define#sprite3D#true#   gl_Position /= gl_Position.w;
 			//#define#sprite3D#true#   gl_Position.xy += aVertexPosition.xy * vec2(uMMatrix[0][0],uMMatrix[1][1] * uResolution.x/uResolution.y);
 			//#define#sprite3D#true# }
