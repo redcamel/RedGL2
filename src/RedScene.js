@@ -67,17 +67,17 @@ var RedScene;
 		 }
 		 :DOC*/
 		addLight: function (v) {
-			switch ( v['type'] ) {
-				case RedAmbientLight['type']:
-					this['_lightInfo'][v['type']] = v;
+			switch ( v['TYPE'] ) {
+				case RedAmbientLight['TYPE']:
+					this['_lightInfo'][v['TYPE']] = v;
 					break;
-				case RedDirectionalLight['type']:
-					if ( this['_lightInfo'][v['type']].length == RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT ) RedGLUtil.throwFunc('RedScene : RedDirectionalLight ' + RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT + '개 까지 허용.');
-					this['_lightInfo'][v['type']].push(v);
+				case RedDirectionalLight['TYPE']:
+					if ( this['_lightInfo'][v['TYPE']].length == RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT ) RedGLUtil.throwFunc('RedScene : RedDirectionalLight ' + RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT + '개 까지 허용.');
+					this['_lightInfo'][v['TYPE']].push(v);
 					break;
-				case RedPointLight['type']:
-					if ( this['_lightInfo'][v['type']].length == RedSystemShaderCode.MAX_POINT_LIGHT ) RedGLUtil.throwFunc('RedScene : RedPointLight ' + RedSystemShaderCode.MAX_POINT_LIGHT + '개 까지 허용.');
-					this['_lightInfo'][v['type']].push(v);
+				case RedPointLight['TYPE']:
+					if ( this['_lightInfo'][v['TYPE']].length == RedSystemShaderCode.MAX_POINT_LIGHT ) RedGLUtil.throwFunc('RedScene : RedPointLight ' + RedSystemShaderCode.MAX_POINT_LIGHT + '개 까지 허용.');
+					this['_lightInfo'][v['TYPE']].push(v);
 					break;
 				default:
 					RedGLUtil.throwFunc('RedScene : RedBaseLight 인스턴스만 가능');
@@ -97,17 +97,17 @@ var RedScene;
 		removeLight: (function () {
 			var tIndex;
 			return function (v) {
-				switch ( v['type'] ) {
-					case RedAmbientLight['type']:
-						if ( this['_lightInfo'][v['type']] == v ) this['_lightInfo'][v['type']] = null;
+				switch ( v['TYPE'] ) {
+					case RedAmbientLight['TYPE']:
+						if ( this['_lightInfo'][v['TYPE']] == v ) this['_lightInfo'][v['TYPE']] = null;
 						break;
-					case RedDirectionalLight['type']:
-						tIndex = this['_lightInfo'][v['type']].indexOf(v);
-						if ( tIndex > -1 ) this['_lightInfo'][v['type']].splice(tIndex, 1);
+					case RedDirectionalLight['TYPE']:
+						tIndex = this['_lightInfo'][v['TYPE']].indexOf(v);
+						if ( tIndex > -1 ) this['_lightInfo'][v['TYPE']].splice(tIndex, 1);
 						break;
-					case RedPointLight['type']:
-						tIndex = this['_lightInfo'][v['type']].indexOf(v);
-						if ( tIndex > -1 ) this['_lightInfo'][v['type']].splice(tIndex, 1);
+					case RedPointLight['TYPE']:
+						tIndex = this['_lightInfo'][v['TYPE']].indexOf(v);
+						if ( tIndex > -1 ) this['_lightInfo'][v['TYPE']].splice(tIndex, 1);
 						break;
 					default:
 						RedGLUtil.throwFunc('RedScene : RedBaseLight 인스턴스만 가능')
@@ -138,7 +138,7 @@ var RedScene;
 		callback: (function () {
 			var t0;
 			return function () {
-				t0 = RedGLUtil.hexToRGB.call(this, this['_backgroundColor']);
+				t0 = RedGLUtil.hexToRGB_ZeroToOne.call(this, this['_backgroundColor']);
 				this['_r'] = t0[0];
 				this['_g'] = t0[1];
 				this['_b'] = t0[2];
@@ -202,7 +202,7 @@ var RedScene;
 		callback: (function () {
 			var t0;
 			return function () {
-				t0 = RedGLUtil.hexToRGB.call(this, this['_fogColor']);
+				t0 = RedGLUtil.hexToRGB_ZeroToOne.call(this, this['_fogColor']);
 				this['_fogR'] = t0[0];
 				this['_fogG'] = t0[1];
 				this['_fogB'] = t0[2];

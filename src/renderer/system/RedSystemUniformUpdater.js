@@ -72,7 +72,7 @@ var RedSystemUniformUpdater;
 			return function (redGL, redRenderer, time, tView, prevProgram_UUID, lightDebugRenderList) {
 				tGL = redGL.gl;
 				tScene = tView['scene'];
-				tCamera = tView['camera'], tCamera = tCamera.camera || tCamera;
+				tCamera = tView['camera'], tCamera = tCamera instanceof RedBaseController ? tCamera.camera : tCamera;
 				tViewRect = tView['_viewRect'];
 				tCacheSystemUniformInfo = redRenderer['cacheInfo']['cacheSystemUniformInfo'];
 				prevShadowSamplerIndex = null;
@@ -138,15 +138,15 @@ var RedSystemUniformUpdater;
 					tCheckData['cacheData'] = tValueStr;
 				}
 				// 암비안트 라이트 업데이트
-				if ( tLightData = tScene['_lightInfo'][RedAmbientLight['type']] ) {
-					tValueStr = JSON.stringify(tLightData['_color']);
+				if ( tLightData = tScene['_lightInfo'][RedAmbientLight['TYPE']] ) {
+					tValueStr = JSON.stringify(tLightData['_lightColor']);
 					tCheckData = checkUniformInfo['uAmbientLightColor']
 					if ( tCheckData['cacheData'] != tValueStr || changedProgramNum ) {
-						needUpdateUniformInfo['uAmbientLightColor'] = tCheckData['data'] = tLightData['_color'];
+						needUpdateUniformInfo['uAmbientLightColor'] = tCheckData['data'] = tLightData['_lightColor'];
 						tCheckData['cacheData'] = tValueStr;
 					}
 					//
-					tValueStr = tScene['uAmbientIntensity']
+					tValueStr = tLightData['_intensity']
 					tCheckData = checkUniformInfo['uAmbientIntensity']
 					if ( tCheckData['cacheData'] != tValueStr || changedProgramNum ) {
 						needUpdateUniformInfo['uAmbientIntensity'] = tCheckData['data'] = tLightData['_intensity'];
@@ -154,7 +154,7 @@ var RedSystemUniformUpdater;
 					}
 				}
 				// 디렉셔널 라이트 업데이트
-				tLightList = tScene['_lightInfo'][RedDirectionalLight['type']];
+				tLightList = tScene['_lightInfo'][RedDirectionalLight['TYPE']];
 				i = tLightList.length;
 				while ( i-- ) {
 					tLightData = tLightList[i];
@@ -162,11 +162,11 @@ var RedSystemUniformUpdater;
 					tVector[1] = tLightData['y'];
 					tVector[2] = tLightData['z'];
 					if ( tLightData['debug'] ) {
-						tLightDebugObj = tLightData['debugObject'];
+						tLightDebugObj = tLightData['_debugObject'];
 						tLightDebugObj['x'] = tVector[0];
 						tLightDebugObj['y'] = tVector[1];
 						tLightDebugObj['z'] = tVector[2];
-						tLightDebugObj['_material']['_color'] = tLightData['_color']
+						tLightDebugObj['_material']['_color'] = tLightData['_lightColor']
 						lightDebugRenderList.push(tLightDebugObj)
 					}
 					//
@@ -175,10 +175,10 @@ var RedSystemUniformUpdater;
 					tDirectionalPositionList[1 + 3 * i] = tVector[1];
 					tDirectionalPositionList[2 + 3 * i] = tVector[2];
 					//
-					tDirectionalLightColorList[0 + 4 * i] = tLightData['_color'][0];
-					tDirectionalLightColorList[1 + 4 * i] = tLightData['_color'][1];
-					tDirectionalLightColorList[2 + 4 * i] = tLightData['_color'][2];
-					tDirectionalLightColorList[3 + 4 * i] = tLightData['_color'][3];
+					tDirectionalLightColorList[0 + 4 * i] = tLightData['_lightColor'][0];
+					tDirectionalLightColorList[1 + 4 * i] = tLightData['_lightColor'][1];
+					tDirectionalLightColorList[2 + 4 * i] = tLightData['_lightColor'][2];
+					tDirectionalLightColorList[3 + 4 * i] = tLightData['_lightColor'][3];
 					tDirectionalLightIntensityList[i] = tLightData['_intensity']
 				}
 				//
@@ -210,7 +210,7 @@ var RedSystemUniformUpdater;
 					tCheckData['cacheData'] = tValueStr;
 				}
 				// 포인트 라이트 업데이트
-				tLightList = tScene['_lightInfo'][RedPointLight['type']];
+				tLightList = tScene['_lightInfo'][RedPointLight['TYPE']];
 				i = tLightList.length;
 				while ( i-- ) {
 					tLightData = tLightList[i];
@@ -218,22 +218,22 @@ var RedSystemUniformUpdater;
 					tVector[1] = tLightData['y'];
 					tVector[2] = tLightData['z'];
 					if ( tLightData['debug'] ) {
-						tLightDebugObj = tLightData['debugObject'];
+						tLightDebugObj = tLightData['_debugObject'];
 						tLightDebugObj['x'] = tVector[0];
 						tLightDebugObj['y'] = tVector[1];
 						tLightDebugObj['z'] = tVector[2];
 						tLightDebugObj['scaleX'] = tLightDebugObj['scaleY'] = tLightDebugObj['scaleZ'] = tLightData['_radius']
-						tLightDebugObj['_material']['_color'] = tLightData['_color']
+						tLightDebugObj['_material']['_color'] = tLightData['_lightColor']
 						lightDebugRenderList.push(tLightDebugObj)
 					}
 					//
 					tPointLightPositionList[0 + 3 * i] = tVector[0];
 					tPointLightPositionList[1 + 3 * i] = tVector[1];
 					tPointLightPositionList[2 + 3 * i] = tVector[2];
-					tPointLightColorList[0 + 4 * i] = tLightData['_color'][0];
-					tPointLightColorList[1 + 4 * i] = tLightData['_color'][1];
-					tPointLightColorList[2 + 4 * i] = tLightData['_color'][2];
-					tPointLightColorList[3 + 4 * i] = tLightData['_color'][3];
+					tPointLightColorList[0 + 4 * i] = tLightData['_lightColor'][0];
+					tPointLightColorList[1 + 4 * i] = tLightData['_lightColor'][1];
+					tPointLightColorList[2 + 4 * i] = tLightData['_lightColor'][2];
+					tPointLightColorList[3 + 4 * i] = tLightData['_lightColor'][3];
 					//
 					tPointLightIntensityList[i] = tLightData['_intensity']
 					//

@@ -31,6 +31,7 @@ baseTestUI.prototype = {
 	},
 	initCamera: function (camera) {
 		var t0 = this['gui'].addFolder('camera')
+		camera = camera instanceof RedCamera ? camera : camera.camera
 		t0.add(camera, 'orthographicYn', true, false)
 		t0.add(camera, 'nearClipping', 0, 20)
 		t0.add(camera, 'farClipping', 0, 10000)

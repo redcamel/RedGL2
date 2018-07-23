@@ -29,20 +29,20 @@
 	RedGL(document.getElementById('test'), function (v) {
 		if ( v ) {
 			console.log('초기화 성공!')
-			var tWorld, tScene, tCamera, tRenderer;
+			var tWorld, tScene, tController, tRenderer;
 			// 월드 생성
 			this['world'] = tWorld = RedWorld();
 			// 씬 생성
 			tScene = RedScene(this);
 			// 카메라 생성
-			tCamera = RedCamera();
-			tCamera.x = 3
-			tCamera.y = 4
-			tCamera.z = 6
+			tController = RedObitController(this);
+			tController.tilt = -45
+			tController.pan = 45
+			tController.distance = 10
 			// 렌더러 생성
 			tRenderer = RedRenderer();
 			// 뷰생성 및 적용
-			tWorld.addView(RedView('test', this,tScene, tCamera));
+			tWorld.addView(RedView('test', this, tScene, tController));
 			// 그리드 설정
 			tScene['grid'] = RedGrid(this)
 			// 라이트 설정
@@ -109,11 +109,10 @@
 			tScene.addChild(tMesh)
 			// 렌더시작
 			tRenderer.start(this, function (time) {
-				tCamera.lookAt(0, 0, 0)
 			})
 			// 렌더 디버거 활성화
 			tRenderer['renderDebuger']['visible'] = true
-			testUI(this, tCamera, tScene, tALight, tDLight, tPLight)
+			testUI(this, tController, tScene, tALight, tDLight, tPLight)
 		} else {
 			console.log('초기화 실패!')
 		}

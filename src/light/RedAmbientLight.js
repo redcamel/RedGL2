@@ -30,35 +30,14 @@ var RedAmbientLight;
 		if ( !(this instanceof RedAmbientLight) ) return new RedAmbientLight(redGL, hexColor, alpha);
 		redGL instanceof RedGL || RedGLUtil.throwFunc('RedAmbientLight : RedGL Instance만 허용됩니다.', '입력값 : ' + redGL);
 		// 유니폼 프로퍼티
-		this['_color'] = new Float32Array(4)
-		/**DOC:
-		 {
-			 title :`intensity`,
-			 description : `
-				 라이트 강도
-				 기본값 : 1
-			 `,
-			 return : 'Number'
-		 }
-		 :DOC*/
-		this['intensity'] = 1
+		this['_lightColor'] = new Float32Array(4);
 		// 일반 프로퍼티
-		/**DOC:
-		 {
-			 title :`alpha`,
-			 description : `
-				 기본값 : 0.1
-			 `,
-			 return : 'Number'
-		 }
-		 :DOC*/
-		Object.defineProperty(this, 'alpha', RedDefinePropertyInfo['alpha']);
-		Object.defineProperty(this, 'color', RedDefinePropertyInfo['color']);
-		this['alpha'] = alpha == undefined ? 0.1 : alpha
-		this['color'] = hexColor ? hexColor : '#fff'
+		this['intensity'] = 1;
+		this['alpha'] = alpha == undefined ? 0.1 : alpha;
+		this['color'] = hexColor ? hexColor : '#fff';
 		this['_UUID'] = RedGL['makeUUID']();
-		console.log(this)
-	}
+		console.log(this);
+	};
 	/**DOC:
 	 {
 		 title :`RedAmbientLight.type`,
@@ -67,19 +46,19 @@ var RedAmbientLight;
 		 return : 'String'
 	 }
 	 :DOC*/
-	RedAmbientLight['type'] = 'RedAmbientLight'
-	RedAmbientLight.prototype = new RedBaseLight()
+	RedAmbientLight['TYPE'] = 'RedAmbientLight';
+	RedAmbientLight.prototype = new RedBaseLight();
 	/**DOC:
 	 {
 		 title :`type`,
-		 description : `RedAmbientLight['type']`,
+		 description : `RedAmbientLight['TYPE']`,
 		 return : 'String'
 	 }
 	 :DOC*/
-	Object.defineProperty(RedAmbientLight.prototype, 'type', {
+	Object.defineProperty(RedAmbientLight.prototype, 'TYPE', {
 		configurable: false,
 		writable: false,
-		value: RedAmbientLight['type']
-	})
-	Object.freeze(RedAmbientLight)
+		value: RedAmbientLight['TYPE']
+	});
+	Object.freeze(RedAmbientLight);
 })();

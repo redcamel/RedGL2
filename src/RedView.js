@@ -47,13 +47,8 @@ var RedView;
 		typeof key == 'string' || RedGLUtil.throwFunc('RedView : key : 문자열만 허용', '입력값 : ' + key);
 		if ( !scene && !camera ) RedGLUtil.throwFunc('RedView : 존재하지 않는 key입니다.', '입력값 : ' + key);
 		if ( scene && !(scene instanceof RedScene) ) RedGLUtil.throwFunc('RedView : RedScene Instance만 허용', '입력값 : ' + scene);
-		//TODO: 카메라 컨트롤러 벨리데이션 어쩔껀지 결정해야함
 		if ( camera ) {
-			if (
-				!(camera instanceof RedCamera)
-				&& !(camera instanceof RedBasicController)
-				&& !(camera instanceof RedObitController)
-			) RedGLUtil.throwFunc('RedView : RedCamera or XXController Instance만 허용')
+			if ( camera && !(camera instanceof RedCamera) && !(camera instanceof RedBaseController) ) RedGLUtil.throwFunc('RedView : RedCamera or XXController Instance만 허용');
 		}
 		else RedGLUtil.throwFunc('RedView : RedCamera or XXController Instance만 허용', '입력값 : ' + camera);
 		/**DOC:

@@ -85,7 +85,7 @@ var RedDefinePropertyInfo;
 						result = {
 							get: function () { return this['_' + name]; },
 							set: function (v) {
-								if ( typeof v != 'number' ) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : 숫자만 허용함.')
+								if ( typeof v != 'number' ) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : 숫자만 허용함.', '입력값 : ' + v)
 								if ( v < min ) v = min;
 								if ( v > max ) v = max;
 								this['_' + name] = v
@@ -97,7 +97,7 @@ var RedDefinePropertyInfo;
 							result = {
 								get: function () { return this['_' + name]; },
 								set: function (v) {
-									if ( typeof v != 'number' ) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : 숫자만 허용함.')
+									if ( typeof v != 'number' ) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : 숫자만 허용함.', '입력값 : ' + v)
 									if ( v < min ) v = min;
 									this['_' + name] = v
 									if ( option && option['callback'] ) option['callback'].call(this, v)
@@ -107,7 +107,7 @@ var RedDefinePropertyInfo;
 							result = {
 								get: function () { return this['_' + name]; },
 								set: function (v) {
-									if ( typeof v != 'number' ) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : 숫자만 허용함.')
+									if ( typeof v != 'number' ) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : 숫자만 허용함.', '입력값 : ' + v)
 									if ( v > max ) v = max;
 									this['_' + name] = v
 									if ( option && option['callback'] ) option['callback'].call(this, v)
@@ -119,7 +119,7 @@ var RedDefinePropertyInfo;
 					result = {
 						get: function () { return this['_' + name]; },
 						set: function (v) {
-							if ( typeof v != 'number' ) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : 숫자만 허용함.')
+							if ( typeof v != 'number' ) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : 숫자만 허용함.', '입력값 : ' + v)
 							this['_' + name] = v
 						}
 					}
@@ -177,7 +177,7 @@ var RedDefinePropertyInfo;
 					return function (hex) {
 						_v = hex ? hex : '#ff2211';
 						console.log(_v)
-						t0 = RedGLUtil.hexToRGB.call(this, _v);
+						t0 = RedGLUtil.hexToRGB_ZeroToOne.call(this, _v);
 						this['_color'][0] = t0[0];
 						this['_color'][1] = t0[1];
 						this['_color'][2] = t0[2];

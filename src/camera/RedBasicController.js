@@ -250,6 +250,7 @@ var RedBasicController;
 			redGL['_canvas'].addEventListener('mousedown', HD_down);
 		})(this);
 	};
+	RedBasicController.prototype = new RedBaseController()
 	RedBasicController.prototype['update'] = (function () {
 		var up = new Float32Array([0, 1, 0]);
 		var tPan, tTilt

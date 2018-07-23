@@ -74,7 +74,7 @@ var RedCamera;
 			 return : 'Number'
 		 }
 		 :DOC*/
-		this['targetX'] = this['targetY'] = this['targetZ'] = 0
+		this['targetX'] = this['targetY'] = this['targetZ'] = 0;
 		/**DOC:
 		 {
 			 code:`PROPERTY`,
@@ -133,8 +133,11 @@ var RedCamera;
 		 }
 		 :DOC*/
 		this['perspectiveMTX'] = mat4.create();
-		this['autoUpdateMatrix'] = true
+		this['autoUpdateMatrix'] = true;
 		this['_UUID'] = RedGL['makeUUID']();
+	};
+	RedCamera.prototype['update'] = function () {
+		this.lookAt(this['targetX'], this['targetY'], this['targetZ']);
 	};
 	/**DOC:
 	 {
@@ -151,21 +154,15 @@ var RedCamera;
 		 return : 'mat4'
 	 }
 	 :DOC*/
-	RedCamera.prototype['update'] = (function () {
-		var up = new Float32Array([0, 1, 0]);
-		return function () {
-			this.lookAt(this['targetX'], this['targetY'], this['targetZ'])
-		}
-	})();
 	RedCamera.prototype['lookAt'] = (function () {
 		var up = new Float32Array([0, 1, 0]);
-		var tPosition = []
+		var tPosition = [];
 		return function (x, y, z) {
-			tPosition[0] = this['targetX'] = x
-			tPosition[1] = this['targetY'] = y
-			tPosition[2] = this['targetZ'] = z
+			tPosition[0] = this['targetX'] = x;
+			tPosition[1] = this['targetY'] = y;
+			tPosition[2] = this['targetZ'] = z;
 			//out, eye, center, up
-			mat4.identity(this['matrix'])
+			mat4.identity(this['matrix']);
 			mat4.lookAt(this['matrix'], [this.x, this.y, this.z], tPosition, up);
 		}
 	})();

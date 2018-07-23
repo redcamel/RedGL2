@@ -206,7 +206,7 @@ var RedRenderer;
 				// 현재뷰에 대한 렌더 디버깅 정보
 				if ( !self['renderInfo'][tView['key']] ) self['renderInfo'][tView['key']] = {}
 				tRenderInfo = self['renderInfo'][tView['key']]
-				tRenderInfo['orthographicYn'] = tCamera.camera ? tCamera.camera['orthographicYn'] : tCamera['orthographicYn']
+				tRenderInfo['orthographicYn'] = tCamera instanceof RedBaseController ? tCamera.camera['orthographicYn'] : tCamera['orthographicYn']
 				tRenderInfo['x'] = tView['_x']
 				tRenderInfo['y'] = tView['_y']
 				tRenderInfo['width'] = tView['_width']
@@ -230,12 +230,12 @@ var RedRenderer;
 					gl.clear(gl.DEPTH_BUFFER_BIT);
 				}
 				// 카메라 메트릭스 설정
-				if ( !(tCamera instanceof RedCamera) ) {
+				if ( tCamera instanceof RedBaseController ) {
 					// 카메라 형식이 아닌경우 컨트롤러로 판단함
-					tCamera['update']()
-					tCamera = tCamera['camera']
+					tCamera['update']();
+					tCamera = tCamera['camera'];
 				}
-				if ( tCamera['autoUpdateMatrix'] ) tCamera['update']()
+				if ( tCamera['autoUpdateMatrix'] ) tCamera['update']();
 				// 퍼스펙티브 매트릭스 설정
 				// view 에 적용할 카메라 퍼스펙티브를 계산
 				tPerspectiveMTX = tCamera['perspectiveMTX'];

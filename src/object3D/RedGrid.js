@@ -65,7 +65,7 @@ var RedGrid;
 				step = this['_size'] / this['_divisions'];
 				halfSize = this['_size'] / 2;
 				for ( i = 0, k = -halfSize; i <= this['_divisions']; i++ , k += step ) {
-					tColor = i === center ? RedGLUtil.hexToRGB(this['color1']) : RedGLUtil.hexToRGB(this['color2']);
+					tColor = i === center ? RedGLUtil.hexToRGB_ZeroToOne(this['color1']) : RedGLUtil.hexToRGB_ZeroToOne(this['color2']);
 					interleaveData.push(
 						-halfSize, 0, k, tColor[0], tColor[1], tColor[2], 1,
 						halfSize, 0, k, tColor[0], tColor[1], tColor[2], 1,
