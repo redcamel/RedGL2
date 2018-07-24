@@ -43,7 +43,7 @@ var RedParticleEmitter;
 		this['blendSrc'] = redGL.gl.SRC_ALPHA
 		this['blendDst'] = redGL.gl.ONE
 		this['useDepthMask'] = false
-		this['_UUID'] = RedGL['makeUUID']();
+		this['_UUID'] = RedGL.makeUUID();
 	}
 	RedParticleEmitter.QuintIn = 1;
 	RedParticleEmitter.QuintOut = 2;

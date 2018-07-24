@@ -21,7 +21,7 @@ var RedPostEffect_GaussianBlur;
 		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedPostEffect_GaussianBlur : RedGL Instance만 허용됩니다.', redGL)
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['_UUID'] = RedGL['makeUUID']();
+		this['_UUID'] = RedGL.makeUUID();
 		this['process'] = [
 			RedPostEffect_BlurX(redGL),
 			RedPostEffect_BlurY(redGL)

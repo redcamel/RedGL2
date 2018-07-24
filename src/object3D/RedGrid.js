@@ -51,7 +51,7 @@ var RedGrid;
 		this['geometry'] = this['_makeGridGeometry']();
 		this['material'] = RedGridMaterial(redGL);
 		this['drawMode'] = tGL.LINES;
-		this['_UUID'] = RedGL['makeUUID']();
+		this['_UUID'] = RedGL.makeUUID();
 		console.log(this);
 	};
 	RedGrid.prototype = new RedBaseContainer();

@@ -88,7 +88,7 @@ var RedParticleBitmapMaterial;
 		 }
 		 :DOC*/
 		this['alphaTest'] = 0.01
-		this['_UUID'] = RedGL['makeUUID']();
+		this['_UUID'] = RedGL.makeUUID();
 		this.checkUniformAndProperty();
 		console.log(this)
 	}

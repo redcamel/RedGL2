@@ -149,7 +149,7 @@ var RedGL;
 		if ( tGL ) this['_detect'] = RedGLDetect(tGL);
 		else return callback ? callback.call(self, tGL ? true : false) : 0;
 		//
-		this['_UUID'] = RedGL['makeUUID']();
+		this['_UUID'] = RedGL.makeUUID();
 		if ( RedSystemShaderCode['init'] ) RedSystemShaderCode.init();
 		//
 		requestAnimationFrame(function () {

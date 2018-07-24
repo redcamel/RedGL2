@@ -33,7 +33,11 @@ var RedDefinePropertyInfo;
 						if ( !(v instanceof RedSkyBoxMaterial) ) {
 							RedGLUtil.throwFunc('RedSkyBox : RedSkyBoxMaterial Instance만 허용됩니다.', '입력값 : ' + v)
 						}
-					} else if ( this instanceof RedPointUnit ) {
+					} else if ( this instanceof RedLine ) {
+						if ( !(v instanceof RedColorMaterial) ) {
+							RedGLUtil.throwFunc('RedLine : RedColorMaterial Instance만 허용됩니다.', '입력값 : ' + v)
+						}
+					}  else if ( this instanceof RedPointUnit ) {
 						if ( !(v instanceof RedPointColorMaterial) && !(v instanceof RedPointBitmapMaterial) ) {
 							RedGLUtil.throwFunc('RedPointUnit : material - RedPointColorMaterial Instance or RedPointBitmapMaterial Instance만 허용됩니다.')
 						}

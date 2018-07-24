@@ -25,7 +25,7 @@ var RedDirectionalShadow;
 		this['width'] = 2048;
 		this['height'] = 2048;
 		this['size'] = 20
-		this['_UUID'] = RedGL['makeUUID']();
+		this['_UUID'] = RedGL.makeUUID();
 		this['_castingList'] = []
 		console.log(this);
 	}

@@ -276,7 +276,7 @@ var RedShader;
 		 }
 		 :DOC*/
 		this['type'] = type
-		this['_UUID'] = RedGL['makeUUID']();
+		this['_UUID'] = RedGL.makeUUID();
 		console.log(this);
 		// Object.freeze( this )
 		// console.log(this)

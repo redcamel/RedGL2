@@ -131,7 +131,7 @@ var RedPostEffect_SSAO_PointMaker;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
 		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
-		this['_UUID'] = RedGL['makeUUID']();
+		this['_UUID'] = RedGL.makeUUID();
 		this.updateTexture = function (lastFrameBufferTexture, parentFrameBufferTexture) {
 			this['depthTexture'] = this['subFrameBufferList'][0]['frameBuffer']['texture'];
 		}

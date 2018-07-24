@@ -55,7 +55,7 @@ var RedBuffer;
 							if ( !(v instanceof RedInterleaveInfo) ) RedGLUtil.throwFunc('RedBuffer : interleaveDefineInfoList의 정보는 RedInterleaveInfo Instance로만 구성되어야함.', interleaveDefineInfoList)
 							v['offset'] = interleaveDefineInfoList.length < 2 ? 0 : t0
 							t0 += v['size']
-							v['_UUID'] = RedGL['makeUUID']();
+							v['_UUID'] = RedGL.makeUUID();
 							interleaveDefineInfoList[v['attributeKey']] = v
 						})
 						if ( interleaveDefineInfoList.length < 2 ) {
@@ -254,7 +254,7 @@ var RedBuffer;
 		 :DOC*/
 		this['webglBuffer'] = tGL.createBuffer();
 		this['_binded'] = false
-		this['_UUID'] = RedGL['makeUUID']();
+		this['_UUID'] = RedGL.makeUUID();
 		/**DOC:
 		 {
 			 code : 'METHOD',

@@ -35,7 +35,7 @@ var RedAmbientLight;
 		this['intensity'] = 1;
 		this['alpha'] = alpha == undefined ? 0.1 : alpha;
 		this['color'] = hexColor ? hexColor : '#fff';
-		this['_UUID'] = RedGL['makeUUID']();
+		this['_UUID'] = RedGL.makeUUID();
 		console.log(this);
 	};
 	/**DOC:

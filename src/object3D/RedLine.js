@@ -13,8 +13,7 @@ var RedLine;
 				 {type:'RedGL'}
 			 ],
 			 material : [
-				 {type:'RedBaseMaterial 확장 Instance'},
-				 `material`
+				 {type:'RedColorMaterial Instance'}
 			 ]
 		 },
 		 example : `
@@ -41,90 +40,81 @@ var RedLine;
 	RedLine = function (redGL, material) {
 		if ( !(this instanceof RedLine) ) return new RedLine(redGL, material);
 		redGL instanceof RedGL || RedGLUtil.throwFunc('RedLine : RedGL Instance만 허용됩니다.', redGL);
+		material = material || RedColorMaterial(redGL);
 		material instanceof RedColorMaterial || RedGLUtil.throwFunc('RedLine : RedColorMaterial Instance만 허용됩니다.');
 		var tGL;
-		var interleaveData, indexData;
-		var interleaveBuffer, indexBuffer;
+		// var indexData, indexBuffer;
 		tGL = redGL.gl;
 		RedBaseObject3D['build'].call(this, tGL);
-		interleaveData = [];
-		indexData = [];
-		this['_UUID'] = RedGL['makeUUID']();
-		interleaveBuffer = RedBuffer(
+		this['_interleaveData'] = [];
+		this['_indexData'] = [];
+		this['_UUID'] = RedGL.makeUUID();
+		this['_interleaveBuffer'] = RedBuffer(
 			redGL,
 			'RedLine_InterleaveBuffer_' + this['_UUID'],
 			RedBuffer.ARRAY_BUFFER,
-			new Float32Array(interleaveData),
+			new Float32Array(this['_interleaveData']),
 			[
 				RedInterleaveInfo('aVertexPosition', 3)
 			]
 		);
-		indexBuffer = RedBuffer(
-			redGL,
-			'RedLine_indexBuffer_' + this['_UUID'],
-			RedBuffer.ELEMENT_ARRAY_BUFFER,
-			new Uint16Array(indexData)
-		);
-		/**DOC:
-		 {
-			 title :`addPoint`,
-			 description : `
-				 라인포인트 추가
-			 `,
-			 parmas : {
-				 x : [{type:'Number'}],
-				 y : [{type:'Number'}],
-				 z : [{type:'Number'}]
-			 },
-			 return : 'void'
-		 }
-		 :DOC*/
-		this['addPoint'] = function (x, y, z) {
-			var t = interleaveData.length / 3;
-			interleaveData.push(x, y, z);
-			indexData.push(t);
-			this['upload']();
-		};
-		this['removeAllPoint'] = function () {
-			interleaveData.length = 0;
-			indexData.length = 0;
-			this['upload']();
-		};
-		/**DOC:
-		 {
-			 title :`upload`,
-			 description : `
-				 addPoint로 포인트 추가후 실제 버퍼 반영할떄 사용
-			 `,
-			 return : 'void'
-		 }
-		 :DOC*/
-		this['upload'] = function () {
-			interleaveBuffer['upload'](new Float32Array(interleaveData));
-			indexBuffer['upload'](new Uint16Array(indexData));
-		};
-		this['geometry'] = RedGeometry(interleaveBuffer, indexBuffer);
-		/**DOC:
-		 {
-			 title :`material`,
-			 description : `material`,
-			 return : 'RedBaseMaterial 확장 Instance'
-		 }
-		 :DOC*/
+		// this['_indexBuffer'] = RedBuffer(
+		// 	redGL,
+		// 	'RedLine_indexBuffer_' + this['_UUID'],
+		// 	RedBuffer.ELEMENT_ARRAY_BUFFER,
+		// 	new Uint16Array(this['_indexData'] )
+		// );
+		this['geometry'] = RedGeometry(this['_interleaveBuffer'] /*,this['_indexBuffer']*/);
 		this['material'] = material;
-		/**DOC:
-		 {
-			 title :`drawMode`,
-			 description : `
-				 기본값 : gl.LINE_STRIP
-			 `,
-			 return : 'gl 상수'
-		 }
-		 :DOC*/
 		this['drawMode'] = tGL.LINE_STRIP;
-		// Object.seal(RedLine);
 		// console.log(this);
 	};
 	RedLine.prototype = new RedBaseContainer();
+	/**DOC:
+	 {
+		 title :`addPoint`,
+		 description : `
+			 라인포인트 추가
+		 `,
+		 parmas : {
+			 x : [{type:'Number'}],
+			 y : [{type:'Number'}],
+			 z : [{type:'Number'}]
+		 },
+		 return : 'void'
+	 }
+	 :DOC*/
+	RedLine.prototype['addPoint'] = function (x, y, z) {
+		// var tIndex = this['_interleaveData'].length / 3;
+		typeof x == 'number' || RedGLUtil.throwFunc('RedLine : addPoint - x값은 숫자만 허용', '입력값 : ' + x);
+		typeof y == 'number' || RedGLUtil.throwFunc('RedLine : addPoint - y값은 숫자만 허용', '입력값 : ' + y);
+		typeof z == 'number' || RedGLUtil.throwFunc('RedLine : addPoint - z값은 숫자만 허용', '입력값 : ' + z);
+		this['_interleaveData'].push(x, y, z);
+		// this['_indexData'].push(tIndex);
+		this['_upload']();
+	};
+	/**DOC:
+	 {
+		 title :`removeAllPoint`,
+		 description : `
+			 포인트 전체 제거
+		 `,
+		 parmas : {
+			 x : [{type:'Number'}],
+			 y : [{type:'Number'}],
+			 z : [{type:'Number'}]
+		 },
+		 return : 'void'
+	 }
+	 :DOC*/
+	RedLine.prototype['removeAllPoint'] = function () {
+		this['_interleaveData'].length = 0;
+		// indexData.length = 0;
+		this['_upload']();
+	};
+	RedLine.prototype['_upload'] = function () {
+		this['_interleaveBuffer'].upload(new Float32Array(this['_interleaveData']));
+		// this['_indexBuffer']['upload'](new Uint16Array(this['_indexData']));
+	};
 	Object.freeze(RedLine);
 })();

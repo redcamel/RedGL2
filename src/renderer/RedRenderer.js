@@ -20,7 +20,7 @@ var RedRenderer;
 		this.world = null;
 		this['_tickKey'] = null;
 		this['_callback'] = null;
-		this['_UUID'] = RedGL['makeUUID']();
+		this['_UUID'] = RedGL.makeUUID();
 		this['renderInfo'] = {};
 		this['cacheState'] = [];
 		this['cacheInfo'] = {

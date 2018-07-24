@@ -272,7 +272,7 @@ var RedProgram;
 		maxSamplerIndex = redGL._detect['MAX_COMBINED_TEXTURE_IMAGE_UNITS']
 		updateLocation(this, tGL, vertexShader);
 		updateLocation(this, tGL, fragmentShader);
-		this['_UUID'] = RedGL['makeUUID']();
+		this['_UUID'] = RedGL.makeUUID();
 		console.log(this)
 	}
 	RedProgram.prototype = {};

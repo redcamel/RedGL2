@@ -70,7 +70,7 @@ var RedPointLight;
 		this['debug'] = false;
 		this['_debugObject'] = RedMesh(redGL, RedSphere(redGL, 1, 16, 16, 16), RedColorMaterial(redGL));
 		this['_debugObject']['drawMode'] = redGL.gl.LINE_STRIP;
-		this['_UUID'] = RedGL['makeUUID']();
+		this['_UUID'] = RedGL.makeUUID();
 		console.log(this);
 	};
 	/**DOC:

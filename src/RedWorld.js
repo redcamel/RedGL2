@@ -19,7 +19,7 @@ var RedWorld;
 		if ( !(this instanceof RedWorld) ) return new RedWorld();
 		this['_viewList'] = [];
 		this['_viewMap'] = {};
-		this['_UUID'] = RedGL['makeUUID']();
+		this['_UUID'] = RedGL.makeUUID();
 		//Object.seal(this)
 		console.log(this);
 	};

@@ -68,7 +68,7 @@ var RedDirectionalLight;
 		 }
 		 :DOC*/
 		this['z'] = 0;
-		this['_UUID'] = RedGL['makeUUID']();
+		this['_UUID'] = RedGL.makeUUID();
 		/**DOC:
 		 {
 			 title :`debug`,

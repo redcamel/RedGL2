@@ -70,7 +70,7 @@ var RedPostEffectManager;
 		quad = RedMesh(redGL, RedPlane(redGL), this['_finalMaterial']);
 		quad['useCullFace'] = false;
 		this['children'] = [quad];
-		this['_UUID'] = RedGL['makeUUID']();
+		this['_UUID'] = RedGL.makeUUID();
 		console.log(this);
 	}
 	RedPostEffectManager.prototype = {

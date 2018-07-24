@@ -143,7 +143,7 @@ var RedBox;
 		tPrimitiveData = makeData(redGL, tType, width, height, depth, wSegments, hSegments, dSegments);
 		this['interleaveBuffer'] = tPrimitiveData['interleaveBuffer'];
 		this['indexBuffer'] = tPrimitiveData['indexBuffer'];
-		this['_UUID'] = RedGL['makeUUID']();
+		this['_UUID'] = RedGL.makeUUID();
 		console.log(this)
 	}
 	RedBox.prototype = RedGeometry.prototype;

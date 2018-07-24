@@ -13,7 +13,7 @@ var RedBaseController;
 	 :DOC*/
 	RedBaseController = function () {};
 	RedBaseController.prototype = {
-		update : function(){
+		update: function () {
 			RedGLUtil.throwFunc('RedBaseController : update - 재정의 해서 써라')
 		}
 	};

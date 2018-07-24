@@ -16,7 +16,7 @@ var RedFrameBuffer;
 		this['webglFrameBuffer'] = gl.createFramebuffer();
 		this['webglRenderBuffer'] = gl.createRenderbuffer();
 		this['texture'] = RedBitmapTexture(redGL)
-		this['_UUID'] = RedGL['makeUUID']();
+		this['_UUID'] = RedGL.makeUUID();
 		gl.bindFramebuffer(gl.FRAMEBUFFER, this['webglFrameBuffer']);
 		// 텍스쳐 세팅
 		gl.activeTexture(gl.TEXTURE0)

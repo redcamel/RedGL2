@@ -116,7 +116,7 @@ var RedPlane;
 		tPrimitiveData = makeData(redGL, tType, width, height, wSegments, hSegments);
 		this['interleaveBuffer'] = tPrimitiveData['interleaveBuffer'];
 		this['indexBuffer'] = tPrimitiveData['indexBuffer'];
-		this['_UUID'] = RedGL['makeUUID']();
+		this['_UUID'] = RedGL.makeUUID();
 		console.log(this);
 	}
 	RedPlane.prototype = RedGeometry.prototype;

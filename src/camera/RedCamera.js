@@ -134,7 +134,7 @@ var RedCamera;
 		 :DOC*/
 		this['perspectiveMTX'] = mat4.create();
 		this['autoUpdateMatrix'] = true;
-		this['_UUID'] = RedGL['makeUUID']();
+		this['_UUID'] = RedGL.makeUUID();
 	};
 	RedCamera.prototype['update'] = function () {
 		this.lookAt(this['targetX'], this['targetY'], this['targetZ']);

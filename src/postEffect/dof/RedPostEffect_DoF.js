@@ -113,7 +113,7 @@ var RedPostEffect_DoF;
 			this['depthTexture'] = this['subFrameBufferList'][0]['frameBuffer']['texture']
 		}
 		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
-		this['_UUID'] = RedGL['makeUUID']();
+		this['_UUID'] = RedGL.makeUUID();
 		this.checkUniformAndProperty();
 		console.log(this);
 	}

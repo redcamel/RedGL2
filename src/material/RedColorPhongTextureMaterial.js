@@ -228,7 +228,7 @@ var RedColorPhongTextureMaterial;
 		this['normalTexture'] = normalTexture;
 		this['specularTexture'] = specularTexture;
 		this['displacementTexture'] = displacementTexture;
-		this['_UUID'] = RedGL['makeUUID']();
+		this['_UUID'] = RedGL.makeUUID();
 		this.checkUniformAndProperty();
 		console.log(this);
 	}

@@ -51,7 +51,7 @@ var RedDDSTexture;
 		RedTextureOptionChecker.check('RedDDSTexture', option, tGL)
 		this['webglTexture'] = tGL.createTexture();
 		this['atlascoord'] = RedAtlasUV(redGL)
-		this['_UUID'] = RedGL['makeUUID']();
+		this['_UUID'] = RedGL.makeUUID();
 		this.setEmptyTexture(tGL, this['webglTexture']);
 		tGL.glExtension['WEBGL_compressed_texture_s3tc'] || RedGLUtil.throwFunc('RedDDSTexture : WEBGL_compressed_texture_s3tc확장을 지원하지않는 하드웨어입니다.');
 		this.loadDDSTexture(tGL, tGL.glExtension['WEBGL_compressed_texture_s3tc'], src, option, callBack)

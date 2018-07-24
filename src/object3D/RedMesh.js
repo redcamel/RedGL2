@@ -51,7 +51,7 @@ var RedMesh;
 		 }
 		 :DOC*/
 		this['material'] = material;
-		this['_UUID'] = RedGL['makeUUID']();
+		this['_UUID'] = RedGL.makeUUID();
 	};
 	RedMesh.prototype = new RedBaseContainer();
 	Object.freeze(RedMesh);

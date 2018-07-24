@@ -109,7 +109,7 @@ var RedText;
 				wrap_t: redGL.gl.CLAMP_TO_EDGE
 			})
 		};
-		this['_UUID'] = RedGL['makeUUID']();
+		this['_UUID'] = RedGL.makeUUID();
 		console.log(this);
 	}
 	RedText.prototype = new RedBaseObject3D();

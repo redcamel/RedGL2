@@ -148,7 +148,7 @@ var RedColorPhongMaterial;
 		Object.defineProperty(this, 'alpha', RedDefinePropertyInfo['alpha']);
 		this['alpha'] = alpha == undefined ? 1 : alpha;
 		this['color'] = hexColor ? hexColor : '#ff0000'
-		this['_UUID'] = RedGL['makeUUID']();
+		this['_UUID'] = RedGL.makeUUID();
 		this.checkUniformAndProperty();
 		console.log(this);
 	}

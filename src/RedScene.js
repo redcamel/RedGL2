@@ -51,7 +51,7 @@ var RedScene;
 			RedDirectionalLight: [],
 			RedPointLight: []
 		};
-		this['_UUID'] = RedGL['makeUUID']();
+		this['_UUID'] = RedGL.makeUUID();
 		console.log(this);
 	};
 	var prototypeData = {

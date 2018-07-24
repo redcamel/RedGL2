@@ -60,7 +60,7 @@ var RedParticleColorMaterial;
 		// 유니폼 프로퍼티
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['_UUID'] = RedGL['makeUUID']();
+		this['_UUID'] = RedGL.makeUUID();
 		this.checkUniformAndProperty();
 		console.log(this)
 	}

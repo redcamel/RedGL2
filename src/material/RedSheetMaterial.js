@@ -111,7 +111,7 @@ var RedSheetMaterial;
 		this['loop'] = true
 		this['_aniMap'] = {}
 		this['__RedSheetMaterialYn'] = true
-		this['_UUID'] = RedGL['makeUUID']();
+		this['_UUID'] = RedGL.makeUUID();
 		this.checkUniformAndProperty();
 		console.log(this)
 	}
