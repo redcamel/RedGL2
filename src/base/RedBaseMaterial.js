@@ -100,8 +100,9 @@ var RedBaseMaterial;
 			 code : 'METHOD',
 			 title :`checkUniformAndProperty`,
 			 description : `
-				 소유하고 있는 Program에서 사용하고 있지만
-				 재질이 해당 유니폼에 대응하는 프로퍼티를 소유하고 않는경우를 검출.
+				 재질의 Program에서 사용하고 있는 유니폼키가
+				 속성으로 매칭되지 않는 경우 검출.
+				 ex) 프로그램에서 uTestUniform 이 사용되어진다면 testUniform이 정의 되어있어야함.
 			 `,
 			 return : 'void'
 		 }

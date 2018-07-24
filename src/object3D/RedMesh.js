@@ -13,19 +13,17 @@ var RedMesh;
 				 {type:'RedGL'}
 			 ],
 			 geometry : [
-				 {type:'RedGeometry'},
-				 `geometry`
+				 {type:'RedGeometry'}
 			 ],
 			 material : [
-				 {type:'RedBaseMaterial 확장 Instance'},
-				 `material`
+				 {type:'RedBaseMaterial 확장 Instance'}
 			 ]
 		 },
 		 example : `
 			 var tScene;
 			 var tMesh;
 			 tScene = RedScene();
-			 tMesh = RedMesh(RedGL Instance, RedBox(RedGL Instance), RedColorMaterial(RedGL Instance, '#ff0000'));
+			 tMesh = RedMesh( RedGL Instance, RedBox(RedGL Instance), RedColorMaterial(RedGL Instance, '#ff0000' ));
 			 tScene.addChild(tMesh);
 		 `,
 		 return : 'RedMesh Instance'

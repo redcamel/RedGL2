@@ -153,14 +153,20 @@
 		var source;
 		source = function () {
 			/* @preserve
+			 precision mediump float;
              uniform highp vec3 uTest;
+             uniform highp vec3 uTest2;
+             uniform highp vec3 uTest3;
+             highp vec4 test4;
+             vec4 test5;
              void main(void) {
-             gl_Position = vec4(1.0);
+                float test = uDirectionalLightIntensityList[0];
+                gl_FragColor = vec4(1.0);
              }
              */
 		}
 		source = RedGLUtil.getStrFromComment(source.toString());
-		RedShader(this, 'uniformTestShader' + RedGL.makeUUID(), RedShader.VERTEX, source);
+		RedShader(this, 'uniformTestShader' + RedGL.makeUUID(), RedShader.FRAGMENT, source);
 		// RedShader(this, 'test', RedShader.VERTEX)
 //		RedShader(this, 'testVs', RedShader.VERTEX, 'vec3 test; void main(){}')
 //		RedShader(this, 'testFs', RedShader.FRAGMENT,
@@ -174,23 +180,23 @@
 //		)
 //		console.log('검색', RedProgram(this, 'testProgram'))
 		// this.renderScale = 1
-		var testMaterial
-		testMaterial = RedStandardMaterial(
-			this,
-			RedBitmapTexture(this, '../asset/crate.png')
-		)
-		RedStandardMaterial(
-			this,
-			RedBitmapTexture(this, '../asset/crate.png')
-		)
-		RedBitmapMaterial(
-			this,
-			RedBitmapTexture(this, '../asset/crate.png')
-		)
-		RedBitmapMaterial(
-			this,
-			RedBitmapTexture(this, '../asset/crate.png')
-		)
+//		var testMaterial
+//		testMaterial = RedStandardMaterial(
+//			this,
+//			RedBitmapTexture(this, '../asset/crate.png')
+//		)
+//		RedStandardMaterial(
+//			this,
+//			RedBitmapTexture(this, '../asset/crate.png')
+//		)
+//		RedBitmapMaterial(
+//			this,
+//			RedBitmapTexture(this, '../asset/crate.png')
+//		)
+//		RedBitmapMaterial(
+//			this,
+//			RedBitmapTexture(this, '../asset/crate.png')
+//		)
 //		RedColorMaterial(this)
 //		RedColorMaterial(this)
 //		RedColorPhongTextureMaterial(this)

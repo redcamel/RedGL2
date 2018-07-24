@@ -1,7 +1,7 @@
 "use strict";
 var RedShader;
 (function () {
-	var makeWebGLShader, compile, parser, mergeSystemCode;
+	var makeWebGLShader, compileWebGLShader, parserDefine, mergeSystemCode;
 	makeWebGLShader = (function () {
 		var t0;
 		return function (gl, key, type) {
@@ -9,8 +9,8 @@ var RedShader;
 				case RedShader.VERTEX:
 					t0 = gl.createShader(gl.VERTEX_SHADER);
 					if ( !t0 ) {
-						if ( gl.isContextLost() ) RedGLUtil.throwFunc('RedShader : 쉐이더를 생성실패! - WebGL 컨텍스트가 손실')
-						else RedGLUtil.throwFunc('RedShader : 쉐이더를 생성실패! - GPU메모리가 부족일 가능성이 큼')
+						if ( gl.isContextLost() ) RedGLUtil.throwFunc('RedShader : 쉐이더를 생성실패! - WebGL 컨텍스트가 손실');
+						else RedGLUtil.throwFunc('RedShader : 쉐이더를 생성실패! - GPU메모리가 부족일 가능성이 큼');
 					}
 					t0['key'] = key;
 					t0['type'] = type;
@@ -19,28 +19,29 @@ var RedShader;
 				case RedShader.FRAGMENT:
 					t0 = gl.createShader(gl.FRAGMENT_SHADER);
 					if ( !t0 ) {
-						if ( gl.isContextLost() ) RedGLUtil.throwFunc('RedShader : 쉐이더를 생성실패! - WebGL 컨텍스트가 손실')
-						else RedGLUtil.throwFunc('RedShader : 쉐이더를 생성실패! - GPU메모리가 부족일 가능성이 큼')
+						if ( gl.isContextLost() ) RedGLUtil.throwFunc('RedShader : 쉐이더를 생성실패! - WebGL 컨텍스트가 손실');
+						else RedGLUtil.throwFunc('RedShader : 쉐이더를 생성실패! - GPU메모리가 부족일 가능성이 큼');
 					}
 					t0['key'] = key;
 					t0['type'] = type;
 					return t0;
 					break;
 				default:
-					RedGLUtil.throwFunc('RedShader : 쉐이더 타입을 확인하세요. RedShader.VERTEX or RedShader.FRAGMENT 만 허용됩니다')
+					RedGLUtil.throwFunc('RedShader : 쉐이더 타입을 확인하세요. RedShader.VERTEX or RedShader.FRAGMENT 만 허용됩니다');
 					break
 			}
 		}
 	})();
-	compile = function (gl, type, shader, parseData) {
+	compileWebGLShader = function (gl, type, shader, parseData) {
 		gl.shaderSource(shader, parseData['lastSource']);
 		gl.compileShader(shader);
 		if ( !gl.getShaderParameter(shader, gl.COMPILE_STATUS) ) {
 			// console.log(parseData)
 			RedGLUtil.throwFunc('RedShader : 쉐이더 컴파일에 실패하였습니다.\n', gl.getShaderInfoLog(shader))
 		}
-	}
+	};
 	mergeSystemCode = (function () {
+		var i, tDefineData;
 		return function (type, sourceList) {
 			var t0;
 			switch ( type ) {
@@ -51,143 +52,144 @@ var RedShader;
 					t0 = RedSystemShaderCode['fShareSource'].concat();
 					break;
 				default:
-					RedGLUtil.throwFunc('RedShader : 쉐이더 타입을 확인하세요. RedShader.VERTEX or RedShader.FRAGMENT 만 허용됩니다')
-					break
+					RedGLUtil.throwFunc('RedShader : 쉐이더 타입을 확인하세요. RedShader.VERTEX or RedShader.FRAGMENT 만 허용됩니다');
+					break;
 			}
-			sourceList.forEach(function (v) {
-				v = v.replace(';', '');
-				if ( t0.indexOf(v) == -1 ) t0.push(v);
+			i = sourceList.length;
+			while ( i-- ) {
+				tDefineData = sourceList[i];
+				tDefineData = tDefineData.replace(';', '');
+				if ( t0.indexOf(tDefineData) == -1 ) t0.push(tDefineData);
 				else {
-					console.log(RedSystemShaderCode)
-					RedGLUtil.throwFunc('RedShader : ', '\n1. 중복 선언 이거나', '\n2. RedSystemShaderCode에 정의된 선언\n', '입력값 : ' + v);
+					console.log(RedSystemShaderCode);
+					RedGLUtil.throwFunc('RedShader : ', '\n1. 중복 선언 이거나', '\n2. RedSystemShaderCode에 정의된 선언\n', '입력값 : ' + tDefineData);
 				}
-			})
+			}
 			return t0;
 		}
 	})();
-	parser = (function () {
-		var parseData, checkList;
+	parserDefine = (function () {
+		var parseData, checkDefineList;
 		var mergeStr;
 		return function (type, source) {
-			source = source.replace(/\s+$/, '')
+			source = source.replace(/\s+$/, '');
 			source = source.replace(/  /g, '').trim();
 			// console.log(source)
-			parseData = {
-				etc: {
-					list: [],
-					map: {},
-					source: ''
-				}
-			}
+			parseData = {etc: ''};
 			// 함수 제외 전부 검색
-			checkList = source.match(/attribute[\s\S]+?\;|uniform[\s\S]+?\;|varying[\s\S]+?\;|const[\s\S]+?\;|precision[\s\S]+?\;/g);
-			checkList = checkList ? checkList : [];
-			checkList = mergeSystemCode(type, checkList);
-			checkList.sort();
+			checkDefineList = source.match(/attribute[\s\S]+?\;|uniform[\s\S]+?\;|varying[\s\S]+?\;|const[\s\S]+?\;|precision[\s\S]+?\;/g);
+			checkDefineList = checkDefineList ? checkDefineList : [];
+			checkDefineList = mergeSystemCode(type, checkDefineList);
+			checkDefineList.sort();
 			// console.log(checkList)
-			// console.log(checkList)
-			checkList.forEach(function (v) {
-				var tData;
-				var tType, tName, tDataType, tArrayNum, tValue;
-				var tInputData;
-				var tPrecision
-				v = v.trim()
-				source = source.replace(v + ';', '')
+			// console.log(checkDefineList)
+			checkDefineList.forEach(function (v) {
+				var tCheckDefine;
+				var tDefineType, tName, tDataType, tArrayNum, tValue;
+				var tResultData;
+				var tPrecision;
+				v = v.trim();
+				// 체크된 녀석은 소스에서 갈아치움
+				source = source.replace(v + ';', '');
 				// console.log(source)
-				tData = v.split(' ')
-				if ( tData[1] == 'highp' || tData[1] == 'mediump' || tData[1] == 'lowp' ) {
+				tCheckDefine = v.split(' ');
+				if ( tCheckDefine[1] == 'highp' || tCheckDefine[1] == 'mediump' || tCheckDefine[1] == 'lowp' ) {
+					// uniform highp vec4 uTest4; 같은 선언을 Precision값을 분리함
 					var temp;
-					temp = tData[1]
-					tData.splice(1, 1)
-					tData.push(temp)
-					tPrecision = temp
+					temp = tCheckDefine[1];
+					tCheckDefine.splice(1, 1);
+					tCheckDefine.push(temp);
+					tPrecision = temp;
 				}
 				// console.log(v,tData)
-				if ( tData[2] ) {
+				// 배열화 했을때 최소 2개여야함. ex) uniform vec2 uTest, uniform highp vec2 uTest2;
+				// highp vec4 uTest4; 같은 선언의 경우 checkDefineList match시 걸리지 않으므로 상관없음
+				if ( tCheckDefine[2] ) {
 					// 정의인경우
-					tType = tData[0];
-					tDataType = tData[1];
-					tName = tData[2].replace(';', '').split('[');
-					tValue = v.split('=')
-					tValue = tValue[1] ? tValue[1].trim().replace(';', '') : null
-					tArrayNum = tName.length > 1 ? +tName[1].split(']')[0] : 0;
-					tName = tName[0]
-					switch ( tType ) {
+					tDefineType = tCheckDefine[0]; // uniform, attribute, varying
+					tDataType = tCheckDefine[1]; // vec2, float, ...
+					tName = tCheckDefine[2].replace(';', '').split('['); // 이름은 배열인텍스 2번째로 간주함.
+					tValue = v.split('='); // 값을 찾음
+					tValue = tValue[1] ? tValue[1].trim().replace(';', '') : null; // 값이 있으면 값을 가져옴
+					tArrayNum = tName.length > 1 ? +tName[1].split(']')[0] : 0; // 이름이 uTest[2]와 같이 배열일경우 배열 길이를 가져옴
+					tName = tName[0]; // 최종 이름확보
+					// 이름 검증
+					switch ( tDefineType ) {
 						case 'precision':
-							break
+							break;
 						case 'attribute':
-							if ( tName.charAt(0) != 'a' ) RedGLUtil.throwFunc('RedShader : attribute의 첫글자는 a로 시작해야합니다.', tName)
-							if ( tName.charAt(1) != tName.charAt(1).toUpperCase() ) RedGLUtil.throwFunc('RedShader : attribute의 두번째 글자는 대문자 시작해야합니다.', tName)
-							break
+							if ( tName.charAt(0) != 'a' ) RedGLUtil.throwFunc('RedShader : attribute의 첫글자는 a로 시작해야합니다.', tName);
+							if ( tName.charAt(1) != tName.charAt(1).toUpperCase() ) RedGLUtil.throwFunc('RedShader : attribute의 두번째 글자는 대문자 시작해야합니다.', tName);
+							break;
 						case 'uniform':
-							if ( tName.charAt(0) != 'u' ) RedGLUtil.throwFunc('RedShader : uniform의 첫글자는 u로 시작해야합니다.', tName)
-							if ( tName.charAt(1) != tName.charAt(1).toUpperCase() ) RedGLUtil.throwFunc('RedShader : uniform의 두번째 글자는 대문자 시작해야합니다.', tName)
-							break
+							if ( tName.charAt(0) != 'u' ) RedGLUtil.throwFunc('RedShader : uniform의 첫글자는 u로 시작해야합니다.', tName);
+							if ( tName.charAt(1) != tName.charAt(1).toUpperCase() ) RedGLUtil.throwFunc('RedShader : uniform의 두번째 글자는 대문자 시작해야합니다.', tName);
+							break;
 						case 'varying':
-							if ( tName.charAt(0) != 'v' ) RedGLUtil.throwFunc('RedShader : varying의 첫글자는 v로 시작해야합니다.', tName)
-							if ( tName.charAt(1) != tName.charAt(1).toUpperCase() ) RedGLUtil.throwFunc('RedShader : varying의 두번째 글자는 대문자 시작해야합니다.', tName)
-							break
+							if ( tName.charAt(0) != 'v' ) RedGLUtil.throwFunc('RedShader : varying의 첫글자는 v로 시작해야합니다.', tName);
+							if ( tName.charAt(1) != tName.charAt(1).toUpperCase() ) RedGLUtil.throwFunc('RedShader : varying의 두번째 글자는 대문자 시작해야합니다.', tName);
+							break;
 						case 'const':
-							if ( tName.charAt(0) != 'c' ) RedGLUtil.throwFunc('RedShader : const의 첫글자는 c로 시작해야합니다.', tName)
-							if ( tName.charAt(1) != tName.charAt(1).toUpperCase() ) RedGLUtil.throwFunc('RedShader : const의 두번째 글자는 대문자 시작해야합니다.', tName)
-							break
+							if ( tName.charAt(0) != 'c' ) RedGLUtil.throwFunc('RedShader : const의 첫글자는 c로 시작해야합니다.', tName);
+							if ( tName.charAt(1) != tName.charAt(1).toUpperCase() ) RedGLUtil.throwFunc('RedShader : const의 두번째 글자는 대문자 시작해야합니다.', tName);
+							break;
 						default:
-							// RedGLUtil.throwFunc('RedShader : 체크되지 못하는값인데 뭐냐', tName)
-							console.log('RedShader : 체크되지 못하는값인데 뭐냐', tName)
-							break
+							console.log('RedShader : 체크되지 못하는값인데 뭐냐', tName);
+							RedGLUtil.throwFunc('RedShader : 체크되지 못하는값인데 뭐냐', tName);
+							break;
 					}
-				} else {
-					// 변수인경우
-					tType = 'var';
-					tDataType = tData[0];
-					tName = tData[1].replace(';', '').split('[');
-					tArrayNum = tName.length > 1 ? +tName[1].split(']')[0] : 0;
-					tName = tName[0];
 				}
-				if ( !parseData[tType] ) parseData[tType] = {}, parseData[tType]['list'] = [], parseData[tType]['map'] = {}, parseData[tType]['source'] = '';
-				tInputData = {
+				else {
+					console.log('RedShader : 체크되지 못하는값인데 뭐냐', tCheckDefine);
+					RedGLUtil.throwFunc('RedShader : 체크되지 못하는값인데 뭐냐', tCheckDefine);
+					// 아래놈은 이제 사용하지 ㅇ낳음
+					// // 변수인경우
+					// console.log('여기냐', tCheckDefine)
+					// tDefineType = 'var';
+					// tDataType = tCheckDefine[0];
+					// tName = tCheckDefine[1].replace(';', '').split('[');
+					// tArrayNum = tName.length > 1 ? +tName[1].split(']')[0] : 0;
+					// tName = tName[0];
+				}
+				// 저장공간확보
+				if ( !parseData[tDefineType] ) {
+					parseData[tDefineType] = {};
+					parseData[tDefineType]['list'] = [];
+					parseData[tDefineType]['map'] = {};
+					parseData[tDefineType]['source'] = '';
+				}
+				tResultData = {
 					name: tName,
 					arrayNum: tArrayNum,
 					value: tValue,
 					precision: tPrecision,
 					systemUniformYn: RedSystemShaderCode.systemUniform[tArrayNum ? tName + '[' + tArrayNum + ']' : tName] ? true : false
 				};
-				if ( tType == 'uniform' ) tInputData['uniformType'] = tDataType;
-				if ( tType == 'attribute' ) tInputData['attributeType'] = tDataType;
-				if ( tType == 'varying' ) tInputData['varyingType'] = tDataType;
-				parseData[tType]['list'].push(tInputData);
-				parseData[tType]['map'][tName] = v;
-				parseData[tType]['source'] += v + ';\n';
+				if ( tDefineType == 'uniform' ) tResultData['uniformType'] = tDataType;
+				if ( tDefineType == 'attribute' ) tResultData['attributeType'] = tDataType;
+				if ( tDefineType == 'varying' ) tResultData['varyingType'] = tDataType;
+				parseData[tDefineType]['list'].push(tResultData);
+				parseData[tDefineType]['map'][tName] = v;
+				parseData[tDefineType]['source'] += v + ';\n';
 			});
-			// console.log('일단 걸러진상태는',source)
-			// 함수부 찾는다.
 			source += '\n';
-			// source.match(/[A-Za-z0-9]+\s[\s\S]+?(\}\n)/g).forEach(function (v) {
-			[source].forEach(function (v) {
-				// console.log(v.split(' '))
-				var data = v.split(' ');
-				var tName = data[1].replace(/\([\s\S]+/g, '').trim()
-				parseData['etc']['list'].push({
-					uniformType: data[0],
-					name: tName
-				})
-				parseData['etc']['map'][tName] = v;
-				parseData['etc']['source'] += v + '\n';
-			})
+			source = source.trim();
+			// console.log(source)
+			// 메인함수 및 변수 처리
+			parseData['etc'] = source + '\n';
 			mergeStr = '';
-			if ( parseData['precision'] ) mergeStr += parseData['precision']['source'] + '\n//attribute\n';
-			if ( parseData['const'] ) mergeStr += parseData['const']['source'] + '\n//const\n';
+			if ( parseData['precision'] ) mergeStr += parseData['precision']['source'] + '\n//const\n';
+			if ( parseData['const'] ) mergeStr += parseData['const']['source'] + '\n//attribute\n';
 			if ( parseData['attribute'] ) mergeStr += parseData['attribute']['source'] + '\n//uniform\n';
 			if ( parseData['uniform'] ) mergeStr += parseData['uniform']['source'] + '\n//varying\n';
-			if ( parseData['varying'] ) mergeStr += parseData['varying']['source'] + '\n//var\n';
-			if ( parseData['var'] ) mergeStr += parseData['var']['source'] + '\n//etc\n';
-			if ( parseData['etc'] ) mergeStr += parseData['etc']['source'];
+			if ( parseData['varying'] ) mergeStr += parseData['varying']['source'] + '\n//etc\n';
+			if ( parseData['etc'] ) mergeStr += parseData['etc'];
 			parseData.lastSource = mergeStr;
 			// console.log(parseData)
-			if ( type == RedShader.FRAGMENT && !parseData['precision'] ) RedGLUtil.throwFunc('RedShader : FRAGMENT Shader는 precision를 반드시 선언해야함')
+			if ( type == RedShader.FRAGMENT && !parseData['precision'] ) RedGLUtil.throwFunc('RedShader : FRAGMENT Shader는 precision를 반드시 선언해야함');
 			return parseData;
 		}
-	})()
+	})();
 	/**DOC:
 	 {
 		 constructorYn : true,
@@ -223,8 +225,8 @@ var RedShader;
 	RedShader = function (redGL, key, type, source) {
 		var tGL;
 		if ( !(this instanceof RedShader) ) return new RedShader(redGL, key, type, source);
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedShader : RedGL Instance만 허용됩니다.', '입력값 : ' + redGL);
-		if ( typeof key != 'string' ) RedGLUtil.throwFunc('RedShader : key - 문자열만 허용됩니다.', '입력값 : ' + key);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedShader : RedGL Instance만 허용됩니다.', '입력값 : ' + redGL);
+		typeof key == 'string' || RedGLUtil.throwFunc('RedShader : key - 문자열만 허용됩니다.', '입력값 : ' + key);
 		if ( type != RedShader['VERTEX'] && type != RedShader['FRAGMENT'] ) RedGLUtil.throwFunc('RedShader : type - RedShader.VERTEX or RedShader.FRAGMENT 만 허용됩니다.', '입력값 : ' + type);
 		// 데이터 공간확보
 		if ( !redGL['_datas']['RedShader'] ) {
@@ -234,7 +236,7 @@ var RedShader;
 		}
 		// 소스가 있을 경우 검증
 		if ( source ) {
-			if ( typeof source != 'string' ) RedGLUtil.throwFunc('RedShader : source - 문자열만 허용됩니다.');
+			typeof source == 'string' || RedGLUtil.throwFunc('RedShader : source - 문자열만 허용됩니다.');
 			if ( RedShader['hasKey'](redGL, key, type) ) RedGLUtil.throwFunc('RedShader : key - 이미 정의된 키로 생성을 시도.', '\n키 :', key, '\n타입 :' + type);
 			else redGL['_datas']['RedShader'][type][key] = this;
 		} else {
@@ -242,7 +244,7 @@ var RedShader;
 			if ( RedShader['hasKey'](redGL, key, type) ) return redGL['_datas']['RedShader'][type][key];
 			else RedGLUtil.throwFunc('RedShader : ' + type + ' 타입에 존재하지 않는 key를 검색하려고합니다.', '입력값 : ' + key);
 		}
-		tGL = redGL.gl
+		tGL = redGL.gl;
 		/**DOC:
 		 {
 		  title :`webglShader`,
@@ -258,8 +260,8 @@ var RedShader;
 		  return : 'Object'
 		 }
 		 :DOC*/
-		this['parseData'] = parser(type, source); // 소스 파싱
-		compile(tGL, type, this['webglShader'], this['parseData']); // 쉐이더 컴파일
+		this['parseData'] = parserDefine(type, source); // 소스 파싱
+		compileWebGLShader(tGL, type, this['webglShader'], this['parseData']); // 쉐이더 컴파일
 		/**DOC:
 		 {
 			 title :`key`,
@@ -267,7 +269,7 @@ var RedShader;
 			 return : 'String'
 		 }
 		 :DOC*/
-		this['key'] = key
+		this['key'] = key;
 		/**DOC:
 		 {
 			 title :`type`,
@@ -275,12 +277,11 @@ var RedShader;
 			 return : 'String'
 		 }
 		 :DOC*/
-		this['type'] = type
+		this['type'] = type;
 		this['_UUID'] = RedGL.makeUUID();
+		Object.freeze(this);
 		console.log(this);
-		// Object.freeze( this )
-		// console.log(this)
-	}
+	};
 	/**DOC:
 	 {
 		 title :`RedShader.hasKey`,
@@ -307,7 +308,7 @@ var RedShader;
 	 :DOC*/
 	RedShader['hasKey'] = function (redGL, key, type) {
 		return redGL['_datas']['RedShader'][type][key] ? true : false
-	}
+	};
 	/**DOC:
 	 {
 		 title :`RedShader.FRAGMENT`,
@@ -315,7 +316,7 @@ var RedShader;
 		 return : 'String'
 	 }
 	 :DOC*/
-	RedShader['FRAGMENT'] = 'fragmentShader'
+	RedShader['FRAGMENT'] = 'fragmentShader';
 	/**DOC:
 	 {
 		 title :`RedShader.VERTEX`,
@@ -323,6 +324,6 @@ var RedShader;
 		 return : 'String'
 	 }
 	 :DOC*/
-	RedShader['VERTEX'] = 'vertexShader'
+	RedShader['VERTEX'] = 'vertexShader';
 	Object.freeze(RedShader)
 })();
