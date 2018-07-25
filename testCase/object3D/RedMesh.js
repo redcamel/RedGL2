@@ -44,7 +44,7 @@ RedGL(document.createElement('canvas'), function (v) {
 					unit.run(false)
 				}
 			}, true),
-			redTest("RedGeometry Intance가 아닌경우 : 실패테스트", function (unit, title) {
+			redTest("RedGeometry Instance가 아닌경우 : 실패테스트", function (unit, title) {
 				try {
 					var t0 = RedMesh(tRedGL, 1, RedColorMaterial(tRedGL));
 					console.log(t0)
@@ -91,7 +91,7 @@ RedGL(document.createElement('canvas'), function (v) {
 					unit.run(false)
 				}
 			}, true),
-			redTest("RedBaseMaterial Intance가 아닌경우 : 실패테스트", function (unit, title) {
+			redTest("RedBaseMaterial Instance가 아닌경우 : 실패테스트", function (unit, title) {
 				try {
 					var t0 = RedMesh(tRedGL, RedBox(tRedGL), 1);
 					console.log(t0)

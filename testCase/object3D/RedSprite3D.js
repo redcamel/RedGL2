@@ -68,20 +68,20 @@ RedGL(document.createElement('canvas'), function (v) {
 				}
 			}, false),
 			redTest("set 테스트", function (unit, title) {
-				var tBitmapMaterial = RedBitmapMaterial(tRedGL, RedBitmapTexture(tRedGL, '../../asset/alphaTest.png'))
+				var tBitmapMaterial = RedBitmapMaterial(tRedGL, RedBitmapTexture(tRedGL, RedBaseTexture.EMPTY_BASE64))
 				var t0 = RedSprite3D(tRedGL, tMaterial);
 				t0['material'] = tBitmapMaterial
 				unit.run(t0['material'] == tBitmapMaterial)
 			}, true),
 			redTest("set 테스트", function (unit, title) {
-				var tBitmapMaterial = RedBitmapMaterial(tRedGL, RedBitmapTexture(tRedGL, '../../asset/alphaTest.png'))
+				var tBitmapMaterial = RedBitmapMaterial(tRedGL, RedBitmapTexture(tRedGL, RedBaseTexture.EMPTY_BASE64))
 				var t0 = RedSprite3D(tRedGL, tMaterial);
 				t0['material'] = tBitmapMaterial
 				unit.run(t0['_material'] == tBitmapMaterial)
 			}, true),
 			redTest("set 테스트 : RedColorMaterial or RedBitmapMaterial Instance가 아닌녀석을 재질로 할 경우", function (unit, title) {
 				try {
-					var tMaterial = RedStandardMaterial(tRedGL, RedBitmapTexture(tRedGL, '../../asset/alphaTest.png'))
+					var tMaterial = RedStandardMaterial(tRedGL, RedBitmapTexture(tRedGL, RedBaseTexture.EMPTY_BASE64))
 					var t0 = RedSprite3D(tRedGL, tMaterial);
 					t0['material'] = tMaterial
 					console.log(t0)

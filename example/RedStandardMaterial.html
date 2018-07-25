@@ -114,8 +114,13 @@
 			this.normalTexture = false
 			this.specularTexture = false
 			this.displacementTexture = false
+            this.alpha = 1
 		}
 		testStandard = new testStandard()
+
+		gui['gui'].add(testStandard, 'alpha', 0, 1).onChange(function (v) {
+			tMaterial.alpha = tMaterial2.alpha = tMaterial3.alpha = v
+		})
 		t0.add(testStandard, 'normalTexture').onChange(function (v) {
 			tMaterial['normalTexture'] = tMaterial2['normalTexture'] = tMaterial3['normalTexture'] = v ? tNormalTexture : null
 		})

@@ -26,7 +26,7 @@
   },
   {
     "title": "children",
-    "description": "\n자식 리스트\n",
+    "description": "자식 리스트",
     "return": "Array"
   },
   {
@@ -52,7 +52,7 @@
   {
     "constructorYn": true,
     "title": "RedScene",
-    "description": "\nRedScene Instance 생성자.\n",
+    "description": "RedScene Instance 생성자.",
     "params": {
       "redGL": [
         {
@@ -73,6 +73,11 @@
     "code": "METHOD",
     "description": "\n라이트 제거 매서드.\nRedBaseLight 확장객체만 사용가능.\n",
     "return": "void"
+  },
+  {
+    "title": "shadowManager",
+    "description": "\n그림자 매니저.\nRedScene Instance생성시 자동생성.\n",
+    "return": "Array"
   },
   {
     "title": "skyBox",

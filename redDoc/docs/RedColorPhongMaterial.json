@@ -1,5 +1,15 @@
 [
   {
+    "title": "alpha",
+    "description": "기본값 : 1",
+    "return": "Number"
+  },
+  {
+    "title": "color",
+    "description": "기본값 : #ff2211",
+    "return": "hex"
+  },
+  {
     "constructorYn": true,
     "title": "RedColorPhongMaterial",
     "description": "\nRedColorPhongMaterial Instance 생성\n",

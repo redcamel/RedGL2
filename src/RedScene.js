@@ -5,9 +5,7 @@ var RedScene;
 	 {
 		 constructorYn : true,
 		 title :`RedScene`,
-		 description : `
-			 RedScene Instance 생성자.
-		 `,
+		 description : `RedScene Instance 생성자.`,
 		 params : {
 			 redGL : [
 				 {type: 'RedGL Instance'}
@@ -21,8 +19,8 @@ var RedScene;
 	 }
 	 :DOC*/
 	RedScene = function (redGL, backgroundColor) {
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedScene : RedGL Instance만 허용됩니다.', redGL);
 		if ( !(this instanceof RedScene) ) return new RedScene(redGL, backgroundColor);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedScene : RedGL Instance만 허용됩니다.', redGL);
 		this['backgroundColor'] = backgroundColor ? backgroundColor : '#000000';
 		this['useBackgroundColor'] = true;
 		this['useFog'] = false;
@@ -32,29 +30,31 @@ var RedScene;
 		/**DOC:
 		 {
 			 title :`children`,
-			 description : `
-				 자식 리스트
-			 `,
+			 description : `자식 리스트`,
 			 return : 'Array'
 		 }
 		 :DOC*/
 		this['children'] = [];
+		/**DOC:
+		 {
+			 title :`shadowManager`,
+			 description : `
+				 그림자 매니저.
+				 RedScene Instance생성시 자동생성.
+			 `,
+			 return : 'Array'
+		 }
+		 :DOC*/
 		this['shadowManager'] = RedShadowManager(redGL);
 		this['_lightInfo'] = {
 			RedAmbientLight: null,
 			RedDirectionalLight: [],
 			RedPointLight: []
 		};
-		this['_UUID'] = RedGL['makeUUID']();
+		this['_UUID'] = RedGL.makeUUID();
 		console.log(this);
 	};
 	var prototypeData = {
-		_r: 0,
-		_g: 0,
-		_b: 0,
-		_fogR: 1,
-		_fogG: 1,
-		_fogB: 1,
 		/**DOC:
 		 {
 			 title :`addLight`,
@@ -67,19 +67,20 @@ var RedScene;
 		 }
 		 :DOC*/
 		addLight: function (v) {
-			switch ( v['type'] ) {
-				//TODO: 맥스제한을 어떻게 줄지 결정해야함
-				case RedAmbientLight['type']:
-					this['_lightInfo'][v['type']] = v;
+			switch ( v['TYPE'] ) {
+				case RedAmbientLight['TYPE']:
+					this['_lightInfo'][v['TYPE']] = v;
 					break;
-				case RedDirectionalLight['type']:
-					this['_lightInfo'][v['type']].push(v);
+				case RedDirectionalLight['TYPE']:
+					if ( this['_lightInfo'][v['TYPE']].length == RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT ) RedGLUtil.throwFunc('RedScene : RedDirectionalLight ' + RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT + '개 까지 허용.');
+					this['_lightInfo'][v['TYPE']].push(v);
 					break;
-				case RedPointLight['type']:
-					this['_lightInfo'][v['type']].push(v);
+				case RedPointLight['TYPE']:
+					if ( this['_lightInfo'][v['TYPE']].length == RedSystemShaderCode.MAX_POINT_LIGHT ) RedGLUtil.throwFunc('RedScene : RedPointLight ' + RedSystemShaderCode.MAX_POINT_LIGHT + '개 까지 허용.');
+					this['_lightInfo'][v['TYPE']].push(v);
 					break;
 				default:
-					RedGLUtil.throwFunc('RedScene : RedAmbientLight,RedDirectionalLight,RedPointLight 인스턴스만 가능');
+					RedGLUtil.throwFunc('RedScene : RedBaseLight 인스턴스만 가능');
 			}
 		},
 		/**DOC:
@@ -96,21 +97,20 @@ var RedScene;
 		removeLight: (function () {
 			var tIndex;
 			return function (v) {
-				//TODO:검증해야함
-				switch ( v['type'] ) {
-					case RedAmbientLight['type']:
-						if ( this['_lightInfo'][v['type']] == v ) this['_lightInfo'][v['type']] = null;
+				switch ( v['TYPE'] ) {
+					case RedAmbientLight['TYPE']:
+						if ( this['_lightInfo'][v['TYPE']] == v ) this['_lightInfo'][v['TYPE']] = null;
 						break;
-					case RedDirectionalLight['type']:
-						tIndex = this['_lightInfo'][v['type']].indexOf(v);
-						if ( tIndex > -1 ) this['_lightInfo'][v['type']].splice(tIndex, 1);
+					case RedDirectionalLight['TYPE']:
+						tIndex = this['_lightInfo'][v['TYPE']].indexOf(v);
+						if ( tIndex > -1 ) this['_lightInfo'][v['TYPE']].splice(tIndex, 1);
 						break;
-					case RedPointLight['type']:
-						tIndex = this['_lightInfo'][v['type']].indexOf(v);
-						if ( tIndex > -1 ) this['_lightInfo'][v['type']].splice(tIndex, 1);
+					case RedPointLight['TYPE']:
+						tIndex = this['_lightInfo'][v['TYPE']].indexOf(v);
+						if ( tIndex > -1 ) this['_lightInfo'][v['TYPE']].splice(tIndex, 1);
 						break;
 					default:
-						RedGLUtil.throwFunc('RedScene : RedAmbientLight,RedDirectionalLight,RedPointLight 인스턴스만 가능')
+						RedGLUtil.throwFunc('RedScene : RedBaseLight 인스턴스만 가능')
 				}
 			}
 		})()
@@ -135,10 +135,10 @@ var RedScene;
 	 }
 	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedScene', 'backgroundColor', 'hex', {
-		callback : (function(){
+		callback: (function () {
 			var t0;
-			return function(){
-				t0 = RedGLUtil.hexToRGB.call(this, this['_backgroundColor']);
+			return function () {
+				t0 = RedGLUtil.hexToRGB_ZeroToOne.call(this, this['_backgroundColor']);
 				this['_r'] = t0[0];
 				this['_g'] = t0[1];
 				this['_b'] = t0[2];
@@ -199,10 +199,10 @@ var RedScene;
 	 }
 	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedScene', 'fogColor', 'hex', {
-		callback : (function(){
+		callback: (function () {
 			var t0;
-			return function(){
-				t0 = RedGLUtil.hexToRGB.call(this, this['_fogColor']);
+			return function () {
+				t0 = RedGLUtil.hexToRGB_ZeroToOne.call(this, this['_fogColor']);
 				this['_fogR'] = t0[0];
 				this['_fogG'] = t0[1];
 				this['_fogB'] = t0[2];

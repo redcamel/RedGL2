@@ -89,6 +89,7 @@ var RedText;
 		this['useDepthMask'] = false
 		this['useCullFace'] = false
 		this['perspectiveScale'] = false
+		this['sprite3DYn'] = false;
 		//////////////////////
 		this['_img'].onload = function () {
 			var tW, tH
@@ -109,11 +110,13 @@ var RedText;
 				wrap_t: redGL.gl.CLAMP_TO_EDGE
 			})
 		};
-		this['_UUID'] = RedGL['makeUUID']();
+		this['_UUID'] = RedGL.makeUUID();
 		console.log(this);
 	}
 	RedText.prototype = new RedBaseObject3D();
-	RedDefinePropertyInfo.definePrototype('RedText', 'sprite3DYn', 'boolean', false);
+
+	RedDefinePropertyInfo.definePrototype('RedText', 'perspectiveScale', 'boolean', true);
+	RedDefinePropertyInfo.definePrototype('RedText', 'sprite3DYn', 'boolean', true);
 	Object.defineProperty(RedText.prototype, 'width', {
 		get: function () { return this['_width']},
 		set: function (v) {

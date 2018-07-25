@@ -20,6 +20,11 @@
         },
         "텍스쳐 정의옵션",
         "\n<code>\n{\nmin: this.gl.LINEAR_MIPMAP_NEAREST,\nmag: this.gl.LINEAR,\nwrap_s: this.gl.REPEAT,\nwrap_t: this.gl.REPEAT,\nanisotropic: 16 // 지원가능한경우에만 작동\n}\n</code>\n"
+      ],
+      "callBack": [
+        {
+          "type": "Function"
+        }
       ]
     },
     "example": "\nRedBitmapTexture( RedGL Instance,  src, {\nmin: gl.LINEAR_MIPMAP_NEAREST,\nmag: gl.LINEAR,\nwrap_s: gl.REPEAT,\nwrap_t: gl.REPEAT\n})\n",

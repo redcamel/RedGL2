@@ -3,6 +3,7 @@ var RedDirectionalShadowMaterial;
 (function () {
 	var vSource, fSource;
 	var PROGRAM_NAME = 'RedDirectionalShadowMaterialProgram';
+	var checked;
 	vSource = function () {
 		/* @preserve
 		 void main(void) {
@@ -62,8 +63,8 @@ var RedDirectionalShadowMaterial;
 		// 일반 프로퍼티
 		this['__RedDirectionalShadowYn'] = true
 		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
-		this['_UUID'] = RedGL['makeUUID']();
-		this.checkUniformAndProperty();
+		this['_UUID'] = RedGL.makeUUID();
+		if ( !checked ) this.checkUniformAndProperty(), checked = true;
 		console.log(this)
 	}
 	RedDirectionalShadowMaterial.prototype = new RedBaseMaterial()

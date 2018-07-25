@@ -230,7 +230,6 @@ var RedBaseObject3D;
 		 }
 		 :DOC*/
 		this['children'] = []
-
 		this['useLOD'] = false
 		this['_lodLevels'] = {
 			/* 1: {
@@ -342,7 +341,7 @@ var RedBaseObject3D;
 				mat4.identity(resultMTX);
 				tCamera = redView['camera'];
 				tViewRect = redView['_viewRect'];
-				if ( !(tCamera instanceof RedCamera ) ) tCamera = tCamera.camera;
+				if ( tCamera instanceof RedBaseController ) tCamera = tCamera.camera;
 				mat4.multiply(resultMTX, tCamera.perspectiveMTX, tCamera.matrix);
 				mat4.multiply(resultMTX, resultMTX, this['matrix']);
 				resultPosition.x = resultMTX[12];

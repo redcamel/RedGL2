@@ -1,5 +1,10 @@
 [
   {
+    "title": "alpha",
+    "description": "기본값 : 1",
+    "return": "Number"
+  },
+  {
     "title": "diffuseTexture",
     "return": "RedBitmapTexture"
   },
@@ -7,6 +12,10 @@
     "title": "displacementPower",
     "description": "기본값 : 0",
     "return": "Number"
+  },
+  {
+    "title": "displacementTexture",
+    "return": "RedBitmapTexture"
   },
   {
     "title": "normalPower",
@@ -50,10 +59,6 @@
     },
     "example": "\nRedStandardMaterial(\nRedGL Instance,\nRedBitmapTexture(RedGL Instance, src), // diffuseTexture\nRedBitmapTexture(RedGL Instance, src), // normalTexture\nRedBitmapTexture(RedGL Instance, src), // specularTexture\nRedBitmapTexture(RedGL Instance, src)  // displacementTexture\n)\n",
     "return": "RedStandardMaterial Instance"
-  },
-  {
-    "title": "shininess",
-    "return": "RedBitmapTexture"
   },
   {
     "title": "shininess",

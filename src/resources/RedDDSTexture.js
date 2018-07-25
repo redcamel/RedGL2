@@ -42,20 +42,21 @@ var RedDDSTexture;
 		 return : 'RedDDSTexture Instance'
 	 }
 	 :DOC*/
-	RedDDSTexture = function (redGL, src, option, callBack) {
+	RedDDSTexture = function (redGL, src, option, callback) {
 		var tGL;
-		if ( !(this instanceof RedDDSTexture) ) return new RedDDSTexture(redGL, src, option, callBack);
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedDDSTexture : RedGL Instance만 허용됩니다.', redGL);
+		if ( !(this instanceof RedDDSTexture) ) return new RedDDSTexture(redGL, src, option, callback);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedDDSTexture : RedGL Instance만 허용됩니다.', redGL);
 		if ( src && typeof  src != 'string' && !(src instanceof HTMLCanvasElement) ) RedGLUtil.throwFunc('RedDDSTexture : src는 문자열 or Canvas Element만 허용.', '입력값 : ' + src);
+		if ( callback && !(typeof callback == 'function') ) RedGLUtil.throwFunc('RedVideoTexture : callback은 함수만 허용됩니다.', '입력값 :', callback);
 		tGL = redGL.gl;
-		RedTextureOptionChecker.check('RedDDSTexture', option, tGL)
+		RedTextureOptionChecker.check('RedDDSTexture', option, tGL);
 		this['webglTexture'] = tGL.createTexture();
-		this['atlascoord'] = RedAtlasUV(redGL)
-		this['_UUID'] = RedGL['makeUUID']();
+		this['atlascoord'] = RedAtlasUV(redGL);
+		this['_UUID'] = RedGL.makeUUID();
 		this.setEmptyTexture(tGL, this['webglTexture']);
 		tGL.glExtension['WEBGL_compressed_texture_s3tc'] || RedGLUtil.throwFunc('RedDDSTexture : WEBGL_compressed_texture_s3tc확장을 지원하지않는 하드웨어입니다.');
-		this.loadDDSTexture(tGL, tGL.glExtension['WEBGL_compressed_texture_s3tc'], src, option, callBack)
-		console.log(this)
+		this.loadDDSTexture(tGL, tGL.glExtension['WEBGL_compressed_texture_s3tc'], src, option, callback);
+		console.log(this);
 	}
 	RedDDSTexture.prototype = new RedBaseTexture();
 })();

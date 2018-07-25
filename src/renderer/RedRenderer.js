@@ -20,7 +20,7 @@ var RedRenderer;
 		this.world = null;
 		this['_tickKey'] = null;
 		this['_callback'] = null;
-		this['_UUID'] = RedGL['makeUUID']();
+		this['_UUID'] = RedGL.makeUUID();
 		this['renderInfo'] = {};
 		this['cacheState'] = [];
 		this['cacheInfo'] = {
@@ -206,7 +206,7 @@ var RedRenderer;
 				// 현재뷰에 대한 렌더 디버깅 정보
 				if ( !self['renderInfo'][tView['key']] ) self['renderInfo'][tView['key']] = {}
 				tRenderInfo = self['renderInfo'][tView['key']]
-				tRenderInfo['orthographicYn'] = tCamera.camera ? tCamera.camera['orthographicYn'] : tCamera['orthographicYn']
+				tRenderInfo['orthographicYn'] = tCamera instanceof RedBaseController ? tCamera.camera['orthographicYn'] : tCamera['orthographicYn']
 				tRenderInfo['x'] = tView['_x']
 				tRenderInfo['y'] = tView['_y']
 				tRenderInfo['width'] = tView['_width']
@@ -222,19 +222,20 @@ var RedRenderer;
 				gl.scissor(tViewRect[0], tWorldRect[3] - tViewRect[3] - tViewRect[1], tViewRect[2], tViewRect[3]);
 				// 배경 설정
 				if ( tScene['_useBackgroundColor'] ) {
-					gl.clearColor(tScene['_r'], tScene['_g'], tScene['_b'], 1);
+					if ( tScene['_useFog'] ) gl.clearColor(tScene['_fogR'], tScene['_fogG'], tScene['_fogB'], 1);
+					else gl.clearColor(tScene['_r'], tScene['_g'], tScene['_b'], 1);
 					gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 				} else {
 					gl.clearColor(0, 0, 0, 1);
 					gl.clear(gl.DEPTH_BUFFER_BIT);
 				}
 				// 카메라 메트릭스 설정
-				if ( !(tCamera instanceof RedCamera) ) {
+				if ( tCamera instanceof RedBaseController ) {
 					// 카메라 형식이 아닌경우 컨트롤러로 판단함
-					tCamera['update']()
-					tCamera = tCamera['camera']
+					tCamera['update']();
+					tCamera = tCamera['camera'];
 				}
-				if ( tCamera['autoUpdateMatrix'] ) tCamera['update']()
+				if ( tCamera['autoUpdateMatrix'] ) tCamera['update']();
 				// 퍼스펙티브 매트릭스 설정
 				// view 에 적용할 카메라 퍼스펙티브를 계산
 				tPerspectiveMTX = tCamera['perspectiveMTX'];
@@ -302,7 +303,7 @@ var RedRenderer;
 					tScene['skyBox']['x'] = tCamera.x
 					tScene['skyBox']['y'] = tCamera.y
 					tScene['skyBox']['z'] = tCamera.z
-					tScene['skyBox']['scaleX'] = tScene['skyBox']['scaleY'] = tScene['skyBox']['scaleZ'] = tCamera['farClipping']*0.6
+					tScene['skyBox']['scaleX'] = tScene['skyBox']['scaleY'] = tScene['skyBox']['scaleZ'] = tCamera['farClipping'] * 0.6
 					self.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], [tScene['skyBox']], time, tRenderInfo);
 					gl.clear(gl.DEPTH_BUFFER_BIT);
 				}
@@ -435,15 +436,15 @@ var RedRenderer;
 					tProgramList = tMaterial['_programList']
 					if ( tProgramList ) {
 						if ( tUseDirectionalShadow ) {
-							if ( scene['useFog'] && tSprite3DYn ) tProgram = tProgramList['directionalShadow_fog_sprite3D'][tBaseProgramKey]
+							if ( scene['_useFog'] && tSprite3DYn ) tProgram = tProgramList['directionalShadow_fog_sprite3D'][tBaseProgramKey]
 							else if ( tSprite3DYn ) tProgram = tProgramList['directionalShadow_sprite3D'][tBaseProgramKey]
-							else if ( scene['useFog'] ) tProgram = tProgramList['directionalShadow_fog'][tBaseProgramKey]
+							else if ( scene['_useFog'] ) tProgram = tProgramList['directionalShadow_fog'][tBaseProgramKey]
 							else tProgram = tProgramList['directionalShadow'][tBaseProgramKey]
 						}
 						else {
-							if ( scene['useFog'] && tSprite3DYn ) tProgram = tProgramList['fog_sprite3D'][tBaseProgramKey]
+							if ( scene['_useFog'] && tSprite3DYn ) tProgram = tProgramList['fog_sprite3D'][tBaseProgramKey]
 							else if ( tSprite3DYn ) tProgram = tProgramList['sprite3D'][tBaseProgramKey]
-							else if ( scene['useFog'] ) tProgram = tProgramList['fog'][tBaseProgramKey]
+							else if ( scene['_useFog'] ) tProgram = tProgramList['fog'][tBaseProgramKey]
 						}
 					}
 					//
@@ -726,11 +727,11 @@ var RedRenderer;
 					if ( tSystemUniformGroup['uPointSize']['use'] ) {
 						tCacheState['pointSize'] != tMesh['pointSize'] ? tGL.uniform1f(tSystemUniformGroup['uPointSize']['location'], tCacheState['pointSize'] = tMesh['pointSize']) : 0;
 					}
-					if ( tSystemUniformGroup['uPerspectiveScale']['location'] ) {
-						tUUID = tSystemUniformGroup['uPerspectiveScale']['_UUID']
-						tUniformValue = tMesh['perspectiveScale']
+					if ( tSystemUniformGroup['u_PerspectiveScale']['location'] ) {
+						tUUID = tSystemUniformGroup['u_PerspectiveScale']['_UUID']
+						tUniformValue = tMesh['_perspectiveScale']
 						if ( tCacheUniformInfo[tUUID] != tUniformValue ) {
-							tGL[tSystemUniformGroup['uPerspectiveScale']['renderMethod']](tSystemUniformGroup['uPerspectiveScale']['location'], tUniformValue)
+							tGL[tSystemUniformGroup['u_PerspectiveScale']['renderMethod']](tSystemUniformGroup['u_PerspectiveScale']['location'], tUniformValue)
 							tCacheUniformInfo[tUUID] = tUniformValue
 						}
 					}

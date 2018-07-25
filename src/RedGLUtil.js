@@ -23,7 +23,7 @@ var RedGLUtil;
 		 }
 		 :DOC*/
 		throwFunc: function () {
-			throw Array.prototype.slice.call(arguments).join(' ')
+			throw 'RedGL Error : ' + Array.prototype.slice.call(arguments).join(' ')
 		},
 		/**DOC:
 		 {
@@ -60,7 +60,7 @@ var RedGLUtil;
 		/**DOC:
 		 {
 			 constructorYn : true,
-			 title :`RedGLUtil.hexToRGB`,
+			 title :`RedGLUtil.hexToRGB_ZeroToOne`,
 			 description : `
 				 hex값을 RGB로 변환
 			 `,
@@ -70,12 +70,12 @@ var RedGLUtil;
 				 ]
 			 },
 			 example : `
-				 RedGLUtil.hexToRGB('#fff') // [1,1,1]
+				 RedGLUtil.hexToRGB_ZeroToOne('#fff') // [1,1,1]
 			 `,
 			 return : 'Array'
 		 }
 		 :DOC*/
-		hexToRGB: function (hex) {
+		hexToRGB_ZeroToOne: function (hex) {
 			var t0, t1;
 			if ( /^#([A-Fa-f0-9]{3}){1,2}$/.test(hex) ) {
 				t1 = [];
@@ -86,7 +86,7 @@ var RedGLUtil;
 				t1[1] = ((t0 >> 8) & 255) / 255;
 				t1[2] = (t0 & 255) / 255;
 				return t1
-			} else RedGLUtil.throwFunc('RedGLUtil.hexToRGB : 잘못된 hex값입니다.', hex)
+			} else RedGLUtil.throwFunc('RedGLUtil.hexToRGB_ZeroToOne : 잘못된 hex값입니다.', hex)
 		},
 		rgb2hex: function (red, green, blue) {
 			var rgb = blue | (green << 8) | (red << 16);
@@ -123,7 +123,7 @@ var RedGLUtil;
 				else RedGLUtil.throwFunc('getStrFromComment : 해석할 불가능한 값', source)
 			}
 		})(),
-		isPowerOf2 : function (v) { return (v & (v - 1)) == 0; },
+		isPowerOf2: function (v) { return (v & (v - 1)) == 0; },
 		nextHighestPowerOfTwo: (function () {
 			var i;
 			return function (v) {
@@ -132,7 +132,7 @@ var RedGLUtil;
 				return v + 1;
 			}
 		})()
-}
+	}
 	;
 	Object.freeze(RedGLUtil);
 })();

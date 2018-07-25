@@ -71,6 +71,7 @@ gulp.task('make-doc', function () {
 		"src/RedGL.js",
 		"src/RedXR.js",
 		"src/base/RedDefinePropertyInfo.js",
+		"src/base/RedBaseController.js",
 		"src/base/RedBaseObject3D.js",
 		"src/base/RedBaseContainer.js",
 		"src/base/RedBaseLight.js",
@@ -179,6 +180,7 @@ gulp.task('combine-js', function () {
 		"src/RedGL.js",
 		"src/RedXR.js",
 		//
+		"src/base/RedBaseController.js",
 		"src/base/RedBaseTexture.js",
 		"src/base/RedBaseObject3D.js",
 		"src/base/RedBaseContainer.js",

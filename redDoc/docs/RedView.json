@@ -44,7 +44,7 @@
         "RedCamera"
       ]
     },
-    "example": "\nvar tWorld, tScene, tCamera;\ntScene = RedScene(); // 씬생성\ntCamera = RedCamera(); // 카메라생성\nRedView('test', RedGL Instance, tScene, tCamera); // test라는 키값을 가진 RedView 생성\nRedView('test2',RedGL Instance, tScene, tCamera); // test2라는 키값을 가진 RedView 생성\n",
+    "example": "\nvar tWorld;\nRedView('test', RedGL Instance, RedScene Instance, RedCamera Instance); // test라는 키값을 가진 RedView 생성\nRedView('test2',RedGL Instance, RedScene Instance, RedCamera Instance); // test2라는 키값을 가진 RedView 생성\n",
     "return": "RedView Instance"
   },
   {
@@ -55,15 +55,15 @@
   {
     "code": "METHOD",
     "title": "setLocation",
-    "description": "\n씬의 위치를 결정.\npx, % 단위를 받음\n",
-    "example": "\nvar tWorld, tScene, tCamera;\ntScene = RedScene(); // 씬생성\ntCamera = RedCamera(); // 카메라생성\nRedView('test', tScene, tCamera); // test라는 키값을 가진 RedView 생성\nRedView('test').setLocation(100,100);\nRedView('test').setLocation('50%',100);\n",
+    "description": "\n씬의 위치를 결정.\npx, % 단위를 받음.\n",
+    "example": "\nvar tWorld;\ntCamera = RedCamera(); // 카메라생성\nRedView('test', RedGL Instance, RedScene Instance, RedCamera Instance); // test라는 키값을 가진 RedView 생성\nRedView('test').setLocation(100,100);\nRedView('test').setLocation('50%',100);\n",
     "return": "void"
   },
   {
     "code": "METHOD",
     "title": "setSize",
-    "description": "\n씬의 사이즈를 결정.\npx, % 단위를 받음\n",
-    "example": "\nvar tWorld, tScene, tCamera;\ntScene = RedScene(); // 씬생성\ntCamera = RedCamera(); // 카메라생성\nRedView('test', tScene, tCamera); // test라는 키값을 가진 RedView 생성\nRedView('test').setSize(100,100);\nRedView('test').setSize('50%',100);\n",
+    "description": "\n씬의 사이즈를 결정.\npx, % 단위를 받음.\n",
+    "example": "\nvar tWorld;\nRedView('test', RedGL Instance, RedScene Instance, RedCamera Instance); // test라는 키값을 가진 RedView 생성\nRedView('test').setSize(100,100);\nRedView('test').setSize('50%',100);\n",
     "return": "void"
   }
 ]

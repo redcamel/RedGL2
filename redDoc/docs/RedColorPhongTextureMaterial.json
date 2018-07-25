@@ -1,5 +1,25 @@
 [
   {
+    "title": "alpha",
+    "description": "기본값 : 1",
+    "return": "Number"
+  },
+  {
+    "title": "color",
+    "description": "기본값 : #ff2211",
+    "return": "hex"
+  },
+  {
+    "title": "displacementFlowSpeedX",
+    "description": "기본값 : 0",
+    "return": "Number"
+  },
+  {
+    "title": "displacementFlowSpeedY",
+    "description": "기본값 : 0",
+    "return": "Number"
+  },
+  {
     "title": "displacementPower",
     "description": "기본값 : 0",
     "return": "Number"

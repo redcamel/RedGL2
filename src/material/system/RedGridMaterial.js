@@ -3,6 +3,7 @@ var RedGridMaterial;
 (function () {
 	var vSource, fSource;
 	var PROGRAM_NAME = 'gridMaterialProgram';
+	var checked;
 	vSource = function () {
 		/* @preserve
 		 varying vec4 vColor;
@@ -57,8 +58,8 @@ var RedGridMaterial;
 		this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource)
 		// 유니폼 프로퍼티
 		// 일반 프로퍼티
-		this['_UUID'] = RedGL['makeUUID']();
-		this.checkUniformAndProperty();
+		this['_UUID'] = RedGL.makeUUID();
+		if ( !checked ) this.checkUniformAndProperty(), checked = true;
 		console.log(this)
 	}
 	RedGridMaterial.prototype = new RedBaseMaterial()

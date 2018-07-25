@@ -70,7 +70,7 @@ var RedPostEffectManager;
 		quad = RedMesh(redGL, RedPlane(redGL), this['_finalMaterial']);
 		quad['useCullFace'] = false;
 		this['children'] = [quad];
-		this['_UUID'] = RedGL['makeUUID']();
+		this['_UUID'] = RedGL.makeUUID();
 		console.log(this);
 	}
 	RedPostEffectManager.prototype = {
@@ -311,7 +311,6 @@ var RedPostEffectManager;
 					);
 					// 해당 이펙트를 렌더링하고
 					redRenderer.sceneRender(redGL, redScene, tCamera, true, postEffectChildren, time, renderInfo);
-
 					// 해당 이펙트의 프레임 버퍼를 언바인딩한다.
 					effect.unbind(tGL)
 					// 현재 이펙트를 최종 텍스쳐로 기록하고 다음 이펙트가 있을경우 활용한다.
@@ -327,7 +326,7 @@ var RedPostEffectManager;
 					self = this;
 					prevWidth = null, prevHeight = null;
 					tScene = redView['scene'];
-					tCamera = redView['camera'] instanceof RedCamera ? redView['camera'] : redView['camera']['camera'];
+					tCamera = redView['camera'] instanceof RedBaseController ? redView['camera']['camera'] : redView['camera'];
 					tViewRect = redView['_viewRect'];
 					tWorldRect = redRenderer['worldRect']
 					tCacheSystemUniformInfo = redRenderer['cacheInfo']['cacheSystemUniformInfo']

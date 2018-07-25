@@ -8,7 +8,7 @@ var RedDefinePropertyInfo;
 				get: function () { return this['_geometry']; },
 				set: function (v) {
 					if ( this instanceof RedSkyBox ) {
-						if ( !(v instanceof RedBox) ) RedGLUtil.throwFunc('RedSkyBox : geometry - RedBox Instance만 허용됩니다.', '입력값 : ' + v)
+						v instanceof RedBox || RedGLUtil.throwFunc('RedSkyBox : geometry - RedBox Instance만 허용됩니다.', '입력값 : ' + v)
 					} else {
 						if ( v && !(v instanceof RedGeometry) ) RedGLUtil.throwFunc('geometry : RedGeometry Instance만 허용됩니다.', '입력값 : ' + v)
 					}
@@ -33,7 +33,11 @@ var RedDefinePropertyInfo;
 						if ( !(v instanceof RedSkyBoxMaterial) ) {
 							RedGLUtil.throwFunc('RedSkyBox : RedSkyBoxMaterial Instance만 허용됩니다.', '입력값 : ' + v)
 						}
-					} else if ( this instanceof RedPointUnit ) {
+					} else if ( this instanceof RedLine ) {
+						if ( !(v instanceof RedColorMaterial) ) {
+							RedGLUtil.throwFunc('RedLine : RedColorMaterial Instance만 허용됩니다.', '입력값 : ' + v)
+						}
+					}  else if ( this instanceof RedPointUnit ) {
 						if ( !(v instanceof RedPointColorMaterial) && !(v instanceof RedPointBitmapMaterial) ) {
 							RedGLUtil.throwFunc('RedPointUnit : material - RedPointColorMaterial Instance or RedPointBitmapMaterial Instance만 허용됩니다.')
 						}
@@ -60,7 +64,7 @@ var RedDefinePropertyInfo;
 					get: function () { return this['_' + name]; },
 					set: function (v) {
 						typeof v == 'string' || RedGLUtil.throwFunc(clsName + ' - ' + name + ' 문자열만 허용함', '입력값 : ' + v);
-						RedGLUtil.regHex(v) || RedGLUtil.throwFunc(clsName + ' - ' + name + ' : hex 형식만 허용함.'+ v)
+						RedGLUtil.regHex(v) || RedGLUtil.throwFunc(clsName + ' - ' + name + ' : hex 형식만 허용함.' + v)
 						this['_' + name] = v
 						if ( option && option['callback'] ) option['callback'].call(this, v)
 					}
@@ -71,7 +75,7 @@ var RedDefinePropertyInfo;
 				result = {
 					get: function () { return this['_' + name]; },
 					set: function (v) {
-						if ( typeof v != 'boolean' ) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : boolean만 허용함.'+ v)
+						if ( typeof v != 'boolean' ) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : boolean만 허용함.' + v)
 						this['_' + name] = v
 						if ( option && option['callback'] ) option['callback'].call(this, v)
 					}
@@ -85,7 +89,7 @@ var RedDefinePropertyInfo;
 						result = {
 							get: function () { return this['_' + name]; },
 							set: function (v) {
-								if ( typeof v != 'number' ) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : 숫자만 허용함.')
+								if ( typeof v != 'number' ) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : 숫자만 허용함.', '입력값 : ' + v)
 								if ( v < min ) v = min;
 								if ( v > max ) v = max;
 								this['_' + name] = v
@@ -97,7 +101,7 @@ var RedDefinePropertyInfo;
 							result = {
 								get: function () { return this['_' + name]; },
 								set: function (v) {
-									if ( typeof v != 'number' ) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : 숫자만 허용함.')
+									if ( typeof v != 'number' ) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : 숫자만 허용함.', '입력값 : ' + v)
 									if ( v < min ) v = min;
 									this['_' + name] = v
 									if ( option && option['callback'] ) option['callback'].call(this, v)
@@ -107,7 +111,7 @@ var RedDefinePropertyInfo;
 							result = {
 								get: function () { return this['_' + name]; },
 								set: function (v) {
-									if ( typeof v != 'number' ) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : 숫자만 허용함.')
+									if ( typeof v != 'number' ) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : 숫자만 허용함.', '입력값 : ' + v)
 									if ( v > max ) v = max;
 									this['_' + name] = v
 									if ( option && option['callback'] ) option['callback'].call(this, v)
@@ -119,7 +123,7 @@ var RedDefinePropertyInfo;
 					result = {
 						get: function () { return this['_' + name]; },
 						set: function (v) {
-							if ( typeof v != 'number' ) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : 숫자만 허용함.')
+							if ( typeof v != 'number' ) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : 숫자만 허용함.', '입력값 : ' + v)
 							this['_' + name] = v
 						}
 					}
@@ -177,7 +181,7 @@ var RedDefinePropertyInfo;
 					return function (hex) {
 						_v = hex ? hex : '#ff2211';
 						console.log(_v)
-						t0 = RedGLUtil.hexToRGB.call(this, _v);
+						t0 = RedGLUtil.hexToRGB_ZeroToOne.call(this, _v);
 						this['_color'][0] = t0[0];
 						this['_color'][1] = t0[1];
 						this['_color'][2] = t0[2];

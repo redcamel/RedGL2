@@ -20,6 +20,11 @@
         },
         "텍스쳐 정의옵션",
         "\n<code>\n{\nmin: gl.LINEAR_MIPMAP_NEAREST,\nmag: gl.LINEAR,\nwrap_s: gl.REPEAT,\nwrap_t: gl.REPEAT\n}\n</code>\n"
+      ],
+      "callBack": [
+        {
+          "type": "Function"
+        }
       ]
     },
     "example": "\nRedBitmapCubeTexture( RedGL Instance,  srcList, {\nmin: gl.LINEAR_MIPMAP_NEAREST,\nmag: gl.LINEAR,\nwrap_s: gl.REPEAT,\nwrap_t: gl.REPEAT\n})\n",

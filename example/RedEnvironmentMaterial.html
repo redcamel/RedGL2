@@ -134,9 +134,12 @@
 			this.specularTexture = false
 			this.displacementTexture = false
 			this.environmentTexture = true
+            this.alpha = 1
 		}
 		testStandard = new testStandard()
-
+		t0.add(testStandard, 'alpha', 0, 1).onChange(function (v) {
+			tMaterial.alpha = tMaterial2.alpha = tMaterial3.alpha = v
+		})
 		t0.add(tMaterial, 'reflectionPower', 0, 1).onChange(function (v) {
 			tMaterial2['reflectionPower'] = v
 			tMaterial3['reflectionPower'] = v

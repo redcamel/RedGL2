@@ -1,15 +1,5 @@
 [
   {
-    "title": "alpha",
-    "description": "\n기본값 : 0.1\n",
-    "return": "Number"
-  },
-  {
-    "title": "intensity",
-    "description": "\n라이트 강도\n기본값 : 1\n",
-    "return": "Number"
-  },
-  {
     "constructorYn": true,
     "title": "RedAmbientLight",
     "description": "\nRedAmbientLight Instance 생성\n",
@@ -42,7 +32,7 @@
   },
   {
     "title": "type",
-    "description": "RedAmbientLight['type']",
+    "description": "RedAmbientLight['TYPE']",
     "return": "String"
   }
 ]

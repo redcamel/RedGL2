@@ -152,7 +152,7 @@ var RedGround;
 		tPrimitiveData = makeData(redGL, tType, width, height, wSegments, hSegments, seed, seedX, seedY, maxHeight, locationX,locationZ);
 		this['interleaveBuffer'] = tPrimitiveData['interleaveBuffer'];
 		this['indexBuffer'] = tPrimitiveData['indexBuffer'];
-		this['_UUID'] = RedGL['makeUUID']();
+		this['_UUID'] = RedGL.makeUUID();
 		// console.log(this);
 	}
 	RedGround.prototype = RedGeometry.prototype;

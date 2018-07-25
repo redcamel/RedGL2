@@ -22,16 +22,6 @@
     "return": "void"
   },
   {
-    "title": "drawMode",
-    "description": "\n기본값 : gl.LINE_STRIP\n",
-    "return": "gl 상수"
-  },
-  {
-    "title": "material",
-    "description": "material",
-    "return": "RedBaseMaterial 확장 Instance"
-  },
-  {
     "constructorYn": true,
     "title": "RedLine",
     "description": "\nRedLine Instance 생성기\n",
@@ -43,17 +33,33 @@
       ],
       "material": [
         {
-          "type": "RedBaseMaterial 확장 Instance"
-        },
-        "material"
+          "type": "RedColorMaterial Instance"
+        }
       ]
     },
     "example": "\nvar tScene;\nvar tLine;\nvar tX, tY, tZ;\nvar i;\ntScene = RedScene();\ni = 3 * 20;\ntLine = RedLine(redGL Instance, RedColorMaterial(redGL Instance))\ntX = tY = tZ = 0\nwhile (i--) {\ntX += Math.random() * 0.5\ntY += Math.random() * 0.5\ntZ += Math.random() * 0.5\ntLine.addPoint(tX, tY, tZ)\n}\ntLine.upload()\ntScene.addChild(tLine)\n",
     "return": "RedLine Instance"
   },
   {
-    "title": "upload",
-    "description": "\naddPoint로 포인트 추가후 실제 버퍼 반영할떄 사용\n",
+    "title": "removeAllPoint",
+    "description": "\n포인트 전체 제거\n",
+    "parmas": {
+      "x": [
+        {
+          "type": "Number"
+        }
+      ],
+      "y": [
+        {
+          "type": "Number"
+        }
+      ],
+      "z": [
+        {
+          "type": "Number"
+        }
+      ]
+    },
     "return": "void"
   }
 ]

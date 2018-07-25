@@ -41,7 +41,7 @@
   },
   {
     "constructorYn": true,
-    "title": "RedGLUtil.hexToRGB",
+    "title": "RedGLUtil.hexToRGB_ZeroToOne",
     "description": "\nhex값을 RGB로 변환\n",
     "params": {
       "hex": [
@@ -50,7 +50,7 @@
         }
       ]
     },
-    "example": "\nRedGLUtil.hexToRGB('#fff') // [1,1,1]\n",
+    "example": "\nRedGLUtil.hexToRGB_ZeroToOne('#fff') // [1,1,1]\n",
     "return": "Array"
   },
   {

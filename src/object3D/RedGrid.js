@@ -48,14 +48,14 @@ var RedGrid;
 		this['divisions'] = divisions || 100;
 		this['color1'] = color1 || '#cccccc';
 		this['color2'] = color2 || '#666666';
-		this['geometry'] = this['_makeGeometry']();
+		this['geometry'] = this['_makeGridGeometry']();
 		this['material'] = RedGridMaterial(redGL);
 		this['drawMode'] = tGL.LINES;
-		this['_UUID'] = RedGL['makeUUID']();
+		this['_UUID'] = RedGL.makeUUID();
 		console.log(this);
 	};
 	RedGrid.prototype = new RedBaseContainer();
-	RedGrid.prototype['_makeGeometry'] = (function () {
+	RedGrid.prototype['_makeGridGeometry'] = (function () {
 		var center, step, halfSize;
 		var i, k, tColor;
 		return function () {
@@ -65,7 +65,7 @@ var RedGrid;
 				step = this['_size'] / this['_divisions'];
 				halfSize = this['_size'] / 2;
 				for ( i = 0, k = -halfSize; i <= this['_divisions']; i++ , k += step ) {
-					tColor = i === center ? RedGLUtil.hexToRGB(this['color1']) : RedGLUtil.hexToRGB(this['color2']);
+					tColor = i === center ? RedGLUtil.hexToRGB_ZeroToOne(this['color1']) : RedGLUtil.hexToRGB_ZeroToOne(this['color2']);
 					interleaveData.push(
 						-halfSize, 0, k, tColor[0], tColor[1], tColor[2], 1,
 						halfSize, 0, k, tColor[0], tColor[1], tColor[2], 1,
@@ -88,7 +88,7 @@ var RedGrid;
 			}
 		}
 	})();
-	RedGrid.prototype['_update'] = function () { this['geometry'] = this['_makeGeometry']() };
+	RedGrid.prototype['_update'] = function () { this['geometry'] = this['_makeGridGeometry']() };
 	/**DOC:
 	 {
 		 title :`size`,

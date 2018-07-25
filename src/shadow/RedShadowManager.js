@@ -20,7 +20,7 @@ var RedShadowManager;
 	RedShadowManager = function (redGL) {
 		if ( !(this instanceof RedShadowManager) ) return new RedShadowManager(redGL);
 		redGL instanceof RedGL || RedGLUtil.throwFunc('RedShadowManager : RedGL Instance만 허용됩니다.', redGL);
-		this['_UUID'] = RedGL['makeUUID']();
+		this['_UUID'] = RedGL.makeUUID();
 		console.log(this);
 	}
 	RedShadowManager.prototype = {

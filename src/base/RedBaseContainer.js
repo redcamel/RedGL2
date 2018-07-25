@@ -11,54 +11,52 @@ var RedBaseContainer;
 		 return : 'void'
 	 }
 	 :DOC*/
-	RedBaseContainer = function () {
-		this['autoSort'] = false
-	}
+	RedBaseContainer = function () {};
 	var prototypeData = {
 		sortGeometry: function (recursive) {
 			if ( recursive ) {
-				var i = this.children.length
+				var i = this.children.length;
 				while ( i-- ) this.children[i].sortGeometry(recursive)
 			}
 			this.children.sort(function (a, b) {
-				a = a['_geometry']['interleaveBuffer']['_UUID']
-				b = b['_geometry']['interleaveBuffer']['_UUID']
-				if ( a < b ) return -1
-				if ( a > b ) return 1
+				a = a['_geometry']['interleaveBuffer']['_UUID'];
+				b = b['_geometry']['interleaveBuffer']['_UUID'];
+				if ( a < b ) return -1;
+				if ( a > b ) return 1;
 				return 0
 			})
 		},
 		sortMaterial: function (recursive) {
 			if ( recursive ) {
-				var i = this.children.length
+				var i = this.children.length;
 				while ( i-- ) this.children[i].sortMaterial(recursive)
 			}
 			this.children.sort(function (a, b) {
-				a = a['_material']['program']['_UUID']
-				b = b['_material']['program']['_UUID']
-				if ( a < b ) return -1
-				if ( a > b ) return 1
+				a = a['_material']['program']['_UUID'];
+				b = b['_material']['program']['_UUID'];
+				if ( a < b ) return -1;
+				if ( a > b ) return 1;
 				return 0
 			})
 		},
 		sortGeometryAndMaterial: function (recursive) {
 			//TODO: 정의,검증 해야함
 			if ( recursive ) {
-				var i = this.children.length
+				var i = this.children.length;
 				while ( i-- ) this.children[i].sortGeometryAndMaterial(recursive)
 			}
 			this.children.sort(function (a, b) {
-				a = a['_geometry']['interleaveBuffer']['_UUID']
-				b = b['_geometry']['interleaveBuffer']['_UUID']
+				a = a['_geometry']['interleaveBuffer']['_UUID'];
+				b = b['_geometry']['interleaveBuffer']['_UUID'];
 				if ( a == b ) {
-					var a2 = a['_material']['program']['_UUID']
-					var b2 = b['_material']['program']['_UUID']
-					if ( a2 < b2 ) return -1
-					if ( a2 > b2 ) return 1
+					var a2 = a['_material']['program']['_UUID'];
+					var b2 = b['_material']['program']['_UUID'];
+					if ( a2 < b2 ) return -1;
+					if ( a2 > b2 ) return 1;
 					return 0
 				}
-				if ( a < b ) return -1
-				if ( a > b ) return 1
+				if ( a < b ) return -1;
+				if ( a > b ) return 1;
 				return 0
 			})
 		},
@@ -78,7 +76,7 @@ var RedBaseContainer;
 		addChild: (function () {
 			var t0;
 			return function (child) {
-				if ( !(child instanceof RedBaseObject3D ) ) RedGLUtil.throwFunc('addChild', 'RedBaseObject3D Instance만 가능', '입력값 : ' + child);
+				child instanceof RedBaseObject3D || RedGLUtil.throwFunc('addChild', 'RedBaseObject3D Instance만 가능', '입력값 : ' + child);
 				t0 = this['children'].indexOf(child);
 				if ( t0 != -1 ) child = this['children'].splice(t0, 1)[0];
 				this['children'].push(child);
@@ -101,11 +99,11 @@ var RedBaseContainer;
 		 }
 		 :DOC*/
 		addChildAt: function (child, index) {
-			if ( typeof index != 'number' ) RedGLUtil.throwFunc('addChildAt', 'index는 숫자만 입력가능', '입력값 : ' + index);
-			if ( !(child instanceof RedBaseObject3D) ) RedGLUtil.throwFunc('addChildAt', 'RedBaseObject3D Instance만 가능', '입력값 : ' + child);
+			typeof index == 'number' || RedGLUtil.throwFunc('addChildAt', 'index는 숫자만 입력가능', '입력값 : ' + index);
+			child instanceof RedBaseObject3D || RedGLUtil.throwFunc('addChildAt', 'RedBaseObject3D Instance만 가능', '입력값 : ' + child);
 			if ( this['children'].length >= index ) {
 				if ( index ) this['children'].splice(index, 0, child);
-				else  this['children'].push(child);
+				else this['children'].push(child);
 			}
 			else RedGLUtil.throwFunc('addChildAt', '해당인덱스가 현재 children 길이와 같거나 큽니다.', '입력값 : ' + index);
 		},
@@ -216,7 +214,7 @@ var RedBaseContainer;
 			return this['children'].length;
 		}
 	};
-	RedBaseContainer.prototype = new RedBaseObject3D()
+	RedBaseContainer.prototype = new RedBaseObject3D();
 	for ( var k in prototypeData ) RedBaseContainer.prototype[k] = prototypeData[k];
 	Object.freeze(RedBaseContainer);
 })();

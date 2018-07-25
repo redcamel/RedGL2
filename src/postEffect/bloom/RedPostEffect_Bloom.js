@@ -118,7 +118,7 @@ var RedPostEffect_Bloom;
 		})())
 		this['threshold'] = 75;
 		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
-		this['_UUID'] = RedGL['makeUUID']();
+		this['_UUID'] = RedGL.makeUUID();
 		this.updateTexture = function (lastFrameBufferTexture, parentFrameBufferTexture) {
 			this['diffuseTexture'] = parentFrameBufferTexture;
 			this['blurTexture'] = lastFrameBufferTexture;

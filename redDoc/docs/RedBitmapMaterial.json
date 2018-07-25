@@ -1,7 +1,12 @@
 [
   {
+    "title": "alpha",
+    "description": "기본값 : 1",
+    "return": "Number"
+  },
+  {
     "title": "diffuseTexture",
-    "return": "RedBitmapMaterial"
+    "return": "RedBitmapTexture"
   },
   {
     "constructorYn": true,
@@ -16,11 +21,10 @@
       "diffuseTexture": [
         {
           "type": "RedBitmapTexture"
-        },
-        "RedBitmapTexture Instance"
+        }
       ]
     },
-    "example": "\nRedBitmapMaterial(RedGL Instance, RedBitmapTexture(RedGL Instance, src))\n",
+    "example": "\nRedBitmapMaterial( RedGL Instance, RedBitmapTexture(RedGL Instance, src) )\n",
     "return": "RedBitmapMaterial Instance"
   }
 ]

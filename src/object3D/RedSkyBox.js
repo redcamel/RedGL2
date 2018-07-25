@@ -34,13 +34,13 @@ var RedSkyBox;
 	 :DOC*/
 	RedSkyBox = function (redGL, srcList) {
 		if ( !(this instanceof RedSkyBox) ) return new RedSkyBox(redGL, srcList);
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedSkyBox : RedGL Instance만 허용됩니다.', redGL)
-		RedBaseObject3D['build'].call(this, redGL.gl)
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedSkyBox : RedGL Instance만 허용됩니다.', redGL);
+		RedBaseObject3D['build'].call(this, redGL.gl);
 		this['geometry'] = RedBox(redGL);
 		this['material'] = RedSkyBoxMaterial(redGL, RedBitmapCubeTexture(redGL, srcList));
-		this['cullFace'] = redGL.gl.FRONT
-		this['_UUID'] = RedGL['makeUUID']();
-	}
+		this['cullFace'] = redGL.gl.FRONT;
+		this['_UUID'] = RedGL.makeUUID();
+	};
 	RedSkyBox.prototype = new RedBaseObject3D();
 	Object.freeze(RedSkyBox);
 })();

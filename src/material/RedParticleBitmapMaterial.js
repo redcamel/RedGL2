@@ -6,6 +6,7 @@ var RedParticleBitmapMaterial;
 (function () {
 	var vSource, fSource;
 	var PROGRAM_NAME = 'particleBitmapProgram';
+	var checked;
 	vSource = function () {
 		/* @preserve
 		 varying vec4 vColor;
@@ -15,12 +16,13 @@ var RedParticleBitmapMaterial;
 			vColor = aVertexColor;
 		 }
 		 */
-	}
+	};
 	fSource = function () {
 		/* @preserve
 		 precision mediump float;
 		 uniform sampler2D u_diffuseTexture;
-		 uniform float uAlphaTest;
+		 uniform float u_alphaTest;
+		 uniform float u_alpha;
 	     varying vec4 vColor;
 		 float fogFactor(float perspectiveFar, float density){
 			 float flog_cord = gl_FragCoord.z / gl_FragCoord.w / perspectiveFar;
@@ -37,13 +39,13 @@ var RedParticleBitmapMaterial;
 			 finalColor.rgb += vColor.rgb;
 			 finalColor.rgb *= vColor.a;
 			 finalColor.a = finalColor.a;
-			 if(finalColor.a < uAlphaTest) discard;
-
+			 if(finalColor.a < u_alphaTest) discard;
+             finalColor.a *= u_alpha;
 			 //#define#fog#false# gl_FragColor = finalColor;
 			 //#define#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
 		 }
 		 */
-	}
+	};
 	/**DOC:
 	 {
 		 constructorYn : true,
@@ -64,35 +66,45 @@ var RedParticleBitmapMaterial;
 	 :DOC*/
 	RedParticleBitmapMaterial = function (redGL, diffuseTexture) {
 		if ( !(this instanceof RedParticleBitmapMaterial) ) return new RedParticleBitmapMaterial(redGL, diffuseTexture);
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedParticleBitmapMaterial : RedGL Instance만 허용됩니다.', redGL)
-		this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource)
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedParticleBitmapMaterial : RedGL Instance만 허용됩니다.', redGL);
+		this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource);
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
-		/**DOC:
-		 {
-			 title :`diffuseTexture`,
-			 return : 'RedBitmapTexture'
-		 }
-		 :DOC*/
 		this['diffuseTexture'] = diffuseTexture;
+		this['alpha'] = 1;
+		this['alphaTest'] = 0.01;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		/**DOC:
-		 {
-			 title :`alphaTest`,
-			 description : `
-			 기본값 : 0.01
-			 해당값보다 알파값이 작을경우 discard 처리됨.
-			 `,
-			 return : 'Number'
-		 }
-		 :DOC*/
-		this['alphaTest'] = 0.01
-		this['_UUID'] = RedGL['makeUUID']();
-		this.checkUniformAndProperty();
+		this['_UUID'] = RedGL.makeUUID();
+		if ( !checked ) {
+			this.checkUniformAndProperty();
+			checked = true;
+		}
 		console.log(this)
-	}
-	RedParticleBitmapMaterial.prototype = new RedBaseMaterial()
+	};
+	RedParticleBitmapMaterial.prototype = new RedBaseMaterial();
+	/**DOC:
+	 {
+		 title :`diffuseTexture`,
+		 return : 'RedBitmapTexture'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedParticleBitmapMaterial', 'diffuseTexture', 'sampler2D', {essential: true});
-	Object.freeze(RedParticleBitmapMaterial)
+	/**DOC:
+	 {
+		 title :`alpha`,
+		 description : `기본값 : 1`,
+		 return : 'Number'
+	 }
+	 :DOC*/
+	RedDefinePropertyInfo.definePrototype('RedParticleBitmapMaterial', 'alpha', 'number', {min: 0, max: 1});
+	/**DOC:
+	 {
+		 title :`alphaTest`,
+		 description : `기본값 : 0.01`,
+		 return : 'Number'
+	 }
+	 :DOC*/
+	RedDefinePropertyInfo.definePrototype('RedParticleBitmapMaterial', 'alphaTest', 'number', {min: 0, max: 1});
+	Object.freeze(RedParticleBitmapMaterial);
 })();

@@ -13,19 +13,17 @@ var RedMesh;
 				 {type:'RedGL'}
 			 ],
 			 geometry : [
-				 {type:'RedGeometry'},
-				 `geometry`
+				 {type:'RedGeometry'}
 			 ],
 			 material : [
-				 {type:'RedBaseMaterial 확장 Instance'},
-				 `material`
+				 {type:'RedBaseMaterial 확장 Instance'}
 			 ]
 		 },
 		 example : `
 			 var tScene;
 			 var tMesh;
 			 tScene = RedScene();
-			 tMesh = RedMesh(RedGL Instance, RedBox(RedGL Instance), RedColorMaterial(RedGL Instance, '#ff0000'));
+			 tMesh = RedMesh( RedGL Instance, RedBox(RedGL Instance), RedColorMaterial(RedGL Instance, '#ff0000' ));
 			 tScene.addChild(tMesh);
 		 `,
 		 return : 'RedMesh Instance'
@@ -33,8 +31,8 @@ var RedMesh;
 	 :DOC*/
 	RedMesh = function (redGL, geometry, material) {
 		if ( !(this instanceof RedMesh) ) return new RedMesh(redGL, geometry, material);
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedMesh : RedGL Instance만 허용됩니다.', redGL)
-		RedBaseObject3D['build'].call(this, redGL.gl)
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedMesh : RedGL Instance만 허용됩니다.', redGL);
+		RedBaseObject3D['build'].call(this, redGL.gl);
 		/**DOC:
 		 {
 			 title :`geometry`,
@@ -51,8 +49,8 @@ var RedMesh;
 		 }
 		 :DOC*/
 		this['material'] = material;
-		this['_UUID'] = RedGL['makeUUID']();
-	}
+		this['_UUID'] = RedGL.makeUUID();
+	};
 	RedMesh.prototype = new RedBaseContainer();
 	Object.freeze(RedMesh);
 })();

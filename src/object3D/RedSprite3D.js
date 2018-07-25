@@ -28,10 +28,8 @@ var RedSprite3D;
 	 :DOC*/
 	RedSprite3D = function (redGL, material) {
 		if ( !(this instanceof RedSprite3D) ) return new RedSprite3D(redGL, material);
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedSprite3D : RedGL Instance만 허용됩니다.', redGL)
-		var tGL;
-		tGL = redGL.gl;
-		RedBaseObject3D['build'].call(this, tGL)
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedSprite3D : RedGL Instance만 허용됩니다.', redGL);
+		RedBaseObject3D['build'].call(this, redGL.gl);
 		this['geometry'] = RedPlane(redGL, 1, 1, 0);
 		/**DOC:
 		 {
@@ -51,11 +49,13 @@ var RedSprite3D;
 			 return : 'Boolean'
 		 }
 		 :DOC*/
-		this['perspectiveScale'] = true
-		this['_sprite3DYn'] = true
-		this['useCullFace'] = false
-		this['_UUID'] = RedGL['makeUUID']();
-	}
+		this['perspectiveScale'] = true;
+		this['sprite3DYn'] = true;
+		this['useCullFace'] = false;
+		this['_UUID'] = RedGL.makeUUID();
+	};
 	RedSprite3D.prototype = new RedBaseContainer();
+	RedDefinePropertyInfo.definePrototype('RedSprite3D', 'perspectiveScale', 'boolean', true);
+	RedDefinePropertyInfo.definePrototype('RedSprite3D', 'sprite3DYn', 'boolean', true);
 	Object.freeze(RedSprite3D);
 })();

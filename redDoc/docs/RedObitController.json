@@ -5,8 +5,29 @@
     "return": "RedCamera"
   },
   {
+    "title": "centerX",
+    "return": "Number"
+  },
+  {
+    "title": "centerY",
+    "return": "Number"
+  },
+  {
+    "title": "centerZ",
+    "return": "Number"
+  },
+  {
     "title": "delayDistance",
     "description": "\n거리 지연 속도\n기본값 : 0.1\n",
+    "return": "Number"
+  },
+  {
+    "title": "delayRotation",
+    "description": "\n회전 지연 속도\n기본값 : 0.1\n",
+    "return": "Number"
+  },
+  {
+    "title": "distance",
     "return": "Number"
   },
   {
@@ -44,28 +65,11 @@
   },
   {
     "title": "speedRotation",
-    "description": "\n회전 지연 속도\n기본값 : 0.1\n",
-    "return": "Number"
-  },
-  {
-    "title": "speedRotation",
     "description": "\n회전 속도\n기본값 : 3\n",
     "return": "Number"
   },
   {
     "title": "tilt",
-    "return": "Number"
-  },
-  {
-    "title": "x",
-    "return": "Number"
-  },
-  {
-    "title": "y",
-    "return": "Number"
-  },
-  {
-    "title": "z",
     "return": "Number"
   }
 ]
