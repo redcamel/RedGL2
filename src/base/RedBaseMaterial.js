@@ -15,6 +15,7 @@ var RedBaseMaterial;
 	RedBaseMaterial = function () {};
 	RedBaseMaterial.prototype = {
 		makeProgramList: (function () {
+			//TODO: 이걸좀 정리해야하는데..
 			var makeList;
 			makeList = function (target, baseKey, redGL, programName, vSource, fSource, programOptionList) {
 				programOptionList = programOptionList.concat();
@@ -75,7 +76,7 @@ var RedBaseMaterial;
 				target['program'] = target['_programList']['basic'][programName];
 			}
 		})(),
-		searchProgram: (function () {
+		_searchProgram: (function () {
 			var i;
 			var tKey;
 			var t0;
@@ -89,8 +90,7 @@ var RedBaseMaterial;
 				if ( t0.length ) {
 					t0.sort();
 					t0 = PROGRAM_NAME + '_' + t0.join('_');
-				}
-				else t0 = PROGRAM_NAME;
+				} else t0 = PROGRAM_NAME;
 				this['program'] = this['_programList']['basic'][t0];
 				// console.log('현재프로그램', this['program'])
 			}
@@ -107,19 +107,21 @@ var RedBaseMaterial;
 			 return : 'void'
 		 }
 		 :DOC*/
-		checkUniformAndProperty: function () {
-			var i2;
+		checkUniformAndProperty: (function () {
+			var i;
 			var tUniformGroup, tUniformLocationInfo, tWebGLUniformLocation;
-			tUniformGroup = this['program']['uniformLocation'];
-			i2 = tUniformGroup.length;
-			while ( i2-- ) {
-				tUniformLocationInfo = tUniformGroup[i2];
-				tWebGLUniformLocation = tUniformLocationInfo['location'];
-				if ( tWebGLUniformLocation && !(tUniformLocationInfo['materialPropertyName'] in this) ) {
-					RedGLUtil.throwFunc(this['program']['key'] + '- ', tUniformLocationInfo['materialPropertyName'], '속성이 정의 되지않았습니다.');
+			return function () {
+				tUniformGroup = this['program']['uniformLocation'];
+				i = tUniformGroup.length;
+				while ( i-- ) {
+					tUniformLocationInfo = tUniformGroup[i];
+					tWebGLUniformLocation = tUniformLocationInfo['location'];
+					if ( tWebGLUniformLocation && !(tUniformLocationInfo['materialPropertyName'] in this) ) {
+						RedGLUtil.throwFunc(this['program']['key'] + '- ', tUniformLocationInfo['materialPropertyName'], '속성이 정의 되지않았습니다.');
+					}
 				}
 			}
-		}
+		})()
 	};
 	Object.freeze(RedBaseMaterial);
 })();

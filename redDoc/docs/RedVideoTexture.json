@@ -13,9 +13,14 @@
         {
           "type": "string"
         }
+      ],
+      "callback": [
+        {
+          "type": "Function"
+        }
       ]
     },
-    "example": "\nRedVideoTexture( RedGL Instance,  src)\n",
+    "example": "\nRedVideoTexture( RedGL Instance,  src or HTMLVideoElement)\n",
     "return": "RedVideoTexture Instance"
   }
 ]

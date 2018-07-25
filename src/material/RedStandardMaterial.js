@@ -269,7 +269,7 @@ var RedStandardMaterial;
 	}
 	var samplerOption = {
 		callback: function () {
-			this.searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST)
+			this._searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST)
 		}
 	}
 	RedStandardMaterial.prototype = new RedBaseMaterial()

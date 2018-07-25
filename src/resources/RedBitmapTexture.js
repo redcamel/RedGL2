@@ -2,13 +2,13 @@
 var RedBitmapTexture;
 (function () {
 	var loadTexture;
-	var makeTexture
+	var makeWebGLTexture;
 	var MAX_TEXTURE_SIZE;
-	makeTexture = function (gl, texture, source, option) {
-		gl.activeTexture(gl.TEXTURE0 + 0)
+	makeWebGLTexture = function (gl, texture, source, option) {
+		gl.activeTexture(gl.TEXTURE0 + 0);
 		gl.bindTexture(gl.TEXTURE_2D, texture);
 		//level,internalFormat, format, type
-		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, source)
+		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, source);
 		// gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
 		gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, option['min'] ? option['min'] : gl.LINEAR_MIPMAP_NEAREST);
@@ -19,60 +19,57 @@ var RedBitmapTexture;
 			gl.texParameterf(gl.TEXTURE_2D, gl['glExtension']['EXT_texture_filter_anisotropic'].TEXTURE_MAX_ANISOTROPY_EXT, option['anisotropic']);
 		}
 		try {
-			gl.generateMipmap(gl.TEXTURE_2D)
+			gl.generateMipmap(gl.TEXTURE_2D);
 		} catch ( error ) {
 			console.log('밉맵을 생성할수 없음', source)
 		}
 		gl.bindTexture(gl.TEXTURE_2D, null);
-	}
+	};
 	loadTexture = (function () {
-		return function (gl, self, texture, src, option, callBack) {
-			var onError, onLoad;
-			var clearEvents;
-			if ( !option ) option = {}
-			clearEvents = function (img) {
-				img.removeEventListener('error', onError);
-				img.removeEventListener('load', onLoad);
-			}
-			onError = function () {
-				clearEvents(this);
-				callBack ? callBack.call(self, false) : 0
-				// var msg = "couldn't load image: " + src;
-				// RedGLUtil.throwFunc(msg);
-			}
-			onLoad = function () {
-				clearEvents(this);
-				var tSource = this;
-				var tW, tH
-				if ( tSource instanceof HTMLImageElement ) {
-					if ( !RedGLUtil.isPowerOf2(tSource.width) || !RedGLUtil.isPowerOf2(tSource.height) ) {
-						var canvas = document.createElement("canvas");
-						var ctx = canvas.getContext("2d");
-						tW = RedGLUtil.nextHighestPowerOfTwo(tSource.width)
-						tH = RedGLUtil.nextHighestPowerOfTwo(tSource.height)
-						if ( tW > MAX_TEXTURE_SIZE ) tW = MAX_TEXTURE_SIZE;
-						if ( tH > MAX_TEXTURE_SIZE ) tH = MAX_TEXTURE_SIZE;
-						canvas.width = tW;
-						canvas.height = tH;
-						ctx.drawImage(tSource, 0, 0, tW, tH);
-						console.log(canvas)
-						tSource = canvas
-					}
-				}
-				makeTexture(gl, texture, tSource, option);
-				callBack ? callBack.call(this, true) : 0
-			}
-			if ( src instanceof HTMLCanvasElement ) makeTexture(gl, texture, src, option)
+		return function (gl, self, texture, src, option, callback) {
+			if ( !option ) option = {};
+			if ( src instanceof HTMLCanvasElement ) makeWebGLTexture(gl, texture, src, option);
 			else {
 				var img;
+				var onError, onLoad, clearEvents;
+				clearEvents = function (img) {
+					img.removeEventListener('error', onError);
+					img.removeEventListener('load', onLoad);
+				};
+				onError = function () {
+					clearEvents(this);
+					callback ? callback.call(self, false) : 0
+				};
+				onLoad = function () {
+					clearEvents(this);
+					var tSource = this;
+					var tW, tH;
+					if ( tSource instanceof HTMLImageElement ) {
+						if ( !RedGLUtil.isPowerOf2(tSource.width) || !RedGLUtil.isPowerOf2(tSource.height) ) {
+							var canvas = document.createElement("canvas");
+							var ctx = canvas.getContext("2d");
+							tW = RedGLUtil.nextHighestPowerOfTwo(tSource.width);
+							tH = RedGLUtil.nextHighestPowerOfTwo(tSource.height);
+							if ( tW > MAX_TEXTURE_SIZE ) tW = MAX_TEXTURE_SIZE;
+							if ( tH > MAX_TEXTURE_SIZE ) tH = MAX_TEXTURE_SIZE;
+							canvas.width = tW;
+							canvas.height = tH;
+							ctx.drawImage(tSource, 0, 0, tW, tH);
+							console.log(canvas);
+							tSource = canvas;
+						}
+					}
+					makeWebGLTexture(gl, texture, tSource, option);
+					callback ? callback.call(this, true) : 0;
+				};
 				img = new Image();
-				img.crossOrigin = 'anonymous'
+				img.crossOrigin = 'anonymous';
 				img.src = src;
 				img.addEventListener('error', onError);
 				img.addEventListener('load', onLoad);
 			}
 		}
-	})()
+	})();
 	/**DOC:
 	 {
 		 constructorYn : true,
@@ -101,6 +98,9 @@ var RedBitmapTexture;
 				 }
 				 </code>
 				 `
+			 ],
+			 callBack : [
+			    {type:'Function'}
 			 ]
 		 },
 		 example : `
@@ -114,21 +114,22 @@ var RedBitmapTexture;
 		 return : 'RedBitmapTexture Instance'
 	 }
 	 :DOC*/
-	RedBitmapTexture = function (redGL, src, option, callBack) {
+	RedBitmapTexture = function (redGL, src, option, callback) {
 		var tGL;
-		MAX_TEXTURE_SIZE = redGL['_detect']['MAX_TEXTURE_SIZE']
-		if ( !(this instanceof RedBitmapTexture) ) return new RedBitmapTexture(redGL, src, option, callBack);
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedBitmapTexture : RedGL Instance만 허용됩니다.', redGL);
-		if ( src && typeof  src != 'string' && !(src instanceof HTMLCanvasElement) ) RedGLUtil.throwFunc('RedBitmapTexture : src는 문자열 or Canvas Element만 허용.', '입력값 : ' + src);
+		if ( !(this instanceof RedBitmapTexture) ) return new RedBitmapTexture(redGL, src, option, callback);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedBitmapTexture : RedGL Instance만 허용됩니다.', redGL);
+		if ( src && typeof src != 'string' && !(src instanceof HTMLCanvasElement) ) RedGLUtil.throwFunc('RedBitmapTexture : src는 문자열 or Canvas Element만 허용.', '입력값 : ' + src);
+		if ( callback && !(typeof callback == 'function') ) RedGLUtil.throwFunc('RedBitmapTexture : callback은 함수만 허용됩니다.', '입력값 :', callback);
 		tGL = redGL.gl;
-		RedTextureOptionChecker.check('RedBitmapTexture', option, tGL)
+		MAX_TEXTURE_SIZE = redGL['_detect']['MAX_TEXTURE_SIZE'];
+		RedTextureOptionChecker.check('RedBitmapTexture', option, tGL);
 		this['webglTexture'] = tGL.createTexture();
-		this['atlascoord'] = RedAtlasUV(redGL)
+		this['atlascoord'] = RedAtlasUV(redGL);
 		this['_UUID'] = RedGL.makeUUID();
 		this.setEmptyTexture(tGL, this['webglTexture']);
-		if ( src ) loadTexture(tGL, this, this['webglTexture'], src, option, callBack);
-		console.log(this)
-	}
+		if ( src ) loadTexture(tGL, this, this['webglTexture'], src, option, callback);
+		console.log(this);
+	};
 	RedBitmapTexture.prototype = new RedBaseTexture();
 	Object.freeze(RedBitmapTexture);
 })();

@@ -234,7 +234,7 @@ var RedColorPhongTextureMaterial;
 	}
 	var samplerOption = {
 		callback: function () {
-			this.searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST)
+			this._searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST)
 		}
 	}
 	RedColorPhongTextureMaterial.prototype = new RedBaseMaterial()

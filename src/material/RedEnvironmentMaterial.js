@@ -271,7 +271,7 @@ var RedEnvironmentMaterial;
 	RedEnvironmentMaterial.prototype = new RedBaseMaterial()
 	var samplerOption = {
 		callback: function () {
-			this.searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST)
+			this._searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST)
 		}
 	}
 	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'diffuseTexture', 'sampler2D', samplerOption);

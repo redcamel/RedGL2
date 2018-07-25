@@ -3,20 +3,20 @@ var tRedGL
 RedGL(document.createElement('canvas'), function (v) {
 	var testSrcList;
 	tRedGL = this;
-	testSrcList = ['../../asset/alphaTest.png', '../../asset/alphaTest.png', '../../asset/alphaTest.png', '../../asset/alphaTest.png', '../../asset/alphaTest.png', '../../asset/alphaTest.png']
+	testSrcList = [RedBaseTexture.EMPTY_BASE64, RedBaseTexture.EMPTY_BASE64, RedBaseTexture.EMPTY_BASE64, RedBaseTexture.EMPTY_BASE64, RedBaseTexture.EMPTY_BASE64, RedBaseTexture.EMPTY_BASE64]
 	redSuite(
 		"RedBitmapCubeTexture Test",
 		redGroup(
-			"생성 확인",
-			redTest("생성확인", function (unit, title) {
+			"RedBitmapCubeTexture( redGL, srcList, option, callBack )",
+			redTest("성공테스트 : 기본생성확인", function (unit, title) {
 				var t0;
 				t0 = RedBitmapCubeTexture(tRedGL, testSrcList)
 				unit.run(t0 instanceof RedBitmapCubeTexture)
 			}, true)
 		),
 		redGroup(
-			"srcList",
-			redTest("srcList : 미입력", function (unit, title) {
+			"RedBitmapCubeTexture( redGL, <b>srcList</b>, option, callBack )",
+			redTest("실패테스트 : 미입력", function (unit, title) {
 				try {
 					RedBitmapCubeTexture(tRedGL)
 					unit.run(true)
@@ -26,7 +26,7 @@ RedGL(document.createElement('canvas'), function (v) {
 					unit.run(false)
 				}
 			}, false),
-			redTest("srcList : 숫자입력", function (unit, title) {
+			redTest("실패테스트 : 숫자입력", function (unit, title) {
 				try {
 					RedBitmapCubeTexture(tRedGL, 1)
 					unit.run(true)
@@ -36,7 +36,7 @@ RedGL(document.createElement('canvas'), function (v) {
 					unit.run(false)
 				}
 			}, false),
-			redTest("srcList : 오브젝트 입력", function (unit, title) {
+			redTest("실패테스트 : 오브젝트 입력", function (unit, title) {
 				try {
 					RedBitmapCubeTexture(tRedGL, {})
 					unit.run(true)
@@ -46,7 +46,7 @@ RedGL(document.createElement('canvas'), function (v) {
 					unit.run(false)
 				}
 			}, false),
-			redTest("srcList : length가 6이 아닐떄", function (unit, title) {
+			redTest("실패테스트 : length가 6이 아닐떄", function (unit, title) {
 				try {
 					RedBitmapCubeTexture(tRedGL, ["src1", "src2", "src3", "src4", "src5"])
 					unit.run(true)
@@ -55,6 +55,54 @@ RedGL(document.createElement('canvas'), function (v) {
 					console.log(title, '\n', error)
 					unit.run(false)
 				}
+			}, false)
+		),
+		redGroup(
+			"RedBitmapCubeTexture( redGL, srcList, option, <b>callBack</b> )",
+			redTest("성공테스트 : 미입력", function (unit, title) {
+				try {
+					RedBitmapTexture(tRedGL)
+					unit.run(true)
+				} catch ( error ) {
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
+					unit.run(false)
+				}
+			}, true),
+			redTest("성공테스트 : 콜백함수 입력", function (unit, title) {
+				RedBitmapCubeTexture(tRedGL, testSrcList, null, function () {
+					unit.run(true)
+				})
+			}, true),
+			redTest("실패테스트 : 콜백에 함수외 다른것을 입력했을떄", function (unit, title) {
+				try {
+					RedBitmapCubeTexture(tRedGL, testSrcList, null, 1)
+					unit.run(true)
+				} catch ( error ) {
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
+					unit.run(false)
+				}
+			}, false),
+			redTest("성공테스트 : callback : 미입력", function (unit, title) {
+				try {
+					RedBitmapCubeTexture(tRedGL, testSrcList)
+					unit.run(true)
+				} catch ( error ) {
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
+					unit.run(false)
+				}
+			}, true),
+			redTest("성공테스트 : srcList로드 성공시 callback", function (unit, title) {
+				RedBitmapCubeTexture(tRedGL, testSrcList, null, function (v) {
+					unit.run(v)
+				})
+			}, true),
+			redTest("실패테스트 : srcList로드 실패시 callback", function (unit, title) {
+				RedBitmapCubeTexture(tRedGL, ['~~', '~~', '~~', '~~', '~~', '~~',], null, function (v) {
+					unit.run(v)
+				})
 			}, false)
 		),
 		redGroup(
@@ -459,29 +507,6 @@ RedGL(document.createElement('canvas'), function (v) {
 					console.log(title, '\n', error)
 					unit.run(false)
 				}
-			}, false)
-		),
-		redGroup(
-			"callback",
-			redTest("callback : 미입력", function (unit, title) {
-				try {
-					RedBitmapCubeTexture(tRedGL, testSrcList)
-					unit.run(true)
-				} catch ( error ) {
-					console.log('///////////////////////////////////////////////////////////')
-					console.log(title, '\n', error)
-					unit.run(false)
-				}
-			}, true),
-			redTest("callback : 성공테스트", function (unit, title) {
-				RedBitmapCubeTexture(tRedGL, testSrcList, null, function (v) {
-					unit.run(v)
-				})
-			}, true),
-			redTest("callback : 실패테스트", function (unit, title) {
-				RedBitmapCubeTexture(tRedGL, ["src1", "src2", "src3", "src4", "src5", "src6"], null, function (v) {
-					unit.run(v)
-				})
 			}, false)
 		)
 	)
