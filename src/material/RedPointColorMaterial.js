@@ -13,10 +13,11 @@ var RedPointColorMaterial;
 			 gl_PointSize = aPointSize/gl_Position.w * uResolution.y;
 		 }
 		 */
-	}
+	};
 	fSource = function () {
 		/* @preserve
 		 precision mediump float;
+		 uniform float u_alpha;
 		 varying vec4 vColor;
 		 float fogFactor(float perspectiveFar, float density){
 			 float flog_cord = gl_FragCoord.z / gl_FragCoord.w / perspectiveFar;
@@ -28,13 +29,13 @@ var RedPointColorMaterial;
 			return mix(fogColor, currentColor, fogFactor);
 		 }
 		 void main(void) {
-			 vec4 finalColor = vColor * vColor.a;
-
+			 vec4 finalColor = vColor;
+			 finalColor.a *= u_alpha;
 			 //#define#fog#false# gl_FragColor = finalColor;
 			 //#define#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
 		 }
 		 */
-	}
+	};
 	/**DOC:
 	 {
 		 constructorYn : true,
@@ -52,16 +53,28 @@ var RedPointColorMaterial;
 	 :DOC*/
 	RedPointColorMaterial = function (redGL) {
 		if ( !(this instanceof RedPointColorMaterial) ) return new RedPointColorMaterial(redGL);
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedPointColorMaterial : RedGL Instance만 허용됩니다.', redGL)
-		this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource)
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPointColorMaterial : RedGL Instance만 허용됩니다.', redGL);
+		this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource);
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
+		this['alpha'] = 1;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
 		this['_UUID'] = RedGL.makeUUID();
-		if ( !checked ) this.checkUniformAndProperty(), checked = true;
-		console.log(this)
-	}
-	RedPointColorMaterial.prototype = new RedBaseMaterial()
-	Object.freeze(RedPointColorMaterial)
+		if ( !checked ) {
+			this.checkUniformAndProperty();
+			checked = true;
+		}
+		console.log(this);
+	};
+	RedPointColorMaterial.prototype = new RedBaseMaterial();
+	/**DOC:
+	 {
+		 title :`alpha`,
+		 description : `기본값 : 1`,
+		 return : 'Number'
+	 }
+	 :DOC*/
+	RedDefinePropertyInfo.definePrototype('RedPointColorMaterial', 'alpha', 'number', {min: 0, max: 1});
+	Object.freeze(RedPointColorMaterial);
 })();
