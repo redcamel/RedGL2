@@ -3,6 +3,7 @@ var RedPointBitmapMaterial;
 (function () {
 	var vSource, fSource;
 	var PROGRAM_NAME = 'pointBitmapProgram';
+	var checked;
 	vSource = function () {
 		/* @preserve
 
@@ -81,7 +82,7 @@ var RedPointBitmapMaterial;
 		 :DOC*/
 		this['alphaTest'] = 0.1
 		this['_UUID'] = RedGL.makeUUID();
-		this.checkUniformAndProperty();
+		if ( !checked ) this.checkUniformAndProperty(), checked = true;
 		console.log(this)
 	}
 	RedPointBitmapMaterial.prototype = new RedBaseMaterial()

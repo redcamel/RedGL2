@@ -3,27 +3,25 @@ var RedColorPhongMaterial;
 (function () {
 	var vSource, fSource;
 	var PROGRAM_NAME = 'colorPhongProgram';
+	var checked;
 	vSource = function () {
 		/* @preserve
-		 uniform vec4 u_color;
-		 varying vec4 vColor;
 		 varying vec4 vVertexPositionEye4;
 		 void main(void) {
-			 vColor = u_color;
 			 vVertexNormal = vec3(uNMatrix * vec4(aVertexNormal,1.0));
 			 vVertexPositionEye4 = uMMatrix * vec4(aVertexPosition, 1.0);
 			 gl_PointSize = uPointSize;
 			 gl_Position = uPMatrix * uCameraMatrix* vVertexPositionEye4;
 		 }
 		 */
-	}
+	};
 	fSource = function () {
 		/* @preserve
 		 precision mediump float;
 		 uniform float u_shininess;
 		 uniform float u_specularPower;
+		 uniform vec4 u_color;
 		 varying vec4 vVertexPositionEye4;
-		 varying vec4 vColor;
 		 float fogFactor(float perspectiveFar, float density){
 			 float flog_cord = gl_FragCoord.z / gl_FragCoord.w / perspectiveFar;
 			 float fog = flog_cord * density;
@@ -53,7 +51,7 @@ var RedColorPhongMaterial;
 			 ld = vec4(0.0, 0.0, 0.0, 1.0);
 			 ls = vec4(0.0, 0.0, 0.0, 1.0);
 
-			 texelColor = vColor;
+			 texelColor = u_color;
 			 // texelColor.rgb *= texelColor.a;
 			 N = normalize(vVertexNormal);
 
@@ -93,7 +91,7 @@ var RedColorPhongMaterial;
 			 //#define#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
 		 }
 		 */
-	}
+	};
 	/**DOC:
 	 {
 		 constructorYn : true,
@@ -121,39 +119,56 @@ var RedColorPhongMaterial;
 	 :DOC*/
 	RedColorPhongMaterial = function (redGL, hexColor, alpha) {
 		if ( !(this instanceof RedColorPhongMaterial) ) return new RedColorPhongMaterial(redGL, hexColor, alpha);
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedColorPhongMaterial : RedGL Instance만 허용됩니다.', '입력값 : ' + redGL);
-		this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource)
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedColorPhongMaterial : RedGL Instance만 허용됩니다.', '입력값 : ' + redGL);
+		this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource);
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
 		this['_color'] = new Float32Array(4);
-		/**DOC:
-		 {
-			 title :`shininess`,
-			 description : `기본값 : 16`,
-			 return : 'shininess'
-		 }
-		 :DOC*/
-		this['shininess'] = 16
-		/**DOC:
-		 {
-			 title :`specularPower`,
-			 description : `기본값 : 1`,
-			 return : 'Number'
-		 }
-		 :DOC*/
-		this['specularPower'] = 1
+		this['shininess'] = 16;
+		this['specularPower'] = 1;
+		this['alpha'] = alpha == undefined ? 1 : alpha;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		Object.defineProperty(this, 'color', RedDefinePropertyInfo['color']);
-		Object.defineProperty(this, 'alpha', RedDefinePropertyInfo['alpha']);
-		this['alpha'] = alpha == undefined ? 1 : alpha;
-		this['color'] = hexColor ? hexColor : '#ff0000'
+		this['color'] = hexColor ? hexColor : '#ff0000';
 		this['_UUID'] = RedGL.makeUUID();
-		this.checkUniformAndProperty();
+		if ( !checked ) {
+			this.checkUniformAndProperty();
+			checked = true;
+		}
 		console.log(this);
-	}
-	RedColorPhongMaterial.prototype = new RedBaseMaterial()
+	};
+	RedColorPhongMaterial.prototype = new RedBaseMaterial();
+	/**DOC:
+	 {
+		 title :`color`,
+		 description : `기본값 : #ff2211`,
+		 return : 'hex'
+	 }
+	 :DOC*/
+	Object.defineProperty(RedColorPhongMaterial.prototype, 'color', RedColorMaterial['DEFINE_OBJECT_COLOR']);
+	/**DOC:
+	 {
+		 title :`alpha`,
+		 description : `기본값 : 1`,
+		 return : 'Number'
+	 }
+	 :DOC*/
+	RedDefinePropertyInfo.definePrototype('RedColorPhongMaterial', 'alpha', 'number', RedColorMaterial['DEFINE_OBJECT_ALPHA']);
+	/**DOC:
+	 {
+		 title :`shininess`,
+		 description : `기본값 : 16`,
+		 return : 'shininess'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedColorPhongMaterial', 'shininess', 'number', {'min': 0});
+	/**DOC:
+	 {
+		 title :`specularPower`,
+		 description : `기본값 : 1`,
+		 return : 'Number'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedColorPhongMaterial', 'specularPower', 'number', {'min': 0});
-	Object.freeze(RedColorPhongMaterial)
+	Object.freeze(RedColorPhongMaterial);
 })();

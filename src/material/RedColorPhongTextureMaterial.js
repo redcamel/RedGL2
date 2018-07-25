@@ -3,12 +3,10 @@ var RedColorPhongTextureMaterial;
 (function () {
 	var vSource, fSource;
 	var PROGRAM_NAME = 'RedColorPhongTextureProgram';
-	var PROGRAM_OPTION_LIST = ['normalTexture', 'specularTexture', 'displacementTexture']
+	var PROGRAM_OPTION_LIST = ['normalTexture', 'specularTexture', 'displacementTexture'];
+	var checked;
 	vSource = function () {
 		/* @preserve
-		 uniform vec4 u_color;
-		 varying vec4 vColor;
-
 		 //#define#displacementTexture# uniform sampler2D u_displacementTexture;
 		 //#define#displacementTexture# uniform float u_displacementPower;
 	     //#define#displacementTexture# uniform float u_displacementFlowSpeedX;
@@ -16,7 +14,6 @@ var RedColorPhongTextureMaterial;
 
 		 varying vec4 vVertexPositionEye4;
 		 void main(void) {
-			 vColor = u_color;
 			 vTexcoord = aTexcoord;
 			 vVertexNormal = vec3(uNMatrix * vec4(aVertexNormal,1.0));
 			 vVertexPositionEye4 = uMMatrix * vec4(aVertexPosition, 1.0);
@@ -30,7 +27,7 @@ var RedColorPhongTextureMaterial;
 			 gl_Position = uPMatrix * uCameraMatrix* vVertexPositionEye4;
 		 }
 		 */
-	}
+	};
 	fSource = function () {
 		/* @preserve
 		 precision mediump float;
@@ -40,9 +37,8 @@ var RedColorPhongTextureMaterial;
 		 //#define#normalTexture# uniform float u_normalPower;
 		 uniform float u_shininess;
 		 uniform float u_specularPower;
-
+		 uniform vec4 u_color;
 		 varying vec4 vVertexPositionEye4;
-		 varying vec4 vColor;
 
 		 float fogFactor(float perspectiveFar, float density){
 			 float flog_cord = gl_FragCoord.z / gl_FragCoord.w / perspectiveFar;
@@ -73,7 +69,7 @@ var RedColorPhongTextureMaterial;
 			 ld = vec4(0.0, 0.0, 0.0, 1.0);
 			 ls = vec4(0.0, 0.0, 0.0, 1.0);
 
-			 texelColor = vColor;
+			 texelColor = u_color;
 			 // texelColor.rgb *= texelColor.a;
 
 			 N = normalize(vVertexNormal);
@@ -119,7 +115,7 @@ var RedColorPhongTextureMaterial;
 			 //#define#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
 		 }
 		 */
-	}
+	};
 	/**DOC:
 	 {
 		 constructorYn : true,
@@ -159,93 +155,121 @@ var RedColorPhongTextureMaterial;
 	 :DOC*/
 	RedColorPhongTextureMaterial = function (redGL, hexColor, alpha, normalTexture, specularTexture, displacementTexture) {
 		if ( !(this instanceof RedColorPhongTextureMaterial) ) return new RedColorPhongTextureMaterial(redGL, hexColor, alpha, normalTexture, specularTexture, displacementTexture);
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedColorPhongTextureMaterial : RedGL Instance만 허용됩니다.', '입력값 : ' + redGL);
-		this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource, PROGRAM_OPTION_LIST)
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedColorPhongTextureMaterial : RedGL Instance만 허용됩니다.', '입력값 : ' + redGL);
+		this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource, PROGRAM_OPTION_LIST);
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
 		this['_color'] = new Float32Array(4);
-		/**DOC:
-		 {
-			 title :`normalTexture`,
-			 return : 'RedBitmapTexture'
-		 }
-		 :DOC*/
 		this['normalTexture'] = normalTexture;
-		/**DOC:
-		 {
-			 title :`specularTexture`,
-			 return : 'RedBitmapTexture'
-		 }
-		 :DOC*/
 		this['specularTexture'] = specularTexture;
-		/**DOC:
-		 {
-			 title :`displacementTexture`,
-			 return : 'RedBitmapTexture'
-		 }
-		 :DOC*/
 		this['displacementTexture'] = displacementTexture;
-		/**DOC:
-		 {
-			 title :`normalPower`,
-			 description : `기본값 : 1`,
-			 return : 'number'
-		 }
-		 :DOC*/
-		this['normalPower'] = 1
-		/**DOC:
-		 {
-			 title :`shininess`,
-			 description : `기본값 : 16`,
-			 return : 'Number'
-		 }
-		 :DOC*/
-		this['shininess'] = 16
-		/**DOC:
-		 {
-			 title :`specularPower`,
-			 description : `기본값 : 1`,
-			 return : 'Number'
-		 }
-		 :DOC*/
-		this['specularPower'] = 1
-		/**DOC:
-		 {
-			 title :`displacementPower`,
-			 description : `기본값 : 0`,
-			 return : 'Number'
-		 }
-		 :DOC*/
-		this['displacementPower'] = 0
-		this['displacementFlowSpeedX'] = 0
-		this['displacementFlowSpeedY'] = 0
+		this['normalPower'] = 1;
+		this['shininess'] = 16;
+		this['specularPower'] = 1;
+		this['displacementPower'] = 0;
+		this['displacementFlowSpeedX'] = 0;
+		this['displacementFlowSpeedY'] = 0;
+		this['alpha'] = alpha == undefined ? 1 : alpha;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		Object.defineProperty(this, 'color', RedDefinePropertyInfo['color']);
-		Object.defineProperty(this, 'alpha', RedDefinePropertyInfo['alpha']);
-		this['alpha'] = alpha == undefined ? 1 : alpha;
-		this['color'] = hexColor ? hexColor : '#ff0000'
-		this['normalTexture'] = normalTexture;
-		this['specularTexture'] = specularTexture;
-		this['displacementTexture'] = displacementTexture;
+		this['color'] = hexColor ? hexColor : '#ff0000';
 		this['_UUID'] = RedGL.makeUUID();
-		this.checkUniformAndProperty();
+		if ( !checked ) {
+			this.checkUniformAndProperty();
+			checked = true;
+		}
 		console.log(this);
-	}
+	};
 	var samplerOption = {
 		callback: function () {
 			this._searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST)
 		}
-	}
-	RedColorPhongTextureMaterial.prototype = new RedBaseMaterial()
+	};
+	RedColorPhongTextureMaterial.prototype = new RedBaseMaterial();
+	/**DOC:
+	 {
+		 title :`color`,
+		 description : `기본값 : #ff2211`,
+		 return : 'hex'
+	 }
+	 :DOC*/
+	Object.defineProperty(RedColorPhongTextureMaterial.prototype, 'color', RedColorMaterial['DEFINE_OBJECT_COLOR']);
+	/**DOC:
+	 {
+		 title :`alpha`,
+		 description : `기본값 : 1`,
+		 return : 'Number'
+	 }
+	 :DOC*/
+	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'alpha', 'number', RedColorMaterial['DEFINE_OBJECT_ALPHA']);
+	/**DOC:
+	 {
+		 title :`normalTexture`,
+		 return : 'RedBitmapTexture'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'normalTexture', 'sampler2D', samplerOption);
+	/**DOC:
+	 {
+		 title :`specularTexture`,
+		 return : 'RedBitmapTexture'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'specularTexture', 'sampler2D', samplerOption);
+	/**DOC:
+	 {
+		 title :`displacementTexture`,
+		 return : 'RedBitmapTexture'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'displacementTexture', 'sampler2D', samplerOption);
+	/**DOC:
+	 {
+		 title :`normalPower`,
+		 description : `기본값 : 1`,
+		 return : 'number'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'normalPower', 'number', {'min': 0});
+	/**DOC:
+	 {
+		 title :`shininess`,
+		 description : `기본값 : 16`,
+		 return : 'Number'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'shininess', 'number', {'min': 0});
+	/**DOC:
+	 {
+		 title :`specularPower`,
+		 description : `기본값 : 1`,
+		 return : 'Number'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'specularPower', 'number', {'min': 0});
+	/**DOC:
+	 {
+		 title :`displacementPower`,
+		 description : `기본값 : 0`,
+		 return : 'Number'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'displacementPower', 'number', {'min': 0});
+	/**DOC:
+	 {
+		 title :`displacementFlowSpeedX`,
+		 description : `기본값 : 0`,
+		 return : 'Number'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'displacementFlowSpeedX', 'number');
+	/**DOC:
+	 {
+		 title :`displacementFlowSpeedY`,
+		 description : `기본값 : 0`,
+		 return : 'Number'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'displacementFlowSpeedY', 'number');
 	Object.freeze(RedColorPhongTextureMaterial)
 })();

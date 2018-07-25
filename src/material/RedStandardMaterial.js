@@ -3,7 +3,8 @@ var RedStandardMaterial;
 (function () {
 	var vSource, fSource;
 	var PROGRAM_NAME = 'standardProgram';
-	var PROGRAM_OPTION_LIST = ['normalTexture', 'specularTexture', 'displacementTexture']
+	var PROGRAM_OPTION_LIST = ['normalTexture', 'specularTexture', 'displacementTexture'];
+	var checked;
 	vSource = function () {
 		/* @preserve
 		 //#define#displacementTexture# uniform sampler2D u_displacementTexture;
@@ -33,7 +34,7 @@ var RedStandardMaterial;
 
 		 }
 		 */
-	}
+	};
 	fSource = function () {
 		/* @preserve
 		 precision mediump float;
@@ -45,6 +46,7 @@ var RedStandardMaterial;
 		 //#define#normalTexture# uniform float u_normalPower;
 		 uniform float u_shininess;
 		 uniform float u_specularPower;
+		 uniform float u_alpha;
 
 		 varying vec4 vVertexPositionEye4;
          float cShadowAcneRemover = 0.0007;
@@ -151,12 +153,12 @@ var RedStandardMaterial;
 
 			 finalColor = la * uAmbientIntensity + ld + ls;
 			 finalColor.rgb *= texelColor.a;
-			 finalColor.a = texelColor.a;
+			 finalColor.a = texelColor.a * u_alpha;
 			 //#define#fog#false# gl_FragColor = finalColor;
 			 //#define#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
 		 }
 		 */
-	}
+	};
 	/**DOC:
 	 {
 		 constructorYn : true,
@@ -195,96 +197,108 @@ var RedStandardMaterial;
 	 :DOC*/
 	RedStandardMaterial = function (redGL, diffuseTexture, normalTexture, specularTexture, displacementTexture) {
 		if ( !(this instanceof RedStandardMaterial) ) return new RedStandardMaterial(redGL, diffuseTexture, normalTexture, specularTexture, displacementTexture);
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedStandardMaterial : RedGL Instance만 허용됩니다.', redGL)
-		this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource, PROGRAM_OPTION_LIST)
+		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedStandardMaterial : RedGL Instance만 허용됩니다.', redGL);
+		this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource, PROGRAM_OPTION_LIST);
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
-		/**DOC:
-		 {
-			 title :`diffuseTexture`,
-			 return : 'RedBitmapTexture'
-		 }
-		 :DOC*/
 		this['diffuseTexture'] = diffuseTexture;
-		/**DOC:
-		 {
-			 title :`normalTexture`,
-			 return : 'RedBitmapTexture'
-		 }
-		 :DOC*/
 		this['normalTexture'] = normalTexture;
-		/**DOC:
-		 {
-			 title :`specularTexture`,
-			 return : 'RedBitmapTexture'
-		 }
-		 :DOC*/
-		this['specularTexture'] = specularTexture
-		/**DOC:
-		 {
-			 title :`shininess`,
-			 return : 'RedBitmapTexture'
-		 }
-		 :DOC*/
+		this['specularTexture'] = specularTexture;
 		this['displacementTexture'] = displacementTexture;
-		/**DOC:
-		 {
-			 title :`normalPower`,
-			 description : `기본값 : 1`,
-			 return : 'number'
-		 }
-		 :DOC*/
-		this['normalPower'] = 1
-		/**DOC:
-		 {
-			 title :`shininess`,
-			 description : `기본값 : 16`,
-			 return : 'number'
-		 }
-		 :DOC*/
-		this['shininess'] = 16
-		/**DOC:
-		 {
-			 title :`specularPower`,
-			 description : `기본값 : 1`,
-			 return : 'number'
-		 }
-		 :DOC*/
-		this['specularPower'] = 1
-		/**DOC:
-		 {
-			 title :`displacementPower`,
-			 description : `기본값 : 0`,
-			 return : 'Number'
-		 }
-		 :DOC*/
-		this['displacementPower'] = 0
-		this['displacementFlowSpeedX'] = 0
-		this['displacementFlowSpeedY'] = 0
+		this['normalPower'] = 1;
+		this['shininess'] = 16;
+		this['specularPower'] = 1;
+		this['displacementPower'] = 0;
+		this['displacementFlowSpeedX'] = 0;
+		this['displacementFlowSpeedY'] = 0;
+		this['alpha'] = 1
 		/////////////////////////////////////////
 		// 일반 프로퍼티
 		this['_UUID'] = RedGL.makeUUID();
-		this.checkUniformAndProperty();
-		console.log(this)
-	}
+		if ( !checked ) {
+			this.checkUniformAndProperty();
+			checked = true;
+		}
+		console.log(this);
+	};
 	var samplerOption = {
 		callback: function () {
 			this._searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST)
 		}
-	}
-	RedStandardMaterial.prototype = new RedBaseMaterial()
+	};
+	RedStandardMaterial.prototype = new RedBaseMaterial();
+	/**DOC:
+	 {
+		 title :`alpha`,
+		 description : `기본값 : 1`,
+		 return : 'Number'
+	 }
+	 :DOC*/
+	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'alpha', 'number', {min: 0, max: 1});
+	/**DOC:
+	 {
+		 title :`diffuseTexture`,
+		 return : 'RedBitmapTexture'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'diffuseTexture', 'sampler2D', {
 		essential: true,
 		callback: samplerOption.callback
 	});
+	/**DOC:
+	 {
+		 title :`normalTexture`,
+		 return : 'RedBitmapTexture'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'normalTexture', 'sampler2D', samplerOption);
+	/**DOC:
+	 {
+		 title :`specularTexture`,
+		 return : 'RedBitmapTexture'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'specularTexture', 'sampler2D', samplerOption);
+	/**DOC:
+	 {
+		 title :`displacementTexture`,
+		 return : 'RedBitmapTexture'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'displacementTexture', 'sampler2D', samplerOption);
+	/**DOC:
+	 {
+		 title :`normalPower`,
+		 description : `기본값 : 1`,
+		 return : 'number'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'normalPower', 'number', {'min': 0});
+	/**DOC:
+	 {
+		 title :`shininess`,
+		 description : `기본값 : 16`,
+		 return : 'number'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'shininess', 'number', {'min': 0});
+	/**DOC:
+	 {
+		 title :`specularPower`,
+		 description : `기본값 : 1`,
+		 return : 'number'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'specularPower', 'number', {'min': 0});
+	/**DOC:
+	 {
+		 title :`displacementPower`,
+		 description : `기본값 : 0`,
+		 return : 'Number'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'displacementPower', 'number', {'min': 0});
 	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'displacementFlowSpeedX', 'number');
 	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'displacementFlowSpeedY', 'number');
-	Object.freeze(RedStandardMaterial)
+	Object.freeze(RedStandardMaterial);
 })();

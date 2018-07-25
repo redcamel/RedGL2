@@ -3,6 +3,7 @@ var RedSheetMaterial;
 (function () {
 	var vSource, fSource;
 	var PROGRAM_NAME = 'RedSheetMaterialProgram';
+	var checked;
 	vSource = function () {
 		/* @preserve
 		mat4 calSprite3D(mat4 cameraMTX, mat4 mvMatrix){
@@ -34,7 +35,7 @@ var RedSheetMaterial;
 			//#define#sprite3D#false# gl_Position = uPMatrix * uCameraMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
 		}
 		 */
-	}
+	};
 	fSource = function () {
 		/* @preserve
 		 precision mediump float;
@@ -57,7 +58,7 @@ var RedSheetMaterial;
 			 //#define#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
 		 }
 		 */
-	}
+	};
 	/**DOC:
 	 {
 		 constructorYn : true,
@@ -82,95 +83,81 @@ var RedSheetMaterial;
 	 :DOC*/
 	RedSheetMaterial = function (redGL, diffuseTexture, frameRate, segmentW, segmentH, totalFrame) {
 		if ( !(this instanceof RedSheetMaterial) ) return new RedSheetMaterial(redGL, diffuseTexture, frameRate, segmentW, segmentH, totalFrame);
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedSheetMaterial : RedGL Instance만 허용됩니다.', redGL)
-		frameRate = frameRate || 60
-		segmentW = segmentW || 1
-		segmentH = segmentH || 1
-		totalFrame = totalFrame || 1
-		this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource)
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedSheetMaterial : RedGL Instance만 허용됩니다.', redGL);
+		frameRate = frameRate || 60;
+		segmentW = segmentW || 1;
+		segmentH = segmentH || 1;
+		totalFrame = totalFrame || 1;
+		this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource);
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
-		/**DOC:
-		 {
-			 title :`diffuseTexture`,
-			 return : 'RedSheetMaterial'
-		 }
-		 :DOC*/
 		this['diffuseTexture'] = diffuseTexture;
 		this['_sheetRect'] = new Float32Array(4);
 		/////////////////////////////////////////
 		// 일반 프로퍼티
 		this['_perFrameTime'] = 0; // 단위당 시간
 		this['_nextFrameTime'] = 0; // 다음 프레임 호출 시간
-		this['_playYn'] = true
-		this['segmentW'] = segmentW || 1;
-		this['segmentH'] = segmentH || 1;
-		this['totalFrame'] = totalFrame || 1;
-		this['frameRate'] = frameRate || 1000;
+		this['_playYn'] = true;
+		this['segmentW'] = segmentW ;
+		this['segmentH'] = segmentH;
+		this['totalFrame'] = totalFrame;
+		this['frameRate'] = frameRate;
 		this['currentIndex'] = 0;
-		this['loop'] = true
-		this['_aniMap'] = {}
-		this['__RedSheetMaterialYn'] = true
+		this['loop'] = true;
+		this['_aniMap'] = {};
+		this['__RedSheetMaterialYn'] = true;
 		this['_UUID'] = RedGL.makeUUID();
-		this.checkUniformAndProperty();
-		console.log(this)
-	}
-	RedSheetMaterial.prototype = new RedBaseMaterial()
+		if ( !checked ) {
+			this.checkUniformAndProperty();
+			checked = true;
+		}
+		console.log(this);
+	};
+	RedSheetMaterial.prototype = new RedBaseMaterial();
 	RedSheetMaterial.prototype['addAction'] = function (key, option) {
 		this['_aniMap'][key] = option
-	}
+	};
 	RedSheetMaterial.prototype['setAction'] = function (key) {
-		this['diffuseTexture'] = this['_aniMap'][key]['texture']
-		this['segmentW'] = this['_aniMap'][key]['segmentW']
-		this['segmentH'] = this['_aniMap'][key]['segmentH']
-		this['totalFrame'] = this['_aniMap'][key]['totalFrame']
-		this['frameRate'] = this['_aniMap'][key]['frameRate']
-		this['currentIndex'] = 0
-		this['_nextFrameTime'] = 0
-	}
+		this['diffuseTexture'] = this['_aniMap'][key]['texture'];
+		this['segmentW'] = this['_aniMap'][key]['segmentW'];
+		this['segmentH'] = this['_aniMap'][key]['segmentH'];
+		this['totalFrame'] = this['_aniMap'][key]['totalFrame'];
+		this['frameRate'] = this['_aniMap'][key]['frameRate'];
+		this['currentIndex'] = 0;
+		this['_nextFrameTime'] = 0;
+	};
+	/**DOC:
+	 {
+		 title :`diffuseTexture`,
+		 return : 'RedSheetMaterial'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'diffuseTexture', 'sampler2D', {essential: true});
 	RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'totalFrame', 'number', {'min': 0});
 	RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'loop', 'boolean', true);
-	RedSheetMaterial.prototype['play'] = function () { this['_playYn'] = true }
-	RedSheetMaterial.prototype['stop'] = function () { this['_playYn'] = false, this['currentIndex'] = 0 }
-	RedSheetMaterial.prototype['pause'] = function () { this['_playYn'] = false}
+	RedSheetMaterial.prototype['play'] = function () { this['_playYn'] = true };
+	RedSheetMaterial.prototype['stop'] = function () { this['_playYn'] = false, this['currentIndex'] = 0 };
+	RedSheetMaterial.prototype['pause'] = function () { this['_playYn'] = false};
 	RedSheetMaterial.prototype['gotoAndStop'] = function (index) {
-		if ( index > this['totalFrame'] - 1 ) index = this['totalFrame'] - 1
-		if ( index < 0 ) index = 0
-		this['_playYn'] = false
-		this['currentIndex'] = index
-	}
+		if ( index > this['totalFrame'] - 1 ) index = this['totalFrame'] - 1;
+		if ( index < 0 ) index = 0;
+		this['_playYn'] = false;
+		this['currentIndex'] = index;
+	};
 	RedSheetMaterial.prototype['gotoAndPlay'] = function (index) {
-		if ( index > this['totalFrame'] - 1 ) index = this['totalFrame'] - 1
-		if ( index < 0 ) index = 0
-		this['_playYn'] = true
-		this['currentIndex'] = index
-		this['_nextFrameTime'] = 0
-	}
-	Object.defineProperty(RedSheetMaterial.prototype, 'frameRate', {
-		get: function () { return this['_frameRate']; },
-		set: function (v) {
-			if ( typeof v != 'number' ) RedGLUtil.throwFunc('RedSheetMaterial' + ' - frameRate  : 숫자만 허용함.')
-			if ( v < 1 ) v = 1;
-			this['_frameRate'] = v
-			this['_perFrameTime'] = 1000 / this['frameRate']
+		if ( index > this['totalFrame'] - 1 ) index = this['totalFrame'] - 1;
+		if ( index < 0 ) index = 0;
+		this['_playYn'] = true;
+		this['currentIndex'] = index;
+		this['_nextFrameTime'] = 0;
+	};
+	RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'frameRate', 'number', {
+		min: 1,
+		callback: function () {
+			this['_perFrameTime'] = 1000 / this['_frameRate'];
 		}
 	});
-	Object.defineProperty(RedSheetMaterial.prototype, 'segmentW', {
-		get: function () { return this['_segmentW']; },
-		set: function (v) {
-			if ( typeof v != 'number' ) RedGLUtil.throwFunc('RedSheetMaterial' + ' - segmentW  : 숫자만 허용함.')
-			if ( v < 1 ) v = 1;
-			this['_segmentW'] = v
-		}
-	});
-	Object.defineProperty(RedSheetMaterial.prototype, 'segmentH', {
-		get: function () { return this['_segmentH']; },
-		set: function (v) {
-			if ( typeof v != 'number' ) RedGLUtil.throwFunc('RedSheetMaterial' + ' - segmentH  : 숫자만 허용함.')
-			if ( v < 1 ) v = 1;
-			this['_segmentH'] = v
-		}
-	})
+	RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'segmentW', 'number', {min: 1});
+	RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'segmentH', 'number', {min: 1});
 	Object.freeze(RedSheetMaterial)
 })();

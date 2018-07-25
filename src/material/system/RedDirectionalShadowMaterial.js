@@ -3,6 +3,7 @@ var RedDirectionalShadowMaterial;
 (function () {
 	var vSource, fSource;
 	var PROGRAM_NAME = 'RedDirectionalShadowMaterialProgram';
+	var checked;
 	vSource = function () {
 		/* @preserve
 		 void main(void) {
@@ -63,7 +64,7 @@ var RedDirectionalShadowMaterial;
 		this['__RedDirectionalShadowYn'] = true
 		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		this['_UUID'] = RedGL.makeUUID();
-		this.checkUniformAndProperty();
+		if ( !checked ) this.checkUniformAndProperty(), checked = true;
 		console.log(this)
 	}
 	RedDirectionalShadowMaterial.prototype = new RedBaseMaterial()

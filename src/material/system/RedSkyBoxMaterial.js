@@ -3,6 +3,7 @@ var RedSkyBoxMaterial;
 (function () {
 	var vSource, fSource;
 	var PROGRAM_NAME = 'skyBoxProgram';
+	var checked;
 	vSource = function () {
 		/* @preserve
 		 varying vec3 vReflectionCubeCoord;
@@ -73,7 +74,7 @@ var RedSkyBoxMaterial;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
 		this['_UUID'] = RedGL.makeUUID();
-		this.checkUniformAndProperty();
+		if ( !checked ) this.checkUniformAndProperty(), checked = true;
 		console.log(this)
 	}
 	RedSkyBoxMaterial.prototype = new RedBaseMaterial()

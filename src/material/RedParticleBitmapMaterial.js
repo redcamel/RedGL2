@@ -6,6 +6,7 @@ var RedParticleBitmapMaterial;
 (function () {
 	var vSource, fSource;
 	var PROGRAM_NAME = 'particleBitmapProgram';
+	var checked;
 	vSource = function () {
 		/* @preserve
 		 varying vec4 vColor;
@@ -89,7 +90,7 @@ var RedParticleBitmapMaterial;
 		 :DOC*/
 		this['alphaTest'] = 0.01
 		this['_UUID'] = RedGL.makeUUID();
-		this.checkUniformAndProperty();
+		if ( !checked ) this.checkUniformAndProperty(), checked = true;
 		console.log(this)
 	}
 	RedParticleBitmapMaterial.prototype = new RedBaseMaterial()

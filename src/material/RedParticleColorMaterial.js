@@ -6,6 +6,7 @@ var RedParticleColorMaterial;
 (function () {
 	var vSource, fSource;
 	var PROGRAM_NAME = 'particleColorProgram';
+	var checked;
 	vSource = function () {
 		/* @preserve
 		 varying vec4 vColor;
@@ -61,7 +62,7 @@ var RedParticleColorMaterial;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
 		this['_UUID'] = RedGL.makeUUID();
-		this.checkUniformAndProperty();
+		if ( !checked ) this.checkUniformAndProperty(), checked = true;
 		console.log(this)
 	}
 	RedParticleColorMaterial.prototype = new RedBaseMaterial()

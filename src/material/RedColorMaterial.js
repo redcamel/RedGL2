@@ -3,6 +3,7 @@ var RedColorMaterial;
 (function () {
 	var vSource, fSource;
 	var PROGRAM_NAME = 'colorProgram';
+	var checked;
 	vSource = function () {
 		/* @preserve
 		mat4 calSprite3D(mat4 cameraMTX, mat4 mvMatrix){
@@ -18,10 +19,7 @@ var RedColorMaterial;
 			tMTX[2][0] = 0.0, tMTX[2][1] = 0.0, tMTX[2][2] = 1.0;
 			return tMTX * cacheScale;
 		}
-		uniform vec4 u_color;
-		varying vec4 vColor;
 		void main(void) {
-			vColor = u_color;
 			gl_PointSize = uPointSize;
 			//#define#sprite3D#true# gl_Position = uPMatrix * calSprite3D(uCameraMatrix , uMMatrix) *  vec4(aVertexPosition, 1.0);
 			//#define#sprite3D#true# if(!u_PerspectiveScale){
@@ -31,11 +29,11 @@ var RedColorMaterial;
 			//#define#sprite3D#false# gl_Position = uPMatrix * uCameraMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
 		}
 		 */
-	}
+	};
 	fSource = function () {
 		/* @preserve
 		 precision mediump float;
-		 varying vec4 vColor;
+		 uniform vec4 u_color;
 		 float fogFactor(float perspectiveFar, float density){
 			 float flog_cord = gl_FragCoord.z / gl_FragCoord.w / perspectiveFar;
 			 float fog = flog_cord * density;
@@ -46,13 +44,12 @@ var RedColorMaterial;
 			 return mix(fogColor, currentColor, fogFactor);
 		 }
 		 void main(void) {
-			 vec4 finalColor = vColor * vColor.a;
-
+			 vec4 finalColor = u_color * u_color.a;
 			 //#define#fog#false# gl_FragColor = finalColor;
 			 //#define#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
 		 }
 		 */
-	}
+	};
 	/**DOC:
 	 {
 		 constructorYn : true,
@@ -80,21 +77,58 @@ var RedColorMaterial;
 	 :DOC*/
 	RedColorMaterial = function (redGL, hexColor, alpha) {
 		if ( !(this instanceof RedColorMaterial) ) return new RedColorMaterial(redGL, hexColor, alpha);
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedColorMaterial : RedGL Instance만 허용됩니다.', '입력값 : ' + redGL);
-		this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource)
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedColorMaterial : RedGL Instance만 허용됩니다.', '입력값 : ' + redGL);
+		this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource);
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
 		this['_color'] = new Float32Array(4);
+		this['alpha'] = alpha == undefined ? 1 : alpha;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		Object.defineProperty(this, 'color', RedDefinePropertyInfo['color']);
-		Object.defineProperty(this, 'alpha', RedDefinePropertyInfo['alpha']);
-		this['alpha'] = alpha == undefined ? 1 : alpha;
-		this['color'] = hexColor ? hexColor : '#ff0000'
+		this['color'] = hexColor ? hexColor : '#ff0000';
 		this['_UUID'] = RedGL.makeUUID();
-		this.checkUniformAndProperty();
+		if ( !checked ) {
+			this.checkUniformAndProperty();
+			checked = true;
+		}
 		console.log(this);
-	}
-	RedColorMaterial.prototype = new RedBaseMaterial()
-	Object.freeze(RedColorMaterial)
+	};
+	RedColorMaterial.prototype = new RedBaseMaterial();
+	RedColorMaterial['DEFINE_OBJECT_COLOR'] = {
+		get: function () { return this['_colorHex'] },
+		set: (function () {
+			var t0;
+			return function (hex) {
+				this['_colorHex'] = hex ? hex : '#ff2211';
+				t0 = RedGLUtil.hexToRGB_ZeroToOne.call(this, this['_colorHex']);
+				this['_color'][0] = t0[0];
+				this['_color'][1] = t0[1];
+				this['_color'][2] = t0[2];
+				this['_color'][3] = this['_alpha'];
+			}
+		})()
+	};
+	RedColorMaterial['DEFINE_OBJECT_ALPHA'] = {
+		'min': 0, 'max': 1,
+		callback: function (v) {
+			this['_color'][3] = this['_alpha'] = v
+		}
+	};
+	/**DOC:
+	 {
+		 title :`color`,
+		 description : `기본값 : #ff2211`,
+		 return : 'hex'
+	 }
+	 :DOC*/
+	Object.defineProperty(RedColorMaterial.prototype, 'color', RedColorMaterial['DEFINE_OBJECT_COLOR']);
+	/**DOC:
+	 {
+		 title :`alpha`,
+		 description : `기본값 : 1`,
+		 return : 'Number'
+	 }
+	 :DOC*/
+	RedDefinePropertyInfo.definePrototype('RedColorMaterial', 'alpha', 'number', RedColorMaterial['DEFINE_OBJECT_ALPHA']);
+	Object.freeze(RedColorMaterial);
 })();

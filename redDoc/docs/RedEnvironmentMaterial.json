@@ -1,5 +1,10 @@
 [
   {
+    "title": "alpha",
+    "description": "기본값 : 1",
+    "return": "Number"
+  },
+  {
     "title": "diffuseTexture",
     "return": "RedBitmapTexture"
   },
@@ -7,6 +12,10 @@
     "title": "displacementPower",
     "description": "기본값 : 0",
     "return": "Number"
+  },
+  {
+    "title": "displacementTexture",
+    "return": "RedBitmapTexture"
   },
   {
     "title": "environmentTexture",
@@ -69,10 +78,6 @@
     "title": "shininess",
     "description": "기본값 : 16",
     "return": "Number"
-  },
-  {
-    "title": "shininess",
-    "return": "RedBitmapTexture"
   },
   {
     "title": "specularPower",

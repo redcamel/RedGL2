@@ -3,6 +3,7 @@ var RedBitmapMaterial;
 (function () {
 	var vSource, fSource;
 	var PROGRAM_NAME = 'RedBitmapMaterialProgram';
+	var checked;
 	vSource = function () {
 		/* @preserve
 		mat4 calSprite3D(mat4 cameraMTX, mat4 mvMatrix){
@@ -30,11 +31,12 @@ var RedBitmapMaterial;
 			//#define#sprite3D#false# gl_Position = uPMatrix * uCameraMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
 		}
 		 */
-	}
+	};
 	fSource = function () {
 		/* @preserve
 		 precision mediump float;
 		 uniform sampler2D u_diffuseTexture;
+		 uniform float u_alpha;
 		 float fogFactor(float perspectiveFar, float density){
 			 float flog_cord = gl_FragCoord.z / gl_FragCoord.w / perspectiveFar;
 			 float fog = flog_cord * density;
@@ -49,11 +51,12 @@ var RedBitmapMaterial;
 			 finalColor.rgb *= finalColor.a;
 			 if(finalColor.a ==0.0) discard;
 
+			 finalColor.a = u_alpha;
 			 //#define#fog#false# gl_FragColor = finalColor;
 			 //#define#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
 		 }
 		 */
-	}
+	};
 	/**DOC:
 	 {
 		 constructorYn : true,
@@ -66,36 +69,47 @@ var RedBitmapMaterial;
 				 {type:'RedGL'}
 			 ],
 			 diffuseTexture : [
-				 {type:'RedBitmapTexture'},
-				 'RedBitmapTexture Instance'
+				 {type:'RedBitmapTexture'}
 			 ]
 		 },
 		 example : `
-			 RedBitmapMaterial(RedGL Instance, RedBitmapTexture(RedGL Instance, src))
+			 RedBitmapMaterial( RedGL Instance, RedBitmapTexture(RedGL Instance, src) )
 		 `,
 		 return : 'RedBitmapMaterial Instance'
 	 }
 	 :DOC*/
 	RedBitmapMaterial = function (redGL, diffuseTexture) {
 		if ( !(this instanceof RedBitmapMaterial) ) return new RedBitmapMaterial(redGL, diffuseTexture);
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedBitmapMaterial : RedGL Instance만 허용됩니다.', redGL)
-		this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource)
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedBitmapMaterial : RedGL Instance만 허용됩니다.', redGL);
+		this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource);
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
-		/**DOC:
-		 {
-			 title :`diffuseTexture`,
-			 return : 'RedBitmapMaterial'
-		 }
-		 :DOC*/
 		this['diffuseTexture'] = diffuseTexture;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
+		this['alpha'] = 1;
 		this['_UUID'] = RedGL.makeUUID();
-		this.checkUniformAndProperty();
-		console.log(this)
-	}
-	RedBitmapMaterial.prototype = new RedBaseMaterial()
+		if ( !checked ) {
+			this.checkUniformAndProperty();
+			checked = true;
+		}
+		console.log(this);
+	};
+	RedBitmapMaterial.prototype = new RedBaseMaterial();
+	/**DOC:
+	 {
+		 title :`diffuseTexture`,
+		 return : 'RedBitmapTexture'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedBitmapMaterial', 'diffuseTexture', 'sampler2D', {essential: true});
-	Object.freeze(RedBitmapMaterial)
+	/**DOC:
+	 {
+		 title :`alpha`,
+		 description : `기본값 : 1`,
+		 return : 'Number'
+	 }
+	 :DOC*/
+	RedDefinePropertyInfo.definePrototype('RedBitmapMaterial', 'alpha', 'number', {min: 0, max: 1});
+	Object.freeze(RedBitmapMaterial);
 })();
