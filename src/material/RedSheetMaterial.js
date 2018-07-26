@@ -98,7 +98,7 @@ var RedSheetMaterial;
 		this['_perFrameTime'] = 0; // 단위당 시간
 		this['_nextFrameTime'] = 0; // 다음 프레임 호출 시간
 		this['_playYn'] = true;
-		this['segmentW'] = segmentW ;
+		this['segmentW'] = segmentW;
 		this['segmentH'] = segmentH;
 		this['totalFrame'] = totalFrame;
 		this['frameRate'] = frameRate;
@@ -114,9 +114,38 @@ var RedSheetMaterial;
 		console.log(this);
 	};
 	RedSheetMaterial.prototype = new RedBaseMaterial();
+	/**DOC:
+	 {
+		 title :`addAction`,
+		 code : 'METHOD',
+		 description : `addAction`,
+		 params : {
+			 key : [
+				 {type:'String'}
+			 ],
+			 option : [
+				 {type:'Object'}
+			 ]
+		 },
+		 return : 'void'
+	 }
+	 :DOC*/
 	RedSheetMaterial.prototype['addAction'] = function (key, option) {
 		this['_aniMap'][key] = option
 	};
+	/**DOC:
+	 {
+		 title :`setAction`,
+		 code : 'METHOD',
+		 description : `setAction`,
+		 params : {
+			 key : [
+				 {type:'String'}
+			 ]
+		 },
+		 return : 'void'
+	 }
+	 :DOC*/
 	RedSheetMaterial.prototype['setAction'] = function (key) {
 		this['diffuseTexture'] = this['_aniMap'][key]['texture'];
 		this['segmentW'] = this['_aniMap'][key]['segmentW'];
@@ -128,22 +157,56 @@ var RedSheetMaterial;
 	};
 	/**DOC:
 	 {
-		 title :`diffuseTexture`,
-		 return : 'RedSheetMaterial'
+		 title :`play`,
+		 code : 'METHOD',
+		 description : `play`,
+		 return : 'void'
 	 }
 	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'diffuseTexture', 'sampler2D', {essential: true});
-	RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'totalFrame', 'number', {'min': 0});
-	RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'loop', 'boolean', true);
 	RedSheetMaterial.prototype['play'] = function () { this['_playYn'] = true };
-	RedSheetMaterial.prototype['stop'] = function () { this['_playYn'] = false, this['currentIndex'] = 0 };
+	/**DOC:
+	 {
+		 title :`stop`,
+		 code : 'METHOD',
+		 description : `stop`,
+		 return : 'void'
+	 }
+	 :DOC*/
+	RedSheetMaterial.prototype['stop'] = function () {
+		this['_playYn'] = false;
+		this['currentIndex'] = 0;
+	};
+	/**DOC:
+	 {
+		 title :`pause`,
+		 code : 'METHOD',
+		 description : `pause`,
+		 return : 'void'
+	 }
+	 :DOC*/
 	RedSheetMaterial.prototype['pause'] = function () { this['_playYn'] = false};
+	/**DOC:
+	 {
+		 title :`gotoAndStop`,
+		 code : 'METHOD',
+		 description : `gotoAndStop`,
+		 return : 'void'
+	 }
+	 :DOC*/
 	RedSheetMaterial.prototype['gotoAndStop'] = function (index) {
 		if ( index > this['totalFrame'] - 1 ) index = this['totalFrame'] - 1;
 		if ( index < 0 ) index = 0;
 		this['_playYn'] = false;
 		this['currentIndex'] = index;
 	};
+	/**DOC:
+	 {
+		 title :`gotoAndPlay`,
+		 code : 'METHOD',
+		 description : `gotoAndPlay`,
+		 return : 'void'
+	 }
+	 :DOC*/
 	RedSheetMaterial.prototype['gotoAndPlay'] = function (index) {
 		if ( index > this['totalFrame'] - 1 ) index = this['totalFrame'] - 1;
 		if ( index < 0 ) index = 0;
@@ -151,13 +214,58 @@ var RedSheetMaterial;
 		this['currentIndex'] = index;
 		this['_nextFrameTime'] = 0;
 	};
+	/**DOC:
+	 {
+		 title :`diffuseTexture`,
+		 description : `diffuseTexture`,
+		 return : 'RedSheetMaterial'
+	 }
+	 :DOC*/
+	RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'diffuseTexture', 'sampler2D', {essential: true});
+	/**DOC:
+	 {
+		 title :`totalFrame`,
+		 description : `최소값 : 1`,
+		 return : 'Number'
+	 }
+	 :DOC*/
+	RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'totalFrame', 'number', {'min': 1});
+	/**DOC:
+	 {
+		 title :`loop`,
+		 description : `기본값 : true`,
+		 return : 'Boolean'
+	 }
+	 :DOC*/
+	RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'loop', 'boolean', true);
+	/**DOC:
+	 {
+		 title :`frameRate`,
+		 description : `최소값 : 1`,
+		 return : 'Number'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'frameRate', 'number', {
 		min: 1,
 		callback: function () {
 			this['_perFrameTime'] = 1000 / this['_frameRate'];
 		}
 	});
+	/**DOC:
+	 {
+		 title :`segmentW`,
+		 description : `최소값 : 1`,
+		 return : 'Number'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'segmentW', 'number', {min: 1});
+	/**DOC:
+	 {
+		 title :`segmentH`,
+		 description : `최소값 : 1`,
+		 return : 'Number'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'segmentH', 'number', {min: 1});
 	Object.freeze(RedSheetMaterial)
 })();

@@ -3,42 +3,36 @@
     "code": "PROPERTY",
     "title": "bufferType",
     "description": "bufferType 상수",
-    "example": "\n",
     "return": "RedBuffer.ARRAY_BUFFER or RedBuffer.ELEMENT_ARRAY_BUFFER"
   },
   {
     "code": "PROPERTY",
     "title": "data",
     "description": "data",
-    "example": "\n",
     "return": "TypedArray"
   },
   {
     "code": "PROPERTY",
     "title": "drawMode",
     "description": "gl.STATIC_DRAW 상수",
-    "example": "\n",
     "return": "gl.STATIC_DRAW or gl.DYNAMIC_DRAW"
   },
   {
     "code": "PROPERTY",
     "title": "glArrayType",
     "description": "\ndata의 type의 gl.XXX 상수\nex) gl.FLOAT, gl.BYTE\n",
-    "example": "\n",
     "return": "gl.XXX 상수"
   },
   {
     "code": "PROPERTY",
     "title": "glBufferType",
     "description": "bufferType에 대응하는 gl.ARRAY_BUFFER or gl.ELEMENT_ARRAY_BUFFER 상수",
-    "example": "\n",
     "return": "gl.ARRAY_BUFFER or glELEMENT_ARRAY_BUFFER 상수"
   },
   {
     "code": "PROPERTY",
     "title": "key",
     "description": "고유키",
-    "example": "\n",
     "return": "String"
   },
   {
@@ -89,14 +83,14 @@
   {
     "code": "CONST",
     "title": "RedBuffer.ARRAY_BUFFER",
-    "description": "\nARRAY_BUFFER 버퍼상수\n",
-    "return": "RedBuffer Instance"
+    "description": "ARRAY_BUFFER 버퍼상수 ",
+    "return": "String"
   },
   {
     "code": "CONST",
     "title": "RedBuffer.ELEMENT_ARRAY_BUFFER",
-    "description": "\nELEMENT_ARRAY_BUFFER 버퍼상수\n",
-    "return": "RedBuffer Instance"
+    "description": "ELEMENT_ARRAY_BUFFER 버퍼상수",
+    "return": "String"
   },
   {
     "code": "METHOD",
@@ -117,7 +111,6 @@
     "code": "PROPERTY",
     "title": "webglBuffer",
     "description": "WebGLBuffer",
-    "example": "\n",
     "return": "WebGLBuffer"
   }
 ]

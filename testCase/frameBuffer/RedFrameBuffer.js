@@ -97,7 +97,7 @@ RedGL(document.createElement('canvas'), function (v) {
 				console.log(tGL.getParameter(tGL.RENDERBUFFER_BINDING))
 				unit.run(tGL.getParameter(tGL.RENDERBUFFER_BINDING) == t0['webglRenderBuffer'])
 				t0.unbind(tGL)
-			}, true),
+			}, true)
 		)
 	)
 })

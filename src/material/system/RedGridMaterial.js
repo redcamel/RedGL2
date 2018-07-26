@@ -12,7 +12,7 @@ var RedGridMaterial;
 			 gl_Position = uPMatrix * uCameraMatrix* uMMatrix * vec4(aVertexPosition, 1.0);
 		 }
 		 */
-	}
+	};
 	fSource = function () {
 		/* @preserve
 		 precision mediump float;
@@ -33,7 +33,7 @@ var RedGridMaterial;
 			 //#define#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
 		 }
 		 */
-	}
+	};
 	/**DOC:
 	 {
 		 constructorYn : true,
@@ -55,13 +55,16 @@ var RedGridMaterial;
 	 :DOC*/
 	RedGridMaterial = function (redGL) {
 		if ( !(this instanceof RedGridMaterial) ) return new RedGridMaterial(redGL);
-		this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource)
+		this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource);
 		// 유니폼 프로퍼티
 		// 일반 프로퍼티
 		this['_UUID'] = RedGL.makeUUID();
-		if ( !checked ) this.checkUniformAndProperty(), checked = true;
-		console.log(this)
-	}
-	RedGridMaterial.prototype = new RedBaseMaterial()
-	Object.freeze(RedGridMaterial)
+		if ( !checked ) {
+			this.checkUniformAndProperty();
+			checked = true;
+		}
+		console.log(this);
+	};
+	RedGridMaterial.prototype = new RedBaseMaterial();
+	Object.freeze(RedGridMaterial);
 })();

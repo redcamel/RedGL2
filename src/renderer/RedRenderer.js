@@ -348,7 +348,7 @@ var RedRenderer;
 			// 오쏘고날 스케일 비율
 			var orthographicYnScale = orthographicYn ? -1 : 1;
 			//
-			var BYTES_PER_ELEMENT, CONVERT_RADIAN;
+			var CONVERT_RADIAN;
 			//
 			var tMesh, tGeometry, tMaterial;
 			var tLODInfo;
@@ -379,7 +379,6 @@ var RedRenderer;
 			var tProgramList;
 			var tBaseProgramKey;
 			//////////////// 변수값 할당 ////////////////
-			BYTES_PER_ELEMENT = Float32Array.BYTES_PER_ELEMENT;
 			CONVERT_RADIAN = Math.PI / 180;
 			CPI = 3.141592653589793, CPI2 = 6.283185307179586, C225 = 0.225, C127 = 1.27323954, C045 = 0.405284735, C157 = 1.5707963267948966;
 			//////////////// 렌더시작 ////////////////
@@ -488,8 +487,10 @@ var RedRenderer;
 								tInterleaveDefineUnit['size'],
 								tInterleaveBuffer['glArrayType'],
 								tInterleaveDefineUnit['normalize'],
-								tInterleaveBuffer['stride'] * BYTES_PER_ELEMENT, //stride
-								tInterleaveDefineUnit['offset'] * BYTES_PER_ELEMENT //offset
+								tInterleaveBuffer['stride_BYTES_PER_ELEMENT'], //stride
+								tInterleaveDefineUnit['offset_BYTES_PER_ELEMENT'] //offset
+								// tInterleaveBuffer['stride'] * BYTES_PER_ELEMENT, //stride
+								// tInterleaveDefineUnit['offset'] * BYTES_PER_ELEMENT //offset
 							);
 							// 상태 캐싱
 							tCacheInterleaveBuffer[tWebGLAttributeLocation] = tInterleaveDefineUnit['_UUID']
