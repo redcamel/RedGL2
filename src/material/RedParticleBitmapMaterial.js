@@ -18,6 +18,7 @@ var RedParticleBitmapMaterial;
 		 */
 	};
 	fSource = function () {
+		//TODO: tint명확히 정의해야함
 		/* @preserve
 		 precision mediump float;
 		 uniform sampler2D u_diffuseTexture;
@@ -36,11 +37,11 @@ var RedParticleBitmapMaterial;
 		 void main(void) {
 			 vec4 finalColor = texture2D(u_diffuseTexture, vec2(gl_PointCoord.x, - gl_PointCoord.y));
 		     finalColor.rgb *= finalColor.a;
-			 finalColor.rgb += vColor.rgb;
-			 finalColor.rgb *= vColor.a;
-			 finalColor.a = finalColor.a;
+			 finalColor.rgb += vColor.rgb * vColor.a;
+			 finalColor.a *= vColor.a;
+			 finalColor.a *= u_alpha;
 			 if(finalColor.a < u_alphaTest) discard;
-             finalColor.a *= u_alpha;
+
 			 //#define#fog#false# gl_FragColor = finalColor;
 			 //#define#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
 		 }

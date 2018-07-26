@@ -12,7 +12,7 @@ var RedPostEffectMaterial;
 			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
 		 }
 		 */
-	}
+	};
 	fSource = function () {
 		/* @preserve
 		 precision mediump float;
@@ -22,7 +22,7 @@ var RedPostEffectMaterial;
 			 gl_FragColor = finalColor;
 		 }
 		 */
-	}
+	};
 	/**DOC:
 	 {
 		 constructorYn : true,
@@ -47,24 +47,27 @@ var RedPostEffectMaterial;
 	 :DOC*/
 	RedPostEffectMaterial = function (redGL, diffuseTexture) {
 		if ( !(this instanceof RedPostEffectMaterial) ) return new RedPostEffectMaterial(redGL, diffuseTexture);
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedPostEffectMaterial : RedGL Instance만 허용됩니다.', redGL)
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPostEffectMaterial : RedGL Instance만 허용됩니다.', redGL);
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
-		/**DOC:
-		 {
-			 title :`diffuseTexture`,
-			 return : 'RedPostEffectMaterial'
-		 }
-		 :DOC*/
 		this['diffuseTexture'] = diffuseTexture;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
 		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		this['_UUID'] = RedGL.makeUUID();
-		if ( !checked ) this.checkUniformAndProperty(), checked = true;
-		console.log(this)
-	}
-	RedPostEffectMaterial.prototype = new RedBaseMaterial()
+		if ( !checked ) {
+			this.checkUniformAndProperty();
+			checked = true;
+		}
+		console.log(this);
+	};
+	RedPostEffectMaterial.prototype = new RedBaseMaterial();
+	/**DOC:
+	 {
+		 title :`diffuseTexture`,
+		 return : 'RedPostEffectMaterial'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedPostEffectMaterial', 'diffuseTexture', 'sampler2D', {essential: true});
-	Object.freeze(RedPostEffectMaterial)
+	Object.freeze(RedPostEffectMaterial);
 })();

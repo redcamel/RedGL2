@@ -12,7 +12,7 @@ var RedSkyBoxMaterial;
 			 gl_Position = uPMatrix * uCameraMatrix * uMMatrix * vec4(aVertexPosition, 1.0);
 		 }
 		 */
-	}
+	};
 	fSource = function () {
 		/* @preserve
 		 precision mediump float;
@@ -32,7 +32,7 @@ var RedSkyBoxMaterial;
 			 //#define#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
 		 }
 		 */
-	}
+	};
 	/**DOC:
 	 {
 		 constructorYn : true,
@@ -60,24 +60,27 @@ var RedSkyBoxMaterial;
 	 :DOC*/
 	RedSkyBoxMaterial = function (redGL, skyBoxTexture) {
 		if ( !(this instanceof RedSkyBoxMaterial) ) return new RedSkyBoxMaterial(redGL, skyBoxTexture);
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedSkyBoxMaterial : RedGL Instance만 허용됩니다.', redGL)
-		this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource)
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedSkyBoxMaterial : RedGL Instance만 허용됩니다.', redGL);
+		this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource);
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
-		/**DOC:
-		 {
-			 title :`skyBoxTexture`,
-			 return : 'RedBitmapCubeTexture'
-		 }
-		 :DOC*/
 		this['skyBoxTexture'] = skyBoxTexture;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
 		this['_UUID'] = RedGL.makeUUID();
-		if ( !checked ) this.checkUniformAndProperty(), checked = true;
-		console.log(this)
-	}
-	RedSkyBoxMaterial.prototype = new RedBaseMaterial()
+		if ( !checked ) {
+			this.checkUniformAndProperty();
+			checked = true;
+		}
+		console.log(this);
+	};
+	RedSkyBoxMaterial.prototype = new RedBaseMaterial();
+	/**DOC:
+	 {
+		 title :`skyBoxTexture`,
+		 return : 'RedBitmapCubeTexture'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedSkyBoxMaterial', 'skyBoxTexture', 'samplerCube', {essential: true});
 	Object.freeze(RedSkyBoxMaterial)
 })();
