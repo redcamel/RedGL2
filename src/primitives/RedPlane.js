@@ -11,32 +11,36 @@ var RedPlane;
 		var tX, tY;
 		var a, b, c, d;
 		return function (redGL, type, width, height, wSegments, hSegments) {
-			width_half = width / 2, height_half = height / 2
-			gridX = Math.floor(wSegments) || 1, gridY = Math.floor(hSegments) || 1
-			gridX1 = gridX + 1, gridY1 = gridY + 1
-			segment_width = width / gridX, segment_height = height / gridY
+			width_half = width / 2;
+			height_half = height / 2;
+			gridX = Math.floor(wSegments) || 1;
+			gridY = Math.floor(hSegments) || 1;
+			gridX1 = gridX + 1;
+			gridY1 = gridY + 1;
+			segment_width = width / gridX;
+			segment_height = height / gridY;
 			////////////////////////////////////////////////////////////////////////////
 			// 데이터 생성!
 			// buffers Datas
 			var interleaveData = [];
-			var indexData = []
+			var indexData = [];
 			// interleaveData
 			for ( iy = 0; iy < gridY1; iy++ ) {
 				tY = iy * segment_height - height_half;
 				for ( ix = 0; ix < gridX1; ix++ ) {
-					tX = ix * segment_width - width_half,
-						// position, normal, texcoord
-						interleaveData.push(tX, -tY, 0, 0, 0, 1, ix / gridX, 1 - (iy / gridY))
+					tX = ix * segment_width - width_half;
+					// position, normal, texcoord
+					interleaveData.push(tX, -tY, 0, 0, 0, 1, ix / gridX, 1 - (iy / gridY));
 				}
 			}
 			// indexData
 			for ( iy = 0; iy < gridY; iy++ ) {
 				for ( ix = 0; ix < gridX; ix++ ) {
-					a = ix + gridX1 * iy,
-						b = ix + gridX1 * (iy + 1),
-						c = (ix + 1) + gridX1 * (iy + 1),
-						d = (ix + 1) + gridX1 * iy,
-						indexData.push(a, b, d, b, c, d)
+					a = ix + gridX1 * iy;
+					b = ix + gridX1 * (iy + 1);
+					c = (ix + 1) + gridX1 * (iy + 1);
+					d = (ix + 1) + gridX1 * iy;
+					indexData.push(a, b, d, b, c, d)
 				}
 			}
 			////////////////////////////////////////////////////////////////////////////
@@ -103,10 +107,12 @@ var RedPlane;
 	 :DOC*/
 	RedPlane = function (redGL, width, height, wSegments, hSegments) {
 		if ( !(this instanceof RedPlane) ) return new RedPlane(redGL, width, height, wSegments, hSegments);
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedPlane : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPlane : RedGL Instance만 허용됩니다.', redGL);
 		var tType, tPrimitiveData;
-		width = width || 1, height = height || 1;
-		wSegments = wSegments || 1, hSegments = hSegments || 1;
+		width = width || 1;
+		height = height || 1;
+		wSegments = wSegments || 1;
+		hSegments = hSegments || 1;
 		tType = 'RedPlane' + '_' + width + '_' + height + '_' + wSegments + '_' + hSegments;
 		// 유일키 방어
 		if ( !redGL['_datas']['Primitives'] ) redGL['_datas']['Primitives'] = {};
@@ -118,7 +124,7 @@ var RedPlane;
 		this['indexBuffer'] = tPrimitiveData['indexBuffer'];
 		this['_UUID'] = RedGL.makeUUID();
 		console.log(this);
-	}
-	RedPlane.prototype = RedGeometry.prototype;
+	};
+	RedPlane.prototype = Object.create(RedGeometry.prototype);
 	Object.freeze(RedPlane);
-})()
+})();
