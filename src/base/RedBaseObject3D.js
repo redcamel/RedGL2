@@ -145,62 +145,8 @@ var RedBaseObject3D;
 		 }
 		 :DOC*/
 		this['pointSize'] = 1;
-		/**DOC:
-		 {
-			 title :`x`,
-			 return : 'Number'
-		 }
-		 :DOC*/
-		/**DOC:
-		 {
-			 title :`y`,
-			 return : 'Number'
-		 }
-		 :DOC*/
-		/**DOC:
-		 {
-			 title :`z`,
-			 return : 'Number'
-		 }
-		 :DOC*/
 		this['x'] = this['y'] = this['z'] = 0;
-		/**DOC:
-		 {
-			 title :`rotationX`,
-			 return : 'Number'
-		 }
-		 :DOC*/
-		/**DOC:
-		 {
-			 title :`rotationY`,
-			 return : 'Number'
-		 }
-		 :DOC*/
-		/**DOC:
-		 {
-			 title :`rotationZ`,
-			 return : 'Number'
-		 }
-		 :DOC*/
 		this['rotationX'] = this['rotationY'] = this['rotationZ'] = 0;
-		/**DOC:
-		 {
-			 title :`scaleX`,
-			 return : 'Number'
-		 }
-		 :DOC*/
-		/**DOC:
-		 {
-			 title :`scaleY`,
-			 return : 'Number'
-		 }
-		 :DOC*/
-		/**DOC:
-		 {
-			 title :`scaleZ`,
-			 return : 'Number'
-		 }
-		 :DOC*/
 		this['scaleX'] = this['scaleY'] = this['scaleZ'] = 1;
 		/**DOC:
 		 {
@@ -256,8 +202,8 @@ var RedBaseObject3D;
 			}
 			*/
 		};
-		Object.defineProperty(this, 'geometry', RedDefinePropertyInfo['geometry']);
-		Object.defineProperty(this, 'material', RedDefinePropertyInfo['material']);
+		Object.defineProperty(this, 'geometry', RedDefinePropertyInfo['GEOMETRY']);
+		Object.defineProperty(this, 'material', RedDefinePropertyInfo['MATERIAL']);
 	};
 	RedBaseObject3D.prototype = {
 		/**DOC:
@@ -409,5 +355,70 @@ var RedBaseObject3D;
 			}
 		})()
 	};
+	//TODO: xyz,scaleXYZ,rotationXYZ 일단 이 GET/SET을 쓸건지 말껀지 결정해야함
+	//TODO: xyz,scaleXYZ,rotationXYZ 렌더러 계산시 get/set 함수 안타게 추적해야함
+	/**DOC:
+	 {
+		 title :`x`,
+		 return : 'Number'
+	 }
+	 :DOC*/
+	/**DOC:
+	 {
+		 title :`y`,
+		 return : 'Number'
+	 }
+	 :DOC*/
+	/**DOC:
+	 {
+		 title :`z`,
+		 return : 'Number'
+	 }
+	 :DOC*/
+	// RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'x', 'number');
+	// RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'y', 'number');
+	// RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'z', 'number');
+	/**DOC:
+	 {
+		 title :`rotationX`,
+		 return : 'Number'
+	 }
+	 :DOC*/
+	/**DOC:
+	 {
+		 title :`rotationY`,
+		 return : 'Number'
+	 }
+	 :DOC*/
+	/**DOC:
+	 {
+		 title :`rotationZ`,
+		 return : 'Number'
+	 }
+	 :DOC*/
+	// RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'scaleX', 'number');
+	// RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'scaleY', 'number');
+	// RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'scaleZ', 'number');
+	/**DOC:
+	 {
+		 title :`scaleX`,
+		 return : 'Number'
+	 }
+	 :DOC*/
+	/**DOC:
+	 {
+		 title :`scaleY`,
+		 return : 'Number'
+	 }
+	 :DOC*/
+	/**DOC:
+	 {
+		 title :`scaleZ`,
+		 return : 'Number'
+	 }
+	 :DOC*/
+	// RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'rotationX', 'number');
+	// RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'rotationY', 'number');
+	// RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'rotationZ', 'number');
 	Object.freeze(RedBaseObject3D);
 })();

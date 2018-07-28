@@ -2,19 +2,6 @@
   {
     "title": "addLOD",
     "code": "METHOD",
-    "description": "\nLOD 삭제\n",
-    "params": {
-      "level": [
-        {
-          "type": "int"
-        }
-      ]
-    },
-    "return": "void"
-  },
-  {
-    "title": "addLOD",
-    "code": "METHOD",
     "description": "\nLOD 추가\n",
     "params": {
       "level": [
@@ -35,6 +22,19 @@
       "material": [
         {
           "type": "RedBaseMaterial 확장 Instance"
+        }
+      ]
+    },
+    "return": "void"
+  },
+  {
+    "title": "addLOD",
+    "code": "METHOD",
+    "description": "\nLOD 삭제\n",
+    "params": {
+      "level": [
+        {
+          "type": "int"
         }
       ]
     },
@@ -83,12 +83,12 @@
   },
   {
     "title": "matrix",
-    "description": "\nmatrix 렌더링시 자동계산\n",
+    "description": "\nmatrix 자동계산여부\n",
     "return": "mat4"
   },
   {
     "title": "matrix",
-    "description": "\nmatrix 자동계산여부\n",
+    "description": "\nmatrix 렌더링시 자동계산\n",
     "return": "mat4"
   },
   {
