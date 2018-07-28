@@ -10,11 +10,10 @@ var RedGround;
 		var jj, ii;
 		var tX, tZ;
 		var a, b, c, d;
-
 		return function (redGL, type, width, height, wSegments, hSegments, seed, seedX, seedY, maxHeight, locationX, locationZ) {
 			width_half = width / 2, height_half = height / 2
-			gridX = Math.floor(wSegments) || 1, gridY = Math.floor(hSegments) || 1
-			gridX1 = gridX + 1, gridY1 = gridY + 1
+			gridX = Math.floor(wSegments) || 1, gridY = Math.floor(hSegments) || 1;
+			gridX1 = gridX + 1, gridY1 = gridY + 1;
 			segment_width = width / gridX, segment_height = height / gridY
 			////////////////////////////////////////////////////////////////////////////
 			// 데이터 생성!
@@ -35,8 +34,8 @@ var RedGround;
 					// position, normal, texcoord
 					// persistence 지속성
 					// frequency 진동수
-					var tZ2 = tZ+ locationZ
-					var tX2 = tX+ locationX
+					var tZ2 = tZ + locationZ
+					var tX2 = tX + locationX
 					var tY = noise.noise2D((tX2) / Math.pow(seedY, 2), (tZ2) / Math.pow(seedY, 4))
 					var si = 0, si2 = 1
 					for ( si; si < seedX; si++ ) {
@@ -62,7 +61,7 @@ var RedGround;
 						indexData.push(b, c, d, a, b, d)
 				}
 			}
-			_n = RedGeometry.calculateNormals(_v, indexData)
+			_n = RedGLUtil.calculateNormals(_v, indexData)
 			var i = 0, len = indexData.length
 			for ( i; i < len; i++ ) {
 				var tIndex = indexData[i]
@@ -135,26 +134,28 @@ var RedGround;
 	 :DOC*/
 	RedGround = function (redGL, width, height, wSegments, hSegments, seed, seedX, seedY, maxHeight, locationX, locationZ) {
 		if ( !(this instanceof RedGround) ) return new RedGround(redGL, width, height, wSegments, hSegments, seed, seedX, seedY, maxHeight, locationX, locationZ);
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedGround : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedGround : RedGL Instance만 허용됩니다.', redGL);
 		var tType, tPrimitiveData;
-		width = width || 1, height = height || 1;
-		wSegments = wSegments || 1, hSegments = hSegments || 1;
-		seed = seed || 1
-		seedX = seedX || 0.4
-		seedY = seedY || 1
-		maxHeight = maxHeight || 500
-		tType = 'RedGround' + '_' + width + '_' + height + '_' + wSegments + '_' + hSegments + '_' + seed + '_' + seedX + '_' + seedY + '_' + maxHeight + '_' + locationX + '_' + locationZ+'_'+Math.random();
+		width = width || 1;
+		height = height || 1;
+		wSegments = wSegments || 1;
+		hSegments = hSegments || 1;
+		seed = seed || 1;
+		seedX = seedX || 0.4;
+		seedY = seedY || 1;
+		maxHeight = maxHeight || 500;
+		tType = 'RedGround' + '_' + width + '_' + height + '_' + wSegments + '_' + hSegments + '_' + seed + '_' + seedX + '_' + seedY + '_' + maxHeight + '_' + locationX + '_' + locationZ + '_' + Math.random();
 		// 유일키 방어
 		if ( !redGL['_datas']['Primitives'] ) redGL['_datas']['Primitives'] = {};
 		if ( redGL['_datas']['Primitives'][tType] ) return redGL['_datas']['Primitives'][tType];
 		else redGL['_datas']['Primitives'][tType] = this;
 		//
-		tPrimitiveData = makeData(redGL, tType, width, height, wSegments, hSegments, seed, seedX, seedY, maxHeight, locationX,locationZ);
+		tPrimitiveData = makeData(redGL, tType, width, height, wSegments, hSegments, seed, seedX, seedY, maxHeight, locationX, locationZ);
 		this['interleaveBuffer'] = tPrimitiveData['interleaveBuffer'];
 		this['indexBuffer'] = tPrimitiveData['indexBuffer'];
 		this['_UUID'] = RedGL.makeUUID();
 		// console.log(this);
-	}
-	RedGround.prototype = RedGeometry.prototype;
+	};
+	RedGround.prototype = Object.create(RedGeometry.prototype);
 	Object.freeze(RedGround);
-})()
+})();

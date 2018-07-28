@@ -42,7 +42,7 @@ var RedBox;
 			}
 			groupStart += groupCount;
 			numberOfVertices += vertexCounter;
-		}
+		};
 		return function (redGL, type, width, height, depth, wSegments, hSegments, dSegments) {
 			////////////////////////////////////////////////////////////////////////////
 			// 데이터 생성!
@@ -130,10 +130,14 @@ var RedBox;
 	 :DOC*/
 	RedBox = function (redGL, width, height, depth, wSegments, hSegments, dSegments) {
 		if ( !(this instanceof RedBox) ) return new RedBox(redGL, width, height, depth, wSegments, hSegments, dSegments);
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedBox : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedBox : RedGL Instance만 허용됩니다.', redGL);
 		var tType, tPrimitiveData;
-		width = width || 1, height = height || 1, depth = depth || 1;
-		wSegments = wSegments || 1, hSegments = hSegments || 1, dSegments = dSegments || 1;
+		width = width || 1;
+		height = height || 1;
+		depth = depth || 1;
+		wSegments = wSegments || 1;
+		hSegments = hSegments || 1;
+		dSegments = dSegments || 1;
 		tType = 'RedBox' + '_' + width + '_' + height + '_' + depth + '_' + wSegments + '_' + hSegments + '_' + dSegments;
 		// 유일키 방어
 		if ( !redGL['_datas']['Primitives'] ) redGL['_datas']['Primitives'] = {};
@@ -145,7 +149,7 @@ var RedBox;
 		this['indexBuffer'] = tPrimitiveData['indexBuffer'];
 		this['_UUID'] = RedGL.makeUUID();
 		console.log(this)
-	}
-	RedBox.prototype = RedGeometry.prototype;
+	};
+	RedBox.prototype = Object.create(RedGeometry.prototype);
 	Object.freeze(RedBox);
-})()
+})();

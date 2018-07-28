@@ -8,15 +8,18 @@ var RedSphere;
 		var index
 		var grid = [];
 		var a, b, c, d;
-		var vertex = new Float32Array([0, 0, 0])
-		var normal = new Float32Array([0, 0, 0])
+		var vertex = new Float32Array([0, 0, 0]);
+		var normal = new Float32Array([0, 0, 0]);
 		return function (redGL, type, radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength) {
 			thetaEnd = thetaStart + thetaLength;
-			ix, iy;
 			index = 0;
-			grid.length = 0
-			vertex[0] = 0, vertex[1] = 0, vertex[2] = 0
-			normal[0] = 0, normal[1] = 0, normal[2] = 0
+			grid.length = 0;
+			vertex[0] = 0;
+			vertex[1] = 0;
+			vertex[2] = 0;
+			normal[0] = 0;
+			normal[1] = 0;
+			normal[2] = 0;
 			////////////////////////////////////////////////////////////////////////////
 			// 데이터 생성!
 			// buffers Data
@@ -48,12 +51,12 @@ var RedSphere;
 			// indices
 			for ( iy = 0; iy < heightSegments; iy++ ) {
 				for ( ix = 0; ix < widthSegments; ix++ ) {
-					a = grid[iy][ix + 1]
-					b = grid[iy][ix]
-					c = grid[iy + 1][ix]
-					d = grid[iy + 1][ix + 1]
-					if ( iy !== 0 || thetaStart > 0 ) indexData.push(a, b, d)
-					if ( iy !== heightSegments - 1 || thetaEnd < Math.PI ) indexData.push(b, c, d)
+					a = grid[iy][ix + 1];
+					b = grid[iy][ix];
+					c = grid[iy + 1][ix];
+					d = grid[iy + 1][ix + 1];
+					if ( iy !== 0 || thetaStart > 0 ) indexData.push(a, b, d);
+					if ( iy !== heightSegments - 1 || thetaEnd < Math.PI ) indexData.push(b, c, d);
 				}
 			}
 			////////////////////////////////////////////////////////////////////////////
@@ -129,7 +132,7 @@ var RedSphere;
 	 :DOC*/
 	RedSphere = function (redGL, radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength) {
 		if ( !(this instanceof RedSphere) ) return new RedSphere(redGL, radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength);
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedPrimitive : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPrimitive : RedGL Instance만 허용됩니다.', redGL);
 		var tType, tPrimitiveData;
 		radius = radius || 1;
 		widthSegments = Math.max(3, Math.floor(widthSegments) || 8);
@@ -149,7 +152,7 @@ var RedSphere;
 		this['indexBuffer'] = tPrimitiveData['indexBuffer'];
 		this['_UUID'] = RedGL.makeUUID();
 		console.log(this)
-	}
-	RedSphere.prototype = RedGeometry.prototype;
+	};
+	RedSphere.prototype = Object.create(RedGeometry.prototype);
 	Object.freeze(RedSphere);
-})()
+})();

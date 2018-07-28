@@ -21,11 +21,10 @@ var RedParticleEmitter;
 	 :DOC*/
 	RedParticleEmitter = function (redGL, defineObject, material) {
 		if ( !(this instanceof RedParticleEmitter) ) return new RedPointUnit(redGL, material);
-		RedBaseObject3D['build'].call(this, redGL.gl)
-		this['autoUpdateMatrix'] = false
-		this['list'] = []
+		RedBaseObject3D['build'].call(this, redGL.gl);
+		this['list'] = [];
 		this['_interleaveData'] = [];
-		this['info'] = defineObject
+		this['info'] = defineObject;
 		this['geometry'] = RedGeometry(RedBuffer(
 			redGL,
 			'RedParticleEmitter_Buffer' + RedGL.makeUUID(),
@@ -37,14 +36,14 @@ var RedParticleEmitter;
 				RedInterleaveInfo('aVertexColor', 4)
 			],
 			redGL.gl.DYNAMIC_DRAW
-		))
-		this['material'] = material
-		this['drawMode'] = redGL.gl.POINTS
-		this['blendSrc'] = redGL.gl.SRC_ALPHA
-		this['blendDst'] = redGL.gl.ONE
-		this['useDepthMask'] = false
+		));
+		this['material'] = material;
+		this['drawMode'] = redGL.gl.POINTS;
+		this['blendSrc'] = redGL.gl.SRC_ALPHA;
+		this['blendDst'] = redGL.gl.ONE;
+		this['useDepthMask'] = false;
 		this['_UUID'] = RedGL.makeUUID();
-	}
+	};
 	RedParticleEmitter.QuintIn = 1;
 	RedParticleEmitter.QuintOut = 2;
 	RedParticleEmitter.QuintInOut = 3;
@@ -82,8 +81,8 @@ var RedParticleEmitter;
 	RedParticleEmitter.prototype = new RedBaseContainer();
 	RedParticleEmitter.prototype['update'] = (function () {
 		return function (time) {
-			var POW, SIN, COS, SQRT, PI, PI2, HPI
-			var i, i2, tParticle
+			var POW, SIN, COS, SQRT, PI, PI2, HPI;
+			var i, i2, tParticle;
 			var lifeRatio;
 			var tIndex;
 			var tInfo, tInfoParticle, newParticle;
@@ -94,60 +93,60 @@ var RedParticleEmitter;
 			var tTargetIndex;
 			var n;
 			//
-			POW = Math.pow
-			SIN = Math.sin
-			COS = Math.cos
-			SQRT = Math.sqrt
-			PI = Math.PI
-			HPI = PI * 0.5
-			PI2 = PI * 2
-			i = this['list']['length']
+			POW = Math.pow;
+			SIN = Math.sin;
+			COS = Math.cos;
+			SQRT = Math.sqrt;
+			PI = Math.PI;
+			HPI = PI * 0.5;
+			PI2 = PI * 2;
+			i = this['list']['length'];
 			// 맥스보다 갯수가 적으면 추가함
 			tInfo = this['info'];
 			tInfoParticle = tInfo['particle'];
 			if ( i < tInfo['max'] ) {
-				i2 = tInfo['emitCount']
-				if ( i2 + i > tInfo['max'] ) i2 = tInfo['max'] - i
+				i2 = tInfo['emitCount'];
+				if ( i2 + i > tInfo['max'] ) i2 = tInfo['max'] - i;
 				while ( i2-- ) {
-					newParticle = this['list'][i + i2] = new RedParticleUnit(tInfo['lifeTime'])
-					this['_interleaveData'].push(this.x, this.y, this.z)
-					this['_interleaveData'].push(0)
-					if ( tInfo['tint'] == 'random' ) this['_interleaveData'].push(Math.random(), Math.random(), Math.random(), 1)
-					else this['_interleaveData'].push(tInfo['tint'][0], tInfo['tint'][1], tInfo['tint'][2], 1)
+					newParticle = this['list'][i + i2] = new RedParticleUnit(tInfo['lifeTime']);
+					this['_interleaveData'].push(this.x, this.y, this.z);
+					this['_interleaveData'].push(0);
+					if ( tInfo['tint'] == 'random' ) this['_interleaveData'].push(Math.random(), Math.random(), Math.random(), 1);
+					else this['_interleaveData'].push(tInfo['tint'][0], tInfo['tint'][1], tInfo['tint'][2], 1);
 					// 룰추가
 					if ( tInfo['particle'] ) {
-						if ( tInfoParticle['movementX'] ) newParticle.addRule('movementX', tInfoParticle['movementX'])
-						if ( tInfoParticle['movementY'] ) newParticle.addRule('movementY', tInfoParticle['movementY'])
-						if ( tInfoParticle['movementZ'] ) newParticle.addRule('movementZ', tInfoParticle['movementZ'])
-						if ( tInfoParticle['scale'] ) newParticle.addRule('scale', tInfoParticle['scale'])
-						if ( tInfoParticle['alpha'] ) newParticle.addRule('alpha', tInfoParticle['alpha'])
+						if ( tInfoParticle['movementX'] ) newParticle.addRule('movementX', tInfoParticle['movementX']);
+						if ( tInfoParticle['movementY'] ) newParticle.addRule('movementY', tInfoParticle['movementY']);
+						if ( tInfoParticle['movementZ'] ) newParticle.addRule('movementZ', tInfoParticle['movementZ']);
+						if ( tInfoParticle['scale'] ) newParticle.addRule('scale', tInfoParticle['scale']);
+						if ( tInfoParticle['alpha'] ) newParticle.addRule('alpha', tInfoParticle['alpha']);
 					}
 				}
 			}
 			//////////////////////////////////
-			i = this['list']['length']
+			i = this['list']['length'];
 			while ( i-- ) {
-				tParticle = this['list'][i]
+				tParticle = this['list'][i];
 				if ( !tParticle['startTime'] ) {
-					tParticle['startTime'] = time
-					tParticle['age'] = 0
+					tParticle['startTime'] = time;
+					tParticle['age'] = 0;
 				}
-				tParticle['age'] = time - tParticle['startTime']
-				lifeRatio = tParticle['age'] / tParticle['lifeTime']
-				tIndex = i * 8
+				tParticle['age'] = time - tParticle['startTime'];
+				lifeRatio = tParticle['age'] / tParticle['lifeTime'];
+				tIndex = i * 8;
 				if ( lifeRatio < 1 ) {
 					//////////////////////////////////
 					//////////////////////////////////
 					n = lifeRatio;
 					////////////////////////
-					if ( !tParticle['startCenter'] ) tParticle['startCenter'] = [this.x, this.y, this.z]
-					tTweenKeyList = 'movementX,movementY,movementZ,scale,alpha'.split(',')
-					i2 = tTweenKeyList.length
+					if ( !tParticle['startCenter'] ) tParticle['startCenter'] = [this.x, this.y, this.z];
+					tTweenKeyList = 'movementX,movementY,movementZ,scale,alpha'.split(',');
+					i2 = tTweenKeyList.length;
 					while ( i2-- ) {
-						tTweenKey = tTweenKeyList[i2]
+						tTweenKey = tTweenKeyList[i2];
 						n = lifeRatio;
 						// 트윈을 여기서 결정
-						tEase = tParticle[tTweenKey]['ease']
+						tEase = tParticle[tTweenKey]['ease'];
 						if ( tEase ) {
 							// QuintIn
 							tEase == 1 ? n = n * n * n * n * n :
@@ -219,42 +218,42 @@ var RedParticleEmitter;
 																																			) :
 																																		n;
 						}
-						if ( tTweenKey == 'movementX' ) tTargetIndex = 0
-						if ( tTweenKey == 'movementY' ) tTargetIndex = 1
-						if ( tTweenKey == 'movementZ' ) tTargetIndex = 2
-						if ( tTweenKey == 'scale' ) tTargetIndex = 3
-						if ( tTweenKey == 'alpha' ) tTargetIndex = 7
+						if ( tTweenKey == 'movementX' ) tTargetIndex = 0;
+						if ( tTweenKey == 'movementY' ) tTargetIndex = 1;
+						if ( tTweenKey == 'movementZ' ) tTargetIndex = 2;
+						if ( tTweenKey == 'scale' ) tTargetIndex = 3;
+						if ( tTweenKey == 'alpha' ) tTargetIndex = 7;
 						if ( tTargetIndex < 3 ) {
-							this['_interleaveData'][tIndex + tTargetIndex] = tParticle['startCenter'][tTargetIndex] + tParticle[tTweenKey]['start'] + tParticle[tTweenKey]['gap'] * n
+							this['_interleaveData'][tIndex + tTargetIndex] = tParticle['startCenter'][tTargetIndex] + tParticle[tTweenKey]['start'] + tParticle[tTweenKey]['gap'] * n;
 						} else {
-							this['_interleaveData'][tIndex + tTargetIndex] = tParticle[tTweenKey]['start'] + tParticle[tTweenKey]['gap'] * n
+							this['_interleaveData'][tIndex + tTargetIndex] = tParticle[tTweenKey]['start'] + tParticle[tTweenKey]['gap'] * n;
 						}
 						// 중력계산
-						if ( tInfo['gravity'] ) tParticle['_gravitySum'] -= tInfo['gravity']
-						this['_interleaveData'][tIndex + 1] += tParticle['_gravitySum']
+						if ( tInfo['gravity'] ) tParticle['_gravitySum'] -= tInfo['gravity'];
+						this['_interleaveData'][tIndex + 1] += tParticle['_gravitySum'];
 					}
 				} else {
-					this['_interleaveData'][tIndex + 0] = tParticle['startCenter'][0] = this.x
-					this['_interleaveData'][tIndex + 1] = tParticle['startCenter'][1] = this.y
-					this['_interleaveData'][tIndex + 2] = tParticle['startCenter'][2] = this.z
-					this['_interleaveData'][tIndex + 3] = tParticle['scale']['start']
+					this['_interleaveData'][tIndex + 0] = tParticle['startCenter'][0] = this.x;
+					this['_interleaveData'][tIndex + 1] = tParticle['startCenter'][1] = this.y;
+					this['_interleaveData'][tIndex + 2] = tParticle['startCenter'][2] = this.z;
+					this['_interleaveData'][tIndex + 3] = tParticle['scale']['start'];
 					if ( tInfo['tint'] == 'random' ) {
-						this['_interleaveData'][tIndex + 4] = Math.random()
-						this['_interleaveData'][tIndex + 5] = Math.random()
-						this['_interleaveData'][tIndex + 6] = Math.random()
+						this['_interleaveData'][tIndex + 4] = Math.random();
+						this['_interleaveData'][tIndex + 5] = Math.random();
+						this['_interleaveData'][tIndex + 6] = Math.random();
 					} else {
-						this['_interleaveData'][tIndex + 4] = tInfo['tint'][0]
-						this['_interleaveData'][tIndex + 5] = tInfo['tint'][1]
-						this['_interleaveData'][tIndex + 6] = tInfo['tint'][2]
+						this['_interleaveData'][tIndex + 4] = tInfo['tint'][0];
+						this['_interleaveData'][tIndex + 5] = tInfo['tint'][1];
+						this['_interleaveData'][tIndex + 6] = tInfo['tint'][2];
 					}
-					this['_interleaveData'][tIndex + 7] = tParticle['alpha']['start']
-					tParticle['_gravitySum'] = 0
-					tParticle['startTime'] = null
-					tParticle['age'] = -1
+					this['_interleaveData'][tIndex + 7] = tParticle['alpha']['start'];
+					tParticle['_gravitySum'] = 0;
+					tParticle['startTime'] = null;
+					tParticle['age'] = -1;
 				}
 			}
 			this['geometry']['interleaveBuffer'].upload(new Float32Array(this['_interleaveData']))
 		}
-	})()
+	})();
 	Object.freeze(RedParticleEmitter);
 })();

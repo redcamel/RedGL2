@@ -1,5 +1,46 @@
 [
   {
+    "title": "addLOD",
+    "code": "METHOD",
+    "description": "\nLOD 추가\n",
+    "params": {
+      "level": [
+        {
+          "type": "int"
+        }
+      ],
+      "distance": [
+        {
+          "type": "Number"
+        }
+      ],
+      "geometry": [
+        {
+          "type": "RedGeometry 확장 Instance"
+        }
+      ],
+      "material": [
+        {
+          "type": "RedBaseMaterial 확장 Instance"
+        }
+      ]
+    },
+    "return": "void"
+  },
+  {
+    "title": "addLOD",
+    "code": "METHOD",
+    "description": "\nLOD 삭제\n",
+    "params": {
+      "level": [
+        {
+          "type": "int"
+        }
+      ]
+    },
+    "return": "void"
+  },
+  {
     "title": "blendDst",
     "description": "\n블렌드 목표값 factor\n기본값 : gl.ONE_MINUS_SRC_ALPHA\n",
     "return": "gl 상수"
@@ -39,6 +80,11 @@
     "code": "METHOD",
     "description": "\n로컬좌표를 RedWorld 좌표로 변경\n",
     "return": "Array"
+  },
+  {
+    "title": "matrix",
+    "description": "\nmatrix 자동계산여부\n",
+    "return": "mat4"
   },
   {
     "title": "matrix",
@@ -118,6 +164,11 @@
     "title": "useDepthTest",
     "description": "\n뎁스 테스트 사용여부\n기본값 : true\n",
     "return": "Boolean"
+  },
+  {
+    "title": "useLOD",
+    "description": "LOD사용여부",
+    "return": "Array"
   },
   {
     "title": "worldToLocal",

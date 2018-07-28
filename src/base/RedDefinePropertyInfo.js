@@ -3,7 +3,8 @@ var RedDefinePropertyInfo;
 (function () {
 	RedDefinePropertyInfo = {
 		//Object3D
-		geometry: (function () {
+		//TODO: geometry, material도 간소화할수있겠당..귀찮;
+		GEOMETRY: (function () {
 			return {
 				get: function () { return this['_geometry']; },
 				set: function (v) {
@@ -16,7 +17,7 @@ var RedDefinePropertyInfo;
 				}
 			}
 		})(),
-		material: (function () {
+		MATERIAL: (function () {
 			return {
 				get: function () { return this['_material']; },
 				set: function (v) {
@@ -37,7 +38,7 @@ var RedDefinePropertyInfo;
 						if ( !(v instanceof RedColorMaterial) ) {
 							RedGLUtil.throwFunc('RedLine : RedColorMaterial Instance만 허용됩니다.', '입력값 : ' + v)
 						}
-					}  else if ( this instanceof RedPointUnit ) {
+					} else if ( this instanceof RedPointUnit ) {
 						if ( !(v instanceof RedPointColorMaterial) && !(v instanceof RedPointBitmapMaterial) ) {
 							RedGLUtil.throwFunc('RedPointUnit : material - RedPointColorMaterial Instance or RedPointBitmapMaterial Instance만 허용됩니다.')
 						}
@@ -171,39 +172,5 @@ var RedDefinePropertyInfo;
 	RedDefinePropertyInfo['definePrototype'] = function (clsName, name, type, option) {
 		maker(window[clsName]['prototype'], clsName, name, type, option)
 	}
-	Object.defineProperty(RedDefinePropertyInfo, 'color', {
-		get: function () {
-			var _v = '#ff2211'
-			return {
-				get: function () { return _v },
-				set: (function () {
-					var t0;
-					return function (hex) {
-						_v = hex ? hex : '#ff2211';
-						console.log(_v)
-						t0 = RedGLUtil.hexToRGB_ZeroToOne.call(this, _v);
-						this['_color'][0] = t0[0];
-						this['_color'][1] = t0[1];
-						this['_color'][2] = t0[2];
-						this['_color'][3] = this['alpha'];
-					}
-				})()
-			}
-		}
-	})
-	Object.defineProperty(RedDefinePropertyInfo, 'alpha', {
-		get: function () {
-			var _v = 1
-			return {
-				get: function () { return _v; },
-				set: function (v) {
-					if ( typeof v != 'number' ) RedGLUtil.throwFunc('alpha : 0~1 숫자만 허용함.')
-					if ( v < 0 ) v = 0;
-					if ( v > 1 ) v = 1
-					this['_color'][3] = _v = v
-				}
-			}
-		}
-	})
 	Object.freeze(RedDefinePropertyInfo);
 })();
