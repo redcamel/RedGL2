@@ -1,59 +1,7 @@
 "use strict";
 var RedDefinePropertyInfo;
 (function () {
-	RedDefinePropertyInfo = {
-		//Object3D
-		//TODO: geometry, material도 간소화할수있겠당..귀찮;
-		GEOMETRY: (function () {
-			return {
-				get: function () { return this['_geometry']; },
-				set: function (v) {
-					if ( this instanceof RedSkyBox ) {
-						v instanceof RedBox || RedGLUtil.throwFunc('RedSkyBox : geometry - RedBox Instance만 허용됩니다.', '입력값 : ' + v)
-					} else {
-						if ( v && !(v instanceof RedGeometry) ) RedGLUtil.throwFunc('geometry : RedGeometry Instance만 허용됩니다.', '입력값 : ' + v)
-					}
-					this['_geometry'] = v
-				}
-			}
-		})(),
-		MATERIAL: (function () {
-			return {
-				get: function () { return this['_material']; },
-				set: function (v) {
-					if ( this instanceof RedSprite3D ) {
-						if (
-							!(v instanceof RedColorMaterial)
-							&& !(v instanceof RedBitmapMaterial)
-							&& !(v instanceof RedSheetMaterial)
-							&& !(v instanceof RedVideoMaterial)
-						) {
-							RedGLUtil.throwFunc('RedSprite3D : RedColorMaterial or RedBitmapMaterial or RedSheetMaterial Instance만 허용됩니다.', '입력값 : ' + v)
-						}
-					} else if ( this instanceof RedSkyBox ) {
-						if ( !(v instanceof RedSkyBoxMaterial) ) {
-							RedGLUtil.throwFunc('RedSkyBox : RedSkyBoxMaterial Instance만 허용됩니다.', '입력값 : ' + v)
-						}
-					} else if ( this instanceof RedLine ) {
-						if ( !(v instanceof RedColorMaterial) ) {
-							RedGLUtil.throwFunc('RedLine : RedColorMaterial Instance만 허용됩니다.', '입력값 : ' + v)
-						}
-					} else if ( this instanceof RedPointUnit ) {
-						if ( !(v instanceof RedPointColorMaterial) && !(v instanceof RedPointBitmapMaterial) ) {
-							RedGLUtil.throwFunc('RedPointUnit : material - RedPointColorMaterial Instance or RedPointBitmapMaterial Instance만 허용됩니다.')
-						}
-					} else if ( this instanceof RedParticleEmitter ) {
-						if ( !(v instanceof RedParticleColorMaterial) && !(v instanceof RedParticleBitmapMaterial) ) {
-							RedGLUtil.throwFunc('RedParticleEmitter : material - RedParticleColorMaterial Instance or RedParticleBitmapMaterial Instance만 허용됩니다.')
-						}
-					} else {
-						if ( v && !(v instanceof RedBaseMaterial) ) RedGLUtil.throwFunc('material : RedBaseMaterial Instance만 허용됩니다.', '입력값 : ' + v)
-					}
-					this['_material'] = v
-				}
-			}
-		})()
-	}
+	RedDefinePropertyInfo = {};
 	var maker;
 	maker = function (targetObject, clsName, name, type, option) {
 		var result;
