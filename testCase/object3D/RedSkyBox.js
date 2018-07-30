@@ -77,21 +77,9 @@ RedGL(document.createElement('canvas'), function (v) {
 		),
 		redGroup(
 			"(RedSkyBox Instance).<b>geometry</b> = value",
-			redTest("성공테스트 : set 테스트", function (unit, title) {
-				var tGeo = RedBox(tRedGL)
-				var t0 = RedSkyBox(tRedGL, tSrcList);
-				t0['geometry'] = tGeo
-				unit.run(t0['geometry'] == tGeo)
-			}, true),
-			redTest("성공테스트 : set 테스트", function (unit, title) {
-				var tGeo = RedBox(tRedGL)
-				var t0 = RedSkyBox(tRedGL, tSrcList);
-				t0['geometry'] = tGeo
-				unit.run(t0['_geometry'] == tGeo)
-			}, true),
-			redTest("실패테스트 : set 테스트 : RedBox Instance가 아닌녀석을 지오메트리로 입력 할 경우", function (unit, title) {
+			redTest("실패테스트 : 임의설정을 허용하지 않음", function (unit, title) {
 				try {
-					var tGeo = RedPlane(tRedGL)
+					var tGeo = RedBox(tRedGL)
 					var t0 = RedSkyBox(tRedGL, tSrcList);
 					t0['geometry'] = tGeo
 					unit.run(t0['_geometry'] == tGeo)

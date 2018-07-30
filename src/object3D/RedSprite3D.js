@@ -57,7 +57,19 @@ var RedSprite3D;
 	RedSprite3D.prototype = new RedBaseContainer();
 	RedDefinePropertyInfo.definePrototype('RedSprite3D', 'perspectiveScale', 'boolean', true);
 	RedDefinePropertyInfo.definePrototype('RedSprite3D', 'sprite3DYn', 'boolean', true);
-	RedDefinePropertyInfo.definePrototype_GEOMETRY(RedSprite3D);
-	RedDefinePropertyInfo.definePrototype_MATERIAL(RedSprite3D);
+	Object.defineProperty(RedSprite3D.prototype, 'material', {
+		get: function () { return this['_material']; },
+		set: function (v) {
+			if (
+				!(v instanceof RedColorMaterial)
+				&& !(v instanceof RedBitmapMaterial)
+				&& !(v instanceof RedSheetMaterial)
+				&& !(v instanceof RedVideoMaterial)
+			) {
+				RedGLUtil.throwFunc('RedSprite3D : RedColorMaterial or RedBitmapMaterial or RedSheetMaterial Instance만 허용됩니다.', '입력값 : ' + v)
+			}
+			this['_material'] = v;
+		}
+	});
 	Object.freeze(RedSprite3D);
 })();

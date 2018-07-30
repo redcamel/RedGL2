@@ -418,7 +418,19 @@ var RedBaseObject3D;
 	// RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'rotationX', 'number');
 	// RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'rotationY', 'number');
 	// RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'rotationZ', 'number');
-	RedDefinePropertyInfo.definePrototype_GEOMETRY(RedBaseObject3D);
-	RedDefinePropertyInfo.definePrototype_MATERIAL(RedBaseObject3D);
+	Object.defineProperty(RedBaseObject3D.prototype, 'geometry', {
+		get: function () { return this['_geometry']; },
+		set: function (v) {
+			if ( v && !(v instanceof RedGeometry) ) RedGLUtil.throwFunc('geometry : RedGeometry Instance만 허용됩니다.', '입력값 : ' + v);
+			this['_geometry'] = v
+		}
+	});
+	Object.defineProperty(RedBaseObject3D.prototype, 'material', {
+		get: function () { return this['_material']; },
+		set: function (v) {
+			if ( v && !(v instanceof RedBaseMaterial) ) RedGLUtil.throwFunc('material : RedBaseMaterial Instance만 허용됩니다.', '입력값 : ' + v)
+			this['_material'] = v
+		}
+	});
 	Object.freeze(RedBaseObject3D);
 })();

@@ -43,7 +43,6 @@ var RedLine;
 		material = material || RedColorMaterial(redGL);
 		material instanceof RedColorMaterial || RedGLUtil.throwFunc('RedLine : RedColorMaterial Instance만 허용됩니다.');
 		var tGL;
-		// var indexData, indexBuffer;
 		tGL = redGL.gl;
 		RedBaseObject3D['build'].call(this, tGL);
 		this['_interleaveData'] = [];
@@ -67,7 +66,6 @@ var RedLine;
 		this['geometry'] = RedGeometry(this['_interleaveBuffer'] /*,this['_indexBuffer']*/);
 		this['material'] = material;
 		this['drawMode'] = tGL.LINE_STRIP;
-		// console.log(this);
 	};
 	RedLine.prototype = new RedBaseContainer();
 	/**DOC:
@@ -116,7 +114,19 @@ var RedLine;
 		this['_interleaveBuffer'].upload(new Float32Array(this['_interleaveData']));
 		// this['_indexBuffer']['upload'](new Uint16Array(this['_indexData']));
 	};
-	RedDefinePropertyInfo.definePrototype_GEOMETRY(RedLine);
-	RedDefinePropertyInfo.definePrototype_MATERIAL(RedLine);
+	Object.defineProperty(RedLine.prototype, 'geometry', {
+		get: function () { return this['_geometry']; },
+		set: function (v) {
+			if ( this['_geometry'] ) RedGLUtil.throwFunc('RedLine : geometry - 임의로 설정을 허용하지 않음', '입력값 : ' + v);
+			this['_geometry'] = v;
+		}
+	});
+	Object.defineProperty(RedLine.prototype, 'material', {
+		get: function () { return this['_material']; },
+		set: function (v) {
+			v instanceof RedColorMaterial || RedGLUtil.throwFunc('RedLine : RedColorMaterial Instance만 허용됩니다.', '입력값 : ' + v);
+			this['_material'] = v;
+		}
+	});
 	Object.freeze(RedLine);
 })();

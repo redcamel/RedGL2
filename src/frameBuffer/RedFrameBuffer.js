@@ -1,25 +1,49 @@
 "use strict";
 var RedFrameBuffer;
 (function () {
+	/**DOC:
+	 {
+		 constructorYn : true,
+		 title :`RedFrameBuffer`,
+		 description : `
+			 RedFrameBuffer Instance 생성자
+		 `,
+		 params : {
+	         redGL : [
+				 {type:'RedGL Instance'}
+			 ],
+			 width : [
+				 {type:'Number'}
+			 ],
+			 height : [
+				 {type:'Number'}
+			 ]
+		 },
+		 example : `
+			 RedFrameBuffer( RedGL Instance );
+		 `,
+		 return : 'RedGeometry Instance'
+	 }
+	 :DOC*/
 	RedFrameBuffer = function (redGL, width, height) {
-		if ( !(this instanceof RedFrameBuffer) ) return new RedFrameBuffer(redGL, width, height)
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedFrameBuffer : RedGL Instance만 허용됩니다.', redGL)
+		if ( !(this instanceof RedFrameBuffer) ) return new RedFrameBuffer(redGL, width, height);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedFrameBuffer : RedGL Instance만 허용됩니다.', redGL);
 		var gl;
 		gl = redGL['gl'];
 		width = width || 1920;
 		height = height || 1080;
-		if ( width > 2048 ) width = 2048
-		if ( height > 2048 ) height = 2048
-		this['redGL'] = redGL
+		if ( width > redGL['_detect']['MAX_TEXTURE_SIZE'] ) width = redGL['_detect']['MAX_TEXTURE_SIZE'];
+		if ( height > redGL['_detect']['MAX_TEXTURE_SIZE'] ) height = redGL['_detect']['MAX_TEXTURE_SIZE'];
+		this['redGL'] = redGL;
 		this['width'] = width;
 		this['height'] = height;
 		this['webglFrameBuffer'] = gl.createFramebuffer();
 		this['webglRenderBuffer'] = gl.createRenderbuffer();
-		this['texture'] = RedBitmapTexture(redGL)
+		this['texture'] = RedBitmapTexture(redGL);
 		this['_UUID'] = RedGL.makeUUID();
 		gl.bindFramebuffer(gl.FRAMEBUFFER, this['webglFrameBuffer']);
 		// 텍스쳐 세팅
-		gl.activeTexture(gl.TEXTURE0)
+		gl.activeTexture(gl.TEXTURE0);
 		gl.bindTexture(gl.TEXTURE_2D, this['texture']['webglTexture']);
 		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this['width'], this['height'], 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
@@ -38,11 +62,11 @@ var RedFrameBuffer;
 		gl.bindRenderbuffer(gl.RENDERBUFFER, null);
 		gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 		console.log(this)
-	}
+	};
 	RedFrameBuffer.prototype = {
 		bind: function (gl) {
 			gl.bindFramebuffer(gl.FRAMEBUFFER, this['webglFrameBuffer']);
-			gl.activeTexture(gl.TEXTURE0)
+			gl.activeTexture(gl.TEXTURE0);
 			gl.bindTexture(gl.TEXTURE_2D, this['texture']['webglTexture']);
 			gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this['width'], this['height'], 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
 			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
@@ -61,6 +85,6 @@ var RedFrameBuffer;
 			gl.bindRenderbuffer(gl.RENDERBUFFER, null);
 			gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 		}
-	}
+	};
 	Object.freeze(RedFrameBuffer);
 })();

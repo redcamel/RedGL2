@@ -40,9 +40,22 @@ var RedSkyBox;
 		this['material'] = RedSkyBoxMaterial(redGL, RedBitmapCubeTexture(redGL, srcList));
 		this['cullFace'] = redGL.gl.FRONT;
 		this['_UUID'] = RedGL.makeUUID();
+		console.log(this);
 	};
 	RedSkyBox.prototype = new RedBaseObject3D();
-	RedDefinePropertyInfo.definePrototype_GEOMETRY(RedSkyBox);
-	RedDefinePropertyInfo.definePrototype_MATERIAL(RedSkyBox);
+	Object.defineProperty(RedSkyBox.prototype, 'geometry', {
+		get: function () { return this['_geometry']; },
+		set: function (v) {
+			if ( this['_geometry'] ) RedGLUtil.throwFunc('RedSkyBox : geometry - 임의로 설정을 허용하지 않음', '입력값 : ' + v);
+			this['_geometry'] = v;
+		}
+	});
+	Object.defineProperty(RedSkyBox.prototype, 'material', {
+		get: function () { return this['_material']; },
+		set: function (v) {
+			v instanceof RedSkyBoxMaterial || RedGLUtil.throwFunc('RedSkyBox : RedSkyBoxMaterial Instance만 허용됩니다.', '입력값 : ' + v);
+			this['_material'] = v;
+		}
+	});
 	Object.freeze(RedSkyBox);
 })();
