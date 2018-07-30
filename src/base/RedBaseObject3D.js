@@ -202,8 +202,6 @@ var RedBaseObject3D;
 			}
 			*/
 		};
-		Object.defineProperty(this, 'geometry', RedDefinePropertyInfo['GEOMETRY']);
-		Object.defineProperty(this, 'material', RedDefinePropertyInfo['MATERIAL']);
 	};
 	RedBaseObject3D.prototype = {
 		/**DOC:
@@ -420,5 +418,98 @@ var RedBaseObject3D;
 	// RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'rotationX', 'number');
 	// RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'rotationY', 'number');
 	// RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'rotationZ', 'number');
+	Object.defineProperty(RedBaseObject3D.prototype, 'geometry', (function (cls) {
+		switch ( cls ) {
+			case cls == RedBaseObject3D :
+				return {
+					get: function () { return this['_geometry']; },
+					set: function (v) {
+						v instanceof RedBox || RedGLUtil.throwFunc('RedSkyBox : geometry - RedBox Instance만 허용됩니다.', '입력값 : ' + v);
+						this['_geometry'] = v;
+					}
+				}
+				break
+			default :
+				return {
+					get: function () { return this['_geometry']; },
+					set: function (v) {
+						if ( v && !(v instanceof RedGeometry) ) RedGLUtil.throwFunc('geometry : RedGeometry Instance만 허용됩니다.', '입력값 : ' + v);
+						this['_geometry'] = v
+					}
+				}
+		}
+	})());
+	Object.defineProperty(RedBaseObject3D.prototype, 'material', (function (cls) {
+		switch ( cls ) {
+			case cls == window['RedSprite3D'] :
+				return {
+					get: function () { return this['_material']; },
+					set: function (v) {
+						if (
+							!(v instanceof RedColorMaterial)
+							&& !(v instanceof RedBitmapMaterial)
+							&& !(v instanceof RedSheetMaterial)
+							&& !(v instanceof RedVideoMaterial)
+						) {
+							RedGLUtil.throwFunc('RedSprite3D : RedColorMaterial or RedBitmapMaterial or RedSheetMaterial Instance만 허용됩니다.', '입력값 : ' + v)
+						}
+						this['_material'] = v;
+					}
+				}
+				break
+			case cls == window['RedSkyBox'] :
+				return {
+					get: function () { return this['_material']; },
+					set: function (v) {
+						if ( !(v instanceof RedSkyBoxMaterial) ) {
+							RedGLUtil.throwFunc('RedSkyBox : RedSkyBoxMaterial Instance만 허용됩니다.', '입력값 : ' + v)
+						}
+						this['_material'] = v;
+					}
+				}
+				break
+			case cls == window['RedLine'] :
+				return {
+					get: function () { return this['_material']; },
+					set: function (v) {
+						if ( !(v instanceof RedColorMaterial) ) {
+							RedGLUtil.throwFunc('RedLine : RedColorMaterial Instance만 허용됩니다.', '입력값 : ' + v)
+						}
+						this['_material'] = v;
+					}
+				}
+				break
+			case cls == window['RedPointUnit'] :
+				return {
+					get: function () { return this['_material']; },
+					set: function (v) {
+						if ( !(v instanceof RedPointColorMaterial) && !(v instanceof RedPointBitmapMaterial) ) {
+							RedGLUtil.throwFunc('RedPointUnit : material - RedPointColorMaterial Instance or RedPointBitmapMaterial Instance만 허용됩니다.')
+						}
+						this['_material'] = v;
+					}
+				}
+				break
+			case cls == window['RedParticleEmitter'] :
+				return {
+					get: function () { return this['_material']; },
+					set: function (v) {
+						if ( !(v instanceof RedParticleColorMaterial) && !(v instanceof RedParticleBitmapMaterial) ) {
+							RedGLUtil.throwFunc('RedParticleEmitter : material - RedParticleColorMaterial Instance or RedParticleBitmapMaterial Instance만 허용됩니다.')
+						}
+						this['_material'] = v;
+					}
+				}
+				break
+			default :
+				return {
+					get: function () { return this['_material']; },
+					set: function (v) {
+						if ( v && !(v instanceof RedBaseMaterial) ) RedGLUtil.throwFunc('material : RedBaseMaterial Instance만 허용됩니다.', '입력값 : ' + v)
+						this['_material'] = v
+					}
+				}
+		}
+	})());
 	Object.freeze(RedBaseObject3D);
 })();
