@@ -57,5 +57,7 @@ var RedSprite3D;
 	RedSprite3D.prototype = new RedBaseContainer();
 	RedDefinePropertyInfo.definePrototype('RedSprite3D', 'perspectiveScale', 'boolean', true);
 	RedDefinePropertyInfo.definePrototype('RedSprite3D', 'sprite3DYn', 'boolean', true);
+	RedDefinePropertyInfo.definePrototype_GEOMETRY(RedSprite3D);
+	RedDefinePropertyInfo.definePrototype_MATERIAL(RedSprite3D);
 	Object.freeze(RedSprite3D);
 })();

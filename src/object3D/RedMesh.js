@@ -52,5 +52,7 @@ var RedMesh;
 		this['_UUID'] = RedGL.makeUUID();
 	};
 	RedMesh.prototype = new RedBaseContainer();
+	RedDefinePropertyInfo.definePrototype_GEOMETRY(RedMesh);
+	RedDefinePropertyInfo.definePrototype_MATERIAL(RedMesh);
 	Object.freeze(RedMesh);
 })();

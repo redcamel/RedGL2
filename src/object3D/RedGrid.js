@@ -165,5 +165,7 @@ var RedGrid;
 			return this['_color2']
 		}
 	});
+	RedDefinePropertyInfo.definePrototype_GEOMETRY(RedGrid);
+	RedDefinePropertyInfo.definePrototype_MATERIAL(RedGrid);
 	Object.freeze(RedGrid);
 })();
