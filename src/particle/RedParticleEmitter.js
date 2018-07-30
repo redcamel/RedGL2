@@ -252,8 +252,24 @@ var RedParticleEmitter;
 					tParticle['age'] = -1;
 				}
 			}
-			this['geometry']['interleaveBuffer'].upload(new Float32Array(this['_interleaveData']))
+			this['_geometry']['interleaveBuffer'].upload(new Float32Array(this['_interleaveData']))
 		}
 	})();
+	Object.defineProperty(RedParticleUnit.prototype, 'geometry', {
+		get: function () { return this['_geometry']; },
+		set: function (v) {
+			if ( this['_geometry'] ) RedGLUtil.throwFunc('RedParticleUnit : geometry - 임의로 설정을 허용하지 않음', '입력값 : ' + v);
+			this['_geometry'] = v;
+		}
+	});
+	Object.defineProperty(RedParticleUnit.prototype, 'material', {
+		get: function () { return this['_material']; },
+		set: function (v) {
+			v instanceof RedParticleColorMaterial
+			|| v instanceof RedParticleBitmapMaterial
+			|| RedGLUtil.throwFunc('RedParticleEmitter : material - RedParticleColorMaterial Instance or RedParticleBitmapMaterial Instance만 허용됩니다.');
+			this['_material'] = v;
+		}
+	});
 	Object.freeze(RedParticleEmitter);
 })();

@@ -103,8 +103,8 @@ var RedGrid;
 	 }
 	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedGrid', 'size', 'number', {
-		'min': 1,
-		'callback': function () {this['_update']()}
+		min: 1,
+		callback: function () {this['_update']()}
 	});
 	/**DOC:
 	 {
@@ -120,8 +120,8 @@ var RedGrid;
 	 }
 	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedGrid', 'divisions', 'number', {
-		'min': 1,
-		'callback': function () {this['_update']()}
+		min: 1,
+		callback: function () {this['_update']()}
 	});
 	/**DOC:
 	 {
@@ -165,7 +165,12 @@ var RedGrid;
 			return this['_color2']
 		}
 	});
-	RedDefinePropertyInfo.definePrototype_GEOMETRY(RedGrid);
-	RedDefinePropertyInfo.definePrototype_MATERIAL(RedGrid);
+	Object.defineProperty(RedGrid.prototype, 'material', {
+		get: function () { return this['_material']; },
+		set: function (v) {
+			v instanceof RedGridMaterial || RedGLUtil.throwFunc('RedGrid : RedGridMaterial Instance만 허용됩니다.', '입력값 : ' + v);
+			this['_material'] = v;
+		}
+	});
 	Object.freeze(RedGrid);
 })();

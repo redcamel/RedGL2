@@ -229,9 +229,9 @@
 			while ( i-- ) {
 				if ( i == 0 ) break
 				testMesh = tScene3D.children[i]
-				testMesh._rotationX += 0.3
-				testMesh._rotationY += 0.3
-				testMesh._rotationZ += 0.3
+				testMesh.rotationX += 0.3
+				testMesh.rotationY += 0.3
+				testMesh.rotationZ += 0.3
 			}
 			tProgramDom.innerHTML = '현재프로그램 : ' + (tScene3D['useFog'] ? testMaterial['_programList']['fog'][testMaterial['program']['key']]['key'] : testMaterial['program']['key'])
 			testDLight.x = Math.sin(time / 1500) * 10

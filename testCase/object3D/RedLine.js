@@ -32,6 +32,23 @@ RedGL(document.createElement('canvas'), function (v) {
 			}, false)
 		),
 		redGroup(
+			"(RedLine Instance).<b>geometry</b> = value",
+			redTest("실패테스트 : 임의설정을 허용하지 않음", function (unit, title) {
+				try {
+					var tGeo = RedBox(tRedGL)
+					var t0 = RedLine(tRedGL, RedColorMaterial(tRedGL));
+					t0['geometry'] = tGeo
+					unit.run(t0['_geometry'] == tGeo)
+					console.log(t0)
+					unit.run(true)
+				} catch ( error ) {
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
+					unit.run(false)
+				}
+			}, false)
+		),
+		redGroup(
 			"RedLine( redGL, <b>material</b> )",
 			redTest("성공테스트 : 미입력 했을경우 자동으로 RedColorMaterial 생성", function (unit, title) {
 				try {
@@ -88,7 +105,7 @@ RedGL(document.createElement('canvas'), function (v) {
 			}, false)
 		),
 		redGroup(
-			"(RedLine Instance).addPoint( x, y, z )",
+			"(RedLine Instance).<b>addPoint</b>( x, y, z )",
 			redTest("성공테스트 : 동작확인", function (unit, title) {
 				var t0 = RedLine(tRedGL, RedColorMaterial(tRedGL));
 				t0.addPoint(1, 2, 3)
@@ -134,7 +151,7 @@ RedGL(document.createElement('canvas'), function (v) {
 			}, false)
 		),
 		redGroup(
-			"(RedLine Instance).removeAllPoint()",
+			"(RedLine Instance).<b>removeAllPoint</b>()",
 			redTest("성공테스트 : 동작확인", function (unit, title) {
 				var t0 = RedLine(tRedGL, RedColorMaterial(tRedGL));
 				t0.addPoint(1, 2, 3)
