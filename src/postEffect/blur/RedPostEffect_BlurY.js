@@ -81,9 +81,7 @@ var RedPostEffect_BlurY;
 		this.checkUniformAndProperty();
 		console.log(this);
 	}
-	RedPostEffect_BlurY.prototype = new RedBaseMaterial();
-	RedPostEffect_BlurY.prototype['bind'] = RedPostEffectManager.prototype['bind'];
-	RedPostEffect_BlurY.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
+	RedPostEffect_BlurY.prototype = new RedBasePostEffect();
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_BlurY', 'size', 'number', {'min': 0})
 	Object.freeze(RedPostEffect_BlurY);
 })();

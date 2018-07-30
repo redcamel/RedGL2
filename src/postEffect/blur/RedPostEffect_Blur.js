@@ -68,8 +68,6 @@ var RedPostEffect_Blur;
 		this.checkUniformAndProperty();
 		console.log(this);
 	}
-	RedPostEffect_Blur.prototype = new RedBaseMaterial();
-	RedPostEffect_Blur.prototype['bind'] = RedPostEffectManager.prototype['bind'];
-	RedPostEffect_Blur.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
+	RedPostEffect_Blur.prototype = new RedBasePostEffect();
 	Object.freeze(RedPostEffect_Blur);
 })();

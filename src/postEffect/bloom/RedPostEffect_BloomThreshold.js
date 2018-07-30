@@ -80,8 +80,6 @@ var RedPostEffect_BloomThreshold;
 		this.checkUniformAndProperty();
 		console.log(this);
 	}
-	RedPostEffect_BloomThreshold.prototype = new RedBaseMaterial();
-	RedPostEffect_BloomThreshold.prototype['bind'] = RedPostEffectManager.prototype['bind'];
-	RedPostEffect_BloomThreshold.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
+	RedPostEffect_BloomThreshold.prototype = new RedBasePostEffect();
 	Object.freeze(RedPostEffect_BloomThreshold);
 })();

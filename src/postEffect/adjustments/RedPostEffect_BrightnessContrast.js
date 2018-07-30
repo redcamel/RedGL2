@@ -104,8 +104,6 @@ var RedPostEffect_BrightnessContrast;
 		this.checkUniformAndProperty();
 		console.log(this);
 	}
-	RedPostEffect_BrightnessContrast.prototype = new RedBaseMaterial();
-	RedPostEffect_BrightnessContrast.prototype['bind'] = RedPostEffectManager.prototype['bind'];
-	RedPostEffect_BrightnessContrast.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
+	RedPostEffect_BrightnessContrast.prototype = new RedBasePostEffect();
 	Object.freeze(RedPostEffect_BrightnessContrast);
 })();

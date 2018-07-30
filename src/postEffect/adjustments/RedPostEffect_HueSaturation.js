@@ -115,8 +115,6 @@ var RedPostEffect_HueSaturation;
 		this.checkUniformAndProperty();
 		console.log(this);
 	}
-	RedPostEffect_HueSaturation.prototype = RedBaseMaterial.prototype
-	RedPostEffect_HueSaturation.prototype['bind'] = RedPostEffectManager.prototype['bind'];
-	RedPostEffect_HueSaturation.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
+	RedPostEffect_HueSaturation.prototype = new RedBasePostEffect();
 	Object.freeze(RedPostEffect_HueSaturation);
 })();

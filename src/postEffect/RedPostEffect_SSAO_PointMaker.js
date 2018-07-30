@@ -140,8 +140,6 @@ var RedPostEffect_SSAO_PointMaker;
 		this.checkUniformAndProperty();
 		console.log(this);
 	}
-	RedPostEffect_SSAO_PointMaker.prototype = new RedBaseMaterial();
-	RedPostEffect_SSAO_PointMaker.prototype['bind'] = RedPostEffectManager.prototype['bind'];
-	RedPostEffect_SSAO_PointMaker.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
+	RedPostEffect_SSAO_PointMaker.prototype = new RedBasePostEffect();
 	Object.freeze(RedPostEffect_SSAO_PointMaker);
 })();

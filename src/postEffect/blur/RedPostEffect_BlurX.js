@@ -81,9 +81,7 @@ var RedPostEffect_BlurX;
 		this.checkUniformAndProperty();
 		console.log(this);
 	}
-	RedPostEffect_BlurX.prototype = new RedBaseMaterial();
-	RedPostEffect_BlurX.prototype['bind'] = RedPostEffectManager.prototype['bind'];
-	RedPostEffect_BlurX.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
+	RedPostEffect_BlurX.prototype = new RedBasePostEffect();
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_BlurX', 'size', 'number', {'min': 0})
 	Object.freeze(RedPostEffect_BlurX);
 })();

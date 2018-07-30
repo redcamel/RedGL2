@@ -126,9 +126,7 @@ var RedPostEffect_Bloom;
 		console.log(this);
 		this.checkUniformAndProperty();
 	}
-	RedPostEffect_Bloom.prototype = new RedBaseMaterial();
-	RedPostEffect_Bloom.prototype['bind'] = RedPostEffectManager.prototype['bind'];
-	RedPostEffect_Bloom.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
+	RedPostEffect_Bloom.prototype = new RedBasePostEffect();
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_Bloom', 'exposure', 'number', {'min': 0});
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_Bloom', 'bloomStrength', 'number', {'min': 0});
 	Object.freeze(RedPostEffect_Bloom);

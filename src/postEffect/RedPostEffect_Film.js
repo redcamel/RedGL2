@@ -125,9 +125,7 @@ var RedPostEffect_Film;
 		this.checkUniformAndProperty();
 		console.log(this);
 	}
-	RedPostEffect_Film.prototype = new RedBaseMaterial();
-	RedPostEffect_Film.prototype['bind'] = RedPostEffectManager.prototype['bind'];
-	RedPostEffect_Film.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
+	RedPostEffect_Film.prototype = new RedBasePostEffect();
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_Film', 'scanlineIntensity', 'number', {'min': 0});
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_Film', 'noiseIntensity', 'number', {'min': 0});
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_Film', 'scanlineCount', 'number', {'min': 0});
