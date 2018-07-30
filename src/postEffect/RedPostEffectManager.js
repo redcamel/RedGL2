@@ -90,7 +90,7 @@ var RedPostEffectManager;
 		}
 		 :DOC*/
 		addEffect: function (postEffect) {
-			postEffect instanceof RedBaseMaterial || RedGLUtil.throwFunc('RedPostEffectManager : addEffect - RedBaseMaterial Instance만 허용.', '입력값 : ' + postEffect);
+			postEffect instanceof RedBasePostEffect || RedGLUtil.throwFunc('RedPostEffectManager : addEffect - RedBasePostEffect Instance만 허용.', '입력값 : ' + postEffect);
 			this['postEffectList'].push(postEffect);
 		},
 		/**DOC:

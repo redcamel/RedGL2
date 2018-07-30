@@ -53,8 +53,6 @@ var RedPostEffect_Gray;
 		this.checkUniformAndProperty();
 		console.log(this);
 	}
-	RedPostEffect_Gray.prototype = new RedBaseMaterial();
-	RedPostEffect_Gray.prototype['bind'] = RedPostEffectManager.prototype['bind'];
-	RedPostEffect_Gray.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
+	RedPostEffect_Gray.prototype = new RedBasePostEffect();
 	Object.freeze(RedPostEffect_Gray);
 })();

@@ -85,9 +85,7 @@ var RedPostEffect_HalfTone;
 		this.checkUniformAndProperty();
 		console.log(this);
 	}
-	RedPostEffect_HalfTone.prototype = new RedBaseMaterial();
-	RedPostEffect_HalfTone.prototype['bind'] = RedPostEffectManager.prototype['bind'];
-	RedPostEffect_HalfTone.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
+	RedPostEffect_HalfTone.prototype = new RedBasePostEffect();
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_HalfTone', 'centerX', 'number')
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_HalfTone', 'centerY', 'number')
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_HalfTone', 'angle', 'number')

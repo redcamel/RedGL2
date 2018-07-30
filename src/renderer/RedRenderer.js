@@ -407,7 +407,7 @@ var RedRenderer;
 				}
 				if ( tGeometry ) {
 					tMaterial = subSceneMaterial ? subSceneMaterial : tMesh['_material'];
-					tDirectionalShadowMaterialYn = tMaterial['__RedDirectionalShadowYn'];
+					tDirectionalShadowMaterialYn = tMaterial['_RedDirectionalShadowYn'];
 					// SpriteSheet체크
 					if ( tMaterial['__RedSheetMaterialYn'] ) {
 						if ( !tMaterial['_nextFrameTime'] ) tMaterial['_nextFrameTime'] = tMaterial['_perFrameTime'] + time

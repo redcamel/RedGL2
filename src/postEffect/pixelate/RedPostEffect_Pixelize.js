@@ -83,9 +83,7 @@ var RedPostEffect_Pixelize;
 		this.checkUniformAndProperty();
 		console.log(this);
 	}
-	RedPostEffect_Pixelize.prototype = new RedBaseMaterial();
-	RedPostEffect_Pixelize.prototype['bind'] = RedPostEffectManager.prototype['bind'];
-	RedPostEffect_Pixelize.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
+	RedPostEffect_Pixelize.prototype = new RedBasePostEffect();
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_Pixelize', 'width', 'number', {'min': 0})
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_Pixelize', 'height', 'number', {'min': 0})
 	Object.freeze(RedPostEffect_Pixelize);

@@ -77,6 +77,7 @@ gulp.task('make-doc', function () {
 		"src/base/RedBaseLight.js",
 		"src/base/RedBaseTexture.js",
 		"src/base/RedBaseMaterial.js",
+		"src/base/RedBasePostEffect.js",
 		"src/detect/RedGLDetect.js",
 		"src/frameBuffer/RedFrameBuffer.js",
 		"src/geometry/RedBuffer.js",
@@ -267,6 +268,7 @@ gulp.task('combine-js', function () {
 		"src/text/RedText.js",
 		//이펙트
 		"src/postEffect/RedPostEffectManager.js",
+		"src/base/RedBasePostEffect.js",
 		"src/postEffect/bloom/RedPostEffect_Bloom.js",
 		"src/postEffect/bloom/RedPostEffect_BloomThreshold.js",
 		"src/postEffect/blur/RedPostEffect_Blur.js",

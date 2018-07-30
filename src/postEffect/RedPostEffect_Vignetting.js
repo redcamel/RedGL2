@@ -77,9 +77,7 @@ var RedPostEffect_Vignetting;
 		this.checkUniformAndProperty();
 		console.log(this);
 	}
-	RedPostEffect_Vignetting.prototype = new RedBaseMaterial();
-	RedPostEffect_Vignetting.prototype['bind'] = RedPostEffectManager.prototype['bind'];
-	RedPostEffect_Vignetting.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
+	RedPostEffect_Vignetting.prototype = new RedBasePostEffect();
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_Vignetting', 'intensity', 'number', {'min': 0});
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_Vignetting', 'size', 'number', {'min': 0});
 	Object.freeze(RedPostEffect_Vignetting);

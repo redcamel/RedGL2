@@ -96,8 +96,6 @@ var RedPostEffect_FXAA;
 		this.checkUniformAndProperty();
 		console.log(this);
 	}
-	RedPostEffect_FXAA.prototype = new RedBaseMaterial();
-	RedPostEffect_FXAA.prototype['bind'] = RedPostEffectManager.prototype['bind'];
-	RedPostEffect_FXAA.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
+	RedPostEffect_FXAA.prototype = new RedBasePostEffect();
 	Object.freeze(RedPostEffect_FXAA);
 })();

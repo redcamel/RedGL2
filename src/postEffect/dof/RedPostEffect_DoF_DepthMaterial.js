@@ -71,7 +71,7 @@ var RedPostEffect_DoF_DepthMaterial;
 		this.checkUniformAndProperty();
 		console.log(this);
 	}
-	RedPostEffect_DoF_DepthMaterial.prototype = new RedBaseMaterial()
+	RedPostEffect_DoF_DepthMaterial.prototype = new RedBasePostEffect()
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_DoF_DepthMaterial', 'focusLength', 'number', {'min': 0});
 	Object.freeze(RedPostEffect_DoF_DepthMaterial)
 })();

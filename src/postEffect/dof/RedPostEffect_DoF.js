@@ -117,9 +117,7 @@ var RedPostEffect_DoF;
 		this.checkUniformAndProperty();
 		console.log(this);
 	}
-	RedPostEffect_DoF.prototype = new RedBaseMaterial();
-	RedPostEffect_DoF.prototype['bind'] = RedPostEffectManager.prototype['bind'];
-	RedPostEffect_DoF.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
+	RedPostEffect_DoF.prototype = new RedBasePostEffect();
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_DoF', 'focusLength', 'number', {'min': 0});
 	Object.freeze(RedPostEffect_DoF);
 })();

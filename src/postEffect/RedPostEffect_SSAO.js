@@ -109,8 +109,6 @@ var RedPostEffect_SSAO;
 	RedPostEffect_SSAO['ONLY_NORMAL'] = 1
 	RedPostEffect_SSAO['ONLY_COLOR'] = 2
 	RedPostEffect_SSAO['COLOR_SSAO'] = 3
-	RedPostEffect_SSAO.prototype = new RedBaseMaterial();
-	RedPostEffect_SSAO.prototype['bind'] = RedPostEffectManager.prototype['bind'];
-	RedPostEffect_SSAO.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
+	RedPostEffect_SSAO.prototype = new RedBasePostEffect();
 	Object.freeze(RedPostEffect_SSAO);
 })();

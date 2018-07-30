@@ -50,7 +50,7 @@ RedGL(document.createElement('canvas'), function (v) {
 				t0.addEffect(tEffect0)
 				unit.run(t0['postEffectList'].length)
 			}, 2),
-			redTest("RedBaseMaterial Instance가 아닌녀석을 등록했을떄", function (unit, title) {
+			redTest("RedPostEffectManager Instance가 아닌녀석을 등록했을떄", function (unit, title) {
 				try {
 					var t0 = RedPostEffectManager(tRedGL);
 					var tEffect0 = 1;

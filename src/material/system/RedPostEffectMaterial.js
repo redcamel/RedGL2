@@ -8,7 +8,6 @@ var RedPostEffectMaterial;
 		/* @preserve
 		 void main(void) {
 			 vTexcoord = aTexcoord;
-
 			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
 		 }
 		 */
@@ -18,8 +17,7 @@ var RedPostEffectMaterial;
 		 precision mediump float;
 		 uniform sampler2D u_diffuseTexture;
 		 void main(void) {
-			 vec4 finalColor = texture2D(u_diffuseTexture, vTexcoord);
-			 gl_FragColor = finalColor;
+			 gl_FragColor = texture2D(u_diffuseTexture, vTexcoord);
 		 }
 		 */
 	};

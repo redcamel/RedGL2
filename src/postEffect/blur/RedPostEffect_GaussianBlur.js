@@ -53,6 +53,6 @@ var RedPostEffect_GaussianBlur;
 		this['radius'] = 1
 		console.log(this);
 	}
-	RedPostEffect_GaussianBlur.prototype = new RedBaseMaterial();
+	RedPostEffect_GaussianBlur.prototype = new RedBasePostEffect();
 	Object.freeze(RedPostEffect_GaussianBlur);
 })();
