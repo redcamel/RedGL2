@@ -42,5 +42,7 @@ var RedSkyBox;
 		this['_UUID'] = RedGL.makeUUID();
 	};
 	RedSkyBox.prototype = new RedBaseObject3D();
+	RedDefinePropertyInfo.definePrototype_GEOMETRY(RedSkyBox);
+	RedDefinePropertyInfo.definePrototype_MATERIAL(RedSkyBox);
 	Object.freeze(RedSkyBox);
 })();

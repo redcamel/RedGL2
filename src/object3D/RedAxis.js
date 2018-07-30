@@ -67,5 +67,7 @@ var RedAxis;
 		this['_UUID'] = RedGL.makeUUID();
 	};
 	RedAxis.prototype = new RedBaseContainer();
+	RedDefinePropertyInfo.definePrototype_GEOMETRY(RedAxis);
+	RedDefinePropertyInfo.definePrototype_MATERIAL(RedAxis);
 	Object.freeze(RedAxis);
 })();

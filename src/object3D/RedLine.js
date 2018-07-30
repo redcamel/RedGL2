@@ -116,5 +116,7 @@ var RedLine;
 		this['_interleaveBuffer'].upload(new Float32Array(this['_interleaveData']));
 		// this['_indexBuffer']['upload'](new Uint16Array(this['_indexData']));
 	};
+	RedDefinePropertyInfo.definePrototype_GEOMETRY(RedLine);
+	RedDefinePropertyInfo.definePrototype_MATERIAL(RedLine);
 	Object.freeze(RedLine);
 })();
