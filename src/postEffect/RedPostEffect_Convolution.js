@@ -3,6 +3,7 @@ var RedPostEffect_Convolution;
 (function () {
 	var vSource, fSource;
 	var PROGRAM_NAME = 'RedPostEffectConvolutionProgram';
+	var checked;
 	vSource = function () {
 		/* @preserve
 		 void main(void) {
@@ -11,25 +12,25 @@ var RedPostEffect_Convolution;
 			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
 		 }
 		 */
-	}
+	};
 	fSource = function () {
 		/* @preserve
 		 precision mediump float;
-		 uniform sampler2D uDiffuseTexture;
-		 uniform mat3 uKernel;
+		 uniform sampler2D u_diffuseTexture;
+		 uniform mat3 u_kernel;
 		 uniform float uKernelWeight;
 		 void main(void) {
 			 vec2 perPX = vec2(1.0/vResolution.x, 1.0/vResolution.y);
 			 vec4 finalColor = vec4(0.0);
-			 finalColor += texture2D(uDiffuseTexture, vTexcoord + perPX * vec2(-1.0, -1.0)) * uKernel[0][0] ;
-			 finalColor += texture2D(uDiffuseTexture, vTexcoord + perPX * vec2( 0.0, -1.0)) * uKernel[0][1] ;
-			 finalColor += texture2D(uDiffuseTexture, vTexcoord + perPX * vec2( 1.0, -1.0)) * uKernel[0][2] ;
-			 finalColor += texture2D(uDiffuseTexture, vTexcoord + perPX * vec2(-1.0,  0.0)) * uKernel[1][0] ;
-			 finalColor += texture2D(uDiffuseTexture, vTexcoord + perPX * vec2( 0.0,  0.0)) * uKernel[1][1] ;
-			 finalColor += texture2D(uDiffuseTexture, vTexcoord + perPX * vec2( 1.0,  0.0)) * uKernel[1][2] ;
-			 finalColor += texture2D(uDiffuseTexture, vTexcoord + perPX * vec2(-1.0,  1.0)) * uKernel[2][0] ;
-			 finalColor += texture2D(uDiffuseTexture, vTexcoord + perPX * vec2( 0.0,  1.0)) * uKernel[2][1] ;
-			 finalColor += texture2D(uDiffuseTexture, vTexcoord + perPX * vec2( 1.0,  1.0)) * uKernel[2][2] ;
+			 finalColor += texture2D(u_diffuseTexture, vTexcoord + perPX * vec2(-1.0, -1.0)) * u_kernel[0][0] ;
+			 finalColor += texture2D(u_diffuseTexture, vTexcoord + perPX * vec2( 0.0, -1.0)) * u_kernel[0][1] ;
+			 finalColor += texture2D(u_diffuseTexture, vTexcoord + perPX * vec2( 1.0, -1.0)) * u_kernel[0][2] ;
+			 finalColor += texture2D(u_diffuseTexture, vTexcoord + perPX * vec2(-1.0,  0.0)) * u_kernel[1][0] ;
+			 finalColor += texture2D(u_diffuseTexture, vTexcoord + perPX * vec2( 0.0,  0.0)) * u_kernel[1][1] ;
+			 finalColor += texture2D(u_diffuseTexture, vTexcoord + perPX * vec2( 1.0,  0.0)) * u_kernel[1][2] ;
+			 finalColor += texture2D(u_diffuseTexture, vTexcoord + perPX * vec2(-1.0,  1.0)) * u_kernel[2][0] ;
+			 finalColor += texture2D(u_diffuseTexture, vTexcoord + perPX * vec2( 0.0,  1.0)) * u_kernel[2][1] ;
+			 finalColor += texture2D(u_diffuseTexture, vTexcoord + perPX * vec2( 1.0,  1.0)) * u_kernel[2][2] ;
 			 highp float weight;
 			 weight = uKernelWeight;
 			 if (0.01 > weight) {
@@ -38,7 +39,7 @@ var RedPostEffect_Convolution;
 			 gl_FragColor = vec4((finalColor / uKernelWeight).rgb, 1.0);
 		 }
 		 */
-	}
+	};
 	/**DOC:
 	 {
 		 constructorYn : true,
@@ -56,50 +57,52 @@ var RedPostEffect_Convolution;
 	 :DOC*/
 	RedPostEffect_Convolution = function (redGL, kernel) {
 		if ( !(this instanceof RedPostEffect_Convolution) ) return new RedPostEffect_Convolution(redGL, kernel);
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedPostEffect_Convolution : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPostEffect_Convolution : RedGL Instance만 허용됩니다.', redGL);
 		this['frameBuffer'] = RedFrameBuffer(redGL);
 		this['diffuseTexture'] = null;
-		/**DOC:
-		 {
-			 title :`kernel`,
-			 description : `
-				 커널값.
-			 `,
-			 return : 'Array'
-		 }
-		 :DOC*/
 		this['kernel'] = kernel;
-		Object.defineProperty(this, 'kernel', (function () {
-			var _v;
-			return {
-				get: function () {
-					if ( !_v ) _v = RedPostEffect_Convolution['NORMAL']
-					return _v
-				},
-				set: function (v) { _v = v }
-			}
-		})());
-		Object.defineProperty(this, 'kernelWeight', (function () {
-			var sum;
-			return {
-				get: function () {
-					sum = 0;
-					for ( var k in this['kernel'] ) sum += this['kernel'][k];
-					return sum;
-				}
-			}
-		})());
 		/////////////////////////////////////////
 		// 일반 프로퍼티
 		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		this['_UUID'] = RedGL.makeUUID();
-		this.updateTexture = function (lastFrameBufferTexture) {
-			this['diffuseTexture'] = lastFrameBufferTexture;
+		if ( !checked ) {
+			this.checkUniformAndProperty();
+			checked = true;
 		}
-		this.checkUniformAndProperty();
 		console.log(this);
-	}
+	};
 	RedPostEffect_Convolution.prototype = new RedBasePostEffect();
+	RedPostEffect_Convolution.prototype['updateTexture'] = function (lastFrameBufferTexture) {
+		this['diffuseTexture'] = lastFrameBufferTexture;
+	};
+	RedDefinePropertyInfo.definePrototype('RedPostEffect_Convolution', 'diffuseTexture', 'sampler2D');
+	/**DOC:
+	 {
+		 title :`kernel`,
+		 description : `
+			 커널값.
+		 `,
+		 return : 'Array'
+	 }
+	 :DOC*/
+	Object.defineProperty(RedPostEffect_Convolution.prototype, 'kernel', {
+		get: function () {
+			if ( !this['_kernel'] ) this['_kernel'] = RedPostEffect_Convolution['NORMAL'];
+			return this['_kernel']
+		},
+		set: function (v) { this['_kernel'] = v }
+	});
+	Object.defineProperty(RedPostEffect_Convolution.prototype, 'kernelWeight', (function () {
+		var sum;
+		var k;
+		return {
+			get: function () {
+				sum = 0;
+				for ( k in this['kernel'] ) sum += this['kernel'][k];
+				return sum;
+			}
+		}
+	})());
 	/**DOC:
 	 {
 		 title :`RedPostEffect_Convolution.NORMAL`,
@@ -120,7 +123,7 @@ var RedPostEffect_Convolution;
 		0, 0, 0,
 		0, 1, 0,
 		0, 0, 0
-	]
+	];
 	/**DOC:
 	 {
 		 title :`RedPostEffect_Convolution.SHARPEN`,
@@ -141,7 +144,7 @@ var RedPostEffect_Convolution;
 		0, -1, 0,
 		-1, 5, -1,
 		0, -1, 0
-	]
+	];
 	/**DOC:
 	 {
 		 title :`RedPostEffect_Convolution.BLUR`,
@@ -162,7 +165,7 @@ var RedPostEffect_Convolution;
 		1, 1, 1,
 		1, 1, 1,
 		1, 1, 1
-	]
+	];
 	/**DOC:
 	 {
 		 title :`RedPostEffect_Convolution.EDGE`,
@@ -183,7 +186,7 @@ var RedPostEffect_Convolution;
 		0, 1, 0,
 		1, -4, 1,
 		0, 1, 0
-	]
+	];
 	/**DOC:
 	 {
 		 title :`RedPostEffect_Convolution.EMBOSS`,
@@ -204,6 +207,6 @@ var RedPostEffect_Convolution;
 		-2, -1, 0,
 		-1, 1, 1,
 		0, 1, 2
-	]
+	];
 	Object.freeze(RedPostEffect_Convolution);
 })();

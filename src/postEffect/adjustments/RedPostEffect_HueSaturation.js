@@ -3,6 +3,7 @@ var RedPostEffect_HueSaturation;
 (function () {
 	var vSource, fSource;
 	var PROGRAM_NAME = 'RedPostEffectHueSaturationProgram';
+	var checked;
 	vSource = function () {
 		/* @preserve
 		 void main(void) {
@@ -10,16 +11,16 @@ var RedPostEffect_HueSaturation;
 			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
 		 }
 		 */
-	}
+	};
 	fSource = function () {
 		/* @preserve
 		 precision mediump float;
-		 uniform sampler2D uDiffuseTexture;
-		 uniform float u_hue;
-		 uniform float u_saturation;
+		 uniform sampler2D u_diffuseTexture;
+		 uniform float u_hue_value;
+		 uniform float u_saturation_value;
 		 void main(void) {
-			 vec4 finalColor = texture2D(uDiffuseTexture, vTexcoord );
-			 float angle = u_hue * 3.1415926535897932384626433832795;
+			 vec4 finalColor = texture2D(u_diffuseTexture, vTexcoord );
+			 float angle = u_hue_value * 3.1415926535897932384626433832795;
 			 float s = sin(angle), c = cos(angle);
 			 vec3 weights = (vec3(2.0 * c, -sqrt(3.0) * s - c, sqrt(3.0) * s - c) + 1.0) / 3.0;
 			 float len = length(finalColor.rgb);
@@ -31,12 +32,12 @@ var RedPostEffect_HueSaturation;
 			 );
 
 			 float average = (finalColor.r + finalColor.g + finalColor.b) / 3.0;
-			 if (u_saturation > 0.0) finalColor.rgb += (average - finalColor.rgb) * (1.0 - 1.0 / (1.001 - u_saturation));
-			 else finalColor.rgb += (average - finalColor.rgb) * (-u_saturation);
+			 if (u_saturation_value > 0.0) finalColor.rgb += (average - finalColor.rgb) * (1.0 - 1.0 / (1.001 - u_saturation_value));
+			 else finalColor.rgb += (average - finalColor.rgb) * (-u_saturation_value);
 			 gl_FragColor = finalColor;
 		 }
 		 */
-	}
+	};
 	/**DOC:
 	 {
 		 constructorYn : true,
@@ -54,67 +55,55 @@ var RedPostEffect_HueSaturation;
 	 :DOC*/
 	RedPostEffect_HueSaturation = function (redGL) {
 		if ( !(this instanceof RedPostEffect_HueSaturation) ) return new RedPostEffect_HueSaturation(redGL);
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedPostEffect_HueSaturation : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPostEffect_HueSaturation : RedGL Instance만 허용됩니다.', redGL);
 		this['frameBuffer'] = RedFrameBuffer(redGL);
 		this['diffuseTexture'] = null;
-		/**DOC:
-		 {
-			 title :`hue`,
-			 description : `
-				 색조
-				 기본값 : 0
-			 `,
-			 return : 'Number'
-		 }
-		 :DOC*/
-		this['_hue'] = 0;
-		Object.defineProperty(this, 'hue', (function () {
-			var _v = 0
-			return {
-				get: function () { return _v },
-				set: function (v) {
-					if ( typeof v != 'number' ) RedGLUtil.throwFunc('RedPostEffect_HueSaturation : hue 숫자만허용함', '입력값 : ' + v);
-					_v = v;
-					if ( _v < -180 ) _v = -180
-					if ( _v > 180 ) _v = 180
-					this['_hue'] = _v / 180
-				}
-			}
-		})())
-		/**DOC:
-		 {
-			 title :`saturation`,
-			 description : `
-				 채도
-				 기본값 : 0
-			 `,
-			 return : 'Number'
-		 }
-		 :DOC*/
-		this['_saturation'] = 0;
-		Object.defineProperty(this, 'saturation', (function () {
-			var _v = 0
-			return {
-				get: function () { return _v },
-				set: function (v) {
-					if ( typeof v != 'number' ) RedGLUtil.throwFunc('RedPostEffect_HueSaturation : saturation 숫자만허용함', '입력값 : ' + v);
-					_v = v;
-					if ( _v < -100 ) _v = -100
-					if ( _v > 100 ) _v = 100
-					this['_saturation'] = _v / 100
-				}
-			}
-		})())
+		this['hue'] = 0;
+		this['saturation'] = 0;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
 		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		this['_UUID'] = RedGL.makeUUID();
-		this.updateTexture = function (lastFrameBufferTexture) {
-			this['diffuseTexture'] = lastFrameBufferTexture;
+		if ( !checked ) {
+			this.checkUniformAndProperty();
+			checked = true;
 		}
-		this.checkUniformAndProperty();
 		console.log(this);
-	}
+	};
 	RedPostEffect_HueSaturation.prototype = new RedBasePostEffect();
+	RedPostEffect_HueSaturation.prototype['updateTexture'] = function (lastFrameBufferTexture) {
+		this['diffuseTexture'] = lastFrameBufferTexture;
+	};
+	RedDefinePropertyInfo.definePrototype('RedPostEffect_HueSaturation', 'diffuseTexture', 'sampler2D');
+	/**DOC:
+	 {
+		 title :`hue`,
+		 description : `
+			 색조
+			 기본값 : 0
+		 `,
+		 return : 'Number'
+	 }
+	 :DOC*/
+	RedDefinePropertyInfo.definePrototype('RedPostEffect_HueSaturation', 'hue', 'number', {
+		min: -180, max: 180, callback: function (v) {
+			this['_hue_value'] = v / 180
+		}
+	});
+	/**DOC:
+	 {
+		 title :`saturation`,
+		 description : `
+			 채도
+			 기본값 : 0
+		 `,
+		 return : 'Number'
+	 }
+	 :DOC*/
+	RedDefinePropertyInfo.definePrototype('RedPostEffect_HueSaturation', 'saturation', 'number', {
+		min: -100, max: 100, callback: function (v) {
+			this['_saturation_value'] = v / 100
+		}
+	});
 	Object.freeze(RedPostEffect_HueSaturation);
 })();

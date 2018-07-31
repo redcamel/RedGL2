@@ -3,6 +3,7 @@ var RedPostEffect_FXAA;
 (function () {
 	var vSource, fSource;
 	var PROGRAM_NAME = 'RedPostEffectFXAAProgram';
+	var checked;
 	vSource = function () {
 		/* @preserve
 		 void main(void) {
@@ -11,11 +12,11 @@ var RedPostEffect_FXAA;
 			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
 		 }
 		 */
-	}
+	};
 	fSource = function () {
 		/* @preserve
 		 precision mediump float;
-		 uniform sampler2D uDiffuseTexture;
+		 uniform sampler2D u_diffuseTexture;
 		 const float cFXAA_REDUCE_MIN = 1.0/ 128.0;
 		 const float cFXAA_REDUCE_MUL = 1.0 / 8.0;
 		 const float cFXAA_SPAN_MAX = 8.0;
@@ -23,11 +24,11 @@ var RedPostEffect_FXAA;
 			 vec4 finalColor;
 			 vec2 inverseVP = vec2(1.0 / vResolution.x, 1.0 / vResolution.y);
 			 vec2 fragCoord = gl_FragCoord.xy;
-			 vec3 rgbNW = texture2D(uDiffuseTexture, (fragCoord + vec2(-1.0, -1.0)) * inverseVP).xyz;
-			 vec3 rgbNE = texture2D(uDiffuseTexture, (fragCoord + vec2(1.0, -1.0)) * inverseVP).xyz;
-			 vec3 rgbSW = texture2D(uDiffuseTexture, (fragCoord + vec2(-1.0, 1.0)) * inverseVP).xyz;
-			 vec3 rgbSE = texture2D(uDiffuseTexture, (fragCoord + vec2(1.0, 1.0)) * inverseVP).xyz;
-			 vec3 rgbM  = texture2D(uDiffuseTexture, fragCoord  * inverseVP).xyz;
+			 vec3 rgbNW = texture2D(u_diffuseTexture, (fragCoord + vec2(-1.0, -1.0)) * inverseVP).xyz;
+			 vec3 rgbNE = texture2D(u_diffuseTexture, (fragCoord + vec2(1.0, -1.0)) * inverseVP).xyz;
+			 vec3 rgbSW = texture2D(u_diffuseTexture, (fragCoord + vec2(-1.0, 1.0)) * inverseVP).xyz;
+			 vec3 rgbSE = texture2D(u_diffuseTexture, (fragCoord + vec2(1.0, 1.0)) * inverseVP).xyz;
+			 vec3 rgbM  = texture2D(u_diffuseTexture, fragCoord  * inverseVP).xyz;
 			 vec3 luma = vec3(0.299, 0.587, 0.114);
 			 float lumaNW = dot(rgbNW, luma);
 			 float lumaNE = dot(rgbNE, luma);
@@ -50,12 +51,12 @@ var RedPostEffect_FXAA;
 			 ) * inverseVP;
 
 			 vec3 rgbA = 0.5 * (
-				 texture2D(uDiffuseTexture, fragCoord * inverseVP + dir * (1.0 / 3.0 - 0.5)).xyz +
-				 texture2D(uDiffuseTexture, fragCoord * inverseVP + dir * (2.0 / 3.0 - 0.5)).xyz
+				 texture2D(u_diffuseTexture, fragCoord * inverseVP + dir * (1.0 / 3.0 - 0.5)).xyz +
+				 texture2D(u_diffuseTexture, fragCoord * inverseVP + dir * (2.0 / 3.0 - 0.5)).xyz
 			 );
 			 vec3 rgbB = rgbA * 0.5 + 0.25 * (
-				 texture2D(uDiffuseTexture, fragCoord * inverseVP + dir * -0.5).xyz +
-				 texture2D(uDiffuseTexture, fragCoord * inverseVP + dir * 0.5).xyz
+				 texture2D(u_diffuseTexture, fragCoord * inverseVP + dir * -0.5).xyz +
+				 texture2D(u_diffuseTexture, fragCoord * inverseVP + dir * 0.5).xyz
 			 );
 
 			 float lumaB = dot(rgbB, luma);
@@ -65,7 +66,7 @@ var RedPostEffect_FXAA;
 			 gl_FragColor = finalColor;
 		 }
 		 */
-	}
+	};
 	/**DOC:
 	 {
 		 constructorYn : true,
@@ -83,19 +84,23 @@ var RedPostEffect_FXAA;
 	 :DOC*/
 	RedPostEffect_FXAA = function (redGL) {
 		if ( !(this instanceof RedPostEffect_FXAA) ) return new RedPostEffect_FXAA(redGL);
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedPostEffect_FXAA : RedGL Instance만 허용됩니다.', redGL)
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPostEffect_FXAA : RedGL Instance만 허용됩니다.', redGL);
 		this['frameBuffer'] = RedFrameBuffer(redGL);
 		this['diffuseTexture'] = null;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
 		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		this['_UUID'] = RedGL.makeUUID();
-		this.updateTexture = function (lastFrameBufferTexture) {
-			this['diffuseTexture'] = lastFrameBufferTexture;
+		if ( !checked ) {
+			this.checkUniformAndProperty();
+			checked = true;
 		}
-		this.checkUniformAndProperty();
 		console.log(this);
-	}
+	};
 	RedPostEffect_FXAA.prototype = new RedBasePostEffect();
+	RedPostEffect_FXAA.prototype['updateTexture'] = function (lastFrameBufferTexture) {
+		this['diffuseTexture'] = lastFrameBufferTexture;
+	};
+	RedDefinePropertyInfo.definePrototype('RedPostEffect_FXAA', 'diffuseTexture', 'sampler2D');
 	Object.freeze(RedPostEffect_FXAA);
 })();

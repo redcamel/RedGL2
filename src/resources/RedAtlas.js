@@ -45,7 +45,7 @@ var RedAtlas;
 	 :DOC*/
 	RedAtlas = function (redGL, srcList, callBack) {
 		if ( !(this instanceof RedAtlas) ) return new RedAtlas(redGL, srcList, callBack);
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedBitmapMaterial : RedGL Instance만 허용됩니다.', redGL)
+		redGL instanceof RedGL ||  RedGLUtil.throwFunc('RedBitmapMaterial : RedGL Instance만 허용됩니다.', redGL)
 		if ( !redGL['_datas']['RedAtlas'] ) redGL['_datas']['RedAtlas'] = {
 			atlasInfoList: [new Atlas()],
 			atlasMap: {}

@@ -65,7 +65,7 @@ var RedRenderer;
 				self['_tickKey'] = requestAnimationFrame(tick);
 			}
 			return function (redGL, callback) {
-				if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedGL Instance만 허용');
+				redGL instanceof RedGL ||  RedGLUtil.throwFunc('RedGL Instance만 허용');
 				if ( !(redGL.world instanceof RedWorld) ) RedGLUtil.throwFunc('RedWorld Instance만 허용');
 				self = this;
 				self.world = redGL.world;
@@ -94,7 +94,7 @@ var RedRenderer;
 		 }
 		 :DOC*/
 		render: function (redGL, time) {
-			if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedGL Instance만 허용');
+			redGL instanceof RedGL ||  RedGLUtil.throwFunc('RedGL Instance만 허용');
 			this.worldRender(redGL, time);
 			this.world = redGL.world;
 		},

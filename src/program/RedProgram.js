@@ -294,7 +294,7 @@ var RedProgram;
 	 }
 	 :DOC*/
 	RedProgram['hasKey'] = function (redGL, key) {
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedProgram : RedGL Instance만 허용됩니다.', '입력값 : ' + redGL);
+		redGL instanceof RedGL ||  RedGLUtil.throwFunc('RedProgram : RedGL Instance만 허용됩니다.', '입력값 : ' + redGL);
 		if ( !redGL['_datas']['RedProgram'] ) redGL['_datas']['RedProgram'] = {}, redGL['_datas']['RedProgramList'] = [];
 		return redGL['_datas']['RedProgram'][key] ? true : false
 	};
