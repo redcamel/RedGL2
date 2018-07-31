@@ -18,7 +18,7 @@ var RedPostEffect_GaussianBlur;
 	 :DOC*/
 	RedPostEffect_GaussianBlur = function (redGL) {
 		if ( !(this instanceof RedPostEffect_GaussianBlur) ) return new RedPostEffect_GaussianBlur(redGL);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPostEffect_GaussianBlur : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPostEffect_GaussianBlur : RedGL Instance만 허용.', redGL);
 		/////////////////////////////////////////
 		// 일반 프로퍼티
 		this['_UUID'] = RedGL.makeUUID();

@@ -134,10 +134,10 @@ var RedBitmapCubeTexture;
 	RedBitmapCubeTexture = function (redGL, srcList, option, callback) {
 		var tGL;
 		if ( !(this instanceof RedBitmapCubeTexture) ) return new RedBitmapCubeTexture(redGL, srcList, option, callback);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedBitmapCubeTexture : RedGL Instance만 허용됩니다.', '입력값 : ' + redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedBitmapCubeTexture : RedGL Instance만 허용.', '입력값 : ' + redGL);
 		srcList instanceof Array || RedGLUtil.throwFunc('RedBitmapCubeTexture : srcList는 배열만 허용.', '입력값 : ' + srcList);
 		srcList.length == 6 || RedGLUtil.throwFunc('RedBitmapCubeTexture : srcList 길이는 6이어야함', '입력값 : ' + srcList);
-		if ( callback && !(typeof callback == 'function') ) RedGLUtil.throwFunc('RedVideoTexture : callback은 함수만 허용됩니다.', '입력값 :', callback);
+		if ( callback && !(typeof callback == 'function') ) RedGLUtil.throwFunc('RedVideoTexture : callback은 함수만 허용.', '입력값 :', callback);
 		tGL = redGL.gl;
 		RedTextureOptionChecker.check('RedBitmapCubeTexture', option, tGL);
 		this['webglTexture'] = tGL.createTexture();

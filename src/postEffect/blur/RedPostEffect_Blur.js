@@ -56,7 +56,7 @@ var RedPostEffect_Blur;
 	 :DOC*/
 	RedPostEffect_Blur = function (redGL) {
 		if ( !(this instanceof RedPostEffect_Blur) ) return new RedPostEffect_Blur(redGL);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPostEffect_Blur : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPostEffect_Blur : RedGL Instance만 허용.', redGL);
 		this['frameBuffer'] = RedFrameBuffer(redGL);
 		this['diffuseTexture'] = null;
 		/////////////////////////////////////////

@@ -45,7 +45,7 @@ var RedPostEffect_DoF;
 	 :DOC*/
 	RedPostEffect_DoF = function (redGL) {
 		if ( !(this instanceof RedPostEffect_DoF) ) return new RedPostEffect_DoF(redGL);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPostEffect_DoF : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPostEffect_DoF : RedGL Instance만 허용.', redGL);
 		this['frameBuffer'] = RedFrameBuffer(redGL);
 		this['diffuseTexture'] = null;
 		this['blurTexture'] = null;

@@ -119,7 +119,7 @@ var RedColorPhongMaterial;
 	 :DOC*/
 	RedColorPhongMaterial = function (redGL, hexColor, alpha) {
 		if ( !(this instanceof RedColorPhongMaterial) ) return new RedColorPhongMaterial(redGL, hexColor, alpha);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedColorPhongMaterial : RedGL Instance만 허용됩니다.', '입력값 : ' + redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedColorPhongMaterial : RedGL Instance만 허용.', '입력값 : ' + redGL);
 		this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource);
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티

@@ -1,10 +1,5 @@
 [
   {
-    "title": "blur",
-    "description": "\nblur 정도.\n기본값 : 20\n",
-    "return": "Number"
-  },
-  {
     "title": "focusLength",
     "description": "\nfocusLength\n기본값 : 15\n",
     "return": "Number"

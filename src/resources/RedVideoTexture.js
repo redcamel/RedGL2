@@ -77,9 +77,9 @@ var RedVideoTexture;
 	RedVideoTexture = function (redGL, src, callback) {
 		var tGL;
 		if ( !(this instanceof RedVideoTexture) ) return new RedVideoTexture(redGL, src, callback);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedVideoTexture : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedVideoTexture : RedGL Instance만 허용.', redGL);
 		if ( src && typeof src != 'string' && !(src instanceof HTMLVideoElement) ) RedGLUtil.throwFunc('RedBitmapTexture : src는 문자열 or HTMLVideoElement만 허용.', '입력값 : ' + src);
-		if ( callback && !(typeof callback == 'function') ) RedGLUtil.throwFunc('RedVideoTexture : callback은 함수만 허용됩니다.', '입력값 :', callback);
+		if ( callback && !(typeof callback == 'function') ) RedGLUtil.throwFunc('RedVideoTexture : callback은 함수만 허용.', '입력값 :', callback);
 		tGL = redGL.gl;
 		this['webglTexture'] = tGL.createTexture();
 		this['atlascoord'] = RedAtlasUV(redGL);

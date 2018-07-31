@@ -19,7 +19,7 @@ var RedPostEffectManager;
 	 :DOC*/
 	RedPostEffectManager = function (redGL) {
 		if ( !(this instanceof RedPostEffectManager) ) return new RedPostEffectManager(redGL);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPostEffectManager : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPostEffectManager : RedGL Instance만 허용.', redGL);
 		/**DOC:
 		 {
 			title :`frameBuffer`,
@@ -351,7 +351,7 @@ var RedPostEffectManager;
 	Object.defineProperty(RedPostEffectManager.prototype, 'antialiasing', {
 		get: function () { return this['_antialiasing'] },
 		set: function (v) {
-			if ( v ) v instanceof RedPostEffect_FXAA || RedGLUtil.throwFunc('RedPostEffectManager : antialiasing - RedPostEffect_FXAA Instance만 허용됩니다.', '입력값 : ' + v);
+			if ( v ) v instanceof RedPostEffect_FXAA || RedGLUtil.throwFunc('RedPostEffectManager : antialiasing - RedPostEffect_FXAA Instance만 허용.', '입력값 : ' + v);
 			this['_antialiasing'] = v;
 		}
 	});

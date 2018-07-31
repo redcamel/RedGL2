@@ -158,8 +158,8 @@ var RedBuffer;
 	RedBuffer = function (redGL, key, bufferType, typedArrayData, interleaveDefineInfoList, drawMode) {
 		// console.log(redGL, key, data, bufferType, interleaveDefineInfoList)
 		if ( !(this instanceof RedBuffer) ) return new RedBuffer(redGL, key, bufferType, typedArrayData, interleaveDefineInfoList, drawMode);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedBuffer : RedGL Instance만 허용됩니다.', redGL);
-		typeof key == 'string' || RedGLUtil.throwFunc('RedBuffer : key - 문자열만 허용됩니다.', '입력값 : ' + key);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedBuffer : RedGL Instance만 허용.', redGL);
+		typeof key == 'string' || RedGLUtil.throwFunc('RedBuffer : key - 문자열만 허용.', '입력값 : ' + key);
 		bufferType || RedGLUtil.throwFunc('RedBuffer : bufferType : 미입력, 반드시 입력해야함.');
 		bufferType == RedBuffer.ARRAY_BUFFER || bufferType == RedBuffer.ELEMENT_ARRAY_BUFFER || RedGLUtil.throwFunc('RedBuffer : bufferType - RedBuffer.ARRAY_BUFFER or RedBuffer.ELEMENT_ARRAY_BUFFER 만 허용함.', '입력값 : ' + bufferType);
 		var tGL = redGL.gl;

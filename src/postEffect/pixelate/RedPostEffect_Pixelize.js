@@ -49,7 +49,7 @@ var RedPostEffect_Pixelize;
 	 :DOC*/
 	RedPostEffect_Pixelize = function (redGL) {
 		if ( !(this instanceof RedPostEffect_Pixelize) ) return new RedPostEffect_Pixelize(redGL);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPostEffect_Pixelize : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPostEffect_Pixelize : RedGL Instance만 허용.', redGL);
 		this['frameBuffer'] = RedFrameBuffer(redGL);
 		this['diffuseTexture'] = null;
 		this['width'] = 5;

@@ -45,9 +45,9 @@ var RedDDSTexture;
 	RedDDSTexture = function (redGL, src, option, callback) {
 		var tGL;
 		if ( !(this instanceof RedDDSTexture) ) return new RedDDSTexture(redGL, src, option, callback);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedDDSTexture : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedDDSTexture : RedGL Instance만 허용.', redGL);
 		if ( src && typeof  src != 'string' && !(src instanceof HTMLCanvasElement) ) RedGLUtil.throwFunc('RedDDSTexture : src는 문자열 or Canvas Element만 허용.', '입력값 : ' + src);
-		if ( callback && !(typeof callback == 'function') ) RedGLUtil.throwFunc('RedVideoTexture : callback은 함수만 허용됩니다.', '입력값 :', callback);
+		if ( callback && !(typeof callback == 'function') ) RedGLUtil.throwFunc('RedVideoTexture : callback은 함수만 허용.', '입력값 :', callback);
 		tGL = redGL.gl;
 		RedTextureOptionChecker.check('RedDDSTexture', option, tGL);
 		this['webglTexture'] = tGL.createTexture();

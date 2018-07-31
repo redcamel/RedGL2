@@ -43,7 +43,7 @@ var RedPostEffect_BloomThreshold;
 	 :DOC*/
 	RedPostEffect_BloomThreshold = function (redGL) {
 		if ( !(this instanceof RedPostEffect_BloomThreshold) ) return new RedPostEffect_BloomThreshold(redGL);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPostEffect_BloomThreshold : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPostEffect_BloomThreshold : RedGL Instance만 허용.', redGL);
 		this['frameBuffer'] = RedFrameBuffer(redGL);
 		this['diffuseTexture'] = null;
 		this['threshold'] = 128;

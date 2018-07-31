@@ -41,7 +41,7 @@ var RedPostEffect_Gray;
 	 :DOC*/
 	RedPostEffect_Gray = function (redGL) {
 		if ( !(this instanceof RedPostEffect_Gray) ) return new RedPostEffect_Gray(redGL);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPostEffect_Gray : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPostEffect_Gray : RedGL Instance만 허용.', redGL);
 		this['frameBuffer'] = RedFrameBuffer(redGL);
 		this['diffuseTexture'] = null;
 		/////////////////////////////////////////

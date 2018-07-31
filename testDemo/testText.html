@@ -271,6 +271,11 @@
 				testRedText[k] = v
 			})
 		});
+		['background'].forEach(function (k) {
+			t0.addColor(testData, k).onChange(function (v) {
+				testRedText[k] = v
+			})
+		});
 		t0.open()
 		var t0, t1;
 		t0 = document.createElement('div')

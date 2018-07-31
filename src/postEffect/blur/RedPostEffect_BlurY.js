@@ -58,7 +58,7 @@ var RedPostEffect_BlurY;
 	 :DOC*/
 	RedPostEffect_BlurY = function (redGL) {
 		if ( !(this instanceof RedPostEffect_BlurY) ) return new RedPostEffect_BlurY(redGL);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPostEffect_BlurY : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPostEffect_BlurY : RedGL Instance만 허용.', redGL);
 		this['frameBuffer'] = RedFrameBuffer(redGL);
 		this['diffuseTexture'] = null;
 		this['size'] = 50;

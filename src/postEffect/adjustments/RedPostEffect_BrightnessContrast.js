@@ -44,7 +44,7 @@ var RedPostEffect_BrightnessContrast;
 	 :DOC*/
 	RedPostEffect_BrightnessContrast = function (redGL) {
 		if ( !(this instanceof RedPostEffect_BrightnessContrast) ) return new RedPostEffect_BrightnessContrast(redGL);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPostEffect_BrightnessContrast : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPostEffect_BrightnessContrast : RedGL Instance만 허용.', redGL);
 		this['frameBuffer'] = RedFrameBuffer(redGL);
 		this['diffuseTexture'] = null;
 		this['brightness'] = 0;

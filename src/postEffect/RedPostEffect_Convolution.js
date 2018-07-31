@@ -57,7 +57,7 @@ var RedPostEffect_Convolution;
 	 :DOC*/
 	RedPostEffect_Convolution = function (redGL, kernel) {
 		if ( !(this instanceof RedPostEffect_Convolution) ) return new RedPostEffect_Convolution(redGL, kernel);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPostEffect_Convolution : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPostEffect_Convolution : RedGL Instance만 허용.', redGL);
 		this['frameBuffer'] = RedFrameBuffer(redGL);
 		this['diffuseTexture'] = null;
 		this['kernel'] = kernel;

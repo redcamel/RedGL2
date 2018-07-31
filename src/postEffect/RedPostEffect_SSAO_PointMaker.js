@@ -115,7 +115,7 @@ var RedPostEffect_SSAO_PointMaker;
 	 :DOC*/
 	RedPostEffect_SSAO_PointMaker = function (redGL) {
 		if ( !(this instanceof RedPostEffect_SSAO_PointMaker) ) return new RedPostEffect_SSAO_PointMaker(redGL);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPostEffect_SSAO_PointMaker : RedGL Instance만 허용됩니다.', redGL)
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPostEffect_SSAO_PointMaker : RedGL Instance만 허용.', redGL)
 		this['frameBuffer'] = RedFrameBuffer(redGL);
 		this['_subFrameBufferList'] = [
 			{

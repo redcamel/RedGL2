@@ -44,7 +44,7 @@ var RedPostEffect_Threshold;
 	 :DOC*/
 	RedPostEffect_Threshold = function (redGL) {
 		if ( !(this instanceof RedPostEffect_Threshold) ) return new RedPostEffect_Threshold(redGL);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPostEffect_Threshold : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPostEffect_Threshold : RedGL Instance만 허용.', redGL);
 		this['frameBuffer'] = RedFrameBuffer(redGL);
 		this['diffuseTexture'] = null;
 		this['threshold'] = 128;

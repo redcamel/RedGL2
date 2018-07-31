@@ -55,7 +55,7 @@ var RedPostEffect_HueSaturation;
 	 :DOC*/
 	RedPostEffect_HueSaturation = function (redGL) {
 		if ( !(this instanceof RedPostEffect_HueSaturation) ) return new RedPostEffect_HueSaturation(redGL);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPostEffect_HueSaturation : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPostEffect_HueSaturation : RedGL Instance만 허용.', redGL);
 		this['frameBuffer'] = RedFrameBuffer(redGL);
 		this['diffuseTexture'] = null;
 		this['hue'] = 0;

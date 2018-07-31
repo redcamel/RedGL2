@@ -27,7 +27,7 @@ var RedShader;
 					return t0;
 					break;
 				default:
-					RedGLUtil.throwFunc('RedShader : 쉐이더 타입을 확인하세요. RedShader.VERTEX or RedShader.FRAGMENT 만 허용됩니다');
+					RedGLUtil.throwFunc('RedShader : 쉐이더 타입을 확인하세요. RedShader.VERTEX or RedShader.FRAGMENT 만 허용');
 					break
 			}
 		}
@@ -52,7 +52,7 @@ var RedShader;
 					t0 = RedSystemShaderCode['fShareSource'].concat();
 					break;
 				default:
-					RedGLUtil.throwFunc('RedShader : 쉐이더 타입을 확인하세요. RedShader.VERTEX or RedShader.FRAGMENT 만 허용됩니다');
+					RedGLUtil.throwFunc('RedShader : 쉐이더 타입을 확인하세요. RedShader.VERTEX or RedShader.FRAGMENT 만 허용');
 					break;
 			}
 			i = sourceList.length;
@@ -225,9 +225,9 @@ var RedShader;
 	RedShader = function (redGL, key, type, source) {
 		var tGL;
 		if ( !(this instanceof RedShader) ) return new RedShader(redGL, key, type, source);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedShader : RedGL Instance만 허용됩니다.', '입력값 : ' + redGL);
-		typeof key == 'string' || RedGLUtil.throwFunc('RedShader : key - 문자열만 허용됩니다.', '입력값 : ' + key);
-		if ( type != RedShader['VERTEX'] && type != RedShader['FRAGMENT'] ) RedGLUtil.throwFunc('RedShader : type - RedShader.VERTEX or RedShader.FRAGMENT 만 허용됩니다.', '입력값 : ' + type);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedShader : RedGL Instance만 허용.', '입력값 : ' + redGL);
+		typeof key == 'string' || RedGLUtil.throwFunc('RedShader : key - 문자열만 허용.', '입력값 : ' + key);
+		if ( type != RedShader['VERTEX'] && type != RedShader['FRAGMENT'] ) RedGLUtil.throwFunc('RedShader : type - RedShader.VERTEX or RedShader.FRAGMENT 만 허용.', '입력값 : ' + type);
 		// 데이터 공간확보
 		if ( !redGL['_datas']['RedShader'] ) {
 			redGL['_datas']['RedShader'] = {};
@@ -236,7 +236,7 @@ var RedShader;
 		}
 		// 소스가 있을 경우 검증
 		if ( source ) {
-			typeof source == 'string' || RedGLUtil.throwFunc('RedShader : source - 문자열만 허용됩니다.');
+			typeof source == 'string' || RedGLUtil.throwFunc('RedShader : source - 문자열만 허용.');
 			if ( RedShader['hasKey'](redGL, key, type) ) RedGLUtil.throwFunc('RedShader : key - 이미 정의된 키로 생성을 시도.', '\n키 :', key, '\n타입 :' + type);
 			else redGL['_datas']['RedShader'][type][key] = this;
 		} else {

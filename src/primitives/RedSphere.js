@@ -132,7 +132,7 @@ var RedSphere;
 	 :DOC*/
 	RedSphere = function (redGL, radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength) {
 		if ( !(this instanceof RedSphere) ) return new RedSphere(redGL, radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPrimitive : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPrimitive : RedGL Instance만 허용.', redGL);
 		var tType, tPrimitiveData;
 		radius = radius || 1;
 		widthSegments = Math.max(3, Math.floor(widthSegments) || 8);

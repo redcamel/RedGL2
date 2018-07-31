@@ -18,7 +18,7 @@ var RedDirectionalShadow;
 	 :DOC*/
 	RedDirectionalShadow = function (redGL, light) {
 		if ( !(this instanceof RedDirectionalShadow) ) return new RedDirectionalShadow(redGL, light);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedDirectionalShadow : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedDirectionalShadow : RedGL Instance만 허용.', redGL);
 		this['_directionalShadowMaterial'] = RedDirectionalShadowMaterial(redGL);
 		this['frameBuffer'] = RedFrameBuffer(redGL);
 		this['light'] = light;
@@ -44,7 +44,7 @@ var RedDirectionalShadow;
 	Object.defineProperty(RedDirectionalShadow.prototype, 'light', {
 		get: function () { return this['_light']},
 		set: function (v) {
-			(v && v instanceof RedDirectionalLight) || RedGLUtil.throwFunc('RedDirectionalShadow - light : RedDirectionalLight Instance만 허용됩니다.', v);
+			(v && v instanceof RedDirectionalLight) || RedGLUtil.throwFunc('RedDirectionalShadow - light : RedDirectionalLight Instance만 허용.', v);
 			this['_light'] = v;
 		}
 	});

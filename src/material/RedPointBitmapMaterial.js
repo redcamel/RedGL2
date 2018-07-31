@@ -57,7 +57,7 @@ var RedPointBitmapMaterial;
 	 :DOC*/
 	RedPointBitmapMaterial = function (redGL, diffuseTexture) {
 		if ( !(this instanceof RedPointBitmapMaterial) ) return new RedPointBitmapMaterial(redGL, diffuseTexture);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPointBitmapMaterial : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPointBitmapMaterial : RedGL Instance만 허용.', redGL);
 		this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource);
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티

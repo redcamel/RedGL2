@@ -27,7 +27,7 @@ var RedFrameBuffer;
 	 :DOC*/
 	RedFrameBuffer = function (redGL, width, height) {
 		if ( !(this instanceof RedFrameBuffer) ) return new RedFrameBuffer(redGL, width, height);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedFrameBuffer : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedFrameBuffer : RedGL Instance만 허용.', redGL);
 		if ( width ) typeof width == 'number' || RedGLUtil.throwFunc('RedFrameBuffer : width - 숫자만 허용', '입력값 : ', width);
 		if ( height ) typeof height == 'number' || RedGLUtil.throwFunc('RedFrameBuffer : height - 숫자만 허용', '입력값 : ', height);
 		var gl;

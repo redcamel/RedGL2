@@ -43,7 +43,7 @@ var RedPostEffect_Vignetting;
 	 :DOC*/
 	RedPostEffect_Vignetting = function (redGL) {
 		if ( !(this instanceof RedPostEffect_Vignetting) ) return new RedPostEffect_Vignetting(redGL);
-		redGL instanceof RedGL ||  RedGLUtil.throwFunc('RedPostEffect_Vignetting : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL ||  RedGLUtil.throwFunc('RedPostEffect_Vignetting : RedGL Instance만 허용.', redGL);
 		this['frameBuffer'] = RedFrameBuffer(redGL);
 		this['diffuseTexture'] = null;
 		this['size'] = 0.1;

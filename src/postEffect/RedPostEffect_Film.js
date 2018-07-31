@@ -66,7 +66,7 @@ var RedPostEffect_Film;
 	 :DOC*/
 	RedPostEffect_Film = function (redGL) {
 		if ( !(this instanceof RedPostEffect_Film) ) return new RedPostEffect_Film(redGL);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPostEffect_Film : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPostEffect_Film : RedGL Instance만 허용.', redGL);
 		this['frameBuffer'] = RedFrameBuffer(redGL);
 		this['diffuseTexture'] = null;
 		this['grayMode'] = false;

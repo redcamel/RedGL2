@@ -51,7 +51,7 @@ var RedBitmapMaterial;
 			 finalColor.rgb *= finalColor.a;
 			 if(finalColor.a ==0.0) discard;
 
-			 finalColor.a = u_alpha;
+			 finalColor.a *= u_alpha;
 			 //#define#fog#false# gl_FragColor = finalColor;
 			 //#define#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
 		 }
@@ -80,7 +80,7 @@ var RedBitmapMaterial;
 	 :DOC*/
 	RedBitmapMaterial = function (redGL, diffuseTexture) {
 		if ( !(this instanceof RedBitmapMaterial) ) return new RedBitmapMaterial(redGL, diffuseTexture);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedBitmapMaterial : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedBitmapMaterial : RedGL Instance만 허용.', redGL);
 		this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource);
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티

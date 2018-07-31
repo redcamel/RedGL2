@@ -59,7 +59,7 @@ var RedPostEffect_ZoomBlur;
 	 :DOC*/
 	RedPostEffect_ZoomBlur = function (redGL) {
 		if ( !(this instanceof RedPostEffect_ZoomBlur) ) return new RedPostEffect_ZoomBlur(redGL);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPostEffect_ZoomBlur : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPostEffect_ZoomBlur : RedGL Instance만 허용.', redGL);
 		this['frameBuffer'] = RedFrameBuffer(redGL);
 		this['diffuseTexture'] = null;
 		this['centerX'] = 0.0;

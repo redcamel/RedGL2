@@ -67,7 +67,7 @@ var RedPostEffect_HalfTone;
 	 :DOC*/
 	RedPostEffect_HalfTone = function (redGL) {
 		if ( !(this instanceof RedPostEffect_HalfTone) ) return new RedPostEffect_HalfTone(redGL);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPostEffect_HalfTone : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPostEffect_HalfTone : RedGL Instance만 허용.', redGL);
 		this['frameBuffer'] = RedFrameBuffer(redGL);
 		this['diffuseTexture'] = null;
 		this['centerX'] = 0.0;

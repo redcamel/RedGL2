@@ -47,7 +47,7 @@ var RedAtlasTexture;
 	var t0;
 	RedAtlasTexture = function (redGL, key) {
 		if ( !(this instanceof RedAtlasTexture) ) return new RedAtlasTexture(redGL, key);
-		redGL instanceof RedGL ||  RedGLUtil.throwFunc('RedAtlasTexture : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL ||  RedGLUtil.throwFunc('RedAtlasTexture : RedGL Instance만 허용.', redGL);
 		t0 = redGL['_datas']['RedAtlas']['atlasMap'][key]
 		this['webglTexture'] = t0['atlas']['texture']['webglTexture']
 		this['atlascoord'] = RedAtlasUV(redGL, t0['rect'])

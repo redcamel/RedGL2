@@ -211,8 +211,8 @@ var RedProgram;
 		var tGL;
 		var vertexShader, fragmentShader;
 		if ( !(this instanceof RedProgram) ) return new RedProgram(redGL, key, vSource, fSource);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedProgram : RedGL Instance만 허용됩니다.', '입력값 : ' + redGL);
-		typeof key == 'string' || RedGLUtil.throwFunc('RedProgram : key - 문자열만 허용됩니다.', '입력값 : ' + key);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedProgram : RedGL Instance만 허용.', '입력값 : ' + redGL);
+		typeof key == 'string' || RedGLUtil.throwFunc('RedProgram : key - 문자열만 허용.', '입력값 : ' + key);
 		tGL = redGL.gl;
 		// 데이터 공간확보
 		if ( !redGL['_datas']['RedProgram'] ) redGL['_datas']['RedProgram'] = {}, redGL['_datas']['RedProgramList'] = [];
@@ -294,7 +294,7 @@ var RedProgram;
 	 }
 	 :DOC*/
 	RedProgram['hasKey'] = function (redGL, key) {
-		redGL instanceof RedGL ||  RedGLUtil.throwFunc('RedProgram : RedGL Instance만 허용됩니다.', '입력값 : ' + redGL);
+		redGL instanceof RedGL ||  RedGLUtil.throwFunc('RedProgram : RedGL Instance만 허용.', '입력값 : ' + redGL);
 		if ( !redGL['_datas']['RedProgram'] ) redGL['_datas']['RedProgram'] = {}, redGL['_datas']['RedProgramList'] = [];
 		return redGL['_datas']['RedProgram'][key] ? true : false
 	};

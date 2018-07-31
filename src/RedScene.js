@@ -20,7 +20,7 @@ var RedScene;
 	 :DOC*/
 	RedScene = function (redGL, backgroundColor) {
 		if ( !(this instanceof RedScene) ) return new RedScene(redGL, backgroundColor);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedScene : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedScene : RedGL Instance만 허용.', redGL);
 		this['backgroundColor'] = backgroundColor ? backgroundColor : '#000000';
 		this['useBackgroundColor'] = true;
 		this['useFog'] = false;
@@ -221,7 +221,7 @@ var RedScene;
 	Object.defineProperty(RedScene.prototype, 'skyBox', {
 		get: function () { return this['_skyBoxMesh'] },
 		set: function (v) {
-			if ( v && !(v instanceof RedSkyBox) ) RedGLUtil.throwFunc('RedScene : RedSkyBox Instance만 허용됩니다.');
+			if ( v && !(v instanceof RedSkyBox) ) RedGLUtil.throwFunc('RedScene : RedSkyBox Instance만 허용.');
 			this['_skyBoxMesh'] = v;
 			return this['_skyBoxMesh']
 		}
@@ -238,7 +238,7 @@ var RedScene;
 	Object.defineProperty(RedScene.prototype, 'grid', {
 		get: function () { return this['_gridMesh'] },
 		set: function (v) {
-			if ( v && !(v instanceof RedGrid) ) RedGLUtil.throwFunc('RedScene : RedGrid Instance만 허용됩니다.');
+			if ( v && !(v instanceof RedGrid) ) RedGLUtil.throwFunc('RedScene : RedGrid Instance만 허용.');
 			this['_gridMesh'] = v;
 			return this['_gridMesh'];
 		}
@@ -255,7 +255,7 @@ var RedScene;
 	Object.defineProperty(RedScene.prototype, 'axis', {
 		get: function () { return this['_axisMesh'] },
 		set: function (v) {
-			if ( v && !(v instanceof RedAxis) ) RedGLUtil.throwFunc('RedScene : RedAxis Instance만 허용됩니다.');
+			if ( v && !(v instanceof RedAxis) ) RedGLUtil.throwFunc('RedScene : RedAxis Instance만 허용.');
 			this['_axisMesh'] = v;
 			return this['_axisMesh'];
 		}

@@ -84,7 +84,7 @@ var RedPostEffect_FXAA;
 	 :DOC*/
 	RedPostEffect_FXAA = function (redGL) {
 		if ( !(this instanceof RedPostEffect_FXAA) ) return new RedPostEffect_FXAA(redGL);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPostEffect_FXAA : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPostEffect_FXAA : RedGL Instance만 허용.', redGL);
 		this['frameBuffer'] = RedFrameBuffer(redGL);
 		this['diffuseTexture'] = null;
 		/////////////////////////////////////////

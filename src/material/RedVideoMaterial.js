@@ -80,7 +80,7 @@ var RedVideoMaterial;
 	 :DOC*/
 	RedVideoMaterial = function (redGL, videoTexture) {
 		if ( !(this instanceof RedVideoMaterial) ) return new RedVideoMaterial(redGL, videoTexture);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedVideoMaterial : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedVideoMaterial : RedGL Instance만 허용.', redGL);
 		this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource);
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
