@@ -56,7 +56,7 @@ var RedPostEffect_SSAO;
 		// 일반 프로퍼티
 		var point;
 		point = RedPostEffect_SSAO_PointMaker(redGL)
-		this['process'] = [
+		this['_process'] = [
 			point,
 			RedPostEffect_GaussianBlur(redGL)
 		]
@@ -69,7 +69,7 @@ var RedPostEffect_SSAO;
 				},
 				set: function (v) {
 					_v = v;
-					this['process'][1]['radius'] = _v;
+					this['_process'][1]['radius'] = _v;
 				}
 			}
 		})());

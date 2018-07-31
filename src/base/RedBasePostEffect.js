@@ -19,7 +19,7 @@ var RedBasePostEffect;
 	RedBasePostEffect.prototype['updateTexture'] = function () {
 		RedGLUtil.throwFunc('RedBasePostEffect - updateTexture : 반드시 재정의해야함')
 	};
-	RedBasePostEffect.prototype['process'] = [];
-	RedBasePostEffect.prototype['subFrameBufferList'] = [];
+	RedBasePostEffect.prototype['_process'] = [];
+	RedBasePostEffect.prototype['_subFrameBufferList'] = [];
 	Object.freeze(RedBasePostEffect);
 })();

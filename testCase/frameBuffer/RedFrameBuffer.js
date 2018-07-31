@@ -5,8 +5,8 @@ RedGL(document.createElement('canvas'), function (v) {
 	redSuite(
 		"RedFrameBuffer 테스트",
 		redGroup(
-			"생성 확인",
-			redTest("기본 생성 테스트", function (unit, title) {
+			"RedFrameBuffer( redGL, width, height )",
+			redTest("성공테스트 : 기본 생성 테스트", function (unit, title) {
 				try {
 					var t0 = RedFrameBuffer(tRedGL)
 					console.log('///////////////////////////////////////////////////////////')
@@ -20,8 +20,8 @@ RedGL(document.createElement('canvas'), function (v) {
 			}, true)
 		),
 		redGroup(
-			"인자 확인",
-			redTest("RedGL Instance만 허용하는지", function (unit, title) {
+			"RedFrameBuffer( <b>redGL</b>, width, height )",
+			redTest("실패테스트 : RedGL Instance만 허용하는지", function (unit, title) {
 				try {
 					var t0 = RedFrameBuffer(1)
 					console.log('///////////////////////////////////////////////////////////')
@@ -32,40 +32,77 @@ RedGL(document.createElement('canvas'), function (v) {
 					console.log(title, '\n', error)
 					unit.run(false)
 				}
-			}, false),
-			redTest("width 반영되는지", function (unit, title) {
+			}, false)
+		),
+		redGroup(
+			"RedFrameBuffer( redGL, <b>width, height</b> )",
+			redTest("성공테스트 : width 반영되는지", function (unit, title) {
 				var t0 = RedFrameBuffer(tRedGL, 123)
 				console.log(t0)
 				unit.run(t0['width'])
 			}, 123),
-			redTest("height 반영되는지", function (unit, title) {
+			redTest("성공테스트 : width - 2보다 작은 숫자입력시 2로 치환되는지", function (unit, title) {
+				var t0 = RedFrameBuffer(tRedGL, 1, 512)
+				unit.run(t0['width'])
+			}, 2),
+			redTest("성공테스트 : height 반영되는지", function (unit, title) {
 				var t0 = RedFrameBuffer(tRedGL, 123, 512)
 				console.log(t0)
 				unit.run(t0['height'])
-			}, 512)
+			}, 512),
+			redTest("성공테스트 : height - 2보다 작은 숫자입력시 2로 치환되는지", function (unit, title) {
+				var t0 = RedFrameBuffer(tRedGL, 512, 1)
+				unit.run(t0['height'])
+			}, 2),
+			redTest("성공테스트 : 2보다 큰 숫자만 허용", function (unit, title) {
+				var t0 = RedFrameBuffer(tRedGL, 123, 512)
+				console.log(t0)
+				unit.run(t0['height'])
+			}, 512),
+			redTest("실패테스트 : width - 문자입력시", function (unit, title) {
+				try {
+					var t0 = RedFrameBuffer(tRedGL, 'failTest', 512)
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', t0)
+					unit.run(true)
+				} catch ( error ) {
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
+					unit.run(false)
+				}
+			}, false),
+			redTest("실패테스트 : height - 문자입력시", function (unit, title) {
+				try {
+					var t0 = RedFrameBuffer(tRedGL, 512, 'failTest')
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', t0)
+					unit.run(true)
+				} catch ( error ) {
+					console.log('///////////////////////////////////////////////////////////')
+					console.log(title, '\n', error)
+					unit.run(false)
+				}
+			}, false)
 		),
 		redGroup(
-			"bind, unbind",
-			redTest("bind - 소유하고있는 webglFrameBuffer가 등록되는지 확인", function (unit, title) {
+			"webglFrameBuffer - (RedFrameBuffer Instance).<b>bind</b>( gl ), (RedFrameBuffer Instance).<b>unbind</b>( gl )",
+			redTest("성공테스트 : bind - 소유하고있는 webglFrameBuffer가 등록되는지 확인", function (unit, title) {
 				var t0 = RedFrameBuffer(tRedGL)
 				t0.bind(tGL)
 				console.log(tGL.getParameter(tGL.FRAMEBUFFER_BINDING))
 				unit.run(tGL.getParameter(tGL.FRAMEBUFFER_BINDING) == t0['webglFrameBuffer'])
 				t0.unbind(tGL)
 			}, true),
-			redTest("unbind - unbind시 webglFrameBuffer가 unbind 되는지 확인", function (unit, title) {
+			redTest("성공테스트 : unbind - webglFrameBuffer가 unbind 되는지 확인", function (unit, title) {
 				var t0 = RedFrameBuffer(tRedGL)
 				t0.bind(tGL)
 				t0.unbind(tGL)
-				unit.run(tGL.getParameter(tGL.FRAMEBUFFER_BINDING) == t0['webglFrameBuffer'])
-			}, false),
-			redTest("bind - 소유하고있는 webglFrameBuffer가 등록되는지 확인2", function (unit, title) {
-				var t0 = RedFrameBuffer(tRedGL)
-				t0.bind(tGL)
-				unit.run(tGL.getParameter(tGL.FRAMEBUFFER_BINDING) == t0['webglFrameBuffer'])
-				t0.unbind(tGL)
-			}, true),
-			redTest("bind - 소유하고있는 webglTexture가 등록되는지 확인", function (unit, title) {
+				unit.run(tGL.getParameter(tGL.FRAMEBUFFER_BINDING) != t0['webglFrameBuffer'])
+			}, true)
+		),
+		redGroup(
+			"webglTexture - (RedFrameBuffer Instance).<b>bind</b>( gl ), (RedFrameBuffer Instance).<b>unbind</b>( gl )",
+			redTest("성공테스트 : bind - 소유하고있는 webglTexture가 등록되는지 확인", function (unit, title) {
 				var t0 = RedFrameBuffer(tRedGL)
 				t0.bind(tGL)
 				// console.log(tGL.TEXTURE)
@@ -77,26 +114,29 @@ RedGL(document.createElement('canvas'), function (v) {
 				unit.run(tGL.getParameter(tGL.TEXTURE_BINDING_2D) == t0['texture']['webglTexture'])
 				t0.unbind(tGL)
 			}, true),
-			redTest("unbind - unbind시 소유하고있는 webglTexture가 unbind 되는지 확인", function (unit, title) {
+			redTest("성공테스트 : unbind - 소유하고있는 webglTexture가 unbind 되는지 확인", function (unit, title) {
 				var t0 = RedFrameBuffer(tRedGL)
 				t0.bind(tGL)
 				t0.unbind(tGL)
 				console.log(t0['texture']['webglTexture'])
-				unit.run(tGL.getParameter(tGL.TEXTURE_BINDING_2D) == t0['texture']['webglTexture'])
-			}, false),
-			redTest("bind - 소유하고있는 webglRenderBuffer가 등록되는지 확인", function (unit, title) {
+				unit.run(tGL.getParameter(tGL.TEXTURE_BINDING_2D) != t0['texture']['webglTexture'])
+			}, true)
+		),
+		redGroup(
+			"webglRenderBuffer - (RedFrameBuffer Instance).<b>bind</b>( gl ), (RedFrameBuffer Instance).<b>unbind</b>( gl )",
+			redTest("성공테스트 : bind - 소유하고있는 webglRenderBuffer가 등록되는지 확인", function (unit, title) {
 				var t0 = RedFrameBuffer(tRedGL)
 				t0.bind(tGL)
 				console.log(tGL.getParameter(tGL.RENDERBUFFER_BINDING))
 				unit.run(tGL.getParameter(tGL.RENDERBUFFER_BINDING) == t0['webglRenderBuffer'])
 				t0.unbind(tGL)
 			}, true),
-			redTest("unbind - unbind시 소유하고있는 webglRenderBuffer가 unbind 되는지 확인", function (unit, title) {
+			redTest("성공테스트 : unbind -  소유하고있는 webglRenderBuffer가 unbind 되는지 확인", function (unit, title) {
 				var t0 = RedFrameBuffer(tRedGL)
 				t0.bind(tGL)
 				console.log(tGL.getParameter(tGL.RENDERBUFFER_BINDING))
-				unit.run(tGL.getParameter(tGL.RENDERBUFFER_BINDING) == t0['webglRenderBuffer'])
 				t0.unbind(tGL)
+				unit.run(tGL.getParameter(tGL.RENDERBUFFER_BINDING) != t0['webglRenderBuffer'])
 			}, true)
 		)
 	)

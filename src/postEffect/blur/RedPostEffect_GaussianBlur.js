@@ -22,7 +22,7 @@ var RedPostEffect_GaussianBlur;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
 		this['_UUID'] = RedGL.makeUUID();
-		this['process'] = [
+		this['_process'] = [
 			RedPostEffect_BlurX(redGL),
 			RedPostEffect_BlurY(redGL)
 		];
@@ -43,8 +43,8 @@ var RedPostEffect_GaussianBlur;
 	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_GaussianBlur', 'radius', 'number', {
 		min: 0.1, max: 255, callback: function (v) {
-			this['process'][0]['size'] = v;
-			this['process'][1]['size'] = v;
+			this['_process'][0]['size'] = v;
+			this['_process'][1]['size'] = v;
 		}
 	});
 	Object.freeze(RedPostEffect_GaussianBlur);

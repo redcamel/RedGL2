@@ -52,14 +52,14 @@ var RedPostEffect_DoF;
 		this['depthTexture'] = null;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['subFrameBufferList'] = [
+		this['_subFrameBufferList'] = [
 			{
 				frameBuffer: RedFrameBuffer(redGL),
 				renderMaterial: RedPostEffect_DoF_DepthMaterial(redGL),
 				process: []
 			}
 		];
-		this['process'] = [
+		this['_process'] = [
 			RedPostEffect_BlurX(redGL),
 			RedPostEffect_BlurY(redGL)
 		];
@@ -77,15 +77,15 @@ var RedPostEffect_DoF;
 	RedPostEffect_DoF.prototype['updateTexture'] = function (lastFrameBufferTexture, parentFrameBufferTexture) {
 		this['diffuseTexture'] = parentFrameBufferTexture;
 		this['blurTexture'] = lastFrameBufferTexture;
-		this['depthTexture'] = this['subFrameBufferList'][0]['frameBuffer']['texture']
+		this['depthTexture'] = this['_subFrameBufferList'][0]['frameBuffer']['texture']
 	};
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_DoF', 'diffuseTexture', 'sampler2D');
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_DoF', 'blurTexture', 'sampler2D');
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_DoF', 'depthTexture', 'sampler2D');
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_DoF', 'blur', 'number', {
 		min: 0, callback: function (v) {
-			this['process'][0]['size'] = v;
-			this['process'][1]['size'] = v;
+			this['_process'][0]['size'] = v;
+			this['_process'][1]['size'] = v;
 		}
 	});
 	/**DOC:
@@ -101,10 +101,10 @@ var RedPostEffect_DoF;
 	Object.defineProperty(RedPostEffect_DoF.prototype, 'focusLength', (function () {
 		return {
 			get: function () {
-				return this['subFrameBufferList'][0]['renderMaterial']['focusLength']
+				return this['_subFrameBufferList'][0]['renderMaterial']['focusLength']
 			},
 			set: function (v) {
-				this['subFrameBufferList'][0]['renderMaterial']['focusLength'] = v
+				this['_subFrameBufferList'][0]['renderMaterial']['focusLength'] = v
 			}
 		}
 	})());

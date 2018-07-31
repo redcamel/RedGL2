@@ -53,7 +53,7 @@ var RedPostEffect_Bloom;
 		this['bloomStrength'] = 1.2;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
-		this['process'] = [
+		this['_process'] = [
 			RedPostEffect_BloomThreshold(redGL),
 			RedPostEffect_BlurX(redGL),
 			RedPostEffect_BlurY(redGL)
@@ -110,8 +110,8 @@ var RedPostEffect_Bloom;
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_Bloom', 'threshold', 'number', {
 		min: 0,
 		callback: function (v) {
-			this['process'][0]['threshold'] = v;
-			this['_threshold'] = this['process'][0]['threshold']
+			this['_process'][0]['threshold'] = v;
+			this['_threshold'] = this['_process'][0]['threshold']
 		}
 	});
 	/**DOC:
@@ -126,8 +126,8 @@ var RedPostEffect_Bloom;
 	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_Bloom', 'blur', 'number', {
 		min: 0, callback: function (v) {
-			this['process'][1]['size'] = v;
-			this['process'][2]['size'] = v;
+			this['_process'][1]['size'] = v;
+			this['_process'][2]['size'] = v;
 		}
 	});
 	Object.freeze(RedPostEffect_Bloom);
