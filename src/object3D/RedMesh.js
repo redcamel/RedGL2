@@ -31,7 +31,7 @@ var RedMesh;
 	 :DOC*/
 	RedMesh = function (redGL, geometry, material) {
 		if ( !(this instanceof RedMesh) ) return new RedMesh(redGL, geometry, material);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedMesh : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedMesh : RedGL Instance만 허용.', redGL);
 		RedBaseObject3D['build'].call(this, redGL.gl);
 		/**DOC:
 		 {

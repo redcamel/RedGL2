@@ -60,7 +60,7 @@ var RedSkyBoxMaterial;
 	 :DOC*/
 	RedSkyBoxMaterial = function (redGL, skyBoxTexture) {
 		if ( !(this instanceof RedSkyBoxMaterial) ) return new RedSkyBoxMaterial(redGL, skyBoxTexture);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedSkyBoxMaterial : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedSkyBoxMaterial : RedGL Instance만 허용.', redGL);
 		this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource);
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티

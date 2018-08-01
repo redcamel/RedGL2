@@ -39,9 +39,9 @@ var RedLine;
 	 :DOC*/
 	RedLine = function (redGL, material) {
 		if ( !(this instanceof RedLine) ) return new RedLine(redGL, material);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedLine : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedLine : RedGL Instance만 허용.', redGL);
 		material = material || RedColorMaterial(redGL);
-		material instanceof RedColorMaterial || RedGLUtil.throwFunc('RedLine : RedColorMaterial Instance만 허용됩니다.');
+		material instanceof RedColorMaterial || RedGLUtil.throwFunc('RedLine : RedColorMaterial Instance만 허용.');
 		var tGL;
 		tGL = redGL.gl;
 		RedBaseObject3D['build'].call(this, tGL);
@@ -124,7 +124,7 @@ var RedLine;
 	Object.defineProperty(RedLine.prototype, 'material', {
 		get: function () { return this['_material']; },
 		set: function (v) {
-			v instanceof RedColorMaterial || RedGLUtil.throwFunc('RedLine : RedColorMaterial Instance만 허용됩니다.', '입력값 : ' + v);
+			v instanceof RedColorMaterial || RedGLUtil.throwFunc('RedLine : RedColorMaterial Instance만 허용.', '입력값 : ' + v);
 			this['_material'] = v;
 		}
 	});

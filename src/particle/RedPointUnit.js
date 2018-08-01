@@ -27,7 +27,7 @@ var RedPointUnit;
 	 :DOC*/
 	RedPointUnit = function (redGL, interleaveData, interleaveDefineInfoList, material) {
 		if ( !(this instanceof RedPointUnit) ) return new RedPointUnit(redGL, interleaveData, interleaveDefineInfoList, material);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedLine : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedLine : RedGL Instance만 허용.', redGL);
 		var tGL;
 		tGL = redGL.gl;
 		RedBaseObject3D['build'].call(this, tGL);
@@ -63,7 +63,7 @@ var RedPointUnit;
 		set: function (v) {
 			v instanceof RedPointColorMaterial
 			|| v instanceof RedPointBitmapMaterial
-			|| RedGLUtil.throwFunc('RedPointUnit : material - RedPointColorMaterial Instance or RedPointBitmapMaterial Instance만 허용됩니다.');
+			|| RedGLUtil.throwFunc('RedPointUnit : material - RedPointColorMaterial Instance or RedPointBitmapMaterial Instance만 허용.');
 			this['_material'] = v;
 		}
 	});

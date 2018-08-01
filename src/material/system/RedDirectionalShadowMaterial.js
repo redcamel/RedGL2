@@ -56,7 +56,7 @@ var RedDirectionalShadowMaterial;
 	 :DOC*/
 	RedDirectionalShadowMaterial = function (redGL) {
 		if ( !(this instanceof RedDirectionalShadowMaterial) ) return new RedDirectionalShadowMaterial(redGL);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedDirectionalShadowMaterial : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedDirectionalShadowMaterial : RedGL Instance만 허용.', redGL);
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
 		/////////////////////////////////////////

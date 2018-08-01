@@ -98,7 +98,11 @@ var RedDefinePropertyInfo;
 				result = {
 					get: function () { return this['_' + name]; },
 					set: function (v) {
-						if ( !(v instanceof samplerCls) ) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : ' + samplerTypeKey + ' Instance만 허용.', '입력값 : ' + v)
+						if ( samplerCls == RedBitmapCubeTexture ) {
+							if ( !(v instanceof samplerCls) ) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : ' + samplerTypeKey + ' Instance만 허용.', '입력값 : ' + v)
+						} else {
+							if ( v instanceof RedBitmapCubeTexture || !(v instanceof samplerCls) ) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : ' + samplerTypeKey + ' Instance만 허용.', '입력값 : ' + v)
+						}
 						this['_' + name] = v
 						if ( option && option['callback'] ) option['callback'].call(this)
 					}
@@ -107,7 +111,13 @@ var RedDefinePropertyInfo;
 				result = {
 					get: function () { return this['_' + name]; },
 					set: function (v) {
-						if ( v && !(v instanceof samplerCls) ) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : ' + samplerTypeKey + ' Instance만 허용.', '입력값 : ' + v)
+						if ( v ) {
+							if ( samplerCls == RedBitmapCubeTexture ) {
+								if ( !(v instanceof samplerCls) ) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : ' + samplerTypeKey + ' Instance만 허용.', '입력값 : ' + v)
+							} else {
+								if ( v instanceof RedBitmapCubeTexture || !(v instanceof samplerCls) ) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : ' + samplerTypeKey + ' Instance만 허용.', '입력값 : ' + v)
+							}
+						}
 						this['_' + name] = v
 						if ( option && option['callback'] ) option['callback'].call(this)
 					}

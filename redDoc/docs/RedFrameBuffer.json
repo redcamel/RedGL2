@@ -1,5 +1,11 @@
 [
   {
+    "code": "METHOD",
+    "title": "bind",
+    "description": "소유하고있는 webglFrameBuffer, webglTexture, webglRenderBuffer를 binding.",
+    "return": "void"
+  },
+  {
     "constructorYn": true,
     "title": "RedFrameBuffer",
     "description": "\nRedFrameBuffer Instance 생성자\n",
@@ -22,5 +28,11 @@
     },
     "example": "\nRedFrameBuffer( RedGL Instance );\n",
     "return": "RedGeometry Instance"
+  },
+  {
+    "code": "METHOD",
+    "title": "unbind",
+    "description": "소유하고있는 webglFrameBuffer, webglTexture, webglRenderBuffer를 unbinding.",
+    "return": "void"
   }
 ]

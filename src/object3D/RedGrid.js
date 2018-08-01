@@ -39,7 +39,7 @@ var RedGrid;
 	 :DOC*/
 	RedGrid = function (redGL, size, divisions, color1, color2) {
 		if ( !(this instanceof RedGrid) ) return new RedGrid(redGL, size, divisions, color1, color2);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedGrid : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedGrid : RedGL Instance만 허용.', redGL);
 		var tGL;
 		tGL = redGL.gl;
 		RedBaseObject3D['build'].call(this, tGL);
@@ -168,7 +168,7 @@ var RedGrid;
 	Object.defineProperty(RedGrid.prototype, 'material', {
 		get: function () { return this['_material']; },
 		set: function (v) {
-			v instanceof RedGridMaterial || RedGLUtil.throwFunc('RedGrid : RedGridMaterial Instance만 허용됩니다.', '입력값 : ' + v);
+			v instanceof RedGridMaterial || RedGLUtil.throwFunc('RedGrid : RedGridMaterial Instance만 허용.', '입력값 : ' + v);
 			this['_material'] = v;
 		}
 	});

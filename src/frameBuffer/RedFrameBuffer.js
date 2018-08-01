@@ -27,7 +27,9 @@ var RedFrameBuffer;
 	 :DOC*/
 	RedFrameBuffer = function (redGL, width, height) {
 		if ( !(this instanceof RedFrameBuffer) ) return new RedFrameBuffer(redGL, width, height);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedFrameBuffer : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedFrameBuffer : RedGL Instance만 허용.', redGL);
+		if ( width ) typeof width == 'number' || RedGLUtil.throwFunc('RedFrameBuffer : width - 숫자만 허용', '입력값 : ', width);
+		if ( height ) typeof height == 'number' || RedGLUtil.throwFunc('RedFrameBuffer : height - 숫자만 허용', '입력값 : ', height);
 		var gl;
 		gl = redGL['gl'];
 		width = width || 1920;
@@ -64,6 +66,14 @@ var RedFrameBuffer;
 		console.log(this)
 	};
 	RedFrameBuffer.prototype = {
+		/**DOC:
+		 {
+			 code : 'METHOD',
+			 title :`bind`,
+			 description : `소유하고있는 webglFrameBuffer, webglTexture, webglRenderBuffer를 binding.`,
+			 return : 'void'
+		 }
+		 :DOC*/
 		bind: function (gl) {
 			gl.bindFramebuffer(gl.FRAMEBUFFER, this['webglFrameBuffer']);
 			gl.activeTexture(gl.TEXTURE0);
@@ -80,11 +90,21 @@ var RedFrameBuffer;
 			gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this['texture']['webglTexture'], 0);
 			gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, this['webglRenderBuffer']);
 		},
+		/**DOC:
+		 {
+			 code : 'METHOD',
+			 title :`unbind`,
+			 description : `소유하고있는 webglFrameBuffer, webglTexture, webglRenderBuffer를 unbinding.`,
+			 return : 'void'
+		 }
+		 :DOC*/
 		unbind: function (gl) {
 			gl.bindTexture(gl.TEXTURE_2D, null);
 			gl.bindRenderbuffer(gl.RENDERBUFFER, null);
 			gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 		}
 	};
+	RedDefinePropertyInfo.definePrototype('RedFrameBuffer', 'width', 'number', {min: 2});
+	RedDefinePropertyInfo.definePrototype('RedFrameBuffer', 'height', 'number', {min: 2});
 	Object.freeze(RedFrameBuffer);
 })();

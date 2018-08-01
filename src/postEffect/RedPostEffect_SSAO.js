@@ -48,7 +48,7 @@ var RedPostEffect_SSAO;
 	 :DOC*/
 	RedPostEffect_SSAO = function (redGL) {
 		if ( !(this instanceof RedPostEffect_SSAO) ) return new RedPostEffect_SSAO(redGL);
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedPostEffect_SSAO : RedGL Instance만 허용됩니다.', redGL)
+		redGL instanceof RedGL ||  RedGLUtil.throwFunc('RedPostEffect_SSAO : RedGL Instance만 허용.', redGL)
 		this['frameBuffer'] = RedFrameBuffer(redGL);
 		this['diffuseTexture'] = null;
 		this['ssaoTexture'] = null;
@@ -56,7 +56,7 @@ var RedPostEffect_SSAO;
 		// 일반 프로퍼티
 		var point;
 		point = RedPostEffect_SSAO_PointMaker(redGL)
-		this['process'] = [
+		this['_process'] = [
 			point,
 			RedPostEffect_GaussianBlur(redGL)
 		]
@@ -69,7 +69,7 @@ var RedPostEffect_SSAO;
 				},
 				set: function (v) {
 					_v = v;
-					this['process'][1]['radius'] = _v;
+					this['_process'][1]['radius'] = _v;
 				}
 			}
 		})());

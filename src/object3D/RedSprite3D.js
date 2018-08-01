@@ -28,7 +28,7 @@ var RedSprite3D;
 	 :DOC*/
 	RedSprite3D = function (redGL, material) {
 		if ( !(this instanceof RedSprite3D) ) return new RedSprite3D(redGL, material);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedSprite3D : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedSprite3D : RedGL Instance만 허용.', redGL);
 		RedBaseObject3D['build'].call(this, redGL.gl);
 		this['geometry'] = RedPlane(redGL, 1, 1, 0);
 		/**DOC:
@@ -66,7 +66,7 @@ var RedSprite3D;
 				&& !(v instanceof RedSheetMaterial)
 				&& !(v instanceof RedVideoMaterial)
 			) {
-				RedGLUtil.throwFunc('RedSprite3D : RedColorMaterial or RedBitmapMaterial or RedSheetMaterial Instance만 허용됩니다.', '입력값 : ' + v)
+				RedGLUtil.throwFunc('RedSprite3D : RedColorMaterial or RedBitmapMaterial or RedSheetMaterial Instance만 허용.', '입력값 : ' + v)
 			}
 			this['_material'] = v;
 		}

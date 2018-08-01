@@ -77,17 +77,27 @@ var RedVideoTexture;
 	RedVideoTexture = function (redGL, src, callback) {
 		var tGL;
 		if ( !(this instanceof RedVideoTexture) ) return new RedVideoTexture(redGL, src, callback);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedVideoTexture : RedGL Instance만 허용됩니다.', redGL);
-		if ( src && typeof src != 'string' && !(src instanceof HTMLVideoElement) ) RedGLUtil.throwFunc('RedBitmapTexture : src는 문자열 or HTMLVideoElement만 허용.', '입력값 : ' + src);
-		if ( callback && !(typeof callback == 'function') ) RedGLUtil.throwFunc('RedVideoTexture : callback은 함수만 허용됩니다.', '입력값 :', callback);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedVideoTexture : RedGL Instance만 허용.', redGL);
 		tGL = redGL.gl;
 		this['webglTexture'] = tGL.createTexture();
 		this['atlascoord'] = RedAtlasUV(redGL);
 		this['_UUID'] = RedGL.makeUUID();
-		this.setEmptyTexture(tGL, this['webglTexture']);
-		if ( src ) loadTexture(tGL, this, this['webglTexture'], src, callback);
+		this['_load'] = function (needEmpty) {
+			if ( needEmpty ) this.setEmptyTexture(tGL, this['webglTexture']);
+			if ( this['_src'] ) loadTexture(tGL, this, this['webglTexture'], this['_src'],  this['_callback']);
+		}
+		this['callback'] = callback;
+		this['src'] = src;
 		console.log(this);
 	};
 	RedVideoTexture.prototype = new RedBaseTexture();
+	Object.defineProperty(RedVideoTexture.prototype, 'src', {
+		get: function () {return this['_src']},
+		set: function (v) {
+			if ( v && typeof v != 'string' && !(v instanceof HTMLVideoElement) ) RedGLUtil.throwFunc('RedVideoTexture : src는 문자열 or HTMLVideoElement만 허용.', '입력값 : ' + v);
+			this['_src'] = v;
+			this._load(true)
+		}
+	});
 	Object.freeze(RedVideoTexture);
 })();

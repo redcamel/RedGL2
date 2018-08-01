@@ -3,6 +3,7 @@ var RedPostEffect_Threshold;
 (function () {
 	var vSource, fSource;
 	var PROGRAM_NAME = 'RedPostEffectThresholdProgram';
+	var checked;
 	vSource = function () {
 		/* @preserve
 		 void main(void) {
@@ -10,22 +11,22 @@ var RedPostEffect_Threshold;
 			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
 		 }
 		 */
-	}
+	};
 	fSource = function () {
 		/* @preserve
 		 precision highp float;
-		 uniform sampler2D uDiffuseTexture;
-		 uniform float u_threshold;
+		 uniform sampler2D u_diffuseTexture;
+		 uniform float u_threshold_value;
 		 void main() {
-			 vec4 finalColor = texture2D(uDiffuseTexture, vTexcoord);
+			 vec4 finalColor = texture2D(u_diffuseTexture, vTexcoord);
 			 float v;
-			 if(0.2126 * finalColor.r + 0.7152 * finalColor.g + 0.0722 * finalColor.b >= u_threshold) v = 1.0;
+			 if(0.2126 * finalColor.r + 0.7152 * finalColor.g + 0.0722 * finalColor.b >= u_threshold_value) v = 1.0;
 			 else v = 0.0;
 			 finalColor.r = finalColor.g = finalColor.b = v;
 			 gl_FragColor = finalColor;
 		 }
 		 */
-	}
+	};
 	/**DOC:
 	 {
 		 constructorYn : true,
@@ -43,44 +44,39 @@ var RedPostEffect_Threshold;
 	 :DOC*/
 	RedPostEffect_Threshold = function (redGL) {
 		if ( !(this instanceof RedPostEffect_Threshold) ) return new RedPostEffect_Threshold(redGL);
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedPostEffect_Threshold : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPostEffect_Threshold : RedGL Instance만 허용.', redGL);
 		this['frameBuffer'] = RedFrameBuffer(redGL);
 		this['diffuseTexture'] = null;
+		this['threshold'] = 128;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
 		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		this['_UUID'] = RedGL.makeUUID();
-		/**DOC:
-		 {
-			 title :`threshold`,
-			 description : `
-				 최소 유효값
-				 기본값 : 128
-			 `,
-			 return : 'Number'
-		 }
-		 :DOC*/
-		this['_threshold'] = null;
-		Object.defineProperty(this, 'threshold', (function () {
-			var _v = 128
-			return {
-				get: function () { return _v },
-				set: function (v) {
-					if ( typeof v != 'number' ) RedGLUtil.throwFunc('RedPostEffect_Threshold : threshold 숫자만허용함', '입력값 : ' + v);
-					_v = v;
-					if ( _v < 1 ) _v = 1
-					if ( _v > 255 ) _v = 255
-					this['_threshold'] = _v / 255
-				}
-			}
-		})())
-		this['threshold'] = 128
-		this.updateTexture = function (lastFrameBufferTexture) {
-			this['diffuseTexture'] = lastFrameBufferTexture;
+		if ( !checked ) {
+			this.checkUniformAndProperty();
+			checked = true;
 		}
-		this.checkUniformAndProperty();
 		console.log(this);
-	}
+	};
 	RedPostEffect_Threshold.prototype = new RedBasePostEffect();
+	RedPostEffect_Threshold.prototype['updateTexture'] = function (lastFrameBufferTexture) {
+		this['diffuseTexture'] = lastFrameBufferTexture;
+	};
+	RedDefinePropertyInfo.definePrototype('RedPostEffect_Threshold', 'diffuseTexture', 'sampler2D');
+	/**DOC:
+	 {
+		 title :`threshold`,
+		 description : `
+			 최소 유효값
+			 기본값 : 128
+		 `,
+		 return : 'Number'
+	 }
+	 :DOC*/
+	RedDefinePropertyInfo.definePrototype('RedPostEffect_Threshold', 'threshold', 'number', {
+		min: 1, max: 255, callback: function (v) {
+			this['_threshold_value'] = v / 255
+		}
+	});
 	Object.freeze(RedPostEffect_Threshold);
 })();

@@ -177,6 +177,7 @@
 			this,
 			RedBitmapTexture(this, '../asset/alphaTest.png')
 		)
+
 		tScene3D.skyBox =
 			RedSkyBox(this, [
 				'../asset/cubemap/posx.png',
@@ -251,6 +252,9 @@
 		// testALight = RedAmbientLight(this)
 		// tScene3D.addLight(testALight)
 		tRenderer.renderDebuger.visible = true
+		var test = RedPostEffect_BrightnessContrast(this)
+        console.log(test)
+		RedView('test')['postEffectManager'].addEffect(test)
 		tRenderer.start(this, function (time) {
 			// testInterleaveBuffer.upload(interleaveData)
 			i = tScene3D.children.length

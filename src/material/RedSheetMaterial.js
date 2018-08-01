@@ -83,7 +83,7 @@ var RedSheetMaterial;
 	 :DOC*/
 	RedSheetMaterial = function (redGL, diffuseTexture, frameRate, segmentW, segmentH, totalFrame) {
 		if ( !(this instanceof RedSheetMaterial) ) return new RedSheetMaterial(redGL, diffuseTexture, frameRate, segmentW, segmentH, totalFrame);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedSheetMaterial : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedSheetMaterial : RedGL Instance만 허용.', redGL);
 		frameRate = frameRate || 60;
 		segmentW = segmentW || 1;
 		segmentH = segmentH || 1;

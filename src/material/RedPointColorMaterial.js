@@ -53,7 +53,7 @@ var RedPointColorMaterial;
 	 :DOC*/
 	RedPointColorMaterial = function (redGL) {
 		if ( !(this instanceof RedPointColorMaterial) ) return new RedPointColorMaterial(redGL);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPointColorMaterial : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPointColorMaterial : RedGL Instance만 허용.', redGL);
 		this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource);
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티

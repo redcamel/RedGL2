@@ -3,6 +3,7 @@ var RedPostEffect_BlurX;
 (function () {
 	var vSource, fSource;
 	var PROGRAM_NAME = 'RedPostEffectBlurXProgram';
+	var checked;
 	vSource = function () {
 		/* @preserve
 		 void main(void) {
@@ -11,11 +12,11 @@ var RedPostEffect_BlurX;
 		     gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
 		 }
 		 */
-	}
+	};
 	fSource = function () {
 		/* @preserve
 		 precision mediump float;
-		 uniform sampler2D uDiffuseTexture;
+		 uniform sampler2D u_diffuseTexture;
 		 uniform float u_size;
 		 float random(vec3 scale, float seed) {
 		    return fract(sin(dot(gl_FragCoord.xyz + seed, scale)) * 43758.5453 + seed);
@@ -29,7 +30,7 @@ var RedPostEffect_BlurX;
 			 for (float t = -10.0; t <= 10.0; t++) {
 				 float percent = (t + offset - 0.5) / 10.0;
 				 float weight = 1.0 - abs(percent);
-				 vec4 sample = texture2D(uDiffuseTexture, vTexcoord + delta * percent);
+				 vec4 sample = texture2D(u_diffuseTexture, vTexcoord + delta * percent);
 				 sample.rgb *= sample.a;
 				 finalColor += sample * weight;
 				 total += weight;
@@ -39,7 +40,7 @@ var RedPostEffect_BlurX;
 			 gl_FragColor =  finalColor ;
 		 }
 		 */
-	}
+	};
 	/**DOC:
 	 {
 		 constructorYn : true,
@@ -57,31 +58,35 @@ var RedPostEffect_BlurX;
 	 :DOC*/
 	RedPostEffect_BlurX = function (redGL) {
 		if ( !(this instanceof RedPostEffect_BlurX) ) return new RedPostEffect_BlurX(redGL);
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedPostEffect_BlurX : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPostEffect_BlurX : RedGL Instance만 허용.', redGL);
 		this['frameBuffer'] = RedFrameBuffer(redGL);
 		this['diffuseTexture'] = null;
-		/**DOC:
-		 {
-			 title :`size`,
-			 description : `
-				 블러 사이즈
-				 기본값 : 50
-			 `,
-			 return : 'Number'
-		 }
-		 :DOC*/
-		this['size'] = 50
+		this['size'] = 50;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
 		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		this['_UUID'] = RedGL.makeUUID();
-		this.updateTexture = function (lastFrameBufferTexture) {
-			this['diffuseTexture'] = lastFrameBufferTexture;
+		if ( !checked ) {
+			this.checkUniformAndProperty();
+			checked = true;
 		}
-		this.checkUniformAndProperty();
 		console.log(this);
-	}
+	};
 	RedPostEffect_BlurX.prototype = new RedBasePostEffect();
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_BlurX', 'size', 'number', {'min': 0})
+	RedPostEffect_BlurX.prototype['updateTexture'] = function (lastFrameBufferTexture) {
+		this['diffuseTexture'] = lastFrameBufferTexture;
+	};
+	RedDefinePropertyInfo.definePrototype('RedPostEffect_BlurX', 'diffuseTexture', 'sampler2D');
+	/**DOC:
+	 {
+		 title :`size`,
+		 description : `
+			 블러 사이즈
+			 기본값 : 50
+		 `,
+		 return : 'Number'
+	 }
+	 :DOC*/
+	RedDefinePropertyInfo.definePrototype('RedPostEffect_BlurX', 'size', 'number', {'min': 0});
 	Object.freeze(RedPostEffect_BlurX);
 })();

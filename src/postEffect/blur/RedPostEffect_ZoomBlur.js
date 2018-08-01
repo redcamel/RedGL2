@@ -3,6 +3,7 @@ var RedPostEffect_ZoomBlur;
 (function () {
 	var vSource, fSource;
 	var PROGRAM_NAME = 'RedPostEffectZoomBlurProgram';
+	var checked;
 	vSource = function () {
 		/* @preserve
 		 void main(void) {
@@ -10,20 +11,20 @@ var RedPostEffect_ZoomBlur;
 			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
 		 }
 		 */
-	}
+	};
 	fSource = function () {
 		/* @preserve
 		 precision mediump float;
-		 uniform sampler2D uDiffuseTexture;
-		 uniform float uCenterX;
-		 uniform float uCenterY;
-		 uniform float u_amount;
+		 uniform sampler2D u_diffuseTexture;
+		 uniform float u_centerX;
+		 uniform float u_centerY;
+		 uniform float u_amount_value;
 		 float random(vec3 scale, float seed) {
 		    return fract(sin(dot(gl_FragCoord.xyz + seed, scale)) * 43758.5453 + seed);
 		 }
 		 void main(void) {
 			 vec4 finalColor = vec4(0.0);
-			 vec2 center = vec2(uCenterX+0.5,-uCenterY+0.5);
+			 vec2 center = vec2(u_centerX+0.5,-u_centerY+0.5);
 			 vec2 toCenter = center - vTexcoord ;
 			 float offset = random(vec3(12.9898, 78.233, 151.7182), 0.0);
 			 float total = 0.0;
@@ -31,7 +32,7 @@ var RedPostEffect_ZoomBlur;
 			 for (float t = 0.0; t <= 30.0; t++) {
 				 float percent = (t + offset) / 30.0;
 				 float weight = 3.0 * (percent - percent * percent);
-				 vec4 sample = texture2D(uDiffuseTexture, vTexcoord + toCenter * percent * u_amount );
+				 vec4 sample = texture2D(u_diffuseTexture, vTexcoord + toCenter * percent * u_amount_value );
 				 sample.rgb *= sample.a;
 				 finalColor += sample * weight;
 				 total += weight;
@@ -40,7 +41,7 @@ var RedPostEffect_ZoomBlur;
 			 gl_FragColor.rgb /= gl_FragColor.a + 0.00001;
 		 }
 		 */
-	}
+	};
 	/**DOC:
 	 {
 		 constructorYn : true,
@@ -58,68 +59,63 @@ var RedPostEffect_ZoomBlur;
 	 :DOC*/
 	RedPostEffect_ZoomBlur = function (redGL) {
 		if ( !(this instanceof RedPostEffect_ZoomBlur) ) return new RedPostEffect_ZoomBlur(redGL);
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedPostEffect_ZoomBlur : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPostEffect_ZoomBlur : RedGL Instance만 허용.', redGL);
 		this['frameBuffer'] = RedFrameBuffer(redGL);
 		this['diffuseTexture'] = null;
-		/**DOC:
-		 {
-			 title :`centerX`,
-			 description : `
-				 정중앙 중심의 가로 위치
-				 기본값 : 0.0
-			 `,
-			 return : 'Number'
-		 }
-		 :DOC*/
 		this['centerX'] = 0.0;
-		/**DOC:
-		 {
-			 title :`centerY`,
-			 description : `
-				 정중앙 중심의 세로 위치
-				 기본값 : 0.0
-			 `,
-			 return : 'Number'
-		 }
-		 :DOC*/
 		this['centerY'] = 0.0;
-		/**DOC:
-		 {
-			 title :`amount`,
-			 description : `
-				 강도
-				 기본값 : 0.15
-			 `,
-			 return : 'Number'
-		 }
-		 :DOC*/
-		this['_amount'] = null;
-		Object.defineProperty(this, 'amount', (function () {
-			var _v = 0
-			return {
-				get: function () { return _v },
-				set: function (v) {
-					if ( typeof v != 'number' ) RedGLUtil.throwFunc('RedPostEffect_ZoomBlur : amount 숫자만허용함', '입력값 : ' + v);
-					_v = v;
-					if ( _v < 1 ) _v = 1
-					if ( _v > 100 ) _v = 100
-					this['_amount'] = _v / 100
-				}
-			}
-		})());
-		this['amount'] = 38
+		this['amount'] = 38;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
 		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
 		this['_UUID'] = RedGL.makeUUID();
-		this.updateTexture = function (lastFrameBufferTexture) {
-			this['diffuseTexture'] = lastFrameBufferTexture
+		if ( !checked ) {
+			this.checkUniformAndProperty();
+			checked = true;
 		}
-		this.checkUniformAndProperty();
 		console.log(this);
-	}
+	};
 	RedPostEffect_ZoomBlur.prototype = new RedBasePostEffect();
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_ZoomBlur', 'centerX', 'number')
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_ZoomBlur', 'centerY', 'number')
+	RedPostEffect_ZoomBlur.prototype['updateTexture'] = function (lastFrameBufferTexture) {
+		this['diffuseTexture'] = lastFrameBufferTexture;
+	};
+	RedDefinePropertyInfo.definePrototype('RedPostEffect_ZoomBlur', 'diffuseTexture', 'sampler2D');
+	/**DOC:
+	 {
+		 title :`centerX`,
+		 description : `
+			 정중앙 중심의 가로 위치
+			 기본값 : 0.0
+		 `,
+		 return : 'Number'
+	 }
+	 :DOC*/
+	RedDefinePropertyInfo.definePrototype('RedPostEffect_ZoomBlur', 'centerX', 'number');
+	/**DOC:
+	 {
+		 title :`centerY`,
+		 description : `
+			 정중앙 중심의 세로 위치
+			 기본값 : 0.0
+		 `,
+		 return : 'Number'
+	 }
+	 :DOC*/
+	RedDefinePropertyInfo.definePrototype('RedPostEffect_ZoomBlur', 'centerY', 'number');
+	/**DOC:
+	 {
+		 title :`amount`,
+		 description : `
+			 강도
+			 기본값 : 38
+		 `,
+		 return : 'Number'
+	 }
+	 :DOC*/
+	RedDefinePropertyInfo.definePrototype('RedPostEffect_ZoomBlur', 'amount', 'number', {
+		min: 1, max: 100, callback: function (v) {
+			this['_amount_value'] = v / 100
+		}
+	});
 	Object.freeze(RedPostEffect_ZoomBlur);
 })();

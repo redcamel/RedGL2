@@ -19,7 +19,7 @@ var RedShadowManager;
 	 :DOC*/
 	RedShadowManager = function (redGL) {
 		if ( !(this instanceof RedShadowManager) ) return new RedShadowManager(redGL);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedShadowManager : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedShadowManager : RedGL Instance만 허용.', redGL);
 		this['_UUID'] = RedGL.makeUUID();
 		console.log(this);
 	};
@@ -54,7 +54,7 @@ var RedShadowManager;
 	Object.defineProperty(RedShadowManager.prototype, 'directionalShadow', {
 		get: function () { return this['_directionalShadow']},
 		set: function (v) {
-			(!v || v instanceof RedDirectionalShadow) || RedGLUtil.throwFunc('RedShadowManager - directionalShadow : RedDirectionalShadow Instance만 허용됩니다.', v);
+			(!v || v instanceof RedDirectionalShadow) || RedGLUtil.throwFunc('RedShadowManager - directionalShadow : RedDirectionalShadow Instance만 허용.', v);
 			this['_directionalShadow'] = v
 		}
 	});

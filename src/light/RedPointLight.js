@@ -28,7 +28,7 @@ var RedPointLight;
 	 :DOC*/
 	RedPointLight = function (redGL, hexColor, alpha) {
 		if ( !(this instanceof RedPointLight) ) return new RedPointLight(redGL, hexColor, alpha);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPointLight : RedGL Instance만 허용됩니다.', '입력값 : ' + redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPointLight : RedGL Instance만 허용.', '입력값 : ' + redGL);
 		// 유니폼 프로퍼티
 		this['_lightColor'] = new Float32Array(4);
 		// 일반 프로퍼티

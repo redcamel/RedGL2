@@ -45,20 +45,30 @@ var RedDDSTexture;
 	RedDDSTexture = function (redGL, src, option, callback) {
 		var tGL;
 		if ( !(this instanceof RedDDSTexture) ) return new RedDDSTexture(redGL, src, option, callback);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedDDSTexture : RedGL Instance만 허용됩니다.', redGL);
-		if ( src && typeof  src != 'string' && !(src instanceof HTMLCanvasElement) ) RedGLUtil.throwFunc('RedDDSTexture : src는 문자열 or Canvas Element만 허용.', '입력값 : ' + src);
-		if ( callback && !(typeof callback == 'function') ) RedGLUtil.throwFunc('RedVideoTexture : callback은 함수만 허용됩니다.', '입력값 :', callback);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedDDSTexture : RedGL Instance만 허용.', redGL);
 		tGL = redGL.gl;
+		tGL.glExtension['WEBGL_compressed_texture_s3tc'] || RedGLUtil.throwFunc('RedDDSTexture : WEBGL_compressed_texture_s3tc확장을 지원하지않는 하드웨어입니다.');
 		RedTextureOptionChecker.check('RedDDSTexture', option, tGL);
 		this['webglTexture'] = tGL.createTexture();
 		this['atlascoord'] = RedAtlasUV(redGL);
+		this['_load'] = function (needEmpty) {
+			if ( needEmpty ) this.setEmptyTexture(tGL, this['webglTexture']);
+			if ( this['_src'] ) this.loadDDSTexture(tGL, tGL.glExtension['WEBGL_compressed_texture_s3tc'], this['_src'],  this['_callback']);
+		}
+		this['callback'] = callback;
+		this['src'] = src;
 		this['_UUID'] = RedGL.makeUUID();
-		this.setEmptyTexture(tGL, this['webglTexture']);
-		tGL.glExtension['WEBGL_compressed_texture_s3tc'] || RedGLUtil.throwFunc('RedDDSTexture : WEBGL_compressed_texture_s3tc확장을 지원하지않는 하드웨어입니다.');
-		this.loadDDSTexture(tGL, tGL.glExtension['WEBGL_compressed_texture_s3tc'], src, option, callback);
 		console.log(this);
 	}
 	RedDDSTexture.prototype = new RedBaseTexture();
+	Object.defineProperty(RedDDSTexture.prototype, 'src', {
+		get: function () {return this['_src']},
+		set: function (v) {
+			if ( v && typeof  v != 'string' && !(v instanceof HTMLCanvasElement) ) RedGLUtil.throwFunc('RedDDSTexture : src는 문자열 or Canvas Element만 허용.', '입력값 : ' + v);
+			this['_src'] = v;
+			this._load(true)
+		}
+	});
 })();
 /**
  * @fileoverview dds - Utilities for loading DDS texture files

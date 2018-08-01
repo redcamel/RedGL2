@@ -34,7 +34,7 @@ var RedSkyBox;
 	 :DOC*/
 	RedSkyBox = function (redGL, srcList) {
 		if ( !(this instanceof RedSkyBox) ) return new RedSkyBox(redGL, srcList);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedSkyBox : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedSkyBox : RedGL Instance만 허용.', redGL);
 		RedBaseObject3D['build'].call(this, redGL.gl);
 		this['geometry'] = RedBox(redGL);
 		this['material'] = RedSkyBoxMaterial(redGL, RedBitmapCubeTexture(redGL, srcList));
@@ -53,7 +53,7 @@ var RedSkyBox;
 	Object.defineProperty(RedSkyBox.prototype, 'material', {
 		get: function () { return this['_material']; },
 		set: function (v) {
-			v instanceof RedSkyBoxMaterial || RedGLUtil.throwFunc('RedSkyBox : RedSkyBoxMaterial Instance만 허용됩니다.', '입력값 : ' + v);
+			v instanceof RedSkyBoxMaterial || RedGLUtil.throwFunc('RedSkyBox : RedSkyBoxMaterial Instance만 허용.', '입력값 : ' + v);
 			this['_material'] = v;
 		}
 	});

@@ -45,7 +45,7 @@ var RedPostEffectMaterial;
 	 :DOC*/
 	RedPostEffectMaterial = function (redGL, diffuseTexture) {
 		if ( !(this instanceof RedPostEffectMaterial) ) return new RedPostEffectMaterial(redGL, diffuseTexture);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPostEffectMaterial : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPostEffectMaterial : RedGL Instance만 허용.', redGL);
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
 		this['diffuseTexture'] = diffuseTexture;

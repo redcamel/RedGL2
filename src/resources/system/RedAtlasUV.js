@@ -27,7 +27,7 @@ var RedAtlasUV;
 	 :DOC*/
 	RedAtlasUV = function (redGL, rect) {
 		if ( !(this instanceof RedAtlasUV) ) return new RedAtlasUV(redGL, rect);
-		if ( !(redGL instanceof RedGL) ) RedGLUtil.throwFunc('RedAtlasUV : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL ||  RedGLUtil.throwFunc('RedAtlasUV : RedGL Instance만 허용.', redGL);
 		if ( rect ) {
 			t0 = [
 				rect[0][0],

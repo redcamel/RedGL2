@@ -267,7 +267,7 @@ var RedParticleEmitter;
 		set: function (v) {
 			v instanceof RedParticleColorMaterial
 			|| v instanceof RedParticleBitmapMaterial
-			|| RedGLUtil.throwFunc('RedParticleEmitter : material - RedParticleColorMaterial Instance or RedParticleBitmapMaterial Instance만 허용됩니다.');
+			|| RedGLUtil.throwFunc('RedParticleEmitter : material - RedParticleColorMaterial Instance or RedParticleBitmapMaterial Instance만 허용.');
 			this['_material'] = v;
 		}
 	});

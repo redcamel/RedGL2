@@ -107,7 +107,7 @@ var RedPlane;
 	 :DOC*/
 	RedPlane = function (redGL, width, height, wSegments, hSegments) {
 		if ( !(this instanceof RedPlane) ) return new RedPlane(redGL, width, height, wSegments, hSegments);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPlane : RedGL Instance만 허용됩니다.', redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPlane : RedGL Instance만 허용.', redGL);
 		var tType, tPrimitiveData;
 		width = width || 1;
 		height = height || 1;
