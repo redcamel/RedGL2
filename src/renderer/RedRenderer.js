@@ -65,7 +65,7 @@ var RedRenderer;
 				self['_tickKey'] = requestAnimationFrame(tick);
 			}
 			return function (redGL, callback) {
-				redGL instanceof RedGL ||  RedGLUtil.throwFunc('RedGL Instance만 허용');
+				redGL instanceof RedGL || RedGLUtil.throwFunc('RedGL Instance만 허용');
 				if ( !(redGL.world instanceof RedWorld) ) RedGLUtil.throwFunc('RedWorld Instance만 허용');
 				self = this;
 				self.world = redGL.world;
@@ -94,7 +94,7 @@ var RedRenderer;
 		 }
 		 :DOC*/
 		render: function (redGL, time) {
-			redGL instanceof RedGL ||  RedGLUtil.throwFunc('RedGL Instance만 허용');
+			redGL instanceof RedGL || RedGLUtil.throwFunc('RedGL Instance만 허용');
 			this.worldRender(redGL, time);
 			this.world = redGL.world;
 		},
@@ -361,7 +361,7 @@ var RedRenderer;
 			var tUUID;
 			var tSamplerIndex;
 			var tSprite3DYn, tLODData, tDirectionalShadowMaterialYn;
-			var tProgram;
+			var tProgram, tOptionProgramKey, tOptionProgram;
 			// matix 관련
 			var a,
 				aSx, aSy, aSz, aCx, aCy, aCz, tRx, tRy, tRz,
@@ -431,24 +431,34 @@ var RedRenderer;
 					//TODO: 프로그램 생성로직정리후 선택로직 확정
 					tUseDirectionalShadow = scene['shadowManager']['_directionalShadow'];
 					tProgram = tMaterial['program']
+					tOptionProgramKey = null;
+					tOptionProgram = null;
 					tBaseProgramKey = tProgram['key']
 					tProgramList = tMaterial['_programList']
 					if ( tProgramList ) {
 						if ( tUseDirectionalShadow ) {
-							if ( scene['_useFog'] && tSprite3DYn ) tProgram = tProgramList['directionalShadow_fog_sprite3D'][tBaseProgramKey]
-							else if ( tSprite3DYn ) tProgram = tProgramList['directionalShadow_sprite3D'][tBaseProgramKey]
-							else if ( scene['_useFog'] ) tProgram = tProgramList['directionalShadow_fog'][tBaseProgramKey]
-							else tProgram = tProgramList['directionalShadow'][tBaseProgramKey]
+							if ( scene['_useFog'] && tSprite3DYn ) tOptionProgramKey = 'directionalShadow_fog_sprite3D'
+							else if ( tSprite3DYn ) tOptionProgramKey = 'directionalShadow_sprite3D'
+							else if ( scene['_useFog'] ) tOptionProgramKey = 'directionalShadow_fog'
+							else tOptionProgramKey = 'directionalShadow'
 						}
 						else {
-							if ( scene['_useFog'] && tSprite3DYn ) tProgram = tProgramList['fog_sprite3D'][tBaseProgramKey]
-							else if ( tSprite3DYn ) tProgram = tProgramList['sprite3D'][tBaseProgramKey]
-							else if ( scene['_useFog'] ) tProgram = tProgramList['fog'][tBaseProgramKey]
+							if ( scene['_useFog'] && tSprite3DYn ) tOptionProgramKey = 'fog_sprite3D'
+							else if ( tSprite3DYn ) tOptionProgramKey = 'sprite3D'
+							else if ( scene['_useFog'] ) tOptionProgramKey = 'fog'
 						}
 					}
+					if ( tOptionProgramKey ) {
+						tOptionProgram = tProgramList[tOptionProgramKey][tBaseProgramKey];
+						if ( tOptionProgram['_prepareProgramYn'] ) {
+							tOptionProgram = tProgramList[tOptionProgramKey][tBaseProgramKey] = tOptionProgram._makePrepareProgram();
+
+						}
+						tProgram = tOptionProgram
+					}
 					//
-					prevProgram_UUID == tProgram['_UUID'] ? 0 : tGL.useProgram(tProgram['webglProgram'])
-					prevProgram_UUID = tProgram['_UUID']
+					prevProgram_UUID == tProgram['_UUID'] ? 0 : tGL.useProgram(tProgram['webglProgram']);
+					prevProgram_UUID = tProgram['_UUID'];
 					// 업데이트할 어트리뷰트와 유니폼 정보를 가져옴
 					tAttrGroup = tProgram['attributeLocation'];
 					tUniformGroup = tProgram['uniformLocation'];

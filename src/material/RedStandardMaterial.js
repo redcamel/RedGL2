@@ -2,7 +2,7 @@
 var RedStandardMaterial;
 (function () {
 	var vSource, fSource;
-	var PROGRAM_NAME = 'standardProgram';
+	var PROGRAM_NAME = 'RedStandardMaterialProgram';
 	var PROGRAM_OPTION_LIST = ['normalTexture', 'specularTexture', 'displacementTexture'];
 	var checked;
 	vSource = function () {

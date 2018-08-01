@@ -37,7 +37,7 @@ var RedDirectionalShadow;
 		var t0;
 		return function (v) {
 			t0 = this['_castingList'].indexOf(v);
-			if ( t0 == -1 ) RedGLUtil.throwFunc('removeChild', '존재하지 않는 RedMesh를 삭제하려고 함');
+			if ( t0 == -1 ) RedGLUtil.throwFunc('removeCasting', '존재하지 않는 대상을 삭제하려고 함');
 			else this['_castingList'].splice(t0, 1);
 		}
 	})();

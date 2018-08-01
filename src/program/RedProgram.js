@@ -30,20 +30,30 @@ var RedProgram;
 			// 프로그램 정보를 입력함.
 			tProgram['key'] = key;
 			tProgram['vShaderKey'] = vs['key'];
+			tProgram['vShaderOriginSource'] = vs['originSource'];
 			tProgram['fShaderKey'] = fs['key'];
-			gl.useProgram(tProgram);
+			tProgram['fShaderOriginKey'] = vs['originSource'];
 			return tProgram;
 		}
 	})();
 	updateLocation = (function () {
 		var AttributeLocationInfo;
 		var UniformLocationInfo;
+		var materialPropertyNameMAP = {};
+		var totalUpdateLocationTime = 0;
 		AttributeLocationInfo = function () {};
 		UniformLocationInfo = function () {};
 		return function (self, gl, shader) {
+			var startTime = performance.now();
+			var i, v, tList;
+			var tIndex;
 			// attributeLocation 정보 생성
 			if ( shader['parseData']['attribute'] ) {
-				shader['parseData']['attribute']['list'].forEach(function (v) {
+				tList = shader['parseData']['attribute']['list'];
+				i = tList.length;
+				while ( i-- ) {
+					// shader['parseData']['attribute']['list'].forEach(function (v) {
+					v = tList[i];
 					var tLocationInfo = new AttributeLocationInfo();
 					tLocationInfo['_UUID'] = RedGL.makeUUID();
 					tLocationInfo['location'] = gl.getAttribLocation(self['webglProgram'], v['name']);
@@ -52,21 +62,27 @@ var RedProgram;
 					tLocationInfo['attributeType'] = v['attributeType'];
 					tLocationInfo['name'] = v['name'];
 					tLocationInfo['enabled'] = false;
-					if ( tLocationInfo['location'] != -1 ) self['attributeLocation'].push(tLocationInfo);
+					tIndex = self['attributeLocation'].length;
+					if ( tLocationInfo['location'] != -1 ) self['attributeLocation'][tIndex] = tLocationInfo;
 					self['attributeLocation'][tLocationInfo['name']] = tLocationInfo;
-				})
+					// })
+				}
 			}
 			// uniformLocation 정보 생성
 			if ( shader['parseData']['uniform'] ) {
-				shader['parseData']['uniform']['list'].forEach(function (tParseData) {
+				tList = shader['parseData']['uniform']['list'];
+				i = tList.length;
+				while ( i-- ) {
+					// shader['parseData']['uniform']['list'].forEach(function (v) {
+					v = tList[i];
 					var arrayNum, tRenderType, tRenderTypeIndex, tRenderMethod;
 					var tLocationInfo = new UniformLocationInfo();
 					tLocationInfo['_UUID'] = RedGL.makeUUID();
-					tLocationInfo['uniformType'] = tParseData['uniformType'];
+					tLocationInfo['uniformType'] = v['uniformType'];
 					// renderType 조사
-					arrayNum = tParseData['arrayNum'];
+					arrayNum = v['arrayNum'];
 					tRenderTypeIndex = 100000;
-					switch ( tParseData['uniformType'] ) {
+					switch ( v['uniformType'] ) {
 						case 'sampler2D':
 							tRenderType = 'sampler2D';
 							tRenderTypeIndex = 0;
@@ -160,24 +176,33 @@ var RedProgram;
 							break;
 					}
 					// console.log('samplerIndex', samplerIndex)
-					tLocationInfo['location'] = gl.getUniformLocation(self['webglProgram'], tParseData['name']);
+					tLocationInfo['location'] = gl.getUniformLocation(self['webglProgram'], v['name']);
 					tLocationInfo['renderType'] = tRenderType;
 					tLocationInfo['renderMethod'] = tRenderMethod;
 					tLocationInfo['renderTypeIndex'] = tRenderTypeIndex;
-					tLocationInfo['name'] = tParseData['name'];
-					tLocationInfo['materialPropertyName'] = tParseData['name'].charAt(1).toLowerCase() + tParseData['name'].substr(2);
-					tLocationInfo['arrayNum'] = tParseData['arrayNum'];
-					if ( !tLocationInfo['location'] ) tLocationInfo['msg'] = '쉐이더 main 함수에서 사용되고 있지 않음', tLocationInfo['use'] = false;
-					else tLocationInfo['use'] = true;
-					if ( tParseData['systemUniformYn'] ) {
-						if ( tLocationInfo['use'] ) self['systemUniformLocation'].push(tLocationInfo);
-						self['systemUniformLocation'][tParseData['name']] = tLocationInfo;
-					} else {
-						if ( tLocationInfo['use'] ) self['uniformLocation'].push(tLocationInfo);
-						self['uniformLocation'][tParseData['name']] = tLocationInfo;
+					tLocationInfo['name'] = v['name'];
+					if ( !materialPropertyNameMAP[v['name']] ) materialPropertyNameMAP[v['name']] = v['name'].charAt(1).toLowerCase() + v['name'].substr(2);
+					tLocationInfo['materialPropertyName'] = materialPropertyNameMAP[v['name']];
+					tLocationInfo['arrayNum'] = v['arrayNum'];
+					if ( !tLocationInfo['location'] ) {
+						tLocationInfo['msg'] = '쉐이더 main 함수에서 사용되고 있지 않음';
+						tLocationInfo['use'] = false;
 					}
-				})
+					else tLocationInfo['use'] = true;
+					if ( v['systemUniformYn'] ) {
+						tIndex = self['systemUniformLocation'].length;
+						if ( tLocationInfo['use'] ) self['systemUniformLocation'][tIndex] = tLocationInfo;
+						self['systemUniformLocation'][v['name']] = tLocationInfo;
+					} else {
+						tIndex = self['uniformLocation'].length;
+						if ( tLocationInfo['use'] ) self['uniformLocation'][tIndex] = tLocationInfo;
+						self['uniformLocation'][v['name']] = tLocationInfo;
+					}
+				}
+				// })
 			}
+			totalUpdateLocationTime += performance.now() - startTime;
+			console.log('totalUpdateLocationTime', totalUpdateLocationTime);
 		}
 	})();
 	/**DOC:
@@ -215,8 +240,11 @@ var RedProgram;
 		typeof key == 'string' || RedGLUtil.throwFunc('RedProgram : key - 문자열만 허용.', '입력값 : ' + key);
 		tGL = redGL.gl;
 		// 데이터 공간확보
-		if ( !redGL['_datas']['RedProgram'] ) redGL['_datas']['RedProgram'] = {}, redGL['_datas']['RedProgramList'] = [];
-		if ( RedProgram.hasKey(redGL, key) ) return redGL['_datas']['RedProgram'][key]
+		if ( !redGL['_datas']['RedProgram'] ) {
+			redGL['_datas']['RedProgram'] = {};
+			redGL['_datas']['RedProgramList'] = [];
+		}
+		if ( RedProgram.hasKey(redGL, key) ) return redGL['_datas']['RedProgram'][key];
 		else {
 			vertexShader = vSource ? RedShader(redGL, key + '_VS', RedShader['VERTEX'], vSource) : null;
 			fragmentShader = fSource ? RedShader(redGL, key + '_FS', RedShader['FRAGMENT'], fSource) : null;
@@ -294,9 +322,12 @@ var RedProgram;
 	 }
 	 :DOC*/
 	RedProgram['hasKey'] = function (redGL, key) {
-		redGL instanceof RedGL ||  RedGLUtil.throwFunc('RedProgram : RedGL Instance만 허용.', '입력값 : ' + redGL);
-		if ( !redGL['_datas']['RedProgram'] ) redGL['_datas']['RedProgram'] = {}, redGL['_datas']['RedProgramList'] = [];
-		return redGL['_datas']['RedProgram'][key] ? true : false
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedProgram : RedGL Instance만 허용.', '입력값 : ' + redGL);
+		if ( !redGL['_datas']['RedProgram'] ) {
+			redGL['_datas']['RedProgram'] = {};
+			redGL['_datas']['RedProgramList'] = [];
+		}
+		return redGL['_datas']['RedProgram'][key] ? true : false;
 	};
 	//TODO: 이걸좀 정리해야하는데..
 	RedProgram['makeProgram'] = function (redGL, programName, vSource, fSource, subProgramOption) {

@@ -261,6 +261,7 @@ var RedShader;
 		 }
 		 :DOC*/
 		this['parseData'] = parserDefine(type, source); // 소스 파싱
+		this['originSource'] = source;
 		compileWebGLShader(tGL, type, this['webglShader'], this['parseData']); // 쉐이더 컴파일
 		/**DOC:
 		 {

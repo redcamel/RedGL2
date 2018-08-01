@@ -112,7 +112,7 @@ var RedGL;
 				 </code>
 				 `
 			 ],
-			 targetContext : [
+			 targetContextKey : [
 			    {type:'String'},
 			    `컨텍스트 키를 명시적으로 지정할 경우 사용`,
 			    `입력하지 않을경우 webkit-3d,moz-webgl,3d,experimental-webgl,webgl,webgl2 중에서 가장 높은 값으로 선택됨`
@@ -133,8 +133,9 @@ var RedGL;
 		 return : 'RedGL Instance'
 	 }
 	 :DOC*/
-	RedGL = function (canvas, callback, option, targetContext) {
-		if ( !(this instanceof RedGL) ) return new RedGL(canvas, callback, option, targetContext);
+	RedGL = function (canvas, callback, option, targetContextKey, initPrograms) {
+		var startTime = performance.now();
+		if ( !(this instanceof RedGL) ) return new RedGL(canvas, callback, option, targetContextKey, initPrograms);
 		canvas instanceof Element && canvas['tagName'] == 'CANVAS' || RedGLUtil.throwFunc('RedGL : Canvas Element만 허용');
 		var tGL, self;
 		self = this;
@@ -145,7 +146,7 @@ var RedGL;
 		this['_viewRect'] = [0, 0, 0, 0];
 		//
 		this['_canvas'] = canvas;
-		this['gl'] = tGL = getGL(canvas, option, targetContext);
+		this['gl'] = tGL = getGL(canvas, option, targetContextKey);
 		if ( tGL ) this['_detect'] = RedGLDetect(tGL);
 		else return callback ? callback.call(self, tGL ? true : false) : 0;
 		//
@@ -158,7 +159,47 @@ var RedGL;
 			});
 			self.setSize(self['_width'], self['_height']); // 리사이즈를 초기에 한번 실행.
 			setEmptyTextures(self, tGL); // 빈텍스쳐를 미리 체워둔다.
+			// 주요프로그램을 미리생성
+			if ( initPrograms ) {
+				var totalTime_RedBitmapMaterial = performance.now();
+				RedBitmapMaterial(self, self['_datas']['emptyTexture']['2d']);
+				totalTime_RedBitmapMaterial = performance.now() - totalTime_RedBitmapMaterial;
+				//
+				var totalTime_RedColorMaterial = performance.now();
+				RedColorMaterial(self);
+				totalTime_RedColorMaterial = performance.now() - totalTime_RedColorMaterial;
+				//
+				var totalTime_RedColorPhongMaterial = performance.now();
+				RedColorPhongMaterial(self);
+				totalTime_RedColorPhongMaterial = performance.now() - totalTime_RedColorPhongMaterial
+				//
+				var totalTime_RedColorPhongTextureMaterial = performance.now();
+				RedColorPhongTextureMaterial(self);
+				totalTime_RedColorPhongTextureMaterial = performance.now() - totalTime_RedColorPhongTextureMaterial;
+				//
+				var totalTime_RedEnvironmentMaterial = performance.now();
+				RedEnvironmentMaterial(self, self['_datas']['emptyTexture']['2d'], self['_datas']['emptyTexture']['3d']);
+				totalTime_RedEnvironmentMaterial = performance.now() - totalTime_RedEnvironmentMaterial;
+				//
+				var totalTime_RedSheetMaterial = performance.now();
+				RedSheetMaterial(self, self['_datas']['emptyTexture']['2d']);
+				totalTime_RedSheetMaterial = performance.now() - totalTime_RedSheetMaterial;
+				//
+				var totalTime_RedStandardMaterial = performance.now();
+				RedStandardMaterial(self, self['_datas']['emptyTexture']['2d']);
+				totalTime_RedStandardMaterial = performance.now() - totalTime_RedStandardMaterial;
+				//
+				console.log('totalTime_RedBitmapMaterial', totalTime_RedBitmapMaterial, self['_datas']['RedProgramGroup']['RedBitmapMaterialProgram']);
+				console.log('totalTime_RedColorMaterial', totalTime_RedColorMaterial, self['_datas']['RedProgramGroup']['RedColorMaterialProgram']);
+				console.log('totalTime_RedColorPhongMaterial', totalTime_RedColorPhongMaterial, self['_datas']['RedProgramGroup']['RedColorPhongMaterialProgram']);
+				console.log('totalTime_RedColorPhongTextureMaterial', totalTime_RedColorPhongTextureMaterial, self['_datas']['RedProgramGroup']['RedColorPhongTextureMaterialProgram']);
+				console.log('totalTime_RedSheetMaterial', totalTime_RedSheetMaterial, self['_datas']['RedProgramGroup']['RedSheetMaterialProgram']);
+				console.log('totalTime_RedEnvironmentMaterial', totalTime_RedEnvironmentMaterial, self['_datas']['RedProgramGroup']['RedEnvironmentMaterialProgram']);
+				console.log('totalTime_RedStandardMaterial', totalTime_RedStandardMaterial, self['_datas']['RedProgramGroup']['RedStandardMaterialProgram']);
+				console.log('초기화시간', performance.now() - startTime);
+			}
 			callback ? callback.call(self, tGL ? true : false) : 0; // 콜백이 있으면 실행
+			//
 		});
 		console.log(this)
 	};

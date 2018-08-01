@@ -1,0 +1,8 @@
+[
+  {
+    "constructorYn": true,
+    "title": "RedBasePostEffect",
+    "description": "\nRedBasePostEffect 기저층\n",
+    "return": "void"
+  }
+]

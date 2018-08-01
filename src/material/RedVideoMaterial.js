@@ -2,7 +2,7 @@
 var RedVideoMaterial;
 (function () {
 	var vSource, fSource;
-	var PROGRAM_NAME = 'videoProgram';
+	var PROGRAM_NAME = 'RedVideoMaterialProgram';
 	var checked;
 	vSource = function () {
 		/* @preserve
