@@ -20,9 +20,10 @@ var RedText;
 		}
 	})();
 	setTexture = function (target) {
+		target['_height'] = +target['_height'];
 		target['_svg'].setAttribute('width', target['_svg']['viewBox']['baseVal'].width = target['_width']);
-		target['_svg'].setAttribute('height', target['_svg']['viewBox']['baseVal'].height = +target['_height']);
-		target['_svg'].querySelector('foreignObject').setAttribute('height', +target['_height']);
+		target['_svg'].setAttribute('height', target['_svg']['viewBox']['baseVal'].height = target['_height']);
+		target['_svg'].querySelector('foreignObject').setAttribute('height', target['_height']);
 		target['_svg'].querySelector('table').style.height = target['_height'] + 'px';
 		target['_img'].src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(target['_svg'].outerHTML);
 	};

@@ -55,6 +55,7 @@ var RedDDSTexture;
 			if ( needEmpty ) this.setEmptyTexture(tGL, this['webglTexture']);
 			if ( this['_src'] ) this.loadDDSTexture(tGL, tGL.glExtension['WEBGL_compressed_texture_s3tc'], this['_src'],  this['_callback']);
 		}
+		this['callback'] = callback;
 		this['src'] = src;
 		this['_UUID'] = RedGL.makeUUID();
 		console.log(this);

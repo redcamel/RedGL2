@@ -11,5 +11,20 @@
       ]
     },
     "return": "RedText Instance"
+  },
+  {
+    "title": "text",
+    "description": "텍스트값, html 허용",
+    "return": "Number"
+  },
+  {
+    "title": "width",
+    "description": "가로영역크기",
+    "return": "Number"
+  },
+  {
+    "title": "width",
+    "description": "세로영역크기",
+    "return": "Number"
   }
 ]

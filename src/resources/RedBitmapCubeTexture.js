@@ -120,6 +120,8 @@ var RedBitmapCubeTexture;
 			if ( needEmpty ) this.setEmptyTexture(tGL, this['webglTexture']);
 			if ( this['_srcList'] ) loadTexture(tGL, this, this['webglTexture'], this['_srcList'], this['_option'], this['_callback']);
 		}
+		this['_option'] = option;
+		this['callback'] = callback;
 		this['srcList'] = srcList;
 		console.log(this);
 	};

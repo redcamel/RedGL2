@@ -86,6 +86,7 @@ var RedVideoTexture;
 			if ( needEmpty ) this.setEmptyTexture(tGL, this['webglTexture']);
 			if ( this['_src'] ) loadTexture(tGL, this, this['webglTexture'], this['_src'],  this['_callback']);
 		}
+		this['callback'] = callback;
 		this['src'] = src;
 		console.log(this);
 	};

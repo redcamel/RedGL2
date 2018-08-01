@@ -78,7 +78,7 @@ var RedBaseTexture;
 	Object.defineProperty(RedBaseTexture.prototype, 'callback', {
 		get: function () {return this['_callback']},
 		set: function (v) {
-			if ( v && !(typeof v == 'function') ) RedGLUtil.throwFunc('RedBaseTexture : callback은 함수만 허용.', '입력값 :', v);
+			if ( v && typeof v != 'function' ) RedGLUtil.throwFunc('RedBaseTexture : callback은 함수만 허용.', '입력값 :', v);
 			this['_callback'] = v;
 		}
 	});

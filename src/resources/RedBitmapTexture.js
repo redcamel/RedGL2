@@ -127,6 +127,8 @@ var RedBitmapTexture;
 			if ( needEmpty ) this.setEmptyTexture(tGL, this['webglTexture']);
 			if ( this['_src'] ) loadTexture(tGL, this, this['webglTexture'], this['_src'], this['_option'], this['_callback']);
 		}
+		this['_option'] = option;
+		this['callback'] = callback;
 		this['src'] = src;
 		this['_UUID'] = RedGL.makeUUID();
 		console.log(this);
