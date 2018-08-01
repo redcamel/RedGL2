@@ -21,8 +21,8 @@ var RedText;
 	})();
 	setTexture = function (target) {
 		target['_svg'].setAttribute('width', target['_svg']['viewBox']['baseVal'].width = target['_width']);
-		target['_svg'].setAttribute('height', target['_svg']['viewBox']['baseVal'].height = target['_height']);
-		target['_svg'].querySelector('foreignObject').setAttribute('height', target['_height']);
+		target['_svg'].setAttribute('height', target['_svg']['viewBox']['baseVal'].height = +target['_height']);
+		target['_svg'].querySelector('foreignObject').setAttribute('height', +target['_height']);
 		target['_svg'].querySelector('table').style.height = target['_height'] + 'px';
 		target['_img'].src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(target['_svg'].outerHTML);
 	};
@@ -103,14 +103,7 @@ var RedText;
 			self['scaleX'] = self['_width'] / redGL.gl.drawingBufferWidth;
 			self['scaleY'] = self['_height'] / redGL.gl.drawingBufferWidth;
 			self['_ctx'].drawImage(self['_img'], 0, 0, tW, tH);
-			// TODO: 같은 크기일경우 subData로 밀어넣을수 있도록 변경
-			// TODO: 혹은 기존꺼 디스포스 시키고 진행하도록 변경
-			self['material'].diffuseTexture = RedBitmapTexture(redGL, self['_cvs'], {
-				min: redGL.gl.LINEAR,
-				mag: redGL.gl.LINEAR,
-				wrap_s: redGL.gl.CLAMP_TO_EDGE,
-				wrap_t: redGL.gl.CLAMP_TO_EDGE
-			})
+			self['material'].diffuseTexture.src = self['_cvs']
 		};
 		this['_UUID'] = RedGL.makeUUID();
 		console.log(this);
@@ -118,6 +111,13 @@ var RedText;
 	RedText.prototype = new RedBaseObject3D();
 	RedDefinePropertyInfo.definePrototype('RedText', 'perspectiveScale', 'boolean', true);
 	RedDefinePropertyInfo.definePrototype('RedText', 'sprite3DYn', 'boolean', true);
+	/**DOC:
+	 {
+		 title :`width`,
+		 description : `가로영역크기`,
+		 return : 'Number'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedText', 'width', 'number', {
 		min: 2,
 		callback: function (v) {
@@ -125,6 +125,13 @@ var RedText;
 			setTexture(this);
 		}
 	});
+	/**DOC:
+	 {
+		 title :`width`,
+		 description : `세로영역크기`,
+		 return : 'Number'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedText', 'height', 'number', {
 		min: 2,
 		callback: function (v) {
@@ -132,6 +139,13 @@ var RedText;
 			setTexture(this);
 		}
 	});
+	/**DOC:
+	 {
+		 title :`text`,
+		 description : `텍스트값, html 허용`,
+		 return : 'Number'
+	 }
+	 :DOC*/
 	Object.defineProperty(RedText.prototype, 'text', {
 		get: function () { return this['_text']},
 		set: (function () {

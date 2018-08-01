@@ -118,18 +118,34 @@ var RedBitmapTexture;
 		var tGL;
 		if ( !(this instanceof RedBitmapTexture) ) return new RedBitmapTexture(redGL, src, option, callback);
 		redGL instanceof RedGL || RedGLUtil.throwFunc('RedBitmapTexture : RedGL Instance만 허용.', redGL);
-		if ( src && typeof src != 'string' && !(src instanceof HTMLCanvasElement) ) RedGLUtil.throwFunc('RedBitmapTexture : src는 문자열 or Canvas Element만 허용.', '입력값 : ' + src);
-		if ( callback && !(typeof callback == 'function') ) RedGLUtil.throwFunc('RedBitmapTexture : callback은 함수만 허용.', '입력값 :', callback);
 		tGL = redGL.gl;
 		MAX_TEXTURE_SIZE = redGL['_detect']['MAX_TEXTURE_SIZE'];
 		RedTextureOptionChecker.check('RedBitmapTexture', option, tGL);
 		this['webglTexture'] = tGL.createTexture();
 		this['atlascoord'] = RedAtlasUV(redGL);
+		this['_load'] = function (needEmpty) {
+			if ( needEmpty ) this.setEmptyTexture(tGL, this['webglTexture']);
+			if ( this['_src'] ) loadTexture(tGL, this, this['webglTexture'], this['_src'], this['_option'], this['_callback']);
+		}
+		this['src'] = src;
 		this['_UUID'] = RedGL.makeUUID();
-		this.setEmptyTexture(tGL, this['webglTexture']);
-		if ( src ) loadTexture(tGL, this, this['webglTexture'], src, option, callback);
 		console.log(this);
 	};
 	RedBitmapTexture.prototype = new RedBaseTexture();
+	Object.defineProperty(RedBitmapTexture.prototype, 'src', {
+		get: function () {return this['_src']},
+		set: function (v) {
+			if ( v && typeof v != 'string' && !(v instanceof HTMLCanvasElement) ) RedGLUtil.throwFunc('RedBitmapTexture : src는 문자열 or Canvas Element만 허용.', '입력값 : ' + v);
+			this['_src'] = v;
+			this._load(true)
+		}
+	});
+	Object.defineProperty(RedBitmapTexture.prototype, 'option', {
+		get: function () {return this['_option']},
+		set: function (v) {
+			this['_option'] = v;
+			this._load(false)
+		}
+	});
 	Object.freeze(RedBitmapTexture);
 })();
