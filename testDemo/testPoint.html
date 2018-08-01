@@ -173,7 +173,7 @@
 				interleaveData.push(Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50)
 				interleaveData.push(Math.random() * 2)
 			}
-			interleaveData = new Float32Array(interleaveData)
+			interleaveData = interleaveData
 			var testParticle = RedPointUnit(
 				self,
 				interleaveData,
@@ -200,7 +200,7 @@
 				interleaveData.push(Math.random() * 1)
 				interleaveData.push(Math.random(), Math.random(), Math.random(), 1)
 			}
-			interleaveData = new Float32Array(interleaveData)
+			interleaveData = interleaveData
 			var testParticle = RedPointUnit(
 				self,
 				interleaveData,
@@ -213,11 +213,13 @@
 			)
 			tScene3D.addChild(testParticle)
 		})();
+		var interleaveData;
+		var testParticle
 		(function () {
 			var testMaterial
 			testMaterial = RedPointBitmapMaterial(self, RedBitmapTexture(self, '../asset/alphaTest.png'))
 			testMaterial.alpha = 0.8
-			var interleaveData
+
 			interleaveData = []
 			var i = 20000
 			while ( i-- ) {
@@ -225,8 +227,7 @@
 				interleaveData.push(Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50)
 				interleaveData.push(Math.random() * 2)
 			}
-			interleaveData = new Float32Array(interleaveData)
-			var testParticle = RedPointUnit(
+			 testParticle = RedPointUnit(
 				self,
 				interleaveData,
 				[
@@ -254,6 +255,12 @@
 		})
 		tScene3D['grid'] = RedGrid(self)
 		tRenderer.start(this, function (time) {
+			var i = interleaveData.length/4
+			while ( i-- ) {
+				interleaveData[i*4-4]+=0.01
+			}
+			testParticle.update(interleaveData)
+
 			tCamera.x = Math.sin(time / 3500) * 30
 			tCamera.y = Math.cos(time / 3500) * 30
 			if ( tCamera.y < 1 ) tCamera.y = 1

@@ -27,6 +27,7 @@ var RedPointUnit;
 	 :DOC*/
 	RedPointUnit = function (redGL, interleaveData, interleaveDefineInfoList, material) {
 		if ( !(this instanceof RedPointUnit) ) return new RedPointUnit(redGL, interleaveData, interleaveDefineInfoList, material);
+		interleaveData instanceof Array || RedGLUtil.throwFunc('RedLine : interleaveData - Array Instance만 허용.', '입력값 :', redGL);
 		redGL instanceof RedGL || RedGLUtil.throwFunc('RedLine : RedGL Instance만 허용.', redGL);
 		var tGL;
 		tGL = redGL.gl;
@@ -37,7 +38,7 @@ var RedPointUnit;
 				redGL,
 				'RedPointUnit_' + this['_UUID'],
 				RedBuffer.ARRAY_BUFFER,
-				interleaveData,
+				new Float32Array(interleaveData),
 				interleaveDefineInfoList,
 				redGL.gl.DYNAMIC_DRAW
 			)
@@ -48,13 +49,12 @@ var RedPointUnit;
 	};
 	RedPointUnit.prototype = new RedBaseContainer();
 	RedPointUnit.prototype['update'] = function (interleaveData) {
-		//TODO: 검증해야됨
-		this['_geometry']['_interleaveBuffer'].upload(new Float32Array(interleaveData));
+		this['_geometry']['interleaveBuffer'].upload(new Float32Array(interleaveData));
 	};
 	Object.defineProperty(RedPointUnit.prototype, 'geometry', {
 		get: function () { return this['_geometry']; },
 		set: function (v) {
-			if ( this['_geometry'] ) RedGLUtil.throwFunc('RedPointUnit : geometry - 임의로 설정을 허용하지 않음', '입력값 : ' + v);
+			if ( this['_geometry'] ) RedGLUtil.throwFunc('RedPointUnit : geometry - 임의 설정을 허용하지 않음', '입력값 : ' + v);
 			this['_geometry'] = v;
 		}
 	});
