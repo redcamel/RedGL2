@@ -167,7 +167,7 @@
 				'../asset/cubemap/posz.png',
 				'../asset/cubemap/negz.png'
 			]);
-		var testRedText = RedText(self, RedBox(this))
+		var testRedText = RedText(self)
 		var str = ('<div >Here is a <strong>paragraph</strong> that requires <em>word wrap</em>' +
 		'<br>br태그는 빈 div로 치환함<br>' +
 		'hr태그는 안됨' +
@@ -187,7 +187,7 @@
 		testRedText.z = 0.55
 		var i = 100
 		while ( i-- ) {
-			var testTet = RedText(self, RedBox(this))
+			var testTet = RedText(self)
 			testTet.text = str
 			testTet.width = Math.random() * 512 + 128
 			testTet.height = Math.random() * 512

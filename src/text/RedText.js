@@ -43,8 +43,8 @@ var RedText;
 		 return : 'RedText Instance'
 	 }
 	 :DOC*/
-	RedText = function (redGL) {
-		if ( !(this instanceof RedText) ) return new RedText(redGL);
+	RedText = function (redGL, width, height) {
+		if ( !(this instanceof RedText) ) return new RedText(redGL, width, height);
 		redGL instanceof RedGL || RedGLUtil.throwFunc('RedText : RedGL Instance만 허용.', redGL);
 		RedBaseObject3D['build'].call(this, redGL.gl);
 		var self = this;
@@ -67,8 +67,12 @@ var RedText;
 		// document.body.appendChild(this['_svg'])
 		/////////////////////
 		this['_img'] = new Image();
-		this['width'] = 256;
-		this['height'] = 512;
+		width = width || 256;
+		height = height || 256;
+		if ( width > redGL['_detect']['MAX_TEXTURE_SIZE'] ) width = redGL['_detect']['MAX_TEXTURE_SIZE'];
+		if ( height > redGL['_detect']['MAX_TEXTURE_SIZE'] ) height = redGL['_detect']['MAX_TEXTURE_SIZE'];
+		this['width'] = width;
+		this['height'] = height;
 		// 기본 스타일 프로퍼티
 		setStylePrototype(this, 'padding', 0);
 		setStylePrototype(this, 'background', '');
@@ -110,7 +114,21 @@ var RedText;
 		console.log(this);
 	};
 	RedText.prototype = new RedBaseObject3D();
+	/**DOC:
+	 {
+		 title :`perspectiveScale`,
+		 description : `perspectiveScale`,
+		 return : 'boolean'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedText', 'perspectiveScale', 'boolean', true);
+	/**DOC:
+	 {
+		 title :`sprite3DYn`,
+		 description : `sprite3DYn`,
+		 return : 'boolean'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedText', 'sprite3DYn', 'boolean', true);
 	/**DOC:
 	 {
