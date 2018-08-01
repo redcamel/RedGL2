@@ -258,7 +258,7 @@ var RedParticleEmitter;
 	Object.defineProperty(RedParticleUnit.prototype, 'geometry', {
 		get: function () { return this['_geometry']; },
 		set: function (v) {
-			if ( this['_geometry'] ) RedGLUtil.throwFunc('RedParticleUnit : geometry - 임의로 설정을 허용하지 않음', '입력값 : ' + v);
+			if ( this['_geometry'] ) RedGLUtil.throwFunc('RedParticleUnit : geometry - 임의 설정을 허용하지 않음', '입력값 : ' + v);
 			this['_geometry'] = v;
 		}
 	});

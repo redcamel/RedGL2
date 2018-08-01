@@ -2,7 +2,7 @@
 var RedColorPhongMaterial;
 (function () {
 	var vSource, fSource;
-	var PROGRAM_NAME = 'colorPhongProgram';
+	var PROGRAM_NAME = 'RedColorPhongMaterialProgram';
 	var checked;
 	vSource = function () {
 		/* @preserve

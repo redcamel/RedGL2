@@ -31,7 +31,6 @@ var RedShadowManager;
 			var tWidth, tHeight;
 			return function (redGL, redRenderer, tView, time, renderInfo) {
 				tDirectionalShadow = this['_directionalShadow'];
-				//TODO: 개별 쉐도우객체가 렌더를 가져가야함
 				if ( tDirectionalShadow ) {
 					gl = redGL.gl;
 					tWorldRect = redRenderer['worldRect'];

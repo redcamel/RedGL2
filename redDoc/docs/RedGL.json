@@ -23,7 +23,7 @@
         "초기화 옵션을 지정한다.",
         "\n<code>\n// 초기값\n{\nalpha: false,\ndepth: true,\nstencil: false,\nantialias: true,\npremultipliedAlpha: false,\npreserveDrawingBuffer: false,\npowerPreference: 'default', // default, high-performance, low-power\nfailIfMajorPerformanceCaveat: false\n}\n</code>\n"
       ],
-      "targetContext": [
+      "targetContextKey": [
         {
           "type": "String"
         },

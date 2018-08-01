@@ -2,7 +2,7 @@
 var RedColorMaterial;
 (function () {
 	var vSource, fSource;
-	var PROGRAM_NAME = 'colorProgram';
+	var PROGRAM_NAME = 'RedColorMaterialProgram';
 	var checked;
 	vSource = function () {
 		/* @preserve
