@@ -271,6 +271,8 @@ var RedBuffer;
 				tGL.bindBuffer(this['glBufferType'], this['webglBuffer']);
 				tGL.bufferData(this['glBufferType'], this['data'], this['drawMode']);
 				parseInterleaveDefineInfo(this, this['bufferType'], this['data'], this['interleaveDefineInfoList']);
+				if ( this['bufferType'] == RedBuffer.ARRAY_BUFFER ) this['triangleNum'] = this['data'].length / (this['stride'] ? this['stride'] : 3);
+				if ( this['bufferType'] == RedBuffer.ELEMENT_ARRAY_BUFFER ) this['triangleNum'] = this['pointNum'] / 3;
 			} else RedGLUtil.throwFunc('RedBuffer : upload - data형식이 기존 형식과 다름', data)
 		};
 		this['upload'](this['data']);

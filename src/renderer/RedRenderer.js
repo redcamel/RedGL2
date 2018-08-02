@@ -217,6 +217,7 @@ var RedRenderer;
 				tRenderInfo['viewRectHeight'] = tViewRect[3]
 				tRenderInfo['key'] = tView['key']
 				tRenderInfo['call'] = 0
+				tRenderInfo['triangleNum'] = 0
 				// viewport 크기설정
 				gl.viewport(tViewRect[0], tWorldRect[3] - tViewRect[3] - tViewRect[1], tViewRect[2], tViewRect[3]);
 				gl.scissor(tViewRect[0], tWorldRect[3] - tViewRect[3] - tViewRect[1], tViewRect[2], tViewRect[3]);
@@ -769,7 +770,11 @@ var RedRenderer;
 							0
 						);
 						tPrevIndexBuffer_UUID = tIndexBufferInfo['_UUID'];
-					} else tGL.drawArrays(tMesh['drawMode'], 0, tInterleaveBuffer['pointNum'])
+						renderResultObj['triangleNum'] += tIndexBufferInfo['triangleNum'];
+					} else {
+						tGL.drawArrays(tMesh['drawMode'], 0, tInterleaveBuffer['pointNum'])
+						renderResultObj['triangleNum'] += tInterleaveBuffer['triangleNum'];
+					}
 				}
 				/////////////////////////////////////////////////////////////////////////
 				/////////////////////////////////////////////////////////////////////////

@@ -20,8 +20,8 @@ var RedRenderDebuger;
 			this['_etcBox'] = document.createElement('div')
 			this['renderResult'].appendChild(this['_contentBox'])
 			this['renderResult'].appendChild(this['_etcBox'])
-			this['renderResult'].style.cssText = 'position:absolute;bottom:0px;left:0px;color:#fff;font:11px Lucida Grande,sans-serif;font-size:11px;background:rgba(0,0,0,0.6);padding:3px;width:300px'
-			this['_etcBox'].style.cssText = 'position:relative;color:#fff;font:11px Lucida Grande,sans-serif;font-size:11px;background:rgba(0,0,0,0.6);padding:3px'
+			this['renderResult'].style.cssText = 'position:absolute;bottom:0px;left:0px;color:#fff;font:11px Lucida Grande,sans-serif;font-size:11px;background:rgba(0,0,0,0.75);padding:3px;width:300px'
+			this['_etcBox'].style.cssText = 'position:relative;color:#fff;font:11px Lucida Grande,sans-serif;font-size:11px;background:rgba(0,0,0,0.75);padding:3px'
 			this['_etcBox'].innerHTML = '<a href="https://redcamel.github.io/RedGL2/redDoc/index.html" stlye="color:#fff;text-decoration:none">API document</a>'
 		}
 		this['_visible'] = false
@@ -32,16 +32,17 @@ var RedRenderDebuger;
 			for ( var k in renderInfo ) {
 				// console.log(tRenderer['renderInfo'][k])
 				this['_contentBox'].innerHTML +=
-					'<div style="padding:3px">' +
-					'<div><b>RedView : key - ' + renderInfo[k]['key'] + '</b></div>' +
-					' orthographicYn - ' + renderInfo[k]['orthographicYn'] +
-					' <br>call - ' + renderInfo[k]['call'] +
-					' <br> width - ' + renderInfo[k]['width'] +
-					' / height - ' + renderInfo[k]['height'] +
-					' <br> viewRectWidth - ' + renderInfo[k]['viewRectWidth'] +
-					' / viewRectHeight - ' + renderInfo[k]['viewRectHeight'] +
-					' <br> x - ' + renderInfo[k]['x'] +
-					' / y - ' + renderInfo[k]['y'] +
+					'<div style="padding:5px">' +
+					'<div><b style="color:rgb(242, 169, 113)">RedView : key - ' + renderInfo[k]['key'] + '</b></div>' +
+					' orthographicYn - ' + '<b style="color:rgb(191, 82, 170)">' + renderInfo[k]['orthographicYn'] + '</b>' +
+					' <br>call - ' + '<b style="color:rgb(191, 82, 170)">' + renderInfo[k]['call'] + '</b>' +
+					' <br>triangleNum - ' + '<b style="color:rgb(191, 82, 170)">' + renderInfo[k]['triangleNum'] + '</b>' +
+					' <br> width - ' + '<b style="color:rgb(191, 82, 170)">' + renderInfo[k]['width'] + '</b>' +
+					' / height - ' + '<b style="color:rgb(191, 82, 170)">' + renderInfo[k]['height'] + '</b>' +
+					' <br> viewRectWidth - ' + '<b style="color:rgb(191, 82, 170)">' + renderInfo[k]['viewRectWidth'] + '</b>' +
+					' / viewRectHeight - ' + '<b style="color:rgb(191, 82, 170)">' + renderInfo[k]['viewRectHeight'] + '</b>' +
+					' <br> x - ' + '<b style="color:rgb(191, 82, 170)">' + renderInfo[k]['x'] + '</b>' +
+					' / y - ' + '<b style="color:rgb(191, 82, 170)">' + renderInfo[k]['y'] + '</b>' +
 					'</div><br>'
 			}
 			this['_contentBox'].innerHTML += '<div style="padding:3px;background:#000">renderScale : ' + redGL['renderScale'] + '</div>'
