@@ -453,7 +453,6 @@ var RedRenderer;
 						tOptionProgram = tProgramList[tOptionProgramKey][tBaseProgramKey];
 						if ( tOptionProgram['_prepareProgramYn'] ) {
 							tOptionProgram = tProgramList[tOptionProgramKey][tBaseProgramKey] = tOptionProgram._makePrepareProgram();
-
 						}
 						tProgram = tOptionProgram
 					}
@@ -770,10 +769,9 @@ var RedRenderer;
 							0
 						);
 						tPrevIndexBuffer_UUID = tIndexBufferInfo['_UUID'];
-						renderResultObj['triangleNum'] += tIndexBufferInfo['triangleNum'];
+						renderResultObj['call']
 					} else {
 						tGL.drawArrays(tMesh['drawMode'], 0, tInterleaveBuffer['pointNum'])
-						renderResultObj['triangleNum'] += tInterleaveBuffer['triangleNum'];
 					}
 				}
 				/////////////////////////////////////////////////////////////////////////
