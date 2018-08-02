@@ -19,8 +19,7 @@ let RedXR;
 			});
 			[canvas, xrButton.domElement].forEach(el => document.body.appendChild(el));
 			if ( navigator.xr ) {
-				navigator.xr.requestDevice()
-					.then(device => device.supportsSession({exclusive: true}).then(_ => xrButton.setDevice(device)));
+				navigator.xr.requestDevice().then(device => device.supportsSession({exclusive: true}).then(_ => xrButton.setDevice(device)));
 			}
 			const start = session => {
 				const start = isOK => {

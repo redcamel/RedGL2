@@ -179,7 +179,7 @@ gulp.task('combine-js', function () {
 		"src/detect/RedGLDetect.js",
 		"src/RedGLUtil.js",
 		"src/RedGL.js",
-		"src/RedXR.js",
+		// "src/RedXR.js",
 		//
 		"src/base/RedBaseController.js",
 		"src/base/RedBaseTexture.js",
