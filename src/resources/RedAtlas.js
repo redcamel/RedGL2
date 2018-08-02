@@ -50,7 +50,7 @@ var RedAtlas;
 			atlasInfoList: [new Atlas()],
 			atlasMap: {}
 		}
-		MAX_TEXTURE_SIZE = redGL['_detect']['MAX_TEXTURE_SIZE']
+		MAX_TEXTURE_SIZE = redGL['_detect']['texture']['MAX_TEXTURE_SIZE']
 		if ( MAX_TEXTURE_SIZE > 2048 ) MAX_TEXTURE_SIZE = 2048
 		this['redGL'] = redGL
 		this.loadList(srcList, callBack)

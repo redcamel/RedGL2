@@ -119,7 +119,7 @@ var RedBitmapTexture;
 		if ( !(this instanceof RedBitmapTexture) ) return new RedBitmapTexture(redGL, src, option, callback);
 		redGL instanceof RedGL || RedGLUtil.throwFunc('RedBitmapTexture : RedGL Instance만 허용.', redGL);
 		tGL = redGL.gl;
-		MAX_TEXTURE_SIZE = redGL['_detect']['MAX_TEXTURE_SIZE'];
+		MAX_TEXTURE_SIZE = redGL['_detect']['texture']['MAX_TEXTURE_SIZE'];
 		RedTextureOptionChecker.check('RedBitmapTexture', option, tGL);
 		this['webglTexture'] = tGL.createTexture();
 		this['atlascoord'] = RedAtlasUV(redGL);
