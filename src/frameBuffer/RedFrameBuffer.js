@@ -10,7 +10,8 @@ var RedFrameBuffer;
 		 `,
 		 params : {
 	         redGL : [
-				 {type:'RedGL Instance'}
+				 {type:'RedGL Instance'},
+				 'test'
 			 ],
 			 width : [
 				 {type:'Number'}
@@ -34,8 +35,8 @@ var RedFrameBuffer;
 		gl = redGL['gl'];
 		width = width || 1920;
 		height = height || 1080;
-		if ( width > redGL['_detect']['MAX_TEXTURE_SIZE'] ) width = redGL['_detect']['MAX_TEXTURE_SIZE'];
-		if ( height > redGL['_detect']['MAX_TEXTURE_SIZE'] ) height = redGL['_detect']['MAX_TEXTURE_SIZE'];
+		if ( width > redGL['_detect']['texture']['MAX_TEXTURE_SIZE'] ) width = redGL['_detect']['texture']['MAX_TEXTURE_SIZE'];
+		if ( height > redGL['_detect']['texture']['MAX_TEXTURE_SIZE'] ) height = redGL['_detect']['texture']['MAX_TEXTURE_SIZE'];
 		this['redGL'] = redGL;
 		this['width'] = width;
 		this['height'] = height;

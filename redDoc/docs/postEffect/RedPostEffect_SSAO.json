@@ -1,0 +1,15 @@
+[
+  {
+    "constructorYn": true,
+    "title": "RedPostEffect_SSAO",
+    "description": "\nRedPostEffect_SSAO Instance 생성.\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ]
+    },
+    "return": "RedPostEffect_SSAO Instance"
+  }
+]

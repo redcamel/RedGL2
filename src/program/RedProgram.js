@@ -294,7 +294,7 @@ var RedProgram;
 		this['systemUniformLocation'] = [];
 		// 쉐이더 로케이션 찾기
 		tGL.useProgram(this['webglProgram']);
-		MAX_SAMPLER_INDEX = redGL._detect['MAX_COMBINED_TEXTURE_IMAGE_UNITS'];
+		MAX_SAMPLER_INDEX = redGL._detect['texture']['MAX_COMBINED_TEXTURE_IMAGE_UNITS'];
 		updateLocation(this, tGL, vertexShader);
 		updateLocation(this, tGL, fragmentShader);
 		this['_UUID'] = RedGL.makeUUID();

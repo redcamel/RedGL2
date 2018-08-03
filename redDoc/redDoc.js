@@ -1,385 +1,259 @@
 "use strict";
-var DocJS = {
-	init: function (srcList) {
-		var reg = /\/\*\*DOC\:[\s\S]+?\:\DOC\*\//g;
-		(function () {
-			var selectBox;
-			var tList;
-			var parseDoc;
-			var rootBox
-			var leftBox;
-			var dedent = function (callSite, ...args) {
-				function format(str) {
-					let size = -1;
-					return str.replace(/\n(\s+)/g, (m, m1) => {
-						if ( size < 0 )
-							size = m1.replace(/\t/g, "    ").length;
-						return "\n" + m1.slice(Math.min(m1.length, size));
-					});
-				}
-
-				if ( typeof callSite === "string" ) return format(callSite);
-				if ( typeof callSite === "function" ) return (...args) => format(callSite(...args));
-				let output = callSite
-					.slice(0, args.length + 1)
-					.map((text, i) => (i === 0 ? "" : args[i - 1]) + text)
-					.join("");
-				return format(output);
-			}
-			parseDoc = function (url) {
-				var tLoader;
-				console.log('멀부르는거냐!', url)
-				tLoader = Recard.AjaxLoader(
-					null,
-					{
-						url: url,
-						method: 'GET'
-					}
-				)
-				tLoader.onAllLoaded(function (rsList) {
-					console.log('전체로딩성공!', rsList)
-					var groupBox, propertybox, methodBox, eventBox, descripttionBox, listBox, constBox, staticBox, extendsMethodBox
-					var makeBox;
-					var makeDocObject;
-					var descriptionParser, methodParser, paramsParser, propertyParser, exampleParser;
-					rootBox.S('html', '')
-					descriptionParser = function (v, parentBox) {
-						Recard.Dom('ul').S(
-							'>', Recard.Dom('li').S(
-								'html', v.trim().replace(/\n/g, '<br>')
-							),
-							'<', parentBox
-						)
-					}
-					exampleParser = function (v, parentBox, noTitle) {
-						var tTitle, t1, t2;
-						if ( !noTitle ) {
-							parentBox.S(
-								'>', tTitle = Recard.Dom('div').S(
-									'@className', 'paramTitle',
-									'html', 'Example'
-								)
-							)
-						}
-						parentBox.S(
-							'>', Recard.Dom('pre').S(
-								'borderRadius', 5,
-								'background', '#333',
-								'padding', 20,
-								'>', t2 = Recard.Dom('code').S(
-									'@className', 'language-javascript'
-								)
-							)
-						)
-						t2.S('html', Prism.highlight(dedent(v), Prism.languages.javascript).trim())
-					}
-					paramsParser = (function () {
-						var parser;
-						parser = function (k, v, parentBox) {
-							var tCon, keyName, typeName;
-							tCon = Recard.Dom('li').S(
-								'>', keyName = Recard.Dom('span').S(
-									'@className', 'paramTitle',
-									'html', k.trim() + ' : '
-								),
-								'>', typeName = Recard.Dom('span'),
-								'<', parentBox
-							)
-							v.forEach(function (tData) {
-								var t3;
-								t3 = Recard.Dom('div')
-								if ( typeof tData == 'object' && tData['type'] ) typeName.S('html+', tData['type'])
-								else {
-									tData = tData.trim()
-									if ( tData.indexOf('<code>') == -1 ) {
-										Recard.Dom('div').S(
-											'html', tData,
-											'<', tCon
-										)
-									} else {
-										tData = tData.replace('<code>', '')
-										tData = tData.replace('</code>', '')
-										exampleParser(tData, Recard.Dom('div').S('<', tCon), true)
-									}
-								}
-							})
-						}
-						return function (v, parentBox) {
-							var t2;
-							Recard.Dom('div').S(
-								'>', Recard.Dom('div').S(
-									'@className', 'paramTitle',
-									'html', 'Parameters'
-								),
-								'>', t2 = Recard.Dom('ul'),
-								'<', parentBox
-							)
-							for ( var k in v ) parser(k, v[k], t2)
-						}
-					})()
-					methodParser = (function () {
-						return function (k, v, parentBox) {
-							var t0, t1;
-							var tParams;
-							tParams = []
-							t0 = Recard.Dom('div').S(
-								'>', t1 = Recard.Dom('div').S(
-									'@className', 'title',
-									'html', `${k.replace(/\n/g, '<br>')}${v['params'] ? '' : '<span style="font-weight:normal"> ( )</span>'}
-                                    <span style='font-size:11px;background:${v['state'] == 'FINAL' ? 'green' : 'red'};color:white;padding:4px 10px 5px 10px;border-radius:4px;vertical-align:middle;'>STATE : ${v['state'] ? v['state'] : 'DRAFT'}</span>`,
-								),
-								'<', parentBox
-							)
-							for ( var k in v ) {
-								if ( k == 'description' ) descriptionParser(v[k], t0)
-								if ( k == 'params' ) {
-									paramsParser(v[k], t0)
-									for ( var k2 in v[k] ) {
-										if ( v[k][k2][0]['type'] ) tParams.push(k2 + " : <span style='color:red'>" + v[k][k2][0]['type'] + '</span>')
-										else tParams.push(k2)
-									}
-									tParams = tParams.join(', ')
-									Recard.Dom('span').S(
-										'fontWeight', 'normal',
-										'html+', ' ( ' + tParams + ' )',
-										'<', t1
-									)
-								}
-								if ( k == 'example' ) exampleParser(v[k], t0)
-							}
-							t0.S(
-								'>', Recard.Dom('div').S(
-									'fontWeight', 'normal',
-									'html', `<span style='font-weight:bold'>return</span> : ${v['return'] != undefined ? v['return'] : '<span style="color:red">DOC에 정의하지 않았습니다.</span>'}`
-								),
-								'>', Recard.Dom('div').S(
-									'position', 'absolute',
-									'html', 'top',
-									'bottom', 0,
-									'right', 0,
-									'on', ['down', function () {
-										Recard.WIN.scroll(0, 0)
-									}]
-								)
-							)
-						}
-					})()
-					propertyParser = (function () {
-						return function (k, v, parentBox) {
-							var t0, t1;
-							var tParams;
-							tParams = []
-							t0 = Recard.Dom('div').S(
-								'position', 'relative',
-								'>', t1 = Recard.Dom('div').S(
-									'@className', 'title',
-									'html', k.replace(/\n/g, '<br>')
-									+ `<span style='margin-left:10px;font-size:11px;background:${v['state'] == 'FINAL' ? 'green' : 'red'};color:white;padding:4px 10px 5px 10px;border-radius:4px;vertical-align:middle;'>STATE : ${v['state'] ? v['state'] : 'DRAFT'}</span>`
-								),
-								'<', parentBox
-							)
-							for ( var k in v ) {
-								if ( k == 'description' ) descriptionParser(v[k], t0)
-								if ( k == 'params' ) {
-									paramsParser(v[k], t0)
-									for ( var k2 in v[k] ) {
-										if ( v[k][k2][0]['type'] ) tParams.push(k2 + " : <span style='color:red'>" + v[k][k2][0]['type'] + '</span>')
-										else tParams.push(k2)
-									}
-									tParams = tParams.join(', ')
-									Recard.Dom('span').S(
-										'fontWeight', 'normal',
-										'<', t1
-									)
-								}
-								if ( k == 'example' ) exampleParser(v[k], t0)
-							}
-							t0.S(
-								'>', Recard.Dom('div').S(
-									'fontWeight', 'normal',
-									'html', `<span style='font-weight:bold'>return</span> : ${v['return'] != undefined ? v['return'] : '<span style="color:red">DOC에 정의하지 않았습니다.</span>'}`
-								),
-								'>', Recard.Dom('div').S(
-									'position', 'absolute',
-									'html', 'top',
-									'bottom', 0,
-									'right', 0,
-									'cursor', 'pointer',
-									'on', ['down', function () {
-										Recard.WIN.scroll(0, 0)
-									}]
-								)
-							)
-						}
-					})()
-					makeDocObject = function (data) {
-						var comments = JSON.parse(data)
-						console.log(comments)
-						var extendList = comments.filter(function (v) {
-							if ( v.hasOwnProperty('copyProto') ) return true
-						})
-						extendList.forEach(function (v) {
-							Recard.Dom('div').S(
-								'html', v['copyProto'],
-								'display', 'inline-block',
-								'@className', 'defineBox',
-								'cursor', 'pointer',
-								'on', ['down', function () {
-									console.log('test')
-									parseDoc(document.querySelector('option[key="' + v['copyProto'] + '"]').value)
-								}],
-								'<', extendsMethodBox
-							)
-						})
-						comments = comments.filter(function (v) {
-							if ( !v.hasOwnProperty('copyProto') ) return true
-						})
-						comments.sort(function (a, b) {
-							a = a['title'].toLowerCase().replace(/[^a-z]/gi, '') // 정렬할때, 일단은 알파벳만 가지고 비교하는걸로~
-							b = b['title'].toLowerCase().replace(/[^a-z]/gi, '')
-							if ( a > b ) return 1
-							if ( a < b ) return -1
-							return 0
-						})
-						// console.log(comments)
-						comments.forEach(function (v, index) {
-							var tContainer, vTitle;
-							vTitle = v['title'];
-							// 앵커 생성
-							Recard.Dom('a').S(
-								'@href', '#' + vTitle,
-								'display', 'inline-block',
-								'padding', 10,
-								'html', vTitle,
-								'<', listBox
-							)
-							tContainer = Recard.Dom('div').S(
-								'@id', vTitle,
-								'@className', 'defineBox',
-								'<', v['constructorYn'] ? descripttionBox
-									: v['code'] == 'METHOD' ? methodBox
-										: v['code'] == 'CONST' ? constBox
-											: v['code'] == 'STATIC' ? staticBox
-												: propertybox
-							)
-							propertyParser(vTitle, v, tContainer)
-						})
-					}
-					makeBox = function (title, parentBox) {
-						var t0, titleBox;
-						t0 = Recard.Dom('div').S('<', parentBox)
-						title = title ? (title = title.split('/'), title = title[title.length - 1]): title
-						if ( title ) {
-							titleBox = Recard.Dom('div').S(
-								'@className', 'topTitle',
-								'margin', '1.6rem 0 1.6rem 0',
-								'border', '1px solid #eee',
-								'padding', '1.6rem',
-								'html', title,
-								'<', t0
-							)
-						}
-						return t0
-					}
-					/////
-					console.log(rsList)
-					console.log('파싱할대상!', rsList[0])
-					groupBox = makeBox(rsList[0]['requestURL'].replace('.json', ''), rootBox, 20)
-					descripttionBox = makeBox(null, groupBox)
-					extendsMethodBox = makeBox('Extend List', groupBox)
-					listBox = makeBox('API', groupBox)
-					staticBox = makeBox('Statics', groupBox)
-					constBox = makeBox('Const', groupBox)
-					propertybox = makeBox('properties', groupBox)
-					methodBox = makeBox('Methods', groupBox)
-					eventBox = makeBox('Events', groupBox)
-					makeDocObject(rsList[0]['content'])
-					if ( !constBox.__dom__.querySelector('.defineBox') ) constBox.remove()
-					if ( !methodBox.__dom__.querySelector('.defineBox') ) methodBox.remove()
-					if ( !propertybox.__dom__.querySelector('.defineBox') ) propertybox.remove()
-					if ( !eventBox.__dom__.querySelector('.defineBox') ) eventBox.remove()
-					if ( !staticBox.__dom__.querySelector('.defineBox') ) staticBox.remove()
-					if ( !extendsMethodBox.__dom__.querySelector('.defineBox') ) extendsMethodBox.remove()
-					/////
-					console.log(window.location.href)
-					var t0 = window.location.href.split('#')[0]
-					window.location.href = t0 + '#' + rsList[0]['requestURL'].replace('.json', '')
-					window.scrollTo(0, 0)
+var DocJS = (function () {
+	var setBaseBox, setLeftBox, setRightBox;
+	var rootBox, leftBox, rightBox;
+	var callDoc;
+	Recard.Css('.redDoc li').S('margin-left', 10)
+	Recard.Css('.redDoc .redDocBox').S(
+		'position', 'relative',
+		'padding', '15px 15px 15px 15px',
+		'background', 'rgba(0,0,0,0.01)'
+	)
+	Recard.Css('.redDoc h1[titleBox]').S(
+		'font-size', '3em',
+		'color', '#111'
+	)
+	Recard.Css('.redDoc h2[titleBox]').S(
+		'font-size', '2.5em',
+		'color', '#111'
+	)
+	Recard.Css('.redDoc h3[titleBox]').S(
+		'font-size', '1.5em',
+		'color', '#0795b7'
+	)
+	setBaseBox = function () {
+		Recard.Dom('table').S(
+			'@className', 'redDoc',
+			'width', '100%',
+			'>', rootBox = Recard.Dom('tr').S(
+				'font-size', 12,
+				'line-height', 20
+			),
+			'<', 'body'
+		)
+	};
+	setLeftBox = (function () {
+		var getTargetDir;
+		var dirMAP;
+		dirMAP = {};
+		// 주어진 정보에 따라 경로를 생성관리한다.
+		getTargetDir = function (v) {
+			console.log(v)
+			var len;
+			len = v.length
+			if ( len == 1 ) {
+				// 최상위
+				return leftBox;
+			} else {
+				// 하위 디렉토리가 있다고 판단
+				var path = '';
+				var tParent;
+				v.pop();
+				tParent = leftBox;
+				v.forEach(function (v2, index) {
+					console.log(v, v2)
+					path += v2;
+					if ( !dirMAP[path] ) dirMAP[path] = Recard.Dom('li').S(
+						'html', path,
+						'<', tParent
+					);
+					tParent = dirMAP[path];
 				})
-				tLoader.start()
+				return dirMAP[path];
 			}
-			tList = Array.prototype.slice.call(srcList)
-			tList.sort()
-			leftBox = Recard.Dom('ul').S(
-				'position', 'absolute',
-				'top', 0,
-				'left', 0,
-				'width', 250,
-				'padding', '10px 10px 10px 10px',
-				'<', 'body'
+		}
+		return function (srcList) {
+			leftBox = Recard.Dom('td').S(
+				'vertical-align', 'top',
+				'width', 300,
+				'<', rootBox
 			)
-			selectBox = Recard.Dom('select').S(
-				'position', 'fixed',
-				'top', 10,
-				'right', 10,
-				'on', ['change', function (e) {
-					console.log(selectBox.__dom__.selectedIndex)
-					parseDoc(selectBox.__dom__.options[selectBox.__dom__.selectedIndex].value)
-				}],
-				'<', 'body'
-			)
-			var leftStr = ''
-			tList.forEach(function (v, index) {
-				var HD_click;
-				var title
-				title = v
-				HD_click = function () {
-					console.log(this)
-					console.log(index)
-					selectBox.__dom__.selectedIndex = index
-					parseDoc(selectBox.__dom__.options[index].value)
-				}
-				title = title ? (title = title.split('/'), title = title[title.length - 1]): title
-					selectBox.S(
-						'>', Recard.Dom('option').S(
-							'@value', v,
-							'@key', title.replace('.json', ''),
-							'html', title.replace('.json', '')
-						)
-					)
-				title = title ? (title = title.split('/'), title = title[title.length - 1]): title
-
-					Recard.Dom('li').S(
-						'cursor', 'pointer',
-						'@value', index,
-						'html', title.replace('.json', ''),
-						'on', ['click', HD_click],
-						'<', leftBox
-					)
-			});
-			rootBox = Recard.Dom('div').S(
-				'marginLeft', 251,
-				'<', 'body'
-			)
-			Recard.Dom('div').S(
-				'html', '<hr style="border:0px;border-top:1px solid #eee;margin-left:251px">' +
-				'<div style="font-size:11px;color:#222;margin-left:251px;text-align:right;padding-right:10px">By Redcamel<br>' +
-				'<a href = "https://github.com/redcamel/RedGL2">https://github.com/redcamel/RedGL2</a>' +
-				'</div>',
-				'<', 'body'
-			)
-			var t0, tValue;
-			t0 = window.location.href
-			t0 = t0.split('#')
-			if ( t0[1] ) t0 = t0[1] + '.json'
-			else t0 = t0[0]
-			tValue = selectBox.__dom__.options[0].value
-			Array.prototype.slice.call(selectBox.__dom__.options).forEach(function (v, index) {
-				console.log(v.value.split('/')[1], ',,,', t0)
-				if ( v.value.split('/')[1] == t0 ) tValue = v.value
+			srcList.forEach(function (v) {
+				var src = v.join('/') + '.json';
+				Recard.Dom('li').S(
+					'html', v[v.length - 1],
+					'cursor', 'pointer',
+					'on', ['down', function () {
+						document.body.scrollTop = 0
+						callDoc(src)
+					}],
+					'<', getTargetDir(v)
+				)
 			})
-			console.log(tValue)
-			parseDoc(tValue)
-		})();
+		}
+	}());
+	setRightBox = function () {
+		rightBox = Recard.Dom('td').S(
+			'vertical-align', 'top',
+			'html', '초기화면 넣자',
+			'<', rootBox
+		)
 	}
-}
+	callDoc = (function () {
+		var setConstructor;
+		var setContent;
+		var setTitle, setDescription, setReturn, setParam, setExample;
+		setTitle = function (data, tag) {
+			console.log(data['title'])
+			return Recard.Dom(tag ? tag : 'div').S(
+				'@titleBox', '',
+				'margin', 0,
+				'padding', '10px 0',
+				'html', data['title'] ? data['title'] : 'DOC에 title이 정의 되지 않았습니다.'
+			)
+		}
+		setDescription = function (data, tag) {
+			console.log(data['description'])
+			var t0;
+			t0 = '<b>description</b> : ';
+			if ( data['description'] ) {
+				if ( data['description'] instanceof Array ) {
+					data['description'].forEach(function (v) {
+						t0 += '<br>' + v
+					})
+				} else t0 += data['description']
+			} else t0 += 'DOC에 description이 정의 되지 않았습니다.';
+			return Recard.Dom(tag ? tag : 'div').S(
+				'html', t0
+			)
+		}
+		setParam = function (data, tag) {
+			console.log(data['setParam'])
+			var box, boxContent, paramsBox, paramItemBox;
+			var k, tData;
+			box = Recard.Dom(tag ? tag : 'div').S(
+				'>', Recard.Dom('div').S('html', '<b>params : </b>'),
+				'>', boxContent = Recard.Dom('div')
+			);
+			if ( data['params'] ) {
+				paramsBox = Recard.Dom('table').S(
+					'margin-top', 5,
+					'margin-bottom', 5,
+					'width', '100%',
+					'font-size', 12,
+					'line-height', 20,
+					'border', '1px solid #ccc',
+					'<', boxContent
+				)
+				for ( k in data['params'] ) {
+					tData = data['params'][k];
+					Recard.Dom('tr').S(
+						'>', Recard.Dom('td').S(
+							'vertical-align', 'top',
+							'html', '<b>' + k + '</b>'
+						),
+						'>', paramItemBox = Recard.Dom('td').S('vertical-align', 'top'),
+						'<', paramsBox
+					)
+					tData.forEach(function (v) {
+						Recard.Dom(tag ? tag : 'div').S(
+							'html', (v['type'] ? 'type : ' + v['type'] : v),
+							'<', paramItemBox
+						)
+					})
+				}
+			}
+			return box;
+		}
+		setExample = function (data, tag) {
+			console.log(data['example'])
+			return Recard.Dom(tag ? tag : 'div').S(
+				'>', Recard.Dom('div').S(
+					'html', '<b>example</b> :'
+				),
+				'>', Recard.Dom('div').S(
+					'>', Recard.Dom('code').S(
+						'@className', 'language-javascript',
+						'display', 'block',
+						'padding', 10,
+						'html', Prism.highlight(data['example'] ? data['example'] : 'DOC에 example이 정의 되지 않았습니다.', Prism.languages.javascript).trim()
+					)
+				)
+			)
+		}
+		setReturn = function (data, tag) {
+			console.log(data['return'])
+			return Recard.Dom(tag ? tag : 'div').S(
+				'html', '<b>return</b> : ' + (data['return'] ? data['return'] : 'DOC에 return이 정의 되지 않았습니다.')
+			)
+		}
+		setConstructor = function (data) {
+			if ( data.length ) {
+				data = data[0];
+				Recard.Dom('div').S(
+					'>', setTitle(data, 'h1'),
+					'<', rightBox
+				)
+			}
+		};
+		setContent = function (content, key) {
+			var box;
+			var dataList;
+			dataList = content.filter(function (v) {
+				if ( v['code'] == key ) return true
+			});
+			rightBox.S(
+				'>', Recard.Dom('hr'),
+				'>', Recard.Dom('h2').S(
+					'@titleBox', '',
+					'html', key ? key : '비정의'
+				),
+				'>', box = Recard.Dom('div')
+			)
+			dataList.forEach(function (v) {
+				setTitle(v, 'h3').S(
+					'@titleBox', '',
+					'<', box
+				),
+					Recard.Dom('div').S(
+						'@className', 'redDocBox',
+						'>', setDescription(v),
+						'>', setParam(v),
+						'>', setExample(v),
+						'>', setReturn(v),
+						'<', box
+					)
+			})
+		}
+		return function (src) {
+			rightBox.S('html', src + ' loading..')
+			var tLoader
+			tLoader = Recard.AjaxLoader(
+				null,
+				{
+					url: 'docs/' + src,
+					method: 'GET'
+				}
+			)
+			tLoader.onAllLoaded(function (v) {
+				var content = JSON.parse(v[0]['content'])
+				console.log(content)
+				rightBox.S('html', '');
+				var codeKEYList;
+				codeKEYList = {};
+				setConstructor(content.filter(function (v) {
+					if ( !v['contructorYn'] ) {
+						if ( !v['code'] ) codeKEYList['none'] = -1
+						else if ( !codeKEYList[v['code']] ) codeKEYList[v['code']] = 1;
+					}
+					if ( v['constructorYn'] ) return true
+				}));
+				for ( var k in codeKEYList ) {
+					setContent(content, k == 'none' ? null : k);
+				}
+				// for ( var k in content ) {
+				// 	console.log(content[k])
+				// }
+			})
+			tLoader.start()
+		}
+	})();
+	return {
+		init: function (srcList) {
+			console.log(srcList)
+			setBaseBox()
+			setLeftBox(srcList);
+			setRightBox();
+		}
+	}
+})();

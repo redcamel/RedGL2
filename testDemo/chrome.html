@@ -63,11 +63,6 @@
 			tLight3.x = 0
 			tLight3.y = 20
 			tLight3.z = -10
-			var tLight4 = RedDirectionalLight(this)
-			tScene.addLight(tLight4)
-			tLight4.x = 0
-			tLight4.y = -20
-			tLight4.z = -10
 			var tPointLight1 = RedPointLight(this, '#ff0000')
 //			tPointLight1.debug= true
 			tPointLight1.radius = 4
@@ -111,9 +106,8 @@
 				var i = 200000
 				while ( i-- ) {
 					interleaveData.push(Math.random() * 50 - 25, Math.random() * 50 - 25, Math.random() * 50 - 25)
-					interleaveData.push(Math.random() * 6)
+					interleaveData.push(Math.random()*0.1 )
 				}
-				interleaveData = new Float32Array(interleaveData)
 				tPointCloud = RedPointUnit(
 					self,
 					interleaveData,
@@ -237,7 +231,6 @@
 					testParticle.x = Math.sin(time / 500) * 3
 					testParticle.y = Math.sin(time / 1500) * 3
 					testParticle.z = Math.cos(time / 500) * 3
-					testParticle.update(time)
 				}
 			})
 		} else {

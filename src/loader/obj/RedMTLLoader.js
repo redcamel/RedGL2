@@ -3,8 +3,7 @@ var RedMTLLoader;
 (function () {
 	var parser;
 	var RedMTLResult;
-	RedMTLResult = function () {
-	}
+	RedMTLResult = function () {};
 	/**DOC:
 	 {
 		 constructorYn : true,
@@ -30,34 +29,34 @@ var RedMTLLoader;
 	 }
 	 :DOC*/
 	RedMTLLoader = function (redGL, path, fileName, callback) {
-		if ( (!(this instanceof RedMTLLoader)) ) return new RedMTLLoader(redGL, path, fileName, callback)
-		console.log('~~~~~~~~~~~')
+		if ( (!(this instanceof RedMTLLoader)) ) return new RedMTLLoader(redGL, path, fileName, callback);
+		console.log('~~~~~~~~~~~');
 		var self = this;
 		var request = new XMLHttpRequest();
 		request.open("GET", path + fileName, true);
-		request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
+		request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
 		request.onreadystatechange = function () {
 			if ( request.readyState == 4 ) {
-				self['complete'] = true
+				self['complete'] = true;
 				if ( request.status == 200 ) {
 					var data;
-					data = parser(self, redGL, request.responseText)
-					self['parseData'] = data
+					data = parser(self, redGL, request.responseText);
+					self['parseData'] = data;
 				} else {
-					self['parseData'] = new RedMTLResult()
+					self['parseData'] = new RedMTLResult();
 				}
-				if ( callback ) callback(self['parseData'])
+				if ( callback ) callback(self['parseData']);
 			}
-		}
+		};
 		request.addEventListener('error', function (e) {
-			console.log('에럿', e)
-		})
+			console.log('에럿', e);
+		});
 		request.send();
 		this['path'] = path;
 		this['fileName'] = fileName;
 		this['complete'] = false;
 		this['parseData'] = null;
-	}
+	};
 	parser = function (target, redGL, data) {
 		var info, resultInfo;
 		var lines;
@@ -91,17 +90,17 @@ var RedMTLLoader;
 			}
 
 			// 암비안트
-			else if ( reg_Ka.test(line) ) currentMaterialInfo['Ka'] = line.replace('Ka ', '').split(' ')
+			else if ( reg_Ka.test(line) ) currentMaterialInfo['Ka'] = line.replace('Ka ', '').split(' ');
 			// 디퓨즈
-			else if ( reg_Kd.test(line) ) currentMaterialInfo['Kd'] = line.replace('Kd ', '').split(' ')
+			else if ( reg_Kd.test(line) ) currentMaterialInfo['Kd'] = line.replace('Kd ', '').split(' ');
 			// 스페큘러
-			else if ( reg_Ks.test(line) ) currentMaterialInfo['Ks'] = line.replace('Ks ', '').split(' ')
+			else if ( reg_Ks.test(line) ) currentMaterialInfo['Ks'] = line.replace('Ks ', '').split(' ');
 			//uShininess
-			else if ( reg_Ns.test(line) ) currentMaterialInfo['Ns'] = +line.replace('Ns ', '')
+			else if ( reg_Ns.test(line) ) currentMaterialInfo['Ns'] = +line.replace('Ns ', '');
 			// 굴절률
-			else if ( reg_Ni.test(line) ) currentMaterialInfo['Ni'] = +line.replace('Ni ', '')
+			else if ( reg_Ni.test(line) ) currentMaterialInfo['Ni'] = +line.replace('Ni ', '');
 			// 디졸브라는데 뭐래 -_-
-			else if ( reg_d.test(line) ) currentMaterialInfo['d'] = +line.replace('d ', '')
+			else if ( reg_d.test(line) ) currentMaterialInfo['d'] = +line.replace('d ', '');
 			else if ( reg_illum.test(line) ) {
 				// illum illum_#
 				// The "illum" statement specifies the illumination model to use in the
@@ -110,41 +109,41 @@ var RedMTLLoader;
 				// "illum_#"can be a number from 0 to 10.  The illumination models are
 				// summarized below; for complete descriptions see "Illumination models" on
 				// page 5-30.
-				currentMaterialInfo['illum'] = +line.replace('illum ', '')
+				currentMaterialInfo['illum'] = +line.replace('illum ', '');
 				switch ( currentMaterialInfo['illum'] ) {
 					case 0:
 						// 0		Color on and Ambient off
-						break
+						break;
 					case 1:
 						// 1		Color on and Ambient on
-						break
+						break;
 					case 2:
 						// 2		Highlight on
-						break
+						break;
 					case 3:
 						// 3		Reflection on and Ray trace on
-						break
+						break;
 					case 4:
 						// 4		Transparency: Glass on
-						break
+						break;
 					case 5:
 						// 5		Reflection: Fresnel on and Ray trace on
-						break
+						break;
 					case 6:
 						// 6		Transparency: Refraction on
-						break
+						break;
 					case 7:
 						// 7		Transparency: Refraction on
-						break
+						break;
 					case 8:
 						// 8		Reflection on and Ray trace off
-						break
+						break;
 					case 9:
 						// 9		Transparency: Glass on
-						break
+						break;
 					case 10:
 						// 10		Casts shadows onto invisible surfaces
-						break
+						break;
 				}
 			}
 			// map_Ka lemur.tga           # the ambient texture map
@@ -154,17 +153,17 @@ var RedMTLLoader;
 			// map_Ns lemur_spec.tga      # specular highlight component
 			// map_d lemur_alpha.tga      # the alpha texture map
 			// map_bump lemur_bump.tga    # some implementations use 'map_bump' instead of 'bump' below
-			else if ( reg_map_Kd.test(line) ) currentMaterialInfo['map_Kd'] = target['path'] + line.replace('map_Kd ', '')
-			else if ( reg_map_Ns.test(line) ) currentMaterialInfo['map_Ns'] = target['path'] + line.replace('map_Ns ', '')
-			// else if (reg_map_Ks.test(line)) currentMaterialInfo['map_Ks'] = target['path'] + line.replace('map_Ks ', '')
-			else if ( red_map_bump.test(line) ) currentMaterialInfo['map_bump'] = target['path'] + (line.replace('map_bump ', '').split(' ')[2])
-		})
-		resultInfo = new RedMTLResult()
+			else if ( reg_map_Kd.test(line) ) currentMaterialInfo['map_Kd'] = target['path'] + line.replace('map_Kd ', '');
+			else if ( reg_map_Ns.test(line) ) currentMaterialInfo['map_Ns'] = target['path'] + line.replace('map_Ns ', '');
+			// else if (reg_map_Ks.test(line)) currentMaterialInfo['map_Ks'] = target['path'] + line.replace('map_Ks ', '');
+			else if ( red_map_bump.test(line) ) currentMaterialInfo['map_bump'] = target['path'] + (line.replace('map_bump ', '').split(' ')[2]);
+		});
+		resultInfo = new RedMTLResult();
 		for ( var k in info ) {
-			resultInfo[k] = info[k]
+			resultInfo[k] = info[k];
 		}
-		console.log(resultInfo)
+		console.log(resultInfo);
 		return resultInfo
-	}
-	Object.freeze(RedMTLLoader)
-})()
+	};
+	Object.freeze(RedMTLLoader);
+})();

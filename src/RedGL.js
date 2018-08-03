@@ -56,7 +56,7 @@ var RedGL;
 	setEmptyTextures = function (redGL, gl) {
 		var i;
 		var emptyTexture, emptyCubeTexture, src;
-		i = redGL['_detect']['MAX_COMBINED_TEXTURE_IMAGE_UNITS'];
+		i = redGL['_detect']['texture']['MAX_COMBINED_TEXTURE_IMAGE_UNITS'];
 		src = RedBaseTexture.EMPTY_BASE64;
 		emptyTexture = RedBitmapTexture(redGL, src);
 		emptyCubeTexture = RedBitmapCubeTexture(redGL, [src, src, src, src, src, src]);

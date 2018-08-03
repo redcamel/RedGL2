@@ -69,8 +69,8 @@ var RedText;
 		this['_img'] = new Image();
 		width = width || 256;
 		height = height || 256;
-		if ( width > redGL['_detect']['MAX_TEXTURE_SIZE'] ) width = redGL['_detect']['MAX_TEXTURE_SIZE'];
-		if ( height > redGL['_detect']['MAX_TEXTURE_SIZE'] ) height = redGL['_detect']['MAX_TEXTURE_SIZE'];
+		if ( width > redGL['_detect']['texture']['MAX_TEXTURE_SIZE'] ) width = redGL['_detect']['texture']['MAX_TEXTURE_SIZE'];
+		if ( height > redGL['_detect']['texture']['MAX_TEXTURE_SIZE'] ) height = redGL['_detect']['texture']['MAX_TEXTURE_SIZE'];
 		this['width'] = width;
 		this['height'] = height;
 		// 기본 스타일 프로퍼티
