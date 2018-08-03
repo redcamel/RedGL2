@@ -3,7 +3,30 @@ var DocJS = (function () {
 	var setBaseBox, setLeftBox, setRightBox;
 	var rootBox, leftBox, rightBox;
 	var callDoc;
-	Recard.Css('.redDoc li').S('margin-left', 10)
+	var dedent = function (callSite, ...args) {
+		function format(str) {
+			let size = -1;
+			return str.replace(/\n(\s+)/g, (m, m1) => {
+				if ( size < 0 )
+					size = m1.replace(/\t/g, "    ").length;
+				return "\n" + m1.slice(Math.min(m1.length, size));
+			});
+		}
+
+		if ( typeof callSite === "string" ) return format(callSite);
+		if ( typeof callSite === "function" ) return (...args) => format(callSite(...args));
+		let output = callSite
+			.slice(0, args.length + 1)
+			.map((text, i) => (i === 0 ? "" : args[i - 1]) + text)
+			.join("");
+		return format(output);
+	}
+	Recard.Css('.redDoc li').S(
+		'list-style-type', 'none',
+		'margin-left', 10
+	)
+	Recard.Css('.redDoc li[directory]').S(
+	)
 	Recard.Css('.redDoc .redDocBox').S(
 		'position', 'relative',
 		'padding', '15px 15px 15px 15px',
@@ -40,14 +63,23 @@ var DocJS = (function () {
 			'background', '#fff',
 			'>', Recard.Dom('h1').S(
 				'font-size', 40,
-				'html', 'RedGL DOC'
+				'html', 'RedGL2 DOC'
 			),
 			'>', Recard.Dom('div').S(
 				'position', 'fixed',
-				'top', 20,
+				'top', 10,
 				'right', 20,
 				'>', Recard.Dom('div').S(
-					'html', '<a href = "https://github.com/redcamel/RedGL2">https://github.com/redcamel/RedGL2</a>'
+					'text-align', 'right',
+					'>', Recard.Dom('span').S(
+						'html', '<a href = "https://redcamel.github.io/RedGL2/example">example</a> / '
+					),
+					'>', Recard.Dom('span').S(
+						'html', '<a href = "https://redcamel.github.io/RedGL2/testCase">testCase</a> / '
+					),
+					'>', Recard.Dom('span').S(
+						'html', '<a href = "https://github.com/redcamel/RedGL2/">github</a>'
+					)
 				),
 				'>', Recard.Dom('div').S(
 					'text-align', 'right',
@@ -89,9 +121,33 @@ var DocJS = (function () {
 					console.log(v, v2)
 					path += v2;
 					if ( !dirMAP[path] ) dirMAP[path] = Recard.Dom('li').S(
-						'html', path,
+						'@open', false,
+						'@depth', index,
+						'position', 'relative',
+						'cursor', 'pointer',
+						'display', 'none',
+						'on', ['down', function (e) {
+							if ( e.nativeEvent.target == this.__dom__ ) {
+								var tOpen = this.S('@open') == 'true' ? 1 : 0
+								this.queryAll('li').forEach(function (v) {
+									v.S('display', tOpen ? 'none' : 'list-item')
+								})
+								this.S('@open', (!tOpen) ? true : false)
+							}
+						}],
+						'html', v2,
+						'>', Recard.Dom('div').S(
+							'@directory', '',
+							'position', 'absolute',
+							'top', 5,
+							'left', -15,
+							'background', '#d0a4a4',
+							'width', 10,
+							'height', 10
+						),
 						'<', tParent
-					);
+					)
+					;
 					tParent = dirMAP[path];
 				})
 				return dirMAP[path];
@@ -100,20 +156,29 @@ var DocJS = (function () {
 		return function (srcList) {
 			leftBox = Recard.Dom('td').S(
 				'vertical-align', 'top',
+				'padding-left', 15,
 				'width', 300,
 				'<', rootBox
 			)
 			srcList.forEach(function (v) {
 				var src = v.join('/') + '.json';
+				var tTitle = v[v.length - 1]
+				var tParent = getTargetDir(v)
 				Recard.Dom('li').S(
-					'html', v[v.length - 1],
+					'html', tTitle,
 					'cursor', 'pointer',
+					'display', tParent.__dom__ == leftBox.__dom__ ? 'list-item' : 'none',
 					'on', ['down', function () {
 						document.body.scrollTop = 0
 						callDoc(src)
 					}],
-					'<', getTargetDir(v)
+					'<', tParent
 				)
+			})
+			leftBox.queryAll('li').forEach(function (v) {
+				console.log(v, v.S('@depth'))
+				if ( v.S('@depth') == '0' ) v.S('display', 'list-item')
+				else console.log('뭔데')
 			})
 		}
 	}());
@@ -127,7 +192,7 @@ var DocJS = (function () {
 	callDoc = (function () {
 		var setConstructor;
 		var setContent;
-		var setTitle, setDescription, setReturn, setParam, setExample, setTestCase;
+		var setTitle, setDescription, setReturn, setParam, setExample, setTestCase, setState;
 		setTitle = function (data, tag) {
 			console.log(data['title'])
 			return Recard.Dom(tag ? tag : 'div').S(
@@ -137,17 +202,21 @@ var DocJS = (function () {
 				'html', data['title'] ? data['title'] : 'DOC에 title이 정의 되지 않았습니다.'
 			)
 		}
+		setState = function (data, tag) {
+			console.log(data['title'])
+			return Recard.Dom(tag ? tag : 'div').S(
+				'margin', 0,
+				'font-weight', 'bold',
+				'font-size', 11,
+				'html', '<b>state</b> : ' + '<span style="color:' + (data['state'] == 'FINAL' ? 'green' : 'red') + '">' + (data['state'] ? data['state'] : 'DRAFT') + '</span>'
+			)
+		}
 		setDescription = function (data, tag) {
 			console.log(data['description'])
 			var t0;
 			t0 = '<b>description</b> : ';
-			if ( data['description'] ) {
-				if ( data['description'] instanceof Array ) {
-					data['description'].forEach(function (v) {
-						t0 += '<br>' + v
-					})
-				} else t0 += data['description']
-			} else t0 += 'DOC에 description이 정의 되지 않았습니다.';
+			if ( data['description'] ) t0 += data['description'].replace(/\n/g, '<br>')
+			else t0 += 'DOC에 description이 정의 되지 않았습니다.';
 			return Recard.Dom(tag ? tag : 'div').S(
 				'html', t0
 			)
@@ -217,7 +286,7 @@ var DocJS = (function () {
 							'@className', 'language-javascript',
 							'display', 'block',
 							'padding', 10,
-							'html', Prism.highlight(data['example'] ? data['example'] : 'DOC에 example이 정의 되지 않았습니다.', Prism.languages.javascript).trim()
+							'html', Prism.highlight(dedent(data['example'] ? data['example'] : 'DOC에 example이 정의 되지 않았습니다.'), Prism.languages.javascript).trim()
 						)
 					)
 				)
@@ -296,6 +365,7 @@ var DocJS = (function () {
 				)
 				Recard.Dom('div').S(
 					'@className', 'redDocBox',
+					'>', setState(v),
 					'>', setDescription(v),
 					'>', setParam(v),
 					'>', setExample(v),
