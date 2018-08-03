@@ -21,10 +21,45 @@ var DocJS = (function () {
 		'font-size', '1.5em',
 		'color', '#0795b7'
 	)
+	Recard.Css('.redDoc .redDocBox .paramTD').S(
+		'padding', '5px 10px',
+		'border', '1px solid #ddd'
+	)
+	Recard.Css('.redDoc .redDocBox .paramTD:nth-child(odd)').S(
+		'background', '#f2f2f2'
+	)
 	setBaseBox = function () {
+		Recard.Dom('div').S(
+			'position', 'fixed',
+			'top', 0,
+			'left', 0,
+			'right', 0,
+			'height', 85,
+			'padding-left', 20,
+			'border-bottom', '1px solid #ddd',
+			'background', '#fff',
+			'>', Recard.Dom('h1').S(
+				'font-size', 40,
+				'html', 'RedGL DOC'
+			),
+			'>', Recard.Dom('div').S(
+				'position', 'fixed',
+				'top', 20,
+				'right', 20,
+				'>', Recard.Dom('div').S(
+					'html', '<a href = "https://github.com/redcamel/RedGL2">https://github.com/redcamel/RedGL2</a>'
+				),
+				'>', Recard.Dom('div').S(
+					'text-align', 'right',
+					'html', 'By Redcamel'
+				)
+			),
+			'<', 'body'
+		)
 		Recard.Dom('table').S(
 			'@className', 'redDoc',
 			'width', '100%',
+			'margin-top', 100,
 			'>', rootBox = Recard.Dom('tr').S(
 				'font-size', 12,
 				'line-height', 20
@@ -92,7 +127,7 @@ var DocJS = (function () {
 	callDoc = (function () {
 		var setConstructor;
 		var setContent;
-		var setTitle, setDescription, setReturn, setParam, setExample;
+		var setTitle, setDescription, setReturn, setParam, setExample, setTestCase;
 		setTitle = function (data, tag) {
 			console.log(data['title'])
 			return Recard.Dom(tag ? tag : 'div').S(
@@ -127,55 +162,109 @@ var DocJS = (function () {
 			);
 			if ( data['params'] ) {
 				paramsBox = Recard.Dom('table').S(
+					'border-collapse', 'collapse',
+					'@cellSpacing', 0,
+					'@cellPadding', 0,
 					'margin-top', 5,
 					'margin-bottom', 5,
-					'width', '100%',
 					'font-size', 12,
 					'line-height', 20,
-					'border', '1px solid #ccc',
 					'<', boxContent
 				)
 				for ( k in data['params'] ) {
 					tData = data['params'][k];
 					Recard.Dom('tr').S(
 						'>', Recard.Dom('td').S(
+							'@className', 'paramTD',
 							'vertical-align', 'top',
 							'html', '<b>' + k + '</b>'
 						),
-						'>', paramItemBox = Recard.Dom('td').S('vertical-align', 'top'),
+						'>', paramItemBox = Recard.Dom('td').S(
+							'@className', 'paramTD',
+							'vertical-align', 'top'
+						),
 						'<', paramsBox
 					)
 					tData.forEach(function (v) {
-						Recard.Dom(tag ? tag : 'div').S(
-							'html', (v['type'] ? 'type : ' + v['type'] : v),
-							'<', paramItemBox
-						)
+						if ( v['type'] ) {
+							Recard.Dom(tag ? tag : 'div').S(
+								'font-weight', 'bold',
+								'color', '#0795b7',
+								'html', (v['type'] ? 'type : ' + v['type'] : v),
+								'<', paramItemBox
+							)
+						} else {
+							Recard.Dom(tag ? tag : 'div').S(
+								'html', v,
+								'<', paramItemBox
+							)
+						}
 					})
 				}
-			}
-			return box;
+				return box;
+			} else return Recard.Dom('div')
 		}
 		setExample = function (data, tag) {
 			console.log(data['example'])
-			return Recard.Dom(tag ? tag : 'div').S(
-				'>', Recard.Dom('div').S(
-					'html', '<b>example</b> :'
-				),
-				'>', Recard.Dom('div').S(
-					'>', Recard.Dom('code').S(
-						'@className', 'language-javascript',
-						'display', 'block',
-						'padding', 10,
-						'html', Prism.highlight(data['example'] ? data['example'] : 'DOC에 example이 정의 되지 않았습니다.', Prism.languages.javascript).trim()
+			if ( data['example'] ) {
+				return Recard.Dom(tag ? tag : 'div').S(
+					'>', Recard.Dom('div').S(
+						'html', '<b>example</b> :'
+					),
+					'>', Recard.Dom('div').S(
+						'margin', '5px 0',
+						'>', Recard.Dom('code').S(
+							'@className', 'language-javascript',
+							'display', 'block',
+							'padding', 10,
+							'html', Prism.highlight(data['example'] ? data['example'] : 'DOC에 example이 정의 되지 않았습니다.', Prism.languages.javascript).trim()
+						)
 					)
 				)
-			)
+			} else return Recard.Dom('div')
 		}
 		setReturn = function (data, tag) {
 			console.log(data['return'])
 			return Recard.Dom(tag ? tag : 'div').S(
 				'html', '<b>return</b> : ' + (data['return'] ? data['return'] : 'DOC에 return이 정의 되지 않았습니다.')
 			)
+		}
+		setTestCase = function (src) {
+			console.log(src)
+			var tIframe;
+			var tLoader
+			tLoader = Recard.AjaxLoader(
+				null,
+				{
+					url: '../testCase/' + src.replace('.json', '.html'),
+					method: 'GET'
+				}
+			)
+			tLoader.onAllLoaded(function (v) {
+				if ( v[0]['resultType'] != 'FAIL' ) {
+					rightBox.S(
+						'>', Recard.Dom('h1').S('html', 'TestCase'),
+						'>', tIframe = Recard.Dom('iframe').S(
+							'@src', '../testCase/' + src.replace('.json', '.html'),
+							'border', 0,
+							'width', '100%',
+							'height', 500
+						)
+					)
+					tIframe.__dom__.onload = function () {
+						console.log('오오옹오', this.contentWindow.document)
+						console.log(this.contentWindow.document.documentElement.clientHeight)
+						var self = this
+						setTimeout(function () {
+							tIframe.S(
+								'height', self.contentWindow.document.documentElement.clientHeight
+							)
+						}, 500)
+					}
+					console.log(tIframe.__dom__)
+				}
+			})
+			tLoader.start()
 		}
 		setConstructor = function (data) {
 			if ( data.length ) {
@@ -204,15 +293,15 @@ var DocJS = (function () {
 				setTitle(v, 'h3').S(
 					'@titleBox', '',
 					'<', box
-				),
-					Recard.Dom('div').S(
-						'@className', 'redDocBox',
-						'>', setDescription(v),
-						'>', setParam(v),
-						'>', setExample(v),
-						'>', setReturn(v),
-						'<', box
-					)
+				)
+				Recard.Dom('div').S(
+					'@className', 'redDocBox',
+					'>', setDescription(v),
+					'>', setParam(v),
+					'>', setExample(v),
+					'>', setReturn(v),
+					'<', box
+				)
 			})
 		}
 		return function (src) {
@@ -239,8 +328,9 @@ var DocJS = (function () {
 					if ( v['constructorYn'] ) return true
 				}));
 				for ( var k in codeKEYList ) {
-					setContent(content, k == 'none' ? null : k);
+					setContent(content, k == 'none' ? null : k, src);
 				}
+				setTestCase(src)
 				// for ( var k in content ) {
 				// 	console.log(content[k])
 				// }

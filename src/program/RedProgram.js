@@ -304,7 +304,7 @@ var RedProgram;
 	/**DOC:
 	 {
 		 title :`RedProgram.hasKey`,
-		 code: 'STATIC',
+		 code: 'CONST',
 		 description : '키에 해당하는 쉐이더 존재 여부 반환',
 		 params : {
 			 redGL : [

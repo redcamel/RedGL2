@@ -205,7 +205,7 @@ var RedGL;
 	};
 	/**DOC:
 	 {
-		 code : 'STATIC',
+		 code : 'CONST',
 		 title :`RedGL.makeUUID`,
 		 description : `
 			 UUID 생성기
