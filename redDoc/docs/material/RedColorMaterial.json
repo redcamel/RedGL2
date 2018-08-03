@@ -1,0 +1,37 @@
+[
+  {
+    "title": "alpha",
+    "description": "기본값 : 1",
+    "return": "Number"
+  },
+  {
+    "title": "color",
+    "description": "기본값 : #ff2211",
+    "return": "hex"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedColorMaterial",
+    "description": "\nRedColorMaterial Instance 생성\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ],
+      "hexColor": [
+        {
+          "type": "hex"
+        }
+      ],
+      "alpha": [
+        {
+          "type": "number"
+        },
+        "알파값"
+      ]
+    },
+    "example": "\nRedColorMaterial(RedGL Instance, hex)\n",
+    "return": "RedColorMaterial Instance"
+  }
+]

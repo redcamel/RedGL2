@@ -1,0 +1,20 @@
+[
+  {
+    "title": "alpha",
+    "description": "기본값 : 1",
+    "return": "Number"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedPointColorMaterial",
+    "description": "\nRedPointColorMaterial Instance 생성\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ]
+    },
+    "return": "RedPointColorMaterial Instance"
+  }
+]

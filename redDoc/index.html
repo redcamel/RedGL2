@@ -14,131 +14,27 @@
             color: #4c6575
         }
 
-        a {
-            color: inherit;
-        }
-
-        h1 {
-            font-size: 40px
-        }
-
-        .topTitle {
-            font-size: 35px;
-            line-height: 21px;
-            color: #333;
-            font-weight: bold
-        }
-
-        .title {
-            font-size: 24px;
-            line-height: 21px;
-            color: #333;
-            font-weight: bold
-        }
-
-        .paramTitle {
-            font-size: 14px;
-            line-height: 21px;
-            color: #2233aa;
-            font-weight: bold
-        }
-
-        .defineBox {
-            margin-top: 30px;
-            margin-left: 10px;
-            margin-right: 10px;
-            padding-bottom: 30px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .defineBox:last-child {
-            border-bottom: 0
-        }
     </style>
 </head>
 
 <body>
 <script>
-	Recard(function () {
-			var path = 'docs/'
-			DocJS.init(
-				[
-					path + "RedGLUtil.json",
-					path + "RedGL.json",
-					path + "RedAtlas.json",
-					path + "RedBaseContainer.json",
-					path + "RedBaseLight.json",
-					path + "RedBaseMaterial.json",
-					path + "RedBaseObject3D.json",
-					path + "RedBuffer.json",
-					path + "RedGeometry.json",
-					path + "RedInterleaveInfo.json",
-					path + "RedAmbientLight.json",
-					path + "RedDirectionalLight.json",
-					path + "RedPointLight.json",
-					path + "JsonModelLoader.json",
-					path + "obj/RedMTLLoader.json",
-					path + "obj/RedOBJLoader.json",
-					path + "RedMaterial.json",
-					path + "RedColorMaterial.json",
-					path + "RedColorPhongMaterial.json",
-					path + "RedColorPhongMaterial.json",
-					path + "RedEnvironmentMaterial.json",
-					path + "RedGridMaterial.json",
-					path + "RedBitmapMaterial.json",
-					path + "RedPointBitmapMaterial.json",
-					path + "RedPointColorMaterial.json",
-					path + "RedSkyBoxMaterial.json",
-					path + "RedStandardMaterial.json",
-					path + "RedSheetMaterial.json",
-					path + "RedAxis.json",
-					path + "RedGrid.json",
-					path + "RedMesh.json",
-					path + "RedLine.json",
-					path + "RedSkyBox.json",
-					path + "RedSprite3D.json",
-					path + "RedPointUnit.json",
-					path + "RedPostEffect_Bloom.json",
-					path + "RedPostEffect_BloomThreshold.json",
-					path + "RedPostEffect_Blur.json",
-					path + "RedPostEffect_BlurX.json",
-					path + "RedPostEffect_BlurY.json",
-					path + "RedPostEffect_BrightnessContrast.json",
-					path + "RedPostEffect_Convolution.json",
-					path + "RedPostEffect_DoF.json",
-					path + "RedPostEffect_DoF_DepthMaterial.json",
-					path + "RedPostEffect_Film.json",
-					path + "RedPostEffect_GaussianBlur.json",
-					path + "RedPostEffect_Gray.json",
-					path + "RedPostEffect_HalfTone.json",
-					path + "RedPostEffect_HueSaturation.json",
-					path + "RedPostEffect_Invert.json",
-					path + "RedPostEffect_Pixelize.json",
-					path + "RedPostEffect_Threshold.json",
-					path + "RedPostEffect_Vignetting.json",
-					path + "RedPostEffect_ZoomBlur.json",
-					path + "RedPostEffect_FXAA.json",
-					path + "RedBox.json",
-					path + "RedPlane.json",
-					path + "RedSphere.json",
-					path + "RedProgram.json",
-					path + "RedSystemShaderCode.json",
-					path + "RedShader.json",
-					path + "RedRenderer.json",
-					path + "RedRenderDebuger.json",
-					path + "RedTextureOptionChecker.json",
-					path + "RedAtlasUV.json",
-					path + "RedBitmapTexture.json",
-					path + "RedAtlasTexture.json",
-					path + "RedBitmapCubeTexture.json",
-					path + "RedView.json",
-					path + "RedWorld.json",
-					path + "RedScene.json",
-					path + "RedCamera.json",
-					path + "RedBasicController.json",
-					path + "RedObitController.json"
-				]
+	Recard(
+		function () {
+			console.log('왔어')
+			var tLoader
+			tLoader = Recard.AjaxLoader(
+				null,
+				{
+					url: 'docs/list.json',
+					method: 'GET'
+				}
 			)
+			tLoader.onAllLoaded(function (v) {
+				var srcList = JSON.parse(v[0]['content'])
+				DocJS.init(srcList)
+			})
+			tLoader.start()
 		}
 	)
 </script>

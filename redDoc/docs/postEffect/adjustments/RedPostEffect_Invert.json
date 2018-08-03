@@ -1,0 +1,15 @@
+[
+  {
+    "constructorYn": true,
+    "title": "RedPostEffect_Invert",
+    "description": "\nRedPostEffect_Invert Instance 생성.\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ]
+    },
+    "return": "RedPostEffect_Invert Instance"
+  }
+]

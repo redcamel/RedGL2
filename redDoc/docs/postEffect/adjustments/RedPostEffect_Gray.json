@@ -1,0 +1,15 @@
+[
+  {
+    "constructorYn": true,
+    "title": "RedPostEffect_Gray",
+    "description": "\nRedPostEffect_Gray Instance 생성.\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ]
+    },
+    "return": "RedPostEffect_Gray Instance"
+  }
+]

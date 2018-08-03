@@ -1,0 +1,20 @@
+[
+  {
+    "constructorYn": true,
+    "title": "RedPostEffect_BlurY",
+    "description": "\nRedPostEffect_BlurY Instance 생성.\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ]
+    },
+    "return": "RedPostEffect_BlurY Instance"
+  },
+  {
+    "title": "size",
+    "description": "\n블러 사이즈\n기본값 : 50\n",
+    "return": "Number"
+  }
+]

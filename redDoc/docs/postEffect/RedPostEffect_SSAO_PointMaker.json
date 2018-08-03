@@ -1,0 +1,15 @@
+[
+  {
+    "constructorYn": true,
+    "title": "RedPostEffect_SSAO_PointMaker",
+    "description": "\nRedPostEffect_SSAO_PointMaker Instance 생성.\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ]
+    },
+    "return": "RedPostEffect_SSAO_PointMaker Instance"
+  }
+]

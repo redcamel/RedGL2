@@ -1,0 +1,77 @@
+[
+  {
+    "title": "alpha",
+    "description": "기본값 : 1",
+    "return": "Number"
+  },
+  {
+    "title": "diffuseTexture",
+    "return": "RedBitmapTexture"
+  },
+  {
+    "title": "displacementPower",
+    "description": "기본값 : 0",
+    "return": "Number"
+  },
+  {
+    "title": "displacementTexture",
+    "return": "RedBitmapTexture"
+  },
+  {
+    "title": "normalPower",
+    "description": "기본값 : 1",
+    "return": "number"
+  },
+  {
+    "title": "normalTexture",
+    "return": "RedBitmapTexture"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedStandardMaterial",
+    "description": "\nRedStandardMaterial Instance 생성\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ],
+      "diffuseTexture": [
+        {
+          "type": "RedBitmapTexture"
+        }
+      ],
+      "normalTexture": [
+        {
+          "type": "RedBitmapTexture"
+        }
+      ],
+      "specularTexture": [
+        {
+          "type": "RedBitmapTexture"
+        }
+      ],
+      "displacementTexture": [
+        {
+          "type": "RedBitmapTexture"
+        }
+      ]
+    },
+    "example": "\nRedStandardMaterial(\nRedGL Instance,\nRedBitmapTexture(RedGL Instance, src), // diffuseTexture\nRedBitmapTexture(RedGL Instance, src), // normalTexture\nRedBitmapTexture(RedGL Instance, src), // specularTexture\nRedBitmapTexture(RedGL Instance, src)  // displacementTexture\n)\n",
+    "return": "RedStandardMaterial Instance"
+  },
+  {
+    "title": "shininess",
+    "description": "기본값 : 16",
+    "return": "number"
+  },
+  {
+    "title": "specularPower",
+    "description": "기본값 : 1",
+    "return": "number"
+  },
+  {
+    "title": "specularTexture",
+    "return": "RedBitmapTexture"
+  }
+]

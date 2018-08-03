@@ -1,0 +1,13 @@
+[
+  {
+    "constructorYn": true,
+    "title": "RedRenderDebuger",
+    "description": "\nRedRenderDebuger Instance 생성\n렌더러 생성시 시스템적으로 자동생성됨.\n",
+    "return": "RedRenderDebuger Instance"
+  },
+  {
+    "title": "visible",
+    "description": "\nRedRenderDebuger 정보 visible 여부\n",
+    "return": "Boolean"
+  }
+]

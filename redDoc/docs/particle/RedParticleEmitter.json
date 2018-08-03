@@ -1,0 +1,15 @@
+[
+  {
+    "constructorYn": true,
+    "title": "RedParticleEmitter",
+    "description": "\nRedParticleEmitter Instance 생성기\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ]
+    },
+    "return": "RedProgram Instance"
+  }
+]

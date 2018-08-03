@@ -1,0 +1,16 @@
+[
+  {
+    "constructorYn": true,
+    "title": "RedPostEffect_SSAO_DepthMaterial",
+    "description": "\nRedPostEffect_SSAO_DepthMaterial Instance 생성\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ]
+    },
+    "example": "\nRedPostEffect_SSAO_DepthMaterial(RedGL Instance)\n",
+    "return": "RedPostEffect_SSAO_DepthMaterial Instance"
+  }
+]

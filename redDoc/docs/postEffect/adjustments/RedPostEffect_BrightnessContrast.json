@@ -1,0 +1,25 @@
+[
+  {
+    "title": "brightness",
+    "description": "\n밝기\n기본값 : 0\n",
+    "return": "Number"
+  },
+  {
+    "title": "contrast",
+    "description": "\n대조\n기본값 : 0\n",
+    "return": "Number"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedPostEffect_BrightnessContrast",
+    "description": "\nRedPostEffect_BrightnessContrast Instance 생성.\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ]
+    },
+    "return": "RedPostEffect_BrightnessContrast Instance"
+  }
+]

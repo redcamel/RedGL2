@@ -1,0 +1,31 @@
+[
+  {
+    "title": "alpha",
+    "description": "기본값 : 1",
+    "return": "Number"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedVideoMaterial",
+    "description": "\nRedVideoMaterial Instance 생성\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ],
+      "videoSrc": [
+        {
+          "type": "videoSrc"
+        },
+        "String"
+      ]
+    },
+    "example": "\nRedVideoMaterial(RedGL Instance, RedBitmapTexture(RedGL Instance, src))\n",
+    "return": "RedVideoMaterial Instance"
+  },
+  {
+    "title": "videoTexture",
+    "return": "RedVideoMaterial"
+  }
+]

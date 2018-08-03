@@ -1,0 +1,40 @@
+[
+  {
+    "constructorYn": true,
+    "title": "RedPlane",
+    "description": "\nRedPlane Instance 생성기.\nBox 형태의 RedGeometry 생성\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ],
+      "width": [
+        {
+          "type": "uint"
+        },
+        "기본값 : 1"
+      ],
+      "height": [
+        {
+          "type": "uint"
+        },
+        "기본값 : 1"
+      ],
+      "widthSegments": [
+        {
+          "type": "uint"
+        },
+        "기본값 : 1"
+      ],
+      "heightSegments": [
+        {
+          "type": "uint"
+        },
+        "기본값 : 1"
+      ]
+    },
+    "example": "\nRedPlane(RedGL Instance);\nRedPlane(RedGL Instance, 1, 1);\nRedPlane(RedGL Instance, 1, 1, 16, 16);\n",
+    "return": "RedPlane Instance"
+  }
+]

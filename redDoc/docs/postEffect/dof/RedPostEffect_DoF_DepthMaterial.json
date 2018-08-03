@@ -1,0 +1,16 @@
+[
+  {
+    "constructorYn": true,
+    "title": "RedPostEffect_DoF_DepthMaterial",
+    "description": "\nRedPostEffect_DoF_DepthMaterial Instance 생성\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ]
+    },
+    "example": "\nRedPostEffect_DoF_DepthMaterial(RedGL Instance)\n",
+    "return": "RedPostEffect_DoF_DepthMaterial Instance"
+  }
+]

@@ -1,0 +1,38 @@
+[
+  {
+    "constructorYn": true,
+    "title": "RedAmbientLight",
+    "description": "\nRedAmbientLight Instance 생성\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ],
+      "hex": [
+        {
+          "type": "hex"
+        }
+      ],
+      "alpha": [
+        {
+          "type": "number"
+        },
+        "알파값"
+      ]
+    },
+    "example": "\nRedAmbientLight(RedGL Instance, hex, alpha)\n",
+    "return": "RedAmbientLight Instance"
+  },
+  {
+    "title": "RedAmbientLight.type",
+    "code": "CONST",
+    "description": "RedAmbientLight 타입상수",
+    "return": "String"
+  },
+  {
+    "title": "type",
+    "description": "RedAmbientLight['TYPE']",
+    "return": "String"
+  }
+]

@@ -1,4 +1,5 @@
 var gulp = require('gulp');
+var fs = require('fs');
 var uglify = require('gulp-uglify-es').default;
 var concat = require('gulp-concat');
 var stripDebug = require('gulp-strip-debug');
@@ -63,6 +64,38 @@ var transformString = function (s) {
 	return list.concat(t0)
 };
 var myTransformation = textTransformation(transformString);
+gulp.task('make-doc-list', function () {
+	console.log('-------------------------------------------');
+	console.log('시작!');
+	function getFiles(dir, files_) {
+		files_ = files_ || [];
+		var files = fs.readdirSync(dir);
+		for ( var i in files ) {
+			var name = dir + '/' + files[i];
+			if ( fs.statSync(name).isDirectory() ) {
+				getFiles(name, files_);
+			} else {
+				files_.push(name);
+			}
+		}
+		return files_;
+	}
+
+	var list = getFiles('src');
+	list.forEach(function (v,index) {
+		v = v.replace(/src\//g, '')
+		list[index] = v.replace(/\.js/g, '')
+		list[index] = list[index].split('/')
+	})
+	list = JSON.stringify(list);
+	console.log(list)
+	var file = 'redDoc/docs/list.json';
+	fs.open(file, 'w', function (err, fd) {
+		if ( err ) throw err;
+		console.log('file open complete');
+	});
+	fs.writeFile('redDoc/docs/list.json', list, 'utf8', function (error) { console.log('write end') });
+});
 gulp.task('make-doc', function () {
 	console.log('-------------------------------------------');
 	console.log('시작!');
@@ -211,7 +244,7 @@ gulp.task('combine-js', function () {
 	console.log('-------------------------------------------');
 	console.log('파일 병합 시작!');
 });
-gulp.task('default', ['make-doc', 'combine-js'], function () {
+gulp.task('default', ['make-doc-list','make-doc', 'combine-js'], function () {
 	console.log('-------------------------------------------');
 	console.log('성공!');
 	console.log('-------------------------------------------');

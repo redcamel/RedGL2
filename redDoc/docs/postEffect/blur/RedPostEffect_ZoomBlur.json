@@ -1,0 +1,30 @@
+[
+  {
+    "title": "amount",
+    "description": "\n강도\n기본값 : 38\n",
+    "return": "Number"
+  },
+  {
+    "title": "centerX",
+    "description": "\n정중앙 중심의 가로 위치\n기본값 : 0.0\n",
+    "return": "Number"
+  },
+  {
+    "title": "centerY",
+    "description": "\n정중앙 중심의 세로 위치\n기본값 : 0.0\n",
+    "return": "Number"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedPostEffect_ZoomBlur",
+    "description": "\nRedPostEffect_ZoomBlur Instance 생성.\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ]
+    },
+    "return": "RedPostEffect_ZoomBlur Instance"
+  }
+]

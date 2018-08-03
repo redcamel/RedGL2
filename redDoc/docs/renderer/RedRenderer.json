@@ -1,0 +1,53 @@
+[
+  {
+    "constructorYn": true,
+    "title": "RedRenderer",
+    "description": "\nRedRenderer Instance 생성자.\n",
+    "example": "\nRedRenderer();\n",
+    "return": "RedRenderer Instance"
+  },
+  {
+    "code": "METHOD",
+    "title": "render",
+    "description": "\n단일 프레임 렌더\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ],
+      "time": [
+        {
+          "type": "Number"
+        },
+        "time"
+      ]
+    },
+    "return": "void"
+  },
+  {
+    "code": "METHOD",
+    "title": "start",
+    "description": "\n렌더 시작\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ],
+      "callback": [
+        {
+          "type": "Function"
+        },
+        "렌더시마다 실행될 콜백"
+      ]
+    },
+    "return": "void"
+  },
+  {
+    "code": "METHOD",
+    "title": "stop",
+    "description": "\n렌더 중지\n",
+    "return": "void"
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "constructorYn": true,
+    "title": "RedVideoTexture",
+    "description": "\nRedVideoTexture Instance 생성\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ],
+      "src": [
+        {
+          "type": "string"
+        }
+      ],
+      "callback": [
+        {
+          "type": "Function"
+        }
+      ]
+    },
+    "example": "\nRedVideoTexture( RedGL Instance,  src or HTMLVideoElement)\n",
+    "return": "RedVideoTexture Instance"
+  }
+]

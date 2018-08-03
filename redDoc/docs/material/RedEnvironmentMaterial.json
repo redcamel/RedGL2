@@ -1,0 +1,91 @@
+[
+  {
+    "title": "alpha",
+    "description": "기본값 : 1",
+    "return": "Number"
+  },
+  {
+    "title": "diffuseTexture",
+    "return": "RedBitmapTexture"
+  },
+  {
+    "title": "displacementPower",
+    "description": "기본값 : 0",
+    "return": "Number"
+  },
+  {
+    "title": "displacementTexture",
+    "return": "RedBitmapTexture"
+  },
+  {
+    "title": "environmentTexture",
+    "return": "RedBitmapCubeTexture"
+  },
+  {
+    "title": "normalPower",
+    "description": "기본값 : 1",
+    "return": "number"
+  },
+  {
+    "title": "normalTexture",
+    "return": "RedBitmapTexture"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedEnvironmentMaterial",
+    "description": "\nRedEnvironmentMaterial Instance 생성\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ],
+      "diffuseTexture": [
+        {
+          "type": "RedBitmapTexture"
+        }
+      ],
+      "environmentTexture": [
+        {
+          "type": "RedBitmapCubeTexture"
+        }
+      ],
+      "normalTexture": [
+        {
+          "type": "RedBitmapTexture"
+        }
+      ],
+      "specularTexture": [
+        {
+          "type": "RedBitmapTexture"
+        }
+      ],
+      "displacementTexture": [
+        {
+          "type": "RedBitmapTexture"
+        }
+      ]
+    },
+    "example": "\nRedEnvironmentMaterial(\nRedGL Instance,\nRedBitmapTexture(RedGL Instance, src), // diffuseTexture\nRedBitmapCubeTexture(RedGL Instance, srcList),\nRedBitmapTexture(RedGL Instance, src), // normalTexture\nRedBitmapTexture(RedGL Instance, src), // specularTexture\nRedBitmapTexture(RedGL Instance, src)  // displacementTexture\n)\n",
+    "return": "RedEnvironmentMaterial Instance"
+  },
+  {
+    "title": "reflectionPower",
+    "description": "기본값 : 1",
+    "return": "Number"
+  },
+  {
+    "title": "shininess",
+    "description": "기본값 : 16",
+    "return": "Number"
+  },
+  {
+    "title": "specularPower",
+    "description": "기본값 : 1",
+    "return": "Number"
+  },
+  {
+    "title": "specularTexture",
+    "return": "RedBitmapTexture"
+  }
+]

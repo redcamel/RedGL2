@@ -1,0 +1,71 @@
+[
+  {
+    "title": "camera",
+    "description": "\n컨트롤러 생성시 자동생성됨\n",
+    "return": "RedCamera"
+  },
+  {
+    "title": "delay",
+    "description": "\n이동 지연 속도\n기본값 : 0.1\n",
+    "return": "Number"
+  },
+  {
+    "title": "delayRotation",
+    "description": "\n회전 지연 속도\n기본값 : 0.1\n",
+    "return": "Number"
+  },
+  {
+    "title": "keyNameMapper",
+    "description": "\n이동, 회전에 대한 기본 키맵퍼\n기본값 :\n<code>\nthis['keyNameMapper'] = {\nmoveForward: 'w',\nmoveBack: 's',\nmoveLeft: 'a',\nmoveRight: 'd',\nmoveUp: 't',\nmoveDown: 'g',\n//\nturnLeft: 'q',\nturnRight: 'e',\nturnUp: 'r',\nturnDown: 'f',\n}\n</code>\n",
+    "return": "Object"
+  },
+  {
+    "title": "maxAcceleration",
+    "description": "\n최대 가속도 ( 이동 속도와 합쳐짐 )\n기본값 : 3\n",
+    "return": "Number"
+  },
+  {
+    "title": "pan",
+    "return": "Number"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedBasicController",
+    "description": "\nRedBasicController Instance 생성자.\n",
+    "example": "\nRedBasicController()\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ]
+    },
+    "return": "RedBasicController Instance"
+  },
+  {
+    "title": "speed",
+    "description": "\n이동 속도\n기본값 : 1\n",
+    "return": "Number"
+  },
+  {
+    "title": "speedRotation",
+    "description": "\n회전 속도\n기본값 : 1\n",
+    "return": "Number"
+  },
+  {
+    "title": "tilt",
+    "return": "Number"
+  },
+  {
+    "title": "x",
+    "return": "Number"
+  },
+  {
+    "title": "y",
+    "return": "Number"
+  },
+  {
+    "title": "z",
+    "return": "Number"
+  }
+]

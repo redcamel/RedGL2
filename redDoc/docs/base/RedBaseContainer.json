@@ -1,0 +1,110 @@
+[
+  {
+    "code": "METHOD",
+    "title": "addChild",
+    "description": "자식추가",
+    "params": {
+      "child": [
+        {
+          "type": "RedBaseObject3D Instance"
+        }
+      ]
+    },
+    "return": "void"
+  },
+  {
+    "code": "METHOD",
+    "title": "addChildAt",
+    "description": "인덱스 위치에 자식을 추가",
+    "params": {
+      "child": [
+        {
+          "type": "RedBaseObject3D Instance"
+        }
+      ],
+      "index": [
+        {
+          "type": "uint"
+        }
+      ]
+    },
+    "return": "void"
+  },
+  {
+    "code": "METHOD",
+    "title": "getChildAt",
+    "description": "해당위치의 자식을 반환",
+    "params": {
+      "index": [
+        {
+          "type": "uint"
+        }
+      ]
+    },
+    "return": "RedBaseObject3D Instance"
+  },
+  {
+    "code": "METHOD",
+    "title": "getChildIndex",
+    "description": "해당객체의 인덱스 번호를 반환",
+    "params": {
+      "child": [
+        {
+          "type": "RedBaseObject3D Instance"
+        }
+      ]
+    },
+    "return": "int"
+  },
+  {
+    "code": "METHOD",
+    "title": "numChildren",
+    "description": "numChildren",
+    "params": {
+      "target": [
+        {
+          "type": "RedBaseObject3D Instance"
+        }
+      ]
+    },
+    "return": "uint"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedBaseContainer",
+    "description": "\nDisplayContainer 기저층\n",
+    "return": "void"
+  },
+  {
+    "code": "METHOD",
+    "title": "removeChild",
+    "description": "해당 자식을 제거",
+    "params": {
+      "child": [
+        {
+          "type": "RedBaseObject3D Instance"
+        }
+      ]
+    },
+    "return": "void"
+  },
+  {
+    "code": "METHOD",
+    "title": "removeChildAll",
+    "description": "전체 자식을 제거",
+    "return": "void"
+  },
+  {
+    "code": "METHOD",
+    "title": "removeChildAt",
+    "description": "인덱스 위치에 있는 자식을 제거",
+    "params": {
+      "index": [
+        {
+          "type": "uint"
+        }
+      ]
+    },
+    "return": "void"
+  }
+]

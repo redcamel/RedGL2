@@ -1,0 +1,8 @@
+[
+  {
+    "constructorYn": true,
+    "title": "RedBaseController",
+    "description": "\nRedBaseController 기저층\n",
+    "return": "void"
+  }
+]

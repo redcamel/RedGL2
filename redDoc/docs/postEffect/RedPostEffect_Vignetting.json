@@ -1,0 +1,25 @@
+[
+  {
+    "title": "_intensity",
+    "description": "\n비네팅 강도\n기본값 : 0.85\n",
+    "return": "Number"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedPostEffect_Vignetting",
+    "description": "\nRedPostEffect_Vignetting Instance 생성.\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ]
+    },
+    "return": "RedPostEffect_Vignetting Instance"
+  },
+  {
+    "title": "size",
+    "description": "\n비네팅사이즈\n기본값 : 0.1\n",
+    "return": "Number"
+  }
+]

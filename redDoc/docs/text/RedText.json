@@ -1,0 +1,40 @@
+[
+  {
+    "title": "perspectiveScale",
+    "description": "perspectiveScale",
+    "return": "boolean"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedText",
+    "description": "\nRedText Instance 생성.\nRedScene 생성시 내부속성으로 자동생성됨.\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ]
+    },
+    "return": "RedText Instance"
+  },
+  {
+    "title": "sprite3DYn",
+    "description": "sprite3DYn",
+    "return": "boolean"
+  },
+  {
+    "title": "text",
+    "description": "텍스트값, html 허용",
+    "return": "Number"
+  },
+  {
+    "title": "width",
+    "description": "가로영역크기",
+    "return": "Number"
+  },
+  {
+    "title": "width",
+    "description": "세로영역크기",
+    "return": "Number"
+  }
+]
