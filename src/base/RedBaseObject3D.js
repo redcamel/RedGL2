@@ -15,7 +15,7 @@ var RedBaseObject3D;
 	/**DOC:
 	 {
 		 title :`RedBaseObject3D.build`,
-		 code : 'STATIC',
+		 code : 'CONST',
 		 description : `
 			RedBaseObject3D가 가지고있는 속성을 해당 인스턴스에 복사하기위해사용
 		 `,

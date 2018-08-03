@@ -35,7 +35,7 @@
     "return": "RedGL Instance"
   },
   {
-    "code": "STATIC",
+    "code": "CONST",
     "title": "RedGL.makeUUID",
     "description": "\nUUID 생성기\n",
     "example": "\nRedGL.makeUUID()\n",
