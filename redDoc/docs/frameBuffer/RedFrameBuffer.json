@@ -13,7 +13,8 @@
       "redGL": [
         {
           "type": "RedGL Instance"
-        }
+        },
+        "test"
       ],
       "width": [
         {

@@ -10,7 +10,8 @@ var RedFrameBuffer;
 		 `,
 		 params : {
 	         redGL : [
-				 {type:'RedGL Instance'}
+				 {type:'RedGL Instance'},
+				 'test'
 			 ],
 			 width : [
 				 {type:'Number'}
