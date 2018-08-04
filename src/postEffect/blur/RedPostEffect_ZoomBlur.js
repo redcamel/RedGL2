@@ -58,6 +58,7 @@ var RedPostEffect_ZoomBlur;
 		    'RedBasePostEffect',
 		    'RedBaseMaterial'
 		 ],
+		 demo : '../example/RedPostEffect_ZoomBlur.html',
 		 return : 'RedPostEffect_ZoomBlur Instance'
 	 }
 	 :DOC*/

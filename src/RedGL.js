@@ -118,6 +118,7 @@ var RedGL;
 			    `입력하지 않을경우 webkit-3d,moz-webgl,3d,experimental-webgl,webgl,webgl2 중에서 가장 높은 값으로 선택됨`
 			 ]
 		 },
+	     demo : '../example/RedGL.html',
 		 example : `
 			 // 기초 초기화
 			 RedGL(document.getElementById('test'), function(v){

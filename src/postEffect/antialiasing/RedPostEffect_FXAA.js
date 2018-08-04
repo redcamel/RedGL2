@@ -83,6 +83,7 @@ var RedPostEffect_FXAA;
 		    'RedBasePostEffect',
 		    'RedBaseMaterial'
 		 ],
+		 demo : '../example/RedPostEffect_FXAA.html',
 		 return : 'RedPostEffect_FXAA Instance'
 	 }
 	 :DOC*/

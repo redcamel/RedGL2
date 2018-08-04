@@ -66,6 +66,7 @@
     "extends": [
       "RedBaseMaterial"
     ],
+    "demo": "../example/RedStandardMaterial.html",
     "example": "\nRedStandardMaterial(\nRedGL Instance,\nRedBitmapTexture(RedGL Instance, src), // diffuseTexture\nRedBitmapTexture(RedGL Instance, src), // normalTexture\nRedBitmapTexture(RedGL Instance, src), // specularTexture\nRedBitmapTexture(RedGL Instance, src)  // displacementTexture\n)\n",
     "return": "RedStandardMaterial Instance"
   },

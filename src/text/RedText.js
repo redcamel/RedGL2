@@ -40,6 +40,7 @@ var RedText;
 				 {type:'RedGL'}
 			 ]
 		 },
+		 demo : '../example/RedText.html',
 		 return : 'RedText Instance'
 	 }
 	 :DOC*/

@@ -47,6 +47,7 @@
         "RedCamera"
       ]
     },
+    "demo": "../example/RedView.html",
     "example": "\nvar tWorld;\nRedView('test', RedGL Instance, RedScene Instance, RedCamera Instance); // test라는 키값을 가진 RedView 생성\nRedView('test2',RedGL Instance, RedScene Instance, RedCamera Instance); // test2라는 키값을 가진 RedView 생성\n",
     "return": "RedView Instance"
   },

@@ -15,6 +15,7 @@ var RedScene;
 				 '초기값 #000000'
 			 ]
 		 },
+		 demo : '../example/RedScene.html',
 		 extends : [
 		    'RedBaseContainer'
 		 ],

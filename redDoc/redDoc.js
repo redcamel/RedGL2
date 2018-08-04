@@ -203,6 +203,7 @@ var DocJS = (function () {
 		var setConstructor;
 		var setContent;
 		var setTitle, setDescription, setReturn, setParam, setExample, setTestCase, setState, setExtends;
+		var setDemo;
 		setTitle = function (data, tag, key) {
 			console.log(data['title'])
 			var tTitle = data['title'] ? data['title'] : 'DOC에 title이 정의 되지 않았습니다.'
@@ -230,9 +231,8 @@ var DocJS = (function () {
 				data.forEach(function (v) {
 					t0.push(v)
 				});
-
 			}
-			if(t0.length){
+			if ( t0.length ) {
 				t0 = t0.join(' >> ');
 				return Recard.Dom(tag ? tag : 'div').S(
 					'margin', '8px 0px 0px 0px',
@@ -242,8 +242,7 @@ var DocJS = (function () {
 					'color', '#059aab',
 					'html', '<b>extends</b> : ' + t0
 				)
-			}else return Recard.Dom('div')
-
+			} else return Recard.Dom('div')
 		}
 		setState = function (data, tag) {
 			console.log(data['title'])
@@ -358,7 +357,7 @@ var DocJS = (function () {
 						'>', Recard.Dom('h1').S('html', 'TestCase'),
 						'>', tIframe = Recard.Dom('iframe').S(
 							'@src', '../testCase/' + src.replace('.json', '.html'),
-							'border-radius',5,
+							'border-radius', 5,
 							'border', 0,
 							'width', '100%',
 							'height', 500
@@ -379,6 +378,47 @@ var DocJS = (function () {
 			})
 			tLoader.start()
 		}
+		setDemo = function (data) {
+			console.log('뭐가오지',data)
+			var tIframe;
+			var tLoader
+			var tRoot;
+			var src = data['demo']
+			tLoader = Recard.AjaxLoader(
+				null,
+				{
+					url: src,
+					method: 'GET'
+				}
+			)
+			tLoader.onAllLoaded(function (v) {
+				if ( v[0]['resultType'] != 'FAIL' ) {
+					tRoot.S(
+						'>', Recard.Dom('h1').S('html', 'TestCase'),
+						'>', tIframe = Recard.Dom('iframe').S(
+							'@src', src,
+							'border-radius', 5,
+							'border', 0,
+							'width', '100%',
+							'height', 500
+						)
+					)
+					tIframe.__dom__.onload = function () {
+						console.log('오오옹오', this.contentWindow.document)
+						console.log(this.contentWindow.document.documentElement.clientHeight)
+						var self = this
+						setTimeout(function () {
+							tIframe.S(
+								'height', self.contentWindow.document.documentElement.clientHeight
+							)
+						}, 500)
+					}
+					console.log(tIframe.__dom__)
+				}
+			})
+			tLoader.start()
+			return tRoot = Recard.Dom('div')
+		}
 		setConstructor = function (data) {
 			if ( data.length ) {
 				data = data[0];
@@ -391,7 +431,8 @@ var DocJS = (function () {
 						'>', setDescription(data),
 						'>', setParam(data),
 						'>', setExample(data),
-						'>', setReturn(data)
+						'>', setReturn(data),
+						'>', setDemo(data)
 					),
 					'<', rightBox
 				)

@@ -27,6 +27,7 @@
         "필수아님"
       ]
     },
+    "demo": "../example/RedBuffer.html",
     "example": "\nRedGeometry(interleaveBuffer,indexBuffer)\n",
     "return": "RedGeometry Instance"
   }

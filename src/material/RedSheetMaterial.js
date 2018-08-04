@@ -78,6 +78,7 @@ var RedSheetMaterial;
 		 extends : [
 		    'RedBaseMaterial'
 		 ],
+		 demo : '../example/RedSheetMaterial.html',
 		 example : `
 			 RedSheetMaterial(RedGL Instance, RedBitmapTexture(RedGL Instance, src))
 		 `,

@@ -85,6 +85,7 @@
     "extends": [
       "RedBaseMaterial"
     ],
+    "demo": "../example/RedColorPhongMaterial.html",
     "example": "\nRedColorPhongTextureMaterial(RedGL Instance, hex, alpha, normalTexture, specularTexture)\n",
     "return": "RedColorPhongTextureMaterial Instance"
   },

@@ -44,6 +44,7 @@ var RedPostEffect_DoF;
 		    'RedBasePostEffect',
 		    'RedBaseMaterial'
 		 ],
+		 demo : '../example/RedPostEffect_DoF.html',
 		 return : 'RedPostEffect_DoF Instance'
 	 }
 	 :DOC*/

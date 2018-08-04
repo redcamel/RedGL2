@@ -49,6 +49,7 @@
     "extends": [
       "RedGeometry"
     ],
+    "demo": "../example/RedPrimitive.html",
     "example": "\nRedBox(RedGL Instance);\nRedBox(RedGL Instance, 1, 1, 1);\nRedBox(RedGL Instance, 1, 1, 1, 16, 16, 16);\n",
     "return": "RedBox Instance"
   }

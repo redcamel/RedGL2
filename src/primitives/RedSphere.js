@@ -126,6 +126,7 @@ var RedSphere;
 		 extends : [
 		    'RedGeometry'
 		 ],
+		 demo : '../example/RedPrimitive.html',
 		 example : `
 			 RedSphere(RedGL Instance);
 			 RedSphere(RedGL Instance, 1);

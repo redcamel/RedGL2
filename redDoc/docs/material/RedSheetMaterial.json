@@ -79,6 +79,7 @@
     "extends": [
       "RedBaseMaterial"
     ],
+    "demo": "../example/RedSheetMaterial.html",
     "example": "\nRedSheetMaterial(RedGL Instance, RedBitmapTexture(RedGL Instance, src))\n",
     "return": "RedSheetMaterial Instance"
   },

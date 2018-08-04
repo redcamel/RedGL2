@@ -100,6 +100,7 @@ var RedPlane;
 		 extends : [
 		    'RedGeometry'
 		 ],
+		 demo : '../example/RedPrimitive.html',
 		 example : `
 			 RedPlane(RedGL Instance);
 			 RedPlane(RedGL Instance, 1, 1);

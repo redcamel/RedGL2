@@ -58,6 +58,7 @@
     "constructorYn": true,
     "title": "RedObitController",
     "description": "\nRedObitController Instance 생성자.\n",
+    "demo": "../example/RedObitController.html",
     "example": "\nRedObitController(RedGL Instance)\n",
     "params": {
       "redGL": [

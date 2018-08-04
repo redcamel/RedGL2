@@ -77,6 +77,7 @@
         "ex) gl.STATIC_DRAW"
       ]
     },
+    "demo": "../example/RedBuffer.html",
     "example": "\nvar interleaveData, indexData;\nvar tInterleaveBuffer, tIndexBuffer\ninterleaveData = new Float32Array([\n0.0, 0.5, 0.0, 0.0, 0.5,\n-0.5, -0.5, 0.0, 0.5, 0.5,\n0.5, -0.5, 0.0, 0.5, 0.0\n]);\nindexData = new Uint16Array([0, 1, 2])\n// 인터리브 버퍼생성\ntInterleaveBuffer = RedBuffer(\nthis, // RedGL Instance\n'tInterleaveBuffer', // key\nRedBuffer.ARRAY_BUFFER, // bufferType\ninterleaveData, // data\n[\nRedInterleaveInfo('aVertexPosition', 3),\nRedInterleaveInfo('aTexcoord', 2)\n]\n)\n// 인덱스 버퍼생성\ntIndexBuffer = RedBuffer(\nthis, // RedGL Instance\n'tIndexBuffer', // key\nRedBuffer.ELEMENT_ARRAY_BUFFER, // bufferType\nindexData  // data\n)\nconsole.log('인터리브버퍼', tInterleaveBuffer)\nconsole.log('인덱스버퍼', tIndexBuffer)\n",
     "return": "RedBuffer Instance"
   },

@@ -37,6 +37,7 @@
     "extends": [
       "RedGeometry"
     ],
+    "demo": "../example/RedPrimitive.html",
     "example": "\nRedPlane(RedGL Instance);\nRedPlane(RedGL Instance, 1, 1);\nRedPlane(RedGL Instance, 1, 1, 16, 16);\n",
     "return": "RedPlane Instance"
   }

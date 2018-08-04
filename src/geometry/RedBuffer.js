@@ -122,6 +122,7 @@ var RedBuffer;
 				 `ex) gl.STATIC_DRAW`
 			 ]
 		 },
+		 demo : '../example/RedBuffer.html',
 		 example : `
 			 var interleaveData, indexData;
 			 var tInterleaveBuffer, tIndexBuffer

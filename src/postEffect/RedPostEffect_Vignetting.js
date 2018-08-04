@@ -42,6 +42,7 @@ var RedPostEffect_Vignetting;
 		    'RedBasePostEffect',
 		    'RedBaseMaterial'
 		 ],
+		 demo : '../example/RedPostEffect_Vignetting.html',
 		 return : 'RedPostEffect_Vignetting Instance'
 	 }
 	 :DOC*/

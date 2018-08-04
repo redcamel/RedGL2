@@ -43,6 +43,7 @@ var RedPostEffect_BrightnessContrast;
 		    'RedBasePostEffect',
 		    'RedBaseMaterial'
 		 ],
+		 demo : '../example/RedPostEffect_BrightnessContrast.html',
 		 return : 'RedPostEffect_BrightnessContrast Instance'
 	 }
 	 :DOC*/

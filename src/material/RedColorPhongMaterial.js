@@ -114,6 +114,7 @@ var RedColorPhongMaterial;
 		 extends : [
 		    'RedBaseMaterial'
 		 ],
+		 demo : '../example/RedColorPhongMaterial.html',
 		 example: `
 		 RedColorPhongMaterial(RedGL Instance, hex, alpha)
 		 `,

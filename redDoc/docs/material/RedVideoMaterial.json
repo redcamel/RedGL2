@@ -25,6 +25,7 @@
     "extends": [
       "RedBaseMaterial"
     ],
+    "demo": "../example/RedVideoMaterial.html",
     "example": "\nRedVideoMaterial(RedGL Instance, RedBitmapTexture(RedGL Instance, src))\n",
     "return": "RedVideoMaterial Instance"
   },
