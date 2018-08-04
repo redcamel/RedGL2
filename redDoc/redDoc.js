@@ -193,13 +193,23 @@ var DocJS = (function () {
 		var setConstructor;
 		var setContent;
 		var setTitle, setDescription, setReturn, setParam, setExample, setTestCase, setState;
-		setTitle = function (data, tag) {
+		setTitle = function (data, tag, key) {
 			console.log(data['title'])
+			var tTitle = data['title'] ? data['title'] : 'DOC에 title이 정의 되지 않았습니다.'
+			if ( key == 'METHOD' ) {
+				var paramList = []
+				if ( data['params'] ) {
+					for ( var k in data['params'] ) {
+						paramList.push('<span style="font-weight:normal"> ' + k + (data['params'][k][0]['type'] ? ' : ' + data['params'][k][0]['type'] : '') + ' </span>')
+					}
+				}
+				tTitle += '(' + paramList.join(', ') + ')'
+			}
 			return Recard.Dom(tag ? tag : 'div').S(
 				'@titleBox', '',
 				'margin', 0,
 				'padding', '10px 0',
-				'html', data['title'] ? data['title'] : 'DOC에 title이 정의 되지 않았습니다.'
+				'html', tTitle
 			)
 		}
 		setState = function (data, tag) {
@@ -359,7 +369,7 @@ var DocJS = (function () {
 				'>', box = Recard.Dom('div')
 			)
 			dataList.forEach(function (v) {
-				setTitle(v, 'h3').S(
+				setTitle(v, 'h3', key).S(
 					'@titleBox', '',
 					'<', box
 				)
