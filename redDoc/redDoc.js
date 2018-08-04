@@ -394,7 +394,7 @@ var DocJS = (function () {
 			tLoader.onAllLoaded(function (v) {
 				if ( v[0]['resultType'] != 'FAIL' ) {
 					tRoot.S(
-						'>', Recard.Dom('h1').S('html', 'TestCase'),
+						'>', Recard.Dom('h1').S('html', 'Demo'),
 						'>', tIframe = Recard.Dom('iframe').S(
 							'@src', src,
 							'border-radius', 5,
