@@ -16,19 +16,21 @@
             overflow: hidden;
         }
     </style>
+
     <script src="dat.gui.min.js"></script>
     <script src="baseTestUI.js"></script>
     <script src="../release/RedGL.min.js"></script>
 </head>
 
 <body>
-<canvas id="test" style="border: none;background:red"></canvas>
-<script>
+<script id='testSource'>
 	var testUI;
-	document.getElementById('test')
-	RedGL(document.getElementById('test'), function (v) {
+	var canvas;
+	canvas = document.createElement('canvas');
+	document.body.appendChild(canvas);
+	RedGL(canvas, function (v) {
 		if ( v ) {
-			console.log('초기화 성공!')
+			console.log('초기화 성공!');
 			var tWorld, tScene3D, tCamera, tRenderer;
 			// 월드 생성
 			this['world'] = tWorld = RedWorld();
@@ -39,31 +41,29 @@
 			// 렌더러 생성
 			tRenderer = RedRenderer();
 			// 뷰생성 및 적용
-			tWorld.addView(RedView('test',this, tScene3D, tCamera));
+			tWorld.addView(RedView('test', this, tScene3D, tCamera));
 			// 그리드 설정
-			tScene3D['grid'] = RedGrid(this)
+			tScene3D['grid'] = RedGrid(this);
 			// 렌더시작
 			tRenderer.start(this, function (time) {
-				tCamera.x = Math.sin(time / 1500) * 10
-				tCamera.y = Math.cos(time / 1500) * 10
-				tCamera.z = Math.cos(time / 1500) * 15 + Math.sin(time / 1500) * 15
-				tCamera.lookAt(0, 0, 0)
+				tCamera.x = Math.sin(time / 1500) * 10;
+				tCamera.y = Math.cos(time / 1500) * 10;
+				tCamera.z = Math.cos(time / 1500) * 15 + Math.sin(time / 1500) * 15;
+				tCamera.lookAt(0, 0, 0);
 			})
 			// 렌더 디버거 활성화
-			tRenderer['renderDebuger']['visible'] = true
-			//
-			testUI(this)
-            console.log(this)
+			tRenderer['renderDebuger']['visible'] = true;
+			// testUI 호출
+			testUI(this);
+			console.log(this);
 		} else {
-			console.log('초기화 실패!')
+			alert('초기화 실패!')
 		}
-	})
+	});
 	testUI = function (redGL) {
-		console.log('test')
-		var gui = new baseTestUI(redGL)
-		gui.initRedGL().open()
-	}
+		var gui = new baseTestUI(redGL);
+		gui.initRedGL().open();
+	};
 </script>
 </body>
-
 </html>

@@ -218,6 +218,8 @@ var RedRenderer;
 				tRenderInfo['key'] = tView['key']
 				tRenderInfo['call'] = 0
 				tRenderInfo['triangleNum'] = 0
+				tRenderInfo['viewRenderTime'] = 0
+				tRenderInfo['postEffectRenderTime'] = 0
 				// viewport 크기설정
 				gl.viewport(tViewRect[0], tWorldRect[3] - tViewRect[3] - tViewRect[1], tViewRect[2], tViewRect[3]);
 				gl.scissor(tViewRect[0], tWorldRect[3] - tViewRect[3] - tViewRect[1], tViewRect[2], tViewRect[3]);
@@ -317,7 +319,10 @@ var RedRenderer;
 				// 디버깅 라이트 업데이트
 				if ( lightDebugRenderList.length ) self.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], lightDebugRenderList, time, tRenderInfo);
 				// 포스트이펙트 최종렌더
+				tRenderInfo['viewRenderTime'] = performance.now();
 				if ( tView['postEffectManager']['postEffectList'].length ) tView['postEffectManager'].render(redGL, gl, self, tView, time, tRenderInfo)
+				tRenderInfo['postEffectRenderTime'] = performance.now() - tRenderInfo['viewRenderTime'];
+				tRenderInfo['viewRenderTime'] -= time;
 				// })
 			}
 			if ( this['renderDebuger']['visible'] ) this['renderDebuger'].update(redGL, self['renderInfo'])

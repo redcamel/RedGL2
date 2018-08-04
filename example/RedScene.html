@@ -16,17 +16,19 @@
             overflow: hidden;
         }
     </style>
+
     <script src="dat.gui.min.js"></script>
     <script src="baseTestUI.js"></script>
     <script src="../release/RedGL.min.js"></script>
 </head>
 
 <body>
-<canvas id="test" style="border: none;background:red"></canvas>
-<script>
+<script id='testSource'>
 	var testUI;
-	document.getElementById('test')
-	RedGL(document.getElementById('test'), function (v) {
+	var canvas;
+	canvas = document.createElement('canvas');
+	document.body.appendChild(canvas);
+	RedGL(canvas, function (v) {
 		if ( v ) {
 			console.log('초기화 성공!')
 			var tWorld, tScene, tCamera, tRenderer;
@@ -40,7 +42,7 @@
 			// 렌더러 생성
 			tRenderer = RedRenderer();
 			// 뷰생성 및 적용
-			tWorld.addView(RedView('test', this,tScene, tCamera));
+			tWorld.addView(RedView('test', this, tScene, tCamera));
 			// 그리드 설정
 			tScene['grid'] = RedGrid(this)
 			// Box 설정
