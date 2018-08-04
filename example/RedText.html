@@ -16,17 +16,19 @@
             overflow: hidden;
         }
     </style>
+
     <script src="dat.gui.min.js"></script>
     <script src="baseTestUI.js"></script>
     <script src="../release/RedGL.min.js"></script>
 </head>
 
 <body>
-<canvas id="test" style="border: none;background:red"></canvas>
-<script>
+<script id='testSource'>
 	var testUI;
-	document.getElementById('test')
-	RedGL(document.getElementById('test'), function (v) {
+	var canvas;
+	canvas = document.createElement('canvas');
+	document.body.appendChild(canvas);
+	RedGL(canvas, function (v) {
 		if ( v ) {
 			console.log('초기화 성공!')
 			var tWorld, tScene, tController, tRenderer;
@@ -53,7 +55,6 @@
 			testDLight.y = 2
 			testDLight.z = 3
 			tScene.addLight(testDLight)
-
 			tScene.skyBox =
 				RedSkyBox(this, [
 					'../asset/cubemap/posx.png',
@@ -63,7 +64,6 @@
 					'../asset/cubemap/posz.png',
 					'../asset/cubemap/negz.png'
 				]);
-
 			var testRedText = RedText(self)
 			var str = ('<div >Here is a <strong>paragraph</strong> that requires <em>word wrap</em>' +
 			'<br>br태그는 빈 div로 치환함<br>' +
@@ -85,7 +85,7 @@
 			tRenderer.start(this, function (time) {})
 			// 렌더 디버거 활성화
 			tRenderer['renderDebuger']['visible'] = true
-			testUI(this, tScene,testRedText)
+			testUI(this, tScene, testRedText)
 			// 이펙트 적용
 		} else {
 			console.log('초기화 실패!')

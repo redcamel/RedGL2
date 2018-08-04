@@ -16,17 +16,19 @@
             overflow: hidden;
         }
     </style>
+
     <script src="dat.gui.min.js"></script>
     <script src="baseTestUI.js"></script>
     <script src="../release/RedGL.min.js"></script>
 </head>
 
 <body>
-<canvas id="test" style="border: none;background:red"></canvas>
-<script>
-	var t = document.getElementById('test')
-	document.body.appendChild(t)
-	RedGL(t, function (v) {
+<script id='testSource'>
+
+	var canvas;
+	canvas = document.createElement('canvas');
+	document.body.appendChild(canvas);
+	RedGL(canvas, function (v) {
 		var tGL;
 		var tWorld, tScene3D, tCamera
 		var tRenderer;
@@ -339,6 +341,7 @@
 			}
 		})()
 		makeTestUI()
+		new baseTestUI(self)
 		var t0, particle_JSON_DATA;
 		t0 = document.createElement('div')
 		t0.style.position = 'absolute'
