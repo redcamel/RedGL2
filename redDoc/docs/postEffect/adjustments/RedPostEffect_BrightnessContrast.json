@@ -1,10 +1,12 @@
 [
   {
+    "code": "PROPERTY",
     "title": "brightness",
     "description": "\n밝기\n기본값 : 0\n",
     "return": "Number"
   },
   {
+    "code": "PROPERTY",
     "title": "contrast",
     "description": "\n대조\n기본값 : 0\n",
     "return": "Number"
@@ -20,6 +22,10 @@
         }
       ]
     },
+    "extends": [
+      "RedBasePostEffect",
+      "RedBaseMaterial"
+    ],
     "return": "RedPostEffect_BrightnessContrast Instance"
   }
 ]

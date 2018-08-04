@@ -36,6 +36,10 @@ var RedPostEffect_Gray;
 				 {type:'RedGL'}
 			 ]
 		 },
+		 extends : [
+		    'RedBasePostEffect',
+		    'RedBaseMaterial'
+		 ],
 		 return : 'RedPostEffect_Gray Instance'
 	 }
 	 :DOC*/

@@ -10,6 +10,10 @@
         }
       ]
     },
+    "extends": [
+      "RedBasePostEffect",
+      "RedBaseMaterial"
+    ],
     "return": "RedPostEffect_Gray Instance"
   }
 ]

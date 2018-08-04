@@ -52,6 +52,10 @@ var RedPostEffect_DoF_DepthMaterial;
 				 {type:'RedGL'}
 			 ]
 		 },
+		 extends : [
+		    'RedBasePostEffect',
+		    'RedBaseMaterial'
+		 ],
 		 example : `
 			 RedPostEffect_DoF_DepthMaterial(RedGL Instance)
 		 `,
@@ -74,6 +78,17 @@ var RedPostEffect_DoF_DepthMaterial;
 		console.log(this);
 	};
 	RedPostEffect_DoF_DepthMaterial.prototype = new RedBasePostEffect();
+	/**DOC:
+	 {
+	     code : 'PROPERTY',
+		 title :`focusLength`,
+		 description : `
+			 focusLength
+			 기본값 : 15
+		 `,
+		 return : 'Number'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_DoF_DepthMaterial', 'focusLength', 'number', {'min': 0});
 	Object.freeze(RedPostEffect_DoF_DepthMaterial)
 })();

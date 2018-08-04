@@ -61,6 +61,10 @@ var RedPostEffect_Film;
 				 {type:'RedGL'}
 			 ]
 		 },
+		 extends : [
+		    'RedBasePostEffect',
+		    'RedBaseMaterial'
+		 ],
 		 return : 'RedPostEffect_Film Instance'
 	 }
 	 :DOC*/
@@ -90,6 +94,7 @@ var RedPostEffect_Film;
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_Film', 'diffuseTexture', 'sampler2D');
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`grayMode`,
 		 description : `
 			 그레이모드
@@ -101,6 +106,7 @@ var RedPostEffect_Film;
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_Film', 'grayMode', 'boolean');
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`scanlineIntensity`,
 		 description : `
 			 스캔라인강도
@@ -112,6 +118,7 @@ var RedPostEffect_Film;
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_Film', 'scanlineIntensity', 'number', {'min': 0});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`noiseIntensity`,
 		 description : `
 			 노이즈강도
@@ -123,6 +130,7 @@ var RedPostEffect_Film;
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_Film', 'noiseIntensity', 'number', {'min': 0});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`scanlineCount`,
 		 description : `
 			 스캔라인 수

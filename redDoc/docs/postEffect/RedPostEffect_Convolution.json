@@ -1,5 +1,6 @@
 [
   {
+    "code": "PROPERTY",
     "title": "kernel",
     "description": "\n커널값.\n",
     "return": "Array"
@@ -15,6 +16,10 @@
         }
       ]
     },
+    "extends": [
+      "RedBasePostEffect",
+      "RedBaseMaterial"
+    ],
     "return": "RedPostEffect_Convolution Instance"
   },
   {

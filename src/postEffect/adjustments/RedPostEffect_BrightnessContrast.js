@@ -39,6 +39,10 @@ var RedPostEffect_BrightnessContrast;
 				 {type:'RedGL'}
 			 ]
 		 },
+		 extends : [
+		    'RedBasePostEffect',
+		    'RedBaseMaterial'
+		 ],
 		 return : 'RedPostEffect_BrightnessContrast Instance'
 	 }
 	 :DOC*/
@@ -66,6 +70,7 @@ var RedPostEffect_BrightnessContrast;
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_BrightnessContrast', 'diffuseTexture', 'sampler2D');
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`brightness`,
 		 description : `
 			 밝기
@@ -81,6 +86,7 @@ var RedPostEffect_BrightnessContrast;
 	});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`contrast`,
 		 description : `
 			 대조

@@ -1,15 +1,18 @@
 [
   {
+    "code": "PROPERTY",
     "title": "amount",
     "description": "\n강도\n기본값 : 38\n",
     "return": "Number"
   },
   {
+    "code": "PROPERTY",
     "title": "centerX",
     "description": "\n정중앙 중심의 가로 위치\n기본값 : 0.0\n",
     "return": "Number"
   },
   {
+    "code": "PROPERTY",
     "title": "centerY",
     "description": "\n정중앙 중심의 세로 위치\n기본값 : 0.0\n",
     "return": "Number"
@@ -25,6 +28,10 @@
         }
       ]
     },
+    "extends": [
+      "RedBasePostEffect",
+      "RedBaseMaterial"
+    ],
     "return": "RedPostEffect_ZoomBlur Instance"
   }
 ]

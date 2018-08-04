@@ -2,7 +2,7 @@
   {
     "constructorYn": true,
     "title": "RedPostEffect_SSAO",
-    "description": "\nRedPostEffect_SSAO Instance 생성.\n",
+    "description": "\n<h1>연구중</h1>\nRedPostEffect_SSAO Instance 생성.\n",
     "params": {
       "redGL": [
         {
@@ -10,6 +10,10 @@
         }
       ]
     },
+    "extends": [
+      "RedBasePostEffect",
+      "RedBaseMaterial"
+    ],
     "return": "RedPostEffect_SSAO Instance"
   }
 ]

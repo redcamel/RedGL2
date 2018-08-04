@@ -358,6 +358,7 @@ var DocJS = (function () {
 						'>', Recard.Dom('h1').S('html', 'TestCase'),
 						'>', tIframe = Recard.Dom('iframe').S(
 							'@src', '../testCase/' + src.replace('.json', '.html'),
+							'border-radius',5,
 							'border', 0,
 							'width', '100%',
 							'height', 500

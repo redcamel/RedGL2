@@ -38,6 +38,10 @@ var RedPostEffect_Vignetting;
 				 {type:'RedGL'}
 			 ]
 		 },
+		 extends : [
+		    'RedBasePostEffect',
+		    'RedBaseMaterial'
+		 ],
 		 return : 'RedPostEffect_Vignetting Instance'
 	 }
 	 :DOC*/
@@ -65,6 +69,7 @@ var RedPostEffect_Vignetting;
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_Vignetting', 'diffuseTexture', 'sampler2D');
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`_intensity`,
 		 description : `
 			 비네팅 강도
@@ -76,6 +81,7 @@ var RedPostEffect_Vignetting;
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_Vignetting', 'intensity', 'number', {'min': 0});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`size`,
 		 description : `
 			 비네팅사이즈

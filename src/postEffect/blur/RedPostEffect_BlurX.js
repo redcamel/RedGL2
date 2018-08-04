@@ -53,6 +53,10 @@ var RedPostEffect_BlurX;
 				 {type:'RedGL'}
 			 ]
 		 },
+		 extends : [
+		    'RedBasePostEffect',
+		    'RedBaseMaterial'
+		 ],
 		 return : 'RedPostEffect_BlurX Instance'
 	 }
 	 :DOC*/
@@ -79,6 +83,7 @@ var RedPostEffect_BlurX;
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_BlurX', 'diffuseTexture', 'sampler2D');
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`size`,
 		 description : `
 			 블러 사이즈

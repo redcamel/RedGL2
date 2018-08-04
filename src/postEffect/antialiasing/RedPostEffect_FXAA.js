@@ -79,6 +79,10 @@ var RedPostEffect_FXAA;
 				 {type:'RedGL'}
 			 ]
 		 },
+		 extends : [
+		    'RedBasePostEffect',
+		    'RedBaseMaterial'
+		 ],
 		 return : 'RedPostEffect_FXAA Instance'
 	 }
 	 :DOC*/

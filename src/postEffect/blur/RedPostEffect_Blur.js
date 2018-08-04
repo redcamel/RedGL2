@@ -51,6 +51,10 @@ var RedPostEffect_Blur;
 				 {type:'RedGL'}
 			 ]
 		 },
+		 extends : [
+		    'RedBasePostEffect',
+		    'RedBaseMaterial'
+		 ],
 		 return : 'RedPostEffect_Blur Instance'
 	 }
 	 :DOC*/
