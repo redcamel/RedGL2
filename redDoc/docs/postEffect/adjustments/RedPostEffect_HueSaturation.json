@@ -1,5 +1,6 @@
 [
   {
+    "code": "PROPERTY",
     "title": "hue",
     "description": "\n색조\n기본값 : 0\n",
     "return": "Number"
@@ -15,9 +16,14 @@
         }
       ]
     },
+    "extends": [
+      "RedBasePostEffect",
+      "RedBaseMaterial"
+    ],
     "return": "RedPostEffect_HueSaturation Instance"
   },
   {
+    "code": "PROPERTY",
     "title": "saturation",
     "description": "\n채도\n기본값 : 0\n",
     "return": "Number"

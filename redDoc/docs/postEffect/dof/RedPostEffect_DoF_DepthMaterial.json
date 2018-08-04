@@ -1,5 +1,11 @@
 [
   {
+    "code": "PROPERTY",
+    "title": "focusLength",
+    "description": "\nfocusLength\n기본값 : 15\n",
+    "return": "Number"
+  },
+  {
     "constructorYn": true,
     "title": "RedPostEffect_DoF_DepthMaterial",
     "description": "\nRedPostEffect_DoF_DepthMaterial Instance 생성\n",
@@ -10,6 +16,10 @@
         }
       ]
     },
+    "extends": [
+      "RedBasePostEffect",
+      "RedBaseMaterial"
+    ],
     "example": "\nRedPostEffect_DoF_DepthMaterial(RedGL Instance)\n",
     "return": "RedPostEffect_DoF_DepthMaterial Instance"
   }

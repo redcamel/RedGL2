@@ -103,6 +103,7 @@ var RedPostEffect_SSAO_PointMaker;
 		 constructorYn : true,
 		 title :`RedPostEffect_SSAO_PointMaker`,
 		 description : `
+		    <h1>연구중</h1>
 			 RedPostEffect_SSAO_PointMaker Instance 생성.
 		 `,
 		 params : {
@@ -110,6 +111,10 @@ var RedPostEffect_SSAO_PointMaker;
 				 {type:'RedGL'}
 			 ]
 		 },
+		 extends : [
+		    'RedBasePostEffect',
+		    'RedBaseMaterial'
+		 ],
 		 return : 'RedPostEffect_SSAO_PointMaker Instance'
 	 }
 	 :DOC*/

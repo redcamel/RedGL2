@@ -77,6 +77,7 @@ var RedPostEffect_SSAO_DepthMaterial;
 		 constructorYn : true,
 		 title :`RedPostEffect_SSAO_DepthMaterial`,
 		 description : `
+		    <h1>연구중</h1>
 			 RedPostEffect_SSAO_DepthMaterial Instance 생성
 		 `,
 		 params : {
@@ -84,6 +85,10 @@ var RedPostEffect_SSAO_DepthMaterial;
 				 {type:'RedGL'}
 			 ]
 		 },
+		 extends : [
+		    'RedBasePostEffect',
+		    'RedBaseMaterial'
+		 ],
 		 example : `
 			 RedPostEffect_SSAO_DepthMaterial(RedGL Instance)
 		 `,

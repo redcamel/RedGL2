@@ -38,6 +38,10 @@ var RedPostEffect_Invert;
 				 {type:'RedGL'}
 			 ]
 		 },
+		 extends : [
+		    'RedBasePostEffect',
+		    'RedBaseMaterial'
+		 ],
 		 return : 'RedPostEffect_Invert Instance'
 	 }
 	 :DOC*/

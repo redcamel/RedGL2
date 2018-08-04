@@ -2,7 +2,7 @@
   {
     "constructorYn": true,
     "title": "RedPostEffect_SSAO_DepthMaterial",
-    "description": "\nRedPostEffect_SSAO_DepthMaterial Instance 생성\n",
+    "description": "\n<h1>연구중</h1>\nRedPostEffect_SSAO_DepthMaterial Instance 생성\n",
     "params": {
       "redGL": [
         {
@@ -10,6 +10,10 @@
         }
       ]
     },
+    "extends": [
+      "RedBasePostEffect",
+      "RedBaseMaterial"
+    ],
     "example": "\nRedPostEffect_SSAO_DepthMaterial(RedGL Instance)\n",
     "return": "RedPostEffect_SSAO_DepthMaterial Instance"
   }

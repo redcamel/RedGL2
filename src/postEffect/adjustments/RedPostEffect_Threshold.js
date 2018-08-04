@@ -39,6 +39,10 @@ var RedPostEffect_Threshold;
 				 {type:'RedGL'}
 			 ]
 		 },
+		 extends : [
+		    'RedBasePostEffect',
+		    'RedBaseMaterial'
+		 ],
 		 return : 'RedPostEffect_Threshold Instance'
 	 }
 	 :DOC*/
@@ -65,6 +69,7 @@ var RedPostEffect_Threshold;
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_Threshold', 'diffuseTexture', 'sampler2D');
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`threshold`,
 		 description : `
 			 최소 유효값

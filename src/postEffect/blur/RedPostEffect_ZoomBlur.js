@@ -54,6 +54,10 @@ var RedPostEffect_ZoomBlur;
 				 {type:'RedGL'}
 			 ]
 		 },
+		 extends : [
+		    'RedBasePostEffect',
+		    'RedBaseMaterial'
+		 ],
 		 return : 'RedPostEffect_ZoomBlur Instance'
 	 }
 	 :DOC*/
@@ -82,6 +86,7 @@ var RedPostEffect_ZoomBlur;
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_ZoomBlur', 'diffuseTexture', 'sampler2D');
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`centerX`,
 		 description : `
 			 정중앙 중심의 가로 위치
@@ -93,6 +98,7 @@ var RedPostEffect_ZoomBlur;
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_ZoomBlur', 'centerX', 'number');
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`centerY`,
 		 description : `
 			 정중앙 중심의 세로 위치
@@ -104,6 +110,7 @@ var RedPostEffect_ZoomBlur;
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_ZoomBlur', 'centerY', 'number');
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`amount`,
 		 description : `
 			 강도

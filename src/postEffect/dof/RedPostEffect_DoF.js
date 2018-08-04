@@ -40,6 +40,10 @@ var RedPostEffect_DoF;
 				 {type:'RedGL'}
 			 ]
 		 },
+		 extends : [
+		    'RedBasePostEffect',
+		    'RedBaseMaterial'
+		 ],
 		 return : 'RedPostEffect_DoF Instance'
 	 }
 	 :DOC*/
@@ -82,6 +86,17 @@ var RedPostEffect_DoF;
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_DoF', 'diffuseTexture', 'sampler2D');
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_DoF', 'blurTexture', 'sampler2D');
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_DoF', 'depthTexture', 'sampler2D');
+	/**DOC:
+	 {
+	     code : 'PROPERTY',
+		 title :`blur`,
+		 description : `
+			 blur
+			 기본값 : 50
+		 `,
+		 return : 'Number'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_DoF', 'blur', 'number', {
 		min: 0, callback: function (v) {
 			this['_process'][0]['size'] = v;
@@ -90,6 +105,7 @@ var RedPostEffect_DoF;
 	});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`focusLength`,
 		 description : `
 			 focusLength

@@ -62,6 +62,10 @@ var RedPostEffect_HalfTone;
 				 {type:'RedGL'}
 			 ]
 		 },
+		 extends : [
+		    'RedBasePostEffect',
+		    'RedBaseMaterial'
+		 ],
 		 return : 'RedPostEffect_HalfTone Instance'
 	 }
 	 :DOC*/
@@ -90,10 +94,60 @@ var RedPostEffect_HalfTone;
 		this['diffuseTexture'] = lastFrameBufferTexture;
 	};
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_HalfTone', 'diffuseTexture', 'sampler2D');
+	/**DOC:
+	 {
+	     code : 'PROPERTY',
+		 title :`centerX`,
+		 description : `
+			 기본값 0.0
+		 `,
+		 return : 'Number'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_HalfTone', 'centerX', 'number');
+	/**DOC:
+	 {
+	     code : 'PROPERTY',
+		 title :`centerY`,
+		 description : `
+			 기본값 0.0
+		 `,
+		 return : 'Number'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_HalfTone', 'centerY', 'number');
+	/**DOC:
+	 {
+	     code : 'PROPERTY',
+		 title :`angle`,
+		 description : `
+			 기본값 0.0
+		 `,
+		 return : 'Number'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_HalfTone', 'angle', 'number');
+	/**DOC:
+	 {
+	     code : 'PROPERTY',
+		 title :`grayMode`,
+		 description : `
+			 기본값 false
+		 `,
+		 return : 'Boolean'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_HalfTone', 'grayMode', 'boolean');
+	/**DOC:
+	 {
+	     code : 'PROPERTY',
+		 title :`radius`,
+		 description : `
+			 기본값 2
+		 `,
+		 return : 'Number'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_HalfTone', 'radius', 'number', {'min': 0});
 	Object.freeze(RedPostEffect_HalfTone);
 })();

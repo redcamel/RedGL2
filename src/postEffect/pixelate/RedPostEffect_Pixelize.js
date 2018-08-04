@@ -44,6 +44,10 @@ var RedPostEffect_Pixelize;
 				 {type:'RedGL'}
 			 ]
 		 },
+		 extends : [
+		    'RedBasePostEffect',
+		    'RedBaseMaterial'
+		 ],
 		 return : 'RedPostEffect_Pixelize Instance'
 	 }
 	 :DOC*/
@@ -71,6 +75,7 @@ var RedPostEffect_Pixelize;
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_Pixelize', 'diffuseTexture', 'sampler2D');
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`width`,
 		 description : `
 			 픽셀화 가로 크기
@@ -82,6 +87,7 @@ var RedPostEffect_Pixelize;
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_Pixelize', 'width', 'number', {'min': 0});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`height`,
 		 description : `
 			 픽셀화 세로 크기

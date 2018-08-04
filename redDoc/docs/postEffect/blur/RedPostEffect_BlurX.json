@@ -10,9 +10,14 @@
         }
       ]
     },
+    "extends": [
+      "RedBasePostEffect",
+      "RedBaseMaterial"
+    ],
     "return": "RedPostEffect_BlurX Instance"
   },
   {
+    "code": "PROPERTY",
     "title": "size",
     "description": "\n블러 사이즈\n기본값 : 50\n",
     "return": "Number"

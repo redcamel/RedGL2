@@ -1,5 +1,6 @@
 [
   {
+    "code": "PROPERTY",
     "title": "_intensity",
     "description": "\n비네팅 강도\n기본값 : 0.85\n",
     "return": "Number"
@@ -15,9 +16,14 @@
         }
       ]
     },
+    "extends": [
+      "RedBasePostEffect",
+      "RedBaseMaterial"
+    ],
     "return": "RedPostEffect_Vignetting Instance"
   },
   {
+    "code": "PROPERTY",
     "title": "size",
     "description": "\n비네팅사이즈\n기본값 : 0.1\n",
     "return": "Number"

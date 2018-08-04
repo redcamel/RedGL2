@@ -36,6 +36,7 @@ var RedPostEffect_SSAO;
 		 constructorYn : true,
 		 title :`RedPostEffect_SSAO`,
 		 description : `
+		    <h1>연구중</h1>
 			 RedPostEffect_SSAO Instance 생성.
 		 `,
 		 params : {
@@ -43,6 +44,10 @@ var RedPostEffect_SSAO;
 				 {type:'RedGL'}
 			 ]
 		 },
+		 extends : [
+		    'RedBasePostEffect',
+		    'RedBaseMaterial'
+		 ],
 		 return : 'RedPostEffect_SSAO Instance'
 	 }
 	 :DOC*/

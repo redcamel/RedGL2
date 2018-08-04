@@ -13,6 +13,10 @@ var RedPostEffect_GaussianBlur;
 				 {type:'RedGL'}
 			 ]
 		 },
+		 extends : [
+		    'RedBasePostEffect',
+		    'RedBaseMaterial'
+		 ],
 		 return : 'RedPostEffect_GaussianBlur Instance'
 	 }
 	 :DOC*/
@@ -33,6 +37,7 @@ var RedPostEffect_GaussianBlur;
 	RedPostEffect_GaussianBlur.prototype['updateTexture'] = function () {};
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`radius`,
 		 description : `
 			 가우시간 블러강도

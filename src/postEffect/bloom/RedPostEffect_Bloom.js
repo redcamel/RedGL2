@@ -40,6 +40,10 @@ var RedPostEffect_Bloom;
 				 {type:'RedGL'}
 			 ]
 		 },
+		 extends : [
+		    'RedBasePostEffect',
+		    'RedBaseMaterial'
+		 ],
 		 return : 'RedPostEffect_Bloom Instance'
 	 }
 	 :DOC*/
@@ -77,6 +81,7 @@ var RedPostEffect_Bloom;
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_Bloom', 'blurTexture', 'sampler2D');
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`exposure`,
 		 description : `
 			 확산 강도.
@@ -88,6 +93,7 @@ var RedPostEffect_Bloom;
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_Bloom', 'exposure', 'number', {'min': 0});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`bloomStrength`,
 		 description : `
 			 블룸 강도
@@ -99,6 +105,7 @@ var RedPostEffect_Bloom;
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_Bloom', 'bloomStrength', 'number', {'min': 0});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`threshold`,
 		 description : `
 			 최소 유효값
@@ -116,6 +123,7 @@ var RedPostEffect_Bloom;
 	});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`blur`,
 		 description : `
 			 blur 정도.

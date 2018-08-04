@@ -52,6 +52,10 @@ var RedPostEffect_Convolution;
 				 {type:'RedGL'}
 			 ]
 		 },
+		 extends : [
+		    'RedBasePostEffect',
+		    'RedBaseMaterial'
+		 ],
 		 return : 'RedPostEffect_Convolution Instance'
 	 }
 	 :DOC*/
@@ -78,6 +82,7 @@ var RedPostEffect_Convolution;
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_Convolution', 'diffuseTexture', 'sampler2D');
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`kernel`,
 		 description : `
 			 커널값.

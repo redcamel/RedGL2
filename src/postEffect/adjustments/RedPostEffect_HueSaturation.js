@@ -50,6 +50,10 @@ var RedPostEffect_HueSaturation;
 				 {type:'RedGL'}
 			 ]
 		 },
+		 extends : [
+		    'RedBasePostEffect',
+		    'RedBaseMaterial'
+		 ],
 		 return : 'RedPostEffect_HueSaturation Instance'
 	 }
 	 :DOC*/
@@ -77,6 +81,7 @@ var RedPostEffect_HueSaturation;
 	RedDefinePropertyInfo.definePrototype('RedPostEffect_HueSaturation', 'diffuseTexture', 'sampler2D');
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`hue`,
 		 description : `
 			 색조
@@ -92,6 +97,7 @@ var RedPostEffect_HueSaturation;
 	});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`saturation`,
 		 description : `
 			 채도
