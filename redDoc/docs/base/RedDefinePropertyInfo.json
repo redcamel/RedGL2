@@ -1,1 +1,40 @@
-[]
+[
+  {
+    "constructorYn": true,
+    "title": "RedDefinePropertyInfo",
+    "description": "\nprototype Property 선언기\n//TODO: 코드 정리좀 해야함\n",
+    "return": "void"
+  },
+  {
+    "code": "STATIC METHOD",
+    "title": "RedDefinePropertyInfo.definePrototype",
+    "description": "\nprototype Property 선언기\n",
+    "params": {
+      "clsName": [
+        {
+          "type": "String"
+        },
+        "클래스 명 입력"
+      ],
+      "name": [
+        {
+          "type": "String"
+        },
+        "선언할 프로퍼티 명 입력"
+      ],
+      "type": [
+        {
+          "type": "String"
+        },
+        "hex, boolean, number, sampler2D, samplerCube, samplerVideo 사용가능"
+      ],
+      "option": [
+        {
+          "type": "Object"
+        },
+        "타입별 옵션 정의 가능"
+      ]
+    },
+    "return": "void"
+  }
+]

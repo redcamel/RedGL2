@@ -3,15 +3,23 @@
     "title": "addLight",
     "code": "METHOD",
     "description": "\n라이트 추가 매서드.\nRedBaseLight 확장객체만 등록가능.\n",
+    "params": {
+      "light": [
+        {
+          "type": "RedBaseLight"
+        }
+      ]
+    },
     "return": "void"
   },
   {
+    "code": "PROPERTY",
     "title": "axis",
     "description": "\naxis get/set\n",
     "return": "RedAxis Instance"
   },
   {
-    "code": "property",
+    "code": "PROPERTY",
     "title": "backgroundColor",
     "description": "\n배경 컬러설정.\n알파설정은 불가능\n",
     "params": {
@@ -22,29 +30,34 @@
         "ex) #fff, #ffffff"
       ]
     },
-    "return": "void"
+    "return": "hex"
   },
   {
+    "code": "PROPERTY",
     "title": "children",
     "description": "자식 리스트",
     "return": "Array"
   },
   {
+    "code": "PROPERTY",
     "title": "fogColor",
     "description": "\n초기값 '#ffffff\n",
     "return": "hex"
   },
   {
+    "code": "PROPERTY",
     "title": "fogDensity",
     "description": "\n안개농도\n초기값 0.5\n",
     "return": "Number"
   },
   {
+    "code": "PROPERTY",
     "title": "fogDistance",
     "description": "\n가시거리\n초기값 25.0\n",
     "return": "Number"
   },
   {
+    "code": "PROPERTY",
     "title": "grid",
     "description": "\ngrid get/set\n",
     "return": "RedGrid Instance"
@@ -66,30 +79,44 @@
         "초기값 #000000"
       ]
     },
+    "extends": [
+      "RedBaseContainer"
+    ],
     "return": "RedScene Instance"
   },
   {
     "title": "removeLight",
     "code": "METHOD",
     "description": "\n라이트 제거 매서드.\nRedBaseLight 확장객체만 사용가능.\n",
+    "params": {
+      "light": [
+        {
+          "type": "RedBaseLight"
+        }
+      ]
+    },
     "return": "void"
   },
   {
+    "code": "PROPERTY",
     "title": "shadowManager",
     "description": "\n그림자 매니저.\nRedScene Instance생성시 자동생성.\n",
-    "return": "Array"
+    "return": "RedShadowManager Instance"
   },
   {
+    "code": "PROPERTY",
     "title": "skyBox",
     "description": "\nskyBox get/set\n",
     "return": "RedSkyBox Instance"
   },
   {
+    "code": "PROPERTY",
     "title": "useBackgroundColor",
     "description": "\n배경색 사용여부.\n초기값 true\n",
     "return": "Boolean"
   },
   {
+    "code": "PROPERTY",
     "title": "useFog",
     "description": "\n안개 사용여부\n초기값 true\n",
     "return": "Boolean"

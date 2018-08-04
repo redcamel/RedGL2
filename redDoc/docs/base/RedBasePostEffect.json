@@ -1,8 +1,26 @@
 [
   {
+    "title": "_process",
+    "code": "PROPERTY",
+    "description": "\n해당포스트 이펙트 처리전 전처리과정이 필요할 경우 사용.\n",
+    "return": "void"
+  },
+  {
+    "title": "_subFrameBufferList",
+    "code": "PROPERTY",
+    "description": "\n해당포스트 이펙트에서 개별적인 프레임 버퍼가 추가로 필요할 경우 사용.\n",
+    "return": "void"
+  },
+  {
     "constructorYn": true,
     "title": "RedBasePostEffect",
-    "description": "\nRedBasePostEffect 기저층\n",
+    "description": "\n포스트 이펙스 정의 사용되는 기저층\n",
+    "return": "RedBasePostEffect Instance"
+  },
+  {
+    "title": "updateTexture",
+    "code": "METHOD",
+    "description": "\n포스트이펙트 정의시 반드시 재정의 되어야함\n",
     "return": "void"
   }
 ]

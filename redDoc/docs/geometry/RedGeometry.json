@@ -1,9 +1,11 @@
 [
   {
+    "code": "PROPERTY",
     "title": "indexBuffer",
     "return": "RedBuffer Instance"
   },
   {
+    "code": "PROPERTY",
     "title": "interleaveBuffer",
     "return": "RedBuffer Instance"
   },

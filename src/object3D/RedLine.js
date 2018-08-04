@@ -16,6 +16,10 @@ var RedLine;
 				 {type:'RedColorMaterial Instance'}
 			 ]
 		 },
+		 extends : [
+		    'RedBaseContainer',
+		    'RedBaseObject3D'
+		 ],
 		 example : `
 		 var tScene;
 		 var tLine;
@@ -70,6 +74,7 @@ var RedLine;
 	RedLine.prototype = new RedBaseContainer();
 	/**DOC:
 	 {
+	     code : 'METHOD',
 		 title :`addPoint`,
 		 description : `
 			 라인포인트 추가
@@ -93,6 +98,7 @@ var RedLine;
 	};
 	/**DOC:
 	 {
+	     code : 'METHOD',
 		 title :`removeAllPoint`,
 		 description : `
 			 포인트 전체 제거

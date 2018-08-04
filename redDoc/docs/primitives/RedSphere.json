@@ -46,6 +46,9 @@
         "기본값 : Math.PI"
       ]
     },
+    "extends": [
+      "RedGeometry"
+    ],
     "example": "\nRedSphere(RedGL Instance);\nRedSphere(RedGL Instance, 1);\nRedSphere(RedGL Instance, 1, 16,16);\n",
     "return": "RedSphere Instance"
   }

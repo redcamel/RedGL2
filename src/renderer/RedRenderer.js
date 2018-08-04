@@ -769,9 +769,10 @@ var RedRenderer;
 							0
 						);
 						tPrevIndexBuffer_UUID = tIndexBufferInfo['_UUID'];
-						renderResultObj['call']
+						renderResultObj['triangleNum'] += tIndexBufferInfo['triangleNum'];
 					} else {
 						tGL.drawArrays(tMesh['drawMode'], 0, tInterleaveBuffer['pointNum'])
+						renderResultObj['triangleNum'] += tInterleaveBuffer['triangleNum'];
 					}
 				}
 				/////////////////////////////////////////////////////////////////////////

@@ -1,15 +1,18 @@
 [
   {
+    "code": "PROPERTY",
     "title": "alpha",
     "description": "기본값 : 1",
     "return": "Number"
   },
   {
+    "code": "PROPERTY",
     "title": "alphaTest",
     "description": "기본값 : 0.01",
     "return": "Number"
   },
   {
+    "code": "PROPERTY",
     "title": "diffuseTexture",
     "return": "RedBitmapTexture"
   },
@@ -29,6 +32,9 @@
         }
       ]
     },
+    "extends": [
+      "RedBaseMaterial"
+    ],
     "return": "RedParticleBitmapMaterial Instance"
   }
 ]

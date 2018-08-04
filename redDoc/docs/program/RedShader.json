@@ -1,10 +1,12 @@
 [
   {
+    "code": "PROPERTY",
     "title": "key",
     "description": "고유키",
     "return": "String"
   },
   {
+    "code": "PROPERTY",
     "title": "parseData",
     "description": "쉐이더 해석 데이터",
     "return": "Object"
@@ -48,7 +50,7 @@
   },
   {
     "title": "RedShader.hasKey",
-    "code": "CONST",
+    "code": "STATIC METHOD",
     "description": "키에 해당하는 쉐이더 존재 여부 반환",
     "params": {
       "redGL": [
@@ -78,11 +80,13 @@
     "return": "String"
   },
   {
+    "code": "PROPERTY",
     "title": "type",
     "description": "RedShader.VERTEX or RedShader.FRAGMENT",
     "return": "String"
   },
   {
+    "code": "PROPERTY",
     "title": "webglShader",
     "description": "실제 쉐이더(WebGLShader Instance)",
     "return": "WebGLShader"

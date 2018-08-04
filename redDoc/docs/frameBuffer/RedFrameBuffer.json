@@ -6,6 +6,12 @@
     "return": "void"
   },
   {
+    "code": "PROPERTY",
+    "title": "height",
+    "description": "\n기본값 : 1080 or 하드웨어 최대값\n",
+    "return": "Number"
+  },
+  {
     "constructorYn": true,
     "title": "RedFrameBuffer",
     "description": "\nRedFrameBuffer Instance 생성자\n",
@@ -35,5 +41,11 @@
     "title": "unbind",
     "description": "소유하고있는 webglFrameBuffer, webglTexture, webglRenderBuffer를 unbinding.",
     "return": "void"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "width",
+    "description": "\n기본값 : 1920 or 하드웨어 최대값\n",
+    "return": "Number"
   }
 ]

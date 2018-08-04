@@ -1,5 +1,11 @@
 [
   {
+    "code": "PROPERTY",
+    "title": "option",
+    "description": "\n텍스쳐 옵션 정의\n",
+    "return": "void"
+  },
+  {
     "constructorYn": true,
     "title": "RedBitmapCubeTexture",
     "description": "\nRedBitmapCubeTexture Instance 생성\n",
@@ -27,7 +33,16 @@
         }
       ]
     },
+    "extends": [
+      "RedBaseTexture"
+    ],
     "example": "\nRedBitmapCubeTexture( RedGL Instance,  srcList, {\nmin: gl.LINEAR_MIPMAP_NEAREST,\nmag: gl.LINEAR,\nwrap_s: gl.REPEAT,\nwrap_t: gl.REPEAT\n})\n",
     "return": "RedBitmapCubeTexture Instance"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "srcList",
+    "description": "\nsrcList\n",
+    "return": "void"
   }
 ]

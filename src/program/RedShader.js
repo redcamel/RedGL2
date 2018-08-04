@@ -247,6 +247,7 @@ var RedShader;
 		tGL = redGL.gl;
 		/**DOC:
 		 {
+		  code : 'PROPERTY',
 		  title :`webglShader`,
 		  description : `실제 쉐이더(WebGLShader Instance)`,
 		  return : 'WebGLShader'
@@ -255,6 +256,7 @@ var RedShader;
 		this['webglShader'] = makeWebGLShader(tGL, key, type); // 쉐이더 생성
 		/**DOC:
 		 {
+		  code : 'PROPERTY',
 		  title :`parseData`,
 		  description : `쉐이더 해석 데이터`,
 		  return : 'Object'
@@ -265,6 +267,7 @@ var RedShader;
 		compileWebGLShader(tGL, type, this['webglShader'], this['parseData']); // 쉐이더 컴파일
 		/**DOC:
 		 {
+		     code : 'PROPERTY',
 			 title :`key`,
 			 description : `고유키`,
 			 return : 'String'
@@ -273,6 +276,7 @@ var RedShader;
 		this['key'] = key;
 		/**DOC:
 		 {
+		     code : 'PROPERTY',
 			 title :`type`,
 			 description : `RedShader.VERTEX or RedShader.FRAGMENT`,
 			 return : 'String'
@@ -286,7 +290,7 @@ var RedShader;
 	/**DOC:
 	 {
 		 title :`RedShader.hasKey`,
-		 code: 'CONST',
+		 code: 'STATIC METHOD',
 		 description : '키에 해당하는 쉐이더 존재 여부 반환',
 		 params : {
 			 redGL : [

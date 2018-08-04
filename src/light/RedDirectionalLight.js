@@ -20,6 +20,9 @@ var RedDirectionalLight;
 				 '알파값'
 			 ]
 		 },
+		 extends : [
+		    'RedBaseLight'
+		 ],
 		 example: `
 			 RedDirectionalLight(RedGL Instance, hex, alpha)
 		 `,
@@ -37,6 +40,7 @@ var RedDirectionalLight;
 		this['color'] = hexColor ? hexColor : '#fff';
 		/**DOC:
 		 {
+	         code : 'PROPERTY',
 			 title :`x`,
 			 description : `
 			 기본값 : 0
@@ -48,6 +52,7 @@ var RedDirectionalLight;
 		this['x'] = 0;
 		/**DOC:
 		 {
+	         code : 'PROPERTY',
 			 title :`y`,
 			 description : `
 			 기본값 : 0
@@ -59,6 +64,7 @@ var RedDirectionalLight;
 		this['y'] = -1;
 		/**DOC:
 		 {
+	         code : 'PROPERTY',
 			 title :`z`,
 			 description : `
 			 기본값 : 0
@@ -71,6 +77,7 @@ var RedDirectionalLight;
 		this['_UUID'] = RedGL.makeUUID();
 		/**DOC:
 		 {
+	         code : 'PROPERTY',
 			 title :`debug`,
 			 description : `디버그오브젝트 활성화 여부`,
 			 return : 'Boolean'
@@ -91,7 +98,7 @@ var RedDirectionalLight;
 	};
 	/**DOC:
 	 {
-		 title :`RedDirectionalLight.type`,
+		 title :`RedDirectionalLight.TYPE`,
 		 code : 'CONST',
 		 description : `RedDirectionalLight 타입상수`,
 		 return : 'String'
@@ -101,6 +108,7 @@ var RedDirectionalLight;
 	RedDirectionalLight.prototype = new RedBaseLight();
 	/**DOC:
 	 {
+         code : 'PROPERTY',
 		 title :`type`,
 		 description : `RedDirectionalLight['TYPE']`,
 		 return : 'String'

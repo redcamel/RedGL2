@@ -72,6 +72,9 @@ var RedBitmapMaterial;
 				 {type:'RedBitmapTexture'}
 			 ]
 		 },
+		 extends : [
+		    'RedBaseMaterial'
+		 ],
 		 example : `
 			 RedBitmapMaterial( RedGL Instance, RedBitmapTexture(RedGL Instance, src) )
 		 `,
@@ -98,6 +101,7 @@ var RedBitmapMaterial;
 	RedBitmapMaterial.prototype = new RedBaseMaterial();
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`diffuseTexture`,
 		 return : 'RedBitmapTexture'
 	 }
@@ -105,6 +109,7 @@ var RedBitmapMaterial;
 	RedDefinePropertyInfo.definePrototype('RedBitmapMaterial', 'diffuseTexture', 'sampler2D', {essential: true});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`alpha`,
 		 description : `기본값 : 1`,
 		 return : 'Number'

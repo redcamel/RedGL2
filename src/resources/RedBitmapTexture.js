@@ -103,6 +103,9 @@ var RedBitmapTexture;
 			    {type:'Function'}
 			 ]
 		 },
+		 extends : [
+		    'RedBaseTexture'
+		 ],
 		 example : `
 		 RedBitmapTexture( RedGL Instance,  src, {
 			 min: gl.LINEAR_MIPMAP_NEAREST,
@@ -119,7 +122,7 @@ var RedBitmapTexture;
 		if ( !(this instanceof RedBitmapTexture) ) return new RedBitmapTexture(redGL, src, option, callback);
 		redGL instanceof RedGL || RedGLUtil.throwFunc('RedBitmapTexture : RedGL Instance만 허용.', redGL);
 		tGL = redGL.gl;
-		MAX_TEXTURE_SIZE = redGL['_detect']['texture']['MAX_TEXTURE_SIZE'];
+		MAX_TEXTURE_SIZE = redGL['detect']['texture']['MAX_TEXTURE_SIZE'];
 		RedTextureOptionChecker.check('RedBitmapTexture', option, tGL);
 		this['webglTexture'] = tGL.createTexture();
 		this['atlascoord'] = RedAtlasUV(redGL);
@@ -134,6 +137,16 @@ var RedBitmapTexture;
 		console.log(this);
 	};
 	RedBitmapTexture.prototype = new RedBaseTexture();
+	/**DOC:
+	 {
+		 code:`PROPERTY`,
+		 title :`src`,
+		 description : `
+			 src
+		 `,
+		 return : 'void'
+	 }
+	 :DOC*/
 	Object.defineProperty(RedBitmapTexture.prototype, 'src', {
 		get: function () {return this['_src']},
 		set: function (v) {
@@ -142,6 +155,16 @@ var RedBitmapTexture;
 			this._load(true)
 		}
 	});
+	/**DOC:
+	 {
+		 code:`PROPERTY`,
+		 title :`option`,
+		 description : `
+			 텍스쳐 옵션 정의
+		 `,
+		 return : 'void'
+	 }
+	 :DOC*/
 	Object.defineProperty(RedBitmapTexture.prototype, 'option', {
 		get: function () {return this['_option']},
 		set: function (v) {

@@ -183,6 +183,9 @@ var RedStandardMaterial;
 				 {type:'RedBitmapTexture'}
 			 ]
 		 },
+		 extends : [
+		    'RedBaseMaterial'
+		 ],
 		 example : `
 			 RedStandardMaterial(
 				 RedGL Instance,
@@ -229,6 +232,7 @@ var RedStandardMaterial;
 	RedStandardMaterial.prototype = new RedBaseMaterial();
 	/**DOC:
 	 {
+         code : 'PROPERTY',
 		 title :`alpha`,
 		 description : `기본값 : 1`,
 		 return : 'Number'
@@ -237,6 +241,7 @@ var RedStandardMaterial;
 	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'alpha', 'number', {min: 0, max: 1});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`diffuseTexture`,
 		 return : 'RedBitmapTexture'
 	 }
@@ -247,6 +252,7 @@ var RedStandardMaterial;
 	});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`normalTexture`,
 		 return : 'RedBitmapTexture'
 	 }
@@ -254,6 +260,7 @@ var RedStandardMaterial;
 	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'normalTexture', 'sampler2D', samplerOption);
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`specularTexture`,
 		 return : 'RedBitmapTexture'
 	 }
@@ -261,6 +268,7 @@ var RedStandardMaterial;
 	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'specularTexture', 'sampler2D', samplerOption);
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`displacementTexture`,
 		 return : 'RedBitmapTexture'
 	 }
@@ -268,6 +276,7 @@ var RedStandardMaterial;
 	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'displacementTexture', 'sampler2D', samplerOption);
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`normalPower`,
 		 description : `기본값 : 1`,
 		 return : 'number'
@@ -276,6 +285,7 @@ var RedStandardMaterial;
 	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'normalPower', 'number', {'min': 0});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`shininess`,
 		 description : `기본값 : 16`,
 		 return : 'number'
@@ -284,6 +294,7 @@ var RedStandardMaterial;
 	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'shininess', 'number', {'min': 0});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`specularPower`,
 		 description : `기본값 : 1`,
 		 return : 'number'
@@ -292,6 +303,7 @@ var RedStandardMaterial;
 	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'specularPower', 'number', {'min': 0});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`displacementPower`,
 		 description : `기본값 : 0`,
 		 return : 'Number'

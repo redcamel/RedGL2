@@ -50,6 +50,7 @@ var RedRenderDebuger;
 	}
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`visible`,
 		 description : `
 			 RedRenderDebuger 정보 visible 여부

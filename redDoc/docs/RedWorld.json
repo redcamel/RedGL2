@@ -4,7 +4,7 @@
     "title": "addView",
     "description": "getViewList",
     "params": {
-      "View": [
+      "redView": [
         {
           "type": "RedView"
         },

@@ -97,6 +97,9 @@ var RedPlane;
 				 '기본값 : 1'
 			 ]
 		 },
+		 extends : [
+		    'RedGeometry'
+		 ],
 		 example : `
 			 RedPlane(RedGL Instance);
 			 RedPlane(RedGL Instance, 1, 1);

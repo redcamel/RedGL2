@@ -106,7 +106,7 @@ var RedCamera;
 		 {
 			 code:`PROPERTY`,
 			 title :`orthographicYn`,
-			 description : `orthographicYn - false`,
+			 description : `기본값 : false`,
 			 return : 'Boolean'
 		 }
 		 :DOC*/

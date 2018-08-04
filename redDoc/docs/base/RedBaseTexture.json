@@ -1,8 +1,32 @@
 [
   {
+    "code": "CONST",
+    "title": "EMPTY_BASE64",
+    "description": "\n2 * 2 크기의 빈 base64 이미지\n",
+    "return": "data:image/png;base64~~~"
+  },
+  {
     "constructorYn": true,
     "title": "RedBaseTexture",
     "description": "\nRedBaseTexture 기저층\n",
+    "return": "RedBaseTexture Instance"
+  },
+  {
+    "code": "METHOD",
+    "title": "setEmptyTexture",
+    "description": "\nwebglTexture 생성후 이미지 로딩전까지 안전한 텍스쳐 세팅할때 사용\n",
+    "params": {
+      "gl": [
+        {
+          "type": "RedGL"
+        }
+      ],
+      "texture": [
+        {
+          "type": "WebGLTexture"
+        }
+      ]
+    },
     "return": "void"
   }
 ]

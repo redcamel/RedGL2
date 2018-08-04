@@ -122,6 +122,10 @@ var RedSphere;
 				 '기본값 : Math.PI'
 			 ]
 		 },
+
+		 extends : [
+		    'RedGeometry'
+		 ],
 		 example : `
 			 RedSphere(RedGL Instance);
 			 RedSphere(RedGL Instance, 1);

@@ -1,5 +1,11 @@
 [
   {
+    "code": "PROPERTY",
+    "title": "option",
+    "description": "\n텍스쳐 옵션 정의\n",
+    "return": "void"
+  },
+  {
     "constructorYn": true,
     "title": "RedBitmapTexture",
     "description": "\nRedBitmapTexture Instance 생성\n",
@@ -27,7 +33,16 @@
         }
       ]
     },
+    "extends": [
+      "RedBaseTexture"
+    ],
     "example": "\nRedBitmapTexture( RedGL Instance,  src, {\nmin: gl.LINEAR_MIPMAP_NEAREST,\nmag: gl.LINEAR,\nwrap_s: gl.REPEAT,\nwrap_t: gl.REPEAT\n})\n",
     "return": "RedBitmapTexture Instance"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "src",
+    "description": "\nsrc\n",
+    "return": "void"
   }
 ]

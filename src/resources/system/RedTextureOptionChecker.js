@@ -19,7 +19,7 @@ var RedTextureOptionChecker;
 			 `,
 			 params : {
 				 type : [
-					 {type:'RedBitmapCubeTexture or RedBitmapTexture'}
+					 {type:'RedBaseTexture'}
 				 ],
 				 option : [
 					 {type:'Object'}

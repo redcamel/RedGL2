@@ -16,7 +16,7 @@ var RedParticleUnit;
 				 {type:'RedGL'}
 			 ]
 		 },
-		 return : 'RedProgram Instance'
+		 return : 'RedParticleUnit Instance'
 	 }
 	 :DOC*/
 	RedParticleUnit = function (lifeTime) {
@@ -26,6 +26,24 @@ var RedParticleUnit;
 		this['initLifeTime'] = this['lifeTime'];
 		this['_gravitySum'] = 0;
 	};
+	/**DOC:
+	 {
+		 code : 'addRule',
+		 title :`addRule`,
+		 description : `
+		    룰 추가 매서드
+		 `,
+		 params : {
+		    key : [
+		        {type : 'String'}
+		    ],
+		    option : [
+		        {type : 'Object'}
+		    ]
+		 },
+		 return : 'void'
+	 }
+	 :DOC*/
 	RedParticleUnit.prototype.addRule = function (key, option) {
 		this[key] = {
 			startCenter: null,

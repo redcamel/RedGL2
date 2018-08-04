@@ -7,13 +7,47 @@ var RedBaseMaterial;
 		 title :`RedBaseMaterial`,
 		 description : `
 			 RedBaseMaterial 기저층
-
 		 `,
-		 return : 'void'
+		 return : 'RedBaseMaterial instance'
 	 }
 	 :DOC*/
 	RedBaseMaterial = function () {};
 	RedBaseMaterial.prototype = {
+		/**DOC:
+		 {
+			 code : 'METHOD',
+			 title :`makeProgramList`,
+			 description : `
+				 다중 프로그램 리스트 생성기.
+				 TODO:// 좀더 구체적인 설명 적어야함
+			 `,
+			 params : {
+			    target : [
+			        { type : 'RedBaseMaterial Instance' }
+			    ],
+			    redGL : [
+			        { type : 'RedGL Instance' }
+			    ],
+			    programName : [
+			        { type : 'String' },
+			        '기본 프로그램이름'
+			    ],
+			    vSource : [
+			        { type : 'String' },
+			        '버텍스 쉐이더 소스'
+			    ],
+			    fSource : [
+			        { type : 'String' },
+			        '프레그먼트 쉐이더'
+			    ],
+			    programOptionList : [
+			        { type : 'Array' },
+			        '옵션키 리스트'
+			    ]
+			 },
+			 return : 'void'
+		 }
+		 :DOC*/
 		makeProgramList: (function () {
 			//TODO: 이걸좀 정리해야하는데..
 			var makeList;
@@ -109,7 +143,7 @@ var RedBaseMaterial;
 			 description : `
 				 재질의 Program에서 사용하고 있는 유니폼키가
 				 속성으로 매칭되지 않는 경우 검출.
-				 ex) 프로그램에서 uTestUniform 이 사용되어진다면 testUniform이 정의 되어있어야함.
+				 ex) 프로그램에서 <b>uTestUniform</b> 이 사용되어진다면 <b>testUniform</b>이 정의 되어있어야함.
 			 `,
 			 return : 'void'
 		 }

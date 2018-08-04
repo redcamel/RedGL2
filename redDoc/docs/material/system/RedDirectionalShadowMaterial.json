@@ -10,6 +10,9 @@
         }
       ]
     },
+    "extends": [
+      "RedBaseMaterial"
+    ],
     "example": "\nRedDirectionalShadowMaterial(RedGL Instance, RedBitmapTexture(RedGL Instance, src))\n",
     "return": "RedDirectionalShadowMaterial Instance"
   }

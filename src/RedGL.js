@@ -56,7 +56,7 @@ var RedGL;
 	setEmptyTextures = function (redGL, gl) {
 		var i;
 		var emptyTexture, emptyCubeTexture, src;
-		i = redGL['_detect']['texture']['MAX_COMBINED_TEXTURE_IMAGE_UNITS'];
+		i = redGL['detect']['texture']['MAX_COMBINED_TEXTURE_IMAGE_UNITS'];
 		src = RedBaseTexture.EMPTY_BASE64;
 		emptyTexture = RedBitmapTexture(redGL, src);
 		emptyCubeTexture = RedBitmapCubeTexture(redGL, [src, src, src, src, src, src]);
@@ -146,8 +146,28 @@ var RedGL;
 		this['_viewRect'] = [0, 0, 0, 0];
 		//
 		this['_canvas'] = canvas;
+		/**DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`gl`,
+			 description : `
+				 생성된 WebGL Context
+			 `,
+			 return : 'WebGL Context Instance'
+		 }
+		 :DOC*/
 		this['gl'] = tGL = getGL(canvas, option, targetContextKey);
-		if ( tGL ) this['_detect'] = RedGLDetect(tGL);
+		/**DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`detect`,
+			 description : `
+				 하드웨어 디텍팅 정보
+			 `,
+			 return : 'RedGLDetect Instance'
+		 }
+		 :DOC*/
+		if ( tGL ) this['detect'] = RedGLDetect(tGL);
 		else return callback ? callback.call(self, tGL ? true : false) : 0;
 		//
 		this['_UUID'] = RedGL.makeUUID();
@@ -205,7 +225,7 @@ var RedGL;
 	};
 	/**DOC:
 	 {
-		 code : 'CONST',
+		 code : 'STATIC METHOD',
 		 title :`RedGL.makeUUID`,
 		 description : `
 			 UUID 생성기
@@ -231,6 +251,14 @@ var RedGL;
 				 RedGL Instance의 Canvas 사이즈 설정
 				 px, %단위만 입력가능.
 			 `,
+			 params : {
+			    width : [
+			        { type : 'Number or %' }
+			    ],
+			    height : [
+			        { type : 'Number or %' }
+			    ]
+			 },
 			 example : `
 				 RedGL(document.getElementById('test'), function(v){
 					  if(v){

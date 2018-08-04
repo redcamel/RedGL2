@@ -111,6 +111,9 @@ var RedColorPhongMaterial;
 				 '알파값'
 			 ]
 		 },
+		 extends : [
+		    'RedBaseMaterial'
+		 ],
 		 example: `
 		 RedColorPhongMaterial(RedGL Instance, hex, alpha)
 		 `,
@@ -140,6 +143,7 @@ var RedColorPhongMaterial;
 	RedColorPhongMaterial.prototype = new RedBaseMaterial();
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`color`,
 		 description : `기본값 : #ff2211`,
 		 return : 'hex'
@@ -148,6 +152,7 @@ var RedColorPhongMaterial;
 	Object.defineProperty(RedColorPhongMaterial.prototype, 'color', RedColorMaterial['DEFINE_OBJECT_COLOR']);
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`alpha`,
 		 description : `기본값 : 1`,
 		 return : 'Number'
@@ -156,6 +161,7 @@ var RedColorPhongMaterial;
 	RedDefinePropertyInfo.definePrototype('RedColorPhongMaterial', 'alpha', 'number', RedColorMaterial['DEFINE_OBJECT_ALPHA']);
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`shininess`,
 		 description : `기본값 : 16`,
 		 return : 'shininess'
@@ -164,6 +170,7 @@ var RedColorPhongMaterial;
 	RedDefinePropertyInfo.definePrototype('RedColorPhongMaterial', 'shininess', 'number', {'min': 0});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`specularPower`,
 		 description : `기본값 : 1`,
 		 return : 'Number'

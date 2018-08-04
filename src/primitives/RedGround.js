@@ -102,6 +102,7 @@ var RedGround;
 		 description : `
 			 RedGround Instance 생성기.
 			 Box 형태의 RedGeometry 생성
+			 연구중연구중연구중연구중연구중연구중연구중연구중연구중연구중연구중연구중연구중연구중연구중연구중연구중연구중연구중연구중연구중연구중연구중연구중연구중연구중연구중연구중연구중연구중연구중
 		 `,
 		 params : {
 			 redGL : [

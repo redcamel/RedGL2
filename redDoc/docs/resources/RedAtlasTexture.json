@@ -2,7 +2,7 @@
   {
     "constructorYn": true,
     "title": "RedAtlasTexture",
-    "description": "\nRedAtlasTexture Instance 생성\nRedAtlas에 이미지 등록후 키를 기반으로 RedAtlasTexture를 생성할 수 있음.\n",
+    "description": "\n<h1>재개발예정</h1>\nRedAtlasTexture Instance 생성\nRedAtlas에 이미지 등록후 키를 기반으로 RedAtlasTexture를 생성할 수 있음.\n",
     "params": {
       "redGL": [
         {

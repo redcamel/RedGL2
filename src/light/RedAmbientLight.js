@@ -20,6 +20,9 @@ var RedAmbientLight;
 				 '알파값'
 			 ]
 		 },
+		 extends : [
+		    'RedBaseLight'
+		 ],
 		 example: `
 			 RedAmbientLight(RedGL Instance, hex, alpha)
 		 `,
@@ -40,7 +43,7 @@ var RedAmbientLight;
 	};
 	/**DOC:
 	 {
-		 title :`RedAmbientLight.type`,
+		 title :`RedAmbientLight.TYPE`,
 		 code : 'CONST',
 		 description : `RedAmbientLight 타입상수`,
 		 return : 'String'
@@ -51,7 +54,8 @@ var RedAmbientLight;
 	/**DOC:
 	 {
 		 title :`type`,
-		 description : `RedAmbientLight['TYPE']`,
+		 code : 'PROPERTY',
+		 description : `인스턴스 생성시 RedAmbientLight['TYPE']값이 자동 주입됨`,
 		 return : 'String'
 	 }
 	 :DOC*/

@@ -35,8 +35,8 @@ var RedFrameBuffer;
 		gl = redGL['gl'];
 		width = width || 1920;
 		height = height || 1080;
-		if ( width > redGL['_detect']['texture']['MAX_TEXTURE_SIZE'] ) width = redGL['_detect']['texture']['MAX_TEXTURE_SIZE'];
-		if ( height > redGL['_detect']['texture']['MAX_TEXTURE_SIZE'] ) height = redGL['_detect']['texture']['MAX_TEXTURE_SIZE'];
+		if ( width > redGL['detect']['texture']['MAX_TEXTURE_SIZE'] ) width = redGL['detect']['texture']['MAX_TEXTURE_SIZE'];
+		if ( height > redGL['detect']['texture']['MAX_TEXTURE_SIZE'] ) height = redGL['detect']['texture']['MAX_TEXTURE_SIZE'];
 		this['redGL'] = redGL;
 		this['width'] = width;
 		this['height'] = height;
@@ -105,7 +105,27 @@ var RedFrameBuffer;
 			gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 		}
 	};
+	/**DOC:
+	 {
+		 code:`PROPERTY`,
+		 title :`width`,
+		 description : `
+		    기본값 : 1920 or 하드웨어 최대값
+		 `,
+		 return : 'Number'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedFrameBuffer', 'width', 'number', {min: 2});
+	/**DOC:
+	 {
+		 code:`PROPERTY`,
+		 title :`height`,
+		 description : `
+		    기본값 : 1080 or 하드웨어 최대값
+	    `,
+		 return : 'Number'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedFrameBuffer', 'height', 'number', {min: 2});
 	Object.freeze(RedFrameBuffer);
 })();

@@ -1,4 +1,13 @@
 "use strict";
+/**DOC:
+ {
+	 constructorYn : true,
+	 title :`RedXR`,
+	 description : `
+		 <h1>연구시작전</h1>
+	 `
+ }
+ :DOC*/
 let RedXR;
 (function () {
 	RedXR = function (canvas, callback, frameUpdater) {

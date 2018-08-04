@@ -1,5 +1,6 @@
 [
   {
+    "code": "PROPERTY",
     "title": "alpha",
     "description": "기본값 : 1",
     "return": "Number"
@@ -21,10 +22,14 @@
         "String"
       ]
     },
+    "extends": [
+      "RedBaseMaterial"
+    ],
     "example": "\nRedVideoMaterial(RedGL Instance, RedBitmapTexture(RedGL Instance, src))\n",
     "return": "RedVideoMaterial Instance"
   },
   {
+    "code": "PROPERTY",
     "title": "videoTexture",
     "return": "RedVideoMaterial"
   }

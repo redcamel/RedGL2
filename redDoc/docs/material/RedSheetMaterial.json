@@ -18,11 +18,13 @@
     "return": "void"
   },
   {
+    "code": "PROPERTY",
     "title": "diffuseTexture",
     "description": "diffuseTexture",
     "return": "RedSheetMaterial"
   },
   {
+    "code": "PROPERTY",
     "title": "frameRate",
     "description": "최소값 : 1",
     "return": "Number"
@@ -40,6 +42,7 @@
     "return": "void"
   },
   {
+    "code": "PROPERTY",
     "title": "loop",
     "description": "기본값 : true",
     "return": "Boolean"
@@ -73,15 +76,20 @@
         "RedBitmapTexture Instance"
       ]
     },
+    "extends": [
+      "RedBaseMaterial"
+    ],
     "example": "\nRedSheetMaterial(RedGL Instance, RedBitmapTexture(RedGL Instance, src))\n",
     "return": "RedSheetMaterial Instance"
   },
   {
+    "code": "PROPERTY",
     "title": "segmentH",
     "description": "최소값 : 1",
     "return": "Number"
   },
   {
+    "code": "PROPERTY",
     "title": "segmentW",
     "description": "최소값 : 1",
     "return": "Number"
@@ -106,6 +114,7 @@
     "return": "void"
   },
   {
+    "code": "PROPERTY",
     "title": "totalFrame",
     "description": "최소값 : 1",
     "return": "Number"

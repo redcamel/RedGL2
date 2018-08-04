@@ -1,10 +1,12 @@
 [
   {
+    "code": "PROPERTY",
     "title": "material",
     "description": "material",
     "return": "RedBaseMaterial 확장 Instance"
   },
   {
+    "code": "PROPERTY",
     "title": "perspectiveScale",
     "description": "\n퍼스펙티브에 스케일이 반응할것인가 여부\n기본값 true\n",
     "return": "Boolean"
@@ -25,7 +27,17 @@
         }
       ]
     },
+    "extends": [
+      "RedBaseContainer",
+      "RedBaseObject3D"
+    ],
     "example": "\nvar tScene;\nvar tSprite3D;\ntScene = RedScene();\ntSprite3D = RedSprite3D(RedGL Instance, RedColorMaterial(RedGL Instance))\ntScene.addChild(tSprite3D)\n",
     "return": "RedSprite3D Instance"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "sprite3DYn",
+    "description": "\nsprite3D 모드 사용 여부\n기본값 true\n",
+    "return": "Boolean"
   }
 ]

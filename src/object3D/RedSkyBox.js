@@ -17,6 +17,9 @@ var RedSkyBox;
 				 `스카이박스 이미지 리스트`
 			 ]
 		 },
+         extends : [
+		    'RedBaseObject3D'
+		 ],
 		 example : `
 			 var tScene3D;
 			 tScene3D = RedScene()

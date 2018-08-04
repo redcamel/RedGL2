@@ -155,6 +155,9 @@ var RedEnvironmentMaterial;
 				 {type:'RedBitmapTexture'}
 			 ]
 		 },
+		 extends : [
+		    'RedBaseMaterial'
+		 ],
 		 example : `
 			 RedEnvironmentMaterial(
 				 RedGL Instance,
@@ -217,6 +220,7 @@ var RedEnvironmentMaterial;
 	};
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`alpha`,
 		 description : `기본값 : 1`,
 		 return : 'Number'
@@ -225,6 +229,7 @@ var RedEnvironmentMaterial;
 	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'alpha', 'number', {min: 0, max: 1});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`diffuseTexture`,
 		 return : 'RedBitmapTexture'
 	 }
@@ -232,6 +237,7 @@ var RedEnvironmentMaterial;
 	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'diffuseTexture', 'sampler2D', samplerOption);
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`environmentTexture`,
 		 return : 'RedBitmapCubeTexture'
 	 }
@@ -242,6 +248,7 @@ var RedEnvironmentMaterial;
 	});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`normalTexture`,
 		 return : 'RedBitmapTexture'
 	 }
@@ -249,6 +256,7 @@ var RedEnvironmentMaterial;
 	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'normalTexture', 'sampler2D', samplerOption);
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`specularTexture`,
 		 return : 'RedBitmapTexture'
 	 }
@@ -256,6 +264,7 @@ var RedEnvironmentMaterial;
 	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'specularTexture', 'sampler2D', samplerOption);
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`displacementTexture`,
 		 return : 'RedBitmapTexture'
 	 }
@@ -263,6 +272,7 @@ var RedEnvironmentMaterial;
 	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'displacementTexture', 'sampler2D', samplerOption);
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`normalPower`,
 		 description : `기본값 : 1`,
 		 return : 'number'
@@ -271,6 +281,7 @@ var RedEnvironmentMaterial;
 	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'normalPower', 'number', {'min': 0});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`shininess`,
 		 description : `기본값 : 16`,
 		 return : 'Number'
@@ -279,6 +290,7 @@ var RedEnvironmentMaterial;
 	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'shininess', 'number', {'min': 0});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`specularPower`,
 		 description : `기본값 : 1`,
 		 return : 'Number'
@@ -287,6 +299,7 @@ var RedEnvironmentMaterial;
 	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'specularPower', 'number', {'min': 0});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`reflectionPower`,
 		 description : `기본값 : 1`,
 		 return : 'Number'
@@ -295,13 +308,30 @@ var RedEnvironmentMaterial;
 	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'reflectionPower', 'number', {'min': 0});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`displacementPower`,
 		 description : `기본값 : 0`,
 		 return : 'Number'
 	 }
 	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'displacementPower', 'number', {'min': 0});
+	/**DOC:
+	 {
+	     code : 'PROPERTY',
+		 title :`displacementFlowSpeedX`,
+		 description : `기본값 : 0`,
+		 return : 'Number'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'displacementFlowSpeedX', 'number');
+	/**DOC:
+	 {
+	     code : 'PROPERTY',
+		 title :`displacementFlowSpeedY`,
+		 description : `기본값 : 0`,
+		 return : 'Number'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'displacementFlowSpeedY', 'number');
 	Object.freeze(RedEnvironmentMaterial);
 })();

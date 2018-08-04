@@ -13,6 +13,18 @@
   },
   {
     "code": "CONST",
+    "title": "RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT",
+    "description": "\n최대 허용 직사광 갯수\n",
+    "return": "Number"
+  },
+  {
+    "code": "CONST",
+    "title": "RedSystemShaderCode.MAX_POINT_LIGHT",
+    "description": "\n최대 허용 점광 갯수\n",
+    "return": "Number"
+  },
+  {
+    "code": "CONST",
     "title": "RedSystemShaderCode.vShareSource",
     "description": "\n버텍스 쉐이더 기본 생성코드 리스트\n",
     "return": "Array"

@@ -9,7 +9,7 @@ var RedObitController;
 			 RedObitController Instance 생성자.
 		 `,
 		 example : `
-			 RedObitController()
+			 RedObitController(RedGL Instance)
 		 `,
 		 params : {
 			 redGL : [
@@ -39,6 +39,7 @@ var RedObitController;
 		this['pan'] = 0;
 		/**DOC:
 		 {
+		     code : 'PROPERTY',
 			 title :`camera`,
 			 description : `
 				 컨트롤러 생성시 자동생성됨
@@ -83,6 +84,7 @@ var RedObitController;
 
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`centerX`,
 		 return : 'Number'
 	 }
@@ -90,6 +92,7 @@ var RedObitController;
 	RedDefinePropertyInfo.definePrototype('RedObitController', 'centerX', 'number');
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`centerY`,
 		 return : 'Number'
 	 }
@@ -97,6 +100,7 @@ var RedObitController;
 	RedDefinePropertyInfo.definePrototype('RedObitController', 'centerY', 'number');
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`centerZ`,
 		 return : 'Number'
 	 }
@@ -104,6 +108,7 @@ var RedObitController;
 	RedDefinePropertyInfo.definePrototype('RedObitController', 'centerZ', 'number');
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`distance`,
 		 return : 'Number'
 	 }
@@ -111,6 +116,7 @@ var RedObitController;
 	RedDefinePropertyInfo.definePrototype('RedObitController', 'distance', 'number',{min: 1});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`speedDistance`,
 		 description : `
 			 거리 속도
@@ -122,6 +128,7 @@ var RedObitController;
 	RedDefinePropertyInfo.definePrototype('RedObitController', 'speedDistance', 'number', {min: 0});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`delayDistance`,
 		 description : `
 			 거리 지연 속도
@@ -133,6 +140,7 @@ var RedObitController;
 	RedDefinePropertyInfo.definePrototype('RedObitController', 'delayDistance', 'number', {min: 0});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`speedRotation`,
 		 description : `
 			 회전 속도
@@ -144,6 +152,7 @@ var RedObitController;
 	RedDefinePropertyInfo.definePrototype('RedObitController', 'speedRotation', 'number', {min: 0});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`delayRotation`,
 		 description : `
 			 회전 지연 속도
@@ -155,6 +164,7 @@ var RedObitController;
 	RedDefinePropertyInfo.definePrototype('RedObitController', 'delayRotation', 'number', {min: 0});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`pan`,
 		 return : 'Number'
 	 }
@@ -162,6 +172,7 @@ var RedObitController;
 	RedDefinePropertyInfo.definePrototype('RedObitController', 'pan', 'number');
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`tilt`,
 		 return : 'Number'
 	 }
@@ -169,6 +180,7 @@ var RedObitController;
 	RedDefinePropertyInfo.definePrototype('RedObitController', 'tilt', 'number');
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`maxTilt`,
 		  description : `
 			 기본값 : 90
@@ -179,6 +191,7 @@ var RedObitController;
 	RedDefinePropertyInfo.definePrototype('RedObitController', 'maxTilt', 'number', {max: 90});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`minTilt`,
 		  description : `
 			 기본값 : -90
@@ -187,6 +200,14 @@ var RedObitController;
 	 }
 	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedObitController', 'minTilt', 'number', {max: -90});
+	/**DOC:
+	 {
+	     code : 'METHOD',
+		 title :`update`,
+		 description : '업데이트',
+		 return : 'void'
+	 }
+	 :DOC*/
 	RedObitController.prototype['update'] = (function () {
 		var tDelayRotation;
 		var tCamera;

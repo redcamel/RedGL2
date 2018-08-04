@@ -2,7 +2,7 @@
 var RedGridMaterial;
 (function () {
 	var vSource, fSource;
-	var PROGRAM_NAME = 'gridMaterialProgram';
+	var PROGRAM_NAME = 'RedGridMaterialProgram';
 	var checked;
 	vSource = function () {
 		/* @preserve
@@ -47,6 +47,9 @@ var RedGridMaterial;
 				 {type:'RedGL'}
 			 ]
 		 },
+		 extends : [
+		    'RedBaseMaterial'
+		 ],
 		 example : `
 			 RedGridMaterial(RedGL Instance)
 		 `,

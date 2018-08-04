@@ -8,7 +8,7 @@ var RedBaseController;
 		 description : `
 			 RedBaseController 기저층
 		 `,
-		 return : 'void'
+		 return : 'RedBaseController instance'
 	 }
 	 :DOC*/
 	RedBaseController = function () {};

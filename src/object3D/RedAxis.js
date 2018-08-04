@@ -13,6 +13,10 @@ var RedAxis;
 				 {type:'RedGL'}
 			 ],
 		 },
+		 extends : [
+		    'RedBaseContainer',
+		    'RedBaseObject3D'
+		 ],
 		 example : `
 			 var tScene;
 			 tScene = RedScene();

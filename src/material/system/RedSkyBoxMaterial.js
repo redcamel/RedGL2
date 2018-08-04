@@ -2,7 +2,7 @@
 var RedSkyBoxMaterial;
 (function () {
 	var vSource, fSource;
-	var PROGRAM_NAME = 'skyBoxProgram';
+	var PROGRAM_NAME = 'RedSkyBoxMaterialProgram';
 	var checked;
 	vSource = function () {
 		/* @preserve
@@ -49,6 +49,9 @@ var RedSkyBoxMaterial;
 				 {type:'RedBitmapCubeTexture'}
 			 ]
 		 },
+		 extends : [
+		    'RedBaseMaterial'
+		 ],
 		 example : `
 			 RedSkyBoxMaterial(
 				 RedGL Instance,
@@ -77,6 +80,7 @@ var RedSkyBoxMaterial;
 	RedSkyBoxMaterial.prototype = new RedBaseMaterial();
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`skyBoxTexture`,
 		 return : 'RedBitmapCubeTexture'
 	 }

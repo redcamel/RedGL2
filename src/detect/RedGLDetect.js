@@ -54,6 +54,46 @@ var RedGLDetect;
 			this[k] = {};
 			while ( i-- ) this[k][tKey = tList[i]] = gl.getParameter(gl[tKey]);
 		}
-	}
+	};
+	/**DOC:
+	 {
+		 code : 'PROPERTY',
+		 title :`basic`,
+		 description : `기본 디텍팅 값`,
+		 return : 'Object'
+	 }
+	 :DOC*/
+	/**DOC:
+	 {
+		 code : 'PROPERTY',
+		 title :`frameBuffer`,
+		 description : `frameBuffer 관련 디텍팅 값`,
+		 return : 'Object'
+	 }
+	 :DOC*/
+	/**DOC:
+	 {
+		 code : 'PROPERTY',
+		 title :`frameBuffer`,
+		 description : `vertexShader 관련 디텍팅 값`,
+		 return : 'Object'
+	 }
+	 :DOC*/
+	/**DOC:
+	 {
+		 code : 'PROPERTY',
+		 title :`frameBuffer`,
+		 description : `fragmentShader 관련 디텍팅 값`,
+		 return : 'Object'
+	 }
+	 :DOC*/
+	/**DOC:
+	 {
+		 code : 'PROPERTY',
+		 title :`frameBuffer`,
+		 description : `texture 관련 디텍팅 값`,
+		 return : 'Object'
+	 }
+	 :DOC*/
 	Object.freeze(RedGLDetect);
 })();

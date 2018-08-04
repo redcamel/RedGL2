@@ -120,6 +120,9 @@ var RedBox;
 				 '기본값 : 1'
 			 ]
 		 },
+		 extends : [
+		    'RedGeometry'
+		 ],
 		 example : `
 			 RedBox(RedGL Instance);
 			 RedBox(RedGL Instance, 1, 1, 1);

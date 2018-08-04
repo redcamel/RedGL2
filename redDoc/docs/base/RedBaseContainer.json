@@ -72,8 +72,11 @@
   {
     "constructorYn": true,
     "title": "RedBaseContainer",
-    "description": "\nDisplayContainer 기저층\n",
-    "return": "void"
+    "description": "\nRedBaseContainer 기저층\n",
+    "extends": [
+      "RedBaseObject3D"
+    ],
+    "return": "RedBaseContainer Instance"
   },
   {
     "code": "METHOD",
@@ -103,6 +106,48 @@
         {
           "type": "uint"
         }
+      ]
+    },
+    "return": "void"
+  },
+  {
+    "code": "METHOD",
+    "title": "sortGeometry",
+    "description": "지오메트리 순으로 자식들을 정렬",
+    "params": {
+      "recursive": [
+        {
+          "type": "Boolean"
+        },
+        "true 입력시 자식리스트까지 모두 정렬"
+      ]
+    },
+    "return": "void"
+  },
+  {
+    "code": "METHOD",
+    "title": "sortGeometry",
+    "description": "재질 순으로 자식들을 정렬",
+    "params": {
+      "recursive": [
+        {
+          "type": "Boolean"
+        },
+        "true 입력시 자식리스트까지 모두 정렬"
+      ]
+    },
+    "return": "void"
+  },
+  {
+    "code": "METHOD",
+    "title": "sortGeometryAndMaterial",
+    "description": "지오메트리/재질순으로 자식들을 정렬",
+    "params": {
+      "recursive": [
+        {
+          "type": "Boolean"
+        },
+        "true 입력시 자식리스트까지 모두 정렬"
       ]
     },
     "return": "void"

@@ -1,5 +1,6 @@
 [
   {
+    "code": "PROPERTY",
     "title": "debug",
     "description": "디버그오브젝트 활성화 여부",
     "return": "Boolean"
@@ -26,31 +27,38 @@
         "알파값"
       ]
     },
+    "extends": [
+      "RedBaseLight"
+    ],
     "example": "\nRedDirectionalLight(RedGL Instance, hex, alpha)\n",
     "return": "RedDirectionalLight Instance"
   },
   {
-    "title": "RedDirectionalLight.type",
+    "title": "RedDirectionalLight.TYPE",
     "code": "CONST",
     "description": "RedDirectionalLight 타입상수",
     "return": "String"
   },
   {
+    "code": "PROPERTY",
     "title": "type",
     "description": "RedDirectionalLight['TYPE']",
     "return": "String"
   },
   {
+    "code": "PROPERTY",
     "title": "x",
     "description": "\n기본값 : 0\n포지션값은 광원계산시 0,0,0을 바라보는 방향벡터로 계산됨\n",
     "return": "Number"
   },
   {
+    "code": "PROPERTY",
     "title": "y",
     "description": "\n기본값 : 0\n포지션값은 광원계산시 0,0,0을 바라보는 방향벡터로 계산됨\n",
     "return": "Number"
   },
   {
+    "code": "PROPERTY",
     "title": "z",
     "description": "\n기본값 : 0\n포지션값은 광원계산시 0,0,0을 바라보는 방향벡터로 계산됨\n",
     "return": "Number"

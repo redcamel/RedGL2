@@ -48,12 +48,7 @@ var transformString = function (s) {
 		var result = docParser()
 		if ( result ) list[index] = result
 	})
-	var t0 = list.filter(function (a) {
-		if ( a.hasOwnProperty('copyProto') ) return true
-	})
-	list = list.filter(function (a) {
-		if ( !a.hasOwnProperty('copyProto') ) return true
-	})
+
 	list.sort(function (a, b) {
 		a = a['title'].toLowerCase()
 		b = b['title'].toLowerCase()
@@ -61,7 +56,7 @@ var transformString = function (s) {
 		if ( a < b ) return -1
 		return 0
 	})
-	return list.concat(t0)
+	return list
 };
 var myTransformation = textTransformation(transformString);
 gulp.task('make-doc-list', function () {

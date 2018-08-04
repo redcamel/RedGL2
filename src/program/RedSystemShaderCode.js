@@ -92,7 +92,27 @@ var RedSystemShaderCode;
 			],
 			systemUniform: {}
 		};
+		/**DOC:
+		 {
+			 code: 'CONST',
+			 title :`RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT`,
+			 description : `
+				 최대 허용 직사광 갯수
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
 		RedSystemShaderCode['MAX_DIRECTIONAL_LIGHT'] = maxDirectionalLight;
+		/**DOC:
+		 {
+			 code: 'CONST',
+			 title :`RedSystemShaderCode.MAX_POINT_LIGHT`,
+			 description : `
+				 최대 허용 점광 갯수
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
 		RedSystemShaderCode['MAX_POINT_LIGHT'] = maxPointLight;
 		[RedSystemShaderCode.vShareSource, RedSystemShaderCode.fShareSource].forEach(function (data) {
 			data.forEach(function (v) {
