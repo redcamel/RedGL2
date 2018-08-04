@@ -50,11 +50,26 @@ var RedShadowManager;
 			}
 		})()
 	};
+	/**DOC:
+	 {
+		 code:`PROPERTY`,
+		 title :`directionalShadow`,
+		 description : `
+			 directionalShadow 지정
+		 `,
+		 params : {
+		    shadow : [
+		        { type : 'RedDirectionalShadow' }
+		    ]
+		 },
+		 return : 'directionalShadow Instance'
+	 }
+	 :DOC*/
 	Object.defineProperty(RedShadowManager.prototype, 'directionalShadow', {
 		get: function () { return this['_directionalShadow']},
-		set: function (v) {
-			(!v || v instanceof RedDirectionalShadow) || RedGLUtil.throwFunc('RedShadowManager - directionalShadow : RedDirectionalShadow Instance만 허용.', v);
-			this['_directionalShadow'] = v
+		set: function (shadow) {
+			(!shadow || shadow instanceof RedDirectionalShadow) || RedGLUtil.throwFunc('RedShadowManager - directionalShadow : RedDirectionalShadow Instance만 허용.', shadow);
+			this['_directionalShadow'] = shadow
 		}
 	});
 	Object.freeze(RedShadowManager);

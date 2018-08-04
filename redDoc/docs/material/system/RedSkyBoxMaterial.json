@@ -15,10 +15,14 @@
         }
       ]
     },
+    "extends": [
+      "RedBaseMaterial"
+    ],
     "example": "\nRedSkyBoxMaterial(\nRedGL Instance,\nRedBitmapCubeTexture Instance\n)\n",
     "return": "RedSkyBoxMaterial Instance"
   },
   {
+    "code": "PROPERTY",
     "title": "skyBoxTexture",
     "return": "RedBitmapCubeTexture"
   }

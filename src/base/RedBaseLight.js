@@ -15,9 +15,9 @@ var RedBaseLight;
 	RedBaseLight.prototype = {};
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`intensity`,
 		 description : `
-			 라이트 강도
 			 기본값 : 1
 		 `,
 		 return : 'Number'
@@ -26,9 +26,10 @@ var RedBaseLight;
 	RedDefinePropertyInfo.definePrototype('RedBaseLight', 'intensity', 'number', {'min': 0});
 	/**DOC:
 	 {
+         code : 'PROPERTY',
 		 title :`alpha`,
 		 description : `
-			 기본값 : 0.1
+			 기본값 : 1
 		 `,
 		 return : 'Number'
 	 }
@@ -41,6 +42,7 @@ var RedBaseLight;
 	});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`color`,
 		 description : `
 			색상

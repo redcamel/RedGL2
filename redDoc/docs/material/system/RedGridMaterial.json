@@ -10,6 +10,9 @@
         }
       ]
     },
+    "extends": [
+      "RedBaseMaterial"
+    ],
     "example": "\nRedGridMaterial(RedGL Instance)\n",
     "return": "RedGridMaterial Instance"
   }

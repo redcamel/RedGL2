@@ -1,5 +1,6 @@
 [
   {
+    "code": "PROPERTY",
     "title": "alpha",
     "description": "기본값 : 1",
     "return": "Number"
@@ -15,6 +16,9 @@
         }
       ]
     },
+    "extends": [
+      "RedBaseMaterial"
+    ],
     "return": "RedParticleColorMaterial Instance"
   }
 ]

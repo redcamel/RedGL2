@@ -6,13 +6,30 @@ var RedBaseContainer;
 		 constructorYn : true,
 		 title :`RedBaseContainer`,
 		 description : `
-			 DisplayContainer 기저층
+			 RedBaseContainer 기저층
 		 `,
-		 return : 'void'
+		 extends : [
+		    'RedBaseObject3D'
+		 ],
+		 return : 'RedBaseContainer Instance'
 	 }
 	 :DOC*/
 	RedBaseContainer = function () {};
 	RedBaseContainer.prototype = new RedBaseObject3D();
+	/**DOC:
+	 {
+		 code : 'METHOD',
+		 title :`sortGeometry`,
+		 description : `지오메트리 순으로 자식들을 정렬`,
+		 params:{
+			 recursive : [
+				 {type:'Boolean'},
+				 'true 입력시 자식리스트까지 모두 정렬'
+			 ]
+		 },
+		 return : 'void'
+	 }
+	 :DOC*/
 	RedBaseContainer.prototype['sortGeometry'] = function (recursive) {
 		if ( recursive ) {
 			var i = this.children.length;
@@ -26,6 +43,20 @@ var RedBaseContainer;
 			return 0
 		})
 	};
+	/**DOC:
+	 {
+		 code : 'METHOD',
+		 title :`sortGeometry`,
+		 description : `재질 순으로 자식들을 정렬`,
+		 params:{
+			 recursive : [
+				 {type:'Boolean'},
+				 'true 입력시 자식리스트까지 모두 정렬'
+			 ]
+		 },
+		 return : 'void'
+	 }
+	 :DOC*/
 	RedBaseContainer.prototype['sortMaterial'] = function (recursive) {
 		if ( recursive ) {
 			var i = this.children.length;
@@ -39,6 +70,20 @@ var RedBaseContainer;
 			return 0
 		})
 	};
+	/**DOC:
+	 {
+		 code : 'METHOD',
+		 title :`sortGeometryAndMaterial`,
+		 description : `지오메트리/재질순으로 자식들을 정렬`,
+		 params:{
+			 recursive : [
+				 {type:'Boolean'},
+				 'true 입력시 자식리스트까지 모두 정렬'
+			 ]
+		 },
+		 return : 'void'
+	 }
+	 :DOC*/
 	RedBaseContainer.prototype['sortGeometryAndMaterial'] = function (recursive) {
 		//TODO: 정의,검증 해야함
 		if ( recursive ) {

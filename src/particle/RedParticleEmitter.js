@@ -14,9 +14,20 @@ var RedParticleEmitter;
 		 params : {
 			 redGL : [
 				 {type:'RedGL'}
+			 ],
+			 defineObject : [
+			    {type:'Object'},
+			    '파티클 정의 오브젝트'
+			 ],
+			 material : [
+			    {type:'RedParticleColorMaterial Instance or RedParticleBitmapMaterial Instance'},
 			 ]
 		 },
-		 return : 'RedProgram Instance'
+		 extends : [
+		    'RedBaseContainer',
+		    'RedBaseObject3D'
+		 ],
+		 return : 'RedParticleEmitter Instance'
 	 }
 	 :DOC*/
 	RedParticleEmitter = function (redGL, defineObject, material) {

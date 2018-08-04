@@ -53,6 +53,7 @@ var RedView;
 		else RedGLUtil.throwFunc('RedView : RedCamera or XXController Instance만 허용', '입력값 : ' + camera);
 		/**DOC:
 		 {
+		     code : 'PROPERTY',
 			 title :`key`,
 			 description : `고유키`,
 			 return : 'String'
@@ -61,6 +62,7 @@ var RedView;
 		this['key'] = key;
 		/**DOC:
 		 {
+		     code : 'PROPERTY',
 			 title :`scene`,
 			 description : `scene`,
 			 return : 'RedScene'
@@ -69,6 +71,7 @@ var RedView;
 		this['scene'] = scene;
 		/**DOC:
 		 {
+		     code : 'PROPERTY',
 			 title :`postEffectManager`,
 			 description : `
 				 postEffectManager
@@ -79,6 +82,7 @@ var RedView;
 		this['postEffectManager'] = RedPostEffectManager(redGL);
 		/**DOC:
 		 {
+		     code : 'PROPERTY',
 			 title :`camera`,
 			 description : `camera`,
 			 return : 'RedCamera'
@@ -102,6 +106,14 @@ var RedView;
 				  씬의 사이즈를 결정.
 				  px, % 단위를 받음.
 			 `,
+			 params : {
+			    width : [
+			        { type : 'Number or %' }
+			    ],
+			    height : [
+			        { type : 'Number or %' }
+			    ]
+			 },
 			 example : `
 				  var tWorld;
 				  RedView('test', RedGL Instance, RedScene Instance, RedCamera Instance); // test라는 키값을 가진 RedView 생성
@@ -133,6 +145,14 @@ var RedView;
 				 씬의 위치를 결정.
 				 px, % 단위를 받음.
 			 `,
+			 params : {
+			    x : [
+			        { type : 'Number or %' }
+			    ],
+			    y : [
+			        { type : 'Number or %' }
+			    ]
+			 },
 			 example : `
 				  var tWorld;
 				  tCamera = RedCamera(); // 카메라생성

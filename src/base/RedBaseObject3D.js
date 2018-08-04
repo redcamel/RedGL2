@@ -8,14 +8,14 @@ var RedBaseObject3D;
 		 description : `
 			 RedBaseObject3D 기저층
 		 `,
-		 return : 'void'
+		 return : 'RedBaseObject3D Instance'
 	 }
 	 :DOC*/
 	RedBaseObject3D = function () {};
 	/**DOC:
 	 {
 		 title :`RedBaseObject3D.build`,
-		 code : 'CONST',
+		 code : 'STATIC METHOD',
 		 description : `
 			RedBaseObject3D가 가지고있는 속성을 해당 인스턴스에 복사하기위해사용
 		 `,
@@ -37,6 +37,7 @@ var RedBaseObject3D;
 	RedBaseObject3D['build'] = function (gl) {
 		/**DOC:
 		 {
+		     code : 'PROPERTY',
 			 title :`useCullFace`,
 			 description : `
 				 컬링 사용여부
@@ -48,6 +49,7 @@ var RedBaseObject3D;
 		this['useCullFace'] = true;
 		/**DOC:
 		 {
+             code : 'PROPERTY',
 			 title :`cullFace`,
 			 description : `
 				 컬링 페이스 설정
@@ -59,6 +61,7 @@ var RedBaseObject3D;
 		this['cullFace'] = gl.BACK;
 		/**DOC:
 		 {
+		     code : 'PROPERTY',
 			 title :`useDepthMask`,
 			 description : `
 				 뎁스 테스트 사용여부
@@ -70,6 +73,7 @@ var RedBaseObject3D;
 		this['useDepthMask'] = true;
 		/**DOC:
 		 {
+		     code : 'PROPERTY',
 			 title :`useDepthTest`,
 			 description : `
 				 뎁스 테스트 사용여부
@@ -81,6 +85,7 @@ var RedBaseObject3D;
 		this['useDepthTest'] = true;
 		/**DOC:
 		 {
+		     code : 'PROPERTY',
 			 title :`depthTestFunc`,
 			 description : `
 				 뎁스 테스트 함수 설정
@@ -92,6 +97,7 @@ var RedBaseObject3D;
 		this['depthTestFunc'] = gl.LEQUAL;
 		/**DOC:
 		 {
+		     code : 'PROPERTY',
 			 title :`useBlendMode`,
 			 description : `
 				 블렌드 모드 사용여부
@@ -103,6 +109,7 @@ var RedBaseObject3D;
 		this['useBlendMode'] = true;
 		/**DOC:
 		 {
+		     code : 'PROPERTY',
 			 title :`blendSrc`,
 			 description : `
 				 블렌드 소스값 factor
@@ -114,6 +121,7 @@ var RedBaseObject3D;
 		this['blendSrc'] = gl.SRC_ALPHA;
 		/**DOC:
 		 {
+		     code : 'PROPERTY',
 			 title :`blendDst`,
 			 description : `
 				 블렌드 목표값 factor
@@ -125,6 +133,7 @@ var RedBaseObject3D;
 		this['blendDst'] = gl.ONE_MINUS_SRC_ALPHA;
 		/**DOC:
 		 {
+		     code : 'PROPERTY',
 			 title :`drawMode`,
 			 description : `
 				 기본값 : gl.TRIANGLES
@@ -136,6 +145,7 @@ var RedBaseObject3D;
 		this['drawMode'] = gl.TRIANGLES;
 		/**DOC:
 		 {
+		     code : 'PROPERTY',
 			 title :`pointSize`,
 			 description : `
 				 기본값 : 1
@@ -150,6 +160,7 @@ var RedBaseObject3D;
 		this['scaleX'] = this['scaleY'] = this['scaleZ'] = 1;
 		/**DOC:
 		 {
+		    code : 'PROPERTY',
 			title :`matrix`,
 			description : `
 			matrix 자동계산여부
@@ -160,6 +171,7 @@ var RedBaseObject3D;
 		this['autoUpdateMatrix'] = true;
 		/**DOC:
 		 {
+		    code : 'PROPERTY',
 			title :`matrix`,
 			description : `
 			matrix 렌더링시 자동계산
@@ -170,6 +182,7 @@ var RedBaseObject3D;
 		this['matrix'] = mat4.create();
 		/**DOC:
 		 {
+		    code : 'PROPERTY',
 			title :`normalMatrix`,
 			description : `
 			normalMatrix 렌더링시 자동계산
@@ -180,16 +193,21 @@ var RedBaseObject3D;
 		this['normalMatrix'] = mat4.create();
 		/**DOC:
 		 {
+		     code : 'PROPERTY',
 			 title :`children`,
+			 description : `
+			    자식 리스트
+			 `,
 			 return : 'Array'
 		 }
 		 :DOC*/
 		this['children'] = [];
 		/**DOC:
 		 {
+		     code : 'PROPERTY',
 			 title :`useLOD`,
 			 description : `LOD사용여부`,
-			 return : 'Array'
+			 return : 'Boolean'
 		 }
 		 :DOC*/
 		this['useLOD'] = false;
@@ -209,11 +227,12 @@ var RedBaseObject3D;
 			 title :`addLOD`,
 			 code : 'METHOD',
 			 description : `
-				 LOD 추가
+				 LOD 추가.
+				 추가시 geometry, material 둘중 하나는 반드시 입력되어야함.
 			 `,
 			 params : {
 				 level : [
-					 {type : 'int' }
+					 {type : '*' }
 				 ],
 				 distance : [
 					 {type : 'Number' }
@@ -230,24 +249,22 @@ var RedBaseObject3D;
 		 :DOC*/
 		addLOD: (function () {
 			var tData;
-			return function (level, distance, geometry, material) {
+			return function (levelName, distance, geometry, material) {
 				geometry || material || RedGL.throwFunc('RedBaseObject3D - addLOD : geometry, material 둘중하나는 반드시 입력되어야함');
 				tData = {
-					level: level,
+					level: levelName,
 					distance: distance,
 					geometry: geometry ? geometry : this['geometry'],
 					material: material ? material : this['material']
 				};
-				this['_lodLevels'][level] = tData;
+				this['_lodLevels'][levelName] = tData;
 			}
 		})(),
 		/**DOC:
 		 {
-			 title :`addLOD`,
+			 title :`removeLOD`,
 			 code : 'METHOD',
-			 description : `
-				 LOD 삭제
-			 `,
+			 description : `LOD 삭제`,
 			 params : {
 				 level : [
 					 {type : 'int' }
@@ -266,6 +283,17 @@ var RedBaseObject3D;
 			 description : `
 				 로컬좌표를 RedWorld 좌표로 변경
 			 `,
+			  params : {
+				 x : [
+					 {type : 'Number' }
+				 ],
+				 y : [
+					 {type : 'Number' }
+				 ],
+				 z : [
+					 {type : 'Number' }
+				 ]
+			 },
 			 return : 'Array'
 		 }
 		 :DOC*/
@@ -291,8 +319,19 @@ var RedBaseObject3D;
 			 title :`worldToLocal`,
 			 code : 'METHOD',
 			 description : `
-				 RedWorld좌료를 로컬좌료로 변환
+				 RedWorld 좌표를 로컬좌표로 변환
 			 `,
+			 params : {
+				 x : [
+					 {type : 'Number' }
+				 ],
+				 y : [
+					 {type : 'Number' }
+				 ],
+				 z : [
+					 {type : 'Number' }
+				 ]
+			 },
 			 return : 'Array'
 		 }
 		 :DOC*/
@@ -320,6 +359,11 @@ var RedBaseObject3D;
 			 description : `
 				 스크린좌표반환
 			 `,
+			 params : {
+				 redView : [
+					 {type : 'RedView' }
+				 ]
+			 },
 			 return : 'Array'
 		 }
 		 :DOC*/
@@ -357,18 +401,21 @@ var RedBaseObject3D;
 	//TODO: xyz,scaleXYZ,rotationXYZ 렌더러 계산시 get/set 함수 안타게 추적해야함
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`x`,
 		 return : 'Number'
 	 }
 	 :DOC*/
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`y`,
 		 return : 'Number'
 	 }
 	 :DOC*/
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`z`,
 		 return : 'Number'
 	 }
@@ -378,18 +425,21 @@ var RedBaseObject3D;
 	// RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'z', 'number');
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`rotationX`,
 		 return : 'Number'
 	 }
 	 :DOC*/
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`rotationY`,
 		 return : 'Number'
 	 }
 	 :DOC*/
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`rotationZ`,
 		 return : 'Number'
 	 }
@@ -399,18 +449,21 @@ var RedBaseObject3D;
 	// RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'scaleZ', 'number');
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`scaleX`,
 		 return : 'Number'
 	 }
 	 :DOC*/
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`scaleY`,
 		 return : 'Number'
 	 }
 	 :DOC*/
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`scaleZ`,
 		 return : 'Number'
 	 }

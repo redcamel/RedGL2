@@ -96,6 +96,9 @@ var RedBitmapCubeTexture;
 			    {type:'Function'}
 			 ]
 		 },
+		 extends : [
+		    'RedBaseTexture'
+		 ],
 		 example : `
 		 RedBitmapCubeTexture( RedGL Instance,  srcList, {
 			 min: gl.LINEAR_MIPMAP_NEAREST,
@@ -126,6 +129,16 @@ var RedBitmapCubeTexture;
 		console.log(this);
 	};
 	RedBitmapCubeTexture.prototype = new RedBaseTexture();
+	/**DOC:
+	 {
+		 code:`PROPERTY`,
+		 title :`srcList`,
+		 description : `
+			 srcList
+		 `,
+		 return : 'void'
+	 }
+	 :DOC*/
 	Object.defineProperty(RedBitmapCubeTexture.prototype, 'srcList', {
 		get: function () {return this['_srcList']},
 		set: function (srcList) {
@@ -135,6 +148,16 @@ var RedBitmapCubeTexture;
 			this._load(true)
 		}
 	});
+	/**DOC:
+	 {
+		 code:`PROPERTY`,
+		 title :`option`,
+		 description : `
+			 텍스쳐 옵션 정의
+		 `,
+		 return : 'void'
+	 }
+	 :DOC*/
 	Object.defineProperty(RedBitmapCubeTexture.prototype, 'option', {
 		get: function () {return this['_option']},
 		set: function (v) {

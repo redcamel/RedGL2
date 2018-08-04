@@ -19,6 +19,10 @@ var RedMesh;
 				 {type:'RedBaseMaterial 확장 Instance'}
 			 ]
 		 },
+		 extends : [
+		    'RedBaseContainer',
+		    'RedBaseObject3D'
+		 ],
 		 example : `
 			 var tScene;
 			 var tMesh;
@@ -35,6 +39,7 @@ var RedMesh;
 		RedBaseObject3D['build'].call(this, redGL.gl);
 		/**DOC:
 		 {
+		     code : 'PROPERTY',
 			 title :`geometry`,
 			 description : `geometry`,
 			 return : 'RedGeometry'
@@ -43,6 +48,7 @@ var RedMesh;
 		this['geometry'] = geometry;
 		/**DOC:
 		 {
+		     code : 'PROPERTY',
 			 title :`material`,
 			 description : `material`,
 			 return : 'RedBaseMaterial 확장 Instance'

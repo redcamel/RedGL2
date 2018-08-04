@@ -254,6 +254,7 @@ var RedProgram;
 		}
 		/**DOC:
 		 {
+		     code : 'PROPERTY',
 			 title :`key`,
 			 description : `고유키`,
 			 return : 'String'
@@ -262,6 +263,7 @@ var RedProgram;
 		this['key'] = key;
 		/**DOC:
 		 {
+		     code : 'PROPERTY',
 			 title :`webglProgram`,
 			 description : `실제 프로그램(WebGLProgram Instance)`,
 			 return : 'WebGLShader'
@@ -270,6 +272,7 @@ var RedProgram;
 		this['webglProgram'] = makeWebGLProgram(tGL, key, vertexShader, fragmentShader);
 		/**DOC:
 		 {
+		     code : 'PROPERTY',
 			 title :`attributeLocation`,
 			 description : `어리뷰트 로케이션 정보`,
 			 return : 'Array'
@@ -278,6 +281,8 @@ var RedProgram;
 		this['attributeLocation'] = [];
 		/**DOC:
 		 {
+		     code : 'PROPERTY',
+		     code : 'PROPERTY',
 			 title :`uniformLocation`,
 			 description : `유니폼 로케이션 정보`,
 			 return : 'Array'
@@ -286,6 +291,7 @@ var RedProgram;
 		this['uniformLocation'] = [];
 		/**DOC:
 		 {
+		     code : 'PROPERTY',
 			 title :`systemUniformLocation`,
 			 description : `시스템 유니폼 로케이션 정보`,
 			 return : 'Array'
@@ -294,7 +300,7 @@ var RedProgram;
 		this['systemUniformLocation'] = [];
 		// 쉐이더 로케이션 찾기
 		tGL.useProgram(this['webglProgram']);
-		MAX_SAMPLER_INDEX = redGL._detect['texture']['MAX_COMBINED_TEXTURE_IMAGE_UNITS'];
+		MAX_SAMPLER_INDEX = redGL['detect']['texture']['MAX_COMBINED_TEXTURE_IMAGE_UNITS'];
 		updateLocation(this, tGL, vertexShader);
 		updateLocation(this, tGL, fragmentShader);
 		this['_UUID'] = RedGL.makeUUID();
@@ -304,7 +310,7 @@ var RedProgram;
 	/**DOC:
 	 {
 		 title :`RedProgram.hasKey`,
-		 code: 'CONST',
+		 code: 'STATIC METHOD',
 		 description : '키에 해당하는 쉐이더 존재 여부 반환',
 		 params : {
 			 redGL : [

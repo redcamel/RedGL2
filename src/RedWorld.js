@@ -30,7 +30,7 @@ var RedWorld;
 			 title :`addView`,
 			 description : `getViewList`,
 			 params : {
-				 View :[
+				 redView :[
 					 {type:'RedView'},
 					 '추가할 RedView Instance'
 				 ]

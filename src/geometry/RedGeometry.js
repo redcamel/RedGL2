@@ -35,6 +35,7 @@ var RedGeometry;
 		}
 		/**DOC:
 		 {
+		     code : 'PROPERTY',
 			 title :`interleaveBuffer`,
 			 return : 'RedBuffer Instance'
 		 }
@@ -42,6 +43,7 @@ var RedGeometry;
 		this['interleaveBuffer'] = interleaveBuffer;
 		/**DOC:
 		 {
+		     code : 'PROPERTY',
 			 title :`indexBuffer`,
 			 return : 'RedBuffer Instance'
 		 }

@@ -1,28 +1,34 @@
 [
   {
+    "code": "PROPERTY",
     "title": "alpha",
     "description": "기본값 : 1",
     "return": "Number"
   },
   {
+    "code": "PROPERTY",
     "title": "diffuseTexture",
     "return": "RedBitmapTexture"
   },
   {
+    "code": "PROPERTY",
     "title": "displacementPower",
     "description": "기본값 : 0",
     "return": "Number"
   },
   {
+    "code": "PROPERTY",
     "title": "displacementTexture",
     "return": "RedBitmapTexture"
   },
   {
+    "code": "PROPERTY",
     "title": "normalPower",
     "description": "기본값 : 1",
     "return": "number"
   },
   {
+    "code": "PROPERTY",
     "title": "normalTexture",
     "return": "RedBitmapTexture"
   },
@@ -57,20 +63,26 @@
         }
       ]
     },
+    "extends": [
+      "RedBaseMaterial"
+    ],
     "example": "\nRedStandardMaterial(\nRedGL Instance,\nRedBitmapTexture(RedGL Instance, src), // diffuseTexture\nRedBitmapTexture(RedGL Instance, src), // normalTexture\nRedBitmapTexture(RedGL Instance, src), // specularTexture\nRedBitmapTexture(RedGL Instance, src)  // displacementTexture\n)\n",
     "return": "RedStandardMaterial Instance"
   },
   {
+    "code": "PROPERTY",
     "title": "shininess",
     "description": "기본값 : 16",
     "return": "number"
   },
   {
+    "code": "PROPERTY",
     "title": "specularPower",
     "description": "기본값 : 1",
     "return": "number"
   },
   {
+    "code": "PROPERTY",
     "title": "specularTexture",
     "return": "RedBitmapTexture"
   }

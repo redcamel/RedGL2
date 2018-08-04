@@ -29,6 +29,10 @@ var RedGrid;
 				 `격자선 컬러`
 			 ]
 		 },
+		 extends : [
+		    'RedBaseContainer',
+		    'RedBaseObject3D'
+		 ],
 		 example : `
 			 var tScene;
 			 tScene = RedScene();
@@ -91,6 +95,7 @@ var RedGrid;
 	RedGrid.prototype['_update'] = function () { this['geometry'] = this['_makeGridGeometry']() };
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`size`,
 		 description : `size`,
 		 params : {
@@ -108,6 +113,7 @@ var RedGrid;
 	});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`divisions`,
 		 description : `divisions`,
 		 params : {
@@ -125,6 +131,7 @@ var RedGrid;
 	});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`color1`,
 		 description : `color1`,
 		 params : {
@@ -133,7 +140,7 @@ var RedGrid;
 				 `기준선 컬러`
 			 ]
 		 },
-		 return : 'Number'
+		 return : 'hex'
 	 }
 	 :DOC*/
 	Object.defineProperty(RedGrid.prototype, 'color1', {
@@ -146,6 +153,7 @@ var RedGrid;
 	});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`color2`,
 		 description : `color2`,
 		 params : {
@@ -154,7 +162,7 @@ var RedGrid;
 				 `격자 컬러`
 			 ]
 		 },
-		 return : 'Number'
+		 return : 'hex'
 	 }
 	 :DOC*/
 	Object.defineProperty(RedGrid.prototype, 'color2', {

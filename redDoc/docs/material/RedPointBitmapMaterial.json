@@ -1,15 +1,18 @@
 [
   {
+    "code": "PROPERTY",
     "title": "alpha",
     "description": "기본값 : 1",
     "return": "Number"
   },
   {
+    "code": "PROPERTY",
     "title": "alphaTest",
     "description": "\n기본값 : 0.0001\n해당값보다 알파값이 작을경우 discard 처리됨.\n",
     "return": "Number"
   },
   {
+    "code": "PROPERTY",
     "title": "diffuseTexture",
     "return": "RedBitmapTexture"
   },
@@ -29,6 +32,9 @@
         }
       ]
     },
+    "extends": [
+      "RedBaseMaterial"
+    ],
     "return": "RedPointBitmapMaterial Instance"
   }
 ]

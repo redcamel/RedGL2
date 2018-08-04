@@ -1,5 +1,23 @@
 [
   {
+    "code": "addRule",
+    "title": "addRule",
+    "description": "\n룰 추가 매서드\n",
+    "params": {
+      "key": [
+        {
+          "type": "String"
+        }
+      ],
+      "option": [
+        {
+          "type": "Object"
+        }
+      ]
+    },
+    "return": "void"
+  },
+  {
     "constructorYn": true,
     "title": "RedParticleUnit",
     "description": "\nRedParticleUnit Instance 생성기\n",
@@ -10,6 +28,6 @@
         }
       ]
     },
-    "return": "RedProgram Instance"
+    "return": "RedParticleUnit Instance"
   }
 ]

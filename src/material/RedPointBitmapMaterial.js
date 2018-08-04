@@ -52,6 +52,9 @@ var RedPointBitmapMaterial;
 				 {type:'RedBitmapTexture'}
 			 ]
 		 },
+		 extends : [
+		    'RedBaseMaterial'
+		 ],
 		 return : 'RedPointBitmapMaterial Instance'
 	 }
 	 :DOC*/
@@ -76,6 +79,7 @@ var RedPointBitmapMaterial;
 	RedPointBitmapMaterial.prototype = new RedBaseMaterial();
 	/**DOC:
 	 {
+ 	     code : 'PROPERTY',
 		 title :`alpha`,
 		 description : `기본값 : 1`,
 		 return : 'Number'
@@ -84,6 +88,7 @@ var RedPointBitmapMaterial;
 	RedDefinePropertyInfo.definePrototype('RedPointBitmapMaterial', 'alpha', 'number', {min: 0, max: 1});
 	/**DOC:
 	 {
+ 	     code : 'PROPERTY',
 		 title :`alphaTest`,
 		 description : `
 		 기본값 : 0.0001
@@ -95,6 +100,7 @@ var RedPointBitmapMaterial;
 	RedDefinePropertyInfo.definePrototype('RedPointBitmapMaterial', 'alphaTest', 'number', {min: 0, max: 1});
 	/**DOC:
 	 {
+ 	     code : 'PROPERTY',
 		 title :`diffuseTexture`,
 		 return : 'RedBitmapTexture'
 	 }

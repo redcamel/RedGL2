@@ -1,10 +1,12 @@
 [
   {
+    "code": "PROPERTY",
     "title": "debug",
     "description": "디버그오브젝트 활성화 여부",
     "return": "Boolean"
   },
   {
+    "code": "PROPERTY",
     "title": "radius",
     "description": "\n점광의 반지름\n기본값 : 1\n",
     "return": "Number"
@@ -31,31 +33,38 @@
         "알파값"
       ]
     },
+    "extends": [
+      "RedBaseLight"
+    ],
     "example": "\nRedPointLight(RedGL Instance, hex, alpha)\n",
     "return": "RedPointLight Instance"
   },
   {
-    "title": "RedPointLight.type",
+    "title": "RedPointLight.TYPE",
     "code": "CONST",
     "description": "RedPointLight 타입상수",
     "return": "String"
   },
   {
+    "code": "PROPERTY",
     "title": "type",
     "description": "RedPointLight['TYPE']",
     "return": "String"
   },
   {
+    "code": "PROPERTY",
     "title": "x",
     "description": "기본값 : 0",
     "return": "Number"
   },
   {
+    "code": "PROPERTY",
     "title": "y",
     "description": "기본값 : 0",
     "return": "Number"
   },
   {
+    "code": "PROPERTY",
     "title": "z",
     "description": "기본값 : 0",
     "return": "Number"

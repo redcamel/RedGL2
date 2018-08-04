@@ -48,6 +48,9 @@ var RedDirectionalShadowMaterial;
 				 {type:'RedGL'}
 			 ]
 		 },
+		 extends : [
+		    'RedBaseMaterial'
+		 ],
 		 example : `
 			 RedDirectionalShadowMaterial(RedGL Instance, RedBitmapTexture(RedGL Instance, src))
 		 `,

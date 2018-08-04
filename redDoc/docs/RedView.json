@@ -1,15 +1,18 @@
 [
   {
+    "code": "PROPERTY",
     "title": "camera",
     "description": "camera",
     "return": "RedCamera"
   },
   {
+    "code": "PROPERTY",
     "title": "key",
     "description": "고유키",
     "return": "String"
   },
   {
+    "code": "PROPERTY",
     "title": "postEffectManager",
     "description": "\npostEffectManager\n",
     "return": "RedPostEffectManager Instance"
@@ -48,6 +51,7 @@
     "return": "RedView Instance"
   },
   {
+    "code": "PROPERTY",
     "title": "scene",
     "description": "scene",
     "return": "RedScene"
@@ -56,6 +60,18 @@
     "code": "METHOD",
     "title": "setLocation",
     "description": "\n씬의 위치를 결정.\npx, % 단위를 받음.\n",
+    "params": {
+      "x": [
+        {
+          "type": "Number or %"
+        }
+      ],
+      "y": [
+        {
+          "type": "Number or %"
+        }
+      ]
+    },
     "example": "\nvar tWorld;\ntCamera = RedCamera(); // 카메라생성\nRedView('test', RedGL Instance, RedScene Instance, RedCamera Instance); // test라는 키값을 가진 RedView 생성\nRedView('test').setLocation(100,100);\nRedView('test').setLocation('50%',100);\n",
     "return": "void"
   },
@@ -63,6 +79,18 @@
     "code": "METHOD",
     "title": "setSize",
     "description": "\n씬의 사이즈를 결정.\npx, % 단위를 받음.\n",
+    "params": {
+      "width": [
+        {
+          "type": "Number or %"
+        }
+      ],
+      "height": [
+        {
+          "type": "Number or %"
+        }
+      ]
+    },
     "example": "\nvar tWorld;\nRedView('test', RedGL Instance, RedScene Instance, RedCamera Instance); // test라는 키값을 가진 RedView 생성\nRedView('test').setSize(100,100);\nRedView('test').setSize('50%',100);\n",
     "return": "void"
   }

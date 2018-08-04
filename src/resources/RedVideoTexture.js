@@ -68,6 +68,9 @@ var RedVideoTexture;
 			    {type:'Function'}
 			 ]
 		 },
+		 extends : [
+		    'RedBaseTexture'
+		 ],
 		 example : `
 		    RedVideoTexture( RedGL Instance,  src or HTMLVideoElement)
 		 `,
@@ -91,6 +94,16 @@ var RedVideoTexture;
 		console.log(this);
 	};
 	RedVideoTexture.prototype = new RedBaseTexture();
+	/**DOC:
+	 {
+		 code:`PROPERTY`,
+		 title :`src`,
+		 description : `
+			 src
+		 `,
+		 return : 'void'
+	 }
+	 :DOC*/
 	Object.defineProperty(RedVideoTexture.prototype, 'src', {
 		get: function () {return this['_src']},
 		set: function (v) {

@@ -9,7 +9,7 @@ var RedBasicController;
 			 RedBasicController Instance 생성자.
 		 `,
 		 example : `
-			 RedBasicController()
+			 RedBasicController(redGL Instance)
 		 `,
 		 params : {
 			 redGL : [
@@ -26,25 +26,26 @@ var RedBasicController;
 		this['keyBuffer'] = {};
 		/**DOC:
 		 {
+		     code : 'PROPERTY',
 			 title :`keyNameMapper`,
 			 description : `
 				 이동, 회전에 대한 기본 키맵퍼
 				 기본값 :
-				 <code>
-				 this['keyNameMapper'] = {
-					 moveForward: 'w',
-					 moveBack: 's',
-					 moveLeft: 'a',
-					 moveRight: 'd',
-					 moveUp: 't',
-					 moveDown: 'g',
-					 //
-					 turnLeft: 'q',
-					 turnRight: 'e',
-					 turnUp: 'r',
-					 turnDown: 'f',
-				 }
-				 </code>
+			 `,
+			 example : `
+			 this['keyNameMapper'] = {
+				 moveForward: 'w',
+				 moveBack: 's',
+				 moveLeft: 'a',
+				 moveRight: 'd',
+				 moveUp: 't',
+				 moveDown: 'g',
+				 //
+				 turnLeft: 'q',
+				 turnRight: 'e',
+				 turnUp: 'r',
+				 turnDown: 'f',
+			 }
 			 `,
 			 return : 'Object'
 		 }
@@ -69,6 +70,7 @@ var RedBasicController;
 		this['maxAcceleration'] = 3;
 		/**DOC:
 		 {
+		     code : 'PROPERTY',
 			 title :`camera`,
 			 description : `
 				 컨트롤러 생성시 자동생성됨
@@ -118,6 +120,7 @@ var RedBasicController;
 	RedBasicController.prototype = new RedBaseController();
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`speed`,
 		 description : `
 			 이동 속도
@@ -129,6 +132,7 @@ var RedBasicController;
 	RedDefinePropertyInfo.definePrototype('RedBasicController', 'speed', 'number', {min: 0});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`delay`,
 		 description : `
 			 이동 지연 속도
@@ -140,6 +144,7 @@ var RedBasicController;
 	RedDefinePropertyInfo.definePrototype('RedBasicController', 'delay', 'number', {min: 0});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`speedRotation`,
 		 description : `
 			 회전 속도
@@ -151,6 +156,7 @@ var RedBasicController;
 	RedDefinePropertyInfo.definePrototype('RedBasicController', 'speedRotation', 'number', {min: 0});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`delayRotation`,
 		 description : `
 			 회전 지연 속도
@@ -162,6 +168,7 @@ var RedBasicController;
 	RedDefinePropertyInfo.definePrototype('RedBasicController', 'delayRotation', 'number', {min: 0});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`maxAcceleration`,
 		 description : `
 			 최대 가속도 ( 이동 속도와 합쳐짐 )
@@ -173,6 +180,7 @@ var RedBasicController;
 	RedDefinePropertyInfo.definePrototype('RedBasicController', 'maxAcceleration', 'number', {min: 0});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`x`,
 		 return : 'Number'
 	 }
@@ -190,6 +198,7 @@ var RedBasicController;
 	})());
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`y`,
 		 return : 'Number'
 	 }
@@ -207,6 +216,7 @@ var RedBasicController;
 	})());
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`z`,
 		 return : 'Number'
 	 }
@@ -224,6 +234,7 @@ var RedBasicController;
 	})());
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`tilt`,
 		 return : 'Number'
 	 }
@@ -241,6 +252,7 @@ var RedBasicController;
 	})());
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`pan`,
 		 return : 'Number'
 	 }
@@ -256,6 +268,14 @@ var RedBasicController;
 			}
 		}
 	})());
+	/**DOC:
+	 {
+	     code : 'METHOD',
+		 title :`update`,
+		 description : '업데이트',
+		 return : 'void'
+	 }
+	 :DOC*/
 	RedBasicController.prototype['update'] = (function () {
 		var up = new Float32Array([0, 1, 0]);
 		var tPan, tTilt

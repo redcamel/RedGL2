@@ -48,6 +48,9 @@ var RedPointColorMaterial;
 				 {type:'RedGL'}
 			 ]
 		 },
+		 extends : [
+		    'RedBaseMaterial'
+		 ],
 		 return : 'RedPointColorMaterial Instance'
 	 }
 	 :DOC*/
@@ -70,6 +73,7 @@ var RedPointColorMaterial;
 	RedPointColorMaterial.prototype = new RedBaseMaterial();
 	/**DOC:
 	 {
+ 	     code : 'PROPERTY',
 		 title :`alpha`,
 		 description : `기본값 : 1`,
 		 return : 'Number'

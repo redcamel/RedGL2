@@ -69,6 +69,9 @@ var RedColorMaterial;
 				 '알파값'
 			 ]
 		 },
+		 extends : [
+		    'RedBaseMaterial'
+		 ],
 		 example : `
 			 RedColorMaterial(RedGL Instance, hex)
 		 `,
@@ -116,6 +119,7 @@ var RedColorMaterial;
 	};
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`color`,
 		 description : `기본값 : #ff2211`,
 		 return : 'hex'
@@ -124,6 +128,7 @@ var RedColorMaterial;
 	Object.defineProperty(RedColorMaterial.prototype, 'color', RedColorMaterial['DEFINE_OBJECT_COLOR']);
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`alpha`,
 		 description : `기본값 : 1`,
 		 return : 'Number'

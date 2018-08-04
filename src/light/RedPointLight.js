@@ -20,6 +20,9 @@ var RedPointLight;
 				 '알파값'
 			 ]
 		 },
+		 extends : [
+		    'RedBaseLight'
+		 ],
 		 example: `
 			 RedPointLight(RedGL Instance, hex, alpha)
 		 `,
@@ -37,6 +40,7 @@ var RedPointLight;
 		this['color'] = hexColor ? hexColor : '#fff';
 		/**DOC:
 		 {
+		     code : 'PROPERTY',
 			 title :`x`,
 			 description : `기본값 : 0`,
 			 return : 'Number'
@@ -45,6 +49,7 @@ var RedPointLight;
 		this['x'] = 0;
 		/**DOC:
 		 {
+		     code : 'PROPERTY',
 			 title :`y`,
 			 description : `기본값 : 0`,
 			 return : 'Number'
@@ -53,6 +58,7 @@ var RedPointLight;
 		this['y'] = 0;
 		/**DOC:
 		 {
+		     code : 'PROPERTY',
 			 title :`z`,
 			 description : `기본값 : 0`,
 			 return : 'Number'
@@ -62,6 +68,7 @@ var RedPointLight;
 		this['radius'] = 1;
 		/**DOC:
 		 {
+		     code : 'PROPERTY',
 			 title :`debug`,
 			 description : `디버그오브젝트 활성화 여부`,
 			 return : 'Boolean'
@@ -75,7 +82,7 @@ var RedPointLight;
 	};
 	/**DOC:
 	 {
-		 title :`RedPointLight.type`,
+		 title :`RedPointLight.TYPE`,
 		 code : 'CONST',
 		 description : `RedPointLight 타입상수`,
 		 return : 'String'
@@ -85,6 +92,7 @@ var RedPointLight;
 	RedPointLight.prototype = new RedBaseLight;
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`type`,
 		 description : `RedPointLight['TYPE']`,
 		 return : 'String'
@@ -97,6 +105,7 @@ var RedPointLight;
 	});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`radius`,
 		 description : `
 		 점광의 반지름

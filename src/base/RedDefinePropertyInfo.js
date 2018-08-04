@@ -1,6 +1,17 @@
 "use strict";
 var RedDefinePropertyInfo;
 (function () {
+	/**DOC:
+	 {
+		 constructorYn : true,
+		 title :`RedDefinePropertyInfo`,
+		 description : `
+			 prototype Property 선언기
+			 //TODO: 코드 정리좀 해야함
+		 `,
+		 return : 'void'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo = {}
 	var maker;
 	maker = function (targetObject, clsName, name, type, option) {
@@ -127,6 +138,35 @@ var RedDefinePropertyInfo;
 		targetObject['_' + name] = null
 		Object.defineProperty(targetObject, name, result)
 	}
+	/**DOC:
+	 {
+	     code : 'STATIC METHOD',
+		 title :`RedDefinePropertyInfo.definePrototype`,
+		 description : `
+			 prototype Property 선언기
+		 `,
+		 params : {
+		    clsName : [
+		        {type : 'String'},
+		        '클래스 명 입력'
+		    ],
+		    name : [
+		        {type : 'String'},
+		        '선언할 프로퍼티 명 입력'
+		    ],
+		    type : [
+		        {type : 'String'},
+		        'hex, boolean, number, sampler2D, samplerCube, samplerVideo 사용가능'
+		    ],
+		    option : [
+	            {type : 'Object'},
+	            '타입별 옵션 정의 가능',
+	            //TODO: 추후 예제포함 정리해야함
+		    ]
+		 },
+		 return : 'void'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo['definePrototype'] = function (clsName, name, type, option) {
 		maker(window[clsName]['prototype'], clsName, name, type, option)
 	}

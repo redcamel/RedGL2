@@ -37,6 +37,9 @@ var RedPostEffectMaterial;
 				 'RedBitmapTexture Instance'
 			 ]
 		 },
+		 extends : [
+		    'RedBaseMaterial'
+		 ],
 		 example : `
 			 RedPostEffectMaterial(RedGL Instance, RedBitmapTexture(RedGL Instance, src))
 		 `,
@@ -62,6 +65,7 @@ var RedPostEffectMaterial;
 	RedPostEffectMaterial.prototype = new RedBaseMaterial();
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`diffuseTexture`,
 		 return : 'RedPostEffectMaterial'
 	 }

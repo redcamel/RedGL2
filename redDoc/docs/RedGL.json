@@ -1,5 +1,17 @@
 [
   {
+    "code": "PROPERTY",
+    "title": "detect",
+    "description": "\n하드웨어 디텍팅 정보\n",
+    "return": "RedGLDetect Instance"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "gl",
+    "description": "\n생성된 WebGL Context\n",
+    "return": "WebGL Context Instance"
+  },
+  {
     "constructorYn": true,
     "title": "RedGL",
     "description": "\nRedGL Instance 생성자.\nWebGL 초기화를 담당하며, 단일 월드를 소유한다.\n",
@@ -35,7 +47,7 @@
     "return": "RedGL Instance"
   },
   {
-    "code": "CONST",
+    "code": "STATIC METHOD",
     "title": "RedGL.makeUUID",
     "description": "\nUUID 생성기\n",
     "example": "\nRedGL.makeUUID()\n",
@@ -52,6 +64,18 @@
     "title": "setSize",
     "code": "METHOD",
     "description": "\nRedGL Instance의 Canvas 사이즈 설정\npx, %단위만 입력가능.\n",
+    "params": {
+      "width": [
+        {
+          "type": "Number or %"
+        }
+      ],
+      "height": [
+        {
+          "type": "Number or %"
+        }
+      ]
+    },
     "example": "\nRedGL(document.getElementById('test'), function(v){\nif(v){\n// 초기화 성공\nthis.setSize(200,200)\n}else{\n// 초기화실패\n}\n})\n",
     "return": "void"
   }

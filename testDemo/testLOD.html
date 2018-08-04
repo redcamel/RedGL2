@@ -199,9 +199,9 @@
 					tMesh.useLOD = true
 					tMesh.drawMode = self.gl.LINES
 					tMesh.addLOD(0, 5, RedSphere(self, 0.5, 32, 32, 32), tMat)
-					tMesh.addLOD(1, 10, RedSphere(self, 0.5, 16, 16, 16), RedColorMaterial(self, '#00ff00'))
-					tMesh.addLOD(2, 15, RedSphere(self, 0.5, 8, 8, 8), RedColorMaterial(self, '#0000ff'))
-					tMesh.addLOD(3, 20, RedSphere(self, 0.5, 4, 4, 4), RedColorMaterial(self, '#ffff00'))
+					tMesh.addLOD('test', 10, RedSphere(self, 0.5, 16, 16, 16), RedColorMaterial(self, '#00ff00'))
+					tMesh.addLOD('test2', 15, RedSphere(self, 0.5, 8, 8, 8), RedColorMaterial(self, '#0000ff'))
+					tMesh.addLOD('test', 20, RedSphere(self, 0.5, 4, 4, 4), RedColorMaterial(self, '#ffff00'))
 					tMesh.addLOD(4, 25, RedSphere(self, 0.5, 3, 3, 3), RedColorMaterial(self, '#00ffff'))
 					tScene3D.addChild(tMesh)
 				}

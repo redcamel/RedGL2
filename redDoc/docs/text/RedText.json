@@ -1,5 +1,12 @@
 [
   {
+    "code": "PROPERTY",
+    "title": "height",
+    "description": "세로영역크기",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
     "title": "perspectiveScale",
     "description": "perspectiveScale",
     "return": "boolean"
@@ -18,23 +25,21 @@
     "return": "RedText Instance"
   },
   {
+    "code": "PROPERTY",
     "title": "sprite3DYn",
     "description": "sprite3DYn",
     "return": "boolean"
   },
   {
+    "code": "PROPERTY",
     "title": "text",
     "description": "텍스트값, html 허용",
     "return": "Number"
   },
   {
+    "code": "PROPERTY",
     "title": "width",
     "description": "가로영역크기",
-    "return": "Number"
-  },
-  {
-    "title": "width",
-    "description": "세로영역크기",
     "return": "Number"
   }
 ]

@@ -8,6 +8,7 @@ var RedAtlas;
 		 constructorYn : true,
 		 title :`Atlas`,
 		 description : `
+		     <h1>재개발예정</h1>
 			 Atlas Instance 생성
 		 `,
 		 params : {
@@ -50,7 +51,7 @@ var RedAtlas;
 			atlasInfoList: [new Atlas()],
 			atlasMap: {}
 		}
-		MAX_TEXTURE_SIZE = redGL['_detect']['texture']['MAX_TEXTURE_SIZE']
+		MAX_TEXTURE_SIZE = redGL['detect']['texture']['MAX_TEXTURE_SIZE']
 		if ( MAX_TEXTURE_SIZE > 2048 ) MAX_TEXTURE_SIZE = 2048
 		this['redGL'] = redGL
 		this.loadList(srcList, callBack)

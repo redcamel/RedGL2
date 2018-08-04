@@ -1,5 +1,18 @@
 [
   {
+    "code": "PROPERTY",
+    "title": "directionalShadow",
+    "description": "\ndirectionalShadow 지정\n",
+    "params": {
+      "shadow": [
+        {
+          "type": "RedDirectionalShadow"
+        }
+      ]
+    },
+    "return": "directionalShadow Instance"
+  },
+  {
     "constructorYn": true,
     "title": "RedShadowManager",
     "description": "\nRedShadowManager Instance 생성.\nRedScene 생성시 내부속성으로 자동생성됨.\n",

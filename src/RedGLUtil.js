@@ -14,7 +14,7 @@ var RedGLUtil;
 	RedGLUtil = {
 		/**DOC:
 		 {
-			 constructorYn : true,
+			 code : 'STATIC METHOD',
 			 title :`RedGLUtil.throwFunc`,
 			 description : `
 				 에러생성기
@@ -27,42 +27,10 @@ var RedGLUtil;
 		},
 		/**DOC:
 		 {
-			 constructorYn : true,
-			 title :`RedGLUtil.copyProto`,
-			 description : `
-				 프로토타입 내용을 복사
-			 `,
-			 params : {
-				 target : [
-					 {type : 'Object'},
-					 '확장할 대상'
-				 ],
-				 from : [
-					 {type : 'Object'},
-					 '가져올 대상'
-				 ]
-			 },
-			 example : `
-				 var a = function(){};
-				 var b = function(){};
-				 a.prototype.test = function(){
-					 console.log('test')
-				 };
-				 RedGLUtil.copyProto(b,a);
-				 (new b()).test(); // test
-			 `,
-			 return : 'void'
-		 }
-		 :DOC*/
-		copyProto: function (target, from) {
-			for ( var k in from.prototype ) target.prototype[k] = from.prototype[k]//,console.log(k)
-		},
-		/**DOC:
-		 {
-			 constructorYn : true,
+			 code : 'STATIC METHOD',
 			 title :`RedGLUtil.hexToRGB_ZeroToOne`,
 			 description : `
-				 hex값을 RGB로 변환
+				 hex값을 RGB로 변환 (0 ~ 1로 변환함)
 			 `,
 			 params : {
 				 hex : [
@@ -88,6 +56,24 @@ var RedGLUtil;
 				return t1
 			} else RedGLUtil.throwFunc('RedGLUtil.hexToRGB_ZeroToOne : 잘못된 hex값입니다.', hex)
 		},
+		/**DOC:
+		 {
+			 code : 'STATIC METHOD',
+			 title :`RedGLUtil.rgb2hex`,
+			 description : `
+				 255, 255, 255 형식의 RGB를 hex로 변환
+			 `,
+			 params : {
+				 red : [ {type : 'Number'} ],
+				 green : [ {type : 'Number'} ],
+				 blue : [ {type : 'Number'} ]
+			 },
+			 example : `
+				 RedGLUtil.rgb2hex(255,255,255) // #ffffff
+			 `,
+			 return : 'hex'
+		 }
+		 :DOC*/
 		rgb2hex: function (red, green, blue) {
 			var rgb = blue | (green << 8) | (red << 16);
 			return '#' + (0x1000000 + rgb).toString(16).slice(1)
@@ -100,11 +86,11 @@ var RedGLUtil;
 		})(),
 		/**DOC:
 		 {
-			 constructorYn : true,
+			 code : 'STATIC METHOD',
 			 title :`RedGLUtil.getStrFromComment`,
 			 description : `
-			 문자열중 멀티 라인 코멘트 사이값을 반환함.
-			 프로그램 생성기에서 사용
+				 문자열중 멀티 라인 코멘트 사이값을 반환함.
+				 프로그램 생성기에서 사용
 			 `,
 			 params : {
 				 source : [
@@ -123,7 +109,37 @@ var RedGLUtil;
 				else RedGLUtil.throwFunc('getStrFromComment : 해석할 불가능한 값', source)
 			}
 		})(),
+		/**DOC:
+		 {
+			 code : 'STATIC METHOD',
+			 title :`RedGLUtil.isPowerOf2`,
+			 description : `
+				 2n 값인지 판단
+			 `,
+			 params : {
+				 v : [
+					 {type : 'Number'}
+				 ]
+			 },
+			 return : 'Boolean'
+		 }
+		 :DOC*/
 		isPowerOf2: function (v) { return (v & (v - 1)) == 0; },
+		/**DOC:
+		 {
+			 code : 'STATIC METHOD',
+			 title :`RedGLUtil.nextHighestPowerOfTwo`,
+			 description : `
+				 입력된 값을 기준으로 다음 2n 값을 구함
+			 `,
+			 params : {
+				 v : [
+					 {type : 'Number'}
+				 ]
+			 },
+			 return : 'Number'
+		 }
+		 :DOC*/
 		nextHighestPowerOfTwo: (function () {
 			var i;
 			return function (v) {
@@ -132,6 +148,25 @@ var RedGLUtil;
 				return v + 1;
 			}
 		})(),
+		/**DOC:
+		 {
+			 code : 'STATIC METHOD',
+			 title :`RedGLUtil.calculateNormals`,
+			 description : `
+				 버텍스 배열과 인덱스 배열을 기반으로 노말 배열을 계산함.
+				 적용은 알아서 해야함 -_-;; 계산만해줌
+			 `,
+			 params : {
+				 vertexArray : [
+					 {type : 'Array'}
+				 ],
+				 indexArray : [
+					 {type : 'Array'}
+				 ]
+			 },
+			 return : 'Array'
+		 }
+		 :DOC*/
 		calculateNormals: function (vertexArray, indexArray) {
 			//TODO: 이함수 정리
 			var i, j;

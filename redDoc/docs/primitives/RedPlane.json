@@ -34,6 +34,9 @@
         "기본값 : 1"
       ]
     },
+    "extends": [
+      "RedGeometry"
+    ],
     "example": "\nRedPlane(RedGL Instance);\nRedPlane(RedGL Instance, 1, 1);\nRedPlane(RedGL Instance, 1, 1, 16, 16);\n",
     "return": "RedPlane Instance"
   }

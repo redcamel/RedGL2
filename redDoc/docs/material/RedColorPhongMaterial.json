@@ -1,10 +1,12 @@
 [
   {
+    "code": "PROPERTY",
     "title": "alpha",
     "description": "기본값 : 1",
     "return": "Number"
   },
   {
+    "code": "PROPERTY",
     "title": "color",
     "description": "기본값 : #ff2211",
     "return": "hex"
@@ -31,15 +33,20 @@
         "알파값"
       ]
     },
+    "extends": [
+      "RedBaseMaterial"
+    ],
     "example": "\nRedColorPhongMaterial(RedGL Instance, hex, alpha)\n",
     "return": "RedColorPhongMaterial Instance"
   },
   {
+    "code": "PROPERTY",
     "title": "shininess",
     "description": "기본값 : 16",
     "return": "shininess"
   },
   {
+    "code": "PROPERTY",
     "title": "specularPower",
     "description": "기본값 : 1",
     "return": "Number"

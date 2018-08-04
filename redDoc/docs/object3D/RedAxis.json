@@ -10,6 +10,10 @@
         }
       ]
     },
+    "extends": [
+      "RedBaseContainer",
+      "RedBaseObject3D"
+    ],
     "example": "\nvar tScene;\ntScene = RedScene();\ntScene['axis'] = RedAxis(redGL Instance)\n",
     "return": "RedAxis Instance"
   }

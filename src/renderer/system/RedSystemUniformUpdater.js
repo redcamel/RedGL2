@@ -4,10 +4,43 @@ var RedSystemUniformUpdater;
 	/**DOC:
 	 {
 		 constructorYn : true,
-		 title :`RedSystemUniformUpdater`
+		 title :`RedSystemUniformUpdater`,
+		 description : `
+			 시스템 유니폼 전담 업데이터.
+			 시스템 적으로 사용됨으로 사용자 접근은 필요없음.
+		 `,
+		 return : 'void'
 	 }
 	 :DOC*/
+
 	RedSystemUniformUpdater = {
+		/**DOC:
+		 {
+			 code:`STATIC METHOD`,
+			 title :`update`,
+			 description : `
+				 시스템 유니폼 업데이터
+			 `,
+			 params : {
+				 redGL : [
+					 {type : "RedGL"}
+				 ],
+				 redRenderer : [
+					 {type : "RedRenderer"}
+				 ],
+				 tView : [
+					 {type : "RedView"}
+				 ],
+				 prevProgram_UUID : [
+					 {type : "Int"}
+				 ],
+				 lightDebugRenderList : [
+					 {type : "Array"}
+				 ]
+			 },
+			 return : 'void'
+		 }
+		 :DOC*/
 		update: (function () {
 			var tGL;
 			var tProgram;

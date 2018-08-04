@@ -1,5 +1,6 @@
 [
   {
+    "code": "PROPERTY",
     "title": "color1",
     "description": "color1",
     "params": {
@@ -10,9 +11,10 @@
         "기준선 컬러"
       ]
     },
-    "return": "Number"
+    "return": "hex"
   },
   {
+    "code": "PROPERTY",
     "title": "color2",
     "description": "color2",
     "params": {
@@ -23,9 +25,10 @@
         "격자 컬러"
       ]
     },
-    "return": "Number"
+    "return": "hex"
   },
   {
+    "code": "PROPERTY",
     "title": "divisions",
     "description": "divisions",
     "params": {
@@ -73,10 +76,15 @@
         "격자선 컬러"
       ]
     },
+    "extends": [
+      "RedBaseContainer",
+      "RedBaseObject3D"
+    ],
     "example": "\nvar tScene;\ntScene = RedScene();\ntScene['grid'] = RedGrid(redGL Instance)\n",
     "return": "RedGrid Instance"
   },
   {
+    "code": "PROPERTY",
     "title": "size",
     "description": "size",
     "params": {

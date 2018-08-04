@@ -22,7 +22,11 @@ var RedPointUnit;
 				 {type : 'RedPointColorMaterial or RedPointBitmapMaterial'}
 			 ]
 		 },
-		 return : 'RedProgram Instance'
+		 extends : [
+		    'RedBaseContainer',
+		    'RedBaseObject3D'
+		 ],
+		 return : 'RedPointUnit Instance'
 	 }
 	 :DOC*/
 	RedPointUnit = function (redGL, interleaveData, interleaveDefineInfoList, material) {

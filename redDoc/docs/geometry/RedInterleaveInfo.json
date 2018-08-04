@@ -1,5 +1,23 @@
 [
   {
+    "code": "PROPERTY",
+    "title": "attributeKey",
+    "description": "쉐이더상 접근할 어트리뷰트 키",
+    "return": "String"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "normalize",
+    "description": "\n기본값 : false\n",
+    "return": "Boolean"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "offset",
+    "description": "\nRedBuffer 생성시 자동 주입됨.\n",
+    "return": "Int"
+  },
+  {
     "constructorYn": true,
     "title": "RedInterleaveInfo",
     "description": "\nRedInterleaveInfo Instance 생성자\n",
@@ -26,5 +44,11 @@
     },
     "example": "\nRedInterleaveInfo('aVertexPosition', 3);\n",
     "return": "RedBuffer Instance"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "size",
+    "description": "어트리뷰트 사이즈",
+    "return": "Int"
   }
 ]

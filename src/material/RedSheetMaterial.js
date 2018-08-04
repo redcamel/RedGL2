@@ -75,6 +75,9 @@ var RedSheetMaterial;
 				 'RedBitmapTexture Instance'
 			 ]
 		 },
+		 extends : [
+		    'RedBaseMaterial'
+		 ],
 		 example : `
 			 RedSheetMaterial(RedGL Instance, RedBitmapTexture(RedGL Instance, src))
 		 `,
@@ -216,6 +219,7 @@ var RedSheetMaterial;
 	};
 	/**DOC:
 	 {
+         code : 'PROPERTY',
 		 title :`diffuseTexture`,
 		 description : `diffuseTexture`,
 		 return : 'RedSheetMaterial'
@@ -224,6 +228,7 @@ var RedSheetMaterial;
 	RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'diffuseTexture', 'sampler2D', {essential: true});
 	/**DOC:
 	 {
+ 	     code : 'PROPERTY',
 		 title :`totalFrame`,
 		 description : `최소값 : 1`,
 		 return : 'Number'
@@ -232,6 +237,7 @@ var RedSheetMaterial;
 	RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'totalFrame', 'number', {'min': 1});
 	/**DOC:
 	 {
+ 	     code : 'PROPERTY',
 		 title :`loop`,
 		 description : `기본값 : true`,
 		 return : 'Boolean'
@@ -240,6 +246,7 @@ var RedSheetMaterial;
 	RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'loop', 'boolean', true);
 	/**DOC:
 	 {
+ 	     code : 'PROPERTY',
 		 title :`frameRate`,
 		 description : `최소값 : 1`,
 		 return : 'Number'
@@ -253,6 +260,7 @@ var RedSheetMaterial;
 	});
 	/**DOC:
 	 {
+ 	     code : 'PROPERTY',
 		 title :`segmentW`,
 		 description : `최소값 : 1`,
 		 return : 'Number'
@@ -261,6 +269,7 @@ var RedSheetMaterial;
 	RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'segmentW', 'number', {min: 1});
 	/**DOC:
 	 {
+ 	     code : 'PROPERTY',
 		 title :`segmentH`,
 		 description : `최소값 : 1`,
 		 return : 'Number'

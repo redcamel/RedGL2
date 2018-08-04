@@ -147,6 +147,9 @@ var RedColorPhongTextureMaterial;
 				 {type: 'RedBitmapTexture'}
 			 ]
 		 },
+		 extends : [
+		    'RedBaseMaterial'
+		 ],
 		 example: `
 		 RedColorPhongTextureMaterial(RedGL Instance, hex, alpha, normalTexture, specularTexture)
 		 `,
@@ -188,6 +191,7 @@ var RedColorPhongTextureMaterial;
 	RedColorPhongTextureMaterial.prototype = new RedBaseMaterial();
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`color`,
 		 description : `기본값 : #ff2211`,
 		 return : 'hex'
@@ -196,6 +200,7 @@ var RedColorPhongTextureMaterial;
 	Object.defineProperty(RedColorPhongTextureMaterial.prototype, 'color', RedColorMaterial['DEFINE_OBJECT_COLOR']);
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`alpha`,
 		 description : `기본값 : 1`,
 		 return : 'Number'
@@ -204,6 +209,7 @@ var RedColorPhongTextureMaterial;
 	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'alpha', 'number', RedColorMaterial['DEFINE_OBJECT_ALPHA']);
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`normalTexture`,
 		 return : 'RedBitmapTexture'
 	 }
@@ -211,6 +217,7 @@ var RedColorPhongTextureMaterial;
 	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'normalTexture', 'sampler2D', samplerOption);
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`specularTexture`,
 		 return : 'RedBitmapTexture'
 	 }
@@ -218,6 +225,7 @@ var RedColorPhongTextureMaterial;
 	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'specularTexture', 'sampler2D', samplerOption);
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`displacementTexture`,
 		 return : 'RedBitmapTexture'
 	 }
@@ -225,6 +233,7 @@ var RedColorPhongTextureMaterial;
 	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'displacementTexture', 'sampler2D', samplerOption);
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`normalPower`,
 		 description : `기본값 : 1`,
 		 return : 'number'
@@ -233,6 +242,7 @@ var RedColorPhongTextureMaterial;
 	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'normalPower', 'number', {'min': 0});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`shininess`,
 		 description : `기본값 : 16`,
 		 return : 'Number'
@@ -241,6 +251,7 @@ var RedColorPhongTextureMaterial;
 	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'shininess', 'number', {'min': 0});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`specularPower`,
 		 description : `기본값 : 1`,
 		 return : 'Number'
@@ -249,6 +260,7 @@ var RedColorPhongTextureMaterial;
 	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'specularPower', 'number', {'min': 0});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`displacementPower`,
 		 description : `기본값 : 0`,
 		 return : 'Number'
@@ -257,6 +269,7 @@ var RedColorPhongTextureMaterial;
 	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'displacementPower', 'number', {'min': 0});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`displacementFlowSpeedX`,
 		 description : `기본값 : 0`,
 		 return : 'Number'
@@ -265,6 +278,7 @@ var RedColorPhongTextureMaterial;
 	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'displacementFlowSpeedX', 'number');
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`displacementFlowSpeedY`,
 		 description : `기본값 : 0`,
 		 return : 'Number'

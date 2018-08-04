@@ -1,5 +1,6 @@
 [
   {
+    "code": "PROPERTY",
     "title": "diffuseTexture",
     "return": "RedPostEffectMaterial"
   },
@@ -20,6 +21,9 @@
         "RedBitmapTexture Instance"
       ]
     },
+    "extends": [
+      "RedBaseMaterial"
+    ],
     "example": "\nRedPostEffectMaterial(RedGL Instance, RedBitmapTexture(RedGL Instance, src))\n",
     "return": "RedPostEffectMaterial Instance"
   }

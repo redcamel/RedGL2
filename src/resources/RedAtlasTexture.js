@@ -6,6 +6,7 @@ var RedAtlasTexture;
 		 constructorYn : true,
 		 title :`RedAtlasTexture`,
 		 description : `
+		     <h1>재개발예정</h1>
 			 RedAtlasTexture Instance 생성
 			 RedAtlas에 이미지 등록후 키를 기반으로 RedAtlasTexture를 생성할 수 있음.
 		 `,

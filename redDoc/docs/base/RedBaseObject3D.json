@@ -2,11 +2,11 @@
   {
     "title": "addLOD",
     "code": "METHOD",
-    "description": "\nLOD 추가\n",
+    "description": "\nLOD 추가.\n추가시 geometry, material 둘중 하나는 반드시 입력되어야함.\n",
     "params": {
       "level": [
         {
-          "type": "int"
+          "type": "*"
         }
       ],
       "distance": [
@@ -28,43 +28,37 @@
     "return": "void"
   },
   {
-    "title": "addLOD",
-    "code": "METHOD",
-    "description": "\nLOD 삭제\n",
-    "params": {
-      "level": [
-        {
-          "type": "int"
-        }
-      ]
-    },
-    "return": "void"
-  },
-  {
+    "code": "PROPERTY",
     "title": "blendDst",
     "description": "\n블렌드 목표값 factor\n기본값 : gl.ONE_MINUS_SRC_ALPHA\n",
     "return": "gl 상수"
   },
   {
+    "code": "PROPERTY",
     "title": "blendSrc",
     "description": "\n블렌드 소스값 factor\n기본값 : gl.ONE\n",
     "return": "gl 상수"
   },
   {
+    "code": "PROPERTY",
     "title": "children",
+    "description": "\n자식 리스트\n",
     "return": "Array"
   },
   {
+    "code": "PROPERTY",
     "title": "cullFace",
     "description": "\n컬링 페이스 설정\n기본값 : gl.BACK\n",
     "return": "gl 상수"
   },
   {
+    "code": "PROPERTY",
     "title": "depthTestFunc",
     "description": "\n뎁스 테스트 함수 설정\n기본값 : gl.LEQUAL\n",
     "return": "gl 상수"
   },
   {
+    "code": "PROPERTY",
     "title": "drawMode",
     "description": "\n기본값 : gl.TRIANGLES\ndrawCall시 적용한 드로잉 모드\n",
     "return": "gl 상수"
@@ -73,30 +67,58 @@
     "title": "getScreenPoint",
     "code": "METHOD",
     "description": "\n스크린좌표반환\n",
+    "params": {
+      "redView": [
+        {
+          "type": "RedView"
+        }
+      ]
+    },
     "return": "Array"
   },
   {
     "title": "localToWorld",
     "code": "METHOD",
     "description": "\n로컬좌표를 RedWorld 좌표로 변경\n",
+    "params": {
+      "x": [
+        {
+          "type": "Number"
+        }
+      ],
+      "y": [
+        {
+          "type": "Number"
+        }
+      ],
+      "z": [
+        {
+          "type": "Number"
+        }
+      ]
+    },
     "return": "Array"
   },
   {
-    "title": "matrix",
-    "description": "\nmatrix 자동계산여부\n",
-    "return": "mat4"
-  },
-  {
+    "code": "PROPERTY",
     "title": "matrix",
     "description": "\nmatrix 렌더링시 자동계산\n",
     "return": "mat4"
   },
   {
+    "code": "PROPERTY",
+    "title": "matrix",
+    "description": "\nmatrix 자동계산여부\n",
+    "return": "mat4"
+  },
+  {
+    "code": "PROPERTY",
     "title": "normalMatrix",
     "description": "\nnormalMatrix 렌더링시 자동계산\n",
     "return": "mat4"
   },
   {
+    "code": "PROPERTY",
     "title": "pointSize",
     "description": "\n기본값 : 1\ngl.POINTS로 그릴경우 반영될 포인트 사이즈.\n",
     "return": "Number"
@@ -105,11 +127,11 @@
     "constructorYn": true,
     "title": "RedBaseObject3D",
     "description": "\nRedBaseObject3D 기저층\n",
-    "return": "void"
+    "return": "RedBaseObject3D Instance"
   },
   {
     "title": "RedBaseObject3D.build",
-    "code": "CONST",
+    "code": "STATIC METHOD",
     "description": "\nRedBaseObject3D가 가지고있는 속성을 해당 인스턴스에 복사하기위해사용\n",
     "params": {
       "gl": [
@@ -122,69 +144,113 @@
     "return": "void"
   },
   {
+    "title": "removeLOD",
+    "code": "METHOD",
+    "description": "LOD 삭제",
+    "params": {
+      "level": [
+        {
+          "type": "int"
+        }
+      ]
+    },
+    "return": "void"
+  },
+  {
+    "code": "PROPERTY",
     "title": "rotationX",
     "return": "Number"
   },
   {
+    "code": "PROPERTY",
     "title": "rotationY",
     "return": "Number"
   },
   {
+    "code": "PROPERTY",
     "title": "rotationZ",
     "return": "Number"
   },
   {
+    "code": "PROPERTY",
     "title": "scaleX",
     "return": "Number"
   },
   {
+    "code": "PROPERTY",
     "title": "scaleY",
     "return": "Number"
   },
   {
+    "code": "PROPERTY",
     "title": "scaleZ",
     "return": "Number"
   },
   {
+    "code": "PROPERTY",
     "title": "useBlendMode",
     "description": "\n블렌드 모드 사용여부\n기본값 : true\n",
     "return": "Boolean"
   },
   {
+    "code": "PROPERTY",
     "title": "useCullFace",
     "description": "\n컬링 사용여부\n기본값 : true\n",
     "return": "Boolean"
   },
   {
+    "code": "PROPERTY",
     "title": "useDepthMask",
     "description": "\n뎁스 테스트 사용여부\n기본값 : true\n",
     "return": "Boolean"
   },
   {
+    "code": "PROPERTY",
     "title": "useDepthTest",
     "description": "\n뎁스 테스트 사용여부\n기본값 : true\n",
     "return": "Boolean"
   },
   {
+    "code": "PROPERTY",
     "title": "useLOD",
     "description": "LOD사용여부",
-    "return": "Array"
+    "return": "Boolean"
   },
   {
     "title": "worldToLocal",
     "code": "METHOD",
-    "description": "\nRedWorld좌료를 로컬좌료로 변환\n",
+    "description": "\nRedWorld 좌표를 로컬좌표로 변환\n",
+    "params": {
+      "x": [
+        {
+          "type": "Number"
+        }
+      ],
+      "y": [
+        {
+          "type": "Number"
+        }
+      ],
+      "z": [
+        {
+          "type": "Number"
+        }
+      ]
+    },
     "return": "Array"
   },
   {
+    "code": "PROPERTY",
     "title": "x",
     "return": "Number"
   },
   {
+    "code": "PROPERTY",
     "title": "y",
     "return": "Number"
   },
   {
+    "code": "PROPERTY",
     "title": "z",
     "return": "Number"
   }

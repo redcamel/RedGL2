@@ -29,10 +29,40 @@ var RedDirectionalShadow;
 		this['_castingList'] = [];
 		console.log(this);
 	};
-	RedDirectionalShadow.prototype['addCasting'] = function (v) {
-		if ( !(v instanceof RedBaseObject3D ) ) RedGLUtil.throwFunc('addCasting', 'RedBaseObject3D Instance만 가능', '입력값 : ' + v);
-		this['_castingList'].push(v)
+	/**DOC:
+	 {
+		 code:`METHOD`,
+		 title :`addCasting`,
+		 description : `
+			 그림자 케스팅할 오브젝트 추가
+		 `,
+		 params : {
+		    target : [
+		        { type : 'RedBaseObject3D' }
+		    ]
+		 },
+	     return : 'void'
+	 }
+	 :DOC*/
+	RedDirectionalShadow.prototype['addCasting'] = function (target) {
+		if ( !(target instanceof RedBaseObject3D ) ) RedGLUtil.throwFunc('addCasting', 'RedBaseObject3D Instance만 가능', '입력값 : ' + target);
+		this['_castingList'].push(target)
 	};
+	/**DOC:
+	 {
+		 code:`METHOD`,
+		 title :`removeCasting`,
+		 description : `
+			 캐스팅 제거
+		 `,
+		 params : {
+		    target : [
+		        { type : 'RedBaseObject3D' }
+		    ]
+		 },
+		 return : 'void'
+	 }
+	 :DOC*/
 	RedDirectionalShadow.prototype['removeCasting'] = (function () {
 		var t0;
 		return function (v) {
@@ -41,6 +71,16 @@ var RedDirectionalShadow;
 			else this['_castingList'].splice(t0, 1);
 		}
 	})();
+	/**DOC:
+	 {
+		 code:`PROPERTY`,
+		 title :`light`,
+		 description : `
+			 그림자를 반영할 RedDirectionalLight 지정
+		 `,
+		 return : 'RedDirectionalLight Instance'
+	 }
+	 :DOC*/
 	Object.defineProperty(RedDirectionalShadow.prototype, 'light', {
 		get: function () { return this['_light']},
 		set: function (v) {
@@ -48,8 +88,38 @@ var RedDirectionalShadow;
 			this['_light'] = v;
 		}
 	});
+	/**DOC:
+	 {
+		 code:`PROPERTY`,
+		 title :`width`,
+		 description : `
+			 프레임버퍼 width
+		 `,
+		 return : 'Number'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedDirectionalShadow', 'width', 'number', {'min': 1});
+	/**DOC:
+	 {
+		 code:`PROPERTY`,
+		 title :`height`,
+		 description : `
+			 프레임버퍼 height
+		 `,
+		 return : 'Number'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedDirectionalShadow', 'height', 'number', {'min': 1});
+	/**DOC:
+	 {
+		 code:`PROPERTY`,
+		 title :`size`,
+		 description : `
+			 그림자 영역 크기
+		 `,
+		 return : 'Number'
+	 }
+	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedDirectionalShadow', 'size', 'number', {'min': 1});
 	Object.freeze(RedDirectionalShadow);
 })();

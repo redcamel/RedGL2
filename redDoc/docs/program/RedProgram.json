@@ -1,10 +1,12 @@
 [
   {
+    "code": "PROPERTY",
     "title": "attributeLocation",
     "description": "어리뷰트 로케이션 정보",
     "return": "Array"
   },
   {
+    "code": "PROPERTY",
     "title": "key",
     "description": "고유키",
     "return": "String"
@@ -42,7 +44,7 @@
   },
   {
     "title": "RedProgram.hasKey",
-    "code": "CONST",
+    "code": "STATIC METHOD",
     "description": "키에 해당하는 쉐이더 존재 여부 반환",
     "params": {
       "redGL": [
@@ -61,16 +63,19 @@
     "return": "Boolean"
   },
   {
+    "code": "PROPERTY",
     "title": "systemUniformLocation",
     "description": "시스템 유니폼 로케이션 정보",
     "return": "Array"
   },
   {
+    "code": "PROPERTY",
     "title": "uniformLocation",
     "description": "유니폼 로케이션 정보",
     "return": "Array"
   },
   {
+    "code": "PROPERTY",
     "title": "webglProgram",
     "description": "실제 프로그램(WebGLProgram Instance)",
     "return": "WebGLShader"

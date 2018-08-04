@@ -25,6 +25,10 @@
         }
       ]
     },
-    "return": "RedProgram Instance"
+    "extends": [
+      "RedBaseContainer",
+      "RedBaseObject3D"
+    ],
+    "return": "RedPointUnit Instance"
   }
 ]

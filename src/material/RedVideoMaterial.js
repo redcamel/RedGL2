@@ -72,6 +72,9 @@ var RedVideoMaterial;
 				 'String'
 			 ]
 		 },
+		 extends : [
+		    'RedBaseMaterial'
+		 ],
 		 example : `
 			 RedVideoMaterial(RedGL Instance, RedBitmapTexture(RedGL Instance, src))
 		 `,
@@ -98,6 +101,7 @@ var RedVideoMaterial;
 	RedVideoMaterial.prototype = new RedBaseMaterial();
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`alpha`,
 		 description : `기본값 : 1`,
 		 return : 'Number'
@@ -106,6 +110,7 @@ var RedVideoMaterial;
 	RedDefinePropertyInfo.definePrototype('RedVideoMaterial', 'alpha', 'number', {min: 0, max: 1});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`videoTexture`,
 		 return : 'RedVideoMaterial'
 	 }

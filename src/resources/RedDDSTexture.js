@@ -31,6 +31,9 @@ var RedDDSTexture;
 				 `
 			 ]
 		 },
+		 extends : [
+		    'RedBaseTexture'
+		 ],
 		 example : `
 		 RedDDSTexture( RedGL Instance,  src, {
 			 min: gl.LINEAR_MIPMAP_NEAREST,
@@ -61,6 +64,16 @@ var RedDDSTexture;
 		console.log(this);
 	}
 	RedDDSTexture.prototype = new RedBaseTexture();
+	/**DOC:
+	 {
+		 code:`PROPERTY`,
+		 title :`src`,
+		 description : `
+			 src
+		 `,
+		 return : 'void'
+	 }
+	 :DOC*/
 	Object.defineProperty(RedDDSTexture.prototype, 'src', {
 		get: function () {return this['_src']},
 		set: function (v) {

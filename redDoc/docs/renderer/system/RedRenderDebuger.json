@@ -6,6 +6,7 @@
     "return": "RedRenderDebuger Instance"
   },
   {
+    "code": "PROPERTY",
     "title": "visible",
     "description": "\nRedRenderDebuger 정보 visible 여부\n",
     "return": "Boolean"

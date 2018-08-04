@@ -21,6 +21,9 @@ var DocJS = (function () {
 			.join("");
 		return format(output);
 	}
+	Recard.Css('.redDoc').S(
+		'user-select', 'none'
+	)
 	Recard.Css('.redDoc li').S(
 		'list-style-type', 'none',
 		'margin-left', 10
@@ -32,8 +35,14 @@ var DocJS = (function () {
 		'padding', '15px 15px 15px 15px',
 		'background', 'rgba(0,0,0,0.01)'
 	)
+	Recard.Css('.redDoc .redDocConstructorBox').S(
+		'position', 'relative',
+		'padding', '15px 5px',
+		'background', '#fff'
+	)
 	Recard.Css('.redDoc h1[titleBox]').S(
 		'font-size', '3em',
+		'line-height', '1em',
 		'color', '#111'
 	)
 	Recard.Css('.redDoc h2[titleBox]').S(
@@ -42,7 +51,7 @@ var DocJS = (function () {
 	)
 	Recard.Css('.redDoc h3[titleBox]').S(
 		'font-size', '1.5em',
-		'color', '#0795b7'
+		'color', '#36b334'
 	)
 	Recard.Css('.redDoc .redDocBox .paramTD').S(
 		'padding', '5px 10px',
@@ -59,6 +68,7 @@ var DocJS = (function () {
 			'right', 0,
 			'height', 85,
 			'padding-left', 20,
+			'z-index', 1,
 			'border-bottom', '1px solid #ddd',
 			'background', '#fff',
 			'>', Recard.Dom('h1').S(
@@ -67,7 +77,7 @@ var DocJS = (function () {
 			),
 			'>', Recard.Dom('div').S(
 				'position', 'fixed',
-				'top', 10,
+				'top', 18,
 				'right', 20,
 				'>', Recard.Dom('div').S(
 					'text-align', 'right',
@@ -83,7 +93,7 @@ var DocJS = (function () {
 				),
 				'>', Recard.Dom('div').S(
 					'text-align', 'right',
-					'html', 'By Redcamel'
+					'html', 'This project is maintained by <a href = "https://github.com/redcamel/">Redcamel</a>'
 				)
 			),
 			'<', 'body'
@@ -192,15 +202,15 @@ var DocJS = (function () {
 	callDoc = (function () {
 		var setConstructor;
 		var setContent;
-		var setTitle, setDescription, setReturn, setParam, setExample, setTestCase, setState;
+		var setTitle, setDescription, setReturn, setParam, setExample, setTestCase, setState, setExtends;
 		setTitle = function (data, tag, key) {
 			console.log(data['title'])
 			var tTitle = data['title'] ? data['title'] : 'DOC에 title이 정의 되지 않았습니다.'
-			if ( key == 'METHOD' ) {
+			if ( key == 'METHOD' || key == 'STATIC METHOD' ) {
 				var paramList = []
 				if ( data['params'] ) {
 					for ( var k in data['params'] ) {
-						paramList.push('<span style="font-weight:normal"> ' + k + (data['params'][k][0]['type'] ? ' : ' + data['params'][k][0]['type'] : '') + ' </span>')
+						paramList.push('<span style="font-weight:normal;font-size:14px;vertical-align: top"> <span style="color:#666;font-weight:bold;vertical-align: top">' + k + '</span>' + (data['params'][k][0]['type'] ? ' : ' + data['params'][k][0]['type'] : '') + ' </span>')
 					}
 				}
 				tTitle += '(' + paramList.join(', ') + ')'
@@ -211,6 +221,29 @@ var DocJS = (function () {
 				'padding', '10px 0',
 				'html', tTitle
 			)
+		}
+		setExtends = function (data, tag) {
+			console.log(data['extends'])
+			data = data['extends'];
+			var t0 = [];
+			if ( data ) {
+				data.forEach(function (v) {
+					t0.push(v)
+				});
+
+			}
+			if(t0.length){
+				t0 = t0.join(' >> ');
+				return Recard.Dom(tag ? tag : 'div').S(
+					'margin', '8px 0px 0px 0px',
+					'font-weight', 'bold',
+					'font-size', 14,
+					'margin-left', 3,
+					'color', '#059aab',
+					'html', '<b>extends</b> : ' + t0
+				)
+			}else return Recard.Dom('div')
+
 		}
 		setState = function (data, tag) {
 			console.log(data['title'])
@@ -350,6 +383,15 @@ var DocJS = (function () {
 				data = data[0];
 				Recard.Dom('div').S(
 					'>', setTitle(data, 'h1'),
+					'>', setExtends(data),
+					'>', Recard.Dom('div').S(
+						'@className', 'redDocBox redDocConstructorBox',
+						'>', setState(data),
+						'>', setDescription(data),
+						'>', setParam(data),
+						'>', setExample(data),
+						'>', setReturn(data)
+					),
 					'<', rightBox
 				)
 			}
@@ -369,12 +411,18 @@ var DocJS = (function () {
 				'>', box = Recard.Dom('div')
 			)
 			dataList.forEach(function (v) {
+				var tContentBox;
 				setTitle(v, 'h3', key).S(
 					'@titleBox', '',
+					'cursor', 'pointer',
+					'on', ['down', function () {
+						tContentBox.S('display', tContentBox.S('display') == 'none' ? 'block' : 'none')
+					}],
 					'<', box
 				)
-				Recard.Dom('div').S(
+				tContentBox = Recard.Dom('div').S(
 					'@className', 'redDocBox',
+					// 'display', 'none',
 					'>', setState(v),
 					'>', setDescription(v),
 					'>', setParam(v),
@@ -401,12 +449,13 @@ var DocJS = (function () {
 				var codeKEYList;
 				codeKEYList = {};
 				setConstructor(content.filter(function (v) {
-					if ( !v['contructorYn'] ) {
+					if ( !v['constructorYn'] ) {
 						if ( !v['code'] ) codeKEYList['none'] = -1
 						else if ( !codeKEYList[v['code']] ) codeKEYList[v['code']] = 1;
 					}
 					if ( v['constructorYn'] ) return true
 				}));
+				console.log(codeKEYList)
 				for ( var k in codeKEYList ) {
 					setContent(content, k == 'none' ? null : k, src);
 				}

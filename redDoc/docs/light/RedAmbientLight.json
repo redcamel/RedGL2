@@ -21,18 +21,22 @@
         "알파값"
       ]
     },
+    "extends": [
+      "RedBaseLight"
+    ],
     "example": "\nRedAmbientLight(RedGL Instance, hex, alpha)\n",
     "return": "RedAmbientLight Instance"
   },
   {
-    "title": "RedAmbientLight.type",
+    "title": "RedAmbientLight.TYPE",
     "code": "CONST",
     "description": "RedAmbientLight 타입상수",
     "return": "String"
   },
   {
     "title": "type",
-    "description": "RedAmbientLight['TYPE']",
+    "code": "PROPERTY",
+    "description": "인스턴스 생성시 RedAmbientLight['TYPE']값이 자동 주입됨",
     "return": "String"
   }
 ]

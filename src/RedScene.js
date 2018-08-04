@@ -15,6 +15,9 @@ var RedScene;
 				 '초기값 #000000'
 			 ]
 		 },
+		 extends : [
+		    'RedBaseContainer'
+		 ],
 		 return : 'RedScene Instance'
 	 }
 	 :DOC*/
@@ -29,6 +32,7 @@ var RedScene;
 		this['fogColor'] = '#ffffff';
 		/**DOC:
 		 {
+		     code : 'PROPERTY',
 			 title :`children`,
 			 description : `자식 리스트`,
 			 return : 'Array'
@@ -37,12 +41,13 @@ var RedScene;
 		this['children'] = [];
 		/**DOC:
 		 {
+		     code : 'PROPERTY',
 			 title :`shadowManager`,
 			 description : `
 				 그림자 매니저.
 				 RedScene Instance생성시 자동생성.
 			 `,
-			 return : 'Array'
+			 return : 'RedShadowManager Instance'
 		 }
 		 :DOC*/
 		this['shadowManager'] = RedShadowManager(redGL);
@@ -63,21 +68,26 @@ var RedScene;
 				 라이트 추가 매서드.
 				 RedBaseLight 확장객체만 등록가능.
 			 `,
+			 params : {
+			    light : [
+			        { type : 'RedBaseLight' }
+			    ]
+			 },
 			 return : 'void'
 		 }
 		 :DOC*/
-		addLight: function (v) {
-			switch ( v['TYPE'] ) {
+		addLight: function (light) {
+			switch ( light['TYPE'] ) {
 				case RedAmbientLight['TYPE']:
-					this['_lightInfo'][v['TYPE']] = v;
+					this['_lightInfo'][light['TYPE']] = light;
 					break;
 				case RedDirectionalLight['TYPE']:
-					if ( this['_lightInfo'][v['TYPE']].length == RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT ) RedGLUtil.throwFunc('RedScene : RedDirectionalLight ' + RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT + '개 까지 허용.');
-					this['_lightInfo'][v['TYPE']].push(v);
+					if ( this['_lightInfo'][light['TYPE']].length == RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT ) RedGLUtil.throwFunc('RedScene : RedDirectionalLight ' + RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT + '개 까지 허용.');
+					this['_lightInfo'][light['TYPE']].push(light);
 					break;
 				case RedPointLight['TYPE']:
-					if ( this['_lightInfo'][v['TYPE']].length == RedSystemShaderCode.MAX_POINT_LIGHT ) RedGLUtil.throwFunc('RedScene : RedPointLight ' + RedSystemShaderCode.MAX_POINT_LIGHT + '개 까지 허용.');
-					this['_lightInfo'][v['TYPE']].push(v);
+					if ( this['_lightInfo'][light['TYPE']].length == RedSystemShaderCode.MAX_POINT_LIGHT ) RedGLUtil.throwFunc('RedScene : RedPointLight ' + RedSystemShaderCode.MAX_POINT_LIGHT + '개 까지 허용.');
+					this['_lightInfo'][light['TYPE']].push(light);
 					break;
 				default:
 					RedGLUtil.throwFunc('RedScene : RedBaseLight 인스턴스만 가능');
@@ -91,23 +101,28 @@ var RedScene;
 				 라이트 제거 매서드.
 				 RedBaseLight 확장객체만 사용가능.
 			 `,
+			 params : {
+			    light : [
+			        { type : 'RedBaseLight' }
+			    ]
+			 },
 			 return : 'void'
 		 }
 		 :DOC*/
 		removeLight: (function () {
 			var tIndex;
-			return function (v) {
-				switch ( v['TYPE'] ) {
+			return function (light) {
+				switch ( light['TYPE'] ) {
 					case RedAmbientLight['TYPE']:
-						if ( this['_lightInfo'][v['TYPE']] == v ) this['_lightInfo'][v['TYPE']] = null;
+						if ( this['_lightInfo'][light['TYPE']] == light ) this['_lightInfo'][light['TYPE']] = null;
 						break;
 					case RedDirectionalLight['TYPE']:
-						tIndex = this['_lightInfo'][v['TYPE']].indexOf(v);
-						if ( tIndex > -1 ) this['_lightInfo'][v['TYPE']].splice(tIndex, 1);
+						tIndex = this['_lightInfo'][light['TYPE']].indexOf(light);
+						if ( tIndex > -1 ) this['_lightInfo'][light['TYPE']].splice(tIndex, 1);
 						break;
 					case RedPointLight['TYPE']:
-						tIndex = this['_lightInfo'][v['TYPE']].indexOf(v);
-						if ( tIndex > -1 ) this['_lightInfo'][v['TYPE']].splice(tIndex, 1);
+						tIndex = this['_lightInfo'][light['TYPE']].indexOf(light);
+						if ( tIndex > -1 ) this['_lightInfo'][light['TYPE']].splice(tIndex, 1);
 						break;
 					default:
 						RedGLUtil.throwFunc('RedScene : RedBaseLight 인스턴스만 가능')
@@ -119,7 +134,7 @@ var RedScene;
 	for ( var k in prototypeData ) RedScene.prototype[k] = prototypeData[k];
 	/**DOC:
 	 {
-		 code : 'property',
+		 code : 'PROPERTY',
 		 title :`backgroundColor`,
 		 description : `
 			 배경 컬러설정.
@@ -131,7 +146,7 @@ var RedScene;
 				 'ex) #fff, #ffffff'
 			 ]
 		 },
-		 return : 'void'
+		 return : 'hex'
 	 }
 	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedScene', 'backgroundColor', 'hex', {
@@ -147,6 +162,7 @@ var RedScene;
 	});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`useBackgroundColor`,
 		 description : `
 			 배경색 사용여부.
@@ -158,6 +174,7 @@ var RedScene;
 	RedDefinePropertyInfo.definePrototype('RedScene', 'useBackgroundColor', 'boolean', true);
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`useFog`,
 		 description : `
 			 안개 사용여부
@@ -169,6 +186,7 @@ var RedScene;
 	RedDefinePropertyInfo.definePrototype('RedScene', 'useFog', 'boolean', true);
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`fogDensity`,
 		 description : `
 			 안개농도
@@ -180,6 +198,7 @@ var RedScene;
 	RedDefinePropertyInfo.definePrototype('RedScene', 'fogDensity', 'number', {'min': 0});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`fogDistance`,
 		 description : `
 			 가시거리
@@ -191,6 +210,7 @@ var RedScene;
 	RedDefinePropertyInfo.definePrototype('RedScene', 'fogDistance', 'number', {'min': 0});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`fogColor`,
 		 description : `
 			 초기값 '#ffffff
@@ -211,6 +231,7 @@ var RedScene;
 	})
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`skyBox`,
 		 description : `
 			 skyBox get/set
@@ -228,6 +249,7 @@ var RedScene;
 	});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`grid`,
 		 description : `
 			 grid get/set
@@ -245,6 +267,7 @@ var RedScene;
 	});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`axis`,
 		 description : `
 			 axis get/set

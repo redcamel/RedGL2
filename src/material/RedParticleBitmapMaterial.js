@@ -62,6 +62,9 @@ var RedParticleBitmapMaterial;
 				 {type:'RedBitmapTexture'}
 			 ]
 		 },
+		 extends : [
+		    'RedBaseMaterial'
+		 ],
 		 return : 'RedParticleBitmapMaterial Instance'
 	 }
 	 :DOC*/
@@ -86,6 +89,7 @@ var RedParticleBitmapMaterial;
 	RedParticleBitmapMaterial.prototype = new RedBaseMaterial();
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`diffuseTexture`,
 		 return : 'RedBitmapTexture'
 	 }
@@ -93,6 +97,7 @@ var RedParticleBitmapMaterial;
 	RedDefinePropertyInfo.definePrototype('RedParticleBitmapMaterial', 'diffuseTexture', 'sampler2D', {essential: true});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`alpha`,
 		 description : `기본값 : 1`,
 		 return : 'Number'
@@ -101,6 +106,7 @@ var RedParticleBitmapMaterial;
 	RedDefinePropertyInfo.definePrototype('RedParticleBitmapMaterial', 'alpha', 'number', {min: 0, max: 1});
 	/**DOC:
 	 {
+	     code : 'PROPERTY',
 		 title :`alphaTest`,
 		 description : `기본값 : 0.01`,
 		 return : 'Number'
