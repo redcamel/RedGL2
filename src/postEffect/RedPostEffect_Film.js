@@ -65,6 +65,7 @@ var RedPostEffect_Film;
 		    'RedBasePostEffect',
 		    'RedBaseMaterial'
 		 ],
+		 demo : '../example/RedPostEffect_Film.html',
 		 return : 'RedPostEffect_Film Instance'
 	 }
 	 :DOC*/

@@ -14,6 +14,7 @@
       "RedBasePostEffect",
       "RedBaseMaterial"
     ],
+    "demo": "../example/RedPostEffect_BlurX.html",
     "return": "RedPostEffect_BlurX Instance"
   },
   {

@@ -123,6 +123,7 @@ var RedBox;
 		 extends : [
 		    'RedGeometry'
 		 ],
+		 demo : '../example/RedPrimitive.html',
 		 example : `
 			 RedBox(RedGL Instance);
 			 RedBox(RedGL Instance, 1, 1, 1);

@@ -18,6 +18,7 @@ var RedGeometry;
 				 `필수아님`
 			 ]
 		 },
+		 demo : '../example/RedBuffer.html',
 		 example : `
 			 RedGeometry(interleaveBuffer,indexBuffer)
 		 `,

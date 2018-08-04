@@ -158,6 +158,7 @@ var RedEnvironmentMaterial;
 		 extends : [
 		    'RedBaseMaterial'
 		 ],
+		 demo : '../example/RedEnvironmentMaterial.html',
 		 example : `
 			 RedEnvironmentMaterial(
 				 RedGL Instance,

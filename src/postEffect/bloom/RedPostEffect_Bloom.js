@@ -44,6 +44,7 @@ var RedPostEffect_Bloom;
 		    'RedBasePostEffect',
 		    'RedBaseMaterial'
 		 ],
+		 demo : '../example/RedPostEffect_Bloom.html',
 		 return : 'RedPostEffect_Bloom Instance'
 	 }
 	 :DOC*/

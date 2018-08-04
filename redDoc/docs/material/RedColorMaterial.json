@@ -36,6 +36,7 @@
     "extends": [
       "RedBaseMaterial"
     ],
+    "demo": "../example/RedColorMaterial.html",
     "example": "\nRedColorMaterial(RedGL Instance, hex)\n",
     "return": "RedColorMaterial Instance"
   }

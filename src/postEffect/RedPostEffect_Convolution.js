@@ -56,6 +56,7 @@ var RedPostEffect_Convolution;
 		    'RedBasePostEffect',
 		    'RedBaseMaterial'
 		 ],
+		 demo : '../example/RedPostEffect_Convolution.html',
 		 return : 'RedPostEffect_Convolution Instance'
 	 }
 	 :DOC*/

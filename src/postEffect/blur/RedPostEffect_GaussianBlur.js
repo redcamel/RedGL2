@@ -17,6 +17,7 @@ var RedPostEffect_GaussianBlur;
 		    'RedBasePostEffect',
 		    'RedBaseMaterial'
 		 ],
+		 demo : '../example/RedPostEffect_GaussianBlur.html',
 		 return : 'RedPostEffect_GaussianBlur Instance'
 	 }
 	 :DOC*/

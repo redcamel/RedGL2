@@ -66,6 +66,7 @@ var RedPostEffect_HalfTone;
 		    'RedBasePostEffect',
 		    'RedBaseMaterial'
 		 ],
+		 demo : '../example/RedPostEffect_HalfTone.html',
 		 return : 'RedPostEffect_HalfTone Instance'
 	 }
 	 :DOC*/

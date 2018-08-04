@@ -14,6 +14,7 @@ var RedPostEffectManager;
 				 {type:'RedGL'}
 			 ]
 		 },
+		 demo : '../example/RedPostEffect.html',
 		 return : 'RedPostEffectManager Instance'
 	 }
 	 :DOC*/

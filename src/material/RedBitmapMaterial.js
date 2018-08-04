@@ -75,6 +75,7 @@ var RedBitmapMaterial;
 		 extends : [
 		    'RedBaseMaterial'
 		 ],
+		 demo : '../example/RedBitmapMaterial.html',
 		 example : `
 			 RedBitmapMaterial( RedGL Instance, RedBitmapTexture(RedGL Instance, src) )
 		 `,

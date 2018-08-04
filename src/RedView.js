@@ -29,6 +29,7 @@ var RedView;
 				 'RedCamera'
 			 ]
 		 },
+		 demo : '../example/RedView.html',
 		 example : `
 			 var tWorld;
 			 RedView('test', RedGL Instance, RedScene Instance, RedCamera Instance); // test라는 키값을 가진 RedView 생성

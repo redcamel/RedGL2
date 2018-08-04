@@ -8,6 +8,7 @@ var RedObitController;
 		 description : `
 			 RedObitController Instance 생성자.
 		 `,
+		 demo : '../example/RedObitController.html',
 		 example : `
 			 RedObitController(RedGL Instance)
 		 `,

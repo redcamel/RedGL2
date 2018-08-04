@@ -9,6 +9,7 @@ var RedWorld;
 			 RedWorld Instance 생성자.
 			 RedWorld는 RedView를 소유하며 이는 렌더리스트로서 작동한다..
 		 `,
+		 demo : '../example/RedWorld.html',
 		 example : `
 			 RedWorld();
 		 `,

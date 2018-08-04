@@ -23,6 +23,7 @@ var RedParticleEmitter;
 			    {type:'RedParticleColorMaterial Instance or RedParticleBitmapMaterial Instance'},
 			 ]
 		 },
+		 demo : '../example/RedParticleEmitter.html',
 		 extends : [
 		    'RedBaseContainer',
 		    'RedBaseObject3D'
