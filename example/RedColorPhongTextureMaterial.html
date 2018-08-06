@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>RedColorPhongMaterial</title>
+    <title>RedColorPhongTextureMaterial</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -55,7 +55,7 @@
 			tLight.z = 10
 			// Box 설정
 			var tSphere;
-			var tMaterial = RedColorPhongMaterial(this, '#ff0000')
+			var tMaterial = RedColorPhongTextureMaterial(this, '#ff0000')
 			tSphere = RedMesh(this, RedSphere(this, 1, 32, 32, 32), tMaterial)
 			tScene.addChild(tSphere)
 			// 렌더시작
@@ -77,25 +77,67 @@
 		var gui = new baseTestUI(redGL)
 		gui.initRedGL()
 		gui.initScene(tScene)
-		var folder = gui['gui'].addFolder('RedColorPhongMaterial')
-		var testColorPhong = {
+		var folder = gui['gui'].addFolder('RedColorPhongTextureMaterial')
+		var testColorPhongTextureMaterial = {
 			color: '#ff0000',
+			normalTexture: false,
+			specularTexture: false,
+			displacementTexture: false,
 			shininess: 16,
-			specularPower: 1
+			normalPower: 1,
+			specularPower: 1,
+			displacementPower: 0,
+			displacementFlowSpeedX: 0,
+			displacementFlowSpeedY: 0
 		}
-		folder.addColor(testColorPhong, 'color').onChange(function (v) {
+		folder.addColor(testColorPhongTextureMaterial, 'color').onChange(function (v) {
 			tScene.children.forEach(function (v2) {
 				v2.material.color = v
 			})
 		})
-		folder.add(testColorPhong, 'shininess', 1, 128).onChange(function (v) {
+		folder.add(testColorPhongTextureMaterial, 'normalPower', 0, 3).onChange(function (v) {
+			tScene.children.forEach(function (v2) {
+				v2.material.normalPower = v
+			})
+		})
+		folder.add(testColorPhongTextureMaterial, 'shininess', 1, 128).onChange(function (v) {
 			tScene.children.forEach(function (v2) {
 				v2.material.shininess = v
 			})
 		})
-		folder.add(testColorPhong, 'specularPower', 0.1, 10).onChange(function (v) {
+		folder.add(testColorPhongTextureMaterial, 'specularPower', 0.1, 10).onChange(function (v) {
 			tScene.children.forEach(function (v2) {
 				v2.material.specularPower = v
+			})
+		})
+		folder.add(testColorPhongTextureMaterial, 'normalTexture').onChange(function (v) {
+			tScene.children.forEach(function (v2) {
+				v2.material.normalTexture = v ? RedBitmapTexture(redGL, '../asset/normalTest.jpg') : null
+			})
+		})
+		folder.add(testColorPhongTextureMaterial, 'specularTexture').onChange(function (v) {
+			tScene.children.forEach(function (v2) {
+				v2.material.specularTexture = v ? RedBitmapTexture(redGL, '../asset/specular.png') : null
+			})
+		})
+		folder.add(testColorPhongTextureMaterial, 'displacementTexture').onChange(function (v) {
+			tScene.children.forEach(function (v2) {
+				v2.material.displacementTexture = v ? RedBitmapTexture(redGL, '../asset/displacementTest.jpg') : null
+			})
+		})
+		folder.add(testColorPhongTextureMaterial, 'displacementPower', 0, 2).onChange(function (v) {
+			tScene.children.forEach(function (v2) {
+				v2.material.displacementPower = v
+			})
+		})
+		folder.add(testColorPhongTextureMaterial, 'displacementFlowSpeedX', 0, 0.3, 0.001).onChange(function (v) {
+			tScene.children.forEach(function (v2) {
+				v2.material.displacementFlowSpeedX = v
+			})
+		})
+		folder.add(testColorPhongTextureMaterial, 'displacementFlowSpeedY', 0, 0.3, 0.001).onChange(function (v) {
+			tScene.children.forEach(function (v2) {
+				v2.material.displacementFlowSpeedY = v
 			})
 		})
 		folder.open()
