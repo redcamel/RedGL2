@@ -94,24 +94,35 @@
 			})
 			// 렌더 디버거 활성화
 			tRenderer['renderDebuger']['visible'] = true
-			testUI = function (redGL, tCamera, tScene) {
-				var gui = new baseTestUI(redGL)
-				gui.initRedGL()
-				gui.initCamera(tCamera)
-				gui.initScene(tScene)
-				var alphaTest = {
-					alpha: 1
-				}
-				gui['gui'].add(alphaTest, 'alpha', 0, 1).onChange(function (v) {
-					tMaterial.alpha = tMaterial2.alpha = tMaterial3.alpha = v
-				})
-			}
 			testUI(this, tCamera, tScene)
 			console.log(tMaterial)
 		} else {
 			console.log('초기화 실패!')
 		}
 	})
+	testUI = function (redGL, tCamera, tScene) {
+		var gui = new baseTestUI(redGL)
+		gui.initRedGL()
+		gui.initCamera(tCamera)
+		gui.initScene(tScene)
+		var alphaTest = {
+			alpha: 1,
+			diffuseTexture: '../asset/draft1.png'
+		}
+		var folder;
+		folder = gui['gui'].addFolder('RedBitmapMaterial')
+		folder.add(alphaTest, 'alpha', 0, 1).onChange(function (v) {
+			tScene.children.forEach(function (v2) {
+				v2.material.alpha = v
+			})
+		})
+		folder.add(alphaTest, 'diffuseTexture', ['../asset/draft1.png', '../asset/draft2.png', '../asset/draft3.png'], 0).onChange(function (v) {
+			tScene.children.forEach(function (v2) {
+				v2.material.diffuseTexture = RedBitmapTexture(redGL, v)
+			})
+		})
+		folder.open()
+	}
 
 </script>
 </body>

@@ -150,7 +150,7 @@ var RedColorPhongTextureMaterial;
 		 extends : [
 		    'RedBaseMaterial'
 		 ],
-		 demo : '../example/RedColorPhongMaterial.html',
+		 demo : '../example/RedColorPhongTextureMaterial.html',
 		 example: `
 		 RedColorPhongTextureMaterial(RedGL Instance, hex, alpha, normalTexture, specularTexture)
 		 `,
