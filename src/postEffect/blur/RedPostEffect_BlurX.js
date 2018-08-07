@@ -57,7 +57,7 @@ var RedPostEffect_BlurX;
 		    'RedBasePostEffect',
 		    'RedBaseMaterial'
 		 ],
-		 demo : '../example/RedPostEffect_BlurX.html',
+		 demo : '../example/postEffect/blur/RedPostEffect_BlurX.html',
 		 return : 'RedPostEffect_BlurX Instance'
 	 }
 	 :DOC*/

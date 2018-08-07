@@ -42,7 +42,7 @@
       "RedBaseContainer",
       "RedBaseObject3D"
     ],
-    "demo": "../example/RedLine.html",
+    "demo": "../example/object3D/RedLine.html",
     "example": "\nvar tScene;\nvar tLine;\nvar tX, tY, tZ;\nvar i;\ntScene = RedScene();\ni = 3 * 20;\ntLine = RedLine(redGL Instance, RedColorMaterial(redGL Instance))\ntX = tY = tZ = 0\nwhile (i--) {\ntX += Math.random() * 0.5\ntY += Math.random() * 0.5\ntZ += Math.random() * 0.5\ntLine.addPoint(tX, tY, tZ)\n}\ntLine.upload()\ntScene.addChild(tLine)\n",
     "return": "RedLine Instance"
   },

@@ -20,7 +20,7 @@ var RedLine;
 		    'RedBaseContainer',
 		    'RedBaseObject3D'
 		 ],
-		 demo : '../example/RedLine.html',
+		 demo : '../example/object3D/RedLine.html',
 		 example : `
 		 var tScene;
 		 var tLine;

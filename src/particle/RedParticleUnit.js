@@ -16,6 +16,7 @@ var RedParticleUnit;
 				 {type:'RedGL'}
 			 ]
 		 },
+		 demo : '../example/material/RedPointColorMaterial.html',
 		 return : 'RedParticleUnit Instance'
 	 }
 	 :DOC*/

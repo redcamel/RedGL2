@@ -19,6 +19,7 @@ var RedMesh;
 				 {type:'RedBaseMaterial 확장 Instance'}
 			 ]
 		 },
+		 demo : '../example/object3D/RedMesh.html',
 		 extends : [
 		    'RedBaseContainer',
 		    'RedBaseObject3D'

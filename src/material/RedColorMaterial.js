@@ -72,7 +72,7 @@ var RedColorMaterial;
 		 extends : [
 		    'RedBaseMaterial'
 		 ],
-		 demo : '../example/RedColorMaterial.html',
+		 demo : '../example/material/RedColorMaterial.html',
 		 example : `
 			 RedColorMaterial(RedGL Instance, hex)
 		 `,

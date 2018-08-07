@@ -42,7 +42,7 @@ var RedPostEffect_Invert;
 		    'RedBasePostEffect',
 		    'RedBaseMaterial'
 		 ],
-		 demo : '../example/RedPostEffect_Invert.html',
+		 demo : '../example/postEffect/adjustments/RedPostEffect_Invert.html',
 		 return : 'RedPostEffect_Invert Instance'
 	 }
 	 :DOC*/

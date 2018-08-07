@@ -26,6 +26,7 @@
 <script id='testSource'>
 	var testUI;
 	var canvas;
+	var assetPath = '../../asset/'
 	canvas = document.createElement('canvas');
 	document.body.appendChild(canvas);
 	RedGL(canvas, function (v) {
@@ -56,12 +57,12 @@
 			// Mesh 설정
 			var tMesh;
 			var tEnvironmentTexture = RedBitmapCubeTexture(this, [
-				'../asset/cubemap/posx.png',
-				'../asset/cubemap/negx.png',
-				'../asset/cubemap/posy.png',
-				'../asset/cubemap/negy.png',
-				'../asset/cubemap/posz.png',
-				'../asset/cubemap/negz.png'
+				'../asset/cubemap/SwedishRoyalCastle/px.jpg',
+				'../asset/cubemap/SwedishRoyalCastle/nx.jpg',
+				'../asset/cubemap/SwedishRoyalCastle/py.jpg',
+				'../asset/cubemap/SwedishRoyalCastle/ny.jpg',
+				'../asset/cubemap/SwedishRoyalCastle/pz.jpg',
+				'../asset/cubemap/SwedishRoyalCastle/nz.jpg'
 			])
 			var tMaterial = RedEnvironmentMaterial(
 				this, RedBitmapTexture(this, '../asset/draft1.png'),
@@ -95,7 +96,7 @@
 		var gui = new baseTestUI(redGL)
 		gui.initRedGL()
 		gui.initCamera(tCamera)
-		gui.initScene(tScene)
+		gui.initScene(tScene, false, assetPath)
 	}
 </script>
 </body>

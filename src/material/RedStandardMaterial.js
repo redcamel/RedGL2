@@ -186,7 +186,7 @@ var RedStandardMaterial;
 		 extends : [
 		    'RedBaseMaterial'
 		 ],
-		 demo : '../example/RedStandardMaterial.html',
+		 demo : '../example/material/RedStandardMaterial.html',
 		 example : `
 			 RedStandardMaterial(
 				 RedGL Instance,

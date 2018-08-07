@@ -14,6 +14,7 @@
       "RedBaseContainer",
       "RedBaseObject3D"
     ],
+    "demo": "../example/object3D/RedAxis.html",
     "example": "\nvar tScene;\ntScene = RedScene();\ntScene['axis'] = RedAxis(redGL Instance)\n",
     "return": "RedAxis Instance"
   }

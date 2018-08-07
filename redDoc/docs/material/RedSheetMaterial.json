@@ -19,6 +19,12 @@
   },
   {
     "code": "PROPERTY",
+    "title": "alpha",
+    "description": "기본값 : 1",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
     "title": "diffuseTexture",
     "description": "diffuseTexture",
     "return": "RedSheetMaterial"
@@ -79,7 +85,7 @@
     "extends": [
       "RedBaseMaterial"
     ],
-    "demo": "../example/RedSheetMaterial.html",
+    "demo": "../example/material/RedSheetMaterial.html",
     "example": "\nRedSheetMaterial(RedGL Instance, RedBitmapTexture(RedGL Instance, src))\n",
     "return": "RedSheetMaterial Instance"
   },

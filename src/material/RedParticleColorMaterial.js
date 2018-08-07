@@ -51,6 +51,7 @@ var RedParticleColorMaterial;
 				 {type:'RedGL'}
 			 ]
 		 },
+		 demo : '../example/particle/RedParticleEmitter.html',
 		 extends : [
 		    'RedBaseMaterial'
 		 ],

@@ -48,6 +48,7 @@ var RedPointColorMaterial;
 				 {type:'RedGL'}
 			 ]
 		 },
+		 demo : '../example/material/RedPointColorMaterial.html',
 		 extends : [
 		    'RedBaseMaterial'
 		 ],

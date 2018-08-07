@@ -26,7 +26,7 @@
       "RedBasePostEffect",
       "RedBaseMaterial"
     ],
-    "demo": "../example/RedPostEffect_DoF.html",
+    "demo": "../example/postEffect/dof/RedPostEffect_DoF.html",
     "return": "RedPostEffect_DoF Instance"
   }
 ]

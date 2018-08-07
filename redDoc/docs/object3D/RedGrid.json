@@ -76,6 +76,7 @@
         "격자선 컬러"
       ]
     },
+    "demo": "../example/object3D/RedGrid.html",
     "extends": [
       "RedBaseContainer",
       "RedBaseObject3D"

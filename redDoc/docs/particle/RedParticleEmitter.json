@@ -21,7 +21,7 @@
         }
       ]
     },
-    "demo": "../example/RedParticleEmitter.html",
+    "demo": "../example/particle/RedParticleEmitter.html",
     "extends": [
       "RedBaseContainer",
       "RedBaseObject3D"

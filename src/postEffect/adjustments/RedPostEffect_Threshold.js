@@ -43,7 +43,7 @@ var RedPostEffect_Threshold;
 		    'RedBasePostEffect',
 		    'RedBaseMaterial'
 		 ],
-		 demo : '../example/RedPostEffect_Threshold.html',
+		 demo : '../example/postEffect/adjustments/RedPostEffect_Threshold.html',
 		 return : 'RedPostEffect_Threshold Instance'
 	 }
 	 :DOC*/

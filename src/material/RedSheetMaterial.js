@@ -40,6 +40,7 @@ var RedSheetMaterial;
 		/* @preserve
 		 precision mediump float;
 		 uniform sampler2D u_diffuseTexture;
+         uniform float u_alpha;
 		 float fogFactor(float perspectiveFar, float density){
 			 float flog_cord = gl_FragCoord.z / gl_FragCoord.w / perspectiveFar;
 			 float fog = flog_cord * density;
@@ -53,7 +54,7 @@ var RedSheetMaterial;
 			 vec4 finalColor = texture2D(u_diffuseTexture, vTexcoord);
 			 finalColor.rgb *= finalColor.a;
 			 if(finalColor.a ==0.0) discard;
-
+			 finalColor.a *= u_alpha;
 			 //#define#fog#false# gl_FragColor = finalColor;
 			 //#define#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
 		 }
@@ -78,7 +79,7 @@ var RedSheetMaterial;
 		 extends : [
 		    'RedBaseMaterial'
 		 ],
-		 demo : '../example/RedSheetMaterial.html',
+		 demo : '../example/material/RedSheetMaterial.html',
 		 example : `
 			 RedSheetMaterial(RedGL Instance, RedBitmapTexture(RedGL Instance, src))
 		 `,
@@ -99,6 +100,7 @@ var RedSheetMaterial;
 		this['_sheetRect'] = new Float32Array(4);
 		/////////////////////////////////////////
 		// 일반 프로퍼티
+		this['alpha'] = 1;
 		this['_perFrameTime'] = 0; // 단위당 시간
 		this['_nextFrameTime'] = 0; // 다음 프레임 호출 시간
 		this['_playYn'] = true;
@@ -277,5 +279,14 @@ var RedSheetMaterial;
 	 }
 	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'segmentH', 'number', {min: 1});
+	/**DOC:
+	 {
+	     code : 'PROPERTY',
+		 title :`alpha`,
+		 description : `기본값 : 1`,
+		 return : 'Number'
+	 }
+	 :DOC*/
+	RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'alpha', 'number', {min: 0, max: 1});
 	Object.freeze(RedSheetMaterial)
 })();

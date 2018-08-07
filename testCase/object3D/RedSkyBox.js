@@ -2,12 +2,12 @@
 RedGL(document.createElement('canvas'), function (v) {
 	var tRedGL = this;
 	var tSrcList = [
-		'../../asset/cubemap/posx.png',
-		'../../asset/cubemap/negx.png',
-		'../../asset/cubemap/posy.png',
-		'../../asset/cubemap/negy.png',
-		'../../asset/cubemap/posz.png',
-		'../../asset/cubemap/negz.png'
+		'../../asset/cubemap/SwedishRoyalCastle/px.jpg',
+		'../../asset/cubemap/SwedishRoyalCastle/nx.jpg',
+		'../../asset/cubemap/SwedishRoyalCastle/ny.jpg',
+		'../../asset/cubemap/SwedishRoyalCastle/py.jpg',
+		'../../asset/cubemap/SwedishRoyalCastle/pz.jpg',
+		'../../asset/cubemap/SwedishRoyalCastle/nz.jpg'
 	]
 	redSuite(
 		"RedSkyBox 테스트",

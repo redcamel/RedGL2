@@ -32,6 +32,7 @@
         }
       ]
     },
+    "demo": "../example/object3D/RedMesh.html",
     "extends": [
       "RedBaseContainer",
       "RedBaseObject3D"

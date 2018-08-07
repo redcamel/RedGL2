@@ -62,6 +62,7 @@ var RedParticleBitmapMaterial;
 				 {type:'RedBitmapTexture'}
 			 ]
 		 },
+		  demo : '../example/particle/RedParticleEmitter.html',
 		 extends : [
 		    'RedBaseMaterial'
 		 ],
