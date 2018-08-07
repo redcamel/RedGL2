@@ -17,6 +17,7 @@ var RedAxis;
 		    'RedBaseContainer',
 		    'RedBaseObject3D'
 		 ],
+		 demo : '../example/object3D/RedAxis.html',
 		 example : `
 			 var tScene;
 			 tScene = RedScene();

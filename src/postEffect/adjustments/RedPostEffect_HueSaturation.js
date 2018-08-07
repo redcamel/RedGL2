@@ -54,7 +54,7 @@ var RedPostEffect_HueSaturation;
 		    'RedBasePostEffect',
 		    'RedBaseMaterial'
 		 ],
-		  demo : '../example/RedPostEffect_HueSaturation.html',
+		  demo : '../example/postEffect/adjustments/RedPostEffect_HueSaturation.html',
 		 return : 'RedPostEffect_HueSaturation Instance'
 	 }
 	 :DOC*/

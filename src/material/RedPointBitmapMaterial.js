@@ -52,6 +52,7 @@ var RedPointBitmapMaterial;
 				 {type:'RedBitmapTexture'}
 			 ]
 		 },
+		 demo : '../example/material/RedPointBitmapMaterial.html',
 		 extends : [
 		    'RedBaseMaterial'
 		 ],

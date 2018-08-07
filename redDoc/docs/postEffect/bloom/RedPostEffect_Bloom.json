@@ -32,7 +32,7 @@
       "RedBasePostEffect",
       "RedBaseMaterial"
     ],
-    "demo": "../example/RedPostEffect_Bloom.html",
+    "demo": "../example/postEffect/bloom/RedPostEffect_Bloom.html",
     "return": "RedPostEffect_Bloom Instance"
   },
   {

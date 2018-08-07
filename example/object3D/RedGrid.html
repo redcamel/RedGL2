@@ -1,0 +1,84 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>html</title>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
+    />
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+    </style>
+
+    <script src="../dat.gui.min.js"></script>
+    <script src="../baseTestUI.js"></script>
+    <script src="../../release/RedGL.min.js"></script>
+</head>
+
+<body>
+<script id='testSource'>
+	var testUI;
+	var canvas;
+	var assetPath = '../../asset/'
+	canvas = document.createElement('canvas');
+	document.body.appendChild(canvas);
+	RedGL(canvas, function (v) {
+		if ( v ) {
+			console.log('초기화 성공!')
+			var tWorld, tRenderer;
+			var tScene;
+			var tCamera;
+			// 월드 생성
+			this['world'] = tWorld = RedWorld();
+			// 씬 생성
+			tScene = RedScene(this);
+			// 카메라 생성
+			tCamera = RedObitController(this);
+			tCamera.tilt = -45
+			// 렌더러 생성
+			tRenderer = RedRenderer();
+			// 뷰생성 및 적용
+			tWorld.addView(RedView('testView', this, tScene, tCamera));
+			// 그리드 설정
+			tScene['grid'] = RedGrid(this)
+			// 렌더시작
+			tRenderer.start(this, function (time) {
+			})
+			// 렌더 디버거 활성화
+			tRenderer['renderDebuger']['visible'] = true
+			//
+			testUI(this, tScene['grid'])
+		} else {
+			console.log('초기화 실패!')
+		}
+	})
+	testUI = function (redGL, redGrid) {
+		console.log('test')
+		var gui = new baseTestUI(redGL)
+		var folder;
+		folder = gui['gui'].addFolder('RedGrid')
+		folder.add(redGrid, 'size', 0, 100).onChange(function (v) {
+			redGrid.alpha = v
+		})
+		folder.add(redGrid, 'divisions', 0, 100).onChange(function (v) {
+			redGrid.divisions = v
+		})
+		folder.addColor(redGrid, 'color1').onChange(function (v) {
+			redGrid.color1 = v
+		})
+		folder.addColor(redGrid, 'color2').onChange(function (v) {
+			redGrid.color2 = v
+		})
+		folder.open()
+	}
+</script>
+</body>
+
+</html>

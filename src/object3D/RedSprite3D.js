@@ -20,7 +20,7 @@ var RedSprite3D;
 		    'RedBaseContainer',
 		    'RedBaseObject3D'
 		 ],
-		 demo : '../example/RedSprite3D.html',
+		 demo : '../example/object3D/RedSprite3D.html',
 		 example : `
 			 var tScene;
 			 var tSprite3D;

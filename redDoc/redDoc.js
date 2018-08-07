@@ -379,7 +379,7 @@ var DocJS = (function () {
 			tLoader.start()
 		}
 		setDemo = function (data) {
-			console.log('뭐가오지',data)
+			console.log('뭐가오지', data)
 			var tIframe;
 			var tLoader
 			var tRoot;
@@ -394,7 +394,14 @@ var DocJS = (function () {
 			tLoader.onAllLoaded(function (v) {
 				if ( v[0]['resultType'] != 'FAIL' ) {
 					tRoot.S(
-						'>', Recard.Dom('h1').S('html', 'Demo'),
+						'>', Recard.Dom('h1').S(
+							'>', Recard.Dom('span').S('html', 'Demo'),
+							'>', Recard.Dom('a').S(
+								'@href', src,
+								'font-size',12,
+								'html', ' ( ' + src + ' )'
+							)
+						),
 						'>', tIframe = Recard.Dom('iframe').S(
 							'@src', src,
 							'border-radius', 5,

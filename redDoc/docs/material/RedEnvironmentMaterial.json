@@ -88,7 +88,7 @@
     "extends": [
       "RedBaseMaterial"
     ],
-    "demo": "../example/RedEnvironmentMaterial.html",
+    "demo": "../example/material/RedEnvironmentMaterial.html",
     "example": "\nRedEnvironmentMaterial(\nRedGL Instance,\nRedBitmapTexture(RedGL Instance, src), // diffuseTexture\nRedBitmapCubeTexture(RedGL Instance, srcList),\nRedBitmapTexture(RedGL Instance, src), // normalTexture\nRedBitmapTexture(RedGL Instance, src), // specularTexture\nRedBitmapTexture(RedGL Instance, src)  // displacementTexture\n)\n",
     "return": "RedEnvironmentMaterial Instance"
   },

@@ -32,6 +32,7 @@
         }
       ]
     },
+    "demo": "../example/material/RedPointBitmapMaterial.html",
     "extends": [
       "RedBaseMaterial"
     ],

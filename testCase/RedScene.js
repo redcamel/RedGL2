@@ -321,12 +321,12 @@ RedGL(document.createElement('canvas'), function (v) {
 			redTest("성공테스트 : RedSkyBox Instance만  허용하는지 확인", function (unit, title) {
 				var t0 = RedScene(tRedGL);
 				t0['skyBox'] = RedSkyBox(tRedGL, [
-					'../asset/cubemap/posx.png',
-					'../asset/cubemap/negx.png',
-					'../asset/cubemap/posy.png',
-					'../asset/cubemap/negy.png',
-					'../asset/cubemap/posz.png',
-					'../asset/cubemap/negz.png'
+					'../asset/cubemap/SwedishRoyalCastle/px.jpg',
+					'../asset/cubemap/SwedishRoyalCastle/nx.jpg',
+					'../asset/cubemap/SwedishRoyalCastle/ny.jpg',
+					'../asset/cubemap/SwedishRoyalCastle/py.jpg',
+					'../asset/cubemap/SwedishRoyalCastle/pz.jpg',
+					'../asset/cubemap/SwedishRoyalCastle/nz.jpg'
 				])
 				unit.run(t0['skyBox'] instanceof RedSkyBox)
 			}, true),
@@ -344,12 +344,12 @@ RedGL(document.createElement('canvas'), function (v) {
 			redTest("성공테스트 : null 세팅확인", function (unit, title) {
 				var t0 = RedScene(tRedGL);
 				t0['skyBox'] = RedSkyBox(tRedGL, [
-					'../asset/cubemap/posx.png',
-					'../asset/cubemap/negx.png',
-					'../asset/cubemap/posy.png',
-					'../asset/cubemap/negy.png',
-					'../asset/cubemap/posz.png',
-					'../asset/cubemap/negz.png'
+					'../asset/cubemap/SwedishRoyalCastle/px.jpg',
+					'../asset/cubemap/SwedishRoyalCastle/nx.jpg',
+					'../asset/cubemap/SwedishRoyalCastle/ny.jpg',
+					'../asset/cubemap/SwedishRoyalCastle/py.jpg',
+					'../asset/cubemap/SwedishRoyalCastle/pz.jpg',
+					'../asset/cubemap/SwedishRoyalCastle/nz.jpg'
 				])
 				t0['skyBox'] = null;
 				unit.run(t0['skyBox'])

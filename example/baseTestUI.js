@@ -35,7 +35,7 @@ baseTestUI.makeBaseUI = function () {
 	makeSourceView()
 }
 baseTestUI.prototype = {
-	initRedGL: function () {
+	initRedGL: function (open) {
 		var self = this
 		var redGLTest = {
 			setSizeTest1: function () {
@@ -56,9 +56,10 @@ baseTestUI.prototype = {
 		t0.add(redGLTest, 'setSizeTest1').name('setSize(300,300)');
 		t0.add(redGLTest, 'setSizeTest2').name('setSize(600,300)');
 		t0.add(redGLTest, 'setSizeTest3').name('setSize(100%,100%)');
+		if ( open ) t0.open()
 		return t0
 	},
-	initCamera: function (camera) {
+	initCamera: function (camera, open) {
 		var t0 = this['gui'].addFolder('camera')
 		camera = camera instanceof RedCamera ? camera : camera.camera
 		t0.add(camera, 'orthographicYn', true, false)
@@ -68,9 +69,10 @@ baseTestUI.prototype = {
 		t0.add(camera, 'x', -100, 100)
 		t0.add(camera, 'y', -100, 100)
 		t0.add(camera, 'z', -100, 100)
+		if ( open ) t0.open()
 		return t0
 	},
-	initBasicController: function (controller) {
+	initBasicController: function (controller, open) {
 		var t0 = this['gui'].addFolder('BasicController')
 		t0.add(controller, 'x', -100, 100)
 		t0.add(controller, 'y', -100, 100)
@@ -82,6 +84,7 @@ baseTestUI.prototype = {
 		t0.add(controller, 'speedRotation', 0.1, 2)
 		t0.add(controller, 'delayRotation', 0.01, 0.5)
 		t0.add(controller, 'maxAcceleration', 0.1, 5)
+		if ( open ) t0.open()
 		return t0
 	},
 	initObitController: function (controller) {
@@ -99,7 +102,7 @@ baseTestUI.prototype = {
 		t0.add(controller, 'delayRotation', 0.01, 0.5)
 		return t0
 	},
-	initScene: function (scene) {
+	initScene: function (scene, open, assetPath) {
 		var t0 = this['gui'].addFolder('scene')
 		var self = this
 		var test = {
@@ -117,51 +120,52 @@ baseTestUI.prototype = {
 		t0.add(test, 'axis').onChange(function (v) {
 			scene['axis'] = v ? RedAxis(self['redGL']) : null
 		})
+		assetPath = assetPath ? assetPath : '../asset/'
 		t0.add(test, 'skyBox').onChange(function (v) {
 			scene['skyBox'] = v ?
 				RedSkyBox(self['redGL'], [
-					'../asset/cubemap/posx.png',
-					'../asset/cubemap/negx.png',
-					'../asset/cubemap/posy.png',
-					'../asset/cubemap/negy.png',
-					'../asset/cubemap/posz.png',
-					'../asset/cubemap/negz.png'
+					assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
+					assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
+					assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
+					assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
+					assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
+					assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
 				]) : null
 		})
-		t0.open()
-		t0 = t0.addFolder('fog')
-		t0.open()
-		t0.add(scene, 'useFog')
-		t0.add(scene, 'fogDensity', 0, 1)
-		t0.add(scene, 'fogDistance', 0, 50000)
-		t0.addColor(scene, 'fogColor')
-		t0 = t0.addFolder('grid')
+		if ( open ) t0.open()
+		var tFolder;
+		tFolder = t0.addFolder('fog')
+		tFolder.add(scene, 'useFog')
+		tFolder.add(scene, 'fogDensity', 0, 1)
+		tFolder.add(scene, 'fogDistance', 0, 50000)
+		tFolder.addColor(scene, 'fogColor')
+		tFolder = t0.addFolder('grid')
 		var testGrid = {
-			grid: true,
+			grid: scene['grid'] ? true : false,
 			size: 100,
 			divisions: 100,
 			color1: '#cccccc',
 			color2: '#666666'
 		}
-		t0.add(testGrid, 'grid').onChange(function (v) {
+		tFolder.add(testGrid, 'grid').onChange(function (v) {
 			scene['grid'] = v ? RedGrid(self['redGL'], testGrid['size'], testGrid['divisions'], testGrid['color1'], testGrid['color2']) : null
 		})
-		t0.add(testGrid, 'size', 1, 200).onChange(function (v) {
+		tFolder.add(testGrid, 'size', 1, 200).onChange(function (v) {
 			if ( testGrid['grid'] ) {
 				scene['grid'] = RedGrid(self['redGL'], testGrid['size'], testGrid['divisions'], testGrid['color1'], testGrid['color2'])
 			}
 		})
-		t0.add(testGrid, 'divisions', 1, 200, 2).onChange(function (v) {
+		tFolder.add(testGrid, 'divisions', 1, 200, 2).onChange(function (v) {
 			if ( testGrid['grid'] ) {
 				scene['grid'] = RedGrid(self['redGL'], testGrid['size'], testGrid['divisions'], testGrid['color1'], testGrid['color2'])
 			}
 		})
-		t0.addColor(testGrid, 'color1').onChange(function (v) {
+		tFolder.addColor(testGrid, 'color1').onChange(function (v) {
 			if ( testGrid['grid'] ) {
 				scene['grid'] = RedGrid(self['redGL'], testGrid['size'], testGrid['divisions'], testGrid['color1'], testGrid['color2'])
 			}
 		})
-		t0.addColor(testGrid, 'color2').onChange(function (v) {
+		tFolder.addColor(testGrid, 'color2').onChange(function (v) {
 			if ( testGrid['grid'] ) {
 				scene['grid'] = RedGrid(self['redGL'], testGrid['size'], testGrid['divisions'], testGrid['color1'], testGrid['color2'])
 			}
@@ -183,8 +187,7 @@ baseTestUI.prototype = {
 			self['gui'].updateDisplay()
 		})
 		return t0
-	}
-	,
+	},
 	initView: function (view) {
 		var t0 = this['gui'].addFolder('view')
 		var self = this

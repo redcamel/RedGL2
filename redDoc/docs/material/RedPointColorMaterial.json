@@ -16,6 +16,7 @@
         }
       ]
     },
+    "demo": "../example/material/RedPointColorMaterial.html",
     "extends": [
       "RedBaseMaterial"
     ],

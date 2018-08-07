@@ -20,16 +20,17 @@ var RedSkyBox;
          extends : [
 		    'RedBaseObject3D'
 		 ],
+		 demo : '../example/object3D/RedSkyBox.html',
 		 example : `
 			 var tScene3D;
 			 tScene3D = RedScene()
 			 tScene3D.skyBox = RedSkyBox(RedGL Instance, [
-				 'asset/cubemap/posx.png',
-				 'asset/cubemap/negx.png',
-				 'asset/cubemap/posy.png',
-				 'asset/cubemap/negy.png',
-				 'asset/cubemap/posz.png',
-				 'asset/cubemap/negz.png'
+				 'asset/cubemap/SwedishRoyalCastle/px.jpg',
+				 'asset/cubemap/SwedishRoyalCastle/nx.jpg',
+				 'asset/cubemap/SwedishRoyalCastle/ny.jpg',
+				 'asset/cubemap/SwedishRoyalCastle/py.jpg',
+				 'asset/cubemap/SwedishRoyalCastle/pz.jpg',
+				 'asset/cubemap/SwedishRoyalCastle/nz.jpg'
 			 ])
 		 `,
 		 return : 'RedSkyBox Instance'

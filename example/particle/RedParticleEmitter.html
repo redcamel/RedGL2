@@ -1,0 +1,380 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>RedParticleBitmapMaterial</title>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
+    />
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+    </style>
+
+    <script src="../dat.gui.min.js"></script>
+    <script src="../baseTestUI.js"></script>
+    <script src="../../release/RedGL.min.js"></script>
+</head>
+
+<body>
+<script id='testSource'>
+	var canvas;
+	var assetPath = '../../asset/'
+	canvas = document.createElement('canvas');
+	document.body.appendChild(canvas);
+	RedGL(canvas, function (v) {
+		var tGL;
+		var tWorld, tScene3D, tCamera
+		var tRenderer;
+		var self;
+		self = this
+		tGL = this.gl;
+		this.world = tWorld = RedWorld();
+		tScene3D = RedScene(this, '#223344');
+		tScene3D.alpha = 0.1
+		tCamera = RedObitController(self)
+		tCamera.distance = 50
+		tRenderer = RedRenderer();
+		tWorld.addView(RedView('test', this, tScene3D, tCamera));
+		var testDLight;
+		testDLight = RedDirectionalLight(this, '#fff')
+		testDLight.x = 3
+		testDLight.y = 3
+		testDLight.z = 3
+		tScene3D.addLight(testDLight);
+		tScene3D['grid'] = RedGrid(self)
+		tScene3D.skyBox =
+			RedSkyBox(this, [
+				assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
+				assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
+				assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
+				assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
+				assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
+				assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
+			]);
+		/////////////////
+		var TEST_UI_DATA = [
+			{
+				name: 'movementX',
+				startRangeMin: 0, startRangeMax: 0,
+				endRangeMin: 0, endRangeMax: 0,
+				startRange: [-15, 15],
+				endRange: [-15, 15],
+				ease: RedParticleEmitter.QuadIn
+			},
+			{
+				name: 'movementY',
+				startRangeMin: 0, startRangeMax: 0,
+				endRangeMin: 0, endRangeMax: 0,
+				startRange: [-15, 15],
+				endRange: [-15, 15],
+				ease: RedParticleEmitter.QuadIn
+			},
+			{
+				name: 'movementZ',
+				startRangeMin: 0, startRangeMax: 0,
+				endRangeMin: 0, endRangeMax: 0,
+				startRange: [-15, 15],
+				endRange: [-15, 15],
+				ease: RedParticleEmitter.QuadIn
+			},
+			{
+				name: 'scale',
+				startRangeMin: 0, startRangeMax: 0,
+				endRangeMin: 0, endRangeMax: 0,
+				startRange: [0, 10],
+				endRange: [0, 10],
+				ease: RedParticleEmitter.QuadIn
+			},
+			{
+				name: 'alpha',
+				startRangeMin: 0, startRangeMax: 0,
+				endRangeMin: 0, endRangeMax: 0,
+				startRange: [0, 1],
+				endRange: [0, 1],
+				ease: RedParticleEmitter.QuadIn
+			}
+		]
+		var TEST_TWEEN_LIST = {
+			//
+			QuintIn: 'QuintIn',
+			QuintOut: 'QuintOut',
+			QuintInOut: 'QuintInOut',
+			//
+			BackIn: 'BackIn',
+			BackOut: 'BackOut',
+			BackInOut: 'BackInOut',
+			//
+			CircIn: 'CircIn',
+			CircOut: 'CircOut',
+			CircInOut: 'CircInOut',
+			//
+			CubicIn: 'CubicIn',
+			CubicOut: 'CubicOut',
+			CubicInOut: 'CubicInOut',
+			//
+			ExpoIn: 'ExpoIn',
+			ExpoOut: 'ExpoOut',
+			ExpoInOut: 'ExpoInOut',
+			//
+			QuadIn: 'QuadIn',
+			QuadOut: 'QuadOut',
+			QuadInOut: 'QuadInOut',
+			//
+			QuartIn: 'QuartIn',
+			QuartOut: 'QuartOut',
+			QuartInOut: 'QuartInOut',
+			//
+			SineIn: 'SineIn',
+			SineOut: 'SineOut',
+			SineInOut: 'SineInOut',
+			//
+			ElasticIn: 'ElasticIn',
+			ElasticOut: 'ElasticOut',
+			ElasticInOut: 'ElasticInOut'
+		}
+		var TEST_PARTICLE_DEFINE_DATA = {
+			max: 200,
+			emitCount: 1,
+			lifeTime: [1000, 1500],
+			particle: {
+				movementX: {start: [0, 0], end: [-15, 15], ease: RedParticleEmitter.QuadIn},
+				movementY: {start: [0, 0], end: [-15, 15], ease: RedParticleEmitter.QuadIn},
+				movementZ: {start: [0, 0], end: [-15, 15], ease: RedParticleEmitter.QuadIn},
+				scale: {start: [0, 0], end: [7, 13], ease: RedParticleEmitter.QuadIn},
+				alpha: {start: [1, 1], end: [0, 0], ease: RedParticleEmitter.QuadIn}
+			},
+			tint: 'random',
+			gravity: 0
+		}
+		var testTextureList = [
+			RedBitmapTexture(this, assetPath + 'particle.png'),
+			RedBitmapTexture(this, assetPath + 'alphaTest.png')
+		]
+		var testEmitter = new RedParticleEmitter(this, TEST_PARTICLE_DEFINE_DATA, RedParticleBitmapMaterial(this, testTextureList[0]))
+		var centerMesh = RedMesh(this, RedSphere(this, 0.2, 16, 16, 16), RedColorPhongMaterial(this))
+		var moveYn
+		tScene3D.addChild(testEmitter)
+		tRenderer.start(this, function (time) {
+			tRenderer.renderDebuger.visible = true
+			if ( moveYn ) {
+				centerMesh.x = testEmitter.x = Math.sin(time / 500) * 5
+				centerMesh.y = testEmitter.y = 0
+				centerMesh.z = testEmitter.z = Math.cos(time / 500) * 5
+			}
+			testEmitter.update(time)
+		})
+		console.log(tScene3D)
+		var makeTestUI;
+		makeTestUI = (function () {
+			var gui, tFolder;
+			var updateRule;
+			updateRule = function (key) {
+				var i = testEmitter['list'].length
+				var tParticle;
+				while ( i-- ) {
+					tParticle = testEmitter['list'][i]
+					tParticle.addRule(key, TEST_PARTICLE_DEFINE_DATA['particle'][key])
+				}
+			}
+			return function () {
+				gui = this['gui'] = new dat.GUI({name: 'test'});
+				tFolder = gui.addFolder('particleUnit')
+				tFolder.open()
+				TEST_UI_DATA.forEach(function (tDefineData) {
+					var tSubFolder = tFolder.addFolder(tDefineData['name']);
+					// 범위 설정
+					['start', 'end'].forEach(function (key) {
+						tDefineData[key + 'RangeMin'] = TEST_PARTICLE_DEFINE_DATA['particle'][tDefineData['name']][key][0]
+						tSubFolder.add(tDefineData, key + 'RangeMin', tDefineData[key + 'Range'][0], tDefineData[key + 'Range'][1], 0.001).onChange(function (v) {
+							TEST_PARTICLE_DEFINE_DATA['particle'][tDefineData['name']][key][0] = tDefineData[key + 'RangeMin'] = v
+							updateRule(tDefineData['name'])
+						})
+						tDefineData[key + 'RangeMax'] = TEST_PARTICLE_DEFINE_DATA['particle'][tDefineData['name']][key][1]
+						tSubFolder.add(tDefineData, key + 'RangeMax', tDefineData[key + 'Range'][0], tDefineData[key + 'Range'][1], 0.001).onChange(function (v) {
+							TEST_PARTICLE_DEFINE_DATA['particle'][tDefineData['name']][key][1] = tDefineData[key + 'RangeMax'] = v
+							updateRule(tDefineData['name'])
+						})
+					})
+					// 이징 설정
+					tSubFolder.add(TEST_TWEEN_LIST, 'QuadIn', TEST_TWEEN_LIST).onChange(function (v) {
+						var i = testEmitter['list'].length
+						var tParticle;
+						while ( i-- ) {
+							tParticle = testEmitter['list'][i][tDefineData['name']]
+							tParticle['ease'] = RedParticleEmitter[v]
+						}
+					})
+					// UI열기
+					if ( tDefineData['name'] == 'scale' || tDefineData['name'] == 'alpha' ) {
+					} else tSubFolder.open()
+				})
+				// 파티클에미터 설정
+				gui = this['gui'] = new dat.GUI({name: 'test'});
+				tFolder = gui.addFolder('particleEmitter')
+				tFolder.open()
+				tFolder.add(TEST_PARTICLE_DEFINE_DATA, 'gravity', -0.01, 0.01, 0.001)
+				tFolder.add(TEST_PARTICLE_DEFINE_DATA, 'max', 1, 500, 1).onChange(function (v) {
+					testEmitter.list = testEmitter.list.slice(0, v)
+					testEmitter._interleaveData = testEmitter._interleaveData.slice(0, v * 8)
+				})
+				tFolder.add(TEST_PARTICLE_DEFINE_DATA, 'emitCount', 0, 100, 1).onChange(function () {
+					testEmitter.list.length = 0
+				})
+				var testLifeTime = {
+					lifeTimeRangeMin: TEST_PARTICLE_DEFINE_DATA['lifeTime'][0],
+					lifeTimeRangeMax: TEST_PARTICLE_DEFINE_DATA['lifeTime'][1]
+				}
+				tFolder.add(testLifeTime, 'lifeTimeRangeMin', 0, 5000, 1).onChange(function (v) {
+						var i = testEmitter['list'].length
+						var tParticle;
+						var lifeTime
+						TEST_PARTICLE_DEFINE_DATA['lifeTime'][0] = v
+						lifeTime = TEST_PARTICLE_DEFINE_DATA['lifeTime']
+						while ( i-- ) {
+							tParticle = testEmitter['list'][i]
+							tParticle['lifeTime'] = lifeTime.length == 2 ? Math.random() * (lifeTime[1] - lifeTime[0]) + lifeTime[0] : lifeTime[0]
+						}
+					}
+				)
+				tFolder.add(testLifeTime, 'lifeTimeRangeMax', 0, 5000, 1).onChange(function (v) {
+					var i = testEmitter['list'].length
+					var tParticle;
+					var lifeTime
+					TEST_PARTICLE_DEFINE_DATA['lifeTime'][1] = v
+					lifeTime = TEST_PARTICLE_DEFINE_DATA['lifeTime']
+					while ( i-- ) {
+						tParticle = testEmitter['list'][i]
+						tParticle['lifeTime'] = lifeTime.length == 2 ? Math.random() * (lifeTime[1] - lifeTime[0]) + lifeTime[0] : lifeTime[0]
+					}
+				})
+				var TINT_TEST_DATA = {
+					random: function () {
+						TEST_PARTICLE_DEFINE_DATA['tint'] = 'random'
+					},
+					red: function () {
+						TEST_PARTICLE_DEFINE_DATA['tint'] = [1, 0, 0]
+					},
+					green: function () {
+						TEST_PARTICLE_DEFINE_DATA['tint'] = [0, 1, 0]
+					}
+				}
+				tFolder = gui.addFolder('tint')
+				tFolder.open()
+				tFolder.add(TINT_TEST_DATA, 'random').name('tint - random')
+				tFolder.add(TINT_TEST_DATA, 'red').name('tint - red')
+				tFolder.add(TINT_TEST_DATA, 'green').name('tint - green')
+				tFolder = gui.addFolder('blendMode')
+				tFolder.open()
+				var BLEND_TEST_DATA = {
+					blendSrc: 'SRC_ALPHA',
+					blendDst: 'ONE',
+					blendFuncList: [
+						'ZERO',
+						'ONE',
+						'SRC_COLOR',
+						'ONE_MINUS_SRC_COLOR',
+						'DST_COLOR',
+						'ONE_MINUS_DST_COLOR',
+						'SRC_ALPHA',
+						'ONE_MINUS_SRC_ALPHA',
+						'DST_ALPHA',
+						'ONE_MINUS_DST_ALPHA',
+						'CONSTANT_COLOR',
+						'ONE_MINUS_CONSTANT_COLOR',
+						'CONSTANT_ALPHA',
+						'ONE_MINUS_CONSTANT_ALPHA',
+						'SRC_ALPHA_SATURATE'
+					]
+				}
+				var blendSrc, blendDst
+				tFolder.add(testEmitter, 'useBlendMode').onChange(function (v) {
+					if ( v ) {
+						blendSrc.domElement.style.display = 'block'
+						blendDst.domElement.style.display = 'block'
+					} else {
+						blendSrc.domElement.style.display = 'none'
+						blendDst.domElement.style.display = 'none'
+					}
+				})
+				blendSrc = tFolder.add(BLEND_TEST_DATA, 'blendSrc', BLEND_TEST_DATA['blendFuncList'])
+				blendSrc.onChange(function (v) {
+					testEmitter.blendSrc = tGL[v]
+				})
+				blendDst = tFolder.add(BLEND_TEST_DATA, 'blendDst', BLEND_TEST_DATA['blendFuncList'])
+				blendDst.onChange(function (v) {
+					testEmitter.blendDst = tGL[v]
+				})
+				blendDst.onChange(function (v) {
+					testEmitter.blendDst = tGL[v]
+				})
+				tFolder = gui.addFolder('testTexture')
+				tFolder.open()
+				var TEST_TEXTURE = {
+					testTexture: 'testTexture1'
+				}
+				tFolder.add(TEST_TEXTURE, 'testTexture', [
+					'testTexture1',
+					'testTexture2'
+				]).onChange(function (v) {
+					testEmitter.material.diffuseTexture = testTextureList[v == 'testTexture1' ? 0 : 1]
+				})
+				tFolder.add(testEmitter.material, 'alphaTest', 0, 1, 0.0001)
+				tFolder.open()
+				//
+				tFolder = gui.addFolder('emitterMoveTest')
+				tFolder.open()
+				var TEST_MOVE = {
+					moveTest: false
+				}
+				tFolder.add(TEST_MOVE, 'moveTest').onChange(function (v) {
+					moveYn = v
+					tScene3D[moveYn ? 'addChild' : 'removeChild'](centerMesh)
+				})
+				tFolder.open()
+			}
+		})()
+		makeTestUI()
+		new baseTestUI(self)
+		var t0, particle_JSON_DATA;
+		t0 = document.createElement('div')
+		t0.style.position = 'absolute'
+		t0.style.bottom = '10px'
+		t0.style.right = '10px'
+		document.body.appendChild(t0)
+		particle_JSON_DATA = document.createElement('div')
+		particle_JSON_DATA.style.position = 'absolute'
+		particle_JSON_DATA.style.width = '500px'
+		particle_JSON_DATA.style.bottom = '225px'
+		particle_JSON_DATA.style.right = '10px'
+		particle_JSON_DATA.style.fontWeight = 'bold'
+		particle_JSON_DATA.innerHTML = 'particle JSON DATA'
+		particle_JSON_DATA.style.textShadow = '1px 1px 0px rgba(255,255,255,0.4)'
+		t0.appendChild(particle_JSON_DATA)
+		particle_JSON_DATA = document.createElement('div')
+		particle_JSON_DATA.style.position = 'absolute'
+		particle_JSON_DATA.style.bottom = '0px'
+		particle_JSON_DATA.style.right = '0px'
+		particle_JSON_DATA.style.width = '500px'
+		particle_JSON_DATA.style.height = '200px'
+		particle_JSON_DATA.style.padding = '10px'
+		particle_JSON_DATA.style.fontSize = '12px'
+		particle_JSON_DATA.style.background = 'rgba(255,255,255,0.5)'
+		t0.appendChild(particle_JSON_DATA)
+		var jsonTick
+		jsonTick = function () {
+			particle_JSON_DATA.textContent = JSON.stringify(TEST_PARTICLE_DEFINE_DATA)
+			requestAnimationFrame(jsonTick)
+		}
+		requestAnimationFrame(jsonTick)
+	})
+</script>
+</body>
+
+</html>

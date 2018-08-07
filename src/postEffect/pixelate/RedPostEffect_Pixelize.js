@@ -48,7 +48,7 @@ var RedPostEffect_Pixelize;
 		    'RedBasePostEffect',
 		    'RedBaseMaterial'
 		 ],
-		 demo : '../example/RedPostEffect_Pixelize.html',
+		 demo : '../example/postEffect/pixelate/RedPostEffect_Pixelize.html',
 		 return : 'RedPostEffect_Pixelize Instance'
 	 }
 	 :DOC*/

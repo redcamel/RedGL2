@@ -1,0 +1,123 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>RedPostEffect_BlurY</title>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
+    />
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+    </style>
+
+    <script src="../../dat.gui.min.js"></script>
+    <script src="../../baseTestUI.js"></script>
+    <script src="../../../release/RedGL.min.js"></script>
+</head>
+
+<body>
+<script id='testSource'>
+	var testUI;
+	var canvas;
+	var assetPath = '../../../asset/'
+	canvas = document.createElement('canvas');
+	document.body.appendChild(canvas);
+	RedGL(canvas, function (v) {
+		if ( v ) {
+			console.log('초기화 성공!')
+			var tWorld, tScene, tController, tRenderer;
+			var self;
+			self = this;
+			// 월드 생성
+			this['world'] = tWorld = RedWorld();
+			// 씬 생성
+			tScene = RedScene(this);
+			// 카메라 생성
+			tController = RedObitController(this);
+			tController.distance = 15
+			tController.tilt = -30
+			tController.pan = 0
+			// 렌더러 생성
+			tRenderer = RedRenderer();
+			// 뷰생성 및 적용
+			tWorld.addView(RedView('test', this, tScene, tController));
+			tWorld.addView(RedView('test2', this, tScene, tController));
+			RedView('test').setSize('50%', '100%')
+			RedView('test').setLocation('0%', '0%')
+			RedView('test2').setSize('50%', '100%')
+			RedView('test2').setLocation('50%', '0%')
+			// 라이트 설정
+			var testDLight, testALight, testPLight;
+			testDLight = RedDirectionalLight(this, '#fff', 1)
+			testDLight.x = 3
+			testDLight.y = 2
+			testDLight.z = 3
+			testDLight.debug = true
+			tScene.addLight(testDLight)
+			tScene.skyBox =
+				RedSkyBox(this, [
+					assetPath +'cubemap/SwedishRoyalCastle/px.jpg',
+					assetPath +'cubemap/SwedishRoyalCastle/nx.jpg',
+					assetPath +'cubemap/SwedishRoyalCastle/py.jpg',
+					assetPath +'cubemap/SwedishRoyalCastle/ny.jpg',
+					assetPath +'cubemap/SwedishRoyalCastle/pz.jpg',
+					assetPath +'cubemap/SwedishRoyalCastle/nz.jpg'
+				]);
+			// OBJ 로딩
+			RedOBJLoader(this, assetPath +'obj/', 'female.obj', function (v) {
+				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.025
+				tScene.addChild(v['resultMesh'])
+				var i = 10
+				var max = 10
+				var j
+				var tMesh;
+				var tGeo = RedSphere(self, 1, 32, 32, 32)
+				var tMat = RedStandardMaterial(
+					self,
+					RedBitmapTexture(self, assetPath +'crate.png'),
+					RedBitmapTexture(self, assetPath +'normalTest.jpg'),
+					RedBitmapTexture(self, assetPath +'brick_roughness.jpg')
+				)
+				while ( i-- ) {
+					j = 10
+					while ( j-- ) {
+						tMesh = RedMesh(self, tGeo, tMat)
+						tMesh.x = Math.sin(Math.PI * 2 / (max - 1) * i) * j * 3
+						tMesh.z = Math.cos(Math.PI * 2 / (max - 1) * i) * j * 3
+						tScene.addChild(tMesh)
+					}
+				}
+			})
+			// 렌더시작
+			tRenderer.start(this, function (time) { })
+			// 렌더 디버거 활성화
+			tRenderer['renderDebuger']['visible'] = true
+			// 이펙트 적용
+			var effect;
+			effect = RedPostEffect_BlurY(this);
+			RedView('test')['postEffectManager'].addEffect(effect)
+			console.log(effect)
+			testUI(this, tScene, effect)
+		} else {
+			console.log('초기화 실패!')
+		}
+	})
+	testUI = function (redGL, tScene, effect) {
+		console.log('test')
+		var gui = new baseTestUI(redGL)
+		gui.initRedGL()
+		var t0 = gui['gui'].addFolder('BlurY')
+		t0.add(effect, 'size', 0, 100)
+		t0.open()
+	}
+</script>
+</body>
+
+</html>

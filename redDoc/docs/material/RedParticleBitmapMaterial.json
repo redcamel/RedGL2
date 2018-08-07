@@ -32,6 +32,7 @@
         }
       ]
     },
+    "demo": "../example/particle/RedParticleEmitter.html",
     "extends": [
       "RedBaseMaterial"
     ],

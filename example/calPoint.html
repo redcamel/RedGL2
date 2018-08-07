@@ -25,6 +25,7 @@
 <script id='testSource'>
 	var testUI;
 	var canvas;
+	var assetPath = '../../asset/'
 	canvas = document.createElement('canvas');
 	document.body.appendChild(canvas);
 	RedGL(canvas, function (v) {
@@ -45,12 +46,12 @@
 			tScene['grid'] = RedGrid(this);
 			tScene.skyBox =
 				RedSkyBox(this, [
-					'../asset/cubemap/posx.png',
-					'../asset/cubemap/negx.png',
-					'../asset/cubemap/posy.png',
-					'../asset/cubemap/negy.png',
-					'../asset/cubemap/posz.png',
-					'../asset/cubemap/negz.png'
+					'../asset/cubemap/SwedishRoyalCastle/px.jpg',
+					'../asset/cubemap/SwedishRoyalCastle/nx.jpg',
+					'../asset/cubemap/SwedishRoyalCastle/py.jpg',
+					'../asset/cubemap/SwedishRoyalCastle/ny.jpg',
+					'../asset/cubemap/SwedishRoyalCastle/pz.jpg',
+					'../asset/cubemap/SwedishRoyalCastle/nz.jpg'
 				]);
 			tScene['axis'] = RedAxis(this)
 			//////////////////////////////////////

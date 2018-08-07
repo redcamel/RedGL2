@@ -29,6 +29,7 @@ var RedGrid;
 				 `격자선 컬러`
 			 ]
 		 },
+		 demo : '../example/object3D/RedGrid.html',
 		 extends : [
 		    'RedBaseContainer',
 		    'RedBaseObject3D'
@@ -148,6 +149,7 @@ var RedGrid;
 		set: function (hex) {
 			RedGLUtil.regHex(hex) || RedGLUtil.throwFunc('RedGrid : color1 hex 형식만 허용.', hex);
 			this['_color1'] = hex;
+			this['_update']()
 			return this['_color1']
 		}
 	});
@@ -170,6 +172,7 @@ var RedGrid;
 		set: function (hex) {
 			RedGLUtil.regHex(hex) || RedGLUtil.throwFunc('RedGrid : color2 hex 형식만 허용.', hex);
 			this['_color2'] = hex;
+			this['_update']()
 			return this['_color2']
 		}
 	});

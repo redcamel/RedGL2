@@ -40,7 +40,7 @@ var RedPostEffect_Gray;
 		    'RedBasePostEffect',
 		    'RedBaseMaterial'
 		 ],
-		 demo : '../example/RedPostEffect_Gray.html',
+		 demo : '../example/postEffect/adjustments/RedPostEffect_Gray.html',
 		 return : 'RedPostEffect_Gray Instance'
 	 }
 	 :DOC*/
