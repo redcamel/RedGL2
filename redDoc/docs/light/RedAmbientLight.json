@@ -24,7 +24,7 @@
     "extends": [
       "RedBaseLight"
     ],
-    "demo": "../example/RedLights.html",
+    "demo": "../example/light/RedAmbientLight.html",
     "example": "\nRedAmbientLight(RedGL Instance, hex, alpha)\n",
     "return": "RedAmbientLight Instance"
   },

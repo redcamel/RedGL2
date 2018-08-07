@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>RedLights</title>
+    <title>RedPointLight</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -17,9 +17,9 @@
         }
     </style>
 
-    <script src="dat.gui.min.js"></script>
-    <script src="baseTestUI.js"></script>
-    <script src="../release/RedGL.min.js"></script>
+    <script src="../dat.gui.min.js"></script>
+    <script src="../baseTestUI.js"></script>
+    <script src="../../release/RedGL.min.js"></script>
 </head>
 
 <body>
@@ -68,30 +68,25 @@
 			tPLight['debug'] = true
 			// Mesh 설정
 			var tMesh;
-			var tMaterial = RedStandardMaterial(this, RedBitmapTexture(this, '../asset/draft1.png'))
-			var tMaterial2 = RedStandardMaterial(this, RedBitmapTexture(this, '../asset/draft2.png'))
-			var tMaterial3 = RedStandardMaterial(this, RedBitmapTexture(this, '../asset/alphaTest.png'))
-			var tNormalTexture = RedBitmapTexture(this, '../asset/normalTest.jpg')
-			var tSpecularTexture = RedBitmapTexture(this, '../asset/specular.png')
-			var tDisplacementTexture = RedBitmapTexture(this, '../asset/displacementTest.jpg')
+			var tMaterial = RedStandardMaterial(this, RedBitmapTexture(this, assetPath +'draft1.png'))
 			tMesh = RedMesh(this, RedBox(this, 1, 1, 1, 32, 32, 32), tMaterial)
 			tMesh.x = -1.5
 			tScene.addChild(tMesh)
-			tMesh = RedMesh(this, RedBox(this, 1, 1, 1, 32, 32, 32), tMaterial2)
+			tMesh = RedMesh(this, RedBox(this, 1, 1, 1, 32, 32, 32), tMaterial)
 			tMesh.x = 0
 			tScene.addChild(tMesh)
-			tMesh = RedMesh(this, RedBox(this, 1, 1, 1, 32, 32, 32), tMaterial3)
+			tMesh = RedMesh(this, RedBox(this, 1, 1, 1, 32, 32, 32), tMaterial)
 			tMesh.x = 1.5
 			tScene.addChild(tMesh)
 			tMesh = RedMesh(this, RedSphere(this, 0.5, 32, 32, 32), tMaterial)
 			tMesh.x = -1.5
 			tMesh.y = 1.5
 			tScene.addChild(tMesh)
-			tMesh = RedMesh(this, RedSphere(this, 0.5, 32, 32, 32), tMaterial2)
+			tMesh = RedMesh(this, RedSphere(this, 0.5, 32, 32, 32), tMaterial)
 			tMesh.x = 0
 			tMesh.y = 1.5
 			tScene.addChild(tMesh)
-			tMesh = RedMesh(this, RedSphere(this, 0.5, 32, 32, 32), tMaterial3)
+			tMesh = RedMesh(this, RedSphere(this, 0.5, 32, 32, 32), tMaterial)
 			tMesh.x = 1.5
 			tMesh.y = 1.5
 			tScene.addChild(tMesh)
@@ -100,12 +95,12 @@
 			tMesh.x = -1.5
 			tMesh.y = -1.5
 			tScene.addChild(tMesh)
-			tMesh = RedMesh(this, RedPlane(this, 1, 1, 32, 32), tMaterial2)
+			tMesh = RedMesh(this, RedPlane(this, 1, 1, 32, 32), tMaterial)
 			tMesh['useCullFace'] = false
 			tMesh.x = 0
 			tMesh.y = -1.5
 			tScene.addChild(tMesh)
-			tMesh = RedMesh(this, RedPlane(this, 1, 1, 32, 32), tMaterial3)
+			tMesh = RedMesh(this, RedPlane(this, 1, 1, 32, 32), tMaterial)
 			tMesh['useCullFace'] = false
 			tMesh.x = 1.5
 			tMesh.y = -1.5
@@ -115,50 +110,21 @@
 			})
 			// 렌더 디버거 활성화
 			tRenderer['renderDebuger']['visible'] = true
-			testUI(this, tController, tScene, tALight, tDLight, tPLight)
+			testUI(this, tController, tScene,  tPLight)
 		} else {
 			console.log('초기화 실패!')
 		}
 	})
-	testUI = function (redGL, tCamera, tScene, tALight, tDLight, tPLight) {
+	testUI = function (redGL, tCamera, tScene,  tPLight) {
 		var gui = new baseTestUI(redGL)
 		gui.initRedGL()
 		gui.initCamera(tCamera)
 		gui.initScene(tScene, false, assetPath)
 		//
-		var t0 = gui['gui'].addFolder('RedAmbientLight')
-		var testALight = function () {
-			this.color = '#111'
-		}
-		testALight = new testALight()
-		t0.addColor(testALight, 'color').onChange(function (v) {
-			tALight.color = v
-			t0.updateDisplay()
-		})
-		t0.add(tALight, 'alpha', 0, 1)
-		t0.add(tALight, 'intensity', 0, 5)
-		t0.open()
-		var t0 = gui['gui'].addFolder('RedDirectionalLight')
-		var testDLight = function () {
-			this.color = '#fff'
-		}
-		testDLight = new testDLight()
-		t0.addColor(testDLight, 'color').onChange(function (v) {
-			tDLight.color = v
-			t0.updateDisplay()
-		})
-		t0.add(tDLight, 'alpha', 0, 1)
-		t0.add(tDLight, 'intensity', 0, 5)
-		t0.add(tDLight, 'x', -10, 10, 0.1)
-		t0.add(tDLight, 'y', -10, 10, 0.1)
-		t0.add(tDLight, 'z', -10, 10, 0.1)
-		t0.add(tDLight, 'debug', true, false)
-		t0.open()
-		//
 		//
 		var t0 = gui['gui'].addFolder('RedPointLight')
 		var testPLight = function () {
-			this.color = '#ff0000'
+			this.color = tPLight.color
 		}
 		testPLight = new testPLight()
 		t0.addColor(testPLight, 'color').onChange(function (v) {

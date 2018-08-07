@@ -195,7 +195,15 @@ var DocJS = (function () {
 	setRightBox = function () {
 		rightBox = Recard.Dom('td').S(
 			'vertical-align', 'top',
-			'html', '초기화면 넣자',
+			'>', Recard.Dom('iframe').S(
+				'@src', '../testDemo/testShadow.html',
+				'border', 0,
+				'width', '100%',
+				'height', 600
+			),
+			'>', Recard.Dom('div').S(
+				'html', '초기화면을 넣을꺼임'
+			),
 			'<', rootBox
 		)
 	}
@@ -398,7 +406,7 @@ var DocJS = (function () {
 							'>', Recard.Dom('span').S('html', 'Demo'),
 							'>', Recard.Dom('a').S(
 								'@href', src,
-								'font-size',12,
+								'font-size', 12,
 								'html', ' ( ' + src + ' )'
 							)
 						),

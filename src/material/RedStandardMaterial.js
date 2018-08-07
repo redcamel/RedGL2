@@ -141,7 +141,6 @@ var RedStandardMaterial;
 				 distanceLength = length(L);
 				 if(uPointLightRadiusList[i]> distanceLength){
 					 attenuation = 1.0 / (0.01 + 0.02 * distanceLength + 0.03 * distanceLength * distanceLength);
-					 L = normalize(L);
 					 lambertTerm = dot(N,-L);
 					 if(lambertTerm > 0.0){
 						 ld += uPointLightColorList[i] * texelColor * lambertTerm * attenuation * uPointLightIntensityList[i] * uPointLightColorList[i].a;
