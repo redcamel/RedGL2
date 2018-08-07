@@ -1,0 +1,134 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>RedAmbientLight</title>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
+    />
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+    </style>
+
+    <script src="../dat.gui.min.js"></script>
+    <script src="../baseTestUI.js"></script>
+    <script src="../../release/RedGL.min.js"></script>
+</head>
+
+<body>
+<script id='testSource'>
+	var testUI;
+	var canvas;
+	var assetPath = '../../asset/'
+	canvas = document.createElement('canvas');
+	document.body.appendChild(canvas);
+	RedGL(canvas, function (v) {
+		if ( v ) {
+			console.log('초기화 성공!')
+			var tWorld, tScene, tController, tRenderer;
+			// 월드 생성
+			this['world'] = tWorld = RedWorld();
+			// 씬 생성
+			tScene = RedScene(this);
+			// 카메라 생성
+			tController = RedObitController(this);
+			tController.tilt = -45
+			tController.pan = 45
+			tController.distance = 10
+			// 렌더러 생성
+			tRenderer = RedRenderer();
+			// 뷰생성 및 적용
+			tWorld.addView(RedView('test', this, tScene, tController));
+			// 그리드 설정
+			tScene['grid'] = RedGrid(this)
+			// 라이트 설정
+			var tALight = RedAmbientLight(this)
+			tScene.addLight(tALight)
+			tALight.x = 10
+			tALight.y = 5
+			tALight.z = 5
+			var tDLight = RedDirectionalLight(this)
+			tScene.addLight(tDLight)
+			tDLight.x = 2
+			tDLight.y = 1
+			tDLight.z = 1
+			tDLight['debug'] = true
+			// Mesh 설정
+			var tMesh;
+			var tMaterial = RedStandardMaterial(this, RedBitmapTexture(this, assetPath + 'draft1.png'))
+			tMesh = RedMesh(this, RedBox(this, 1, 1, 1, 32, 32, 32), tMaterial)
+			tMesh.x = -1.5
+			tScene.addChild(tMesh)
+			tMesh = RedMesh(this, RedBox(this, 1, 1, 1, 32, 32, 32), tMaterial)
+			tMesh.x = 0
+			tScene.addChild(tMesh)
+			tMesh = RedMesh(this, RedBox(this, 1, 1, 1, 32, 32, 32), tMaterial)
+			tMesh.x = 1.5
+			tScene.addChild(tMesh)
+			tMesh = RedMesh(this, RedSphere(this, 0.5, 32, 32, 32), tMaterial)
+			tMesh.x = -1.5
+			tMesh.y = 1.5
+			tScene.addChild(tMesh)
+			tMesh = RedMesh(this, RedSphere(this, 0.5, 32, 32, 32), tMaterial)
+			tMesh.x = 0
+			tMesh.y = 1.5
+			tScene.addChild(tMesh)
+			tMesh = RedMesh(this, RedSphere(this, 0.5, 32, 32, 32), tMaterial)
+			tMesh.x = 1.5
+			tMesh.y = 1.5
+			tScene.addChild(tMesh)
+			tMesh = RedMesh(this, RedPlane(this, 1, 1, 32, 32), tMaterial)
+			tMesh['useCullFace'] = false
+			tMesh.x = -1.5
+			tMesh.y = -1.5
+			tScene.addChild(tMesh)
+			tMesh = RedMesh(this, RedPlane(this, 1, 1, 32, 32), tMaterial)
+			tMesh['useCullFace'] = false
+			tMesh.x = 0
+			tMesh.y = -1.5
+			tScene.addChild(tMesh)
+			tMesh = RedMesh(this, RedPlane(this, 1, 1, 32, 32), tMaterial)
+			tMesh['useCullFace'] = false
+			tMesh.x = 1.5
+			tMesh.y = -1.5
+			tScene.addChild(tMesh)
+			// 렌더시작
+			tRenderer.start(this, function (time) {
+			})
+			// 렌더 디버거 활성화
+			tRenderer['renderDebuger']['visible'] = true
+			testUI(this, tController, tScene, tALight)
+		} else {
+			console.log('초기화 실패!')
+		}
+	})
+	testUI = function (redGL, tCamera, tScene, tALight) {
+		var gui = new baseTestUI(redGL)
+		gui.initRedGL()
+		gui.initCamera(tCamera)
+		gui.initScene(tScene, false, assetPath)
+		//
+		var t0 = gui['gui'].addFolder('RedAmbientLight')
+		var testALight = function () {
+			this.color = tALight.color
+		}
+		testALight = new testALight()
+		t0.addColor(testALight, 'color').onChange(function (v) {
+			tALight.color = v
+			t0.updateDisplay()
+		})
+		t0.add(tALight, 'alpha', 0, 1)
+		t0.add(tALight, 'intensity', 0, 5)
+		t0.open()
+	}
+</script>
+</body>
+
+</html>

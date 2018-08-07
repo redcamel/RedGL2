@@ -23,7 +23,7 @@ var RedAmbientLight;
 		 extends : [
 		    'RedBaseLight'
 		 ],
-		 demo : '../example/RedLights.html',
+		 demo : '../example/light/RedAmbientLight.html',
 		 example: `
 			 RedAmbientLight(RedGL Instance, hex, alpha)
 		 `,

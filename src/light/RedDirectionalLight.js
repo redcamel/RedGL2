@@ -23,7 +23,7 @@ var RedDirectionalLight;
 		 extends : [
 		    'RedBaseLight'
 		 ],
-		 demo : '../example/RedLights.html',
+		 demo : '../example/light/RedDirectionalLight.html',
 		 example: `
 			 RedDirectionalLight(RedGL Instance, hex, alpha)
 		 `,
