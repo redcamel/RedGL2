@@ -19,9 +19,10 @@
           "type": "Object"
         },
         "텍스쳐 정의옵션",
-        "\n<code>\n{\nmin: this.gl.LINEAR_MIPMAP_NEAREST,\nmag: this.gl.LINEAR,\nwrap_s: this.gl.REPEAT,\nwrap_t: this.gl.REPEAT,\nanisotropic: 16 // 지원가능한경우에만 작동\n}\n</code>\n"
+        "\n<h2>dds는 현재 지원하지 않음</h2>\n"
       ]
     },
+    "demo": "../example/resources/RedDDSTexture.html",
     "extends": [
       "RedBaseTexture"
     ],

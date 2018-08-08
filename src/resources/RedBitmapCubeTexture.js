@@ -99,6 +99,7 @@ var RedBitmapCubeTexture;
 		 extends : [
 		    'RedBaseTexture'
 		 ],
+         demo : '../example/resources/RedBitmapCubeTexture.html',
 		 example : `
 		 RedBitmapCubeTexture( RedGL Instance,  srcList, {
 			 min: gl.LINEAR_MIPMAP_NEAREST,

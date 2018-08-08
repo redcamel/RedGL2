@@ -122,7 +122,7 @@ var RedBuffer;
 				 `ex) gl.STATIC_DRAW`
 			 ]
 		 },
-		 demo : '../example/RedBuffer.html',
+		 demo : '../example/geometry/RedBuffer.html',
 		 example : `
 			 var interleaveData, indexData;
 			 var tInterleaveBuffer, tIndexBuffer

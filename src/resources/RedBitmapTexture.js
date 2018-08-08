@@ -106,6 +106,7 @@ var RedBitmapTexture;
 		 extends : [
 		    'RedBaseTexture'
 		 ],
+		 demo : '../example/resources/RedBitmapTexture.html',
 		 example : `
 		 RedBitmapTexture( RedGL Instance,  src, {
 			 min: gl.LINEAR_MIPMAP_NEAREST,

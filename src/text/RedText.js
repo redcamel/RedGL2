@@ -93,7 +93,7 @@ var RedText;
 		//////////////////////
 		this['blendSrc'] = redGL.gl.ONE;
 		this['blendDst'] = redGL.gl.ONE_MINUS_SRC_ALPHA;
-		this['useDepthMask'] = false;
+		// this['useDepthMask'] = false;
 		this['useCullFace'] = false;
 		this['perspectiveScale'] = false;
 		this['sprite3DYn'] = false;

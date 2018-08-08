@@ -73,7 +73,7 @@ var DocJS = (function () {
 			'background', '#fff',
 			'>', Recard.Dom('h1').S(
 				'font-size', 40,
-				'html', 'RedGL2 DOC'
+				'html', 'RedGL DOC'
 			),
 			'>', Recard.Dom('div').S(
 				'position', 'fixed',

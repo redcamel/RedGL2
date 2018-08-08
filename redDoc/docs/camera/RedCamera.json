@@ -62,7 +62,7 @@
     "constructorYn": true,
     "title": "RedCamera",
     "description": "\nRedCamera Instance 생성자.\n",
-    "demo": "../example/RedCamera.html",
+    "demo": "../example/camera/RedCamera.html",
     "example": "\nRedCamera()\n",
     "return": "RedCamera Instance"
   },

@@ -23,6 +23,7 @@
     "extends": [
       "RedBaseTexture"
     ],
+    "demo": "../example/resources/RedVideoTexture.html",
     "example": "\nRedVideoTexture( RedGL Instance,  src or HTMLVideoElement)\n",
     "return": "RedVideoTexture Instance"
   },

@@ -109,7 +109,7 @@ baseTestUI.prototype = {
 			backgroundColor: '#0e1318',
 			grid: scene['grid'] ? true : false,
 			axis: scene['axis'] ? true : false,
-			skyBox: scene['skyBox'] ? true : false,
+			skyBox: true
 		}
 		t0.add(scene, 'useBackgroundColor')
 		t0.addColor(test, 'backgroundColor').onChange(function (v) {
@@ -132,6 +132,15 @@ baseTestUI.prototype = {
 					assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
 				]) : null
 		})
+		if ( !scene['skyBox'] ) scene['skyBox'] = RedSkyBox(self['redGL'], [
+			assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
+			assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
+			assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
+			assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
+			assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
+			assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
+		])
+		null
 		if ( open ) t0.open()
 		var tFolder;
 		tFolder = t0.addFolder('fog')

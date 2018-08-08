@@ -17,9 +17,9 @@
         }
     </style>
 
-    <script src="dat.gui.min.js"></script>
-    <script src="baseTestUI.js"></script>
-    <script src="../release/RedGL.min.js"></script>
+    <script src="../dat.gui.min.js"></script>
+    <script src="../baseTestUI.js"></script>
+    <script src="../../release/RedGL.min.js"></script>
 </head>
 
 <body>
@@ -38,8 +38,8 @@
 			// 씬 생성
 			tScene = RedScene(this);
 			// 카메라 생성
-			tCamera = RedCamera();
-			tCamera.z = 4
+			tCamera = RedObitController(this)
+			tCamera.distance = 4
 			// 렌더러 생성
 			tRenderer = RedRenderer();
 			// 뷰생성 및 적용
@@ -78,10 +78,25 @@
 			// Mesh 설정
 			var tMesh;
 			var tDiffuse1, tDiffuse2, tDiffuse3
+			var tText
+			var setOptionText = function (target, v) {
+				tText = RedText(target, 1350, 512)
+				tText.color = '#fff'
+				tText.background = 'rgba(0,0,0,0.5)'
+				tText.text = v
+				tText.fontSize = '80px'
+				tText.lineHeight = '95px'
+				tText.padding = '35px'
+				tText.textAlign = 'left'
+                tText.sprite3DYn = true
+                tText.perspectiveScale = true
+				tText.z = 0.5
+				tText.y = 0.25
+			}
 			// REPEAT
 			tDiffuse1 = RedBitmapTexture(
 				this,
-				'../asset/crate.png',
+				assetPath + 'crate.png',
 				{
 					min: this.gl.LINEAR,
 					mag: this.gl.LINEAR,
@@ -91,7 +106,7 @@
 			)
 			tDiffuse2 = RedBitmapTexture(
 				this,
-				'../asset/crate.png',
+				assetPath + 'crate.png',
 				{
 					min: this.gl.NEAREST,
 					mag: this.gl.NEAREST,
@@ -101,7 +116,7 @@
 			)
 			tDiffuse3 = RedBitmapTexture(
 				this,
-				'../asset/crate.png',
+				assetPath + 'crate.png',
 				{
 					min: this.gl.LINEAR_MIPMAP_NEAREST,
 					mag: this.gl.LINEAR,
@@ -110,18 +125,24 @@
 				}
 			)
 			tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse1))
+			setOptionText(this, 'min: LINEAR<br>' + 'mag: LINEAR<br>' + 'wrap_s: REPEAT<br>' + 'wrap_t: REPEAT')
+			tMesh.addChild(tText)
 			tMesh.x = -1.1
 			tScene.addChild(tMesh)
 			tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse2))
 			tMesh.x = 0
+			setOptionText(this, 'min: NEAREST<br>' + 'mag: NEAREST<br>' + 'wrap_s: REPEAT<br>' + 'wrap_t: REPEAT')
+			tMesh.addChild(tText)
 			tScene.addChild(tMesh)
 			tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse3))
 			tMesh.x = 1.1
+			setOptionText(this, 'min: LINEAR_MIPMAP_NEAREST<br>' + 'mag: LINEAR<br>' + 'wrap_s: REPEAT<br>' + 'wrap_t: REPEAT')
+			tMesh.addChild(tText)
 			tScene.addChild(tMesh)
 			// MIRRORED_REPEAT
 			tDiffuse1 = RedBitmapTexture(
 				this,
-				'../asset/crate.png',
+				assetPath + 'crate.png',
 				{
 					min: this.gl.LINEAR,
 					mag: this.gl.LINEAR,
@@ -131,7 +152,7 @@
 			)
 			tDiffuse2 = RedBitmapTexture(
 				this,
-				'../asset/crate.png',
+				assetPath + 'crate.png',
 				{
 					min: this.gl.NEAREST,
 					mag: this.gl.NEAREST,
@@ -141,7 +162,7 @@
 			)
 			tDiffuse3 = RedBitmapTexture(
 				this,
-				'../asset/crate.png',
+				assetPath + 'crate.png',
 				{
 					min: this.gl.LINEAR_MIPMAP_NEAREST,
 					mag: this.gl.LINEAR,
@@ -152,19 +173,25 @@
 			tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse1))
 			tMesh.x = -1.1
 			tMesh.y = 1.1
+			setOptionText(this, 'min: LINEAR<br>' + 'mag: LINEAR<br>' + 'wrap_s: MIRRORED_REPEAT<br>' + 'wrap_t: MIRRORED_REPEAT')
+			tMesh.addChild(tText)
 			tScene.addChild(tMesh)
 			tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse2))
 			tMesh.x = 0
 			tMesh.y = 1.1
+			setOptionText(this, 'min: NEAREST<br>' + 'mag: NEAREST<br>' + 'wrap_s: MIRRORED_REPEAT<br>' + 'wrap_t: MIRRORED_REPEAT')
+			tMesh.addChild(tText)
 			tScene.addChild(tMesh)
 			tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse3))
 			tMesh.x = 1.1
 			tMesh.y = 1.1
+			setOptionText(this, 'min: LINEAR_MIPMAP_NEAREST<br>' + 'mag: LINEAR<br>' + 'wrap_s: MIRRORED_REPEAT<br>' + 'wrap_t: MIRRORED_REPEAT')
+			tMesh.addChild(tText)
 			tScene.addChild(tMesh)
 			// CLAMP_TO_EDGE
 			tDiffuse1 = RedBitmapTexture(
 				this,
-				'../asset/crate.png',
+				assetPath + 'crate.png',
 				{
 					min: this.gl.LINEAR,
 					mag: this.gl.LINEAR,
@@ -174,7 +201,7 @@
 			)
 			tDiffuse2 = RedBitmapTexture(
 				this,
-				'../asset/crate.png',
+				assetPath + 'crate.png',
 				{
 					min: this.gl.NEAREST,
 					mag: this.gl.NEAREST,
@@ -184,7 +211,7 @@
 			)
 			tDiffuse3 = RedBitmapTexture(
 				this,
-				'../asset/crate.png',
+				assetPath + 'crate.png',
 				{
 					min: this.gl.LINEAR_MIPMAP_NEAREST,
 					mag: this.gl.LINEAR,
@@ -195,18 +222,24 @@
 			tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse1))
 			tMesh.x = -1.1
 			tMesh.y = -1.1
+			setOptionText(this, 'min: LINEAR<br>' + 'mag: LINEAR<br>' + 'wrap_s: CLAMP_TO_EDGE<br>' + 'wrap_t: CLAMP_TO_EDGE')
+			tMesh.addChild(tText)
 			tScene.addChild(tMesh)
 			tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse2))
 			tMesh.x = 0
 			tMesh.y = -1.1
+			setOptionText(this, 'min: NEAREST<br>' + 'mag: NEAREST<br>' + 'wrap_s: CLAMP_TO_EDGE<br>' + 'wrap_t: CLAMP_TO_EDGE')
+			tMesh.addChild(tText)
 			tScene.addChild(tMesh)
 			tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse3))
 			tMesh.x = 1.1
 			tMesh.y = -1.1
+			setOptionText(this, 'min: LINEAR_MIPMAP_NEAREST<br>' + 'mag: LINEAR<br>' + 'wrap_s: CLAMP_TO_EDGE<br>' + 'wrap_t: CLAMP_TO_EDGE')
+			tMesh.addChild(tText)
 			tScene.addChild(tMesh)
 			// 렌더시작
 			tRenderer.start(this, function (time) {
-				tCamera.lookAt(0, 0, 0)
+
 			})
 			// 렌더 디버거 활성화
 			tRenderer['renderDebuger']['visible'] = true
@@ -218,7 +251,6 @@
 	testUI = function (redGL, tCamera, tScene) {
 		var gui = new baseTestUI(redGL)
 		gui.initRedGL()
-		gui.initCamera(tCamera)
 		gui.initScene(tScene, false, assetPath)
 	}
 </script>

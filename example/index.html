@@ -14,8 +14,8 @@
             margin: 0;
             padding: 0;
             overflow-x: hidden;
-            background: #222;
-            color: #fff;
+            background: rgb(14, 17, 21);
+            color: rgb(242, 169, 113);
             font-size: 12px;
             line-height: 20px;
         }
@@ -23,184 +23,346 @@
         a, a:hover, a:active, a:visited {
             color: #fff
         }
+
+        li {
+            vertical-align: top;
+        }
+
+        .item {
+            display: inline-block;
+            padding: 5px;
+            margin-top: 10px;
+            margin-bottom: 10px
+
+        }
+
+        .item img {
+            border-radius: 10px;
+            width: 250px;
+            height: 150px;
+        }
     </style>
 </head>
 
 <body>
+<div style="padding:30px;">
+    <h1>RedGL Example</h1>
+</div>
 <br>
 <ul>
     <li>
-        RedGL
+        <h2>RedGL</h2>
         <ul>
-            <li><a href="RedGL.html">RedGL</a></li>
-            <li><a href="RedScene.html">RedScene</a></li>
-            <li><a href="RedView.html">RedView</a></li>
+            <li class="item">
+                <div><img src='thumb/RedGL.png'></div>
+
+                <a href="RedGL.html">RedGL</a>
+            </li>
+            <li class="item">
+                <div><img src='thumb/RedScene.png'></div>
+
+                <a href="RedScene.html">RedScene</a>
+            </li>
+            <li class="item">
+                <div><img src='thumb/RedView.png'></div>
+
+                <a href="RedView.html">RedView</a>
+            </li>
         </ul>
     </li>
     <li>
-        Buffer & Geometry
+        <h2>Buffer & Geometry</h2>
         <ul>
-            <li><a href="RedBuffer.html">Buffer & Geometry</a></li>
+            <li class="item">
+                <div><img src='thumb/RedBuffer.png'></div>
+                <a href="geometry/RedBuffer.html">Buffer & Geometry</a></li>
         </ul>
     </li>
     <li>
-        Primitives
+        <h2>Primitives</h2>
         <ul>
-            <li><a href="RedPrimitive.html">RedPrimitive</a></li>
+            <li class="item">
+                <div><img src='thumb/RedPrimitive.png'></div>
+
+                <a href="primitives/RedPrimitive.html">RedPrimitive</a></li>
+            <li class="item">
+                <div><img src='thumb/RedPlane.png'></div>
+                <a href="primitives/RedPlane.html">RedPlane</a></li>
+            <li class="item">
+                <div><img src='thumb/RedBox.png'></div>
+                <a href="primitives/RedBox.html">RedBox</a></li>
+            <li class="item">
+                <div><img src='thumb/RedSphere.png'></div>
+                <a href="primitives/RedSphere.html">RedSphere</a></li>
         </ul>
     </li>
     <li>
-        object3D
+        <h2>object3D</h2>
         <ul>
-            <li><a href="object3D/RedAxis.html">RedAxis</a></li>
-            <li><a href="object3D/RedGrid.html">RedGrid</a></li>
-            <li><a href="object3D/RedLine.html">RedLine</a></li>
-            <li><a href="object3D/RedMesh.html">RedMesh</a></li>
-            <li><a href="object3D/RedSkyBox.html">RedSkyBox</a></li>
-            <li><a href="object3D/RedSprite3D.html">RedSprite3D</a></li>
+            <li class="item">
+                <div><img src='thumb/RedAxis.png'></div>
+                <a href="object3D/RedAxis.html">RedAxis</a></li>
+            <li class="item">
+                <div><img src='thumb/RedGrid.png'></div>
+                <a href="object3D/RedGrid.html">RedGrid</a></li>
+            <li class="item">
+                <div><img src='thumb/RedLine.png'></div>
+                <a href="object3D/RedLine.html">RedLine</a></li>
+            <li class="item">
+                <div><img src='thumb/RedMesh.png'></div>
+                <a href="object3D/RedMesh.html">RedMesh</a></li>
+            <li class="item">
+                <div><img src='thumb/RedSkyBox.png'></div>
+                <a href="object3D/RedSkyBox.html">RedSkyBox</a></li>
+            <li class="item">
+                <div><img src='thumb/RedSprite3D.png'></div>
+                <a href="object3D/RedSprite3D.html">RedSprite3D</a></li>
         </ul>
     </li>
     <li>
-        Material
+        <h2>Material</h2>
         <ul>
-            <li><a href="material/RedColorMaterial.html">RedColorMaterial</a></li>
-            <li><a href="material/RedColorPhongMaterial.html">RedColorPhongMaterial</a></li>
-            <li><a href="material/RedColorPhongTextureMaterial.html">RedColorPhongTextureMaterial</a></li>
-            <li><a href="material/RedBitmapMaterial.html">RedBitmapMaterial</a></li>
-            <li><a href="material/RedStandardMaterial.html">RedStandardMaterial</a></li>
-            <li><a href="material/RedEnvironmentMaterial.html">RedEnvironmentMaterial</a></li>
-            <li><a href="material/RedSheetMaterial.html">RedSheetMaterial</a></li>
-            <li><a href="material/RedVideoMaterial.html">RedVideoMaterial</a></li>
+            <li class="item">
+                <div><img src='thumb/RedColorMaterial.png'></div>
+                <a href="material/RedColorMaterial.html">RedColorMaterial</a></li>
+            <li class="item">
+                <div><img src='thumb/RedColorPhongMaterial.png'></div>
+                <a href="material/RedColorPhongMaterial.html">RedColorPhongMaterial</a></li>
+            <li class="item">
+                <div><img src='thumb/RedColorPhongTextureMaterial.png'></div>
+                <a href="material/RedColorPhongTextureMaterial.html">RedColorPhongTextureMaterial</a></li>
+            <li class="item">
+                <div><img src='thumb/RedBitmapMaterial.png'></div>
+                <a href="material/RedBitmapMaterial.html">RedBitmapMaterial</a></li>
+            <li class="item">
+                <div><img src='thumb/RedStandardMaterial.png'></div>
+                <a href="material/RedStandardMaterial.html">RedStandardMaterial</a></li>
+            <li class="item">
+                <div><img src='thumb/RedEnvironmentMaterial.png'></div>
+                <a href="material/RedEnvironmentMaterial.html">RedEnvironmentMaterial</a></li>
+            <li class="item">
+                <div><img src='thumb/RedSheetMaterial.png'></div>
+                <a href="material/RedSheetMaterial.html">RedSheetMaterial</a></li>
+            <li class="item">
+                <div><img src='thumb/RedVideoMaterial.png'></div>
+                <a href="material/RedVideoMaterial.html">RedVideoMaterial</a></li>
         </ul>
     </li>
     <li>
-        Texture
+        <h2>Texture</h2>
         <ul>
-            <li><a href="RedBitmapTexture.html">RedBitmapTexture</a></li>
-            <li><a href="RedBitmapTexture_anisotropic.html">RedBitmapTexture - anisotropic option</a></li>
-            <li><a href="RedBitmapCubeTexture.html">RedBitmapCubeTexture</a></li>
+            <li class="item">
+                <div><img src='thumb/RedBitmapTexture.png'></div>
+                <a href="resources/RedBitmapTexture.html">RedBitmapTexture</a></li>
+            <li class="item">
+                <div><img src='thumb/RedBitmapTexture_anisotropic.png'></div>
+                <a href="resources/RedBitmapTexture_anisotropic.html">RedBitmapTexture anisotropic option</a></li>
+            <li class="item">
+                <div><img src='thumb/RedBitmapCubeTexture.png'></div>
+                <a href="resources/RedBitmapCubeTexture.html">RedBitmapCubeTexture</a></li>
             <!--<li><a href="RedAtlas.html">RedAtlas & RedAtlasTexture</a></li>-->
-            <li><a href="RedDDSTexture.html">DXT TEST(연구중)</a></li>
+            <li class="item">
+                <div><img src='thumb/RedDDSTexture.png'></div>
+                <a href="resources/RedDDSTexture.html">DXT TEST(연구중)</a></li>
 
         </ul>
     </li>
 
     <li>
-        localToWorld, worldToLocal, getScreenPoint
+        <h2>localToWorld, worldToLocal, getScreenPoint</h2>
         <ul>
-            <li><a href="calPoint.html">localToWorld, worldToLocal, getScreenPoint</a></li>
+            <li class="item">
+                <div><img src='thumb/screenTo.png'></div>
+                <a href="calPoint.html">localToWorld, worldToLocal, getScreenPoint</a></li>
 
         </ul>
     </li>
     <li>
-        RedPointUnit
+        <h2>RedPointUnit</h2>
         <ul>
-            <li><a href="material/RedPointColorMaterial.html">RedPointUnit + RedPointColorMaterial</a></li>
-            <li><a href="material/RedPointBitmapMaterial.html">RedPointUnit + RedPointBitmapMaterial</a></li>
+            <li class="item">
+                <div><img src='thumb/RedPointColorMaterial.png'></div>
+                <a href="material/RedPointColorMaterial.html">RedPointUnit + RedPointColorMaterial</a></li>
+            <li class="item">
+                <div><img src='thumb/RedPointBitmapMaterial.png'></div>
+                <a href="material/RedPointBitmapMaterial.html">RedPointUnit + RedPointBitmapMaterial</a>
+            </li>
         </ul>
     </li>
     <li>
-        RedParticleEmitter
+        <h2>RedParticleEmitter</h2>
         <ul>
-            <li><a href="particle/RedParticleEmitter.html">RedParticleEmitter</a></li>
+            <li class="item">
+                <div><img src='thumb/RedParticleEmitter.png'></div>
+                <a href="particle/RedParticleEmitter.html">RedParticleEmitter</a></li>
         </ul>
     </li>
     <li>
-        Light
+        <h2>Light</h2>
         <ul>
-            <li><a href="light/RedLights.html">RedLights ( Ambient, Directional, Point)</a></li>
-            <li><a href="light/RedAmbientLight.html">RedAmbientLight</a></li>
-            <li><a href="light/RedDirectionalLight.html">RedDirectionalLight</a></li>
-            <li><a href="light/RedPointLight.html">RedPointLight</a></li>
+            <li class="item">
+                <div><img src='thumb/RedLights.png'></div>
+                <a href="light/RedLights.html">RedLights ( Ambient, Directional, Point)</a></li>
+            <li class="item">
+                <div><img src='thumb/RedAmbientLight.png'></div>
+                <a href="light/RedAmbientLight.html">RedAmbientLight</a></li>
+            <li class="item">
+                <div><img src='thumb/RedDirectionalLight.png'></div>
+                <a href="light/RedDirectionalLight.html">RedDirectionalLight</a></li>
+            <li class="item">
+                <div><img src='thumb/RedPointLight.png'></div>
+                <a href="light/RedPointLight.html">RedPointLight</a></li>
         </ul>
     </li>
     <li>
-        Controller
+        <h2>Controller</h2>
         <ul>
-            <li><a href="RedCamera.html">RedCamera</a></li>
-            <li><a href="RedBasicController.html">RedBasicController</a></li>
-            <li><a href="RedObitController.html">RedObitController</a></li>
+            <li class="item">
+                <div><img src='thumb/RedCamera.png'></div>
+                <a href="camera/RedCamera.html">RedCamera</a></li>
+            <li class="item">
+                <div><img src='thumb/RedBasicController.png'></div>
+                <a href="camera/RedBasicController.html">RedBasicController</a></li>
+            <li class="item">
+                <div><img src='thumb/RedObitController.png'></div>
+                <a href="camera/RedObitController.html">RedObitController</a></li>
         </ul>
     </li>
     <li>
-        Loader
+        <h2>Loader</h2>
         <ul>
-            <li><a href="RedOBJLoader.html">RedOBJLoader</a></li>
-            <li>//TODO: RedDAELoader 개발중</li>
+            <li class="item">
+                <div><img src='thumb/RedOBJLoader.png'></div>
+                <a href="RedOBJLoader.html">RedOBJLoader</a></li>
+            <li class="item">//TODO: RedDAELoader 개발중</li>
         </ul>
     </li>
     <li>
-        Fog
+        <h2>Fog</h2>
         <ul>
-            <li><a href="Fog.html">Fog</a></li>
+            <li class="item">
+                <div><img src='thumb/fog.png'></div>
+                <a href="Fog.html">Fog</a></li>
         </ul>
     </li>
     <li>
-        LOD
+        <h2>LOD</h2>
         <ul>
-            <li><a href="lod.html">LOD</a></li>
+            <li class="item">
+                <div><img src='thumb/lod.png'></div>
+                <a href="lod.html">LOD</a></li>
+        </ul>
+    </li>
+    <!--<li>-->
+    <!--<h2>RedXR</h2>-->
+    <!--<ul>-->
+    <!--<li class="item">-->
+    <!--<div><img src='thumb/test.png'></div>-->
+    <!--<a href="RedXR.html">RedXR</a></li>-->
+    <!--</ul>-->
+    <!--</li>-->
+    <li>
+        <h2>RedText</h2>
+        <ul>
+            <li class="item">
+                <div><img src='thumb/RedText.png'></div>
+                <a href="RedText.html">RedText</a></li>
         </ul>
     </li>
     <li>
-        RedXR
+        <h2>postEffect</h2>
         <ul>
-            <li><a href="RedXR.html">RedXR</a></li>
-        </ul>
-    </li>
-    <li>
-        RedText
-        <ul>
-            <li><a href="RedText.html">RedText</a></li>
-        </ul>
-    </li>
-    <li>
-        postEffect
-        <ul>
-            <li><a href="postEffect/RedPostEffect.html">postEffect</a></li>
+            <li class="item">
+                <div><img src='thumb/RedPostEffect.png'></div>
+                <a href="postEffect/RedPostEffect.html">postEffect</a></li>
             <li>
-                adjustments
+
+            <li class="item">
+                <div><img src='thumb/RedPostEffect_Vignetting.png'></div>
+                <a href="postEffect/RedPostEffect_Vignetting.html">RedPostEffect_Vignetting</a></li>
+            <li class="item">
+                <div><img src='thumb/RedPostEffect_FXAA.png'></div>
+                <a href="postEffect/antialiasing/RedPostEffect_FXAA.html">RedPostEffect_FXAA</a></li>
+            <li class="item">
+                <div><img src='thumb/RedPostEffect_DoF.png'></div>
+                <a href="postEffect/dof/RedPostEffect_DoF.html">RedPostEffect_DoF</a></li>
+            <li class="item">
+                <div><img src='thumb/RedPostEffect_Bloom.png'></div>
+                <a href="postEffect/bloom/RedPostEffect_Bloom.html">RedPostEffect_Bloom</a></li>
+
+            <li class="item">
+                <div><img src='thumb/RedPostEffect_Convolution.png'></div>
+                <a href="postEffect/RedPostEffect_Convolution.html">RedPostEffect_Convolution</a></li>
+            <li class="item">
+                <div><img src='thumb/RedPostEffect_Film.png'></div>
+                <a href="postEffect/RedPostEffect_Film.html">RedPostEffect_Film</a></li>
+            <h2>adjustments</h2>
+            <ul>
+                <li class="item">
+                    <div><img src='thumb/RedPostEffect_BrightnessContrast.png'></div>
+                    <a href="postEffect/adjustments/RedPostEffect_BrightnessContrast.html">RedPostEffect_BrightnessContrast</a>
+                </li>
+                <li class="item">
+                    <div><img src='thumb/RedPostEffect_Threshold.png'></div>
+                    <a href="postEffect/adjustments/RedPostEffect_Threshold.html">RedPostEffect_Threshold</a>
+                </li>
+                <li class="item">
+                    <div><img src='thumb/RedPostEffect_Invert.png'></div>
+                    <a href="postEffect/adjustments/RedPostEffect_Invert.html">RedPostEffect_Invert</a>
+                </li>
+                <li class="item">
+                    <div><img src='thumb/RedPostEffect_Gray.png'></div>
+                    <a href="postEffect/adjustments/RedPostEffect_Gray.html">RedPostEffect_Gray</a>
+                </li>
+                <li class="item">
+                    <div><img src='thumb/RedPostEffect_HueSaturation.png'></div>
+                    <a href="postEffect/adjustments/RedPostEffect_HueSaturation.html">RedPostEffect_HueSaturation</a>
+                </li>
+            </ul>
+            </li>
+            <li>
+                <h2>blur</h2>
                 <ul>
-                    <li><a href="postEffect/adjustments/RedPostEffect_BrightnessContrast.html">RedPostEffect_BrightnessContrast</a>
+                    <li class="item">
+                        <div><img src='thumb/RedPostEffect_Blur.png'></div>
+                        <a href="postEffect/blur/RedPostEffect_Blur.html">RedPostEffect_Blur</a></li>
+                    <li class="item">
+                        <div><img src='thumb/RedPostEffect_BlurX.png'></div>
+                        <a href="postEffect/blur/RedPostEffect_BlurX.html">RedPostEffect_BlurX</a></li>
+                    <li class="item">
+                        <div><img src='thumb/RedPostEffect_BlurY.png'></div>
+                        <a href="postEffect/blur/RedPostEffect_BlurY.html">RedPostEffect_BlurY</a></li>
+                    <li class="item">
+                        <div><img src='thumb/RedPostEffect_GaussianBlur.png'></div>
+                        <a href="postEffect/blur/RedPostEffect_GaussianBlur.html">RedPostEffect_GaussianBlur</a>
                     </li>
-                    <li><a href="postEffect/adjustments/RedPostEffect_Threshold.html">RedPostEffect_Threshold</a></li>
-                    <li><a href="postEffect/adjustments/RedPostEffect_Invert.html">RedPostEffect_Invert</a></li>
-                    <li><a href="postEffect/adjustments/RedPostEffect_Gray.html">RedPostEffect_Gray</a></li>
-                    <li>
-                        <a href="postEffect/adjustments/RedPostEffect_HueSaturation.html">RedPostEffect_HueSaturation</a>
+                    <li class="item">
+                        <div><img src='thumb/RedPostEffect_ZoomBlur.png'></div>
+                        <a href="postEffect/blur/RedPostEffect_ZoomBlur.html">RedPostEffect_ZoomBlur</a>
                     </li>
                 </ul>
             </li>
             <li>
-                blur
+                <h2>pixelate</h2>
                 <ul>
-                    <li><a href="postEffect/blur/RedPostEffect_Blur.html">RedPostEffect_Blur</a></li>
-                    <li><a href="postEffect/blur/RedPostEffect_BlurX.html">RedPostEffect_BlurX</a></li>
-                    <li><a href="postEffect/blur/RedPostEffect_BlurY.html">RedPostEffect_BlurY</a></li>
-                    <li><a href="postEffect/blur/RedPostEffect_GaussianBlur.html">RedPostEffect_GaussianBlur</a></li>
-                    <li><a href="postEffect/blur/RedPostEffect_ZoomBlur.html">RedPostEffect_ZoomBlur</a></li>
-                </ul>
-            </li>
-            <li>
-                pixelate
-                <ul>
-                    <li><a href="postEffect/pixelate/RedPostEffect_HalfTone.html">RedPostEffect_HalfTone</a></li>
-                    <li><a href="postEffect/pixelate/RedPostEffect_Pixelize.html">RedPostEffect_Pixelize</a></li>
+                    <li class="item">
+                        <div><img src='thumb/RedPostEffect_HalfTone.png'></div>
+                        <a href="postEffect/pixelate/RedPostEffect_HalfTone.html">RedPostEffect_HalfTone</a></li>
+                    <li class="item">
+                        <div><img src='thumb/RedPostEffect_Pixelize.png'></div>
+                        <a href="postEffect/pixelate/RedPostEffect_Pixelize.html">RedPostEffect_Pixelize</a></li>
                 </ul>
             </li>
 
-            <li><a href="postEffect/RedPostEffect_Convolution.html">RedPostEffect_Convolution</a></li>
-            <li><a href="postEffect/RedPostEffect_Film.html">RedPostEffect_Film</a></li>
-
-            <li><a href="postEffect/RedPostEffect_Vignetting.html">RedPostEffect_Vignetting</a></li>
-            <li>//TODO: 일단 포토샵필터중에 후보군 추리는중</li>
-            <li><a href="postEffect/antialiasing/RedPostEffect_FXAA.html">RedPostEffect_FXAA</a></li>
-            <li><a href="postEffect/dof/RedPostEffect_DoF.html">RedPostEffect_DoF</a></li>
-            <li><a href="postEffect/bloom/RedPostEffect_Bloom.html">RedPostEffect_Bloom</a></li>
-
-            <li>//TODO: SSAO 개발중</li>
         </ul>
     </li>
 </ul>
+<hr style="margin:0px 10px 0px 10px; border:0;border-bottom:1px solid #333">
+<div style="padding:10px">
+    <a href="https://redcamel.github.io/RedGL2/example">example</a> / <a
+        href="https://redcamel.github.io/RedGL2/testCase">testCase</a>  / <a href="https://redcamel.github.io/RedGL2/redDoc">document</a> / <a href="https://github.com/redcamel/RedGL2/">github</a>
+    <div>This project is maintained by <a href="https://github.com/redcamel/">Redcamel</a></div>
+</div>
 </body>
 
 </html>

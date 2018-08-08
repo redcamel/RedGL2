@@ -8,7 +8,7 @@ var RedCamera;
 		 description : `
 			 RedCamera Instance 생성자.
 		 `,
-		 demo : '../example/RedCamera.html',
+		 demo : '../example/camera/RedCamera.html',
 		 example : `
 			 RedCamera()
 		 `,
