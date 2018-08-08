@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>RedPrimitive</title>
+    <title>RedPlane</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -17,9 +17,9 @@
         }
     </style>
 
-    <script src="dat.gui.min.js"></script>
-    <script src="baseTestUI.js"></script>
-    <script src="../release/RedGL.min.js"></script>
+    <script src="../dat.gui.min.js"></script>
+    <script src="../baseTestUI.js"></script>
+    <script src="../../release/RedGL.min.js"></script>
 </head>
 
 <body>
@@ -38,7 +38,9 @@
 			// 씬 생성
 			tScene = RedScene(this);
 			// 카메라 생성
-			tCamera = RedCamera();
+			tCamera = RedObitController(this);
+			tCamera.tilt = -45
+			tCamera.pan = -45
 			// 렌더러 생성
 			tRenderer = RedRenderer();
 			// 뷰생성 및 적용
@@ -46,38 +48,22 @@
 			// 그리드 설정
 			tScene['grid'] = RedGrid(this)
 			// Mesh 설정
-			var tBox, tPlane, tSphere;
-			tBox = RedMesh(this, RedBox(this), RedColorMaterial(this, '#ff0000'))
-			tPlane = RedMesh(this, RedPlane(this), RedColorMaterial(this, '#00ff00'))
-			tSphere = RedMesh(this, RedSphere(this), RedColorMaterial(this, '#0000ff'))
-			tBox.x = -2
-			tPlane.x = 0
-			tSphere.x = 2
-			tScene.addChild(tBox)
-			tScene.addChild(tPlane)
-			tScene.addChild(tSphere)
+			var tMesh;
+			tMesh = RedMesh(this, RedPlane(this), RedColorMaterial(this, '#00ff00'))
+			tMesh.useCullFace = false
+			tScene.addChild(tMesh)
 			// 렌더시작
 			tRenderer.start(this, function (time) {
-				var i = tScene.children.length
-				var tMesh;
-				while ( i-- ) {
-					tMesh = tScene.children[i]
-					// tMesh.rotationX += 1
-					// tMesh.rotationY += 1
-					// tMesh.rotationZ += 1
-				}
-				tCamera.z = 10
-				tCamera.lookAt(0, 0, 0)
 			})
 			// 렌더 디버거 활성화
 			tRenderer['renderDebuger']['visible'] = true
 			//
-			testUI(this, tCamera, tScene, [tBox, tPlane, tSphere])
+			testUI(this, tCamera, tScene)
 		} else {
 			console.log('초기화 실패!')
 		}
 	})
-	testUI = function (redGL, tCamera, tScene, geoList) {
+	testUI = function (redGL, tCamera, tScene) {
 		console.log('test')
 		var gui = new baseTestUI(redGL)
 		gui.initRedGL()
@@ -85,18 +71,46 @@
 		gui.initScene(tScene, false, assetPath)
 		var test = {
 			drawMode: 'TRIANGLES',
-			pointSize: 1
+			pointSize: 1,
+			width: 1,
+			height: 1,
+			wSegments: 1,
+			hSegments: 1
 		}
 		var t0 = gui['gui'].addFolder('mesh')
 		t0.open()
 		t0.add(test, 'drawMode', ['TRIANGLES', 'TRIANGLE_STRIP', 'TRIANGLE_FAN', 'LINES', 'LINE_LOOP', 'LINE_STRIP', 'POINTS']).onChange(function (v) {
-			geoList.forEach(function (v2) {
-				v2['drawMode'] = redGL.gl[v]
+			tScene.children.forEach(function (v2) {
+				v2.drawMode = redGL.gl[v]
 			})
 		})
 		t0.add(test, 'pointSize', 1, 100).onChange(function (v) {
-			geoList.forEach(function (v2) {
-				v2['pointSize'] = v
+			tScene.children.forEach(function (v2) {
+				v2.pointSize = v
+			})
+		})
+		t0.add(test, 'width', 1, 5,1).onChange(function (v) {
+			
+			tScene.children.forEach(function (v2) {
+				v2.geometry = RedPlane(redGL, test.width, test.height, test.wSegments, test.hSegments)
+			})
+		})
+		t0.add(test, 'height', 1, 5,1).onChange(function (v) {
+			
+			tScene.children.forEach(function (v2) {
+				v2.geometry = RedPlane(redGL, test.width, test.height, test.wSegments, test.hSegments)
+			})
+		})
+		t0.add(test, 'wSegments', 1, 5,1).onChange(function (v) {
+			
+			tScene.children.forEach(function (v2) {
+				v2.geometry = RedPlane(redGL, test.width, test.height, test.wSegments, test.hSegments)
+			})
+		})
+		t0.add(test, 'hSegments', 1, 5,1).onChange(function (v) {
+			
+			tScene.children.forEach(function (v2) {
+				v2.geometry = RedPlane(redGL, test.width, test.height, test.wSegments, test.hSegments)
 			})
 		})
 	}

@@ -39,7 +39,7 @@
     "constructorYn": true,
     "title": "RedBasicController",
     "description": "\nRedBasicController Instance 생성자.\n",
-    "demo": "../example/RedBasicController.html",
+    "demo": "../example/camera/RedBasicController.html",
     "example": "\nRedBasicController(redGL Instance)\n",
     "params": {
       "redGL": [

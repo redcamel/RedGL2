@@ -17,9 +17,9 @@
         }
     </style>
 
-    <script src="dat.gui.min.js"></script>
-    <script src="baseTestUI.js"></script>
-    <script src="../release/RedGL.min.js"></script>
+    <script src="../dat.gui.min.js"></script>
+    <script src="../baseTestUI.js"></script>
+    <script src="../../release/RedGL.min.js"></script>
 </head>
 
 <body>
@@ -81,7 +81,7 @@
 			// REPEAT
 			tDiffuse1 = RedDDSTexture(
 				this,
-				'../asset/dxt/test_dxt1.dds',
+				assetPath + 'dxt/test_dxt1.dds',
 				{
 					min: this.gl.LINEAR,
 					mag: this.gl.LINEAR,
@@ -91,7 +91,7 @@
 			)
 			tDiffuse2 = RedDDSTexture(
 				this,
-				'../asset/crate.png',
+				assetPath + 'crate.png',
 				{
 					min: this.gl.NEAREST,
 					mag: this.gl.NEAREST,
@@ -101,7 +101,7 @@
 			)
 			tDiffuse3 = RedDDSTexture(
 				this,
-				'../asset/dxt/test_dxt1.dds',
+				assetPath + 'dxt/test_dxt1.dds',
 				{
 					min: this.gl.LINEAR_MIPMAP_NEAREST,
 					mag: this.gl.LINEAR,
@@ -121,7 +121,7 @@
 			// MIRRORED_REPEAT
 			tDiffuse1 = RedDDSTexture(
 				this,
-				'../asset/dxt/test_dxt1.dds',
+				assetPath + 'dxt/test_dxt1.dds',
 				{
 					min: this.gl.LINEAR,
 					mag: this.gl.LINEAR,
@@ -131,7 +131,7 @@
 			)
 			tDiffuse2 = RedDDSTexture(
 				this,
-				'../asset/dxt/test_dxt1.dds',
+				assetPath + 'dxt/test_dxt1.dds',
 				{
 					min: this.gl.NEAREST,
 					mag: this.gl.NEAREST,
@@ -141,7 +141,7 @@
 			)
 			tDiffuse3 = RedDDSTexture(
 				this,
-				'../asset/dxt/test_dxt1.dds',
+				assetPath + 'dxt/test_dxt1.dds',
 				{
 					min: this.gl.LINEAR_MIPMAP_NEAREST,
 					mag: this.gl.LINEAR,
@@ -164,7 +164,7 @@
 			// CLAMP_TO_EDGE
 			tDiffuse1 = RedBitmapTexture(
 				this,
-				'../asset/crate.png',
+				assetPath + 'crate.png',
 				{
 					min: this.gl.LINEAR,
 					mag: this.gl.LINEAR,
@@ -174,7 +174,7 @@
 			)
 			tDiffuse2 = RedBitmapTexture(
 				this,
-				'../asset/crate.png',
+				assetPath + 'crate.png',
 				{
 					min: this.gl.NEAREST,
 					mag: this.gl.NEAREST,
@@ -184,7 +184,7 @@
 			)
 			tDiffuse3 = RedBitmapTexture(
 				this,
-				'../asset/crate.png',
+				assetPath + 'crate.png',
 				{
 					min: this.gl.LINEAR_MIPMAP_NEAREST,
 					mag: this.gl.LINEAR,

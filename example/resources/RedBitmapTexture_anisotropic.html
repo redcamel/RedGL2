@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>RedEnvironmentMaterial</title>
+    <title>RedBitmapMaterial</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -17,9 +17,9 @@
         }
     </style>
 
-    <script src="dat.gui.min.js"></script>
-    <script src="baseTestUI.js"></script>
-    <script src="../release/RedGL.min.js"></script>
+    <script src="../dat.gui.min.js"></script>
+    <script src="../baseTestUI.js"></script>
+    <script src="../../release/RedGL.min.js"></script>
 </head>
 
 <body>
@@ -39,51 +39,58 @@
 			tScene = RedScene(this);
 			// 카메라 생성
 			tCamera = RedCamera();
-			tCamera.x = 3
-			tCamera.y = 4
-			tCamera.z = 6
 			// 렌더러 생성
 			tRenderer = RedRenderer();
 			// 뷰생성 및 적용
 			tWorld.addView(RedView('test', this, tScene, tCamera));
-			// 그리드 설정
-			tScene['grid'] = RedGrid(this)
-			// 라이트 설정
-			var tLight = RedDirectionalLight(this)
-			tScene.addLight(tLight)
-			tLight.x = 10
-			tLight.y = 5
-			tLight.z = 5
 			// Mesh 설정
 			var tMesh;
-			var tEnvironmentTexture = RedBitmapCubeTexture(this, [
-				'../asset/cubemap/SwedishRoyalCastle/px.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/nx.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/py.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/ny.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/pz.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/nz.jpg'
-			])
-			var tMaterial = RedEnvironmentMaterial(
-				this, RedBitmapTexture(this, '../asset/draft1.png'),
-				tEnvironmentTexture
+			var tDiffuse1, tDiffuse2
+			// REPEAT
+			tDiffuse1 = RedBitmapTexture(
+				this,
+				assetPath + 'crate.png',
+				{
+					min: this.gl.NEAREST,
+					mag: this.gl.NEAREST,
+					anisotropic: 16
+				}
 			)
-			tMesh = RedMesh(this, RedSphere(this, 1), tMaterial)
+			tDiffuse2 = RedBitmapTexture(
+				this,
+				assetPath + 'crate.png',
+				{
+					min: this.gl.NEAREST,
+					mag: this.gl.NEAREST
+				}
+			)
+			var tText
+			var setOptionText = function (target, v) {
+				tText = RedText(target, 1024, 300)
+				tText.color = '#fff'
+				tText.background = 'rgba(0,0,0,0.5)'
+				tText.text = v
+				tText.fontSize = '100px'
+				tText.sprite3DYn = true
+				tText.perspectiveScale = true
+				tText.z = 0.5
+				tText.y = 0.25
+			}
+			tMesh = RedMesh(this, RedPlane(this), RedBitmapMaterial(this, tDiffuse1))
+			tMesh.y = 0.6
+			setOptionText(this, 'anisotropic : 16')
+			tMesh.addChild(tText)
+			tScene.addChild(tMesh)
+			tMesh = RedMesh(this, RedPlane(this), RedBitmapMaterial(this, tDiffuse2))
+			tMesh.y = -0.6
+			setOptionText(this, 'none : anisotropic')
+			tMesh.addChild(tText)
 			tScene.addChild(tMesh)
 			// 렌더시작
 			tRenderer.start(this, function (time) {
+				tCamera.x = Math.cos(time / 500)
+				tCamera.z = 3.5
 				tCamera.lookAt(0, 0, 0)
-				var i = tScene.children.length
-				var t0
-				while ( i-- ) {
-					t0 = tScene.children[i]
-					t0.rotationX += 1
-					t0.rotationY += 1
-					t0.rotationZ += 1
-				}
-				tCamera.x = Math.sin(time / 3000) * 4
-				tCamera.y = Math.cos(time / 3000) * 4
-				tCamera.z = Math.cos(time / 3000) * 4
 			})
 			// 렌더 디버거 활성화
 			tRenderer['renderDebuger']['visible'] = true
@@ -96,7 +103,7 @@
 		var gui = new baseTestUI(redGL)
 		gui.initRedGL()
 		gui.initCamera(tCamera)
-		gui.initScene(tScene, false, assetPath)
+		gui.initScene(tScene, false, assetPath )
 	}
 </script>
 </body>

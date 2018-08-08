@@ -71,6 +71,7 @@ var RedVideoTexture;
 		 extends : [
 		    'RedBaseTexture'
 		 ],
+		 demo : '../example/resources/RedVideoTexture.html',
 		 example : `
 		    RedVideoTexture( RedGL Instance,  src or HTMLVideoElement)
 		 `,

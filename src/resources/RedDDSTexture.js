@@ -19,18 +19,11 @@ var RedDDSTexture;
 				 {type:'Object'},
 				 '텍스쳐 정의옵션',
 				 `
-				 <code>
-				 {
-					 min: this.gl.LINEAR_MIPMAP_NEAREST,
-					 mag: this.gl.LINEAR,
-					 wrap_s: this.gl.REPEAT,
-					 wrap_t: this.gl.REPEAT,
-					 anisotropic: 16 // 지원가능한경우에만 작동
-				 }
-				 </code>
+					<h2>dds는 현재 지원하지 않음</h2>
 				 `
 			 ]
 		 },
+	     demo : '../example/resources/RedDDSTexture.html',
 		 extends : [
 		    'RedBaseTexture'
 		 ],

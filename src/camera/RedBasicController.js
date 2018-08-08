@@ -8,7 +8,7 @@ var RedBasicController;
 		 description : `
 			 RedBasicController Instance 생성자.
 		 `,
-		 demo : '../example/RedBasicController.html',
+		 demo : '../example/camera/RedBasicController.html',
 		 example : `
 			 RedBasicController(redGL Instance)
 		 `,

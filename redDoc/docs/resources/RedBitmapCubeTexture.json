@@ -36,6 +36,7 @@
     "extends": [
       "RedBaseTexture"
     ],
+    "demo": "../example/resources/RedBitmapCubeTexture.html",
     "example": "\nRedBitmapCubeTexture( RedGL Instance,  srcList, {\nmin: gl.LINEAR_MIPMAP_NEAREST,\nmag: gl.LINEAR,\nwrap_s: gl.REPEAT,\nwrap_t: gl.REPEAT\n})\n",
     "return": "RedBitmapCubeTexture Instance"
   },
