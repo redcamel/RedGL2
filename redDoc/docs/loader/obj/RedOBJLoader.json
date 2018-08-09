@@ -25,6 +25,7 @@
         }
       ]
     },
+    "demo": "../example/loader/obj/RedOBJLoader.html",
     "example": "\nRedOBJLoader(RedGL Instance, '../asset/obj/gun/', 'Handgun_obj.obj', function (result) {\ntScene3D.addChild(result['resultMesh'])\n})\n",
     "return": "void"
   }
