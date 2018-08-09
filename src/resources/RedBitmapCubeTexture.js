@@ -118,7 +118,6 @@ var RedBitmapCubeTexture;
 		tGL = redGL.gl;
 
 		this['webglTexture'] = tGL.createTexture();
-		this['atlascoord'] = RedAtlasUV(redGL);
 		this['_UUID'] = RedGL.makeUUID();
 		this['_load'] = function (needEmpty) {
 			RedTextureOptionChecker.check('RedBitmapCubeTexture', option, tGL);

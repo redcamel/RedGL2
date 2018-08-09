@@ -129,12 +129,9 @@ gulp.task('combine-js', function () {
 		//
 		"src/base/RedBaseMaterial.js",
 		//
-		"src/resources/RedAtlas.js",
-		"src/resources/system/RedAtlasUV.js",
 		'src/resources/system/RedTextureOptionChecker.js',
 		"src/resources/RedBitmapTexture.js",
 		"src/resources/RedVideoTexture.js",
-		"src/resources/RedAtlasTexture.js",
 		"src/resources/RedDDSTexture.js",
 		"src/resources/RedBitmapCubeTexture.js",
 		// 재질
