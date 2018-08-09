@@ -158,7 +158,6 @@ gulp.task('combine-js', function () {
 		"src/loader/JsonModelLoader.js",
 		"src/loader/obj/RedMTLLoader.js",
 		"src/loader/obj/RedOBJLoader.js",
-		"src/loader/dae/RedDAELoader.js",
 		//
 		"src/object3D/RedAxis.js",
 		"src/object3D/RedGrid.js",

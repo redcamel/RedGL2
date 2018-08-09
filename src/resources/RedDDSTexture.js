@@ -44,10 +44,11 @@ var RedDDSTexture;
 		redGL instanceof RedGL || RedGLUtil.throwFunc('RedDDSTexture : RedGL Instance만 허용.', redGL);
 		tGL = redGL.gl;
 		tGL.glExtension['WEBGL_compressed_texture_s3tc'] || RedGLUtil.throwFunc('RedDDSTexture : WEBGL_compressed_texture_s3tc확장을 지원하지않는 하드웨어입니다.');
-		RedTextureOptionChecker.check('RedDDSTexture', option, tGL);
+
 		this['webglTexture'] = tGL.createTexture();
 		this['atlascoord'] = RedAtlasUV(redGL);
 		this['_load'] = function (needEmpty) {
+			RedTextureOptionChecker.check('RedDDSTexture', option, tGL);
 			if ( needEmpty ) this.setEmptyTexture(tGL, this['webglTexture']);
 			if ( this['_src'] ) this.loadDDSTexture(tGL, tGL.glExtension['WEBGL_compressed_texture_s3tc'], this['_src'],  this['_callback']);
 		}
