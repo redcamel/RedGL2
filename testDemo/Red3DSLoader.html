@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>RedDAELoader</title>
+    <title>html</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -51,7 +51,6 @@
     <script src="../rnd/resources/RedAtlasTexture.js"></script>
     <script src="../src/resources/RedBitmapCubeTexture.js"></script>
     <!--재질-->
-    <script src="RedTestMaterial.js"></script>
     <script src="../src/material/RedColorMaterial.js"></script>
     <script src="../src/material/RedColorPhongMaterial.js"></script>
     <script src="../src/material/RedColorPhongTextureMaterial.js"></script>
@@ -72,7 +71,7 @@
     <script src="../src/loader/JsonModelLoader.js"></script>
     <script src="../src/loader/obj/RedMTLLoader.js"></script>
     <script src="../src/loader/obj/RedOBJLoader.js"></script>
-    <script src="../rnd/loader/dae/RedDAELoader.js"></script>
+    <script src="../rnd/loader/3ds/Red3DSLoader.js"></script>
     <!--//-->
     <script src="../src/object3D/RedAxis.js"></script>
     <script src="../src/object3D/RedGrid.js"></script>
@@ -134,8 +133,15 @@
     <script src="../src/postEffect/dof/RedPostEffect_DoF_DepthMaterial.js"></script>
     <script src="../src/postEffect/RedPostEffect_Film.js"></script>
     <script src="../src/postEffect/RedPostEffect_Vignetting.js"></script>
+    <script src="../rnd/postEffect/RedPostEffect_SSAO.js"></script>
+    <script src="../rnd/postEffect/RedPostEffect_SSAO_DepthMaterial.js"></script>
+
+    <script src="../rnd/postEffect/RedPostEffect_SSAO_PointMaker.js"></script>
     <script src="../src/postEffect/antialiasing/RedPostEffect_FXAA.js"></script>
 
+    <script src="RedTestShaderMaterial2.js"></script>
+    <script src="../rnd/primitive/RedGround.js"></script>
+    <script src="RedNoise.js"></script>
 </head>
 
 <body>
@@ -152,51 +158,38 @@
 		tGL = this.gl;
 		this.world = tWorld = RedWorld();
 		tScene3D = RedScene(this);
+		// tScene3D['useFog'] = true
 		tCamera = RedObitController(this);
 		tCamera.tilt = -45
 		tRenderer = RedRenderer();
 		tWorld.addView(RedView('test', this, tScene3D, tCamera));
 		RedView('test').setSize('100%', '100%')
 		RedView('test').setLocation('0%', '0%')
-		this.renderScale = 1
-		var testDLight, testPLight;
-		testDLight = RedDirectionalLight(this, '#fff', 1)
-		testDLight.x = 3
+		tScene3D.skyBox =
+			RedSkyBox(this, [
+				'../asset/cubemap/SwedishRoyalCastle/px.jpg',
+				'../asset/cubemap/SwedishRoyalCastle/nx.jpg',
+				'../asset/cubemap/SwedishRoyalCastle/py.jpg',
+				'../asset/cubemap/SwedishRoyalCastle/ny.jpg',
+				'../asset/cubemap/SwedishRoyalCastle/pz.jpg',
+				'../asset/cubemap/SwedishRoyalCastle/nz.jpg'
+			]);
+		var  testALight ;
+		var testDLight
+		tScene3D.addLight(RedAmbientLight(this))
+		testDLight = RedDirectionalLight(this)
+		testDLight.x = 0
 		testDLight.y = 2
 		testDLight.z = 3
+		testDLight.intensity = 1.5
 		testDLight.debug = true
 		tScene3D.addLight(testDLight)
-		testDLight = RedDirectionalLight(this, '#ff00ff', 0.2)
-		testDLight.x = -3
-		testDLight.y = 2
-		testDLight.z = -3
-		testDLight.debug = true
-		tScene3D.addLight(testDLight)
-		testPLight = RedPointLight(this, '#00ff00', 0.5)
-		testPLight.x = -3
-		testPLight.y = -3
-		testPLight.z = -3
-		testPLight['radius'] = 1
-		testPLight['intensity'] = 1
-		tScene3D.addLight(testPLight)
-
-		tScene3D['grid'] = RedGrid(self)
-		RedDAELoader(this, '../asset/dae/', 'wolf.dae', function (v) {
+		tRenderer.renderDebuger.visible = true
+		Red3DSLoader(this, '../asset/3ds/portalgun/', 'portalgun.3ds', function (v) {
 			console.log('호잇!', v)
 			tScene3D.addChild(v['resultMesh'])
-
-			// v['resultMesh'].rotationX = 90
 		})
-		tRenderer.renderDebuger.visible = true
 		tRenderer.start(this, function (time) {
-			testDLight.x = Math.sin(time / 1000) * 2
-			testDLight.y = Math.cos(time / 1000) * 2
-			testDLight.z = Math.cos(time / 1000) * 2
-			testPLight.x = Math.sin(time / 1500) * 2
-			testPLight.y = Math.cos(time / 1500) * 2
-			testPLight.z = Math.cos(time / 1500) * 2
-			testPLight.debug = true
-			// testDLight.debug = true
 		})
 		console.log(tScene3D)
 	})

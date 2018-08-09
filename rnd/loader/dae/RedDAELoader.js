@@ -175,9 +175,6 @@ var RedDAELoader;
 			var sourceList
 			var pointInfo;
 			var materialInfo;
-			var meshMap = {}
-			var aniInfo, controllerInfo, controllerInfo2;
-			var visualSceneInfo;
 			sourceList = mesh.querySelectorAll('source')
 			// 포인트 리스트 만들기
 			pointInfo = makePointList(sourceList)
@@ -251,23 +248,11 @@ var RedDAELoader;
 	}
 	parser = function (tRedDAELoader, redGL, rawData) {
 		console.log('파싱시작', tRedDAELoader['path'] + tRedDAELoader['fileName'])
-		var meshs = parseMesh(tRedDAELoader, redGL, rawData)
-		var parsedData = {}
+		parseMesh(tRedDAELoader, redGL, rawData)
 		return {
 			fileName: tRedDAELoader['fileName'],
 			path: tRedDAELoader['path'],
 			resultMesh: tRedDAELoader['resultMesh']
-			// rawData: rawData,
-			// indexS: {
-			//     // index: indexDataIndex,
-			//     // normal: normalDataindex,
-			//     // coord: coordDataIndex
-			// },
-			// rawData: {
-			//     position: parseSourceDatas[0].querySelector('float_array').textContent.split(' ').map(Number),
-			//     normal: parseSourceDatas[1].querySelector('float_array').textContent.split(' ').map(Number),
-			//     coord: parseSourceDatas[2].querySelector('float_array').textContent.split(' ').map(Number)
-			// }
 		}
 	}
 	Object.freeze(RedDAELoader)
