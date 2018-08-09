@@ -116,11 +116,11 @@ var RedBitmapCubeTexture;
 		if ( !(this instanceof RedBitmapCubeTexture) ) return new RedBitmapCubeTexture(redGL, srcList, option, callback);
 		redGL instanceof RedGL || RedGLUtil.throwFunc('RedBitmapCubeTexture : RedGL Instance만 허용.', '입력값 : ' + redGL);
 		tGL = redGL.gl;
-		RedTextureOptionChecker.check('RedBitmapCubeTexture', option, tGL);
+
 		this['webglTexture'] = tGL.createTexture();
-		this['atlascoord'] = RedAtlasUV(redGL);
 		this['_UUID'] = RedGL.makeUUID();
 		this['_load'] = function (needEmpty) {
+			RedTextureOptionChecker.check('RedBitmapCubeTexture', option, tGL);
 			if ( needEmpty ) this.setEmptyTexture(tGL, this['webglTexture']);
 			if ( this['_srcList'] ) loadTexture(tGL, this, this['webglTexture'], this['_srcList'], this['_option'], this['_callback']);
 		}

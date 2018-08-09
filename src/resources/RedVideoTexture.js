@@ -84,7 +84,6 @@ var RedVideoTexture;
 		redGL instanceof RedGL || RedGLUtil.throwFunc('RedVideoTexture : RedGL Instance만 허용.', redGL);
 		tGL = redGL.gl;
 		this['webglTexture'] = tGL.createTexture();
-		this['atlascoord'] = RedAtlasUV(redGL);
 		this['_UUID'] = RedGL.makeUUID();
 		this['_load'] = function (needEmpty) {
 			if ( needEmpty ) this.setEmptyTexture(tGL, this['webglTexture']);
