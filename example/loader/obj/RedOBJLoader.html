@@ -17,16 +17,16 @@
         }
     </style>
 
-    <script src="dat.gui.min.js"></script>
-    <script src="baseTestUI.js"></script>
-    <script src="../release/RedGL.min.js"></script>
+    <script src="../../dat.gui.min.js"></script>
+    <script src="../../baseTestUI.js"></script>
+    <script src="../../../release/RedGL.min.js"></script>
 </head>
 
 <body>
 <script id='testSource'>
 	var testUI;
 	var canvas;
-	var assetPath = '../../asset/'
+	var assetPath = '../../../asset/'
 	canvas = document.createElement('canvas');
 	document.body.appendChild(canvas);
 	RedGL(canvas, function (v) {
@@ -72,7 +72,7 @@
 			testPLight.debug = true
 			tScene.addLight(testPLight)
 			// OBJ 로딩
-			RedOBJLoader(this, '../asset/obj/', 'female.obj', function (v) {
+			RedOBJLoader(this, assetPath + 'obj/', 'female.obj', function (v) {
 				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.025
 				tScene.addChild(v['resultMesh'])
 			})
