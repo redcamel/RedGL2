@@ -498,7 +498,7 @@ var Red3DSLoader;
 				RedInterleaveInfo('aTexcoord', 2)
 			])
 			indexBuffer = RedBuffer(target['redGL'], 'testRed3DS', RedBuffer.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices))
-			var material = RedColorPhongTextureMaterial(target['redGL'])
+			var material = RedColorPhongTextureMaterial(target['redGL'],'#00ff00')
 			var tGeo = RedGeometry(interleaveBuffer, indexBuffer)
 			var mesh = RedMesh(target['redGL'], tGeo, material)
 			mesh.name = 'mesh'+RedGL.makeUUID();
