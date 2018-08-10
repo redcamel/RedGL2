@@ -185,7 +185,7 @@
 		var tShadow = RedDirectionalShadow(this, testDLight)
 		tShadow.size = 1000
 		tScene3D.shadowManager.directionalShadow = tShadow
-		RedGLTFLoader(this, '../asset/glTF/Box/glTF-Embedded/', 'Box.gltf', function (v) {
+		RedGLTFLoader(this, '../asset/glTF/basic/', 'basic.gltf', function (v) {
 			console.log('호잇!', v)
 			tScene3D.addChild(v['resultMesh'])
 		})
