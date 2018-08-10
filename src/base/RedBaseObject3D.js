@@ -35,6 +35,7 @@ var RedBaseObject3D;
 	 }
 	 :DOC*/
 	RedBaseObject3D['build'] = function (gl) {
+		this['name'] = 'object3D_' + (RedGL.makeUUID() + 1)
 		/**DOC:
 		 {
 		     code : 'PROPERTY',
