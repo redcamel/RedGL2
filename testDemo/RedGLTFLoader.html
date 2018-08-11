@@ -188,21 +188,34 @@
 //		RedGLTFLoader(this, '../asset/glTF/basic/', 'sparse.gltf', function (v) {
 			console.log('호잇!', v)
 			tScene3D.addChild(v['resultMesh'])
-//			var i = 7000
-//			var ttt = v['resultMesh']['children'][0]
-//			while ( i-- ) {
-//				var t0;
-//				t0 = RedMesh(self,ttt.geometry,ttt.material)
-//				t0.x = Math.random() * 10 - 5
-//				t0.y = Math.random() * 10 - 5
-//				t0.z = Math.random() * 10 - 5
-//				t0.rotationX = Math.random() * 360
-//				t0.rotationY = Math.random() * 360
-//				t0.rotationZ = Math.random() * 360
-//				tScene3D.addChild(t0)
-//			}
+			var i = 5000
+			var ttt = v['resultMesh']['children'][0]
+			while ( i-- ) {
+				var t0;
+				t0 = RedMesh(self,ttt.geometry,ttt.material)
+				t0.x = Math.random() * 100 - 50
+				t0.y = Math.random() * 100 - 50
+				t0.z = Math.random() * 100 - 50
+				t0.rotationX = Math.random() * 360
+				t0.rotationY = Math.random() * 360
+				t0.rotationZ = Math.random() * 360
+				tScene3D.addChild(t0)
+			}
 		})
 		tRenderer.start(this, function (time) {
+			var i = tScene3D['children'].length
+            var aa = tScene3D['children'][0]
+            if(aa && aa['children'][0]) aa = aa['children'][0]
+			while ( i-- ) {
+				if(i>0){
+					var t0;
+					t0 = tScene3D['children'][i]
+					t0.rotationX = aa['rotationX']+i
+					t0.rotationY = aa['rotationY']+i
+					t0.rotationZ = aa['rotationZ']+i
+                }
+
+			}
 		})
 		console.log(tScene3D)
 	})
