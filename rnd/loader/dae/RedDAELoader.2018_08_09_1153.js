@@ -169,7 +169,7 @@ var RedDAELoader;
 	})();
 	parseAnimation = function (rawData) {
 		var map = {};
-		var aniList = rawData.querySelectorAll('library_animations animation')
+		var aniList = rawData.querySelectorAll('library_animations animation.gltf')
 		aniList.forEach(function (tAni) {
 			console.log('tAni', tAni)
 			var float_arrayList = tAni.querySelectorAll('float_array')
