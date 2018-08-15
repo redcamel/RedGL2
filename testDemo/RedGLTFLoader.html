@@ -72,6 +72,7 @@
     <script src="../src/loader/obj/RedMTLLoader.js"></script>
     <script src="../src/loader/obj/RedOBJLoader.js"></script>
     <script src="../rnd/loader/gltf/RedGLTFLoader.js"></script>
+    <script src="../rnd/loader/3ds/Red3DSLoader.js"></script>
     <!--//-->
     <script src="../src/object3D/RedAxis.js"></script>
     <script src="../src/object3D/RedGrid.js"></script>
@@ -161,35 +162,60 @@
 		// tScene3D['useFog'] = true
 		tCamera = RedObitController(this);
 		tCamera.tilt = -45
-		tCamera.distance = 1500
-		tCamera.speedDistance = 100
 		tRenderer = RedRenderer();
 		tWorld.addView(RedView('test', this, tScene3D, tCamera));
 		RedView('test').setSize('100%', '100%')
 		RedView('test').setLocation('0%', '0%')
 		this.renderScale = 1
-		var testDLight, testALight, testPLight;
-		testDLight = RedDirectionalLight(this, '#ff00ff', 0.3)
+		var testDLight;
+		testDLight = RedDirectionalLight(this)
 		testDLight.x = -30
 		testDLight.y = 20
 		testDLight.z = -30
-//		testDLight.intensity = 1.5
 		tScene3D.addLight(testDLight)
-		testDLight = RedDirectionalLight(this)
-		testDLight.x = -3
-		testDLight.y = 2
-		testDLight.z = -3
-		tScene3D.addLight(testDLight)
-		tScene3D.fogDistance = 2500
 		tRenderer.renderDebuger.visible = true
-		var tShadow = RedDirectionalShadow(this, testDLight)
-		tShadow.size = 1000
-		tScene3D.shadowManager.directionalShadow = tShadow
-		RedGLTFLoader(this, '../asset/glTF/Box/glTF-Embedded/', 'Box.gltf', function (v) {
+		tScene3D.skyBox =
+			RedSkyBox(this, [
+				'../asset/cubemap/SwedishRoyalCastle/px.jpg',
+				'../asset/cubemap/SwedishRoyalCastle/nx.jpg',
+				'../asset/cubemap/SwedishRoyalCastle/py.jpg',
+				'../asset/cubemap/SwedishRoyalCastle/ny.jpg',
+				'../asset/cubemap/SwedishRoyalCastle/pz.jpg',
+				'../asset/cubemap/SwedishRoyalCastle/nz.jpg'
+			]);
+//		RedGLTFLoader(this, '../asset/glTF/basic/', 'basic.gltf', function (v) {
+		RedGLTFLoader(this, '../asset/glTF/basic/', 'animation.gltf', function (v) {
+//		RedGLTFLoader(this, '../asset/glTF/basic/', 'sparse.gltf', function (v) {
 			console.log('호잇!', v)
 			tScene3D.addChild(v['resultMesh'])
+			var i = 5000
+			var ttt = v['resultMesh']['children'][0]
+			while ( i-- ) {
+				var t0;
+				t0 = RedMesh(self,ttt.geometry,ttt.material)
+				t0.x = Math.random() * 100 - 50
+				t0.y = Math.random() * 100 - 50
+				t0.z = Math.random() * 100 - 50
+				t0.rotationX = Math.random() * 360
+				t0.rotationY = Math.random() * 360
+				t0.rotationZ = Math.random() * 360
+				tScene3D.addChild(t0)
+			}
 		})
 		tRenderer.start(this, function (time) {
+			var i = tScene3D['children'].length
+            var aa = tScene3D['children'][0]
+            if(aa && aa['children'][0]) aa = aa['children'][0]
+			while ( i-- ) {
+				if(i>0){
+					var t0;
+					t0 = tScene3D['children'][i]
+					t0.rotationX = aa['rotationX']+i
+					t0.rotationY = aa['rotationY']+i
+					t0.rotationZ = aa['rotationZ']+i
+                }
+
+			}
 		})
 		console.log(tScene3D)
 	})
