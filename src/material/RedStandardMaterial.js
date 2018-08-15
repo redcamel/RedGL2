@@ -3,7 +3,7 @@ var RedStandardMaterial;
 (function () {
 	var vSource, fSource;
 	var PROGRAM_NAME = 'RedStandardMaterialProgram';
-	var PROGRAM_OPTION_LIST = ['normalTexture', 'specularTexture', 'displacementTexture'];
+	var PROGRAM_OPTION_LIST = ['normalTexture', 'specularTexture', 'emissiveTexture', 'displacementTexture'];
 	var checked;
 	vSource = function () {
 		/* @preserve
@@ -39,9 +39,10 @@ var RedStandardMaterial;
 		/* @preserve
 		 precision mediump float;
 		 uniform sampler2D u_diffuseTexture;
+
 		 //#define#normalTexture# uniform sampler2D u_normalTexture;
 		 //#define#specularTexture# uniform sampler2D u_specularTexture;
-
+		 //#define#emissiveTexture# uniform sampler2D u_emissiveTexture;
 
 		 //#define#normalTexture# uniform float u_normalPower;
 		 uniform float u_shininess;
@@ -74,6 +75,7 @@ var RedStandardMaterial;
 		 vec4 ld;
 		 vec4 ls;
 		 vec4 texelColor;
+		 vec4 emissiveColor;
 		 vec4 specularLightColor= vec4(1.0, 1.0, 1.0, 1.0);
 		 vec4 finalColor;
 		 vec3 N;
@@ -92,6 +94,8 @@ var RedStandardMaterial;
 			 texelColor.rgb *= texelColor.a;
 			 if(texelColor.a ==0.0) discard;
 
+			//#define#emissiveTexture# emissiveColor = texture2D(u_emissiveTexture, vTexcoord);
+			//#define#emissiveTexture# emissiveColor.rgb *= texelColor.a;
 			///////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -154,6 +158,7 @@ var RedStandardMaterial;
 			 finalColor = la * uAmbientIntensity + ld + ls;
 			 finalColor.rgb *= texelColor.a;
 			 finalColor.a = texelColor.a * u_alpha;
+			 //#define#emissiveTexture# finalColor +=emissiveColor;
 			 //#define#fog#false# gl_FragColor = finalColor;
 			 //#define#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
 		 }
@@ -199,8 +204,8 @@ var RedStandardMaterial;
 		 return : 'RedStandardMaterial Instance'
 	 }
 	 :DOC*/
-	RedStandardMaterial = function (redGL, diffuseTexture, normalTexture, specularTexture, displacementTexture) {
-		if ( !(this instanceof RedStandardMaterial) ) return new RedStandardMaterial(redGL, diffuseTexture, normalTexture, specularTexture, displacementTexture);
+	RedStandardMaterial = function (redGL, diffuseTexture, normalTexture, specularTexture, displacementTexture, emissiveTexture) {
+		if ( !(this instanceof RedStandardMaterial) ) return new RedStandardMaterial(redGL, diffuseTexture, normalTexture, specularTexture, displacementTexture, emissiveTexture);
 		redGL instanceof RedGL || RedGLUtil.throwFunc('RedStandardMaterial : RedGL Instance만 허용.', redGL);
 		this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource, PROGRAM_OPTION_LIST);
 		/////////////////////////////////////////
@@ -208,6 +213,7 @@ var RedStandardMaterial;
 		this['diffuseTexture'] = diffuseTexture;
 		this['normalTexture'] = normalTexture;
 		this['specularTexture'] = specularTexture;
+		this['emissiveTexture'] = emissiveTexture;
 		this['displacementTexture'] = displacementTexture;
 		this['normalPower'] = 1;
 		this['shininess'] = 16;
@@ -267,6 +273,14 @@ var RedStandardMaterial;
 	 }
 	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'specularTexture', 'sampler2D', samplerOption);
+	/**DOC:
+	 {
+	     code : 'PROPERTY',
+		 title :`specularTexture`,
+		 return : 'RedBitmapTexture'
+	 }
+	 :DOC*/
+	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'emissiveTexture', 'sampler2D', samplerOption);
 	/**DOC:
 	 {
 	     code : 'PROPERTY',

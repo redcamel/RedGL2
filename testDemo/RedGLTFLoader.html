@@ -162,6 +162,8 @@
 		// tScene3D['useFog'] = true
 		tCamera = RedObitController(this);
 		tCamera.tilt = -45
+		tCamera.distance = 500
+		tCamera.speedDistance = 50
 		tRenderer = RedRenderer();
 		tWorld.addView(RedView('test', this, tScene3D, tCamera));
 		RedView('test').setSize('100%', '100%')
@@ -172,6 +174,11 @@
 		testDLight.x = -30
 		testDLight.y = 20
 		testDLight.z = -30
+		tScene3D.addLight(testDLight)
+		testDLight = RedDirectionalLight(this)
+		testDLight.x = 30
+		testDLight.y = -20
+		testDLight.z = 30
 		tScene3D.addLight(testDLight)
 		tRenderer.renderDebuger.visible = true
 		tScene3D.skyBox =
@@ -184,38 +191,63 @@
 				'../asset/cubemap/SwedishRoyalCastle/nz.jpg'
 			]);
 //		RedGLTFLoader(this, '../asset/glTF/basic/', 'basic.gltf', function (v) {
-		RedGLTFLoader(this, '../asset/glTF/basic/', 'animation.gltf', function (v) {
+//		RedGLTFLoader(this, '../asset/glTF/basic/', 'animation.gltf', function (v) {
+//		RedGLTFLoader(this, '../asset/glTF/basic/', 'simpleMesh.gltf', function (v) {
 //		RedGLTFLoader(this, '../asset/glTF/basic/', 'sparse.gltf', function (v) {
+//		RedGLTFLoader(this, '../asset/glTF/basic/', '2CylinderEngine.gltf', function (v) {
+//		RedGLTFLoader(this, '../asset/glTF/basic/', 'BoxAnimated.gltf', function (v) {
+//		RedGLTFLoader(this, '../asset/glTF/basic/', 'Buggy.gltf', function (v) {
+//		RedGLTFLoader(this, '../asset/glTF/basic/', 'CesiumMan.gltf', function (v) {
+//		RedGLTFLoader(this, '../asset/glTF/basic/', 'Duck.gltf', function (v) {
+//		RedGLTFLoader(this, '../asset/glTF/basic/', 'GearboxAssy.gltf', function (v) {
+//		RedGLTFLoader(this, '../asset/glTF/basic/', 'Monster.gltf', function (v) {
+//		RedGLTFLoader(this, '../asset/glTF/basic/', 'ReciprocatingSaw.gltf', function (v) {
+//        RedGLTFLoader(this, '../asset/glTF/basic/', 'VertexColorTest.gltf', function (v) {
+		RedGLTFLoader(this, '../asset/glTF/basic/', 'DamagedHelmet.gltf', function (v) {
 			console.log('호잇!', v)
 			tScene3D.addChild(v['resultMesh'])
-			var i = 5000
-			var ttt = v['resultMesh']['children'][0]
-			while ( i-- ) {
-				var t0;
-				t0 = RedMesh(self,ttt.geometry,ttt.material)
-				t0.x = Math.random() * 100 - 50
-				t0.y = Math.random() * 100 - 50
-				t0.z = Math.random() * 100 - 50
-				t0.rotationX = Math.random() * 360
-				t0.rotationY = Math.random() * 360
-				t0.rotationZ = Math.random() * 360
-				tScene3D.addChild(t0)
-			}
+			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 40
+		})
+		RedGLTFLoader(this, '../asset/glTF/basic/', '2CylinderEngine.gltf', function (v) {
+			console.log('호잇!', v)
+			tScene3D.addChild(v['resultMesh'])
+			v['resultMesh'].z = -300
+		})
+		RedGLTFLoader(this, '../asset/glTF/basic/', 'ReciprocatingSaw.gltf', function (v) {
+			console.log('호잇!', v)
+			tScene3D.addChild(v['resultMesh'])
+			v['resultMesh'].z = 100
+		})
+		RedGLTFLoader(this, '../asset/glTF/basic/', 'CesiumMan.gltf', function (v) {
+			console.log('호잇!', v)
+			tScene3D.addChild(v['resultMesh'])
+			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 50
+			v['resultMesh'].z = -100
+		})
+		RedGLTFLoader(this, '../asset/glTF/basic/', 'Monster.gltf', function (v) {
+			console.log('호잇!', v)
+			tScene3D.addChild(v['resultMesh'])
+			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 2
+			v['resultMesh'].x = -100
+		})
+		RedGLTFLoader(this, '../asset/glTF/basic/', 'Buggy.gltf', function (v) {
+			console.log('호잇!', v)
+			tScene3D.addChild(v['resultMesh'])
+			v['resultMesh'].x = 100
 		})
 		tRenderer.start(this, function (time) {
-			var i = tScene3D['children'].length
-            var aa = tScene3D['children'][0]
-            if(aa && aa['children'][0]) aa = aa['children'][0]
-			while ( i-- ) {
-				if(i>0){
-					var t0;
-					t0 = tScene3D['children'][i]
-					t0.rotationX = aa['rotationX']+i
-					t0.rotationY = aa['rotationY']+i
-					t0.rotationZ = aa['rotationZ']+i
-                }
-
-			}
+//			var i = tScene3D['children'].length
+//            var aa = tScene3D['children'][0]
+//            if(aa && aa['children'][0]) aa = aa['children'][0]
+//			while ( i-- ) {
+//				if(i>0){
+//					var t0;
+//					t0 = tScene3D['children'][i]
+//					t0.rotationX = aa['rotationX']+i
+//					t0.rotationY = aa['rotationY']+i
+//					t0.rotationZ = aa['rotationZ']+i
+//                }
+//			}
 		})
 		console.log(tScene3D)
 	})
