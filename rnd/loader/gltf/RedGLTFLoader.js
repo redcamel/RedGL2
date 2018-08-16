@@ -392,7 +392,6 @@ var RedGLTFLoader;
 						// t0.src = json['images'][diffuseSourceIndex]['uri']
 						// t0.style.cssText = 'position:absolute;top:0px;left:0px;width:500px'
 						// document.body.appendChild(t0)
-
 					}
 					var diffseTexture, normalTexture, roughnessTexture, emissiveTexture, occlusionTexture;
 					if ( 'metallicRoughnessTexture' in tMaterialInfo['pbrMetallicRoughness'] ) {
@@ -438,12 +437,27 @@ var RedGLTFLoader;
 						// t0.style.cssText = 'position:absolute;top:0px;left:0px;width:500px'
 						// document.body.appendChild(t0)
 					}
-					if(diffseTexture ){
-						tMaterial = RedStandardMaterial(redGLTFLoader['redGL'], diffseTexture, normalTexture, roughnessTexture, null, emissiveTexture)
-					}else{
+					if ( diffseTexture ) {
+						var env = RedBitmapCubeTexture(redGLTFLoader['redGL'], [
+							'../asset/cubemap/SwedishRoyalCastle/px.jpg',
+							'../asset/cubemap/SwedishRoyalCastle/nx.jpg',
+							'../asset/cubemap/SwedishRoyalCastle/py.jpg',
+							'../asset/cubemap/SwedishRoyalCastle/ny.jpg',
+							'../asset/cubemap/SwedishRoyalCastle/pz.jpg',
+							'../asset/cubemap/SwedishRoyalCastle/nz.jpg'
+						])
+						// Type	Description	Required
+						// baseColorFactor	number [4]	The material's base color factor.	No, default: [1,1,1,1]
+						// baseColorTexture	object	The base color texture.	No
+						// metallicFactor	number	The metalness of the material.	No, default: 1
+						// roughnessFactor	number	The roughness of the material.	No, default: 1
+						// metallicRoughnessTexture	object	The metallic-roughness texture.	No
+
+						tMaterial = RedPBRMaterial(redGLTFLoader['redGL'], diffseTexture, env, normalTexture, occlusionTexture, emissiveTexture, roughnessTexture, null)
+					} else {
 						var tColor
-						if(tMaterialInfo['pbrMetallicRoughness'] && tMaterialInfo['pbrMetallicRoughness']['baseColorFactor'])tColor = tMaterialInfo['pbrMetallicRoughness']['baseColorFactor']
-						 tColor = [(Math.random()), (Math.random()), (Math.random()), 1]
+						if ( tMaterialInfo['pbrMetallicRoughness'] && tMaterialInfo['pbrMetallicRoughness']['baseColorFactor'] ) tColor = tMaterialInfo['pbrMetallicRoughness']['baseColorFactor']
+						tColor = [(Math.random()), (Math.random()), (Math.random()), 1]
 						tMaterial = RedColorPhongMaterial(redGLTFLoader['redGL'],
 							RedGLUtil.rgb2hex(
 								tColor[0] * 255,
@@ -453,8 +467,6 @@ var RedGLTFLoader;
 							tColor[3]
 						)
 					}
-
-
 				}
 				if ( 'mode' in v ) {
 					// 0 POINTS
@@ -510,10 +522,10 @@ var RedGLTFLoader;
 						RedBuffer.ARRAY_BUFFER,
 						new Float32Array(interleaveData),
 						uvs.length ? [
-							RedInterleaveInfo('aVertexPosition', 3),
-							RedInterleaveInfo('aVertexNormal', 3),
-							RedInterleaveInfo('aTexcoord', 2)
-						] : [
+								RedInterleaveInfo('aVertexPosition', 3),
+								RedInterleaveInfo('aVertexNormal', 3),
+								RedInterleaveInfo('aTexcoord', 2)
+							] : [
 								RedInterleaveInfo('aVertexPosition', 3),
 								RedInterleaveInfo('aVertexNormal', 3)
 							]
