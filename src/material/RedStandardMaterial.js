@@ -135,7 +135,7 @@ var RedStandardMaterial;
 				 if(lambertTerm > 0.0){
 					 ld += uDirectionalLightColorList[i] * texelColor * lambertTerm * uDirectionalLightIntensityList[i] * uDirectionalLightColorList[i].a;
 					 specular = pow( max(dot(reflect(L, N), -L), 0.0), u_shininess);
-					 ls +=  specularLightColor * pow( max(dot(reflect(L, N), -L), 0.0), u_shininess) * u_specularPower * specularTextureValue * uDirectionalLightIntensityList[i];
+					 ls +=  specularLightColor * specular * u_specularPower * specularTextureValue * uDirectionalLightIntensityList[i] * uDirectionalLightColorList[i].a;
 				 }
 			 }
 
@@ -150,15 +150,16 @@ var RedStandardMaterial;
 					 if(lambertTerm > 0.0){
 						 ld += uPointLightColorList[i] * texelColor * lambertTerm * attenuation * uPointLightIntensityList[i] * uPointLightColorList[i].a;
 						 specular = pow( max(dot(reflect(L, N), -L), 0.0), u_shininess);
-						 ls +=  specularLightColor * specular * u_specularPower * specularTextureValue * uPointLightIntensityList[i] ;
+						 ls +=  specularLightColor * specular * u_specularPower * specularTextureValue * uPointLightIntensityList[i]* uPointLightColorList[i].a ;
 					 }
 				 }
 			 }
 
 			 finalColor = la * uAmbientIntensity + ld + ls;
+			  //#define#emissiveTexture# finalColor +=emissiveColor;
 			 finalColor.rgb *= texelColor.a;
 			 finalColor.a = texelColor.a * u_alpha;
-			 //#define#emissiveTexture# finalColor +=emissiveColor;
+
 			 //#define#fog#false# gl_FragColor = finalColor;
 			 //#define#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
 		 }

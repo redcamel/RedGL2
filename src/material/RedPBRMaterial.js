@@ -1,9 +1,9 @@
 "use strict";
-var RedEnvironmentMaterial;
+var RedPBRMaterial;
 (function () {
 	var vSource, fSource;
-	var PROGRAM_NAME = 'RedEnvironmentMaterialProgram';
-	var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'specularTexture', 'displacementTexture','emissiveTexture'];
+	var PROGRAM_NAME = 'RedPBRMaterialProgram';
+	var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture', 'displacementTexture'];
 	var checked;
 	vSource = function () {
 		/* @preserve
@@ -36,14 +36,16 @@ var RedEnvironmentMaterial;
 		 precision mediump float;
 		 //#define#diffuseTexture# uniform sampler2D u_diffuseTexture;
 		 //#define#normalTexture# uniform sampler2D u_normalTexture;
-		 //#define#specularTexture# uniform sampler2D u_specularTexture;
+		 //#define#occlusionTexture# uniform sampler2D u_occlusionTexture;
 		 uniform samplerCube u_environmentTexture;
 		 //#define#emissiveTexture# uniform sampler2D u_emissiveTexture;
+		 //#define#emissiveTexture# uniform sampler2D u_roughnessTexture;
+
 
          //#define#normalTexture# uniform float u_normalPower;
-		 uniform float u_shininess;
 		 uniform float u_specularPower;
-		 uniform float u_reflectionPower;
+		 uniform float u_metallicPower;
+
 		 uniform float u_alpha;
 
 		 varying vec4 vVertexPositionEye4;
@@ -64,6 +66,8 @@ var RedEnvironmentMaterial;
 		 vec4 ls;
 		 vec4 texelColor= vec4(0.0,0.0,0.0,0.0);
 		 vec4 emissiveColor;
+		 vec4 roughnessColor;
+		 vec4 occlusionColor;
 		 vec4 reflectionColor;
 		 vec4 specularLightColor= vec4(1.0, 1.0, 1.0, 1.0);
 		 vec4 finalColor;
@@ -74,6 +78,7 @@ var RedEnvironmentMaterial;
 	     float specularTextureValue;
          float distanceLength;
 		 float attenuation;
+
 		 void main(void) {
 			 la = uAmbientLightColor * uAmbientLightColor.a;
 			 ld = vec4(0.0, 0.0, 0.0, 1.0);
@@ -85,18 +90,32 @@ var RedEnvironmentMaterial;
 			 //#define#diffuseTexture# if(texelColor.a ==0.0) discard;
 
 			 //#define#emissiveTexture# emissiveColor = texture2D(u_emissiveTexture, vTexcoord);
-			 //#define#emissiveTexture# emissiveColor.rgb *= texelColor.a;
+			 //#define#emissiveTexture# emissiveColor.rgb *= emissiveColor.a;
+
+			 //#define#roughnessTexture# roughnessColor = texture2D(u_roughnessTexture, vTexcoord);
+
+
+
 
 			 N = normalize(vVertexNormal);
 			 //#define#normalTexture# vec4 normalColor = texture2D(u_normalTexture, vTexcoord);
 			 //#define#normalTexture# if(normalColor.a != 0.0) N = normalize(2.0 * (N + normalColor.rgb * u_normalPower  - 0.5));
 
 			 reflectionColor = textureCube(u_environmentTexture, 2.0 * dot(vReflectionCubeCoord, N) * N - vReflectionCubeCoord);
-			 texelColor = mix(texelColor,reflectionColor ,u_reflectionPower);
+			 float tMetallicPower = u_metallicPower;
+
+			 // 메탈릭 산출 roughnessColor.b
+			 //#define#roughnessTexture# tMetallicPower = tMetallicPower * roughnessColor.b;
+             float shininess = 32.0 ;
+             // 거칠기 산출 roughnessColor.g
+
+			 texelColor = mix(texelColor,reflectionColor ,tMetallicPower);
+
+             //#define#occlusionTexture# occlusionColor = texture2D(u_occlusionTexture, vTexcoord);
 
 			 specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);
 			 specularTextureValue = 1.0;
-			 //#define#specularTexture#  specularTextureValue = texture2D(u_specularTexture, vTexcoord).r;
+
 
 			 for(int i=0; i<cDIRETIONAL_MAX; i++){
 				 if(i == uDirectionalLightNum) break;
@@ -104,8 +123,8 @@ var RedEnvironmentMaterial;
 				 lambertTerm = dot(N,-L);
 				 if(lambertTerm > 0.0){
 					 ld += uDirectionalLightColorList[i] * texelColor * lambertTerm * uDirectionalLightIntensityList[i] * uDirectionalLightColorList[i].a;
-					 specular = pow( max(dot(reflect(L, N), -L), 0.0), u_shininess);
-					 ls +=  specularLightColor * specular * u_specularPower * specularTextureValue * uDirectionalLightIntensityList[i] * uDirectionalLightColorList[i].a;
+					 specular = pow( max(dot(reflect(L, N), -L), 0.0), shininess/tMetallicPower  ) ;
+					 ls +=  specularLightColor * specular * u_specularPower * specularTextureValue * uDirectionalLightIntensityList[i]* uDirectionalLightColorList[i].a;
 				 }
 			 }
 
@@ -119,17 +138,16 @@ var RedEnvironmentMaterial;
 					 lambertTerm = dot(N,-L);
 					 if(lambertTerm > 0.0){
 						 ld += uPointLightColorList[i] * texelColor * lambertTerm * attenuation * uPointLightIntensityList[i] * uPointLightColorList[i].a;
-						 specular = pow( max(dot(reflect(L, N), -L), 0.0), u_shininess);
-						 ls +=  specularLightColor * specular * u_specularPower * specularTextureValue * uPointLightIntensityList[i] * uPointLightColorList[i].a;
+						 specular = pow( max(dot(reflect(L, N), -L), 0.0), shininess/tMetallicPower );
+						 ls +=  specularLightColor * specular * u_specularPower * specularTextureValue * uPointLightIntensityList[i] * uPointLightColorList[i].a ;
 					 }
 				 }
 			 }
-
 			 finalColor = la * uAmbientIntensity + ld + ls;
-			 //#define#emissiveTexture# finalColor +=emissiveColor;
+			 //#define#emissiveTexture# finalColor += emissiveColor;
 			 finalColor.rgb *= texelColor.a;
 			 finalColor.a = texelColor.a * u_alpha;
-
+			 //#define#occlusionTexture# finalColor *= occlusionColor;
 			 //#define#fog#false# gl_FragColor = finalColor;
 			 //#define#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
 		 }
@@ -138,9 +156,9 @@ var RedEnvironmentMaterial;
 	/**DOC:
 	 {
 		 constructorYn : true,
-		 title :`RedEnvironmentMaterial`,
+		 title :`RedPBRMaterial`,
 		 description : `
-			 RedEnvironmentMaterial Instance 생성
+			 RedPBRMaterial Instance 생성
 		 `,
 		 params : {
 			 redGL : [
@@ -155,7 +173,7 @@ var RedEnvironmentMaterial;
 			 normalTexture : [
 				 {type:'RedBitmapTexture'}
 			 ],
-			 specularTexture : [
+			 occlusionTexture : [
 				 {type:'RedBitmapTexture'}
 			 ],
 			 displacementTexture : [
@@ -165,52 +183,53 @@ var RedEnvironmentMaterial;
 		 extends : [
 		    'RedBaseMaterial'
 		 ],
-		 demo : '../example/material/RedEnvironmentMaterial.html',
+		 demo : '../example/material/RedPBRMaterial.html',
 		 example : `
-			 RedEnvironmentMaterial(
+			 RedPBRMaterial(
 				 RedGL Instance,
 				 RedBitmapTexture(RedGL Instance, src), // diffuseTexture
 				 RedBitmapCubeTexture(RedGL Instance, srcList),
 				 RedBitmapTexture(RedGL Instance, src), // normalTexture
-				 RedBitmapTexture(RedGL Instance, src), // specularTexture
+				 RedBitmapTexture(RedGL Instance, src), // occlusionTexture
 				 RedBitmapTexture(RedGL Instance, src)  // displacementTexture
 			 )
 		 `,
-		 return : 'RedEnvironmentMaterial Instance'
+		 return : 'RedPBRMaterial Instance'
 	 }
 	 :DOC*/
-	RedEnvironmentMaterial = function (redGL,
-	                                   diffuseTexture,
-	                                   environmentTexture,
-	                                   normalTexture,
-	                                   specularTexture,
-	                                   displacementTexture,
-	                                   emissiveTexture
-	) {
-		if ( !(this instanceof RedEnvironmentMaterial) ) return new RedEnvironmentMaterial(
+	RedPBRMaterial = function (redGL,
+	                           diffuseTexture,
+	                           environmentTexture,
+	                           normalTexture,
+	                           occlusionTexture,
+	                           emissiveTexture,
+	                           roughnessTexture,
+	                           displacementTexture) {
+		if ( !(this instanceof RedPBRMaterial) ) return new RedPBRMaterial(
 			redGL,
 			diffuseTexture,
 			environmentTexture,
 			normalTexture,
-			specularTexture,
-			displacementTexture,
-			emissiveTexture
+			occlusionTexture,
+			emissiveTexture,
+			roughnessTexture,
+			displacementTexture
 		);
-		redGL instanceof RedGL ||  RedGLUtil.throwFunc('RedEnvironmentMaterial : RedGL Instance만 허용.', redGL);
-		environmentTexture instanceof RedBitmapCubeTexture || RedGLUtil.throwFunc('RedEnvironmentMaterial : environmentTexture - RedBitmapCubeTexture Instance만 허용.');
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedPBRMaterial : RedGL Instance만 허용.', redGL);
+		environmentTexture instanceof RedBitmapCubeTexture || RedGLUtil.throwFunc('RedPBRMaterial : environmentTexture - RedBitmapCubeTexture Instance만 허용.');
 		this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource, PROGRAM_OPTION_LIST);
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
 		this['diffuseTexture'] = diffuseTexture;
 		this['environmentTexture'] = environmentTexture;
 		this['normalTexture'] = normalTexture;
-		this['specularTexture'] = specularTexture;
+		this['occlusionTexture'] = occlusionTexture;
 		this['displacementTexture'] = displacementTexture;
 		this['emissiveTexture'] = emissiveTexture;
+		this['roughnessTexture'] = roughnessTexture;
 		this['normalPower'] = 1;
-		this['shininess'] = 8;
 		this['specularPower'] = 1;
-		this['reflectionPower'] = 1;
+		this['metallicPower'] = 1;
 		this['displacementPower'] = 0;
 		this['displacementFlowSpeedX'] = 0;
 		this['displacementFlowSpeedY'] = 0;
@@ -224,7 +243,7 @@ var RedEnvironmentMaterial;
 		}
 		console.log(this);
 	};
-	RedEnvironmentMaterial.prototype = new RedBaseMaterial();
+	RedPBRMaterial.prototype = new RedBaseMaterial();
 	var samplerOption = {
 		callback: function () {
 			this._searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST)
@@ -238,7 +257,7 @@ var RedEnvironmentMaterial;
 		 return : 'Number'
 	 }
 	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'alpha', 'number', {min: 0, max: 1});
+	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'alpha', 'number', {min: 0, max: 1});
 	/**DOC:
 	 {
 	     code : 'PROPERTY',
@@ -246,7 +265,7 @@ var RedEnvironmentMaterial;
 		 return : 'RedBitmapTexture'
 	 }
 	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'diffuseTexture', 'sampler2D', samplerOption);
+	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'diffuseTexture', 'sampler2D', samplerOption);
 	/**DOC:
 	 {
 	     code : 'PROPERTY',
@@ -254,7 +273,7 @@ var RedEnvironmentMaterial;
 		 return : 'RedBitmapCubeTexture'
 	 }
 	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'environmentTexture', 'samplerCube', {
+	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'environmentTexture', 'samplerCube', {
 		essential: true,
 		callback: samplerOption.callback
 	});
@@ -265,15 +284,15 @@ var RedEnvironmentMaterial;
 		 return : 'RedBitmapTexture'
 	 }
 	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'normalTexture', 'sampler2D', samplerOption);
+	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'normalTexture', 'sampler2D', samplerOption);
 	/**DOC:
 	 {
 	     code : 'PROPERTY',
-		 title :`specularTexture`,
+		 title :`occlusionTexture`,
 		 return : 'RedBitmapTexture'
 	 }
 	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'specularTexture', 'sampler2D', samplerOption);
+	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'occlusionTexture', 'sampler2D', samplerOption);
 	/**DOC:
 	 {
 	     code : 'PROPERTY',
@@ -281,7 +300,7 @@ var RedEnvironmentMaterial;
 		 return : 'RedBitmapTexture'
 	 }
 	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'displacementTexture', 'sampler2D', samplerOption);
+	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'displacementTexture', 'sampler2D', samplerOption);
 	/**DOC:
 	 {
 	     code : 'PROPERTY',
@@ -289,7 +308,15 @@ var RedEnvironmentMaterial;
 		 return : 'RedBitmapTexture'
 	 }
 	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'emissiveTexture', 'sampler2D', samplerOption);
+	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'emissiveTexture', 'sampler2D', samplerOption);
+	/**DOC:
+	 {
+	     code : 'PROPERTY',
+		 title :`roughnessTexture`,
+		 return : 'RedBitmapTexture'
+	 }
+	 :DOC*/
+	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'roughnessTexture', 'sampler2D', samplerOption);
 	/**DOC:
 	 {
 	     code : 'PROPERTY',
@@ -298,16 +325,8 @@ var RedEnvironmentMaterial;
 		 return : 'number'
 	 }
 	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'normalPower', 'number', {'min': 0});
-	/**DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`shininess`,
-		 description : `기본값 : 16`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'shininess', 'number', {'min': 0});
+	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'normalPower', 'number', {'min': 0});
+
 	/**DOC:
 	 {
 	     code : 'PROPERTY',
@@ -316,16 +335,17 @@ var RedEnvironmentMaterial;
 		 return : 'Number'
 	 }
 	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'specularPower', 'number', {'min': 0});
+	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'specularPower', 'number', {'min': 0});
 	/**DOC:
 	 {
 	     code : 'PROPERTY',
-		 title :`reflectionPower`,
+		 title :`metallicPower`,
 		 description : `기본값 : 1`,
 		 return : 'Number'
 	 }
 	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'reflectionPower', 'number', {'min': 0});
+	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'metallicPower', 'number', {'min': 0});
+
 	/**DOC:
 	 {
 	     code : 'PROPERTY',
@@ -334,7 +354,7 @@ var RedEnvironmentMaterial;
 		 return : 'Number'
 	 }
 	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'displacementPower', 'number', {'min': 0});
+	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'displacementPower', 'number', {'min': 0});
 	/**DOC:
 	 {
 	     code : 'PROPERTY',
@@ -343,7 +363,7 @@ var RedEnvironmentMaterial;
 		 return : 'Number'
 	 }
 	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'displacementFlowSpeedX', 'number');
+	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'displacementFlowSpeedX', 'number');
 	/**DOC:
 	 {
 	     code : 'PROPERTY',
@@ -352,6 +372,6 @@ var RedEnvironmentMaterial;
 		 return : 'Number'
 	 }
 	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'displacementFlowSpeedY', 'number');
-	Object.freeze(RedEnvironmentMaterial);
+	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'displacementFlowSpeedY', 'number');
+	Object.freeze(RedPBRMaterial);
 })();

@@ -65,7 +65,7 @@ var RedColorPhongMaterial;
 				 if(lambertTerm > 0.0){
 					 ld += uDirectionalLightColorList[i] * texelColor * lambertTerm * uDirectionalLightIntensityList[i] * uDirectionalLightColorList[i].a;
 					 specular = pow( max(dot(reflect(L, N), -L), 0.0), u_shininess);
-					 ls +=  specularLightColor * specular * u_specularPower * specularTextureValue * uDirectionalLightIntensityList[i];
+					 ls +=  specularLightColor * specular * u_specularPower * specularTextureValue * uDirectionalLightIntensityList[i] * uDirectionalLightColorList[i].a;
 				 }
 			 }
 			 for(int i=0;i<cPOINT_MAX;i++){
@@ -79,7 +79,7 @@ var RedColorPhongMaterial;
 					 if(lambertTerm > 0.0){
 						 ld += uPointLightColorList[i] * texelColor * lambertTerm * attenuation * uPointLightIntensityList[i] * uPointLightColorList[i].a;
 						 specular = pow( max(dot( reflect(L, N), -L), 0.0), u_shininess);
-						 ls +=  specularLightColor * specular * u_specularPower * specularTextureValue * uPointLightIntensityList[i] ;
+						 ls +=  specularLightColor * specular * u_specularPower * specularTextureValue * uPointLightIntensityList[i]  * uPointLightColorList[i].a ;
 					 }
 				 }
 			 }
