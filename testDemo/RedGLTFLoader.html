@@ -211,10 +211,44 @@
 			console.log('호잇!', v)
 			tScene3D.addChild(v['resultMesh'])
 			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 40
+			RedGLTFLoader(self, '../asset/glTF/basic/', 'BoxTextured.gltf', function (v) {
+				console.log('호잇!', v)
+				tScene3D.addChild(v['resultMesh'])
+				v['resultMesh'].x = 200
+				v['resultMesh'].z = 200
+				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 50
+			})
+			RedGLTFLoader(self, '../asset/glTF/basic/', 'BrainStem.gltf', function (v) {
+				console.log('호잇!', v)
+				tScene3D.addChild(v['resultMesh'])
+				v['resultMesh'].x = 0
+				v['resultMesh'].z = 200
+				v['resultMesh'].y = -50
+				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 50
+			})
+			RedGLTFLoader(self, '../asset/glTF/basic/', 'NormalTangentTest.gltf', function (v) {
+				console.log('호잇!', v)
+				tScene3D.addChild(v['resultMesh'])
+				v['resultMesh'].x = 200
+				v['resultMesh'].z = 100
+				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 50
+			})
 			RedGLTFLoader(self, '../asset/glTF/basic/', '2CylinderEngine.gltf', function (v) {
 				console.log('호잇!', v)
 				tScene3D.addChild(v['resultMesh'])
 				v['resultMesh'].z = -300
+			})
+			RedGLTFLoader(self, '../asset/glTF/basic/', 'TextureCoordinateTest.gltf', function (v) {
+				console.log('호잇!', v)
+				tScene3D.addChild(v['resultMesh'])
+				v['resultMesh'].x = -200
+				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 50
+			})
+			RedGLTFLoader(self, '../asset/glTF/basic/', 'VertexColorTest.gltf', function (v) {
+				console.log('호잇!', v)
+				tScene3D.addChild(v['resultMesh'])
+				v['resultMesh'].x = 250
+				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 50
 			})
 			RedGLTFLoader(self, '../asset/glTF/basic/', 'ReciprocatingSaw.gltf', function (v) {
 				console.log('호잇!', v)

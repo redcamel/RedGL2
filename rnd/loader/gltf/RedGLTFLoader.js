@@ -228,7 +228,9 @@ var RedGLTFLoader;
 					target.z = info['translation'][2];
 				}
 				if ( 'scale' in info ) {
-					//TODO:
+					target.scaleX = info['scale'][0];
+					target.scaleY = info['scale'][1];
+					target.scaleZ = info['scale'][2];
 				}
 			}
 		})();
@@ -437,6 +439,13 @@ var RedGLTFLoader;
 						// t0.style.cssText = 'position:absolute;top:0px;left:0px;width:500px'
 						// document.body.appendChild(t0)
 					}
+					var metallicFactor,roughnessFactor
+					if ( 'metallicFactor' in tMaterialInfo['pbrMetallicRoughness'] ) {
+						metallicFactor = tMaterialInfo['pbrMetallicRoughness']['metallicFactor']
+					}
+					if ( 'roughnessFactor' in tMaterialInfo['pbrMetallicRoughness'] ) {
+						roughnessFactor = tMaterialInfo['pbrMetallicRoughness']['roughnessFactor']
+					}
 					if ( diffseTexture ) {
 						var env = RedBitmapCubeTexture(redGLTFLoader['redGL'], [
 							'../asset/cubemap/SwedishRoyalCastle/px.jpg',
@@ -452,8 +461,8 @@ var RedGLTFLoader;
 						// metallicFactor	number	The metalness of the material.	No, default: 1
 						// roughnessFactor	number	The roughness of the material.	No, default: 1
 						// metallicRoughnessTexture	object	The metallic-roughness texture.	No
-
 						tMaterial = RedPBRMaterial(redGLTFLoader['redGL'], diffseTexture, env, normalTexture, occlusionTexture, emissiveTexture, roughnessTexture, null)
+						if ( !roughnessTexture ) tMaterial.metallicPower = metallicFactor;
 					} else {
 						var tColor
 						if ( tMaterialInfo['pbrMetallicRoughness'] && tMaterialInfo['pbrMetallicRoughness']['baseColorFactor'] ) tColor = tMaterialInfo['pbrMetallicRoughness']['baseColorFactor']

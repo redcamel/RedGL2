@@ -108,6 +108,7 @@ var RedPBRMaterial;
 			 //#define#roughnessTexture# tMetallicPower = tMetallicPower * roughnessColor.b;
              float shininess = 32.0 ;
              // 거칠기 산출 roughnessColor.g
+			  // TODO
 
 			 texelColor = mix(texelColor,reflectionColor ,tMetallicPower);
 
