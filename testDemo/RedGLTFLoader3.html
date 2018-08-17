@@ -191,21 +191,36 @@
 				'../asset/cubemap/SwedishRoyalCastle/pz.jpg',
 				'../asset/cubemap/SwedishRoyalCastle/nz.jpg'
 			]);
-		var t0, t1
+		var t0, t1, t2
 		t0 = RedGLTFLoader(self, '../asset/glTF/basic/', 'BoxAnimated.gltf', function (v) {
 			console.log('호잇!', v)
 			tScene3D.addChild(v['resultMesh'])
-			t1 = RedGLTFLoader(self, '../asset/glTF/basic/', 'animation.gltf', function (v) {
-				console.log('호잇!', v)
-				tScene3D.addChild(v['resultMesh'])
-				testUI()
-			})
 		})
-
+		t1 = RedGLTFLoader(self, '../asset/glTF/basic/', 'animation.gltf', function (v) {
+			console.log('호잇!', v)
+			tScene3D.addChild(v['resultMesh'])
+			v['resultMesh'].x = -2
+		})
 		RedGLTFLoader(self, '../asset/glTF/basic/', 'SimpleSparseAccessor.gltf', function (v) {
 			console.log('호잇!', v)
 			tScene3D.addChild(v['resultMesh'])
+			v['resultMesh'].z = -2
 		})
+		t2 = RedGLTFLoader(self, '../asset/glTF/basic/', 'SimpleMorph.gltf', function (v) {
+			console.log('호잇!', v)
+			tScene3D.addChild(v['resultMesh'])
+			v['resultMesh'].z = 2
+
+		});
+		RedGLTFLoader(self, '../asset/glTF/basic/', 'SimpleSkin.gltf', function (v) {
+			console.log('호잇!', v)
+			tScene3D.addChild(v['resultMesh'])
+			v['resultMesh'].scaleX = 10
+			v['resultMesh'].scaleY = 10
+			v['resultMesh'].scaleZ = 10
+
+		});
+
 		tRenderer.start(this, function (time) {
 
 //			if(tScene3D['children'][0]) tScene3D['children'][0].rotationX+=1
@@ -221,11 +236,12 @@
 				playAnimation: function () {
 					t0.playAnimation(t0['animations'][0])
 					t1.playAnimation(t1['animations'][0])
+					t2.playAnimation(t2['animations'][0])
 				},
 				stopAnimation: function () {
 					t0.stopAnimation()
 					t1.stopAnimation()
-
+					t2.stopAnimation()
 				}
 			}
 			folder.add(testAnimation, 'playAnimation')
@@ -233,6 +249,7 @@
 			///////////////////////////////////////////////
 			folder.open()
 		}
+		testUI();
 		console.log(tScene3D)
 	})
 </script>
