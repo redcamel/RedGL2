@@ -88,13 +88,169 @@ var RedGLTFLoader;
 		};
 		this['redGL'] = redGL;
 		this['groups'] = []
+		this['animations'] = [];
+		this['aniTick'] = null
 		this['path'] = path;
 		this['fileName'] = fileName;
 		this['callback'] = callback;
 		this['resultMesh'] = RedMesh(redGL)
 		this['resultMesh']['name'] = 'instanceOfRedGLTFLoader_' + RedGL.makeUUID()
 		this['result'] = null;
+		var _currentAnimationInfo = null
+		this['stopAnimation'] = function () {
+			console.log('_currentAnimationInfo', _currentAnimationInfo, loopList.indexOf(_currentAnimationInfo))
+			if ( loopList.indexOf(_currentAnimationInfo) > -1 ) {
+				loopList.splice(loopList.indexOf(_currentAnimationInfo), 1)
+			}
+			console.log('loopList', loopList)
+		}
+		this['playAnimation'] = function (animationData) {
+			loopList.push(
+				_currentAnimationInfo = {
+					startTime: performance.now(),
+					targetAnimationData: animationData
+				}
+			)
+			console.log('loopList', loopList)
+		}
+		console.log(this)
 	};
+	var loopList = []
+	var animationLooper = (function () {
+		var currentTime, previousTime, nextTime;
+		var prevRotation, nextRotation;
+		var prevTranslation, nextTranslation;
+		var prevScale, nextScale;
+		var interpolationValue;
+		var targetAnimationData
+		return function (time) {
+			loopList.forEach(function (v) {
+				prevRotation = null
+				nextRotation = null
+				prevTranslation = null
+				nextTranslation = null
+				targetAnimationData = v['targetAnimationData']
+				targetAnimationData.forEach(function (aniData) {
+					currentTime = ((time - v['startTime']) % (targetAnimationData['maxTime'] * 1000)) / 1000
+					// console.log(currentTime,aniData['minTime'] )
+					var target = aniData['target']
+					var nextIndex, prevIndex
+					prevIndex = aniData['time'].length - 1
+					nextIndex = 0
+					previousTime = aniData['time'][prevIndex]
+					nextTime = aniData['time'][nextIndex]
+					var len = aniData['time'].length
+					var i = 0
+					for ( i; i < len; i++ ) {
+						var tTime = aniData['time'][i]
+						var index = i
+						if ( tTime < currentTime ) {
+							prevIndex = index
+							previousTime = aniData['time'][prevIndex]
+							if ( aniData['time'][index + 1] == undefined ) {
+								nextIndex = 0
+								nextTime = aniData['time'][nextIndex]
+							} else {
+								nextIndex = index + 1
+								nextTime = aniData['time'][nextIndex]
+							}
+						}
+						if ( index == 0 && (currentTime < tTime) ) {
+							prevIndex = len - 1
+							previousTime = aniData['time'][prevIndex]
+							nextIndex = index
+							nextTime = aniData['time'][nextIndex]
+							currentTime = tTime
+							break
+						}
+						if ( index == len - 1 && (currentTime > tTime) ) {
+							prevIndex = 0
+							previousTime = aniData['time'][prevIndex]
+							nextIndex = len - 1
+							nextTime = aniData['time'][nextIndex]
+							currentTime = tTime
+							break
+						}
+					}
+					if ( aniData['key'] == 'rotation' ) {
+						var rotationMTX = mat4.create()
+						var tRotation = [0, 0, 0]
+						var tQuaternion = [
+							aniData['data'][nextIndex * 4],
+							aniData['data'][nextIndex * 4 + 1],
+							aniData['data'][nextIndex * 4 + 2],
+							aniData['data'][nextIndex * 4 + 3]
+						]
+						RedGLUtil.quaternionToRotationMat4(tQuaternion, rotationMTX)
+						RedGLUtil.mat4ToEuler(rotationMTX, tRotation)
+						tRotation[0] = -(tRotation[0] * 180 / Math.PI)
+						tRotation[1] = -(tRotation[1] * 180 / Math.PI)
+						tRotation[2] = -(tRotation[2] * 180 / Math.PI)
+						nextRotation = tRotation
+						//
+						var tRotation = [0, 0, 0]
+						tQuaternion = [
+							aniData['data'][prevIndex * 4],
+							aniData['data'][prevIndex * 4 + 1],
+							aniData['data'][prevIndex * 4 + 2],
+							aniData['data'][prevIndex * 4 + 3]
+						]
+						RedGLUtil.quaternionToRotationMat4(tQuaternion, rotationMTX)
+						RedGLUtil.mat4ToEuler(rotationMTX, tRotation)
+						tRotation[0] = -(tRotation[0] * 180 / Math.PI)
+						tRotation[1] = -(tRotation[1] * 180 / Math.PI)
+						tRotation[2] = -(tRotation[2] * 180 / Math.PI)
+						prevRotation = tRotation
+					}
+					if ( aniData['key'] == 'translation' ) {
+						nextTranslation = [
+							aniData['data'][nextIndex * 3],
+							aniData['data'][nextIndex * 3 + 1],
+							aniData['data'][nextIndex * 3 + 2]
+						]
+						prevTranslation = [
+							aniData['data'][prevIndex * 3],
+							aniData['data'][prevIndex * 3 + 1],
+							aniData['data'][prevIndex * 3 + 2]
+						]
+					}
+					if ( aniData['key'] == 'scale' ) {
+						nextScale = [
+							aniData['data'][nextIndex * 3],
+							aniData['data'][nextIndex * 3 + 1],
+							aniData['data'][nextIndex * 3 + 2]
+						]
+						prevScale = [
+							aniData['data'][prevIndex * 3],
+							aniData['data'][prevIndex * 3 + 1],
+							aniData['data'][prevIndex * 3 + 2]
+						]
+					}
+					interpolationValue = (currentTime - previousTime) / (nextTime - previousTime)
+					if ( target ) {
+						if ( aniData['key'] == 'translation' ) {
+							target.x = prevTranslation[0] + interpolationValue * (nextTranslation[0] - prevTranslation[0])
+							target.y = prevTranslation[1] + interpolationValue * (nextTranslation[1] - prevTranslation[1])
+							target.z = prevTranslation[2] + interpolationValue * (nextTranslation[2] - prevTranslation[2])
+							// console.log(target.y)
+						}
+						if ( aniData['key'] == 'rotation' ) {
+							target.rotationX = prevRotation[0] + interpolationValue * (nextRotation[0] - prevRotation[0])
+							target.rotationY = prevRotation[1] + interpolationValue * (nextRotation[1] - prevRotation[1])
+							target.rotationZ = prevRotation[2] + interpolationValue * (nextRotation[2] - prevRotation[2])
+						}
+						if ( aniData['key'] == 'scale' ) {
+							target.scaleX = prevScale[0] + interpolationValue * (nextScale[0] - prevScale[0])
+							target.scaleY = prevScale[1] + interpolationValue * (nextScale[1] - prevScale[1])
+							target.scaleZ = prevScale[2] + interpolationValue * (nextScale[2] - prevScale[2])
+						}
+					}
+				})
+			})
+			requestAnimationFrame(animationLooper);
+		}
+	})();
+	requestAnimationFrame(animationLooper);
 	parser = (function () {
 		var checkAsset;
 		var getBaseResource;
@@ -258,6 +414,7 @@ var RedGLTFLoader;
 				// console.log('nodeInfo', info)
 				// console.log('parentMesh', parentMesh)
 				makeMesh(redGLTFLoader, json, json['meshes'][tMeshIndex]).forEach(function (tMesh) {
+					info['RedMesh'] = tMesh
 					parentMesh.addChild(tMesh)
 					// console.log("메쉬인덱스를 찾음", tMeshIndex, parentMesh)
 					checkTRSAndMATRIX(tMesh, info)
@@ -266,6 +423,91 @@ var RedGLTFLoader;
 				})
 			} else {
 				console.log('파싱대상이 아님', info)
+			}
+		}
+		var parseSparse = function (redGLTFLoader, key, tAccessors, json, vertices, normals, uvs) {
+			if ( tAccessors['sparse'] ) {
+				var sparseVerties = []
+				var sparseNormals = []
+				var sparseUvs = [];
+				(function () {
+					var tSparse = tAccessors['sparse']
+					var tSparseValuesAccessors = tSparse['values']
+					console.log('tSparseValuesAccessors', tSparseValuesAccessors)
+					var tBufferView = json['bufferViews'][tSparseValuesAccessors['bufferView']]
+					var tBufferIndex = tBufferView['buffer']
+					var tBuffer = json['buffers'][tBufferIndex]
+					var tBufferURIDataView;
+					if ( tBuffer['uri'] ) {
+						tBufferURIDataView = redGLTFLoader['uris']['buffers'][tBufferIndex]
+					}
+					var i, len;
+					var tComponentType
+					var tMethod;
+					tComponentType = WEBGL_COMPONENT_TYPES[tAccessors['componentType']]
+					if ( tComponentType == Float32Array ) tMethod = 'getFloat32'
+					var tAccessorBufferOffset = tAccessors['byteOffset'] || 0
+					i = (tBufferView['byteOffset'] + tAccessorBufferOffset) / tComponentType['BYTES_PER_ELEMENT']
+					switch ( tAccessors['type'] ) {
+						case 'VEC3' :
+							len = i + ( tComponentType['BYTES_PER_ELEMENT'] * tSparse['count']) / tComponentType['BYTES_PER_ELEMENT'] * 3
+							console.log('오오오오', key, i, len)
+							for ( i; i < len; i++ ) {
+								if ( key == 'NORMAL' ) sparseNormals.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+								else if ( key == 'POSITION' ) sparseVerties.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+							}
+							// console.log('인터리브 버퍼 데이터', vertices)
+							break
+						case 'VEC2' :
+							len = i + ( tComponentType['BYTES_PER_ELEMENT'] * tSparse['count']) / tComponentType['BYTES_PER_ELEMENT'] * 2
+							// console.log(i, len)
+							for ( i; i < len; i++ ) {
+								if ( key == 'TEXCOORD_0' ) {
+									if ( i % 2 == 0 ) sparseUvs.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+									else sparseUvs.push(-tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+								}
+							}
+							// console.log('인터리브 버퍼 데이터', vertices)
+							break
+						default :
+							console.log('알수없는 형식 엑세서 타입', tAccessors['type'])
+							break
+					}
+				})();
+				console.log(sparseVerties)
+				console.log(sparseNormals)
+				console.log(sparseUvs);
+				var tSparse = tAccessors['sparse']
+				var tSparseAccessors = tSparse['indices']
+				console.log('tSparseAccessors', tSparseAccessors)
+				var tBufferView = json['bufferViews'][tSparseAccessors['bufferView']]
+				var tBufferIndex = tBufferView['buffer']
+				var tBuffer = json['buffers'][tBufferIndex]
+				var tBufferURIDataView;
+				if ( tBuffer['uri'] ) {
+					tBufferURIDataView = redGLTFLoader['uris']['buffers'][tBufferIndex]
+				}
+				var i, len;
+				var tComponentType
+				var tMethod;
+				tComponentType = WEBGL_COMPONENT_TYPES[tSparseAccessors['componentType']]
+				if ( tComponentType == Uint16Array ) tMethod = 'getUint16'
+				else if ( tComponentType == Uint8Array ) tMethod = 'getUint8'
+				var tAccessorBufferOffset = tSparseAccessors['byteOffset'] || 0
+				i = (tBufferView['byteOffset'] + tAccessorBufferOffset) / tComponentType['BYTES_PER_ELEMENT']
+				//
+				len = i + ( tComponentType['BYTES_PER_ELEMENT'] * tSparse['count']) / tComponentType['BYTES_PER_ELEMENT']
+				console.log('오오오오', key, i, len)
+				var sparseIndex = 0
+				for ( i; i < len; i++ ) {
+					var targetIndex = tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true)
+					console.log('몇번째껄 부르는건가', targetIndex)
+					vertices[targetIndex * 3] = sparseVerties[sparseIndex * 3]
+					vertices[targetIndex * 3 + 1] = sparseVerties[sparseIndex * 3 + 1]
+					vertices[targetIndex * 3 + 2] = sparseVerties[sparseIndex * 3 + 2]
+					sparseIndex++
+					// indices.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+				}
 			}
 		}
 		makeMesh = function (redGLTFLoader, json, meshData) {
@@ -339,6 +581,8 @@ var RedGLTFLoader;
 								console.log('알수없는 형식 엑세서 타입', tAccessors['type'])
 								break
 						}
+						console.log('tAccessors', tAccessors)
+						if ( tAccessors['sparse'] ) parseSparse(redGLTFLoader, k, tAccessors, json,vertices,normals, uvs)
 					}
 				}
 				if ( 'indices' in v ) {
@@ -439,7 +683,7 @@ var RedGLTFLoader;
 						// t0.style.cssText = 'position:absolute;top:0px;left:0px;width:500px'
 						// document.body.appendChild(t0)
 					}
-					var metallicFactor,roughnessFactor
+					var metallicFactor, roughnessFactor
 					if ( 'metallicFactor' in tMaterialInfo['pbrMetallicRoughness'] ) {
 						metallicFactor = tMaterialInfo['pbrMetallicRoughness']['metallicFactor']
 					}
@@ -538,7 +782,8 @@ var RedGLTFLoader;
 								RedInterleaveInfo('aVertexPosition', 3),
 								RedInterleaveInfo('aVertexNormal', 3)
 							]
-					),
+					)
+					,
 					RedBuffer(
 						redGLTFLoader['redGL'],
 						'testGLTF_indexBuffer_' + RedGL.makeUUID(),
@@ -608,6 +853,14 @@ var RedGLTFLoader;
 						}
 						console.log('값 데이터', dataList)
 						break
+					case 'VEC3' :
+						len = i + ( tComponentType['BYTES_PER_ELEMENT'] * tAccessors['count']) / tComponentType['BYTES_PER_ELEMENT'] * 3
+						console.log(i, len)
+						for ( i; i < len; i++ ) {
+							dataList.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+						}
+						console.log('값 데이터', dataList)
+						break
 					default :
 						console.log('알수없는 형식 엑세서 타입', tAccessors)
 						break
@@ -619,94 +872,92 @@ var RedGLTFLoader;
 				console.log(v)
 				var samplers = v['samplers'];
 				// 채널을 돌면서 파악한다.
+				var animationData = []
+				animationData['minTime'] = 1000000
+				animationData['maxTime'] = 0
+				animationData['name'] = 'animation_' + index
+				redGLTFLoader['animations'].push(animationData)
 				v['channels'].forEach(function (channel, channelIndex) {
 					var tSampler;
 					var tTargetData;
-					var tMeshIndex, tMesh;
+					var tMesh;
 					var tNode;
-					var animationData = {}
 					tSampler = samplers[channel['sampler']];
 					console.log('tSampler', tSampler)
 					tTargetData = channel['target'];
 					tNode = nodes[tTargetData['node']];
 					if ( 'mesh' in tNode ) {
-						tMeshIndex = tNode['mesh']
-						tMesh = redGLTFLoader['resultMesh']['children'][tMeshIndex]
-						console.log('애니메이션 대상메쉬', tMesh)
-						switch ( tTargetData['path'] ) {
-							case 'rotation' :
-								console.log('path', tTargetData['path'])
-								// 시간축은 샘플의 input
-								console.log('시간축', tSampler['input'])
-								console.log('시간엑세서 데이터', tSampler['input'])
-								animationData['time'] = parse(tSampler['input'])
-								console.log('시간축 데이터리스트', animationData['time'])
-								// 로테이션 축은 샘플의 output
-								console.log('로테이션축', tSampler['output'])
-								console.log('로테이션엑세서 데이터', tSampler['output'])
-								animationData['rotation'] = parse(tSampler['output'])
-								console.log('로테이션축 데이터리스트', animationData['rotation'])
-								break
-							default :
-								console.log('파싱할수없는 데이터', tTargetData['path'])
-								break
+						tMesh = tNode['RedMesh']
+					} else {
+						var tGroup
+						//TODO: 이거 개선해야함
+						if ( redGLTFLoader['groups'][tTargetData['node']] ) {
+							tGroup = redGLTFLoader['groups'][tTargetData['node']].children[0]
+							console.log('tGroup', tGroup)
+							tMesh = tGroup;
+						} else {
+							return
 						}
-						console.log('animationData', animationData)
-						var currentTime, previousTime, nextTime;
-						var startTime = performance.now()
-						var prevRotation, nextRotation
-						var interpolationValue
-						var tAniData;
-						var currentRotation
-						tAniData = animationData['rotation']
-						var gap = 0
-						var aniTick = function (time) {
-							// console.log(time-startTime)
-							currentTime = ((time - startTime) % 1000) / 1000
-							// console.log('currentTime', currentTime)
-							prevRotation = null
-							nextRotation = null
-							animationData['time'].forEach(function (v, index) {
-								if ( v > currentTime ) {
-									nextTime = v
-									nextRotation = quat.getAxisAngle([0, 0, 1], [
-											animationData['rotation'][index * 4],
-											animationData['rotation'][index * 4 + 1],
-											animationData['rotation'][index * 4 + 2],
-											animationData['rotation'][index * 4 + 3]
-										]) * 180 / Math.PI
-									if ( index - 1 == -1 ) {
-										index = animationData['time'].length
-										prevRotation = quat.getAxisAngle([0, 0, 1], [
-												animationData['rotation'][index * 4],
-												animationData['rotation'][index * 4 + 1],
-												animationData['rotation'][index * 4 + 2],
-												animationData['rotation'][index * 4 + 3]
-											]) * 180 / Math.PI
-									}
-									else {
-										index--
-										prevRotation = quat.getAxisAngle([0, 0, 1], [
-												animationData['rotation'][index * 4],
-												animationData['rotation'][index * 4 + 1],
-												animationData['rotation'][index * 4 + 2],
-												animationData['rotation'][index * 4 + 3]
-											]) * 180 / Math.PI
-									}
-									previousTime = animationData['time'][index]
-								}
-							})
-							// console.log('현재정보', currentTime, previousTime, nextTime)
-							interpolationValue = (currentTime - previousTime) / (nextTime - previousTime)
-							// console.log('interpolationValue', interpolationValue)
-							currentRotation = prevRotation + interpolationValue * (nextRotation - prevRotation)
-							// console.log('currentRotation', currentRotation)
-							tMesh.rotationZ = currentRotation
-							requestAnimationFrame(aniTick)
-						}
-						requestAnimationFrame(aniTick)
 					}
+					console.log('애니메이션 대상메쉬', tMesh)
+					console.log(tTargetData['path'])
+					switch ( tTargetData['path'] ) {
+						case 'scale' :
+							var t0
+							animationData.push(t0 = {
+									key: 'scale',
+									time: parse(tSampler['input']),
+									data: parse(tSampler['output']),
+									target: tMesh
+								}
+							)
+							if ( animationData['minTime'] > t0['time'][0] ) animationData['minTime'] = t0['time'][0]
+							if ( animationData['maxTime'] < t0['time'][t0['time'].length - 1] ) animationData['maxTime'] = t0['time'][t0['time'].length - 1]
+							// console.log('scale 데이터리스트', t0)
+							break
+						case 'rotation' :
+							var t0
+							animationData.push(t0 = {
+									key: 'rotation',
+									time: parse(tSampler['input']),
+									data: parse(tSampler['output']),
+									target: tMesh
+								}
+							)
+							if ( animationData['minTime'] > t0['time'][0] ) animationData['minTime'] = t0['time'][0]
+							if ( animationData['maxTime'] < t0['time'][t0['time'].length - 1] ) animationData['maxTime'] = t0['time'][t0['time'].length - 1]
+							// console.log('로테이션 데이터리스트', t0)
+							break
+						case 'translation' :
+							console.log('path', tTargetData['path'])
+							// 시간축은 샘플의 input
+							console.log('시간축', tSampler['input'])
+							console.log('시간엑세서 데이터', tSampler['input'])
+							console.log('시간축 데이터리스트', animationData['time'])
+							// 로테이션 축은 샘플의 output
+							console.log('translation', tSampler['output'])
+							console.log('translation 엑세서 데이터', tSampler['output'])
+							var t0
+							animationData.push(t0 = {
+									key: 'translation',
+									time: parse(tSampler['input']),
+									data: parse(tSampler['output']),
+									target: tMesh
+								}
+							)
+							if ( animationData['minTime'] > t0['time'][0] ) animationData['minTime'] = t0['time'][0]
+							if ( animationData['maxTime'] < t0['time'][t0['time'].length - 1] ) animationData['maxTime'] = t0['time'][t0['time'].length - 1]
+							console.log('translation 데이터리스트', t0)
+							break
+						default :
+							console.log('파싱할수없는 데이터', tTargetData['path'])
+							break
+					}
+					console.log('animationData', animationData)
 				})
+				if ( redGLTFLoader['animations'].length ) {
+					redGLTFLoader.playAnimation(redGLTFLoader['animations'][0])
+				}
 			})
 		}
 		return function (redGLTFLoader, redGL, json, callBack) {
@@ -717,7 +968,7 @@ var RedGLTFLoader;
 				function () {
 					// 리소스 로딩이 완료되면 다음 진행
 					parseScene(redGLTFLoader, json)
-					// parseAnimation(redGLTFLoader, json)
+					parseAnimation(redGLTFLoader, json)
 					if ( callBack ) callBack();
 				}
 			)

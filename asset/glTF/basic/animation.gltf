@@ -1,7 +1,7 @@
 {
   "scenes" : [
     {
-      "nodes" : [ 0,1 ]
+      "nodes" : [ 0 ]
     }
   ],
 
@@ -9,10 +9,6 @@
     {
       "mesh" : 0,
       "rotation" : [ 0.0, 0.0, 0.0, 1.0 ]
-    },
-     {
-          "mesh" : 0,
-          "translation" : [ 1.0, 1.0, 1.0 ]
     }
   ],
 
@@ -36,15 +32,13 @@
           "output" : 3
         }
       ],
-      "channels" : [
-        {
+      "channels" : [ {
         "sampler" : 0,
         "target" : {
-              "node" : 0,
-              "path" : "rotation"
-          }
+          "node" : 0,
+          "path" : "rotation"
         }
-      ]
+      } ]
     }
   ],
 
