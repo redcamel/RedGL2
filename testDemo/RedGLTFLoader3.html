@@ -163,8 +163,8 @@
 		// tScene3D['useFog'] = true
 		tCamera = RedObitController(this);
 		tCamera.tilt = -25
-		tCamera.distance = 150
-		tCamera.speedDistance = 50
+//		tCamera.distance = 150
+//		tCamera.speedDistance = 50
 		tRenderer = RedRenderer();
 		tWorld.addView(RedView('test', this, tScene3D, tCamera));
 		RedView('test').setSize('100%', '100%')
@@ -175,11 +175,8 @@
 		testDLight.x = 0
 		testDLight.y = 300
 		testDLight.z = 300
-
 		tScene3D.addLight(testDLight)
-
 		testDLight = RedDirectionalLight(this)
-
 		testDLight.x = 0
 		testDLight.y = 300
 		testDLight.z = -300
@@ -194,133 +191,65 @@
 				'../asset/cubemap/SwedishRoyalCastle/pz.jpg',
 				'../asset/cubemap/SwedishRoyalCastle/nz.jpg'
 			]);
-//		RedGLTFLoader(this, '../asset/glTF/basic/', 'basic.gltf', function (v) {
-//		RedGLTFLoader(this, '../asset/glTF/basic/', 'animation.gltf', function (v) {
-//		RedGLTFLoader(this, '../asset/glTF/basic/', 'simpleMesh.gltf', function (v) {
-//		RedGLTFLoader(this, '../asset/glTF/basic/', 'sparse.gltf', function (v) {
-//		RedGLTFLoader(this, '../asset/glTF/basic/', '2CylinderEngine.gltf', function (v) {
-//		RedGLTFLoader(this, '../asset/glTF/basic/', 'BoxAnimated.gltf', function (v) {
-//		RedGLTFLoader(this, '../asset/glTF/basic/', 'Buggy.gltf', function (v) {
-//		RedGLTFLoader(this, '../asset/glTF/basic/', 'CesiumMan.gltf', function (v) {
-//		RedGLTFLoader(this, '../asset/glTF/basic/', 'Duck.gltf', function (v) {
-//		RedGLTFLoader(this, '../asset/glTF/basic/', 'GearboxAssy.gltf', function (v) {
-//		RedGLTFLoader(this, '../asset/glTF/basic/', 'Monster.gltf', function (v) {
-//		RedGLTFLoader(this, '../asset/glTF/basic/', 'ReciprocatingSaw.gltf', function (v) {
-//        RedGLTFLoader(this, '../asset/glTF/basic/', 'VertexColorTest.gltf', function (v) {
-		RedGLTFLoader(this, '../asset/glTF/basic/', 'DamagedHelmet.gltf', function (v) {
+		var t0, t1, t2
+		t0 = RedGLTFLoader(self, '../asset/glTF/basic/', 'BoxAnimated.gltf', function (v) {
 			console.log('호잇!', v)
 			tScene3D.addChild(v['resultMesh'])
-			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 40
-			RedGLTFLoader(self, '../asset/glTF/basic/', 'BoxTextured.gltf', function (v) {
-				console.log('호잇!', v)
-				tScene3D.addChild(v['resultMesh'])
-				v['resultMesh'].x = 200
-				v['resultMesh'].z = 200
-				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 50
-			})
-			RedGLTFLoader(self, '../asset/glTF/basic/', 'OrientationTest.gltf', function (v) {
-				console.log('호잇!', v)
-				tScene3D.addChild(v['resultMesh'])
-				v['resultMesh'].x = 0
-				v['resultMesh'].z = 300
-				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 10
-			})
-
-			RedGLTFLoader(self, '../asset/glTF/basic/', 'BrainStem.gltf', function (v) {
-				console.log('호잇!', v)
-				tScene3D.addChild(v['resultMesh'])
-				v['resultMesh'].x = 0
-				v['resultMesh'].z = 200
-				v['resultMesh'].y = -50
-				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 50
-			})
-			RedGLTFLoader(self, '../asset/glTF/basic/', 'NormalTangentTest.gltf', function (v) {
-				console.log('호잇!', v)
-				tScene3D.addChild(v['resultMesh'])
-				v['resultMesh'].x = 200
-				v['resultMesh'].z = 100
-				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 50
-			})
-			RedGLTFLoader(self, '../asset/glTF/basic/', '2CylinderEngine.gltf', function (v) {
-				console.log('호잇!', v)
-				tScene3D.addChild(v['resultMesh'])
-				v['resultMesh'].z = -300
-			})
-			RedGLTFLoader(self, '../asset/glTF/basic/', 'TextureCoordinateTest.gltf', function (v) {
-				console.log('호잇!', v)
-				tScene3D.addChild(v['resultMesh'])
-				v['resultMesh'].x = -200
-				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 50
-			})
-			RedGLTFLoader(self, '../asset/glTF/basic/', 'VertexColorTest.gltf', function (v) {
-				console.log('호잇!', v)
-				tScene3D.addChild(v['resultMesh'])
-				v['resultMesh'].x = 250
-				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 50
-			})
-			RedGLTFLoader(self, '../asset/glTF/basic/', 'ReciprocatingSaw.gltf', function (v) {
-				console.log('호잇!', v)
-				tScene3D.addChild(v['resultMesh'])
-				v['resultMesh'].z = 100
-			})
-			RedGLTFLoader(self, '../asset/glTF/basic/', 'CesiumMan.gltf', function (v) {
-				console.log('호잇!', v)
-				tScene3D.addChild(v['resultMesh'])
-				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 50
-				v['resultMesh'].z = -100
-			})
-			RedGLTFLoader(self, '../asset/glTF/basic/', 'Monster.gltf', function (v) {
-				console.log('호잇!', v)
-				tScene3D.addChild(v['resultMesh'])
-				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 2
-				v['resultMesh'].x = -100
-			})
-			RedGLTFLoader(self, '../asset/glTF/basic/', 'Buggy.gltf', function (v) {
-				console.log('호잇!', v)
-				tScene3D.addChild(v['resultMesh'])
-				v['resultMesh'].x = 100
-			})
-			testUI(self,tScene3D)
 		})
+		t1 = RedGLTFLoader(self, '../asset/glTF/basic/', 'animation.gltf', function (v) {
+			console.log('호잇!', v)
+			tScene3D.addChild(v['resultMesh'])
+			v['resultMesh'].x = -2
+		})
+		RedGLTFLoader(self, '../asset/glTF/basic/', 'SimpleSparseAccessor.gltf', function (v) {
+			console.log('호잇!', v)
+			tScene3D.addChild(v['resultMesh'])
+			v['resultMesh'].z = -2
+		})
+		t2 = RedGLTFLoader(self, '../asset/glTF/basic/', 'SimpleMorph.gltf', function (v) {
+			console.log('호잇!', v)
+			tScene3D.addChild(v['resultMesh'])
+			v['resultMesh'].z = 2
+
+		});
+		RedGLTFLoader(self, '../asset/glTF/basic/', 'SimpleSkin.gltf', function (v) {
+			console.log('호잇!', v)
+			tScene3D.addChild(v['resultMesh'])
+			v['resultMesh'].scaleX = 10
+			v['resultMesh'].scaleY = 10
+			v['resultMesh'].scaleZ = 10
+
+		});
+
 		tRenderer.start(this, function (time) {
 
 //			if(tScene3D['children'][0]) tScene3D['children'][0].rotationX+=1
-			if ( tScene3D['children'][0] ) tScene3D['children'][0].rotationY += 0.3
+//			if ( tScene3D['children'][0] ) tScene3D['children'][0].rotationY += 0.3
 //			if(tScene3D['children'][0]) tScene3D['children'][0].rotationZ+=1
 		})
 		var testUI = function (redGL, tScene) {
 			var gui = self['gui'] = new dat.GUI({
 				name: 'test'
 			});
-			var folder = gui.addFolder('RedPBRMaterial')
-			var testRedPBRMaterial = {
-				alpha: 1,
-				metallicPower: 1,
-
-				specularPower: 1,
-				displacementPower: 0,
-				displacementFlowSpeedX: 0,
-				displacementFlowSpeedY: 0
+			var folder = gui.addFolder('animations')
+			var testAnimation = {
+				playAnimation: function () {
+					t0.playAnimation(t0['animations'][0])
+					t1.playAnimation(t1['animations'][0])
+					t2.playAnimation(t2['animations'][0])
+				},
+				stopAnimation: function () {
+					t0.stopAnimation()
+					t1.stopAnimation()
+					t2.stopAnimation()
+				}
 			}
-			folder.add(testRedPBRMaterial, 'alpha', 0, 1).onChange(function (v) {
-				tScene.children[0].children.forEach(function (v2) {
-					v2.material.alpha = v
-				})
-			})
-
-			folder.add(testRedPBRMaterial, 'metallicPower', 0, 2).onChange(function (v) {
-				tScene.children[0].children.forEach(function (v2) {
-					v2.material.metallicPower = v
-				})
-			})
-			folder.add(testRedPBRMaterial, 'specularPower', 0, 10).onChange(function (v) {
-				tScene.children[0].children.forEach(function (v2) {
-					v2.material.specularPower = v
-				})
-			})
+			folder.add(testAnimation, 'playAnimation')
+			folder.add(testAnimation, 'stopAnimation')
 			///////////////////////////////////////////////
 			folder.open()
 		}
+		testUI();
 		console.log(tScene3D)
 	})
 </script>
