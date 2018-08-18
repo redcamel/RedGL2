@@ -181,6 +181,7 @@ var RedBaseObject3D;
 		 }
 		 :DOC*/
 		this['matrix'] = mat4.create();
+		this['localMatrix'] = mat4.create();
 		/**DOC:
 		 {
 		    code : 'PROPERTY',

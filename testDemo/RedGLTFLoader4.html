@@ -191,8 +191,28 @@
 				'../asset/cubemap/SwedishRoyalCastle/pz.jpg',
 				'../asset/cubemap/SwedishRoyalCastle/nz.jpg'
 			]);
-
-		RedGLTFLoader(self, '../asset/glTF/basic/', 'CesiumMan.gltf', function (v) {
+		var t0, t1, t2
+//		t0 = RedGLTFLoader(self, '../asset/glTF/basic/', 'BoxAnimated.gltf', function (v) {
+//			console.log('호잇!', v)
+//			tScene3D.addChild(v['resultMesh'])
+//		})
+//		t1 = RedGLTFLoader(self, '../asset/glTF/basic/', 'animation.gltf', function (v) {
+//			console.log('호잇!', v)
+//			tScene3D.addChild(v['resultMesh'])
+//			v['resultMesh'].x = -2
+//		})
+//		RedGLTFLoader(self, '../asset/glTF/basic/', 'SimpleSparseAccessor.gltf', function (v) {
+//			console.log('호잇!', v)
+//			tScene3D.addChild(v['resultMesh'])
+//			v['resultMesh'].z = -2
+//		})
+//		t2 = RedGLTFLoader(self, '../asset/glTF/basic/', 'SimpleMorph.gltf', function (v) {
+//			console.log('호잇!', v)
+//			tScene3D.addChild(v['resultMesh'])
+//			v['resultMesh'].z = 2
+//
+//		});
+		RedGLTFLoader(self, '../asset/glTF/basic/', 'SimpleSkin.gltf', function (v) {
 			console.log('호잇!', v)
 			tScene3D.addChild(v['resultMesh'])
 

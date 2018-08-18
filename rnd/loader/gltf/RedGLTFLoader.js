@@ -238,6 +238,7 @@ var RedGLTFLoader;
 							target.rotationX = prevRotation[0] + interpolationValue * (nextRotation[0] - prevRotation[0])
 							target.rotationY = prevRotation[1] + interpolationValue * (nextRotation[1] - prevRotation[1])
 							target.rotationZ = prevRotation[2] + interpolationValue * (nextRotation[2] - prevRotation[2])
+							// console.log(target.rotationX ,target.rotationY ,target.rotationZ )
 						}
 						if ( aniData['key'] == 'scale' ) {
 							target.scaleX = prevScale[0] + interpolationValue * (nextScale[0] - prevScale[0])
@@ -253,7 +254,7 @@ var RedGLTFLoader;
 								var prev, next
 								prev = originData[index]
 								next = originData[index]
-								targetMesh['_morphList'].forEach(function (v,morphIndex) {
+								targetMesh['_morphList'].forEach(function (v, morphIndex) {
 									prev += aniData['data'][prevIndex * 2 + morphIndex] * v['interleaveData'][index]
 									next += aniData['data'][nextIndex * 2 + morphIndex] * v['interleaveData'][index]
 								})
@@ -407,26 +408,71 @@ var RedGLTFLoader;
 				}
 			}
 		})();
+		var parseSkin = function (redGLTFLoader, json, info, tMesh) {
+			console.log('스킨설정!', info)
+			var skinInfo = {
+				joints: [],
+				inverseBindMatrices: []
+			}
+			info['joints'].forEach(function (v) {
+				console.log(json['nodes'][v])
+				skinInfo['joints'].push(json['nodes'][v]['RedMesh'])
+				json['nodes'][v]['RedMesh'].geometry = RedSphere(redGLTFLoader['redGL'],0.01)
+				json['nodes'][v]['RedMesh'].material = RedColorMaterial(redGLTFLoader['redGL'])
+
+			})
+			var accessorIndex = info['inverseBindMatrices']
+			var tAccessors = json['accessors'][accessorIndex]
+			var tBufferView = json['bufferViews'][tAccessors['bufferView']]
+			var tBufferIndex = tBufferView['buffer']
+			var tBuffer = json['buffers'][tBufferIndex]
+			var tBufferURIDataView;
+			if ( tBuffer['uri'] ) {
+				tBufferURIDataView = redGLTFLoader['uris']['buffers'][tBufferIndex]
+			}
+			// console.log('해당 bufferView 정보', tBufferView)
+			// console.log('바라볼 버퍼 인덱스', tBufferIndex)
+			// console.log('바라볼 버퍼', tBuffer)
+			// console.log('바라볼 버퍼데이터', tBufferURIDataView)
+			// console.log('바라볼 엑세서', tAccessors)
+			////////////////////////////
+			var i, len;
+			var tComponentType
+			var tMethod;
+			tComponentType = WEBGL_COMPONENT_TYPES[tAccessors['componentType']]
+			if ( tComponentType == Float32Array ) tMethod = 'getFloat32'
+			if ( tComponentType == Uint32Array ) tMethod = 'getUint32'
+			if ( tComponentType == Uint16Array ) tMethod = 'getUint16'
+			if ( tComponentType == Int16Array ) tMethod = 'getInt16'
+			if ( tComponentType == Uint8Array ) tMethod = 'getUint8'
+			if ( tComponentType == Int8Array ) tMethod = 'getInt8'
+			// console.log('tComponentType', tComponentType)
+			// console.log('tMethod', tMethod)
+			// console.log("tBufferView['byteOffset']", tBufferView['byteOffset'])
+			// console.log("tAccessors['byteOffset']", tAccessors['byteOffset'])
+			var tAccessorBufferOffset = tAccessors['byteOffset'] || 0
+			i = (tBufferView['byteOffset'] + tAccessorBufferOffset) / tComponentType['BYTES_PER_ELEMENT']
+			switch ( tAccessors['type'] ) {
+				case 'MAT4' :
+					len = i + ( tComponentType['BYTES_PER_ELEMENT'] * tAccessors['count']) / tComponentType['BYTES_PER_ELEMENT'] * 16
+					console.log('inverseBindMatrices', i, len)
+					for ( i; i < len; i++ ) {
+						skinInfo['inverseBindMatrices'].push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+					}
+					break
+				default :
+					console.log('알수없는 형식 엑세서 타입', tAccessors['type'])
+					break
+			}
+			skinInfo['inverseBindMatrices'] = new Float32Array(skinInfo['inverseBindMatrices'])
+
+
+			tMesh['skinInfo'] = skinInfo
+			console.log(skinInfo)
+			console.log(tMesh)
+		}
 		parseNode = function (redGLTFLoader, json, nodeIndex, info, parentMesh) {
-			if ( 'children' in info ) {
-				var tGroup
-				console.log('차일드 정보로 구성된 정보임', info)
-				if ( !redGLTFLoader['groups'][nodeIndex] ) {
-					tGroup = RedMesh(redGLTFLoader['redGL'])
-					parentMesh.addChild(tGroup)
-					redGLTFLoader['groups'][nodeIndex] = tGroup
-					redGLTFLoader['groups'][nodeIndex]['name'] = 'group' + nodeIndex
-					redGLTFLoader['groups'][nodeIndex]['byIndex'] = nodeIndex
-				} else {
-					tGroup = redGLTFLoader['groups'][nodeIndex]
-				}
-				checkTRSAndMATRIX(tGroup, info)
-				// tGroup.matrix = matrix
-				// tGroup.autoUpdateMatrix = false
-				info['children'].forEach(function (index) {
-					parseNode(redGLTFLoader, json, index, info = json['nodes'][index], tGroup)
-				})
-			} else if ( 'mesh' in info ) {
+			if ( 'mesh' in info ) {
 				var tMeshIndex = info['mesh']
 				// console.log('nodeInfo', info)
 				// console.log('parentMesh', parentMesh)
@@ -437,9 +483,33 @@ var RedGLTFLoader;
 					checkTRSAndMATRIX(tMesh, info)
 					// tMesh.matrix = matrix
 					// tMesh.autoUpdateMatrix = false
+					if ( 'children' in info ) {
+						info['children'].forEach(function (index) {
+							parseNode(redGLTFLoader, json, index, json['nodes'][index], tMesh)
+						})
+					}
+					if ( 'skin' in info ) parseSkin(redGLTFLoader, json, json['skins'][info['skin']], tMesh)
 				})
-			} else {
-				console.log('파싱대상이 아님', info)
+			}
+			else {
+				var tGroup
+				console.log('차일드 정보로 구성된 정보임', info)
+				tGroup = RedMesh(redGLTFLoader['redGL'])
+				parentMesh.addChild(tGroup)
+				info['RedMesh'] = tGroup
+				if(redGLTFLoader['groups'][nodeIndex]) console.log('기존에 존재!',redGLTFLoader['groups'][nodeIndex])
+				redGLTFLoader['groups'][nodeIndex] = tGroup
+				redGLTFLoader['groups'][nodeIndex]['name'] = 'group' + nodeIndex
+				redGLTFLoader['groups'][nodeIndex]['byIndex'] = nodeIndex
+				checkTRSAndMATRIX(tGroup, info)
+				// tGroup.matrix = matrix
+				// tGroup.autoUpdateMatrix = false
+				if ( 'children' in info ) {
+					info['children'].forEach(function (index) {
+						parseNode(redGLTFLoader, json, index, json['nodes'][index], tGroup)
+					})
+				}
+				if ( 'skin' in info ) parseSkin(redGLTFLoader, json, info, tGroup)
 			}
 		}
 		var parseSparse = function (redGLTFLoader, key, tAccessors, json, vertices, normals, uvs) {
@@ -463,6 +533,11 @@ var RedGLTFLoader;
 					var tMethod;
 					tComponentType = WEBGL_COMPONENT_TYPES[tAccessors['componentType']]
 					if ( tComponentType == Float32Array ) tMethod = 'getFloat32'
+					if ( tComponentType == Uint32Array ) tMethod = 'getUint32'
+					if ( tComponentType == Uint16Array ) tMethod = 'getUint16'
+					if ( tComponentType == Int16Array ) tMethod = 'getInt16'
+					if ( tComponentType == Uint8Array ) tMethod = 'getUint8'
+					if ( tComponentType == Int8Array ) tMethod = 'getInt8'
 					var tAccessorBufferOffset = tAccessors['byteOffset'] || 0
 					i = (tBufferView['byteOffset'] + tAccessorBufferOffset) / tComponentType['BYTES_PER_ELEMENT']
 					switch ( tAccessors['type'] ) {
@@ -540,7 +615,9 @@ var RedGLTFLoader;
 						var tMorphData = {
 							vertices: [],
 							normals: [],
-							uvs: []
+							uvs: [],
+							weights: [],
+							joints: []
 						}
 						morphList.push(tMorphData)
 						console.log('morphList', morphList)
@@ -565,6 +642,11 @@ var RedGLTFLoader;
 							var tMethod;
 							tComponentType = WEBGL_COMPONENT_TYPES[tAccessors['componentType']]
 							if ( tComponentType == Float32Array ) tMethod = 'getFloat32'
+							if ( tComponentType == Uint32Array ) tMethod = 'getUint32'
+							if ( tComponentType == Uint16Array ) tMethod = 'getUint16'
+							if ( tComponentType == Int16Array ) tMethod = 'getInt16'
+							if ( tComponentType == Uint8Array ) tMethod = 'getUint8'
+							if ( tComponentType == Int8Array ) tMethod = 'getInt8'
 							// console.log('tComponentType', tComponentType)
 							// console.log('tMethod', tMethod)
 							// console.log("tBufferView['byteOffset']", tBufferView['byteOffset'])
@@ -572,6 +654,15 @@ var RedGLTFLoader;
 							var tAccessorBufferOffset = tAccessors['byteOffset'] || 0
 							i = (tBufferView['byteOffset'] + tAccessorBufferOffset) / tComponentType['BYTES_PER_ELEMENT']
 							switch ( tAccessors['type'] ) {
+								case 'VEC4' :
+									len = i + ( tComponentType['BYTES_PER_ELEMENT'] * tAccessors['count']) / tComponentType['BYTES_PER_ELEMENT'] * 4
+									console.log(k, i, len)
+									for ( i; i < len; i++ ) {
+										if ( k == 'WEIGHTS_0' ) tMorphData['jointWeights'].push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+										if ( k == 'JOINTS_0' ) tMorphData['joints'].push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+									}
+									// console.log('인터리브 버퍼 데이터', vertices)
+									break
 								case 'VEC3' :
 									len = i + ( tComponentType['BYTES_PER_ELEMENT'] * tAccessors['count']) / tComponentType['BYTES_PER_ELEMENT'] * 3
 									console.log(k, i, len)
@@ -607,6 +698,8 @@ var RedGLTFLoader;
 				var vertices = []
 				var uvs = []
 				var normals = []
+				var jointWeights = []
+				var joints = []
 				var tDrawMode;
 				// console.log(v, index)
 				if ( v['attributes'] ) {
@@ -626,7 +719,7 @@ var RedGLTFLoader;
 						// console.log('해당 bufferView 정보', tBufferView)
 						// console.log('바라볼 버퍼 인덱스', tBufferIndex)
 						// console.log('바라볼 버퍼', tBuffer)
-						// console.log('바라볼 버퍼데이터', tBufferURIDataView)
+						console.log('바라볼 버퍼데이터', tBufferURIDataView)
 						// console.log('바라볼 엑세서', tAccessors)
 						////////////////////////////
 						var i, len;
@@ -634,6 +727,12 @@ var RedGLTFLoader;
 						var tMethod;
 						tComponentType = WEBGL_COMPONENT_TYPES[tAccessors['componentType']]
 						if ( tComponentType == Float32Array ) tMethod = 'getFloat32'
+						if ( tComponentType == Uint32Array ) tMethod = 'getUint32'
+						if ( tComponentType == Uint16Array ) tMethod = 'getUint16'
+						if ( tComponentType == Int16Array ) tMethod = 'getInt16'
+						if ( tComponentType == Uint8Array ) tMethod = 'getUint8'
+						if ( tComponentType == Int8Array ) tMethod = 'getInt8'
+
 						// console.log('tComponentType', tComponentType)
 						// console.log('tMethod', tMethod)
 						// console.log("tBufferView['byteOffset']", tBufferView['byteOffset'])
@@ -641,6 +740,15 @@ var RedGLTFLoader;
 						var tAccessorBufferOffset = tAccessors['byteOffset'] || 0
 						i = (tBufferView['byteOffset'] + tAccessorBufferOffset) / tComponentType['BYTES_PER_ELEMENT']
 						switch ( tAccessors['type'] ) {
+							case 'VEC4' :
+								len = i + ( tComponentType['BYTES_PER_ELEMENT'] * tAccessors['count']) / tComponentType['BYTES_PER_ELEMENT'] * 4
+								console.log(k, i, len)
+								for ( i; i < len; i++ ) {
+									if ( k == 'WEIGHTS_0' ) jointWeights.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+									else if ( k == 'JOINTS_0' ) joints.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+								}
+								console.log('JOINTS_0 ', joints)
+								break
 							case 'VEC3' :
 								len = i + ( tComponentType['BYTES_PER_ELEMENT'] * tAccessors['count']) / tComponentType['BYTES_PER_ELEMENT'] * 3
 								console.log(k, i, len)
@@ -690,8 +798,12 @@ var RedGLTFLoader;
 					var i, len
 					var tComponentType = WEBGL_COMPONENT_TYPES[tAccessors['componentType']]
 					var tMethod;
+					if ( tComponentType == Float32Array ) tMethod = 'getFloat32'
+					if ( tComponentType == Uint32Array ) tMethod = 'getUint32'
 					if ( tComponentType == Uint16Array ) tMethod = 'getUint16'
-					else if ( tComponentType == Uint8Array ) tMethod = 'getUint8'
+					if ( tComponentType == Int16Array ) tMethod = 'getInt16'
+					if ( tComponentType == Uint8Array ) tMethod = 'getUint8'
+					if ( tComponentType == Int8Array ) tMethod = 'getInt8'
 					// console.log('tComponentType', tComponentType)
 					var tAccessorBufferOffset = tAccessors['byteOffset'] || 0
 					i = (tBufferView['byteOffset'] + tAccessorBufferOffset) / tComponentType['BYTES_PER_ELEMENT']
@@ -846,10 +958,45 @@ var RedGLTFLoader;
 				var interleaveData = []
 				var i = 0, len = vertices.length / 3
 				for ( i; i < len; i++ ) {
-					interleaveData.push(vertices[i * 3 + 0], vertices[i * 3 + 1], vertices[i * 3 + 2])
-					interleaveData.push(normalData[i * 3 + 0], normalData[i * 3 + 1], normalData[i * 3 + 2])
+					if ( vertices.length ) interleaveData.push(vertices[i * 3 + 0], vertices[i * 3 + 1], vertices[i * 3 + 2])
+					if ( normalData.length ) interleaveData.push(normalData[i * 3 + 0], normalData[i * 3 + 1], normalData[i * 3 + 2])
 					if ( uvs.length ) interleaveData.push(uvs[i * 2 + 0], uvs[i * 2 + 1])
+					if ( jointWeights.length ) interleaveData.push(jointWeights[i * 4 + 0], jointWeights[i * 4 + 1], jointWeights[i * 4 + 2], jointWeights[i * 4 + 3])
+					if ( joints.length ) interleaveData.push(joints[i * 4 + 0], joints[i * 4 + 1], joints[i * 4 + 2], joints[i * 4 + 3])
 				}
+				// console.log('interleaveData', interleaveData)
+				var tGeo
+				var tInterleaveInfoList = []
+				if ( vertices.length ) tInterleaveInfoList.push(RedInterleaveInfo('aVertexPosition', 3))
+				if ( normalData.length ) tInterleaveInfoList.push(RedInterleaveInfo('aVertexNormal', 3))
+				if ( uvs.length ) tInterleaveInfoList.push(RedInterleaveInfo('aTexcoord', 2))
+				if ( jointWeights.length ) tInterleaveInfoList.push(RedInterleaveInfo('aVertexWeight', 4))
+				if ( joints.length ) tInterleaveInfoList.push(RedInterleaveInfo('aVertexJoint', 4))
+				tGeo = RedGeometry(
+					RedBuffer(
+						redGLTFLoader['redGL'],
+						'testGLTF_interleaveBuffer_' + RedGL.makeUUID(),
+						RedBuffer.ARRAY_BUFFER,
+						new Float32Array(interleaveData),
+						tInterleaveInfoList
+					),
+					RedBuffer(
+						redGLTFLoader['redGL'],
+						'testGLTF_indexBuffer_' + RedGL.makeUUID(),
+						RedBuffer.ELEMENT_ARRAY_BUFFER,
+						new Uint16Array(indices)
+					)
+				)
+				if ( !tMaterial ) tMaterial = RedColorPhongMaterial(redGLTFLoader['redGL'], RedGLUtil.rgb2hex(parseInt(Math.random() * 255), parseInt(Math.random() * 255), parseInt(Math.random() * 255)))
+				console.log('tMaterial', tMaterial)
+				tMesh = RedMesh(redGLTFLoader['redGL'], tGeo, tMaterial)
+				if ( tName ) tMesh.name = tName
+				if ( tDrawMode ) tMesh.drawMode = tDrawMode
+				else tMesh.drawMode = redGLTFLoader['redGL'].gl.TRIANGLES
+
+				if ( meshData['doubleSided'] ) tMesh.useCullFace = false
+				console.log('tMesh', tMesh)
+				// 모프리스트 설정
 				morphList.forEach(function (v) {
 					var normalData
 					if ( v['normals'].length ) normalData = v['normals']
@@ -859,47 +1006,18 @@ var RedGLTFLoader;
 					var interleaveData = []
 					var i = 0, len = v['vertices'].length / 3
 					for ( i; i < len; i++ ) {
-						interleaveData.push(v['vertices'][i * 3 + 0], v['vertices'][i * 3 + 1], v['vertices'][i * 3 + 2])
-						interleaveData.push(normalData[i * 3 + 0], normalData[i * 3 + 1], normalData[i * 3 + 2])
+						if ( v['vertices'].length ) interleaveData.push(v['vertices'][i * 3 + 0], v['vertices'][i * 3 + 1], v['vertices'][i * 3 + 2])
+						if ( normalData.length ) interleaveData.push(normalData[i * 3 + 0], normalData[i * 3 + 1], normalData[i * 3 + 2])
 						if ( v['uvs'].length ) interleaveData.push(v['uvs'][i * 2 + 0], v['uvs'][i * 2 + 1])
 					}
 					v['interleaveData'] = interleaveData
 				});
-				// console.log('interleaveData', interleaveData)
-				var tGeo
-				tGeo = RedGeometry(
-					RedBuffer(
-						redGLTFLoader['redGL'],
-						'testGLTF_interleaveBuffer_' + RedGL.makeUUID(),
-						RedBuffer.ARRAY_BUFFER,
-						new Float32Array(interleaveData),
-						uvs.length ? [
-								RedInterleaveInfo('aVertexPosition', 3),
-								RedInterleaveInfo('aVertexNormal', 3),
-								RedInterleaveInfo('aTexcoord', 2)
-							] : [
-								RedInterleaveInfo('aVertexPosition', 3),
-								RedInterleaveInfo('aVertexNormal', 3)
-							]
-					)
-					,
-					RedBuffer(
-						redGLTFLoader['redGL'],
-						'testGLTF_indexBuffer_' + RedGL.makeUUID(),
-						RedBuffer.ELEMENT_ARRAY_BUFFER,
-						new Uint16Array(indices)
-					)
-				)
-				if ( !tMaterial ) tMaterial = RedColorPhongMaterial(redGLTFLoader['redGL'], RedGLUtil.rgb2hex(parseInt(Math.random() * 255), parseInt(Math.random() * 255), parseInt(Math.random() * 255)))
-				tMesh = RedMesh(redGLTFLoader['redGL'], tGeo, tMaterial)
-				if ( tName ) tMesh.name = tName
-				if ( tDrawMode ) tMesh.drawMode = tDrawMode
-				else tMesh.drawMode = redGLTFLoader['redGL'].gl.TRIANGLES
-				if ( meshData['doubleSided'] ) tMesh.useCullFace = false
-				console.log('tMesh', tMesh)
 				tMesh['_morphList'] = morphList
 				tMesh['_morphList']['origin'] = new Float32Array((interleaveData))
 				tMeshList.push(tMesh)
+				console.log('vertices',vertices)
+				console.log('joints',joints)
+				console.log('indices',indices)
 			})
 			return tMeshList
 		}
@@ -933,8 +1051,11 @@ var RedGLTFLoader;
 				var dataList = []
 				tComponentType = WEBGL_COMPONENT_TYPES[tAccessors['componentType']]
 				if ( tComponentType == Float32Array ) tMethod = 'getFloat32'
-				else if ( tComponentType == Uint16Array ) tMethod = 'getUint16'
-				else if ( tComponentType == Uint8Array ) tMethod = 'getUint8'
+				if ( tComponentType == Uint32Array ) tMethod = 'getUint32'
+				if ( tComponentType == Uint16Array ) tMethod = 'getUint16'
+				if ( tComponentType == Int16Array ) tMethod = 'getInt16'
+				if ( tComponentType == Uint8Array ) tMethod = 'getUint8'
+				if ( tComponentType == Int8Array ) tMethod = 'getInt8'
 				// console.log('tComponentType', tComponentType)
 				i = (tBufferView['byteOffset'] + tAccessors['byteOffset']) / tComponentType['BYTES_PER_ELEMENT']
 				switch ( tAccessors['type'] ) {
@@ -992,11 +1113,13 @@ var RedGLTFLoader;
 					} else {
 						var tGroup
 						//TODO: 이거 개선해야함
+						console.log('여기로 오는경우가 있는건가')
 						if ( redGLTFLoader['groups'][tTargetData['node']] ) {
-							tGroup = redGLTFLoader['groups'][tTargetData['node']].children[0]
+							tGroup = redGLTFLoader['groups'][tTargetData['node']]
 							console.log('tGroup', tGroup)
 							tMesh = tGroup;
 						} else {
+							console.log('여기로 오는경우가 있는건가2')
 							return
 						}
 					}
