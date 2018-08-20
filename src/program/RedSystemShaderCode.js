@@ -37,6 +37,12 @@ var RedSystemShaderCode;
 				'uniform float uPointSize',
 				'attribute vec2 aTexcoord',
 				'varying vec2 vTexcoord',
+
+				'uniform mat4 uJointMatrix[4]',
+				'uniform mat4 uInverseBindMatrixForJoint[4]',
+				'uniform mat4 uGlobalTransformOfNodeThatTheMeshIsAttachedTo',
+
+
 				// 'uniform vec4 uAtlascoord',
 				'uniform float uTime',
 				'varying float vTime',

@@ -643,40 +643,116 @@ var RedRenderer;
 						a[4] = a[4] * aY, a[5] = a[5] * aY, a[6] = a[6] * aY, a[7] = a[7] * aY,
 						a[8] = a[8] * aZ, a[9] = a[9] * aZ, a[10] = a[10] * aZ, a[11] = a[11] * aZ,
 						a[12] = a[12], a[13] = a[13], a[14] = a[14], a[15] = a[15],
-						// 부모가있으면 곱함
-						parentMTX ? (
-								// 부모매트릭스 복사
-								// 매트립스 곱
-								a00 = parentMTX[0], a01 = parentMTX[1], a02 = parentMTX[2], a03 = parentMTX[3],
-									a10 = parentMTX[4], a11 = parentMTX[5], a12 = parentMTX[6], a13 = parentMTX[7],
-									a20 = parentMTX[8], a21 = parentMTX[9], a22 = parentMTX[10], a23 = parentMTX[11],
-									a30 = parentMTX[12], a31 = parentMTX[13], a32 = parentMTX[14], a33 = parentMTX[15],
-									// Cache only the current line of the second matrix
-									b0 = tMVMatrix[0], b1 = tMVMatrix[1], b2 = tMVMatrix[2], b3 = tMVMatrix[3],
-									tMVMatrix[0] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30,
-									tMVMatrix[1] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
-									tMVMatrix[2] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
-									tMVMatrix[3] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33,
-									b0 = tMVMatrix[4], b1 = tMVMatrix[5], b2 = tMVMatrix[6], b3 = tMVMatrix[7],
-									tMVMatrix[4] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30,
-									tMVMatrix[5] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
-									tMVMatrix[6] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
-									tMVMatrix[7] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33,
-									b0 = tMVMatrix[8], b1 = tMVMatrix[9], b2 = tMVMatrix[10], b3 = tMVMatrix[11],
-									tMVMatrix[8] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30,
-									tMVMatrix[9] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
-									tMVMatrix[10] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
-									tMVMatrix[11] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33,
-									b0 = tMVMatrix[12], b1 = tMVMatrix[13], b2 = tMVMatrix[14], b3 = tMVMatrix[15],
-									tMVMatrix[12] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30,
-									tMVMatrix[13] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
-									tMVMatrix[14] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
-									tMVMatrix[15] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33
-							) : 0;
+						// localMatrix
+						tMesh['localMatrix'][0] = a[0] * aX, tMesh['localMatrix'][1] = a[1] * aX, tMesh['localMatrix'][2] = a[2] * aX, tMesh['localMatrix'][3] = a[3] * aX,
+						tMesh['localMatrix'][4] = a[4] * aY, tMesh['localMatrix'][5] = a[5] * aY, tMesh['localMatrix'][6] = a[6] * aY, tMesh['localMatrix'][7] = a[7] * aY,
+					tMesh['localMatrix'][8] = a[8] * aZ, tMesh['localMatrix'][9] = a[9] * aZ, tMesh['localMatrix'][10] = a[10] * aZ, tMesh['localMatrix'][11] = a[11] * aZ,
+					tMesh['localMatrix'][12] = a[12], tMesh['localMatrix'][13] = a[13], tMesh['localMatrix'][14] = a[14], tMesh['localMatrix'][15] = a[15],
+					// 부모가있으면 곱함
+					parentMTX ? (
+							// 부모매트릭스 복사
+							// 매트립스 곱
+							a00 = parentMTX[0], a01 = parentMTX[1], a02 = parentMTX[2], a03 = parentMTX[3],
+								a10 = parentMTX[4], a11 = parentMTX[5], a12 = parentMTX[6], a13 = parentMTX[7],
+								a20 = parentMTX[8], a21 = parentMTX[9], a22 = parentMTX[10], a23 = parentMTX[11],
+								a30 = parentMTX[12], a31 = parentMTX[13], a32 = parentMTX[14], a33 = parentMTX[15],
+								// Cache only the current line of the second matrix
+								b0 = tMVMatrix[0], b1 = tMVMatrix[1], b2 = tMVMatrix[2], b3 = tMVMatrix[3],
+								tMVMatrix[0] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30,
+								tMVMatrix[1] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
+								tMVMatrix[2] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
+								tMVMatrix[3] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33,
+								b0 = tMVMatrix[4], b1 = tMVMatrix[5], b2 = tMVMatrix[6], b3 = tMVMatrix[7],
+								tMVMatrix[4] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30,
+								tMVMatrix[5] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
+								tMVMatrix[6] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
+								tMVMatrix[7] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33,
+								b0 = tMVMatrix[8], b1 = tMVMatrix[9], b2 = tMVMatrix[10], b3 = tMVMatrix[11],
+								tMVMatrix[8] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30,
+								tMVMatrix[9] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
+								tMVMatrix[10] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
+								tMVMatrix[11] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33,
+								b0 = tMVMatrix[12], b1 = tMVMatrix[13], b2 = tMVMatrix[14], b3 = tMVMatrix[15],
+								tMVMatrix[12] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30,
+								tMVMatrix[13] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
+								tMVMatrix[14] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
+								tMVMatrix[15] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33
+						) : 0;
 				}
 				/////////////////////////////////////////////////////////////////////////
 				/////////////////////////////////////////////////////////////////////////
 				if ( tGeometry ) tGL.uniformMatrix4fv(tSystemUniformGroup['uMMatrix']['location'], false, tMVMatrix)
+				/*
+					1. 조인트를 물고있는 루트 메쉬의 전역 매트릭스의 역함수를 구한다.
+					2. 노드의 현재 전역 변환을 구한다라는데... 이게 조인트를 물고있는 루트부터인지.. 노드상의 루트인지 알아내야함.
+				 */
+				var getInverse = function (self, m, throwOnDegenerate) {
+
+					// based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm
+					var te = self,
+						me = m,
+						n11 = me[0], n21 = me[1], n31 = me[2], n41 = me[3],
+						n12 = me[4], n22 = me[5], n32 = me[6], n42 = me[7],
+						n13 = me[8], n23 = me[9], n33 = me[10], n43 = me[11],
+						n14 = me[12], n24 = me[13], n34 = me[14], n44 = me[15],
+						t11 = n23 * n34 * n42 - n24 * n33 * n42 + n24 * n32 * n43 - n22 * n34 * n43 - n23 * n32 * n44 + n22 * n33 * n44,
+						t12 = n14 * n33 * n42 - n13 * n34 * n42 - n14 * n32 * n43 + n12 * n34 * n43 + n13 * n32 * n44 - n12 * n33 * n44,
+						t13 = n13 * n24 * n42 - n14 * n23 * n42 + n14 * n22 * n43 - n12 * n24 * n43 - n13 * n22 * n44 + n12 * n23 * n44,
+						t14 = n14 * n23 * n32 - n13 * n24 * n32 - n14 * n22 * n33 + n12 * n24 * n33 + n13 * n22 * n34 - n12 * n23 * n34;
+					var det = n11 * t11 + n21 * t12 + n31 * t13 + n41 * t14;
+					if ( det === 0 ) {
+						var msg = "THREE.Matrix4: .getInverse() can't invert matrix, determinant is 0";
+						if ( throwOnDegenerate === true ) {
+							throw new Error(msg);
+						} else {
+							console.warn(msg);
+						}
+						return mat4.identity(self);
+					}
+					var detInv = 1 / det;
+					te[0] = t11 * detInv;
+					te[1] = ( n24 * n33 * n41 - n23 * n34 * n41 - n24 * n31 * n43 + n21 * n34 * n43 + n23 * n31 * n44 - n21 * n33 * n44 ) * detInv;
+					te[2] = ( n22 * n34 * n41 - n24 * n32 * n41 + n24 * n31 * n42 - n21 * n34 * n42 - n22 * n31 * n44 + n21 * n32 * n44 ) * detInv;
+					te[3] = ( n23 * n32 * n41 - n22 * n33 * n41 - n23 * n31 * n42 + n21 * n33 * n42 + n22 * n31 * n43 - n21 * n32 * n43 ) * detInv;
+					te[4] = t12 * detInv;
+					te[5] = ( n13 * n34 * n41 - n14 * n33 * n41 + n14 * n31 * n43 - n11 * n34 * n43 - n13 * n31 * n44 + n11 * n33 * n44 ) * detInv;
+					te[6] = ( n14 * n32 * n41 - n12 * n34 * n41 - n14 * n31 * n42 + n11 * n34 * n42 + n12 * n31 * n44 - n11 * n32 * n44 ) * detInv;
+					te[7] = ( n12 * n33 * n41 - n13 * n32 * n41 + n13 * n31 * n42 - n11 * n33 * n42 - n12 * n31 * n43 + n11 * n32 * n43 ) * detInv;
+					te[8] = t13 * detInv;
+					te[9] = ( n14 * n23 * n41 - n13 * n24 * n41 - n14 * n21 * n43 + n11 * n24 * n43 + n13 * n21 * n44 - n11 * n23 * n44 ) * detInv;
+					te[10] = ( n12 * n24 * n41 - n14 * n22 * n41 + n14 * n21 * n42 - n11 * n24 * n42 - n12 * n21 * n44 + n11 * n22 * n44 ) * detInv;
+					te[11] = ( n13 * n22 * n41 - n12 * n23 * n41 - n13 * n21 * n42 + n11 * n23 * n42 + n12 * n21 * n43 - n11 * n22 * n43 ) * detInv;
+					te[12] = t14 * detInv;
+					te[13] = ( n13 * n24 * n31 - n14 * n23 * n31 + n14 * n21 * n33 - n11 * n24 * n33 - n13 * n21 * n34 + n11 * n23 * n34 ) * detInv;
+					te[14] = ( n14 * n22 * n31 - n12 * n24 * n31 - n14 * n21 * n32 + n11 * n24 * n32 + n12 * n21 * n34 - n11 * n22 * n34 ) * detInv;
+					te[15] = ( n12 * n23 * n31 - n13 * n22 * n31 + n13 * n21 * n32 - n11 * n23 * n32 - n12 * n21 * n33 + n11 * n22 * n33 ) * detInv;
+					return self;
+				}
+				if ( tGeometry && tMesh['skinInfo'] ) {
+					var globalTransformOfNodeThatTheMeshIsAttachedTo
+					var globalTransformOfJointNode = []
+					var temp = mat4.create()
+					mat4.multiply(temp, temp, tMesh['matrix'])
+					var temp2 = mat4.create()
+					getInverse(temp2, temp)
+					globalTransformOfNodeThatTheMeshIsAttachedTo = temp2
+					var inverseBindMatrices = mat4.create()
+					var jointMatrix = mat4.create()
+					var index = 0, len = tMesh['skinInfo']['joints'].length
+					for ( index; index < len; index++ ) {
+						// 조인트 공간내에서의 전역
+						var result = mat4.create()
+
+						jointMatrix = mat4.create()
+						mat4.multiply(jointMatrix, jointMatrix, tMesh['skinInfo']['joints'][index]['matrix'])
+
+						globalTransformOfJointNode = globalTransformOfJointNode.concat(Array.prototype.slice.call(jointMatrix))
+					}
+					// tGL.uniformMatrix4fv(tSystemUniformGroup['uGlobalTransformOfNodeThatTheMeshIsAttachedTo']['location'], false, globalTransformOfNodeThatTheMeshIsAttachedTo)
+					tGL.uniformMatrix4fv(tSystemUniformGroup['uGlobalTransformOfNodeThatTheMeshIsAttachedTo']['location'], false, globalTransformOfNodeThatTheMeshIsAttachedTo)
+					tGL.uniformMatrix4fv(tSystemUniformGroup['uJointMatrix']['location'], false, globalTransformOfJointNode)
+					tGL.uniformMatrix4fv(tSystemUniformGroup['uInverseBindMatrixForJoint']['location'], false, tMesh['skinInfo']['inverseBindMatrices'])
+				}
 				/////////////////////////////////////////////////////////////////////////
 				/////////////////////////////////////////////////////////////////////////
 				// 노말매트릭스를 사용할경우

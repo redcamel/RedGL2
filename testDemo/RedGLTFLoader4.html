@@ -212,6 +212,12 @@
 //			v['resultMesh'].z = 2
 //
 //		});
+		RedGLTFLoader(self, '../asset/glTF/basic/', 'RiggedSimple.gltf', function (v) {
+			console.log('호잇!', v)
+			tScene3D.addChild(v['resultMesh'])
+
+		});
+
 		RedGLTFLoader(self, '../asset/glTF/basic/', 'SimpleSkin.gltf', function (v) {
 			console.log('호잇!', v)
 			tScene3D.addChild(v['resultMesh'])
