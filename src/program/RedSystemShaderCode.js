@@ -30,11 +30,21 @@ var RedSystemShaderCode;
 				'attribute vec3 aVertexPosition',
 				'attribute vec3 aVertexNormal',
 				'attribute vec4 aVertexColor',
+				'attribute vec4 aVertexWeight',
+				'attribute vec4 aVertexJoint',
 				'varying vec3 vVertexNormal',
 				'attribute float aPointSize',
 				'uniform float uPointSize',
 				'attribute vec2 aTexcoord',
 				'varying vec2 vTexcoord',
+
+
+				'uniform bool uUseSkin',
+				'uniform mat4 uJointMatrix[20]',
+				'uniform mat4 uInverseBindMatrixForJoint[20]',
+				'uniform mat4 uGlobalTransformOfNodeThatTheMeshIsAttachedTo',
+
+
 				// 'uniform vec4 uAtlascoord',
 				'uniform float uTime',
 				'varying float vTime',

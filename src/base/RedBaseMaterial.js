@@ -52,13 +52,30 @@ var RedBaseMaterial;
 			//TODO: 이걸좀 정리해야하는데..
 			var makeList;
 			var makePrepareProgram;
+			var makeStore,makeStore2
+			var systemKeyList = ['fog', 'sprite3D', 'skin', 'directionalShadow']
+			systemKeyList.sort()
+			makeStore = function (programList, programName, redGL, vSource, fSource, list) {
+				if(!programList['basic'][programName]) programList['basic'][programName] = RedProgram['makeProgram'](redGL, programName, vSource, fSource);
+				list.forEach(function (key, index) {
+					// console.log(key)
+					var tProgramName = list.join('_')
+					programList[tProgramName] = {}
+					if(!programList[tProgramName][programName]) programList[tProgramName][programName] = new makePrepareProgram(redGL, programName, vSource, fSource, list);
+					var newList = JSON.parse(JSON.stringify(list))
+					newList.splice(index, 1)
+					// console.log('newList', newList)
+					makeStore(programList, programName, redGL, vSource, fSource, newList)
+				})
+			}
+
 			makePrepareProgram = function (redGL, programName, vSource, fSource, targetKey) {
 				this['_prepareProgramYn'] = true;
 				this['_makePrepareProgram'] = function () {
 					return RedProgram['makeProgram'](redGL, programName, vSource, fSource, targetKey)
 				}
 			}
-			makeList = function (target, baseKey, redGL, programName, vSource, fSource, programOptionList) {
+			makeStore2 = function (target, baseKey, redGL, programName, vSource, fSource, programOptionList) {
 				programOptionList = programOptionList.concat();
 				programOptionList.sort();
 				var i, tKey;
@@ -70,14 +87,26 @@ var RedBaseMaterial;
 					if ( !target['_programList']['basic'][programName + '_' + tKey] ) {
 						//TODO: 이걸 자동화하는데..... 렌더러에서 가장 쉽게 찾을수 있는 구조를 찾아야함.
 						target['_programList']['basic'][programName + '_' + tKey] = RedProgram['makeProgram'](redGL, programName, vSource, fSource, tKey.split('_'));
-						target['_programList']['fog'][programName + '_' + tKey] = new makePrepareProgram(redGL, programName, vSource, fSource, (tKey + '_fog').split('_'));
-						target['_programList']['sprite3D'][programName + '_' + tKey] = new makePrepareProgram(redGL, programName, vSource, fSource, (tKey + '_sprite3D').split('_'));
-						target['_programList']['fog_sprite3D'][programName + '_' + tKey] = new makePrepareProgram(redGL, programName, vSource, fSource, (tKey + '_fog_sprite3D').split('_'));
 						target['_programList']['directionalShadow'][programName + '_' + tKey] = new makePrepareProgram(redGL, programName, vSource, fSource, (tKey + '_directionalShadow').split('_'));
+
 						target['_programList']['directionalShadow_fog'][programName + '_' + tKey] = new makePrepareProgram(redGL, programName, vSource, fSource, (tKey + '_directionalShadow_fog').split('_'));
-						target['_programList']['directionalShadow_sprite3D'][programName + '_' + tKey] = new makePrepareProgram(redGL, programName, vSource, fSource, (tKey + '_directionalShadow_sprite3D').split('_'));
+						target['_programList']['directionalShadow_fog_skin'][programName + '_' + tKey] = new makePrepareProgram(redGL, programName, vSource, fSource, (tKey + '_directionalShadow_fog_skin').split('_'));
+						target['_programList']['directionalShadow_fog_skin_sprite3D'][programName + '_' + tKey] = new makePrepareProgram(redGL, programName, vSource, fSource, (tKey + '_directionalShadow_fog_skin_sprite3D').split('_'));
 						target['_programList']['directionalShadow_fog_sprite3D'][programName + '_' + tKey] = new makePrepareProgram(redGL, programName, vSource, fSource, (tKey + '_directionalShadow_fog_sprite3D').split('_'));
-						makeList(target, tKey, redGL, programName, vSource, fSource, (programOptionList.concat()).slice(i + 1));
+
+						target['_programList']['directionalShadow_skin'][programName + '_' + tKey] = new makePrepareProgram(redGL, programName, vSource, fSource, (tKey + '_directionalShadow_skin').split('_'));
+						target['_programList']['directionalShadow_skin_sprite3D'][programName + '_' + tKey] = new makePrepareProgram(redGL, programName, vSource, fSource, (tKey + '_directionalShadow_skin_sprite3D').split('_'));
+						target['_programList']['directionalShadow_sprite3D'][programName + '_' + tKey] = new makePrepareProgram(redGL, programName, vSource, fSource, (tKey + '_directionalShadow_sprite3D').split('_'));
+
+						target['_programList']['fog'][programName + '_' + tKey] = new makePrepareProgram(redGL, programName, vSource, fSource, (tKey + '_fog').split('_'));
+						target['_programList']['fog_skin'][programName + '_' + tKey] = new makePrepareProgram(redGL, programName, vSource, fSource, (tKey + '_fog_skin').split('_'));
+						target['_programList']['fog_skin_sprite3D'][programName + '_' + tKey] = new makePrepareProgram(redGL, programName, vSource, fSource, (tKey + '_fog_skin_sprite3D').split('_'));
+						target['_programList']['fog_sprite3D'][programName + '_' + tKey] = new makePrepareProgram(redGL, programName, vSource, fSource, (tKey + '_fog_sprite3D').split('_'));
+
+						target['_programList']['skin'][programName + '_' + tKey] = new makePrepareProgram(redGL, programName, vSource, fSource, (tKey + '_skin').split('_'));
+						target['_programList']['skin_sprite3D'][programName + '_' + tKey] = new makePrepareProgram(redGL, programName, vSource, fSource, (tKey + '_skin_sprite3D').split('_'));
+						target['_programList']['sprite3D'][programName + '_' + tKey] = new makePrepareProgram(redGL, programName, vSource, fSource, (tKey + '_sprite3D').split('_'));
+						makeStore2(target, tKey, redGL, programName, vSource, fSource, (programOptionList.concat()).slice(i + 1));
 					}
 				}
 				// console.log(programOptionList)
@@ -91,26 +120,17 @@ var RedBaseMaterial;
 				}
 				else {
 					target['_programList'] = {
-						basic: {},
-						fog: {},
-						sprite3D: {},
-						fog_sprite3D: {},
-						directionalShadow: {},
-						directionalShadow_fog: {},
-						directionalShadow_sprite3D: {},
-						directionalShadow_fog_sprite3D: {}
+						basic: {}
 					};
-					makeList(target, '', redGL, programName, vSource, fSource, programOptionList);
+					console.log('//////////////////////////////////////////////////////////////')
+					console.log(systemKeyList)
+					makeStore(target['_programList'], programName, redGL, vSource, fSource, systemKeyList)
+					console.log(target['_programList'])
+					console.log('//////////////////////////////////////////////////////////////')
+					makeStore2(target, '', redGL, programName, vSource, fSource, programOptionList);
 					// console.log(target['_programList'])
 					// 일반 프로그램생성
 					target['_programList']['basic'][programName] = RedProgram['makeProgram'](redGL, programName, vSource, fSource);
-					target['_programList']['fog'][programName] = new makePrepareProgram(redGL, programName, vSource, fSource, ['fog']);
-					target['_programList']['sprite3D'][programName] = new makePrepareProgram(redGL, programName, vSource, fSource, ['sprite3D']);
-					target['_programList']['fog_sprite3D'][programName] = new makePrepareProgram(redGL, programName, vSource, fSource, ['fog', 'sprite3D']);
-					target['_programList']['directionalShadow'][programName] = new makePrepareProgram(redGL, programName, vSource, fSource, ['directionalShadow']);
-					target['_programList']['directionalShadow_fog'][programName] = new makePrepareProgram(redGL, programName, vSource, fSource, ['fog', 'directionalShadow']);
-					target['_programList']['directionalShadow_sprite3D'][programName] = new makePrepareProgram(redGL, programName, vSource, fSource, ['sprite3D', 'directionalShadow']);
-					target['_programList']['directionalShadow_fog_sprite3D'][programName] = new makePrepareProgram(redGL, programName, vSource, fSource, ['fog', 'directionalShadow', 'sprite3D']);
 					// 그룹데이터 캐싱
 					redGL['_datas']['RedProgramGroup'][programName] = target['_programList'];
 				}
