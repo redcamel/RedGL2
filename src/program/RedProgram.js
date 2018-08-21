@@ -344,6 +344,7 @@ var RedProgram;
 		var hasFog = false;
 		var hasSprite3D = false;
 		var hasDirectionalShadow = false;
+		var hasSkin = false
 		if ( subProgramOption ) {
 			subProgramOption.sort();
 			programName += '_' + subProgramOption.join('_');
@@ -353,7 +354,8 @@ var RedProgram;
 				if ( subProgramOption[i] == 'fog' ) hasFog = true;
 				if ( subProgramOption[i] == 'sprite3D' ) hasSprite3D = true;
 				if ( subProgramOption[i] == 'directionalShadow' ) hasDirectionalShadow = true;
-				if ( subProgramOption[i] == 'fog' || subProgramOption[i] == 'sprite3D' || subProgramOption[i] == 'directionalShadow' ) continue;
+				if ( subProgramOption[i] == 'skin' ) hasSkin = true;
+				if ( subProgramOption[i] == 'fog' || subProgramOption[i] == 'sprite3D' || subProgramOption[i] == 'directionalShadow' || subProgramOption[i] == 'skin' ) continue;
 				t0 = new RegExp('\/\/\#define\#' + subProgramOption[i] + '\#', 'gi');
 				// console.log(t0)
 				vSource = vSource.replace(t0, '');
@@ -370,6 +372,10 @@ var RedProgram;
 		fSource = fSource.replace(t0, '');
 		// directionalShadow 처리
 		t0 = new RegExp('\/\/\#define\#directionalShadow\#' + (hasDirectionalShadow ? 'true' : 'false') + '\#', 'gi');
+		vSource = vSource.replace(t0, '');
+		fSource = fSource.replace(t0, '');
+		// skin 처리
+		t0 = new RegExp('\/\/\#define\#skin\#' + (hasSkin ? 'true' : 'false') + '\#', 'gi');
 		vSource = vSource.replace(t0, '');
 		fSource = fSource.replace(t0, '');
 		// console.log(vSource, fSource)

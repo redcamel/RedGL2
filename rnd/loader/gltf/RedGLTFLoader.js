@@ -418,7 +418,7 @@ var RedGLTFLoader;
 			info['joints'].forEach(function (v) {
 				console.log(json['nodes'][v])
 				skinInfo['joints'].push(json['nodes'][v]['RedMesh'])
-				json['nodes'][v]['RedMesh'].geometry = RedSphere(redGLTFLoader['redGL'], 0.01)
+				json['nodes'][v]['RedMesh'].geometry = RedSphere(redGLTFLoader['redGL'], 0.05)
 				json['nodes'][v]['RedMesh'].material = RedColorMaterial(redGLTFLoader['redGL'])
 			})
 			if(info['skeleton']) skinInfo['skeleton'] = json['nodes'][info['skeleton']]['RedMesh']
@@ -652,33 +652,85 @@ var RedGLTFLoader;
 							// console.log("tBufferView['byteOffset']", tBufferView['byteOffset'])
 							// console.log("tAccessors['byteOffset']", tAccessors['byteOffset'])
 							var tAccessorBufferOffset = tAccessors['byteOffset'] || 0
+							var tBufferViewByteStride = tBufferView['byteStride'] || 0
 							i = (tBufferView['byteOffset'] + tAccessorBufferOffset) / tComponentType['BYTES_PER_ELEMENT']
 							switch ( tAccessors['type'] ) {
 								case 'VEC4' :
-									len = i + ( tComponentType['BYTES_PER_ELEMENT'] * tAccessors['count']) / tComponentType['BYTES_PER_ELEMENT'] * 4
-									console.log(k, i, len)
-									for ( i; i < len; i++ ) {
-										if ( k == 'WEIGHTS_0' ) tMorphData['jointWeights'].push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
-										if ( k == 'JOINTS_0' ) tMorphData['joints'].push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+									if ( tBufferViewByteStride ) {
+										len = i + ( (tComponentType['BYTES_PER_ELEMENT']) * tAccessors['count']) / tComponentType['BYTES_PER_ELEMENT'] * 4 * (tBufferViewByteStride / 4 / tComponentType['BYTES_PER_ELEMENT'])
+										var aa = 0
+										for ( i; i < len; i++ ) {
+											if ( k == 'WEIGHTS_0' ) {
+												if ( aa % (tBufferViewByteStride / tComponentType['BYTES_PER_ELEMENT']) < 4 ) {
+													jointWeights.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+												}
+												aa++
+											} else if ( k == 'JOINTS_0' ) {
+												if ( aa % (tBufferViewByteStride / tComponentType['BYTES_PER_ELEMENT']) < 4 ) {
+													joints.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+												}
+												aa++
+												// console.log('어라안온다고????', aa, joints[joints.length - 1])
+											}
+										}
+										console.log('JOINTS_0 ', joints)
+									} else {
+										len = i + ( tComponentType['BYTES_PER_ELEMENT'] * tAccessors['count']) / tComponentType['BYTES_PER_ELEMENT'] * 4
+										for ( i; i < len; i++ ) {
+											if ( k == 'WEIGHTS_0' ) jointWeights.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+											else if ( k == 'JOINTS_0' ) joints.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+										}
 									}
-									// console.log('인터리브 버퍼 데이터', vertices)
 									break
 								case 'VEC3' :
-									len = i + ( tComponentType['BYTES_PER_ELEMENT'] * tAccessors['count']) / tComponentType['BYTES_PER_ELEMENT'] * 3
-									console.log(k, i, len)
-									for ( i; i < len; i++ ) {
-										if ( k == 'NORMAL' ) tMorphData['normals'].push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
-										else if ( k == 'POSITION' ) tMorphData['vertices'].push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+									if ( tBufferViewByteStride ) {
+										len = i + ( (tComponentType['BYTES_PER_ELEMENT']) * tAccessors['count']) / tComponentType['BYTES_PER_ELEMENT'] * 3 * (tBufferViewByteStride / 3 / tComponentType['BYTES_PER_ELEMENT'])
+										var aa = 0
+										for ( i; i < len; i++ ) {
+											if ( k == 'NORMAL' ) {
+												if ( aa % (tBufferViewByteStride / tComponentType['BYTES_PER_ELEMENT']) < 3 ) {
+													normals.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+												}
+												aa++
+											} else if ( k == 'POSITION' ) {
+												if ( aa % (tBufferViewByteStride / tComponentType['BYTES_PER_ELEMENT']) < 3 ) {
+													vertices.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+												}
+												aa++
+												// console.log('어라안온다고????', aa, joints[joints.length - 1])
+											}
+										}
+									} else {
+										len = i + ( tComponentType['BYTES_PER_ELEMENT'] * tAccessors['count']) / tComponentType['BYTES_PER_ELEMENT'] * 3
+										console.log(k, i, len)
+										for ( i; i < len; i++ ) {
+											if ( k == 'NORMAL' ) normals.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+											else if ( k == 'POSITION' ) vertices.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+										}
+										// console.log('인터리브 버퍼 데이터', vertices)
 									}
-									// console.log('인터리브 버퍼 데이터', vertices)
 									break
 								case 'VEC2' :
-									len = i + ( tComponentType['BYTES_PER_ELEMENT'] * tAccessors['count']) / tComponentType['BYTES_PER_ELEMENT'] * 2
-									// console.log(i, len)
-									for ( i; i < len; i++ ) {
-										if ( k == 'TEXCOORD_0' ) {
-											if ( i % 2 == 0 ) tMorphData['uvs'].push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
-											else tMorphData['uvs'].push(-tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+									if ( tBufferViewByteStride ) {
+										len = i + ( (tComponentType['BYTES_PER_ELEMENT']) * tAccessors['count']) / tComponentType['BYTES_PER_ELEMENT'] * 2 * (tBufferViewByteStride / 2 / tComponentType['BYTES_PER_ELEMENT'])
+										var aa = 0
+										for ( i; i < len; i++ ) {
+											if ( k == 'TEXCOORD_0' ) {
+												if ( aa % (tBufferViewByteStride / tComponentType['BYTES_PER_ELEMENT']) < 2 ) {
+													if ( i % 2 == 0 ) uvs.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+													else uvs.push(-tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+												}
+												aa++
+											}
+										}
+									}else{
+										len = i + ( tComponentType['BYTES_PER_ELEMENT'] * tAccessors['count']) / tComponentType['BYTES_PER_ELEMENT'] * 2
+										// console.log(i, len)
+										for ( i; i < len; i++ ) {
+											if ( k == 'TEXCOORD_0' ) {
+												if ( i % 2 == 0 ) uvs.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+												else uvs.push(-tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+											}
 										}
 									}
 									// console.log('인터리브 버퍼 데이터', vertices)
@@ -797,14 +849,29 @@ var RedGLTFLoader;
 								}
 								break
 							case 'VEC2' :
-								len = i + ( tComponentType['BYTES_PER_ELEMENT'] * tAccessors['count']) / tComponentType['BYTES_PER_ELEMENT'] * 2
-								// console.log(i, len)
-								for ( i; i < len; i++ ) {
-									if ( k == 'TEXCOORD_0' ) {
-										if ( i % 2 == 0 ) uvs.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
-										else uvs.push(-tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+								if ( tBufferViewByteStride ) {
+									len = i + ( (tComponentType['BYTES_PER_ELEMENT']) * tAccessors['count']) / tComponentType['BYTES_PER_ELEMENT'] * 2 * (tBufferViewByteStride / 2 / tComponentType['BYTES_PER_ELEMENT'])
+									var aa = 0
+									for ( i; i < len; i++ ) {
+										if ( k == 'TEXCOORD_0' ) {
+											if ( aa % (tBufferViewByteStride / tComponentType['BYTES_PER_ELEMENT']) < 2 ) {
+												if ( i % 2 == 0 ) uvs.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+												else uvs.push(-tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+											}
+											aa++
+										}
+									}
+								}else{
+									len = i + ( tComponentType['BYTES_PER_ELEMENT'] * tAccessors['count']) / tComponentType['BYTES_PER_ELEMENT'] * 2
+									// console.log(i, len)
+									for ( i; i < len; i++ ) {
+										if ( k == 'TEXCOORD_0' ) {
+											if ( i % 2 == 0 ) uvs.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+											else uvs.push(-tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+										}
 									}
 								}
+
 								// console.log('인터리브 버퍼 데이터', vertices)
 								break
 							default :
@@ -1018,12 +1085,12 @@ var RedGLTFLoader;
 						new Float32Array(interleaveData),
 						tInterleaveInfoList
 					),
-					RedBuffer(
+					indices.length ? RedBuffer(
 						redGLTFLoader['redGL'],
 						'testGLTF_indexBuffer_' + RedGL.makeUUID(),
 						RedBuffer.ELEMENT_ARRAY_BUFFER,
 						new Uint16Array(indices)
-					)
+					) : null
 				)
 				if ( !tMaterial ) tMaterial = RedColorPhongMaterial(redGLTFLoader['redGL'], RedGLUtil.rgb2hex(parseInt(Math.random() * 255), parseInt(Math.random() * 255), parseInt(Math.random() * 255)))
 				console.log('tMaterial', tMaterial)
@@ -1052,10 +1119,12 @@ var RedGLTFLoader;
 				tMesh['_morphList'] = morphList
 				tMesh['_morphList']['origin'] = new Float32Array((interleaveData))
 				tMeshList.push(tMesh)
-				console.log('vertices', vertices)
-				console.log('joints', joints)
-				console.log('jointWeights', jointWeights)
-				console.log('indices', indices)
+				// console.log('vertices', vertices)
+				// console.log('normalData', normalData)
+				// console.log('uvs', uvs)
+				// console.log('joints', joints)
+				// console.log('jointWeights', jointWeights)
+				// console.log('indices', indices)
 			})
 			return tMeshList
 		}
@@ -1143,7 +1212,7 @@ var RedGLTFLoader;
 					var tMesh;
 					var tNode;
 					tSampler = samplers[channel['sampler']];
-					console.log('tSampler', tSampler)
+					// console.log('tSampler', tSampler)
 					tTargetData = channel['target'];
 					tNode = nodes[tTargetData['node']];
 					if ( 'mesh' in tNode ) {
@@ -1151,7 +1220,7 @@ var RedGLTFLoader;
 					} else {
 						var tGroup
 						//TODO: 이거 개선해야함
-						console.log('여기로 오는경우가 있는건가')
+						// console.log('여기로 오는경우가 있는건가')
 						if ( redGLTFLoader['groups'][tTargetData['node']] ) {
 							tGroup = redGLTFLoader['groups'][tTargetData['node']]
 							console.log('tGroup', tGroup)

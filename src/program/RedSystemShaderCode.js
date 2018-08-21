@@ -38,8 +38,10 @@ var RedSystemShaderCode;
 				'attribute vec2 aTexcoord',
 				'varying vec2 vTexcoord',
 
-				'uniform mat4 uJointMatrix[4]',
-				'uniform mat4 uInverseBindMatrixForJoint[4]',
+
+				'uniform bool uUseSkin',
+				'uniform mat4 uJointMatrix[20]',
+				'uniform mat4 uInverseBindMatrixForJoint[20]',
 				'uniform mat4 uGlobalTransformOfNodeThatTheMeshIsAttachedTo',
 
 

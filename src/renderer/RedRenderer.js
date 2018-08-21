@@ -450,6 +450,7 @@ var RedRenderer;
 						}
 						else {
 							if ( scene['_useFog'] && tSprite3DYn ) tOptionProgramKey = 'fog_sprite3D'
+							else if ( tMesh['skinInfo'] ) tOptionProgramKey = 'skin'
 							else if ( tSprite3DYn ) tOptionProgramKey = 'sprite3D'
 							else if ( scene['_useFog'] ) tOptionProgramKey = 'fog'
 						}
@@ -682,6 +683,7 @@ var RedRenderer;
 				/////////////////////////////////////////////////////////////////////////
 				/////////////////////////////////////////////////////////////////////////
 				if ( tGeometry ) tGL.uniformMatrix4fv(tSystemUniformGroup['uMMatrix']['location'], false, tMVMatrix)
+
 				/*
 					1. 조인트를 물고있는 루트 메쉬의 전역 매트릭스의 역함수를 구한다.
 					2. 노드의 현재 전역 변환을 구한다라는데... 이게 조인트를 물고있는 루트부터인지.. 노드상의 루트인지 알아내야함.
@@ -728,7 +730,15 @@ var RedRenderer;
 					te[15] = ( n12 * n23 * n31 - n13 * n22 * n31 + n13 * n21 * n32 - n11 * n23 * n32 - n12 * n21 * n33 + n11 * n22 * n33 ) * detInv;
 					return self;
 				}
+				if ( tProgram && tSystemUniformGroup['uUseSkin']['location'] ) {
+					tGL.uniform1i(tSystemUniformGroup['uUseSkin']['location'], false)
+				}else{
+
+				}
+
+
 				if ( tGeometry && tMesh['skinInfo'] ) {
+					if ( tSystemUniformGroup ) tGL.uniform1i(tSystemUniformGroup['uUseSkin']['location'], true)
 					var globalTransformOfNodeThatTheMeshIsAttachedTo
 					var globalTransformOfJointNode = []
 					var temp = mat4.create()
@@ -742,10 +752,8 @@ var RedRenderer;
 					for ( index; index < len; index++ ) {
 						// 조인트 공간내에서의 전역
 						var result = mat4.create()
-
 						jointMatrix = mat4.create()
 						mat4.multiply(jointMatrix, jointMatrix, tMesh['skinInfo']['joints'][index]['matrix'])
-
 						globalTransformOfJointNode = globalTransformOfJointNode.concat(Array.prototype.slice.call(jointMatrix))
 					}
 					// tGL.uniformMatrix4fv(tSystemUniformGroup['uGlobalTransformOfNodeThatTheMeshIsAttachedTo']['location'], false, globalTransformOfNodeThatTheMeshIsAttachedTo)

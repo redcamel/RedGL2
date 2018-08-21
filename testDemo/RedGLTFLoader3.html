@@ -191,8 +191,13 @@
 				'../asset/cubemap/SwedishRoyalCastle/pz.jpg',
 				'../asset/cubemap/SwedishRoyalCastle/nz.jpg'
 			]);
+		var t0 =RedGLTFLoader(self, '../asset/glTF/basic/', 'BrainStem.gltf', function (v) {
+			console.log('호잇!', v)
+			tScene3D.addChild(v['resultMesh'])
+			v['resultMesh'].x = 3
 
-		RedGLTFLoader(self, '../asset/glTF/basic/', 'CesiumMan.gltf', function (v) {
+		});
+		var t1 =RedGLTFLoader(self, '../asset/glTF/basic/', 'CesiumMan.gltf', function (v) {
 			console.log('호잇!', v)
 			tScene3D.addChild(v['resultMesh'])
 
@@ -213,12 +218,10 @@
 				playAnimation: function () {
 					t0.playAnimation(t0['animations'][0])
 					t1.playAnimation(t1['animations'][0])
-					t2.playAnimation(t2['animations'][0])
 				},
 				stopAnimation: function () {
 					t0.stopAnimation()
 					t1.stopAnimation()
-					t2.stopAnimation()
 				}
 			}
 			folder.add(testAnimation, 'playAnimation')
