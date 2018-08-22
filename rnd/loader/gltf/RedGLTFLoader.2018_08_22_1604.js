@@ -272,12 +272,12 @@ var RedGLTFLoader;
 							// console.log(aniData)
 							var targetMesh = aniData['target']
 							var targetData = targetMesh['geometry']['interleaveBuffer']['data']
-							var originData = targetMesh['_morphInfo']['origin']
+							var originData = targetMesh['_morphList']['origin']
 							targetData.forEach(function (v, index) {
 								var prev, next
 								prev = originData[index]
 								next = originData[index]
-								targetMesh['_morphInfo']['list'].forEach(function (v, morphIndex) {
+								targetMesh['_morphList'].forEach(function (v, morphIndex) {
 									prev += aniData['data'][prevIndex * 2 + morphIndex] * v['interleaveData'][index]
 									next += aniData['data'][nextIndex * 2 + morphIndex] * v['interleaveData'][index]
 								})
@@ -536,7 +536,7 @@ var RedGLTFLoader;
 				if ( 'skin' in info ) parseSkin(redGLTFLoader, json, info, tGroup)
 			}
 		}
-		var parseSparse = function (redGLTFLoader, key, tAccessors, json, vertices, uvs, normals, jointWeights, joints) {
+		var parseSparse = function (redGLTFLoader, key, tAccessors, json, vertices, normals, uvs) {
 			if ( tAccessors['sparse'] ) {
 				var sparseVerties = []
 				var sparseNormals = []
@@ -626,290 +626,6 @@ var RedGLTFLoader;
 				}
 			}
 		}
-		var RedGLTF_AccessorInfo = function (redGLTFLoader, json, accessorIndex) {
-			this['accessor'] = json['accessors'][accessorIndex];
-			this['bufferView'] = json['bufferViews'][this['accessor']['bufferView']];
-			this['bufferIndex'] = this['bufferView']['buffer'];
-			this['buffer'] = json['buffers'][this['bufferIndex']]
-			this['bufferURIDataView'] = null
-			if ( this['buffer']['uri'] ) {
-				this['bufferURIDataView'] = redGLTFLoader['uris']['buffers'][this['bufferIndex']]
-			}
-			////////////////////////////
-			this['componentType'] = WEBGL_COMPONENT_TYPES[this['accessor']['componentType']]
-			this['componentType_BYTES_PER_ELEMENT'] = this['componentType']['BYTES_PER_ELEMENT'];
-			switch ( this['componentType'] ) {
-				case Float32Array :
-					this['getMethod'] = 'getFloat32'
-					break
-				case Uint32Array :
-					this['getMethod'] = 'getUint32'
-					break
-				case Uint16Array :
-					this['getMethod'] = 'getUint16'
-					break
-				case Int16Array :
-					this['getMethod'] = 'getInt16'
-					break
-				case Uint8Array :
-					this['getMethod'] = 'getUint8'
-					break
-				case Int8Array :
-					this['getMethod'] = 'getInt8'
-					break
-				default :
-					RedGLUtil.throwFunc('파싱할수없는 타입', this['componentType'])
-			}
-			this['accessorBufferOffset'] = this['accessor']['byteOffset'] || 0
-			this['bufferViewByteStride'] = this['bufferView']['byteStride'] || 0
-			this['startIndex'] = (this['bufferView']['byteOffset'] + this['accessorBufferOffset']) / this['componentType_BYTES_PER_ELEMENT'];
-			// console.log('해당 bufferView 정보', this['bufferView'])
-			// console.log('바라볼 버퍼 인덱스', this['bufferIndex'])
-			// console.log('바라볼 버퍼', this['buffer'])
-			// console.log('바라볼 버퍼데이터', this['bufferURIDataView'])
-			// console.log('바라볼 엑세서', this['accessor'])
-			// console.log('this['componentType']', this['componentType'])
-			// console.log("this['getMethod']", this['getMethod'])
-			// console.log("this['bufferView']['byteOffset']", this['bufferView']['byteOffset'])
-			// console.log("this['accessor']['byteOffset']", this['accessor']['byteOffset'])
-		}
-		var parseAttributeInfo = function (redGLTFLoader, json, key, accessorInfo, vertices, uvs, normals, jointWeights, joints) {
-			var tBYTES_PER_ELEMENT = accessorInfo['componentType_BYTES_PER_ELEMENT'];
-			var tBufferViewByteStride = accessorInfo['bufferViewByteStride'];
-			var tBufferURIDataView = accessorInfo['bufferURIDataView'];
-			var tGetMethod = accessorInfo['getMethod'];
-			var tType = accessorInfo['accessor']['type'];
-			var tCount = accessorInfo['accessor']['count'];
-			var strideIndex = 0;
-			var stridePerElement = tBufferViewByteStride / tBYTES_PER_ELEMENT
-			var i = accessorInfo['startIndex']
-			var len
-			switch ( tType ) {
-				case 'VEC4' :
-					if ( tBufferViewByteStride ) {
-						len = i + tCount * (tBufferViewByteStride / tBYTES_PER_ELEMENT)
-						for ( i; i < len; i++ ) {
-							if ( strideIndex % stridePerElement < 4 ) {
-								if ( key == 'WEIGHTS_0' ) jointWeights.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-								else if ( key == 'JOINTS_0' ) joints.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-								else RedGLUtil.throwFunc('VEC4에서 현재 지원하고 있지 않는 키', key)
-							}
-							strideIndex++
-						}
-					} else {
-						len = i + tCount * 4;
-						for ( i; i < len; i++ ) {
-							if ( key == 'WEIGHTS_0' ) jointWeights.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-							else if ( key == 'JOINTS_0' ) joints.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-							else RedGLUtil.throwFunc('VEC4에서 현재 지원하고 있지 않는 키', key)
-						}
-					}
-					break
-				case 'VEC3' :
-					if ( tBufferViewByteStride ) {
-						len = i + tCount * (tBufferViewByteStride / tBYTES_PER_ELEMENT)
-						for ( i; i < len; i++ ) {
-							if ( strideIndex % stridePerElement < 3 ) {
-								if ( key == 'NORMAL' ) normals.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-								else if ( key == 'POSITION' ) vertices.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-								else RedGLUtil.throwFunc('VEC3에서 현재 지원하고 있지 않는 키', key)
-							}
-							strideIndex++
-						}
-					} else {
-						len = i + tCount * 3;
-						for ( i; i < len; i++ ) {
-							if ( key == 'NORMAL' ) normals.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-							else if ( key == 'POSITION' ) vertices.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-							else RedGLUtil.throwFunc('VEC3에서 현재 지원하고 있지 않는 키', key)
-						}
-						// console.log('인터리브 버퍼 데이터', vertices)
-					}
-					break
-				case 'VEC2' :
-					if ( tBufferViewByteStride ) {
-						len = i + tCount * (tBufferViewByteStride / tBYTES_PER_ELEMENT)
-						for ( i; i < len; i++ ) {
-							if ( strideIndex % stridePerElement < 2 ) {
-								if ( key == 'TEXCOORD_0' ) {
-									if ( i % 2 == 0 ) uvs.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-									else uvs.push(-tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-								}
-								else RedGLUtil.throwFunc('VEC2에서 현재 지원하고 있지 않는 키', key)
-							}
-							strideIndex++
-						}
-					} else {
-						len = i + tCount * 2;
-						for ( i; i < len; i++ ) {
-							if ( key == 'TEXCOORD_0' ) {
-								if ( i % 2 == 0 ) uvs.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-								else uvs.push(-tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-							} else RedGLUtil.throwFunc('VEC2에서 현재 지원하고 있지 않는 키', key)
-						}
-					}
-					break
-				default :
-					console.log('알수없는 형식 엑세서 타입', tType)
-					break
-			}
-		}
-		var RedGLTF_MorphInfo = function (redGLTFLoader, json, primitiveData) {
-			var morphList = []
-			if ( primitiveData['targets'] ) {
-				primitiveData['targets'].forEach(function (v2) {
-					var tMorphData = {
-						vertices: [],
-						normals: [],
-						uvs: [],
-						jointWeights: [],
-						joints: []
-					}
-					morphList.push(tMorphData)
-					for ( var key in v2 ) {
-						var vertices = tMorphData['vertices']
-						var normals = tMorphData['normals']
-						var uvs = tMorphData['uvs']
-						var jointWeights = tMorphData['jointWeights']
-						var joints = tMorphData['joints']
-						var accessorIndex = v2[key]
-						var accessorInfo = new RedGLTF_AccessorInfo(redGLTFLoader, json, accessorIndex)
-						// 어트리뷰트 갈궈서 파악함
-						parseAttributeInfo(
-							redGLTFLoader, json, key, accessorInfo,
-							vertices, uvs, normals, jointWeights, joints
-						)
-						// 스파스 정보도 갈굼
-						if ( accessorInfo['accessor']['sparse'] ) parseSparse(redGLTFLoader, key, accessorInfo['accessor'], json, vertices, uvs, normals, jointWeights, joints)
-					}
-				})
-			}
-			this['list'] = morphList
-			this['origin'] = null
-		}
-		var parseIndicesInfo = function (redGLTFLoader, json, key, accessorInfo, indices) {
-			var tBYTES_PER_ELEMENT = accessorInfo['componentType_BYTES_PER_ELEMENT'];
-			var tBufferURIDataView = accessorInfo['bufferURIDataView'];
-			var tGetMethod = accessorInfo['getMethod'];
-			var tType = accessorInfo['accessor']['type'];
-			var tCount = accessorInfo['accessor']['count'];
-			var i = accessorInfo['startIndex']
-			var len;
-			// console.log('인덱스!!', accessorInfo)
-			switch ( tType ) {
-				case 'SCALAR' :
-					len = i + tCount
-					// console.log(i, len)
-					for ( i; i < len; i++ ) {
-						indices.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-					}
-					// console.log('인덱스버퍼 데이터', indices)
-					break
-				default :
-					console.log('알수없는 형식 엑세서 타입', accessorInfo['accessor'])
-					break
-			}
-		}
-		var parseMaterialInfo = function (redGLTFLoader, json, v) {
-			var tMaterial
-			if ( 'material' in v ) {
-				var tIndex = v['material']
-				var tMaterialInfo = json['materials'][tIndex]
-				// console.log('tMaterialInfo', tMaterialInfo)
-				if ( 'baseColorTexture' in tMaterialInfo['pbrMetallicRoughness'] ) {
-					var baseTextureIndex = tMaterialInfo['pbrMetallicRoughness']['baseColorTexture']['index']
-					var baseTextureInfo = json['textures'][baseTextureIndex]
-					var diffuseSourceIndex = baseTextureInfo['source']
-					diffseTexture = RedBitmapTexture(redGLTFLoader['redGL'], json['images'][diffuseSourceIndex]['uri'])
-					// var t0 = document.createElement('img')
-					// t0.src = json['images'][diffuseSourceIndex]['uri']
-					// t0.style.cssText = 'position:absolute;top:0px;left:0px;width:500px'
-					// document.body.appendChild(t0)
-				}
-				var diffseTexture, normalTexture, roughnessTexture, emissiveTexture, occlusionTexture;
-				if ( 'metallicRoughnessTexture' in tMaterialInfo['pbrMetallicRoughness'] ) {
-					var roughnessTextureIndex = tMaterialInfo['pbrMetallicRoughness']['metallicRoughnessTexture']['index']
-					var roughnessTextureInfo = json['textures'][roughnessTextureIndex]
-					var roughnessSourceIndex = roughnessTextureInfo['source']
-					roughnessTexture = RedBitmapTexture(redGLTFLoader['redGL'], json['images'][roughnessSourceIndex]['uri'])
-					// var t0 = document.createElement('img')
-					// t0.src = json['images'][roughnessSourceIndex]['uri']
-					// t0.style.cssText = 'position:absolute;top:0px;left:0px;width:500px'
-					// document.body.appendChild(t0)
-				}
-				var normalTextureIndex = tMaterialInfo['normalTexture']
-				if ( normalTextureIndex != undefined ) {
-					normalTextureIndex = normalTextureIndex['index']
-					var normalTextureInfo = json['textures'][normalTextureIndex]
-					var normalSourceIndex = normalTextureInfo['source']
-					normalTexture = RedBitmapTexture(redGLTFLoader['redGL'], json['images'][normalSourceIndex]['uri'])
-					// var t0 = document.createElement('img')
-					// t0.src = json['images'][normalSourceIndex]['uri']
-					// t0.style.cssText = 'position:absolute;top:0px;left:0px;width:500px'
-					// document.body.appendChild(t0)
-				}
-				var emissiveTextureIndex = tMaterialInfo['emissiveTexture']
-				if ( emissiveTextureIndex != undefined ) {
-					emissiveTextureIndex = emissiveTextureIndex['index']
-					var emissiveTextureInfo = json['textures'][emissiveTextureIndex]
-					var emissiveSourceIndex = emissiveTextureInfo['source']
-					emissiveTexture = RedBitmapTexture(redGLTFLoader['redGL'], json['images'][emissiveSourceIndex]['uri'])
-					// var t0 = document.createElement('img')
-					// t0.src = json['images'][emissiveSourceIndex]['uri']
-					// t0.style.cssText = 'position:absolute;top:0px;left:0px;width:500px'
-					// document.body.appendChild(t0)
-				}
-				var occlusionTextureIndex = tMaterialInfo['occlusionTexture']
-				if ( occlusionTextureIndex != undefined ) {
-					occlusionTextureIndex = occlusionTextureIndex['index']
-					var occlusionTextureInfo = json['textures'][occlusionTextureIndex]
-					var occlusionSourceIndex = occlusionTextureInfo['source']
-					occlusionTexture = RedBitmapTexture(redGLTFLoader['redGL'], json['images'][occlusionSourceIndex]['uri'])
-					// var t0 = document.createElement('img')
-					// t0.src = json['images'][occlusionSourceIndex]['uri']
-					// t0.style.cssText = 'position:absolute;top:0px;left:0px;width:500px'
-					// document.body.appendChild(t0)
-				}
-				var metallicFactor, roughnessFactor
-				if ( 'metallicFactor' in tMaterialInfo['pbrMetallicRoughness'] ) {
-					metallicFactor = tMaterialInfo['pbrMetallicRoughness']['metallicFactor']
-				}
-				if ( 'roughnessFactor' in tMaterialInfo['pbrMetallicRoughness'] ) {
-					roughnessFactor = tMaterialInfo['pbrMetallicRoughness']['roughnessFactor']
-				}
-				if ( diffseTexture ) {
-					var env = RedBitmapCubeTexture(redGLTFLoader['redGL'], [
-						'../asset/cubemap/SwedishRoyalCastle/px.jpg',
-						'../asset/cubemap/SwedishRoyalCastle/nx.jpg',
-						'../asset/cubemap/SwedishRoyalCastle/py.jpg',
-						'../asset/cubemap/SwedishRoyalCastle/ny.jpg',
-						'../asset/cubemap/SwedishRoyalCastle/pz.jpg',
-						'../asset/cubemap/SwedishRoyalCastle/nz.jpg'
-					])
-					// Type	Description	Required
-					// baseColorFactor	number [4]	The material's base color factor.	No, default: [1,1,1,1]
-					// baseColorTexture	object	The base color texture.	No
-					// metallicFactor	number	The metalness of the material.	No, default: 1
-					// roughnessFactor	number	The roughness of the material.	No, default: 1
-					// metallicRoughnessTexture	object	The metallic-roughness texture.	No
-					tMaterial = RedPBRMaterial(redGLTFLoader['redGL'], diffseTexture, env, normalTexture, occlusionTexture, emissiveTexture, roughnessTexture, null)
-					if ( !roughnessTexture ) tMaterial.metallicPower = metallicFactor;
-				} else {
-					var tColor
-					if ( tMaterialInfo['pbrMetallicRoughness'] && tMaterialInfo['pbrMetallicRoughness']['baseColorFactor'] ) tColor = tMaterialInfo['pbrMetallicRoughness']['baseColorFactor']
-					tColor = [(Math.random()), (Math.random()), (Math.random()), 1]
-					tMaterial = RedColorPhongMaterial(redGLTFLoader['redGL'],
-						RedGLUtil.rgb2hex(
-							tColor[0] * 255,
-							tColor[1] * 255,
-							tColor[2] * 255
-						),
-						tColor[3]
-					)
-				}
-			}
-			return tMaterial
-		}
 		makeMesh = function (redGLTFLoader, json, meshData) {
 			// console.log('parseMesh :')
 			// console.log(meshData)
@@ -917,10 +633,144 @@ var RedGLTFLoader;
 			if ( meshData['name'] ) tName = meshData['name']
 			var tMeshList = []
 			meshData['primitives'].forEach(function (v, index) {
+				var morphList = []
+				if ( v['targets'] ) {
+					v['targets'].forEach(function (v2) {
+						var tMorphData = {
+							vertices: [],
+							normals: [],
+							uvs: [],
+							weights: [],
+							joints: []
+						}
+						morphList.push(tMorphData)
+						console.log('morphList', morphList)
+						for ( var k in v2 ) {
+							var accessorIndex = v2[k]
+							var tAccessors = json['accessors'][accessorIndex]
+							var tBufferView = json['bufferViews'][tAccessors['bufferView']]
+							var tBufferIndex = tBufferView['buffer']
+							var tBuffer = json['buffers'][tBufferIndex]
+							var tBufferURIDataView;
+							if ( tBuffer['uri'] ) {
+								tBufferURIDataView = redGLTFLoader['uris']['buffers'][tBufferIndex]
+							}
+							// console.log('해당 bufferView 정보', tBufferView)
+							// console.log('바라볼 버퍼 인덱스', tBufferIndex)
+							// console.log('바라볼 버퍼', tBuffer)
+							// console.log('바라볼 버퍼데이터', tBufferURIDataView)
+							// console.log('바라볼 엑세서', tAccessors)
+							////////////////////////////
+							var i, len;
+							var tComponentType
+							var tMethod;
+							tComponentType = WEBGL_COMPONENT_TYPES[tAccessors['componentType']]
+							if ( tComponentType == Float32Array ) tMethod = 'getFloat32'
+							if ( tComponentType == Uint32Array ) tMethod = 'getUint32'
+							if ( tComponentType == Uint16Array ) tMethod = 'getUint16'
+							if ( tComponentType == Int16Array ) tMethod = 'getInt16'
+							if ( tComponentType == Uint8Array ) tMethod = 'getUint8'
+							if ( tComponentType == Int8Array ) tMethod = 'getInt8'
+							// console.log('tComponentType', tComponentType)
+							// console.log('tMethod', tMethod)
+							// console.log("tBufferView['byteOffset']", tBufferView['byteOffset'])
+							// console.log("tAccessors['byteOffset']", tAccessors['byteOffset'])
+							var tAccessorBufferOffset = tAccessors['byteOffset'] || 0
+							var tBufferViewByteStride = tBufferView['byteStride'] || 0
+							i = (tBufferView['byteOffset'] + tAccessorBufferOffset) / tComponentType['BYTES_PER_ELEMENT']
+							switch ( tAccessors['type'] ) {
+								case 'VEC4' :
+									if ( tBufferViewByteStride ) {
+										len = i + ( (tComponentType['BYTES_PER_ELEMENT']) * tAccessors['count']) / tComponentType['BYTES_PER_ELEMENT'] * 4 * (tBufferViewByteStride / 4 / tComponentType['BYTES_PER_ELEMENT'])
+										var aa = 0
+										for ( i; i < len; i++ ) {
+											if ( k == 'WEIGHTS_0' ) {
+												if ( aa % (tBufferViewByteStride / tComponentType['BYTES_PER_ELEMENT']) < 4 ) {
+													jointWeights.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+												}
+												aa++
+											} else if ( k == 'JOINTS_0' ) {
+												if ( aa % (tBufferViewByteStride / tComponentType['BYTES_PER_ELEMENT']) < 4 ) {
+													joints.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+												}
+												aa++
+												// console.log('어라안온다고????', aa, joints[joints.length - 1])
+											}
+										}
+										console.log('JOINTS_0 ', joints)
+									} else {
+										len = i + ( tComponentType['BYTES_PER_ELEMENT'] * tAccessors['count']) / tComponentType['BYTES_PER_ELEMENT'] * 4
+										for ( i; i < len; i++ ) {
+											if ( k == 'WEIGHTS_0' ) jointWeights.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+											else if ( k == 'JOINTS_0' ) joints.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+										}
+									}
+									break
+								case 'VEC3' :
+									if ( tBufferViewByteStride ) {
+										len = i + ( (tComponentType['BYTES_PER_ELEMENT']) * tAccessors['count']) / tComponentType['BYTES_PER_ELEMENT'] * 3 * (tBufferViewByteStride / 3 / tComponentType['BYTES_PER_ELEMENT'])
+										var aa = 0
+										for ( i; i < len; i++ ) {
+											if ( k == 'NORMAL' ) {
+												if ( aa % (tBufferViewByteStride / tComponentType['BYTES_PER_ELEMENT']) < 3 ) {
+													normals.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+												}
+												aa++
+											} else if ( k == 'POSITION' ) {
+												if ( aa % (tBufferViewByteStride / tComponentType['BYTES_PER_ELEMENT']) < 3 ) {
+													vertices.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+												}
+												aa++
+												// console.log('어라안온다고????', aa, joints[joints.length - 1])
+											}
+										}
+									} else {
+										len = i + ( tComponentType['BYTES_PER_ELEMENT'] * tAccessors['count']) / tComponentType['BYTES_PER_ELEMENT'] * 3
+										console.log(k, i, len)
+										for ( i; i < len; i++ ) {
+											if ( k == 'NORMAL' ) normals.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+											else if ( k == 'POSITION' ) vertices.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+										}
+										// console.log('인터리브 버퍼 데이터', vertices)
+									}
+									break
+								case 'VEC2' :
+									if ( tBufferViewByteStride ) {
+										len = i + ( (tComponentType['BYTES_PER_ELEMENT']) * tAccessors['count']) / tComponentType['BYTES_PER_ELEMENT'] * 2 * (tBufferViewByteStride / 2 / tComponentType['BYTES_PER_ELEMENT'])
+										var aa = 0
+										for ( i; i < len; i++ ) {
+											if ( k == 'TEXCOORD_0' ) {
+												if ( aa % (tBufferViewByteStride / tComponentType['BYTES_PER_ELEMENT']) < 2 ) {
+													if ( i % 2 == 0 ) uvs.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+													else uvs.push(-tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+												}
+												aa++
+											}
+										}
+									} else {
+										len = i + ( tComponentType['BYTES_PER_ELEMENT'] * tAccessors['count']) / tComponentType['BYTES_PER_ELEMENT'] * 2
+										// console.log(i, len)
+										for ( i; i < len; i++ ) {
+											if ( k == 'TEXCOORD_0' ) {
+												if ( i % 2 == 0 ) uvs.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+												else uvs.push(-tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+											}
+										}
+									}
+									// console.log('인터리브 버퍼 데이터', vertices)
+									break
+								default :
+									console.log('알수없는 형식 엑세서 타입', tAccessors['type'])
+									break
+							}
+							console.log('tAccessors', tAccessors)
+							if ( tAccessors['sparse'] ) parseSparse(redGLTFLoader, k, tAccessors, json, tMorphData['vertices'], tMorphData['normals'], tMorphData['uvs'])
+						}
+					})
+				}
 				var tMesh;
 				var tMaterial
 				var indices = []
-				// 어트리뷰트에서 파싱되는놈들
 				var vertices = []
 				var uvs = []
 				var normals = []
@@ -928,36 +778,273 @@ var RedGLTFLoader;
 				var joints = []
 				var tDrawMode;
 				// console.log(v, index)
-				// 형상 파싱
 				if ( v['attributes'] ) {
 					// console.log('TODO: 어트리뷰트 파싱')
-					for ( var key in v['attributes'] ) {
+					for ( var k in v['attributes'] ) {
 						// console.log(k, '파싱')
-						// 엑세서를 통해서 정보파악하고
-						var accessorIndex = v['attributes'][key];
-						var accessorInfo = new RedGLTF_AccessorInfo(redGLTFLoader, json, accessorIndex)
-						// 어트리뷰트 갈궈서 파악함
-						parseAttributeInfo(
-							redGLTFLoader, json, key, accessorInfo,
-							vertices, uvs, normals, jointWeights, joints
-						)
-						// 스파스 정보도 갈굼
-						if ( accessorInfo['accessor']['sparse'] ) parseSparse(redGLTFLoader, key, accessorInfo['accessor'], json, vertices, uvs, normals, jointWeights, joints)
+						// 버퍼뷰의 위치를 말하므로...이를 추적파싱항
+						var accessorIndex = v['attributes'][k]
+						var tAccessors = json['accessors'][accessorIndex]
+						var tBufferView = json['bufferViews'][tAccessors['bufferView']]
+						var tBufferIndex = tBufferView['buffer']
+						var tBuffer = json['buffers'][tBufferIndex]
+						var tBufferURIDataView;
+						if ( tBuffer['uri'] ) {
+							tBufferURIDataView = redGLTFLoader['uris']['buffers'][tBufferIndex]
+						}
+						// console.log('해당 bufferView 정보', tBufferView)
+						// console.log('바라볼 버퍼 인덱스', tBufferIndex)
+						// console.log('바라볼 버퍼', tBuffer)
+						console.log('바라볼 버퍼데이터', tBufferURIDataView)
+						// console.log('바라볼 엑세서', tAccessors)
+						////////////////////////////
+						var i, len;
+						var tComponentType
+						var tMethod;
+						tComponentType = WEBGL_COMPONENT_TYPES[tAccessors['componentType']]
+						if ( tComponentType == Float32Array ) tMethod = 'getFloat32'
+						if ( tComponentType == Uint32Array ) tMethod = 'getUint32'
+						if ( tComponentType == Uint16Array ) tMethod = 'getUint16'
+						if ( tComponentType == Int16Array ) tMethod = 'getInt16'
+						if ( tComponentType == Uint8Array ) tMethod = 'getUint8'
+						if ( tComponentType == Int8Array ) tMethod = 'getInt8'
+						// console.log('tComponentType', tComponentType)
+						// console.log('tMethod', tMethod)
+						// console.log("tBufferView['byteOffset']", tBufferView['byteOffset'])
+						// console.log("tAccessors['byteOffset']", tAccessors['byteOffset'])
+						var tAccessorBufferOffset = tAccessors['byteOffset'] || 0
+						var tBufferViewByteStride = tBufferView['byteStride'] || 0
+						console.log(k, 'tBufferViewByteStride', tBufferViewByteStride)
+						i = (tBufferView['byteOffset'] + tAccessorBufferOffset) / tComponentType['BYTES_PER_ELEMENT']
+						switch ( tAccessors['type'] ) {
+							case 'VEC4' :
+								if ( tBufferViewByteStride ) {
+									len = i + ( (tComponentType['BYTES_PER_ELEMENT']) * tAccessors['count']) / tComponentType['BYTES_PER_ELEMENT'] * 4 * (tBufferViewByteStride / 4 / tComponentType['BYTES_PER_ELEMENT'])
+									var aa = 0
+									for ( i; i < len; i++ ) {
+										if ( k == 'WEIGHTS_0' ) {
+											if ( aa % (tBufferViewByteStride / tComponentType['BYTES_PER_ELEMENT']) < 4 ) {
+												jointWeights.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+											}
+											aa++
+										} else if ( k == 'JOINTS_0' ) {
+											if ( aa % (tBufferViewByteStride / tComponentType['BYTES_PER_ELEMENT']) < 4 ) {
+												joints.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+											}
+											aa++
+											// console.log('어라안온다고????', aa, joints[joints.length - 1])
+										}
+									}
+									console.log('JOINTS_0 ', joints)
+								} else {
+									len = i + ( tComponentType['BYTES_PER_ELEMENT'] * tAccessors['count']) / tComponentType['BYTES_PER_ELEMENT'] * 4
+									for ( i; i < len; i++ ) {
+										if ( k == 'WEIGHTS_0' ) jointWeights.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+										else if ( k == 'JOINTS_0' ) joints.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+									}
+								}
+								break
+							case 'VEC3' :
+								if ( tBufferViewByteStride ) {
+									len = i + ( (tComponentType['BYTES_PER_ELEMENT']) * tAccessors['count']) / tComponentType['BYTES_PER_ELEMENT'] * 3 * (tBufferViewByteStride / 3 / tComponentType['BYTES_PER_ELEMENT'])
+									var aa = 0
+									for ( i; i < len; i++ ) {
+										if ( k == 'NORMAL' ) {
+											if ( aa % (tBufferViewByteStride / tComponentType['BYTES_PER_ELEMENT']) < 3 ) {
+												normals.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+											}
+											aa++
+										} else if ( k == 'POSITION' ) {
+											if ( aa % (tBufferViewByteStride / tComponentType['BYTES_PER_ELEMENT']) < 3 ) {
+												vertices.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+											}
+											aa++
+											// console.log('어라안온다고????', aa, joints[joints.length - 1])
+										}
+									}
+								} else {
+									len = i + ( tComponentType['BYTES_PER_ELEMENT'] * tAccessors['count']) / tComponentType['BYTES_PER_ELEMENT'] * 3
+									console.log(k, i, len)
+									for ( i; i < len; i++ ) {
+										if ( k == 'NORMAL' ) normals.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+										else if ( k == 'POSITION' ) vertices.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+									}
+									// console.log('인터리브 버퍼 데이터', vertices)
+								}
+								break
+							case 'VEC2' :
+								if ( tBufferViewByteStride ) {
+									len = i + ( (tComponentType['BYTES_PER_ELEMENT']) * tAccessors['count']) / tComponentType['BYTES_PER_ELEMENT'] * 2 * (tBufferViewByteStride / 2 / tComponentType['BYTES_PER_ELEMENT'])
+									var aa = 0
+									for ( i; i < len; i++ ) {
+										if ( k == 'TEXCOORD_0' ) {
+											if ( aa % (tBufferViewByteStride / tComponentType['BYTES_PER_ELEMENT']) < 2 ) {
+												if ( i % 2 == 0 ) uvs.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+												else uvs.push(-tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+											}
+											aa++
+										}
+									}
+								} else {
+									len = i + ( tComponentType['BYTES_PER_ELEMENT'] * tAccessors['count']) / tComponentType['BYTES_PER_ELEMENT'] * 2
+									// console.log(i, len)
+									for ( i; i < len; i++ ) {
+										if ( k == 'TEXCOORD_0' ) {
+											if ( i % 2 == 0 ) uvs.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+											else uvs.push(-tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+										}
+									}
+								}
+								// console.log('인터리브 버퍼 데이터', vertices)
+								break
+							default :
+								console.log('알수없는 형식 엑세서 타입', tAccessors['type'])
+								break
+						}
+						console.log('tAccessors', tAccessors)
+						if ( tAccessors['sparse'] ) parseSparse(redGLTFLoader, k, tAccessors, json, vertices, normals, uvs)
 					}
 				}
-				// 인덱스 파싱
 				if ( 'indices' in v ) {
 					// console.log('TODO: 인덱스 파싱')
 					// 버퍼뷰의 위치를 말하므로...이를 추적파싱항
 					var accessorIndex = v['indices']
-					var accessorInfo = new RedGLTF_AccessorInfo(redGLTFLoader, json, accessorIndex)
-					parseIndicesInfo(
-						redGLTFLoader, json, key, accessorInfo, indices
-					)
+					var tAccessors = json['accessors'][accessorIndex]
+					var tBufferView = json['bufferViews'][tAccessors['bufferView']]
+					var tBufferIndex = tBufferView['buffer']
+					var tBuffer = json['buffers'][tBufferIndex]
+					var tBufferURIDataView;
+					if ( tBuffer['uri'] ) {
+						tBufferURIDataView = redGLTFLoader['uris']['buffers'][tBufferIndex]
+					}
+					// console.log('해당 bufferView 정보', tBufferView)
+					// console.log('바라볼 버퍼 인덱스', tBufferIndex)
+					// console.log('바라볼 버퍼', tBuffer)
+					// console.log('바라볼 버퍼데이터', tBufferURIDataView)
+					// console.log('바라볼 엑세서', tAccessors)
+					////////////////////////////
+					var i, len
+					var tComponentType = WEBGL_COMPONENT_TYPES[tAccessors['componentType']]
+					var tMethod;
+					if ( tComponentType == Float32Array ) tMethod = 'getFloat32'
+					if ( tComponentType == Uint32Array ) tMethod = 'getUint32'
+					if ( tComponentType == Uint16Array ) tMethod = 'getUint16'
+					if ( tComponentType == Int16Array ) tMethod = 'getInt16'
+					if ( tComponentType == Uint8Array ) tMethod = 'getUint8'
+					if ( tComponentType == Int8Array ) tMethod = 'getInt8'
+					// console.log('tComponentType', tComponentType)
+					var tAccessorBufferOffset = tAccessors['byteOffset'] || 0
+					i = (tBufferView['byteOffset'] + tAccessorBufferOffset) / tComponentType['BYTES_PER_ELEMENT']
+					switch ( tAccessors['type'] ) {
+						case 'SCALAR' :
+							len = i + ( tComponentType['BYTES_PER_ELEMENT'] * tAccessors['count']) / tComponentType['BYTES_PER_ELEMENT']
+							// console.log(i, len)
+							for ( i; i < len; i++ ) {
+								indices.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+							}
+							// console.log('인덱스버퍼 데이터', indices)
+							break
+						default :
+							console.log('알수없는 형식 엑세서 타입', tAccessors)
+							break
+					}
 				}
-				// 재질파싱
-				tMaterial = parseMaterialInfo(redGLTFLoader, json, v)
-				// 모드 파싱
+				if ( 'material' in v ) {
+					var tIndex = v['material']
+					var tMaterialInfo = json['materials'][tIndex]
+					console.log('tMaterialInfo', tMaterialInfo)
+					if ( 'baseColorTexture' in tMaterialInfo['pbrMetallicRoughness'] ) {
+						var baseTextureIndex = tMaterialInfo['pbrMetallicRoughness']['baseColorTexture']['index']
+						var baseTextureInfo = json['textures'][baseTextureIndex]
+						var diffuseSourceIndex = baseTextureInfo['source']
+						diffseTexture = RedBitmapTexture(redGLTFLoader['redGL'], json['images'][diffuseSourceIndex]['uri'])
+						// var t0 = document.createElement('img')
+						// t0.src = json['images'][diffuseSourceIndex]['uri']
+						// t0.style.cssText = 'position:absolute;top:0px;left:0px;width:500px'
+						// document.body.appendChild(t0)
+					}
+					var diffseTexture, normalTexture, roughnessTexture, emissiveTexture, occlusionTexture;
+					if ( 'metallicRoughnessTexture' in tMaterialInfo['pbrMetallicRoughness'] ) {
+						var roughnessTextureIndex = tMaterialInfo['pbrMetallicRoughness']['metallicRoughnessTexture']['index']
+						var roughnessTextureInfo = json['textures'][roughnessTextureIndex]
+						var roughnessSourceIndex = roughnessTextureInfo['source']
+						roughnessTexture = RedBitmapTexture(redGLTFLoader['redGL'], json['images'][roughnessSourceIndex]['uri'])
+						// var t0 = document.createElement('img')
+						// t0.src = json['images'][roughnessSourceIndex]['uri']
+						// t0.style.cssText = 'position:absolute;top:0px;left:0px;width:500px'
+						// document.body.appendChild(t0)
+					}
+					var normalTextureIndex = tMaterialInfo['normalTexture']
+					if ( normalTextureIndex != undefined ) {
+						normalTextureIndex = normalTextureIndex['index']
+						var normalTextureInfo = json['textures'][normalTextureIndex]
+						var normalSourceIndex = normalTextureInfo['source']
+						normalTexture = RedBitmapTexture(redGLTFLoader['redGL'], json['images'][normalSourceIndex]['uri'])
+						// var t0 = document.createElement('img')
+						// t0.src = json['images'][normalSourceIndex]['uri']
+						// t0.style.cssText = 'position:absolute;top:0px;left:0px;width:500px'
+						// document.body.appendChild(t0)
+					}
+					var emissiveTextureIndex = tMaterialInfo['emissiveTexture']
+					if ( emissiveTextureIndex != undefined ) {
+						emissiveTextureIndex = emissiveTextureIndex['index']
+						var emissiveTextureInfo = json['textures'][emissiveTextureIndex]
+						var emissiveSourceIndex = emissiveTextureInfo['source']
+						emissiveTexture = RedBitmapTexture(redGLTFLoader['redGL'], json['images'][emissiveSourceIndex]['uri'])
+						// var t0 = document.createElement('img')
+						// t0.src = json['images'][emissiveSourceIndex]['uri']
+						// t0.style.cssText = 'position:absolute;top:0px;left:0px;width:500px'
+						// document.body.appendChild(t0)
+					}
+					var occlusionTextureIndex = tMaterialInfo['occlusionTexture']
+					if ( occlusionTextureIndex != undefined ) {
+						occlusionTextureIndex = occlusionTextureIndex['index']
+						var occlusionTextureInfo = json['textures'][occlusionTextureIndex]
+						var occlusionSourceIndex = occlusionTextureInfo['source']
+						occlusionTexture = RedBitmapTexture(redGLTFLoader['redGL'], json['images'][occlusionSourceIndex]['uri'])
+						// var t0 = document.createElement('img')
+						// t0.src = json['images'][occlusionSourceIndex]['uri']
+						// t0.style.cssText = 'position:absolute;top:0px;left:0px;width:500px'
+						// document.body.appendChild(t0)
+					}
+					var metallicFactor, roughnessFactor
+					if ( 'metallicFactor' in tMaterialInfo['pbrMetallicRoughness'] ) {
+						metallicFactor = tMaterialInfo['pbrMetallicRoughness']['metallicFactor']
+					}
+					if ( 'roughnessFactor' in tMaterialInfo['pbrMetallicRoughness'] ) {
+						roughnessFactor = tMaterialInfo['pbrMetallicRoughness']['roughnessFactor']
+					}
+					if ( diffseTexture ) {
+						var env = RedBitmapCubeTexture(redGLTFLoader['redGL'], [
+							'../asset/cubemap/SwedishRoyalCastle/px.jpg',
+							'../asset/cubemap/SwedishRoyalCastle/nx.jpg',
+							'../asset/cubemap/SwedishRoyalCastle/py.jpg',
+							'../asset/cubemap/SwedishRoyalCastle/ny.jpg',
+							'../asset/cubemap/SwedishRoyalCastle/pz.jpg',
+							'../asset/cubemap/SwedishRoyalCastle/nz.jpg'
+						])
+						// Type	Description	Required
+						// baseColorFactor	number [4]	The material's base color factor.	No, default: [1,1,1,1]
+						// baseColorTexture	object	The base color texture.	No
+						// metallicFactor	number	The metalness of the material.	No, default: 1
+						// roughnessFactor	number	The roughness of the material.	No, default: 1
+						// metallicRoughnessTexture	object	The metallic-roughness texture.	No
+						tMaterial = RedPBRMaterial(redGLTFLoader['redGL'], diffseTexture, env, normalTexture, occlusionTexture, emissiveTexture, roughnessTexture, null)
+						if ( !roughnessTexture ) tMaterial.metallicPower = metallicFactor;
+					} else {
+						var tColor
+						if ( tMaterialInfo['pbrMetallicRoughness'] && tMaterialInfo['pbrMetallicRoughness']['baseColorFactor'] ) tColor = tMaterialInfo['pbrMetallicRoughness']['baseColorFactor']
+						tColor = [(Math.random()), (Math.random()), (Math.random()), 1]
+						tMaterial = RedColorPhongMaterial(redGLTFLoader['redGL'],
+							RedGLUtil.rgb2hex(
+								tColor[0] * 255,
+								tColor[1] * 255,
+								tColor[2] * 255
+							),
+							tColor[3]
+						)
+					}
+				}
 				if ( 'mode' in v ) {
 					// 0 POINTS
 					// 1 LINES
@@ -991,8 +1078,6 @@ var RedGLTFLoader;
 							break
 					}
 				}
-				/////////////////////////////////////////////////////////
-				// 최종데이터 생산
 				var normalData
 				if ( normals.length ) normalData = normals
 				else normalData = RedGLUtil.calculateNormals(vertices, indices)
@@ -1008,8 +1093,6 @@ var RedGLTFLoader;
 					if ( joints.length ) interleaveData.push(joints[i * 4 + 0], joints[i * 4 + 1], joints[i * 4 + 2], joints[i * 4 + 3])
 				}
 				// console.log('interleaveData', interleaveData)
-				/////////////////////////////////////////////////////////
-				// 메쉬 생성
 				var tGeo
 				var tInterleaveInfoList = []
 				if ( vertices.length ) tInterleaveInfoList.push(RedInterleaveInfo('aVertexPosition', 3))
@@ -1033,17 +1116,15 @@ var RedGLTFLoader;
 						) : null
 				)
 				if ( !tMaterial ) tMaterial = RedColorPhongMaterial(redGLTFLoader['redGL'], RedGLUtil.rgb2hex(parseInt(Math.random() * 255), parseInt(Math.random() * 255), parseInt(Math.random() * 255)))
-				// console.log('tMaterial', tMaterial)
+				console.log('tMaterial', tMaterial)
 				tMesh = RedMesh(redGLTFLoader['redGL'], tGeo, tMaterial)
 				if ( tName ) tMesh.name = tName
 				if ( tDrawMode ) tMesh.drawMode = tDrawMode
 				else tMesh.drawMode = redGLTFLoader['redGL'].gl.TRIANGLES
 				if ( meshData['doubleSided'] ) tMesh.useCullFace = false
-				// console.log('tMesh', tMesh)
-				/////////////////////////////////////////////////////////
+				console.log('tMesh', tMesh)
 				// 모프리스트 설정
-				var morphInfo = new RedGLTF_MorphInfo(redGLTFLoader, json, v)
-				morphInfo['list'].forEach(function (v) {
+				morphList.forEach(function (v) {
 					var normalData
 					if ( v['normals'].length ) normalData = v['normals']
 					else normalData = RedGLUtil.calculateNormals(v['vertices'], indices)
@@ -1058,9 +1139,8 @@ var RedGLTFLoader;
 					}
 					v['interleaveData'] = interleaveData
 				});
-				tMesh['_morphInfo'] = morphInfo
-				tMesh['_morphInfo']['origin'] = new Float32Array(interleaveData)
-				console.log(morphInfo)
+				tMesh['_morphList'] = morphList
+				tMesh['_morphList']['origin'] = new Float32Array((interleaveData))
 				tMeshList.push(tMesh)
 				// console.log('vertices', vertices)
 				// console.log('normalData', normalData)
