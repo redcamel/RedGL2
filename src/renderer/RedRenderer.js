@@ -450,7 +450,7 @@ var RedRenderer;
 						}
 						else {
 							if ( scene['_useFog'] && tSprite3DYn ) tOptionProgramKey = 'fog_sprite3D'
-								//TODO: 스킨관련 추가해야함
+							//TODO: 스킨관련 추가해야함
 							else if ( tMesh['skinInfo'] ) tOptionProgramKey = 'skin'
 							else if ( tSprite3DYn ) tOptionProgramKey = 'sprite3D'
 							else if ( scene['_useFog'] ) tOptionProgramKey = 'fog'
@@ -684,7 +684,6 @@ var RedRenderer;
 				/////////////////////////////////////////////////////////////////////////
 				/////////////////////////////////////////////////////////////////////////
 				if ( tGeometry ) tGL.uniformMatrix4fv(tSystemUniformGroup['uMMatrix']['location'], false, tMVMatrix)
-
 				/*
 					1. 조인트를 물고있는 루트 메쉬의 전역 매트릭스의 역함수를 구한다.
 					2. 노드의 현재 전역 변환을 구한다라는데... 이게 조인트를 물고있는 루트부터인지.. 노드상의 루트인지 알아내야함.
@@ -732,32 +731,54 @@ var RedRenderer;
 					return self;
 				}
 				if ( tProgram && tSystemUniformGroup['uUseSkin']['location'] ) {
-					tGL.uniform1i(tSystemUniformGroup['uUseSkin']['location'], false)
-				}else{
-
+					tGL.uniform1i(tSystemUniformGroup['uUseSkin']['location'], false) //TODO: 이놈도 캐싱가능함
 				}
-
-
 				if ( tGeometry && tMesh['skinInfo'] ) {
-					if ( tSystemUniformGroup ) tGL.uniform1i(tSystemUniformGroup['uUseSkin']['location'], true)
-					var globalTransformOfNodeThatTheMeshIsAttachedTo
+					if ( tSystemUniformGroup ) tGL.uniform1i(tSystemUniformGroup['uUseSkin']['location'], true) //TODO: 이놈도 캐싱가능함
 					var globalTransformOfJointNode = []
-					var temp = mat4.create()
-					mat4.multiply(temp, temp, tMesh['matrix'])
-					var temp2 = mat4.create()
-					getInverse(temp2, temp)
-					globalTransformOfNodeThatTheMeshIsAttachedTo = temp2
-					var inverseBindMatrices = mat4.create()
-					var jointMatrix = mat4.create()
-					var index = 0, len = tMesh['skinInfo']['joints'].length
+					var joints = tMesh['skinInfo']['joints']
+					var index = 0, len = joints.length
+					var globalTransformOfNodeThatTheMeshIsAttachedTo = [
+						tMesh['matrix'][0],
+						tMesh['matrix'][1],
+						tMesh['matrix'][2],
+						tMesh['matrix'][3],
+						tMesh['matrix'][4],
+						tMesh['matrix'][5],
+						tMesh['matrix'][6],
+						tMesh['matrix'][7],
+						tMesh['matrix'][8],
+						tMesh['matrix'][9],
+						tMesh['matrix'][10],
+						tMesh['matrix'][11],
+						tMesh['matrix'][12],
+						tMesh['matrix'][13],
+						tMesh['matrix'][14],
+						tMesh['matrix'][15]
+					]
+					// 역구하고
+					getInverse(globalTransformOfNodeThatTheMeshIsAttachedTo, globalTransformOfNodeThatTheMeshIsAttachedTo)
+					// 글로벌 조인트 노드병합함
 					for ( index; index < len; index++ ) {
 						// 조인트 공간내에서의 전역
-						var result = mat4.create()
-						jointMatrix = mat4.create()
-						mat4.multiply(jointMatrix, jointMatrix, tMesh['skinInfo']['joints'][index]['matrix'])
-						globalTransformOfJointNode = globalTransformOfJointNode.concat(Array.prototype.slice.call(jointMatrix))
+						globalTransformOfJointNode[index * 16 + 0] = joints[index]['matrix'][0]
+						globalTransformOfJointNode[index * 16 + 1] = joints[index]['matrix'][1]
+						globalTransformOfJointNode[index * 16 + 2] = joints[index]['matrix'][2]
+						globalTransformOfJointNode[index * 16 + 3] = joints[index]['matrix'][3]
+						globalTransformOfJointNode[index * 16 + 4] = joints[index]['matrix'][4]
+						globalTransformOfJointNode[index * 16 + 5] = joints[index]['matrix'][5]
+						globalTransformOfJointNode[index * 16 + 6] = joints[index]['matrix'][6]
+						globalTransformOfJointNode[index * 16 + 7] = joints[index]['matrix'][7]
+						globalTransformOfJointNode[index * 16 + 8] = joints[index]['matrix'][8]
+						globalTransformOfJointNode[index * 16 + 9] = joints[index]['matrix'][9]
+						globalTransformOfJointNode[index * 16 + 10] = joints[index]['matrix'][10]
+						globalTransformOfJointNode[index * 16 + 11] = joints[index]['matrix'][11]
+						globalTransformOfJointNode[index * 16 + 12] = joints[index]['matrix'][12]
+						globalTransformOfJointNode[index * 16 + 13] = joints[index]['matrix'][13]
+						globalTransformOfJointNode[index * 16 + 14] = joints[index]['matrix'][14]
+						globalTransformOfJointNode[index * 16 + 15] = joints[index]['matrix'][15]
 					}
-					// tGL.uniformMatrix4fv(tSystemUniformGroup['uGlobalTransformOfNodeThatTheMeshIsAttachedTo']['location'], false, globalTransformOfNodeThatTheMeshIsAttachedTo)
+					//TODO: 여기 캐싱할 방법 찾아야함
 					tGL.uniformMatrix4fv(tSystemUniformGroup['uGlobalTransformOfNodeThatTheMeshIsAttachedTo']['location'], false, globalTransformOfNodeThatTheMeshIsAttachedTo)
 					tGL.uniformMatrix4fv(tSystemUniformGroup['uJointMatrix']['location'], false, globalTransformOfJointNode)
 					tGL.uniformMatrix4fv(tSystemUniformGroup['uInverseBindMatrixForJoint']['location'], false, tMesh['skinInfo']['inverseBindMatrices'])
