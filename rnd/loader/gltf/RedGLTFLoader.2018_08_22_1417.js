@@ -134,8 +134,11 @@ var RedGLTFLoader;
 				targetAnimationData.forEach(function (aniData) {
 					currentTime = ((time - v['startTime']) % (targetAnimationData['maxTime'] * 1000)) / 1000
 					// console.log(currentTime,aniData['minTime'] )
+					if ( aniData['_cacheKey'] == undefined ) aniData['_cacheKey'] = 0
+					if ( aniData['_cacheTime'] == undefined ) aniData['_cacheTime'] = 0
 					var target = aniData['target']
 					var nextIndex, prevIndex
+					var tPercent;
 					prevIndex = aniData['time'].length - 1
 					nextIndex = 0
 					previousTime = aniData['time'][prevIndex]
@@ -173,35 +176,37 @@ var RedGLTFLoader;
 							break
 						}
 					}
+					var range = nextTime - previousTime;
+					var percent = range === 0 ? 0 : (currentTime - previousTime) / range;
 					if ( aniData['key'] == 'rotation' ) {
-						// var rotationMTX = mat4.create()
-						// var tRotation = [0, 0, 0]
+						var rotationMTX = mat4.create()
+						var tRotation = [0, 0, 0]
 						var tQuaternion = [
 							aniData['data'][nextIndex * 4],
 							aniData['data'][nextIndex * 4 + 1],
 							aniData['data'][nextIndex * 4 + 2],
 							aniData['data'][nextIndex * 4 + 3]
 						]
-						// RedGLUtil.quaternionToRotationMat4(tQuaternion, rotationMTX)
-						// RedGLUtil.mat4ToEuler(rotationMTX, tRotation)
-						// tRotation[0] = -(tRotation[0] * 180 / Math.PI)
-						// tRotation[1] = -(tRotation[1] * 180 / Math.PI)
-						// tRotation[2] = -(tRotation[2] * 180 / Math.PI)
+						RedGLUtil.quaternionToRotationMat4(tQuaternion, rotationMTX)
+						RedGLUtil.mat4ToEuler(rotationMTX, tRotation)
+						tRotation[0] = -(tRotation[0] * 180 / Math.PI)
+						tRotation[1] = -(tRotation[1] * 180 / Math.PI)
+						tRotation[2] = -(tRotation[2] * 180 / Math.PI)
 						nextRotation = tQuaternion
 						//
-						// var rotationMTX = mat4.create()
-						// var tRotation = [0, 0, 0]
+						var rotationMTX = mat4.create()
+						var tRotation = [0, 0, 0]
 						var tQuaternion = [
 							aniData['data'][prevIndex * 4],
 							aniData['data'][prevIndex * 4 + 1],
 							aniData['data'][prevIndex * 4 + 2],
 							aniData['data'][prevIndex * 4 + 3]
 						]
-						// RedGLUtil.quaternionToRotationMat4(tQuaternion, rotationMTX)
-						// RedGLUtil.mat4ToEuler(rotationMTX, tRotation)
-						// tRotation[0] = -(tRotation[0] * 180 / Math.PI)
-						// tRotation[1] = -(tRotation[1] * 180 / Math.PI)
-						// tRotation[2] = -(tRotation[2] * 180 / Math.PI)
+						RedGLUtil.quaternionToRotationMat4(tQuaternion, rotationMTX)
+						RedGLUtil.mat4ToEuler(rotationMTX, tRotation)
+						tRotation[0] = -(tRotation[0] * 180 / Math.PI)
+						tRotation[1] = -(tRotation[1] * 180 / Math.PI)
+						tRotation[2] = -(tRotation[2] * 180 / Math.PI)
 						prevRotation = tQuaternion
 					}
 					if ( aniData['key'] == 'translation' ) {
@@ -237,25 +242,18 @@ var RedGLTFLoader;
 							// console.log(target.y)
 						}
 						if ( aniData['key'] == 'rotation' ) {
-							var tQuat = []
-							// quat lerp start
-							var ax = prevRotation[0];
-							var ay = prevRotation[1];
-							var az = prevRotation[2];
-							var aw = prevRotation[3];
-							tQuat[0] = ax + interpolationValue * (nextRotation[0] - ax);
-							tQuat[1] = ay + interpolationValue * (nextRotation[1] - ay);
-							tQuat[2] = az + interpolationValue * (nextRotation[2] - az);
-							tQuat[3] = aw + interpolationValue * (nextRotation[3] - aw);
-							// quat lerp end
-							// quat.lerp(tt, prevRotation, nextRotation, interpolationValue)
-							var rotationMTX = []
+							var tt = quat.create()
+							quat.lerp(tt,prevRotation, nextRotation, percent)
+
+							var rotationMTX = mat4.create()
 							var tRotation = [0, 0, 0]
-							RedGLUtil.quaternionToRotationMat4(tQuat, rotationMTX)
+
+							RedGLUtil.quaternionToRotationMat4(tt, rotationMTX)
 							RedGLUtil.mat4ToEuler(rotationMTX, tRotation)
 							tRotation[0] = -(tRotation[0] * 180 / Math.PI)
 							tRotation[1] = -(tRotation[1] * 180 / Math.PI)
 							tRotation[2] = -(tRotation[2] * 180 / Math.PI)
+
 							target.rotationX = tRotation[0]
 							target.rotationY = tRotation[1]
 							target.rotationZ = tRotation[2]
@@ -419,13 +417,12 @@ var RedGLTFLoader;
 					target.rotationZ = -(tRotation[2] * 180 / Math.PI)
 				}
 				if ( 'translation' in info ) {
-					// 위치 
+					// 위치 쿼터니언으로 들어온다.
 					target.x = info['translation'][0];
 					target.y = info['translation'][1];
 					target.z = info['translation'][2];
 				}
 				if ( 'scale' in info ) {
-					// 스케일
 					target.scaleX = info['scale'][0];
 					target.scaleY = info['scale'][1];
 					target.scaleZ = info['scale'][2];
@@ -441,10 +438,8 @@ var RedGLTFLoader;
 			info['joints'].forEach(function (v) {
 				console.log(json['nodes'][v])
 				skinInfo['joints'].push(json['nodes'][v]['RedMesh'])
-				json['nodes'][v]['RedMesh'].geometry = RedSphere(redGLTFLoader['redGL'], 0.05, 3, 3, 3)
+				json['nodes'][v]['RedMesh'].geometry = RedSphere(redGLTFLoader['redGL'], 0.05)
 				json['nodes'][v]['RedMesh'].material = RedColorMaterial(redGLTFLoader['redGL'])
-				json['nodes'][v]['RedMesh'].drawMode = redGLTFLoader['redGL'].gl.LINE_LOOP
-				json['nodes'][v]['RedMesh'].depthTestFunc = redGLTFLoader['redGL'].gl.ALWAYS
 			})
 			if ( info['skeleton'] ) skinInfo['skeleton'] = json['nodes'][info['skeleton']]['RedMesh']
 			var accessorIndex = info['inverseBindMatrices']
