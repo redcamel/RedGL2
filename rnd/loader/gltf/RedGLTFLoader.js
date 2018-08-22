@@ -89,6 +89,7 @@ var RedGLTFLoader;
 		this['redGL'] = redGL;
 		this['groups'] = []
 		this['skins'] = []
+		this['textures'] = {}
 		this['animations'] = [];
 		this['aniTick'] = null
 		this['path'] = path;
@@ -686,7 +687,7 @@ var RedGLTFLoader;
 							if ( strideIndex % stridePerElement < 4 ) {
 								if ( key == 'WEIGHTS_0' ) jointWeights.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
 								else if ( key == 'JOINTS_0' ) joints.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-								else RedGLUtil.throwFunc('VEC4에서 현재 지원하고 있지 않는 키', key)
+								// else RedGLUtil.throwFunc('VEC4에서 현재 지원하고 있지 않는 키', key)
 							}
 							strideIndex++
 						}
@@ -814,7 +815,9 @@ var RedGLTFLoader;
 					var baseTextureIndex = tMaterialInfo['pbrMetallicRoughness']['baseColorTexture']['index']
 					var baseTextureInfo = json['textures'][baseTextureIndex]
 					var diffuseSourceIndex = baseTextureInfo['source']
-					diffseTexture = RedBitmapTexture(redGLTFLoader['redGL'], redGLTFLoader['path'] + json['images'][diffuseSourceIndex]['uri'])
+					var tURL = (json['images'][diffuseSourceIndex]['uri'].indexOf(';base64,')>-1 ? '' : redGLTFLoader['path']) + json['images'][diffuseSourceIndex]['uri']
+					if ( redGLTFLoader[diffuseSourceIndex] ) diffseTexture = redGLTFLoader[diffuseSourceIndex]
+					else diffseTexture = redGLTFLoader[diffuseSourceIndex] = RedBitmapTexture(redGLTFLoader['redGL'], tURL)
 					// var t0 = document.createElement('img')
 					// t0.src = json['images'][diffuseSourceIndex]['uri']
 					// t0.style.cssText = 'position:absolute;top:0px;left:0px;width:500px'
@@ -825,7 +828,11 @@ var RedGLTFLoader;
 					var roughnessTextureIndex = tMaterialInfo['pbrMetallicRoughness']['metallicRoughnessTexture']['index']
 					var roughnessTextureInfo = json['textures'][roughnessTextureIndex]
 					var roughnessSourceIndex = roughnessTextureInfo['source']
-					roughnessTexture = RedBitmapTexture(redGLTFLoader['redGL'], redGLTFLoader['path'] + json['images'][roughnessSourceIndex]['uri'])
+
+					var tURL = (json['images'][diffuseSourceIndex]['uri'].indexOf(';base64,')>-1 ? '' : redGLTFLoader['path']) + json['images'][roughnessSourceIndex]['uri']
+					if ( redGLTFLoader['textures'][roughnessSourceIndex] ) roughnessTexture = redGLTFLoader['textures'][roughnessSourceIndex]
+					else roughnessTexture = redGLTFLoader['textures'][roughnessSourceIndex] = RedBitmapTexture(redGLTFLoader['redGL'], tURL)
+
 					// var t0 = document.createElement('img')
 					// t0.src = json['images'][roughnessSourceIndex]['uri']
 					// t0.style.cssText = 'position:absolute;top:0px;left:0px;width:500px'
@@ -836,7 +843,11 @@ var RedGLTFLoader;
 					normalTextureIndex = normalTextureIndex['index']
 					var normalTextureInfo = json['textures'][normalTextureIndex]
 					var normalSourceIndex = normalTextureInfo['source']
-					normalTexture = RedBitmapTexture(redGLTFLoader['redGL'], redGLTFLoader['path'] + json['images'][normalSourceIndex]['uri'])
+
+					var tURL = (json['images'][diffuseSourceIndex]['uri'].indexOf(';base64,')>-1 ? '' : redGLTFLoader['path'])+ json['images'][normalSourceIndex]['uri']
+					if ( redGLTFLoader['textures'][normalSourceIndex] ) normalTexture = redGLTFLoader['textures'][normalSourceIndex]
+					else normalTexture = redGLTFLoader['textures'][normalSourceIndex] = RedBitmapTexture(redGLTFLoader['redGL'], tURL)
+
 					// var t0 = document.createElement('img')
 					// t0.src = json['images'][normalSourceIndex]['uri']
 					// t0.style.cssText = 'position:absolute;top:0px;left:0px;width:500px'
@@ -847,7 +858,11 @@ var RedGLTFLoader;
 					emissiveTextureIndex = emissiveTextureIndex['index']
 					var emissiveTextureInfo = json['textures'][emissiveTextureIndex]
 					var emissiveSourceIndex = emissiveTextureInfo['source']
-					emissiveTexture = RedBitmapTexture(redGLTFLoader['redGL'],redGLTFLoader['path'] +  json['images'][emissiveSourceIndex]['uri'])
+
+					var tURL = (json['images'][diffuseSourceIndex]['uri'].indexOf(';base64,')>-1 ? '' : redGLTFLoader['path']) + json['images'][emissiveSourceIndex]['uri']
+					if ( redGLTFLoader['textures'][emissiveSourceIndex] ) emissiveTexture = redGLTFLoader['textures'][emissiveSourceIndex]
+					else emissiveTexture = redGLTFLoader['textures'][emissiveSourceIndex] = RedBitmapTexture(redGLTFLoader['redGL'], tURL)
+
 					// var t0 = document.createElement('img')
 					// t0.src = json['images'][emissiveSourceIndex]['uri']
 					// t0.style.cssText = 'position:absolute;top:0px;left:0px;width:500px'
@@ -858,7 +873,11 @@ var RedGLTFLoader;
 					occlusionTextureIndex = occlusionTextureIndex['index']
 					var occlusionTextureInfo = json['textures'][occlusionTextureIndex]
 					var occlusionSourceIndex = occlusionTextureInfo['source']
-					occlusionTexture = RedBitmapTexture(redGLTFLoader['redGL'], redGLTFLoader['path'] + json['images'][occlusionSourceIndex]['uri'])
+
+					var tURL = (json['images'][diffuseSourceIndex]['uri'].indexOf(';base64,')>-1 ? '' : redGLTFLoader['path']) + json['images'][occlusionSourceIndex]['uri']
+					if ( redGLTFLoader['textures'][occlusionSourceIndex] ) occlusionTexture = redGLTFLoader['textures'][occlusionSourceIndex]
+					else occlusionTexture = redGLTFLoader['textures'][occlusionSourceIndex] = RedBitmapTexture(redGLTFLoader['redGL'], tURL)
+
 					// var t0 = document.createElement('img')
 					// t0.src = json['images'][occlusionSourceIndex]['uri']
 					// t0.style.cssText = 'position:absolute;top:0px;left:0px;width:500px'
