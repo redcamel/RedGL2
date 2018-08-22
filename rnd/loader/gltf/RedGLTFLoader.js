@@ -134,8 +134,11 @@ var RedGLTFLoader;
 				targetAnimationData.forEach(function (aniData) {
 					currentTime = ((time - v['startTime']) % (targetAnimationData['maxTime'] * 1000)) / 1000
 					// console.log(currentTime,aniData['minTime'] )
+					if ( aniData['_cacheKey'] == undefined ) aniData['_cacheKey'] = 0
+					if ( aniData['_cacheTime'] == undefined ) aniData['_cacheTime'] = 0
 					var target = aniData['target']
 					var nextIndex, prevIndex
+					var tPercent;
 					prevIndex = aniData['time'].length - 1
 					nextIndex = 0
 					previousTime = aniData['time'][prevIndex]
@@ -148,15 +151,15 @@ var RedGLTFLoader;
 						if ( tTime < currentTime ) {
 							prevIndex = index
 							previousTime = aniData['time'][prevIndex]
-							if ( aniData['time'][index + 1] == undefined ) {
+							if ( aniData['time'][prevIndex + 1] == undefined ) {
 								nextIndex = 0
 								nextTime = aniData['time'][nextIndex]
 							} else {
-								nextIndex = index + 1
+								nextIndex = prevIndex + 1
 								nextTime = aniData['time'][nextIndex]
 							}
 						}
-						if ( index == 0 && (currentTime < tTime) ) {
+						if ( index == 0 && (currentTime < aniData['time'][i]) ) {
 							prevIndex = len - 1
 							previousTime = aniData['time'][prevIndex]
 							nextIndex = index
@@ -173,6 +176,8 @@ var RedGLTFLoader;
 							break
 						}
 					}
+					var range = nextTime - previousTime;
+					var percent = range === 0 ? 0 : (currentTime - previousTime) / range;
 					if ( aniData['key'] == 'rotation' ) {
 						var rotationMTX = mat4.create()
 						var tRotation = [0, 0, 0]
@@ -187,10 +192,11 @@ var RedGLTFLoader;
 						tRotation[0] = -(tRotation[0] * 180 / Math.PI)
 						tRotation[1] = -(tRotation[1] * 180 / Math.PI)
 						tRotation[2] = -(tRotation[2] * 180 / Math.PI)
-						nextRotation = tRotation
+						nextRotation = tQuaternion
 						//
+						var rotationMTX = mat4.create()
 						var tRotation = [0, 0, 0]
-						tQuaternion = [
+						var tQuaternion = [
 							aniData['data'][prevIndex * 4],
 							aniData['data'][prevIndex * 4 + 1],
 							aniData['data'][prevIndex * 4 + 2],
@@ -201,7 +207,7 @@ var RedGLTFLoader;
 						tRotation[0] = -(tRotation[0] * 180 / Math.PI)
 						tRotation[1] = -(tRotation[1] * 180 / Math.PI)
 						tRotation[2] = -(tRotation[2] * 180 / Math.PI)
-						prevRotation = tRotation
+						prevRotation = tQuaternion
 					}
 					if ( aniData['key'] == 'translation' ) {
 						nextTranslation = [
@@ -236,9 +242,23 @@ var RedGLTFLoader;
 							// console.log(target.y)
 						}
 						if ( aniData['key'] == 'rotation' ) {
-							target.rotationX = prevRotation[0] + interpolationValue * (nextRotation[0] - prevRotation[0])
-							target.rotationY = prevRotation[1] + interpolationValue * (nextRotation[1] - prevRotation[1])
-							target.rotationZ = prevRotation[2] + interpolationValue * (nextRotation[2] - prevRotation[2])
+							var tt = quat.create()
+							quat.lerp(tt,prevRotation, nextRotation, percent)
+
+							var rotationMTX = mat4.create()
+							var tRotation = [0, 0, 0]
+
+							RedGLUtil.quaternionToRotationMat4(tt, rotationMTX)
+							RedGLUtil.mat4ToEuler(rotationMTX, tRotation)
+							tRotation[0] = -(tRotation[0] * 180 / Math.PI)
+							tRotation[1] = -(tRotation[1] * 180 / Math.PI)
+							tRotation[2] = -(tRotation[2] * 180 / Math.PI)
+
+							target.rotationX = tRotation[0]
+							target.rotationY = tRotation[1]
+							target.rotationZ = tRotation[2]
+							// console.log(prevIndex, nextIndex)
+							// console.log(parseInt(prevRotation[2]), parseInt(nextRotation[2]))
 							// console.log(target.rotationX ,target.rotationY ,target.rotationZ )
 						}
 						if ( aniData['key'] == 'scale' ) {
@@ -421,8 +441,7 @@ var RedGLTFLoader;
 				json['nodes'][v]['RedMesh'].geometry = RedSphere(redGLTFLoader['redGL'], 0.05)
 				json['nodes'][v]['RedMesh'].material = RedColorMaterial(redGLTFLoader['redGL'])
 			})
-			if(info['skeleton']) skinInfo['skeleton'] = json['nodes'][info['skeleton']]['RedMesh']
-
+			if ( info['skeleton'] ) skinInfo['skeleton'] = json['nodes'][info['skeleton']]['RedMesh']
 			var accessorIndex = info['inverseBindMatrices']
 			var tAccessors = json['accessors'][accessorIndex]
 			var tBufferView = json['bufferViews'][tAccessors['bufferView']]
@@ -723,7 +742,7 @@ var RedGLTFLoader;
 												aa++
 											}
 										}
-									}else{
+									} else {
 										len = i + ( tComponentType['BYTES_PER_ELEMENT'] * tAccessors['count']) / tComponentType['BYTES_PER_ELEMENT'] * 2
 										// console.log(i, len)
 										for ( i; i < len; i++ ) {
@@ -861,7 +880,7 @@ var RedGLTFLoader;
 											aa++
 										}
 									}
-								}else{
+								} else {
 									len = i + ( tComponentType['BYTES_PER_ELEMENT'] * tAccessors['count']) / tComponentType['BYTES_PER_ELEMENT'] * 2
 									// console.log(i, len)
 									for ( i; i < len; i++ ) {
@@ -871,7 +890,6 @@ var RedGLTFLoader;
 										}
 									}
 								}
-
 								// console.log('인터리브 버퍼 데이터', vertices)
 								break
 							default :
@@ -1086,11 +1104,11 @@ var RedGLTFLoader;
 						tInterleaveInfoList
 					),
 					indices.length ? RedBuffer(
-						redGLTFLoader['redGL'],
-						'testGLTF_indexBuffer_' + RedGL.makeUUID(),
-						RedBuffer.ELEMENT_ARRAY_BUFFER,
-						new Uint16Array(indices)
-					) : null
+							redGLTFLoader['redGL'],
+							'testGLTF_indexBuffer_' + RedGL.makeUUID(),
+							RedBuffer.ELEMENT_ARRAY_BUFFER,
+							new Uint16Array(indices)
+						) : null
 				)
 				if ( !tMaterial ) tMaterial = RedColorPhongMaterial(redGLTFLoader['redGL'], RedGLUtil.rgb2hex(parseInt(Math.random() * 255), parseInt(Math.random() * 255), parseInt(Math.random() * 255)))
 				console.log('tMaterial', tMaterial)
