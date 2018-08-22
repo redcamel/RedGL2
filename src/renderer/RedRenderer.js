@@ -450,6 +450,7 @@ var RedRenderer;
 						}
 						else {
 							if ( scene['_useFog'] && tSprite3DYn ) tOptionProgramKey = 'fog_sprite3D'
+								//TODO: 스킨관련 추가해야함
 							else if ( tMesh['skinInfo'] ) tOptionProgramKey = 'skin'
 							else if ( tSprite3DYn ) tOptionProgramKey = 'sprite3D'
 							else if ( scene['_useFog'] ) tOptionProgramKey = 'fog'
