@@ -203,6 +203,7 @@
 			console.log('호잇!', v)
 			tScene3D.addChild(t1 =v['resultMesh'])
 			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 10
+			 v['resultMesh'].x = -70
 			v['resultMesh'].y = 10
 		})
 		RedGLTFLoader(self, '../asset/glTF/Sponza/glTF/', 'Sponza.gltf', function (v) {
@@ -214,14 +215,16 @@
 			console.log('호잇!', v)
 			tScene3D.addChild(t2 = v['resultMesh'])
 			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 10
-			v['resultMesh'].x = -30
+
+			v['resultMesh'].z = -30
 			v['resultMesh'].y = 10
 		})
 		RedGLTFLoader(self, '../asset/glTF/FlightHelmet/glTF/', 'FlightHelmet.gltf', function (v) {
 			console.log('호잇!', v)
 			tScene3D.addChild(t2 = v['resultMesh'])
 			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 40
-			v['resultMesh'].x = 30
+
+			v['resultMesh'].z = 30
 			v['resultMesh'].y = 20
 
 		})
@@ -230,9 +233,14 @@
 			tScene3D.addChild(t2 = v['resultMesh'])
 			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 1
 			v['resultMesh'].z = 10
-
-
 		})
+		RedGLTFLoader(self, '../asset/glTF/busterDrone/', 'busterDrone.gltf', function (v) {
+			console.log('호잇!', v)
+			tScene3D.addChild(t2 = v['resultMesh'])
+			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 30
+			v['resultMesh'].y = 30
+		})
+
 //		RedGLTFLoader(self, '../asset/glTF/BarramundiFish/glTF/', 'BarramundiFish.gltf', function (v) {
 //			console.log('호잇!', v)
 //			tScene3D.addChild(t2 = v['resultMesh'])
