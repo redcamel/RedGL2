@@ -202,6 +202,12 @@
 			tScene3D.addChild(v['resultMesh'])
 			v['resultMesh'].x = -1.5
 		});
+	    RedGLTFLoader(self, '../asset/glTF/basic/', 'CesiumMilkTruck.gltf', function (v) {
+			console.log('호잇!', v)
+			tScene3D.addChild(v['resultMesh'])
+			v['resultMesh'].z = -3
+		});
+
 		var t1 =RedGLTFLoader(self, '../asset/glTF/basic/', 'RiggedFigure.gltf', function (v) {
 			console.log('호잇!', v)
 			tScene3D.addChild(v['resultMesh'])

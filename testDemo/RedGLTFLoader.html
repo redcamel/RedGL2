@@ -211,6 +211,15 @@
 			console.log('호잇!', v)
 			tScene3D.addChild(v['resultMesh'])
 			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 40
+
+			RedGLTFLoader(self, '../asset/glTF/basic/', 'CesiumMilkTruck.gltf', function (v) {
+				console.log('호잇!', v)
+				tScene3D.addChild(v['resultMesh'])
+
+				v['resultMesh'].x = -350
+				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 50
+			});
+
 			RedGLTFLoader(self, '../asset/glTF/basic/', 'BoxTextured.gltf', function (v) {
 				console.log('호잇!', v)
 				tScene3D.addChild(v['resultMesh'])
