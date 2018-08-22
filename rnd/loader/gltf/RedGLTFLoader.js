@@ -298,7 +298,7 @@ var RedGLTFLoader;
 		var getBufferResources;
 		var parseScene;
 		var makeMesh;
-		var parseAnimation;
+		var parseAnimations;
 		var parseNode;
 		var checkTRSAndMATRIX;
 		/*
@@ -438,62 +438,56 @@ var RedGLTFLoader;
 				joints: [],
 				inverseBindMatrices: []
 			}
+			var nodes = json['nodes']
 			info['joints'].forEach(function (v) {
-				console.log(json['nodes'][v])
-				skinInfo['joints'].push(json['nodes'][v]['RedMesh'])
-				json['nodes'][v]['RedMesh'].geometry = RedSphere(redGLTFLoader['redGL'], 0.05, 3, 3, 3)
-				json['nodes'][v]['RedMesh'].material = RedColorMaterial(redGLTFLoader['redGL'])
-				json['nodes'][v]['RedMesh'].drawMode = redGLTFLoader['redGL'].gl.LINE_LOOP
-				json['nodes'][v]['RedMesh'].depthTestFunc = redGLTFLoader['redGL'].gl.ALWAYS
+				// console.log(json['nodes'][v])
+				var tJointMesh = nodes[v]['RedMesh']
+				skinInfo['joints'].push(tJointMesh)
+				tJointMesh.geometry = RedSphere(redGLTFLoader['redGL'], 0.05, 3, 3, 3)
+				tJointMesh.material = RedColorMaterial(redGLTFLoader['redGL'])
+				tJointMesh.drawMode = redGLTFLoader['redGL'].gl.LINE_LOOP
+				tJointMesh.depthTestFunc = redGLTFLoader['redGL'].gl.ALWAYS
 			})
+			// 스켈레톤 정보가 있으면 정보와 메쉬를 연결해둔다.
 			if ( info['skeleton'] ) skinInfo['skeleton'] = json['nodes'][info['skeleton']]['RedMesh']
+			// 액세서 구하고..
+			// 정보 파싱한다.
 			var accessorIndex = info['inverseBindMatrices']
-			var tAccessors = json['accessors'][accessorIndex]
-			var tBufferView = json['bufferViews'][tAccessors['bufferView']]
-			var tBufferIndex = tBufferView['buffer']
-			var tBuffer = json['buffers'][tBufferIndex]
-			var tBufferURIDataView;
-			if ( tBuffer['uri'] ) {
-				tBufferURIDataView = redGLTFLoader['uris']['buffers'][tBufferIndex]
-			}
-			// console.log('해당 bufferView 정보', tBufferView)
-			// console.log('바라볼 버퍼 인덱스', tBufferIndex)
-			// console.log('바라볼 버퍼', tBuffer)
-			// console.log('바라볼 버퍼데이터', tBufferURIDataView)
-			// console.log('바라볼 엑세서', tAccessors)
-			////////////////////////////
-			var i, len;
-			var tComponentType
-			var tMethod;
-			tComponentType = WEBGL_COMPONENT_TYPES[tAccessors['componentType']]
-			if ( tComponentType == Float32Array ) tMethod = 'getFloat32'
-			if ( tComponentType == Uint32Array ) tMethod = 'getUint32'
-			if ( tComponentType == Uint16Array ) tMethod = 'getUint16'
-			if ( tComponentType == Int16Array ) tMethod = 'getInt16'
-			if ( tComponentType == Uint8Array ) tMethod = 'getUint8'
-			if ( tComponentType == Int8Array ) tMethod = 'getInt8'
-			// console.log('tComponentType', tComponentType)
-			// console.log('tMethod', tMethod)
-			// console.log("tBufferView['byteOffset']", tBufferView['byteOffset'])
-			// console.log("tAccessors['byteOffset']", tAccessors['byteOffset'])
-			var tAccessorBufferOffset = tAccessors['byteOffset'] || 0
-			i = (tBufferView['byteOffset'] + tAccessorBufferOffset) / tComponentType['BYTES_PER_ELEMENT']
-			switch ( tAccessors['type'] ) {
+			var accessorInfo = new RedGLTF_AccessorInfo(redGLTFLoader, json, accessorIndex)
+			var tBYTES_PER_ELEMENT = accessorInfo['componentType_BYTES_PER_ELEMENT'];
+			var tBufferViewByteStride = accessorInfo['bufferViewByteStride'];
+			var tBufferURIDataView = accessorInfo['bufferURIDataView'];
+			var tGetMethod = accessorInfo['getMethod'];
+			var tType = accessorInfo['accessor']['type'];
+			var tCount = accessorInfo['accessor']['count'];
+			var strideIndex = 0;
+			var stridePerElement = tBufferViewByteStride / tBYTES_PER_ELEMENT
+			var i = accessorInfo['startIndex']
+			var len
+			switch ( tType ) {
 				case 'MAT4' :
-					len = i + ( tComponentType['BYTES_PER_ELEMENT'] * tAccessors['count']) / tComponentType['BYTES_PER_ELEMENT'] * 16
-					console.log('inverseBindMatrices', i, len)
-					for ( i; i < len; i++ ) {
-						skinInfo['inverseBindMatrices'].push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+					if ( tBufferViewByteStride ) {
+						len = i + tCount * (tBufferViewByteStride / tBYTES_PER_ELEMENT)
+						for ( i; i < len; i++ ) {
+							if ( strideIndex % stridePerElement < 16 ) {
+								skinInfo['inverseBindMatrices'].push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+							}
+							strideIndex++
+						}
+					} else {
+						len = i + tCount * 16;
+						for ( i; i < len; i++ ) {
+							skinInfo['inverseBindMatrices'].push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+						}
 					}
 					break
 				default :
-					console.log('알수없는 형식 엑세서 타입', tAccessors['type'])
+					console.log('알수없는 형식 엑세서 타입', tType)
 					break
 			}
 			skinInfo['inverseBindMatrices'] = new Float32Array(skinInfo['inverseBindMatrices'])
 			tMesh['skinInfo'] = skinInfo
 			console.log(skinInfo)
-			console.log(tMesh)
 		}
 		parseNode = function (redGLTFLoader, json, nodeIndex, info, parentMesh) {
 			if ( 'mesh' in info ) {
@@ -1060,7 +1054,7 @@ var RedGLTFLoader;
 				});
 				tMesh['_morphInfo'] = morphInfo
 				tMesh['_morphInfo']['origin'] = new Float32Array(interleaveData)
-				console.log(morphInfo)
+				// console.log(morphInfo)
 				tMeshList.push(tMesh)
 				// console.log('vertices', vertices)
 				// console.log('normalData', normalData)
@@ -1071,65 +1065,41 @@ var RedGLTFLoader;
 			})
 			return tMeshList
 		}
-		parseAnimation = function (redGLTFLoader, json) {
-			console.log('애니메이션 파싱시작')
-			var nodes = json['nodes']
-			var meshs = json['meshs']
-			var accessors = json['accessors']
-			var parse;
-			parse = function (accessorIndex) {
+		parseAnimations = (function () {
+			var parseAnimationInfo;
+			parseAnimationInfo = function (redGLTFLoader, json, accessorIndex) {
 				// console.log('accessorIndex', accessorIndex)
-				var tAccessors = json['accessors'][accessorIndex]
-				var tBufferView = json['bufferViews'][tAccessors['bufferView']]
-				var tBufferIndex = tBufferView['buffer']
-				var tBuffer = json['buffers'][tBufferIndex]
-				var tBufferURIDataView;
-				if ( tBuffer['uri'] ) {
-					tBufferURIDataView = redGLTFLoader['uris']['buffers'][tBufferIndex]
-				}
-				// console.log('///////////////////////////////////////////////////')
-				// console.log('버퍼인텍스', accessorIndex)
-				// console.log('해당 bufferView 정보', tBufferView)
-				// console.log('바라볼 버퍼 인덱스', tBufferIndex)
-				// console.log('바라볼 버퍼', tBuffer)
-				// console.log('바라볼 버퍼데이터', tBufferURIDataView)
-				// console.log('바라볼 엑세서', tAccessors)
-				////////////////////////////
-				var i, len;
-				var tComponentType
-				var tMethod;
 				var dataList = []
-				tComponentType = WEBGL_COMPONENT_TYPES[tAccessors['componentType']]
-				if ( tComponentType == Float32Array ) tMethod = 'getFloat32'
-				if ( tComponentType == Uint32Array ) tMethod = 'getUint32'
-				if ( tComponentType == Uint16Array ) tMethod = 'getUint16'
-				if ( tComponentType == Int16Array ) tMethod = 'getInt16'
-				if ( tComponentType == Uint8Array ) tMethod = 'getUint8'
-				if ( tComponentType == Int8Array ) tMethod = 'getInt8'
-				// console.log('tComponentType', tComponentType)
-				i = (tBufferView['byteOffset'] + tAccessors['byteOffset']) / tComponentType['BYTES_PER_ELEMENT']
-				switch ( tAccessors['type'] ) {
+				var accessorInfo = new RedGLTF_AccessorInfo(redGLTFLoader, json, accessorIndex)
+				var tBYTES_PER_ELEMENT = accessorInfo['componentType_BYTES_PER_ELEMENT'];
+				// var tBufferViewByteStride = accessorInfo['bufferViewByteStride'];
+				var tBufferURIDataView = accessorInfo['bufferURIDataView'];
+				var tGetMethod = accessorInfo['getMethod'];
+				var tType = accessorInfo['accessor']['type'];
+				var tCount = accessorInfo['accessor']['count'];
+				// var strideIndex = 0;
+				// var stridePerElement = tBufferViewByteStride / tBYTES_PER_ELEMENT
+				var i = accessorInfo['startIndex']
+				var len
+				switch ( tType ) {
 					case 'SCALAR' :
-						len = i + ( tComponentType['BYTES_PER_ELEMENT'] * tAccessors['count']) / tComponentType['BYTES_PER_ELEMENT']
-						// console.log(i, len)
+						len = i + tCount * 1;
 						for ( i; i < len; i++ ) {
-							dataList.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+							dataList.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
 						}
 						// console.log('타임 데이터', dataList)
 						break
 					case 'VEC4' :
-						len = i + ( tComponentType['BYTES_PER_ELEMENT'] * tAccessors['count']) / tComponentType['BYTES_PER_ELEMENT'] * 4
-						// console.log(i, len)
+						len = i + tCount * 4;
 						for ( i; i < len; i++ ) {
-							dataList.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+							dataList.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
 						}
 						// console.log('값 데이터', dataList)
 						break
 					case 'VEC3' :
-						len = i + ( tComponentType['BYTES_PER_ELEMENT'] * tAccessors['count']) / tComponentType['BYTES_PER_ELEMENT'] * 3
-						// console.log(i, len)
+						len = i + tCount * 3;
 						for ( i; i < len; i++ ) {
-							dataList.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+							dataList.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
 						}
 						// console.log('값 데이터', dataList)
 						break
@@ -1139,114 +1109,88 @@ var RedGLTFLoader;
 				}
 				return dataList
 			}
-			if ( !json['animations'] ) json['animations'] = []
-			json['animations'].forEach(function (v, index) {
-				console.log(v)
-				var samplers = v['samplers'];
-				// 채널을 돌면서 파악한다.
-				var animationData = []
-				animationData['minTime'] = 1000000
-				animationData['maxTime'] = 0
-				animationData['name'] = 'animation_' + index
-				redGLTFLoader['animations'].push(animationData)
-				v['channels'].forEach(function (channel, channelIndex) {
-					var tSampler;
-					var tTargetData;
-					var tMesh;
-					var tNode;
-					tSampler = samplers[channel['sampler']];
-					// console.log('tSampler', tSampler)
-					tTargetData = channel['target'];
-					tNode = nodes[tTargetData['node']];
-					if ( 'mesh' in tNode ) {
-						tMesh = tNode['RedMesh']
-					} else {
-						var tGroup
-						//TODO: 이거 개선해야함
-						// console.log('여기로 오는경우가 있는건가')
-						if ( redGLTFLoader['groups'][tTargetData['node']] ) {
-							tGroup = redGLTFLoader['groups'][tTargetData['node']]
-							console.log('tGroup', tGroup)
-							tMesh = tGroup;
+			return function (redGLTFLoader, json) {
+				console.log('애니메이션 파싱시작')
+				var nodes = json['nodes']
+				var meshs = json['meshs']
+				var accessors = json['accessors']
+				if ( !json['animations'] ) json['animations'] = []
+				json['animations'].forEach(function (v, index) {
+					// console.log(v)
+					var samplers = v['samplers'];
+					//TODO: 용어를 정리해봐야겠음.
+					// 이걸 애니메이션 클립으로 봐야하는가..
+					var animationClip = []
+					animationClip['minTime'] = 1000000;
+					animationClip['maxTime'] = 0;
+					animationClip['name'] = 'animation_' + index;
+					// 로더에 애니메이션 데이터들을 입력함
+					redGLTFLoader['animations'].push(animationClip)
+					// 채널을 돌면서 파악한다.
+					v['channels'].forEach(function (channel, channelIndex) {
+						var tSampler;
+						var tChannelTargetData;
+						var tMesh;
+						var tNode;
+						var aniTrack; //
+						tSampler = samplers[channel['sampler']];
+						// console.log('tSampler', tSampler)
+						tChannelTargetData = channel['target'];
+						tNode = nodes[tChannelTargetData['node']];
+						if ( 'mesh' in tNode ) {
+							tMesh = tNode['RedMesh']
 						} else {
-							console.log('여기로 오는경우가 있는건가2')
-							return
+							var tGroup
+							//TODO: 이거 개선해야함
+							// console.log('여기로 오는경우가 있는건가')
+							if ( redGLTFLoader['groups'][tChannelTargetData['node']] ) {
+								tGroup = redGLTFLoader['groups'][tChannelTargetData['node']]
+								// console.log('tGroup', tGroup)
+								tMesh = tGroup;
+							} else {
+								console.log('여기로 오는경우가 있는건가2')
+								return
+							}
 						}
-					}
-					console.log('애니메이션 대상메쉬', tMesh)
-					console.log(tTargetData['path'])
-					switch ( tTargetData['path'] ) {
-						case 'scale' :
-							var t0
-							animationData.push(t0 = {
-									key: 'scale',
-									time: parse(tSampler['input']),
-									data: parse(tSampler['output']),
-									target: tMesh
-								}
-							)
-							if ( animationData['minTime'] > t0['time'][0] ) animationData['minTime'] = t0['time'][0]
-							if ( animationData['maxTime'] < t0['time'][t0['time'].length - 1] ) animationData['maxTime'] = t0['time'][t0['time'].length - 1]
+						// console.log('애니메이션 대상메쉬', tMesh)
+						// console.log(tChannelTargetData['path'])
+						if (
+							tChannelTargetData['path'] == 'scale'
+							|| tChannelTargetData['path'] == 'rotation'
+							|| tChannelTargetData['path'] == 'translation'
+							|| tChannelTargetData['path'] == 'weights'
+						) {
+							// console.log('path', tChannelTargetData['path'])
+							// // 시간축은 샘플의 input
+							// console.log('시간축', tSampler['input'])
+							// console.log('시간엑세서 데이터', tSampler['input'])
+							// console.log('시간축 데이터리스트', animationData['time'])
+							// // 로테이션 축은 샘플의 output
+							// console.log('translation', tSampler['output'])
+							// console.log('translation 엑세서 데이터', tSampler['output'])
 							// console.log('scale 데이터리스트', t0)
-							break
-						case 'rotation' :
-							var t0
-							animationData.push(t0 = {
-									key: 'rotation',
-									time: parse(tSampler['input']),
-									data: parse(tSampler['output']),
+							animationClip.push(aniTrack = {
+									key: tChannelTargetData['path'],
+									time: parseAnimationInfo(redGLTFLoader, json, tSampler['input']),
+									data: parseAnimationInfo(redGLTFLoader, json, tSampler['output']),
 									target: tMesh
 								}
 							)
-							if ( animationData['minTime'] > t0['time'][0] ) animationData['minTime'] = t0['time'][0]
-							if ( animationData['maxTime'] < t0['time'][t0['time'].length - 1] ) animationData['maxTime'] = t0['time'][t0['time'].length - 1]
-							// console.log('로테이션 데이터리스트', t0)
-							break
-						case 'translation' :
-							console.log('path', tTargetData['path'])
-							// 시간축은 샘플의 input
-							console.log('시간축', tSampler['input'])
-							console.log('시간엑세서 데이터', tSampler['input'])
-							console.log('시간축 데이터리스트', animationData['time'])
-							// 로테이션 축은 샘플의 output
-							console.log('translation', tSampler['output'])
-							console.log('translation 엑세서 데이터', tSampler['output'])
-							var t0
-							animationData.push(t0 = {
-									key: 'translation',
-									time: parse(tSampler['input']),
-									data: parse(tSampler['output']),
-									target: tMesh
-								}
-							)
-							if ( animationData['minTime'] > t0['time'][0] ) animationData['minTime'] = t0['time'][0]
-							if ( animationData['maxTime'] < t0['time'][t0['time'].length - 1] ) animationData['maxTime'] = t0['time'][t0['time'].length - 1]
-							console.log('translation 데이터리스트', t0)
-							break
-						case 'weights' :
-							var t0
-							animationData.push(t0 = {
-									key: 'weights',
-									time: parse(tSampler['input']),
-									data: parse(tSampler['output']),
-									target: tMesh
-								}
-							)
-							if ( animationData['minTime'] > t0['time'][0] ) animationData['minTime'] = t0['time'][0]
-							if ( animationData['maxTime'] < t0['time'][t0['time'].length - 1] ) animationData['maxTime'] = t0['time'][t0['time'].length - 1]
-							// console.log('scale 데이터리스트', t0)
-							break
-						default :
-							console.log('파싱할수없는 데이터', tTargetData['path'])
-							break
+						} else {
+							console.log('파싱할수없는 데이터', tChannelTargetData['path'])
+						}
+						if ( aniTrack ) {
+							if ( animationClip['minTime'] > aniTrack['time'][0] ) animationClip['minTime'] = aniTrack['time'][0]
+							if ( animationClip['maxTime'] < aniTrack['time'][aniTrack['time'].length - 1] ) animationClip['maxTime'] = aniTrack['time'][aniTrack['time'].length - 1]
+						}
+						// console.log('animationData', animationData)
+					})
+					if ( redGLTFLoader['animations'].length ) {
+						redGLTFLoader.playAnimation(redGLTFLoader['animations'][0])
 					}
-					console.log('animationData', animationData)
 				})
-				if ( redGLTFLoader['animations'].length ) {
-					redGLTFLoader.playAnimation(redGLTFLoader['animations'][0])
-				}
-			})
-		}
+			}
+		})();
 		return function (redGLTFLoader, redGL, json, callBack) {
 			console.log('파싱시작', redGLTFLoader['path'] + redGLTFLoader['fileName']);
 			// console.log('rawData', json);
@@ -1255,7 +1199,7 @@ var RedGLTFLoader;
 				function () {
 					// 리소스 로딩이 완료되면 다음 진행
 					parseScene(redGLTFLoader, json)
-					parseAnimation(redGLTFLoader, json)
+					parseAnimations(redGLTFLoader, json)
 					if ( callBack ) callBack();
 				}
 			)
