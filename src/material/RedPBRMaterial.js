@@ -42,12 +42,14 @@ var RedPBRMaterial;
 	fSource = function () {
 		/* @preserve
 		 precision mediump float;
+		 uniform vec4 uBaseColorFactor;
 		 //#define#diffuseTexture# uniform sampler2D u_diffuseTexture;
 		 //#define#normalTexture# uniform sampler2D u_normalTexture;
 		 //#define#occlusionTexture# uniform sampler2D u_occlusionTexture;
 		 uniform samplerCube u_environmentTexture;
 		 //#define#emissiveTexture# uniform sampler2D u_emissiveTexture;
 		 //#define#emissiveTexture# uniform sampler2D u_roughnessTexture;
+
 
 
          //#define#normalTexture# uniform float u_normalPower;
@@ -93,7 +95,7 @@ var RedPBRMaterial;
 			 ls = vec4(0.0, 0.0, 0.0, 1.0);
 
 			 texelColor = vec4(0.0,0.0,0.0,0.0);
-			 //#define#diffuseTexture# texelColor = texture2D(u_diffuseTexture, vTexcoord);
+			 //#define#diffuseTexture# texelColor = texture2D(u_diffuseTexture, vec2(vTexcoord.x,vTexcoord.y));
 			 //#define#diffuseTexture# texelColor.rgb *= texelColor.a;
 			 //#define#diffuseTexture# if(texelColor.a ==0.0) discard;
 
@@ -133,7 +135,7 @@ var RedPBRMaterial;
 				 if(lambertTerm > 0.0){
 					 ld += uDirectionalLightColorList[i] * texelColor * lambertTerm * uDirectionalLightIntensityList[i] * uDirectionalLightColorList[i].a;
 					 specular = pow( max(dot(reflect(L, N), -L), 0.0), shininess/tMetallicPower  ) ;
-					 ls +=  specularLightColor * specular * u_specularPower * specularTextureValue * uDirectionalLightIntensityList[i]* uDirectionalLightColorList[i].a;
+					 ls +=  specularLightColor * specular * u_specularPower * specularTextureValue * uDirectionalLightIntensityList[i]* uDirectionalLightColorList[i].a * (1.0-roughnessColor.g);
 				 }
 			 }
 
@@ -156,6 +158,9 @@ var RedPBRMaterial;
 			 //#define#emissiveTexture# finalColor += emissiveColor;
 			 finalColor.rgb *= texelColor.a;
 			 finalColor.a = texelColor.a * u_alpha;
+			 vec4 test = uBaseColorFactor;
+			 test.rgb *= test.a;
+			 finalColor.rgb *= test.rgb;
 			 //#define#occlusionTexture# finalColor *= occlusionColor;
 			 //#define#fog#false# gl_FragColor = finalColor;
 			 //#define#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
@@ -242,6 +247,7 @@ var RedPBRMaterial;
 		this['displacementPower'] = 0;
 		this['displacementFlowSpeedX'] = 0;
 		this['displacementFlowSpeedY'] = 0;
+		this['baseColorFactor'] = null
 		this['alpha'] = 1;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
@@ -335,7 +341,6 @@ var RedPBRMaterial;
 	 }
 	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'normalPower', 'number', {'min': 0});
-
 	/**DOC:
 	 {
 	     code : 'PROPERTY',
@@ -354,7 +359,6 @@ var RedPBRMaterial;
 	 }
 	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'metallicPower', 'number', {'min': 0});
-
 	/**DOC:
 	 {
 	     code : 'PROPERTY',
