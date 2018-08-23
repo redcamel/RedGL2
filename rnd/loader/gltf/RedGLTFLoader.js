@@ -668,7 +668,7 @@ var RedGLTFLoader;
 			// console.log("this['bufferView']['byteOffset']", this['bufferView']['byteOffset'])
 			// console.log("this['accessor']['byteOffset']", this['accessor']['byteOffset'])
 		}
-		var parseAttributeInfo = function (redGLTFLoader, json, key, accessorInfo, vertices, uvs, normals, jointWeights, joints) {
+		var parseAttributeInfo = function (redGLTFLoader, json, key, accessorInfo, vertices, uvs, normals, jointWeights, joints, tangents) {
 			var tBYTES_PER_ELEMENT = accessorInfo['componentType_BYTES_PER_ELEMENT'];
 			var tBufferViewByteStride = accessorInfo['bufferViewByteStride'];
 			var tBufferURIDataView = accessorInfo['bufferURIDataView'];
@@ -687,6 +687,7 @@ var RedGLTFLoader;
 							if ( strideIndex % stridePerElement < 4 ) {
 								if ( key == 'WEIGHTS_0' ) jointWeights.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
 								else if ( key == 'JOINTS_0' ) joints.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+								// else if ( key == 'TANGENT' ) tangents.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
 								// else RedGLUtil.throwFunc('VEC4에서 현재 지원하고 있지 않는 키', key)
 							}
 							strideIndex++
@@ -696,6 +697,7 @@ var RedGLTFLoader;
 						for ( i; i < len; i++ ) {
 							if ( key == 'WEIGHTS_0' ) jointWeights.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
 							else if ( key == 'JOINTS_0' ) joints.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+							// else if ( key == 'TANGENT' ) tangents.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
 							// else RedGLUtil.throwFunc('VEC4에서 현재 지원하고 있지 않는 키', key)
 						}
 					}
@@ -805,128 +807,162 @@ var RedGLTFLoader;
 					break
 			}
 		}
-		var parseMaterialInfo = function (redGLTFLoader, json, v) {
-			var tMaterial
-			if ( 'material' in v ) {
-				var tIndex = v['material']
-				var tMaterialInfo = json['materials'][tIndex]
-				// console.log('tMaterialInfo', tMaterialInfo)
-				if ( 'baseColorTexture' in tMaterialInfo['pbrMetallicRoughness'] ) {
-					var baseTextureIndex = tMaterialInfo['pbrMetallicRoughness']['baseColorTexture']['index']
-					var baseTextureInfo = json['textures'][baseTextureIndex]
-					var diffuseSourceIndex = baseTextureInfo['source']
-					var tURL = (json['images'][diffuseSourceIndex]['uri'].indexOf(';base64,')>-1 ? '' : redGLTFLoader['path']) + json['images'][diffuseSourceIndex]['uri']
-					if ( redGLTFLoader[diffuseSourceIndex] ) diffseTexture = redGLTFLoader[diffuseSourceIndex]
-					else diffseTexture = redGLTFLoader[diffuseSourceIndex] = RedBitmapTexture(redGLTFLoader['redGL'], tURL)
-					// var t0 = document.createElement('img')
-					// t0.src = json['images'][diffuseSourceIndex]['uri']
-					// t0.style.cssText = 'position:absolute;top:0px;left:0px;width:500px'
-					// document.body.appendChild(t0)
-				}
-				var diffseTexture, normalTexture, roughnessTexture, emissiveTexture, occlusionTexture;
-				if ( 'metallicRoughnessTexture' in tMaterialInfo['pbrMetallicRoughness'] ) {
-					var roughnessTextureIndex = tMaterialInfo['pbrMetallicRoughness']['metallicRoughnessTexture']['index']
-					var roughnessTextureInfo = json['textures'][roughnessTextureIndex]
-					var roughnessSourceIndex = roughnessTextureInfo['source']
-
-					var tURL = (json['images'][diffuseSourceIndex]['uri'].indexOf(';base64,')>-1 ? '' : redGLTFLoader['path']) + json['images'][roughnessSourceIndex]['uri']
-					if ( redGLTFLoader['textures'][roughnessSourceIndex] ) roughnessTexture = redGLTFLoader['textures'][roughnessSourceIndex]
-					else roughnessTexture = redGLTFLoader['textures'][roughnessSourceIndex] = RedBitmapTexture(redGLTFLoader['redGL'], tURL)
-
-					// var t0 = document.createElement('img')
-					// t0.src = json['images'][roughnessSourceIndex]['uri']
-					// t0.style.cssText = 'position:absolute;top:0px;left:0px;width:500px'
-					// document.body.appendChild(t0)
-				}
-				var normalTextureIndex = tMaterialInfo['normalTexture']
-				if ( normalTextureIndex != undefined ) {
-					normalTextureIndex = normalTextureIndex['index']
-					var normalTextureInfo = json['textures'][normalTextureIndex]
-					var normalSourceIndex = normalTextureInfo['source']
-
-					var tURL = (json['images'][diffuseSourceIndex]['uri'].indexOf(';base64,')>-1 ? '' : redGLTFLoader['path'])+ json['images'][normalSourceIndex]['uri']
-					if ( redGLTFLoader['textures'][normalSourceIndex] ) normalTexture = redGLTFLoader['textures'][normalSourceIndex]
-					else normalTexture = redGLTFLoader['textures'][normalSourceIndex] = RedBitmapTexture(redGLTFLoader['redGL'], tURL)
-
-					// var t0 = document.createElement('img')
-					// t0.src = json['images'][normalSourceIndex]['uri']
-					// t0.style.cssText = 'position:absolute;top:0px;left:0px;width:500px'
-					// document.body.appendChild(t0)
-				}
-				var emissiveTextureIndex = tMaterialInfo['emissiveTexture']
-				if ( emissiveTextureIndex != undefined ) {
-					emissiveTextureIndex = emissiveTextureIndex['index']
-					var emissiveTextureInfo = json['textures'][emissiveTextureIndex]
-					var emissiveSourceIndex = emissiveTextureInfo['source']
-
-					var tURL = (json['images'][diffuseSourceIndex]['uri'].indexOf(';base64,')>-1 ? '' : redGLTFLoader['path']) + json['images'][emissiveSourceIndex]['uri']
-					if ( redGLTFLoader['textures'][emissiveSourceIndex] ) emissiveTexture = redGLTFLoader['textures'][emissiveSourceIndex]
-					else emissiveTexture = redGLTFLoader['textures'][emissiveSourceIndex] = RedBitmapTexture(redGLTFLoader['redGL'], tURL)
-
-					// var t0 = document.createElement('img')
-					// t0.src = json['images'][emissiveSourceIndex]['uri']
-					// t0.style.cssText = 'position:absolute;top:0px;left:0px;width:500px'
-					// document.body.appendChild(t0)
-				}
-				var occlusionTextureIndex = tMaterialInfo['occlusionTexture']
-				if ( occlusionTextureIndex != undefined ) {
-					occlusionTextureIndex = occlusionTextureIndex['index']
-					var occlusionTextureInfo = json['textures'][occlusionTextureIndex]
-					var occlusionSourceIndex = occlusionTextureInfo['source']
-
-					var tURL = (json['images'][diffuseSourceIndex]['uri'].indexOf(';base64,')>-1 ? '' : redGLTFLoader['path']) + json['images'][occlusionSourceIndex]['uri']
-					if ( redGLTFLoader['textures'][occlusionSourceIndex] ) occlusionTexture = redGLTFLoader['textures'][occlusionSourceIndex]
-					else occlusionTexture = redGLTFLoader['textures'][occlusionSourceIndex] = RedBitmapTexture(redGLTFLoader['redGL'], tURL)
-
-					// var t0 = document.createElement('img')
-					// t0.src = json['images'][occlusionSourceIndex]['uri']
-					// t0.style.cssText = 'position:absolute;top:0px;left:0px;width:500px'
-					// document.body.appendChild(t0)
-				}
-				var metallicFactor, roughnessFactor
-				if ( 'metallicFactor' in tMaterialInfo['pbrMetallicRoughness'] ) {
-					metallicFactor = tMaterialInfo['pbrMetallicRoughness']['metallicFactor']
-				}
-				if ( 'roughnessFactor' in tMaterialInfo['pbrMetallicRoughness'] ) {
-					roughnessFactor = tMaterialInfo['pbrMetallicRoughness']['roughnessFactor']
-				}
-				if ( diffseTexture ) {
-					var env = RedBitmapCubeTexture(redGLTFLoader['redGL'], [
-						'../asset/cubemap/SwedishRoyalCastle/px.jpg',
-						'../asset/cubemap/SwedishRoyalCastle/nx.jpg',
-						'../asset/cubemap/SwedishRoyalCastle/py.jpg',
-						'../asset/cubemap/SwedishRoyalCastle/ny.jpg',
-						'../asset/cubemap/SwedishRoyalCastle/pz.jpg',
-						'../asset/cubemap/SwedishRoyalCastle/nz.jpg'
-					])
-					// Type	Description	Required
-					// baseColorFactor	number [4]	The material's base color factor.	No, default: [1,1,1,1]
-					// baseColorTexture	object	The base color texture.	No
-					// metallicFactor	number	The metalness of the material.	No, default: 1
-					// roughnessFactor	number	The roughness of the material.	No, default: 1
-					// metallicRoughnessTexture	object	The metallic-roughness texture.	No
-					tMaterial = RedPBRMaterial(redGLTFLoader['redGL'], diffseTexture, env, normalTexture, occlusionTexture, emissiveTexture, roughnessTexture, null)
-					if ( !roughnessTexture ) tMaterial.metallicPower = metallicFactor;
-				} else {
-					var tColor
-					if ( tMaterialInfo['pbrMetallicRoughness'] && tMaterialInfo['pbrMetallicRoughness']['baseColorFactor'] ) tColor = tMaterialInfo['pbrMetallicRoughness']['baseColorFactor']
-					tColor = [(Math.random()), (Math.random()), (Math.random()), 1]
-					tMaterial = RedColorPhongMaterial(redGLTFLoader['redGL'],
-						RedGLUtil.rgb2hex(
-							tColor[0] * 255,
-							tColor[1] * 255,
-							tColor[2] * 255
-						),
-						tColor[3]
-					)
-				}
+		var parseMaterialInfo = (function () {
+			var getURL = function (redGLTFLoader, json, sourceIndex) {
+				return (json['images'][sourceIndex]['uri'].indexOf(';base64,') > -1 ? '' : redGLTFLoader['path']) + json['images'][sourceIndex]['uri']
 			}
-			return tMaterial
-		}
+			var getSamplerInfo = function (redGLTFLoader, json, samplerIndex) {
+				var result = {}
+				if ( json['samplers'] ) {
+					var t0 = json['samplers'][samplerIndex]
+					// if ( 'magFilter' in t0 ) result['mag'] = t0['magFilter']
+					// if ( 'minFilter' in t0 ) result['min'] = t0['minFilter']
+					// if ( 'wrapS' in t0 ) result['wrap_s'] = t0['wrapS']
+					// if ( 'wrapT' in t0 ) result['wrap_t'] = t0['wrapT']
+				} else {
+					console.log('있긴하냐',samplerIndex)
+				}
+				result['string'] = JSON.stringify(result)
+				console.log('result', result)
+				return result
+			}
+			return function (redGLTFLoader, json, v) {
+				var tMaterial
+				var doubleSide = false
+				if ( 'material' in v ) {
+					var tIndex = v['material']
+					var tMaterialInfo = json['materials'][tIndex]
+					if ( 'doubleSided' in tMaterialInfo ) {
+						doubleSide = tMaterialInfo['doubleSided'] ? true : false
+					}
+					var diffseTexture, normalTexture, roughnessTexture, emissiveTexture, occlusionTexture;
+					// console.log('tMaterialInfo', tMaterialInfo)
+					if ( 'baseColorTexture' in tMaterialInfo['pbrMetallicRoughness'] ) {
+						var baseTextureIndex = tMaterialInfo['pbrMetallicRoughness']['baseColorTexture']['index']
+						var baseTextureInfo = json['textures'][baseTextureIndex]
+						var diffuseSourceIndex = baseTextureInfo['source']
+						var tURL = getURL(redGLTFLoader, json, diffuseSourceIndex)
+						var samplerIndex = baseTextureInfo['sampler']
+						var option = getSamplerInfo(redGLTFLoader, json, samplerIndex)
+						var tKey = tURL// + option['string']
+						if ( redGLTFLoader['textures'][tKey] ) diffseTexture = redGLTFLoader['textures'][tKey]
+						else diffseTexture = redGLTFLoader['textures'][tKey] = RedBitmapTexture(redGLTFLoader['redGL'], tURL, option)
+						// var t0 = document.createElement('img')
+						// t0.src = json['images'][diffuseSourceIndex]['uri']
+						// t0.style.cssText = 'position:absolute;top:0px;left:0px;width:500px'
+						// document.body.appendChild(t0)
+					}
+					if ( 'metallicRoughnessTexture' in tMaterialInfo['pbrMetallicRoughness'] ) {
+						var roughnessTextureIndex = tMaterialInfo['pbrMetallicRoughness']['metallicRoughnessTexture']['index']
+						var roughnessTextureInfo = json['textures'][roughnessTextureIndex]
+						var roughnessSourceIndex = roughnessTextureInfo['source']
+						var tURL = getURL(redGLTFLoader, json, roughnessSourceIndex)
+						var samplerIndex = roughnessTextureInfo['sampler']
+						var option = getSamplerInfo(redGLTFLoader, json, samplerIndex)
+						var tKey = tURL// + option['string']
+						if ( redGLTFLoader['textures'][tKey] ) roughnessTexture = redGLTFLoader['textures'][tKey]
+						else roughnessTexture = redGLTFLoader['textures'][tKey] = RedBitmapTexture(redGLTFLoader['redGL'], tURL, option)
+						// var t0 = document.createElement('img')
+						// t0.src = json['images'][roughnessSourceIndex]['uri']
+						// t0.style.cssText = 'position:absolute;top:0px;left:0px;width:500px'
+						// document.body.appendChild(t0)
+					}
+					var normalTextureIndex = tMaterialInfo['normalTexture']
+					if ( normalTextureIndex != undefined ) {
+						normalTextureIndex = normalTextureIndex['index']
+						var normalTextureInfo = json['textures'][normalTextureIndex]
+						var normalSourceIndex = normalTextureInfo['source']
+						var tURL = getURL(redGLTFLoader, json, normalSourceIndex)
+						var samplerIndex = normalTextureInfo['sampler']
+						var option = getSamplerInfo(redGLTFLoader, json, samplerIndex)
+						var tKey = tURL// + option['string']
+						if ( redGLTFLoader['textures'][tKey] ) normalTexture = redGLTFLoader['textures'][tKey]
+						else normalTexture = redGLTFLoader['textures'][tKey] = RedBitmapTexture(redGLTFLoader['redGL'], tURL, option)
+						// var t0 = document.createElement('img')
+						// t0.src = json['images'][normalSourceIndex]['uri']
+						// t0.style.cssText = 'position:absolute;top:0px;left:0px;width:500px'
+						// document.body.appendChild(t0)
+					}
+					var emissiveTextureIndex = tMaterialInfo['emissiveTexture']
+					if ( emissiveTextureIndex != undefined ) {
+						emissiveTextureIndex = emissiveTextureIndex['index']
+						var emissiveTextureInfo = json['textures'][emissiveTextureIndex]
+						var emissiveSourceIndex = emissiveTextureInfo['source']
+						var tURL = getURL(redGLTFLoader, json, emissiveSourceIndex)
+						var samplerIndex = emissiveTextureInfo['sampler']
+						var option = getSamplerInfo(redGLTFLoader, json, samplerIndex)
+						var tKey = tURL// + option['string']
+						if ( redGLTFLoader['textures'][tKey] ) emissiveTexture = redGLTFLoader['textures'][tKey]
+						else emissiveTexture = redGLTFLoader['textures'][tKey] = RedBitmapTexture(redGLTFLoader['redGL'], tURL, option)
+						// var t0 = document.createElement('img')
+						// t0.src = json['images'][emissiveSourceIndex]['uri']
+						// t0.style.cssText = 'position:absolute;top:0px;left:0px;width:500px'
+						// document.body.appendChild(t0)
+					}
+					var occlusionTextureIndex = tMaterialInfo['occlusionTexture']
+					if ( occlusionTextureIndex != undefined ) {
+						occlusionTextureIndex = occlusionTextureIndex['index']
+						var occlusionTextureInfo = json['textures'][occlusionTextureIndex]
+						var occlusionSourceIndex = occlusionTextureInfo['source']
+						var tURL = getURL(redGLTFLoader, json, occlusionSourceIndex)
+						var samplerIndex = occlusionTextureInfo['sampler']
+						var option = getSamplerInfo(redGLTFLoader, json, samplerIndex)
+						var tKey = tURL// + option['string']
+						if ( redGLTFLoader['textures'][tKey] ) occlusionTexture = redGLTFLoader['textures'][tKey]
+						else occlusionTexture = redGLTFLoader['textures'][tKey] = RedBitmapTexture(redGLTFLoader['redGL'], tURL, option)
+						// var t0 = document.createElement('img')
+						// t0.src = json['images'][occlusionSourceIndex]['uri']
+						// t0.style.cssText = 'position:absolute;top:0px;left:0px;width:500px'
+						// document.body.appendChild(t0)
+					}
+					var metallicFactor, roughnessFactor
+					if ( 'metallicFactor' in tMaterialInfo['pbrMetallicRoughness'] ) {
+						metallicFactor = tMaterialInfo['pbrMetallicRoughness']['metallicFactor']
+					}
+					if ( 'roughnessFactor' in tMaterialInfo['pbrMetallicRoughness'] ) {
+						roughnessFactor = tMaterialInfo['pbrMetallicRoughness']['roughnessFactor']
+					}
+					if ( diffseTexture ) {
+						var env = RedBitmapCubeTexture(redGLTFLoader['redGL'], [
+							'../asset/cubemap/SwedishRoyalCastle/px.jpg',
+							'../asset/cubemap/SwedishRoyalCastle/nx.jpg',
+							'../asset/cubemap/SwedishRoyalCastle/py.jpg',
+							'../asset/cubemap/SwedishRoyalCastle/ny.jpg',
+							'../asset/cubemap/SwedishRoyalCastle/pz.jpg',
+							'../asset/cubemap/SwedishRoyalCastle/nz.jpg'
+						])
+						// Type	Description	Required
+						// baseColorFactor	number [4]	The material's base color factor.	No, default: [1,1,1,1]
+						// baseColorTexture	object	The base color texture.	No
+						// metallicFactor	number	The metalness of the material.	No, default: 1
+						// roughnessFactor	number	The roughness of the material.	No, default: 1
+						// metallicRoughnessTexture	object	The metallic-roughness texture.	No
+						tMaterial = RedPBRMaterial(redGLTFLoader['redGL'], diffseTexture, env, normalTexture, occlusionTexture, emissiveTexture, roughnessTexture, null)
+						if ( tMaterialInfo['pbrMetallicRoughness'] && tMaterialInfo['pbrMetallicRoughness']['baseColorFactor'] ) tColor = tMaterialInfo['pbrMetallicRoughness']['baseColorFactor']
+						else tColor = [1.0, 1.0, 1.0, 1.0]
+						tMaterial['baseColorFactor'] = tColor
+						if ( !roughnessTexture ) tMaterial.metallicPower = metallicFactor;
+					} else {
+						var tColor
+						if ( tMaterialInfo['pbrMetallicRoughness'] && tMaterialInfo['pbrMetallicRoughness']['baseColorFactor'] ) tColor = tMaterialInfo['pbrMetallicRoughness']['baseColorFactor']
+						else tColor = [(Math.random()), (Math.random()), (Math.random()), 1]
+						tMaterial = RedColorPhongMaterial(redGLTFLoader['redGL'],
+							RedGLUtil.rgb2hex(
+								tColor[0] * 255,
+								tColor[1] * 255,
+								tColor[2] * 255
+							),
+							tColor[3]
+						)
+					}
+				}
+				return [tMaterial, doubleSide]
+			}
+		})();
 		makeMesh = function (redGLTFLoader, json, meshData) {
 			// console.log('parseMesh :')
 			// console.log(meshData)
-			var tName
+			var tName, tDoubleSide
 			if ( meshData['name'] ) tName = meshData['name']
 			var tMeshList = []
 			meshData['primitives'].forEach(function (v, index) {
@@ -970,6 +1006,8 @@ var RedGLTFLoader;
 				}
 				// 재질파싱
 				tMaterial = parseMaterialInfo(redGLTFLoader, json, v)
+				tDoubleSide = tMaterial[1]
+				tMaterial = tMaterial[0]
 				// 모드 파싱
 				if ( 'mode' in v ) {
 					// 0 POINTS
@@ -1051,7 +1089,8 @@ var RedGLTFLoader;
 				if ( tName ) tMesh.name = tName
 				if ( tDrawMode ) tMesh.drawMode = tDrawMode
 				else tMesh.drawMode = redGLTFLoader['redGL'].gl.TRIANGLES
-				if ( meshData['doubleSided'] ) tMesh.useCullFace = false
+				if ( tDoubleSide ) tMesh.useCullFace = false
+				console.log('tDoubleSide', tDoubleSide)
 				// console.log('tMesh', tMesh)
 				/////////////////////////////////////////////////////////
 				// 모프리스트 설정
