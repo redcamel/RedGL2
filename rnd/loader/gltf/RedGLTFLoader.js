@@ -1125,11 +1125,11 @@ var RedGLTFLoader;
 						tMesh.useBlendMode = false
 						break
 					case 'BLEND' :
-						tMesh.useDepthMask = false
+						// tMesh.useDepthMask = false
 						tMesh.useBlendMode = true
 						break
 					case 'MASK' :
-						tMesh.useDepthMask = false
+						// tMesh.useDepthMask = false
 						tMesh.useBlendMode = true
 						tMaterial.cutOff = tAlphaCutoff
 						break
