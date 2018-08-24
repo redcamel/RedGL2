@@ -479,6 +479,7 @@ var RedGLTFLoader;
 						len = i + tCount * 16;
 						for ( i; i < len; i++ ) {
 							skinInfo['inverseBindMatrices'].push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+							strideIndex++
 						}
 					}
 					break
@@ -558,7 +559,8 @@ var RedGLTFLoader;
 					if ( tComponentType == Uint8Array ) tMethod = 'getUint8'
 					if ( tComponentType == Int8Array ) tMethod = 'getInt8'
 					var tAccessorBufferOffset = tAccessors['byteOffset'] || 0
-					i = (tBufferView['byteOffset'] + tAccessorBufferOffset) / tComponentType['BYTES_PER_ELEMENT']
+					var tBufferViewOffset  = tBufferView['byteOffset'] || 0
+					i = (tBufferViewOffset + tAccessorBufferOffset) / tComponentType['BYTES_PER_ELEMENT']
 					switch ( tAccessors['type'] ) {
 						case 'VEC3' :
 							len = i + ( tComponentType['BYTES_PER_ELEMENT'] * tSparse['count']) / tComponentType['BYTES_PER_ELEMENT'] * 3
@@ -605,7 +607,8 @@ var RedGLTFLoader;
 				if ( tComponentType == Uint16Array ) tMethod = 'getUint16'
 				else if ( tComponentType == Uint8Array ) tMethod = 'getUint8'
 				var tAccessorBufferOffset = tSparseAccessors['byteOffset'] || 0
-				i = (tBufferView['byteOffset'] + tAccessorBufferOffset) / tComponentType['BYTES_PER_ELEMENT']
+				var tBufferViewOffset  = tBufferView['byteOffset'] || 0
+				i = (tBufferViewOffset + tAccessorBufferOffset) / tComponentType['BYTES_PER_ELEMENT']
 				//
 				len = i + ( tComponentType['BYTES_PER_ELEMENT'] * tSparse['count']) / tComponentType['BYTES_PER_ELEMENT']
 				console.log('오오오오', key, i, len)
@@ -656,8 +659,9 @@ var RedGLTFLoader;
 					RedGLUtil.throwFunc('파싱할수없는 타입', this['componentType'])
 			}
 			this['accessorBufferOffset'] = this['accessor']['byteOffset'] || 0
+			this['bufferViewOffset']  = this['bufferView']['byteOffset'] || 0
 			this['bufferViewByteStride'] = this['bufferView']['byteStride'] || 0
-			this['startIndex'] = (this['bufferView']['byteOffset'] + this['accessorBufferOffset']) / this['componentType_BYTES_PER_ELEMENT'];
+			this['startIndex'] = (this['bufferViewOffset'] + this['accessorBufferOffset']) / this['componentType_BYTES_PER_ELEMENT'];
 			// console.log('해당 bufferView 정보', this['bufferView'])
 			// console.log('바라볼 버퍼 인덱스', this['bufferIndex'])
 			// console.log('바라볼 버퍼', this['buffer'])
@@ -699,6 +703,7 @@ var RedGLTFLoader;
 							else if ( key == 'JOINTS_0' ) joints.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
 							// else if ( key == 'TANGENT' ) tangents.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
 							// else RedGLUtil.throwFunc('VEC4에서 현재 지원하고 있지 않는 키', key)
+							strideIndex++
 						}
 					}
 					break
@@ -709,7 +714,8 @@ var RedGLTFLoader;
 							if ( strideIndex % stridePerElement < 3 ) {
 								if ( key == 'NORMAL' ) normals.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
 								else if ( key == 'POSITION' ) vertices.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-								else RedGLUtil.throwFunc('VEC3에서 현재 지원하고 있지 않는 키', key)
+								// else if ( key == 'TANGENT' ) tangents.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+								// else RedGLUtil.throwFunc('VEC3에서 현재 지원하고 있지 않는 키', key)
 							}
 							strideIndex++
 						}
@@ -718,7 +724,9 @@ var RedGLTFLoader;
 						for ( i; i < len; i++ ) {
 							if ( key == 'NORMAL' ) normals.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
 							else if ( key == 'POSITION' ) vertices.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-							else RedGLUtil.throwFunc('VEC3에서 현재 지원하고 있지 않는 키', key)
+							// else if ( key == 'TANGENT' ) tangents.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+							// else RedGLUtil.throwFunc('VEC3에서 현재 지원하고 있지 않는 키', key)
+							strideIndex++
 						}
 						// console.log('인터리브 버퍼 데이터', vertices)
 					}
@@ -729,8 +737,11 @@ var RedGLTFLoader;
 						for ( i; i < len; i++ ) {
 							if ( strideIndex % stridePerElement < 2 ) {
 								if ( key == 'TEXCOORD_0' ) {
-									if ( i % 2 == 0 ) uvs.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-									else uvs.push(-tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+									if ( strideIndex % 2 == 0 ) uvs.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+									else uvs.push(1 - tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+								}else if ( key == 'TEXCOORD_1' ) {
+									if ( strideIndex % 2 == 0 ) uvs.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+									else uvs.push(1 - tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
 								}
 								else RedGLUtil.throwFunc('VEC2에서 현재 지원하고 있지 않는 키', key)
 							}
@@ -740,9 +751,13 @@ var RedGLTFLoader;
 						len = i + tCount * 2;
 						for ( i; i < len; i++ ) {
 							if ( key == 'TEXCOORD_0' ) {
-								if ( i % 2 == 0 ) uvs.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-								else uvs.push(-tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+								if ( strideIndex % 2 == 0 ) uvs.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+								else uvs.push(1 - tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+							} else if ( key == 'TEXCOORD_1' ) {
+								if ( strideIndex % 2 == 0 ) uvs.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+								else uvs.push(1 - tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
 							} else RedGLUtil.throwFunc('VEC2에서 현재 지원하고 있지 않는 키', key)
+							strideIndex++
 						}
 					}
 					break
@@ -815,12 +830,12 @@ var RedGLTFLoader;
 				var result = {}
 				if ( json['samplers'] ) {
 					var t0 = json['samplers'][samplerIndex]
-					// if ( 'magFilter' in t0 ) result['mag'] = t0['magFilter']
-					// if ( 'minFilter' in t0 ) result['min'] = t0['minFilter']
-					// if ( 'wrapS' in t0 ) result['wrap_s'] = t0['wrapS']
-					// if ( 'wrapT' in t0 ) result['wrap_t'] = t0['wrapT']
+					if ( 'magFilter' in t0 ) result['mag'] = t0['magFilter']
+					if ( 'minFilter' in t0 ) result['min'] = t0['minFilter']
+					if ( 'wrapS' in t0 ) result['wrap_s'] = t0['wrapS']
+					if ( 'wrapT' in t0 ) result['wrap_t'] = t0['wrapT']
 				} else {
-					console.log('있긴하냐',samplerIndex)
+					console.log('있긴하냐', samplerIndex)
 				}
 				result['string'] = JSON.stringify(result)
 				console.log('result', result)
@@ -829,12 +844,14 @@ var RedGLTFLoader;
 			return function (redGLTFLoader, json, v) {
 				var tMaterial
 				var doubleSide = false
+				var alphaMode;
+				var alphaCutoff = 0.5
 				if ( 'material' in v ) {
 					var tIndex = v['material']
 					var tMaterialInfo = json['materials'][tIndex]
-					if ( 'doubleSided' in tMaterialInfo ) {
-						doubleSide = tMaterialInfo['doubleSided'] ? true : false
-					}
+					if ( 'doubleSided' in tMaterialInfo ) doubleSide = tMaterialInfo['doubleSided'] ? true : false
+					if ( 'alphaMode' in tMaterialInfo ) alphaMode = tMaterialInfo['alphaMode']
+					if ( 'alphaCutoff' in tMaterialInfo ) alphaCutoff = tMaterialInfo['alphaCutoff']
 					var diffseTexture, normalTexture, roughnessTexture, emissiveTexture, occlusionTexture;
 					// console.log('tMaterialInfo', tMaterialInfo)
 					if ( 'baseColorTexture' in tMaterialInfo['pbrMetallicRoughness'] ) {
@@ -844,7 +861,7 @@ var RedGLTFLoader;
 						var tURL = getURL(redGLTFLoader, json, diffuseSourceIndex)
 						var samplerIndex = baseTextureInfo['sampler']
 						var option = getSamplerInfo(redGLTFLoader, json, samplerIndex)
-						var tKey = tURL// + option['string']
+						var tKey = tURL + option['string']
 						if ( redGLTFLoader['textures'][tKey] ) diffseTexture = redGLTFLoader['textures'][tKey]
 						else diffseTexture = redGLTFLoader['textures'][tKey] = RedBitmapTexture(redGLTFLoader['redGL'], tURL, option)
 						// var t0 = document.createElement('img')
@@ -859,7 +876,7 @@ var RedGLTFLoader;
 						var tURL = getURL(redGLTFLoader, json, roughnessSourceIndex)
 						var samplerIndex = roughnessTextureInfo['sampler']
 						var option = getSamplerInfo(redGLTFLoader, json, samplerIndex)
-						var tKey = tURL// + option['string']
+						var tKey = tURL + option['string']
 						if ( redGLTFLoader['textures'][tKey] ) roughnessTexture = redGLTFLoader['textures'][tKey]
 						else roughnessTexture = redGLTFLoader['textures'][tKey] = RedBitmapTexture(redGLTFLoader['redGL'], tURL, option)
 						// var t0 = document.createElement('img')
@@ -875,7 +892,7 @@ var RedGLTFLoader;
 						var tURL = getURL(redGLTFLoader, json, normalSourceIndex)
 						var samplerIndex = normalTextureInfo['sampler']
 						var option = getSamplerInfo(redGLTFLoader, json, samplerIndex)
-						var tKey = tURL// + option['string']
+						var tKey = tURL + option['string']
 						if ( redGLTFLoader['textures'][tKey] ) normalTexture = redGLTFLoader['textures'][tKey]
 						else normalTexture = redGLTFLoader['textures'][tKey] = RedBitmapTexture(redGLTFLoader['redGL'], tURL, option)
 						// var t0 = document.createElement('img')
@@ -891,7 +908,7 @@ var RedGLTFLoader;
 						var tURL = getURL(redGLTFLoader, json, emissiveSourceIndex)
 						var samplerIndex = emissiveTextureInfo['sampler']
 						var option = getSamplerInfo(redGLTFLoader, json, samplerIndex)
-						var tKey = tURL// + option['string']
+						var tKey = tURL + option['string']
 						if ( redGLTFLoader['textures'][tKey] ) emissiveTexture = redGLTFLoader['textures'][tKey]
 						else emissiveTexture = redGLTFLoader['textures'][tKey] = RedBitmapTexture(redGLTFLoader['redGL'], tURL, option)
 						// var t0 = document.createElement('img')
@@ -907,7 +924,7 @@ var RedGLTFLoader;
 						var tURL = getURL(redGLTFLoader, json, occlusionSourceIndex)
 						var samplerIndex = occlusionTextureInfo['sampler']
 						var option = getSamplerInfo(redGLTFLoader, json, samplerIndex)
-						var tKey = tURL// + option['string']
+						var tKey = tURL + option['string']
 						if ( redGLTFLoader['textures'][tKey] ) occlusionTexture = redGLTFLoader['textures'][tKey]
 						else occlusionTexture = redGLTFLoader['textures'][tKey] = RedBitmapTexture(redGLTFLoader['redGL'], tURL, option)
 						// var t0 = document.createElement('img')
@@ -923,14 +940,17 @@ var RedGLTFLoader;
 						roughnessFactor = tMaterialInfo['pbrMetallicRoughness']['roughnessFactor']
 					}
 					if ( diffseTexture ) {
-						var env = RedBitmapCubeTexture(redGLTFLoader['redGL'], [
-							'../asset/cubemap/SwedishRoyalCastle/px.jpg',
-							'../asset/cubemap/SwedishRoyalCastle/nx.jpg',
-							'../asset/cubemap/SwedishRoyalCastle/py.jpg',
-							'../asset/cubemap/SwedishRoyalCastle/ny.jpg',
-							'../asset/cubemap/SwedishRoyalCastle/pz.jpg',
-							'../asset/cubemap/SwedishRoyalCastle/nz.jpg'
-						])
+						if ( !redGLTFLoader['environmentTexture'] ) {
+							redGLTFLoader['environmentTexture'] = RedBitmapCubeTexture(redGLTFLoader['redGL'], [
+								'../asset/cubemap/SwedishRoyalCastle/px.jpg',
+								'../asset/cubemap/SwedishRoyalCastle/nx.jpg',
+								'../asset/cubemap/SwedishRoyalCastle/py.jpg',
+								'../asset/cubemap/SwedishRoyalCastle/ny.jpg',
+								'../asset/cubemap/SwedishRoyalCastle/pz.jpg',
+								'../asset/cubemap/SwedishRoyalCastle/nz.jpg'
+							])
+						}
+						var env = redGLTFLoader['environmentTexture']
 						// Type	Description	Required
 						// baseColorFactor	number [4]	The material's base color factor.	No, default: [1,1,1,1]
 						// baseColorTexture	object	The base color texture.	No
@@ -941,7 +961,8 @@ var RedGLTFLoader;
 						if ( tMaterialInfo['pbrMetallicRoughness'] && tMaterialInfo['pbrMetallicRoughness']['baseColorFactor'] ) tColor = tMaterialInfo['pbrMetallicRoughness']['baseColorFactor']
 						else tColor = [1.0, 1.0, 1.0, 1.0]
 						tMaterial['baseColorFactor'] = tColor
-						if ( !roughnessTexture ) tMaterial.metallicPower = metallicFactor;
+						tMaterial.metallicFactor = metallicFactor != undefined ? metallicFactor : 1;
+						tMaterial.roughnessFactor = roughnessFactor != undefined ? roughnessFactor : 1;
 					} else {
 						var tColor
 						if ( tMaterialInfo['pbrMetallicRoughness'] && tMaterialInfo['pbrMetallicRoughness']['baseColorFactor'] ) tColor = tMaterialInfo['pbrMetallicRoughness']['baseColorFactor']
@@ -956,13 +977,13 @@ var RedGLTFLoader;
 						)
 					}
 				}
-				return [tMaterial, doubleSide]
+				return [tMaterial, doubleSide, alphaMode, alphaCutoff]
 			}
 		})();
 		makeMesh = function (redGLTFLoader, json, meshData) {
 			// console.log('parseMesh :')
 			// console.log(meshData)
-			var tName, tDoubleSide
+			var tName, tDoubleSide, tAlphaMode, tAlphaCutoff
 			if ( meshData['name'] ) tName = meshData['name']
 			var tMeshList = []
 			meshData['primitives'].forEach(function (v, index) {
@@ -1007,6 +1028,8 @@ var RedGLTFLoader;
 				// 재질파싱
 				tMaterial = parseMaterialInfo(redGLTFLoader, json, v)
 				tDoubleSide = tMaterial[1]
+				tAlphaMode = tMaterial[2]
+				tAlphaCutoff = tMaterial[3]
 				tMaterial = tMaterial[0]
 				// 모드 파싱
 				if ( 'mode' in v ) {
@@ -1083,13 +1106,37 @@ var RedGLTFLoader;
 							new Uint16Array(indices)
 						) : null
 				)
-				if ( !tMaterial ) tMaterial = RedColorPhongMaterial(redGLTFLoader['redGL'], RedGLUtil.rgb2hex(parseInt(Math.random() * 255), parseInt(Math.random() * 255), parseInt(Math.random() * 255)))
+				if ( !tMaterial ){
+					tMaterial = RedColorPhongMaterial(redGLTFLoader['redGL'], RedGLUtil.rgb2hex(parseInt(Math.random() * 255), parseInt(Math.random() * 255), parseInt(Math.random() * 255)))
+
+				}
 				// console.log('tMaterial', tMaterial)
 				tMesh = RedMesh(redGLTFLoader['redGL'], tGeo, tMaterial)
 				if ( tName ) tMesh.name = tName
 				if ( tDrawMode ) tMesh.drawMode = tDrawMode
 				else tMesh.drawMode = redGLTFLoader['redGL'].gl.TRIANGLES
+				//
 				if ( tDoubleSide ) tMesh.useCullFace = false
+				console.log('tAlphaMode', tAlphaMode)
+				console.log('tAlphaCutoff', tAlphaCutoff)
+				switch ( tAlphaMode ) {
+					// TODO
+					case 'OPAQUE ' :
+						tMesh.useBlendMode = false
+						break
+					case 'BLEND' :
+						tMesh.useDepthMask = false
+						tMesh.useBlendMode = true
+						break
+					case 'MASK' :
+						tMesh.useDepthMask = false
+						tMesh.useBlendMode = true
+						tMaterial.cutOff = tAlphaCutoff
+						break
+					default :
+						tMaterial.cutOff = 0.0
+						tMesh.useBlendMode = false
+				}
 				console.log('tDoubleSide', tDoubleSide)
 				// console.log('tMesh', tMesh)
 				/////////////////////////////////////////////////////////

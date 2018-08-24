@@ -162,8 +162,8 @@
 		tScene3D = RedScene(this);
 		// tScene3D['useFog'] = true
 		tCamera = RedObitController(this);
-		tCamera.distance = 80
-		tCamera.tilt = -45
+		tCamera.distance = 20
+		tCamera.tilt = -35
 //		tCamera.distance = 150
 //		tCamera.speedDistance = 50
 		tRenderer = RedRenderer();
@@ -174,13 +174,13 @@
 		var testDLight;
 		testDLight = RedDirectionalLight(this)
 		testDLight.x = 0
-		testDLight.y = 300
-		testDLight.z = 200
+		testDLight.y = 100
+		testDLight.z = 100
 		tScene3D.addLight(testDLight)
 		testDLight = RedDirectionalLight(this)
 		testDLight.x = 0
-		testDLight.y = 300
-		testDLight.z = -200
+		testDLight.y = 100
+		testDLight.z = -100
 		tScene3D.addLight(testDLight)
 		tRenderer.renderDebuger.visible = true
 		tScene3D.skyBox =
@@ -192,15 +192,33 @@
 				'../asset/cubemap/SwedishRoyalCastle/pz.jpg',
 				'../asset/cubemap/SwedishRoyalCastle/nz.jpg'
 			]);
-		RedGLTFLoader(self, '../asset/glTF/basic/', 'TextureCoordinateTest.gltf', function (v) {
-			console.log('호잇!', v)
-			tScene3D.addChild(v['resultMesh'])
-			v['resultMesh'].x = -3
-		})
+//		RedGLTFLoader(self, '../asset/glTF/basic/', 'TextureCoordinateTest.gltf', function (v) {
+//			console.log('호잇!', v)
+//			tScene3D.addChild(v['resultMesh'])
+//			v['resultMesh'].z = 3
+//		})
 		RedGLTFLoader(self, '../asset/glTF/basic/', 'TextureSettingsTest.gltf', function (v) {
 			console.log('호잇!', v)
 			tScene3D.addChild(v['resultMesh'])
-			v['resultMesh'].x = 5
+			v['resultMesh'].y = 2
+//			v['resultMesh'].x = 5
+		})
+
+//		RedGLTFLoader(self, '../asset/glTF/SciFiHelmet/glTF/', 'SciFiHelmet.gltf', function (v) {
+//			console.log('호잇!', v)
+//			tScene3D.addChild(t1 =v['resultMesh'])
+//		})
+
+//		RedGLTFLoader(self, '../asset/glTF/FlightHelmet/glTF/', 'FlightHelmet.gltf', function (v) {
+//			console.log('호잇!', v)
+//			tScene3D.addChild(v['resultMesh'])
+//
+//		})
+		RedGLTFLoader(self, '../asset/glTF/basic/', 'AlphaBlendModeTest.gltf', function (v) {
+			console.log('호잇!', v)
+			tScene3D.addChild(v['resultMesh'])
+			v['resultMesh'].z = 2
+			v['resultMesh'].y = -5
 		})
 //		RedGLTFLoader(self, '../asset/glTF/WaterBottle/glTF/', 'WaterBottle.gltf', function (v) {
 //			console.log('호잇!', v)

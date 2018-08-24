@@ -196,6 +196,10 @@
 			console.log('호잇!', v)
 			tScene3D.addChild(v['resultMesh'])
 		})
+//		RedGLTFLoader(self, '../asset/glTF/basic/', 'VC.gltf', function (v) {
+//			console.log('호잇!', v)
+//			tScene3D.addChild(v['resultMesh'])
+//		})
 		t1 = RedGLTFLoader(self, '../asset/glTF/basic/', 'animation.gltf', function (v) {
 			console.log('호잇!', v)
 			tScene3D.addChild(v['resultMesh'])
@@ -210,23 +214,27 @@
 			console.log('호잇!', v)
 			tScene3D.addChild(v['resultMesh'])
 			v['resultMesh'].z = 2
-
 		});
 		RedGLTFLoader(self, '../asset/glTF/basic/', 'RiggedSimple.gltf', function (v) {
 			console.log('호잇!', v)
 			tScene3D.addChild(v['resultMesh'])
 			v['resultMesh'].x = 3
-
-
+		});
+		RedGLTFLoader(self, '../asset/glTF/AnimatedMorphCube/glTF/', 'AnimatedMorphCube.gltf', function (v) {
+			console.log('호잇!', v)
+			tScene3D.addChild(v['resultMesh'])
+		});
+		RedGLTFLoader(self, '../asset/glTF/AnimatedMorphSphere/glTF/', 'AnimatedMorphSphere.gltf', function (v) {
+			console.log('호잇!', v)
+			tScene3D.addChild(v['resultMesh'])
+			v['resultMesh'].z = -5
 		});
 //////
 		RedGLTFLoader(self, '../asset/glTF/basic/', 'SimpleSkin.gltf', function (v) {
 			console.log('호잇!', v)
 			tScene3D.addChild(v['resultMesh'])
 			v['resultMesh'].x = -3
-
 		});
-
 		tRenderer.start(this, function (time) {
 
 //			if(tScene3D['children'][0]) tScene3D['children'][0].rotationX+=1

@@ -304,8 +304,8 @@
 			var folder = gui.addFolder('RedPBRMaterial')
 			var testRedPBRMaterial = {
 				alpha: 1,
-				metallicPower: 1,
-
+				metallicFactor: 1,
+				roughnessFactor : 1,
 				specularPower: 1,
 				displacementPower: 0,
 				displacementFlowSpeedX: 0,
@@ -317,9 +317,14 @@
 				})
 			})
 
-			folder.add(testRedPBRMaterial, 'metallicPower', 0, 2).onChange(function (v) {
+			folder.add(testRedPBRMaterial, 'metallicFactor', 0, 2).onChange(function (v) {
 				tScene.children[0].children.forEach(function (v2) {
-					v2.material.metallicPower = v
+					v2.material.metallicFactor = v
+				})
+			})
+			folder.add(testRedPBRMaterial, 'roughnessFactor', 0, 2).onChange(function (v) {
+				tScene.children[0].children.forEach(function (v2) {
+					v2.material.roughnessFactor = v
 				})
 			})
 			folder.add(testRedPBRMaterial, 'specularPower', 0, 10).onChange(function (v) {

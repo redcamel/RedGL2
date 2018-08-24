@@ -163,7 +163,7 @@
 		// tScene3D['useFog'] = true
 		tCamera = RedObitController(this);
 		tCamera.tilt = 0
-		tCamera.pan =180
+		tCamera.pan =-180
 //		tCamera.distance = 150
 //		tCamera.speedDistance = 50
 		tRenderer = RedRenderer();
@@ -173,8 +173,7 @@
 		this.renderScale = 1
 		var testDLight;
 		testDLight = RedDirectionalLight(this)
-		testDLight.z = 100
-
+		testDLight.z = -100
 		tScene3D.addLight(testDLight)
 
 		tRenderer.renderDebuger.visible = true
@@ -191,7 +190,7 @@
 		RedGLTFLoader(this, '../asset/glTF/basic/', 'MetalRoughSpheres.gltf', function (v) {
 			console.log('호잇!', v)
 			tScene3D.addChild(v['resultMesh'])
-			v['resultMesh'].rotationX =50
+			v['resultMesh'].rotationX =65
 		})
 
 		tRenderer.start(this, function (time) {
