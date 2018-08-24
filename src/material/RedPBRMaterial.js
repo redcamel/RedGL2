@@ -43,6 +43,8 @@ var RedPBRMaterial;
 		/* @preserve
 		 precision mediump float;
 		 uniform vec4 uBaseColorFactor;
+		 uniform float u_cutOff;
+
 		 //#define#diffuseTexture# uniform sampler2D u_diffuseTexture;
 		 //#define#normalTexture# uniform sampler2D u_normalTexture;
 		 //#define#occlusionTexture# uniform sampler2D u_occlusionTexture;
@@ -54,7 +56,8 @@ var RedPBRMaterial;
 
          //#define#normalTexture# uniform float u_normalPower;
 		 uniform float u_specularPower;
-		 uniform float u_metallicPower;
+		 uniform float u_metallicFactor;
+		 uniform float u_roughnessFactor;
 
 		 uniform float u_alpha;
 
@@ -96,8 +99,9 @@ var RedPBRMaterial;
 
 			 texelColor = vec4(0.0,0.0,0.0,0.0);
 			 //#define#diffuseTexture# texelColor = texture2D(u_diffuseTexture, vec2(vTexcoord.x,vTexcoord.y));
+			 texelColor *= uBaseColorFactor;
 			 //#define#diffuseTexture# texelColor.rgb *= texelColor.a;
-			 //#define#diffuseTexture# if(texelColor.a ==0.0) discard;
+			 //#define#diffuseTexture# if(texelColor.a < u_cutOff) discard;
 
 			 //#define#emissiveTexture# emissiveColor = texture2D(u_emissiveTexture, vTexcoord);
 			 //#define#emissiveTexture# emissiveColor.rgb *= emissiveColor.a;
@@ -105,24 +109,26 @@ var RedPBRMaterial;
 			 //#define#roughnessTexture# roughnessColor = texture2D(u_roughnessTexture, vTexcoord);
 
 
-
-
 			 N = normalize(vVertexNormal);
 			 //#define#normalTexture# vec4 normalColor = texture2D(u_normalTexture, vTexcoord);
 			 //#define#normalTexture# if(normalColor.a != 0.0) N = normalize(2.0 * (N + normalColor.rgb * u_normalPower  - 0.5));
 
 			 reflectionColor = textureCube(u_environmentTexture, 2.0 * dot(vReflectionCubeCoord, N) * N - vReflectionCubeCoord);
-			 float tMetallicPower = u_metallicPower;
+			 float tMetallicPower = u_metallicFactor;
+			 float tRoughnessPower = u_roughnessFactor;
 
 			 // 메탈릭 산출 roughnessColor.b
 			 //#define#roughnessTexture# tMetallicPower = tMetallicPower * roughnessColor.b;
-             float shininess = 32.0 ;
+             float shininess = 128.0 ;
              // 거칠기 산출 roughnessColor.g
-			  // TODO
+			//#define#roughnessTexture# tRoughnessPower = (1.0-roughnessColor.g)/tRoughnessPower; //TODO: 공식적용해야함
 
-			 texelColor = mix(texelColor,reflectionColor ,tMetallicPower);
+
+
+			 texelColor = mix(texelColor,reflectionColor ,tMetallicPower * (1.0-roughnessColor.g));
 
              //#define#occlusionTexture# occlusionColor = texture2D(u_occlusionTexture, vTexcoord);
+             //#define#occlusionTexture# occlusionColor.rgb *= occlusionColor.a;
 
 			 specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);
 			 specularTextureValue = 1.0;
@@ -134,8 +140,8 @@ var RedPBRMaterial;
 				 lambertTerm = dot(N,-L);
 				 if(lambertTerm > 0.0){
 					 ld += uDirectionalLightColorList[i] * texelColor * lambertTerm * uDirectionalLightIntensityList[i] * uDirectionalLightColorList[i].a;
-					 specular = pow( max(dot(reflect(L, N), -L), 0.0), shininess/tMetallicPower  ) ;
-					 ls +=  specularLightColor * specular * u_specularPower * specularTextureValue * uDirectionalLightIntensityList[i]* uDirectionalLightColorList[i].a * (1.0-roughnessColor.g);
+					 specular = pow( max(dot(reflect(L, N), -L), 0.0), pow(shininess, tRoughnessPower)/tMetallicPower) ;
+					 ls +=  specularLightColor * specular * u_specularPower * specularTextureValue * uDirectionalLightIntensityList[i]* uDirectionalLightColorList[i].a *  tRoughnessPower;
 				 }
 			 }
 
@@ -156,12 +162,10 @@ var RedPBRMaterial;
 			 }
 			 finalColor = la * uAmbientIntensity + ld + ls;
 			 //#define#emissiveTexture# finalColor += emissiveColor;
+
 			 finalColor.rgb *= texelColor.a;
 			 finalColor.a = texelColor.a * u_alpha;
-			 vec4 test = uBaseColorFactor;
-			 test.rgb *= test.a;
-			 finalColor.rgb *= test.rgb;
-			 //#define#occlusionTexture# finalColor *= occlusionColor;
+			 //#define#occlusionTexture#  finalColor.rgb *= occlusionColor.r;
 			 //#define#fog#false# gl_FragColor = finalColor;
 			 //#define#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
 		 }
@@ -243,12 +247,15 @@ var RedPBRMaterial;
 		this['roughnessTexture'] = roughnessTexture;
 		this['normalPower'] = 1;
 		this['specularPower'] = 1;
-		this['metallicPower'] = 1;
+		this['metallicFactor'] = 1;
+		this['roughnessFactor'] = 1;
+
 		this['displacementPower'] = 0;
 		this['displacementFlowSpeedX'] = 0;
 		this['displacementFlowSpeedY'] = 0;
 		this['baseColorFactor'] = null
 		this['alpha'] = 1;
+		this['cutOff'] = 0;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
 		this['_UUID'] = RedGL.makeUUID();
@@ -273,6 +280,14 @@ var RedPBRMaterial;
 	 }
 	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'alpha', 'number', {min: 0, max: 1});
+	/**DOC:
+	 {
+	     code : 'PROPERTY',
+		 title :`cutOff`,
+		 return : 'Number'
+	 }
+	 :DOC*/
+	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'cutOff', 'number', {min: 0, max: 1});
 	/**DOC:
 	 {
 	     code : 'PROPERTY',
@@ -353,12 +368,22 @@ var RedPBRMaterial;
 	/**DOC:
 	 {
 	     code : 'PROPERTY',
-		 title :`metallicPower`,
+		 title :`metallicFactor`,
 		 description : `기본값 : 1`,
 		 return : 'Number'
 	 }
 	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'metallicPower', 'number', {'min': 0});
+	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'metallicFactor', 'number', {'min': 0});
+	/**DOC:
+	 {
+	     code : 'PROPERTY',
+		 title :`roughnessFactor`,
+		 description : `기본값 : 1`,
+		 return : 'Number'
+	 }
+	 :DOC*/
+	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'roughnessFactor', 'number', {'min': 0});
+
 	/**DOC:
 	 {
 	     code : 'PROPERTY',
