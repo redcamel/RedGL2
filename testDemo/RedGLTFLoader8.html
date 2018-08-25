@@ -179,13 +179,13 @@
 		testDLight.z = 10
 
 		tScene3D.addLight(testDLight)
-		var dof = RedPostEffect_DoF(this)
-		dof.focusLength = 50
-		RedView('test')['postEffectManager'].addEffect(dof)
-
-		var bloom = RedPostEffect_Bloom(this)
-		RedView('test')['postEffectManager'].addEffect(bloom)
-		bloom.exposure = 1.5
+//		var dof = RedPostEffect_DoF(this)
+//		dof.focusLength = 50
+//		RedView('test')['postEffectManager'].addEffect(dof)
+//
+//		var bloom = RedPostEffect_Bloom(this)
+//		RedView('test')['postEffectManager'].addEffect(bloom)
+//		bloom.exposure = 1.5
 //		tRenderer.renderDebuger.visible = true
 		tScene3D.skyBox =
 			RedSkyBox(this, [
@@ -228,7 +228,15 @@
 			console.log('호잇!', v)
 			tScene3D.addChild(t2 = v['resultMesh'])
 			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 10
-			v['resultMesh'].z = -10
+			v['resultMesh'].z = 10
+		})
+
+		RedGLTFLoader(self, '../asset/glTF/BoomBoxWithAxes/glTF/', 'BoomBoxWithAxes.gltf', function (v) {
+			console.log('호잇!', v)
+			tScene3D.addChild(v['resultMesh'])
+			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 100
+			v['resultMesh'].x =5
+			v['resultMesh'].z = 5
 		})
 
 		tRenderer.start(this, function (time) {

@@ -238,18 +238,39 @@ var RedGLTFLoader;
 							// console.log(target.y)
 						}
 						if ( aniData['key'] == 'rotation' ) {
+							interpolationValue = (currentTime - previousTime) / (nextTime - previousTime)
 							var tQuat = []
-							// quat lerp start
-							var ax = prevRotation[0];
-							var ay = prevRotation[1];
-							var az = prevRotation[2];
-							var aw = prevRotation[3];
-							tQuat[0] = ax + interpolationValue * (nextRotation[0] - ax);
-							tQuat[1] = ay + interpolationValue * (nextRotation[1] - ay);
-							tQuat[2] = az + interpolationValue * (nextRotation[2] - az);
-							tQuat[3] = aw + interpolationValue * (nextRotation[3] - aw);
-							// quat lerp end
-							// quat.lerp(tt, prevRotation, nextRotation, interpolationValue)
+							var ax = prevRotation[0], ay = prevRotation[1], az = prevRotation[2], aw = prevRotation[3];
+							var bx = nextRotation[0], by = nextRotation[1], bz = nextRotation[2], bw = nextRotation[3];
+							var omega, cosom, sinom, scale0, scale1;
+							// calc cosine
+							cosom = ax * bx + ay * by + az * bz + aw * bw;
+							// adjust signs (if necessary)
+							if ( cosom < 0.0 ) {
+								cosom = -cosom;
+								bx = -bx;
+								by = -by;
+								bz = -bz;
+								bw = -bw;
+							}
+							// calculate coefficients
+							if ( (1.0 - cosom) > glMatrix.EPSILON ) {
+								// standard case (slerp)
+								omega = Math.acos(cosom);
+								sinom = Math.sin(omega);
+								scale0 = Math.sin((1.0 - interpolationValue) * omega) / sinom;
+								scale1 = Math.sin(interpolationValue * omega) / sinom;
+							} else {
+								// "from" and "to" quaternions are very close
+								//  ... so we can do a linear interpolation
+								scale0 = 1.0 - interpolationValue;
+								scale1 = interpolationValue;
+							}
+							// calculate final values
+							tQuat[0] = scale0 * ax + scale1 * bx;
+							tQuat[1] = scale0 * ay + scale1 * by;
+							tQuat[2] = scale0 * az + scale1 * bz;
+							tQuat[3] = scale0 * aw + scale1 * bw;
 							var rotationMTX = []
 							var tRotation = [0, 0, 0]
 							RedGLUtil.quaternionToRotationMat4(tQuat, rotationMTX)
@@ -559,7 +580,7 @@ var RedGLTFLoader;
 					if ( tComponentType == Uint8Array ) tMethod = 'getUint8'
 					if ( tComponentType == Int8Array ) tMethod = 'getInt8'
 					var tAccessorBufferOffset = tAccessors['byteOffset'] || 0
-					var tBufferViewOffset  = tBufferView['byteOffset'] || 0
+					var tBufferViewOffset = tBufferView['byteOffset'] || 0
 					i = (tBufferViewOffset + tAccessorBufferOffset) / tComponentType['BYTES_PER_ELEMENT']
 					switch ( tAccessors['type'] ) {
 						case 'VEC3' :
@@ -607,7 +628,7 @@ var RedGLTFLoader;
 				if ( tComponentType == Uint16Array ) tMethod = 'getUint16'
 				else if ( tComponentType == Uint8Array ) tMethod = 'getUint8'
 				var tAccessorBufferOffset = tSparseAccessors['byteOffset'] || 0
-				var tBufferViewOffset  = tBufferView['byteOffset'] || 0
+				var tBufferViewOffset = tBufferView['byteOffset'] || 0
 				i = (tBufferViewOffset + tAccessorBufferOffset) / tComponentType['BYTES_PER_ELEMENT']
 				//
 				len = i + ( tComponentType['BYTES_PER_ELEMENT'] * tSparse['count']) / tComponentType['BYTES_PER_ELEMENT']
@@ -659,7 +680,7 @@ var RedGLTFLoader;
 					RedGLUtil.throwFunc('파싱할수없는 타입', this['componentType'])
 			}
 			this['accessorBufferOffset'] = this['accessor']['byteOffset'] || 0
-			this['bufferViewOffset']  = this['bufferView']['byteOffset'] || 0
+			this['bufferViewOffset'] = this['bufferView']['byteOffset'] || 0
 			this['bufferViewByteStride'] = this['bufferView']['byteStride'] || 0
 			this['startIndex'] = (this['bufferViewOffset'] + this['accessorBufferOffset']) / this['componentType_BYTES_PER_ELEMENT'];
 			// console.log('해당 bufferView 정보', this['bufferView'])
@@ -739,7 +760,7 @@ var RedGLTFLoader;
 								if ( key == 'TEXCOORD_0' ) {
 									if ( strideIndex % 2 == 0 ) uvs.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
 									else uvs.push(1 - tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-								}else if ( key == 'TEXCOORD_1' ) {
+								} else if ( key == 'TEXCOORD_1' ) {
 									if ( strideIndex % 2 == 0 ) uvs.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
 									else uvs.push(1 - tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
 								}
@@ -1106,9 +1127,8 @@ var RedGLTFLoader;
 							new Uint16Array(indices)
 						) : null
 				)
-				if ( !tMaterial ){
+				if ( !tMaterial ) {
 					tMaterial = RedColorPhongMaterial(redGLTFLoader['redGL'], RedGLUtil.rgb2hex(parseInt(Math.random() * 255), parseInt(Math.random() * 255), parseInt(Math.random() * 255)))
-
 				}
 				// console.log('tMaterial', tMaterial)
 				tMesh = RedMesh(redGLTFLoader['redGL'], tGeo, tMaterial)
