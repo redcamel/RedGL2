@@ -183,10 +183,10 @@
 //		dof.focusLength = 50
 //		RedView('test')['postEffectManager'].addEffect(dof)
 //
-//		var bloom = RedPostEffect_Bloom(this)
-//		RedView('test')['postEffectManager'].addEffect(bloom)
-//		bloom.exposure = 1.5
-//		tRenderer.renderDebuger.visible = true
+		var bloom = RedPostEffect_Bloom(this)
+		RedView('test')['postEffectManager'].addEffect(bloom)
+		bloom.exposure = 1
+		tRenderer.renderDebuger.visible = true
 		tScene3D.skyBox =
 			RedSkyBox(this, [
 				'../asset/cubemap/SwedishRoyalCastle/px.jpg',

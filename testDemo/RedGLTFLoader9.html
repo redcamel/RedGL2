@@ -164,7 +164,8 @@
 //		tCamera = RedBasicController(this);
 		tCamera = RedObitController(this);
 		tCamera.tilt = 0
-		tCamera.distance = 3
+		tCamera.distance = 750
+		tCamera.speedDistance = 50
 		tRenderer = RedRenderer();
 		tWorld.addView(RedView('test', this, tScene3D, tCamera));
 		RedView('test').setSize('100%', '100%')
@@ -195,11 +196,16 @@
 				'../asset/cubemap/SwedishRoyalCastle/nz.jpg'
 			]);
 		var t0, t1, t2
-		RedGLTFLoader(self, '../asset/glTF/basic/', 'NormalTangentTest.gltf', function (v) {
+//		RedGLTFLoader(self, '../asset/glTF/basic/', 'NormalTangentTest.gltf', function (v) {
+//			console.log('호잇!', v)
+//			tScene3D.addChild(t0 = v['resultMesh'])
+//		})
+
+		RedGLTFLoader(self, '../asset/glTF/buggy/', 'scene.gltf', function (v) {
 			console.log('호잇!', v)
 			tScene3D.addChild(t0 = v['resultMesh'])
+			t0.y = -90
 		})
-
 
 		tRenderer.start(this, function (time) {
 			if ( t0 ) {
