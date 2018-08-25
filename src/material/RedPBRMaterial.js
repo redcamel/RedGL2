@@ -247,8 +247,8 @@ var RedPBRMaterial;
 		this['roughnessTexture'] = roughnessTexture;
 		this['normalPower'] = 1;
 		this['specularPower'] = 1;
-		this['metallicFactor'] = 0;
-		this['roughnessFactor'] = 0;
+		this['metallicFactor'] = 1;
+		this['roughnessFactor'] = 1;
 
 		this['displacementPower'] = 0;
 		this['displacementFlowSpeedX'] = 0;

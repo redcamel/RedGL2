@@ -90,6 +90,7 @@ var RedGLTFLoader;
 		this['groups'] = []
 		this['skins'] = []
 		this['textures'] = {}
+		this['cameras'] = [];
 		this['animations'] = [];
 		this['aniTick'] = null
 		this['path'] = path;
@@ -322,6 +323,7 @@ var RedGLTFLoader;
 		var makeMesh;
 		var parseAnimations;
 		var parseNode;
+		var parseCameras;
 		var checkTRSAndMATRIX;
 		/*
 			glTF는 asset 속성이 있어야한다.
@@ -383,13 +385,19 @@ var RedGLTFLoader;
 					case 'buffers' :
 						console.log('TODO : buffers 내부 리소스 로딩');
 						break;
-					case 'bufferViews ' :
+					case 'bufferViews' :
 						console.log('TODO : bufferViews 내부 리소스 로딩');
 						break;
-					case 'accessors ' :
+					case 'accessors' :
 						console.log('TODO : accessors 내부 리소스 로딩');
 						break;
-					case 'images ' :
+					case 'images' :
+						console.log('TODO : images 내부 리소스 로딩');
+						break;
+					case 'cameras' :
+						console.log('TODO : images 내부 리소스 로딩');
+						break;
+					case 'animations ' :
 						console.log('TODO : images 내부 리소스 로딩');
 						break;
 					default :
@@ -398,6 +406,24 @@ var RedGLTFLoader;
 				}
 			}
 			getBufferResources(redGLTFLoader, json, callback);
+		}
+		parseCameras = function (redGLTFLoader, json) {
+			console.log(json)
+			if ( json['cameras'] ) {
+				json['cameras'].forEach(function (v) {
+					console.log('카메라', v)
+					var t0 = RedCamera()
+					if ( v['type'] == 'orthographic' ) {
+						t0.orthographicYn = true
+					}
+					else {
+						t0['fov'] = v['perspective']['yfov']
+						t0['farClipping'] = v['perspective']['zfar']
+						t0['nearClipping'] = v['perspective']['znear']
+					}
+					redGLTFLoader['cameras'].push(t0)
+				})
+			}
 		}
 		parseScene = function (redGLTFLoader, json) {
 			console.log('parseScene 시작')
@@ -543,6 +569,11 @@ var RedGLTFLoader;
 				redGLTFLoader['groups'][nodeIndex]['name'] = 'group' + nodeIndex
 				redGLTFLoader['groups'][nodeIndex]['byIndex'] = nodeIndex
 				checkTRSAndMATRIX(tGroup, info)
+				// 카메라가 있으면 또 연결시킴
+				if ( 'camera' in info ) {
+					redGLTFLoader['cameras'][info['camera']]['parentMesh'] = parentMesh
+					redGLTFLoader['cameras'][info['camera']]['targetMesh'] = tGroup
+				}
 				// tGroup.matrix = matrix
 				// tGroup.autoUpdateMatrix = false
 				if ( 'children' in info ) {
@@ -982,8 +1013,11 @@ var RedGLTFLoader;
 						if ( tMaterialInfo['pbrMetallicRoughness'] && tMaterialInfo['pbrMetallicRoughness']['baseColorFactor'] ) tColor = tMaterialInfo['pbrMetallicRoughness']['baseColorFactor']
 						else tColor = [1.0, 1.0, 1.0, 1.0]
 						tMaterial['baseColorFactor'] = tColor
-						tMaterial.metallicFactor = metallicFactor != undefined ? metallicFactor : 1;
-						tMaterial.roughnessFactor = roughnessFactor != undefined ? roughnessFactor : 1;
+						if(tMaterialInfo['pbrMetallicRoughness']){
+							tMaterial.metallicFactor = metallicFactor != undefined ? metallicFactor : 1;
+							tMaterial.roughnessFactor = roughnessFactor != undefined ? roughnessFactor : 1;
+						}
+
 					} else {
 						var tColor
 						if ( tMaterialInfo['pbrMetallicRoughness'] && tMaterialInfo['pbrMetallicRoughness']['baseColorFactor'] ) tColor = tMaterialInfo['pbrMetallicRoughness']['baseColorFactor']
@@ -1323,6 +1357,7 @@ var RedGLTFLoader;
 			getBaseResource(redGLTFLoader, json,
 				function () {
 					// 리소스 로딩이 완료되면 다음 진행
+					parseCameras(redGLTFLoader, json)
 					parseScene(redGLTFLoader, json)
 					parseAnimations(redGLTFLoader, json)
 					if ( callBack ) callBack();
