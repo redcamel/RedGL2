@@ -43,6 +43,7 @@ var RedPBRMaterial;
 		/* @preserve
 		 precision mediump float;
 		 uniform vec4 uBaseColorFactor;
+		 uniform vec3 uEmissiveFactor;
 		 uniform float u_cutOff;
 
 		 //#define#diffuseTexture# uniform sampler2D u_diffuseTexture;
@@ -58,6 +59,9 @@ var RedPBRMaterial;
 		 uniform float u_specularPower;
 		 uniform float u_metallicFactor;
 		 uniform float u_roughnessFactor;
+
+		 uniform float u_occlusionPower;
+
 
 		 uniform float u_alpha;
 
@@ -93,81 +97,79 @@ var RedPBRMaterial;
 		 float attenuation;
 
 		 void main(void) {
-			 la = uAmbientLightColor * uAmbientLightColor.a;
-			 ld = vec4(0.0, 0.0, 0.0, 1.0);
-			 ls = vec4(0.0, 0.0, 0.0, 1.0);
-
-			 texelColor = vec4(0.0,0.0,0.0,0.0);
-			 //#define#diffuseTexture# texelColor = texture2D(u_diffuseTexture, vec2(vTexcoord.x,vTexcoord.y));
-			 texelColor *= uBaseColorFactor;
-			 //#define#diffuseTexture# texelColor.rgb *= texelColor.a;
-			 //#define#diffuseTexture# if(texelColor.a < u_cutOff) discard;
-
-			 //#define#emissiveTexture# emissiveColor = texture2D(u_emissiveTexture, vTexcoord);
-			 //#define#emissiveTexture# emissiveColor.rgb *= emissiveColor.a;
-
-			 //#define#roughnessTexture# roughnessColor = texture2D(u_roughnessTexture, vTexcoord);
-
-
-			 N = normalize(vVertexNormal);
-			 //#define#normalTexture# vec4 normalColor = texture2D(u_normalTexture, vTexcoord);
-			 //#define#normalTexture# if(normalColor.a != 0.0) N = normalize(2.0 * (N + normalColor.rgb * u_normalPower  - 0.5));
-
-			 reflectionColor = textureCube(u_environmentTexture, 2.0 * dot(vReflectionCubeCoord, N) * N - vReflectionCubeCoord);
-			 float tMetallicPower = u_metallicFactor;
-			 float tRoughnessPower = u_roughnessFactor;
-
-			 // 메탈릭 산출 roughnessColor.b
-			 //#define#roughnessTexture# tMetallicPower = tMetallicPower * roughnessColor.b;
-             float shininess = 128.0 ;
-             // 거칠기 산출 roughnessColor.g
-			//#define#roughnessTexture# tRoughnessPower = (1.0-roughnessColor.g)/tRoughnessPower; //TODO: 공식적용해야함
+			la = uAmbientLightColor * uAmbientLightColor.a;
+			ld = vec4(0.0, 0.0, 0.0, 1.0);
+			ls = vec4(0.0, 0.0, 0.0, 1.0);
 
 
 
-			 texelColor = mix(texelColor,reflectionColor ,tMetallicPower * (1.0-roughnessColor.g));
+			float tMetallicPower = u_metallicFactor;
+			float tRoughnessPower = u_roughnessFactor;
+			//#define#roughnessTexture# roughnessColor = texture2D(u_roughnessTexture, vTexcoord);
+			// 메탈릭 산출 roughnessColor.b
+			//#define#roughnessTexture# tMetallicPower *= roughnessColor.b;
+			// 거칠기 산출 roughnessColor.g
+			//#define#roughnessTexture# tRoughnessPower *= roughnessColor.g ; //TODO: 공식적용해야함
 
-             //#define#occlusionTexture# occlusionColor = texture2D(u_occlusionTexture, vTexcoord);
-             //#define#occlusionTexture# occlusionColor.rgb *= occlusionColor.a;
-
-			 specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);
-			 specularTextureValue = 1.0;
 
 
-			 for(int i=0; i<cDIRETIONAL_MAX; i++){
-				 if(i == uDirectionalLightNum) break;
-				 L = normalize(-uDirectionalLightPositionList[i]);
-				 lambertTerm = dot(N,-L);
-				 if(lambertTerm > 0.0){
-					 ld += uDirectionalLightColorList[i] * texelColor * lambertTerm * uDirectionalLightIntensityList[i] * uDirectionalLightColorList[i].a;
-					 specular = pow( max(dot(reflect(L, N), -L), 0.0), pow(shininess, tRoughnessPower)/tMetallicPower) ;
-					 ls +=  specularLightColor * specular * u_specularPower * specularTextureValue * uDirectionalLightIntensityList[i]* uDirectionalLightColorList[i].a *  tRoughnessPower;
-				 }
+			// diffuse 색상 산출
+			texelColor = vec4(0.0,0.0,0.0,0.0);
+			//#define#diffuseTexture# texelColor = texture2D(u_diffuseTexture, vec2(vTexcoord.x,vTexcoord.y));
+			texelColor *= uBaseColorFactor;
+
+			// 노멀값 계산
+			N = normalize(vVertexNormal);
+			//#define#normalTexture# vec4 normalColor = texture2D(u_normalTexture, vTexcoord);
+			//#define#normalTexture# if(normalColor.a != 0.0) N = normalize(2.0 * (N + normalColor.rgb * u_normalPower  - 0.5));
+
+
+			// 환경맵 계산
+			reflectionColor = textureCube(u_environmentTexture, 2.0 * dot(vReflectionCubeCoord, N) * N - vReflectionCubeCoord);
+			reflectionColor.rgb *= reflectionColor.a;
+			// 환경맵 합성
+    		texelColor = mix(texelColor,reflectionColor ,tMetallicPower * (1.0-tRoughnessPower+0.04));
+
+
+
+			// 컷오프 계산
+			//#define#diffuseTexture# texelColor.rgb *= texelColor.a;
+			//#define#diffuseTexture# if(texelColor.a < u_cutOff) discard;
+
+
+
+
+			float shininess = 256.0 ;
+			specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);
+			specularTextureValue =  1.0 ;
+
+			for(int i=0; i<cDIRETIONAL_MAX; i++){
+			 if(i == uDirectionalLightNum) break;
+			 L = normalize(-uDirectionalLightPositionList[i]);
+			 lambertTerm = dot(N,-L);
+			 if(lambertTerm > 0.0){
+				 ld += uDirectionalLightColorList[i] * texelColor * lambertTerm * uDirectionalLightIntensityList[i] * uDirectionalLightColorList[i].a;
+				 specular = pow( max(dot(reflect(L, N), -L), 0.0), pow(shininess, 1.0-tRoughnessPower+0.04) );
+				 specular *= pow(1.0-tRoughnessPower+0.04, 2.0 * (1.0-tMetallicPower)) ;
+				 ls +=  specularLightColor * specular * u_specularPower * specularTextureValue * uDirectionalLightIntensityList[i]* uDirectionalLightColorList[i].a * (1.0-tRoughnessPower+0.04);
 			 }
+			}
 
-			 for(int i=0;i<cPOINT_MAX;i++){
-				 if(i== uPointLightNum) break;
-				 L =  -uPointLightPositionList[i] + vVertexPositionEye4.xyz;
-				 distanceLength = length(L);
-				 if(uPointLightRadiusList[i]> distanceLength){
-					 attenuation = 1.0 / (0.01 + 0.02 * distanceLength + 0.03 * distanceLength * distanceLength);
-					 L = normalize(L);
-					 lambertTerm = dot(N,-L);
-					 if(lambertTerm > 0.0){
-						 ld += uPointLightColorList[i] * texelColor * lambertTerm * attenuation * uPointLightIntensityList[i] * uPointLightColorList[i].a;
-						 specular = pow( max(dot(reflect(L, N), -L), 0.0), shininess/tMetallicPower );
-						 ls +=  specularLightColor * specular * u_specularPower * specularTextureValue * uPointLightIntensityList[i] * uPointLightColorList[i].a ;
-					 }
-				 }
-			 }
-			 finalColor = la * uAmbientIntensity + ld + ls;
-			 //#define#emissiveTexture# finalColor += emissiveColor;
+			finalColor = la * uAmbientIntensity + ld + ls;
+			finalColor.rgb *= texelColor.a;
+			finalColor.a = texelColor.a * u_alpha ;
 
-			 finalColor.rgb *= texelColor.a;
-			 finalColor.a = texelColor.a * u_alpha;
-			 //#define#occlusionTexture#  finalColor.rgb *= occlusionColor.r;
-			 //#define#fog#false# gl_FragColor = finalColor;
-			 //#define#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
+			// 이미시브합성
+			//#define#emissiveTexture# emissiveColor = texture2D(u_emissiveTexture, vTexcoord);
+			//#define#emissiveTexture# emissiveColor.rgb *= emissiveColor.a;
+			//#define#emissiveTexture# emissiveColor.rgb *= uEmissiveFactor;
+			//#define#emissiveTexture# finalColor += emissiveColor;
+			// 오클루젼 합성
+			//#define#occlusionTexture# occlusionColor = texture2D(u_occlusionTexture, vTexcoord);
+			//#define#occlusionTexture# occlusionColor.rgb *= occlusionColor.a;
+			//#define#occlusionTexture#  finalColor.rgb = mix(finalColor.rgb, finalColor.rgb * occlusionColor.rrr, u_occlusionPower);
+			//#define#fog#false# gl_FragColor = finalColor;
+			//#define#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
 		 }
 		 */
 	};
@@ -250,10 +252,12 @@ var RedPBRMaterial;
 		this['metallicFactor'] = 1;
 		this['roughnessFactor'] = 1;
 
+		this['occlusionPower'] = 1;
 		this['displacementPower'] = 0;
 		this['displacementFlowSpeedX'] = 0;
 		this['displacementFlowSpeedY'] = 0;
 		this['baseColorFactor'] = null
+		this['emissiveFactor'] = null;
 		this['alpha'] = 1;
 		this['cutOff'] = 0;
 		/////////////////////////////////////////
@@ -373,7 +377,7 @@ var RedPBRMaterial;
 		 return : 'Number'
 	 }
 	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'metallicFactor', 'number', {'min': 0});
+	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'metallicFactor', 'number', {'min': 0, 'max' : 1});
 	/**DOC:
 	 {
 	     code : 'PROPERTY',
@@ -382,8 +386,17 @@ var RedPBRMaterial;
 		 return : 'Number'
 	 }
 	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'roughnessFactor', 'number', {'min': 0});
+	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'roughnessFactor', 'number', {'min': 0, 'max' : 1});
 
+	/**DOC:
+	 {
+	     code : 'PROPERTY',
+		 title :`occlusionPower`,
+		 description : `기본값 : 1`,
+		 return : 'Number'
+	 }
+	 :DOC*/
+	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'occlusionPower', 'number', {'min': 0});
 	/**DOC:
 	 {
 	     code : 'PROPERTY',

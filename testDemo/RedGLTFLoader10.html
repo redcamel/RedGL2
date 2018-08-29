@@ -165,7 +165,11 @@
 		tCamera = RedObitController(this);
 		tCamera.tilt = 0
 		tCamera.distance = 50
-		tCamera.speedDistance = 1
+		tCamera.speedDistance = 50
+//		tCamera = RedCamera()
+//		tCamera.x = 0.5
+//		tCamera.y = 0.5
+//		tCamera.z = 3.0
 		tRenderer = RedRenderer();
 		tWorld.addView(RedView('test', this, tScene3D, tCamera));
 		RedView('test').setSize('100%', '100%')
@@ -177,6 +181,12 @@
 		testDLight.y = 0
 		testDLight.z = 10
 		tScene3D.addLight(testDLight)
+		testDLight = RedDirectionalLight(this)
+		testDLight.x = 10
+		testDLight.y = 0
+		testDLight.z = -10
+		tScene3D.addLight(testDLight)
+		tScene3D.addLight(RedAmbientLight(this))
 //		var dof = RedPostEffect_DoF(this)
 //		dof.focusLength = 50
 //		RedView('test')['postEffectManager'].addEffect(dof)
@@ -200,24 +210,34 @@
 			tScene3D.addChild(t0 = v['resultMesh'])
 			testUI(self, tScene3D)
 		})
+//		RedGLTFLoader(self, '../asset/glTF/basic/', '2CylinderEngine.gltf', function (v) {
+//			console.log('호잇!', v)
+//			tScene3D.addChild(v['resultMesh'])
+//
+//		})
 //		RedGLTFLoader(self, '../asset/glTF/basic/', 'Cameras.gltf', function (v) {
 //			console.log('호잇!', t1 = v)
 //			tScene3D.addChild(t0 = v['resultMesh'])
 //			testUI(self, tScene3D)
 //		})
 		var tIndex = 0
+		var tt = 0
 		tRenderer.start(this, function (time) {
-			var targetMesh = RedView('test').camera['targetMesh']
-			var parentMesh = RedView('test').camera['parentMesh']
-			if ( targetMesh ) {
-				console.log(targetMesh.x, targetMesh.y, targetMesh.z)
-//				RedView('test').camera.x = targetMesh.x
-//				RedView('test').camera.y = targetMesh.y
-//				RedView('test').camera.z = targetMesh.z
-				RedView('test').camera.autoUpdateMatrix = false
-				var aa = mat4.create()
-				RedView('test').camera.matrix = parentMesh['matrix']
+			var tCamera = RedView('test').camera
+			var cameraMesh = tCamera['_cameraMesh']
+			var targetMesh = tCamera['_targetMesh']
+			if ( cameraMesh ) {
+//				tCamera.autoUpdateMatrix = false
+//				tCamera.matrix = parentMesh.matrix
 //
+//                console.log(targetMesh['matrix'])
+
+				tCamera.targetX = targetMesh.localToWorld(cameraMesh.x,cameraMesh.y,cameraMesh.z)[0]
+				tCamera.targetY = targetMesh.localToWorld(cameraMesh.x,cameraMesh.y,cameraMesh.z)[1]
+				tCamera.targetZ = targetMesh.localToWorld(cameraMesh.x,cameraMesh.y,cameraMesh.z)[2]
+				tCamera.x = targetMesh.localToWorld(0,0,0)[0]
+				tCamera.y = targetMesh.localToWorld(0,0,0)[1]
+				tCamera.z = targetMesh.localToWorld(0,0,0)[2]
 			}
 		})
 		var testUI = function (redGL, tScene) {
