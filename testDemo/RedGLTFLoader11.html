@@ -162,10 +162,7 @@
 		tScene3D = RedScene(this);
 //		 tScene3D['useFog'] = true
 //		tCamera = RedBasicController(this);
-		tCamera = RedObitController(this);
-		tCamera.tilt = 0
-		tCamera.distance = 750
-		tCamera.speedDistance = 10
+		tCamera = RedCamera();
 //		tCamera = RedCamera()
 //		tCamera.x = 0.5
 //		tCamera.y = 0.5
@@ -178,32 +175,17 @@
 		var testDLight;
 		testDLight = RedDirectionalLight(this)
 		testDLight.x = 50
-		testDLight.y = 100
-		testDLight.z = 100
+		testDLight.y = 50
+		testDLight.z = 50
 		tScene3D.addLight(testDLight)
-
 		testDLight = RedDirectionalLight(this)
 		testDLight.x = -50
-		testDLight.y = 100
-		testDLight.z = 100
+		testDLight.y = 50
+		testDLight.z = -50
 		tScene3D.addLight(testDLight)
-
-		testDLight = RedDirectionalLight(this)
-		testDLight.x = 50
-		testDLight.y = 100
-		testDLight.z = -100
-		tScene3D.addLight(testDLight)
-
-
-
-
-//		var dof = RedPostEffect_DoF(this)
-//		dof.focusLength = 50
-//		RedView('test')['postEffectManager'].addEffect(dof)
-//
-//		var bloom = RedPostEffect_Bloom(this)
-//		RedView('test')['postEffectManager'].addEffect(bloom)
-//		bloom.exposure = 1.5
+		var bloom = RedPostEffect_Bloom(this)
+		RedView('test')['postEffectManager'].addEffect(bloom)
+		bloom.exposure = 0.75
 		tRenderer.renderDebuger.visible = true
 		tScene3D.skyBox =
 			RedSkyBox(this, [
@@ -235,11 +217,36 @@
 //			tScene3D.addChild(t0 = v['resultMesh'])
 //			testUI(self, tScene3D)
 //		})
-		var tIndex = 0
 		var tt = 0
 		tRenderer.start(this, function (time) {
-
-		})
+				if ( tt == 0 ) {
+					tCamera.x = Math.sin(time / 3500) * 750
+					tCamera.y = Math.abs(Math.cos(time / 3500) * 500)
+					tCamera.z = Math.cos(time / 3500) * 750
+				} else if ( tt == 1 ) {
+					tCamera.x = Math.sin(time / 3500) * 250
+					tCamera.y = Math.abs(Math.cos(time / 3500) * 250)
+					tCamera.z = Math.cos(time / 3500) * 250
+				} else if ( tt == 2 ) {
+					tCamera.x = Math.sin(time / 3500) * 150
+					tCamera.y = Math.abs(Math.cos(time / 3500) * 250)
+					tCamera.z = Math.cos(time / 3500) * 150
+				} else if ( tt == 3 ) {
+					tCamera.x = Math.sin(time / 3500) * 50
+					tCamera.y = Math.abs(Math.cos(time / 3500) * 50)
+					tCamera.z = Math.cos(time / 3500) * 50
+				} else if ( tt == 4 ) {
+					tCamera.x = Math.sin(time / 3500) * 10
+					tCamera.y = Math.abs(Math.cos(time / 3500) * 10)
+					tCamera.z = Math.cos(time / 3500) * 10
+				}
+				else {
+					tCamera.x = Math.sin(time / 3500) * 250
+					tCamera.y = Math.abs(Math.cos(time / 3500) * 250)
+					tCamera.z = Math.cos(time / 3500) * 250
+				}
+			}
+		)
 		var testUI = function (redGL, tScene) {
 			var gui = self['gui'] = new dat.GUI({
 				name: 'test'
@@ -248,14 +255,10 @@
 			var testAnimation = {
 				cameras: 0
 			}
-			var tList = []
-			t1['redGLTFLoader']['cameras'].forEach(function (v, index) {
-				tList.push(index)
-			})
+			var tList = [0, 1, 2, 3, 4]
 			folder.add(testAnimation, 'cameras', tList).onChange(function (v) {
-				tIndex = v
-				RedView('test').camera = t1['redGLTFLoader']['cameras'][v]
-				console.log(RedView('test').camera)
+				tt = v
+				console.log(tt)
 			})
 			///////////////////////////////////////////////
 			folder.open()

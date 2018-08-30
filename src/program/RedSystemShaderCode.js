@@ -36,7 +36,9 @@ var RedSystemShaderCode;
 				'attribute float aPointSize',
 				'uniform float uPointSize',
 				'attribute vec2 aTexcoord',
+				'attribute vec2 aTexcoord1',
 				'varying vec2 vTexcoord',
+				'varying vec2 vTexcoord1',
 
 
 				'uniform bool uUseSkin',
@@ -73,6 +75,7 @@ var RedSystemShaderCode;
 			fShareSource: [
 				'varying vec3 vVertexNormal',
 				'varying vec2 vTexcoord',
+				'varying vec2 vTexcoord1',
 				'varying float vTime',
 				'varying vec2 vResolution',
 				//

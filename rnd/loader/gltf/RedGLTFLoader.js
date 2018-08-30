@@ -276,9 +276,9 @@ var RedGLTFLoader;
 							var tRotation = [0, 0, 0]
 							RedGLUtil.quaternionToRotationMat4(tQuat, rotationMTX)
 							RedGLUtil.mat4ToEuler(rotationMTX, tRotation)
-							tRotation[0] = 360 - (tRotation[0] * 180 / Math.PI)
-							tRotation[1] = 360 - (tRotation[1] * 180 / Math.PI)
-							tRotation[2] = 360 - (tRotation[2] * 180 / Math.PI)
+							tRotation[0] = -(tRotation[0] * 180 / Math.PI)
+							tRotation[1] = -(tRotation[1] * 180 / Math.PI)
+							tRotation[2] = -(tRotation[2] * 180 / Math.PI)
 							target.rotationX = tRotation[0]
 							target.rotationY = tRotation[1]
 							target.rotationZ = tRotation[2]
@@ -420,7 +420,6 @@ var RedGLTFLoader;
 						t0['fov'] = v['perspective']['yfov'] * 180 / Math.PI
 						t0['farClipping'] = v['perspective']['zfar']
 						t0['nearClipping'] = v['perspective']['znear']
-						t0['nearClipping'] = 0.01
 					}
 					redGLTFLoader['cameras'].push(t0)
 				})
@@ -444,13 +443,14 @@ var RedGLTFLoader;
 				if ( 'matrix' in info ) {
 					// parseMatrix
 					tMatrix = info['matrix']
-					console.log('~~~',info, tMatrix)
-					mat4.getRotation(tQuaternion, tMatrix)
+					console.log('~~~', info, tMatrix)
+					// mat4.getRotation(tQuaternion, tMatrix)
+					if ( tQuaternion[3] < 0 ) console.log('tQuaternion', tQuaternion)
 					// RedGLUtil.quaternionToRotationMat4(tQuaternion, rotationMTX)
 					RedGLUtil.mat4ToEuler(tMatrix, tRotation)
-					target.rotationX = 360 - (tRotation[0] * 180 / Math.PI)
-					target.rotationY = 360 - (tRotation[1] * 180 / Math.PI)
-					target.rotationZ = 360 - (tRotation[2] * 180 / Math.PI)
+					target.rotationX = -(tRotation[0] * 180 / Math.PI)
+					target.rotationY = -(tRotation[1] * 180 / Math.PI)
+					target.rotationZ = -(tRotation[2] * 180 / Math.PI)
 					target.x = tMatrix[12]
 					target.y = tMatrix[13]
 					target.z = tMatrix[14]
@@ -464,9 +464,9 @@ var RedGLTFLoader;
 					tQuaternion = info['rotation'];
 					RedGLUtil.quaternionToRotationMat4(tQuaternion, rotationMTX)
 					RedGLUtil.mat4ToEuler(rotationMTX, tRotation)
-					target.rotationX = 360 - (tRotation[0] * 180 / Math.PI)
-					target.rotationY = 360 - (tRotation[1] * 180 / Math.PI)
-					target.rotationZ = 360 - (tRotation[2] * 180 / Math.PI)
+					target.rotationX = -(tRotation[0] * 180 / Math.PI)
+					target.rotationY = -(tRotation[1] * 180 / Math.PI)
+					target.rotationZ = -(tRotation[2] * 180 / Math.PI)
 				}
 				if ( 'translation' in info ) {
 					// 위치
@@ -573,9 +573,9 @@ var RedGLTFLoader;
 				checkTRSAndMATRIX(tGroup, info)
 				// 카메라가 있으면 또 연결시킴
 				if ( 'camera' in info ) {
+					redGLTFLoader['cameras'][info['camera']]['_parentMesh'] = parentMesh
 					redGLTFLoader['cameras'][info['camera']]['_targetMesh'] = tGroup
 					var tCameraMesh = RedMesh(redGLTFLoader['redGL'])
-					tCameraMesh.z = -0.05
 					tGroup.addChild(tCameraMesh)
 					redGLTFLoader['cameras'][info['camera']]['_cameraMesh'] = tCameraMesh
 				}
@@ -729,7 +729,7 @@ var RedGLTFLoader;
 			// console.log("this['bufferView']['byteOffset']", this['bufferView']['byteOffset'])
 			// console.log("this['accessor']['byteOffset']", this['accessor']['byteOffset'])
 		}
-		var parseAttributeInfo = function (redGLTFLoader, json, key, accessorInfo, vertices, uvs, normals, jointWeights, joints, tangents) {
+		var parseAttributeInfo = function (redGLTFLoader, json, key, accessorInfo, vertices, uvs, uvs1, normals, jointWeights, joints, tangents) {
 			var tBYTES_PER_ELEMENT = accessorInfo['componentType_BYTES_PER_ELEMENT'];
 			var tBufferViewByteStride = accessorInfo['bufferViewByteStride'];
 			var tBufferURIDataView = accessorInfo['bufferURIDataView'];
@@ -797,8 +797,8 @@ var RedGLTFLoader;
 									if ( strideIndex % 2 == 0 ) uvs.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
 									else uvs.push(1 - tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
 								} else if ( key == 'TEXCOORD_1' ) {
-									if ( strideIndex % 2 == 0 ) uvs.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-									else uvs.push(1 - tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+									if ( strideIndex % 2 == 0 ) uvs1.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+									else uvs1.push(1 - tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
 								}
 								else RedGLUtil.throwFunc('VEC2에서 현재 지원하고 있지 않는 키', key)
 							}
@@ -811,8 +811,8 @@ var RedGLTFLoader;
 								if ( strideIndex % 2 == 0 ) uvs.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
 								else uvs.push(1 - tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
 							} else if ( key == 'TEXCOORD_1' ) {
-								if ( strideIndex % 2 == 0 ) uvs.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-								else uvs.push(1 - tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+								if ( strideIndex % 2 == 0 ) uvs1.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+								else uvs1.push(1 - tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
 							} else RedGLUtil.throwFunc('VEC2에서 현재 지원하고 있지 않는 키', key)
 							strideIndex++
 						}
@@ -831,6 +831,7 @@ var RedGLTFLoader;
 						vertices: [],
 						normals: [],
 						uvs: [],
+						uvs1: [],
 						jointWeights: [],
 						joints: []
 					}
@@ -839,6 +840,7 @@ var RedGLTFLoader;
 						var vertices = tMorphData['vertices']
 						var normals = tMorphData['normals']
 						var uvs = tMorphData['uvs']
+						var uvs1 = tMorphData['uvs1']
 						var jointWeights = tMorphData['jointWeights']
 						var joints = tMorphData['joints']
 						var accessorIndex = v2[key]
@@ -846,10 +848,10 @@ var RedGLTFLoader;
 						// 어트리뷰트 갈궈서 파악함
 						parseAttributeInfo(
 							redGLTFLoader, json, key, accessorInfo,
-							vertices, uvs, normals, jointWeights, joints
+							vertices, uvs, uvs1, normals, jointWeights, joints
 						)
 						// 스파스 정보도 갈굼
-						if ( accessorInfo['accessor']['sparse'] ) parseSparse(redGLTFLoader, key, accessorInfo['accessor'], json, vertices, uvs, normals, jointWeights, joints)
+						if ( accessorInfo['accessor']['sparse'] ) parseSparse(redGLTFLoader, key, accessorInfo['accessor'], json, vertices, uvs, uvs1, normals, jointWeights, joints)
 					}
 				})
 			}
@@ -1023,6 +1025,12 @@ var RedGLTFLoader;
 							tMaterial.roughnessFactor = roughnessFactor != undefined ? roughnessFactor : 1;
 						}
 						tMaterial.emissiveFactor = tMaterialInfo.emissiveFactor != undefined ? tMaterialInfo.emissiveFactor : [1, 1, 1];
+						if ( tMaterialInfo['pbrMetallicRoughness'] ) {
+							if ( tMaterialInfo['pbrMetallicRoughness']['baseColorFactor'] ) tMaterial['diffuseTexCoordIndex'] = tMaterialInfo['pbrMetallicRoughness']['baseColorFactor']['texCoord'] || 0
+						}
+						if ( tMaterialInfo['occlusionTexture'] ) tMaterial['occlusionTexCoordIndex'] = tMaterialInfo['occlusionTexture']['texCoord'] || 0
+						if ( tMaterialInfo['emissiveTexture'] ) tMaterial['emissiveTexCoordIndex'] = tMaterialInfo['emissiveTexture']['texCoord'] || 0
+
 					} else {
 						var tColor
 						if ( tMaterialInfo['pbrMetallicRoughness'] && tMaterialInfo['pbrMetallicRoughness']['baseColorFactor'] ) tColor = tMaterialInfo['pbrMetallicRoughness']['baseColorFactor']
@@ -1053,6 +1061,7 @@ var RedGLTFLoader;
 				// 어트리뷰트에서 파싱되는놈들
 				var vertices = []
 				var uvs = []
+				var uvs1 = []
 				var normals = []
 				var jointWeights = []
 				var joints = []
@@ -1069,10 +1078,10 @@ var RedGLTFLoader;
 						// 어트리뷰트 갈궈서 파악함
 						parseAttributeInfo(
 							redGLTFLoader, json, key, accessorInfo,
-							vertices, uvs, normals, jointWeights, joints
+							vertices, uvs, uvs1, normals, jointWeights, joints
 						)
 						// 스파스 정보도 갈굼
-						if ( accessorInfo['accessor']['sparse'] ) parseSparse(redGLTFLoader, key, accessorInfo['accessor'], json, vertices, uvs, normals, jointWeights, joints)
+						if ( accessorInfo['accessor']['sparse'] ) parseSparse(redGLTFLoader, key, accessorInfo['accessor'], json, vertices, uvs, uvs1, normals, jointWeights, joints)
 					}
 				}
 				// 인덱스 파싱
@@ -1138,6 +1147,7 @@ var RedGLTFLoader;
 					if ( vertices.length ) interleaveData.push(vertices[i * 3 + 0], vertices[i * 3 + 1], vertices[i * 3 + 2])
 					if ( normalData.length ) interleaveData.push(normalData[i * 3 + 0], normalData[i * 3 + 1], normalData[i * 3 + 2])
 					if ( uvs.length ) interleaveData.push(uvs[i * 2 + 0], uvs[i * 2 + 1])
+					if ( uvs1.length ) interleaveData.push(uvs1[i * 2 + 0], uvs1[i * 2 + 1])
 					if ( jointWeights.length ) interleaveData.push(jointWeights[i * 4 + 0], jointWeights[i * 4 + 1], jointWeights[i * 4 + 2], jointWeights[i * 4 + 3])
 					if ( joints.length ) interleaveData.push(joints[i * 4 + 0], joints[i * 4 + 1], joints[i * 4 + 2], joints[i * 4 + 3])
 				}
@@ -1149,6 +1159,7 @@ var RedGLTFLoader;
 				if ( vertices.length ) tInterleaveInfoList.push(RedInterleaveInfo('aVertexPosition', 3))
 				if ( normalData.length ) tInterleaveInfoList.push(RedInterleaveInfo('aVertexNormal', 3))
 				if ( uvs.length ) tInterleaveInfoList.push(RedInterleaveInfo('aTexcoord', 2))
+				if ( uvs1.length ) tInterleaveInfoList.push(RedInterleaveInfo('aTexcoord1', 2))
 				if ( jointWeights.length ) tInterleaveInfoList.push(RedInterleaveInfo('aVertexWeight', 4))
 				if ( joints.length ) tInterleaveInfoList.push(RedInterleaveInfo('aVertexJoint', 4))
 				tGeo = RedGeometry(
@@ -1174,7 +1185,6 @@ var RedGLTFLoader;
 				if ( tName ) tMesh.name = tName
 				if ( tDrawMode ) tMesh.drawMode = tDrawMode
 				else tMesh.drawMode = redGLTFLoader['redGL'].gl.TRIANGLES
-
 				//
 				if ( tDoubleSide ) tMesh.useCullFace = false
 				console.log('tAlphaMode', tAlphaMode)
@@ -1214,6 +1224,7 @@ var RedGLTFLoader;
 						if ( v['vertices'].length ) interleaveData.push(v['vertices'][i * 3 + 0], v['vertices'][i * 3 + 1], v['vertices'][i * 3 + 2])
 						if ( normalData.length ) interleaveData.push(normalData[i * 3 + 0], normalData[i * 3 + 1], normalData[i * 3 + 2])
 						if ( v['uvs'].length ) interleaveData.push(v['uvs'][i * 2 + 0], v['uvs'][i * 2 + 1])
+						if ( v['uvs1'].length ) interleaveData.push(v['uvs1'][i * 2 + 0], v['uvs1'][i * 2 + 1])
 					}
 					v['interleaveData'] = interleaveData
 				});
