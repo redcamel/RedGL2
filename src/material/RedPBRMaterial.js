@@ -7,6 +7,7 @@ var RedPBRMaterial;
 	var checked;
 	vSource = function () {
 		/* @preserve
+
 		 varying vec4 vVertexPositionEye4;
 		 varying vec3 vReflectionCubeCoord;
 		 //#define#displacementTexture# uniform sampler2D u_displacementTexture;
@@ -16,6 +17,9 @@ var RedPBRMaterial;
 
 		 void main(void) {
 			 vTexcoord = aTexcoord;
+			 vTexcoord1 = aTexcoord1;
+
+
 			 vVertexNormal = (uNMatrix * vec4(aVertexNormal,1.0)).xyz;
 
 			//#define#skin#true# mat4 skinMat =
@@ -68,6 +72,12 @@ var RedPBRMaterial;
 		 varying vec4 vVertexPositionEye4;
 		 varying vec3 vReflectionCubeCoord;
 
+		uniform int u_diffuseTexCoordIndex;
+		uniform int u_occlusionTexCoordIndex;
+		uniform int u_emissiveTexCoordIndex;
+
+
+
 		 float fogFactor(float perspectiveFar, float density){
 			 float flog_cord = gl_FragCoord.z / gl_FragCoord.w / perspectiveFar;
 			 float fog = flog_cord * density;
@@ -101,6 +111,13 @@ var RedPBRMaterial;
 			ld = vec4(0.0, 0.0, 0.0, 1.0);
 			ls = vec4(0.0, 0.0, 0.0, 1.0);
 
+			vec2 u_diffuseTexCoord ;
+			vec2 u_occlusionTexCoord;
+			vec2 u_emissiveTexCoord;
+			u_diffuseTexCoord = u_diffuseTexCoordIndex==0 ? vTexcoord : vTexcoord1;
+			u_occlusionTexCoord = u_occlusionTexCoordIndex==0 ? vTexcoord : vTexcoord1;
+			u_emissiveTexCoord = u_emissiveTexCoordIndex==0 ? vTexcoord : vTexcoord1;
+
 
 
 			float tMetallicPower = u_metallicFactor;
@@ -115,7 +132,7 @@ var RedPBRMaterial;
 
 			// diffuse 색상 산출
 			texelColor = vec4(0.0,0.0,0.0,0.0);
-			//#define#diffuseTexture# texelColor = texture2D(u_diffuseTexture, vec2(vTexcoord.x,vTexcoord.y));
+			//#define#diffuseTexture# texelColor = texture2D(u_diffuseTexture, vec2(u_diffuseTexCoord.x,u_diffuseTexCoord.y));
 			texelColor *= uBaseColorFactor;
 
 			// 노멀값 계산
@@ -160,12 +177,12 @@ var RedPBRMaterial;
 			finalColor.a = texelColor.a * u_alpha ;
 
 			// 이미시브합성
-			//#define#emissiveTexture# emissiveColor = texture2D(u_emissiveTexture, vTexcoord);
+			//#define#emissiveTexture# emissiveColor = texture2D(u_emissiveTexture, u_emissiveTexCoord);
 			//#define#emissiveTexture# emissiveColor.rgb *= emissiveColor.a;
 			//#define#emissiveTexture# emissiveColor.rgb *= uEmissiveFactor;
 			//#define#emissiveTexture# finalColor += emissiveColor;
 			// 오클루젼 합성
-			//#define#occlusionTexture# occlusionColor = texture2D(u_occlusionTexture, vTexcoord);
+			//#define#occlusionTexture# occlusionColor = texture2D(u_occlusionTexture, u_occlusionTexCoord);
 			//#define#occlusionTexture# occlusionColor.rgb *= occlusionColor.a;
 			//#define#occlusionTexture#  finalColor.rgb = mix(finalColor.rgb, finalColor.rgb * occlusionColor.rrr, u_occlusionPower);
 			//#define#fog#false# gl_FragColor = finalColor;
@@ -252,6 +269,11 @@ var RedPBRMaterial;
 		this['metallicFactor'] = 1;
 		this['roughnessFactor'] = 1;
 
+		this['diffuseTexCoordIndex']=0
+		this['occlusionTexCoordIndex']=0
+		this['emissiveTexCoordIndex']=0
+
+
 		this['occlusionPower'] = 1;
 		this['displacementPower'] = 0;
 		this['displacementFlowSpeedX'] = 0;
@@ -300,6 +322,7 @@ var RedPBRMaterial;
 	 }
 	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'diffuseTexture', 'sampler2D', samplerOption);
+	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'diffuseTexCoordIndex', 'number');
 	/**DOC:
 	 {
 	     code : 'PROPERTY',
@@ -327,6 +350,7 @@ var RedPBRMaterial;
 	 }
 	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'occlusionTexture', 'sampler2D', samplerOption);
+	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'occlusionTexCoordIndex', 'number');
 	/**DOC:
 	 {
 	     code : 'PROPERTY',
@@ -343,6 +367,8 @@ var RedPBRMaterial;
 	 }
 	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'emissiveTexture', 'sampler2D', samplerOption);
+	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'emissiveTexCoordIndex', 'number');
+
 	/**DOC:
 	 {
 	     code : 'PROPERTY',

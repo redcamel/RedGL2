@@ -226,18 +226,37 @@
 			var tCamera = RedView('test').camera
 			var cameraMesh = tCamera['_cameraMesh']
 			var targetMesh = tCamera['_targetMesh']
+			var parentMesh = tCamera['_parentMesh']
 			if ( cameraMesh ) {
-//				tCamera.autoUpdateMatrix = false
-//				tCamera.matrix = parentMesh.matrix
+				tCamera.autoUpdateMatrix = false
+				tCamera.x = targetMesh.localToWorld(0, 0, 0)[0]
+				tCamera.y = targetMesh.localToWorld(0, 0, 0)[1]
+				tCamera.z = targetMesh.localToWorld(0, 0, 0)[2]
+				tCamera.lookAt(
+					targetMesh.localToWorld(0, 0, -1)[0],
+					targetMesh.localToWorld(0, 0, -1)[1],
+					targetMesh.localToWorld(0, 0, -1)[2]
+				)
+//				var aa = mat4.create()
+//                var bb = [0,0,0]
+//                var cc = [0,0,0,1]
 //
-//                console.log(targetMesh['matrix'])
-
-				tCamera.targetX = targetMesh.localToWorld(cameraMesh.x,cameraMesh.y,cameraMesh.z)[0]
-				tCamera.targetY = targetMesh.localToWorld(cameraMesh.x,cameraMesh.y,cameraMesh.z)[1]
-				tCamera.targetZ = targetMesh.localToWorld(cameraMesh.x,cameraMesh.y,cameraMesh.z)[2]
-				tCamera.x = targetMesh.localToWorld(0,0,0)[0]
-				tCamera.y = targetMesh.localToWorld(0,0,0)[1]
-				tCamera.z = targetMesh.localToWorld(0,0,0)[2]
+//				quat.getAxisAngle(bb, mat4.getRotation(cc,cameraMesh.matrix))
+//				mat4.lookAt(
+//					aa,
+//					[
+//						tCamera.x,
+//						tCamera.y,
+//						tCamera.z
+//					],
+//					[
+//						cameraMesh.localToWorld(0, 0, -1)[0],
+//						cameraMesh.localToWorld(0, 0, -1)[1],
+//						cameraMesh.localToWorld(0, 0, -1)[2]
+//					],
+//					bb
+//				)
+//				tCamera.matrix = aa
 			}
 		})
 		var testUI = function (redGL, tScene) {
