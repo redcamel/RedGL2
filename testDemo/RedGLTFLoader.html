@@ -306,6 +306,7 @@
 				alpha: 1,
 				metallicFactor: 1,
 				roughnessFactor : 1,
+				occlusionPower : 1,
 				specularPower: 1,
 				displacementPower: 0,
 				displacementFlowSpeedX: 0,
@@ -317,14 +318,20 @@
 				})
 			})
 
-			folder.add(testRedPBRMaterial, 'metallicFactor', 0, 2).onChange(function (v) {
+			folder.add(testRedPBRMaterial, 'metallicFactor', 0, 1).onChange(function (v) {
 				tScene.children[0].children.forEach(function (v2) {
 					v2.material.metallicFactor = v
 				})
 			})
-			folder.add(testRedPBRMaterial, 'roughnessFactor', 0, 2).onChange(function (v) {
+			folder.add(testRedPBRMaterial, 'roughnessFactor', 0, 1).onChange(function (v) {
 				tScene.children[0].children.forEach(function (v2) {
 					v2.material.roughnessFactor = v
+				})
+			})
+
+			folder.add(testRedPBRMaterial, 'occlusionPower', 0, 3).onChange(function (v) {
+				tScene.children[0].children.forEach(function (v2) {
+					v2.material.occlusionPower = v
 				})
 			})
 			folder.add(testRedPBRMaterial, 'specularPower', 0, 10).onChange(function (v) {
