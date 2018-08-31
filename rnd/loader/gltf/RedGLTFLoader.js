@@ -1243,8 +1243,8 @@ var RedGLTFLoader;
 				// console.log('vertices', vertices)
 				// console.log('normalData', normalData)
 				// console.log('uvs', uvs)
-				// console.log('joints', joints)
-				// console.log('jointWeights', jointWeights)
+				console.log('joints', joints)
+				console.log('jointWeights', jointWeights)
 				// console.log('indices', indices)
 			})
 			return tMeshList
