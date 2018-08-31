@@ -207,95 +207,91 @@
 //		RedGLTFLoader(this, '../asset/glTF/basic/', 'Monster.gltf', function (v) {
 //		RedGLTFLoader(this, '../asset/glTF/basic/', 'ReciprocatingSaw.gltf', function (v) {
 //        RedGLTFLoader(this, '../asset/glTF/basic/', 'VertexColorTest.gltf', function (v) {
-		RedGLTFLoader(self, '../asset/glTF/basic/', '2CylinderEngine.gltf', function (v) {
+
+		RedGLTFLoader(this, '../asset/glTF/basic/', 'DamagedHelmet.gltf', function (v) {
 			console.log('호잇!', v)
 			tScene3D.addChild(v['resultMesh'])
-			v['resultMesh'].z = -300
+			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 40
+
+			RedGLTFLoader(self, '../asset/glTF/basic/', 'CesiumMilkTruck.gltf', function (v) {
+				console.log('호잇!', v)
+				tScene3D.addChild(v['resultMesh'])
+
+				v['resultMesh'].x = -350
+				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 50
+			});
+
+			RedGLTFLoader(self, '../asset/glTF/basic/', 'BoxTextured.gltf', function (v) {
+				console.log('호잇!', v)
+				tScene3D.addChild(v['resultMesh'])
+				v['resultMesh'].x = 200
+				v['resultMesh'].z = 200
+				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 50
+			})
+			RedGLTFLoader(self, '../asset/glTF/basic/', 'OrientationTest.gltf', function (v) {
+				console.log('호잇!', v)
+				tScene3D.addChild(v['resultMesh'])
+				v['resultMesh'].x = 0
+				v['resultMesh'].z = 300
+				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 10
+			})
+
+			RedGLTFLoader(self, '../asset/glTF/basic/', 'BrainStem.gltf', function (v) {
+				console.log('호잇!', v)
+				tScene3D.addChild(v['resultMesh'])
+				v['resultMesh'].x = 0
+				v['resultMesh'].z = 200
+				v['resultMesh'].y = -50
+				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 50
+			})
+			RedGLTFLoader(self, '../asset/glTF/basic/', 'NormalTangentTest.gltf', function (v) {
+				console.log('호잇!', v)
+				tScene3D.addChild(v['resultMesh'])
+				v['resultMesh'].x = 200
+				v['resultMesh'].z = 100
+				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 50
+			})
+			RedGLTFLoader(self, '../asset/glTF/basic/', '2CylinderEngine.gltf', function (v) {
+				console.log('호잇!', v)
+				tScene3D.addChild(v['resultMesh'])
+				v['resultMesh'].z = -300
+			})
+			RedGLTFLoader(self, '../asset/glTF/basic/', 'TextureCoordinateTest.gltf', function (v) {
+				console.log('호잇!', v)
+				tScene3D.addChild(v['resultMesh'])
+				v['resultMesh'].x = -200
+				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 50
+			})
+			RedGLTFLoader(self, '../asset/glTF/basic/', 'VertexColorTest.gltf', function (v) {
+				console.log('호잇!', v)
+				tScene3D.addChild(v['resultMesh'])
+				v['resultMesh'].x = 250
+				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 50
+			})
+			RedGLTFLoader(self, '../asset/glTF/basic/', 'ReciprocatingSaw.gltf', function (v) {
+				console.log('호잇!', v)
+				tScene3D.addChild(v['resultMesh'])
+				v['resultMesh'].z = 100
+			})
+			RedGLTFLoader(self, '../asset/glTF/basic/', 'CesiumMan.gltf', function (v) {
+				console.log('호잇!', v)
+				tScene3D.addChild(v['resultMesh'])
+				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 50
+				v['resultMesh'].z = -100
+			})
+			RedGLTFLoader(self, '../asset/glTF/basic/', 'Monster.gltf', function (v) {
+				console.log('호잇!', v)
+				tScene3D.addChild(v['resultMesh'])
+				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 2
+				v['resultMesh'].x = -100
+			})
+			RedGLTFLoader(self, '../asset/glTF/basic/', 'Buggy.gltf', function (v) {
+				console.log('호잇!', v)
+				tScene3D.addChild(v['resultMesh'])
+				v['resultMesh'].x = 100
+			})
+			testUI(self,tScene3D)
 		})
-//		RedGLTFLoader(this, '../asset/glTF/basic/', 'DamagedHelmet.gltf', function (v) {
-//			console.log('호잇!', v)
-//			tScene3D.addChild(v['resultMesh'])
-//			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 40
-//
-//			RedGLTFLoader(self, '../asset/glTF/basic/', 'CesiumMilkTruck.gltf', function (v) {
-//				console.log('호잇!', v)
-//				tScene3D.addChild(v['resultMesh'])
-//
-//				v['resultMesh'].x = -350
-//				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 50
-//			});
-//
-//			RedGLTFLoader(self, '../asset/glTF/basic/', 'BoxTextured.gltf', function (v) {
-//				console.log('호잇!', v)
-//				tScene3D.addChild(v['resultMesh'])
-//				v['resultMesh'].x = 200
-//				v['resultMesh'].z = 200
-//				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 50
-//			})
-//			RedGLTFLoader(self, '../asset/glTF/basic/', 'OrientationTest.gltf', function (v) {
-//				console.log('호잇!', v)
-//				tScene3D.addChild(v['resultMesh'])
-//				v['resultMesh'].x = 0
-//				v['resultMesh'].z = 300
-//				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 10
-//			})
-//
-//			RedGLTFLoader(self, '../asset/glTF/basic/', 'BrainStem.gltf', function (v) {
-//				console.log('호잇!', v)
-//				tScene3D.addChild(v['resultMesh'])
-//				v['resultMesh'].x = 0
-//				v['resultMesh'].z = 200
-//				v['resultMesh'].y = -50
-//				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 50
-//			})
-//			RedGLTFLoader(self, '../asset/glTF/basic/', 'NormalTangentTest.gltf', function (v) {
-//				console.log('호잇!', v)
-//				tScene3D.addChild(v['resultMesh'])
-//				v['resultMesh'].x = 200
-//				v['resultMesh'].z = 100
-//				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 50
-//			})
-//			RedGLTFLoader(self, '../asset/glTF/basic/', '2CylinderEngine.gltf', function (v) {
-//				console.log('호잇!', v)
-//				tScene3D.addChild(v['resultMesh'])
-//				v['resultMesh'].z = -300
-//			})
-//			RedGLTFLoader(self, '../asset/glTF/basic/', 'TextureCoordinateTest.gltf', function (v) {
-//				console.log('호잇!', v)
-//				tScene3D.addChild(v['resultMesh'])
-//				v['resultMesh'].x = -200
-//				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 50
-//			})
-//			RedGLTFLoader(self, '../asset/glTF/basic/', 'VertexColorTest.gltf', function (v) {
-//				console.log('호잇!', v)
-//				tScene3D.addChild(v['resultMesh'])
-//				v['resultMesh'].x = 250
-//				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 50
-//			})
-//			RedGLTFLoader(self, '../asset/glTF/basic/', 'ReciprocatingSaw.gltf', function (v) {
-//				console.log('호잇!', v)
-//				tScene3D.addChild(v['resultMesh'])
-//				v['resultMesh'].z = 100
-//			})
-//			RedGLTFLoader(self, '../asset/glTF/basic/', 'CesiumMan.gltf', function (v) {
-//				console.log('호잇!', v)
-//				tScene3D.addChild(v['resultMesh'])
-//				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 50
-//				v['resultMesh'].z = -100
-//			})
-//			RedGLTFLoader(self, '../asset/glTF/basic/', 'Monster.gltf', function (v) {
-//				console.log('호잇!', v)
-//				tScene3D.addChild(v['resultMesh'])
-//				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 2
-//				v['resultMesh'].x = -100
-//			})
-//			RedGLTFLoader(self, '../asset/glTF/basic/', 'Buggy.gltf', function (v) {
-//				console.log('호잇!', v)
-//				tScene3D.addChild(v['resultMesh'])
-//				v['resultMesh'].x = 100
-//			})
-//			testUI(self,tScene3D)
-//		})
 		tRenderer.start(this, function (time) {
 
 //			if(tScene3D['children'][0]) tScene3D['children'][0].rotationX+=1

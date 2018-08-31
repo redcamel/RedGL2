@@ -246,6 +246,12 @@
 			v['resultMesh'].x = -3
 
 		});
+		RedGLTFLoader(self, '../asset/glTF/breakDance/', 'scene.gltf', function (v) {
+			console.log('호잇!',v)
+			tScene3D.addChild(v['resultMesh'])
+			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.001
+
+		})
 
 		tRenderer.start(this, function (time) {
 

@@ -1028,7 +1028,10 @@ var RedGLTFLoader;
 						if ( tMaterialInfo['pbrMetallicRoughness'] ) {
 							if ( tMaterialInfo['pbrMetallicRoughness']['baseColorFactor'] ) tMaterial['diffuseTexCoordIndex'] = tMaterialInfo['pbrMetallicRoughness']['baseColorFactor']['texCoord'] || 0
 						}
-						if ( tMaterialInfo['occlusionTexture'] ) tMaterial['occlusionTexCoordIndex'] = tMaterialInfo['occlusionTexture']['texCoord'] || 0
+						if ( tMaterialInfo['occlusionTexture'] ) {
+							tMaterial['occlusionTexCoordIndex'] = tMaterialInfo['occlusionTexture']['texCoord'] || 0
+							tMaterial['occlusionPower'] = tMaterialInfo['occlusionTexture']['strength'] || 1
+						}
 						if ( tMaterialInfo['emissiveTexture'] ) tMaterial['emissiveTexCoordIndex'] = tMaterialInfo['emissiveTexture']['texCoord'] || 0
 
 					} else {
@@ -1148,6 +1151,7 @@ var RedGLTFLoader;
 					if ( normalData.length ) interleaveData.push(normalData[i * 3 + 0], normalData[i * 3 + 1], normalData[i * 3 + 2])
 					if ( uvs.length ) interleaveData.push(uvs[i * 2 + 0], uvs[i * 2 + 1])
 					if ( uvs1.length ) interleaveData.push(uvs1[i * 2 + 0], uvs1[i * 2 + 1])
+					else interleaveData.push(uvs[i * 2 + 0], uvs[i * 2 + 1])
 					if ( jointWeights.length ) interleaveData.push(jointWeights[i * 4 + 0], jointWeights[i * 4 + 1], jointWeights[i * 4 + 2], jointWeights[i * 4 + 3])
 					if ( joints.length ) interleaveData.push(joints[i * 4 + 0], joints[i * 4 + 1], joints[i * 4 + 2], joints[i * 4 + 3])
 				}
@@ -1160,6 +1164,7 @@ var RedGLTFLoader;
 				if ( normalData.length ) tInterleaveInfoList.push(RedInterleaveInfo('aVertexNormal', 3))
 				if ( uvs.length ) tInterleaveInfoList.push(RedInterleaveInfo('aTexcoord', 2))
 				if ( uvs1.length ) tInterleaveInfoList.push(RedInterleaveInfo('aTexcoord1', 2))
+				else tInterleaveInfoList.push(RedInterleaveInfo('aTexcoord1', 2))
 				if ( jointWeights.length ) tInterleaveInfoList.push(RedInterleaveInfo('aVertexWeight', 4))
 				if ( joints.length ) tInterleaveInfoList.push(RedInterleaveInfo('aVertexJoint', 4))
 				tGeo = RedGeometry(
@@ -1225,6 +1230,7 @@ var RedGLTFLoader;
 						if ( normalData.length ) interleaveData.push(normalData[i * 3 + 0], normalData[i * 3 + 1], normalData[i * 3 + 2])
 						if ( v['uvs'].length ) interleaveData.push(v['uvs'][i * 2 + 0], v['uvs'][i * 2 + 1])
 						if ( v['uvs1'].length ) interleaveData.push(v['uvs1'][i * 2 + 0], v['uvs1'][i * 2 + 1])
+						else interleaveData.push(v['uvs'][i * 2 + 0], v['uvs'][i * 2 + 1])
 					}
 					v['interleaveData'] = interleaveData
 				});
