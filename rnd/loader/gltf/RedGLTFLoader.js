@@ -589,7 +589,7 @@ var RedGLTFLoader;
 				if ( 'skin' in info ) parseSkin(redGLTFLoader, json, info, tGroup)
 			}
 		}
-		var parseSparse = function (redGLTFLoader, key, tAccessors, json, vertices, uvs, normals, jointWeights, joints) {
+		var parseSparse = function (redGLTFLoader, key, tAccessors, json, vertices, uvs,uvs1, normals, jointWeights, joints) {
 			if ( tAccessors['sparse'] ) {
 				var sparseVerties = []
 				var sparseNormals = []
