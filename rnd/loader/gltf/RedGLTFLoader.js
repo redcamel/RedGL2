@@ -1231,6 +1231,8 @@ var RedGLTFLoader;
 						if ( v['uvs'].length ) interleaveData.push(v['uvs'][i * 2 + 0], v['uvs'][i * 2 + 1])
 						if ( v['uvs1'].length ) interleaveData.push(v['uvs1'][i * 2 + 0], v['uvs1'][i * 2 + 1])
 						else interleaveData.push(v['uvs'][i * 2 + 0], v['uvs'][i * 2 + 1])
+						if ( v['jointWeights'].length ) interleaveData.push( v['jointWeights'][i * 4 + 0],  v['jointWeights'][i * 4 + 1],  v['jointWeights'][i * 4 + 2],  v['jointWeights'][i * 4 + 3])
+						if ( v['joints'].length ) interleaveData.push( v['joints'][i * 4 + 0],  v['joints'][i * 4 + 1],  v['joints'][i * 4 + 2],  v['joints'][i * 4 + 3])
 					}
 					v['interleaveData'] = interleaveData
 				});
