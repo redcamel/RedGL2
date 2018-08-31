@@ -755,7 +755,6 @@ var RedRenderer;
 						tMesh['matrix'][13],
 						tMesh['matrix'][14],
 						tMesh['matrix'][15]
-
 					]
 					// 역구하고
 					getInverse(globalTransformOfNodeThatTheMeshIsAttachedTo, globalTransformOfNodeThatTheMeshIsAttachedTo)
@@ -779,6 +778,7 @@ var RedRenderer;
 						globalTransformOfJointNode[index * 16 + 14] = joints[index]['matrix'][14]
 						globalTransformOfJointNode[index * 16 + 15] = joints[index]['matrix'][15]
 					}
+					// console.log(globalTransformOfJointNode)
 					//TODO: 여기 캐싱할 방법 찾아야함
 					tGL.uniformMatrix4fv(tSystemUniformGroup['uGlobalTransformOfNodeThatTheMeshIsAttachedTo']['location'], false, globalTransformOfNodeThatTheMeshIsAttachedTo)
 					tGL.uniformMatrix4fv(tSystemUniformGroup['uJointMatrix']['location'], false, globalTransformOfJointNode)
