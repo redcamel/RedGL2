@@ -646,10 +646,10 @@ var RedRenderer;
 						a[8] = a[8] * aZ, a[9] = a[9] * aZ, a[10] = a[10] * aZ, a[11] = a[11] * aZ,
 						a[12] = a[12], a[13] = a[13], a[14] = a[14], a[15] = a[15],
 						// localMatrix
-						tMesh['localMatrix'][0] = a[0] * aX, tMesh['localMatrix'][1] = a[1] * aX, tMesh['localMatrix'][2] = a[2] * aX, tMesh['localMatrix'][3] = a[3] * aX,
-						tMesh['localMatrix'][4] = a[4] * aY, tMesh['localMatrix'][5] = a[5] * aY, tMesh['localMatrix'][6] = a[6] * aY, tMesh['localMatrix'][7] = a[7] * aY,
-					tMesh['localMatrix'][8] = a[8] * aZ, tMesh['localMatrix'][9] = a[9] * aZ, tMesh['localMatrix'][10] = a[10] * aZ, tMesh['localMatrix'][11] = a[11] * aZ,
-					tMesh['localMatrix'][12] = a[12], tMesh['localMatrix'][13] = a[13], tMesh['localMatrix'][14] = a[14], tMesh['localMatrix'][15] = a[15],
+						tMesh['localMatrix'][0] = a[0] , tMesh['localMatrix'][1] = a[1] , tMesh['localMatrix'][2] = a[2] , tMesh['localMatrix'][3] = a[3] ,
+						tMesh['localMatrix'][4] = a[4] , tMesh['localMatrix'][5] = a[5] , tMesh['localMatrix'][6] = a[6] , tMesh['localMatrix'][7] = a[7] ,
+						tMesh['localMatrix'][8] = a[8] , tMesh['localMatrix'][9] = a[9] , tMesh['localMatrix'][10] = a[10], tMesh['localMatrix'][11] = a[11] ,
+						tMesh['localMatrix'][12] = a[12], tMesh['localMatrix'][13] = a[13], tMesh['localMatrix'][14] = a[14], tMesh['localMatrix'][15] = a[15],
 					// 부모가있으면 곱함
 					parentMTX ? (
 							// 부모매트릭스 복사
@@ -756,11 +756,34 @@ var RedRenderer;
 						tMesh['matrix'][14],
 						tMesh['matrix'][15]
 					]
+
 					// 역구하고
 					getInverse(globalTransformOfNodeThatTheMeshIsAttachedTo, globalTransformOfNodeThatTheMeshIsAttachedTo)
 					// 글로벌 조인트 노드병합함
 					for ( index; index < len; index++ ) {
 						// 조인트 공간내에서의 전역
+						if(joints[index]['matrix'][12].toString() == 'NaN') {
+							// console.log(index, joints[index],joints[index]['matrix'])
+							joints[index]['matrix'][0] = 0
+							joints[index]['matrix'][1] = 0
+							joints[index]['matrix'][2] = 0
+							joints[index]['matrix'][3] = 0
+
+							joints[index]['matrix'][4] = 0
+							joints[index]['matrix'][5] = 0
+							joints[index]['matrix'][6] = 0
+							joints[index]['matrix'][7] = 0
+
+							joints[index]['matrix'][8] = 0
+							joints[index]['matrix'][9] = 0
+							joints[index]['matrix'][10] = 0
+							joints[index]['matrix'][11] = 0
+
+							joints[index]['matrix'][12] = 0
+							joints[index]['matrix'][13] = 0
+							joints[index]['matrix'][14] = 0
+							joints[index]['matrix'][15] = 0
+						}
 						globalTransformOfJointNode[index * 16 + 0] = joints[index]['matrix'][0]
 						globalTransformOfJointNode[index * 16 + 1] = joints[index]['matrix'][1]
 						globalTransformOfJointNode[index * 16 + 2] = joints[index]['matrix'][2]
