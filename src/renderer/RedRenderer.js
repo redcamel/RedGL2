@@ -755,6 +755,7 @@ var RedRenderer;
 						tMesh['matrix'][13],
 						tMesh['matrix'][14],
 						tMesh['matrix'][15]
+
 					]
 					// 역구하고
 					getInverse(globalTransformOfNodeThatTheMeshIsAttachedTo, globalTransformOfNodeThatTheMeshIsAttachedTo)

@@ -42,8 +42,8 @@ var RedSystemShaderCode;
 
 
 				'uniform bool uUseSkin',
-				'uniform mat4 uJointMatrix[20]',
-				'uniform mat4 uInverseBindMatrixForJoint[20]',
+				'uniform mat4 uJointMatrix[40]',
+				'uniform mat4 uInverseBindMatrixForJoint[40]',
 				'uniform mat4 uGlobalTransformOfNodeThatTheMeshIsAttachedTo',
 
 
