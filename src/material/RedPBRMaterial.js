@@ -143,6 +143,7 @@ var RedPBRMaterial;
 			texelColor = vec4(0.0,0.0,0.0,0.0);
 			//#define#diffuseTexture# texelColor = texture2D(u_diffuseTexture, vec2(u_diffuseTexCoord.x,u_diffuseTexCoord.y));
 			texelColor *= uBaseColorFactor;
+			texelColor.rgb *= texelColor.a;
 
 			// 노멀값 계산
 			N = normalize(vVertexNormal);
@@ -182,8 +183,9 @@ var RedPBRMaterial;
 			}
 
 			finalColor = la * uAmbientIntensity + ld + ls;
-			finalColor.rgb *= texelColor.a;
+
 			finalColor.a = texelColor.a * u_alpha ;
+
 
 			// 이미시브합성
 			//#define#emissiveTexture# emissiveColor = texture2D(u_emissiveTexture, u_emissiveTexCoord);
@@ -192,8 +194,7 @@ var RedPBRMaterial;
 			//#define#emissiveTexture# finalColor += emissiveColor;
 			// 오클루젼 합성
 			//#define#occlusionTexture# occlusionColor = texture2D(u_occlusionTexture, u_occlusionTexCoord);
-
-			//#define#occlusionTexture# finalColor.rgb = mix(finalColor.rgb, finalColor.rgb * occlusionColor.ggg, u_occlusionPower);
+			//#define#occlusionTexture# finalColor.rgb = mix(finalColor.rgb, finalColor.rgb * occlusionColor.r, u_occlusionPower);
 			//#define#fog#false# gl_FragColor = finalColor;
 			//#define#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
 		 }

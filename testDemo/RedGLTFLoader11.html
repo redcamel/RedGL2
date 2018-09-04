@@ -179,19 +179,23 @@
 		testDLight.x = 150
 		testDLight.y = 150
 		testDLight.z = 150
-		testDLight.intensity = 0.75
+		testDLight.intensity = 1.3
 
 		tScene3D.addLight(testDLight)
 		testDLight = RedDirectionalLight(this)
 		testDLight.x = -150
 		testDLight.y = 150
 		testDLight.z = -150
-		testDLight.intensity = 0.75
+		testDLight.color = '#ffff00'
+		testDLight.intensity =0.5
 		tScene3D.addLight(testDLight)
-		var bloom = RedPostEffect_Bloom(this)
-		bloom.exposure=0.75
+        var a = RedAmbientLight(this)
+        a.intensity = 1.5
+		tScene3D.addLight(a)
+//		var bloom = RedPostEffect_Bloom(this)
+//		bloom.exposure=0.75
 //		RedView('test')['postEffectManager'].addEffect(bloom)
-		RedView('test')['postEffectManager']['antialiasing'] = RedPostEffect_FXAA(this)
+//		RedView('test')['postEffectManager']['antialiasing'] = RedPostEffect_FXAA(this)
 
 		tRenderer.renderDebuger.visible = true
 		tScene3D.skyBox =
