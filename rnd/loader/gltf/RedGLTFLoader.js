@@ -1199,19 +1199,19 @@ var RedGLTFLoader;
 					// TODO
 					case 'OPAQUE ' :
 						tMesh.useBlendMode = false
+						tMaterial.cutOff = 0.0
 						break
 					case 'BLEND' :
-						// tMesh.useDepthMask = false
 						tMesh.useBlendMode = true
+						tMaterial.cutOff = tAlphaCutoff
 						break
 					case 'MASK' :
-						// tMesh.useDepthMask = false
 						tMesh.useBlendMode = true
 						tMaterial.cutOff = tAlphaCutoff
 						break
 					default :
+						tMesh.useBlendMode = true
 						tMaterial.cutOff = 0.0
-						tMesh.useBlendMode = false
 				}
 				console.log('tDoubleSide', tDoubleSide)
 				// console.log('tMesh', tMesh)
