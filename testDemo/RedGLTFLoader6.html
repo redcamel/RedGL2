@@ -197,6 +197,12 @@
 //			tScene3D.addChild(v['resultMesh'])
 //			v['resultMesh'].z = 3
 //		})
+		RedGLTFLoader(self, '../asset/glTF/basic/', 'AlphaBlendModeTest.gltf', function (v) {
+			console.log('호잇!', v)
+			tScene3D.addChild(v['resultMesh'])
+			v['resultMesh'].z = 2
+			v['resultMesh'].y = -5
+		})
 		RedGLTFLoader(self, '../asset/glTF/basic/', 'TextureSettingsTest.gltf', function (v) {
 			console.log('호잇!', v)
 			tScene3D.addChild(v['resultMesh'])
@@ -214,12 +220,7 @@
 //			tScene3D.addChild(v['resultMesh'])
 //
 //		})
-		RedGLTFLoader(self, '../asset/glTF/basic/', 'AlphaBlendModeTest.gltf', function (v) {
-			console.log('호잇!', v)
-			tScene3D.addChild(v['resultMesh'])
-			v['resultMesh'].z = 2
-			v['resultMesh'].y = -5
-		})
+
 //		RedGLTFLoader(self, '../asset/glTF/WaterBottle/glTF/', 'WaterBottle.gltf', function (v) {
 //			console.log('호잇!', v)
 //			tScene3D.addChild(t2 = v['resultMesh'])

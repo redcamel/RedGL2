@@ -389,9 +389,10 @@ var RedRenderer;
 			CPI = 3.141592653589793, CPI2 = 6.283185307179586, C225 = 0.225, C127 = 1.27323954, C045 = 0.405284735, C157 = 1.5707963267948966;
 			//////////////// 렌더시작 ////////////////
 			i = children.length
+			var len2 = children.length-1
 			while ( i-- ) {
 				renderResultObj['call']++;
-				tMesh = children[i];
+				tMesh = children[len2-i];
 				tMVMatrix = tMesh['matrix'];
 				tNMatrix = tMesh['normalMatrix'];
 				tGeometry = tMesh['_geometry'];
