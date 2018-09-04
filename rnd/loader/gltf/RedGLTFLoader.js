@@ -231,15 +231,16 @@ var RedGLTFLoader;
 						]
 					}
 					interpolationValue = (currentTime - previousTime) / (nextTime - previousTime)
+					if(interpolationValue.toString() == 'NaN') interpolationValue = 0
 					if ( target ) {
 						if ( aniData['key'] == 'translation' ) {
+							// console.log(interpolationValue,nextTranslation , prevTranslation)
 							target.x = prevTranslation[0] + interpolationValue * (nextTranslation[0] - prevTranslation[0])
 							target.y = prevTranslation[1] + interpolationValue * (nextTranslation[1] - prevTranslation[1])
 							target.z = prevTranslation[2] + interpolationValue * (nextTranslation[2] - prevTranslation[2])
 							// console.log(target.y)
 						}
 						if ( aniData['key'] == 'rotation' ) {
-							interpolationValue = (currentTime - previousTime) / (nextTime - previousTime)
 							var tQuat = []
 							var ax = prevRotation[0], ay = prevRotation[1], az = prevRotation[2], aw = prevRotation[3];
 							var bx = nextRotation[0], by = nextRotation[1], bz = nextRotation[2], bw = nextRotation[3];

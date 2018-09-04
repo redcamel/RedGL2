@@ -762,28 +762,7 @@ var RedRenderer;
 					// 글로벌 조인트 노드병합함
 					for ( index; index < len; index++ ) {
 						// 조인트 공간내에서의 전역
-						if(joints[index]['matrix'][12].toString() == 'NaN') {
-							// console.log(index, joints[index],joints[index]['matrix'])
-							joints[index]['matrix'][0] = 0
-							joints[index]['matrix'][1] = 0
-							joints[index]['matrix'][2] = 0
-							joints[index]['matrix'][3] = 0
 
-							joints[index]['matrix'][4] = 0
-							joints[index]['matrix'][5] = 0
-							joints[index]['matrix'][6] = 0
-							joints[index]['matrix'][7] = 0
-
-							joints[index]['matrix'][8] = 0
-							joints[index]['matrix'][9] = 0
-							joints[index]['matrix'][10] = 0
-							joints[index]['matrix'][11] = 0
-
-							joints[index]['matrix'][12] = 0
-							joints[index]['matrix'][13] = 0
-							joints[index]['matrix'][14] = 0
-							joints[index]['matrix'][15] = 0
-						}
 						globalTransformOfJointNode[index * 16 + 0] = joints[index]['matrix'][0]
 						globalTransformOfJointNode[index * 16 + 1] = joints[index]['matrix'][1]
 						globalTransformOfJointNode[index * 16 + 2] = joints[index]['matrix'][2]
