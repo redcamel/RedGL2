@@ -75,6 +75,10 @@ var RedPBRMaterial;
 		uniform int u_diffuseTexCoordIndex;
 		uniform int u_occlusionTexCoordIndex;
 		uniform int u_emissiveTexCoordIndex;
+		uniform int u_roughnessTexCoordIndex;
+		uniform int u_normalTexCoordIndex;
+
+
 
 
 
@@ -114,15 +118,20 @@ var RedPBRMaterial;
 			vec2 u_diffuseTexCoord ;
 			vec2 u_occlusionTexCoord;
 			vec2 u_emissiveTexCoord;
+			vec2 u_roughnessTexCoord;
+			vec2 u_normalTexCoord;
 			u_diffuseTexCoord = u_diffuseTexCoordIndex==0 ? vTexcoord : vTexcoord1;
+			u_normalTexCoord = u_normalTexCoordIndex==0 ? vTexcoord : vTexcoord1;
 			u_occlusionTexCoord = u_occlusionTexCoordIndex==0 ? vTexcoord : vTexcoord1;
 			u_emissiveTexCoord = u_emissiveTexCoordIndex==0 ? vTexcoord : vTexcoord1;
+			u_roughnessTexCoord  = u_roughnessTexCoordIndex==0 ? vTexcoord : vTexcoord1;
+
 
 
 
 			float tMetallicPower = u_metallicFactor;
 			float tRoughnessPower = u_roughnessFactor;
-			//#define#roughnessTexture# roughnessColor = texture2D(u_roughnessTexture, vTexcoord);
+			//#define#roughnessTexture# roughnessColor = texture2D(u_roughnessTexture, u_roughnessTexCoord);
 			// 메탈릭 산출 roughnessColor.b
 			//#define#roughnessTexture# tMetallicPower *= roughnessColor.b;
 			// 거칠기 산출 roughnessColor.g
@@ -137,7 +146,7 @@ var RedPBRMaterial;
 
 			// 노멀값 계산
 			N = normalize(vVertexNormal);
-			//#define#normalTexture# vec4 normalColor = texture2D(u_normalTexture, vTexcoord);
+			//#define#normalTexture# vec4 normalColor = texture2D(u_normalTexture, u_normalTexCoord);
 			//#define#normalTexture# if(normalColor.a != 0.0) N = normalize(2.0 * (N + normalColor.rgb * u_normalPower  - 0.5));
 
 
@@ -183,8 +192,8 @@ var RedPBRMaterial;
 			//#define#emissiveTexture# finalColor += emissiveColor;
 			// 오클루젼 합성
 			//#define#occlusionTexture# occlusionColor = texture2D(u_occlusionTexture, u_occlusionTexCoord);
-			//#define#occlusionTexture# occlusionColor.rgb *= occlusionColor.a;
-			//#define#occlusionTexture#  finalColor.rgb = mix(finalColor.rgb, finalColor.rgb * occlusionColor.rrr, u_occlusionPower);
+
+			//#define#occlusionTexture# finalColor.rgb = mix(finalColor.rgb, finalColor.rgb * occlusionColor.ggg, u_occlusionPower);
 			//#define#fog#false# gl_FragColor = finalColor;
 			//#define#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
 		 }
@@ -272,6 +281,8 @@ var RedPBRMaterial;
 		this['diffuseTexCoordIndex']=0
 		this['occlusionTexCoordIndex']=0
 		this['emissiveTexCoordIndex']=0
+		this['roughnessTexCoordIndex'] = 0;
+		this['normalTexCoordIndex'] = 0
 
 
 		this['occlusionPower'] = 1;
@@ -342,6 +353,8 @@ var RedPBRMaterial;
 	 }
 	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'normalTexture', 'sampler2D', samplerOption);
+	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'normalTexCoordIndex', 'number');
+
 	/**DOC:
 	 {
 	     code : 'PROPERTY',
@@ -377,6 +390,7 @@ var RedPBRMaterial;
 	 }
 	 :DOC*/
 	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'roughnessTexture', 'sampler2D', samplerOption);
+	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'roughnessTexCoordIndex', 'number');
 	/**DOC:
 	 {
 	     code : 'PROPERTY',

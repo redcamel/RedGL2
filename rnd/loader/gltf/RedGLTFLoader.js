@@ -1027,13 +1027,15 @@ var RedGLTFLoader;
 						}
 						tMaterial.emissiveFactor = tMaterialInfo.emissiveFactor != undefined ? tMaterialInfo.emissiveFactor : [1, 1, 1];
 						if ( tMaterialInfo['pbrMetallicRoughness'] ) {
-							if ( tMaterialInfo['pbrMetallicRoughness']['baseColorFactor'] ) tMaterial['diffuseTexCoordIndex'] = tMaterialInfo['pbrMetallicRoughness']['baseColorFactor']['texCoord'] || 0
+							if ( tMaterialInfo['pbrMetallicRoughness']['metallicRoughnessTexture'] ) tMaterial['roughnessTexCoordIndex'] = tMaterialInfo['pbrMetallicRoughness']['metallicRoughnessTexture']['texCoord'] || 0
+							if ( tMaterialInfo['pbrMetallicRoughness']['baseColorTexture'] ) tMaterial['diffuseTexCoordIndex'] = tMaterialInfo['pbrMetallicRoughness']['baseColorTexture']['texCoord'] || 0
 						}
 						if ( tMaterialInfo['occlusionTexture'] ) {
 							tMaterial['occlusionTexCoordIndex'] = tMaterialInfo['occlusionTexture']['texCoord'] || 0
 							tMaterial['occlusionPower'] = tMaterialInfo['occlusionTexture']['strength'] || 1
 						}
 						if ( tMaterialInfo['emissiveTexture'] ) tMaterial['emissiveTexCoordIndex'] = tMaterialInfo['emissiveTexture']['texCoord'] || 0
+						if ( tMaterialInfo['normalTexture'] ) tMaterial['normalTexCoordIndex'] = tMaterialInfo['normalTexture']['texCoord'] || 0
 
 					} else {
 						var tColor
@@ -1197,21 +1199,20 @@ var RedGLTFLoader;
 				console.log('tAlphaCutoff', tAlphaCutoff)
 				switch ( tAlphaMode ) {
 					// TODO
-					case 'OPAQUE ' :
-						tMesh.useBlendMode = false
-						tMaterial.cutOff = 0.0
+					case 'OPAQUE' :
+						// tMesh.useBlendMode = false
+						tMaterial.cutOff =-1
 						break
 					case 'BLEND' :
-						tMesh.useBlendMode = true
-						tMaterial.cutOff = tAlphaCutoff
+						tMaterial.cutOff =-1
 						break
 					case 'MASK' :
-						tMesh.useBlendMode = true
+						// tMesh.useDepthMask = false
 						tMaterial.cutOff = tAlphaCutoff
 						break
 					default :
-						tMesh.useBlendMode = true
-						tMaterial.cutOff = 0.0
+						// tMesh.useBlendMode = false
+						tMaterial.cutOff =-1
 				}
 				console.log('tDoubleSide', tDoubleSide)
 				// console.log('tMesh', tMesh)
