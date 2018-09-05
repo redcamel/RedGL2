@@ -161,7 +161,7 @@ var RedPBRMaterial;
 
 			// 컷오프 계산
 			//#define#diffuseTexture# texelColor.rgb *= texelColor.a;
-			//#define#diffuseTexture# if(texelColor.a < u_cutOff) discard;
+			//#define#diffuseTexture# if(texelColor.a <= u_cutOff) discard;
 
 
 
