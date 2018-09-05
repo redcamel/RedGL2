@@ -1008,6 +1008,12 @@ var RedGLTFLoader;
 								'../asset/cubemap/SwedishRoyalCastle/ny.jpg',
 								'../asset/cubemap/SwedishRoyalCastle/pz.jpg',
 								'../asset/cubemap/SwedishRoyalCastle/nz.jpg'
+								// '../asset/cubemap/posx.png',
+								// '../asset/cubemap/negx.png',
+								// '../asset/cubemap/posy.png',
+								// '../asset/cubemap/negy.png',
+								// '../asset/cubemap/posz.png',
+								// '../asset/cubemap/negz.png'
 							])
 						}
 						var env = redGLTFLoader['environmentTexture']

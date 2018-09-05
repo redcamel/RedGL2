@@ -164,7 +164,7 @@
 //		tCamera = RedBasicController(this);
 		tCamera = RedObitController(this);
 		tCamera.speedDistance = 50
-		tCamera.distance = 1000
+		tCamera.distance = 750
 //		tCamera = RedCamera()
 //		tCamera.x = 0.5
 //		tCamera.y = 0.5
@@ -176,25 +176,20 @@
 		this.renderScale = 1
 		var testDLight;
 		testDLight = RedDirectionalLight(this)
-		testDLight.x = 350
-		testDLight.y = 150
+		testDLight.x = -150
+		testDLight.y = 350
 		testDLight.z = 150
-
+		testDLight.intensity = 1.5
 		tScene3D.addLight(testDLight)
-		testDLight = RedDirectionalLight(this)
-		testDLight.x = -350
-		testDLight.y = 150
-		testDLight.z = -150
 //		testDLight.color = '#ffff00'
 //		tScene3D.addLight(testDLight)
-        var a = RedAmbientLight(this)
-
+var a = RedAmbientLight(this)
+		a.intensity = 0.1
 		tScene3D.addLight(a)
-		var bloom = RedPostEffect_Bloom(this)
-		bloom.exposure=0.2
-		RedView('test')['postEffectManager'].addEffect(bloom)
-		RedView('test')['postEffectManager']['antialiasing'] = RedPostEffect_FXAA(this)
 
+        var b = RedPostEffect_DoF(this)
+        b.focusLength = 3000
+		RedView('test')['postEffectManager'].addEffect(b)
 		tRenderer.renderDebuger.visible = true
 		tScene3D.skyBox =
 			RedSkyBox(this, [
@@ -205,14 +200,17 @@
 				'../asset/cubemap/SwedishRoyalCastle/pz.jpg',
 				'../asset/cubemap/SwedishRoyalCastle/nz.jpg'
 			]);
-		RedGLTFLoader(self, '../asset/glTF/iso/', 'scene.gltf', function (v) {
-			console.log('호잇!', t1 = v)
-			tScene3D.addChild(t0 = v['resultMesh'])
-			t0.x = -750
-			t0.z = -2000
-			testUI(self, tScene3D)
-		})
+//		RedGLTFLoader(self, '../asset/glTF/iso/', 'scene.gltf', function (v) {
+//			console.log('호잇!', v)
+//			tScene3D.addChild(t0 = v['resultMesh'])
+//			t0.x = -750
+//			t0.z = -2000
+//		})
+		RedGLTFLoader(self, '../asset/glTF/warrior/', 'scene.gltf', function (v) {
+			console.log('호잇!', v)
+			tScene3D.addChild(v['resultMesh'])
 
+		})
 		var t0, t1, t2
 //				RedGLTFLoader(self, '../asset/glTF/bedRoom/', 'scene.gltf', function (v) {
 //			console.log('호잇!', t1 = v)
@@ -224,7 +222,6 @@
 //			tScene3D.addChild(t0 = v['resultMesh'])
 //			testUI(self, tScene3D)
 //		})
-
 //		RedGLTFLoader(self, '../asset/glTF/basic/', 'Cameras.gltf', function (v) {
 //			console.log('호잇!', t1 = v)
 //			tScene3D.addChild(t0 = v['resultMesh'])
