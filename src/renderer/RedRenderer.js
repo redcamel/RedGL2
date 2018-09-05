@@ -231,7 +231,7 @@ var RedRenderer;
 					else gl.clearColor(tScene['_r'], tScene['_g'], tScene['_b'], 1);
 					gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 				} else {
-					gl.clearColor(1, 1, 1, 1);
+					gl.clearColor(0, 0, 0, 1);
 					gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 				}
 				// 카메라 메트릭스 설정
@@ -315,7 +315,7 @@ var RedRenderer;
 				if ( tScene['grid'] ) self.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], [tScene['grid']], time, tRenderInfo);
 				// 씬렌더 호출
 				self.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], tScene['children'], time, tRenderInfo);
-				self.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], transparentList, time, tRenderInfo, null, true);
+				if(transparentList.length) self.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], transparentList, time, tRenderInfo, null, true);
 				// asix가 있으면 그림
 				if ( tScene['axis'] ) self.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], tScene['axis']['children'], time, tRenderInfo);
 				// 디버깅 라이트 업데이트
@@ -897,15 +897,15 @@ var RedRenderer;
 					}
 					/////////////////////////////////////////////////////////////////////////
 					/////////////////////////////////////////////////////////////////////////
-					if ( !transparentMode ) {
-						if ( tMaterial &&  tMaterial['_cutOff'] != 0 ) {
-							transparentList.push(tMesh)
-							tMesh.autoUpdateMatrix = false
-							continue
-						}
-					} else {
-						tMesh.autoUpdateMatrix = true
-					}
+					// if ( !transparentMode ) {
+					// 	if ( tMaterial &&  tMaterial['_cutOff'] != 0 ) {
+					// 		transparentList.push(tMesh)
+					// 		tMesh.autoUpdateMatrix = false
+					// 		continue
+					// 	}
+					// } else {
+					// 	tMesh.autoUpdateMatrix = true
+					// }
 					// 드로우
 					if ( tIndexBufferInfo ) {
 						tPrevIndexBuffer_UUID == tIndexBufferInfo['_UUID'] ? 0 : tGL.bindBuffer(tGL.ELEMENT_ARRAY_BUFFER, tIndexBufferInfo['webglBuffer'])
@@ -922,6 +922,7 @@ var RedRenderer;
 						tGL.drawArrays(tMesh['drawMode'], 0, tInterleaveBuffer['pointNum'])
 						renderResultObj['triangleNum'] += tInterleaveBuffer['triangleNum'];
 					}
+
 				}
 				/////////////////////////////////////////////////////////////////////////
 				/////////////////////////////////////////////////////////////////////////

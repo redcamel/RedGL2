@@ -183,7 +183,6 @@ var RedPBRMaterial;
 			}
 
 			finalColor = la * uAmbientIntensity + ld + ls;
-
 			finalColor.a = texelColor.a * u_alpha ;
 
 
