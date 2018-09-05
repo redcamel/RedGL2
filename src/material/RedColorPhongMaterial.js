@@ -30,6 +30,8 @@ var RedColorPhongMaterial;
 		 uniform float u_shininess;
 		 uniform float u_specularPower;
 		 uniform vec4 u_color;
+		 uniform float u_cutOff;
+
 		 varying vec4 vVertexPositionEye4;
 		 float fogFactor(float perspectiveFar, float density){
 			 float flog_cord = gl_FragCoord.z / gl_FragCoord.w / perspectiveFar;
@@ -62,6 +64,7 @@ var RedColorPhongMaterial;
 
 			 texelColor = u_color;
 			 // texelColor.rgb *= texelColor.a;
+			 if(texelColor.a<=u_cutOff) discard;
 			 N = normalize(vVertexNormal);
 
 			 specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);
@@ -140,6 +143,7 @@ var RedColorPhongMaterial;
 		this['shininess'] = 16;
 		this['specularPower'] = 1;
 		this['alpha'] = alpha == undefined ? 1 : alpha;
+		this['cutOff'] = 0.1
 		/////////////////////////////////////////
 		// 일반 프로퍼티
 		this['color'] = hexColor ? hexColor : '#ff0000';
@@ -160,6 +164,7 @@ var RedColorPhongMaterial;
 	 }
 	 :DOC*/
 	Object.defineProperty(RedColorPhongMaterial.prototype, 'color', RedColorMaterial['DEFINE_OBJECT_COLOR']);
+	RedDefinePropertyInfo.definePrototype('RedColorPhongMaterial', 'cutOff', 'number', {min: 0, max: 1});
 	/**DOC:
 	 {
 	     code : 'PROPERTY',
