@@ -231,7 +231,7 @@ var RedGLTFLoader;
 						]
 					}
 					interpolationValue = (currentTime - previousTime) / (nextTime - previousTime)
-					if(interpolationValue.toString() == 'NaN') interpolationValue = 0
+					if ( interpolationValue.toString() == 'NaN' ) interpolationValue = 0
 					if ( target ) {
 						if ( aniData['key'] == 'translation' ) {
 							// console.log(interpolationValue,nextTranslation , prevTranslation)
@@ -497,7 +497,7 @@ var RedGLTFLoader;
 				tJointMesh.geometry = RedSphere(redGLTFLoader['redGL'], 0.05, 3, 3, 3)
 				tJointMesh.material = RedColorMaterial(redGLTFLoader['redGL'])
 				tJointMesh.drawMode = redGLTFLoader['redGL'].gl.LINE_LOOP
-				tJointMesh.depthTestFunc = redGLTFLoader['redGL'].gl.ALWAYS
+				// tJointMesh.depthTestFunc = redGLTFLoader['redGL'].gl.ALWAYS
 			})
 			// 스켈레톤 정보가 있으면 정보와 메쉬를 연결해둔다.
 			if ( info['skeleton'] ) skinInfo['skeleton'] = json['nodes'][info['skeleton']]['RedMesh']
@@ -590,7 +590,7 @@ var RedGLTFLoader;
 				if ( 'skin' in info ) parseSkin(redGLTFLoader, json, info, tGroup)
 			}
 		}
-		var parseSparse = function (redGLTFLoader, key, tAccessors, json, vertices, uvs,uvs1, normals, jointWeights, joints) {
+		var parseSparse = function (redGLTFLoader, key, tAccessors, json, vertices, uvs, uvs1, normals, jointWeights, joints) {
 			if ( tAccessors['sparse'] ) {
 				var sparseVerties = []
 				var sparseNormals = []
@@ -1036,7 +1036,6 @@ var RedGLTFLoader;
 						}
 						if ( tMaterialInfo['emissiveTexture'] ) tMaterial['emissiveTexCoordIndex'] = tMaterialInfo['emissiveTexture']['texCoord'] || 0
 						if ( tMaterialInfo['normalTexture'] ) tMaterial['normalTexCoordIndex'] = tMaterialInfo['normalTexture']['texCoord'] || 0
-
 					} else {
 						var tColor
 						if ( tMaterialInfo['pbrMetallicRoughness'] && tMaterialInfo['pbrMetallicRoughness']['baseColorFactor'] ) tColor = tMaterialInfo['pbrMetallicRoughness']['baseColorFactor']
@@ -1201,18 +1200,14 @@ var RedGLTFLoader;
 					// TODO
 					case 'OPAQUE' :
 						// tMesh.useBlendMode = false
-						tMaterial.cutOff =-1
 						break
 					case 'BLEND' :
-						tMaterial.cutOff =-1
 						break
 					case 'MASK' :
-						// tMesh.useDepthMask = false
 						tMaterial.cutOff = tAlphaCutoff
 						break
 					default :
 						// tMesh.useBlendMode = false
-						tMaterial.cutOff =-1
 				}
 				console.log('tDoubleSide', tDoubleSide)
 				// console.log('tMesh', tMesh)
@@ -1233,8 +1228,8 @@ var RedGLTFLoader;
 						if ( v['uvs'].length ) interleaveData.push(v['uvs'][i * 2 + 0], v['uvs'][i * 2 + 1])
 						if ( v['uvs1'].length ) interleaveData.push(v['uvs1'][i * 2 + 0], v['uvs1'][i * 2 + 1])
 						else interleaveData.push(v['uvs'][i * 2 + 0], v['uvs'][i * 2 + 1])
-						if ( v['jointWeights'].length ) interleaveData.push( v['jointWeights'][i * 4 + 0],  v['jointWeights'][i * 4 + 1],  v['jointWeights'][i * 4 + 2],  v['jointWeights'][i * 4 + 3])
-						if ( v['joints'].length ) interleaveData.push( v['joints'][i * 4 + 0],  v['joints'][i * 4 + 1],  v['joints'][i * 4 + 2],  v['joints'][i * 4 + 3])
+						if ( v['jointWeights'].length ) interleaveData.push(v['jointWeights'][i * 4 + 0], v['jointWeights'][i * 4 + 1], v['jointWeights'][i * 4 + 2], v['jointWeights'][i * 4 + 3])
+						if ( v['joints'].length ) interleaveData.push(v['joints'][i * 4 + 0], v['joints'][i * 4 + 1], v['joints'][i * 4 + 2], v['joints'][i * 4 + 3])
 					}
 					v['interleaveData'] = interleaveData
 				});

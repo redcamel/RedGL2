@@ -112,6 +112,7 @@ var RedRenderer;
 	};
 	// 캐시관련
 	var prevProgram_UUID;
+	var transparentList = []
 	RedRenderer.prototype.worldRender = (function () {
 		var tWorldRect;
 		var self;
@@ -178,6 +179,7 @@ var RedRenderer;
 			gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
 			gl.scissor(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
 			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+			transparentList.length = 0
 			if ( !self['_glInitialized'] ) glInitialize(gl), self['_glInitialized'] = true
 			// console.log("worldRender", v['key'], t0)
 			self['renderInfo'] = {}
@@ -229,8 +231,8 @@ var RedRenderer;
 					else gl.clearColor(tScene['_r'], tScene['_g'], tScene['_b'], 1);
 					gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 				} else {
-					gl.clearColor(0, 0, 0, 1);
-					gl.clear(gl.DEPTH_BUFFER_BIT);
+					gl.clearColor(1, 1, 1, 1);
+					gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 				}
 				// 카메라 메트릭스 설정
 				if ( tCamera instanceof RedBaseController ) {
@@ -308,12 +310,12 @@ var RedRenderer;
 					tScene['skyBox']['z'] = tCamera.z
 					tScene['skyBox']['scaleX'] = tScene['skyBox']['scaleY'] = tScene['skyBox']['scaleZ'] = tCamera['farClipping'] * 0.6
 					self.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], [tScene['skyBox']], time, tRenderInfo);
-					gl.clear(gl.DEPTH_BUFFER_BIT);
 				}
 				// 그리드가 있으면 그림
 				if ( tScene['grid'] ) self.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], [tScene['grid']], time, tRenderInfo);
 				// 씬렌더 호출
 				self.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], tScene['children'], time, tRenderInfo);
+				self.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], transparentList, time, tRenderInfo,null, true);
 				// asix가 있으면 그림
 				if ( tScene['axis'] ) self.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], tScene['axis']['children'], time, tRenderInfo);
 				// 디버깅 라이트 업데이트
@@ -343,7 +345,8 @@ var RedRenderer;
 		                 tCacheInfo,
 		                 tCacheState,
 		                 parentMTX,
-		                 subSceneMaterial) {
+		                 subSceneMaterial,
+		                 transparentMode) {
 			var i, i2;
 			// 캐쉬관련
 			var tGL = redGL.gl
@@ -389,10 +392,10 @@ var RedRenderer;
 			CPI = 3.141592653589793, CPI2 = 6.283185307179586, C225 = 0.225, C127 = 1.27323954, C045 = 0.405284735, C157 = 1.5707963267948966;
 			//////////////// 렌더시작 ////////////////
 			i = children.length
-			var len2 = children.length-1
+			var len3 = children.length - 1
 			while ( i-- ) {
 				renderResultObj['call']++;
-				tMesh = children[len2-i];
+				tMesh = children[len3 - i];
 				tMVMatrix = tMesh['matrix'];
 				tNMatrix = tMesh['normalMatrix'];
 				tGeometry = tMesh['_geometry'];
@@ -649,8 +652,8 @@ var RedRenderer;
 						// localMatrix
 						tMesh['localMatrix'][0] = a[0] , tMesh['localMatrix'][1] = a[1] , tMesh['localMatrix'][2] = a[2] , tMesh['localMatrix'][3] = a[3] ,
 						tMesh['localMatrix'][4] = a[4] , tMesh['localMatrix'][5] = a[5] , tMesh['localMatrix'][6] = a[6] , tMesh['localMatrix'][7] = a[7] ,
-						tMesh['localMatrix'][8] = a[8] , tMesh['localMatrix'][9] = a[9] , tMesh['localMatrix'][10] = a[10], tMesh['localMatrix'][11] = a[11] ,
-						tMesh['localMatrix'][12] = a[12], tMesh['localMatrix'][13] = a[13], tMesh['localMatrix'][14] = a[14], tMesh['localMatrix'][15] = a[15],
+					tMesh['localMatrix'][8] = a[8] , tMesh['localMatrix'][9] = a[9] , tMesh['localMatrix'][10] = a[10], tMesh['localMatrix'][11] = a[11] ,
+					tMesh['localMatrix'][12] = a[12], tMesh['localMatrix'][13] = a[13], tMesh['localMatrix'][14] = a[14], tMesh['localMatrix'][15] = a[15],
 					// 부모가있으면 곱함
 					parentMTX ? (
 							// 부모매트릭스 복사
@@ -685,57 +688,45 @@ var RedRenderer;
 				/////////////////////////////////////////////////////////////////////////
 				/////////////////////////////////////////////////////////////////////////
 				if ( tGeometry ) tGL.uniformMatrix4fv(tSystemUniformGroup['uMMatrix']['location'], false, tMVMatrix)
-				/*
-					1. 조인트를 물고있는 루트 메쉬의 전역 매트릭스의 역함수를 구한다.
-					2. 노드의 현재 전역 변환을 구한다라는데... 이게 조인트를 물고있는 루트부터인지.. 노드상의 루트인지 알아내야함.
-				 */
-				var getInverse = function (self, m, throwOnDegenerate) {
-
-					// based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm
-					var te = self,
-						me = m,
-						n11 = me[0], n21 = me[1], n31 = me[2], n41 = me[3],
-						n12 = me[4], n22 = me[5], n32 = me[6], n42 = me[7],
-						n13 = me[8], n23 = me[9], n33 = me[10], n43 = me[11],
-						n14 = me[12], n24 = me[13], n34 = me[14], n44 = me[15],
-						t11 = n23 * n34 * n42 - n24 * n33 * n42 + n24 * n32 * n43 - n22 * n34 * n43 - n23 * n32 * n44 + n22 * n33 * n44,
-						t12 = n14 * n33 * n42 - n13 * n34 * n42 - n14 * n32 * n43 + n12 * n34 * n43 + n13 * n32 * n44 - n12 * n33 * n44,
-						t13 = n13 * n24 * n42 - n14 * n23 * n42 + n14 * n22 * n43 - n12 * n24 * n43 - n13 * n22 * n44 + n12 * n23 * n44,
-						t14 = n14 * n23 * n32 - n13 * n24 * n32 - n14 * n22 * n33 + n12 * n24 * n33 + n13 * n22 * n34 - n12 * n23 * n34;
-					var det = n11 * t11 + n21 * t12 + n31 * t13 + n41 * t14;
-					if ( det === 0 ) {
-						var msg = "THREE.Matrix4: .getInverse() can't invert matrix, determinant is 0";
-						if ( throwOnDegenerate === true ) {
-							throw new Error(msg);
-						} else {
-							console.warn(msg);
-						}
-						return mat4.identity(self);
-					}
-					var detInv = 1 / det;
-					te[0] = t11 * detInv;
-					te[1] = ( n24 * n33 * n41 - n23 * n34 * n41 - n24 * n31 * n43 + n21 * n34 * n43 + n23 * n31 * n44 - n21 * n33 * n44 ) * detInv;
-					te[2] = ( n22 * n34 * n41 - n24 * n32 * n41 + n24 * n31 * n42 - n21 * n34 * n42 - n22 * n31 * n44 + n21 * n32 * n44 ) * detInv;
-					te[3] = ( n23 * n32 * n41 - n22 * n33 * n41 - n23 * n31 * n42 + n21 * n33 * n42 + n22 * n31 * n43 - n21 * n32 * n43 ) * detInv;
-					te[4] = t12 * detInv;
-					te[5] = ( n13 * n34 * n41 - n14 * n33 * n41 + n14 * n31 * n43 - n11 * n34 * n43 - n13 * n31 * n44 + n11 * n33 * n44 ) * detInv;
-					te[6] = ( n14 * n32 * n41 - n12 * n34 * n41 - n14 * n31 * n42 + n11 * n34 * n42 + n12 * n31 * n44 - n11 * n32 * n44 ) * detInv;
-					te[7] = ( n12 * n33 * n41 - n13 * n32 * n41 + n13 * n31 * n42 - n11 * n33 * n42 - n12 * n31 * n43 + n11 * n32 * n43 ) * detInv;
-					te[8] = t13 * detInv;
-					te[9] = ( n14 * n23 * n41 - n13 * n24 * n41 - n14 * n21 * n43 + n11 * n24 * n43 + n13 * n21 * n44 - n11 * n23 * n44 ) * detInv;
-					te[10] = ( n12 * n24 * n41 - n14 * n22 * n41 + n14 * n21 * n42 - n11 * n24 * n42 - n12 * n21 * n44 + n11 * n22 * n44 ) * detInv;
-					te[11] = ( n13 * n22 * n41 - n12 * n23 * n41 - n13 * n21 * n42 + n11 * n23 * n42 + n12 * n21 * n43 - n11 * n22 * n43 ) * detInv;
-					te[12] = t14 * detInv;
-					te[13] = ( n13 * n24 * n31 - n14 * n23 * n31 + n14 * n21 * n33 - n11 * n24 * n33 - n13 * n21 * n34 + n11 * n23 * n34 ) * detInv;
-					te[14] = ( n14 * n22 * n31 - n12 * n24 * n31 - n14 * n21 * n32 + n11 * n24 * n32 + n12 * n21 * n34 - n11 * n22 * n34 ) * detInv;
-					te[15] = ( n12 * n23 * n31 - n13 * n22 * n31 + n13 * n21 * n32 - n11 * n23 * n32 - n12 * n21 * n33 + n11 * n22 * n33 ) * detInv;
-					return self;
-				}
-				if ( tProgram && tSystemUniformGroup['uUseSkin']['location'] ) {
-					tGL.uniform1i(tSystemUniformGroup['uUseSkin']['location'], false) //TODO: 이놈도 캐싱가능함
-				}
-				if ( tGeometry && tMesh['skinInfo'] ) {
-					if ( tSystemUniformGroup ) tGL.uniform1i(tSystemUniformGroup['uUseSkin']['location'], true) //TODO: 이놈도 캐싱가능함
+				// var getInverse = function (self, m, throwOnDegenerate) {
+				// 	// based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm
+				// 	var te = self,
+				// 		me = m,
+				// 		n11 = me[0], n21 = me[1], n31 = me[2], n41 = me[3],
+				// 		n12 = me[4], n22 = me[5], n32 = me[6], n42 = me[7],
+				// 		n13 = me[8], n23 = me[9], n33 = me[10], n43 = me[11],
+				// 		n14 = me[12], n24 = me[13], n34 = me[14], n44 = me[15],
+				// 		t11 = n23 * n34 * n42 - n24 * n33 * n42 + n24 * n32 * n43 - n22 * n34 * n43 - n23 * n32 * n44 + n22 * n33 * n44,
+				// 		t12 = n14 * n33 * n42 - n13 * n34 * n42 - n14 * n32 * n43 + n12 * n34 * n43 + n13 * n32 * n44 - n12 * n33 * n44,
+				// 		t13 = n13 * n24 * n42 - n14 * n23 * n42 + n14 * n22 * n43 - n12 * n24 * n43 - n13 * n22 * n44 + n12 * n23 * n44,
+				// 		t14 = n14 * n23 * n32 - n13 * n24 * n32 - n14 * n22 * n33 + n12 * n24 * n33 + n13 * n22 * n34 - n12 * n23 * n34;
+				// 	var det = n11 * t11 + n21 * t12 + n31 * t13 + n41 * t14;
+				// 	if ( det === 0 ) {
+				// 		var msg = "THREE.Matrix4: .getInverse() can't invert matrix, determinant is 0";
+				// 		if ( throwOnDegenerate === true ) throw new Error(msg);
+				// 		else console.warn(msg);
+				// 		return mat4.identity(self);
+				// 	}
+				// 	var detInv = 1 / det;
+				// 	te[0] = t11 * detInv;
+				// 	te[1] = ( n24 * n33 * n41 - n23 * n34 * n41 - n24 * n31 * n43 + n21 * n34 * n43 + n23 * n31 * n44 - n21 * n33 * n44 ) * detInv;
+				// 	te[2] = ( n22 * n34 * n41 - n24 * n32 * n41 + n24 * n31 * n42 - n21 * n34 * n42 - n22 * n31 * n44 + n21 * n32 * n44 ) * detInv;
+				// 	te[3] = ( n23 * n32 * n41 - n22 * n33 * n41 - n23 * n31 * n42 + n21 * n33 * n42 + n22 * n31 * n43 - n21 * n32 * n43 ) * detInv;
+				// 	te[4] = t12 * detInv;
+				// 	te[5] = ( n13 * n34 * n41 - n14 * n33 * n41 + n14 * n31 * n43 - n11 * n34 * n43 - n13 * n31 * n44 + n11 * n33 * n44 ) * detInv;
+				// 	te[6] = ( n14 * n32 * n41 - n12 * n34 * n41 - n14 * n31 * n42 + n11 * n34 * n42 + n12 * n31 * n44 - n11 * n32 * n44 ) * detInv;
+				// 	te[7] = ( n12 * n33 * n41 - n13 * n32 * n41 + n13 * n31 * n42 - n11 * n33 * n42 - n12 * n31 * n43 + n11 * n32 * n43 ) * detInv;
+				// 	te[8] = t13 * detInv;
+				// 	te[9] = ( n14 * n23 * n41 - n13 * n24 * n41 - n14 * n21 * n43 + n11 * n24 * n43 + n13 * n21 * n44 - n11 * n23 * n44 ) * detInv;
+				// 	te[10] = ( n12 * n24 * n41 - n14 * n22 * n41 + n14 * n21 * n42 - n11 * n24 * n42 - n12 * n21 * n44 + n11 * n22 * n44 ) * detInv;
+				// 	te[11] = ( n13 * n22 * n41 - n12 * n23 * n41 - n13 * n21 * n42 + n11 * n23 * n42 + n12 * n21 * n43 - n11 * n22 * n43 ) * detInv;
+				// 	te[12] = t14 * detInv;
+				// 	te[13] = ( n13 * n24 * n31 - n14 * n23 * n31 + n14 * n21 * n33 - n11 * n24 * n33 - n13 * n21 * n34 + n11 * n23 * n34 ) * detInv;
+				// 	te[14] = ( n14 * n22 * n31 - n12 * n24 * n31 - n14 * n21 * n32 + n11 * n24 * n32 + n12 * n21 * n34 - n11 * n22 * n34 ) * detInv;
+				// 	te[15] = ( n12 * n23 * n31 - n13 * n22 * n31 + n13 * n21 * n32 - n11 * n23 * n32 - n12 * n21 * n33 + n11 * n22 * n33 ) * detInv;
+				// 	return self;
+				// }
+				if ( tMesh['skinInfo'] ) {
 					var globalTransformOfJointNode = []
 					var joints = tMesh['skinInfo']['joints']
 					var index = 0, len = joints.length
@@ -757,13 +748,47 @@ var RedRenderer;
 						tMesh['matrix'][14],
 						tMesh['matrix'][15]
 					]
-
+					////////////////////////////////////////////////////////////////////////////////////////////////////////////
 					// 역구하고
-					getInverse(globalTransformOfNodeThatTheMeshIsAttachedTo, globalTransformOfNodeThatTheMeshIsAttachedTo)
+					// getInverse(globalTransformOfNodeThatTheMeshIsAttachedTo, globalTransformOfNodeThatTheMeshIsAttachedTo)
+					var te = globalTransformOfNodeThatTheMeshIsAttachedTo,
+						me = globalTransformOfNodeThatTheMeshIsAttachedTo,
+						n11 = me[0], n21 = me[1], n31 = me[2], n41 = me[3],
+						n12 = me[4], n22 = me[5], n32 = me[6], n42 = me[7],
+						n13 = me[8], n23 = me[9], n33 = me[10], n43 = me[11],
+						n14 = me[12], n24 = me[13], n34 = me[14], n44 = me[15],
+						t11 = n23 * n34 * n42 - n24 * n33 * n42 + n24 * n32 * n43 - n22 * n34 * n43 - n23 * n32 * n44 + n22 * n33 * n44,
+						t12 = n14 * n33 * n42 - n13 * n34 * n42 - n14 * n32 * n43 + n12 * n34 * n43 + n13 * n32 * n44 - n12 * n33 * n44,
+						t13 = n13 * n24 * n42 - n14 * n23 * n42 + n14 * n22 * n43 - n12 * n24 * n43 - n13 * n22 * n44 + n12 * n23 * n44,
+						t14 = n14 * n23 * n32 - n13 * n24 * n32 - n14 * n22 * n33 + n12 * n24 * n33 + n13 * n22 * n34 - n12 * n23 * n34;
+					var det = n11 * t11 + n21 * t12 + n31 * t13 + n41 * t14;
+					if ( det === 0 ) {
+						console.warn("can't invert matrix, determinant is 0");
+						return mat4.identity(globalTransformOfNodeThatTheMeshIsAttachedTo);
+					} else {
+						var detInv = 1 / det;
+						te[0] = t11 * detInv;
+						te[1] = ( n24 * n33 * n41 - n23 * n34 * n41 - n24 * n31 * n43 + n21 * n34 * n43 + n23 * n31 * n44 - n21 * n33 * n44 ) * detInv;
+						te[2] = ( n22 * n34 * n41 - n24 * n32 * n41 + n24 * n31 * n42 - n21 * n34 * n42 - n22 * n31 * n44 + n21 * n32 * n44 ) * detInv;
+						te[3] = ( n23 * n32 * n41 - n22 * n33 * n41 - n23 * n31 * n42 + n21 * n33 * n42 + n22 * n31 * n43 - n21 * n32 * n43 ) * detInv;
+						te[4] = t12 * detInv;
+						te[5] = ( n13 * n34 * n41 - n14 * n33 * n41 + n14 * n31 * n43 - n11 * n34 * n43 - n13 * n31 * n44 + n11 * n33 * n44 ) * detInv;
+						te[6] = ( n14 * n32 * n41 - n12 * n34 * n41 - n14 * n31 * n42 + n11 * n34 * n42 + n12 * n31 * n44 - n11 * n32 * n44 ) * detInv;
+						te[7] = ( n12 * n33 * n41 - n13 * n32 * n41 + n13 * n31 * n42 - n11 * n33 * n42 - n12 * n31 * n43 + n11 * n32 * n43 ) * detInv;
+						te[8] = t13 * detInv;
+						te[9] = ( n14 * n23 * n41 - n13 * n24 * n41 - n14 * n21 * n43 + n11 * n24 * n43 + n13 * n21 * n44 - n11 * n23 * n44 ) * detInv;
+						te[10] = ( n12 * n24 * n41 - n14 * n22 * n41 + n14 * n21 * n42 - n11 * n24 * n42 - n12 * n21 * n44 + n11 * n22 * n44 ) * detInv;
+						te[11] = ( n13 * n22 * n41 - n12 * n23 * n41 - n13 * n21 * n42 + n11 * n23 * n42 + n12 * n21 * n43 - n11 * n22 * n43 ) * detInv;
+						te[12] = t14 * detInv;
+						te[13] = ( n13 * n24 * n31 - n14 * n23 * n31 + n14 * n21 * n33 - n11 * n24 * n33 - n13 * n21 * n34 + n11 * n23 * n34 ) * detInv;
+						te[14] = ( n14 * n22 * n31 - n12 * n24 * n31 - n14 * n21 * n32 + n11 * n24 * n32 + n12 * n21 * n34 - n11 * n22 * n34 ) * detInv;
+						te[15] = ( n12 * n23 * n31 - n13 * n22 * n31 + n13 * n21 * n32 - n11 * n23 * n32 - n12 * n21 * n33 + n11 * n22 * n33 ) * detInv;
+					}
+					////////////////////////////////////////////////////////////////////////////////////////////////////////////
 					// 글로벌 조인트 노드병합함
+					//TODO: 여기 캐싱할 방법 찾아야함
 					for ( index; index < len; index++ ) {
 						// 조인트 공간내에서의 전역
-
 						globalTransformOfJointNode[index * 16 + 0] = joints[index]['matrix'][0]
 						globalTransformOfJointNode[index * 16 + 1] = joints[index]['matrix'][1]
 						globalTransformOfJointNode[index * 16 + 2] = joints[index]['matrix'][2]
@@ -782,7 +807,6 @@ var RedRenderer;
 						globalTransformOfJointNode[index * 16 + 15] = joints[index]['matrix'][15]
 					}
 					// console.log(globalTransformOfJointNode)
-					//TODO: 여기 캐싱할 방법 찾아야함
 					tGL.uniformMatrix4fv(tSystemUniformGroup['uGlobalTransformOfNodeThatTheMeshIsAttachedTo']['location'], false, globalTransformOfNodeThatTheMeshIsAttachedTo)
 					tGL.uniformMatrix4fv(tSystemUniformGroup['uJointMatrix']['location'], false, globalTransformOfJointNode)
 					tGL.uniformMatrix4fv(tSystemUniformGroup['uInverseBindMatrixForJoint']['location'], false, tMesh['skinInfo']['inverseBindMatrices'])
@@ -873,6 +897,15 @@ var RedRenderer;
 					}
 					/////////////////////////////////////////////////////////////////////////
 					/////////////////////////////////////////////////////////////////////////
+					// if ( !transparentMode  ) {
+					// 	if(tMaterial && tMaterial['_cutOff'] != 0){
+					// 		transparentList.push(tMesh)
+					// 		tMesh.autoUpdateMatrix = false
+					// 		continue
+					// 	}
+					// }else{
+					// 	tMesh.autoUpdateMatrix = true
+					// }
 					// 드로우
 					if ( tIndexBufferInfo ) {
 						tPrevIndexBuffer_UUID == tIndexBufferInfo['_UUID'] ? 0 : tGL.bindBuffer(tGL.ELEMENT_ARRAY_BUFFER, tIndexBufferInfo['webglBuffer'])
@@ -892,10 +925,10 @@ var RedRenderer;
 				}
 				/////////////////////////////////////////////////////////////////////////
 				/////////////////////////////////////////////////////////////////////////
-				tMesh['children'].length ? draw(redGL, scene, tMesh['children'], camera, orthographicYn, time, renderResultObj, tCacheInfo, tCacheState, tMVMatrix, subSceneMaterial) : 0;
+				tMesh['children'].length ? draw(redGL, scene, tMesh['children'], camera, orthographicYn, time, renderResultObj, tCacheInfo, tCacheState, tMVMatrix, subSceneMaterial, transparentMode) : 0;
 			}
 		}
-		return function (redGL, scene, camera, orthographicYn, children, time, renderResultObj, subSceneMaterial) {
+		return function (redGL, scene, camera, orthographicYn, children, time, renderResultObj, subSceneMaterial, transparentMode) {
 			// if ( this['cacheState']['pointSize'] == undefined ) this['cacheState']['pointSize'] = null
 			// if ( !this['cacheState']['useCullFace'] ) this['cacheState']['useCullFace'] = null
 			// if ( !this['cacheState']['cullFace'] ) this['cacheState']['cullFace'] = null
@@ -923,7 +956,8 @@ var RedRenderer;
 				this['cacheInfo'],
 				this['cacheState'],
 				undefined,
-				subSceneMaterial
+				subSceneMaterial,
+				transparentMode
 			)
 		}
 	})()
