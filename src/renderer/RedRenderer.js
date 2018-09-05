@@ -112,6 +112,7 @@ var RedRenderer;
 	};
 	// 캐시관련
 	var prevProgram_UUID;
+	var transparentList = []
 	RedRenderer.prototype.worldRender = (function () {
 		var tWorldRect;
 		var self;
@@ -178,6 +179,7 @@ var RedRenderer;
 			gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
 			gl.scissor(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
 			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+			transparentList.length = 0
 			if ( !self['_glInitialized'] ) glInitialize(gl), self['_glInitialized'] = true
 			// console.log("worldRender", v['key'], t0)
 			self['renderInfo'] = {}
@@ -308,12 +310,12 @@ var RedRenderer;
 					tScene['skyBox']['z'] = tCamera.z
 					tScene['skyBox']['scaleX'] = tScene['skyBox']['scaleY'] = tScene['skyBox']['scaleZ'] = tCamera['farClipping'] * 0.6
 					self.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], [tScene['skyBox']], time, tRenderInfo);
-					gl.clear(gl.DEPTH_BUFFER_BIT);
 				}
 				// 그리드가 있으면 그림
 				if ( tScene['grid'] ) self.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], [tScene['grid']], time, tRenderInfo);
 				// 씬렌더 호출
 				self.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], tScene['children'], time, tRenderInfo);
+				self.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], transparentList, time, tRenderInfo,null, true);
 				// asix가 있으면 그림
 				if ( tScene['axis'] ) self.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], tScene['axis']['children'], time, tRenderInfo);
 				// 디버깅 라이트 업데이트
@@ -343,7 +345,8 @@ var RedRenderer;
 		                 tCacheInfo,
 		                 tCacheState,
 		                 parentMTX,
-		                 subSceneMaterial) {
+		                 subSceneMaterial,
+		                 transparentMode) {
 			var i, i2;
 			// 캐쉬관련
 			var tGL = redGL.gl
@@ -389,10 +392,10 @@ var RedRenderer;
 			CPI = 3.141592653589793, CPI2 = 6.283185307179586, C225 = 0.225, C127 = 1.27323954, C045 = 0.405284735, C157 = 1.5707963267948966;
 			//////////////// 렌더시작 ////////////////
 			i = children.length
-			var len3 = children.length-1
+			var len3 = children.length - 1
 			while ( i-- ) {
 				renderResultObj['call']++;
-				tMesh = children[len3-i];
+				tMesh = children[len3 - i];
 				tMVMatrix = tMesh['matrix'];
 				tNMatrix = tMesh['normalMatrix'];
 				tGeometry = tMesh['_geometry'];
@@ -723,8 +726,7 @@ var RedRenderer;
 				// 	te[15] = ( n12 * n23 * n31 - n13 * n22 * n31 + n13 * n21 * n32 - n11 * n23 * n32 - n12 * n21 * n33 + n11 * n22 * n33 ) * detInv;
 				// 	return self;
 				// }
-
-				if (  tMesh['skinInfo'] ) {
+				if ( tMesh['skinInfo'] ) {
 					var globalTransformOfJointNode = []
 					var joints = tMesh['skinInfo']['joints']
 					var index = 0, len = joints.length
@@ -805,7 +807,6 @@ var RedRenderer;
 						globalTransformOfJointNode[index * 16 + 15] = joints[index]['matrix'][15]
 					}
 					// console.log(globalTransformOfJointNode)
-
 					tGL.uniformMatrix4fv(tSystemUniformGroup['uGlobalTransformOfNodeThatTheMeshIsAttachedTo']['location'], false, globalTransformOfNodeThatTheMeshIsAttachedTo)
 					tGL.uniformMatrix4fv(tSystemUniformGroup['uJointMatrix']['location'], false, globalTransformOfJointNode)
 					tGL.uniformMatrix4fv(tSystemUniformGroup['uInverseBindMatrixForJoint']['location'], false, tMesh['skinInfo']['inverseBindMatrices'])
@@ -896,6 +897,15 @@ var RedRenderer;
 					}
 					/////////////////////////////////////////////////////////////////////////
 					/////////////////////////////////////////////////////////////////////////
+					// if ( !transparentMode  ) {
+					// 	if(tMaterial && tMaterial['_cutOff'] != 0){
+					// 		transparentList.push(tMesh)
+					// 		tMesh.autoUpdateMatrix = false
+					// 		continue
+					// 	}
+					// }else{
+					// 	tMesh.autoUpdateMatrix = true
+					// }
 					// 드로우
 					if ( tIndexBufferInfo ) {
 						tPrevIndexBuffer_UUID == tIndexBufferInfo['_UUID'] ? 0 : tGL.bindBuffer(tGL.ELEMENT_ARRAY_BUFFER, tIndexBufferInfo['webglBuffer'])
@@ -915,10 +925,10 @@ var RedRenderer;
 				}
 				/////////////////////////////////////////////////////////////////////////
 				/////////////////////////////////////////////////////////////////////////
-				tMesh['children'].length ? draw(redGL, scene, tMesh['children'], camera, orthographicYn, time, renderResultObj, tCacheInfo, tCacheState, tMVMatrix, subSceneMaterial) : 0;
+				tMesh['children'].length ? draw(redGL, scene, tMesh['children'], camera, orthographicYn, time, renderResultObj, tCacheInfo, tCacheState, tMVMatrix, subSceneMaterial, transparentMode) : 0;
 			}
 		}
-		return function (redGL, scene, camera, orthographicYn, children, time, renderResultObj, subSceneMaterial) {
+		return function (redGL, scene, camera, orthographicYn, children, time, renderResultObj, subSceneMaterial, transparentMode) {
 			// if ( this['cacheState']['pointSize'] == undefined ) this['cacheState']['pointSize'] = null
 			// if ( !this['cacheState']['useCullFace'] ) this['cacheState']['useCullFace'] = null
 			// if ( !this['cacheState']['cullFace'] ) this['cacheState']['cullFace'] = null
@@ -946,7 +956,8 @@ var RedRenderer;
 				this['cacheInfo'],
 				this['cacheState'],
 				undefined,
-				subSceneMaterial
+				subSceneMaterial,
+				transparentMode
 			)
 		}
 	})()

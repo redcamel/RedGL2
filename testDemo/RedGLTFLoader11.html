@@ -198,15 +198,15 @@
 //		RedView('test')['postEffectManager']['antialiasing'] = RedPostEffect_FXAA(this)
 
 		tRenderer.renderDebuger.visible = true
-//		tScene3D.skyBox =
-//			RedSkyBox(this, [
-//				'../asset/cubemap/SwedishRoyalCastle/px.jpg',
-//				'../asset/cubemap/SwedishRoyalCastle/nx.jpg',
-//				'../asset/cubemap/SwedishRoyalCastle/py.jpg',
-//				'../asset/cubemap/SwedishRoyalCastle/ny.jpg',
-//				'../asset/cubemap/SwedishRoyalCastle/pz.jpg',
-//				'../asset/cubemap/SwedishRoyalCastle/nz.jpg'
-//			]);
+		tScene3D.skyBox =
+			RedSkyBox(this, [
+				'../asset/cubemap/SwedishRoyalCastle/px.jpg',
+				'../asset/cubemap/SwedishRoyalCastle/nx.jpg',
+				'../asset/cubemap/SwedishRoyalCastle/py.jpg',
+				'../asset/cubemap/SwedishRoyalCastle/ny.jpg',
+				'../asset/cubemap/SwedishRoyalCastle/pz.jpg',
+				'../asset/cubemap/SwedishRoyalCastle/nz.jpg'
+			]);
 		RedGLTFLoader(self, '../asset/glTF/tokyo/', 'scene.gltf', function (v) {
 			console.log('호잇!', t1 = v)
 			tScene3D.addChild(t0 = v['resultMesh'])
