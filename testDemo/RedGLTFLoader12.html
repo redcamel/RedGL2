@@ -186,12 +186,12 @@
 		testDLight.y = 150
 		testDLight.z = -150
 //		testDLight.color = '#ffff00'
-		tScene3D.addLight(testDLight)
+//		tScene3D.addLight(testDLight)
         var a = RedAmbientLight(this)
 
 		tScene3D.addLight(a)
 		var bloom = RedPostEffect_Bloom(this)
-		bloom.exposure=0.75
+		bloom.exposure=0.2
 		RedView('test')['postEffectManager'].addEffect(bloom)
 		RedView('test')['postEffectManager']['antialiasing'] = RedPostEffect_FXAA(this)
 
