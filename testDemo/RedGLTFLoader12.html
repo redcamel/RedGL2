@@ -175,32 +175,31 @@
         RedView('test').setLocation('0%', '0%')
         this.renderScale = 1
         var testDLight;
-        testDLight = RedDirectionalLight(this)
-        testDLight.x = -150
-        testDLight.y = 350
-        testDLight.z = 150
-        tScene3D.addLight(testDLight)
+
 //		testDLight.color = '#ffff00'
         testDLight = RedDirectionalLight(this)
-        testDLight.x = 150
+        testDLight.x = 350
         testDLight.y = 350
-        testDLight.z = 150
+        testDLight.z = 350
 		tScene3D.addLight(testDLight)
-        var a = RedAmbientLight(this)
-
+        // var a = RedAmbientLight(this)
+        // tScene3D.addLight(a)
 
         var b = RedPostEffect_DoF(this)
         b.focusLength = 3000
-        RedView('test')['postEffectManager'].addEffect(b)
+        // RedView('test')['postEffectManager'].addEffect(b)
+        var c = RedPostEffect_Bloom(this)
+        // c.threshold = 0.5
+        // RedView('test')['postEffectManager'].addEffect(c)
         tRenderer.renderDebuger.visible = true
         tScene3D.skyBox =
             RedSkyBox(this, [
-                '../asset/cubemap/SwedishRoyalCastle/px.jpg',
-                '../asset/cubemap/SwedishRoyalCastle/nx.jpg',
-                '../asset/cubemap/SwedishRoyalCastle/py.jpg',
-                '../asset/cubemap/SwedishRoyalCastle/ny.jpg',
-                '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
-                '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
+                '../asset/cubemap/posx.png',
+                '../asset/cubemap/negx.png',
+                '../asset/cubemap/posy.png',
+                '../asset/cubemap/negy.png',
+                '../asset/cubemap/posz.png',
+                '../asset/cubemap/negz.png'
             ]);
 		// RedGLTFLoader(self, '../asset/glTF/iso/', 'scene.gltf', function (v) {
 		// 	console.log('호잇!', v)
@@ -215,7 +214,6 @@
         RedGLTFLoader(self, '../asset/glTF/warrior/', 'scene.gltf', function (v) {
             console.log('호잇!', v)
             tScene3D.addChild(v['resultMesh'])
-
         })
         var t0, t1, t2
 //				RedGLTFLoader(self, '../asset/glTF/bedRoom/', 'scene.gltf', function (v) {
@@ -261,6 +259,9 @@
 //					tCamera.y = Math.abs(Math.cos(time / 3500) * 250)
 //					tCamera.z = Math.cos(time / 3500) * 250
 //				}
+//                 testDLight.x = -Math.sin(time / 1500) * 500
+//                 testDLight.y = 500
+//                 testDLight.z = -Math.cos(time / 1500) * 500
             }
         )
         var testUI = function (redGL, tScene) {

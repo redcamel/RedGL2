@@ -372,7 +372,7 @@ var RedRenderer;
             var tMVMatrix, tNMatrix
             var tUUID;
             var tSamplerIndex;
-            var tSprite3DYn, tLODData, tDirectionalShadowMaterialYn, tSkinInfo;
+            var tSprite3DYn, tLODData, tDirectionalShadowMaterialYn, tSkinInfo,tUseFog;
             var tProgram, tOptionProgramKey, tOptionProgram;
             // matix 관련
             var a,
@@ -399,6 +399,7 @@ var RedRenderer;
             //////////////// 렌더시작 ////////////////
             i = children.length
             var len3 = children.length - 1
+            tUseFog = scene['_useFog']
             while (i--) {
                 renderResultObj['call']++;
                 tMesh = children[len3 - i];
@@ -455,19 +456,20 @@ var RedRenderer;
                     //TODO: 스킨관련 추가해야함
                     if (tProgramList) {
                         if (tUseDirectionalShadow) {
-                            if (tSkinInfo) tOptionProgramKey = 'skin'
+                            if (tUseFog && tSprite3DYn) tOptionProgramKey = 'directionalShadow_fog_sprite3D'
+                            else if (tSkinInfo) tOptionProgramKey = 'directionalShadow_skin'
                             else if (tSprite3DYn) tOptionProgramKey = 'directionalShadow_sprite3D'
-                            else if (scene['_useFog']) tOptionProgramKey = 'directionalShadow_fog'
-                            else if (scene['_useFog'] && tSprite3DYn) tOptionProgramKey = 'directionalShadow_fog_sprite3D'
+                            else if (tUseFog) tOptionProgramKey = 'directionalShadow_fog'
                             else tOptionProgramKey = 'directionalShadow'
                         }
                         else {
-                            if (tSkinInfo) tOptionProgramKey = 'skin'
+                            if (tUseFog && tSprite3DYn) tOptionProgramKey = 'fog_sprite3D'
+                            else if (tSkinInfo) tOptionProgramKey = 'skin'
                             else if (tSprite3DYn) tOptionProgramKey = 'sprite3D'
-                            else if (scene['_useFog']) tOptionProgramKey = 'fog'
-                            else if (scene['_useFog'] && tSprite3DYn) tOptionProgramKey = 'fog_sprite3D'
+                            else if (tUseFog) tOptionProgramKey = 'fog'
                         }
                     }
+
                     if (tOptionProgramKey) {
                         tOptionProgram = tProgramList[tOptionProgramKey][tBaseProgramKey];
                         if (tOptionProgram['_prepareProgramYn']) {

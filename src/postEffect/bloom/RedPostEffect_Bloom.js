@@ -24,7 +24,8 @@ var RedPostEffect_Bloom;
 			 vec4 finalColor = texture2D(u_diffuseTexture, vTexcoord);
 			 vec4 thresholdColor = finalColor;
 			 vec4 blurColor = texture2D(u_blurTexture, vTexcoord);
-			 gl_FragColor = (finalColor  + blurColor * u_bloomStrength) * u_exposure ;
+			 finalColor.rgb = (finalColor.rgb  + blurColor.rgb * u_bloomStrength) * u_exposure;
+			 gl_FragColor = finalColor ;
 		 }
 		 */
 	};

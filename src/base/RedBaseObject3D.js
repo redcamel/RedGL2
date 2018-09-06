@@ -247,7 +247,7 @@ var RedBaseObject3D;
 			 `,
 			 params : {
 				 level : [
-					 {type : '*' }
+					  {type : 'Number' }
 				 ],
 				 distance : [
 					 {type : 'Number' }
@@ -264,15 +264,16 @@ var RedBaseObject3D;
 		 :DOC*/
 		addLOD: (function () {
 			var tData;
-			return function (levelName, distance, geometry, material) {
-				geometry || material || RedGL.throwFunc('RedBaseObject3D - addLOD : geometry, material 둘중하나는 반드시 입력되어야함');
+			return function (level, distance, geometry, material) {
+				geometry || material || RedGLUtil.throwFunc('RedBaseObject3D - addLOD : geometry, material 둘중하나는 반드시 입력되어야함');
+                typeof level == 'number' ||  RedGLUtil.throwFunc('RedBaseObject3D - level : 숫자만허용함');
 				tData = {
-					level: levelName,
+					level: level,
 					distance: distance,
 					geometry: geometry ? geometry : this['geometry'],
 					material: material ? material : this['material']
 				};
-				this['_lodLevels'][levelName] = tData;
+				this['_lodLevels'][level] = tData;
 			}
 		})(),
 		/**DOC:

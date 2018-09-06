@@ -318,6 +318,7 @@ var RedPostEffectManager;
 					for ( i; i < len; i++ ) tEffectList[i] = self['postEffectList'][i];
 					// 안티알리어싱 모드가 적용되어있으면 추가한다.
 					if ( self['antialiasing'] ) tEffectList.push(self['antialiasing']);
+					//TODO: 감마를 여기서 추가해야할듯
 					////////////////////////////////////////////////////////////////////////////
 					// 이펙트 렌더
 					i = 0;

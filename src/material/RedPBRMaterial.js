@@ -37,7 +37,8 @@ var RedPBRMaterial;
 		     //#define#displacementTexture# )).x * u_displacementPower ;
 
 			 vReflectionCubeCoord = -vVertexPositionEye4.xyz;
-
+            //#define#directionalShadow#true# vResolution = uResolution;
+            //#define#directionalShadow#true# vShadowPos = cTexUnitConverter  *  uDirectionalShadowLightMatrix * vVertexPositionEye4;
 			 gl_PointSize = uPointSize;
 			 gl_Position = uPMatrix * uCameraMatrix * vVertexPositionEye4;
 		 }
@@ -105,7 +106,16 @@ var RedPBRMaterial;
 	     float specularTextureValue;
          float distanceLength;
 		 float attenuation;
-
+        float cShadowAcneRemover = 0.0007;
+         float decodeFloat (vec4 color) {
+            const vec4 cBitShift = vec4(
+	            1.0 / (256.0 * 256.0 * 256.0),
+	            1.0 / (256.0 * 256.0),
+	            1.0 / 256.0,
+	            1
+	        );
+	        return dot(color, cBitShift);
+        }
 		 void main(void) {
 			la = uAmbientLightColor * uAmbientLightColor.a;
 			ld = vec4(0.0, 0.0, 0.0, 1.0);
@@ -143,6 +153,8 @@ var RedPBRMaterial;
 			//#define#normalTexture# if(normalColor.a != 0.0) N = normalize(2.0 * (N + normalColor.rgb * u_normalPower  - 0.5));
 
 
+
+
 			// 환경맵 계산
 			//#define#environmentTexture# reflectionColor = textureCube(u_environmentTexture, 2.0 * dot(vReflectionCubeCoord, N) * N - vReflectionCubeCoord);
 			//#define#environmentTexture# reflectionColor.rgb *= reflectionColor.a;
@@ -153,8 +165,6 @@ var RedPBRMaterial;
 
 			// 컷오프 계산
 			if(texelColor.a <= u_cutOff) discard;
-
-
 
 
 			float shininess = 256.0 ;
@@ -185,6 +195,29 @@ var RedPBRMaterial;
 			// 오클루젼 합성
 			//#define#occlusionTexture# occlusionColor = texture2D(u_occlusionTexture, u_occlusionTexCoord);
 			//#define#occlusionTexture# finalColor.rgb = mix(finalColor.rgb, finalColor.rgb * occlusionColor.r, u_occlusionPower);
+
+///////////////////////////////////////////////////////////////////////////////////////
+
+
+			//#define#directionalShadow#true#	vec3 fragmentDepth = vShadowPos.xyz;
+	        //#define#directionalShadow#true#    fragmentDepth.z -= cShadowAcneRemover;
+			//#define#directionalShadow#true#	float amountInLight = 0.0;
+			//#define#directionalShadow#true#	for (int x = -1; x <= 1; x++) {
+			//#define#directionalShadow#true#	    for (int y = -1; y <= 1; y++) {
+			//#define#directionalShadow#true#	        vec2 tUV = fragmentDepth.xy + vec2(float(x)/vResolution.x, float(y)/vResolution.y) ;
+	        //#define#directionalShadow#true#            if(tUV.x<0.0) continue;
+	        //#define#directionalShadow#true#            if(tUV.x>1.0) continue;
+	        //#define#directionalShadow#true#            if(tUV.y<0.0) continue;
+	        //#define#directionalShadow#true#            if(tUV.y>1.0) continue;
+			//#define#directionalShadow#true#	        float texelDepth = decodeFloat(texture2D(uDirectionalShadowTexture,tUV));
+			//#define#directionalShadow#true#	        if (fragmentDepth.z < texelDepth ) amountInLight += 0.5;
+			//#define#directionalShadow#true#	       // finalColor =  texture2D(uDirectionalShadowTexture,tUV);
+			//#define#directionalShadow#true#	    }
+			//#define#directionalShadow#true#	}
+			//#define#directionalShadow#true#	amountInLight /= 9.0;
+			//#define#directionalShadow#true#	finalColor.rgb *= (1.0-amountInLight);
+
+			///////////////////////////////////////////////////////////////////////////////////////
 			//#define#fog#false# gl_FragColor = finalColor;
 			//#define#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
 		 }
