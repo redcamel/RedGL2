@@ -897,15 +897,15 @@ var RedRenderer;
 					}
 					/////////////////////////////////////////////////////////////////////////
 					/////////////////////////////////////////////////////////////////////////
-					// if ( !transparentMode ) {
-					// 	if ( tMaterial &&  tMaterial['_cutOff'] != 0 ) {
-					// 		transparentList.push(tMesh)
-					// 		tMesh.autoUpdateMatrix = false
-					// 		continue
-					// 	}
-					// } else {
-					// 	tMesh.autoUpdateMatrix = true
-					// }
+					if ( !transparentMode ) {
+						if ( tMesh['useTransparentSort'] ) {
+							transparentList.push(tMesh)
+							tMesh.autoUpdateMatrix = false
+							continue
+						}
+					} else {
+						tMesh.autoUpdateMatrix = true
+					}
 					// 드로우
 					if ( tIndexBufferInfo ) {
 						tPrevIndexBuffer_UUID == tIndexBufferInfo['_UUID'] ? 0 : tGL.bindBuffer(tGL.ELEMENT_ARRAY_BUFFER, tIndexBufferInfo['webglBuffer'])

@@ -36,6 +36,18 @@ var RedBaseObject3D;
 	 :DOC*/
 	RedBaseObject3D['build'] = function (gl) {
 		this['name'] = 'object3D_' + (RedGL.makeUUID() + 1)
+        /**DOC:
+         {
+		     code : 'PROPERTY',
+			 title :`useTransparentSort`,
+			 description : `
+				 투명도 소팅 여부
+				 기본값 : false
+			 `,
+			 return : 'Boolean'
+		 }
+         :DOC*/
+		this['useTransparentSort'] = false
 		/**DOC:
 		 {
 		     code : 'PROPERTY',
