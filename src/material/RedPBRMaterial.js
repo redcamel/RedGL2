@@ -3,7 +3,7 @@ var RedPBRMaterial;
 (function () {
 	var vSource, fSource;
 	var PROGRAM_NAME = 'RedPBRMaterialProgram';
-	var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture', 'displacementTexture'];
+	var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture','environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture', 'displacementTexture'];
 	var checked;
 	vSource = function () {
 		/* @preserve
@@ -53,7 +53,7 @@ var RedPBRMaterial;
 		 //#define#diffuseTexture# uniform sampler2D u_diffuseTexture;
 		 //#define#normalTexture# uniform sampler2D u_normalTexture;
 		 //#define#occlusionTexture# uniform sampler2D u_occlusionTexture;
-		 uniform samplerCube u_environmentTexture;
+		 //#define#environmentTexture# uniform samplerCube u_environmentTexture;
 		 //#define#emissiveTexture# uniform sampler2D u_emissiveTexture;
 		 //#define#emissiveTexture# uniform sampler2D u_roughnessTexture;
 
@@ -77,10 +77,6 @@ var RedPBRMaterial;
 		uniform int u_emissiveTexCoordIndex;
 		uniform int u_roughnessTexCoordIndex;
 		uniform int u_normalTexCoordIndex;
-
-
-
-
 
 		 float fogFactor(float perspectiveFar, float density){
 			 float flog_cord = gl_FragCoord.z / gl_FragCoord.w / perspectiveFar;
@@ -140,9 +136,8 @@ var RedPBRMaterial;
 
 
 			// diffuse 색상 산출
-			texelColor = vec4(0.0,0.0,0.0,0.0);
+			texelColor = uBaseColorFactor;
 			//#define#diffuseTexture# texelColor = texture2D(u_diffuseTexture, vec2(u_diffuseTexCoord.x,u_diffuseTexCoord.y));
-			texelColor *= uBaseColorFactor;
 			texelColor.rgb *= texelColor.a;
 
 			// 노멀값 계산
@@ -152,16 +147,16 @@ var RedPBRMaterial;
 
 
 			// 환경맵 계산
-			reflectionColor = textureCube(u_environmentTexture, 2.0 * dot(vReflectionCubeCoord, N) * N - vReflectionCubeCoord);
-			reflectionColor.rgb *= reflectionColor.a;
+			//#define#environmentTexture# reflectionColor = textureCube(u_environmentTexture, 2.0 * dot(vReflectionCubeCoord, N) * N - vReflectionCubeCoord);
+			//#define#environmentTexture# reflectionColor.rgb *= reflectionColor.a;
 			// 환경맵 합성
-    		texelColor = mix(texelColor,reflectionColor ,tMetallicPower * (1.0-tRoughnessPower+0.04));
+    		//#define#environmentTexture# texelColor = mix(texelColor,reflectionColor ,tMetallicPower * (1.0-tRoughnessPower+0.04));
 
 
 
 			// 컷오프 계산
-			//#define#diffuseTexture# texelColor.rgb *= texelColor.a;
-			//#define#diffuseTexture# if(texelColor.a <= u_cutOff) discard;
+			//#define#environmentTexture# texelColor.rgb *= texelColor.a;
+			if(texelColor.a <= u_cutOff) discard;
 
 
 
@@ -190,7 +185,7 @@ var RedPBRMaterial;
 			//#define#emissiveTexture# emissiveColor = texture2D(u_emissiveTexture, u_emissiveTexCoord);
 			//#define#emissiveTexture# emissiveColor.rgb *= emissiveColor.a;
 			//#define#emissiveTexture# emissiveColor.rgb *= uEmissiveFactor;
-			//#define#emissiveTexture# finalColor += emissiveColor;
+			//#define#emissiveTexture# finalColor.rgb += emissiveColor.rgb;
 			// 오클루젼 합성
 			//#define#occlusionTexture# occlusionColor = texture2D(u_occlusionTexture, u_occlusionTexCoord);
 			//#define#occlusionTexture# finalColor.rgb = mix(finalColor.rgb, finalColor.rgb * occlusionColor.r, u_occlusionPower);
