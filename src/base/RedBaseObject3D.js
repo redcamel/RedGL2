@@ -182,6 +182,7 @@ var RedBaseObject3D;
 		 }
 		 :DOC*/
 		this['autoUpdateMatrix'] = true;
+        this['_renderAutoUpdateMatrix'] = true;
 		/**DOC:
 		 {
 		    code : 'PROPERTY',

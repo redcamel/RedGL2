@@ -179,22 +179,19 @@
         testDLight.x = -150
         testDLight.y = 350
         testDLight.z = 150
-        testDLight.alpha = 0.5
         tScene3D.addLight(testDLight)
 //		testDLight.color = '#ffff00'
         testDLight = RedDirectionalLight(this)
         testDLight.x = 150
         testDLight.y = 350
         testDLight.z = 150
-        testDLight.alpha = 0.5
 		tScene3D.addLight(testDLight)
         var a = RedAmbientLight(this)
 
-        tScene3D.addLight(a)
 
-        var b = RedPostEffect_Bloom(this)
+        var b = RedPostEffect_DoF(this)
         b.focusLength = 3000
-        // RedView('test')['postEffectManager'].addEffect(b)
+        RedView('test')['postEffectManager'].addEffect(b)
         tRenderer.renderDebuger.visible = true
         tScene3D.skyBox =
             RedSkyBox(this, [
@@ -205,21 +202,21 @@
                 '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
                 '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
             ]);
-		RedGLTFLoader(self, '../asset/glTF/iso/', 'scene.gltf', function (v) {
-			console.log('호잇!', v)
-			tScene3D.addChild(t0 = v['resultMesh'])
-			t0.x = -750
-			t0.z = -2000
-		},{
-		    glass : function(v){
-		        v['useTransparentSort'] = true
-            }
+		// RedGLTFLoader(self, '../asset/glTF/iso/', 'scene.gltf', function (v) {
+		// 	console.log('호잇!', v)
+		// 	tScene3D.addChild(t0 = v['resultMesh'])
+		// 	t0.x = -750
+		// 	t0.z = -2000
+		// },{
+		//     glass : function(v){
+		//         v['useTransparentSort'] = true
+        //     }
+        // })
+        RedGLTFLoader(self, '../asset/glTF/warrior/', 'scene.gltf', function (v) {
+            console.log('호잇!', v)
+            tScene3D.addChild(v['resultMesh'])
+
         })
-//         RedGLTFLoader(self, '../asset/glTF/warrior/', 'scene.gltf', function (v) {
-//             console.log('호잇!', v)
-//             tScene3D.addChild(v['resultMesh'])
-//
-//         })
         var t0, t1, t2
 //				RedGLTFLoader(self, '../asset/glTF/bedRoom/', 'scene.gltf', function (v) {
 //			console.log('호잇!', t1 = v)
