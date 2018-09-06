@@ -372,7 +372,7 @@ var RedRenderer;
             var tMVMatrix, tNMatrix
             var tUUID;
             var tSamplerIndex;
-            var tSprite3DYn, tLODData, tDirectionalShadowMaterialYn;
+            var tSprite3DYn, tLODData, tDirectionalShadowMaterialYn, tSkinInfo;
             var tProgram, tOptionProgramKey, tOptionProgram;
             // matix 관련
             var a,
@@ -406,6 +406,7 @@ var RedRenderer;
                 tNMatrix = tMesh['normalMatrix'];
                 tGeometry = tMesh['_geometry'];
                 tSprite3DYn = tMesh['_sprite3DYn'];
+                tSkinInfo = tMesh['skinInfo']
                 // LOD체크
                 if (tMesh['useLOD']) {
                     lodX = camera.x - tMesh.x;
@@ -451,19 +452,20 @@ var RedRenderer;
                     tOptionProgram = null;
                     tBaseProgramKey = tProgram['key']
                     tProgramList = tMaterial['_programList']
+                    //TODO: 스킨관련 추가해야함
                     if (tProgramList) {
                         if (tUseDirectionalShadow) {
-                            if (scene['_useFog'] && tSprite3DYn) tOptionProgramKey = 'directionalShadow_fog_sprite3D'
+                            if (tSkinInfo) tOptionProgramKey = 'skin'
                             else if (tSprite3DYn) tOptionProgramKey = 'directionalShadow_sprite3D'
                             else if (scene['_useFog']) tOptionProgramKey = 'directionalShadow_fog'
+                            else if (scene['_useFog'] && tSprite3DYn) tOptionProgramKey = 'directionalShadow_fog_sprite3D'
                             else tOptionProgramKey = 'directionalShadow'
                         }
                         else {
-                            if (scene['_useFog'] && tSprite3DYn) tOptionProgramKey = 'fog_sprite3D'
-                            //TODO: 스킨관련 추가해야함
-                            else if (tMesh['skinInfo']) tOptionProgramKey = 'skin'
+                            if (tSkinInfo) tOptionProgramKey = 'skin'
                             else if (tSprite3DYn) tOptionProgramKey = 'sprite3D'
                             else if (scene['_useFog']) tOptionProgramKey = 'fog'
+                            else if (scene['_useFog'] && tSprite3DYn) tOptionProgramKey = 'fog_sprite3D'
                         }
                     }
                     if (tOptionProgramKey) {
@@ -732,9 +734,9 @@ var RedRenderer;
                 // 	te[15] = ( n12 * n23 * n31 - n13 * n22 * n31 + n13 * n21 * n32 - n11 * n23 * n32 - n12 * n21 * n33 + n11 * n22 * n33 ) * detInv;
                 // 	return self;
                 // }
-                if (tMesh['skinInfo']) {
+                if (tSkinInfo) {
                     var globalTransformOfJointNode = []
-                    var joints = tMesh['skinInfo']['joints']
+                    var joints = tSkinInfo['joints']
                     var index = 0, len = joints.length
                     var globalTransformOfNodeThatTheMeshIsAttachedTo = [
                         tMesh['matrix'][0],
@@ -815,7 +817,7 @@ var RedRenderer;
                     // console.log(globalTransformOfJointNode)
                     tGL.uniformMatrix4fv(tSystemUniformGroup['uGlobalTransformOfNodeThatTheMeshIsAttachedTo']['location'], false, globalTransformOfNodeThatTheMeshIsAttachedTo)
                     tGL.uniformMatrix4fv(tSystemUniformGroup['uJointMatrix']['location'], false, globalTransformOfJointNode)
-                    tGL.uniformMatrix4fv(tSystemUniformGroup['uInverseBindMatrixForJoint']['location'], false, tMesh['skinInfo']['inverseBindMatrices'])
+                    tGL.uniformMatrix4fv(tSystemUniformGroup['uInverseBindMatrixForJoint']['location'], false, tSkinInfo['inverseBindMatrices'])
                 }
                 /////////////////////////////////////////////////////////////////////////
                 /////////////////////////////////////////////////////////////////////////

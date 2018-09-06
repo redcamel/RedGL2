@@ -89,11 +89,11 @@ var RedCamera;
 		 {
 			 code:`PROPERTY`,
 			 title :`nearClipping`,
-			 description : `기본값 - 1`,
+			 description : `기본값 : 1`,
 			 return : 'Number'
 		 }
 		 :DOC*/
-		this['nearClipping'] = 1;
+		this['nearClipping'] =1;
 		/**DOC:
 		 {
 			 code:`PROPERTY`,

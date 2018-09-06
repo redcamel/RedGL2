@@ -65,17 +65,17 @@ var RedGLTFLoader;
         request.send();
     }
     RedGLTFLoader = function (redGL, path, fileName, callback, parsingOption) {
-        if ((!(this instanceof RedGLTFLoader))) return new RedGLTFLoader(redGL, path, fileName, callback,parsingOption)
+        if ((!(this instanceof RedGLTFLoader))) return new RedGLTFLoader(redGL, path, fileName, callback, parsingOption)
         console.log('~~~~~~~~~~~')
         var self = this;
         fileLoader(
             path + fileName,
             null,
             function (request) {
-                self['result'] = parser(self, redGL, JSON.parse(request['responseText']), function () {
+                parser(self, redGL, JSON.parse(request['responseText']), function () {
                     if (callback) {
                         console.log('모델 파싱 종료');
-                        callback(self['result'])
+                        callback(self)
                     }
                 })
             },
@@ -88,7 +88,6 @@ var RedGLTFLoader;
         };
         this['redGL'] = redGL;
         this['groups'] = []
-        this['skins'] = []
         this['textures'] = {}
         this['cameras'] = [];
         this['animations'] = [];
@@ -99,7 +98,6 @@ var RedGLTFLoader;
         this['resultMesh'] = RedMesh(redGL)
         this['resultMesh']['name'] = 'instanceOfRedGLTFLoader_' + RedGL.makeUUID()
         this['parsingOption'] = parsingOption
-        this['result'] = null;
         var _currentAnimationInfo = null
         this['stopAnimation'] = function () {
             console.log('_currentAnimationInfo', _currentAnimationInfo, loopList.indexOf(_currentAnimationInfo))
@@ -1319,8 +1317,8 @@ var RedGLTFLoader;
                     //TODO: 용어를 정리해봐야겠음.
                     // 이걸 애니메이션 클립으로 봐야하는가..
                     var animationClip = []
-                    animationClip['minTime'] = 1000000;
-                    animationClip['maxTime'] = 0;
+                    animationClip['minTime'] = 10000000;
+                    animationClip['maxTime'] = -1;
                     animationClip['name'] = 'animation_' + index;
                     // 로더에 애니메이션 데이터들을 입력함
                     redGLTFLoader['animations'].push(animationClip)
@@ -1402,12 +1400,6 @@ var RedGLTFLoader;
                     if (callBack) callBack();
                 }
             )
-            return {
-                fileName: redGLTFLoader['fileName'],
-                path: redGLTFLoader['path'],
-                resultMesh: redGLTFLoader['resultMesh'],
-                redGLTFLoader: redGLTFLoader
-            }
         }
     })();
     Object.freeze(RedGLTFLoader);
