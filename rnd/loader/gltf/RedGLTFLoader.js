@@ -15,7 +15,8 @@ var RedGLTFLoader;
 		 constructorYn : true,
 		 title :`RedGLTFLoader`,
 		 description : `
-			 OBJ 로더
+			 GLTF 로더
+			 COLOR_0, TANGENT는 아직 지원하지 않는다.
 		 `,
 		 params : {
 			 redGL : [
@@ -748,6 +749,7 @@ var RedGLTFLoader;
                             if (strideIndex % stridePerElement < 4) {
                                 if (key == 'WEIGHTS_0') jointWeights.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                                 else if (key == 'JOINTS_0') joints.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+                                // else if ( key == 'COLOR_0' )
                                 // else if ( key == 'TANGENT' ) tangents.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                                 // else RedGLUtil.throwFunc('VEC4에서 현재 지원하고 있지 않는 키', key)
                             }
@@ -758,6 +760,7 @@ var RedGLTFLoader;
                         for (i; i < len; i++) {
                             if (key == 'WEIGHTS_0') jointWeights.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                             else if (key == 'JOINTS_0') joints.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+                            // else if ( key == 'COLOR_0' )
                             // else if ( key == 'TANGENT' ) tangents.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                             // else RedGLUtil.throwFunc('VEC4에서 현재 지원하고 있지 않는 키', key)
                             strideIndex++
@@ -771,6 +774,7 @@ var RedGLTFLoader;
                             if (strideIndex % stridePerElement < 3) {
                                 if (key == 'NORMAL') normals.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                                 else if (key == 'POSITION') vertices.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+                                // else if ( key == 'COLOR_0' )
                                 // else if ( key == 'TANGENT' ) tangents.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                                 // else RedGLUtil.throwFunc('VEC3에서 현재 지원하고 있지 않는 키', key)
                             }
@@ -781,6 +785,7 @@ var RedGLTFLoader;
                         for (i; i < len; i++) {
                             if (key == 'NORMAL') normals.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                             else if (key == 'POSITION') vertices.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+                            // else if ( key == 'COLOR_0' )
                             // else if ( key == 'TANGENT' ) tangents.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                             // else RedGLUtil.throwFunc('VEC3에서 현재 지원하고 있지 않는 키', key)
                             strideIndex++

@@ -268,12 +268,12 @@
 				cameras: 0
 			}
 			var tList = []
-			t1['redGLTFLoader']['cameras'].forEach(function (v, index) {
+			t1['cameras'].forEach(function (v, index) {
 				tList.push(index)
 			})
 			folder.add(testAnimation, 'cameras', tList).onChange(function (v) {
 				tIndex = v
-				RedView('test').camera = t1['redGLTFLoader']['cameras'][v]
+				RedView('test').camera = t1['cameras'][v]
 				console.log(RedView('test').camera)
 			})
 			///////////////////////////////////////////////

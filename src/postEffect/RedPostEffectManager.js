@@ -251,7 +251,7 @@ var RedPostEffectManager;
 						tSubScene['frameBuffer']['height'] = tViewRect[3];
 						tSubScene['frameBuffer'].bind(tGL);
 						tGL.clear(tGL.COLOR_BUFFER_BIT | tGL.DEPTH_BUFFER_BIT);
-						redRenderer.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], tScene['children'], time, renderInfo, tSubScene['renderMaterial'], true);
+						redRenderer.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], tScene['children'], time, renderInfo, tSubScene['renderMaterial'], true,true);
 						tSubScene['frameBuffer'].unbind(tGL);
 						prevWidth = tSubScene['frameBuffer']['width'];
 						prevHeight = tSubScene['frameBuffer']['height'];
@@ -275,7 +275,7 @@ var RedPostEffectManager;
 						tParentFrameBufferTexture
 					);
 					// 해당 이펙트를 렌더링하고
-					redRenderer.sceneRender(redGL, tScene, tCamera, true, quadChildren, time, renderInfo, null, true);
+					redRenderer.sceneRender(redGL, tScene, tCamera, true, quadChildren, time, renderInfo, null, true,true);
 					// 해당 이펙트의 프레임 버퍼를 언바인딩한다.
 					effect.unbind(tGL);
 					// 현재 이펙트를 최종 텍스쳐로 기록하고 다음 이펙트가 있을경우 활용한다.
@@ -318,6 +318,7 @@ var RedPostEffectManager;
 					for ( i; i < len; i++ ) tEffectList[i] = self['postEffectList'][i];
 					// 안티알리어싱 모드가 적용되어있으면 추가한다.
 					if ( self['antialiasing'] ) tEffectList.push(self['antialiasing']);
+					//TODO: 감마를 여기서 추가해야할듯
 					////////////////////////////////////////////////////////////////////////////
 					// 이펙트 렌더
 					i = 0;
