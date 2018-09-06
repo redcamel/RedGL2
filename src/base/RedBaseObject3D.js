@@ -194,6 +194,7 @@ var RedBaseObject3D;
 		 }
 		 :DOC*/
 		this['matrix'] = mat4.create();
+        this['cachedMatrix'] = mat4.create();
 		this['localMatrix'] = mat4.create();
 		/**DOC:
 		 {
@@ -206,6 +207,7 @@ var RedBaseObject3D;
 		 }
 		 :DOC*/
 		this['normalMatrix'] = mat4.create();
+        this['cachedNormalMatrix'] = mat4.create();
 		/**DOC:
 		 {
 		     code : 'PROPERTY',
