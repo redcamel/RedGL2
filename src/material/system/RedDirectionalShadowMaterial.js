@@ -7,7 +7,14 @@ var RedDirectionalShadowMaterial;
 	vSource = function () {
 		/* @preserve
 		 void main(void) {
-			 gl_Position =  uDirectionalShadowLightMatrix *  uMMatrix * vec4(aVertexPosition, 1.0);
+		 	//#define#skin#true# mat4 skinMat =
+			//#define#skin#true# aVertexWeight.x * uGlobalTransformOfNodeThatTheMeshIsAttachedTo * uJointMatrix[ int(aVertexJoint.x) ] * uInverseBindMatrixForJoint[int(aVertexJoint.x)]+
+			//#define#skin#true# aVertexWeight.y * uGlobalTransformOfNodeThatTheMeshIsAttachedTo * uJointMatrix[ int(aVertexJoint.y) ] * uInverseBindMatrixForJoint[int(aVertexJoint.y)]+
+			//#define#skin#true# aVertexWeight.z * uGlobalTransformOfNodeThatTheMeshIsAttachedTo * uJointMatrix[ int(aVertexJoint.z) ] * uInverseBindMatrixForJoint[int(aVertexJoint.z)]+
+			//#define#skin#true# aVertexWeight.w * uGlobalTransformOfNodeThatTheMeshIsAttachedTo * uJointMatrix[ int(aVertexJoint.w) ] * uInverseBindMatrixForJoint[int(aVertexJoint.w)];
+			//#define#skin#true# gl_Position =  uDirectionalShadowLightMatrix *  uMMatrix * skinMat * vec4(aVertexPosition, 1.0);
+			//#define#skin#false# gl_Position =  uDirectionalShadowLightMatrix *  uMMatrix * vec4(aVertexPosition, 1.0);
+
 		 }
 		 */
 	};
@@ -65,7 +72,7 @@ var RedDirectionalShadowMaterial;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
 		this['_RedDirectionalShadowYn'] = true;
-		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
+        this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource);
 		this['_UUID'] = RedGL.makeUUID();
 		if ( !checked ) {
 			this.checkUniformAndProperty();

@@ -156,7 +156,7 @@ var RedStandardMaterial;
 			 }
 
 			 finalColor = la * uAmbientIntensity + ld + ls;
-			  //#define#emissiveTexture# finalColor +=emissiveColor;
+			  //#define#emissiveTexture# finalColor.rgb += emissiveColor.rgb;
 			 finalColor.rgb *= texelColor.a;
 			 finalColor.a = texelColor.a * u_alpha;
 

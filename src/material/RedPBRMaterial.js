@@ -55,7 +55,7 @@ var RedPBRMaterial;
 		 //#define#occlusionTexture# uniform sampler2D u_occlusionTexture;
 		 //#define#environmentTexture# uniform samplerCube u_environmentTexture;
 		 //#define#emissiveTexture# uniform sampler2D u_emissiveTexture;
-		 //#define#emissiveTexture# uniform sampler2D u_roughnessTexture;
+		 //#define#roughnessTexture# uniform sampler2D u_roughnessTexture;
 
 
 
@@ -122,9 +122,6 @@ var RedPBRMaterial;
 			u_emissiveTexCoord = u_emissiveTexCoordIndex==0 ? vTexcoord : vTexcoord1;
 			u_roughnessTexCoord  = u_roughnessTexCoordIndex==0 ? vTexcoord : vTexcoord1;
 
-
-
-
 			float tMetallicPower = u_metallicFactor;
 			float tRoughnessPower = u_roughnessFactor;
 			//#define#roughnessTexture# roughnessColor = texture2D(u_roughnessTexture, u_roughnessTexCoord);
@@ -155,7 +152,6 @@ var RedPBRMaterial;
 
 
 			// 컷오프 계산
-			//#define#environmentTexture# texelColor.rgb *= texelColor.a;
 			if(texelColor.a <= u_cutOff) discard;
 
 
