@@ -1235,6 +1235,7 @@ var RedGLTFLoader;
                         tMesh['useTransparentSort'] = true
                         break
                     case 'MASK' :
+                        tMesh.useBlendMode = false
                         tMesh['useTransparentSort'] = true
                         tMaterial.cutOff = tAlphaCutoff
                         break

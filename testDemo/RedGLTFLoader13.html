@@ -189,17 +189,18 @@
         tRenderer.renderDebuger.visible = true
         tScene3D.skyBox =
             RedSkyBox(this, [
-                '../asset/cubemap/SwedishRoyalCastle/px.jpg',
-                '../asset/cubemap/SwedishRoyalCastle/nx.jpg',
-                '../asset/cubemap/SwedishRoyalCastle/py.jpg',
-                '../asset/cubemap/SwedishRoyalCastle/ny.jpg',
-                '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
-                '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
+                '../asset/cubemap/posx.png',
+                '../asset/cubemap/negx.png',
+                '../asset/cubemap/posy.png',
+                '../asset/cubemap/negy.png',
+                '../asset/cubemap/posz.png',
+                '../asset/cubemap/negz.png'
             ]);
         RedGLTFLoader(self, '../asset/glTF/basic/', 'NormalTangentTest.gltf', function (v) {
             console.log('호잇!', v)
             tScene3D.addChild(v['resultMesh'])
             v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 4
+            // v['resultMesh'].rotationX = 90
         }, RedBitmapCubeTexture(self, [
             // '../asset/cubemap/SwedishRoyalCastle/px.jpg',
             // '../asset/cubemap/SwedishRoyalCastle/nx.jpg',
