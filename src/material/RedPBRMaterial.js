@@ -38,7 +38,7 @@ var RedPBRMaterial;
              //#define#displacementTexture#    u_displacementFlowSpeedY * (uTime/1000.0)
              //#define#displacementTexture# )).x * u_displacementPower ;
 
-             vReflectionCubeCoord = (uCameraMatrix *vVertexPositionEye4).xyz;
+             vReflectionCubeCoord = (uCameraMatrix * vVertexPositionEye4).xyz;
 
             //#define#directionalShadow#true# vResolution = uResolution;
             //#define#directionalShadow#true# vShadowPos = cTexUnitConverter  *  uDirectionalShadowLightMatrix * vVertexPositionEye4;
@@ -147,7 +147,7 @@ var RedPBRMaterial;
 
             // diffuse 색상 산출
             texelColor = uBaseColorFactor;
-            //#define#diffuseTexture# texelColor = texture2D(u_diffuseTexture, vec2(u_diffuseTexCoord.x,u_diffuseTexCoord.y));
+            //#define#diffuseTexture# texelColor = texture2D(u_diffuseTexture, u_diffuseTexCoord);
             texelColor.rgb *= texelColor.a;
 
             // 노멀값 계산
@@ -162,10 +162,7 @@ var RedPBRMaterial;
             //#define#environmentTexture# reflectionColor = textureCube(u_environmentTexture, 2.0 * dot(vReflectionCubeCoord, N) * N - vReflectionCubeCoord);
             //#define#environmentTexture# reflectionColor.rgb *= reflectionColor.a;
             // 환경맵 합성
-            //#define#environmentTexture# texelColor = mix(texelColor,reflectionColor ,tMetallicPower * (1.0-tRoughnessPower));;
-
-
-
+            //#define#environmentTexture# if(tMetallicPower-tRoughnessPower>0.0) texelColor.rgb = mix( texelColor.rgb , reflectionColor.rgb , max(tMetallicPower - tRoughnessPower,0.0));
 
             // 컷오프 계산
             if(texelColor.a <= u_cutOff) discard;
