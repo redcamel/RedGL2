@@ -149,51 +149,51 @@
 <body>
 <canvas id="test" style="border: none;background:red"></canvas>
 <script>
-	document.getElementById('test')
-	RedGL(document.getElementById('test'), function (v) {
-		console.log(v)
-		var tGL;
-		var tWorld, tScene3D, tCamera
-		var tRenderer;
-		var self;
-		self = this
-		tGL = this.gl;
-		this.world = tWorld = RedWorld();
-		tScene3D = RedScene(this);
-		// tScene3D['useFog'] = true
-		tCamera = RedObitController(this);
-		tCamera.tilt = -25
-		tCamera.distance = 2500
-		tCamera.speedDistance = 50
-		tRenderer = RedRenderer();
-		tWorld.addView(RedView('test', this, tScene3D, tCamera));
-		RedView('test').setSize('100%', '100%')
-		RedView('test').setLocation('0%', '0%')
-		this.renderScale = 1
-		var testDLight;
-		testDLight = RedDirectionalLight(this)
-		testDLight.x = 0
-		testDLight.y = 300
-		testDLight.z = 300
+    document.getElementById('test')
+    RedGL(document.getElementById('test'), function (v) {
+        console.log(v)
+        var tGL;
+        var tWorld, tScene3D, tCamera
+        var tRenderer;
+        var self;
+        self = this
+        tGL = this.gl;
+        this.world = tWorld = RedWorld();
+        tScene3D = RedScene(this);
+        // tScene3D['useFog'] = true
+        tCamera = RedObitController(this);
+        tCamera.tilt = -25
+        tCamera.distance = 2500
+        tCamera.speedDistance = 50
+        tRenderer = RedRenderer();
+        tWorld.addView(RedView('test', this, tScene3D, tCamera));
+        RedView('test').setSize('100%', '100%')
+        RedView('test').setLocation('0%', '0%')
+        this.renderScale = 1
+        var testDLight;
+        testDLight = RedDirectionalLight(this)
+        testDLight.x = 0
+        testDLight.y = 300
+        testDLight.z = 300
 
-		tScene3D.addLight(testDLight)
+        tScene3D.addLight(testDLight)
 
-		testDLight = RedDirectionalLight(this)
+        testDLight = RedDirectionalLight(this)
 
-		testDLight.x = 0
-		testDLight.y = 300
-		testDLight.z = -300
-		tScene3D.addLight(testDLight)
-		tRenderer.renderDebuger.visible = true
-		tScene3D.skyBox =
-			RedSkyBox(this, [
-				'../asset/cubemap/SwedishRoyalCastle/px.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/nx.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/py.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/ny.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/pz.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/nz.jpg'
-			]);
+        testDLight.x = 0
+        testDLight.y = 300
+        testDLight.z = -300
+        tScene3D.addLight(testDLight)
+        tRenderer.renderDebuger.visible = true
+        tScene3D.skyBox =
+            RedSkyBox(this, [
+                '../asset/cubemap/SwedishRoyalCastle/px.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/nx.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/py.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/ny.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
+            ]);
 //		RedGLTFLoader(this, '../asset/glTF/basic/', 'basic.gltf', function (v) {
 //		RedGLTFLoader(this, '../asset/glTF/basic/', 'animation.gltf', function (v) {
 //		RedGLTFLoader(this, '../asset/glTF/basic/', 'simpleMesh.gltf', function (v) {
@@ -208,144 +208,159 @@
 //		RedGLTFLoader(this, '../asset/glTF/basic/', 'ReciprocatingSaw.gltf', function (v) {
 //        RedGLTFLoader(this, '../asset/glTF/basic/', 'VertexColorTest.gltf', function (v) {
 
-		RedGLTFLoader(this, '../asset/glTF/basic/', 'DamagedHelmet.gltf', function (v) {
-			console.log('호잇!', v)
-			tScene3D.addChild(v['resultMesh'])
-			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 40
-            v['resultMesh']['children'][0].useTransparentSort=true
+        RedGLTFLoader(this, '../asset/glTF/basic/', 'DamagedHelmet.gltf', function (v) {
+                console.log('호잇!', v)
+                tScene3D.addChild(v['resultMesh'])
+                v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 40
+                v['resultMesh']['children'][0].useTransparentSort = true
 
-			RedGLTFLoader(self, '../asset/glTF/basic/', 'CesiumMilkTruck.gltf', function (v) {
-				console.log('호잇!', v)
-				tScene3D.addChild(v['resultMesh'])
+                RedGLTFLoader(self, '../asset/glTF/basic/', 'CesiumMilkTruck.gltf', function (v) {
+                    console.log('호잇!', v)
+                    tScene3D.addChild(v['resultMesh'])
 
-				v['resultMesh'].x = -350
-				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 50
-			});
+                    v['resultMesh'].x = -350
+                    v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 50
+                });
 
-			RedGLTFLoader(self, '../asset/glTF/basic/', 'BoxTextured.gltf', function (v) {
-				console.log('호잇!', v)
-				tScene3D.addChild(v['resultMesh'])
-				v['resultMesh'].x = 200
-				v['resultMesh'].z = 200
-				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 50
-			})
-			RedGLTFLoader(self, '../asset/glTF/basic/', 'OrientationTest.gltf', function (v) {
-				console.log('호잇!', v)
-				tScene3D.addChild(v['resultMesh'])
-				v['resultMesh'].x = 0
-				v['resultMesh'].z = 300
-				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 10
-			})
+                RedGLTFLoader(self, '../asset/glTF/basic/', 'BoxTextured.gltf', function (v) {
+                    console.log('호잇!', v)
+                    tScene3D.addChild(v['resultMesh'])
+                    v['resultMesh'].x = 200
+                    v['resultMesh'].z = 200
+                    v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 50
+                })
+                RedGLTFLoader(self, '../asset/glTF/basic/', 'OrientationTest.gltf', function (v) {
+                    console.log('호잇!', v)
+                    tScene3D.addChild(v['resultMesh'])
+                    v['resultMesh'].x = 0
+                    v['resultMesh'].z = 300
+                    v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 10
+                })
 
-			RedGLTFLoader(self, '../asset/glTF/basic/', 'BrainStem.gltf', function (v) {
-				console.log('호잇!', v)
-				tScene3D.addChild(v['resultMesh'])
-				v['resultMesh'].x = 0
-				v['resultMesh'].z = 200
-				v['resultMesh'].y = -50
-				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 50
-			})
-			RedGLTFLoader(self, '../asset/glTF/basic/', 'NormalTangentTest.gltf', function (v) {
-				console.log('호잇!', v)
-				tScene3D.addChild(v['resultMesh'])
-				v['resultMesh'].x = 200
-				v['resultMesh'].z = 100
-				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 50
-			})
-			RedGLTFLoader(self, '../asset/glTF/basic/', '2CylinderEngine.gltf', function (v) {
-				console.log('호잇!', v)
-				tScene3D.addChild(v['resultMesh'])
-				v['resultMesh'].z = -300
-			})
-			RedGLTFLoader(self, '../asset/glTF/basic/', 'TextureCoordinateTest.gltf', function (v) {
-				console.log('호잇!', v)
-				tScene3D.addChild(v['resultMesh'])
-				v['resultMesh'].x = -200
-				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 50
-			})
-			RedGLTFLoader(self, '../asset/glTF/basic/', 'VertexColorTest.gltf', function (v) {
-				console.log('호잇!', v)
-				tScene3D.addChild(v['resultMesh'])
-				v['resultMesh'].x = 250
-				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 50
-			})
-			RedGLTFLoader(self, '../asset/glTF/basic/', 'ReciprocatingSaw.gltf', function (v) {
-				console.log('호잇!', v)
-				tScene3D.addChild(v['resultMesh'])
-				v['resultMesh'].z = 100
-			})
-			RedGLTFLoader(self, '../asset/glTF/basic/', 'CesiumMan.gltf', function (v) {
-				console.log('호잇!', v)
-				tScene3D.addChild(v['resultMesh'])
-				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 50
-				v['resultMesh'].z = -100
-			})
-			RedGLTFLoader(self, '../asset/glTF/basic/', 'Monster.gltf', function (v) {
-				console.log('호잇!', v)
-				tScene3D.addChild(v['resultMesh'])
-				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 2
-				v['resultMesh'].x = -100
-			})
-			RedGLTFLoader(self, '../asset/glTF/basic/', 'Buggy.gltf', function (v) {
-				console.log('호잇!', v)
-				tScene3D.addChild(v['resultMesh'])
-				v['resultMesh'].x = 100
-			})
-			testUI(self,tScene3D)
-		})
-		tRenderer.start(this, function (time) {
+                RedGLTFLoader(self, '../asset/glTF/basic/', 'BrainStem.gltf', function (v) {
+                    console.log('호잇!', v)
+                    tScene3D.addChild(v['resultMesh'])
+                    v['resultMesh'].x = 0
+                    v['resultMesh'].z = 200
+                    v['resultMesh'].y = -50
+                    v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 50
+                })
+                RedGLTFLoader(self, '../asset/glTF/basic/', 'NormalTangentTest.gltf', function (v) {
+                    console.log('호잇!', v)
+                    tScene3D.addChild(v['resultMesh'])
+                    v['resultMesh'].x = 200
+                    v['resultMesh'].z = 100
+                    v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 50
+                })
+                RedGLTFLoader(self, '../asset/glTF/basic/', '2CylinderEngine.gltf', function (v) {
+                    console.log('호잇!', v)
+                    tScene3D.addChild(v['resultMesh'])
+                    v['resultMesh'].z = -300
+                })
+                RedGLTFLoader(self, '../asset/glTF/basic/', 'TextureCoordinateTest.gltf', function (v) {
+                    console.log('호잇!', v)
+                    tScene3D.addChild(v['resultMesh'])
+                    v['resultMesh'].x = -200
+                    v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 50
+                })
+                RedGLTFLoader(self, '../asset/glTF/basic/', 'VertexColorTest.gltf', function (v) {
+                    console.log('호잇!', v)
+                    tScene3D.addChild(v['resultMesh'])
+                    v['resultMesh'].x = 250
+                    v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 50
+                })
+                RedGLTFLoader(self, '../asset/glTF/basic/', 'ReciprocatingSaw.gltf', function (v) {
+                    console.log('호잇!', v)
+                    tScene3D.addChild(v['resultMesh'])
+                    v['resultMesh'].z = 100
+                })
+                RedGLTFLoader(self, '../asset/glTF/basic/', 'CesiumMan.gltf', function (v) {
+                    console.log('호잇!', v)
+                    tScene3D.addChild(v['resultMesh'])
+                    v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 50
+                    v['resultMesh'].z = -100
+                })
+                RedGLTFLoader(self, '../asset/glTF/basic/', 'Monster.gltf', function (v) {
+                    console.log('호잇!', v)
+                    tScene3D.addChild(v['resultMesh'])
+                    v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 2
+                    v['resultMesh'].x = -100
+                })
+                RedGLTFLoader(self, '../asset/glTF/basic/', 'Buggy.gltf', function (v) {
+                    console.log('호잇!', v)
+                    tScene3D.addChild(v['resultMesh'])
+                    v['resultMesh'].x = 100
+                })
+                testUI(self, tScene3D)
+            },
+            RedBitmapCubeTexture(self, [
+                // '../asset/cubemap/SwedishRoyalCastle/px.jpg',
+                // '../asset/cubemap/SwedishRoyalCastle/nx.jpg',
+                // '../asset/cubemap/SwedishRoyalCastle/py.jpg',
+                // '../asset/cubemap/SwedishRoyalCastle/ny.jpg',
+                // '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
+                // '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
+                '../asset/cubemap/posx.png',
+                '../asset/cubemap/negx.png',
+                '../asset/cubemap/posy.png',
+                '../asset/cubemap/negy.png',
+                '../asset/cubemap/posz.png',
+                '../asset/cubemap/negz.png'
+            ])
+        )
+        tRenderer.start(this, function (time) {
 
 //			if(tScene3D['children'][0]) tScene3D['children'][0].rotationX+=1
-			if ( tScene3D['children'][0] ) tScene3D['children'][0].rotationY += 0.3
+            if (tScene3D['children'][0]) tScene3D['children'][0].rotationY += 0.3
 //			if(tScene3D['children'][0]) tScene3D['children'][0].rotationZ+=1
-		})
-		var testUI = function (redGL, tScene) {
-			var gui = self['gui'] = new dat.GUI({
-				name: 'test'
-			});
-			var folder = gui.addFolder('RedPBRMaterial')
-			var testRedPBRMaterial = {
-				alpha: 1,
-				metallicFactor: 1,
-				roughnessFactor : 1,
-				occlusionPower : 1,
-				specularPower: 1,
-				displacementPower: 0,
-				displacementFlowSpeedX: 0,
-				displacementFlowSpeedY: 0
-			}
-			folder.add(testRedPBRMaterial, 'alpha', 0, 1).onChange(function (v) {
-				tScene.children[0].children.forEach(function (v2) {
-					v2.material.alpha = v
-				})
-			})
+        })
+        var testUI = function (redGL, tScene) {
+            var gui = self['gui'] = new dat.GUI({
+                name: 'test'
+            });
+            var folder = gui.addFolder('RedPBRMaterial')
+            var testRedPBRMaterial = {
+                alpha: 1,
+                metallicFactor: 1,
+                roughnessFactor: 1,
+                occlusionPower: 1,
+                specularPower: 1,
+                displacementPower: 0,
+                displacementFlowSpeedX: 0,
+                displacementFlowSpeedY: 0
+            }
+            folder.add(testRedPBRMaterial, 'alpha', 0, 1).onChange(function (v) {
+                tScene.children[0].children.forEach(function (v2) {
+                    v2.material.alpha = v
+                })
+            })
 
-			folder.add(testRedPBRMaterial, 'metallicFactor', 0, 1).onChange(function (v) {
-				tScene.children[0].children.forEach(function (v2) {
-					v2.material.metallicFactor = v
-				})
-			})
-			folder.add(testRedPBRMaterial, 'roughnessFactor', 0, 1).onChange(function (v) {
-				tScene.children[0].children.forEach(function (v2) {
-					v2.material.roughnessFactor = v
-				})
-			})
+            folder.add(testRedPBRMaterial, 'metallicFactor', 0, 1).onChange(function (v) {
+                tScene.children[0].children.forEach(function (v2) {
+                    v2.material.metallicFactor = v
+                })
+            })
+            folder.add(testRedPBRMaterial, 'roughnessFactor', 0, 1).onChange(function (v) {
+                tScene.children[0].children.forEach(function (v2) {
+                    v2.material.roughnessFactor = v
+                })
+            })
 
-			folder.add(testRedPBRMaterial, 'occlusionPower', 0, 3).onChange(function (v) {
-				tScene.children[0].children.forEach(function (v2) {
-					v2.material.occlusionPower = v
-				})
-			})
-			folder.add(testRedPBRMaterial, 'specularPower', 0, 10).onChange(function (v) {
-				tScene.children[0].children.forEach(function (v2) {
-					v2.material.specularPower = v
-				})
-			})
-			///////////////////////////////////////////////
-			folder.open()
-		}
-		console.log(tScene3D)
-	})
+            folder.add(testRedPBRMaterial, 'occlusionPower', 0, 3).onChange(function (v) {
+                tScene.children[0].children.forEach(function (v2) {
+                    v2.material.occlusionPower = v
+                })
+            })
+            folder.add(testRedPBRMaterial, 'specularPower', 0, 10).onChange(function (v) {
+                tScene.children[0].children.forEach(function (v2) {
+                    v2.material.specularPower = v
+                })
+            })
+            ///////////////////////////////////////////////
+            folder.open()
+        }
+        console.log(tScene3D)
+    })
 </script>
 </body>
 

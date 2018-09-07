@@ -163,8 +163,8 @@
 //		 tScene3D['useFog'] = true
 //		tCamera = RedBasicController(this);
         tCamera = RedObitController(this);
-        tCamera.speedDistance = 50
-        tCamera.distance = 750
+//         tCamera.speedDistance = 50
+//         tCamera.distance = 750
 // 		tCamera = RedCamera()
 //		tCamera.x = 0.5
 //		tCamera.y = 0.5
@@ -182,23 +182,10 @@
         testDLight.y = 350
         testDLight.z = 350
 		tScene3D.addLight(testDLight)
-
-        testDLight = RedDirectionalLight(this)
-        testDLight.x = -350
-        testDLight.y = 350
-        testDLight.z = -350
-        tScene3D.addLight(testDLight)
         // var a = RedAmbientLight(this)
         // tScene3D.addLight(a)
 
-        var b = RedPostEffect_DoF(this)
-        b.focusLength = 1500
-        RedView('test')['postEffectManager'].addEffect(b)
-        var c = RedPostEffect_Bloom(this)
-        c.blur = 30
-        // c.threshold = 0.5
-        RedView('test')['postEffectManager'].addEffect(c)
-        // RedView('test')['postEffectManager'].addEffect(RedPostEffect_Film(this))
+
         tRenderer.renderDebuger.visible = true
         tScene3D.skyBox =
             RedSkyBox(this, [
@@ -209,153 +196,30 @@
                 '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
                 '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
             ]);
-		// RedGLTFLoader(self, '../asset/glTF/iso/', 'scene.gltf', function (v) {
-		// 	console.log('호잇!', v)
-		// 	tScene3D.addChild(t0 = v['resultMesh'])
-		// 	t0.x = -750
-		// 	t0.z = -2000
-		// },{
-		//     glass : function(v){
-		//         v['useTransparentSort'] = true
-        //     }
-        // })
-
-        var i = 8
-        var j
-        var k
-        var tMesh;
-        var tGeo = RedSphere(self, 100, 16, 16, 16)
-        var tMat = RedStandardMaterial(
-            self,
-            RedBitmapTexture(self, '../asset/crate.png'),
-            RedBitmapTexture(self, '../asset/normalTest.jpg'),
-            RedBitmapTexture(self, '../asset/brick_roughness.jpg')
-        )
-        tMat.shininess = 32
-        while ( i-- ) {
-            j = 15
-            while ( j-- ) {
-                k = 15
-                while ( k-- ) {
-                    tMesh = RedMesh(self, tGeo, tMat)
-                    tMesh.x = (i - 7.5) * 500
-                    tMesh.y = (j - 7.5) * 500
-                    tMesh.z = (k - 7.5) * 500
-                    tMesh.useLOD = true
-                    tMesh.drawMode = self.gl.LINES
-                    tMesh.addLOD(0, 100, RedSphere(self, 70, 32, 32, 32), tMat)
-                    tMesh.addLOD(1, 500, RedSphere(self, 70, 16, 16, 16), RedColorMaterial(self, '#00ff00'))
-                    tMesh.addLOD(2, 1000, RedSphere(self, 70, 8, 8, 8), RedColorMaterial(self, '#0000ff'))
-                    tMesh.addLOD(3, 1500, RedSphere(self, 70, 4, 4, 4), RedColorMaterial(self, '#ffff00'))
-                    tMesh.addLOD(4, 2000, RedSphere(self, 70, 3, 3, 3), RedColorMaterial(self, '#00ffff'))
-                    // console.log(tMesh._lodLevels)
-                    tScene3D.addChild(tMesh)
-                }
-            }
-        }
-
-
-        RedGLTFLoader(self, '../asset/glTF/warrior/', 'scene.gltf', function (v) {
+        RedGLTFLoader(self, '../asset/glTF/basic/', 'NormalTangentTest.gltf', function (v) {
             console.log('호잇!', v)
-            tScene3D.addChild(v['resultMesh']);
-            RedGLTFLoader(self, '../asset/glTF/busterDrone/', 'busterDrone.gltf', function (v) {
-                console.log('호잇!', v)
-                tScene3D.addChild(t2 = v['resultMesh'])
-                v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 30
-                v['resultMesh'].y = 50
-                v['resultMesh'].x = 50
-            });
-            // (function () {
-            //     var testMaterial
-            //     testMaterial = RedPointBitmapMaterial(self, RedBitmapTexture(self, '../asset/particle.png'))
-            //     var interleaveData
-            //     interleaveData = []
-            //     var i = 10000
-            //     while ( i-- ) {
-            //         interleaveData.push(Math.random() * 5000 - 2500, Math.random() * 5000 - 2500, Math.random() * 5000 - 2500)
-            //         interleaveData.push(Math.random() * 5)
-            //         interleaveData.push(Math.random(), Math.random(), Math.random(), 1)
-            //     }
-            //     var testParticle = RedPointUnit(
-            //         self,
-            //         interleaveData,
-            //         [
-            //             RedInterleaveInfo('aVertexPosition', 3),
-            //             RedInterleaveInfo('aPointSize', 1),
-            //             RedInterleaveInfo('aVertexColor', 4)
-            //         ],
-            //         testMaterial
-            //     )
-            //     tScene3D.addChild(testParticle)
-            // })();
-        })
-		// RedGLTFLoader(self, '../asset/glTF/viking_room/', 'scene.gltf', function (v) {
-		// 	console.log('호잇!', t1 = v)
-		// 	tScene3D.addChild(t0 = v['resultMesh'])
-        //     t0.x = -650
-        //     t0.y = -150
-        //     t0.scaleX = t0.scaleY = t0.scaleZ = 30
-		// })
-//		RedGLTFLoader(self, '../asset/glTF/basic/', 'Cameras.gltf', function (v) {
-//			console.log('호잇!', t1 = v)
-//			tScene3D.addChild(t0 = v['resultMesh'])
-//			testUI(self, tScene3D)
-//		})
-        var tt = 0
-        tRenderer.start(this, function (time) {
-//				if ( tt == 0 ) {
-//					tCamera.x = Math.sin(time / 3500) * 750
-//					tCamera.y = Math.abs(Math.cos(time / 3500) * 500)
-//					tCamera.z = Math.cos(time / 3500) * 750
-//				} else if ( tt == 1 ) {
-//					tCamera.x = Math.sin(time / 3500) * 250
-//					tCamera.y = Math.abs(Math.cos(time / 3500) * 250)
-//					tCamera.z = Math.cos(time / 3500) * 250
-//				} else if ( tt == 2 ) {
-//					tCamera.x = Math.sin(time / 3500) * 150
-//					tCamera.y = Math.abs(Math.cos(time / 3500) * 250)
-//					tCamera.z = Math.cos(time / 3500) * 150
-//				} else if ( tt == 3 ) {
-//					tCamera.x = Math.sin(time / 3500) * 50
-//					tCamera.y = Math.abs(Math.cos(time / 3500) * 50)
-//					tCamera.z = Math.cos(time / 3500) * 50
-//				} else if ( tt == 4 ) {
-//					tCamera.x = Math.sin(time / 3500) * 10
-//					tCamera.y = Math.abs(Math.cos(time / 3500) * 10)
-//					tCamera.z = Math.cos(time / 3500) * 10
-//				}
-//				else {
-//					tCamera.x = Math.sin(time / 3500) * 250
-//					tCamera.y = Math.abs(Math.cos(time / 3500) * 250)
-//					tCamera.z = Math.cos(time / 3500) * 250
-//				}
-                testDLight.x = -Math.sin(time / 1500) * 500
-                testDLight.y = 100
-                testDLight.z = -Math.cos(time / 1500) * 500
-                tCamera.x = Math.sin(time / 1500) * 500 + Math.cos(time / 1500) * 500
-                tCamera.y = Math.cos(time / 2500) * 500+500
-                tCamera.z = Math.cos(time / 1300) * 500 + Math.sin(time / 2300) * 500
+            tScene3D.addChild(v['resultMesh'])
+            v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 4
+        }, RedBitmapCubeTexture(self, [
+            // '../asset/cubemap/SwedishRoyalCastle/px.jpg',
+            // '../asset/cubemap/SwedishRoyalCastle/nx.jpg',
+            // '../asset/cubemap/SwedishRoyalCastle/py.jpg',
+            // '../asset/cubemap/SwedishRoyalCastle/ny.jpg',
+            // '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
+            // '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
+            '../asset/cubemap/posx.png',
+            '../asset/cubemap/negx.png',
+            '../asset/cubemap/posy.png',
+            '../asset/cubemap/negy.png',
+            '../asset/cubemap/posz.png',
+            '../asset/cubemap/negz.png'
+        ]))
 
-                // b.focusLength = vec3.length([tCamera.x,tCamera.y,tCamera.z])*2
+        tRenderer.start(this, function (time) {
             // console.log(    b.focusLength)
             }
         )
-        var testUI = function (redGL, tScene) {
-            var gui = self['gui'] = new dat.GUI({
-                name: 'test'
-            });
-            var folder = gui.addFolder('animations')
-            var testAnimation = {
-                cameras: 0
-            }
-            var tList = [0, 1, 2, 3, 4]
-            folder.add(testAnimation, 'cameras', tList).onChange(function (v) {
-                tt = v
-                console.log(tt)
-            })
-            ///////////////////////////////////////////////
-            folder.open()
-        }
+
     }, null)
 </script>
 </body>
