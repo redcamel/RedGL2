@@ -65,8 +65,8 @@ var RedGLTFLoader;
         }
         request.send();
     }
-    RedGLTFLoader = function (redGL, path, fileName, callback, parsingOption) {
-        if ((!(this instanceof RedGLTFLoader))) return new RedGLTFLoader(redGL, path, fileName, callback, parsingOption)
+    RedGLTFLoader = function (redGL, path, fileName, callback, environmentTexture, parsingOption) {
+        if ((!(this instanceof RedGLTFLoader))) return new RedGLTFLoader(redGL, path, fileName, callback, environmentTexture, parsingOption)
         console.log('~~~~~~~~~~~')
         var self = this;
         fileLoader(
@@ -92,6 +92,7 @@ var RedGLTFLoader;
         this['textures'] = {}
         this['cameras'] = [];
         this['animations'] = [];
+        this['materials'] = []
         this['aniTick'] = null
         this['path'] = path;
         this['fileName'] = fileName;
@@ -99,6 +100,7 @@ var RedGLTFLoader;
         this['resultMesh'] = RedMesh(redGL)
         this['resultMesh']['name'] = 'instanceOfRedGLTFLoader_' + RedGL.makeUUID()
         this['parsingOption'] = parsingOption
+        this['environmentTexture'] = environmentTexture || null
         var _currentAnimationInfo = null
         this['stopAnimation'] = function () {
             console.log('_currentAnimationInfo', _currentAnimationInfo, loopList.indexOf(_currentAnimationInfo))
@@ -118,6 +120,14 @@ var RedGLTFLoader;
         }
         console.log(this)
     };
+    RedDefinePropertyInfo.definePrototype('RedGLTFLoader', 'environmentTexture', 'samplerCube', {
+        callback: function (v) {
+            console.log(v)
+            this['materials'].forEach(function (v2) {
+                if ('environmentTexture' in v2) v2['environmentTexture'] = v
+            })
+        }
+    });
     var loopList = []
     var animationLooper = (function () {
         var currentTime, previousTime, nextTime;
@@ -564,13 +574,18 @@ var RedGLTFLoader;
             else {
                 var tGroup
                 console.log('차일드 정보로 구성된 정보임', info)
-                tGroup = RedMesh(redGLTFLoader['redGL'])
-                parentMesh.addChild(tGroup)
-                info['RedMesh'] = tGroup
-                if (redGLTFLoader['groups'][nodeIndex]) console.log('기존에 존재!', redGLTFLoader['groups'][nodeIndex])
-                redGLTFLoader['groups'][nodeIndex] = tGroup
-                redGLTFLoader['groups'][nodeIndex]['name'] = 'group' + nodeIndex
-                redGLTFLoader['groups'][nodeIndex]['byIndex'] = nodeIndex
+
+                if (redGLTFLoader['groups'][nodeIndex]) {
+                    console.log('기존에 존재!', redGLTFLoader['groups'][nodeIndex])
+                    tGroup = redGLTFLoader['groups'][nodeIndex]
+                    info['RedMesh'] = tGroup
+                }else{
+                    tGroup = RedMesh(redGLTFLoader['redGL'])
+                    parentMesh.addChild(tGroup)
+                    info['RedMesh'] = tGroup
+                    redGLTFLoader['groups'][nodeIndex] = tGroup
+                    redGLTFLoader['groups'][nodeIndex]['name'] = info['name']
+                }
                 checkTRSAndMATRIX(tGroup, info)
                 // 카메라가 있으면 또 연결시킴
                 if ('camera' in info) {
@@ -1012,12 +1027,6 @@ var RedGLTFLoader;
                                 '../asset/cubemap/SwedishRoyalCastle/ny.jpg',
                                 '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
                                 '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
-                                // '../asset/cubemap/posx.png',
-                                // '../asset/cubemap/negx.png',
-                                // '../asset/cubemap/posy.png',
-                                // '../asset/cubemap/negy.png',
-                                // '../asset/cubemap/posz.png',
-                                // '../asset/cubemap/negz.png'
                             ])
                         }
                         var env = redGLTFLoader['environmentTexture']
@@ -1115,6 +1124,7 @@ var RedGLTFLoader;
                 tAlphaMode = tMaterial[2]
                 tAlphaCutoff = tMaterial[3]
                 tMaterial = tMaterial[0]
+                if(tMaterial instanceof RedPBRMaterial) redGLTFLoader['materials'].push(tMaterial)
                 // 모드 파싱
                 if ('mode' in v) {
                     // 0 POINTS
@@ -1219,14 +1229,17 @@ var RedGLTFLoader;
                 switch (tAlphaMode) {
                     // TODO
                     case 'OPAQUE' :
-                        // tMesh.useBlendMode = false
+                        tMesh.useBlendMode = false
                         break
                     case 'BLEND' :
+                        tMesh['useTransparentSort'] = true
                         break
                     case 'MASK' :
+                        tMesh['useTransparentSort'] = true
                         tMaterial.cutOff = tAlphaCutoff
                         break
                     default :
+                        tMesh.useBlendMode = false
                     // tMesh.useBlendMode = false
                 }
                 console.log('tDoubleSide', tDoubleSide)
