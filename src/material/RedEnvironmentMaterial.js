@@ -24,7 +24,7 @@ var RedEnvironmentMaterial;
 			 //#define#displacementTexture#    u_displacementFlowSpeedY * (uTime/1000.0)
 		     //#define#displacementTexture# )).x * u_displacementPower ;
 
-			  vReflectionCubeCoord = (uCameraMatrix *vVertexPositionEye4).xyz;
+			 vReflectionCubeCoord = (uCameraMatrix *vVertexPositionEye4).xyz;
 
 			 gl_PointSize = uPointSize;
 			 gl_Position = uPMatrix * uCameraMatrix * vVertexPositionEye4;

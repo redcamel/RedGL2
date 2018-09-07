@@ -162,10 +162,10 @@
         tScene3D = RedScene(this);
 //		 tScene3D['useFog'] = true
 //		tCamera = RedBasicController(this);
-        tCamera = RedObitController(this);
-        tCamera.speedDistance = 50
-        tCamera.distance = 750
-// 		tCamera = RedCamera()
+//         tCamera = RedObitController(this);
+//         tCamera.speedDistance = 50
+//         tCamera.distance = 750
+		tCamera = RedCamera()
 //		tCamera.x = 0.5
 //		tCamera.y = 0.5
 //		tCamera.z = 3.0
@@ -183,22 +183,17 @@
         testDLight.z = 350
 		tScene3D.addLight(testDLight)
 
-        testDLight = RedDirectionalLight(this)
-        testDLight.x = -350
-        testDLight.y = 350
-        testDLight.z = -350
-        tScene3D.addLight(testDLight)
-        // var a = RedAmbientLight(this)
-        // tScene3D.addLight(a)
+        var a = RedAmbientLight(this)
+        tScene3D.addLight(a)
 
         var b = RedPostEffect_DoF(this)
         b.focusLength = 1500
-        RedView('test')['postEffectManager'].addEffect(b)
+        // RedView('test')['postEffectManager'].addEffect(b)
         var c = RedPostEffect_Bloom(this)
         c.blur = 30
         // c.threshold = 0.5
         RedView('test')['postEffectManager'].addEffect(c)
-        // RedView('test')['postEffectManager'].addEffect(RedPostEffect_Film(this))
+        RedView('test')['postEffectManager'].addEffect(RedPostEffect_Film(this))
         tRenderer.renderDebuger.visible = true
         tScene3D.skyBox =
             RedSkyBox(this, [
@@ -220,7 +215,7 @@
         //     }
         // })
 
-        var i = 8
+        var i = 15
         var j
         var k
         var tMesh;
@@ -243,11 +238,11 @@
                     tMesh.z = (k - 7.5) * 500
                     tMesh.useLOD = true
                     tMesh.drawMode = self.gl.LINES
-                    tMesh.addLOD(0, 100, RedSphere(self, 70, 32, 32, 32), tMat)
-                    tMesh.addLOD(1, 500, RedSphere(self, 70, 16, 16, 16), RedColorMaterial(self, '#00ff00'))
-                    tMesh.addLOD(2, 1000, RedSphere(self, 70, 8, 8, 8), RedColorMaterial(self, '#0000ff'))
-                    tMesh.addLOD(3, 1500, RedSphere(self, 70, 4, 4, 4), RedColorMaterial(self, '#ffff00'))
-                    tMesh.addLOD(4, 2000, RedSphere(self, 70, 3, 3, 3), RedColorMaterial(self, '#00ffff'))
+                    tMesh.addLOD(0, 100, RedSphere(self, 100, 32, 32, 32), tMat)
+                    tMesh.addLOD(1, 500, RedSphere(self, 100, 16, 16, 16), RedColorMaterial(self, '#00ff00'))
+                    tMesh.addLOD(2, 1000, RedSphere(self, 100, 8, 8, 8), RedColorMaterial(self, '#0000ff'))
+                    tMesh.addLOD(3, 1500, RedSphere(self, 100, 4, 4, 4), RedColorMaterial(self, '#ffff00'))
+                    tMesh.addLOD(4, 2000, RedSphere(self, 100, 3, 3, 3), RedColorMaterial(self, '#00ffff'))
                     // console.log(tMesh._lodLevels)
                     tScene3D.addChild(tMesh)
                 }
@@ -265,29 +260,31 @@
                 v['resultMesh'].y = 50
                 v['resultMesh'].x = 50
             });
-            // (function () {
-            //     var testMaterial
-            //     testMaterial = RedPointBitmapMaterial(self, RedBitmapTexture(self, '../asset/particle.png'))
-            //     var interleaveData
-            //     interleaveData = []
-            //     var i = 10000
-            //     while ( i-- ) {
-            //         interleaveData.push(Math.random() * 5000 - 2500, Math.random() * 5000 - 2500, Math.random() * 5000 - 2500)
-            //         interleaveData.push(Math.random() * 5)
-            //         interleaveData.push(Math.random(), Math.random(), Math.random(), 1)
-            //     }
-            //     var testParticle = RedPointUnit(
-            //         self,
-            //         interleaveData,
-            //         [
-            //             RedInterleaveInfo('aVertexPosition', 3),
-            //             RedInterleaveInfo('aPointSize', 1),
-            //             RedInterleaveInfo('aVertexColor', 4)
-            //         ],
-            //         testMaterial
-            //     )
-            //     tScene3D.addChild(testParticle)
-            // })();
+            (function () {
+                var testMaterial
+                testMaterial = RedPointBitmapMaterial(self, RedBitmapTexture(self, '../asset/particle.png'))
+                var interleaveData
+                interleaveData = []
+                var i = 100000
+                while ( i-- ) {
+                    interleaveData.push(Math.random() * 5000 - 2500, Math.random() * 5000 - 2500, Math.random() * 5000 - 2500)
+                    interleaveData.push(Math.random() * 5)
+                    interleaveData.push(Math.random(), Math.random(), Math.random(), 1)
+                }
+                var testParticle = RedPointUnit(
+                    self,
+                    interleaveData,
+                    [
+                        RedInterleaveInfo('aVertexPosition', 3),
+                        RedInterleaveInfo('aPointSize', 1),
+                        RedInterleaveInfo('aVertexColor', 4)
+                    ],
+                    testMaterial
+                )
+                tScene3D.addChild(testParticle)
+                testParticle['blendSrc'] = self.gl.ONE
+                testParticle['blendDst'] = self.gl.ONE
+            })();
         })
 		// RedGLTFLoader(self, '../asset/glTF/viking_room/', 'scene.gltf', function (v) {
 		// 	console.log('호잇!', t1 = v)
@@ -329,15 +326,15 @@
 //					tCamera.y = Math.abs(Math.cos(time / 3500) * 250)
 //					tCamera.z = Math.cos(time / 3500) * 250
 //				}
-                testDLight.x = -Math.sin(time / 1500) * 500
-                testDLight.y = 100
-                testDLight.z = -Math.cos(time / 1500) * 500
+//                 testDLight.x = -Math.sin(time / 1500) * 500
+//                 testDLight.y = 500
+//                 testDLight.z = -Math.cos(time / 1500) * 500
                 tCamera.x = Math.sin(time / 1500) * 500 + Math.cos(time / 1500) * 500
                 tCamera.y = Math.cos(time / 2500) * 500+500
                 tCamera.z = Math.cos(time / 1300) * 500 + Math.sin(time / 2300) * 500
 
-                // b.focusLength = vec3.length([tCamera.x,tCamera.y,tCamera.z])*2
-            // console.log(    b.focusLength)
+                b.focusLength = vec3.length([tCamera.x,tCamera.y,tCamera.z])*2
+            console.log(    b.focusLength)
             }
         )
         var testUI = function (redGL, tScene) {

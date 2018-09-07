@@ -25,6 +25,7 @@ var RedBitmapCubeTexture;
 					gl.activeTexture(gl.TEXTURE0);
 					gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
 					var i = imgList.length;
+                    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
 					while ( i-- ) {
 						gl.texImage2D(
 							gl.TEXTURE_CUBE_MAP_POSITIVE_X + i,

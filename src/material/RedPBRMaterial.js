@@ -21,7 +21,8 @@ var RedPBRMaterial;
 
 
              vVertexNormal = (uNMatrix * vec4(aVertexNormal,1.0)).xyz;
-             // vVertexBiTangent = cross( vVertexNormal, aVertexTangent );
+
+
 
             //#define#skin#true# mat4 skinMat =
             //#define#skin#true# aVertexWeight.x * uGlobalTransformOfNodeThatTheMeshIsAttachedTo * uJointMatrix[ int(aVertexJoint.x) ] * uInverseBindMatrixForJoint[int(aVertexJoint.x)]+
@@ -38,6 +39,7 @@ var RedPBRMaterial;
              //#define#displacementTexture# )).x * u_displacementPower ;
 
              vReflectionCubeCoord = (uCameraMatrix *vVertexPositionEye4).xyz;
+
             //#define#directionalShadow#true# vResolution = uResolution;
             //#define#directionalShadow#true# vShadowPos = cTexUnitConverter  *  uDirectionalShadowLightMatrix * vVertexPositionEye4;
              gl_PointSize = uPointSize;
@@ -160,7 +162,8 @@ var RedPBRMaterial;
             //#define#environmentTexture# reflectionColor = textureCube(u_environmentTexture, 2.0 * dot(vReflectionCubeCoord, N) * N - vReflectionCubeCoord);
             //#define#environmentTexture# reflectionColor.rgb *= reflectionColor.a;
             // 환경맵 합성
-            //#define#environmentTexture# texelColor = mix(texelColor,reflectionColor ,tMetallicPower * (1.0-tRoughnessPower+0.04));
+            //#define#environmentTexture# texelColor = mix(texelColor,reflectionColor ,tMetallicPower * (1.0-tRoughnessPower));;
+
 
 
 
@@ -188,14 +191,7 @@ var RedPBRMaterial;
             finalColor.a = texelColor.a * u_alpha ;
 
 
-            // 이미시브합성
-            //#define#emissiveTexture# emissiveColor = texture2D(u_emissiveTexture, u_emissiveTexCoord);
-            //#define#emissiveTexture# emissiveColor.rgb *= emissiveColor.a;
-            //#define#emissiveTexture# emissiveColor.rgb *= uEmissiveFactor;
-            //#define#emissiveTexture# finalColor.rgb += emissiveColor.rgb;
-            // 오클루젼 합성
-            //#define#occlusionTexture# occlusionColor = texture2D(u_occlusionTexture, u_occlusionTexCoord);
-            //#define#occlusionTexture# finalColor.rgb = mix(finalColor.rgb, finalColor.rgb * occlusionColor.r, u_occlusionPower);
+
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
@@ -219,6 +215,14 @@ var RedPBRMaterial;
             //#define#directionalShadow#true#	finalColor.rgb *= (1.0-amountInLight);
 
             ///////////////////////////////////////////////////////////////////////////////////////
+                // 이미시브합성
+            //#define#emissiveTexture# emissiveColor = texture2D(u_emissiveTexture, u_emissiveTexCoord);
+            //#define#emissiveTexture# emissiveColor.rgb *= emissiveColor.a;
+            //#define#emissiveTexture# emissiveColor.rgb *= uEmissiveFactor;
+            //#define#emissiveTexture# finalColor.rgb += emissiveColor.rgb;
+            // 오클루젼 합성
+            //#define#occlusionTexture# occlusionColor = texture2D(u_occlusionTexture, u_occlusionTexCoord);
+            //#define#occlusionTexture# finalColor.rgb = mix(finalColor.rgb, finalColor.rgb * occlusionColor.r, u_occlusionPower);
             //#define#fog#false# gl_FragColor = finalColor;
             //#define#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
          }
