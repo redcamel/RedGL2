@@ -74,6 +74,7 @@ var RedSystemUniformUpdater;
 				uFogColor: {cacheData: null, data: new Float32Array([0, 0, 0, 0])},
 				u_FogDistance: {cacheData: null, data: 0},
 				uCameraMatrix: {cacheData: null, data: null},
+                uCameraPosition : {cacheData: null, data: new Float32Array([0, 0, 0])},
 				uPMatrix: {cacheData: null, data: null},
 				uAmbientLightColor: {cacheData: null, data: new Float32Array([0, 0, 0, 0])},
 				uAmbientIntensity: {cacheData: null, data: 1},
@@ -164,6 +165,16 @@ var RedSystemUniformUpdater;
 					needUpdateUniformInfo['uCameraMatrix'] = tCheckData['data'] = tCamera['matrix'];
 					tCheckData['cacheData'] = tValueStr;
 				}
+
+				if(tCamera['camera']) tValueStr = [tCamera.camera.x,tCamera.camera.y,tCamera.camera.z];
+				else tValueStr = [tCamera.x,tCamera.y,tCamera.z];
+                if ( tCheckData['cacheData'] != tValueStr.join(',') || changedProgramNum ) {
+                    tCheckData = checkUniformInfo['uCameraPosition'];
+                    needUpdateUniformInfo['uCameraPosition'] = tCheckData['data'] = tValueStr;
+                    tCheckData['cacheData'] = tValueStr.join(',');
+                }
+
+
 				// 퍼스펙티브 매트릭스 업데이트
 				tValueStr = JSON.stringify(tCamera['perspectiveMTX']);
 				tCheckData = checkUniformInfo['uPMatrix'];

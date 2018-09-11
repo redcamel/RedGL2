@@ -54,6 +54,11 @@
 			tLight.x = 10
 			tLight.y = 5
 			tLight.z = 5
+            var tLight = RedDirectionalLight(this)
+            tScene.addLight(tLight)
+            tLight.x = -10
+            tLight.y = 5
+            tLight.z = -5
 			// Mesh 설정
 			var tMesh;
 			var tEnvironmentTexture = RedBitmapCubeTexture(this, [
@@ -74,15 +79,15 @@
 			tMesh = RedMesh(this, RedBox(this, 1, 1, 1, 32, 32, 32), tMaterial)
 			tMesh.x = 1.5
 			tScene.addChild(tMesh)
-			tMesh = RedMesh(this, RedSphere(this, 0.5, 6, 6, 6), tMaterial)
+			tMesh = RedMesh(this, RedSphere(this, 0.5, 32, 32, 32), tMaterial)
 			tMesh.x = -1.5
 			tMesh.y = 1.5
 			tScene.addChild(tMesh)
-			tMesh = RedMesh(this, RedSphere(this, 0.5, 6, 6, 6), tMaterial)
+			tMesh = RedMesh(this, RedSphere(this, 0.5, 32, 32, 32), tMaterial)
 			tMesh.x = 0
 			tMesh.y = 1.5
 			tScene.addChild(tMesh)
-			tMesh = RedMesh(this, RedSphere(this, 0.5, 6, 6, 6), tMaterial)
+			tMesh = RedMesh(this, RedSphere(this, 0.5, 32, 32, 32), tMaterial)
 			tMesh.x = 1.5
 			tMesh.y = 1.5
 			tScene.addChild(tMesh)

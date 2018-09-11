@@ -9,7 +9,7 @@ var RedPBRMaterial;
         /* @preserve
 
          varying vec4 vVertexPositionEye4;
-         varying vec3 vReflectionCubeCoord;
+
          //#define#displacementTexture# uniform sampler2D u_displacementTexture;
          //#define#displacementTexture# uniform float u_displacementPower;
          //#define#displacementTexture# uniform float u_displacementFlowSpeedX;
@@ -38,7 +38,8 @@ var RedPBRMaterial;
              //#define#displacementTexture#    u_displacementFlowSpeedY * (uTime/1000.0)
              //#define#displacementTexture# )).x * u_displacementPower ;
 
-             vReflectionCubeCoord = (uCameraMatrix * vVertexPositionEye4).xyz;
+
+
 
             //#define#directionalShadow#true# vResolution = uResolution;
             //#define#directionalShadow#true# vShadowPos = cTexUnitConverter  *  uDirectionalShadowLightMatrix * vVertexPositionEye4;
@@ -63,6 +64,7 @@ var RedPBRMaterial;
 
 
 
+
          //#define#normalTexture# uniform float u_normalPower;
          uniform float u_specularPower;
          uniform float u_metallicFactor;
@@ -74,7 +76,7 @@ var RedPBRMaterial;
          uniform float u_alpha;
 
          varying vec4 vVertexPositionEye4;
-         varying vec3 vReflectionCubeCoord;
+
 
         uniform int u_diffuseTexCoordIndex;
         uniform int u_occlusionTexCoordIndex;
@@ -159,10 +161,11 @@ var RedPBRMaterial;
 
 
             // 환경맵 계산
-            //#define#environmentTexture# reflectionColor = textureCube(u_environmentTexture, 2.0 * dot(vReflectionCubeCoord, N) * N - vReflectionCubeCoord);
+            vec3 R = reflect( vVertexPositionEye4.xyz-uCameraPosition, N);
+            //#define#environmentTexture# reflectionColor = textureCube(u_environmentTexture, R);
             //#define#environmentTexture# reflectionColor.rgb *= reflectionColor.a;
             // 환경맵 합성
-            //#define#environmentTexture# if(tMetallicPower-tRoughnessPower>0.0) texelColor.rgb = mix( texelColor.rgb , reflectionColor.rgb , max(tMetallicPower - tRoughnessPower,0.0));
+            //#define#environmentTexture# texelColor.rgb = mix( texelColor.rgb , reflectionColor.rgb , max(tMetallicPower - tRoughnessPower,0.0));
 
             // 컷오프 계산
             if(texelColor.a <= u_cutOff) discard;

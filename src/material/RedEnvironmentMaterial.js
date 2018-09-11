@@ -8,7 +8,6 @@ var RedEnvironmentMaterial;
 	vSource = function () {
 		/* @preserve
 		 varying vec4 vVertexPositionEye4;
-		 varying vec3 vReflectionCubeCoord;
 		 //#define#displacementTexture# uniform sampler2D u_displacementTexture;
 		 //#define#displacementTexture# uniform float u_displacementPower;
 	     //#define#displacementTexture# uniform float u_displacementFlowSpeedX;
@@ -24,7 +23,7 @@ var RedEnvironmentMaterial;
 			 //#define#displacementTexture#    u_displacementFlowSpeedY * (uTime/1000.0)
 		     //#define#displacementTexture# )).x * u_displacementPower ;
 
-			 vReflectionCubeCoord = (uCameraMatrix * vVertexPositionEye4).xyz;
+
 
 			 gl_PointSize = uPointSize;
 			 gl_Position = uPMatrix * uCameraMatrix * vVertexPositionEye4;
@@ -47,7 +46,6 @@ var RedEnvironmentMaterial;
 		 uniform float u_alpha;
 
 		 varying vec4 vVertexPositionEye4;
-		 varying vec3 vReflectionCubeCoord;
 
 		 float fogFactor(float perspectiveFar, float density){
 			 float flog_cord = gl_FragCoord.z / gl_FragCoord.w / perspectiveFar;
@@ -91,7 +89,8 @@ var RedEnvironmentMaterial;
 			 //#define#normalTexture# vec4 normalColor = texture2D(u_normalTexture, vTexcoord);
 			 //#define#normalTexture# if(normalColor.a != 0.0) N = normalize(2.0 * (N + normalColor.rgb * u_normalPower  - 0.5));
 
-			 reflectionColor = textureCube(u_environmentTexture, 2.0 * dot(vReflectionCubeCoord, N) * N - vReflectionCubeCoord);
+             vec3 R = reflect( vVertexPositionEye4.xyz-uCameraPosition, N);
+			 reflectionColor = textureCube(u_environmentTexture, R);
 			 texelColor = mix(texelColor,reflectionColor ,u_reflectionPower);
 
 			 specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);

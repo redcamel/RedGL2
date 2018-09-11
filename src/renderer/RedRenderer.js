@@ -698,6 +698,7 @@ var RedRenderer;
                 /////////////////////////////////////////////////////////////////////////
                 /////////////////////////////////////////////////////////////////////////
                 if (tGeometry) tGL.uniformMatrix4fv(tSystemUniformGroup['uMMatrix']['location'], false, tMVMatrix)
+
                 // var getInverse = function (self, m, throwOnDegenerate) {
                 // 	// based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm
                 // 	var te = self,
