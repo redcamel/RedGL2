@@ -77,6 +77,9 @@ var RedSystemShaderCode;
 				'varying vec2 vTexcoord1',
 				'varying float vTime',
 				'varying vec2 vResolution',
+
+                'uniform vec3 uCameraPosition',
+
 				//
 				// fog
 				'uniform float u_FogDistance',

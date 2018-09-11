@@ -71,6 +71,7 @@ var RedBaseMaterial;
 
 			makePrepareProgram = function (redGL, programName, vSource, fSource, targetKey) {
 				this['_prepareProgramYn'] = true;
+				this['key'] = programName + '_' + targetKey.join('_')
 				this['_makePrepareProgram'] = function () {
 					return RedProgram['makeProgram'](redGL, programName, vSource, fSource, targetKey)
 				}
@@ -86,7 +87,8 @@ var RedBaseMaterial;
 					// 일반 프로그램생성
 					if ( !target['_programList']['basic'][programName + '_' + tKey] ) {
 						//TODO: 이걸 자동화하는데..... 렌더러에서 가장 쉽게 찾을수 있는 구조를 찾아야함.
-						target['_programList']['basic'][programName + '_' + tKey] = RedProgram['makeProgram'](redGL, programName, vSource, fSource, tKey.split('_'));
+						// target['_programList']['basic'][programName + '_' + tKey] = RedProgram['makeProgram'](redGL, programName, vSource, fSource, tKey.split('_'));
+                        target['_programList']['basic'][programName + '_' + tKey] = new makePrepareProgram(redGL, programName, vSource, fSource, tKey.split('_'));
 						target['_programList']['directionalShadow'][programName + '_' + tKey] = new makePrepareProgram(redGL, programName, vSource, fSource, (tKey + '_directionalShadow').split('_'));
 
 						target['_programList']['directionalShadow_fog'][programName + '_' + tKey] = new makePrepareProgram(redGL, programName, vSource, fSource, (tKey + '_directionalShadow_fog').split('_'));
@@ -172,6 +174,10 @@ var RedBaseMaterial;
 			var i;
 			var tUniformGroup, tUniformLocationInfo, tWebGLUniformLocation;
 			return function () {
+				if(this['program']['_prepareProgramYn']) {
+                    this['program'] = this['program']['_makePrepareProgram']()
+                    this['program']['_prepareProgramYn'] = false
+				}
 				tUniformGroup = this['program']['uniformLocation'];
 				i = tUniformGroup.length;
 				while ( i-- ) {

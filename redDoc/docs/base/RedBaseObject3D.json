@@ -6,7 +6,7 @@
     "params": {
       "level": [
         {
-          "type": "*"
+          "type": "Number"
         }
       ],
       "distance": [
@@ -214,6 +214,12 @@
     "code": "PROPERTY",
     "title": "useLOD",
     "description": "LOD사용여부",
+    "return": "Boolean"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "useTransparentSort",
+    "description": "\n투명도 소팅 여부\n기본값 : false\n",
     "return": "Boolean"
   },
   {

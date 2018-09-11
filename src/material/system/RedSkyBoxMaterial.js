@@ -8,7 +8,7 @@ var RedSkyBoxMaterial;
 		/* @preserve
 		 varying vec3 vReflectionCubeCoord;
 		 void main(void) {
-			 vReflectionCubeCoord = (uMMatrix *vec4(-aVertexPosition, 0.0)).xyz;
+			 vReflectionCubeCoord = (uMMatrix *vec4(aVertexPosition, 0.0)).xyz;
 			 gl_Position = uPMatrix * uCameraMatrix * uMMatrix * vec4(aVertexPosition, 1.0);
 		 }
 		 */

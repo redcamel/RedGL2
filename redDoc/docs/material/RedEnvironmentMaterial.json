@@ -35,6 +35,11 @@
   },
   {
     "code": "PROPERTY",
+    "title": "emissiveTexture",
+    "return": "RedBitmapTexture"
+  },
+  {
+    "code": "PROPERTY",
     "title": "environmentTexture",
     "return": "RedBitmapCubeTexture"
   },
