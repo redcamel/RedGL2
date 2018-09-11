@@ -7,7 +7,6 @@ var RedPBRMaterial;
     var checked;
     vSource = function () {
         /* @preserve
-
          varying vec4 vVertexPositionEye4;
 
          //#define#displacementTexture# uniform sampler2D u_displacementTexture;
@@ -19,10 +18,7 @@ var RedPBRMaterial;
              vTexcoord = aTexcoord;
              vTexcoord1 = aTexcoord1;
 
-
              vVertexNormal = (uNMatrix * vec4(aVertexNormal,1.0)).xyz;
-
-
 
             //#define#skin#true# mat4 skinMat =
             //#define#skin#true# aVertexWeight.x * uGlobalTransformOfNodeThatTheMeshIsAttachedTo * uJointMatrix[ int(aVertexJoint.x) ] * uInverseBindMatrixForJoint[int(aVertexJoint.x)]+
@@ -156,9 +152,6 @@ var RedPBRMaterial;
             N = normalize(vVertexNormal);
             //#define#normalTexture# vec4 normalColor = texture2D(u_normalTexture, u_normalTexCoord);
             //#define#normalTexture# if(normalColor.a != 0.0) N = normalize(2.0 * (N + normalColor.rgb * u_normalPower  - 0.5));
-
-
-
 
             // 환경맵 계산
             vec3 R = reflect( vVertexPositionEye4.xyz-uCameraPosition, N);

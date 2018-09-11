@@ -454,7 +454,7 @@ var RedGLTFLoader;
                 if ('matrix' in info) {
                     // parseMatrix
                     tMatrix = info['matrix']
-                    console.log('~~~', info, tMatrix)
+                    // console.log('~~~', info, tMatrix)
                     // mat4.getRotation(tQuaternion, tMatrix)
                     if (tQuaternion[3] < 0) console.log('tQuaternion', tQuaternion)
                     // RedGLUtil.quaternionToRotationMat4(tQuaternion, rotationMTX)
@@ -549,7 +549,7 @@ var RedGLTFLoader;
             }
             skinInfo['inverseBindMatrices'] = new Float32Array(skinInfo['inverseBindMatrices'])
             tMesh['skinInfo'] = skinInfo
-            console.log(skinInfo)
+            // console.log(skinInfo)
         }
         parseNode = function (redGLTFLoader, json, nodeIndex, info, parentMesh) {
             if ('mesh' in info) {
@@ -573,7 +573,7 @@ var RedGLTFLoader;
             }
             else {
                 var tGroup
-                console.log('차일드 정보로 구성된 정보임', info)
+                // console.log('차일드 정보로 구성된 정보임', info)
 
                 if (redGLTFLoader['groups'][nodeIndex]) {
                     console.log('기존에 존재!', redGLTFLoader['groups'][nodeIndex])
@@ -660,12 +660,12 @@ var RedGLTFLoader;
                             break
                     }
                 })();
-                console.log(sparseVerties)
-                console.log(sparseNormals)
-                console.log(sparseUvs);
+                // console.log(sparseVerties)
+                // console.log(sparseNormals)
+                // console.log(sparseUvs);
                 var tSparse = tAccessors['sparse']
                 var tSparseAccessors = tSparse['indices']
-                console.log('tSparseAccessors', tSparseAccessors)
+                // console.log('tSparseAccessors', tSparseAccessors)
                 var tBufferView = json['bufferViews'][tSparseAccessors['bufferView']]
                 var tBufferIndex = tBufferView['buffer']
                 var tBuffer = json['buffers'][tBufferIndex]
@@ -684,11 +684,11 @@ var RedGLTFLoader;
                 i = (tBufferViewOffset + tAccessorBufferOffset) / tComponentType['BYTES_PER_ELEMENT']
                 //
                 len = i + (tComponentType['BYTES_PER_ELEMENT'] * tSparse['count']) / tComponentType['BYTES_PER_ELEMENT']
-                console.log('오오오오', key, i, len)
+                // console.log('오오오오', key, i, len)
                 var sparseIndex = 0
                 for (i; i < len; i++) {
                     var targetIndex = tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true)
-                    console.log('몇번째껄 부르는건가', targetIndex)
+                    // console.log('몇번째껄 부르는건가', targetIndex)
                     vertices[targetIndex * 3] = sparseVerties[sparseIndex * 3]
                     vertices[targetIndex * 3 + 1] = sparseVerties[sparseIndex * 3 + 1]
                     vertices[targetIndex * 3 + 2] = sparseVerties[sparseIndex * 3 + 2]
@@ -917,7 +917,7 @@ var RedGLTFLoader;
                     console.log('있긴하냐', samplerIndex)
                 }
                 result['string'] = JSON.stringify(result)
-                console.log('result', result)
+                // console.log('result', result)
                 return result
             }
             return function (redGLTFLoader, json, v) {
@@ -1224,8 +1224,8 @@ var RedGLTFLoader;
                 else tMesh.drawMode = redGLTFLoader['redGL'].gl.TRIANGLES
                 //
                 if (tDoubleSide) tMesh.useCullFace = false
-                console.log('tAlphaMode', tAlphaMode)
-                console.log('tAlphaCutoff', tAlphaCutoff)
+                // console.log('tAlphaMode', tAlphaMode)
+                // console.log('tAlphaCutoff', tAlphaCutoff)
                 switch (tAlphaMode) {
                     // TODO
                     case 'OPAQUE' :
@@ -1242,7 +1242,7 @@ var RedGLTFLoader;
                         tMesh.useBlendMode = false
                     // tMesh.useBlendMode = false
                 }
-                console.log('tDoubleSide', tDoubleSide)
+                // console.log('tDoubleSide', tDoubleSide)
                 // console.log('tMesh', tMesh)
                 /////////////////////////////////////////////////////////
                 // 모프리스트 설정
@@ -1318,7 +1318,7 @@ var RedGLTFLoader;
                         // console.log('값 데이터', dataList)
                         break
                     default :
-                        console.log('알수없는 형식 엑세서 타입', tAccessors)
+                        console.log('알수없는 형식 엑세서 타입', accessorInfo['accessor'])
                         break
                 }
                 return dataList
