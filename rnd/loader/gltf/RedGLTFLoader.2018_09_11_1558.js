@@ -579,7 +579,7 @@ var RedGLTFLoader;
                     console.log('기존에 존재!', redGLTFLoader['groups'][nodeIndex])
                     tGroup = redGLTFLoader['groups'][nodeIndex]
                     info['RedMesh'] = tGroup
-                } else {
+                }else{
                     tGroup = RedMesh(redGLTFLoader['redGL'])
                     parentMesh.addChild(tGroup)
                     info['RedMesh'] = tGroup
@@ -1124,7 +1124,7 @@ var RedGLTFLoader;
                 tAlphaMode = tMaterial[2]
                 tAlphaCutoff = tMaterial[3]
                 tMaterial = tMaterial[0]
-                if (tMaterial instanceof RedPBRMaterial) redGLTFLoader['materials'].push(tMaterial)
+                if(tMaterial instanceof RedPBRMaterial) redGLTFLoader['materials'].push(tMaterial)
                 // 모드 파싱
                 if ('mode' in v) {
                     // 0 POINTS
@@ -1235,6 +1235,7 @@ var RedGLTFLoader;
                         tMesh['useTransparentSort'] = true
                         break
                     case 'MASK' :
+                        tMesh.useBlendMode = false
                         tMesh['useTransparentSort'] = true
                         tMaterial.cutOff = tAlphaCutoff
                         break

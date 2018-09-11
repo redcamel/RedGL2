@@ -184,17 +184,23 @@
 //		RedView('test')['postEffectManager'].addEffect(dof)
 //
 		var bloom = RedPostEffect_Bloom(this)
-		RedView('test')['postEffectManager'].addEffect(bloom)
+		// RedView('test')['postEffectManager'].addEffect(bloom)
 		bloom.exposure = 1
 		tRenderer.renderDebuger.visible = true
 		tScene3D.skyBox =
 			RedSkyBox(this, [
-				'../asset/cubemap/SwedishRoyalCastle/px.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/nx.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/py.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/ny.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/pz.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/nz.jpg'
+				// '../asset/cubemap/SwedishRoyalCastle/px.jpg',
+				// '../asset/cubemap/SwedishRoyalCastle/nx.jpg',
+				// '../asset/cubemap/SwedishRoyalCastle/py.jpg',
+				// '../asset/cubemap/SwedishRoyalCastle/ny.jpg',
+				// '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
+				// '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
+                '../asset/cubemap/posx.png',
+                '../asset/cubemap/negx.png',
+                '../asset/cubemap/posy.png',
+                '../asset/cubemap/negy.png',
+                '../asset/cubemap/posz.png',
+                '../asset/cubemap/negz.png'
 			]);
 		var t0, t1, t2
 //		t0 = RedGLTFLoader(self, '../asset/glTF/Box/glTF/', 'Box.gltf', function (v) {
