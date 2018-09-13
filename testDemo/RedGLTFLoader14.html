@@ -1,0 +1,368 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>html</title>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
+    />
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+    </style>
+    <script src="../example/dat.gui.min.js"></script>
+    <script src="../src/gl-matrix-min.js"></script>
+    <script src="../src/RedGLUtil.js"></script>
+    <script src="../src/detect/RedGLDetect.js"></script>
+    <script src="../src/base/RedDefinePropertyInfo.js"></script>
+    <script src="../src/RedGL.js"></script>
+
+    <!--//-->
+
+    <script src="../src/base/RedBaseObject3D.js"></script>
+    <script src="../src/base/RedBaseContainer.js"></script>
+    <script src="../src/base/RedBaseController.js"></script>
+    <script src="../src/base/RedBaseLight.js"></script>
+    <script src="../src/base/RedBaseTexture.js"></script>
+    <script src="../src/base/RedBaseMaterial.js"></script>
+
+
+    <!--//-->
+    <script src="../src/frameBuffer/RedFrameBuffer.js"></script>
+    <!--//-->
+    <script src="../src/geometry/RedBuffer.js"></script>
+    <script src="../src/geometry/RedGeometry.js"></script>
+    <script src="../src/geometry/RedInterleaveInfo.js"></script>
+    <!--//-->
+
+    <!--//-->
+    <script src="../rnd/resources/RedAtlas.js"></script>
+    <script src="../rnd/resources/system/RedAtlasUV.js"></script>
+    <script src="../src/resources/system/RedTextureOptionChecker.js"></script>
+    <script src="../src/resources/RedBitmapTexture.js"></script>
+    <script src="../src/resources/RedDDSTexture.js"></script>
+    <script src="../src/resources/RedVideoTexture.js"></script>
+    <script src="../rnd/resources/RedAtlasTexture.js"></script>
+    <script src="../src/resources/RedBitmapCubeTexture.js"></script>
+    <!--재질-->
+    <script src="../src/material/RedColorMaterial.js"></script>
+    <script src="../src/material/RedColorPhongMaterial.js"></script>
+    <script src="../src/material/RedColorPhongTextureMaterial.js"></script>
+    <script src="../src/material/RedEnvironmentMaterial.js"></script>
+    <script src="../src/material/RedBitmapMaterial.js"></script>
+    <script src="../src/material/RedParticleColorMaterial.js"></script>
+    <script src="../src/material/RedParticleBitmapMaterial.js"></script>
+    <script src="../src/material/RedPointColorMaterial.js"></script>
+    <script src="../src/material/RedPointBitmapMaterial.js"></script>
+    <script src="../src/material/RedSheetMaterial.js"></script>
+    <script src="../src/material/RedStandardMaterial.js"></script>
+    <script src="../src/material/RedVideoMaterial.js"></script>
+    <script src="../src/material/RedPBRMaterial.js"></script>
+    <!--//-->
+    <script src="../src/light/RedAmbientLight.js"></script>
+    <script src="../src/light/RedDirectionalLight.js"></script>
+    <script src="../src/light/RedPointLight.js"></script>
+    <!--//-->
+    <script src="../src/loader/JsonModelLoader.js"></script>
+    <script src="../src/loader/obj/RedMTLLoader.js"></script>
+    <script src="../src/loader/obj/RedOBJLoader.js"></script>
+    <script src="../rnd/loader/gltf/RedGLTFLoader.js"></script>
+    <script src="../rnd/loader/3ds/Red3DSLoader.js"></script>
+    <!--//-->
+    <script src="../src/object3D/RedAxis.js"></script>
+    <script src="../src/object3D/RedGrid.js"></script>
+    <script src="../src/object3D/RedMesh.js"></script>
+    <script src="../src/object3D/RedLine.js"></script>
+    <script src="../src/object3D/RedSkyBox.js"></script>
+    <script src="../src/object3D/RedSprite3D.js"></script>
+    <!--//-->
+    <script src="../src/particle/RedPointUnit.js"></script>
+    <script src="../src/particle/RedParticleUnit.js"></script>
+    <script src="../src/particle/RedParticleEmitter.js"></script>
+    <!--//-->
+    <script src="../src/primitives/RedBox.js"></script>
+    <script src="../src/primitives/RedPlane.js"></script>
+    <script src="../src/primitives/RedSphere.js"></script>
+    <!--//-->
+    <script src="../src/program/RedProgram.js"></script>
+    <script src="../src/program/RedSystemShaderCode.js"></script>
+    <script src="../src/program/RedShader.js"></script>
+    <!--//-->
+    <script src="../src/renderer/RedRenderer.js"></script>
+    <script src="../src/renderer/system/RedRenderDebuger.js"></script>
+    <script src="../src/renderer/system/RedSystemUniformUpdater.js"></script>
+    <!--//-->
+    <script src="../src/RedView.js"></script>
+    <script src="../src/RedWorld.js"></script>
+    <script src="../src/RedScene.js"></script>
+    <!--//-->
+    <script src="../src/camera/RedCamera.js"></script>
+    <script src="../src/camera/RedBasicController.js"></script>
+    <script src="../src/camera/RedObitController.js"></script>
+    <!--시스템 재질-->
+    <script src="../src/material/system/RedGridMaterial.js"></script>
+    <script src="../src/material/system/RedDirectionalShadowMaterial.js"></script>
+    <script src="../src/material/system/RedSkyBoxMaterial.js"></script>
+    <script src="../src/material/system/RedPostEffectMaterial.js"></script>
+    <!--쉐도우-->
+    <script src="../src/shadow/RedDirectionalShadow.js"></script>
+    <script src="../src/shadow/RedShadowManager.js"></script>
+    <!--이펙트-->
+    <script src="../src/postEffect/RedPostEffectManager.js"></script>
+    <script src="../src/base/RedBasePostEffect.js"></script>
+    <script src="../src/postEffect/bloom/RedPostEffect_Bloom.js"></script>
+    <script src="../src/postEffect/bloom/RedPostEffect_BloomThreshold.js"></script>
+    <script src="../src/postEffect/blur/RedPostEffect_Blur.js"></script>
+    <script src="../src/postEffect/blur/RedPostEffect_BlurX.js"></script>
+    <script src="../src/postEffect/blur/RedPostEffect_BlurY.js"></script>
+    <script src="../src/postEffect/blur/RedPostEffect_GaussianBlur.js"></script>
+    <script src="../src/postEffect/blur/RedPostEffect_ZoomBlur.js"></script>
+    <script src="../src/postEffect/adjustments/RedPostEffect_BrightnessContrast.js"></script>
+    <script src="../src/postEffect/adjustments/RedPostEffect_Threshold.js"></script>
+    <script src="../src/postEffect/adjustments/RedPostEffect_Invert.js"></script>
+    <script src="../src/postEffect/adjustments/RedPostEffect_Gray.js"></script>
+    <script src="../src/postEffect/adjustments/RedPostEffect_HueSaturation.js"></script>
+    <script src="../src/postEffect/pixelate/RedPostEffect_HalfTone.js"></script>
+    <script src="../src/postEffect/pixelate/RedPostEffect_Pixelize.js"></script>
+    <script src="../src/postEffect/RedPostEffect_Convolution.js"></script>
+    <script src="../src/postEffect/dof/RedPostEffect_DoF.js"></script>
+    <script src="../src/postEffect/dof/RedPostEffect_DoF_DepthMaterial.js"></script>
+    <script src="../src/postEffect/RedPostEffect_Film.js"></script>
+    <script src="../src/postEffect/RedPostEffect_Vignetting.js"></script>
+    <script src="../rnd/postEffect/RedPostEffect_SSAO.js"></script>
+    <script src="../rnd/postEffect/RedPostEffect_SSAO_DepthMaterial.js"></script>
+
+    <script src="../rnd/postEffect/RedPostEffect_SSAO_PointMaker.js"></script>
+    <script src="../src/postEffect/antialiasing/RedPostEffect_FXAA.js"></script>
+
+    <script src="RedTestShaderMaterial2.js"></script>
+    <script src="../rnd/primitive/RedGround.js"></script>
+    <script src="RedNoise.js"></script>
+</head>
+
+<body>
+<canvas id="test" style="border: none;background:red"></canvas>
+<script>
+    document.getElementById('test')
+    RedGL(document.getElementById('test'), function (v) {
+        console.log(v)
+        var tGL;
+        var tWorld, tScene3D, tCamera
+        var tRenderer;
+        var self;
+        self = this
+        tGL = this.gl;
+        this.world = tWorld = RedWorld();
+        tScene3D = RedScene(this);
+//		 tScene3D['useFog'] = true
+		tCamera = RedBasicController(this);
+        tCamera = RedObitController(this);
+        tCamera.speedDistance = 50
+        tCamera.distance = 750
+// 		tCamera = RedCamera()
+//		tCamera.x = 0.5
+//		tCamera.y = 0.5
+//		tCamera.z = 3.0
+        tRenderer = RedRenderer();
+        tWorld.addView(RedView('test', this, tScene3D, tCamera));
+        RedView('test').setSize('100%', '100%')
+        RedView('test').setLocation('0%', '0%')
+        this.renderScale = 1
+        var testDLight;
+
+//		testDLight.color = '#ffff00'
+        testDLight = RedDirectionalLight(this)
+        testDLight.x = 350
+        testDLight.y = 350
+        testDLight.z = 350
+		tScene3D.addLight(testDLight)
+
+        var a = RedAmbientLight(this)
+        tScene3D.addLight(a)
+
+        var b = RedPostEffect_DoF(this)
+        b.focusLength = 1500
+        // RedView('test')['postEffectManager'].addEffect(b)
+        var c = RedPostEffect_Bloom(this)
+        c.blur = 30
+        // c.threshold = 0.5
+        // RedView('test')['postEffectManager'].addEffect(c)
+        // RedView('test')['postEffectManager'].addEffect(RedPostEffect_Film(this))
+        tRenderer.renderDebuger.visible = true
+        tScene3D.skyBox =
+            RedSkyBox(this, [
+                '../asset/cubemap/SwedishRoyalCastle/px.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/nx.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/py.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/ny.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
+            ]);
+        RedGLTFLoader(self, '../asset/glTF/gundam/', 'scene.gltf', function (v) {
+        	console.log('호잇!', v)
+            var t0
+        	tScene3D.addChild(t0 = v['resultMesh'])
+            // v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 40
+        	t0.y = -300
+        	t0.z = -350
+        })
+		// RedGLTFLoader(self, '../asset/glTF/iso/', 'scene.gltf', function (v) {
+		// 	console.log('호잇!', v)
+		// 	tScene3D.addChild(t0 = v['resultMesh'])
+		// 	t0.x = -750
+		// 	t0.z = -2000
+		// },{
+		//     glass : function(v){
+		//         v['useTransparentSort'] = true
+        //     }
+        // })
+
+        var i = 15
+        var j
+        var k
+        var tMesh;
+        var tGeo = RedSphere(self, 100, 16, 16, 16)
+        var tMat = RedStandardMaterial(
+            self,
+            RedBitmapTexture(self, '../asset/crate.png'),
+            RedBitmapTexture(self, '../asset/normalTest.jpg'),
+            RedBitmapTexture(self, '../asset/brick_roughness.jpg')
+        )
+        tMat.shininess = 32
+        while ( i-- ) {
+            j = 15
+            while ( j-- ) {
+                k = 15
+                while ( k-- ) {
+                    tMesh = RedMesh(self, tGeo, tMat)
+                    tMesh.x = (i - 7.5) * 500
+                    tMesh.y = (j - 7.5) * 500
+                    tMesh.z = (k - 7.5) * 500
+                    tMesh.useLOD = true
+                    tMesh.drawMode = self.gl.LINES
+                    tMesh.addLOD(0, 100, RedSphere(self, 100, 32, 32, 32), tMat)
+                    tMesh.addLOD(1, 500, RedSphere(self, 100, 16, 16, 16), RedColorMaterial(self, '#00ff00'))
+                    tMesh.addLOD(2, 1000, RedSphere(self, 100, 8, 8, 8), RedColorMaterial(self, '#0000ff'))
+                    tMesh.addLOD(3, 1500, RedSphere(self, 100, 4, 4, 4), RedColorMaterial(self, '#ffff00'))
+                    tMesh.addLOD(4, 2000, RedSphere(self, 100, 3, 3, 3), RedColorMaterial(self, '#00ffff'))
+                    // console.log(tMesh._lodLevels)
+                    tScene3D.addChild(tMesh)
+                }
+            }
+        }
+
+
+        RedGLTFLoader(self, '../asset/glTF/warrior/', 'scene.gltf', function (v) {
+            console.log('호잇!', v)
+            tScene3D.addChild(v['resultMesh']);
+            RedGLTFLoader(self, '../asset/glTF/busterDrone/', 'busterDrone.gltf', function (v) {
+                console.log('호잇!', v)
+                tScene3D.addChild(t2 = v['resultMesh'])
+                v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 30
+                v['resultMesh'].y = 50
+                v['resultMesh'].x = 50
+            });
+            (function () {
+                var testMaterial
+                testMaterial = RedPointBitmapMaterial(self, RedBitmapTexture(self, '../asset/particle.png'))
+                var interleaveData
+                interleaveData = []
+                var i = 100000
+                while ( i-- ) {
+                    interleaveData.push(Math.random() * 5000 - 2500, Math.random() * 5000 - 2500, Math.random() * 5000 - 2500)
+                    interleaveData.push(Math.random() * 5)
+                    interleaveData.push(Math.random(), Math.random(), Math.random(), 1)
+                }
+                var testParticle = RedPointUnit(
+                    self,
+                    interleaveData,
+                    [
+                        RedInterleaveInfo('aVertexPosition', 3),
+                        RedInterleaveInfo('aPointSize', 1),
+                        RedInterleaveInfo('aVertexColor', 4)
+                    ],
+                    testMaterial
+                )
+                tScene3D.addChild(testParticle)
+                testParticle['blendSrc'] = self.gl.ONE
+                testParticle['blendDst'] = self.gl.ONE
+            })();
+        })
+		// RedGLTFLoader(self, '../asset/glTF/viking_room/', 'scene.gltf', function (v) {
+		// 	console.log('호잇!', t1 = v)
+		// 	tScene3D.addChild(t0 = v['resultMesh'])
+        //     t0.x = -650
+        //     t0.y = -150
+        //     t0.scaleX = t0.scaleY = t0.scaleZ = 30
+		// })
+//		RedGLTFLoader(self, '../asset/glTF/basic/', 'Cameras.gltf', function (v) {
+//			console.log('호잇!', t1 = v)
+//			tScene3D.addChild(t0 = v['resultMesh'])
+//			testUI(self, tScene3D)
+//		})
+        var tt = 0
+        tRenderer.start(this, function (time) {
+//				if ( tt == 0 ) {
+//					tCamera.x = Math.sin(time / 3500) * 750
+//					tCamera.y = Math.abs(Math.cos(time / 3500) * 500)
+//					tCamera.z = Math.cos(time / 3500) * 750
+//				} else if ( tt == 1 ) {
+//					tCamera.x = Math.sin(time / 3500) * 250
+//					tCamera.y = Math.abs(Math.cos(time / 3500) * 250)
+//					tCamera.z = Math.cos(time / 3500) * 250
+//				} else if ( tt == 2 ) {
+//					tCamera.x = Math.sin(time / 3500) * 150
+//					tCamera.y = Math.abs(Math.cos(time / 3500) * 250)
+//					tCamera.z = Math.cos(time / 3500) * 150
+//				} else if ( tt == 3 ) {
+//					tCamera.x = Math.sin(time / 3500) * 50
+//					tCamera.y = Math.abs(Math.cos(time / 3500) * 50)
+//					tCamera.z = Math.cos(time / 3500) * 50
+//				} else if ( tt == 4 ) {
+//					tCamera.x = Math.sin(time / 3500) * 10
+//					tCamera.y = Math.abs(Math.cos(time / 3500) * 10)
+//					tCamera.z = Math.cos(time / 3500) * 10
+//				}
+//				else {
+//					tCamera.x = Math.sin(time / 3500) * 250
+//					tCamera.y = Math.abs(Math.cos(time / 3500) * 250)
+//					tCamera.z = Math.cos(time / 3500) * 250
+//				}
+//                 testDLight.x = -Math.sin(time / 1500) * 500
+//                 testDLight.y = 500
+//                 testDLight.z = -Math.cos(time / 1500) * 500
+                tCamera.x = Math.sin(time / 1500) * 500 + Math.cos(time / 1500) * 500
+                tCamera.y = Math.cos(time / 2500) * 500+500
+                tCamera.z = Math.cos(time / 1300) * 500 + Math.sin(time / 2300) * 500
+
+                b.focusLength = vec3.length([tCamera.x,tCamera.y,tCamera.z])*2
+            // console.log(    b.focusLength)
+            }
+        )
+        var testUI = function (redGL, tScene) {
+            var gui = self['gui'] = new dat.GUI({
+                name: 'test'
+            });
+            var folder = gui.addFolder('animations')
+            var testAnimation = {
+                cameras: 0
+            }
+            var tList = [0, 1, 2, 3, 4]
+            folder.add(testAnimation, 'cameras', tList).onChange(function (v) {
+                tt = v
+                console.log(tt)
+            })
+            ///////////////////////////////////////////////
+            folder.open()
+        }
+    }, null)
+</script>
+</body>
+
+</html>
