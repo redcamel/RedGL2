@@ -10,14 +10,7 @@ var RedColorPhongMaterial;
 		 void main(void) {
 			 vVertexNormal = vec3(uNMatrix * vec4(aVertexNormal,1.0));
 
-			//#define#skin#true# mat4 skinMat =
-			//#define#skin#true# aVertexWeight.x * uGlobalTransformOfNodeThatTheMeshIsAttachedTo * uJointMatrix[ int(aVertexJoint.x) ] * uInverseBindMatrixForJoint[int(aVertexJoint.x)]+
-			//#define#skin#true# aVertexWeight.y * uGlobalTransformOfNodeThatTheMeshIsAttachedTo * uJointMatrix[ int(aVertexJoint.y) ] * uInverseBindMatrixForJoint[int(aVertexJoint.y)]+
-			//#define#skin#true# aVertexWeight.z * uGlobalTransformOfNodeThatTheMeshIsAttachedTo * uJointMatrix[ int(aVertexJoint.z) ] * uInverseBindMatrixForJoint[int(aVertexJoint.z)]+
-			//#define#skin#true# aVertexWeight.w * uGlobalTransformOfNodeThatTheMeshIsAttachedTo * uJointMatrix[ int(aVertexJoint.w) ] * uInverseBindMatrixForJoint[int(aVertexJoint.w)];
-			//#define#skin#true# vVertexPositionEye4 =  uMMatrix *  skinMat* vec4(aVertexPosition, 1.0) ;
-
-			//#define#skin#false# vVertexPositionEye4 =  uMMatrix *  vec4(aVertexPosition, 1.0) ;
+			vVertexPositionEye4 =  uMMatrix *  vec4(aVertexPosition, 1.0) ;
 
 			 gl_PointSize = uPointSize;
 			 gl_Position = uPMatrix * uCameraMatrix* vVertexPositionEye4;

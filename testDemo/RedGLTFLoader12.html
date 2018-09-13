@@ -183,8 +183,8 @@
         testDLight.z = 350
 		tScene3D.addLight(testDLight)
 
-        var a = RedAmbientLight(this)
-        tScene3D.addLight(a)
+        // var a = RedAmbientLight(this)
+        // tScene3D.addLight(a)
 
         var b = RedPostEffect_DoF(this)
         b.focusLength = 1500
@@ -192,7 +192,7 @@
         var c = RedPostEffect_Bloom(this)
         c.blur = 30
         // c.threshold = 0.5
-        RedView('test')['postEffectManager'].addEffect(c)
+        // RedView('test')['postEffectManager'].addEffect(c)
         RedView('test')['postEffectManager'].addEffect(RedPostEffect_Film(this))
         tRenderer.renderDebuger.visible = true
         tScene3D.skyBox =

@@ -1018,56 +1018,49 @@ var RedGLTFLoader;
                     if ('roughnessFactor' in tMaterialInfo['pbrMetallicRoughness']) {
                         roughnessFactor = tMaterialInfo['pbrMetallicRoughness']['roughnessFactor']
                     }
-                    if (diffseTexture) {
-                        if (!redGLTFLoader['environmentTexture']) {
-                            redGLTFLoader['environmentTexture'] = RedBitmapCubeTexture(redGLTFLoader['redGL'], [
-                                '../asset/cubemap/SwedishRoyalCastle/px.jpg',
-                                '../asset/cubemap/SwedishRoyalCastle/nx.jpg',
-                                '../asset/cubemap/SwedishRoyalCastle/py.jpg',
-                                '../asset/cubemap/SwedishRoyalCastle/ny.jpg',
-                                '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
-                                '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
-                            ])
-                        }
-                        var env = redGLTFLoader['environmentTexture']
-                        // Type	Description	Required
-                        // baseColorFactor	number [4]	The material's base color factor.	No, default: [1,1,1,1]
-                        // baseColorTexture	object	The base color texture.	No
-                        // metallicFactor	number	The metalness of the material.	No, default: 1
-                        // roughnessFactor	number	The roughness of the material.	No, default: 1
-                        // metallicRoughnessTexture	object	The metallic-roughness texture.	No
-                        tMaterial = RedPBRMaterial(redGLTFLoader['redGL'], diffseTexture, env, normalTexture, occlusionTexture, emissiveTexture, roughnessTexture, null)
-                        if (tMaterialInfo['pbrMetallicRoughness'] && tMaterialInfo['pbrMetallicRoughness']['baseColorFactor']) tColor = tMaterialInfo['pbrMetallicRoughness']['baseColorFactor']
-                        else tColor = [1.0, 1.0, 1.0, 1.0]
-                        tMaterial['baseColorFactor'] = tColor
-                        if (tMaterialInfo['pbrMetallicRoughness']) {
-                            tMaterial.metallicFactor = metallicFactor != undefined ? metallicFactor : 1;
-                            tMaterial.roughnessFactor = roughnessFactor != undefined ? roughnessFactor : 1;
-                        }
-                        tMaterial.emissiveFactor = tMaterialInfo.emissiveFactor != undefined ? tMaterialInfo.emissiveFactor : [1, 1, 1];
-                        if (tMaterialInfo['pbrMetallicRoughness']) {
-                            if (tMaterialInfo['pbrMetallicRoughness']['metallicRoughnessTexture']) tMaterial['roughnessTexCoordIndex'] = tMaterialInfo['pbrMetallicRoughness']['metallicRoughnessTexture']['texCoord'] || 0
-                            if (tMaterialInfo['pbrMetallicRoughness']['baseColorTexture']) tMaterial['diffuseTexCoordIndex'] = tMaterialInfo['pbrMetallicRoughness']['baseColorTexture']['texCoord'] || 0
-                        }
-                        if (tMaterialInfo['occlusionTexture']) {
-                            tMaterial['occlusionTexCoordIndex'] = tMaterialInfo['occlusionTexture']['texCoord'] || 0
-                            tMaterial['occlusionPower'] = tMaterialInfo['occlusionTexture']['strength'] || 1
-                        }
-                        if (tMaterialInfo['emissiveTexture']) tMaterial['emissiveTexCoordIndex'] = tMaterialInfo['emissiveTexture']['texCoord'] || 0
-                        if (tMaterialInfo['normalTexture']) tMaterial['normalTexCoordIndex'] = tMaterialInfo['normalTexture']['texCoord'] || 0
-                    } else {
-                        var tColor
-                        if (tMaterialInfo['pbrMetallicRoughness'] && tMaterialInfo['pbrMetallicRoughness']['baseColorFactor']) tColor = tMaterialInfo['pbrMetallicRoughness']['baseColorFactor']
-                        else tColor = [(Math.random()), (Math.random()), (Math.random()), 1]
-                        tMaterial = RedColorPhongMaterial(redGLTFLoader['redGL'],
-                            RedGLUtil.rgb2hex(
-                                tColor[0] * 255,
-                                tColor[1] * 255,
-                                tColor[2] * 255
-                            ),
-                            tColor[3]
-                        )
+                    var tColor
+                    // if (diffseTexture) {
+                    if (!redGLTFLoader['environmentTexture']) {
+                        redGLTFLoader['environmentTexture'] = RedBitmapCubeTexture(redGLTFLoader['redGL'], [
+                            '../asset/cubemap/SwedishRoyalCastle/px.jpg',
+                            '../asset/cubemap/SwedishRoyalCastle/nx.jpg',
+                            '../asset/cubemap/SwedishRoyalCastle/py.jpg',
+                            '../asset/cubemap/SwedishRoyalCastle/ny.jpg',
+                            '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
+                            '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
+                        ])
                     }
+                    var env = redGLTFLoader['environmentTexture']
+                    // Type	Description	Required
+                    // baseColorFactor	number [4]	The material's base color factor.	No, default: [1,1,1,1]
+                    // baseColorTexture	object	The base color texture.	No
+                    // metallicFactor	number	The metalness of the material.	No, default: 1
+                    // roughnessFactor	number	The roughness of the material.	No, default: 1
+                    // metallicRoughnessTexture	object	The metallic-roughness texture.	No
+                    tMaterial = RedPBRMaterial(redGLTFLoader['redGL'], diffseTexture, env, normalTexture, occlusionTexture, emissiveTexture, roughnessTexture, null)
+                    if (tMaterialInfo['pbrMetallicRoughness'] && tMaterialInfo['pbrMetallicRoughness']['baseColorFactor']) tColor = tMaterialInfo['pbrMetallicRoughness']['baseColorFactor']
+                    else tColor = [1.0, 1.0, 1.0, 1.0]
+                    tMaterial['baseColorFactor'] = tColor
+                    if (tMaterialInfo['pbrMetallicRoughness']) {
+                        tMaterial.metallicFactor = metallicFactor != undefined ? metallicFactor : 1;
+                        tMaterial.roughnessFactor = roughnessFactor != undefined ? roughnessFactor : 1;
+                    }
+                    tMaterial.emissiveFactor = tMaterialInfo.emissiveFactor != undefined ? tMaterialInfo.emissiveFactor : [1, 1, 1];
+                    if (tMaterialInfo['pbrMetallicRoughness']) {
+                        if (tMaterialInfo['pbrMetallicRoughness']['metallicRoughnessTexture']) tMaterial['roughnessTexCoordIndex'] = tMaterialInfo['pbrMetallicRoughness']['metallicRoughnessTexture']['texCoord'] || 0
+                        if (tMaterialInfo['pbrMetallicRoughness']['baseColorTexture']) tMaterial['diffuseTexCoordIndex'] = tMaterialInfo['pbrMetallicRoughness']['baseColorTexture']['texCoord'] || 0
+                    }
+                    if (tMaterialInfo['occlusionTexture']) {
+                        tMaterial['occlusionTexCoordIndex'] = tMaterialInfo['occlusionTexture']['texCoord'] || 0
+                        tMaterial['occlusionPower'] = tMaterialInfo['occlusionTexture']['strength'] || 1
+                    }
+                    if (tMaterialInfo['emissiveTexture']) tMaterial['emissiveTexCoordIndex'] = tMaterialInfo['emissiveTexture']['texCoord'] || 0
+                    if (tMaterialInfo['normalTexture']) tMaterial['normalTexCoordIndex'] = tMaterialInfo['normalTexture']['texCoord'] || 0
+
+                } else {
+                    var tColor = [(Math.random()), (Math.random()), (Math.random()), 1]
+                    tMaterial = RedPBRMaterial(redGLTFLoader['redGL'])
+                    tMaterial['baseColorFactor'] = tColor
                 }
                 return [tMaterial, doubleSide, alphaMode, alphaCutoff]
             }
@@ -1171,9 +1164,10 @@ var RedGLTFLoader;
                 for (i; i < len; i++) {
                     if (vertices.length) interleaveData.push(vertices[i * 3 + 0], vertices[i * 3 + 1], vertices[i * 3 + 2])
                     if (normalData.length) interleaveData.push(normalData[i * 3 + 0], normalData[i * 3 + 1], normalData[i * 3 + 2])
+                    if (!uvs.length) uvs.push(0, 0)
                     if (uvs.length) interleaveData.push(uvs[i * 2 + 0], uvs[i * 2 + 1])
                     if (uvs1.length) interleaveData.push(uvs1[i * 2 + 0], uvs1[i * 2 + 1])
-                    else interleaveData.push(uvs[i * 2 + 0], uvs[i * 2 + 1])
+                    else if (uvs.length) interleaveData.push(uvs[i * 2 + 0], uvs[i * 2 + 1])
                     if (jointWeights.length) interleaveData.push(jointWeights[i * 4 + 0], jointWeights[i * 4 + 1], jointWeights[i * 4 + 2], jointWeights[i * 4 + 3])
                     if (joints.length) interleaveData.push(joints[i * 4 + 0], joints[i * 4 + 1], joints[i * 4 + 2], joints[i * 4 + 3])
                 }
@@ -1186,7 +1180,7 @@ var RedGLTFLoader;
                 if (normalData.length) tInterleaveInfoList.push(RedInterleaveInfo('aVertexNormal', 3))
                 if (uvs.length) tInterleaveInfoList.push(RedInterleaveInfo('aTexcoord', 2))
                 if (uvs1.length) tInterleaveInfoList.push(RedInterleaveInfo('aTexcoord1', 2))
-                else tInterleaveInfoList.push(RedInterleaveInfo('aTexcoord1', 2))
+                else if (uvs.length) tInterleaveInfoList.push(RedInterleaveInfo('aTexcoord1', 2))
                 if (jointWeights.length) tInterleaveInfoList.push(RedInterleaveInfo('aVertexWeight', 4))
                 if (joints.length) tInterleaveInfoList.push(RedInterleaveInfo('aVertexJoint', 4))
                 tGeo = RedGeometry(
@@ -1205,7 +1199,8 @@ var RedGLTFLoader;
                     ) : null
                 )
                 if (!tMaterial) {
-                    tMaterial = RedColorPhongMaterial(redGLTFLoader['redGL'], RedGLUtil.rgb2hex(parseInt(Math.random() * 255), parseInt(Math.random() * 255), parseInt(Math.random() * 255)))
+                    RedGLUtil.throwFunc('재질을 파싱할수없는경우 ',v)
+                    // tMaterial = RedColorPhongMaterial(redGLTFLoader['redGL'], RedGLUtil.rgb2hex(parseInt(Math.random() * 255), parseInt(Math.random() * 255), parseInt(Math.random() * 255)))
                 }
                 // console.log('tMaterial', tMaterial)
                 tMesh = RedMesh(redGLTFLoader['redGL'], tGeo, tMaterial)
@@ -1258,9 +1253,10 @@ var RedGLTFLoader;
                     for (i; i < len; i++) {
                         if (v['vertices'].length) interleaveData.push(v['vertices'][i * 3 + 0], v['vertices'][i * 3 + 1], v['vertices'][i * 3 + 2])
                         if (normalData.length) interleaveData.push(normalData[i * 3 + 0], normalData[i * 3 + 1], normalData[i * 3 + 2])
+                        if (!v['uvs'].length) v['uvs'].push(0, 0)
                         if (v['uvs'].length) interleaveData.push(v['uvs'][i * 2 + 0], v['uvs'][i * 2 + 1])
                         if (v['uvs1'].length) interleaveData.push(v['uvs1'][i * 2 + 0], v['uvs1'][i * 2 + 1])
-                        else interleaveData.push(v['uvs'][i * 2 + 0], v['uvs'][i * 2 + 1])
+                        else if (v['uvs'].length) interleaveData.push(v['uvs'][i * 2 + 0], v['uvs'][i * 2 + 1])
                         if (v['jointWeights'].length) interleaveData.push(v['jointWeights'][i * 4 + 0], v['jointWeights'][i * 4 + 1], v['jointWeights'][i * 4 + 2], v['jointWeights'][i * 4 + 3])
                         if (v['joints'].length) interleaveData.push(v['joints'][i * 4 + 0], v['joints'][i * 4 + 1], v['joints'][i * 4 + 2], v['joints'][i * 4 + 3])
                     }

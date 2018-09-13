@@ -158,6 +158,7 @@ var RedPBRMaterial;
             //#define#environmentTexture# reflectionColor = textureCube(u_environmentTexture, R);
             //#define#environmentTexture# reflectionColor.rgb *= reflectionColor.a;
             // 환경맵 합성
+            //// #define#environmentTexture# texelColor.rgb = mix( texelColor.rgb , reflectionColor.rgb , max(tMetallicPower-tRoughnessPower,0.0)*(1.0-tRoughnessPower));
             //#define#environmentTexture# texelColor.rgb = mix( texelColor.rgb , reflectionColor.rgb , max(tMetallicPower-tRoughnessPower,0.0)*(1.0-tRoughnessPower));
             //#define#environmentTexture# texelColor = mix( texelColor , vec4(0.04, 0.04, 0.04, 1.0) , tRoughnessPower * (tMetallicPower) * 0.5);
             // 컷오프 계산
