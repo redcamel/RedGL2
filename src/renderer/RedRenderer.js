@@ -277,6 +277,7 @@ var RedRenderer;
                 self['cacheState']['useDepthMask'] ? 0 : gl.depthMask(self['cacheState']['useDepthMask'] = true);
                 // 디렉셔널 쉐도우 렌더
                 if (tScene['shadowManager']['_directionalShadow']) {
+
                     updateSystemUniform.apply(self, [redGL, time, tView])
                     gl.enable(gl.BLEND);
                     gl.blendFunc(gl.ONE, gl.ONE);

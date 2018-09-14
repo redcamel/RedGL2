@@ -6,31 +6,16 @@ var RedPostEffect_DoF_DepthMaterial;
     var checked;
     vSource = function () {
         /* @preserve
-         mat4 calSprite3D(mat4 cameraMTX, mat4 mvMatrix){
-             mat4 cacheScale = mat4(
-                 mvMatrix[0][0], 0.0, 0.0, 0.0,
-                 0.0, mvMatrix[1][1], 0.0, 0.0,
-                 0.0, 0.0, 1.0, mvMatrix[2][2],
-                 0.0, 0.0, 0.0, 1.0
-             );
-             mat4 tMTX = cameraMTX * mvMatrix;
-             tMTX[0][0] = 1.0, tMTX[0][1] = 0.0, tMTX[0][2] = 0.0,
-             tMTX[1][0] = 0.0, tMTX[1][1] = 1.0, tMTX[1][2] = 0.0,
-             tMTX[2][0] = 0.0, tMTX[2][1] = 0.0, tMTX[2][2] = 1.0;
-             return tMTX * cacheScale;
-         }
+         //#REDGL_DEFINE#vertexShareFunc#getSprite3DMatrix#
+         //#REDGL_DEFINE#vertexShareFunc#getSkinMatrix#
          void main(void) {
             gl_PointSize = uPointSize;
             vec4 tPosition;
-            //#REDGL_DEFINE#skin#true# mat4 skinMat =
-            //#REDGL_DEFINE#skin#true# aVertexWeight.x * uGlobalTransformOfNodeThatTheMeshIsAttachedTo * uJointMatrix[ int(aVertexJoint.x) ] * uInverseBindMatrixForJoint[int(aVertexJoint.x)]+
-            //#REDGL_DEFINE#skin#true# aVertexWeight.y * uGlobalTransformOfNodeThatTheMeshIsAttachedTo * uJointMatrix[ int(aVertexJoint.y) ] * uInverseBindMatrixForJoint[int(aVertexJoint.y)]+
-            //#REDGL_DEFINE#skin#true# aVertexWeight.z * uGlobalTransformOfNodeThatTheMeshIsAttachedTo * uJointMatrix[ int(aVertexJoint.z) ] * uInverseBindMatrixForJoint[int(aVertexJoint.z)]+
-            //#REDGL_DEFINE#skin#true# aVertexWeight.w * uGlobalTransformOfNodeThatTheMeshIsAttachedTo * uJointMatrix[ int(aVertexJoint.w) ] * uInverseBindMatrixForJoint[int(aVertexJoint.w)];
-            //#REDGL_DEFINE#skin#true# tPosition = uMMatrix * skinMat * vec4(aVertexPosition, 1.0);
+
+            //#REDGL_DEFINE#skin#true# tPosition = uMMatrix * getSkinMatrix() * vec4(aVertexPosition, 1.0);
             //#REDGL_DEFINE#skin#false# tPosition = uMMatrix * vec4(aVertexPosition, 1.0);
 
-            //#REDGL_DEFINE#sprite3D#true# gl_Position = uPMatrix * calSprite3D(uCameraMatrix , uMMatrix) *  vec4(aVertexPosition, 1.0);
+            //#REDGL_DEFINE#sprite3D#true# gl_Position = uPMatrix * getSprite3DMatrix(uCameraMatrix , uMMatrix) *  vec4(aVertexPosition, 1.0);
             //#REDGL_DEFINE#sprite3D#true# if(!u_PerspectiveScale){
             //#REDGL_DEFINE#sprite3D#true#   gl_Position /= gl_Position.w;
             //#REDGL_DEFINE#sprite3D#true#   gl_Position.xy += aVertexPosition.xy * vec2(uMMatrix[0][0],uMMatrix[1][1] * uResolution.x/uResolution.y);

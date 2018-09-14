@@ -379,6 +379,17 @@ var RedProgram;
                     fSource = fSource.replace(t0, '');
                 }
             }
+            for (var k in RedSystemShaderCode.vertexShareFunc) {
+                t0 = new RegExp('\/\/\#REDGL_DEFINE\#vertexShareFunc\#' + k + '\#', 'gi');
+                console.log('~~~~',t0)
+                vSource = vSource.replace(t0, RedSystemShaderCode.vertexShareFunc[k]);
+            }
+            for (var k in RedSystemShaderCode.fragmentShareFunc) {
+                t0 = new RegExp('\/\/\#REDGL_DEFINE\#fragmentShareFunc\#' + k + '\#', 'gi');
+                console.log('~~~~',t0)
+                fSource = fSource.replace(t0, RedSystemShaderCode.fragmentShareFunc[k]);
+            }
+
             // fog 처리
             t0 = new RegExp('\/\/\#REDGL_DEFINE\#fog\#' + (hasFog ? 'true' : 'false') + '\#', 'gi');
             vSource = vSource.replace(t0, '');
@@ -395,6 +406,8 @@ var RedProgram;
             t0 = new RegExp('\/\/\#REDGL_DEFINE\#skin\#' + (hasSkin ? 'true' : 'false') + '\#', 'gi');
             vSource = vSource.replace(t0, '');
             fSource = fSource.replace(t0, '');
+
+            //
             // console.log(vSource, fSource)
             return RedProgram(redGL, programName, vSource, fSource, subProgramOption)
         };

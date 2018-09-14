@@ -14,25 +14,27 @@ var RedColorPhongMaterial;
 
 			 gl_PointSize = uPointSize;
 			 gl_Position = uPMatrix * uCameraMatrix* vVertexPositionEye4;
+
+			//#REDGL_DEFINE#directionalShadow#true# vResolution = uResolution;
+			//#REDGL_DEFINE#directionalShadow#true# vShadowPos = cTexUnitConverter  *  uDirectionalShadowLightMatrix * uMMatrix * vec4(aVertexPosition, 1.0);
 		 }
 		 */
 	};
 	fSource = function () {
 		/* @preserve
 		 precision mediump float;
+		// 안개
+		//#REDGL_DEFINE#fragmentShareFunc#fogFactor#
+		//#REDGL_DEFINE#fragmentShareFunc#fog#
+
+		// 그림자
+		//#REDGL_DEFINE#fragmentShareFunc#decodeFloatShadow#
+		//#REDGL_DEFINE#fragmentShareFunc#getShadowColor#
+
 		 uniform float u_shininess;
 		 uniform float u_specularPower;
 		 uniform vec4 u_color;
 		 varying vec4 vVertexPositionEye4;
-		 float fogFactor(float perspectiveFar, float density){
-			 float flog_cord = gl_FragCoord.z / gl_FragCoord.w / perspectiveFar;
-			 float fog = flog_cord * density;
-			 if(1.0 - fog < 0.0) discard;
-			 return clamp(1.0 - fog, 0.0,  1.0);
-		 }
-		 vec4 fog(float fogFactor, vec4 fogColor, vec4 currentColor) {
-			 return mix(fogColor, currentColor, fogFactor);
-		 }
 
 		 vec4 la;
 		 vec4 ld;
@@ -55,8 +57,10 @@ var RedColorPhongMaterial;
 
 			 texelColor = u_color;
 			 // texelColor.rgb *= texelColor.a;
-			 N = normalize(vVertexNormal);
 
+			//#REDGL_DEFINE#directionalShadow#true#	texelColor.rgb *= getShadowColor( vShadowPos, vResolution, uDirectionalShadowTexture);
+
+			 N = normalize(vVertexNormal);
 			 specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);
 			 specularTextureValue = 1.0;
 

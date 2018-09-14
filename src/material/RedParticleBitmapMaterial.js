@@ -21,19 +21,14 @@ var RedParticleBitmapMaterial;
 		//TODO: tint명확히 정의해야함
 		/* @preserve
 		 precision mediump float;
+		// 안개
+		//#REDGL_DEFINE#fragmentShareFunc#fogFactor#
+		//#REDGL_DEFINE#fragmentShareFunc#fog#
+
 		 uniform sampler2D u_diffuseTexture;
 		 uniform float u_alphaTest;
 		 uniform float u_alpha;
 	     varying vec4 vColor;
-		 float fogFactor(float perspectiveFar, float density){
-			 float flog_cord = gl_FragCoord.z / gl_FragCoord.w / perspectiveFar;
-			 float fog = flog_cord * density;
-			 if(1.0 - fog < 0.0) discard;
-			 return clamp(1.0 - fog, 0.0,  1.0);
-		 }
-		 vec4 fog(float fogFactor, vec4 fogColor, vec4 currentColor) {
-			return mix(fogColor, currentColor, fogFactor);
-		 }
 		 void main(void) {
 			 vec4 finalColor = texture2D(u_diffuseTexture, vec2(gl_PointCoord.x, - gl_PointCoord.y));
 		     finalColor.rgb *= finalColor.a;
