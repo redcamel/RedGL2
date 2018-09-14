@@ -38,7 +38,7 @@ var RedGLTFLoader;
 
     var fileLoader = function (src, type, onLoader, onError) {
         var request = new XMLHttpRequest();
-        request.open("POST", src, true);
+        request.open("GET", src, true);
         request.overrideMimeType('model/gltf+json')
         request.onreadystatechange = function (e) {
             if (request.readyState == 4 && request.status === 200) {
@@ -52,7 +52,7 @@ var RedGLTFLoader;
     }
     var arrayBufferLoader = function (src, onLoader, onError) {
         var request = new XMLHttpRequest();
-        request.open("POST", src, true);
+        request.open("GET", src, true);
         request.overrideMimeType('application/octet-stream')
         request.responseType = "arraybuffer";
         request.onreadystatechange = function (e) {
