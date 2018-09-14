@@ -26,10 +26,11 @@ var RedGL;
 			'OES_element_index_uint',
 			'OES_standard_derivatives',
 			'EXT_texture_filter_anisotropic',
-			'WEBGL_compressed_texture_s3tc'
+			'WEBGL_compressed_texture_s3tc',
+			'WEBGL_debug_renderer_info'
 		];
-		CHECK_CONTEXT_LIST = 'webkit-3d,moz-webgl,3d,experimental-webgl,webgl,webgl2'.split(',');
-		// checkContextList = 'webkit-3d,moz-webgl,3d,experimental-webgl,webgl'.split(',');
+		// CHECK_CONTEXT_LIST = 'webkit-3d,moz-webgl,3d,experimental-webgl,webgl,webgl2'.split(',');
+        CHECK_CONTEXT_LIST = 'webkit-3d,moz-webgl,3d,experimental-webgl,webgl'.split(',');
 		tCheckContextList = [];
 		return function (canvas, option, targetContext) {
 			initOption = JSON.parse(JSON.stringify(OPTION));
@@ -44,6 +45,10 @@ var RedGL;
 					tContext['glExtension'] = {};
 					EXT_KEY_LIST.forEach(function (extensionKey) {
 						tContext['glExtension'][extensionKey] = tContext.getExtension(extensionKey);
+						if(tContext['glExtension'][extensionKey] && extensionKey == 'WEBGL_debug_renderer_info'){
+                            tContext['vendor'] = tContext.getParameter(tContext['glExtension'][extensionKey].UNMASKED_VENDOR_WEBGL);
+                            tContext['renderer']  = tContext.getParameter(tContext['glExtension'][extensionKey].UNMASKED_RENDERER_WEBGL)
+						}
 						console.log('확장여부 ' + extensionKey + ' :', tContext['glExtension'][extensionKey])
 					});
 					tContext['version'] = tKey;

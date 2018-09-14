@@ -89,8 +89,8 @@ var RedColorPhongMaterial;
 			 finalColor.rgb *= texelColor.a;
 			 finalColor.a = texelColor.a;
 
-			 //#define#fog#false# gl_FragColor = finalColor;
-			 //#define#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
+			 //#REDGL_DEFINE#fog#false# gl_FragColor = finalColor;
+			 //#REDGL_DEFINE#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
 		 }
 		 */
 	};

@@ -27,12 +27,12 @@ var RedSheetMaterial;
 				vTexcoord.t * u_sheetRect.y - u_sheetRect.w
 			);
 			gl_PointSize = uPointSize;
-			//#define#sprite3D#true# gl_Position = uPMatrix * calSprite3D(uCameraMatrix , uMMatrix) *  vec4(aVertexPosition, 1.0);
-			//#define#sprite3D#true# if(!u_PerspectiveScale){
-			//#define#sprite3D#true#   gl_Position /= gl_Position.w;
-			//#define#sprite3D#true#   gl_Position.xy += aVertexPosition.xy * vec2(uMMatrix[0][0],uMMatrix[1][1] * uResolution.x/uResolution.y);
-			//#define#sprite3D#true# }
-			//#define#sprite3D#false# gl_Position = uPMatrix * uCameraMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
+			//#REDGL_DEFINE#sprite3D#true# gl_Position = uPMatrix * calSprite3D(uCameraMatrix , uMMatrix) *  vec4(aVertexPosition, 1.0);
+			//#REDGL_DEFINE#sprite3D#true# if(!u_PerspectiveScale){
+			//#REDGL_DEFINE#sprite3D#true#   gl_Position /= gl_Position.w;
+			//#REDGL_DEFINE#sprite3D#true#   gl_Position.xy += aVertexPosition.xy * vec2(uMMatrix[0][0],uMMatrix[1][1] * uResolution.x/uResolution.y);
+			//#REDGL_DEFINE#sprite3D#true# }
+			//#REDGL_DEFINE#sprite3D#false# gl_Position = uPMatrix * uCameraMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
 		}
 		 */
 	};
@@ -55,8 +55,8 @@ var RedSheetMaterial;
 			 finalColor.rgb *= finalColor.a;
 			 if(finalColor.a ==0.0) discard;
 			 finalColor.a *= u_alpha;
-			 //#define#fog#false# gl_FragColor = finalColor;
-			 //#define#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
+			 //#REDGL_DEFINE#fog#false# gl_FragColor = finalColor;
+			 //#REDGL_DEFINE#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
 		 }
 		 */
 	};

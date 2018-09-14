@@ -180,11 +180,11 @@
         testDLight = RedDirectionalLight(this)
         testDLight.x = 350
         testDLight.y = 350
-        testDLight.z = 350
+        testDLight.z = -350
 		tScene3D.addLight(testDLight)
 
-        var a = RedAmbientLight(this)
-        tScene3D.addLight(a)
+        // var a = RedAmbientLight(this)
+        // tScene3D.addLight(a)
 
         var b = RedPostEffect_DoF(this)
         b.focusLength = 1500
@@ -236,14 +236,14 @@
         )
         tMat.shininess = 32
         while ( i-- ) {
-            j = 15
+            j = 8
             while ( j-- ) {
-                k = 15
+                k = 8
                 while ( k-- ) {
                     tMesh = RedMesh(self, tGeo, tMat)
-                    tMesh.x = (i - 7.5) * 500
-                    tMesh.y = (j - 7.5) * 500
-                    tMesh.z = (k - 7.5) * 500
+                    tMesh.x = (i - 4) * 500
+                    tMesh.y = (j - 4) * 500
+                    tMesh.z = (k -4) * 500
                     tMesh.useLOD = true
                     tMesh.drawMode = self.gl.LINES
                     tMesh.addLOD(0, 100, RedSphere(self, 100, 32, 32, 32), tMat)
