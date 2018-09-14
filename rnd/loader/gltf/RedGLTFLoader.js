@@ -39,7 +39,9 @@ var RedGLTFLoader;
     var fileLoader = function (src, type, onLoader, onError) {
         var request = new XMLHttpRequest();
         request.open("GET", src, true);
-        request.overrideMimeType('model/gltf+json')
+        // request.overrideMimeType('model/gltf+json')
+        request.setRequestHeader("Content-Type", (type ? type : "application/xml; " ) + 'charset=UTF-8')
+
         request.onreadystatechange = function (e) {
             if (request.readyState == 4 && request.status === 200) {
                 console.log(request)
