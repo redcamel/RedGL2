@@ -38,8 +38,8 @@ var RedGLTFLoader;
 
     var fileLoader = function (src, type, onLoader, onError) {
         var request = new XMLHttpRequest();
-        request.open("GET", src, true);
-        request.setRequestHeader("Content-Type", (type ? type : "application/xml; ") + 'charset=UTF-8')
+        request.open("POST", src, true);
+        request.overrideMimeType('model/gltf+json')
         request.onreadystatechange = function (e) {
             if (request.readyState == 4 && request.status === 200) {
                 console.log(request)
@@ -52,7 +52,7 @@ var RedGLTFLoader;
     }
     var arrayBufferLoader = function (src, onLoader, onError) {
         var request = new XMLHttpRequest();
-        request.open("GET", src, true);
+        request.open("POST", src, true);
         request.overrideMimeType('application/octet-stream')
         request.responseType = "arraybuffer";
         request.onreadystatechange = function (e) {
@@ -73,7 +73,7 @@ var RedGLTFLoader;
             path + fileName,
             null,
             function (request) {
-                parser(self, redGL, JSON.parse(request['responseText']), function () {
+                parser(self, redGL, JSON.parse(request['response']), function () {
                     if (callback) {
                         console.log('모델 파싱 종료');
                         callback(self)
@@ -122,7 +122,6 @@ var RedGLTFLoader;
     };
     RedDefinePropertyInfo.definePrototype('RedGLTFLoader', 'environmentTexture', 'samplerCube', {
         callback: function (v) {
-            console.log(v)
             this['materials'].forEach(function (v2) {
                 if ('environmentTexture' in v2) v2['environmentTexture'] = v
             })
@@ -354,7 +353,7 @@ var RedGLTFLoader;
                 tList.push(v)
             })
             tList.forEach(function (v) {
-                console.log('버퍼테이터', v)
+                // console.log('버퍼테이터', v)
                 allNum++
                 var tSrc = v['uri'].substr(0, 5) == 'data:' ? v['uri'] : redGLTFLoader['path'] + v['uri']
                 // console.log('tSrc', tSrc)
@@ -381,41 +380,59 @@ var RedGLTFLoader;
             전체 데이터중 외부소스데이터를 모두 실제화 해둔다.
          */
         getBaseResource = function (redGLTFLoader, json, callback) {
-            for (var k in json) {
-                console.log(k, json[k])
-                switch (k) {
-                    case 'scenes' :
-                        console.log('TODO : scene 내부 리소스 로딩');
-                        break;
-                    case 'nodes' :
-                        console.log('TODO : nodes 내부 리소스 로딩');
-                        break;
-                    case 'meshes' :
-                        console.log('TODO : meshes 내부 리소스 로딩');
-                        break;
-                    case 'buffers' :
-                        console.log('TODO : buffers 내부 리소스 로딩');
-                        break;
-                    case 'bufferViews' :
-                        console.log('TODO : bufferViews 내부 리소스 로딩');
-                        break;
-                    case 'accessors' :
-                        console.log('TODO : accessors 내부 리소스 로딩');
-                        break;
-                    case 'images' :
-                        console.log('TODO : images 내부 리소스 로딩');
-                        break;
-                    case 'cameras' :
-                        console.log('TODO : images 내부 리소스 로딩');
-                        break;
-                    case 'animations ' :
-                        console.log('TODO : images 내부 리소스 로딩');
-                        break;
-                    default :
-                        console.log(k, '고려안한거임');
-                        break;
-                }
-            }
+            // for (var k in json) {
+            //     // console.log(k, json[k])
+            //     switch (k) {
+            //         case 'asset' :
+            //             console.log('TODO : asset 내부 리소스 로딩');
+            //             break;
+            //         case 'scene' :
+            //             console.log('TODO : scene 내부 리소스 로딩');
+            //             break;
+            //         case 'scenes' :
+            //             console.log('TODO : scenes 내부 리소스 로딩');
+            //             break;
+            //         case 'nodes' :
+            //             console.log('TODO : nodes 내부 리소스 로딩');
+            //             break;
+            //         case 'meshes' :
+            //             console.log('TODO : meshes 내부 리소스 로딩');
+            //             break;
+            //         case 'buffers' :
+            //             console.log('TODO : buffers 내부 리소스 로딩');
+            //             break;
+            //         case 'bufferViews' :
+            //             console.log('TODO : bufferViews 내부 리소스 로딩');
+            //             break;
+            //         case 'skins' :
+            //             console.log('TODO : skins 내부 리소스 로딩');
+            //             break;
+            //         case 'accessors' :
+            //             console.log('TODO : accessors 내부 리소스 로딩');
+            //             break;
+            //         case 'images' :
+            //             console.log('TODO : images 내부 리소스 로딩');
+            //             break;
+            //         case 'materials' :
+            //             console.log('TODO : materials 내부 리소스 로딩');
+            //             break;
+            //         case 'samplers' :
+            //             console.log('TODO : samplers 내부 리소스 로딩');
+            //             break;
+            //         case 'textures' :
+            //             console.log('TODO : textures 내부 리소스 로딩');
+            //             break;
+            //         case 'cameras' :
+            //             console.log('TODO : images 내부 리소스 로딩');
+            //             break;
+            //         case 'animations' :
+            //             console.log('TODO : images 내부 리소스 로딩');
+            //             break;
+            //         default :
+            //             console.log(k, '고려안한거임');
+            //             break;
+            //     }
+            // }
             getBufferResources(redGLTFLoader, json, callback);
         }
         parseCameras = function (redGLTFLoader, json) {
@@ -439,8 +456,8 @@ var RedGLTFLoader;
         parseScene = function (redGLTFLoader, json) {
             console.log('parseScene 시작')
             console.log(json)
-            json['scenes'][0]['nodes'].forEach(function (nodeIndex, index) {
-                console.log('노드를 찾음', nodeIndex)
+            json['scenes'][0]['nodes'].forEach(function (nodeIndex) {
+                // console.log('노드를 찾음', nodeIndex)
                 parseNode(redGLTFLoader, json, nodeIndex, json['nodes'][nodeIndex], redGLTFLoader['resultMesh'])
             })
         }
@@ -456,7 +473,7 @@ var RedGLTFLoader;
                     tMatrix = info['matrix']
                     // console.log('~~~', info, tMatrix)
                     // mat4.getRotation(tQuaternion, tMatrix)
-                    if (tQuaternion[3] < 0) console.log('tQuaternion', tQuaternion)
+                    // if (tQuaternion[3] < 0) console.log('tQuaternion', tQuaternion)
                     // RedGLUtil.quaternionToRotationMat4(tQuaternion, rotationMTX)
                     RedGLUtil.mat4ToEuler(tMatrix, tRotation)
                     target.rotationX = -(tRotation[0] * 180 / Math.PI)
@@ -602,7 +619,7 @@ var RedGLTFLoader;
                         parseNode(redGLTFLoader, json, index, json['nodes'][index], tGroup)
                     })
                 }
-                if ('skin' in info) parseSkin(redGLTFLoader, json, info, tGroup)
+                if ('skin' in info) parseSkin(redGLTFLoader, json, json['skins'][info['skin']], tGroup)
             }
         }
         var parseSparse = function (redGLTFLoader, key, tAccessors, json, vertices, uvs, uvs1, normals, jointWeights, joints) {
@@ -1199,7 +1216,7 @@ var RedGLTFLoader;
                     ) : null
                 )
                 if (!tMaterial) {
-                    RedGLUtil.throwFunc('재질을 파싱할수없는경우 ',v)
+                    RedGLUtil.throwFunc('재질을 파싱할수없는경우 ', v)
                     // tMaterial = RedColorPhongMaterial(redGLTFLoader['redGL'], RedGLUtil.rgb2hex(parseInt(Math.random() * 255), parseInt(Math.random() * 255), parseInt(Math.random() * 255)))
                 }
                 // console.log('tMaterial', tMaterial)

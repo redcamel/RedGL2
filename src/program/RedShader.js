@@ -177,7 +177,7 @@ var RedShader;
 			// console.log(source)
 			// 메인함수 및 변수 처리
 			parseData['etc'] = source + '\n';
-			mergeStr = '';
+			mergeStr = '#extension GL_OES_standard_derivatives : enable\n';
 			if ( parseData['precision'] ) mergeStr += parseData['precision']['source'] + '\n//const\n';
 			if ( parseData['const'] ) mergeStr += parseData['const']['source'] + '\n//attribute\n';
 			if ( parseData['attribute'] ) mergeStr += parseData['attribute']['source'] + '\n//uniform\n';

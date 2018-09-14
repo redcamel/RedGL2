@@ -149,120 +149,18 @@
 <body>
 <canvas id="test" style="border: none;background:red"></canvas>
 <script>
-	document.getElementById('test')
-	RedGL(document.getElementById('test'), function (v) {
-		console.log(v)
-		var tGL;
-		var tWorld, tScene3D, tCamera
-		var tRenderer;
-		var self;
-		self = this
-		tGL = this.gl;
-		this.world = tWorld = RedWorld();
-		tScene3D = RedScene(this);
-		// tScene3D['useFog'] = true
-		tCamera = RedObitController(this);
-		tCamera.distance = 80
-		tCamera.tilt = -45
-		tCamera.pan = 90
-//		tCamera.distance = 150
-		tCamera.speedDistance = 50
-		tRenderer = RedRenderer();
-		tWorld.addView(RedView('test', this, tScene3D, tCamera));
-		RedView('test').setSize('100%', '100%')
-		RedView('test').setLocation('0%', '0%')
-		this.renderScale = 1
-		var testDLight;
-		testDLight = RedDirectionalLight(this)
-		testDLight.x = 10
-		testDLight.y = 20
-		testDLight.z = 20
-        testDLight.intensity = 1
-		tScene3D.addLight(testDLight)
-		// testDLight = RedDirectionalLight(this)
-		// testDLight.x = 0
-		// testDLight.y = 300
-		// testDLight.z = -200
-        // testDLight.intensity = 0.9
-		// tScene3D.addLight(testDLight)
-		tRenderer.renderDebuger.visible = true
-		tScene3D.skyBox =
-			RedSkyBox(this, [
-				'../asset/cubemap/SwedishRoyalCastle/px.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/nx.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/py.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/ny.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/pz.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/nz.jpg'
-			]);
-		var t0, t1, t2
-//		t0 = RedGLTFLoader(self, '../asset/glTF/Box/glTF/', 'Box.gltf', function (v) {
-//			console.log('호잇!', v)
-//			tScene3D.addChild(v['resultMesh'])
-//			v['resultMesh'].z = 10
-//		})
-//		 RedGLTFLoader(self, '../asset/glTF/SciFiHelmet/glTF/', 'SciFiHelmet.gltf', function (v) {
-//			console.log('호잇!', v)
-//			tScene3D.addChild(t1 =v['resultMesh'])
-//			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 10
-//			 v['resultMesh'].x = -70
-//			v['resultMesh'].y = 10
-//		})
-		RedGLTFLoader(self, '../asset/glTF/Sponza/glTF/', 'Sponza.gltf', function (v) {
-			console.log('호잇!', v)
-			tScene3D.addChild(v['resultMesh'])
-			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 40
-		})
-//		RedGLTFLoader(self, '../asset/glTF/Suzanne/glTF/', 'Suzanne.gltf', function (v) {
-//			console.log('호잇!', v)
-//			tScene3D.addChild(t2 = v['resultMesh'])
-//			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 10
-//
-//			v['resultMesh'].z = -30
-//			v['resultMesh'].y = 10
-//		})
-//		RedGLTFLoader(self, '../asset/glTF/FlightHelmet/glTF/', 'FlightHelmet.gltf', function (v) {
-//			console.log('호잇!', v)
-//			tScene3D.addChild(t2 = v['resultMesh'])
-//			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 40
-//
-//			v['resultMesh'].z = 30
-//			v['resultMesh'].y = 20
-//
-//		})
-//		RedGLTFLoader(self, '../asset/glTF/Lantern/glTF/', 'Lantern.gltf', function (v) {
-//			console.log('호잇!', v)
-//			tScene3D.addChild(t2 = v['resultMesh'])
-//			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 1
-//			v['resultMesh'].z = 10
-//		})
-		RedGLTFLoader(self, '../asset/glTF/busterDrone/', 'busterDrone.gltf', function (v) {
-			console.log('호잇!', v)
-			tScene3D.addChild(t2 = v['resultMesh'])
-			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 30
-			v['resultMesh'].y = 30
-		})
-//		RedGLTFLoader(self, '../asset/glTF/BarramundiFish/glTF/', 'BarramundiFish.gltf', function (v) {
-//			console.log('호잇!', v)
-//			tScene3D.addChild(t2 = v['resultMesh'])
-//			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 40
-//			v['resultMesh'].z = 30
-//			v['resultMesh'].y = 20
-//
-//		})
-		tRenderer.start(this, function (time) {
-			if ( t1 ) {
-//				t1.rotationX += 1
-				t1.rotationY += 1
-//				t1.rotationZ += 1
-			}
-			if ( t2 ) {
-//				t2.rotationX += 1
-				t2.rotationY += 1
-//				t2.rotationZ += 1
-			}
-		})
-	})
+    document.getElementById('test')
+    RedGL(document.getElementById('test'), function (v) {
+        console.log(v)
+        var tGL;
+        var tWorld, tScene3D, tCamera
+        var tRenderer;
+        var self;
+        self = this
+        tGL = this.gl;
+        // RedColorMaterial(this)
+        RedColorPhongTextureMaterial(this)
+    }, null)
 </script>
 </body>
 

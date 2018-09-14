@@ -178,10 +178,10 @@
 
 //		testDLight.color = '#ffff00'
         testDLight = RedDirectionalLight(this)
-        testDLight.x = 350
-        testDLight.y = 350
+        testDLight.x = 0
+        testDLight.y = 50
         testDLight.z = 350
-		tScene3D.addLight(testDLight)
+        tScene3D.addLight(testDLight)
         // var a = RedAmbientLight(this)
         // tScene3D.addLight(a)
 
@@ -189,39 +189,42 @@
         tRenderer.renderDebuger.visible = true
         tScene3D.skyBox =
             RedSkyBox(this, [
-                '../asset/cubemap/posx.png',
-                '../asset/cubemap/negx.png',
-                '../asset/cubemap/posy.png',
-                '../asset/cubemap/negy.png',
-                '../asset/cubemap/posz.png',
-                '../asset/cubemap/negz.png'
+                '../asset/cubemap/SwedishRoyalCastle/px.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/nx.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/py.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/ny.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
             ]);
-        RedGLTFLoader(self, '../asset/glTF/basic/', 'NormalTangentTest.gltf', function (v) {
+        // RedGLTFLoader(self, '../asset/glTF/basic/', 'NormalTangentTest.gltf', function (v) {
+        RedGLTFLoader(self, '../asset/glTF/basic/', 'NormalTangentMirrorTest.gltf', function (v) {
+        // RedGLTFLoader(self, '../asset/glTF/basic/', 'TextureCoordinateTest.gltf', function (v) {
+
             console.log('호잇!', v)
             tScene3D.addChild(v['resultMesh'])
             v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 4
             // v['resultMesh'].rotationX = 90
         }, RedBitmapCubeTexture(self, [
-            // '../asset/cubemap/SwedishRoyalCastle/px.jpg',
-            // '../asset/cubemap/SwedishRoyalCastle/nx.jpg',
-            // '../asset/cubemap/SwedishRoyalCastle/py.jpg',
-            // '../asset/cubemap/SwedishRoyalCastle/ny.jpg',
-            // '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
-            // '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
-            '../asset/cubemap/posx.png',
-            '../asset/cubemap/negx.png',
-            '../asset/cubemap/posy.png',
-            '../asset/cubemap/negy.png',
-            '../asset/cubemap/posz.png',
-            '../asset/cubemap/negz.png'
+            '../asset/cubemap/SwedishRoyalCastle/px.jpg',
+            '../asset/cubemap/SwedishRoyalCastle/nx.jpg',
+            '../asset/cubemap/SwedishRoyalCastle/py.jpg',
+            '../asset/cubemap/SwedishRoyalCastle/ny.jpg',
+            '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
+            '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
+            // '../asset/cubemap/posx.png',
+            // '../asset/cubemap/negx.png',
+            // '../asset/cubemap/posy.png',
+            // '../asset/cubemap/negy.png',
+            // '../asset/cubemap/posz.png',
+            // '../asset/cubemap/negz.png'
         ]))
 
         tRenderer.start(this, function (time) {
-            // console.log(    b.focusLength)
+                // console.log(    b.focusLength)
             }
         )
 
-    }, null)
+    })
 </script>
 </body>
 

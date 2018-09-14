@@ -7,10 +7,10 @@ var RedStandardMaterial;
 	var checked;
 	vSource = function () {
 		/* @preserve
-		 //#define#displacementTexture# uniform sampler2D u_displacementTexture;
-		 //#define#displacementTexture# uniform float u_displacementPower;
-	     //#define#displacementTexture# uniform float u_displacementFlowSpeedX;
-		 //#define#displacementTexture# uniform float u_displacementFlowSpeedY;
+		 //#REDGL_DEFINE#displacementTexture# uniform sampler2D u_displacementTexture;
+		 //#REDGL_DEFINE#displacementTexture# uniform float u_displacementPower;
+	     //#REDGL_DEFINE#displacementTexture# uniform float u_displacementFlowSpeedX;
+		 //#REDGL_DEFINE#displacementTexture# uniform float u_displacementFlowSpeedY;
 
 		 varying vec4 vVertexPositionEye4;
 
@@ -19,17 +19,17 @@ var RedStandardMaterial;
 			 vVertexNormal = vec3(uNMatrix * vec4(aVertexNormal,1.0));
 			 vVertexPositionEye4 = uMMatrix * vec4(aVertexPosition, 1.0);
 
-			 //#define#displacementTexture# vVertexPositionEye4.xyz += normalize(vVertexNormal) * texture2D(u_displacementTexture, vTexcoord + vec2(
-			 //#define#displacementTexture#    u_displacementFlowSpeedX * (uTime/1000.0),
-			 //#define#displacementTexture#    u_displacementFlowSpeedY * (uTime/1000.0)
-		     //#define#displacementTexture# )).x * u_displacementPower ;
+			 //#REDGL_DEFINE#displacementTexture# vVertexPositionEye4.xyz += normalize(vVertexNormal) * texture2D(u_displacementTexture, vTexcoord + vec2(
+			 //#REDGL_DEFINE#displacementTexture#    u_displacementFlowSpeedX * (uTime/1000.0),
+			 //#REDGL_DEFINE#displacementTexture#    u_displacementFlowSpeedY * (uTime/1000.0)
+		     //#REDGL_DEFINE#displacementTexture# )).x * u_displacementPower ;
 
 			 gl_PointSize = uPointSize;
 			 gl_Position = uPMatrix * uCameraMatrix * vVertexPositionEye4;
 
 
-		     //#define#directionalShadow#true# vResolution = uResolution;
-			 //#define#directionalShadow#true# vShadowPos = cTexUnitConverter  *  uDirectionalShadowLightMatrix * uMMatrix * vec4(aVertexPosition, 1.0);
+		     //#REDGL_DEFINE#directionalShadow#true# vResolution = uResolution;
+			 //#REDGL_DEFINE#directionalShadow#true# vShadowPos = cTexUnitConverter  *  uDirectionalShadowLightMatrix * uMMatrix * vec4(aVertexPosition, 1.0);
 
 
 		 }
@@ -40,11 +40,11 @@ var RedStandardMaterial;
 		 precision mediump float;
 		 uniform sampler2D u_diffuseTexture;
 
-		 //#define#normalTexture# uniform sampler2D u_normalTexture;
-		 //#define#specularTexture# uniform sampler2D u_specularTexture;
-		 //#define#emissiveTexture# uniform sampler2D u_emissiveTexture;
+		 //#REDGL_DEFINE#normalTexture# uniform sampler2D u_normalTexture;
+		 //#REDGL_DEFINE#specularTexture# uniform sampler2D u_specularTexture;
+		 //#REDGL_DEFINE#emissiveTexture# uniform sampler2D u_emissiveTexture;
 
-		 //#define#normalTexture# uniform float u_normalPower;
+		 //#REDGL_DEFINE#normalTexture# uniform float u_normalPower;
 		 uniform float u_shininess;
 		 uniform float u_specularPower;
 		 uniform float u_alpha;
@@ -94,38 +94,38 @@ var RedStandardMaterial;
 			 texelColor.rgb *= texelColor.a;
 			 if(texelColor.a ==0.0) discard;
 
-			//#define#emissiveTexture# emissiveColor = texture2D(u_emissiveTexture, vTexcoord);
-			//#define#emissiveTexture# emissiveColor.rgb *= texelColor.a;
+			//#REDGL_DEFINE#emissiveTexture# emissiveColor = texture2D(u_emissiveTexture, vTexcoord);
+			//#REDGL_DEFINE#emissiveTexture# emissiveColor.rgb *= texelColor.a;
 			///////////////////////////////////////////////////////////////////////////////////////
 
 
-			//#define#directionalShadow#true#	vec3 fragmentDepth = vShadowPos.xyz;
-	        //#define#directionalShadow#true#    fragmentDepth.z -= cShadowAcneRemover;
-			//#define#directionalShadow#true#	float amountInLight = 0.0;
-			//#define#directionalShadow#true#	for (int x = -1; x <= 1; x++) {
-			//#define#directionalShadow#true#	    for (int y = -1; y <= 1; y++) {
-			//#define#directionalShadow#true#	        vec2 tUV = fragmentDepth.xy + vec2(float(x)/vResolution.x, float(y)/vResolution.y) ;
-	        //#define#directionalShadow#true#            if(tUV.x<0.0) continue;
-	        //#define#directionalShadow#true#            if(tUV.x>1.0) continue;
-	        //#define#directionalShadow#true#            if(tUV.y<0.0) continue;
-	        //#define#directionalShadow#true#            if(tUV.y>1.0) continue;
-			//#define#directionalShadow#true#	        float texelDepth = decodeFloat(texture2D(uDirectionalShadowTexture,tUV));
-			//#define#directionalShadow#true#	        if (fragmentDepth.z < texelDepth ) amountInLight += 0.5;
-			//#define#directionalShadow#true#	       // texelColor =  texture2D(uDirectionalShadowTexture,tUV);
-			//#define#directionalShadow#true#	    }
-			//#define#directionalShadow#true#	}
-			//#define#directionalShadow#true#	amountInLight /= 9.0;
-			//#define#directionalShadow#true#	texelColor.rgb *= (1.0-amountInLight);
+			//#REDGL_DEFINE#directionalShadow#true#	vec3 fragmentDepth = vShadowPos.xyz;
+	        //#REDGL_DEFINE#directionalShadow#true#    fragmentDepth.z -= cShadowAcneRemover;
+			//#REDGL_DEFINE#directionalShadow#true#	float amountInLight = 0.0;
+			//#REDGL_DEFINE#directionalShadow#true#	for (int x = -1; x <= 1; x++) {
+			//#REDGL_DEFINE#directionalShadow#true#	    for (int y = -1; y <= 1; y++) {
+			//#REDGL_DEFINE#directionalShadow#true#	        vec2 tUV = fragmentDepth.xy + vec2(float(x)/vResolution.x, float(y)/vResolution.y) ;
+	        //#REDGL_DEFINE#directionalShadow#true#            if(tUV.x<0.0) continue;
+	        //#REDGL_DEFINE#directionalShadow#true#            if(tUV.x>1.0) continue;
+	        //#REDGL_DEFINE#directionalShadow#true#            if(tUV.y<0.0) continue;
+	        //#REDGL_DEFINE#directionalShadow#true#            if(tUV.y>1.0) continue;
+			//#REDGL_DEFINE#directionalShadow#true#	        float texelDepth = decodeFloat(texture2D(uDirectionalShadowTexture,tUV));
+			//#REDGL_DEFINE#directionalShadow#true#	        if (fragmentDepth.z < texelDepth ) amountInLight += 0.5;
+			//#REDGL_DEFINE#directionalShadow#true#	       // texelColor =  texture2D(uDirectionalShadowTexture,tUV);
+			//#REDGL_DEFINE#directionalShadow#true#	    }
+			//#REDGL_DEFINE#directionalShadow#true#	}
+			//#REDGL_DEFINE#directionalShadow#true#	amountInLight /= 9.0;
+			//#REDGL_DEFINE#directionalShadow#true#	texelColor.rgb *= (1.0-amountInLight);
 
 			///////////////////////////////////////////////////////////////////////////////////////
 
 			 N = normalize(vVertexNormal);
-			 //#define#normalTexture# vec4 normalColor = texture2D(u_normalTexture, vTexcoord);
-			 //#define#normalTexture# if(normalColor.a != 0.0) N = normalize(2.0 * (N + normalColor.rgb * u_normalPower  - 0.5));
+			 //#REDGL_DEFINE#normalTexture# vec4 normalColor = texture2D(u_normalTexture, vTexcoord);
+			 //#REDGL_DEFINE#normalTexture# if(normalColor.a != 0.0) N = normalize(2.0 * (N + normalColor.rgb * u_normalPower  - 0.5));
 
 			 specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);
 			 specularTextureValue = 1.0;
-			 //#define#specularTexture# specularTextureValue = texture2D(u_specularTexture, vTexcoord).r;
+			 //#REDGL_DEFINE#specularTexture# specularTextureValue = texture2D(u_specularTexture, vTexcoord).r;
 
 
 			for(int i=0; i<cDIRETIONAL_MAX; i++){
@@ -156,12 +156,12 @@ var RedStandardMaterial;
 			 }
 
 			 finalColor = la * uAmbientIntensity + ld + ls;
-			  //#define#emissiveTexture# finalColor.rgb += emissiveColor.rgb;
+			  //#REDGL_DEFINE#emissiveTexture# finalColor.rgb += emissiveColor.rgb;
 			 finalColor.rgb *= texelColor.a;
 			 finalColor.a = texelColor.a * u_alpha;
 
-			 //#define#fog#false# gl_FragColor = finalColor;
-			 //#define#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
+			 //#REDGL_DEFINE#fog#false# gl_FragColor = finalColor;
+			 //#REDGL_DEFINE#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
 		 }
 		 */
 	};

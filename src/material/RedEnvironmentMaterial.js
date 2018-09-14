@@ -8,20 +8,20 @@ var RedEnvironmentMaterial;
 	vSource = function () {
 		/* @preserve
 		 varying vec4 vVertexPositionEye4;
-		 //#define#displacementTexture# uniform sampler2D u_displacementTexture;
-		 //#define#displacementTexture# uniform float u_displacementPower;
-	     //#define#displacementTexture# uniform float u_displacementFlowSpeedX;
-		 //#define#displacementTexture# uniform float u_displacementFlowSpeedY;
+		 //#REDGL_DEFINE#displacementTexture# uniform sampler2D u_displacementTexture;
+		 //#REDGL_DEFINE#displacementTexture# uniform float u_displacementPower;
+	     //#REDGL_DEFINE#displacementTexture# uniform float u_displacementFlowSpeedX;
+		 //#REDGL_DEFINE#displacementTexture# uniform float u_displacementFlowSpeedY;
 
 		 void main(void) {
 			 vTexcoord = aTexcoord;
 			 vVertexNormal = (uNMatrix * vec4(aVertexNormal,1.0)).xyz;
 			 vVertexPositionEye4 = uMMatrix * vec4(aVertexPosition, 1.0);
 
-			 //#define#displacementTexture# vVertexPositionEye4.xyz += normalize(vVertexNormal) * texture2D(u_displacementTexture, vTexcoord + vec2(
-			 //#define#displacementTexture#    u_displacementFlowSpeedX * (uTime/1000.0),
-			 //#define#displacementTexture#    u_displacementFlowSpeedY * (uTime/1000.0)
-		     //#define#displacementTexture# )).x * u_displacementPower ;
+			 //#REDGL_DEFINE#displacementTexture# vVertexPositionEye4.xyz += normalize(vVertexNormal) * texture2D(u_displacementTexture, vTexcoord + vec2(
+			 //#REDGL_DEFINE#displacementTexture#    u_displacementFlowSpeedX * (uTime/1000.0),
+			 //#REDGL_DEFINE#displacementTexture#    u_displacementFlowSpeedY * (uTime/1000.0)
+		     //#REDGL_DEFINE#displacementTexture# )).x * u_displacementPower ;
 
 
 
@@ -33,13 +33,13 @@ var RedEnvironmentMaterial;
 	fSource = function () {
 		/* @preserve
 		 precision mediump float;
-		 //#define#diffuseTexture# uniform sampler2D u_diffuseTexture;
-		 //#define#normalTexture# uniform sampler2D u_normalTexture;
-		 //#define#specularTexture# uniform sampler2D u_specularTexture;
+		 //#REDGL_DEFINE#diffuseTexture# uniform sampler2D u_diffuseTexture;
+		 //#REDGL_DEFINE#normalTexture# uniform sampler2D u_normalTexture;
+		 //#REDGL_DEFINE#specularTexture# uniform sampler2D u_specularTexture;
 		 uniform samplerCube u_environmentTexture;
-		 //#define#emissiveTexture# uniform sampler2D u_emissiveTexture;
+		 //#REDGL_DEFINE#emissiveTexture# uniform sampler2D u_emissiveTexture;
 
-         //#define#normalTexture# uniform float u_normalPower;
+         //#REDGL_DEFINE#normalTexture# uniform float u_normalPower;
 		 uniform float u_shininess;
 		 uniform float u_specularPower;
 		 uniform float u_reflectionPower;
@@ -78,16 +78,16 @@ var RedEnvironmentMaterial;
 			 ls = vec4(0.0, 0.0, 0.0, 1.0);
 
 			 texelColor = vec4(0.0,0.0,0.0,0.0);
-			 //#define#diffuseTexture# texelColor = texture2D(u_diffuseTexture, vTexcoord);
-			 //#define#diffuseTexture# texelColor.rgb *= texelColor.a;
-			 //#define#diffuseTexture# if(texelColor.a ==0.0) discard;
+			 //#REDGL_DEFINE#diffuseTexture# texelColor = texture2D(u_diffuseTexture, vTexcoord);
+			 //#REDGL_DEFINE#diffuseTexture# texelColor.rgb *= texelColor.a;
+			 //#REDGL_DEFINE#diffuseTexture# if(texelColor.a ==0.0) discard;
 
-			 //#define#emissiveTexture# emissiveColor = texture2D(u_emissiveTexture, vTexcoord);
-			 //#define#emissiveTexture# emissiveColor.rgb *= texelColor.a;
+			 //#REDGL_DEFINE#emissiveTexture# emissiveColor = texture2D(u_emissiveTexture, vTexcoord);
+			 //#REDGL_DEFINE#emissiveTexture# emissiveColor.rgb *= texelColor.a;
 
 			 N = normalize(vVertexNormal);
-			 //#define#normalTexture# vec4 normalColor = texture2D(u_normalTexture, vTexcoord);
-			 //#define#normalTexture# if(normalColor.a != 0.0) N = normalize(2.0 * (N + normalColor.rgb * u_normalPower  - 0.5));
+			 //#REDGL_DEFINE#normalTexture# vec4 normalColor = texture2D(u_normalTexture, vTexcoord);
+			 //#REDGL_DEFINE#normalTexture# if(normalColor.a != 0.0) N = normalize(2.0 * (N + normalColor.rgb * u_normalPower  - 0.5));
 
              vec3 R = reflect( vVertexPositionEye4.xyz-uCameraPosition, N);
 			 reflectionColor = textureCube(u_environmentTexture, R);
@@ -95,7 +95,7 @@ var RedEnvironmentMaterial;
 
 			 specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);
 			 specularTextureValue = 1.0;
-			 //#define#specularTexture#  specularTextureValue = texture2D(u_specularTexture, vTexcoord).r;
+			 //#REDGL_DEFINE#specularTexture#  specularTextureValue = texture2D(u_specularTexture, vTexcoord).r;
 
 			 for(int i=0; i<cDIRETIONAL_MAX; i++){
 				 if(i == uDirectionalLightNum) break;
@@ -125,12 +125,12 @@ var RedEnvironmentMaterial;
 			 }
 
 			 finalColor = la * uAmbientIntensity + ld + ls;
-			 //#define#emissiveTexture# finalColor.rgb += emissiveColor.rgb;
+			 //#REDGL_DEFINE#emissiveTexture# finalColor.rgb += emissiveColor.rgb;
 			 finalColor.rgb *= texelColor.a;
 			 finalColor.a = texelColor.a * u_alpha;
 
-			 //#define#fog#false# gl_FragColor = finalColor;
-			 //#define#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
+			 //#REDGL_DEFINE#fog#false# gl_FragColor = finalColor;
+			 //#REDGL_DEFINE#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
 		 }
 		 */
 	};

@@ -7,10 +7,10 @@ var RedColorPhongTextureMaterial;
 	var checked;
 	vSource = function () {
 		/* @preserve
-		 //#define#displacementTexture# uniform sampler2D u_displacementTexture;
-		 //#define#displacementTexture# uniform float u_displacementPower;
-	     //#define#displacementTexture# uniform float u_displacementFlowSpeedX;
-		 //#define#displacementTexture# uniform float u_displacementFlowSpeedY;
+		 //#REDGL_DEFINE#displacementTexture# uniform sampler2D u_displacementTexture;
+		 //#REDGL_DEFINE#displacementTexture# uniform float u_displacementPower;
+	     //#REDGL_DEFINE#displacementTexture# uniform float u_displacementFlowSpeedX;
+		 //#REDGL_DEFINE#displacementTexture# uniform float u_displacementFlowSpeedY;
 
 		 varying vec4 vVertexPositionEye4;
 		 void main(void) {
@@ -18,10 +18,10 @@ var RedColorPhongTextureMaterial;
 			 vVertexNormal = vec3(uNMatrix * vec4(aVertexNormal,1.0));
 			 vVertexPositionEye4 = uMMatrix * vec4(aVertexPosition, 1.0);
 
-		     //#define#displacementTexture# vVertexPositionEye4.xyz += normalize(vVertexNormal) * texture2D(u_displacementTexture, vTexcoord + vec2(
-			 //#define#displacementTexture#    u_displacementFlowSpeedX * (uTime/1000.0),
-			 //#define#displacementTexture#    u_displacementFlowSpeedY * (uTime/1000.0)
-		     //#define#displacementTexture# )).x * u_displacementPower ;
+		     //#REDGL_DEFINE#displacementTexture# vVertexPositionEye4.xyz += normalize(vVertexNormal) * texture2D(u_displacementTexture, vTexcoord + vec2(
+			 //#REDGL_DEFINE#displacementTexture#    u_displacementFlowSpeedX * (uTime/1000.0),
+			 //#REDGL_DEFINE#displacementTexture#    u_displacementFlowSpeedY * (uTime/1000.0)
+		     //#REDGL_DEFINE#displacementTexture# )).x * u_displacementPower ;
 
 			 gl_PointSize = uPointSize;
 			 gl_Position = uPMatrix * uCameraMatrix* vVertexPositionEye4;
@@ -31,10 +31,10 @@ var RedColorPhongTextureMaterial;
 	fSource = function () {
 		/* @preserve
 		 precision mediump float;
-		 //#define#normalTexture# uniform sampler2D u_normalTexture;
-		 //#define#specularTexture# uniform sampler2D u_specularTexture;
+		 //#REDGL_DEFINE#normalTexture# uniform sampler2D u_normalTexture;
+		 //#REDGL_DEFINE#specularTexture# uniform sampler2D u_specularTexture;
 
-		 //#define#normalTexture# uniform float u_normalPower;
+		 //#REDGL_DEFINE#normalTexture# uniform float u_normalPower;
 		 uniform float u_shininess;
 		 uniform float u_specularPower;
 		 uniform vec4 u_color;
@@ -73,12 +73,12 @@ var RedColorPhongTextureMaterial;
 			 // texelColor.rgb *= texelColor.a;
 
 			 N = normalize(vVertexNormal);
-			 //#define#normalTexture# vec4 normalColor = texture2D(u_normalTexture, vTexcoord);
-			 //#define#normalTexture# if(normalColor.a != 0.0) N = normalize(2.0 * (N + normalColor.rgb * u_normalPower  - 0.5));
+			 //#REDGL_DEFINE#normalTexture# vec4 normalColor = texture2D(u_normalTexture, vTexcoord);
+			 //#REDGL_DEFINE#normalTexture# if(normalColor.a != 0.0) N = normalize(2.0 * (N + normalColor.rgb * u_normalPower  - 0.5));
 
 			 specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);
 			 float specularTextureValue = 1.0;
-			 //#define#specularTexture# specularTextureValue = texture2D(u_specularTexture, vTexcoord).r;
+			 //#REDGL_DEFINE#specularTexture# specularTextureValue = texture2D(u_specularTexture, vTexcoord).r;
 
 			 for(int i=0; i<cDIRETIONAL_MAX; i++){
 				 if(i == uDirectionalLightNum) break;
@@ -111,8 +111,8 @@ var RedColorPhongTextureMaterial;
 			 finalColor.rgb *= texelColor.a;
 			 finalColor.a = texelColor.a;
 
-			 //#define#fog#false# gl_FragColor = finalColor;
-			 //#define#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
+			 //#REDGL_DEFINE#fog#false# gl_FragColor = finalColor;
+			 //#REDGL_DEFINE#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
 		 }
 		 */
 	};

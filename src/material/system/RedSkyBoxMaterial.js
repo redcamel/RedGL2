@@ -28,8 +28,8 @@ var RedSkyBoxMaterial;
 		 }
 		 void main(void) {
 			 vec4 finalColor = textureCube(u_skyBoxTexture, vReflectionCubeCoord);
-			 //#define#fog#false# gl_FragColor = finalColor;
-			 //#define#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
+			 //#REDGL_DEFINE#fog#false# gl_FragColor = finalColor;
+			 //#REDGL_DEFINE#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
 		 }
 		 */
 	};

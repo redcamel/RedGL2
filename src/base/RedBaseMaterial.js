@@ -1,8 +1,8 @@
 "use strict";
 var RedBaseMaterial;
 (function () {
-	/**DOC:
-	 {
+    /**DOC:
+     {
 		 constructorYn : true,
 		 title :`RedBaseMaterial`,
 		 description : `
@@ -10,11 +10,12 @@ var RedBaseMaterial;
 		 `,
 		 return : 'RedBaseMaterial instance'
 	 }
-	 :DOC*/
-	RedBaseMaterial = function () {};
-	RedBaseMaterial.prototype = {
-		/**DOC:
-		 {
+     :DOC*/
+    RedBaseMaterial = function () {
+    };
+    RedBaseMaterial.prototype = {
+        /**DOC:
+         {
 			 code : 'METHOD',
 			 title :`makeProgramList`,
 			 description : `
@@ -47,119 +48,102 @@ var RedBaseMaterial;
 			 },
 			 return : 'void'
 		 }
-		 :DOC*/
-		makeProgramList: (function () {
-			//TODO: 이걸좀 정리해야하는데..
-			var makeList;
-			var makePrepareProgram;
-			var makeStore,makeStore2
-			var systemKeyList = ['fog', 'sprite3D', 'skin', 'directionalShadow']
-			systemKeyList.sort()
-			makeStore = function (programList, programName, redGL, vSource, fSource, list) {
-				if(!programList['basic'][programName]) programList['basic'][programName] = RedProgram['makeProgram'](redGL, programName, vSource, fSource);
-				list.forEach(function (key, index) {
-					// console.log(key)
-					var tProgramName = list.join('_')
-					programList[tProgramName] = {}
-					if(!programList[tProgramName][programName]) programList[tProgramName][programName] = new makePrepareProgram(redGL, programName, vSource, fSource, list);
-					var newList = JSON.parse(JSON.stringify(list))
-					newList.splice(index, 1)
-					// console.log('newList', newList)
-					makeStore(programList, programName, redGL, vSource, fSource, newList)
-				})
-			}
-
-			makePrepareProgram = function (redGL, programName, vSource, fSource, targetKey) {
-				this['_prepareProgramYn'] = true;
-				this['key'] = programName + '_' + targetKey.join('_')
-				this['_makePrepareProgram'] = function () {
-					return RedProgram['makeProgram'](redGL, programName, vSource, fSource, targetKey)
-				}
-			}
-			makeStore2 = function (target, baseKey, redGL, programName, vSource, fSource, programOptionList) {
-				programOptionList = programOptionList.concat();
-				programOptionList.sort();
-				var i, tKey;
-				i = programOptionList.length;
-				while ( i-- ) {
-					tKey = programOptionList[i];
-					tKey = baseKey == '' ? tKey : (baseKey + '_' + tKey);
-					// 일반 프로그램생성
-					if ( !target['_programList']['basic'][programName + '_' + tKey] ) {
-						//TODO: 이걸 자동화하는데..... 렌더러에서 가장 쉽게 찾을수 있는 구조를 찾아야함.
-						// target['_programList']['basic'][programName + '_' + tKey] = RedProgram['makeProgram'](redGL, programName, vSource, fSource, tKey.split('_'));
-                        target['_programList']['basic'][programName + '_' + tKey] = new makePrepareProgram(redGL, programName, vSource, fSource, tKey.split('_'));
-						target['_programList']['directionalShadow'][programName + '_' + tKey] = new makePrepareProgram(redGL, programName, vSource, fSource, (tKey + '_directionalShadow').split('_'));
-
-						target['_programList']['directionalShadow_fog'][programName + '_' + tKey] = new makePrepareProgram(redGL, programName, vSource, fSource, (tKey + '_directionalShadow_fog').split('_'));
-						target['_programList']['directionalShadow_fog_skin'][programName + '_' + tKey] = new makePrepareProgram(redGL, programName, vSource, fSource, (tKey + '_directionalShadow_fog_skin').split('_'));
-						target['_programList']['directionalShadow_fog_skin_sprite3D'][programName + '_' + tKey] = new makePrepareProgram(redGL, programName, vSource, fSource, (tKey + '_directionalShadow_fog_skin_sprite3D').split('_'));
-						target['_programList']['directionalShadow_fog_sprite3D'][programName + '_' + tKey] = new makePrepareProgram(redGL, programName, vSource, fSource, (tKey + '_directionalShadow_fog_sprite3D').split('_'));
-
-						target['_programList']['directionalShadow_skin'][programName + '_' + tKey] = new makePrepareProgram(redGL, programName, vSource, fSource, (tKey + '_directionalShadow_skin').split('_'));
-						target['_programList']['directionalShadow_skin_sprite3D'][programName + '_' + tKey] = new makePrepareProgram(redGL, programName, vSource, fSource, (tKey + '_directionalShadow_skin_sprite3D').split('_'));
-						target['_programList']['directionalShadow_sprite3D'][programName + '_' + tKey] = new makePrepareProgram(redGL, programName, vSource, fSource, (tKey + '_directionalShadow_sprite3D').split('_'));
-
-						target['_programList']['fog'][programName + '_' + tKey] = new makePrepareProgram(redGL, programName, vSource, fSource, (tKey + '_fog').split('_'));
-						target['_programList']['fog_skin'][programName + '_' + tKey] = new makePrepareProgram(redGL, programName, vSource, fSource, (tKey + '_fog_skin').split('_'));
-						target['_programList']['fog_skin_sprite3D'][programName + '_' + tKey] = new makePrepareProgram(redGL, programName, vSource, fSource, (tKey + '_fog_skin_sprite3D').split('_'));
-						target['_programList']['fog_sprite3D'][programName + '_' + tKey] = new makePrepareProgram(redGL, programName, vSource, fSource, (tKey + '_fog_sprite3D').split('_'));
-
-						target['_programList']['skin'][programName + '_' + tKey] = new makePrepareProgram(redGL, programName, vSource, fSource, (tKey + '_skin').split('_'));
-						target['_programList']['skin_sprite3D'][programName + '_' + tKey] = new makePrepareProgram(redGL, programName, vSource, fSource, (tKey + '_skin_sprite3D').split('_'));
-						target['_programList']['sprite3D'][programName + '_' + tKey] = new makePrepareProgram(redGL, programName, vSource, fSource, (tKey + '_sprite3D').split('_'));
-						makeStore2(target, tKey, redGL, programName, vSource, fSource, (programOptionList.concat()).slice(i + 1));
-					}
-				}
-				// console.log(programOptionList)
-			};
-			return function (target, redGL, programName, vSource, fSource, programOptionList) {
-				if ( !programOptionList ) programOptionList = [];
-				if ( !redGL['_datas']['RedProgramGroup'] ) redGL['_datas']['RedProgramGroup'] = {};
-				if ( redGL['_datas']['RedProgramGroup'][programName] ) {
-					target['_programList'] = redGL['_datas']['RedProgramGroup'][programName];
-					console.log('캐싱프로그램그룹사용 :', programName);
-				}
-				else {
-					target['_programList'] = {
-						basic: {}
-					};
-					console.log('//////////////////////////////////////////////////////////////')
-					console.log(systemKeyList)
-					makeStore(target['_programList'], programName, redGL, vSource, fSource, systemKeyList)
-					console.log(target['_programList'])
-					console.log('//////////////////////////////////////////////////////////////')
-					makeStore2(target, '', redGL, programName, vSource, fSource, programOptionList);
-					// console.log(target['_programList'])
-					// 일반 프로그램생성
-					target['_programList']['basic'][programName] = RedProgram['makeProgram'](redGL, programName, vSource, fSource);
-					// 그룹데이터 캐싱
-					redGL['_datas']['RedProgramGroup'][programName] = target['_programList'];
-				}
-				target['program'] = target['_programList']['basic'][programName];
-			}
-		})(),
-		_searchProgram: (function () {
-			var i;
-			var tKey;
-			var t0;
-			return function (PROGRAM_NAME, keyList) {
-				t0 = [];
-				if ( keyList ) {
-					i = keyList.length;
-					while ( i-- ) if ( this[tKey = keyList[i]] ) t0.push(tKey)
-				}
-				// console.log(keyList)
-				if ( t0.length ) {
-					t0.sort();
-					t0 = PROGRAM_NAME + '_' + t0.join('_');
-				} else t0 = PROGRAM_NAME;
-				this['program'] = this['_programList']['basic'][t0];
-				// console.log('현재프로그램', this['program'])
-			}
-		})(),
-		/**DOC:
-		 {
+         :DOC*/
+        makeProgramList: (function () {
+            //TODO: 이걸좀 정리해야하는데..
+            var makePrepareProgram;
+            var makeSystemProgram, makeOptionProgram;
+            var systemKeyList = ['fog', 'sprite3D', 'skin', 'directionalShadow'];
+            systemKeyList.sort();
+            makeSystemProgram = function (programList, programName, redGL, vSource, fSource, systemOptionList, programOptionList) {
+                if (!programList['basic'][programName]) programList['basic'][programName] = new makePrepareProgram(redGL, programList, programName, vSource, fSource);
+                systemOptionList.forEach(function (key, index) {
+                    systemOptionList.sort();
+                    programOptionList.sort();
+                    // console.log(key)
+                    var tSpaceName = systemOptionList.join('_');
+                    if (!programList[tSpaceName]) programList[tSpaceName] = {};
+                    if (!programList[tSpaceName][programName]) programList[tSpaceName][programName] = new makePrepareProgram(redGL, programList, programName, vSource, fSource, systemOptionList);
+                    // else console.log('중복', programName)
+                    var newList = systemOptionList.concat();
+                    newList.splice(index, 1);
+                    // console.log('newList', newList)
+                    makeOptionProgram(programList, tSpaceName, programName, redGL, vSource, fSource, systemOptionList, programOptionList);
+                    makeSystemProgram(programList, programName, redGL, vSource, fSource, newList, programOptionList);
+                })
+            };
+            makeOptionProgram = function (programList, spaceName, programName, redGL, vSource, fSource, systemOptionList, programOptionList) {
+                programOptionList = programOptionList || [];
+                // console.log('rootName', rootName, list)
+                programOptionList.forEach(function (key, index) {
+                    // console.log(key)
+                    var tOptionName = programOptionList.join('_');
+                    // console.log('tOptionName', tOptionName)
+                    if (!programList['basic'][programName + '_' + tOptionName]) programList['basic'][programName + '_' + tOptionName] = new makePrepareProgram(redGL, programList, programName, vSource, fSource, null, programOptionList);
+                    if (!programList[spaceName][programName + '_' + tOptionName]) programList[spaceName][programName + '_' + tOptionName] = new makePrepareProgram(redGL, programList, programName, vSource, fSource, systemOptionList, programOptionList);
+                    // else console.log('중복', programName)
+                    var newList = programOptionList.concat();
+                    newList.splice(index, 1);
+                    // console.log('newList', newList)
+                    makeOptionProgram(programList, spaceName, programName, redGL, vSource, fSource, systemOptionList, newList);
+                })
+            };
+            makePrepareProgram = function (redGL, programList, programName, vSource, fSource, systemKey, optionKey) {
+                optionKey = optionKey || [];
+                this['optionList'] = optionKey.concat(systemKey || []);
+                this['systemKey'] = (systemKey || ['basic']).join('_');
+                this['searchKey'] = programName + (optionKey.length ? '_' + optionKey.join('_') : '');
+                this['key'] = programName + (this['optionList'].length ? '_' + this['optionList'].join('_') : '');
+                this['_prepareProgramYn'] = true;
+                this['_makePrepareProgram'] = function () {
+                    return programList[this['systemKey']][this['searchKey']] = RedProgram['makeProgram'](redGL, programName, vSource, fSource, this['optionList']);
+                }
+            };
+            return function (target, redGL, programName, vSource, fSource, programOptionList) {
+                if (!programOptionList) programOptionList = [];
+                if (!redGL['_datas']['RedProgramGroup']) redGL['_datas']['RedProgramGroup'] = {};
+                if (redGL['_datas']['RedProgramGroup'][programName]) {
+                    target['_programList'] = redGL['_datas']['RedProgramGroup'][programName];
+                    console.log('캐싱프로그램그룹사용 :', programName);
+                }
+                else {
+                    target['_programList'] = {
+                        basic: {}
+                    };
+                    // console.log('//////////////////////////////////////////////////////////////');
+                    // console.log(systemKeyList);
+                    makeSystemProgram(target['_programList'], programName, redGL, vSource, fSource, systemKeyList, programOptionList);
+                    // console.log(target['_programList']);
+                    // console.log('//////////////////////////////////////////////////////////////');
+                    // 일반 프로그램생성
+                    target['_programList']['basic'][programName] = RedProgram['makeProgram'](redGL, programName, vSource, fSource);
+                    // 그룹데이터 캐싱
+                    redGL['_datas']['RedProgramGroup'][programName] = target['_programList'];
+                }
+                target['program'] = target['_programList']['basic'][programName];
+            }
+        })(),
+        _searchProgram: (function () {
+            var i;
+            var tKey;
+            var t0;
+            return function (PROGRAM_NAME, keyList) {
+                t0 = [];
+                if (keyList) {
+                    i = keyList.length;
+                    while (i--) if (this[tKey = keyList[i]]) t0.push(tKey)
+                }
+                // console.log(keyList)
+                if (t0.length) {
+                    t0.sort();
+                    t0 = PROGRAM_NAME + '_' + t0.join('_');
+                } else t0 = PROGRAM_NAME;
+                this['program'] = this['_programList']['basic'][t0];
+                // console.log('현재프로그램', this['program'])
+            }
+        })(),
+        /**DOC:
+         {
 			 code : 'METHOD',
 			 title :`checkUniformAndProperty`,
 			 description : `
@@ -169,26 +153,25 @@ var RedBaseMaterial;
 			 `,
 			 return : 'void'
 		 }
-		 :DOC*/
-		checkUniformAndProperty: (function () {
-			var i;
-			var tUniformGroup, tUniformLocationInfo, tWebGLUniformLocation;
-			return function () {
-				if(this['program']['_prepareProgramYn']) {
+         :DOC*/
+        checkUniformAndProperty: (function () {
+            var i;
+            var tUniformGroup, tUniformLocationInfo, tWebGLUniformLocation;
+            return function () {
+                if (this['program']['_prepareProgramYn']) {
                     this['program'] = this['program']['_makePrepareProgram']()
-                    this['program']['_prepareProgramYn'] = false
-				}
-				tUniformGroup = this['program']['uniformLocation'];
-				i = tUniformGroup.length;
-				while ( i-- ) {
-					tUniformLocationInfo = tUniformGroup[i];
-					tWebGLUniformLocation = tUniformLocationInfo['location'];
-					if ( tWebGLUniformLocation && !(tUniformLocationInfo['materialPropertyName'] in this) ) {
-						RedGLUtil.throwFunc(this['program']['key'] + '- ', tUniformLocationInfo['materialPropertyName'], '속성이 정의 되지않았습니다.');
-					}
-				}
-			}
-		})()
-	};
-	Object.freeze(RedBaseMaterial);
+                }
+                tUniformGroup = this['program']['uniformLocation'];
+                i = tUniformGroup.length;
+                while (i--) {
+                    tUniformLocationInfo = tUniformGroup[i];
+                    tWebGLUniformLocation = tUniformLocationInfo['location'];
+                    if (tWebGLUniformLocation && !(tUniformLocationInfo['materialPropertyName'] in this)) {
+                        RedGLUtil.throwFunc(this['program']['key'] + '- ', tUniformLocationInfo['materialPropertyName'], '속성이 정의 되지않았습니다.');
+                    }
+                }
+            }
+        })()
+    };
+    Object.freeze(RedBaseMaterial);
 })();
