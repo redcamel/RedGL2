@@ -16,15 +16,10 @@ var RedGridMaterial;
 	fSource = function () {
 		/* @preserve
 		 precision mediump float;
-		 float fogFactor(float perspectiveFar, float density){
-			 float flog_cord = gl_FragCoord.z / gl_FragCoord.w / perspectiveFar;
-			 float fog = flog_cord * density;
-			 if(1.0 - fog < 0.0) discard;
-			 return clamp(1.0 - fog, 0.0,  1.0);
-		 }
-		 vec4 fog(float fogFactor, vec4 fogColor, vec4 currentColor) {
-			return mix(fogColor, currentColor, fogFactor);
-		 }
+		// 안개
+		//#REDGL_DEFINE#fragmentShareFunc#fogFactor#
+		//#REDGL_DEFINE#fragmentShareFunc#fog#
+
 		 varying vec4 vColor;
 		 void main(void) {
 			 vec4 finalColor = vColor;

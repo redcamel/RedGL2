@@ -14,14 +14,7 @@ var RedPBRMaterial;
             //#REDGL_DEFINE#displacementTexture# uniform float u_displacementFlowSpeedX;
             //#REDGL_DEFINE#displacementTexture# uniform float u_displacementFlowSpeedY;
 
-            //#REDGL_DEFINE#skin#true#  mat4 getSkinMatrix(){
-            //#REDGL_DEFINE#skin#true#      mat4 skinMat =
-            //#REDGL_DEFINE#skin#true#      aVertexWeight.x * uGlobalTransformOfNodeThatTheMeshIsAttachedTo * uJointMatrix[ int(aVertexJoint.x) ] * uInverseBindMatrixForJoint[int(aVertexJoint.x)]+
-            //#REDGL_DEFINE#skin#true#      aVertexWeight.y * uGlobalTransformOfNodeThatTheMeshIsAttachedTo * uJointMatrix[ int(aVertexJoint.y) ] * uInverseBindMatrixForJoint[int(aVertexJoint.y)]+
-            //#REDGL_DEFINE#skin#true#      aVertexWeight.z * uGlobalTransformOfNodeThatTheMeshIsAttachedTo * uJointMatrix[ int(aVertexJoint.z) ] * uInverseBindMatrixForJoint[int(aVertexJoint.z)]+
-            //#REDGL_DEFINE#skin#true#      aVertexWeight.w * uGlobalTransformOfNodeThatTheMeshIsAttachedTo * uJointMatrix[ int(aVertexJoint.w) ] * uInverseBindMatrixForJoint[int(aVertexJoint.w)];
-            //#REDGL_DEFINE#skin#true#      return skinMat;
-            //#REDGL_DEFINE#skin#true#  }
+            //#REDGL_DEFINE#vertexShareFunc#getSkinMatrix#
 
             void main(void) {
                 vTexcoord = aTexcoord;
@@ -37,16 +30,26 @@ var RedPBRMaterial;
                 //#REDGL_DEFINE#displacementTexture#    u_displacementFlowSpeedY * (uTime/1000.0)
                 //#REDGL_DEFINE#displacementTexture# )).x * u_displacementPower ;
 
-                //#REDGL_DEFINE#directionalShadow#true# vResolution = uResolution;
-                //#REDGL_DEFINE#directionalShadow#true# vShadowPos = cTexUnitConverter  *  uDirectionalShadowLightMatrix * vVertexPositionEye4;
+
                 gl_PointSize = uPointSize;
                 gl_Position = uPMatrix * uCameraMatrix * vVertexPositionEye4;
+
+                //#REDGL_DEFINE#directionalShadow#true# vResolution = uResolution;
+                //#REDGL_DEFINE#directionalShadow#true# vShadowPos = cTexUnitConverter  *  uDirectionalShadowLightMatrix * uMMatrix * vec4(aVertexPosition, 1.0);
             }
          */
     };
     fSource = function () {
         /* @preserve
          precision mediump float;
+		// 안개
+		//#REDGL_DEFINE#fragmentShareFunc#fogFactor#
+		//#REDGL_DEFINE#fragmentShareFunc#fog#
+
+		// 그림자
+		//#REDGL_DEFINE#fragmentShareFunc#decodeFloatShadow#
+		//#REDGL_DEFINE#fragmentShareFunc#getShadowColor#
+
          uniform vec4 uBaseColorFactor;
          uniform vec3 uEmissiveFactor;
          uniform float u_cutOff;
@@ -57,22 +60,16 @@ var RedPBRMaterial;
          //#REDGL_DEFINE#environmentTexture# uniform samplerCube u_environmentTexture;
          //#REDGL_DEFINE#emissiveTexture# uniform sampler2D u_emissiveTexture;
          //#REDGL_DEFINE#roughnessTexture# uniform sampler2D u_roughnessTexture;
-
-
-
-
          //#REDGL_DEFINE#normalTexture# uniform float u_normalPower;
+
+
          uniform float u_specularPower;
          uniform float u_metallicFactor;
          uniform float u_roughnessFactor;
-
          uniform float u_occlusionPower;
-
-
          uniform float u_alpha;
 
          varying vec4 vVertexPositionEye4;
-
 
         uniform int u_diffuseTexCoordIndex;
         uniform int u_occlusionTexCoordIndex;
@@ -80,15 +77,7 @@ var RedPBRMaterial;
         uniform int u_roughnessTexCoordIndex;
         uniform int u_normalTexCoordIndex;
 
-         float fogFactor(float perspectiveFar, float density){
-             float flog_cord = gl_FragCoord.z / gl_FragCoord.w / perspectiveFar;
-             float fog = flog_cord * density;
-             if(1.0 - fog < 0.0) discard;
-             return clamp(1.0 - fog, 0.0,  1.0);
-         }
-         vec4 fog(float fogFactor, vec4 fogColor, vec4 currentColor) {
-            return mix(fogColor, currentColor, fogFactor);
-         }
+
 
          vec4 la;
          vec4 ld;
@@ -107,16 +96,7 @@ var RedPBRMaterial;
          float specularTextureValue;
          float distanceLength;
          float attenuation;
-        float cShadowAcneRemover = 0.0007;
-         float decodeFloat (vec4 color) {
-            const vec4 cBitShift = vec4(
-                1.0 / (256.0 * 256.0 * 256.0),
-                1.0 / (256.0 * 256.0),
-                1.0 / 256.0,
-                1
-            );
-            return dot(color, cBitShift);
-        }
+
 
         vec3 perturbNormal2Arb( vec3 eye_pos, vec3 surf_norm, sampler2D normalMap, vec2 vUv ) {
             vec3 q0 = dFdx( eye_pos.xyz );
@@ -168,7 +148,6 @@ var RedPBRMaterial;
             texelColor.rgb *= texelColor.a;
 
 
-
             // 노멀값 계산
             N = normalize(vVertexNormal);
             //#REDGL_DEFINE#normalTexture# vec4 normalColor = texture2D(u_normalTexture, u_normalTexCoord);
@@ -206,30 +185,10 @@ var RedPBRMaterial;
             finalColor.a = texelColor.a * u_alpha ;
 
 
+            //#REDGL_DEFINE#directionalShadow#true# finalColor.rgb *= getShadowColor( vShadowPos, vResolution, uDirectionalShadowTexture);
 
 
-///////////////////////////////////////////////////////////////////////////////////////
 
-
-            //#REDGL_DEFINE#directionalShadow#true#	vec3 fragmentDepth = vShadowPos.xyz;
-            //#REDGL_DEFINE#directionalShadow#true#    fragmentDepth.z -= cShadowAcneRemover;
-            //#REDGL_DEFINE#directionalShadow#true#	float amountInLight = 0.0;
-            //#REDGL_DEFINE#directionalShadow#true#	for (int x = -1; x <= 1; x++) {
-            //#REDGL_DEFINE#directionalShadow#true#	    for (int y = -1; y <= 1; y++) {
-            //#REDGL_DEFINE#directionalShadow#true#	        vec2 tUV = fragmentDepth.xy + vec2(float(x)/vResolution.x, float(y)/vResolution.y) ;
-            //#REDGL_DEFINE#directionalShadow#true#            if(tUV.x<0.0) continue;
-            //#REDGL_DEFINE#directionalShadow#true#            if(tUV.x>1.0) continue;
-            //#REDGL_DEFINE#directionalShadow#true#            if(tUV.y<0.0) continue;
-            //#REDGL_DEFINE#directionalShadow#true#            if(tUV.y>1.0) continue;
-            //#REDGL_DEFINE#directionalShadow#true#	        float texelDepth = decodeFloat(texture2D(uDirectionalShadowTexture,tUV));
-            //#REDGL_DEFINE#directionalShadow#true#	        if (fragmentDepth.z < texelDepth ) amountInLight += 0.5;
-            //#REDGL_DEFINE#directionalShadow#true#	       // finalColor =  texture2D(uDirectionalShadowTexture,tUV);
-            //#REDGL_DEFINE#directionalShadow#true#	    }
-            //#REDGL_DEFINE#directionalShadow#true#	}
-            //#REDGL_DEFINE#directionalShadow#true#	amountInLight /= 9.0;
-            //#REDGL_DEFINE#directionalShadow#true#	finalColor.rgb *= (1.0-amountInLight);
-
-            ///////////////////////////////////////////////////////////////////////////////////////
                 // 이미시브합성
             //#REDGL_DEFINE#emissiveTexture# emissiveColor = texture2D(u_emissiveTexture, u_emissiveTexCoord);
             //#REDGL_DEFINE#emissiveTexture# emissiveColor.rgb *= emissiveColor.a;

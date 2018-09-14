@@ -27,12 +27,23 @@ var RedEnvironmentMaterial;
 
 			 gl_PointSize = uPointSize;
 			 gl_Position = uPMatrix * uCameraMatrix * vVertexPositionEye4;
+
+			//#REDGL_DEFINE#directionalShadow#true# vResolution = uResolution;
+			//#REDGL_DEFINE#directionalShadow#true# vShadowPos = cTexUnitConverter  *  uDirectionalShadowLightMatrix * uMMatrix * vec4(aVertexPosition, 1.0);
 		 }
 		 */
 	};
 	fSource = function () {
 		/* @preserve
 		 precision mediump float;
+		// 안개
+		//#REDGL_DEFINE#fragmentShareFunc#fogFactor#
+		//#REDGL_DEFINE#fragmentShareFunc#fog#
+
+		// 그림자
+		//#REDGL_DEFINE#fragmentShareFunc#decodeFloatShadow#
+		//#REDGL_DEFINE#fragmentShareFunc#getShadowColor#
+
 		 //#REDGL_DEFINE#diffuseTexture# uniform sampler2D u_diffuseTexture;
 		 //#REDGL_DEFINE#normalTexture# uniform sampler2D u_normalTexture;
 		 //#REDGL_DEFINE#specularTexture# uniform sampler2D u_specularTexture;
@@ -47,15 +58,24 @@ var RedEnvironmentMaterial;
 
 		 varying vec4 vVertexPositionEye4;
 
-		 float fogFactor(float perspectiveFar, float density){
-			 float flog_cord = gl_FragCoord.z / gl_FragCoord.w / perspectiveFar;
-			 float fog = flog_cord * density;
-			 if(1.0 - fog < 0.0) discard;
-			 return clamp(1.0 - fog, 0.0,  1.0);
-		 }
-		 vec4 fog(float fogFactor, vec4 fogColor, vec4 currentColor) {
-			return mix(fogColor, currentColor, fogFactor);
-		 }
+vec3 perturbNormal2Arb( vec3 eye_pos, vec3 surf_norm, sampler2D normalMap, vec2 vUv ) {
+            vec3 q0 = dFdx( eye_pos.xyz );
+            vec3 q1 = dFdy( eye_pos.xyz );
+            vec2 st0 = dFdx( vUv.st );
+            vec2 st1 = dFdy( vUv.st );
+
+            vec3 S = normalize(  q0 * st1.t - q1 * st0.t );
+            vec3 T = normalize( -q0 * st1.s + q1 * st0.s );
+            vec3 N = normalize( surf_norm );
+
+            vec3 nmap = texture2D( normalMap, vUv ).xyz;
+            // nmap.y = 1.0 - nmap.y;
+            vec3 mapN = nmap * 2.0 - 1.0;
+            mapN.xy = u_normalPower * mapN.xy;
+            mat3 tsn = mat3( S, T, N );
+            return normalize( tsn * mapN );
+
+        }
 
 		 vec4 la;
 		 vec4 ld;
@@ -81,15 +101,17 @@ var RedEnvironmentMaterial;
 			 //#REDGL_DEFINE#diffuseTexture# texelColor = texture2D(u_diffuseTexture, vTexcoord);
 			 //#REDGL_DEFINE#diffuseTexture# texelColor.rgb *= texelColor.a;
 			 //#REDGL_DEFINE#diffuseTexture# if(texelColor.a ==0.0) discard;
+			 //#REDGL_DEFINE#directionalShadow#true# texelColor.rgb *= getShadowColor( vShadowPos, vResolution, uDirectionalShadowTexture);
 
 			 //#REDGL_DEFINE#emissiveTexture# emissiveColor = texture2D(u_emissiveTexture, vTexcoord);
 			 //#REDGL_DEFINE#emissiveTexture# emissiveColor.rgb *= texelColor.a;
 
 			 N = normalize(vVertexNormal);
 			 //#REDGL_DEFINE#normalTexture# vec4 normalColor = texture2D(u_normalTexture, vTexcoord);
-			 //#REDGL_DEFINE#normalTexture# if(normalColor.a != 0.0) N = normalize(2.0 * (N + normalColor.rgb * u_normalPower  - 0.5));
+			 //#REDGL_DEFINE#normalTexture# N = perturbNormal2Arb(vVertexPositionEye4.xyz, N, u_normalTexture, vTexcoord) ;
+            ////#REDGL_DEFINE#normalTexture# if(normalColor.a != 0.0) N = normalize(2.0 * (N + normalColor.rgb * u_normalPower  - 0.5));
 
-             vec3 R = reflect( vVertexPositionEye4.xyz-uCameraPosition, N);
+		   vec3 R = reflect( vVertexPositionEye4.xyz-uCameraPosition, N);
 			 reflectionColor = textureCube(u_environmentTexture, R);
 			 texelColor = mix(texelColor,reflectionColor ,u_reflectionPower);
 

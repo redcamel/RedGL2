@@ -178,13 +178,14 @@
 
 //		testDLight.color = '#ffff00'
         testDLight = RedDirectionalLight(this)
-        testDLight.x = 350
-        testDLight.y = 350
-        testDLight.z = -350
+        testDLight.x = 3500
+        testDLight.y = 3500
+        testDLight.z = -3500
+        testDLight.debug=true
 		tScene3D.addLight(testDLight)
+        var tShadow = RedDirectionalShadow(this, testDLight)
+        tScene3D.shadowManager.directionalShadow = tShadow
 
-        // var a = RedAmbientLight(this)
-        // tScene3D.addLight(a)
 
         var b = RedPostEffect_DoF(this)
         b.focusLength = 1500
@@ -208,6 +209,7 @@
         	console.log('호잇!', v)
             var t0
         	tScene3D.addChild(t0 = v['resultMesh'])
+            tShadow.addCasting(v['resultMesh'],true);
             // v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 40
         	t0.y = -300
         	t0.z = -350
@@ -235,39 +237,36 @@
             RedBitmapTexture(self, '../asset/brick_roughness.jpg')
         )
         tMat.shininess = 32
-        while ( i-- ) {
-            j = 8
-            while ( j-- ) {
-                k = 8
-                while ( k-- ) {
-                    tMesh = RedMesh(self, tGeo, tMat)
-                    tMesh.x = (i - 4) * 500
-                    tMesh.y = (j - 4) * 500
-                    tMesh.z = (k -4) * 500
-                    tMesh.useLOD = true
-                    tMesh.drawMode = self.gl.LINES
-                    tMesh.addLOD(0, 100, RedSphere(self, 100, 32, 32, 32), tMat)
-                    tMesh.addLOD(1, 500, RedSphere(self, 100, 16, 16, 16), RedColorMaterial(self, '#00ff00'))
-                    tMesh.addLOD(2, 1000, RedSphere(self, 100, 8, 8, 8), RedColorMaterial(self, '#0000ff'))
-                    tMesh.addLOD(3, 1500, RedSphere(self, 100, 4, 4, 4), RedColorMaterial(self, '#ffff00'))
-                    tMesh.addLOD(4, 2000, RedSphere(self, 100, 3, 3, 3), RedColorMaterial(self, '#00ffff'))
-                    // console.log(tMesh._lodLevels)
-                    tScene3D.addChild(tMesh)
-                }
-            }
-        }
+        // while ( i-- ) {
+        //     j = 8
+        //     while ( j-- ) {
+        //         k = 8
+        //         while ( k-- ) {
+        //             tMesh = RedMesh(self, tGeo, tMat)
+        //             tMesh.x = (i - 4) * 500
+        //             tMesh.y = (j - 4) * 500
+        //             tMesh.z = (k -4) * 500
+        //             tMesh.useLOD = true
+        //             tMesh.drawMode = self.gl.LINES
+        //             tMesh.addLOD(0, 100, RedSphere(self, 100, 32, 32, 32), tMat)
+        //             tMesh.addLOD(1, 500, RedSphere(self, 100, 16, 16, 16), RedColorMaterial(self, '#00ff00'))
+        //             tMesh.addLOD(2, 1000, RedSphere(self, 100, 8, 8, 8), RedColorMaterial(self, '#0000ff'))
+        //             tMesh.addLOD(3, 1500, RedSphere(self, 100, 4, 4, 4), RedColorMaterial(self, '#ffff00'))
+        //             tMesh.addLOD(4, 2000, RedSphere(self, 100, 3, 3, 3), RedColorMaterial(self, '#00ffff'))
+        //             // console.log(tMesh._lodLevels)
+        //             tScene3D.addChild(tMesh)
+        //         }
+        //     }
+        // }
 
 
         RedGLTFLoader(self, '../asset/glTF/warrior/', 'scene.gltf', function (v) {
             console.log('호잇!', v)
+
+
             tScene3D.addChild(v['resultMesh']);
-            RedGLTFLoader(self, '../asset/glTF/busterDrone/', 'busterDrone.gltf', function (v) {
-                console.log('호잇!', v)
-                tScene3D.addChild(t2 = v['resultMesh'])
-                v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 30
-                v['resultMesh'].y = 50
-                v['resultMesh'].x = 50
-            });
+
+            tShadow.size  = 1000;
             (function () {
                 var testMaterial
                 testMaterial = RedPointBitmapMaterial(self, RedBitmapTexture(self, '../asset/particle.png'))
@@ -290,6 +289,7 @@
                     testMaterial
                 )
                 tScene3D.addChild(testParticle)
+                tShadow.addCasting(v['resultMesh'],true);
                 testParticle['blendSrc'] = self.gl.ONE
                 testParticle['blendDst'] = self.gl.ONE
             })();
@@ -306,6 +306,12 @@
 //			tScene3D.addChild(t0 = v['resultMesh'])
 //			testUI(self, tScene3D)
 //		})
+
+
+        var tMesh2 = RedMesh(self, RedBox(self, 3000, 3000, 3000), RedColorPhongMaterial(this))
+        tMesh2.rotationX = 90
+        tMesh2.y = -1500
+        tScene3D.addChild(tMesh2)
         var tt = 0
         tRenderer.start(this, function (time) {
 //				if ( tt == 0 ) {
@@ -334,13 +340,9 @@
 //					tCamera.y = Math.abs(Math.cos(time / 3500) * 250)
 //					tCamera.z = Math.cos(time / 3500) * 250
 //				}
-//                 testDLight.x = -Math.sin(time / 1500) * 500
-//                 testDLight.y = 500
-//                 testDLight.z = -Math.cos(time / 1500) * 500
-                tCamera.x = Math.sin(time / 1500) * 500 + Math.cos(time / 1500) * 500
-                tCamera.y = Math.cos(time / 2500) * 500+500
-                tCamera.z = Math.cos(time / 1300) * 500 + Math.sin(time / 2300) * 500
-
+                testDLight.x = -Math.sin(time / 1500) * 500
+                testDLight.y = 500
+                testDLight.z = -Math.cos(time / 1500) * 500
                 b.focusLength = vec3.length([tCamera.x,tCamera.y,tCamera.z])*2
             // console.log(    b.focusLength)
             }

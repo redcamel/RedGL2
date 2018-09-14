@@ -16,16 +16,12 @@ var RedSkyBoxMaterial;
 	fSource = function () {
 		/* @preserve
 		 precision mediump float;
+		// 안개
+		//#REDGL_DEFINE#fragmentShareFunc#fogFactor#
+		//#REDGL_DEFINE#fragmentShareFunc#fog#
+
 		 uniform samplerCube u_skyBoxTexture;
 		 varying vec3 vReflectionCubeCoord;
-		 float fogFactor(float perspectiveFar, float density){
-			 float flog_cord = gl_FragCoord.z / gl_FragCoord.w / perspectiveFar;
-			 float fog = flog_cord * density;
-			 return clamp(1.0 - fog, 0.0,  1.0);
-		 }
-		 vec4 fog(float fogFactor, vec4 fogColor, vec4 currentColor) {
-			return mix(fogColor, currentColor, fogFactor);
-		 }
 		 void main(void) {
 			 vec4 finalColor = textureCube(u_skyBoxTexture, vReflectionCubeCoord);
 			 //#REDGL_DEFINE#fog#false# gl_FragColor = finalColor;

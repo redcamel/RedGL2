@@ -46,10 +46,10 @@ var RedShader;
 			var t0;
 			switch ( type ) {
 				case RedShader.VERTEX:
-					t0 = RedSystemShaderCode['vShareSource'].concat();
+					t0 = RedSystemShaderCode['vertexShareDeclare'].concat();
 					break;
 				case RedShader.FRAGMENT:
-					t0 = RedSystemShaderCode['fShareSource'].concat();
+					t0 = RedSystemShaderCode['fragmentShareDeclare'].concat();
 					break;
 				default:
 					RedGLUtil.throwFunc('RedShader : 쉐이더 타입을 확인하세요. RedShader.VERTEX or RedShader.FRAGMENT 만 허용');

@@ -49,7 +49,7 @@ var RedDirectionalShadow;
         this['_castingList'].push(target)
         var self = this
         if (reculsive) target.children.forEach(function (v) {
-            self.addCasting(v, reculsive)
+            if(v['material']) self.addCasting(v, reculsive)
         })
 
     };

@@ -175,16 +175,17 @@
 		var testDLight;
 		testDLight = RedDirectionalLight(this)
 		testDLight.x = 10
-		testDLight.y = 20
-		testDLight.z = 20
+		testDLight.y = 100
+		testDLight.z = 10
         testDLight.intensity = 1
 		tScene3D.addLight(testDLight)
-		// testDLight = RedDirectionalLight(this)
-		// testDLight.x = 0
-		// testDLight.y = 300
-		// testDLight.z = -200
-        // testDLight.intensity = 0.9
-		// tScene3D.addLight(testDLight)
+		testDLight = RedDirectionalLight(this)
+		testDLight.x = 0
+		testDLight.y = 300
+		testDLight.z = -200
+        testDLight.intensity = 0.9
+		tScene3D.addLight(testDLight)
+        tScene3D.addLight(RedAmbientLight(this))
 		tRenderer.renderDebuger.visible = true
 		tScene3D.skyBox =
 			RedSkyBox(this, [
