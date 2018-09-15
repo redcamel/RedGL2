@@ -381,12 +381,12 @@ var RedProgram;
             }
             for (var k in RedSystemShaderCode.vertexShareFunc) {
                 t0 = new RegExp('\/\/\#REDGL_DEFINE\#vertexShareFunc\#' + k + '\#', 'gi');
-                console.log('~~~~',t0)
+                // console.log('~~~~',t0)
                 vSource = vSource.replace(t0, RedSystemShaderCode.vertexShareFunc[k]);
             }
             for (var k in RedSystemShaderCode.fragmentShareFunc) {
                 t0 = new RegExp('\/\/\#REDGL_DEFINE\#fragmentShareFunc\#' + k + '\#', 'gi');
-                console.log('~~~~',t0)
+                // console.log('~~~~',t0)
                 fSource = fSource.replace(t0, RedSystemShaderCode.fragmentShareFunc[k]);
             }
 
