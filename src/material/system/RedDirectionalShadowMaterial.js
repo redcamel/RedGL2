@@ -6,15 +6,11 @@ var RedDirectionalShadowMaterial;
     var checked;
     vSource = function () {
         /* @preserve
+        // 스키닝
+        //#REDGL_DEFINE#vertexShareFunc#getSkinMatrix#
          void main(void) {
-             //#REDGL_DEFINE#skin#true# mat4 skinMat =
-            //#REDGL_DEFINE#skin#true# aVertexWeight.x * uGlobalTransformOfNodeThatTheMeshIsAttachedTo * uJointMatrix[ int(aVertexJoint.x) ] * uInverseBindMatrixForJoint[int(aVertexJoint.x)]+
-            //#REDGL_DEFINE#skin#true# aVertexWeight.y * uGlobalTransformOfNodeThatTheMeshIsAttachedTo * uJointMatrix[ int(aVertexJoint.y) ] * uInverseBindMatrixForJoint[int(aVertexJoint.y)]+
-            //#REDGL_DEFINE#skin#true# aVertexWeight.z * uGlobalTransformOfNodeThatTheMeshIsAttachedTo * uJointMatrix[ int(aVertexJoint.z) ] * uInverseBindMatrixForJoint[int(aVertexJoint.z)]+
-            //#REDGL_DEFINE#skin#true# aVertexWeight.w * uGlobalTransformOfNodeThatTheMeshIsAttachedTo * uJointMatrix[ int(aVertexJoint.w) ] * uInverseBindMatrixForJoint[int(aVertexJoint.w)];
-            //#REDGL_DEFINE#skin#true# gl_Position =  uDirectionalShadowLightMatrix *  uMMatrix * skinMat * vec4(aVertexPosition, 1.0);
+            //#REDGL_DEFINE#skin#true# gl_Position =  uDirectionalShadowLightMatrix *  uMMatrix * getSkinMatrix() * vec4(aVertexPosition, 1.0);
             //#REDGL_DEFINE#skin#false# gl_Position =  uDirectionalShadowLightMatrix *  uMMatrix * vec4(aVertexPosition, 1.0);
-
          }
          */
     };
@@ -40,7 +36,7 @@ var RedDirectionalShadowMaterial;
         }
         void main(void) {
             vec4 finalColor = encodeFloat(gl_FragCoord.z);
-            if(finalColor.a == 0.0) discard;
+            if(finalColor.a < 0.5) finalColor = vec4(0.0, 0.0, 0.0, 1.0);
             gl_FragColor = finalColor;
         }
          */

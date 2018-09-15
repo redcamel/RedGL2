@@ -28,7 +28,25 @@ var RedBitmapTexture;
 	loadTexture = (function () {
 		return function (gl, self, texture, src, option, callback) {
 			if ( !option ) option = {};
-			if ( src instanceof HTMLCanvasElement ) makeWebGLTexture(gl, texture, src, option);
+			if ( src instanceof HTMLCanvasElement ) {
+                var tSource = src;
+                var tW, tH;
+                if ( !RedGLUtil.isPowerOf2(tSource.width) || !RedGLUtil.isPowerOf2(tSource.height) ) {
+                    var canvas = document.createElement("canvas");
+                    var ctx = canvas.getContext("2d");
+                    tW = RedGLUtil.nextHighestPowerOfTwo(tSource.width);
+                    tH = RedGLUtil.nextHighestPowerOfTwo(tSource.height);
+                    if ( tW > MAX_TEXTURE_SIZE ) tW = MAX_TEXTURE_SIZE;
+                    if ( tH > MAX_TEXTURE_SIZE ) tH = MAX_TEXTURE_SIZE;
+                    canvas.width = tW;
+                    canvas.height = tH;
+                    ctx.drawImage(tSource, 0, 0, tW, tH);
+                    console.log(canvas);
+                    tSource = canvas;
+                }
+                console.log('tSource',tSource)
+                makeWebGLTexture(gl, texture, tSource, option);
+			}
 			else {
 				var img;
 				var onError, onLoad, clearEvents;

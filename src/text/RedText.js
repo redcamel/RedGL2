@@ -111,6 +111,7 @@ var RedText;
 			self['_ctx'].drawImage(self['_img'], 0, 0, tW, tH);
 			self['material'].diffuseTexture.src = self['_cvs']
 		};
+        this['useTransparentSort'] = true
 		this['_UUID'] = RedGL.makeUUID();
 		console.log(this);
 	};

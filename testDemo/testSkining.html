@@ -149,121 +149,138 @@
 <body>
 <canvas id="test" style="border: none;background:red"></canvas>
 <script>
-	document.getElementById('test')
-	RedGL(document.getElementById('test'), function (v) {
-		console.log(v)
-		var tGL;
-		var tWorld, tScene3D, tCamera
-		var tRenderer;
-		var self;
-		self = this
-		tGL = this.gl;
-		this.world = tWorld = RedWorld();
-		tScene3D = RedScene(this);
-		// tScene3D['useFog'] = true
-		tCamera = RedObitController(this);
-		tCamera.distance = 80
-		tCamera.tilt = -45
-		tCamera.pan = 90
-//		tCamera.distance = 150
-		tCamera.speedDistance = 50
-		tRenderer = RedRenderer();
-		tWorld.addView(RedView('test', this, tScene3D, tCamera));
-		RedView('test').setSize('100%', '100%')
-		RedView('test').setLocation('0%', '0%')
-		this.renderScale = 1
-		var testDLight;
-		testDLight = RedDirectionalLight(this)
-		testDLight.x = 10
-		testDLight.y = 100
-		testDLight.z = 10
+    document.getElementById('test')
+    RedGL(document.getElementById('test'), function (v) {
+        console.log(v)
+        var tGL;
+        var tWorld, tScene3D, tCamera
+        var tRenderer;
+        var self;
+        self = this
+        tGL = this.gl;
+        this.world = tWorld = RedWorld();
+        tScene3D = RedScene(this);
+        tCamera = RedObitController(this);
+        tCamera.speedDistance = 50
+        tCamera.distance = 5000
+        tRenderer = RedRenderer();
+        tWorld.addView(RedView('test', this, tScene3D, tCamera));
+        RedView('test').setSize('100%', '100%')
+        RedView('test').setLocation('0%', '0%')
+        this.renderScale = 1
+        var testDLight;
+        testDLight = RedDirectionalLight(this)
+        testDLight.x = -1500
+        testDLight.y = 1500
+        testDLight.z = -1500
         testDLight.intensity = 1
-		tScene3D.addLight(testDLight)
-		testDLight = RedDirectionalLight(this)
-		testDLight.x = 0
-		testDLight.y = 300
-		testDLight.z = -200
-        testDLight.intensity = 0.9
-		tScene3D.addLight(testDLight)
-        // tScene3D.addLight(RedAmbientLight(this))
-		tRenderer.renderDebuger.visible = true
-		tScene3D.skyBox =
-			RedSkyBox(this, [
-				'../asset/cubemap/SwedishRoyalCastle/px.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/nx.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/py.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/ny.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/pz.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/nz.jpg'
-			]);
-		var t0, t1, t2
-//		t0 = RedGLTFLoader(self, '../asset/glTF/Box/glTF/', 'Box.gltf', function (v) {
-//			console.log('호잇!', v)
-//			tScene3D.addChild(v['resultMesh'])
-//			v['resultMesh'].z = 10
-//		})
-//		 RedGLTFLoader(self, '../asset/glTF/SciFiHelmet/glTF/', 'SciFiHelmet.gltf', function (v) {
-//			console.log('호잇!', v)
-//			tScene3D.addChild(t1 =v['resultMesh'])
-//			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 10
-//			 v['resultMesh'].x = -70
-//			v['resultMesh'].y = 10
-//		})
-		RedGLTFLoader(self, '../asset/glTF/Sponza/glTF/', 'Sponza.gltf', function (v) {
-			console.log('호잇!', v)
-			tScene3D.addChild(v['resultMesh'])
-			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 40
-		})
-//		RedGLTFLoader(self, '../asset/glTF/Suzanne/glTF/', 'Suzanne.gltf', function (v) {
-//			console.log('호잇!', v)
-//			tScene3D.addChild(t2 = v['resultMesh'])
-//			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 10
-//
-//			v['resultMesh'].z = -30
-//			v['resultMesh'].y = 10
-//		})
-//		RedGLTFLoader(self, '../asset/glTF/FlightHelmet/glTF/', 'FlightHelmet.gltf', function (v) {
-//			console.log('호잇!', v)
-//			tScene3D.addChild(t2 = v['resultMesh'])
-//			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 40
-//
-//			v['resultMesh'].z = 30
-//			v['resultMesh'].y = 20
-//
-//		})
-//		RedGLTFLoader(self, '../asset/glTF/Lantern/glTF/', 'Lantern.gltf', function (v) {
-//			console.log('호잇!', v)
-//			tScene3D.addChild(t2 = v['resultMesh'])
-//			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 1
-//			v['resultMesh'].z = 10
-//		})
-		RedGLTFLoader(self, '../asset/glTF/busterDrone/', 'busterDrone.gltf', function (v) {
-			console.log('호잇!', v)
-			tScene3D.addChild(t2 = v['resultMesh'])
-			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 30
-			v['resultMesh'].y = 30
-		})
-//		RedGLTFLoader(self, '../asset/glTF/BarramundiFish/glTF/', 'BarramundiFish.gltf', function (v) {
-//			console.log('호잇!', v)
-//			tScene3D.addChild(t2 = v['resultMesh'])
-//			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 40
-//			v['resultMesh'].z = 30
-//			v['resultMesh'].y = 20
-//
-//		})
-		tRenderer.start(this, function (time) {
-			if ( t1 ) {
-//				t1.rotationX += 1
-				t1.rotationY += 1
-//				t1.rotationZ += 1
-			}
-			if ( t2 ) {
-//				t2.rotationX += 1
-				t2.rotationY += 1
-//				t2.rotationZ += 1
-			}
-		})
-	})
+        tScene3D.addLight(testDLight)
+        testDLight = RedDirectionalLight(this)
+        testDLight.x = 1500
+        testDLight.y = 1500
+        testDLight.z = 1500
+        testDLight.intensity = 1
+        tScene3D.addLight(testDLight)
+
+        tRenderer.renderDebuger.visible = true
+
+        tScene3D.skyBox =
+            RedSkyBox(this, [
+                '../asset/cubemap/SwedishRoyalCastle/px.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/nx.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/py.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/ny.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
+            ]);
+
+
+        RedGLTFLoader(self, '../asset/glTF/breakDance/', 'scene.gltf', function (v) {
+            console.log('호잇!', v)
+            tScene3D.addChild(v['resultMesh'])
+            var tRoot = v['resultMesh']
+            var testUI = function (redGL, tScene) {
+                var gui = self['gui'] = new dat.GUI({
+                    name: 'test'
+                });
+                var folder = gui.addFolder('animations')
+                var testAnimation = {
+                    material: '...'
+                }
+                var tList = [
+                    '...',
+                    'RedColorMaterial',
+                    'RedColorPhongMaterial',
+                    'RedColorPhongTextureMaterial',
+                    'RedBitmapMaterial',
+                    'RedStandardMaterial',
+                    'RedEnvironmentMaterial',
+                    'RedSheetMaterial',
+                    'RedVideoMaterial'
+                ]
+
+                var targetMaterial
+                var setMaterial = function (target, reculsive) {
+                    var self = this
+                    if (reculsive) target.children.forEach(function (v) {
+                        if (v['material']) {
+                            v.material = targetMaterial
+                        }
+                        setMaterial(v, reculsive)
+                    })
+
+                };
+                folder.add(testAnimation, 'material', tList).onChange(function (v) {
+                    switch (v) {
+                        case 'RedColorMaterial' :
+                            targetMaterial = RedColorMaterial(self)
+                            break
+                        case 'RedColorPhongMaterial' :
+                            targetMaterial = RedColorPhongMaterial(self)
+                            break
+                        case 'RedColorPhongTextureMaterial' :
+                            targetMaterial = RedColorPhongTextureMaterial(self)
+                            targetMaterial.normalTexture = RedBitmapTexture(self, '../asset/normalTest.jpg')
+                            break
+                        case 'RedBitmapMaterial' :
+                            targetMaterial = RedBitmapMaterial(self, RedBitmapTexture(self, '../asset/glTF/breakDance/textures/Material_baseColor.jpeg'))
+                            break
+                        case 'RedStandardMaterial':
+                            targetMaterial = RedStandardMaterial(self, RedBitmapTexture(self, '../asset/glTF/breakDance/textures/Material_baseColor.jpeg'))
+                            break
+                        case 'RedEnvironmentMaterial' :
+                            targetMaterial = RedEnvironmentMaterial(
+                                self,
+                                RedBitmapTexture(self, null),
+                                RedBitmapCubeTexture(self, [
+                                    '../asset/cubemap/SwedishRoyalCastle/px.jpg',
+                                    '../asset/cubemap/SwedishRoyalCastle/nx.jpg',
+                                    '../asset/cubemap/SwedishRoyalCastle/py.jpg',
+                                    '../asset/cubemap/SwedishRoyalCastle/ny.jpg',
+                                    '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
+                                    '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
+                                ])
+                            )
+                            break
+                        case 'RedSheetMaterial' :
+                            targetMaterial = RedSheetMaterial(self, RedBitmapTexture(self, '../asset/sheet/spriteSheet.png'), 24, 5, 3, 15)
+                            break
+                        case 'RedVideoMaterial' :
+                            targetMaterial = RedVideoMaterial(self, RedVideoTexture(self, '../asset/mov_bbb.mp4'))
+                            break
+
+                    }
+                    setMaterial(tRoot, true)
+                })
+                ///////////////////////////////////////////////
+                folder.open()
+            }
+            testUI()
+        })
+        tRenderer.start(this, function (time) {
+            }
+        )
+    })
 </script>
 </body>
 

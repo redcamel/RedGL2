@@ -182,6 +182,26 @@ var RedSystemShaderCode;
                         '   amountInLight /= 9.0;',
                         '   return 1.0 - amountInLight;',
                         '}'
+                    ].join('\n'),
+                getPerturbNormal2Arb:
+                    [
+                        'vec3 getPerturbNormal2Arb( vec3 eye_pos, vec3 surf_norm, vec4 normalColor , vec2 vUv) {',
+                        '   vec3 q0 = dFdx( eye_pos.xyz );',
+                        '   vec3 q1 = dFdy( eye_pos.xyz );',
+                        '   vec2 st0 = dFdx( vUv.st );',
+                        '   vec2 st1 = dFdy( vUv.st );',
+
+                        '   vec3 S = normalize(  q0 * st1.t - q1 * st0.t );',
+                        '   vec3 T = normalize( -q0 * st1.s + q1 * st0.s );',
+                        '   vec3 N = normalize( surf_norm );',
+
+                        '   vec3 nmap = normalColor.xyz;',
+                        '   // nmap.y = 1.0 - nmap.y;',
+                        '   vec3 mapN = nmap * 2.0 - 1.0;',
+                        '   mapN.xy = u_normalPower * mapN.xy;',
+                        '   mat3 tsn = mat3( S, T, N );',
+                        '   return normalize( tsn * mapN );',
+                        '}'
                     ].join('\n')
             }
         };

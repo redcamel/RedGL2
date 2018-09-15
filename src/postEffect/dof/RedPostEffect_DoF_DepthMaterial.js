@@ -6,23 +6,23 @@ var RedPostEffect_DoF_DepthMaterial;
     var checked;
     vSource = function () {
         /* @preserve
-         //#REDGL_DEFINE#vertexShareFunc#getSprite3DMatrix#
-         //#REDGL_DEFINE#vertexShareFunc#getSkinMatrix#
-         void main(void) {
-            gl_PointSize = uPointSize;
-            vec4 tPosition;
+            //#REDGL_DEFINE#vertexShareFunc#getSprite3DMatrix#
+            // 스키닝
+            //#REDGL_DEFINE#vertexShareFunc#getSkinMatrix#
+            void main(void) {
+                gl_PointSize = uPointSize;
 
-            //#REDGL_DEFINE#skin#true# tPosition = uMMatrix * getSkinMatrix() * vec4(aVertexPosition, 1.0);
-            //#REDGL_DEFINE#skin#false# tPosition = uMMatrix * vec4(aVertexPosition, 1.0);
+                //#REDGL_DEFINE#skin#true# mat4 targetMatrix = uMMatrix *  getSkinMatrix() ;
+			    //#REDGL_DEFINE#skin#false# mat4 targetMatrix = uMMatrix;
 
-            //#REDGL_DEFINE#sprite3D#true# gl_Position = uPMatrix * getSprite3DMatrix(uCameraMatrix , uMMatrix) *  vec4(aVertexPosition, 1.0);
-            //#REDGL_DEFINE#sprite3D#true# if(!u_PerspectiveScale){
-            //#REDGL_DEFINE#sprite3D#true#   gl_Position /= gl_Position.w;
-            //#REDGL_DEFINE#sprite3D#true#   gl_Position.xy += aVertexPosition.xy * vec2(uMMatrix[0][0],uMMatrix[1][1] * uResolution.x/uResolution.y);
-            //#REDGL_DEFINE#sprite3D#true# }
-            //#REDGL_DEFINE#sprite3D#false# gl_Position = uPMatrix * uCameraMatrix * tPosition;
-        }
-         */
+                //#REDGL_DEFINE#sprite3D#true# gl_Position = uPMatrix * getSprite3DMatrix(uCameraMatrix , targetMatrix) *  vec4(aVertexPosition, 1.0);
+                //#REDGL_DEFINE#sprite3D#true# if(!u_PerspectiveScale){
+                //#REDGL_DEFINE#sprite3D#true#   gl_Position /= gl_Position.w;
+                //#REDGL_DEFINE#sprite3D#true#   gl_Position.xy += aVertexPosition.xy * vec2(targetMatrix[0][0],targetMatrix[1][1] * uResolution.x/uResolution.y);
+                //#REDGL_DEFINE#sprite3D#true# }
+                //#REDGL_DEFINE#sprite3D#false# gl_Position = uPMatrix * uCameraMatrix * targetMatrix * vec4(aVertexPosition, 1.0);
+            }
+        */
     };
     fSource = function () {
         /* @preserve
