@@ -362,6 +362,19 @@ var RedProgram;
             var hasSprite3D = false;
             var hasDirectionalShadow = false;
             var hasSkin = false
+
+            // 전처리
+            for (var k in RedSystemShaderCode.vertexShareFunc) {
+                t0 = new RegExp('\/\/\#REDGL_DEFINE\#vertexShareFunc\#' + k + '\#', 'gi');
+                // console.log('~~~~',t0)
+                vSource = vSource.replace(t0, RedSystemShaderCode.vertexShareFunc[k]);
+            }
+            for (var k in RedSystemShaderCode.fragmentShareFunc) {
+                t0 = new RegExp('\/\/\#REDGL_DEFINE\#fragmentShareFunc\#' + k + '\#', 'gi');
+                // console.log('~~~~',t0)
+                fSource = fSource.replace(t0, RedSystemShaderCode.fragmentShareFunc[k]);
+            }
+
             if (subProgramOption) {
                 subProgramOption.sort();
                 programName += '_' + subProgramOption.join('_');
@@ -379,16 +392,7 @@ var RedProgram;
                     fSource = fSource.replace(t0, '');
                 }
             }
-            for (var k in RedSystemShaderCode.vertexShareFunc) {
-                t0 = new RegExp('\/\/\#REDGL_DEFINE\#vertexShareFunc\#' + k + '\#', 'gi');
-                // console.log('~~~~',t0)
-                vSource = vSource.replace(t0, RedSystemShaderCode.vertexShareFunc[k]);
-            }
-            for (var k in RedSystemShaderCode.fragmentShareFunc) {
-                t0 = new RegExp('\/\/\#REDGL_DEFINE\#fragmentShareFunc\#' + k + '\#', 'gi');
-                // console.log('~~~~',t0)
-                fSource = fSource.replace(t0, RedSystemShaderCode.fragmentShareFunc[k]);
-            }
+
 
             // fog 처리
             t0 = new RegExp('\/\/\#REDGL_DEFINE\#fog\#' + (hasFog ? 'true' : 'false') + '\#', 'gi');

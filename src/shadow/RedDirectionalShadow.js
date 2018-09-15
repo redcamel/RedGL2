@@ -44,17 +44,14 @@ var RedDirectionalShadow;
 	     return : 'void'
 	 }
      :DOC*/
-    RedDirectionalShadow.prototype['addCasting'] = function (target, reculsive) {
+    RedDirectionalShadow.prototype['addCasting'] = function (target) {
         if (!(target instanceof RedBaseObject3D)) RedGLUtil.throwFunc('addCasting', 'RedBaseObject3D Instance만 가능', '입력값 : ' + target);
         this['_castingList'].push(target)
-        var self = this
-        if (reculsive) target.children.forEach(function (v) {
-            if(v['material']) self.addCasting(v, reculsive)
-        })
+
 
     };
     /**DOC:
-     {
+     {z
 		 code:`METHOD`,
 		 title :`removeCasting`,
 		 description : `
@@ -70,14 +67,11 @@ var RedDirectionalShadow;
      :DOC*/
     RedDirectionalShadow.prototype['removeCasting'] = (function () {
         var t0;
-        return function (v, reculsive) {
+        return function (v) {
             t0 = this['_castingList'].indexOf(v);
             if (t0 == -1) RedGLUtil.throwFunc('removeCasting', '존재하지 않는 대상을 삭제하려고 함');
             else this['_castingList'].splice(t0, 1);
-            var self = this
-            if (reculsive) target.children.forEach(function (v) {
-                self.removeCasting(v, reculsive)
-            })
+
         }
     })();
     /**DOC:

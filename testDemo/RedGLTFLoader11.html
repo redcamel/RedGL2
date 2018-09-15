@@ -208,12 +208,18 @@
 			]);
 		RedGLTFLoader(self, '../asset/glTF/tokyo/', 'scene.gltf', function (v) {
 			console.log('호잇!', t1 = v)
+            // tShadow.addCasting(v['resultMesh'],true);
 			tScene3D.addChild(t0 = v['resultMesh'])
+
 			testUI(self, tScene3D)
 		})
+        var tShadow = RedDirectionalShadow(this, testDLight)
+        tScene3D.shadowManager.directionalShadow = tShadow
+        tShadow.size = 1000
 		RedGLTFLoader(self, '../asset/glTF/breakDance/', 'scene.gltf', function (v) {
 			console.log('호잇!',v)
 			tScene3D.addChild(v['resultMesh'])
+            tShadow.addCasting(v['resultMesh'],true);
 			v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.04
 			v['resultMesh'].z = -280
 			v['resultMesh'].y = -200

@@ -59,5 +59,29 @@ var RedMesh;
 		this['_UUID'] = RedGL.makeUUID();
 	};
 	RedMesh.prototype = new RedBaseContainer();
+    /**DOC:
+     {
+		 code : 'PROPERTY',
+		 title :`perspectiveScale`,
+		 description : `
+		 퍼스펙티브에 스케일이 반응할것인가 여부
+		 기본값 true
+		 `,
+		 return : 'Boolean'
+	 }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedMesh', 'perspectiveScale', 'boolean', false);
+    /**DOC:
+     {
+		 code : 'PROPERTY',
+		 title :`sprite3DYn`,
+		 description : `
+		 sprite3D 모드 사용 여부
+		 기본값 true
+		 `,
+		 return : 'Boolean'
+	 }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedMesh', 'sprite3DYn', 'boolean', false);
 	Object.freeze(RedMesh);
 })();

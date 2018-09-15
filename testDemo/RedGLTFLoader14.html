@@ -161,7 +161,7 @@
         this.world = tWorld = RedWorld();
         tScene3D = RedScene(this);
 //		 tScene3D['useFog'] = true
-		tCamera = RedBasicController(this);
+        tCamera = RedBasicController(this);
         tCamera = RedObitController(this);
         tCamera.speedDistance = 50
         tCamera.distance = 750
@@ -178,14 +178,17 @@
 
 //		testDLight.color = '#ffff00'
         testDLight = RedDirectionalLight(this)
-        testDLight.x = 3500
-        testDLight.y = 3500
-        testDLight.z = -3500
-        testDLight.debug=true
-		tScene3D.addLight(testDLight)
+        testDLight.x = 350
+        testDLight.y = 350
+        testDLight.z = -350
+        testDLight.debug = true
+        tScene3D.addLight(testDLight)
+
+        // tScene3D.addLight(RedAmbientLight(this))
         var tShadow = RedDirectionalShadow(this, testDLight)
         tScene3D.shadowManager.directionalShadow = tShadow
 
+        tShadow.size = 2000;
 
         var b = RedPostEffect_DoF(this)
         b.focusLength = 1500
@@ -206,22 +209,22 @@
                 '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
             ]);
         RedGLTFLoader(self, '../asset/glTF/gundam/', 'scene.gltf', function (v) {
-        	console.log('호잇!', v)
+            console.log('호잇!', v)
             var t0
-        	tScene3D.addChild(t0 = v['resultMesh'])
-            tShadow.addCasting(v['resultMesh'],true);
+            tScene3D.addChild(t0 = v['resultMesh'])
+            tShadow.addCasting(v['resultMesh'], true);
             // v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 40
-        	t0.y = -300
-        	t0.z = -350
+            t0.y = -300
+            t0.z = -350
         })
-		// RedGLTFLoader(self, '../asset/glTF/iso/', 'scene.gltf', function (v) {
-		// 	console.log('호잇!', v)
-		// 	tScene3D.addChild(t0 = v['resultMesh'])
-		// 	t0.x = -750
-		// 	t0.z = -2000
-		// },{
-		//     glass : function(v){
-		//         v['useTransparentSort'] = true
+        // RedGLTFLoader(self, '../asset/glTF/iso/', 'scene.gltf', function (v) {
+        // 	console.log('호잇!', v)
+        // 	tScene3D.addChild(t0 = v['resultMesh'])
+        // 	t0.x = -750
+        // 	t0.z = -2000
+        // },{
+        //     glass : function(v){
+        //         v['useTransparentSort'] = true
         //     }
         // })
 
@@ -266,14 +269,13 @@
 
             tScene3D.addChild(v['resultMesh']);
 
-            tShadow.size  = 1000;
             (function () {
                 var testMaterial
                 testMaterial = RedPointBitmapMaterial(self, RedBitmapTexture(self, '../asset/particle.png'))
                 var interleaveData
                 interleaveData = []
                 var i = 100000
-                while ( i-- ) {
+                while (i--) {
                     interleaveData.push(Math.random() * 5000 - 2500, Math.random() * 5000 - 2500, Math.random() * 5000 - 2500)
                     interleaveData.push(Math.random() * 5)
                     interleaveData.push(Math.random(), Math.random(), Math.random(), 1)
@@ -289,18 +291,18 @@
                     testMaterial
                 )
                 tScene3D.addChild(testParticle)
-                tShadow.addCasting(v['resultMesh'],true);
+                tShadow.addCasting(v['resultMesh'], true);
                 testParticle['blendSrc'] = self.gl.ONE
                 testParticle['blendDst'] = self.gl.ONE
             })();
         })
-		// RedGLTFLoader(self, '../asset/glTF/viking_room/', 'scene.gltf', function (v) {
-		// 	console.log('호잇!', t1 = v)
-		// 	tScene3D.addChild(t0 = v['resultMesh'])
+        // RedGLTFLoader(self, '../asset/glTF/viking_room/', 'scene.gltf', function (v) {
+        // 	console.log('호잇!', t1 = v)
+        // 	tScene3D.addChild(t0 = v['resultMesh'])
         //     t0.x = -650
         //     t0.y = -150
         //     t0.scaleX = t0.scaleY = t0.scaleZ = 30
-		// })
+        // })
 //		RedGLTFLoader(self, '../asset/glTF/basic/', 'Cameras.gltf', function (v) {
 //			console.log('호잇!', t1 = v)
 //			tScene3D.addChild(t0 = v['resultMesh'])
@@ -308,8 +310,22 @@
 //		})
 
 
-        var tMesh2 = RedMesh(self, RedBox(self, 3000, 3000, 3000), RedColorPhongMaterial(this))
-        tMesh2.rotationX = 90
+        var tMesh2 = RedMesh(self, RedBox(self, 3000, 3000, 3000),
+            // RedColorMaterial(self)
+            // RedColorPhongMaterial(self)
+            // RedColorPhongTextureMaterial(self)
+            // RedBitmapMaterial(self,RedBitmapTexture(self, '../asset/brick_diffuse.jpg'))
+            RedStandardMaterial(self,RedBitmapTexture(self, '../asset/brick_diffuse.jpg'))
+            // RedEnvironmentMaterial(self, RedBitmapTexture(self, '../asset/brick_diffuse.jpg'), RedBitmapCubeTexture(self, [
+            //     '../asset/cubemap/SwedishRoyalCastle/px.jpg',
+            //     '../asset/cubemap/SwedishRoyalCastle/nx.jpg',
+            //     '../asset/cubemap/SwedishRoyalCastle/py.jpg',
+            //     '../asset/cubemap/SwedishRoyalCastle/ny.jpg',
+            //     '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
+            //     '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
+            // ]))
+        )
+
         tMesh2.y = -1500
         tScene3D.addChild(tMesh2)
         var tt = 0
@@ -340,11 +356,11 @@
 //					tCamera.y = Math.abs(Math.cos(time / 3500) * 250)
 //					tCamera.z = Math.cos(time / 3500) * 250
 //				}
-                testDLight.x = -Math.sin(time / 1500) * 500
-                testDLight.y = 500
-                testDLight.z = -Math.cos(time / 1500) * 500
-                b.focusLength = vec3.length([tCamera.x,tCamera.y,tCamera.z])*2
-            // console.log(    b.focusLength)
+                testDLight.x = -Math.sin(time / 1500) * 5000
+                testDLight.y = 4000
+                testDLight.z = -Math.cos(time / 1500) * 5000
+                b.focusLength = vec3.length([tCamera.x, tCamera.y, tCamera.z]) * 2
+                // console.log(    b.focusLength)
             }
         )
         var testUI = function (redGL, tScene) {
