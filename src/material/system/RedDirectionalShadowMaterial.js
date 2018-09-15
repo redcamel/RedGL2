@@ -8,9 +8,19 @@ var RedDirectionalShadowMaterial;
         /* @preserve
         // 스키닝
         //#REDGL_DEFINE#vertexShareFunc#getSkinMatrix#
+        //#REDGL_DEFINE#vertexShareFunc#getSprite3DMatrix#
          void main(void) {
-            //#REDGL_DEFINE#skin#true# gl_Position =  uDirectionalShadowLightMatrix *  uMMatrix * getSkinMatrix() * vec4(aVertexPosition, 1.0);
-            //#REDGL_DEFINE#skin#false# gl_Position =  uDirectionalShadowLightMatrix *  uMMatrix * vec4(aVertexPosition, 1.0);
+            // position 계산
+            //#REDGL_DEFINE#skin#true# mat4 targetMatrix = uMMatrix *  getSkinMatrix() ;
+            //#REDGL_DEFINE#skin#false# mat4 targetMatrix = uMMatrix;
+
+            //#REDGL_DEFINE#sprite3D#true# gl_Position = getSprite3DMatrix(uDirectionalShadowLightMatrix , targetMatrix) *  vec4(aVertexPosition, 1.0);
+            //#REDGL_DEFINE#sprite3D#true# if(!u_PerspectiveScale){
+            //#REDGL_DEFINE#sprite3D#true#   gl_Position /= gl_Position.w;
+            //#REDGL_DEFINE#sprite3D#true#   gl_Position.xy += aVertexPosition.xy * vec2(targetMatrix[0][0],targetMatrix[1][1] * uResolution.x/uResolution.y);
+            //#REDGL_DEFINE#sprite3D#true# }
+            //#REDGL_DEFINE#sprite3D#false# gl_Position = uDirectionalShadowLightMatrix * targetMatrix *  vec4(aVertexPosition, 1.0);
+
          }
          */
     };
