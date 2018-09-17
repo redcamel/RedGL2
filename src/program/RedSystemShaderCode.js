@@ -135,6 +135,69 @@ var RedSystemShaderCode;
 
             },
             fragmentShareFunc: {
+                getDirectionalLightColor:
+                    [
+                        'vec4 getDirectionalLightColor(' +
+                        '      vec4 texelColor,' +
+                        '      vec3 N,' +
+                        '      float shininess,' +
+                        '      vec4 specularLightColor,' +
+                        '      float specularTextureValue,' +
+                        '      float specularPower' +
+                        ') {',
+                        '   vec3 L;',
+                        '   float specular;',
+                        '   float lambertTerm;',
+                        '   vec4 ld = vec4(0.0, 0.0, 0.0, 1.0);',
+                        '   vec4 ls = vec4(0.0, 0.0, 0.0, 1.0);',
+                        '   for(int i=0; i<cDIRETIONAL_MAX; i++){',
+                        '      if(i == uDirectionalLightNum) break;',
+                        '      L = normalize(-uDirectionalLightPositionList[i]);',
+                        '      lambertTerm = dot(N,-L);',
+                        '      if(lambertTerm > 0.0){',
+                        '         ld += uDirectionalLightColorList[i] * texelColor * lambertTerm * uDirectionalLightIntensityList[i] * uDirectionalLightColorList[i].a;',
+                        '         specular = pow( max(dot(reflect(L, N), -L), 0.0), shininess);',
+                        '         ls +=  specularLightColor * specular * specularPower * specularTextureValue * uDirectionalLightIntensityList[i] * uDirectionalLightColorList[i].a;',
+                        '      }',
+                        '   }',
+                        '   return ld + ls;',
+                        '}'
+                    ].join('\n'),
+                getPointLightColor:
+                    [
+                        'vec4 getPointLightColor(' +
+                        '      vec4 texelColor,' +
+                        '      vec3 N,' +
+                        '      float shininess,' +
+                        '      vec4 specularLightColor,' +
+                        '      float specularTextureValue,' +
+                        '      float specularPower' +
+                        ') {',
+                        '   vec3 L;',
+                        '   float specular;',
+                        '   float lambertTerm;',
+                        '   vec4 ld = vec4(0.0, 0.0, 0.0, 1.0);',
+                        '   vec4 ls = vec4(0.0, 0.0, 0.0, 1.0);',
+                        '   float distanceLength;',
+                        '   float attenuation;',
+                        '   for(int i=0;i<cPOINT_MAX;i++){',
+                        '      if(i== uPointLightNum) break;',
+                        '      L =  -uPointLightPositionList[i] + vVertexPosition.xyz;',
+                        '      distanceLength = abs(length(L));',
+                        '      if(uPointLightRadiusList[i]> distanceLength){',
+                        '          attenuation = 1.0 / (0.01 + 0.02 * distanceLength + 0.03 * distanceLength * distanceLength);',
+                        '          L = normalize(L);',
+                        '          lambertTerm = dot(N,-L);',
+                        '          if(lambertTerm > 0.0){',
+                        '             ld += uPointLightColorList[i] * texelColor * lambertTerm * attenuation * uPointLightIntensityList[i] * uPointLightColorList[i].a;',
+                        '             specular = pow( max(dot( reflect(L, N), -L), 0.0), shininess);',
+                        '             ls +=  specularLightColor * specular * specularPower * specularTextureValue * uPointLightIntensityList[i]  * uPointLightColorList[i].a ;',
+                        '          }',
+                        '      }',
+                        '   }',
+                        '   return ld + ls;',
+                        '}'
+                    ].join('\n'),
                 fogFactor:
                     [
                         'float fogFactor(float perspectiveFar, float density){',

@@ -165,7 +165,6 @@ var RedPBRMaterial;
                 if(i == uDirectionalLightNum) break;
                 L = normalize(-uDirectionalLightPositionList[i]);
                 lambertTerm = dot(N,-L);
-                lambertTerm = lambertTerm <0.1 ? 0.1 : lambertTerm;
                 if(lambertTerm > 0.0){
                     ld += uDirectionalLightColorList[i] * texelColor * lambertTerm * uDirectionalLightIntensityList[i] * uDirectionalLightColorList[i].a;
                     specular = pow( max(dot(reflect(L, N), -L), 0.0), pow(shininess, 1.0-tRoughnessPower+0.04) );

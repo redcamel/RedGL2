@@ -60,6 +60,10 @@ var RedColorPhongTextureMaterial;
         //#REDGL_DEFINE#fragmentShareFunc#decodeFloatShadow#
         //#REDGL_DEFINE#fragmentShareFunc#getShadowColor#
 
+        // 라이트
+        //#REDGL_DEFINE#fragmentShareFunc#getDirectionalLightColor#
+        //#REDGL_DEFINE#fragmentShareFunc#getPointLightColor#
+
          //#REDGL_DEFINE#normalTexture# uniform sampler2D u_normalTexture;
          //#REDGL_DEFINE#specularTexture# uniform sampler2D u_specularTexture;
 
@@ -69,29 +73,20 @@ var RedColorPhongTextureMaterial;
          uniform vec4 u_color;
          varying vec4 vVertexPosition;
 
-
          vec4 la;
-         vec4 ld;
-         vec4 ls;
+
          vec4 texelColor;
-         vec4 specularLightColor= vec4(1.0, 1.0, 1.0, 1.0);
          vec4 finalColor;
          vec3 N;
-         vec3 L;
-         float lambertTerm;
-         float specular;
+
+         vec4 specularLightColor= vec4(1.0, 1.0, 1.0, 1.0);
          float specularTextureValue;
-         float distanceLength;
-         float attenuation;
 
          void main(void) {
              la = uAmbientLightColor * uAmbientLightColor.a;
-             ld = vec4(0.0, 0.0, 0.0, 1.0);
-             ls = vec4(0.0, 0.0, 0.0, 1.0);
 
              texelColor = u_color;
              // texelColor.rgb *= texelColor.a;
-
 
              N = normalize(vVertexNormal);
              //#REDGL_DEFINE#normalTexture# vec4 normalColor = texture2D(u_normalTexture, vTexcoord);
@@ -101,34 +96,24 @@ var RedColorPhongTextureMaterial;
              float specularTextureValue = 1.0;
              //#REDGL_DEFINE#specularTexture# specularTextureValue = texture2D(u_specularTexture, vTexcoord).r;
 
-             for(int i=0; i<cDIRETIONAL_MAX; i++){
-                 if(i == uDirectionalLightNum) break;
-                 L = normalize(-uDirectionalLightPositionList[i]);
-                 lambertTerm = dot(N,-L);
-                 if(lambertTerm > 0.0){
-                     ld += uDirectionalLightColorList[i] * texelColor * lambertTerm * uDirectionalLightIntensityList[i] * uDirectionalLightColorList[i].a;
-                     specular = pow( max(dot(reflect(L, N), -L), 0.0), u_shininess);
-                     ls +=  specularLightColor * specular * u_specularPower * specularTextureValue * uDirectionalLightIntensityList[i] * uDirectionalLightColorList[i].a;
-                 }
-             }
+             vec4 finalColor = la * uAmbientIntensity
+             + getDirectionalLightColor(
+                texelColor,
+                N,
+                u_shininess,
+                specularLightColor,
+                specularTextureValue,
+                u_specularPower
+             )
+             + getPointLightColor(
+                texelColor,
+                N,
+                u_shininess,
+                specularLightColor,
+                specularTextureValue,
+                u_specularPower
+             );
 
-             for(int i=0;i<cPOINT_MAX;i++){
-                 if(i== uPointLightNum) break;
-                 L =  -uPointLightPositionList[i] + vVertexPosition.xyz;
-                 distanceLength = length(L);
-                 if(uPointLightRadiusList[i]> distanceLength){
-                     attenuation = 1.0 / (0.01 + 0.02 * distanceLength + 0.03 * distanceLength * distanceLength);
-                     L = normalize(L);
-                     lambertTerm = dot(N,-L);
-                     if(lambertTerm > 0.0){
-                         ld += uPointLightColorList[i] * texelColor * lambertTerm * attenuation * uPointLightIntensityList[i] * uPointLightColorList[i].a;
-                         specular = pow( max(dot(reflect(L, N), -L), 0.0), u_shininess);
-                         ls +=  specularLightColor * specular * u_specularPower * specularTextureValue * uPointLightIntensityList[i] * uPointLightColorList[i].a;
-                     }
-                 }
-             }
-
-             finalColor = la * uAmbientIntensity + ld + ls;
              finalColor.rgb *= texelColor.a;
              finalColor.a = texelColor.a;
              //#REDGL_DEFINE#directionalShadow#true# finalColor.rgb *= getShadowColor( vShadowPos, vResolution, uDirectionalShadowTexture);
