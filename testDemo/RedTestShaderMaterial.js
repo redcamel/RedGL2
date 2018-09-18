@@ -1,33 +1,33 @@
 "use strict";
 var RedTestShaderMaterial;
 (function () {
-	var makeProgram;
-	RedTestShaderMaterial = function (redGL) {
-		if ( !(this instanceof RedTestShaderMaterial) ) return new RedTestShaderMaterial(redGL);
-		this['program'] = makeProgram(redGL)
-		// 일반 프로퍼티
-		this['_UUID'] = RedGL['makeUUID']();
-		this.checkUniformAndProperty();
-		Object.seal(this)
-		console.log(this)
-	}
-	makeProgram = (function () {
-		var vSource, fSource;
-		var PROGRAM_NAME;
-		vSource = function () {
-			/* @preserve
-			varying vec3 vPosition;
-			 void main(void) {
-			 	 vTexcoord = aTexcoord;
-			 	 vTime = uTime;
-				 gl_Position = uPMatrix * uMMatrix * vec4(aVertexPosition, 1.0);
-				 vPosition = gl_Position.xyz;
-			 }
-			 */
-		}
-		fSource = function () {
-			/* @preserve
-			 precision mediump float;
+    var makeProgram;
+    RedTestShaderMaterial = function (redGL) {
+        if (!(this instanceof RedTestShaderMaterial)) return new RedTestShaderMaterial(redGL);
+        this['program'] = makeProgram(redGL)
+        // 일반 프로퍼티
+        this['_UUID'] = RedGL['makeUUID']();
+        this.checkUniformAndProperty();
+        Object.seal(this)
+        console.log(this)
+    }
+    makeProgram = (function () {
+        var vSource, fSource;
+        var PROGRAM_NAME;
+        vSource = function () {
+            /* @preserve
+            varying vec3 vPosition;
+             void main(void) {
+                  vTexcoord = aTexcoord;
+                  vTime = uTime;
+                 gl_Position = uPMatrix * uMMatrix * vec4(aVertexPosition, 1.0);
+                 vPosition = gl_Position.xyz;
+             }
+             */
+        }
+        fSource = function () {
+            /* @preserve
+             precision mediump float;
 #define PI 3.141592
 #define iSteps 16
 #define jSteps 8
@@ -136,36 +136,36 @@ vec3 atmosphere(vec3 r, vec3 r0, vec3 pSun, float iSun, float rPlanet, float rAt
     return iSun * (pRlh * kRlh * totalRlh + pMie * kMie * totalMie);
 }
 varying vec3 vPosition;
-			 void main(void) {
-			 vec3 uSunPos = uDirectionalLightPositionList[0];
-				vec3 color = atmosphere(
-		        normalize(vPosition),           // normalized ray direction
-		        vec3(0,6372e3,0),               // ray origin
-		        uSunPos,                        // position of the sun
-		        100.0,                           // intensity of the sun
-		        6371e3,                         // radius of the planet in meters
-		        6471e3,                         // radius of the atmosphere in meters
-		        vec3(5.5e-6, 13.0e-6, 22.4e-6), // Rayleigh scattering coefficient
-		        21e-6,                          // Mie scattering coefficient
-		        5000.0,                            // Rayleigh scale height
-		        1.2e3,                          // Mie scale height
-		        0.958                           // Mie preferred scattering direction
-		    );
+             void main(void) {
+             vec3 uSunPos = uDirectionalLightPositionList[0];
+                vec3 color = atmosphere(
+                normalize(vPosition),           // normalized ray direction
+                vec3(0,6372e3,0),               // ray origin
+                uSunPos,                        // position of the sun
+                100.0,                           // intensity of the sun
+                6371e3,                         // radius of the planet in meters
+                6471e3,                         // radius of the atmosphere in meters
+                vec3(5.5e-6, 13.0e-6, 22.4e-6), // Rayleigh scattering coefficient
+                21e-6,                          // Mie scattering coefficient
+                5000.0,                            // Rayleigh scale height
+                1.2e3,                          // Mie scale height
+                0.958                           // Mie preferred scattering direction
+            );
 
-		    // Apply exposure.
-		    color = 1.0 - exp(-1.0 * color);
+            // Apply exposure.
+            color = 1.0 - exp(-1.0 * color);
 
-		    gl_FragColor = vec4(color, 1);
-			 }
-			 */
-		}
-		vSource = RedGLUtil.getStrFromComment(vSource.toString());
-		fSource = RedGLUtil.getStrFromComment(fSource.toString());
-		PROGRAM_NAME = 'testrProgram';
-		return function (redGL) {
-			return RedProgram(redGL, PROGRAM_NAME, vSource, fSource)
-		}
-	})()
-	RedTestShaderMaterial.prototype = RedBaseMaterial.prototype
-	Object.freeze(RedTestShaderMaterial)
+            gl_FragColor = vec4(color, 1);
+             }
+             */
+        }
+        vSource = RedGLUtil.getStrFromComment(vSource.toString());
+        fSource = RedGLUtil.getStrFromComment(fSource.toString());
+        PROGRAM_NAME = 'testrProgram';
+        return function (redGL) {
+            return RedProgram(redGL, PROGRAM_NAME, vSource, fSource)
+        }
+    })()
+    RedTestShaderMaterial.prototype = RedBaseMaterial.prototype
+    Object.freeze(RedTestShaderMaterial)
 })();

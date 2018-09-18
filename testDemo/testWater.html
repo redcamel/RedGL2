@@ -138,60 +138,60 @@
 <body>
 <canvas id="test" style="border: none;background:red"></canvas>
 <script>
-	var t = document.getElementById('test')
-	document.body.appendChild(t)
-	RedGL(t, function (v) {
-		var tGL;
-		var tWorld, tScene3D, tCamera
-		var tRenderer;
-		var self;
-		self = this
-		tGL = this.gl;
-		this.world = tWorld = RedWorld();
-		tScene3D = RedScene(this);
-		tCamera = RedObitController(this);
-		tRenderer = RedRenderer();
-		tWorld.addView(RedView('test', this, tScene3D, tCamera));
-		RedView('test').setSize('100%', '100%')
-		RedView('test').setLocation('0%', '0%')
-		var testMaterial = RedColorPhongTextureMaterial(
-			this,
-			'#0000ff',
-			1,
-			RedBitmapTexture(this, '../asset/waterNormal.jpg'),
-			null,
-		)
-		testMaterial.displacementPower = 0.1
-		testMaterial.displacementFlowSpeedX = 0.2
-		testMaterial.displacementFlowSpeedY = 0.2
-		tScene3D.skyBox =
-			RedSkyBox(this, [
-				'../asset/cubemap/SwedishRoyalCastle/px.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/nx.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/py.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/ny.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/pz.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/nz.jpg'
-			]);
-		var testMesh = RedMesh(self, RedPlane(this, 1000, 1000, 200, 200), testMaterial)
-		tCamera.tilt = -45
-		tCamera.distance = 50
-		tScene3D.useFog = true
-		tScene3D.fogDistance = 300
-		tScene3D.fogDensity = 0.5
-		testMesh.rotationX = 90
-		tScene3D.addChild(testMesh)
-		var testDLight
-		testDLight = RedDirectionalLight(this, '#fff')
-		testDLight.x = 30
-		testDLight.y = 30
-		testDLight.z = 30
-		tScene3D.addLight(testDLight)
-		tRenderer.renderDebuger.visible = true
-		tRenderer.start(this, function (time) {
-		})
-		console.log(tScene3D)
-	})
+    var t = document.getElementById('test')
+    document.body.appendChild(t)
+    RedGL(t, function (v) {
+        var tGL;
+        var tWorld, tScene3D, tCamera
+        var tRenderer;
+        var self;
+        self = this
+        tGL = this.gl;
+        this.world = tWorld = RedWorld();
+        tScene3D = RedScene(this);
+        tCamera = RedObitController(this);
+        tRenderer = RedRenderer();
+        tWorld.addView(RedView('test', this, tScene3D, tCamera));
+        RedView('test').setSize('100%', '100%')
+        RedView('test').setLocation('0%', '0%')
+        var testMaterial = RedColorPhongTextureMaterial(
+            this,
+            '#0000ff',
+            1,
+            RedBitmapTexture(this, '../asset/waterNormal.jpg'),
+            null,
+        )
+        testMaterial.displacementPower = 0.1
+        testMaterial.displacementFlowSpeedX = 0.2
+        testMaterial.displacementFlowSpeedY = 0.2
+        tScene3D.skyBox =
+            RedSkyBox(this, [
+                '../asset/cubemap/SwedishRoyalCastle/px.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/nx.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/py.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/ny.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
+            ]);
+        var testMesh = RedMesh(self, RedPlane(this, 1000, 1000, 200, 200), testMaterial)
+        tCamera.tilt = -45
+        tCamera.distance = 50
+        tScene3D.useFog = true
+        tScene3D.fogDistance = 300
+        tScene3D.fogDensity = 0.5
+        testMesh.rotationX = 90
+        tScene3D.addChild(testMesh)
+        var testDLight
+        testDLight = RedDirectionalLight(this, '#fff')
+        testDLight.x = 30
+        testDLight.y = 30
+        testDLight.z = 30
+        tScene3D.addLight(testDLight)
+        tRenderer.renderDebuger.visible = true
+        tRenderer.start(this, function (time) {
+        })
+        console.log(tScene3D)
+    })
 </script>
 </body>
 

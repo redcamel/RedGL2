@@ -72,8 +72,9 @@
     <script src="../src/loader/JsonModelLoader.js"></script>
     <script src="../src/loader/obj/RedMTLLoader.js"></script>
     <script src="../src/loader/obj/RedOBJLoader.js"></script>
-    <script src="../rnd/loader/gltf/RedGLTFLoader.js"></script>
-    <script src="../rnd/loader/3ds/Red3DSLoader.js"></script>
+    <script src="../src/loader/gltf/RedGLTFLoader.js"></script>
+    <script src="../src/loader/3ds/Red3DSLoader.js"></script>
+    <script src="../src/loader/dae/RedDAELoader.js"></script>
     <!--//-->
     <script src="../src/object3D/RedAxis.js"></script>
     <script src="../src/object3D/RedGrid.js"></script>
@@ -208,15 +209,15 @@
                 '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
                 '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
             ]);
-        RedGLTFLoader(self, '../asset/glTF/gundam/', 'scene.gltf', function (v) {
-            console.log('호잇!', v)
-            var t0
-            tScene3D.addChild(t0 = v['resultMesh'])
-            tShadow.addCasting(v['resultMesh'], true);
-            // v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 40
-            t0.y = -300
-            t0.z = -350
-        })
+        // RedGLTFLoader(self, '../asset/glTF/gundam/', 'scene.gltf', function (v) {
+        //     console.log('호잇!', v)
+        //     var t0
+        //     tScene3D.addChild(t0 = v['resultMesh'])
+        //     tShadow.addCasting(v['resultMesh'], true);
+        //     // v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 40
+        //     t0.y = -300
+        //     t0.z = -350
+        // })
         // RedGLTFLoader(self, '../asset/glTF/iso/', 'scene.gltf', function (v) {
         // 	console.log('호잇!', v)
         // 	tScene3D.addChild(t0 = v['resultMesh'])
@@ -315,7 +316,7 @@
             // RedColorPhongMaterial(self)
             // RedColorPhongTextureMaterial(self)
             // RedBitmapMaterial(self,RedBitmapTexture(self, '../asset/brick_diffuse.jpg'))
-            RedStandardMaterial(self,RedBitmapTexture(self, '../asset/brick_diffuse.jpg'))
+            RedStandardMaterial(self, RedBitmapTexture(self, '../asset/brick_diffuse.jpg'))
             // RedEnvironmentMaterial(self, RedBitmapTexture(self, '../asset/brick_diffuse.jpg'), RedBitmapCubeTexture(self, [
             //     '../asset/cubemap/SwedishRoyalCastle/px.jpg',
             //     '../asset/cubemap/SwedishRoyalCastle/nx.jpg',

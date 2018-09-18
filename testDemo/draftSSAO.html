@@ -142,150 +142,150 @@
 <body>
 <canvas id="test" style="border: none;background:red"></canvas>
 <script>
-	document.getElementById('test')
-	RedGL(document.getElementById('test'), function (v) {
-		console.log(v)
-		var tGL;
-		var tWorld, tScene3D, tCamera
-		var tRenderer;
-		var self;
-		self = this
-		tGL = this.gl;
-		this.world = tWorld = RedWorld();
-		tScene3D = RedScene(this);
-		// tScene3D['useFog'] = true
-		tCamera = RedObitController(this);
-		tCamera.tilt = -45
-		tCamera.distance = 40
-		tRenderer = RedRenderer();
-		tWorld.addView(RedView('test', this, tScene3D, tCamera));
-		RedView('test').setSize('100%', '100%')
-		RedView('test').setLocation('0%', '0%')
-		this.renderScale = 1
-		var testDLight, testALight, testPLight;
-		testDLight = RedDirectionalLight(this)
-		testDLight.x = -3
-		testDLight.y = -2
-		testDLight.z = -3
-		testDLight.debug = true
+    document.getElementById('test')
+    RedGL(document.getElementById('test'), function (v) {
+        console.log(v)
+        var tGL;
+        var tWorld, tScene3D, tCamera
+        var tRenderer;
+        var self;
+        self = this
+        tGL = this.gl;
+        this.world = tWorld = RedWorld();
+        tScene3D = RedScene(this);
+        // tScene3D['useFog'] = true
+        tCamera = RedObitController(this);
+        tCamera.tilt = -45
+        tCamera.distance = 40
+        tRenderer = RedRenderer();
+        tWorld.addView(RedView('test', this, tScene3D, tCamera));
+        RedView('test').setSize('100%', '100%')
+        RedView('test').setLocation('0%', '0%')
+        this.renderScale = 1
+        var testDLight, testALight, testPLight;
+        testDLight = RedDirectionalLight(this)
+        testDLight.x = -3
+        testDLight.y = -2
+        testDLight.z = -3
+        testDLight.debug = true
 //		testDLight.intensity = 1.5
-		tScene3D.addLight(testDLight)
-		var testDLight, testALight, testPLight;
-		testDLight = RedDirectionalLight(this)
-		testDLight.x = 3
-		testDLight.y = 2
-		testDLight.z = 3
-		testDLight.debug = true
+        tScene3D.addLight(testDLight)
+        var testDLight, testALight, testPLight;
+        testDLight = RedDirectionalLight(this)
+        testDLight.x = 3
+        testDLight.y = 2
+        testDLight.z = 3
+        testDLight.debug = true
 //		testDLight.intensity = 1.5
-		tScene3D.addLight(testDLight)
-		// var ssao = RedPostEffect_SSAO_PointMaker(this)
-		var ssao = RedPostEffect_SSAO(this)
-		ssao.mode = RedPostEffect_SSAO.ONLY_SSAO
-		RedView('test')['postEffectManager'].addEffect(ssao)
-		// var bloom = RedPostEffect_Bloom(this)
-		// tScene3D['postEffectManager'].addEffect(bloom)
-		tScene3D.skyBox =
-			RedSkyBox(this, [
-				'../asset/cubemap/SwedishRoyalCastle/px.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/nx.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/py.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/ny.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/pz.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/nz.jpg'
-			]);
-		var testMaterial, testMaterial2
-		testMaterial = RedEnvironmentMaterial(
-			this,
-			RedBitmapTexture(this, '../asset/crate.png'),
-			RedBitmapCubeTexture(this, [
-				'../asset/cubemap/SwedishRoyalCastle/px.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/nx.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/py.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/ny.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/pz.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/nz.jpg'
-			]),
-			RedBitmapTexture(this, '../asset/normalTest.jpg'),
-			RedBitmapTexture(this, '../asset/specular.png'),
-			RedBitmapTexture(this, '../asset/displacementTest.jpg')
-		)
-		testMaterial2 = RedBitmapMaterial(
-			this,
-			RedBitmapTexture(this, '../asset/alphaTest.png')
-		)
-		JsonModelLoader(this, 'testJsonModel', '../asset/teapot.json', function (interleaveBuffer, indexBuffer) {
-			console.log('호잇!', interleaveBuffer, indexBuffer)
-			var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer), RedColorPhongMaterial(self))
-			// var testMesh = RedMesh(self, RedBox(self), testMaterial)
-			testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.3
-			testMesh.y = 2.2
-			// var testMesh = RedMesh(self,RedPlane(self),testMaterial)
-			// testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 1
-			// testMesh.scaleY  =
-			tScene3D.addChild(testMesh)
-			var i = 10
-			while ( i-- ) {
-				// var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer),
-				//     testMaterial)
-				var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer), testMaterial)
-				testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.3
-				tScene3D.addChild(testMesh)
-				testMesh.x = Math.sin(Math.PI * 2 / 10 * i) * 10
-				testMesh.z = Math.cos(Math.PI * 2 / 10 * i) * 10
-				testMesh.y = 2.2
-				tScene3D.addChild(testMesh)
-			}
-			tScene3D['grid'] = RedGrid(self)
-		})
-		var tGeo = RedBox(self, 1, 5, 1, 1, 1, 1)
-		var tMesh = RedMesh(self, tGeo, testMaterial2)
-		tScene3D.addChild(tMesh)
-		tMesh.material = RedColorPhongMaterial(self)
-		tMesh.x = 0
-		tMesh.z = 0
-		tMesh.rotationX = tMesh.rotationY = tMesh.rotationZ = 0
-		tMesh.scaleX = 100
-		tMesh.scaleY = 0.1
-		tMesh.scaleZ = 100
-		tRenderer.renderDebuger.visible = true
-		tRenderer.start(this, function (time) {
-			testDLight.x = Math.sin(time / 1000) * 25
-			testDLight.y = 25
-			testDLight.z = Math.cos(time / 1000) * 25
-			var i = tScene3D.children.length
-			while ( i-- ) {
-				if ( i == 0 ) break
-				testMesh = tScene3D.children[i]
-				// testMesh.rotationX += 0.5
-				// testMesh.rotationY += 0.5
-				// testMesh.rotationZ += 0.5
-			}
-		})
-		this['gui'] = new dat.GUI({
-			name: 'test'
-		});
-		// var t0 = this['gui'].addFolder('fxaa')
-		// var testFXAA = {
-		//     bloom: true
-		// }
-		// t0.add(testFXAA, 'bloom', false, true).onChange(function (v) {
-		//     if (!v) tScene3D['postEffectManager'].removeEffect(bloom)
-		//     else tScene3D['postEffectManager'].addEffect(bloom)
-		// })
-		var t0 = this['gui'].addFolder('ssao')
-		t0.add(ssao, 'blur', 0.0, 30)
-		t0.add(ssao, 'range', 0, 1000)
-		t0.add(ssao, 'factor2', 0, 10)
-		// t0.add(ssao, 'contrast', -1, 1)
-		var test = {
-			mode: 'ONLY_SSAO'
-		}
-		t0.add(test, 'mode', ['ONLY_SSAO', 'ONLY_NORMAL', 'ONLY_COLOR', 'COLOR_SSAO']).onChange(function (v) {
-			ssao['mode'] = RedPostEffect_SSAO[v]
-		})
-		t0.open()
-		console.log(tScene3D)
-	})
+        tScene3D.addLight(testDLight)
+        // var ssao = RedPostEffect_SSAO_PointMaker(this)
+        var ssao = RedPostEffect_SSAO(this)
+        ssao.mode = RedPostEffect_SSAO.ONLY_SSAO
+        RedView('test')['postEffectManager'].addEffect(ssao)
+        // var bloom = RedPostEffect_Bloom(this)
+        // tScene3D['postEffectManager'].addEffect(bloom)
+        tScene3D.skyBox =
+            RedSkyBox(this, [
+                '../asset/cubemap/SwedishRoyalCastle/px.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/nx.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/py.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/ny.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
+            ]);
+        var testMaterial, testMaterial2
+        testMaterial = RedEnvironmentMaterial(
+            this,
+            RedBitmapTexture(this, '../asset/crate.png'),
+            RedBitmapCubeTexture(this, [
+                '../asset/cubemap/SwedishRoyalCastle/px.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/nx.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/py.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/ny.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
+            ]),
+            RedBitmapTexture(this, '../asset/normalTest.jpg'),
+            RedBitmapTexture(this, '../asset/specular.png'),
+            RedBitmapTexture(this, '../asset/displacementTest.jpg')
+        )
+        testMaterial2 = RedBitmapMaterial(
+            this,
+            RedBitmapTexture(this, '../asset/alphaTest.png')
+        )
+        JsonModelLoader(this, 'testJsonModel', '../asset/teapot.json', function (interleaveBuffer, indexBuffer) {
+            console.log('호잇!', interleaveBuffer, indexBuffer)
+            var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer), RedColorPhongMaterial(self))
+            // var testMesh = RedMesh(self, RedBox(self), testMaterial)
+            testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.3
+            testMesh.y = 2.2
+            // var testMesh = RedMesh(self,RedPlane(self),testMaterial)
+            // testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 1
+            // testMesh.scaleY  =
+            tScene3D.addChild(testMesh)
+            var i = 10
+            while (i--) {
+                // var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer),
+                //     testMaterial)
+                var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer), testMaterial)
+                testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.3
+                tScene3D.addChild(testMesh)
+                testMesh.x = Math.sin(Math.PI * 2 / 10 * i) * 10
+                testMesh.z = Math.cos(Math.PI * 2 / 10 * i) * 10
+                testMesh.y = 2.2
+                tScene3D.addChild(testMesh)
+            }
+            tScene3D['grid'] = RedGrid(self)
+        })
+        var tGeo = RedBox(self, 1, 5, 1, 1, 1, 1)
+        var tMesh = RedMesh(self, tGeo, testMaterial2)
+        tScene3D.addChild(tMesh)
+        tMesh.material = RedColorPhongMaterial(self)
+        tMesh.x = 0
+        tMesh.z = 0
+        tMesh.rotationX = tMesh.rotationY = tMesh.rotationZ = 0
+        tMesh.scaleX = 100
+        tMesh.scaleY = 0.1
+        tMesh.scaleZ = 100
+        tRenderer.renderDebuger.visible = true
+        tRenderer.start(this, function (time) {
+            testDLight.x = Math.sin(time / 1000) * 25
+            testDLight.y = 25
+            testDLight.z = Math.cos(time / 1000) * 25
+            var i = tScene3D.children.length
+            while (i--) {
+                if (i == 0) break
+                testMesh = tScene3D.children[i]
+                // testMesh.rotationX += 0.5
+                // testMesh.rotationY += 0.5
+                // testMesh.rotationZ += 0.5
+            }
+        })
+        this['gui'] = new dat.GUI({
+            name: 'test'
+        });
+        // var t0 = this['gui'].addFolder('fxaa')
+        // var testFXAA = {
+        //     bloom: true
+        // }
+        // t0.add(testFXAA, 'bloom', false, true).onChange(function (v) {
+        //     if (!v) tScene3D['postEffectManager'].removeEffect(bloom)
+        //     else tScene3D['postEffectManager'].addEffect(bloom)
+        // })
+        var t0 = this['gui'].addFolder('ssao')
+        t0.add(ssao, 'blur', 0.0, 30)
+        t0.add(ssao, 'range', 0, 1000)
+        t0.add(ssao, 'factor2', 0, 10)
+        // t0.add(ssao, 'contrast', -1, 1)
+        var test = {
+            mode: 'ONLY_SSAO'
+        }
+        t0.add(test, 'mode', ['ONLY_SSAO', 'ONLY_NORMAL', 'ONLY_COLOR', 'COLOR_SSAO']).onChange(function (v) {
+            ssao['mode'] = RedPostEffect_SSAO[v]
+        })
+        t0.open()
+        console.log(tScene3D)
+    })
 </script>
 </body>
 

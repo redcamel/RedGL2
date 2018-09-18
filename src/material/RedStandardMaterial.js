@@ -9,6 +9,8 @@ var RedStandardMaterial;
         /* @preserve
             // 스키닝
             //#REDGL_DEFINE#vertexShareFunc#getSkinMatrix#
+
+            // Sprite3D
             //#REDGL_DEFINE#vertexShareFunc#getSprite3DMatrix#
 
             //#REDGL_DEFINE#displacementTexture# uniform sampler2D u_displacementTexture;
@@ -16,9 +18,10 @@ var RedStandardMaterial;
             //#REDGL_DEFINE#displacementTexture# uniform float u_displacementFlowSpeedX;
             //#REDGL_DEFINE#displacementTexture# uniform float u_displacementFlowSpeedY;
 
-            varying vec4 vVertexPosition;
+
 
             void main(void) {
+                gl_PointSize = uPointSize;
                 vTexcoord = aTexcoord;
 
                 // normal 계산
@@ -59,6 +62,9 @@ var RedStandardMaterial;
         //#REDGL_DEFINE#fragmentShareFunc#decodeFloatShadow#
         //#REDGL_DEFINE#fragmentShareFunc#getShadowColor#
 
+        // 라이트
+        //#REDGL_DEFINE#fragmentShareFunc#getDirectionalLightColor#
+        //#REDGL_DEFINE#fragmentShareFunc#getPointLightColor#
 
         // 텍스쳐
          uniform sampler2D u_diffuseTexture;
@@ -71,26 +77,19 @@ var RedStandardMaterial;
          uniform float u_specularPower;
          uniform float u_alpha;
 
-         varying vec4 vVertexPosition;
 
-         vec4 la;
-         vec4 ld;
-         vec4 ls;
+
          vec4 texelColor;
          vec4 emissiveColor;
+
          vec4 specularLightColor= vec4(1.0, 1.0, 1.0, 1.0);
+         float specularTextureValue;
+
          vec4 finalColor;
          vec3 N;
-         vec3 L;
-         float lambertTerm;
-         float specular;
-         float specularTextureValue;
-         float distanceLength;
-         float attenuation;
+
          void main(void) {
-             la = uAmbientLightColor * uAmbientLightColor.a;
-             ld = vec4(0.0, 0.0, 0.0, 1.0);
-             ls = vec4(0.0, 0.0, 0.0, 1.0);
+
 
              texelColor = texture2D(u_diffuseTexture, vTexcoord);
              texelColor.rgb *= texelColor.a;
@@ -98,9 +97,6 @@ var RedStandardMaterial;
 
             //#REDGL_DEFINE#emissiveTexture# emissiveColor = texture2D(u_emissiveTexture, vTexcoord);
             //#REDGL_DEFINE#emissiveTexture# emissiveColor.rgb *= texelColor.a;
-
-
-
 
 
              N = normalize(vVertexNormal);
@@ -112,34 +108,24 @@ var RedStandardMaterial;
              //#REDGL_DEFINE#specularTexture# specularTextureValue = texture2D(u_specularTexture, vTexcoord).r;
 
 
-            for(int i=0; i<cDIRETIONAL_MAX; i++){
-                 if(i == uDirectionalLightNum) break;
-                 L = normalize(-uDirectionalLightPositionList[i]);
-                 lambertTerm = dot(N,-L);
-                 if(lambertTerm > 0.0){
-                     ld += uDirectionalLightColorList[i] * texelColor * lambertTerm * uDirectionalLightIntensityList[i] * uDirectionalLightColorList[i].a;
-                     specular = pow( max(dot(reflect(L, N), -L), 0.0), u_shininess);
-                     ls +=  specularLightColor * specular * u_specularPower * specularTextureValue * uDirectionalLightIntensityList[i] * uDirectionalLightColorList[i].a;
-                 }
-             }
+             vec4 finalColor = uAmbientLightColor * uAmbientIntensity
+             + getDirectionalLightColor(
+                texelColor,
+                N,
+                u_shininess,
+                specularLightColor,
+                specularTextureValue,
+                u_specularPower
+             )
+             + getPointLightColor(
+                texelColor,
+                N,
+                u_shininess,
+                specularLightColor,
+                specularTextureValue,
+                u_specularPower
+             );
 
-             for(int i=0;i<cPOINT_MAX;i++){
-                 if(i== uPointLightNum) break;
-                 L =  -uPointLightPositionList[i] + vVertexPosition.xyz;
-                 distanceLength = length(L);
-                 if(uPointLightRadiusList[i]> distanceLength){
-                     attenuation = 1.0 / (0.01 + 0.02 * distanceLength + 0.03 * distanceLength * distanceLength);
-                     L = normalize(L);
-                     lambertTerm = dot(N,-L);
-                     if(lambertTerm > 0.0){
-                         ld += uPointLightColorList[i] * texelColor * lambertTerm * attenuation * uPointLightIntensityList[i] * uPointLightColorList[i].a;
-                         specular = pow( max(dot(reflect(L, N), -L), 0.0), u_shininess);
-                         ls +=  specularLightColor * specular * u_specularPower * specularTextureValue * uPointLightIntensityList[i]* uPointLightColorList[i].a ;
-                     }
-                 }
-             }
-
-             finalColor = la * uAmbientIntensity + ld + ls;
              //#REDGL_DEFINE#emissiveTexture# finalColor.rgb += emissiveColor.rgb;
              finalColor.rgb *= texelColor.a;
              finalColor.a = texelColor.a * u_alpha;

@@ -51,7 +51,7 @@ var RedDirectionalShadow;
 
     };
     /**DOC:
-     {z
+     {
 		 code:`METHOD`,
 		 title :`removeCasting`,
 		 description : `

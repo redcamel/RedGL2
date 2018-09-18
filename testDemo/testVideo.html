@@ -138,48 +138,48 @@
 <body>
 <canvas id="test" style="border: none;background:red"></canvas>
 <script>
-	var t = document.getElementById('test')
-	document.body.appendChild(t)
-	RedGL(t, function (v) {
-		var tGL;
-		var tWorld, tScene3D, tCamera
-		var tRenderer;
-		var self;
-		self = this
-		tGL = this.gl;
-		this.world = tWorld = RedWorld();
-		tScene3D = RedScene(this);
-		tCamera = RedObitController(this);
-		tRenderer = RedRenderer();
-		tWorld.addView(RedView('test', this, tScene3D, tCamera));
-		RedView('test').setSize('100%', '100%')
-		RedView('test').setLocation('0%', '0%')
-		var testMaterial = RedVideoMaterial(
-			this,
-			RedVideoTexture(this, '../asset/mov_bbb.mp4')
-		)
-		tScene3D.skyBox =
-			RedSkyBox(this, [
-				'../asset/cubemap/SwedishRoyalCastle/px.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/nx.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/py.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/ny.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/pz.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/nz.jpg'
-			]);
-		var testMesh = RedMesh(self, RedBox(this), testMaterial)
-		tScene3D.addChild(testMesh)
-		var testDLight
-		testDLight = RedDirectionalLight(this, '#fff')
-		testDLight.x = 3
-		testDLight.y = 3
-		testDLight.z = 3
-		tScene3D.addLight(testDLight)
-		tRenderer.renderDebuger.visible = true
-		tRenderer.start(this, function (time) {
-		})
-		console.log(tScene3D)
-	})
+    var t = document.getElementById('test')
+    document.body.appendChild(t)
+    RedGL(t, function (v) {
+        var tGL;
+        var tWorld, tScene3D, tCamera
+        var tRenderer;
+        var self;
+        self = this
+        tGL = this.gl;
+        this.world = tWorld = RedWorld();
+        tScene3D = RedScene(this);
+        tCamera = RedObitController(this);
+        tRenderer = RedRenderer();
+        tWorld.addView(RedView('test', this, tScene3D, tCamera));
+        RedView('test').setSize('100%', '100%')
+        RedView('test').setLocation('0%', '0%')
+        var testMaterial = RedVideoMaterial(
+            this,
+            RedVideoTexture(this, '../asset/mov_bbb.mp4')
+        )
+        tScene3D.skyBox =
+            RedSkyBox(this, [
+                '../asset/cubemap/SwedishRoyalCastle/px.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/nx.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/py.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/ny.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
+            ]);
+        var testMesh = RedMesh(self, RedBox(this), testMaterial)
+        tScene3D.addChild(testMesh)
+        var testDLight
+        testDLight = RedDirectionalLight(this, '#fff')
+        testDLight.x = 3
+        testDLight.y = 3
+        testDLight.z = 3
+        tScene3D.addLight(testDLight)
+        tRenderer.renderDebuger.visible = true
+        tRenderer.start(this, function (time) {
+        })
+        console.log(tScene3D)
+    })
 </script>
 </body>
 

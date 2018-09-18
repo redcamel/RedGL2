@@ -7,7 +7,7 @@
   },
   {
     "code": "PROPERTY",
-    "title": "alphaTest",
+    "title": "cutOff",
     "description": "기본값 : 0.01",
     "return": "Number"
   },

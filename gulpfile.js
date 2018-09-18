@@ -147,6 +147,7 @@ gulp.task('combine-js', function () {
 		"src/material/RedSheetMaterial.js",
 		"src/material/RedStandardMaterial.js",
 		"src/material/RedVideoMaterial.js",
+        "src/material/RedPBRMaterial.js",
 		//
 		"src/light/RedAmbientLight.js",
 		"src/light/RedDirectionalLight.js",
@@ -155,6 +156,9 @@ gulp.task('combine-js', function () {
 		"src/loader/JsonModelLoader.js",
 		"src/loader/obj/RedMTLLoader.js",
 		"src/loader/obj/RedOBJLoader.js",
+        "src/loader/3ds/Red3DSLoader.js",
+        "src/loader/dae/RedDAELoader.js",
+        "src/loader/gltf/RedGLTFLoader.js",
 		//
 		"src/object3D/RedAxis.js",
 		"src/object3D/RedGrid.js",

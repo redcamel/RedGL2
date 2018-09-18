@@ -138,84 +138,84 @@
 <body>
 <canvas id="test" style="border: none;background:red"></canvas>
 <script>
-	var t = document.getElementById('test')
-	document.body.appendChild(t)
-	RedGL(t, function (v) {
-		var tGL;
-		var tWorld, tScene3D, tCamera
-		var tRenderer;
-		var self;
-		self = this
-		tGL = this.gl;
-		this.world = tWorld = RedWorld();
-		tScene3D = RedScene(this);
-		tCamera = RedCamera();
-		tRenderer = RedRenderer();
-		tWorld.addView(RedView('test', this, tScene3D, tCamera));
-		RedView('test').setSize('100%', '100%')
-		RedView('test').setLocation('0%', '0%')
-		tScene3D.skyBox =
-			RedSkyBox(this, [
-				'../asset/cubemap/SwedishRoyalCastle/px.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/nx.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/py.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/ny.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/pz.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/nz.jpg'
-			]);
-		var testDLight
-		testDLight = RedDirectionalLight(this, '#fff')
-		testDLight.x = 3
-		testDLight.y = 3
-		testDLight.z = 3
-		tScene3D.addLight(testDLight)
-		var testMaterials = []
-		var imgList = []
-		for ( var i = 0; i < 10; i++ ) {
-			imgList.push('../asset/draft' + (i % 5 + 1) + '.png?test=' + Math.random())
-		}
-		RedAtlas(this, imgList,
-			function (v) {
-				console.log('~~~~~~~~~~~~~~~', v)
-				for ( var k in v['atlasMap'] ) {
+    var t = document.getElementById('test')
+    document.body.appendChild(t)
+    RedGL(t, function (v) {
+        var tGL;
+        var tWorld, tScene3D, tCamera
+        var tRenderer;
+        var self;
+        self = this
+        tGL = this.gl;
+        this.world = tWorld = RedWorld();
+        tScene3D = RedScene(this);
+        tCamera = RedCamera();
+        tRenderer = RedRenderer();
+        tWorld.addView(RedView('test', this, tScene3D, tCamera));
+        RedView('test').setSize('100%', '100%')
+        RedView('test').setLocation('0%', '0%')
+        tScene3D.skyBox =
+            RedSkyBox(this, [
+                '../asset/cubemap/SwedishRoyalCastle/px.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/nx.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/py.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/ny.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
+            ]);
+        var testDLight
+        testDLight = RedDirectionalLight(this, '#fff')
+        testDLight.x = 3
+        testDLight.y = 3
+        testDLight.z = 3
+        tScene3D.addLight(testDLight)
+        var testMaterials = []
+        var imgList = []
+        for (var i = 0; i < 10; i++) {
+            imgList.push('../asset/draft' + (i % 5 + 1) + '.png?test=' + Math.random())
+        }
+        RedAtlas(this, imgList,
+            function (v) {
+                console.log('~~~~~~~~~~~~~~~', v)
+                for (var k in v['atlasMap']) {
 
-					// console.log( v['atlasMap'][k]['atlas']['canvas'])
-					testMaterials.push(
-						RedStandardMaterial(
-							self,
-							RedAtlasTexture(self, k)
-						)
-					)
-				}
-				var i = 7000
-				var geo = RedBox(self)
-				while ( i-- ) {
-					var testMesh = RedMesh(self, geo, testMaterials[i % imgList.length])
-					testMesh.x = Math.random() * 100 - 50
-					testMesh.y = Math.random() * 100 - 50
-					testMesh.z = Math.random() * 100 - 50
-					tScene3D.addChild(testMesh)
-				}
-				console.log(testMaterials)
-			}
-		)
-		tRenderer.renderDebuger.visible = true
-		tRenderer.start(this, function (time) {
-			i = tScene3D.children.length
-			while ( i-- ) {
-				if ( i == 0 ) break
-				testMesh = tScene3D.children[i]
-				testMesh.rotationX += 1
-				testMesh.rotationY += 1
-				testMesh.rotationZ += 1
-			}
-			tCamera.x = Math.sin(time / 3500) * 20
-			tCamera.y = Math.cos(time / 3500) * 20
-			tCamera.z = Math.cos(time / 3500) * 20
-			tCamera.lookAt(0, 0, 0)
-		})
-		console.log(tScene3D)
-	})
+                    // console.log( v['atlasMap'][k]['atlas']['canvas'])
+                    testMaterials.push(
+                        RedStandardMaterial(
+                            self,
+                            RedAtlasTexture(self, k)
+                        )
+                    )
+                }
+                var i = 7000
+                var geo = RedBox(self)
+                while (i--) {
+                    var testMesh = RedMesh(self, geo, testMaterials[i % imgList.length])
+                    testMesh.x = Math.random() * 100 - 50
+                    testMesh.y = Math.random() * 100 - 50
+                    testMesh.z = Math.random() * 100 - 50
+                    tScene3D.addChild(testMesh)
+                }
+                console.log(testMaterials)
+            }
+        )
+        tRenderer.renderDebuger.visible = true
+        tRenderer.start(this, function (time) {
+            i = tScene3D.children.length
+            while (i--) {
+                if (i == 0) break
+                testMesh = tScene3D.children[i]
+                testMesh.rotationX += 1
+                testMesh.rotationY += 1
+                testMesh.rotationZ += 1
+            }
+            tCamera.x = Math.sin(time / 3500) * 20
+            tCamera.y = Math.cos(time / 3500) * 20
+            tCamera.z = Math.cos(time / 3500) * 20
+            tCamera.lookAt(0, 0, 0)
+        })
+        console.log(tScene3D)
+    })
 </script>
 </body>
 

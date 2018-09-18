@@ -72,8 +72,9 @@
     <script src="../src/loader/JsonModelLoader.js"></script>
     <script src="../src/loader/obj/RedMTLLoader.js"></script>
     <script src="../src/loader/obj/RedOBJLoader.js"></script>
-    <script src="../rnd/loader/gltf/RedGLTFLoader.js"></script>
-    <script src="../rnd/loader/3ds/Red3DSLoader.js"></script>
+    <script src="../src/loader/gltf/RedGLTFLoader.js"></script>
+    <script src="../src/loader/3ds/Red3DSLoader.js"></script>
+    <script src="../src/loader/dae/RedDAELoader.js"></script>
     <!--//-->
     <script src="../src/object3D/RedAxis.js"></script>
     <script src="../src/object3D/RedGrid.js"></script>
@@ -191,46 +192,46 @@
                 '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
                 '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
             ]);
-        var t0 =RedGLTFLoader(self, '../asset/glTF/basic/', 'BrainStem.gltf', function (v) {
-        	console.log('호잇!', v)
-        	tScene3D.addChild(v['resultMesh'])
-        	v['resultMesh'].x = 1.5
+        var t0 = RedGLTFLoader(self, '../asset/glTF/basic/', 'BrainStem.gltf', function (v) {
+            console.log('호잇!', v)
+            tScene3D.addChild(v['resultMesh'])
+            v['resultMesh'].x = 1.5
 
         });
-        var t1 =RedGLTFLoader(self, '../asset/glTF/basic/', 'CesiumMan.gltf', function (v) {
-        	console.log('호잇!', v)
-        	tScene3D.addChild(v['resultMesh'])
-        	v['resultMesh'].x = -1.5
+        var t1 = RedGLTFLoader(self, '../asset/glTF/basic/', 'CesiumMan.gltf', function (v) {
+            console.log('호잇!', v)
+            tScene3D.addChild(v['resultMesh'])
+            v['resultMesh'].x = -1.5
         });
         RedGLTFLoader(self, '../asset/glTF/basic/', 'CesiumMilkTruck.gltf', function (v) {
-        	console.log('호잇!', v)
-        	tScene3D.addChild(v['resultMesh'])
-        	v['resultMesh'].z = -3
+            console.log('호잇!', v)
+            tScene3D.addChild(v['resultMesh'])
+            v['resultMesh'].z = -3
         });
 
-        var t1 =RedGLTFLoader(self, '../asset/glTF/basic/', 'RiggedFigure.gltf', function (v) {
-        	console.log('호잇!', v)
-        	tScene3D.addChild(v['resultMesh'])
-        	v['resultMesh'].z = -1
+        var t1 = RedGLTFLoader(self, '../asset/glTF/basic/', 'RiggedFigure.gltf', function (v) {
+            console.log('호잇!', v)
+            tScene3D.addChild(v['resultMesh'])
+            v['resultMesh'].z = -1
         });
         t0 = RedGLTFLoader(self, '../asset/glTF/basic/', 'BoxAnimated.gltf', function (v) {
-        	console.log('호잇!', v)
-        	tScene3D.addChild(v['resultMesh'])
+            console.log('호잇!', v)
+            tScene3D.addChild(v['resultMesh'])
         })
         t1 = RedGLTFLoader(self, '../asset/glTF/basic/', 'animation.gltf', function (v) {
-        	console.log('호잇!', v)
-        	tScene3D.addChild(v['resultMesh'])
-        	v['resultMesh'].x = -2
+            console.log('호잇!', v)
+            tScene3D.addChild(v['resultMesh'])
+            v['resultMesh'].x = -2
         })
         RedGLTFLoader(self, '../asset/glTF/basic/', 'SimpleSparseAccessor.gltf', function (v) {
-        	console.log('호잇!', v)
-        	tScene3D.addChild(v['resultMesh'])
-        	v['resultMesh'].z = -2
+            console.log('호잇!', v)
+            tScene3D.addChild(v['resultMesh'])
+            v['resultMesh'].z = -2
         })
         t2 = RedGLTFLoader(self, '../asset/glTF/basic/', 'SimpleMorph.gltf', function (v) {
-        	console.log('호잇!', v)
-        	tScene3D.addChild(v['resultMesh'])
-        	v['resultMesh'].z = 2
+            console.log('호잇!', v)
+            tScene3D.addChild(v['resultMesh'])
+            v['resultMesh'].z = 2
 
         });
         RedGLTFLoader(self, '../asset/glTF/basic/', 'RiggedSimple.gltf', function (v) {
@@ -241,15 +242,15 @@
 
         });
         RedGLTFLoader(self, '../asset/glTF/basic/', 'SimpleSkin.gltf', function (v) {
-        	console.log('호잇!', v)
-        	tScene3D.addChild(v['resultMesh'])
-        	v['resultMesh'].x = -3
+            console.log('호잇!', v)
+            tScene3D.addChild(v['resultMesh'])
+            v['resultMesh'].x = -3
 
         });
         RedGLTFLoader(self, '../asset/glTF/breakDance/', 'scene.gltf', function (v) {
-        	console.log('호잇!',v)
-        	tScene3D.addChild(v['resultMesh'])
-        	v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.001
+            console.log('호잇!', v)
+            tScene3D.addChild(v['resultMesh'])
+            v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.001
 
         })
 
@@ -266,8 +267,8 @@
             var folder = gui.addFolder('animations')
             var testAnimation = {
                 playAnimation: function () {
-                    t0.playAnimation(t0['animations'][0])
-                    t1.playAnimation(t1['animations'][0])
+                    t0.playAnimation(t0['parsingResult']['animations'][0])
+                    t1.playAnimation(t1['parsingResult']['animations'][0])
                 },
                 stopAnimation: function () {
                     t0.stopAnimation()

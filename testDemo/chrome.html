@@ -22,221 +22,221 @@
 <body>
 <canvas id="test" style="border: none;background:red"></canvas>
 <script>
-	var testUI;
-	document.getElementById('test')
-	RedGL(document.getElementById('test'), function (v) {
-		if ( v ) {
-			console.log('초기화 성공!')
-			var tWorld, tScene, tCamera, tRenderer;
-			var self = this
-			// 월드 생성
-			this['world'] = tWorld = RedWorld();
-			// 씬 생성
-			tScene = RedScene(this);
-			// 카메라 생성
-			tCamera = RedObitController(this);
-			tCamera.distance = 500
-			// 렌더러 생성
-			tRenderer = RedRenderer();
-			// 뷰생성 및 적용
-			tWorld.addView(RedView('test', this, tScene, tCamera));
-			tScene.useFog = true
-			tScene.fogColor = '#000'
-			tScene.fogDensity = 0.2
-			tScene.fogDistance = 1500
-			RedView('test').setSize('100%', 500)
-			// 그리드 설정
+    var testUI;
+    document.getElementById('test')
+    RedGL(document.getElementById('test'), function (v) {
+        if (v) {
+            console.log('초기화 성공!')
+            var tWorld, tScene, tCamera, tRenderer;
+            var self = this
+            // 월드 생성
+            this['world'] = tWorld = RedWorld();
+            // 씬 생성
+            tScene = RedScene(this);
+            // 카메라 생성
+            tCamera = RedObitController(this);
+            tCamera.distance = 500
+            // 렌더러 생성
+            tRenderer = RedRenderer();
+            // 뷰생성 및 적용
+            tWorld.addView(RedView('test', this, tScene, tCamera));
+            tScene.useFog = true
+            tScene.fogColor = '#000'
+            tScene.fogDensity = 0.2
+            tScene.fogDistance = 1500
+            RedView('test').setSize('100%', 500)
+            // 그리드 설정
 //			tScene['grid'] = RedGrid(this)
-			// 라이트 설정
-			var tLight = RedDirectionalLight(this)
-			tScene.addLight(tLight)
-			tLight.x = 10
-			tLight.y = -5
-			tLight.z = 5
-			var tLight2 = RedDirectionalLight(this)
-			tScene.addLight(tLight2)
-			tLight2.x = -10
-			tLight2.y = -5
-			tLight2.z = 5
-			var tLight3 = RedDirectionalLight(this)
-			tScene.addLight(tLight3)
-			tLight3.x = 0
-			tLight3.y = 20
-			tLight3.z = -10
-			var tPointLight1 = RedPointLight(this, '#ff0000')
+            // 라이트 설정
+            var tLight = RedDirectionalLight(this)
+            tScene.addLight(tLight)
+            tLight.x = 10
+            tLight.y = -5
+            tLight.z = 5
+            var tLight2 = RedDirectionalLight(this)
+            tScene.addLight(tLight2)
+            tLight2.x = -10
+            tLight2.y = -5
+            tLight2.z = 5
+            var tLight3 = RedDirectionalLight(this)
+            tScene.addLight(tLight3)
+            tLight3.x = 0
+            tLight3.y = 20
+            tLight3.z = -10
+            var tPointLight1 = RedPointLight(this, '#ff0000')
 //			tPointLight1.debug= true
-			tPointLight1.radius = 4
-			tPointLight1.intensity = 0.1
-			var tPointLight2 = RedPointLight(this, '#ff00ff')
+            tPointLight1.radius = 4
+            tPointLight1.intensity = 0.1
+            var tPointLight2 = RedPointLight(this, '#ff00ff')
 //			tPointLight2.debug= true
-			tPointLight2.radius = 4
-			tPointLight2.intensity = 0.1
-			var tPointLight3 = RedPointLight(this, '#00ff00')
+            tPointLight2.radius = 4
+            tPointLight2.intensity = 0.1
+            var tPointLight3 = RedPointLight(this, '#00ff00')
 //			tPointLight3.debug= true
-			tPointLight3.radius = 4
-			tPointLight3.intensity = 0.1
-			tScene.addLight(tPointLight1)
-			tScene.addLight(tPointLight2)
-			tScene.addLight(tPointLight3)
-			var tModel, tModel2, tModel3
-			var testParticle
-			var tPointCloud
-			var tEnvironmentTexture
-			var testSkyBox
-			var aa = {
-				max: 10000,
-				emitCount: 100,
-				lifeTime: [500, 2000],
-				gravity: 0
-			}
-			testParticle = new RedParticleEmitter(self, aa, RedParticleBitmapMaterial(self, RedBitmapTexture(self, '../asset/particle.png')))
-			testSkyBox = RedSkyBox(self, [
-				'../asset/cubemap/SwedishRoyalCastle/px.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/nx.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/ny.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/py.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/pz.jpg',
-				'../asset/cubemap/SwedishRoyalCastle/nz.jpg'
-			]);
-			(function () {
-				var testMaterial
-				testMaterial = RedPointBitmapMaterial(self, RedBitmapTexture(self, '../asset/particle.png'))
-				var interleaveData
-				interleaveData = []
-				var i = 200000
-				while ( i-- ) {
-					interleaveData.push(Math.random() * 50 - 25, Math.random() * 50 - 25, Math.random() * 50 - 25)
-					interleaveData.push(Math.random()*0.1 )
-				}
-				tPointCloud = RedPointUnit(
-					self,
-					interleaveData,
-					[
-						RedInterleaveInfo('aVertexPosition', 3),
-						RedInterleaveInfo('aPointSize', 1)
-					],
-					testMaterial
-				)
-				tPointCloud['blendSrc'] = self.gl.SRC_ALPHA
-				tPointCloud['blendDst'] = self.gl.ONE
-			})();
-			tEnvironmentTexture = RedBitmapCubeTexture(self, [
-					'../asset/cubemap/SwedishRoyalCastle/px.jpg',
-					'../asset/cubemap/SwedishRoyalCastle/nx.jpg',
-					'../asset/cubemap/SwedishRoyalCastle/ny.jpg',
-					'../asset/cubemap/SwedishRoyalCastle/py.jpg',
-					'../asset/cubemap/SwedishRoyalCastle/pz.jpg',
-					'../asset/cubemap/SwedishRoyalCastle/nz.jpg'
-				],
-				null,
-				function () {
-					RedOBJLoader(self, '../asset/obj/chrome/', 'chrome.obj', function (v) {
-						tCamera.distance = 10
-						tScene.skyBox = testSkyBox
-						tScene.addChild(testParticle)
-						tScene.addChild(tPointCloud)
-						// Mesh 설정
-						var tMaterialR = RedEnvironmentMaterial(
-							self, RedBitmapTexture(self, '../asset/r.png'),
-							tEnvironmentTexture
-						)
-						var tMaterialG = RedEnvironmentMaterial(
-							self, RedBitmapTexture(self, '../asset/g.png'),
-							tEnvironmentTexture
-						)
-						var tMaterialY = RedEnvironmentMaterial(
-							self, RedBitmapTexture(self, '../asset/y.png'),
-							tEnvironmentTexture
-						)
-						var tMaterialB = RedEnvironmentMaterial(
-							self, RedBitmapTexture(self, '../asset/b.png'),
-							tEnvironmentTexture
-						)
-						var innerMaterial = RedEnvironmentMaterial(
-							self, RedBitmapTexture(self, '../asset/r.png'),
-							tEnvironmentTexture
-						)
-						tMaterialR.reflectionPower = tMaterialG.reflectionPower = tMaterialB.reflectionPower = tMaterialY.reflectionPower = 0.5
-						tMaterialB.reflectionPower = 0.1
-						tMaterialR.shininess = tMaterialG.shininess = tMaterialB.shininess = tMaterialY.shininess = 256;
-						tModel = v['resultMesh']
-						tModel.useCullFace = false
+            tPointLight3.radius = 4
+            tPointLight3.intensity = 0.1
+            tScene.addLight(tPointLight1)
+            tScene.addLight(tPointLight2)
+            tScene.addLight(tPointLight3)
+            var tModel, tModel2, tModel3
+            var testParticle
+            var tPointCloud
+            var tEnvironmentTexture
+            var testSkyBox
+            var aa = {
+                max: 10000,
+                emitCount: 100,
+                lifeTime: [500, 2000],
+                gravity: 0
+            }
+            testParticle = new RedParticleEmitter(self, aa, RedParticleBitmapMaterial(self, RedBitmapTexture(self, '../asset/particle.png')))
+            testSkyBox = RedSkyBox(self, [
+                '../asset/cubemap/SwedishRoyalCastle/px.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/nx.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/ny.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/py.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
+            ]);
+            (function () {
+                var testMaterial
+                testMaterial = RedPointBitmapMaterial(self, RedBitmapTexture(self, '../asset/particle.png'))
+                var interleaveData
+                interleaveData = []
+                var i = 200000
+                while (i--) {
+                    interleaveData.push(Math.random() * 50 - 25, Math.random() * 50 - 25, Math.random() * 50 - 25)
+                    interleaveData.push(Math.random() * 0.1)
+                }
+                tPointCloud = RedPointUnit(
+                    self,
+                    interleaveData,
+                    [
+                        RedInterleaveInfo('aVertexPosition', 3),
+                        RedInterleaveInfo('aPointSize', 1)
+                    ],
+                    testMaterial
+                )
+                tPointCloud['blendSrc'] = self.gl.SRC_ALPHA
+                tPointCloud['blendDst'] = self.gl.ONE
+            })();
+            tEnvironmentTexture = RedBitmapCubeTexture(self, [
+                    '../asset/cubemap/SwedishRoyalCastle/px.jpg',
+                    '../asset/cubemap/SwedishRoyalCastle/nx.jpg',
+                    '../asset/cubemap/SwedishRoyalCastle/ny.jpg',
+                    '../asset/cubemap/SwedishRoyalCastle/py.jpg',
+                    '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
+                    '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
+                ],
+                null,
+                function () {
+                    RedOBJLoader(self, '../asset/obj/chrome/', 'chrome.obj', function (v) {
+                        tCamera.distance = 10
+                        tScene.skyBox = testSkyBox
+                        tScene.addChild(testParticle)
+                        tScene.addChild(tPointCloud)
+                        // Mesh 설정
+                        var tMaterialR = RedEnvironmentMaterial(
+                            self, RedBitmapTexture(self, '../asset/r.png'),
+                            tEnvironmentTexture
+                        )
+                        var tMaterialG = RedEnvironmentMaterial(
+                            self, RedBitmapTexture(self, '../asset/g.png'),
+                            tEnvironmentTexture
+                        )
+                        var tMaterialY = RedEnvironmentMaterial(
+                            self, RedBitmapTexture(self, '../asset/y.png'),
+                            tEnvironmentTexture
+                        )
+                        var tMaterialB = RedEnvironmentMaterial(
+                            self, RedBitmapTexture(self, '../asset/b.png'),
+                            tEnvironmentTexture
+                        )
+                        var innerMaterial = RedEnvironmentMaterial(
+                            self, RedBitmapTexture(self, '../asset/r.png'),
+                            tEnvironmentTexture
+                        )
+                        tMaterialR.reflectionPower = tMaterialG.reflectionPower = tMaterialB.reflectionPower = tMaterialY.reflectionPower = 0.5
+                        tMaterialB.reflectionPower = 0.1
+                        tMaterialR.shininess = tMaterialG.shininess = tMaterialB.shininess = tMaterialY.shininess = 256;
+                        tModel = v['resultMesh']
+                        tModel.useCullFace = false
 //				tMesh.drawMode = self.gl.POINTS
-						tModel.removeChild(tModel['children'][3])
-						tModel.children[0].material = tMaterialG
-						tModel.children[1].material = tMaterialY
-						tModel.children[2].material = tMaterialR
-						tModel.children[3].material = tMaterialB
-						console.log(v)
+                        tModel.removeChild(tModel['children'][3])
+                        tModel.children[0].material = tMaterialG
+                        tModel.children[1].material = tMaterialY
+                        tModel.children[2].material = tMaterialR
+                        tModel.children[3].material = tMaterialB
+                        console.log(v)
 //				tMesh.scaleX = tMesh.scaleY = v['resultMesh'].scaleZ = 0.025
-						tScene.addChild(tModel)
-						//////////////////////
-						tModel2 = RedMesh(self)
-						tModel.children.forEach(function (v) {
-							var t = RedMesh(self, v['geometry'])
-							t.material = innerMaterial
-							tModel2.children.push(t)
-						})
-						console.log(v)
+                        tScene.addChild(tModel)
+                        //////////////////////
+                        tModel2 = RedMesh(self)
+                        tModel.children.forEach(function (v) {
+                            var t = RedMesh(self, v['geometry'])
+                            t.material = innerMaterial
+                            tModel2.children.push(t)
+                        })
+                        console.log(v)
 //				tMesh.scaleX = tMesh.scaleY = v['resultMesh'].scaleZ = 0.025
-						tScene.addChild(tModel2)
-						tModel2.scaleX = tModel2.scaleY = tModel2.scaleZ = 0.8;
-					})
-					RedOBJLoader(self, '../asset/obj/chrome/', 'chromeLogotype.obj', function (v) {
-						tModel3 = v['resultMesh']['children'][0]
+                        tScene.addChild(tModel2)
+                        tModel2.scaleX = tModel2.scaleY = tModel2.scaleZ = 0.8;
+                    })
+                    RedOBJLoader(self, '../asset/obj/chrome/', 'chromeLogotype.obj', function (v) {
+                        tModel3 = v['resultMesh']['children'][0]
 //						tModel3.z = 1.9
-						tModel3.y = -2.3
-						tModel3.useCullFace = false
-						console.log(v['resultMesh'])
-						tModel3.material = RedColorPhongMaterial(self, '#eee')
-						tModel3.material.shininess = 1
-						tModel3.scaleX = tModel3.scaleY = tModel3.scaleZ = 2
-						tScene.addChild(tModel3)
-					})
-					///////////////////////////
-				});
-			///////////////////////////
-			// 렌더시작
-			tRenderer.start(this, function (time) {
-				if ( tModel ) {
-					tModel.rotationZ += 0.3
-					tModel.children[0].x += Math.sin(time / 550) / 550
-					tModel.children[1].y += Math.sin(time / 550) / 550
-					tModel.children[2].z += Math.sin(time / 550) / 550
-					tModel.children[3].z += Math.sin(time / 250) / 1000
-				}
-				if ( tModel2 ) {
-					tModel2.rotationX += 0.16
-					tModel2.rotationY += 0.16
-					tModel2.rotationZ += 0.16
-				}
-				tPointLight1.x = Math.sin(time / 1500) * 2.5
-				tPointLight1.y = Math.cos(time / 1500) * 2.5
-				tPointLight1.z = Math.cos(time / 1500) * 2.5
-				tPointLight2.x = -Math.sin(time / 1500) * 2.5
-				tPointLight2.y = -Math.cos(time / 1500) * 2.5
-				tPointLight2.z = -Math.cos(time / 1500) * 2.5
-				tPointLight3.x = -Math.sin(time / 1500) * 2.5
-				tPointLight3.y = Math.cos(time / 1500) * 2.5
-				tPointLight3.z = -Math.cos(time / 1500) * 2.5
-				tCamera.pan += 0.1
+                        tModel3.y = -2.3
+                        tModel3.useCullFace = false
+                        console.log(v['resultMesh'])
+                        tModel3.material = RedColorPhongMaterial(self, '#eee')
+                        tModel3.material.shininess = 1
+                        tModel3.scaleX = tModel3.scaleY = tModel3.scaleZ = 2
+                        tScene.addChild(tModel3)
+                    })
+                    ///////////////////////////
+                });
+            ///////////////////////////
+            // 렌더시작
+            tRenderer.start(this, function (time) {
+                if (tModel) {
+                    tModel.rotationZ += 0.3
+                    tModel.children[0].x += Math.sin(time / 550) / 550
+                    tModel.children[1].y += Math.sin(time / 550) / 550
+                    tModel.children[2].z += Math.sin(time / 550) / 550
+                    tModel.children[3].z += Math.sin(time / 250) / 1000
+                }
+                if (tModel2) {
+                    tModel2.rotationX += 0.16
+                    tModel2.rotationY += 0.16
+                    tModel2.rotationZ += 0.16
+                }
+                tPointLight1.x = Math.sin(time / 1500) * 2.5
+                tPointLight1.y = Math.cos(time / 1500) * 2.5
+                tPointLight1.z = Math.cos(time / 1500) * 2.5
+                tPointLight2.x = -Math.sin(time / 1500) * 2.5
+                tPointLight2.y = -Math.cos(time / 1500) * 2.5
+                tPointLight2.z = -Math.cos(time / 1500) * 2.5
+                tPointLight3.x = -Math.sin(time / 1500) * 2.5
+                tPointLight3.y = Math.cos(time / 1500) * 2.5
+                tPointLight3.z = -Math.cos(time / 1500) * 2.5
+                tCamera.pan += 0.1
 //				tLight.x = Math.sin(time / 1000) * 5
 //				tLight.z = Math.cos(time / 1000) * 5
 //				tLight2.x = -Math.sin(time / 1000) * 5
 //				tLight2.z = -Math.cos(time / 1000) * 5
-				if ( tPointCloud ) {
-					tPointCloud.rotationX += 0.01
-					tPointCloud.rotationY += 0.01
-					tPointCloud.rotationZ += 0.01
-					testParticle.x = Math.sin(time / 500) * 3
-					testParticle.y = Math.sin(time / 1500) * 3
-					testParticle.z = Math.cos(time / 500) * 3
-				}
-			})
-		} else {
-			console.log('초기화 실패!')
-		}
-	})
+                if (tPointCloud) {
+                    tPointCloud.rotationX += 0.01
+                    tPointCloud.rotationY += 0.01
+                    tPointCloud.rotationZ += 0.01
+                    testParticle.x = Math.sin(time / 500) * 3
+                    testParticle.y = Math.sin(time / 1500) * 3
+                    testParticle.z = Math.cos(time / 500) * 3
+                }
+            })
+        } else {
+            console.log('초기화 실패!')
+        }
+    })
 </script>
 </body>
 

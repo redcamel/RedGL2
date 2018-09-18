@@ -72,8 +72,9 @@
     <script src="../src/loader/JsonModelLoader.js"></script>
     <script src="../src/loader/obj/RedMTLLoader.js"></script>
     <script src="../src/loader/obj/RedOBJLoader.js"></script>
-    <script src="../rnd/loader/gltf/RedGLTFLoader.js"></script>
-    <script src="../rnd/loader/3ds/Red3DSLoader.js"></script>
+    <script src="../src/loader/gltf/RedGLTFLoader.js"></script>
+    <script src="../src/loader/3ds/Red3DSLoader.js"></script>
+    <script src="../src/loader/dae/RedDAELoader.js"></script>
     <!--//-->
     <script src="../src/object3D/RedAxis.js"></script>
     <script src="../src/object3D/RedGrid.js"></script>
@@ -195,7 +196,7 @@
             ]);
 
 
-        var tRoot = RedMesh(self, RedBox(this),RedColorMaterial(this))
+        var tRoot = RedMesh(self, RedBox(this), RedColorMaterial(this))
         tScene3D.addChild(tRoot)
         tRoot.z = 10
 
@@ -208,7 +209,7 @@
             var testAnimation = {
                 material: '...',
                 perspectiveScale: false,
-                sprite3DYn : false
+                sprite3DYn: false
             }
             var tList = [
                 '...',
