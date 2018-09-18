@@ -31,13 +31,13 @@ var RedDirectionalShadowMaterial;
         precision mediump float;
         vec4 encodeFloat (float depth) {
             const vec4 cBitShift = vec4(
-                256 * 256 * 256,
-                256 * 256,
-                256,
+                256.0 * 256.0 * 256.0,
+                256.0 * 256.0,
+                256.0,
                 1.0
             );
             const vec4 cBitMask = vec4(
-                0,
+                0.0,
                 1.0 / 256.0,
                 1.0 / 256.0,
                 1.0 / 256.0
@@ -48,7 +48,7 @@ var RedDirectionalShadowMaterial;
         }
         void main(void) {
             vec4 finalColor = encodeFloat(gl_FragCoord.z);
-            if(finalColor.a < 0.5) finalColor = vec4(0.0, 0.0, 0.0, 1.0);
+            // if(finalColor.a < 0.5) finalColor = vec4(0.0, 0.0, 0.0, 1.0);
             gl_FragColor = finalColor;
         }
          */

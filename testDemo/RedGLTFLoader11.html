@@ -183,18 +183,17 @@
         // testDLight.color = '#ff00ff'
         testDLight.intensity = 1
 
-        tScene3D.addLight(testDLight)
+        // tScene3D.addLight(testDLight)
         testDLight = RedDirectionalLight(this)
         testDLight.x = -150
         testDLight.y = 150
         testDLight.z = -150
-        // testDLight.color = '#ffff00'
-        testDLight.intensity = 1
+
+        testDLight.debug = true
         tScene3D.addLight(testDLight)
         var a = RedAmbientLight(this)
-        a.color = '#ff0000'
 
-        // tScene3D.addLight(a)
+        tScene3D.addLight(a)
 //		var bloom = RedPostEffect_Bloom(this)
 //		bloom.exposure=0.75
 //		RedView('test')['postEffectManager'].addEffect(bloom)
@@ -212,14 +211,14 @@
             ]);
         RedGLTFLoader(self, '../asset/glTF/tokyo/', 'scene.gltf', function (v) {
             console.log('호잇!', t1 = v)
-            // tShadow.addCasting(v['resultMesh'],true);
+            tShadow.addCasting(v['resultMesh'], true);
             tScene3D.addChild(t0 = v['resultMesh'])
 
             testUI(self, tScene3D)
         })
         var tShadow = RedDirectionalShadow(this, testDLight)
         tScene3D.shadowManager.directionalShadow = tShadow
-        tShadow.size = 1000
+        tShadow.size = 500
         RedGLTFLoader(self, '../asset/glTF/breakDance/', 'scene.gltf', function (v) {
             console.log('호잇!', v)
             tScene3D.addChild(v['resultMesh'])
@@ -274,6 +273,9 @@
 //					tCamera.y = Math.abs(Math.cos(time / 3500) * 250)
 //					tCamera.z = Math.cos(time / 3500) * 250
 //				}
+                testDLight.x = Math.sin(time / 1500) * 1250
+                testDLight.y = 3500
+                testDLight.z = Math.cos(time / 1500) * 1250
             }
         )
         var testUI = function (redGL, tScene) {

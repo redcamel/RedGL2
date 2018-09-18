@@ -185,7 +185,7 @@
         testDLight.debug = true
         tScene3D.addLight(testDLight)
 
-        // tScene3D.addLight(RedAmbientLight(this))
+        tScene3D.addLight(RedAmbientLight(this))
         var tShadow = RedDirectionalShadow(this, testDLight)
         tScene3D.shadowManager.directionalShadow = tShadow
 
@@ -197,7 +197,7 @@
         var c = RedPostEffect_Bloom(this)
         c.blur = 30
         // c.threshold = 0.5
-        // RedView('test')['postEffectManager'].addEffect(c)
+        RedView('test')['postEffectManager'].addEffect(c)
         // RedView('test')['postEffectManager'].addEffect(RedPostEffect_Film(this))
         tRenderer.renderDebuger.visible = true
         tScene3D.skyBox =
@@ -209,15 +209,15 @@
                 '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
                 '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
             ]);
-        // RedGLTFLoader(self, '../asset/glTF/gundam/', 'scene.gltf', function (v) {
-        //     console.log('호잇!', v)
-        //     var t0
-        //     tScene3D.addChild(t0 = v['resultMesh'])
-        //     tShadow.addCasting(v['resultMesh'], true);
-        //     // v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 40
-        //     t0.y = -300
-        //     t0.z = -350
-        // })
+        RedGLTFLoader(self, '../asset/glTF/gundam/', 'scene.gltf', function (v) {
+            console.log('호잇!', v)
+            var t0
+            tScene3D.addChild(t0 = v['resultMesh'])
+            tShadow.addCasting(v['resultMesh'], true);
+            // v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 40
+            t0.y = -300
+            t0.z = -350
+        })
         // RedGLTFLoader(self, '../asset/glTF/iso/', 'scene.gltf', function (v) {
         // 	console.log('호잇!', v)
         // 	tScene3D.addChild(t0 = v['resultMesh'])
