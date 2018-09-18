@@ -9,11 +9,12 @@ var RedVideoMaterial;
             // 스키닝
             //#REDGL_DEFINE#vertexShareFunc#getSkinMatrix#
 
+            // Sprite3D
             //#REDGL_DEFINE#vertexShareFunc#getSprite3DMatrix#
 
             void main(void) {
-                vTexcoord = aTexcoord;
                 gl_PointSize = uPointSize;
+                vTexcoord = aTexcoord;
 
                 // position 계산
                 //#REDGL_DEFINE#skin#true# mat4 targetMatrix = uMMatrix *  getSkinMatrix() ;

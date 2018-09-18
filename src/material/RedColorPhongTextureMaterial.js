@@ -10,6 +10,7 @@ var RedColorPhongTextureMaterial;
             // 스키닝
             //#REDGL_DEFINE#vertexShareFunc#getSkinMatrix#
 
+            // Sprite3D
             //#REDGL_DEFINE#vertexShareFunc#getSprite3DMatrix#
 
             //#REDGL_DEFINE#displacementTexture# uniform sampler2D u_displacementTexture;
@@ -17,9 +18,10 @@ var RedColorPhongTextureMaterial;
             //#REDGL_DEFINE#displacementTexture# uniform float u_displacementFlowSpeedX;
             //#REDGL_DEFINE#displacementTexture# uniform float u_displacementFlowSpeedY;
 
-            varying vec4 vVertexPosition;
+
 
             void main(void) {
+                gl_PointSize = uPointSize;
                 vTexcoord = aTexcoord;
 
                 // normal 계산
@@ -71,9 +73,7 @@ var RedColorPhongTextureMaterial;
          uniform float u_shininess;
          uniform float u_specularPower;
          uniform vec4 u_color;
-         varying vec4 vVertexPosition;
 
-         vec4 la;
 
          vec4 texelColor;
          vec4 finalColor;
@@ -83,7 +83,6 @@ var RedColorPhongTextureMaterial;
          float specularTextureValue;
 
          void main(void) {
-             la = uAmbientLightColor * uAmbientLightColor.a;
 
              texelColor = u_color;
              // texelColor.rgb *= texelColor.a;
@@ -96,7 +95,7 @@ var RedColorPhongTextureMaterial;
              float specularTextureValue = 1.0;
              //#REDGL_DEFINE#specularTexture# specularTextureValue = texture2D(u_specularTexture, vTexcoord).r;
 
-             vec4 finalColor = la * uAmbientIntensity
+             vec4 finalColor = uAmbientLightColor * uAmbientIntensity
              + getDirectionalLightColor(
                 texelColor,
                 N,
@@ -116,6 +115,8 @@ var RedColorPhongTextureMaterial;
 
              finalColor.rgb *= texelColor.a;
              finalColor.a = texelColor.a;
+             if(finalColor.a == 0.0) discard;
+
              //#REDGL_DEFINE#directionalShadow#true# finalColor.rgb *= getShadowColor( vShadowPos, vResolution, uDirectionalShadowTexture);
 
              //#REDGL_DEFINE#fog#false# gl_FragColor = finalColor;

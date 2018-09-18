@@ -9,10 +9,13 @@ var RedBitmapMaterial;
             // 스키닝
             //#REDGL_DEFINE#vertexShareFunc#getSkinMatrix#
 
+            // Sprite3D
             //#REDGL_DEFINE#vertexShareFunc#getSprite3DMatrix#
+
             void main(void) {
-                vTexcoord = aTexcoord;
                 gl_PointSize = uPointSize;
+
+                vTexcoord = aTexcoord;
 
                 // position 계산
                 //#REDGL_DEFINE#skin#true# mat4 targetMatrix = uMMatrix *  getSkinMatrix() ;
@@ -43,11 +46,13 @@ var RedBitmapMaterial;
 
          uniform sampler2D u_diffuseTexture;
          uniform float u_alpha;
+
          void main(void) {
              vec4 finalColor = texture2D(u_diffuseTexture, vTexcoord);
              finalColor.rgb *= finalColor.a;
-             if(finalColor.a ==0.0) discard;
              finalColor.a *= u_alpha;
+             if(finalColor.a == 0.0) discard;
+
              //#REDGL_DEFINE#directionalShadow#true# finalColor.rgb *= getShadowColor( vShadowPos, vResolution, uDirectionalShadowTexture);
              //#REDGL_DEFINE#fog#false# gl_FragColor = finalColor;
              //#REDGL_DEFINE#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);

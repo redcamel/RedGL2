@@ -1,0 +1,129 @@
+[
+  {
+    "code": "PROPERTY",
+    "title": "alpha",
+    "description": "기본값 : 1",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "cutOff",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "diffuseTexture",
+    "return": "RedBitmapTexture"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "displacementFlowSpeedX",
+    "description": "기본값 : 0",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "displacementFlowSpeedY",
+    "description": "기본값 : 0",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "displacementPower",
+    "description": "기본값 : 0",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "emissiveTexture",
+    "return": "RedBitmapTexture"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "environmentTexture",
+    "return": "RedBitmapCubeTexture"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "metallicFactor",
+    "description": "기본값 : 1",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "normalPower",
+    "description": "기본값 : 1",
+    "return": "number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "normalTexture",
+    "return": "RedBitmapTexture"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "occlusionPower",
+    "description": "기본값 : 1",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "occlusionTexture",
+    "return": "RedBitmapTexture"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedPBRMaterial",
+    "description": "\nRedPBRMaterial Instance 생성\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ],
+      "diffuseTexture": [
+        {
+          "type": "RedBitmapTexture"
+        }
+      ],
+      "environmentTexture": [
+        {
+          "type": "RedBitmapCubeTexture"
+        }
+      ],
+      "normalTexture": [
+        {
+          "type": "RedBitmapTexture"
+        }
+      ],
+      "occlusionTexture": [
+        {
+          "type": "RedBitmapTexture"
+        }
+      ]
+    },
+    "extends": [
+      "RedBaseMaterial"
+    ],
+    "demo": "../example/material/RedPBRMaterial.html",
+    "example": "\nRedPBRMaterial(\nRedGL Instance,\nRedBitmapTexture(RedGL Instance, src), // diffuseTexture\nRedBitmapCubeTexture(RedGL Instance, srcList),\nRedBitmapTexture(RedGL Instance, src), // normalTexture\nRedBitmapTexture(RedGL Instance, src) // occlusionTexture\n)\n",
+    "return": "RedPBRMaterial Instance"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "roughnessFactor",
+    "description": "기본값 : 1",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "roughnessTexture",
+    "return": "RedBitmapTexture"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "specularPower",
+    "description": "기본값 : 1",
+    "return": "Number"
+  }
+]

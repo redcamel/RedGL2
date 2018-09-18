@@ -8,6 +8,8 @@ var RedDirectionalShadowMaterial;
         /* @preserve
         // 스키닝
         //#REDGL_DEFINE#vertexShareFunc#getSkinMatrix#
+
+        // Sprite3D
         //#REDGL_DEFINE#vertexShareFunc#getSprite3DMatrix#
          void main(void) {
             // position 계산

@@ -7,7 +7,7 @@
   },
   {
     "code": "PROPERTY",
-    "title": "alphaTest",
+    "title": "cutOff",
     "description": "\n기본값 : 0.0001\n해당값보다 알파값이 작을경우 discard 처리됨.\n",
     "return": "Number"
   },

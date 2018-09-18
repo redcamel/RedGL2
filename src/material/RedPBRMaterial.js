@@ -3,22 +3,19 @@ var RedPBRMaterial;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'RedPBRMaterialProgram';
-    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture', 'displacementTexture'];
+    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture'];
     var checked;
     vSource = function () {
         /* @preserve
-            varying vec4 vVertexPosition;
+
             // 스키닝
             //#REDGL_DEFINE#vertexShareFunc#getSkinMatrix#
+
+            // Sprite3D
             //#REDGL_DEFINE#vertexShareFunc#getSprite3DMatrix#
 
-            // 텍스쳐 선언
-            //#REDGL_DEFINE#displacementTexture# uniform sampler2D u_displacementTexture;
-            //#REDGL_DEFINE#displacementTexture# uniform float u_displacementPower;
-            //#REDGL_DEFINE#displacementTexture# uniform float u_displacementFlowSpeedX;
-            //#REDGL_DEFINE#displacementTexture# uniform float u_displacementFlowSpeedY;
-
             void main(void) {
+                gl_PointSize = uPointSize;
                 // UV설정
                 vTexcoord = aTexcoord;
                 vTexcoord1 = aTexcoord1;
@@ -30,11 +27,6 @@ var RedPBRMaterial;
                 //#REDGL_DEFINE#skin#true# mat4 targetMatrix = uMMatrix *  getSkinMatrix() ;
                 //#REDGL_DEFINE#skin#false# mat4 targetMatrix = uMMatrix;
                 vVertexPosition =  targetMatrix *  vec4(aVertexPosition, 1.0);
-
-                //#REDGL_DEFINE#displacementTexture# vVertexPosition.xyz += normalize(vVertexNormal) * texture2D(u_displacementTexture, vTexcoord + vec2(
-                //#REDGL_DEFINE#displacementTexture#    u_displacementFlowSpeedX * (uTime/1000.0),
-                //#REDGL_DEFINE#displacementTexture#    u_displacementFlowSpeedY * (uTime/1000.0)
-                //#REDGL_DEFINE#displacementTexture# )).x * u_displacementPower ;
 
                 // 최종 포지션 계산
                 //#REDGL_DEFINE#sprite3D#true# gl_Position = uPMatrix * getSprite3DMatrix(uCameraMatrix , targetMatrix) *  vec4(aVertexPosition, 1.0);
@@ -82,7 +74,7 @@ var RedPBRMaterial;
          uniform float u_occlusionPower;
          uniform float u_alpha;
 
-         varying vec4 vVertexPosition;
+
 
         uniform int u_diffuseTexCoordIndex;
         uniform int u_occlusionTexCoordIndex;
@@ -172,6 +164,24 @@ var RedPBRMaterial;
                     ls +=  specularLightColor * specular * u_specularPower * specularTextureValue * uDirectionalLightIntensityList[i]* uDirectionalLightColorList[i].a * (1.0-tRoughnessPower+0.04);
                 }
             }
+
+           for(int i=0;i<cPOINT_MAX;i++){
+              if(i== uPointLightNum) break;
+              L =  -uPointLightPositionList[i] + vVertexPosition.xyz;
+              distanceLength = abs(length(L));
+              if(uPointLightRadiusList[i]> distanceLength){
+                  attenuation = 1.0 / (0.01 + 0.02 * distanceLength + 0.03 * distanceLength * distanceLength) * 0.5;
+                  L = normalize(L);
+                  lambertTerm = dot(N,-L);
+                  if(lambertTerm > 0.0){
+                     ld += uPointLightColorList[i] * texelColor * lambertTerm * attenuation * uPointLightIntensityList[i] ;
+                     specular = pow( max(dot(reflect(L, N), -L), 0.0), pow(shininess, 1.0-tRoughnessPower+0.04) );
+                     specular *= pow(1.0-tRoughnessPower+0.04, 2.0 * (1.0-tMetallicPower)) ;
+                     ls +=  specularLightColor * specular * uPointLightIntensityList[i]  * uPointLightColorList[i].a * (1.0-tRoughnessPower+0.04) ;
+                  }
+              }
+           }
+
             finalColor = la * uAmbientIntensity + ld + ls;
             finalColor.a = texelColor.a * u_alpha ;
 
@@ -216,9 +226,6 @@ var RedPBRMaterial;
 			 ],
 			 occlusionTexture : [
 				 {type:'RedBitmapTexture'}
-			 ],
-			 displacementTexture : [
-				 {type:'RedBitmapTexture'}
 			 ]
 		 },
 		 extends : [
@@ -231,8 +238,7 @@ var RedPBRMaterial;
 				 RedBitmapTexture(RedGL Instance, src), // diffuseTexture
 				 RedBitmapCubeTexture(RedGL Instance, srcList),
 				 RedBitmapTexture(RedGL Instance, src), // normalTexture
-				 RedBitmapTexture(RedGL Instance, src), // occlusionTexture
-				 RedBitmapTexture(RedGL Instance, src)  // displacementTexture
+				 RedBitmapTexture(RedGL Instance, src) // occlusionTexture
 			 )
 		 `,
 		 return : 'RedPBRMaterial Instance'
@@ -244,8 +250,8 @@ var RedPBRMaterial;
                                normalTexture,
                                occlusionTexture,
                                emissiveTexture,
-                               roughnessTexture,
-                               displacementTexture) {
+                               roughnessTexture
+                               ) {
         if (!(this instanceof RedPBRMaterial)) return new RedPBRMaterial(
             redGL,
             diffuseTexture,
@@ -253,8 +259,8 @@ var RedPBRMaterial;
             normalTexture,
             occlusionTexture,
             emissiveTexture,
-            roughnessTexture,
-            displacementTexture
+            roughnessTexture
+
         );
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedPBRMaterial : RedGL Instance만 허용.', redGL);
         this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource, PROGRAM_OPTION_LIST);
@@ -264,9 +270,9 @@ var RedPBRMaterial;
         this['environmentTexture'] = environmentTexture;
         this['normalTexture'] = normalTexture;
         this['occlusionTexture'] = occlusionTexture;
-        this['displacementTexture'] = displacementTexture;
         this['emissiveTexture'] = emissiveTexture;
         this['roughnessTexture'] = roughnessTexture;
+
         this['normalPower'] = 1;
         this['specularPower'] = 1;
         this['metallicFactor'] = 1;
@@ -357,14 +363,6 @@ var RedPBRMaterial;
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'occlusionTexture', 'sampler2D', samplerOption);
     RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'occlusionTexCoordIndex', 'number');
-    /**DOC:
-     {
-	     code : 'PROPERTY',
-		 title :`displacementTexture`,
-		 return : 'RedBitmapTexture'
-	 }
-     :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'displacementTexture', 'sampler2D', samplerOption);
     /**DOC:
      {
 	     code : 'PROPERTY',

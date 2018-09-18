@@ -139,77 +139,77 @@
 <body>
 <canvas id="test" style="border: none;background:red"></canvas>
 <script>
-	var t = document.getElementById('test')
-	document.body.appendChild(t)
-	RedGL(t, function (v) {
-		var tGL;
-		var tWorld, tScene3D, tCamera
-		var tRenderer;
-		var self;
-		self = this
-		tGL = this.gl;
-		this.world = tWorld = RedWorld();
-		tScene3D = RedScene(this, '#223344');
-		tScene3D.alpha = 0.1
-		tCamera = RedCamera()
-		tCamera.y = 10
-		tCamera.z = 10
-		tCamera.lookAt(0, 0, 0)
-		tRenderer = RedRenderer();
-		tWorld.addView(RedView('test', this, tScene3D, tCamera));
-		var testMaterial
-		testMaterial = RedTestMaterial(this)
-		var interleaveData, interleaveData2
-		interleaveData = []
-		var i = 50000
-		while ( i-- ) {
-			var t = Math.random() * 100 - 50
-			interleaveData.push(Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50)
-			interleaveData.push(Math.random() * 10)
-			interleaveData.push(Math.random(), Math.random(), Math.random(), 1)
-		}
-		interleaveData = new Float32Array(interleaveData)
-		var testInterleaveBuffer
-		testInterleaveBuffer = RedBuffer(
-			this,
-			'testInterleaveBuffer',
-			RedBuffer.ARRAY_BUFFER,
-			interleaveData,
-			[
-				RedInterleaveInfo('aVertexPosition', 3),
-				RedInterleaveInfo('aPointSize', 1),
-				RedInterleaveInfo('aVertexColor', 4)
-			]
-		)
-		var geometry
-		geometry = RedGeometry(testInterleaveBuffer)
-		var testMesh
-		var i = 1;
-		var len = i
-		tScene3D['grid'] = RedGrid(self)
-		testMesh = RedMesh(this, geometry, testMaterial)
-		testMesh.drawMode = this.gl.POINTS
-		// if(Math.random() >0.8) testMesh.drawMode = this.gl.LINE_LOOP
-		tScene3D.addChild(testMesh)
-		tRenderer.renderDebuger.visible = true
-		tRenderer.start(this, function (time) {
-			tCamera.x = Math.sin(time / 15000) * 30
-			tCamera.y = Math.cos(time / 15000) * 30
-			var i = 1000000
-			var tSin = Math.sin(time / 500) / 10
-			var tCos = Math.cos(time / 700) / 10
-			while ( i-- ) {
-				interleaveData[i * 8 + 0] += tSin
-				interleaveData[i * 8 + 1] += tCos
-				interleaveData[i * 8 + 2] += tSin + tCos
-			}
-			testInterleaveBuffer['upload'](interleaveData)
-			if ( tCamera.y < 1 ) tCamera.y = 1
-			tCamera.z = Math.cos(time / 15000) * 30 + Math.sin(time / 15000) * 30
-			tCamera.lookAt(0, 0, 0)
-		})
-		console.log(tScene3D)
-	})
+    var t = document.getElementById('test')
+    document.body.appendChild(t)
+    RedGL(t, function (v) {
+        var tGL;
+        var tWorld, tScene3D, tCamera
+        var tRenderer;
+        var self;
+        self = this
+        tGL = this.gl;
+        this.world = tWorld = RedWorld();
+        tScene3D = RedScene(this, '#223344');
+        tScene3D.alpha = 0.1
+        tCamera = RedCamera()
+        tCamera.y = 10
+        tCamera.z = 10
+        tCamera.lookAt(0, 0, 0)
+        tRenderer = RedRenderer();
+        tWorld.addView(RedView('test', this, tScene3D, tCamera));
+        var testMaterial
+        testMaterial = RedTestMaterial(this)
+        var interleaveData, interleaveData2
+        interleaveData = []
+        var i = 50000
+        while (i--) {
+            var t = Math.random() * 100 - 50
+            interleaveData.push(Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50)
+            interleaveData.push(Math.random() * 10)
+            interleaveData.push(Math.random(), Math.random(), Math.random(), 1)
+        }
+        interleaveData = new Float32Array(interleaveData)
+        var testInterleaveBuffer
+        testInterleaveBuffer = RedBuffer(
+            this,
+            'testInterleaveBuffer',
+            RedBuffer.ARRAY_BUFFER,
+            interleaveData,
+            [
+                RedInterleaveInfo('aVertexPosition', 3),
+                RedInterleaveInfo('aPointSize', 1),
+                RedInterleaveInfo('aVertexColor', 4)
+            ]
+        )
+        var geometry
+        geometry = RedGeometry(testInterleaveBuffer)
+        var testMesh
+        var i = 1;
+        var len = i
+        tScene3D['grid'] = RedGrid(self)
+        testMesh = RedMesh(this, geometry, testMaterial)
+        testMesh.drawMode = this.gl.POINTS
+        // if(Math.random() >0.8) testMesh.drawMode = this.gl.LINE_LOOP
+        tScene3D.addChild(testMesh)
+        tRenderer.renderDebuger.visible = true
+        tRenderer.start(this, function (time) {
+            tCamera.x = Math.sin(time / 15000) * 30
+            tCamera.y = Math.cos(time / 15000) * 30
+            var i = 1000000
+            var tSin = Math.sin(time / 500) / 10
+            var tCos = Math.cos(time / 700) / 10
+            while (i--) {
+                interleaveData[i * 8 + 0] += tSin
+                interleaveData[i * 8 + 1] += tCos
+                interleaveData[i * 8 + 2] += tSin + tCos
+            }
+            testInterleaveBuffer['upload'](interleaveData)
+            if (tCamera.y < 1) tCamera.y = 1
+            tCamera.z = Math.cos(time / 15000) * 30 + Math.sin(time / 15000) * 30
+            tCamera.lookAt(0, 0, 0)
+        })
+        console.log(tScene3D)
+    })
 </script>
 </body>
 

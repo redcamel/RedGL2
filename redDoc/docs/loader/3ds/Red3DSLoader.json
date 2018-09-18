@@ -1,7 +1,7 @@
 [
   {
     "constructorYn": true,
-    "title": "RedDAELoader",
+    "title": "Red3DSLoader",
     "description": "\nOBJ 로더\n",
     "params": {
       "redGL": [
@@ -25,7 +25,6 @@
         }
       ]
     },
-    "example": "\nRedDAELoader(RedGL Instance, '../asset/obj/gun/', 'Handgun_obj.obj', function (result) {\ntScene3D.addChild(result['resultMesh'])\n})\n",
     "return": "void"
   }
 ]

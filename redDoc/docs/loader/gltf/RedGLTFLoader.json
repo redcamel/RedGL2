@@ -1,0 +1,30 @@
+[
+  {
+    "constructorYn": true,
+    "title": "RedGLTFLoader",
+    "description": "\nGLTF 로더\nCOLOR_0, TANGENT는 아직 지원하지 않는다.\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ],
+      "path": [
+        {
+          "type": "String"
+        }
+      ],
+      "fileName": [
+        {
+          "type": "String"
+        }
+      ],
+      "callback": [
+        {
+          "type": "Function"
+        }
+      ]
+    },
+    "return": "void"
+  }
+]

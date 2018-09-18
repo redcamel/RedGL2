@@ -8,17 +8,19 @@ var RedSheetMaterial;
         /* @preserve
             // 스키닝
             //#REDGL_DEFINE#vertexShareFunc#getSkinMatrix#
+
+            // Sprite3D
             //#REDGL_DEFINE#vertexShareFunc#getSprite3DMatrix#
 
             uniform vec4 u_sheetRect;
             void main(void) {
+                gl_PointSize = uPointSize;
                 vTexcoord = aTexcoord;
                 vTexcoord = vec2(
                     vTexcoord.s * u_sheetRect.x + u_sheetRect.z,
                     vTexcoord.t * u_sheetRect.y - u_sheetRect.w
                 );
 
-                gl_PointSize = uPointSize;
 
                // position 계산
                 //#REDGL_DEFINE#skin#true# mat4 targetMatrix = uMMatrix *  getSkinMatrix() ;
@@ -52,8 +54,9 @@ var RedSheetMaterial;
          void main(void) {
              vec4 finalColor = texture2D(u_diffuseTexture, vTexcoord);
              finalColor.rgb *= finalColor.a;
-             if(finalColor.a ==0.0) discard;
              finalColor.a *= u_alpha;
+             if(finalColor.a ==0.0) discard;
+
              //#REDGL_DEFINE#directionalShadow#true# finalColor.rgb *= getShadowColor( vShadowPos, vResolution, uDirectionalShadowTexture);
              //#REDGL_DEFINE#fog#false# gl_FragColor = finalColor;
              //#REDGL_DEFINE#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);

@@ -72,7 +72,7 @@
     <script src="../src/loader/JsonModelLoader.js"></script>
     <script src="../src/loader/obj/RedMTLLoader.js"></script>
     <script src="../src/loader/obj/RedOBJLoader.js"></script>
-    <script src="../rnd/loader/dae/RedDAELoader.js"></script>
+    <script src="../src/loader/dae/RedDAELoader.js"></script>
     <!--//-->
     <script src="../src/object3D/RedAxis.js"></script>
     <script src="../src/object3D/RedGrid.js"></script>
@@ -141,65 +141,65 @@
 <body>
 <canvas id="test" style="border: none;background:red"></canvas>
 <script>
-	document.getElementById('test')
-	RedGL(document.getElementById('test'), function (v) {
-		console.log(v)
-		var tGL;
-		var tWorld, tScene3D, tCamera
-		var tRenderer;
-		var self;
-		self = this
-		tGL = this.gl;
-		this.world = tWorld = RedWorld();
-		tScene3D = RedScene(this);
-		tCamera = RedObitController(this);
-		tCamera.tilt = -45
-		tRenderer = RedRenderer();
-		tWorld.addView(RedView('test', this, tScene3D, tCamera));
-		RedView('test').setSize('100%', '100%')
-		RedView('test').setLocation('0%', '0%')
-		this.renderScale = 1
-		var testDLight, testPLight;
-		testDLight = RedDirectionalLight(this, '#fff', 1)
-		testDLight.x = 3
-		testDLight.y = 2
-		testDLight.z = 3
-		testDLight.debug = true
-		tScene3D.addLight(testDLight)
-		testDLight = RedDirectionalLight(this, '#ff00ff', 0.2)
-		testDLight.x = -3
-		testDLight.y = 2
-		testDLight.z = -3
-		testDLight.debug = true
-		tScene3D.addLight(testDLight)
-		testPLight = RedPointLight(this, '#00ff00', 0.5)
-		testPLight.x = -3
-		testPLight.y = -3
-		testPLight.z = -3
-		testPLight['radius'] = 1
-		testPLight['intensity'] = 1
-		tScene3D.addLight(testPLight)
+    document.getElementById('test')
+    RedGL(document.getElementById('test'), function (v) {
+        console.log(v)
+        var tGL;
+        var tWorld, tScene3D, tCamera
+        var tRenderer;
+        var self;
+        self = this
+        tGL = this.gl;
+        this.world = tWorld = RedWorld();
+        tScene3D = RedScene(this);
+        tCamera = RedObitController(this);
+        tCamera.tilt = -45
+        tRenderer = RedRenderer();
+        tWorld.addView(RedView('test', this, tScene3D, tCamera));
+        RedView('test').setSize('100%', '100%')
+        RedView('test').setLocation('0%', '0%')
+        this.renderScale = 1
+        var testDLight, testPLight;
+        testDLight = RedDirectionalLight(this, '#fff', 1)
+        testDLight.x = 3
+        testDLight.y = 2
+        testDLight.z = 3
+        testDLight.debug = true
+        tScene3D.addLight(testDLight)
+        testDLight = RedDirectionalLight(this, '#ff00ff', 0.2)
+        testDLight.x = -3
+        testDLight.y = 2
+        testDLight.z = -3
+        testDLight.debug = true
+        tScene3D.addLight(testDLight)
+        testPLight = RedPointLight(this, '#00ff00', 0.5)
+        testPLight.x = -3
+        testPLight.y = -3
+        testPLight.z = -3
+        testPLight['radius'] = 1
+        testPLight['intensity'] = 1
+        tScene3D.addLight(testPLight)
 
-		tScene3D['grid'] = RedGrid(self)
-		RedDAELoader(this, '../asset/dae/', 'wolf.dae', function (v) {
-			console.log('호잇!', v)
-			tScene3D.addChild(v['resultMesh'])
+        tScene3D['grid'] = RedGrid(self)
+        RedDAELoader(this, '../asset/dae/', 'test2.dae', function (v) {
+            console.log('호잇!', v)
+            tScene3D.addChild(v['resultMesh'])
 
-			// v['resultMesh'].rotationX = 90
-		})
-		tRenderer.renderDebuger.visible = true
-		tRenderer.start(this, function (time) {
-			testDLight.x = Math.sin(time / 1000) * 2
-			testDLight.y = Math.cos(time / 1000) * 2
-			testDLight.z = Math.cos(time / 1000) * 2
-			testPLight.x = Math.sin(time / 1500) * 2
-			testPLight.y = Math.cos(time / 1500) * 2
-			testPLight.z = Math.cos(time / 1500) * 2
-			testPLight.debug = true
-			// testDLight.debug = true
-		})
-		console.log(tScene3D)
-	})
+            // v['resultMesh'].rotationX = 90
+        })
+        tRenderer.renderDebuger.visible = true
+        tRenderer.start(this, function (time) {
+            testDLight.x = Math.sin(time / 1000) * 2
+            testDLight.y = Math.cos(time / 1000) * 2
+            testDLight.z = Math.cos(time / 1000) * 2
+            testPLight.x = Math.sin(time / 1500) * 2
+            testPLight.y = Math.cos(time / 1500) * 2
+            testPLight.z = Math.cos(time / 1500) * 2
+            testPLight.debug = true
+            // testDLight.debug = true
+        })
+        console.log(tScene3D)
+    })
 </script>
 </body>
 

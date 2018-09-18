@@ -187,8 +187,16 @@ var RedSystemUniformUpdater;
 					tValueStr = JSON.stringify(tLightData['_lightColor']);
 					tCheckData = checkUniformInfo['uAmbientLightColor'];
 					if ( tCheckData['cacheData'] != tValueStr || changedProgramNum ) {
-						needUpdateUniformInfo['uAmbientLightColor'] = tCheckData['data'] = tLightData['_lightColor'];
+						needUpdateUniformInfo['uAmbientLightColor'] = tCheckData['data'] = [
+                            tLightData['_lightColor'][0],
+                            tLightData['_lightColor'][1],
+                            tLightData['_lightColor'][2],
+                            tLightData['_lightColor'][3]
+						];
 						tCheckData['cacheData'] = tValueStr;
+                        needUpdateUniformInfo['uAmbientLightColor'][0] *= needUpdateUniformInfo['uAmbientLightColor'][3]
+                        needUpdateUniformInfo['uAmbientLightColor'][1] *= needUpdateUniformInfo['uAmbientLightColor'][3]
+                        needUpdateUniformInfo['uAmbientLightColor'][2] *= needUpdateUniformInfo['uAmbientLightColor'][3]
 					}
 					//
 					tValueStr = tLightData['_intensity'];
@@ -220,9 +228,9 @@ var RedSystemUniformUpdater;
 					tDirectionalPositionList[1 + 3 * i] = tVector[1];
 					tDirectionalPositionList[2 + 3 * i] = tVector[2];
 					//
-					tDirectionalLightColorList[0 + 4 * i] = tLightData['_lightColor'][0];
-					tDirectionalLightColorList[1 + 4 * i] = tLightData['_lightColor'][1];
-					tDirectionalLightColorList[2 + 4 * i] = tLightData['_lightColor'][2];
+					tDirectionalLightColorList[0 + 4 * i] = tLightData['_lightColor'][0] * tLightData['_lightColor'][3];
+					tDirectionalLightColorList[1 + 4 * i] = tLightData['_lightColor'][1] * tLightData['_lightColor'][3];
+					tDirectionalLightColorList[2 + 4 * i] = tLightData['_lightColor'][2] * tLightData['_lightColor'][3];
 					tDirectionalLightColorList[3 + 4 * i] = tLightData['_lightColor'][3];
 					tDirectionalLightIntensityList[i] = tLightData['_intensity'];
 				}
@@ -275,9 +283,9 @@ var RedSystemUniformUpdater;
 					tPointLightPositionList[0 + 3 * i] = tVector[0];
 					tPointLightPositionList[1 + 3 * i] = tVector[1];
 					tPointLightPositionList[2 + 3 * i] = tVector[2];
-					tPointLightColorList[0 + 4 * i] = tLightData['_lightColor'][0];
-					tPointLightColorList[1 + 4 * i] = tLightData['_lightColor'][1];
-					tPointLightColorList[2 + 4 * i] = tLightData['_lightColor'][2];
+					tPointLightColorList[0 + 4 * i] = tLightData['_lightColor'][0] * tLightData['_lightColor'][3];
+					tPointLightColorList[1 + 4 * i] = tLightData['_lightColor'][1] * tLightData['_lightColor'][3];
+					tPointLightColorList[2 + 4 * i] = tLightData['_lightColor'][2] * tLightData['_lightColor'][3];
 					tPointLightColorList[3 + 4 * i] = tLightData['_lightColor'][3];
 					//
 					tPointLightIntensityList[i] = tLightData['_intensity'];

@@ -9,8 +9,10 @@ var RedEnvironmentMaterial;
         /* @preserve
             // 스키닝
             //#REDGL_DEFINE#vertexShareFunc#getSkinMatrix#
+
+            // Sprite3D
             //#REDGL_DEFINE#vertexShareFunc#getSprite3DMatrix#
-            varying vec4 vVertexPosition;
+
 
             //#REDGL_DEFINE#displacementTexture# uniform sampler2D u_displacementTexture;
             //#REDGL_DEFINE#displacementTexture# uniform float u_displacementPower;
@@ -18,6 +20,7 @@ var RedEnvironmentMaterial;
             //#REDGL_DEFINE#displacementTexture# uniform float u_displacementFlowSpeedY;
 
             void main(void) {
+                gl_PointSize = uPointSize;
                 vTexcoord = aTexcoord;
 
                 // normal 계산
@@ -76,9 +79,7 @@ var RedEnvironmentMaterial;
          uniform float u_reflectionPower;
          uniform float u_alpha;
 
-         varying vec4 vVertexPosition;
 
-         vec4 la;
 
          vec4 texelColor= vec4(0.0,0.0,0.0,0.0);
          vec4 emissiveColor;
@@ -90,7 +91,6 @@ var RedEnvironmentMaterial;
          vec4 finalColor;
 
          void main(void) {
-             la = uAmbientLightColor * uAmbientLightColor.a;
 
              texelColor = vec4(0.0,0.0,0.0,0.0);
              //#REDGL_DEFINE#diffuseTexture# texelColor = texture2D(u_diffuseTexture, vTexcoord);
@@ -113,7 +113,7 @@ var RedEnvironmentMaterial;
              specularTextureValue = 1.0;
              //#REDGL_DEFINE#specularTexture#  specularTextureValue = texture2D(u_specularTexture, vTexcoord).r;
 
-             vec4 finalColor = la * uAmbientIntensity
+             vec4 finalColor = uAmbientLightColor * uAmbientIntensity
              + getDirectionalLightColor(
                 texelColor,
                 N,

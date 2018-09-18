@@ -9,11 +9,11 @@ var RedColorPhongMaterial;
             // 스키닝
             //#REDGL_DEFINE#vertexShareFunc#getSkinMatrix#
 
+            // Sprite3D
             //#REDGL_DEFINE#vertexShareFunc#getSprite3DMatrix#
 
-            varying vec4 vVertexPosition;
-
             void main(void) {
+                gl_PointSize = uPointSize;
                 // normal 계산
                 vVertexNormal = vec3(uNMatrix * vec4(aVertexNormal,1.0));
 
@@ -53,19 +53,16 @@ var RedColorPhongMaterial;
          uniform float u_shininess;
          uniform float u_specularPower;
          uniform vec4 u_color;
-         varying vec4 vVertexPosition;
 
-        vec3 N;
-         vec4 la;
+
+         vec3 N;
          vec4 texelColor;
 
          vec4 specularLightColor= vec4(1.0, 1.0, 1.0, 1.0);
          float specularTextureValue;
 
          vec4 finalColor;
-
          void main(void) {
-             la = uAmbientLightColor * uAmbientLightColor.a;
 
              texelColor = u_color;
              // texelColor.rgb *= texelColor.a;
@@ -75,7 +72,7 @@ var RedColorPhongMaterial;
              specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);
              specularTextureValue = 1.0;
 
-             vec4 finalColor = la * uAmbientIntensity
+             vec4 finalColor = uAmbientLightColor * uAmbientIntensity
              + getDirectionalLightColor(
                 texelColor,
                 N,
@@ -95,6 +92,8 @@ var RedColorPhongMaterial;
 
              finalColor.rgb *= texelColor.a;
              finalColor.a = texelColor.a;
+             if(finalColor.a == 0.0) discard;
+
              //#REDGL_DEFINE#directionalShadow#true# finalColor.rgb *= getShadowColor( vShadowPos, vResolution, uDirectionalShadowTexture);
 
              //#REDGL_DEFINE#fog#false# gl_FragColor = finalColor;

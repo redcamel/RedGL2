@@ -26,7 +26,7 @@ var RedParticleBitmapMaterial;
 		//#REDGL_DEFINE#fragmentShareFunc#fog#
 
 		 uniform sampler2D u_diffuseTexture;
-		 uniform float u_alphaTest;
+		 uniform float u_cutOff;
 		 uniform float u_alpha;
 	     varying vec4 vColor;
 		 void main(void) {
@@ -35,7 +35,7 @@ var RedParticleBitmapMaterial;
 			 finalColor.rgb += vColor.rgb * vColor.a;
 			 finalColor.a *= vColor.a;
 			 finalColor.a *= u_alpha;
-			 if(finalColor.a < u_alphaTest) discard;
+			 if(finalColor.a < u_cutOff) discard;
 
 			 //#REDGL_DEFINE#fog#false# gl_FragColor = finalColor;
 			 //#REDGL_DEFINE#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
@@ -72,7 +72,7 @@ var RedParticleBitmapMaterial;
 		// 유니폼 프로퍼티
 		this['diffuseTexture'] = diffuseTexture;
 		this['alpha'] = 1;
-		this['alphaTest'] = 0.01;
+		this['cutOff'] = 0.01;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
 		this['_UUID'] = RedGL.makeUUID();
@@ -103,11 +103,11 @@ var RedParticleBitmapMaterial;
 	/**DOC:
 	 {
 	     code : 'PROPERTY',
-		 title :`alphaTest`,
+		 title :`cutOff`,
 		 description : `기본값 : 0.01`,
 		 return : 'Number'
 	 }
 	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedParticleBitmapMaterial', 'alphaTest', 'number', {min: 0, max: 1});
+	RedDefinePropertyInfo.definePrototype('RedParticleBitmapMaterial', 'cutOff', 'number', {min: 0, max: 1});
 	Object.freeze(RedParticleBitmapMaterial);
 })();

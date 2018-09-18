@@ -20,12 +20,12 @@ var RedPointBitmapMaterial;
 		//#REDGL_DEFINE#fragmentShareFunc#fog#
 
 		 uniform sampler2D u_diffuseTexture;
-		 uniform float u_alphaTest;
+		 uniform float u_cutOff;
          uniform float u_alpha;
 		 void main(void) {
 			 vec4 finalColor = texture2D(u_diffuseTexture, vec2(gl_PointCoord.x, - gl_PointCoord.y));
 			 finalColor.rgb *= finalColor.a;
-			 if(finalColor.a < u_alphaTest) discard;
+			 if(finalColor.a < u_cutOff) discard;
 			 finalColor.a *= u_alpha;
 			 //#REDGL_DEFINE#fog#false# gl_FragColor = finalColor;
 			 //#REDGL_DEFINE#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
@@ -64,7 +64,7 @@ var RedPointBitmapMaterial;
 		// 유니폼 프로퍼티
 		this['diffuseTexture'] = diffuseTexture;
 		this['alpha'] = 1;
-		this['alphaTest'] = 0.1;
+		this['cutOff'] = 0.1;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
 		this['_UUID'] = RedGL.makeUUID();
@@ -87,7 +87,7 @@ var RedPointBitmapMaterial;
 	/**DOC:
 	 {
  	     code : 'PROPERTY',
-		 title :`alphaTest`,
+		 title :`cutOff`,
 		 description : `
 		 기본값 : 0.0001
 		 해당값보다 알파값이 작을경우 discard 처리됨.
@@ -95,7 +95,7 @@ var RedPointBitmapMaterial;
 		 return : 'Number'
 	 }
 	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPointBitmapMaterial', 'alphaTest', 'number', {min: 0, max: 1});
+	RedDefinePropertyInfo.definePrototype('RedPointBitmapMaterial', 'cutOff', 'number', {min: 0, max: 1});
 	/**DOC:
 	 {
  	     code : 'PROPERTY',
