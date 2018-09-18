@@ -32,6 +32,7 @@ var RedGLTFLoader;
 				 {type:'Function'}
 			 ]
 		 },
+		 demo : '../example/loader/gltf/RedGLTFLoader.html',
 		 return : 'void'
 	 }
      :DOC*/

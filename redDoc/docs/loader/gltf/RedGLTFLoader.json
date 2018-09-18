@@ -25,6 +25,7 @@
         }
       ]
     },
+    "demo": "../example/loader/gltf/RedGLTFLoader.html",
     "return": "void"
   }
 ]

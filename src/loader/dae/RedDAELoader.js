@@ -24,6 +24,7 @@ var RedDAELoader;
 				 {type:'Function'}
 			 ]
 		 },
+	     demo : '../example/loader/dae/RedDAELoader.html',
 		 example : `
 		 RedDAELoader(RedGL Instance, '../asset/obj/gun/', 'Handgun_obj.obj', function (result) {
 			 tScene3D.addChild(result['resultMesh'])
