@@ -207,6 +207,7 @@
             tMesh.x = Math.random() * 50 - 25
             tMesh.y = Math.random() * 20 - 10
             tMesh.z = Math.random() * 50 - 25
+            // tMesh.useCullFace=false
             if (Math.random() < 0.5) tMesh.drawMode = self.gl.LINES
             tScene3D.addChild(tMesh)
             tShadow.addCasting(tMesh)

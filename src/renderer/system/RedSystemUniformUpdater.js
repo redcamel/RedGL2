@@ -338,9 +338,9 @@ var RedSystemUniformUpdater;
 					tDirectionalShadowLightPosition[1] = 0;
 					tDirectionalShadowLightPosition[2] = 0;
 					if ( tLight ) {
-						tDirectionalShadowLightPosition[0] = -tLight.x;
-						tDirectionalShadowLightPosition[1] = -tLight.y;
-						tDirectionalShadowLightPosition[2] = -tLight.z;
+						tDirectionalShadowLightPosition[0] = tLight.x;
+						tDirectionalShadowLightPosition[1] = tLight.y;
+						tDirectionalShadowLightPosition[2] = tLight.z;
 						vec3.normalize(tDirectionalShadowLightPosition, tDirectionalShadowLightPosition);
 						mat4.lookAt(
 							tDirectionalShadowLightMatrix,

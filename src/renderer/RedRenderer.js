@@ -279,7 +279,7 @@ var RedRenderer;
                 if (tScene['shadowManager']['_directionalShadow']) {
 
                     updateSystemUniform.apply(self, [redGL, time, tView])
-                    gl.enable(gl.BLEND);
+                    gl.disable(gl.BLEND);
                     gl.blendFunc(gl.ONE, gl.ONE);
                     self['cacheState']['useBlendMode'] = true
                     self['cacheState']['blendSrc'] = gl.ONE
