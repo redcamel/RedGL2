@@ -240,6 +240,7 @@ var Red3DSLoader;
 				 {type:'Function'}
 			 ]
 		 },
+		 demo : '../example/loader/3ds/Red3DSLoader.html',
 		 return : 'void'
 	 }
 	 :DOC*/

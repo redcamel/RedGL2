@@ -25,7 +25,7 @@ var RedOBJLoader;
 				 {type:'Function'}
 			 ]
 		 },
-		 demo : '../example/loader/obj/RedGLTFLoader.html',
+		 demo : '../example/loader/obj/RedOBJLoader.html',
 		 example : `
 		 RedOBJLoader(RedGL Instance, '../asset/obj/gun/', 'Handgun_obj.obj', function (result) {
 			 tScene3D.addChild(result['resultMesh'])
