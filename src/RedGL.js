@@ -1,88 +1,88 @@
 "use strict";
 var RedGL;
 (function () {
-	var getGL;
-	var setEmptyTextures;
-	/*
-	 gl 컨텍스트 찾기
-	 */
-	getGL = (function () {
-		var CHECK_CONTEXT_LIST, tCheckContextList; // 체크할 리스트
-		var OPTION; // 기본초기화 옵션 리스트
-		var tContext, tKey, i;
-		var initOption;
-		var EXT_KEY_LIST;
-		OPTION = {
-			alpha: false,
-			depth: true,
-			stencil: false,
-			antialias: true,
-			premultipliedAlpha: false,
-			preserveDrawingBuffer: false,
-			powerPreference: 'default', // default, high-performance, low-power
-			failIfMajorPerformanceCaveat: false
-		};
-		EXT_KEY_LIST = [
-			'OES_element_index_uint',
-			'OES_standard_derivatives',
-			'EXT_texture_filter_anisotropic',
-			'WEBGL_compressed_texture_s3tc',
-			'WEBGL_debug_renderer_info'
-		];
-		// CHECK_CONTEXT_LIST = 'webkit-3d,moz-webgl,3d,experimental-webgl,webgl,webgl2'.split(',');
+    var getGL;
+    var setEmptyTextures;
+    /*
+     gl 컨텍스트 찾기
+     */
+    getGL = (function () {
+        var CHECK_CONTEXT_LIST, tCheckContextList; // 체크할 리스트
+        var OPTION; // 기본초기화 옵션 리스트
+        var tContext, tKey, i;
+        var initOption;
+        var EXT_KEY_LIST;
+        OPTION = {
+            alpha: false,
+            depth: true,
+            stencil: false,
+            antialias: true,
+            premultipliedAlpha: false,
+            preserveDrawingBuffer: false,
+            powerPreference: 'default', // default, high-performance, low-power
+            failIfMajorPerformanceCaveat: false
+        };
+        EXT_KEY_LIST = [
+            'OES_element_index_uint',
+            'OES_standard_derivatives',
+            'EXT_texture_filter_anisotropic',
+            'WEBGL_compressed_texture_s3tc',
+            'WEBGL_debug_renderer_info'
+        ];
+        // CHECK_CONTEXT_LIST = 'webkit-3d,moz-webgl,3d,experimental-webgl,webgl,webgl2'.split(',');
         CHECK_CONTEXT_LIST = 'webkit-3d,moz-webgl,3d,experimental-webgl,webgl'.split(',');
-		tCheckContextList = [];
-		return function (canvas, option, targetContext) {
-			initOption = JSON.parse(JSON.stringify(OPTION));
-			if ( option ) for ( i in option ) initOption[i] = option[i];
-			if ( targetContext ) {
-				tCheckContextList.length = 0
-				tCheckContextList.push(targetContext)
-			} else tCheckContextList = CHECK_CONTEXT_LIST.concat();
-			i = tCheckContextList.length;
-			while ( i-- ) {
-				if ( tContext = canvas.getContext(tKey = tCheckContextList[i], initOption) ) {
-					tContext['glExtension'] = {};
-					EXT_KEY_LIST.forEach(function (extensionKey) {
-						tContext['glExtension'][extensionKey] = tContext.getExtension(extensionKey);
-						if(tContext['glExtension'][extensionKey] && extensionKey == 'WEBGL_debug_renderer_info'){
+        tCheckContextList = [];
+        return function (canvas, option, targetContext) {
+            initOption = JSON.parse(JSON.stringify(OPTION));
+            if (option) for (i in option) initOption[i] = option[i];
+            if (targetContext) {
+                tCheckContextList.length = 0
+                tCheckContextList.push(targetContext)
+            } else tCheckContextList = CHECK_CONTEXT_LIST.concat();
+            i = tCheckContextList.length;
+            while (i--) {
+                if (tContext = canvas.getContext(tKey = tCheckContextList[i], initOption)) {
+                    tContext['glExtension'] = {};
+                    EXT_KEY_LIST.forEach(function (extensionKey) {
+                        tContext['glExtension'][extensionKey] = tContext.getExtension(extensionKey);
+                        if (tContext['glExtension'][extensionKey] && extensionKey == 'WEBGL_debug_renderer_info') {
                             tContext['vendor'] = tContext.getParameter(tContext['glExtension'][extensionKey].UNMASKED_VENDOR_WEBGL);
-                            tContext['renderer']  = tContext.getParameter(tContext['glExtension'][extensionKey].UNMASKED_RENDERER_WEBGL)
-						}
-						console.log('확장여부 ' + extensionKey + ' :', tContext['glExtension'][extensionKey])
-					});
-					tContext['version'] = tKey;
-					return tContext;
-				}
-			}
-			return null;
-		}
-	})();
-	setEmptyTextures = function (redGL, gl) {
-		var i;
-		var emptyTexture, emptyCubeTexture, src;
-		i = redGL['detect']['texture']['MAX_COMBINED_TEXTURE_IMAGE_UNITS'];
-		src = RedBaseTexture.EMPTY_BASE64;
-		emptyTexture = RedBitmapTexture(redGL, src);
-		emptyCubeTexture = RedBitmapCubeTexture(redGL, [src, src, src, src, src, src]);
-		redGL['_datas']['emptyTexture'] = {
-			'2d': emptyTexture,
-			'3d': emptyCubeTexture
-		};
-		// 0번은 2D 텍스쳐 생성용공간
-		// 1번은 3D 텍스쳐 생성용공간
-		while ( i-- ) {
-			if ( i == 1 ) {
-				gl.activeTexture(gl.TEXTURE0 + 1);
-				gl.bindTexture(gl.TEXTURE_CUBE_MAP, emptyCubeTexture['webglTexture']);
-			} else {
-				gl.activeTexture(gl.TEXTURE0 + i);
-				gl.bindTexture(gl.TEXTURE_2D, emptyTexture['webglTexture']);
-			}
-		}
-	};
-	/**DOC:
-	 {
+                            tContext['renderer'] = tContext.getParameter(tContext['glExtension'][extensionKey].UNMASKED_RENDERER_WEBGL)
+                        }
+                        console.log('확장여부 ' + extensionKey + ' :', tContext['glExtension'][extensionKey])
+                    });
+                    tContext['version'] = tKey;
+                    return tContext;
+                }
+            }
+            return null;
+        }
+    })();
+    setEmptyTextures = function (redGL, gl) {
+        var i;
+        var emptyTexture, emptyCubeTexture, src;
+        i = redGL['detect']['texture']['MAX_COMBINED_TEXTURE_IMAGE_UNITS'];
+        src = RedBaseTexture.EMPTY_BASE64;
+        emptyTexture = RedBitmapTexture(redGL, src);
+        emptyCubeTexture = RedBitmapCubeTexture(redGL, [src, src, src, src, src, src]);
+        redGL['_datas']['emptyTexture'] = {
+            '2d': emptyTexture,
+            '3d': emptyCubeTexture
+        };
+        // 0번은 2D 텍스쳐 생성용공간
+        // 1번은 3D 텍스쳐 생성용공간
+        while (i--) {
+            if (i == 1) {
+                gl.activeTexture(gl.TEXTURE0 + 1);
+                gl.bindTexture(gl.TEXTURE_CUBE_MAP, emptyCubeTexture['webglTexture']);
+            } else {
+                gl.activeTexture(gl.TEXTURE0 + i);
+                gl.bindTexture(gl.TEXTURE_2D, emptyTexture['webglTexture']);
+            }
+        }
+    };
+    /**DOC:
+     {
 		 constructorYn : true,
 		 title :`RedGL`,
 		 description : `
@@ -138,22 +138,22 @@ var RedGL;
 		 `,
 		 return : 'RedGL Instance'
 	 }
-	 :DOC*/
-	RedGL = function (canvas, callback, option, targetContextKey, initPrograms) {
-		var startTime = performance.now();
-		if ( !(this instanceof RedGL) ) return new RedGL(canvas, callback, option, targetContextKey, initPrograms);
-		canvas instanceof Element && canvas['tagName'] == 'CANVAS' || RedGLUtil.throwFunc('RedGL : Canvas Element만 허용');
-		var tGL, self;
-		self = this;
-		this['_datas'] = {};
-		this['_width'] = '100%';
-		this['_height'] = '100%';
-		this['_renderScale'] = 1;
-		this['_viewRect'] = [0, 0, 0, 0];
-		//
-		this['_canvas'] = canvas;
-		/**DOC:
-		 {
+     :DOC*/
+    RedGL = function (canvas, callback, option, targetContextKey, initPrograms) {
+        var startTime = performance.now();
+        if (!(this instanceof RedGL)) return new RedGL(canvas, callback, option, targetContextKey, initPrograms);
+        canvas['tagName'] == 'CANVAS' || RedGLUtil.throwFunc('RedGL : Canvas Element만 허용');
+        var tGL, self;
+        self = this;
+        this['_datas'] = {};
+        this['_width'] = '100%';
+        this['_height'] = '100%';
+        this['_renderScale'] = 1;
+        this['_viewRect'] = [0, 0, 0, 0];
+        //
+        this['_canvas'] = canvas;
+        /**DOC:
+         {
 			 code : 'PROPERTY',
 			 title :`gl`,
 			 description : `
@@ -161,10 +161,10 @@ var RedGL;
 			 `,
 			 return : 'WebGL Context Instance'
 		 }
-		 :DOC*/
-		this['gl'] = tGL = getGL(canvas, option, targetContextKey);
-		/**DOC:
-		 {
+         :DOC*/
+        this['gl'] = tGL = getGL(canvas, option, targetContextKey);
+        /**DOC:
+         {
 			 code : 'PROPERTY',
 			 title :`detect`,
 			 description : `
@@ -172,65 +172,65 @@ var RedGL;
 			 `,
 			 return : 'RedGLDetect Instance'
 		 }
-		 :DOC*/
-		if ( tGL ) this['detect'] = RedGLDetect(tGL);
-		else return callback ? callback.call(self, tGL ? true : false) : 0;
-		//
-		this['_UUID'] = RedGL.makeUUID();
-		if ( RedSystemShaderCode['init'] ) RedSystemShaderCode.init();
-		//
-		requestAnimationFrame(function () {
-			window.addEventListener('resize', function () {
-				self.setSize(self['_width'], self['_height'])
-			});
-			self.setSize(self['_width'], self['_height']); // 리사이즈를 초기에 한번 실행.
-			setEmptyTextures(self, tGL); // 빈텍스쳐를 미리 체워둔다.
-			// 주요프로그램을 미리생성
-			if ( initPrograms ) {
-				var totalTime_RedBitmapMaterial = performance.now();
-				RedBitmapMaterial(self, self['_datas']['emptyTexture']['2d']);
-				totalTime_RedBitmapMaterial = performance.now() - totalTime_RedBitmapMaterial;
-				//
-				var totalTime_RedColorMaterial = performance.now();
-				RedColorMaterial(self);
-				totalTime_RedColorMaterial = performance.now() - totalTime_RedColorMaterial;
-				//
-				var totalTime_RedColorPhongMaterial = performance.now();
-				RedColorPhongMaterial(self);
-				totalTime_RedColorPhongMaterial = performance.now() - totalTime_RedColorPhongMaterial
-				//
-				var totalTime_RedColorPhongTextureMaterial = performance.now();
-				RedColorPhongTextureMaterial(self);
-				totalTime_RedColorPhongTextureMaterial = performance.now() - totalTime_RedColorPhongTextureMaterial;
-				//
-				var totalTime_RedEnvironmentMaterial = performance.now();
-				RedEnvironmentMaterial(self, self['_datas']['emptyTexture']['2d'], self['_datas']['emptyTexture']['3d']);
-				totalTime_RedEnvironmentMaterial = performance.now() - totalTime_RedEnvironmentMaterial;
-				//
-				var totalTime_RedSheetMaterial = performance.now();
-				RedSheetMaterial(self, self['_datas']['emptyTexture']['2d']);
-				totalTime_RedSheetMaterial = performance.now() - totalTime_RedSheetMaterial;
-				//
-				var totalTime_RedStandardMaterial = performance.now();
-				RedStandardMaterial(self, self['_datas']['emptyTexture']['2d']);
-				totalTime_RedStandardMaterial = performance.now() - totalTime_RedStandardMaterial;
-				//
-				console.log('totalTime_RedBitmapMaterial', totalTime_RedBitmapMaterial, self['_datas']['RedProgramGroup']['RedBitmapMaterialProgram']);
-				console.log('totalTime_RedColorMaterial', totalTime_RedColorMaterial, self['_datas']['RedProgramGroup']['RedColorMaterialProgram']);
-				console.log('totalTime_RedColorPhongMaterial', totalTime_RedColorPhongMaterial, self['_datas']['RedProgramGroup']['RedColorPhongMaterialProgram']);
-				console.log('totalTime_RedColorPhongTextureMaterial', totalTime_RedColorPhongTextureMaterial, self['_datas']['RedProgramGroup']['RedColorPhongTextureMaterialProgram']);
-				console.log('totalTime_RedSheetMaterial', totalTime_RedSheetMaterial, self['_datas']['RedProgramGroup']['RedSheetMaterialProgram']);
-				console.log('totalTime_RedEnvironmentMaterial', totalTime_RedEnvironmentMaterial, self['_datas']['RedProgramGroup']['RedEnvironmentMaterialProgram']);
-				console.log('totalTime_RedStandardMaterial', totalTime_RedStandardMaterial, self['_datas']['RedProgramGroup']['RedStandardMaterialProgram']);
-				console.log('초기화시간', performance.now() - startTime);
-			}
-			callback ? callback.call(self, tGL ? true : false) : 0; // 콜백이 있으면 실행
-			//
-		});
-		console.log(this)
-	};
-	/**DOC:
-	 {
+         :DOC*/
+        if (tGL) this['detect'] = RedGLDetect(tGL);
+        else return callback ? callback.call(self, tGL ? true : false) : 0;
+        //
+        this['_UUID'] = RedGL.makeUUID();
+        if (RedSystemShaderCode['init']) RedSystemShaderCode.init();
+        //
+        requestAnimationFrame(function () {
+            window.addEventListener('resize', function () {
+                self.setSize(self['_width'], self['_height'])
+            });
+            self.setSize(self['_width'], self['_height']); // 리사이즈를 초기에 한번 실행.
+            setEmptyTextures(self, tGL); // 빈텍스쳐를 미리 체워둔다.
+            // 주요프로그램을 미리생성
+            if (initPrograms) {
+                var totalTime_RedBitmapMaterial = performance.now();
+                RedBitmapMaterial(self, self['_datas']['emptyTexture']['2d']);
+                totalTime_RedBitmapMaterial = performance.now() - totalTime_RedBitmapMaterial;
+                //
+                var totalTime_RedColorMaterial = performance.now();
+                RedColorMaterial(self);
+                totalTime_RedColorMaterial = performance.now() - totalTime_RedColorMaterial;
+                //
+                var totalTime_RedColorPhongMaterial = performance.now();
+                RedColorPhongMaterial(self);
+                totalTime_RedColorPhongMaterial = performance.now() - totalTime_RedColorPhongMaterial
+                //
+                var totalTime_RedColorPhongTextureMaterial = performance.now();
+                RedColorPhongTextureMaterial(self);
+                totalTime_RedColorPhongTextureMaterial = performance.now() - totalTime_RedColorPhongTextureMaterial;
+                //
+                var totalTime_RedEnvironmentMaterial = performance.now();
+                RedEnvironmentMaterial(self, self['_datas']['emptyTexture']['2d'], self['_datas']['emptyTexture']['3d']);
+                totalTime_RedEnvironmentMaterial = performance.now() - totalTime_RedEnvironmentMaterial;
+                //
+                var totalTime_RedSheetMaterial = performance.now();
+                RedSheetMaterial(self, self['_datas']['emptyTexture']['2d']);
+                totalTime_RedSheetMaterial = performance.now() - totalTime_RedSheetMaterial;
+                //
+                var totalTime_RedStandardMaterial = performance.now();
+                RedStandardMaterial(self, self['_datas']['emptyTexture']['2d']);
+                totalTime_RedStandardMaterial = performance.now() - totalTime_RedStandardMaterial;
+                //
+                console.log('totalTime_RedBitmapMaterial', totalTime_RedBitmapMaterial, self['_datas']['RedProgramGroup']['RedBitmapMaterialProgram']);
+                console.log('totalTime_RedColorMaterial', totalTime_RedColorMaterial, self['_datas']['RedProgramGroup']['RedColorMaterialProgram']);
+                console.log('totalTime_RedColorPhongMaterial', totalTime_RedColorPhongMaterial, self['_datas']['RedProgramGroup']['RedColorPhongMaterialProgram']);
+                console.log('totalTime_RedColorPhongTextureMaterial', totalTime_RedColorPhongTextureMaterial, self['_datas']['RedProgramGroup']['RedColorPhongTextureMaterialProgram']);
+                console.log('totalTime_RedSheetMaterial', totalTime_RedSheetMaterial, self['_datas']['RedProgramGroup']['RedSheetMaterialProgram']);
+                console.log('totalTime_RedEnvironmentMaterial', totalTime_RedEnvironmentMaterial, self['_datas']['RedProgramGroup']['RedEnvironmentMaterialProgram']);
+                console.log('totalTime_RedStandardMaterial', totalTime_RedStandardMaterial, self['_datas']['RedProgramGroup']['RedStandardMaterialProgram']);
+                console.log('초기화시간', performance.now() - startTime);
+            }
+            callback ? callback.call(self, tGL ? true : false) : 0; // 콜백이 있으면 실행
+            //
+        });
+        console.log(this)
+    };
+    /**DOC:
+     {
 		 code : 'STATIC METHOD',
 		 title :`RedGL.makeUUID`,
 		 description : `
@@ -241,16 +241,16 @@ var RedGL;
 		 `,
 		 return : 'int'
 	 }
-	 :DOC*/
-	RedGL['makeUUID'] = (function () {
-		var UUID = 0;
-		return function () {
-			return UUID++
-		}
-	})();
-	RedGL.prototype = {
-		/**DOC:
-		 {
+     :DOC*/
+    RedGL['makeUUID'] = (function () {
+        var UUID = 0;
+        return function () {
+            return UUID++
+        }
+    })();
+    RedGL.prototype = {
+        /**DOC:
+         {
 			 title :`setSize`,
 			 code: `METHOD`,
 			 description : `
@@ -277,44 +277,44 @@ var RedGL;
 			 `,
 			 return : 'void'
 		 }
-		 :DOC*/
-		setSize: (function () {
-			var W, H;
-			var prevW, prevH;
-			var ratio;
-			var tCVS;
-			prevW = 0, prevH = 0;
-			return function (width, height, force) {
-				if ( width == undefined ) RedGLUtil.throwFunc('RedGL setSize : width가 입력되지 않았습니다.');
-				if ( height == undefined ) RedGLUtil.throwFunc('RedGL setSize : height가 입력되지 않았습니다.');
-				W = this['_width'] = width;
-				H = this['_height'] = height;
-				if ( typeof W != 'number' ) {
-					if ( W.indexOf('%') > -1 ) W = (document.documentElement ? document.documentElement.clientWidth : document.body.clientWidth) * parseFloat(W) / 100;
-					else RedGLUtil.throwFunc('RedGL setSize : width는 0이상의 숫자나 %만 허용.', W);
-				}
-				if ( typeof H != 'number' ) {
-					if ( H.indexOf('%') > -1 ) H = window.innerHeight * parseFloat(H) / 100;
-					else RedGLUtil.throwFunc('RedGL setSize : height는 0이상의 숫자나 %만 허용.', H);
-				}
-				ratio = window['devicePixelRatio'] || 1;
-				tCVS = this['_canvas'];
-				if ( prevW != W || prevH != H || force ) {
-					tCVS.width = W * ratio * this['_renderScale'];
-					tCVS.height = H * ratio * this['_renderScale'];
-					tCVS.style.width = W;
-					tCVS.style.height = H;
-					console.log('RedGL canvas setSize : ', this.gl.drawingBufferWidth, this.gl.drawingBufferHeight);
-					prevW = W;
-					prevH = H;
-				}
-				this['_viewRect'][2] = prevW;
-				this['_viewRect'][3] = prevH;
-			}
-		})()
-	};
-	/**DOC:
-	 {
+         :DOC*/
+        setSize: (function () {
+            var W, H;
+            var prevW, prevH;
+            var ratio;
+            var tCVS;
+            prevW = 0, prevH = 0;
+            return function (width, height, force) {
+                if (width == undefined) RedGLUtil.throwFunc('RedGL setSize : width가 입력되지 않았습니다.');
+                if (height == undefined) RedGLUtil.throwFunc('RedGL setSize : height가 입력되지 않았습니다.');
+                W = this['_width'] = width;
+                H = this['_height'] = height;
+                if (typeof W != 'number') {
+                    if (W.indexOf('%') > -1) W = (document.documentElement ? document.documentElement.clientWidth : document.body.clientWidth) * parseFloat(W) / 100;
+                    else RedGLUtil.throwFunc('RedGL setSize : width는 0이상의 숫자나 %만 허용.', W);
+                }
+                if (typeof H != 'number') {
+                    if (H.indexOf('%') > -1) H = window.innerHeight * parseFloat(H) / 100;
+                    else RedGLUtil.throwFunc('RedGL setSize : height는 0이상의 숫자나 %만 허용.', H);
+                }
+                ratio = window['devicePixelRatio'] || 1;
+                tCVS = this['_canvas'];
+                if (prevW != W || prevH != H || force) {
+                    tCVS.width = W * ratio * this['_renderScale'];
+                    tCVS.height = H * ratio * this['_renderScale'];
+                    tCVS.style.width = W;
+                    tCVS.style.height = H;
+                    console.log('RedGL canvas setSize : ', this.gl.drawingBufferWidth, this.gl.drawingBufferHeight);
+                    prevW = W;
+                    prevH = H;
+                }
+                this['_viewRect'][2] = prevW;
+                this['_viewRect'][3] = prevH;
+            }
+        })()
+    };
+    /**DOC:
+     {
 		 title :`renderScale`,
 		 code: `PROPERTY`,
 		 description : `
@@ -330,13 +330,13 @@ var RedGL;
 		 `,
 		 return : 'Number'
 	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedGL', 'renderScale', 'number', {
-		'min': 0.1,
-		'max': 1,
-		'callback': function () {
-			this.setSize(this['_width'], this['_height'], true);
-		}
-	});
-	Object.freeze(RedGL);
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedGL', 'renderScale', 'number', {
+        'min': 0.1,
+        'max': 1,
+        'callback': function () {
+            this.setSize(this['_width'], this['_height'], true);
+        }
+    });
+    Object.freeze(RedGL);
 })();

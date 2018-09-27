@@ -88,7 +88,7 @@ var RedGLTFLoader;
             }
         )
         this['redGL'] = redGL;
- 
+
         this['path'] = path;
         this['fileName'] = fileName;
         this['resultMesh'] = RedMesh(redGL)
@@ -99,9 +99,9 @@ var RedGLTFLoader;
             uris: {
                 buffers: []
             },
-            textures:{},
-            cameras : [],
-            animations : []
+            textures: {},
+            cameras: [],
+            animations: []
         }
         this['parsingOption'] = parsingOption
         this['environmentTexture'] = environmentTexture || null

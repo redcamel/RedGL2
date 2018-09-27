@@ -1,8 +1,8 @@
 "use strict";
 var RedBasePostEffect;
 (function () {
-	/**DOC:
-	 {
+    /**DOC:
+     {
 		 constructorYn : true,
 		 title :`RedBasePostEffect`,
 		 description : `
@@ -10,13 +10,14 @@ var RedBasePostEffect;
 		 `,
 		 return : 'RedBasePostEffect Instance'
 	 }
-	 :DOC*/
-	RedBasePostEffect = function () {};
-	RedBasePostEffect.prototype = new RedBaseMaterial();
-	RedBasePostEffect.prototype['bind'] = RedPostEffectManager.prototype['bind'];
-	RedBasePostEffect.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
-	/**DOC:
-	 {
+     :DOC*/
+    RedBasePostEffect = function () {
+    };
+    RedBasePostEffect.prototype = new RedBaseMaterial();
+    RedBasePostEffect.prototype['bind'] = RedPostEffectManager.prototype['bind'];
+    RedBasePostEffect.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
+    /**DOC:
+     {
 		title :`updateTexture`,
 		code : 'METHOD',
 		description : `
@@ -24,12 +25,12 @@ var RedBasePostEffect;
 		`,
 		return : 'void'
 	}
-	 :DOC*/
-	RedBasePostEffect.prototype['updateTexture'] = function () {
-		RedGLUtil.throwFunc('RedBasePostEffect - updateTexture : 반드시 재정의해야함')
-	};
-	/**DOC:
-	 {
+     :DOC*/
+    RedBasePostEffect.prototype['updateTexture'] = function () {
+        RedGLUtil.throwFunc('RedBasePostEffect - updateTexture : 반드시 재정의해야함')
+    };
+    /**DOC:
+     {
 		title :`_process`,
 		code : 'PROPERTY',
 		description : `
@@ -37,10 +38,10 @@ var RedBasePostEffect;
 		`,
 		return : 'void'
 	}
-	 :DOC*/
-	RedBasePostEffect.prototype['_process'] = [];
-	/**DOC:
-	 {
+     :DOC*/
+    RedBasePostEffect.prototype['_process'] = [];
+    /**DOC:
+     {
 		title :`_subFrameBufferList`,
 		code : 'PROPERTY',
 		description : `
@@ -48,7 +49,7 @@ var RedBasePostEffect;
 		`,
 		return : 'void'
 	}
-	 :DOC*/
-	RedBasePostEffect.prototype['_subFrameBufferList'] = [];
-	Object.freeze(RedBasePostEffect);
+     :DOC*/
+    RedBasePostEffect.prototype['_subFrameBufferList'] = [];
+    Object.freeze(RedBasePostEffect);
 })();

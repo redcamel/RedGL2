@@ -1,0 +1,41 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>RedOBJLoader</title>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
+    />
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+    </style>
+    <script src="../example/dat.gui.min.js"></script>
+
+    <!--//-->
+
+    <script src="../src/loader/RedImageLoader.js"></script>
+
+</head>
+
+<body>
+<script>
+    RedImageLoader(
+        '../asset/cubemap/SwedishRoyalCastle/px.jpg',
+        function (v) {
+            console.log(this)
+        },
+        function (v) {
+            console.log(v)
+        }
+    )
+</script>
+</body>
+
+</html>
