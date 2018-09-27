@@ -1,8 +1,8 @@
 "use strict";
 var RedBaseObject3D;
 (function () {
-	/**DOC:
-	 {
+    /**DOC:
+     {
 		 constructorYn : true,
 		 title :`RedBaseObject3D`,
 		 description : `
@@ -10,10 +10,11 @@ var RedBaseObject3D;
 		 `,
 		 return : 'RedBaseObject3D Instance'
 	 }
-	 :DOC*/
-	RedBaseObject3D = function () {};
-	/**DOC:
-	 {
+     :DOC*/
+    RedBaseObject3D = function () {
+    };
+    /**DOC:
+     {
 		 title :`RedBaseObject3D.build`,
 		 code : 'STATIC METHOD',
 		 description : `
@@ -33,9 +34,9 @@ var RedBaseObject3D;
 		 `,
 		 return : 'void'
 	 }
-	 :DOC*/
-	RedBaseObject3D['build'] = function (gl) {
-		this['name'] = 'object3D_' + (RedGL.makeUUID() + 1)
+     :DOC*/
+    RedBaseObject3D['build'] = function (gl) {
+        this['name'] = 'object3D_' + (RedGL.makeUUID() + 1)
         /**DOC:
          {
 		     code : 'PROPERTY',
@@ -47,9 +48,9 @@ var RedBaseObject3D;
 			 return : 'Boolean'
 		 }
          :DOC*/
-		this['useTransparentSort'] = false
-		/**DOC:
-		 {
+        this['useTransparentSort'] = false
+        /**DOC:
+         {
 		     code : 'PROPERTY',
 			 title :`useCullFace`,
 			 description : `
@@ -58,10 +59,10 @@ var RedBaseObject3D;
 			 `,
 			 return : 'Boolean'
 		 }
-		 :DOC*/
-		this['useCullFace'] = true;
-		/**DOC:
-		 {
+         :DOC*/
+        this['useCullFace'] = true;
+        /**DOC:
+         {
              code : 'PROPERTY',
 			 title :`cullFace`,
 			 description : `
@@ -70,10 +71,10 @@ var RedBaseObject3D;
 			 `,
 			 return : 'gl 상수'
 		 }
-		 :DOC*/
-		this['cullFace'] = gl.BACK;
-		/**DOC:
-		 {
+         :DOC*/
+        this['cullFace'] = gl.BACK;
+        /**DOC:
+         {
 		     code : 'PROPERTY',
 			 title :`useDepthMask`,
 			 description : `
@@ -82,10 +83,10 @@ var RedBaseObject3D;
 			 `,
 			 return : 'Boolean'
 		 }
-		 :DOC*/
-		this['useDepthMask'] = true;
-		/**DOC:
-		 {
+         :DOC*/
+        this['useDepthMask'] = true;
+        /**DOC:
+         {
 		     code : 'PROPERTY',
 			 title :`useDepthTest`,
 			 description : `
@@ -94,10 +95,10 @@ var RedBaseObject3D;
 			 `,
 			 return : 'Boolean'
 		 }
-		 :DOC*/
-		this['useDepthTest'] = true;
-		/**DOC:
-		 {
+         :DOC*/
+        this['useDepthTest'] = true;
+        /**DOC:
+         {
 		     code : 'PROPERTY',
 			 title :`depthTestFunc`,
 			 description : `
@@ -106,10 +107,10 @@ var RedBaseObject3D;
 			 `,
 			 return : 'gl 상수'
 		 }
-		 :DOC*/
-		this['depthTestFunc'] = gl.LEQUAL;
-		/**DOC:
-		 {
+         :DOC*/
+        this['depthTestFunc'] = gl.LEQUAL;
+        /**DOC:
+         {
 		     code : 'PROPERTY',
 			 title :`useBlendMode`,
 			 description : `
@@ -118,10 +119,10 @@ var RedBaseObject3D;
 			 `,
 			 return : 'Boolean'
 		 }
-		 :DOC*/
-		this['useBlendMode'] = true;
-		/**DOC:
-		 {
+         :DOC*/
+        this['useBlendMode'] = true;
+        /**DOC:
+         {
 		     code : 'PROPERTY',
 			 title :`blendSrc`,
 			 description : `
@@ -130,10 +131,10 @@ var RedBaseObject3D;
 			 `,
 			 return : 'gl 상수'
 		 }
-		 :DOC*/
-		this['blendSrc'] = gl.SRC_ALPHA;
-		/**DOC:
-		 {
+         :DOC*/
+        this['blendSrc'] = gl.SRC_ALPHA;
+        /**DOC:
+         {
 		     code : 'PROPERTY',
 			 title :`blendDst`,
 			 description : `
@@ -142,10 +143,10 @@ var RedBaseObject3D;
 			 `,
 			 return : 'gl 상수'
 		 }
-		 :DOC*/
-		this['blendDst'] = gl.ONE_MINUS_SRC_ALPHA;
-		/**DOC:
-		 {
+         :DOC*/
+        this['blendDst'] = gl.ONE_MINUS_SRC_ALPHA;
+        /**DOC:
+         {
 		     code : 'PROPERTY',
 			 title :`drawMode`,
 			 description : `
@@ -154,10 +155,10 @@ var RedBaseObject3D;
 			 `,
 			 return : 'gl 상수'
 		 }
-		 :DOC*/
-		this['drawMode'] = gl.TRIANGLES;
-		/**DOC:
-		 {
+         :DOC*/
+        this['drawMode'] = gl.TRIANGLES;
+        /**DOC:
+         {
 		     code : 'PROPERTY',
 			 title :`pointSize`,
 			 description : `
@@ -166,13 +167,13 @@ var RedBaseObject3D;
 			 `,
 			 return : 'Number'
 		 }
-		 :DOC*/
-		this['pointSize'] = 1;
-		this['x'] = this['y'] = this['z'] = 0;
-		this['rotationX'] = this['rotationY'] = this['rotationZ'] = 0;
-		this['scaleX'] = this['scaleY'] = this['scaleZ'] = 1;
-		/**DOC:
-		 {
+         :DOC*/
+        this['pointSize'] = 1;
+        this['x'] = this['y'] = this['z'] = 0;
+        this['rotationX'] = this['rotationY'] = this['rotationZ'] = 0;
+        this['scaleX'] = this['scaleY'] = this['scaleZ'] = 1;
+        /**DOC:
+         {
 		    code : 'PROPERTY',
 			title :`matrix`,
 			description : `
@@ -180,11 +181,11 @@ var RedBaseObject3D;
 			`,
 			return : 'mat4'
 		 }
-		 :DOC*/
-		this['autoUpdateMatrix'] = true;
+         :DOC*/
+        this['autoUpdateMatrix'] = true;
         this['_renderAutoUpdateMatrix'] = true;
-		/**DOC:
-		 {
+        /**DOC:
+         {
 		    code : 'PROPERTY',
 			title :`matrix`,
 			description : `
@@ -192,12 +193,12 @@ var RedBaseObject3D;
 			`,
 			return : 'mat4'
 		 }
-		 :DOC*/
-		this['matrix'] = mat4.create();
+         :DOC*/
+        this['matrix'] = mat4.create();
         this['cachedMatrix'] = mat4.create();
-		this['localMatrix'] = mat4.create();
-		/**DOC:
-		 {
+        this['localMatrix'] = mat4.create();
+        /**DOC:
+         {
 		    code : 'PROPERTY',
 			title :`normalMatrix`,
 			description : `
@@ -205,11 +206,11 @@ var RedBaseObject3D;
 			`,
 			return : 'mat4'
 		 }
-		 :DOC*/
-		this['normalMatrix'] = mat4.create();
+         :DOC*/
+        this['normalMatrix'] = mat4.create();
         this['cachedNormalMatrix'] = mat4.create();
-		/**DOC:
-		 {
+        /**DOC:
+         {
 		     code : 'PROPERTY',
 			 title :`children`,
 			 description : `
@@ -217,30 +218,30 @@ var RedBaseObject3D;
 			 `,
 			 return : 'Array'
 		 }
-		 :DOC*/
-		this['children'] = [];
-		/**DOC:
-		 {
+         :DOC*/
+        this['children'] = [];
+        /**DOC:
+         {
 		     code : 'PROPERTY',
 			 title :`useLOD`,
 			 description : `LOD사용여부`,
 			 return : 'Boolean'
 		 }
-		 :DOC*/
-		this['useLOD'] = false;
-		this['_lodLevels'] = {
-			/* 1: {
-				geometry : ~~,
-				material : ~~~
-				둘중하나는 있어야하며
-				하나만 입력할경우 없는쪽은 오리지날 속성이 부여된다.
-			}
-			*/
-		};
-	};
-	RedBaseObject3D.prototype = {
-		/**DOC:
-		 {
+         :DOC*/
+        this['useLOD'] = false;
+        this['_lodLevels'] = {
+            /* 1: {
+                geometry : ~~,
+                material : ~~~
+                둘중하나는 있어야하며
+                하나만 입력할경우 없는쪽은 오리지날 속성이 부여된다.
+            }
+            */
+        };
+    };
+    RedBaseObject3D.prototype = {
+        /**DOC:
+         {
 			 title :`addLOD`,
 			 code : 'METHOD',
 			 description : `
@@ -263,23 +264,23 @@ var RedBaseObject3D;
 			 },
 			 return : 'void'
 		 }
-		 :DOC*/
-		addLOD: (function () {
-			var tData;
-			return function (level, distance, geometry, material) {
-				geometry || material || RedGLUtil.throwFunc('RedBaseObject3D - addLOD : geometry, material 둘중하나는 반드시 입력되어야함');
-                typeof level == 'number' ||  RedGLUtil.throwFunc('RedBaseObject3D - level : 숫자만허용함');
-				tData = {
-					level: level,
-					distance: distance,
-					geometry: geometry ? geometry : this['geometry'],
-					material: material ? material : this['material']
-				};
-				this['_lodLevels'][level] = tData;
-			}
-		})(),
-		/**DOC:
-		 {
+         :DOC*/
+        addLOD: (function () {
+            var tData;
+            return function (level, distance, geometry, material) {
+                geometry || material || RedGLUtil.throwFunc('RedBaseObject3D - addLOD : geometry, material 둘중하나는 반드시 입력되어야함');
+                typeof level == 'number' || RedGLUtil.throwFunc('RedBaseObject3D - level : 숫자만허용함');
+                tData = {
+                    level: level,
+                    distance: distance,
+                    geometry: geometry ? geometry : this['geometry'],
+                    material: material ? material : this['material']
+                };
+                this['_lodLevels'][level] = tData;
+            }
+        })(),
+        /**DOC:
+         {
 			 title :`removeLOD`,
 			 code : 'METHOD',
 			 description : `LOD 삭제`,
@@ -290,12 +291,12 @@ var RedBaseObject3D;
 			 },
 			 return : 'void'
 		 }
-		 :DOC*/
-		removeLOD: function (level) {
-			if ( this['_lodLevels'][level] ) delete this['_lodLevels'][level]
-		},
-		/**DOC:
-		 {
+         :DOC*/
+        removeLOD: function (level) {
+            if (this['_lodLevels'][level]) delete this['_lodLevels'][level]
+        },
+        /**DOC:
+         {
 			 title :`localToWorld`,
 			 code : 'METHOD',
 			 description : `
@@ -314,26 +315,26 @@ var RedBaseObject3D;
 			 },
 			 return : 'Array'
 		 }
-		 :DOC*/
-		localToWorld: (function () {
-			var t0;
-			t0 = mat4.create();
-			return function (x, y, z) {
-				x = x || 0;
-				y = y || 0;
-				z = z || 0;
-				mat4.identity(t0);
-				mat4.translate(t0, t0, [x, y, z]);
-				mat4.multiply(t0, this['matrix'], t0);
-				return [
-					t0[12],
-					t0[13],
-					t0[14]
-				]
-			}
-		})(),
-		/**DOC:
-		 {
+         :DOC*/
+        localToWorld: (function () {
+            var t0;
+            t0 = mat4.create();
+            return function (x, y, z) {
+                x = x || 0;
+                y = y || 0;
+                z = z || 0;
+                mat4.identity(t0);
+                mat4.translate(t0, t0, [x, y, z]);
+                mat4.multiply(t0, this['matrix'], t0);
+                return [
+                    t0[12],
+                    t0[13],
+                    t0[14]
+                ]
+            }
+        })(),
+        /**DOC:
+         {
 			 title :`worldToLocal`,
 			 code : 'METHOD',
 			 description : `
@@ -352,26 +353,26 @@ var RedBaseObject3D;
 			 },
 			 return : 'Array'
 		 }
-		 :DOC*/
-		worldToLocal: (function () {
-			var t0, t1;
-			t0 = mat4.create();
-			t1 = mat4.create();
-			return function (x, y, z) {
-				x = x || 0;
-				y = y || 0;
-				z = z || 0;
-				mat4.translate(t0, t0, [x, y, z]);
-				mat4.multiply(t1, t0, this['matrix']);
-				return [
-					t1[0] * x + t1[1] * y + t1[2] * z + t1[3],
-					t1[4] * x + t1[5] * y + t1[6] * z + t1[7],
-					t1[8] * x + t1[9] * y + t1[10] * z + t1[11]
-				]
-			}
-		})(),
-		/**DOC:
-		 {
+         :DOC*/
+        worldToLocal: (function () {
+            var t0, t1;
+            t0 = mat4.create();
+            t1 = mat4.create();
+            return function (x, y, z) {
+                x = x || 0;
+                y = y || 0;
+                z = z || 0;
+                mat4.translate(t0, t0, [x, y, z]);
+                mat4.multiply(t1, t0, this['matrix']);
+                return [
+                    t1[0] * x + t1[1] * y + t1[2] * z + t1[3],
+                    t1[4] * x + t1[5] * y + t1[6] * z + t1[7],
+                    t1[8] * x + t1[9] * y + t1[10] * z + t1[11]
+                ]
+            }
+        })(),
+        /**DOC:
+         {
 			 title :`getScreenPoint`,
 			 code : 'METHOD',
 			 description : `
@@ -384,124 +385,128 @@ var RedBaseObject3D;
 			 },
 			 return : 'Array'
 		 }
-		 :DOC*/
-		getScreenPoint: (function () {
-			var resultMTX = mat4.create();
-			var tCamera, tViewRect;
-			var resultPosition;
-			resultPosition = {
-				x: 0,
-				y: 0,
-				z: 0,
-				w: 0
-			};
-			return function (redView) {
-				mat4.identity(resultMTX);
-				tCamera = redView['camera'];
-				tViewRect = redView['_viewRect'];
-				if ( tCamera instanceof RedBaseController ) tCamera = tCamera.camera;
-				mat4.multiply(resultMTX, tCamera.perspectiveMTX, tCamera.matrix);
-				mat4.multiply(resultMTX, resultMTX, this['matrix']);
-				resultPosition.x = resultMTX[12];
-				resultPosition.y = resultMTX[13];
-				resultPosition.z = resultMTX[14];
-				resultPosition.w = resultMTX[15];
-				resultPosition.x = resultPosition.x * 0.5 / resultPosition.w + 0.5;
-				resultPosition.y = resultPosition.y * 0.5 / resultPosition.w + 0.5;
-				return [
-					(tViewRect[0] + resultPosition.x * tViewRect[2]) / window.devicePixelRatio,
-					(tViewRect[1] + (1 - resultPosition.y) * tViewRect[3]) / window.devicePixelRatio
-				]
-			}
-		})()
-	};
-	//TODO: xyz,scaleXYZ,rotationXYZ 일단 이 GET/SET을 쓸건지 말껀지 결정해야함
-	//TODO: xyz,scaleXYZ,rotationXYZ 렌더러 계산시 get/set 함수 안타게 추적해야함
-	/**DOC:
-	 {
+         :DOC*/
+        getScreenPoint: (function () {
+            var resultMTX = mat4.create();
+            var tCamera, tViewRect;
+            var resultPosition;
+            resultPosition = {
+                x: 0,
+                y: 0,
+                z: 0,
+                w: 0
+            };
+            return function (redView) {
+                mat4.identity(resultMTX);
+                tCamera = redView['camera'];
+                tViewRect = redView['_viewRect'];
+                if (tCamera instanceof RedBaseController) tCamera = tCamera.camera;
+                mat4.multiply(resultMTX, tCamera.perspectiveMTX, tCamera.matrix);
+                mat4.multiply(resultMTX, resultMTX, this['matrix']);
+                resultPosition.x = resultMTX[12];
+                resultPosition.y = resultMTX[13];
+                resultPosition.z = resultMTX[14];
+                resultPosition.w = resultMTX[15];
+                resultPosition.x = resultPosition.x * 0.5 / resultPosition.w + 0.5;
+                resultPosition.y = resultPosition.y * 0.5 / resultPosition.w + 0.5;
+                return [
+                    (tViewRect[0] + resultPosition.x * tViewRect[2]) / window.devicePixelRatio,
+                    (tViewRect[1] + (1 - resultPosition.y) * tViewRect[3]) / window.devicePixelRatio
+                ]
+            }
+        })()
+    };
+    //TODO: xyz,scaleXYZ,rotationXYZ 일단 이 GET/SET을 쓸건지 말껀지 결정해야함
+    //TODO: xyz,scaleXYZ,rotationXYZ 렌더러 계산시 get/set 함수 안타게 추적해야함
+    /**DOC:
+     {
 	     code : 'PROPERTY',
 		 title :`x`,
 		 return : 'Number'
 	 }
-	 :DOC*/
-	/**DOC:
-	 {
+     :DOC*/
+    /**DOC:
+     {
 	     code : 'PROPERTY',
 		 title :`y`,
 		 return : 'Number'
 	 }
-	 :DOC*/
-	/**DOC:
-	 {
+     :DOC*/
+    /**DOC:
+     {
 	     code : 'PROPERTY',
 		 title :`z`,
 		 return : 'Number'
 	 }
-	 :DOC*/
-	// RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'x', 'number');
-	// RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'y', 'number');
-	// RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'z', 'number');
-	/**DOC:
-	 {
+     :DOC*/
+    // RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'x', 'number');
+    // RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'y', 'number');
+    // RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'z', 'number');
+    /**DOC:
+     {
 	     code : 'PROPERTY',
 		 title :`rotationX`,
 		 return : 'Number'
 	 }
-	 :DOC*/
-	/**DOC:
-	 {
+     :DOC*/
+    /**DOC:
+     {
 	     code : 'PROPERTY',
 		 title :`rotationY`,
 		 return : 'Number'
 	 }
-	 :DOC*/
-	/**DOC:
-	 {
+     :DOC*/
+    /**DOC:
+     {
 	     code : 'PROPERTY',
 		 title :`rotationZ`,
 		 return : 'Number'
 	 }
-	 :DOC*/
-	// RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'scaleX', 'number');
-	// RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'scaleY', 'number');
-	// RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'scaleZ', 'number');
-	/**DOC:
-	 {
+     :DOC*/
+    // RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'scaleX', 'number');
+    // RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'scaleY', 'number');
+    // RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'scaleZ', 'number');
+    /**DOC:
+     {
 	     code : 'PROPERTY',
 		 title :`scaleX`,
 		 return : 'Number'
 	 }
-	 :DOC*/
-	/**DOC:
-	 {
+     :DOC*/
+    /**DOC:
+     {
 	     code : 'PROPERTY',
 		 title :`scaleY`,
 		 return : 'Number'
 	 }
-	 :DOC*/
-	/**DOC:
-	 {
+     :DOC*/
+    /**DOC:
+     {
 	     code : 'PROPERTY',
 		 title :`scaleZ`,
 		 return : 'Number'
 	 }
-	 :DOC*/
-	// RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'rotationX', 'number');
-	// RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'rotationY', 'number');
-	// RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'rotationZ', 'number');
-	Object.defineProperty(RedBaseObject3D.prototype, 'geometry', {
-		get: function () { return this['_geometry']; },
-		set: function (v) {
-			if ( v && !(v instanceof RedGeometry) ) RedGLUtil.throwFunc('geometry : RedGeometry Instance만 허용.', '입력값 : ' + v);
-			this['_geometry'] = v
-		}
-	});
-	Object.defineProperty(RedBaseObject3D.prototype, 'material', {
-		get: function () { return this['_material']; },
-		set: function (v) {
-			if ( v && !(v instanceof RedBaseMaterial) ) RedGLUtil.throwFunc('material : RedBaseMaterial Instance만 허용.', '입력값 : ' + v)
-			this['_material'] = v
-		}
-	});
-	Object.freeze(RedBaseObject3D);
+     :DOC*/
+    // RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'rotationX', 'number');
+    // RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'rotationY', 'number');
+    // RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'rotationZ', 'number');
+    Object.defineProperty(RedBaseObject3D.prototype, 'geometry', {
+        get: function () {
+            return this['_geometry'];
+        },
+        set: function (v) {
+            if (v && !(v instanceof RedGeometry)) RedGLUtil.throwFunc('geometry : RedGeometry Instance만 허용.', '입력값 : ' + v);
+            this['_geometry'] = v
+        }
+    });
+    Object.defineProperty(RedBaseObject3D.prototype, 'material', {
+        get: function () {
+            return this['_material'];
+        },
+        set: function (v) {
+            if (v && !(v instanceof RedBaseMaterial)) RedGLUtil.throwFunc('material : RedBaseMaterial Instance만 허용.', '입력값 : ' + v)
+            this['_material'] = v
+        }
+    });
+    Object.freeze(RedBaseObject3D);
 })();

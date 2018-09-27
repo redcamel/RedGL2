@@ -251,7 +251,7 @@ var RedPBRMaterial;
                                occlusionTexture,
                                emissiveTexture,
                                roughnessTexture
-                               ) {
+    ) {
         if (!(this instanceof RedPBRMaterial)) return new RedPBRMaterial(
             redGL,
             diffuseTexture,
@@ -260,7 +260,6 @@ var RedPBRMaterial;
             occlusionTexture,
             emissiveTexture,
             roughnessTexture
-
         );
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedPBRMaterial : RedGL Instance만 허용.', redGL);
         this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource, PROGRAM_OPTION_LIST);

@@ -1,8 +1,8 @@
 "use strict";
 var RedCamera;
 (function () {
-	/**DOC:
-	 {
+    /**DOC:
+     {
 		 constructorYn : true,
 		 title :`RedCamera`,
 		 description : `
@@ -14,36 +14,36 @@ var RedCamera;
 		 `,
 		 return : 'RedCamera Instance'
 	 }
-	 :DOC*/
-	RedCamera = function () {
-		if ( !(this instanceof RedCamera) ) return new RedCamera();
-		/**DOC:
-		 {
+     :DOC*/
+    RedCamera = function () {
+        if (!(this instanceof RedCamera)) return new RedCamera();
+        /**DOC:
+         {
 			 code:`PROPERTY`,
 			 title :`x`,
 			 description : `기본값 : 0`,
 			 return : 'Number'
 		 }
-		 :DOC*/
-		/**DOC:
-		 {
+         :DOC*/
+        /**DOC:
+         {
 			 code:`PROPERTY`,
 			 title :`y`,
 			 description : `기본값 : 0`,
 			 return : 'Number'
 		 }
-		 :DOC*/
-		/**DOC:
-		 {
+         :DOC*/
+        /**DOC:
+         {
 			 code:`PROPERTY`,
 			 title :`z`,
 			 description : `기본값 : 0`,
 			 return : 'Number'
 		 }
-		 :DOC*/
-		this['x'] = this['y'] = this['z'] = 0;
-		/**DOC:
-		 {
+         :DOC*/
+        this['x'] = this['y'] = this['z'] = 0;
+        /**DOC:
+         {
 			 code:`PROPERTY`,
 			 title :`targetX`,
 			 description : `
@@ -52,9 +52,9 @@ var RedCamera;
 			 `,
 			 return : 'Number'
 		 }
-		 :DOC*/
-		/**DOC:
-		 {
+         :DOC*/
+        /**DOC:
+         {
 			 code:`PROPERTY`,
 			 title :`targetY`,
 			 description : `
@@ -63,9 +63,9 @@ var RedCamera;
 			 `,
 			 return : 'Number'
 		 }
-		 :DOC*/
-		/**DOC:
-		 {
+         :DOC*/
+        /**DOC:
+         {
 			 code:`PROPERTY`,
 			 title :`targetZ`,
 			 description : `
@@ -74,46 +74,46 @@ var RedCamera;
 			 `,
 			 return : 'Number'
 		 }
-		 :DOC*/
-		this['targetX'] = this['targetY'] = this['targetZ'] = 0;
-		/**DOC:
-		 {
+         :DOC*/
+        this['targetX'] = this['targetY'] = this['targetZ'] = 0;
+        /**DOC:
+         {
 			 code:`PROPERTY`,
 			 title :`fov`,
 			 description : `기본값 : 45degree`,
 			 return : 'Number'
 		 }
-		 :DOC*/
-		this['fov'] = 60;
-		/**DOC:
-		 {
+         :DOC*/
+        this['fov'] = 60;
+        /**DOC:
+         {
 			 code:`PROPERTY`,
 			 title :`nearClipping`,
 			 description : `기본값 : 1`,
 			 return : 'Number'
 		 }
-		 :DOC*/
-		this['nearClipping'] =1;
-		/**DOC:
-		 {
+         :DOC*/
+        this['nearClipping'] = 1;
+        /**DOC:
+         {
 			 code:`PROPERTY`,
 			 title :`farClipping`,
 			 description : `기본값 : 100000`,
 			 return : 'Number'
 		 }
-		 :DOC*/
-		this['farClipping'] = 100000;
-		/**DOC:
-		 {
+         :DOC*/
+        this['farClipping'] = 100000;
+        /**DOC:
+         {
 			 code:`PROPERTY`,
 			 title :`orthographicYn`,
 			 description : `기본값 : false`,
 			 return : 'Boolean'
 		 }
-		 :DOC*/
-		this['orthographicYn'] = false;
-		/**DOC:
-		 {
+         :DOC*/
+        this['orthographicYn'] = false;
+        /**DOC:
+         {
 			 code:`PROPERTY`,
 			 title :`matrix`,
 			 description : `
@@ -121,10 +121,10 @@ var RedCamera;
 			 `,
 			 return : 'mat4'
 		 }
-		 :DOC*/
-		this['matrix'] = mat4.create();
-		/**DOC:
-		 {
+         :DOC*/
+        this['matrix'] = mat4.create();
+        /**DOC:
+         {
 			 code:`PROPERTY`,
 			 title :`perspectiveMTX`,
 			 description : `
@@ -132,16 +132,16 @@ var RedCamera;
 			 `,
 			 return : 'mat4'
 		 }
-		 :DOC*/
-		this['perspectiveMTX'] = mat4.create();
-		this['autoUpdateMatrix'] = true;
-		this['_UUID'] = RedGL.makeUUID();
-	};
-	RedCamera.prototype['update'] = function () {
-		this.lookAt(this['targetX'], this['targetY'], this['targetZ']);
-	};
-	/**DOC:
-	 {
+         :DOC*/
+        this['perspectiveMTX'] = mat4.create();
+        this['autoUpdateMatrix'] = true;
+        this['_UUID'] = RedGL.makeUUID();
+    };
+    RedCamera.prototype['update'] = function () {
+        this.lookAt(this['targetX'], this['targetY'], this['targetZ']);
+    };
+    /**DOC:
+     {
 		 code:`PROPERTY`,
 		 title :`lookAt`,
 		 description : `
@@ -154,18 +154,18 @@ var RedCamera;
 		 },
 		 return : 'mat4'
 	 }
-	 :DOC*/
-	RedCamera.prototype['lookAt'] = (function () {
-		var up = new Float32Array([0, 1, 0]);
-		var tPosition = [];
-		return function (x, y, z) {
-			tPosition[0] = this['targetX'] = x;
-			tPosition[1] = this['targetY'] = y;
-			tPosition[2] = this['targetZ'] = z;
-			//out, eye, center, up
-			mat4.identity(this['matrix']);
-			mat4.lookAt(this['matrix'], [this.x, this.y, this.z], tPosition, up);
-		}
-	})();
-	Object.freeze(RedCamera);
+     :DOC*/
+    RedCamera.prototype['lookAt'] = (function () {
+        var up = new Float32Array([0, 1, 0]);
+        var tPosition = [];
+        return function (x, y, z) {
+            tPosition[0] = this['targetX'] = x;
+            tPosition[1] = this['targetY'] = y;
+            tPosition[2] = this['targetZ'] = z;
+            //out, eye, center, up
+            mat4.identity(this['matrix']);
+            mat4.lookAt(this['matrix'], [this.x, this.y, this.z], tPosition, up);
+        }
+    })();
+    Object.freeze(RedCamera);
 })();

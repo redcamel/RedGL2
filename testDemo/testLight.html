@@ -29,9 +29,9 @@
     <script src="../src/base/RedBaseContainer.js"></script>
     <script src="../src/base/RedBaseController.js"></script>
     <script src="../src/base/RedBaseLight.js"></script>
-    <script src="../src/base/RedBaseTexture.js"></script>
-    <script src="../src/base/RedBaseMaterial.js"></script>
 
+    <script src="../src/loader/RedImageLoader.js"></script><script src="../src/base/RedBaseTexture.js"></script>
+    <script src="../src/base/RedBaseMaterial.js"></script>
 
     <!--//-->
     <script src="../src/frameBuffer/RedFrameBuffer.js"></script>
@@ -173,6 +173,7 @@
             RedBitmapTexture(this, '../asset/specular.png'),
             RedBitmapTexture(this, '../asset/displacementTest.jpg')
         )
+        testMaterial.reflectionPower = 0.5
         testMaterial2 = RedBitmapMaterial(
             this,
             RedBitmapTexture(this, '../asset/alphaTest.png')
@@ -180,12 +181,12 @@
 
         tScene3D.skyBox =
             RedSkyBox(this, [
-                '../asset/cubemap/SwedishRoyalCastle/px.jpg',
-                '../asset/cubemap/SwedishRoyalCastle/nx.jpg',
-                '../asset/cubemap/SwedishRoyalCastle/py.jpg',
-                '../asset/cubemap/SwedishRoyalCastle/ny.jpg',
-                '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
-                '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
+                '../asset/cubemap/posx.png',
+                '../asset/cubemap/negx.png',
+                '../asset/cubemap/posy.png',
+                '../asset/cubemap/negy.png',
+                '../asset/cubemap/posz.png',
+                '../asset/cubemap/negz.png'
             ]);
         JsonModelLoader(this, 'testJsonModel', '../asset/teapot.json', function (interleaveBuffer, indexBuffer) {
             console.log('호잇!', interleaveBuffer, indexBuffer)
@@ -254,7 +255,7 @@
         tRenderer.renderDebuger.visible = true
         var test = RedPostEffect_BrightnessContrast(this)
         console.log(test)
-        RedView('test')['postEffectManager'].addEffect(test)
+        // RedView('test')['postEffectManager'].addEffect(test)
         tRenderer.start(this, function (time) {
             // testInterleaveBuffer.upload(interleaveData)
             i = tScene3D.children.length

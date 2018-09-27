@@ -1,72 +1,66 @@
 "use strict";
 var RedBitmapCubeTexture;
 (function () {
-	var loadTexture;
-	loadTexture = (function () {
-		return function (gl, self, texture, srcList, option, callBack) {
-			var onError, onLoad;
-			var clearEvents;
-			var imgList = [];
-			var i, loaded, failNum;
-			option = option || {};
-			clearEvents = function (img) {
-				img.removeEventListener('error', onError);
-				img.removeEventListener('load', onLoad);
-			};
-			onError = function () {
-				clearEvents(this);
-				if ( failNum == 0 ) callBack.call(self, false);
-				failNum++
-			};
-			onLoad = function () {
-				loaded++;
-				if ( loaded == 6 ) {
-					clearEvents(this);
-					gl.activeTexture(gl.TEXTURE0);
-					gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
-					var i = imgList.length;
+    var loadTexture;
+    loadTexture = (function () {
+        return function (gl, self, texture, srcList, option, callBack) {
+            var onError, onLoad;
+            var imgList = [];
+            var i, loaded, failNum;
+            option = option || {};
+            onError = function () {
+                if (failNum == 0) callBack ? callBack.call(self, false) : 0;
+                failNum++
+            };
+            onLoad = function () {
+                loaded++;
+                if (loaded == 6) {
+
+                    gl.activeTexture(gl.TEXTURE0);
+                    gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
                     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
-					while ( i-- ) {
-						gl.texImage2D(
-							gl.TEXTURE_CUBE_MAP_POSITIVE_X + i,
-							0,
-							gl.RGBA,
-							gl.RGBA,
-							gl.UNSIGNED_BYTE,
-							imgList[i]
-						);
-					}
-					// gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
-					gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-					gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, option['min'] ? option['min'] : gl.LINEAR_MIPMAP_NEAREST);
-					gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, option['mag'] ? option['mag'] : gl.LINEAR);
-					gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, option['wrap_s'] ? option['wrap_s'] : gl.CLAMP_TO_EDGE);
-					gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, option['wrap_t'] ? option['wrap_t'] : gl.CLAMP_TO_EDGE);
-					try {
-						gl.generateMipmap(gl.TEXTURE_CUBE_MAP)
-					} catch ( error ) {
-						console.log('밉맵을 생성할수 없음', imgList)
-					}
-					gl.bindTexture(gl.TEXTURE_CUBE_MAP, null);
-					if ( failNum == 0 ) callBack ? callBack.call(self, true) : 0
-				} else clearEvents(this)
-			};
-			i = 6;
-			loaded = 0;
-			failNum = 0;
-			while ( i-- ) {
-				var img;
-				img = new Image();
-				img.crossOrigin = 'anonymous';
-				img.src = srcList[i];
-				img.addEventListener('error', onError);
-				img.addEventListener('load', onLoad);
-				imgList[i] = img;
-			}
-		}
-	})();
-	/**DOC:
-	 {
+                    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, option['min'] ? option['min'] : gl.LINEAR_MIPMAP_NEAREST);
+                    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, option['mag'] ? option['mag'] : gl.LINEAR);
+                    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, option['wrap_s'] ? option['wrap_s'] : gl.CLAMP_TO_EDGE);
+                    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, option['wrap_t'] ? option['wrap_t'] : gl.CLAMP_TO_EDGE);
+
+                    gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_X, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, imgList[0]['source']);
+                    gl.texImage2D(gl.TEXTURE_CUBE_MAP_NEGATIVE_X, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, imgList[1]['source']);
+                    gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_Y, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, imgList[2]['source']);
+                    gl.texImage2D(gl.TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, imgList[3]['source']);
+                    gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_Z, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, imgList[4]['source']);
+                    gl.texImage2D(gl.TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, imgList[5]['source']);
+
+                    // gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
+                    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+
+                    try {
+                        gl.generateMipmap(gl.TEXTURE_CUBE_MAP)
+                    } catch (error) {
+                        console.log('밉맵을 생성할수 없음', imgList)
+                    }
+                    gl.bindTexture(gl.TEXTURE_CUBE_MAP, null);
+                    if (failNum == 0) callBack ? callBack.call(self, true) : 0
+                }
+            };
+            i = 6;
+            loaded = 0;
+            failNum = 0;
+            while (i--) {
+
+                imgList[i] = RedImageLoader(
+                    srcList[i],
+                    onLoad,
+                    onError,
+                    {}
+                )
+
+
+            }
+        }
+    })();
+    /**DOC:
+     {
 		 constructorYn : true,
 		 title :`RedBitmapCubeTexture`,
 		 description : `
@@ -111,28 +105,28 @@ var RedBitmapCubeTexture;
 		 `,
 		 return : 'RedBitmapCubeTexture Instance'
 	 }
-	 :DOC*/
-	RedBitmapCubeTexture = function (redGL, srcList, option, callback) {
-		var tGL;
-		if ( !(this instanceof RedBitmapCubeTexture) ) return new RedBitmapCubeTexture(redGL, srcList, option, callback);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedBitmapCubeTexture : RedGL Instance만 허용.', '입력값 : ' + redGL);
-		tGL = redGL.gl;
+     :DOC*/
+    RedBitmapCubeTexture = function (redGL, srcList, option, callback) {
+        var tGL;
+        if (!(this instanceof RedBitmapCubeTexture)) return new RedBitmapCubeTexture(redGL, srcList, option, callback);
+        redGL instanceof RedGL || RedGLUtil.throwFunc('RedBitmapCubeTexture : RedGL Instance만 허용.', '입력값 : ' + redGL);
+        tGL = redGL.gl;
 
-		this['webglTexture'] = tGL.createTexture();
-		this['_UUID'] = RedGL.makeUUID();
-		this['_load'] = function (needEmpty) {
-			RedTextureOptionChecker.check('RedBitmapCubeTexture', option, tGL);
-			if ( needEmpty ) this.setEmptyTexture(tGL, this['webglTexture']);
-			if ( this['_srcList'] ) loadTexture(tGL, this, this['webglTexture'], this['_srcList'], this['_option'], this['_callback']);
-		}
-		this['_option'] = option;
-		this['callback'] = callback;
-		this['srcList'] = srcList;
-		console.log(this);
-	};
-	RedBitmapCubeTexture.prototype = new RedBaseTexture();
-	/**DOC:
-	 {
+        this['webglTexture'] = tGL.createTexture();
+        this['_UUID'] = RedGL.makeUUID();
+        this['_load'] = function (needEmpty) {
+            RedTextureOptionChecker.check('RedBitmapCubeTexture', option, tGL);
+            if (needEmpty) this.setEmptyTexture(tGL, this['webglTexture']);
+            if (this['_srcList']) loadTexture(tGL, this, this['webglTexture'], this['_srcList'], this['_option'], this['_callback']);
+        }
+        this['_option'] = option;
+        this['callback'] = callback;
+        this['srcList'] = srcList;
+        console.log(this);
+    };
+    RedBitmapCubeTexture.prototype = new RedBaseTexture();
+    /**DOC:
+     {
 		 code:`PROPERTY`,
 		 title :`srcList`,
 		 description : `
@@ -140,18 +134,20 @@ var RedBitmapCubeTexture;
 		 `,
 		 return : 'void'
 	 }
-	 :DOC*/
-	Object.defineProperty(RedBitmapCubeTexture.prototype, 'srcList', {
-		get: function () {return this['_srcList']},
-		set: function (srcList) {
-			srcList instanceof Array || RedGLUtil.throwFunc('RedBitmapCubeTexture : srcList는 배열만 허용.', '입력값 : ' + srcList);
-			srcList.length == 6 || RedGLUtil.throwFunc('RedBitmapCubeTexture : srcList 길이는 6이어야함', '입력값 : ' + srcList);
-			this['_srcList'] = srcList;
-			this._load(true)
-		}
-	});
-	/**DOC:
-	 {
+     :DOC*/
+    Object.defineProperty(RedBitmapCubeTexture.prototype, 'srcList', {
+        get: function () {
+            return this['_srcList']
+        },
+        set: function (srcList) {
+            srcList instanceof Array || RedGLUtil.throwFunc('RedBitmapCubeTexture : srcList는 배열만 허용.', '입력값 : ' + srcList);
+            srcList.length == 6 || RedGLUtil.throwFunc('RedBitmapCubeTexture : srcList 길이는 6이어야함', '입력값 : ' + srcList);
+            this['_srcList'] = srcList;
+            this._load(true)
+        }
+    });
+    /**DOC:
+     {
 		 code:`PROPERTY`,
 		 title :`option`,
 		 description : `
@@ -159,13 +155,15 @@ var RedBitmapCubeTexture;
 		 `,
 		 return : 'void'
 	 }
-	 :DOC*/
-	Object.defineProperty(RedBitmapCubeTexture.prototype, 'option', {
-		get: function () {return this['_option']},
-		set: function (v) {
-			this['_option'] = v;
-			this._load(false)
-		}
-	});
-	Object.freeze(RedBitmapCubeTexture);
+     :DOC*/
+    Object.defineProperty(RedBitmapCubeTexture.prototype, 'option', {
+        get: function () {
+            return this['_option']
+        },
+        set: function (v) {
+            this['_option'] = v;
+            this._load(false)
+        }
+    });
+    Object.freeze(RedBitmapCubeTexture);
 })();

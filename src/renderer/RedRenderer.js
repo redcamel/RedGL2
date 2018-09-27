@@ -373,7 +373,7 @@ var RedRenderer;
             var tMVMatrix, tNMatrix
             var tUUID;
             var tSamplerIndex;
-            var tSprite3DYn, tLODData, tDirectionalShadowMaterialYn, tSkinInfo,tUseFog;
+            var tSprite3DYn, tLODData, tDirectionalShadowMaterialYn, tSkinInfo, tUseFog;
             var tProgram, tOptionProgramKey, tOptionProgram;
             // matix 관련
             var a,
@@ -478,12 +478,12 @@ var RedRenderer;
                         tOptionProgram = tProgramList[tOptionProgramKey][tBaseProgramKey];
                         try {
                             tOptionProgram['_prepareProgramYn']
-                        }catch (e) {
-                            console.log(e,tProgram,tProgramList,tOptionProgramKey,tBaseProgramKey)
+                        } catch (e) {
+                            console.log(e, tProgram, tProgramList, tOptionProgramKey, tBaseProgramKey)
                         }
 
                         if (tOptionProgram['_prepareProgramYn']) {
-                            console.log(tProgramList,tOptionProgramKey,tBaseProgramKey)
+                            console.log(tProgramList, tOptionProgramKey, tBaseProgramKey)
                             tOptionProgram = tProgramList[tOptionProgramKey][tBaseProgramKey] = tOptionProgram._makePrepareProgram();
                         }
                         tProgram = tOptionProgram
