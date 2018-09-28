@@ -283,33 +283,47 @@ var RedGL;
             var prevW, prevH;
             var ratio;
             var tCVS;
+            var tW = new Uint32Array(2)
+            var tH = new Uint32Array(2)
             prevW = 0, prevH = 0;
             return function (width, height, force) {
                 if (width == undefined) RedGLUtil.throwFunc('RedGL setSize : width가 입력되지 않았습니다.');
                 if (height == undefined) RedGLUtil.throwFunc('RedGL setSize : height가 입력되지 않았습니다.');
                 W = this['_width'] = width;
                 H = this['_height'] = height;
-                if (typeof W != 'number') {
-                    if (W.indexOf('%') > -1) W = (document.documentElement ? document.documentElement.clientWidth : document.body.clientWidth) * parseFloat(W) / 100;
-                    else RedGLUtil.throwFunc('RedGL setSize : width는 0이상의 숫자나 %만 허용.', W);
+                if (window['HTMLCanvasElement']) {
+                    if (typeof W != 'number') {
+                        if (W.indexOf('%') > -1) W = (document.documentElement ? document.documentElement.clientWidth : document.body.clientWidth) * parseFloat(W) / 100;
+                        else RedGLUtil.throwFunc('RedGL setSize : width는 0이상의 숫자나 %만 허용.', W);
+                    }
+                    if (typeof H != 'number') {
+                        if (H.indexOf('%') > -1) H = window.innerHeight * parseFloat(H) / 100;
+                        else RedGLUtil.throwFunc('RedGL setSize : height는 0이상의 숫자나 %만 허용.', H);
+                    }
+                    ratio = window['devicePixelRatio'] || 1;
+                    tCVS = this['_canvas'];
+                    if (prevW != W || prevH != H || force) {
+                        tCVS.width = W * ratio * this['_renderScale'];
+                        tCVS.height = H * ratio * this['_renderScale'];
+                        tCVS.style.width = W;
+                        tCVS.style.height = H;
+                        console.log('RedGL canvas setSize : ', this.gl.drawingBufferWidth, this.gl.drawingBufferHeight);
+                        prevW = W;
+                        prevH = H;
+                    }
+                    this['_viewRect'][2] = prevW;
+                    this['_viewRect'][3] = prevH;
+                } else {
+                    var ratio = window['devicePixelRatio'] || 1;
+                    W = this['_width'] = width
+                    H = this['_height'] = height
+                    tCVS = this['_canvas'];
+                    tW[0] = W * ratio * this['_renderScale']
+                    tH[0] = H * ratio * this['_renderScale']
+                    console.log('offscreen - RedGL canvas setSize : ', this.gl.drawingBufferWidth, this.gl.drawingBufferHeight);
+                    this['_viewRect'][2] = W;
+                    this['_viewRect'][3] = H
                 }
-                if (typeof H != 'number') {
-                    if (H.indexOf('%') > -1) H = window.innerHeight * parseFloat(H) / 100;
-                    else RedGLUtil.throwFunc('RedGL setSize : height는 0이상의 숫자나 %만 허용.', H);
-                }
-                ratio = window['devicePixelRatio'] || 1;
-                tCVS = this['_canvas'];
-                if (prevW != W || prevH != H || force) {
-                    tCVS.width = W * ratio * this['_renderScale'];
-                    tCVS.height = H * ratio * this['_renderScale'];
-                    tCVS.style.width = W;
-                    tCVS.style.height = H;
-                    console.log('RedGL canvas setSize : ', this.gl.drawingBufferWidth, this.gl.drawingBufferHeight);
-                    prevW = W;
-                    prevH = H;
-                }
-                this['_viewRect'][2] = prevW;
-                this['_viewRect'][3] = prevH;
             }
         })()
     };

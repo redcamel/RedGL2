@@ -179,15 +179,15 @@
             RedBitmapTexture(this, '../asset/alphaTest.png')
         )
 
-        tScene3D.skyBox =
-            RedSkyBox(this, [
-                '../asset/cubemap/posx.png',
-                '../asset/cubemap/negx.png',
-                '../asset/cubemap/posy.png',
-                '../asset/cubemap/negy.png',
-                '../asset/cubemap/posz.png',
-                '../asset/cubemap/negz.png'
-            ]);
+        // tScene3D.skyBox =
+        //     RedSkyBox(this, [
+        //         '../asset/cubemap/posx.png',
+        //         '../asset/cubemap/negx.png',
+        //         '../asset/cubemap/posy.png',
+        //         '../asset/cubemap/negy.png',
+        //         '../asset/cubemap/posz.png',
+        //         '../asset/cubemap/negz.png'
+        //     ]);
         JsonModelLoader(this, 'testJsonModel', '../asset/teapot.json', function (interleaveBuffer, indexBuffer) {
             console.log('호잇!', interleaveBuffer, indexBuffer)
             var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer), testMaterial)
