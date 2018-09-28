@@ -11,10 +11,10 @@ var RedBitmapTexture;
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, source);
         // gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, option['min'] ? option['min'] : gl.LINEAR_MIPMAP_NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, option['min'] ? option['min'] : gl.LINEAR);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, option['mag'] ? option['mag'] : gl.LINEAR);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, option['wrap_s'] ? option['wrap_s'] : gl.REPEAT);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, option['wrap_t'] ? option['wrap_t'] : gl.REPEAT);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, option['wrap_s'] ? option['wrap_s'] : gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, option['wrap_t'] ? option['wrap_t'] : gl.CLAMP_TO_EDGE);
         if (gl['glExtension']['EXT_texture_filter_anisotropic'] && option['anisotropic']) {
             gl.texParameterf(gl.TEXTURE_2D, gl['glExtension']['EXT_texture_filter_anisotropic'].TEXTURE_MAX_ANISOTROPY_EXT, option['anisotropic']);
         }
@@ -28,7 +28,7 @@ var RedBitmapTexture;
     loadTexture = (function () {
         return function (gl, self, texture, src, option, callback) {
             if (!option) option = {};
-            if (window['HTMLCanvasElement'] && src instanceof HTMLCanvasElement) {
+            if (window['OffscreenCanvas'] && src instanceof OffscreenCanvas || window['HTMLCanvasElement'] && src instanceof HTMLCanvasElement) {
                 var tSource = src;
                 var tW, tH;
                 if (!RedGLUtil.isPowerOf2(tSource.width) || !RedGLUtil.isPowerOf2(tSource.height)) {
@@ -38,10 +38,15 @@ var RedBitmapTexture;
                     if (tH > MAX_TEXTURE_SIZE) tH = MAX_TEXTURE_SIZE;
                     var canvas = window['OffscreenCanvas'] ? new OffscreenCanvas(tW, tH) : document.createElement('canvas');
                     var ctx = canvas.getContext("2d");
+
                     console.log('캔버스 엘리먼트에 대한 리사이즈용캔버스생성', canvas)
                     if (!window['OffscreenCanvas']) {
                         canvas.width = tW;
                         canvas.height = tH;
+                    }
+                    if(gl['vendor'] != 'Microsoft'){
+                        tH = -tH
+                        ctx.scale(1,-1)
                     }
                     ctx.drawImage(tSource, 0, 0, tW, tH);
                     console.log(canvas);
@@ -167,7 +172,11 @@ var RedBitmapTexture;
             return this['_src']
         },
         set: function (v) {
-            if (v && typeof v != 'string' && !(window['HTMLCanvasElement'] && v instanceof HTMLCanvasElement)) RedGLUtil.throwFunc('RedBitmapTexture : src는 문자열 or Canvas Element만 허용.', '입력값 : ' + v);
+            if(window['OffscreenCanvas']){
+                this['_src'] = v;
+                this._load(true)
+            }
+            else if (v && typeof v != 'string' && !(window['HTMLCanvasElement'] && v instanceof HTMLCanvasElement)) RedGLUtil.throwFunc('RedBitmapTexture : src는 문자열 or Canvas Element만 허용.', '입력값 : ' + v);
             this['_src'] = v;
             this._load(true)
         }
