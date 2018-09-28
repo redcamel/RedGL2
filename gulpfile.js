@@ -225,14 +225,14 @@ gulp.task('combine-js', function () {
 		"src/postEffect/antialiasing/RedPostEffect_FXAA.js"
 	])
 		.pipe(concat(name + '.min.js')) // 병합한다.
-		.pipe(stripDebug())
-		.pipe(uglify(
-			{
-				output: {
-					comments: /^!|@preserve|@license|@cc_on/i
-				}
-			}
-		))
+		// .pipe(stripDebug())
+		// .pipe(uglify(
+		// 	{
+		// 		output: {
+		// 			comments: /^!|@preserve|@license|@cc_on/i
+		// 		}
+		// 	}
+		// ))
 		.pipe(replace(/\n\s{2,}/g, '\n'))
 		.pipe(gulp.dest('release'))
 		.pipe(insert.append("console.log('" + 'RedGL' + " Release. last update(" + d + ")'" + ");"))

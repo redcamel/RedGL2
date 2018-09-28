@@ -23,12 +23,13 @@ var RedImageLoader;
     var fileLoader = function (src, onLoader, onError, option) {
         var self = this
         var request = new XMLHttpRequest();
+        var ended = false
         request.open("GET", src, true);
         request.responseType = "blob";
         request.onreadystatechange = function (e) {
-            if (request.readyState == 4 ) {
+            if (request.readyState == 4) {
                 console.log(request)
-                if(request.status === 200){
+                if (request.status === 200) {
                     createImageBitmap(request.response, option ? option : {
                         imageOrientation: 'flipY'
                     }).then(function (v) {
@@ -39,14 +40,19 @@ var RedImageLoader;
                             self['_onLoad'] = undefined
                             self['_onError'] = undefined
                         }
-                        console.log('fileLoader',v)
+
+                        console.log('fileLoader', v)
+                        console.log('성공!')
                     })
-                }else{
+                } else {
+                    console.log('에러!')
                     if (self['_onError']) {
                         self['_onError'](request)
                         self['_onLoad'] = undefined
                         self['_onError'] = undefined
                     }
+
+
                 }
 
             }
@@ -57,6 +63,7 @@ var RedImageLoader;
     RedImageLoader = function (src, onLoad, onError, option) {
         var self = this;
         if (!(this instanceof RedImageLoader)) return new RedImageLoader(src, onLoad, onError, option);
+        if (typeof src != 'string') RedGLUtil.throwFunc('RedImageLoader : src는 문자열 만 허용.', '입력값 : ' + src);
         self['_src'] = src
         self['_onLoad'] = onLoad
         self['_onError'] = onError
@@ -73,6 +80,8 @@ var RedImageLoader;
                         self['_onLoad'] = undefined
                         self['_onError'] = undefined
                     }
+                    console.log('베이스이미지성공', v)
+
                 });
             } else fileLoader.apply(self, [self['_src'], onLoad, onError, option])
         } else {

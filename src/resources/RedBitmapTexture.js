@@ -54,6 +54,7 @@ var RedBitmapTexture;
                 }
                 console.log('tSource', tSource)
                 makeWebGLTexture(gl, texture, tSource, option);
+                callback ? callback.call(self, true) : 0;
             }
             else {
                 RedImageLoader(
@@ -80,7 +81,7 @@ var RedBitmapTexture;
                             tSource = window['OffscreenCanvas'] ? canvas.transferToImageBitmap() : canvas;
                         }
                         makeWebGLTexture(gl, texture, tSource, option);
-                        callback ? callback.call(this, true) : 0;
+                        callback ? callback.call(self, true) : 0;
                     },
                     function (v) {
                         callback ? callback.call(self, false) : 0
@@ -175,6 +176,7 @@ var RedBitmapTexture;
             if(window['OffscreenCanvas']){
                 this['_src'] = v;
                 this._load(true)
+                return 
             }
             else if (v && typeof v != 'string' && !(window['HTMLCanvasElement'] && v instanceof HTMLCanvasElement)) RedGLUtil.throwFunc('RedBitmapTexture : src는 문자열 or Canvas Element만 허용.', '입력값 : ' + v);
             this['_src'] = v;
