@@ -52,10 +52,9 @@ var RedText;
         RedBaseObject3D['build'].call(this, redGL.gl);
         var self = this;
         // 이미지 생성용 캔버스
-        this['_cvs'] = document.createElement('canvas');
-        this['_ctx'] = this['_cvs'].getContext('2d');
-        this['_cvs']['width'] = 2;
-        this['_cvs']['height'] = 2;
+        this['_cvs'] = null;
+        this['_ctx'] = null;
+
         // SVG 생성
         this['_svg'] = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         this['_svg'].setAttribute('xmlns', "http://www.w3.org/2000/svg");
@@ -104,6 +103,8 @@ var RedText;
             var tW, tH;
             tW = self['_width'];
             tH = self['_height'];
+            self['_cvs'] = window['OffscreenCanvas'] ? new OffscreenCanvas(tW, tH) : document.createElement('canvas');
+            self['_ctx'] = self['_cvs'].getContext('2d');
             console.log(tW, tH);
             self['_cvs']['width'] = tW;
             self['_cvs']['height'] = tH;
