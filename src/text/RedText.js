@@ -113,6 +113,8 @@ var RedText;
             self['scaleY'] = self['_height'] / redGL.gl.drawingBufferWidth;
             self['_ctx'].drawImage(self['_img'], 0, 0, tW, tH);
             self['material'].diffuseTexture.src = self['_cvs']
+            self['material'].diffuseTexture.option = {min: redGL.gl.LINEAR, mag: redGL.gl.LINEAR}
+
         };
         this['useTransparentSort'] = true
         this['_UUID'] = RedGL.makeUUID();
