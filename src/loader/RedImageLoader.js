@@ -26,20 +26,32 @@ var RedImageLoader;
         request.open("GET", src, true);
         request.responseType = "blob";
         request.onreadystatechange = function (e) {
-            if (request.readyState == 4 && request.status === 200) {
+            if (request.readyState == 4 ) {
                 console.log(request)
-                createImageBitmap(request.response, option ? option : {
-                    imageOrientation: 'flipY'
-                }).then(function (v) {
-                    self['source'] = v
-                    if (self['_onLoad']) {
-                        self['_onLoad'](request)
+                if(request.status === 200){
+                    createImageBitmap(request.response, option ? option : {
+                        imageOrientation: 'flipY'
+                    }).then(function (v) {
+                        v['src'] = src
+                        self['source'] = v
+                        if (self['_onLoad']) {
+                            self['_onLoad'](request)
+                            self['_onLoad'] = undefined
+                            self['_onError'] = undefined
+                        }
+                        console.log('fileLoader',v)
+                    })
+                }else{
+                    if (self['_onError']) {
+                        self['_onError'](request)
                         self['_onLoad'] = undefined
                         self['_onError'] = undefined
                     }
-                });
+                }
+
             }
         }
+
         request.send();
     }
     RedImageLoader = function (src, onLoad, onError, option) {
@@ -53,6 +65,8 @@ var RedImageLoader;
                 createImageBitmap(base64toBlob(src.split(',')[1], 'image/png'), option ? option : {
                     imageOrientation: 'flipY'
                 }).then(function (v) {
+                    console.log(v)
+                    v['src'] = src
                     self['source'] = v
                     if (self['_onLoad']) {
                         self['_onLoad'](v)

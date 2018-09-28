@@ -72,7 +72,7 @@ var RedDDSTexture;
             return this['_src']
         },
         set: function (v) {
-            if (v && typeof  v != 'string' && !(v instanceof HTMLCanvasElement)) RedGLUtil.throwFunc('RedDDSTexture : src는 문자열 or Canvas Element만 허용.', '입력값 : ' + v);
+            if (v && typeof  v != 'string' ) RedGLUtil.throwFunc('RedDDSTexture : src는 문자열만 허용.', '입력값 : ' + v);
             this['_src'] = v;
             this._load(true)
         }
