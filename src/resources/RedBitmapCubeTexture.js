@@ -126,6 +126,7 @@ var RedBitmapCubeTexture;
         console.log(this);
     };
     RedBitmapCubeTexture.prototype = new RedBaseTexture();
+
     /**DOC:
      {
 		 code:`PROPERTY`,

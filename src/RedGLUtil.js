@@ -168,7 +168,7 @@ var RedGLUtil;
                         canvas.width = tW;
                         canvas.height = tH;
                     }
-                    if ('getContext' in source && gl['vendor'] != 'Microsoft') {
+                    if ('getContext' in source && RedGLDetect.BROWSER_INFO.browser != 'edge' && RedGLDetect.BROWSER_INFO.browser != 'ie') {
                         tH = -tH
                         ctx.scale(1, -1)
                     }

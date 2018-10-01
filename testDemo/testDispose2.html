@@ -139,6 +139,7 @@
 <body>
 <canvas id="test" style="border: none;background:red"></canvas>
 <script>
+
     var t = document.getElementById('test')
     document.body.appendChild(t)
     RedGL(t, function (v) {
@@ -226,29 +227,10 @@
         tScene3D.addLight(testDLight)
         tRenderer.renderDebuger.visible = true
         tRenderer.start(this, function (time) {
-            testMesh.geometry.disposeAllBuffer()
+
             tCamera.z = 5
             tCamera.lookAt(0, 0, 0)
 
-            testInterleaveBuffer = RedBuffer(
-                self,
-                'testInterleaveBuffer',
-                RedBuffer.ARRAY_BUFFER,
-                interleaveData,
-                [
-                    RedInterleaveInfo('aVertexPosition', 3),
-                    RedInterleaveInfo('aTexcoord', 2),
-                    RedInterleaveInfo('aVertexColor', 4)
-                ]
-            )
-            testIndexBuffer = RedBuffer(
-                self,
-                'testIndexBuffer',
-                RedBuffer.ELEMENT_ARRAY_BUFFER,
-                indexData
-            )
-            testMesh.geometry.interleaveBuffer = testInterleaveBuffer
-            testMesh.geometry.indexBuffer = testIndexBuffer
 
         })
         console.log(tScene3D)
