@@ -151,6 +151,8 @@ var RedBox;
         tPrimitiveData = makeData(redGL, tType, width, height, depth, wSegments, hSegments, dSegments);
         this['interleaveBuffer'] = tPrimitiveData['interleaveBuffer'];
         this['indexBuffer'] = tPrimitiveData['indexBuffer'];
+        this['interleaveBuffer']['isPrimitiveBuffer'] = true
+        this['indexBuffer']['isPrimitiveBuffer'] = true
         this['_UUID'] = RedGL.makeUUID();
         console.log(this)
     };

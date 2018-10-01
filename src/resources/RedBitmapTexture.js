@@ -107,6 +107,7 @@ var RedBitmapTexture;
         MAX_TEXTURE_SIZE = redGL['detect']['texture']['MAX_TEXTURE_SIZE'];
 
         this['webglTexture'] = tGL.createTexture();
+        this['webglTexture']['gl'] = tGL
         this['_load'] = function (needEmpty) {
             RedTextureOptionChecker.check('RedBitmapTexture', option, tGL);
             if (needEmpty) this.setEmptyTexture(tGL, this['webglTexture']);
@@ -119,6 +120,7 @@ var RedBitmapTexture;
         console.log(this);
     };
     RedBitmapTexture.prototype = new RedBaseTexture();
+
     /**DOC:
      {
 		 code:`PROPERTY`,

@@ -113,6 +113,7 @@ var RedBitmapCubeTexture;
         tGL = redGL.gl;
 
         this['webglTexture'] = tGL.createTexture();
+        this['webglTexture']['gl'] = tGL
         this['_UUID'] = RedGL.makeUUID();
         this['_load'] = function (needEmpty) {
             RedTextureOptionChecker.check('RedBitmapCubeTexture', option, tGL);

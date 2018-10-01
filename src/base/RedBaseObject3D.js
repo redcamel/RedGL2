@@ -414,7 +414,23 @@ var RedBaseObject3D;
                     (tViewRect[1] + (1 - resultPosition.y) * tViewRect[3]) / window.devicePixelRatio
                 ]
             }
-        })()
+        })(),
+        disposeAll: function () {
+            this.disposeAllTexture();
+            this.disposeAllBuffer()
+        },
+        disposeAllTexture: function () {
+            if (this['material']) this['material']['disposeAllTexture']()
+        },
+        disposeTexture: function (key) {
+            if (this['material']) this['material']['disposeTexture'](key)
+        },
+        disposeAllBuffer: function () {
+            if (this['geometry']) this['geometry']['disposeAllBuffer']()
+        },
+        disposeBuffer: function (key) {
+            if (this['geometry']) this['geometry']['disposeBuffer'](key)
+        }
     };
     //TODO: xyz,scaleXYZ,rotationXYZ 일단 이 GET/SET을 쓸건지 말껀지 결정해야함
     //TODO: xyz,scaleXYZ,rotationXYZ 렌더러 계산시 get/set 함수 안타게 추적해야함

@@ -53,5 +53,18 @@ var RedGeometry;
         this['_UUID'] = RedGL.makeUUID();
         // console.log(this);
     };
+    RedGeometry.prototype = {
+        disposeAllBuffer: (function () {
+            var k;
+            return function () {
+                for (k in this) {
+                    if (this && this[k] instanceof RedBuffer) this[k].dispose()
+                }
+            }
+        })(),
+        disposeBuffer: function (key) {
+            if (this && this[key] instanceof RedBuffer) this[key].dispose()
+        }
+    }
     Object.freeze(RedGeometry);
 })();

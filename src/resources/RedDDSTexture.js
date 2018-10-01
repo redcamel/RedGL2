@@ -46,6 +46,7 @@ var RedDDSTexture;
         tGL.glExtension['WEBGL_compressed_texture_s3tc'] || RedGLUtil.throwFunc('RedDDSTexture : WEBGL_compressed_texture_s3tc확장을 지원하지않는 하드웨어입니다.');
 
         this['webglTexture'] = tGL.createTexture();
+        this['webglTexture']['gl'] = tGL
         this['_load'] = function (needEmpty) {
             RedTextureOptionChecker.check('RedDDSTexture', option, tGL);
             if (needEmpty) this.setEmptyTexture(tGL, this['webglTexture']);

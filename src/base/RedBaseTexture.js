@@ -107,6 +107,12 @@ var RedBaseTexture;
     RedBaseTexture.prototype['src'] = function () {
         RedGLUtil.throwFunc('RedBaseTexture - src : 반드시 재정의해야함')
     };
+    RedBaseTexture.prototype['dispose'] = function () {
+        if (this['webglTexture'] && this['_src'] != RedBaseTexture.EMPTY_BASE64) {
+            this['webglTexture']['gl'].deleteTexture(this['webglTexture'])
+            this['webglTexture'] = null
+        }
+    };
     Object.defineProperty(RedBaseTexture.prototype, 'callback', {
         get: function () {
             return this['_callback']
