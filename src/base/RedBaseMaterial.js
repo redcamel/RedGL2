@@ -171,7 +171,18 @@ var RedBaseMaterial;
                     }
                 }
             }
-        })()
+        })(),
+        disposeAllTexture: (function () {
+            var k;
+            return function () {
+                for (k in this) {
+                    if (this[k] instanceof RedBaseTexture) this[k].dispose()
+                }
+            }
+        })(),
+        disposeTexture: function (key) {
+            if (this[key] instanceof RedBaseTexture) this[key].dispose()
+        }
     };
     Object.freeze(RedBaseMaterial);
 })();

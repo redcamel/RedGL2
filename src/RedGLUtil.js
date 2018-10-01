@@ -150,6 +150,34 @@ var RedGLUtil;
                 return v + 1;
             }
         })(),
+        makePowerOf2Source: (function () {
+            var tW, tH;
+            var MAX_TEXTURE_SIZE
+            return function (gl, source, maxTextureSize) {
+                MAX_TEXTURE_SIZE = maxTextureSize
+                if (!RedGLUtil.isPowerOf2(source.width) || !RedGLUtil.isPowerOf2(source.height)) {
+                    tW = RedGLUtil.nextHighestPowerOfTwo(source.width);
+                    tH = RedGLUtil.nextHighestPowerOfTwo(source.height);
+                    if (tW > MAX_TEXTURE_SIZE) tW = MAX_TEXTURE_SIZE;
+                    if (tH > MAX_TEXTURE_SIZE) tH = MAX_TEXTURE_SIZE;
+                    var canvas = window['OffscreenCanvas'] ? new OffscreenCanvas(tW, tH) : document.createElement('canvas');
+                    var ctx = canvas.getContext("2d");
+
+                    console.log('캔버스 엘리먼트에 대한 리사이즈용캔버스생성', canvas)
+                    if (!window['OffscreenCanvas']) {
+                        canvas.width = tW;
+                        canvas.height = tH;
+                    }
+                    if ('getContext' in source && RedGLDetect.BROWSER_INFO.browser != 'edge' && RedGLDetect.BROWSER_INFO.browser != 'ie') {
+                        tH = -tH
+                        ctx.scale(1, -1)
+                    }
+                    ctx.drawImage(source, 0, 0, tW, tH);
+                    console.log(canvas);
+                    return window['OffscreenCanvas'] ? canvas.transferToImageBitmap() : canvas;
+                } else return source
+            }
+        })(),
         /**DOC:
          {
 			 code : 'STATIC METHOD',

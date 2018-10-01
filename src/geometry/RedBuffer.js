@@ -240,6 +240,8 @@ var RedBuffer;
 		 }
          :DOC*/
         this['webglBuffer'] = tGL.createBuffer();
+        this['webglBuffer']['gl'] = tGL
+        this['webglBuffer']['redGL'] = redGL
         this['_UUID'] = RedGL.makeUUID();
         /**DOC:
          {
@@ -279,6 +281,13 @@ var RedBuffer;
         this['upload'](this['data']);
         console.log(this);
     };
+    RedBuffer.prototype['dispose'] = function () {
+        if (this['webglBuffer'] && !this['isPrimitiveBuffer']) {
+            this['webglBuffer']['gl'].deleteBuffer(this['webglBuffer'])
+            delete this['webglBuffer']['redGL']['_datas']['RedBuffer'][this['bufferType']][this['key']]
+            this['webglBuffer'] = null
+        }
+    }
     /**DOC:
      {
 		 code: 'CONST',

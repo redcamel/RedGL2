@@ -52,7 +52,7 @@ var RedBaseTexture;
                     gl.activeTexture(gl.TEXTURE0);
                     gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
                     gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
-                    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+                    // gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
                     // console.log('nullImage.source',nullImage.source)
                     gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_X, 0, gl.LUMINANCE, 2, 2, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, cubePixelData);
                     gl.texImage2D(gl.TEXTURE_CUBE_MAP_NEGATIVE_X, 0, gl.LUMINANCE, 2, 2, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, cubePixelData);
@@ -71,7 +71,7 @@ var RedBaseTexture;
                     gl.activeTexture(gl.TEXTURE0 + 0);
                     gl.bindTexture(gl.TEXTURE_2D, texture);
                     gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
-                    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+                    // gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
                     gl.texImage2D(
                         gl.TEXTURE_2D,
                         0, //level
@@ -106,6 +106,12 @@ var RedBaseTexture;
     };
     RedBaseTexture.prototype['src'] = function () {
         RedGLUtil.throwFunc('RedBaseTexture - src : 반드시 재정의해야함')
+    };
+    RedBaseTexture.prototype['dispose'] = function () {
+        if (this['webglTexture'] && this['_src'] != RedBaseTexture.EMPTY_BASE64) {
+            this['webglTexture']['gl'].deleteTexture(this['webglTexture'])
+            this['webglTexture'] = null
+        }
     };
     Object.defineProperty(RedBaseTexture.prototype, 'callback', {
         get: function () {

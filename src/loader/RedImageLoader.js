@@ -20,7 +20,13 @@ var RedImageLoader;
         }
         return new Blob(byteArrays, {type: contentType});
     }
+
+    var makeImageBitmap = function (v, option) {
+        if (RedGLDetect.BROWSER_INFO.browser == 'firefox') return createImageBitmap(v)
+        else return createImageBitmap(v, option ? option : {imageOrientation: 'flipY'})
+    }
     var fileLoader = function (src, onLoader, onError, option) {
+
         var self = this
         var request = new XMLHttpRequest();
         var ended = false
@@ -29,8 +35,9 @@ var RedImageLoader;
         request.onreadystatechange = function (e) {
             if (request.readyState == 4) {
                 console.log(request)
+                console.log(request.response)
                 if (request.status === 200) {
-                    createImageBitmap(request.response, option ? option : {
+                    makeImageBitmap(request.response, option ? option : {
                         imageOrientation: 'flipY'
                     }).then(function (v) {
                         v['src'] = src
@@ -43,6 +50,13 @@ var RedImageLoader;
 
                         console.log('fileLoader', v)
                         console.log('성공!')
+                    }).catch(function (v) {
+                        console.log('에러!')
+                        if (self['_onError']) {
+                            self['_onError'](request)
+                            self['_onLoad'] = undefined
+                            self['_onError'] = undefined
+                        }
                     })
                 } else {
                     console.log('에러!')
@@ -69,7 +83,7 @@ var RedImageLoader;
         self['_onError'] = onError
         if (window['createImageBitmap']) {
             if (src.split(',').length == 2 && src.substr(0, 5) == 'data:') {
-                createImageBitmap(base64toBlob(src.split(',')[1], 'image/png'), option ? option : {
+                makeImageBitmap(base64toBlob(src.split(',')[1], 'image/png'), option ? option : {
                     imageOrientation: 'flipY'
                 }).then(function (v) {
                     console.log(v)
