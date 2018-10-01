@@ -30,29 +30,7 @@ var RedBitmapTexture;
         return function (gl, self, texture, src, option, callback) {
             if (!option) option = {};
             if (window['OffscreenCanvas'] && src instanceof OffscreenCanvas || window['HTMLCanvasElement'] && src instanceof HTMLCanvasElement) {
-                var tSource = src;
-                var tW, tH;
-                if (!RedGLUtil.isPowerOf2(tSource.width) || !RedGLUtil.isPowerOf2(tSource.height)) {
-                    tW = RedGLUtil.nextHighestPowerOfTwo(tSource.width);
-                    tH = RedGLUtil.nextHighestPowerOfTwo(tSource.height);
-                    if (tW > MAX_TEXTURE_SIZE) tW = MAX_TEXTURE_SIZE;
-                    if (tH > MAX_TEXTURE_SIZE) tH = MAX_TEXTURE_SIZE;
-                    var canvas = window['OffscreenCanvas'] ? new OffscreenCanvas(tW, tH) : document.createElement('canvas');
-                    var ctx = canvas.getContext("2d");
-
-                    console.log('캔버스 엘리먼트에 대한 리사이즈용캔버스생성', canvas)
-                    if (!window['OffscreenCanvas']) {
-                        canvas.width = tW;
-                        canvas.height = tH;
-                    }
-                    if(gl['vendor'] != 'Microsoft'){
-                        tH = -tH
-                        ctx.scale(1,-1)
-                    }
-                    ctx.drawImage(tSource, 0, 0, tW, tH);
-                    console.log(canvas);
-                    tSource = window['OffscreenCanvas'] ? canvas.transferToImageBitmap() : canvas;
-                }
+                var tSource = RedGLUtil.makePowerOf2Source(gl, src, MAX_TEXTURE_SIZE)
                 console.log('tSource', tSource)
                 makeWebGLTexture(gl, texture, tSource, option);
                 callback ? callback.call(self, true) : 0;
@@ -61,26 +39,8 @@ var RedBitmapTexture;
                 RedImageLoader(
                     src,
                     function (v) {
-                        var tSource = this['source'];
-                        var tW, tH;
-                        if (!RedGLUtil.isPowerOf2(tSource.width) || !RedGLUtil.isPowerOf2(tSource.height)) {
-                            tW = RedGLUtil.nextHighestPowerOfTwo(tSource.width);
-                            tH = RedGLUtil.nextHighestPowerOfTwo(tSource.height);
-                            if (tW > MAX_TEXTURE_SIZE) tW = MAX_TEXTURE_SIZE;
-                            if (tH > MAX_TEXTURE_SIZE) tH = MAX_TEXTURE_SIZE;
-                            var canvas = window['OffscreenCanvas'] ? new OffscreenCanvas(tW, tH) : document.createElement('canvas');
-                            var ctx = canvas.getContext("2d");
-
-                            console.log('리사이즈용캔버스생성', canvas)
-                            if (!window['OffscreenCanvas']) {
-                                canvas.width = tW;
-                                canvas.height = tH;
-                            }
-
-                            ctx.drawImage(tSource, 0, 0, tW, tH);
-                            console.log(canvas);
-                            tSource = window['OffscreenCanvas'] ? canvas.transferToImageBitmap() : canvas;
-                        }
+                        console.log(this)
+                        var tSource = RedGLUtil.makePowerOf2Source(gl, this['source'], MAX_TEXTURE_SIZE)
                         makeWebGLTexture(gl, texture, tSource, option);
                         callback ? callback.call(self, true) : 0;
                     },
@@ -174,7 +134,7 @@ var RedBitmapTexture;
             return this['_src']
         },
         set: function (v) {
-            if(window['OffscreenCanvas']){
+            if (window['OffscreenCanvas']) {
                 this['_src'] = v;
                 this._load(true)
                 return
