@@ -1,0 +1,42 @@
+[
+  {
+    "constructorYn": true,
+    "title": "RedGLOffScreen",
+    "description": "\nRedGLOffScreen Instance 생성\n",
+    "params": {
+      "canvas": [
+        {
+          "type": "Canvas Element"
+        }
+      ],
+      "w": [
+        {
+          "type": "Uint"
+        }
+      ],
+      "h": [
+        {
+          "type": "Uint"
+        }
+      ],
+      "redGLSrc": [
+        {
+          "type": "String"
+        },
+        "redGL 라이브러리파일 경로"
+      ],
+      "hostSrc": [
+        {
+          "type": "String"
+        },
+        "호스트경로"
+      ]
+    },
+    "extends": [
+      "RedBaseMaterial"
+    ],
+    "demo": "../example/launcher/RedGLOffScreen.html",
+    "example": "\n<body>\n       <canvas id=\"testCanvas\"></canvas>\n       <script id='testSource'>\n           var canvas = document.getElementById('testCanvas')\n           var redGLSrc = '../release/RedGL.min.js' // redGL 라이브러리 경로\n           var hostSrc = 'workerHost2.js' // 호스트 코드 경로\n           RedGLOffScreen(canvas, 1024, 768, redGLSrc, hostSrc)\n       </script>\n   </body>\n",
+    "return": "RedGLOffScreen Instance"
+  }
+]
