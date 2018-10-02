@@ -146,6 +146,16 @@ var RedGLDetect;
             out: 'mouseout'
         })
             if (t0.hasOwnProperty(i)) result[i] = t0[i];
+
+        if (window['OffscreenCanvas']) {
+            var t0 = new window['OffscreenCanvas'](2, 2)
+            try {
+                t0.getContext('2d')
+            } catch (e) {
+                window['OffscreenCanvas'] = null
+            }
+        }
+
     };
     /**DOC:
      {
