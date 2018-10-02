@@ -222,7 +222,9 @@ gulp.task('combine-js', function () {
 		"src/postEffect/RedPostEffect_Film.js",
 		"src/postEffect/RedPostEffect_Vignetting.js",
 		"src/postEffect/RedPostEffect_Vignetting.js",
-		"src/postEffect/antialiasing/RedPostEffect_FXAA.js"
+		"src/postEffect/antialiasing/RedPostEffect_FXAA.js",
+		//
+        "src/launcher/RedGLOffScreen.js"
 	])
 		.pipe(concat(name + '.min.js')) // 병합한다.
 		.pipe(stripDebug())

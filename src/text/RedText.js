@@ -23,8 +23,8 @@ var RedText;
     })();
     setTexture = function (target) {
         target['_height'] = +target['_height'];
-        target['_svg'].setAttribute('width', target['_svg']['viewBox']['baseVal'].width = target['_width']);
-        target['_svg'].setAttribute('height', target['_svg']['viewBox']['baseVal'].height = target['_height']);
+        target['_svg'].setAttribute('width', target['_width']);
+        target['_svg'].setAttribute('height', target['_height']);
         target['_svg'].querySelector('foreignObject').setAttribute('height', target['_height']);
         target['_svg'].querySelector('table').style.height = target['_height'] + 'px';
         target['_img'].src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(target['_svg'].outerHTML);
@@ -109,8 +109,8 @@ var RedText;
             self['_cvs']['width'] = tW;
             self['_cvs']['height'] = tH;
             self['_ctx'].clearRect(0, 0, tW, tH);
-            self['scaleX'] = self['_width'] / redGL.gl.drawingBufferWidth;
-            self['scaleY'] = self['_height'] / redGL.gl.drawingBufferWidth;
+            self['scaleX'] = self['_width'] / 1024;
+            self['scaleY'] = self['_height'] / 1024;
             self['_ctx'].drawImage(self['_img'], 0, 0, tW, tH);
             self['material'].diffuseTexture.src = self['_cvs']
             self['material'].diffuseTexture.option = {min: redGL.gl.LINEAR, mag: redGL.gl.LINEAR}

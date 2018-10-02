@@ -1,0 +1,33 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>OffScreenCanvasRnD</title>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
+    />
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            font-size: 11px;
+            overflow: hidden;
+        }
+
+    </style>
+    <script src="../release/RedGL.min.js"></script>
+</head>
+
+<body>
+<canvas id="testCanvas"></canvas>
+<script id='testSource'>
+    var canvas = document.getElementById('testCanvas')
+    var redGLSrc = '../release/RedGL.min.js' // redGL 라이브러리 경로
+    var hostSrc = 'workerHost2.js' // 호스트 코드 경로
+    RedGLOffScreen(canvas, 1024, 768, redGLSrc, hostSrc)
+</script>
+</body>
+</html>
