@@ -56,7 +56,53 @@ var RedGLDetect;
         }
 
 
-//TODO: 아래정리
+        RedGLDetect.getBrowserInfo()
+
+    };
+    /**DOC:
+     {
+		 code : 'PROPERTY',
+		 title :`basic`,
+		 description : `기본 디텍팅 값`,
+		 return : 'Object'
+	 }
+     :DOC*/
+    /**DOC:
+     {
+		 code : 'PROPERTY',
+		 title :`frameBuffer`,
+		 description : `frameBuffer 관련 디텍팅 값`,
+		 return : 'Object'
+	 }
+     :DOC*/
+    /**DOC:
+     {
+		 code : 'PROPERTY',
+		 title :`frameBuffer`,
+		 description : `vertexShader 관련 디텍팅 값`,
+		 return : 'Object'
+	 }
+     :DOC*/
+    /**DOC:
+     {
+		 code : 'PROPERTY',
+		 title :`frameBuffer`,
+		 description : `fragmentShader 관련 디텍팅 값`,
+		 return : 'Object'
+	 }
+     :DOC*/
+    /**DOC:
+     {
+		 code : 'PROPERTY',
+		 title :`frameBuffer`,
+		 description : `texture 관련 디텍팅 값`,
+		 return : 'Object'
+	 }
+     :DOC*/
+
+
+    RedGLDetect.BROWSER_INFO = {}
+    RedGLDetect.getBrowserInfo = function(){
         var result = RedGLDetect['BROWSER_INFO']
         var navi = window['navigator'],
             agent = navi.userAgent.toLowerCase(),
@@ -155,50 +201,7 @@ var RedGLDetect;
                 window['OffscreenCanvas'] = null
             }
         }
-
-    };
-    /**DOC:
-     {
-		 code : 'PROPERTY',
-		 title :`basic`,
-		 description : `기본 디텍팅 값`,
-		 return : 'Object'
-	 }
-     :DOC*/
-    /**DOC:
-     {
-		 code : 'PROPERTY',
-		 title :`frameBuffer`,
-		 description : `frameBuffer 관련 디텍팅 값`,
-		 return : 'Object'
-	 }
-     :DOC*/
-    /**DOC:
-     {
-		 code : 'PROPERTY',
-		 title :`frameBuffer`,
-		 description : `vertexShader 관련 디텍팅 값`,
-		 return : 'Object'
-	 }
-     :DOC*/
-    /**DOC:
-     {
-		 code : 'PROPERTY',
-		 title :`frameBuffer`,
-		 description : `fragmentShader 관련 디텍팅 값`,
-		 return : 'Object'
-	 }
-     :DOC*/
-    /**DOC:
-     {
-		 code : 'PROPERTY',
-		 title :`frameBuffer`,
-		 description : `texture 관련 디텍팅 값`,
-		 return : 'Object'
-	 }
-     :DOC*/
-
-
-    RedGLDetect.BROWSER_INFO = {}
+        return result
+    }
     Object.freeze(RedGLDetect);
 })();

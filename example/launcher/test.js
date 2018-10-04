@@ -2,6 +2,7 @@
 // 실제로는 RedGLInstance생성이후 발동되는 호스트이다.
 function () {
     console.log('초기화 성공!')
+    console.log(this)
     var tWorld, tScene, tController, tRenderer;
     // 월드 생성
     this['world'] = tWorld = RedWorld();

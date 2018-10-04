@@ -30,7 +30,7 @@
     var canvas = document.getElementById('testCanvas')
     var redGLSrc = '../../release/RedGL.min.js' // redGL 라이브러리 경로
     var hostSrc = 'test.js' // 호스트 코드 경로
-    var redOffScreen = RedGLOffScreen(canvas, 1024, 768, redGLSrc, hostSrc)
+    var redOffScreen = RedGLOffScreen(canvas, '100%', '100%', redGLSrc, hostSrc)
     testUI = function () {
         // 사이즈 조정 생성
         var testList = [
@@ -40,7 +40,8 @@
             [1024, 768],
             [1280, 1024],
             [1680, 1024],
-            [1920, 1280]
+            [1920, 1280],
+            ['100%', '100%']
         ]
         var tGroup = document.createElement('div')
         document.getElementById('testUI').appendChild(tGroup)

@@ -91,15 +91,9 @@ var RedBasicController;
             var sX, sY;
             var mX, mY;
             var tMove,tUp,tDown;
-            if(RedGLDetect.BROWSER_INFO.isMobile){
-                tMove = 'touchmove'
-                tUp = 'touchend'
-                tDown = 'touchstart'
-            }else{
-                tMove = 'mousemove'
-                tUp = 'mouseup'
-                tDown = 'mousedown'
-            }
+            tMove = RedGLDetect.BROWSER_INFO.move
+            tUp =  RedGLDetect.BROWSER_INFO.up
+            tDown = RedGLDetect.BROWSER_INFO.down
             sX = 0, sY = 0;
             mX = 0, mY = 0;
             HD_keyDown = function (e) {
