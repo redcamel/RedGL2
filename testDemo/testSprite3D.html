@@ -195,114 +195,116 @@
                 '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
             ]);
 
+        RedGLTFLoader(self, '../asset/glTF/breakDance/', 'scene.gltf', function (v) {
+            console.log('호잇!', v)
+            tScene3D.addChild(v['resultMesh'])
+            var tRoot = v['resultMesh']
+            tRoot.scaleX = tRoot.scaleY = tRoot.scaleZ = 0.001
 
-        var tRoot = RedMesh(self, RedBox(this), RedColorMaterial(this))
-        tScene3D.addChild(tRoot)
-        tRoot.z = 10
+            var testUI = function (redGL, tScene) {
+                var gui = self['gui'] = new dat.GUI({
+                    name: 'test'
+                });
+                var folder = gui.addFolder('animations')
+                var testAnimation = {
+                    material: '...',
+                    perspectiveScale: false,
+                    sprite3DYn: false
+                }
+                var tList = [
+                    '...',
+                    'RedColorMaterial',
+                    'RedColorPhongMaterial',
+                    'RedColorPhongTextureMaterial',
+                    'RedBitmapMaterial',
+                    'RedStandardMaterial',
+                    'RedEnvironmentMaterial',
+                    'RedSheetMaterial',
+                    'RedVideoMaterial'
+                ]
 
+                var targetMaterial
+                var setMaterial = function (target, reculsive) {
+                    var self = this
+                    if (target['material']) {
+                        target.material = targetMaterial
+                    }
+                    if (reculsive) target.children.forEach(function (v) {
 
-        var testUI = function (redGL, tScene) {
-            var gui = self['gui'] = new dat.GUI({
-                name: 'test'
-            });
-            var folder = gui.addFolder('animations')
-            var testAnimation = {
-                material: '...',
-                perspectiveScale: false,
-                sprite3DYn: false
+                        setMaterial(v, reculsive)
+                    })
+
+                };
+                var setSprite3DYn = function (target, value, reculsive) {
+                    var self = this
+                    target.sprite3DYn = value
+                    if (reculsive) target.children.forEach(function (v) {
+                        setSprite3DYn(v, value, reculsive)
+                    })
+
+                };
+                var setPerspectiveScale = function (target, value, reculsive) {
+                    var self = this
+                    target.perspectiveScale = value
+                    if (reculsive) target.children.forEach(function (v) {
+                        setPerspectiveScale(v, value, reculsive)
+                    })
+
+                };
+                folder.add(testAnimation, 'perspectiveScale').onChange(function (v) {
+                    setPerspectiveScale(tRoot, v, true)
+                })
+                folder.add(testAnimation, 'sprite3DYn').onChange(function (v) {
+                    setSprite3DYn(tRoot, v, true)
+                })
+                folder.add(testAnimation, 'material', tList).onChange(function (v) {
+                    switch (v) {
+                        case 'RedColorMaterial' :
+                            targetMaterial = RedColorMaterial(self)
+                            break
+                        case 'RedColorPhongMaterial' :
+                            targetMaterial = RedColorPhongMaterial(self)
+                            break
+                        case 'RedColorPhongTextureMaterial' :
+                            targetMaterial = RedColorPhongTextureMaterial(self)
+                            targetMaterial.normalTexture = RedBitmapTexture(self, '../asset/normalTest.jpg')
+                            break
+                        case 'RedBitmapMaterial' :
+                            targetMaterial = RedBitmapMaterial(self, RedBitmapTexture(self, '../asset/brick_diffuse.jpg'))
+                            break
+                        case 'RedStandardMaterial':
+                            targetMaterial = RedStandardMaterial(self, RedBitmapTexture(self, '../asset/brick_diffuse.jpg'))
+                            break
+                        case 'RedEnvironmentMaterial' :
+                            targetMaterial = RedEnvironmentMaterial(
+                                self,
+                                RedBitmapTexture(self, null),
+                                RedBitmapCubeTexture(self, [
+                                    '../asset/cubemap/SwedishRoyalCastle/px.jpg',
+                                    '../asset/cubemap/SwedishRoyalCastle/nx.jpg',
+                                    '../asset/cubemap/SwedishRoyalCastle/py.jpg',
+                                    '../asset/cubemap/SwedishRoyalCastle/ny.jpg',
+                                    '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
+                                    '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
+                                ])
+                            )
+                            break
+                        case 'RedSheetMaterial' :
+                            targetMaterial = RedSheetMaterial(self, RedBitmapTexture(self, '../asset/sheet/spriteSheet.png'), 24, 5, 3, 15)
+                            break
+                        case 'RedVideoMaterial' :
+                            targetMaterial = RedVideoMaterial(self, RedVideoTexture(self, '../asset/mov_bbb.mp4'))
+                            break
+
+                    }
+                    setMaterial(tRoot, true)
+                })
+                ///////////////////////////////////////////////
+                folder.open()
             }
-            var tList = [
-                '...',
-                'RedColorMaterial',
-                'RedColorPhongMaterial',
-                'RedColorPhongTextureMaterial',
-                'RedBitmapMaterial',
-                'RedStandardMaterial',
-                'RedEnvironmentMaterial',
-                'RedSheetMaterial',
-                'RedVideoMaterial'
-            ]
+            testUI()
+        })
 
-            var targetMaterial
-            var setMaterial = function (target, reculsive) {
-                var self = this
-                if (target['material']) {
-                    target.material = targetMaterial
-                }
-                if (reculsive) target.children.forEach(function (v) {
-
-                    setMaterial(v, reculsive)
-                })
-
-            };
-            var setSprite3DYn = function (target, value, reculsive) {
-                var self = this
-                target.sprite3DYn = value
-                if (reculsive) target.children.forEach(function (v) {
-                    setSprite3DYn(v, value, reculsive)
-                })
-
-            };
-            var setPerspectiveScale = function (target, value, reculsive) {
-                var self = this
-                target.perspectiveScale = value
-                if (reculsive) target.children.forEach(function (v) {
-                    setPerspectiveScale(v, value, reculsive)
-                })
-
-            };
-            folder.add(testAnimation, 'perspectiveScale').onChange(function (v) {
-                setPerspectiveScale(tRoot, v, true)
-            })
-            folder.add(testAnimation, 'sprite3DYn').onChange(function (v) {
-                setSprite3DYn(tRoot, v, true)
-            })
-            folder.add(testAnimation, 'material', tList).onChange(function (v) {
-                switch (v) {
-                    case 'RedColorMaterial' :
-                        targetMaterial = RedColorMaterial(self)
-                        break
-                    case 'RedColorPhongMaterial' :
-                        targetMaterial = RedColorPhongMaterial(self)
-                        break
-                    case 'RedColorPhongTextureMaterial' :
-                        targetMaterial = RedColorPhongTextureMaterial(self)
-                        targetMaterial.normalTexture = RedBitmapTexture(self, '../asset/normalTest.jpg')
-                        break
-                    case 'RedBitmapMaterial' :
-                        targetMaterial = RedBitmapMaterial(self, RedBitmapTexture(self, '../asset/brick_diffuse.jpg'))
-                        break
-                    case 'RedStandardMaterial':
-                        targetMaterial = RedStandardMaterial(self, RedBitmapTexture(self, '../asset/brick_diffuse.jpg'))
-                        break
-                    case 'RedEnvironmentMaterial' :
-                        targetMaterial = RedEnvironmentMaterial(
-                            self,
-                            RedBitmapTexture(self, null),
-                            RedBitmapCubeTexture(self, [
-                                '../asset/cubemap/SwedishRoyalCastle/px.jpg',
-                                '../asset/cubemap/SwedishRoyalCastle/nx.jpg',
-                                '../asset/cubemap/SwedishRoyalCastle/py.jpg',
-                                '../asset/cubemap/SwedishRoyalCastle/ny.jpg',
-                                '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
-                                '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
-                            ])
-                        )
-                        break
-                    case 'RedSheetMaterial' :
-                        targetMaterial = RedSheetMaterial(self, RedBitmapTexture(self, '../asset/sheet/spriteSheet.png'), 24, 5, 3, 15)
-                        break
-                    case 'RedVideoMaterial' :
-                        targetMaterial = RedVideoMaterial(self, RedVideoTexture(self, '../asset/mov_bbb.mp4'))
-                        break
-
-                }
-                setMaterial(tRoot, true)
-            })
-            ///////////////////////////////////////////////
-            folder.open()
-        }
-        testUI()
 
         tRenderer.start(this, function (time) {
             }

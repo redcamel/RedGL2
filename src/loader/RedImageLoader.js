@@ -22,7 +22,6 @@ var RedImageLoader;
     }
 
     var makeImageBitmap = function (v, option) {
-        console.log(RedGLDetect.BROWSER_INFO.browser )
         if (RedGLDetect.BROWSER_INFO.browser == 'firefox') return createImageBitmap(v)
         else return createImageBitmap(v, option ? option : {imageOrientation: 'flipY'})
     }
@@ -35,8 +34,8 @@ var RedImageLoader;
         request.responseType = "blob";
         request.onreadystatechange = function (e) {
             if (request.readyState == 4) {
-                console.log(request)
-                console.log(request.response)
+                // console.log(request)
+                // console.log(request.response)
                 if (request.status === 200) {
                     makeImageBitmap(request.response, option ? option : {
                         imageOrientation: 'flipY'
@@ -48,9 +47,8 @@ var RedImageLoader;
                             self['_onLoad'] = undefined
                             self['_onError'] = undefined
                         }
-
-                        console.log('fileLoader', v)
-                        console.log('성공!')
+                        // console.log('fileLoader', v)
+                        // console.log('성공!')
                     }).catch(function (v) {
                         console.log('에러!')
                         if (self['_onError']) {
@@ -87,7 +85,7 @@ var RedImageLoader;
                 makeImageBitmap(base64toBlob(src.split(',')[1], 'image/png'), option ? option : {
                     imageOrientation: 'flipY'
                 }).then(function (v) {
-                    console.log(v)
+                    // console.log(v)
                     v['src'] = src
                     self['source'] = v
                     if (self['_onLoad']) {
@@ -95,7 +93,7 @@ var RedImageLoader;
                         self['_onLoad'] = undefined
                         self['_onError'] = undefined
                     }
-                    console.log('베이스이미지성공', v)
+                    // console.log('베이스이미지성공', v)
 
                 });
             } else fileLoader.apply(self, [self['_src'], onLoad, onError, option])

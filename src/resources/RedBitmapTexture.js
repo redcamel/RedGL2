@@ -106,6 +106,14 @@ var RedBitmapTexture;
         tGL = redGL.gl;
         MAX_TEXTURE_SIZE = redGL['detect']['texture']['MAX_TEXTURE_SIZE'];
 
+        option = option || {}
+        var tKey = src + JSON.stringify(option)
+        if (typeof src == 'string') {
+            if (!redGL['_datas']['textures']) redGL['_datas']['textures'] = {}
+            if (redGL['_datas']['textures'][tKey]) return redGL['_datas']['textures'][tKey]
+        }
+
+
         this['webglTexture'] = tGL.createTexture();
         this['webglTexture']['gl'] = tGL
         this['_load'] = function (needEmpty) {
@@ -117,6 +125,7 @@ var RedBitmapTexture;
         this['callback'] = callback;
         this['src'] = src;
         this['_UUID'] = RedGL.makeUUID();
+        redGL['_datas']['textures'][tKey] = this
         console.log(this);
     };
     RedBitmapTexture.prototype = new RedBaseTexture();

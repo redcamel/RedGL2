@@ -29,7 +29,8 @@
     <script src="../src/base/RedBaseContainer.js"></script>
     <script src="../src/base/RedBaseController.js"></script>
     <script src="../src/base/RedBaseLight.js"></script>
-    <script src="../src/loader/RedImageLoader.js"></script><script src="../src/base/RedBaseTexture.js"></script>
+    <script src="../src/loader/RedImageLoader.js"></script>
+    <script src="../src/base/RedBaseTexture.js"></script>
     <script src="../src/base/RedBaseMaterial.js"></script>
 
 
@@ -162,7 +163,7 @@
         this.world = tWorld = RedWorld();
         tScene3D = RedScene(this);
         tCamera = RedObitController(this);
-        tCamera.speedDistance = 50
+        tCamera.speedDistance = 500
         tCamera.distance = 5000
         tRenderer = RedRenderer();
         tWorld.addView(RedView('test', this, tScene3D, tCamera));
@@ -194,12 +195,24 @@
                 '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
                 '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
             ]);
+        var i = 10
+        while (i--) {
+            RedGLTFLoader(self, '../asset/glTF/breakDance/', 'scene.gltf', function (v) {
+                console.log('호잇!', v)
+                tScene3D.addChild(v['resultMesh'])
+                v['resultMesh'].x = Math.random() * 5000 - 2500
+                v['resultMesh'].z = Math.random() * 5000 - 2500
+                v['resultMesh'].rotationY = Math.random() * 360
 
+
+            })
+        }
 
         RedGLTFLoader(self, '../asset/glTF/breakDance/', 'scene.gltf', function (v) {
             console.log('호잇!', v)
             tScene3D.addChild(v['resultMesh'])
             var tRoot = v['resultMesh']
+
             var testUI = function (redGL, tScene) {
                 var gui = self['gui'] = new dat.GUI({
                     name: 'test'
