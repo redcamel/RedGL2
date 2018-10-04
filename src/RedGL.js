@@ -185,45 +185,6 @@ var RedGL;
             });
             self.setSize(self['_width'], self['_height']); // 리사이즈를 초기에 한번 실행.
             setEmptyTextures(self, tGL); // 빈텍스쳐를 미리 체워둔다.
-            // 주요프로그램을 미리생성
-            if (initPrograms) {
-                var totalTime_RedBitmapMaterial = performance.now();
-                RedBitmapMaterial(self, self['_datas']['emptyTexture']['2d']);
-                totalTime_RedBitmapMaterial = performance.now() - totalTime_RedBitmapMaterial;
-                //
-                var totalTime_RedColorMaterial = performance.now();
-                RedColorMaterial(self);
-                totalTime_RedColorMaterial = performance.now() - totalTime_RedColorMaterial;
-                //
-                var totalTime_RedColorPhongMaterial = performance.now();
-                RedColorPhongMaterial(self);
-                totalTime_RedColorPhongMaterial = performance.now() - totalTime_RedColorPhongMaterial
-                //
-                var totalTime_RedColorPhongTextureMaterial = performance.now();
-                RedColorPhongTextureMaterial(self);
-                totalTime_RedColorPhongTextureMaterial = performance.now() - totalTime_RedColorPhongTextureMaterial;
-                //
-                var totalTime_RedEnvironmentMaterial = performance.now();
-                RedEnvironmentMaterial(self, self['_datas']['emptyTexture']['2d'], self['_datas']['emptyTexture']['3d']);
-                totalTime_RedEnvironmentMaterial = performance.now() - totalTime_RedEnvironmentMaterial;
-                //
-                var totalTime_RedSheetMaterial = performance.now();
-                RedSheetMaterial(self, self['_datas']['emptyTexture']['2d']);
-                totalTime_RedSheetMaterial = performance.now() - totalTime_RedSheetMaterial;
-                //
-                var totalTime_RedStandardMaterial = performance.now();
-                RedStandardMaterial(self, self['_datas']['emptyTexture']['2d']);
-                totalTime_RedStandardMaterial = performance.now() - totalTime_RedStandardMaterial;
-                //
-                console.log('totalTime_RedBitmapMaterial', totalTime_RedBitmapMaterial, self['_datas']['RedProgramGroup']['RedBitmapMaterialProgram']);
-                console.log('totalTime_RedColorMaterial', totalTime_RedColorMaterial, self['_datas']['RedProgramGroup']['RedColorMaterialProgram']);
-                console.log('totalTime_RedColorPhongMaterial', totalTime_RedColorPhongMaterial, self['_datas']['RedProgramGroup']['RedColorPhongMaterialProgram']);
-                console.log('totalTime_RedColorPhongTextureMaterial', totalTime_RedColorPhongTextureMaterial, self['_datas']['RedProgramGroup']['RedColorPhongTextureMaterialProgram']);
-                console.log('totalTime_RedSheetMaterial', totalTime_RedSheetMaterial, self['_datas']['RedProgramGroup']['RedSheetMaterialProgram']);
-                console.log('totalTime_RedEnvironmentMaterial', totalTime_RedEnvironmentMaterial, self['_datas']['RedProgramGroup']['RedEnvironmentMaterialProgram']);
-                console.log('totalTime_RedStandardMaterial', totalTime_RedStandardMaterial, self['_datas']['RedProgramGroup']['RedStandardMaterialProgram']);
-                console.log('초기화시간', performance.now() - startTime);
-            }
             callback ? callback.call(self, tGL ? true : false) : 0; // 콜백이 있으면 실행
             //
         });
