@@ -18,17 +18,19 @@
     </style>
     <script src="../example/dat.gui.min.js"></script>
     <script src="../src/gl-matrix-min.js"></script>
+    <script src="../src/RedGLUtil.js"></script>
     <script src="../src/detect/RedGLDetect.js"></script>
     <script src="../src/base/RedDefinePropertyInfo.js"></script>
     <script src="../src/RedGL.js"></script>
-    hierarchyInfo
+
     <!--//-->
 
     <script src="../src/base/RedBaseObject3D.js"></script>
     <script src="../src/base/RedBaseContainer.js"></script>
     <script src="../src/base/RedBaseController.js"></script>
     <script src="../src/base/RedBaseLight.js"></script>
-    <script src="../src/loader/RedImageLoader.js"></script><script src="../src/base/RedBaseTexture.js"></script>
+    <script src="../src/loader/RedImageLoader.js"></script>
+    <script src="../src/base/RedBaseTexture.js"></script>
     <script src="../src/base/RedBaseMaterial.js"></script>
 
 
@@ -50,7 +52,6 @@
     <script src="../rnd/resources/RedAtlasTexture.js"></script>
     <script src="../src/resources/RedBitmapCubeTexture.js"></script>
     <!--재질-->
-    <script src="RedTestMaterial.js"></script>
     <script src="../src/material/RedColorMaterial.js"></script>
     <script src="../src/material/RedColorPhongMaterial.js"></script>
     <script src="../src/material/RedColorPhongTextureMaterial.js"></script>
@@ -63,6 +64,7 @@
     <script src="../src/material/RedSheetMaterial.js"></script>
     <script src="../src/material/RedStandardMaterial.js"></script>
     <script src="../src/material/RedVideoMaterial.js"></script>
+    <!--//-->
     <!--//-->
     <script src="../src/light/RedAmbientLight.js"></script>
     <script src="../src/light/RedDirectionalLight.js"></script>
@@ -134,6 +136,7 @@
     <script src="../src/postEffect/RedPostEffect_Vignetting.js"></script>
     <script src="../src/postEffect/antialiasing/RedPostEffect_FXAA.js"></script>
 
+
 </head>
 
 <body>
@@ -151,9 +154,7 @@
         this.world = tWorld = RedWorld();
         tScene3D = RedScene(this);
         tController = RedBasicController(this);
-        tController.x = tController.y = tController.z = 10
-        tController.tilt = -45
-        tController.pan = 45
+        tController.z = 10
         tRenderer = RedRenderer();
         tWorld.addView(RedView('test', this, tScene3D, tController));
         RedView('test').setSize('100%', '100%')

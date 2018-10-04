@@ -56,28 +56,49 @@ var RedObitController;
             var HD_down, HD_Move, HD_up, HD_wheel;
             var sX, sY;
             var mX, mY;
+            var tMove,tUp,tDown;
+            if(RedGLDetect.BROWSER_INFO.isMobile){
+                tMove = 'touchmove'
+                tUp = 'touchend'
+                tDown = 'touchstart'
+            }else{
+                tMove = 'mousemove'
+                tUp = 'mouseup'
+                tDown = 'mousedown'
+            }
             sX = 0, sY = 0;
             mX = 0, mY = 0;
             HD_down = function (e) {
-                sX = e['x'], sY = e['y'];
-                redGL['_canvas'].addEventListener('mousemove', HD_Move);
-                window.addEventListener('mouseup', HD_up);
+                if(RedGLDetect.BROWSER_INFO.isMobile){
+                    e = e.targetTouches[0]
+                    sX = e['clientX'], sY = e['clientY'];
+                }else{
+                    sX = e['x'], sY = e['y'];
+                }
+                redGL['_canvas'].addEventListener(tMove, HD_Move);
+                window.addEventListener(tUp, HD_up);
             };
             HD_Move = function (e) {
-                mX = e['x'] - sX, mY = e['y'] - sY;
-                sX = e['x'], sY = e['y'];
+                if(RedGLDetect.BROWSER_INFO.isMobile){
+                    e = e.targetTouches[0]
+                    mX = e['clientX'] - sX, mY = e['clientY'] - sY;
+                    sX = e['clientX'], sY = e['clientY'];
+                }else{
+                    mX = e['x'] - sX, mY = e['y'] - sY;
+                    sX = e['x'], sY = e['y'];
+                }
                 self['_pan'] -= mX * self['_speedRotation'] * 0.1;
                 self['_tilt'] -= mY * self['_speedRotation'] * 0.1;
             };
             HD_up = function () {
-                redGL['_canvas'].removeEventListener('mousemove', HD_Move);
-                window.removeEventListener('mouseup', HD_up);
+                redGL['_canvas'].removeEventListener(tMove, HD_Move);
+                window.removeEventListener(tUp, HD_up);
             };
             HD_wheel = function (e) {
                 console.log(e);
                 self['distance'] += e['deltaY'] / 100 * self['_speedDistance']
             };
-            redGL['_canvas'].addEventListener('mousedown', HD_down);
+            redGL['_canvas'].addEventListener(tDown, HD_down);
             redGL['_canvas'].addEventListener('wheel', HD_wheel);
         })(this);
     };
