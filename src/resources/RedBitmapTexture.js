@@ -103,6 +103,7 @@ var RedBitmapTexture;
         var tGL;
         if (!(this instanceof RedBitmapTexture)) return new RedBitmapTexture(redGL, src, option, callback);
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedBitmapTexture : RedGL Instance만 허용.', redGL);
+        (callback && typeof callback =='function') || !callback || RedGLUtil.throwFunc('RedBitmapTexture : callback Function만 허용.', callback);
         tGL = redGL.gl;
         MAX_TEXTURE_SIZE = redGL['detect']['texture']['MAX_TEXTURE_SIZE'];
 
@@ -110,7 +111,14 @@ var RedBitmapTexture;
         var tKey = src + JSON.stringify(option)
         if (typeof src == 'string') {
             if (!redGL['_datas']['textures']) redGL['_datas']['textures'] = {}
-            if (redGL['_datas']['textures'][tKey]) return redGL['_datas']['textures'][tKey]
+            if (redGL['_datas']['textures'][tKey]) {
+                if(callback){
+                    setTimeout(function(){
+                        callback.call(this,true)
+                    },1)
+                }
+                return redGL['_datas']['textures'][tKey]
+            }
         }
 
 

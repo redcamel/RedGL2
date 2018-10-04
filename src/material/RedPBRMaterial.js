@@ -285,9 +285,6 @@ var RedPBRMaterial;
 
 
         this['occlusionPower'] = 1;
-        this['displacementPower'] = 0;
-        this['displacementFlowSpeedX'] = 0;
-        this['displacementFlowSpeedY'] = 0;
         this['baseColorFactor'] = null
         this['emissiveFactor'] = null;
         this['alpha'] = 1;
@@ -427,32 +424,6 @@ var RedPBRMaterial;
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'occlusionPower', 'number', {'min': 0});
-    /**DOC:
-     {
-	     code : 'PROPERTY',
-		 title :`displacementPower`,
-		 description : `기본값 : 0`,
-		 return : 'Number'
-	 }
-     :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'displacementPower', 'number', {'min': 0});
-    /**DOC:
-     {
-	     code : 'PROPERTY',
-		 title :`displacementFlowSpeedX`,
-		 description : `기본값 : 0`,
-		 return : 'Number'
-	 }
-     :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'displacementFlowSpeedX', 'number');
-    /**DOC:
-     {
-	     code : 'PROPERTY',
-		 title :`displacementFlowSpeedY`,
-		 description : `기본값 : 0`,
-		 return : 'Number'
-	 }
-     :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'displacementFlowSpeedY', 'number');
+
     Object.freeze(RedPBRMaterial);
 })();

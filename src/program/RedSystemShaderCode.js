@@ -234,7 +234,7 @@ var RedSystemShaderCode;
                     [
                         'float getShadowColor ( vec4 shadowPos, vec2 resolution, sampler2D directionalShadowTexture ) {',
                         '   vec3 fragmentDepth = shadowPos.xyz;',
-                        '   fragmentDepth.z -= 0.03; // cShadowAcneRemover',
+                        '   fragmentDepth.z -= 0.007; // cShadowAcneRemover',
                         '   float amountInLight = 0.0;',
                         '   for (int x = -1; x <= 1; x++) {',
                         '       for (int y = -1; y <= 1; y++) {',
