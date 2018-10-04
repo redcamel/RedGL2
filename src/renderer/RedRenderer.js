@@ -172,7 +172,7 @@ var RedRenderer;
             var tViewRect;
             gl = redGL.gl;
             self = this;
-            RedGLTFLoader.animationLooper(time)
+            if(window['RedGLTFLoader']) RedGLTFLoader.animationLooper(time)
             // 캔버스 사이즈 적용
             tWorldRect = self['worldRect']
             tWorldRect[0] = 0;
