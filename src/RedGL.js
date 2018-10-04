@@ -275,12 +275,10 @@ var RedGL;
                     this['_viewRect'][2] = prevW;
                     this['_viewRect'][3] = prevH;
                 } else {
-                    var ratio = window['devicePixelRatio'] || 1;
                     W = this['_width'] = width
                     H = this['_height'] = height
-                    tCVS = this['_canvas'];
-                    tW[0] = W * ratio * this['_renderScale']
-                    tH[0] = H * ratio * this['_renderScale']
+                    tW[0] = W * this['_renderScale']
+                    tH[0] = H * this['_renderScale']
                     console.log('offscreen - RedGL canvas setSize : ', this.gl.drawingBufferWidth, this.gl.drawingBufferHeight);
                     this['_viewRect'][2] = W;
                     this['_viewRect'][3] = H

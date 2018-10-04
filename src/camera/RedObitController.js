@@ -57,19 +57,14 @@ var RedObitController;
             var sX, sY;
             var mX, mY;
             var tMove,tUp,tDown;
-            if(RedGLDetect.BROWSER_INFO.isMobile){
-                tMove = 'touchmove'
-                tUp = 'touchend'
-                tDown = 'touchstart'
-            }else{
-                tMove = 'mousemove'
-                tUp = 'mouseup'
-                tDown = 'mousedown'
-            }
+            tMove = RedGLDetect.BROWSER_INFO.move
+            tUp =  RedGLDetect.BROWSER_INFO.up
+            tDown = RedGLDetect.BROWSER_INFO.down
             sX = 0, sY = 0;
             mX = 0, mY = 0;
             HD_down = function (e) {
                 if(RedGLDetect.BROWSER_INFO.isMobile){
+                    console.log(e)
                     e = e.targetTouches[0]
                     sX = e['clientX'], sY = e['clientY'];
                 }else{

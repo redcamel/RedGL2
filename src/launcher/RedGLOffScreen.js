@@ -49,8 +49,7 @@ var RedGLOffScreen;
      :DOC*/
     RedGLOffScreen = function (canvas, w, h, redGLSrc, hostSrc) {
         if (!(this instanceof RedGLOffScreen)) return new RedGLOffScreen(canvas, w, h, redGLSrc, hostSrc);
-        w = parseInt(w)
-        h = parseInt(h)
+        RedGLDetect.getBrowserInfo()
         var self = this;
         self['htmlCanvas'] = canvas;
         self['redGLSrc'] = redGLSrc;
@@ -89,16 +88,39 @@ var RedGLOffScreen;
         var newNode = canvas.cloneNode(true);
         tParentNode.replaceChild(newNode, this['htmlCanvas']);
         this['htmlCanvas'] = newNode;
-        var MOUSE_KEY_LIST = 'x,y,clientX,clientY,pageX,pageY,screenX,screenY,layerX,layerY,detail,shiftKey,altKey,ctrlKey,movementX,movementY,button,type,which,deltaX,deltaY,deltaZ,timeStamp'.split(',');
+        var MOUSE_KEY_LIST = 'x,y,clientX,clientY,pageX,pageY,screenX,screenY,layerX,layerY,detail,shiftKey,altKey,ctrlKey,movementX,movementY,button,type,which,deltaX,deltaY,deltaZ,timeStamp,targetTouches'.split(',');
         var KEY_LIST = 'shiftKey,altKey,ctrlKey,key,keyCode,location,code,charCode,detail,timeStamp,which,type'.split(',');
-        var mouseEventList = 'mousemove,mousedown,mouseup,wheel'.split(',');
+        var mouseEventList = [RedGLDetect.BROWSER_INFO.move, RedGLDetect.BROWSER_INFO.down, RedGLDetect.BROWSER_INFO.up];
         var keyEvnetList = 'keydown,keyup,keypress'.split(',');
         mouseEventList.forEach(function (v) {
             self['htmlCanvas'].addEventListener(v, function (e) {
                 console.log(e);
                 var customEvent = {};
                 MOUSE_KEY_LIST.forEach(function (v) {
-                    customEvent[v] = e[v];
+                    if (v == 'targetTouches' && e[v]) {
+                        var t0 = []
+                        var i = e[v].length
+                        while (i--) {
+                            var v2 = e[v][i]
+                            t0.push({
+                                clientX: v2['clientX'],
+                                clientY: v2['clientY'],
+                                force: v2['force'],
+                                identifier: v2['identifier'],
+                                pageX: v2['pageX'],
+                                pageY: v2['pageY'],
+                                radiusX: v2['radiusX'],
+                                radiusY: v2['radiusY'],
+                                rotationAngle: v2['rotationAngle'],
+                                screenX: v2['screenX'],
+                                screenY: v2['screenY']
+                            })
+                        }
+                        customEvent[v] = t0;
+                    } else {
+                        customEvent[v] = e[v];
+                    }
+
                 });
                 self['worker'].postMessage({
                     state: e.type,
@@ -177,7 +199,9 @@ var RedGLOffScreen;
                 prevW = W;
                 prevH = H;
             }
-            this._init(this['htmlCanvas'], W * ratio, H * ratio);
+            W = parseInt(W)
+            H = parseInt(H)
+            this._init(this['htmlCanvas'], W, H);
         }
     })();
     ////////////////////////
@@ -206,8 +230,17 @@ var RedGLOffScreen;
                         var tArg = event.data.run['args'];
                         WorkerMainInstance['userInterface'][event.data.run['name']][typeof tArg == 'array' ? 'apply' : 'call'](WorkerMainInstance, event.data.run['args']);
                         break;
-                    case 'mousemove':
-                        var evt = new Event('mousemove');
+                    case RedGLDetect.BROWSER_INFO.move:
+                        var evt = new Event(RedGLDetect.BROWSER_INFO.move);
+                        var e = event.data.event;
+                        for (var k in e) {
+                            evt[k] = e[k];
+                        }
+                        console.log(evt);
+                        WorkerMainInstance['_canvas'].dispatchEvent(evt);
+                        break;
+                    case RedGLDetect.BROWSER_INFO.down:
+                        var evt = new Event(RedGLDetect.BROWSER_INFO.down);
                         var e = event.data.event;
                         for (var k in e) {
                             evt[k] = e[k];
@@ -216,18 +249,8 @@ var RedGLOffScreen;
                         WorkerMainInstance['_canvas'].dispatchEvent(evt);
                         // mousemove(event.data.event)
                         break;
-                    case 'mousedown':
-                        var evt = new Event('mousedown');
-                        var e = event.data.event;
-                        for (var k in e) {
-                            evt[k] = e[k];
-                        }
-                        console.log(evt);
-                        WorkerMainInstance['_canvas'].dispatchEvent(evt);
-                        // mousemove(event.data.event)
-                        break;
-                    case 'mouseup':
-                        var evt = new Event('mouseup');
+                    case RedGLDetect.BROWSER_INFO.up:
+                        var evt = new Event(RedGLDetect.BROWSER_INFO.up);
                         var e = event.data.event;
                         for (var k in e) {
                             evt[k] = e[k];

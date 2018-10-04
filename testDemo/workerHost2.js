@@ -3,6 +3,9 @@
 function () {
     if ( v ) {
         console.log('초기화 성공!')
+        console.log(RedGLDetect.BROWSER_INFO)
+        console.log(this)
+// return
         var tWorld, tScene, tController, tRenderer;
         // 월드 생성
         this['world'] = tWorld = RedWorld();
@@ -21,7 +24,9 @@ function () {
         // axis 설정
         tScene['axis'] = RedAxis(this)
         // 렌더시작
+        var self = this
         tRenderer.start(this, function (time) {
+            console.log(self._canvas.width,self._canvas.height )
         })
         // 렌더 디버거 활성화
         tRenderer['renderDebuger']['visible'] = true
