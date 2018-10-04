@@ -120,7 +120,7 @@ var RedGLTFLoader;
                     targetAnimationData: animationData
                 }
             )
-            console.log('loopList', loopList)
+            // console.log('loopList', loopList)
         }
         console.log(this)
     };
@@ -529,10 +529,7 @@ var RedGLTFLoader;
                 // tJointMesh.depthTestFunc = redGLTFLoader['redGL'].gl.ALWAYS
             })
             // 스켈레톤 정보가 있으면 정보와 메쉬를 연결해둔다.
-            if (info['skeleton']) {
-                skinInfo['skeleton'] = json['nodes'][info['skeleton']]['RedMesh']
-                skinInfo['skeletonIndex'] = info['skeleton']
-            }
+            if (info['skeleton']) skinInfo['skeleton'] = json['nodes'][info['skeleton']]['RedMesh']
             // 액세서 구하고..
             // 정보 파싱한다.
             var accessorIndex = info['inverseBindMatrices']
@@ -864,7 +861,6 @@ var RedGLTFLoader;
                     console.log('알수없는 형식 엑세서 타입', tType)
                     break
             }
-
         }
         var RedGLTF_MorphInfo = function (redGLTFLoader, json, primitiveData) {
             var morphList = []
@@ -1293,12 +1289,6 @@ var RedGLTFLoader;
                 // console.log('normalData', normalData)
                 // console.log('uvs', uvs)
                 // console.log('joints', joints)
-                // var max = 0
-                // joints.forEach(function(v){
-                //     if(v>max) max = v
-                // })
-                // console.log(max)
-
                 // console.log('jointWeights', jointWeights)
                 // console.log('indices', indices)
             })

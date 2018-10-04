@@ -172,7 +172,7 @@ var RedRenderer;
             var tViewRect;
             gl = redGL.gl;
             self = this;
-            if(window['RedGLTFLoader']) RedGLTFLoader.animationLooper(time)
+            if (window['RedGLTFLoader']) RedGLTFLoader.animationLooper(time)
             // 캔버스 사이즈 적용
             tWorldRect = self['worldRect']
             tWorldRect[0] = 0;
@@ -462,6 +462,7 @@ var RedRenderer;
                     if (tProgramList) {
                         if (tUseDirectionalShadow) {
                             if (tUseFog && tSprite3DYn) tOptionProgramKey = 'directionalShadow_fog_sprite3D'
+                            else if (tUseFog && tSkinInfo) tOptionProgramKey = 'directionalShadow_fog_skin'
                             else if (tSkinInfo) tOptionProgramKey = 'directionalShadow_skin'
                             else if (tSprite3DYn) tOptionProgramKey = 'directionalShadow_sprite3D'
                             else if (tUseFog) tOptionProgramKey = 'directionalShadow_fog'
@@ -469,6 +470,7 @@ var RedRenderer;
                         }
                         else {
                             if (tUseFog && tSprite3DYn) tOptionProgramKey = 'fog_sprite3D'
+                            else if (tUseFog && tSkinInfo) tOptionProgramKey = 'fog_skin'
                             else if (tSkinInfo) tOptionProgramKey = 'skin'
                             else if (tSprite3DYn) tOptionProgramKey = 'sprite3D'
                             else if (tUseFog) tOptionProgramKey = 'fog'
