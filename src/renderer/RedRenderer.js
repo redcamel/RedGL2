@@ -172,6 +172,7 @@ var RedRenderer;
             var tViewRect;
             gl = redGL.gl;
             self = this;
+            RedGLTFLoader.animationLooper(time)
             // 캔버스 사이즈 적용
             tWorldRect = self['worldRect']
             tWorldRect[0] = 0;
@@ -790,7 +791,6 @@ var RedRenderer;
                         globalTransformOfJointNode[index * 16 + 14] = joints[index]['matrix'][14]
                         globalTransformOfJointNode[index * 16 + 15] = joints[index]['matrix'][15]
                     }
-                    // console.log(globalTransformOfJointNode)
                     tGL.uniformMatrix4fv(tSystemUniformGroup['uGlobalTransformOfNodeThatTheMeshIsAttachedTo']['location'], false, globalTransformOfNodeThatTheMeshIsAttachedTo)
                     tGL.uniformMatrix4fv(tSystemUniformGroup['uJointMatrix']['location'], false, globalTransformOfJointNode)
                     tGL.uniformMatrix4fv(tSystemUniformGroup['uInverseBindMatrixForJoint']['location'], false, tSkinInfo['inverseBindMatrices'])

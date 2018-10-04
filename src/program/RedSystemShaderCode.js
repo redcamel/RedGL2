@@ -44,8 +44,8 @@ var RedSystemShaderCode;
                 'varying vec2 vTexcoord1',
 
 
-                'uniform mat4 uJointMatrix[50]',
-                'uniform mat4 uInverseBindMatrixForJoint[50]',
+                'uniform mat4 uJointMatrix[32]',
+                'uniform mat4 uInverseBindMatrixForJoint[32]',
                 'uniform mat4 uGlobalTransformOfNodeThatTheMeshIsAttachedTo',
 
 

@@ -22,6 +22,7 @@ var RedImageLoader;
     }
 
     var makeImageBitmap = function (v, option) {
+        console.log(RedGLDetect.BROWSER_INFO.browser )
         if (RedGLDetect.BROWSER_INFO.browser == 'firefox') return createImageBitmap(v)
         else return createImageBitmap(v, option ? option : {imageOrientation: 'flipY'})
     }
