@@ -276,9 +276,14 @@ var RedRenderer;
                 }
                 // 뎁스마스크 원상복구
                 self['cacheState']['useDepthMask'] ? 0 : gl.depthMask(self['cacheState']['useDepthMask'] = true);
+                // 마우스 이벤트 렌더
+                if (tScene['mouseManager']) {
+                    updateSystemUniform.apply(self, [redGL, time, tView])
+                    tScene['mouseManager']['render'](redGL, self, tView, time, tRenderInfo)
+
+                }
                 // 디렉셔널 쉐도우 렌더
                 if (tScene['shadowManager']['_directionalShadow']) {
-
                     updateSystemUniform.apply(self, [redGL, time, tView])
                     gl.disable(gl.BLEND);
                     gl.blendFunc(gl.ONE, gl.ONE);
@@ -292,6 +297,7 @@ var RedRenderer;
                     self['cacheState']['blendSrc'] = gl.SRC_ALPHA
                     self['cacheState']['blendDst'] = gl.ONE_MINUS_SRC_ALPHA
                 }
+
                 // 포스트이펙트 확인
                 if (tView['postEffectManager']['postEffectList'].length) {
                     tView['postEffectManager'].bind(gl);
@@ -428,6 +434,8 @@ var RedRenderer;
                 if (tGeometry) {
                     tMaterial = subSceneMaterial ? subSceneMaterial : tMesh['_material'];
                     tDirectionalShadowMaterialYn = tMaterial['_RedDirectionalShadowYn'];
+                    // 마우스 이벤트 커러설정
+                    tMaterial['_RedMouseEventMaterialYn'] ?  tMaterial['color'] = tMesh['_mouseColorID'] : 0
                     // SpriteSheet체크
                     if (tMaterial['__RedSheetMaterialYn']) {
                         if (!tMaterial['_nextFrameTime']) tMaterial['_nextFrameTime'] = tMaterial['_perFrameTime'] + time

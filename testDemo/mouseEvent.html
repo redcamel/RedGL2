@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>RedOBJLoader</title>
+    <title>testMouseEvent</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -29,10 +29,10 @@
     <script src="../src/base/RedBaseContainer.js"></script>
     <script src="../src/base/RedBaseController.js"></script>
     <script src="../src/base/RedBaseLight.js"></script>
+
     <script src="../src/loader/RedImageLoader.js"></script>
     <script src="../src/base/RedBaseTexture.js"></script>
     <script src="../src/base/RedBaseMaterial.js"></script>
-
 
     <!--//-->
     <script src="../src/frameBuffer/RedFrameBuffer.js"></script>
@@ -64,7 +64,6 @@
     <script src="../src/material/RedSheetMaterial.js"></script>
     <script src="../src/material/RedStandardMaterial.js"></script>
     <script src="../src/material/RedVideoMaterial.js"></script>
-    <!--//-->
     <!--//-->
     <script src="../src/light/RedAmbientLight.js"></script>
     <script src="../src/light/RedDirectionalLight.js"></script>
@@ -137,15 +136,15 @@
     <script src="../src/postEffect/RedPostEffect_Film.js"></script>
     <script src="../src/postEffect/RedPostEffect_Vignetting.js"></script>
     <script src="../src/postEffect/antialiasing/RedPostEffect_FXAA.js"></script>
-
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.2/TweenMax.min.js"></script>
 </head>
 
 <body>
 <canvas id="test" style="border: none;background:red"></canvas>
 <script>
-    document.getElementById('test')
-    RedGL(document.getElementById('test'), function (v) {
+    var t = document.getElementById('test')
+    document.body.appendChild(t)
+    RedGL(t, function (v) {
         console.log(v)
         var tGL;
         var tWorld, tScene3D, tController
@@ -155,63 +154,151 @@
         tGL = this.gl;
         this.world = tWorld = RedWorld();
         tScene3D = RedScene(this);
-        tController = RedBasicController(this);
-        tController.z = 10
+        tController = RedObitController(this);
+        tController.distance = 20
         tRenderer = RedRenderer();
         tWorld.addView(RedView('test', this, tScene3D, tController));
         RedView('test').setSize('100%', '100%')
         RedView('test').setLocation('0%', '0%')
         this.renderScale = 1
-        var testDLight, testALight, testPLight;
-        testDLight = RedDirectionalLight(this, '#fff', 1)
-        testDLight.x = 3
-        testDLight.y = 2
-        testDLight.z = 3
-        testDLight.debug = true
-        tScene3D.addLight(testDLight)
-        testDLight = RedDirectionalLight(this, '#ff00ff', 0.2)
-        testDLight.x = -3
-        testDLight.y = 2
-        testDLight.z = -3
-        testDLight.debug = true
-        tScene3D.addLight(testDLight)
-        testPLight = RedPointLight(this, '#00ff00', 0.5)
-        testPLight.x = -3
-        testPLight.y = -3
-        testPLight.z = -3
-        testPLight['radius'] = 1
-        testPLight['intensity'] = 1
-        tScene3D.addLight(testPLight)
-        tScene3D.skyBox =
-            RedSkyBox(this, [
+        var testMaterial, testMaterial2
+        testMaterial = RedEnvironmentMaterial(
+            this,
+            RedBitmapTexture(this, '../asset/crate.png'),
+            RedBitmapCubeTexture(this, [
                 '../asset/cubemap/SwedishRoyalCastle/px.jpg',
                 '../asset/cubemap/SwedishRoyalCastle/nx.jpg',
                 '../asset/cubemap/SwedishRoyalCastle/py.jpg',
                 '../asset/cubemap/SwedishRoyalCastle/ny.jpg',
                 '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
                 '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
+            ]),
+            RedBitmapTexture(this, '../asset/normalTest.jpg'),
+            RedBitmapTexture(this, '../asset/specular.png'),
+            RedBitmapTexture(this, '../asset/displacementTest.jpg')
+        )
+        testMaterial.reflectionPower = 0.5
+        testMaterial2 = RedBitmapMaterial(
+            this,
+            RedBitmapTexture(this, '../asset/alphaTest.png')
+        )
+
+        tScene3D.skyBox =
+            RedSkyBox(this, [
+                '../asset/cubemap/posx.png',
+                '../asset/cubemap/negx.png',
+                '../asset/cubemap/posy.png',
+                '../asset/cubemap/negy.png',
+                '../asset/cubemap/posz.png',
+                '../asset/cubemap/negz.png'
             ]);
-        tScene3D['grid'] = RedGrid(self)
-        tScene3D['axis'] = RedAxis(self)
-        RedOBJLoader(this, '../asset/obj/rabbit/', 'Rabbit.obj', function (v) {
-            console.log('호잇!', v)
-            tScene3D.addChild(v['resultMesh'])
-            v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 2
+        JsonModelLoader(this, 'testJsonModel', '../asset/teapot.json', function (interleaveBuffer, indexBuffer) {
+            console.log('호잇!', interleaveBuffer, indexBuffer)
+            var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer), testMaterial)
+            // var testMesh = RedMesh(self, RedBox(self), testMaterial)
+            testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.3
+            // var testMesh = RedMesh(self,RedPlane(self),testMaterial)
+            // testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 1
+            // testMesh.scaleY  =
+            tScene3D.addChild(testMesh)
+
+            var i = 2000
+            while (i--) {
+                // var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer),
+                //     testMaterial)
+                var testMesh = RedMesh(self, RedSphere(self), testMaterial)
+                // testMesh.x = Math.sin(Math.PI * 2 / 1000 * i) * 16
+                // testMesh.z = Math.cos(Math.PI * 2 / 1000 * i) * 16
+                testMesh.x = Math.random() * 60 - 30
+                testMesh.y = Math.random() * 60 - 30
+                testMesh.z = Math.random() * 60 - 30
+                testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 1
+                tScene3D.addChild(testMesh)
+                tScene3D.mouseManager.add(testMesh, 'over', function (e) {
+                    var t0 = 2
+                    TweenMax.to(this, 0.5, {
+                        scaleX: t0,
+                        scaleY: t0,
+                        scaleZ: t0,
+                        ease: Back.easeOut,
+                        rotationX: Math.random() * 360
+                    });
+                    console.log(e)
+                })
+                tScene3D.mouseManager.add(testMesh, 'out', function (e) {
+                    var t0 = 1
+                    TweenMax.to(this, 0.5, {scaleX: t0, scaleY: t0, scaleZ: t0, ease: Back.easeOut});
+                    console.log(e)
+                })
+                tScene3D.mouseManager.add(testMesh, 'down', function (e) {
+                    var t0 = 3
+                    TweenMax.to(this, 0.5, {scaleX: t0, scaleY: t0, scaleZ: t0, ease: Back.easeOut});
+                    console.log(e)
+                })
+                tScene3D.mouseManager.add(testMesh, 'up', function (e) {
+                    var t0 = 2
+                    TweenMax.to(this, 0.5, {scaleX: t0, scaleY: t0, scaleZ: t0, ease: Back.easeOut});
+                    console.log(e)
+                })
+
+            }
+            tScene3D['grid'] = RedGrid(self)
         })
-        tRenderer.renderDebuger.visible = true
+        var testDLight, testALight, testPLight;
+        testDLight = RedDirectionalLight(this, '#fff')
+        testDLight.x = 3
+        testDLight.y = 3
+        testDLight.z = 3
+        tScene3D.addLight(testDLight)
+        testDLight = RedDirectionalLight(this, '#00ff00')
+        testDLight.x = -3
+        testDLight.y = -3
+        testDLight.z = -3
+        testDLight.debug = false
+        // tScene3D.addLight(testDLight)
+        testPLight = RedPointLight(this, '#ff0000')
+        testPLight.x = -3
+        testPLight.y = -3
+        testPLight.z = -3
+        testPLight['radius'] = 4
+        testPLight['intensity'] = 1
+        testPLight.debug = false
+        tScene3D.addLight(testPLight)
+        var testPLight2 = RedPointLight(this, '#00ff00')
+        testPLight2.x = -3
+        testPLight2.y = -3
+        testPLight2.z = -3
+        testPLight2['radius'] = 2
+        testPLight2['intensity'] = 1
+        testPLight2.debug = false
+        tScene3D.addLight(testPLight2)
+        testDLight = RedDirectionalLight(this, '#fff')
+        testDLight.x = Math.random() * 10 - 5
+        // testDLight.y = Math.random() * 30 - 15
+        testDLight.z = Math.random() * 10 - 5
+        // tScene3D.addLight(testDLight)
+        // testALight = RedAmbientLight(this)
+        // tScene3D.addLight(testALight)
+        // tRenderer.renderDebuger.visible = true
+        var test = RedPostEffect_BrightnessContrast(this)
+        console.log(test)
         tRenderer.start(this, function (time) {
-            testDLight.x = Math.sin(time / 1000) * 2
-            testDLight.y = Math.cos(time / 1000) * 2
-            testDLight.z = Math.cos(time / 1000) * 2
-            testPLight.x = Math.sin(time / 1500) * 2
-            testPLight.y = Math.cos(time / 1500) * 2
-            testPLight.z = Math.cos(time / 1500) * 2
-            testPLight.debug = true
-            // testDLight.debug = true
-            //  tController.x = Math.sin(time / 1500) * 10
-            //  tController.y = Math.cos(time / 1500) * 10
-            // tController.z = Math.cos(time / 1500) * 15 + Math.sin(time / 1500) * 15
+            i = tScene3D.children.length
+            while (i--) {
+                testMesh = tScene3D.children[i]
+
+            }
+            testDLight.x = -Math.sin(time / 1500) * 20
+            // testLight.y = Math.cos(time / 1500) * 10
+            testDLight.z = -Math.cos(time / 1500) * 20
+            testPLight.x = -Math.sin(time / 1500) * 5
+            testPLight.y = 2
+            testPLight.z = -Math.cos(time / 1500) * 5
+            testPLight2.x = Math.sin(time / 1500) * 3.5
+            testPLight2.y = 0
+            testPLight2.z = Math.cos(time / 1500) * 3.5
         })
+        console.log(tScene3D)
     })
 </script>
 </body>

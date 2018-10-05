@@ -52,6 +52,7 @@ var RedScene;
 		 }
          :DOC*/
         this['shadowManager'] = RedShadowManager(redGL);
+        this['mouseManager'] = RedMouseEventManager(redGL)
         this['_lightInfo'] = {
             RedAmbientLight: null,
             RedDirectionalLight: [],

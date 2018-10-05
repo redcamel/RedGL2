@@ -238,6 +238,14 @@ var RedBaseObject3D;
             }
             */
         };
+        this['_mouseColorMaterial'] = null
+        this['_mouseColorID'] = [
+            parseInt(Math.random()*255),
+            parseInt(Math.random()*255),
+            parseInt(Math.random()*255),
+            255
+        ]
+
     };
     RedBaseObject3D.prototype = {
         /**DOC:

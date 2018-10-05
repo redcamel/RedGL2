@@ -183,6 +183,35 @@ var RedGL;
             window.addEventListener('resize', function () {
                 self.setSize(self['_width'], self['_height'])
             });
+            self['_mouseEventInfo'] = {
+                type: null,
+                x: 0,
+                y: 0
+            };
+            [RedGLDetect.BROWSER_INFO.move, RedGLDetect.BROWSER_INFO.down, RedGLDetect.BROWSER_INFO.up].forEach(function (v) {
+                self['_canvas'].addEventListener(v, function (e) {
+                    if (RedGLDetect.BROWSER_INFO.isMobile) {
+                        if(e.changedTouches[0]){
+                            self['_mouseEventInfo'] = {
+                                type: e.type,
+                                x: e.changedTouches[0].clientX * window.devicePixelRatio,
+                                y: e.changedTouches[0].clientY* window.devicePixelRatio
+                            }
+                        }
+                    }
+                    else {
+                        self['_mouseEventInfo'] = {
+                            type: e.type,
+                            x: e.x,
+                            y: e.y
+                        }
+                    }
+
+
+                })
+            });
+
+
             self.setSize(self['_width'], self['_height']); // 리사이즈를 초기에 한번 실행.
             setEmptyTextures(self, tGL); // 빈텍스쳐를 미리 체워둔다.
             callback ? callback.call(self, tGL ? true : false) : 0; // 콜백이 있으면 실행
