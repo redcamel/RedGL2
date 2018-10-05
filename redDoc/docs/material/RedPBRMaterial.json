@@ -17,24 +17,6 @@
   },
   {
     "code": "PROPERTY",
-    "title": "displacementFlowSpeedX",
-    "description": "기본값 : 0",
-    "return": "Number"
-  },
-  {
-    "code": "PROPERTY",
-    "title": "displacementFlowSpeedY",
-    "description": "기본값 : 0",
-    "return": "Number"
-  },
-  {
-    "code": "PROPERTY",
-    "title": "displacementPower",
-    "description": "기본값 : 0",
-    "return": "Number"
-  },
-  {
-    "code": "PROPERTY",
     "title": "emissiveTexture",
     "return": "RedBitmapTexture"
   },
