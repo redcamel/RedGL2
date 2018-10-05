@@ -190,6 +190,7 @@ var RedGL;
             };
             [RedGLDetect.BROWSER_INFO.move, RedGLDetect.BROWSER_INFO.down, RedGLDetect.BROWSER_INFO.up].forEach(function (v) {
                 self['_canvas'].addEventListener(v, function (e) {
+                    e.preventDefault()
                     if (RedGLDetect.BROWSER_INFO.isMobile) {
                         if(e.changedTouches[0]){
                             self['_mouseEventInfo'] = {
@@ -208,7 +209,7 @@ var RedGL;
                     }
 
 
-                })
+                },false)
             });
 
 
