@@ -147,6 +147,13 @@ var RedSystemShaderCode;
 
             },
             fragmentShareFunc: {
+                getFlatNormal : [
+                    'vec3 getFlatNormal(vec3 vertexPosition){',
+                    '   vec3 dx = dFdx(vVertexPosition.xyz);',
+                    '   vec3 dy = dFdy(vVertexPosition.xyz);',
+                    '   return normalize(cross(normalize(dx), normalize(dy)));',
+                    '}'
+                ].join('\n'),
                 getDirectionalLightColor:
                     [
                         'vec4 getDirectionalLightColor(' +

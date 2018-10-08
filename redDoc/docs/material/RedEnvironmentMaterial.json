@@ -51,6 +51,12 @@
   },
   {
     "code": "PROPERTY",
+    "title": "normalPower",
+    "description": "기본값 : 1",
+    "return": "number"
+  },
+  {
+    "code": "PROPERTY",
     "title": "normalTexture",
     "return": "RedBitmapTexture"
   },

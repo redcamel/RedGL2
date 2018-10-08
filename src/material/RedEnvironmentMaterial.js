@@ -3,7 +3,7 @@ var RedEnvironmentMaterial;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'RedEnvironmentMaterialProgram';
-    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'specularTexture', 'displacementTexture', 'emissiveTexture'];
+    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'specularTexture', 'displacementTexture', 'emissiveTexture','useFlatMode'];
     var checked;
     vSource = function () {
         /* @preserve
@@ -18,6 +18,7 @@ var RedEnvironmentMaterial;
             //#REDGL_DEFINE#displacementTexture# uniform float u_displacementPower;
             //#REDGL_DEFINE#displacementTexture# uniform float u_displacementFlowSpeedX;
             //#REDGL_DEFINE#displacementTexture# uniform float u_displacementFlowSpeedY;
+
 
             void main(void) {
                 gl_PointSize = uPointSize;
@@ -67,6 +68,9 @@ var RedEnvironmentMaterial;
         //#REDGL_DEFINE#fragmentShareFunc#getDirectionalLightColor#
         //#REDGL_DEFINE#fragmentShareFunc#getPointLightColor#
 
+        // flat노말
+        //#REDGL_DEFINE#fragmentShareFunc#getFlatNormal#
+
          //#REDGL_DEFINE#diffuseTexture# uniform sampler2D u_diffuseTexture;
          //#REDGL_DEFINE#normalTexture# uniform sampler2D u_normalTexture;
          //#REDGL_DEFINE#specularTexture# uniform sampler2D u_specularTexture;
@@ -78,7 +82,7 @@ var RedEnvironmentMaterial;
          uniform float u_specularPower;
          uniform float u_reflectionPower;
          uniform float u_alpha;
-
+         uniform bool u_useFlatMode;
 
 
          vec4 texelColor= vec4(0.0,0.0,0.0,0.0);
@@ -104,6 +108,10 @@ var RedEnvironmentMaterial;
              vec4 normalColor = vec4(0.0);
              //#REDGL_DEFINE#normalTexture# normalColor = texture2D(u_normalTexture, vTexcoord);
              //#REDGL_DEFINE#normalTexture# N = getPerturbNormal2Arb(vVertexPosition.xyz, N, normalColor, vTexcoord) ;
+
+
+             //#REDGL_DEFINE#useFlatMode# N = getFlatNormal(vVertexPosition.xyz);
+
 
              vec3 R = reflect( vVertexPosition.xyz - uCameraPosition, N);
              reflectionColor = textureCube(u_environmentTexture, R);
@@ -221,6 +229,7 @@ var RedEnvironmentMaterial;
         this['displacementPower'] = 0;
         this['displacementFlowSpeedX'] = 0;
         this['displacementFlowSpeedY'] = 0;
+        this['useFlatMode'] = false
         this['alpha'] = 1;
         /////////////////////////////////////////
         // 일반 프로퍼티
@@ -297,6 +306,15 @@ var RedEnvironmentMaterial;
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'emissiveTexture', 'sampler2D', samplerOption);
+    /**DOC:
+     {
+	     code : 'PROPERTY',
+		 title :`normalPower`,
+		 description : `기본값 : 1`,
+		 return : 'number'
+	 }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'useFlatMode', 'boolean', samplerOption);
     /**DOC:
      {
 	     code : 'PROPERTY',
