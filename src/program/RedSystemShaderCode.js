@@ -19,6 +19,7 @@ var RedSystemShaderCode;
         if (RedGLDetect.BROWSER_INFO.browser == 'ie' && RedGLDetect.BROWSER_INFO.browserVer == 11) maxJoint = 60
         else if(RedGLDetect.BROWSER_INFO.browser == 'iphone' || RedGLDetect.BROWSER_INFO.browser == 'ipad') maxJoint = 8
         else maxJoint = 64
+        //TODO 조인트 맥스 갯수 찾는 부분을 분기하거나 다른 방법으로 전달할 방법 생각해야함
         RedSystemShaderCode = {
             /**DOC:
              {
@@ -40,6 +41,7 @@ var RedSystemShaderCode;
                 'varying vec4 vVertexPosition',
                 'varying vec3 vVertexNormal',
                 'varying vec4 vVertexTangent',
+                'varying vec4 vVertexColor',
                 'attribute float aPointSize',
                 'uniform float uPointSize',
                 'attribute vec2 aTexcoord',
@@ -82,6 +84,7 @@ var RedSystemShaderCode;
                 'varying vec4 vVertexPosition',
                 'varying vec3 vVertexNormal',
                 'varying vec4 vVertexTangent',
+                'varying vec4 vVertexColor',
                 'varying vec2 vTexcoord',
                 'varying vec2 vTexcoord1',
                 'varying float vTime',

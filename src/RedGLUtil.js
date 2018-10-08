@@ -286,6 +286,98 @@ var RedGLUtil;
             m[15] = 1;
             return m;
         },
+        quaternionToRotation: function (q, order) {
+            var mat = []
+            var x = q[0];
+            var y = q[1];
+            var z = q[2];
+            var w = q[3];
+            var x2 = x + x, y2 = y + y, z2 = z + z;
+            var xx = x * x2, xy = x * y2, xz = x * z2;
+            var yy = y * y2, yz = y * z2, zz = z * z2;
+            var wx = w * x2, wy = w * y2, wz = w * z2;
+            mat[0] = 1 - (yy + zz);
+            mat[4] = xy - wz;
+            mat[8] = xz + wy;
+            mat[1] = xy + wz;
+            mat[5] = 1 - (xx + zz);
+            mat[9] = yz - wx;
+            mat[2] = xz - wy;
+            mat[6] = yz + wx;
+            mat[10] = 1 - (xx + yy);
+            // last column
+            mat[3] = 0;
+            mat[7] = 0;
+            mat[11] = 0;
+            // bottom row
+            mat[12] = 0;
+            mat[13] = 0;
+            mat[14] = 0;
+            mat[15] = 1;
+
+            var dest = [0, 0, 0];
+            order = order || 'XYZ'
+            // Assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)
+            var m11 = mat[0], m12 = mat[4], m13 = mat[8];
+            var m21 = mat[1], m22 = mat[5], m23 = mat[9];
+            var m31 = mat[2], m32 = mat[6], m33 = mat[10];
+            if (order === 'XYZ') {
+                dest[1] = Math.asin(RedGLUtil.clamp(m13, -1, 1));
+                if (Math.abs(m13) < 0.99999) {
+                    dest[0] = Math.atan2(-m23, m33);
+                    dest[2] = Math.atan2(-m12, m11);
+                } else {
+                    dest[0] = Math.atan2(m32, m22);
+                    dest[2] = 0;
+                }
+            } else if (order === 'YXZ') {
+                dest[0] = Math.asin(-RedGLUtil.clamp(m23, -1, 1));
+                if (Math.abs(m23) < 0.99999) {
+                    dest[1] = Math.atan2(m13, m33);
+                    dest[2] = Math.atan2(m21, m22);
+                } else {
+                    dest[1] = Math.atan2(-m31, m11);
+                    dest[2] = 0;
+                }
+            } else if (order === 'ZXY') {
+                dest[0] = Math.asin(RedGLUtil.clamp(m32, -1, 1));
+                if (Math.abs(m32) < 0.99999) {
+                    dest[1] = Math.atan2(-m31, m33);
+                    dest[2] = Math.atan2(-m12, m22);
+                } else {
+                    dest[1] = 0;
+                    dest[2] = Math.atan2(m21, m11);
+                }
+            } else if (order === 'ZYX') {
+                dest[1] = Math.asin(-RedGLUtil.clamp(m31, -1, 1));
+                if (Math.abs(m31) < 0.99999) {
+                    dest[0] = Math.atan2(m32, m33);
+                    dest[2] = Math.atan2(m21, m11);
+                } else {
+                    dest[0] = 0;
+                    dest[2] = Math.atan2(-m12, m22);
+                }
+            } else if (order === 'YZX') {
+                dest[2] = Math.asin(RedGLUtil.clamp(m21, -1, 1));
+                if (Math.abs(m21) < 0.99999) {
+                    dest[0] = Math.atan2(-m23, m22);
+                    dest[1] = Math.atan2(-m31, m11);
+                } else {
+                    dest[0] = 0;
+                    dest[1] = Math.atan2(m13, m33);
+                }
+            } else if (order === 'XZY') {
+                dest[2] = Math.asin(-RedGLUtil.clamp(m12, -1, 1));
+                if (Math.abs(m12) < 0.99999) {
+                    dest[0] = Math.atan2(m32, m22);
+                    dest[1] = Math.atan2(m13, m11);
+                } else {
+                    dest[0] = Math.atan2(-m23, m33);
+                    dest[1] = 0;
+                }
+            }
+            return dest
+        },
         mat4ToEuler: function (mat, dest, order) {
             dest = dest || [0, 0, 0];
             order = order || 'XYZ'

@@ -24,94 +24,94 @@
 
 <body>
 <script id='testSource'>
-	var testUI;
-	var canvas;
-	var assetPath = '../../asset/'
-	canvas = document.createElement('canvas');
-	document.body.appendChild(canvas);
-	RedGL(canvas, function (v) {
-		if ( v ) {
-			console.log('초기화 성공!')
-			var tWorld, tScene, tCamera, tRenderer;
-			// 월드 생성
-			this['world'] = tWorld = RedWorld();
-			// 씬 생성
-			tScene = RedScene(this);
-			// 카메라 생성
-			tCamera = RedCamera();
-			tCamera.x = tCamera.y = tCamera.z = 10
-			tCamera.lookAt(0, 0, 0)
-			// 렌더러 생성
-			tRenderer = RedRenderer();
-			// 뷰생성 및 적용
-			tWorld.addView(RedView('test', this, tScene, tCamera));
-			// 그리드 설정
-			tScene['grid'] = RedGrid(this)
-			///////////////////////////////////////////////////////////////////////////////////////////////////
-			// Buffer 설정
-			var interleaveData, indexData;
-			var tInterleaveBuffer, tIndexBuffer
-			interleaveData = new Float32Array([
-				0.0, 0.5, 0.0, 0.0, 0.5,
-				-0.5, -0.5, 0.0, 0.5, 0.5,
-				0.5, -0.5, 0.0, 0.5, 0.0
-			]);
-			indexData = new Uint16Array([0, 1, 2])
-			// 인터리브 버퍼생성
-			tInterleaveBuffer = RedBuffer(
-				this, // RedGL Instance
-				'tInterleaveBuffer', // key
-				RedBuffer.ARRAY_BUFFER, // bufferType
-				interleaveData, // data
-				[
-					RedInterleaveInfo('aVertexPosition', 3),
-					RedInterleaveInfo('aTexcoord', 2)
-				]
-			)
-			// 인덱스 버퍼생성
-			tIndexBuffer = RedBuffer(
-				this, // RedGL Instance
-				'tIndexBuffer', // key
-				RedBuffer.ELEMENT_ARRAY_BUFFER, // bufferType
-				indexData  // data
-			)
-			console.log('인터리브버퍼', tInterleaveBuffer)
-			console.log('인덱스버퍼', tIndexBuffer)
-			var testGeometry;
-			testGeometry = RedGeometry(tInterleaveBuffer, tIndexBuffer)
-			console.log('지오메트리', testGeometry)
-			var tMesh;
-			var i = 100
-			while ( i-- ) {
-				tMesh = RedMesh(this, testGeometry, RedColorMaterial(this));
-				tMesh['useCullFace'] = false;
-				tMesh.x = Math.random() * 10 - 5
-				tMesh.y = Math.random() * 10 - 5
-				tMesh.z = Math.random() * 10 - 5
-				tScene.addChild(tMesh);
-			}
-			///////////////////////////////////////////////////////////////////////////////////////////////////
-			// 렌더시작
-			tRenderer.start(this, function (time) {
-				// 버퍼정보를 갱신해보자
-				interleaveData[0] = Math.sin(time / 1000) * 1
-				interleaveData[2] = Math.cos(time / 1000) * 2
-				// 버퍼정보 업로드
-				tInterleaveBuffer.upload(interleaveData)
-			})
-			// 렌더 디버거 활성화
-			tRenderer['renderDebuger']['visible'] = true
-			testUI(this, tCamera, tScene)
-		} else {
-			console.log('초기화 실패!')
-		}
-	})
-	testUI = function (redGL, tCamera, tScene) {
-		var gui = new baseTestUI(redGL)
-		gui.initRedGL()
-		gui.initCamera(tCamera)
-		gui.initScene(tScene, false, assetPath)
-	}
+    var testUI;
+    var canvas;
+    var assetPath = '../../asset/'
+    canvas = document.createElement('canvas');
+    document.body.appendChild(canvas);
+    RedGL(canvas, function (v) {
+        if (v) {
+            console.log('초기화 성공!')
+            var tWorld, tScene, tCamera, tRenderer;
+            // 월드 생성
+            this['world'] = tWorld = RedWorld();
+            // 씬 생성
+            tScene = RedScene(this);
+            // 카메라 생성
+            tCamera = RedCamera();
+            tCamera.x = tCamera.y = tCamera.z = 10
+            tCamera.lookAt(0, 0, 0)
+            // 렌더러 생성
+            tRenderer = RedRenderer();
+            // 뷰생성 및 적용
+            tWorld.addView(RedView('test', this, tScene, tCamera));
+            // 그리드 설정
+            tScene['grid'] = RedGrid(this)
+            ///////////////////////////////////////////////////////////////////////////////////////////////////
+            // Buffer 설정
+            var interleaveData, indexData;
+            var tInterleaveBuffer, tIndexBuffer
+            interleaveData = new Float32Array([
+                0.0, 0.5, 0.0, 0.0, 0.5,
+                -0.5, -0.5, 0.0, 0.5, 0.5,
+                0.5, -0.5, 0.0, 0.5, 0.0
+            ]);
+            indexData = new Uint16Array([0, 1, 2])
+            // 인터리브 버퍼생성
+            tInterleaveBuffer = RedBuffer(
+                this, // RedGL Instance
+                'tInterleaveBuffer', // key
+                RedBuffer.ARRAY_BUFFER, // bufferType
+                interleaveData, // data
+                [
+                    RedInterleaveInfo('aVertexPosition', 3),
+                    RedInterleaveInfo('aTexcoord', 2)
+                ]
+            )
+            // 인덱스 버퍼생성
+            tIndexBuffer = RedBuffer(
+                this, // RedGL Instance
+                'tIndexBuffer', // key
+                RedBuffer.ELEMENT_ARRAY_BUFFER, // bufferType
+                indexData  // data
+            )
+            console.log('인터리브버퍼', tInterleaveBuffer)
+            console.log('인덱스버퍼', tIndexBuffer)
+            var testGeometry;
+            testGeometry = RedGeometry(tInterleaveBuffer, tIndexBuffer)
+            console.log('지오메트리', testGeometry)
+            var tMesh;
+            var i = 100
+            while (i--) {
+                tMesh = RedMesh(this, testGeometry, RedColorMaterial(this));
+                tMesh['useCullFace'] = false;
+                tMesh.x = Math.random() * 10 - 5
+                tMesh.y = Math.random() * 10 - 5
+                tMesh.z = Math.random() * 10 - 5
+                tScene.addChild(tMesh);
+            }
+            ///////////////////////////////////////////////////////////////////////////////////////////////////
+            // 렌더시작
+            tRenderer.start(this, function (time) {
+                // 버퍼정보를 갱신해보자
+                interleaveData[0] = Math.sin(time / 1000) * 1
+                interleaveData[2] = Math.cos(time / 1000) * 2
+                // 버퍼정보 업로드
+                tInterleaveBuffer.upload(interleaveData)
+            })
+            // 렌더 디버거 활성화
+            tRenderer['renderDebuger']['visible'] = true
+            testUI(this, tCamera, tScene)
+        } else {
+            console.log('초기화 실패!')
+        }
+    })
+    testUI = function (redGL, tCamera, tScene) {
+        var gui = new baseTestUI(redGL)
+        gui.initRedGL()
+        gui.initCamera(tCamera)
+        gui.initScene(tScene, false, assetPath)
+    }
 </script>
 </body>
 

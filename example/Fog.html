@@ -24,107 +24,107 @@
 
 <body>
 <script id='testSource'>
-	var testUI;
-	var canvas;
-	var assetPath = '../../asset/'
-	canvas = document.createElement('canvas');
-	document.body.appendChild(canvas);
-	RedGL(canvas, function (v) {
-		if ( v ) {
-			console.log('초기화 성공!')
-			var tWorld, tScene, tController, tRenderer;
-			var self;
-			self = this;
-			// 월드 생성
-			this['world'] = tWorld = RedWorld();
-			// 씬 생성
-			tScene = RedScene(this);
-			tScene['useFog'] = true
-			// 카메라 생성
-			tController = RedObitController(this);
-			tController.distance = 20
-			tController.tilt = -30
-			tController.pan = 45
-			// 렌더러 생성
-			tRenderer = RedRenderer();
-			// 뷰생성 및 적용
-			tWorld.addView(RedView('test', this, tScene, tController));
-			// 그리드 설정
-			tScene['grid'] = RedGrid(this)
-			// 라이트 설정
-			var testDLight, testALight, testPLight;
-			testDLight = RedDirectionalLight(this, '#fff', 1)
-			testDLight.x = 3
-			testDLight.y = 2
-			testDLight.z = 3
-			testDLight.debug = true
-			tScene.addLight(testDLight)
-			testDLight = RedDirectionalLight(this, '#ff0000', 1)
-			testDLight.x = -3
-			testDLight.y = 2
-			testDLight.z = -3
-			testDLight.debug = true
-			tScene.addLight(testDLight)
-			testPLight = RedPointLight(this, '#00ff00', 0.5)
-			testPLight.x = -3
-			testPLight.y = -3
-			testPLight.z = -3
-			testPLight['radius'] = 2
-			testPLight['intensity'] = 1
-			testPLight.debug = true
-			tScene.addLight(testPLight)
-			tScene.skyBox =
-				RedSkyBox(this, [
-					'../asset/cubemap/SwedishRoyalCastle/px.jpg',
-					'../asset/cubemap/SwedishRoyalCastle/nx.jpg',
-					'../asset/cubemap/SwedishRoyalCastle/py.jpg',
-					'../asset/cubemap/SwedishRoyalCastle/ny.jpg',
-					'../asset/cubemap/SwedishRoyalCastle/pz.jpg',
-					'../asset/cubemap/SwedishRoyalCastle/nz.jpg'
-				]);
-			// OBJ 로딩
-			RedOBJLoader(this, '../asset/obj/', 'female.obj', function (v) {
-				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.025
-				tScene.addChild(v['resultMesh'])
-				var i = 10
-				var max = 10
-				var j
-				var tMesh;
-				var tGeo = RedBox(self)
-				var tMat = RedColorPhongMaterial(self)
-				while ( i-- ) {
-					j = 10
-					while ( j-- ) {
-						tMesh = RedMesh(self, tGeo, tMat)
-						tMesh.x = Math.sin(Math.PI * 2 / (max - 1) * i) * j * 2
-						tMesh.z = Math.cos(Math.PI * 2 / (max - 1) * i) * j * 2
-						tScene.addChild(tMesh)
-					}
-				}
-			})
-			// 렌더시작
-			tRenderer.start(this, function (time) {
-				testDLight.x = Math.sin(time / 1000) * 2
-				testDLight.y = Math.cos(time / 1000) * 2
-				testDLight.z = Math.cos(time / 1000) * 2
-				testPLight.x = Math.sin(time / 1500) * 1
-				testPLight.y = Math.cos(time / 1500) * 1 + 1
-				testPLight.z = Math.cos(time / 1500) * 1
-			})
-			// 렌더 디버거 활성화
-			tRenderer['renderDebuger']['visible'] = true
-			//
-			testUI(this, tScene)
-		} else {
-			console.log('초기화 실패!')
-		}
-	})
-	testUI = function (redGL, tScene) {
-		console.log('test')
-		var gui = new baseTestUI(redGL)
-		gui.initRedGL()
-		gui.initFog(tScene).open()
-	}
+    var testUI;
+    var canvas;
+    var assetPath = '../../asset/'
+    canvas = document.createElement('canvas');
+    document.body.appendChild(canvas);
+    RedGL(canvas, function (v) {
+        if (v) {
+            console.log('초기화 성공!')
+            var tWorld, tScene, tController, tRenderer;
+            var self;
+            self = this;
+            // 월드 생성
+            this['world'] = tWorld = RedWorld();
+            // 씬 생성
+            tScene = RedScene(this);
+            tScene['useFog'] = true
+            // 카메라 생성
+            tController = RedObitController(this);
+            tController.distance = 20
+            tController.tilt = -30
+            tController.pan = 45
+            // 렌더러 생성
+            tRenderer = RedRenderer();
+            // 뷰생성 및 적용
+            tWorld.addView(RedView('test', this, tScene, tController));
+            // 그리드 설정
+            tScene['grid'] = RedGrid(this)
+            // 라이트 설정
+            var testDLight, testALight, testPLight;
+            testDLight = RedDirectionalLight(this, '#fff', 1)
+            testDLight.x = 3
+            testDLight.y = 2
+            testDLight.z = 3
+            testDLight.debug = true
+            tScene.addLight(testDLight)
+            testDLight = RedDirectionalLight(this, '#ff0000', 1)
+            testDLight.x = -3
+            testDLight.y = 2
+            testDLight.z = -3
+            testDLight.debug = true
+            tScene.addLight(testDLight)
+            testPLight = RedPointLight(this, '#00ff00', 0.5)
+            testPLight.x = -3
+            testPLight.y = -3
+            testPLight.z = -3
+            testPLight['radius'] = 2
+            testPLight['intensity'] = 1
+            testPLight.debug = true
+            tScene.addLight(testPLight)
+            tScene.skyBox =
+                RedSkyBox(this, [
+                    '../asset/cubemap/SwedishRoyalCastle/px.jpg',
+                    '../asset/cubemap/SwedishRoyalCastle/nx.jpg',
+                    '../asset/cubemap/SwedishRoyalCastle/py.jpg',
+                    '../asset/cubemap/SwedishRoyalCastle/ny.jpg',
+                    '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
+                    '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
+                ]);
+            // OBJ 로딩
+            RedOBJLoader(this, '../asset/obj/', 'female.obj', function (v) {
+                v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.025
+                tScene.addChild(v['resultMesh'])
+                var i = 10
+                var max = 10
+                var j
+                var tMesh;
+                var tGeo = RedBox(self)
+                var tMat = RedColorPhongMaterial(self)
+                while (i--) {
+                    j = 10
+                    while (j--) {
+                        tMesh = RedMesh(self, tGeo, tMat)
+                        tMesh.x = Math.sin(Math.PI * 2 / (max - 1) * i) * j * 2
+                        tMesh.z = Math.cos(Math.PI * 2 / (max - 1) * i) * j * 2
+                        tScene.addChild(tMesh)
+                    }
+                }
+            })
+            // 렌더시작
+            tRenderer.start(this, function (time) {
+                testDLight.x = Math.sin(time / 1000) * 2
+                testDLight.y = Math.cos(time / 1000) * 2
+                testDLight.z = Math.cos(time / 1000) * 2
+                testPLight.x = Math.sin(time / 1500) * 1
+                testPLight.y = Math.cos(time / 1500) * 1 + 1
+                testPLight.z = Math.cos(time / 1500) * 1
+            })
+            // 렌더 디버거 활성화
+            tRenderer['renderDebuger']['visible'] = true
+            //
+            testUI(this, tScene)
+        } else {
+            console.log('초기화 실패!')
+        }
+    })
+    testUI = function (redGL, tScene) {
+        console.log('test')
+        var gui = new baseTestUI(redGL)
+        gui.initRedGL()
+        gui.initFog(tScene).open()
+    }
 </script>
 </body>
 

@@ -23,63 +23,63 @@
 </head>
 <body>
 <script id='testSource'>
-	var testUI;
-	var canvas;
-	var assetPath = '../../asset/'
-	canvas = document.createElement('canvas');
-	document.body.appendChild(canvas);
-	RedGL(canvas, function (v) {
-		if ( v ) {
-			console.log('초기화 성공!')
-			var tWorld, tScene, tCamera, tRenderer;
-			// 월드 생성
-			this['world'] = tWorld = RedWorld();
-			// 씬 생성
-			tScene = RedScene(this);
-			// 카메라 생성
-			tCamera = RedCamera();
-			tCamera.z = 20
-			// 렌더러 생성
-			tRenderer = RedRenderer();
-			// 뷰생성 및 적용
-			tWorld.addView(RedView('test', this, tScene, tCamera));
-			// 그리드 설정
-			tScene['grid'] = RedGrid(this)
-			// Box 설정
-			var tMesh;
-			var i = 100
-			while ( i-- ) {
-				// 3D 테스트용
-				tMesh = RedMesh(this, RedBox(this), RedColorMaterial(this))
-				tMesh.x = Math.random() * 50 - 25
-				tMesh.y = Math.random() * 50 - 25
-				tMesh.z = Math.random() * 50 - 25
-				tScene.addChild(tMesh)
-				// 2D 테스트용
-				tMesh = RedMesh(this, RedBox(this), RedColorMaterial(this, '#00ff00'))
-				tMesh.x = Math.random() * 1280 + 10
-				tMesh.y = Math.random() * 600
-				tMesh.scaleX = tMesh.scaleY = Math.random() * 10 * 10
-				tScene.addChild(tMesh)
-			}
-			// 렌더시작
-			tRenderer.start(this, function (time) {
-				tCamera.lookAt(0, 0, 0)
-			})
-			// 렌더 디버거 활성화
-			tRenderer['renderDebuger']['visible'] = true
-			//
-			testUI(this, tCamera)
-		} else {
-			console.log('초기화 실패!')
-		}
-	})
-	testUI = function (redGL, tCamera) {
-		console.log('test')
-		var gui = new baseTestUI(redGL)
-		gui.initRedGL()
-		gui.initCamera(tCamera).open()
-	}
+    var testUI;
+    var canvas;
+    var assetPath = '../../asset/'
+    canvas = document.createElement('canvas');
+    document.body.appendChild(canvas);
+    RedGL(canvas, function (v) {
+        if (v) {
+            console.log('초기화 성공!')
+            var tWorld, tScene, tCamera, tRenderer;
+            // 월드 생성
+            this['world'] = tWorld = RedWorld();
+            // 씬 생성
+            tScene = RedScene(this);
+            // 카메라 생성
+            tCamera = RedCamera();
+            tCamera.z = 20
+            // 렌더러 생성
+            tRenderer = RedRenderer();
+            // 뷰생성 및 적용
+            tWorld.addView(RedView('test', this, tScene, tCamera));
+            // 그리드 설정
+            tScene['grid'] = RedGrid(this)
+            // Box 설정
+            var tMesh;
+            var i = 100
+            while (i--) {
+                // 3D 테스트용
+                tMesh = RedMesh(this, RedBox(this), RedColorMaterial(this))
+                tMesh.x = Math.random() * 50 - 25
+                tMesh.y = Math.random() * 50 - 25
+                tMesh.z = Math.random() * 50 - 25
+                tScene.addChild(tMesh)
+                // 2D 테스트용
+                tMesh = RedMesh(this, RedBox(this), RedColorMaterial(this, '#00ff00'))
+                tMesh.x = Math.random() * 1280 + 10
+                tMesh.y = Math.random() * 600
+                tMesh.scaleX = tMesh.scaleY = Math.random() * 10 * 10
+                tScene.addChild(tMesh)
+            }
+            // 렌더시작
+            tRenderer.start(this, function (time) {
+                tCamera.lookAt(0, 0, 0)
+            })
+            // 렌더 디버거 활성화
+            tRenderer['renderDebuger']['visible'] = true
+            //
+            testUI(this, tCamera)
+        } else {
+            console.log('초기화 실패!')
+        }
+    })
+    testUI = function (redGL, tCamera) {
+        console.log('test')
+        var gui = new baseTestUI(redGL)
+        gui.initRedGL()
+        gui.initCamera(tCamera).open()
+    }
 </script>
 </body>
 
