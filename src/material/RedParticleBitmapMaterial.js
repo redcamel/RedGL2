@@ -9,11 +9,10 @@ var RedParticleBitmapMaterial;
     var checked;
     vSource = function () {
         /* @preserve
-         varying vec4 vColor;
          void main(void) {
             gl_Position = uPMatrix * uCameraMatrix * vec4(aVertexPosition, 1.0);
             gl_PointSize = aPointSize/gl_Position.w * uResolution.y;
-            vColor = aVertexColor;
+            vVertexColor = aVertexColor;
          }
          */
     };
@@ -28,12 +27,11 @@ var RedParticleBitmapMaterial;
          uniform sampler2D u_diffuseTexture;
          uniform float u_cutOff;
          uniform float u_alpha;
-         varying vec4 vColor;
          void main(void) {
              vec4 finalColor = texture2D(u_diffuseTexture, vec2(gl_PointCoord.x, - gl_PointCoord.y));
              finalColor.rgb *= finalColor.a;
-             finalColor.rgb += vColor.rgb * vColor.a;
-             finalColor.a *= vColor.a;
+             finalColor.rgb += vVertexColor.rgb * vVertexColor.a;
+             finalColor.a *= vVertexColor.a;
              finalColor.a *= u_alpha;
              if(finalColor.a < u_cutOff) discard;
 

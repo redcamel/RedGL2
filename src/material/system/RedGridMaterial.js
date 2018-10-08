@@ -6,9 +6,8 @@ var RedGridMaterial;
     var checked;
     vSource = function () {
         /* @preserve
-         varying vec4 vColor;
          void main(void) {
-             vColor = aVertexColor;
+             vVertexColor = aVertexColor;
              gl_Position = uPMatrix * uCameraMatrix* uMMatrix * vec4(aVertexPosition, 1.0);
          }
          */
@@ -20,10 +19,9 @@ var RedGridMaterial;
         //#REDGL_DEFINE#fragmentShareFunc#fogFactor#
         //#REDGL_DEFINE#fragmentShareFunc#fog#
 
-         varying vec4 vColor;
          void main(void) {
-             vec4 finalColor = vColor;
-             finalColor.rgb *= vColor.a;
+             vec4 finalColor = vVertexColor;
+             finalColor.rgb *= vVertexColor.a;
              //#REDGL_DEFINE#fog#false# gl_FragColor = finalColor;
              //#REDGL_DEFINE#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
          }

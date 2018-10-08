@@ -6,9 +6,8 @@ var RedPointColorMaterial;
     var checked;
     vSource = function () {
         /* @preserve
-         varying vec4 vColor;
          void main(void) {
-             vColor = aVertexColor;
+             vVertexColor = aVertexColor;
              gl_Position = uPMatrix * uCameraMatrix* uMMatrix * vec4(aVertexPosition, 1.0);
              gl_PointSize = aPointSize/gl_Position.w * uResolution.y;
          }
@@ -22,9 +21,8 @@ var RedPointColorMaterial;
         //#REDGL_DEFINE#fragmentShareFunc#fog#
 
          uniform float u_alpha;
-         varying vec4 vColor;
          void main(void) {
-             vec4 finalColor = vColor;
+             vec4 finalColor = vVertexColor;
              finalColor.a *= u_alpha;
              //#REDGL_DEFINE#fog#false# gl_FragColor = finalColor;
              //#REDGL_DEFINE#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);

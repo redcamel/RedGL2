@@ -30,7 +30,7 @@ function () {
         addObject: function (num) {
             var t0;
             while (num--) {
-                tScene.addChild(t0 = RedMesh(this, RedSphere(this), RedColorMaterial(this)))
+                tScene.addChild(t0 = RedMesh(this, RedSphere(this, 1, 16, 16, 16), RedColorMaterial(this)))
                 t0.scaleX = t0.scaleY = t0.scaleZ = 1
                 t0.x = Math.random() * 100 - 50
                 t0.y = Math.random() * 100 - 50

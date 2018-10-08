@@ -24,188 +24,188 @@
 
 <body>
 <script id='testSource'>
-	var testUI;
-	var canvas;
-	var assetPath = '../../asset/'
-	canvas = document.createElement('canvas');
-	document.body.appendChild(canvas);
-	RedGL(canvas, function (v) {
-		if ( v ) {
-			console.log('초기화 성공!')
-			var tWorld, tScene, tCamera, tRenderer;
-			// 월드 생성
-			this['world'] = tWorld = RedWorld();
-			// 씬 생성
-			tScene = RedScene(this);
-			// 카메라 생성
-			tCamera = RedObitController(this);
-			tCamera.pan = 45
-			tCamera.tilt = -45
-			tCamera.distance = 5
-			// 렌더러 생성
-			tRenderer = RedRenderer();
-			// 뷰생성 및 적용
-			tWorld.addView(RedView('test', this, tScene, tCamera));
-			// 그리드 설정
-			tScene['grid'] = RedGrid(this)
-			// 라이트 설정
-			var tLight = RedDirectionalLight(this)
-			tScene.addLight(tLight)
-			tLight.x = 10
-			tLight.y = 5
-			tLight.z = 5
+    var testUI;
+    var canvas;
+    var assetPath = '../../asset/'
+    canvas = document.createElement('canvas');
+    document.body.appendChild(canvas);
+    RedGL(canvas, function (v) {
+        if (v) {
+            console.log('초기화 성공!')
+            var tWorld, tScene, tCamera, tRenderer;
+            // 월드 생성
+            this['world'] = tWorld = RedWorld();
+            // 씬 생성
+            tScene = RedScene(this);
+            // 카메라 생성
+            tCamera = RedObitController(this);
+            tCamera.pan = 45
+            tCamera.tilt = -45
+            tCamera.distance = 5
+            // 렌더러 생성
+            tRenderer = RedRenderer();
+            // 뷰생성 및 적용
+            tWorld.addView(RedView('test', this, tScene, tCamera));
+            // 그리드 설정
+            tScene['grid'] = RedGrid(this)
+            // 라이트 설정
+            var tLight = RedDirectionalLight(this)
+            tScene.addLight(tLight)
+            tLight.x = 10
+            tLight.y = 5
+            tLight.z = 5
             var tLight = RedDirectionalLight(this)
             tScene.addLight(tLight)
             tLight.x = -10
             tLight.y = 5
             tLight.z = -5
-			// Mesh 설정
-			var tMesh;
-			var tEnvironmentTexture = RedBitmapCubeTexture(this, [
-				assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
-				assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
-				assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
-				assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
-				assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
-				assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
-			])
-			var tMaterial = RedEnvironmentMaterial(this, RedBitmapTexture(this, assetPath + 'draft1.png'), tEnvironmentTexture, RedBitmapTexture(this, assetPath + 'normalTest.jpg'))
-			tMesh = RedMesh(this, RedBox(this, 1, 1, 1, 32, 32, 32), tMaterial)
-			tMesh.x = -1.5
-			tScene.addChild(tMesh)
-			tMesh = RedMesh(this, RedBox(this, 1, 1, 1, 32, 32, 32), tMaterial)
-			tMesh.x = 0
-			tScene.addChild(tMesh)
-			tMesh = RedMesh(this, RedBox(this, 1, 1, 1, 32, 32, 32), tMaterial)
-			tMesh.x = 1.5
-			tScene.addChild(tMesh)
-			tMesh = RedMesh(this, RedSphere(this, 0.5, 32, 32, 32), tMaterial)
-			tMesh.x = -1.5
-			tMesh.y = 1.5
-			tScene.addChild(tMesh)
-			tMesh = RedMesh(this, RedSphere(this, 0.5, 32, 32, 32), tMaterial)
-			tMesh.x = 0
-			tMesh.y = 1.5
-			tScene.addChild(tMesh)
-			tMesh = RedMesh(this, RedSphere(this, 0.5, 32, 32, 32), tMaterial)
-			tMesh.x = 1.5
-			tMesh.y = 1.5
-			tScene.addChild(tMesh)
-			tMesh = RedMesh(this, RedPlane(this, 1, 1, 32, 32), tMaterial)
-			tMesh['useCullFace'] = false
-			tMesh.x = -1.5
-			tMesh.y = -1.5
-			tScene.addChild(tMesh)
-			tMesh = RedMesh(this, RedPlane(this, 1, 1, 32, 32), tMaterial)
-			tMesh['useCullFace'] = false
-			tMesh.x = 0
-			tMesh.y = -1.5
-			tScene.addChild(tMesh)
-			tMesh = RedMesh(this, RedPlane(this, 1, 1, 32, 32), tMaterial)
-			tMesh['useCullFace'] = false
-			tMesh.x = 1.5
-			tMesh.y = -1.5
-			tScene.addChild(tMesh)
-			// 렌더시작
-			tRenderer.start(this, function (time) {
-				var i = tScene.children.length
-				var t0
-				while ( i-- ) {
-					t0 = tScene.children[i]
-					t0.rotationX += 1
-					t0.rotationY += 1
-					t0.rotationZ += 1
-				}
-			})
-			// 렌더 디버거 활성화
-			tRenderer['renderDebuger']['visible'] = true
-			testUI(this, tCamera, tScene)
-		} else {
-			console.log('초기화 실패!')
-		}
-	})
-	testUI = function (redGL, tCamera, tScene) {
-		var gui = new baseTestUI(redGL)
-		gui.initRedGL()
-		gui.initScene(tScene, false, assetPath)
-		var folder = gui['gui'].addFolder('RedEnvironmentMaterial')
-		var testRedEnvironmentMaterial = {
-			diffuseTexture: assetPath + 'draft1.png',
-			normalTexture: assetPath + 'normalTest.jpg',
-			specularTexture: 'none',
-			displacementTexture: 'none',
-			alpha: 1,
-			reflectionPower: 1,
-			shininess: 16,
-			normalPower: 1,
-			specularPower: 1,
-			displacementPower: 0,
-			displacementFlowSpeedX: 0,
-			displacementFlowSpeedY: 0
-		}
-		folder.add(testRedEnvironmentMaterial, 'alpha', 0, 1).onChange(function (v) {
-			tScene.children.forEach(function (v2) {
-				v2.material.alpha = v
-			})
-		})
-		folder.add(testRedEnvironmentMaterial, 'reflectionPower', 0, 1).onChange(function (v) {
-			tScene.children.forEach(function (v2) {
-				v2.material.reflectionPower = v
-			})
-		})
-		folder.add(testRedEnvironmentMaterial, 'normalPower', 0, 3).onChange(function (v) {
-			tScene.children.forEach(function (v2) {
-				v2.material.normalPower = v
-			})
-		})
-		folder.add(testRedEnvironmentMaterial, 'shininess', 1, 128).onChange(function (v) {
-			tScene.children.forEach(function (v2) {
-				v2.material.shininess = v
-			})
-		})
-		folder.add(testRedEnvironmentMaterial, 'specularPower', 0.1, 10).onChange(function (v) {
-			tScene.children.forEach(function (v2) {
-				v2.material.specularPower = v
-			})
-		})
-		folder.add(testRedEnvironmentMaterial, 'diffuseTexture', ['none', assetPath + 'draft1.png', assetPath + 'draft2.png', assetPath + 'draft3.png'], 0).onChange(function (v) {
-			tScene.children.forEach(function (v2) {
-				v2.material.diffuseTexture = v == 'none' ? null : RedBitmapTexture(redGL, v)
-			})
-		})
-		folder.add(testRedEnvironmentMaterial, 'normalTexture', ['none', assetPath + 'normalTest.jpg']).onChange(function (v) {
-			tScene.children.forEach(function (v2) {
-				v2.material.normalTexture = v == 'none' ? null : RedBitmapTexture(redGL, v)
-			})
-		})
-		folder.add(testRedEnvironmentMaterial, 'specularTexture', ['none', assetPath + 'specular.png']).onChange(function (v) {
-			tScene.children.forEach(function (v2) {
-				v2.material.specularTexture = v == 'none' ? null : RedBitmapTexture(redGL, v)
-			})
-		})
-		folder.add(testRedEnvironmentMaterial, 'displacementTexture', ['none', assetPath + 'displacementTest.jpg']).onChange(function (v) {
-			tScene.children.forEach(function (v2) {
-				v2.material.displacementTexture = v == 'none' ? null : RedBitmapTexture(redGL, v)
-			})
-		})
-		folder.add(testRedEnvironmentMaterial, 'displacementPower', 0, 2).onChange(function (v) {
-			tScene.children.forEach(function (v2) {
-				v2.material.displacementPower = v
-			})
-		})
-		folder.add(testRedEnvironmentMaterial, 'displacementFlowSpeedX', 0, 0.3, 0.001).onChange(function (v) {
-			tScene.children.forEach(function (v2) {
-				v2.material.displacementFlowSpeedX = v
-			})
-		})
-		folder.add(testRedEnvironmentMaterial, 'displacementFlowSpeedY', 0, 0.3, 0.001).onChange(function (v) {
-			tScene.children.forEach(function (v2) {
-				v2.material.displacementFlowSpeedY = v
-			})
-		})
-		///////////////////////////////////////////////
-		folder.open()
-	}
+            // Mesh 설정
+            var tMesh;
+            var tEnvironmentTexture = RedBitmapCubeTexture(this, [
+                assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
+                assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
+                assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
+                assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
+                assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
+                assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
+            ])
+            var tMaterial = RedEnvironmentMaterial(this, RedBitmapTexture(this, assetPath + 'draft1.png'), tEnvironmentTexture, RedBitmapTexture(this, assetPath + 'normalTest.jpg'))
+            tMesh = RedMesh(this, RedBox(this, 1, 1, 1, 32, 32, 32), tMaterial)
+            tMesh.x = -1.5
+            tScene.addChild(tMesh)
+            tMesh = RedMesh(this, RedBox(this, 1, 1, 1, 32, 32, 32), tMaterial)
+            tMesh.x = 0
+            tScene.addChild(tMesh)
+            tMesh = RedMesh(this, RedBox(this, 1, 1, 1, 32, 32, 32), tMaterial)
+            tMesh.x = 1.5
+            tScene.addChild(tMesh)
+            tMesh = RedMesh(this, RedSphere(this, 0.5, 32, 32, 32), tMaterial)
+            tMesh.x = -1.5
+            tMesh.y = 1.5
+            tScene.addChild(tMesh)
+            tMesh = RedMesh(this, RedSphere(this, 0.5, 32, 32, 32), tMaterial)
+            tMesh.x = 0
+            tMesh.y = 1.5
+            tScene.addChild(tMesh)
+            tMesh = RedMesh(this, RedSphere(this, 0.5, 32, 32, 32), tMaterial)
+            tMesh.x = 1.5
+            tMesh.y = 1.5
+            tScene.addChild(tMesh)
+            tMesh = RedMesh(this, RedPlane(this, 1, 1, 32, 32), tMaterial)
+            tMesh['useCullFace'] = false
+            tMesh.x = -1.5
+            tMesh.y = -1.5
+            tScene.addChild(tMesh)
+            tMesh = RedMesh(this, RedPlane(this, 1, 1, 32, 32), tMaterial)
+            tMesh['useCullFace'] = false
+            tMesh.x = 0
+            tMesh.y = -1.5
+            tScene.addChild(tMesh)
+            tMesh = RedMesh(this, RedPlane(this, 1, 1, 32, 32), tMaterial)
+            tMesh['useCullFace'] = false
+            tMesh.x = 1.5
+            tMesh.y = -1.5
+            tScene.addChild(tMesh)
+            // 렌더시작
+            tRenderer.start(this, function (time) {
+                var i = tScene.children.length
+                var t0
+                while (i--) {
+                    t0 = tScene.children[i]
+                    t0.rotationX += 1
+                    t0.rotationY += 1
+                    t0.rotationZ += 1
+                }
+            })
+            // 렌더 디버거 활성화
+            tRenderer['renderDebuger']['visible'] = true
+            testUI(this, tCamera, tScene)
+        } else {
+            console.log('초기화 실패!')
+        }
+    })
+    testUI = function (redGL, tCamera, tScene) {
+        var gui = new baseTestUI(redGL)
+        gui.initRedGL()
+        gui.initScene(tScene, false, assetPath)
+        var folder = gui['gui'].addFolder('RedEnvironmentMaterial')
+        var testRedEnvironmentMaterial = {
+            diffuseTexture: assetPath + 'draft1.png',
+            normalTexture: assetPath + 'normalTest.jpg',
+            specularTexture: 'none',
+            displacementTexture: 'none',
+            alpha: 1,
+            reflectionPower: 1,
+            shininess: 16,
+            normalPower: 1,
+            specularPower: 1,
+            displacementPower: 0,
+            displacementFlowSpeedX: 0,
+            displacementFlowSpeedY: 0
+        }
+        folder.add(testRedEnvironmentMaterial, 'alpha', 0, 1).onChange(function (v) {
+            tScene.children.forEach(function (v2) {
+                v2.material.alpha = v
+            })
+        })
+        folder.add(testRedEnvironmentMaterial, 'reflectionPower', 0, 1).onChange(function (v) {
+            tScene.children.forEach(function (v2) {
+                v2.material.reflectionPower = v
+            })
+        })
+        folder.add(testRedEnvironmentMaterial, 'normalPower', 0, 3).onChange(function (v) {
+            tScene.children.forEach(function (v2) {
+                v2.material.normalPower = v
+            })
+        })
+        folder.add(testRedEnvironmentMaterial, 'shininess', 1, 128).onChange(function (v) {
+            tScene.children.forEach(function (v2) {
+                v2.material.shininess = v
+            })
+        })
+        folder.add(testRedEnvironmentMaterial, 'specularPower', 0.1, 10).onChange(function (v) {
+            tScene.children.forEach(function (v2) {
+                v2.material.specularPower = v
+            })
+        })
+        folder.add(testRedEnvironmentMaterial, 'diffuseTexture', ['none', assetPath + 'draft1.png', assetPath + 'draft2.png', assetPath + 'draft3.png'], 0).onChange(function (v) {
+            tScene.children.forEach(function (v2) {
+                v2.material.diffuseTexture = v == 'none' ? null : RedBitmapTexture(redGL, v)
+            })
+        })
+        folder.add(testRedEnvironmentMaterial, 'normalTexture', ['none', assetPath + 'normalTest.jpg']).onChange(function (v) {
+            tScene.children.forEach(function (v2) {
+                v2.material.normalTexture = v == 'none' ? null : RedBitmapTexture(redGL, v)
+            })
+        })
+        folder.add(testRedEnvironmentMaterial, 'specularTexture', ['none', assetPath + 'specular.png']).onChange(function (v) {
+            tScene.children.forEach(function (v2) {
+                v2.material.specularTexture = v == 'none' ? null : RedBitmapTexture(redGL, v)
+            })
+        })
+        folder.add(testRedEnvironmentMaterial, 'displacementTexture', ['none', assetPath + 'displacementTest.jpg']).onChange(function (v) {
+            tScene.children.forEach(function (v2) {
+                v2.material.displacementTexture = v == 'none' ? null : RedBitmapTexture(redGL, v)
+            })
+        })
+        folder.add(testRedEnvironmentMaterial, 'displacementPower', 0, 2).onChange(function (v) {
+            tScene.children.forEach(function (v2) {
+                v2.material.displacementPower = v
+            })
+        })
+        folder.add(testRedEnvironmentMaterial, 'displacementFlowSpeedX', 0, 0.3, 0.001).onChange(function (v) {
+            tScene.children.forEach(function (v2) {
+                v2.material.displacementFlowSpeedX = v
+            })
+        })
+        folder.add(testRedEnvironmentMaterial, 'displacementFlowSpeedY', 0, 0.3, 0.001).onChange(function (v) {
+            tScene.children.forEach(function (v2) {
+                v2.material.displacementFlowSpeedY = v
+            })
+        })
+        ///////////////////////////////////////////////
+        folder.open()
+    }
 </script>
 </body>
 

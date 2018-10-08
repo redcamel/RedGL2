@@ -24,83 +24,83 @@
 
 <body>
 <script id='testSource'>
-	var testUI;
-	var canvas;
-	var assetPath = '../../asset/'
-	canvas = document.createElement('canvas');
-	document.body.appendChild(canvas);
-	RedGL(canvas, function (v) {
-		if ( v ) {
-			console.log('초기화 성공!')
-			var tWorld, tScene, tCamera, tRenderer;
-			// 월드 생성
-			this['world'] = tWorld = RedWorld();
-			// 씬 생성
-			tScene = RedScene(this);
-			// 카메라 생성
-			tCamera = RedCamera();
-			// 렌더러 생성
-			tRenderer = RedRenderer();
-			// 뷰생성 및 적용
-			tWorld.addView(RedView('test', this, tScene, tCamera));
-			// 그리드 설정
-			tScene['grid'] = RedGrid(this)
-			// 스카이박스 설정
-			tScene['skyBox'] = RedSkyBox(this, [
-				assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
-				assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
-				assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
-				assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
-				assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
-				assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
-			])
-			// 렌더시작
-			tRenderer.start(this, function (time) {
-				tCamera.x = Math.sin(time / 1500) * 10
-				tCamera.y = Math.cos(time / 1500) * 10
-				tCamera.z = Math.cos(time / 1500) * 10 + Math.sin(time / 1500) * 10
-				tCamera.lookAt(0, 0, 0)
-			})
-			// 렌더 디버거 활성화
-			tRenderer['renderDebuger']['visible'] = true
-			//
-			testUI(this, tCamera, tScene)
-		} else {
-			console.log('초기화 실패!')
-		}
-	})
-	testUI = function (redGL, tCamera, tScene) {
-		console.log('test')
-		var gui = new baseTestUI(redGL)
-		var testSkyBox = {
-			srcList: 'test2'
-		}
-		var folder = gui['gui'].addFolder('RedSkyBox')
-		folder.add(testSkyBox, 'srcList', ['test1', 'test2']).onChange(function (v) {
-			var tList;
-			if ( v == 'test1' ) {
-				tList = [
-					assetPath + 'cubemap/posx.png',
-					assetPath + 'cubemap/negx.png',
-					assetPath + 'cubemap/posy.png',
-					assetPath + 'cubemap/negy.png',
-					assetPath + 'cubemap/posz.png',
-					assetPath + 'cubemap/negz.png'
-				]
-			} else if ( v == 'test2' ) {
-				tList = [
-					assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
-					assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
-					assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
-					assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
-					assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
-					assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
-				]
-			}
-			tScene.skyBox = RedSkyBox(redGL, tList)
-		})
-		folder.open()
-	}
+    var testUI;
+    var canvas;
+    var assetPath = '../../asset/'
+    canvas = document.createElement('canvas');
+    document.body.appendChild(canvas);
+    RedGL(canvas, function (v) {
+        if (v) {
+            console.log('초기화 성공!')
+            var tWorld, tScene, tCamera, tRenderer;
+            // 월드 생성
+            this['world'] = tWorld = RedWorld();
+            // 씬 생성
+            tScene = RedScene(this);
+            // 카메라 생성
+            tCamera = RedCamera();
+            // 렌더러 생성
+            tRenderer = RedRenderer();
+            // 뷰생성 및 적용
+            tWorld.addView(RedView('test', this, tScene, tCamera));
+            // 그리드 설정
+            tScene['grid'] = RedGrid(this)
+            // 스카이박스 설정
+            tScene['skyBox'] = RedSkyBox(this, [
+                assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
+                assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
+                assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
+                assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
+                assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
+                assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
+            ])
+            // 렌더시작
+            tRenderer.start(this, function (time) {
+                tCamera.x = Math.sin(time / 1500) * 10
+                tCamera.y = Math.cos(time / 1500) * 10
+                tCamera.z = Math.cos(time / 1500) * 10 + Math.sin(time / 1500) * 10
+                tCamera.lookAt(0, 0, 0)
+            })
+            // 렌더 디버거 활성화
+            tRenderer['renderDebuger']['visible'] = true
+            //
+            testUI(this, tCamera, tScene)
+        } else {
+            console.log('초기화 실패!')
+        }
+    })
+    testUI = function (redGL, tCamera, tScene) {
+        console.log('test')
+        var gui = new baseTestUI(redGL)
+        var testSkyBox = {
+            srcList: 'test2'
+        }
+        var folder = gui['gui'].addFolder('RedSkyBox')
+        folder.add(testSkyBox, 'srcList', ['test1', 'test2']).onChange(function (v) {
+            var tList;
+            if (v == 'test1') {
+                tList = [
+                    assetPath + 'cubemap/posx.png',
+                    assetPath + 'cubemap/negx.png',
+                    assetPath + 'cubemap/posy.png',
+                    assetPath + 'cubemap/negy.png',
+                    assetPath + 'cubemap/posz.png',
+                    assetPath + 'cubemap/negz.png'
+                ]
+            } else if (v == 'test2') {
+                tList = [
+                    assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
+                    assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
+                    assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
+                    assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
+                    assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
+                    assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
+                ]
+            }
+            tScene.skyBox = RedSkyBox(redGL, tList)
+        })
+        folder.open()
+    }
 </script>
 </body>
 
