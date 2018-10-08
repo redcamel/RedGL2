@@ -17,6 +17,7 @@ var RedSystemShaderCode;
         var maxPointLight = 5;
         var maxJoint;
         if (RedGLDetect.BROWSER_INFO.browser == 'ie' && RedGLDetect.BROWSER_INFO.browserVer == 11) maxJoint = 60
+        else if(RedGLDetect.BROWSER_INFO.isMobile && RedGLDetect.BROWSER_INFO.browser == 'ios') maxJoint = 8
         else maxJoint = 64
         RedSystemShaderCode = {
             /**DOC:
