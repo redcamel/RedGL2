@@ -32,13 +32,18 @@ var RedMouseEventManager;
         add: function (target, type, handler) {
             var key = target['_mouseColorID']
             if (!this['_mouseEventListObject'][key]) {
-                this['_mouseEventListObject'][key] = {
-                    target: target
-                }
+                this['_mouseEventListObject'][key] = {target: target}
                 this['_mouseEventList'].push(target)
             }
             this['_mouseEventListObject'][key][type] = handler
             // console.log(this['_mouseEventListObject'])
+        },
+        remove: function (target, type) {
+            var t0 = this['_mouseEventList'].indexOf(target)
+            if (t0 > -1) {
+                this['_mouseEventList'].splice(t0, 1)
+                delete this['_mouseEventListObject'][target['_mouseColorID']]
+            }
         },
         render: (function () {
             var gl;
@@ -86,7 +91,7 @@ var RedMouseEventManager;
                                 })
                             }
                         }
-                        if (redGL['_mouseEventInfo']['type'] ==RedGLDetect.BROWSER_INFO.up) {
+                        if (redGL['_mouseEventInfo']['type'] == RedGLDetect.BROWSER_INFO.up) {
                             tEventType = 'up'
                             console.log('업')
                             if (tEventType && currentInfo[tEventType]) {
