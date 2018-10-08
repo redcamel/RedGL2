@@ -37,6 +37,7 @@ var RedShader;
         gl.compileShader(shader);
         if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
             // console.log(parseData)
+            alert(gl.getShaderInfoLog(shader))
             RedGLUtil.throwFunc('RedShader : 쉐이더 컴파일에 실패하였습니다.\n', gl.getShaderInfoLog(shader))
         }
     };
