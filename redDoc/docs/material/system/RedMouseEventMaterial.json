@@ -1,0 +1,19 @@
+[
+  {
+    "constructorYn": true,
+    "title": "RedMouseEventMaterial",
+    "description": "\nRedMouseEventMaterial Instance 생성\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ]
+    },
+    "extends": [
+      "RedBaseMaterial"
+    ],
+    "example": "\nRedMouseEventMaterial(RedGL Instance, RedBitmapTexture(RedGL Instance, src))\n",
+    "return": "RedMouseEventMaterial Instance"
+  }
+]
