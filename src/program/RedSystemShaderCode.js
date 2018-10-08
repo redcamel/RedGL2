@@ -15,6 +15,9 @@ var RedSystemShaderCode;
     RedSystemShaderCode['init'] = function () {
         var maxDirectionalLight = 3;
         var maxPointLight = 5;
+        var maxJoint;
+        if (RedGLDetect.BROWSER_INFO.browser == 'ie' && RedGLDetect.BROWSER_INFO.browserVer == 11) maxJoint = 60
+        else maxJoint = 64
         RedSystemShaderCode = {
             /**DOC:
              {
@@ -44,8 +47,8 @@ var RedSystemShaderCode;
                 'varying vec2 vTexcoord1',
 
 
-                'uniform mat4 uJointMatrix[64]',
-                'uniform mat4 uInverseBindMatrixForJoint[64]',
+                'uniform mat4 uJointMatrix[' + maxJoint + ']',
+                'uniform mat4 uInverseBindMatrixForJoint[' + maxJoint + ']',
                 'uniform mat4 uGlobalTransformOfNodeThatTheMeshIsAttachedTo',
 
 
@@ -296,6 +299,7 @@ var RedSystemShaderCode;
 		 }
          :DOC*/
         RedSystemShaderCode['MAX_POINT_LIGHT'] = maxPointLight;
+        RedSystemShaderCode['MAX_JOINT'] = maxJoint;
         [RedSystemShaderCode.vertexShareDeclare, RedSystemShaderCode.fragmentShareDeclare].forEach(function (data) {
             data.forEach(function (v) {
                 v = v.split(' ')

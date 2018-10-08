@@ -192,11 +192,11 @@ var RedGL;
                 self['_canvas'].addEventListener(v, function (e) {
                     e.preventDefault()
                     if (RedGLDetect.BROWSER_INFO.isMobile) {
-                        if(e.changedTouches[0]){
+                        if (e.changedTouches[0]) {
                             self['_mouseEventInfo'] = {
                                 type: e.type,
                                 x: e.changedTouches[0].clientX * window.devicePixelRatio,
-                                y: e.changedTouches[0].clientY* window.devicePixelRatio
+                                y: e.changedTouches[0].clientY * window.devicePixelRatio
                             }
                         }
                     }
@@ -207,9 +207,7 @@ var RedGL;
                             y: e.y
                         }
                     }
-
-
-                },false)
+                }, false)
             });
 
 
