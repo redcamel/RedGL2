@@ -19,7 +19,7 @@ var RedGL;
             antialias: true,
             premultipliedAlpha: false,
             preserveDrawingBuffer: false,
-            powerPreference: 'default', // default, high-performance, low-power
+            powerPreference: 'high-performance', // default, high-performance, low-power
             failIfMajorPerformanceCaveat: false
         };
         EXT_KEY_LIST = [
