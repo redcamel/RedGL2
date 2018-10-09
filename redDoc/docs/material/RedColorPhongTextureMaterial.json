@@ -105,5 +105,11 @@
     "code": "PROPERTY",
     "title": "specularTexture",
     "return": "RedBitmapTexture"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "useFlatMode",
+    "description": "기본값 : true",
+    "return": "boolean"
   }
 ]

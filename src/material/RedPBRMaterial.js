@@ -3,7 +3,7 @@ var RedPBRMaterial;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'RedPBRMaterialProgram';
-    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture'];
+    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture','useFlatMode'];
     var checked;
     vSource = function () {
         /* @preserve
@@ -52,6 +52,9 @@ var RedPBRMaterial;
 		// 그림자
 		//#REDGL_DEFINE#fragmentShareFunc#decodeFloatShadow#
 		//#REDGL_DEFINE#fragmentShareFunc#getShadowColor#
+
+        // flat노말
+        //#REDGL_DEFINE#fragmentShareFunc#getFlatNormal#
 
 		//#REDGL_DEFINE#fragmentShareFunc#getPerturbNormal2Arb#
 
@@ -136,6 +139,7 @@ var RedPBRMaterial;
             vec4 normalColor = vec4(0.0);
             //#REDGL_DEFINE#normalTexture# normalColor = texture2D(u_normalTexture, u_normalTexCoord);
             //#REDGL_DEFINE#normalTexture# N = getPerturbNormal2Arb(vVertexPosition.xyz, N, normalColor, u_normalTexCoord) ;
+            //#REDGL_DEFINE#useFlatMode# N = getFlatNormal(vVertexPosition.xyz);
 
             // 환경맵 계산
             vec3 R = reflect( vVertexPosition.xyz-uCameraPosition, N);
@@ -291,6 +295,7 @@ var RedPBRMaterial;
         this['cutOff'] = 0;
         /////////////////////////////////////////
         // 일반 프로퍼티
+        this['useFlatMode'] = false
         this['_UUID'] = RedGL.makeUUID();
         if (!checked) {
             this.checkUniformAndProperty();
@@ -424,6 +429,14 @@ var RedPBRMaterial;
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'occlusionPower', 'number', {'min': 0});
-
+    /**DOC:
+     {
+	     code : 'PROPERTY',
+		 title :`useFlatMode`,
+		 description : `기본값 : true`,
+		 return : 'boolean'
+	 }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'useFlatMode', 'boolean', samplerOption);
     Object.freeze(RedPBRMaterial);
 })();

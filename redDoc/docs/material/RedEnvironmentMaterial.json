@@ -51,12 +51,6 @@
   },
   {
     "code": "PROPERTY",
-    "title": "normalPower",
-    "description": "기본값 : 1",
-    "return": "number"
-  },
-  {
-    "code": "PROPERTY",
     "title": "normalTexture",
     "return": "RedBitmapTexture"
   },
@@ -125,5 +119,11 @@
     "code": "PROPERTY",
     "title": "specularTexture",
     "return": "RedBitmapTexture"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "useFlatMode",
+    "description": "기본값 : true",
+    "return": "boolean"
   }
 ]

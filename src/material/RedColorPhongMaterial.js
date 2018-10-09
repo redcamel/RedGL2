@@ -3,6 +3,7 @@ var RedColorPhongMaterial;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'RedColorPhongMaterialProgram';
+    var PROGRAM_OPTION_LIST = ['useFlatMode'];
     var checked;
     vSource = function () {
         /* @preserve
@@ -37,7 +38,7 @@ var RedColorPhongMaterial;
     };
     fSource = function () {
         /* @preserve
-         precision mediump float;
+        precision mediump float;
         // 안개
         //#REDGL_DEFINE#fragmentShareFunc#fogFactor#
         //#REDGL_DEFINE#fragmentShareFunc#fog#
@@ -45,6 +46,9 @@ var RedColorPhongMaterial;
         // 그림자
         //#REDGL_DEFINE#fragmentShareFunc#decodeFloatShadow#
         //#REDGL_DEFINE#fragmentShareFunc#getShadowColor#
+
+        // flat노말
+        //#REDGL_DEFINE#fragmentShareFunc#getFlatNormal#
 
         // 라이트
         //#REDGL_DEFINE#fragmentShareFunc#getDirectionalLightColor#
@@ -68,6 +72,7 @@ var RedColorPhongMaterial;
              // texelColor.rgb *= texelColor.a;
 
              N = normalize(vVertexNormal);
+             //#REDGL_DEFINE#useFlatMode# N = getFlatNormal(vVertexPosition.xyz);
 
              specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);
              specularTextureValue = 1.0;
@@ -133,7 +138,7 @@ var RedColorPhongMaterial;
     RedColorPhongMaterial = function (redGL, hexColor, alpha) {
         if (!(this instanceof RedColorPhongMaterial)) return new RedColorPhongMaterial(redGL, hexColor, alpha);
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedColorPhongMaterial : RedGL Instance만 허용.', '입력값 : ' + redGL);
-        this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource);
+        this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource, PROGRAM_OPTION_LIST);
         /////////////////////////////////////////
         // 유니폼 프로퍼티
         this['_color'] = new Float32Array(4);
@@ -142,6 +147,7 @@ var RedColorPhongMaterial;
         this['alpha'] = alpha == undefined ? 1 : alpha;
         /////////////////////////////////////////
         // 일반 프로퍼티
+        this['useFlatMode'] = false
         this['color'] = hexColor ? hexColor : '#ff0000';
         this['_UUID'] = RedGL.makeUUID();
         if (!checked) {
@@ -149,6 +155,11 @@ var RedColorPhongMaterial;
             checked = true;
         }
         console.log(this);
+    };
+    var samplerOption = {
+        callback: function () {
+            this._searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST)
+        }
     };
     RedColorPhongMaterial.prototype = new RedBaseMaterial();
     /**DOC:
@@ -187,5 +198,14 @@ var RedColorPhongMaterial;
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedColorPhongMaterial', 'specularPower', 'number', {'min': 0});
+    /**DOC:
+     {
+	     code : 'PROPERTY',
+		 title :`useFlatMode`,
+		 description : `기본값 : true`,
+		 return : 'boolean'
+	 }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedColorPhongMaterial', 'useFlatMode', 'boolean', samplerOption);
     Object.freeze(RedColorPhongMaterial);
 })();
