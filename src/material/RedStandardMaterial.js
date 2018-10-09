@@ -3,7 +3,7 @@ var RedStandardMaterial;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'RedStandardMaterialProgram';
-    var PROGRAM_OPTION_LIST = ['normalTexture', 'specularTexture', 'emissiveTexture', 'displacementTexture'];
+    var PROGRAM_OPTION_LIST = ['normalTexture', 'specularTexture', 'emissiveTexture', 'displacementTexture','useFlatMode'];
     var checked;
     vSource = function () {
         /* @preserve
@@ -62,6 +62,9 @@ var RedStandardMaterial;
         //#REDGL_DEFINE#fragmentShareFunc#decodeFloatShadow#
         //#REDGL_DEFINE#fragmentShareFunc#getShadowColor#
 
+        // flat노말
+        //#REDGL_DEFINE#fragmentShareFunc#getFlatNormal#
+
         // 라이트
         //#REDGL_DEFINE#fragmentShareFunc#getDirectionalLightColor#
         //#REDGL_DEFINE#fragmentShareFunc#getPointLightColor#
@@ -102,6 +105,7 @@ var RedStandardMaterial;
              N = normalize(vVertexNormal);
              //#REDGL_DEFINE#normalTexture# vec4 normalColor = texture2D(u_normalTexture, vTexcoord);
              //#REDGL_DEFINE#normalTexture# if(normalColor.a != 0.0) N = normalize(2.0 * (N + normalColor.rgb * u_normalPower  - 0.5));
+             //#REDGL_DEFINE#useFlatMode# N = getFlatNormal(vVertexPosition.xyz);
 
              specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);
              specularTextureValue = 1.0;
@@ -299,5 +303,14 @@ var RedStandardMaterial;
     RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'displacementPower', 'number', {'min': 0});
     RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'displacementFlowSpeedX', 'number');
     RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'displacementFlowSpeedY', 'number');
+    /**DOC:
+     {
+	     code : 'PROPERTY',
+		 title :`useFlatMode`,
+		 description : `기본값 : true`,
+		 return : 'boolean'
+	 }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'useFlatMode', 'boolean', samplerOption);
     Object.freeze(RedStandardMaterial);
 })();

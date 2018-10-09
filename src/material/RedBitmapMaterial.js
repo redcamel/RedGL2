@@ -3,6 +3,7 @@ var RedBitmapMaterial;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'RedBitmapMaterialProgram';
+    var PROGRAM_OPTION_LIST = [];
     var checked;
     vSource = function () {
         /* @preserve
@@ -87,7 +88,7 @@ var RedBitmapMaterial;
     RedBitmapMaterial = function (redGL, diffuseTexture) {
         if (!(this instanceof RedBitmapMaterial)) return new RedBitmapMaterial(redGL, diffuseTexture);
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedBitmapMaterial : RedGL Instance만 허용.', redGL);
-        this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource);
+        this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource, PROGRAM_OPTION_LIST);
         /////////////////////////////////////////
         // 유니폼 프로퍼티
         this['diffuseTexture'] = diffuseTexture;

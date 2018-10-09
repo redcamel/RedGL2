@@ -62,14 +62,16 @@ var RedEnvironmentMaterial;
         //#REDGL_DEFINE#fragmentShareFunc#decodeFloatShadow#
         //#REDGL_DEFINE#fragmentShareFunc#getShadowColor#
 
+        // flat노말
+        //#REDGL_DEFINE#fragmentShareFunc#getFlatNormal#
+
         //#REDGL_DEFINE#fragmentShareFunc#getPerturbNormal2Arb#
 
         // 라이트
         //#REDGL_DEFINE#fragmentShareFunc#getDirectionalLightColor#
         //#REDGL_DEFINE#fragmentShareFunc#getPointLightColor#
 
-        // flat노말
-        //#REDGL_DEFINE#fragmentShareFunc#getFlatNormal#
+
 
          //#REDGL_DEFINE#diffuseTexture# uniform sampler2D u_diffuseTexture;
          //#REDGL_DEFINE#normalTexture# uniform sampler2D u_normalTexture;
@@ -109,9 +111,7 @@ var RedEnvironmentMaterial;
              //#REDGL_DEFINE#normalTexture# normalColor = texture2D(u_normalTexture, vTexcoord);
              //#REDGL_DEFINE#normalTexture# N = getPerturbNormal2Arb(vVertexPosition.xyz, N, normalColor, vTexcoord) ;
 
-
              //#REDGL_DEFINE#useFlatMode# N = getFlatNormal(vVertexPosition.xyz);
-
 
              vec3 R = reflect( vVertexPosition.xyz - uCameraPosition, N);
              reflectionColor = textureCube(u_environmentTexture, R);
@@ -229,9 +229,9 @@ var RedEnvironmentMaterial;
         this['displacementPower'] = 0;
         this['displacementFlowSpeedX'] = 0;
         this['displacementFlowSpeedY'] = 0;
-        this['useFlatMode'] = false
         this['alpha'] = 1;
         /////////////////////////////////////////
+        this['useFlatMode'] = false
         // 일반 프로퍼티
         this['_UUID'] = RedGL.makeUUID();
         if (!checked) {
@@ -314,15 +314,6 @@ var RedEnvironmentMaterial;
 		 return : 'number'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'useFlatMode', 'boolean', samplerOption);
-    /**DOC:
-     {
-	     code : 'PROPERTY',
-		 title :`normalPower`,
-		 description : `기본값 : 1`,
-		 return : 'number'
-	 }
-     :DOC*/
     RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'normalPower', 'number', {'min': 0});
     /**DOC:
      {
@@ -378,5 +369,14 @@ var RedEnvironmentMaterial;
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'displacementFlowSpeedY', 'number');
+    /**DOC:
+     {
+	     code : 'PROPERTY',
+		 title :`useFlatMode`,
+		 description : `기본값 : true`,
+		 return : 'boolean'
+	 }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'useFlatMode', 'boolean', samplerOption);
     Object.freeze(RedEnvironmentMaterial);
 })();

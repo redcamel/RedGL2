@@ -3,6 +3,7 @@ var RedSheetMaterial;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'RedSheetMaterialProgram';
+    var PROGRAM_OPTION_LIST = [];
     var checked;
     vSource = function () {
         /* @preserve
@@ -96,7 +97,7 @@ var RedSheetMaterial;
         segmentW = segmentW || 1;
         segmentH = segmentH || 1;
         totalFrame = totalFrame || 1;
-        this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource);
+        this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource, PROGRAM_OPTION_LIST);
         /////////////////////////////////////////
         // 유니폼 프로퍼티
         this['diffuseTexture'] = diffuseTexture;

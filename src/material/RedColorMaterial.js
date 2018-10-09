@@ -3,6 +3,7 @@ var RedColorMaterial;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'RedColorMaterialProgram';
+    var PROGRAM_OPTION_LIST = [];
     var checked;
     vSource = function () {
         /* @preserve
@@ -17,6 +18,7 @@ var RedColorMaterial;
             // position 계산
             //#REDGL_DEFINE#skin#true# mat4 targetMatrix = uMMatrix *  getSkinMatrix() ;
             //#REDGL_DEFINE#skin#false# mat4 targetMatrix = uMMatrix;
+            vVertexPosition =  targetMatrix *  vec4(aVertexPosition, 1.0);
 
             //#REDGL_DEFINE#sprite3D#true# gl_Position = uPMatrix * getSprite3DMatrix(uCameraMatrix , targetMatrix) *  vec4(aVertexPosition, 1.0);
             //#REDGL_DEFINE#sprite3D#true# if(!u_PerspectiveScale){
@@ -43,6 +45,7 @@ var RedColorMaterial;
 
          uniform vec4 u_color;
          void main(void) {
+
             vec4 finalColor = u_color * u_color.a;
             if(finalColor.a == 0.0) discard;
 
@@ -84,7 +87,7 @@ var RedColorMaterial;
     RedColorMaterial = function (redGL, hexColor, alpha) {
         if (!(this instanceof RedColorMaterial)) return new RedColorMaterial(redGL, hexColor, alpha);
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedColorMaterial : RedGL Instance만 허용.', '입력값 : ' + redGL);
-        this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource);
+        this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource, PROGRAM_OPTION_LIST);
         /////////////////////////////////////////
         // 유니폼 프로퍼티
         this['_color'] = new Float32Array(4);
@@ -98,6 +101,11 @@ var RedColorMaterial;
             checked = true;
         }
         console.log(this);
+    };
+    var samplerOption = {
+        callback: function () {
+            this._searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST)
+        }
     };
     RedColorMaterial.prototype = new RedBaseMaterial();
     RedColorMaterial['DEFINE_OBJECT_COLOR'] = {

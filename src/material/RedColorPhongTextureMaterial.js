@@ -3,7 +3,7 @@ var RedColorPhongTextureMaterial;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'RedColorPhongTextureMaterialProgram';
-    var PROGRAM_OPTION_LIST = ['normalTexture', 'specularTexture', 'displacementTexture'];
+    var PROGRAM_OPTION_LIST = ['normalTexture', 'specularTexture', 'displacementTexture','useFlatMode'];
     var checked;
     vSource = function () {
         /* @preserve
@@ -62,6 +62,9 @@ var RedColorPhongTextureMaterial;
         //#REDGL_DEFINE#fragmentShareFunc#decodeFloatShadow#
         //#REDGL_DEFINE#fragmentShareFunc#getShadowColor#
 
+        // flat노말
+        //#REDGL_DEFINE#fragmentShareFunc#getFlatNormal#
+
         // 라이트
         //#REDGL_DEFINE#fragmentShareFunc#getDirectionalLightColor#
         //#REDGL_DEFINE#fragmentShareFunc#getPointLightColor#
@@ -90,6 +93,7 @@ var RedColorPhongTextureMaterial;
              N = normalize(vVertexNormal);
              //#REDGL_DEFINE#normalTexture# vec4 normalColor = texture2D(u_normalTexture, vTexcoord);
              //#REDGL_DEFINE#normalTexture# if(normalColor.a != 0.0) N = normalize(2.0 * (N + normalColor.rgb * u_normalPower  - 0.5));
+             //#REDGL_DEFINE#useFlatMode# N = getFlatNormal(vVertexPosition.xyz);
 
              specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);
              float specularTextureValue = 1.0;
@@ -185,6 +189,7 @@ var RedColorPhongTextureMaterial;
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['color'] = hexColor ? hexColor : '#ff0000';
+        this['useFlatMode'] = false
         this['_UUID'] = RedGL.makeUUID();
         if (!checked) {
             this.checkUniformAndProperty();
@@ -294,5 +299,14 @@ var RedColorPhongTextureMaterial;
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'displacementFlowSpeedY', 'number');
+    /**DOC:
+     {
+	     code : 'PROPERTY',
+		 title :`useFlatMode`,
+		 description : `기본값 : true`,
+		 return : 'boolean'
+	 }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'useFlatMode', 'boolean', samplerOption);
     Object.freeze(RedColorPhongTextureMaterial)
 })();
