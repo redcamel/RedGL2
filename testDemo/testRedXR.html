@@ -179,6 +179,12 @@
             testDLight.x = 0
             testDLight.y = 300
             testDLight.z = 300
+            console.log('~~~',v)
+            var c = RedPostEffect_Bloom(this)
+            c.blur = 30
+            // c.threshold = 0.5
+            RedView('left55')['postEffectManager'].addEffect(c)
+            RedView('right55')['postEffectManager'].addEffect(c)
 
             v['scene'].addLight(testDLight)
             v['scene'].skyBox =
