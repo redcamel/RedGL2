@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>다중뷰</title>
+    <title>testTexture</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -16,25 +16,13 @@
             overflow: hidden;
         }
     </style>
-    <script src='https://immersive-web.github.io/webxr-samples/js/webxr-polyfill.js'></script>
-
-    <!--This script patches up around implementation differences in past browser versions
-        so that the samples can always be written against the most recent spec changes.
-        It won't be necessary after the API has been officially shipped for a bit.-->
-    <script src='https://immersive-web.github.io/webxr-samples/js/webxr-version-shim.js'></script>
-
-    <script src='https://immersive-web.github.io/webxr-samples/js/cottontail/build/cottontail.js'></script>
-
-    <script src='https://immersive-web.github.io/webxr-samples/js/webxr-button.js'></script>
-
-
     <script src="../example/dat.gui.min.js"></script>
     <script src="../src/gl-matrix-min.js"></script>
     <script src="../src/RedGLUtil.js"></script>
     <script src="../src/detect/RedGLDetect.js"></script>
     <script src="../src/base/RedDefinePropertyInfo.js"></script>
     <script src="../src/RedGL.js"></script>
-    <script src="../src/RedXR.js"></script>
+
     <!--//-->
 
     <script src="../src/base/RedBaseObject3D.js"></script>
@@ -76,7 +64,6 @@
     <script src="../src/material/RedSheetMaterial.js"></script>
     <script src="../src/material/RedStandardMaterial.js"></script>
     <script src="../src/material/RedVideoMaterial.js"></script>
-    <script src="../src/material/RedPBRMaterial.js"></script>
     <!--//-->
     <script src="../src/light/RedAmbientLight.js"></script>
     <script src="../src/light/RedDirectionalLight.js"></script>
@@ -85,9 +72,6 @@
     <script src="../src/loader/JsonModelLoader.js"></script>
     <script src="../src/loader/obj/RedMTLLoader.js"></script>
     <script src="../src/loader/obj/RedOBJLoader.js"></script>
-    <script src="../src/loader/gltf/RedGLTFLoader.js"></script>
-    <script src="../src/loader/3ds/Red3DSLoader.js"></script>
-    <script src="../src/loader/dae/RedDAELoader.js"></script>
     <!--//-->
     <script src="../src/object3D/RedAxis.js"></script>
     <script src="../src/object3D/RedGrid.js"></script>
@@ -99,6 +83,9 @@
     <script src="../src/particle/RedPointUnit.js"></script>
     <script src="../src/particle/RedParticleUnit.js"></script>
     <script src="../src/particle/RedParticleEmitter.js"></script>
+    <!--//-->
+    <script src="../rnd/water/RedWaterField.js"></script>
+    <script src="../rnd/water/RedWaterFieldMaterial.js"></script>
     <!--//-->
     <script src="../src/primitives/RedBox.js"></script>
     <script src="../src/primitives/RedPlane.js"></script>
@@ -151,10 +138,6 @@
     <script src="../src/postEffect/dof/RedPostEffect_DoF_DepthMaterial.js"></script>
     <script src="../src/postEffect/RedPostEffect_Film.js"></script>
     <script src="../src/postEffect/RedPostEffect_Vignetting.js"></script>
-    <script src="../rnd/postEffect/RedPostEffect_SSAO.js"></script>
-    <script src="../rnd/postEffect/RedPostEffect_SSAO_DepthMaterial.js"></script>
-
-    <script src="../rnd/postEffect/RedPostEffect_SSAO_PointMaker.js"></script>
     <script src="../src/postEffect/antialiasing/RedPostEffect_FXAA.js"></script>
 </head>
 
@@ -163,51 +146,45 @@
 <script>
     var t = document.getElementById('test')
     document.body.appendChild(t)
-    var testMesh,testMesh2
-    RedXR(t,
-        function (v) {
-            console.log(this)
-            console.log(v)
-            testMesh = RedMesh(this, RedSphere(this), RedColorMaterial(this))
-            testMesh.z = -10
-            testMesh.drawMode = this.gl.POINTS
-            testMesh.pointSize = 5
-            v['scene'].addChild(testMesh)
-
-            var testDLight;
-            testDLight = RedDirectionalLight(this)
-            testDLight.x = 0
-            testDLight.y = 300
-            testDLight.z = 300
-
-            v['scene'].addLight(testDLight)
-            v['scene'].skyBox =
-                RedSkyBox(
-                    this,
-                    [
-                        '../asset/cubemap/SwedishRoyalCastle/px.jpg',
-                        '../asset/cubemap/SwedishRoyalCastle/nx.jpg',
-                        '../asset/cubemap/SwedishRoyalCastle/py.jpg',
-                        '../asset/cubemap/SwedishRoyalCastle/ny.jpg',
-                        '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
-                        '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
-                    ]
-                );
-            RedGLTFLoader(this, '../asset/glTF/basic/', 'DamagedHelmet.gltf', function (v2) {
-                console.log('호잇!', v2)
-                // v2['resultMesh'].scaleX = v2['resultMesh'].scaleY = v2['resultMesh'].scaleZ = 0.1
-                v2['resultMesh'].z =-10
-                v['scene'].addChild(testMesh2 = v2['resultMesh'])
-            })
-        },
-        function (time) {
-//			console.log(time)
-            testMesh.rotationX += 1
-            testMesh.rotationY += 1
-            testMesh.rotationZ += 1
-            if(testMesh2) testMesh2.rotationY+=0.1
-        }
-    )
+    RedGL(t, function (v) {
+        var tGL;
+        var tWorld, tScene3D, tCamera
+        var tRenderer;
+        var self;
+        self = this
+        tGL = this.gl;
+        this.world = tWorld = RedWorld();
+        tScene3D = RedScene(this);
+        tCamera = RedObitController(this);
+        tCamera.distance = 500
+        tCamera.speedDistance = 50
+        tCamera.tilt = -45
+        tRenderer = RedRenderer();
+        tWorld.addView(RedView('test', this, tScene3D, tCamera));
+        RedView('test').setSize('100%', '100%')
+        RedView('test').setLocation('0%', '0%')
+        // tScene3D.skyBox =
+        //     RedSkyBox(this, [
+        //         '../asset/cubemap/SwedishRoyalCastle/px.jpg',
+        //         '../asset/cubemap/SwedishRoyalCastle/nx.jpg',
+        //         '../asset/cubemap/SwedishRoyalCastle/py.jpg',
+        //         '../asset/cubemap/SwedishRoyalCastle/ny.jpg',
+        //         '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
+        //         '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
+        //     ]);
+        var testMesh = RedWaterField(self)
+        tScene3D.addChild(testMesh)
+        var testDLight
+        testDLight = RedDirectionalLight(this, '#fff')
+        testDLight.x = 3
+        testDLight.y = 5
+        testDLight.z = 3
+        tScene3D.addLight(testDLight)
+        tRenderer.renderDebuger.visible = true
+        tRenderer.start(this, function (time) {
+        })
+        console.log(tScene3D)
+    })
 </script>
 </body>
 

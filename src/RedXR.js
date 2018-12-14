@@ -14,9 +14,10 @@ let RedXR;
         (_ => {
             'use strict';
             const polyfill = new WebXRPolyfill();
+            var versionShim = new WebXRVersionShim();
             const cvs = document.createElement('canvas');
             const xrButton = new XRDeviceButton({
-                onRequestSession: device => device.requestSession({exclusive: true}).then(session => {
+                onRequestSession: device => device.requestSession({immersive: true}).then(session => {
                     xrButton.setSession(session);
                     session.addEventListener('end', e => {
                         xrButton.setSession(null)
@@ -28,7 +29,7 @@ let RedXR;
             });
             [canvas, xrButton.domElement].forEach(el => document.body.appendChild(el));
             if (navigator.xr) {
-                navigator.xr.requestDevice().then(device => device.supportsSession({exclusive: true}).then(_ => xrButton.setDevice(device)));
+                navigator.xr.requestDevice().then(device => device.supportsSession({immersive: true}).then(_ => xrButton.setDevice(device)));
             }
             const start = session => {
                 const start = isOK => {
@@ -59,7 +60,7 @@ let RedXR;
                     if (callback) callback.call(redGL, resultObject)
                     session.baseLayer = new XRWebGLLayer(session, redGL.gl);
                     redGL.gl.bindFramebuffer(redGL.gl.FRAMEBUFFER, session.baseLayer.framebuffer);
-                    session.requestFrameOfReference('eyeLevel').then(frameOfRef => {
+                    session.requestFrameOfReference('eye-level').then(frameOfRef => {
                         const onframe = (t, frame) => {
                             const session = frame.session;
                             const pose = frame.getDevicePose(frameOfRef);
@@ -69,6 +70,7 @@ let RedXR;
                                     const viewport = session.baseLayer.getViewport(view);
                                     const cam = viewport.x == 0 ? camL : camR;
                                     const viewName = viewport.x == 0 ? tLeftViewName : tRightViewName
+
                                     RedView(viewName).setSize(viewport.width, viewport.height)
                                     RedView(viewName).setLocation(viewport.x, viewport.y)
                                     cam.perspectiveMTX = view.projectionMatrix;
@@ -79,7 +81,7 @@ let RedXR;
                             }
                             session.requestAnimationFrame(onframe);
                         }
-                        redGL.setSize(null, null, true)
+                        redGL.setSize('100%', '100%', true)
                         session.requestAnimationFrame(onframe);
                     });
                 };
