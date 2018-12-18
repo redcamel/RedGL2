@@ -163,7 +163,7 @@
 <script>
     var t = document.getElementById('test')
     document.body.appendChild(t)
-    var testMesh,testMesh2
+    var testMesh, testMesh2
     RedXR(t,
         function (v) {
             console.log(this)
@@ -179,12 +179,12 @@
             testDLight.x = 0
             testDLight.y = 300
             testDLight.z = 300
-            console.log('~~~',v)
+            console.log('~~~', v)
             var c = RedPostEffect_Bloom(this)
             c.blur = 30
             // c.threshold = 0.5
-            RedView('left55')['postEffectManager'].addEffect(c)
-            RedView('right55')['postEffectManager'].addEffect(c)
+            // RedView('left55')['postEffectManager'].addEffect(c)
+            // RedView('right55')['postEffectManager'].addEffect(c)
 
             v['scene'].addLight(testDLight)
             v['scene'].skyBox =
@@ -199,10 +199,74 @@
                         '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
                     ]
                 );
+            var self = this;
+            (function () {
+                var testMaterial
+                testMaterial = RedPointBitmapMaterial(self, RedBitmapTexture(self, '../asset/particle.png'))
+                var interleaveData
+                interleaveData = []
+                var i = 20000
+                while (i--) {
+                    var t = Math.random() * 100 - 50
+                    interleaveData.push(Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50)
+                    interleaveData.push(Math.random() * 2)
+                }
+                interleaveData = interleaveData
+                var testParticle = RedPointUnit(
+                    self,
+                    interleaveData,
+                    [
+                        RedInterleaveInfo('aVertexPosition', 3),
+                        RedInterleaveInfo('aPointSize', 1)
+                    ],
+                    testMaterial
+                )
+//			testParticle['useDepthTest'] = false
+                testParticle['blendSrc'] = self.gl.SRC_ALPHA
+                testParticle['blendDst'] = self.gl.ONE
+                v['scene'].addChildAt(testParticle, 0)
+            })();
+            var testMaterial = RedEnvironmentMaterial(
+                this,
+                RedBitmapTexture(this, '../asset/crate.png'),
+                RedBitmapCubeTexture(this, [
+                    '../asset/cubemap/SwedishRoyalCastle/px.jpg',
+                    '../asset/cubemap/SwedishRoyalCastle/nx.jpg',
+                    '../asset/cubemap/SwedishRoyalCastle/py.jpg',
+                    '../asset/cubemap/SwedishRoyalCastle/ny.jpg',
+                    '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
+                    '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
+                ]),
+                RedBitmapTexture(this, '../asset/normalTest.jpg'),
+                RedBitmapTexture(this, '../asset/specular.png'),
+                RedBitmapTexture(this, '../asset/displacementTest.jpg')
+            )
+            testMaterial.reflectionPower = 0.5
+            JsonModelLoader(this, 'testJsonModel', '../asset/teapot.json', function (interleaveBuffer, indexBuffer) {
+                console.log('호잇!', interleaveBuffer, indexBuffer)
+                var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer), testMaterial)
+                // var testMesh = RedMesh(self, RedBox(self), testMaterial)
+                testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.3
+                // var testMesh = RedMesh(self,RedPlane(self),testMaterial)
+                // testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 1
+                // testMesh.scaleY  =
+                v['scene'].addChild(testMesh)
+                var i = 10
+                while (i--) {
+                    // var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer),
+                    //     testMaterial)
+                    var testMesh = RedMesh(self, RedSphere(self), testMaterial)
+                    testMesh.x = Math.sin(Math.PI * 2 / 10 * i) * 25
+                    testMesh.z = Math.cos(Math.PI * 2 / 10 * i) * 25
+                    testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 1
+                    v['scene'].addChild(testMesh)
+                }
+                v['scene']['grid'] = RedGrid(self)
+            });
             RedGLTFLoader(this, '../asset/glTF/basic/', 'DamagedHelmet.gltf', function (v2) {
                 console.log('호잇!', v2)
                 // v2['resultMesh'].scaleX = v2['resultMesh'].scaleY = v2['resultMesh'].scaleZ = 0.1
-                v2['resultMesh'].z =-10
+                v2['resultMesh'].z = -10
                 v['scene'].addChild(testMesh2 = v2['resultMesh'])
             })
         },
@@ -211,7 +275,7 @@
             testMesh.rotationX += 1
             testMesh.rotationY += 1
             testMesh.rotationZ += 1
-            if(testMesh2) testMesh2.rotationY+=0.1
+            if (testMesh2) testMesh2.rotationY += 0.1
         }
     )
 </script>
