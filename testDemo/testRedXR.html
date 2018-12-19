@@ -159,19 +159,20 @@
 </head>
 
 <body>
-<canvas id="test" style="border: none;background:red"></canvas>
+<canvas id="test" style="border: none;width:0 ;height:0"></canvas>
 <script>
     var t = document.getElementById('test')
     document.body.appendChild(t)
     var testMesh, testMesh2
+    var testParticle;
     RedXR(t,
         function (v) {
             console.log(this)
             console.log(v)
-            testMesh = RedMesh(this, RedSphere(this), RedColorMaterial(this))
+            testMesh = RedMesh(this, RedSphere(this, 2, 16, 16, 16), RedColorPhongMaterial(this))
             testMesh.z = -10
             testMesh.drawMode = this.gl.POINTS
-            testMesh.pointSize = 5
+            testMesh.pointSize = 7
             v['scene'].addChild(testMesh)
 
             var testDLight;
@@ -180,8 +181,8 @@
             testDLight.y = 300
             testDLight.z = 300
             console.log('~~~', v)
-            var c = RedPostEffect_Bloom(this)
-            c.blur = 30
+            // var c = RedPostEffect_Bloom(this)
+            // c.blur = 30
             // c.threshold = 0.5
             // RedView('left55')['postEffectManager'].addEffect(c)
             // RedView('right55')['postEffectManager'].addEffect(c)
@@ -200,6 +201,7 @@
                     ]
                 );
             var self = this;
+
             (function () {
                 var testMaterial
                 testMaterial = RedPointBitmapMaterial(self, RedBitmapTexture(self, '../asset/particle.png'))
@@ -207,12 +209,12 @@
                 interleaveData = []
                 var i = 20000
                 while (i--) {
-                    var t = Math.random() * 100 - 50
-                    interleaveData.push(Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50)
+                    var t = Math.random() * 1000 - 500
+                    interleaveData.push(Math.random() * 1000 - 500, Math.random() * 1000 - 500, Math.random() * 1000 - 500)
                     interleaveData.push(Math.random() * 2)
                 }
                 interleaveData = interleaveData
-                var testParticle = RedPointUnit(
+                testParticle = RedPointUnit(
                     self,
                     interleaveData,
                     [
@@ -244,13 +246,7 @@
             testMaterial.reflectionPower = 0.5
             JsonModelLoader(this, 'testJsonModel', '../asset/teapot.json', function (interleaveBuffer, indexBuffer) {
                 console.log('호잇!', interleaveBuffer, indexBuffer)
-                var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer), testMaterial)
-                // var testMesh = RedMesh(self, RedBox(self), testMaterial)
-                testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 0.3
-                // var testMesh = RedMesh(self,RedPlane(self),testMaterial)
-                // testMesh.scaleX = testMesh.scaleY = testMesh.scaleZ = 1
-                // testMesh.scaleY  =
-                v['scene'].addChild(testMesh)
+
                 var i = 10
                 while (i--) {
                     // var testMesh = RedMesh(self, RedGeometry(interleaveBuffer, indexBuffer),
@@ -272,9 +268,12 @@
         },
         function (time) {
 //			console.log(time)
-            testMesh.rotationX += 1
-            testMesh.rotationY += 1
-            testMesh.rotationZ += 1
+
+            testParticle.rotationY += 0.1
+            //
+            testMesh.rotationX += 0.5
+            testMesh.rotationY += 0.5
+            testMesh.rotationZ += 0.5
             if (testMesh2) testMesh2.rotationY += 0.1
         }
     )

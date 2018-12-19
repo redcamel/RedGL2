@@ -16,8 +16,17 @@ let RedXR;
             const polyfill = new WebXRPolyfill();
             var versionShim = new WebXRVersionShim();
             const cvs = document.createElement('canvas');
+            // cvs.width = '600'
+            // cvs.height = '300'
+            cvs.style.cssText = 'position:absolute;top:0;left:0;';
+            canvas.style.display = 'none'
+            document.body.appendChild(cvs)
             const xrButton = new XRDeviceButton({
-                onRequestSession: device => device.requestSession({immersive: true}).then(session => {
+                onRequestSession: device => device.requestSession({
+                    immersive: true,
+                    outputContext: cvs.getContext('xrpresent')
+                }).then(session => {
+                    console.log('session', session)
                     xrButton.setSession(session);
                     session.addEventListener('end', e => {
                         xrButton.setSession(null)
@@ -33,6 +42,7 @@ let RedXR;
             }
             const start = session => {
                 const start = isOK => {
+                    console.log('session', session)
                     if (!isOK) return console.log('error');
                     canvas.style.display = 'block'
                     const camL = RedCamera()
