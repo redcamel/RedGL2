@@ -1,3 +1,14 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:cd374e97087f07651af048d28e0c2a78d282b4da7c64bfdf48357beb0ae2cedf
-size 244
+# 
+# 
+newmtl Rabbit
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd Rabbit_D.png
+map_bump -bm 5.000000 Rabbit_N.png
+map_Ns Rabbit_S.png
+
