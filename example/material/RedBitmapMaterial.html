@@ -47,7 +47,7 @@
             tScene['grid'] = RedGrid(this)
             // Mesh 설정
             var tMesh;
-            var tMaterial = RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'draft1.png'))
+            var tMaterial = RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'brick/Brick03_col.jpg'))
             var tMaterial2 = RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'draft2.png'))
             var tMaterial3 = RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'alphaTest.png'))
             tMesh = RedMesh(this, RedBox(this), tMaterial)
@@ -108,7 +108,7 @@
         gui.initScene(tScene, false, assetPath)
         var alphaTest = {
             alpha: 1,
-            diffuseTexture: assetPath + 'draft1.png'
+            diffuseTexture: assetPath + 'brick/Brick03_col.jpg'
         }
         var folder;
         folder = gui['gui'].addFolder('RedBitmapMaterial')
@@ -117,7 +117,7 @@
                 v2.material.alpha = v
             })
         })
-        folder.add(alphaTest, 'diffuseTexture', [assetPath + 'draft1.png', assetPath + 'draft2.png', assetPath + 'draft3.png'], 0).onChange(function (v) {
+        folder.add(alphaTest, 'diffuseTexture', [assetPath + 'brick/Brick03_col.jpg', assetPath + 'draft2.png', assetPath + 'draft3.png'], 0).onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.material.diffuseTexture = RedBitmapTexture(redGL, v)
             })

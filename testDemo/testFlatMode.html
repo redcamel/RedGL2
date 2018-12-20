@@ -48,11 +48,11 @@
             RedColorMaterial(this),
             RedColorPhongMaterial(this),
             RedColorPhongTextureMaterial(this),
-            RedBitmapMaterial(this, RedBitmapTexture(this, '../asset/crate.png')),
-            RedStandardMaterial(this, RedBitmapTexture(this, '../asset/crate.png')),
+            RedBitmapMaterial(this, RedBitmapTexture(this, '../asset/brick/Brick03_col.jpg')),
+            RedStandardMaterial(this, RedBitmapTexture(this, '../asset/brick/Brick03_col.jpg')),
             RedEnvironmentMaterial(
                 this,
-                RedBitmapTexture(this, '../asset/crate.png'),
+                RedBitmapTexture(this, '../asset/brick/Brick03_col.jpg'),
                 RedBitmapCubeTexture(this, [
                     '../asset/cubemap/SwedishRoyalCastle/px.jpg',
                     '../asset/cubemap/SwedishRoyalCastle/nx.jpg',
@@ -61,13 +61,13 @@
                     '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
                     '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
                 ]),
-                RedBitmapTexture(this, '../asset/normalTest.jpg'),
+                RedBitmapTexture(this, '../asset/brick/Brick03_nrm.jpg'),
                 RedBitmapTexture(this, '../asset/specular.png'),
                 RedBitmapTexture(this, '../asset/displacementTest.jpg')
             ),
             RedSheetMaterial(this, RedBitmapTexture(this, '../asset/sheet/spriteSheet2.png'), 24, 6, 4, 24),
             RedVideoMaterial(this, RedVideoTexture(this, '../asset/mov_bbb.mp4')),
-            tPBR = RedPBRMaterial(this, RedBitmapTexture(this, '../asset/crate.png'), RedBitmapCubeTexture(this, [
+            tPBR = RedPBRMaterial(this, RedBitmapTexture(this, '../asset/brick/Brick03_col.jpg'), RedBitmapCubeTexture(this, [
                 '../asset/cubemap/SwedishRoyalCastle/px.jpg',
                 '../asset/cubemap/SwedishRoyalCastle/nx.jpg',
                 '../asset/cubemap/SwedishRoyalCastle/py.jpg',

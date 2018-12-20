@@ -62,8 +62,10 @@ var RedColorPhongTextureMaterial;
         //#REDGL_DEFINE#fragmentShareFunc#decodeFloatShadow#
         //#REDGL_DEFINE#fragmentShareFunc#getShadowColor#
 
-        // flat노말
+       // flat노말
         //#REDGL_DEFINE#fragmentShareFunc#getFlatNormal#
+
+        //#REDGL_DEFINE#fragmentShareFunc#getPerturbNormal2Arb#
 
         // 라이트
         //#REDGL_DEFINE#fragmentShareFunc#getDirectionalLightColor#
@@ -91,8 +93,9 @@ var RedColorPhongTextureMaterial;
              // texelColor.rgb *= texelColor.a;
 
              N = normalize(vVertexNormal);
-             //#REDGL_DEFINE#normalTexture# vec4 normalColor = texture2D(u_normalTexture, vTexcoord);
-             //#REDGL_DEFINE#normalTexture# if(normalColor.a != 0.0) N = normalize(2.0 * (N + normalColor.rgb * u_normalPower  - 0.5));
+             vec4 normalColor = vec4(0.0);
+             //#REDGL_DEFINE#normalTexture# normalColor = texture2D(u_normalTexture, vTexcoord);
+             //#REDGL_DEFINE#normalTexture# N = getPerturbNormal2Arb(vVertexPosition.xyz, N, normalColor, vTexcoord) ;
              //#REDGL_DEFINE#useFlatMode# N = getFlatNormal(vVertexPosition.xyz);
 
              specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);

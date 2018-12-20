@@ -63,7 +63,7 @@ function () {
     var testMaterial
     testMaterial = RedEnvironmentMaterial(
         this,
-        RedBitmapTexture(this, 'https://redcamel.github.io/RedGL2/asset/crate.png'),
+        RedBitmapTexture(this, 'https://redcamel.github.io/RedGL2/asset/brick/Brick03_col.jpg'),
         RedBitmapCubeTexture(this, [
             'https://redcamel.github.io/RedGL2/asset/cubemap/SwedishRoyalCastle/px.jpg',
             'https://redcamel.github.io/RedGL2/asset/cubemap/SwedishRoyalCastle/nx.jpg',
@@ -72,7 +72,7 @@ function () {
             'https://redcamel.github.io/RedGL2/asset/cubemap/SwedishRoyalCastle/pz.jpg',
             'https://redcamel.github.io/RedGL2/asset/cubemap/SwedishRoyalCastle/nz.jpg'
         ])
-        , RedBitmapTexture(this, 'https://redcamel.github.io/RedGL2/asset/normalTest.jpg')
+        , RedBitmapTexture(this, 'https://redcamel.github.io/RedGL2/asset/brick/Brick03_nrm.jpg')
         , RedBitmapTexture(this, 'https://redcamel.github.io/RedGL2/asset/specular.png')
         , RedBitmapTexture(this, 'https://redcamel.github.io/RedGL2/asset/displacementTest.jpg')
     )

@@ -113,7 +113,7 @@
         })
         folder.add(testColorPhongTextureMaterial, 'normalTexture').onChange(function (v) {
             tScene.children.forEach(function (v2) {
-                v2.material.normalTexture = v ? RedBitmapTexture(redGL, assetPath + 'normalTest.jpg') : null
+                v2.material.normalTexture = v ? RedBitmapTexture(redGL, assetPath + 'brick/Brick03_nrm.jpg') : null
             })
         })
         folder.add(testColorPhongTextureMaterial, 'specularTexture').onChange(function (v) {
@@ -123,7 +123,7 @@
         })
         folder.add(testColorPhongTextureMaterial, 'displacementTexture').onChange(function (v) {
             tScene.children.forEach(function (v2) {
-                v2.material.displacementTexture = v ? RedBitmapTexture(redGL, assetPath + 'displacementTest.jpg') : null
+                v2.material.displacementTexture = v ? RedBitmapTexture(redGL, assetPath + 'brick/Brick03_disp.jpg') : null
             })
         })
         folder.add(testColorPhongTextureMaterial, 'displacementPower', 0, 2).onChange(function (v) {
