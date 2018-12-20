@@ -62,7 +62,10 @@
             tDLight['debug'] = true
             // Mesh 설정
             var tMesh;
-            var tMaterial = RedStandardMaterial(this, RedBitmapTexture(this, assetPath + 'brick/Brick03_col.jpg'))
+            var self = this
+            var tMaterial = RedStandardMaterial(self, RedBitmapTexture(self, assetPath + 'brick/Brick03_col.jpg'), RedBitmapTexture(self, assetPath + 'brick/Brick03_nrm.jpg'), null, RedBitmapTexture(self, assetPath + 'brick/Brick03_disp.jpg'),);
+            tMaterial.displacementPower = 0.1, tMaterial.normalPower = 2
+            tMaterial.shininess = 32
             tMesh = RedMesh(this, RedBox(this, 1, 1, 1, 32, 32, 32), tMaterial)
             tMesh.x = -1.5
             tScene.addChild(tMesh)

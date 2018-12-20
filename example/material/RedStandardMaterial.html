@@ -162,7 +162,7 @@
                 v2.material.specularTexture = v == 'none' ? null : RedBitmapTexture(redGL, v)
             })
         })
-        folder.add(testRedStandard, 'displacementTexture', ['none', assetPath + 'displacementTest.jpg']).onChange(function (v) {
+        folder.add(testRedStandard, 'displacementTexture', ['none', assetPath + 'brick/Brick03_disp.jpg']).onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.material.displacementTexture = v == 'none' ? null : RedBitmapTexture(redGL, v)
             })
