@@ -83,8 +83,10 @@
                     self,
                     RedBitmapTexture(self, assetPath + 'brick/Brick03_col.jpg'),
                     RedBitmapTexture(self, assetPath + 'brick/Brick03_nrm.jpg'),
-                    RedBitmapTexture(self, assetPath + 'brick_roughness.jpg')
-                )
+                    RedBitmapTexture(self, assetPath + 'brick/Brick03_disp.jpg'),
+                    RedBitmapTexture(self, assetPath + 'brick/Brick03_disp.jpg'),
+                );
+                tMat.displacementPower = 0.1, tMat.normalPower = 2
                 while (i--) {
                     j = 10
                     while (j--) {

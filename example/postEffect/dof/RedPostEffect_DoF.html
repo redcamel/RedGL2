@@ -76,12 +76,8 @@
             var k
             var tMesh;
             var tGeo = RedSphere(self, 0.5, 16, 16, 16)
-            var tMat = RedStandardMaterial(
-                self,
-                RedBitmapTexture(self, assetPath + 'brick/Brick03_col.jpg'),
-                RedBitmapTexture(self, assetPath + 'brick/Brick03_nrm.jpg'),
-                RedBitmapTexture(self, assetPath + 'brick_roughness.jpg')
-            )
+            var tMat = RedStandardMaterial(self, RedBitmapTexture(self, assetPath + 'brick/Brick03_col.jpg'), RedBitmapTexture(self, assetPath + 'brick/Brick03_nrm.jpg'), null, RedBitmapTexture(self, assetPath + 'brick/Brick03_disp.jpg'),);
+            tMat.displacementPower = 0.1, tMat.normalPower = 2
             tMat.shininess = 32
             while (i--) {
                 j = 10
