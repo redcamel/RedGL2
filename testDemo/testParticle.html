@@ -21,7 +21,7 @@
 </head>
 
 <body>
-<canvas id="test" style="border: none;background:red"></canvas>
+<canvas id="test" style="border: none;"></canvas>
 <script>
     var t = document.getElementById('test')
     document.body.appendChild(t)
@@ -38,6 +38,15 @@
         tCamera = RedObitController(self)
         tCamera.distance = 50
         tRenderer = RedRenderer();
+        (function () {
+            var sourceViewBt;
+            document.body.appendChild(sourceViewBt = document.createElement('button'));
+            sourceViewBt.style.cssText = 'position:fixed;left:10px;top:10px;background:rgb(91, 82, 170);color:#fff;z-index:10001;border:0;outline:none;cursor:pointer;padding:8px;font-size:11px;border-radius:5px'
+            sourceViewBt.innerHTML = 'debugRenderInfo'
+            sourceViewBt.addEventListener('click', function () {
+                tRenderer.renderDebuger.visible = !tRenderer.renderDebuger.visible
+            })
+        })();
         tWorld.addView(RedView('test', this, tScene3D, tCamera));
         var testDLight;
         testDLight = RedDirectionalLight(this, '#fff')
@@ -159,7 +168,7 @@
         var moveYn
         tScene3D.addChild(testEmitter)
         tRenderer.start(this, function (time) {
-            tRenderer.renderDebuger.visible = true
+
             if (moveYn) {
                 centerMesh.x = testEmitter.x = Math.sin(time / 500) * 5
                 centerMesh.y = testEmitter.y = 0

@@ -22,8 +22,10 @@
 </head>
 
 <body>
-<canvas id="test" style="border: none;background:red"></canvas>
+<canvas id="test" style="border: none;"></canvas>
 <script>
+
+
     var t = document.getElementById('test')
     document.body.appendChild(t)
     RedGL(t, function (v) {
@@ -45,6 +47,24 @@
         tCamera3 = RedCamera();
         tCamera.orthographicYn = true
         tRenderer = RedRenderer();
+        (function () {
+            var sourceViewBt;
+            document.body.appendChild(sourceViewBt = document.createElement('button'));
+            sourceViewBt.style.cssText = 'position:fixed;left:10px;top:10px;background:rgb(91, 82, 170);color:#fff;z-index:10001;border:0;outline:none;cursor:pointer;padding:8px;font-size:11px;border-radius:5px'
+            sourceViewBt.innerHTML = 'debugRenderInfo'
+            sourceViewBt.addEventListener('click', function () {
+                tRenderer.renderDebuger.visible = !tRenderer.renderDebuger.visible
+            })
+        })();
+        (function () {
+            var sourceViewBt;
+            document.body.appendChild(sourceViewBt = document.createElement('button'));
+            sourceViewBt.style.cssText = 'position:fixed;left:10px;top:10px;background:rgb(91, 82, 170);color:#fff;z-index:10001;border:0;outline:none;cursor:pointer;padding:8px;font-size:11px;border-radius:5px'
+            sourceViewBt.innerHTML = 'debugRenderInfo'
+            sourceViewBt.addEventListener('click', function () {
+                tRenderer.renderDebuger.visible = !tRenderer.renderDebuger.visible
+            })
+        })();
         tWorld.addView(RedView('test', this, tScene2D, tCamera));
         tWorld.addView(RedView('test2', this, tScene3D, tCamera2));
         tWorld.addView(RedView('test3', this, tScene3D_2, tCamera3));
@@ -54,26 +74,20 @@
         RedView('test3').setLocation('0%', '50%')
         RedView('test4').setSize('50%', '50%')
         RedView('test4').setLocation('50%', '50%')
-        // tScene3D.skyBox =
-        //     RedSkyBox(this, [
-        //         '../asset/cubemap/SwedishRoyalCastle/px.jpg',
-        //         '../asset/cubemap/SwedishRoyalCastle/nx.jpg',
-        //         '../asset/cubemap/SwedishRoyalCastle/ny.jpg',
-        //         '../asset/cubemap/SwedishRoyalCastle/py.jpg',
-        //         '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
-        //         '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
-        //     ])
+        tScene3D.skyBox =
+            RedSkyBox(this, [
+                '../asset/cubemap/SwedishRoyalCastle/px.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/nx.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/ny.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/py.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
+                '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
+            ])
         // tScene3D['postEffectManager'].addEffect(RedPostEffect_Invert(this))
         // tScene3D['postEffectManager'].addEffect(RedPostEffect_Blur(this))
         RedView('test2')['postEffectManager'].addEffect(RedPostEffect_Gray(this))
         RedView('test4')['postEffectManager'].addEffect(RedPostEffect_Gray(this))
-        // tScene3D['postEffectManager'].addEffect(RedPostEffect_Pixelize(this))
-        // tScene3D['postEffectManager'].addEffect(RedPostEffect_Convolution(this, RedPostEffect_Convolution['EMBOSS']))
-        // tScene3D['postEffectManager'].addEffect(RedPostEffect_HueSaturation(this))
-//		tScene3D['postEffectManager'].addEffect(RedPostEffect_Vignetting(this))
-        // tScene3D['postEffectManager'].addEffect(RedPostEffect_BrightnessContrast(this))
-//		tScene3D['postEffectManager'].addEffect(RedPostEffect_ZoomBlur(this))
-        // tScene3D['postEffectManager'].addEffect(RedPostEffect_HalfTone(this))
+
         var testMaterial, testMaterial2, testMaterial3, testMaterial4, testMaterial5, testMaterial6,
             testMaterial7, testMaterial8
         testMaterial = RedTestMaterial(this)
@@ -247,7 +261,7 @@
                 tScene3D.addChild(testMesh)
             }
         })
-        tRenderer.renderDebuger.visible = true
+        tRenderer.renderDebuger.visible = false
         tRenderer.start(this, function (time) {
             testMaterial['floatTest'] = time
             interleaveData[0] = Math.sin(time / 1000) * 3

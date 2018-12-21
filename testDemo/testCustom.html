@@ -23,7 +23,7 @@
 </head>
 
 <body>
-<canvas id="test" style="border: none;background:red"></canvas>
+<canvas id="test" style="border: none;"></canvas>
 <script>
     var t = document.getElementById('test')
     document.body.appendChild(t)
@@ -42,6 +42,15 @@
         tCamera.z = 10
         tCamera.lookAt(0, 0, 0)
         tRenderer = RedRenderer();
+        (function () {
+            var sourceViewBt;
+            document.body.appendChild(sourceViewBt = document.createElement('button'));
+            sourceViewBt.style.cssText = 'position:fixed;left:10px;top:10px;background:rgb(91, 82, 170);color:#fff;z-index:10001;border:0;outline:none;cursor:pointer;padding:8px;font-size:11px;border-radius:5px'
+            sourceViewBt.innerHTML = 'debugRenderInfo'
+            sourceViewBt.addEventListener('click', function () {
+                tRenderer.renderDebuger.visible = !tRenderer.renderDebuger.visible
+            })
+        })();
         tWorld.addView(RedView('test', this, tScene3D, tCamera));
         var testMaterial
         testMaterial = RedTestMaterial(this)
@@ -77,7 +86,7 @@
         testMesh.drawMode = this.gl.POINTS
         // if(Math.random() >0.8) testMesh.drawMode = this.gl.LINE_LOOP
         tScene3D.addChild(testMesh)
-        tRenderer.renderDebuger.visible = true
+
         tRenderer.start(this, function (time) {
             tCamera.x = Math.sin(time / 15000) * 30
             tCamera.y = Math.cos(time / 15000) * 30

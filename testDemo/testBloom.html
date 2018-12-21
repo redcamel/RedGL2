@@ -22,7 +22,7 @@
 </head>
 
 <body>
-<canvas id="test" style="border: none;background:red"></canvas>
+<canvas id="test" style="border: none;"></canvas>
 <script>
     document.getElementById('test')
     RedGL(document.getElementById('test'), function (v) {
@@ -39,6 +39,15 @@
         tCamera = RedObitController(this);
         tCamera.tilt = -45
         tRenderer = RedRenderer();
+        (function () {
+            var sourceViewBt;
+            document.body.appendChild(sourceViewBt = document.createElement('button'));
+            sourceViewBt.style.cssText = 'position:fixed;left:10px;top:10px;background:rgb(91, 82, 170);color:#fff;z-index:10001;border:0;outline:none;cursor:pointer;padding:8px;font-size:11px;border-radius:5px'
+            sourceViewBt.innerHTML = 'debugRenderInfo'
+            sourceViewBt.addEventListener('click', function () {
+                tRenderer.renderDebuger.visible = !tRenderer.renderDebuger.visible
+            })
+        })();
         tWorld.addView(RedView('test', this, tScene3D, tCamera));
         RedView('test').setSize('100%', '50%')
         RedView('test').setLocation('0%', '0%')
@@ -118,7 +127,7 @@
             }
             v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.025
         })
-        tRenderer.renderDebuger.visible = true
+
         tRenderer.start(this, function (time) {
             i = tScene3D.children.length
             while (i--) {

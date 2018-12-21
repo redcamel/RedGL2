@@ -20,7 +20,7 @@
 </head>
 
 <body>
-<canvas id="test" style="border: none;background:red"></canvas>
+<canvas id="test" style="border: none;"></canvas>
 <script>
     var testUI;
     document.getElementById('test')
@@ -38,6 +38,15 @@
             tCamera.distance = 500
             // 렌더러 생성
             tRenderer = RedRenderer();
+            (function () {
+                var sourceViewBt;
+                document.body.appendChild(sourceViewBt = document.createElement('button'));
+                sourceViewBt.style.cssText = 'position:fixed;left:10px;top:10px;background:rgb(91, 82, 170);color:#fff;z-index:10001;border:0;outline:none;cursor:pointer;padding:8px;font-size:11px;border-radius:5px'
+                sourceViewBt.innerHTML = 'debugRenderInfo'
+                sourceViewBt.addEventListener('click', function () {
+                    tRenderer.renderDebuger.visible = !tRenderer.renderDebuger.visible
+                })
+            })();
             // 뷰생성 및 적용
             tWorld.addView(RedView('test', this, tScene, tCamera));
             tScene.useFog = true

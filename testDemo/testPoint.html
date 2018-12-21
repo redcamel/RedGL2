@@ -21,7 +21,7 @@
 </head>
 
 <body>
-<canvas id="test" style="border: none;background:red"></canvas>
+<canvas id="test" style="border: none;"></canvas>
 <script>
     var t = document.getElementById('test')
     document.body.appendChild(t)
@@ -40,6 +40,15 @@
         tCamera.z = 10
         tCamera.lookAt(0, 0, 0)
         tRenderer = RedRenderer();
+        (function () {
+            var sourceViewBt;
+            document.body.appendChild(sourceViewBt = document.createElement('button'));
+            sourceViewBt.style.cssText = 'position:fixed;left:10px;top:10px;background:rgb(91, 82, 170);color:#fff;z-index:10001;border:0;outline:none;cursor:pointer;padding:8px;font-size:11px;border-radius:5px'
+            sourceViewBt.innerHTML = 'debugRenderInfo'
+            sourceViewBt.addEventListener('click', function () {
+                tRenderer.renderDebuger.visible = !tRenderer.renderDebuger.visible
+            })
+        })();
         tWorld.addView(RedView('test', this, tScene3D, tCamera));
         var testDLight;
         testDLight = RedDirectionalLight(this, '#fff')
@@ -151,7 +160,7 @@
             if (tCamera.y < 1) tCamera.y = 1
             tCamera.z = Math.cos(time / 3500) * 30 + Math.sin(time / 31500) * 30
             tCamera.lookAt(0, 0, 0)
-            tRenderer.renderDebuger.visible = true
+
         })
         console.log(tScene3D)
     })

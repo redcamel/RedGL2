@@ -25,7 +25,7 @@
 </head>
 
 <body>
-<canvas id="test" style="border: none;background:red"></canvas>
+<canvas id="test" style="border: none;"></canvas>
 <script>
     document.getElementById('test')
     RedGL(document.getElementById('test'), function (v) {
@@ -44,6 +44,15 @@
 //		tCamera.distance = 150
 //		tCamera.speedDistance = 50
         tRenderer = RedRenderer();
+        (function () {
+            var sourceViewBt;
+            document.body.appendChild(sourceViewBt = document.createElement('button'));
+            sourceViewBt.style.cssText = 'position:fixed;left:10px;top:10px;background:rgb(91, 82, 170);color:#fff;z-index:10001;border:0;outline:none;cursor:pointer;padding:8px;font-size:11px;border-radius:5px'
+            sourceViewBt.innerHTML = 'debugRenderInfo'
+            sourceViewBt.addEventListener('click', function () {
+                tRenderer.renderDebuger.visible = !tRenderer.renderDebuger.visible
+            })
+        })();
         tWorld.addView(RedView('test', this, tScene3D, tCamera));
         RedView('test').setSize('100%', '100%')
         RedView('test').setLocation('0%', '0%')
@@ -59,7 +68,7 @@
         testDLight.y = 300
         testDLight.z = -300
         tScene3D.addLight(testDLight)
-        tRenderer.renderDebuger.visible = true
+
         tScene3D.skyBox =
             RedSkyBox(this, [
                 '../asset/cubemap/SwedishRoyalCastle/px.jpg',
