@@ -22,7 +22,7 @@ var RedAtlasTexture;
 		 example : `
 			 var imgList;
 			 imgList = [
-				 '../asset/draft1.png',
+				 '../asset/brick/Brick03_col.jpg',
 				 '../asset/draft2.png',
 				 '../asset/draft3.png',
 				 '../asset/draft4.png',

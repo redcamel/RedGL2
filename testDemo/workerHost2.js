@@ -42,6 +42,15 @@ function () {
     testPLight2.debug = true
     tScene3D.addLight(testPLight2)
     tRenderer = RedRenderer();
+    (function () {
+        var sourceViewBt;
+        document.body.appendChild(sourceViewBt = document.createElement('button'));
+        sourceViewBt.style.cssText = 'position:fixed;left:10px;top:10px;background:rgb(91, 82, 170);color:#fff;z-index:10001;border:0;outline:none;cursor:pointer;padding:8px;font-size:11px;border-radius:5px'
+        sourceViewBt.innerHTML = 'debugRenderInfo'
+        sourceViewBt.addEventListener('click', function () {
+            tRenderer.renderDebuger.visible = !tRenderer.renderDebuger.visible
+        })
+    })();
     tWorld.addView(RedView('testView', this, tScene3D, tCamera));
     RedView('testView').setSize('100%', '100%')
     RedView('testView').setLocation('0%', '0%')
@@ -63,7 +72,7 @@ function () {
     var testMaterial
     testMaterial = RedEnvironmentMaterial(
         this,
-        RedBitmapTexture(this, 'https://redcamel.github.io/RedGL2/asset/crate.png'),
+        RedBitmapTexture(this, 'https://redcamel.github.io/RedGL2/asset/brick/Brick03_col.jpg'),
         RedBitmapCubeTexture(this, [
             'https://redcamel.github.io/RedGL2/asset/cubemap/SwedishRoyalCastle/px.jpg',
             'https://redcamel.github.io/RedGL2/asset/cubemap/SwedishRoyalCastle/nx.jpg',
@@ -72,7 +81,7 @@ function () {
             'https://redcamel.github.io/RedGL2/asset/cubemap/SwedishRoyalCastle/pz.jpg',
             'https://redcamel.github.io/RedGL2/asset/cubemap/SwedishRoyalCastle/nz.jpg'
         ])
-        , RedBitmapTexture(this, 'https://redcamel.github.io/RedGL2/asset/normalTest.jpg')
+        , RedBitmapTexture(this, 'https://redcamel.github.io/RedGL2/asset/brick/Brick03_nrm.jpg')
         , RedBitmapTexture(this, 'https://redcamel.github.io/RedGL2/asset/specular.png')
         , RedBitmapTexture(this, 'https://redcamel.github.io/RedGL2/asset/displacementTest.jpg')
     )
@@ -188,7 +197,7 @@ function () {
             tScene3D.addChild(testLine)
         }
     })
-    tRenderer.renderDebuger.visible = true
+
     tScene3D.sortGeometry()
     tRenderer.start(this, function (time) {
         // testInterleaveBuffer.upload(interleaveData)

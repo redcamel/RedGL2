@@ -81,10 +81,12 @@
                 var tGeo = RedSphere(self, 1, 32, 32, 32)
                 var tMat = RedStandardMaterial(
                     self,
-                    RedBitmapTexture(self, assetPath + 'crate.png'),
-                    RedBitmapTexture(self, assetPath + 'normalTest.jpg'),
-                    RedBitmapTexture(self, assetPath + 'brick_roughness.jpg')
-                )
+                    RedBitmapTexture(self, assetPath + 'brick/Brick03_col.jpg'),
+                    RedBitmapTexture(self, assetPath + 'brick/Brick03_nrm.jpg'),
+                    null,
+                    RedBitmapTexture(self, assetPath + 'brick/Brick03_disp.jpg'),
+                );
+                tMat.displacementPower = 0.1, tMat.normalPower = 2
                 while (i--) {
                     j = 10
                     while (j--) {

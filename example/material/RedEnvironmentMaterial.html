@@ -69,7 +69,13 @@
                 assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
                 assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
             ])
-            var tMaterial = RedEnvironmentMaterial(this, RedBitmapTexture(this, assetPath + 'draft1.png'), tEnvironmentTexture, RedBitmapTexture(this, assetPath + 'normalTest.jpg'))
+            var tMaterial = RedEnvironmentMaterial(this,
+                RedBitmapTexture(this, assetPath + 'brick/Brick03_col.jpg'),
+                tEnvironmentTexture,
+                RedBitmapTexture(this, assetPath + 'brick/Brick03_nrm.jpg'),
+                null,
+                RedBitmapTexture(this, assetPath + 'brick/Brick03_disp.jpg')
+            )
             tMesh = RedMesh(this, RedBox(this, 1, 1, 1, 32, 32, 32), tMaterial)
             tMesh.x = -1.5
             tScene.addChild(tMesh)
@@ -130,8 +136,8 @@
         gui.initScene(tScene, false, assetPath)
         var folder = gui['gui'].addFolder('RedEnvironmentMaterial')
         var testRedEnvironmentMaterial = {
-            diffuseTexture: assetPath + 'draft1.png',
-            normalTexture: assetPath + 'normalTest.jpg',
+            diffuseTexture: assetPath + 'brick/Brick03_col.jpg',
+            normalTexture: assetPath + 'brick/Brick03_nrm.jpg',
             specularTexture: 'none',
             displacementTexture: 'none',
             alpha: 1,
@@ -168,12 +174,12 @@
                 v2.material.specularPower = v
             })
         })
-        folder.add(testRedEnvironmentMaterial, 'diffuseTexture', ['none', assetPath + 'draft1.png', assetPath + 'draft2.png', assetPath + 'draft3.png'], 0).onChange(function (v) {
+        folder.add(testRedEnvironmentMaterial, 'diffuseTexture', ['none', assetPath + 'brick/Brick03_col.jpg', assetPath + 'draft2.png', assetPath + 'draft3.png'], 0).onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.material.diffuseTexture = v == 'none' ? null : RedBitmapTexture(redGL, v)
             })
         })
-        folder.add(testRedEnvironmentMaterial, 'normalTexture', ['none', assetPath + 'normalTest.jpg']).onChange(function (v) {
+        folder.add(testRedEnvironmentMaterial, 'normalTexture', ['none', assetPath + 'brick/Brick03_nrm.jpg']).onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.material.normalTexture = v == 'none' ? null : RedBitmapTexture(redGL, v)
             })
@@ -183,7 +189,7 @@
                 v2.material.specularTexture = v == 'none' ? null : RedBitmapTexture(redGL, v)
             })
         })
-        folder.add(testRedEnvironmentMaterial, 'displacementTexture', ['none', assetPath + 'displacementTest.jpg']).onChange(function (v) {
+        folder.add(testRedEnvironmentMaterial, 'displacementTexture', ['none', assetPath + 'brick/Brick03_disp.jpg']).onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.material.displacementTexture = v == 'none' ? null : RedBitmapTexture(redGL, v)
             })

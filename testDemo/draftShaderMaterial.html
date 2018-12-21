@@ -17,129 +17,7 @@
         }
     </style>
     <script src="../example/dat.gui.min.js"></script>
-    <script src="../src/gl-matrix-min.js"></script>
-    <script src="../src/RedGLUtil.js"></script>
-    <script src="../src/detect/RedGLDetect.js"></script>
-    <script src="../src/base/RedDefinePropertyInfo.js"></script>
-    <script src="../src/RedGL.js"></script>
-
-    <!--//-->
-
-    <script src="../src/base/RedBaseObject3D.js"></script>
-    <script src="../src/base/RedBaseContainer.js"></script>
-    <script src="../src/base/RedBaseController.js"></script>
-    <script src="../src/base/RedBaseLight.js"></script>
-    <script src="../src/loader/RedImageLoader.js"></script>
-    <script src="../src/base/RedBaseTexture.js"></script>
-    <script src="../src/base/RedBaseMaterial.js"></script>
-
-
-    <!--//-->
-    <script src="../src/frameBuffer/RedFrameBuffer.js"></script>
-    <!--//-->
-    <script src="../src/geometry/RedBuffer.js"></script>
-    <script src="../src/geometry/RedGeometry.js"></script>
-    <script src="../src/geometry/RedInterleaveInfo.js"></script>
-    <!--//-->
-
-    <!--//-->
-    <script src="../rnd/resources/RedAtlas.js"></script>
-    <script src="../rnd/resources/system/RedAtlasUV.js"></script>
-    <script src="../src/resources/system/RedTextureOptionChecker.js"></script>
-    <script src="../src/resources/RedBitmapTexture.js"></script>
-    <script src="../src/resources/RedDDSTexture.js"></script>
-    <script src="../src/resources/RedVideoTexture.js"></script>
-    <script src="../rnd/resources/RedAtlasTexture.js"></script>
-    <script src="../src/resources/RedBitmapCubeTexture.js"></script>
-    <!--재질-->
-    <script src="../src/material/RedColorMaterial.js"></script>
-    <script src="../src/material/RedColorPhongMaterial.js"></script>
-    <script src="../src/material/RedColorPhongTextureMaterial.js"></script>
-    <script src="../src/material/RedEnvironmentMaterial.js"></script>
-    <script src="../src/material/RedBitmapMaterial.js"></script>
-    <script src="../src/material/RedParticleColorMaterial.js"></script>
-    <script src="../src/material/RedParticleBitmapMaterial.js"></script>
-    <script src="../src/material/RedPointColorMaterial.js"></script>
-    <script src="../src/material/RedPointBitmapMaterial.js"></script>
-    <script src="../src/material/RedSheetMaterial.js"></script>
-    <script src="../src/material/RedStandardMaterial.js"></script>
-    <script src="../src/material/RedVideoMaterial.js"></script>
-    <!--//-->
-    <script src="../src/light/RedAmbientLight.js"></script>
-    <script src="../src/light/RedDirectionalLight.js"></script>
-    <script src="../src/light/RedPointLight.js"></script>
-    <!--//-->
-    <script src="../src/loader/JsonModelLoader.js"></script>
-    <script src="../src/loader/obj/RedMTLLoader.js"></script>
-    <script src="../src/loader/obj/RedOBJLoader.js"></script>
-    <!--//-->
-    <script src="../src/object3D/RedAxis.js"></script>
-    <script src="../src/object3D/RedGrid.js"></script>
-    <script src="../src/object3D/RedMesh.js"></script>
-    <script src="../src/object3D/RedLine.js"></script>
-    <script src="../src/object3D/RedSkyBox.js"></script>
-    <script src="../src/object3D/RedSprite3D.js"></script>
-    <!--//-->
-    <script src="../src/particle/RedPointUnit.js"></script>
-    <script src="../src/particle/RedParticleUnit.js"></script>
-    <script src="../src/particle/RedParticleEmitter.js"></script>
-    <!--//-->
-    <script src="../src/primitives/RedBox.js"></script>
-    <script src="../src/primitives/RedPlane.js"></script>
-    <script src="../src/primitives/RedSphere.js"></script>
-    <!--//-->
-    <script src="../src/program/RedProgram.js"></script>
-    <script src="../src/program/RedSystemShaderCode.js"></script>
-    <script src="../src/program/RedShader.js"></script>
-    <!--//-->
-    <script src="../src/renderer/RedRenderer.js"></script>
-    <script src="../src/renderer/system/RedRenderDebuger.js"></script>
-    <script src="../src/renderer/system/RedSystemUniformUpdater.js"></script>
-    <!--//-->
-    <script src="../src/RedView.js"></script>
-    <script src="../src/RedWorld.js"></script>
-    <script src="../src/RedScene.js"></script>
-    <!--//-->
-    <script src="../src/camera/RedCamera.js"></script>
-    <script src="../src/camera/RedBasicController.js"></script>
-    <script src="../src/camera/RedObitController.js"></script>
-    <!--시스템 재질-->
-    <script src="../src/material/system/RedGridMaterial.js"></script>
-    <script src="../src/material/system/RedDirectionalShadowMaterial.js"></script>
-    <script src="../src/material/system/RedSkyBoxMaterial.js"></script>
-    <script src="../src/material/system/RedPostEffectMaterial.js"></script>
-    <!--쉐도우-->
-    <script src="../src/shadow/RedDirectionalShadow.js"></script>
-    <script src="../src/shadow/RedShadowManager.js"></script>
-    <!--마우스이벤트-->
-    <script src="../src/renderer/system/RedMouseEventManager.js"></script>
-    <script src="../src/material/system/RedMouseEventMaterial.js"></script><!--이펙트-->
-    <script src="../src/postEffect/RedPostEffectManager.js"></script>
-    <script src="../src/base/RedBasePostEffect.js"></script>
-    <script src="../src/postEffect/bloom/RedPostEffect_Bloom.js"></script>
-    <script src="../src/postEffect/bloom/RedPostEffect_BloomThreshold.js"></script>
-    <script src="../src/postEffect/blur/RedPostEffect_Blur.js"></script>
-    <script src="../src/postEffect/blur/RedPostEffect_BlurX.js"></script>
-    <script src="../src/postEffect/blur/RedPostEffect_BlurY.js"></script>
-    <script src="../src/postEffect/blur/RedPostEffect_GaussianBlur.js"></script>
-    <script src="../src/postEffect/blur/RedPostEffect_ZoomBlur.js"></script>
-    <script src="../src/postEffect/adjustments/RedPostEffect_BrightnessContrast.js"></script>
-    <script src="../src/postEffect/adjustments/RedPostEffect_Threshold.js"></script>
-    <script src="../src/postEffect/adjustments/RedPostEffect_Invert.js"></script>
-    <script src="../src/postEffect/adjustments/RedPostEffect_Gray.js"></script>
-    <script src="../src/postEffect/adjustments/RedPostEffect_HueSaturation.js"></script>
-    <script src="../src/postEffect/pixelate/RedPostEffect_HalfTone.js"></script>
-    <script src="../src/postEffect/pixelate/RedPostEffect_Pixelize.js"></script>
-    <script src="../src/postEffect/RedPostEffect_Convolution.js"></script>
-    <script src="../src/postEffect/dof/RedPostEffect_DoF.js"></script>
-    <script src="../src/postEffect/dof/RedPostEffect_DoF_DepthMaterial.js"></script>
-    <script src="../src/postEffect/RedPostEffect_Film.js"></script>
-    <script src="../src/postEffect/RedPostEffect_Vignetting.js"></script>
-    <script src="../rnd/postEffect/RedPostEffect_SSAO.js"></script>
-    <script src="../rnd/postEffect/RedPostEffect_SSAO_DepthMaterial.js"></script>
-
-    <script src="../rnd/postEffect/RedPostEffect_SSAO_PointMaker.js"></script>
-    <script src="../src/postEffect/antialiasing/RedPostEffect_FXAA.js"></script>
+    <script src="../release/RedGL.min.js"></script>
 
     <script src="RedTestShaderMaterial2.js"></script>
     <script src="../rnd/primitive/RedGround.js"></script>
@@ -147,7 +25,7 @@
 </head>
 
 <body>
-<canvas id="test" style="border: none;background:red"></canvas>
+<canvas id="test" style="border: none;"></canvas>
 <script>
     document.getElementById('test')
     RedGL(document.getElementById('test'), function (v) {
@@ -166,6 +44,15 @@
         tCamera.distance = 1500
         tCamera.speedDistance = 100
         tRenderer = RedRenderer();
+        (function () {
+            var sourceViewBt;
+            document.body.appendChild(sourceViewBt = document.createElement('button'));
+            sourceViewBt.style.cssText = 'position:fixed;left:10px;top:10px;background:rgb(91, 82, 170);color:#fff;z-index:10001;border:0;outline:none;cursor:pointer;padding:8px;font-size:11px;border-radius:5px'
+            sourceViewBt.innerHTML = 'debugRenderInfo'
+            sourceViewBt.addEventListener('click', function () {
+                tRenderer.renderDebuger.visible = !tRenderer.renderDebuger.visible
+            })
+        })();
         tWorld.addView(RedView('test', this, tScene3D, tCamera));
         RedView('test').setSize('100%', '100%')
         RedView('test').setLocation('0%', '0%')
@@ -207,13 +94,13 @@
         tMesh.material.specularPower = 0.1
 //		tMesh.drawMode = this.gl.LINES
         tScene3D.addChild(tMesh)
-        tRenderer.renderDebuger.visible = true
+
         var tShadow = RedDirectionalShadow(this, testDLight)
         tShadow.size = 1000
         tScene3D.shadowManager.directionalShadow = tShadow
         var i = 50
         while (i--) {
-            var tMesh2 = RedMesh(self, RedSphere(this, Math.random() * 25 + 5, 32, 32, 32), RedStandardMaterial(this, RedBitmapTexture(this, '../asset/crate.png')))
+            var tMesh2 = RedMesh(self, RedSphere(this, Math.random() * 25 + 5, 32, 32, 32), RedStandardMaterial(this, RedBitmapTexture(this, '../asset/brick/Brick03_col.jpg')))
             tMesh2.y = 200 + Math.random() * 50
             tMesh2.x = Math.random() * 800 - 400
             tMesh2.z = Math.random() * 800 - 400
