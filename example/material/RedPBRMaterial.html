@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>RedEnvironmentMaterial</title>
+    <title>RedPBRMaterial</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -62,13 +62,15 @@
                 assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
                 assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
             ])
-            var tMaterial = RedEnvironmentMaterial(this,
+            var tMaterial = RedPBRMaterial(
+                this,
                 RedBitmapTexture(this, assetPath + 'brick/Brick03_col.jpg'),
                 tEnvironmentTexture,
-                RedBitmapTexture(this, assetPath + 'brick/Brick03_nrm.jpg'),
-                null,
-                RedBitmapTexture(this, assetPath + 'brick/Brick03_disp.jpg')
+                RedBitmapTexture(this, assetPath + 'brick/Brick03_nrm.jpg')
             )
+            tMaterial.baseColorFactor = [1, 1, 1, 1]
+            tMaterial.metallicFactor = 1
+            tMaterial.roughnessFactor = 0.1
             tMesh = RedMesh(this, RedBox(this, 1, 1, 1, 32, 32, 32), tMaterial)
             tMesh.x = -1.5
             tScene.addChild(tMesh)
@@ -118,7 +120,7 @@
             })
             // 렌더 디버거 활성화
             tRenderer.setDebugButton();
-            testUI(this, tCamera, tScene)
+            // testUI(this, tCamera, tScene)
         } else {
             console.log('초기화 실패!')
         }
@@ -127,8 +129,8 @@
         var gui = new baseTestUI(redGL)
         gui.initRedGL()
         gui.initScene(tScene, false, assetPath)
-        var folder = gui['gui'].addFolder('RedEnvironmentMaterial')
-        var testRedEnvironmentMaterial = {
+        var folder = gui['gui'].addFolder('RedPBRMaterial')
+        var testRedPBRMaterial = {
             diffuseTexture: assetPath + 'brick/Brick03_col.jpg',
             normalTexture: assetPath + 'brick/Brick03_nrm.jpg',
             specularTexture: 'none',
@@ -143,67 +145,67 @@
             displacementFlowSpeedY: 0,
             useFlatMode: false
         }
-        folder.add(testRedEnvironmentMaterial, 'alpha', 0, 1).onChange(function (v) {
+        folder.add(testRedPBRMaterial, 'alpha', 0, 1).onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.material.alpha = v
             })
         })
-        folder.add(testRedEnvironmentMaterial, 'reflectionPower', 0, 1).onChange(function (v) {
+        folder.add(testRedPBRMaterial, 'reflectionPower', 0, 1).onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.material.reflectionPower = v
             })
         })
-        folder.add(testRedEnvironmentMaterial, 'normalPower', 0, 3).onChange(function (v) {
+        folder.add(testRedPBRMaterial, 'normalPower', 0, 3).onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.material.normalPower = v
             })
         })
-        folder.add(testRedEnvironmentMaterial, 'shininess', 1, 128).onChange(function (v) {
+        folder.add(testRedPBRMaterial, 'shininess', 1, 128).onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.material.shininess = v
             })
         })
-        folder.add(testRedEnvironmentMaterial, 'specularPower', 0.1, 10).onChange(function (v) {
+        folder.add(testRedPBRMaterial, 'specularPower', 0.1, 10).onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.material.specularPower = v
             })
         })
-        folder.add(testRedEnvironmentMaterial, 'diffuseTexture', ['none', assetPath + 'brick/Brick03_col.jpg', assetPath + 'draft2.png', assetPath + 'draft3.png'], 0).onChange(function (v) {
+        folder.add(testRedPBRMaterial, 'diffuseTexture', ['none', assetPath + 'brick/Brick03_col.jpg', assetPath + 'draft2.png', assetPath + 'draft3.png'], 0).onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.material.diffuseTexture = v == 'none' ? null : RedBitmapTexture(redGL, v)
             })
         })
-        folder.add(testRedEnvironmentMaterial, 'normalTexture', ['none', assetPath + 'brick/Brick03_nrm.jpg']).onChange(function (v) {
+        folder.add(testRedPBRMaterial, 'normalTexture', ['none', assetPath + 'brick/Brick03_nrm.jpg']).onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.material.normalTexture = v == 'none' ? null : RedBitmapTexture(redGL, v)
             })
         })
-        folder.add(testRedEnvironmentMaterial, 'specularTexture', ['none', assetPath + 'specular.png']).onChange(function (v) {
+        folder.add(testRedPBRMaterial, 'specularTexture', ['none', assetPath + 'specular.png']).onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.material.specularTexture = v == 'none' ? null : RedBitmapTexture(redGL, v)
             })
         })
-        folder.add(testRedEnvironmentMaterial, 'displacementTexture', ['none', assetPath + 'brick/Brick03_disp.jpg']).onChange(function (v) {
+        folder.add(testRedPBRMaterial, 'displacementTexture', ['none', assetPath + 'brick/Brick03_disp.jpg']).onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.material.displacementTexture = v == 'none' ? null : RedBitmapTexture(redGL, v)
             })
         })
-        folder.add(testRedEnvironmentMaterial, 'displacementPower', 0, 2).onChange(function (v) {
+        folder.add(testRedPBRMaterial, 'displacementPower', 0, 2).onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.material.displacementPower = v
             })
         })
-        folder.add(testRedEnvironmentMaterial, 'displacementFlowSpeedX', 0, 0.3, 0.001).onChange(function (v) {
+        folder.add(testRedPBRMaterial, 'displacementFlowSpeedX', 0, 0.3, 0.001).onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.material.displacementFlowSpeedX = v
             })
         })
-        folder.add(testRedEnvironmentMaterial, 'displacementFlowSpeedY', 0, 0.3, 0.001).onChange(function (v) {
+        folder.add(testRedPBRMaterial, 'displacementFlowSpeedY', 0, 0.3, 0.001).onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.material.displacementFlowSpeedY = v
             })
         })
-        folder.add(testRedEnvironmentMaterial, 'useFlatMode').onChange(function (v) {
+        folder.add(testRedPBRMaterial, 'useFlatMode').onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.material.useFlatMode = v
             })

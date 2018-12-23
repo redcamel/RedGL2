@@ -22,7 +22,7 @@
 
 <body>
 <canvas id="test" style="border: none;"></canvas>
-<div id='program' style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:20px;color:#fff">
+<div id='program' style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:12px;color:#fff;background: #111111;padding:5px">
     testest
 </div>
 <script>
@@ -60,15 +60,7 @@
         testPLight2.debug = true
         tScene3D.addLight(testPLight2)
         tRenderer = RedRenderer();
-        (function () {
-            var sourceViewBt;
-            document.body.appendChild(sourceViewBt = document.createElement('button'));
-            sourceViewBt.style.cssText = 'position:fixed;left:10px;top:10px;background:rgb(91, 82, 170);color:#fff;z-index:10001;border:0;outline:none;cursor:pointer;padding:8px;font-size:11px;border-radius:5px'
-            sourceViewBt.innerHTML = 'debugRenderInfo'
-            sourceViewBt.addEventListener('click', function () {
-                tRenderer.renderDebuger.visible = !tRenderer.renderDebuger.visible
-            })
-        })();
+        tRenderer.setDebugButton()
         tWorld.addView(RedView('test', this, tScene3D, tCamera));
         RedView('test').setSize('100%', '100%')
         RedView('test').setLocation('0%', '0%')
@@ -77,7 +69,8 @@
             diffuseTexture: RedBitmapTexture(this, '../asset/brick/Brick03_col.jpg'),
             normalTexture: RedBitmapTexture(this, '../asset/brick/Brick03_nrm.jpg'),
             specularTexture: RedBitmapTexture(this, '../asset/specular.png'),
-            displacementTexture: RedBitmapTexture(this, '../asset/displacementTest.jpg')
+            displacementTexture: RedBitmapTexture(this, '../asset/displacementTest.jpg'),
+            useFlatMode :false
         }
         testMaterial = RedEnvironmentMaterial(
             this,
@@ -127,7 +120,7 @@
                 testMesh.rotationY += 0.3
                 testMesh.rotationZ += 0.3
             }
-            tProgramDom.innerHTML = '현재프로그램 : ' + (tScene3D['useFog'] ? testMaterial['_programList']['fog'][testMaterial['program']['key']]['key'] : testMaterial['program']['key'])
+            tProgramDom.innerHTML = '현재프로그램 : ' + document.querySelector('select').value
             testDLight.x = Math.sin(time / 1500) * 10
             testDLight.y = Math.cos(time / 1500) * 10
             testDLight.z = Math.cos(time / 1500) * 10

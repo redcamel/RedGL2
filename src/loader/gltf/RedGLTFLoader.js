@@ -1056,7 +1056,7 @@ var RedGLTFLoader;
                     // metallicFactor	number	The metalness of the material.	No, default: 1
                     // roughnessFactor	number	The roughness of the material.	No, default: 1
                     // metallicRoughnessTexture	object	The metallic-roughness texture.	No
-                    tMaterial = RedPBRMaterial(redGLTFLoader['redGL'], diffseTexture, env, normalTexture, occlusionTexture, emissiveTexture, roughnessTexture, null)
+                    tMaterial = RedPBRMaterial_System(redGLTFLoader['redGL'], diffseTexture, env, normalTexture, occlusionTexture, emissiveTexture, roughnessTexture, null)
                     if (tMaterialInfo['pbrMetallicRoughness'] && tMaterialInfo['pbrMetallicRoughness']['baseColorFactor']) tColor = tMaterialInfo['pbrMetallicRoughness']['baseColorFactor']
                     else tColor = [1.0, 1.0, 1.0, 1.0]
                     tMaterial['baseColorFactor'] = tColor
@@ -1078,7 +1078,7 @@ var RedGLTFLoader;
 
                 } else {
                     var tColor = [(Math.random()), (Math.random()), (Math.random()), 1]
-                    tMaterial = RedPBRMaterial(redGLTFLoader['redGL'])
+                    tMaterial = RedPBRMaterial_System(redGLTFLoader['redGL'])
                     tMaterial['baseColorFactor'] = tColor
                 }
                 return [tMaterial, doubleSide, alphaMode, alphaCutoff]
@@ -1136,7 +1136,7 @@ var RedGLTFLoader;
                 tAlphaMode = tMaterial[2]
                 tAlphaCutoff = tMaterial[3]
                 tMaterial = tMaterial[0]
-                if (tMaterial instanceof RedPBRMaterial) redGLTFLoader['parsingResult']['materials'].push(tMaterial)
+                if (tMaterial instanceof RedPBRMaterial_System) redGLTFLoader['parsingResult']['materials'].push(tMaterial)
                 // 모드 파싱
                 if ('mode' in v) {
                     // 0 POINTS

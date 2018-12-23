@@ -8,25 +8,26 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
     />
-    <style>
-        html,
-        body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-        }
-    </style>
-    <script src="https://immersive-web.github.io/webxr-samples/js/webxr-button.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/webxr-polyfill@latest/build/webxr-polyfill.js"></script>
+    <link rel="stylesheet" href="../example.css">
+    <script src='https://immersive-web.github.io/webxr-samples/js/webxr-polyfill.js'></script>
 
-    <script src="dat.gui.min.js"></script>
-    <script src="baseTestUI.js"></script>
-    <script src="../release/RedGL.min.js"></script>
-    <script src="../src/RedXR.js"></script>
+    <!--This script patches up around implementation differences in past browser versions
+        so that the samples can always be written against the most recent spec changes.
+        It won't be necessary after the API has been officially shipped for a bit.-->
+    <script src='https://immersive-web.github.io/webxr-samples/js/webxr-version-shim.js'></script>
+
+    <script src='https://immersive-web.github.io/webxr-samples/js/cottontail/build/cottontail.js'></script>
+
+    <script src='https://immersive-web.github.io/webxr-samples/js/webxr-button.js'></script>
+
+    <script src="../dat.gui.min.js"></script>
+    <script src="../baseTestUI.js"></script>
+    <script src="../../release/RedGL.min.js"></script>
+    <script src="../../src/RedXR.js"></script>
 </head>
 
 <body>
-<canvas id="test" style="border: none;background:red"></canvas>
+<canvas id="test" style="border: none;"></canvas>
 <script>
     var t = document.getElementById('test')
     document.body.appendChild(t)

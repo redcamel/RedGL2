@@ -6,16 +6,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
-          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
-    />
-    <style>
-        html,
-        body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-        }
-    </style>
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"/>
+    <link rel="stylesheet" href="../example.css">
 
     <script src="../dat.gui.min.js"></script>
     <script src="../baseTestUI.js"></script>
@@ -47,9 +39,12 @@
             tScene['grid'] = RedGrid(this)
             // Mesh 설정
             var tMesh;
-            var tMaterial = RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'brick/Brick03_col.jpg'))
-            var tMaterial2 = RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'draft2.png'))
-            var tMaterial3 = RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'alphaTest.png'))
+            var tMaterial = RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'crate.png'))
+            var tMaterial2 = RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'UV_Grid_Sm.jpg'))
+            var tMaterial3 = RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'alphaTest.png', {
+                min: this.gl.NEAREST,
+                mag: this.gl.NEAREST
+            }))
             tMesh = RedMesh(this, RedBox(this), tMaterial)
             tMesh.x = -1.5
             tScene.addChild(tMesh)
@@ -57,6 +52,8 @@
             tMesh.x = 0
             tScene.addChild(tMesh)
             tMesh = RedMesh(this, RedBox(this), tMaterial3)
+
+
             tMesh.x = 1.5
             tScene.addChild(tMesh)
             tMesh = RedMesh(this, RedSphere(this, 0.5, 32, 32, 32), tMaterial)
@@ -68,6 +65,7 @@
             tMesh.y = 1.5
             tScene.addChild(tMesh)
             tMesh = RedMesh(this, RedSphere(this, 0.5, 32, 32, 32), tMaterial3)
+
             tMesh.x = 1.5
             tMesh.y = 1.5
             tScene.addChild(tMesh)
@@ -83,6 +81,7 @@
             tScene.addChild(tMesh)
             tMesh = RedMesh(this, RedPlane(this), tMaterial3)
             tMesh['useCullFace'] = false
+
             tMesh.x = 1.5
             tMesh.y = -1.5
             tScene.addChild(tMesh)
@@ -94,7 +93,7 @@
                 tCamera.lookAt(0, 0, 0)
             })
             // 렌더 디버거 활성화
-            tRenderer['renderDebuger']['visible'] = true
+            tRenderer.setDebugButton();
             testUI(this, tCamera, tScene)
             console.log(tMaterial)
         } else {
@@ -108,7 +107,7 @@
         gui.initScene(tScene, false, assetPath)
         var alphaTest = {
             alpha: 1,
-            diffuseTexture: assetPath + 'brick/Brick03_col.jpg'
+            diffuseTexture: assetPath + 'crate.png'
         }
         var folder;
         folder = gui['gui'].addFolder('RedBitmapMaterial')
@@ -117,7 +116,7 @@
                 v2.material.alpha = v
             })
         })
-        folder.add(alphaTest, 'diffuseTexture', [assetPath + 'brick/Brick03_col.jpg', assetPath + 'draft2.png', assetPath + 'draft3.png'], 0).onChange(function (v) {
+        folder.add(alphaTest, 'diffuseTexture', [assetPath + 'crate.png', assetPath + 'UV_Grid_Sm.jpg', assetPath + 'alphaTest.png'], 0).onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.material.diffuseTexture = RedBitmapTexture(redGL, v)
             })

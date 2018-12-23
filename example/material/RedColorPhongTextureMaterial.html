@@ -8,14 +8,7 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
     />
-    <style>
-        html,
-        body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-        }
-    </style>
+    <link rel="stylesheet" href="../example.css">
 
     <script src="../dat.gui.min.js"></script>
     <script src="../baseTestUI.js"></script>
@@ -66,7 +59,7 @@
                 tCamera.z = Math.cos(time / 1500) * 15 + Math.sin(time / 1500) * 15
             })
             // 렌더 디버거 활성화
-            tRenderer['renderDebuger']['visible'] = true
+            tRenderer.setDebugButton();
             //
             testUI(this, tCamera, tScene)
         } else {
@@ -87,9 +80,10 @@
             shininess: 16,
             normalPower: 1,
             specularPower: 1,
-            displacementPower: 0,
+            displacementPower: 0.1,
             displacementFlowSpeedX: 0,
-            displacementFlowSpeedY: 0
+            displacementFlowSpeedY: 0,
+            useFlatMode: false
         }
         folder.addColor(testColorPhongTextureMaterial, 'color').onChange(function (v) {
             tScene.children.forEach(function (v2) {
@@ -139,6 +133,11 @@
         folder.add(testColorPhongTextureMaterial, 'displacementFlowSpeedY', 0, 0.3, 0.001).onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.material.displacementFlowSpeedY = v
+            })
+        })
+        folder.add(testColorPhongTextureMaterial, 'useFlatMode').onChange(function (v) {
+            tScene.children.forEach(function (v2) {
+                v2.material.useFlatMode = v
             })
         })
         folder.open()

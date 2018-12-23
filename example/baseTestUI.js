@@ -2,6 +2,7 @@
 var baseTestUI = function (redGL) {
     baseTestUI.makeBaseUI();
     this['gui'] = new dat.GUI({name: 'test'});
+    this['gui'].width = 400
     this['redGL'] = redGL;
 };
 var makeSourceView = function () {
@@ -9,8 +10,8 @@ var makeSourceView = function () {
     var sourceViewBt;
     document.body.appendChild(rootBox = document.createElement('div'));
     document.body.appendChild(sourceViewBt = document.createElement('button'));
-    rootBox.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.95);z-index:10000;display:none;color:#fff;font-size:11px;overflow-y:auto;padding:10px;'
-    sourceViewBt.style.cssText = 'position:fixed;right:10px;bottom:10px;background:#222;color:#fff;z-index:10001;border:0;outline:none;cursor:pointer;padding:8px;font-size:11px;border-radius:5px'
+    rootBox.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:#2b2b2b;z-index:10001;display:none;color:#fff;font-size:12px;overflow-y:auto;padding:10px;'
+    sourceViewBt.style.cssText = 'position:fixed;right:10px;bottom:10px;background:#222;color:#fff;z-index:10002;border:0;outline:none;cursor:pointer;padding:8px;font-size:11px;border-radius:5px'
     sourceViewBt.innerHTML = 'SOURCE VIEW'
     sourceViewBt.addEventListener('click', function () {
         if (rootBox.style.display == 'block') {

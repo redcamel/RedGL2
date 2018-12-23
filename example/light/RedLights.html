@@ -8,14 +8,7 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
     />
-    <style>
-        html,
-        body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-        }
-    </style>
+    <link rel="stylesheet" href="../example.css">
 
     <script src="../dat.gui.min.js"></script>
     <script src="../baseTestUI.js"></script>
@@ -112,7 +105,7 @@
             tRenderer.start(this, function (time) {
             })
             // 렌더 디버거 활성화
-            tRenderer['renderDebuger']['visible'] = true
+            tRenderer.setDebugButton();
             testUI(this, tController, tScene, tALight, tDLight, tPLight)
         } else {
             console.log('초기화 실패!')

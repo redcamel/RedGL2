@@ -24,7 +24,7 @@ function () {
     tRenderer.start(this, function (time) {
     })
     // 렌더 디버거 활성화
-    tRenderer['renderDebuger']['visible'] = true
+    tRenderer.setDebugButton();
     //
     this.userInterface = {
         addObject: function (num) {

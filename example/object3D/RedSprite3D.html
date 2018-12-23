@@ -8,14 +8,7 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
     />
-    <style>
-        html,
-        body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-        }
-    </style>
+    <link rel="stylesheet" href="../example.css">
 
     <script src="../dat.gui.min.js"></script>
     <script src="../baseTestUI.js"></script>
@@ -48,7 +41,7 @@
             // Box 설정
             var i = 10
             while (i--) {
-                var tSprite3D = RedSprite3D(this, RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'alphaTest.png')))
+                var tSprite3D = RedSprite3D(this, RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'crate.png')))
                 tSprite3D.x = Math.sin(Math.PI * 2 / 10 * i) * 3
                 tSprite3D.y = Math.cos(Math.PI * 2 / 10 * i) * 3
                 tScene.addChild(tSprite3D)
@@ -61,7 +54,7 @@
                 tCamera.lookAt(0, 0, 0)
             })
             // 렌더 디버거 활성화
-            tRenderer['renderDebuger']['visible'] = true
+            tRenderer.setDebugButton();
             //
             testUI(this, tCamera, tScene)
         } else {

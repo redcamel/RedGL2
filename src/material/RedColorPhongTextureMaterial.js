@@ -95,8 +95,9 @@ var RedColorPhongTextureMaterial;
              N = normalize(vVertexNormal);
              vec4 normalColor = vec4(0.0);
              //#REDGL_DEFINE#normalTexture# normalColor = texture2D(u_normalTexture, vTexcoord);
-             //#REDGL_DEFINE#normalTexture# N = getPerturbNormal2Arb(vVertexPosition.xyz, N, normalColor, vTexcoord) ;
              //#REDGL_DEFINE#useFlatMode# N = getFlatNormal(vVertexPosition.xyz);
+             //#REDGL_DEFINE#normalTexture# N = getPerturbNormal2Arb(vVertexPosition.xyz, N, normalColor, vTexcoord) ;
+
 
              specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);
              float specularTextureValue = 1.0;
@@ -185,7 +186,7 @@ var RedColorPhongTextureMaterial;
         this['normalPower'] = 1;
         this['shininess'] = 16;
         this['specularPower'] = 1;
-        this['displacementPower'] = 0;
+        this['displacementPower'] = 0.1;
         this['displacementFlowSpeedX'] = 0;
         this['displacementFlowSpeedY'] = 0;
         this['alpha'] = alpha == undefined ? 1 : alpha;
