@@ -152,6 +152,7 @@ gulp.task('combine-js', function () {
         "src/material/RedStandardMaterial.js",
         "src/material/RedVideoMaterial.js",
         "src/material/RedPBRMaterial.js",
+        "src/material/RedPBRMaterial_system.js",
         //
         "src/light/RedAmbientLight.js",
         "src/light/RedDirectionalLight.js",

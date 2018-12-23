@@ -1,8 +1,8 @@
 "use strict";
-var RedPBRMaterial;
+var RedPBRMaterial_System;
 (function () {
     var vSource, fSource;
-    var PROGRAM_NAME = 'RedPBRMaterialProgram';
+    var PROGRAM_NAME = 'RedPBRMaterialSystemProgram';
     var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture','useFlatMode'];
     var checked;
     vSource = function () {
@@ -17,6 +17,7 @@ var RedPBRMaterial;
                 gl_PointSize = uPointSize;
                 // UV설정
                 vTexcoord = aTexcoord;
+                vTexcoord1 = aTexcoord1;
 
                 // normal 계산
                 vVertexNormal = (uNMatrix * vec4(aVertexNormal,1.0)).xyz;
@@ -209,9 +210,9 @@ var RedPBRMaterial;
     /**DOC:
      {
 		 constructorYn : true,
-		 title :`RedPBRMaterial`,
+		 title :`RedPBRMaterial_System`,
 		 description : `
-			 RedPBRMaterial Instance 생성
+			 RedPBRMaterial_System Instance 생성
 		 `,
 		 params : {
 			 redGL : [
@@ -233,9 +234,9 @@ var RedPBRMaterial;
 		 extends : [
 		    'RedBaseMaterial'
 		 ],
-		 demo : '../example/material/RedPBRMaterial.html',
+		 demo : '../example/material/RedPBRMaterial_System.html',
 		 example : `
-			 RedPBRMaterial(
+			 RedPBRMaterial_System(
 				 RedGL Instance,
 				 RedBitmapTexture(RedGL Instance, src), // diffuseTexture
 				 RedBitmapCubeTexture(RedGL Instance, srcList),
@@ -243,10 +244,10 @@ var RedPBRMaterial;
 				 RedBitmapTexture(RedGL Instance, src) // occlusionTexture
 			 )
 		 `,
-		 return : 'RedPBRMaterial Instance'
+		 return : 'RedPBRMaterial_System Instance'
 	 }
      :DOC*/
-    RedPBRMaterial = function (redGL,
+    RedPBRMaterial_System = function (redGL,
                                diffuseTexture,
                                environmentTexture,
                                normalTexture,
@@ -254,7 +255,7 @@ var RedPBRMaterial;
                                emissiveTexture,
                                roughnessTexture
     ) {
-        if (!(this instanceof RedPBRMaterial)) return new RedPBRMaterial(
+        if (!(this instanceof RedPBRMaterial_System)) return new RedPBRMaterial_System(
             redGL,
             diffuseTexture,
             environmentTexture,
@@ -263,7 +264,7 @@ var RedPBRMaterial;
             emissiveTexture,
             roughnessTexture
         );
-        redGL instanceof RedGL || RedGLUtil.throwFunc('RedPBRMaterial : RedGL Instance만 허용.', redGL);
+        redGL instanceof RedGL || RedGLUtil.throwFunc('RedPBRMaterial_System : RedGL Instance만 허용.', redGL);
         this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource, PROGRAM_OPTION_LIST);
         /////////////////////////////////////////
         // 유니폼 프로퍼티
@@ -301,7 +302,7 @@ var RedPBRMaterial;
         }
         console.log(this);
     };
-    RedPBRMaterial.prototype = new RedBaseMaterial();
+    RedPBRMaterial_System.prototype = new RedBaseMaterial();
     var samplerOption = {
         callback: function () {
             this._searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST)
@@ -315,7 +316,7 @@ var RedPBRMaterial;
 		 return : 'Number'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'alpha', 'number', {min: 0, max: 1});
+    RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'alpha', 'number', {min: 0, max: 1});
     /**DOC:
      {
 	     code : 'PROPERTY',
@@ -323,7 +324,7 @@ var RedPBRMaterial;
 		 return : 'Number'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'cutOff', 'number', {min: 0, max: 1});
+    RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'cutOff', 'number', {min: 0, max: 1});
     /**DOC:
      {
 	     code : 'PROPERTY',
@@ -331,8 +332,8 @@ var RedPBRMaterial;
 		 return : 'RedBitmapTexture'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'diffuseTexture', 'sampler2D', samplerOption);
-    RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'diffuseTexCoordIndex', 'number');
+    RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'diffuseTexture', 'sampler2D', samplerOption);
+    RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'diffuseTexCoordIndex', 'number');
     /**DOC:
      {
 	     code : 'PROPERTY',
@@ -340,7 +341,7 @@ var RedPBRMaterial;
 		 return : 'RedBitmapCubeTexture'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'environmentTexture', 'samplerCube', {
+    RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'environmentTexture', 'samplerCube', {
         callback: samplerOption.callback
     });
     /**DOC:
@@ -350,8 +351,8 @@ var RedPBRMaterial;
 		 return : 'RedBitmapTexture'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'normalTexture', 'sampler2D', samplerOption);
-    RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'normalTexCoordIndex', 'number');
+    RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'normalTexture', 'sampler2D', samplerOption);
+    RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'normalTexCoordIndex', 'number');
 
     /**DOC:
      {
@@ -360,8 +361,8 @@ var RedPBRMaterial;
 		 return : 'RedBitmapTexture'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'occlusionTexture', 'sampler2D', samplerOption);
-    RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'occlusionTexCoordIndex', 'number');
+    RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'occlusionTexture', 'sampler2D', samplerOption);
+    RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'occlusionTexCoordIndex', 'number');
     /**DOC:
      {
 	     code : 'PROPERTY',
@@ -369,8 +370,8 @@ var RedPBRMaterial;
 		 return : 'RedBitmapTexture'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'emissiveTexture', 'sampler2D', samplerOption);
-    RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'emissiveTexCoordIndex', 'number');
+    RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'emissiveTexture', 'sampler2D', samplerOption);
+    RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'emissiveTexCoordIndex', 'number');
 
     /**DOC:
      {
@@ -379,8 +380,8 @@ var RedPBRMaterial;
 		 return : 'RedBitmapTexture'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'roughnessTexture', 'sampler2D', samplerOption);
-    RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'roughnessTexCoordIndex', 'number');
+    RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'roughnessTexture', 'sampler2D', samplerOption);
+    RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'roughnessTexCoordIndex', 'number');
     /**DOC:
      {
 	     code : 'PROPERTY',
@@ -389,7 +390,7 @@ var RedPBRMaterial;
 		 return : 'number'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'normalPower', 'number', {'min': 0});
+    RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'normalPower', 'number', {'min': 0});
     /**DOC:
      {
 	     code : 'PROPERTY',
@@ -398,7 +399,7 @@ var RedPBRMaterial;
 		 return : 'Number'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'specularPower', 'number', {'min': 0});
+    RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'specularPower', 'number', {'min': 0});
     /**DOC:
      {
 	     code : 'PROPERTY',
@@ -407,7 +408,7 @@ var RedPBRMaterial;
 		 return : 'Number'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'metallicFactor', 'number', {'min': 0, 'max': 1});
+    RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'metallicFactor', 'number', {'min': 0, 'max': 1});
     /**DOC:
      {
 	     code : 'PROPERTY',
@@ -416,7 +417,7 @@ var RedPBRMaterial;
 		 return : 'Number'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'roughnessFactor', 'number', {'min': 0, 'max': 1});
+    RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'roughnessFactor', 'number', {'min': 0, 'max': 1});
 
     /**DOC:
      {
@@ -426,7 +427,7 @@ var RedPBRMaterial;
 		 return : 'Number'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'occlusionPower', 'number', {'min': 0});
+    RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'occlusionPower', 'number', {'min': 0});
     /**DOC:
      {
 	     code : 'PROPERTY',
@@ -435,6 +436,6 @@ var RedPBRMaterial;
 		 return : 'boolean'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'useFlatMode', 'boolean', samplerOption);
-    Object.freeze(RedPBRMaterial);
+    RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'useFlatMode', 'boolean', samplerOption);
+    Object.freeze(RedPBRMaterial_System);
 })();

@@ -74,10 +74,10 @@ var RedRenderer;
                 self['_tickKey'] = requestAnimationFrame(tick);
             }
         })(),
-        setDebugButton : function(){
+        setDebugButton: function () {
             var sourceViewBt;
             var self = this
-            if(window['document']){
+            if (window['document']) {
                 document.body.appendChild(sourceViewBt = document.createElement('button'));
                 sourceViewBt.style.cssText = 'position:fixed;left:10px;top:10px;background:rgb(91, 82, 170);color:#fff;z-index:10001;border:0;outline:none;cursor:pointer;padding:8px;font-size:11px;border-radius:5px'
                 sourceViewBt.innerHTML = 'debugRenderInfo - ' + RedGL_VERSION.version
@@ -448,7 +448,7 @@ var RedRenderer;
                     tMaterial = subSceneMaterial ? subSceneMaterial : tMesh['_material'];
                     tDirectionalShadowMaterialYn = tMaterial['_RedDirectionalShadowYn'];
                     // 마우스 이벤트 커러설정
-                    tMaterial['_RedMouseEventMaterialYn'] ?  tMaterial['color'] = tMesh['_mouseColorID'] : 0
+                    tMaterial['_RedMouseEventMaterialYn'] ? tMaterial['color'] = tMesh['_mouseColorID'] : 0
                     // SpriteSheet체크
                     if (tMaterial['__RedSheetMaterialYn']) {
                         if (!tMaterial['_nextFrameTime']) tMaterial['_nextFrameTime'] = tMaterial['_perFrameTime'] + time
@@ -544,7 +544,7 @@ var RedRenderer;
                         */
                         // webgl location도 알아낸다.
                         tWebGLAttributeLocation = tAttributeLocationInfo['location']
-                        if ( tInterleaveDefineUnit && tCacheInterleaveBuffer[tWebGLAttributeLocation] != tInterleaveDefineUnit['_UUID']) {
+                        if (tInterleaveDefineUnit && tCacheInterleaveBuffer[tWebGLAttributeLocation] != tInterleaveDefineUnit['_UUID']) {
                             // 해당로케이션을 활성화된적이없으면 활성화 시킨다
                             tAttributeLocationInfo['enabled'] ? 0 : tGL.enableVertexAttribArray(tWebGLAttributeLocation);
                             tAttributeLocationInfo['enabled'] = 1;
@@ -561,11 +561,6 @@ var RedRenderer;
                             // 상태 캐싱
                             tCacheInterleaveBuffer[tWebGLAttributeLocation] = tInterleaveDefineUnit['_UUID']
                         }
-                        // if ( !tInterleaveDefineUnit){
-                        //     //TODO - 사용하지않는 어트리뷰트일경우를 생각해야하는거군..
-                        //
-                        //     console.log('걸렸냐',tAttributeLocationInfo)
-                        // }
 
                     }
                     /////////////////////////////////////////////////////////////////////////
@@ -590,9 +585,11 @@ var RedRenderer;
                                         //TODO: 일단 비디오를 우겨넣었으니 정리를 해야함
                                         tGL.bindTexture(tGL.TEXTURE_2D, tUniformValue['webglTexture']);
                                         if (tUniformValue['_videoDom']['loaded']) tGL.texImage2D(tGL.TEXTURE_2D, 0, tGL.RGBA, tGL.RGBA, tGL.UNSIGNED_BYTE, tUniformValue['_videoDom'])
+                                        tCacheTexture = [];
                                     } else tGL.bindTexture(tRenderType == 'sampler2D' ? tGL.TEXTURE_2D : tGL.TEXTURE_CUBE_MAP, tUniformValue['webglTexture']);
                                     tCacheSamplerIndex[tUUID] == tSamplerIndex ? 0 : tGL.uniform1i(tWebGLUniformLocation, tCacheSamplerIndex[tUUID] = tSamplerIndex);
                                     tCacheTexture[tSamplerIndex] = tUniformValue['_UUID'];
+
                                 }
                                 // // 아틀라스 UV검색
                                 // if ( tSystemUniformGroup['uAtlascoord']['location'] ) {

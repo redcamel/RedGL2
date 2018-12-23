@@ -3,7 +3,7 @@ var RedStandardMaterial;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'RedStandardMaterialProgram';
-    var PROGRAM_OPTION_LIST = ['normalTexture', 'specularTexture', 'emissiveTexture', 'displacementTexture','useFlatMode'];
+    var PROGRAM_OPTION_LIST = ['diffuseTexture','normalTexture', 'specularTexture', 'emissiveTexture', 'displacementTexture','useFlatMode'];
     var checked;
     vSource = function () {
         /* @preserve

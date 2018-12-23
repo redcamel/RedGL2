@@ -23,7 +23,7 @@
     document.body.appendChild(canvas);
     RedGL(canvas, function (v) {
         if (v) {
-            console.log('초기화 성공!',this)
+            console.log('초기화 성공!', this)
             var self = this;
             var tWorld, tScene, tCamera, tRenderer;
             // 월드 생성
@@ -55,7 +55,7 @@
                 ['RedStandardMaterial', RedStandardMaterial(self, RedBitmapTexture(self, assetPath + 'brick/Brick03_col.jpg'))],
                 ['RedEnvironmentMaterial', RedEnvironmentMaterial(
                     self,
-                    RedBitmapTexture(self, assetPath + 'brick/Brick03_col.jpg'),
+                    RedBitmapTexture(self, assetPath + 'brick/Brick03_nrm.jpg?test=t1'),
                     RedBitmapCubeTexture(self, [
                         assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
                         assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
@@ -67,26 +67,26 @@
                     RedBitmapTexture(self, assetPath + 'brick/Brick03_nrm.jpg'),
                     RedBitmapTexture(self, assetPath + 'specular.png')
                 )],
-                ['RedVideoMaterial',   RedVideoMaterial(self, RedVideoTexture(self,assetPath + 'mov_bbb.mp4')),],
-                // ['RedPBRMaterial', tPBR = RedPBRMaterial(
-                //     self,
-                //     RedBitmapTexture(self, assetPath + 'brick/Brick03_col.jpg'),
-                //     RedBitmapCubeTexture(self, [
-                //         assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
-                //         assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
-                //         assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
-                //         assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
-                //         assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
-                //         assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
-                //     ]),
-                //     RedBitmapTexture(self, assetPath + 'brick/Brick03_nrm.jpg')
-                // )]
+                ['RedVideoMaterial', RedVideoMaterial(self, RedVideoTexture(self, assetPath + 'mov_bbb.mp4'))],
+                ['RedPBRMaterial', tPBR = RedPBRMaterial(
+                    self,
+                    RedBitmapTexture(self, assetPath + 'brick/Brick03_col.jpg'),
+                    RedBitmapCubeTexture(self, [
+                        assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
+                        assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
+                        assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
+                        assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
+                        assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
+                        assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
+                    ]),
+                    RedBitmapTexture(self, assetPath + 'brick/Brick03_nrm.jpg')
+                )]
 
             ];
 
-            // tPBR.baseColorFactor = [1, 1, 1, 1]
-            // tPBR.metallicFactor = 1
-            // tPBR.roughnessFactor = 0.1
+            tPBR.baseColorFactor = [1, 1, 1, 1]
+            tPBR.metallicFactor = 1
+            tPBR.roughnessFactor = 0.1
             var max = testMaterials.length
             var i = max
             var setOptionText = function (target, v) {
