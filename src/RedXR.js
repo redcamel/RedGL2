@@ -18,13 +18,13 @@ let RedXR;
             const cvs = document.createElement('canvas');
             // cvs.width = '600'
             // cvs.height = '300'
-            cvs.style.cssText = 'position:absolute;top:0;left:0;';
+            // cvs.style.cssText = 'position:absolute;top:0;left:0;';
             canvas.style.display = 'none'
-            document.body.appendChild(cvs)
+            // document.body.appendChild(cvs)
             const xrButton = new XRDeviceButton({
                 onRequestSession: device => device.requestSession({
-                    immersive: true,
-                    outputContext: cvs.getContext('xrpresent')
+                    immersive: true
+                    // outputContext: cvs.getContext('xrpresent')
                 }).then(session => {
                     console.log('session', session)
                     xrButton.setSession(session);

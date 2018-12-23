@@ -47,24 +47,8 @@
         tCamera3 = RedCamera();
         tCamera.orthographicYn = true
         tRenderer = RedRenderer();
-        (function () {
-            var sourceViewBt;
-            document.body.appendChild(sourceViewBt = document.createElement('button'));
-            sourceViewBt.style.cssText = 'position:fixed;left:10px;top:10px;background:rgb(91, 82, 170);color:#fff;z-index:10001;border:0;outline:none;cursor:pointer;padding:8px;font-size:11px;border-radius:5px'
-            sourceViewBt.innerHTML = 'debugRenderInfo'
-            sourceViewBt.addEventListener('click', function () {
-                tRenderer.renderDebuger.visible = !tRenderer.renderDebuger.visible
-            })
-        })();
-        (function () {
-            var sourceViewBt;
-            document.body.appendChild(sourceViewBt = document.createElement('button'));
-            sourceViewBt.style.cssText = 'position:fixed;left:10px;top:10px;background:rgb(91, 82, 170);color:#fff;z-index:10001;border:0;outline:none;cursor:pointer;padding:8px;font-size:11px;border-radius:5px'
-            sourceViewBt.innerHTML = 'debugRenderInfo'
-            sourceViewBt.addEventListener('click', function () {
-                tRenderer.renderDebuger.visible = !tRenderer.renderDebuger.visible
-            })
-        })();
+        tRenderer.setDebugButton()
+        tRenderer.setDebugButton()
         tWorld.addView(RedView('test', this, tScene2D, tCamera));
         tWorld.addView(RedView('test2', this, tScene3D, tCamera2));
         tWorld.addView(RedView('test3', this, tScene3D_2, tCamera3));

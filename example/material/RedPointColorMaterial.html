@@ -8,14 +8,7 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
     />
-    <style>
-        html,
-        body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-        }
-    </style>
+    <link rel="stylesheet" href="../example.css">
 
     <script src="../dat.gui.min.js"></script>
     <script src="../baseTestUI.js"></script>
@@ -55,7 +48,7 @@
                     // position
                     interleaveData.push(Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50)
                     // pointSize
-                    interleaveData.push(Math.random() * 0.5)
+                    interleaveData.push(Math.random() * 0.1)
                     // color
                     interleaveData.push(Math.random(), Math.random(), Math.random(), 1)
                 }
@@ -84,7 +77,7 @@
                 tCamera.lookAt(0, 0, 0)
             })
             // 렌더 디버거 활성화
-            tRenderer['renderDebuger']['visible'] = true
+            tRenderer.setDebugButton();
             testUI(this, tCamera, tScene)
             /////////////////////////////////
         } else {

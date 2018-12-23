@@ -242,7 +242,8 @@ gulp.task('combine-js', function () {
         ))
         .pipe(replace(/\n\s{2,}/g, '\n'))
         .pipe(gulp.dest('release'))
-        .pipe(insert.append("console.log('" + 'RedGL' + " Release. last update(" + d + ")'" + ");"))
+        .pipe(insert.append("var RedGL_VERSION = {version : 'RedGL Release. last update( " + d + ")' };console.log(RedGL_VERSION);"))
+
         .pipe(gulp.dest('release'))
     console.log('-------------------------------------------');
     console.log('파일 병합 시작!');

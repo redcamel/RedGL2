@@ -1,0 +1,159 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>RedBitmapMaterial</title>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"/>
+    <link rel="stylesheet" href="../example.css">
+
+    <script src="../dat.gui.min.js"></script>
+    <script src="../baseTestUI.js"></script>
+    <script src="../../release/RedGL.min.js"></script>
+</head>
+
+<body>
+<script id='testSource'>
+    var testUI, assetPath;
+    var canvas;
+    assetPath = '../../asset/'
+    canvas = document.createElement('canvas');
+    document.body.appendChild(canvas);
+    RedGL(canvas, function (v) {
+        if (v) {
+            console.log('초기화 성공!',this)
+            var self = this;
+            var tWorld, tScene, tCamera, tRenderer;
+            // 월드 생성
+            self['world'] = tWorld = RedWorld();
+            // 씬 생성
+            tScene = RedScene(self);
+            // 카메라 생성
+            tCamera = RedCamera();
+            // 렌더러 생성
+            tRenderer = RedRenderer();
+            // 뷰생성 및 적용
+            tWorld.addView(RedView('test', self, tScene, tCamera));
+            // 그리드 설정
+            tScene['grid'] = RedGrid(self)
+            // 라이트 설정
+            var testDLight;
+            testDLight = RedDirectionalLight(self, '#fff')
+            testDLight.x = 3
+            testDLight.y = 3
+            testDLight.z = 3
+            tScene.addLight(testDLight)
+            // Mesh 설정
+            var tPBR
+            var testMaterials = [
+                // ['RedColorMaterial', RedColorMaterial(self)],
+                ['RedColorPhongMaterial', RedColorPhongMaterial(self)],
+                ['RedColorPhongTextureMaterial', RedColorPhongTextureMaterial(self)],
+                // ['RedBitmapMaterial', RedBitmapMaterial(self, RedBitmapTexture(self, assetPath + 'brick/Brick03_col.jpg'))],
+                ['RedStandardMaterial', RedStandardMaterial(self, RedBitmapTexture(self, assetPath + 'brick/Brick03_col.jpg'))],
+                ['RedEnvironmentMaterial', RedEnvironmentMaterial(
+                    self,
+                    RedBitmapTexture(self, assetPath + 'brick/Brick03_col.jpg'),
+                    RedBitmapCubeTexture(self, [
+                        assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
+                        assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
+                        assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
+                        assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
+                        assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
+                        assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
+                    ]),
+                    RedBitmapTexture(self, assetPath + 'brick/Brick03_nrm.jpg'),
+                    RedBitmapTexture(self, assetPath + 'specular.png')
+                )],
+                ['RedVideoMaterial',   RedVideoMaterial(self, RedVideoTexture(self,assetPath + 'mov_bbb.mp4')),],
+                // ['RedPBRMaterial', tPBR = RedPBRMaterial(
+                //     self,
+                //     RedBitmapTexture(self, assetPath + 'brick/Brick03_col.jpg'),
+                //     RedBitmapCubeTexture(self, [
+                //         assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
+                //         assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
+                //         assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
+                //         assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
+                //         assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
+                //         assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
+                //     ]),
+                //     RedBitmapTexture(self, assetPath + 'brick/Brick03_nrm.jpg')
+                // )]
+
+            ];
+
+            // tPBR.baseColorFactor = [1, 1, 1, 1]
+            // tPBR.metallicFactor = 1
+            // tPBR.roughnessFactor = 0.1
+            var max = testMaterials.length
+            var i = max
+            var setOptionText = function (target, v) {
+                var tText = RedText(target, 256, 40)
+                tText.color = '#fff'
+                tText.background = 'rgba(0,0,0,0.5)'
+                tText.text = v
+                tText.fontSize = '20px'
+                tText.lineHeight = '15px'
+                tText.padding = '5px'
+                tText.textAlign = 'center'
+                tText.sprite3DYn = true
+                tText.perspectiveScale = false
+
+                return tText
+            }
+
+            while (i--) {
+                var testMesh = RedMesh(self, RedSphere(self, 1, 16, 16, 16), testMaterials[i][1])
+                console.log(testMaterials[i][1])
+                testMaterials[i][1].useFlatMode = false
+                testMesh.x = -max + i * 2
+                testMesh.y = 0
+                tScene.addChild(testMesh)
+                var t = setOptionText(this, testMaterials[i][0])
+                t.y = 1.5
+                testMesh.addChild(t)
+            }
+            // 렌더시작
+            tRenderer.start(self, function (time) {
+                tCamera.x = Math.sin(time / 2500) * 8
+                tCamera.y = Math.cos(time / 2500) * 8
+                tCamera.z = Math.cos(time / 2500) * 8 + Math.sin(time / 2500) * 8
+                tCamera.lookAt(0, 0, 0)
+            })
+            // 렌더 디버거 활성화
+            tRenderer.setDebugButton();
+            testUI(self, tCamera, tScene)
+        } else {
+            console.log('초기화 실패!')
+        }
+    })
+    testUI = function (redGL, tCamera, tScene) {
+        var gui = new baseTestUI(redGL)
+        gui.initRedGL()
+        gui.initCamera(tCamera)
+        gui.initScene(tScene, false, assetPath)
+        var alphaTest = {
+            alpha: 1,
+            useFlatMode: false
+        }
+        var folder;
+        folder = gui['gui'].addFolder('RedBitmapMaterial')
+        folder.add(alphaTest, 'alpha', 0, 1).onChange(function (v) {
+            tScene.children.forEach(function (v2) {
+                v2.material.alpha = v
+            })
+        })
+        folder.add(alphaTest, 'useFlatMode').onChange(function (v) {
+            tScene.children.forEach(function (v2) {
+                v2.material.useFlatMode = v
+            })
+        })
+        folder.open()
+    }
+
+</script>
+</body>
+
+</html>

@@ -102,11 +102,6 @@ var RedColorMaterial;
         }
         console.log(this);
     };
-    var samplerOption = {
-        callback: function () {
-            this._searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST)
-        }
-    };
     RedColorMaterial.prototype = new RedBaseMaterial();
     RedColorMaterial['DEFINE_OBJECT_COLOR'] = {
         get: function () {

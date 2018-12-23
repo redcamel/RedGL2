@@ -74,6 +74,18 @@ var RedRenderer;
                 self['_tickKey'] = requestAnimationFrame(tick);
             }
         })(),
+        setDebugButton : function(){
+            var sourceViewBt;
+            var self = this
+            if(window['document']){
+                document.body.appendChild(sourceViewBt = document.createElement('button'));
+                sourceViewBt.style.cssText = 'position:fixed;left:10px;top:10px;background:rgb(91, 82, 170);color:#fff;z-index:10001;border:0;outline:none;cursor:pointer;padding:8px;font-size:11px;border-radius:5px'
+                sourceViewBt.innerHTML = 'debugRenderInfo - ' + RedGL_VERSION.version
+                sourceViewBt.addEventListener('click', function () {
+                    self.renderDebuger.visible = !self.renderDebuger.visible
+                })
+            }
+        },
         /**DOC:
          {
 			 code:`METHOD`,
@@ -321,11 +333,12 @@ var RedRenderer;
                     tScene['skyBox']['scaleX'] = tScene['skyBox']['scaleY'] = tScene['skyBox']['scaleZ'] = tCamera['farClipping'] * 0.6
                     self.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], [tScene['skyBox']], time, tRenderInfo);
                 }
-                // 그리드가 있으면 그림
-                if (tScene['grid']) self.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], [tScene['grid']], time, tRenderInfo);
+
                 // 씬렌더 호출
                 self.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], tScene['children'], time, tRenderInfo);
                 if (transparentList.length) self.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], transparentList, time, tRenderInfo, null, true);
+                // 그리드가 있으면 그림
+                if (tScene['grid']) self.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], [tScene['grid']], time, tRenderInfo);
                 // asix가 있으면 그림
                 if (tScene['axis']) self.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], tScene['axis']['children'], time, tRenderInfo);
                 // 디버깅 라이트 업데이트
@@ -531,7 +544,7 @@ var RedRenderer;
                         */
                         // webgl location도 알아낸다.
                         tWebGLAttributeLocation = tAttributeLocationInfo['location']
-                        if (tInterleaveDefineUnit && tCacheInterleaveBuffer[tWebGLAttributeLocation] != tInterleaveDefineUnit['_UUID']) {
+                        if ( tInterleaveDefineUnit && tCacheInterleaveBuffer[tWebGLAttributeLocation] != tInterleaveDefineUnit['_UUID']) {
                             // 해당로케이션을 활성화된적이없으면 활성화 시킨다
                             tAttributeLocationInfo['enabled'] ? 0 : tGL.enableVertexAttribArray(tWebGLAttributeLocation);
                             tAttributeLocationInfo['enabled'] = 1;
@@ -548,6 +561,12 @@ var RedRenderer;
                             // 상태 캐싱
                             tCacheInterleaveBuffer[tWebGLAttributeLocation] = tInterleaveDefineUnit['_UUID']
                         }
+                        // if ( !tInterleaveDefineUnit){
+                        //     //TODO - 사용하지않는 어트리뷰트일경우를 생각해야하는거군..
+                        //
+                        //     console.log('걸렸냐',tAttributeLocationInfo)
+                        // }
+
                     }
                     /////////////////////////////////////////////////////////////////////////
                     /////////////////////////////////////////////////////////////////////////

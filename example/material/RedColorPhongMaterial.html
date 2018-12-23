@@ -8,14 +8,7 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
     />
-    <style>
-        html,
-        body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-        }
-    </style>
+    <link rel="stylesheet" href="../example.css">
 
     <script src="../dat.gui.min.js"></script>
     <script src="../baseTestUI.js"></script>
@@ -66,7 +59,7 @@
                 tCamera.z = Math.cos(time / 1500) * 15 + Math.sin(time / 1500) * 15
             })
             // 렌더 디버거 활성화
-            tRenderer['renderDebuger']['visible'] = true
+            tRenderer.setDebugButton();
             //
             testUI(this, tCamera, tScene)
         } else {
@@ -82,7 +75,8 @@
         var testColorPhong = {
             color: '#ff0000',
             shininess: 16,
-            specularPower: 1
+            specularPower: 1,
+            useFlatMode: false
         }
         folder.addColor(testColorPhong, 'color').onChange(function (v) {
             tScene.children.forEach(function (v2) {
@@ -97,6 +91,11 @@
         folder.add(testColorPhong, 'specularPower', 0.1, 10).onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.material.specularPower = v
+            })
+        })
+        folder.add(testColorPhong, 'useFlatMode').onChange(function (v) {
+            tScene.children.forEach(function (v2) {
+                v2.material.useFlatMode = v
             })
         })
         folder.open()
