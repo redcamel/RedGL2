@@ -1,0 +1,12 @@
+[
+  {
+    "constructorYn": true,
+    "title": "RedCylinder",
+    "description": "\nRedCylinder Instance 생성기.\nBox 형태의 RedGeometry 생성\n",
+    "extends": [
+      "RedGeometry"
+    ],
+    "demo": "../example/RedPrimitive.html",
+    "return": "RedCylinder Instance"
+  }
+]

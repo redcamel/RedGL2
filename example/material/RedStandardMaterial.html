@@ -101,7 +101,7 @@
             shininess: 16,
             normalPower: 1,
             specularPower: 1,
-            emissivePower: 1,
+            emissiveFactor: 1,
             displacementPower: 0.1,
             displacementFlowSpeedX: 0,
             displacementFlowSpeedY: 0,
@@ -127,9 +127,9 @@
                 v2.material.specularPower = v
             })
         });
-        folder.add(testRedStandard, 'emissivePower', 0.1, 10).onChange(function (v) {
+        folder.add(testRedStandard, 'emissiveFactor', 0.1, 10).onChange(function (v) {
             tScene.children.forEach(function (v2) {
-                v2.material.emissivePower = v
+                v2.material.emissiveFactor = v
             })
         });
         folder.add(testRedStandard, 'normalTexture').onChange(function (v) {

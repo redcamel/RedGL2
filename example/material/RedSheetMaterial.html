@@ -25,43 +25,47 @@
     RedGL(canvas, function (v) {
         if (v) {
             console.log('초기화 성공!')
-            var tWorld, tScene, tCamera, tRenderer;
-            // 월드 생성
-            this['world'] = tWorld = RedWorld();
-            // 씬 생성
-            tScene = RedScene(this);
-            // 카메라 생성
-            tCamera = RedCamera();
-            // 렌더러 생성
-            tRenderer = RedRenderer();
-            // 뷰생성 및 적용
-            tWorld.addView(RedView('test', this, tScene, tCamera));
-            // 그리드 설정
-            tScene['grid'] = RedGrid(this)
+            var tWorld, tView, tScene, tController, tRenderer, tLight;
+            var setBase = function (regGL) {
+                // 월드 생성
+                regGL['world'] = tWorld = RedWorld();
+                // 씬 생성
+                tScene = RedScene(regGL);
+                // 카메라 생성
+                tController = RedObitController(regGL);
+                tController.pan = 0;
+                tController.tilt = -25;
+                tController.distance = 7;
+                tController.speedDistance = 0.5
+                // 렌더러 생성
+                tRenderer = RedRenderer();
+                // 뷰생성 및 적용
+                tView = RedView('HelloRedGL', regGL, tScene, tController);
+                tWorld.addView(tView);
+                // 그리드 설정
+                tScene['grid'] = RedGrid(regGL);
+                // 렌더시작
+                tRenderer.start(regGL, function (time) {
+                });
+                // 렌더 디버거 활성화
+                tRenderer.setDebugButton();
+                testUI(regGL, tScene)
+            };
+            setBase(this);
+            // 재질설정
+            var tMaterial = RedSheetMaterial(this, RedBitmapTexture(this, assetPath + 'sheet/spriteSheet.png'), 24, 5, 3, 15);
             // Mesh 설정
             var tMesh;
-            tMesh = RedMesh(this, RedPlane(this, 5, 5), RedSheetMaterial(this, RedBitmapTexture(this, assetPath + 'sheet/spriteSheet.png'), 24, 5, 3, 15))
+            tMesh = RedMesh(this, RedPlane(this, 5, 5), tMaterial)
             tMesh.useCullFace = false
             tScene.addChild(tMesh)
-            // 렌더시작
-            tRenderer.start(this, function (time) {
-                tCamera.x = Math.sin(time / 2500) * 8
-                tCamera.y = Math.cos(time / 2500) * 8
-                tCamera.z = Math.cos(time / 2500) * 8 + Math.sin(time / 2500) * 8
-                tCamera.lookAt(0, 0, 0)
-            })
-            // 렌더 디버거 활성화
-            tRenderer.setDebugButton();
-            testUI(this, tCamera, tScene)
         } else {
             console.log('초기화 실패!')
         }
     })
-    testUI = function (redGL, tCamera, tScene) {
+    testUI = function (redGL, tScene) {
         var gui = new baseTestUI(redGL)
         gui.initRedGL()
-        gui.initCamera(tCamera)
-        gui.initScene(tScene, false, assetPath)
         var alphaTest = {
             diffuseTexture: 'spriteSheet',
             alpha: 1,

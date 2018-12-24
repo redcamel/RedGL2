@@ -43,7 +43,7 @@
   {
     "code": "PROPERTY",
     "title": "nearClipping",
-    "description": "기본값 : 1",
+    "description": "기본값 : 0.1",
     "return": "Number"
   },
   {
