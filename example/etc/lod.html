@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>LOD</title>
+    <title>RedGL - LOD</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -25,85 +25,98 @@
     RedGL(canvas, function (v) {
         if (v) {
             console.log('초기화 성공!')
-            var tWorld, tScene, tController, tRenderer;
-            var self;
-            self = this;
-            // 월드 생성
-            this['world'] = tWorld = RedWorld();
-            // 씬 생성
-            tScene = RedScene(this);
-            // 카메라 생성
-            tController = RedObitController(this);
-            tController.distance = 15
-            tController.tilt = -30
-            tController.pan = 0
-            // 렌더러 생성
-            tRenderer = RedRenderer();
-            // 뷰생성 및 적용
-            tWorld.addView(RedView('test', this, tScene, tController));
-            // 라이트 설정
-            var testDLight;
-            testDLight = RedDirectionalLight(this, '#fff', 1)
-            testDLight.x = 3
-            testDLight.y = 2
-            testDLight.z = 3
-            testDLight.debug = true
-            tScene.addLight(testDLight)
-            tScene.skyBox =
-                RedSkyBox(this, [
-                    '../asset/cubemap/SwedishRoyalCastle/px.jpg',
-                    '../asset/cubemap/SwedishRoyalCastle/nx.jpg',
-                    '../asset/cubemap/SwedishRoyalCastle/py.jpg',
-                    '../asset/cubemap/SwedishRoyalCastle/ny.jpg',
-                    '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
-                    '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
-                ]);
-            var i = 15
-            var max = 10
-            var j
-            var k
-            var tMesh;
-            var tGeo = RedSphere(self, 0.5, 16, 16, 16)
-            var tMat = RedStandardMaterial(
-                self,
-                RedBitmapTexture(self, '../asset/brick/Brick03_col.jpg'),
-                RedBitmapTexture(self, '../asset/brick/Brick03_nrm.jpg'),
-                RedBitmapTexture(self, '../asset/brick_roughness.jpg')
-            )
-            tMat.shininess = 32
+            var tWorld, tView, tScene, tController, tRenderer;
+            var setBase = function (regGL) {
+                // 월드 생성
+                regGL['world'] = tWorld = RedWorld();
+                // 씬 생성
+                tScene = RedScene(regGL);
+                // 카메라 생성
+                tController = RedObitController(regGL);
+                tController.pan = 0;
+                tController.tilt = -45;
+                // 렌더러 생성
+                tRenderer = RedRenderer();
+                // 뷰생성 및 적용
+                tView = RedView('HelloRedGL', regGL, tScene, tController);
+                tWorld.addView(tView);
+                // 그리드 설정
+                tScene['grid'] = RedGrid(regGL);
+                // 렌더시작
+                tRenderer.start(regGL, function (time) {
+                });
+                // 렌더 디버거 활성화
+                tRenderer.setDebugButton();
+                // testUI 호출
+                testUI(regGL, tScene);
+                console.log(regGL);
+            };
+            setBase(this);
+
+            var MAX;
+            var i, i2, i3;
+            var tGeo, tMesh;
+            var lodMatList = [
+                RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'UV_Grid_Sm.jpg')),
+                RedColorMaterial(this, '#00ff00'),
+                RedColorMaterial(this, '#0000ff'),
+                RedColorMaterial(this, '#ffff00'),
+                RedColorMaterial(this, '#00ffff')
+            ];
+            MAX = 15;
+            tGeo = RedSphere(this, 0.5, 16, 16, 16);
+            i = MAX;
             while (i--) {
-                j = 15
-                while (j--) {
-                    k = 15
-                    while (k--) {
-                        tMesh = RedMesh(self, tGeo, tMat)
-                        tMesh.x = (i - 7.5) * 2
-                        tMesh.y = (j - 7.5) * 2
-                        tMesh.z = (k - 7.5) * 2
-                        tMesh.useLOD = true
-                        tMesh.drawMode = self.gl.LINES
-                        tMesh.addLOD(0, 5, RedSphere(self, 0.5, 32, 32, 32), tMat)
-                        tMesh.addLOD(1, 10, RedSphere(self, 0.5, 16, 16, 16), RedColorMaterial(self, '#00ff00'))
-                        tMesh.addLOD(2, 15, RedSphere(self, 0.5, 8, 8, 8), RedColorMaterial(self, '#0000ff'))
-                        tMesh.addLOD(3, 20, RedSphere(self, 0.5, 4, 4, 4), RedColorMaterial(self, '#ffff00'))
-                        tMesh.addLOD(4, 25, RedSphere(self, 0.5, 3, 3, 3), RedColorMaterial(self, '#00ffff'))
-                        tScene.addChild(tMesh)
+                i2 = MAX;
+                while (i2--) {
+                    i3 = MAX;
+                    while (i3--) {
+                        tMesh = RedMesh(this, tGeo, lodMatList[0]);
+                        tMesh.x = (i - MAX / 2) * 2;
+                        tMesh.y = (i2 - MAX / 2) * 2;
+                        tMesh.z = (i3 - MAX / 2) * 2;
+                        tMesh.drawMode = this.gl.LINES;
+                        // LOD 설정
+                        tMesh.useLOD = true;
+                        tMesh.addLOD(0, 5, RedSphere(this, 0.5, 32, 32, 32), lodMatList[0]);
+                        tMesh.addLOD(1, 10, RedSphere(this, 0.5, 16, 16, 16), lodMatList[1]);
+                        tMesh.addLOD(2, 15, RedSphere(this, 0.5, 8, 8, 8), lodMatList[2]);
+                        tMesh.addLOD(3, 20, RedSphere(this, 0.5, 4, 4, 4), lodMatList[3]);
+                        tMesh.addLOD(4, 25, RedSphere(this, 0.5, 3, 3, 3), lodMatList[4]);
+                        tScene.addChild(tMesh);
                     }
                 }
             }
-            // 렌더시작
-            tRenderer.start(this, function (time) {
-            })
-            // 렌더 디버거 활성화
-            tRenderer.setDebugButton();
-            testUI()
         } else {
-            console.log('초기화 실패!')
+            console.log('초기화 실패!');
         }
-    })
-    testUI = function (redGL, tScene, effect) {
-        var gui = new baseTestUI(redGL)
-    }
+    });
+    testUI = function (redGL, tScene) {
+        var gui = new baseTestUI(redGL);
+        var lodTestData = {
+            drawMode: 'TRIANGLES',
+            pointSize: 1,
+            useLOD: true
+        }
+        var tFolder = gui['gui'].addFolder('RedMesh')
+        tFolder.open()
+        tFolder.add(lodTestData, 'drawMode', ['TRIANGLES', 'TRIANGLE_STRIP', 'TRIANGLE_FAN', 'LINES', 'LINE_LOOP', 'LINE_STRIP', 'POINTS']).onChange(function (v) {
+            tScene.children.forEach(function (tMesh) {
+                tMesh.drawMode = redGL.gl[v]
+            })
+        });
+        tFolder.add(lodTestData, 'pointSize', 1, 100).onChange(function (v) {
+            tScene.children.forEach(function (tMesh) {
+                tMesh.pointSize = v
+            })
+        });
+        //TODO LOD해제될떄 LOD 0번으로 설정되게 수정해야함
+        // tFolder.add(lodTestData, 'useLOD').onChange(function (v) {
+        //     tScene.children.forEach(function (tMesh) {
+        //         tMesh.useLOD = v
+        //     })
+        // });
+    };
 </script>
 </body>
 

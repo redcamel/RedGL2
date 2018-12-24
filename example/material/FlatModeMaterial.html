@@ -31,7 +31,7 @@
             // 씬 생성
             tScene = RedScene(self);
             // 카메라 생성
-            tCamera = RedCamera();
+            tCamera = RedObitController(this)
             // 렌더러 생성
             tRenderer = RedRenderer();
             // 뷰생성 및 적용
@@ -117,10 +117,7 @@
             }
             // 렌더시작
             tRenderer.start(self, function (time) {
-                tCamera.x = Math.sin(time / 2500) * 8
-                tCamera.y = Math.cos(time / 2500) * 8
-                tCamera.z = Math.cos(time / 2500) * 8 + Math.sin(time / 2500) * 8
-                tCamera.lookAt(0, 0, 0)
+                tCamera.update()
             })
             // 렌더 디버거 활성화
             tRenderer.setDebugButton();

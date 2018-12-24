@@ -64,13 +64,11 @@ var RedEnvironmentMaterial;
 
         // flat노말
         //#REDGL_DEFINE#fragmentShareFunc#getFlatNormal#
-
         //#REDGL_DEFINE#fragmentShareFunc#getPerturbNormal2Arb#
 
         // 라이트
         //#REDGL_DEFINE#fragmentShareFunc#getDirectionalLightColor#
         //#REDGL_DEFINE#fragmentShareFunc#getPointLightColor#
-
 
 
          //#REDGL_DEFINE#diffuseTexture# uniform sampler2D u_diffuseTexture;
@@ -82,6 +80,7 @@ var RedEnvironmentMaterial;
          //#REDGL_DEFINE#normalTexture# uniform float u_normalPower;
          uniform float u_shininess;
          uniform float u_specularPower;
+         //#REDGL_DEFINE#emissiveTexture# uniform float u_emissivePower;
          uniform float u_reflectionPower;
          uniform float u_alpha;
          uniform bool u_useFlatMode;
@@ -138,7 +137,7 @@ var RedEnvironmentMaterial;
                 u_specularPower
              );
 
-             //#REDGL_DEFINE#emissiveTexture# finalColor.rgb += emissiveColor.rgb;
+             //#REDGL_DEFINE#emissiveTexture# finalColor.rgb += emissiveColor.rgb * u_emissivePower;
              finalColor.rgb *= texelColor.a;
              finalColor.a = texelColor.a * u_alpha;
 
@@ -224,6 +223,7 @@ var RedEnvironmentMaterial;
         this['normalPower'] = 1;
         this['shininess'] = 8;
         this['specularPower'] = 1;
+        this['emissivePower'] = 1;
         this['reflectionPower'] = 1;
         this['displacementPower'] = 0.1;
         this['displacementFlowSpeedX'] = 0;
@@ -332,6 +332,15 @@ var RedEnvironmentMaterial;
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'specularPower', 'number', {'min': 0});
+    /**DOC:
+     {
+	     code : 'PROPERTY',
+		 title :`emissivePower`,
+		 description : `기본값 : 1`,
+		 return : 'number'
+	 }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'emissivePower', 'number', {'min': 0});
     /**DOC:
      {
 	     code : 'PROPERTY',

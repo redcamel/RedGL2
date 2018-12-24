@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>localToWorld, worldToLocal, getScreenPoint</title>
+    <title>RedGL - localToWorld, worldToLocal, getScreenPoint</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -23,54 +23,56 @@
     document.body.appendChild(canvas);
     RedGL(canvas, function (v) {
         if (v) {
-            console.log('초기화 성공!')
-            var tWorld, tScene, tCamera, tRenderer;
-            // 월드 생성
-            this['world'] = tWorld = RedWorld();
-            // 씬 생성
-            tScene = RedScene(this);
-            // 카메라 생성
-            tCamera = RedObitController(this);
-            // 렌더러 생성
-            tRenderer = RedRenderer();
-            // 뷰생성 및 적용
-            tWorld.addView(RedView('test', this, tScene, tCamera));
-            // 그리드 설정
-            tScene['grid'] = RedGrid(this);
-            tScene.skyBox =
-                RedSkyBox(this, [
-                    '../asset/cubemap/SwedishRoyalCastle/px.jpg',
-                    '../asset/cubemap/SwedishRoyalCastle/nx.jpg',
-                    '../asset/cubemap/SwedishRoyalCastle/py.jpg',
-                    '../asset/cubemap/SwedishRoyalCastle/ny.jpg',
-                    '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
-                    '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
-                ]);
-            tScene['axis'] = RedAxis(this)
+            //TODO 코드정리
+            console.log('초기화 성공!');
+            var tWorld, tView, tScene, tController, tRenderer;
+            var setBase = function (regGL) {
+                // 월드 생성
+                regGL['world'] = tWorld = RedWorld();
+                // 씬 생성
+                tScene = RedScene(regGL);
+                // 카메라 생성
+                tController = RedObitController(regGL);
+                tController.pan = 0;
+                tController.tilt = -45;
+                // 렌더러 생성
+                tRenderer = RedRenderer();
+                // 뷰생성 및 적용
+                tView = RedView('HelloRedGL', regGL, tScene, tController);
+                tWorld.addView(tView);
+                // 그리드 설정
+                tScene['grid'] = RedGrid(regGL);
+                tScene['axis'] = RedAxis(regGL)
+                // 렌더 디버거 활성화
+                tRenderer.setDebugButton();
+                // testUI 호출
+                testUI(regGL, tScene);
+                console.log(regGL);
+            };
+            setBase(this);
             //////////////////////////////////////
             var testMesh, testMesh2, testMesh3, testMesh4
             var testMaterial;
-            testMaterial = RedStandardMaterial(this, RedBitmapTexture(this, '../asset/brick/Brick03_col.jpg'))
+            testMaterial = RedStandardMaterial(this, RedBitmapTexture(this, assetPath + 'brick/Brick03_col.jpg'))
             testMesh = RedMesh(this, RedBox(this), testMaterial)
             testMesh.x = 1
             testMesh.y = 1
             testMesh.z = 1
             tScene.addChild(testMesh)
             /////////////////////////////////////////////////////////
-            testMesh2 = RedMesh(this, RedSphere(this, 0.5, 16, 16, 16), testMaterial)
+            testMesh2 = RedMesh(this, RedBox(this), testMaterial)
             testMesh2.x = -2
             testMesh.addChild(testMesh2)
             /////////////////////////////////////////////////////////
-            testMesh3 = RedMesh(this, RedSphere(this, 0.5, 16, 16, 16), RedColorMaterial(this))
+            testMesh3 = RedMesh(this, RedBox(this), RedColorMaterial(this))
             testMesh3.scaleX = testMesh3.scaleY = testMesh3.scaleZ = 1.1
             tScene.addChild(testMesh3)
             /////////////////////////////////////////////////////////
-            testMesh4 = RedMesh(this, RedSphere(this, 0.5, 16, 16, 16), RedColorMaterial(this, '#00ff00'))
+            testMesh4 = RedMesh(this, RedBox(this), RedColorMaterial(this, '#00ff00'))
             testMesh4.scaleX = testMesh4.scaleY = testMesh4.scaleZ = 1
             testMesh4.x = 2
             testMesh.addChild(testMesh4)
             /////////////////////////////////////////////////////////
-            tScene['grid'] = RedGrid(this)
             var testDLight, testALight;
             testDLight = RedDirectionalLight(this, '#fff')
             testDLight.x = 3
@@ -79,8 +81,6 @@
             tScene.addLight(testDLight)
             testALight = RedAmbientLight(this)
             tScene.addLight(testALight)
-            tScene['axis'] = RedAxis(this)
-            RedAxis(this)
             ////////////////////////
             var getScreenPointBox, getScreenPointBox2;
             var localToWorldBox3
@@ -106,28 +106,28 @@
             worldToLocalBox4.innerHTML = 'worldToLocalBox Test'
             document.body.appendChild(worldToLocalBox4)
             ////////////////////////
-            tRenderer.renderDebuger.visible = true
             // 렌더시작
             tRenderer.start(this, function (time) {
-                var testPoint = testMesh.getScreenPoint(RedView('test'))
-                getScreenPointBox.style.top = testPoint[1]
-                getScreenPointBox.style.left = testPoint[0]
-                getScreenPointBox.innerHTML = 'testMesh / getScreenPointBox Test<br>screen X : ' + testPoint[0] + '<br>' + 'screen Y : ' + testPoint[1]
                 testMesh.rotationX += 0.2
                 testMesh.rotationY += 0.2
                 testMesh.rotationZ += 0.2
-                ////////////////////////////////////////////////////////////////////////////////////
-                var testPoint2 = testMesh2.getScreenPoint(RedView('test'))
-                getScreenPointBox2.style.top = testPoint2[1]
-                getScreenPointBox2.style.left = testPoint2[0]
-                getScreenPointBox2.innerHTML = 'testMesh2 / getScreenPointBox2 Test<br>screen X : ' + testPoint2[0] + '<br>' + 'screen Y : ' + testPoint2[1]
                 testMesh2.rotationX += 0.2
                 testMesh2.rotationY += 0.2
                 testMesh2.rotationZ += 0.2
                 ////////////////////////////////////////////////////////////////////////////////////
+                var testPoint = testMesh.getScreenPoint(RedView('HelloRedGL'))
+                getScreenPointBox.style.top = testPoint[1]
+                getScreenPointBox.style.left = testPoint[0]
+                getScreenPointBox.innerHTML = 'testMesh / getScreenPointBox Test<br>screen X : ' + testPoint[0] + '<br>' + 'screen Y : ' + testPoint[1]
+                ////////////////////////////////////////////////////////////////////////////////////
+                var testPoint2 = testMesh2.getScreenPoint(RedView('HelloRedGL'))
+                getScreenPointBox2.style.top = testPoint2[1]
+                getScreenPointBox2.style.left = testPoint2[0]
+                getScreenPointBox2.innerHTML = 'testMesh2 / getScreenPointBox2 Test<br>screen X : ' + testPoint2[0] + '<br>' + 'screen Y : ' + testPoint2[1]
+                ////////////////////////////////////////////////////////////////////////////////////
                 var testLocalInput3 = [-1, 1, 0]
                 var testLocalToWorld3 = testMesh2.localToWorld(testLocalInput3[0], testLocalInput3[1], testLocalInput3[2])
-                var testPoint3 = testMesh3.getScreenPoint(RedView('test'))
+                var testPoint3 = testMesh3.getScreenPoint(RedView('HelloRedGL'))
                 testMesh3.x = testLocalToWorld3[0]
                 testMesh3.y = testLocalToWorld3[1]
                 testMesh3.z = testLocalToWorld3[2]
@@ -139,7 +139,7 @@
                 ////////////////////////////////////////////////////////////////////////////////////
                 var testWolrdInput4 = [3, 0, 1]
                 var testWorldToLocal4 = testMesh4.worldToLocal(testWolrdInput4[0], testWolrdInput4[1], testWolrdInput4[2])
-                var testPoint4 = testMesh4.getScreenPoint(RedView('test'))
+                var testPoint4 = testMesh4.getScreenPoint(RedView('HelloRedGL'))
                 testMesh4.x = testWorldToLocal4[0]
                 testMesh4.y = testWorldToLocal4[1]
                 testMesh4.z = testWorldToLocal4[2]
@@ -149,14 +149,13 @@
                     + '<br>local X: ' + testWorldToLocal4[0] + '<br>' + 'local Y : ' + testWorldToLocal4[1] + '<br>' + 'local Z : ' + testWorldToLocal4[2]
                 ////////////////////////////////////////////////////////////////////////////////////
             })
-            // 렌더 디버거 활성화
-            tRenderer.setDebugButton();
-            testUI(this, tCamera, tScene)
         } else {
             console.log('초기화 실패!')
         }
-    })
-    testUI = function (redGL, tCamera, tScene) {
+    });
+    testUI = function (redGL, tScene) {
+        var gui = new baseTestUI(redGL)
+        gui.initRedGL()
     }
 </script>
 </body>

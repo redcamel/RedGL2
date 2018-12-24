@@ -25,61 +25,80 @@
     RedGL(canvas, function (v) {
         if (v) {
             console.log('초기화 성공!')
-            var tWorld, tScene, tCamera, tRenderer;
-            // 월드 생성
-            this['world'] = tWorld = RedWorld();
-            // 씬 생성
-            tScene = RedScene(this);
-            // 카메라 생성
-            tCamera = RedObitController(this);
-            tCamera.pan = 45
-            tCamera.tilt = -45
-            tCamera.distance = 10
-            // 렌더러 생성
-            tRenderer = RedRenderer();
-            // 뷰생성 및 적용
-            tWorld.addView(RedView('test', this, tScene, tCamera));
-            // 그리드 설정
-            tScene['grid'] = RedGrid(this)
-            // 라이트 설정
-            var tLight = RedDirectionalLight(this)
-            tScene.addLight(tLight)
-            tLight.x = 10
-            tLight.y = 10
-            tLight.z = 10
-            // Box 설정
-            var tSphere;
-            var tMaterial = RedColorPhongTextureMaterial(this, '#ff0000')
-            tSphere = RedMesh(this, RedSphere(this, 1, 32, 32, 32), tMaterial)
-            tScene.addChild(tSphere)
-            // 렌더시작
-            tRenderer.start(this, function (time) {
-                tCamera.x = Math.sin(time / 1500) * 10
-                tCamera.y = Math.cos(time / 1500) * 10
-                tCamera.z = Math.cos(time / 1500) * 15 + Math.sin(time / 1500) * 15
-            })
-            // 렌더 디버거 활성화
-            tRenderer.setDebugButton();
+            var tWorld, tView, tScene, tController, tRenderer, tLight;
+            var setBase = function (regGL) {
+                // 월드 생성
+                regGL['world'] = tWorld = RedWorld();
+                // 씬 생성
+                tScene = RedScene(regGL);
+                // 카메라 생성
+                tController = RedObitController(regGL);
+                tController.pan = 0;
+                tController.tilt = -15;
+                tController.distance = 3;
+                // 렌더러 생성
+                tRenderer = RedRenderer();
+                // 뷰생성 및 적용
+                tView = RedView('HelloRedGL', regGL, tScene, tController);
+                tWorld.addView(tView);
+                // 그리드 설정
+                tScene['grid'] = RedGrid(regGL);
+                // 라이트 설정
+                tLight = RedDirectionalLight(regGL);
+                tScene.addLight(tLight)
+                tLight.x = 10;
+                tLight.y = 10;
+                tLight.z = 10;
+                // 렌더시작
+                tRenderer.start(regGL, function (time) {
+                    tScene.children.forEach(function (tMesh) {
+                        tMesh.rotationX += 1
+                        tMesh.rotationY += 1
+                        tMesh.rotationZ += 1
+                    })
+                });
+                // 렌더 디버거 활성화
+                tRenderer.setDebugButton();
+            };
+            setBase(this);
+
+            // 재질설정
+            var tMaterial = RedColorPhongTextureMaterial(this, '#ff0000');
+            // Mesh 설정
+            var makeMesh = function (redGL, y) {
+                var tMesh;
+                tMesh = RedMesh(redGL, RedCylinder(redGL, 0.2, 0.5, 1, 32, 32), tMaterial)
+                tMesh.x = -0.75
+                tMesh.y = y
+                tScene.addChild(tMesh)
+                tMesh = RedMesh(redGL, RedSphere(redGL, 0.5, 32, 32, 32), tMaterial)
+                tMesh.x = 0.75
+                tMesh.y = y
+                tScene.addChild(tMesh)
+            }
+            makeMesh(this, 0);
             //
-            testUI(this, tCamera, tScene)
+            testUI(this, tScene)
         } else {
             console.log('초기화 실패!')
         }
     })
-    testUI = function (redGL, tCamera, tScene) {
+    testUI = function (redGL, tScene) {
         console.log('test')
         var gui = new baseTestUI(redGL)
         gui.initRedGL()
-        gui.initScene(tScene, false, assetPath)
         var folder = gui['gui'].addFolder('RedColorPhongTextureMaterial')
         var testColorPhongTextureMaterial = {
             color: '#ff0000',
+            alpha: 1,
             normalTexture: false,
             specularTexture: false,
             displacementTexture: false,
+            emissiveTexture: false,
             shininess: 16,
             normalPower: 1,
             specularPower: 1,
+            emissivePower: 1,
             displacementPower: 0.1,
             displacementFlowSpeedX: 0,
             displacementFlowSpeedY: 0,
@@ -89,42 +108,57 @@
             tScene.children.forEach(function (v2) {
                 v2.material.color = v
             })
-        })
+        });
+        folder.add(testColorPhongTextureMaterial, 'alpha', 0, 1, 0.01).onChange(function (v) {
+            tScene.children.forEach(function (v2) {
+                v2.material.alpha = v
+            })
+        });
         folder.add(testColorPhongTextureMaterial, 'normalPower', 0, 3).onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.material.normalPower = v
             })
-        })
+        });
         folder.add(testColorPhongTextureMaterial, 'shininess', 1, 128).onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.material.shininess = v
             })
-        })
+        });
         folder.add(testColorPhongTextureMaterial, 'specularPower', 0.1, 10).onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.material.specularPower = v
             })
-        })
+        });
+        folder.add(testColorPhongTextureMaterial, 'emissivePower', 0.1, 10).onChange(function (v) {
+            tScene.children.forEach(function (v2) {
+                v2.material.emissivePower = v
+            })
+        });
         folder.add(testColorPhongTextureMaterial, 'normalTexture').onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.material.normalTexture = v ? RedBitmapTexture(redGL, assetPath + 'brick/Brick03_nrm.jpg') : null
             })
-        })
+        });
         folder.add(testColorPhongTextureMaterial, 'specularTexture').onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.material.specularTexture = v ? RedBitmapTexture(redGL, assetPath + 'specular.png') : null
             })
-        })
+        });
+        folder.add(testColorPhongTextureMaterial, 'emissiveTexture').onChange(function (v) {
+            tScene.children.forEach(function (v2) {
+                v2.material.emissiveTexture = v ? RedBitmapTexture(redGL, assetPath + 'emissive.jpg') : null
+            })
+        });
         folder.add(testColorPhongTextureMaterial, 'displacementTexture').onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.material.displacementTexture = v ? RedBitmapTexture(redGL, assetPath + 'brick/Brick03_disp.jpg') : null
             })
-        })
+        });
         folder.add(testColorPhongTextureMaterial, 'displacementPower', 0, 2).onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.material.displacementPower = v
             })
-        })
+        });
         folder.add(testColorPhongTextureMaterial, 'displacementFlowSpeedX', 0, 0.3, 0.001).onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.material.displacementFlowSpeedX = v
@@ -134,13 +168,13 @@
             tScene.children.forEach(function (v2) {
                 v2.material.displacementFlowSpeedY = v
             })
-        })
+        });
         folder.add(testColorPhongTextureMaterial, 'useFlatMode').onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.material.useFlatMode = v
             })
-        })
-        folder.open()
+        });
+        folder.open();
     }
 </script>
 </body>

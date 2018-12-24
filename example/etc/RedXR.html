@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>다중뷰</title>
+    <title>RedGL - RedXR</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -10,16 +10,9 @@
     />
     <link rel="stylesheet" href="../example.css">
     <script src='https://immersive-web.github.io/webxr-samples/js/webxr-polyfill.js'></script>
-
-    <!--This script patches up around implementation differences in past browser versions
-        so that the samples can always be written against the most recent spec changes.
-        It won't be necessary after the API has been officially shipped for a bit.-->
     <script src='https://immersive-web.github.io/webxr-samples/js/webxr-version-shim.js'></script>
-
     <script src='https://immersive-web.github.io/webxr-samples/js/cottontail/build/cottontail.js'></script>
-
     <script src='https://immersive-web.github.io/webxr-samples/js/webxr-button.js'></script>
-
     <script src="../dat.gui.min.js"></script>
     <script src="../baseTestUI.js"></script>
     <script src="../../release/RedGL.min.js"></script>
@@ -28,28 +21,28 @@
 
 <body>
 <canvas id="test" style="border: none;"></canvas>
-<script>
-    var t = document.getElementById('test')
-    document.body.appendChild(t)
+<script id='testSource'>
+    var canvas
     var testMesh
-    RedXR(t,
+    canvas = document.getElementById('test');
+    document.body.appendChild(canvas);
+    baseTestUI.makeBaseUI();
+    RedXR(canvas,
         function (v) {
-            console.log(this)
-            console.log(v)
-            testMesh = RedMesh(this, RedSphere(this, 1, 16, 16, 16), RedColorMaterial(this))
-            testMesh.z = -10
-            testMesh.drawMode = this.gl.POINTS
-            testMesh.pointSize = 5
-            v['scene'].addChild(testMesh)
+            testMesh = RedMesh(this, RedSphere(this, 1, 16, 16, 16), RedColorMaterial(this));
+            testMesh.z = -10;
+            testMesh.drawMode = this.gl.POINTS;
+            testMesh.pointSize = 5;
+            v['scene'].addChild(testMesh);
+
         },
         function (time) {
-//			console.log(time)
-            testMesh.rotationX += 1
-            testMesh.rotationY += 1
-            testMesh.rotationZ += 1
+            // console.log(time);
+            testMesh.rotationX += 1;
+            testMesh.rotationY += 1;
+            testMesh.rotationZ += 1;
         }
     )
 </script>
 </body>
-
 </html>

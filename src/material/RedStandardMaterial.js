@@ -3,7 +3,7 @@ var RedStandardMaterial;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'RedStandardMaterialProgram';
-    var PROGRAM_OPTION_LIST = ['diffuseTexture','normalTexture', 'specularTexture', 'emissiveTexture', 'displacementTexture','useFlatMode'];
+    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'specularTexture', 'emissiveTexture', 'displacementTexture', 'useFlatMode'];
     var checked;
     vSource = function () {
         /* @preserve
@@ -80,6 +80,7 @@ var RedStandardMaterial;
          //#REDGL_DEFINE#normalTexture# uniform float u_normalPower;
          uniform float u_shininess;
          uniform float u_specularPower;
+         //#REDGL_DEFINE#emissiveTexture# uniform float u_emissivePower;
          uniform float u_alpha;
 
 
@@ -133,7 +134,8 @@ var RedStandardMaterial;
                 u_specularPower
              );
 
-             //#REDGL_DEFINE#emissiveTexture# finalColor.rgb += emissiveColor.rgb;
+             //#REDGL_DEFINE#emissiveTexture# finalColor.rgb += emissiveColor.rgb * u_emissivePower;
+
              finalColor.rgb *= texelColor.a;
              finalColor.a = texelColor.a * u_alpha;
 
@@ -197,6 +199,7 @@ var RedStandardMaterial;
         this['normalPower'] = 1;
         this['shininess'] = 16;
         this['specularPower'] = 1;
+        this['emissivePower'] = 1;
         this['displacementPower'] = 0.1;
         this['displacementFlowSpeedX'] = 0;
         this['displacementFlowSpeedY'] = 0;
@@ -255,7 +258,7 @@ var RedStandardMaterial;
     /**DOC:
      {
 	     code : 'PROPERTY',
-		 title :`specularTexture`,
+		 title :`emissiveTexture`,
 		 return : 'RedBitmapTexture'
 	 }
      :DOC*/
@@ -295,6 +298,16 @@ var RedStandardMaterial;
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'specularPower', 'number', {'min': 0});
+    /**DOC:
+     {
+	     code : 'PROPERTY',
+		 title :`emissivePower`,
+		 description : `기본값 : 1`,
+		 return : 'number'
+	 }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'emissivePower', 'number', {'min': 0});
+
     /**DOC:
      {
 	     code : 'PROPERTY',

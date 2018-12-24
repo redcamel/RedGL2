@@ -176,6 +176,8 @@ gulp.task('combine-js', function () {
         "src/particle/RedParticleUnit.js",
         "src/particle/RedParticleEmitter.js",
         "src/primitives/RedBox.js",
+        "src/primitives/RedCylinder.js",
+
         "src/primitives/RedPlane.js",
         "src/primitives/RedSphere.js",
         //

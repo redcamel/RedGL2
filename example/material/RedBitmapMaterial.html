@@ -24,90 +24,67 @@
     RedGL(canvas, function (v) {
         if (v) {
             console.log('초기화 성공!')
-            var tWorld, tScene, tCamera, tRenderer;
-            // 월드 생성
-            this['world'] = tWorld = RedWorld();
-            // 씬 생성
-            tScene = RedScene(this);
-            // 카메라 생성
-            tCamera = RedCamera();
-            // 렌더러 생성
-            tRenderer = RedRenderer();
-            // 뷰생성 및 적용
-            tWorld.addView(RedView('test', this, tScene, tCamera));
-            // 그리드 설정
-            tScene['grid'] = RedGrid(this)
+            var tWorld, tView, tScene, tController, tRenderer, tLight;
+            var setBase = function (regGL) {
+                // 월드 생성
+                regGL['world'] = tWorld = RedWorld();
+                // 씬 생성
+                tScene = RedScene(regGL);
+                // 카메라 생성
+                tController = RedObitController(regGL);
+                tController.pan = -25;
+                tController.tilt = -25;
+                tController.distance = 5;
+                tController.speedDistance=0.5
+                // 렌더러 생성
+                tRenderer = RedRenderer();
+                // 뷰생성 및 적용
+                tView = RedView('HelloRedGL', regGL, tScene, tController);
+                tWorld.addView(tView);
+                // 그리드 설정
+                tScene['grid'] = RedGrid(regGL);
+                // 렌더시작
+                tRenderer.start(regGL, function (time) {
+                });
+                // 렌더 디버거 활성화
+                tRenderer.setDebugButton();
+            };
+            setBase(this);
+            // 재질설정
+            var tMaterial = RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'UV_Grid_Sm.jpg'))
+
             // Mesh 설정
-            var tMesh;
-            var tMaterial = RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'crate.png'))
-            var tMaterial2 = RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'UV_Grid_Sm.jpg'))
-            var tMaterial3 = RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'alphaTest.png', {
-                min: this.gl.NEAREST,
-                mag: this.gl.NEAREST
-            }))
-            tMesh = RedMesh(this, RedBox(this), tMaterial)
-            tMesh.x = -1.5
-            tScene.addChild(tMesh)
-            tMesh = RedMesh(this, RedBox(this), tMaterial2)
-            tMesh.x = 0
-            tScene.addChild(tMesh)
-            tMesh = RedMesh(this, RedBox(this), tMaterial3)
-
-
-            tMesh.x = 1.5
-            tScene.addChild(tMesh)
-            tMesh = RedMesh(this, RedSphere(this, 0.5, 32, 32, 32), tMaterial)
-            tMesh.x = -1.5
-            tMesh.y = 1.5
-            tScene.addChild(tMesh)
-            tMesh = RedMesh(this, RedSphere(this, 0.5, 32, 32, 32), tMaterial2)
-            tMesh.x = 0
-            tMesh.y = 1.5
-            tScene.addChild(tMesh)
-            tMesh = RedMesh(this, RedSphere(this, 0.5, 32, 32, 32), tMaterial3)
-
-            tMesh.x = 1.5
-            tMesh.y = 1.5
-            tScene.addChild(tMesh)
-            tMesh = RedMesh(this, RedPlane(this), tMaterial)
-            tMesh['useCullFace'] = false
-            tMesh.x = -1.5
-            tMesh.y = -1.5
-            tScene.addChild(tMesh)
-            tMesh = RedMesh(this, RedPlane(this), tMaterial2)
-            tMesh['useCullFace'] = false
-            tMesh.x = 0
-            tMesh.y = -1.5
-            tScene.addChild(tMesh)
-            tMesh = RedMesh(this, RedPlane(this), tMaterial3)
-            tMesh['useCullFace'] = false
-
-            tMesh.x = 1.5
-            tMesh.y = -1.5
-            tScene.addChild(tMesh)
-            // 렌더시작
-            tRenderer.start(this, function (time) {
-                tCamera.x = Math.sin(time / 2500) * 8
-                tCamera.y = Math.cos(time / 2500) * 8
-                tCamera.z = Math.cos(time / 2500) * 8 + Math.sin(time / 2500) * 8
-                tCamera.lookAt(0, 0, 0)
-            })
-            // 렌더 디버거 활성화
-            tRenderer.setDebugButton();
-            testUI(this, tCamera, tScene)
-            console.log(tMaterial)
+            var makeMesh = function (redGL, y) {
+                var tMesh;
+                tMesh = RedMesh(redGL, RedSphere(redGL, 0.5, 32, 32, 32), tMaterial)
+                tMesh.x = -1.5
+                tMesh.y = y
+                tScene.addChild(tMesh)
+                tMesh = RedMesh(redGL, RedBox(redGL), tMaterial)
+                tMesh.x = 0
+                tMesh.y = y
+                tScene.addChild(tMesh)
+                tMesh = RedMesh(redGL, RedPlane(redGL), tMaterial)
+                tMesh.useCullFace = false;
+                tMesh.x = 1.5
+                tMesh.y = y
+                tScene.addChild(tMesh)
+            }
+            makeMesh(this, -1.5);
+            makeMesh(this, 0);
+            makeMesh(this, 1.5);
+            testUI(this, tScene);
+            console.log(this)
         } else {
             console.log('초기화 실패!')
         }
     })
-    testUI = function (redGL, tCamera, tScene) {
+    testUI = function (redGL, tScene) {
         var gui = new baseTestUI(redGL)
         gui.initRedGL()
-        gui.initCamera(tCamera)
-        gui.initScene(tScene, false, assetPath)
         var alphaTest = {
             alpha: 1,
-            diffuseTexture: assetPath + 'crate.png'
+            diffuseTexture: assetPath + 'UV_Grid_Sm.jpg'
         }
         var folder;
         folder = gui['gui'].addFolder('RedBitmapMaterial')
@@ -118,7 +95,14 @@
         })
         folder.add(alphaTest, 'diffuseTexture', [assetPath + 'crate.png', assetPath + 'UV_Grid_Sm.jpg', assetPath + 'alphaTest.png'], 0).onChange(function (v) {
             tScene.children.forEach(function (v2) {
-                v2.material.diffuseTexture = RedBitmapTexture(redGL, v)
+                v2.material.diffuseTexture = RedBitmapTexture(
+                    redGL,
+                    v,
+                    v == assetPath + 'UV_Grid_Sm.png' ? {
+                        min: redGL.gl.NEAREST,
+                        mag: redGL.gl.NEAREST
+                    } : null
+                )
             })
         })
         folder.open()
