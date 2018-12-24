@@ -25,7 +25,6 @@
     RedGL(canvas, function (v) {
         if (v) {
             console.log('초기화 성공!')
-            console.log('초기화 성공!')
             var tWorld, tView, tScene, tController, tRenderer, tLight;
             var setBase = function (regGL) {
                 // 월드 생성
@@ -123,7 +122,7 @@
             shininess: 16,
             normalPower: 1,
             specularPower: 1,
-            emissivePower: 1,
+            emissiveFactor: 1,
             displacementPower: 0.1,
             displacementFlowSpeedX: 0,
             displacementFlowSpeedY: 0,
@@ -155,9 +154,9 @@
             })
         });
 
-        folder.add(testRedEnvironmentMaterial, 'emissivePower', 0.1, 10).onChange(function (v) {
+        folder.add(testRedEnvironmentMaterial, 'emissiveFactor', 0.1, 10).onChange(function (v) {
             tScene.children.forEach(function (v2) {
-                v2.material.emissivePower = v
+                v2.material.emissiveFactor = v
             })
         });
         folder.add(testRedEnvironmentMaterial, 'diffuseTexture', ['none', assetPath + 'brick/Brick03_col.jpg', assetPath + 'draft2.png', assetPath + 'draft3.png'], 0).onChange(function (v) {

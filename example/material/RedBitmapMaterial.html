@@ -48,6 +48,7 @@
                 });
                 // 렌더 디버거 활성화
                 tRenderer.setDebugButton();
+                testUI(regGL, tScene);
             };
             setBase(this);
             // 재질설정
@@ -73,7 +74,7 @@
             makeMesh(this, -1.5);
             makeMesh(this, 0);
             makeMesh(this, 1.5);
-            testUI(this, tScene);
+
             console.log(this)
         } else {
             console.log('초기화 실패!')

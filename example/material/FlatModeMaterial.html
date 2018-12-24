@@ -25,26 +25,46 @@
         if (v) {
             console.log('초기화 성공!', this)
             var self = this;
-            var tWorld, tScene, tCamera, tRenderer;
-            // 월드 생성
-            self['world'] = tWorld = RedWorld();
-            // 씬 생성
-            tScene = RedScene(self);
-            // 카메라 생성
-            tCamera = RedObitController(this)
-            // 렌더러 생성
-            tRenderer = RedRenderer();
-            // 뷰생성 및 적용
-            tWorld.addView(RedView('test', self, tScene, tCamera));
-            // 그리드 설정
-            tScene['grid'] = RedGrid(self)
-            // 라이트 설정
-            var testDLight;
-            testDLight = RedDirectionalLight(self, '#fff')
-            testDLight.x = 3
-            testDLight.y = 3
-            testDLight.z = 3
-            tScene.addLight(testDLight)
+            console.log('초기화 성공!')
+            var tWorld, tView, tScene, tController, tRenderer, tLight;
+            var setBase = function (regGL) {
+                // 월드 생성
+                regGL['world'] = tWorld = RedWorld();
+                // 씬 생성
+                tScene = RedScene(regGL);
+                // 카메라 생성
+                tController = RedObitController(regGL);
+                tController.pan = 25;
+                tController.tilt = -15;
+                tController.distance = 15;
+                tController.speedDistance = 0.5
+                // 렌더러 생성
+                tRenderer = RedRenderer();
+                // 뷰생성 및 적용
+                tView = RedView('HelloRedGL', regGL, tScene, tController);
+                tWorld.addView(tView);
+                // 그리드 설정
+                tScene['grid'] = RedGrid(regGL);
+                // 라이트 설정
+                tLight = RedDirectionalLight(regGL);
+                tScene.addLight(tLight)
+                tLight.x = 10;
+                tLight.y = 10;
+                tLight.z = 10;
+                tLight = RedDirectionalLight(regGL, '#ff00ff');
+                tScene.addLight(tLight)
+                tLight.x = -10;
+                tLight.y = 10;
+                tLight.z = -10;
+                // 렌더시작
+                tRenderer.start(regGL, function (time) {
+
+                });
+                // 렌더 디버거 활성화
+                tRenderer.setDebugButton();
+                testUI(regGL, tScene)
+            };
+            setBase(this);
             // Mesh 설정
             var tPBR
             var testMaterials = [
@@ -67,7 +87,7 @@
                     RedBitmapTexture(self, assetPath + 'brick/Brick03_nrm.jpg'),
                     RedBitmapTexture(self, assetPath + 'specular.png')
                 )],
-                ['RedVideoMaterial', RedVideoMaterial(self, RedVideoTexture(self, assetPath + 'mov_bbb.mp4'))],
+                // ['RedVideoMaterial', RedVideoMaterial(self, RedVideoTexture(self, assetPath + 'mov_bbb.mp4'))],
                 ['RedPBRMaterial', tPBR = RedPBRMaterial(
                     self,
                     RedBitmapTexture(self, assetPath + 'brick/Brick03_col.jpg'),
@@ -107,37 +127,29 @@
             while (i--) {
                 var testMesh = RedMesh(self, RedSphere(self, 1, 16, 16, 16), testMaterials[i][1])
                 console.log(testMaterials[i][1])
-                testMaterials[i][1].useFlatMode = false
-                testMesh.x = -max + i * 2
+                testMaterials[i][1].useFlatMode = true
+                testMesh.x = -max + i * 2.5
                 testMesh.y = 0
                 tScene.addChild(testMesh)
                 var t = setOptionText(this, testMaterials[i][0])
                 t.y = 1.5
                 testMesh.addChild(t)
             }
-            // 렌더시작
-            tRenderer.start(self, function (time) {
-                tCamera.update()
-            })
-            // 렌더 디버거 활성화
-            tRenderer.setDebugButton();
-            testUI(self, tCamera, tScene)
+
         } else {
             console.log('초기화 실패!')
         }
     })
-    testUI = function (redGL, tCamera, tScene) {
+    testUI = function (redGL, tScene) {
         var gui = new baseTestUI(redGL)
         gui.initRedGL()
-        gui.initCamera(tCamera)
-        gui.initScene(tScene, false, assetPath)
         var alphaTest = {
             alpha: 1,
-            useFlatMode: false
+            useFlatMode: true
         }
         var folder;
         folder = gui['gui'].addFolder('RedBitmapMaterial')
-        folder.add(alphaTest, 'alpha', 0, 1).onChange(function (v) {
+        folder.add(alphaTest, 'alpha', 0, 1, 0.01).onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.material.alpha = v
             })

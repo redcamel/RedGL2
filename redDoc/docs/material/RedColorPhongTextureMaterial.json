@@ -36,6 +36,17 @@
   },
   {
     "code": "PROPERTY",
+    "title": "emissiveFactor",
+    "description": "기본값 : 1",
+    "return": "number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "emissiveTexture",
+    "return": "RedBitmapTexture"
+  },
+  {
+    "code": "PROPERTY",
     "title": "normalPower",
     "description": "기본값 : 1",
     "return": "number"

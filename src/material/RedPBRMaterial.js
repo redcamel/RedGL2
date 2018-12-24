@@ -3,7 +3,7 @@ var RedPBRMaterial;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'RedPBRMaterialProgram';
-    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture','useFlatMode'];
+    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture', 'useFlatMode'];
     var checked;
     vSource = function () {
         /* @preserve
@@ -57,7 +57,7 @@ var RedPBRMaterial;
 		//#REDGL_DEFINE#fragmentShareFunc#getPerturbNormal2Arb#
 
          uniform vec4 uBaseColorFactor;
-         uniform vec3 uEmissiveFactor;
+         uniform float u_emissiveFactor;
          uniform float u_cutOff;
 
          //#REDGL_DEFINE#diffuseTexture# uniform sampler2D u_diffuseTexture;
@@ -136,8 +136,8 @@ var RedPBRMaterial;
             N = normalize(vVertexNormal);
             vec4 normalColor = vec4(0.0);
             //#REDGL_DEFINE#normalTexture# normalColor = texture2D(u_normalTexture, u_normalTexCoord);
-            //#REDGL_DEFINE#normalTexture# N = getPerturbNormal2Arb(vVertexPosition.xyz, N, normalColor, u_normalTexCoord) ;
             //#REDGL_DEFINE#useFlatMode# N = getFlatNormal(vVertexPosition.xyz);
+            //#REDGL_DEFINE#normalTexture# N = getPerturbNormal2Arb(vVertexPosition.xyz, N, normalColor, u_normalTexCoord) ;
 
             // 환경맵 계산
             vec3 R = reflect( vVertexPosition.xyz-uCameraPosition, N);
@@ -192,8 +192,8 @@ var RedPBRMaterial;
 
             // 이미시브합성
             //#REDGL_DEFINE#emissiveTexture# emissiveColor = texture2D(u_emissiveTexture, u_emissiveTexCoord);
-            //#REDGL_DEFINE#emissiveTexture# emissiveColor.rgb *= emissiveColor.a;
-            //#REDGL_DEFINE#emissiveTexture# emissiveColor.rgb *= uEmissiveFactor;
+            //#REDGL_DEFINE#emissiveTexture# emissiveColor.rgb *= emissiveColor.a * u_emissiveFactor;
+            //#REDGL_DEFINE#emissiveTexture# emissiveColor.rgb *= u_emissiveFactor;
             //#REDGL_DEFINE#emissiveTexture# finalColor.rgb += emissiveColor.rgb;
 
             // 오클루젼 합성
@@ -276,8 +276,8 @@ var RedPBRMaterial;
 
         this['normalPower'] = 1;
         this['specularPower'] = 1;
-        this['metallicFactor'] = 1;
-        this['roughnessFactor'] = 1;
+
+        this['occlusionPower'] = 1;
 
         this['diffuseTexCoordIndex'] = 0
         this['occlusionTexCoordIndex'] = 0
@@ -286,9 +286,10 @@ var RedPBRMaterial;
         this['normalTexCoordIndex'] = 0
 
 
-        this['occlusionPower'] = 1;
-        this['baseColorFactor'] = null
-        this['emissiveFactor'] = null;
+        this['metallicFactor'] = 1;
+        this['roughnessFactor'] = 0.1;
+        this['baseColorFactor'] = [1, 1, 1, 1]
+        this['emissiveFactor'] = 1;
         this['alpha'] = 1;
         this['cutOff'] = 0;
         /////////////////////////////////////////
@@ -411,8 +412,18 @@ var RedPBRMaterial;
     /**DOC:
      {
 	     code : 'PROPERTY',
-		 title :`roughnessFactor`,
+		 title :`emissiveFactor`,
 		 description : `기본값 : 1`,
+		 return : 'Number'
+	 }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'emissiveFactor', 'number', {'min': 0, 'max': 1});
+
+    /**DOC:
+     {
+	     code : 'PROPERTY',
+		 title :`roughnessFactor`,
+		 description : `기본값 : 0.1`,
 		 return : 'Number'
 	 }
      :DOC*/

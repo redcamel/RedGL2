@@ -80,7 +80,7 @@ var RedEnvironmentMaterial;
          //#REDGL_DEFINE#normalTexture# uniform float u_normalPower;
          uniform float u_shininess;
          uniform float u_specularPower;
-         //#REDGL_DEFINE#emissiveTexture# uniform float u_emissivePower;
+         //#REDGL_DEFINE#emissiveTexture# uniform float u_emissiveFactor;
          uniform float u_reflectionPower;
          uniform float u_alpha;
          uniform bool u_useFlatMode;
@@ -137,7 +137,7 @@ var RedEnvironmentMaterial;
                 u_specularPower
              );
 
-             //#REDGL_DEFINE#emissiveTexture# finalColor.rgb += emissiveColor.rgb * u_emissivePower;
+             //#REDGL_DEFINE#emissiveTexture# finalColor.rgb += emissiveColor.rgb * u_emissiveFactor;
              finalColor.rgb *= texelColor.a;
              finalColor.a = texelColor.a * u_alpha;
 
@@ -223,7 +223,7 @@ var RedEnvironmentMaterial;
         this['normalPower'] = 1;
         this['shininess'] = 8;
         this['specularPower'] = 1;
-        this['emissivePower'] = 1;
+        this['emissiveFactor'] = 1;
         this['reflectionPower'] = 1;
         this['displacementPower'] = 0.1;
         this['displacementFlowSpeedX'] = 0;
@@ -335,12 +335,12 @@ var RedEnvironmentMaterial;
     /**DOC:
      {
 	     code : 'PROPERTY',
-		 title :`emissivePower`,
+		 title :`emissiveFactor`,
 		 description : `기본값 : 1`,
 		 return : 'number'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'emissivePower', 'number', {'min': 0});
+    RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'emissiveFactor', 'number', {'min': 0});
     /**DOC:
      {
 	     code : 'PROPERTY',

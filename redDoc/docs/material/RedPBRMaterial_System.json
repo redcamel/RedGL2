@@ -1,0 +1,117 @@
+[
+  {
+    "code": "PROPERTY",
+    "title": "alpha",
+    "description": "기본값 : 1",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "cutOff",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "diffuseTexture",
+    "return": "RedBitmapTexture"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "emissiveTexture",
+    "return": "RedBitmapTexture"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "environmentTexture",
+    "return": "RedBitmapCubeTexture"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "metallicFactor",
+    "description": "기본값 : 1",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "normalPower",
+    "description": "기본값 : 1",
+    "return": "number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "normalTexture",
+    "return": "RedBitmapTexture"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "occlusionPower",
+    "description": "기본값 : 1",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "occlusionTexture",
+    "return": "RedBitmapTexture"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedPBRMaterial_System",
+    "description": "\nRedPBRMaterial_System Instance 생성\n",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ],
+      "diffuseTexture": [
+        {
+          "type": "RedBitmapTexture"
+        }
+      ],
+      "environmentTexture": [
+        {
+          "type": "RedBitmapCubeTexture"
+        }
+      ],
+      "normalTexture": [
+        {
+          "type": "RedBitmapTexture"
+        }
+      ],
+      "occlusionTexture": [
+        {
+          "type": "RedBitmapTexture"
+        }
+      ]
+    },
+    "extends": [
+      "RedBaseMaterial"
+    ],
+    "demo": "../example/material/RedPBRMaterial_System.html",
+    "example": "\nRedPBRMaterial_System(\nRedGL Instance,\nRedBitmapTexture(RedGL Instance, src), // diffuseTexture\nRedBitmapCubeTexture(RedGL Instance, srcList),\nRedBitmapTexture(RedGL Instance, src), // normalTexture\nRedBitmapTexture(RedGL Instance, src) // occlusionTexture\n)\n",
+    "return": "RedPBRMaterial_System Instance"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "roughnessFactor",
+    "description": "기본값 : 1",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "roughnessTexture",
+    "return": "RedBitmapTexture"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "specularPower",
+    "description": "기본값 : 1",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "useFlatMode",
+    "description": "기본값 : true",
+    "return": "boolean"
+  }
+]
