@@ -25,43 +25,47 @@
     RedGL(canvas, function (v) {
         if (v) {
             console.log('초기화 성공!')
-            var tWorld, tScene, tCamera, tRenderer;
-            // 월드 생성
-            this['world'] = tWorld = RedWorld();
-            // 씬 생성
-            tScene = RedScene(this);
-            // 카메라 생성
-            tCamera = RedObitController(this);
-            tCamera.tilt = -45
-            tCamera.pan = -45
-            // 렌더러 생성
-            tRenderer = RedRenderer();
-            // 뷰생성 및 적용
-            tWorld.addView(RedView('test', this, tScene, tCamera));
-            // 그리드 설정
-            tScene['grid'] = RedGrid(this)
+            var tWorld, tView, tScene, tController, tRenderer;
+            var setBase = function (regGL) {
+                // 월드 생성
+                regGL['world'] = tWorld = RedWorld();
+                // 씬 생성
+                tScene = RedScene(regGL);
+                // 카메라 생성
+                tController = RedObitController(regGL);
+                tController.pan = 0;
+                tController.tilt = -45;
+                // 렌더러 생성
+                tRenderer = RedRenderer();
+                // 뷰생성 및 적용
+                tView = RedView('HelloRedGL', regGL, tScene, tController);
+                tWorld.addView(tView);
+                // 그리드 설정
+                tScene['grid'] = RedGrid(regGL);
+                // 렌더시작
+                tRenderer.start(regGL, function (time) {
+                });
+                // 렌더 디버거 활성화
+                tRenderer.setDebugButton();
+                // testUI 호출
+                testUI(regGL, tController, tScene);
+                console.log(regGL);
+            };
+            setBase(this);
             // Mesh 설정
             var tMesh;
-            tMesh = RedMesh(this, RedSphere(this, 1, 16, 16, 16), RedColorMaterial(this, '#00ff00'))
+            tMesh = RedMesh(this, RedSphere(this, 1, 16, 16, 16), RedBitmapMaterial(this, RedBitmapTexture(this,assetPath+'UV_Grid_Sm.jpg')));
             tMesh.useCullFace = false
             tScene.addChild(tMesh)
-            // 렌더시작
-            tRenderer.start(this, function (time) {
-            })
-            // 렌더 디버거 활성화
-            tRenderer.setDebugButton();
-            //
-            testUI(this, tCamera, tScene)
+
         } else {
             console.log('초기화 실패!')
         }
     })
-    testUI = function (redGL, tCamera, tScene) {
+    testUI = function (redGL, tController, tScene) {
         console.log('test')
-        var gui = new baseTestUI(redGL)
-        gui.initRedGL()
-        gui.initCamera(tCamera)
-        gui.initScene(tScene, false, assetPath)
+        var gui = new baseTestUI(redGL);
+        gui.initRedGL();
         var test = {
             drawMode: 'TRIANGLES',
             pointSize: 1,
@@ -73,46 +77,51 @@
             thetaStart: 0,
             thetaLength: Math.PI
         }
-        var t0 = gui['gui'].addFolder('mesh')
-        t0.open()
-        t0.add(test, 'drawMode', ['TRIANGLES', 'TRIANGLE_STRIP', 'TRIANGLE_FAN', 'LINES', 'LINE_LOOP', 'LINE_STRIP', 'POINTS']).onChange(function (v) {
+        var tFolder = gui['gui'].addFolder('RedMesh')
+        tFolder.open()
+        tFolder.add(test, 'drawMode', ['TRIANGLES', 'TRIANGLE_STRIP', 'TRIANGLE_FAN', 'LINES', 'LINE_LOOP', 'LINE_STRIP', 'POINTS']).onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.drawMode = redGL.gl[v]
             })
-        })
-        t0.add(test, 'pointSize', 1, 100).onChange(function (v) {
+        });
+        tFolder.add(test, 'pointSize', 1, 100).onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.pointSize = v
             })
-        })
-        t0.add(test, 'radius', 1, 5, 1).onChange(function (v) {
+        });
+        tFolder = gui['gui'].addFolder('RedSphere')
+        tFolder.open()
+        var makeSphere = function () {
+            return RedSphere(redGL, test.radius, test.widthSegments, test.heightSegments, test.phiStart, test.phiLength, test.thetaStart, test.thetaLength);
+        };
+        tFolder.add(test, 'radius', 1, 5, 1).onChange(function (v) {
             tScene.children.forEach(function (v2) {
-                v2.geometry = RedSphere(redGL, test.radius, test.widthSegments, test.heightSegments, test.phiStart, test.phiLength, test.thetaStart, test.thetaLength)
+                v2.geometry = makeSphere();
             })
         })
-        t0.add(test, 'widthSegments', 1, 32, 1).onChange(function (v) {
+        tFolder.add(test, 'widthSegments', 1, 32, 1).onChange(function (v) {
             tScene.children.forEach(function (v2) {
-                v2.geometry = RedSphere(redGL, test.radius, test.widthSegments, test.heightSegments, test.phiStart, test.phiLength, test.thetaStart, test.thetaLength)
+                v2.geometry = makeSphere();
             })
         })
-        t0.add(test, 'heightSegments', 1, 32, 1).onChange(function (v) {
+        tFolder.add(test, 'heightSegments', 1, 32, 1).onChange(function (v) {
             tScene.children.forEach(function (v2) {
-                v2.geometry = RedSphere(redGL, test.radius, test.widthSegments, test.heightSegments, test.phiStart, test.phiLength, test.thetaStart, test.thetaLength)
+                v2.geometry = makeSphere();
             })
         })
-        t0.add(test, 'phiStart', 0, Math.PI * 2, Math.PI / 180).onChange(function (v) {
+        tFolder.add(test, 'phiStart', 0, Math.PI * 2, Math.PI / 180).onChange(function (v) {
             tScene.children.forEach(function (v2) {
-                v2.geometry = RedSphere(redGL, test.radius, test.widthSegments, test.heightSegments, test.phiStart, test.phiLength, test.thetaStart, test.thetaLength)
+                v2.geometry = makeSphere();
             })
         })
-        t0.add(test, 'phiLength', 0, Math.PI * 2, Math.PI / 180).onChange(function (v) {
+        tFolder.add(test, 'phiLength', 0, Math.PI * 2, Math.PI / 180).onChange(function (v) {
             tScene.children.forEach(function (v2) {
-                v2.geometry = RedSphere(redGL, test.radius, test.widthSegments, test.heightSegments, test.phiStart, test.phiLength, test.thetaStart, test.thetaLength)
+                v2.geometry = makeSphere();
             })
         })
-        t0.add(test, 'thetaStart', 0, Math.PI * 2, Math.PI / 180).onChange(function (v) {
+        tFolder.add(test, 'thetaStart', 0, Math.PI * 2, Math.PI / 180).onChange(function (v) {
             tScene.children.forEach(function (v2) {
-                v2.geometry = RedSphere(redGL, test.radius, test.widthSegments, test.heightSegments, test.phiStart, test.phiLength, test.thetaStart, test.thetaLength)
+                v2.geometry = makeSphere();
             })
         })
     }

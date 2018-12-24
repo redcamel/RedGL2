@@ -3,7 +3,7 @@ var RedColorPhongTextureMaterial;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'RedColorPhongTextureMaterialProgram';
-    var PROGRAM_OPTION_LIST = ['normalTexture', 'specularTexture', 'displacementTexture','useFlatMode'];
+    var PROGRAM_OPTION_LIST = ['normalTexture', 'specularTexture', 'displacementTexture', 'emissiveTexture', 'useFlatMode'];
     var checked;
     vSource = function () {
         /* @preserve
@@ -64,7 +64,6 @@ var RedColorPhongTextureMaterial;
 
        // flat노말
         //#REDGL_DEFINE#fragmentShareFunc#getFlatNormal#
-
         //#REDGL_DEFINE#fragmentShareFunc#getPerturbNormal2Arb#
 
         // 라이트
@@ -73,14 +72,17 @@ var RedColorPhongTextureMaterial;
 
          //#REDGL_DEFINE#normalTexture# uniform sampler2D u_normalTexture;
          //#REDGL_DEFINE#specularTexture# uniform sampler2D u_specularTexture;
+         //#REDGL_DEFINE#emissiveTexture# uniform sampler2D u_emissiveTexture;
 
          //#REDGL_DEFINE#normalTexture# uniform float u_normalPower;
          uniform float u_shininess;
          uniform float u_specularPower;
+         //#REDGL_DEFINE#emissiveTexture# uniform float u_emissivePower;
          uniform vec4 u_color;
 
 
          vec4 texelColor;
+         vec4 emissiveColor;
          vec4 finalColor;
          vec3 N;
 
@@ -98,6 +100,8 @@ var RedColorPhongTextureMaterial;
              //#REDGL_DEFINE#useFlatMode# N = getFlatNormal(vVertexPosition.xyz);
              //#REDGL_DEFINE#normalTexture# N = getPerturbNormal2Arb(vVertexPosition.xyz, N, normalColor, vTexcoord) ;
 
+            //#REDGL_DEFINE#emissiveTexture# emissiveColor = texture2D(u_emissiveTexture, vTexcoord);
+            //#REDGL_DEFINE#emissiveTexture# emissiveColor.rgb *= texelColor.a;
 
              specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);
              float specularTextureValue = 1.0;
@@ -120,6 +124,8 @@ var RedColorPhongTextureMaterial;
                 specularTextureValue,
                 u_specularPower
              );
+
+             //#REDGL_DEFINE#emissiveTexture# finalColor.rgb += emissiveColor.rgb * u_emissivePower;
 
              finalColor.rgb *= texelColor.a;
              finalColor.a = texelColor.a;
@@ -173,8 +179,8 @@ var RedColorPhongTextureMaterial;
 		 return : 'RedColorPhongTextureMaterial Instance'
 	 }
      :DOC*/
-    RedColorPhongTextureMaterial = function (redGL, hexColor, alpha, normalTexture, specularTexture, displacementTexture) {
-        if (!(this instanceof RedColorPhongTextureMaterial)) return new RedColorPhongTextureMaterial(redGL, hexColor, alpha, normalTexture, specularTexture, displacementTexture);
+    RedColorPhongTextureMaterial = function (redGL, hexColor, alpha, normalTexture, specularTexture, displacementTexture, emissiveTexture) {
+        if (!(this instanceof RedColorPhongTextureMaterial)) return new RedColorPhongTextureMaterial(redGL, hexColor, alpha, normalTexture, specularTexture, displacementTexture, emissiveTexture);
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedColorPhongTextureMaterial : RedGL Instance만 허용.', '입력값 : ' + redGL);
         this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource, PROGRAM_OPTION_LIST);
         /////////////////////////////////////////
@@ -183,9 +189,11 @@ var RedColorPhongTextureMaterial;
         this['normalTexture'] = normalTexture;
         this['specularTexture'] = specularTexture;
         this['displacementTexture'] = displacementTexture;
+        this['emissiveTexture'] = emissiveTexture;
         this['normalPower'] = 1;
         this['shininess'] = 16;
         this['specularPower'] = 1;
+        this['emissivePower'] = 1;
         this['displacementPower'] = 0.1;
         this['displacementFlowSpeedX'] = 0;
         this['displacementFlowSpeedY'] = 0;
@@ -252,6 +260,14 @@ var RedColorPhongTextureMaterial;
     /**DOC:
      {
 	     code : 'PROPERTY',
+		 title :`emissiveTexture`,
+		 return : 'RedBitmapTexture'
+	 }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'emissiveTexture', 'sampler2D', samplerOption);
+    /**DOC:
+     {
+	     code : 'PROPERTY',
 		 title :`normalPower`,
 		 description : `기본값 : 1`,
 		 return : 'number'
@@ -276,6 +292,15 @@ var RedColorPhongTextureMaterial;
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'specularPower', 'number', {'min': 0});
+    /**DOC:
+     {
+	     code : 'PROPERTY',
+		 title :`emissivePower`,
+		 description : `기본값 : 1`,
+		 return : 'number'
+	 }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'emissivePower', 'number', {'min': 0});
     /**DOC:
      {
 	     code : 'PROPERTY',

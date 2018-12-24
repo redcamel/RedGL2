@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>RedLine</title>
+    <title>RedGL - RedLine</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -24,96 +24,100 @@
     document.body.appendChild(canvas);
     RedGL(canvas, function (v) {
         if (v) {
-            console.log('초기화 성공!')
-            var tWorld, tRenderer;
-            var tScene;
-            var tCamera;
-            // 월드 생성
-            this['world'] = tWorld = RedWorld();
-            // 씬 생성
-            tScene = RedScene(this);
-            // 카메라 생성
-            tCamera = RedCamera();
-            // 렌더러 생성
-            tRenderer = RedRenderer();
-            // 뷰생성 및 적용
-            tWorld.addView(RedView('testView', this, tScene, tCamera));
-            // 그리드 설정
-            tScene['grid'] = RedGrid(this)
-            // tLine 설정
-            var addLine, addLine2;
-            addLine = function (redGL) {
+            console.log('초기화 성공!');
+            var tWorld, tView, tScene, tController, tRenderer;
+            var setBase = function (regGL) {
+                // 월드 생성
+                regGL['world'] = tWorld = RedWorld();
+                // 씬 생성
+                tScene = RedScene(regGL);
+                // 카메라 생성
+                tController = RedObitController(regGL);
+                tController.pan = 45;
+                tController.tilt = -45;
+                tController.distance = 20;
+                // 렌더러 생성
+                tRenderer = RedRenderer();
+                // 뷰생성 및 적용
+                tView = RedView('HelloRedGL', regGL, tScene, tController);
+                tWorld.addView(tView);
+                // 그리드 설정
+                tScene['grid'] = RedGrid(regGL);
+                // 렌더시작
+                tRenderer.start(regGL, function (time) {
+                });
+                // 렌더 디버거 활성화
+                tRenderer.setDebugButton();
+
+            };
+            setBase(this);
+            // tLine 생성 함수 정의
+            var addLine_random, addLine_circle;
+            // 60번 포인트를 랜덤으로 정의하고 라인추가
+            addLine_random = function (redGL) {
                 var tLine;
-                var tX, tY, tZ
-                var i = 3 * 20
-                tLine = RedLine(redGL, RedColorMaterial(redGL))
-                tScene.addChild(tLine)
+                var tX, tY, tZ;
+                var i = 60;
+                // 라인객체 생성
+                tLine = RedLine(redGL, RedColorMaterial(redGL));
+                tScene.addChild(tLine);
                 tX = tY = tZ = 0
                 while (i--) {
-                    tX += Math.random() * 0.5
-                    tY += Math.random() * 0.5
-                    tZ += Math.random() * 0.5
-                    tLine.addPoint(tX, tY, tZ)
+                    tX += Math.random() - 0.5;
+                    tY += Math.random() - 0.5;
+                    tZ += Math.random() - 0.5;
+                    // 라인에 포인트 추가
+                    tLine.addPoint(tX, tY, tZ);
                 }
-            }
-            addLine2 = function (redGL) {
+            };
+            // 60번 포인트로 원을 정의하는 함수
+            addLine_circle = function (redGL, drawMode) {
                 var tLine;
-                var tX, tY, tZ
-                var i = 3 * 20
-                tLine = RedLine(redGL, RedColorMaterial(redGL, '#00ff00'))
+                var tX, tY, tZ;
+                var startRadian;
+                var i = 60
+                tLine = RedLine(redGL, RedColorMaterial(redGL, drawMode == redGL.gl.LINES ? '#ff00ff' : '#00ff00'))
                 tScene.addChild(tLine)
-                tX = tY = tZ = 0
+                tX = tY = tZ = 0;
+                startRadian = Math.random() * Math.PI * 2;
                 while (i--) {
-                    tX += Math.sin(i / 60 * Math.PI * 2)
-                    tY += Math.cos(i / 60 * Math.PI * 2)
-                    tZ += Math.sin(i / 60 * Math.PI * 2)
-                    tLine.addPoint(tX, tY, tZ)
+                    tX += Math.sin(i / 60 * Math.PI * 2 + startRadian);
+                    tY += Math.cos(i / 60 * Math.PI * 2 + startRadian);
+                    tZ += Math.sin(i / 60 * Math.PI * 2 + startRadian);
+                    // 라인에 포인트 추가
+                    tLine.addPoint(tX, tY, tZ);
                 }
-                tLine.rotationX = tLine.rotationY = tLine.rotationZ = Math.random() * 360
-                tLine.drawMode = redGL.gl.LINES
-            }
-            addLine(this)
-            addLine2(this)
-            tCamera.x = 30
-            tCamera.y = 30
-            tCamera.z = 30
-            tCamera.lookAt(0, 0, 0)
-            // 렌더시작
-            tRenderer.start(this, function (time) {
-                var i = tScene.children.length
-                var t0
-                while (i--) {
-                    t0 = tScene.children[i]
-                    t0.rotationX += 1
-                    t0.rotationY += 1
-                    t0.rotationZ += 1
-                }
-            })
-            // 렌더 디버거 활성화
-            tRenderer.setDebugButton();
-            //
-            testUI(this, RedView('testView'), addLine, addLine2)
+                tLine.rotationX = tLine.rotationY = tLine.rotationZ = Math.random() * 360;
+                tLine.drawMode = drawMode
+            };
+            addLine_random(this);
+            addLine_circle(this, this.gl.LINES);
+            // Test UI
+            testUI(this, tView, addLine_random, addLine_circle)
         } else {
-            console.log('초기화 실패!')
+            console.log('초기화 실패!');
         }
-    })
-    testUI = function (redGL, view1, addLine, addLine2) {
-        console.log('test')
-        var gui = new baseTestUI(redGL)
-        gui.initCamera(view1['camera'])
-        gui.initScene(view1['scene'])
-        var t0 = gui['gui'].addFolder('Line Test')
+    });
+    testUI = function (redGL, view1, addLine_random, addLine_circle) {
+        var gui = new baseTestUI(redGL);
+        gui.initCamera(view1['camera']);
+        gui.initScene(view1['scene']);
+        var t0 = gui['gui'].addFolder('Line Test');
         var test = {
-            addLineTest: function () {
-                addLine(redGL)
+            addLine_random: function () {
+                addLine_random(redGL, redGL.gl.LINES);
             },
-            addLine2Test: function () {
-                addLine2(redGL)
+            addLine_circle1: function () {
+                addLine_circle(redGL, redGL.gl.LINES);
+            },
+            addLine_circle2: function () {
+                addLine_circle(redGL, redGL.gl.LINE_LOOP);
             }
-        }
-        t0.open()
-        t0.add(test, 'addLineTest').name('add Line Test')
-        t0.add(test, 'addLine2Test').name('add Line Test2')
+        };
+        t0.open();
+        t0.add(test, 'addLine_random').name('addLine_random');
+        t0.add(test, 'addLine_circle1').name('addLine_circle(redGL.gl.LINES)');
+        t0.add(test, 'addLine_circle2').name('addLine_circle(redGL.gl.LINE_LOOP)');
     }
 </script>
 </body>
