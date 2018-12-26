@@ -22,7 +22,7 @@
     var testUI;
     var canvas = document.getElementById('testCanvas')
     var redGLSrc = '../../release/RedGL.min.js' // redGL 라이브러리 경로
-    var hostSrc = 'test.js' // 호스트 코드 경로
+    var hostSrc = 'RedGLOffScreen_test.js' // 호스트 코드 경로
     var redOffScreen = RedGLOffScreen(canvas, '100%', '100%', redGLSrc, hostSrc)
     testUI = function () {
         // 사이즈 조정 생성
@@ -59,7 +59,7 @@
                     args: [100]
                 }
             );
-        })
+        });
     }
     testUI()
 </script>
