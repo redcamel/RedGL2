@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>RedLights</title>
+    <title>RedGL - RedLights</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -25,145 +25,93 @@
     RedGL(canvas, function (v) {
         if (v) {
             console.log('초기화 성공!')
-            var tWorld, tScene, tController, tRenderer;
-            // 월드 생성
-            this['world'] = tWorld = RedWorld();
-            // 씬 생성
-            tScene = RedScene(this);
-            // 카메라 생성
-            tController = RedObitController(this);
-            tController.tilt = -45
-            tController.pan = 45
-            tController.distance = 10
-            // 렌더러 생성
-            tRenderer = RedRenderer();
-            // 뷰생성 및 적용
-            tWorld.addView(RedView('test', this, tScene, tController));
-            // 그리드 설정
-            tScene['grid'] = RedGrid(this)
+            var tWorld, tView, tScene, tController, tRenderer;
+            var setBase = function (redGL) {
+                // 월드 생성
+                redGL['world'] = tWorld = RedWorld();
+                // 씬 생성
+                tScene = RedScene(redGL);
+                // 카메라 생성
+                tController = RedObitController(redGL);
+                tController.pan = 25;
+                tController.tilt = -15;
+                tController.distance = 5;
+                tController.speedDistance = 0.5
+                // 렌더러 생성
+                tRenderer = RedRenderer();
+                // 뷰생성 및 적용
+                tView = RedView('HelloRedGL', redGL, tScene, tController);
+                tWorld.addView(tView);
+                // 그리드 설정
+                tScene['grid'] = RedGrid(redGL);
+                // 렌더시작
+                tRenderer.start(redGL, function (time) {
+                    tScene.children.forEach(function (tMesh) {
+                        tMesh.rotationX += 1
+                        tMesh.rotationY += 1
+                        tMesh.rotationZ += 1
+                    })
+                });
+                // 렌더 디버거 활성화
+                tRenderer.setDebugButton();
+            };
+            setBase(this);
             // 라이트 설정
             var tALight = RedAmbientLight(this)
             tScene.addLight(tALight)
             tALight.x = 10
             tALight.y = 5
             tALight.z = 5
-            var tDLight = RedDirectionalLight(this)
+            var tDLight = RedDirectionalLight(this,'#ff0000')
             tScene.addLight(tDLight)
             tDLight.x = 2
             tDLight.y = 1
             tDLight.z = 1
             tDLight['debug'] = true
-            var tPLight = RedPointLight(this, '#ff0000')
+            var tPLight =RedPointLight(this, '#351169')
             tScene.addLight(tPLight)
-            tPLight.x = -1
-            tPLight.y = 2
-            tPLight.z = 0.5
+            tPLight.x = -1;
+            tPLight.z = 1;
+            tPLight.radius = 2;
             tPLight['debug'] = true
+            // 재질설정
+            var tMaterial = RedStandardMaterial(this,
+                RedBitmapTexture(this, assetPath + 'brick/Brick03_col.jpg'),
+                RedBitmapTexture(this, assetPath + 'brick/Brick03_nrm.jpg'),
+                null,
+                RedBitmapTexture(this, assetPath + 'brick/Brick03_disp.jpg')
+            )
             // Mesh 설정
-            var tMesh;
-            var self = this
-            var tMaterial = RedStandardMaterial(self, RedBitmapTexture(self, assetPath + 'brick/Brick03_col.jpg'), RedBitmapTexture(self, assetPath + 'brick/Brick03_nrm.jpg'), null, RedBitmapTexture(self, assetPath + 'brick/Brick03_disp.jpg'),);
-            tMaterial.displacementPower = 0.1, tMaterial.normalPower = 2
-            tMaterial.shininess = 32
-            tMesh = RedMesh(this, RedBox(this, 1, 1, 1, 32, 32, 32), tMaterial)
-            tMesh.x = -1.5
-            tScene.addChild(tMesh)
-            tMesh = RedMesh(this, RedBox(this, 1, 1, 1, 32, 32, 32), tMaterial)
-            tMesh.x = 0
-            tScene.addChild(tMesh)
-            tMesh = RedMesh(this, RedBox(this, 1, 1, 1, 32, 32, 32), tMaterial)
-            tMesh.x = 1.5
-            tScene.addChild(tMesh)
-            tMesh = RedMesh(this, RedSphere(this, 0.5, 32, 32, 32), tMaterial)
-            tMesh.x = -1.5
-            tMesh.y = 1.5
-            tScene.addChild(tMesh)
-            tMesh = RedMesh(this, RedSphere(this, 0.5, 32, 32, 32), tMaterial)
-            tMesh.x = 0
-            tMesh.y = 1.5
-            tScene.addChild(tMesh)
-            tMesh = RedMesh(this, RedSphere(this, 0.5, 32, 32, 32), tMaterial)
-            tMesh.x = 1.5
-            tMesh.y = 1.5
-            tScene.addChild(tMesh)
-            tMesh = RedMesh(this, RedPlane(this, 1, 1, 32, 32), tMaterial)
-            tMesh['useCullFace'] = false
-            tMesh.x = -1.5
-            tMesh.y = -1.5
-            tScene.addChild(tMesh)
-            tMesh = RedMesh(this, RedPlane(this, 1, 1, 32, 32), tMaterial)
-            tMesh['useCullFace'] = false
-            tMesh.x = 0
-            tMesh.y = -1.5
-            tScene.addChild(tMesh)
-            tMesh = RedMesh(this, RedPlane(this, 1, 1, 32, 32), tMaterial)
-            tMesh['useCullFace'] = false
-            tMesh.x = 1.5
-            tMesh.y = -1.5
-            tScene.addChild(tMesh)
-            // 렌더시작
-            tRenderer.start(this, function (time) {
-            })
-            // 렌더 디버거 활성화
-            tRenderer.setDebugButton();
-            testUI(this, tController, tScene, tALight, tDLight, tPLight)
+            var makeMesh = function (redGL, y) {
+                var tMesh;
+                tMesh = RedMesh(redGL, RedCylinder(redGL, 0.1, 0.5, 1, 32, 32), tMaterial)
+                tMesh.x = -1.5
+                tMesh.y = y
+                tScene.addChild(tMesh)
+                tMesh = RedMesh(redGL, RedSphere(redGL, 0.5, 32, 32, 32), tMaterial)
+                tMesh.x = 0
+                tMesh.y = y
+                tScene.addChild(tMesh)
+                tMesh = RedMesh(redGL, RedBox(redGL, 1, 1, 1, 32, 32, 32), tMaterial)
+                tMesh.x = 1.5
+                tMesh.y = y
+                tScene.addChild(tMesh)
+            }
+            makeMesh(this, 1.5);
+            makeMesh(this, 0);
+            makeMesh(this, -1.5);
+
+            testUI(this, tALight, tDLight, tPLight)
         } else {
             console.log('초기화 실패!')
         }
     })
-    testUI = function (redGL, tCamera, tScene, tALight, tDLight, tPLight) {
+    testUI = function (redGL, tALight, tDLight, tPLight) {
         var gui = new baseTestUI(redGL)
         gui.initRedGL()
-        gui.initCamera(tCamera)
-        gui.initScene(tScene, false, assetPath)
-        //
-        var t0 = gui['gui'].addFolder('RedAmbientLight')
-        var testALight = function () {
-            this.color = tALight.color
-        }
-        testALight = new testALight()
-        t0.addColor(testALight, 'color').onChange(function (v) {
-            tALight.color = v
-            t0.updateDisplay()
-        })
-        t0.add(tALight, 'alpha', 0, 1)
-        t0.add(tALight, 'intensity', 0, 5)
-        t0.open()
-        var t0 = gui['gui'].addFolder('RedDirectionalLight')
-        var testDLight = function () {
-            this.color = tDLight.color
-        }
-        testDLight = new testDLight()
-        t0.addColor(testDLight, 'color').onChange(function (v) {
-            tDLight.color = v
-            t0.updateDisplay()
-        })
-        t0.add(tDLight, 'alpha', 0, 1)
-        t0.add(tDLight, 'intensity', 0, 5)
-        t0.add(tDLight, 'x', -10, 10, 0.1)
-        t0.add(tDLight, 'y', -10, 10, 0.1)
-        t0.add(tDLight, 'z', -10, 10, 0.1)
-        t0.add(tDLight, 'debug', true, false)
-        t0.open()
-        //
-        //
-        var t0 = gui['gui'].addFolder('RedPointLight')
-        var testPLight = function () {
-            this.color = tPLight.color
-        }
-        testPLight = new testPLight()
-        t0.addColor(testPLight, 'color').onChange(function (v) {
-            tPLight.color = v
-            t0.updateDisplay()
-        })
-        t0.add(tPLight, 'alpha', 0, 1)
-        t0.add(tPLight, 'intensity', 0, 5)
-        t0.add(tPLight, 'x', -5, 5, 0.1)
-        t0.add(tPLight, 'y', -5, 5, 0.1)
-        t0.add(tPLight, 'z', -5, 5, 0.1)
-        t0.add(tPLight, 'radius', 0, 5)
-        t0.add(tPLight, 'debug', true, false)
-        t0.open()
+        gui.initAmbientLight(tALight,true)
+        gui.initDirectionalLight(tDLight,true)
+        gui.initPointLight(tPLight,true)
     }
 </script>
 </body>

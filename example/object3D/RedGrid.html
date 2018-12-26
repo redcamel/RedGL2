@@ -26,23 +26,23 @@
         if (v) {
             console.log('초기화 성공!');
             var tWorld, tView, tScene, tController, tRenderer;
-            var setBase = function (regGL) {
+            var setBase = function (redGL) {
                 // 월드 생성
-                regGL['world'] = tWorld = RedWorld();
+                redGL['world'] = tWorld = RedWorld();
                 // 씬 생성
-                tScene = RedScene(regGL);
+                tScene = RedScene(redGL);
                 // 카메라 생성
-                tController = RedObitController(regGL);
+                tController = RedObitController(redGL);
                 tController.pan = 45;
                 tController.tilt = -45;
                 // 렌더러 생성
                 tRenderer = RedRenderer();
                 // 뷰생성 및 적용
-                tView = RedView('HelloRedGL', regGL, tScene, tController);
+                tView = RedView('HelloRedGL', redGL, tScene, tController);
                 tWorld.addView(tView);
 
                 // 렌더시작
-                tRenderer.start(regGL, function (time) {
+                tRenderer.start(redGL, function (time) {
                 });
                 // 렌더 디버거 활성화
                 tRenderer.setDebugButton();

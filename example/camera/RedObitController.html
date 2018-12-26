@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>RedObitController</title>
+    <title>RedGL - RedObitController</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -57,10 +57,8 @@
         console.log('test')
         var gui = new baseTestUI(redGL)
         gui.initRedGL()
-        gui.initObitController(tController).open()
-        setInterval(function () {
-            gui['gui'].updateDisplay()
-        }, 16)
+        gui.initObitController(tController,true)
+
     }
 </script>
 </body>

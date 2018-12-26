@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>RedBitmapMaterial</title>
+    <title>RedGL - RedBitmapMaterial</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -25,22 +25,38 @@
     RedGL(canvas, function (v) {
         if (v) {
             console.log('초기화 성공!')
-            var tWorld, tScene, tCamera, tRenderer;
-            // 월드 생성
-            this['world'] = tWorld = RedWorld();
-            // 씬 생성
-            tScene = RedScene(this);
-            // 카메라 생성
-            tCamera = RedCamera();
-            // 렌더러 생성
-            tRenderer = RedRenderer();
-            // 뷰생성 및 적용
-            tWorld.addView(RedView('test', this, tScene, tCamera));
+            var tWorld, tView, tScene, tController, tRenderer, tLight;
+            var setBase = function (redGL) {
+                // 월드 생성
+                redGL['world'] = tWorld = RedWorld();
+                // 씬 생성
+                tScene = RedScene(redGL);
+                // 카메라 생성
+                tController = RedObitController(redGL);
+                tController.pan = -25;
+                tController.tilt = -25;
+                tController.distance = 5;
+                tController.speedDistance = 0.5
+                // 렌더러 생성
+                tRenderer = RedRenderer();
+                // 뷰생성 및 적용
+                tView = RedView('HelloRedGL', redGL, tScene, tController);
+                tWorld.addView(tView);
+                // 그리드 설정
+                tScene['grid'] = RedGrid(redGL);
+                // 렌더시작
+                tRenderer.start(redGL, function (time) {
+                });
+                // 렌더 디버거 활성화
+                tRenderer.setDebugButton();
+                testUI(redGL, tScene);
+            };
+            setBase(this);
             // Mesh 설정
             var tMesh;
-            var tDiffuse1, tDiffuse2
+            var tDiffuse_anisotropic, tDiffuse_none_anisotropic;
             // REPEAT
-            tDiffuse1 = RedBitmapTexture(
+            tDiffuse_anisotropic = RedBitmapTexture(
                 this,
                 assetPath + 'crate.png',
                 {
@@ -49,7 +65,7 @@
                     anisotropic: 16
                 }
             )
-            tDiffuse2 = RedBitmapTexture(
+            tDiffuse_none_anisotropic = RedBitmapTexture(
                 this,
                 assetPath + 'crate.png',
                 {
@@ -69,34 +85,24 @@
                 tText.z = 0.5
                 tText.y = 0.25
             }
-            tMesh = RedMesh(this, RedPlane(this), RedBitmapMaterial(this, tDiffuse1))
+            tMesh = RedMesh(this, RedPlane(this), RedBitmapMaterial(this, tDiffuse_anisotropic))
             tMesh.y = 0.6
             setOptionText(this, 'anisotropic : 16')
             tMesh.addChild(tText)
             tScene.addChild(tMesh)
-            tMesh = RedMesh(this, RedPlane(this), RedBitmapMaterial(this, tDiffuse2))
+            tMesh = RedMesh(this, RedPlane(this), RedBitmapMaterial(this, tDiffuse_none_anisotropic))
             tMesh.y = -0.6
             setOptionText(this, 'none : anisotropic')
             tMesh.addChild(tText)
             tScene.addChild(tMesh)
-            // 렌더시작
-            tRenderer.start(this, function (time) {
-                tCamera.x = Math.cos(time / 500)
-                tCamera.z = 3.5
-                tCamera.lookAt(0, 0, 0)
-            })
-            // 렌더 디버거 활성화
-            tRenderer.setDebugButton();
-            testUI(this, tCamera, tScene)
+
         } else {
             console.log('초기화 실패!')
         }
     })
-    testUI = function (redGL, tCamera, tScene) {
+    testUI = function (redGL, tScene) {
         var gui = new baseTestUI(redGL)
         gui.initRedGL()
-        gui.initCamera(tCamera)
-        gui.initScene(tScene, false, assetPath)
     }
 </script>
 </body>

@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>RedStandardMaterial</title>
+   <title>RedGL -RedStandardMaterial</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -26,13 +26,13 @@
         if (v) {
             console.log('초기화 성공!')
             var tWorld, tView, tScene, tController, tRenderer, tLight;
-            var setBase = function (regGL) {
+            var setBase = function (redGL) {
                 // 월드 생성
-                regGL['world'] = tWorld = RedWorld();
+                redGL['world'] = tWorld = RedWorld();
                 // 씬 생성
-                tScene = RedScene(regGL);
+                tScene = RedScene(redGL);
                 // 카메라 생성
-                tController = RedObitController(regGL);
+                tController = RedObitController(redGL);
                 tController.pan = 25;
                 tController.tilt = -15;
                 tController.distance = 5;
@@ -40,23 +40,23 @@
                 // 렌더러 생성
                 tRenderer = RedRenderer();
                 // 뷰생성 및 적용
-                tView = RedView('HelloRedGL', regGL, tScene, tController);
+                tView = RedView('HelloRedGL', redGL, tScene, tController);
                 tWorld.addView(tView);
                 // 그리드 설정
-                tScene['grid'] = RedGrid(regGL);
+                tScene['grid'] = RedGrid(redGL);
                 // 라이트 설정
-                tLight = RedDirectionalLight(regGL);
+                tLight = RedDirectionalLight(redGL);
                 tScene.addLight(tLight)
                 tLight.x = 10;
                 tLight.y = 10;
                 tLight.z = 10;
-                tLight = RedDirectionalLight(regGL, '#ff00ff');
+                tLight = RedDirectionalLight(redGL, '#ff00ff');
                 tScene.addLight(tLight)
                 tLight.x = -10;
                 tLight.y = 10;
                 tLight.z = -10;
                 // 렌더시작
-                tRenderer.start(regGL, function (time) {
+                tRenderer.start(redGL, function (time) {
                 });
                 // 렌더 디버거 활성화
                 tRenderer.setDebugButton();
