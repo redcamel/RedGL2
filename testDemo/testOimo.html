@@ -89,7 +89,14 @@
         }
 
         function addStaticBox(size, position, rotation) {
-            var mesh = RedMesh(self, RedBox(self), RedStandardMaterial(self, RedBitmapTexture(self, '../asset/brick/Brick03_col.jpg')))
+            var mesh = RedMesh(self, RedBox(self, 1, 1, 1, 32, 32, 32), RedStandardMaterial(
+                self,
+                RedBitmapTexture(self, '../asset/brick/Brick03_col.jpg'),
+                RedBitmapTexture(self, '../asset/brick/Brick03_nrm.jpg'),
+                null,
+                RedBitmapTexture(self, '../asset/brick/Brick03_disp.jpg')
+            ));
+            mesh.material.displacementPower = 5
             mesh.scaleX = size[0]
             mesh.scaleY = size[1]
             mesh.scaleZ = size[2]
@@ -104,7 +111,7 @@
 
             tScene3D.addChild(mesh);
             grounds.push(mesh);
-            tScene3D.grid = RedGrid(self, 400)
+
         }
 
         function updateOimoPhysics() {
