@@ -100,15 +100,26 @@
                     }
                 };
                 setMeshs(redGL);
-                // OBJ 로딩
-                RedOBJLoader(
-                    redGL,
-                    assetPath + 'obj/',
-                    'female.obj',
-                    function (v) {
-                        v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.025
+                /// GLTF 로딩
+                RedGLTFLoader(
+                    redGL, // redGL
+                    assetPath + 'glTF/basic/', // assetRootPath
+                    'DamagedHelmet.gltf', // fileName
+                    function (v) { // callBack
+                        v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 3
+                        v['resultMesh'].y = 4
                         tScene.addChild(v['resultMesh'])
-                    }
+                    },
+                    RedBitmapCubeTexture(redGL, // environmentTexture
+                        [
+                            assetPath + 'cubemap/posx.png',
+                            assetPath + 'cubemap/negx.png',
+                            assetPath + 'cubemap/posy.png',
+                            assetPath + 'cubemap/negy.png',
+                            assetPath + 'cubemap/posz.png',
+                            assetPath + 'cubemap/negz.png'
+                        ]
+                    )
                 );
                 // 렌더시작
                 tRenderer.start(redGL, function (time) {
