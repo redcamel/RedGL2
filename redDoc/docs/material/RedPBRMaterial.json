@@ -17,6 +17,12 @@
   },
   {
     "code": "PROPERTY",
+    "title": "emissiveFactor",
+    "description": "기본값 : 1",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
     "title": "emissiveTexture",
     "return": "RedBitmapTexture"
   },
@@ -94,7 +100,7 @@
   {
     "code": "PROPERTY",
     "title": "roughnessFactor",
-    "description": "기본값 : 1",
+    "description": "기본값 : 0.1",
     "return": "Number"
   },
   {
