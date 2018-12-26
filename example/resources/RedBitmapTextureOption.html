@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>RedGL - RedDDSTexture</title>
+    <title>RedGL - RedBitmapMaterial</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -52,19 +52,19 @@
                 testUI(redGL, tScene);
             };
             setBase(this);
-            // Geometry 생성
+            // Custom Geometry 생성
             var tGeo;
             (function (redGL) {
                 var interleaveData;
-                var indexData
+                var indexData;
+                var testInterleaveBuffer, testIndexBuffer;
                 interleaveData = new Float32Array([
                     -0.5, -0.5, 0.0, 0.0, 0.0,
                     0.5, -0.5, 0.0, 2.0, 0.0,
                     0.5, 0.5, 0.0, 2.0, 2.0,
                     -0.5, 0.5, 0.0, 0.0, 2.0
                 ]);
-                indexData = new Uint16Array([0, 1, 2, 0, 2, 3])
-                var testInterleaveBuffer, testIndexBuffer
+                indexData = new Uint16Array([0, 1, 2, 0, 2, 3]);
                 testInterleaveBuffer = RedBuffer(
                     redGL,
                     'testInterleaveBuffer',
@@ -74,30 +74,47 @@
                         RedInterleaveInfo('aVertexPosition', 3),
                         RedInterleaveInfo('aTexcoord', 2)
                     ]
-                )
+                );
                 testIndexBuffer = RedBuffer(
                     redGL,
                     'testIndexBuffer',
                     RedBuffer.ELEMENT_ARRAY_BUFFER,
                     indexData
-                )
-                tGeo = RedGeometry(testInterleaveBuffer, testIndexBuffer)
+                );
+                tGeo = RedGeometry(testInterleaveBuffer, testIndexBuffer);
             })(this);
             // Mesh 설정
             var tMesh;
             var tDiffuse1, tDiffuse2, tDiffuse3
+
+            var setOptionText = function (target, v) {
+                var tText
+                tText = RedText(target, 1350, 512)
+                tText.color = '#fff'
+                tText.background = 'rgba(0,0,0,0.5)'
+                tText.text = v
+                tText.fontSize = '80px'
+                tText.lineHeight = '95px'
+                tText.padding = '35px'
+                tText.textAlign = 'left'
+                tText.sprite3DYn = true
+                tText.perspectiveScale = true
+                tText.z = 0.5
+                tText.y = 0.25
+                return tText
+            };
             // REPEAT
-            tDiffuse1 = RedDDSTexture(
+            tDiffuse1 = RedBitmapTexture(
                 this,
-                assetPath + 'dxt/test_dxt1.dds',
+                assetPath + 'crate.png',
                 {
                     min: this.gl.LINEAR,
                     mag: this.gl.LINEAR,
                     wrap_s: this.gl.REPEAT,
                     wrap_t: this.gl.REPEAT
                 }
-            )
-            tDiffuse2 = RedDDSTexture(
+            );
+            tDiffuse2 = RedBitmapTexture(
                 this,
                 assetPath + 'crate.png',
                 {
@@ -106,30 +123,33 @@
                     wrap_s: this.gl.REPEAT,
                     wrap_t: this.gl.REPEAT
                 }
-            )
-            tDiffuse3 = RedDDSTexture(
+            );
+            tDiffuse3 = RedBitmapTexture(
                 this,
-                assetPath + 'dxt/test_dxt1.dds',
+                assetPath + 'crate.png',
                 {
                     min: this.gl.LINEAR_MIPMAP_NEAREST,
                     mag: this.gl.LINEAR,
                     wrap_s: this.gl.REPEAT,
                     wrap_t: this.gl.REPEAT
                 }
-            )
-            tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse1))
-            tMesh.x = -1.1
-            tScene.addChild(tMesh)
-            tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse2))
-            tMesh.x = 0
-            tScene.addChild(tMesh)
-            tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse3))
+            );
+            tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse1));
+            tMesh.addChild(setOptionText(this, 'min: LINEAR<br>' + 'mag: LINEAR<br>' + 'wrap_s: REPEAT<br>' + 'wrap_t: REPEAT'));
+            tMesh.x = -1.1;
+            tScene.addChild(tMesh);
+            tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse2));
+            tMesh.x = 0;
+            tMesh.addChild(setOptionText(this, 'min: NEAREST<br>' + 'mag: NEAREST<br>' + 'wrap_s: REPEAT<br>' + 'wrap_t: REPEAT'));
+            tScene.addChild(tMesh);
+            tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse3));
             tMesh.x = 1.1
+            tMesh.addChild(setOptionText(this, 'min: LINEAR_MIPMAP_NEAREST<br>' + 'mag: LINEAR<br>' + 'wrap_s: REPEAT<br>' + 'wrap_t: REPEAT'))
             tScene.addChild(tMesh)
             // MIRRORED_REPEAT
-            tDiffuse1 = RedDDSTexture(
+            tDiffuse1 = RedBitmapTexture(
                 this,
-                assetPath + 'dxt/test_dxt1.dds',
+                assetPath + 'crate.png',
                 {
                     min: this.gl.LINEAR,
                     mag: this.gl.LINEAR,
@@ -137,9 +157,9 @@
                     wrap_t: this.gl.MIRRORED_REPEAT
                 }
             )
-            tDiffuse2 = RedDDSTexture(
+            tDiffuse2 = RedBitmapTexture(
                 this,
-                assetPath + 'dxt/test_dxt1.dds',
+                assetPath + 'crate.png',
                 {
                     min: this.gl.NEAREST,
                     mag: this.gl.NEAREST,
@@ -147,9 +167,9 @@
                     wrap_t: this.gl.MIRRORED_REPEAT
                 }
             )
-            tDiffuse3 = RedDDSTexture(
+            tDiffuse3 = RedBitmapTexture(
                 this,
-                assetPath + 'dxt/test_dxt1.dds',
+                assetPath + 'crate.png',
                 {
                     min: this.gl.LINEAR_MIPMAP_NEAREST,
                     mag: this.gl.LINEAR,
@@ -160,14 +180,17 @@
             tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse1))
             tMesh.x = -1.1
             tMesh.y = 1.1
+            tMesh.addChild(setOptionText(this, 'min: LINEAR<br>' + 'mag: LINEAR<br>' + 'wrap_s: MIRRORED_REPEAT<br>' + 'wrap_t: MIRRORED_REPEAT'))
             tScene.addChild(tMesh)
             tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse2))
             tMesh.x = 0
             tMesh.y = 1.1
+            tMesh.addChild(setOptionText(this, 'min: NEAREST<br>' + 'mag: NEAREST<br>' + 'wrap_s: MIRRORED_REPEAT<br>' + 'wrap_t: MIRRORED_REPEAT'))
             tScene.addChild(tMesh)
             tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse3))
             tMesh.x = 1.1
             tMesh.y = 1.1
+            tMesh.addChild(setOptionText(this, 'min: LINEAR_MIPMAP_NEAREST<br>' + 'mag: LINEAR<br>' + 'wrap_s: MIRRORED_REPEAT<br>' + 'wrap_t: MIRRORED_REPEAT'))
             tScene.addChild(tMesh)
             // CLAMP_TO_EDGE
             tDiffuse1 = RedBitmapTexture(
@@ -203,21 +226,25 @@
             tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse1))
             tMesh.x = -1.1
             tMesh.y = -1.1
+            tMesh.addChild(setOptionText(this, 'min: LINEAR<br>' + 'mag: LINEAR<br>' + 'wrap_s: CLAMP_TO_EDGE<br>' + 'wrap_t: CLAMP_TO_EDGE'))
             tScene.addChild(tMesh)
             tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse2))
             tMesh.x = 0
             tMesh.y = -1.1
+
+            tMesh.addChild(setOptionText(this, 'min: NEAREST<br>' + 'mag: NEAREST<br>' + 'wrap_s: CLAMP_TO_EDGE<br>' + 'wrap_t: CLAMP_TO_EDGE'))
             tScene.addChild(tMesh)
             tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse3))
             tMesh.x = 1.1
             tMesh.y = -1.1
+            tMesh.addChild(setOptionText(this, 'min: LINEAR_MIPMAP_NEAREST<br>' + 'mag: LINEAR<br>' + 'wrap_s: CLAMP_TO_EDGE<br>' + 'wrap_t: CLAMP_TO_EDGE'))
             tScene.addChild(tMesh)
 
         } else {
             console.log('초기화 실패!')
         }
     })
-    testUI = function (redGL) {
+    testUI = function (redGL, tScene) {
         var gui = new baseTestUI(redGL)
         gui.initRedGL()
     }

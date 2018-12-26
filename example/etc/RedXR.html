@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>RedGL - RedXR</title>
+    <title>redGL - RedGL - RedXR</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -27,16 +27,16 @@
     canvas = document.getElementById('test');
     document.body.appendChild(canvas);
     baseTestUI.makeBaseUI();
-    RedXR(canvas,
-        function (v) {
+    RedXR(
+        canvas, // 캔버스
+        function (v) { // init callback
             testMesh = RedMesh(this, RedSphere(this, 1, 16, 16, 16), RedColorMaterial(this));
             testMesh.z = -10;
             testMesh.drawMode = this.gl.POINTS;
             testMesh.pointSize = 5;
             v['scene'].addChild(testMesh);
-
         },
-        function (time) {
+        function (time) { // looper
             // console.log(time);
             testMesh.rotationX += 1;
             testMesh.rotationY += 1;

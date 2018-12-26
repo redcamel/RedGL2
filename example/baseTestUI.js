@@ -185,48 +185,73 @@ baseTestUI.prototype = {
     },
     initCamera: function (camera, open) {
         var t0 = this['gui'].addFolder('camera')
-        camera = camera instanceof RedCamera ? camera : camera.camera
-        t0.add(camera, 'orthographicYn', true, false)
-        t0.add(camera, 'nearClipping', 0, 20)
-        t0.add(camera, 'farClipping', 0, 10000)
-        t0.add(camera, 'fov', 0, 100)
-        t0.add(camera, 'x', -100, 100)
-        t0.add(camera, 'y', -100, 100)
-        t0.add(camera, 'z', -100, 100)
+        camera = camera instanceof RedCamera ? camera : camera.camera;
+        t0.add(camera, 'orthographicYn', true, false);
+        t0.add(camera, 'nearClipping', 0, 20, 0.01);
+        t0.add(camera, 'farClipping', 0, 10000, 0.01);
+        t0.add(camera, 'fov', 0, 100, 0.01);
+        t0.add(camera, 'x', -1, 1, 0.01);
+        t0.add(camera, 'y', -1, 1, 0.01);
+        t0.add(camera, 'z', -10, 10, 0.01);
+        t0.add(camera, 'targetX', -1, 1, 0.01);
+        t0.add(camera, 'targetY', -1, 1, 0.01);
+        t0.add(camera, 'targetZ', -1, 1, 0.01);
         if (open) t0.open()
         return t0
     },
     initBasicController: function (controller, open) {
         var t0 = this['gui'].addFolder('BasicController')
-        t0.add(controller, 'x', -100, 100)
-        t0.add(controller, 'y', -100, 100)
-        t0.add(controller, 'z', -100, 100)
-        t0.add(controller, 'tilt', 0, 360)
-        t0.add(controller, 'pan', 0, 360)
-        t0.add(controller, 'speed', 0.1, 5)
-        t0.add(controller, 'delay', 0.001, 1)
-        t0.add(controller, 'speedRotation', 0.1, 2)
-        t0.add(controller, 'delayRotation', 0.01, 0.5)
-        t0.add(controller, 'maxAcceleration', 0.1, 5)
-        if (open) t0.open()
+        t0.add(controller, 'x', -100, 100, 0.01);
+        t0.add(controller, 'y', -100, 100, 0.01);
+        t0.add(controller, 'z', -100, 100, 0.01);
+        t0.add(controller, 'tilt', -360, 360, 0.01);
+        t0.add(controller, 'pan', -360, 360, 0.01);
+        t0.add(controller, 'speed', 0.1, 5, 0.01);
+        t0.add(controller, 'delay', 0.001, 1, 0.01);
+        t0.add(controller, 'speedRotation', 0.1, 2, 0.01);
+        t0.add(controller, 'delayRotation', 0.01, 0.5, 0.01);
+        t0.add(controller, 'maxAcceleration', 0.1, 5, 0.01);
+        setInterval(function () {
+            t0.updateDisplay()
+        }, 16);
+        if (open) t0.open();
+        var t1, t2;
+        t1 = document.createElement('div')
+        t2 = ''
+        t1.style.cssText = 'position:absolute;top:40px;left:10px;background:#000;padding:3px;color:#fff;font-size:11px;padding:10px'
+        t2 += 'w - forward<br>'
+        t2 += 's - back<br>'
+        t2 += 'a - left<br>'
+        t2 += 'd - right<br>'
+        t2 += 't - up<br>'
+        t2 += 'g - down<br>'
+        t2 += 'q - pan left<br>'
+        t2 += 'e - pan right<br>'
+        t2 += 'r - tilt up<br>'
+        t2 += 'f - tilt down<br>'
+        t1.innerHTML = t2;
+        document.body.appendChild(t1)
         return t0
     },
-    initObitController: function (controller) {
+    initObitController: function (controller, open) {
         var t0 = this['gui'].addFolder('ObitController')
-        t0.add(controller, 'centerX', -10, 10)
-        t0.add(controller, 'centerY', -10, 10)
-        t0.add(controller, 'centerZ', -10, 10)
-        t0.add(controller, 'tilt', 0, 360)
-        t0.add(controller, 'pan', 0, 360)
-        t0.add(controller, 'minTilt', -90, 0)
-        t0.add(controller, 'maxTilt', 0, 90)
-        t0.add(controller, 'distance', 0.1, 20)
-        t0.add(controller, 'speedDistance', 0.001, 1)
-        t0.add(controller, 'speedRotation', 0.1, 2)
-        t0.add(controller, 'delayRotation', 0.01, 0.5)
+        t0.add(controller, 'centerX', -10, 10, 0.01);
+        t0.add(controller, 'centerY', -10, 10, 0.01);
+        t0.add(controller, 'centerZ', -10, 10, 0.01);
+        t0.add(controller, 'tilt', -360, 360, 0.01);
+        t0.add(controller, 'pan', -360, 360, 0.01);
+        t0.add(controller, 'minTilt', -90, 90, 0.01);
+        t0.add(controller, 'maxTilt', -90, 90, 0.01);
+        t0.add(controller, 'distance', 0.1, 20, 0.01);
+        t0.add(controller, 'speedDistance', 0.001, 1, 0.01);
+        t0.add(controller, 'speedRotation', 0.1, 2, 0.01);
+        t0.add(controller, 'delayRotation', 0.01, 0.5, 0.01);
+        if (open) t0.open();
+        setInterval(function () {
+            t0.updateDisplay()
+        }, 16)
         return t0
     },
-
     initFog: function (scene) {
         var t0 = this['gui'].addFolder('scene')
         console.log(scene.useFog)
@@ -240,5 +265,130 @@ baseTestUI.prototype = {
             scene['fogColor'] = v
         });
         return t0
+    },
+    initAmbientLight: function (tALight, open) {
+        var tFolder = this['gui'].addFolder('RedAmbientLight')
+        var testAmbientLightData = {
+            color: tALight.color
+        };
+        tFolder.addColor(testAmbientLightData, 'color').onChange(function (v) {
+            tALight.color = v
+            tFolder.updateDisplay()
+        });
+        tFolder.add(tALight, 'alpha', 0, 1, 0.01);
+        tFolder.add(tALight, 'intensity', 0, 5, 0.01);
+        if (open) tFolder.open();
+    },
+    initDirectionalLight: function (tDLight, open) {
+        var tFolder = this['gui'].addFolder('RedDirectionalLight');
+        var testDLight = {
+            color: tDLight.color
+        };
+        tFolder.addColor(testDLight, 'color').onChange(function (v) {
+            tDLight.color = v
+            tFolder.updateDisplay()
+        });
+        tFolder.add(tDLight, 'alpha', 0, 1, 0.01);
+        tFolder.add(tDLight, 'intensity', 0, 5, 0.01);
+        tFolder.add(tDLight, 'x', -10, 10, 0.01);
+        tFolder.add(tDLight, 'y', -10, 10, 0.01);
+        tFolder.add(tDLight, 'z', -10, 10, 0.01);
+        tFolder.add(tDLight, 'debug');
+        if (open) tFolder.open();
+    },
+    initPointLight: function (tPLight, open) {
+        var tFolder = this['gui'].addFolder('RedPointLight')
+        var testPLight = {
+            color: tPLight.color
+        };
+        tFolder.addColor(testPLight, 'color').onChange(function (v) {
+            tPLight.color = v
+            tFolder.updateDisplay()
+        });
+        tFolder.add(tPLight, 'alpha', 0, 1)
+        tFolder.add(tPLight, 'intensity', 0, 5)
+        tFolder.add(tPLight, 'x', -5, 5, 0.1)
+        tFolder.add(tPLight, 'y', -5, 5, 0.1)
+        tFolder.add(tPLight, 'z', -5, 5, 0.1)
+        tFolder.add(tPLight, 'radius', 0, 5)
+        tFolder.add(tPLight, 'debug', true, false)
+        if (open) tFolder.open();
+    },
+    //
+    initPostEffect: function (tName, effect, open, view) {
+        var tFolder;
+        if (tName) tFolder = this['gui'].addFolder(tName);
+        switch (tName) {
+            case 'RedPostEffect_BrightnessContrast':
+                tFolder.add(effect, 'brightness', -150, 150);
+                tFolder.add(effect, 'contrast', -50, 100);
+                break;
+                break;
+            case 'RedPostEffect_HueSaturation':
+                tFolder.add(effect, 'hue', -180, 180);
+                tFolder.add(effect, 'saturation', -100, 100);
+                break;
+            case 'RedPostEffect_Threshold':
+                tFolder.add(effect, 'threshold', 1, 255);
+                break;
+            case 'RedPostEffect_Vignetting':
+                tFolder.add(effect, 'size', 0, 1);
+                tFolder.add(effect, 'intensity', 0, 2);
+                break;
+            case 'RedPostEffect_BlurX':
+                tFolder.add(effect, 'size', 0, 100, 0.01);
+                break;
+            case 'RedPostEffect_BlurY':
+                tFolder.add(effect, 'size', 0, 100, 0.01);
+                break;
+            case 'RedPostEffect_GaussianBlur':
+                tFolder.add(effect, 'radius', 0.1, 250, 0.01);
+                break;
+            case 'RedPostEffect_ZoomBlur':
+                tFolder.add(effect, 'amount', 0, 100, 0.01);
+                tFolder.add(effect, 'centerX', -1, 1, 0.01);
+                tFolder.add(effect, 'centerY', -1, 1, 0.01);
+                break;
+            case 'RedPostEffect_HalfTone':
+                tFolder.add(effect, 'centerX', -1, 1, 0.01);
+                tFolder.add(effect, 'centerY', -1, 1, 0.01);
+                tFolder.add(effect, 'radius', 0, 25, 0.01);
+                tFolder.add(effect, 'angle', 0, 360, 0.01);
+                tFolder.add(effect, 'grayMode')
+                break;
+            case 'RedPostEffect_Pixelize':
+                tFolder.add(effect, 'width', 0, 50, 0.01);
+                tFolder.add(effect, 'height', 0, 50, 0.01);
+                break;
+            case 'RedPostEffect_DoF':
+                tFolder.add(effect, 'blur', 0, 100, 0.01);
+                tFolder.add(effect, 'focusLength', 0, 100, 0.01);
+                break;
+            case 'RedPostEffect_Bloom':
+                tFolder.add(effect, 'blur', 0, 100);
+                tFolder.add(effect, 'exposure', 0, 5);
+                tFolder.add(effect, 'bloomStrength', 0, 5);
+                tFolder.add(effect, 'threshold', 1, 255);
+                break;
+            case 'RedPostEffect_Film':
+                tFolder.add(effect, 'scanlineIntensity', -1, 1, 0.01);
+                tFolder.add(effect, 'noiseIntensity', 0, 1, 0.01);
+                tFolder.add(effect, 'scanlineCount', 0, 4096);
+                tFolder.add(effect, 'grayMode');
+                break;
+            case 'RedPostEffect_FXAA':
+                var testFXAAData = {
+                    fxaa: true
+                };
+                tFolder.add(testFXAAData, 'fxaa', false, true).onChange(function (v) {
+                    if (v) view['postEffectManager']['antialiasing'] = effect
+                    else view['postEffectManager']['antialiasing'] = null
+                })
+
+                break
+        }
+        if (tFolder && open) tFolder.open();
+        return tFolder
+
     }
 }

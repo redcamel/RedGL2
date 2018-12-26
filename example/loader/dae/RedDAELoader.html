@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>RedDAELoader</title>
+    <title>RedGL - RedDAELoader</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -24,76 +24,67 @@
     document.body.appendChild(canvas);
     RedGL(canvas, function (v) {
         if (v) {
-            console.log('초기화 성공!')
-            var tWorld, tScene, tController, tRenderer;
-            var self;
-            self = this;
-            // 월드 생성
-            this['world'] = tWorld = RedWorld();
-            // 씬 생성
-            tScene = RedScene(this);
-            // 카메라 생성
-            tController = RedObitController(this);
-            tController.tilt = -30
-            tController.pan = 45
-            // 렌더러 생성
-            tRenderer = RedRenderer();
-            // 뷰생성 및 적용
-            tWorld.addView(RedView('test', this, tScene, tController));
-            // 그리드 설정
-            // tScene['grid'] = RedGrid(this)
-            // 라이트 설정
-            var testDLight, testALight, testPLight;
-            testDLight = RedDirectionalLight(this, '#fff', 1)
-            testDLight.x = 3
-            testDLight.y = 2
-            testDLight.z = 3
-            testDLight.debug = true
-            tScene.addLight(testDLight)
-            testDLight = RedDirectionalLight(this, '#ff00ff', 0.2)
-            testDLight.x = -3
-            testDLight.y = 2
-            testDLight.z = -3
-            testDLight.debug = true
-            tScene.addLight(testDLight)
-            testPLight = RedPointLight(this, '#00ff00', 0.5)
-            testPLight.x = -3
-            testPLight.y = -3
-            testPLight.z = -3
-            testPLight['radius'] = 2
-            testPLight['intensity'] = 1
-            testPLight.debug = true
-            tScene.addLight(testPLight)
-            // OBJ 로딩
-            RedDAELoader(this, assetPath + 'dae/', 'test1.dae', function (v) {
-                v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.1
-                tScene.addChild(v['resultMesh'])
-            })
-            // 렌더시작
-            tRenderer.start(this, function (time) {
-                testDLight.x = Math.sin(time / 1000) * 2
-                testDLight.y = Math.cos(time / 1000) * 2
-                testDLight.z = Math.cos(time / 1000) * 2
-                testPLight.x = Math.sin(time / 1500) * 1
-                testPLight.y = Math.cos(time / 1500) * 1 + 1
-                testPLight.z = Math.cos(time / 1500) * 1
-            })
-            // 렌더 디버거 활성화
-            tRenderer.setDebugButton();
-            //
-            testUI(this, tController)
+            console.log('초기화 성공!');
+            var tWorld, tView, tScene, tController, tRenderer;
+            var setBase = function (redGL) {
+                // 월드 생성
+                redGL['world'] = tWorld = RedWorld();
+                // 씬 생성
+                tScene = RedScene(redGL);
+                // 카메라 생성
+                tController = RedObitController(redGL);
+                tController.pan = 25;
+                tController.tilt = -15;
+                tController.distance = 12;
+                // 렌더러 생성
+                tRenderer = RedRenderer();
+                // 뷰생성 및 적용
+                tView = RedView('HelloRedGL', redGL, tScene, tController);
+                tWorld.addView(tView);
+                // 그리드 설정
+                tScene['grid'] = RedGrid(redGL);
+                // 라이트 설정
+                var testDLight, testPLight;
+                testDLight = RedDirectionalLight(redGL)
+                testDLight.x = 3
+                testDLight.y = 2
+                testDLight.z = 3
+                testDLight.debug = true
+                tScene.addLight(testDLight)
+                // 라이트 설정
+                testPLight = RedPointLight(redGL, '#351169', 0.5)
+                testPLight['radius'] = 2
+                testPLight.debug = true
+                tScene.addLight(testPLight)
+                // 렌더시작
+                tRenderer.start(redGL, function (time) {
+                    testPLight.x = Math.sin(time / 1000) * 1
+                    testPLight.y = Math.cos(time / 1000) * 1 + 1
+                    testPLight.z = Math.cos(time / 1000) * 1
+                });
+                // 렌더 디버거 활성화
+                tRenderer.setDebugButton();
+                testUI(redGL, tController)
+            };
+            setBase(this);
+            // DAE 로딩
+            RedDAELoader(
+                this, // redGL
+                assetPath + 'dae/', // assetRootPath
+                'test1.dae', // fileName
+                function (v) { // callback
+                    v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.1
+                    tScene.addChild(v['resultMesh'])
+                }
+            )
         } else {
             console.log('초기화 실패!')
         }
     })
-    testUI = function (redGL, tController) {
+    testUI = function (redGL) {
         console.log('test')
-        var gui = new baseTestUI(redGL)
-        gui.initRedGL()
-        gui.initObitController(tController).open()
-        setInterval(function () {
-            gui['gui'].updateDisplay()
-        }, 16)
+        var gui = new baseTestUI(redGL);
+        gui.initRedGL();
     }
 </script>
 </body>

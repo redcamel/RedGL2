@@ -391,6 +391,7 @@ var RedBasicController;
             tCamera['x'] = tMTX1[12];
             tCamera['y'] = tMTX1[13];
             tCamera['z'] = tMTX1[14];
+
             // 카메라는 대상 오브젝트를 바라봄
             tCamera.lookAt(targetObject['x'], targetObject['y'], targetObject['z']);
             // console.log('RedBasicController update')

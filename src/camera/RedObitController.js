@@ -205,7 +205,7 @@ var RedObitController;
 		 return : 'Number'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedObitController', 'maxTilt', 'number', {max: 90});
+    RedDefinePropertyInfo.definePrototype('RedObitController', 'maxTilt', 'number', {min:-90,max: 90});
     /**DOC:
      {
 	     code : 'PROPERTY',
@@ -216,7 +216,7 @@ var RedObitController;
 		 return : 'Number'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedObitController', 'minTilt', 'number', {max: -90});
+    RedDefinePropertyInfo.definePrototype('RedObitController', 'minTilt', 'number', {min:-90,max: 90});
     /**DOC:
      {
 	     code : 'METHOD',
@@ -241,6 +241,7 @@ var RedObitController;
             this['_currentTilt'] += (this['_tilt'] - this['_currentTilt']) * tDelayRotation;
             this['_currentDistance'] += (this['_distance'] - this['_currentDistance']) * this['_delayDistance'];
             mat4.identity(tMTX0);
+            mat4.translate(tMTX0, tMTX0, [this['_centerX'], this['_centerY'], this['_centerZ']]);
             mat4.rotateY(tMTX0, tMTX0, this['_currentPan'] * PER_PI);
             mat4.rotateX(tMTX0, tMTX0, this['_currentTilt'] * PER_PI);
             mat4.translate(tMTX0, tMTX0, [0, 0, this['_currentDistance']]);

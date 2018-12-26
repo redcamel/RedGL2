@@ -1,7 +1,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>RedBasicController</title>
+    <title>RedGL - RedBasicController</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -30,9 +30,10 @@
             tScene = RedScene(this);
             // 카메라 생성
             tController = RedBasicController(this);
-            tController.x = tController.y = tController.z = 10
+            tController.x = tController.y = tController.z = 15
             tController.tilt = -45
             tController.pan = 45
+            console.log(tController)
             // 렌더러 생성
             tRenderer = RedRenderer();
             // 뷰생성 및 적용
@@ -43,40 +44,20 @@
             tScene['axis'] = RedAxis(this)
             // 렌더시작
             tRenderer.start(this, function (time) {
-            })
+            });
             // 렌더 디버거 활성화
             tRenderer.setDebugButton();
             //
-            testUI(this, tController)
+            testUI(this, tController);
         } else {
             console.log('초기화 실패!')
         }
-    })
+    });
     testUI = function (redGL, tController) {
-        console.log('test')
-        var gui = new baseTestUI(redGL)
-        gui.initRedGL()
-        gui.initBasicController(tController).open()
-        var t0, t1;
-        t0 = document.createElement('div')
-        t1 = ''
-        t0.style.cssText = 'position:absolute;top:0px;left:0px;background:#000;padding:3px;color:#fff;font-size:11px;'
-        t1 += 'w - forward<br>'
-        t1 += 's - back<br>'
-        t1 += 'a - left<br>'
-        t1 += 'd - right<br>'
-        t1 += 't - up<br>'
-        t1 += 'g - down<br>'
-        t1 += 'q - pan left<br>'
-        t1 += 'e - pan right<br>'
-        t1 += 'r - tilt up<br>'
-        t1 += 'f - tilt down<br>'
-        t0.innerHTML = t1;
-        document.body.appendChild(t0)
-        setInterval(function () {
-            gui['gui'].updateDisplay()
-        }, 16)
-    }
+        var gui = new baseTestUI(redGL);
+        gui.initRedGL();
+        gui.initBasicController(tController, true);
+    };
 </script>
 </body>
 

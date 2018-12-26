@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>RedVideoMaterial</title>
+   <title>RedGL -RedVideoMaterial</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -26,13 +26,13 @@
         if (v) {
             console.log('초기화 성공!')
             var tWorld, tView, tScene, tController, tRenderer, tLight;
-            var setBase = function (regGL) {
+            var setBase = function (redGL) {
                 // 월드 생성
-                regGL['world'] = tWorld = RedWorld();
+                redGL['world'] = tWorld = RedWorld();
                 // 씬 생성
-                tScene = RedScene(regGL);
+                tScene = RedScene(redGL);
                 // 카메라 생성
-                tController = RedObitController(regGL);
+                tController = RedObitController(redGL);
                 tController.pan = 0;
                 tController.tilt = -25;
                 tController.distance = 7;
@@ -40,16 +40,16 @@
                 // 렌더러 생성
                 tRenderer = RedRenderer();
                 // 뷰생성 및 적용
-                tView = RedView('HelloRedGL', regGL, tScene, tController);
+                tView = RedView('HelloRedGL', redGL, tScene, tController);
                 tWorld.addView(tView);
                 // 그리드 설정
-                tScene['grid'] = RedGrid(regGL);
+                tScene['grid'] = RedGrid(redGL);
                 // 렌더시작
-                tRenderer.start(regGL, function (time) {
+                tRenderer.start(redGL, function (time) {
                 });
                 // 렌더 디버거 활성화
                 tRenderer.setDebugButton();
-                testUI(regGL, tScene)
+                testUI(redGL, tScene)
             };
             setBase(this);
             // 재질설정
