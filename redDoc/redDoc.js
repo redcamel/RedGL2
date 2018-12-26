@@ -196,7 +196,7 @@ var DocJS = (function () {
 		rightBox = Recard.Dom('td').S(
 			'vertical-align', 'top',
 			'>', Recard.Dom('iframe').S(
-				'@src', '../testDemo/testShadow.html',
+				'@src', '../example/shadow/RedDirectionalShadow.html',
 				'border', 0,
 				'width', '100%',
 				'height', 600

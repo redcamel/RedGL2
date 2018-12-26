@@ -23,34 +23,43 @@
     document.body.appendChild(canvas);
     RedGL(canvas, function (v) {
         var tGL;
-        var tWorld, tScene3D, tCamera
-        var tRenderer;
+
         var self;
         self = this
         tGL = this.gl;
-        this.world = tWorld = RedWorld();
-        tScene3D = RedScene(this, '#223344');
-        tScene3D.alpha = 0.1
-        tCamera = RedObitController(self)
-        tCamera.distance = 50
-        tRenderer = RedRenderer();
-        tWorld.addView(RedView('test', this, tScene3D, tCamera));
-        var testDLight;
-        testDLight = RedDirectionalLight(this, '#fff')
-        testDLight.x = 3
-        testDLight.y = 3
-        testDLight.z = 3
-        tScene3D.addLight(testDLight);
-        tScene3D['grid'] = RedGrid(self)
-        tScene3D.skyBox =
-            RedSkyBox(this, [
-                assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
-                assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
-                assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
-                assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
-                assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
-                assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
-            ]);
+        console.log('초기화 성공!');
+        var tWorld, tView, tScene, tController, tRenderer;
+        var setBase = function (redGL) {
+            // 월드 생성
+            redGL['world'] = tWorld = RedWorld();
+            // 씬 생성
+            tScene = RedScene(redGL);
+            // 카메라 생성
+            tController = RedObitController(redGL);
+            tController.pan = 45;
+            tController.tilt = -45;
+            // 렌더러 생성
+            tRenderer = RedRenderer();
+            // 뷰생성 및 적용
+            tView = RedView('HelloRedGL', redGL, tScene, tController);
+            tWorld.addView(tView);
+            // 그리드 설정
+            tScene['grid'] = RedGrid(redGL);
+            tScene.skyBox =
+                RedSkyBox(redGL, [
+                    assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
+                    assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
+                    assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
+                    assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
+                    assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
+                    assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
+                ]);
+            // 렌더 디버거 활성화
+            tRenderer.setDebugButton();
+
+        };
+        setBase(this);
+
         /////////////////
         var TEST_UI_DATA = [
             {
@@ -153,9 +162,8 @@
         var testEmitter = new RedParticleEmitter(this, TEST_PARTICLE_DEFINE_DATA, RedParticleBitmapMaterial(this, testTextureList[0]))
         var centerMesh = RedMesh(this, RedSphere(this, 0.2, 16, 16, 16), RedColorPhongMaterial(this))
         var moveYn
-        tScene3D.addChild(testEmitter)
+        tScene.addChild(testEmitter)
         tRenderer.start(this, function (time) {
-            tRenderer.renderDebuger.visible = true
             if (moveYn) {
                 centerMesh.x = testEmitter.x = Math.sin(time / 500) * 5
                 centerMesh.y = testEmitter.y = 0
@@ -163,9 +171,11 @@
             }
             testEmitter.update(time)
         })
-        console.log(tScene3D)
+        console.log(tScene)
+
         var makeTestUI;
         makeTestUI = (function () {
+
             var gui, tFolder;
             var updateRule;
             updateRule = function (key) {
@@ -318,7 +328,7 @@
                 ]).onChange(function (v) {
                     testEmitter.material.diffuseTexture = testTextureList[v == 'testTexture1' ? 0 : 1]
                 })
-                tFolder.add(testEmitter.material, 'alphaTest', 0, 1, 0.0001)
+                tFolder.add(testEmitter.material, 'cutOff', 0, 1, 0.0001)
                 tFolder.open()
                 //
                 tFolder = gui.addFolder('emitterMoveTest')
@@ -328,13 +338,12 @@
                 }
                 tFolder.add(TEST_MOVE, 'moveTest').onChange(function (v) {
                     moveYn = v
-                    tScene3D[moveYn ? 'addChild' : 'removeChild'](centerMesh)
+                    tScene[moveYn ? 'addChild' : 'removeChild'](centerMesh)
                 })
                 tFolder.open()
             }
         })()
         makeTestUI()
-        new baseTestUI(self)
         var t0, particle_JSON_DATA;
         t0 = document.createElement('div')
         t0.style.position = 'absolute'
