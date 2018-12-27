@@ -2,7 +2,7 @@
   {
     "code": "PROPERTY",
     "title": "alpha",
-    "description": "기본값 : 1",
+    "description": "\n    기본값 : 1\n    최소값 : 0\n    최대값 : 1\n ",
     "return": "Number"
   },
   {
@@ -14,7 +14,7 @@
   {
     "constructorYn": true,
     "title": "RedColorPhongMaterial",
-    "description": "\nRedColorPhongMaterial Instance 생성\n",
+    "description": "\n\t RedColorPhongMaterial Instance 생성\n ",
     "params": {
       "redGL": [
         {
@@ -24,20 +24,21 @@
       "hexColor": [
         {
           "type": "hex"
-        }
+        },
+        "기본값 : #ff0000"
       ],
       "alpha": [
         {
           "type": "number"
         },
-        "알파값"
+        "기본값 : 1"
       ]
     },
     "extends": [
       "RedBaseMaterial"
     ],
     "demo": "../example/material/RedColorPhongMaterial.html",
-    "example": "\nRedColorPhongMaterial(RedGL Instance, hex, alpha)\n",
+    "example": "\n RedColorPhongMaterial(RedGL Instance, hex, alpha)\n ",
     "return": "RedColorPhongMaterial Instance"
   },
   {
@@ -55,7 +56,7 @@
   {
     "code": "PROPERTY",
     "title": "useFlatMode",
-    "description": "기본값 : true",
+    "description": "\n    flatMode 사용여부\n    기본값 : true\n ",
     "return": "boolean"
   }
 ]

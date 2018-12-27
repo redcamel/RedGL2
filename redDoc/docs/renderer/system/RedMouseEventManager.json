@@ -2,7 +2,7 @@
   {
     "constructorYn": true,
     "title": "RedMouseEventManager",
-    "description": "\nRedMouseEventManager Instance 생성.\nRedScene 생성시 내부속성으로 자동생성됨.\n",
+    "description": "\n\t RedMouseEventManager Instance 생성.\n\t RedScene 생성시 내부속성으로 자동생성됨.\n\t 시스템적으로 사용됨.\n ",
     "params": {
       "redGL": [
         {

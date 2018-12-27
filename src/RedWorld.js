@@ -7,11 +7,13 @@ var RedWorld;
 		 title :`RedWorld`,
 		 description : `
 			 RedWorld Instance 생성자.
-			 RedWorld는 RedView를 소유하며 이는 렌더리스트로서 작동한다..
+			 RedGL Instance 에 설정가능함.
+			 RedView 목록을 관리함.
+			 RedWorld 내의 RedView 를 렌더링 대상으로 함.
 		 `,
-		 demo : '../example/RedWorld.html',
+		 demo : '../example/etc/RedWorld.html',
 		 example : `
-			 RedWorld();
+			 RedWorld(); // RedWorld Instance 생성
 		 `,
 		 return : 'RedWorld Instance'
 	 }
@@ -37,8 +39,9 @@ var RedWorld;
 				 ]
 			 },
 			 example : `
-				 var tWorld = RedWorld()
-				 tWorld.addView( RedView(keyName, RedGL Instance ,RedScene Instance, RedCamera Instance) )
+				 var testWorld = RedWorld(); // 월드생성
+				 var testView = RedView( '뷰이름', RedGL Instance, RedScene Instance, RedCamera Instance ); // 뷰생성
+				 testWorld.addView( testView ); // 뷰등록
 			`,
 			 return : 'void'
 		 }
@@ -60,11 +63,12 @@ var RedWorld;
 				 ]
 			 },
 			 example : `
-				 var tWorld = RedWorld();
-				 tWorld.addView( RedView('testView', RedGL Instance ,RedScene Instance, RedCamera Instance) );
-				 console.log( tWorld.getView('testView') ); // testView 반환
-				 tWorld.delView('testView');
-				 console.log( tWorld.getView('testView') ); // undefined
+				 var testWorld = RedWorld(); // 월드생성
+				 var testView = RedView( '뷰이름', RedGL Instance, RedScene Instance, RedCamera Instance ); // 뷰생성
+				 testWorld.addView( testView ); // 뷰등록
+				 console.log( testWorld.getView('뷰이름') ); // testView 반환
+				 testWorld.delView('뷰이름');
+				 console.log( testWorld.getView('뷰이름') ); // undefined 반환
 			`,
 			 return : 'RedView'
 		 }
@@ -85,11 +89,12 @@ var RedWorld;
 				 ]
 			 },
 			 example : `
-				 var tWorld = RedWorld();
-				 tWorld.addView( RedView('testView', RedGL Instance ,RedScene Instance, RedCamera Instance) );
-				 console.log( tWorld.getView('testView') ); // testView 반환
-				 tWorld.delView('testView');
-				 console.log( tWorld.getView('testView') ); // undefined
+				 var testWorld = RedWorld(); // 월드생성
+				 var testView = RedView( '뷰이름', RedGL Instance, RedScene Instance, RedCamera Instance ); // 뷰생성
+				 testWorld.addView( testView ); // 뷰등록
+				 console.log( testWorld.getView('뷰이름') ); // testView 반환
+				 testWorld.delView('뷰이름');
+				 console.log( testWorld.getView('뷰이름') ); // undefined 반환
 			`,
 			 return : 'void'
 		 }
@@ -117,9 +122,10 @@ var RedWorld;
 				 ]
 			 },
 			 example : `
-				 var tWorld = RedWorld();
-				 tWorld.addView( RedView('testView', RedGL Instance ,RedScene Instance, RedCamera Instance) );
-				 console.log(tWorld.hasView('testView')) // true
+				 var testWorld = RedWorld(); // 월드생성
+				 var testView = RedView( '뷰이름', RedGL Instance, RedScene Instance, RedCamera Instance ); // 뷰생성
+				 testWorld.addView( testView ); // 뷰등록
+				 console.log(testWorld.hasView('뷰이름')) // true 반환
 			`,
 			 return : 'Boolean'
 		 }
@@ -140,9 +146,12 @@ var RedWorld;
 				 ]
 			 },
 			 example : `
-				 var tWorld = RedWorld();
-				 tWorld.addView( RedView('testView', RedGL Instance ,RedScene Instance, RedCamera Instance) );
-				 console.log(tWorld.getViewList())
+				 var testWorld = RedWorld(); // 월드생성
+				 var testView = RedView( '뷰이름', RedGL Instance, RedScene Instance, RedCamera Instance ); // 뷰생성
+				 var testView2 = RedView( '뷰이름2', RedGL Instance, RedScene Instance, RedCamera Instance ); // 뷰생성
+				 testWorld.addView( testView ); // 뷰등록
+				 testWorld.addView( testView2 ); // 뷰등록
+				 console.log(testWorld.getViewList()); // 뷰리스트 반환
 			`,
 			 return : 'Array'
 		 }

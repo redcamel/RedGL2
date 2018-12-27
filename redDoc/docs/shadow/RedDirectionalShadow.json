@@ -2,7 +2,7 @@
   {
     "code": "METHOD",
     "title": "addCasting",
-    "description": "\n그림자 케스팅할 오브젝트 추가\n",
+    "description": "\n\t 그림자 케스팅할 오브젝트 추가\n ",
     "params": {
       "target": [
         {
@@ -15,19 +15,19 @@
   {
     "code": "PROPERTY",
     "title": "height",
-    "description": "\n프레임버퍼 height\n",
+    "description": "\n\t 프레임버퍼 height\n ",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "light",
-    "description": "\n그림자를 반영할 RedDirectionalLight 지정\n",
+    "description": "\n\t 그림자를 반영할 RedDirectionalLight 지정\n ",
     "return": "RedDirectionalLight Instance"
   },
   {
     "constructorYn": true,
     "title": "RedDirectionalShadow",
-    "description": "\nRedDirectionalShadow Instance 생성.\n",
+    "description": "\n\t RedDirectionalShadow Instance 생성.\n ",
     "params": {
       "redGL": [
         {
@@ -35,12 +35,13 @@
         }
       ]
     },
+    "demo": "../example/shadow/RedDirectionalShadow.html",
     "return": "RedDirectionalShadow Instance"
   },
   {
     "code": "METHOD",
     "title": "removeCasting",
-    "description": "\n캐스팅 제거\n",
+    "description": "\n\t 캐스팅 제거\n ",
     "params": {
       "target": [
         {
@@ -53,13 +54,13 @@
   {
     "code": "PROPERTY",
     "title": "size",
-    "description": "\n그림자 영역 크기\n",
+    "description": "\n\t 그림자 영역 크기\n ",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "width",
-    "description": "\n프레임버퍼 width\n",
+    "description": "\n\t 프레임버퍼 width\n ",
     "return": "Number"
   }
 ]

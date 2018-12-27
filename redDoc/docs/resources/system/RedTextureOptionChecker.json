@@ -1,8 +1,8 @@
 [
   {
-    "type": "METHOD",
+    "code": "STATIC METHOD",
     "title": "check",
-    "description": "\ntexture 옵션 검증\n",
+    "description": "\n\t texture 옵션 검증\n ",
     "params": {
       "type": [
         {
@@ -20,13 +20,12 @@
         }
       ]
     },
-    "example": "",
     "return": "void"
   },
   {
     "constructorYn": true,
     "title": "RedTextureOptionChecker",
     "description": "texture 옵션 검증",
-    "return": "void"
+    "return": "RedTextureOptionChecker"
   }
 ]

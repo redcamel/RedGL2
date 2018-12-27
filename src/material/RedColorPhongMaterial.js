@@ -118,16 +118,15 @@ var RedColorPhongMaterial;
 				 {type:'RedGL'}
 			 ],
 			 hexColor : [
-				 {type:'hex'}
+				 {type:'hex'},
+				 '기본값 : #ff0000'
 			 ],
 			 alpha : [
 				 {type:'number'},
-				 '알파값'
+				 '기본값 : 1'
 			 ]
 		 },
-		 extends : [
-		    'RedBaseMaterial'
-		 ],
+		 extends : ['RedBaseMaterial'],
 		 demo : '../example/material/RedColorPhongMaterial.html',
 		 example: `
 		 RedColorPhongMaterial(RedGL Instance, hex, alpha)
@@ -175,7 +174,11 @@ var RedColorPhongMaterial;
      {
 	     code : 'PROPERTY',
 		 title :`alpha`,
-		 description : `기본값 : 1`,
+		 description : `
+		    기본값 : 1
+		    최소값 : 0
+		    최대값 : 1
+		 `,
 		 return : 'Number'
 	 }
      :DOC*/
@@ -202,7 +205,10 @@ var RedColorPhongMaterial;
      {
 	     code : 'PROPERTY',
 		 title :`useFlatMode`,
-		 description : `기본값 : true`,
+		 description : `
+		    flatMode 사용여부
+		    기본값 : true
+		 `,
 		 return : 'boolean'
 	 }
      :DOC*/

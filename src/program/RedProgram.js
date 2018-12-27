@@ -339,24 +339,10 @@ var RedProgram;
     };
     //TODO: 이걸좀 정리해야하는데..
     RedProgram['makeProgram'] = (function () {
-        var cachTable = {}
         return function (redGL, programName, vSource, fSource, subProgramOption) {
             if (programName.indexOf('_') > -1) RedGLUtil.throwFunc('RedProgram : 프로그램이름에 _ 는 허용하지 않음.', '입력값 : ' + programName);
-            // if (vSource && cachTable[vSource]) vSource = cachTable[vSource]
-            // else {
-            //     var t0 = vSource
-            //     vSource = typeof vSource == 'string' ? vSource : RedGLUtil.getStrFromComment(vSource.toString());
-            //     cachTable[t0] = vSource
-            // }
-            // if (fSource && cachTable[fSource]) fSource = cachTable[fSource]
-            // else {
-            //     var t0 = fSource
-            //     fSource = typeof fSource == 'string' ? fSource : RedGLUtil.getStrFromComment(fSource.toString());
-            //     cachTable[t0] = fSource
-            // }
             vSource = typeof vSource == 'string' ? vSource : RedGLUtil.getStrFromComment(vSource.toString());
             fSource = typeof fSource == 'string' ? fSource : RedGLUtil.getStrFromComment(fSource.toString());
-            // console.log(cachTable)
             var t0;
             var hasFog = false;
             var hasSprite3D = false;
@@ -392,7 +378,6 @@ var RedProgram;
                     fSource = fSource.replace(t0, '');
                 }
             }
-
 
             // fog 처리
             t0 = new RegExp('\/\/\#REDGL_DEFINE\#fog\#' + (hasFog ? 'true' : 'false') + '\#', 'gi');

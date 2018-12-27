@@ -8,7 +8,7 @@
   {
     "constructorYn": true,
     "title": "RedParticleColorMaterial",
-    "description": "\nRedParticleColorMaterial Instance 생성\n",
+    "description": "\n\t RedParticleColorMaterial Instance 생성\n ",
     "params": {
       "redGL": [
         {

@@ -56,9 +56,7 @@ var RedParticleBitmapMaterial;
 			 ]
 		 },
 		  demo : '../example/particle/RedParticleEmitter.html',
-		 extends : [
-		    'RedBaseMaterial'
-		 ],
+		 extends : ['RedBaseMaterial'],
 		 return : 'RedParticleBitmapMaterial Instance'
 	 }
      :DOC*/

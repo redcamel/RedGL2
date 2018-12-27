@@ -20,6 +20,7 @@ var RedBaseLight;
 		 title :`intensity`,
 		 description : `
 			 기본값 : 1
+			 최소값 : 0
 		 `,
 		 return : 'Number'
 	 }
@@ -31,6 +32,8 @@ var RedBaseLight;
 		 title :`alpha`,
 		 description : `
 			 기본값 : 1
+			 최소값 : 0
+			 최대값 : 1
 		 `,
 		 return : 'Number'
 	 }
@@ -46,7 +49,7 @@ var RedBaseLight;
 	     code : 'PROPERTY',
 		 title :`color`,
 		 description : `
-			색상
+			색상(hex)
 		 `,
 		 return : 'hex'
 	 }

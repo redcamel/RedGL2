@@ -13,6 +13,7 @@ var RedDirectionalShadow;
 				 {type:'RedGL'}
 			 ]
 		 },
+		 demo : '../example/shadow/RedDirectionalShadow.html',
 		 return : 'RedDirectionalShadow Instance'
 	 }
      :DOC*/

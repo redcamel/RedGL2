@@ -8,7 +8,20 @@
   {
     "code": "PROPERTY",
     "title": "diffuseTexture",
+    "description": "diffuseTexture",
     "return": "RedBitmapTexture"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "displacementFlowSpeedX",
+    "description": "기본값 : 0",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "displacementFlowSpeedY",
+    "description": "기본값 : 0",
+    "return": "Number"
   },
   {
     "code": "PROPERTY",
@@ -19,6 +32,7 @@
   {
     "code": "PROPERTY",
     "title": "displacementTexture",
+    "description": "displacementTexture",
     "return": "RedBitmapTexture"
   },
   {
@@ -30,6 +44,7 @@
   {
     "code": "PROPERTY",
     "title": "emissiveTexture",
+    "description": "emissiveTexture",
     "return": "RedBitmapTexture"
   },
   {
@@ -41,12 +56,13 @@
   {
     "code": "PROPERTY",
     "title": "normalTexture",
+    "description": "normalTexture",
     "return": "RedBitmapTexture"
   },
   {
     "constructorYn": true,
     "title": "RedStandardMaterial",
-    "description": "\nRedStandardMaterial Instance 생성\n",
+    "description": "\n\t RedStandardMaterial Instance 생성\n ",
     "params": {
       "redGL": [
         {
@@ -72,13 +88,18 @@
         {
           "type": "RedBitmapTexture"
         }
+      ],
+      "emissiveTexture": [
+        {
+          "type": "RedBitmapTexture"
+        }
       ]
     },
     "extends": [
       "RedBaseMaterial"
     ],
     "demo": "../example/material/RedStandardMaterial.html",
-    "example": "\nRedStandardMaterial(\nRedGL Instance,\nRedBitmapTexture(RedGL Instance, src), // diffuseTexture\nRedBitmapTexture(RedGL Instance, src), // normalTexture\nRedBitmapTexture(RedGL Instance, src), // specularTexture\nRedBitmapTexture(RedGL Instance, src)  // displacementTexture\n)\n",
+    "example": "\n\t RedStandardMaterial(\n\t\t RedGL Instance,\n\t\t RedBitmapTexture(RedGL Instance, src), // diffuseTexture\n\t\t RedBitmapTexture(RedGL Instance, src), // normalTexture\n\t\t RedBitmapTexture(RedGL Instance, src), // specularTexture\n\t\t RedBitmapTexture(RedGL Instance, src),  // displacementTexture\n\t\t RedBitmapTexture(RedGL Instance, src)  // emissiveTexture\n\t )\n ",
     "return": "RedStandardMaterial Instance"
   },
   {
@@ -96,12 +117,13 @@
   {
     "code": "PROPERTY",
     "title": "specularTexture",
+    "description": "specularTexture",
     "return": "RedBitmapTexture"
   },
   {
     "code": "PROPERTY",
     "title": "useFlatMode",
-    "description": "기본값 : true",
+    "description": "\n    flatMode 사용여부\n    기본값 : true\n ",
     "return": "boolean"
   }
 ]

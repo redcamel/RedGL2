@@ -2,7 +2,7 @@
   {
     "constructorYn": true,
     "title": "Red3DSLoader",
-    "description": "\nOBJ 로더\n",
+    "description": "\n\t 3DS 로더.\n\t 애니메이션은 지원하지 않음(GLTF만 지원)\n ",
     "params": {
       "redGL": [
         {
@@ -12,19 +12,23 @@
       "path": [
         {
           "type": "String"
-        }
+        },
+        "파일이 위치한 경로"
       ],
       "fileName": [
         {
           "type": "String"
-        }
+        },
+        "파일이름"
       ],
       "callback": [
         {
           "type": "Function"
-        }
+        },
+        "로딩완료시 실행될 콜백"
       ]
     },
+    "example": "\n    // 3ds 로딩\n          Red3DSLoader(\n              RedGL Instance, // redGL\n              assetPath + '3ds/portalgun/', // assetRootPath\n              'portalgun.3ds', // fileName\n              function (v) { // callback\n                  console.log('로딩성공', v);\n                  (RedScene Instance).addChild(v['resultMesh']);\n              }\n          )\n ",
     "demo": "../example/loader/3ds/Red3DSLoader.html",
     "return": "void"
   }

@@ -32,20 +32,15 @@ var RedGridMaterial;
 		 constructorYn : true,
 		 title :`RedGridMaterial`,
 		 description : `
-			 RedGridMaterial Instance 생성.
 			 RedGrid Instance 새성시 내부적으로 자동으로 생성됨.
+			 시스템적으로 사용됨
 		 `,
 		 params : {
 			 redGL : [
 				 {type:'RedGL'}
 			 ]
 		 },
-		 extends : [
-		    'RedBaseMaterial'
-		 ],
-		 example : `
-			 RedGridMaterial(RedGL Instance)
-		 `,
+		 extends : ['RedBaseMaterial'],
 		 return : 'RedGridMaterial Instance'
 	 }
      :DOC*/

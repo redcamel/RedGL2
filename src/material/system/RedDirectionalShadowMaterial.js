@@ -58,19 +58,15 @@ var RedDirectionalShadowMaterial;
 		 constructorYn : true,
 		 title :`RedDirectionalShadowMaterial`,
 		 description : `
-			 RedDirectionalShadowMaterial Instance 생성
+			 RedDirectionalShadow 의 뎁스를 생성하기 위한 재질
+			 시스템적으로 사용됨
 		 `,
 		 params : {
 			 redGL : [
 				 {type:'RedGL'}
 			 ]
 		 },
-		 extends : [
-		    'RedBaseMaterial'
-		 ],
-		 example : `
-			 RedDirectionalShadowMaterial(RedGL Instance, RedBitmapTexture(RedGL Instance, src))
-		 `,
+		 extends : ['RedBaseMaterial'],
 		 return : 'RedDirectionalShadowMaterial Instance'
 	 }
      :DOC*/

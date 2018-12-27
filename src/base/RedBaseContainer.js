@@ -6,11 +6,10 @@ var RedBaseContainer;
 		 constructorYn : true,
 		 title :`RedBaseContainer`,
 		 description : `
-			 RedBaseContainer 기저층
+			 RedBaseContainer 기저층.
+			 children 관리층.
 		 `,
-		 extends : [
-		    'RedBaseObject3D'
-		 ],
+		 extends : ['RedBaseObject3D'],
 		 return : 'RedBaseContainer Instance'
 	 }
      :DOC*/
@@ -21,13 +20,20 @@ var RedBaseContainer;
      {
 		 code : 'METHOD',
 		 title :`sortGeometry`,
-		 description : `지오메트리 순으로 자식들을 정렬`,
+		 description : `
+		    지오메트리 순으로 자식들을 정렬.
+		    동일 지오메트리가 다량 사용될 경우 attribute 변경 횟수가 줄어들어 렌더성능이 좋아진다.
+         `,
 		 params:{
 			 recursive : [
 				 {type:'Boolean'},
-				 'true 입력시 자식리스트까지 모두 정렬'
+				 'true 입력시 하위 자식의 children 까지 모두 정렬'
 			 ]
 		 },
+		 example : `
+		    (RedBaseContainer Instance).sortGeometry();
+		    (RedBaseContainer Instance).sortGeometry(true);
+		 `,
 		 return : 'void'
 	 }
      :DOC*/
@@ -47,14 +53,21 @@ var RedBaseContainer;
     /**DOC:
      {
 		 code : 'METHOD',
-		 title :`sortGeometry`,
-		 description : `재질 순으로 자식들을 정렬`,
+		 title :`sortMaterial`,
+		 description : `
+		    재질이 소유한 RedProgram 순으로 자식들을 정렬.
+		    동일 재질이 다량 사용될 경우 프로그램 변경 횟수가 줄어들어 렌더성능이 좋아진다.
+         `,
 		 params:{
 			 recursive : [
 				 {type:'Boolean'},
-				 'true 입력시 자식리스트까지 모두 정렬'
+				 'true 입력시 하위 자식의 children 까지 모두 정렬'
 			 ]
 		 },
+		 example : `
+		    (RedBaseContainer Instance).sortMaterial();
+		    (RedBaseContainer Instance).sortMaterial(true);
+		 `,
 		 return : 'void'
 	 }
      :DOC*/
@@ -79,9 +92,13 @@ var RedBaseContainer;
 		 params:{
 			 recursive : [
 				 {type:'Boolean'},
-				 'true 입력시 자식리스트까지 모두 정렬'
+				 'true 입력시 하위 자식의 children 까지 모두 정렬'
 			 ]
 		 },
+		 example : `
+		    (RedBaseContainer Instance).sortGeometryAndMaterial();
+		    (RedBaseContainer Instance).sortGeometryAndMaterial(true);
+		 `,
 		 return : 'void'
 	 }
      :DOC*/
@@ -116,6 +133,9 @@ var RedBaseContainer;
 				 {type:'RedBaseObject3D Instance'}
 			 ]
 		 },
+		 example : `
+		    (RedBaseContainer Instance).addChild( RedBaseObject3D Instance );
+		 `,
 		 return : 'void'
 	 }
      :DOC*/
@@ -137,6 +157,10 @@ var RedBaseContainer;
 				 {type:'uint'}
 			 ]
 		 },
+		 example : `
+		    (RedBaseContainer Instance).addChildAt( RedBaseObject3D Instance, 0 ); // 0번째에 자식추가
+		    (RedBaseContainer Instance).addChildAt( RedBaseObject3D Instance, 2 ); // 2번째에 자식추가
+		 `,
 		 return : 'void'
 	 }
      :DOC*/
@@ -158,6 +182,9 @@ var RedBaseContainer;
 				 {type:'RedBaseObject3D Instance'}
 			 ]
 		 },
+		 example : `
+		    (RedBaseContainer Instance).removeChild( RedBaseObject3D Instance ); // 해당 자식 제거
+		 `,
 		 return : 'void'
 	 }
      :DOC*/
@@ -179,6 +206,10 @@ var RedBaseContainer;
 				 {type:'uint'}
 			 ]
 		 },
+		 example : `
+		    (RedBaseContainer Instance).removeChildAt( 0 ); // 0번째 자식 제거
+		    (RedBaseContainer Instance).removeChildAt( 1 ); // 1번째 자식 제거
+		 `,
 		 return : 'void'
 	 }
      :DOC*/
@@ -192,6 +223,9 @@ var RedBaseContainer;
 		 code : 'METHOD',
 		 title :`removeChildAll`,
 		 description : `전체 자식을 제거`,
+		 example : `
+		    (RedBaseContainer Instance).removeChildAll(); // 전체 자식 제거
+		 `,
 		 return : 'void'
 	 }
      :DOC*/
@@ -208,6 +242,10 @@ var RedBaseContainer;
 				 {type:'uint'}
 			 ]
 		 },
+		 example : `
+		    (RedBaseContainer Instance).getChildAt( 0 ); // 0번째 자식 반환
+		    (RedBaseContainer Instance).getChildAt( 2 ); // 2번째 자식 반환
+		 `,
 		 return : 'RedBaseObject3D Instance'
 	 }
      :DOC*/
@@ -225,6 +263,9 @@ var RedBaseContainer;
 				 {type:'RedBaseObject3D Instance'}
 			 ]
 		 },
+		 example : `
+		    (RedBaseContainer Instance).getChildIndex( RedBaseObject3D Instance ); // 해당객체가 부모메쉬의 몇번째 자식인지 인덱스 반환
+		 `,
 		 return : 'int'
 	 }
      :DOC*/
@@ -235,13 +276,15 @@ var RedBaseContainer;
      {
 		 code : 'METHOD',
 		 title :`numChildren`,
-		 description : `numChildren`,
+		 description : `자식갯수 반환`,
 		 params:{
 			 target : [
 				 {type:'RedBaseObject3D Instance'}
 			 ]
 		 },
-
+          example : `
+		    (RedBaseContainer Instance).numChildren(); // 자식갯수 반환
+		 `,
 		 return : 'uint'
 	 }
      :DOC*/

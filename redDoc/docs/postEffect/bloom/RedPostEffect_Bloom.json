@@ -2,25 +2,25 @@
   {
     "code": "PROPERTY",
     "title": "bloomStrength",
-    "description": "\n블룸 강도\n기본값 : 1.2\n",
+    "description": "\n\t 블룸 강도\n\t 기본값 : 1.2\n ",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "blur",
-    "description": "\nblur 정도.\n기본값 : 20\n",
+    "description": "\n\t blur 정도.\n\t 기본값 : 20\n ",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "exposure",
-    "description": "\n확산 강도.\n기본값 : 1\n",
+    "description": "\n\t 확산 강도.\n\t 기본값 : 1\n ",
     "return": "Number"
   },
   {
     "constructorYn": true,
     "title": "RedPostEffect_Bloom",
-    "description": "\nRedPostEffect_Bloom Instance 생성.\n",
+    "description": "\n\t RedPostEffect_Bloom Instance 생성.\n ",
     "params": {
       "redGL": [
         {
@@ -38,7 +38,7 @@
   {
     "code": "PROPERTY",
     "title": "threshold",
-    "description": "\n최소 유효값\n기본값 : 75\n",
+    "description": "\n\t 최소 유효값\n\t 기본값 : 75\n ",
     "return": "Number"
   }
 ]

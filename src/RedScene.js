@@ -5,7 +5,11 @@ var RedScene;
      {
 		 constructorYn : true,
 		 title :`RedScene`,
-		 description : `RedScene Instance 생성자.`,
+		 description : `
+		    RedScene Instance 생성자.
+		    장면 구성의 기본단위.
+		    RedBaseObject3D 확장 객체등을 자식으로 입력하거나 fog 등을 설정 할 수 있다.
+		 `,
 		 params : {
 			 redGL : [
 				 {type: 'RedGL Instance'}
@@ -15,10 +19,18 @@ var RedScene;
 				 '초기값 #000000'
 			 ]
 		 },
-		 demo : '../example/RedScene.html',
-		 extends : [
-		    'RedBaseContainer'
-		 ],
+		 example : `
+            var testScene;
+            testScene = RedScene(RedGL Instance); // RedScene 생성 설정
+            testScene.useBackgroundColor = true; // backgroundColor 사용여부 설정
+            testScene.backgroundColor = '#fff; // backgroundColor (hex) 설정
+            testScene.useFog = true; // fog 사용여부 설정
+            testScene.fogDensity = 0.5; // fog 농도 설정
+            testScene.fogDistance = 25; // fog 가시거리 설정
+            testScene.fogColor = '#fff; // fog 컬러 설정
+		 `,
+		 demo : '../example/etc/RedScene.html',
+		 extends : ['RedBaseContainer'],
 		 return : 'RedScene Instance'
 	 }
      :DOC*/
@@ -68,13 +80,21 @@ var RedScene;
 			 code : 'METHOD',
 			 description : `
 				 라이트 추가 매서드.
-				 RedBaseLight 확장객체만 등록가능.
+				 RedBaseLight 확장객체만 등록가능. ( RedAmbientLight, RedDirectionalLight, RedPointLight ).
+				 하드웨어 상황에 따른 라이트별 허용갯수까지만 등록가능.
 			 `,
 			 params : {
 			    light : [
 			        { type : 'RedBaseLight' }
 			    ]
 			 },
+			 example : `
+                var testScene;
+                var testLight;
+                testScene = RedScene(RedGL Instance); // RedScene 생성 설정
+                testLight = RedDirectionalLight(RedGL Instance); // 라이트 생성
+                testScene.addLight( testLight ); // 라이트 추가
+             `,
 			 return : 'void'
 		 }
          :DOC*/
@@ -101,13 +121,21 @@ var RedScene;
 			 code : 'METHOD',
 			 description : `
 				 라이트 제거 매서드.
-				 RedBaseLight 확장객체만 사용가능.
+				 RedBaseLight 확장객체만 등록가능. ( RedAmbientLight, RedDirectionalLight, RedPointLight )
 			 `,
 			 params : {
 			    light : [
 			        { type : 'RedBaseLight' }
 			    ]
 			 },
+			 example : `
+                var testScene;
+                var testLight;
+                testScene = RedScene(RedGL Instance); // RedScene 생성 설정
+                testLight = RedDirectionalLight(RedGL Instance); // 라이트 생성
+                testScene.addLight( testLight ); // 라이트 추가
+                testScene.removeLight( testLight ); // 라이트 제거
+             `,
 			 return : 'void'
 		 }
          :DOC*/
@@ -167,8 +195,8 @@ var RedScene;
 	     code : 'PROPERTY',
 		 title :`useBackgroundColor`,
 		 description : `
-			 배경색 사용여부.
-			 초기값 true
+			 backgroundColor 사용여부.
+			 초기값 : true
 		 `,
 		 return : 'Boolean'
 	 }
@@ -179,8 +207,8 @@ var RedScene;
 	     code : 'PROPERTY',
 		 title :`useFog`,
 		 description : `
-			 안개 사용여부
-			 초기값 true
+			 fog 사용여부
+			 초기값 : true
 		 `,
 		 return : 'Boolean'
 	 }
@@ -191,8 +219,8 @@ var RedScene;
 	     code : 'PROPERTY',
 		 title :`fogDensity`,
 		 description : `
-			 안개농도
-			 초기값 0.5
+			 fog 농도.
+			 초기값 : 0.5
 		 `,
 		 return : 'Number'
 	 }
@@ -203,8 +231,8 @@ var RedScene;
 	     code : 'PROPERTY',
 		 title :`fogDistance`,
 		 description : `
-			 가시거리
-			 초기값 25.0
+			 fog 가시거리.
+			 초기값 : 25.0
 		 `,
 		 return : 'Number'
 	 }
@@ -215,7 +243,8 @@ var RedScene;
 	     code : 'PROPERTY',
 		 title :`fogColor`,
 		 description : `
-			 초기값 '#ffffff
+		     fog 컬러값.
+			 초기값 : #ffffff
 		 `,
 		 return : 'hex'
 	 }
@@ -238,6 +267,13 @@ var RedScene;
 		 description : `
 			 skyBox get/set
 		 `,
+         example : `
+            var testScene;
+            var testSkyBox;
+            testScene = RedScene(RedGL Instance); // RedScene 생성 설정
+            testSkyBox = RedSkyBox(RedGL Instance, srcList); // skyBox 생성
+            testScene.skyBox = testSkyBox; // skyBox 추가
+         `,
 		 return : 'RedSkyBox Instance'
 	 }
      :DOC*/
@@ -256,8 +292,15 @@ var RedScene;
 	     code : 'PROPERTY',
 		 title :`grid`,
 		 description : `
-			 grid get/set
+			 그리드 get/set
 		 `,
+         example : `
+            var testScene;
+            var testGrid;
+            testScene = RedScene(RedGL Instance); // RedScene 생성 설정
+            testGrid = RedGrid(RedGL Instance); // 그리드 생성
+            testScene.grid = testGrid; // 그리드 설정
+         `,
 		 return : 'RedGrid Instance'
 	 }
      :DOC*/
@@ -278,6 +321,13 @@ var RedScene;
 		 description : `
 			 axis get/set
 		 `,
+         example : `
+            var testScene;
+            var testAxis;
+            testScene = RedScene(RedGL Instance); // RedScene 생성 설정
+            testAxis = RedAxis(RedGL Instance); // axis 생성
+            testScene.axis = testAxis; // axis 설정
+         `,
 		 return : 'RedAxis Instance'
 	 }
      :DOC*/

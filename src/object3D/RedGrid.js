@@ -36,8 +36,12 @@ var RedGrid;
 		 ],
 		 example : `
 			 var tScene;
-			 tScene = RedScene();
-			 tScene['grid'] = RedGrid(redGL Instance)
+			 tScene = RedScene Instance;
+			 tScene['grid'] = RedGrid(RedGL Instance);
+			 tScene['grid'].color1 = '#fff';
+			 tScene['grid'].color2 = '#fff';
+			 tScene['grid'].size = 100;
+			 tScene['grid'].divisions = 100;
 		 `,
 		 return : 'RedGrid Instance'
 	 }
@@ -140,7 +144,7 @@ var RedGrid;
      {
 	     code : 'PROPERTY',
 		 title :`color1`,
-		 description : `color1`,
+		 description : `중앙 그리드 색상`,
 		 params : {
 			 size : [
 				 {type:'hex'},
@@ -165,7 +169,7 @@ var RedGrid;
      {
 	     code : 'PROPERTY',
 		 title :`color2`,
-		 description : `color2`,
+		 description : `그리드 색상`,
 		 params : {
 			 size : [
 				 {type:'hex'},

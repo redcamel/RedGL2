@@ -2,7 +2,7 @@
   {
     "title": "addLight",
     "code": "METHOD",
-    "description": "\n라이트 추가 매서드.\nRedBaseLight 확장객체만 등록가능.\n",
+    "description": "\n\t 라이트 추가 매서드.\n\t RedBaseLight 확장객체만 등록가능. ( RedAmbientLight, RedDirectionalLight, RedPointLight ).\n\t 하드웨어 상황에 따른 라이트별 허용갯수까지만 등록가능.\n ",
     "params": {
       "light": [
         {
@@ -10,18 +10,20 @@
         }
       ]
     },
+    "example": "\n             var testScene;\n             var testLight;\n             testScene = RedScene(RedGL Instance); // RedScene 생성 설정\n             testLight = RedDirectionalLight(RedGL Instance); // 라이트 생성\n             testScene.addLight( testLight ); // 라이트 추가\n          ",
     "return": "void"
   },
   {
     "code": "PROPERTY",
     "title": "axis",
-    "description": "\naxis get/set\n",
+    "description": "\n\t axis get/set\n ",
+    "example": "\n          var testScene;\n          var testAxis;\n          testScene = RedScene(RedGL Instance); // RedScene 생성 설정\n          testAxis = RedAxis(RedGL Instance); // axis 생성\n          testScene.axis = testAxis; // axis 설정\n       ",
     "return": "RedAxis Instance"
   },
   {
     "code": "PROPERTY",
     "title": "backgroundColor",
-    "description": "\n배경 컬러설정.\n알파설정은 불가능\n",
+    "description": "\n\t 배경 컬러설정.\n\t 알파설정은 불가능\n ",
     "params": {
       "hex": [
         {
@@ -41,31 +43,32 @@
   {
     "code": "PROPERTY",
     "title": "fogColor",
-    "description": "\n초기값 '#ffffff\n",
+    "description": "\n     fog 컬러값.\n\t 초기값 : #ffffff\n ",
     "return": "hex"
   },
   {
     "code": "PROPERTY",
     "title": "fogDensity",
-    "description": "\n안개농도\n초기값 0.5\n",
+    "description": "\n\t fog 농도.\n\t 초기값 : 0.5\n ",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "fogDistance",
-    "description": "\n가시거리\n초기값 25.0\n",
+    "description": "\n\t fog 가시거리.\n\t 초기값 : 25.0\n ",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "grid",
-    "description": "\ngrid get/set\n",
+    "description": "\n\t 그리드 get/set\n ",
+    "example": "\n          var testScene;\n          var testGrid;\n          testScene = RedScene(RedGL Instance); // RedScene 생성 설정\n          testGrid = RedGrid(RedGL Instance); // 그리드 생성\n          testScene.grid = testGrid; // 그리드 설정\n       ",
     "return": "RedGrid Instance"
   },
   {
     "constructorYn": true,
     "title": "RedScene",
-    "description": "RedScene Instance 생성자.",
+    "description": "\n    RedScene Instance 생성자.\n    장면 구성의 기본단위.\n    RedBaseObject3D 확장 객체등을 자식으로 입력하거나 fog 등을 설정 할 수 있다.\n ",
     "params": {
       "redGL": [
         {
@@ -79,7 +82,8 @@
         "초기값 #000000"
       ]
     },
-    "demo": "../example/RedScene.html",
+    "example": "\n          var testScene;\n          testScene = RedScene(RedGL Instance); // RedScene 생성 설정\n          testScene.useBackgroundColor = true; // backgroundColor 사용여부 설정\n          testScene.backgroundColor = '#fff; // backgroundColor (hex) 설정\n          testScene.useFog = true; // fog 사용여부 설정\n          testScene.fogDensity = 0.5; // fog 농도 설정\n          testScene.fogDistance = 25; // fog 가시거리 설정\n          testScene.fogColor = '#fff; // fog 컬러 설정\n ",
+    "demo": "../example/etc/RedScene.html",
     "extends": [
       "RedBaseContainer"
     ],
@@ -88,7 +92,7 @@
   {
     "title": "removeLight",
     "code": "METHOD",
-    "description": "\n라이트 제거 매서드.\nRedBaseLight 확장객체만 사용가능.\n",
+    "description": "\n\t 라이트 제거 매서드.\n\t RedBaseLight 확장객체만 등록가능. ( RedAmbientLight, RedDirectionalLight, RedPointLight )\n ",
     "params": {
       "light": [
         {
@@ -96,30 +100,32 @@
         }
       ]
     },
+    "example": "\n             var testScene;\n             var testLight;\n             testScene = RedScene(RedGL Instance); // RedScene 생성 설정\n             testLight = RedDirectionalLight(RedGL Instance); // 라이트 생성\n             testScene.addLight( testLight ); // 라이트 추가\n             testScene.removeLight( testLight ); // 라이트 제거\n          ",
     "return": "void"
   },
   {
     "code": "PROPERTY",
     "title": "shadowManager",
-    "description": "\n그림자 매니저.\nRedScene Instance생성시 자동생성.\n",
+    "description": "\n\t 그림자 매니저.\n\t RedScene Instance생성시 자동생성.\n ",
     "return": "RedShadowManager Instance"
   },
   {
     "code": "PROPERTY",
     "title": "skyBox",
-    "description": "\nskyBox get/set\n",
+    "description": "\n\t skyBox get/set\n ",
+    "example": "\n          var testScene;\n          var testSkyBox;\n          testScene = RedScene(RedGL Instance); // RedScene 생성 설정\n          testSkyBox = RedSkyBox(RedGL Instance, srcList); // skyBox 생성\n          testScene.skyBox = testSkyBox; // skyBox 추가\n       ",
     "return": "RedSkyBox Instance"
   },
   {
     "code": "PROPERTY",
     "title": "useBackgroundColor",
-    "description": "\n배경색 사용여부.\n초기값 true\n",
+    "description": "\n\t backgroundColor 사용여부.\n\t 초기값 : true\n ",
     "return": "Boolean"
   },
   {
     "code": "PROPERTY",
     "title": "useFog",
-    "description": "\n안개 사용여부\n초기값 true\n",
+    "description": "\n\t fog 사용여부\n\t 초기값 : true\n ",
     "return": "Boolean"
   }
 ]

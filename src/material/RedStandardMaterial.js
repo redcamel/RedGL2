@@ -167,11 +167,12 @@ var RedStandardMaterial;
 			 ],
 			 displacementTexture : [
 				 {type:'RedBitmapTexture'}
+			 ],
+			 emissiveTexture : [
+				 {type:'RedBitmapTexture'}
 			 ]
 		 },
-		 extends : [
-		    'RedBaseMaterial'
-		 ],
+		 extends : ['RedBaseMaterial'],
 		 demo : '../example/material/RedStandardMaterial.html',
 		 example : `
 			 RedStandardMaterial(
@@ -179,7 +180,8 @@ var RedStandardMaterial;
 				 RedBitmapTexture(RedGL Instance, src), // diffuseTexture
 				 RedBitmapTexture(RedGL Instance, src), // normalTexture
 				 RedBitmapTexture(RedGL Instance, src), // specularTexture
-				 RedBitmapTexture(RedGL Instance, src)  // displacementTexture
+				 RedBitmapTexture(RedGL Instance, src),  // displacementTexture
+				 RedBitmapTexture(RedGL Instance, src)  // emissiveTexture
 			 )
 		 `,
 		 return : 'RedStandardMaterial Instance'
@@ -232,6 +234,7 @@ var RedStandardMaterial;
      {
 	     code : 'PROPERTY',
 		 title :`diffuseTexture`,
+		 description : `diffuseTexture`,
 		 return : 'RedBitmapTexture'
 	 }
      :DOC*/
@@ -243,6 +246,7 @@ var RedStandardMaterial;
      {
 	     code : 'PROPERTY',
 		 title :`normalTexture`,
+		 description : `normalTexture`,
 		 return : 'RedBitmapTexture'
 	 }
      :DOC*/
@@ -251,6 +255,7 @@ var RedStandardMaterial;
      {
 	     code : 'PROPERTY',
 		 title :`specularTexture`,
+		 description : `specularTexture`,
 		 return : 'RedBitmapTexture'
 	 }
      :DOC*/
@@ -259,6 +264,7 @@ var RedStandardMaterial;
      {
 	     code : 'PROPERTY',
 		 title :`emissiveTexture`,
+		 description : `emissiveTexture`,
 		 return : 'RedBitmapTexture'
 	 }
      :DOC*/
@@ -267,6 +273,7 @@ var RedStandardMaterial;
      {
 	     code : 'PROPERTY',
 		 title :`displacementTexture`,
+		 description : `displacementTexture`,
 		 return : 'RedBitmapTexture'
 	 }
      :DOC*/
@@ -317,13 +324,32 @@ var RedStandardMaterial;
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'displacementPower', 'number', {'min': 0});
+    /**DOC:
+     {
+	     code : 'PROPERTY',
+		 title :`displacementFlowSpeedX`,
+		 description : `기본값 : 0`,
+		 return : 'Number'
+	 }
+     :DOC*/
     RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'displacementFlowSpeedX', 'number');
+    /**DOC:
+     {
+	     code : 'PROPERTY',
+		 title :`displacementFlowSpeedY`,
+		 description : `기본값 : 0`,
+		 return : 'Number'
+	 }
+     :DOC*/
     RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'displacementFlowSpeedY', 'number');
     /**DOC:
      {
 	     code : 'PROPERTY',
 		 title :`useFlatMode`,
-		 description : `기본값 : true`,
+		 description : `
+		    flatMode 사용여부
+		    기본값 : true
+		 `,
 		 return : 'boolean'
 	 }
      :DOC*/

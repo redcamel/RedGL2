@@ -40,9 +40,15 @@ var RedText;
 		 params : {
 			 redGL : [
 				 {type:'RedGL'}
+			 ],
+			 width : [
+				 {type:'Number'}
+			 ],
+			 height : [
+				 {type:'Number'}
 			 ]
 		 },
-		 demo : '../example/RedText.html',
+		 demo : '../example/text/RedText.html',
 		 return : 'RedText Instance'
 	 }
      :DOC*/
@@ -76,17 +82,113 @@ var RedText;
         this['width'] = width;
         this['height'] = height;
         // 기본 스타일 프로퍼티
+        /**DOC:
+        {
+            code : 'PROPERTY',
+            title :`padding`,
+            description : `padding - Css 속성사용`,
+            return : 'Number'
+        }
+        :DOC*/
         setStylePrototype(this, 'padding', 0);
+        /**DOC:
+         {
+            code : 'PROPERTY',
+            title :`background`,
+            description : `background - Css 속성사용`,
+            return : 'hex'
+        }
+         :DOC*/
         setStylePrototype(this, 'background', '');
+        /**DOC:
+         {
+            code : 'PROPERTY',
+            title :`color`,
+            description : `color - Css 속성사용`,
+            return : 'hex'
+        }
+         :DOC*/
         setStylePrototype(this, 'color', '#000');
+        /**DOC:
+         {
+            code : 'PROPERTY',
+            title :`fontFamily`,
+            description : `fontFamily - Css 속성사용`,
+            return : 'String'
+        }
+         :DOC*/
         setStylePrototype(this, 'fontFamily', 'Arial');
+        /**DOC:
+         {
+            code : 'PROPERTY',
+            title :`fontSize`,
+            description : `fontSize - Css 속성사용`,
+            return : 'Number'
+        }
+         :DOC*/
         setStylePrototype(this, 'fontSize', 16);
+        /**DOC:
+         {
+            code : 'PROPERTY',
+            title :`fontWeight`,
+            description : `fontWeight - Css 속성사용`,
+            return : 'String'
+        }
+         :DOC*/
         setStylePrototype(this, 'fontWeight', 'normal');
+        /**DOC:
+         {
+            code : 'PROPERTY',
+            title :`fontStyle`,
+            description : `fontStyle - Css 속성사용`,
+            return : 'String'
+        }
+         :DOC*/
         setStylePrototype(this, 'fontStyle', 'normal');
+        /**DOC:
+         {
+            code : 'PROPERTY',
+            title :`lineHeight`,
+            description : `lineHeight - Css 속성사용`,
+            return : 'Number'
+        }
+         :DOC*/
         setStylePrototype(this, 'lineHeight', 16 * 1.5);
+        /**DOC:
+         {
+            code : 'PROPERTY',
+            title :`letterSpacing`,
+            description : `letterSpacing - Css 속성사용`,
+            return : 'Number'
+        }
+         :DOC*/
         setStylePrototype(this, 'letterSpacing', 0);
+        /**DOC:
+         {
+            code : 'PROPERTY',
+            title :`wordBreak`,
+            description : `wordBreak - Css 속성사용`,
+            return : 'String'
+        }
+         :DOC*/
         setStylePrototype(this, 'wordBreak', 'break-all');
+        /**DOC:
+         {
+            code : 'PROPERTY',
+            title :`verticalAlign`,
+            description : `verticalAlign - Css 속성사용`,
+            return : 'String'
+        }
+         :DOC*/
         setStylePrototype(this, 'verticalAlign', 'middle');
+        /**DOC:
+         {
+            code : 'PROPERTY',
+            title :`textAlign`,
+            description : `textAlign - Css 속성사용`,
+            return : 'String'
+        }
+         :DOC*/
         setStylePrototype(this, 'textAlign', 'center');
         //////////////////////
         this['geometry'] = RedPlane(redGL, 1, 1, 0);

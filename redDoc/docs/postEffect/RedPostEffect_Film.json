@@ -2,19 +2,19 @@
   {
     "code": "PROPERTY",
     "title": "grayMode",
-    "description": "\n그레이모드\n기본값 : false\n",
+    "description": "\n\t 그레이모드\n\t 기본값 : false\n ",
     "return": "Boolean"
   },
   {
     "code": "PROPERTY",
     "title": "noiseIntensity",
-    "description": "\n노이즈강도\n기본값 : 0.5\n",
+    "description": "\n\t 노이즈강도\n\t 기본값 : 0.5\n ",
     "return": "Number"
   },
   {
     "constructorYn": true,
     "title": "RedPostEffect_Film",
-    "description": "\nRedPostEffect_Film Instance 생성.\n",
+    "description": "\n\t RedPostEffect_Film Instance 생성.\n ",
     "params": {
       "redGL": [
         {
@@ -32,13 +32,13 @@
   {
     "code": "PROPERTY",
     "title": "scanlineCount",
-    "description": "\n스캔라인 수\n기본값 : 2048\n",
+    "description": "\n\t 스캔라인 수\n\t 기본값 : 2048\n ",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "scanlineIntensity",
-    "description": "\n스캔라인강도\n기본값 : 0.5\n",
+    "description": "\n\t 스캔라인강도\n\t 기본값 : 0.5\n ",
     "return": "Number"
   }
 ]

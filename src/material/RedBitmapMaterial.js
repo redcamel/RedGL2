@@ -65,7 +65,7 @@ var RedBitmapMaterial;
 		 constructorYn : true,
 		 title :`RedBitmapMaterial`,
 		 description : `
-			 RedBitmapMaterial Instance 생성
+			 RedBitmapMaterial Instance 생성자.
 		 `,
 		 params : {
 			 redGL : [
@@ -75,9 +75,7 @@ var RedBitmapMaterial;
 				 {type:'RedBitmapTexture'}
 			 ]
 		 },
-		 extends : [
-		    'RedBaseMaterial'
-		 ],
+		 extends : ['RedBaseMaterial'],
 		 demo : '../example/material/RedBitmapMaterial.html',
 		 example : `
 			 RedBitmapMaterial( RedGL Instance, RedBitmapTexture(RedGL Instance, src) )
@@ -107,6 +105,7 @@ var RedBitmapMaterial;
      {
 	     code : 'PROPERTY',
 		 title :`diffuseTexture`,
+		 description : `diffuseTexture`,
 		 return : 'RedBitmapTexture'
 	 }
      :DOC*/

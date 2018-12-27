@@ -1,8 +1,62 @@
 [
   {
     "code": "PROPERTY",
+    "title": "background",
+    "description": "background - Css 속성사용",
+    "return": "hex"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "color",
+    "description": "color - Css 속성사용",
+    "return": "hex"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "fontFamily",
+    "description": "fontFamily - Css 속성사용",
+    "return": "String"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "fontSize",
+    "description": "fontSize - Css 속성사용",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "fontStyle",
+    "description": "fontStyle - Css 속성사용",
+    "return": "String"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "fontWeight",
+    "description": "fontWeight - Css 속성사용",
+    "return": "String"
+  },
+  {
+    "code": "PROPERTY",
     "title": "height",
     "description": "세로영역크기",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "letterSpacing",
+    "description": "letterSpacing - Css 속성사용",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "lineHeight",
+    "description": "lineHeight - Css 속성사용",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "padding",
+    "description": "padding - Css 속성사용",
     "return": "Number"
   },
   {
@@ -14,15 +68,25 @@
   {
     "constructorYn": true,
     "title": "RedText",
-    "description": "\nRedText Instance 생성.\nRedScene 생성시 내부속성으로 자동생성됨.\n",
+    "description": "\n\t RedText Instance 생성.\n\t RedScene 생성시 내부속성으로 자동생성됨.\n ",
     "params": {
       "redGL": [
         {
           "type": "RedGL"
         }
+      ],
+      "width": [
+        {
+          "type": "Number"
+        }
+      ],
+      "height": [
+        {
+          "type": "Number"
+        }
       ]
     },
-    "demo": "../example/RedText.html",
+    "demo": "../example/text/RedText.html",
     "return": "RedText Instance"
   },
   {
@@ -39,8 +103,26 @@
   },
   {
     "code": "PROPERTY",
+    "title": "textAlign",
+    "description": "textAlign - Css 속성사용",
+    "return": "String"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "verticalAlign",
+    "description": "verticalAlign - Css 속성사용",
+    "return": "String"
+  },
+  {
+    "code": "PROPERTY",
     "title": "width",
     "description": "가로영역크기",
     "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "wordBreak",
+    "description": "wordBreak - Css 속성사용",
+    "return": "String"
   }
 ]

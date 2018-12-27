@@ -2,7 +2,7 @@
   {
     "constructorYn": true,
     "title": "RedDDSTexture",
-    "description": "\nRedDDSTexture Instance 생성\n",
+    "description": "\n\t RedDDSTexture Instance 생성\n ",
     "params": {
       "redGL": [
         {
@@ -19,20 +19,20 @@
           "type": "Object"
         },
         "텍스쳐 정의옵션",
-        "\n<h2>dds는 현재 지원하지 않음</h2>\n"
+        "\n\t\t\t<h2>dds는 현재 지원하지 않음</h2>\n\t\t "
       ]
     },
     "demo": "../example/resources/RedDDSTexture.html",
     "extends": [
       "RedBaseTexture"
     ],
-    "example": "\nRedDDSTexture( RedGL Instance,  src, {\nmin: gl.LINEAR_MIPMAP_NEAREST,\nmag: gl.LINEAR,\nwrap_s: gl.REPEAT,\nwrap_t: gl.REPEAT\n})\n",
+    "example": "\n RedDDSTexture( RedGL Instance,  src, {\n\t min: gl.LINEAR_MIPMAP_NEAREST,\n\t mag: gl.LINEAR,\n\t wrap_s: gl.REPEAT,\n\t wrap_t: gl.REPEAT\n })\n ",
     "return": "RedDDSTexture Instance"
   },
   {
     "code": "PROPERTY",
     "title": "src",
-    "description": "\nsrc\n",
+    "description": "\n\t src\n ",
     "return": "void"
   }
 ]

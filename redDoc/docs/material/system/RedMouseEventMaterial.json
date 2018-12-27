@@ -2,7 +2,7 @@
   {
     "constructorYn": true,
     "title": "RedMouseEventMaterial",
-    "description": "\nRedMouseEventMaterial Instance 생성\n",
+    "description": "\n\t 마우스 이벤트 처리를 위한 색상 UUID를 그리기위한 재질\n\t 시스템적으로 사용됨.\n ",
     "params": {
       "redGL": [
         {
@@ -13,7 +13,6 @@
     "extends": [
       "RedBaseMaterial"
     ],
-    "example": "\nRedMouseEventMaterial(RedGL Instance, RedBitmapTexture(RedGL Instance, src))\n",
     "return": "RedMouseEventMaterial Instance"
   }
 ]

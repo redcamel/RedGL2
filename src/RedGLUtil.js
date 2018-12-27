@@ -78,6 +78,24 @@ var RedGLUtil;
             var rgb = blue | (green << 8) | (red << 16);
             return '#' + (0x1000000 + rgb).toString(16).slice(1)
         },
+        /**DOC:
+         {
+			 code : 'STATIC METHOD',
+			 title :`RedGLUtil.regHex`,
+			 description : `
+				 입력값이 올바른 hex 형태인지 반환
+			 `,
+			 params : {
+				 hex : [ {type : 'hex'} ]
+			 },
+			 example : `
+				 RedGLUtil.regHex('#fff'); // true
+				 RedGLUtil.regHex('#ffffff'); // true
+				 RedGLUtil.regHex('~~'); // false
+			 `,
+			 return : 'hex'
+		 }
+         :DOC*/
         regHex: (function () {
             var reg = /^#(?:[0-9a-fA-F]{3}){1,2}$/;
             return function (hex) {
@@ -90,7 +108,7 @@ var RedGLUtil;
 			 title :`RedGLUtil.getStrFromComment`,
 			 description : `
 				 문자열중 멀티 라인 코멘트 사이값을 반환함.
-				 프로그램 생성기에서 사용
+				 프로그램 생성기에서 사용.
 			 `,
 			 params : {
 				 source : [
@@ -121,6 +139,11 @@ var RedGLUtil;
 					 {type : 'Number'}
 				 ]
 			 },
+			 example : `
+				 RedGLUtil.isPowerOf2(2); // true
+				 RedGLUtil.isPowerOf2(4); // true
+				 RedGLUtil.isPowerOf2(5); // false
+			 `,
 			 return : 'Boolean'
 		 }
          :DOC*/
@@ -132,13 +155,19 @@ var RedGLUtil;
 			 code : 'STATIC METHOD',
 			 title :`RedGLUtil.nextHighestPowerOfTwo`,
 			 description : `
-				 입력된 값을 기준으로 다음 2n 값을 구함
+				 입력된 값을 기준으로 다음 2n 값을 구함.
+				 입력된 값이 2n인 경우 그대로 반환.
 			 `,
 			 params : {
 				 v : [
 					 {type : 'Number'}
 				 ]
 			 },
+			 example : `
+				 RedGLUtil.nextHighestPowerOfTwo(2); // 2
+				 RedGLUtil.nextHighestPowerOfTwo(4); // 4
+				 RedGLUtil.nextHighestPowerOfTwo(5); // 8
+			 `,
 			 return : 'Number'
 		 }
          :DOC*/
@@ -150,6 +179,16 @@ var RedGLUtil;
                 return v + 1;
             }
         })(),
+        /**DOC:
+         {
+			 code : 'STATIC METHOD',
+			 title :`RedGLUtil.makePowerOf2Source`,
+			 description : `
+				 입력된 소스를 기반으로 2n 이미지를 만듬.
+				 시스템에서 사용함.
+			 `
+		 }
+         :DOC*/
         makePowerOf2Source: (function () {
             var tW, tH;
             var MAX_TEXTURE_SIZE
@@ -254,9 +293,40 @@ var RedGLUtil;
             }
             return result;
         },
+        /**DOC:
+         {
+			 code : 'STATIC METHOD',
+			 title :`RedGLUtil.clamp`,
+			 description : `
+				 clamp
+			 `,
+			 params : {
+				 value : [
+					 {type : 'Number'}
+				 ],
+				 min : [
+					 {type : 'Number'}
+				 ],
+				 max : [
+					 {type : 'Number'}
+				 ]
+			 },
+			 return : 'Number'
+		 }
+         :DOC*/
         clamp: function (value, min, max) {
             return Math.max(min, Math.min(max, value));
         },
+        /**DOC:
+         {
+			 code : 'STATIC METHOD',
+			 title :`RedGLUtil.quaternionToRotationMat4`,
+			 description : `
+				 quaternionToRotationMat4
+				 doc 작성해야함
+			 `
+		 }
+         :DOC*/
         quaternionToRotationMat4: function (q, m) {
             var x = q[0];
             var y = q[1];
@@ -286,6 +356,16 @@ var RedGLUtil;
             m[15] = 1;
             return m;
         },
+        /**DOC:
+         {
+			 code : 'STATIC METHOD',
+			 title :`RedGLUtil.quaternionToRotation`,
+			 description : `
+				 quaternionToRotation
+				 doc 작성해야함
+			 `
+		 }
+         :DOC*/
         quaternionToRotation: function (q, order) {
             var mat = []
             var x = q[0];
@@ -378,6 +458,16 @@ var RedGLUtil;
             }
             return dest
         },
+        /**DOC:
+         {
+			 code : 'STATIC METHOD',
+			 title :`RedGLUtil.mat4ToEuler`,
+			 description : `
+				 mat4ToEuler
+				 doc 작성해야함
+			 `
+		 }
+         :DOC*/
         mat4ToEuler: function (mat, dest, order) {
             dest = dest || [0, 0, 0];
             order = order || 'XYZ'

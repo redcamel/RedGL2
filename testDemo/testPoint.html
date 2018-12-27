@@ -50,7 +50,7 @@
         tScene3D.addLight(testDLight);
         (function () {
             var testMaterial
-            testMaterial = RedPointBitmapMaterial(self, RedBitmapTexture(self, '../asset/particle.png'))
+            testMaterial = RedBitmapPointCloudMaterial(self, RedBitmapTexture(self, '../asset/particle.png'))
             var interleaveData
             interleaveData = []
             var i = 20000
@@ -60,7 +60,7 @@
                 interleaveData.push(Math.random() * 2)
             }
             interleaveData = interleaveData
-            var testParticle = RedPointUnit(
+            var testParticle = RedBitmapPointCloud(
                 self,
                 interleaveData,
                 [
@@ -75,8 +75,6 @@
             tScene3D.addChildAt(testParticle, 0)
         })();
         (function () {
-            var testMaterial
-            testMaterial = RedPointColorMaterial(self)
             var interleaveData, interleaveData2
             interleaveData = []
             var i = 10000
@@ -87,15 +85,14 @@
                 interleaveData.push(Math.random(), Math.random(), Math.random(), 1)
             }
             interleaveData = interleaveData
-            var testParticle = RedPointUnit(
+            var testParticle = RedColorPointCloud(
                 self,
                 interleaveData,
                 [
                     RedInterleaveInfo('aVertexPosition', 3),
                     RedInterleaveInfo('aPointSize', 1),
                     RedInterleaveInfo('aVertexColor', 4)
-                ],
-                testMaterial
+                ]
             )
             tScene3D.addChild(testParticle)
         })();
@@ -103,7 +100,7 @@
         var testParticle
         (function () {
             var testMaterial
-            testMaterial = RedPointBitmapMaterial(self, RedBitmapTexture(self, '../asset/alphaTest.png'))
+            testMaterial = RedBitmapPointCloudMaterial(self, RedBitmapTexture(self, '../asset/alphaTest.png'))
             testMaterial.alpha = 0.8
 
             interleaveData = []
@@ -113,7 +110,7 @@
                 interleaveData.push(Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50)
                 interleaveData.push(Math.random() * 2)
             }
-            testParticle = RedPointUnit(
+            testParticle = RedBitmapPointCloud(
                 self,
                 interleaveData,
                 [

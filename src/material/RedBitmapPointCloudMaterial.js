@@ -1,8 +1,10 @@
 "use strict";
-var RedPointBitmapMaterial;
+var RedBitmapPointCloudMaterial;
 (function () {
     var vSource, fSource;
-    var PROGRAM_NAME = 'pointBitmapProgram';
+    var PROGRAM_NAME = 'bitmapPointCloudProgram';
+    var PROGRAM_OPTION_LIST = [];
+
     var checked;
     vSource = function () {
         /* @preserve
@@ -29,17 +31,15 @@ var RedPointBitmapMaterial;
              finalColor.a *= u_alpha;
              //#REDGL_DEFINE#fog#false# gl_FragColor = finalColor;
              //#REDGL_DEFINE#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
-
-
          }
          */
     };
     /**DOC:
      {
 		 constructorYn : true,
-		 title :`RedPointBitmapMaterial`,
+		 title :`RedBitmapPointCloudMaterial`,
 		 description : `
-			 RedPointBitmapMaterial Instance 생성
+			 RedBitmapPointCloudMaterial Instance 생성
 		 `,
 		 params : {
 			 redGL : [
@@ -49,17 +49,18 @@ var RedPointBitmapMaterial;
 				 {type:'RedBitmapTexture'}
 			 ]
 		 },
-		 demo : '../example/material/RedPointBitmapMaterial.html',
-		 extends : [
-		    'RedBaseMaterial'
-		 ],
-		 return : 'RedPointBitmapMaterial Instance'
+		 demo : '../example/material/RedBitmapPointCloudMaterial.html',
+		 extends : ['RedBaseMaterial'],
+		 example : `
+		     RedBitmapPointCloudMaterial(RedGL Instance, RedBitmapTexture(RedGL Instance, src));
+		 `,
+		 return : 'RedBitmapPointCloudMaterial Instance'
 	 }
      :DOC*/
-    RedPointBitmapMaterial = function (redGL, diffuseTexture) {
-        if (!(this instanceof RedPointBitmapMaterial)) return new RedPointBitmapMaterial(redGL, diffuseTexture);
-        redGL instanceof RedGL || RedGLUtil.throwFunc('RedPointBitmapMaterial : RedGL Instance만 허용.', redGL);
-        this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource);
+    RedBitmapPointCloudMaterial = function (redGL, diffuseTexture) {
+        if (!(this instanceof RedBitmapPointCloudMaterial)) return new RedBitmapPointCloudMaterial(redGL, diffuseTexture);
+        redGL instanceof RedGL || RedGLUtil.throwFunc('RedBitmapPointCloudMaterial : RedGL Instance만 허용.', redGL);
+        this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource, PROGRAM_OPTION_LIST);
         /////////////////////////////////////////
         // 유니폼 프로퍼티
         this['diffuseTexture'] = diffuseTexture;
@@ -74,7 +75,7 @@ var RedPointBitmapMaterial;
         }
         console.log(this)
     };
-    RedPointBitmapMaterial.prototype = new RedBaseMaterial();
+    RedBitmapPointCloudMaterial.prototype = new RedBaseMaterial();
     /**DOC:
      {
  	     code : 'PROPERTY',
@@ -83,26 +84,27 @@ var RedPointBitmapMaterial;
 		 return : 'Number'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedPointBitmapMaterial', 'alpha', 'number', {min: 0, max: 1});
+    RedDefinePropertyInfo.definePrototype('RedBitmapPointCloudMaterial', 'alpha', 'number', {min: 0, max: 1});
     /**DOC:
      {
  	     code : 'PROPERTY',
 		 title :`cutOff`,
 		 description : `
-		 기본값 : 0.0001
+		 기본값 : 0.1
 		 해당값보다 알파값이 작을경우 discard 처리됨.
 		 `,
 		 return : 'Number'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedPointBitmapMaterial', 'cutOff', 'number', {min: 0, max: 1});
+    RedDefinePropertyInfo.definePrototype('RedBitmapPointCloudMaterial', 'cutOff', 'number', {min: 0, max: 1});
     /**DOC:
      {
  	     code : 'PROPERTY',
 		 title :`diffuseTexture`,
+		 description : `diffuseTexture`,
 		 return : 'RedBitmapTexture'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedPointBitmapMaterial', 'diffuseTexture', 'sampler2D', {essential: true});
-    Object.freeze(RedPointBitmapMaterial)
+    RedDefinePropertyInfo.definePrototype('RedBitmapPointCloudMaterial', 'diffuseTexture', 'sampler2D', {essential: true});
+    Object.freeze(RedBitmapPointCloudMaterial)
 })();

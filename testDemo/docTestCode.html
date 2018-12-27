@@ -1,0 +1,69 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>RedEnvironmentMaterial</title>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
+    />
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+    </style>
+    <script src="../release/RedGL.min.js"></script>
+</head>
+
+<body>
+<canvas id="test" style="border: none;"></canvas>
+<script>
+    var canvas;
+    canvas = document.createElement('canvas');
+    document.body.appendChild(canvas);
+    RedGL(canvas, function (v) {
+        if (v) {
+            var tWorld, tView, tScene, tController, tRenderer, tLight;
+            var setBase = function (redGL) {
+                // 월드 생성
+                redGL['world'] = tWorld = RedWorld();
+                // 씬 생성
+                tScene = RedScene(redGL);
+                // 카메라 생성
+                tController = RedObitController(redGL);
+                tController.pan = -25;
+                tController.tilt = -25;
+                tController.distance = 5;
+                tController.speedDistance=0.5
+                // 렌더러 생성
+                tRenderer = RedRenderer();
+                // 뷰생성 및 적용
+                tView = RedView('HelloRedGL', redGL, tScene, tController);
+                tWorld.addView(tView);
+                // 그리드 설정
+                tScene['grid'] = RedGrid(redGL);
+                // 렌더시작
+                // tRenderer.start(redGL, function (time) {
+                //     console.log(time)
+                // });
+                // 렌더 디버거 활성화
+                tRenderer.setDebugButton();
+            };
+            setBase(this);
+            // tRenderer.start( this, function(){
+            //     // looper
+            //     console.log('test')
+            // });
+            tRenderer.stop()
+        } else {
+            console.log('초기화 실패!')
+        }
+    });
+</script>
+</body>
+
+</html>

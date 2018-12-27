@@ -10,7 +10,13 @@ var RedRenderer;
 			 RedRenderer Instance 생성자.
 		 `,
 		 example : `
-		 RedRenderer();
+		    var tRenderer = RedRenderer();
+            tRenderer.start(
+                redGL,
+                function (time) {
+                    // looper
+                }
+            );
 		 `,
 		 return : 'RedRenderer Instance'
 	 }
@@ -52,6 +58,15 @@ var RedRenderer;
 					 '렌더시마다 실행될 콜백'
 				 ]
 			 },
+			 example : `
+			    var tRenderer = RedRenderer();
+                tRenderer.start(
+                    redGL,
+                    function (time) {
+                        // looper
+                    }
+                );
+			 `,
 			 return : 'void'
 		 }
          :DOC*/
@@ -74,6 +89,20 @@ var RedRenderer;
                 self['_tickKey'] = requestAnimationFrame(tick);
             }
         })(),
+        /**DOC:
+         {
+			 code:`METHOD`,
+			 title :`setDebugButton`,
+			 description : `
+				 디버그 버튼 생성
+			 `,
+			 example : `
+			    var tRenderer = RedRenderer();
+                tRenderer.setDebugButton();
+			 `,
+			 return : 'void'
+		 }
+         :DOC*/
         setDebugButton: function () {
             var sourceViewBt;
             var self = this
@@ -102,13 +131,19 @@ var RedRenderer;
 					 'time'
 				 ]
 			 },
+			 example : `
+			    var tRenderer = RedRenderer();
+                tRenderer.render(RedGL Instance)
+			 `,
 			 return : 'void'
 		 }
          :DOC*/
         render: function (redGL, time) {
             redGL instanceof RedGL || RedGLUtil.throwFunc('RedGL Instance만 허용');
-            this.worldRender(redGL, time);
+            time = time || 0;
             this.world = redGL.world;
+            this.worldRender(redGL, time);
+
         },
         /**DOC:
          {
@@ -116,6 +151,16 @@ var RedRenderer;
 			 title :`stop`,
 			 description : `
 				 렌더 중지
+			 `,
+			 example : `
+                var tRenderer = RedRenderer();
+                tRenderer.start(
+                    redGL,
+                    function (time) {
+                        // looper
+                    }
+                );
+                tRender.stop();
 			 `,
 			 return : 'void'
 		 }
@@ -974,5 +1019,4 @@ var RedRenderer;
         }
     })()
     Object.freeze(RedRenderer);
-})
-();
+})();

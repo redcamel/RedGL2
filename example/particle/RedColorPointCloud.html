@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>RedGL - RedPointColorMaterial</title>
+    <title>RedGL - RedColorPointCloud</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -25,7 +25,7 @@
     RedGL(canvas, function (v) {
         if (v) {
             console.log('초기화 성공!')
-            var tWorld, tView, tScene, tController, tRenderer, tLight;
+            var tWorld, tView, tScene, tController, tRenderer;
             var setBase = function (redGL) {
                 // 월드 생성
                 redGL['world'] = tWorld = RedWorld();
@@ -34,7 +34,7 @@
                 // 카메라 생성
                 tController = RedObitController(redGL);
                 tController.tilt = -25;
-                tController.distance = 15;
+                tController.distance = 5;
                 tController.speedDistance = 0.5
                 // 렌더러 생성
                 tRenderer = RedRenderer();
@@ -43,47 +43,57 @@
                 tWorld.addView(tView);
                 // 그리드 설정
                 tScene['grid'] = RedGrid(redGL);
-                // 렌더시작
-                tRenderer.start(redGL, function (time) {
-                });
+
                 // 렌더 디버거 활성화
                 tRenderer.setDebugButton();
                 testUI(redGL);
             };
             setBase(this);
             //////////////////////////////////////////////////////////////////
-            // RedPointUnit 설정
+            // RedPointCloud 설정
             var i;
             var interleaveData;
-            var testRedPointUnit;
+            var testRedPointCloud;
             // 인터리브 정보 생성
             interleaveData = [];
-            i = 100000
+            i = 1000
             while (i--) {
                 // position
                 interleaveData.push(
-                    Math.random() * 100 - 50, // x
-                    Math.random() * 100 - 50, // y
-                    Math.random() * 100 - 50 // z
+                    Math.random() * 30 - 15, // x
+                    Math.random() * 30 - 15, // y
+                    Math.random() * 30 - 15 // z
                 );
                 // pointSize
-                interleaveData.push(Math.random() * 0.1);
+                interleaveData.push(Math.random() * 1);
                 // color
                 interleaveData.push(Math.random(), Math.random(), Math.random(), 1);
             }
             // 포인트 유닛 생성
-            testRedPointUnit = RedPointUnit(
+            testRedPointCloud = RedColorPointCloud(
                 this,
                 interleaveData,
                 [
                     RedInterleaveInfo('aVertexPosition', 3),
                     RedInterleaveInfo('aPointSize', 1),
                     RedInterleaveInfo('aVertexColor', 4)
-                ],
-                // 포인트 재질 생성
-                RedPointColorMaterial(this)
+                ]
             );
-            tScene.addChild(testRedPointUnit)
+            // 블렌드모드 설정
+            testRedPointCloud['blendSrc'] = this.gl.ONE;
+            testRedPointCloud['blendDst'] = this.gl.ONE;
+            tScene.addChild(testRedPointCloud);
+            // 렌더시작
+            tRenderer.start(this, function (time) {
+                // 인터리브 데이터 업데이트
+                interleaveData.forEach(function (v, index) {
+                    if (index % 4 == 0) interleaveData[index] = v + Math.sin(time / 1000 + index / 100) / 10
+                    else if (index % 4 == 1) interleaveData[index] = v + Math.sin(time / 1000 + index / 100) / 10
+                    else if (index % 4 == 2) interleaveData[index] = v + Math.cos(time / 1000 + index / 100) / 10
+                    else interleaveData[index] = Math.cos(time / 500 + index / 100)
+                });
+                testRedPointCloud.update(interleaveData);
+            });
         } else {
             console.log('초기화 실패!')
         }

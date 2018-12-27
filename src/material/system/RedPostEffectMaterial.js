@@ -26,7 +26,8 @@ var RedPostEffectMaterial;
 		 constructorYn : true,
 		 title :`RedPostEffectMaterial`,
 		 description : `
-			 RedPostEffectMaterial Instance 생성
+			 포스트이펙트 최종 이미지를 생성하기 위한재질.
+			 시스템적으로 사용됨.
 		 `,
 		 params : {
 			 redGL : [
@@ -37,12 +38,7 @@ var RedPostEffectMaterial;
 				 'RedBitmapTexture Instance'
 			 ]
 		 },
-		 extends : [
-		    'RedBaseMaterial'
-		 ],
-		 example : `
-			 RedPostEffectMaterial(RedGL Instance, RedBitmapTexture(RedGL Instance, src))
-		 `,
+		 extends : ['RedBaseMaterial'],
 		 return : 'RedPostEffectMaterial Instance'
 	 }
      :DOC*/
@@ -67,6 +63,7 @@ var RedPostEffectMaterial;
      {
 	     code : 'PROPERTY',
 		 title :`diffuseTexture`,
+		 description :`diffuseTexture`,
 		 return : 'RedPostEffectMaterial'
 	 }
      :DOC*/

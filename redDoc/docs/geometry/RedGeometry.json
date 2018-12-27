@@ -1,18 +1,32 @@
 [
   {
+    "code": "METHOD",
+    "title": "disposeAllBuffer",
+    "description": "내부 interleaveBuffer, indexBuffer 둘다 dispose",
+    "return": "void"
+  },
+  {
+    "code": "METHOD",
+    "title": "disposeBuffer",
+    "description": "입력된키( interleaveBuffer or indexBuffer )에 해당하는 버퍼 dispose",
+    "return": "void"
+  },
+  {
     "code": "PROPERTY",
     "title": "indexBuffer",
+    "description": "indexBuffer",
     "return": "RedBuffer Instance"
   },
   {
     "code": "PROPERTY",
     "title": "interleaveBuffer",
+    "description": "interleaveBuffer",
     "return": "RedBuffer Instance"
   },
   {
     "constructorYn": true,
     "title": "RedGeometry",
-    "description": "\nRedGeometry Instance 생성자\n",
+    "description": "\n     인터리브 버퍼와 인덱스 버퍼로 구성된 정보 구조체.\n\t RedGeometry Instance 생성자.\n ",
     "params": {
       "interleaveBuffer": [
         {
@@ -28,7 +42,7 @@
       ]
     },
     "demo": "../example/RedBuffer.html",
-    "example": "\nRedGeometry(interleaveBuffer,indexBuffer)\n",
+    "example": "\n\t RedGeometry(interleaveBuffer,indexBuffer)\n ",
     "return": "RedGeometry Instance"
   }
 ]

@@ -71,10 +71,10 @@ var RedBitmapTexture;
 				 `
 				 <code>
 				 {
-					 min: this.gl.LINEAR_MIPMAP_NEAREST,
-					 mag: this.gl.LINEAR,
-					 wrap_s: this.gl.REPEAT,
-					 wrap_t: this.gl.REPEAT,
+					 min: gl.LINEAR_MIPMAP_NEAREST,
+					 mag: gl.LINEAR,
+					 wrap_s: gl.REPEAT,
+					 wrap_t: gl.REPEAT,
 					 anisotropic: 16 // 지원가능한경우에만 작동
 				 }
 				 </code>
@@ -89,12 +89,16 @@ var RedBitmapTexture;
 		 ],
 		 demo : '../example/resources/RedBitmapTexture.html',
 		 example : `
-		 RedBitmapTexture( RedGL Instance,  src, {
-			 min: gl.LINEAR_MIPMAP_NEAREST,
-			 mag: gl.LINEAR,
-			 wrap_s: gl.REPEAT,
-			 wrap_t: gl.REPEAT
-		 })
+            RedBitmapTexture(
+                RedGL Instance,
+                src,
+                {
+                    min: gl.LINEAR_MIPMAP_NEAREST,
+                    mag: gl.LINEAR,
+                    wrap_s: gl.REPEAT,
+                    wrap_t: gl.REPEAT
+                }
+            )
 		 `,
 		 return : 'RedBitmapTexture Instance'
 	 }
@@ -103,7 +107,7 @@ var RedBitmapTexture;
         var tGL;
         if (!(this instanceof RedBitmapTexture)) return new RedBitmapTexture(redGL, src, option, callback);
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedBitmapTexture : RedGL Instance만 허용.', redGL);
-        (callback && typeof callback =='function') || !callback || RedGLUtil.throwFunc('RedBitmapTexture : callback Function만 허용.', callback);
+        (callback && typeof callback == 'function') || !callback || RedGLUtil.throwFunc('RedBitmapTexture : callback Function만 허용.', callback);
         tGL = redGL.gl;
         MAX_TEXTURE_SIZE = redGL['detect']['texture']['MAX_TEXTURE_SIZE'];
 
@@ -112,10 +116,10 @@ var RedBitmapTexture;
         if (typeof src == 'string') {
             if (!redGL['_datas']['textures']) redGL['_datas']['textures'] = {}
             if (redGL['_datas']['textures'][tKey]) {
-                if(callback){
-                    setTimeout(function(){
-                        callback.call(this,true)
-                    },1)
+                if (callback) {
+                    setTimeout(function () {
+                        callback.call(this, true)
+                    }, 1)
                 }
                 return redGL['_datas']['textures'][tKey]
             }
@@ -143,9 +147,9 @@ var RedBitmapTexture;
 		 code:`PROPERTY`,
 		 title :`src`,
 		 description : `
-			 src
+			 이미지 경로
 		 `,
-		 return : 'void'
+		 return : 'String or HTMLCanvasElement'
 	 }
      :DOC*/
     Object.defineProperty(RedBitmapTexture.prototype, 'src', {
@@ -170,7 +174,7 @@ var RedBitmapTexture;
 		 description : `
 			 텍스쳐 옵션 정의
 		 `,
-		 return : 'void'
+		 return : 'Object'
 	 }
      :DOC*/
     Object.defineProperty(RedBitmapTexture.prototype, 'option', {

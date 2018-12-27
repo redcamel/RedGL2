@@ -2,7 +2,7 @@
   {
     "code": "addRule",
     "title": "addRule",
-    "description": "\n룰 추가 매서드\n",
+    "description": "\n    룰 추가 매서드\n ",
     "params": {
       "key": [
         {
@@ -20,15 +20,14 @@
   {
     "constructorYn": true,
     "title": "RedParticleUnit",
-    "description": "\nRedParticleUnit Instance 생성기\n",
+    "description": "\n\t RedParticleUnit Instance 생성기.\n\t RedParticleEmitter 사용시 내부적으로 사용되는 객체.\n ",
     "params": {
-      "redGL": [
+      "lifeTime": [
         {
-          "type": "RedGL"
+          "type": "Number"
         }
       ]
     },
-    "demo": "../example/material/RedPointColorMaterial.html",
     "return": "RedParticleUnit Instance"
   }
 ]

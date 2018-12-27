@@ -2,7 +2,7 @@
   {
     "constructorYn": true,
     "title": "RedBaseController",
-    "description": "\nRedBaseController 기저층\n",
+    "description": "\n\t RedBaseController 기저층\n ",
     "return": "RedBaseController instance"
   }
 ]

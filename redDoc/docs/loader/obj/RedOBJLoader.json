@@ -2,7 +2,7 @@
   {
     "constructorYn": true,
     "title": "RedOBJLoader",
-    "description": "\nOBJ 로더\n",
+    "description": "\n\t OBJ 로더.\n\t 애니메이션은 지원하지 않음(GLTF만 지원)\n ",
     "params": {
       "redGL": [
         {
@@ -12,21 +12,24 @@
       "path": [
         {
           "type": "String"
-        }
+        },
+        "파일이 위치한 경로"
       ],
       "fileName": [
         {
           "type": "String"
-        }
+        },
+        "파일이름"
       ],
       "callback": [
         {
           "type": "Function"
-        }
+        },
+        "로딩완료시 실행될 콜백"
       ]
     },
     "demo": "../example/loader/obj/RedOBJLoader.html",
-    "example": "\nRedOBJLoader(RedGL Instance, '../asset/obj/gun/', 'Handgun_obj.obj', function (result) {\ntScene3D.addChild(result['resultMesh'])\n})\n",
+    "example": "\n    // OBJ 로딩\n          RedOBJLoader(\n              RedGL Instance, // redGL\n              assetPath + 'obj/', // assetRootPath\n              'female.obj', // fileName\n              function (v) { // callback\n                  console.log(v);\n                  tScene.addChild(v['resultMesh'])\n              }\n          )\n ",
     "return": "void"
   }
 ]

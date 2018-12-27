@@ -150,7 +150,7 @@
 
             (function () {
                 var testMaterial
-                testMaterial = RedPointBitmapMaterial(self, RedBitmapTexture(self, '../asset/particle.png'))
+                testMaterial = RedBitmapPointCloudMaterial(self, RedBitmapTexture(self, '../asset/particle.png'))
                 var interleaveData
                 interleaveData = []
                 var i = 100000
@@ -159,7 +159,7 @@
                     interleaveData.push(Math.random() * 5)
                     interleaveData.push(Math.random(), Math.random(), Math.random(), 1)
                 }
-                var testParticle = RedPointUnit(
+                var testParticle = RedBitmapPointCloud(
                     self,
                     interleaveData,
                     [

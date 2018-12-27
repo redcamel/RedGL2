@@ -97,6 +97,10 @@ var RedSphere;
 			 redGL : [
 				 {type:'RedGL'}
 			 ],
+			 radius : [
+				 {type:'number'},
+				 '기본값 : 1'
+			 ],
 			 widthSegments : [
 				 {type:'uint'},
 				 '기본값 : 8'
@@ -111,7 +115,7 @@ var RedSphere;
 			 ],
 			 phiLength : [
 				 {type:'uint'},
-				 '기본값 : 2'
+				 '기본값 : Math.PI * 2'
 			 ],
 			 thetaStart : [
 				 {type:'uint'},
@@ -126,11 +130,11 @@ var RedSphere;
 		 extends : [
 		    'RedGeometry'
 		 ],
-		 demo : '../example/RedPrimitive.html',
+		 demo : '../example/primitives/RedSphere.html',
 		 example : `
 			 RedSphere(RedGL Instance);
 			 RedSphere(RedGL Instance, 1);
-			 RedSphere(RedGL Instance, 1, 16,16);
+			 RedSphere(RedGL Instance, 1, 16,16,16);
 		 `,
 		 return : 'RedSphere Instance'
 	 }

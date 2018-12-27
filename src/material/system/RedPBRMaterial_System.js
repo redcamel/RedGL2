@@ -212,7 +212,9 @@ var RedPBRMaterial_System;
 		 constructorYn : true,
 		 title :`RedPBRMaterial_System`,
 		 description : `
-			 RedPBRMaterial_System Instance 생성
+		     RedGLTFLoader에서 모델을 파싱할때 생성되는 PBR재질.
+		     일반사용은 금지함.
+			 RedPBRMaterial_System Instance 생성.
 		 `,
 		 params : {
 			 redGL : [
@@ -229,19 +231,25 @@ var RedPBRMaterial_System;
 			 ],
 			 occlusionTexture : [
 				 {type:'RedBitmapTexture'}
+			 ],
+			 emissiveTexture : [
+				 {type:'RedBitmapTexture'}
+			 ],
+			 roughnessTexture : [
+				 {type:'RedBitmapTexture'}
 			 ]
 		 },
-		 extends : [
-		    'RedBaseMaterial'
-		 ],
-		 demo : '../example/material/RedPBRMaterial_System.html',
+		 extends : ['RedBaseMaterial'],
+		 demo : '../example/loader/gltf/RedGLTFLoader.html',
 		 example : `
 			 RedPBRMaterial_System(
 				 RedGL Instance,
 				 RedBitmapTexture(RedGL Instance, src), // diffuseTexture
 				 RedBitmapCubeTexture(RedGL Instance, srcList),
 				 RedBitmapTexture(RedGL Instance, src), // normalTexture
-				 RedBitmapTexture(RedGL Instance, src) // occlusionTexture
+				 RedBitmapTexture(RedGL Instance, src), // occlusionTexture
+				 RedBitmapTexture(RedGL Instance, src), // emissiveTexture
+				 RedBitmapTexture(RedGL Instance, src) // roughnessTexture
 			 )
 		 `,
 		 return : 'RedPBRMaterial_System Instance'
@@ -432,7 +440,10 @@ var RedPBRMaterial_System;
      {
 	     code : 'PROPERTY',
 		 title :`useFlatMode`,
-		 description : `기본값 : true`,
+		 description : `
+		    flatMode 사용여부
+		    기본값 : true
+		 `,
 		 return : 'boolean'
 	 }
      :DOC*/

@@ -77,13 +77,6 @@ var RedPBRMaterial;
 
 
 
-        uniform int u_diffuseTexCoordIndex;
-        uniform int u_occlusionTexCoordIndex;
-        uniform int u_emissiveTexCoordIndex;
-        uniform int u_roughnessTexCoordIndex;
-        uniform int u_normalTexCoordIndex;
-
-
 
          vec4 la;
          vec4 ld;
@@ -103,41 +96,32 @@ var RedPBRMaterial;
          float distanceLength;
          float attenuation;
 
-        vec2 u_diffuseTexCoord ;
-        vec2 u_occlusionTexCoord;
-        vec2 u_emissiveTexCoord;
-        vec2 u_roughnessTexCoord;
-        vec2 u_normalTexCoord;
+
 
          void main(void) {
             la = uAmbientLightColor * uAmbientLightColor.a;
             ld = vec4(0.0, 0.0, 0.0, 1.0);
             ls = vec4(0.0, 0.0, 0.0, 1.0);
 
-            u_diffuseTexCoord = u_diffuseTexCoordIndex==0 ? vTexcoord : vTexcoord1;
-            u_normalTexCoord = u_normalTexCoordIndex==0 ? vTexcoord : vTexcoord1;
-            u_occlusionTexCoord = u_occlusionTexCoordIndex==0 ? vTexcoord : vTexcoord1;
-            u_emissiveTexCoord = u_emissiveTexCoordIndex==0 ? vTexcoord : vTexcoord1;
-            u_roughnessTexCoord  = u_roughnessTexCoordIndex==0 ? vTexcoord : vTexcoord1;
 
             float tMetallicPower = u_metallicFactor;
             float tRoughnessPower = u_roughnessFactor;
 
-            //#REDGL_DEFINE#roughnessTexture# roughnessColor = texture2D(u_roughnessTexture, u_roughnessTexCoord);
+            //#REDGL_DEFINE#roughnessTexture# roughnessColor = texture2D(u_roughnessTexture, vTexcoord);
             //#REDGL_DEFINE#roughnessTexture# tMetallicPower *= roughnessColor.b; // 메탈릭 산출 roughnessColor.b
             //#REDGL_DEFINE#roughnessTexture# tRoughnessPower *= roughnessColor.g; // 거칠기 산출 roughnessColor.g
 
             // diffuse 색상 산출
             texelColor = uBaseColorFactor;
-            //#REDGL_DEFINE#diffuseTexture# texelColor *= texture2D(u_diffuseTexture, u_diffuseTexCoord);
+            //#REDGL_DEFINE#diffuseTexture# texelColor *= texture2D(u_diffuseTexture, vTexcoord);
             texelColor.rgb *= texelColor.a;
 
             // 노멀값 계산
             N = normalize(vVertexNormal);
             vec4 normalColor = vec4(0.0);
-            //#REDGL_DEFINE#normalTexture# normalColor = texture2D(u_normalTexture, u_normalTexCoord);
+            //#REDGL_DEFINE#normalTexture# normalColor = texture2D(u_normalTexture, vTexcoord);
             //#REDGL_DEFINE#useFlatMode# N = getFlatNormal(vVertexPosition.xyz);
-            //#REDGL_DEFINE#normalTexture# N = getPerturbNormal2Arb(vVertexPosition.xyz, N, normalColor, u_normalTexCoord) ;
+            //#REDGL_DEFINE#normalTexture# N = getPerturbNormal2Arb(vVertexPosition.xyz, N, normalColor, vTexcoord) ;
 
             // 환경맵 계산
             vec3 R = reflect( vVertexPosition.xyz-uCameraPosition, N);
@@ -191,13 +175,13 @@ var RedPBRMaterial;
             //#REDGL_DEFINE#directionalShadow#true# finalColor.rgb = mix(finalColor.rgb, finalColor.rgb * getShadowColor( vShadowPos, vResolution, uDirectionalShadowTexture), 0.5);
 
             // 이미시브합성
-            //#REDGL_DEFINE#emissiveTexture# emissiveColor = texture2D(u_emissiveTexture, u_emissiveTexCoord);
+            //#REDGL_DEFINE#emissiveTexture# emissiveColor = texture2D(u_emissiveTexture, vTexcoord);
             //#REDGL_DEFINE#emissiveTexture# emissiveColor.rgb *= emissiveColor.a * u_emissiveFactor;
             //#REDGL_DEFINE#emissiveTexture# emissiveColor.rgb *= u_emissiveFactor;
             //#REDGL_DEFINE#emissiveTexture# finalColor.rgb += emissiveColor.rgb;
 
             // 오클루젼 합성
-            //#REDGL_DEFINE#occlusionTexture# occlusionColor = texture2D(u_occlusionTexture, u_occlusionTexCoord);
+            //#REDGL_DEFINE#occlusionTexture# occlusionColor = texture2D(u_occlusionTexture, vTexcoord);
             //#REDGL_DEFINE#occlusionTexture# finalColor.rgb = mix(finalColor.rgb, finalColor.rgb * occlusionColor.r, occlusionColor.r * u_occlusionPower);
 
             // 최종결과 산출
@@ -228,11 +212,15 @@ var RedPBRMaterial;
 			 ],
 			 occlusionTexture : [
 				 {type:'RedBitmapTexture'}
+			 ],
+			 emissiveTexture : [
+				 {type:'RedBitmapTexture'}
+			 ],
+			 roughnessTexture : [
+				 {type:'RedBitmapTexture'}
 			 ]
 		 },
-		 extends : [
-		    'RedBaseMaterial'
-		 ],
+		 extends : ['RedBaseMaterial'],
 		 demo : '../example/material/RedPBRMaterial.html',
 		 example : `
 			 RedPBRMaterial(
@@ -240,7 +228,9 @@ var RedPBRMaterial;
 				 RedBitmapTexture(RedGL Instance, src), // diffuseTexture
 				 RedBitmapCubeTexture(RedGL Instance, srcList),
 				 RedBitmapTexture(RedGL Instance, src), // normalTexture
-				 RedBitmapTexture(RedGL Instance, src) // occlusionTexture
+				 RedBitmapTexture(RedGL Instance, src), // occlusionTexture
+				 RedBitmapTexture(RedGL Instance, src), // emissiveTexture
+				 RedBitmapTexture(RedGL Instance, src) // roughnessTexture
 			 )
 		 `,
 		 return : 'RedPBRMaterial Instance'
@@ -276,14 +266,7 @@ var RedPBRMaterial;
 
         this['normalPower'] = 1;
         this['specularPower'] = 1;
-
         this['occlusionPower'] = 1;
-
-        this['diffuseTexCoordIndex'] = 0
-        this['occlusionTexCoordIndex'] = 0
-        this['emissiveTexCoordIndex'] = 0
-        this['roughnessTexCoordIndex'] = 0;
-        this['normalTexCoordIndex'] = 0
 
 
         this['metallicFactor'] = 1;
@@ -321,6 +304,7 @@ var RedPBRMaterial;
      {
 	     code : 'PROPERTY',
 		 title :`cutOff`,
+		 description : `기본값 : 0`,
 		 return : 'Number'
 	 }
      :DOC*/
@@ -329,15 +313,16 @@ var RedPBRMaterial;
      {
 	     code : 'PROPERTY',
 		 title :`diffuseTexture`,
+		 description : `diffuseTexture`,
 		 return : 'RedBitmapTexture'
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'diffuseTexture', 'sampler2D', samplerOption);
-    RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'diffuseTexCoordIndex', 'number');
     /**DOC:
      {
 	     code : 'PROPERTY',
 		 title :`environmentTexture`,
+		 description : `environmentTexture`,
 		 return : 'RedBitmapCubeTexture'
 	 }
      :DOC*/
@@ -348,40 +333,40 @@ var RedPBRMaterial;
      {
 	     code : 'PROPERTY',
 		 title :`normalTexture`,
+		 description : `normalTexture`,
 		 return : 'RedBitmapTexture'
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'normalTexture', 'sampler2D', samplerOption);
-    RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'normalTexCoordIndex', 'number');
 
     /**DOC:
      {
 	     code : 'PROPERTY',
 		 title :`occlusionTexture`,
+		 description : `occlusionTexture`,
 		 return : 'RedBitmapTexture'
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'occlusionTexture', 'sampler2D', samplerOption);
-    RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'occlusionTexCoordIndex', 'number');
     /**DOC:
      {
 	     code : 'PROPERTY',
 		 title :`emissiveTexture`,
+		 description : `emissiveTexture`,
 		 return : 'RedBitmapTexture'
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'emissiveTexture', 'sampler2D', samplerOption);
-    RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'emissiveTexCoordIndex', 'number');
 
     /**DOC:
      {
 	     code : 'PROPERTY',
 		 title :`roughnessTexture`,
+		 description : `roughnessTexture`,
 		 return : 'RedBitmapTexture'
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'roughnessTexture', 'sampler2D', samplerOption);
-    RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'roughnessTexCoordIndex', 'number');
     /**DOC:
      {
 	     code : 'PROPERTY',
@@ -442,7 +427,10 @@ var RedPBRMaterial;
      {
 	     code : 'PROPERTY',
 		 title :`useFlatMode`,
-		 description : `기본값 : true`,
+		 description : `
+		    flatMode 사용여부
+		    기본값 : true
+		 `,
 		 return : 'boolean'
 	 }
      :DOC*/

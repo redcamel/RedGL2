@@ -2,45 +2,46 @@
   {
     "code": "PROPERTY",
     "title": "camera",
-    "description": "\n컨트롤러 생성시 자동생성됨\n",
+    "description": "\n\t 컨트롤러 생성시 자동생성됨\n ",
     "return": "RedCamera"
   },
   {
     "code": "PROPERTY",
     "title": "delay",
-    "description": "\n이동 지연 속도\n기본값 : 0.1\n",
+    "description": "\n\t 이동 지연 속도\n\t 기본값 : 0.1\n ",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "delayRotation",
-    "description": "\n회전 지연 속도\n기본값 : 0.1\n",
+    "description": "\n\t 회전 지연 속도\n\t 기본값 : 0.1\n ",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "keyNameMapper",
-    "description": "\n이동, 회전에 대한 기본 키맵퍼\n기본값 :\n",
-    "example": "\nthis['keyNameMapper'] = {\nmoveForward: 'w',\nmoveBack: 's',\nmoveLeft: 'a',\nmoveRight: 'd',\nmoveUp: 't',\nmoveDown: 'g',\n//\nturnLeft: 'q',\nturnRight: 'e',\nturnUp: 'r',\nturnDown: 'f',\n}\n",
+    "description": "\n\t 이동, 회전에 대한 기본 키맵퍼\n\t 기본값 :\n ",
+    "example": "\n this['keyNameMapper'] = {\n\t moveForward: 'w',\n\t moveBack: 's',\n\t moveLeft: 'a',\n\t moveRight: 'd',\n\t moveUp: 't',\n\t moveDown: 'g',\n\t //\n\t turnLeft: 'q',\n\t turnRight: 'e',\n\t turnUp: 'r',\n\t turnDown: 'f',\n }\n ",
     "return": "Object"
   },
   {
     "code": "PROPERTY",
     "title": "maxAcceleration",
-    "description": "\n최대 가속도 ( 이동 속도와 합쳐짐 )\n기본값 : 3\n",
+    "description": "\n\t 최대 가속도 ( 이동 속도와 합쳐짐 )\n\t 기본값 : 3\n ",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "pan",
+    "description": "pan",
     "return": "Number"
   },
   {
     "constructorYn": true,
     "title": "RedBasicController",
-    "description": "\nRedBasicController Instance 생성자.\n",
+    "description": "\n\t RedBasicController Instance 생성자.\n ",
     "demo": "../example/camera/RedBasicController.html",
-    "example": "\nRedBasicController(redGL Instance)\n",
+    "example": "\n\t RedBasicController(redGL Instance)\n ",
     "params": {
       "redGL": [
         {
@@ -48,23 +49,27 @@
         }
       ]
     },
+    "extends": [
+      "RedBaseController"
+    ],
     "return": "RedBasicController Instance"
   },
   {
     "code": "PROPERTY",
     "title": "speed",
-    "description": "\n이동 속도\n기본값 : 1\n",
+    "description": "\n\t 이동 속도\n\t 기본값 : 1\n ",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "speedRotation",
-    "description": "\n회전 속도\n기본값 : 1\n",
+    "description": "\n\t 회전 속도\n\t 기본값 : 1\n ",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "tilt",
+    "description": "tilt",
     "return": "Number"
   },
   {
@@ -76,16 +81,19 @@
   {
     "code": "PROPERTY",
     "title": "x",
+    "description": "x",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "y",
+    "description": "y",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "z",
+    "description": "z",
     "return": "Number"
   }
 ]

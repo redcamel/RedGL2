@@ -2,14 +2,14 @@
   {
     "constructorYn": true,
     "title": "RedRenderer",
-    "description": "\nRedRenderer Instance 생성자.\n",
-    "example": "\nRedRenderer();\n",
+    "description": "\n\t RedRenderer Instance 생성자.\n ",
+    "example": "\n    var tRenderer = RedRenderer();\n          tRenderer.start(\n              redGL,\n              function (time) {\n                  // looper\n              }\n          );\n ",
     "return": "RedRenderer Instance"
   },
   {
     "code": "METHOD",
     "title": "render",
-    "description": "\n단일 프레임 렌더\n",
+    "description": "\n\t 단일 프레임 렌더\n ",
     "params": {
       "redGL": [
         {
@@ -23,12 +23,20 @@
         "time"
       ]
     },
+    "example": "\n    var tRenderer = RedRenderer();\n             tRenderer.render(RedGL Instance)\n ",
+    "return": "void"
+  },
+  {
+    "code": "METHOD",
+    "title": "setDebugButton",
+    "description": "\n\t 디버그 버튼 생성\n ",
+    "example": "\n    var tRenderer = RedRenderer();\n             tRenderer.setDebugButton();\n ",
     "return": "void"
   },
   {
     "code": "METHOD",
     "title": "start",
-    "description": "\n렌더 시작\n",
+    "description": "\n\t 렌더 시작\n ",
     "params": {
       "redGL": [
         {
@@ -42,12 +50,14 @@
         "렌더시마다 실행될 콜백"
       ]
     },
+    "example": "\n    var tRenderer = RedRenderer();\n             tRenderer.start(\n                 redGL,\n                 function (time) {\n                     // looper\n                 }\n             );\n ",
     "return": "void"
   },
   {
     "code": "METHOD",
     "title": "stop",
-    "description": "\n렌더 중지\n",
+    "description": "\n\t 렌더 중지\n ",
+    "example": "\n             var tRenderer = RedRenderer();\n             tRenderer.start(\n                 redGL,\n                 function (time) {\n                     // looper\n                 }\n             );\n             tRender.stop();\n ",
     "return": "void"
   }
 ]

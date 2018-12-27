@@ -2,37 +2,37 @@
   {
     "code": "PROPERTY",
     "title": "angle",
-    "description": "\n기본값 0.0\n",
+    "description": "\n\t 기본값 0.0\n ",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "centerX",
-    "description": "\n기본값 0.0\n",
+    "description": "\n\t 기본값 0.0\n ",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "centerY",
-    "description": "\n기본값 0.0\n",
+    "description": "\n\t 기본값 0.0\n ",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "grayMode",
-    "description": "\n기본값 false\n",
+    "description": "\n\t 기본값 false\n ",
     "return": "Boolean"
   },
   {
     "code": "PROPERTY",
     "title": "radius",
-    "description": "\n기본값 2\n",
+    "description": "\n\t 기본값 2\n ",
     "return": "Number"
   },
   {
     "constructorYn": true,
     "title": "RedPostEffect_HalfTone",
-    "description": "\nRedPostEffect_HalfTone Instance 생성.\n",
+    "description": "\n\t RedPostEffect_HalfTone Instance 생성.\n ",
     "params": {
       "redGL": [
         {

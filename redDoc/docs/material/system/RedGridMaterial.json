@@ -2,7 +2,7 @@
   {
     "constructorYn": true,
     "title": "RedGridMaterial",
-    "description": "\nRedGridMaterial Instance 생성.\nRedGrid Instance 새성시 내부적으로 자동으로 생성됨.\n",
+    "description": "\n\t RedGrid Instance 새성시 내부적으로 자동으로 생성됨.\n\t 시스템적으로 사용됨\n ",
     "params": {
       "redGL": [
         {
@@ -13,7 +13,6 @@
     "extends": [
       "RedBaseMaterial"
     ],
-    "example": "\nRedGridMaterial(RedGL Instance)\n",
     "return": "RedGridMaterial Instance"
   }
 ]

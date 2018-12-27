@@ -2,7 +2,7 @@
   {
     "constructorYn": true,
     "title": "RedMTLResult",
-    "description": "\nOBJ 로딩시 mtl로딩이 필요하면 자동으로 호출됨\n",
+    "description": "\n\t OBJ 로딩시 mtl로딩이 필요하면 자동으로 호출됨\n ",
     "params": {
       "redGL": [
         {
@@ -12,17 +12,20 @@
       "path": [
         {
           "type": "String"
-        }
+        },
+        "파일이 위치한 경로"
       ],
       "fileName": [
         {
           "type": "String"
-        }
+        },
+        "파일이름"
       ],
       "callback": [
         {
           "type": "Function"
-        }
+        },
+        "로딩완료시 실행될 콜백"
       ]
     },
     "return": "void"

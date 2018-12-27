@@ -14,13 +14,13 @@
   {
     "code": "PROPERTY",
     "title": "perspectiveScale",
-    "description": "\n퍼스펙티브에 스케일이 반응할것인가 여부\n기본값 true\n",
+    "description": "\n 퍼스펙티브에 스케일이 반응할것인가 여부\n 기본값 true\n ",
     "return": "Boolean"
   },
   {
     "constructorYn": true,
     "title": "RedMesh",
-    "description": "\nRedMesh Instance 생성기\n",
+    "description": "\n\t RedMesh Instance 생성기\n ",
     "params": {
       "redGL": [
         {
@@ -43,13 +43,13 @@
       "RedBaseContainer",
       "RedBaseObject3D"
     ],
-    "example": "\nvar tScene;\nvar tMesh;\ntScene = RedScene();\ntMesh = RedMesh( RedGL Instance, RedBox(RedGL Instance), RedColorMaterial(RedGL Instance, '#ff0000' ));\ntScene.addChild(tMesh);\n",
+    "example": "\n\t var tScene;\n\t var tMesh;\n\t tScene = RedScene();\n\t tMesh = RedMesh( RedGL Instance, RedBox(RedGL Instance), RedColorMaterial(RedGL Instance, '#ff0000' ));\n\t tScene.addChild(tMesh);\n ",
     "return": "RedMesh Instance"
   },
   {
     "code": "PROPERTY",
     "title": "sprite3DYn",
-    "description": "\nsprite3D 모드 사용 여부\n기본값 true\n",
+    "description": "\n sprite3D 모드 사용 여부\n 기본값 true\n ",
     "return": "Boolean"
   }
 ]

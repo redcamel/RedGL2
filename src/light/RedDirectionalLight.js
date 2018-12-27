@@ -6,26 +6,26 @@ var RedDirectionalLight;
 		 constructorYn : true,
 		 title :`RedDirectionalLight`,
 		 description : `
-			 RedDirectionalLight Instance 생성
+		    기본 직사광.
+			RedDirectionalLight Instance 생성자.
 		 `,
 		 params : {
 			 redGL : [
 				 {type:'RedGL'}
 			 ],
 			 hex : [
-				 {type:'hex'}
+				 {type:'hex'},
+				 '기본값 : #fff'
 			 ],
 			 alpha : [
 				 {type:'number'},
-				 '알파값'
+				 '기본값 : 1'
 			 ]
 		 },
-		 extends : [
-		    'RedBaseLight'
-		 ],
+		 extends : ['RedBaseLight'],
 		 demo : '../example/light/RedDirectionalLight.html',
 		 example: `
-			 RedDirectionalLight(RedGL Instance, hex, alpha)
+		    RedDirectionalLight(RedGL Instance, '#fff', 1);
 		 `,
 		 return : 'RedDirectionalLight Instance'
 	 }

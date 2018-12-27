@@ -17,6 +17,7 @@ var RedObitController;
 				 {type:'RedGL'}
 			 ]
 		 },
+		 extends : ['RedBaseController'],
 		 return : 'RedObitController Instance'
 	 }
      :DOC*/
@@ -103,6 +104,7 @@ var RedObitController;
      {
 	     code : 'PROPERTY',
 		 title :`centerX`,
+		 description : `회전축 X 포지션`,
 		 return : 'Number'
 	 }
      :DOC*/
@@ -111,6 +113,7 @@ var RedObitController;
      {
 	     code : 'PROPERTY',
 		 title :`centerY`,
+		 description : `회전축 Y 포지션`,
 		 return : 'Number'
 	 }
      :DOC*/
@@ -119,6 +122,7 @@ var RedObitController;
      {
 	     code : 'PROPERTY',
 		 title :`centerZ`,
+		 description : `회전축 Z 포지션`,
 		 return : 'Number'
 	 }
      :DOC*/
@@ -127,6 +131,7 @@ var RedObitController;
      {
 	     code : 'PROPERTY',
 		 title :`distance`,
+		 description : `회전축과의 거리`,
 		 return : 'Number'
 	 }
      :DOC*/
@@ -183,6 +188,7 @@ var RedObitController;
      {
 	     code : 'PROPERTY',
 		 title :`pan`,
+		 description : `pan`,
 		 return : 'Number'
 	 }
      :DOC*/
@@ -191,6 +197,7 @@ var RedObitController;
      {
 	     code : 'PROPERTY',
 		 title :`tilt`,
+		 description : `tilt`,
 		 return : 'Number'
 	 }
      :DOC*/

@@ -8,13 +8,13 @@
   {
     "code": "PROPERTY",
     "title": "radius",
-    "description": "\n점광의 반지름\n기본값 : 1\n",
+    "description": "\n 점광의 반지름\n 기본값 : 1\n ",
     "return": "Number"
   },
   {
     "constructorYn": true,
     "title": "RedPointLight",
-    "description": "\nRedPointLight Instance 생성\n",
+    "description": "\n\t RedPointLight Instance 생성\n ",
     "params": {
       "redGL": [
         {
@@ -24,20 +24,21 @@
       "hex": [
         {
           "type": "hex"
-        }
+        },
+        "기본값 : #fff"
       ],
       "alpha": [
         {
           "type": "number"
         },
-        "알파값"
+        "기본값 : 1"
       ]
     },
     "extends": [
       "RedBaseLight"
     ],
     "demo": "../example/light/RedPointLight.html",
-    "example": "\nRedPointLight(RedGL Instance, hex, alpha)\n",
+    "example": "\n\t RedPointLight(RedGL Instance, '#fff', 1);\n ",
     "return": "RedPointLight Instance"
   },
   {

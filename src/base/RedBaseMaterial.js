@@ -19,8 +19,8 @@ var RedBaseMaterial;
 			 code : 'METHOD',
 			 title :`makeProgramList`,
 			 description : `
-				 다중 프로그램 리스트 생성기.
-				 TODO:// 좀더 구체적인 설명 적어야함
+				 <h1>다중 프로그램 리스트 생성기.
+				 TODO:// 좀더 구체적인 설명 적어야함</h1>
 			 `,
 			 params : {
 			    target : [
@@ -148,8 +148,8 @@ var RedBaseMaterial;
 			 title :`checkUniformAndProperty`,
 			 description : `
 				 재질의 Program에서 사용하고 있는 유니폼키가
-				 속성으로 매칭되지 않는 경우 검출.
-				 ex) 프로그램에서 <b>uTestUniform</b> 이 사용되어진다면 <b>testUniform</b>이 정의 되어있어야함.
+				 재질의 속성으로 매칭되지 않는 경우 검출.
+				 ex) Program에서 <b>uTestUniform</b>을 사용 할 경우 <b>testUniform</b>이 정의 되어 있어야함.
 			 `,
 			 return : 'void'
 		 }

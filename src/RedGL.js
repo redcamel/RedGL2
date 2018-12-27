@@ -87,61 +87,68 @@ var RedGL;
 		 title :`RedGL`,
 		 description : `
 			 RedGL Instance 생성자.
-			 WebGL 초기화를 담당하며, 단일 월드를 소유한다.
+			 WebGL 초기화를 담당하며, 단일 월드(RedWorld Instance)를 소유한다.
 		 `,
 		 params : {
 			 canvas : [
 				 {type:'Canvas Element'}
 			 ],
 			 callback :[
-				 {type:'function'},
+				 {type:'Function'},
 				 `컨텍스트 초기화이후 실행될 콜백`,
-				 `리턴인자로 true,false를 반환한다`
+				 `리턴인자로 <b>true, false</b>를 반환한다`
 			 ],
 			 option : [
 				 {type:'Object'},
 				 `초기화 옵션을 지정한다.`,
 				 `
-				 <code>
-				 // 초기값
-				 {
-					 alpha: false,
-					 depth: true,
-					 stencil: false,
-					 antialias: true,
-					 premultipliedAlpha: false,
-					 preserveDrawingBuffer: false,
-					 powerPreference: 'default', // default, high-performance, low-power
-					 failIfMajorPerformanceCaveat: false
-				 }
-				 </code>
+                <code>
+                // 초기값
+                {
+                    alpha: false,
+                    depth: true,
+                    stencil: false,
+                    antialias: true,
+                    premultipliedAlpha: false,
+                    preserveDrawingBuffer: false,
+                    powerPreference: 'default', // default, high-performance, low-power
+                    failIfMajorPerformanceCaveat: false
+                }
+                </code>
 				 `
 			 ],
 			 targetContextKey : [
 			    {type:'String'},
 			    `컨텍스트 키를 명시적으로 지정할 경우 사용`,
-			    `입력하지 않을경우 webkit-3d,moz-webgl,3d,experimental-webgl,webgl,webgl2 중에서 가장 높은 값으로 선택됨`
+			    `입력하지 않을경우 <b>webkit-3d,moz-webgl,3d,experimental-webgl, webgl</b> 중에서 가장 높은 값으로 선택됨`
 			 ]
 		 },
-	     demo : '../example/RedGL.html',
+	     demo : '../example/etc/RedGL.html',
 		 example : `
-			 // 기초 초기화
-			 RedGL(document.getElementById('test'), function(v){
-				  // 콜백내용
-				  // 성공,실패에 따라 v값이 true or false.
-				  if(v){
-					  // 초기화 성공
-				  }else{
-					  // 초기화실패
-				  }
-			 })
+            var canvas = document.createElement('canvas');
+            document.body.appendChild(canvas);
+            // 기초 초기화
+            RedGL(
+                canvas,
+                function(v){
+                    // 성공,실패에 따라 v값이 true or false.
+                    if(v){
+                        // 초기화 성공
+                        console.log(this.detect); // 디텍팅정보
+                        console.log(this.gl); // webGL context
+                        console.log(this.renderScale); // 렌더스케일 (기본값 : 1)
+                        this.setSize('100%', '100%'); // 사이즈 설정 : 숫자형, %형 둘다 허용
+                    }else{
+                        // 초기화실패
+                    }
+                }
+            )
 		 `,
 		 return : 'RedGL Instance'
 	 }
      :DOC*/
-    RedGL = function (canvas, callback, option, targetContextKey, initPrograms) {
-        var startTime = performance.now();
-        if (!(this instanceof RedGL)) return new RedGL(canvas, callback, option, targetContextKey, initPrograms);
+    RedGL = function (canvas, callback, option, targetContextKey) {
+        if (!(this instanceof RedGL)) return new RedGL(canvas, callback, option, targetContextKey);
         canvas['tagName'] == 'CANVAS' || RedGLUtil.throwFunc('RedGL : Canvas Element만 허용');
         var tGL, self;
         self = this;
@@ -210,7 +217,6 @@ var RedGL;
                 }, false)
             });
 
-
             self.setSize(self['_width'], self['_height']); // 리사이즈를 초기에 한번 실행.
             setEmptyTextures(self, tGL); // 빈텍스쳐를 미리 체워둔다.
             callback ? callback.call(self, tGL ? true : false) : 0; // 콜백이 있으면 실행
@@ -254,16 +260,6 @@ var RedGL;
 			        { type : 'Number or %' }
 			    ]
 			 },
-			 example : `
-				 RedGL(document.getElementById('test'), function(v){
-					  if(v){
-						  // 초기화 성공
-						  this.setSize(200,200)
-					  }else{
-						  // 초기화실패
-					  }
-				 })
-			 `,
 			 return : 'void'
 		 }
          :DOC*/
@@ -319,15 +315,10 @@ var RedGL;
 		 title :`renderScale`,
 		 code: `PROPERTY`,
 		 description : `
-			 기본값 : 1
+			 렌더링시 사용할 적용할 렌더링 스케일.
+			 기본값 : 1.
 			 0이하일 경우 0.1로 세팅됨.
-			 렌더링시 사용할 적용할 렌더링 스케일
-			 size 1024*768, renderScale 0.5 일경우 512 * 389로 렌더링된다
-		 `,
-		 example : `
-		 RedGL(document.getElementById('test'), function (v) {
-			 this.renderScale = 0.5 // 기본값 1
-		 })
+			 size 1024*768, renderScale 0.5 일경우 512 * 389로 렌더링 됨.
 		 `,
 		 return : 'Number'
 	 }

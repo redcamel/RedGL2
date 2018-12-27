@@ -6,7 +6,8 @@ var RedGeometry;
 		 constructorYn : true,
 		 title :`RedGeometry`,
 		 description : `
-			 RedGeometry Instance 생성자
+		     인터리브 버퍼와 인덱스 버퍼로 구성된 정보 구조체.
+			 RedGeometry Instance 생성자.
 		 `,
 		 params : {
 			 interleaveBuffer : [
@@ -38,6 +39,7 @@ var RedGeometry;
          {
 		     code : 'PROPERTY',
 			 title :`interleaveBuffer`,
+			 description : `interleaveBuffer`,
 			 return : 'RedBuffer Instance'
 		 }
          :DOC*/
@@ -46,6 +48,7 @@ var RedGeometry;
          {
 		     code : 'PROPERTY',
 			 title :`indexBuffer`,
+			 description : `indexBuffer`,
 			 return : 'RedBuffer Instance'
 		 }
          :DOC*/
@@ -54,6 +57,14 @@ var RedGeometry;
         // console.log(this);
     };
     RedGeometry.prototype = {
+        /**DOC:
+         {
+		     code : 'METHOD',
+			 title :`disposeAllBuffer`,
+			 description : `내부 interleaveBuffer, indexBuffer 둘다 dispose`,
+			 return : 'void'
+		 }
+         :DOC*/
         disposeAllBuffer: (function () {
             var k;
             return function () {
@@ -62,9 +73,17 @@ var RedGeometry;
                 }
             }
         })(),
+        /**DOC:
+         {
+		     code : 'METHOD',
+			 title :`disposeBuffer`,
+			 description : `입력된키( interleaveBuffer or indexBuffer )에 해당하는 버퍼 dispose`,
+			 return : 'void'
+		 }
+         :DOC*/
         disposeBuffer: function (key) {
             if (this && this[key] instanceof RedBuffer) this[key].dispose()
         }
-    }
+    };
     Object.freeze(RedGeometry);
 })();

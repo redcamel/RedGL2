@@ -170,13 +170,49 @@ var RedCylinder;
 		 constructorYn : true,
 		 title :`RedCylinder`,
 		 description : `
-			 RedCylinder Instance 생성기.
-			 Box 형태의 RedGeometry 생성
+			 RedCylinder 형태의 RedGeometry 생성
 		 `,
+		 params : {
+			 redGL : [
+				 {type:'RedGL'}
+			 ],
+			 radiusTop : [
+				 {type:'number'},
+				 '기본값 : 1'
+			 ],
+			 radiusBottom : [
+				 {type:'number'},
+				 '기본값 : 1'
+			 ],
+			 height : [
+				 {type:'number'},
+				 '기본값 : 1'
+			 ],
+			 radialSegments : [
+				 {type:'uint'},
+				 '기본값 : 8'
+			 ],
+			 heightSegments : [
+				 {type:'uint'},
+				 '기본값 : 1'
+			 ],
+			 openEnded : [
+				 {type:'Boolean'},
+				 '기본값 : false'
+			 ],
+			 thetaStart : [
+				 {type:'number'},
+				 'thetaStart'
+			 ],
+			 thetaLength : [
+				 {type:'number'},
+				 'thetaLength'
+			 ]
+		 },
 		 extends : [
 		    'RedGeometry'
 		 ],
-		 demo : '../example/RedPrimitive.html',
+		 demo : '../example/primitives/RedCylinder.html',
 		 return : 'RedCylinder Instance'
 	 }
      :DOC*/

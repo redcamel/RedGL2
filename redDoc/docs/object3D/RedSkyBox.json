@@ -2,7 +2,7 @@
   {
     "constructorYn": true,
     "title": "RedSkyBox",
-    "description": "\nRedSkyBox Instance 생성기\n",
+    "description": "\n\t RedSkyBox Instance 생성기\n ",
     "params": {
       "redGL": [
         {
@@ -20,7 +20,7 @@
       "RedBaseObject3D"
     ],
     "demo": "../example/object3D/RedSkyBox.html",
-    "example": "\nvar tScene3D;\ntScene3D = RedScene()\ntScene3D.skyBox = RedSkyBox(RedGL Instance, [\n'asset/cubemap/SwedishRoyalCastle/px.jpg',\n'asset/cubemap/SwedishRoyalCastle/nx.jpg',\n'asset/cubemap/SwedishRoyalCastle/ny.jpg',\n'asset/cubemap/SwedishRoyalCastle/py.jpg',\n'asset/cubemap/SwedishRoyalCastle/pz.jpg',\n'asset/cubemap/SwedishRoyalCastle/nz.jpg'\n])\n",
+    "example": "\n          var tScene3D;\n          tScene3D = RedScene( RedGL Instance );\n          tScene3D.skyBox = RedSkyBox(\n              RedGL Instance,\n              [\n              'asset/cubemap/SwedishRoyalCastle/px.jpg',\n              'asset/cubemap/SwedishRoyalCastle/nx.jpg',\n              'asset/cubemap/SwedishRoyalCastle/ny.jpg',\n              'asset/cubemap/SwedishRoyalCastle/py.jpg',\n              'asset/cubemap/SwedishRoyalCastle/pz.jpg',\n              'asset/cubemap/SwedishRoyalCastle/nz.jpg'\n              ]\n          );\n ",
     "return": "RedSkyBox Instance"
   }
 ]

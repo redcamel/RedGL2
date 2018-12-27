@@ -17,13 +17,16 @@ var RedMTLLoader;
 				 {type:'RedGL'}
 			 ],
 			 path : [
-				 {type:'String'}
+				 {type:'String'},
+				 '파일이 위치한 경로'
 			 ],
 			 fileName : [
-				 {type:'String'}
+				 {type:'String'},
+				 '파일이름'
 			 ],
 			 callback : [
-				 {type:'Function'}
+				 {type:'Function'},
+				 '로딩완료시 실행될 콜백'
 			 ]
 		 },
 		 return : 'void'

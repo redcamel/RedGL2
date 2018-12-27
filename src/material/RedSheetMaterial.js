@@ -80,12 +80,10 @@ var RedSheetMaterial;
 				 'RedBitmapTexture Instance'
 			 ]
 		 },
-		 extends : [
-		    'RedBaseMaterial'
-		 ],
+		 extends : ['RedBaseMaterial'],
 		 demo : '../example/material/RedSheetMaterial.html',
 		 example : `
-			 RedSheetMaterial(RedGL Instance, RedBitmapTexture(RedGL Instance, src))
+			 RedSheetMaterial(RedGL Instance, RedBitmapTexture(RedGL Instance, src), frameRate, segmentW, segmentH, totalFrame );
 		 `,
 		 return : 'RedSheetMaterial Instance'
 	 }
@@ -128,13 +126,27 @@ var RedSheetMaterial;
      {
 		 title :`addAction`,
 		 code : 'METHOD',
-		 description : `addAction`,
+		 description : `
+		    키 기반 액션추가.
+		 `,
 		 params : {
 			 key : [
 				 {type:'String'}
 			 ],
 			 option : [
-				 {type:'Object'}
+				 {type:'Object'},
+				 `
+				 <code>
+                    // 옵션값 예시
+                    {
+                        diffuseTexture : RedBitmapTexture Instance,
+                        segmentW : 가로 분할 수,
+                        segmentH : 세로 분할 수,
+                        totalFrame : 전체 프레임수,
+                        frameRate : 초당 프레임 속도
+                    }
+                </code>
+                `
 			 ]
 		 },
 		 return : 'void'
@@ -147,7 +159,9 @@ var RedSheetMaterial;
      {
 		 title :`setAction`,
 		 code : 'METHOD',
-		 description : `setAction`,
+		 description : `
+		    addAction에 의해 추가된 액션을 실행함
+		 `,
 		 params : {
 			 key : [
 				 {type:'String'}
@@ -162,6 +176,16 @@ var RedSheetMaterial;
         this['segmentH'] = this['_aniMap'][key]['segmentH'];
         this['totalFrame'] = this['_aniMap'][key]['totalFrame'];
         this['frameRate'] = this['_aniMap'][key]['frameRate'];
+        /**DOC:
+         {
+ 	     code : 'PROPERTY',
+		 title :`currentIndex`,
+		 description : `
+		    현재 프레임 인덱스
+         `,
+		 return : 'int'
+	 }
+         :DOC*/
         this['currentIndex'] = 0;
         this['_nextFrameTime'] = 0;
     };
@@ -169,7 +193,9 @@ var RedSheetMaterial;
      {
 		 title :`play`,
 		 code : 'METHOD',
-		 description : `play`,
+		 description : `
+		    현재 액션을 재생함
+		 `,
 		 return : 'void'
 	 }
      :DOC*/
@@ -180,7 +206,10 @@ var RedSheetMaterial;
      {
 		 title :`stop`,
 		 code : 'METHOD',
-		 description : `stop`,
+		 description : `
+		    현재 액션 재생을 멈춤.
+		    프레임은 0번으로 지정됨
+		 `,
 		 return : 'void'
 	 }
      :DOC*/
@@ -192,7 +221,9 @@ var RedSheetMaterial;
      {
 		 title :`pause`,
 		 code : 'METHOD',
-		 description : `pause`,
+		 description : `
+		    현재 액션을 현재 프레임에서 멈춤
+		 `,
 		 return : 'void'
 	 }
      :DOC*/
@@ -203,7 +234,9 @@ var RedSheetMaterial;
      {
 		 title :`gotoAndStop`,
 		 code : 'METHOD',
-		 description : `gotoAndStop`,
+		 description : `
+		    해당 프레임으로 가서 멈춤
+		 `,
 		 return : 'void'
 	 }
      :DOC*/
@@ -217,7 +250,9 @@ var RedSheetMaterial;
      {
 		 title :`gotoAndPlay`,
 		 code : 'METHOD',
-		 description : `gotoAndPlay`,
+		 description : `
+		    해당 프레임 부터 재생
+		 `,
 		 return : 'void'
 	 }
      :DOC*/
@@ -233,7 +268,7 @@ var RedSheetMaterial;
          code : 'PROPERTY',
 		 title :`diffuseTexture`,
 		 description : `diffuseTexture`,
-		 return : 'RedSheetMaterial'
+		 return : 'RedBitmapTexture'
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'diffuseTexture', 'sampler2D', {essential: true});
@@ -250,7 +285,10 @@ var RedSheetMaterial;
      {
  	     code : 'PROPERTY',
 		 title :`loop`,
-		 description : `기본값 : true`,
+		 description : `
+		    반복여부 설정.
+		    기본값 : true
+         `,
 		 return : 'Boolean'
 	 }
      :DOC*/
@@ -259,7 +297,10 @@ var RedSheetMaterial;
      {
  	     code : 'PROPERTY',
 		 title :`frameRate`,
-		 description : `최소값 : 1`,
+		 description : `
+		    초당 프레임 속도
+		    최소값 : 1
+        `,
 		 return : 'Number'
 	 }
      :DOC*/
@@ -273,7 +314,10 @@ var RedSheetMaterial;
      {
  	     code : 'PROPERTY',
 		 title :`segmentW`,
-		 description : `최소값 : 1`,
+		 description : `
+		    가로 분할 수
+		    최소값 : 1
+         `,
 		 return : 'Number'
 	 }
      :DOC*/
@@ -282,7 +326,10 @@ var RedSheetMaterial;
      {
  	     code : 'PROPERTY',
 		 title :`segmentH`,
-		 description : `최소값 : 1`,
+		 description : `
+		    세로 분할 수
+		    최소값 : 1
+         `,
 		 return : 'Number'
 	 }
      :DOC*/

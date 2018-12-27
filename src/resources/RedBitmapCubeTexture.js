@@ -96,12 +96,16 @@ var RedBitmapCubeTexture;
 		 ],
          demo : '../example/resources/RedBitmapCubeTexture.html',
 		 example : `
-		 RedBitmapCubeTexture( RedGL Instance,  srcList, {
-			 min: gl.LINEAR_MIPMAP_NEAREST,
-			 mag: gl.LINEAR,
-			 wrap_s: gl.REPEAT,
-			 wrap_t: gl.REPEAT
-		 })
+            RedBitmapCubeTexture(
+                RedGL Instance,
+                srcList,
+                {
+                    min: gl.LINEAR_MIPMAP_NEAREST,
+                    mag: gl.LINEAR,
+                    wrap_s: gl.REPEAT,
+                    wrap_t: gl.REPEAT
+                }
+            )
 		 `,
 		 return : 'RedBitmapCubeTexture Instance'
 	 }
@@ -146,9 +150,9 @@ var RedBitmapCubeTexture;
 		 code:`PROPERTY`,
 		 title :`srcList`,
 		 description : `
-			 srcList
+			 큐브 이미지 결로 리스트.
 		 `,
-		 return : 'void'
+		 return : 'Array'
 	 }
      :DOC*/
     Object.defineProperty(RedBitmapCubeTexture.prototype, 'srcList', {
@@ -169,7 +173,7 @@ var RedBitmapCubeTexture;
 		 description : `
 			 텍스쳐 옵션 정의
 		 `,
-		 return : 'void'
+		 return : 'Object'
 	 }
      :DOC*/
     Object.defineProperty(RedBitmapCubeTexture.prototype, 'option', {

@@ -2,7 +2,7 @@
   {
     "constructorYn": true,
     "title": "RedGLTFLoader",
-    "description": "\nGLTF 로더\nCOLOR_0, TANGENT는 아직 지원하지 않는다.\n",
+    "description": "\n\t GLTF 로더.\n\t 애니메이션 지원함.\n\t COLOR_0, TANGENT는 아직 지원하지 않는다.\n ",
     "params": {
       "redGL": [
         {
@@ -12,19 +12,23 @@
       "path": [
         {
           "type": "String"
-        }
+        },
+        "파일이 위치한 경로"
       ],
       "fileName": [
         {
           "type": "String"
-        }
+        },
+        "파일이름"
       ],
       "callback": [
         {
           "type": "Function"
-        }
+        },
+        "로딩완료시 실행될 콜백"
       ]
     },
+    "example": "\n    // GLTF 로딩\n          RedGLTFLoader(\n              RedGL Instance, // redGL\n              assetPath + 'glTF/basic/', // assetRootPath\n              'DamagedHelmet.gltf', // fileName\n              function (v) { // callBack\n                  tScene.addChild(v['resultMesh'])\n              },\n              RedBitmapCubeTexture( // environmentTexture\n                  RedGL Instance,\n                  [\n                      assetPath + 'cubemap/posx.png',\n                      assetPath + 'cubemap/negx.png',\n                      assetPath + 'cubemap/posy.png',\n                      assetPath + 'cubemap/negy.png',\n                      assetPath + 'cubemap/posz.png',\n                      assetPath + 'cubemap/negz.png'\n                  ]\n              )\n          );\n ",
     "demo": "../example/loader/gltf/RedGLTFLoader.html",
     "return": "void"
   }

@@ -2,12 +2,18 @@
   {
     "constructorYn": true,
     "title": "RedSphere",
-    "description": "\nRedSphere Instance 생성기.\nBox 형태의 RedGeometry 생성\n",
+    "description": "\n\t\t RedSphere Instance 생성기.\n\t\t Box 형태의 RedGeometry 생성\n\t ",
     "params": {
       "redGL": [
         {
           "type": "RedGL"
         }
+      ],
+      "radius": [
+        {
+          "type": "number"
+        },
+        "기본값 : 1"
       ],
       "widthSegments": [
         {
@@ -31,7 +37,7 @@
         {
           "type": "uint"
         },
-        "기본값 : 2"
+        "기본값 : Math.PI * 2"
       ],
       "thetaStart": [
         {
@@ -49,8 +55,8 @@
     "extends": [
       "RedGeometry"
     ],
-    "demo": "../example/RedPrimitive.html",
-    "example": "\nRedSphere(RedGL Instance);\nRedSphere(RedGL Instance, 1);\nRedSphere(RedGL Instance, 1, 16,16);\n",
+    "demo": "../example/primitives/RedSphere.html",
+    "example": "\n\t\t RedSphere(RedGL Instance);\n\t\t RedSphere(RedGL Instance, 1);\n\t\t RedSphere(RedGL Instance, 1, 16,16,16);\n\t ",
     "return": "RedSphere Instance"
   }
 ]

@@ -108,7 +108,7 @@ var RedBuffer;
 				 {type:'Object'},
 				 `
 				 버퍼의 인터리브 구성 정보
-				 RedBuffer.ARRAY_BUFFER 일때만 필요
+				 <b>RedBuffer.ARRAY_BUFFER</b> 일때만 필요
 				 `,
 				 `<code>
 				 [
@@ -124,34 +124,45 @@ var RedBuffer;
 		 },
 		 demo : '../example/geometry/RedBuffer.html',
 		 example : `
-			 var interleaveData, indexData;
-			 var tInterleaveBuffer, tIndexBuffer
-			 interleaveData = new Float32Array([
-				 0.0, 0.5, 0.0, 0.0, 0.5,
-				 -0.5, -0.5, 0.0, 0.5, 0.5,
-				 0.5, -0.5, 0.0, 0.5, 0.0
-			 ]);
-			 indexData = new Uint16Array([0, 1, 2])
-			 // 인터리브 버퍼생성
-			 tInterleaveBuffer = RedBuffer(
-				 this, // RedGL Instance
-				 'tInterleaveBuffer', // key
-				 RedBuffer.ARRAY_BUFFER, // bufferType
-				 interleaveData, // data
-				 [
-				   RedInterleaveInfo('aVertexPosition', 3),
-				   RedInterleaveInfo('aTexcoord', 2)
-				 ]
-			 )
-			 // 인덱스 버퍼생성
-			 tIndexBuffer = RedBuffer(
-				 this, // RedGL Instance
-				 'tIndexBuffer', // key
-				 RedBuffer.ELEMENT_ARRAY_BUFFER, // bufferType
-				 indexData  // data
-			 )
-			 console.log('인터리브버퍼', tInterleaveBuffer)
-			 console.log('인덱스버퍼', tIndexBuffer)
+            var canvas;
+            canvas = document.createElement('canvas');
+            document.body.appendChild(canvas);
+            RedGL(canvas, function (v) {
+                if (v) {
+                    var interleaveData, indexData; // 데이터 변수
+                    var tInterleaveBuffer, tIndexBuffer; // 버퍼 변수
+                    // 인터리브 데이터 생성
+                    interleaveData = new Float32Array([
+                        0.0, 0.5, 0.0, 0.0, 0.5,
+                        -0.5, -0.5, 0.0, 0.5, 0.5,
+                        0.5, -0.5, 0.0, 0.5, 0.0
+                    ]);
+                    // 인덱스 데이터 생성
+                    indexData = new Uint16Array([0, 1, 2]);
+                    // 인터리브 버퍼생성
+                    tInterleaveBuffer = RedBuffer(
+                        this, // RedGL Instance
+                        'tInterleaveBuffer', // key
+                        RedBuffer.ARRAY_BUFFER, // bufferType
+                        interleaveData, // data
+                        [
+                            RedInterleaveInfo('aVertexPosition', 3), // 프로그램에서 aVertexPosition 키를 사용하고 포인트당 3개로 구성됨
+                            RedInterleaveInfo('aTexcoord', 2)  // 프로그램에서 aTexcoord 키를 사용하고 포인트당 2개로 구성됨
+                        ]
+                    );
+                    // 인덱스 버퍼생성
+                    tIndexBuffer = RedBuffer(
+                        this, // RedGL Instance
+                        'tIndexBuffer', // key
+                        RedBuffer.ELEMENT_ARRAY_BUFFER, // bufferType
+                        indexData  // data
+                    );
+                    console.log('인터리브버퍼', tInterleaveBuffer);
+                    console.log('인덱스버퍼', tIndexBuffer);
+                } else {
+                    console.log('초기화 실패!')
+                }
+            });
 		 `,
 		 return : 'RedBuffer Instance'
 	 }
@@ -186,7 +197,7 @@ var RedBuffer;
          {
 			 code : 'PROPERTY',
 			 title :`data`,
-			 description : `data`,
+			 description : `버퍼 구성 데이터`,
 			 return : 'TypedArray'
 		 }
          :DOC*/
@@ -204,7 +215,10 @@ var RedBuffer;
          {
 			 code : 'PROPERTY',
 			 title :`glBufferType`,
-			 description : `bufferType에 대응하는 gl.ARRAY_BUFFER or gl.ELEMENT_ARRAY_BUFFER 상수`,
+			 description : `
+			    bufferType 에 대응하는 gl.ARRAY_BUFFER or gl.ELEMENT_ARRAY_BUFFER 상수.
+			    생성시 자동 판별되어 입력됨.
+             `,
 			 return : 'gl.ARRAY_BUFFER or glELEMENT_ARRAY_BUFFER 상수'
 		 }
          :DOC*/
@@ -214,8 +228,8 @@ var RedBuffer;
 			 code : 'PROPERTY',
 			 title :`glArrayType`,
 			 description : `
-			 data의 type의 gl.XXX 상수
-			 ex) gl.FLOAT, gl.BYTE
+                 입력된 데이터의 타입으로 판별한 gl.XXX 상수
+                 ex) gl.FLOAT, gl.BYTE
 			 `,
 			 return : 'gl.XXX 상수'
 		 }
@@ -235,8 +249,8 @@ var RedBuffer;
          {
 			 code : 'PROPERTY',
 			 title :`webglBuffer`,
-			 description : `WebGLBuffer`,
-			 return : 'WebGLBuffer'
+			 description : `생성된 WebGLBuffer`,
+			 return : 'WebGLBuffer Instance'
 		 }
          :DOC*/
         this['webglBuffer'] = tGL.createBuffer();
@@ -249,7 +263,7 @@ var RedBuffer;
 			 title :`upload`,
 			 description : `
 				 버퍼 데이터 갱신
-				 기존 버퍼의 타입과 다른 타입의 값이 들어올경우 에러.
+				 기존 버퍼의 타입과 다른 타입의 데이터가 들어 올 경우 에러.
 			 `,
 			 params : {
 				 data : [
@@ -281,6 +295,14 @@ var RedBuffer;
         this['upload'](this['data']);
         console.log(this);
     };
+    /**DOC:
+     {
+         code : 'METHOD',
+         title :`dispose`,
+         description : `dispose`,
+         return : 'void'
+     }
+     :DOC*/
     RedBuffer.prototype['dispose'] = function () {
         if (this['webglBuffer'] && !this['isPrimitiveBuffer']) {
             this['webglBuffer']['gl'].deleteBuffer(this['webglBuffer'])

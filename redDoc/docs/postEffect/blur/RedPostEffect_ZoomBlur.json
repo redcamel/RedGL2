@@ -2,25 +2,25 @@
   {
     "code": "PROPERTY",
     "title": "amount",
-    "description": "\n강도\n기본값 : 38\n",
+    "description": "\n\t 강도\n\t 기본값 : 38\n ",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "centerX",
-    "description": "\n정중앙 중심의 가로 위치\n기본값 : 0.0\n",
+    "description": "\n\t 정중앙 중심의 가로 위치\n\t 기본값 : 0.0\n ",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "centerY",
-    "description": "\n정중앙 중심의 세로 위치\n기본값 : 0.0\n",
+    "description": "\n\t 정중앙 중심의 세로 위치\n\t 기본값 : 0.0\n ",
     "return": "Number"
   },
   {
     "constructorYn": true,
     "title": "RedPostEffect_ZoomBlur",
-    "description": "\nRedPostEffect_ZoomBlur Instance 생성.\n",
+    "description": "\n\t RedPostEffect_ZoomBlur Instance 생성.\n ",
     "params": {
       "redGL": [
         {

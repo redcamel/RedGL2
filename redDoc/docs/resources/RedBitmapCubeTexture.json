@@ -2,13 +2,13 @@
   {
     "code": "PROPERTY",
     "title": "option",
-    "description": "\n텍스쳐 옵션 정의\n",
-    "return": "void"
+    "description": "\n\t 텍스쳐 옵션 정의\n ",
+    "return": "Object"
   },
   {
     "constructorYn": true,
     "title": "RedBitmapCubeTexture",
-    "description": "\nRedBitmapCubeTexture Instance 생성\n",
+    "description": "\n\t RedBitmapCubeTexture Instance 생성\n ",
     "params": {
       "redGL": [
         {
@@ -25,7 +25,7 @@
           "type": "Object"
         },
         "텍스쳐 정의옵션",
-        "\n<code>\n{\nmin: gl.LINEAR_MIPMAP_NEAREST,\nmag: gl.LINEAR,\nwrap_s: gl.REPEAT,\nwrap_t: gl.REPEAT\n}\n</code>\n"
+        "\n\t\t <code>\n\t\t {\n\t\t\t min: gl.LINEAR_MIPMAP_NEAREST,\n\t\t\t mag: gl.LINEAR,\n\t\t\t wrap_s: gl.REPEAT,\n\t\t\t wrap_t: gl.REPEAT\n\t\t }\n\t\t </code>\n\t\t "
       ],
       "callBack": [
         {
@@ -37,13 +37,13 @@
       "RedBaseTexture"
     ],
     "demo": "../example/resources/RedBitmapCubeTexture.html",
-    "example": "\nRedBitmapCubeTexture( RedGL Instance,  srcList, {\nmin: gl.LINEAR_MIPMAP_NEAREST,\nmag: gl.LINEAR,\nwrap_s: gl.REPEAT,\nwrap_t: gl.REPEAT\n})\n",
+    "example": "\n          RedBitmapCubeTexture(\n              RedGL Instance,\n              srcList,\n              {\n                  min: gl.LINEAR_MIPMAP_NEAREST,\n                  mag: gl.LINEAR,\n                  wrap_s: gl.REPEAT,\n                  wrap_t: gl.REPEAT\n              }\n          )\n ",
     "return": "RedBitmapCubeTexture Instance"
   },
   {
     "code": "PROPERTY",
     "title": "srcList",
-    "description": "\nsrcList\n",
-    "return": "void"
+    "description": "\n\t 큐브 이미지 결로 리스트.\n ",
+    "return": "Array"
   }
 ]

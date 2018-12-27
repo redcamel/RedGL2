@@ -8,19 +8,19 @@
   {
     "code": "PROPERTY",
     "title": "normalize",
-    "description": "\n기본값 : false\n",
+    "description": "\n    기본값 : false\n    ",
     "return": "Boolean"
   },
   {
     "code": "PROPERTY",
     "title": "offset",
-    "description": "\nRedBuffer 생성시 자동 주입됨.\n",
+    "description": "\n    RedBuffer 생성시 자동 주입됨.\n ",
     "return": "Int"
   },
   {
     "constructorYn": true,
     "title": "RedInterleaveInfo",
-    "description": "\nRedInterleaveInfo Instance 생성자\n",
+    "description": "\n     인터리브 버퍼 구성 정보 데이터.\n\t RedInterleaveInfo Instance 생성자\n ",
     "params": {
       "attributeKey": [
         {
@@ -42,8 +42,8 @@
         "기본값 : false"
       ]
     },
-    "example": "\nRedInterleaveInfo('aVertexPosition', 3);\n",
-    "return": "RedBuffer Instance"
+    "example": "\n\t RedInterleaveInfo('aVertexPosition', 3); // 프로그램에서 aVertexPosition 키를 사용하고 포인트당 3개로 구성됨을 선언함.\n ",
+    "return": "RedInterleaveInfo Instance"
   },
   {
     "code": "PROPERTY",

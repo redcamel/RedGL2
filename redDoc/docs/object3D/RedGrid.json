@@ -2,7 +2,7 @@
   {
     "code": "PROPERTY",
     "title": "color1",
-    "description": "color1",
+    "description": "중앙 그리드 색상",
     "params": {
       "size": [
         {
@@ -16,7 +16,7 @@
   {
     "code": "PROPERTY",
     "title": "color2",
-    "description": "color2",
+    "description": "그리드 색상",
     "params": {
       "size": [
         {
@@ -44,7 +44,7 @@
   {
     "constructorYn": true,
     "title": "RedGrid",
-    "description": "\nRedGrid Instance 생성기\n",
+    "description": "\n\t RedGrid Instance 생성기\n ",
     "params": {
       "redGL": [
         {
@@ -81,7 +81,7 @@
       "RedBaseContainer",
       "RedBaseObject3D"
     ],
-    "example": "\nvar tScene;\ntScene = RedScene();\ntScene['grid'] = RedGrid(redGL Instance)\n",
+    "example": "\n\t var tScene;\n\t tScene = RedScene Instance;\n\t tScene['grid'] = RedGrid(RedGL Instance);\n\t tScene['grid'].color1 = '#fff';\n\t tScene['grid'].color2 = '#fff';\n\t tScene['grid'].size = 100;\n\t tScene['grid'].divisions = 100;\n ",
     "return": "RedGrid Instance"
   },
   {
