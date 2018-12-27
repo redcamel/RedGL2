@@ -22,16 +22,19 @@ var RedSkyBox;
 		 ],
 		 demo : '../example/object3D/RedSkyBox.html',
 		 example : `
-			 var tScene3D;
-			 tScene3D = RedScene()
-			 tScene3D.skyBox = RedSkyBox(RedGL Instance, [
-				 'asset/cubemap/SwedishRoyalCastle/px.jpg',
-				 'asset/cubemap/SwedishRoyalCastle/nx.jpg',
-				 'asset/cubemap/SwedishRoyalCastle/ny.jpg',
-				 'asset/cubemap/SwedishRoyalCastle/py.jpg',
-				 'asset/cubemap/SwedishRoyalCastle/pz.jpg',
-				 'asset/cubemap/SwedishRoyalCastle/nz.jpg'
-			 ])
+            var tScene3D;
+            tScene3D = RedScene( RedGL Instance );
+            tScene3D.skyBox = RedSkyBox(
+                RedGL Instance,
+                [
+                'asset/cubemap/SwedishRoyalCastle/px.jpg',
+                'asset/cubemap/SwedishRoyalCastle/nx.jpg',
+                'asset/cubemap/SwedishRoyalCastle/ny.jpg',
+                'asset/cubemap/SwedishRoyalCastle/py.jpg',
+                'asset/cubemap/SwedishRoyalCastle/pz.jpg',
+                'asset/cubemap/SwedishRoyalCastle/nz.jpg'
+                ]
+            );
 		 `,
 		 return : 'RedSkyBox Instance'
 	 }

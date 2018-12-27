@@ -2,7 +2,7 @@
   {
     "constructorYn": true,
     "title": "RedDirectionalShadowMaterial",
-    "description": "\nRedDirectionalShadowMaterial Instance 생성\n",
+    "description": "\n\t RedDirectionalShadow 의 뎁스를 생성하기 위한 재질\n\t 시스템적으로 사용됨\n ",
     "params": {
       "redGL": [
         {
@@ -13,7 +13,6 @@
     "extends": [
       "RedBaseMaterial"
     ],
-    "example": "\nRedDirectionalShadowMaterial(RedGL Instance, RedBitmapTexture(RedGL Instance, src))\n",
     "return": "RedDirectionalShadowMaterial Instance"
   }
 ]

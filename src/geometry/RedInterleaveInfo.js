@@ -6,6 +6,7 @@ var RedInterleaveInfo;
 		 constructorYn : true,
 		 title :`RedInterleaveInfo`,
 		 description : `
+		     인터리브 버퍼 구성 정보 데이터.
 			 RedInterleaveInfo Instance 생성자
 		 `,
 		 params : {
@@ -24,9 +25,9 @@ var RedInterleaveInfo;
 			 ]
 		 },
 		 example : `
-			 RedInterleaveInfo('aVertexPosition', 3);
+			 RedInterleaveInfo('aVertexPosition', 3); // 프로그램에서 aVertexPosition 키를 사용하고 포인트당 3개로 구성됨을 선언함.
 		 `,
-		 return : 'RedBuffer Instance'
+		 return : 'RedInterleaveInfo Instance'
 	 }
      :DOC*/
     RedInterleaveInfo = function (attributeKey, size, normalize) {
@@ -74,7 +75,7 @@ var RedInterleaveInfo;
 			 return : 'Int'
 		 }
          :DOC*/
-        this['offset'] = null;// RedBuffer생성시 주입됨
+        this['offset'] = null;
     };
     Object.freeze(RedInterleaveInfo);
 })();

@@ -2,13 +2,13 @@
   {
     "constructorYn": true,
     "title": "RedGLUtil",
-    "description": "\n이것저것모음\n",
+    "description": "\n\t 이것저것모음\n ",
     "return": "void"
   },
   {
     "code": "STATIC METHOD",
     "title": "RedGLUtil.calculateNormals",
-    "description": "\n버텍스 배열과 인덱스 배열을 기반으로 노말 배열을 계산함.\n적용은 알아서 해야함 -_-;; 계산만해줌\n",
+    "description": "\n\t 버텍스 배열과 인덱스 배열을 기반으로 노말 배열을 계산함.\n\t 적용은 알아서 해야함 -_-;; 계산만해줌\n ",
     "params": {
       "vertexArray": [
         {
@@ -25,8 +25,31 @@
   },
   {
     "code": "STATIC METHOD",
+    "title": "RedGLUtil.clamp",
+    "description": "\n\t clamp\n ",
+    "params": {
+      "value": [
+        {
+          "type": "Number"
+        }
+      ],
+      "min": [
+        {
+          "type": "Number"
+        }
+      ],
+      "max": [
+        {
+          "type": "Number"
+        }
+      ]
+    },
+    "return": "Number"
+  },
+  {
+    "code": "STATIC METHOD",
     "title": "RedGLUtil.getStrFromComment",
-    "description": "\n문자열중 멀티 라인 코멘트 사이값을 반환함.\n프로그램 생성기에서 사용\n",
+    "description": "\n\t 문자열중 멀티 라인 코멘트 사이값을 반환함.\n\t 프로그램 생성기에서 사용.\n ",
     "params": {
       "source": [
         {
@@ -39,7 +62,7 @@
   {
     "code": "STATIC METHOD",
     "title": "RedGLUtil.hexToRGB_ZeroToOne",
-    "description": "\nhex값을 RGB로 변환 (0 ~ 1로 변환함)\n",
+    "description": "\n\t hex값을 RGB로 변환 (0 ~ 1로 변환함)\n ",
     "params": {
       "hex": [
         {
@@ -47,13 +70,13 @@
         }
       ]
     },
-    "example": "\nRedGLUtil.hexToRGB_ZeroToOne('#fff') // [1,1,1]\n",
+    "example": "\n\t RedGLUtil.hexToRGB_ZeroToOne('#fff') // [1,1,1]\n ",
     "return": "Array"
   },
   {
     "code": "STATIC METHOD",
     "title": "RedGLUtil.isPowerOf2",
-    "description": "\n2n 값인지 판단\n",
+    "description": "\n\t 2n 값인지 판단\n ",
     "params": {
       "v": [
         {
@@ -61,12 +84,23 @@
         }
       ]
     },
+    "example": "\n\t RedGLUtil.isPowerOf2(2); // true\n\t RedGLUtil.isPowerOf2(4); // true\n\t RedGLUtil.isPowerOf2(5); // false\n ",
     "return": "Boolean"
   },
   {
     "code": "STATIC METHOD",
+    "title": "RedGLUtil.makePowerOf2Source",
+    "description": "\n\t 입력된 소스를 기반으로 2n 이미지를 만듬.\n\t 시스템에서 사용함.\n "
+  },
+  {
+    "code": "STATIC METHOD",
+    "title": "RedGLUtil.mat4ToEuler",
+    "description": "\n\t mat4ToEuler\n\t doc 작성해야함\n "
+  },
+  {
+    "code": "STATIC METHOD",
     "title": "RedGLUtil.nextHighestPowerOfTwo",
-    "description": "\n입력된 값을 기준으로 다음 2n 값을 구함\n",
+    "description": "\n\t 입력된 값을 기준으로 다음 2n 값을 구함.\n\t 입력된 값이 2n인 경우 그대로 반환.\n ",
     "params": {
       "v": [
         {
@@ -74,12 +108,37 @@
         }
       ]
     },
+    "example": "\n\t RedGLUtil.nextHighestPowerOfTwo(2); // 2\n\t RedGLUtil.nextHighestPowerOfTwo(4); // 4\n\t RedGLUtil.nextHighestPowerOfTwo(5); // 8\n ",
     "return": "Number"
   },
   {
     "code": "STATIC METHOD",
+    "title": "RedGLUtil.quaternionToRotation",
+    "description": "\n\t quaternionToRotation\n\t doc 작성해야함\n "
+  },
+  {
+    "code": "STATIC METHOD",
+    "title": "RedGLUtil.quaternionToRotationMat4",
+    "description": "\n\t quaternionToRotationMat4\n\t doc 작성해야함\n "
+  },
+  {
+    "code": "STATIC METHOD",
+    "title": "RedGLUtil.regHex",
+    "description": "\n\t 입력값이 올바른 hex 형태인지 반환\n ",
+    "params": {
+      "hex": [
+        {
+          "type": "hex"
+        }
+      ]
+    },
+    "example": "\n\t RedGLUtil.regHex('#fff'); // true\n\t RedGLUtil.regHex('#ffffff'); // true\n\t RedGLUtil.regHex('~~'); // false\n ",
+    "return": "hex"
+  },
+  {
+    "code": "STATIC METHOD",
     "title": "RedGLUtil.rgb2hex",
-    "description": "\n255, 255, 255 형식의 RGB를 hex로 변환\n",
+    "description": "\n\t 255, 255, 255 형식의 RGB를 hex로 변환\n ",
     "params": {
       "red": [
         {
@@ -97,13 +156,13 @@
         }
       ]
     },
-    "example": "\nRedGLUtil.rgb2hex(255,255,255) // #ffffff\n",
+    "example": "\n\t RedGLUtil.rgb2hex(255,255,255) // #ffffff\n ",
     "return": "hex"
   },
   {
     "code": "STATIC METHOD",
     "title": "RedGLUtil.throwFunc",
-    "description": "\n에러생성기\n",
+    "description": "\n\t 에러생성기\n ",
     "return": "void"
   }
 ]

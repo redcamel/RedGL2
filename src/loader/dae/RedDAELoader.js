@@ -8,27 +8,38 @@ var RedDAELoader;
 		 constructorYn : true,
 		 title :`RedDAELoader`,
 		 description : `
-			 OBJ 로더
+			 DAE 로더.
+			 애니메이션은 지원하지 않음(GLTF만 지원)
 		 `,
 		 params : {
 			 redGL : [
 				 {type:'RedGL'}
 			 ],
 			 path : [
-				 {type:'String'}
+				 {type:'String'},
+				 '파일이 위치한 경로'
 			 ],
 			 fileName : [
-				 {type:'String'}
+				 {type:'String'},
+				 '파일이름'
 			 ],
 			 callback : [
-				 {type:'Function'}
+				 {type:'Function'},
+				 '로딩완료시 실행될 콜백'
 			 ]
 		 },
 	     demo : '../example/loader/dae/RedDAELoader.html',
 		 example : `
-		 RedDAELoader(RedGL Instance, '../asset/obj/gun/', 'Handgun_obj.obj', function (result) {
-			 tScene3D.addChild(result['resultMesh'])
-		 })
+		    // DAE 로딩
+            RedDAELoader(
+                RedGL Instance, // redGL
+                assetPath + 'dae/', // assetRootPath
+                'test1.dae', // fileName
+                function (v) { // callback
+                    console.log('로딩성공', v);
+                    (RedScene Instance).addChild(v['resultMesh']);
+                }
+            )
 		 `,
 		 return : 'void'
 	 }

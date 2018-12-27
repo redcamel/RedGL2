@@ -42,15 +42,7 @@ function () {
     testPLight2.debug = true
     tScene3D.addLight(testPLight2)
     tRenderer = RedRenderer();
-    (function () {
-        var sourceViewBt;
-        document.body.appendChild(sourceViewBt = document.createElement('button'));
-        sourceViewBt.style.cssText = 'position:fixed;left:10px;top:10px;background:rgb(91, 82, 170);color:#fff;z-index:10001;border:0;outline:none;cursor:pointer;padding:8px;font-size:11px;border-radius:5px'
-        sourceViewBt.innerHTML = 'debugRenderInfo'
-        sourceViewBt.addEventListener('click', function () {
-            tRenderer.renderDebuger.visible = !tRenderer.renderDebuger.visible
-        })
-    })();
+    tRenderer.setDebugButton()
     tWorld.addView(RedView('testView', this, tScene3D, tCamera));
     RedView('testView').setSize('100%', '100%')
     RedView('testView').setLocation('0%', '0%')
@@ -95,8 +87,6 @@ function () {
             'https://redcamel.github.io/RedGL2/asset/cubemap/SwedishRoyalCastle/nz.jpg'
         ]);
     (function () {
-        var testMaterial
-        testMaterial = RedPointColorMaterial(self)
         var interleaveData, interleaveData2
         interleaveData = []
         var i = 5000
@@ -106,21 +96,20 @@ function () {
             interleaveData.push(Math.random() * 0.1)
             interleaveData.push(Math.random(), Math.random(), Math.random(), 1)
         }
-        var testParticle = RedPointUnit(
+        var testParticle = RedColorPointCloud(
             self,
             interleaveData,
             [
                 RedInterleaveInfo('aVertexPosition', 3),
                 RedInterleaveInfo('aPointSize', 1),
                 RedInterleaveInfo('aVertexColor', 4)
-            ],
-            testMaterial
+            ]
         )
         tScene3D.addChild(testParticle)
     })();
     (function () {
         var testMaterial
-        testMaterial = RedPointBitmapMaterial(self, RedBitmapTexture(self, 'https://redcamel.github.io/RedGL2/asset/alphaTest.png'))
+        testMaterial = RedBitmapPointCloudMaterial(self, RedBitmapTexture(self, 'https://redcamel.github.io/RedGL2/asset/alphaTest.png'))
         var interleaveData
         interleaveData = []
         var i = 5000
@@ -129,7 +118,7 @@ function () {
             interleaveData.push(Math.random() * 2)
             interleaveData.push(Math.random(), Math.random(), Math.random(), 1)
         }
-        var testParticle = RedPointUnit(
+        var testParticle = RedBitmapPointCloud(
             self,
             interleaveData,
             [

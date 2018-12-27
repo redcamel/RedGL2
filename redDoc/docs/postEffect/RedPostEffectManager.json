@@ -2,7 +2,7 @@
   {
     "title": "addEffect",
     "code": "METHOD",
-    "description": "\npostEffect 추가\n",
+    "description": "\n\t\tpostEffect 추가\n\t",
     "params": {
       "postEffect": [
         {
@@ -15,13 +15,13 @@
   {
     "title": "antialiasing",
     "code": "PROPERTY",
-    "description": "\n안티알리어싱 설정\n현재는 RedPostEffect_FXAA만 등록가능\n",
+    "description": "\n\t\t안티알리어싱 설정\n\t\t현재는 RedPostEffect_FXAA만 등록가능\n\t",
     "return": "Array"
   },
   {
     "title": "bind",
     "code": "METHOD",
-    "description": "\n프레임 버퍼 바인딩.\n렌더러에서 자동호출됨.\n",
+    "description": "\n\t\t프레임 버퍼 바인딩.\n\t\t렌더러에서 자동호출됨.\n\t",
     "params": {
       "gl": [
         {
@@ -34,19 +34,19 @@
   {
     "title": "frameBuffer",
     "code": "PROPERTY",
-    "description": "\n이펙트 렌더링시 사용될 프레임버퍼\n",
+    "description": "\n\t\t이펙트 렌더링시 사용될 프레임버퍼\n\t",
     "return": "RedFrameBuffer Instance"
   },
   {
     "title": "postEffectList",
     "code": "PROPERTY",
-    "description": "\n이펙트 리스트\n",
+    "description": "\n\t\t이펙트 리스트\n\t",
     "return": "Array"
   },
   {
     "constructorYn": true,
     "title": "RedPostEffectManager",
-    "description": "\nRedPostEffectManager Instance 생성.\nRedScene 생성시 내부속성으로 자동생성됨.\n",
+    "description": "\n\t RedPostEffectManager Instance 생성.\n\t RedScene 생성시 내부속성으로 자동생성됨.\n ",
     "params": {
       "redGL": [
         {
@@ -60,13 +60,13 @@
   {
     "title": "removeAllEffect",
     "code": "METHOD",
-    "description": "\n모든 postEffect 제거\n",
+    "description": "\n\t\t모든 postEffect 제거\n\t",
     "return": "void"
   },
   {
     "title": "removeEffect",
     "code": "METHOD",
-    "description": "\npostEffect 제거\n",
+    "description": "\n\t\tpostEffect 제거\n\t",
     "params": {
       "postEffect": [
         {
@@ -79,7 +79,7 @@
   {
     "title": "unbind",
     "code": "METHOD",
-    "description": "\n프레임 버퍼 언바인딩.\n렌더러에서 자동호출됨.\n",
+    "description": "\n\t\t프레임 버퍼 언바인딩.\n\t\t렌더러에서 자동호출됨.\n\t",
     "params": {
       "gl": [
         {

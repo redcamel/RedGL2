@@ -2,13 +2,13 @@
   {
     "code": "METHOD",
     "title": "checkUniformAndProperty",
-    "description": "\n재질의 Program에서 사용하고 있는 유니폼키가\n속성으로 매칭되지 않는 경우 검출.\nex) 프로그램에서 <b>uTestUniform</b> 이 사용되어진다면 <b>testUniform</b>이 정의 되어있어야함.\n",
+    "description": "\n\t 재질의 Program에서 사용하고 있는 유니폼키가\n\t 재질의 속성으로 매칭되지 않는 경우 검출.\n\t ex) Program에서 <b>uTestUniform</b>을 사용 할 경우 <b>testUniform</b>이 정의 되어 있어야함.\n ",
     "return": "void"
   },
   {
     "code": "METHOD",
     "title": "makeProgramList",
-    "description": "\n다중 프로그램 리스트 생성기.\nTODO:// 좀더 구체적인 설명 적어야함\n",
+    "description": "\n\t <h1>다중 프로그램 리스트 생성기.\n\t TODO:// 좀더 구체적인 설명 적어야함</h1>\n ",
     "params": {
       "target": [
         {
@@ -50,7 +50,7 @@
   {
     "constructorYn": true,
     "title": "RedBaseMaterial",
-    "description": "\nRedBaseMaterial 기저층\n",
+    "description": "\n\t RedBaseMaterial 기저층\n ",
     "return": "RedBaseMaterial instance"
   }
 ]

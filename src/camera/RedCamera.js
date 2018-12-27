@@ -145,13 +145,17 @@ var RedCamera;
 		 code:`PROPERTY`,
 		 title :`lookAt`,
 		 description : `
-			 대상 위치를 바라보도록 matrix 설정
+			 대상 위치를 바라보도록 matrix 설정.
+			 실행시 targetX, targetY, targetZ, matrix가 변경됨.
 		 `,
 		 params : {
 			 x : [{type : "Number"}],
 			 y : [{type : "Number"}],
 			 z : [{type : "Number"}]
 		 },
+		 example:`
+		    RedCamera().lookAt(0,0,0); // 0,0,0을 바라보도록 설정
+		 `,
 		 return : 'mat4'
 	 }
      :DOC*/

@@ -102,7 +102,7 @@
             ]);
         (function () {
             var testMaterial
-            testMaterial = RedPointColorMaterial(self)
+            testMaterial = RedColorPointCloudMaterial(self)
             var interleaveData, interleaveData2
             interleaveData = []
             var i = 100000
@@ -112,7 +112,7 @@
                 interleaveData.push(Math.random() * 0.1)
                 interleaveData.push(Math.random(), Math.random(), Math.random(), 1)
             }
-            var testParticle = RedPointUnit(
+            var testParticle = RedColorPointCloud(
                 self,
                 interleaveData,
                 [
@@ -126,7 +126,7 @@
         })();
         (function () {
             var testMaterial
-            testMaterial = RedPointBitmapMaterial(self, RedBitmapTexture(self, '../asset/alphaTest.png'))
+            testMaterial = RedBitmapPointCloudMaterial(self, RedBitmapTexture(self, '../asset/alphaTest.png'))
             var interleaveData
             interleaveData = []
             var i = 100000
@@ -135,7 +135,7 @@
                 interleaveData.push(Math.random() * 2)
                 interleaveData.push(Math.random(), Math.random(), Math.random(), 1)
             }
-            var testParticle = RedPointUnit(
+            var testParticle = RedBitmapPointCloud(
                 self,
                 interleaveData,
                 [

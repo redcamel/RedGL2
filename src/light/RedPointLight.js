@@ -13,11 +13,12 @@ var RedPointLight;
 				 {type:'RedGL'}
 			 ],
 			 hex : [
-				 {type:'hex'}
+				 {type:'hex'},
+				 '기본값 : #fff'
 			 ],
 			 alpha : [
 				 {type:'number'},
-				 '알파값'
+				 '기본값 : 1'
 			 ]
 		 },
 		 extends : [
@@ -25,7 +26,7 @@ var RedPointLight;
 		 ],
 		 demo : '../example/light/RedPointLight.html',
 		 example: `
-			 RedPointLight(RedGL Instance, hex, alpha)
+			 RedPointLight(RedGL Instance, '#fff', 1);
 		 `,
 		 return : 'RedPointLight Instance'
 	 }

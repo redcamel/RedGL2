@@ -1,13 +1,13 @@
 "use strict";
 var RedDefinePropertyInfo;
 (function () {
+    //TODO: 코드 정리좀 해야함
     /**DOC:
      {
 		 constructorYn : true,
 		 title :`RedDefinePropertyInfo`,
 		 description : `
 			 prototype Property 선언기
-			 //TODO: 코드 정리좀 해야함
 		 `,
 		 return : 'void'
 	 }
@@ -180,11 +180,25 @@ var RedDefinePropertyInfo;
 	            //TODO: 추후 예제포함 정리해야함
 		    ]
 		 },
-		 return : 'void'
+		 return : 'void',
+		 example : `
+		    window['Test'] = function(){};
+		    RedDefinePropertyInfo.definePrototype(
+                'Test',
+                'power',
+                'number',
+                {
+                    min: 0,
+                    callback: function(v){
+                        console.log(v); // 설정후 추가 행위가 필요할때 사용
+                    }
+                }
+            );
+		 `
 	 }
      :DOC*/
     RedDefinePropertyInfo['definePrototype'] = function (clsName, name, type, option) {
         maker(window[clsName]['prototype'], clsName, name, type, option)
-    }
+    };
     Object.freeze(RedDefinePropertyInfo);
 })();

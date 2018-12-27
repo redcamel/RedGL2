@@ -2,7 +2,7 @@
   {
     "constructorYn": true,
     "title": "RedPostEffect_BlurX",
-    "description": "\nRedPostEffect_BlurX Instance 생성.\n",
+    "description": "\n\t RedPostEffect_BlurX Instance 생성.\n ",
     "params": {
       "redGL": [
         {
@@ -20,7 +20,7 @@
   {
     "code": "PROPERTY",
     "title": "size",
-    "description": "\n블러 사이즈\n기본값 : 50\n",
+    "description": "\n\t 블러 사이즈\n\t 기본값 : 50\n ",
     "return": "Number"
   }
 ]

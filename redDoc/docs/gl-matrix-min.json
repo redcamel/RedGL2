@@ -3,6 +3,6 @@
     "constructorYn": true,
     "state": "FINAL",
     "title": "gl-matrix-min",
-    "description": "\n<h1>https://github.com/toji/gl-matrix를 그대로 사용함.</h1>\n"
+    "description": "\n\t <h1>https://github.com/toji/gl-matrix를 그대로 사용함.</h1>\n "
   }
 ]

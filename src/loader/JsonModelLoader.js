@@ -6,8 +6,8 @@ var JsonModelLoader;
 		 constructorYn : true,
 		 title :`JsonModelLoader`,
 		 description : `
-			 초안 작업진행중
-			 현재 단순테스트용
+			 <h1>>현재 단순테스트용</h1>
+			 실제로 사용할지 여부는 미정.
 		 `,
 		 return : 'void'
 	 }

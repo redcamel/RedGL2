@@ -6,18 +6,19 @@ var RedFrameBuffer;
 		 constructorYn : true,
 		 title :`RedFrameBuffer`,
 		 description : `
-			 RedFrameBuffer Instance 생성자
+			 RedFrameBuffer Instance 생성자.
 		 `,
 		 params : {
 	         redGL : [
-				 {type:'RedGL Instance'},
-				 'test'
+				 {type:'RedGL Instance'}
 			 ],
 			 width : [
-				 {type:'Number'}
+				 {type:'Number'},
+				 '기기허용 최대값보다 큰경우 기기허용 최대값으로 설정됨'
 			 ],
 			 height : [
-				 {type:'Number'}
+				 {type:'Number'},
+				 '기기허용 최대값보다 큰경우 기기허용 최대값으로 설정됨'
 			 ]
 		 },
 		 example : `
@@ -71,7 +72,10 @@ var RedFrameBuffer;
          {
 			 code : 'METHOD',
 			 title :`bind`,
-			 description : `소유하고있는 webglFrameBuffer, webglTexture, webglRenderBuffer를 binding.`,
+			 description : `소유하고있는 <b>webglFrameBuffer, webglTexture, webglRenderBuffer</b>를 binding.`,
+			 params : {
+                 gl : [{type:'WebGL Context'}]
+			 },
 			 return : 'void'
 		 }
          :DOC*/
@@ -95,7 +99,10 @@ var RedFrameBuffer;
          {
 			 code : 'METHOD',
 			 title :`unbind`,
-			 description : `소유하고있는 webglFrameBuffer, webglTexture, webglRenderBuffer를 unbinding.`,
+			 description : `소유하고있는 <b>webglFrameBuffer, webglTexture, webglRenderBuffer</b>를 unbinding.`,
+			 params : {
+                 gl : [{type:'WebGL Context'}]
+			 },
 			 return : 'void'
 		 }
          :DOC*/

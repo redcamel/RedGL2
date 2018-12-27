@@ -2,7 +2,7 @@
   {
     "code": "PROPERTY",
     "title": "directionalShadow",
-    "description": "\ndirectionalShadow 지정\n",
+    "description": "\n\t directionalShadow 지정\n ",
     "params": {
       "shadow": [
         {
@@ -15,7 +15,7 @@
   {
     "constructorYn": true,
     "title": "RedShadowManager",
-    "description": "\nRedShadowManager Instance 생성.\nRedScene 생성시 내부속성으로 자동생성됨.\n",
+    "description": "\n\t RedShadowManager Instance 생성.\n\t RedScene 생성시 내부속성으로 자동생성됨.\n ",
     "params": {
       "redGL": [
         {

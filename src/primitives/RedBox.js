@@ -88,7 +88,6 @@ var RedBox;
 		 constructorYn : true,
 		 title :`RedBox`,
 		 description : `
-			 RedBox Instance 생성기.
 			 Box 형태의 RedGeometry 생성
 		 `,
 		 params : {
@@ -123,7 +122,7 @@ var RedBox;
 		 extends : [
 		    'RedGeometry'
 		 ],
-		 demo : '../example/RedPrimitive.html',
+		 demo : '../example/primitives/RedBox.html',
 		 example : `
 			 RedBox(RedGL Instance);
 			 RedBox(RedGL Instance, 1, 1, 1);

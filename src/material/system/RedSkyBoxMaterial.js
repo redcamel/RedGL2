@@ -34,8 +34,8 @@ var RedSkyBoxMaterial;
 		 constructorYn : true,
 		 title :`RedSkyBoxMaterial`,
 		 description : `
-			 RedSkyBoxMaterial Instance 생성.
 			 RedSkyBox Instance 생성시 내부적으로 자동으로 생성됨.
+			 시스템적으로 사용됨.
 		 `,
 		 params : {
 			 redGL : [
@@ -48,12 +48,6 @@ var RedSkyBoxMaterial;
 		 extends : [
 		    'RedBaseMaterial'
 		 ],
-		 example : `
-			 RedSkyBoxMaterial(
-				 RedGL Instance,
-				 RedBitmapCubeTexture Instance
-			 )
-		 `,
 		 return : 'RedSkyBoxMaterial Instance'
 	 }
      :DOC*/
@@ -78,6 +72,7 @@ var RedSkyBoxMaterial;
      {
 	     code : 'PROPERTY',
 		 title :`skyBoxTexture`,
+		 description :`skyBoxTexture`,
 		 return : 'RedBitmapCubeTexture'
 	 }
      :DOC*/

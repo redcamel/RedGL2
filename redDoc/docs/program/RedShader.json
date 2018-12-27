@@ -14,7 +14,7 @@
   {
     "constructorYn": true,
     "title": "RedShader",
-    "description": "\nRedShader Instance 생성기\nRedSystemShaderCode 소스와 머징된 RedShader Instance를 생성\n",
+    "description": "\n\t RedShader Instance 생성기\n\t RedSystemShaderCode 소스와 머징된 RedShader Instance를 생성\n ",
     "params": {
       "redGL": [
         {
@@ -40,12 +40,13 @@
         "쉐이더 문자열 소스"
       ]
     },
-    "example": "\nRedShader(RedGL Instance, 'test', RedShader.VERTEX, 'vec3 test; void main(){}')\nRedShader(RedGL Instance, 'test', RedShader.FRAGMENT, 'precision mediump float;vec3 test; void main(){test;}')\n",
+    "example": "\n RedShader(RedGL Instance, 'test', RedShader.VERTEX, 'vec3 test; void main(){}')\n RedShader(RedGL Instance, 'test', RedShader.FRAGMENT, 'precision mediump float;vec3 test; void main(){test;}')\n ",
     "return": "RedShader Instance"
   },
   {
     "title": "RedShader.FRAGMENT",
     "code": "CONST",
+    "description": "프레그먼트 쉐이더 상수",
     "return": "String"
   },
   {
@@ -71,12 +72,13 @@
         "버퍼 타입"
       ]
     },
-    "example": "\nRedShader.haskey(RedGL Instance, '찾고자하는키', RedShader.FRAGMENT or RedShader.VERTEX)\n",
+    "example": "\n\t RedShader.haskey(RedGL Instance, '찾고자하는키', RedShader.FRAGMENT or RedShader.VERTEX)\n ",
     "return": "Boolean"
   },
   {
     "title": "RedShader.VERTEX",
     "code": "CONST",
+    "description": "버텍스 쉐이더 상수",
     "return": "String"
   },
   {

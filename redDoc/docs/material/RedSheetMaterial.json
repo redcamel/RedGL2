@@ -2,7 +2,7 @@
   {
     "title": "addAction",
     "code": "METHOD",
-    "description": "addAction",
+    "description": "\n    키 기반 액션추가.\n ",
     "params": {
       "key": [
         {
@@ -12,7 +12,8 @@
       "option": [
         {
           "type": "Object"
-        }
+        },
+        "\n\t\t <code>\n                  // 옵션값 예시\n                  {\n                      diffuseTexture : RedBitmapTexture Instance,\n                      segmentW : 가로 분할 수,\n                      segmentH : 세로 분할 수,\n                      totalFrame : 전체 프레임수,\n                      frameRate : 초당 프레임 속도\n                  }\n              </code>\n              "
       ]
     },
     "return": "void"
@@ -25,50 +26,56 @@
   },
   {
     "code": "PROPERTY",
+    "title": "currentIndex",
+    "description": "\n    현재 프레임 인덱스\n       ",
+    "return": "int"
+  },
+  {
+    "code": "PROPERTY",
     "title": "diffuseTexture",
     "description": "diffuseTexture",
-    "return": "RedSheetMaterial"
+    "return": "RedBitmapTexture"
   },
   {
     "code": "PROPERTY",
     "title": "frameRate",
-    "description": "최소값 : 1",
+    "description": "\n    초당 프레임 속도\n    최소값 : 1\n      ",
     "return": "Number"
   },
   {
     "title": "gotoAndPlay",
     "code": "METHOD",
-    "description": "gotoAndPlay",
+    "description": "\n    해당 프레임 부터 재생\n ",
     "return": "void"
   },
   {
     "title": "gotoAndStop",
     "code": "METHOD",
-    "description": "gotoAndStop",
+    "description": "\n    해당 프레임으로 가서 멈춤\n ",
     "return": "void"
   },
   {
     "code": "PROPERTY",
     "title": "loop",
-    "description": "기본값 : true",
+    "description": "\n    반복여부 설정.\n    기본값 : true\n       ",
     "return": "Boolean"
   },
   {
     "title": "pause",
     "code": "METHOD",
-    "description": "pause",
+    "description": "\n    현재 액션을 현재 프레임에서 멈춤\n ",
     "return": "void"
   },
   {
     "title": "play",
     "code": "METHOD",
-    "description": "play",
+    "description": "\n    현재 액션을 재생함\n ",
     "return": "void"
   },
   {
     "constructorYn": true,
     "title": "RedSheetMaterial",
-    "description": "\nRedSheetMaterial Instance 생성\n",
+    "description": "\n\t RedSheetMaterial Instance 생성\n ",
     "params": {
       "redGL": [
         {
@@ -86,25 +93,25 @@
       "RedBaseMaterial"
     ],
     "demo": "../example/material/RedSheetMaterial.html",
-    "example": "\nRedSheetMaterial(RedGL Instance, RedBitmapTexture(RedGL Instance, src))\n",
+    "example": "\n\t RedSheetMaterial(RedGL Instance, RedBitmapTexture(RedGL Instance, src), frameRate, segmentW, segmentH, totalFrame );\n ",
     "return": "RedSheetMaterial Instance"
   },
   {
     "code": "PROPERTY",
     "title": "segmentH",
-    "description": "최소값 : 1",
+    "description": "\n    세로 분할 수\n    최소값 : 1\n       ",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "segmentW",
-    "description": "최소값 : 1",
+    "description": "\n    가로 분할 수\n    최소값 : 1\n       ",
     "return": "Number"
   },
   {
     "title": "setAction",
     "code": "METHOD",
-    "description": "setAction",
+    "description": "\n    addAction에 의해 추가된 액션을 실행함\n ",
     "params": {
       "key": [
         {
@@ -117,7 +124,7 @@
   {
     "title": "stop",
     "code": "METHOD",
-    "description": "stop",
+    "description": "\n    현재 액션 재생을 멈춤.\n    프레임은 0번으로 지정됨\n ",
     "return": "void"
   },
   {

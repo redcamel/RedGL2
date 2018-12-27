@@ -2,7 +2,7 @@
   {
     "title": "addLOD",
     "code": "METHOD",
-    "description": "\nLOD 추가.\n추가시 geometry, material 둘중 하나는 반드시 입력되어야함.\n",
+    "description": "\n\t LOD 추가.\n\t 추가시 geometry, material 둘중 하나는 반드시 입력되어야함.\n ",
     "params": {
       "level": [
         {
@@ -25,48 +25,100 @@
         }
       ]
     },
+    "example": "\n             var tMesh = RedBaseObject3D Instance;\n             tMesh.useLOD = true; // LOD 사용 설정\n             tMesh.addLOD(0, 5, RedSphere(this, 0.5, 32, 32, 32), RedColorMaterial(this, '#00ff00')); // 0레벨 LOD 추가\n             tMesh.addLOD(1, 10, RedSphere(this, 0.5, 16, 16, 16), RedColorMaterial(this, '#00ff00')); // 1레벨 LOD 추가\n             tMesh.addLOD(2, 15, RedSphere(this, 0.5, 8, 8, 8), RedColorMaterial(this, '#00ff00')); // 2레벨 LOD 추가\n             tMesh.addLOD(3, 20, RedSphere(this, 0.5, 4, 4, 4), RedColorMaterial(this, '#00ff00')); // 3레벨 LOD 추가\n             tMesh.addLOD(4, 25, RedSphere(this, 0.5, 3, 3, 3), RedColorMaterial(this, '#00ff00')); // 4레벨 LOD 추가\n ",
     "return": "void"
   },
   {
     "code": "PROPERTY",
     "title": "blendDst",
-    "description": "\n블렌드 목표값 factor\n기본값 : gl.ONE_MINUS_SRC_ALPHA\n",
+    "description": "\n\t 블렌드 목표값 factor\n\t 기본값 : gl.ONE_MINUS_SRC_ALPHA\n ",
     "return": "gl 상수"
   },
   {
     "code": "PROPERTY",
     "title": "blendSrc",
-    "description": "\n블렌드 소스값 factor\n기본값 : gl.ONE\n",
+    "description": "\n\t 블렌드 소스값 factor\n\t 기본값 : gl.ONE\n ",
     "return": "gl 상수"
   },
   {
     "code": "PROPERTY",
     "title": "children",
-    "description": "\n자식 리스트\n",
+    "description": "\n    자식 리스트\n ",
     "return": "Array"
   },
   {
     "code": "PROPERTY",
     "title": "cullFace",
-    "description": "\n컬링 페이스 설정\n기본값 : gl.BACK\n",
+    "description": "\n\t 컬링 페이스 설정\n\t 기본값 : gl.BACK\n ",
     "return": "gl 상수"
   },
   {
     "code": "PROPERTY",
     "title": "depthTestFunc",
-    "description": "\n뎁스 테스트 함수 설정\n기본값 : gl.LEQUAL\n",
+    "description": "\n\t 뎁스 테스트 함수 설정\n\t 기본값 : gl.LEQUAL\n ",
     "return": "gl 상수"
+  },
+  {
+    "title": "disposeAll",
+    "code": "METHOD",
+    "description": "\n\t 텍스쳐와 버퍼모두 dispose\n ",
+    "return": "void"
+  },
+  {
+    "title": "disposeAllBuffer",
+    "code": "METHOD",
+    "description": "\n\t 버퍼 전체 dispose\n ",
+    "return": "void"
+  },
+  {
+    "title": "disposeAllTexture",
+    "code": "METHOD",
+    "description": "\n\t 텍스쳐 전체 dispose\n ",
+    "return": "void"
+  },
+  {
+    "title": "disposeBuffer",
+    "code": "METHOD",
+    "description": "\n\t 텍스쳐 dispose,\n              'ex) indexBuffer'\n ",
+    "params": {
+      "key": [
+        {
+          "type": "String"
+        }
+      ]
+    },
+    "return": "void"
+  },
+  {
+    "title": "disposeTexture",
+    "code": "METHOD",
+    "description": "\n\t 텍스쳐 dispose\n ",
+    "params": {
+      "key": [
+        {
+          "type": "String"
+        },
+        "ex) diffuseTexture"
+      ]
+    },
+    "return": "void"
   },
   {
     "code": "PROPERTY",
     "title": "drawMode",
-    "description": "\n기본값 : gl.TRIANGLES\ndrawCall시 적용한 드로잉 모드\n",
+    "description": "\n\t 기본값 : gl.TRIANGLES\n\t drawCall시 적용한 드로잉 모드\n ",
     "return": "gl 상수"
+  },
+  {
+    "title": "geometry",
+    "code": "PROPERTY",
+    "description": "\n\t geometry\n ",
+    "return": "RedGeometry Instance"
   },
   {
     "title": "getScreenPoint",
     "code": "METHOD",
-    "description": "\n스크린좌표반환\n",
+    "description": "\n\t 스크린 좌표 반환\n ",
     "params": {
       "redView": [
         {
@@ -74,12 +126,13 @@
         }
       ]
     },
+    "example": "\n             (RedBaseObject3D Instance).getScreenPoint( RedView Instance ); // 로컬 좌표를 스크린상의 좌표로 반환\n ",
     "return": "Array"
   },
   {
     "title": "localToWorld",
     "code": "METHOD",
-    "description": "\n로컬좌표를 RedWorld 좌표로 변경\n",
+    "description": "\n\t 로컬좌표를 RedWorld 좌표로 변경\n ",
     "params": {
       "x": [
         {
@@ -97,7 +150,14 @@
         }
       ]
     },
+    "example": "\n             (RedBaseObject3D Instance).localToWorld(0,0,0); // 해당메쉬의 0,0,0을  RedWorld 상의 좌표로 반환\n ",
     "return": "Array"
+  },
+  {
+    "title": "material",
+    "code": "PROPERTY",
+    "description": "\n\t material\n ",
+    "return": "RedMaterial Instance"
   },
   {
     "code": "PROPERTY",
@@ -120,19 +180,19 @@
   {
     "code": "PROPERTY",
     "title": "pointSize",
-    "description": "\n기본값 : 1\ngl.POINTS로 그릴경우 반영될 포인트 사이즈.\n",
+    "description": "\n\t 기본값 : 1\n\t gl.POINTS로 그릴경우 반영될 포인트 사이즈.\n ",
     "return": "Number"
   },
   {
     "constructorYn": true,
     "title": "RedBaseObject3D",
-    "description": "\nRedBaseObject3D 기저층\n",
+    "description": "\n\t RedBaseObject3D 기저층.\n ",
     "return": "RedBaseObject3D Instance"
   },
   {
     "title": "RedBaseObject3D.build",
     "code": "STATIC METHOD",
-    "description": "\nRedBaseObject3D가 가지고있는 속성을 해당 인스턴스에 복사하기위해사용\n",
+    "description": "\n\tRedBaseObject3D가 가지고있는 속성을 해당 인스턴스에 복사하기위해사용.\n ",
     "params": {
       "gl": [
         {
@@ -140,7 +200,7 @@
         }
       ]
     },
-    "example": "\nvar testMesh = function (redGL) {\nvar tGL;\ntGL = redGL.gl;\nRedBaseObject3D['build'].call(this, tGL)\n}\n",
+    "example": "\n var testMesh = function (redGL) {\n\t var tGL;\n\t tGL = redGL.gl;\n\t RedBaseObject3D['build'].call(this, tGL)\n }\n ",
     "return": "void"
   },
   {
@@ -154,6 +214,7 @@
         }
       ]
     },
+    "example": "\n             var tMesh = RedBaseObject3D Instance;\n             tMesh.addLOD(0, 5, RedSphere(this, 0.5, 32, 32, 32), RedColorMaterial(this, '#00ff00')); // 0레벨 LOD 추가\n             tMesh.removeLOD(0); // 0레벨 LOD 삭제\n ",
     "return": "void"
   },
   {
@@ -189,25 +250,25 @@
   {
     "code": "PROPERTY",
     "title": "useBlendMode",
-    "description": "\n블렌드 모드 사용여부\n기본값 : true\n",
+    "description": "\n\t 블렌드 모드 사용여부\n\t 기본값 : true\n ",
     "return": "Boolean"
   },
   {
     "code": "PROPERTY",
     "title": "useCullFace",
-    "description": "\n컬링 사용여부\n기본값 : true\n",
+    "description": "\n\t 컬링 사용여부\n\t 기본값 : true\n ",
     "return": "Boolean"
   },
   {
     "code": "PROPERTY",
     "title": "useDepthMask",
-    "description": "\n뎁스 테스트 사용여부\n기본값 : true\n",
+    "description": "\n\t 뎁스 테스트 사용여부\n\t 기본값 : true\n ",
     "return": "Boolean"
   },
   {
     "code": "PROPERTY",
     "title": "useDepthTest",
-    "description": "\n뎁스 테스트 사용여부\n기본값 : true\n",
+    "description": "\n\t 뎁스 테스트 사용여부\n\t 기본값 : true\n ",
     "return": "Boolean"
   },
   {
@@ -219,13 +280,13 @@
   {
     "code": "PROPERTY",
     "title": "useTransparentSort",
-    "description": "\n투명도 소팅 여부\n기본값 : false\n",
+    "description": "\n\t 투명도 소팅 여부\n\t 기본값 : false\n ",
     "return": "Boolean"
   },
   {
     "title": "worldToLocal",
     "code": "METHOD",
-    "description": "\nRedWorld 좌표를 로컬좌표로 변환\n",
+    "description": "\n\t RedWorld 좌표를 로컬좌표로 변환\n ",
     "params": {
       "x": [
         {
@@ -243,6 +304,7 @@
         }
       ]
     },
+    "example": "\n             (RedBaseObject3D Instance).worldToLocal(0,0,0); // RedWorld 상의 0,0,0을  로컬 좌표로 반환\n ",
     "return": "Array"
   },
   {

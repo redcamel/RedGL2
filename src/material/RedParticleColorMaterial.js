@@ -45,9 +45,7 @@ var RedParticleColorMaterial;
 			 ]
 		 },
 		 demo : '../example/particle/RedParticleEmitter.html',
-		 extends : [
-		    'RedBaseMaterial'
-		 ],
+		 extends : ['RedBaseMaterial'],
 		 return : 'RedParticleColorMaterial Instance'
 	 }
      :DOC*/

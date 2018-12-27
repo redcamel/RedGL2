@@ -8,6 +8,7 @@ var RedRenderDebuger;
 		 description : `
 			 RedRenderDebuger Instance 생성
 			 렌더러 생성시 시스템적으로 자동생성됨.
+			 시스템적으로 사용됨.
 		 `,
 		 return : 'RedRenderDebuger Instance'
 	 }

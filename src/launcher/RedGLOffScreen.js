@@ -8,7 +8,7 @@ var RedGLOffScreen;
 		 constructorYn : true,
 		 title :`RedGLOffScreen`,
 		 description : `
-			 RedGLOffScreen Instance 생성
+			 RedGLOffScreen 런처
 		 `,
 		 params : {
 			 canvas : [
@@ -36,13 +36,13 @@ var RedGLOffScreen;
 		 example : `
 			<body>
                 <canvas id="testCanvas"></canvas>
-                <script id='testSource'>
+                <script>
                     var canvas = document.getElementById('testCanvas')
                     var redGLSrc = '../release/RedGL.min.js' // redGL 라이브러리 경로
                     var hostSrc = 'workerHost2.js' // 호스트 코드 경로
                     RedGLOffScreen(canvas, 1024, 768, redGLSrc, hostSrc)
                 </script>
-            </body>
+			</body>
 		 `,
 		 return : 'RedGLOffScreen Instance'
 	 }

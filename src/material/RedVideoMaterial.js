@@ -72,12 +72,13 @@ var RedVideoMaterial;
 				 'String'
 			 ]
 		 },
-		 extends : [
-		    'RedBaseMaterial'
-		 ],
+		 extends : ['RedBaseMaterial'],
 		 demo : '../example/material/RedVideoMaterial.html',
 		 example : `
-			 RedVideoMaterial(RedGL Instance, RedBitmapTexture(RedGL Instance, src))
+            RedVideoMaterial(
+                RedGL Instance,
+                RedBitmapTexture(RedGL Instance, src)
+            )
 		 `,
 		 return : 'RedVideoMaterial Instance'
 	 }
@@ -113,7 +114,8 @@ var RedVideoMaterial;
      {
 	     code : 'PROPERTY',
 		 title :`videoTexture`,
-		 return : 'RedVideoMaterial'
+		 description : `videoTexture`,
+		 return : 'RedVideoTexture'
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedVideoMaterial', 'videoTexture', 'samplerVideo', {essential: true});

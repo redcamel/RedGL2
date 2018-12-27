@@ -11,7 +11,7 @@
         "추가할 RedView Instance"
       ]
     },
-    "example": "\nvar tWorld = RedWorld()\ntWorld.addView( RedView(keyName, RedGL Instance ,RedScene Instance, RedCamera Instance) )\n",
+    "example": "\n\t var testWorld = RedWorld(); // 월드생성\n\t var testView = RedView( '뷰이름', RedGL Instance, RedScene Instance, RedCamera Instance ); // 뷰생성\n\t testWorld.addView( testView ); // 뷰등록\n",
     "return": "void"
   },
   {
@@ -26,7 +26,7 @@
         "고유키"
       ]
     },
-    "example": "\nvar tWorld = RedWorld();\ntWorld.addView( RedView('testView', RedGL Instance ,RedScene Instance, RedCamera Instance) );\nconsole.log( tWorld.getView('testView') ); // testView 반환\ntWorld.delView('testView');\nconsole.log( tWorld.getView('testView') ); // undefined\n",
+    "example": "\n\t var testWorld = RedWorld(); // 월드생성\n\t var testView = RedView( '뷰이름', RedGL Instance, RedScene Instance, RedCamera Instance ); // 뷰생성\n\t testWorld.addView( testView ); // 뷰등록\n\t console.log( testWorld.getView('뷰이름') ); // testView 반환\n\t testWorld.delView('뷰이름');\n\t console.log( testWorld.getView('뷰이름') ); // undefined 반환\n",
     "return": "void"
   },
   {
@@ -41,7 +41,7 @@
         "고유키"
       ]
     },
-    "example": "\nvar tWorld = RedWorld();\ntWorld.addView( RedView('testView', RedGL Instance ,RedScene Instance, RedCamera Instance) );\nconsole.log( tWorld.getView('testView') ); // testView 반환\ntWorld.delView('testView');\nconsole.log( tWorld.getView('testView') ); // undefined\n",
+    "example": "\n\t var testWorld = RedWorld(); // 월드생성\n\t var testView = RedView( '뷰이름', RedGL Instance, RedScene Instance, RedCamera Instance ); // 뷰생성\n\t testWorld.addView( testView ); // 뷰등록\n\t console.log( testWorld.getView('뷰이름') ); // testView 반환\n\t testWorld.delView('뷰이름');\n\t console.log( testWorld.getView('뷰이름') ); // undefined 반환\n",
     "return": "RedView"
   },
   {
@@ -56,7 +56,7 @@
         "고유키"
       ]
     },
-    "example": "\nvar tWorld = RedWorld();\ntWorld.addView( RedView('testView', RedGL Instance ,RedScene Instance, RedCamera Instance) );\nconsole.log(tWorld.getViewList())\n",
+    "example": "\n\t var testWorld = RedWorld(); // 월드생성\n\t var testView = RedView( '뷰이름', RedGL Instance, RedScene Instance, RedCamera Instance ); // 뷰생성\n\t var testView2 = RedView( '뷰이름2', RedGL Instance, RedScene Instance, RedCamera Instance ); // 뷰생성\n\t testWorld.addView( testView ); // 뷰등록\n\t testWorld.addView( testView2 ); // 뷰등록\n\t console.log(testWorld.getViewList()); // 뷰리스트 반환\n",
     "return": "Array"
   },
   {
@@ -71,15 +71,15 @@
         "고유키"
       ]
     },
-    "example": "\nvar tWorld = RedWorld();\ntWorld.addView( RedView('testView', RedGL Instance ,RedScene Instance, RedCamera Instance) );\nconsole.log(tWorld.hasView('testView')) // true\n",
+    "example": "\n\t var testWorld = RedWorld(); // 월드생성\n\t var testView = RedView( '뷰이름', RedGL Instance, RedScene Instance, RedCamera Instance ); // 뷰생성\n\t testWorld.addView( testView ); // 뷰등록\n\t console.log(testWorld.hasView('뷰이름')) // true 반환\n",
     "return": "Boolean"
   },
   {
     "constructorYn": true,
     "title": "RedWorld",
-    "description": "\nRedWorld Instance 생성자.\nRedWorld는 RedView를 소유하며 이는 렌더리스트로서 작동한다..\n",
-    "demo": "../example/RedWorld.html",
-    "example": "\nRedWorld();\n",
+    "description": "\n\t RedWorld Instance 생성자.\n\t RedGL Instance 에 설정가능함.\n\t RedView 목록을 관리함.\n\t RedWorld 내의 RedView 를 렌더링 대상으로 함.\n ",
+    "demo": "../example/etc/RedWorld.html",
+    "example": "\n\t RedWorld(); // RedWorld Instance 생성\n ",
     "return": "RedWorld Instance"
   }
 ]

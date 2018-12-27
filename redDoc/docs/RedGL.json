@@ -2,19 +2,19 @@
   {
     "code": "PROPERTY",
     "title": "detect",
-    "description": "\n하드웨어 디텍팅 정보\n",
+    "description": "\n\t 하드웨어 디텍팅 정보\n ",
     "return": "RedGLDetect Instance"
   },
   {
     "code": "PROPERTY",
     "title": "gl",
-    "description": "\n생성된 WebGL Context\n",
+    "description": "\n\t 생성된 WebGL Context\n ",
     "return": "WebGL Context Instance"
   },
   {
     "constructorYn": true,
     "title": "RedGL",
-    "description": "\nRedGL Instance 생성자.\nWebGL 초기화를 담당하며, 단일 월드를 소유한다.\n",
+    "description": "\n\t RedGL Instance 생성자.\n\t WebGL 초기화를 담당하며, 단일 월드(RedWorld Instance)를 소유한다.\n ",
     "params": {
       "canvas": [
         {
@@ -23,48 +23,47 @@
       ],
       "callback": [
         {
-          "type": "function"
+          "type": "Function"
         },
         "컨텍스트 초기화이후 실행될 콜백",
-        "리턴인자로 true,false를 반환한다"
+        "리턴인자로 <b>true, false</b>를 반환한다"
       ],
       "option": [
         {
           "type": "Object"
         },
         "초기화 옵션을 지정한다.",
-        "\n<code>\n// 초기값\n{\nalpha: false,\ndepth: true,\nstencil: false,\nantialias: true,\npremultipliedAlpha: false,\npreserveDrawingBuffer: false,\npowerPreference: 'default', // default, high-performance, low-power\nfailIfMajorPerformanceCaveat: false\n}\n</code>\n"
+        "\n              <code>\n              // 초기값\n              {\n                  alpha: false,\n                  depth: true,\n                  stencil: false,\n                  antialias: true,\n                  premultipliedAlpha: false,\n                  preserveDrawingBuffer: false,\n                  powerPreference: 'default', // default, high-performance, low-power\n                  failIfMajorPerformanceCaveat: false\n              }\n              </code>\n\t\t "
       ],
       "targetContextKey": [
         {
           "type": "String"
         },
         "컨텍스트 키를 명시적으로 지정할 경우 사용",
-        "입력하지 않을경우 webkit-3d,moz-webgl,3d,experimental-webgl,webgl,webgl2 중에서 가장 높은 값으로 선택됨"
+        "입력하지 않을경우 <b>webkit-3d,moz-webgl,3d,experimental-webgl, webgl</b> 중에서 가장 높은 값으로 선택됨"
       ]
     },
-    "demo": "../example/RedGL.html",
-    "example": "\n// 기초 초기화\nRedGL(document.getElementById('test'), function(v){\n// 콜백내용\n// 성공,실패에 따라 v값이 true or false.\nif(v){\n// 초기화 성공\n}else{\n// 초기화실패\n}\n})\n",
+    "demo": "../example/etc/RedGL.html",
+    "example": "\n          var canvas = document.createElement('canvas');\n          document.body.appendChild(canvas);\n          // 기초 초기화\n          RedGL(\n              canvas,\n              function(v){\n                  // 성공,실패에 따라 v값이 true or false.\n                  if(v){\n                      // 초기화 성공\n                      console.log(this.detect); // 디텍팅정보\n                      console.log(this.gl); // webGL context\n                      console.log(this.renderScale); // 렌더스케일 (기본값 : 1)\n                      this.setSize('100%', '100%'); // 사이즈 설정 : 숫자형, %형 둘다 허용\n                  }else{\n                      // 초기화실패\n                  }\n              }\n          )\n ",
     "return": "RedGL Instance"
   },
   {
     "code": "STATIC METHOD",
     "title": "RedGL.makeUUID",
-    "description": "\nUUID 생성기\n",
-    "example": "\nRedGL.makeUUID()\n",
+    "description": "\n\t UUID 생성기\n ",
+    "example": "\n\t RedGL.makeUUID()\n ",
     "return": "int"
   },
   {
     "title": "renderScale",
     "code": "PROPERTY",
-    "description": "\n기본값 : 1\n0이하일 경우 0.1로 세팅됨.\n렌더링시 사용할 적용할 렌더링 스케일\nsize 1024*768, renderScale 0.5 일경우 512 * 389로 렌더링된다\n",
-    "example": "\nRedGL(document.getElementById('test'), function (v) {\nthis.renderScale = 0.5 // 기본값 1\n})\n",
+    "description": "\n\t 렌더링시 사용할 적용할 렌더링 스케일.\n\t 기본값 : 1.\n\t 0이하일 경우 0.1로 세팅됨.\n\t size 1024*768, renderScale 0.5 일경우 512 * 389로 렌더링 됨.\n ",
     "return": "Number"
   },
   {
     "title": "setSize",
     "code": "METHOD",
-    "description": "\nRedGL Instance의 Canvas 사이즈 설정\npx, %단위만 입력가능.\n",
+    "description": "\n\t RedGL Instance의 Canvas 사이즈 설정\n\t px, %단위만 입력가능.\n ",
     "params": {
       "width": [
         {
@@ -77,7 +76,6 @@
         }
       ]
     },
-    "example": "\nRedGL(document.getElementById('test'), function(v){\nif(v){\n// 초기화 성공\nthis.setSize(200,200)\n}else{\n// 초기화실패\n}\n})\n",
     "return": "void"
   }
 ]

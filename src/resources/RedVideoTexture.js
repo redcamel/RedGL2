@@ -73,7 +73,10 @@ var RedVideoTexture;
 		 ],
 		 demo : '../example/resources/RedVideoTexture.html',
 		 example : `
-		    RedVideoTexture( RedGL Instance,  src or HTMLVideoElement)
+            RedVideoTexture(
+                RedGL Instance,
+                src or HTMLVideoElement
+            )
 		 `,
 		 return : 'RedVideoTexture Instance'
 	 }
@@ -100,9 +103,9 @@ var RedVideoTexture;
 		 code:`PROPERTY`,
 		 title :`src`,
 		 description : `
-			 src
+			 비디오 경로
 		 `,
-		 return : 'void'
+		 return : 'String or HTMLVideoElement'
 	 }
      :DOC*/
     Object.defineProperty(RedVideoTexture.prototype, 'src', {

@@ -8,11 +8,13 @@
   {
     "code": "PROPERTY",
     "title": "cutOff",
+    "description": "기본값 : 0",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "diffuseTexture",
+    "description": "diffuseTexture",
     "return": "RedBitmapTexture"
   },
   {
@@ -24,11 +26,13 @@
   {
     "code": "PROPERTY",
     "title": "emissiveTexture",
+    "description": "emissiveTexture",
     "return": "RedBitmapTexture"
   },
   {
     "code": "PROPERTY",
     "title": "environmentTexture",
+    "description": "environmentTexture",
     "return": "RedBitmapCubeTexture"
   },
   {
@@ -46,6 +50,7 @@
   {
     "code": "PROPERTY",
     "title": "normalTexture",
+    "description": "normalTexture",
     "return": "RedBitmapTexture"
   },
   {
@@ -57,12 +62,13 @@
   {
     "code": "PROPERTY",
     "title": "occlusionTexture",
+    "description": "occlusionTexture",
     "return": "RedBitmapTexture"
   },
   {
     "constructorYn": true,
     "title": "RedPBRMaterial",
-    "description": "\nRedPBRMaterial Instance 생성\n",
+    "description": "\n\t RedPBRMaterial Instance 생성\n ",
     "params": {
       "redGL": [
         {
@@ -88,13 +94,23 @@
         {
           "type": "RedBitmapTexture"
         }
+      ],
+      "emissiveTexture": [
+        {
+          "type": "RedBitmapTexture"
+        }
+      ],
+      "roughnessTexture": [
+        {
+          "type": "RedBitmapTexture"
+        }
       ]
     },
     "extends": [
       "RedBaseMaterial"
     ],
     "demo": "../example/material/RedPBRMaterial.html",
-    "example": "\nRedPBRMaterial(\nRedGL Instance,\nRedBitmapTexture(RedGL Instance, src), // diffuseTexture\nRedBitmapCubeTexture(RedGL Instance, srcList),\nRedBitmapTexture(RedGL Instance, src), // normalTexture\nRedBitmapTexture(RedGL Instance, src) // occlusionTexture\n)\n",
+    "example": "\n\t RedPBRMaterial(\n\t\t RedGL Instance,\n\t\t RedBitmapTexture(RedGL Instance, src), // diffuseTexture\n\t\t RedBitmapCubeTexture(RedGL Instance, srcList),\n\t\t RedBitmapTexture(RedGL Instance, src), // normalTexture\n\t\t RedBitmapTexture(RedGL Instance, src), // occlusionTexture\n\t\t RedBitmapTexture(RedGL Instance, src), // emissiveTexture\n\t\t RedBitmapTexture(RedGL Instance, src) // roughnessTexture\n\t )\n ",
     "return": "RedPBRMaterial Instance"
   },
   {
@@ -106,6 +122,7 @@
   {
     "code": "PROPERTY",
     "title": "roughnessTexture",
+    "description": "roughnessTexture",
     "return": "RedBitmapTexture"
   },
   {
@@ -117,7 +134,7 @@
   {
     "code": "PROPERTY",
     "title": "useFlatMode",
-    "description": "기본값 : true",
+    "description": "\n    flatMode 사용여부\n    기본값 : true\n ",
     "return": "boolean"
   }
 ]

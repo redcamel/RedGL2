@@ -2,25 +2,25 @@
   {
     "code": "PROPERTY",
     "title": "alpha",
-    "description": "\n기본값 : 1\n",
+    "description": "\n\t 기본값 : 1\n\t 최소값 : 0\n\t 최대값 : 1\n ",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "color",
-    "description": "\n색상\n",
+    "description": "\n\t색상(hex)\n ",
     "return": "hex"
   },
   {
     "code": "PROPERTY",
     "title": "intensity",
-    "description": "\n기본값 : 1\n",
+    "description": "\n\t 기본값 : 1\n\t 최소값 : 0\n ",
     "return": "Number"
   },
   {
     "constructorYn": true,
     "title": "RedBaseLight",
-    "description": "\nRedBaseLight 기저층\n",
+    "description": "\n\t RedBaseLight 기저층\n ",
     "return": "void"
   }
 ]

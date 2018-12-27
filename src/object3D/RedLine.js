@@ -22,22 +22,18 @@ var RedLine;
 		 ],
 		 demo : '../example/object3D/RedLine.html',
 		 example : `
-		 var tScene;
-		 var tLine;
-		 var tX, tY, tZ;
-		 var i;
-		 tScene = RedScene();
-		 i = 3 * 20;
-		 tLine = RedLine(redGL Instance, RedColorMaterial(redGL Instance))
-		 tX = tY = tZ = 0
-		 while (i--) {
-			 tX += Math.random() * 0.5
-			 tY += Math.random() * 0.5
-			 tZ += Math.random() * 0.5
-			 tLine.addPoint(tX, tY, tZ)
-		 }
-		 tLine.upload()
-		 tScene.addChild(tLine)
+            var tLine;
+            var tX, tY, tZ;
+            var i;
+            tLine = RedLine(RedGL Instance, RedColorMaterial( RedGL Instance ) ); // RedLine Instance 생성
+            i = 60;
+            tX = tY = tZ = 0;
+            while (i--) {
+                tX += Math.random() * 0.5;
+                tY += Math.random() * 0.5;
+                tZ += Math.random() * 0.5;
+                tLine.addPoint(tX, tY, tZ); // 포인트 추가
+            }
 		 `,
 		 return : 'RedLine Instance'
 	 }
@@ -62,12 +58,6 @@ var RedLine;
                 RedInterleaveInfo('aVertexPosition', 3)
             ]
         );
-        // this['_indexBuffer'] = RedBuffer(
-        // 	redGL,
-        // 	'RedLine_indexBuffer_' + this['_UUID'],
-        // 	RedBuffer.ELEMENT_ARRAY_BUFFER,
-        // 	new Uint16Array(this['_indexData'] )
-        // );
         this['geometry'] = RedGeometry(this['_interleaveBuffer'] /*,this['_indexBuffer']*/);
         this['material'] = material;
         this['drawMode'] = tGL.LINE_STRIP;
@@ -78,7 +68,7 @@ var RedLine;
 	     code : 'METHOD',
 		 title :`addPoint`,
 		 description : `
-			 라인포인트 추가
+			 라인 포인트 추가
 		 `,
 		 parmas : {
 			 x : [{type:'Number'}],
@@ -102,13 +92,8 @@ var RedLine;
 	     code : 'METHOD',
 		 title :`removeAllPoint`,
 		 description : `
-			 포인트 전체 제거
+			 라인 포인트 전체 제거
 		 `,
-		 parmas : {
-			 x : [{type:'Number'}],
-			 y : [{type:'Number'}],
-			 z : [{type:'Number'}]
-		 },
 		 return : 'void'
 	 }
      :DOC*/

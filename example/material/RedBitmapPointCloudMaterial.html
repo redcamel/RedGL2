@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>RedGL - RedPointBitmapMaterial</title>
+    <title>RedGL - RedBitmapPointCloudMaterial</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -52,10 +52,10 @@
             };
             setBase(this);
             //////////////////////////////////////////////////////////////////
-            // RedPointUnit 설정
+            // RedPointCloud 설정
             var i;
             var interleaveData;
-            var testRedPointUnit;
+            var testRedPointCloud;
             // 인터리브 정보 생성
             interleaveData = [];
             i = 100000
@@ -68,11 +68,9 @@
                 );
                 // pointSize
                 interleaveData.push(Math.random() * 1);
-                // color
-                interleaveData.push(Math.random(), Math.random(), Math.random(), 1);
             }
             // 포인트 유닛 생성
-            testRedPointUnit = RedPointUnit(
+            testRedPointCloud = RedBitmapPointCloud(
                 this,
                 interleaveData,
                 [
@@ -81,12 +79,12 @@
                     RedInterleaveInfo('aVertexColor', 4)
                 ],
                 // 포인트 재질 생성
-                RedPointBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'particle.png'))
+                RedBitmapPointCloudMaterial(this, RedBitmapTexture(this, assetPath + 'particle.png'))
             );
             // 블렌드모드 설정
-            testRedPointUnit['blendSrc'] = this.gl.ONE;
-            testRedPointUnit['blendDst'] = this.gl.ONE;
-            tScene.addChild(testRedPointUnit);
+            testRedPointCloud['blendSrc'] = this.gl.ONE;
+            testRedPointCloud['blendDst'] = this.gl.ONE;
+            tScene.addChild(testRedPointCloud);
 
         } else {
             console.log('초기화 실패!')

@@ -1,0 +1,29 @@
+[
+  {
+    "constructorYn": true,
+    "title": "RedXR",
+    "description": "\n\t WebXR 런처\n ",
+    "params": {
+      "canvas": [
+        {
+          "type": "Canvas Element"
+        }
+      ],
+      "callback": [
+        {
+          "type": "Function"
+        },
+        "XR 초기화 이후 실행될 콜백"
+      ],
+      "frameUpdater": [
+        {
+          "type": "Function"
+        },
+        "루퍼"
+      ]
+    },
+    "demo": "../example/launcher/RedXR.html",
+    "example": "\n           var canvas\n           var testMesh\n           canvas = document.getElementById('test');\n           document.body.appendChild(canvas);\n           baseTestUI.makeBaseUI();\n           RedXR(\n               canvas, // 캔버스\n               function (v) { // init callback\n                   testMesh = RedMesh(this, RedSphere(this, 1, 16, 16, 16), RedColorMaterial(this));\n                   testMesh.z = -10;\n                   testMesh.drawMode = this.gl.POINTS;\n                   testMesh.pointSize = 5;\n                   v['scene'].addChild(testMesh);\n               },\n               function (time) { // looper\n                   // console.log(time);\n                   testMesh.rotationX += 1;\n                   testMesh.rotationY += 1;\n                   testMesh.rotationZ += 1;\n               }\n           )\n\t ",
+    "return": "RedView Instance"
+  }
+]

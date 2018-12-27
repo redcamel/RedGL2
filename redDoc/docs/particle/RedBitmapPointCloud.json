@@ -1,0 +1,41 @@
+[
+  {
+    "code": "PROPERTY",
+    "title": "material",
+    "description": "material",
+    "return": "RedBitmapPointCloudMaterial Instance"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedBitmapPointCloud",
+    "description": "\n\t 비트맵 포인트 클라우드\n ",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ],
+      "interleaveData": [
+        {
+          "type": "Array"
+        }
+      ],
+      "interleaveDefineInfoList": [
+        {
+          "type": "Array"
+        }
+      ],
+      "material": [
+        {
+          "type": "RedBitmapPointCloudMaterial"
+        }
+      ]
+    },
+    "demo": "../example/particle/RedBitmapPointCloud.html",
+    "extends": [
+      "RedBaseContainer",
+      "RedBaseObject3D"
+    ],
+    "return": "RedBitmapPointCloud Instance"
+  }
+]

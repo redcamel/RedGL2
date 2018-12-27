@@ -2,7 +2,7 @@
   {
     "constructorYn": true,
     "title": "RedAmbientLight",
-    "description": "\nRedAmbientLight Instance 생성\n",
+    "description": "\n    기본 환경광.\n\tRedAmbientLight Instance 생성자.\n ",
     "params": {
       "redGL": [
         {
@@ -12,20 +12,21 @@
       "hex": [
         {
           "type": "hex"
-        }
+        },
+        "기본값 : #fff"
       ],
       "alpha": [
         {
           "type": "number"
         },
-        "알파값"
+        "기본값 : 0.1"
       ]
     },
     "extends": [
       "RedBaseLight"
     ],
     "demo": "../example/light/RedAmbientLight.html",
-    "example": "\nRedAmbientLight(RedGL Instance, hex, alpha)\n",
+    "example": "\n\t RedAmbientLight(RedGL Instance, '#fff', 1);\n ",
     "return": "RedAmbientLight Instance"
   },
   {

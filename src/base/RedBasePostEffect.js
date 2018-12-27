@@ -6,8 +6,9 @@ var RedBasePostEffect;
 		 constructorYn : true,
 		 title :`RedBasePostEffect`,
 		 description : `
-			 포스트 이펙스 정의 사용되는 기저층
+			 포스트 이펙트 정의 사용되는 기저층
 		 `,
+		 extends:['RedBaseMaterial'],
 		 return : 'RedBasePostEffect Instance'
 	 }
      :DOC*/
@@ -21,7 +22,8 @@ var RedBasePostEffect;
 		title :`updateTexture`,
 		code : 'METHOD',
 		description : `
-			포스트이펙트 정의시 반드시 재정의 되어야함
+			포스트이펙트 정의시 반드시 재정의 되어야함.
+			포스트 이펙트 내부에서 사용되는 텍스쳐를 업데이트함.
 		`,
 		return : 'void'
 	}

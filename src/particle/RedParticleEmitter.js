@@ -9,7 +9,8 @@ var RedParticleEmitter;
 		 constructorYn : true,
 		 title :`RedParticleEmitter`,
 		 description : `
-			 RedParticleEmitter Instance 생성기
+			 파티클 방출기
+			 <h1>이건코드정리부터해야겠음</h1>
 		 `,
 		 params : {
 			 redGL : [
@@ -32,7 +33,7 @@ var RedParticleEmitter;
 	 }
      :DOC*/
     RedParticleEmitter = function (redGL, defineObject, material) {
-        if (!(this instanceof RedParticleEmitter)) return new RedPointUnit(redGL, material);
+        if (!(this instanceof RedParticleEmitter)) return new RedPointCloud(redGL, material);
         RedBaseObject3D['build'].call(this, redGL.gl);
         this['list'] = [];
         this['_interleaveData'] = [];

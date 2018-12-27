@@ -8,7 +8,7 @@
   {
     "constructorYn": true,
     "title": "RedVideoMaterial",
-    "description": "\nRedVideoMaterial Instance 생성\n",
+    "description": "\n\t RedVideoMaterial Instance 생성\n ",
     "params": {
       "redGL": [
         {
@@ -26,12 +26,13 @@
       "RedBaseMaterial"
     ],
     "demo": "../example/material/RedVideoMaterial.html",
-    "example": "\nRedVideoMaterial(RedGL Instance, RedBitmapTexture(RedGL Instance, src))\n",
+    "example": "\n          RedVideoMaterial(\n              RedGL Instance,\n              RedBitmapTexture(RedGL Instance, src)\n          )\n ",
     "return": "RedVideoMaterial Instance"
   },
   {
     "code": "PROPERTY",
     "title": "videoTexture",
-    "return": "RedVideoMaterial"
+    "description": "videoTexture",
+    "return": "RedVideoTexture"
   }
 ]

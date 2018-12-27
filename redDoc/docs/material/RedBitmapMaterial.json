@@ -8,12 +8,13 @@
   {
     "code": "PROPERTY",
     "title": "diffuseTexture",
+    "description": "diffuseTexture",
     "return": "RedBitmapTexture"
   },
   {
     "constructorYn": true,
     "title": "RedBitmapMaterial",
-    "description": "\nRedBitmapMaterial Instance 생성\n",
+    "description": "\n\t RedBitmapMaterial Instance 생성자.\n ",
     "params": {
       "redGL": [
         {
@@ -30,7 +31,7 @@
       "RedBaseMaterial"
     ],
     "demo": "../example/material/RedBitmapMaterial.html",
-    "example": "\nRedBitmapMaterial( RedGL Instance, RedBitmapTexture(RedGL Instance, src) )\n",
+    "example": "\n\t RedBitmapMaterial( RedGL Instance, RedBitmapTexture(RedGL Instance, src) )\n ",
     "return": "RedBitmapMaterial Instance"
   }
 ]

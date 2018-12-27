@@ -2,13 +2,13 @@
   {
     "constructorYn": true,
     "title": "RedDefinePropertyInfo",
-    "description": "\nprototype Property 선언기\n//TODO: 코드 정리좀 해야함\n",
+    "description": "\n\t prototype Property 선언기\n ",
     "return": "void"
   },
   {
     "code": "STATIC METHOD",
     "title": "RedDefinePropertyInfo.definePrototype",
-    "description": "\nprototype Property 선언기\n",
+    "description": "\n\t prototype Property 선언기\n ",
     "params": {
       "clsName": [
         {
@@ -35,6 +35,7 @@
         "타입별 옵션 정의 가능"
       ]
     },
-    "return": "void"
+    "return": "void",
+    "example": "\n    window['Test'] = function(){};\n    RedDefinePropertyInfo.definePrototype(\n              'Test',\n              'power',\n              'number',\n              {\n                  min: 0,\n                  callback: function(v){\n                      console.log(v); // 설정후 추가 행위가 필요할때 사용\n                  }\n              }\n          );\n "
   }
 ]

@@ -173,20 +173,22 @@ var RedEnvironmentMaterial;
 			 ],
 			 displacementTexture : [
 				 {type:'RedBitmapTexture'}
+			 ],
+			 emissiveTexture : [
+				 {type:'RedBitmapTexture'}
 			 ]
 		 },
-		 extends : [
-		    'RedBaseMaterial'
-		 ],
+		 extends : ['RedBaseMaterial'],
 		 demo : '../example/material/RedEnvironmentMaterial.html',
 		 example : `
 			 RedEnvironmentMaterial(
 				 RedGL Instance,
 				 RedBitmapTexture(RedGL Instance, src), // diffuseTexture
-				 RedBitmapCubeTexture(RedGL Instance, srcList),
+				 RedBitmapCubeTexture(RedGL Instance, srcList), // environmentTexture
 				 RedBitmapTexture(RedGL Instance, src), // normalTexture
 				 RedBitmapTexture(RedGL Instance, src), // specularTexture
-				 RedBitmapTexture(RedGL Instance, src)  // displacementTexture
+				 RedBitmapTexture(RedGL Instance, src),  // displacementTexture
+				 RedBitmapTexture(RedGL Instance, src)  // emissiveTexture
 			 )
 		 `,
 		 return : 'RedEnvironmentMaterial Instance'
@@ -258,6 +260,7 @@ var RedEnvironmentMaterial;
      {
 	     code : 'PROPERTY',
 		 title :`diffuseTexture`,
+		 description :`diffuseTexture`,
 		 return : 'RedBitmapTexture'
 	 }
      :DOC*/
@@ -266,6 +269,7 @@ var RedEnvironmentMaterial;
      {
 	     code : 'PROPERTY',
 		 title :`environmentTexture`,
+		 description :`environmentTexture`,
 		 return : 'RedBitmapCubeTexture'
 	 }
      :DOC*/
@@ -277,6 +281,7 @@ var RedEnvironmentMaterial;
      {
 	     code : 'PROPERTY',
 		 title :`normalTexture`,
+		 description :`normalTexture`,
 		 return : 'RedBitmapTexture'
 	 }
      :DOC*/
@@ -285,6 +290,7 @@ var RedEnvironmentMaterial;
      {
 	     code : 'PROPERTY',
 		 title :`specularTexture`,
+		 description :`specularTexture`,
 		 return : 'RedBitmapTexture'
 	 }
      :DOC*/
@@ -293,6 +299,7 @@ var RedEnvironmentMaterial;
      {
 	     code : 'PROPERTY',
 		 title :`displacementTexture`,
+		 description :`displacementTexture`,
 		 return : 'RedBitmapTexture'
 	 }
      :DOC*/
@@ -301,6 +308,7 @@ var RedEnvironmentMaterial;
      {
 	     code : 'PROPERTY',
 		 title :`emissiveTexture`,
+		 description :`emissiveTexture`,
 		 return : 'RedBitmapTexture'
 	 }
      :DOC*/
@@ -381,7 +389,10 @@ var RedEnvironmentMaterial;
      {
 	     code : 'PROPERTY',
 		 title :`useFlatMode`,
-		 description : `기본값 : true`,
+		 description : `
+		    flatMode 사용여부
+		    기본값 : true
+		 `,
 		 return : 'boolean'
 	 }
      :DOC*/

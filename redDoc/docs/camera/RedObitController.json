@@ -2,64 +2,69 @@
   {
     "code": "PROPERTY",
     "title": "camera",
-    "description": "\n컨트롤러 생성시 자동생성됨\n",
+    "description": "\n\t 컨트롤러 생성시 자동생성됨\n ",
     "return": "RedCamera"
   },
   {
     "code": "PROPERTY",
     "title": "centerX",
+    "description": "회전축 X 포지션",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "centerY",
+    "description": "회전축 Y 포지션",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "centerZ",
+    "description": "회전축 Z 포지션",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "delayDistance",
-    "description": "\n거리 지연 속도\n기본값 : 0.1\n",
+    "description": "\n\t 거리 지연 속도\n\t 기본값 : 0.1\n ",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "delayRotation",
-    "description": "\n회전 지연 속도\n기본값 : 0.1\n",
+    "description": "\n\t 회전 지연 속도\n\t 기본값 : 0.1\n ",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "distance",
+    "description": "회전축과의 거리",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "maxTilt",
-    "description": "\n기본값 : 90\n",
+    "description": "\n\t 기본값 : 90\n ",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "minTilt",
-    "description": "\n기본값 : -90\n",
+    "description": "\n\t 기본값 : -90\n ",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "pan",
+    "description": "pan",
     "return": "Number"
   },
   {
     "constructorYn": true,
     "title": "RedObitController",
-    "description": "\nRedObitController Instance 생성자.\n",
+    "description": "\n\t RedObitController Instance 생성자.\n ",
     "demo": "../example/camera/RedObitController.html",
-    "example": "\nRedObitController(RedGL Instance)\n",
+    "example": "\n\t RedObitController(RedGL Instance)\n ",
     "params": {
       "redGL": [
         {
@@ -67,23 +72,27 @@
         }
       ]
     },
+    "extends": [
+      "RedBaseController"
+    ],
     "return": "RedObitController Instance"
   },
   {
     "code": "PROPERTY",
     "title": "speedDistance",
-    "description": "\n거리 속도\n기본값 : 2\n",
+    "description": "\n\t 거리 속도\n\t 기본값 : 2\n ",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "speedRotation",
-    "description": "\n회전 속도\n기본값 : 3\n",
+    "description": "\n\t 회전 속도\n\t 기본값 : 3\n ",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "tilt",
+    "description": "tilt",
     "return": "Number"
   },
   {

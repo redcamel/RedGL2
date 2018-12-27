@@ -7,6 +7,7 @@ var RedSystemShaderCode;
 		 title :`RedSystemShaderCode`,
 		 description : `
 			 쉐이더 기본 정의 코드.
+			 RedGL이 Instance 화 되면 RedSystemShaderCode.init 가 자동으로 실행되며 RedSystemShaderCode 를 실질적으로 구성한다.
 		 `,
 		 return : 'RedSystemShaderCode'
 	 }
@@ -17,7 +18,7 @@ var RedSystemShaderCode;
         var maxPointLight = 5;
         var maxJoint;
         if (RedGLDetect.BROWSER_INFO.browser == 'ie' && RedGLDetect.BROWSER_INFO.browserVer == 11) maxJoint = 60
-        else if(RedGLDetect.BROWSER_INFO.browser == 'iphone' || RedGLDetect.BROWSER_INFO.browser == 'ipad') maxJoint = 8
+        else if (RedGLDetect.BROWSER_INFO.browser == 'iphone' || RedGLDetect.BROWSER_INFO.browser == 'ipad') maxJoint = 8
         else maxJoint = 64
         //TODO 조인트 맥스 갯수 찾는 부분을 분기하거나 다른 방법으로 전달할 방법 생각해야함
         RedSystemShaderCode = {
@@ -26,7 +27,7 @@ var RedSystemShaderCode;
 				 code: 'CONST',
 				 title :`RedSystemShaderCode.vertexShareDeclare`,
 				 description : `
-					 버텍스 쉐이더 기본 생성코드 리스트
+					 버텍스 쉐이더 공용 정의 리스트
 				 `,
 				 return : 'Array'
 			 }
@@ -75,7 +76,7 @@ var RedSystemShaderCode;
 				 code: 'CONST',
 				 title :`RedSystemShaderCode.fragmentShareDeclare`,
 				 description : `
-					 프레그먼트 쉐이더 기본 생성코드 리스트
+					 프레그먼트 쉐이더 공용 정의 리스트
 				 `,
 				 return : 'Array'
 			 }
@@ -115,7 +116,27 @@ var RedSystemShaderCode;
                 'uniform sampler2D uDirectionalShadowTexture',
                 'varying highp vec4 vShadowPos'
             ],
+            /**DOC:
+             {
+				 code: 'CONST',
+				 title :`RedSystemShaderCode.systemUniform`,
+				 description : `
+					 시스템 유니폼 정보
+				 `,
+				 return : 'Object'
+			 }
+             :DOC*/
             systemUniform: {},
+            /**DOC:
+             {
+				 code: 'CONST',
+				 title :`RedSystemShaderCode.vertexShareFunc`,
+				 description : `
+					 버텍스 쉐이더 공용 함수 리스트
+				 `,
+				 return : 'Object'
+			 }
+             :DOC*/
             vertexShareFunc: {
                 getSkinMatrix:
                     [
@@ -146,8 +167,18 @@ var RedSystemShaderCode;
                     ].join('\n')
 
             },
+            /**DOC:
+             {
+				 code: 'CONST',
+				 title :`RedSystemShaderCode.vertexShareFunc`,
+				 description : `
+					 프레그먼트 쉐이더 공용 함수 리스트
+				 `,
+				 return : 'Object'
+			 }
+             :DOC*/
             fragmentShareFunc: {
-                getFlatNormal : [
+                getFlatNormal: [
                     'vec3 getFlatNormal(vec3 vertexPosition){',
                     '   vec3 dx = dFdx(vVertexPosition.xyz);',
                     '   vec3 dy = dFdy(vVertexPosition.xyz);',

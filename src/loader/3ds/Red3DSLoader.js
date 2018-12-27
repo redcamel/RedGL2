@@ -224,27 +224,42 @@ var Red3DSLoader;
 		 constructorYn : true,
 		 title :`Red3DSLoader`,
 		 description : `
-			 OBJ 로더
+			 3DS 로더.
+			 애니메이션은 지원하지 않음(GLTF만 지원)
 		 `,
 		 params : {
 			 redGL : [
 				 {type:'RedGL'}
 			 ],
 			 path : [
-				 {type:'String'}
+				 {type:'String'},
+				 '파일이 위치한 경로'
 			 ],
 			 fileName : [
-				 {type:'String'}
+				 {type:'String'},
+				 '파일이름'
 			 ],
 			 callback : [
-				 {type:'Function'}
+				 {type:'Function'},
+				 '로딩완료시 실행될 콜백'
 			 ]
 		 },
+		 example : `
+		    // 3ds 로딩
+            Red3DSLoader(
+                RedGL Instance, // redGL
+                assetPath + '3ds/portalgun/', // assetRootPath
+                'portalgun.3ds', // fileName
+                function (v) { // callback
+                    console.log('로딩성공', v);
+                    (RedScene Instance).addChild(v['resultMesh']);
+                }
+            )
+		 `,
 		 demo : '../example/loader/3ds/Red3DSLoader.html',
 		 return : 'void'
 	 }
      :DOC*/
-
     Red3DSLoader = function (redGL, path, fileName, callback) {
         if ((!(this instanceof Red3DSLoader))) return new Red3DSLoader(redGL, path, fileName, callback)
         console.log('~~~~~~~~~~~')

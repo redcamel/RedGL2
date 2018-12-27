@@ -150,11 +150,12 @@ var RedColorPhongTextureMaterial;
 				 {type:'RedGL'}
 			 ],
 			 hexColor : [
-				 {type:'hex'}
+				 {type:'hex'},
+				 '기본값 : #ff0000'
 			 ],
 			 alpha : [
 				 {type:'number'},
-				 '알파값'
+				 '기본값 : 1'
 			 ],
 			 normalTexture : [
 				 {type: 'RedBitmapTexture'}
@@ -169,9 +170,7 @@ var RedColorPhongTextureMaterial;
 				 {type: 'RedBitmapTexture'}
 			 ]
 		 },
-		 extends : [
-		    'RedBaseMaterial'
-		 ],
+		 extends : ['RedBaseMaterial'],
 		 demo : '../example/material/RedColorPhongTextureMaterial.html',
 		 example: `
 		 RedColorPhongTextureMaterial(RedGL Instance, hex, alpha, normalTexture, specularTexture)
@@ -228,7 +227,11 @@ var RedColorPhongTextureMaterial;
      {
 	     code : 'PROPERTY',
 		 title :`alpha`,
-		 description : `기본값 : 1`,
+		 description : `
+		    기본값 : 1
+		    최소값 : 0
+		    최대값 : 1
+         `,
 		 return : 'Number'
 	 }
      :DOC*/
@@ -237,6 +240,7 @@ var RedColorPhongTextureMaterial;
      {
 	     code : 'PROPERTY',
 		 title :`normalTexture`,
+		 description :`normalTexture`,
 		 return : 'RedBitmapTexture'
 	 }
      :DOC*/
@@ -245,6 +249,7 @@ var RedColorPhongTextureMaterial;
      {
 	     code : 'PROPERTY',
 		 title :`specularTexture`,
+		 description :`normalTexture`,
 		 return : 'RedBitmapTexture'
 	 }
      :DOC*/
@@ -253,6 +258,7 @@ var RedColorPhongTextureMaterial;
      {
 	     code : 'PROPERTY',
 		 title :`displacementTexture`,
+		 description :`displacementTexture`,
 		 return : 'RedBitmapTexture'
 	 }
      :DOC*/
@@ -261,6 +267,7 @@ var RedColorPhongTextureMaterial;
      {
 	     code : 'PROPERTY',
 		 title :`emissiveTexture`,
+		 description :`emissiveTexture`,
 		 return : 'RedBitmapTexture'
 	 }
      :DOC*/
@@ -332,7 +339,10 @@ var RedColorPhongTextureMaterial;
      {
 	     code : 'PROPERTY',
 		 title :`useFlatMode`,
-		 description : `기본값 : true`,
+		 description : `
+		    flatMode 사용여부
+		    기본값 : true
+		 `,
 		 return : 'boolean'
 	 }
      :DOC*/

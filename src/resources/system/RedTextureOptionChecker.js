@@ -6,13 +6,13 @@ var RedTextureOptionChecker;
 		 constructorYn : true,
 		 title :`RedTextureOptionChecker`,
 		 description : `texture 옵션 검증`,
-		 return : 'void'
+		 return : 'RedTextureOptionChecker'
 	 }
      :DOC*/
     RedTextureOptionChecker = {
         /**DOC:
          {
-			 type:'METHOD',
+			 code:'STATIC METHOD',
 			 title :`check`,
 			 description : `
 				 texture 옵션 검증
@@ -28,7 +28,6 @@ var RedTextureOptionChecker;
 					 {type:'webGL Context'}
 				 ]
 			 },
-			 example : ``,
 			 return : 'void'
 		 }
          :DOC*/

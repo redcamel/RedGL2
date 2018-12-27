@@ -66,16 +66,15 @@ var RedColorMaterial;
 				 {type:'RedGL'}
 			 ],
 			 hexColor : [
-				 {type:'hex'}
+				 {type:'hex'},
+				 '기본값 : #ff0000'
 			 ],
 			 alpha : [
 				 {type:'number'},
-				 '알파값'
+				 '기본값 : 1'
 			 ]
 		 },
-		 extends : [
-		    'RedBaseMaterial'
-		 ],
+		 extends : ['RedBaseMaterial'],
 		 demo : '../example/material/RedColorMaterial.html',
 		 example : `
 			 RedColorMaterial(RedGL Instance, hex)
@@ -137,7 +136,11 @@ var RedColorMaterial;
      {
 	     code : 'PROPERTY',
 		 title :`alpha`,
-		 description : `기본값 : 1`,
+		 description : `
+		    기본값 : 1
+		    최소값 : 0
+		    최대값 : 1
+         `,
 		 return : 'Number'
 	 }
      :DOC*/

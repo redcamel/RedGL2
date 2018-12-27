@@ -1,8 +1,8 @@
 "use strict";
-var RedPointColorMaterial;
+var RedColorPointCloudMaterial;
 (function () {
     var vSource, fSource;
-    var PROGRAM_NAME = 'pointColorProgram';
+    var PROGRAM_NAME = 'colorPointCloudProgram';
     var checked;
     vSource = function () {
         /* @preserve
@@ -32,25 +32,28 @@ var RedPointColorMaterial;
     /**DOC:
      {
 		 constructorYn : true,
-		 title :`RedPointColorMaterial`,
+		 title :`RedColorPointCloudMaterial`,
 		 description : `
-			 RedPointColorMaterial Instance 생성
+			 RedColorPointCloudMaterial.
+			 속성으로 컬러를 가지 않는다.
+			 단순히 RedPointCloud의 interleave 버퍼의 aVertexColor 값을 처리해 주는 역할을 한다.
 		 `,
 		 params : {
 			 redGL : [
 				 {type:'RedGL'}
 			 ]
 		 },
-		 demo : '../example/material/RedPointColorMaterial.html',
-		 extends : [
-		    'RedBaseMaterial'
-		 ],
-		 return : 'RedPointColorMaterial Instance'
+		 demo : '../example/material/RedColorPointCloudMaterial.html',
+		 extends : ['RedBaseMaterial'],
+		 example : `
+		     RedColorPointCloudMaterial(RedGL Instance));
+		 `,
+		 return : 'RedColorPointCloudMaterial Instance'
 	 }
      :DOC*/
-    RedPointColorMaterial = function (redGL) {
-        if (!(this instanceof RedPointColorMaterial)) return new RedPointColorMaterial(redGL);
-        redGL instanceof RedGL || RedGLUtil.throwFunc('RedPointColorMaterial : RedGL Instance만 허용.', redGL);
+    RedColorPointCloudMaterial = function (redGL) {
+        if (!(this instanceof RedColorPointCloudMaterial)) return new RedColorPointCloudMaterial(redGL);
+        redGL instanceof RedGL || RedGLUtil.throwFunc('RedColorPointCloudMaterial : RedGL Instance만 허용.', redGL);
         this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource);
         /////////////////////////////////////////
         // 유니폼 프로퍼티
@@ -64,7 +67,7 @@ var RedPointColorMaterial;
         }
         console.log(this);
     };
-    RedPointColorMaterial.prototype = new RedBaseMaterial();
+    RedColorPointCloudMaterial.prototype = new RedBaseMaterial();
     /**DOC:
      {
  	     code : 'PROPERTY',
@@ -73,6 +76,6 @@ var RedPointColorMaterial;
 		 return : 'Number'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedPointColorMaterial', 'alpha', 'number', {min: 0, max: 1});
-    Object.freeze(RedPointColorMaterial);
+    RedDefinePropertyInfo.definePrototype('RedColorPointCloudMaterial', 'alpha', 'number', {min: 0, max: 1});
+    Object.freeze(RedColorPointCloudMaterial);
 })();

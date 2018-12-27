@@ -2,13 +2,13 @@
   {
     "code": "PROPERTY",
     "title": "option",
-    "description": "\n텍스쳐 옵션 정의\n",
-    "return": "void"
+    "description": "\n\t 텍스쳐 옵션 정의\n ",
+    "return": "Object"
   },
   {
     "constructorYn": true,
     "title": "RedBitmapTexture",
-    "description": "\nRedBitmapTexture Instance 생성\n",
+    "description": "\n\t RedBitmapTexture Instance 생성\n ",
     "params": {
       "redGL": [
         {
@@ -25,7 +25,7 @@
           "type": "Object"
         },
         "텍스쳐 정의옵션",
-        "\n<code>\n{\nmin: this.gl.LINEAR_MIPMAP_NEAREST,\nmag: this.gl.LINEAR,\nwrap_s: this.gl.REPEAT,\nwrap_t: this.gl.REPEAT,\nanisotropic: 16 // 지원가능한경우에만 작동\n}\n</code>\n"
+        "\n\t\t <code>\n\t\t {\n\t\t\t min: gl.LINEAR_MIPMAP_NEAREST,\n\t\t\t mag: gl.LINEAR,\n\t\t\t wrap_s: gl.REPEAT,\n\t\t\t wrap_t: gl.REPEAT,\n\t\t\t anisotropic: 16 // 지원가능한경우에만 작동\n\t\t }\n\t\t </code>\n\t\t "
       ],
       "callBack": [
         {
@@ -37,13 +37,13 @@
       "RedBaseTexture"
     ],
     "demo": "../example/resources/RedBitmapTexture.html",
-    "example": "\nRedBitmapTexture( RedGL Instance,  src, {\nmin: gl.LINEAR_MIPMAP_NEAREST,\nmag: gl.LINEAR,\nwrap_s: gl.REPEAT,\nwrap_t: gl.REPEAT\n})\n",
+    "example": "\n          RedBitmapTexture(\n              RedGL Instance,\n              src,\n              {\n                  min: gl.LINEAR_MIPMAP_NEAREST,\n                  mag: gl.LINEAR,\n                  wrap_s: gl.REPEAT,\n                  wrap_t: gl.REPEAT\n              }\n          )\n ",
     "return": "RedBitmapTexture Instance"
   },
   {
     "code": "PROPERTY",
     "title": "src",
-    "description": "\nsrc\n",
-    "return": "void"
+    "description": "\n\t 이미지 경로\n ",
+    "return": "String or HTMLCanvasElement"
   }
 ]

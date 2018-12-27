@@ -17,6 +17,7 @@ var RedBasicController;
 				 {type:'RedGL'}
 			 ]
 		 },
+		 extends : ['RedBaseController'],
 		 return : 'RedBasicController Instance'
 	 }
      :DOC*/
@@ -198,6 +199,7 @@ var RedBasicController;
      {
 	     code : 'PROPERTY',
 		 title :`x`,
+		 description : `x`,
 		 return : 'Number'
 	 }
      :DOC*/
@@ -216,6 +218,7 @@ var RedBasicController;
      {
 	     code : 'PROPERTY',
 		 title :`y`,
+		 description : `y`,
 		 return : 'Number'
 	 }
      :DOC*/
@@ -234,6 +237,7 @@ var RedBasicController;
      {
 	     code : 'PROPERTY',
 		 title :`z`,
+		 description : `z`,
 		 return : 'Number'
 	 }
      :DOC*/
@@ -252,6 +256,7 @@ var RedBasicController;
      {
 	     code : 'PROPERTY',
 		 title :`tilt`,
+		 description : `tilt`,
 		 return : 'Number'
 	 }
      :DOC*/
@@ -270,6 +275,7 @@ var RedBasicController;
      {
 	     code : 'PROPERTY',
 		 title :`pan`,
+		 description : `pan`,
 		 return : 'Number'
 	 }
      :DOC*/

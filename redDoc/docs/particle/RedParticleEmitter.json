@@ -2,7 +2,7 @@
   {
     "constructorYn": true,
     "title": "RedParticleEmitter",
-    "description": "\nRedParticleEmitter Instance 생성기\n",
+    "description": "\n\t 파티클 방출기\n\t <h1>이건코드정리부터해야겠음</h1>\n ",
     "params": {
       "redGL": [
         {

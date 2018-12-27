@@ -8,13 +8,13 @@
   {
     "code": "PROPERTY",
     "title": "perspectiveScale",
-    "description": "\n퍼스펙티브에 스케일이 반응할것인가 여부\n기본값 true\n",
+    "description": "\n 퍼스펙티브에 스케일이 반응할것인가 여부\n 기본값 true\n ",
     "return": "Boolean"
   },
   {
     "constructorYn": true,
     "title": "RedSprite3D",
-    "description": "\nRedSprite3D Instance 생성기\n",
+    "description": "\n\t RedSprite3D Instance 생성기\n ",
     "params": {
       "redGL": [
         {
@@ -32,13 +32,13 @@
       "RedBaseObject3D"
     ],
     "demo": "../example/object3D/RedSprite3D.html",
-    "example": "\nvar tScene;\nvar tSprite3D;\ntScene = RedScene();\ntSprite3D = RedSprite3D(RedGL Instance, RedColorMaterial(RedGL Instance))\ntScene.addChild(tSprite3D)\n",
+    "example": "\n\t var tScene;\n\t var tSprite3D;\n\t tScene = RedScene();\n\t tSprite3D = RedSprite3D(RedGL Instance, RedColorMaterial(RedGL Instance))\n\t tScene.addChild(tSprite3D)\n ",
     "return": "RedSprite3D Instance"
   },
   {
     "code": "PROPERTY",
     "title": "sprite3DYn",
-    "description": "\nsprite3D 모드 사용 여부\n기본값 true\n",
+    "description": "\n sprite3D 모드 사용 여부\n 기본값 true\n ",
     "return": "Boolean"
   }
 ]

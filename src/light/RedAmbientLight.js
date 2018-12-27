@@ -6,18 +6,20 @@ var RedAmbientLight;
 		 constructorYn : true,
 		 title :`RedAmbientLight`,
 		 description : `
-			 RedAmbientLight Instance 생성
+		    기본 환경광.
+			RedAmbientLight Instance 생성자.
 		 `,
 		 params : {
 			 redGL : [
 				 {type:'RedGL'}
 			 ],
 			 hex : [
-				 {type:'hex'}
+				 {type:'hex'},
+				 '기본값 : #fff'
 			 ],
 			 alpha : [
 				 {type:'number'},
-				 '알파값'
+				 '기본값 : 0.1'
 			 ]
 		 },
 		 extends : [
@@ -25,7 +27,7 @@ var RedAmbientLight;
 		 ],
 		 demo : '../example/light/RedAmbientLight.html',
 		 example: `
-			 RedAmbientLight(RedGL Instance, hex, alpha)
+			 RedAmbientLight(RedGL Instance, '#fff', 1);
 		 `,
 		 return : 'RedAmbientLight Instance'
 	 }

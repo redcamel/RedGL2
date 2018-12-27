@@ -2,7 +2,7 @@
   {
     "constructorYn": true,
     "title": "RedVideoTexture",
-    "description": "\nRedVideoTexture Instance 생성\n",
+    "description": "\n\t RedVideoTexture Instance 생성\n ",
     "params": {
       "redGL": [
         {
@@ -24,13 +24,13 @@
       "RedBaseTexture"
     ],
     "demo": "../example/resources/RedVideoTexture.html",
-    "example": "\nRedVideoTexture( RedGL Instance,  src or HTMLVideoElement)\n",
+    "example": "\n          RedVideoTexture(\n              RedGL Instance,\n              src or HTMLVideoElement\n          )\n ",
     "return": "RedVideoTexture Instance"
   },
   {
     "code": "PROPERTY",
     "title": "src",
-    "description": "\nsrc\n",
-    "return": "void"
+    "description": "\n\t 비디오 경로\n ",
+    "return": "String or HTMLVideoElement"
   }
 ]

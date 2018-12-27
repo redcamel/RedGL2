@@ -19,7 +19,7 @@
   {
     "constructorYn": true,
     "title": "RedParticleBitmapMaterial",
-    "description": "\nRedParticleBitmapMaterial Instance 생성\n",
+    "description": "\n\t RedParticleBitmapMaterial Instance 생성\n ",
     "params": {
       "redGL": [
         {

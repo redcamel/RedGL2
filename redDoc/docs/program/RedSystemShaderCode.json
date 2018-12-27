@@ -2,31 +2,49 @@
   {
     "constructorYn": true,
     "title": "RedSystemShaderCode",
-    "description": "\n쉐이더 기본 정의 코드.\n",
+    "description": "\n\t 쉐이더 기본 정의 코드.\n\t RedGL이 Instance 화 되면 RedSystemShaderCode.init 가 자동으로 실행되며 RedSystemShaderCode 를 실질적으로 구성한다.\n ",
     "return": "RedSystemShaderCode"
   },
   {
     "code": "CONST",
     "title": "RedSystemShaderCode.fragmentShareDeclare",
-    "description": "\n프레그먼트 쉐이더 기본 생성코드 리스트\n",
+    "description": "\n\t 프레그먼트 쉐이더 공용 정의 리스트\n ",
     "return": "Array"
   },
   {
     "code": "CONST",
     "title": "RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT",
-    "description": "\n최대 허용 직사광 갯수\n",
+    "description": "\n\t 최대 허용 직사광 갯수\n ",
     "return": "Number"
   },
   {
     "code": "CONST",
     "title": "RedSystemShaderCode.MAX_POINT_LIGHT",
-    "description": "\n최대 허용 점광 갯수\n",
+    "description": "\n\t 최대 허용 점광 갯수\n ",
     "return": "Number"
   },
   {
     "code": "CONST",
+    "title": "RedSystemShaderCode.systemUniform",
+    "description": "\n\t 시스템 유니폼 정보\n ",
+    "return": "Object"
+  },
+  {
+    "code": "CONST",
     "title": "RedSystemShaderCode.vertexShareDeclare",
-    "description": "\n버텍스 쉐이더 기본 생성코드 리스트\n",
+    "description": "\n\t 버텍스 쉐이더 공용 정의 리스트\n ",
     "return": "Array"
+  },
+  {
+    "code": "CONST",
+    "title": "RedSystemShaderCode.vertexShareFunc",
+    "description": "\n\t 버텍스 쉐이더 공용 함수 리스트\n ",
+    "return": "Object"
+  },
+  {
+    "code": "CONST",
+    "title": "RedSystemShaderCode.vertexShareFunc",
+    "description": "\n\t 프레그먼트 쉐이더 공용 함수 리스트\n ",
+    "return": "Object"
   }
 ]

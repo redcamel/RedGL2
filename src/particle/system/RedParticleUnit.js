@@ -9,14 +9,14 @@ var RedParticleUnit;
 		 constructorYn : true,
 		 title :`RedParticleUnit`,
 		 description : `
-			 RedParticleUnit Instance 생성기
+			 RedParticleUnit Instance 생성기.
+			 RedParticleEmitter 사용시 내부적으로 사용되는 객체.
 		 `,
 		 params : {
-			 redGL : [
-				 {type:'RedGL'}
+			 lifeTime : [
+				 {type:'Number'}
 			 ]
 		 },
-		 demo : '../example/material/RedPointColorMaterial.html',
 		 return : 'RedParticleUnit Instance'
 	 }
      :DOC*/

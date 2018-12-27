@@ -6,8 +6,13 @@ var RedGLDetect;
 		 constructorYn : true,
 		 title :`RedGLDetect`,
 		 description : `
-			 RedGLDetect
+			 GL과 관련된 값들을 디텍팅.
 		 `,
+		 params : {
+		    gl : [
+		        {type:'WebGL Context'}
+		    ]
+		 },
 		 return : 'RedGLDetect Instance'
 	 }
      :DOC*/
@@ -78,7 +83,7 @@ var RedGLDetect;
     /**DOC:
      {
 		 code : 'PROPERTY',
-		 title :`frameBuffer`,
+		 title :`vertexShader`,
 		 description : `vertexShader 관련 디텍팅 값`,
 		 return : 'Object'
 	 }
@@ -86,7 +91,7 @@ var RedGLDetect;
     /**DOC:
      {
 		 code : 'PROPERTY',
-		 title :`frameBuffer`,
+		 title :`fragmentShader`,
 		 description : `fragmentShader 관련 디텍팅 값`,
 		 return : 'Object'
 	 }
@@ -94,7 +99,7 @@ var RedGLDetect;
     /**DOC:
      {
 		 code : 'PROPERTY',
-		 title :`frameBuffer`,
+		 title :`texture`,
 		 description : `texture 관련 디텍팅 값`,
 		 return : 'Object'
 	 }

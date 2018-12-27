@@ -30,7 +30,7 @@
 
     <script src="../example/dat.gui.min.js"></script>
     <script src="../release/RedGL.min.js"></script>
-    <script src="../src/RedXR.js"></script>
+    <script src="../src/launcher/RedXR.js"></script>
 </head>
 
 <body>
@@ -79,7 +79,7 @@
 
             (function () {
                 var testMaterial
-                testMaterial = RedPointBitmapMaterial(self, RedBitmapTexture(self, '../asset/particle.png'))
+                testMaterial = RedBitmapPointCloudMaterial(self, RedBitmapTexture(self, '../asset/particle.png'))
                 var interleaveData
                 interleaveData = []
                 var i = 20000
@@ -89,7 +89,7 @@
                     interleaveData.push(Math.random() * 2)
                 }
                 interleaveData = interleaveData
-                testParticle = RedPointUnit(
+                testParticle = RedBitmapPointCloud(
                     self,
                     interleaveData,
                     [

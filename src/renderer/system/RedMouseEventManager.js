@@ -8,6 +8,7 @@ var RedMouseEventManager;
 		 description : `
 			 RedMouseEventManager Instance 생성.
 			 RedScene 생성시 내부속성으로 자동생성됨.
+			 시스템적으로 사용됨.
 		 `,
 		 params : {
 			 redGL : [

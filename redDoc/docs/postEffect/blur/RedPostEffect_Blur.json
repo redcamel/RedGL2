@@ -2,7 +2,7 @@
   {
     "constructorYn": true,
     "title": "RedPostEffect_Blur",
-    "description": "\nRedPostEffect_Blur Instance 생성.\n",
+    "description": "\n\t RedPostEffect_Blur Instance 생성.\n ",
     "params": {
       "redGL": [
         {

@@ -319,6 +319,7 @@ var RedShader;
      {
 		 title :`RedShader.FRAGMENT`,
 		 code: 'CONST',
+		 description : '프레그먼트 쉐이더 상수',
 		 return : 'String'
 	 }
      :DOC*/
@@ -327,6 +328,7 @@ var RedShader;
      {
 		 title :`RedShader.VERTEX`,
 		 code: 'CONST',
+		 description : '버텍스 쉐이더 상수',
 		 return : 'String'
 	 }
      :DOC*/

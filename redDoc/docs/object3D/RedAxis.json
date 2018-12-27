@@ -2,7 +2,7 @@
   {
     "constructorYn": true,
     "title": "RedAxis",
-    "description": "\nRedAxis Instance 생성기\n",
+    "description": "\n\t RedAxis Instance 생성기\n ",
     "params": {
       "redGL": [
         {
@@ -15,7 +15,7 @@
       "RedBaseObject3D"
     ],
     "demo": "../example/object3D/RedAxis.html",
-    "example": "\nvar tScene;\ntScene = RedScene();\ntScene['axis'] = RedAxis(redGL Instance)\n",
+    "example": "\n\t var tScene;\n\t tScene = RedScene();\n\t tScene['axis'] = RedAxis(redGL Instance)\n ",
     "return": "RedAxis Instance"
   }
 ]

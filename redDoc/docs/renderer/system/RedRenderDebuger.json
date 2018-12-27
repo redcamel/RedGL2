@@ -2,13 +2,13 @@
   {
     "constructorYn": true,
     "title": "RedRenderDebuger",
-    "description": "\nRedRenderDebuger Instance 생성\n렌더러 생성시 시스템적으로 자동생성됨.\n",
+    "description": "\n\t RedRenderDebuger Instance 생성\n\t 렌더러 생성시 시스템적으로 자동생성됨.\n\t 시스템적으로 사용됨.\n ",
     "return": "RedRenderDebuger Instance"
   },
   {
     "code": "PROPERTY",
     "title": "visible",
-    "description": "\nRedRenderDebuger 정보 visible 여부\n",
+    "description": "\n\t RedRenderDebuger 정보 visible 여부\n ",
     "return": "Boolean"
   }
 ]

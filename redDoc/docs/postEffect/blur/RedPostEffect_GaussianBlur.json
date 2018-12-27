@@ -2,13 +2,13 @@
   {
     "code": "PROPERTY",
     "title": "radius",
-    "description": "\n가우시간 블러강도\n기본값 : 1\n",
+    "description": "\n\t 가우시간 블러강도\n\t 기본값 : 1\n ",
     "return": "Number"
   },
   {
     "constructorYn": true,
     "title": "RedPostEffect_GaussianBlur",
-    "description": "\nRedPostEffect_GaussianBlur Instance 생성.\n",
+    "description": "\n\t RedPostEffect_GaussianBlur Instance 생성.\n ",
     "params": {
       "redGL": [
         {

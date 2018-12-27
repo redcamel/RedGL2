@@ -4,8 +4,46 @@
 	 constructorYn : true,
 	 title :`RedXR`,
 	 description : `
-		 <h1>연구시작전</h1>
-	 `
+		 WebXR 런처
+	 `,
+	 params : {
+			 canvas :[
+				 {type:'Canvas Element'}
+			 ],
+			 callback : [
+			    {type:'Function'},
+			    'XR 초기화 이후 실행될 콜백'
+			 ],
+			 frameUpdater :[
+				 {type:'Function'},
+				 '루퍼'
+			 ]
+		 },
+		 demo : '../example/launcher/RedXR.html',
+		 example : `
+            var canvas
+            var testMesh
+            canvas = document.getElementById('test');
+            document.body.appendChild(canvas);
+            baseTestUI.makeBaseUI();
+            RedXR(
+                canvas, // 캔버스
+                function (v) { // init callback
+                    testMesh = RedMesh(this, RedSphere(this, 1, 16, 16, 16), RedColorMaterial(this));
+                    testMesh.z = -10;
+                    testMesh.drawMode = this.gl.POINTS;
+                    testMesh.pointSize = 5;
+                    v['scene'].addChild(testMesh);
+                },
+                function (time) { // looper
+                    // console.log(time);
+                    testMesh.rotationX += 1;
+                    testMesh.rotationY += 1;
+                    testMesh.rotationZ += 1;
+                }
+            )
+		 `,
+		 return : 'RedView Instance'
  }
  :DOC*/
 let RedXR;

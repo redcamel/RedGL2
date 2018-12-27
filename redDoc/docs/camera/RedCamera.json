@@ -14,7 +14,7 @@
   {
     "code": "PROPERTY",
     "title": "lookAt",
-    "description": "\n대상 위치를 바라보도록 matrix 설정\n",
+    "description": "\n\t 대상 위치를 바라보도록 matrix 설정.\n\t 실행시 targetX, targetY, targetZ, matrix가 변경됨.\n ",
     "params": {
       "x": [
         {
@@ -32,12 +32,13 @@
         }
       ]
     },
+    "example": "\n    RedCamera().lookAt(0,0,0); // 0,0,0을 바라보도록 설정\n ",
     "return": "mat4"
   },
   {
     "code": "PROPERTY",
     "title": "matrix",
-    "description": "\n카메라 매트릭스\n",
+    "description": "\n 카메라 매트릭스\n ",
     "return": "mat4"
   },
   {
@@ -55,33 +56,33 @@
   {
     "code": "PROPERTY",
     "title": "perspectiveMTX",
-    "description": "\northographicYn값에따라 렌더링시 퍼스펙티브 or 오쏘고날 매트릭스로 자동 변경됨\n",
+    "description": "\n orthographicYn값에따라 렌더링시 퍼스펙티브 or 오쏘고날 매트릭스로 자동 변경됨\n ",
     "return": "mat4"
   },
   {
     "constructorYn": true,
     "title": "RedCamera",
-    "description": "\nRedCamera Instance 생성자.\n",
+    "description": "\n\t RedCamera Instance 생성자.\n ",
     "demo": "../example/camera/RedCamera.html",
-    "example": "\nRedCamera()\n",
+    "example": "\n\t RedCamera()\n ",
     "return": "RedCamera Instance"
   },
   {
     "code": "PROPERTY",
     "title": "targetX",
-    "description": "\n카메라가 바라볼 X위치\n기본값 : 0\n",
+    "description": "\n 카메라가 바라볼 X위치\n 기본값 : 0\n ",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "targetY",
-    "description": "\n카메라가 바라볼 Y위치\n기본값 : 0\n",
+    "description": "\n 카메라가 바라볼 Y위치\n 기본값 : 0\n ",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "targetZ",
-    "description": "\n카메라가 바라볼 Z위치\n기본값 : 0\n",
+    "description": "\n 카메라가 바라볼 Z위치\n 기본값 : 0\n ",
     "return": "Number"
   },
   {

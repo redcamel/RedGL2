@@ -2,12 +2,13 @@
   {
     "code": "PROPERTY",
     "title": "diffuseTexture",
+    "description": "diffuseTexture",
     "return": "RedPostEffectMaterial"
   },
   {
     "constructorYn": true,
     "title": "RedPostEffectMaterial",
-    "description": "\nRedPostEffectMaterial Instance 생성\n",
+    "description": "\n\t 포스트이펙트 최종 이미지를 생성하기 위한재질.\n\t 시스템적으로 사용됨.\n ",
     "params": {
       "redGL": [
         {
@@ -24,7 +25,6 @@
     "extends": [
       "RedBaseMaterial"
     ],
-    "example": "\nRedPostEffectMaterial(RedGL Instance, RedBitmapTexture(RedGL Instance, src))\n",
     "return": "RedPostEffectMaterial Instance"
   }
 ]

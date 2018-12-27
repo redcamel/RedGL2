@@ -17,22 +17,28 @@ var transformString = function (s) {
     var reg = /\/\*\*DOC\:[\s\S]+?\:\DOC\*\//g;
     var list = s.match(reg)
     var dedent = function (callSite, ...args) {
-        function format(str) {
-            let size = -1;
-            return str.replace(/\n(\s+)/g, (m, m1) => {
-                if (size < 0)
-                    size = m1.replace(/\t/g, "    ").length;
-                return "\n" + m1.slice(Math.min(m1.length, size));
-            });
-        }
+        var tList = callSite.trim().split('\n')
+        var tList2 = []
+        var min = 100000000
+        var minSpace = ''
+        var regex = /^\s+\s?/i
+        tList.forEach(function (v) {
+            var re = regex.exec(v)
+            // console.log('re',v,re)
+            if (re) tList2.push(v[0])
+            else tList2.push(null)
 
-        if (typeof callSite === "string") return format(callSite);
-        if (typeof callSite === "function") return (...args) => format(callSite(...args));
-        let output = callSite
-            .slice(0, args.length + 1)
-            .map((text, i) => (i === 0 ? "" : args[i - 1]) + text)
-            .join("");
-        return format(output);
+            if (re && re[0].length < min) {
+                min = re[0].length
+                minSpace = re[0]
+            }
+        });
+        tList.forEach(function (v, index) {
+            if (tList2[index] != null) tList[index] = v.substr(min)
+        })
+        // console.log('minSpace',minSpace)
+        // console.log(tList)
+        return tList.join('\n')
     }
     if (list) {
         list.forEach(function (v, index) {
@@ -146,13 +152,13 @@ gulp.task('combine-js', function () {
         "src/material/RedBitmapMaterial.js",
         "src/material/RedParticleColorMaterial.js",
         "src/material/RedParticleBitmapMaterial.js",
-        "src/material/RedPointColorMaterial.js",
-        "src/material/RedPointBitmapMaterial.js",
+        "src/material/RedBitmapPointCloudMaterial.js",
         "src/material/RedSheetMaterial.js",
         "src/material/RedStandardMaterial.js",
         "src/material/RedVideoMaterial.js",
         "src/material/RedPBRMaterial.js",
-        "src/material/RedPBRMaterial_system.js",
+        "src/material/system/RedColorPointCloudMaterial.js",
+        "src/material/system/RedPBRMaterial_system.js",
         //
         "src/light/RedAmbientLight.js",
         "src/light/RedDirectionalLight.js",
@@ -172,8 +178,11 @@ gulp.task('combine-js', function () {
         "src/object3D/RedSkyBox.js",
         "src/object3D/RedSprite3D.js",
         //
-        "src/particle/RedPointUnit.js",
-        "src/particle/RedParticleUnit.js",
+        "src/particle/system/RedPointCloud.js",
+        "src/particle/system/RedParticleUnit.js",
+        "src/particle/RedColorPointCloud.js",
+        "src/particle/RedBitmapPointCloud.js",
+
         "src/particle/RedParticleEmitter.js",
         "src/primitives/RedBox.js",
         "src/primitives/RedCylinder.js",

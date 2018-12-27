@@ -26,6 +26,7 @@
     document.getElementById('test')
     RedGL(document.getElementById('test'), function (v) {
         if (v) {
+            console.log(this)
             console.log('초기화 성공!')
             var tWorld, tScene, tCamera, tRenderer;
             var self = this
@@ -101,7 +102,7 @@
             ]);
             (function () {
                 var testMaterial
-                testMaterial = RedPointBitmapMaterial(self, RedBitmapTexture(self, '../asset/particle.png'))
+                testMaterial = RedBitmapPointCloudMaterial(self, RedBitmapTexture(self, '../asset/particle.png'))
                 var interleaveData
                 interleaveData = []
                 var i = 200000
@@ -109,7 +110,7 @@
                     interleaveData.push(Math.random() * 50 - 25, Math.random() * 50 - 25, Math.random() * 50 - 25)
                     interleaveData.push(Math.random() * 0.1)
                 }
-                tPointCloud = RedPointUnit(
+                tPointCloud = RedBitmapPointCloud(
                     self,
                     interleaveData,
                     [

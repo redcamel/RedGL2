@@ -1,7 +1,7 @@
 "use strict";
 RedGL(document.createElement('canvas'), function (v) {
     var tRedGL = this;
-    var tMaterial = RedPointColorMaterial(tRedGL)
+    var tMaterial = RedColorPointCloudMaterial(tRedGL)
     var i;
     var testData;
     var testInterleaveDefineInfoList;
@@ -16,12 +16,12 @@ RedGL(document.createElement('canvas'), function (v) {
         RedInterleaveInfo('aPointSize', 1)
     ]
     redSuite(
-        "RedPointUnit 테스트",
+        "RedPointCloud 테스트",
         redGroup(
-            "RedPointUnit( redGL, interleaveData, interleaveDefineInfoList, material )",
+            "RedPointCloud( redGL, interleaveData, interleaveDefineInfoList, material )",
             redTest("성공테스트 : 기본 생성 테스트", function (unit, title) {
                 try {
-                    var t0 = RedPointUnit(tRedGL, testData, testInterleaveDefineInfoList, tMaterial);
+                    var t0 = RedPointCloud(tRedGL, testData, testInterleaveDefineInfoList, tMaterial);
                     console.log(t0)
                     unit.run(true)
                 } catch (error) {
@@ -32,10 +32,10 @@ RedGL(document.createElement('canvas'), function (v) {
             }, true)
         ),
         redGroup(
-            "RedPointUnit( <b>redGL</b>, interleaveData, interleaveDefineInfoList, material )",
+            "RedPointCloud( <b>redGL</b>, interleaveData, interleaveDefineInfoList, material )",
             redTest("실패테스트 : RedGL Instance만 허용하는지.", function (unit, title) {
                 try {
-                    var t0 = RedPointUnit(1, testData, testInterleaveDefineInfoList, tMaterial);
+                    var t0 = RedPointCloud(1, testData, testInterleaveDefineInfoList, tMaterial);
                     console.log(t0)
                     unit.run(true)
                 } catch (error) {
@@ -46,10 +46,10 @@ RedGL(document.createElement('canvas'), function (v) {
             }, false)
         ),
         redGroup(
-            "RedPointUnit( redGL, <b>interleaveData</b>, interleaveDefineInfoList, material )",
+            "RedPointCloud( redGL, <b>interleaveData</b>, interleaveDefineInfoList, material )",
             redTest("실패테스트 : Array Instance만 허용하는지.", function (unit, title) {
                 try {
-                    var t0 = RedPointUnit(tRedGL, new Float32Array(10), testInterleaveDefineInfoList, tMaterial);
+                    var t0 = RedPointCloud(tRedGL, new Float32Array(10), testInterleaveDefineInfoList, tMaterial);
                     console.log(t0)
                     unit.run(true)
                 } catch (error) {
@@ -60,10 +60,10 @@ RedGL(document.createElement('canvas'), function (v) {
             }, false)
         ),
         redGroup(
-            "RedPointUnit( redGL, interleaveData, interleaveDefineInfoList, <b>material</b> )",
-            redTest("실패테스트 : RedPointColorMaterial or RedPointBitmapMaterial Instance만 허용하는지.", function (unit, title) {
+            "RedPointCloud( redGL, interleaveData, interleaveDefineInfoList, <b>material</b> )",
+            redTest("실패테스트 : RedColorPointCloudMaterial or RedBitmapPointCloudMaterial Instance만 허용하는지.", function (unit, title) {
                 try {
-                    var t0 = RedPointUnit(tRedGL, testData, testInterleaveDefineInfoList, RedColorMaterial(tRedGL));
+                    var t0 = RedPointCloud(tRedGL, testData, testInterleaveDefineInfoList, RedColorMaterial(tRedGL));
                     console.log(t0)
                     unit.run(true)
                 } catch (error) {
@@ -72,9 +72,9 @@ RedGL(document.createElement('canvas'), function (v) {
                     unit.run(false)
                 }
             }, false),
-            redTest("성공테스트 : RedPointColorMaterial or RedPointBitmapMaterial Instance만 허용하는지.", function (unit, title) {
+            redTest("성공테스트 : RedColorPointCloudMaterial or RedBitmapPointCloudMaterial Instance만 허용하는지.", function (unit, title) {
                 try {
-                    var t0 = RedPointUnit(tRedGL, testData, testInterleaveDefineInfoList, RedPointColorMaterial(tRedGL));
+                    var t0 = RedPointCloud(tRedGL, testData, testInterleaveDefineInfoList, RedColorPointCloudMaterial(tRedGL));
                     console.log(t0)
                     unit.run(true)
                 } catch (error) {
@@ -83,9 +83,9 @@ RedGL(document.createElement('canvas'), function (v) {
                     unit.run(false)
                 }
             }, true),
-            redTest("성공테스트 : RedPointColorMaterial or RedPointBitmapMaterial Instance만 허용하는지.", function (unit, title) {
+            redTest("성공테스트 : RedColorPointCloudMaterial or RedBitmapPointCloudMaterial Instance만 허용하는지.", function (unit, title) {
                 try {
-                    var t0 = RedPointUnit(tRedGL, testData, testInterleaveDefineInfoList, RedPointBitmapMaterial(tRedGL, RedBitmapTexture(tRedGL, RedBaseTexture.EMPTY_BASE64)));
+                    var t0 = RedPointCloud(tRedGL, testData, testInterleaveDefineInfoList, RedBitmapPointCloudMaterial(tRedGL, RedBitmapTexture(tRedGL, RedBaseTexture.EMPTY_BASE64)));
                     console.log(t0)
                     unit.run(true)
                 } catch (error) {
@@ -96,9 +96,9 @@ RedGL(document.createElement('canvas'), function (v) {
             }, true)
         ),
         redGroup(
-            "(RedPointUnit Instance).<b>geometry</b>",
+            "(RedPointCloud Instance).<b>geometry</b>",
             redTest("실패테스트 : 임의설정 불가테스트", function (unit, title) {
-                var t0 = RedPointUnit(tRedGL, testData, testInterleaveDefineInfoList, tMaterial);
+                var t0 = RedPointCloud(tRedGL, testData, testInterleaveDefineInfoList, tMaterial);
                 try {
                     t0.geometry = RedBox(tRedGL)
                     console.log(t0)
@@ -111,9 +111,9 @@ RedGL(document.createElement('canvas'), function (v) {
             }, false)
         ),
         redGroup(
-            "(RedPointUnit Instance).<b>update</b>( interleaveData )",
+            "(RedPointCloud Instance).<b>update</b>( interleaveData )",
             redTest("성공테스트 : 임의설정 불가테스트", function (unit, title) {
-                var t0 = RedPointUnit(tRedGL, testData, testInterleaveDefineInfoList, tMaterial);
+                var t0 = RedPointCloud(tRedGL, testData, testInterleaveDefineInfoList, tMaterial);
                 i = 1
                 var t1 = []
                 while (i--) {

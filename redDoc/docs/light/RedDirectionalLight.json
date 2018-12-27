@@ -8,7 +8,7 @@
   {
     "constructorYn": true,
     "title": "RedDirectionalLight",
-    "description": "\nRedDirectionalLight Instance 생성\n",
+    "description": "\n    기본 직사광.\n\tRedDirectionalLight Instance 생성자.\n ",
     "params": {
       "redGL": [
         {
@@ -18,20 +18,21 @@
       "hex": [
         {
           "type": "hex"
-        }
+        },
+        "기본값 : #fff"
       ],
       "alpha": [
         {
           "type": "number"
         },
-        "알파값"
+        "기본값 : 1"
       ]
     },
     "extends": [
       "RedBaseLight"
     ],
     "demo": "../example/light/RedDirectionalLight.html",
-    "example": "\nRedDirectionalLight(RedGL Instance, hex, alpha)\n",
+    "example": "\n    RedDirectionalLight(RedGL Instance, '#fff', 1);\n ",
     "return": "RedDirectionalLight Instance"
   },
   {
@@ -49,19 +50,19 @@
   {
     "code": "PROPERTY",
     "title": "x",
-    "description": "\n기본값 : 0\n포지션값은 광원계산시 0,0,0을 바라보는 방향벡터로 계산됨\n",
+    "description": "\n 기본값 : 0\n 포지션값은 광원계산시 0,0,0을 바라보는 방향벡터로 계산됨\n ",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "y",
-    "description": "\n기본값 : 0\n포지션값은 광원계산시 0,0,0을 바라보는 방향벡터로 계산됨\n",
+    "description": "\n 기본값 : 0\n 포지션값은 광원계산시 0,0,0을 바라보는 방향벡터로 계산됨\n ",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "z",
-    "description": "\n기본값 : 0\n포지션값은 광원계산시 0,0,0을 바라보는 방향벡터로 계산됨\n",
+    "description": "\n 기본값 : 0\n 포지션값은 광원계산시 0,0,0을 바라보는 방향벡터로 계산됨\n ",
     "return": "Number"
   }
 ]

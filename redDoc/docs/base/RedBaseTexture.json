@@ -1,20 +1,32 @@
 [
   {
+    "code": "METHOD",
+    "title": "_load",
+    "description": "\n\t 소스 로딩 매서드.\n\t 반드시 재정의 되어야함.\n ",
+    "return": "void"
+  },
+  {
+    "code": "METHOD",
+    "title": "dispose",
+    "description": "\n\t 텍스쳐 dispose\n ",
+    "return": "void"
+  },
+  {
     "code": "CONST",
     "title": "EMPTY_BASE64",
-    "description": "\n2 * 2 크기의 빈 base64 이미지\n",
+    "description": "\n\t 2 * 2 크기의 빈 base64 이미지\n ",
     "return": "data:image/png;base64~~~"
   },
   {
     "constructorYn": true,
     "title": "RedBaseTexture",
-    "description": "\nRedBaseTexture 기저층\n",
+    "description": "\n\t RedBaseTexture 기저층\n ",
     "return": "RedBaseTexture Instance"
   },
   {
     "code": "METHOD",
     "title": "setEmptyTexture",
-    "description": "\nwebglTexture 생성후 이미지 로딩전까지 안전한 텍스쳐 세팅할때 사용\n",
+    "description": "\n\t webglTexture 생성후 이미지 로딩전까지 안전한 텍스쳐 세팅할때 사용.\n\t 체크 무늬 텍스쳐를 생성함.\n ",
     "params": {
       "gl": [
         {
@@ -27,6 +39,12 @@
         }
       ]
     },
+    "return": "void"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "src",
+    "description": "\n\t 경로처리.\n\t 반드시 재정의 되어야함\n ",
     "return": "void"
   }
 ]

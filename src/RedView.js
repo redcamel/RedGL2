@@ -9,31 +9,31 @@ var RedView;
 		 title :`RedView`,
 		 description : `
 			 고유 키를 기반으로 <b>RedScene</b>과 <b>RedCamera를</b> 쌍으로 하는 정보를 소유.
-			 <b>RedWorld</b>에 등록되어지며 실제 렌더링시 필요한 그려질 크기와 위치를 결정한다.
+			 <b>RedWorld</b>에 등록되어지며 실제 렌더링시 필요한 그려질 <b>크기</b>와 <b>위치</b>를 결정한다.
 		 `,
 		 params : {
 			 key :[
 				 {type:'String'},
 				 '고유키',
-				 '기존에 존재하는 키일경우 <b>캐쉬된 Instance</b>를 반환'
+				 'key만 입력시에 기존에 존재하는 키일경우 <b>캐쉬된 Instance</b>를 반환'
 			 ],
 			 redGL : [
 			    {type:'RedGL'},
 			 ],
 			 scene :[
 				 {type:'RedScene'},
-				 'RedScene'
+				 'RedScene Instance'
 			 ],
 			 camera :[
 				 {type:'RedCamera'},
-				 'RedCamera'
+				 'RedCamera or RedController Instance'
 			 ]
 		 },
-		 demo : '../example/RedView.html',
+		 demo : '../example/etc/RedView.html',
 		 example : `
 			 var tWorld;
-			 RedView('test', RedGL Instance, RedScene Instance, RedCamera Instance); // test라는 키값을 가진 RedView 생성
-			 RedView('test2',RedGL Instance, RedScene Instance, RedCamera Instance); // test2라는 키값을 가진 RedView 생성
+			 RedView('테스트뷰1', RedGL Instance, RedScene Instance, RedCamera Instance); // "테스트뷰1" 라는 키값을 가진 RedView 생성
+			 RedView('테스트뷰2', RedGL Instance, RedScene Instance, RedCamera Instance); // "테스트뷰2" 라는 키값을 가진 RedView 생성
 		 `,
 		 return : 'RedView Instance'
 	 }
@@ -65,7 +65,7 @@ var RedView;
          {
 		     code : 'PROPERTY',
 			 title :`scene`,
-			 description : `scene`,
+			 description : `그려질 RedScene`,
 			 return : 'RedScene'
 		 }
          :DOC*/
@@ -75,7 +75,8 @@ var RedView;
 		     code : 'PROPERTY',
 			 title :`postEffectManager`,
 			 description : `
-				 postEffectManager
+				 포스트 이펙트 매니저.
+				 RedView 생성시 기본적으로 생성되어있음.
 			 `,
 			 return : 'RedPostEffectManager Instance'
 		 }
@@ -85,8 +86,8 @@ var RedView;
          {
 		     code : 'PROPERTY',
 			 title :`camera`,
-			 description : `camera`,
-			 return : 'RedCamera'
+			 description : `대상 RedScene을 관찰할 카메라`,
+			 return : 'RedCamera or RedController'
 		 }
          :DOC*/
         this['camera'] = camera;
@@ -117,9 +118,9 @@ var RedView;
 			 },
 			 example : `
 				  var tWorld;
-				  RedView('test', RedGL Instance, RedScene Instance, RedCamera Instance); // test라는 키값을 가진 RedView 생성
-				  RedView('test').setSize(100,100);
-				  RedView('test').setSize('50%',100);
+				  RedView('테스트뷰', RedGL Instance, RedScene Instance, RedCamera Instance); // "테스트뷰" 라는 키값을 가진 RedView 생성
+				  RedView('테스트뷰').setSize(100,100); // 가로,세로 100px * 100px 설정
+				  RedView('테스트뷰').setSize('50%',100); // 가로,세로 50% * 100px 설정 (RedGL이 소유하고 있는 캔버스 사이즈 기준으로 % 계산됨)
 			 `,
 			 return : 'void'
 		 }
@@ -156,10 +157,9 @@ var RedView;
 			 },
 			 example : `
 				  var tWorld;
-				  tCamera = RedCamera(); // 카메라생성
-				  RedView('test', RedGL Instance, RedScene Instance, RedCamera Instance); // test라는 키값을 가진 RedView 생성
-				  RedView('test').setLocation(100,100);
-				  RedView('test').setLocation('50%',100);
+				  RedView('테스트뷰', RedGL Instance, RedScene Instance, RedCamera Instance); // "테스트뷰" 라는 키값을 가진 RedView 생성
+				  RedView('테스트뷰').setLocation(100,100); // x,y 100px * 100px 설정
+				  RedView('테스트뷰').setLocation('50%',100); // x,y 50% * 100px 설정 (RedGL이 소유하고 있는 캔버스 사이즈 기준으로 % 계산됨)
 			 `,
 			 return : 'void'
 		 }
