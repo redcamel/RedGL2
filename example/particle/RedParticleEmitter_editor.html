@@ -157,6 +157,7 @@
         });
         tFolder.add(defineData, 'emitCount', 0, 100, 1).onChange(function (v) {
             defineData['emitCount'] = v;
+            emitter.reset();
         });
         tFolder.add(defineData, 'gravity', -0.02, 0.02, 0.001).onChange(function (v) {
             defineData['gravity'] = v;

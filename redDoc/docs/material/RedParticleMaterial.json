@@ -1,0 +1,41 @@
+[
+  {
+    "code": "PROPERTY",
+    "title": "alpha",
+    "description": "기본값 : 1",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "cutOff",
+    "description": "기본값 : 0.01",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "diffuseTexture",
+    "return": "RedBitmapTexture"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedParticleMaterial",
+    "description": "\n\t RedParticleMaterial Instance 생성\n ",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ],
+      "diffuseTexture": [
+        {
+          "type": "RedBitmapTexture"
+        }
+      ]
+    },
+    "demo": "../example/particle/RedParticleEmitter.html",
+    "extends": [
+      "RedBaseMaterial"
+    ],
+    "return": "RedParticleMaterial Instance"
+  }
+]
