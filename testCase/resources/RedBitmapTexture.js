@@ -1,4 +1,5 @@
 "use strict";
+RedGL.setDoNotPrepareProgram();
 var tRedGL
 RedGL(document.createElement('canvas'), function (v) {
     tRedGL = this;

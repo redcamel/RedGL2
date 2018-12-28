@@ -1,5 +1,7 @@
 "use strict";
+RedGL.setDoNotPrepareProgram();
 "use strict";
+RedGL.setDoNotPrepareProgram();
 RedGL(document.createElement('canvas'), function (v) {
     var tRedGL = this;
     var testVideoTexture = RedVideoTexture(tRedGL, '../../asset/mov_bbb.mp4')

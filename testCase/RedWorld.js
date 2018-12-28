@@ -1,4 +1,5 @@
 "use strict";
+RedGL.setDoNotPrepareProgram();
 RedGL(document.createElement('canvas'), function () {
     var tWorld, tScene, tCamera;
     var tView1, tView2;

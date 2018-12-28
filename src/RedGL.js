@@ -3,6 +3,7 @@ var RedGL;
 (function () {
     var getGL;
     var setEmptyTextures;
+    var doNotPrepareProgram
     /*
      gl 컨텍스트 찾기
      */
@@ -170,6 +171,7 @@ var RedGL;
 		 }
          :DOC*/
         this['gl'] = tGL = getGL(canvas, option, targetContextKey);
+
         /**DOC:
          {
 			 code : 'PROPERTY',
@@ -185,6 +187,15 @@ var RedGL;
         //
         this['_UUID'] = RedGL.makeUUID();
         if (RedSystemShaderCode['init']) RedSystemShaderCode.init();
+        ///////////////////////////////////////
+        setEmptyTextures(this, tGL); // 빈텍스쳐를 미리 체워둔다.
+        if (!doNotPrepareProgram) {
+            // 무거운놈만 먼저 해둘까...
+            RedPBRMaterial_System(this);
+            // RedStandardMaterial(this, this['_datas']['emptyTexture']['2d']);
+            RedEnvironmentMaterial(this, null, this['_datas']['emptyTexture']['3d']);
+        }
+        ///////////////////////////////////////
         //
         requestAnimationFrame(function () {
             window.addEventListener('resize', function () {
@@ -218,7 +229,7 @@ var RedGL;
             });
 
             self.setSize(self['_width'], self['_height']); // 리사이즈를 초기에 한번 실행.
-            setEmptyTextures(self, tGL); // 빈텍스쳐를 미리 체워둔다.
+
             callback ? callback.call(self, tGL ? true : false) : 0; // 콜백이 있으면 실행
             //
         });
@@ -330,5 +341,8 @@ var RedGL;
             this.setSize(this['_width'], this['_height'], true);
         }
     });
+    RedGL.setDoNotPrepareProgram = function(){
+        doNotPrepareProgram = true
+    }
     Object.freeze(RedGL);
 })();

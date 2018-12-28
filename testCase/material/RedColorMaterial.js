@@ -1,4 +1,5 @@
 "use strict";
+RedGL.setDoNotPrepareProgram();
 RedGL(document.createElement('canvas'), function (v) {
     var tRedGL = this;
     redSuite(

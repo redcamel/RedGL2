@@ -1,4 +1,5 @@
 "use strict";
+RedGL.setDoNotPrepareProgram();
 RedGL(document.createElement('canvas'), function (v) {
     var testInterleaveBuffer, testIndexBuffer
     testInterleaveBuffer = RedBuffer(this, 'test', RedBuffer.ARRAY_BUFFER, new Float32Array([0, 1, 2, 0, 1, 2, 0, 1, 2]), [RedInterleaveInfo('aTest', 3)])

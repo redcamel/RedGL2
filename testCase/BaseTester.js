@@ -23,7 +23,11 @@ var BaseTester;
                 //
                 tTag.onload = function () {
                     idx++
-                    if (idx != max) callResource(tList[idx])
+                    if (idx != max) {
+
+                        RedGL.setDoNotPrepareProgram();
+                        callResource(tList[idx])
+                    }
                 };
                 //
                 document.head.appendChild(tTag);
