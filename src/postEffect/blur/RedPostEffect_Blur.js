@@ -44,7 +44,8 @@ var RedPostEffect_Blur;
 		 constructorYn : true,
 		 title :`RedPostEffect_Blur`,
 		 description : `
-			 RedPostEffect_Blur Instance 생성.
+			 기본 블러 이펙트
+			 postEffectManager.addEffect( effect Instance ) 로 추가.
 		 `,
 		 params : {
 			 redGL : [
@@ -56,6 +57,12 @@ var RedPostEffect_Blur;
 		    'RedBaseMaterial'
 		 ],
 		 demo : '../example/postEffect/blur/RedPostEffect_Blur.html',
+		 example : `
+            var effect;
+            effect = RedPostEffect_Blur(RedGL Instance); // 포스트이펙트 생성
+            // postEffectManager는 RedView 생성시 자동생성됨.
+            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
+		 `,
 		 return : 'RedPostEffect_Blur Instance'
 	 }
      :DOC*/

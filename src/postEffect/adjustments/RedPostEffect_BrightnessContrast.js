@@ -32,7 +32,8 @@ var RedPostEffect_BrightnessContrast;
 		 constructorYn : true,
 		 title :`RedPostEffect_BrightnessContrast`,
 		 description : `
-			 RedPostEffect_BrightnessContrast Instance 생성.
+			 BrightnessContrast 이펙트
+			 postEffectManager.addEffect( effect Instance ) 로 추가.
 		 `,
 		 params : {
 			 redGL : [
@@ -44,6 +45,12 @@ var RedPostEffect_BrightnessContrast;
 		    'RedBaseMaterial'
 		 ],
 		 demo : '../example/postEffect/adjustments/RedPostEffect_BrightnessContrast.html',
+		 example : `
+            var effect;
+            effect = RedPostEffect_BrightnessContrast(RedGL Instance); // 포스트이펙트 생성
+            // postEffectManager는 RedView 생성시 자동생성됨.
+            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
+		 `,
 		 return : 'RedPostEffect_BrightnessContrast Instance'
 	 }
      :DOC*/
@@ -76,6 +83,8 @@ var RedPostEffect_BrightnessContrast;
 		 description : `
 			 밝기
 			 기본값 : 0
+			 min : -150
+			 max : 150
 		 `,
 		 return : 'Number'
 	 }
@@ -92,6 +101,8 @@ var RedPostEffect_BrightnessContrast;
 		 description : `
 			 대조
 			 기본값 : 0
+			 min: -50
+			 max: 100
 		 `,
 		 return : 'Number'
 	 }

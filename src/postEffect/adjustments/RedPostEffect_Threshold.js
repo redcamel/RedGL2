@@ -32,7 +32,8 @@ var RedPostEffect_Threshold;
 		 constructorYn : true,
 		 title :`RedPostEffect_Threshold`,
 		 description : `
-			 RedPostEffect_Threshold Instance 생성.
+			 Threshold 이펙트
+			 postEffectManager.addEffect( effect Instance ) 로 추가.
 		 `,
 		 params : {
 			 redGL : [
@@ -44,6 +45,12 @@ var RedPostEffect_Threshold;
 		    'RedBaseMaterial'
 		 ],
 		 demo : '../example/postEffect/adjustments/RedPostEffect_Threshold.html',
+		 example : `
+            var effect;
+            effect = RedPostEffect_Threshold(RedGL Instance); // 포스트이펙트 생성
+            // postEffectManager는 RedView 생성시 자동생성됨.
+            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
+		 `,
 		 return : 'RedPostEffect_Threshold Instance'
 	 }
      :DOC*/
@@ -75,6 +82,8 @@ var RedPostEffect_Threshold;
 		 description : `
 			 최소 유효값
 			 기본값 : 128
+			 min: 1
+			 max: 255
 		 `,
 		 return : 'Number'
 	 }

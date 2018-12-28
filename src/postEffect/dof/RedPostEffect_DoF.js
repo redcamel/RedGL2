@@ -33,7 +33,7 @@ var RedPostEffect_DoF;
 		 constructorYn : true,
 		 title :`RedPostEffect_DoF`,
 		 description : `
-			 RedPostEffect_DoF Instance 생성.
+			 피사계 심도 이펙트
 		 `,
 		 params : {
 			 redGL : [
@@ -45,6 +45,12 @@ var RedPostEffect_DoF;
 		    'RedBaseMaterial'
 		 ],
 		 demo : '../example/postEffect/dof/RedPostEffect_DoF.html',
+		 example : `
+            var effect;
+            effect = RedPostEffect_DoF(RedGL Instance); // 포스트이펙트 생성
+            // postEffectManager는 RedView 생성시 자동생성됨.
+            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
+		 `,
 		 return : 'RedPostEffect_DoF Instance'
 	 }
      :DOC*/
@@ -94,6 +100,7 @@ var RedPostEffect_DoF;
 		 description : `
 			 blur
 			 기본값 : 50
+			 min : 0
 		 `,
 		 return : 'Number'
 	 }

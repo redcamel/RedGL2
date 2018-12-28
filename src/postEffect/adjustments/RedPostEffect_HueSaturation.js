@@ -43,7 +43,8 @@ var RedPostEffect_HueSaturation;
 		 constructorYn : true,
 		 title :`RedPostEffect_HueSaturation`,
 		 description : `
-			 RedPostEffect_HueSaturation Instance 생성.
+			 HueSaturation 이펙트
+			 postEffectManager.addEffect( effect Instance ) 로 추가.
 		 `,
 		 params : {
 			 redGL : [
@@ -54,7 +55,13 @@ var RedPostEffect_HueSaturation;
 		    'RedBasePostEffect',
 		    'RedBaseMaterial'
 		 ],
-		  demo : '../example/postEffect/adjustments/RedPostEffect_HueSaturation.html',
+		 demo : '../example/postEffect/adjustments/RedPostEffect_HueSaturation.html',
+		 example : `
+            var effect;
+            effect = RedPostEffect_HueSaturation(RedGL Instance); // 포스트이펙트 생성
+            // postEffectManager는 RedView 생성시 자동생성됨.
+            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
+		 `,
 		 return : 'RedPostEffect_HueSaturation Instance'
 	 }
      :DOC*/
@@ -87,6 +94,8 @@ var RedPostEffect_HueSaturation;
 		 description : `
 			 색조
 			 기본값 : 0
+			 min: -180
+			 max: 180
 		 `,
 		 return : 'Number'
 	 }
@@ -103,6 +112,8 @@ var RedPostEffect_HueSaturation;
 		 description : `
 			 채도
 			 기본값 : 0
+			 min: -100
+			 max: 100
 		 `,
 		 return : 'Number'
 	 }

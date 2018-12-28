@@ -31,7 +31,8 @@ var RedPostEffect_Invert;
 		 constructorYn : true,
 		 title :`RedPostEffect_Invert`,
 		 description : `
-			 RedPostEffect_Invert Instance 생성.
+			 Invert 이펙트
+			 postEffectManager.addEffect( effect Instance ) 로 추가.
 		 `,
 		 params : {
 			 redGL : [
@@ -43,6 +44,12 @@ var RedPostEffect_Invert;
 		    'RedBaseMaterial'
 		 ],
 		 demo : '../example/postEffect/adjustments/RedPostEffect_Invert.html',
+		 example : `
+            var effect;
+            effect = RedPostEffect_Invert(RedGL Instance); // 포스트이펙트 생성
+            // postEffectManager는 RedView 생성시 자동생성됨.
+            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
+		 `,
 		 return : 'RedPostEffect_Invert Instance'
 	 }
      :DOC*/

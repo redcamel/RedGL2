@@ -26,13 +26,13 @@
   {
     "code": "PROPERTY",
     "title": "radius",
-    "description": "\n\t 기본값 2\n ",
+    "description": "\n\t 기본값 2\n\t min : 0\n ",
     "return": "Number"
   },
   {
     "constructorYn": true,
     "title": "RedPostEffect_HalfTone",
-    "description": "\n\t RedPostEffect_HalfTone Instance 생성.\n ",
+    "description": "\n\t HalfTone 이펙트\n ",
     "params": {
       "redGL": [
         {
@@ -45,6 +45,7 @@
       "RedBaseMaterial"
     ],
     "demo": "../example/postEffect/pixelate/RedPostEffect_HalfTone.html",
+    "example": "\n          var effect;\n          effect = RedPostEffect_HalfTone(RedGL Instance); // 포스트이펙트 생성\n          // postEffectManager는 RedView 생성시 자동생성됨.\n          (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가\n ",
     "return": "RedPostEffect_HalfTone Instance"
   }
 ]

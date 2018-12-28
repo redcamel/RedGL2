@@ -2,7 +2,7 @@
   {
     "code": "PROPERTY",
     "title": "blur",
-    "description": "\n\t blur\n\t 기본값 : 50\n ",
+    "description": "\n\t blur\n\t 기본값 : 50\n\t min : 0\n ",
     "return": "Number"
   },
   {
@@ -14,7 +14,7 @@
   {
     "constructorYn": true,
     "title": "RedPostEffect_DoF",
-    "description": "\n\t RedPostEffect_DoF Instance 생성.\n ",
+    "description": "\n\t 피사계 심도 이펙트\n ",
     "params": {
       "redGL": [
         {
@@ -27,6 +27,7 @@
       "RedBaseMaterial"
     ],
     "demo": "../example/postEffect/dof/RedPostEffect_DoF.html",
+    "example": "\n          var effect;\n          effect = RedPostEffect_DoF(RedGL Instance); // 포스트이펙트 생성\n          // postEffectManager는 RedView 생성시 자동생성됨.\n          (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가\n ",
     "return": "RedPostEffect_DoF Instance"
   }
 ]

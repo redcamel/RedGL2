@@ -45,7 +45,7 @@ var RedPostEffect_Convolution;
 		 constructorYn : true,
 		 title :`RedPostEffect_Convolution`,
 		 description : `
-			 RedPostEffect_Convolution Instance 생성.
+			 Convolution 이펙트
 		 `,
 		 params : {
 			 redGL : [
@@ -57,6 +57,12 @@ var RedPostEffect_Convolution;
 		    'RedBaseMaterial'
 		 ],
 		 demo : '../example/postEffect/RedPostEffect_Convolution.html',
+		 example : `
+            var effect;
+            effect = RedPostEffect_DoF(RedGL Instance, RedPostEffect_Convolution.SHARPEN); // 포스트이펙트 생성
+            // postEffectManager는 RedView 생성시 자동생성됨.
+            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
+		 `,
 		 return : 'RedPostEffect_Convolution Instance'
 	 }
      :DOC*/
@@ -87,6 +93,7 @@ var RedPostEffect_Convolution;
 		 title :`kernel`,
 		 description : `
 			 커널값.
+			 3 * 3 매트릭스 형식의 배열
 		 `,
 		 return : 'Array'
 	 }

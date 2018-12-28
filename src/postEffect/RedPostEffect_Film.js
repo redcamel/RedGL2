@@ -54,7 +54,7 @@ var RedPostEffect_Film;
 		 constructorYn : true,
 		 title :`RedPostEffect_Film`,
 		 description : `
-			 RedPostEffect_Film Instance 생성.
+			 Film 이펙트
 		 `,
 		 params : {
 			 redGL : [
@@ -65,7 +65,13 @@ var RedPostEffect_Film;
 		    'RedBasePostEffect',
 		    'RedBaseMaterial'
 		 ],
-		 demo : '../example/RedPostEffect_Film.html',
+		 demo : '../example/postEffect/RedPostEffect_Film.html',
+		 example : `
+            var effect;
+            effect = RedPostEffect_Film(RedGL Instance); // 포스트이펙트 생성
+            // postEffectManager는 RedView 생성시 자동생성됨.
+            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
+		 `,
 		 return : 'RedPostEffect_Film Instance'
 	 }
      :DOC*/
@@ -112,6 +118,7 @@ var RedPostEffect_Film;
 		 description : `
 			 스캔라인강도
 			 기본값 : 0.5
+			 min : 0
 		 `,
 		 return : 'Number'
 	 }
@@ -124,6 +131,7 @@ var RedPostEffect_Film;
 		 description : `
 			 노이즈강도
 			 기본값 : 0.5
+			 min : 0
 		 `,
 		 return : 'Number'
 	 }
@@ -136,6 +144,7 @@ var RedPostEffect_Film;
 		 description : `
 			 스캔라인 수
 			 기본값 : 2048
+			 min : 0
 		 `,
 		 return : 'Number'
 	 }

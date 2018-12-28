@@ -1,8 +1,8 @@
 [
   {
     "code": "PROPERTY",
-    "title": "_intensity",
-    "description": "\n\t 비네팅 강도\n\t 기본값 : 0.85\n",
+    "title": "intensity",
+    "description": "\n\t 비네팅 강도\n\t 기본값 : 0.85\n\t min : 0\n",
     "return": "Number"
   },
   {
@@ -21,12 +21,13 @@
       "RedBaseMaterial"
     ],
     "demo": "../example/postEffect/RedPostEffect_Vignetting.html",
+    "example": "\n          var effect;\n          effect = RedPostEffect_Vignetting(RedGL Instance); // 포스트이펙트 생성\n          // postEffectManager는 RedView 생성시 자동생성됨.\n          (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가\n ",
     "return": "RedPostEffect_Vignetting Instance"
   },
   {
     "code": "PROPERTY",
     "title": "size",
-    "description": "\n\t 비네팅사이즈\n\t 기본값 : 0.1\n ",
+    "description": "\n\t 비네팅사이즈\n\t 기본값 : 0.1\n\t min : 0\n ",
     "return": "Number"
   }
 ]

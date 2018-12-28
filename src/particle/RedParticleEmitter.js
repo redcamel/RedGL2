@@ -57,6 +57,7 @@ var RedParticleEmitter;
         this['useDepthMask'] = false;
         this['_UUID'] = RedGL.makeUUID();
     };
+    RedParticleEmitter.TINT_RANDOM = 'random'
     RedParticleEmitter.QuintIn = 1;
     RedParticleEmitter.QuintOut = 2;
     RedParticleEmitter.QuintInOut = 3;
@@ -91,9 +92,10 @@ var RedParticleEmitter;
     RedParticleEmitter.ElasticIn = 25;
     RedParticleEmitter.ElasticOut = 26;
     RedParticleEmitter.ElasticInOut = 27;
-    RedParticleEmitter.prototype = new RedBaseContainer();
+    RedParticleEmitter.prototype = new RedBaseObject3D();
     RedParticleEmitter.prototype['update'] = (function () {
         return function (time) {
+            time = time+2000
             var POW, SIN, COS, SQRT, PI, PI2, HPI;
             var i, i2, tParticle;
             var lifeRatio;
@@ -124,7 +126,7 @@ var RedParticleEmitter;
                     newParticle = this['list'][i + i2] = new RedParticleUnit(tInfo['lifeTime']);
                     this['_interleaveData'].push(this.x, this.y, this.z);
                     this['_interleaveData'].push(0);
-                    if (tInfo['tint'] == 'random') this['_interleaveData'].push(Math.random(), Math.random(), Math.random(), 1);
+                    if (tInfo['tint'] == RedParticleEmitter.TINT_RANDOM) this['_interleaveData'].push(Math.random(), Math.random(), Math.random(), 1);
                     else this['_interleaveData'].push(tInfo['tint'][0], tInfo['tint'][1], tInfo['tint'][2], 1);
                     // 룰추가
                     if (tInfo['particle']) {
@@ -138,6 +140,7 @@ var RedParticleEmitter;
             }
             //////////////////////////////////
             i = this['list']['length'];
+            tTweenKeyList = 'movementX,movementY,movementZ,scale,alpha'.split(',');
             while (i--) {
                 tParticle = this['list'][i];
                 if (!tParticle['startTime']) {
@@ -153,7 +156,6 @@ var RedParticleEmitter;
                     n = lifeRatio;
                     ////////////////////////
                     if (!tParticle['startCenter']) tParticle['startCenter'] = [this.x, this.y, this.z];
-                    tTweenKeyList = 'movementX,movementY,movementZ,scale,alpha'.split(',');
                     i2 = tTweenKeyList.length;
                     while (i2--) {
                         tTweenKey = tTweenKeyList[i2];
@@ -250,7 +252,7 @@ var RedParticleEmitter;
                     this['_interleaveData'][tIndex + 1] = tParticle['startCenter'][1] = this.y;
                     this['_interleaveData'][tIndex + 2] = tParticle['startCenter'][2] = this.z;
                     this['_interleaveData'][tIndex + 3] = tParticle['scale']['start'];
-                    if (tInfo['tint'] == 'random') {
+                    if (tInfo['tint'] == RedParticleEmitter.TINT_RANDOM) {
                         this['_interleaveData'][tIndex + 4] = Math.random();
                         this['_interleaveData'][tIndex + 5] = Math.random();
                         this['_interleaveData'][tIndex + 6] = Math.random();

@@ -29,7 +29,8 @@ var RedPostEffect_Gray;
 		 constructorYn : true,
 		 title :`RedPostEffect_Gray`,
 		 description : `
-			 RedPostEffect_Gray Instance 생성.
+			 Gray 이펙트
+			 postEffectManager.addEffect( effect Instance ) 로 추가.
 		 `,
 		 params : {
 			 redGL : [
@@ -41,6 +42,12 @@ var RedPostEffect_Gray;
 		    'RedBaseMaterial'
 		 ],
 		 demo : '../example/postEffect/adjustments/RedPostEffect_Gray.html',
+		 example : `
+            var effect;
+            effect = RedPostEffect_Gray(RedGL Instance); // 포스트이펙트 생성
+            // postEffectManager는 RedView 생성시 자동생성됨.
+            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
+		 `,
 		 return : 'RedPostEffect_Gray Instance'
 	 }
      :DOC*/
