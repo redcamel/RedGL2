@@ -21,7 +21,7 @@ var RedParticleEmitter;
 			    '파티클 정의 오브젝트'
 			 ],
 			 material : [
-			    {type:'RedParticleColorMaterial Instance or RedParticleBitmapMaterial Instance'},
+			    {type:'RedParticleColorMaterial Instance or RedParticleMaterial Instance'},
 			 ]
 		 },
 		 demo : '../example/particle/RedParticleEmitter.html',
@@ -32,8 +32,8 @@ var RedParticleEmitter;
 		 return : 'RedParticleEmitter Instance'
 	 }
      :DOC*/
-    RedParticleEmitter = function (redGL, defineObject, material) {
-        if (!(this instanceof RedParticleEmitter)) return new RedPointCloud(redGL, material);
+    RedParticleEmitter = function (redGL, defineObject, diffuseTexture) {
+        if (!(this instanceof RedParticleEmitter)) return new RedParticleEmitter(redGL, defineObject, diffuseTexture);
         RedBaseObject3D['build'].call(this, redGL.gl);
         this['list'] = [];
         this['_interleaveData'] = [];
@@ -50,7 +50,7 @@ var RedParticleEmitter;
             ],
             redGL.gl.DYNAMIC_DRAW
         ));
-        this['material'] = material;
+        this['_material'] = RedParticleMaterial(redGL, diffuseTexture);
         this['drawMode'] = redGL.gl.POINTS;
         this['blendSrc'] = redGL.gl.SRC_ALPHA;
         this['blendDst'] = redGL.gl.ONE;
@@ -93,9 +93,13 @@ var RedParticleEmitter;
     RedParticleEmitter.ElasticOut = 26;
     RedParticleEmitter.ElasticInOut = 27;
     RedParticleEmitter.prototype = new RedBaseObject3D();
+    RedParticleEmitter.prototype['reset'] = function () {
+        this.list.length = 0;
+        this._interleaveData.length = 0;
+    }
     RedParticleEmitter.prototype['update'] = (function () {
         return function (time) {
-            time = time+2000
+            time = time + 2000
             var POW, SIN, COS, SQRT, PI, PI2, HPI;
             var i, i2, tParticle;
             var lifeRatio;
@@ -261,7 +265,8 @@ var RedParticleEmitter;
                         this['_interleaveData'][tIndex + 5] = tInfo['tint'][1];
                         this['_interleaveData'][tIndex + 6] = tInfo['tint'][2];
                     }
-                    this['_interleaveData'][tIndex + 7] = tParticle['alpha']['start'];
+                    this['_interleaveData'][tIndex + 7] = 0;
+
                     tParticle['_gravitySum'] = 0;
                     tParticle['startTime'] = null;
                     tParticle['age'] = -1;
@@ -270,24 +275,17 @@ var RedParticleEmitter;
             this['_geometry']['interleaveBuffer'].upload(new Float32Array(this['_interleaveData']))
         }
     })();
-    Object.defineProperty(RedParticleUnit.prototype, 'geometry', {
-        get: function () {
-            return this['_geometry'];
-        },
-        set: function (v) {
-            if (this['_geometry']) RedGLUtil.throwFunc('RedParticleUnit : geometry - 임의 설정을 허용하지 않음', '입력값 : ' + v);
-            this['_geometry'] = v;
-        }
-    });
-    Object.defineProperty(RedParticleUnit.prototype, 'material', {
-        get: function () {
-            return this['_material'];
-        },
-        set: function (v) {
-            v instanceof RedParticleColorMaterial
-            || v instanceof RedParticleBitmapMaterial
-            || RedGLUtil.throwFunc('RedParticleEmitter : material - RedParticleColorMaterial Instance or RedParticleBitmapMaterial Instance만 허용.');
-            this['_material'] = v;
+    /**DOC:
+     {
+	     code : 'PROPERTY',
+		 title :`diffuseTexture`,
+		 description :`diffuseTexture`,
+		 return : 'RedBitmapTexture'
+	 }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedParticleEmitter', 'diffuseTexture', 'sampler2D', {
+        callback:function(v){
+            this.material.diffuseTexture = v
         }
     });
     Object.freeze(RedParticleEmitter);

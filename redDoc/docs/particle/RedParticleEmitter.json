@@ -1,5 +1,11 @@
 [
   {
+    "code": "PROPERTY",
+    "title": "diffuseTexture",
+    "description": "diffuseTexture",
+    "return": "RedBitmapTexture"
+  },
+  {
     "constructorYn": true,
     "title": "RedParticleEmitter",
     "description": "\n\t 파티클 방출기\n\t <h1>이건코드정리부터해야겠음</h1>\n ",
@@ -17,7 +23,7 @@
       ],
       "material": [
         {
-          "type": "RedParticleColorMaterial Instance or RedParticleBitmapMaterial Instance"
+          "type": "RedParticleColorMaterial Instance or RedParticleMaterial Instance"
         }
       ]
     },
