@@ -43,32 +43,15 @@
                 // 그리드 설정
                 tScene['grid'] = RedGrid(redGL);
                 // 라이트 설정
-                var testDLight, testPLight;
+                var testDLight;
                 testDLight = RedDirectionalLight(redGL)
                 testDLight.x = 3
                 testDLight.y = 2
                 testDLight.z = 3
-                testDLight.debug = true
-                tScene.addLight(testDLight)
-                // 라이트 설정
-                testPLight = RedPointLight(redGL, '#351169', 0.5)
-                testPLight['radius'] = 2
-                testPLight.debug = true
-                tScene.addLight(testPLight)
-                // 스카이박스 설정
-                tScene.skyBox = RedSkyBox(redGL, [
-                    assetPath + 'cubemap/posx.png',
-                    assetPath + 'cubemap/negx.png',
-                    assetPath + 'cubemap/posy.png',
-                    assetPath + 'cubemap/negy.png',
-                    assetPath + 'cubemap/posz.png',
-                    assetPath + 'cubemap/negz.png'
-                ]);
+                tScene.addLight(testDLight);
                 // 렌더시작
                 tRenderer.start(redGL, function (time) {
-                    testPLight.x = Math.sin(time / 1000) * 1
-                    testPLight.y = Math.cos(time / 1000) * 1 + 1
-                    testPLight.z = Math.cos(time / 1000) * 1
+
                 });
                 // 렌더 디버거 활성화
                 tRenderer.setDebugButton();
@@ -76,25 +59,21 @@
             };
             setBase(this);
             // GLTF 로딩
-            RedGLTFLoader(
-                this, // redGL
-                assetPath + 'glTF/basic/', // assetRootPath
-                'DamagedHelmet.gltf', // fileName
-                function (v) { // callBack
-                    tScene.addChild(v['resultMesh'])
-                },
-                RedBitmapCubeTexture(this, // environmentTexture
-                    [
-                        assetPath + 'cubemap/posx.png',
-                        assetPath + 'cubemap/negx.png',
-                        assetPath + 'cubemap/posy.png',
-                        assetPath + 'cubemap/negy.png',
-                        assetPath + 'cubemap/posz.png',
-                        assetPath + 'cubemap/negz.png'
-                    ]
-                )
-            );
-            console.log(this)
+            RedGLTFLoader(this, assetPath + 'glTF/basic/', 'BoxAnimated.gltf', function (v) {
+                console.log('호잇!', v)
+                tScene.addChild(v['resultMesh'])
+            })
+            RedGLTFLoader(this, assetPath + 'glTF/basic/', 'animation.gltf', function (v) {
+                console.log('호잇!', v)
+                tScene.addChild(v['resultMesh'])
+                v['resultMesh'].x = -2
+            })
+            RedGLTFLoader(this, assetPath + 'glTF/basic/', 'SimpleMorph.gltf', function (v) {
+                console.log('호잇!', v)
+                tScene.addChild(v['resultMesh'])
+                v['resultMesh'].x = 2
+
+            });
         } else {
             console.log('초기화 실패!')
         }

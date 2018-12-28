@@ -25,6 +25,7 @@
     RedGL(canvas, function (v) {
         if (v) {
             var tWorld, tView, tScene, tController, tRenderer;
+            var tShadow
             var setBase = function (redGL) {
                 // 월드 생성
                 redGL['world'] = tWorld = RedWorld();
@@ -34,7 +35,9 @@
                 tController = RedObitController(redGL);
                 tController.pan = 25;
                 tController.tilt = -15;
-                tController.distance = 5;
+                tController.distance = 1000;
+                tController.speedDistance = 50;
+                tController.camera.nearClipping = 1
                 // 렌더러 생성
                 tRenderer = RedRenderer();
                 // 뷰생성 및 적용
@@ -42,59 +45,42 @@
                 tWorld.addView(tView);
                 // 그리드 설정
                 tScene['grid'] = RedGrid(redGL);
+                tScene.skyBox =
+                    RedSkyBox(redGL, [
+                        assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
+                        assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
+                        assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
+                        assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
+                        assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
+                        assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
+                    ]);
                 // 라이트 설정
-                var testDLight, testPLight;
+                var testDLight;
                 testDLight = RedDirectionalLight(redGL)
                 testDLight.x = 3
                 testDLight.y = 2
                 testDLight.z = 3
-                testDLight.debug = true
-                tScene.addLight(testDLight)
-                // 라이트 설정
-                testPLight = RedPointLight(redGL, '#351169', 0.5)
-                testPLight['radius'] = 2
-                testPLight.debug = true
-                tScene.addLight(testPLight)
-                // 스카이박스 설정
-                tScene.skyBox = RedSkyBox(redGL, [
-                    assetPath + 'cubemap/posx.png',
-                    assetPath + 'cubemap/negx.png',
-                    assetPath + 'cubemap/posy.png',
-                    assetPath + 'cubemap/negy.png',
-                    assetPath + 'cubemap/posz.png',
-                    assetPath + 'cubemap/negz.png'
-                ]);
+                tScene.addLight(testDLight);
+                tShadow = RedDirectionalShadow(redGL, testDLight)
+                tScene.shadowManager.directionalShadow = tShadow
+                tShadow.size = 500
                 // 렌더시작
                 tRenderer.start(redGL, function (time) {
-                    testPLight.x = Math.sin(time / 1000) * 1
-                    testPLight.y = Math.cos(time / 1000) * 1 + 1
-                    testPLight.z = Math.cos(time / 1000) * 1
+                    testDLight.x = Math.sin(time / 1500) * 1250
+                    testDLight.y = 3500
+                    testDLight.z = Math.cos(time / 1500) * 1250
                 });
                 // 렌더 디버거 활성화
                 tRenderer.setDebugButton();
                 testUI(redGL, tController)
             };
             setBase(this);
+
             // GLTF 로딩
-            RedGLTFLoader(
-                this, // redGL
-                assetPath + 'glTF/basic/', // assetRootPath
-                'DamagedHelmet.gltf', // fileName
-                function (v) { // callBack
-                    tScene.addChild(v['resultMesh'])
-                },
-                RedBitmapCubeTexture(this, // environmentTexture
-                    [
-                        assetPath + 'cubemap/posx.png',
-                        assetPath + 'cubemap/negx.png',
-                        assetPath + 'cubemap/posy.png',
-                        assetPath + 'cubemap/negy.png',
-                        assetPath + 'cubemap/posz.png',
-                        assetPath + 'cubemap/negz.png'
-                    ]
-                )
-            );
-            console.log(this)
+            RedGLTFLoader(this, assetPath + 'glTF/tokyo/', 'scene.gltf', function (v) {
+                tShadow.addCasting(v['resultMesh'], true);
+                tScene.addChild(v['resultMesh'])
+            });
         } else {
             console.log('초기화 실패!')
         }

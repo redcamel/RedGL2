@@ -1,4 +1,5 @@
 "use strict";
+
 redSuite(
     "RedGL Test",
     redGroup(

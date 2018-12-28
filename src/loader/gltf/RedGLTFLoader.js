@@ -68,7 +68,6 @@ var RedGLTFLoader;
         request.open("GET", src, true);
         // request.overrideMimeType('model/gltf+json')
         request.setRequestHeader("Content-Type", (type ? type : "application/xml; ") + 'charset=UTF-8')
-
         request.onreadystatechange = function (e) {
             if (request.readyState == 4 && request.status === 200) {
                 console.log(request)
@@ -481,13 +480,29 @@ var RedGLTFLoader;
                 })
             }
         }
-        parseScene = function (redGLTFLoader, json) {
+        parseScene = function (redGLTFLoader, json, callback) {
             console.log('parseScene 시작')
             console.log(json)
-            json['scenes'][0]['nodes'].forEach(function (nodeIndex) {
-                // console.log('노드를 찾음', nodeIndex)
-                parseNode(redGLTFLoader, json, nodeIndex, json['nodes'][nodeIndex], redGLTFLoader['resultMesh'])
-            })
+            var i, len;
+            var nodesInScene;
+            var nodeIndex;
+            nodesInScene = json['scenes'][0]['nodes']
+            i = 0;
+            len = nodesInScene.length;
+            var tick = function () {
+                nodeIndex = nodesInScene[i];
+                parseNode(redGLTFLoader, json, nodeIndex, json['nodes'][nodeIndex], redGLTFLoader['resultMesh']);
+                i++;
+                if (i == len) {
+                    if (callback) callback()
+                }
+                else requestAnimationFrame(tick);
+            }
+            requestAnimationFrame(tick);
+            // json['scenes'][0]['nodes'].forEach(function (nodeIndex) {
+            //     // console.log('노드를 찾음', nodeIndex)
+            //     parseNode(redGLTFLoader, json, nodeIndex, json['nodes'][nodeIndex], redGLTFLoader['resultMesh'])
+            // })
         }
         checkTRSAndMATRIX = (function () {
             var rotationMTX = mat4.create()
@@ -552,7 +567,7 @@ var RedGLTFLoader;
                 tJointMesh.geometry = RedSphere(redGLTFLoader['redGL'], 0.05, 3, 3, 3)
                 tJointMesh.material = RedColorMaterial(redGLTFLoader['redGL'])
                 tJointMesh.drawMode = redGLTFLoader['redGL'].gl.LINE_LOOP
-                // tJointMesh.depthTestFunc = redGLTFLoader['redGL'].gl.ALWAYS
+                tJointMesh.depthTestFunc = redGLTFLoader['redGL'].gl.NEVER
             })
             // 스켈레톤 정보가 있으면 정보와 메쉬를 연결해둔다.
             if (info['skeleton']) skinInfo['skeleton'] = json['nodes'][info['skeleton']]['RedMesh']
@@ -596,60 +611,62 @@ var RedGLTFLoader;
             tMesh['skinInfo'] = skinInfo
             // console.log(skinInfo)
         }
-        parseNode = function (redGLTFLoader, json, nodeIndex, info, parentMesh) {
-            if ('mesh' in info) {
-                var tMeshIndex = info['mesh']
-                // console.log('nodeInfo', info)
-                // console.log('parentMesh', parentMesh)
-                makeMesh(redGLTFLoader, json, json['meshes'][tMeshIndex]).forEach(function (tMesh) {
-                    info['RedMesh'] = tMesh
-                    parentMesh.addChild(tMesh)
-                    // console.log("메쉬인덱스를 찾음", tMeshIndex, parentMesh)
-                    checkTRSAndMATRIX(tMesh, info)
-                    // tMesh.matrix = matrix
-                    // tMesh.autoUpdateMatrix = false
-                    if ('children' in info) {
-                        info['children'].forEach(function (index) {
-                            parseNode(redGLTFLoader, json, index, json['nodes'][index], tMesh)
-                        })
-                    }
-                    if ('skin' in info) parseSkin(redGLTFLoader, json, json['skins'][info['skin']], tMesh)
-                })
-            }
-            else {
-                var tGroup
-                // console.log('차일드 정보로 구성된 정보임', info)
-
-                if (redGLTFLoader['parsingResult']['groups'][nodeIndex]) {
-                    console.log('기존에 존재!', redGLTFLoader['parsingResult']['groups'][nodeIndex])
-                    tGroup = redGLTFLoader['parsingResult']['groups'][nodeIndex]
-                    info['RedMesh'] = tGroup
-                } else {
-                    tGroup = RedMesh(redGLTFLoader['redGL'])
-                    parentMesh.addChild(tGroup)
-                    info['RedMesh'] = tGroup
-                    redGLTFLoader['parsingResult']['groups'][nodeIndex] = tGroup
-                    redGLTFLoader['parsingResult']['groups'][nodeIndex]['name'] = info['name']
-                }
-                checkTRSAndMATRIX(tGroup, info)
-                // 카메라가 있으면 또 연결시킴
-                if ('camera' in info) {
-                    redGLTFLoader['parsingResult']['cameras'][info['camera']]['_parentMesh'] = parentMesh
-                    redGLTFLoader['parsingResult']['cameras'][info['camera']]['_targetMesh'] = tGroup
-                    var tCameraMesh = RedMesh(redGLTFLoader['redGL'])
-                    tGroup.addChild(tCameraMesh)
-                    redGLTFLoader['parsingResult']['cameras'][info['camera']]['_cameraMesh'] = tCameraMesh
-                }
-                // tGroup.matrix = matrix
-                // tGroup.autoUpdateMatrix = false
-                if ('children' in info) {
-                    info['children'].forEach(function (index) {
-                        parseNode(redGLTFLoader, json, index, json['nodes'][index], tGroup)
+        parseNode = (function(){
+            return function (redGLTFLoader, json, nodeIndex, info, parentMesh) {
+                if ('mesh' in info) {
+                    var tMeshIndex = info['mesh']
+                    // console.log('nodeInfo', info)
+                    // console.log('parentMesh', parentMesh)
+                     makeMesh(redGLTFLoader, json, json['meshes'][tMeshIndex]).forEach(function (tMesh) {
+                        info['RedMesh'] = tMesh
+                        parentMesh.addChild(tMesh)
+                        // console.log("메쉬인덱스를 찾음", tMeshIndex, parentMesh)
+                        checkTRSAndMATRIX(tMesh, info)
+                        // tMesh.matrix = matrix
+                        // tMesh.autoUpdateMatrix = false
+                        if ('children' in info) {
+                            info['children'].forEach(function (index) {
+                                parseNode(redGLTFLoader, json, index, json['nodes'][index], tMesh)
+                            })
+                        }
+                        if ('skin' in info) parseSkin(redGLTFLoader, json, json['skins'][info['skin']], tMesh)
                     })
                 }
-                if ('skin' in info) parseSkin(redGLTFLoader, json, json['skins'][info['skin']], tGroup)
+                else {
+                    var tGroup
+                    // console.log('차일드 정보로 구성된 정보임', info)
+
+                    if (redGLTFLoader['parsingResult']['groups'][nodeIndex]) {
+                        console.log('기존에 존재!', redGLTFLoader['parsingResult']['groups'][nodeIndex])
+                        tGroup = redGLTFLoader['parsingResult']['groups'][nodeIndex]
+                        info['RedMesh'] = tGroup
+                    } else {
+                        tGroup = RedMesh(redGLTFLoader['redGL'])
+                        parentMesh.addChild(tGroup)
+                        info['RedMesh'] = tGroup
+                        redGLTFLoader['parsingResult']['groups'][nodeIndex] = tGroup
+                        redGLTFLoader['parsingResult']['groups'][nodeIndex]['name'] = info['name']
+                    }
+                    checkTRSAndMATRIX(tGroup, info)
+                    // 카메라가 있으면 또 연결시킴
+                    if ('camera' in info) {
+                        redGLTFLoader['parsingResult']['cameras'][info['camera']]['_parentMesh'] = parentMesh
+                        redGLTFLoader['parsingResult']['cameras'][info['camera']]['_targetMesh'] = tGroup
+                        var tCameraMesh = RedMesh(redGLTFLoader['redGL'])
+                        tGroup.addChild(tCameraMesh)
+                        redGLTFLoader['parsingResult']['cameras'][info['camera']]['_cameraMesh'] = tCameraMesh
+                    }
+                    // tGroup.matrix = matrix
+                    // tGroup.autoUpdateMatrix = false
+                    if ('children' in info) {
+                        info['children'].forEach(function (index) {
+                            parseNode(redGLTFLoader, json, index, json['nodes'][index], tGroup)
+                        })
+                    }
+                    if ('skin' in info) parseSkin(redGLTFLoader, json, json['skins'][info['skin']], tGroup)
+                }
             }
-        }
+        })()
         var parseSparse = function (redGLTFLoader, key, tAccessors, json, vertices, uvs, uvs1, normals, jointWeights, joints) {
             if (tAccessors['sparse']) {
                 var sparseVerties = []
@@ -1064,17 +1081,16 @@ var RedGLTFLoader;
                         roughnessFactor = tMaterialInfo['pbrMetallicRoughness']['roughnessFactor']
                     }
                     var tColor
-                    // if (diffseTexture) {
-                    if (!redGLTFLoader['environmentTexture']) {
-                        redGLTFLoader['environmentTexture'] = RedBitmapCubeTexture(redGLTFLoader['redGL'], [
-                            '../asset/cubemap/SwedishRoyalCastle/px.jpg',
-                            '../asset/cubemap/SwedishRoyalCastle/nx.jpg',
-                            '../asset/cubemap/SwedishRoyalCastle/py.jpg',
-                            '../asset/cubemap/SwedishRoyalCastle/ny.jpg',
-                            '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
-                            '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
-                        ])
-                    }
+                    // if (!redGLTFLoader['environmentTexture']) {
+                    //     redGLTFLoader['environmentTexture'] = RedBitmapCubeTexture(redGLTFLoader['redGL'], [
+                    //         '../asset/cubemap/SwedishRoyalCastle/px.jpg',
+                    //         '../asset/cubemap/SwedishRoyalCastle/nx.jpg',
+                    //         '../asset/cubemap/SwedishRoyalCastle/py.jpg',
+                    //         '../asset/cubemap/SwedishRoyalCastle/ny.jpg',
+                    //         '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
+                    //         '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
+                    //     ])
+                    // }
                     var env = redGLTFLoader['environmentTexture']
                     // Type	Description	Required
                     // baseColorFactor	number [4]	The material's base color factor.	No, default: [1,1,1,1]
@@ -1454,9 +1470,11 @@ var RedGLTFLoader;
                 function () {
                     // 리소스 로딩이 완료되면 다음 진행
                     parseCameras(redGLTFLoader, json)
-                    parseScene(redGLTFLoader, json)
-                    parseAnimations(redGLTFLoader, json)
-                    if (callBack) callBack();
+                    parseScene(redGLTFLoader, json, function () {
+                        parseAnimations(redGLTFLoader, json)
+                        if (callBack) callBack();
+                    })
+
                 }
             )
         }
