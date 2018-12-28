@@ -42,7 +42,8 @@ var RedPostEffect_DoF_DepthMaterial;
 		 constructorYn : true,
 		 title :`RedPostEffect_DoF_DepthMaterial`,
 		 description : `
-			 RedPostEffect_DoF_DepthMaterial Instance 생성
+			 피사계 심도 뎁스 처리 재질
+			 시스템적으로 사용됨
 		 `,
 		 params : {
 			 redGL : [
@@ -82,6 +83,7 @@ var RedPostEffect_DoF_DepthMaterial;
 		 description : `
 			 focusLength
 			 기본값 : 15
+			 min : 0
 		 `,
 		 return : 'Number'
 	 }

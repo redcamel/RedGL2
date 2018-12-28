@@ -72,7 +72,8 @@ var RedPostEffect_FXAA;
 		 constructorYn : true,
 		 title :`RedPostEffect_FXAA`,
 		 description : `
-			 RedPostEffect_FXAA Instance 생성.
+			 FXAA 안티알리어싱 이펙트
+			 postEffectManager.antialiasing 속성으로 지정 가능함.
 		 `,
 		 params : {
 			 redGL : [
@@ -84,6 +85,12 @@ var RedPostEffect_FXAA;
 		    'RedBaseMaterial'
 		 ],
 		 demo : '../example/postEffect/antialiasing/RedPostEffect_FXAA.html',
+		 example : `
+            var effect;
+            effect = RedPostEffect_FXAA(RedGL Instance); // 포스트이펙트 생성
+            // postEffectManager는 RedView 생성시 자동생성됨.
+            (RedView Instance)['postEffectManager']['antialiasing'] = effect; // 뷰에 이펙트 설정
+		 `,
 		 return : 'RedPostEffect_FXAA Instance'
 	 }
      :DOC*/

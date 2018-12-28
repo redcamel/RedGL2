@@ -2,13 +2,13 @@
   {
     "code": "PROPERTY",
     "title": "kernel",
-    "description": "\n\t 커널값.\n ",
+    "description": "\n\t 커널값.\n\t 3 * 3 매트릭스 형식의 배열\n ",
     "return": "Array"
   },
   {
     "constructorYn": true,
     "title": "RedPostEffect_Convolution",
-    "description": "\n\t RedPostEffect_Convolution Instance 생성.\n ",
+    "description": "\n\t Convolution 이펙트\n ",
     "params": {
       "redGL": [
         {
@@ -21,6 +21,7 @@
       "RedBaseMaterial"
     ],
     "demo": "../example/postEffect/RedPostEffect_Convolution.html",
+    "example": "\n          var effect;\n          effect = RedPostEffect_DoF(RedGL Instance, RedPostEffect_Convolution.SHARPEN); // 포스트이펙트 생성\n          // postEffectManager는 RedView 생성시 자동생성됨.\n          (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가\n ",
     "return": "RedPostEffect_Convolution Instance"
   },
   {

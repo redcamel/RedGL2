@@ -46,7 +46,7 @@ var RedPostEffect_BlurY;
 		 constructorYn : true,
 		 title :`RedPostEffect_BlurY`,
 		 description : `
-			 RedPostEffect_BlurY Instance 생성.
+			 Y축 블러 이펙트
 		 `,
 		 params : {
 			 redGL : [
@@ -58,6 +58,12 @@ var RedPostEffect_BlurY;
 		    'RedBaseMaterial'
 		 ],
 		 demo : '../example/postEffect/blur/RedPostEffect_BlurY.html',
+		 example : `
+            var effect;
+            effect = RedPostEffect_BlurY(RedGL Instance); // 포스트이펙트 생성
+            // postEffectManager는 RedView 생성시 자동생성됨.
+            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
+		 `,
 		 return : 'RedPostEffect_BlurY Instance'
 	 }
      :DOC*/
@@ -89,6 +95,7 @@ var RedPostEffect_BlurY;
 		 description : `
 			 블러 사이즈
 			 기본값 : 50
+			 min : 0
 		 `,
 		 return : 'Number'
 	 }

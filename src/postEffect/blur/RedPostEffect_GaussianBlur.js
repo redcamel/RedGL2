@@ -6,7 +6,7 @@ var RedPostEffect_GaussianBlur;
 		 constructorYn : true,
 		 title :`RedPostEffect_GaussianBlur`,
 		 description : `
-			 RedPostEffect_GaussianBlur Instance 생성.
+			 가우시안 블러 이펙트
 		 `,
 		 params : {
 			 redGL : [
@@ -18,6 +18,12 @@ var RedPostEffect_GaussianBlur;
 		    'RedBaseMaterial'
 		 ],
 		 demo : '../example/postEffect/blur/RedPostEffect_GaussianBlur.html',
+		 example : `
+            var effect;
+            effect = RedPostEffect_GaussianBlur(RedGL Instance); // 포스트이펙트 생성
+            // postEffectManager는 RedView 생성시 자동생성됨.
+            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
+		 `,
 		 return : 'RedPostEffect_GaussianBlur Instance'
 	 }
      :DOC*/
@@ -44,6 +50,8 @@ var RedPostEffect_GaussianBlur;
 		 description : `
 			 가우시간 블러강도
 			 기본값 : 1
+			 min: 0.1
+			 max: 255
 		 `,
 		 return : 'Number'
 	 }

@@ -10,7 +10,7 @@ var RedParticleBitmapMaterial;
     vSource = function () {
         /* @preserve
          void main(void) {
-            gl_Position = uPMatrix * uCameraMatrix * vec4(aVertexPosition, 1.0);
+            gl_Position = uPMatrix * uCameraMatrix * uMMatrix * vec4(aVertexPosition, 1.0);
             gl_PointSize = aPointSize/gl_Position.w * uResolution.y;
             vVertexColor = aVertexColor;
          }
@@ -68,7 +68,7 @@ var RedParticleBitmapMaterial;
         // 유니폼 프로퍼티
         this['diffuseTexture'] = diffuseTexture;
         this['alpha'] = 1;
-        this['cutOff'] = 0.01;
+        this['cutOff'] = 0;
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['_UUID'] = RedGL.makeUUID();

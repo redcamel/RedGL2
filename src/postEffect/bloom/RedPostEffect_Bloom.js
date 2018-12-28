@@ -34,7 +34,8 @@ var RedPostEffect_Bloom;
 		 constructorYn : true,
 		 title :`RedPostEffect_Bloom`,
 		 description : `
-			 RedPostEffect_Bloom Instance 생성.
+			 Bloom 이펙트
+			 postEffectManager.addEffect( effect Instance ) 로 추가.
 		 `,
 		 params : {
 			 redGL : [
@@ -46,6 +47,12 @@ var RedPostEffect_Bloom;
 		    'RedBaseMaterial'
 		 ],
 		 demo : '../example/postEffect/bloom/RedPostEffect_Bloom.html',
+		 example : `
+            var effect;
+            effect = RedPostEffect_Bloom(RedGL Instance); // 포스트이펙트 생성
+            // postEffectManager는 RedView 생성시 자동생성됨.
+            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
+		 `,
 		 return : 'RedPostEffect_Bloom Instance'
 	 }
      :DOC*/
@@ -88,6 +95,7 @@ var RedPostEffect_Bloom;
 		 description : `
 			 확산 강도.
 			 기본값 : 1
+			 min : 0
 		 `,
 		 return : 'Number'
 	 }
@@ -100,6 +108,7 @@ var RedPostEffect_Bloom;
 		 description : `
 			 블룸 강도
 			 기본값 : 1.2
+			 min : 0
 		 `,
 		 return : 'Number'
 	 }
@@ -112,6 +121,7 @@ var RedPostEffect_Bloom;
 		 description : `
 			 최소 유효값
 			 기본값 : 75
+			 min : 0
 		 `,
 		 return : 'Number'
 	 }
@@ -130,6 +140,7 @@ var RedPostEffect_Bloom;
 		 description : `
 			 blur 정도.
 			 기본값 : 20
+			 min : 0
 		 `,
 		 return : 'Number'
 	 }

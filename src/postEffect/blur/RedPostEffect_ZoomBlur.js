@@ -47,7 +47,7 @@ var RedPostEffect_ZoomBlur;
 		 constructorYn : true,
 		 title :`RedPostEffect_ZoomBlur`,
 		 description : `
-			 RedPostEffect_ZoomBlur Instance 생성.
+			 줌 블러 이펙트
 		 `,
 		 params : {
 			 redGL : [
@@ -59,6 +59,12 @@ var RedPostEffect_ZoomBlur;
 		    'RedBaseMaterial'
 		 ],
 		 demo : '../example/postEffect/blur/RedPostEffect_ZoomBlur.html',
+		 example : `
+            var effect;
+            effect = RedPostEffect_ZoomBlur(RedGL Instance); // 포스트이펙트 생성
+            // postEffectManager는 RedView 생성시 자동생성됨.
+            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
+		 `,
 		 return : 'RedPostEffect_ZoomBlur Instance'
 	 }
      :DOC*/
@@ -116,6 +122,8 @@ var RedPostEffect_ZoomBlur;
 		 description : `
 			 강도
 			 기본값 : 38
+			 min: 1
+			 max: 100
 		 `,
 		 return : 'Number'
 	 }

@@ -37,7 +37,7 @@ var RedPostEffect_Pixelize;
 		 constructorYn : true,
 		 title :`RedPostEffect_Pixelize`,
 		 description : `
-			 RedPostEffect_Pixelize Instance 생성.
+			 Pixelize 효과
 		 `,
 		 params : {
 			 redGL : [
@@ -49,6 +49,12 @@ var RedPostEffect_Pixelize;
 		    'RedBaseMaterial'
 		 ],
 		 demo : '../example/postEffect/pixelate/RedPostEffect_Pixelize.html',
+		 example : `
+            var effect;
+            effect = RedPostEffect_Pixelize(RedGL Instance); // 포스트이펙트 생성
+            // postEffectManager는 RedView 생성시 자동생성됨.
+            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
+		 `,
 		 return : 'RedPostEffect_Pixelize Instance'
 	 }
      :DOC*/
@@ -81,6 +87,7 @@ var RedPostEffect_Pixelize;
 		 description : `
 			 픽셀화 가로 크기
 			 기본값 : 5
+			 min : 0
 		 `,
 		 return : 'Number'
 	 }
@@ -93,6 +100,7 @@ var RedPostEffect_Pixelize;
 		 description : `
 			 픽셀화 세로 크기
 			 기본값 : 5
+			 min : 0
 		 `,
 		 return : 'Number'
 	 }

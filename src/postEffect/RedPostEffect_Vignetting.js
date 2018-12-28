@@ -43,6 +43,12 @@ var RedPostEffect_Vignetting;
 		    'RedBaseMaterial'
 		 ],
 		 demo : '../example/postEffect/RedPostEffect_Vignetting.html',
+		 example : `
+            var effect;
+            effect = RedPostEffect_Vignetting(RedGL Instance); // 포스트이펙트 생성
+            // postEffectManager는 RedView 생성시 자동생성됨.
+            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
+		 `,
 		 return : 'RedPostEffect_Vignetting Instance'
 	 }
      :DOC*/
@@ -71,10 +77,11 @@ var RedPostEffect_Vignetting;
     /**DOC:
      {
 	     code : 'PROPERTY',
-		 title :`_intensity`,
+		 title :`intensity`,
 		 description : `
 			 비네팅 강도
 			 기본값 : 0.85
+			 min : 0
 	 `,
 	 return : 'Number'
 	 }
@@ -87,6 +94,7 @@ var RedPostEffect_Vignetting;
 		 description : `
 			 비네팅사이즈
 			 기본값 : 0.1
+			 min : 0
 		 `,
 		 return : 'Number'
 	 }

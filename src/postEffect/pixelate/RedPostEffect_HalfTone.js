@@ -55,7 +55,7 @@ var RedPostEffect_HalfTone;
 		 constructorYn : true,
 		 title :`RedPostEffect_HalfTone`,
 		 description : `
-			 RedPostEffect_HalfTone Instance 생성.
+			 HalfTone 이펙트
 		 `,
 		 params : {
 			 redGL : [
@@ -67,6 +67,12 @@ var RedPostEffect_HalfTone;
 		    'RedBaseMaterial'
 		 ],
 		 demo : '../example/postEffect/pixelate/RedPostEffect_HalfTone.html',
+		 example : `
+            var effect;
+            effect = RedPostEffect_HalfTone(RedGL Instance); // 포스트이펙트 생성
+            // postEffectManager는 RedView 생성시 자동생성됨.
+            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
+		 `,
 		 return : 'RedPostEffect_HalfTone Instance'
 	 }
      :DOC*/
@@ -145,6 +151,7 @@ var RedPostEffect_HalfTone;
 		 title :`radius`,
 		 description : `
 			 기본값 2
+			 min : 0
 		 `,
 		 return : 'Number'
 	 }

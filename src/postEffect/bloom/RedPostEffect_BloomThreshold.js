@@ -31,7 +31,9 @@ var RedPostEffect_BloomThreshold;
 		 constructorYn : true,
 		 title :`RedPostEffect_BloomThreshold`,
 		 description : `
-			 RedPostEffect_BloomThreshold Instance 생성.
+			 BloomThreshold 이펙트
+			 RedPostEffect_Bloom 내부에서 사용하는 절차 이펙트
+			 시스템적으로 사용됨.
 		 `,
 		 params : {
 			 redGL : [
@@ -42,6 +44,12 @@ var RedPostEffect_BloomThreshold;
 		    'RedBasePostEffect',
 		    'RedBaseMaterial'
 		 ],
+		 example : `
+            var effect;
+            effect = RedPostEffect_BloomThreshold(RedGL Instance); // 포스트이펙트 생성
+            // postEffectManager는 RedView 생성시 자동생성됨.
+            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
+		 `,
 		 return : 'RedPostEffect_BloomThreshold Instance'
 	 }
      :DOC*/
