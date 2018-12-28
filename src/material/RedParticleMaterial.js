@@ -1,11 +1,13 @@
 "use strict";
-var RedParticleBitmapMaterial;
+var RedParticleMaterial;
 //////////////////////////////////////////////////////////
 // 연구중
 //////////////////////////////////////////////////////////
 (function () {
     var vSource, fSource;
-    var PROGRAM_NAME = 'particleBitmapProgram';
+    var PROGRAM_NAME = 'particleProgram';
+    var PROGRAM_OPTION_LIST = ['diffuseTexture'];
+
     var checked;
     vSource = function () {
         /* @preserve
@@ -17,23 +19,23 @@ var RedParticleBitmapMaterial;
          */
     };
     fSource = function () {
-        //TODO: tint명확히 정의해야함
         /* @preserve
          precision mediump float;
         // 안개
         //#REDGL_DEFINE#fragmentShareFunc#fogFactor#
         //#REDGL_DEFINE#fragmentShareFunc#fog#
 
-         uniform sampler2D u_diffuseTexture;
+         //#REDGL_DEFINE#diffuseTexture# uniform sampler2D u_diffuseTexture;
          uniform float u_cutOff;
          uniform float u_alpha;
          void main(void) {
-             vec4 finalColor = texture2D(u_diffuseTexture, vec2(gl_PointCoord.x, - gl_PointCoord.y));
-             finalColor.rgb *= finalColor.a;
-             finalColor.rgb += vVertexColor.rgb * vVertexColor.a;
-             finalColor.a *= vVertexColor.a;
+             vec4 finalColor = vVertexColor;
+             //#REDGL_DEFINE#diffuseTexture# finalColor = texture2D(u_diffuseTexture, vec2(gl_PointCoord.x, - gl_PointCoord.y));
+             //#REDGL_DEFINE#diffuseTexture# finalColor.rgb *= finalColor.a;
+             //#REDGL_DEFINE#diffuseTexture# finalColor.rgb += vVertexColor.rgb * vVertexColor.a;
+             //#REDGL_DEFINE#diffuseTexture# finalColor.a *= vVertexColor.a;
              finalColor.a *= u_alpha;
-             if(finalColor.a < u_cutOff) discard;
+             //#REDGL_DEFINE#diffuseTexture# if(finalColor.a < u_cutOff) discard;
 
              //#REDGL_DEFINE#fog#false# gl_FragColor = finalColor;
              //#REDGL_DEFINE#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
@@ -43,9 +45,9 @@ var RedParticleBitmapMaterial;
     /**DOC:
      {
 		 constructorYn : true,
-		 title :`RedParticleBitmapMaterial`,
+		 title :`RedParticleMaterial`,
 		 description : `
-			 RedParticleBitmapMaterial Instance 생성
+			 RedParticleMaterial Instance 생성
 		 `,
 		 params : {
 			 redGL : [
@@ -57,13 +59,13 @@ var RedParticleBitmapMaterial;
 		 },
 		  demo : '../example/particle/RedParticleEmitter.html',
 		 extends : ['RedBaseMaterial'],
-		 return : 'RedParticleBitmapMaterial Instance'
+		 return : 'RedParticleMaterial Instance'
 	 }
      :DOC*/
-    RedParticleBitmapMaterial = function (redGL, diffuseTexture) {
-        if (!(this instanceof RedParticleBitmapMaterial)) return new RedParticleBitmapMaterial(redGL, diffuseTexture);
-        redGL instanceof RedGL || RedGLUtil.throwFunc('RedParticleBitmapMaterial : RedGL Instance만 허용.', redGL);
-        this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource);
+    RedParticleMaterial = function (redGL, diffuseTexture) {
+        if (!(this instanceof RedParticleMaterial)) return new RedParticleMaterial(redGL, diffuseTexture);
+        redGL instanceof RedGL || RedGLUtil.throwFunc('RedParticleMaterial : RedGL Instance만 허용.', redGL);
+        this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource, PROGRAM_OPTION_LIST);
         /////////////////////////////////////////
         // 유니폼 프로퍼티
         this['diffuseTexture'] = diffuseTexture;
@@ -78,7 +80,7 @@ var RedParticleBitmapMaterial;
         }
         console.log(this)
     };
-    RedParticleBitmapMaterial.prototype = new RedBaseMaterial();
+    RedParticleMaterial.prototype = new RedBaseMaterial();
     /**DOC:
      {
 	     code : 'PROPERTY',
@@ -86,7 +88,11 @@ var RedParticleBitmapMaterial;
 		 return : 'RedBitmapTexture'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedParticleBitmapMaterial', 'diffuseTexture', 'sampler2D', {essential: true});
+    RedDefinePropertyInfo.definePrototype('RedParticleMaterial', 'diffuseTexture', 'sampler2D',{
+        callback: function () {
+            this._searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST)
+        }
+    });
     /**DOC:
      {
 	     code : 'PROPERTY',
@@ -95,7 +101,7 @@ var RedParticleBitmapMaterial;
 		 return : 'Number'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedParticleBitmapMaterial', 'alpha', 'number', {min: 0, max: 1});
+    RedDefinePropertyInfo.definePrototype('RedParticleMaterial', 'alpha', 'number', {min: 0, max: 1});
     /**DOC:
      {
 	     code : 'PROPERTY',
@@ -104,6 +110,6 @@ var RedParticleBitmapMaterial;
 		 return : 'Number'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedParticleBitmapMaterial', 'cutOff', 'number', {min: 0, max: 1});
-    Object.freeze(RedParticleBitmapMaterial);
+    RedDefinePropertyInfo.definePrototype('RedParticleMaterial', 'cutOff', 'number', {min: 0, max: 1});
+    Object.freeze(RedParticleMaterial);
 })();

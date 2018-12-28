@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>RedParticleBitmapMaterial</title>
+    <title>RedParticleMaterial</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -59,27 +59,23 @@
         };
         setBase(this);
         var PARTICLE_DEFINE_DATA = {
-            max: 500,
+            max: 200,
             emitCount: 1,
             lifeTime: [1000, 1500],
             particle: {
                 movementX: {start: [0, 0], end: [-7, 7], ease: RedParticleEmitter.QuadInOut},
                 movementY: {start: [0, 0], end: [-7, 7], ease: RedParticleEmitter.QuadInOut},
                 movementZ: {start: [0, 0], end: [-7, 7], ease: RedParticleEmitter.QuadInOut},
-                scale: {start: [0, 0], end: [2, 4], ease: RedParticleEmitter.QuadInOut},
+                scale: {start: [0.5, 0], end: [2, 6], ease: RedParticleEmitter.QuadInOut},
                 alpha: {start: [0.5, 1], end: [0, 0], ease: RedParticleEmitter.QuadInOut}
             },
-            // tint: RedParticleEmitter.TINT_RANDOM,
-            tint: [0, 0, 0],
+            tint: [1, 1, 1],
             gravity: 0
         }
         var testEmitter = new RedParticleEmitter(
             this,
             PARTICLE_DEFINE_DATA,
-            RedParticleBitmapMaterial(
-                this,
-                RedBitmapTexture(this, assetPath + 'particle.png')
-            )
+            RedBitmapTexture(this, assetPath + 'particle.png')
         )
         testEmitter.scaleY = 0.2
         tScene.addChild(testEmitter)
