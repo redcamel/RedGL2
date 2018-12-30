@@ -51,11 +51,11 @@
             };
             setBase(this);
             // Mesh 설정
-            var tBox, tPlane, tSphere,tCylinder;
-            tBox = RedMesh(this, RedBox(this), RedBitmapMaterial(this, RedBitmapTexture(this,assetPath+'UV_Grid_Sm.jpg')));
-            tPlane = RedMesh(this, RedPlane(this), RedBitmapMaterial(this, RedBitmapTexture(this,assetPath+'UV_Grid_Sm.jpg')));
-            tSphere = RedMesh(this, RedSphere(this, 1, 16, 16, 16), RedBitmapMaterial(this, RedBitmapTexture(this,assetPath+'UV_Grid_Sm.jpg')));
-            tCylinder = RedMesh(this, RedCylinder(this,1,1,2), RedBitmapMaterial(this, RedBitmapTexture(this,assetPath+'UV_Grid_Sm.jpg')));
+            var tBox, tPlane, tSphere, tCylinder;
+            tBox = RedMesh(this, RedBox(this), RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'UV_Grid_Sm.jpg')));
+            tPlane = RedMesh(this, RedPlane(this), RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'UV_Grid_Sm.jpg')));
+            tSphere = RedMesh(this, RedSphere(this, 1, 16, 16, 16), RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'UV_Grid_Sm.jpg')));
+            tCylinder = RedMesh(this, RedCylinder(this, 1, 1, 2), RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'UV_Grid_Sm.jpg')));
             tBox.x = -3;
             tPlane.x = 0;
             tPlane.useCullFace = false;

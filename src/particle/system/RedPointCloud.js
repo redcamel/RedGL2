@@ -11,7 +11,8 @@ var RedPointCloud;
 		 return : 'RedPointCloud Instance'
 	 }
      :DOC*/
-    RedPointCloud = function () {};
+    RedPointCloud = function () {
+    };
     RedPointCloud.prototype = new RedBaseContainer();
     /**DOC:
      {

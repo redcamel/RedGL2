@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
-   <title>RedGL - RedPBRMaterial</title>
+    <title>RedGL - RedPBRMaterial</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -123,12 +123,12 @@
             //
             normalPower: 1,
             specularPower: 1,
-            occlusionPower : 1,
+            occlusionPower: 1,
             //
             metallicFactor: 1,
             roughnessFactor: 0.1,
 
-            baseColorFactor : [1, 1, 1, 1],
+            baseColorFactor: [1, 1, 1, 1],
             emissiveFactor: 1,
             useFlatMode: false
         }
@@ -139,33 +139,33 @@
                 v2.material.alpha = v
             })
         })
-        folder.add(testRedPBRMaterial, 'normalPower', 0, 5,0.01).onChange(function (v) {
+        folder.add(testRedPBRMaterial, 'normalPower', 0, 5, 0.01).onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.material.normalPower = v
             })
         })
-        folder.add(testRedPBRMaterial, 'specularPower', 0, 5,0.01).onChange(function (v) {
+        folder.add(testRedPBRMaterial, 'specularPower', 0, 5, 0.01).onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.material.specularPower = v
             })
         })
-        folder.add(testRedPBRMaterial, 'occlusionPower', 0, 5,0.01).onChange(function (v) {
+        folder.add(testRedPBRMaterial, 'occlusionPower', 0, 5, 0.01).onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.material.occlusionPower = v
             })
         })
-        folder.add(testRedPBRMaterial, 'metallicFactor', 0, 2,0.01).onChange(function (v) {
+        folder.add(testRedPBRMaterial, 'metallicFactor', 0, 2, 0.01).onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.material.metallicFactor = v
             })
         })
 
-        folder.add(testRedPBRMaterial, 'roughnessFactor',  0, 1,0.01).onChange(function (v) {
+        folder.add(testRedPBRMaterial, 'roughnessFactor', 0, 1, 0.01).onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.material.roughnessFactor = v
             })
         });
-        folder.add(testRedPBRMaterial, 'emissiveFactor',  0, 5,0.01).onChange(function (v) {
+        folder.add(testRedPBRMaterial, 'emissiveFactor', 0, 5, 0.01).onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.material.emissiveFactor = v
             })

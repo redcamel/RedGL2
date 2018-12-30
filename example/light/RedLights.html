@@ -62,13 +62,13 @@
             tALight.x = 10
             tALight.y = 5
             tALight.z = 5
-            var tDLight = RedDirectionalLight(this,'#ff0000')
+            var tDLight = RedDirectionalLight(this, '#ff0000')
             tScene.addLight(tDLight)
             tDLight.x = 2
             tDLight.y = 1
             tDLight.z = 1
             tDLight['debug'] = true
-            var tPLight =RedPointLight(this, '#351169')
+            var tPLight = RedPointLight(this, '#351169')
             tScene.addLight(tPLight)
             tPLight.x = -1;
             tPLight.z = 1;
@@ -109,9 +109,9 @@
     testUI = function (redGL, tALight, tDLight, tPLight) {
         var gui = new baseTestUI(redGL)
         gui.initRedGL()
-        gui.initAmbientLight(tALight,true)
-        gui.initDirectionalLight(tDLight,true)
-        gui.initPointLight(tPLight,true)
+        gui.initAmbientLight(tALight, true)
+        gui.initDirectionalLight(tDLight, true)
+        gui.initPointLight(tPLight, true)
     }
 </script>
 </body>

@@ -284,7 +284,7 @@ var RedParticleEmitter;
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedParticleEmitter', 'diffuseTexture', 'sampler2D', {
-        callback:function(v){
+        callback: function (v) {
             this.material.diffuseTexture = v
         }
     });

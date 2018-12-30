@@ -611,13 +611,13 @@ var RedGLTFLoader;
             tMesh['skinInfo'] = skinInfo
             // console.log(skinInfo)
         }
-        parseNode = (function(){
+        parseNode = (function () {
             return function (redGLTFLoader, json, nodeIndex, info, parentMesh) {
                 if ('mesh' in info) {
                     var tMeshIndex = info['mesh']
                     // console.log('nodeInfo', info)
                     // console.log('parentMesh', parentMesh)
-                     makeMesh(redGLTFLoader, json, json['meshes'][tMeshIndex]).forEach(function (tMesh) {
+                    makeMesh(redGLTFLoader, json, json['meshes'][tMeshIndex]).forEach(function (tMesh) {
                         info['RedMesh'] = tMesh
                         parentMesh.addChild(tMesh)
                         // console.log("메쉬인덱스를 찾음", tMeshIndex, parentMesh)

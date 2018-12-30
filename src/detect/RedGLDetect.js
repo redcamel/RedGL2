@@ -107,7 +107,7 @@ var RedGLDetect;
 
 
     RedGLDetect.BROWSER_INFO = {}
-    RedGLDetect.getBrowserInfo = function(){
+    RedGLDetect.getBrowserInfo = function () {
         var result = RedGLDetect['BROWSER_INFO']
         var navi = window['navigator'],
             agent = navi.userAgent.toLowerCase(),

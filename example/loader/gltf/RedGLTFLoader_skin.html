@@ -34,7 +34,7 @@
                 tController = RedObitController(redGL);
                 tController.pan = 25;
                 tController.tilt = -15;
-                tController.distance = 5;
+                tController.distance = 7;
                 // 렌더러 생성
                 tRenderer = RedRenderer();
                 // 뷰생성 및 적용
@@ -72,7 +72,7 @@
                 tScene.addChild(v['resultMesh'])
                 v['resultMesh'].x = 0
             });
-            RedGLTFLoader(this, assetPath+'glTF/breakDance/', 'scene.gltf', function (v) {
+            RedGLTFLoader(this, assetPath + 'glTF/breakDance/', 'scene.gltf', function (v) {
                 tScene.addChild(v['resultMesh'])
                 v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.001
                 v['resultMesh'].x = 1.5
@@ -80,11 +80,18 @@
             })
             RedGLTFLoader(this, assetPath + 'glTF/basic/', 'SimpleSkin.gltf', function (v) {
                 tScene.addChild(v['resultMesh'])
-                v['resultMesh'].x = 3
+                v['resultMesh'].z = -3
+                v['resultMesh'].x = 2
             });
             RedGLTFLoader(this, assetPath + 'glTF/basic/', 'RiggedSimple.gltf', function (v) {
                 tScene.addChild(v['resultMesh'])
+                v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.5
                 v['resultMesh'].z = -3
+            });
+            RedGLTFLoader(this, assetPath + 'glTF/busterDrone/', 'busterDrone.gltf', function (v) {
+                tScene.addChild(v['resultMesh'])
+                v['resultMesh'].y = 1
+                v['resultMesh'].x = 3
             });
         } else {
             console.log('초기화 실패!')

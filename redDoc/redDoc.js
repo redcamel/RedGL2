@@ -25,7 +25,7 @@ var DocJS = (function () {
         tList.forEach(function (v, index) {
             if (tList2[index] != null) tList[index] = v.substr(min)
         })
-        console.log('minSpace',minSpace)
+        console.log('minSpace', minSpace)
         console.log(tList)
         return tList.join('\n')
     }
@@ -124,8 +124,8 @@ var DocJS = (function () {
         // 주어진 정보에 따라 경로를 생성관리한다.
         getTargetDir = function (v) {
             console.log(v)
-            if(v.length>1){
-                HREF_MAP[v[v.length-1]] = v.join('/') + '.json'
+            if (v.length > 1) {
+                HREF_MAP[v[v.length - 1]] = v.join('/') + '.json'
             }
             var len;
             len = v.length
@@ -254,8 +254,8 @@ var DocJS = (function () {
             if (t0.length) {
                 // t0 = t0.join(' >> ');
                 var t1 = Recard.Dom('div').S(
-                    '>',Recard.Dom('div').S(
-                        'display','inline-block',
+                    '>', Recard.Dom('div').S(
+                        'display', 'inline-block',
                         'margin', '8px 0px 0px 0px',
                         'font-weight', 'bold',
                         'font-size', 14,
@@ -263,35 +263,34 @@ var DocJS = (function () {
                         'color', '#059aab',
 
                         'html', '<b>extends</b> : '
-
                     )
                 );
-                t0.forEach(function(v,index){
+                t0.forEach(function (v, index) {
                     Recard.Dom('div').S(
-                        'display','inline-block',
+                        'display', 'inline-block',
                         'margin', '8px 0px 0px 0px',
                         'font-weight', 'bold',
                         'font-size', 14,
                         'margin-left', 3,
                         'color', '#059aab',
-                        'cursor','pointer',
-                        'on', ['down',function () {
+                        'cursor', 'pointer',
+                        'on', ['down', function () {
                             callDoc(HREF_MAP[v])
 
                         }],
                         'html', v,
-                        '<',t1
+                        '<', t1
                     )
-                    if(index !=t0.length-1){
+                    if (index != t0.length - 1) {
                         Recard.Dom('div').S(
-                            'display','inline-block',
+                            'display', 'inline-block',
                             'margin', '8px 0px 0px 0px',
                             'font-weight', 'bold',
                             'font-size', 14,
                             'margin-left', 3,
                             'color', '#059aab',
                             'html', ' >> ',
-                            '<',t1
+                            '<', t1
                         )
                     }
                 });
@@ -356,7 +355,7 @@ var DocJS = (function () {
                             Recard.Dom(tag ? tag : 'div').S(
                                 'font-weight', 'bold',
                                 'color', '#0795b7',
-                                'html', (v['type'] ? 'type : ' + "<span style=\"color:#fff;font-weight: bold;font-size:10px;padding:3px 5px 4px 5px;background:#875588;border-radius:5px\">"+v['type']+'</span>' : v),
+                                'html', (v['type'] ? 'type : ' + "<span style=\"color:#fff;font-weight: bold;font-size:10px;padding:3px 5px 4px 5px;background:#875588;border-radius:5px\">" + v['type'] + '</span>' : v),
                                 '<', paramItemBox
                             )
                         } else {
@@ -366,7 +365,7 @@ var DocJS = (function () {
                                     '@className', 'language-javascript',
                                     'display', 'block',
                                     'padding', 10,
-                                    'margin-top',5,
+                                    'margin-top', 5,
                                     'html', Prism.highlight(dedent(v.replace('<code>', '').replace('</code>', '')), Prism.languages.javascript).trim(),
                                     '<', paramItemBox
                                 )
@@ -405,7 +404,7 @@ var DocJS = (function () {
         setReturn = function (data, tag) {
             console.log(data['return'])
             return Recard.Dom(tag ? tag : 'div').S(
-                'html', '<b>return</b> : <span style="color:#fff;font-weight: bold;font-size:10px;padding:3px 5px 4px 5px;background:#875588;border-radius:5px">' + (data['return'] ? data['return'] : 'DOC에 return이 정의 되지 않았습니다.') +'</span>'
+                'html', '<b>return</b> : <span style="color:#fff;font-weight: bold;font-size:10px;padding:3px 5px 4px 5px;background:#875588;border-radius:5px">' + (data['return'] ? data['return'] : 'DOC에 return이 정의 되지 않았습니다.') + '</span>'
             )
         }
         setTestCase = function (src) {
@@ -561,7 +560,7 @@ var DocJS = (function () {
             )
             tLoader.onAllLoaded(function (v) {
                 var content = JSON.parse(v[0]['content'])
-                console.log('content',content)
+                console.log('content', content)
                 rightBox.S('html', '');
                 var codeKEYList;
                 codeKEYList = {};
