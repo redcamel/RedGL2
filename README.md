@@ -1,7 +1,11 @@
-# RedGL2
+# RedGL
+[![Software License](https://img.shields.io/github/license/swisnl/build-size.svg)](LICENSE)
 
-- Example : https://redcamel.github.io/RedGL2/example/index.html
-- API Document : https://redcamel.github.io/RedGL2/redDoc/index.html#RedGL
-- TestCase : https://redcamel.github.io/RedGL2/testCase/index.html
+#### JavaScript 3D library ####
 
-This project is maintained by RedCamel.
+## Documentation
+- [Documentation](https://redcamel.github.io/RedGL2/redDoc/index.html)
+- [Examples](https://redcamel.github.io/RedGL2/example/index.html)
+- [TestCase](https://redcamel.github.io/RedGL2/testCase/index.html)
+
+This project is maintained by [RedCamel](mailto:webseon@gmail.com)

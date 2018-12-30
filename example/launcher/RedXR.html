@@ -24,12 +24,22 @@
 <script id='testSource'>
     var canvas
     var testMesh
+    var assetPath = '../../asset/'
     canvas = document.getElementById('test');
     document.body.appendChild(canvas);
     baseTestUI.makeBaseUI();
     RedXR(
         canvas, // 캔버스
         function (v) { // init callback
+            // 스카이박스 설정
+            v['scene']['skyBox'] = RedSkyBox(this, [
+                assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
+                assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
+                assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
+                assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
+                assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
+                assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
+            ])
             testMesh = RedMesh(this, RedSphere(this, 1, 16, 16, 16), RedColorMaterial(this));
             testMesh.z = -10;
             testMesh.drawMode = this.gl.POINTS;
