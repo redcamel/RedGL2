@@ -8,4 +8,4 @@
 - [Examples](https://redcamel.github.io/RedGL2/example/index.html)
 - [TestCase](https://redcamel.github.io/RedGL2/testCase/index.html)
 
-This project is maintained by RedCamel.
+This project is maintained by [RedCamel](webseon@gmail.com)
