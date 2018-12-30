@@ -1,6 +1,7 @@
 # RedGL2
-
 [![Software License](https://img.shields.io/github/license/swisnl/build-size.svg)](LICENSE)
+
+#### JavaScript 3D library ####
 
 ## Documentation
 - [Documentation](https://redcamel.github.io/RedGL2/redDoc/index.html)
