@@ -8,6 +8,11 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
     />
+
+    <script src="../release/RedGL.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.2/TimelineMax.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.2/TweenMax.min.js"></script>
+    <script src="http://redcamel.github.io/Alucard/release/0.8/min/Alucard.min.js"></script>
     <style>
         html,
         body {
@@ -40,28 +45,12 @@
             /*font-weight: bold;*/
             text-shadow: 0px 1px 3px rgb(0, 0, 0);
             font-size: 16px;
-        }
 
-        .item {
-            display: inline-block;
-            padding: 5px;
-
-        }
-
-        .item div {
-            margin-bottom: 5px;
-        }
-
-        .item img {
-            border-radius: 10px;
-            width: 180px;
-            height: 108px;
-            box-shadow: 0px 0px 40px rgba(0, 0, 0, 1);
         }
 
         /* width */
         ::-webkit-scrollbar {
-            width: 6px;
+            width: 4px;
         }
 
         /* Track */
@@ -79,9 +68,7 @@
             background: #70020c;
         }
     </style>
-    <script src="../release/RedGL.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.2/TimelineMax.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.2/TweenMax.min.js"></script>
+
 </head>
 
 <body>
@@ -90,11 +77,18 @@
     var goRedGL = function () {
         window.location.href = 'https://github.com/redcamel/RedGL2'
     }
+    var goRedGLDoc = function () {
+        window.location.href = 'https://redcamel.github.io/RedGL2/redDoc/index.html'
+    }
 </script>
-<img src="../asset/github.png" style="position: fixed;z-index:1;top:15px;right:15px;width:45px;cursor: pointer;"
+<img src="../asset/github.png" style="position: fixed;z-index:1;top:30px;right:30px;width:45px;cursor: pointer;"
      onclick="goRedGL()">
+<button style="position: fixed;z-index:1;top:30px;right:85px;width:45px;width:45px;height:45px;font-size:11px;border-radius:50%;cursor: pointer; background: #a138e2;color:#fff;border:0;outline:none;font-weight: bold"
+        onclick="goRedGLDoc()">DOC
+</button>
 <script>
     var assetPath = '../asset/'
+    var tEffect, tEffect2
     RedGL(document.querySelector('canvas'), function (v) {
         if (v) {
             console.log('초기화 성공!')
@@ -131,7 +125,7 @@
                     assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
                 ])
                 // 렌더 디버거 활성화
-                tRenderer.setDebugButton();
+                // tRenderer.setDebugButton();
             };
             setBase(this);
             // sphere생성
@@ -291,6 +285,14 @@
 
 
             tScene.addChild(testEmitter)
+            tEffect = RedPostEffect_HueSaturation(this)
+            tEffect2 = RedPostEffect_ZoomBlur(this)
+            if(!Alucard.DETECT.isMobile){
+                tView.postEffectManager.addEffect(tEffect = RedPostEffect_HueSaturation(this))
+                tView.postEffectManager.addEffect(tEffect2 = RedPostEffect_ZoomBlur(this))
+            }
+
+            tEffect2.amount = 0
             // 렌더시작
             tRenderer.start(this, function (time) {
                 // 파티클 업데이트
@@ -317,383 +319,513 @@
     })
 </script>
 <div style="position: absolute;padding-bottom: 70px">
-    <div style="padding:60px 30px 0px 30px;font-size: 40px">
-        RedGL Example
+    <div style="padding:20px 30px 0px 30px;font-size: 40px;text-shadow: 0px 0px 10px rgb(0, 0, 0)">
+        <div>RedGL Example</div>
+        <div style="font-size:12px;margin-left:3px">Javascript for WebGL</div>
     </div>
     <br>
-    <ul style="padding-left:35px">
-        <li>
-            <h2>RedGL</h2>
-            <ul>
-                <li class="item">
-                    <div><img src='thumb/RedGL.png'></div>
-
-                    <a href="etc/RedGL.html">RedGL</a>
-                </li>
-                <li class="item">
-                    <div><img src='thumb/RedScene.png'></div>
-
-                    <a href="etc/RedScene.html">RedScene</a>
-                </li>
-                <li class="item">
-                    <div><img src='thumb/RedView.png'></div>
-
-                    <a href="etc/RedView.html">RedView</a>
-                </li>
-            </ul>
-        </li>
-
-        <li>
-            <h2>Primitives</h2>
-            <ul>
-                <li class="item">
-                    <div><img src='thumb/RedPrimitive.png'></div>
-
-                    <a href="primitives/RedPrimitive.html">RedPrimitive</a></li>
-                <li class="item">
-                    <div><img src='thumb/RedPlane.png'></div>
-                    <a href="primitives/RedPlane.html">RedPlane</a></li>
-                <li class="item">
-                    <div><img src='thumb/RedBox.png'></div>
-                    <a href="primitives/RedBox.html">RedBox</a></li>
-                <li class="item">
-                    <div><img src='thumb/RedSphere.png'></div>
-                    <a href="primitives/RedSphere.html">RedSphere</a></li>
-                <li class="item">
-                    <div><img src='thumb/test.jpg'></div>
-                    <a href="primitives/RedCylinder.html">RedCylinder</a></li>
-
-            </ul>
-        </li>
-        <li>
-            <h2>Controller</h2>
-            <ul>
-                <li class="item">
-                    <div><img src='thumb/RedCamera.png'></div>
-                    <a href="camera/RedCamera.html">RedCamera</a></li>
-                <li class="item">
-                    <div><img src='thumb/RedBasicController.png'></div>
-                    <a href="camera/RedBasicController.html">RedBasicController</a></li>
-                <li class="item">
-                    <div><img src='thumb/RedObitController.png'></div>
-                    <a href="camera/RedObitController.html">RedObitController</a></li>
-            </ul>
-        </li>
-        <li>
-            <h2>object3D</h2>
-            <ul>
-                <li class="item">
-                    <div><img src='thumb/RedAxis.png'></div>
-                    <a href="object3D/RedAxis.html">RedAxis</a></li>
-                <li class="item">
-                    <div><img src='thumb/RedGrid.png'></div>
-                    <a href="object3D/RedGrid.html">RedGrid</a></li>
-                <li class="item">
-                    <div><img src='thumb/RedLine.png'></div>
-                    <a href="object3D/RedLine.html">RedLine</a></li>
-                <li class="item">
-                    <div><img src='thumb/RedMesh.png'></div>
-                    <a href="object3D/RedMesh.html">RedMesh</a></li>
-                <li class="item">
-                    <div><img src='thumb/RedSkyBox.png'></div>
-                    <a href="object3D/RedSkyBox.html">RedSkyBox</a></li>
-                <li class="item">
-                    <div><img src='thumb/RedSprite3D.png'></div>
-                    <a href="object3D/RedSprite3D.html">RedSprite3D</a></li>
-            </ul>
-        </li>
-        <li>
-            <h2>Material</h2>
-            <ul>
-                <li class="item">
-                    <div><img src='thumb/RedColorMaterial.png'></div>
-                    <a href="material/RedColorMaterial.html">RedColorMaterial</a></li>
-                <li class="item">
-                    <div><img src='thumb/RedColorPhongMaterial.png'></div>
-                    <a href="material/RedColorPhongMaterial.html">RedColorPhongMaterial</a></li>
-                <li class="item">
-                    <div><img src='thumb/RedColorPhongTextureMaterial.png'></div>
-                    <a href="material/RedColorPhongTextureMaterial.html">RedColorPhongTextureMaterial</a></li>
-                <li class="item">
-                    <div><img src='thumb/RedBitmapMaterial.png'></div>
-                    <a href="material/RedBitmapMaterial.html">RedBitmapMaterial</a></li>
-                <li class="item">
-                    <div><img src='thumb/RedStandardMaterial.png'></div>
-                    <a href="material/RedStandardMaterial.html">RedStandardMaterial</a></li>
-                <li class="item">
-                    <div><img src='thumb/RedEnvironmentMaterial.png'></div>
-                    <a href="material/RedEnvironmentMaterial.html">RedEnvironmentMaterial</a></li>
-                <li class="item">
-                    <div><img src='thumb/test.jpg'></div>
-                    <a href="material/RedPBRMaterial.html">RedPBRMaterial</a></li>
-                <li class="item">
-                    <div><img src='thumb/RedSheetMaterial.png'></div>
-                    <a href="material/RedSheetMaterial.html">RedSheetMaterial</a></li>
-                <li class="item">
-                    <div><img src='thumb/RedVideoMaterial.png'></div>
-                    <a href="material/RedVideoMaterial.html">RedVideoMaterial</a></li>
-                <li class="item">
-                    <div><img src='thumb/test.jpg'></div>
-                    <a href="material/FlatModeMaterial.html">flatMode</a></li>
-                <li class="item">
-                    <div><img src='thumb/test.jpg'></div>
-                    <a href="material/RedBitmapPointCloudMaterial.html">RedBitmapPointCloudMaterial</a></li>
-                <li class="item">
-                    <div><img src='thumb/test.jpg'></div>
-                    <a href="material/RedColorPointCloudMaterial.html">RedColorPointCloudMaterial</a></li>
-            </ul>
-        </li>
-        <li>
-            <h2>Texture</h2>
-            <ul>
-                <li class="item">
-                    <div><img src='thumb/RedBitmapTexture.png'></div>
-                    <a href="resources/RedBitmapTexture.html">RedBitmapTexture</a></li>
-                <li class="item">
-                    <div><img src='thumb/test.jpg'></div>
-                    <a href="resources/RedBitmapTextureOption.html">RedBitmapTextureOption</a></li>
-                <li class="item">
-                    <div><img src='thumb/RedBitmapTexture_anisotropic.png'></div>
-                    <a href="resources/RedBitmapTexture_anisotropic.html">RedBitmapTexture anisotropic option</a></li>
-                <li class="item">
-                    <div><img src='thumb/RedBitmapCubeTexture.png'></div>
-                    <a href="resources/RedBitmapCubeTexture.html">RedBitmapCubeTexture</a></li>
-                <!--<li><a href="RedAtlas.html">RedAtlas & RedAtlasTexture</a></li>-->
-                <li class="item">
-                    <div><img src='thumb/RedDDSTexture.png'></div>
-                    <a href="resources/RedDDSTexture.html">DXT TEST(연구중)</a></li>
-
-            </ul>
-        </li>
-        <li>
-            <h2>Light</h2>
-            <ul>
-                <li class="item">
-                    <div><img src='thumb/test.jpg'></div>
-                    <a href="light/RedLights.html">RedLights ( Ambient, Directional, Point)</a></li>
-                <li class="item">
-                    <div><img src='thumb/RedAmbientLight.png'></div>
-                    <a href="light/RedAmbientLight.html">RedAmbientLight</a></li>
-                <li class="item">
-                    <div><img src='thumb/RedDirectionalLight.png'></div>
-                    <a href="light/RedDirectionalLight.html">RedDirectionalLight</a></li>
-                <li class="item">
-                    <div><img src='thumb/RedPointLight.png'></div>
-                    <a href="light/RedPointLight.html">RedPointLight</a></li>
-            </ul>
-        </li>
-        <li>
-            <h2>Loader</h2>
-            <ul>
-                <li class="item">
-                    <div><img src='thumb/RedOBJLoader.png'></div>
-                    <a href="loader/obj/RedOBJLoader.html">RedOBJLoader</a>
-                </li>
-                <li class="item">
-                    <div><img src='thumb/RedDAELoader.png'></div>
-                    <a href="loader/dae/RedDAELoader.html">RedDAELoader</a>
-                </li>
-                <li class="item">
-                    <div><img src='thumb/Red3DSLoader.png'></div>
-                    <a href="loader/3ds/Red3DSLoader.html">Red3DSLoader</a>
-                </li>
-                <li class="item">
-                    <div><img src='thumb/RedGLTFLoader.png'></div>
-                    <a href="loader/gltf/RedGLTFLoader.html">RedGLTFLoader</a>
-                </li>
-                <li class="item">
-                    <div><img src='thumb/test.jpg'></div>
-                    <a href="loader/gltf/RedGLTFLoader_morph.html">RedGLTFLoader morph & animation</a>
-                </li>
-                <li class="item">
-                    <div><img src='thumb/test.jpg'></div>
-                    <a href="loader/gltf/RedGLTFLoader_skin.html">RedGLTFLoader skin</a>
-                </li>
-                <li class="item">
-                    <div><img src='thumb/test.jpg'></div>
-                    <a href="loader/gltf/RedGLTFLoader_hardTest.html">RedGLTFLoader hardTest</a>
-                </li>
-
-            </ul>
-        </li>
-        <li>
-            <h2>RedText</h2>
-            <ul>
-                <li class="item">
-                    <div><img src='thumb/RedText.png'></div>
-                    <a href="text/RedText.html">RedText</a></li>
-            </ul>
-        </li>
-        <li>
-            <h2>Fog</h2>
-            <ul>
-                <li class="item">
-                    <div><img src='thumb/fog.png'></div>
-                    <a href="etc/Fog.html">Fog</a></li>
-            </ul>
-        </li>
-        <li>
-            <h2>LOD</h2>
-            <ul>
-                <li class="item">
-                    <div><img src='thumb/lod.png'></div>
-                    <a href="etc/lod.html">LOD</a></li>
-            </ul>
-        </li>
-        <li>
-            <h2>MouseEvent</h2>
-            <ul>
-                <li class="item">
-                    <div><img src='thumb/test.jpg'></div>
-                    <a href="mouseEvent/MouseEvent.html">MouseEvent</a></li>
-            </ul>
-        </li>
-        <li>
-            <h2>RedDirectionalShadow</h2>
-            <ul>
-                <li class="item">
-                    <div><img src='thumb/test.jpg'></div>
-                    <a href="shadow/RedDirectionalShadow.html">RedDirectionalShadow</a></li>
-            </ul>
-        </li>
-
-        <li>
-            <h2>postEffect</h2>
-            <ul>
-                <li class="item">
-                    <div><img src='thumb/RedPostEffect.png'></div>
-                    <a href="postEffect/RedPostEffect.html">postEffect</a></li>
-                <li>
-
-                <li class="item">
-                    <div><img src='thumb/RedPostEffect_Vignetting.png'></div>
-                    <a href="postEffect/RedPostEffect_Vignetting.html">RedPostEffect_Vignetting</a></li>
-                <li class="item">
-                    <div><img src='thumb/RedPostEffect_FXAA.png'></div>
-                    <a href="postEffect/antialiasing/RedPostEffect_FXAA.html">RedPostEffect_FXAA</a></li>
-                <li class="item">
-                    <div><img src='thumb/RedPostEffect_DoF.png'></div>
-                    <a href="postEffect/dof/RedPostEffect_DoF.html">RedPostEffect_DoF</a></li>
-                <li class="item">
-                    <div><img src='thumb/RedPostEffect_Bloom.png'></div>
-                    <a href="postEffect/bloom/RedPostEffect_Bloom.html">RedPostEffect_Bloom</a></li>
-
-                <li class="item">
-                    <div><img src='thumb/RedPostEffect_Convolution.png'></div>
-                    <a href="postEffect/RedPostEffect_Convolution.html">RedPostEffect_Convolution</a></li>
-                <li class="item">
-                    <div><img src='thumb/RedPostEffect_Film.png'></div>
-                    <a href="postEffect/RedPostEffect_Film.html">RedPostEffect_Film</a></li>
-                <h2>adjustments</h2>
-                <ul>
-                    <li class="item">
-                        <div><img src='thumb/RedPostEffect_BrightnessContrast.png'></div>
-                        <a href="postEffect/adjustments/RedPostEffect_BrightnessContrast.html">RedPostEffect_BrightnessContrast</a>
-                    </li>
-                    <li class="item">
-                        <div><img src='thumb/RedPostEffect_Threshold.png'></div>
-                        <a href="postEffect/adjustments/RedPostEffect_Threshold.html">RedPostEffect_Threshold</a>
-                    </li>
-                    <li class="item">
-                        <div><img src='thumb/RedPostEffect_Invert.png'></div>
-                        <a href="postEffect/adjustments/RedPostEffect_Invert.html">RedPostEffect_Invert</a>
-                    </li>
-                    <li class="item">
-                        <div><img src='thumb/RedPostEffect_Gray.png'></div>
-                        <a href="postEffect/adjustments/RedPostEffect_Gray.html">RedPostEffect_Gray</a>
-                    </li>
-                    <li class="item">
-                        <div><img src='thumb/RedPostEffect_HueSaturation.png'></div>
-                        <a href="postEffect/adjustments/RedPostEffect_HueSaturation.html">RedPostEffect_HueSaturation</a>
-                    </li>
-                </ul>
-                </li>
-                <li>
-                    <h2>blur</h2>
-                    <ul>
-                        <li class="item">
-                            <div><img src='thumb/RedPostEffect_Blur.png'></div>
-                            <a href="postEffect/blur/RedPostEffect_Blur.html">RedPostEffect_Blur</a></li>
-                        <li class="item">
-                            <div><img src='thumb/RedPostEffect_BlurX.png'></div>
-                            <a href="postEffect/blur/RedPostEffect_BlurX.html">RedPostEffect_BlurX</a></li>
-                        <li class="item">
-                            <div><img src='thumb/RedPostEffect_BlurY.png'></div>
-                            <a href="postEffect/blur/RedPostEffect_BlurY.html">RedPostEffect_BlurY</a></li>
-                        <li class="item">
-                            <div><img src='thumb/RedPostEffect_GaussianBlur.png'></div>
-                            <a href="postEffect/blur/RedPostEffect_GaussianBlur.html">RedPostEffect_GaussianBlur</a>
-                        </li>
-                        <li class="item">
-                            <div><img src='thumb/RedPostEffect_ZoomBlur.png'></div>
-                            <a href="postEffect/blur/RedPostEffect_ZoomBlur.html">RedPostEffect_ZoomBlur</a>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <h2>pixelate</h2>
-                    <ul>
-                        <li class="item">
-                            <div><img src='thumb/RedPostEffect_HalfTone.png'></div>
-                            <a href="postEffect/pixelate/RedPostEffect_HalfTone.html">RedPostEffect_HalfTone</a></li>
-                        <li class="item">
-                            <div><img src='thumb/RedPostEffect_Pixelize.png'></div>
-                            <a href="postEffect/pixelate/RedPostEffect_Pixelize.html">RedPostEffect_Pixelize</a></li>
-                    </ul>
-                </li>
-
-            </ul>
-        </li>
-        <li>
-            <h2>Buffer & Geometry</h2>
-            <ul>
-                <li class="item">
-                    <div><img src='thumb/RedBuffer.png'></div>
-                    <a href="geometry/RedBuffer.html">Buffer & Geometry</a></li>
-            </ul>
-        </li>
-
-        <li>
-            <h2>localToWorld, worldToLocal, getScreenPoint</h2>
-            <ul>
-                <li class="item">
-                    <div><img src='thumb/screenTo.png'></div>
-                    <a href="etc/calPoint.html">localToWorld, worldToLocal, getScreenPoint</a></li>
-
-            </ul>
-        </li>
-
-        <li>
-            <h2>particle</h2>
-            <ul>
-                <li class="item">
-                    <div><img src='thumb/RedParticleEmitter.png'></div>
-                    <a href="particle/RedParticleEmitter.html">RedParticleEmitter</a></li>
-                <li class="item">
-                    <div><img src='thumb/test.jpg'></div>
-                    <a href="particle/RedParticleEmitter_editor.html">RedParticleEmitter_editor</a></li>
-                <li class="item">
-                    <div><img src='thumb/test.jpg'></div>
-                    <a href="particle/RedColorPointCloud.html">RedColorPointCloud</a></li>
-                <li class="item">
-                    <div><img src='thumb/test.jpg'></div>
-                    <a href="particle/RedBitmapPointCloud.html">RedBitmapPointCloud</a></li>
-            </ul>
-        </li>
-
-        <li>
-            <h2>launcher</h2>
-            <ul>
-                <li class="item">
-                    <div><img src='thumb/RedObitController.png'></div>
-                    <a href="launcher/RedGLOffScreen.html">RedGLOffScreen</a></li>
-                <li class="item">
-                    <div><img src='thumb/test.jpg'></div>
-                    <a href="launcher/RedXR.html">RedXR</a></li>
-            </ul>
-        </li>
-    </ul>
+    <div>
+        <ul id="exampleBox" style="padding-left:35px"></ul>
+    </div>
 </div>
+<script>
+    var makeItem = function (list, root, depth) {
+        depth = depth || 0
+        list.forEach(function (v) {
+            var tDom;
+            if (!v['href']) {
+                var newGroup
+                root.S(
+                    '>', Alucard.Dom('h2').S(
+                        'html', v['key']
+                    ),
+                    '>', newGroup = Alucard.Dom('ul')
+                )
+                makeItem(v['list'] ? v['list'] : [], depth ? root : newGroup, depth + 1)
+            } else {
+                tDom = Alucard.Dom('li').S(
+                    'display', 'inline-block',
+                    '<', root
+                );
+                //
+                var tImg
+                Alucard.Dom('div').S(
+                    'display', 'inline-block',
+                    'margin', '5px 15px 0px 0px',
+                    'cursor', 'pointer',
+                    'position', 'relative',
+                    'height', 108 * 0.85 + 27,
+                    '>', tImg = Alucard.Dom('img').S(
+                        '@src', 'thumb/' + v['key'] + '.png',
+                        'opacity', 0.65,
+                        'border-top-left-radius', 5,
+                        'width', 180 * 0.85,
+                        'height', 108 * 0.85,
+                        'box-shadow', '0px 0px 10px rgba(0, 0, 0, 1)'
+                    ),
+                    '>', Alucard.Dom('li').S(
+                        'position', 'absolute',
+                        'bottom', 0, 'left', 0, 'right', 0,
+                        'padding', 7,
+                        'font-size', 11,
+                        'background', 'rgba(0,0,0,0.8)',
+                        'html', v['key']
+                    ),
+                    'over', function (e) {
+                        console.log(e)
+                        this.S('z-index', 2)
+                        TweenMax.to(this.dom, 0.2, {scale: 1.3, ease: Ease.QuintInOut})
+                        TweenMax.to(tImg.dom, 0.3, {opacity: 1, ease: Ease.QuintOut})
+                        TweenMax.to(tEffect, 0.5, {saturation: -100, ease: Ease.QuintOut})
+                        TweenMax.to(tEffect2, 0.5, {
+                                centerX: e.nativeEvent.clientX / document.body.clientWidth - 0.5,
+                                centerY: e.nativeEvent.clientY / document.body.clientHeight - 0.5,
+                                amount: 15, ease: Ease.QuintOut
+                            }
+                        )
+
+                    },
+                    'out', function () {
+                        this.S('z-index', 1)
+                        TweenMax.to(this.dom, 0.3, {scale: 1, ease: Ease.QuintInOut})
+                        TweenMax.to(tImg.dom, 0.3, {opacity: 0.65, ease: Ease.QuintOut})
+                        TweenMax.to(tEffect, 0.5, {saturation: 0, ease: Ease.QuintOut})
+                        TweenMax.to(tEffect2, 0.5, {
+                                centerX: 0,
+                                centerY: 0,
+                                amount: 0, ease: Ease.QuintOut
+                            }
+                        )
+                    },
+                    'down', function () {
+                        window.location.href = v['href']
+                    },
+                    '<', tDom
+                );
+                tImg.dom.onerror = function (v) {
+                    tImg.S('@src', 'thumb/test.jpg')
+                }
+                makeItem(v['list'] ? v['list'] : [], tDom, depth + 1)
+            }
+
+        })
+    }
+    var exampleList = [
+        {
+            key: 'RedGL',
+            list: [
+                {
+                    key: 'RedGL',
+                    href: 'etc/RedGL.html'
+                },
+                {
+                    key: 'RedScene',
+                    href: 'etc/RedScene.html'
+                },
+                {
+                    key: 'RedView',
+                    href: 'etc/RedView.html'
+                }
+            ]
+        },
+        {
+            key: 'Primitives',
+            list: [
+                {
+                    key: 'RedPlane',
+                    href: 'primitives/RedPlane.html'
+                },
+                {
+                    key: 'RedBox',
+                    href: 'primitives/RedBox.html'
+                },
+                {
+                    key: 'RedSphere',
+                    href: 'primitives/RedSphere.html'
+                },
+                {
+                    key: 'RedCylinder',
+                    href: 'primitives/RedCylinder.html'
+                }
+            ]
+        },
+        {
+            key: 'Controller',
+            list: [
+                {
+                    key: 'RedCamera',
+                    href: 'camera/RedCamera.html'
+                },
+                {
+                    key: 'RedBasicController',
+                    href: 'camera/RedBasicController.html'
+                },
+                {
+                    key: 'RedObitController',
+                    href: 'camera/RedObitController.html'
+                }
+            ]
+        },
+        {
+            key: 'object3D',
+            list: [
+                {
+                    key: 'RedAxis',
+                    href: 'object3D/RedAxis.html'
+                },
+                {
+                    key: 'RedGrid',
+                    href: 'object3D/RedGrid.html'
+                },
+                {
+                    key: 'RedLine',
+                    href: 'object3D/RedLine.html'
+                },
+                {
+                    key: 'RedMesh',
+                    href: 'object3D/RedMesh.html'
+                },
+                {
+                    key: 'RedSkyBox',
+                    href: 'object3D/RedSkyBox.html'
+                },
+                {
+                    key: 'RedSprite3D',
+                    href: 'object3D/RedSprite3D.html'
+                }
+            ]
+        },
+        {
+            key: 'Material',
+            list: [
+                {
+                    key: 'RedColorMaterial',
+                    href: 'material/RedColorMaterial.html'
+                },
+                {
+                    key: 'RedColorPhongMaterial',
+                    href: 'material/RedColorPhongMaterial.html'
+                },
+                {
+                    key: 'RedColorPhongTextureMaterial',
+                    href: 'material/RedColorPhongTextureMaterial.html'
+                },
+                {
+                    key: 'RedBitmapMaterial',
+                    href: 'material/RedBitmapMaterial.html'
+                },
+                {
+                    key: 'RedStandardMaterial',
+                    href: 'material/RedStandardMaterial.html'
+                },
+                {
+                    key: 'RedEnvironmentMaterial',
+                    href: 'material/RedEnvironmentMaterial.html'
+                },
+                {
+                    key: 'RedPBRMaterial',
+                    href: 'material/RedPBRMaterial.html'
+                },
+                {
+                    key: 'RedSheetMaterial',
+                    href: 'material/RedSheetMaterial.html'
+                },
+                {
+                    key: 'RedVideoMaterial',
+                    href: 'material/RedVideoMaterial.html'
+                },
+                {
+                    key: 'RedSheetMaterial',
+                    href: 'material/RedSheetMaterial.html'
+                },
+                {
+                    key: 'FlatModeMaterial',
+                    href: 'material/FlatModeMaterial.html'
+                },
+                {
+                    key: 'RedBitmapPointCloudMaterial',
+                    href: 'material/RedBitmapPointCloudMaterial.html'
+                },
+                {
+                    key: 'RedColorPointCloudMaterial',
+                    href: 'material/RedColorPointCloudMaterial.html'
+                }
+            ]
+        },
+        {
+            key: 'Texture',
+            list: [
+                {
+                    key: 'RedBitmapTexture',
+                    href: 'resources/RedBitmapTexture.html'
+                },
+                {
+                    key: 'RedBitmapTextureOption',
+                    href: 'resources/RedBitmapTextureOption.html'
+                },
+                {
+                    key: 'RedBitmapTexture_anisotropic',
+                    href: 'resources/RedBitmapTexture_anisotropic.html'
+                },
+                {
+                    key: 'RedBitmapCubeTexture',
+                    href: 'resources/RedBitmapCubeTexture.html'
+                },
+                {
+                    key: 'RedDDSTexture',
+                    href: 'resources/RedDDSTexture.html'
+                }
+            ]
+        },
+        {
+            key: 'Light',
+            list: [
+                {
+                    key: 'RedLights',
+                    href: 'light/RedLights.html'
+                },
+                {
+                    key: 'RedAmbientLight',
+                    href: 'light/RedAmbientLight.html'
+                },
+                {
+                    key: 'RedDirectionalLight',
+                    href: 'light/RedDirectionalLight.html'
+                },
+                {
+                    key: 'RedPointLight',
+                    href: 'light/RedPointLight.html'
+                }
+            ]
+        },
+        {
+            key: 'Loader',
+            list: [
+                {
+                    key: 'RedOBJLoader',
+                    href: 'loader/obj/RedOBJLoader.html'
+                },
+                {
+                    key: 'RedDAELoader',
+                    href: 'loader/dae/RedDAELoader.html'
+                },
+                {
+                    key: 'RedGLTFLoader',
+                    href: 'loader/gltf/RedGLTFLoader.html'
+                },
+                {
+                    key: 'RedGLTFLoader_skin',
+                    href: 'loader/gltf/RedGLTFLoader_morph.html'
+                },
+                {
+                    key: 'RedGLTFLoader_skin',
+                    href: 'loader/gltf/RedGLTFLoader_skin.html'
+                },
+                {
+                    key: 'RedGLTFLoader_skin',
+                    href: 'loader/gltf/RedGLTFLoader_hardTest.html'
+                }
+            ]
+        },
+        {
+            key: 'RedText',
+            list: [
+                {
+                    key: 'RedText',
+                    href: 'text/RedText.html'
+                }
+            ]
+        },
+        {
+            key: 'Fog',
+            list: [
+                {
+                    key: 'Fog',
+                    href: 'etc/Fog.html'
+                }
+            ]
+        },
+        {
+            key: 'LOD',
+            list: [
+                {
+                    key: 'LOD',
+                    href: 'etc/lod.html'
+                }
+            ]
+        },
+        {
+            key: 'MouseEvent',
+            list: [
+                {
+                    key: 'MouseEvent',
+                    href: 'mouseEvent/MouseEvent.html'
+                }
+            ]
+        },
+        {
+            key: 'RedDirectionalShadow',
+            list: [
+                {
+                    key: 'RedDirectionalShadow',
+                    href: 'shadow/RedDirectionalShadow.html'
+                }
+            ]
+        },
+        {
+            key: 'PostEffect',
+            list: [
+                {
+                    key: 'RedPostEffect',
+                    href: 'postEffect/RedPostEffect.html'
+                },
+                {
+                    key: 'RedPostEffect_Vignetting',
+                    href: 'postEffect/RedPostEffect_Vignetting.html'
+                },
+                {
+                    key: 'RedPostEffect_FXAA',
+                    href: 'postEffect/RedPostEffect_FXAA.html'
+                },
+                {
+                    key: 'RedPostEffect_DoF',
+                    href: 'postEffect/RedPostEffect_DoF.html'
+                },
+                {
+                    key: 'RedPostEffect_Bloom',
+                    href: 'postEffect/RedPostEffect_Bloom.html'
+                },
+                {
+                    key: 'RedPostEffect_Convolution',
+                    href: 'postEffect/RedPostEffect_Convolution.html'
+                },
+                {
+                    key: 'RedPostEffect_Film',
+                    href: 'postEffect/RedPostEffect_Film.html'
+                },
+                {
+                    key: 'adjustments',
+                    list: [
+                        {
+                            key: 'RedPostEffect_BrightnessContrast',
+                            href: 'postEffect/adjustments/RedPostEffect_BrightnessContrast.html'
+                        },
+                        {
+                            key: 'RedPostEffect_Threshold',
+                            href: 'postEffect/adjustments/RedPostEffect_Threshold.html'
+                        },
+                        {
+                            key: 'RedPostEffect_Invert',
+                            href: 'postEffect/adjustments/RedPostEffect_Invert.html'
+                        },
+                        {
+                            key: 'RedPostEffect_Gray',
+                            href: 'postEffect/adjustments/RedPostEffect_Gray.html'
+                        },
+                        {
+                            key: 'RedPostEffect_HueSaturation',
+                            href: 'postEffect/adjustments/RedPostEffect_HueSaturation.html'
+                        }
+                    ]
+                },
+                {
+                    key: 'blur',
+                    list: [
+                        {
+                            key: 'RedPostEffect_Blur',
+                            href: 'postEffect/blur/RedPostEffect_Blur.html'
+                        },
+                        {
+                            key: 'RedPostEffect_BlurX',
+                            href: 'postEffect/blur/RedPostEffect_BlurX.html'
+                        },
+                        {
+                            key: 'RedPostEffect_BlurY',
+                            href: 'postEffect/blur/RedPostEffect_BlurY.html'
+                        },
+                        {
+                            key: 'RedPostEffect_GaussianBlur',
+                            href: 'postEffect/blur/RedPostEffect_GaussianBlur.html'
+                        },
+                        {
+                            key: 'RedPostEffect_ZoomBlur',
+                            href: 'postEffect/blur/RedPostEffect_ZoomBlur.html'
+                        }
+                    ]
+                },
+                {
+                    key: 'pixelate',
+                    list: [
+                        {
+                            key: 'RedPostEffect_HalfTone',
+                            href: 'postEffect/blur/RedPostEffect_HalfTone.html'
+                        },
+                        {
+                            key: 'RedPostEffect_Pixelize',
+                            href: 'postEffect/blur/RedPostEffect_Pixelize.html'
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            key: 'Buffer & Geometry',
+            list: [
+                {
+                    key: 'RedBuffer',
+                    href: 'geometry/RedBuffer.html'
+                }
+            ]
+        },
+        {
+            key: 'localToWorld, worldToLocal, getScreenPoint',
+            list: [
+                {
+                    key: 'localToWorld, worldToLocal, getScreenPoint',
+                    href: 'etc/calPoint.html'
+                }
+            ]
+        },
+        {
+            key: 'particle',
+            list: [
+                {
+                    key: 'RedParticleEmitter',
+                    href: 'particle/RedParticleEmitter.html'
+                },
+                {
+                    key: 'RedParticleEmitter_editor',
+                    href: 'particle/RedParticleEmitter_editor.html'
+                },
+                {
+                    key: 'RedColorPointCloud',
+                    href: 'particle/RedColorPointCloud.html'
+                },
+                {
+                    key: 'RedBitmapPointCloud',
+                    href: 'particle/RedBitmapPointCloud.html'
+                }
+            ]
+        },
+        {
+            key: 'launcher',
+            list: [
+                {
+                    key: 'RedGLOffScreen',
+                    href: 'launcher/RedGLOffScreen.html'
+                },
+                {
+                    key: 'RedXR',
+                    href: 'launcher/RedXR.html'
+                }
+            ]
+        }
+    ];
+    makeItem(exampleList, Alucard.Dom('#exampleBox'))
+
+</script>
+
+
 <div style="position: fixed;bottom: 0px;width:100%;background: rgba(0,0,0,0.75)">
     <hr style="margin:0px; border:0;border-bottom:1px solid #333">
     <div style="padding:10px">
