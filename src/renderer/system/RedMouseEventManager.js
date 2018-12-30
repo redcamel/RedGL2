@@ -69,14 +69,14 @@ var RedMouseEventManager;
                     gl = redGL.gl;
                     tWorldRect = redRenderer['worldRect'];
                     tViewRect = tView['_viewRect'];
-                    tWidth = tViewRect[2] ;
-                    tHeight = tViewRect[3] ;
+                    tWidth = tViewRect[2];
+                    tHeight = tViewRect[3];
                     this['frameBuffer'].width = tWidth;
                     this['frameBuffer'].height = tHeight;
                     this['frameBuffer'].bind(redGL.gl);
                     redRenderer.sceneRender(redGL, tView['scene'], tView['camera'], tView['camera']['orthographicYn'], this['_mouseEventList'], time, renderInfo, this['_mouseEventMaterial']);
                     // 추출
-                    gl.readPixels(redGL['_mouseEventInfo'].x * renderScale, (tViewRect[3] - redGL['_mouseEventInfo'].y* renderScale) , 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixelValues)
+                    gl.readPixels(redGL['_mouseEventInfo'].x * renderScale, (tViewRect[3] - redGL['_mouseEventInfo'].y * renderScale), 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixelValues)
                     // console.log(pixelValues)
 
                     var currentInfo = this['_mouseEventListObject'][pixelValues.toString()]

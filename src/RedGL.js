@@ -341,7 +341,7 @@ var RedGL;
             this.setSize(this['_width'], this['_height'], true);
         }
     });
-    RedGL.setDoNotPrepareProgram = function(){
+    RedGL.setDoNotPrepareProgram = function () {
         doNotPrepareProgram = true
     }
     Object.freeze(RedGL);

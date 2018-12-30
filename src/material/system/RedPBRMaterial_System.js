@@ -3,7 +3,7 @@ var RedPBRMaterial_System;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'RedPBRMaterialSystemProgram';
-    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture','useFlatMode'];
+    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture', 'useFlatMode'];
     var checked;
     vSource = function () {
         /* @preserve
@@ -256,12 +256,12 @@ var RedPBRMaterial_System;
 	 }
      :DOC*/
     RedPBRMaterial_System = function (redGL,
-                               diffuseTexture,
-                               environmentTexture,
-                               normalTexture,
-                               occlusionTexture,
-                               emissiveTexture,
-                               roughnessTexture
+                                      diffuseTexture,
+                                      environmentTexture,
+                                      normalTexture,
+                                      occlusionTexture,
+                                      emissiveTexture,
+                                      roughnessTexture
     ) {
         if (!(this instanceof RedPBRMaterial_System)) return new RedPBRMaterial_System(
             redGL,

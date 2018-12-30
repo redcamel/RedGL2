@@ -3,7 +3,7 @@ var RedEnvironmentMaterial;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'RedEnvironmentMaterialProgram';
-    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'specularTexture', 'displacementTexture', 'emissiveTexture','useFlatMode'];
+    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'specularTexture', 'displacementTexture', 'emissiveTexture', 'useFlatMode'];
     var checked;
     vSource = function () {
         /* @preserve

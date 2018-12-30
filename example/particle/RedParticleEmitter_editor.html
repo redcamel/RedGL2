@@ -346,10 +346,10 @@
         particle_JSON_DATA.innerHTML = 'Particle Define DATA'
         t0.appendChild(particle_JSON_DATA)
 
-        var bt= document.createElement('button')
+        var bt = document.createElement('button')
         bt.style.cssText = 'cursor:pointer;color:#fff;position:absolute;width:100px;bottom:222px;left:420px;fontWeight:bold;background:#333;width:100px;outline:none;border:0;font-size:11px;padding:3px 5px 4px 5px'
         bt.innerHTML = '코드복사'
-        bt.onclick = function(){
+        bt.onclick = function () {
             var t = document.createElement("textarea");
             document.body.appendChild(t);
             t.value = JSON.stringify(defineData);
@@ -365,8 +365,6 @@
         particle_JSON_DATA.class = 'language-javascript'
         particle_JSON_DATA.style.cssText = 'color:#333;position:absolute;width:500px;height:200px;bottom:0px;left:0px;padding:10px;font-size:12px;background:rgba(0,0,0,0.5)'
         t0.appendChild(particle_JSON_DATA)
-
-
 
 
         var jsonTick

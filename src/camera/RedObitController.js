@@ -57,29 +57,29 @@ var RedObitController;
             var HD_down, HD_Move, HD_up, HD_wheel;
             var sX, sY;
             var mX, mY;
-            var tMove,tUp,tDown;
+            var tMove, tUp, tDown;
             tMove = RedGLDetect.BROWSER_INFO.move
-            tUp =  RedGLDetect.BROWSER_INFO.up
+            tUp = RedGLDetect.BROWSER_INFO.up
             tDown = RedGLDetect.BROWSER_INFO.down
             sX = 0, sY = 0;
             mX = 0, mY = 0;
             HD_down = function (e) {
-                if(RedGLDetect.BROWSER_INFO.isMobile){
+                if (RedGLDetect.BROWSER_INFO.isMobile) {
                     console.log(e)
                     e = e.targetTouches[0]
                     sX = e['clientX'], sY = e['clientY'];
-                }else{
+                } else {
                     sX = e['x'], sY = e['y'];
                 }
                 redGL['_canvas'].addEventListener(tMove, HD_Move);
                 window.addEventListener(tUp, HD_up);
             };
             HD_Move = function (e) {
-                if(RedGLDetect.BROWSER_INFO.isMobile){
+                if (RedGLDetect.BROWSER_INFO.isMobile) {
                     e = e.targetTouches[0]
                     mX = e['clientX'] - sX, mY = e['clientY'] - sY;
                     sX = e['clientX'], sY = e['clientY'];
-                }else{
+                } else {
                     mX = e['x'] - sX, mY = e['y'] - sY;
                     sX = e['x'], sY = e['y'];
                 }
@@ -212,7 +212,7 @@ var RedObitController;
 		 return : 'Number'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedObitController', 'maxTilt', 'number', {min:-90,max: 90});
+    RedDefinePropertyInfo.definePrototype('RedObitController', 'maxTilt', 'number', {min: -90, max: 90});
     /**DOC:
      {
 	     code : 'PROPERTY',
@@ -223,7 +223,7 @@ var RedObitController;
 		 return : 'Number'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedObitController', 'minTilt', 'number', {min:-90,max: 90});
+    RedDefinePropertyInfo.definePrototype('RedObitController', 'minTilt', 'number', {min: -90, max: 90});
     /**DOC:
      {
 	     code : 'METHOD',

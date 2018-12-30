@@ -175,7 +175,7 @@
                 )
             );
             RedOBJLoader(redGL, assetPath + 'obj/rabbit/', 'Rabbit.obj', function (v) {
-                console.log('호잇!', v)
+
                 tScene.addChild(v['resultMesh'])
                 tShadow.addCasting(v['resultMesh']) // 그림자 케스팅
                 v['resultMesh'].x = -16
@@ -189,21 +189,21 @@
 
             })
             RedOBJLoader(redGL, assetPath + 'obj/', 'WaltHead.obj', function (v) {
-                console.log('호잇!', v)
+
                 tScene.addChild(v['resultMesh'])
                 tShadow.addCasting(v['resultMesh']) // 그림자 케스팅
                 v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.25
                 v['resultMesh'].x = 16
             })
             RedOBJLoader(redGL, assetPath + 'obj/', 'cube.obj', function (v) {
-                console.log('호잇!', v)
+
                 tScene.addChild(v['resultMesh'])
                 v['resultMesh'].y = 3
                 v['resultMesh'].x = 32
                 tShadow.addCasting(v['resultMesh']) // 그림자 케스팅
             })
             RedOBJLoader(redGL, assetPath + 'obj/', 'tree.obj', function (v) {
-                console.log('호잇!', v)
+
                 tScene.addChild(v['resultMesh'])
                 v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 20
                 v['resultMesh'].x = -28

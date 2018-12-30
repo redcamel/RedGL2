@@ -12,6 +12,7 @@
             font-size: 12px;
             line-height: 22px;
         }
+
         .redDoc {
             user-select: auto;
         }
@@ -21,24 +22,24 @@
 
 <body>
 <script>
-	Recard(
-		function () {
-			console.log('왔어')
-			var tLoader
-			tLoader = Recard.AjaxLoader(
-				null,
-				{
-					url: 'docs/list.json',
-					method: 'GET'
-				}
-			)
-			tLoader.onAllLoaded(function (v) {
-				var srcList = JSON.parse(v[0]['content'])
-				DocJS.init(srcList)
-			})
-			tLoader.start()
-		}
-	)
+    Recard(
+        function () {
+            console.log('왔어')
+            var tLoader
+            tLoader = Recard.AjaxLoader(
+                null,
+                {
+                    url: 'docs/list.json',
+                    method: 'GET'
+                }
+            )
+            tLoader.onAllLoaded(function (v) {
+                var srcList = JSON.parse(v[0]['content'])
+                DocJS.init(srcList)
+            })
+            tLoader.start()
+        }
+    )
 </script>
 </body>
 

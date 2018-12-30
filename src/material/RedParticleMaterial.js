@@ -88,7 +88,7 @@ var RedParticleMaterial;
 		 return : 'RedBitmapTexture'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedParticleMaterial', 'diffuseTexture', 'sampler2D',{
+    RedDefinePropertyInfo.definePrototype('RedParticleMaterial', 'diffuseTexture', 'sampler2D', {
         callback: function () {
             this._searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST)
         }

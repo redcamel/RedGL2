@@ -83,13 +83,13 @@ var RedText;
         this['height'] = height;
         // 기본 스타일 프로퍼티
         /**DOC:
-        {
+         {
             code : 'PROPERTY',
             title :`padding`,
             description : `padding - Css 속성사용`,
             return : 'Number'
         }
-        :DOC*/
+         :DOC*/
         setStylePrototype(this, 'padding', 0);
         /**DOC:
          {
