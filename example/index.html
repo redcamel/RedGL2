@@ -284,7 +284,7 @@
                 RedBitmapTexture(this, assetPath + 'particle.png')
             )
 
-            if ((Alucard.DETECT.device == 'iphone' || Alucard.DETECT.device == 'ipad')) {
+            if (!(Alucard.DETECT.device == 'iphone' || Alucard.DETECT.device == 'ipad')) {
                 tScene.addChild(testEmitter)
             }
 
