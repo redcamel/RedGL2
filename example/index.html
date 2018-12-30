@@ -284,8 +284,10 @@
                 RedBitmapTexture(this, assetPath + 'particle.png')
             )
 
+            if (!(Alucard.DETECT.device == 'iphone' || Alucard.DETECT.device == 'ipad')) {
+                tScene.addChild(testEmitter)
+            }
 
-            tScene.addChild(testEmitter)
             tEffect = RedPostEffect_HueSaturation(this)
             tEffect2 = RedPostEffect_ZoomBlur(this)
             if (!Alucard.DETECT.isMobile) {
