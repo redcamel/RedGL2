@@ -27,8 +27,8 @@ var RedBitmapPointCloudMaterial;
          void main(void) {
              vec4 finalColor = texture2D(u_diffuseTexture, vec2(gl_PointCoord.x, - gl_PointCoord.y));
              finalColor.rgb *= finalColor.a;
-             if(finalColor.a < u_cutOff) discard;
              finalColor.a *= u_alpha;
+             if(finalColor.a < u_cutOff) discard;
              //#REDGL_DEFINE#fog#false# gl_FragColor = finalColor;
              //#REDGL_DEFINE#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
          }
