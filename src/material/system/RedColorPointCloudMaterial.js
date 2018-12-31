@@ -9,7 +9,7 @@ var RedColorPointCloudMaterial;
          void main(void) {
              vVertexColor = aVertexColor;
              gl_Position = uPMatrix * uCameraMatrix* uMMatrix * vec4(aVertexPosition, 1.0);
-             gl_PointSize = aPointSize/gl_Position.w * uResolution.y;
+             gl_PointSize = abs(aPointSize)/gl_Position.w * uResolution.y;
          }
          */
     };
