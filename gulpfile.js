@@ -117,6 +117,7 @@ gulp.task('make-doc', function () {
 });
 gulp.task('combine-js', function () {
     gulp.src([
+        "LICENSE",
         "src/gl-matrix-min.js",
         "src/base/RedDefinePropertyInfo.js",
         "src/detect/RedGLDetect.js",
