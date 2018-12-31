@@ -4,6 +4,28 @@ var baseTestUI = function (redGL, width) {
     this['gui'] = new dat.GUI({name: 'RedGL Test UI'});
     this['gui'].width = width || 400;
     this['redGL'] = redGL;
+
+
+    var testBt
+    document.body.appendChild(testBt = document.createElement('img'));
+    testBt.src = "https://redcamel.github.io/RedGL2/asset/github.png"
+    testBt.style.cssText = "position: fixed;bottom:12px;left:10px;width:30px;cursor: pointer;"
+    testBt.onclick = function () {
+        window.location.href = 'https://github.com/redcamel/RedGL2'
+    }
+    document.body.appendChild(testBt = document.createElement('button'));
+    testBt.innerHTML = 'DOC'
+    testBt.style.cssText = "position: fixed;bottom:10px;padding:0px;left:45px;width:45px;height:30px;font-size:11px;border-radius:15px;cursor: pointer; background: rgb(65, 48, 76);color:#fff;border:0;outline:none;font-weight: bold"
+    testBt.onclick = function () {
+        window.location.href = 'https://redcamel.github.io/RedGL2/redDoc/index.html'
+    }
+    document.body.appendChild(testBt = document.createElement('button'));
+    testBt.innerHTML = 'EXAMPLE'
+    testBt.style.cssText = "position: fixed;bottom:10px;padding:0px;left:97px;width:80px;height:30px;font-size:11px;border-radius:15px;cursor: pointer; background: rgb(65, 48, 76);color:#fff;border:0;outline:none;font-weight: bold"
+    testBt.onclick = function () {
+        window.location.href = 'https://redcamel.github.io/RedGL2/example/index.html'
+    }
+
 };
 var makeSourceView = function () {
     var rootBox;
@@ -11,6 +33,7 @@ var makeSourceView = function () {
     document.body.appendChild(rootBox = document.createElement('div'));
     document.body.appendChild(sourceViewBt = document.createElement('button'));
     rootBox.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:#2b2b2b;z-index:10001;display:none;color:#fff;font-size:12px;overflow-y:auto;padding:10px;';
+    rootBox.className = 'sourceView'
     sourceViewBt.style.cssText = 'position:fixed;right:10px;bottom:10px;background:#222;color:#fff;z-index:10002;border:0;outline:none;cursor:pointer;padding:8px;font-size:11px;border-radius:5px';
     sourceViewBt.innerHTML = 'SOURCE VIEW';
     sourceViewBt.addEventListener('click', function () {
