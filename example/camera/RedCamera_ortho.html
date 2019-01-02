@@ -24,11 +24,14 @@
     var tMaterial;
     var tMaterial2;
     var testTween = function (redGL,target) {
+        var tScale = Math.random() * 32 + 6
         TweenMax.to(target, Math.random()*2 + 1, {
             x: Math.random() * redGL._viewRect[2],
             y: Math.random() * redGL._viewRect[3],
+            scaleX : tScale,
+            scaleY : tScale,
             rotationZ: Math.random() * 360,
-            ease: Ease.CubicInOut,
+            ease: Ease.QuintInOut,
             onComplete: function () {
                 testTween(redGL,this.target)
             }
@@ -100,8 +103,8 @@
                 while (i--) {
                     // 2D 테스트용
                     var tMesh = RedMesh(redGL, RedPlane(redGL), tMaterial2)
-                    tMesh.x = Math.random() * 1280 + 10
-                    tMesh.y = Math.random() * 600
+                    tMesh.x = Math.random() * redGL._viewRect[2]
+                    tMesh.y = Math.random() * redGL._viewRect[3]
                     tMesh.scaleX = tMesh.scaleY = Math.random() * 16 + 2
                     tScene.addChild(tMesh)
                 }
@@ -113,8 +116,8 @@
                 while (i--) {
                     // 2D 테스트용
                     var tMesh = RedMesh(redGL, RedPlane(redGL), tMaterial)
-                    tMesh.x = Math.random() * 1280 + 10
-                    tMesh.y = Math.random() * 600
+                    tMesh.x = Math.random() * redGL._viewRect[2]
+                    tMesh.y = Math.random() * redGL._viewRect[3]
                     tMesh.scaleX = tMesh.scaleY = Math.random() * 16 + 2
                     testTween(redGL,tMesh)
                     tScene.addChild(tMesh)
