@@ -317,7 +317,7 @@ var RedRenderer;
                         tCamera['farClipping']
                     )
                     mat4.translate(tPerspectiveMTX, tPerspectiveMTX, [-0.5, 0.5, 0])
-                    mat4.scale(tPerspectiveMTX, tPerspectiveMTX, [1 / tViewRect[2], -1 / tViewRect[3], 1]);
+                    mat4.scale(tPerspectiveMTX, tPerspectiveMTX, [1 / tViewRect[2] * redGL['renderScale'], -1 / tViewRect[3] * redGL['renderScale'], 1]);
                     mat4.identity(tCamera['matrix'])
                     gl.disable(gl.CULL_FACE);
                     self['cacheState']['useCullFace'] = false
