@@ -21,6 +21,19 @@
     var testUI;
     var canvas;
     var assetPath = '../../asset/'
+    var tMaterial;
+    var tMaterial2;
+    var testTween = function (redGL,target) {
+        TweenMax.to(target, Math.random()*2 + 1, {
+            x: Math.random() * redGL._viewRect[2],
+            y: Math.random() * redGL._viewRect[3],
+            rotationZ: Math.random() * 360,
+            ease: Ease.CubicInOut,
+            onComplete: function () {
+                testTween(redGL,this.target)
+            }
+        })
+    }
     canvas = document.createElement('canvas');
     document.body.appendChild(canvas);
     RedGL(canvas, function (v) {
@@ -50,7 +63,7 @@
                 });
                 // 렌더 디버거 활성화
                 tRenderer.setDebugButton();
-                testUI(redGL, tCamera)
+                testUI(redGL, tScene)
             };
             setBase(this);
 
@@ -58,36 +71,59 @@
             // Box 설정
             var tMesh;
             var i = 1000
-            var tMaterial = RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'UV_Grid_Sm.jpg'))
-            var tMaterial2 = RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'crate.png'))
-            var testTween = function (target) {
-                TweenMax.to(target, Math.random() + 1, {
-                    x: Math.random() * self._viewRect[2],
-                    y: Math.random() * self._viewRect[3],
-                    rotationZ: Math.random() * 360,
-                    ease: Ease.CubicInOut,
-                    onComplete: function () {
-                        testTween(this.target)
-                    }
-                })
-            }
+            tMaterial = RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'crate.png'))
+            tMaterial2 = RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'UV_Grid_Sm.jpg'))
+
+
             while (i--) {
                 // 2D 테스트용
-                tMesh = RedMesh(this, RedPlane(this), Math.random() > 0.5 ? tMaterial : tMaterial2)
+                tMesh = RedMesh(this, RedPlane(this), tMaterial)
                 tMesh.x = Math.random() * 1280 + 10
                 tMesh.y = Math.random() * 600
-                tMesh.scaleX = tMesh.scaleY = Math.random() * 16 + 32
-                testTween(tMesh)
+                tMesh.scaleX = tMesh.scaleY = Math.random() * 16 + 2
+                testTween(this,tMesh)
                 tScene.addChild(tMesh)
             }
+            tScene.sortMaterial(true)
             console.log(this)
         } else {
             console.log('초기화 실패!')
         }
     })
-    testUI = function (redGL, tCamera) {
+    testUI = function (redGL, tScene) {
         var gui = new baseTestUI(redGL)
         gui.initRedGL();
+        var testData = {
+            addObject: function () {
+                var i = 500
+
+                while (i--) {
+                    // 2D 테스트용
+                    var tMesh = RedMesh(redGL, RedPlane(redGL), tMaterial2)
+                    tMesh.x = Math.random() * 1280 + 10
+                    tMesh.y = Math.random() * 600
+                    tMesh.scaleX = tMesh.scaleY = Math.random() * 16 + 2
+                    tScene.addChild(tMesh)
+                }
+                tScene.sortMaterial(true)
+            },
+            addObjectWidthTween: function () {
+                var i = 500
+
+                while (i--) {
+                    // 2D 테스트용
+                    var tMesh = RedMesh(redGL, RedPlane(redGL), tMaterial)
+                    tMesh.x = Math.random() * 1280 + 10
+                    tMesh.y = Math.random() * 600
+                    tMesh.scaleX = tMesh.scaleY = Math.random() * 16 + 2
+                    testTween(redGL,tMesh)
+                    tScene.addChild(tMesh)
+                }
+                tScene.sortMaterial(true)
+            }
+        }
+        gui['gui'].add(testData, 'addObject')
+        gui['gui'].add(testData, 'addObjectWidthTween')
 
     }
 </script>
