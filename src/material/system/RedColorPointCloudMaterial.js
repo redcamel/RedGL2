@@ -6,10 +6,16 @@ var RedColorPointCloudMaterial;
     var checked;
     vSource = function () {
         /* @preserve
+
          void main(void) {
-             vVertexColor = aVertexColor;
-             gl_Position = uPMatrix * uCameraMatrix* uMMatrix * vec4(aVertexPosition, 1.0);
-             gl_PointSize = abs(aPointSize)/gl_Position.w * uResolution.y;
+            if(uOrthographicYn){
+
+                gl_Position = uPMatrix * uCameraMatrix * uMMatrix * vec4(aVertexPosition.x, -aVertexPosition.y, aVertexPosition.z, 1.0);
+                gl_PointSize = abs(aPointSize)/gl_Position.w;
+            }else {
+                gl_Position = uPMatrix * uCameraMatrix * uMMatrix * vec4(aVertexPosition, 1.0);
+                gl_PointSize = abs(aPointSize)/gl_Position.w * uResolution.y;
+            }
          }
          */
     };

@@ -11,9 +11,21 @@ var RedParticleMaterial;
     var checked;
     vSource = function () {
         /* @preserve
+         const mat4 cOrtho = mat4(
+                0.5, 0.0, 0.0, 0.0,
+                0.0, 0.5, 0.0, 0.0,
+                0.0, 0.0, 0.5, 0.0,
+                0.0, 0.0, 0.0, 1.0
+        );
          void main(void) {
-            gl_Position = uPMatrix * uCameraMatrix * uMMatrix * vec4(aVertexPosition, 1.0);
-            gl_PointSize = abs(aPointSize)/gl_Position.w * uResolution.y;
+            if(uOrthographicYn){
+
+                gl_Position = uPMatrix * uCameraMatrix * cOrtho * uMMatrix * vec4(aVertexPosition.x, -aVertexPosition.y, aVertexPosition.z, 1.0);
+                gl_PointSize = abs(aPointSize)/gl_Position.w;
+            }else {
+                gl_Position = uPMatrix * uCameraMatrix * uMMatrix * vec4(aVertexPosition, 1.0);
+                gl_PointSize = abs(aPointSize)/gl_Position.w * uResolution.y;
+            }
             vVertexColor = aVertexColor;
          }
          */
