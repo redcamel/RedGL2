@@ -8,12 +8,15 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
     />
-
-    <script src="../release/RedGL.min.js"></script>
+    <script src="index_demo1.js"></script>
+    <script src="index_demo2.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.2/TimelineMax.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.2/TweenMax.min.js"></script>
     <script src="https://redcamel.github.io/Alucard/release/0.8/min/Alucard.min.js"></script>
     <script src="https://lo-th.github.io/Oimo.js/build/oimo.js"></script>
+
+    <script src="../release/RedGL.min.js"></script>
+
     <style>
         html,
         body {
@@ -94,225 +97,74 @@
         if (v) {
             console.log('초기화 성공!')
             var tWorld, tView, tScene, tCamera, tRenderer;
+
+
             var setBase = function (redGL) {
                 // 월드 생성
                 redGL['world'] = tWorld = RedWorld();
-                // 씬 생성
-                tScene = RedScene(redGL);
+
                 // 카메라 생성
                 tCamera = RedCamera();
                 // 렌더러 생성
                 tRenderer = RedRenderer();
+                // 씬 생성
+                tScene = RedScene(redGL);
                 // 뷰생성 및 적용
                 tView = RedView('HelloRedGL', redGL, tScene, tCamera);
                 tWorld.addView(tView);
-                var tLight = RedDirectionalLight(redGL);
-                tScene.addLight(tLight)
-                tLight.x = 10;
-                tLight.y = 10;
-                tLight.z = 10;
-                tLight = RedDirectionalLight(redGL, '#fff0ff');
-                tScene.addLight(tLight)
-                tLight.x = -10;
-                tLight.y = 10;
-                tLight.z = -10;
-                // 스카이박스 설정
-                tScene['skyBox'] = RedSkyBox(redGL, [
-                    assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
-                    assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
-                    assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
-                    assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
-                    assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
-                    assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
-                ])
-                // 렌더 디버거 활성화
-                // tRenderer.setDebugButton();
+
+                tEffect = RedPostEffect_HueSaturation(redGL)
+                tEffect2 = RedPostEffect_ZoomBlur(redGL)
+                if (!Alucard.DETECT.isMobile) {
+                    tView.postEffectManager.addEffect(tEffect = RedPostEffect_HueSaturation(redGL))
+                    tView.postEffectManager.addEffect(tEffect2 = RedPostEffect_ZoomBlur(redGL))
+                }
+                tEffect2.amount = 0
+
+
             };
             setBase(this);
-            // sphere생성
-            var tEnvironmentTexture = RedBitmapCubeTexture(this, [
-                assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
-                assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
-                assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
-                assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
-                assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
-                assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
-            ])
-            var tMaterial = RedEnvironmentMaterial(this,
-                RedBitmapTexture(this, assetPath + 'brick/Brick03_col.jpg'),
-                tEnvironmentTexture,
-                RedBitmapTexture(this, assetPath + 'brick/Brick03_nrm.jpg'),
-                RedBitmapTexture(this, assetPath + 'specular.png'),
-                RedBitmapTexture(this, assetPath + 'brick/Brick03_disp.jpg'),
-                RedBitmapTexture(this, assetPath + 'emissive.jpg')
-            )
-            // Mesh 설정
-            var makeMesh = function (redGL, y) {
-                var tMesh;
-                var i = 10
-                tMesh = RedMesh(redGL, RedSphere(redGL, 6, 32, 32, 32), tMaterial)
-                tMesh.x = 0
-                tMesh.y = y
-                tScene.addChild(tMesh)
-                while (i--) {
-                    tMesh = RedMesh(redGL, RedSphere(redGL, 1, 32, 32, 32), tMaterial)
-                    tMesh.x = Math.sin(Math.PI * 2 / 10 * i) * 15
-                    tMesh.z = Math.cos(Math.PI * 2 / 10 * i) * 15
-                    tMesh.scaleX = tMesh.scaleY = tMesh.scaleZ = 2
-                    tScene.addChild(tMesh)
+
+            var self = this;
+            var test = setInterval(function () {
+                if (window['index_demo2']) {
+                    clearInterval(test);
+                    var tRoot = Alucard.Dom('button').S(
+                        'position', 'fixed',
+                        'bottom', 0, 'right', 10,
+                        'height',50,
+                        'outline', 'none',
+                        'background', 'transparent',
+                        'border',0,
+                        'z-index', 2,
+                        '<', 'body'
+                    );
+                    ['index_demo', 'index_demo2'].forEach(
+                        function (v,idx) {
+                            window[v].init(self, tView, tRenderer, tCamera)
+                            Alucard.Dom('button').S(
+                                'html', 'BG Demo'+(idx+1),
+                                'background', '#594665',
+                                'border-radius', 5,
+                                'font-size',9,
+                                'outline', 'none',
+                                'padding', 5,
+                                'cursor','pointer',
+                                'color','#fff',
+                                'margin-left',idx ? 5 : 0,
+                                'border',0,
+                                'click',function(){
+                                    window[v].start(self, tView, tRenderer, tCamera)
+                                },
+                                '<', tRoot
+                            )
+                        }
+                    );
+                    index_demo.start(self, tView, tRenderer, tCamera)
                 }
+            }, 16)
 
 
-                tMaterial.emissiveFactor = 0
-                tMaterial.displacementPower = 0
-                tMaterial.displacementFlowSpeedX = 0.1
-                tMaterial.displacementFlowSpeedY = 0.1
-                var tDelay = 1
-                var tDuration = 0.76
-                var timeline = new TimelineMax({repeat: 1000, yoyo: true, repeatDelay: 2});
-                timeline.add(TweenMax.to(tMaterial, tDuration, {
-                    delay: tDelay,
-                    reflectionPower: 0,
-                    ease: Ease.CubicInOut
-                }));
-                timeline.add(TweenMax.to(tMaterial, tDuration, {
-                    delay: tDelay,
-                    reflectionPower: 1,
-                    ease: Ease.CubicInOut
-                }));
-                timeline.add(TweenMax.to(tMaterial, tDuration, {delay: tDelay, normalPower: 0, ease: Ease.CubicInOut}));
-                timeline.add(TweenMax.to(tMaterial, tDuration, {delay: tDelay, normalPower: 2, ease: Ease.CubicInOut}));
-                timeline.add(TweenMax.to(tMaterial, tDuration, {delay: tDelay, shininess: 16, ease: Ease.CubicInOut}));
-                timeline.add(TweenMax.to(tMaterial, tDuration, {
-                    delay: tDelay,
-                    displacementPower: 1,
-                    ease: Ease.CubicInOut
-                }));
-                timeline.add(TweenMax.to(tMaterial, tDuration, {delay: tDelay, shininess: 128, ease: Ease.CubicInOut}));
-                timeline.add(TweenMax.to(tMaterial, tDuration, {
-                    delay: tDelay,
-                    specularPower: 0.1,
-                    reflectionPower: 0.5,
-                    ease: Ease.CubicInOut
-                }));
-                timeline.add(TweenMax.to(tMaterial, tDuration, {
-                    delay: tDelay,
-                    displacementPower: 0,
-                    ease: Ease.CubicInOut
-                }));
-                timeline.add(TweenMax.to(tMaterial, tDuration, {
-                    delay: tDelay,
-                    specularPower: 1,
-                    ease: Ease.CubicInOut
-                }));
-                timeline.add(TweenMax.to(tMaterial, tDuration, {
-                    delay: tDelay,
-                    emissiveFactor: 1,
-                    ease: Ease.CubicInOut
-                }));
-                timeline.add(TweenMax.to(tMaterial, tDuration, {
-                    delay: tDelay,
-                    emissiveFactor: 0,
-                    ease: Ease.CubicInOut
-                }));
-                timeline.add(TweenMax.to(tMaterial, tDuration, {
-                    delay: tDelay,
-                    displacementPower: 1,
-                    ease: Ease.CubicInOut
-                }));
-                timeline.add(TweenMax.to(tMaterial, tDuration, {
-                    delay: tDelay,
-                    displacementPower: 0.2,
-                    reflectionPower: 1,
-                    ease: Ease.CubicInOut
-                }));
-
-            }
-            makeMesh(this, 0);
-            //////////////////////////////////////////////////////////////////
-            // RedPointCloud 설정
-            var i;
-            var interleaveData;
-            var testRedPointCloud;
-            // 인터리브 정보 생성
-            interleaveData = [];
-            i = 20000
-            while (i--) {
-                // position
-                interleaveData.push(
-                    Math.random() * 30 - 15, // x
-                    Math.random() * 30 - 15, // y
-                    Math.random() * 30 - 15 // z
-                );
-                // pointSize
-                interleaveData.push(Math.random() * 1);
-            }
-            // 포인트 유닛 생성
-            testRedPointCloud = RedBitmapPointCloud(
-                this,
-                interleaveData,
-                [
-                    RedInterleaveInfo('aVertexPosition', 3),
-                    RedInterleaveInfo('aPointSize', 1)
-                ],
-                // 포인트 재질 생성
-                RedBitmapPointCloudMaterial(this, RedBitmapTexture(this, assetPath + 'particle.png'))
-            );
-            // 블렌드모드 설정
-            testRedPointCloud['blendSrc'] = this.gl.ONE;
-            testRedPointCloud['blendDst'] = this.gl.ONE;
-                tScene.addChild(testRedPointCloud);
-            ////////////////////////////////////////////////
-            //파티클 설정
-            var PARTICLE_DEFINE_DATA = {
-                max: 500,
-                emitCount: 1,
-                lifeTime: [1000, 5500],
-                particle: {
-                    movementX: {start: [0, 0], end: [-5, 5], ease: RedParticleEmitter.QuadInOut},
-                    movementY: {start: [0, 0], end: [-5, 5], ease: RedParticleEmitter.QuadInOut},
-                    movementZ: {start: [0, 0], end: [-5, 5], ease: RedParticleEmitter.QuadInOut},
-                    scale: {start: [0.1, 0], end: [1, 10], ease: RedParticleEmitter.QuadInOut},
-                    alpha: {start: [0.5, 1], end: [0, 0], ease: RedParticleEmitter.QuadInOut}
-                },
-                tint: RedParticleEmitter.TINT_RANDOM,
-                gravity: -0.01
-            }
-            var testEmitter = new RedParticleEmitter(
-                this,
-                PARTICLE_DEFINE_DATA,
-                RedBitmapTexture(this, assetPath + 'particle.png')
-            )
-
-            tScene.addChild(testEmitter)
-
-            tEffect = RedPostEffect_HueSaturation(this)
-            tEffect2 = RedPostEffect_ZoomBlur(this)
-            if (!Alucard.DETECT.isMobile) {
-                tView.postEffectManager.addEffect(tEffect = RedPostEffect_HueSaturation(this))
-                tView.postEffectManager.addEffect(tEffect2 = RedPostEffect_ZoomBlur(this))
-            }
-            tEffect2.amount = 0
-            // 렌더시작
-            tRenderer.start(this, function (time) {
-                // 파티클 업데이트
-                testEmitter.update(time)
-
-                testEmitter.x = Math.sin(time / 700) * 6
-                // testEmitter.y = Math.cos(time / 1500) * 4
-                testEmitter.z = Math.cos(time / 700) * 6
-                // 인터리브 데이터 업데이트
-                interleaveData.forEach(function (v, index) {
-                    if (index % 4 == 0) interleaveData[index] = v + Math.sin(time / 1000 + index / 100) / 10
-                    else if (index % 4 == 1) interleaveData[index] = v + Math.sin(time / 1000 + index / 100) / 10
-                    else if (index % 4 == 2) interleaveData[index] = v + Math.cos(time / 1000 + index / 100) / 10
-                    else interleaveData[index] = Math.cos(time / 500 + index / 100) / 10
-                });
-                testRedPointCloud.update(interleaveData);
-                tCamera.x = Math.sin(time / 1500) * 20
-                tCamera.y = Math.cos(time / 1500) * 10 + 15
-                tCamera.z = Math.cos(time / 1500) * 20
-            });
         } else {
             console.log('초기화 실패!')
         }
@@ -329,6 +181,7 @@
     </div>
 </div>
 <script>
+
     var makeItem = function (list, root, depth) {
         depth = depth || 0
         list.forEach(function (v) {
@@ -779,7 +632,7 @@
             key: 'localToWorld, worldToLocal, getScreenPoint',
             list: [
                 {
-                    key: 'localToWorld, worldToLocal, getScreenPoint',
+                    key: 'calPoint',
                     href: 'etc/calPoint.html'
                 }
             ]
