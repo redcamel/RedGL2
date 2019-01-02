@@ -204,7 +204,7 @@ var RedProgram;
                 // })
             }
             totalUpdateLocationTime += performance.now() - startTime;
-            console.log('totalUpdateLocationTime', totalUpdateLocationTime);
+            console.log('totalUpdateLocationTime', self,totalUpdateLocationTime);
         }
     })();
     /**DOC:

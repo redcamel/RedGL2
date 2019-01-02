@@ -77,6 +77,7 @@ var RedSystemUniformUpdater;
                 uCameraMatrix: {cacheData: null, data: null},
                 uCameraPosition: {cacheData: null, data: new Float32Array([0, 0, 0])},
                 uPMatrix: {cacheData: null, data: null},
+                uOrthographicYn: {cacheData: null, data: false},
                 uAmbientLightColor: {cacheData: null, data: new Float32Array([0, 0, 0, 0])},
                 uAmbientIntensity: {cacheData: null, data: 1},
                 uDirectionalLightPositionList: {cacheData: null, data: []},
@@ -175,6 +176,13 @@ var RedSystemUniformUpdater;
                     tCheckData['cacheData'] = tValueStr.join(',');
                 }
 
+
+                tValueStr = JSON.stringify(tCamera['orthographicYn']);
+                tCheckData = checkUniformInfo['uOrthographicYn'];
+                if (tCheckData['cacheData'] != tValueStr || changedProgramNum) {
+                    needUpdateUniformInfo['uOrthographicYn'] = tCheckData['data'] = tCamera['orthographicYn'];
+                    tCheckData['cacheData'] = tValueStr;
+                }
 
                 // 퍼스펙티브 매트릭스 업데이트
                 tValueStr = JSON.stringify(tCamera['perspectiveMTX']);

@@ -50,7 +50,7 @@ var RedSystemShaderCode;
                 'varying vec2 vTexcoord',
                 'varying vec2 vTexcoord1',
 
-
+                'uniform bool uOrthographicYn',
                 'uniform mat4 uJointMatrix[' + maxJoint + ']',
                 'uniform mat4 uInverseBindMatrixForJoint[' + maxJoint + ']',
                 'uniform mat4 uGlobalTransformOfNodeThatTheMeshIsAttachedTo',
