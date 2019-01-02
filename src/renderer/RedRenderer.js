@@ -83,6 +83,7 @@ var RedRenderer;
                 redGL instanceof RedGL || RedGLUtil.throwFunc('RedGL Instance만 허용');
                 if (!(redGL.world instanceof RedWorld)) RedGLUtil.throwFunc('RedWorld Instance만 허용');
                 self = this;
+                self.stop()
                 self.world = redGL.world;
                 tRedGL = redGL;
                 self['_callback'] = callback;
