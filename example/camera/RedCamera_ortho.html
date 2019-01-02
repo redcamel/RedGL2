@@ -57,11 +57,11 @@
             var self = this
             // Box 설정
             var tMesh;
-            var i = 3000
+            var i = 1000
             var tMaterial = RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'UV_Grid_Sm.jpg'))
             var tMaterial2 = RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'crate.png'))
             var testTween = function (target) {
-                TweenMax.to(target, Math.random() + 2, {
+                TweenMax.to(target, Math.random() + 1, {
                     x: Math.random() * self._viewRect[2],
                     y: Math.random() * self._viewRect[3],
                     rotationZ: Math.random() * 360,
@@ -88,6 +88,7 @@
     testUI = function (redGL, tCamera) {
         var gui = new baseTestUI(redGL)
         gui.initRedGL();
+
     }
 </script>
 </body>
