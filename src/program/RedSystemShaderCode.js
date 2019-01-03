@@ -17,7 +17,7 @@ var RedSystemShaderCode;
         var maxDirectionalLight = 3;
         var maxPointLight = 5;
         var maxJoint;
-        if (RedGLDetect.BROWSER_INFO.browser == 'ie' && RedGLDetect.BROWSER_INFO.browserVer == 11) maxJoint = 60
+        if (RedGLDetect.BROWSER_INFO.browser == 'ie' && RedGLDetect.BROWSER_INFO.browserVer == 11) maxJoint = 50
         else if (RedGLDetect.BROWSER_INFO.browser == 'iphone' || RedGLDetect.BROWSER_INFO.browser == 'ipad') maxJoint = 8
         else maxJoint = 64
         //TODO 조인트 맥스 갯수 찾는 부분을 분기하거나 다른 방법으로 전달할 방법 생각해야함
