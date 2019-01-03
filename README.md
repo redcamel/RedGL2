@@ -1,16 +1,16 @@
 # RedGL
 [![Software License](https://img.shields.io/github/license/swisnl/build-size.svg)](LICENSE)
 
-#### JavaScript 3D library ####
+### JavaScript 3D library
 ##### 이 프로젝트의 기본 지향점은 모든 브라우저 / 디바이스(PC, Mobile)에서 최적의 성능을 내는 webgl 라이브러리를 만드는 것입니다.
 
 
-## Documentation
+### Documentation
 - [Documentation](https://redcamel.github.io/RedGL2/redDoc/index.html)
 - [Examples](https://redcamel.github.io/RedGL2/example/index.html)
 - [TestCase](https://redcamel.github.io/RedGL2/testCase/index.html)
 
-## Usage
+### Usage
 ```javascript
     var canvas;
     canvas = document.createElement('canvas');
