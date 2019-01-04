@@ -15,11 +15,16 @@
 
 <body>
 <script id='testSource'>
+
+
     var testUI;
     var assetPath = '../../asset/';
     var canvas;
     canvas = document.createElement('canvas');
     document.body.appendChild(canvas);
+
+
+
     RedGL(canvas, function (v) {
         if (v) {
             console.log('초기화 성공!');
