@@ -123,7 +123,7 @@ var DocJS = (function () {
         dirMAP = {};
         // 주어진 정보에 따라 경로를 생성관리한다.
         getTargetDir = function (v) {
-            console.log(v)
+            // console.log(v)
             if (v.length > 1) {
                 HREF_MAP[v[v.length - 1]] = v.join('/') + '.json'
             }
@@ -139,7 +139,7 @@ var DocJS = (function () {
                 v.pop();
                 tParent = leftBox;
                 v.forEach(function (v2, index) {
-                    console.log(v, v2)
+                    // console.log(v, v2)
                     path += v2;
                     if (!dirMAP[path]) dirMAP[path] = Recard.Dom('li').S(
                         '@open', false,
@@ -197,9 +197,9 @@ var DocJS = (function () {
                 )
             })
             leftBox.queryAll('li').forEach(function (v) {
-                console.log(v, v.S('@depth'))
+                // console.log(v, v.S('@depth'))
                 if (v.S('@depth') == '0') v.S('display', 'list-item')
-                else console.log('뭔데')
+                // else console.log('뭔데')
             })
         }
     }());
@@ -212,9 +212,9 @@ var DocJS = (function () {
                 'width', '100%',
                 'height', 600
             ),
-            '>', Recard.Dom('div').S(
-                'html', '초기화면을 넣을꺼임'
-            ),
+            // '>', Recard.Dom('div').S(
+            //     'html', '초기화면을 넣을꺼임'
+            // ),
             '<', rootBox
         )
     }
@@ -308,7 +308,7 @@ var DocJS = (function () {
             )
         }
         setDescription = function (data, tag) {
-            console.log(data['description'])
+            // console.log(data['description'])
             var t0;
             t0 = '<b>description</b> : ';
             if (data['description']) t0 += data['description'].replace(/\n/g, '<br>')
@@ -402,13 +402,13 @@ var DocJS = (function () {
             } else return Recard.Dom('div')
         }
         setReturn = function (data, tag) {
-            console.log(data['return'])
+            // console.log(data['return'])
             return Recard.Dom(tag ? tag : 'div').S(
                 'html', '<b>return</b> : <span style="color:#fff;font-weight: bold;font-size:10px;padding:3px 5px 4px 5px;background:#875588;border-radius:5px">' + (data['return'] ? data['return'] : 'DOC에 return이 정의 되지 않았습니다.') + '</span>'
             )
         }
         setTestCase = function (src) {
-            console.log(src)
+            // console.log(src)
             var tIframe;
             var tLoader
             tLoader = Recard.AjaxLoader(
@@ -431,7 +431,7 @@ var DocJS = (function () {
                         )
                     )
                     tIframe.__dom__.onload = function () {
-                        console.log('오오옹오', this.contentWindow.document)
+                        // console.log('오오옹오', this.contentWindow.document)
                         console.log(this.contentWindow.document.documentElement.clientHeight)
                         var self = this
                         setTimeout(function () {
@@ -585,7 +585,7 @@ var DocJS = (function () {
     })();
     return {
         init: function (srcList) {
-            console.log(srcList)
+            // console.log(srcList)
             setBaseBox()
             setLeftBox(srcList);
             setRightBox();

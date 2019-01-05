@@ -1,0 +1,37 @@
+[
+  {
+    "code": "PROPERTY",
+    "title": "alpha",
+    "description": "기본값 : 1",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "diffuseTexture",
+    "description": "diffuseTexture",
+    "return": "RedBitmapTexture"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedTextMaterial",
+    "description": "\n\t RedTextMaterial Instance 생성자.\n ",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ],
+      "diffuseTexture": [
+        {
+          "type": "RedBitmapTexture"
+        }
+      ]
+    },
+    "extends": [
+      "RedBaseMaterial"
+    ],
+    "demo": "../example/material/RedTextMaterial.html",
+    "example": "\n\t RedTextMaterial( RedGL Instance, RedBitmapTexture(RedGL Instance, src) )\n ",
+    "return": "RedTextMaterial Instance"
+  }
+]

@@ -176,7 +176,7 @@ var index_demo2;
                     tMat2 = RedStandardMaterial(redGL, RedBitmapTexture(redGL, '../asset/draft2.png'))
                     tMat3 = RedStandardMaterial(redGL, RedBitmapTexture(redGL, '../asset/brick/Brick03_col.jpg'))
                     tMat0 = RedColorPhongMaterial(redGL)
-                    var max = 500;
+                    var max = 400;
 
                     if (n === 1) type = 1
                     else if (n === 2) type = 2;

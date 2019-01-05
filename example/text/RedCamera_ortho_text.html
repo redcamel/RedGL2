@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>RedGL - RedText</title>
+    <title>RedGL - RedText(Orthogonal Mode)</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -23,52 +23,46 @@
     document.body.appendChild(canvas);
     RedGL(canvas, function (v) {
         if (v) {
-            var tWorld, tView, tScene, tController, tRenderer;
+            var tWorld, tView, tScene, tCamera, tRenderer;
             var setBase = function (redGL) {
                 // 월드 생성
                 redGL['world'] = tWorld = RedWorld();
                 // 씬 생성
                 tScene = RedScene(redGL);
                 // 카메라 생성
-                tController = RedObitController(redGL);
-                tController.pan = 0;
-                tController.tilt = -45;
-                tController.distance = 1;
+                tCamera = RedCamera();
+                tCamera.orthographicYn = true
                 // 렌더러 생성
                 tRenderer = RedRenderer();
                 // 뷰생성 및 적용
-                tView = RedView('HelloRedGL', redGL, tScene, tController);
+                tView = RedView('HelloRedGL', redGL, tScene, tCamera);
                 tWorld.addView(tView);
 
-                // 렌더시작
-                tRenderer.start(redGL, function (time) {
-                });
+
                 // 렌더 디버거 활성화
                 tRenderer.setDebugButton();
             };
             setBase(this);
             //////////////////////////////////////////////////////////////////////////////////////////////
             // 테스트 문자열
-            var str = ('<div >Here is a <strong>paragraph</strong> that requires <em>word wrap</em>' +
-                '<br>br태그는 빈 div로 치환함<br>' +
-                'hr태그는 안됨' +
-                '<pre>pre test      test pre</pre>' +
-                '<h1 style="color:#fff">My First Heading</h1>' +
-                '<h2 style="color:red">Heading 2</h2><h3 style="color:#fff">Heading 3</h3><h4>Heading 4</h4><h5>Heading 5</h5><h6>Heading 6</h6>' +
-                '<p>My first paragraph.</p>' +
-                '<ul><li>Coffee</li><li>Tea</li><li>Milk</li></ul>' +
-                '<button>this is Button</button><br>' +
-                Math.random());
+            var str = '가나다라 마바사아자차카 가나다라 마바사아자차카 가나다라 마바사아자차카 가나다라 마바사아자차카 가나다라 마바사아자차카';
             //////////////////////////////////////////////////////////////////////////////////////////////
             // RedText 테스트 객체
             var testRedText = RedText(this);
             testRedText.text = str;
             testRedText.background = 'rgb(91, 82, 170)';
-            testRedText.width = 360;
-            testRedText.height = 1024;
-            testRedText.scaleX = testRedText.scaleY = testRedText.scaleZ = 1;
+            testRedText.width = 256;
+            testRedText.height = 256;
+            testRedText.x = 128
+            testRedText.y = 128
             tScene.addChild(testRedText);
             //////////////////////////////////////////////////////////////////////////////////////////////
+            // 렌더시작
+            var self = this
+            tRenderer.start(this, function (time) {
+                testRedText.x = self._viewRect[2]/2
+                testRedText.y = self._viewRect[3]/2
+            });
             testUI(this, tScene, testRedText);
             console.log(this);
         } else {
@@ -84,7 +78,9 @@
             sprite3DYn: testRedText.sprite3DYn,
             perspectiveScale: testRedText.perspectiveScale
         };
-        t0.add(testRedText, 'height', 2, 2048, 1);
+
+        t0.add(testRedText, 'width', 2, 512, 1);
+        t0.add(testRedText, 'height', 2, 512, 1);
         t0.add(testRedText, 'padding', 0, 100, 0.1);
         t0.add(testRedText, 'fontFamily', ['Arial', 'Times New Roman', 'Times', 'serif']);
         t0.add(testRedText, 'fontSize', 0, 100, 0.1);
@@ -95,16 +91,7 @@
         t0.add(testRedText, 'wordBreak', ['normal', 'break-all', 'break-word', 'keep-all', 'unset']);
         t0.add(testRedText, 'verticalAlign', ['top', 'middle', 'bottom']);
         t0.add(testRedText, 'textAlign', ['left', 'center', 'right']);
-        t0.add(testData, 'sprite3DYn').onChange(function (v) {
-            tScene.children.forEach(function (redText) {
-                if (redText instanceof RedText) redText.sprite3DYn = v
-            })
-        });
-        t0.add(testData, 'perspectiveScale').onChange(function (v) {
-            tScene.children.forEach(function (redText) {
-                if (redText instanceof RedText) redText.perspectiveScale = v
-            })
-        });
+
         t0.addColor(testData, 'background').onChange(function (v) {
             tScene.children.forEach(function (redText) {
                 if (redText instanceof RedText) redText.background = v
