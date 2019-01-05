@@ -243,6 +243,8 @@ gulp.task('combine-js', function () {
         //
         "src/launcher/RedGLOffScreen.js"
     ])
+        .pipe(concat(name + '.js')) // 병합한다.
+        .pipe(gulp.dest('release'))
         .pipe(concat(name + '.min.js')) // 병합한다.
         .pipe(stripDebug())
         .pipe(uglify(

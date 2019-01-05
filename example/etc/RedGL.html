@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>redGL - RedGL - RedGL</title>
+    <title>RedGL - RedGL</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -23,6 +23,7 @@
     document.body.appendChild(canvas);
     RedGL(canvas, function (v) {
         if (v) {
+
             console.log('초기화 성공!');
             var tWorld, tView, tScene, tController, tRenderer;
             // 월드 생성
