@@ -8,8 +8,8 @@ var RedColorPointCloudMaterial;
         /* @preserve
 
          void main(void) {
+            vVertexColor = aVertexColor;
             if(uOrthographicYn){
-
                 gl_Position = uPMatrix * uCameraMatrix * uMMatrix * vec4(aVertexPosition.x, -aVertexPosition.y, aVertexPosition.z, 1.0);
                 gl_PointSize = abs(aPointSize)/gl_Position.w;
             }else {
