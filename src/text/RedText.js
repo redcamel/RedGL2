@@ -192,7 +192,7 @@ var RedText;
         setStylePrototype(this, 'textAlign', 'center');
         //////////////////////
         this['geometry'] = RedPlane(redGL, 1, 1, 0);
-        this['material'] = RedBitmapMaterial(redGL, RedBitmapTexture(redGL, this['_cvs']));
+        this['material'] = RedTextMaterial(redGL, RedBitmapTexture(redGL, this['_cvs']));
         //////////////////////
         this['blendSrc'] = redGL.gl.ONE;
         this['blendDst'] = redGL.gl.ONE_MINUS_SRC_ALPHA;
@@ -211,11 +211,16 @@ var RedText;
             self['_cvs']['width'] = tW;
             self['_cvs']['height'] = tH;
             self['_ctx'].clearRect(0, 0, tW, tH);
-            self['scaleX'] = self['_width'] / 1024;
-            self['scaleY'] = self['_height'] / 1024;
+            self['scaleX'] = self['_width'];
+            self['scaleY'] = self['_height'];
             self['_ctx'].drawImage(self['_img'], 0, 0, tW, tH);
             self['material'].diffuseTexture.src = self['_cvs']
-            self['material'].diffuseTexture.option = {min: redGL.gl.LINEAR, mag: redGL.gl.LINEAR}
+            self['material'].diffuseTexture.option = {
+                min: redGL.gl.LINEAR,
+                mag: redGL.gl.LINEAR,
+                wrap_s: redGL.gl.CLAMP_TO_EDGE,
+                wrap_t: redGL.gl.CLAMP_TO_EDGE
+            }
 
         };
         this['useTransparentSort'] = true

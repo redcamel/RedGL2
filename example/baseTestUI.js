@@ -1,29 +1,31 @@
 "use strict";
 var baseTestUI = function (redGL, width) {
+
     baseTestUI.makeBaseUI();
     this['gui'] = new dat.GUI({name: 'RedGL Test UI'});
     this['gui'].width = width || 400;
     this['redGL'] = redGL;
 
-
-    var testBt
-    document.body.appendChild(testBt = document.createElement('img'));
-    testBt.src = "https://redcamel.github.io/RedGL2/asset/github.png"
-    testBt.style.cssText = "position: fixed;bottom:12px;left:10px;width:30px;cursor: pointer;"
-    testBt.onclick = function () {
-        window.location.href = 'https://github.com/redcamel/RedGL2'
-    }
-    document.body.appendChild(testBt = document.createElement('button'));
-    testBt.innerHTML = 'DOC'
-    testBt.style.cssText = "position: fixed;bottom:10px;padding:0px;left:45px;width:45px;height:30px;font-size:11px;border-radius:15px;cursor: pointer; background: rgb(65, 48, 76);color:#fff;border:0;outline:none;font-weight: bold"
-    testBt.onclick = function () {
-        window.location.href = 'https://redcamel.github.io/RedGL2/redDoc/index.html'
-    }
-    document.body.appendChild(testBt = document.createElement('button'));
-    testBt.innerHTML = 'EXAMPLE'
-    testBt.style.cssText = "position: fixed;bottom:10px;padding:0px;left:97px;width:80px;height:30px;font-size:11px;border-radius:15px;cursor: pointer; background: rgb(65, 48, 76);color:#fff;border:0;outline:none;font-weight: bold"
-    testBt.onclick = function () {
-        window.location.href = 'https://redcamel.github.io/RedGL2/example/index.html'
+    if (!window.frameElement) {
+        var testBt
+        document.body.appendChild(testBt = document.createElement('img'));
+        testBt.src = "https://redcamel.github.io/RedGL2/asset/github.png"
+        testBt.style.cssText = "position: fixed;bottom:12px;left:10px;width:30px;cursor: pointer;"
+        testBt.onclick = function () {
+            window.location.href = 'https://github.com/redcamel/RedGL2'
+        }
+        document.body.appendChild(testBt = document.createElement('button'));
+        testBt.innerHTML = 'DOC'
+        testBt.style.cssText = "position: fixed;bottom:10px;padding:0px;left:45px;width:45px;height:30px;font-size:11px;border-radius:15px;cursor: pointer; background: rgb(65, 48, 76);color:#fff;border:0;outline:none;font-weight: bold"
+        testBt.onclick = function () {
+            window.location.href = 'https://redcamel.github.io/RedGL2/redDoc/index.html'
+        }
+        document.body.appendChild(testBt = document.createElement('button'));
+        testBt.innerHTML = 'EXAMPLE'
+        testBt.style.cssText = "position: fixed;bottom:10px;padding:0px;left:97px;width:80px;height:30px;font-size:11px;border-radius:15px;cursor: pointer; background: rgb(65, 48, 76);color:#fff;border:0;outline:none;font-weight: bold"
+        testBt.onclick = function () {
+            window.location.href = 'https://redcamel.github.io/RedGL2/example/index.html'
+        }
     }
 
 };
