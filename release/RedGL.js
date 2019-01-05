@@ -19472,7 +19472,7 @@ var RedText;
         this['_svg'].setAttribute('xmlns', "http://www.w3.org/2000/svg");
         this['_svg'].style = 'position:absolute;top:0px;left:0px;text-align:center;z-index:10';
         this['_svg'].innerHTML = '<foreignObject  width="100%" style="position:absolute;top:0;left:0">' +
-            '   <table xmlns="http://www.w3.org/1999/xhtml" style="position:table;top:0;left:0;width:100%;table-layout:fixed">' +
+            '   <table xmlns="http://www.w3.org/1999/xhtml" style="border-collapse: collapse;position:table;top:0;left:0;width:100%;table-layout:fixed">' +
             '       <tr xmlns="http://www.w3.org/1999/xhtml">' +
             '       <td xmlns="http://www.w3.org/1999/xhtml"  > </td>' +
             '       </tr>' +
