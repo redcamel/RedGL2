@@ -45,13 +45,16 @@
             setBase(this);
             //////////////////////////////////////////////////////////////////////////////////////////////
             // 테스트 문자열
-            var str = '가나다라 마바사아자차카 가나다라 마바사아자차카 가나다라 마바사아자차카 가나다라 마바사아자차카 가나다라 마바사아자차카';
+            var str = "Baby won't you tell me why there is sadness in your eyes<br>" +
+                "I don't wanna say goodbye to you<br>" +
+                "Love is one big illusion I should try to forget<br>" +
+                "But there is something left in my head";
             //////////////////////////////////////////////////////////////////////////////////////////////
             // RedText 테스트 객체
             var testRedText = RedText(this);
             testRedText.text = str;
             testRedText.background = 'rgb(91, 82, 170)';
-            testRedText.width = 256;
+            testRedText.width = 512;
             testRedText.height = 256;
             testRedText.x = 128
             testRedText.y = 128
@@ -65,6 +68,7 @@
             });
             testUI(this, tScene, testRedText);
             console.log(this);
+            console.log(testRedText);
         } else {
             console.log('초기화 실패!');
         }
