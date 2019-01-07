@@ -8,10 +8,9 @@ var textTransformation = require('gulp-text-simple');
 var dt = new Date();
 require('date-utils');
 var d = dt.toFormat('YYYY-MM-DD HH24:MI:SS');
-var fs = require('fs')
 var rename = require("gulp-rename");
 var replace = require('gulp-string-replace');
-var name = "RedGL"
+var name = "RedGL";
 /////////////////////////////////////////////////////////////
 var transformString = function (s) {
     var reg = /\/\*\*DOC\:[\s\S]+?\:\DOC\*\//g;
@@ -65,7 +64,7 @@ var transformString = function (s) {
     return list
 };
 var myTransformation = textTransformation(transformString);
-gulp.task('make-doc-list', function () {
+gulp.task('make-doc-list', function (done) {
     console.log('-------------------------------------------');
     console.log('시작!');
 
@@ -95,9 +94,11 @@ gulp.task('make-doc-list', function () {
     fs.open(file, 'w', function (err, fd) {
         if (err) throw err;
         console.log('file open complete');
-    });
-    fs.writeFile('redDoc/docs/list.json', list, 'utf8', function (error) {
-        console.log('write end')
+        fs.writeFile('redDoc/docs/list.json', list, 'utf8', function (err) {
+            if (err) throw err;
+            console.log('write end');
+            done();
+        });
     });
 });
 gulp.task('make-doc', function () {
@@ -116,7 +117,9 @@ gulp.task('make-doc', function () {
         .pipe(gulp.dest('redDoc/docs'))
 });
 gulp.task('combine-js', function () {
-    gulp.src([
+    console.log('-------------------------------------------');
+    console.log('파일 병합 시작!');
+    return gulp.src([
         "src/LICENSE.js",
         "src/gl-matrix-min.js",
         "src/base/RedDefinePropertyInfo.js",
@@ -259,12 +262,11 @@ gulp.task('combine-js', function () {
         .pipe(gulp.dest('release'))
         .pipe(insert.append("var RedGL_VERSION = {version : 'RedGL Release. last update( " + d + ")' };console.log(RedGL_VERSION);"))
 
-        .pipe(gulp.dest('release'))
-    console.log('-------------------------------------------');
-    console.log('파일 병합 시작!');
+        .pipe(gulp.dest('release'));
 });
-gulp.task('default', ['make-doc-list', 'make-doc', 'combine-js'], function () {
+gulp.task('default', gulp.series('combine-js','make-doc','make-doc-list',   function (done) {
     console.log('-------------------------------------------');
     console.log('성공!');
     console.log('-------------------------------------------');
-});
+    done();
+}));
