@@ -264,7 +264,7 @@ gulp.task('combine-js', function () {
 
         .pipe(gulp.dest('release'));
 });
-gulp.task('default', gulp.series('make-doc-list', 'make-doc', 'combine-js', function (done) {
+gulp.task('default', gulp.series('combine-js','make-doc','make-doc-list',   function (done) {
     console.log('-------------------------------------------');
     console.log('성공!');
     console.log('-------------------------------------------');
