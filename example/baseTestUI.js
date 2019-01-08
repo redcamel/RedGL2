@@ -1,15 +1,15 @@
 
 var baseTestUI = function (redGL, width) {
-    var getQueryParam = function(param) {
-        var found;
-        window.location.search.split('?')[1].split("&").forEach(function(item) {
-            if (param ==  item.split("=")[0]) {
-                found = item.split("=")[1];
-            }
-        });
-        return found;
-    };
-    console.log(getQueryParam('name'))
+    // var getQueryParam = function(param) {
+    //     var found;
+    //     window.location.search.split('?')[1].split("&").forEach(function(item) {
+    //         if (param ==  item.split("=")[0]) {
+    //             found = item.split("=")[1];
+    //         }
+    //     });
+    //     return found;
+    // };
+    // console.log(getQueryParam('name'))
     document.body.appendChild(testBt = document.createElement('div'));
     testBt.innerHTML =   'created by Redcamel'
     testBt.style.cssText = "position: fixed;top:40px;padding:0px;left:15px;font-size:11px; color:#fff;border:0;outline:none;"
