@@ -1,0 +1,70 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>RedGL - rnd_RedGround</title>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
+    />
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+    </style>
+    <script src="../../example/dat.gui.min.js"></script>
+    <script src="../../release/RedGL.min.js"></script>
+    <script src="RedTextSpan.js"></script>
+</head>
+
+<body>
+
+<canvas id="test" style="border: none;color:#fff;"></canvas>
+<script>
+    document.getElementById('test')
+    RedGL(document.getElementById('test'), function (v) {
+        console.log(v)
+        var tWorld, tScene3D, tCamera
+        var tRenderer;
+        var self;
+        self = this
+        this.world = tWorld = RedWorld();
+        tScene3D = RedScene(this);
+        tCamera = RedObitController(this);
+        tCamera.tilt = -45
+        tCamera.distance = 1500
+        tCamera.speedDistance = 100
+        tRenderer = RedRenderer();
+        tWorld.addView(RedView('test', this, tScene3D, tCamera));
+
+        var testDLight;
+        testDLight = RedDirectionalLight(this, '#ff00ff', 0.3)
+        testDLight.x = -30
+        testDLight.y = 20
+        testDLight.z = -30
+        tScene3D.addLight(testDLight)
+        testDLight = RedDirectionalLight(this)
+        testDLight.x = -3
+        testDLight.y = 2
+        testDLight.z = -3
+        tScene3D.addLight(testDLight)
+
+
+        tRenderer.start(this, function (time) {
+
+        })
+
+        setTimeout(function () {
+            var a = new RedTextSpan('테스트입니다. 2테스트입니다. 3테스트입니다.')
+            a.setColor('red', 0, 10)
+            a.setColor('blue', 2, 7)
+            console.log(a)
+        }, 1000)
+    })
+</script>
+</body>
+</html>

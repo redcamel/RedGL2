@@ -99,14 +99,16 @@ var RedGLTFLoader;
         var self = this;
         if (fileName.indexOf('.glb') > -1) {
             /////////////////////////
-            const BINPACKER_HEADER_MAGIC = 'BINP';
-            const BINPACKER_HEADER_LENGTH = 12;
-            const BINPACKER_CHUNK_TYPE_JSON = 0x4e4f534a;
-            const BINPACKER_CHUNK_TYPE_BINARY = 0x004e4942;
+            var BINPACKER_HEADER_MAGIC = 'BINP';
+            var BINPACKER_HEADER_LENGTH = 12;
+            var BINPACKER_CHUNK_TYPE_JSON = 0x4e4f534a;
+            var BINPACKER_CHUNK_TYPE_BINARY = 0x004e4942;
             var convertUint8ArrayToString;
             convertUint8ArrayToString = function (array) {
                 var str = '';
-                array.map(item => (str += String.fromCharCode(item)));
+                array.map(function(item){
+                    str += String.fromCharCode(item)
+                });
                 return str;
             };
             /////////////////////////
@@ -128,7 +130,7 @@ var RedGLTFLoader;
                     var header = {
                         magic: convertUint8ArrayToString(new Uint8Array(request['response'], 0, 4)),
                         version: headerView.getUint32(4, true),
-                        length: headerView.getUint32(8, true),
+                        length: headerView.getUint32(8, true)
                     };
                     console.log(headerView)
                     console.log(header)
@@ -146,7 +148,7 @@ var RedGLTFLoader;
                             contentArray = new Uint8Array(
                                 request['response'],
                                 BINPACKER_HEADER_LENGTH + chunkIndex,
-                                chunkLength,
+                                chunkLength
                             );
                             content = convertUint8ArrayToString(contentArray);
                         } else if (chunkType === BINPACKER_CHUNK_TYPE_BINARY) {
@@ -176,7 +178,7 @@ var RedGLTFLoader;
                                 )
 
                                 var test = new Blob([new Uint8Array(tt)], {
-                                    type: v['mimeType'],
+                                    type: v['mimeType']
                                 });
                                 v['uri'] = URL.createObjectURL(test)
 
