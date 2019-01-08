@@ -8,14 +8,15 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
     />
-    <script src="index_demo1.js"></script>
-    <script src="index_demo2.js"></script>
+    <script src="baseTestUI.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.2/TimelineMax.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.2/TweenMax.min.js"></script>
     <script src="https://redcamel.github.io/Alucard/release/0.8/min/Alucard.min.js"></script>
     <script src="https://lo-th.github.io/Oimo.js/build/oimo.js"></script>
-
     <script src="../release/RedGL.min.js"></script>
+
+    <script src="index_demo1.js"></script>
+    <script src="index_demo2.js"></script>
 
     <style>
         html,
@@ -38,6 +39,7 @@
             list-style: none;
             vertical-align: top;
             text-shadow: 0px 1px rgb(0, 0, 0);
+            font-family: Montserrat;
         }
 
         h1, h2 {
@@ -132,28 +134,28 @@
                     var tRoot = Alucard.Dom('button').S(
                         'position', 'fixed',
                         'bottom', 0, 'right', 10,
-                        'height',50,
+                        'height', 50,
                         'outline', 'none',
                         'background', 'transparent',
-                        'border',0,
+                        'border', 0,
                         'z-index', 2,
                         '<', 'body'
                     );
-                    ['index_demo', 'index_demo2'].forEach(
-                        function (v,idx) {
+                    (Alucard.DETECT.browser=='ie' && Alucard.DETECT.browserVer==11 ? ['index_demo'] : ['index_demo', 'index_demo2']).forEach(
+                        function (v, idx) {
                             window[v].init(self, tView, tRenderer, tCamera)
                             Alucard.Dom('button').S(
-                                'html', 'BG Demo'+(idx+1),
+                                'html', 'BG Demo' + (idx + 1),
                                 'background', '#594665',
                                 'border-radius', 5,
-                                'font-size',9,
+                                'font-size', 9,
                                 'outline', 'none',
                                 'padding', 5,
-                                'cursor','pointer',
-                                'color','#fff',
-                                'margin-left',idx ? 5 : 0,
-                                'border',0,
-                                'click',function(){
+                                'cursor', 'pointer',
+                                'color', '#fff',
+                                'margin-left', idx ? 5 : 0,
+                                'border', 0,
+                                'click', function () {
                                     window[v].start(self, tView, tRenderer, tCamera)
                                 },
                                 '<', tRoot
@@ -173,7 +175,7 @@
 <div style="position: absolute;padding-bottom: 70px">
     <div style="padding:20px 30px 0px 30px;font-size: 40px;text-shadow: 0px 0px 10px rgb(0, 0, 0)">
         <div>RedGL Example</div>
-        <div style="font-size:12px;margin-left:3px">JavaScript 3D library</div>
+        <div style="font-size:12px;margin-left:3px;opacity: 0.75">JavaScript 3D library</div>
     </div>
     <br>
     <div>
@@ -181,10 +183,13 @@
     </div>
 </div>
 <script>
-
+    var itemList = []
     var makeItem = function (list, root, depth) {
         depth = depth || 0
         list.forEach(function (v) {
+            var tIDX = itemList.length
+
+
             var tDom;
             if (!v['href']) {
                 var newGroup
@@ -196,6 +201,7 @@
                 )
                 makeItem(v['list'] ? v['list'] : [], depth ? root : newGroup, depth + 1)
             } else {
+                itemList.push(v)
                 tDom = Alucard.Dom('li').S(
                     'display', 'inline-block',
                     '<', root
@@ -253,7 +259,7 @@
                         )
                     },
                     'click', function () {
-                        window.location.href = v['href']
+                        window.location.href = v['href'] + '?idx=' + tIDX
                     },
                     '<', tDom
                 );
@@ -265,428 +271,8 @@
 
         })
     }
-    var exampleList = [
-        {
-            key: 'RedGL',
-            list: [
-                {
-                    key: 'RedGL',
-                    href: 'etc/RedGL.html'
-                },
-                {
-                    key: 'RedScene',
-                    href: 'etc/RedScene.html'
-                },
-                {
-                    key: 'RedView',
-                    href: 'etc/RedView.html'
-                }
-            ]
-        },
-        {
-            key: 'Primitives',
-            list: [
-                {
-                    key: 'RedPlane',
-                    href: 'primitives/RedPlane.html'
-                },
-                {
-                    key: 'RedBox',
-                    href: 'primitives/RedBox.html'
-                },
-                {
-                    key: 'RedSphere',
-                    href: 'primitives/RedSphere.html'
-                },
-                {
-                    key: 'RedCylinder',
-                    href: 'primitives/RedCylinder.html'
-                }
-            ]
-        },
-        {
-            key: 'Controller',
-            list: [
-                {
-                    key: 'RedCamera',
-                    href: 'camera/RedCamera.html'
-                },
-                {
-                    key: 'RedCamera(orthographicMode)',
-                    href: 'camera/RedCamera_ortho.html'
-                },
-                {
-                    key: 'RedBasicController',
-                    href: 'camera/RedBasicController.html'
-                },
-                {
-                    key: 'RedObitController',
-                    href: 'camera/RedObitController.html'
-                }
-            ]
-        },
-        {
-            key: 'object3D',
-            list: [
-                {
-                    key: 'RedAxis',
-                    href: 'object3D/RedAxis.html'
-                },
-                {
-                    key: 'RedGrid',
-                    href: 'object3D/RedGrid.html'
-                },
-                {
-                    key: 'RedLine',
-                    href: 'object3D/RedLine.html'
-                },
-                {
-                    key: 'RedMesh',
-                    href: 'object3D/RedMesh.html'
-                },
-                {
-                    key: 'RedSkyBox',
-                    href: 'object3D/RedSkyBox.html'
-                },
-                {
-                    key: 'RedSprite3D',
-                    href: 'object3D/RedSprite3D.html'
-                }
-            ]
-        },
-        {
-            key: 'Material',
-            list: [
-                {
-                    key: 'RedColorMaterial',
-                    href: 'material/RedColorMaterial.html'
-                },
-                {
-                    key: 'RedColorPhongMaterial',
-                    href: 'material/RedColorPhongMaterial.html'
-                },
-                {
-                    key: 'RedColorPhongTextureMaterial',
-                    href: 'material/RedColorPhongTextureMaterial.html'
-                },
-                {
-                    key: 'RedBitmapMaterial',
-                    href: 'material/RedBitmapMaterial.html'
-                },
-                {
-                    key: 'RedStandardMaterial',
-                    href: 'material/RedStandardMaterial.html'
-                },
-                {
-                    key: 'RedEnvironmentMaterial',
-                    href: 'material/RedEnvironmentMaterial.html'
-                },
-                {
-                    key: 'RedPBRMaterial',
-                    href: 'material/RedPBRMaterial.html'
-                },
-                {
-                    key: 'RedSheetMaterial',
-                    href: 'material/RedSheetMaterial.html'
-                },
-                {
-                    key: 'RedVideoMaterial',
-                    href: 'material/RedVideoMaterial.html'
-                },
-                {
-                    key: 'FlatModeMaterial',
-                    href: 'material/FlatModeMaterial.html'
-                },
-                {
-                    key: 'RedBitmapPointCloudMaterial',
-                    href: 'material/RedBitmapPointCloudMaterial.html'
-                },
-                {
-                    key: 'RedColorPointCloudMaterial',
-                    href: 'material/RedColorPointCloudMaterial.html'
-                }
-            ]
-        },
-        {
-            key: 'Texture',
-            list: [
-                {
-                    key: 'RedBitmapTexture',
-                    href: 'resources/RedBitmapTexture.html'
-                },
-                {
-                    key: 'RedBitmapTextureOption',
-                    href: 'resources/RedBitmapTextureOption.html'
-                },
-                {
-                    key: 'RedBitmapTexture_anisotropic',
-                    href: 'resources/RedBitmapTexture_anisotropic.html'
-                },
-                {
-                    key: 'RedBitmapCubeTexture',
-                    href: 'resources/RedBitmapCubeTexture.html'
-                },
-                {
-                    key: 'RedDDSTexture',
-                    href: 'resources/RedDDSTexture.html'
-                }
-            ]
-        },
-        {
-            key: 'Light',
-            list: [
-                {
-                    key: 'RedLights',
-                    href: 'light/RedLights.html'
-                },
-                {
-                    key: 'RedAmbientLight',
-                    href: 'light/RedAmbientLight.html'
-                },
-                {
-                    key: 'RedDirectionalLight',
-                    href: 'light/RedDirectionalLight.html'
-                },
-                {
-                    key: 'RedPointLight',
-                    href: 'light/RedPointLight.html'
-                }
-            ]
-        },
-        {
-            key: 'Loader',
-            list: [
-                {
-                    key: 'RedOBJLoader',
-                    href: 'loader/obj/RedOBJLoader.html'
-                },
-                {
-                    key: 'RedDAELoader',
-                    href: 'loader/dae/RedDAELoader.html'
-                },
-                {
-                    key: 'RedGLTFLoader',
-                    href: 'loader/gltf/RedGLTFLoader.html'
-                },
-                {
-                    key: 'RedGLTFLoader_morph',
-                    href: 'loader/gltf/RedGLTFLoader_morph.html'
-                },
-                {
-                    key: 'RedGLTFLoader_skin',
-                    href: 'loader/gltf/RedGLTFLoader_skin.html'
-                },
-                {
-                    key: 'RedGLTFLoader_hardTest',
-                    href: 'loader/gltf/RedGLTFLoader_hardTest.html'
-                },
-                {
-                    key: 'RedGLTFLoader_glb',
-                    href: 'loader/gltf/RedGLTFLoader_glb.html'
-                }
-            ]
-        },
-        {
-            key: 'RedText',
-            list: [
-                {
-                    key: 'RedText',
-                    href: 'text/RedText.html'
-                },
-                {
-                    key: 'RedText(Orthogonal Mode)',
-                    href: 'text/RedCamera_ortho_text.html'
-                }
-
-            ]
-        },
-        {
-            key: 'Fog',
-            list: [
-                {
-                    key: 'Fog_example',
-                    href: 'etc/Fog_example.html'
-                }
-            ]
-        },
-        {
-            key: 'LOD',
-            list: [
-                {
-                    key: 'LOD_example',
-                    href: 'etc/LOD_example.html'
-                }
-            ]
-        },
-        {
-            key: 'MouseEvent',
-            list: [
-                {
-                    key: 'MouseEvent',
-                    href: 'mouseEvent/MouseEvent.html'
-                }
-            ]
-        },
-        {
-            key: 'RedDirectionalShadow',
-            list: [
-                {
-                    key: 'RedDirectionalShadow',
-                    href: 'shadow/RedDirectionalShadow.html'
-                }
-            ]
-        },
-        {
-            key: 'PostEffect',
-            list: [
-                {
-                    key: 'RedPostEffect',
-                    href: 'postEffect/RedPostEffect.html'
-                },
-                {
-                    key: 'RedPostEffect_Vignetting',
-                    href: 'postEffect/RedPostEffect_Vignetting.html'
-                },
-                {
-                    key: 'RedPostEffect_FXAA',
-                    href: 'postEffect/RedPostEffect_FXAA.html'
-                },
-                {
-                    key: 'RedPostEffect_DoF',
-                    href: 'postEffect/dof/RedPostEffect_DoF.html'
-                },
-                {
-                    key: 'RedPostEffect_Bloom',
-                    href: 'postEffect/bloom/RedPostEffect_Bloom.html'
-                },
-                {
-                    key: 'RedPostEffect_Convolution',
-                    href: 'postEffect/RedPostEffect_Convolution.html'
-                },
-                {
-                    key: 'RedPostEffect_Film',
-                    href: 'postEffect/RedPostEffect_Film.html'
-                },
-                {
-                    key: 'adjustments',
-                    list: [
-                        {
-                            key: 'RedPostEffect_BrightnessContrast',
-                            href: 'postEffect/adjustments/RedPostEffect_BrightnessContrast.html'
-                        },
-                        {
-                            key: 'RedPostEffect_Threshold',
-                            href: 'postEffect/adjustments/RedPostEffect_Threshold.html'
-                        },
-                        {
-                            key: 'RedPostEffect_Invert',
-                            href: 'postEffect/adjustments/RedPostEffect_Invert.html'
-                        },
-                        {
-                            key: 'RedPostEffect_Gray',
-                            href: 'postEffect/adjustments/RedPostEffect_Gray.html'
-                        },
-                        {
-                            key: 'RedPostEffect_HueSaturation',
-                            href: 'postEffect/adjustments/RedPostEffect_HueSaturation.html'
-                        }
-                    ]
-                },
-                {
-                    key: 'blur',
-                    list: [
-                        {
-                            key: 'RedPostEffect_Blur',
-                            href: 'postEffect/blur/RedPostEffect_Blur.html'
-                        },
-                        {
-                            key: 'RedPostEffect_BlurX',
-                            href: 'postEffect/blur/RedPostEffect_BlurX.html'
-                        },
-                        {
-                            key: 'RedPostEffect_BlurY',
-                            href: 'postEffect/blur/RedPostEffect_BlurY.html'
-                        },
-                        {
-                            key: 'RedPostEffect_GaussianBlur',
-                            href: 'postEffect/blur/RedPostEffect_GaussianBlur.html'
-                        },
-                        {
-                            key: 'RedPostEffect_ZoomBlur',
-                            href: 'postEffect/blur/RedPostEffect_ZoomBlur.html'
-                        }
-                    ]
-                },
-                {
-                    key: 'pixelate',
-                    list: [
-                        {
-                            key: 'RedPostEffect_HalfTone',
-                            href: 'postEffect/pixelate/RedPostEffect_HalfTone.html'
-                        },
-                        {
-                            key: 'RedPostEffect_Pixelize',
-                            href: 'postEffect/pixelate/RedPostEffect_Pixelize.html'
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            key: 'Buffer & Geometry',
-            list: [
-                {
-                    key: 'RedBuffer',
-                    href: 'geometry/RedBuffer.html'
-                }
-            ]
-        },
-        {
-            key: 'localToWorld, worldToLocal, getScreenPoint',
-            list: [
-                {
-                    key: 'calPoint',
-                    href: 'etc/calPoint.html'
-                }
-            ]
-        },
-        {
-            key: 'particle',
-            list: [
-                {
-                    key: 'RedParticleEmitter',
-                    href: 'particle/RedParticleEmitter.html'
-                },
-                {
-                    key: 'RedParticleEmitter_editor',
-                    href: 'particle/RedParticleEmitter_editor.html'
-                },
-                {
-                    key: 'RedColorPointCloud',
-                    href: 'particle/RedColorPointCloud.html'
-                },
-                {
-                    key: 'RedBitmapPointCloud',
-                    href: 'particle/RedBitmapPointCloud.html'
-                }
-            ]
-        },
-        {
-            key: 'launcher',
-            list: [
-                {
-                    key: 'RedGLOffScreen',
-                    href: 'launcher/RedGLOffScreen.html'
-                },
-                {
-                    key: 'RedXR',
-                    href: 'launcher/RedXR.html'
-                }
-            ]
-        }
-    ];
+    var exampleList = baseTestUI.exampleList
     makeItem(exampleList, Alucard.Dom('#exampleBox'))
-
 </script>
 
 
