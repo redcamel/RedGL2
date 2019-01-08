@@ -97,21 +97,126 @@ var RedGLTFLoader;
         if ((!(this instanceof RedGLTFLoader))) return new RedGLTFLoader(redGL, path, fileName, callback, environmentTexture, parsingOption)
         console.log('~~~~~~~~~~~')
         var self = this;
-        fileLoader(
-            path + fileName,
-            null,
-            function (request) {
-                parser(self, redGL, JSON.parse(request['response']), function () {
-                    if (callback) {
-                        console.log('모델 파싱 종료');
-                        callback(self)
+        if (fileName.indexOf('.glb') > -1) {
+            /////////////////////////
+            const BINPACKER_HEADER_MAGIC = 'BINP';
+            const BINPACKER_HEADER_LENGTH = 12;
+            const BINPACKER_CHUNK_TYPE_JSON = 0x4e4f534a;
+            const BINPACKER_CHUNK_TYPE_BINARY = 0x004e4942;
+            var convertUint8ArrayToString;
+            convertUint8ArrayToString = function (array) {
+                var str = '';
+                array.map(item => (str += String.fromCharCode(item)));
+                return str;
+            };
+            /////////////////////////
+            arrayBufferLoader(
+                path + fileName,
+                function (request) {
+                    console.log(request['response'])
+
+                    var content = null;
+                    var contentArray = null;
+                    var body = null;
+                    var byteOffset = null;
+
+                    var chunkIndex = 0;
+                    var chunkLength = 0;
+                    var chunkType = null;
+
+                    var headerView = new DataView(request['response'], BINPACKER_HEADER_LENGTH);
+                    var header = {
+                        magic: convertUint8ArrayToString(new Uint8Array(request['response'], 0, 4)),
+                        version: headerView.getUint32(4, true),
+                        length: headerView.getUint32(8, true),
+                    };
+                    console.log(headerView)
+                    console.log(header)
+
+                    var chunkView = new DataView(request['response'], BINPACKER_HEADER_LENGTH);
+
+                    while (chunkIndex < chunkView.byteLength) {
+                        chunkLength = chunkView.getUint32(chunkIndex, true);
+                        chunkIndex += 4;
+
+                        chunkType = chunkView.getUint32(chunkIndex, true);
+                        chunkIndex += 4;
+
+                        if (chunkType === BINPACKER_CHUNK_TYPE_JSON) {
+                            contentArray = new Uint8Array(
+                                request['response'],
+                                BINPACKER_HEADER_LENGTH + chunkIndex,
+                                chunkLength,
+                            );
+                            content = convertUint8ArrayToString(contentArray);
+                        } else if (chunkType === BINPACKER_CHUNK_TYPE_BINARY) {
+                            byteOffset = BINPACKER_HEADER_LENGTH + chunkIndex;
+                            body = request['response'].slice(byteOffset, byteOffset + chunkLength);
+                        }
+
+                        chunkIndex += chunkLength;
                     }
-                })
-            },
-            function (request, error) {
-                console.log(request, error)
-            }
-        )
+
+                    if (content === null) {
+                        throw new Error('JSON content not found');
+                    }
+
+                    var jsonChunk = JSON.parse(content);
+                    var binaryChunk = body;
+                    if (jsonChunk['images']) {
+                        jsonChunk['images'].forEach(function (v) {
+                            console.log(v)
+                            if (v['mimeType'] === 'image/png' || v['mimeType'] === 'image/jpeg' || v['mimeType'] === 'image/gif') {
+                                console.log(binaryChunk)
+                                var tS, tE;
+                                tS = jsonChunk['bufferViews'][v['bufferView']]['byteOffset'] || 0
+                                var tt = binaryChunk.slice(
+                                    tS,
+                                    tS + jsonChunk['bufferViews'][v['bufferView']]['byteLength']
+                                )
+
+                                var test = new Blob([new Uint8Array(tt)], {
+                                    type: v['mimeType'],
+                                });
+                                v['uri'] = URL.createObjectURL(test)
+
+
+                            }
+                        })
+                    }
+
+                    console.log(jsonChunk)
+                    console.log(binaryChunk)
+                    parser(self, redGL, jsonChunk, function () {
+                        if (callback) {
+                            console.log('모델 파싱 종료');
+                            callback(self)
+                        }
+                    }, binaryChunk)
+                },
+                function (request, error) {
+                    console.log(request, error)
+                }
+            )
+        } else {
+            fileLoader(
+                path + fileName,
+                null,
+                function (request) {
+
+                    parser(self, redGL, JSON.parse(request['response']), function () {
+                        if (callback) {
+                            console.log('모델 파싱 종료');
+                            callback(self)
+                        }
+                    })
+                },
+                function (request, error) {
+                    console.log(request, error)
+                }
+            )
+        }
+
         this['redGL'] = redGL;
 
         this['path'] = path;
@@ -382,25 +487,36 @@ var RedGLTFLoader;
             tList.forEach(function (v) {
                 // console.log('버퍼테이터', v)
                 allNum++
-                var tSrc = v['uri'].substr(0, 5) == 'data:' ? v['uri'] : redGLTFLoader['path'] + v['uri']
-                // console.log('tSrc', tSrc)
-                arrayBufferLoader(
-                    tSrc,
-                    function (request) {
-                        loadedNum++
-                        console.log(request)
-                        // console.log(request.response)
-                        redGLTFLoader['parsingResult']['uris'][v['_redURIkey']][v['_redURIIndex']] = new DataView(request.response);
-                        if (loadedNum == allNum) {
-                            console.log("redGLTFLoader['parsingResult']['uris']", redGLTFLoader['parsingResult']['uris'])
-                            console.log("uris로딩현황", loadedNum, loadedNum)
-                            if (callback) callback()
-                        }
-                    },
-                    function (request, error) {
-                        console.log(request, error)
+                if (v['uri'] instanceof ArrayBuffer) {
+                    loadedNum++
+                    redGLTFLoader['parsingResult']['uris'][v['_redURIkey']][v['_redURIIndex']] = new DataView(v['uri']);
+                    if (loadedNum == allNum) {
+                        console.log("redGLTFLoader['parsingResult']['uris']", redGLTFLoader['parsingResult']['uris'])
+                        console.log("uris로딩현황", loadedNum, loadedNum)
+                        if (callback) callback()
                     }
-                )
+                } else {
+                    var tSrc = v['uri'].substr(0, 5) == 'data:' ? v['uri'] : redGLTFLoader['path'] + v['uri']
+                    // console.log('tSrc', tSrc)
+                    arrayBufferLoader(
+                        tSrc,
+                        function (request) {
+                            loadedNum++
+                            console.log(request)
+                            // console.log(request.response)
+                            redGLTFLoader['parsingResult']['uris'][v['_redURIkey']][v['_redURIIndex']] = new DataView(request.response);
+                            if (loadedNum == allNum) {
+                                console.log("redGLTFLoader['parsingResult']['uris']", redGLTFLoader['parsingResult']['uris'])
+                                console.log("uris로딩현황", loadedNum, loadedNum)
+                                if (callback) callback()
+                            }
+                        },
+                        function (request, error) {
+                            console.log(request, error)
+                        }
+                    )
+                }
+
             })
         }
         /*
@@ -965,7 +1081,11 @@ var RedGLTFLoader;
         }
         var parseMaterialInfo = (function () {
             var getURL = function (redGLTFLoader, json, sourceIndex) {
-                return (json['images'][sourceIndex]['uri'].indexOf(';base64,') > -1 ? '' : redGLTFLoader['path']) + json['images'][sourceIndex]['uri']
+                if (json['images'][sourceIndex]['uri'].indexOf('blob:http') > -1) {
+                    return json['images'][sourceIndex]['uri']
+                } else {
+                    return (json['images'][sourceIndex]['uri'].indexOf(';base64,') > -1 ? '' : redGLTFLoader['path']) + json['images'][sourceIndex]['uri']
+                }
             }
             var getSamplerInfo = function (redGLTFLoader, json, samplerIndex) {
                 var result = {}
@@ -1462,21 +1582,40 @@ var RedGLTFLoader;
                 })
             }
         })();
-        return function (redGLTFLoader, redGL, json, callBack) {
+        return function (redGLTFLoader, redGL, json, callBack, binaryChunk) {
             console.log('파싱시작', redGLTFLoader['path'] + redGLTFLoader['fileName']);
             // console.log('rawData', json);
             checkAsset(json);
-            getBaseResource(redGLTFLoader, json,
-                function () {
-                    // 리소스 로딩이 완료되면 다음 진행
-                    parseCameras(redGLTFLoader, json)
-                    parseScene(redGLTFLoader, json, function () {
-                        parseAnimations(redGLTFLoader, json)
-                        if (callBack) callBack();
-                    })
+            if (binaryChunk) {
+                console.log(json)
+                console.log(binaryChunk)
+                json.buffers[0]['uri'] = binaryChunk
+                getBaseResource(redGLTFLoader, json,
+                    function () {
+                        // 리소스 로딩이 완료되면 다음 진행
+                        parseCameras(redGLTFLoader, json)
+                        parseScene(redGLTFLoader, json, function () {
+                            parseAnimations(redGLTFLoader, json)
+                            if (callBack) callBack();
+                        })
 
-                }
-            )
+                    }
+                )
+            } else {
+                getBaseResource(redGLTFLoader, json,
+                    function () {
+                        // 리소스 로딩이 완료되면 다음 진행
+                        parseCameras(redGLTFLoader, json)
+                        parseScene(redGLTFLoader, json, function () {
+                            parseAnimations(redGLTFLoader, json)
+                            if (callBack) callBack();
+                        })
+
+                    }
+                )
+            }
+
+
         }
     })();
     Object.freeze(RedGLTFLoader);

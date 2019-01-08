@@ -248,6 +248,7 @@ gulp.task('combine-js', function () {
         "src/launcher/RedGLOffScreen.js"
     ])
         .pipe(concat(name + '.js')) // 병합한다.
+        .pipe(insert.append("var RedGL_VERSION = {version : 'RedGL Release. last update( " + d + ")' };console.log(RedGL_VERSION);"))
         .pipe(gulp.dest('release'))
         .pipe(concat(name + '.min.js')) // 병합한다.
         .pipe(stripDebug())
@@ -260,7 +261,7 @@ gulp.task('combine-js', function () {
         ))
         .pipe(replace(/\n\s{2,}/g, '\n'))
         .pipe(gulp.dest('release'))
-        .pipe(insert.append("var RedGL_VERSION = {version : 'RedGL Release. last update( " + d + ")' };console.log(RedGL_VERSION);"))
+
 
         .pipe(gulp.dest('release'));
 });
