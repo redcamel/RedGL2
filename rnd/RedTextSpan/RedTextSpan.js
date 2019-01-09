@@ -311,16 +311,74 @@ function setNodeCaretPosition(node, position) {
     setNodeRanges(node, [positionRange]);
 }
 
+
 var RedTextSpan;
 (function () {
+    var addHTML = function (target, v) {
+        target._dom.innerHTML += v
+    }
     RedTextSpan = function (text) {
         this._dom = document.createElement('span')
-        this._dom.style.cssText = 'position:fixed;top:0;left:0;color:#fff;'
+        this._dom.style.cssText = 'position:fixed;top:0;left:0;color:#fff;text-align:center'
         this._dom.innerHTML = text
         document.body.appendChild(this._dom)
-        this.text = text
     };
     RedTextSpan.prototype = {
+        getLineRectInfos: function () {
+            var tLineTemp = {}
+            var tLineRectList = []
+            Array.prototype.slice.call(this._dom.childNodes).forEach(function (v) {
+                var sel = window.getSelection();
+                sel.removeAllRanges();
+                var range = document.createRange()
+                range.selectNode(v)
+                // console.log(v, range.getClientRects())
+                Array.prototype.slice.call(range.getClientRects()).forEach(function (v2) {
+                    if (!tLineTemp[v2.y]) {
+                        tLineTemp[v2.y] = v2
+                        v2['endX'] = v2['x']+v2['width']
+                        v2['endY'] = v2['y']+v2['height']
+                        tLineRectList.push(v2)
+                    }
+                })
+            })
+            // tLineRectList.forEach(function (v, index) {
+            //     var selection = window.getSelection()
+            //     selection.removeAllRanges()
+            //     var tRange = document.caretRangeFromPoint(parseFloat(v.x), parseFloat(v.y))
+            // })
+            return tLineRectList
+
+        },
+        getLineRectInfo: function (lineIndex) {
+            var lineRectInfos = this.getLineRectInfos()
+            return lineRectInfos[lineIndex]
+        },
+        getLineX: function (lineIndex) {
+            var lineRectInfos = this.getLineRectInfos()
+            return lineRectInfos[lineIndex]['x']
+        },
+        getLineEndX: function (lineIndex) {
+            var lineRectInfos = this.getLineRectInfos()
+            return lineRectInfos[lineIndex]['endX']
+        },
+        getLineEndY: function (lineIndex) {
+            var lineRectInfos = this.getLineRectInfos()
+            return lineRectInfos[lineIndex]['endY']
+        },
+        getLineY: function (lineIndex) {
+            var lineRectInfos = this.getLineRectInfos()
+            return lineRectInfos[lineIndex]['y']
+        },
+        addPlain: function (text) {
+            addHTML(this, text);
+        },
+        addLink: function (text, link) {
+            addHTML(this, '<a href=' + link + '>' + text + '</a>');
+        },
+        addColor: function (text, color) {
+            addHTML(this, '<span style="color:' + color + '">' + text + '</span>')
+        },
         setColor: function (color, start, end) {
             var sel = window.getSelection();
             setNodeRanges(this._dom,
@@ -332,25 +390,82 @@ var RedTextSpan;
                 ]
             )
             var range = sel.getRangeAt(0)
-            console.log(sel)
-
-
-            // var selection = document.getSelection();
-            // var range = document.createRange();
-            //
-            // range.setStart(this._dom.childNodes, start)
-            // range.setEnd(this._dom.childNodes, end)
-            // console.log(range)
-            // console.log(selection)
-            // selection.addRange(range)
             var prevNode = range.extractContents()
-            var t= document.createElement('span')
-            t.style.cssText = 'color:'+color
+            var t = document.createElement('span')
+            t.style.cssText = 'color:' + color
             t.innerText = prevNode.textContent
             range.insertNode(t)
             sel.removeAllRanges()
-
+        },
+        getTextPosition: function (location) {
+            var sel = window.getSelection();
+            setNodeRanges(this._dom,
+                [
+                    {
+                        startPosition: location,
+                        endPosition: location + 1
+                    }
+                ]
+            );
+            var range = sel.getRangeAt(0)
+            console.log(range)
+            console.log(range.getClientRects()[0])
+        },
+        getSelection: function (start, end) {
+            var sel = window.getSelection();
+            setNodeRanges(this._dom,
+                [
+                    {
+                        startPosition: start,
+                        endPosition: end
+                    }
+                ]
+            )
+            var range = sel.getRangeAt(0)
+            console.log(range)
+            return new selectionSpan(range)
         }
     }
+    var selectionSpan = function (range) {
+        this._range = range.cloneRange()
+        this._dom = document.createElement('span')
+        range.surroundContents(this._dom)
+        var sel = window.getSelection();
+        sel.removeAllRanges()
+    }
+    selectionSpan.prototype = RedTextSpan.prototype
+    selectionSpan.prototype.insertBefore = function (text) {
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        var t0 = document.createTextNode(text);
+        this._dom.insertBefore(t0, this._dom.childNodes[0]);
+    };
+    selectionSpan.prototype.insertAfter = function (text) {
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(this._range);
+        addHTML(this, text);
+        sel.removeAllRanges()
+    }
+    selectionSpan.prototype.replace = function (text) {
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(this._range);
+        this._dom.innerHTML = text
+        sel.removeAllRanges()
+    }
+    selectionSpan.prototype.remove = function (text) {
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(this._range);
+        this._dom.parentNode.removeChild(this._dom)
+    };
+    'color,backgroundColor,fontSize,fontWeight,textAlign,verticalAlign'.split(',').forEach(function (v) {
+        selectionSpan.prototype[v] = function (value) {
+            this._dom.style[v] = value
+
+        }
+    })
+
     Object.freeze(RedTextSpan);
 })()
