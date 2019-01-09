@@ -110,7 +110,7 @@
         testText.text = a._dom.innerHTML
 
         ///
-        var testLocation = RedText(this, 295, 32)
+        var testLocation = RedText(this, 295, 26)
         testLocation.background = 'rgba(255,0,0,0.8)'
         testLocation.fontSize = 12
         testLocation.color = '#fff'
@@ -122,7 +122,7 @@
             testLocation.text = "a.getLineEndX(4) : " + a.getLineEndX(4) + " / a.getLineEndY(4) : " + a.getLineEndY(4)
 
             if (testText.y != parseInt(testText.y)) testText.y += 0.5
-            testLocation.x = testText.x + a.getLineEndX(4)
+            testLocation.x = testText.x + a.getLineEndX(4)-testText.width/2 + testLocation.width/2
             testLocation.y = testText.y + a.getLineEndY(4) -testText.height/2 + testLocation.height/2
             // console.log(testText.y)
         })
