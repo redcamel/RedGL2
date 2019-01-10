@@ -106,7 +106,7 @@ var RedGLTFLoader;
             var convertUint8ArrayToString;
             convertUint8ArrayToString = function (array) {
                 var str = '';
-                array.map(function(item){
+                array.map(function (item) {
                     str += String.fromCharCode(item)
                 });
                 return str;
@@ -272,12 +272,14 @@ var RedGLTFLoader;
         var interpolationValue;
         var targetAnimationData
         return function (time) {
+            // console.log('loopList',loopList)
             loopList.forEach(function (v) {
                 prevRotation = null
                 nextRotation = null
                 prevTranslation = null
                 nextTranslation = null
                 targetAnimationData = v['targetAnimationData']
+
                 targetAnimationData.forEach(function (aniData) {
                     currentTime = ((time - v['startTime']) % (targetAnimationData['maxTime'] * 1000)) / 1000
                     // console.log(currentTime,aniData['minTime'] )
@@ -375,7 +377,13 @@ var RedGLTFLoader;
                             aniData['data'][prevIndex * 3 + 2]
                         ]
                     }
-                    interpolationValue = (currentTime - previousTime) / (nextTime - previousTime)
+                    if (aniData['interpolation'] == 'STEP') {
+                        interpolationValue = 0
+                    } else if (aniData['interpolation'] == 'CUBICSPLINE') {
+                        return
+                    } else {
+                        interpolationValue = (currentTime - previousTime) / (nextTime - previousTime)
+                    }
                     if (interpolationValue.toString() == 'NaN') interpolationValue = 0
                     if (target) {
                         if (aniData['key'] == 'translation') {
@@ -1448,6 +1456,19 @@ var RedGLTFLoader;
                 tMesh['_morphInfo'] = morphInfo
                 tMesh['_morphInfo']['origin'] = new Float32Array(interleaveData)
                 // console.log(morphInfo)
+                /////////////////////////////////////////////////////
+                var targetData = tMesh['geometry']['interleaveBuffer']['data']
+                tMesh['_morphInfo']['list'].forEach(function (v) {
+                    var i = 0, len = targetData.length / 10
+                    for (i; i < len; i++) {
+                        targetData[i * 10 + 0] += v['vertices'][i * 3 + 0] * 0.5
+                        targetData[i * 10 + 1] += v['vertices'][i * 3 + 1] * 0.5
+                        targetData[i * 10 + 2] += v['vertices'][i * 3 + 2] * 0.5
+                    }
+                });
+                tMesh['geometry']['interleaveBuffer'].upload(targetData)
+                /////////////////////////////////////////////////////
+
                 tMeshList.push(tMesh)
                 // console.log('vertices', vertices)
                 // console.log('normalData', normalData)
@@ -1514,9 +1535,11 @@ var RedGLTFLoader;
                     //TODO: 용어를 정리해봐야겠음.
                     // 이걸 애니메이션 클립으로 봐야하는가..
                     var animationClip = []
+
                     animationClip['minTime'] = 10000000;
                     animationClip['maxTime'] = -1;
-                    animationClip['name'] = 'animation_' + index;
+                    // animationClip['name'] = 'animation_' + index;
+                    animationClip['name'] = v['name'];
                     // 로더에 애니메이션 데이터들을 입력함
                     redGLTFLoader['parsingResult']['animations'].push(animationClip)
                     // 채널을 돌면서 파악한다.
@@ -1566,6 +1589,7 @@ var RedGLTFLoader;
                                     key: tChannelTargetData['path'],
                                     time: parseAnimationInfo(redGLTFLoader, json, tSampler['input']),
                                     data: parseAnimationInfo(redGLTFLoader, json, tSampler['output']),
+                                    interpolation: tSampler['interpolation'],
                                     target: tMesh
                                 }
                             )
@@ -1578,10 +1602,17 @@ var RedGLTFLoader;
                         }
                         // console.log('animationData', animationData)
                     })
-                    if (redGLTFLoader['parsingResult']['animations'].length) {
-                        redGLTFLoader.playAnimation(redGLTFLoader['parsingResult']['animations'][0])
-                    }
-                })
+                    console.log('animationClip', animationClip)
+                });
+                if (redGLTFLoader['parsingResult']['animations'].length) {
+                    redGLTFLoader['parsingResult']['animations'].forEach(function (v) {
+                        redGLTFLoader.playAnimation(v)
+                    })
+                    // redGLTFLoader.playAnimation(redGLTFLoader['parsingResult']['animations'][7])
+
+
+                }
+
             }
         })();
         return function (redGLTFLoader, redGL, json, callBack, binaryChunk) {
@@ -1616,8 +1647,6 @@ var RedGLTFLoader;
                     }
                 )
             }
-
-
         }
     })();
     Object.freeze(RedGLTFLoader);
