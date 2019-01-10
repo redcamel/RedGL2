@@ -83,6 +83,10 @@
                 tScene.addChild(v['resultMesh'])
                 v['resultMesh'].x = -5
             });
+            RedGLTFLoader(this,  assetPath + 'glTF/basic/MorphPrimitivesTest/', 'MorphPrimitivesTest.gltf', function (v) {
+                v['resultMesh'].z =2
+                tScene.addChild(v['resultMesh'])
+            })
         } else {
             console.log('초기화 실패!')
         }
