@@ -11335,9 +11335,9 @@ var RedGLTFLoader;
 
     var fileLoader = function (src, type, onLoader, onError) {
         var request = new XMLHttpRequest();
-        request.open("POST", src, true);
+        request.open("GET", src, true);
         // request.overrideMimeType('model/gltf+json')
-        request.setRequestHeader("Content-Type", (type ? type : "application/xml; ") + 'charset=UTF-8')
+        // request.setRequestHeader("Content-Type", (type ? type : "application/xml; ") + 'charset=UTF-8')
         request.onreadystatechange = function (e) {
             if (request.readyState == 4 && request.status === 200) {
                 console.log(request)
@@ -23190,4 +23190,4 @@ var RedGLOffScreen;
         }
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-01-14 21:20:07)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-01-14 21:31:11)' };console.log(RedGL_VERSION);
