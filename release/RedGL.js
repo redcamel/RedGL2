@@ -12025,7 +12025,11 @@ var RedGLTFLoader;
                                 parseNode(redGLTFLoader, json, index, json['nodes'][index], tMesh)
                             })
                         }
-                        if ('skin' in info) parseSkin(redGLTFLoader, json, json['skins'][info['skin']], tMesh)
+                        if ('skin' in info) {
+                            requestAnimationFrame(function () {
+                                parseSkin(redGLTFLoader, json, json['skins'][info['skin']], tMesh)
+                            })
+                        }
                     })
                 }
                 else {
@@ -12059,7 +12063,11 @@ var RedGLTFLoader;
                             parseNode(redGLTFLoader, json, index, json['nodes'][index], tGroup)
                         })
                     }
-                    if ('skin' in info) parseSkin(redGLTFLoader, json, json['skins'][info['skin']], tGroup)
+                    if ('skin' in info) {
+                        requestAnimationFrame(function () {
+                            parseSkin(redGLTFLoader, json, json['skins'][info['skin']], tGroup)
+                        })
+                    }
                 }
             }
         })()
@@ -23190,4 +23198,4 @@ var RedGLOffScreen;
         }
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-01-14 22:12:29)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-01-16 14:02:44)' };console.log(RedGL_VERSION);
