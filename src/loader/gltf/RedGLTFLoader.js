@@ -755,7 +755,11 @@ var RedGLTFLoader;
                                 parseNode(redGLTFLoader, json, index, json['nodes'][index], tMesh)
                             })
                         }
-                        if ('skin' in info) parseSkin(redGLTFLoader, json, json['skins'][info['skin']], tMesh)
+                        if ('skin' in info) {
+                            requestAnimationFrame(function () {
+                                parseSkin(redGLTFLoader, json, json['skins'][info['skin']], tMesh)
+                            })
+                        }
                     })
                 }
                 else {
@@ -789,7 +793,11 @@ var RedGLTFLoader;
                             parseNode(redGLTFLoader, json, index, json['nodes'][index], tGroup)
                         })
                     }
-                    if ('skin' in info) parseSkin(redGLTFLoader, json, json['skins'][info['skin']], tGroup)
+                    if ('skin' in info) {
+                        requestAnimationFrame(function () {
+                            parseSkin(redGLTFLoader, json, json['skins'][info['skin']], tGroup)
+                        })
+                    }
                 }
             }
         })()

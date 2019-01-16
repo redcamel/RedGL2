@@ -313,7 +313,12 @@ baseTestUI.exampleList =  [
             {
                 key: 'RedGLTFLoader_glb',
                 href: 'loader/gltf/RedGLTFLoader_glb.html'
+            },
+            {
+                key: 'RedGLTFLoader_polly',
+                href: 'loader/gltf/RedGLTFLoader_polly.html'
             }
+
         ]
     },
     {
