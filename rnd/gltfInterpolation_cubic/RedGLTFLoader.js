@@ -685,6 +685,19 @@ var RedGLTFLoader;
                 }
             }
         })();
+        var checkJoint = function(redGLTFLoader,skinInfo,nodes, v){
+            var tJointMesh = nodes[v]['RedMesh']
+            if(tJointMesh){
+                var tJointMesh = nodes[v]['RedMesh']
+                skinInfo['joints'].push(tJointMesh)
+                tJointMesh.geometry = RedSphere(redGLTFLoader['redGL'], 0.05, 3, 3, 3)
+                tJointMesh.material = RedColorMaterial(redGLTFLoader['redGL'])
+                tJointMesh.drawMode = redGLTFLoader['redGL'].gl.LINE_LOOP
+                tJointMesh.depthTestFunc = redGLTFLoader['redGL'].gl.NEVER
+            }else requestAnimationFrame(function(){
+                checkJoint(redGLTFLoader,skinInfo,nodes, v)
+            })
+        }
         var parseSkin = function (redGLTFLoader, json, info, tMesh) {
             console.log('스킨설정!', info)
             var skinInfo = {
@@ -693,13 +706,8 @@ var RedGLTFLoader;
             }
             var nodes = json['nodes']
             info['joints'].forEach(function (v) {
-                // console.log(json['nodes'][v])
-                var tJointMesh = nodes[v]['RedMesh']
-                skinInfo['joints'].push(tJointMesh)
-                tJointMesh.geometry = RedSphere(redGLTFLoader['redGL'], 0.05, 3, 3, 3)
-                tJointMesh.material = RedColorMaterial(redGLTFLoader['redGL'])
-                tJointMesh.drawMode = redGLTFLoader['redGL'].gl.LINE_LOOP
-                tJointMesh.depthTestFunc = redGLTFLoader['redGL'].gl.NEVER
+                console.log(json['nodes'][v])
+                checkJoint(redGLTFLoader,skinInfo,nodes,v)
             })
             // 스켈레톤 정보가 있으면 정보와 메쉬를 연결해둔다.
             if (info['skeleton']) skinInfo['skeleton'] = json['nodes'][info['skeleton']]['RedMesh']
