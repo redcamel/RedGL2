@@ -11665,8 +11665,12 @@ var RedGLTFLoader;
                         }
                         if (aniData['key'] == 'rotation') {
                             var tQuat = []
+                            quat.normalize(prevRotation,prevRotation)
+                            quat.normalize(nextRotation,nextRotation)
                             var ax = prevRotation[0], ay = prevRotation[1], az = prevRotation[2], aw = prevRotation[3];
                             var bx = nextRotation[0], by = nextRotation[1], bz = nextRotation[2], bw = nextRotation[3];
+
+
                             var omega, cosom, sinom, scale0, scale1;
                             // calc cosine
                             cosom = ax * bx + ay * by + az * bz + aw * bw;
@@ -11696,6 +11700,7 @@ var RedGLTFLoader;
                             tQuat[1] = scale0 * ay + scale1 * by;
                             tQuat[2] = scale0 * az + scale1 * bz;
                             tQuat[3] = scale0 * aw + scale1 * bw;
+
                             var rotationMTX = []
                             var tRotation = [0, 0, 0]
                             RedGLUtil.quaternionToRotationMat4(tQuat, rotationMTX)
@@ -11703,6 +11708,7 @@ var RedGLTFLoader;
                             tRotation[0] = -(tRotation[0] * 180 / Math.PI)
                             tRotation[1] = -(tRotation[1] * 180 / Math.PI)
                             tRotation[2] = -(tRotation[2] * 180 / Math.PI)
+                            // console.log(prevRotation, nextRotation)
                             target.rotationX = tRotation[0]
                             target.rotationY = tRotation[1]
                             target.rotationZ = tRotation[2]
@@ -23198,4 +23204,4 @@ var RedGLOffScreen;
         }
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-01-16 14:02:44)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-01-16 18:05:55)' };console.log(RedGL_VERSION);
