@@ -8,24 +8,24 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
     />
-    <link rel="stylesheet" href="../../example.css">
+    <link rel="stylesheet" href="../../example/example.css">
 
-    <script src="../../dat.gui.min.js"></script>
-    <script src="../../baseTestUI.js"></script>
-    <script src="../../../release/RedGL.min.js"></script>
+    <script src="../../example/dat.gui.min.js"></script>
+    <script src="../../example/baseTestUI.js"></script>
+    <script src="../../release/RedGL.min.js"></script>
+    <script src="RedGLTFLoader.js"></script>
 </head>
 
 <body>
 <script id='testSource'>
     var testUI;
     var canvas;
-    var assetPath = '../../../asset/'
+    var assetPath = '../../asset/'
     canvas = document.createElement('canvas');
     document.body.appendChild(canvas);
     RedGL(canvas, function (v) {
         if (v) {
             var tWorld, tView, tScene, tController, tRenderer;
-            var tShadow
             var setBase = function (redGL) {
                 // 월드 생성
                 redGL['world'] = tWorld = RedWorld();
@@ -35,8 +35,7 @@
                 tController = RedObitController(redGL);
                 tController.pan = 25;
                 tController.tilt = -15;
-                tController.distance = 5;
-                tController.speedDistance = 0.1;
+                tController.distance = 20;
                 // 렌더러 생성
                 tRenderer = RedRenderer();
                 // 뷰생성 및 적용
@@ -44,41 +43,50 @@
                 tWorld.addView(tView);
                 // 그리드 설정
                 tScene['grid'] = RedGrid(redGL);
-                tScene.skyBox =
-                    RedSkyBox(redGL, [
-                        assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
-                        assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
-                        assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
-                        assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
-                        assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
-                        assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
-                    ]);
                 // 라이트 설정
                 var testDLight;
                 testDLight = RedDirectionalLight(redGL)
-                testDLight.x = 3
-                testDLight.y = 2
-                testDLight.z = 3
-                tScene.addLight(testDLight);
-                tShadow = RedDirectionalShadow(redGL, testDLight)
-                tScene.shadowManager.directionalShadow = tShadow
-                tShadow.size = 500
+                testDLight.x = 100
+                testDLight.y = 100
+                testDLight.z = 100
+                tScene.addLight(testDLight)
                 // 렌더시작
                 tRenderer.start(redGL, function (time) {
-                    testDLight.x = Math.sin(time / 1500) * 1250
-                    testDLight.y = 3500
-                    testDLight.z = Math.cos(time / 1500) * 1250
                 });
                 // 렌더 디버거 활성화
                 tRenderer.setDebugButton();
                 testUI(redGL, tController)
-
             };
             setBase(this);
-            console.log(this)
             // GLTF 로딩
-            RedGLTFLoader(this, 'https://cdn.rawgit.com/KhronosGroup/glTF-Blender-Exporter/0e23c773bf27dad67d2c25f060370d6fa012d87d/polly/', 'project_polly.gltf', function (v) {
+            tScene['skyBox'] = RedSkyBox(this, [
+                assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
+                assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
+                assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
+                assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
+                assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
+                assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
+            ])
+
+            RedGLTFLoader(this,  assetPath + 'glTF/basic/MorphPrimitivesTest/', 'MorphPrimitivesTest.gltf', function (v) {
+                v['resultMesh'].z =2
                 tScene.addChild(v['resultMesh'])
+            })
+            RedGLTFLoader(this,  assetPath + 'glTF/basic/', 'InterpolationTest.glb', function (v) {
+
+                tScene.addChild(v['resultMesh'])
+            })
+            RedGLTFLoader(this,  assetPath + 'glTF/basic/', 'AlphaBlendModeTest.gltf', function (v) {
+                console.log('호잇!', v)
+                tScene.addChild(v['resultMesh'])
+                v['resultMesh'].z = 2
+            })
+            RedGLTFLoader(this,  assetPath + 'glTF/basic/', 'TextureSettingsTest.gltf', function (v) {
+                console.log('호잇!', v)
+                tScene.addChild(v['resultMesh'])
+                v['resultMesh'].y = 2
+                v['resultMesh'].z = -4
+//			v['resultMesh'].x = 5
             })
         } else {
             console.log('초기화 실패!')
