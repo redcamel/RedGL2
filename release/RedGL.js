@@ -15293,7 +15293,7 @@ var RedSystemShaderCode;
         var maxJoint;
         if (RedGLDetect.BROWSER_INFO.browser == 'ie' && RedGLDetect.BROWSER_INFO.browserVer == 11) maxJoint = 50
         else if (RedGLDetect.BROWSER_INFO.browser == 'iphone' || RedGLDetect.BROWSER_INFO.browser == 'ipad') maxJoint = 8
-        else maxJoint = 64
+        else maxJoint = RedGLDetect.BROWSER_INFO.isMobile ? 64 : 256
         //TODO 조인트 맥스 갯수 찾는 부분을 분기하거나 다른 방법으로 전달할 방법 생각해야함
         RedSystemShaderCode = {
             /**DOC:
@@ -15325,10 +15325,6 @@ var RedSystemShaderCode;
                 'varying vec2 vTexcoord1',
 
                 'uniform bool uOrthographicYn',
-                'uniform mat4 uJointMatrix[' + maxJoint + ']',
-                'uniform mat4 uInverseBindMatrixForJoint[' + maxJoint + ']',
-                'uniform mat4 uGlobalTransformOfNodeThatTheMeshIsAttachedTo',
-
 
                 // 'uniform vec4 uAtlascoord',
                 'uniform float uTime',
@@ -15343,7 +15339,11 @@ var RedSystemShaderCode;
                 // shadow
                 'uniform mat4 uDirectionalShadowLightMatrix',
                 'varying highp vec4 vShadowPos',
-                'const mat4 cTexUnitConverter = mat4(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.5, 0.5, 0.5, 1.0)'
+                'const mat4 cTexUnitConverter = mat4(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.5, 0.5, 0.5, 1.0)',
+
+                'uniform mat4 uJointMatrix[' + maxJoint + ']',
+                'uniform mat4 uInverseBindMatrixForJoint[' + maxJoint + ']',
+                'uniform mat4 uGlobalTransformOfNodeThatTheMeshIsAttachedTo'
             ],
             /**DOC:
              {
@@ -23212,4 +23212,4 @@ var RedGLOffScreen;
         }
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-01-17 00:02:56)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-01-17 13:32:25)' };console.log(RedGL_VERSION);
