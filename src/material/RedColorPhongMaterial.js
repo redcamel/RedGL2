@@ -16,7 +16,8 @@ var RedColorPhongMaterial;
             void main(void) {
                 gl_PointSize = uPointSize;
                 // normal 계산
-                vVertexNormal = vec3(uNMatrix * vec4(aVertexNormal,1.0));
+                //#REDGL_DEFINE#skin#true# vVertexNormal = (uNMatrix * getSkinMatrix() * vec4(aVertexNormal,0.0)).xyz;
+               //#REDGL_DEFINE#skin#false# vVertexNormal = (uNMatrix *  vec4(aVertexNormal,1.0)).xyz;
 
                 // position 계산
                 //#REDGL_DEFINE#skin#true# mat4 targetMatrix = uMMatrix *  getSkinMatrix() ;

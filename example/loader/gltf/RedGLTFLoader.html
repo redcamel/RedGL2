@@ -25,6 +25,7 @@
     RedGL(canvas, function (v) {
         if (v) {
             var tWorld, tView, tScene, tController, tRenderer;
+            var tMesh
             var setBase = function (redGL) {
                 // 월드 생성
                 redGL['world'] = tWorld = RedWorld();
@@ -69,6 +70,7 @@
                     testPLight.x = Math.sin(time / 1000) * 1
                     testPLight.y = Math.cos(time / 1000) * 1 + 1
                     testPLight.z = Math.cos(time / 1000) * 1
+                    if(tMesh) tMesh.rotationY +=0.1
                 });
                 // 렌더 디버거 활성화
                 tRenderer.setDebugButton();
@@ -81,6 +83,7 @@
                 assetPath + 'glTF/basic/', // assetRootPath
                 'DamagedHelmet.gltf', // fileName
                 function (v) { // callBack
+                    tMesh = v['resultMesh']
                     tScene.addChild(v['resultMesh'])
                 },
                 RedBitmapCubeTexture(this, // environmentTexture
