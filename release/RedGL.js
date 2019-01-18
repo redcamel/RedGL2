@@ -12287,7 +12287,7 @@ var RedGLTFLoader;
                             if (strideIndex % stridePerElement < 3) {
                                 if (key == 'NORMAL') normals.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                                 else if (key == 'POSITION') vertices.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-                                // else if ( key == 'COLOR_0' )
+                                // else if ( key == 'COLOR_0' ) RedGLUtil.throwFunc('VEC3에서 현재 지원하고 있지 않는 키', key)
                                 // else if ( key == 'TANGENT' ) tangents.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                                 // else RedGLUtil.throwFunc('VEC3에서 현재 지원하고 있지 않는 키', key)
                             }
@@ -12298,7 +12298,7 @@ var RedGLTFLoader;
                         for (i; i < len; i++) {
                             if (key == 'NORMAL') normals.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                             else if (key == 'POSITION') vertices.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-                            // else if ( key == 'COLOR_0' )
+                            // else if ( key == 'COLOR_0' ) RedGLUtil.throwFunc('VEC3에서 현재 지원하고 있지 않는 키', key)
                             // else if ( key == 'TANGENT' ) tangents.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                             // else RedGLUtil.throwFunc('VEC3에서 현재 지원하고 있지 않는 키', key)
                             strideIndex++
@@ -23239,4 +23239,4 @@ var RedGLOffScreen;
         }
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-01-18 13:05:07)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-01-18 13:28:08)' };console.log(RedGL_VERSION);
