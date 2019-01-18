@@ -12,13 +12,14 @@ var RedPBRMaterial_System;
 
             // Sprite3D
             //#REDGL_DEFINE#vertexShareFunc#getSprite3DMatrix#
-
+            attribute vec4 aVertexColor_0;
+            varying vec4 vVertexColor_0;
             void main(void) {
                 gl_PointSize = uPointSize;
                 // UV설정
                 vTexcoord = aTexcoord;
                 vTexcoord1 = aTexcoord1;
-
+                vVertexColor_0 = aVertexColor_0;
                 // normal 계산
                 vVertexNormal = (uNMatrix * vec4(aVertexNormal,1.0)).xyz;
 
@@ -57,6 +58,7 @@ var RedPBRMaterial_System;
 
 		//#REDGL_DEFINE#fragmentShareFunc#getPerturbNormal2Arb#
 
+        varying vec4 vVertexColor_0;
          uniform vec4 uBaseColorFactor;
          uniform vec3 uEmissiveFactor;
          uniform float u_cutOff;
@@ -83,6 +85,8 @@ var RedPBRMaterial_System;
         uniform int u_emissiveTexCoordIndex;
         uniform int u_roughnessTexCoordIndex;
         uniform int u_normalTexCoordIndex;
+
+        uniform bool u_useVertexColor_0;
 
 
 
@@ -129,9 +133,9 @@ var RedPBRMaterial_System;
             //#REDGL_DEFINE#roughnessTexture# tRoughnessPower *= roughnessColor.g; // 거칠기 산출 roughnessColor.g
 
             // diffuse 색상 산출
-            texelColor = uBaseColorFactor;
+            texelColor = u_useVertexColor_0 ? vVertexColor_0 : uBaseColorFactor;
             //#REDGL_DEFINE#diffuseTexture# texelColor *= texture2D(u_diffuseTexture, u_diffuseTexCoord);
-            texelColor.rgb *= texelColor.a;
+            //#REDGL_DEFINE#diffuseTexture# texelColor.rgb *= texelColor.a;
 
             // 노멀값 계산
             N = normalize(vVertexNormal);
@@ -294,7 +298,7 @@ var RedPBRMaterial_System;
         this['roughnessTexCoordIndex'] = 0;
         this['normalTexCoordIndex'] = 0
 
-
+        this['useVertexColor_0'] = false;
         this['occlusionPower'] = 1;
         this['baseColorFactor'] = null
         this['emissiveFactor'] = null;
@@ -448,5 +452,18 @@ var RedPBRMaterial_System;
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'useFlatMode', 'boolean', samplerOption);
+    /**DOC:
+     {
+	     code : 'PROPERTY',
+		 title :`useVertexColor_0`,
+		 description : `
+		    aVertexColor_0 사용여부
+		    기본값 : true
+		 `,
+		 return : 'boolean'
+	 }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'useVertexColor_0', 'boolean', samplerOption);
+
     Object.freeze(RedPBRMaterial_System);
 })();
