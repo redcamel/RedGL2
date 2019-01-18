@@ -134,7 +134,7 @@ var RedPBRMaterial_System;
             //#REDGL_DEFINE#roughnessTexture# tRoughnessPower *= roughnessColor.g; // 거칠기 산출 roughnessColor.g
 
             // diffuse 색상 산출
-            texelColor = u_useVertexColor_0 ? vVertexColor_0 : uBaseColorFactor;
+            texelColor = u_useVertexColor_0 ? vVertexColor_0*uBaseColorFactor : uBaseColorFactor;
             //#REDGL_DEFINE#diffuseTexture# texelColor *= texture2D(u_diffuseTexture, u_diffuseTexCoord);
             //#REDGL_DEFINE#diffuseTexture# texelColor.rgb *= texelColor.a;
 
