@@ -8591,13 +8591,14 @@ var RedPBRMaterial_System;
 
             // Sprite3D
             //#REDGL_DEFINE#vertexShareFunc#getSprite3DMatrix#
-
+            attribute vec4 aVertexColor_0;
+            varying vec4 vVertexColor_0;
             void main(void) {
                 gl_PointSize = uPointSize;
                 // UV설정
                 vTexcoord = aTexcoord;
                 vTexcoord1 = aTexcoord1;
-
+                vVertexColor_0 = aVertexColor_0;
                 // normal 계산
                 vVertexNormal = (uNMatrix * vec4(aVertexNormal,1.0)).xyz;
 
@@ -8636,6 +8637,7 @@ var RedPBRMaterial_System;
 
 		//#REDGL_DEFINE#fragmentShareFunc#getPerturbNormal2Arb#
 
+        varying vec4 vVertexColor_0;
          uniform vec4 uBaseColorFactor;
          uniform vec3 uEmissiveFactor;
          uniform float u_cutOff;
@@ -8662,6 +8664,8 @@ var RedPBRMaterial_System;
         uniform int u_emissiveTexCoordIndex;
         uniform int u_roughnessTexCoordIndex;
         uniform int u_normalTexCoordIndex;
+
+        uniform bool u_useVertexColor_0;
 
 
 
@@ -8708,9 +8712,9 @@ var RedPBRMaterial_System;
             //#REDGL_DEFINE#roughnessTexture# tRoughnessPower *= roughnessColor.g; // 거칠기 산출 roughnessColor.g
 
             // diffuse 색상 산출
-            texelColor = uBaseColorFactor;
+            texelColor = u_useVertexColor_0 ? vVertexColor_0 : uBaseColorFactor;
             //#REDGL_DEFINE#diffuseTexture# texelColor *= texture2D(u_diffuseTexture, u_diffuseTexCoord);
-            texelColor.rgb *= texelColor.a;
+            //#REDGL_DEFINE#diffuseTexture# texelColor.rgb *= texelColor.a;
 
             // 노멀값 계산
             N = normalize(vVertexNormal);
@@ -8873,7 +8877,7 @@ var RedPBRMaterial_System;
         this['roughnessTexCoordIndex'] = 0;
         this['normalTexCoordIndex'] = 0
 
-
+        this['useVertexColor_0'] = false;
         this['occlusionPower'] = 1;
         this['baseColorFactor'] = null
         this['emissiveFactor'] = null;
@@ -9027,6 +9031,19 @@ var RedPBRMaterial_System;
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'useFlatMode', 'boolean', samplerOption);
+    /**DOC:
+     {
+	     code : 'PROPERTY',
+		 title :`useVertexColor_0`,
+		 description : `
+		    aVertexColor_0 사용여부
+		    기본값 : true
+		 `,
+		 return : 'boolean'
+	 }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'useVertexColor_0', 'boolean', samplerOption);
+
     Object.freeze(RedPBRMaterial_System);
 })();
 "use strict";
@@ -11665,8 +11682,8 @@ var RedGLTFLoader;
                         }
                         if (aniData['key'] == 'rotation') {
                             var tQuat = []
-                            quat.normalize(prevRotation,prevRotation)
-                            quat.normalize(nextRotation,nextRotation)
+                            quat.normalize(prevRotation, prevRotation)
+                            quat.normalize(nextRotation, nextRotation)
                             var ax = prevRotation[0], ay = prevRotation[1], az = prevRotation[2], aw = prevRotation[3];
                             var bx = nextRotation[0], by = nextRotation[1], bz = nextRotation[2], bw = nextRotation[3];
 
@@ -11955,17 +11972,17 @@ var RedGLTFLoader;
                 }
             }
         })();
-        var checkJoint = function(redGLTFLoader,skinInfo,nodes, v){
+        var checkJoint = function (redGLTFLoader, skinInfo, nodes, v) {
             var tJointMesh = nodes[v]['RedMesh']
-            if(tJointMesh){
+            if (tJointMesh) {
                 var tJointMesh = nodes[v]['RedMesh']
                 skinInfo['joints'].push(tJointMesh)
                 tJointMesh.geometry = RedSphere(redGLTFLoader['redGL'], 0.05, 3, 3, 3)
                 tJointMesh.material = RedColorMaterial(redGLTFLoader['redGL'])
                 tJointMesh.drawMode = redGLTFLoader['redGL'].gl.LINE_LOOP
                 tJointMesh.depthTestFunc = redGLTFLoader['redGL'].gl.NEVER
-            }else requestAnimationFrame(function(){
-                checkJoint(redGLTFLoader,skinInfo,nodes, v)
+            } else requestAnimationFrame(function () {
+                checkJoint(redGLTFLoader, skinInfo, nodes, v)
             })
         }
         var parseSkin = function (redGLTFLoader, json, info, tMesh) {
@@ -11977,7 +11994,7 @@ var RedGLTFLoader;
             var nodes = json['nodes']
             info['joints'].forEach(function (v) {
                 console.log(json['nodes'][v])
-                checkJoint(redGLTFLoader,skinInfo,nodes,v)
+                checkJoint(redGLTFLoader, skinInfo, nodes, v)
             })
             // 스켈레톤 정보가 있으면 정보와 메쉬를 연결해둔다.
             if (info['skeleton']) skinInfo['skeleton'] = json['nodes'][info['skeleton']]['RedMesh']
@@ -12225,7 +12242,7 @@ var RedGLTFLoader;
             // console.log("this['bufferView']['byteOffset']", this['bufferView']['byteOffset'])
             // console.log("this['accessor']['byteOffset']", this['accessor']['byteOffset'])
         }
-        var parseAttributeInfo = function (redGLTFLoader, json, key, accessorInfo, vertices, uvs, uvs1, normals, jointWeights, joints, tangents) {
+        var parseAttributeInfo = function (redGLTFLoader, json, key, accessorInfo, vertices, uvs, uvs1, normals, jointWeights, joints, verticesColor_0) {
             var tBYTES_PER_ELEMENT = accessorInfo['componentType_BYTES_PER_ELEMENT'];
             var tBufferViewByteStride = accessorInfo['bufferViewByteStride'];
             var tBufferURIDataView = accessorInfo['bufferURIDataView'];
@@ -12244,6 +12261,7 @@ var RedGLTFLoader;
                             if (strideIndex % stridePerElement < 4) {
                                 if (key == 'WEIGHTS_0') jointWeights.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                                 else if (key == 'JOINTS_0') joints.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+                                else if ( key == 'COLOR_0' ) verticesColor_0.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                                 // else if ( key == 'COLOR_0' )
                                 // else if ( key == 'TANGENT' ) tangents.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                                 // else RedGLUtil.throwFunc('VEC4에서 현재 지원하고 있지 않는 키', key)
@@ -12255,7 +12273,7 @@ var RedGLTFLoader;
                         for (i; i < len; i++) {
                             if (key == 'WEIGHTS_0') jointWeights.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                             else if (key == 'JOINTS_0') joints.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-                            // else if ( key == 'COLOR_0' )
+                            else if ( key == 'COLOR_0' ) verticesColor_0.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                             // else if ( key == 'TANGENT' ) tangents.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                             // else RedGLUtil.throwFunc('VEC4에서 현재 지원하고 있지 않는 키', key)
                             strideIndex++
@@ -12329,6 +12347,7 @@ var RedGLTFLoader;
                 primitiveData['targets'].forEach(function (v2) {
                     var tMorphData = {
                         vertices: [],
+                        verticesColor_0 : [],
                         normals: [],
                         uvs: [],
                         uvs1: [],
@@ -12338,6 +12357,7 @@ var RedGLTFLoader;
                     morphList.push(tMorphData)
                     for (var key in v2) {
                         var vertices = tMorphData['vertices']
+                        var verticesColor_0 = tMorphData['verticesColor_0']
                         var normals = tMorphData['normals']
                         var uvs = tMorphData['uvs']
                         var uvs1 = tMorphData['uvs1']
@@ -12348,7 +12368,7 @@ var RedGLTFLoader;
                         // 어트리뷰트 갈궈서 파악함
                         parseAttributeInfo(
                             redGLTFLoader, json, key, accessorInfo,
-                            vertices, uvs, uvs1, normals, jointWeights, joints
+                            vertices, uvs, uvs1, normals, jointWeights, joints, verticesColor_0
                         )
                         // 스파스 정보도 갈굼
                         if (accessorInfo['accessor']['sparse']) parseSparse(redGLTFLoader, key, accessorInfo['accessor'], json, vertices, uvs, uvs1, normals, jointWeights, joints)
@@ -12560,6 +12580,7 @@ var RedGLTFLoader;
                 var indices = []
                 // 어트리뷰트에서 파싱되는놈들
                 var vertices = []
+                var verticesColor_0 = []
                 var uvs = []
                 var uvs1 = []
                 var normals = []
@@ -12578,7 +12599,7 @@ var RedGLTFLoader;
                         // 어트리뷰트 갈궈서 파악함
                         parseAttributeInfo(
                             redGLTFLoader, json, key, accessorInfo,
-                            vertices, uvs, uvs1, normals, jointWeights, joints
+                            vertices, uvs, uvs1, normals, jointWeights, joints, verticesColor_0
                         )
                         // 스파스 정보도 갈굼
                         if (accessorInfo['accessor']['sparse']) parseSparse(redGLTFLoader, key, accessorInfo['accessor'], json, vertices, uvs, uvs1, normals, jointWeights, joints)
@@ -12646,6 +12667,8 @@ var RedGLTFLoader;
                 var i = 0, len = vertices.length / 3
                 for (i; i < len; i++) {
                     if (vertices.length) interleaveData.push(vertices[i * 3 + 0], vertices[i * 3 + 1], vertices[i * 3 + 2])
+                    if (verticesColor_0.length) interleaveData.push(verticesColor_0[i * 4 + 0], verticesColor_0[i * 4 + 1], verticesColor_0[i * 4 + 2],verticesColor_0[i * 4 + 3])
+                    else interleaveData.push(0,0,0,0)
                     if (normalData.length) interleaveData.push(normalData[i * 3 + 0], normalData[i * 3 + 1], normalData[i * 3 + 2])
                     if (!uvs.length) uvs.push(0, 0)
                     if (uvs.length) interleaveData.push(uvs[i * 2 + 0], uvs[i * 2 + 1])
@@ -12660,6 +12683,7 @@ var RedGLTFLoader;
                 var tGeo
                 var tInterleaveInfoList = []
                 if (vertices.length) tInterleaveInfoList.push(RedInterleaveInfo('aVertexPosition', 3))
+                tInterleaveInfoList.push(RedInterleaveInfo('aVertexColor_0', 4))
                 if (normalData.length) tInterleaveInfoList.push(RedInterleaveInfo('aVertexNormal', 3))
                 if (uvs.length) tInterleaveInfoList.push(RedInterleaveInfo('aTexcoord', 2))
                 if (uvs1.length) tInterleaveInfoList.push(RedInterleaveInfo('aTexcoord1', 2))
@@ -12678,7 +12702,7 @@ var RedGLTFLoader;
                         redGLTFLoader['redGL'],
                         'testGLTF_indexBuffer_' + RedGL.makeUUID(),
                         RedBuffer.ELEMENT_ARRAY_BUFFER,
-                        new Uint16Array(indices)
+                        new Uint32Array(indices)
                     ) : null
                 )
                 if (!tMaterial) {
@@ -12720,6 +12744,7 @@ var RedGLTFLoader;
                         tMesh.useBlendMode = false
                     // tMesh.useBlendMode = false
                 }
+                if(verticesColor_0.length) tMaterial.useVertexColor_0 = true
                 // console.log('tDoubleSide', tDoubleSide)
                 // console.log('tMesh', tMesh)
                 /////////////////////////////////////////////////////////
@@ -12735,6 +12760,8 @@ var RedGLTFLoader;
                     var i = 0, len = v['vertices'].length / 3
                     for (i; i < len; i++) {
                         if (v['vertices'].length) interleaveData.push(v['vertices'][i * 3 + 0], v['vertices'][i * 3 + 1], v['vertices'][i * 3 + 2])
+                        if (v['verticesColor_0'].length) interleaveData.push(v['verticesColor_0'][i * 4 + 0], v['verticesColor_0'][i * 4 + 1], v['verticesColor_0'][i * 4 + 2],v['verticesColor_0'][i * 4 + 3])
+                        else interleaveData.push(0,0,0,0)
                         if (normalData.length) interleaveData.push(normalData[i * 3 + 0], normalData[i * 3 + 1], normalData[i * 3 + 2])
                         if (!v['uvs'].length) v['uvs'].push(0, 0)
                         if (v['uvs'].length) interleaveData.push(v['uvs'][i * 2 + 0], v['uvs'][i * 2 + 1])
@@ -12753,9 +12780,9 @@ var RedGLTFLoader;
                 tMesh['_morphInfo']['list'].forEach(function (v) {
                     var i = 0, len = targetData.length / 10
                     for (i; i < len; i++) {
-                        targetData[i * 10 + 0] += v['vertices'][i * 3 + 0] * 0.5
-                        targetData[i * 10 + 1] += v['vertices'][i * 3 + 1] * 0.5
-                        targetData[i * 10 + 2] += v['vertices'][i * 3 + 2] * 0.5
+                        targetData[i * 14 + 0] += v['vertices'][i * 3 + 0] * 0.5
+                        targetData[i * 14 + 1] += v['vertices'][i * 3 + 1] * 0.5
+                        targetData[i * 14 + 2] += v['vertices'][i * 3 + 2] * 0.5
                     }
                 });
                 tMesh['geometry']['interleaveBuffer'].upload(targetData)
@@ -23212,4 +23239,4 @@ var RedGLOffScreen;
         }
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-01-17 13:32:25)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-01-18 13:05:07)' };console.log(RedGL_VERSION);
