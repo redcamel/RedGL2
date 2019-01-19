@@ -546,11 +546,11 @@ var RedRenderer;
 
                     if (tOptionProgramKey) {
                         tOptionProgram = tProgramList[tOptionProgramKey][tBaseProgramKey];
-                        try {
-                            tOptionProgram['_prepareProgramYn']
-                        } catch (e) {
-                            console.log(e, tProgram, tProgramList, tOptionProgramKey, tBaseProgramKey)
-                        }
+                        // try {
+                        //     tOptionProgram['_prepareProgramYn']
+                        // } catch (e) {
+                        //     console.log(e, tProgram, tProgramList, tOptionProgramKey, tBaseProgramKey)
+                        // }
 
                         if (tOptionProgram['_prepareProgramYn']) {
                             console.log(tProgramList, tOptionProgramKey, tBaseProgramKey)
