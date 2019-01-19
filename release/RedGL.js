@@ -8587,6 +8587,7 @@ var RedPBRMaterial_System;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'RedPBRMaterialSystemProgram';
+    // var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture', 'useFlatMode','useMaterialDoubleSide'];
     var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture', 'useFlatMode'];
     var checked;
     vSource = function () {
@@ -8672,6 +8673,8 @@ var RedPBRMaterial_System;
         uniform int u_normalTexCoordIndex;
 
         uniform bool u_useVertexColor_0;
+        uniform bool u_useMaterialDoubleSide;
+
 
 
 
@@ -8718,12 +8721,23 @@ var RedPBRMaterial_System;
             //#REDGL_DEFINE#roughnessTexture# tRoughnessPower *= roughnessColor.g; // 거칠기 산출 roughnessColor.g
 
             // diffuse 색상 산출
-            texelColor = u_useVertexColor_0 ? vVertexColor_0*uBaseColorFactor : uBaseColorFactor;
+            texelColor = u_useVertexColor_0 ? vVertexColor_0 * uBaseColorFactor : uBaseColorFactor;
             //#REDGL_DEFINE#diffuseTexture# texelColor *= texture2D(u_diffuseTexture, u_diffuseTexCoord);
             //#REDGL_DEFINE#diffuseTexture# texelColor.rgb *= texelColor.a;
 
             // 노멀값 계산
             N = normalize(vVertexNormal);
+            ////#REDGL_DEFINE#useMaterialDoubleSide# vec3 fdx = dFdx(vVertexPosition.xyz);
+            ////#REDGL_DEFINE#useMaterialDoubleSide# vec3 fdy = dFdy(vVertexPosition.xyz);
+            ////#REDGL_DEFINE#useMaterialDoubleSide# vec3 faceNormal = normalize(cross(fdx,fdy));
+            ////#REDGL_DEFINE#useMaterialDoubleSide# if (dot (vVertexNormal, faceNormal) < 0.0)  N = -N;
+            if(u_useMaterialDoubleSide){
+                vec3 fdx = dFdx(vVertexPosition.xyz);
+                vec3 fdy = dFdy(vVertexPosition.xyz);
+                vec3 faceNormal = normalize(cross(fdx,fdy));
+                if (dot (vVertexNormal, faceNormal) < 0.0)  N = -N;
+            }
+
             vec4 normalColor = vec4(0.0);
             //#REDGL_DEFINE#normalTexture# normalColor = texture2D(u_normalTexture, u_normalTexCoord);
             //#REDGL_DEFINE#normalTexture# N = getPerturbNormal2Arb(vVertexPosition.xyz, N, normalColor, u_normalTexCoord) ;
@@ -8889,20 +8903,29 @@ var RedPBRMaterial_System;
         this['emissiveFactor'] = null;
         this['alpha'] = 1;
         this['cutOff'] = 0;
+
         /////////////////////////////////////////
         // 일반 프로퍼티
+        this['useMaterialDoubleSide'] = false
         this['useFlatMode'] = false
         this['_UUID'] = RedGL.makeUUID();
         if (!checked) {
             this.checkUniformAndProperty();
             checked = true;
         }
+        this['_needSearchProgram'] = null
         console.log(this);
     };
     RedPBRMaterial_System.prototype = new RedBaseMaterial();
     var samplerOption = {
         callback: function () {
-            this._searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST)
+            var self = this;
+            cancelAnimationFrame(this['_needSearchProgram']);
+            this['_needSearchProgram'] = requestAnimationFrame(function(){
+                self._searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST)
+                self['_needSearchProgram'] = null
+            });
+
         }
     };
     /**DOC:
@@ -9037,6 +9060,19 @@ var RedPBRMaterial_System;
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'useFlatMode', 'boolean', samplerOption);
+    /**DOC:
+     {
+	     code : 'PROPERTY',
+		 title :`useMaterialDoubleSide`,
+		 description : `
+		    gltf 파싱에 따른 재질에서 더블사이드 사용여부
+		    기본값 : false
+		 `,
+		 return : 'boolean'
+	 }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'useMaterialDoubleSide', 'boolean', samplerOption);
+
     /**DOC:
      {
 	     code : 'PROPERTY',
@@ -12708,7 +12744,7 @@ var RedGLTFLoader;
                         redGLTFLoader['redGL'],
                         'testGLTF_indexBuffer_' + RedGL.makeUUID(),
                         RedBuffer.ELEMENT_ARRAY_BUFFER,
-                        new Uint32Array(indices)
+                        redGLTFLoader['redGL'].gl.glExtension['OES_element_index_uint'] ? new Uint32Array(indices) : new Uint16Array(indices),
                     ) : null
                 )
                 if (!tMaterial) {
@@ -12731,7 +12767,10 @@ var RedGLTFLoader;
                 if (tDrawMode) tMesh.drawMode = tDrawMode
                 else tMesh.drawMode = redGLTFLoader['redGL'].gl.TRIANGLES
                 //
-                if (tDoubleSide) tMesh.useCullFace = false
+                if (tDoubleSide) {
+                    tMesh.useCullFace = false
+                    tMaterial.useMaterialDoubleSide = true
+                }
                 // console.log('tAlphaMode', tAlphaMode)
                 // console.log('tAlphaCutoff', tAlphaCutoff)
                 switch (tAlphaMode) {
@@ -16547,11 +16586,11 @@ var RedRenderer;
 
                     if (tOptionProgramKey) {
                         tOptionProgram = tProgramList[tOptionProgramKey][tBaseProgramKey];
-                        try {
-                            tOptionProgram['_prepareProgramYn']
-                        } catch (e) {
-                            console.log(e, tProgram, tProgramList, tOptionProgramKey, tBaseProgramKey)
-                        }
+                        // try {
+                        //     tOptionProgram['_prepareProgramYn']
+                        // } catch (e) {
+                        //     console.log(e, tProgram, tProgramList, tOptionProgramKey, tBaseProgramKey)
+                        // }
 
                         if (tOptionProgram['_prepareProgramYn']) {
                             console.log(tProgramList, tOptionProgramKey, tBaseProgramKey)
@@ -23245,4 +23284,4 @@ var RedGLOffScreen;
         }
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-01-18 23:24:14)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-01-19 19:56:17)' };console.log(RedGL_VERSION);

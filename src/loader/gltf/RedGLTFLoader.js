@@ -1415,7 +1415,7 @@ var RedGLTFLoader;
                         redGLTFLoader['redGL'],
                         'testGLTF_indexBuffer_' + RedGL.makeUUID(),
                         RedBuffer.ELEMENT_ARRAY_BUFFER,
-                        new Uint32Array(indices)
+                        redGLTFLoader['redGL'].gl.glExtension['OES_element_index_uint'] ? new Uint32Array(indices) : new Uint16Array(indices),
                     ) : null
                 )
                 if (!tMaterial) {
@@ -1438,7 +1438,10 @@ var RedGLTFLoader;
                 if (tDrawMode) tMesh.drawMode = tDrawMode
                 else tMesh.drawMode = redGLTFLoader['redGL'].gl.TRIANGLES
                 //
-                if (tDoubleSide) tMesh.useCullFace = false
+                if (tDoubleSide) {
+                    tMesh.useCullFace = false
+                    tMaterial.useMaterialDoubleSide = true
+                }
                 // console.log('tAlphaMode', tAlphaMode)
                 // console.log('tAlphaCutoff', tAlphaCutoff)
                 switch (tAlphaMode) {

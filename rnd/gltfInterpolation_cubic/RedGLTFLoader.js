@@ -974,7 +974,7 @@ var RedGLTFLoader;
                             if (strideIndex % stridePerElement < 4) {
                                 if (key == 'WEIGHTS_0') jointWeights.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                                 else if (key == 'JOINTS_0') joints.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-                                else if ( key == 'COLOR_0' ) verticesColor_0.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+                                else if (key == 'COLOR_0') verticesColor_0.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                                 // else if ( key == 'COLOR_0' )
                                 // else if ( key == 'TANGENT' ) tangents.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                                 // else RedGLUtil.throwFunc('VEC4에서 현재 지원하고 있지 않는 키', key)
@@ -986,7 +986,7 @@ var RedGLTFLoader;
                         for (i; i < len; i++) {
                             if (key == 'WEIGHTS_0') jointWeights.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                             else if (key == 'JOINTS_0') joints.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-                            else if ( key == 'COLOR_0' ) verticesColor_0.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+                            else if (key == 'COLOR_0') verticesColor_0.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                             // else if ( key == 'TANGENT' ) tangents.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                             // else RedGLUtil.throwFunc('VEC4에서 현재 지원하고 있지 않는 키', key)
                             strideIndex++
@@ -1060,7 +1060,7 @@ var RedGLTFLoader;
                 primitiveData['targets'].forEach(function (v2) {
                     var tMorphData = {
                         vertices: [],
-                        verticesColor_0 : [],
+                        verticesColor_0: [],
                         normals: [],
                         uvs: [],
                         uvs1: [],
@@ -1380,8 +1380,8 @@ var RedGLTFLoader;
                 var i = 0, len = vertices.length / 3
                 for (i; i < len; i++) {
                     if (vertices.length) interleaveData.push(vertices[i * 3 + 0], vertices[i * 3 + 1], vertices[i * 3 + 2])
-                    if (verticesColor_0.length) interleaveData.push(verticesColor_0[i * 4 + 0], verticesColor_0[i * 4 + 1], verticesColor_0[i * 4 + 2],verticesColor_0[i * 4 + 3])
-                    else interleaveData.push(0,0,0,0)
+                    if (verticesColor_0.length) interleaveData.push(verticesColor_0[i * 4 + 0], verticesColor_0[i * 4 + 1], verticesColor_0[i * 4 + 2], verticesColor_0[i * 4 + 3])
+                    else interleaveData.push(0, 0, 0, 0)
                     if (normalData.length) interleaveData.push(normalData[i * 3 + 0], normalData[i * 3 + 1], normalData[i * 3 + 2])
                     if (!uvs.length) uvs.push(0, 0)
                     if (uvs.length) interleaveData.push(uvs[i * 2 + 0], uvs[i * 2 + 1])
@@ -1415,7 +1415,7 @@ var RedGLTFLoader;
                         redGLTFLoader['redGL'],
                         'testGLTF_indexBuffer_' + RedGL.makeUUID(),
                         RedBuffer.ELEMENT_ARRAY_BUFFER,
-                        new Uint32Array(indices)
+                        redGLTFLoader['redGL'].gl.glExtension['OES_element_index_uint'] ? new Uint32Array(indices) : new Uint16Array(indices)
                     ) : null
                 )
                 if (!tMaterial) {
@@ -1438,26 +1438,27 @@ var RedGLTFLoader;
                 if (tDrawMode) tMesh.drawMode = tDrawMode
                 else tMesh.drawMode = redGLTFLoader['redGL'].gl.TRIANGLES
                 //
-                if (tDoubleSide) tMesh.useCullFace = false
+                if (tDoubleSide) {
+                    tMesh.useCullFace = false
+                    tMaterial.useMaterialDoubleSide = true
+                }
                 // console.log('tAlphaMode', tAlphaMode)
                 // console.log('tAlphaCutoff', tAlphaCutoff)
                 switch (tAlphaMode) {
-                    // TODO
-                    case 'OPAQUE' :
-                        tMesh.useBlendMode = false
-                        break
                     case 'BLEND' :
+                        tMesh.useBlendMode = true
                         tMesh['useTransparentSort'] = true
                         break
                     case 'MASK' :
+                        tMesh.useBlendMode = true
                         tMesh['useTransparentSort'] = true
                         tMaterial.cutOff = tAlphaCutoff
                         break
                     default :
+                        //default OPAQUE
                         tMesh.useBlendMode = false
-                    // tMesh.useBlendMode = false
                 }
-                if(verticesColor_0.length) tMaterial.useVertexColor_0 = true
+                if (verticesColor_0.length) tMaterial.useVertexColor_0 = true
                 // console.log('tDoubleSide', tDoubleSide)
                 // console.log('tMesh', tMesh)
                 /////////////////////////////////////////////////////////
@@ -1473,8 +1474,8 @@ var RedGLTFLoader;
                     var i = 0, len = v['vertices'].length / 3
                     for (i; i < len; i++) {
                         if (v['vertices'].length) interleaveData.push(v['vertices'][i * 3 + 0], v['vertices'][i * 3 + 1], v['vertices'][i * 3 + 2])
-                        if (v['verticesColor_0'].length) interleaveData.push(v['verticesColor_0'][i * 4 + 0], v['verticesColor_0'][i * 4 + 1], v['verticesColor_0'][i * 4 + 2],v['verticesColor_0'][i * 4 + 3])
-                        else interleaveData.push(0,0,0,0)
+                        if (v['verticesColor_0'].length) interleaveData.push(v['verticesColor_0'][i * 4 + 0], v['verticesColor_0'][i * 4 + 1], v['verticesColor_0'][i * 4 + 2], v['verticesColor_0'][i * 4 + 3])
+                        else interleaveData.push(0, 0, 0, 0)
                         if (normalData.length) interleaveData.push(normalData[i * 3 + 0], normalData[i * 3 + 1], normalData[i * 3 + 2])
                         if (!v['uvs'].length) v['uvs'].push(0, 0)
                         if (v['uvs'].length) interleaveData.push(v['uvs'][i * 2 + 0], v['uvs'][i * 2 + 1])
@@ -1570,8 +1571,7 @@ var RedGLTFLoader;
 
                     animationClip['minTime'] = 10000000;
                     animationClip['maxTime'] = -1;
-                    // animationClip['name'] = 'animation_' + index;
-                    animationClip['name'] = v['name'];
+                    animationClip['name'] = v['name'] ? v['name'] : 'animation_' + index;
                     // 로더에 애니메이션 데이터들을 입력함
                     redGLTFLoader['parsingResult']['animations'].push(animationClip)
                     // 채널을 돌면서 파악한다.
