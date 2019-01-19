@@ -141,6 +141,7 @@ var RedFluid001;
      vec4 t = texture2D(u_texture, p);
 
      c += vec3(vec4(texture2D(u_texture, p - 0.1)).r, t.g, t.b);
+     // c += t.xyz;
 
      // c *= 1.0 - length(p) * 0.2;
 

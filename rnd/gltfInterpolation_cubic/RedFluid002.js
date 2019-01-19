@@ -17,7 +17,7 @@ var RedFluid002;
                 gl_PointSize = uPointSize;
 
                 vTexcoord = aTexcoord;
- vVertexNormal = vec3(uNMatrix * vec4(aVertexNormal,1.0));
+ vVertexNormal = vec3(uNMatrix * vec4(aVertexNormal,0.0));
                 // position 계산
                 //#REDGL_DEFINE#skin#true# mat4 targetMatrix = uMMatrix *  getSkinMatrix() ;
                 //#REDGL_DEFINE#skin#false# mat4 targetMatrix = uMMatrix;
@@ -60,7 +60,7 @@ var RedFluid002;
          uniform float u_specularPower;
 
          void main(void) {
-            float maximum = 1.0;
+            float maximum =1.0;
             float time_e      = vTime * 0.0001;
 
             vec2 uv_t         = vec2(vTexcoord.s + time_e, vTexcoord.t + time_e);
@@ -70,11 +70,12 @@ var RedFluid002;
             vec2 uv_displaced = vec2(vTexcoord.x + displace_k, vTexcoord.y + displace_k);
 
    vec4 texelColor      = texture2D(u_diffuseTexture, uv_displaced);
-   texelColor.a = 0.9;
 
             displace     = texture2D(u_rippleTexture, uv_displaced);
            vec3 N = vec3(displace.rgb);
-           N.y = pow(N.y,3.5);
+           N = N + vVertexNormal;
+           texelColor.rgb *= N.g;
+           N = normalize(N);
 
 
              vec4 specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);

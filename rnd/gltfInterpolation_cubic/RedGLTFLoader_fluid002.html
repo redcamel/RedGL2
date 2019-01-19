@@ -70,7 +70,7 @@
             // ])
             var t = RedMesh(
                 this,
-                RedBox(this, 100, 100, 100, 100,100,100),
+                RedPlane(this, 100, 100, 100, 100),
                 RedFluid002(
                     this,
                     RedBitmapTexture(this, assetPath + 'cubemap/posy.png'),
@@ -81,6 +81,7 @@
                 )
             )
             t.useCullFace = false
+            t.rotationX = 90
             tScene.addChild(t)
         } else {
             console.log('초기화 실패!')
