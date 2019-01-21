@@ -3,7 +3,7 @@ var RedPBRMaterial_System;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'RedPBRMaterialSystemProgram';
-    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture', 'useFlatMode','useMaterialDoubleSide'];
+    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture', 'useFlatMode', 'useMaterialDoubleSide'];
     // var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture', 'useFlatMode'];
     var checked;
     vSource = function () {
@@ -89,7 +89,6 @@ var RedPBRMaterial_System;
         uniform int u_normalTexCoordIndex;
 
         uniform bool u_useVertexColor_0;
-        uniform bool u_useMaterialDoubleSide;
 
 
 
@@ -153,6 +152,7 @@ var RedPBRMaterial_System;
             //#REDGL_DEFINE#normalTexture# normalColor = texture2D(u_normalTexture, u_normalTexCoord);
             //#REDGL_DEFINE#normalTexture# N = getPerturbNormal2Arb(vVertexPosition.xyz, N, normalColor, u_normalTexCoord) ;
             //#REDGL_DEFINE#useFlatMode# N = getFlatNormal(vVertexPosition.xyz);
+
 
             // 환경맵 계산
             vec3 R = reflect( vVertexPosition.xyz-uCameraPosition, N);
@@ -332,7 +332,7 @@ var RedPBRMaterial_System;
         callback: function () {
             var self = this;
             cancelAnimationFrame(this['_needSearchProgram']);
-            this['_needSearchProgram'] = requestAnimationFrame(function(){
+            this['_needSearchProgram'] = requestAnimationFrame(function () {
                 self._searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST)
                 self['_needSearchProgram'] = null
             });

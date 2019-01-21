@@ -127,7 +127,7 @@ var RedBaseObject3D;
 			 title :`blendSrc`,
 			 description : `
 				 블렌드 소스값 factor
-				 기본값 : gl.ONE
+				 기본값 : gl.SRC_ALPHA
 			 `,
 			 return : 'gl 상수'
 		 }
