@@ -37,7 +37,7 @@
   {
     "code": "PROPERTY",
     "title": "blendSrc",
-    "description": "\n\t 블렌드 소스값 factor\n\t 기본값 : gl.ONE\n ",
+    "description": "\n\t 블렌드 소스값 factor\n\t 기본값 : gl.SRC_ALPHA\n ",
     "return": "gl 상수"
   },
   {

@@ -89,7 +89,6 @@ var RedPBRMaterial_System;
         uniform int u_normalTexCoordIndex;
 
         uniform bool u_useVertexColor_0;
-        uniform bool u_useMaterialDoubleSide;
 
 
 
