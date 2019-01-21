@@ -8648,7 +8648,7 @@ var RedPBRMaterial_System;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'RedPBRMaterialSystemProgram';
-    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture', 'useFlatMode','useMaterialDoubleSide'];
+    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture', 'useFlatMode', 'useMaterialDoubleSide'];
     // var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture', 'useFlatMode'];
     var checked;
     vSource = function () {
@@ -8797,6 +8797,7 @@ var RedPBRMaterial_System;
             //#REDGL_DEFINE#normalTexture# normalColor = texture2D(u_normalTexture, u_normalTexCoord);
             //#REDGL_DEFINE#normalTexture# N = getPerturbNormal2Arb(vVertexPosition.xyz, N, normalColor, u_normalTexCoord) ;
             //#REDGL_DEFINE#useFlatMode# N = getFlatNormal(vVertexPosition.xyz);
+
 
             // 환경맵 계산
             vec3 R = reflect( vVertexPosition.xyz-uCameraPosition, N);
@@ -8976,7 +8977,7 @@ var RedPBRMaterial_System;
         callback: function () {
             var self = this;
             cancelAnimationFrame(this['_needSearchProgram']);
-            this['_needSearchProgram'] = requestAnimationFrame(function(){
+            this['_needSearchProgram'] = requestAnimationFrame(function () {
                 self._searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST)
                 self['_needSearchProgram'] = null
             });
@@ -11894,7 +11895,7 @@ var RedGLTFLoader;
                                     next = originData[index]
 
                                     targetMesh['_morphInfo']['list'].forEach(function (v, morphIndex) {
-                                        if(morphIndex%3==1){
+                                        if (morphIndex % 3 == 1) {
                                             prev += aniData['data'][prevIndex * 2 + morphIndex] * v['interleaveData'][index]
                                             next += aniData['data'][nextIndex * 2 + morphIndex] * v['interleaveData'][index]
                                         }
@@ -12560,7 +12561,6 @@ var RedGLTFLoader;
                                 if (key == 'WEIGHTS_0') jointWeights.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                                 else if (key == 'JOINTS_0') joints.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                                 else if (key == 'COLOR_0') verticesColor_0.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-                                // else if ( key == 'COLOR_0' )
                                 // else if ( key == 'TANGENT' ) tangents.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                                 // else RedGLUtil.throwFunc('VEC4에서 현재 지원하고 있지 않는 키', key)
                             }
@@ -13000,7 +13000,7 @@ var RedGLTFLoader;
                         redGLTFLoader['redGL'],
                         'testGLTF_indexBuffer_' + RedGL.makeUUID(),
                         RedBuffer.ELEMENT_ARRAY_BUFFER,
-                        redGLTFLoader['redGL'].gl.glExtension['OES_element_index_uint'] ? new Uint32Array(indices) : new Uint16Array(indices),
+                        redGLTFLoader['redGL'].gl.glExtension['OES_element_index_uint'] ? new Uint32Array(indices) : new Uint16Array(indices)
                     ) : null
                 )
                 if (!tMaterial) {
@@ -23540,4 +23540,4 @@ var RedGLOffScreen;
         }
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-01-21 19:47:32)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-01-21 20:18:11)' };console.log(RedGL_VERSION);
