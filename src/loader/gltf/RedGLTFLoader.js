@@ -1693,12 +1693,18 @@ var RedGLTFLoader;
                 // console.log(morphInfo)
                 /////////////////////////////////////////////////////
                 var targetData = tMesh['geometry']['interleaveBuffer']['data']
+                var NUM = 0
+                tInterleaveInfoList.forEach(function(v){
+                    NUM +=v['size']
+                })
                 tMesh['_morphInfo']['list'].forEach(function (v) {
-                    var i = 0, len = targetData.length / 10
+                    console.log('tInterleaveInfoList',tInterleaveInfoList)
+                    console.log('NUM',NUM)
+                    var i = 0, len = targetData.length / NUM
                     for (i; i < len; i++) {
-                        targetData[i * 14 + 0] += v['vertices'][i * 3 + 0] * 0.5
-                        targetData[i * 14 + 1] += v['vertices'][i * 3 + 1] * 0.5
-                        targetData[i * 14 + 2] += v['vertices'][i * 3 + 2] * 0.5
+                        targetData[i * NUM + 0] += v['vertices'][i * 3 + 0] * 0.5
+                        targetData[i * NUM + 1] += v['vertices'][i * 3 + 1] * 0.5
+                        targetData[i * NUM + 2] += v['vertices'][i * 3 + 2] * 0.5
                     }
                 });
                 tMesh['geometry']['interleaveBuffer'].upload(targetData)
