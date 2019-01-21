@@ -32,11 +32,12 @@
                 // 씬 생성
                 tScene = RedScene(redGL);
                 // 카메라 생성
-                tController = RedObitController(redGL);
-                tController.pan = 25;
-                tController.tilt = -15;
-                tController.distance = 5;
-                tController.speedDistance = 0.1;
+                tController = RedCamera()
+                // tController = RedObitController(redGL);
+                // tController.pan = 25;
+                // tController.tilt = -15;
+                // tController.distance = 5;
+                // tController.speedDistance = 0.1;
                 // 렌더러 생성
                 tRenderer = RedRenderer();
                 // 뷰생성 및 적용
@@ -60,6 +61,11 @@
                 testDLight.y = 2
                 testDLight.z = 3
                 tScene.addLight(testDLight);
+                testDLight = RedDirectionalLight(redGL)
+                testDLight.x = 3
+                testDLight.y = 2
+                testDLight.z = -3
+                tScene.addLight(testDLight);
                 tShadow = RedDirectionalShadow(redGL, testDLight)
                 tScene.shadowManager.directionalShadow = tShadow
                 tShadow.size = 500
@@ -68,6 +74,23 @@
                     testDLight.x = Math.sin(time / 1500) * 1250
                     testDLight.y = 3500
                     testDLight.z = Math.cos(time / 1500) * 1250
+
+                    var tCamera = tView.camera
+                    var cameraMesh = tCamera['_cameraMesh']
+                    var targetMesh = tCamera['_targetMesh']
+                    var parentMesh = tCamera['_parentMesh']
+                    if (cameraMesh) {
+                        tCamera.autoUpdateMatrix = false
+                        tCamera.x = targetMesh.localToWorld(0, 0, 0)[0]
+                        tCamera.y = targetMesh.localToWorld(0, 0, 0)[1]
+                        tCamera.z = targetMesh.localToWorld(0, 0, 0)[2]
+                        tCamera.lookAt(
+                            targetMesh.localToWorld(0, 0, -0.1)[0],
+                            targetMesh.localToWorld(0, 0, -0.1)[1],
+                            targetMesh.localToWorld(0, 0, -0.1)[2]
+                        )
+
+                    }
                 });
                 // 렌더 디버거 활성화
                 tRenderer.setDebugButton();
@@ -79,6 +102,8 @@
             // GLTF 로딩
             RedGLTFLoader(this, 'https://cdn.rawgit.com/KhronosGroup/glTF-Blender-Exporter/0e23c773bf27dad67d2c25f060370d6fa012d87d/polly/', 'project_polly.gltf', function (v) {
                 tScene.addChild(v['resultMesh'])
+                tView.camera = v['parsingResult']['cameras'][1]
+                tView.camera.nearClipping = 0.1
             })
         } else {
             console.log('초기화 실패!')
