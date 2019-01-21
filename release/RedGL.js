@@ -2561,7 +2561,7 @@ var RedGL;
         if (!doNotPrepareProgram) {
             // 무거운놈만 먼저 해둘까...
             RedPBRMaterial_System(this);
-            // RedStandardMaterial(this, this['_datas']['emptyTexture']['2d']);
+            RedStandardMaterial(this, this['_datas']['emptyTexture']['2d']);
             RedEnvironmentMaterial(this, null, this['_datas']['emptyTexture']['3d']);
         }
         ///////////////////////////////////////
@@ -4675,6 +4675,7 @@ var RedInterleaveInfo;
 "use strict";
 var RedBaseMaterial;
 (function () {
+    var prepareNum = 0
     /**DOC:
      {
 		 constructorYn : true,
@@ -4739,6 +4740,8 @@ var RedBaseMaterial;
                     if (!programList[tSpaceName]) programList[tSpaceName] = {};
                     if (!programList[tSpaceName][programName]) programList[tSpaceName][programName] = new makePrepareProgram(redGL, programList, programName, vSource, fSource, systemOptionList);
                     // else console.log('중복', programName)
+                    // var newList = systemOptionList.concat();
+                    // newList.splice(index, 1);
                     var newList = systemOptionList.concat();
                     newList.splice(index, 1);
                     // console.log('newList', newList)
@@ -4749,20 +4752,77 @@ var RedBaseMaterial;
             makeOptionProgram = function (programList, spaceName, programName, redGL, vSource, fSource, systemOptionList, programOptionList) {
                 programOptionList = programOptionList || [];
                 // console.log('rootName', rootName, list)
-                programOptionList.forEach(function (key, index) {
-                    // console.log(key)
-                    var tOptionName = programOptionList.join('_');
-                    // console.log('tOptionName', tOptionName)
-                    if (!programList['basic'][programName + '_' + tOptionName]) programList['basic'][programName + '_' + tOptionName] = new makePrepareProgram(redGL, programList, programName, vSource, fSource, null, programOptionList);
-                    if (!programList[spaceName][programName + '_' + tOptionName]) programList[spaceName][programName + '_' + tOptionName] = new makePrepareProgram(redGL, programList, programName, vSource, fSource, systemOptionList, programOptionList);
-                    // else console.log('중복', programName)
-                    var newList = programOptionList.concat();
-                    newList.splice(index, 1);
-                    // console.log('newList', newList)
-                    makeOptionProgram(programList, spaceName, programName, redGL, vSource, fSource, systemOptionList, newList);
+                // programOptionList.forEach(function (key, index) {
+                //     // console.log(key)
+                //     var tOptionName = programOptionList.join('_');
+                //     // console.log('tOptionName', tOptionName)
+                //     if (!programList['basic'][programName + '_' + tOptionName]) programList['basic'][programName + '_' + tOptionName] = new makePrepareProgram(redGL, programList, programName, vSource, fSource, null, programOptionList);
+                //     if (!programList[spaceName][programName + '_' + tOptionName]) programList[spaceName][programName + '_' + tOptionName] = new makePrepareProgram(redGL, programList, programName, vSource, fSource, systemOptionList, programOptionList);
+                //     // else console.log('중복', programName)
+                //     var newList = programOptionList.concat();
+                //     newList.splice(index, 1);
+                //     // console.log('newList', newList)
+                //     makeOptionProgram(programList, spaceName, programName, redGL, vSource, fSource, systemOptionList, newList);
+                // })
+                function k_combinations(set, k) {
+                    var i, j, combs, head, tailcombs;
+                    // There is no way to take e.g. sets of 5 elements from
+                    // a set of 4.
+                    if (k > set.length || k <= 0) {
+                        return [];
+                    }
+
+                    // K-sized set has only one K-sized subset.
+                    if (k == set.length) {
+                        return [set];
+                    }
+
+                    // There is N 1-sized subsets in a N-sized set.
+                    if (k == 1) {
+                        combs = [];
+                        for (i = 0; i < set.length; i++) {
+                            combs.push([set[i]]);
+                        }
+                        return combs;
+                    }
+                    combs = [];
+                    for (i = 0; i < set.length - k + 1; i++) {
+                        // head is a list that includes only our current element.
+                        head = set.slice(i, i + 1);
+                        // We take smaller combinations from the subsequent elements
+                        tailcombs = k_combinations(set.slice(i + 1), k - 1);
+                        // For each (k-1)-combination we join it with the current
+                        // and store it to the set of k-combinations.
+                        for (j = 0; j < tailcombs.length; j++) {
+                            combs.push(head.concat(tailcombs[j]));
+                        }
+                    }
+                    return combs;
+                }
+                function combinations(set) {
+                    var k, i, combs, k_combs;
+                    combs = [];
+                    for (k = 1; k <= set.length; k++) {
+                        k_combs = k_combinations(set, k);
+                        for (i = 0; i < k_combs.length; i++) {
+                            combs.push(k_combs[i]);
+                        }
+                    }
+                    return combs;
+                }
+                // console.log('combinations(programOptionList)',combinations(programOptionList))
+                var tList = combinations(programOptionList)
+
+                tList.forEach(function (v) {
+                    var tOptionName = v.join('_');
+                    if (!programList['basic'][programName + '_' + tOptionName]) programList['basic'][programName + '_' + tOptionName] = new makePrepareProgram(redGL, programList, programName, vSource, fSource, null, v);
+                    if (!programList[spaceName][programName + '_' + tOptionName]) programList[spaceName][programName + '_' + tOptionName] = new makePrepareProgram(redGL, programList, programName, vSource, fSource, systemOptionList, v);
+
                 })
+
             };
             makePrepareProgram = function (redGL, programList, programName, vSource, fSource, systemKey, optionKey) {
+                prepareNum++
                 optionKey = optionKey || [];
                 this['optionList'] = optionKey.concat(systemKey || []);
                 this['systemKey'] = (systemKey || ['basic']).join('_');
@@ -4795,6 +4855,7 @@ var RedBaseMaterial;
                     redGL['_datas']['RedProgramGroup'][programName] = target['_programList'];
                 }
                 target['program'] = target['_programList']['basic'][programName];
+                console.log('prepareNum',prepareNum)
             }
         })(),
         _searchProgram: (function () {
@@ -8587,8 +8648,8 @@ var RedPBRMaterial_System;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'RedPBRMaterialSystemProgram';
-    // var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture', 'useFlatMode','useMaterialDoubleSide'];
-    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture', 'useFlatMode'];
+    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture', 'useFlatMode','useMaterialDoubleSide'];
+    // var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture', 'useFlatMode'];
     var checked;
     vSource = function () {
         /* @preserve
@@ -8727,16 +8788,11 @@ var RedPBRMaterial_System;
 
             // 노멀값 계산
             N = normalize(vVertexNormal);
-            ////#REDGL_DEFINE#useMaterialDoubleSide# vec3 fdx = dFdx(vVertexPosition.xyz);
-            ////#REDGL_DEFINE#useMaterialDoubleSide# vec3 fdy = dFdy(vVertexPosition.xyz);
-            ////#REDGL_DEFINE#useMaterialDoubleSide# vec3 faceNormal = normalize(cross(fdx,fdy));
-            ////#REDGL_DEFINE#useMaterialDoubleSide# if (dot (vVertexNormal, faceNormal) < 0.0)  N = -N;
-            if(u_useMaterialDoubleSide){
-                vec3 fdx = dFdx(vVertexPosition.xyz);
-                vec3 fdy = dFdy(vVertexPosition.xyz);
-                vec3 faceNormal = normalize(cross(fdx,fdy));
-                if (dot (vVertexNormal, faceNormal) < 0.0)  N = -N;
-            }
+            //#REDGL_DEFINE#useMaterialDoubleSide# vec3 fdx = dFdx(vVertexPosition.xyz);
+            //#REDGL_DEFINE#useMaterialDoubleSide# vec3 fdy = dFdy(vVertexPosition.xyz);
+            //#REDGL_DEFINE#useMaterialDoubleSide# vec3 faceNormal = normalize(cross(fdx,fdy));
+            //#REDGL_DEFINE#useMaterialDoubleSide# if (dot (vVertexNormal, faceNormal) < 0.0)  N = -N;
+
 
             vec4 normalColor = vec4(0.0);
             //#REDGL_DEFINE#normalTexture# normalColor = texture2D(u_normalTexture, u_normalTexCoord);
@@ -8876,7 +8932,7 @@ var RedPBRMaterial_System;
             roughnessTexture
         );
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedPBRMaterial_System : RedGL Instance만 허용.', redGL);
-        this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource, PROGRAM_OPTION_LIST);
+        this.makeProgramList(this, redGL, PROGRAM_NAME, RedGLUtil.getStrFromComment(vSource.toString()), RedGLUtil.getStrFromComment(fSource.toString()), PROGRAM_OPTION_LIST);
         /////////////////////////////////////////
         // 유니폼 프로퍼티
         this['diffuseTexture'] = diffuseTexture;
@@ -23284,4 +23340,4 @@ var RedGLOffScreen;
         }
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-01-19 19:56:17)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-01-21 12:23:40)' };console.log(RedGL_VERSION);

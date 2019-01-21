@@ -3,8 +3,8 @@ var RedPBRMaterial_System;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'RedPBRMaterialSystemProgram';
-    // var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture', 'useFlatMode','useMaterialDoubleSide'];
-    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture', 'useFlatMode'];
+    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture', 'useFlatMode','useMaterialDoubleSide'];
+    // var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture', 'useFlatMode'];
     var checked;
     vSource = function () {
         /* @preserve
@@ -143,16 +143,11 @@ var RedPBRMaterial_System;
 
             // 노멀값 계산
             N = normalize(vVertexNormal);
-            ////#REDGL_DEFINE#useMaterialDoubleSide# vec3 fdx = dFdx(vVertexPosition.xyz);
-            ////#REDGL_DEFINE#useMaterialDoubleSide# vec3 fdy = dFdy(vVertexPosition.xyz);
-            ////#REDGL_DEFINE#useMaterialDoubleSide# vec3 faceNormal = normalize(cross(fdx,fdy));
-            ////#REDGL_DEFINE#useMaterialDoubleSide# if (dot (vVertexNormal, faceNormal) < 0.0)  N = -N;
-            if(u_useMaterialDoubleSide){
-                vec3 fdx = dFdx(vVertexPosition.xyz);
-                vec3 fdy = dFdy(vVertexPosition.xyz);
-                vec3 faceNormal = normalize(cross(fdx,fdy));
-                if (dot (vVertexNormal, faceNormal) < 0.0)  N = -N;
-            }
+            //#REDGL_DEFINE#useMaterialDoubleSide# vec3 fdx = dFdx(vVertexPosition.xyz);
+            //#REDGL_DEFINE#useMaterialDoubleSide# vec3 fdy = dFdy(vVertexPosition.xyz);
+            //#REDGL_DEFINE#useMaterialDoubleSide# vec3 faceNormal = normalize(cross(fdx,fdy));
+            //#REDGL_DEFINE#useMaterialDoubleSide# if (dot (vVertexNormal, faceNormal) < 0.0)  N = -N;
+
 
             vec4 normalColor = vec4(0.0);
             //#REDGL_DEFINE#normalTexture# normalColor = texture2D(u_normalTexture, u_normalTexCoord);
@@ -292,7 +287,7 @@ var RedPBRMaterial_System;
             roughnessTexture
         );
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedPBRMaterial_System : RedGL Instance만 허용.', redGL);
-        this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource, PROGRAM_OPTION_LIST);
+        this.makeProgramList(this, redGL, PROGRAM_NAME, RedGLUtil.getStrFromComment(vSource.toString()), RedGLUtil.getStrFromComment(fSource.toString()), PROGRAM_OPTION_LIST);
         /////////////////////////////////////////
         // 유니폼 프로퍼티
         this['diffuseTexture'] = diffuseTexture;

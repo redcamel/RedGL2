@@ -192,7 +192,7 @@ var RedGL;
         if (!doNotPrepareProgram) {
             // 무거운놈만 먼저 해둘까...
             RedPBRMaterial_System(this);
-            // RedStandardMaterial(this, this['_datas']['emptyTexture']['2d']);
+            RedStandardMaterial(this, this['_datas']['emptyTexture']['2d']);
             RedEnvironmentMaterial(this, null, this['_datas']['emptyTexture']['3d']);
         }
         ///////////////////////////////////////
