@@ -8781,9 +8781,10 @@ var RedPBRMaterial_System;
             //#REDGL_DEFINE#roughnessTexture# tRoughnessPower *= roughnessColor.g; // 거칠기 산출 roughnessColor.g
 
             // diffuse 색상 산출
-            texelColor = u_useVertexColor_0 ? vVertexColor_0 * uBaseColorFactor : uBaseColorFactor;
+            texelColor = u_useVertexColor_0 ? clamp(vVertexColor_0,0.0,1.0) * uBaseColorFactor : uBaseColorFactor;
             //#REDGL_DEFINE#diffuseTexture# texelColor *= texture2D(u_diffuseTexture, u_diffuseTexCoord);
             //#REDGL_DEFINE#diffuseTexture# texelColor.rgb *= texelColor.a;
+
 
             // 노멀값 계산
             N = normalize(vVertexNormal);
@@ -13031,18 +13032,18 @@ var RedGLTFLoader;
                 // console.log('tAlphaCutoff', tAlphaCutoff)
                 switch (tAlphaMode) {
                     // TODO
-                    case 'OPAQUE' :
-                        tMesh.useBlendMode = false
-                        break
+
                     case 'BLEND' :
                         tMesh['useTransparentSort'] = true
                         break
                     case 'MASK' :
+                        tMesh.useBlendMode = false
                         tMesh['useTransparentSort'] = true
                         tMaterial.cutOff = tAlphaCutoff
                         break
                     default :
                         tMesh.useBlendMode = false
+                        tMaterial._cutOff = -0.1
                     // tMesh.useBlendMode = false
                 }
                 if (verticesColor_0.length) tMaterial.useVertexColor_0 = true
@@ -23546,4 +23547,4 @@ var RedGLOffScreen;
         }
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-01-21 22:12:10)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-01-26 20:12:37)' };console.log(RedGL_VERSION);
