@@ -1646,18 +1646,18 @@ var RedGLTFLoader;
                 // console.log('tAlphaCutoff', tAlphaCutoff)
                 switch (tAlphaMode) {
                     // TODO
-                    case 'OPAQUE' :
-                        tMesh.useBlendMode = false
-                        break
+
                     case 'BLEND' :
                         tMesh['useTransparentSort'] = true
                         break
                     case 'MASK' :
+                        tMesh.useBlendMode = false
                         tMesh['useTransparentSort'] = true
                         tMaterial.cutOff = tAlphaCutoff
                         break
                     default :
                         tMesh.useBlendMode = false
+                        tMaterial._cutOff = -0.1
                     // tMesh.useBlendMode = false
                 }
                 if (verticesColor_0.length) tMaterial.useVertexColor_0 = true
