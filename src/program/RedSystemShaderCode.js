@@ -23,7 +23,8 @@ var RedSystemShaderCode;
         console.log('tDETECT', tDETECT);
         // 버텍스 쉐이더에 100개의 유니폼 벡터 정의를 남겨둔다.;;
         var maxJoint;
-        maxJoint = parseInt(Math.floor(Math.min((tDETECT.vertexShader.MAX_VERTEX_UNIFORM_VECTORS-64)/8, 256)))
+        maxJoint = parseInt(Math.floor(Math.min((tDETECT.vertexShader.MAX_VERTEX_UNIFORM_VECTORS - 64) / 8, 128)))
+        maxPointLight = parseInt(Math.floor(Math.min((tDETECT.fragmentShader.MAX_FRAGMENT_UNIFORM_VECTORS - 64) / 4, 128)))
         console.log('maxJoint', maxJoint)
         // if (RedGLDetect.BROWSER_INFO.browser == 'ie' && RedGLDetect.BROWSER_INFO.browserVer == 11) maxJoint = 50
         // else if (RedGLDetect.BROWSER_INFO.browser == 'iphone' || RedGLDetect.BROWSER_INFO.browser == 'ipad') maxJoint = 8
@@ -248,7 +249,7 @@ var RedSystemShaderCode;
                         '          if(lambertTerm > 0.0){',
                         '             ld += uPointLightColorList[i] * texelColor * lambertTerm * attenuation * uPointLightIntensityList[i] ;',
                         '             specular = pow( max(dot( reflect(L, N), -N), 0.0), shininess) * specularPower * specularTextureValue;',
-                        '             ls +=  specularLightColor * specular * uPointLightIntensityList[i]  * uPointLightColorList[i].a ;',
+                        '             ls +=  specularLightColor * specular  * uPointLightIntensityList[i]  * uPointLightColorList[i].a ;',
                         '          }',
                         '      }',
                         '   }',
@@ -363,9 +364,10 @@ var RedSystemShaderCode;
         var tVertexUniform = [];
         var tVertexVecNum = 0
         var testMap = {
-            bool: 1, float: 1, int: 1, uint: 1,
-            vec2: 2, vec3: 3, vec4: 4,
-            mat2: 4, mat3: 9, mat4: 16
+            bool: 4, float: 4, int: 4, uint: 4,
+            sampler2D: 4, samplerCube: 4,
+            vec2: 4, vec3: 4, vec4: 4,
+            mat2: 4, mat3: 8, mat4: 16
         }
         console.log('RedSystemShaderCode.vertexShareDeclare', RedSystemShaderCode.vertexShareDeclare)
         RedSystemShaderCode.vertexShareDeclare.forEach(function (v) {
@@ -381,12 +383,29 @@ var RedSystemShaderCode;
                 }
                 tVertexUniform.push(tInfo)
                 tVertexVecNum += tNum
-
-
             }
         });
         console.log('tVertexUniform', tVertexUniform)
         console.log('tVertexVecNum', tVertexVecNum / 4)
+        tVertexUniform = []
+        tVertexVecNum = 0
+        RedSystemShaderCode.fragmentShareDeclare.forEach(function (v) {
+            v = v.split(' ')
+            console.log(v[0])
+            if (v[0] == 'uniform') {
+                var tNum;
+                var tInfo;
+                tInfo = {
+                    value: v,
+                    type: v[1],
+                    num: tNum = v[2].indexOf('[') > -1 ? +(v[2].split('[')[1].replace(']', '')) * testMap[v[1]] : testMap[v[1]]
+                }
+                tVertexUniform.push(tInfo)
+                tVertexVecNum += tNum
+            }
+        });
+        console.log('tFragmentUniform', tVertexUniform)
+        console.log('tFragmentVecNum', tVertexVecNum / 4)
 
         console.log(RedSystemShaderCode)
         Object.freeze(RedSystemShaderCode)
