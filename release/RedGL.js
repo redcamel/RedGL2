@@ -8649,7 +8649,7 @@ var RedPBRMaterial_System;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'RedPBRMaterialSystemProgram';
-    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture', 'useFlatMode', 'useMaterialDoubleSide'];
+    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture', 'useFlatMode', 'useMaterialDoubleSide','useVertexTangent','useVertexColor_0'];
     // var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture', 'useFlatMode'];
     var checked;
     vSource = function () {
@@ -8659,14 +8659,17 @@ var RedPBRMaterial_System;
 
             // Sprite3D
             //#REDGL_DEFINE#vertexShareFunc#getSprite3DMatrix#
-            attribute vec4 aVertexColor_0;
-            varying vec4 vVertexColor_0;
+            //#REDGL_DEFINE#useVertexColor_0# attribute vec4 aVertexColor_0;
+            //#REDGL_DEFINE#useVertexColor_0# varying vec4 vVertexColor_0;
+            //#REDGL_DEFINE#useVertexTangent# attribute vec4 aVertexTangent;
+            //#REDGL_DEFINE#useVertexTangent# varying vec4 vVertexTangent;
             void main(void) {
                 gl_PointSize = uPointSize;
                 // UV설정
                 vTexcoord = aTexcoord;
                 vTexcoord1 = aTexcoord1;
-                vVertexColor_0 = aVertexColor_0;
+                //#REDGL_DEFINE#useVertexColor_0# vVertexColor_0 = aVertexColor_0;
+                //#REDGL_DEFINE#useVertexTangent# vVertexTangent = aVertexTangent;
                 // normal 계산
                //#REDGL_DEFINE#skin#true# vVertexNormal = (uNMatrix * getSkinMatrix() * vec4(aVertexNormal,0.0)).xyz;
                //#REDGL_DEFINE#skin#false# vVertexNormal = (uNMatrix *  vec4(aVertexNormal,1.0)).xyz;
@@ -8706,7 +8709,8 @@ var RedPBRMaterial_System;
 
 		//#REDGL_DEFINE#fragmentShareFunc#getPerturbNormal2Arb#
 
-        varying vec4 vVertexColor_0;
+        //#REDGL_DEFINE#useVertexColor_0# varying vec4 vVertexColor_0;
+        //#REDGL_DEFINE#useVertexTangent# varying vec4 vVertexTangent;
          uniform vec4 uBaseColorFactor;
          uniform vec3 uEmissiveFactor;
          uniform float u_cutOff;
@@ -8734,7 +8738,6 @@ var RedPBRMaterial_System;
         uniform int u_roughnessTexCoordIndex;
         uniform int u_normalTexCoordIndex;
 
-        uniform bool u_useVertexColor_0;
 
 
 
@@ -8782,7 +8785,11 @@ var RedPBRMaterial_System;
             //#REDGL_DEFINE#roughnessTexture# tRoughnessPower *= roughnessColor.g; // 거칠기 산출 roughnessColor.g
 
             // diffuse 색상 산출
-            texelColor = u_useVertexColor_0 ? clamp(vVertexColor_0,0.0,1.0) * uBaseColorFactor : uBaseColorFactor;
+
+            texelColor = uBaseColorFactor;
+            //#REDGL_DEFINE#useVertexColor_0# texelColor *= clamp(vVertexColor_0,0.0,1.0) ;
+
+
             //#REDGL_DEFINE#diffuseTexture# texelColor *= texture2D(u_diffuseTexture, u_diffuseTexCoord);
             //#REDGL_DEFINE#diffuseTexture# texelColor.rgb *= texelColor.a;
 
@@ -8799,6 +8806,19 @@ var RedPBRMaterial_System;
             //#REDGL_DEFINE#normalTexture# normalColor = texture2D(u_normalTexture, u_normalTexCoord);
             //#REDGL_DEFINE#normalTexture# N = getPerturbNormal2Arb(vVertexPosition.xyz, N, normalColor, u_normalTexCoord) ;
             //#REDGL_DEFINE#useFlatMode# N = getFlatNormal(vVertexPosition.xyz);
+
+
+            //#REDGL_DEFINE#useVertexTangent# //#REDGL_DEFINE#normalTexture# vec3 pos_dx = dFdx(vVertexPosition.xyz);
+            //#REDGL_DEFINE#useVertexTangent# //#REDGL_DEFINE#normalTexture# vec3 pos_dy = dFdy(vVertexPosition.xyz);
+            //#REDGL_DEFINE#useVertexTangent# //#REDGL_DEFINE#normalTexture# vec3 tex_dx = dFdx(vec3(u_normalTexCoord, 0.0));
+            //#REDGL_DEFINE#useVertexTangent# //#REDGL_DEFINE#normalTexture# vec3 tex_dy = dFdy(vec3(u_normalTexCoord, 0.0));
+            //#REDGL_DEFINE#useVertexTangent# //#REDGL_DEFINE#normalTexture# vec3 t = (tex_dy.t * pos_dx - tex_dx.t * pos_dy) / (tex_dx.s * tex_dy.t - tex_dy.s * tex_dx.t);
+            //#REDGL_DEFINE#useVertexTangent# //#REDGL_DEFINE#normalTexture# vec3 ng = normalize(vVertexNormal);
+            //#REDGL_DEFINE#useVertexTangent# //#REDGL_DEFINE#normalTexture# t = normalize(t - ng * dot(ng, t));
+            //#REDGL_DEFINE#useVertexTangent# //#REDGL_DEFINE#normalTexture# vec3 b = normalize(cross(ng, t));
+            //#REDGL_DEFINE#useVertexTangent# //#REDGL_DEFINE#normalTexture# mat3 tbn = mat3(t, b, ng);
+            //#REDGL_DEFINE#useVertexTangent# //#REDGL_DEFINE#normalTexture# N = normalize(tbn * ((2.0 * normalColor.rgb - 1.0) * vec3(1.0, 1.0 * vVertexTangent.w,1.0)));
+
 
 
             // 환경맵 계산
@@ -8955,7 +8975,6 @@ var RedPBRMaterial_System;
         this['roughnessTexCoordIndex'] = 0;
         this['normalTexCoordIndex'] = 0
 
-        this['useVertexColor_0'] = false;
         this['occlusionPower'] = 1;
         this['baseColorFactor'] = null
         this['emissiveFactor'] = null;
@@ -8965,7 +8984,10 @@ var RedPBRMaterial_System;
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['useMaterialDoubleSide'] = false
+        this['useVertexColor_0'] = false
+
         this['useFlatMode'] = false
+        this['useVertexTangent'] = false
         this['_UUID'] = RedGL.makeUUID();
         if (!checked) {
             this.checkUniformAndProperty();
@@ -9143,6 +9165,7 @@ var RedPBRMaterial_System;
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'useVertexColor_0', 'boolean', samplerOption);
+    RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'useVertexTangent', 'boolean', samplerOption);
 
     Object.freeze(RedPBRMaterial_System);
 })();
@@ -12543,7 +12566,7 @@ var RedGLTFLoader;
             // console.log("this['bufferView']['byteOffset']", this['bufferView']['byteOffset'])
             // console.log("this['accessor']['byteOffset']", this['accessor']['byteOffset'])
         }
-        var parseAttributeInfo = function (redGLTFLoader, json, key, accessorInfo, vertices, uvs, uvs1, normals, jointWeights, joints, verticesColor_0) {
+        var parseAttributeInfo = function (redGLTFLoader, json, key, accessorInfo, vertices, uvs, uvs1, normals, jointWeights, joints, verticesColor_0, tangents) {
             var tBYTES_PER_ELEMENT = accessorInfo['componentType_BYTES_PER_ELEMENT'];
             var tBufferViewByteStride = accessorInfo['bufferViewByteStride'];
             var tBufferURIDataView = accessorInfo['bufferURIDataView'];
@@ -12563,7 +12586,7 @@ var RedGLTFLoader;
                                 if (key == 'WEIGHTS_0') jointWeights.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                                 else if (key == 'JOINTS_0') joints.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                                 else if (key == 'COLOR_0') verticesColor_0.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-                                // else if ( key == 'TANGENT' ) tangents.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+                                else if (key == 'TANGENT') tangents.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                                 // else RedGLUtil.throwFunc('VEC4에서 현재 지원하고 있지 않는 키', key)
                             }
                             strideIndex++
@@ -12574,7 +12597,7 @@ var RedGLTFLoader;
                             if (key == 'WEIGHTS_0') jointWeights.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                             else if (key == 'JOINTS_0') joints.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                             else if (key == 'COLOR_0') verticesColor_0.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-                            // else if ( key == 'TANGENT' ) tangents.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+                            else if (key == 'TANGENT') tangents.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                             // else RedGLUtil.throwFunc('VEC4에서 현재 지원하고 있지 않는 키', key)
                             strideIndex++
                         }
@@ -12652,7 +12675,8 @@ var RedGLTFLoader;
                         uvs: [],
                         uvs1: [],
                         jointWeights: [],
-                        joints: []
+                        joints: [],
+                        tangents: []
                     }
                     morphList.push(tMorphData)
                     for (var key in v2) {
@@ -12663,12 +12687,13 @@ var RedGLTFLoader;
                         var uvs1 = tMorphData['uvs1']
                         var jointWeights = tMorphData['jointWeights']
                         var joints = tMorphData['joints']
+                        var tangents = tMorphData['tangents']
                         var accessorIndex = v2[key]
                         var accessorInfo = new RedGLTF_AccessorInfo(redGLTFLoader, json, accessorIndex)
                         // 어트리뷰트 갈궈서 파악함
                         parseAttributeInfo(
                             redGLTFLoader, json, key, accessorInfo,
-                            vertices, uvs, uvs1, normals, jointWeights, joints, verticesColor_0
+                            vertices, uvs, uvs1, normals, jointWeights, joints, verticesColor_0, tangents
                         )
                         // 스파스 정보도 갈굼
                         if (accessorInfo['accessor']['sparse']) parseSparse(redGLTFLoader, key, accessorInfo['accessor'], json, vertices, uvs, uvs1, normals, jointWeights, joints)
@@ -12886,6 +12911,7 @@ var RedGLTFLoader;
                 var normals = []
                 var jointWeights = []
                 var joints = []
+                var tangents = []
                 var tDrawMode;
                 // console.log(v, index)
                 // 형상 파싱
@@ -12899,7 +12925,7 @@ var RedGLTFLoader;
                         // 어트리뷰트 갈궈서 파악함
                         parseAttributeInfo(
                             redGLTFLoader, json, key, accessorInfo,
-                            vertices, uvs, uvs1, normals, jointWeights, joints, verticesColor_0
+                            vertices, uvs, uvs1, normals, jointWeights, joints, verticesColor_0, tangents
                         )
                         // 스파스 정보도 갈굼
                         if (accessorInfo['accessor']['sparse']) parseSparse(redGLTFLoader, key, accessorInfo['accessor'], json, vertices, uvs, uvs1, normals, jointWeights, joints)
@@ -12976,6 +13002,8 @@ var RedGLTFLoader;
                     else if (uvs.length) interleaveData.push(uvs[i * 2 + 0], uvs[i * 2 + 1])
                     if (jointWeights.length) interleaveData.push(jointWeights[i * 4 + 0], jointWeights[i * 4 + 1], jointWeights[i * 4 + 2], jointWeights[i * 4 + 3])
                     if (joints.length) interleaveData.push(joints[i * 4 + 0], joints[i * 4 + 1], joints[i * 4 + 2], joints[i * 4 + 3])
+                    if (tangents.length) interleaveData.push(tangents[i * 4 + 0], tangents[i * 4 + 1], tangents[i * 4 + 2], tangents[i * 4 + 3])
+                    else interleaveData.push(0, 0, 0, 0)
                 }
                 // console.log('interleaveData', interleaveData)
                 /////////////////////////////////////////////////////////
@@ -12990,6 +13018,7 @@ var RedGLTFLoader;
                 else if (uvs.length) tInterleaveInfoList.push(RedInterleaveInfo('aTexcoord1', 2))
                 if (jointWeights.length) tInterleaveInfoList.push(RedInterleaveInfo('aVertexWeight', 4))
                 if (joints.length) tInterleaveInfoList.push(RedInterleaveInfo('aVertexJoint', 4))
+                tInterleaveInfoList.push(RedInterleaveInfo('aVertexTangent', 4))
                 tGeo = RedGeometry(
                     RedBuffer(
                         redGLTFLoader['redGL'],
@@ -13048,6 +13077,7 @@ var RedGLTFLoader;
                     // tMesh.useBlendMode = false
                 }
                 if (verticesColor_0.length) tMaterial.useVertexColor_0 = true
+                if (tangents.length) tMaterial.useVertexTangent = true
                 // console.log('tDoubleSide', tDoubleSide)
                 // console.log('tMesh', tMesh)
                 /////////////////////////////////////////////////////////
@@ -13072,6 +13102,9 @@ var RedGLTFLoader;
                         else if (v['uvs'].length) interleaveData.push(v['uvs'][i * 2 + 0], v['uvs'][i * 2 + 1])
                         if (v['jointWeights'].length) interleaveData.push(v['jointWeights'][i * 4 + 0], v['jointWeights'][i * 4 + 1], v['jointWeights'][i * 4 + 2], v['jointWeights'][i * 4 + 3])
                         if (v['joints'].length) interleaveData.push(v['joints'][i * 4 + 0], v['joints'][i * 4 + 1], v['joints'][i * 4 + 2], v['joints'][i * 4 + 3])
+                        if (v['tangents'].length) interleaveData.push(v['tangents'][i * 4 + 0], v['tangents'][i * 4 + 1], v['tangents'][i * 4 + 2], v['tangents'][i * 4 + 3])
+                        else interleaveData.push(0, 0, 0, 0)
+
                     }
                     v['interleaveData'] = interleaveData
                 });
@@ -13081,12 +13114,12 @@ var RedGLTFLoader;
                 /////////////////////////////////////////////////////
                 var targetData = tMesh['geometry']['interleaveBuffer']['data']
                 var NUM = 0
-                tInterleaveInfoList.forEach(function(v){
-                    NUM +=v['size']
+                tInterleaveInfoList.forEach(function (v) {
+                    NUM += v['size']
                 })
                 tMesh['_morphInfo']['list'].forEach(function (v) {
-                    console.log('tInterleaveInfoList',tInterleaveInfoList)
-                    console.log('NUM',NUM)
+                    console.log('tInterleaveInfoList', tInterleaveInfoList)
+                    console.log('NUM', NUM)
                     var i = 0, len = targetData.length / NUM
                     for (i; i < len; i++) {
                         targetData[i * NUM + 0] += v['vertices'][i * 3 + 0] * 0.5
@@ -15656,10 +15689,10 @@ var RedSystemShaderCode;
                 'attribute vec4 aVertexColor',
                 'attribute vec4 aVertexWeight',
                 'attribute vec4 aVertexJoint',
-                'attribute vec4 aVertexTangent',
+
                 'varying vec4 vVertexPosition',
                 'varying vec3 vVertexNormal',
-                'varying vec4 vVertexTangent',
+
                 'varying vec4 vVertexColor',
                 'attribute float aPointSize',
                 'uniform float uPointSize',
@@ -15702,7 +15735,7 @@ var RedSystemShaderCode;
             fragmentShareDeclare: [
                 'varying vec4 vVertexPosition',
                 'varying vec3 vVertexNormal',
-                'varying vec4 vVertexTangent',
+
                 'varying vec4 vVertexColor',
                 'varying vec2 vTexcoord',
                 'varying vec2 vTexcoord1',
@@ -23610,4 +23643,4 @@ var RedGLOffScreen;
         }
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-02-04 12:17:29)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-02-04 18:52:42)' };console.log(RedGL_VERSION);

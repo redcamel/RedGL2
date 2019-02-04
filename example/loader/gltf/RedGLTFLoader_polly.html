@@ -44,15 +44,15 @@
                 tView = RedView('HelloRedGL', redGL, tScene, tController);
                 tWorld.addView(tView);
                 // 그리드 설정
-                tScene['grid'] = RedGrid(redGL);
+                // tScene['grid'] = RedGrid(redGL);
                 tScene.skyBox =
                     RedSkyBox(redGL, [
-                        assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
-                        assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
-                        assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
-                        assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
-                        assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
-                        assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
+                        assetPath + 'cubemap/posx.png',
+                        assetPath + 'cubemap/negx.png',
+                        assetPath + 'cubemap/posy.png',
+                        assetPath + 'cubemap/negy.png',
+                        assetPath + 'cubemap/posz.png',
+                        assetPath + 'cubemap/negz.png'
                     ]);
                 // 라이트 설정
                 var testDLight;
@@ -104,7 +104,16 @@
                 tScene.addChild(v['resultMesh'])
                 tView.camera = v['parsingResult']['cameras'][1]
                 tView.camera.nearClipping = 0.1
-            })
+            },RedBitmapCubeTexture(this, // environmentTexture
+                [
+                    assetPath + 'cubemap/posx.png',
+                    assetPath + 'cubemap/negx.png',
+                    assetPath + 'cubemap/posy.png',
+                    assetPath + 'cubemap/negy.png',
+                    assetPath + 'cubemap/posz.png',
+                    assetPath + 'cubemap/negz.png'
+                ]
+            ))
         } else {
             console.log('초기화 실패!')
         }

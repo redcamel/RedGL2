@@ -384,7 +384,7 @@ baseTestUI.exampleList =  [
             },
             {
                 key: 'RedPostEffect_FXAA',
-                href: 'postEffect/RedPostEffect_FXAA.html'
+                href: 'postEffect/antialiasing/RedPostEffect_FXAA.html'
             },
             {
                 key: 'RedPostEffect_DoF',

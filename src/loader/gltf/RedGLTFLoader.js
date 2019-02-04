@@ -1156,7 +1156,7 @@ var RedGLTFLoader;
             // console.log("this['bufferView']['byteOffset']", this['bufferView']['byteOffset'])
             // console.log("this['accessor']['byteOffset']", this['accessor']['byteOffset'])
         }
-        var parseAttributeInfo = function (redGLTFLoader, json, key, accessorInfo, vertices, uvs, uvs1, normals, jointWeights, joints, verticesColor_0) {
+        var parseAttributeInfo = function (redGLTFLoader, json, key, accessorInfo, vertices, uvs, uvs1, normals, jointWeights, joints, verticesColor_0, tangents) {
             var tBYTES_PER_ELEMENT = accessorInfo['componentType_BYTES_PER_ELEMENT'];
             var tBufferViewByteStride = accessorInfo['bufferViewByteStride'];
             var tBufferURIDataView = accessorInfo['bufferURIDataView'];
@@ -1176,7 +1176,7 @@ var RedGLTFLoader;
                                 if (key == 'WEIGHTS_0') jointWeights.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                                 else if (key == 'JOINTS_0') joints.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                                 else if (key == 'COLOR_0') verticesColor_0.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-                                // else if ( key == 'TANGENT' ) tangents.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+                                else if (key == 'TANGENT') tangents.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                                 // else RedGLUtil.throwFunc('VEC4에서 현재 지원하고 있지 않는 키', key)
                             }
                             strideIndex++
@@ -1187,7 +1187,7 @@ var RedGLTFLoader;
                             if (key == 'WEIGHTS_0') jointWeights.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                             else if (key == 'JOINTS_0') joints.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                             else if (key == 'COLOR_0') verticesColor_0.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-                            // else if ( key == 'TANGENT' ) tangents.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+                            else if (key == 'TANGENT') tangents.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                             // else RedGLUtil.throwFunc('VEC4에서 현재 지원하고 있지 않는 키', key)
                             strideIndex++
                         }
@@ -1265,7 +1265,8 @@ var RedGLTFLoader;
                         uvs: [],
                         uvs1: [],
                         jointWeights: [],
-                        joints: []
+                        joints: [],
+                        tangents: []
                     }
                     morphList.push(tMorphData)
                     for (var key in v2) {
@@ -1276,12 +1277,13 @@ var RedGLTFLoader;
                         var uvs1 = tMorphData['uvs1']
                         var jointWeights = tMorphData['jointWeights']
                         var joints = tMorphData['joints']
+                        var tangents = tMorphData['tangents']
                         var accessorIndex = v2[key]
                         var accessorInfo = new RedGLTF_AccessorInfo(redGLTFLoader, json, accessorIndex)
                         // 어트리뷰트 갈궈서 파악함
                         parseAttributeInfo(
                             redGLTFLoader, json, key, accessorInfo,
-                            vertices, uvs, uvs1, normals, jointWeights, joints, verticesColor_0
+                            vertices, uvs, uvs1, normals, jointWeights, joints, verticesColor_0, tangents
                         )
                         // 스파스 정보도 갈굼
                         if (accessorInfo['accessor']['sparse']) parseSparse(redGLTFLoader, key, accessorInfo['accessor'], json, vertices, uvs, uvs1, normals, jointWeights, joints)
@@ -1499,6 +1501,7 @@ var RedGLTFLoader;
                 var normals = []
                 var jointWeights = []
                 var joints = []
+                var tangents = []
                 var tDrawMode;
                 // console.log(v, index)
                 // 형상 파싱
@@ -1512,7 +1515,7 @@ var RedGLTFLoader;
                         // 어트리뷰트 갈궈서 파악함
                         parseAttributeInfo(
                             redGLTFLoader, json, key, accessorInfo,
-                            vertices, uvs, uvs1, normals, jointWeights, joints, verticesColor_0
+                            vertices, uvs, uvs1, normals, jointWeights, joints, verticesColor_0, tangents
                         )
                         // 스파스 정보도 갈굼
                         if (accessorInfo['accessor']['sparse']) parseSparse(redGLTFLoader, key, accessorInfo['accessor'], json, vertices, uvs, uvs1, normals, jointWeights, joints)
@@ -1589,6 +1592,8 @@ var RedGLTFLoader;
                     else if (uvs.length) interleaveData.push(uvs[i * 2 + 0], uvs[i * 2 + 1])
                     if (jointWeights.length) interleaveData.push(jointWeights[i * 4 + 0], jointWeights[i * 4 + 1], jointWeights[i * 4 + 2], jointWeights[i * 4 + 3])
                     if (joints.length) interleaveData.push(joints[i * 4 + 0], joints[i * 4 + 1], joints[i * 4 + 2], joints[i * 4 + 3])
+                    if (tangents.length) interleaveData.push(tangents[i * 4 + 0], tangents[i * 4 + 1], tangents[i * 4 + 2], tangents[i * 4 + 3])
+                    else interleaveData.push(0, 0, 0, 0)
                 }
                 // console.log('interleaveData', interleaveData)
                 /////////////////////////////////////////////////////////
@@ -1603,6 +1608,7 @@ var RedGLTFLoader;
                 else if (uvs.length) tInterleaveInfoList.push(RedInterleaveInfo('aTexcoord1', 2))
                 if (jointWeights.length) tInterleaveInfoList.push(RedInterleaveInfo('aVertexWeight', 4))
                 if (joints.length) tInterleaveInfoList.push(RedInterleaveInfo('aVertexJoint', 4))
+                tInterleaveInfoList.push(RedInterleaveInfo('aVertexTangent', 4))
                 tGeo = RedGeometry(
                     RedBuffer(
                         redGLTFLoader['redGL'],
@@ -1661,6 +1667,7 @@ var RedGLTFLoader;
                     // tMesh.useBlendMode = false
                 }
                 if (verticesColor_0.length) tMaterial.useVertexColor_0 = true
+                if (tangents.length) tMaterial.useVertexTangent = true
                 // console.log('tDoubleSide', tDoubleSide)
                 // console.log('tMesh', tMesh)
                 /////////////////////////////////////////////////////////
@@ -1685,6 +1692,9 @@ var RedGLTFLoader;
                         else if (v['uvs'].length) interleaveData.push(v['uvs'][i * 2 + 0], v['uvs'][i * 2 + 1])
                         if (v['jointWeights'].length) interleaveData.push(v['jointWeights'][i * 4 + 0], v['jointWeights'][i * 4 + 1], v['jointWeights'][i * 4 + 2], v['jointWeights'][i * 4 + 3])
                         if (v['joints'].length) interleaveData.push(v['joints'][i * 4 + 0], v['joints'][i * 4 + 1], v['joints'][i * 4 + 2], v['joints'][i * 4 + 3])
+                        if (v['tangents'].length) interleaveData.push(v['tangents'][i * 4 + 0], v['tangents'][i * 4 + 1], v['tangents'][i * 4 + 2], v['tangents'][i * 4 + 3])
+                        else interleaveData.push(0, 0, 0, 0)
+
                     }
                     v['interleaveData'] = interleaveData
                 });
@@ -1694,12 +1704,12 @@ var RedGLTFLoader;
                 /////////////////////////////////////////////////////
                 var targetData = tMesh['geometry']['interleaveBuffer']['data']
                 var NUM = 0
-                tInterleaveInfoList.forEach(function(v){
-                    NUM +=v['size']
+                tInterleaveInfoList.forEach(function (v) {
+                    NUM += v['size']
                 })
                 tMesh['_morphInfo']['list'].forEach(function (v) {
-                    console.log('tInterleaveInfoList',tInterleaveInfoList)
-                    console.log('NUM',NUM)
+                    console.log('tInterleaveInfoList', tInterleaveInfoList)
+                    console.log('NUM', NUM)
                     var i = 0, len = targetData.length / NUM
                     for (i; i < len; i++) {
                         targetData[i * NUM + 0] += v['vertices'][i * 3 + 0] * 0.5
