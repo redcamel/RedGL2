@@ -186,18 +186,19 @@ var RedGL;
         else return callback ? callback.call(self, tGL ? true : false) : 0;
         //
         this['_UUID'] = RedGL.makeUUID();
-        if (RedSystemShaderCode['init']) RedSystemShaderCode.init();
-        ///////////////////////////////////////
-        setEmptyTextures(this, tGL); // 빈텍스쳐를 미리 체워둔다.
-        if (!doNotPrepareProgram) {
-            // 무거운놈만 먼저 해둘까...
-            RedPBRMaterial_System(this);
-            RedStandardMaterial(this, this['_datas']['emptyTexture']['2d']);
-            RedEnvironmentMaterial(this, null, this['_datas']['emptyTexture']['3d']);
-        }
-        ///////////////////////////////////////
-        //
+
         requestAnimationFrame(function () {
+            if (RedSystemShaderCode['init']) RedSystemShaderCode.init(self);
+            ///////////////////////////////////////
+            setEmptyTextures(self, tGL); // 빈텍스쳐를 미리 체워둔다.
+            if (!doNotPrepareProgram) {
+                // 무거운놈만 먼저 해둘까...
+                RedPBRMaterial_System(self);
+                RedStandardMaterial(self, self['_datas']['emptyTexture']['2d']);
+                RedEnvironmentMaterial(self, null, self['_datas']['emptyTexture']['3d']);
+            }
+            ///////////////////////////////////////
+            //
             window.addEventListener('resize', function () {
                 self.setSize(self['_width'], self['_height'])
             });

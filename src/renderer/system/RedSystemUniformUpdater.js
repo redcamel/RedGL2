@@ -64,48 +64,53 @@ var RedSystemUniformUpdater;
             var tScene, tCamera, tViewRect;
             var programNum = 0;
             var changedProgramNum; // 프로그램 갯수가 변했는가
-            var MAX_DIRECTIONAL_LIGHT_NUM = 3;
-            var MAX_POINT_LIGHT_NUM = 5;
+            var MAX_DIRECTIONAL_LIGHT_NUM;
+            var MAX_POINT_LIGHT_NUM;
             //
             var tCheckData;
-            checkUniformInfo = {
-                uTime: {cacheData: null, data: 0},
-                uResolution: {cacheData: null, data: new Float32Array([0, 0])},
-                u_FogDensity: {cacheData: null, data: 0},
-                uFogColor: {cacheData: null, data: new Float32Array([0, 0, 0, 0])},
-                u_FogDistance: {cacheData: null, data: 0},
-                uCameraMatrix: {cacheData: null, data: null},
-                uCameraPosition: {cacheData: null, data: new Float32Array([0, 0, 0])},
-                uPMatrix: {cacheData: null, data: null},
-                uOrthographicYn: {cacheData: null, data: false},
-                uAmbientLightColor: {cacheData: null, data: new Float32Array([0, 0, 0, 0])},
-                uAmbientIntensity: {cacheData: null, data: 1},
-                uDirectionalLightPositionList: {cacheData: null, data: []},
-                uDirectionalLightColorList: {cacheData: null, data: []},
-                uDirectionalLightIntensityList: {cacheData: null, data: []},
-                uDirectionalLightNum: {cacheData: null, data: 0},
-                uPointLightPositionList: {cacheData: null, data: []},
-                uPointLightColorList: {cacheData: null, data: []},
-                uPointLightIntensityList: {cacheData: null, data: []},
-                uPointLightRadiusList: {cacheData: null, data: []},
-                uPointLightNum: {cacheData: null, data: 0}
-            };
-            // 디렉셔널 쉐도우 관련
-            tDirectionalShadowLightPosition = new Float32Array(3);
-            tDirectionalShadowLightMatrix = new Float32Array(16);
-            tDirectionalShadowLightProjectionMatrix = new Float32Array(16);
-            // 디렉셔널 라이트 관련;
-            tDirectionalPositionList = new Float32Array(3 * MAX_DIRECTIONAL_LIGHT_NUM);
-            tDirectionalLightColorList = new Float32Array(4 * MAX_DIRECTIONAL_LIGHT_NUM);
-            tDirectionalLightIntensityList = new Float32Array(MAX_DIRECTIONAL_LIGHT_NUM);
-            // 포인트 라이트 관련
-            tPointLightPositionList = new Float32Array(3 * MAX_POINT_LIGHT_NUM);
-            tPointLightColorList = new Float32Array(4 * MAX_POINT_LIGHT_NUM);
-            tPointLightIntensityList = new Float32Array(MAX_POINT_LIGHT_NUM);
-            tPointLightRadiusList = new Float32Array(MAX_POINT_LIGHT_NUM);
+
             //
             tVector = new Float32Array(3);
             return function (redGL, redRenderer, time, tView, prevProgram_UUID, lightDebugRenderList) {
+                if(!checkUniformInfo){
+                    MAX_DIRECTIONAL_LIGHT_NUM = RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT;
+                    MAX_POINT_LIGHT_NUM = RedSystemShaderCode.MAX_POINT_LIGHT;
+                    checkUniformInfo = {
+                        uTime: {cacheData: null, data: 0},
+                        uResolution: {cacheData: null, data: new Float32Array([0, 0])},
+                        u_FogDensity: {cacheData: null, data: 0},
+                        uFogColor: {cacheData: null, data: new Float32Array([0, 0, 0, 0])},
+                        u_FogDistance: {cacheData: null, data: 0},
+                        uCameraMatrix: {cacheData: null, data: null},
+                        uCameraPosition: {cacheData: null, data: new Float32Array([0, 0, 0])},
+                        uPMatrix: {cacheData: null, data: null},
+                        uOrthographicYn: {cacheData: null, data: false},
+                        uAmbientLightColor: {cacheData: null, data: new Float32Array([0, 0, 0, 0])},
+                        uAmbientIntensity: {cacheData: null, data: 1},
+                        uDirectionalLightPositionList: {cacheData: null, data: []},
+                        uDirectionalLightColorList: {cacheData: null, data: []},
+                        uDirectionalLightIntensityList: {cacheData: null, data: []},
+                        uDirectionalLightNum: {cacheData: null, data: 0},
+                        uPointLightPositionList: {cacheData: null, data: []},
+                        uPointLightColorList: {cacheData: null, data: []},
+                        uPointLightIntensityList: {cacheData: null, data: []},
+                        uPointLightRadiusList: {cacheData: null, data: []},
+                        uPointLightNum: {cacheData: null, data: 0}
+                    };
+                    // 디렉셔널 쉐도우 관련
+                    tDirectionalShadowLightPosition = new Float32Array(3);
+                    tDirectionalShadowLightMatrix = new Float32Array(16);
+                    tDirectionalShadowLightProjectionMatrix = new Float32Array(16);
+                    // 디렉셔널 라이트 관련;
+                    tDirectionalPositionList = new Float32Array(3 * MAX_DIRECTIONAL_LIGHT_NUM);
+                    tDirectionalLightColorList = new Float32Array(4 * MAX_DIRECTIONAL_LIGHT_NUM);
+                    tDirectionalLightIntensityList = new Float32Array(MAX_DIRECTIONAL_LIGHT_NUM);
+                    // 포인트 라이트 관련
+                    tPointLightPositionList = new Float32Array(3 * MAX_POINT_LIGHT_NUM);
+                    tPointLightColorList = new Float32Array(4 * MAX_POINT_LIGHT_NUM);
+                    tPointLightIntensityList = new Float32Array(MAX_POINT_LIGHT_NUM);
+                    tPointLightRadiusList = new Float32Array(MAX_POINT_LIGHT_NUM);
+                }
                 tGL = redGL.gl;
                 tScene = tView['scene'];
                 tCamera = tView['camera'];
