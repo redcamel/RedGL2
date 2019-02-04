@@ -2555,18 +2555,19 @@ var RedGL;
         else return callback ? callback.call(self, tGL ? true : false) : 0;
         //
         this['_UUID'] = RedGL.makeUUID();
-        if (RedSystemShaderCode['init']) RedSystemShaderCode.init();
-        ///////////////////////////////////////
-        setEmptyTextures(this, tGL); // 빈텍스쳐를 미리 체워둔다.
-        if (!doNotPrepareProgram) {
-            // 무거운놈만 먼저 해둘까...
-            RedPBRMaterial_System(this);
-            RedStandardMaterial(this, this['_datas']['emptyTexture']['2d']);
-            RedEnvironmentMaterial(this, null, this['_datas']['emptyTexture']['3d']);
-        }
-        ///////////////////////////////////////
-        //
+
         requestAnimationFrame(function () {
+            if (RedSystemShaderCode['init']) RedSystemShaderCode.init(self);
+            ///////////////////////////////////////
+            setEmptyTextures(self, tGL); // 빈텍스쳐를 미리 체워둔다.
+            if (!doNotPrepareProgram) {
+                // 무거운놈만 먼저 해둘까...
+                RedPBRMaterial_System(self);
+                RedStandardMaterial(self, self['_datas']['emptyTexture']['2d']);
+                RedEnvironmentMaterial(self, null, self['_datas']['emptyTexture']['3d']);
+            }
+            ///////////////////////////////////////
+            //
             window.addEventListener('resize', function () {
                 self.setSize(self['_width'], self['_height'])
             });
@@ -15622,14 +15623,21 @@ var RedSystemShaderCode;
 	 }
      :DOC*/
     RedSystemShaderCode = {};
-    RedSystemShaderCode['init'] = function () {
+    RedSystemShaderCode['init'] = function (redGL) {
         var maxDirectionalLight = 3;
-        var maxPointLight = 5;
+        var maxPointLight = 8;
         var maxJoint;
-        if (RedGLDetect.BROWSER_INFO.browser == 'ie' && RedGLDetect.BROWSER_INFO.browserVer == 11) maxJoint = 50
-        else if (RedGLDetect.BROWSER_INFO.browser == 'iphone' || RedGLDetect.BROWSER_INFO.browser == 'ipad') maxJoint = 8
-        else maxJoint = RedGLDetect.BROWSER_INFO.isMobile ? 64 : 256
-        //TODO 조인트 맥스 갯수 찾는 부분을 분기하거나 다른 방법으로 전달할 방법 생각해야함
+        var tCTX = document.createElement('canvas')
+        tCTX = tCTX.getContext('webgl')
+        var tDETECT = redGL.detect
+        console.log('tDETECT', tDETECT);
+        // 버텍스 쉐이더에 100개의 유니폼 벡터 정의를 남겨둔다.;;
+        var maxJoint;
+        maxJoint = parseInt(Math.floor(Math.min((tDETECT.vertexShader.MAX_VERTEX_UNIFORM_VECTORS-64)/8, 256)))
+        console.log('maxJoint', maxJoint)
+        // if (RedGLDetect.BROWSER_INFO.browser == 'ie' && RedGLDetect.BROWSER_INFO.browserVer == 11) maxJoint = 50
+        // else if (RedGLDetect.BROWSER_INFO.browser == 'iphone' || RedGLDetect.BROWSER_INFO.browser == 'ipad') maxJoint = 8
+        // else maxJoint = RedGLDetect.BROWSER_INFO.isMobile ? 64 : 1024
         RedSystemShaderCode = {
             /**DOC:
              {
@@ -15849,7 +15857,7 @@ var RedSystemShaderCode;
                         '          lambertTerm = dot(N,-L);',
                         '          if(lambertTerm > 0.0){',
                         '             ld += uPointLightColorList[i] * texelColor * lambertTerm * attenuation * uPointLightIntensityList[i] ;',
-                        '             specular = pow( max(dot( reflect(L, N), -L), 0.0), shininess) * specularPower * specularTextureValue;',
+                        '             specular = pow( max(dot( reflect(L, N), -N), 0.0), shininess) * specularPower * specularTextureValue;',
                         '             ls +=  specularLightColor * specular * uPointLightIntensityList[i]  * uPointLightColorList[i].a ;',
                         '          }',
                         '      }',
@@ -15959,6 +15967,37 @@ var RedSystemShaderCode;
                 }
             })
         });
+
+        // 맥스갯수를 찾아보자..
+
+        var tVertexUniform = [];
+        var tVertexVecNum = 0
+        var testMap = {
+            bool: 1, float: 1, int: 1, uint: 1,
+            vec2: 2, vec3: 3, vec4: 4,
+            mat2: 4, mat3: 9, mat4: 16
+        }
+        console.log('RedSystemShaderCode.vertexShareDeclare', RedSystemShaderCode.vertexShareDeclare)
+        RedSystemShaderCode.vertexShareDeclare.forEach(function (v) {
+            v = v.split(' ')
+            console.log(v[0])
+            if (v[0] == 'uniform') {
+                var tNum;
+                var tInfo;
+                tInfo = {
+                    value: v,
+                    type: v[1],
+                    num: tNum = v[2].indexOf('[') > -1 ? +(v[2].split('[')[1].replace(']', '')) * testMap[v[1]] : testMap[v[1]]
+                }
+                tVertexUniform.push(tInfo)
+                tVertexVecNum += tNum
+
+
+            }
+        });
+        console.log('tVertexUniform', tVertexUniform)
+        console.log('tVertexVecNum', tVertexVecNum / 4)
+
         console.log(RedSystemShaderCode)
         Object.freeze(RedSystemShaderCode)
     };
@@ -17510,48 +17549,53 @@ var RedSystemUniformUpdater;
             var tScene, tCamera, tViewRect;
             var programNum = 0;
             var changedProgramNum; // 프로그램 갯수가 변했는가
-            var MAX_DIRECTIONAL_LIGHT_NUM = 3;
-            var MAX_POINT_LIGHT_NUM = 5;
+            var MAX_DIRECTIONAL_LIGHT_NUM;
+            var MAX_POINT_LIGHT_NUM;
             //
             var tCheckData;
-            checkUniformInfo = {
-                uTime: {cacheData: null, data: 0},
-                uResolution: {cacheData: null, data: new Float32Array([0, 0])},
-                u_FogDensity: {cacheData: null, data: 0},
-                uFogColor: {cacheData: null, data: new Float32Array([0, 0, 0, 0])},
-                u_FogDistance: {cacheData: null, data: 0},
-                uCameraMatrix: {cacheData: null, data: null},
-                uCameraPosition: {cacheData: null, data: new Float32Array([0, 0, 0])},
-                uPMatrix: {cacheData: null, data: null},
-                uOrthographicYn: {cacheData: null, data: false},
-                uAmbientLightColor: {cacheData: null, data: new Float32Array([0, 0, 0, 0])},
-                uAmbientIntensity: {cacheData: null, data: 1},
-                uDirectionalLightPositionList: {cacheData: null, data: []},
-                uDirectionalLightColorList: {cacheData: null, data: []},
-                uDirectionalLightIntensityList: {cacheData: null, data: []},
-                uDirectionalLightNum: {cacheData: null, data: 0},
-                uPointLightPositionList: {cacheData: null, data: []},
-                uPointLightColorList: {cacheData: null, data: []},
-                uPointLightIntensityList: {cacheData: null, data: []},
-                uPointLightRadiusList: {cacheData: null, data: []},
-                uPointLightNum: {cacheData: null, data: 0}
-            };
-            // 디렉셔널 쉐도우 관련
-            tDirectionalShadowLightPosition = new Float32Array(3);
-            tDirectionalShadowLightMatrix = new Float32Array(16);
-            tDirectionalShadowLightProjectionMatrix = new Float32Array(16);
-            // 디렉셔널 라이트 관련;
-            tDirectionalPositionList = new Float32Array(3 * MAX_DIRECTIONAL_LIGHT_NUM);
-            tDirectionalLightColorList = new Float32Array(4 * MAX_DIRECTIONAL_LIGHT_NUM);
-            tDirectionalLightIntensityList = new Float32Array(MAX_DIRECTIONAL_LIGHT_NUM);
-            // 포인트 라이트 관련
-            tPointLightPositionList = new Float32Array(3 * MAX_POINT_LIGHT_NUM);
-            tPointLightColorList = new Float32Array(4 * MAX_POINT_LIGHT_NUM);
-            tPointLightIntensityList = new Float32Array(MAX_POINT_LIGHT_NUM);
-            tPointLightRadiusList = new Float32Array(MAX_POINT_LIGHT_NUM);
+
             //
             tVector = new Float32Array(3);
             return function (redGL, redRenderer, time, tView, prevProgram_UUID, lightDebugRenderList) {
+                if(!checkUniformInfo){
+                    MAX_DIRECTIONAL_LIGHT_NUM = RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT;
+                    MAX_POINT_LIGHT_NUM = RedSystemShaderCode.MAX_POINT_LIGHT;
+                    checkUniformInfo = {
+                        uTime: {cacheData: null, data: 0},
+                        uResolution: {cacheData: null, data: new Float32Array([0, 0])},
+                        u_FogDensity: {cacheData: null, data: 0},
+                        uFogColor: {cacheData: null, data: new Float32Array([0, 0, 0, 0])},
+                        u_FogDistance: {cacheData: null, data: 0},
+                        uCameraMatrix: {cacheData: null, data: null},
+                        uCameraPosition: {cacheData: null, data: new Float32Array([0, 0, 0])},
+                        uPMatrix: {cacheData: null, data: null},
+                        uOrthographicYn: {cacheData: null, data: false},
+                        uAmbientLightColor: {cacheData: null, data: new Float32Array([0, 0, 0, 0])},
+                        uAmbientIntensity: {cacheData: null, data: 1},
+                        uDirectionalLightPositionList: {cacheData: null, data: []},
+                        uDirectionalLightColorList: {cacheData: null, data: []},
+                        uDirectionalLightIntensityList: {cacheData: null, data: []},
+                        uDirectionalLightNum: {cacheData: null, data: 0},
+                        uPointLightPositionList: {cacheData: null, data: []},
+                        uPointLightColorList: {cacheData: null, data: []},
+                        uPointLightIntensityList: {cacheData: null, data: []},
+                        uPointLightRadiusList: {cacheData: null, data: []},
+                        uPointLightNum: {cacheData: null, data: 0}
+                    };
+                    // 디렉셔널 쉐도우 관련
+                    tDirectionalShadowLightPosition = new Float32Array(3);
+                    tDirectionalShadowLightMatrix = new Float32Array(16);
+                    tDirectionalShadowLightProjectionMatrix = new Float32Array(16);
+                    // 디렉셔널 라이트 관련;
+                    tDirectionalPositionList = new Float32Array(3 * MAX_DIRECTIONAL_LIGHT_NUM);
+                    tDirectionalLightColorList = new Float32Array(4 * MAX_DIRECTIONAL_LIGHT_NUM);
+                    tDirectionalLightIntensityList = new Float32Array(MAX_DIRECTIONAL_LIGHT_NUM);
+                    // 포인트 라이트 관련
+                    tPointLightPositionList = new Float32Array(3 * MAX_POINT_LIGHT_NUM);
+                    tPointLightColorList = new Float32Array(4 * MAX_POINT_LIGHT_NUM);
+                    tPointLightIntensityList = new Float32Array(MAX_POINT_LIGHT_NUM);
+                    tPointLightRadiusList = new Float32Array(MAX_POINT_LIGHT_NUM);
+                }
                 tGL = redGL.gl;
                 tScene = tView['scene'];
                 tCamera = tView['camera'];
@@ -23547,4 +23591,4 @@ var RedGLOffScreen;
         }
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-01-26 20:12:37)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-02-04 11:26:18)' };console.log(RedGL_VERSION);
