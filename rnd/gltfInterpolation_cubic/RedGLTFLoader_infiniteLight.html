@@ -1,0 +1,133 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>RedGL - RedGLTFLoader</title>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
+    />
+    <link rel="stylesheet" href="../../example/example.css">
+
+    <script src="../../example/dat.gui.min.js"></script>
+    <script src="../../example/baseTestUI.js"></script>
+    <script src="../../release/RedGL.min.js"></script>
+    <!--<script src="RedGLTFLoader.js"></script>-->
+</head>
+
+<body>
+<script id='testSource'>
+    var testUI;
+    var canvas;
+    var assetPath = '../../asset/'
+    canvas = document.createElement('canvas');
+    document.body.appendChild(canvas);
+    RedGL.setDoNotPrepareProgram()
+    RedGL(canvas, function (v) {
+        if (v) {
+            var tWorld, tView, tScene, tController, tRenderer;
+            var setBase = function (redGL) {
+                // 월드 생성
+                redGL['world'] = tWorld = RedWorld();
+                // 씬 생성
+                tScene = RedScene(redGL);
+                // 카메라 생성
+                tController = RedObitController(redGL);
+                tController.pan = 25;
+                tController.tilt = -15;
+                tController.distance = 75;
+                // 렌더러 생성
+                tRenderer = RedRenderer();
+                // 뷰생성 및 적용
+                tView = RedView('HelloRedGL', redGL, tScene, tController);
+                tWorld.addView(tView);
+                // 그리드 설정
+                // tScene['grid'] = RedGrid(redGL);
+                // 라이트 설정
+                var testDLight;
+                testDLight = RedDirectionalLight(redGL)
+                // testDLight.intensity = 0.3
+                testDLight.x = 100
+                testDLight.y = 100
+                testDLight.z = 100
+                // tScene.addLight(testDLight)
+                // 렌더시작
+
+                // 렌더 디버거 활성화
+                tRenderer.setDebugButton();
+                testUI(redGL, tController)
+            };
+            setBase(this);
+            console.log(this)
+            // GLTF 로딩
+            tScene['skyBox'] = RedSkyBox(this, [
+                assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
+                assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
+                assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
+                assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
+                assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
+                assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
+            ])
+
+            var i = 16
+            var tLightList = []
+            i = parseInt(i)
+            while (i--) {
+                var tLight = RedPointLight(this, i % 4 == 0 ? '#ff0000' : i % 4 == 1 ? '#00ff00' : i % 4 == 2 ?'#0000ff' : i % 4 == 3 ? '#0f02ff' : '#ff12de')
+                tLight.x = Math.random() * 50 - 25
+                tLight.y = Math.random() * 50 - 25
+                tLight.z = Math.random() * 50 - 25
+                tLight.radius = 15
+                // tLight.radius = 10
+                // tLight.debug=true
+                tScene.addLight(tLight)
+                tLightList.push(tLight)
+
+            }
+            i = 2000
+            var tEnvironmentTexture = RedBitmapCubeTexture(this, [
+                assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
+                assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
+                assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
+                assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
+                assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
+                assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
+            ])
+            var tMaterial = RedEnvironmentMaterial(this,
+                RedBitmapTexture(this, assetPath + 'brick/Brick03_col.jpg'),
+                tEnvironmentTexture,
+                RedBitmapTexture(this, assetPath + 'brick/Brick03_nrm.jpg'),
+                null,
+                RedBitmapTexture(this, assetPath + 'brick/Brick03_disp.jpg')
+            )
+            tMaterial = RedStandardMaterial(this, RedBitmapTexture(this, assetPath + 'brick/Brick03_col.jpg'))
+            tMaterial.shininess = 64
+            while (i--) {
+                var tMesh = RedMesh(this, RedSphere(this), tMaterial)
+                tMesh.x = Math.random() * 50 - 25
+                tMesh.y = Math.random() * 50 - 25
+                tMesh.z = Math.random() * 50 - 25
+                tScene.addChild(tMesh)
+            }
+            tRenderer.start(this, function (time) {
+                var index = tLightList.length
+                while (index--) {
+                    tLightList[index].x += Math.sin(time / 700 + index) / 15
+                    tLightList[index].y += Math.cos(time / 700 + index) / 15
+                    tLightList[index].z += Math.sin(time / 700 + index) / 15 + Math.cos(time / 700 + index) / 15
+                }
+            });
+        } else {
+            console.log('초기화 실패!')
+        }
+    })
+    testUI = function (redGL) {
+        console.log('test')
+        var gui = new baseTestUI(redGL);
+        gui.initRedGL();
+    }
+</script>
+</body>
+
+</html>

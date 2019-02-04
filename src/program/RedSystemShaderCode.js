@@ -13,14 +13,22 @@ var RedSystemShaderCode;
 	 }
      :DOC*/
     RedSystemShaderCode = {};
-    RedSystemShaderCode['init'] = function () {
+    RedSystemShaderCode['init'] = function (redGL) {
         var maxDirectionalLight = 3;
-        var maxPointLight = 5;
+        var maxPointLight = 8;
         var maxJoint;
-        if (RedGLDetect.BROWSER_INFO.browser == 'ie' && RedGLDetect.BROWSER_INFO.browserVer == 11) maxJoint = 50
-        else if (RedGLDetect.BROWSER_INFO.browser == 'iphone' || RedGLDetect.BROWSER_INFO.browser == 'ipad') maxJoint = 8
-        else maxJoint = RedGLDetect.BROWSER_INFO.isMobile ? 64 : 256
-        //TODO 조인트 맥스 갯수 찾는 부분을 분기하거나 다른 방법으로 전달할 방법 생각해야함
+        var tCTX = document.createElement('canvas')
+        tCTX = tCTX.getContext('webgl')
+        var tDETECT = redGL.detect
+        console.log('tDETECT', tDETECT);
+        // 버텍스 쉐이더에 100개의 유니폼 벡터 정의를 남겨둔다.;;
+        var maxJoint;
+        maxJoint = parseInt(Math.floor(Math.min((tDETECT.vertexShader.MAX_VERTEX_UNIFORM_VECTORS - 64) / 8, 128)))
+        maxPointLight = parseInt(Math.floor(Math.min((tDETECT.fragmentShader.MAX_FRAGMENT_UNIFORM_VECTORS - 64) / 4, 128)))
+        console.log('maxJoint', maxJoint)
+        // if (RedGLDetect.BROWSER_INFO.browser == 'ie' && RedGLDetect.BROWSER_INFO.browserVer == 11) maxJoint = 50
+        // else if (RedGLDetect.BROWSER_INFO.browser == 'iphone' || RedGLDetect.BROWSER_INFO.browser == 'ipad') maxJoint = 8
+        // else maxJoint = RedGLDetect.BROWSER_INFO.isMobile ? 64 : 1024
         RedSystemShaderCode = {
             /**DOC:
              {
@@ -240,8 +248,8 @@ var RedSystemShaderCode;
                         '          lambertTerm = dot(N,-L);',
                         '          if(lambertTerm > 0.0){',
                         '             ld += uPointLightColorList[i] * texelColor * lambertTerm * attenuation * uPointLightIntensityList[i] ;',
-                        '             specular = pow( max(dot( reflect(L, N), -L), 0.0), shininess) * specularPower * specularTextureValue;',
-                        '             ls +=  specularLightColor * specular * uPointLightIntensityList[i]  * uPointLightColorList[i].a ;',
+                        '             specular = pow( max(dot( reflect(L, N), -N), 0.0), shininess) * specularPower * specularTextureValue;',
+                        '             ls +=  specularLightColor * specular  * uPointLightIntensityList[i]  * uPointLightColorList[i].a ;',
                         '          }',
                         '      }',
                         '   }',
@@ -350,6 +358,55 @@ var RedSystemShaderCode;
                 }
             })
         });
+
+        // 맥스갯수를 찾아보자..
+
+        var tVertexUniform = [];
+        var tVertexVecNum = 0
+        var testMap = {
+            bool: 4, float: 4, int: 4, uint: 4,
+            sampler2D: 4, samplerCube: 4,
+            vec2: 4, vec3: 4, vec4: 4,
+            mat2: 4, mat3: 8, mat4: 16
+        }
+        console.log('RedSystemShaderCode.vertexShareDeclare', RedSystemShaderCode.vertexShareDeclare)
+        RedSystemShaderCode.vertexShareDeclare.forEach(function (v) {
+            v = v.split(' ')
+            console.log(v[0])
+            if (v[0] == 'uniform') {
+                var tNum;
+                var tInfo;
+                tInfo = {
+                    value: v,
+                    type: v[1],
+                    num: tNum = v[2].indexOf('[') > -1 ? +(v[2].split('[')[1].replace(']', '')) * testMap[v[1]] : testMap[v[1]]
+                }
+                tVertexUniform.push(tInfo)
+                tVertexVecNum += tNum
+            }
+        });
+        console.log('tVertexUniform', tVertexUniform)
+        console.log('tVertexVecNum', tVertexVecNum / 4)
+        tVertexUniform = []
+        tVertexVecNum = 0
+        RedSystemShaderCode.fragmentShareDeclare.forEach(function (v) {
+            v = v.split(' ')
+            console.log(v[0])
+            if (v[0] == 'uniform') {
+                var tNum;
+                var tInfo;
+                tInfo = {
+                    value: v,
+                    type: v[1],
+                    num: tNum = v[2].indexOf('[') > -1 ? +(v[2].split('[')[1].replace(']', '')) * testMap[v[1]] : testMap[v[1]]
+                }
+                tVertexUniform.push(tInfo)
+                tVertexVecNum += tNum
+            }
+        });
+        console.log('tFragmentUniform', tVertexUniform)
+        console.log('tFragmentVecNum', tVertexVecNum / 4)
+
         console.log(RedSystemShaderCode)
         Object.freeze(RedSystemShaderCode)
     };
