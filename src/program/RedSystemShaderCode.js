@@ -46,10 +46,10 @@ var RedSystemShaderCode;
                 'attribute vec4 aVertexColor',
                 'attribute vec4 aVertexWeight',
                 'attribute vec4 aVertexJoint',
-                'attribute vec4 aVertexTangent',
+
                 'varying vec4 vVertexPosition',
                 'varying vec3 vVertexNormal',
-                'varying vec4 vVertexTangent',
+
                 'varying vec4 vVertexColor',
                 'attribute float aPointSize',
                 'uniform float uPointSize',
@@ -92,7 +92,7 @@ var RedSystemShaderCode;
             fragmentShareDeclare: [
                 'varying vec4 vVertexPosition',
                 'varying vec3 vVertexNormal',
-                'varying vec4 vVertexTangent',
+
                 'varying vec4 vVertexColor',
                 'varying vec2 vTexcoord',
                 'varying vec2 vTexcoord1',
