@@ -61,7 +61,7 @@ var RedGLDetect;
         }
 
 
-        RedGLDetect.getBrowserInfo()
+        this['BROWSER_INFO'] = RedGLDetect.getBrowserInfo()
 
     };
     /**DOC:
