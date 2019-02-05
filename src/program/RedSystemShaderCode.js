@@ -17,8 +17,6 @@ var RedSystemShaderCode;
         var maxDirectionalLight = 3;
         var maxPointLight = 8;
         var maxJoint;
-        var tCTX = document.createElement('canvas')
-        tCTX = tCTX.getContext('webgl')
         var tDETECT = redGL.detect
         console.log('tDETECT', tDETECT);
         // 버텍스 쉐이더에 100개의 유니폼 벡터 정의를 남겨둔다.;;

@@ -2820,24 +2820,7 @@ var RedImageLoader;
         self['_src'] = src
         self['_onLoad'] = onLoad
         self['_onError'] = onError
-        if (window['createImageBitmap']) {
-            if (src.split(',').length == 2 && src.substr(0, 5) == 'data:') {
-                makeImageBitmap(base64toBlob(src.split(',')[1], 'image/png'), option ? option : {
-                    imageOrientation: 'flipY'
-                }).then(function (v) {
-                    // console.log(v)
-                    v['src'] = src
-                    self['source'] = v
-                    if (self['_onLoad']) {
-                        self['_onLoad'](v)
-                        self['_onLoad'] = undefined
-                        self['_onError'] = undefined
-                    }
-                    // console.log('베이스이미지성공', v)
-
-                });
-            } else fileLoader.apply(self, [self['_src'], onLoad, onError, option])
-        } else {
+        if (window && window['document'] ) {
             var img;
             var HD_onLoad, HD_onError, clearEvents;
             clearEvents = function (img) {
@@ -2858,6 +2841,23 @@ var RedImageLoader;
             img.src = src;
             img.addEventListener('error', HD_onError);
             img.addEventListener('load', HD_onLoad);
+        } else {
+            if (src.split(',').length == 2 && src.substr(0, 5) == 'data:') {
+                makeImageBitmap(base64toBlob(src.split(',')[1], 'image/png'), option ? option : {
+                    imageOrientation: 'flipY'
+                }).then(function (v) {
+                    // console.log(v)
+                    v['src'] = src
+                    self['source'] = v
+                    if (self['_onLoad']) {
+                        self['_onLoad'](v)
+                        self['_onLoad'] = undefined
+                        self['_onError'] = undefined
+                    }
+                    // console.log('베이스이미지성공', v)
+
+                });
+            } else fileLoader.apply(self, [self['_src'], onLoad, onError, option])
         }
 
     }
@@ -8649,8 +8649,10 @@ var RedPBRMaterial_System;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'RedPBRMaterialSystemProgram';
-    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture', 'useFlatMode', 'useMaterialDoubleSide','useVertexTangent','useVertexColor_0'];
-    // var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture', 'useFlatMode'];
+    var PROGRAM_OPTION_LIST = [
+        'diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture',
+        'useFlatMode', 'useMaterialDoubleSide', 'useVertexTangent','useVertexColor_0','usePreMultiply'
+    ];
     var checked;
     vSource = function () {
         /* @preserve
@@ -8791,7 +8793,7 @@ var RedPBRMaterial_System;
 
 
             //#REDGL_DEFINE#diffuseTexture# texelColor *= texture2D(u_diffuseTexture, u_diffuseTexCoord);
-            //#REDGL_DEFINE#diffuseTexture# texelColor.rgb *= texelColor.a;
+            //#REDGL_DEFINE#usePreMultiply# //#REDGL_DEFINE#diffuseTexture# texelColor.rgb *= texelColor.a;
 
 
             // 노멀값 계산
@@ -8985,9 +8987,9 @@ var RedPBRMaterial_System;
         // 일반 프로퍼티
         this['useMaterialDoubleSide'] = false
         this['useVertexColor_0'] = false
-
         this['useFlatMode'] = false
         this['useVertexTangent'] = false
+        this['usePreMultiply'] = false
         this['_UUID'] = RedGL.makeUUID();
         if (!checked) {
             this.checkUniformAndProperty();
@@ -9166,6 +9168,8 @@ var RedPBRMaterial_System;
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'useVertexColor_0', 'boolean', samplerOption);
     RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'useVertexTangent', 'boolean', samplerOption);
+    RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'usePreMultiply', 'boolean', samplerOption);
+    
 
     Object.freeze(RedPBRMaterial_System);
 })();
@@ -13068,7 +13072,6 @@ var RedGLTFLoader;
                         break
                     case 'MASK' :
                         tMesh.useBlendMode = false
-                        tMesh['useTransparentSort'] = true
                         tMaterial.cutOff = tAlphaCutoff
                         break
                     default :
@@ -15660,8 +15663,6 @@ var RedSystemShaderCode;
         var maxDirectionalLight = 3;
         var maxPointLight = 8;
         var maxJoint;
-        var tCTX = document.createElement('canvas')
-        tCTX = tCTX.getContext('webgl')
         var tDETECT = redGL.detect
         console.log('tDETECT', tDETECT);
         // 버텍스 쉐이더에 100개의 유니폼 벡터 정의를 남겨둔다.;;
@@ -23643,4 +23644,4 @@ var RedGLOffScreen;
         }
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-02-05 14:54:18)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-02-05 17:42:50)' };console.log(RedGL_VERSION);

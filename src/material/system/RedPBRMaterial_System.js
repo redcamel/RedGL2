@@ -3,8 +3,10 @@ var RedPBRMaterial_System;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'RedPBRMaterialSystemProgram';
-    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture', 'useFlatMode', 'useMaterialDoubleSide','useVertexTangent','useVertexColor_0'];
-    // var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture', 'useFlatMode'];
+    var PROGRAM_OPTION_LIST = [
+        'diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture',
+        'useFlatMode', 'useMaterialDoubleSide', 'useVertexTangent','useVertexColor_0','usePreMultiply'
+    ];
     var checked;
     vSource = function () {
         /* @preserve
@@ -145,7 +147,7 @@ var RedPBRMaterial_System;
 
 
             //#REDGL_DEFINE#diffuseTexture# texelColor *= texture2D(u_diffuseTexture, u_diffuseTexCoord);
-            //#REDGL_DEFINE#diffuseTexture# texelColor.rgb *= texelColor.a;
+            //#REDGL_DEFINE#usePreMultiply# //#REDGL_DEFINE#diffuseTexture# texelColor.rgb *= texelColor.a;
 
 
             // 노멀값 계산
@@ -339,9 +341,9 @@ var RedPBRMaterial_System;
         // 일반 프로퍼티
         this['useMaterialDoubleSide'] = false
         this['useVertexColor_0'] = false
-
         this['useFlatMode'] = false
         this['useVertexTangent'] = false
+        this['usePreMultiply'] = false
         this['_UUID'] = RedGL.makeUUID();
         if (!checked) {
             this.checkUniformAndProperty();
@@ -520,6 +522,8 @@ var RedPBRMaterial_System;
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'useVertexColor_0', 'boolean', samplerOption);
     RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'useVertexTangent', 'boolean', samplerOption);
+    RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'usePreMultiply', 'boolean', samplerOption);
+    
 
     Object.freeze(RedPBRMaterial_System);
 })();
