@@ -2671,8 +2671,8 @@ var RedGL;
                     if (prevW != W || prevH != H || force) {
                         tCVS.width = W * ratio * this['_renderScale'];
                         tCVS.height = H * ratio * this['_renderScale'];
-                        tCVS.style.width = W;
-                        tCVS.style.height = H;
+                        tCVS.style.width = W+'px';
+                        tCVS.style.height = H+'px';
                         console.log('RedGL canvas setSize : ', this.gl.drawingBufferWidth, this.gl.drawingBufferHeight);
                         prevW = W;
                         prevH = H;
@@ -23643,4 +23643,4 @@ var RedGLOffScreen;
         }
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-02-04 18:52:42)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-02-05 14:54:18)' };console.log(RedGL_VERSION);
