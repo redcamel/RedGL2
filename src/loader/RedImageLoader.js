@@ -80,24 +80,7 @@ var RedImageLoader;
         self['_src'] = src
         self['_onLoad'] = onLoad
         self['_onError'] = onError
-        if (window['createImageBitmap']) {
-            if (src.split(',').length == 2 && src.substr(0, 5) == 'data:') {
-                makeImageBitmap(base64toBlob(src.split(',')[1], 'image/png'), option ? option : {
-                    imageOrientation: 'flipY'
-                }).then(function (v) {
-                    // console.log(v)
-                    v['src'] = src
-                    self['source'] = v
-                    if (self['_onLoad']) {
-                        self['_onLoad'](v)
-                        self['_onLoad'] = undefined
-                        self['_onError'] = undefined
-                    }
-                    // console.log('베이스이미지성공', v)
-
-                });
-            } else fileLoader.apply(self, [self['_src'], onLoad, onError, option])
-        } else {
+        if (window && window['document'] ) {
             var img;
             var HD_onLoad, HD_onError, clearEvents;
             clearEvents = function (img) {
@@ -118,6 +101,23 @@ var RedImageLoader;
             img.src = src;
             img.addEventListener('error', HD_onError);
             img.addEventListener('load', HD_onLoad);
+        } else {
+            if (src.split(',').length == 2 && src.substr(0, 5) == 'data:') {
+                makeImageBitmap(base64toBlob(src.split(',')[1], 'image/png'), option ? option : {
+                    imageOrientation: 'flipY'
+                }).then(function (v) {
+                    // console.log(v)
+                    v['src'] = src
+                    self['source'] = v
+                    if (self['_onLoad']) {
+                        self['_onLoad'](v)
+                        self['_onLoad'] = undefined
+                        self['_onError'] = undefined
+                    }
+                    // console.log('베이스이미지성공', v)
+
+                });
+            } else fileLoader.apply(self, [self['_src'], onLoad, onError, option])
         }
 
     }
