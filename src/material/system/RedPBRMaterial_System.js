@@ -3,7 +3,7 @@ var RedPBRMaterial_System;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'RedPBRMaterialSystemProgram';
-    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture', 'useFlatMode', 'useMaterialDoubleSide'];
+    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture', 'useFlatMode', 'useMaterialDoubleSide','useVertexTangent','useVertexColor_0'];
     // var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture', 'useFlatMode'];
     var checked;
     vSource = function () {
@@ -13,14 +13,17 @@ var RedPBRMaterial_System;
 
             // Sprite3D
             //#REDGL_DEFINE#vertexShareFunc#getSprite3DMatrix#
-            attribute vec4 aVertexColor_0;
-            varying vec4 vVertexColor_0;
+            //#REDGL_DEFINE#useVertexColor_0# attribute vec4 aVertexColor_0;
+            //#REDGL_DEFINE#useVertexColor_0# varying vec4 vVertexColor_0;
+            //#REDGL_DEFINE#useVertexTangent# attribute vec4 aVertexTangent;
+            //#REDGL_DEFINE#useVertexTangent# varying vec4 vVertexTangent;
             void main(void) {
                 gl_PointSize = uPointSize;
                 // UV설정
                 vTexcoord = aTexcoord;
                 vTexcoord1 = aTexcoord1;
-                vVertexColor_0 = aVertexColor_0;
+                //#REDGL_DEFINE#useVertexColor_0# vVertexColor_0 = aVertexColor_0;
+                //#REDGL_DEFINE#useVertexTangent# vVertexTangent = aVertexTangent;
                 // normal 계산
                //#REDGL_DEFINE#skin#true# vVertexNormal = (uNMatrix * getSkinMatrix() * vec4(aVertexNormal,0.0)).xyz;
                //#REDGL_DEFINE#skin#false# vVertexNormal = (uNMatrix *  vec4(aVertexNormal,1.0)).xyz;
@@ -60,7 +63,8 @@ var RedPBRMaterial_System;
 
 		//#REDGL_DEFINE#fragmentShareFunc#getPerturbNormal2Arb#
 
-        varying vec4 vVertexColor_0;
+        //#REDGL_DEFINE#useVertexColor_0# varying vec4 vVertexColor_0;
+        //#REDGL_DEFINE#useVertexTangent# varying vec4 vVertexTangent;
          uniform vec4 uBaseColorFactor;
          uniform vec3 uEmissiveFactor;
          uniform float u_cutOff;
@@ -88,7 +92,6 @@ var RedPBRMaterial_System;
         uniform int u_roughnessTexCoordIndex;
         uniform int u_normalTexCoordIndex;
 
-        uniform bool u_useVertexColor_0;
 
 
 
@@ -136,7 +139,11 @@ var RedPBRMaterial_System;
             //#REDGL_DEFINE#roughnessTexture# tRoughnessPower *= roughnessColor.g; // 거칠기 산출 roughnessColor.g
 
             // diffuse 색상 산출
-            texelColor = u_useVertexColor_0 ? clamp(vVertexColor_0,0.0,1.0) * uBaseColorFactor : uBaseColorFactor;
+
+            texelColor = uBaseColorFactor;
+            //#REDGL_DEFINE#useVertexColor_0# texelColor *= clamp(vVertexColor_0,0.0,1.0) ;
+
+
             //#REDGL_DEFINE#diffuseTexture# texelColor *= texture2D(u_diffuseTexture, u_diffuseTexCoord);
             //#REDGL_DEFINE#diffuseTexture# texelColor.rgb *= texelColor.a;
 
@@ -153,6 +160,19 @@ var RedPBRMaterial_System;
             //#REDGL_DEFINE#normalTexture# normalColor = texture2D(u_normalTexture, u_normalTexCoord);
             //#REDGL_DEFINE#normalTexture# N = getPerturbNormal2Arb(vVertexPosition.xyz, N, normalColor, u_normalTexCoord) ;
             //#REDGL_DEFINE#useFlatMode# N = getFlatNormal(vVertexPosition.xyz);
+
+
+            //#REDGL_DEFINE#useVertexTangent# //#REDGL_DEFINE#normalTexture# vec3 pos_dx = dFdx(vVertexPosition.xyz);
+            //#REDGL_DEFINE#useVertexTangent# //#REDGL_DEFINE#normalTexture# vec3 pos_dy = dFdy(vVertexPosition.xyz);
+            //#REDGL_DEFINE#useVertexTangent# //#REDGL_DEFINE#normalTexture# vec3 tex_dx = dFdx(vec3(u_normalTexCoord, 0.0));
+            //#REDGL_DEFINE#useVertexTangent# //#REDGL_DEFINE#normalTexture# vec3 tex_dy = dFdy(vec3(u_normalTexCoord, 0.0));
+            //#REDGL_DEFINE#useVertexTangent# //#REDGL_DEFINE#normalTexture# vec3 t = (tex_dy.t * pos_dx - tex_dx.t * pos_dy) / (tex_dx.s * tex_dy.t - tex_dy.s * tex_dx.t);
+            //#REDGL_DEFINE#useVertexTangent# //#REDGL_DEFINE#normalTexture# vec3 ng = normalize(vVertexNormal);
+            //#REDGL_DEFINE#useVertexTangent# //#REDGL_DEFINE#normalTexture# t = normalize(t - ng * dot(ng, t));
+            //#REDGL_DEFINE#useVertexTangent# //#REDGL_DEFINE#normalTexture# vec3 b = normalize(cross(ng, t));
+            //#REDGL_DEFINE#useVertexTangent# //#REDGL_DEFINE#normalTexture# mat3 tbn = mat3(t, b, ng);
+            //#REDGL_DEFINE#useVertexTangent# //#REDGL_DEFINE#normalTexture# N = normalize(tbn * ((2.0 * normalColor.rgb - 1.0) * vec3(1.0, 1.0 * vVertexTangent.w,1.0)));
+
 
 
             // 환경맵 계산
@@ -309,7 +329,6 @@ var RedPBRMaterial_System;
         this['roughnessTexCoordIndex'] = 0;
         this['normalTexCoordIndex'] = 0
 
-        this['useVertexColor_0'] = false;
         this['occlusionPower'] = 1;
         this['baseColorFactor'] = null
         this['emissiveFactor'] = null;
@@ -319,7 +338,10 @@ var RedPBRMaterial_System;
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['useMaterialDoubleSide'] = false
+        this['useVertexColor_0'] = false
+
         this['useFlatMode'] = false
+        this['useVertexTangent'] = false
         this['_UUID'] = RedGL.makeUUID();
         if (!checked) {
             this.checkUniformAndProperty();
@@ -497,6 +519,7 @@ var RedPBRMaterial_System;
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'useVertexColor_0', 'boolean', samplerOption);
+    RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'useVertexTangent', 'boolean', samplerOption);
 
     Object.freeze(RedPBRMaterial_System);
 })();
