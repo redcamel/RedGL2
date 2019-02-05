@@ -302,8 +302,8 @@ var RedGL;
                     if (prevW != W || prevH != H || force) {
                         tCVS.width = W * ratio * this['_renderScale'];
                         tCVS.height = H * ratio * this['_renderScale'];
-                        tCVS.style.width = W;
-                        tCVS.style.height = H;
+                        tCVS.style.width = W+'px';
+                        tCVS.style.height = H+'px';
                         console.log('RedGL canvas setSize : ', this.gl.drawingBufferWidth, this.gl.drawingBufferHeight);
                         prevW = W;
                         prevH = H;
