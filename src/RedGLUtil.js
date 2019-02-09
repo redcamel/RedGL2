@@ -207,15 +207,25 @@ var RedGLUtil;
                         canvas.width = tW;
                         canvas.height = tH;
                     }
-                    if(RedGLDetect.BROWSER_INFO.vendor == 'Google Inc.'){
-                        tH = -tH
-                        ctx.scale(1, -1)
+                    switch(RedGLDetect.BROWSER_INFO.browser){
+                        case 'firefox' :
+                        case 'ie' :
+                        case 'edge' :
+                            break
+                        default :
+                            tH = -tH
+                            ctx.scale(1, -1)
                     }
+
 
                     // if ('getContext' in source && window['OffscreenCanvas']) {
                     // }
+                    try{
+                        ctx.drawImage(source, 0, 0, tW, tH);
+                    }catch (e) {
+                        console.log(e)
+                    }
 
-                    ctx.drawImage(source, 0, 0, tW, tH);
                     console.log(canvas);
                     return window['OffscreenCanvas'] ? canvas.transferToImageBitmap() : canvas;
                 } else return source
