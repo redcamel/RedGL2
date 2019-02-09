@@ -207,21 +207,9 @@ var RedGLUtil;
                         canvas.width = tW;
                         canvas.height = tH;
                     }
-                    if(RedGLDetect.BROWSER_INFO.isMobile){
-                        // if(RedGLDetect.BROWSER_INFO.os =='android'){
-                        //     tH = -tH
-                        //     ctx.scale(1, -1)
-                        // }
-                    }else{
-                        switch(RedGLDetect.BROWSER_INFO.browser){
-                            case 'firefox' :
-                            case 'ie' :
-                            case 'edge' :
-                                break
-                            default :
-                                tH = -tH
-                                ctx.scale(1, -1)
-                        }
+                    if(RedGLDetect.BROWSER_INFO.vendor == 'Google Inc.'){
+                        tH = -tH
+                        ctx.scale(1, -1)
                     }
 
                     // if ('getContext' in source && window['OffscreenCanvas']) {
