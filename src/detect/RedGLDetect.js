@@ -182,7 +182,6 @@ var RedGLDetect;
                 osv = parseFloat(i[0] + '.' + i[1]), whale() || opera() || chrome() || firefox() || safari();
         } else os = app.indexOf('x11') > -1 ? 'unix' : app.indexOf('linux') > -1 ? 'linux' : 0, whale() || chrome() || firefox();
         for (i in t0 = {
-            vendor : navi.vendor,
             device: device,
             isMobile: isMobile,
             browser: browser,
