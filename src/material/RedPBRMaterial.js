@@ -3,7 +3,7 @@ var RedPBRMaterial;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'RedPBRMaterialProgram';
-    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture', 'useFlatMode'];
+    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture', 'useFlatMode','usePreMultiply'];
     var checked;
     vSource = function () {
         /* @preserve
@@ -115,7 +115,10 @@ var RedPBRMaterial;
             // diffuse 색상 산출
             texelColor = uBaseColorFactor;
             //#REDGL_DEFINE#diffuseTexture# texelColor *= texture2D(u_diffuseTexture, vTexcoord);
-            texelColor.rgb *= texelColor.a;
+            //#REDGL_DEFINE#usePreMultiply# texelColor.rgb *= texelColor.a;
+
+            // 컷오프 계산
+            if(texelColor.a <= u_cutOff) discard;
 
             // 노멀값 계산
             N = normalize(vVertexNormal);
@@ -133,8 +136,7 @@ var RedPBRMaterial;
             //#REDGL_DEFINE#environmentTexture# texelColor.rgb = mix( texelColor.rgb , reflectionColor.rgb , max(tMetallicPower-tRoughnessPower,0.0)*(1.0-tRoughnessPower));
             //#REDGL_DEFINE#environmentTexture# texelColor = mix( texelColor , vec4(0.04, 0.04, 0.04, 1.0) , tRoughnessPower * (tMetallicPower) * 0.5);
 
-            // 컷오프 계산
-            if(texelColor.a <= u_cutOff) discard;
+
 
             // 라이팅 계산
             float shininess = 128.0 ;
@@ -279,6 +281,7 @@ var RedPBRMaterial;
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['useFlatMode'] = false
+        this['usePreMultiply'] = false
         this['_UUID'] = RedGL.makeUUID();
         if (!checked) {
             this.checkUniformAndProperty();
@@ -436,5 +439,17 @@ var RedPBRMaterial;
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'useFlatMode', 'boolean', samplerOption);
+    /**DOC:
+     {
+	     code : 'PROPERTY',
+		 title :`usePreMultiply`,
+		 description : `
+		    usePreMultiply 사용여부
+		    기본값 : false
+		 `,
+		 return : 'boolean'
+	 }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'usePreMultiply', 'boolean', samplerOption);
     Object.freeze(RedPBRMaterial);
 })();

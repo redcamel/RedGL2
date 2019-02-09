@@ -6,7 +6,7 @@ var RedParticleMaterial;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'particleProgram';
-    var PROGRAM_OPTION_LIST = ['diffuseTexture'];
+    var PROGRAM_OPTION_LIST = ['diffuseTexture','usePreMultiply'];
 
     var checked;
     vSource = function () {
@@ -43,7 +43,7 @@ var RedParticleMaterial;
          void main(void) {
              vec4 finalColor = vVertexColor;
              //#REDGL_DEFINE#diffuseTexture# finalColor = texture2D(u_diffuseTexture, vec2(gl_PointCoord.x, - gl_PointCoord.y));
-             //#REDGL_DEFINE#diffuseTexture# finalColor.rgb *= finalColor.a;
+             //#REDGL_DEFINE#diffuseTexture# //#REDGL_DEFINE#usePreMultiply# finalColor.rgb *= finalColor.a;
              //#REDGL_DEFINE#diffuseTexture# finalColor.rgb += vVertexColor.rgb * vVertexColor.a;
              //#REDGL_DEFINE#diffuseTexture# finalColor.a *= vVertexColor.a;
              finalColor.a *= u_alpha;
@@ -85,12 +85,18 @@ var RedParticleMaterial;
         this['cutOff'] = 0;
         /////////////////////////////////////////
         // 일반 프로퍼티
+        this['usePreMultiply'] = true
         this['_UUID'] = RedGL.makeUUID();
         if (!checked) {
             this.checkUniformAndProperty();
             checked = true;
         }
         console.log(this)
+    };
+    var samplerOption = {
+        callback: function () {
+            this._searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST)
+        }
     };
     RedParticleMaterial.prototype = new RedBaseMaterial();
     /**DOC:
@@ -123,5 +129,17 @@ var RedParticleMaterial;
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedParticleMaterial', 'cutOff', 'number', {min: 0, max: 1});
+    /**DOC:
+     {
+	     code : 'PROPERTY',
+		 title :`usePreMultiply`,
+		 description : `
+		    usePreMultiply 사용여부
+		    기본값 : true
+		 `,
+		 return : 'boolean'
+	 }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedParticleMaterial', 'usePreMultiply', 'boolean', samplerOption);
     Object.freeze(RedParticleMaterial);
 })();

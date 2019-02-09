@@ -47,7 +47,6 @@ var RedVideoMaterial;
          uniform float u_alpha;
          void main(void) {
              vec4 finalColor = texture2D(u_videoTexture, vTexcoord);
-             finalColor.rgb *= finalColor.a;
              if(finalColor.a ==0.0) discard;
              finalColor.a = u_alpha;
              //#REDGL_DEFINE#directionalShadow#true# finalColor.rgb *= getShadowColor( vShadowPos, vResolution, uDirectionalShadowTexture);

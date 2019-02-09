@@ -3,7 +3,7 @@ var RedStandardMaterial;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'RedStandardMaterialProgram';
-    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'specularTexture', 'emissiveTexture', 'displacementTexture', 'useFlatMode'];
+    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'specularTexture', 'emissiveTexture', 'displacementTexture', 'useFlatMode','usePreMultiply'];
     var checked;
     vSource = function () {
         /* @preserve
@@ -97,14 +97,12 @@ var RedStandardMaterial;
 
          void main(void) {
 
-
              texelColor = texture2D(u_diffuseTexture, vTexcoord);
-             texelColor.rgb *= texelColor.a;
-             if(texelColor.a ==0.0) discard;
+             //#REDGL_DEFINE#usePreMultiply# texelColor.rgb *= texelColor.a;
+             if(texelColor.a == 0.0) discard;
 
             //#REDGL_DEFINE#emissiveTexture# emissiveColor = texture2D(u_emissiveTexture, vTexcoord);
-            //#REDGL_DEFINE#emissiveTexture# emissiveColor.rgb *= texelColor.a;
-
+            //#REDGL_DEFINE#emissiveTexture# //#REDGL_DEFINE#usePreMultiply# emissiveColor.rgb *= texelColor.a;
 
              N = normalize(vVertexNormal);
              vec4 normalColor = vec4(0.0);
@@ -115,7 +113,6 @@ var RedStandardMaterial;
              specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);
              specularTextureValue = 1.0;
              //#REDGL_DEFINE#specularTexture# specularTextureValue = texture2D(u_specularTexture, vTexcoord).r;
-
 
              vec4 finalColor = uAmbientLightColor * uAmbientIntensity
              + getDirectionalLightColor(
@@ -137,7 +134,7 @@ var RedStandardMaterial;
 
              //#REDGL_DEFINE#emissiveTexture# finalColor.rgb += emissiveColor.rgb * u_emissiveFactor;
 
-             finalColor.rgb *= texelColor.a;
+
              finalColor.a = texelColor.a * u_alpha;
 
              //#REDGL_DEFINE#directionalShadow#true# finalColor.rgb = mix(finalColor.rgb, finalColor.rgb * getShadowColor( vShadowPos, vResolution, uDirectionalShadowTexture), 0.5);
@@ -210,6 +207,7 @@ var RedStandardMaterial;
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['_UUID'] = RedGL.makeUUID();
+        this['usePreMultiply'] = false;
         if (!checked) {
             this.checkUniformAndProperty();
             checked = true;
@@ -355,5 +353,17 @@ var RedStandardMaterial;
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'useFlatMode', 'boolean', samplerOption);
+    /**DOC:
+     {
+	     code : 'PROPERTY',
+		 title :`usePreMultiply`,
+		 description : `
+		    usePreMultiply 사용여부
+		    기본값 : false
+		 `,
+		 return : 'boolean'
+	 }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'usePreMultiply', 'boolean', samplerOption);
     Object.freeze(RedStandardMaterial);
 })();
