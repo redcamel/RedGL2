@@ -2040,16 +2040,19 @@ var RedGLUtil;
                         canvas.height = tH;
                     }
                     if(RedGLDetect.BROWSER_INFO.isMobile){
-                        tH = -tH
-                        ctx.scale(1, -1)
+                        // if(RedGLDetect.BROWSER_INFO.os =='android'){
+                        //     tH = -tH
+                        //     ctx.scale(1, -1)
+                        // }
                     }else{
-                        switch (RedGLDetect.BROWSER_INFO.browser) {
-                            case 'chrome' :
-                                tH = -tH
-                                ctx.scale(1, -1)
+                        switch(RedGLDetect.BROWSER_INFO.browser){
+                            case 'firefox' :
+                            case 'ie' :
+                            case 'edge' :
                                 break
                             default :
-                                break
+                                tH = -tH
+                                ctx.scale(1, -1)
                         }
                     }
 
@@ -23846,4 +23849,4 @@ var RedGLOffScreen;
         }
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-02-09 18:54:43)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-02-09 19:27:45)' };console.log(RedGL_VERSION);

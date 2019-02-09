@@ -208,16 +208,19 @@ var RedGLUtil;
                         canvas.height = tH;
                     }
                     if(RedGLDetect.BROWSER_INFO.isMobile){
-                        tH = -tH
-                        ctx.scale(1, -1)
+                        // if(RedGLDetect.BROWSER_INFO.os =='android'){
+                        //     tH = -tH
+                        //     ctx.scale(1, -1)
+                        // }
                     }else{
-                        switch (RedGLDetect.BROWSER_INFO.browser) {
-                            case 'chrome' :
-                                tH = -tH
-                                ctx.scale(1, -1)
+                        switch(RedGLDetect.BROWSER_INFO.browser){
+                            case 'firefox' :
+                            case 'ie' :
+                            case 'edge' :
                                 break
                             default :
-                                break
+                                tH = -tH
+                                ctx.scale(1, -1)
                         }
                     }
 
