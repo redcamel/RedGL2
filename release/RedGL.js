@@ -2039,10 +2039,18 @@ var RedGLUtil;
                         canvas.width = tW;
                         canvas.height = tH;
                     }
-                    if ('getContext' in source && window['OffscreenCanvas']) {
-                        tH = -tH
-                        ctx.scale(1, -1)
+                    switch(RedGLDetect.BROWSER_INFO.browser){
+                        case 'firefox' :
+                        case 'ie' :
+                        case 'edge' :
+                            break
+                        default :
+                            tH = -tH
+                            ctx.scale(1, -1)
                     }
+                    // if ('getContext' in source && window['OffscreenCanvas']) {
+                    // }
+
                     ctx.drawImage(source, 0, 0, tW, tH);
                     console.log(canvas);
                     return window['OffscreenCanvas'] ? canvas.transferToImageBitmap() : canvas;
@@ -5847,8 +5855,7 @@ var RedColorMaterial;
 
          uniform vec4 u_color;
          void main(void) {
-
-            vec4 finalColor = u_color * u_color.a;
+            vec4 finalColor = u_color;
             if(finalColor.a == 0.0) discard;
             //#REDGL_DEFINE#directionalShadow#true# finalColor.rgb *= getShadowColor( vShadowPos, vResolution, uDirectionalShadowTexture);
             //#REDGL_DEFINE#fog#false# gl_FragColor = finalColor;
@@ -6021,7 +6028,6 @@ var RedColorPhongMaterial;
          void main(void) {
 
              texelColor = u_color;
-             // texelColor.rgb *= texelColor.a;
 
              N = normalize(vVertexNormal);
              //#REDGL_DEFINE#useFlatMode# N = getFlatNormal(vVertexPosition.xyz);
@@ -6047,7 +6053,6 @@ var RedColorPhongMaterial;
                 u_specularPower
              );
 
-             finalColor.rgb *= texelColor.a;
              finalColor.a = texelColor.a;
              if(finalColor.a == 0.0) discard;
 
@@ -6172,7 +6177,7 @@ var RedColorPhongTextureMaterial;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'RedColorPhongTextureMaterialProgram';
-    var PROGRAM_OPTION_LIST = ['normalTexture', 'specularTexture', 'displacementTexture', 'emissiveTexture', 'useFlatMode'];
+    var PROGRAM_OPTION_LIST = ['normalTexture', 'specularTexture', 'displacementTexture', 'emissiveTexture', 'useFlatMode','usePreMultiply'];
     var checked;
     vSource = function () {
         /* @preserve
@@ -6186,8 +6191,6 @@ var RedColorPhongTextureMaterial;
             //#REDGL_DEFINE#displacementTexture# uniform float u_displacementPower;
             //#REDGL_DEFINE#displacementTexture# uniform float u_displacementFlowSpeedX;
             //#REDGL_DEFINE#displacementTexture# uniform float u_displacementFlowSpeedY;
-
-
 
             void main(void) {
                 gl_PointSize = uPointSize;
@@ -6262,7 +6265,6 @@ var RedColorPhongTextureMaterial;
          void main(void) {
 
              texelColor = u_color;
-             // texelColor.rgb *= texelColor.a;
 
              N = normalize(vVertexNormal);
              vec4 normalColor = vec4(0.0);
@@ -6271,7 +6273,7 @@ var RedColorPhongTextureMaterial;
              //#REDGL_DEFINE#normalTexture# N = getPerturbNormal2Arb(vVertexPosition.xyz, N, normalColor, vTexcoord) ;
 
             //#REDGL_DEFINE#emissiveTexture# emissiveColor = texture2D(u_emissiveTexture, vTexcoord);
-            //#REDGL_DEFINE#emissiveTexture# emissiveColor.rgb *= texelColor.a;
+            //#REDGL_DEFINE#emissiveTexture# //#REDGL_DEFINE#usePreMultiply# emissiveColor.rgb *= texelColor.a;
 
              specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);
              float specularTextureValue = 1.0;
@@ -6297,7 +6299,6 @@ var RedColorPhongTextureMaterial;
 
              //#REDGL_DEFINE#emissiveTexture# finalColor.rgb += emissiveColor.rgb * u_emissiveFactor;
 
-             finalColor.rgb *= texelColor.a;
              finalColor.a = texelColor.a;
              if(finalColor.a == 0.0) discard;
 
@@ -6370,6 +6371,7 @@ var RedColorPhongTextureMaterial;
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['color'] = hexColor ? hexColor : '#ff0000';
+        this['usePreMultiply'] = false;
         this['useFlatMode'] = false
         this['_UUID'] = RedGL.makeUUID();
         if (!checked) {
@@ -6517,6 +6519,18 @@ var RedColorPhongTextureMaterial;
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'useFlatMode', 'boolean', samplerOption);
+    /**DOC:
+     {
+	     code : 'PROPERTY',
+		 title :`usePreMultiply`,
+		 description : `
+		    usePreMultiply 사용여부
+		    기본값 : false
+		 `,
+		 return : 'boolean'
+	 }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'usePreMultiply', 'boolean', samplerOption);
     Object.freeze(RedColorPhongTextureMaterial)
 })();
 "use strict";
@@ -6524,7 +6538,7 @@ var RedEnvironmentMaterial;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'RedEnvironmentMaterialProgram';
-    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'specularTexture', 'displacementTexture', 'emissiveTexture', 'useFlatMode'];
+    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'specularTexture', 'displacementTexture', 'emissiveTexture', 'useFlatMode','usePreMultiply'];
     var checked;
     vSource = function () {
         /* @preserve
@@ -6621,11 +6635,11 @@ var RedEnvironmentMaterial;
 
              texelColor = vec4(0.0,0.0,0.0,0.0);
              //#REDGL_DEFINE#diffuseTexture# texelColor = texture2D(u_diffuseTexture, vTexcoord);
-             //#REDGL_DEFINE#diffuseTexture# texelColor.rgb *= texelColor.a;
+             //#REDGL_DEFINE#diffuseTexture# //#REDGL_DEFINE#usePreMultiply# texelColor.rgb *= texelColor.a;
              //#REDGL_DEFINE#diffuseTexture# if(texelColor.a ==0.0) discard;
 
              //#REDGL_DEFINE#emissiveTexture# emissiveColor = texture2D(u_emissiveTexture, vTexcoord);
-             //#REDGL_DEFINE#emissiveTexture# emissiveColor.rgb *= texelColor.a;
+             //#REDGL_DEFINE#emissiveTexture# //#REDGL_DEFINE#usePreMultiply# emissiveColor.rgb *= texelColor.a;
 
              N = normalize(vVertexNormal);
              vec4 normalColor = vec4(0.0);
@@ -6635,7 +6649,7 @@ var RedEnvironmentMaterial;
 
              vec3 R = reflect( vVertexPosition.xyz - uCameraPosition, N);
              reflectionColor = textureCube(u_environmentTexture, R);
-             texelColor = mix(texelColor,reflectionColor ,u_reflectionPower);
+             texelColor = mix(texelColor, reflectionColor ,u_reflectionPower);
 
              specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);
              specularTextureValue = 1.0;
@@ -6660,7 +6674,6 @@ var RedEnvironmentMaterial;
              );
 
              //#REDGL_DEFINE#emissiveTexture# finalColor.rgb += emissiveColor.rgb * u_emissiveFactor;
-             finalColor.rgb *= texelColor.a;
              finalColor.a = texelColor.a * u_alpha;
 
              //#REDGL_DEFINE#directionalShadow#true# finalColor.rgb = mix(finalColor.rgb, finalColor.rgb * getShadowColor( vShadowPos, vResolution, uDirectionalShadowTexture), 0.5);
@@ -6755,6 +6768,7 @@ var RedEnvironmentMaterial;
         this['alpha'] = 1;
         /////////////////////////////////////////
         this['useFlatMode'] = false
+        this['usePreMultiply'] = false;
         // 일반 프로퍼티
         this['_UUID'] = RedGL.makeUUID();
         if (!checked) {
@@ -6919,6 +6933,18 @@ var RedEnvironmentMaterial;
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'useFlatMode', 'boolean', samplerOption);
+    /**DOC:
+     {
+	     code : 'PROPERTY',
+		 title :`usePreMultiply`,
+		 description : `
+		    usePreMultiply 사용여부
+		    기본값 : false
+		 `,
+		 return : 'boolean'
+	 }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'usePreMultiply', 'boolean', samplerOption);
     Object.freeze(RedEnvironmentMaterial);
 })();
 "use strict";
@@ -6926,7 +6952,7 @@ var RedBitmapMaterial;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'RedBitmapMaterialProgram';
-    var PROGRAM_OPTION_LIST = [];
+    var PROGRAM_OPTION_LIST = ['usePreMultiply'];
     var checked;
     vSource = function () {
         /* @preserve
@@ -6973,7 +6999,7 @@ var RedBitmapMaterial;
 
          void main(void) {
              vec4 finalColor = texture2D(u_diffuseTexture, vTexcoord);
-             finalColor.rgb *= finalColor.a;
+             //#REDGL_DEFINE#usePreMultiply# finalColor.rgb *= finalColor.a;
              finalColor.a *= u_alpha;
              if(finalColor.a == 0.0) discard;
 
@@ -7016,6 +7042,7 @@ var RedBitmapMaterial;
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['alpha'] = 1;
+        this['usePreMultiply'] = false;
         this['_UUID'] = RedGL.makeUUID();
         if (!checked) {
             this.checkUniformAndProperty();
@@ -7024,6 +7051,11 @@ var RedBitmapMaterial;
         console.log(this);
     };
     RedBitmapMaterial.prototype = new RedBaseMaterial();
+    var samplerOption = {
+        callback: function () {
+            this._searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST)
+        }
+    };
     /**DOC:
      {
 	     code : 'PROPERTY',
@@ -7042,6 +7074,18 @@ var RedBitmapMaterial;
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedBitmapMaterial', 'alpha', 'number', {min: 0, max: 1});
+    /**DOC:
+     {
+	     code : 'PROPERTY',
+		 title :`usePreMultiply`,
+		 description : `
+		    usePreMultiply 사용여부
+		    기본값 : false
+		 `,
+		 return : 'boolean'
+	 }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedBitmapMaterial', 'usePreMultiply', 'boolean', samplerOption);
     Object.freeze(RedBitmapMaterial);
 })();
 "use strict";
@@ -7052,7 +7096,7 @@ var RedParticleMaterial;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'particleProgram';
-    var PROGRAM_OPTION_LIST = ['diffuseTexture'];
+    var PROGRAM_OPTION_LIST = ['diffuseTexture','usePreMultiply'];
 
     var checked;
     vSource = function () {
@@ -7089,7 +7133,7 @@ var RedParticleMaterial;
          void main(void) {
              vec4 finalColor = vVertexColor;
              //#REDGL_DEFINE#diffuseTexture# finalColor = texture2D(u_diffuseTexture, vec2(gl_PointCoord.x, - gl_PointCoord.y));
-             //#REDGL_DEFINE#diffuseTexture# finalColor.rgb *= finalColor.a;
+             //#REDGL_DEFINE#diffuseTexture# //#REDGL_DEFINE#usePreMultiply# finalColor.rgb *= finalColor.a;
              //#REDGL_DEFINE#diffuseTexture# finalColor.rgb += vVertexColor.rgb * vVertexColor.a;
              //#REDGL_DEFINE#diffuseTexture# finalColor.a *= vVertexColor.a;
              finalColor.a *= u_alpha;
@@ -7131,12 +7175,18 @@ var RedParticleMaterial;
         this['cutOff'] = 0;
         /////////////////////////////////////////
         // 일반 프로퍼티
+        this['usePreMultiply'] = true
         this['_UUID'] = RedGL.makeUUID();
         if (!checked) {
             this.checkUniformAndProperty();
             checked = true;
         }
         console.log(this)
+    };
+    var samplerOption = {
+        callback: function () {
+            this._searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST)
+        }
     };
     RedParticleMaterial.prototype = new RedBaseMaterial();
     /**DOC:
@@ -7169,6 +7219,18 @@ var RedParticleMaterial;
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedParticleMaterial', 'cutOff', 'number', {min: 0, max: 1});
+    /**DOC:
+     {
+	     code : 'PROPERTY',
+		 title :`usePreMultiply`,
+		 description : `
+		    usePreMultiply 사용여부
+		    기본값 : true
+		 `,
+		 return : 'boolean'
+	 }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedParticleMaterial', 'usePreMultiply', 'boolean', samplerOption);
     Object.freeze(RedParticleMaterial);
 })();
 "use strict";
@@ -7176,7 +7238,7 @@ var RedBitmapPointCloudMaterial;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'bitmapPointCloudProgram';
-    var PROGRAM_OPTION_LIST = [];
+    var PROGRAM_OPTION_LIST = ['usePreMultiply'];
 
     var checked;
     vSource = function () {
@@ -7206,7 +7268,7 @@ var RedBitmapPointCloudMaterial;
          uniform float u_alpha;
          void main(void) {
              vec4 finalColor = texture2D(u_diffuseTexture, vec2(gl_PointCoord.x, - gl_PointCoord.y));
-             finalColor.rgb *= finalColor.a;
+             //#REDGL_DEFINE#usePreMultiply# finalColor.rgb *= finalColor.a;
              finalColor.a *= u_alpha;
              if(finalColor.a < u_cutOff) discard;
              //#REDGL_DEFINE#fog#false# gl_FragColor = finalColor;
@@ -7248,6 +7310,7 @@ var RedBitmapPointCloudMaterial;
         this['cutOff'] = 0.1;
         /////////////////////////////////////////
         // 일반 프로퍼티
+        this['usePreMultiply'] = false;
         this['_UUID'] = RedGL.makeUUID();
         if (!checked) {
             this.checkUniformAndProperty();
@@ -7256,6 +7319,11 @@ var RedBitmapPointCloudMaterial;
         console.log(this)
     };
     RedBitmapPointCloudMaterial.prototype = new RedBaseMaterial();
+    var samplerOption = {
+        callback: function () {
+            this._searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST)
+        }
+    };
     /**DOC:
      {
  	     code : 'PROPERTY',
@@ -7286,6 +7354,18 @@ var RedBitmapPointCloudMaterial;
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedBitmapPointCloudMaterial', 'diffuseTexture', 'sampler2D', {essential: true});
+    /**DOC:
+     {
+	     code : 'PROPERTY',
+		 title :`usePreMultiply`,
+		 description : `
+		    usePreMultiply 사용여부
+		    기본값 : false
+		 `,
+		 return : 'boolean'
+	 }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedBitmapPointCloudMaterial', 'usePreMultiply', 'boolean', samplerOption);
     Object.freeze(RedBitmapPointCloudMaterial)
 })();
 "use strict";
@@ -7293,7 +7373,7 @@ var RedSheetMaterial;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'RedSheetMaterialProgram';
-    var PROGRAM_OPTION_LIST = [];
+    var PROGRAM_OPTION_LIST = ['usePreMultiply'];
     var checked;
     vSource = function () {
         /* @preserve
@@ -7344,7 +7424,7 @@ var RedSheetMaterial;
          uniform float u_alpha;
          void main(void) {
              vec4 finalColor = texture2D(u_diffuseTexture, vTexcoord);
-             finalColor.rgb *= finalColor.a;
+             //#REDGL_DEFINE#usePreMultiply# finalColor.rgb *= finalColor.a;
              finalColor.a *= u_alpha;
              if(finalColor.a ==0.0) discard;
 
@@ -7393,6 +7473,7 @@ var RedSheetMaterial;
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['alpha'] = 1;
+        this['usePreMultiply'] = false;
         this['_perFrameTime'] = 0; // 단위당 시간
         this['_nextFrameTime'] = 0; // 다음 프레임 호출 시간
         this['_playYn'] = true;
@@ -7411,7 +7492,13 @@ var RedSheetMaterial;
         }
         console.log(this);
     };
+    var samplerOption = {
+        callback: function () {
+            this._searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST)
+        }
+    };
     RedSheetMaterial.prototype = new RedBaseMaterial();
+
     /**DOC:
      {
 		 title :`addAction`,
@@ -7633,6 +7720,18 @@ var RedSheetMaterial;
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'alpha', 'number', {min: 0, max: 1});
+    /**DOC:
+     {
+	     code : 'PROPERTY',
+		 title :`usePreMultiply`,
+		 description : `
+		    usePreMultiply 사용여부
+		    기본값 : false
+		 `,
+		 return : 'boolean'
+	 }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'usePreMultiply', 'boolean', samplerOption);
     Object.freeze(RedSheetMaterial)
 })();
 "use strict";
@@ -7640,7 +7739,7 @@ var RedStandardMaterial;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'RedStandardMaterialProgram';
-    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'specularTexture', 'emissiveTexture', 'displacementTexture', 'useFlatMode'];
+    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'specularTexture', 'emissiveTexture', 'displacementTexture', 'useFlatMode','usePreMultiply'];
     var checked;
     vSource = function () {
         /* @preserve
@@ -7734,14 +7833,12 @@ var RedStandardMaterial;
 
          void main(void) {
 
-
              texelColor = texture2D(u_diffuseTexture, vTexcoord);
-             texelColor.rgb *= texelColor.a;
-             if(texelColor.a ==0.0) discard;
+             //#REDGL_DEFINE#usePreMultiply# texelColor.rgb *= texelColor.a;
+             if(texelColor.a == 0.0) discard;
 
             //#REDGL_DEFINE#emissiveTexture# emissiveColor = texture2D(u_emissiveTexture, vTexcoord);
-            //#REDGL_DEFINE#emissiveTexture# emissiveColor.rgb *= texelColor.a;
-
+            //#REDGL_DEFINE#emissiveTexture# //#REDGL_DEFINE#usePreMultiply# emissiveColor.rgb *= texelColor.a;
 
              N = normalize(vVertexNormal);
              vec4 normalColor = vec4(0.0);
@@ -7752,7 +7849,6 @@ var RedStandardMaterial;
              specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);
              specularTextureValue = 1.0;
              //#REDGL_DEFINE#specularTexture# specularTextureValue = texture2D(u_specularTexture, vTexcoord).r;
-
 
              vec4 finalColor = uAmbientLightColor * uAmbientIntensity
              + getDirectionalLightColor(
@@ -7774,7 +7870,7 @@ var RedStandardMaterial;
 
              //#REDGL_DEFINE#emissiveTexture# finalColor.rgb += emissiveColor.rgb * u_emissiveFactor;
 
-             finalColor.rgb *= texelColor.a;
+
              finalColor.a = texelColor.a * u_alpha;
 
              //#REDGL_DEFINE#directionalShadow#true# finalColor.rgb = mix(finalColor.rgb, finalColor.rgb * getShadowColor( vShadowPos, vResolution, uDirectionalShadowTexture), 0.5);
@@ -7847,6 +7943,7 @@ var RedStandardMaterial;
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['_UUID'] = RedGL.makeUUID();
+        this['usePreMultiply'] = false;
         if (!checked) {
             this.checkUniformAndProperty();
             checked = true;
@@ -7992,6 +8089,18 @@ var RedStandardMaterial;
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'useFlatMode', 'boolean', samplerOption);
+    /**DOC:
+     {
+	     code : 'PROPERTY',
+		 title :`usePreMultiply`,
+		 description : `
+		    usePreMultiply 사용여부
+		    기본값 : false
+		 `,
+		 return : 'boolean'
+	 }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'usePreMultiply', 'boolean', samplerOption);
     Object.freeze(RedStandardMaterial);
 })();
 "use strict";
@@ -8043,7 +8152,6 @@ var RedVideoMaterial;
          uniform float u_alpha;
          void main(void) {
              vec4 finalColor = texture2D(u_videoTexture, vTexcoord);
-             finalColor.rgb *= finalColor.a;
              if(finalColor.a ==0.0) discard;
              finalColor.a = u_alpha;
              //#REDGL_DEFINE#directionalShadow#true# finalColor.rgb *= getShadowColor( vShadowPos, vResolution, uDirectionalShadowTexture);
@@ -8122,7 +8230,7 @@ var RedPBRMaterial;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'RedPBRMaterialProgram';
-    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture', 'useFlatMode'];
+    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture', 'useFlatMode','usePreMultiply'];
     var checked;
     vSource = function () {
         /* @preserve
@@ -8234,7 +8342,10 @@ var RedPBRMaterial;
             // diffuse 색상 산출
             texelColor = uBaseColorFactor;
             //#REDGL_DEFINE#diffuseTexture# texelColor *= texture2D(u_diffuseTexture, vTexcoord);
-            texelColor.rgb *= texelColor.a;
+            //#REDGL_DEFINE#usePreMultiply# texelColor.rgb *= texelColor.a;
+
+            // 컷오프 계산
+            if(texelColor.a <= u_cutOff) discard;
 
             // 노멀값 계산
             N = normalize(vVertexNormal);
@@ -8252,8 +8363,7 @@ var RedPBRMaterial;
             //#REDGL_DEFINE#environmentTexture# texelColor.rgb = mix( texelColor.rgb , reflectionColor.rgb , max(tMetallicPower-tRoughnessPower,0.0)*(1.0-tRoughnessPower));
             //#REDGL_DEFINE#environmentTexture# texelColor = mix( texelColor , vec4(0.04, 0.04, 0.04, 1.0) , tRoughnessPower * (tMetallicPower) * 0.5);
 
-            // 컷오프 계산
-            if(texelColor.a <= u_cutOff) discard;
+
 
             // 라이팅 계산
             float shininess = 128.0 ;
@@ -8398,6 +8508,7 @@ var RedPBRMaterial;
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['useFlatMode'] = false
+        this['usePreMultiply'] = false
         this['_UUID'] = RedGL.makeUUID();
         if (!checked) {
             this.checkUniformAndProperty();
@@ -8555,6 +8666,18 @@ var RedPBRMaterial;
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'useFlatMode', 'boolean', samplerOption);
+    /**DOC:
+     {
+	     code : 'PROPERTY',
+		 title :`usePreMultiply`,
+		 description : `
+		    usePreMultiply 사용여부
+		    기본값 : false
+		 `,
+		 return : 'boolean'
+	 }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'usePreMultiply', 'boolean', samplerOption);
     Object.freeze(RedPBRMaterial);
 })();
 "use strict";
@@ -8826,7 +8949,7 @@ var RedPBRMaterial_System;
             // 환경맵 계산
             vec3 R = reflect( vVertexPosition.xyz-uCameraPosition, N);
             //#REDGL_DEFINE#environmentTexture# reflectionColor = textureCube(u_environmentTexture, R);
-            //#REDGL_DEFINE#environmentTexture# reflectionColor.rgb *= reflectionColor.a;
+            //#REDGL_DEFINE#usePreMultiply# //#REDGL_DEFINE#environmentTexture# reflectionColor.rgb *= reflectionColor.a;
 
             // 환경맵 합성
             //#REDGL_DEFINE#environmentTexture# texelColor.rgb = mix( texelColor.rgb , reflectionColor.rgb , max(tMetallicPower-tRoughnessPower,0.0)*(1.0-tRoughnessPower));
@@ -8876,7 +8999,7 @@ var RedPBRMaterial_System;
 
             // 이미시브합성
             //#REDGL_DEFINE#emissiveTexture# emissiveColor = texture2D(u_emissiveTexture, u_emissiveTexCoord);
-            //#REDGL_DEFINE#emissiveTexture# emissiveColor.rgb *= emissiveColor.a;
+            //#REDGL_DEFINE#usePreMultiply# //#REDGL_DEFINE#emissiveTexture# emissiveColor.rgb *= emissiveColor.a;
             //#REDGL_DEFINE#emissiveTexture# emissiveColor.rgb *= uEmissiveFactor;
             //#REDGL_DEFINE#emissiveTexture# finalColor.rgb += emissiveColor.rgb;
 
@@ -9168,6 +9291,17 @@ var RedPBRMaterial_System;
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'useVertexColor_0', 'boolean', samplerOption);
     RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'useVertexTangent', 'boolean', samplerOption);
+    /**DOC:
+     {
+	     code : 'PROPERTY',
+		 title :`usePreMultiply`,
+		 description : `
+		    usePreMultiply 사용여부
+		    기본값 : false
+		 `,
+		 return : 'boolean'
+	 }
+     :DOC*/
     RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'usePreMultiply', 'boolean', samplerOption);
     
 
@@ -9230,7 +9364,6 @@ var RedTextMaterial;
 
          void main(void) {
              vec4 finalColor = texture2D(u_diffuseTexture, vTexcoord);
-             finalColor.rgb *= finalColor.a;
              finalColor.a *= u_alpha;
              if(finalColor.a == 0.0) discard;
 
@@ -11922,13 +12055,11 @@ var RedGLTFLoader;
                                     var prev, next
                                     prev = originData[index]
                                     next = originData[index]
-
                                     targetMesh['_morphInfo']['list'].forEach(function (v, morphIndex) {
                                         if (morphIndex % 3 == 1) {
                                             prev += aniData['data'][prevIndex * 2 + morphIndex] * v['interleaveData'][index]
                                             next += aniData['data'][nextIndex * 2 + morphIndex] * v['interleaveData'][index]
                                         }
-
                                     })
                                     targetData[index] = prev + interpolationValue * (next - prev)
                                 })
@@ -12668,7 +12799,7 @@ var RedGLTFLoader;
                     break
             }
         }
-        var RedGLTF_MorphInfo = function (redGLTFLoader, json, primitiveData) {
+        var RedGLTF_MorphInfo = function (redGLTFLoader, json, primitiveData, weightsData) {
             var morphList = []
             if (primitiveData['targets']) {
                 primitiveData['targets'].forEach(function (v2) {
@@ -12705,6 +12836,7 @@ var RedGLTFLoader;
                 })
             }
             this['list'] = morphList
+            morphList['weights'] = weightsData || []
             this['origin'] = null
         }
         var parseIndicesInfo = function (redGLTFLoader, json, key, accessorInfo, indices) {
@@ -12897,6 +13029,81 @@ var RedGLTFLoader;
                 return [tMaterial, doubleSide, alphaMode, alphaCutoff]
             }
         })();
+        var makeInterleaveData = function (interleaveData, vertices, verticesColor_0, normalData, uvs, uvs1, jointWeights, joints, tangents) {
+            var i = 0, len = vertices.length / 3
+            var idx = 0
+            for (i; i < len; i++) {
+                if (vertices.length) {
+                    interleaveData[idx++] = vertices[i * 3 + 0];
+                    interleaveData[idx++] = vertices[i * 3 + 1];
+                    interleaveData[idx++] = vertices[i * 3 + 2];
+                    // interleaveData.push(vertices[i * 3 + 0], vertices[i * 3 + 1], vertices[i * 3 + 2])
+                }
+                if (verticesColor_0.length) {
+                    interleaveData[idx++] = verticesColor_0[i * 4 + 0];
+                    interleaveData[idx++] = verticesColor_0[i * 4 + 1];
+                    interleaveData[idx++] = verticesColor_0[i * 4 + 2];
+                    interleaveData[idx++] = verticesColor_0[i * 4 + 3];
+                    // interleaveData.push(verticesColor_0[i * 4 + 0], verticesColor_0[i * 4 + 1], verticesColor_0[i * 4 + 2], verticesColor_0[i * 4 + 3])
+                }else{
+                    interleaveData[idx++] = 0;
+                    interleaveData[idx++] = 0;
+                    interleaveData[idx++] = 0;
+                    interleaveData[idx++] = 0;
+                    // interleaveData.push(0, 0, 0, 0)
+                }
+                if (normalData.length) {
+                    interleaveData[idx++] = normalData[i * 3 + 0];
+                    interleaveData[idx++] = normalData[i * 3 + 1];
+                    interleaveData[idx++] = normalData[i * 3 + 2];
+                    // interleaveData.push(normalData[i * 3 + 0], normalData[i * 3 + 1], normalData[i * 3 + 2])
+                }
+                if (!uvs.length) uvs.push(0, 0)
+                if (uvs.length) {
+                    interleaveData[idx++] = uvs[i * 2 + 0];
+                    interleaveData[idx++] = uvs[i * 2 + 1];
+                    // interleaveData.push(uvs[i * 2 + 0], uvs[i * 2 + 1])
+                }
+                if (uvs1.length) {
+                    interleaveData[idx++] = uvs1[i * 2 + 0];
+                    interleaveData[idx++] = uvs1[i * 2 + 1];
+                    // interleaveData.push(uvs1[i * 2 + 0], uvs1[i * 2 + 1])
+                }
+                else if (uvs.length) {
+                    interleaveData[idx++] = uvs[i * 2 + 0];
+                    interleaveData[idx++] = uvs[i * 2 + 1];
+                    // interleaveData.push(uvs[i * 2 + 0], uvs[i * 2 + 1])
+                }
+                if (jointWeights.length) {
+                    interleaveData[idx++] = jointWeights[i * 4 + 0];
+                    interleaveData[idx++] = jointWeights[i * 4 + 1];
+                    interleaveData[idx++] = jointWeights[i * 4 + 2];
+                    interleaveData[idx++] = jointWeights[i * 4 + 3];
+                    // interleaveData.push(jointWeights[i * 4 + 0], jointWeights[i * 4 + 1], jointWeights[i * 4 + 2], jointWeights[i * 4 + 3])
+                }
+                if (joints.length) {
+                    interleaveData[idx++] = joints[i * 4 + 0];
+                    interleaveData[idx++] = joints[i * 4 + 1];
+                    interleaveData[idx++] = joints[i * 4 + 2];
+                    interleaveData[idx++] = joints[i * 4 + 3];
+                    // interleaveData.push(joints[i * 4 + 0], joints[i * 4 + 1], joints[i * 4 + 2], joints[i * 4 + 3])
+                }
+                if (tangents.length) {
+                    interleaveData[idx++] = tangents[i * 4 + 0];
+                    interleaveData[idx++] = tangents[i * 4 + 1];
+                    interleaveData[idx++] = tangents[i * 4 + 2];
+                    interleaveData[idx++] = tangents[i * 4 + 3];
+                    // interleaveData.push(tangents[i * 4 + 0], tangents[i * 4 + 1], tangents[i * 4 + 2], tangents[i * 4 + 3])
+                }
+                else {
+                    interleaveData[idx++] = 0;
+                    interleaveData[idx++] = 0;
+                    interleaveData[idx++] = 0;
+                    interleaveData[idx++] = 0;
+                    // interleaveData.push(0, 0, 0, 0)
+                }
+            }
+        }
         makeMesh = function (redGLTFLoader, json, meshData) {
             // console.log('parseMesh :')
             // console.log(meshData)
@@ -12994,21 +13201,8 @@ var RedGLTFLoader;
                 // console.log('vertices', vertices)
                 // console.log('normalData', normalData)
                 var interleaveData = []
-                var i = 0, len = vertices.length / 3
-                for (i; i < len; i++) {
-                    if (vertices.length) interleaveData.push(vertices[i * 3 + 0], vertices[i * 3 + 1], vertices[i * 3 + 2])
-                    if (verticesColor_0.length) interleaveData.push(verticesColor_0[i * 4 + 0], verticesColor_0[i * 4 + 1], verticesColor_0[i * 4 + 2], verticesColor_0[i * 4 + 3])
-                    else interleaveData.push(0, 0, 0, 0)
-                    if (normalData.length) interleaveData.push(normalData[i * 3 + 0], normalData[i * 3 + 1], normalData[i * 3 + 2])
-                    if (!uvs.length) uvs.push(0, 0)
-                    if (uvs.length) interleaveData.push(uvs[i * 2 + 0], uvs[i * 2 + 1])
-                    if (uvs1.length) interleaveData.push(uvs1[i * 2 + 0], uvs1[i * 2 + 1])
-                    else if (uvs.length) interleaveData.push(uvs[i * 2 + 0], uvs[i * 2 + 1])
-                    if (jointWeights.length) interleaveData.push(jointWeights[i * 4 + 0], jointWeights[i * 4 + 1], jointWeights[i * 4 + 2], jointWeights[i * 4 + 3])
-                    if (joints.length) interleaveData.push(joints[i * 4 + 0], joints[i * 4 + 1], joints[i * 4 + 2], joints[i * 4 + 3])
-                    if (tangents.length) interleaveData.push(tangents[i * 4 + 0], tangents[i * 4 + 1], tangents[i * 4 + 2], tangents[i * 4 + 3])
-                    else interleaveData.push(0, 0, 0, 0)
-                }
+
+                makeInterleaveData(interleaveData, vertices, verticesColor_0, normalData, uvs, uvs1, jointWeights, joints, tangents)
                 // console.log('interleaveData', interleaveData)
                 /////////////////////////////////////////////////////////
                 // 메쉬 생성
@@ -13085,7 +13279,7 @@ var RedGLTFLoader;
                 // console.log('tMesh', tMesh)
                 /////////////////////////////////////////////////////////
                 // 모프리스트 설정
-                var morphInfo = new RedGLTF_MorphInfo(redGLTFLoader, json, v)
+                var morphInfo = new RedGLTF_MorphInfo(redGLTFLoader, json, v, meshData['weights'])
                 morphInfo['list'].forEach(function (v) {
                     var normalData
                     if (v['normals'].length) normalData = v['normals']
@@ -13093,26 +13287,28 @@ var RedGLTFLoader;
                     // console.log('vertices', vertices)
                     // console.log('normalData', normalData)
                     var interleaveData = []
-                    var i = 0, len = v['vertices'].length / 3
-                    for (i; i < len; i++) {
-                        if (v['vertices'].length) interleaveData.push(v['vertices'][i * 3 + 0], v['vertices'][i * 3 + 1], v['vertices'][i * 3 + 2])
-                        if (v['verticesColor_0'].length) interleaveData.push(v['verticesColor_0'][i * 4 + 0], v['verticesColor_0'][i * 4 + 1], v['verticesColor_0'][i * 4 + 2], v['verticesColor_0'][i * 4 + 3])
-                        else interleaveData.push(0, 0, 0, 0)
-                        if (normalData.length) interleaveData.push(normalData[i * 3 + 0], normalData[i * 3 + 1], normalData[i * 3 + 2])
-                        if (!v['uvs'].length) v['uvs'].push(0, 0)
-                        if (v['uvs'].length) interleaveData.push(v['uvs'][i * 2 + 0], v['uvs'][i * 2 + 1])
-                        if (v['uvs1'].length) interleaveData.push(v['uvs1'][i * 2 + 0], v['uvs1'][i * 2 + 1])
-                        else if (v['uvs'].length) interleaveData.push(v['uvs'][i * 2 + 0], v['uvs'][i * 2 + 1])
-                        if (v['jointWeights'].length) interleaveData.push(v['jointWeights'][i * 4 + 0], v['jointWeights'][i * 4 + 1], v['jointWeights'][i * 4 + 2], v['jointWeights'][i * 4 + 3])
-                        if (v['joints'].length) interleaveData.push(v['joints'][i * 4 + 0], v['joints'][i * 4 + 1], v['joints'][i * 4 + 2], v['joints'][i * 4 + 3])
-                        if (v['tangents'].length) interleaveData.push(v['tangents'][i * 4 + 0], v['tangents'][i * 4 + 1], v['tangents'][i * 4 + 2], v['tangents'][i * 4 + 3])
-                        else interleaveData.push(0, 0, 0, 0)
-
-                    }
+                    makeInterleaveData(interleaveData, v['vertices'], v['verticesColor_0'], normalData, v['uvs'], v['uvs1'], v['jointWeights'], v['joints'], v['tangents'])
+                    // var i = 0, len = v['vertices'].length / 3
+                    // for (i; i < len; i++) {
+                    //     if (v['vertices'].length) interleaveData.push(v['vertices'][i * 3 + 0], v['vertices'][i * 3 + 1], v['vertices'][i * 3 + 2])
+                    //     if (v['verticesColor_0'].length) interleaveData.push(v['verticesColor_0'][i * 4 + 0], v['verticesColor_0'][i * 4 + 1], v['verticesColor_0'][i * 4 + 2], v['verticesColor_0'][i * 4 + 3])
+                    //     else interleaveData.push(0, 0, 0, 0)
+                    //     if (normalData.length) interleaveData.push(normalData[i * 3 + 0], normalData[i * 3 + 1], normalData[i * 3 + 2])
+                    //     if (!v['uvs'].length) v['uvs'].push(0, 0)
+                    //     if (v['uvs'].length) interleaveData.push(v['uvs'][i * 2 + 0], v['uvs'][i * 2 + 1])
+                    //     if (v['uvs1'].length) interleaveData.push(v['uvs1'][i * 2 + 0], v['uvs1'][i * 2 + 1])
+                    //     else if (v['uvs'].length) interleaveData.push(v['uvs'][i * 2 + 0], v['uvs'][i * 2 + 1])
+                    //     if (v['jointWeights'].length) interleaveData.push(v['jointWeights'][i * 4 + 0], v['jointWeights'][i * 4 + 1], v['jointWeights'][i * 4 + 2], v['jointWeights'][i * 4 + 3])
+                    //     if (v['joints'].length) interleaveData.push(v['joints'][i * 4 + 0], v['joints'][i * 4 + 1], v['joints'][i * 4 + 2], v['joints'][i * 4 + 3])
+                    //     if (v['tangents'].length) interleaveData.push(v['tangents'][i * 4 + 0], v['tangents'][i * 4 + 1], v['tangents'][i * 4 + 2], v['tangents'][i * 4 + 3])
+                    //     else interleaveData.push(0, 0, 0, 0)
+                    //
+                    // }
                     v['interleaveData'] = interleaveData
                 });
                 tMesh['_morphInfo'] = morphInfo
                 tMesh['_morphInfo']['origin'] = new Float32Array(interleaveData)
+                console.log('모프리스트', tMesh['_morphInfo'])
                 // console.log(morphInfo)
                 /////////////////////////////////////////////////////
                 var targetData = tMesh['geometry']['interleaveBuffer']['data']
@@ -13120,14 +13316,16 @@ var RedGLTFLoader;
                 tInterleaveInfoList.forEach(function (v) {
                     NUM += v['size']
                 })
-                tMesh['_morphInfo']['list'].forEach(function (v) {
+                var gap = 0
+                tMesh['_morphInfo']['list'].forEach(function (v, index) {
                     console.log('tInterleaveInfoList', tInterleaveInfoList)
                     console.log('NUM', NUM)
                     var i = 0, len = targetData.length / NUM
+                    var tWeights = tMesh['_morphInfo']['list']['weights'][index] == undefined ? 0.5 : tMesh['_morphInfo']['list']['weights'][index]
                     for (i; i < len; i++) {
-                        targetData[i * NUM + 0] += v['vertices'][i * 3 + 0] * 0.5
-                        targetData[i * NUM + 1] += v['vertices'][i * 3 + 1] * 0.5
-                        targetData[i * NUM + 2] += v['vertices'][i * 3 + 2] * 0.5
+                        targetData[i * NUM + 0] += v['vertices'][i * 3 + 0] * tWeights
+                        targetData[i * NUM + 1] += v['vertices'][i * 3 + 1] * tWeights
+                        targetData[i * NUM + 2] += v['vertices'][i * 3 + 2] * tWeights
                     }
                 });
                 tMesh['geometry']['interleaveBuffer'].upload(targetData)
@@ -19534,7 +19732,6 @@ var RedGridMaterial;
 
          void main(void) {
              vec4 finalColor = vVertexColor;
-             finalColor.rgb *= vVertexColor.a;
              //#REDGL_DEFINE#fog#false# gl_FragColor = finalColor;
              //#REDGL_DEFINE#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
          }
@@ -23644,4 +23841,4 @@ var RedGLOffScreen;
         }
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-02-05 17:42:50)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-02-09 18:25:02)' };console.log(RedGL_VERSION);

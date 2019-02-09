@@ -95,7 +95,7 @@
                     movementX: {start: [0, 0], end: [-100, 100], ease: RedParticleEmitter.QuadInOut},
                     movementY: {start: [0, 0], end: [0, -500], ease: RedParticleEmitter.QuadInOut},
                     movementZ: {start: [0, 0], end: [0, 0], ease: RedParticleEmitter.QuadInOut},
-                    scale: {start: [4, 4], end: [64, 256], ease: RedParticleEmitter.QuadInOut},
+                    scale: {start: [4, 4], end: [32, 128], ease: RedParticleEmitter.QuadInOut},
                     alpha: {start: [0.5, 1], end: [0, 0], ease: RedParticleEmitter.QuadInOut}
                 },
                 tint: RedParticleEmitter.TINT_RANDOM,
@@ -139,9 +139,6 @@
                 // 포인트 재질 생성
                 RedBitmapPointCloudMaterial(this, RedBitmapTexture(this, assetPath + 'particle.png'))
             );
-            // 블렌드모드 설정
-            testRedPointCloud['blendSrc'] = this.gl.ONE;
-            testRedPointCloud['blendDst'] = this.gl.ONE;
             tScene.addChild(testRedPointCloud);
 
             // 렌더시작
@@ -178,7 +175,7 @@
                 }
                 tScene.sortMaterial(true)
             },
-            addObjectWidthTween: function () {
+            addObjectWithTween: function () {
                 var i = 500
 
                 while (i--) {
@@ -194,7 +191,7 @@
             }
         }
         gui['gui'].add(testData, 'addObject')
-        gui['gui'].add(testData, 'addObjectWidthTween')
+        gui['gui'].add(testData, 'addObjectWithTween')
 
     }
 </script>

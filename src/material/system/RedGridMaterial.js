@@ -21,7 +21,6 @@ var RedGridMaterial;
 
          void main(void) {
              vec4 finalColor = vVertexColor;
-             finalColor.rgb *= vVertexColor.a;
              //#REDGL_DEFINE#fog#false# gl_FragColor = finalColor;
              //#REDGL_DEFINE#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
          }

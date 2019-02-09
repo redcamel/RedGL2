@@ -132,6 +132,12 @@
   },
   {
     "code": "PROPERTY",
+    "title": "usePreMultiply",
+    "description": "\n    usePreMultiply 사용여부\n    기본값 : false\n ",
+    "return": "boolean"
+  },
+  {
+    "code": "PROPERTY",
     "title": "useVertexColor_0",
     "description": "\n    aVertexColor_0 사용여부\n    기본값 : true\n ",
     "return": "boolean"

@@ -39,5 +39,11 @@
     ],
     "example": "\n     RedBitmapPointCloudMaterial(RedGL Instance, RedBitmapTexture(RedGL Instance, src));\n ",
     "return": "RedBitmapPointCloudMaterial Instance"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "usePreMultiply",
+    "description": "\n    usePreMultiply 사용여부\n    기본값 : false\n ",
+    "return": "boolean"
   }
 ]

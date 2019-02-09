@@ -70,7 +70,6 @@ var RedColorPhongMaterial;
          void main(void) {
 
              texelColor = u_color;
-             // texelColor.rgb *= texelColor.a;
 
              N = normalize(vVertexNormal);
              //#REDGL_DEFINE#useFlatMode# N = getFlatNormal(vVertexPosition.xyz);
@@ -96,7 +95,6 @@ var RedColorPhongMaterial;
                 u_specularPower
              );
 
-             finalColor.rgb *= texelColor.a;
              finalColor.a = texelColor.a;
              if(finalColor.a == 0.0) discard;
 

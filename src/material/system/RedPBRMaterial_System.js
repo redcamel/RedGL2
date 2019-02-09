@@ -180,7 +180,7 @@ var RedPBRMaterial_System;
             // 환경맵 계산
             vec3 R = reflect( vVertexPosition.xyz-uCameraPosition, N);
             //#REDGL_DEFINE#environmentTexture# reflectionColor = textureCube(u_environmentTexture, R);
-            //#REDGL_DEFINE#environmentTexture# reflectionColor.rgb *= reflectionColor.a;
+            //#REDGL_DEFINE#usePreMultiply# //#REDGL_DEFINE#environmentTexture# reflectionColor.rgb *= reflectionColor.a;
 
             // 환경맵 합성
             //#REDGL_DEFINE#environmentTexture# texelColor.rgb = mix( texelColor.rgb , reflectionColor.rgb , max(tMetallicPower-tRoughnessPower,0.0)*(1.0-tRoughnessPower));
@@ -230,7 +230,7 @@ var RedPBRMaterial_System;
 
             // 이미시브합성
             //#REDGL_DEFINE#emissiveTexture# emissiveColor = texture2D(u_emissiveTexture, u_emissiveTexCoord);
-            //#REDGL_DEFINE#emissiveTexture# emissiveColor.rgb *= emissiveColor.a;
+            //#REDGL_DEFINE#usePreMultiply# //#REDGL_DEFINE#emissiveTexture# emissiveColor.rgb *= emissiveColor.a;
             //#REDGL_DEFINE#emissiveTexture# emissiveColor.rgb *= uEmissiveFactor;
             //#REDGL_DEFINE#emissiveTexture# finalColor.rgb += emissiveColor.rgb;
 
@@ -522,6 +522,17 @@ var RedPBRMaterial_System;
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'useVertexColor_0', 'boolean', samplerOption);
     RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'useVertexTangent', 'boolean', samplerOption);
+    /**DOC:
+     {
+	     code : 'PROPERTY',
+		 title :`usePreMultiply`,
+		 description : `
+		    usePreMultiply 사용여부
+		    기본값 : false
+		 `,
+		 return : 'boolean'
+	 }
+     :DOC*/
     RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'usePreMultiply', 'boolean', samplerOption);
     
 
