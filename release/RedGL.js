@@ -1801,6 +1801,7 @@ var RedGLDetect;
                 osv = parseFloat(i[0] + '.' + i[1]), whale() || opera() || chrome() || firefox() || safari();
         } else os = app.indexOf('x11') > -1 ? 'unix' : app.indexOf('linux') > -1 ? 'linux' : 0, whale() || chrome() || firefox();
         for (i in t0 = {
+            vendor : navi.vendor,
             device: device,
             isMobile: isMobile,
             browser: browser,
@@ -2039,21 +2040,9 @@ var RedGLUtil;
                         canvas.width = tW;
                         canvas.height = tH;
                     }
-                    if(RedGLDetect.BROWSER_INFO.isMobile){
-                        // if(RedGLDetect.BROWSER_INFO.os =='android'){
-                        //     tH = -tH
-                        //     ctx.scale(1, -1)
-                        // }
-                    }else{
-                        switch(RedGLDetect.BROWSER_INFO.browser){
-                            case 'firefox' :
-                            case 'ie' :
-                            case 'edge' :
-                                break
-                            default :
-                                tH = -tH
-                                ctx.scale(1, -1)
-                        }
+                    if(RedGLDetect.BROWSER_INFO.vendor == 'Google Inc.'){
+                        tH = -tH
+                        ctx.scale(1, -1)
                     }
 
                     // if ('getContext' in source && window['OffscreenCanvas']) {
@@ -23849,4 +23838,4 @@ var RedGLOffScreen;
         }
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-02-09 19:27:45)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-02-09 19:33:11)' };console.log(RedGL_VERSION);
