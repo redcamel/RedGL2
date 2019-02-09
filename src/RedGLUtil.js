@@ -213,6 +213,10 @@ var RedGLUtil;
                             ctx.scale(1, -1)
                             break
                         default :
+                            if(RedGLDetect.BROWSER_INFO.isMobile){
+                                tH = -tH
+                                ctx.scale(1, -1)
+                            }
                             break
                     }
                     // if ('getContext' in source && window['OffscreenCanvas']) {

@@ -2045,6 +2045,10 @@ var RedGLUtil;
                             ctx.scale(1, -1)
                             break
                         default :
+                            if(RedGLDetect.BROWSER_INFO.isMobile){
+                                tH = -tH
+                                ctx.scale(1, -1)
+                            }
                             break
                     }
                     // if ('getContext' in source && window['OffscreenCanvas']) {
@@ -23840,4 +23844,4 @@ var RedGLOffScreen;
         }
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-02-09 18:46:20)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-02-09 18:51:01)' };console.log(RedGL_VERSION);
