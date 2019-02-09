@@ -207,14 +207,13 @@ var RedGLUtil;
                         canvas.width = tW;
                         canvas.height = tH;
                     }
-                    switch(RedGLDetect.BROWSER_INFO.browser){
-                        case 'firefox' :
-                        case 'ie' :
-                        case 'edge' :
-                            break
-                        default :
+                    switch (RedGLDetect.BROWSER_INFO.browser) {
+                        case 'chrome' :
                             tH = -tH
                             ctx.scale(1, -1)
+                            break
+                        default :
+                            break
                     }
                     // if ('getContext' in source && window['OffscreenCanvas']) {
                     // }
