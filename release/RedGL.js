@@ -2039,18 +2039,20 @@ var RedGLUtil;
                         canvas.width = tW;
                         canvas.height = tH;
                     }
-                    switch (RedGLDetect.BROWSER_INFO.browser) {
-                        case 'chrome' :
-                            tH = -tH
-                            ctx.scale(1, -1)
-                            break
-                        default :
-                            if(RedGLDetect.BROWSER_INFO.isMobile){
+                    if(RedGLDetect.BROWSER_INFO.isMobile){
+                        tH = -tH
+                        ctx.scale(1, -1)
+                    }else{
+                        switch (RedGLDetect.BROWSER_INFO.browser) {
+                            case 'chrome' :
                                 tH = -tH
                                 ctx.scale(1, -1)
-                            }
-                            break
+                                break
+                            default :
+                                break
+                        }
                     }
+
                     // if ('getContext' in source && window['OffscreenCanvas']) {
                     // }
 
@@ -23844,4 +23846,4 @@ var RedGLOffScreen;
         }
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-02-09 18:51:01)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-02-09 18:54:43)' };console.log(RedGL_VERSION);
