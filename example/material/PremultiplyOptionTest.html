@@ -140,6 +140,7 @@
                 testMaterials[i][1].useFlatMode = true
                 testMesh.x = Math.sin(Math.PI*2/(max)*i) * 3
                 testMesh.z = Math.cos(Math.PI*2/(max)*i) * 3
+                testMesh.useTransparentSort = true
                 // testMesh.useCullFace=false
                 tScene.addChild(testMesh)
                 var t = setOptionText(this, testMaterials[i][0])
