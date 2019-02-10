@@ -55,7 +55,6 @@ var RedTextMaterial;
 
          void main(void) {
              vec4 finalColor = texture2D(u_diffuseTexture, vTexcoord);
-             finalColor.rgb *= finalColor.a;
              finalColor.a *= u_alpha;
              if(finalColor.a == 0.0) discard;
 

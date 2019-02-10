@@ -175,7 +175,7 @@ var index_demo
                 //////////////////////////////////////////////////////////////////
                 // RedPointCloud 설정
                 var i;
-
+                var testRedBitmapPointCloudMaterial
                 // 인터리브 정보 생성
                 interleaveData = [];
                 i = 20000
@@ -190,6 +190,7 @@ var index_demo
                     interleaveData.push(Math.random() * 1);
                 }
                 // 포인트 유닛 생성
+
                 testRedPointCloud = RedBitmapPointCloud(
                     redGL,
                     interleaveData,
@@ -198,11 +199,13 @@ var index_demo
                         RedInterleaveInfo('aPointSize', 1)
                     ],
                     // 포인트 재질 생성
-                    RedBitmapPointCloudMaterial(redGL, RedBitmapTexture(redGL, assetPath + 'particle.png'))
+                    testRedBitmapPointCloudMaterial = RedBitmapPointCloudMaterial(redGL, RedBitmapTexture(redGL, assetPath + 'particle.png'))
                 );
                 // 블렌드모드 설정
                 testRedPointCloud['blendSrc'] = redGL.gl.ONE;
                 testRedPointCloud['blendDst'] = redGL.gl.ONE;
+                // 재질 프리멀티브 설정
+                testRedBitmapPointCloudMaterial.usePreMultiply = true
                 tScene.addChild(testRedPointCloud);
                 ////////////////////////////////////////////////
                 //파티클 설정

@@ -37,5 +37,11 @@
       "RedBaseMaterial"
     ],
     "return": "RedParticleMaterial Instance"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "usePreMultiply",
+    "description": "\n    usePreMultiply 사용여부\n    기본값 : true\n ",
+    "return": "boolean"
   }
 ]

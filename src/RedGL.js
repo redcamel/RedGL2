@@ -182,15 +182,14 @@ var RedGL;
 			 return : 'RedGLDetect Instance'
 		 }
          :DOC*/
-        if (tGL) this['detect'] = RedGLDetect(tGL);
+        if (tGL) this['detect'] = RedGLDetect(this);
         else return callback ? callback.call(self, tGL ? true : false) : 0;
         //
         this['_UUID'] = RedGL.makeUUID();
-
+        if (RedSystemShaderCode['init']) RedSystemShaderCode.init(self);
+        ///////////////////////////////////////
+        setEmptyTextures(self, tGL); // 빈텍스쳐를 미리 체워둔다.
         requestAnimationFrame(function () {
-            if (RedSystemShaderCode['init']) RedSystemShaderCode.init(self);
-            ///////////////////////////////////////
-            setEmptyTextures(self, tGL); // 빈텍스쳐를 미리 체워둔다.
             if (!doNotPrepareProgram) {
                 // 무거운놈만 먼저 해둘까...
                 RedPBRMaterial_System(self);

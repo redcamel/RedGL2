@@ -132,5 +132,11 @@
     "title": "totalFrame",
     "description": "최소값 : 1",
     "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "usePreMultiply",
+    "description": "\n    usePreMultiply 사용여부\n    기본값 : false\n ",
+    "return": "boolean"
   }
 ]

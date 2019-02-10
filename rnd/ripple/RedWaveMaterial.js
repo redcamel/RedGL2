@@ -1,9 +1,9 @@
 "use strict";
-var RedStandardMaterial;
+var RedWaveMaterial;
 (function () {
     var vSource, fSource;
-    var PROGRAM_NAME = 'RedStandardMaterialProgram';
-    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'specularTexture', 'emissiveTexture', 'displacementTexture', 'useFlatMode','usePreMultiply'];
+    var PROGRAM_NAME = 'RedWaveMaterialProgram';
+    var PROGRAM_OPTION_LIST = [];
     var checked;
     vSource = function () {
         /* @preserve
@@ -12,45 +12,40 @@ var RedStandardMaterial;
 
             // Sprite3D
             //#REDGL_DEFINE#vertexShareFunc#getSprite3DMatrix#
-
-            //#REDGL_DEFINE#displacementTexture# uniform sampler2D u_displacementTexture;
-            //#REDGL_DEFINE#displacementTexture# uniform float u_displacementPower;
-            //#REDGL_DEFINE#displacementTexture# uniform float u_displacementFlowSpeedX;
-            //#REDGL_DEFINE#displacementTexture# uniform float u_displacementFlowSpeedY;
-
-
-
             void main(void) {
                 gl_PointSize = uPointSize;
+
+
+
                 vTexcoord = aTexcoord;
-
-                // normal 계산
-                //#REDGL_DEFINE#skin#true# vVertexNormal = (uNMatrix * getSkinMatrix() * vec4(aVertexNormal,0.0)).xyz;
-               //#REDGL_DEFINE#skin#false# vVertexNormal = (uNMatrix *  vec4(aVertexNormal,1.0)).xyz;
-
+                vTime= uTime;
+                vResolution = uResolution;
                 // position 계산
                 //#REDGL_DEFINE#skin#true# mat4 targetMatrix = uMMatrix *  getSkinMatrix() ;
                 //#REDGL_DEFINE#skin#false# mat4 targetMatrix = uMMatrix;
-                vVertexPosition =  targetMatrix *  vec4(aVertexPosition, 1.0);
 
-                //#REDGL_DEFINE#displacementTexture# vVertexPosition.xyz += normalize(vVertexNormal) * texture2D(u_displacementTexture, vTexcoord + vec2(
-                //#REDGL_DEFINE#displacementTexture#    u_displacementFlowSpeedX * (uTime/1000.0),
-                //#REDGL_DEFINE#displacementTexture#    u_displacementFlowSpeedY * (uTime/1000.0)
-                //#REDGL_DEFINE#displacementTexture# )).x * u_displacementPower ;
+                vec4 transformed =  vec4(aVertexPosition, 1.0);
+                float freq = 3.0;
+                float amp = 0.1;
+                float angle = (uTime/1000.0 + transformed.x)*freq;
+                transformed.z += sin(angle)*amp;
+                float angle2 = (uTime/1000.0 + transformed.y)*freq;
+                transformed.z += sin(angle2)*amp;
 
-                // 최종 포지션 계산
-                //#REDGL_DEFINE#sprite3D#true# gl_Position = uPMatrix * getSprite3DMatrix(uCameraMatrix , targetMatrix) *  vec4(aVertexPosition, 1.0);
-                //#REDGL_DEFINE#sprite3D#true# if(!u_PerspectiveScale){
-                //#REDGL_DEFINE#sprite3D#true#   gl_Position /= gl_Position.w;
-                //#REDGL_DEFINE#sprite3D#true#   gl_Position.xy += aVertexPosition.xy * vec2(targetMatrix[0][0],targetMatrix[1][1] * uResolution.x/uResolution.y);
-                //#REDGL_DEFINE#sprite3D#true# }
-                //#REDGL_DEFINE#sprite3D#false# gl_Position = uPMatrix * uCameraMatrix * vVertexPosition;
 
-                // 쉐도우 계산
+                gl_Position = uPMatrix * uCameraMatrix * targetMatrix *  transformed;
+
+                vVertexPosition = gl_Position;
+                vVertexNormal = normalize(vec3(-amp * freq * cos(angle),0.0,1.0));
+                vVertexNormal = vVertexNormal+normalize(vec3(0.0,-amp * freq * cos(angle),1.0));
+                vVertexNormal = (uNMatrix *  vec4(vVertexNormal,1.0)).xyz;
+
+
+
                 //#REDGL_DEFINE#directionalShadow#true# vResolution = uResolution;
-                //#REDGL_DEFINE#directionalShadow#true# vShadowPos = cTexUnitConverter  *  uDirectionalShadowLightMatrix * vVertexPosition;
+                //#REDGL_DEFINE#directionalShadow#true# vShadowPos = cTexUnitConverter  *  uDirectionalShadowLightMatrix * targetMatrix * vec4(aVertexPosition, 1.0);
             }
-        */
+         */
     };
     fSource = function () {
         /* @preserve
@@ -97,12 +92,14 @@ var RedStandardMaterial;
 
          void main(void) {
 
+
              texelColor = texture2D(u_diffuseTexture, vTexcoord);
-             //#REDGL_DEFINE#usePreMultiply# texelColor.rgb *= texelColor.a;
-             if(texelColor.a == 0.0) discard;
+             texelColor.rgb *= texelColor.a;
+             if(texelColor.a ==0.0) discard;
 
             //#REDGL_DEFINE#emissiveTexture# emissiveColor = texture2D(u_emissiveTexture, vTexcoord);
-            //#REDGL_DEFINE#emissiveTexture# //#REDGL_DEFINE#usePreMultiply# emissiveColor.rgb *= texelColor.a;
+            //#REDGL_DEFINE#emissiveTexture# emissiveColor.rgb *= texelColor.a;
+
 
              N = normalize(vVertexNormal);
              vec4 normalColor = vec4(0.0);
@@ -113,6 +110,7 @@ var RedStandardMaterial;
              specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);
              specularTextureValue = 1.0;
              //#REDGL_DEFINE#specularTexture# specularTextureValue = texture2D(u_specularTexture, vTexcoord).r;
+
 
              vec4 finalColor = uAmbientLightColor * uAmbientIntensity
              + getDirectionalLightColor(
@@ -134,21 +132,22 @@ var RedStandardMaterial;
 
              //#REDGL_DEFINE#emissiveTexture# finalColor.rgb += emissiveColor.rgb * u_emissiveFactor;
 
-
+             finalColor.rgb *= texelColor.a;
              finalColor.a = texelColor.a * u_alpha;
 
              //#REDGL_DEFINE#directionalShadow#true# finalColor.rgb = mix(finalColor.rgb, finalColor.rgb * getShadowColor( vShadowPos, vResolution, uDirectionalShadowTexture), 0.5);
              //#REDGL_DEFINE#fog#false# gl_FragColor = finalColor;
              //#REDGL_DEFINE#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
+
          }
          */
     };
     /**DOC:
      {
 		 constructorYn : true,
-		 title :`RedStandardMaterial`,
+		 title :`RedWaveMaterial`,
 		 description : `
-			 RedStandardMaterial Instance 생성
+			 RedWaveMaterial Instance 생성자.
 		 `,
 		 params : {
 			 redGL : [
@@ -156,38 +155,19 @@ var RedStandardMaterial;
 			 ],
 			 diffuseTexture : [
 				 {type:'RedBitmapTexture'}
-			 ],
-			 normalTexture : [
-				 {type:'RedBitmapTexture'}
-			 ],
-			 specularTexture : [
-				 {type:'RedBitmapTexture'}
-			 ],
-			 displacementTexture : [
-				 {type:'RedBitmapTexture'}
-			 ],
-			 emissiveTexture : [
-				 {type:'RedBitmapTexture'}
 			 ]
 		 },
 		 extends : ['RedBaseMaterial'],
-		 demo : '../example/material/RedStandardMaterial.html',
+		 demo : '../example/material/RedWaveMaterial.html',
 		 example : `
-			 RedStandardMaterial(
-				 RedGL Instance,
-				 RedBitmapTexture(RedGL Instance, src), // diffuseTexture
-				 RedBitmapTexture(RedGL Instance, src), // normalTexture
-				 RedBitmapTexture(RedGL Instance, src), // specularTexture
-				 RedBitmapTexture(RedGL Instance, src),  // displacementTexture
-				 RedBitmapTexture(RedGL Instance, src)  // emissiveTexture
-			 )
+			 RedWaveMaterial( RedGL Instance, RedBitmapTexture(RedGL Instance, src) )
 		 `,
-		 return : 'RedStandardMaterial Instance'
+		 return : 'RedWaveMaterial Instance'
 	 }
      :DOC*/
-    RedStandardMaterial = function (redGL, diffuseTexture, normalTexture, specularTexture, displacementTexture, emissiveTexture) {
-        if (!(this instanceof RedStandardMaterial)) return new RedStandardMaterial(redGL, diffuseTexture, normalTexture, specularTexture, displacementTexture, emissiveTexture);
-        redGL instanceof RedGL || RedGLUtil.throwFunc('RedStandardMaterial : RedGL Instance만 허용.', redGL);
+    RedWaveMaterial = function (redGL, diffuseTexture, normalTexture, specularTexture, displacementTexture, emissiveTexture) {
+        if (!(this instanceof RedWaveMaterial)) return new RedWaveMaterial(redGL, diffuseTexture, normalTexture, specularTexture, displacementTexture, emissiveTexture);
+        redGL instanceof RedGL || RedGLUtil.throwFunc('RedWaveMaterial : RedGL Instance만 허용.', redGL);
         this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource, PROGRAM_OPTION_LIST);
         /////////////////////////////////////////
         // 유니폼 프로퍼티
@@ -207,7 +187,6 @@ var RedStandardMaterial;
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['_UUID'] = RedGL.makeUUID();
-        this['usePreMultiply'] = false;
         if (!checked) {
             this.checkUniformAndProperty();
             checked = true;
@@ -219,7 +198,7 @@ var RedStandardMaterial;
             this._searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST)
         }
     };
-    RedStandardMaterial.prototype = new RedBaseMaterial();
+    RedWaveMaterial.prototype = new RedBaseMaterial();
     /**DOC:
      {
          code : 'PROPERTY',
@@ -228,7 +207,7 @@ var RedStandardMaterial;
 		 return : 'Number'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'alpha', 'number', {min: 0, max: 1});
+    RedDefinePropertyInfo.definePrototype('RedWaveMaterial', 'alpha', 'number', {min: 0, max: 1});
     /**DOC:
      {
 	     code : 'PROPERTY',
@@ -237,7 +216,7 @@ var RedStandardMaterial;
 		 return : 'RedBitmapTexture'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'diffuseTexture', 'sampler2D', {
+    RedDefinePropertyInfo.definePrototype('RedWaveMaterial', 'diffuseTexture', 'sampler2D', {
         essential: true,
         callback: samplerOption.callback
     });
@@ -249,7 +228,7 @@ var RedStandardMaterial;
 		 return : 'RedBitmapTexture'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'normalTexture', 'sampler2D', samplerOption);
+    RedDefinePropertyInfo.definePrototype('RedWaveMaterial', 'normalTexture', 'sampler2D', samplerOption);
     /**DOC:
      {
 	     code : 'PROPERTY',
@@ -258,7 +237,7 @@ var RedStandardMaterial;
 		 return : 'RedBitmapTexture'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'specularTexture', 'sampler2D', samplerOption);
+    RedDefinePropertyInfo.definePrototype('RedWaveMaterial', 'specularTexture', 'sampler2D', samplerOption);
     /**DOC:
      {
 	     code : 'PROPERTY',
@@ -267,7 +246,7 @@ var RedStandardMaterial;
 		 return : 'RedBitmapTexture'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'emissiveTexture', 'sampler2D', samplerOption);
+    RedDefinePropertyInfo.definePrototype('RedWaveMaterial', 'emissiveTexture', 'sampler2D', samplerOption);
     /**DOC:
      {
 	     code : 'PROPERTY',
@@ -276,7 +255,7 @@ var RedStandardMaterial;
 		 return : 'RedBitmapTexture'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'displacementTexture', 'sampler2D', samplerOption);
+    RedDefinePropertyInfo.definePrototype('RedWaveMaterial', 'displacementTexture', 'sampler2D', samplerOption);
     /**DOC:
      {
 	     code : 'PROPERTY',
@@ -285,7 +264,7 @@ var RedStandardMaterial;
 		 return : 'number'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'normalPower', 'number', {'min': 0});
+    RedDefinePropertyInfo.definePrototype('RedWaveMaterial', 'normalPower', 'number', {'min': 0});
     /**DOC:
      {
 	     code : 'PROPERTY',
@@ -294,7 +273,7 @@ var RedStandardMaterial;
 		 return : 'number'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'shininess', 'number', {'min': 0});
+    RedDefinePropertyInfo.definePrototype('RedWaveMaterial', 'shininess', 'number', {'min': 0});
     /**DOC:
      {
 	     code : 'PROPERTY',
@@ -303,7 +282,7 @@ var RedStandardMaterial;
 		 return : 'number'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'specularPower', 'number', {'min': 0});
+    RedDefinePropertyInfo.definePrototype('RedWaveMaterial', 'specularPower', 'number', {'min': 0});
     /**DOC:
      {
 	     code : 'PROPERTY',
@@ -312,7 +291,7 @@ var RedStandardMaterial;
 		 return : 'number'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'emissiveFactor', 'number', {'min': 0});
+    RedDefinePropertyInfo.definePrototype('RedWaveMaterial', 'emissiveFactor', 'number', {'min': 0});
 
     /**DOC:
      {
@@ -322,7 +301,7 @@ var RedStandardMaterial;
 		 return : 'Number'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'displacementPower', 'number', {'min': 0});
+    RedDefinePropertyInfo.definePrototype('RedWaveMaterial', 'displacementPower', 'number', {'min': 0});
     /**DOC:
      {
 	     code : 'PROPERTY',
@@ -331,7 +310,7 @@ var RedStandardMaterial;
 		 return : 'Number'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'displacementFlowSpeedX', 'number');
+    RedDefinePropertyInfo.definePrototype('RedWaveMaterial', 'displacementFlowSpeedX', 'number');
     /**DOC:
      {
 	     code : 'PROPERTY',
@@ -340,7 +319,7 @@ var RedStandardMaterial;
 		 return : 'Number'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'displacementFlowSpeedY', 'number');
+    RedDefinePropertyInfo.definePrototype('RedWaveMaterial', 'displacementFlowSpeedY', 'number');
     /**DOC:
      {
 	     code : 'PROPERTY',
@@ -352,18 +331,6 @@ var RedStandardMaterial;
 		 return : 'boolean'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'useFlatMode', 'boolean', samplerOption);
-    /**DOC:
-     {
-	     code : 'PROPERTY',
-		 title :`usePreMultiply`,
-		 description : `
-		    usePreMultiply 사용여부
-		    기본값 : false
-		 `,
-		 return : 'boolean'
-	 }
-     :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'usePreMultiply', 'boolean', samplerOption);
-    Object.freeze(RedStandardMaterial);
+    RedDefinePropertyInfo.definePrototype('RedWaveMaterial', 'useFlatMode', 'boolean', samplerOption);
+    Object.freeze(RedWaveMaterial);
 })();

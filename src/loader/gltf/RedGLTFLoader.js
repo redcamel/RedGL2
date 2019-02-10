@@ -508,13 +508,11 @@ var RedGLTFLoader;
                                     var prev, next
                                     prev = originData[index]
                                     next = originData[index]
-
                                     targetMesh['_morphInfo']['list'].forEach(function (v, morphIndex) {
                                         if (morphIndex % 3 == 1) {
                                             prev += aniData['data'][prevIndex * 2 + morphIndex] * v['interleaveData'][index]
                                             next += aniData['data'][nextIndex * 2 + morphIndex] * v['interleaveData'][index]
                                         }
-
                                     })
                                     targetData[index] = prev + interpolationValue * (next - prev)
                                 })
@@ -1254,7 +1252,7 @@ var RedGLTFLoader;
                     break
             }
         }
-        var RedGLTF_MorphInfo = function (redGLTFLoader, json, primitiveData) {
+        var RedGLTF_MorphInfo = function (redGLTFLoader, json, primitiveData, weightsData) {
             var morphList = []
             if (primitiveData['targets']) {
                 primitiveData['targets'].forEach(function (v2) {
@@ -1291,6 +1289,7 @@ var RedGLTFLoader;
                 })
             }
             this['list'] = morphList
+            morphList['weights'] = weightsData || []
             this['origin'] = null
         }
         var parseIndicesInfo = function (redGLTFLoader, json, key, accessorInfo, indices) {
@@ -1483,6 +1482,81 @@ var RedGLTFLoader;
                 return [tMaterial, doubleSide, alphaMode, alphaCutoff]
             }
         })();
+        var makeInterleaveData = function (interleaveData, vertices, verticesColor_0, normalData, uvs, uvs1, jointWeights, joints, tangents) {
+            var i = 0, len = vertices.length / 3
+            var idx = 0
+            for (i; i < len; i++) {
+                if (vertices.length) {
+                    interleaveData[idx++] = vertices[i * 3 + 0];
+                    interleaveData[idx++] = vertices[i * 3 + 1];
+                    interleaveData[idx++] = vertices[i * 3 + 2];
+                    // interleaveData.push(vertices[i * 3 + 0], vertices[i * 3 + 1], vertices[i * 3 + 2])
+                }
+                if (verticesColor_0.length) {
+                    interleaveData[idx++] = verticesColor_0[i * 4 + 0];
+                    interleaveData[idx++] = verticesColor_0[i * 4 + 1];
+                    interleaveData[idx++] = verticesColor_0[i * 4 + 2];
+                    interleaveData[idx++] = verticesColor_0[i * 4 + 3];
+                    // interleaveData.push(verticesColor_0[i * 4 + 0], verticesColor_0[i * 4 + 1], verticesColor_0[i * 4 + 2], verticesColor_0[i * 4 + 3])
+                }else{
+                    interleaveData[idx++] = 0;
+                    interleaveData[idx++] = 0;
+                    interleaveData[idx++] = 0;
+                    interleaveData[idx++] = 0;
+                    // interleaveData.push(0, 0, 0, 0)
+                }
+                if (normalData.length) {
+                    interleaveData[idx++] = normalData[i * 3 + 0];
+                    interleaveData[idx++] = normalData[i * 3 + 1];
+                    interleaveData[idx++] = normalData[i * 3 + 2];
+                    // interleaveData.push(normalData[i * 3 + 0], normalData[i * 3 + 1], normalData[i * 3 + 2])
+                }
+                if (!uvs.length) uvs.push(0, 0)
+                if (uvs.length) {
+                    interleaveData[idx++] = uvs[i * 2 + 0];
+                    interleaveData[idx++] = uvs[i * 2 + 1];
+                    // interleaveData.push(uvs[i * 2 + 0], uvs[i * 2 + 1])
+                }
+                if (uvs1.length) {
+                    interleaveData[idx++] = uvs1[i * 2 + 0];
+                    interleaveData[idx++] = uvs1[i * 2 + 1];
+                    // interleaveData.push(uvs1[i * 2 + 0], uvs1[i * 2 + 1])
+                }
+                else if (uvs.length) {
+                    interleaveData[idx++] = uvs[i * 2 + 0];
+                    interleaveData[idx++] = uvs[i * 2 + 1];
+                    // interleaveData.push(uvs[i * 2 + 0], uvs[i * 2 + 1])
+                }
+                if (jointWeights.length) {
+                    interleaveData[idx++] = jointWeights[i * 4 + 0];
+                    interleaveData[idx++] = jointWeights[i * 4 + 1];
+                    interleaveData[idx++] = jointWeights[i * 4 + 2];
+                    interleaveData[idx++] = jointWeights[i * 4 + 3];
+                    // interleaveData.push(jointWeights[i * 4 + 0], jointWeights[i * 4 + 1], jointWeights[i * 4 + 2], jointWeights[i * 4 + 3])
+                }
+                if (joints.length) {
+                    interleaveData[idx++] = joints[i * 4 + 0];
+                    interleaveData[idx++] = joints[i * 4 + 1];
+                    interleaveData[idx++] = joints[i * 4 + 2];
+                    interleaveData[idx++] = joints[i * 4 + 3];
+                    // interleaveData.push(joints[i * 4 + 0], joints[i * 4 + 1], joints[i * 4 + 2], joints[i * 4 + 3])
+                }
+                if (tangents.length) {
+                    interleaveData[idx++] = tangents[i * 4 + 0];
+                    interleaveData[idx++] = tangents[i * 4 + 1];
+                    interleaveData[idx++] = tangents[i * 4 + 2];
+                    interleaveData[idx++] = tangents[i * 4 + 3];
+                    // interleaveData.push(tangents[i * 4 + 0], tangents[i * 4 + 1], tangents[i * 4 + 2], tangents[i * 4 + 3])
+                }
+                else {
+                    interleaveData[idx++] = 0;
+                    interleaveData[idx++] = 0;
+                    interleaveData[idx++] = 0;
+                    interleaveData[idx++] = 0;
+                    // interleaveData.push(0, 0, 0, 0)
+                }
+            }
+        }
         makeMesh = function (redGLTFLoader, json, meshData) {
             // console.log('parseMesh :')
             // console.log(meshData)
@@ -1580,21 +1654,8 @@ var RedGLTFLoader;
                 // console.log('vertices', vertices)
                 // console.log('normalData', normalData)
                 var interleaveData = []
-                var i = 0, len = vertices.length / 3
-                for (i; i < len; i++) {
-                    if (vertices.length) interleaveData.push(vertices[i * 3 + 0], vertices[i * 3 + 1], vertices[i * 3 + 2])
-                    if (verticesColor_0.length) interleaveData.push(verticesColor_0[i * 4 + 0], verticesColor_0[i * 4 + 1], verticesColor_0[i * 4 + 2], verticesColor_0[i * 4 + 3])
-                    else interleaveData.push(0, 0, 0, 0)
-                    if (normalData.length) interleaveData.push(normalData[i * 3 + 0], normalData[i * 3 + 1], normalData[i * 3 + 2])
-                    if (!uvs.length) uvs.push(0, 0)
-                    if (uvs.length) interleaveData.push(uvs[i * 2 + 0], uvs[i * 2 + 1])
-                    if (uvs1.length) interleaveData.push(uvs1[i * 2 + 0], uvs1[i * 2 + 1])
-                    else if (uvs.length) interleaveData.push(uvs[i * 2 + 0], uvs[i * 2 + 1])
-                    if (jointWeights.length) interleaveData.push(jointWeights[i * 4 + 0], jointWeights[i * 4 + 1], jointWeights[i * 4 + 2], jointWeights[i * 4 + 3])
-                    if (joints.length) interleaveData.push(joints[i * 4 + 0], joints[i * 4 + 1], joints[i * 4 + 2], joints[i * 4 + 3])
-                    if (tangents.length) interleaveData.push(tangents[i * 4 + 0], tangents[i * 4 + 1], tangents[i * 4 + 2], tangents[i * 4 + 3])
-                    else interleaveData.push(0, 0, 0, 0)
-                }
+
+                makeInterleaveData(interleaveData, vertices, verticesColor_0, normalData, uvs, uvs1, jointWeights, joints, tangents)
                 // console.log('interleaveData', interleaveData)
                 /////////////////////////////////////////////////////////
                 // 메쉬 생성
@@ -1671,7 +1732,7 @@ var RedGLTFLoader;
                 // console.log('tMesh', tMesh)
                 /////////////////////////////////////////////////////////
                 // 모프리스트 설정
-                var morphInfo = new RedGLTF_MorphInfo(redGLTFLoader, json, v)
+                var morphInfo = new RedGLTF_MorphInfo(redGLTFLoader, json, v, meshData['weights'])
                 morphInfo['list'].forEach(function (v) {
                     var normalData
                     if (v['normals'].length) normalData = v['normals']
@@ -1679,26 +1740,28 @@ var RedGLTFLoader;
                     // console.log('vertices', vertices)
                     // console.log('normalData', normalData)
                     var interleaveData = []
-                    var i = 0, len = v['vertices'].length / 3
-                    for (i; i < len; i++) {
-                        if (v['vertices'].length) interleaveData.push(v['vertices'][i * 3 + 0], v['vertices'][i * 3 + 1], v['vertices'][i * 3 + 2])
-                        if (v['verticesColor_0'].length) interleaveData.push(v['verticesColor_0'][i * 4 + 0], v['verticesColor_0'][i * 4 + 1], v['verticesColor_0'][i * 4 + 2], v['verticesColor_0'][i * 4 + 3])
-                        else interleaveData.push(0, 0, 0, 0)
-                        if (normalData.length) interleaveData.push(normalData[i * 3 + 0], normalData[i * 3 + 1], normalData[i * 3 + 2])
-                        if (!v['uvs'].length) v['uvs'].push(0, 0)
-                        if (v['uvs'].length) interleaveData.push(v['uvs'][i * 2 + 0], v['uvs'][i * 2 + 1])
-                        if (v['uvs1'].length) interleaveData.push(v['uvs1'][i * 2 + 0], v['uvs1'][i * 2 + 1])
-                        else if (v['uvs'].length) interleaveData.push(v['uvs'][i * 2 + 0], v['uvs'][i * 2 + 1])
-                        if (v['jointWeights'].length) interleaveData.push(v['jointWeights'][i * 4 + 0], v['jointWeights'][i * 4 + 1], v['jointWeights'][i * 4 + 2], v['jointWeights'][i * 4 + 3])
-                        if (v['joints'].length) interleaveData.push(v['joints'][i * 4 + 0], v['joints'][i * 4 + 1], v['joints'][i * 4 + 2], v['joints'][i * 4 + 3])
-                        if (v['tangents'].length) interleaveData.push(v['tangents'][i * 4 + 0], v['tangents'][i * 4 + 1], v['tangents'][i * 4 + 2], v['tangents'][i * 4 + 3])
-                        else interleaveData.push(0, 0, 0, 0)
-
-                    }
+                    makeInterleaveData(interleaveData, v['vertices'], v['verticesColor_0'], normalData, v['uvs'], v['uvs1'], v['jointWeights'], v['joints'], v['tangents'])
+                    // var i = 0, len = v['vertices'].length / 3
+                    // for (i; i < len; i++) {
+                    //     if (v['vertices'].length) interleaveData.push(v['vertices'][i * 3 + 0], v['vertices'][i * 3 + 1], v['vertices'][i * 3 + 2])
+                    //     if (v['verticesColor_0'].length) interleaveData.push(v['verticesColor_0'][i * 4 + 0], v['verticesColor_0'][i * 4 + 1], v['verticesColor_0'][i * 4 + 2], v['verticesColor_0'][i * 4 + 3])
+                    //     else interleaveData.push(0, 0, 0, 0)
+                    //     if (normalData.length) interleaveData.push(normalData[i * 3 + 0], normalData[i * 3 + 1], normalData[i * 3 + 2])
+                    //     if (!v['uvs'].length) v['uvs'].push(0, 0)
+                    //     if (v['uvs'].length) interleaveData.push(v['uvs'][i * 2 + 0], v['uvs'][i * 2 + 1])
+                    //     if (v['uvs1'].length) interleaveData.push(v['uvs1'][i * 2 + 0], v['uvs1'][i * 2 + 1])
+                    //     else if (v['uvs'].length) interleaveData.push(v['uvs'][i * 2 + 0], v['uvs'][i * 2 + 1])
+                    //     if (v['jointWeights'].length) interleaveData.push(v['jointWeights'][i * 4 + 0], v['jointWeights'][i * 4 + 1], v['jointWeights'][i * 4 + 2], v['jointWeights'][i * 4 + 3])
+                    //     if (v['joints'].length) interleaveData.push(v['joints'][i * 4 + 0], v['joints'][i * 4 + 1], v['joints'][i * 4 + 2], v['joints'][i * 4 + 3])
+                    //     if (v['tangents'].length) interleaveData.push(v['tangents'][i * 4 + 0], v['tangents'][i * 4 + 1], v['tangents'][i * 4 + 2], v['tangents'][i * 4 + 3])
+                    //     else interleaveData.push(0, 0, 0, 0)
+                    //
+                    // }
                     v['interleaveData'] = interleaveData
                 });
                 tMesh['_morphInfo'] = morphInfo
                 tMesh['_morphInfo']['origin'] = new Float32Array(interleaveData)
+                console.log('모프리스트', tMesh['_morphInfo'])
                 // console.log(morphInfo)
                 /////////////////////////////////////////////////////
                 var targetData = tMesh['geometry']['interleaveBuffer']['data']
@@ -1706,14 +1769,16 @@ var RedGLTFLoader;
                 tInterleaveInfoList.forEach(function (v) {
                     NUM += v['size']
                 })
-                tMesh['_morphInfo']['list'].forEach(function (v) {
+                var gap = 0
+                tMesh['_morphInfo']['list'].forEach(function (v, index) {
                     console.log('tInterleaveInfoList', tInterleaveInfoList)
                     console.log('NUM', NUM)
                     var i = 0, len = targetData.length / NUM
+                    var tWeights = tMesh['_morphInfo']['list']['weights'][index] == undefined ? 0.5 : tMesh['_morphInfo']['list']['weights'][index]
                     for (i; i < len; i++) {
-                        targetData[i * NUM + 0] += v['vertices'][i * 3 + 0] * 0.5
-                        targetData[i * NUM + 1] += v['vertices'][i * 3 + 1] * 0.5
-                        targetData[i * NUM + 2] += v['vertices'][i * 3 + 2] * 0.5
+                        targetData[i * NUM + 0] += v['vertices'][i * 3 + 0] * tWeights
+                        targetData[i * NUM + 1] += v['vertices'][i * 3 + 1] * tWeights
+                        targetData[i * NUM + 2] += v['vertices'][i * 3 + 2] * tWeights
                     }
                 });
                 tMesh['geometry']['interleaveBuffer'].upload(targetData)

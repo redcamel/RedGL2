@@ -3,7 +3,7 @@ var RedEnvironmentMaterial;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'RedEnvironmentMaterialProgram';
-    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'specularTexture', 'displacementTexture', 'emissiveTexture', 'useFlatMode'];
+    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'specularTexture', 'displacementTexture', 'emissiveTexture', 'useFlatMode','usePreMultiply'];
     var checked;
     vSource = function () {
         /* @preserve
@@ -100,11 +100,11 @@ var RedEnvironmentMaterial;
 
              texelColor = vec4(0.0,0.0,0.0,0.0);
              //#REDGL_DEFINE#diffuseTexture# texelColor = texture2D(u_diffuseTexture, vTexcoord);
-             //#REDGL_DEFINE#diffuseTexture# texelColor.rgb *= texelColor.a;
+             //#REDGL_DEFINE#diffuseTexture# //#REDGL_DEFINE#usePreMultiply# texelColor.rgb *= texelColor.a;
              //#REDGL_DEFINE#diffuseTexture# if(texelColor.a ==0.0) discard;
 
              //#REDGL_DEFINE#emissiveTexture# emissiveColor = texture2D(u_emissiveTexture, vTexcoord);
-             //#REDGL_DEFINE#emissiveTexture# emissiveColor.rgb *= texelColor.a;
+             //#REDGL_DEFINE#emissiveTexture# //#REDGL_DEFINE#usePreMultiply# emissiveColor.rgb *= texelColor.a;
 
              N = normalize(vVertexNormal);
              vec4 normalColor = vec4(0.0);
@@ -114,7 +114,7 @@ var RedEnvironmentMaterial;
 
              vec3 R = reflect( vVertexPosition.xyz - uCameraPosition, N);
              reflectionColor = textureCube(u_environmentTexture, R);
-             texelColor = mix(texelColor,reflectionColor ,u_reflectionPower);
+             texelColor = mix(texelColor, reflectionColor ,u_reflectionPower);
 
              specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);
              specularTextureValue = 1.0;
@@ -139,7 +139,6 @@ var RedEnvironmentMaterial;
              );
 
              //#REDGL_DEFINE#emissiveTexture# finalColor.rgb += emissiveColor.rgb * u_emissiveFactor;
-             finalColor.rgb *= texelColor.a;
              finalColor.a = texelColor.a * u_alpha;
 
              //#REDGL_DEFINE#directionalShadow#true# finalColor.rgb = mix(finalColor.rgb, finalColor.rgb * getShadowColor( vShadowPos, vResolution, uDirectionalShadowTexture), 0.5);
@@ -234,6 +233,7 @@ var RedEnvironmentMaterial;
         this['alpha'] = 1;
         /////////////////////////////////////////
         this['useFlatMode'] = false
+        this['usePreMultiply'] = false;
         // 일반 프로퍼티
         this['_UUID'] = RedGL.makeUUID();
         if (!checked) {
@@ -398,5 +398,17 @@ var RedEnvironmentMaterial;
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'useFlatMode', 'boolean', samplerOption);
+    /**DOC:
+     {
+	     code : 'PROPERTY',
+		 title :`usePreMultiply`,
+		 description : `
+		    usePreMultiply 사용여부
+		    기본값 : false
+		 `,
+		 return : 'boolean'
+	 }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'usePreMultiply', 'boolean', samplerOption);
     Object.freeze(RedEnvironmentMaterial);
 })();

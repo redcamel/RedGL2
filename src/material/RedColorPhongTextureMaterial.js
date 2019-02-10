@@ -3,7 +3,7 @@ var RedColorPhongTextureMaterial;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'RedColorPhongTextureMaterialProgram';
-    var PROGRAM_OPTION_LIST = ['normalTexture', 'specularTexture', 'displacementTexture', 'emissiveTexture', 'useFlatMode'];
+    var PROGRAM_OPTION_LIST = ['normalTexture', 'specularTexture', 'displacementTexture', 'emissiveTexture', 'useFlatMode','usePreMultiply'];
     var checked;
     vSource = function () {
         /* @preserve
@@ -17,8 +17,6 @@ var RedColorPhongTextureMaterial;
             //#REDGL_DEFINE#displacementTexture# uniform float u_displacementPower;
             //#REDGL_DEFINE#displacementTexture# uniform float u_displacementFlowSpeedX;
             //#REDGL_DEFINE#displacementTexture# uniform float u_displacementFlowSpeedY;
-
-
 
             void main(void) {
                 gl_PointSize = uPointSize;
@@ -93,7 +91,6 @@ var RedColorPhongTextureMaterial;
          void main(void) {
 
              texelColor = u_color;
-             // texelColor.rgb *= texelColor.a;
 
              N = normalize(vVertexNormal);
              vec4 normalColor = vec4(0.0);
@@ -102,7 +99,7 @@ var RedColorPhongTextureMaterial;
              //#REDGL_DEFINE#normalTexture# N = getPerturbNormal2Arb(vVertexPosition.xyz, N, normalColor, vTexcoord) ;
 
             //#REDGL_DEFINE#emissiveTexture# emissiveColor = texture2D(u_emissiveTexture, vTexcoord);
-            //#REDGL_DEFINE#emissiveTexture# emissiveColor.rgb *= texelColor.a;
+            //#REDGL_DEFINE#emissiveTexture# //#REDGL_DEFINE#usePreMultiply# emissiveColor.rgb *= texelColor.a;
 
              specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);
              float specularTextureValue = 1.0;
@@ -128,7 +125,6 @@ var RedColorPhongTextureMaterial;
 
              //#REDGL_DEFINE#emissiveTexture# finalColor.rgb += emissiveColor.rgb * u_emissiveFactor;
 
-             finalColor.rgb *= texelColor.a;
              finalColor.a = texelColor.a;
              if(finalColor.a == 0.0) discard;
 
@@ -201,6 +197,7 @@ var RedColorPhongTextureMaterial;
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['color'] = hexColor ? hexColor : '#ff0000';
+        this['usePreMultiply'] = false;
         this['useFlatMode'] = false
         this['_UUID'] = RedGL.makeUUID();
         if (!checked) {
@@ -348,5 +345,17 @@ var RedColorPhongTextureMaterial;
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'useFlatMode', 'boolean', samplerOption);
+    /**DOC:
+     {
+	     code : 'PROPERTY',
+		 title :`usePreMultiply`,
+		 description : `
+		    usePreMultiply 사용여부
+		    기본값 : false
+		 `,
+		 return : 'boolean'
+	 }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'usePreMultiply', 'boolean', samplerOption);
     Object.freeze(RedColorPhongTextureMaterial)
 })();

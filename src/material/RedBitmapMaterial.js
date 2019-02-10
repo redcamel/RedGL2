@@ -3,7 +3,7 @@ var RedBitmapMaterial;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'RedBitmapMaterialProgram';
-    var PROGRAM_OPTION_LIST = [];
+    var PROGRAM_OPTION_LIST = ['usePreMultiply'];
     var checked;
     vSource = function () {
         /* @preserve
@@ -50,7 +50,7 @@ var RedBitmapMaterial;
 
          void main(void) {
              vec4 finalColor = texture2D(u_diffuseTexture, vTexcoord);
-             finalColor.rgb *= finalColor.a;
+             //#REDGL_DEFINE#usePreMultiply# finalColor.rgb *= finalColor.a;
              finalColor.a *= u_alpha;
              if(finalColor.a == 0.0) discard;
 
@@ -93,6 +93,7 @@ var RedBitmapMaterial;
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['alpha'] = 1;
+        this['usePreMultiply'] = false;
         this['_UUID'] = RedGL.makeUUID();
         if (!checked) {
             this.checkUniformAndProperty();
@@ -101,6 +102,11 @@ var RedBitmapMaterial;
         console.log(this);
     };
     RedBitmapMaterial.prototype = new RedBaseMaterial();
+    var samplerOption = {
+        callback: function () {
+            this._searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST)
+        }
+    };
     /**DOC:
      {
 	     code : 'PROPERTY',
@@ -119,5 +125,17 @@ var RedBitmapMaterial;
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedBitmapMaterial', 'alpha', 'number', {min: 0, max: 1});
+    /**DOC:
+     {
+	     code : 'PROPERTY',
+		 title :`usePreMultiply`,
+		 description : `
+		    usePreMultiply 사용여부
+		    기본값 : false
+		 `,
+		 return : 'boolean'
+	 }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedBitmapMaterial', 'usePreMultiply', 'boolean', samplerOption);
     Object.freeze(RedBitmapMaterial);
 })();
