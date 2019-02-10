@@ -16,9 +16,11 @@ var RedGLDetect;
 		 return : 'RedGLDetect Instance'
 	 }
      :DOC*/
-    RedGLDetect = function (gl) {
-        if (!(this instanceof RedGLDetect)) return new RedGLDetect(gl);
+    RedGLDetect = function (redGL) {
+        if (!(this instanceof RedGLDetect)) return new RedGLDetect(redGL);
         var checkList, i, k, tKey, tList;
+        var self = this;
+        var gl = redGL.gl
         checkList = {
             basic: [
                 'VENDOR',
@@ -59,9 +61,30 @@ var RedGLDetect;
             this[k] = {};
             while (i--) this[k][tKey = tList[i]] = gl.getParameter(gl[tKey]);
         }
+        this['BROWSER_INFO'] = RedGLDetect.getBrowserInfo();
+        requestAnimationFrame(function(){
+            var canvas = document.createElement('canvas')
+            var ctx = canvas.getContext('2d')
+            canvas.width = 10
+            canvas.height = 20
+            ctx.fillStyle = 'red'
+            ctx.fillRect(0, 0, 10, 10)
+            ctx.fillStyle = 'blue'
+            ctx.fillRect(0, 10, 10, 10)
+            canvas.style.cssText = 'position:fixed;top:0px;left:0px'
+            // document.body.appendChild(canvas)
+            var tTexture  = RedBitmapTexture(redGL,canvas)
 
-
-        this['BROWSER_INFO'] = RedGLDetect.getBrowserInfo()
+            var fb = gl.createFramebuffer();
+            gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
+            gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tTexture.webglTexture, 0);
+            var pixels = new Uint8Array(1 * 1 * 4);
+            gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels)
+            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+            self['ableCanvasSourceFlipYonTexture'] = pixels[0]==255
+            self['BROWSER_INFO']['ableCanvasSourceFlipYonTexture']  = pixels[0]==255
+            console.log('test', pixels)
+        })
 
     };
     /**DOC:

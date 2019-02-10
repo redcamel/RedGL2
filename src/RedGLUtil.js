@@ -207,24 +207,15 @@ var RedGLUtil;
                         canvas.width = tW;
                         canvas.height = tH;
                     }
-                    switch(RedGLDetect.BROWSER_INFO.browser){
-                        case 'firefox' :
-                        case 'ie' :
-                        case 'edge' :
-                            break
-                        default :
-                            tH = -tH
-                            ctx.scale(1, -1)
+                    if (RedGLDetect.BROWSER_INFO.ableCanvasSourceFlipYonTexture) {
+                        tH = -tH
+                        ctx.scale(1, -1)
                     }
 
 
                     // if ('getContext' in source && window['OffscreenCanvas']) {
                     // }
-                    try{
-                        ctx.drawImage(source, 0, 0, tW, tH);
-                    }catch (e) {
-                        console.log(e)
-                    }
+                    ctx.drawImage(source, 0, 0, tW, tH);
 
                     console.log(canvas);
                     return window['OffscreenCanvas'] ? canvas.transferToImageBitmap() : canvas;
