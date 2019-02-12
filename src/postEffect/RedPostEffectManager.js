@@ -44,7 +44,7 @@ var RedPostEffectManager;
 		}
          :DOC*/
         Object.defineProperty(this, 'postEffectList', {value: []});
-        Object.defineProperty(this, 'children', {value: [RedMesh(redGL, RedPlane(redGL), this['finalMaterial'])]});
+        Object.defineProperty(this, 'children', {value: [RedMesh(redGL, RedPlane(redGL, 1, 1, 1, 1, true), this['finalMaterial'])]});
         this['_UUID'] = RedGL.makeUUID();
         console.log(this);
     };

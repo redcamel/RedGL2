@@ -21,7 +21,7 @@ var RedParticleEmitter;
 			    '파티클 정의 오브젝트'
 			 ],
 			 material : [
-			    {type:'RedParticleColorMaterial Instance or RedParticleMaterial Instance'},
+			    {type:'RedParticleMaterial Instance'},
 			 ]
 		 },
 		 demo : '../example/particle/RedParticleEmitter.html',

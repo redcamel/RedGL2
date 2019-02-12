@@ -23,7 +23,7 @@
       ],
       "material": [
         {
-          "type": "RedParticleColorMaterial Instance or RedParticleMaterial Instance"
+          "type": "RedParticleMaterial Instance"
         }
       ]
     },

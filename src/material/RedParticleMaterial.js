@@ -42,7 +42,7 @@ var RedParticleMaterial;
          uniform float u_alpha;
          void main(void) {
              vec4 finalColor = vVertexColor;
-             //#REDGL_DEFINE#diffuseTexture# finalColor = texture2D(u_diffuseTexture, vec2(gl_PointCoord.x, - gl_PointCoord.y));
+             //#REDGL_DEFINE#diffuseTexture# finalColor = texture2D(u_diffuseTexture, gl_PointCoord.xy);
              //#REDGL_DEFINE#diffuseTexture# //#REDGL_DEFINE#usePreMultiply# finalColor.rgb *= finalColor.a;
              //#REDGL_DEFINE#diffuseTexture# finalColor.rgb += vVertexColor.rgb * vVertexColor.a;
              //#REDGL_DEFINE#diffuseTexture# finalColor.a *= vVertexColor.a;
