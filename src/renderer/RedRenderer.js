@@ -216,7 +216,7 @@ var RedRenderer;
             // // 픽셀 블렌딩 결정
             // gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
             // 픽셀 플립 기본설정
-            gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+            gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
         };
         return function (redGL, time) {
             var gl;

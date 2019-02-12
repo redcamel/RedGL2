@@ -43,7 +43,7 @@ var RedSphere;
                     vec3.normalize(normal, normal);
                     interleaveData.push(normal[0], normal[1], normal[2]);
                     // uv
-                    interleaveData.push(u, 1 - v);
+                    interleaveData.push(u,  v);
                     verticesRow.push(index++);
                 }
                 grid.push(verticesRow);

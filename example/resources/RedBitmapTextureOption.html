@@ -59,12 +59,12 @@
                 var indexData;
                 var testInterleaveBuffer, testIndexBuffer;
                 interleaveData = new Float32Array([
-                    -0.5, -0.5, 0.0, 0.0, 0.0,
-                    0.5, -0.5, 0.0, 2.0, 0.0,
-                    0.5, 0.5, 0.0, 2.0, 2.0,
-                    -0.5, 0.5, 0.0, 0.0, 2.0
+                    -0.5, 0.5, 0.0, 0.0, 0.0,
+                    0.5, 0.5, 0.0, 2.0, 0.0,
+                    -0.5, -0.5, 0.0, 0.0, 2.0,
+                    0.5, -0.5, 0.0, 2.0, 2.0
                 ]);
-                indexData = new Uint16Array([0, 1, 2, 0, 2, 3]);
+                indexData = new Uint16Array([0, 2, 1, 2, 3, 1]);
                 testInterleaveBuffer = RedBuffer(
                     redGL,
                     'testInterleaveBuffer',

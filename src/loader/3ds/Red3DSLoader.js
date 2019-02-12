@@ -627,7 +627,7 @@ var Red3DSLoader;
                         var uvs = [];
                         for (i = 0; i < texels; i++) {
                             uvs.push(readFloat(target, dataView));
-                            uvs.push(readFloat(target, dataView));
+                            uvs.push(1-readFloat(target, dataView));
                         }
                         break
                     case MESH_MATRIX :

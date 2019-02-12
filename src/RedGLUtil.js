@@ -207,14 +207,7 @@ var RedGLUtil;
                         canvas.width = tW;
                         canvas.height = tH;
                     }
-                    if (RedGLDetect.BROWSER_INFO.ableCanvasSourceFlipYonTexture) {
-                        tH = -tH
-                        ctx.scale(1, -1)
-                    }
 
-
-                    // if ('getContext' in source && window['OffscreenCanvas']) {
-                    // }
                     ctx.drawImage(source, 0, 0, tW, tH);
 
                     console.log(canvas);

@@ -191,7 +191,7 @@ var RedText;
          :DOC*/
         setStylePrototype(this, 'textAlign', 'center');
         //////////////////////
-        this['geometry'] = RedPlane(redGL, 1, 1, 0);
+        this['geometry'] = RedPlane(redGL, 1, 1);
         this['material'] = RedTextMaterial(redGL, RedBitmapTexture(redGL, this['_cvs']));
         //////////////////////
         this['blendSrc'] = redGL.gl.ONE;

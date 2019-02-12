@@ -306,10 +306,11 @@ var RedSystemShaderCode;
                 getPerturbNormal2Arb:
                     [
                         'vec3 getPerturbNormal2Arb( vec3 eye_pos, vec3 surf_norm, vec4 normalColor , vec2 vUv) {',
+                        '   vec2 vUv2 = vec2(vUv.s, 1.0-vUv.t);',
                         '   vec3 q0 = dFdx( eye_pos.xyz );',
                         '   vec3 q1 = dFdy( eye_pos.xyz );',
-                        '   vec2 st0 = dFdx( vUv.st );',
-                        '   vec2 st1 = dFdy( vUv.st );',
+                        '   vec2 st0 = dFdx( vUv2.st );',
+                        '   vec2 st1 = dFdy( vUv2.st );',
 
                         '   vec3 S = normalize(  q0 * st1.t - q1 * st0.t );',
                         '   vec3 T = normalize( -q0 * st1.s + q1 * st0.s );',
