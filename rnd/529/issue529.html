@@ -13,7 +13,6 @@
     <script src="../../example/dat.gui.min.js"></script>
     <script src="../../example/baseTestUI.js"></script>
     <script src="../../release/RedGL.js"></script>
-    <!--<script src="RedGLTFLoader.js"></script>-->
 </head>
 
 <body>
@@ -23,6 +22,7 @@
     var assetPath = '../../asset/'
     canvas = document.createElement('canvas');
     document.body.appendChild(canvas);
+    RedGL.setDoNotPrepareProgram()
     RedGL(canvas, function (v) {
         if (v) {
             var tWorld, tView, tScene, tController, tRenderer;
@@ -35,7 +35,6 @@
                 tController = RedObitController(redGL);
                 tController.pan = 25;
                 tController.tilt = -15;
-                tController.distance =5;
                 // 렌더러 생성
                 tRenderer = RedRenderer();
                 // 뷰생성 및 적용
@@ -46,60 +45,47 @@
                 // 라이트 설정
                 var testDLight;
                 testDLight = RedDirectionalLight(redGL)
-                testDLight.x = 0
-                testDLight.y = 100
-                testDLight.z = 100
+                testDLight.x = 3
+                testDLight.y = 3
+                testDLight.z = 3
+                testDLight.debug=true
                 tScene.addLight(testDLight)
-                testDLight = RedDirectionalLight(redGL)
-                testDLight.x = 0
-                testDLight.y = 100
-                testDLight.z = -100
-                tScene.addLight(testDLight)
+
+
+
                 // 렌더시작
                 tRenderer.start(redGL, function (time) {
+                    testDLight.x = Math.sin(time/1000)*3
+                    testDLight.z = Math.cos(time/1000)*3
                 });
                 // 렌더 디버거 활성화
                 tRenderer.setDebugButton();
                 testUI(redGL, tController)
             };
-
             setBase(this);
-            console.log(this)
-
-            // GLTF 로딩
-            tScene['skyBox'] = RedSkyBox(this, [
-                assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
-                assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
-                assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
-                assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
-                assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
-                assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
-            ])
-
-            RedGLTFLoader(this,  assetPath + 'glTF/basic/', 'NormalTangentTest.gltf', function (v) {
+            ///////////////////////////////////////////////////
+            //     RedGLTFLoader(this,  'https://ft-lab.github.io/gltf/occlusion/', 'occlusion_leaves.glb', function (v) {
+            RedGLTFLoader(this, 'https://ft-lab.github.io/gltf/yunomi/', 'Yunomi_normal_20.glb', function (v) {
+                // RedGLTFLoader(this,  'https://ft-lab.github.io/gltf/normal_map/', 'normal_test_02.glb', function (v) {
                 console.log('호잇!', v)
                 tScene.addChild(v['resultMesh'])
-                v['resultMesh'].z = -1
-            },RedBitmapCubeTexture(this,[
-                assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
-                assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
-                assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
-                assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
-                assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
-                assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
-            ]))
-            RedGLTFLoader(this,  assetPath + 'glTF/basic/', 'NormalTangentMirrorTest.gltf', function (v) {
+                v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 5
+
+            })
+            RedGLTFLoader(this, 'https://ft-lab.github.io/gltf/normal_map/', 'normal_test_02.glb', function (v) {
                 console.log('호잇!', v)
                 tScene.addChild(v['resultMesh'])
-                v['resultMesh'].z = 1
-            },RedBitmapCubeTexture(this,[
-                assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
-                assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
-                assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
-                assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
-                assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
-                assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
-            ]))
+                v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.5
+                v['resultMesh'].x = 1
+
+            })
+            // RedGLTFLoader(this, 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/SciFiHelmet/glTF/', 'SciFiHelmet.gltf', function (v) {
+            //     console.log('호잇!', v)
+            //     tScene.addChild(v['resultMesh'])
+            //     v['resultMesh'].z = -3
+            //
+            // })
+
         } else {
             console.log('초기화 실패!')
         }

@@ -22,8 +22,7 @@ var RedImageLoader;
     }
 
     var makeImageBitmap = function (v, option) {
-        if (RedGLDetect.BROWSER_INFO.browser == 'firefox') return createImageBitmap(v)
-        else return createImageBitmap(v, option ? option : {imageOrientation: 'flipY'})
+        return createImageBitmap(v, option ? option : {imageOrientation: 'none'})
     }
     var fileLoader = function (src, onLoader, onError, option) {
 
@@ -38,7 +37,7 @@ var RedImageLoader;
                 // console.log(request.response)
                 if (request.status === 200) {
                     makeImageBitmap(request.response, option ? option : {
-                        imageOrientation: 'flipY'
+                        imageOrientation: 'none'
                     }).then(function (v) {
                         v['src'] = src
                         self['source'] = v
@@ -104,7 +103,7 @@ var RedImageLoader;
         } else {
             if (src.split(',').length == 2 && src.substr(0, 5) == 'data:') {
                 makeImageBitmap(base64toBlob(src.split(',')[1], 'image/png'), option ? option : {
-                    imageOrientation: 'flipY'
+                    // imageOrientation: 'flipY'
                 }).then(function (v) {
                     // console.log(v)
                     v['src'] = src

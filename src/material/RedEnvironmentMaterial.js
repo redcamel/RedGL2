@@ -65,7 +65,8 @@ var RedEnvironmentMaterial;
 
         // flat노말
         //#REDGL_DEFINE#fragmentShareFunc#getFlatNormal#
-        //#REDGL_DEFINE#fragmentShareFunc#getPerturbNormal2Arb#
+        //#REDGL_DEFINE#fragmentShareFunc#cotangent_frame#
+        //#REDGL_DEFINE#fragmentShareFunc#perturb_normal#
 
         // 라이트
         //#REDGL_DEFINE#fragmentShareFunc#getDirectionalLightColor#
@@ -110,7 +111,7 @@ var RedEnvironmentMaterial;
              vec4 normalColor = vec4(0.0);
              //#REDGL_DEFINE#normalTexture# normalColor = texture2D(u_normalTexture, vTexcoord);
              //#REDGL_DEFINE#useFlatMode# N = getFlatNormal(vVertexPosition.xyz);
-             //#REDGL_DEFINE#normalTexture# N = getPerturbNormal2Arb(vVertexPosition.xyz, N, normalColor, vTexcoord) ;
+             //#REDGL_DEFINE#normalTexture# N = perturb_normal(N, vVertexPosition.xyz, vTexcoord, normalColor.rgb) ;
 
              vec3 R = reflect( vVertexPosition.xyz - uCameraPosition, N);
              reflectionColor = textureCube(u_environmentTexture, R);

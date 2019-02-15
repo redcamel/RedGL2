@@ -32,7 +32,7 @@ var RedBitmapCubeTexture;
                     gl.texImage2D(gl.TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, imgList[5]['source']);
 
                     // gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
-                    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+                    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
 
                     try {
                         gl.generateMipmap(gl.TEXTURE_CUBE_MAP)

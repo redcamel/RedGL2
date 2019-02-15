@@ -32,7 +32,7 @@ var RedBitmapPointCloudMaterial;
          uniform float u_cutOff;
          uniform float u_alpha;
          void main(void) {
-             vec4 finalColor = texture2D(u_diffuseTexture, vec2(gl_PointCoord.x, - gl_PointCoord.y));
+             vec4 finalColor = texture2D(u_diffuseTexture, gl_PointCoord.xy);
              //#REDGL_DEFINE#usePreMultiply# finalColor.rgb *= finalColor.a;
              finalColor.a *= u_alpha;
              if(finalColor.a < u_cutOff) discard;

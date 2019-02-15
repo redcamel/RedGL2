@@ -2062,14 +2062,7 @@ var RedGLUtil;
                         canvas.width = tW;
                         canvas.height = tH;
                     }
-                    if (RedGLDetect.BROWSER_INFO.ableCanvasSourceFlipYonTexture) {
-                        tH = -tH
-                        ctx.scale(1, -1)
-                    }
 
-
-                    // if ('getContext' in source && window['OffscreenCanvas']) {
-                    // }
                     ctx.drawImage(source, 0, 0, tW, tH);
 
                     console.log(canvas);
@@ -2789,8 +2782,7 @@ var RedImageLoader;
     }
 
     var makeImageBitmap = function (v, option) {
-        if (RedGLDetect.BROWSER_INFO.browser == 'firefox') return createImageBitmap(v)
-        else return createImageBitmap(v, option ? option : {imageOrientation: 'flipY'})
+        return createImageBitmap(v, option ? option : {imageOrientation: 'none'})
     }
     var fileLoader = function (src, onLoader, onError, option) {
 
@@ -2805,7 +2797,7 @@ var RedImageLoader;
                 // console.log(request.response)
                 if (request.status === 200) {
                     makeImageBitmap(request.response, option ? option : {
-                        imageOrientation: 'flipY'
+                        imageOrientation: 'none'
                     }).then(function (v) {
                         v['src'] = src
                         self['source'] = v
@@ -2871,7 +2863,7 @@ var RedImageLoader;
         } else {
             if (src.split(',').length == 2 && src.substr(0, 5) == 'data:') {
                 makeImageBitmap(base64toBlob(src.split(',')[1], 'image/png'), option ? option : {
-                    imageOrientation: 'flipY'
+                    // imageOrientation: 'flipY'
                 }).then(function (v) {
                     // console.log(v)
                     v['src'] = src
@@ -2954,7 +2946,7 @@ var RedBaseTexture;
                     gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
                     gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
                     gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-                    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+                    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
                     gl.pixelStorei(gl.UNPACK_ALIGNMENT, 4);
                     gl.bindTexture(gl.TEXTURE_CUBE_MAP, null);
                 } else {
@@ -2979,7 +2971,7 @@ var RedBaseTexture;
                         )
                     );
                     // 픽셀 플립 기본설정
-                    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+                    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
                     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
                     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
                     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
@@ -4112,6 +4104,7 @@ var RedFrameBuffer;
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, this['texture']['webglTexture']);
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this['width'], this['height'], 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
@@ -5036,7 +5029,7 @@ var RedBitmapTexture;
         //level,internalFormat, format, type
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, source);
         // gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
-        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, option['min'] ? option['min'] : gl.LINEAR_MIPMAP_NEAREST);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, option['mag'] ? option['mag'] : gl.LINEAR);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, option['wrap_s'] ? option['wrap_s'] : gl.REPEAT);
@@ -5226,7 +5219,7 @@ var RedVideoTexture;
         //level,internalFormat, format, type
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, source);
         // gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
-        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
         gl.bindTexture(gl.TEXTURE_2D, null);
@@ -5671,7 +5664,7 @@ var RedBitmapCubeTexture;
                     gl.texImage2D(gl.TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, imgList[5]['source']);
 
                     // gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
-                    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+                    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
 
                     try {
                         gl.generateMipmap(gl.TEXTURE_CUBE_MAP)
@@ -6256,7 +6249,8 @@ var RedColorPhongTextureMaterial;
 
        // flat노말
         //#REDGL_DEFINE#fragmentShareFunc#getFlatNormal#
-        //#REDGL_DEFINE#fragmentShareFunc#getPerturbNormal2Arb#
+        //#REDGL_DEFINE#fragmentShareFunc#cotangent_frame#
+        //#REDGL_DEFINE#fragmentShareFunc#perturb_normal#
 
         // 라이트
         //#REDGL_DEFINE#fragmentShareFunc#getDirectionalLightColor#
@@ -6289,7 +6283,7 @@ var RedColorPhongTextureMaterial;
              vec4 normalColor = vec4(0.0);
              //#REDGL_DEFINE#normalTexture# normalColor = texture2D(u_normalTexture, vTexcoord);
              //#REDGL_DEFINE#useFlatMode# N = getFlatNormal(vVertexPosition.xyz);
-             //#REDGL_DEFINE#normalTexture# N = getPerturbNormal2Arb(vVertexPosition.xyz, N, normalColor, vTexcoord) ;
+             //#REDGL_DEFINE#normalTexture# N = perturb_normal(N, vVertexPosition.xyz, vTexcoord, normalColor.rgb) ;
 
             //#REDGL_DEFINE#emissiveTexture# emissiveColor = texture2D(u_emissiveTexture, vTexcoord);
             //#REDGL_DEFINE#emissiveTexture# //#REDGL_DEFINE#usePreMultiply# emissiveColor.rgb *= texelColor.a;
@@ -6619,7 +6613,8 @@ var RedEnvironmentMaterial;
 
         // flat노말
         //#REDGL_DEFINE#fragmentShareFunc#getFlatNormal#
-        //#REDGL_DEFINE#fragmentShareFunc#getPerturbNormal2Arb#
+        //#REDGL_DEFINE#fragmentShareFunc#cotangent_frame#
+        //#REDGL_DEFINE#fragmentShareFunc#perturb_normal#
 
         // 라이트
         //#REDGL_DEFINE#fragmentShareFunc#getDirectionalLightColor#
@@ -6664,7 +6659,7 @@ var RedEnvironmentMaterial;
              vec4 normalColor = vec4(0.0);
              //#REDGL_DEFINE#normalTexture# normalColor = texture2D(u_normalTexture, vTexcoord);
              //#REDGL_DEFINE#useFlatMode# N = getFlatNormal(vVertexPosition.xyz);
-             //#REDGL_DEFINE#normalTexture# N = getPerturbNormal2Arb(vVertexPosition.xyz, N, normalColor, vTexcoord) ;
+             //#REDGL_DEFINE#normalTexture# N = perturb_normal(N, vVertexPosition.xyz, vTexcoord, normalColor.rgb) ;
 
              vec3 R = reflect( vVertexPosition.xyz - uCameraPosition, N);
              reflectionColor = textureCube(u_environmentTexture, R);
@@ -7151,7 +7146,7 @@ var RedParticleMaterial;
          uniform float u_alpha;
          void main(void) {
              vec4 finalColor = vVertexColor;
-             //#REDGL_DEFINE#diffuseTexture# finalColor = texture2D(u_diffuseTexture, vec2(gl_PointCoord.x, - gl_PointCoord.y));
+             //#REDGL_DEFINE#diffuseTexture# finalColor = texture2D(u_diffuseTexture, gl_PointCoord.xy);
              //#REDGL_DEFINE#diffuseTexture# //#REDGL_DEFINE#usePreMultiply# finalColor.rgb *= finalColor.a;
              //#REDGL_DEFINE#diffuseTexture# finalColor.rgb += vVertexColor.rgb * vVertexColor.a;
              //#REDGL_DEFINE#diffuseTexture# finalColor.a *= vVertexColor.a;
@@ -7286,7 +7281,7 @@ var RedBitmapPointCloudMaterial;
          uniform float u_cutOff;
          uniform float u_alpha;
          void main(void) {
-             vec4 finalColor = texture2D(u_diffuseTexture, vec2(gl_PointCoord.x, - gl_PointCoord.y));
+             vec4 finalColor = texture2D(u_diffuseTexture, gl_PointCoord.xy);
              //#REDGL_DEFINE#usePreMultiply# finalColor.rgb *= finalColor.a;
              finalColor.a *= u_alpha;
              if(finalColor.a < u_cutOff) discard;
@@ -7820,8 +7815,8 @@ var RedStandardMaterial;
 
         // flat노말
         //#REDGL_DEFINE#fragmentShareFunc#getFlatNormal#
-
-        //#REDGL_DEFINE#fragmentShareFunc#getPerturbNormal2Arb#
+        //#REDGL_DEFINE#fragmentShareFunc#cotangent_frame#
+        //#REDGL_DEFINE#fragmentShareFunc#perturb_normal#
 
         // 라이트
         //#REDGL_DEFINE#fragmentShareFunc#getDirectionalLightColor#
@@ -7850,6 +7845,8 @@ var RedStandardMaterial;
          vec4 finalColor;
          vec3 N;
 
+
+
          void main(void) {
 
              texelColor = texture2D(u_diffuseTexture, vTexcoord);
@@ -7863,7 +7860,7 @@ var RedStandardMaterial;
              vec4 normalColor = vec4(0.0);
              //#REDGL_DEFINE#normalTexture# normalColor = texture2D(u_normalTexture, vTexcoord);
              //#REDGL_DEFINE#useFlatMode# N = getFlatNormal(vVertexPosition.xyz);
-             //#REDGL_DEFINE#normalTexture# N = getPerturbNormal2Arb(vVertexPosition.xyz, N, normalColor, vTexcoord) ;
+             //#REDGL_DEFINE#normalTexture# N = perturb_normal(N, vVertexPosition.xyz, vTexcoord, normalColor.rgb) ;
 
              specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);
              specularTextureValue = 1.0;
@@ -8300,8 +8297,8 @@ var RedPBRMaterial;
 
         // flat노말
         //#REDGL_DEFINE#fragmentShareFunc#getFlatNormal#
-
-		//#REDGL_DEFINE#fragmentShareFunc#getPerturbNormal2Arb#
+        //#REDGL_DEFINE#fragmentShareFunc#cotangent_frame#
+		//#REDGL_DEFINE#fragmentShareFunc#perturb_normal#
 
          uniform vec4 uBaseColorFactor;
          uniform float u_emissiveFactor;
@@ -8371,7 +8368,7 @@ var RedPBRMaterial;
             vec4 normalColor = vec4(0.0);
             //#REDGL_DEFINE#normalTexture# normalColor = texture2D(u_normalTexture, vTexcoord);
             //#REDGL_DEFINE#useFlatMode# N = getFlatNormal(vVertexPosition.xyz);
-            //#REDGL_DEFINE#normalTexture# N = getPerturbNormal2Arb(vVertexPosition.xyz, N, normalColor, vTexcoord) ;
+            //#REDGL_DEFINE#normalTexture# N = perturb_normal(N, vVertexPosition.xyz, vTexcoord, normalColor.rgb) ;
 
             // 환경맵 계산
             vec3 R = reflect( vVertexPosition.xyz-uCameraPosition, N);
@@ -8850,8 +8847,8 @@ var RedPBRMaterial_System;
 
         // flat노말
         //#REDGL_DEFINE#fragmentShareFunc#getFlatNormal#
-
-		//#REDGL_DEFINE#fragmentShareFunc#getPerturbNormal2Arb#
+        //#REDGL_DEFINE#fragmentShareFunc#cotangent_frame#
+		//#REDGL_DEFINE#fragmentShareFunc#perturb_normal#
 
         //#REDGL_DEFINE#useVertexColor_0# varying vec4 vVertexColor_0;
         //#REDGL_DEFINE#useVertexTangent# varying vec4 vVertexTangent;
@@ -8910,6 +8907,8 @@ var RedPBRMaterial_System;
         vec2 u_roughnessTexCoord;
         vec2 u_normalTexCoord;
 
+
+
          void main(void) {
             la = uAmbientLightColor * uAmbientLightColor.a;
             ld = vec4(0.0, 0.0, 0.0, 1.0);
@@ -8943,13 +8942,15 @@ var RedPBRMaterial_System;
             //#REDGL_DEFINE#useMaterialDoubleSide# vec3 fdx = dFdx(vVertexPosition.xyz);
             //#REDGL_DEFINE#useMaterialDoubleSide# vec3 fdy = dFdy(vVertexPosition.xyz);
             //#REDGL_DEFINE#useMaterialDoubleSide# vec3 faceNormal = normalize(cross(fdx,fdy));
-            //#REDGL_DEFINE#useMaterialDoubleSide# if (dot (vVertexNormal, faceNormal) < 0.0)  N = -N;
+            bool backFaceYn = false;
+            //#REDGL_DEFINE#useMaterialDoubleSide# if (dot (vVertexNormal, faceNormal) < 0.0) { N = -N; backFaceYn = true; };
 
 
             vec4 normalColor = vec4(0.0);
             //#REDGL_DEFINE#normalTexture# normalColor = texture2D(u_normalTexture, u_normalTexCoord);
-            //#REDGL_DEFINE#normalTexture# N = getPerturbNormal2Arb(vVertexPosition.xyz, N, normalColor, u_normalTexCoord) ;
             //#REDGL_DEFINE#useFlatMode# N = getFlatNormal(vVertexPosition.xyz);
+            //#REDGL_DEFINE#normalTexture# N = perturb_normal(N, vVertexPosition.xyz, backFaceYn ?  1.0 - u_normalTexCoord : u_normalTexCoord, vec3(normalColor.r, 1.0- normalColor.g, normalColor.b) );
+
 
 
             //#REDGL_DEFINE#useVertexTangent# //#REDGL_DEFINE#normalTexture# vec3 pos_dx = dFdx(vVertexPosition.xyz);
@@ -8962,6 +8963,7 @@ var RedPBRMaterial_System;
             //#REDGL_DEFINE#useVertexTangent# //#REDGL_DEFINE#normalTexture# vec3 b = normalize(cross(ng, t));
             //#REDGL_DEFINE#useVertexTangent# //#REDGL_DEFINE#normalTexture# mat3 tbn = mat3(t, b, ng);
             //#REDGL_DEFINE#useVertexTangent# //#REDGL_DEFINE#normalTexture# N = normalize(tbn * ((2.0 * normalColor.rgb - 1.0) * vec3(1.0, 1.0 * vVertexTangent.w,1.0)));
+            //#REDGL_DEFINE#useVertexTangent# //#REDGL_DEFINE#normalTexture# N = backFaceYn ? -N : N;
 
 
 
@@ -10388,8 +10390,8 @@ var RedOBJLoader;
                 else if (redUV.test(line)) {
                     var tUV;
                     tUV = line.split(' ');
-                    pointInfo['uv'].push(+tUV[1], +tUV[2])
-                    pointInfo['uvPoints'][pointInfo['uvPoints'].length] = [+tUV[1], +tUV[2]]
+                    pointInfo['uv'].push(+tUV[1], 1-tUV[2])
+                    pointInfo['uvPoints'][pointInfo['uvPoints'].length] = [+tUV[1], 1-tUV[2]]
                     // console.log('redUV', line, redUV.test(line))
                 }
                 // 인덱스 검색 1//1 1//1 1//1 v//n
@@ -11167,7 +11169,7 @@ var Red3DSLoader;
                         var uvs = [];
                         for (i = 0; i < texels; i++) {
                             uvs.push(readFloat(target, dataView));
-                            uvs.push(readFloat(target, dataView));
+                            uvs.push(1-readFloat(target, dataView));
                         }
                         break
                     case MESH_MATRIX :
@@ -11414,7 +11416,7 @@ var RedDAELoader;
             for (i; i < len; i++) {
                 uvPointList.push([
                     tTexcoord[i * 2 + 0],
-                    tTexcoord[i * 2 + 1]
+                    1-tTexcoord[i * 2 + 1]
                 ])
             }
             console.log('pointList', pointList)
@@ -12624,8 +12626,7 @@ var RedGLTFLoader;
                             // console.log(i, len)
                             for (i; i < len; i++) {
                                 if (key == 'TEXCOORD_0') {
-                                    if (i % 2 == 0) sparseUvs.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
-                                    else sparseUvs.push(-tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+                                    sparseUvs.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
                                 }
                             }
                             // console.log('인터리브 버퍼 데이터', vertices)
@@ -12789,11 +12790,9 @@ var RedGLTFLoader;
                         for (i; i < len; i++) {
                             if (strideIndex % stridePerElement < 2) {
                                 if (key == 'TEXCOORD_0') {
-                                    if (strideIndex % 2 == 0) uvs.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-                                    else uvs.push(1 - tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+                                    uvs.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                                 } else if (key == 'TEXCOORD_1') {
-                                    if (strideIndex % 2 == 0) uvs1.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-                                    else uvs1.push(1 - tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+                                    uvs1.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                                 }
                                 else RedGLUtil.throwFunc('VEC2에서 현재 지원하고 있지 않는 키', key)
                             }
@@ -12803,11 +12802,9 @@ var RedGLTFLoader;
                         len = i + tCount * 2;
                         for (i; i < len; i++) {
                             if (key == 'TEXCOORD_0') {
-                                if (strideIndex % 2 == 0) uvs.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-                                else uvs.push(1 - tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+                                uvs.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                             } else if (key == 'TEXCOORD_1') {
-                                if (strideIndex % 2 == 0) uvs1.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-                                else uvs1.push(1 - tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+                                uvs1.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                             } else RedGLUtil.throwFunc('VEC2에서 현재 지원하고 있지 않는 키', key)
                             strideIndex++
                         }
@@ -14474,7 +14471,7 @@ var RedParticleEmitter;
 			    '파티클 정의 오브젝트'
 			 ],
 			 material : [
-			    {type:'RedParticleColorMaterial Instance or RedParticleMaterial Instance'},
+			    {type:'RedParticleMaterial Instance'},
 			 ]
 		 },
 		 demo : '../example/particle/RedParticleEmitter.html',
@@ -14770,7 +14767,7 @@ var RedBox;
                         interleaveData.push(vector.x, vector.y, vector.z), // position
                         vector[u] = 0, vector[v] = 0, vector[w] = depth > 0 ? 1 : -1,
                         interleaveData.push(vector.x, vector.y, vector.z), // normal
-                        interleaveData.push(ix / gridX, 1 - (iy / gridY)), // texcoord
+                        interleaveData.push(ix / gridX,  (iy / gridY)), // texcoord
                         vertexCounter += 1; // counters
                 }
             }
@@ -14954,7 +14951,7 @@ var RedCylinder;
                         vec3.normalize(normal, normal);
                         interleaveData.push(normal[0], normal[1], normal[2]);
                         // uv
-                        interleaveData.push(u, 1 - v);
+                        interleaveData.push(u, v);
                         // save index of vertex in respective row
                         indexRow.push(index++);
                     }
@@ -15018,7 +15015,7 @@ var RedCylinder;
                     // uv
                     uv[0] = (cosTheta * 0.5) + 0.5;
                     uv[1] = (sinTheta * 0.5 * sign) + 0.5;
-                    interleaveData.push(uv[0], uv[1]);
+                    interleaveData.push(uv[0], 1-uv[1]);
                     // increase index
                     index++;
                 }
@@ -15163,7 +15160,7 @@ var RedPlane;
         var ix, iy;
         var tX, tY;
         var a, b, c, d;
-        return function (redGL, type, width, height, wSegments, hSegments) {
+        return function (redGL, type, width, height, wSegments, hSegments, flipY) {
             width_half = width / 2;
             height_half = height / 2;
             gridX = Math.floor(wSegments) || 1;
@@ -15183,7 +15180,7 @@ var RedPlane;
                 for (ix = 0; ix < gridX1; ix++) {
                     tX = ix * segment_width - width_half;
                     // position, normal, texcoord
-                    interleaveData.push(tX, -tY, 0, 0, 0, 1, ix / gridX, 1 - (iy / gridY));
+                    interleaveData.push(tX, -tY, 0, 0, 0, 1, ix / gridX, flipY ? (1 - (iy / gridY)) : (iy / gridY));
                 }
             }
             // indexData
@@ -15262,21 +15259,21 @@ var RedPlane;
 		 return : 'RedPlane Instance'
 	 }
      :DOC*/
-    RedPlane = function (redGL, width, height, wSegments, hSegments) {
-        if (!(this instanceof RedPlane)) return new RedPlane(redGL, width, height, wSegments, hSegments);
+    RedPlane = function (redGL, width, height, wSegments, hSegments, flipY) {
+        if (!(this instanceof RedPlane)) return new RedPlane(redGL, width, height, wSegments, hSegments, flipY);
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedPlane : RedGL Instance만 허용.', redGL);
         var tType, tPrimitiveData;
         width = width || 1;
         height = height || 1;
         wSegments = wSegments || 1;
         hSegments = hSegments || 1;
-        tType = 'RedPlane' + '_' + width + '_' + height + '_' + wSegments + '_' + hSegments;
+        tType = 'RedPlane' + '_' + width + '_' + height + '_' + wSegments + '_' + hSegments+'_'+flipY;
         // 유일키 방어
         if (!redGL['_datas']['Primitives']) redGL['_datas']['Primitives'] = {};
         if (redGL['_datas']['Primitives'][tType]) return redGL['_datas']['Primitives'][tType];
         else redGL['_datas']['Primitives'][tType] = this;
         //
-        tPrimitiveData = makeData(redGL, tType, width, height, wSegments, hSegments);
+        tPrimitiveData = makeData(redGL, tType, width, height, wSegments, hSegments, flipY);
         this['interleaveBuffer'] = tPrimitiveData['interleaveBuffer'];
         this['indexBuffer'] = tPrimitiveData['indexBuffer'];
         this['interleaveBuffer']['isPrimitiveBuffer'] = true
@@ -15332,7 +15329,7 @@ var RedSphere;
                     vec3.normalize(normal, normal);
                     interleaveData.push(normal[0], normal[1], normal[2]);
                     // uv
-                    interleaveData.push(u, 1 - v);
+                    interleaveData.push(u,  v);
                     verticesRow.push(index++);
                 }
                 grid.push(verticesRow);
@@ -16166,26 +16163,34 @@ var RedSystemShaderCode;
                         '   return amountInLight;',
                         '}'
                     ].join('\n'),
-                getPerturbNormal2Arb:
-                    [
-                        'vec3 getPerturbNormal2Arb( vec3 eye_pos, vec3 surf_norm, vec4 normalColor , vec2 vUv) {',
-                        '   vec3 q0 = dFdx( eye_pos.xyz );',
-                        '   vec3 q1 = dFdy( eye_pos.xyz );',
-                        '   vec2 st0 = dFdx( vUv.st );',
-                        '   vec2 st1 = dFdy( vUv.st );',
-
-                        '   vec3 S = normalize(  q0 * st1.t - q1 * st0.t );',
-                        '   vec3 T = normalize( -q0 * st1.s + q1 * st0.s );',
-                        '   vec3 N = normalize( surf_norm );',
-
-                        '   vec3 nmap = normalColor.xyz;',
-                        '   // nmap.y = 1.0 - nmap.y;',
-                        '   vec3 mapN = nmap * 2.0 - 1.0;',
-                        '   mapN.xy = u_normalPower * mapN.xy;',
-                        '   mat3 tsn = mat3( S, T, N );',
-                        '   return normalize( tsn * mapN );',
-                        '}'
-                    ].join('\n')
+                cotangent_frame : [
+                    'mat3 cotangent_frame(vec3 N, vec3 p, vec2 uv)',
+                    '{',
+                    '   vec3 dp1 = dFdx( p );',
+                    '   vec3 dp2 = dFdy( p );',
+                    '   vec2 duv1 = dFdx( uv );',
+                    '   vec2 duv2 = dFdy( uv );',
+                    '   ',
+                    '   vec3 dp2perp = cross( dp2, N );',
+                    '   vec3 dp1perp = cross( N, dp1 );',
+                    '   vec3 T = dp2perp * duv1.x + dp1perp * duv2.x;',
+                    '   vec3 B = dp2perp * duv1.y + dp1perp * duv2.y;',
+                    '   ',
+                    '   float invmax = inversesqrt( max( dot(T,T), dot(B,B) ) );',
+                    '   return mat3( T * invmax, B * invmax, N );',
+                    '}'
+                ].join('\n'),
+                perturb_normal : [
+                    'vec3 perturb_normal( vec3 N, vec3 V, vec2 texcoord, vec3 normalColor )',
+                    '   {',
+                    '   ',
+                    '   vec3 map = normalColor;',
+                    '   map =  map * 255./127. - 128./127.;',
+                    '   map.xy *= u_normalPower;',
+                    '   mat3 TBN = cotangent_frame(N, V, texcoord);',
+                    '   return normalize(TBN * map);',
+                    '}'
+                ].join('\n')
             }
         };
         /**DOC:
@@ -16828,7 +16833,7 @@ var RedRenderer;
             // // 픽셀 블렌딩 결정
             // gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
             // 픽셀 플립 기본설정
-            gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+            gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
         };
         return function (redGL, time) {
             var gl;
@@ -20437,7 +20442,7 @@ var RedText;
          :DOC*/
         setStylePrototype(this, 'textAlign', 'center');
         //////////////////////
-        this['geometry'] = RedPlane(redGL, 1, 1, 0);
+        this['geometry'] = RedPlane(redGL, 1, 1);
         this['material'] = RedTextMaterial(redGL, RedBitmapTexture(redGL, this['_cvs']));
         //////////////////////
         this['blendSrc'] = redGL.gl.ONE;
@@ -20544,8 +20549,54 @@ var RedText;
                 // console.log(this['_svg'].width)
                 // this['_svg'].setAttribute('width', 100000);
                 // this['_svg'].setAttribute('height', 100000);
-                tHTMLContainer.innerHTML = this['_text'];
-                setTexture(this)
+                var self = this
+                var t0 = this['_text'].match(/<img .*?>/g)
+                var t1 = []
+                var result = this['_text'];
+                t0 = t0 || []
+                console.log(t0)
+                var max = t0.length
+                var loaded = 0
+                t0.forEach(function (v) {
+                    console.log(v, v.match(/src\s*=\s*(\'|\").*?(\'|\")/g))
+                    var tSrc = v.match(/src\s*=\s*(\'|\").*?(\'|\")/g)[0]
+                    tSrc = tSrc.replace(/src\s*=\s*(\'|\")/g, '').replace(/(\'|\")/g, '')
+                    console.log(tSrc)
+                    var test = document.createElement('div')
+                    test.innerHTML = v;
+                    var img = test.querySelector('img');
+                    img.onload = function () {
+                        var canvas = document.createElement('canvas');
+                        canvas.width = img.style.width ? +img.style.width : img.width;
+                        canvas.height = img.style.height ? +img.style.height : img.height;
+                        var ctx = canvas.getContext('2d')
+                        ctx.scale(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight)
+                        ctx.drawImage(img, 0, 0);
+                        tInfo.result = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink= "http://www.w3.org/1999/xlink" width="' + img.width + '" height="' + img.height + '" display="inline" style="vertical-align: middle;display: inline-block">' +
+                            '<image xlink:href="' + (canvas.toDataURL('image/png')) + '" height="' + img.height + 'px" width="' + img.width + 'px" />' +
+                            '</svg>'
+                        loaded++
+                        if (loaded == max) {
+                            t1.forEach(function (v) {
+                                result = result.replace(v.source, v.result)
+                            })
+                            tHTMLContainer.innerHTML = result;
+                            setTexture(self)
+                        }
+                        img.onload = null
+
+                    }
+                    var tInfo = {
+                        source: v,
+                        sourceSrc: tSrc,
+                        result: ''
+                    }
+                    t1.push(tInfo)
+                });
+                if (t0.length == 0) {
+                    tHTMLContainer.innerHTML = result;
+                    setTexture(this)
+                }
             }
         })()
     });
@@ -20831,7 +20882,7 @@ var RedPostEffectManager;
 		}
          :DOC*/
         Object.defineProperty(this, 'postEffectList', {value: []});
-        Object.defineProperty(this, 'children', {value: [RedMesh(redGL, RedPlane(redGL), this['finalMaterial'])]});
+        Object.defineProperty(this, 'children', {value: [RedMesh(redGL, RedPlane(redGL, 1, 1, 1, 1, true), this['finalMaterial'])]});
         this['_UUID'] = RedGL.makeUUID();
         console.log(this);
     };
@@ -23860,4 +23911,4 @@ var RedGLOffScreen;
         }
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-02-10 15:25:09)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-02-15 15:41:16)' };console.log(RedGL_VERSION);

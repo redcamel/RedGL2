@@ -1058,8 +1058,7 @@ var RedGLTFLoader;
                             // console.log(i, len)
                             for (i; i < len; i++) {
                                 if (key == 'TEXCOORD_0') {
-                                    if (i % 2 == 0) sparseUvs.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
-                                    else sparseUvs.push(-tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+                                    sparseUvs.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
                                 }
                             }
                             // console.log('인터리브 버퍼 데이터', vertices)
@@ -1223,11 +1222,9 @@ var RedGLTFLoader;
                         for (i; i < len; i++) {
                             if (strideIndex % stridePerElement < 2) {
                                 if (key == 'TEXCOORD_0') {
-                                    if (strideIndex % 2 == 0) uvs.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-                                    else uvs.push(1 - tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+                                    uvs.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                                 } else if (key == 'TEXCOORD_1') {
-                                    if (strideIndex % 2 == 0) uvs1.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-                                    else uvs1.push(1 - tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+                                    uvs1.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                                 }
                                 else RedGLUtil.throwFunc('VEC2에서 현재 지원하고 있지 않는 키', key)
                             }
@@ -1237,11 +1234,9 @@ var RedGLTFLoader;
                         len = i + tCount * 2;
                         for (i; i < len; i++) {
                             if (key == 'TEXCOORD_0') {
-                                if (strideIndex % 2 == 0) uvs.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-                                else uvs.push(1 - tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+                                uvs.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                             } else if (key == 'TEXCOORD_1') {
-                                if (strideIndex % 2 == 0) uvs1.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-                                else uvs1.push(1 - tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+                                uvs1.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                             } else RedGLUtil.throwFunc('VEC2에서 현재 지원하고 있지 않는 키', key)
                             strideIndex++
                         }

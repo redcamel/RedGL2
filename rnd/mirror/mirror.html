@@ -1,0 +1,106 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>RedGL - RedGLTFLoader</title>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
+    />
+    <link rel="stylesheet" href="../../example/example.css">
+
+    <script src="../../example/dat.gui.min.js"></script>
+    <script src="../../example/baseTestUI.js"></script>
+    <script src="../../release/RedGL.min.js"></script>
+    <script src="RedPostEffect_Mirror.js"></script>
+    <script src="RedPostEffect_MirrorTextureMaker.js"></script>
+    <script src="RedPostEffectMirrorNormal.js"></script>
+
+    <!--<script src="RedGLTFLoader.js"></script>-->
+</head>
+
+<body>
+<script id='testSource'>
+    var testUI;
+    var canvas;
+    var assetPath = '../../asset/'
+    canvas = document.createElement('canvas');
+    document.body.appendChild(canvas);
+    RedGL.setDoNotPrepareProgram()
+    RedGL(canvas, function (v) {
+        if (v) {
+            var tWorld, tView, tScene, tController, tRenderer;
+            var setBase = function (redGL) {
+                // 월드 생성
+                redGL['world'] = tWorld = RedWorld();
+                // 씬 생성
+                tScene = RedScene(redGL);
+                // 카메라 생성
+                tController = RedObitController(redGL);
+                tController.pan = 0;
+                tController.tilt = -45;
+                // tController.distance = 75;
+                // 렌더러 생성
+                tRenderer = RedRenderer();
+                // 뷰생성 및 적용
+                tView = RedView('HelloRedGL', redGL, tScene, tController);
+                tWorld.addView(tView);
+                // 그리드 설정
+                // tScene['grid'] = RedGrid(redGL);
+                // 라이트 설정
+                var testDLight;
+                testDLight = RedDirectionalLight(redGL)
+                // testDLight.intensity = 0.3
+                testDLight.x = 100
+                testDLight.y = 100
+                testDLight.z = 100
+                tScene.addLight(testDLight)
+                // 렌더시작
+                tRenderer.start(redGL, function (time) {
+                });
+                // 렌더 디버거 활성화
+                tRenderer.setDebugButton();
+                testUI(redGL, tController)
+            };
+            setBase(this);
+            ///////////////////////////////////////////////////
+            // GLTF 로딩
+            RedGLTFLoader(
+                this, // redGL
+                'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Sponza/glTF/', // assetRootPath
+                'Sponza.gltf', // fileName
+                function (v) { // callBack
+                    v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 3
+                    v['resultMesh'].y = 4
+                    tScene.addChild(v['resultMesh'])
+                },
+                RedBitmapCubeTexture(this, // environmentTexture
+                    [
+                        assetPath + 'cubemap/posx.png',
+                        assetPath + 'cubemap/negx.png',
+                        assetPath + 'cubemap/posy.png',
+                        assetPath + 'cubemap/negy.png',
+                        assetPath + 'cubemap/posz.png',
+                        assetPath + 'cubemap/negz.png'
+                    ]
+                )
+            );
+
+            var effect;
+            effect = RedPostEffect_Mirror(this);
+            tView['postEffectManager'].addEffect(effect)
+
+        } else {
+            console.log('초기화 실패!')
+        }
+    })
+    testUI = function (redGL) {
+        console.log('test')
+        var gui = new baseTestUI(redGL);
+        gui.initRedGL();
+    }
+</script>
+</body>
+
+</html>

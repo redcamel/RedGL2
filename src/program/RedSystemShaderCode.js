@@ -303,26 +303,34 @@ var RedSystemShaderCode;
                         '   return amountInLight;',
                         '}'
                     ].join('\n'),
-                getPerturbNormal2Arb:
-                    [
-                        'vec3 getPerturbNormal2Arb( vec3 eye_pos, vec3 surf_norm, vec4 normalColor , vec2 vUv) {',
-                        '   vec3 q0 = dFdx( eye_pos.xyz );',
-                        '   vec3 q1 = dFdy( eye_pos.xyz );',
-                        '   vec2 st0 = dFdx( vUv.st );',
-                        '   vec2 st1 = dFdy( vUv.st );',
-
-                        '   vec3 S = normalize(  q0 * st1.t - q1 * st0.t );',
-                        '   vec3 T = normalize( -q0 * st1.s + q1 * st0.s );',
-                        '   vec3 N = normalize( surf_norm );',
-
-                        '   vec3 nmap = normalColor.xyz;',
-                        '   // nmap.y = 1.0 - nmap.y;',
-                        '   vec3 mapN = nmap * 2.0 - 1.0;',
-                        '   mapN.xy = u_normalPower * mapN.xy;',
-                        '   mat3 tsn = mat3( S, T, N );',
-                        '   return normalize( tsn * mapN );',
-                        '}'
-                    ].join('\n')
+                cotangent_frame : [
+                    'mat3 cotangent_frame(vec3 N, vec3 p, vec2 uv)',
+                    '{',
+                    '   vec3 dp1 = dFdx( p );',
+                    '   vec3 dp2 = dFdy( p );',
+                    '   vec2 duv1 = dFdx( uv );',
+                    '   vec2 duv2 = dFdy( uv );',
+                    '   ',
+                    '   vec3 dp2perp = cross( dp2, N );',
+                    '   vec3 dp1perp = cross( N, dp1 );',
+                    '   vec3 T = dp2perp * duv1.x + dp1perp * duv2.x;',
+                    '   vec3 B = dp2perp * duv1.y + dp1perp * duv2.y;',
+                    '   ',
+                    '   float invmax = inversesqrt( max( dot(T,T), dot(B,B) ) );',
+                    '   return mat3( T * invmax, B * invmax, N );',
+                    '}'
+                ].join('\n'),
+                perturb_normal : [
+                    'vec3 perturb_normal( vec3 N, vec3 V, vec2 texcoord, vec3 normalColor )',
+                    '   {',
+                    '   ',
+                    '   vec3 map = normalColor;',
+                    '   map =  map * 255./127. - 128./127.;',
+                    '   map.xy *= u_normalPower;',
+                    '   mat3 TBN = cotangent_frame(N, V, texcoord);',
+                    '   return normalize(TBN * map);',
+                    '}'
+                ].join('\n')
             }
         };
         /**DOC:

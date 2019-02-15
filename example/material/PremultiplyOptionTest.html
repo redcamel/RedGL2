@@ -120,7 +120,7 @@
             var max = testMaterials.length
             var i = max
             var setOptionText = function (target, v) {
-                var tText = RedText(target, 512, 66)
+                var tText = RedText(target, 512, 130)
                 tText.color = '#fff'
                 tText.background = 'rgba(0,0,0,0.0)'
                 tText.text = v
@@ -140,6 +140,7 @@
                 testMaterials[i][1].useFlatMode = true
                 testMesh.x = Math.sin(Math.PI*2/(max)*i) * 3
                 testMesh.z = Math.cos(Math.PI*2/(max)*i) * 3
+                testMesh.useTransparentSort = true
                 // testMesh.useCullFace=false
                 tScene.addChild(testMesh)
                 var t = setOptionText(this, testMaterials[i][0])

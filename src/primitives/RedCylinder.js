@@ -48,7 +48,7 @@ var RedCylinder;
                         vec3.normalize(normal, normal);
                         interleaveData.push(normal[0], normal[1], normal[2]);
                         // uv
-                        interleaveData.push(u, 1 - v);
+                        interleaveData.push(u, v);
                         // save index of vertex in respective row
                         indexRow.push(index++);
                     }
@@ -112,7 +112,7 @@ var RedCylinder;
                     // uv
                     uv[0] = (cosTheta * 0.5) + 0.5;
                     uv[1] = (sinTheta * 0.5 * sign) + 0.5;
-                    interleaveData.push(uv[0], uv[1]);
+                    interleaveData.push(uv[0], 1-uv[1]);
                     // increase index
                     index++;
                 }
