@@ -65,8 +65,8 @@ var RedStandardMaterial;
 
         // flat노말
         //#REDGL_DEFINE#fragmentShareFunc#getFlatNormal#
-
-        //#REDGL_DEFINE#fragmentShareFunc#getPerturbNormal2Arb#
+        //#REDGL_DEFINE#fragmentShareFunc#cotangent_frame#
+        //#REDGL_DEFINE#fragmentShareFunc#perturb_normal#
 
         // 라이트
         //#REDGL_DEFINE#fragmentShareFunc#getDirectionalLightColor#
@@ -95,6 +95,8 @@ var RedStandardMaterial;
          vec4 finalColor;
          vec3 N;
 
+
+
          void main(void) {
 
              texelColor = texture2D(u_diffuseTexture, vTexcoord);
@@ -108,7 +110,7 @@ var RedStandardMaterial;
              vec4 normalColor = vec4(0.0);
              //#REDGL_DEFINE#normalTexture# normalColor = texture2D(u_normalTexture, vTexcoord);
              //#REDGL_DEFINE#useFlatMode# N = getFlatNormal(vVertexPosition.xyz);
-             //#REDGL_DEFINE#normalTexture# N = getPerturbNormal2Arb(vVertexPosition.xyz, N, normalColor, vTexcoord) ;
+             //#REDGL_DEFINE#normalTexture# N = perturb_normal(N, vVertexPosition.xyz, vTexcoord, normalColor.rgb) ;
 
              specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);
              specularTextureValue = 1.0;

@@ -44,22 +44,19 @@
                 tScene['grid'] = RedGrid(redGL);
                 // 렌더 디버거 활성화
                 tRenderer.setDebugButton();
-                // 렌더시작
-                tRenderer.start(redGL, function (time) {
-                });
+
                 var testDLight;
                 testDLight = RedDirectionalLight(redGL)
                 testDLight.x = 3
                 testDLight.y = 2
                 testDLight.z = 3
-                // testDLight.debug = true
+                testDLight.debug = true
                 tScene.addLight(testDLight)
-                testDLight = RedDirectionalLight(redGL)
-                testDLight.x = -3
-                testDLight.y = -2
-                testDLight.z = -3
-                // testDLight.debug = true
-                tScene.addLight(testDLight)
+                // 렌더시작
+                tRenderer.start(redGL, function (time) {
+                    testDLight.x = Math.sin(time/1000)*3
+                    testDLight.z = Math.cos(time/1000)*3
+                });
                 // testUI 호출
                 testUI(redGL, tScene);
                 console.log(redGL);
@@ -67,17 +64,17 @@
             setBase(this);
             var tMesh;
             console.log(RedPlane(this))
-            tMesh = RedMesh(this, RedBox(this), RedStandardMaterial(this, RedBitmapTexture(this, assetPath + 'UV_Grid_Sm.jpg')))
+            tMesh = RedMesh(this, RedBox(this), RedStandardMaterial(this, RedBitmapTexture(this, assetPath + 'fieldstone.jpg'), RedBitmapTexture(this, assetPath + 'normalTestTexture3.jpg')))
             tScene.addChild(tMesh)
-            tMesh = RedMesh(this, RedPlane(this), RedStandardMaterial(this, RedBitmapTexture(this, assetPath + 'UV_Grid_Sm.jpg')))
+            tMesh = RedMesh(this, RedPlane(this), RedStandardMaterial(this, RedBitmapTexture(this, assetPath + 'fieldstone.jpg'), RedBitmapTexture(this, assetPath + 'normalTestTexture3.jpg')))
             tMesh.useCullFace = false
             tMesh.x = -1.5
             tScene.addChild(tMesh)
-            tMesh = RedMesh(this, RedSphere(this, 0.5, 16, 16, 16), RedStandardMaterial(this, RedBitmapTexture(this, assetPath + 'UV_Grid_Sm.jpg')))
+            tMesh = RedMesh(this, RedSphere(this, 0.5, 16, 16, 16), RedStandardMaterial(this, RedBitmapTexture(this, assetPath + 'fieldstone.jpg'), RedBitmapTexture(this, assetPath + 'normalTestTexture3.jpg')))
             tMesh.useCullFace = false
             tMesh.x = 1.5
             tScene.addChild(tMesh)
-            tMesh = RedMesh(this, RedCylinder(this, 0.5, 0.5, 2, 32, 32), RedStandardMaterial(this, RedBitmapTexture(this, assetPath + 'UV_Grid_Sm.jpg')))
+            tMesh = RedMesh(this, RedCylinder(this, 0.5, 0.5, 2, 32, 32), RedStandardMaterial(this, RedBitmapTexture(this, assetPath + 'fieldstone.jpg'), RedBitmapTexture(this, assetPath + 'normalTestTexture3.jpg')))
             tMesh.useCullFace = false
             tMesh.z = -1.5
             tScene.addChild(tMesh)
