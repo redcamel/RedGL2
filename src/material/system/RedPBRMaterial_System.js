@@ -62,8 +62,8 @@ var RedPBRMaterial_System;
 
         // flat노말
         //#REDGL_DEFINE#fragmentShareFunc#getFlatNormal#
-
-		//#REDGL_DEFINE#fragmentShareFunc#getPerturbNormal2Arb#
+        //#REDGL_DEFINE#fragmentShareFunc#cotangent_frame#
+		//#REDGL_DEFINE#fragmentShareFunc#perturb_normal#
 
         //#REDGL_DEFINE#useVertexColor_0# varying vec4 vVertexColor_0;
         //#REDGL_DEFINE#useVertexTangent# varying vec4 vVertexTangent;
@@ -122,6 +122,8 @@ var RedPBRMaterial_System;
         vec2 u_roughnessTexCoord;
         vec2 u_normalTexCoord;
 
+
+
          void main(void) {
             la = uAmbientLightColor * uAmbientLightColor.a;
             ld = vec4(0.0, 0.0, 0.0, 1.0);
@@ -155,13 +157,15 @@ var RedPBRMaterial_System;
             //#REDGL_DEFINE#useMaterialDoubleSide# vec3 fdx = dFdx(vVertexPosition.xyz);
             //#REDGL_DEFINE#useMaterialDoubleSide# vec3 fdy = dFdy(vVertexPosition.xyz);
             //#REDGL_DEFINE#useMaterialDoubleSide# vec3 faceNormal = normalize(cross(fdx,fdy));
-            //#REDGL_DEFINE#useMaterialDoubleSide# if (dot (vVertexNormal, faceNormal) < 0.0)  N = -N;
+            bool backFaceYn = false;
+            //#REDGL_DEFINE#useMaterialDoubleSide# if (dot (vVertexNormal, faceNormal) < 0.0) { N = -N; backFaceYn = true; };
 
 
             vec4 normalColor = vec4(0.0);
             //#REDGL_DEFINE#normalTexture# normalColor = texture2D(u_normalTexture, u_normalTexCoord);
-            //#REDGL_DEFINE#normalTexture# N = getPerturbNormal2Arb(vVertexPosition.xyz, N, normalColor, u_normalTexCoord) ;
             //#REDGL_DEFINE#useFlatMode# N = getFlatNormal(vVertexPosition.xyz);
+            //#REDGL_DEFINE#normalTexture# N = perturb_normal(N, vVertexPosition.xyz, backFaceYn ?  1.0 - u_normalTexCoord : u_normalTexCoord, vec3(normalColor.r, 1.0- normalColor.g, normalColor.b) );
+
 
 
             //#REDGL_DEFINE#useVertexTangent# //#REDGL_DEFINE#normalTexture# vec3 pos_dx = dFdx(vVertexPosition.xyz);
@@ -174,6 +178,7 @@ var RedPBRMaterial_System;
             //#REDGL_DEFINE#useVertexTangent# //#REDGL_DEFINE#normalTexture# vec3 b = normalize(cross(ng, t));
             //#REDGL_DEFINE#useVertexTangent# //#REDGL_DEFINE#normalTexture# mat3 tbn = mat3(t, b, ng);
             //#REDGL_DEFINE#useVertexTangent# //#REDGL_DEFINE#normalTexture# N = normalize(tbn * ((2.0 * normalColor.rgb - 1.0) * vec3(1.0, 1.0 * vVertexTangent.w,1.0)));
+            //#REDGL_DEFINE#useVertexTangent# //#REDGL_DEFINE#normalTexture# N = backFaceYn ? -N : N;
 
 
 
