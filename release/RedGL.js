@@ -20488,6 +20488,7 @@ var RedText;
             var tW, tH;
             tW = self['_width'];
             tH = self['_height'];
+            if(tW%2==0) tW+=1;
             if(tH%2==0) tH+=1;
             self['_cvs'] = window['OffscreenCanvas'] ? new OffscreenCanvas(tW, tH) : document.createElement('canvas');
             self['_ctx'] = self['_cvs'].getContext('2d');
@@ -23948,4 +23949,4 @@ var RedGLOffScreen;
         }
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-02-20 18:10:23)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-02-20 18:17:13)' };console.log(RedGL_VERSION);
