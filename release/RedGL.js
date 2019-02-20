@@ -4578,6 +4578,7 @@ var RedGeometry;
 		 }
          :DOC*/
         this['indexBuffer'] = indexBuffer;
+        this['_volume'] = null;
         this['_UUID'] = RedGL.makeUUID();
         // console.log(this);
     };
@@ -4610,6 +4611,37 @@ var RedGeometry;
             if (this && this[key] instanceof RedBuffer) this[key].dispose()
         }
     };
+    /**DOC:
+     {
+		     code : 'METHOD',
+			 title :`volume`,
+			 description : `지오메트리 고유의 볼륨을 리턴함`,
+			 return : 'array : [xVolume, yVolume, zVolume]'
+		 }
+     :DOC*/
+    Object.defineProperty(RedGeometry.prototype, 'volume', {
+        get: function () {
+            var minX, minY, minZ, maxX, maxY, maxZ, t0, t1, t2, t, i;
+            var stride = this['interleaveBuffer']['stride']
+            // if (!volume[this]) {
+            minX = minY = minZ = maxX = maxY = maxZ = 0,
+                t = this['interleaveBuffer']['data'], i = 0, len =this['interleaveBuffer']['pointNum']
+            for (i; i < len; i++) {
+                t0 = i*stride , t1 = t0 + 1, t2 = t0 + 2,
+                    minX = t[t0] < minX ? t[t0] : minX,
+                    maxX = t[t0] > maxX ? t[t0] : maxX,
+                    minY = t[t1] < minY ? t[t1] : minY,
+                    maxY = t[t1] > maxY ? t[t1] : maxY,
+                    minZ = t[t2] < minZ ? t[t2] : minZ,
+                    maxZ = t[t2] > maxZ ? t[t2] : maxZ;
+
+            }
+            this['_volume'] = [maxX - minX, maxY - minY, maxZ - minZ];
+            // }
+            return this['_volume'];
+        }
+    })
+
     Object.freeze(RedGeometry);
 })();
 "use strict";
@@ -23949,4 +23981,4 @@ var RedGLOffScreen;
         }
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-02-20 18:26:52)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-02-20 20:05:08)' };console.log(RedGL_VERSION);
