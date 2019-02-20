@@ -198,7 +198,7 @@ var RedText;
         this['blendDst'] = redGL.gl.ONE_MINUS_SRC_ALPHA;
         // this['useDepthMask'] = false;
         this['useCullFace'] = false;
-        this['perspectiveScale'] = false;
+        this['perspectiveScale'] = true;
         this['sprite3DYn'] = false;
         //////////////////////
         this['_img'].onload = function () {
