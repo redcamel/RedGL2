@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>RedGL - RedBitmapMaterial</title>
+    <title>RedGL - FlatModeMaterial</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -110,17 +110,19 @@
             var max = testMaterials.length
             var i = max
             var setOptionText = function (target, v) {
-                var tText = RedText(target, 256, 127)
+                var tText = RedText(target, 512, 256)
                 tText.color = '#fff'
                 tText.background = 'rgba(0,0,0,0.0)'
                 tText.text = v
-                tText.fontSize = '17px'
-                tText.lineHeight = '15px'
+                tText.fontSize = '34px'
+                tText.lineHeight = '30px'
                 tText.padding = '5px'
                 tText.textAlign = 'center'
                 tText.sprite3DYn = true
                 tText.perspectiveScale = false
                 tText.useDepthTest=false
+                tText.scaleX = 0.5
+                tText.scaleY = 0.5
                 return tText
             }
 
