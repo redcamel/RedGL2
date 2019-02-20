@@ -12,6 +12,12 @@
     "return": "RedBitmapTexture"
   },
   {
+    "code": "PROPERTY",
+    "title": "height",
+    "description": "세로영역크기",
+    "return": "Number"
+  },
+  {
     "constructorYn": true,
     "title": "RedTextMaterial",
     "description": "\n\t RedTextMaterial Instance 생성자.\n ",
