@@ -55,6 +55,8 @@
                 var tSprite3D = RedSprite3D(this, RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'crate.png')))
                 tSprite3D.x = Math.sin(Math.PI * 2 / 10 * i) * 3
                 tSprite3D.y = Math.cos(Math.PI * 2 / 10 * i) * 3
+                tSprite3D.scaleX = 0.1
+                tSprite3D.scaleY = 0.1
                 tScene.addChild(tSprite3D)
             }
 

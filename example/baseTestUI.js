@@ -224,16 +224,24 @@ baseTestUI.exampleList =  [
                 href: 'material/RedVideoMaterial.html'
             },
             {
-                key: 'FlatModeMaterial',
-                href: 'material/FlatModeMaterial.html'
-            },
-            {
                 key: 'RedBitmapPointCloudMaterial',
                 href: 'material/RedBitmapPointCloudMaterial.html'
             },
             {
                 key: 'RedColorPointCloudMaterial',
                 href: 'material/RedColorPointCloudMaterial.html'
+            },
+            {
+                key: 'FlatModeMaterial',
+                href: 'material/FlatModeMaterial.html'
+            },
+            {
+                key: 'UVTest',
+                href: 'etc/uvTest.html'
+            },
+            {
+                key: 'NormalTextureTest',
+                href: 'etc/normalTest.html'
             }
         ]
     },

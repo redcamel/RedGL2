@@ -74,6 +74,16 @@ var RedText;
             '</foreignObject>';
         // document.body.appendChild(this['_svg'])
         /////////////////////
+        //////////////////////
+        this['geometry'] = RedPlane(redGL, 1, 1);
+        this['material'] = RedTextMaterial(redGL, RedBitmapTexture(redGL, this['_cvs']));
+        //////////////////////
+        this['blendSrc'] = redGL.gl.ONE;
+        this['blendDst'] = redGL.gl.ONE_MINUS_SRC_ALPHA;
+        // this['useDepthMask'] = false;
+        this['useCullFace'] = false;
+        this['perspectiveScale'] = true;
+        this['sprite3DYn'] = false;
         this['_img'] = new Image();
         width = width || 256;
         height = height || 256;
@@ -190,30 +200,25 @@ var RedText;
         }
          :DOC*/
         setStylePrototype(this, 'textAlign', 'center');
-        //////////////////////
-        this['geometry'] = RedPlane(redGL, 1, 1);
-        this['material'] = RedTextMaterial(redGL, RedBitmapTexture(redGL, this['_cvs']));
-        //////////////////////
-        this['blendSrc'] = redGL.gl.ONE;
-        this['blendDst'] = redGL.gl.ONE_MINUS_SRC_ALPHA;
-        // this['useDepthMask'] = false;
-        this['useCullFace'] = false;
-        this['perspectiveScale'] = false;
-        this['sprite3DYn'] = false;
+
         //////////////////////
         this['_img'].onload = function () {
             var tW, tH;
             tW = self['_width'];
             tH = self['_height'];
+            if(tW%2==0) tW+=1;
+            if(tH%2==0) tH+=1;
             self['_cvs'] = window['OffscreenCanvas'] ? new OffscreenCanvas(tW, tH) : document.createElement('canvas');
             self['_ctx'] = self['_cvs'].getContext('2d');
             console.log(tW, tH);
             self['_cvs']['width'] = tW;
             self['_cvs']['height'] = tH;
             self['_ctx'].clearRect(0, 0, tW, tH);
-            self['scaleX'] = self['_width'];
-            self['scaleY'] = self['_height'];
+            // self['scaleX'] = self['_width'];
+            // self['scaleY'] = self['_height'];
             self['_ctx'].drawImage(self['_img'], 0, 0, tW, tH);
+            self['material'].width = tW
+            self['material'].height = tH
             self['material'].diffuseTexture.src = self['_cvs']
             self['material'].diffuseTexture.option = {
                 min: redGL.gl.LINEAR,
@@ -258,6 +263,7 @@ var RedText;
         min: 2,
         callback: function (v) {
             this['_width'] = v;
+            this['material']['width'] = v;
             setTexture(this);
         }
     });
@@ -273,6 +279,7 @@ var RedText;
         min: 2,
         callback: function (v) {
             this['_height'] = v;
+            this['material']['height'] = v;
             setTexture(this);
         }
     });
