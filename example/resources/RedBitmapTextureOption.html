@@ -88,17 +88,19 @@
             var tDiffuse1, tDiffuse2, tDiffuse3
 
             var setOptionText = function (target, v) {
-                var tText
-                tText = RedText(target, 1350, 512)
+                var tText = RedText(target, 512, 200)
                 tText.color = '#fff'
-                // tText.background = 'rgba(0,0,0,0.5)'
+                tText.background = 'rgba(0,0,0,0.5)'
                 tText.text = v
-                tText.fontSize = '80px'
-                tText.lineHeight = '95px'
-                tText.padding = '35px'
+                tText.fontSize = '30px'
+                tText.lineHeight = '35px'
+                tText.padding = '15px'
                 tText.textAlign = 'left'
                 tText.sprite3DYn = true
                 tText.perspectiveScale = true
+                tText.useDepthTest=false
+                tText.scaleX = 2
+                tText.scaleY = 2
                 tText.z = 0.5
                 tText.y = 0.25
                 return tText

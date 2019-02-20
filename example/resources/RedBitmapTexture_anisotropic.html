@@ -75,13 +75,19 @@
             )
             var tText
             var setOptionText = function (target, v) {
-                tText = RedText(target, 1024, 300)
+                tText = RedText(target, 300, 64)
                 tText.color = '#fff'
                 tText.background = 'rgba(0,0,0,0.5)'
                 tText.text = v
-                tText.fontSize = '100px'
+                tText.fontSize = '34px'
+                tText.lineHeight = '30px'
+                tText.padding = '5px'
+                tText.textAlign = 'center'
                 tText.sprite3DYn = true
-                tText.perspectiveScale = true
+                tText.perspectiveScale = false
+                tText.useDepthTest=false
+                tText.scaleX = 0.5
+                tText.scaleY = 0.5
                 tText.z = 0.5
                 tText.y = 0.25
             }
