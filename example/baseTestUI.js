@@ -1,4 +1,3 @@
-
 var baseTestUI = function (redGL, width) {
     // var getQueryParam = function(param) {
     //     var found;
@@ -11,14 +10,14 @@ var baseTestUI = function (redGL, width) {
     // };
     // console.log(getQueryParam('name'))
     document.body.appendChild(testBt = document.createElement('div'));
-    testBt.innerHTML =   'created by Redcamel'
+    testBt.innerHTML = 'created by Redcamel'
     testBt.style.cssText = "position: fixed;top:40px;padding:0px;left:15px;font-size:11px; color:#fff;border:0;outline:none;"
     //
 
     // Global site tag (gtag.js) - Google Analytics
     var t0 = document.createElement('script');
-    t0.setAttribute('async','');
-    t0.setAttribute('src','https://www.googletagmanager.com/gtag/js?id=UA-134079611-1');
+    t0.setAttribute('async', '');
+    t0.setAttribute('src', 'https://www.googletagmanager.com/gtag/js?id=UA-134079611-1');
     document.head.appendChild(t0)
     //
     t0 = document.createElement('script');
@@ -27,7 +26,6 @@ var baseTestUI = function (redGL, width) {
     t0.innerHTML += 'gtag(\'js\', new Date());';
     t0.innerHTML += 'gtag(\'config\', \'UA-134079611-1\');';
     document.head.appendChild(t0);
-
 
 
     baseTestUI.makeBaseUI();
@@ -109,7 +107,7 @@ baseTestUI.makeBaseUI = function () {
     document.head.appendChild(t0);
     makeSourceView();
 };
-baseTestUI.exampleList =  [
+baseTestUI.exampleList = [
     {
         key: 'RedGL',
         list: [
@@ -124,6 +122,10 @@ baseTestUI.exampleList =  [
             {
                 key: 'RedView',
                 href: 'etc/RedView.html'
+            },
+            {
+                key: 'Multi RedGL Instance',
+                href: 'etc/multiRedGLInstance.html'
             }
         ]
     },
@@ -554,7 +556,7 @@ var makeItem = function (list, depth) {
 
     })
 }
-baseTestUI.itemList= []
+baseTestUI.itemList = []
 makeItem(baseTestUI.exampleList)
 baseTestUI.prototype = {
     initRedGL: function (open) {

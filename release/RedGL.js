@@ -2394,6 +2394,12 @@ var RedGL;
     var getGL;
     var setEmptyTextures;
     var doNotPrepareProgram
+    var _instanceList = []
+    window.addEventListener('resize', function () {
+        _instanceList.forEach(function (redGL) {
+            redGL.setSize(redGL['_width'], redGL['_height'])
+        })
+    });
     /*
      gl 컨텍스트 찾기
      */
@@ -2576,9 +2582,77 @@ var RedGL;
         else return callback ? callback.call(self, tGL ? true : false) : 0;
         //
         this['_UUID'] = RedGL.makeUUID();
+        /**DOC:
+         {
+			 title :`setSize`,
+			 code: `METHOD`,
+			 description : `
+				 RedGL Instance의 Canvas 사이즈 설정
+				 px, %단위만 입력가능.
+			 `,
+			 params : {
+			    width : [
+			        { type : 'Number or %' }
+			    ],
+			    height : [
+			        { type : 'Number or %' }
+			    ]
+			 },
+			 return : 'void'
+		 }
+         :DOC*/
+        this['setSize'] = (function () {
+            var W, H;
+            var prevW, prevH;
+            var ratio;
+            var tCVS;
+            var tW = new Uint32Array(2)
+            var tH = new Uint32Array(2)
+            prevW = 0, prevH = 0;
+            return function (width, height, force) {
+                if (width == undefined) RedGLUtil.throwFunc('RedGL setSize : width가 입력되지 않았습니다.');
+                if (height == undefined) RedGLUtil.throwFunc('RedGL setSize : height가 입력되지 않았습니다.');
+                W = this['_width'] = width;
+                H = this['_height'] = height;
+                if (window['HTMLCanvasElement']) {
+                    if (typeof W != 'number') {
+                        if (W.indexOf('%') > -1) W = (document.documentElement ? document.documentElement.clientWidth : document.body.clientWidth) * parseFloat(W) / 100;
+                        else RedGLUtil.throwFunc('RedGL setSize : width는 0이상의 숫자나 %만 허용.', W);
+                    }
+                    if (typeof H != 'number') {
+                        if (H.indexOf('%') > -1) H = window.innerHeight * parseFloat(H) / 100;
+                        else RedGLUtil.throwFunc('RedGL setSize : height는 0이상의 숫자나 %만 허용.', H);
+                    }
+                    ratio = window['devicePixelRatio'] || 1;
+                    tCVS = this['_canvas'];
+                    if (prevW != W || prevH != H || force) {
+                        tCVS.width = W * ratio * this['_renderScale'];
+                        tCVS.height = H * ratio * this['_renderScale'];
+                        tCVS.style.width = W + 'px';
+                        tCVS.style.height = H + 'px';
+                        console.log('RedGL canvas setSize : ', this.gl.drawingBufferWidth, this.gl.drawingBufferHeight);
+                        prevW = W;
+                        prevH = H;
+                    }
+                    this['_viewRect'][2] = prevW;
+                    this['_viewRect'][3] = prevH;
+                    console.log("this['_viewRect']", this['_viewRect'])
+                } else {
+                    W = this['_width'] = width
+                    H = this['_height'] = height
+                    tW[0] = W * this['_renderScale']
+                    tH[0] = H * this['_renderScale']
+                    console.log('offscreen - RedGL canvas setSize : ', this.gl.drawingBufferWidth, this.gl.drawingBufferHeight);
+                    this['_viewRect'][2] = W;
+                    this['_viewRect'][3] = H
+                }
+            }
+        })();
+
         if (RedSystemShaderCode['init']) RedSystemShaderCode.init(self);
         ///////////////////////////////////////
         setEmptyTextures(self, tGL); // 빈텍스쳐를 미리 체워둔다.
+        _instanceList.push(self)
         requestAnimationFrame(function () {
             if (!doNotPrepareProgram) {
                 // 무거운놈만 먼저 해둘까...
@@ -2588,9 +2662,7 @@ var RedGL;
             }
             ///////////////////////////////////////
             //
-            window.addEventListener('resize', function () {
-                self.setSize(self['_width'], self['_height'])
-            });
+
             self['_mouseEventInfo'] = {
                 type: null,
                 x: 0,
@@ -2619,8 +2691,8 @@ var RedGL;
             });
 
             self.setSize(self['_width'], self['_height']); // 리사이즈를 초기에 한번 실행.
-
             callback ? callback.call(self, tGL ? true : false) : 0; // 콜백이 있으면 실행
+
             //
         });
         console.log(this)
@@ -2645,71 +2717,7 @@ var RedGL;
         }
     })();
     RedGL.prototype = {
-        /**DOC:
-         {
-			 title :`setSize`,
-			 code: `METHOD`,
-			 description : `
-				 RedGL Instance의 Canvas 사이즈 설정
-				 px, %단위만 입력가능.
-			 `,
-			 params : {
-			    width : [
-			        { type : 'Number or %' }
-			    ],
-			    height : [
-			        { type : 'Number or %' }
-			    ]
-			 },
-			 return : 'void'
-		 }
-         :DOC*/
-        setSize: (function () {
-            var W, H;
-            var prevW, prevH;
-            var ratio;
-            var tCVS;
-            var tW = new Uint32Array(2)
-            var tH = new Uint32Array(2)
-            prevW = 0, prevH = 0;
-            return function (width, height, force) {
-                if (width == undefined) RedGLUtil.throwFunc('RedGL setSize : width가 입력되지 않았습니다.');
-                if (height == undefined) RedGLUtil.throwFunc('RedGL setSize : height가 입력되지 않았습니다.');
-                W = this['_width'] = width;
-                H = this['_height'] = height;
-                if (window['HTMLCanvasElement']) {
-                    if (typeof W != 'number') {
-                        if (W.indexOf('%') > -1) W = (document.documentElement ? document.documentElement.clientWidth : document.body.clientWidth) * parseFloat(W) / 100;
-                        else RedGLUtil.throwFunc('RedGL setSize : width는 0이상의 숫자나 %만 허용.', W);
-                    }
-                    if (typeof H != 'number') {
-                        if (H.indexOf('%') > -1) H = window.innerHeight * parseFloat(H) / 100;
-                        else RedGLUtil.throwFunc('RedGL setSize : height는 0이상의 숫자나 %만 허용.', H);
-                    }
-                    ratio = window['devicePixelRatio'] || 1;
-                    tCVS = this['_canvas'];
-                    if (prevW != W || prevH != H || force) {
-                        tCVS.width = W * ratio * this['_renderScale'];
-                        tCVS.height = H * ratio * this['_renderScale'];
-                        tCVS.style.width = W+'px';
-                        tCVS.style.height = H+'px';
-                        console.log('RedGL canvas setSize : ', this.gl.drawingBufferWidth, this.gl.drawingBufferHeight);
-                        prevW = W;
-                        prevH = H;
-                    }
-                    this['_viewRect'][2] = prevW;
-                    this['_viewRect'][3] = prevH;
-                } else {
-                    W = this['_width'] = width
-                    H = this['_height'] = height
-                    tW[0] = W * this['_renderScale']
-                    tH[0] = H * this['_renderScale']
-                    console.log('offscreen - RedGL canvas setSize : ', this.gl.drawingBufferWidth, this.gl.drawingBufferHeight);
-                    this['_viewRect'][2] = W;
-                    this['_viewRect'][3] = H
-                }
-            }
-        })()
+
     };
     /**DOC:
      {
@@ -16682,6 +16690,22 @@ var RedShader;
 var RedRenderer;
 //TODO: 캐싱전략을 좀더 고도화하는게 좋을듯
 (function () {
+    var _renderList = []
+    var _renderTick;
+    _renderTick = function (time) {
+        //TODO: 시간보정을 굳이 할피요가 있을까..
+        var i = _renderList.length
+        var tRenderer;
+        while (i--) {
+            tRenderer = _renderList[i]
+            tRenderer.worldRender(tRenderer['_redGL'], time);
+            tRenderer['_callback'] ? tRenderer['_callback'](time) : 0
+
+        }
+        requestAnimationFrame(_renderTick)
+
+    }
+    requestAnimationFrame(_renderTick)
     /**DOC:
      {
 		 constructorYn : true,
@@ -16750,26 +16774,17 @@ var RedRenderer;
 			 return : 'void'
 		 }
          :DOC*/
-        start: (function () {
-            var tick;
-            var self, tRedGL;
-            tick = function (time) {
-                //TODO: 시간보정을 굳이 할피요가 있을까..
-                self.worldRender(tRedGL, time);
-                self['_callback'] ? self['_callback'](time) : 0
-                self['_tickKey'] = requestAnimationFrame(tick);
-            }
-            return function (redGL, callback) {
-                redGL instanceof RedGL || RedGLUtil.throwFunc('RedGL Instance만 허용');
-                if (!(redGL.world instanceof RedWorld)) RedGLUtil.throwFunc('RedWorld Instance만 허용');
-                self = this;
-                self.stop()
-                self.world = redGL.world;
-                tRedGL = redGL;
-                self['_callback'] = callback;
-                self['_tickKey'] = requestAnimationFrame(tick);
-            }
-        })(),
+
+        start: function (redGL, callback) {
+            redGL instanceof RedGL || RedGLUtil.throwFunc('RedGL Instance만 허용');
+            if (!(redGL.world instanceof RedWorld)) RedGLUtil.throwFunc('RedWorld Instance만 허용');
+            var self = this;
+            self.stop()
+            self.world = redGL.world;
+            self['_redGL'] = redGL
+            self['_callback'] = callback;
+            _renderList.push(self)
+        },
         /**DOC:
          {
 			 code:`METHOD`,
@@ -16846,9 +16861,14 @@ var RedRenderer;
 			 return : 'void'
 		 }
          :DOC*/
-        stop: function () {
-            cancelAnimationFrame(this['_tickKey'])
-        }
+        stop: (function () {
+            var t0;
+            return function () {
+                t0 = _renderList.indexOf(this);
+                if (t0 == -1) {
+                } else _renderList.splice(t0, 1);
+            }
+        })()
     };
     // 캐시관련
     var prevProgram_UUID;
@@ -17865,6 +17885,7 @@ var RedSystemUniformUpdater;
 		 }
          :DOC*/
         update: (function () {
+            var prevRedGL;
             var tGL;
             var tProgram;
             var tSystemUniformGroup, tLocationInfo, tLocation, tUUID;
@@ -17895,7 +17916,8 @@ var RedSystemUniformUpdater;
             //
             tVector = new Float32Array(3);
             return function (redGL, redRenderer, time, tView, prevProgram_UUID, lightDebugRenderList) {
-                if(!checkUniformInfo){
+                if (prevRedGL != redGL) checkUniformInfo = null
+                if (!checkUniformInfo) {
                     MAX_DIRECTIONAL_LIGHT_NUM = RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT;
                     MAX_POINT_LIGHT_NUM = RedSystemShaderCode.MAX_POINT_LIGHT;
                     checkUniformInfo = {
@@ -23981,4 +24003,4 @@ var RedGLOffScreen;
         }
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-02-20 20:05:08)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-02-28 19:57:46)' };console.log(RedGL_VERSION);
