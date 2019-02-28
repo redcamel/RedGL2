@@ -42,6 +42,7 @@ var RedSystemUniformUpdater;
 		 }
          :DOC*/
         update: (function () {
+            var prevRedGL;
             var tGL;
             var tProgram;
             var tSystemUniformGroup, tLocationInfo, tLocation, tUUID;
@@ -72,7 +73,8 @@ var RedSystemUniformUpdater;
             //
             tVector = new Float32Array(3);
             return function (redGL, redRenderer, time, tView, prevProgram_UUID, lightDebugRenderList) {
-                if(!checkUniformInfo){
+                if (prevRedGL != redGL) checkUniformInfo = null
+                if (!checkUniformInfo) {
                     MAX_DIRECTIONAL_LIGHT_NUM = RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT;
                     MAX_POINT_LIGHT_NUM = RedSystemShaderCode.MAX_POINT_LIGHT;
                     checkUniformInfo = {

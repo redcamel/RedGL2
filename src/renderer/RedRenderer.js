@@ -2,6 +2,22 @@
 var RedRenderer;
 //TODO: 캐싱전략을 좀더 고도화하는게 좋을듯
 (function () {
+    var _renderList = []
+    var _renderTick;
+    _renderTick = function (time) {
+        //TODO: 시간보정을 굳이 할피요가 있을까..
+        var i = _renderList.length
+        var tRenderer;
+        while (i--) {
+            tRenderer = _renderList[i]
+            tRenderer.worldRender(tRenderer['_redGL'], time);
+            tRenderer['_callback'] ? tRenderer['_callback'](time) : 0
+
+        }
+        requestAnimationFrame(_renderTick)
+
+    }
+    requestAnimationFrame(_renderTick)
     /**DOC:
      {
 		 constructorYn : true,
@@ -70,26 +86,17 @@ var RedRenderer;
 			 return : 'void'
 		 }
          :DOC*/
-        start: (function () {
-            var tick;
-            var self, tRedGL;
-            tick = function (time) {
-                //TODO: 시간보정을 굳이 할피요가 있을까..
-                self.worldRender(tRedGL, time);
-                self['_callback'] ? self['_callback'](time) : 0
-                self['_tickKey'] = requestAnimationFrame(tick);
-            }
-            return function (redGL, callback) {
-                redGL instanceof RedGL || RedGLUtil.throwFunc('RedGL Instance만 허용');
-                if (!(redGL.world instanceof RedWorld)) RedGLUtil.throwFunc('RedWorld Instance만 허용');
-                self = this;
-                self.stop()
-                self.world = redGL.world;
-                tRedGL = redGL;
-                self['_callback'] = callback;
-                self['_tickKey'] = requestAnimationFrame(tick);
-            }
-        })(),
+
+        start: function (redGL, callback) {
+            redGL instanceof RedGL || RedGLUtil.throwFunc('RedGL Instance만 허용');
+            if (!(redGL.world instanceof RedWorld)) RedGLUtil.throwFunc('RedWorld Instance만 허용');
+            var self = this;
+            self.stop()
+            self.world = redGL.world;
+            self['_redGL'] = redGL
+            self['_callback'] = callback;
+            _renderList.push(self)
+        },
         /**DOC:
          {
 			 code:`METHOD`,
@@ -166,9 +173,14 @@ var RedRenderer;
 			 return : 'void'
 		 }
          :DOC*/
-        stop: function () {
-            cancelAnimationFrame(this['_tickKey'])
-        }
+        stop: (function () {
+            var t0;
+            return function () {
+                t0 = _renderList.indexOf(this);
+                if (t0 == -1) {
+                } else _renderList.splice(t0, 1);
+            }
+        })()
     };
     // 캐시관련
     var prevProgram_UUID;
