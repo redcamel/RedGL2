@@ -15,44 +15,31 @@ var RedPostEffect_MirrorTextureMaker;
             void main(void) {
 
                 gl_PointSize = uPointSize;
-                vVertexNormal = aVertexNormal;
+
                 //#REDGL_DEFINE#skin#true# mat4 targetMatrix = uMMatrix *  getSkinMatrix() ;
 			    //#REDGL_DEFINE#skin#false# mat4 targetMatrix = uMMatrix;
+			    vVertexPosition = targetMatrix * vec4(aVertexPosition, 1.0);
+                vVertexNormal =  ( vec4(aVertexNormal, 1.0)).xyz;;
 
-                //#REDGL_DEFINE#sprite3D#true# gl_Position = uPMatrix * getSprite3DMatrix(uCameraMatrix , targetMatrix) *  vec4(aVertexPosition, 1.0);
+
+                //#REDGL_DEFINE#sprite3D#true# gl_Position = uPMatrix * getSprite3DMatrix(uCameraMatrix , targetMatrix) *  vec4(-aVertexPosition, 1.0);
                 //#REDGL_DEFINE#sprite3D#true# if(!u_PerspectiveScale){
                 //#REDGL_DEFINE#sprite3D#true#   gl_Position /= gl_Position.w;
                 //#REDGL_DEFINE#sprite3D#true#   gl_Position.xy += aVertexPosition.xy * vec2(targetMatrix[0][0],targetMatrix[1][1] * uResolution.x/uResolution.y);
                 //#REDGL_DEFINE#sprite3D#true# }
                 //#REDGL_DEFINE#sprite3D#false# gl_Position = uPMatrix * uCameraMatrix * targetMatrix * vec4(aVertexPosition, 1.0);
+
+
             }
         */
     };
     fSource = function () {
         /* @preserve
          precision mediump float;
-        vec4 encodeFloat (float depth) {
-            const vec4 cBitShift = vec4(
-                256.0 * 256.0 * 256.0,
-                256.0 * 256.0,
-                256.0,
-                1.0
-            );
-            const vec4 cBitMask = vec4(
-                0.0,
-                1.0 / 256.0,
-                1.0 / 256.0,
-                1.0 / 256.0
-            );
-            vec4 comp = fract(depth * cBitShift);
-            comp -= comp.xxyz * cBitMask;
-            return comp;
-        }
-        void main(void) {
-            vec4 finalColor = encodeFloat(gl_FragCoord.z);
-            // if(finalColor.a < 0.5) finalColor = vec4(0.0, 0.0, 0.0, 1.0);
-            gl_FragColor = finalColor;
-        }
+         uniform float u_focusLength;
+         void main(void) {
+             gl_FragColor = vec4(normalize(vVertexNormal), 1.0);
+         }
          */
     };
     /**DOC:
@@ -94,6 +81,18 @@ var RedPostEffect_MirrorTextureMaker;
         console.log(this);
     };
     RedPostEffect_MirrorTextureMaker.prototype = new RedBasePostEffect();
-
+    /**DOC:
+     {
+	     code : 'PROPERTY',
+		 title :`focusLength`,
+		 description : `
+			 focusLength
+			 기본값 : 15
+			 min : 0
+		 `,
+		 return : 'Number'
+	 }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedPostEffect_MirrorTextureMaker', 'focusLength', 'number', {'min': 0});
     Object.freeze(RedPostEffect_MirrorTextureMaker)
 })();

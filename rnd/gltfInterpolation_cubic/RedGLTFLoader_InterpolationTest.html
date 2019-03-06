@@ -35,7 +35,7 @@
                 tController = RedObitController(redGL);
                 tController.pan = 25;
                 tController.tilt = -15;
-                tController.distance = 200;
+                tController.distance = 5;
                 // tController.speedDistance = 50
                 // 렌더러 생성
                 tRenderer = RedRenderer();
@@ -71,25 +71,25 @@
                 assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
                 assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
             ])
-            RedGLTFLoader(this,  'https://cdn.rawgit.com/ft-lab/ft-lab.github.io/c56ef016/gltf/grass/', 'rocks_trees_ao.glb', function (v) {
-                tScene.addChild(v['resultMesh'])
-                v['resultMesh'].x = -2
-            })
-            RedGLTFLoader(this,  'https://cdn.rawgit.com/mrdoob/three.js/dev/examples/models/gltf/', 'PrimaryIonDrive.glb', function (v) {
-                tScene.addChild(v['resultMesh'])
-                v['resultMesh'].x = 2
-            })
-            RedGLTFLoader(this,  assetPath + 'glTF/basic/', 'VertexColorTest.gltf', function (v) {
-                tScene.addChild(v['resultMesh'])
-                v['resultMesh'].z = -4
-                v['resultMesh'].x = -2
-            })
-            RedGLTFLoader(this,  'https://cx20.github.io/gltf-test/sampleModels/BoxVertexColors/glTF-Binary/', 'BoxVertexColors.glb', function (v) {
-
-                tScene.addChild(v['resultMesh'])
-                v['resultMesh'].z = -4
-                v['resultMesh'].x = 2
-            })
+            // RedGLTFLoader(this,  'https://cdn.rawgit.com/ft-lab/ft-lab.github.io/c56ef016/gltf/grass/', 'rocks_trees_ao.glb', function (v) {
+            //     tScene.addChild(v['resultMesh'])
+            //     v['resultMesh'].x = -2
+            // })
+            // RedGLTFLoader(this,  'https://cdn.rawgit.com/mrdoob/three.js/dev/examples/models/gltf/', 'PrimaryIonDrive.glb', function (v) {
+            //     tScene.addChild(v['resultMesh'])
+            //     v['resultMesh'].x = 2
+            // })
+            // RedGLTFLoader(this,  assetPath + 'glTF/basic/', 'VertexColorTest.gltf', function (v) {
+            //     tScene.addChild(v['resultMesh'])
+            //     v['resultMesh'].z = -4
+            //     v['resultMesh'].x = -2
+            // })
+            // RedGLTFLoader(this,  'https://cx20.github.io/gltf-test/sampleModels/BoxVertexColors/glTF-Binary/', 'BoxVertexColors.glb', function (v) {
+            //
+            //     tScene.addChild(v['resultMesh'])
+            //     v['resultMesh'].z = -4
+            //     v['resultMesh'].x = 2
+            // })
             // RedGLTFLoader(this,  'https://cdn.rawgit.com/mrdoob/rome-gltf/784089b4/files/models/life_soup/', 'quadruped_fox.gltf', function (v) {
             // 'http://hankuro.sakura.ne.jp/glTF/life_soup/birdsA_eagle.gltf',
             //     'http://hankuro.sakura.ne.jp/glTF/life_soup/birdsA_parrot.gltf',
@@ -102,25 +102,29 @@
             // RedGLTFLoader(this,  'https://cdn.rawgit.com/mrdoob/rome-gltf/784089b4/files/models/life_soup/', 'birdsA_parrot.gltf', function (v) {
             // RedGLTFLoader(this,  'https://cdn.rawgit.com/mrdoob/rome-gltf/784089b4/files/models/life_soup/', 'quadruped_bear.gltf', function (v) {
             // RedGLTFLoader(this, 'https://cdn.rawgit.com/mrdoob/rome-gltf/784089b4/files/models/life_soup/', 'quadruped_chow.gltf', function (v) {
-            RedGLTFLoader(this, 'https://cdn.rawgit.com/mrdoob/rome-gltf/784089b4/files/models/life_soup/', 'quadruped_fox.gltf', function (v) {
-            // RedGLTFLoader(this, 'https://cdn.rawgit.com/mrdoob/rome-gltf/784089b4/files/models/life_soup/', 'quadruped_horse.gltf', function (v) {
-                    tScene.addChild(v['resultMesh'])
-
-                }
-            )
-            // RedGLTFLoader(this, assetPath + 'glTF/basic/MorphPrimitivesTest/', 'MorphPrimitivesTest.gltf', function (v) {
-            //     tScene.addChild(v['resultMesh'])
-            //     v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 10
-            // })
-            // RedGLTFLoader(this,  assetPath + 'glTF/basic/', 'InterpolationTest.glb', function (v) {
+            // RedGLTFLoader(this, 'https://cdn.rawgit.com/mrdoob/rome-gltf/784089b4/files/models/life_soup/', 'quadruped_fox.gltf', function (v) {
+            // // RedGLTFLoader(this, 'https://cdn.rawgit.com/mrdoob/rome-gltf/784089b4/files/models/life_soup/', 'quadruped_horse.gltf', function (v) {
+            //         tScene.addChild(v['resultMesh'])
             //
-            //     tScene.addChild(v['resultMesh'])
-            // })
-            RedGLTFLoader(this,  assetPath + 'glTF/basic/', 'AlphaBlendModeTest.gltf', function (v) {
-                console.log('호잇!', v)
+            //     }
+            // )
+            RedGLTFLoader(this, assetPath + 'glTF/basic/MorphPrimitivesTest/', 'MorphPrimitivesTest.gltf', function (v) {
                 tScene.addChild(v['resultMesh'])
-                v['resultMesh'].z = 2
+                v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 10
             })
+            RedGLTFLoader(this,  assetPath + 'glTF/basic/', 'InterpolationTest.glb', function (v) {
+
+                tScene.addChild(v['resultMesh'])
+            })
+            RedGLTFLoader(this,  assetPath + 'glTF/basic/', 'SimpleMorph.gltf', function (v) {
+
+                tScene.addChild(v['resultMesh'])
+            })
+            // RedGLTFLoader(this,  assetPath + 'glTF/basic/', 'AlphaBlendModeTest.gltf', function (v) {
+            //     console.log('호잇!', v)
+            //     tScene.addChild(v['resultMesh'])
+            //     v['resultMesh'].z = 2
+            // })
 
 
             //
