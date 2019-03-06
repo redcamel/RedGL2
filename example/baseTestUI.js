@@ -327,6 +327,11 @@ baseTestUI.exampleList = [
                 href: 'loader/gltf/RedGLTFLoader_morph.html'
             },
             {
+                key: 'RedGLTFLoader_Multi_morphTarget',
+                href: 'loader/gltf/RedGLTFLoader_Multi_morphTarget.html'
+            },
+
+            {
                 key: 'RedGLTFLoader_skin',
                 href: 'loader/gltf/RedGLTFLoader_skin.html'
             },
