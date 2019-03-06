@@ -28,6 +28,7 @@ var RedPostEffect_Mirror;
          uniform float u_exposure;
          uniform float u_bloomStrength;
 
+
 vec2 viewSpaceToScreenSpaceTexCoord(vec3 p) {
   vec4 projectedPos = vec4(p, 1.0);
   vec2 ndcPos = projectedPos.xy / projectedPos.w; //normalized device coordinates
@@ -41,22 +42,45 @@ vec2 viewSpaceToScreenSpaceTexCoord(vec3 p) {
 
         //#REDGL_DEFINE#fragmentShareFunc#decodeFloatShadow#
         //#REDGL_DEFINE#fragmentShareFunc#getShadowColor#
+
+        float blendOverlay(float base, float blend) {
+	return base<0.5?(2.0*base*blend):(1.0-2.0*(1.0-base)*(1.0-blend));
+}
+
+float blendScreen(float base, float blend) {
+	return 1.0-((1.0-base)*(1.0-blend));
+}
+
+vec3 blendScreen(vec3 base, vec3 blend) {
+	return vec3(blendScreen(base.r,blend.r),blendScreen(base.g,blend.g),blendScreen(base.b,blend.b));
+}
+
+vec3 blendScreen(vec3 base, vec3 blend, float opacity) {
+	return (blendScreen(base, blend) * opacity + base * (1.0 - opacity));
+}
+
+
          void main() {
 
 
              vec4 finalColor = texture2D(u_diffuseTexture, vTexcoord); // 기본컬러
              vec4 normalColor = texture2D(u_normalTexture, vTexcoord); // 뎁스
-             vec4 depthColor = vec4(vec3(decodeFloatShadow(texture2D(u_depthTexture,vTexcoord))),1.0); // 노말
+             vec4 depthColor = texture2D(u_depthTexture, vTexcoord);
 
 
-             vec3 R = reflect(uCameraPosition - normalColor);
 
-             vec4 finalColor2 = texture2D(u_diffuseTexture, coord);
+             vec4 finalColor2 = texture2D(u_diffuseTexture, normalColor.rg);
+             // finalColor2.a = normalColor.b;
 
-             gl_FragColor = mix(finalColor2,finalColor2, normalColor.g) ;
-             // gl_FragColor = finalColor2;
-             // gl_FragColor = depthColor;
-             // gl_FragColor = vec4(normalize(uCameraPosition),1.0);
+gl_FragColor = mix(finalColor, finalColor2, depthColor.g) ;
+
+
+            if(normalColor.xy ==vec2(0.0)) gl_FragColor = finalColor;
+            else gl_FragColor = mix(finalColor, normalColor, depthColor.g) ;
+            // gl_FragColor = vec4(blendScreen(finalColor.xyz, finalColor2.xyz, depthColor.g),1.0);
+            //  gl_FragColor = depthColor;
+            //  gl_FragColor = normalColor;
+            //  gl_FragColor = vec4(R,1.0);
          }
          */
     };

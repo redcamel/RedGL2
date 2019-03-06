@@ -13,11 +13,7 @@
     <script src="../../example/dat.gui.min.js"></script>
     <script src="../../example/baseTestUI.js"></script>
     <script src="../../release/RedGL.min.js"></script>
-    <script src="RedPostEffect_Mirror.js"></script>
-    <script src="RedPostEffect_MirrorTextureMaker.js"></script>
-    <script src="RedPostEffectMirrorNormal.js"></script>
-
-    <!--<script src="RedGLTFLoader.js"></script>-->
+    <script src="NoiseTestMaterial.js"></script>
 </head>
 
 <body>
@@ -38,9 +34,8 @@
                 tScene = RedScene(redGL);
                 // 카메라 생성
                 tController = RedObitController(redGL);
-                tController.pan = 0;
-                tController.tilt = -45;
-                tController.centerY = 10
+                tController.pan = 25;
+                tController.tilt = -15;
                 // tController.distance = 75;
                 // 렌더러 생성
                 tRenderer = RedRenderer();
@@ -56,22 +51,7 @@
                 testDLight.x = 100
                 testDLight.y = 100
                 testDLight.z = 100
-                tScene.addLight(testDLight)
-
-                testDLight = RedDirectionalLight(redGL)
-                // testDLight.intensity = 0.3
-                testDLight.x = -100
-                testDLight.y = 100
-                testDLight.z = -100
-                tScene.skyBox = RedSkyBox(redGL,  [
-                    assetPath + 'cubemap/posx.png',
-                    assetPath + 'cubemap/negx.png',
-                    assetPath + 'cubemap/posy.png',
-                    assetPath + 'cubemap/negy.png',
-                    assetPath + 'cubemap/posz.png',
-                    assetPath + 'cubemap/negz.png'
-                ])
-                tScene.addLight(testDLight)
+                // tScene.addLight(testDLight)
                 // 렌더시작
                 tRenderer.start(redGL, function (time) {
                 });
@@ -81,31 +61,11 @@
             };
             setBase(this);
             ///////////////////////////////////////////////////
-            // GLTF 로딩
-            RedGLTFLoader(
-                this, // redGL
-                'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Sponza/glTF/', // assetRootPath
-                'Sponza.gltf', // fileName
-                function (v) { // callBack
-                    v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 3
-                    v['resultMesh'].y = 4
-                    tScene.addChild(v['resultMesh'])
-                },
-                RedBitmapCubeTexture(this, // environmentTexture
-                    [
-                        assetPath + 'cubemap/posx.png',
-                        assetPath + 'cubemap/negx.png',
-                        assetPath + 'cubemap/posy.png',
-                        assetPath + 'cubemap/negy.png',
-                        assetPath + 'cubemap/posz.png',
-                        assetPath + 'cubemap/negz.png'
-                    ]
-                )
-            );
 
-            var effect;
-            effect = RedPostEffect_Mirror(this);
-            tView['postEffectManager'].addEffect(effect)
+            var plane = RedMesh(this, RedPlane(this), NoiseTestMaterial(this))
+            tScene.addChild(plane)
+            console.log(this.detect)
+
 
         } else {
             console.log('초기화 실패!')
