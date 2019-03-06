@@ -9403,9 +9403,7 @@ var RedTextMaterial;
                         0.0, 0.0, 1.0, 0.0,
                         0.0, 0.0, 0.0, 1.0
                     ) ;
-                gl_Position = uPMatrix * uCameraMatrix * targetMatrix *  vec4(aVertexPosition, 1.0);
-
-
+                    gl_Position = uPMatrix * uCameraMatrix * targetMatrix *  vec4(aVertexPosition, 1.0);
                 }else{
                     targetMatrix = uMMatrix * mat4(
                         u_width/uResolution.y, 0.0, 0.0, 0.0,
@@ -11665,7 +11663,6 @@ var RedGLTFLoader;
 		 description : `
 			 GLTF 로더.
 			 애니메이션 지원함.
-			 COLOR_0, TANGENT는 아직 지원하지 않는다.
 		 `,
 		 params : {
 			 redGL : [
@@ -11921,6 +11918,7 @@ var RedGLTFLoader;
         var targetAnimationData
         return function (time) {
             // console.log('loopList',loopList)
+
             loopList.forEach(function (v) {
                 prevRotation = null
                 nextRotation = null
@@ -12147,24 +12145,72 @@ var RedGLTFLoader;
                             }
                             if (aniData['key'] == 'weights') {
                                 // console.log(aniData)
-                                var targetMesh = aniData['target']
-                                var targetData = targetMesh['geometry']['interleaveBuffer']['data']
-                                var originData = targetMesh['_morphInfo']['origin']
-                                // console.log('targetData',targetData)
-                                // console.log("targetMesh['_morphInfo']['list']",targetMesh['_morphInfo']['list'])
-                                targetData.forEach(function (v, index) {
+                                // aniData['targets'].forEach(function (targetMesh) {
+                                //     var targetData = targetMesh['geometry']['interleaveBuffer']['data']
+                                //     var originData = targetMesh['_morphInfo']['origin']
+                                //     targetData.forEach(function (v, index) {
+                                //         if (index % targetMesh['geometry']['interleaveBuffer']['stride'] < 3) {
+                                //             var prev, next
+                                //             prev = originData[index]
+                                //             next = originData[index]
+                                //             var morphLen = targetMesh['_morphInfo']['list'].length
+                                //             targetMesh['_morphInfo']['list'].forEach(function (v, morphIndex) {
+                                //                 if (morphIndex % 3 == 1) {
+                                //                     prev += aniData['data'][prevIndex * morphLen + morphIndex] * v['interleaveData'][index]
+                                //                     next += aniData['data'][nextIndex * morphLen + morphIndex] * v['interleaveData'][index]
+                                //                 }
+                                //
+                                //             })
+                                //             targetData[index] = prev + interpolationValue * (next - prev)
+                                //         }
+                                //     })
+                                //     targetMesh['geometry']['interleaveBuffer'].upload(targetData)
+                                // })
+                                aniData['targets'].forEach(function (targetMesh) {
+                                    var targetData = targetMesh['geometry']['interleaveBuffer']['data']
+                                    var originData = targetMesh['_morphInfo']['origin']
+                                    var stride = targetMesh['geometry']['interleaveBuffer']['stride']
+                                    var index = 0;
+                                    var LOOP_NUM = targetData.length / stride
                                     var prev, next
-                                    prev = originData[index]
-                                    next = originData[index]
-                                    targetMesh['_morphInfo']['list'].forEach(function (v, morphIndex) {
-                                        if (morphIndex % 3 == 1) {
-                                            prev += aniData['data'][prevIndex * 2 + morphIndex] * v['interleaveData'][index]
-                                            next += aniData['data'][nextIndex * 2 + morphIndex] * v['interleaveData'][index]
+                                    var prev1, next1
+                                    var prev2, next2
+                                    var baseIndex
+                                    var morphLen = targetMesh['_morphInfo']['list'].length
+                                    var tAniData = aniData['data']
+                                    var tMorphList = targetMesh['_morphInfo']['list']
+                                    for (index; index < LOOP_NUM; index++) {
+                                        baseIndex = index * stride
+                                        prev = originData[baseIndex]
+                                        next = originData[baseIndex]
+                                        prev1 = originData[baseIndex + 1]
+                                        next1 = originData[baseIndex + 1]
+                                        prev2 = originData[baseIndex + 2]
+                                        next2 = originData[baseIndex + 2]
+
+                                        var morphIndex = morphLen
+                                        var prevAniData;
+                                        var nextAniData;
+                                        var morphInterleaveData;
+                                        while (morphIndex--) {
+                                            if (morphIndex % 3 == 1) {
+                                                prevAniData = tAniData[prevIndex * morphLen + morphIndex]
+                                                nextAniData = tAniData[nextIndex * morphLen + morphIndex]
+                                                morphInterleaveData = tMorphList[morphIndex]['interleaveData']
+                                                prev += prevAniData * morphInterleaveData[baseIndex]
+                                                next += nextAniData * morphInterleaveData[baseIndex]
+                                                prev1 += prevAniData * morphInterleaveData[baseIndex + 1]
+                                                next1 += nextAniData * morphInterleaveData[baseIndex + 1]
+                                                prev2 += prevAniData * morphInterleaveData[baseIndex + 2]
+                                                next2 += nextAniData * morphInterleaveData[baseIndex + 2]
+                                            }
                                         }
-                                    })
-                                    targetData[index] = prev + interpolationValue * (next - prev)
+                                        targetData[baseIndex] = prev + interpolationValue * (next - prev)
+                                        targetData[baseIndex + 1] = prev1 + interpolationValue * (next1 - prev1)
+                                        targetData[baseIndex + 2] = prev2 + interpolationValue * (next2 - prev2)
+                                    }
+                                    targetMesh['geometry']['interleaveBuffer'].upload(targetData)
                                 })
-                                targetMesh['geometry']['interleaveBuffer'].upload(targetData)
                             }
                         }
                         return
@@ -12298,20 +12344,51 @@ var RedGLTFLoader;
                             }
                             if (aniData['key'] == 'weights') {
                                 // console.log(aniData)
-                                var targetMesh = aniData['target']
-                                var targetData = targetMesh['geometry']['interleaveBuffer']['data']
-                                var originData = targetMesh['_morphInfo']['origin']
-                                targetData.forEach(function (v, index) {
+                                aniData['targets'].forEach(function (targetMesh) {
+                                    var targetData = targetMesh['geometry']['interleaveBuffer']['data']
+                                    var originData = targetMesh['_morphInfo']['origin']
+                                    var stride = targetMesh['geometry']['interleaveBuffer']['stride']
+                                    var index = 0;
+                                    var LOOP_NUM = targetData.length / stride
                                     var prev, next
-                                    prev = originData[index]
-                                    next = originData[index]
-                                    targetMesh['_morphInfo']['list'].forEach(function (v, morphIndex) {
-                                        prev += aniData['data'][prevIndex * 2 + morphIndex] * v['interleaveData'][index]
-                                        next += aniData['data'][nextIndex * 2 + morphIndex] * v['interleaveData'][index]
-                                    })
-                                    targetData[index] = prev + interpolationValue * (next - prev)
+                                    var prev1, next1
+                                    var prev2, next2
+                                    var baseIndex
+                                    var morphLen = targetMesh['_morphInfo']['list'].length
+                                    var tAniData = aniData['data']
+                                    var tMorphList = targetMesh['_morphInfo']['list']
+                                    for (index; index < LOOP_NUM; index++) {
+                                        baseIndex = index * stride
+                                        prev = originData[baseIndex]
+                                        next = originData[baseIndex]
+                                        prev1 = originData[baseIndex + 1]
+                                        next1 = originData[baseIndex + 1]
+                                        prev2 = originData[baseIndex + 2]
+                                        next2 = originData[baseIndex + 2]
+
+                                        var morphIndex = morphLen
+                                        var prevAniData;
+                                        var nextAniData;
+                                        var morphInterleaveData;
+                                        while (morphIndex--) {
+                                            prevAniData = tAniData[prevIndex * morphLen + morphIndex]
+                                            nextAniData = tAniData[nextIndex * morphLen + morphIndex]
+                                            morphInterleaveData = tMorphList[morphIndex]['interleaveData']
+                                            prev += prevAniData * morphInterleaveData[baseIndex]
+                                            next += nextAniData * morphInterleaveData[baseIndex]
+                                            prev1 += prevAniData * morphInterleaveData[baseIndex + 1]
+                                            next1 += nextAniData * morphInterleaveData[baseIndex + 1]
+                                            prev2 += prevAniData * morphInterleaveData[baseIndex + 2]
+                                            next2 += nextAniData * morphInterleaveData[baseIndex + 2]
+                                        }
+                                        targetData[baseIndex] = prev + interpolationValue * (next - prev)
+                                        targetData[baseIndex + 1] = prev1 + interpolationValue * (next1 - prev1)
+                                        targetData[baseIndex + 2] = prev2 + interpolationValue * (next2 - prev2)
+                                    }
+                                    targetMesh['geometry']['interleaveBuffer'].upload(targetData)
                                 })
-                                targetMesh['geometry']['interleaveBuffer'].upload(targetData)
+
+
                             }
                         }
                     }
@@ -13141,7 +13218,7 @@ var RedGLTFLoader;
                     interleaveData[idx++] = verticesColor_0[i * 4 + 2];
                     interleaveData[idx++] = verticesColor_0[i * 4 + 3];
                     // interleaveData.push(verticesColor_0[i * 4 + 0], verticesColor_0[i * 4 + 1], verticesColor_0[i * 4 + 2], verticesColor_0[i * 4 + 3])
-                }else{
+                } else {
                     interleaveData[idx++] = 0;
                     interleaveData[idx++] = 0;
                     interleaveData[idx++] = 0;
@@ -13414,8 +13491,8 @@ var RedGLTFLoader;
                 })
                 var gap = 0
                 tMesh['_morphInfo']['list'].forEach(function (v, index) {
-                    console.log('tInterleaveInfoList', tInterleaveInfoList)
-                    console.log('NUM', NUM)
+                    // console.log('tInterleaveInfoList', tInterleaveInfoList)
+                    // console.log('NUM', NUM)
                     var i = 0, len = targetData.length / NUM
                     var tWeights = tMesh['_morphInfo']['list']['weights'][index] == undefined ? 0.5 : tMesh['_morphInfo']['list']['weights'][index]
                     for (i; i < len; i++) {
@@ -13425,8 +13502,9 @@ var RedGLTFLoader;
                     }
                 });
                 tMesh['geometry']['interleaveBuffer'].upload(targetData)
+                tMesh['_morphInfo']['origin'] = new Float32Array(targetData)
                 /////////////////////////////////////////////////////
-
+                v['RedMesh'] = tMesh
                 tMeshList.push(tMesh)
                 // console.log('vertices', vertices)
                 // console.log('normalData', normalData)
@@ -13484,7 +13562,7 @@ var RedGLTFLoader;
             return function (redGLTFLoader, json) {
                 console.log('애니메이션 파싱시작')
                 var nodes = json['nodes']
-                var meshs = json['meshs']
+                var meshes = json['meshes']
                 var accessors = json['accessors']
                 if (!json['animations']) json['animations'] = []
                 json['animations'].forEach(function (v, index) {
@@ -13507,12 +13585,17 @@ var RedGLTFLoader;
                         var tMesh;
                         var tNode;
                         var aniTrack; //
+                        var targets = []
                         tSampler = samplers[channel['sampler']];
                         // console.log('tSampler', tSampler)
                         tChannelTargetData = channel['target'];
                         tNode = nodes[tChannelTargetData['node']];
                         if ('mesh' in tNode) {
                             tMesh = tNode['RedMesh']
+                            meshes[tNode['mesh']]['primitives'].forEach(function (v) {
+                                targets.push(v['RedMesh'])
+                                v['RedMesh'].geometry.drawMode = redGLTFLoader['redGL']['gl'].DYNAMIC_DRAW
+                            })
                         } else {
                             var tGroup
                             //TODO: 이거 개선해야함
@@ -13543,12 +13626,14 @@ var RedGLTFLoader;
                             // console.log('translation', tSampler['output'])
                             // console.log('translation 엑세서 데이터', tSampler['output'])
                             // console.log('scale 데이터리스트', t0)
+
                             animationClip.push(aniTrack = {
                                     key: tChannelTargetData['path'],
                                     time: parseAnimationInfo(redGLTFLoader, json, tSampler['input']),
                                     data: parseAnimationInfo(redGLTFLoader, json, tSampler['output']),
                                     interpolation: tSampler['interpolation'],
-                                    target: tMesh
+                                    target: tMesh,
+                                    targets: targets
                                 }
                             )
                         } else {
@@ -24012,4 +24097,4 @@ var RedGLOffScreen;
         }
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-03-04 09:33:56)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-03-06 16:33:13)' };console.log(RedGL_VERSION);
