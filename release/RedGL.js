@@ -12922,7 +12922,10 @@ var RedGLTFLoader;
                             if (strideIndex % stridePerElement < 3) {
                                 if (key == 'NORMAL') normals.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                                 else if (key == 'POSITION') vertices.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-                                // else if ( key == 'COLOR_0' ) RedGLUtil.throwFunc('VEC3에서 현재 지원하고 있지 않는 키', key)
+                                else if (key == 'COLOR_0') {
+                                    verticesColor_0.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+                                    if (strideIndex % stridePerElement == 2) verticesColor_0.push(1)
+                                }
                                 // else if ( key == 'TANGENT' ) tangents.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                                 // else RedGLUtil.throwFunc('VEC3에서 현재 지원하고 있지 않는 키', key)
                             }
@@ -12933,7 +12936,10 @@ var RedGLTFLoader;
                         for (i; i < len; i++) {
                             if (key == 'NORMAL') normals.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                             else if (key == 'POSITION') vertices.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-                            // else if ( key == 'COLOR_0' ) RedGLUtil.throwFunc('VEC3에서 현재 지원하고 있지 않는 키', key)
+                            else if (key == 'COLOR_0') {
+                                verticesColor_0.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+                                if (strideIndex % 3 == 1) verticesColor_0.push(1)
+                            }
                             // else if ( key == 'TANGENT' ) tangents.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                             // else RedGLUtil.throwFunc('VEC3에서 현재 지원하고 있지 않는 키', key)
                             strideIndex++
@@ -24097,4 +24103,4 @@ var RedGLOffScreen;
         }
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-03-06 16:33:13)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-03-07 11:40:18)' };console.log(RedGL_VERSION);
