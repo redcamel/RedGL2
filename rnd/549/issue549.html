@@ -12,7 +12,7 @@
 
     <script src="../../example/dat.gui.min.js"></script>
     <script src="../../example/baseTestUI.js"></script>
-    <script src="../../release/RedGL.min.js"></script>
+    <script src="../../release/RedGL.js"></script>
 
 </head>
 
@@ -50,9 +50,10 @@
                 testDLight = RedDirectionalLight(redGL)
                 testDLight.x = 3
                 testDLight.y = 3
-                testDLight.z = 3
+                testDLight.z = -3
                 testDLight.debug = true
                 tScene.addLight(testDLight)
+
 
 
                 // 렌더시작
@@ -65,14 +66,7 @@
             };
 
             setBase(this);
-            tScene['skyBox'] = RedSkyBox(this, [
-                assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
-                assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
-                assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
-                assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
-                assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
-                assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
-            ])
+
             ///////////////////////////////////////////////////
             RedGLTFLoader(this, 'https://cdn.rawgit.com/mrdoob/rome-gltf/784089b4/files/models/life_soup/', 'birdsA_eagle.gltf', function (v) {
                     tScene.addChild(v['resultMesh'])
@@ -96,7 +90,7 @@
             )
             RedGLTFLoader(this, 'https://cdn.rawgit.com/mrdoob/rome-gltf/784089b4/files/models/life_soup/', 'quadruped_bear.gltf', function (v) {
                     tScene.addChild(v['resultMesh'])
-                    v['resultMesh'].x = 50
+                    v['resultMesh'].x = 150
                     v['resultMesh'].z = 200
                     v['resultMesh'].children.forEach(function (v) {
                         v.useCullFace = false
@@ -123,6 +117,20 @@
             RedGLTFLoader(this, 'https://cdn.rawgit.com/mrdoob/rome-gltf/784089b4/files/models/life_soup/', 'quadruped_horse.gltf', function (v) {
                     tScene.addChild(v['resultMesh'])
                     v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.5
+                    v['resultMesh'].children.forEach(function (v) {
+                        v.useCullFace = false
+                    })
+                }
+            )
+            RedGLTFLoader(
+                this,
+                'https://rawcdn.githack.com/mrdoob/three.js/bc0c2c59398f8d0f2442ced77432bee83f870966/examples/models/gltf/',
+                'Horse.glb',
+                function (v) {
+                    tScene.addChild(v['resultMesh'])
+                console.log(v)
+                    v['resultMesh'].rotationY = 180
+                    v['resultMesh'].z = 200
                     v['resultMesh'].children.forEach(function (v) {
                         v.useCullFace = false
                     })
