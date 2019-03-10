@@ -3,8 +3,126 @@ var RedLathe;
 (function () {
     var makeData;
     makeData = (function () {
-        var generateTorso;
-        var generateCap;
+        function lerp(a, b, t) {
+            return a + (b - a) * t;
+        }
+
+        function flatness(points, offset) {
+            const p1 = points[offset + 0];
+            const p2 = points[offset + 1];
+            const p3 = points[offset + 2];
+            const p4 = points[offset + 3];
+
+            let ux = 3 * p2[0] - 2 * p1[0] - p4[0];
+            ux *= ux;
+            let uy = 3 * p2[1] - 2 * p1[1] - p4[1];
+            uy *= uy;
+            let vx = 3 * p3[0] - 2 * p4[0] - p1[0];
+            vx *= vx;
+            let vy = 3 * p3[1] - 2 * p4[1] - p1[1];
+            vy *= vy;
+
+            if (ux < vx) {
+                ux = vx;
+            }
+
+            if (uy < vy) {
+                uy = vy;
+            }
+
+            return ux + uy;
+        }
+
+        function getPointsOnBezierCurveWithSplitting(points, offset, tolerance, newPoints) {
+            const outPoints = newPoints || [];
+            if (flatness(points, offset) < tolerance) {
+
+                // just add the end points of this curve
+                outPoints.push(points[offset + 0]);
+                outPoints.push(points[offset + 3]);
+
+            } else {
+
+                // subdivide
+                const t = .5;
+                const p1 = points[offset + 0];
+                const p2 = points[offset + 1];
+                const p3 = points[offset + 2];
+                const p4 = points[offset + 3];
+
+                const q1 = vec2.lerp([],p1, p2, t);
+                const q2 = vec2.lerp([],p2, p3, t);
+                const q3 = vec2.lerp([],p3, p4, t);
+
+                const r1 = vec2.lerp([],q1, q2, t);
+                const r2 = vec2.lerp([],q2, q3, t);
+
+                const red = vec2.lerp([],r1, r2, t);
+
+                // do 1st half
+                getPointsOnBezierCurveWithSplitting([p1, q1, r1, red], 0, tolerance, outPoints);
+                // do 2nd half
+                getPointsOnBezierCurveWithSplitting([red, r2, q3, p4], 0, tolerance, outPoints);
+
+            }
+            return outPoints;
+        }
+
+        function getPointsOnBezierCurves(points, tolerance) {
+            const newPoints = [];
+            const numSegments = (points.length - 1) / 3;
+            for (let i = 0; i < numSegments; ++i) {
+                const offset = i * 3;
+                getPointsOnBezierCurveWithSplitting(points, offset, tolerance, newPoints);
+            }
+            return newPoints;
+        }
+        function simplifyPoints(points, start, end, epsilon, newPoints) {
+            const outPoints = newPoints || [];
+
+            // find the most distant point from the line formed by the endpoints
+            const s = points[start];
+            const e = points[end - 1];
+            let maxDistSq = 0;
+            let maxNdx = 1;
+            for (let i = start + 1; i < end - 1; ++i) {
+                const distSq = distanceToSegmentSq(points[i], s, e);
+                if (distSq > maxDistSq) {
+                    maxDistSq = distSq;
+                    maxNdx = i;
+                }
+            }
+
+            // if that point is too far
+            if (Math.sqrt(maxDistSq) > epsilon) {
+
+                // split
+                simplifyPoints(points, start, maxNdx + 1, epsilon, outPoints);
+                simplifyPoints(points, maxNdx, end, epsilon, outPoints);
+
+            } else {
+
+                // add the 2 end points
+                outPoints.push(s, e);
+            }
+
+            return outPoints;
+        }
+        function distanceSq(a, b) {
+            const dx = a[0] - b[0];
+            const dy = a[1] - b[1];
+            return dx * dx + dy * dy;
+        }
+        function distanceToSegmentSq(p, v, w) {
+            const l2 = distanceSq(v, w);
+            if (l2 === 0) {
+                return distanceSq(p, v);
+            }
+            let t = ((p[0] - v[0]) * (w[0] - v[0]) + (p[1] - v[1]) * (w[1] - v[1])) / l2;
+            t = Math.max(0, Math.min(1, t));
+            return distanceSq(p, lerp(v, w, t));
+        }
+
         //TODO 정리
         return function (redGL, type, points, radialSegments, openEnded, thetaStart, thetaLength) {
             ////////////////////////////////////////////////////////////////////////////
@@ -13,9 +131,7 @@ var RedLathe;
             var interleaveData = [];
             var indexData = [];
             //
-            var index = 0;
-            var indexArray = [];
-            var groupStart = 0;
+            var lathePoints
 
             var topY, bottomY
             var i;
@@ -28,126 +144,89 @@ var RedLathe;
                 if (t0 > topY) topY = t0
                 if (t0 < bottomY) bottomY = t0
             }
+            var slope = (bottomY - topY);
+            lathePoints = function (points,
+                                    startAngle,   // angle to start at (ie 0)
+                                    endAngle,     // angle to end at (ie Math.PI * 2)
+                                    numDivisions, // how many quads to make around
+                                    capStart,     // true to cap the top
+                                    capEnd) {     // true to cap the bottom
+                var positions = [];
+                var texcoords = [];
+                var normals = []
 
-            generateTorso = function () {
+                var vOffset = capStart ? 1 : 0;
+                var pointsPerColumn = points.length + vOffset + (capEnd ? 1 : 0);
+                var quadsDown = pointsPerColumn - 1;
+
+                // generate v coordniates
+                let vcoords = [];
+                // first compute the length of the points
+                let length = 0;
+                for (let i = 0; i < points.length - 1; ++i) {
+                    vcoords.push(length);
+                    length += vec2.distance(points[i], points[i + 1]);
+                }
+                vcoords.push(length);  // the last point
 
 
-                var heightSegments = points.length - 1
+                // now divide each by the total length;
+                vcoords = vcoords.map(v => v / length);
+                console.log(vcoords,length)
 
-                var x, y;
-                var normal = [];
-                var vertex = [];
-                var groupCount = 0;
-                // this will be used to calculate the normal
-                var slope = (bottomY - topY);
-                // generate vertices, normals and uvs
-                for (y = 0; y <= heightSegments; y++) {
-                    var indexRow = [];
-                    var v = y / heightSegments;
-                    // calculate the radius of the current row
-                    var radius = points[y][0];
-                    for (x = 0; x <= radialSegments; x++) {
-                        var u = x / radialSegments;
-                        var theta = u * thetaLength + thetaStart;
-                        var sinTheta = Math.sin(theta);
-                        var cosTheta = Math.cos(theta);
-                        // vertex
-                        vertex[0] = radius * sinTheta;
-                        vertex[1] = points[y][1];
-                        vertex[2] = radius * cosTheta;
-                        interleaveData.push(vertex[0], vertex[1], vertex[2]);
-                        // normal
-                        normal[0] = sinTheta;
-                        normal[1] = slope;
-                        normal[2] = cosTheta;
-                        vec3.normalize(normal, normal);
-                        interleaveData.push(normal[0], normal[1], normal[2]);
-                        // uv
-                        interleaveData.push(u, v);
-                        // save index of vertex in respective row
-                        indexRow.push(index++);
+                // generate points
+                for (let division = 0; division <= numDivisions; ++division) {
+                    var u = division / numDivisions;
+                    var angle = lerp(startAngle, endAngle, u) % (Math.PI * 2);
+                    var mat = mat4.fromYRotation(mat4.create(), angle);
+                    if (capStart) {
+                        // add point on Y axis at start
+                        positions.push(0, points[0][1], 0);
+                        texcoords.push(u, 0);
                     }
-                    // now save vertices of the row in our index array
-                    indexArray.push(indexRow);
-                }
-                // generate indices
-                for (x = 0; x < radialSegments; x++) {
-                    for (y = 0; y < heightSegments; y++) {
-                        // we use the index array to access the correct indices
-                        var a = indexArray [y][x];
-                        var b = indexArray[y + 1][x];
-                        var c = indexArray[y + 1][x + 1];
-                        var d = indexArray[y][x + 1];
-                        // faces
-                        indexData.push(a, b, d);
-                        indexData.push(b, c, d);
-                        // update group counter
-                        groupCount += 6;
-                    }
-                }
-                groupStart += groupCount;
-            };
-            generateCap = function (top) {
-                var x, centerIndexStart, centerIndexEnd;
-                var uv = [];
-                var vertex = [];
-                var groupCount = 0;
-                var radius = (top === true) ? points[0][0] : points[points.length - 1][0];
-                var sign = (top === true) ? 1 : -1;
-                centerIndexStart = index;
-                for (x = 1; x <= radialSegments; x++) {
-                    // vertex
-                    interleaveData.push(0, top ? topY : bottomY, 0);
-                    // normal
-                    interleaveData.push(0, sign, 0);
-                    // uv
-                    interleaveData.push(0.5, 0.5);
-                    // increase index
-                    index++;
-                }
-                centerIndexEnd = index;
-                for (x = 0; x <= radialSegments; x++) {
-                    var u = x / radialSegments;
                     var theta = u * thetaLength + thetaStart;
-                    var cosTheta = Math.cos(theta);
                     var sinTheta = Math.sin(theta);
-                    // vertex
-                    vertex[0] = radius * sinTheta;
-                    vertex[1] = top ? topY : bottomY;
-                    vertex[2] = radius * cosTheta;
-                    interleaveData.push(vertex[0], vertex[1], vertex[2]);
-                    // normal
-                    interleaveData.push(0, sign, 0);
-                    // uv
-                    uv[0] = (cosTheta * 0.5) + 0.5;
-                    uv[1] = (sinTheta * 0.5 * sign) + 0.5;
-                    interleaveData.push(uv[0], 1 - uv[1]);
-                    // increase index
-                    index++;
-                }
-                // generate indices
-                for (x = 0; x < radialSegments; x++) {
-                    var c = centerIndexStart + x;
-                    var i = centerIndexEnd + x;
-                    if (top === true) {
-                        // face top
-                        indexData.push(i, i + 1, c);
-                    } else {
-                        // face bottom
-                        indexData.push(i + 1, i, c);
+                    var cosTheta = Math.cos(theta);
+                    points.forEach(function (p, ndx) {
+                        var tp = vec3.transformMat4([], [p[0], p[1], 0], mat);
+
+                        positions.push(tp[0], tp[1], tp[2]);
+                        texcoords.push(u, vcoords[ndx]);
+                        normals.push(sinTheta,slope,cosTheta)
+                    });
+                    if (capEnd) {
+                        // add point on Y axis at end
+                        positions.push(0, points[points.length - 1][1], 0);
+                        texcoords.push(u, 1);
                     }
-                    groupCount += 3;
+
                 }
-                // calculate new start value for groups
-                groupStart += groupCount;
 
-            }
-            generateTorso();
-            if (openEnded === false) {
-                generateCap(true);
-                generateCap(false);
-            }
+                // generate indexData
+                for (let division = 0; division < numDivisions; ++division) {
+                    var column1Offset = division * pointsPerColumn;
+                    var column2Offset = column1Offset + pointsPerColumn;
 
+                    for (var quad = 0; quad < quadsDown; ++quad) {
+                        indexData.push(column1Offset + quad, column1Offset + quad + 1, column2Offset + quad);
+                        indexData.push(column1Offset + quad + 1, column2Offset + quad + 1, column2Offset + quad);
+                    }
+                }
+
+                // var normals = RedGLUtil.calculateNormals(positions, indexData)
+                var i = 0, len = positions.length / 3
+                for (i; i < len; i++) {
+                    interleaveData.push(positions[i * 3 + 0], positions[i * 3 + 1], positions[i * 3 + 2])
+                    interleaveData.push(normals[i * 3 + 0], normals[i * 3 + 1], normals[i * 3 + 2])
+                    interleaveData.push(texcoords[i * 2 + 0], texcoords[i * 2 + 1])
+                }
+                console.log(texcoords)
+            }
+            var tolerance = 0.15;
+            var distance = 0.4
+            var tempPoints = getPointsOnBezierCurves(points, tolerance)
+
+            lathePoints(simplifyPoints(tempPoints, 0, tempPoints.length, distance), thetaStart, thetaLength, radialSegments, openEnded, openEnded)
             ////////////////////////////////////////////////////////////////////////////
             // console.log(redGL['__datas']['RedPrimitive'])
             return {
@@ -176,7 +255,7 @@ var RedLathe;
     })();
     /**DOC:
      {
-		 constructorYn : true,
+		 varructorYn : true,
 		 title :`RedLathe`,
 		 description : `
 			 RedLathe 형태의 RedGeometry 생성
