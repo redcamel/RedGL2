@@ -62,6 +62,7 @@
                 redGL['world'] = tWorld = RedWorld();
                 // 씬 생성
                 tScene = RedScene(redGL);
+                tScene.backgroundColor = '#ff0000'
                 // 카메라 생성
                 tController = RedObitController(redGL);
                 tController.pan = 0;
@@ -123,7 +124,8 @@
             height: 1,
             radialSegments: 8,
             heightSegments: 1,
-            openEnded: false,
+            capStart: false,
+            capEnd: false,
             thetaStart: 0,
             thetaLength: Math.PI * 2
         }
@@ -145,7 +147,7 @@
         tFolder.open()
         var makeCylinder = function () {
 
-            return RedLathe(redGL, testPoints, test.radialSegments, test.openEnded, test.thetaStart, test.thetaLength);
+            return RedLathe(redGL, testPoints, test.radialSegments, test.capStart,test.capEnd, test.thetaStart, test.thetaLength);
         };
         'radialSegments'.split(',').forEach(function (tKey) {
             tFolder.add(test, tKey, 0, 60, 1).onChange(function () {
@@ -154,7 +156,12 @@
                 })
             })
         });
-        tFolder.add(test, 'openEnded').onChange(function (v) {
+        tFolder.add(test, 'capStart').onChange(function (v) {
+            tScene.children.forEach(function (v2) {
+                v2.geometry = makeCylinder();
+            })
+        });
+        tFolder.add(test, 'capEnd').onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.geometry = makeCylinder();
             })

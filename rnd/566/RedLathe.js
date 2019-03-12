@@ -50,14 +50,14 @@ var RedLathe;
                 const p3 = points[offset + 2];
                 const p4 = points[offset + 3];
 
-                const q1 = vec2.lerp([],p1, p2, t);
-                const q2 = vec2.lerp([],p2, p3, t);
-                const q3 = vec2.lerp([],p3, p4, t);
+                const q1 = vec2.lerp([], p1, p2, t);
+                const q2 = vec2.lerp([], p2, p3, t);
+                const q3 = vec2.lerp([], p3, p4, t);
 
-                const r1 = vec2.lerp([],q1, q2, t);
-                const r2 = vec2.lerp([],q2, q3, t);
+                const r1 = vec2.lerp([], q1, q2, t);
+                const r2 = vec2.lerp([], q2, q3, t);
 
-                const red = vec2.lerp([],r1, r2, t);
+                const red = vec2.lerp([], r1, r2, t);
 
                 // do 1st half
                 getPointsOnBezierCurveWithSplitting([p1, q1, r1, red], 0, tolerance, outPoints);
@@ -77,6 +77,7 @@ var RedLathe;
             }
             return newPoints;
         }
+
         function simplifyPoints(points, start, end, epsilon, newPoints) {
             const outPoints = newPoints || [];
 
@@ -108,11 +109,13 @@ var RedLathe;
 
             return outPoints;
         }
+
         function distanceSq(a, b) {
             const dx = a[0] - b[0];
             const dy = a[1] - b[1];
             return dx * dx + dy * dy;
         }
+
         function distanceToSegmentSq(p, v, w) {
             const l2 = distanceSq(v, w);
             if (l2 === 0) {
@@ -123,13 +126,200 @@ var RedLathe;
             return distanceSq(p, lerp(v, w, t));
         }
 
+        function generateNormals(positions, texcoords, indexData, maxAngle) {
+
+            // first compute the normal of each face
+            let getNextIndex = makeIndiceIterator(indexData);
+            const numFaceVerts = getNextIndex.numElements;
+            const numVerts = positions.length;
+            const numFaces = numFaceVerts / 3;
+            const faceNormals = [];
+
+            // Compute the normal for every face.
+            // While doing that, create a new vertex for every face vertex
+            for (let i = 0; i < numFaces; ++i) {
+                const n1 = getNextIndex() * 3;
+                const n2 = getNextIndex() * 3;
+                const n3 = getNextIndex() * 3;
+
+                const v1 = positions.slice(n1, n1 + 3);
+                const v2 = positions.slice(n2, n2 + 3);
+                const v3 = positions.slice(n3, n3 + 3);
+                faceNormals.push(
+                    vec3.normalize(
+                        [0, 0, 0],
+                        vec3.cross(
+                            [0, 0, 0],
+                            vec3.subtract([0, 0, 0], v1, v2),
+                            vec3.subtract([0, 0, 0], v3, v2))
+                    )
+                );
+            }
+
+            let tempVerts = {};
+            let tempVertNdx = 0;
+
+            // this assumes vertex positions are an exact match
+
+            function getVertIndex(x, y, z) {
+
+                const vertId = x + "," + y + "," + z;
+                const ndx = tempVerts[vertId];
+                if (ndx !== undefined) {
+                    return ndx;
+                }
+                const newNdx = tempVertNdx++;
+                tempVerts[vertId] = newNdx;
+                return newNdx;
+            }
+
+            // We need to figure out the shared vertices.
+            // It's not as simple as looking at the faces (triangles)
+            // because for example if we have a standard cylinder
+            //
+            //
+            //      3-4
+            //     /   \
+            //    2     5   Looking down a cylinder starting at S
+            //    |     |   and going around to E, E and S are not
+            //    1     6   the same vertex in the data we have
+            //     \   /    as they don't share UV coords.
+            //      S/E
+            //
+            // the vertices at the start and end do not share vertices
+            // since they have different UVs but if you don't consider
+            // them to share vertices they will get the wrong normals
+
+            const vertIndices = [];
+            for (let i = 0; i < numVerts; ++i) {
+                const offset = i * 3;
+                const vert = positions.slice(offset, offset + 3);
+                vertIndices.push(getVertIndex(vert));
+            }
+
+            // go through every vertex and record which faces it's on
+            const vertFaces = [];
+            getNextIndex.reset();
+            for (let i = 0; i < numFaces; ++i) {
+                for (let j = 0; j < 3; ++j) {
+                    const ndx = getNextIndex();
+                    const sharedNdx = vertIndices[ndx];
+                    let faces = vertFaces[sharedNdx];
+                    if (!faces) {
+                        faces = [];
+                        vertFaces[sharedNdx] = faces;
+                    }
+                    faces.push(i);
+                }
+            }
+
+            // now go through every face and compute the normals for each
+            // vertex of the face. Only include faces that aren't more than
+            // maxAngle different. Add the result to arrays of newPositions,
+            // newTexcoords and newNormals, discarding any vertices that
+            // are the same.
+            tempVerts = {};
+            tempVertNdx = 0;
+            const newPositions = [];
+            const newTexcoords = [];
+            const newNormals = [];
+
+            function getNewVertIndex(x, y, z, nx, ny, nz, u, v) {
+                const vertId =
+                    x + "," + y + "," + z + "," +
+                    nx + "," + ny + "," + nz + "," +
+                    u + "," + v;
+
+                const ndx = tempVerts[vertId];
+                if (ndx !== undefined) {
+                    return ndx;
+                }
+                const newNdx = tempVertNdx++;
+                tempVerts[vertId] = newNdx;
+                newPositions.push(x, y, z);
+                newNormals.push(nx, ny, nz);
+                newTexcoords.push(u, v);
+                return newNdx;
+            }
+
+            const newVertIndices = [];
+            getNextIndex.reset();
+            const maxAngleCos = Math.cos(maxAngle);
+            // for each face
+            for (let i = 0; i < numFaces; ++i) {
+                // get the normal for this face
+                const thisFaceNormal = faceNormals[i];
+                // for each vertex on the face
+                for (let j = 0; j < 3; ++j) {
+                    const ndx = getNextIndex();
+                    const sharedNdx = vertIndices[ndx];
+                    const faces = vertFaces[sharedNdx];
+                    const norm = [0, 0, 0];
+                    faces.forEach(faceNdx => {
+                        // is this face facing the same way
+                        const otherFaceNormal = faceNormals[faceNdx];
+                        const dot = vec3.dot(thisFaceNormal, otherFaceNormal);
+                        // if (dot > maxAngleCos) {
+                        vec3.add(norm, otherFaceNormal, norm);
+                        // }
+                    });
+                    vec3.normalize(norm, norm);
+                    const poffset = ndx * 3;
+                    const toffset = ndx * 2;
+                    newVertIndices.push(getNewVertIndex(
+                        positions[poffset + 0], positions[poffset + 1], positions[poffset + 2],
+                        norm[0], norm[1], norm[2],
+                        texcoords[toffset + 0], texcoords[toffset + 1]));
+                }
+            }
+
+            return {
+                position: newPositions,
+                texcoord: newTexcoords,
+                normal: newNormals,
+                indices: newVertIndices,
+            };
+
+        }
+
+        function makeIndexedIndicesFn(indices) {
+            let ndx = 0;
+            const fn = function () {
+                return indices[ndx++];
+            };
+            fn.reset = function () {
+                ndx = 0;
+            };
+            fn.numElements = indices.length;
+            return fn;
+        }
+
+        function makeUnindexedIndicesFn(arrays) {
+            let ndx = 0;
+            const fn = function () {
+                return ndx++;
+            };
+            fn.reset = function () {
+                ndx = 0;
+            }
+            fn.numElements = arrays.length / 3;
+            return fn;
+        }
+
+        function makeIndiceIterator(indices) {
+            return indices
+                ? makeIndexedIndicesFn(indices)
+                : makeUnindexedIndicesFn(indices);
+        }
+
         //TODO 정리
-        return function (redGL, type, points, radialSegments, openEnded, thetaStart, thetaLength) {
+        return function (redGL, type, points, radialSegments, capStart, capEnd, thetaStart, thetaLength) {
             ////////////////////////////////////////////////////////////////////////////
             // 데이터 생성!
             // buffers Data
             var interleaveData = [];
             var indexData = [];
+            var normals
             //
             var lathePoints
 
@@ -153,7 +343,7 @@ var RedLathe;
                                     capEnd) {     // true to cap the bottom
                 var positions = [];
                 var texcoords = [];
-                var normals = []
+
 
                 var vOffset = capStart ? 1 : 0;
                 var pointsPerColumn = points.length + vOffset + (capEnd ? 1 : 0);
@@ -172,7 +362,7 @@ var RedLathe;
 
                 // now divide each by the total length;
                 vcoords = vcoords.map(v => v / length);
-                console.log(vcoords,length)
+
 
                 // generate points
                 for (let division = 0; division <= numDivisions; ++division) {
@@ -181,22 +371,17 @@ var RedLathe;
                     var mat = mat4.fromYRotation(mat4.create(), angle);
                     if (capStart) {
                         // add point on Y axis at start
-                        positions.push(0, points[0][1], 0);
+                        positions.push(0, -points[0][1], 0);
                         texcoords.push(u, 0);
                     }
-                    var theta = u * thetaLength + thetaStart;
-                    var sinTheta = Math.sin(theta);
-                    var cosTheta = Math.cos(theta);
                     points.forEach(function (p, ndx) {
-                        var tp = vec3.transformMat4([], [p[0], p[1], 0], mat);
-
+                        var tp = vec3.transformMat4([], [p[0], -p[1], 0], mat);
                         positions.push(tp[0], tp[1], tp[2]);
-                        texcoords.push(u, vcoords[ndx]);
-                        normals.push(sinTheta,slope,cosTheta)
+                        texcoords.push(u, 1.0 - vcoords[ndx]);
                     });
                     if (capEnd) {
                         // add point on Y axis at end
-                        positions.push(0, points[points.length - 1][1], 0);
+                        positions.push(0, -points[points.length - 1][1], 0);
                         texcoords.push(u, 1);
                     }
 
@@ -213,20 +398,25 @@ var RedLathe;
                     }
                 }
 
-                // var normals = RedGLUtil.calculateNormals(positions, indexData)
+                var t0 = generateNormals(positions, texcoords, indexData, thetaLength)
+                positions = t0['position']
+                normals = t0['normal']
+                texcoords = t0['texcoord']
+                indexData = t0['indices']
+                // normals = RedGLUtil.calculateNormals(positions, indexData)
                 var i = 0, len = positions.length / 3
                 for (i; i < len; i++) {
                     interleaveData.push(positions[i * 3 + 0], positions[i * 3 + 1], positions[i * 3 + 2])
                     interleaveData.push(normals[i * 3 + 0], normals[i * 3 + 1], normals[i * 3 + 2])
                     interleaveData.push(texcoords[i * 2 + 0], texcoords[i * 2 + 1])
                 }
-                console.log(texcoords)
+
             }
             var tolerance = 0.15;
-            var distance = 0.4
+            var distance = 0.6
             var tempPoints = getPointsOnBezierCurves(points, tolerance)
 
-            lathePoints(simplifyPoints(tempPoints, 0, tempPoints.length, distance), thetaStart, thetaLength, radialSegments, openEnded, openEnded)
+            lathePoints(simplifyPoints(tempPoints, 0, tempPoints.length, distance), thetaStart, thetaLength, radialSegments, capStart, capEnd)
             ////////////////////////////////////////////////////////////////////////////
             // console.log(redGL['__datas']['RedPrimitive'])
             return {
@@ -304,21 +494,22 @@ var RedLathe;
 		 return : 'RedLathe Instance'
 	 }
      :DOC*/
-    RedLathe = function (redGL, points, radialSegments, openEnded, thetaStart, thetaLength) {
-        if (!(this instanceof RedLathe)) return new RedLathe(redGL, points, radialSegments, openEnded, thetaStart, thetaLength);
+    RedLathe = function (redGL, points, radialSegments, capStart, capEnd, thetaStart, thetaLength) {
+        if (!(this instanceof RedLathe)) return new RedLathe(redGL, points, radialSegments, capStart, capEnd, thetaStart, thetaLength);
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedPrimitive : RedGL Instance만 허용.', redGL);
         var tType, tPrimitiveData;
         radialSegments = Math.floor(radialSegments) || 8;
-        openEnded = openEnded !== undefined ? openEnded : false;
+        capStart = capStart !== undefined ? capStart : false;
+        capEnd = capEnd !== undefined ? capEnd : false;
         thetaStart = thetaStart !== undefined ? thetaStart : 0.0;
         thetaLength = thetaLength !== undefined ? thetaLength : Math.PI * 2;
-        tType = 'RedLathe' + '_' + points + '_' + radialSegments + '_' + openEnded + '_' + thetaStart + '_' + thetaLength;
+        tType = 'RedLathe' + '_' + points + '_' + radialSegments + '_' + capStart + '_' + capEnd + '_' + thetaStart + '_' + thetaLength;
         // 유일키 방어
         if (!redGL['_datas']['Primitives']) redGL['_datas']['Primitives'] = {};
         if (redGL['_datas']['Primitives'][tType]) return redGL['_datas']['Primitives'][tType];
         else redGL['_datas']['Primitives'][tType] = this;
         //
-        tPrimitiveData = makeData(redGL, tType, points, radialSegments, openEnded, thetaStart, thetaLength);
+        tPrimitiveData = makeData(redGL, tType, points, radialSegments, capStart, capEnd, thetaStart, thetaLength);
         this['interleaveBuffer'] = tPrimitiveData['interleaveBuffer'];
         this['indexBuffer'] = tPrimitiveData['indexBuffer'];
         this['interleaveBuffer']['isPrimitiveBuffer'] = true
