@@ -95,6 +95,7 @@ var RedDirectionalLight;
                 )
             )
         );
+
         console.log(this);
     };
     /**DOC:
