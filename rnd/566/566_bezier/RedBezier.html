@@ -1,0 +1,280 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>redGL - RedBezier</title>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
+    />
+    <link rel="stylesheet" href="../../../example/example.css">
+
+    <script src="../../../example/dat.gui.min.js"></script>
+    <script src="../../../example/baseTestUI.js"></script>
+    <script src="../../../release/RedGL.min.js"></script>
+
+    <script src="RedBezierPoint.js"></script>
+    <script src="RedBezier.js"></script>
+</head>
+
+<body>
+<script id='testSource'>
+    var testUI;
+    var canvas;
+    var assetPath = '../../asset/'
+    canvas = document.createElement('canvas');
+    document.body.appendChild(canvas);
+
+    var targetMesh;
+    var testOption = {
+        drawMode: 'LINES',
+        pointSize: 1,
+        distance: 0.1,
+        tolerance: 0.15
+    }
+    var testPoints
+    var testPointsLaw
+    testPointsLaw = [
+        {
+            inPoint: [0, 0, 0],
+            point: [44, 371, 0],
+            outPoint: [62, 338, 0]
+        },
+        {
+            inPoint: [63, 305, 0],
+            point: [59, 260, 0],
+            outPoint: [55, 215, 0]
+        },
+        {
+            inPoint: [22, 156, 0],
+            point: [20, 128, 0],
+            outPoint: [18, 100, 0]
+        },
+        {
+            inPoint: [32, 77, 0],
+            point: [36, 47, 0],
+            outPoint: [41, 17, 0]
+        }
+    ];
+    var addPoint = function () {
+        var tX, tY;
+        var len = testPointsLaw.length
+        tX = 100 * len
+        tY = 0
+        testPointsLaw.push(
+
+            {
+                inPoint: [36, -16 ,0],
+                point: [0, -16, 0],
+                outPoint: [0, 0, 0]
+            }
+        )
+    }
+    addPoint()
+
+    var makeLathe = function (redGL, tScene) {
+        testPoints = []
+        testPointsLaw.forEach(function (v, index) {
+            testPoints.push(
+                new RedBezierPoint(
+                    redGL,
+                    v['point'][0], v['point'][1], v['point'][2],
+                    v['inPoint'][0], v['inPoint'][1], v['inPoint'][2],
+                    v['outPoint'][0], v['outPoint'][1], v['outPoint'][2],
+                )
+            )
+        })
+        if (targetMesh) {
+            tScene.removeChild(targetMesh)
+        }
+        targetMesh = RedMesh(
+            redGL,
+            RedBezier(redGL, testPoints, testOption.numDivisions, testOption.capStart, testOption.capEnd, testOption.startAngle, testOption.endAngle, testOption.maxAngle, testOption.distance, testOption.tolerance, testOption.flipX, testOption.flipY),
+
+            //RedStandardMaterial(this, RedBitmapTexture(this, assetPath + 'UV_Grid_Sm.jpg'))
+            RedColorMaterial(redGL)
+        );
+        targetMesh['geometry']['debugMeshList'].forEach(function (v) {
+            targetMesh.addChild(v)
+        })
+
+        targetMesh.drawMode = redGL.gl.LINES
+        // targetMesh.drawMode = this.gl.POINTS
+        targetMesh.pointSize = 2
+        targetMesh.useCullFace = false
+        tScene.addChild(targetMesh)
+        return RedBezier(redGL, testPoints, testOption.numDivisions, testOption.capStart, testOption.capEnd, testOption.startAngle, testOption.endAngle, testOption.maxAngle, testOption.distance, testOption.tolerance, testOption.flipX, testOption.flipY);
+    };
+    RedGL(canvas, function (v) {
+        if (v) {
+            console.log('초기화 성공!')
+            var tWorld, tView, tScene, tController, tRenderer;
+            var setBase = function (redGL) {
+                // 월드 생성
+                redGL['world'] = tWorld = RedWorld();
+                // 씬 생성
+                tScene = RedScene(redGL);
+                // 카메라 생성
+                tController = RedObitController(redGL);
+                tController.pan = 0;
+                tController.tilt = 0;
+                tController.distance = 1000
+                tController.speedDistance = 50
+                var tLight = RedDirectionalLight(redGL);
+                tScene.addLight(tLight)
+                tLight.x = 30;
+                tLight.y = 30;
+                tLight.z = 30;
+                tLight.debug = true
+                tLight = RedDirectionalLight(redGL);
+                tScene.addLight(tLight)
+                tLight.x = -30
+                tLight.y = -30;
+                tLight.z = -30;
+                tLight.debug = true
+                // 렌더러 생성
+                tRenderer = RedRenderer();
+                // 뷰생성 및 적용
+                tView = RedView('HelloRedGL', redGL, tScene, tController);
+                tWorld.addView(tView);
+                // 그리드 설정
+                tScene['grid'] = RedGrid(redGL);
+                tScene['axis'] = RedAxis(redGL);
+                // 렌더시작
+                tRenderer.start(redGL, function (time) {
+                });
+                // 렌더 디버거 활성화
+                tRenderer.setDebugButton();
+                // testUI 호출
+                console.log(redGL);
+            };
+            setBase(this);
+            // Mesh 설정
+
+
+            makeLathe(this, tScene)
+
+            testUI(this, tController, tScene);
+        } else {
+            console.log('초기화 실패!')
+        }
+    })
+    testUI = function (redGL, tController, tScene) {
+        console.log('test')
+        var gui = new baseTestUI(redGL);
+        gui.initRedGL();
+
+        var tFolder
+        var testList = {
+            testList: testPoints
+        }
+        console.log('testPointsLaw', testPointsLaw)
+        testPointsLaw.forEach(function (v, index) {
+            console.log(v)
+            tFolder = gui['gui'].addFolder('RedBezierPoint' + index)
+            tFolder.add(v['point'], '0', -100, 100).onChange(function (v) {
+                tScene.children.forEach(function (tMesh) {
+                    tMesh.geometry = makeLathe(redGL, tScene);
+                    ;
+                })
+            });
+            tFolder.add(v['point'], '1', -100, 100).onChange(function (v) {
+                tScene.children.forEach(function (tMesh) {
+                    tMesh.geometry = makeLathe(redGL, tScene);
+                    ;
+                })
+            });
+            tFolder.add(v['point'], '2', -100, 100).onChange(function (v) {
+                tScene.children.forEach(function (tMesh) {
+                    tMesh.geometry = makeLathe(redGL, tScene);
+                    ;
+                })
+            });
+            tFolder.open();
+
+            if (index) {
+                tFolder = gui['gui'].addFolder('RedBezierInPoint' + index)
+                tFolder.add(v['inPoint'], '0', -100, 100).onChange(function (v) {
+                    tScene.children.forEach(function (tMesh) {
+                        tMesh.geometry = makeLathe(redGL, tScene);
+                        ;
+                    })
+                });
+                tFolder.add(v['inPoint'], '1', -100, 100).onChange(function (v) {
+                    tScene.children.forEach(function (tMesh) {
+                        tMesh.geometry = makeLathe(redGL, tScene);
+                        ;
+                    })
+                });
+                tFolder.add(v['inPoint'], '2', -100, 100).onChange(function (v) {
+                    tScene.children.forEach(function (tMesh) {
+                        tMesh.geometry = makeLathe(redGL, tScene);
+                        ;
+                    })
+                });
+                tFolder.open();
+            }
+            if (index == 0) {
+                tFolder = gui['gui'].addFolder('RedBezierOutPoint' + index)
+                tFolder.add(v['outPoint'], '0', -100, 100).onChange(function (v) {
+                    tScene.children.forEach(function (tMesh) {
+                        tMesh.geometry = makeLathe(redGL, tScene);
+                        ;
+                    })
+                });
+                tFolder.add(v['outPoint'], '1', -100, 100).onChange(function (v) {
+                    tScene.children.forEach(function (tMesh) {
+                        tMesh.geometry = makeLathe(redGL, tScene);
+                        ;
+                    })
+                });
+                tFolder.add(v['outPoint'], '2', -100, 100).onChange(function (v) {
+                    tScene.children.forEach(function (tMesh) {
+                        tMesh.geometry = makeLathe(redGL, tScene);
+                        ;
+                    })
+                });
+                tFolder.open();
+            }
+
+        });
+
+
+        tFolder = gui['gui'].addFolder('RedMesh')
+        tFolder.open()
+        tFolder.add(testOption, 'drawMode', ['TRIANGLES', 'TRIANGLE_STRIP', 'TRIANGLE_FAN', 'LINES', 'LINE_LOOP', 'LINE_STRIP', 'POINTS']).onChange(function (v) {
+            tScene.children.forEach(function (v2) {
+                v2.drawMode = redGL.gl[v]
+            })
+        });
+        tFolder.add(testOption, 'pointSize', 1, 100).onChange(function (v) {
+            tScene.children.forEach(function (v2) {
+                v2.pointSize = v
+            })
+        });
+        tFolder = gui['gui'].addFolder('RedBezier')
+        tFolder.open()
+
+        'distance'.split(',').forEach(function (tKey) {
+            tFolder.add(testOption, tKey, 0, 20, 0.001).onChange(function () {
+                tScene.children.forEach(function (tMesh) {
+                    tMesh.geometry = makeLathe(redGL, tScene);
+                    ;
+                })
+            })
+        });
+
+        'tolerance'.split(',').forEach(function (tKey) {
+            tFolder.add(testOption, tKey, 0.1, 1, 0.00001).onChange(function () {
+                tScene.children.forEach(function (tMesh) {
+                    tMesh.geometry = makeLathe(redGL, tScene);
+                    ;
+                })
+            })
+        });
+    }
+</script>
+</body>
+
+</html>

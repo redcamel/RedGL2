@@ -1,0 +1,317 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Bezier Curve Edit</title>
+    <script type="text/javascript">
+
+        "use strict";
+
+        var cubicCanvas, quadCanvas;
+        var cubicGraphics, quadGraphics;
+        var cubicPoints, quadPoints;
+        var quadHideSelect, cubicHideSelect;
+        var lockSelect;
+
+        function Point2D(x,y) {
+            this.x = x;
+            this.y = y;
+        }
+var test = []
+        function cubicDraw() {
+            var i;
+            cubicGraphics.fillStyle = "white";
+            cubicGraphics.fillRect(0,0,600,600);
+            if ( ! cubicHideSelect.checked ) {
+                cubicGraphics.lineWidth = 1;
+                if (lockSelect.checked) {
+                    cubicGraphics.strokeStyle = "#880000";
+                }
+                else {
+                    cubicGraphics.strokeStyle = "#888888";
+                }
+                for (i = 0; i < 9; i++) {
+                    if (i % 3 != 1) {
+                        cubicGraphics.beginPath();
+                        cubicGraphics.moveTo( cubicPoints[i].x + .5, cubicPoints[i].y + .5 );
+                        cubicGraphics.lineTo( cubicPoints[i+1].x + .5, cubicPoints[i+1].y + .5 );
+                        cubicGraphics.stroke();
+                    }
+                }
+                for (i = 0; i < 10; i++) {
+                    if ( i % 3 == 0 ) {
+                        cubicGraphics.fillStyle="black";
+                        disk(cubicGraphics, cubicPoints[i].x, cubicPoints[i].y, 5);
+                    }
+                    else {
+                        cubicGraphics.fillStyle= "blue";
+                        cubicGraphics.fillRect(cubicPoints[i].x - 5, cubicPoints[i].y - 5, 10, 10);
+
+                    }
+                }
+            }
+            cubicGraphics.beginPath();
+            if(test.length==0){
+                test.push(cubicPoints[0])
+                for (i = 1; i < 10; i += 3) {
+                    test.push(cubicPoints[i],cubicPoints[i+1],cubicPoints[i+2])
+                }
+                console.log(test)
+            }
+            cubicGraphics.moveTo(cubicPoints[0].x,cubicPoints[0].y);
+            for (i = 1; i < 10; i += 3) {
+                cubicGraphics.bezierCurveTo(
+                    cubicPoints[i].x,cubicPoints[i].y,
+                    cubicPoints[i+1].x,cubicPoints[i+1].y,
+                    cubicPoints[i+2].x,cubicPoints[i+2].y);
+            }
+            cubicGraphics.lineWidth = 2;
+            cubicGraphics.strokeStyle = "black";
+            cubicGraphics.stroke();
+        }
+
+        function quadDraw() {
+            var i;
+            quadGraphics.fillStyle = "white";
+            quadGraphics.fillRect(0,0,600,600);
+            if ( ! quadHideSelect.checked ) {
+                quadGraphics.lineWidth = 1;
+                quadGraphics.strokeStyle = "#888888";
+                for (i = 0; i < 10; i++) {
+                    quadGraphics.beginPath();
+                    quadGraphics.moveTo( quadPoints[i].x + .5, quadPoints[i].y + .5 );
+                    quadGraphics.lineTo( quadPoints[i+1].x + .5, quadPoints[i+1].y + .5 );
+                    quadGraphics.stroke();
+                }
+                for (i = 0; i < 11; i++) {
+                    if ( i % 2 == 0 ) {
+                        quadGraphics.fillStyle="black";
+                        disk(quadGraphics, quadPoints[i].x, quadPoints[i].y, 5);
+                    }
+                    else {
+                        quadGraphics.fillStyle= "blue";
+                        quadGraphics.fillRect(quadPoints[i].x - 5, quadPoints[i].y - 5, 10, 10);
+
+                    }
+                }
+            }
+            quadGraphics.beginPath();
+            quadGraphics.moveTo(quadPoints[0].x,quadPoints[0].y);
+            for (i = 1; i < 11; i += 2) {
+                quadGraphics.quadraticCurveTo(quadPoints[i].x,quadPoints[i].y,
+                    quadPoints[i+1].x,quadPoints[i+1].y);
+            }
+            quadGraphics.lineWidth = 2;
+            quadGraphics.strokeStyle = "black";
+            quadGraphics.stroke();
+        }
+
+        function disk( graphics, x, y, radius ) {
+            graphics.beginPath();
+            graphics.arc(x,y,radius,0,Math.PI*2);
+            graphics.fill();
+
+        }
+
+        function doLock() {
+            if ( lockSelect.checked ) {
+                cubicPoints[4].x = 2*cubicPoints[3].x - cubicPoints[2].x;
+                cubicPoints[4].y = 2*cubicPoints[3].y - cubicPoints[2].y;
+                cubicPoints[7].x = 2*cubicPoints[6].x - cubicPoints[5].x;
+                cubicPoints[7].y = 2*cubicPoints[6].y - cubicPoints[5].y;
+            }
+            cubicDraw();
+        }
+
+
+        var draggingCubic = false;
+        var draggingQuad = false;
+        var dragPointIndex;
+
+        function doMouseUp(evt) {
+            draggingCubic = false;
+            draggingQuad = false;
+        }
+
+        function doCubicMouseDown(evt) {
+            if (draggingCubic || draggingQuad || cubicHideSelect.checked) {
+                return;
+            }
+            var r = cubicCanvas.getBoundingClientRect();
+            var x = Math.round(evt.clientX - r.left);
+            var y = Math.round(evt.clientY - r.top);
+            for (var i = 9; i >= 0; i--) {
+                var p = cubicPoints[i];
+                if (Math.abs(p.x - x) <= 5 && Math.abs(p.y - y) <= 5) {
+                    draggingCubic = true;
+                    dragPointIndex = i;
+                    return;
+                }
+            }
+        }
+
+        function doCubicMouseMove(evt) {
+            if (!draggingCubic) {
+                return;
+            }
+            var r = cubicCanvas.getBoundingClientRect();
+            var x = Math.round(evt.clientX - r.left);
+            var y = Math.round(evt.clientY - r.top);
+            var offsetX = x - cubicPoints[dragPointIndex].x;
+            var offsetY = y - cubicPoints[dragPointIndex].y;
+            cubicPoints[dragPointIndex].x = x;
+            cubicPoints[dragPointIndex].y = y;
+            if ( dragPointIndex % 3 == 0) {
+                if (dragPointIndex > 0) {
+                    cubicPoints[dragPointIndex - 1].x += offsetX;
+                    cubicPoints[dragPointIndex - 1].y += offsetY;
+                }
+                if (dragPointIndex < 9) {
+                    cubicPoints[dragPointIndex + 1].x += offsetX;
+                    cubicPoints[dragPointIndex + 1].y += offsetY;
+                }
+            }
+            else if (lockSelect.checked) {
+                if (dragPointIndex == 2) {
+                    cubicPoints[4].x = 2*cubicPoints[3].x - cubicPoints[2].x;
+                    cubicPoints[4].y = 2*cubicPoints[3].y - cubicPoints[2].y;
+                }
+                else if (dragPointIndex == 4) {
+                    cubicPoints[2].x = 2*cubicPoints[3].x - cubicPoints[4].x;
+                    cubicPoints[2].y = 2*cubicPoints[3].y - cubicPoints[4].y;
+                }
+                else if (dragPointIndex == 5) {
+                    cubicPoints[7].x = 2*cubicPoints[6].x - cubicPoints[5].x;
+                    cubicPoints[7].y = 2*cubicPoints[6].y - cubicPoints[5].y;
+                }
+                else if (dragPointIndex == 7) {
+                    cubicPoints[5].x = 2*cubicPoints[6].x - cubicPoints[7].x;
+                    cubicPoints[5].y = 2*cubicPoints[6].y - cubicPoints[7].y;
+                }
+            }
+            cubicDraw();
+        }
+
+        function doQuadMouseDown(evt) {
+            if (draggingCubic || draggingQuad || quadHideSelect.checked) {
+                return;
+            }
+            var r = quadCanvas.getBoundingClientRect();
+            var x = Math.round(evt.clientX - r.left);
+            var y = Math.round(evt.clientY - r.top);
+            for (var i = 10; i >= 0; i--) {
+                var p = quadPoints[i];
+                if (Math.abs(p.x - x) <= 5 && Math.abs(p.y - y) <= 5) {
+                    draggingQuad = true;
+                    dragPointIndex = i;
+                    return;
+                }
+            }
+        }
+
+        function doQuadMouseMove(evt) {
+            if (!draggingQuad) {
+                return;
+            }
+            var r = quadCanvas.getBoundingClientRect();
+            var x = Math.round(evt.clientX - r.left);
+            var y = Math.round(evt.clientY - r.top);
+            quadPoints[dragPointIndex].x = x;
+            quadPoints[dragPointIndex].y = y;
+            quadDraw();
+        }
+
+        function init() {
+            try {
+                cubicCanvas = document.getElementById("cubic");
+                quadCanvas = document.getElementById("quad");
+                cubicGraphics = cubicCanvas.getContext("2d");
+                quadGraphics = quadCanvas.getContext("2d");
+            }
+            catch (e) {
+                var message = document.getElementById("message");
+                message.innerHTML = "Oops... Sorry, your browser doesn't support the canvas element.";
+                return;
+            }
+            lockSelect = document.getElementById("lock");
+            lockSelect.checked = false;
+            lockSelect.onclick = doLock;
+            quadHideSelect = document.getElementById("quadHide");
+            quadHideSelect.checked = false;
+            quadHideSelect.onclick = function() { quadDraw(); };
+            cubicHideSelect = document.getElementById("cubicHide");
+            cubicHideSelect.checked = false;
+            cubicHideSelect.onclick = function() { cubicDraw(); };
+            cubicPoints = [
+                new Point2D(50,350),  new Point2D(150,450),
+                new Point2D(150,100), new Point2D(200,100), new Point2D(250,100),
+                new Point2D(325,300), new Point2D(325,400), new Point2D(425,400),
+                new Point2D(475,100), new Point2D(550,175)
+            ];
+            quadPoints = [
+                new Point2D(50,300), new Point2D(100,50),
+                new Point2D(200,100), new Point2D(300,75),
+                new Point2D(250,150), new Point2D(220,450),
+                new Point2D(350,400), new Point2D(325,470),
+                new Point2D(500,500), new Point2D(475,400),
+                new Point2D(550,300),
+            ];
+            cubicDraw();
+            quadDraw();
+            document.addEventListener("mouseup", doMouseUp, false);
+            cubicCanvas.addEventListener("mousedown", doCubicMouseDown, false);
+            cubicCanvas.addEventListener("mousemove", doCubicMouseMove, false);
+            quadCanvas.addEventListener("mousedown", doQuadMouseDown, false);
+            quadCanvas.addEventListener("mousemove", doQuadMouseMove, false);
+        };
+    </script>
+</head>
+<body onload="init()" style="background-color: #CCC">
+
+<noscript><p style="color:red">Sorry, this page requires JavaScript to run.</p></noscript>
+
+<!--[if lt IE 9]>
+<hr>
+<p style="color:red">Sorry, this page uses HTML canvas.<br>
+    Canvas is not supported in Internet Explorer 8 or earlier.<br>
+    Please use a newer version or a different browser.</p>
+<hr>
+<![endif]-->
+
+
+<h1>Bezier Curve Demos</h1>
+
+<p id="message" style="font-weight: bold"></p>
+
+
+<h2 style="margin-top: 1cm">Cubic Bezier Curve</h2>
+
+<p style="width:630px">This demo shows a path made up of three cubic Bezier curve
+    segments.  Each segment is defined by its two endpoints and two control points.
+    A control point determines the tangent at the corresponding endpoint.  You can
+    drag the endpoints and the control points.  If "Lock Control Point Pairs" is
+    specified, then the two control points associated with the endpoint where two
+    segments join are constrained to move together, resulting in a smooth curve.
+</p>
+
+<p style="font-weight: bold"><input type="checkbox" id="lock"> <label for="lock" style="margin-right:1cm">Lock Control Point Pairs</label>
+    <input type="checkbox" id="cubicHide"> <label for="cubicHide">Hide Controls</label></p>
+
+<canvas width="600" height="600" id="cubic" style="background-color: white; border: thin solid black"></canvas>
+
+<h2 style="margin-top: 1cm">Quadratic Bezier Curve</h2>
+
+<p style="width:630px">This demo shows a path made up of five quadratic Bezier curve
+    segments.  Each segment is defined by its two endpoints and one control point.  The
+    control point determines the tangent at both endpoints.  You can drag the
+    control points and endpoints.
+</p>
+
+<p><input type="checkbox" id="quadHide"> <label for="quadHide">Hide Controls</label></p>
+
+<canvas width="600" height="600" id="quad" style="background-color: white; border: thin solid black"></canvas>
+
+</body>
+</html>
+
