@@ -570,6 +570,7 @@ var RedLathe;
         var curvePoints = parseSVGPath(svgStr, flipX, flipY);
         // 베지어 포인트 해석
         var tempPoints = getPointsOnBezierCurves(curvePoints, tolerance);
+        console.log(tempPoints)
         // 단순화
         var points = simplifyPoints(tempPoints, 0, tempPoints.length, distance);
         // 레이스 계산
