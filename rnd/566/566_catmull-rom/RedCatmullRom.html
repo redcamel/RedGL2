@@ -32,7 +32,9 @@
         pointSize: 1,
         distance: 0.1,
         tolerance: 0.15,
-        tension : 1
+        tension : 1,
+        flipX : false,
+        flipY : false
     }
     var testPoints
     var testPointsLaw
@@ -201,6 +203,16 @@
                 })
             })
         })
+        tFolder.add(testOption, 'flipX').onChange(function (v) {
+            tScene.children.forEach(function (v2) {
+                v2.geometry = makeLathe(redGL, tScene);
+            })
+        });
+        tFolder.add(testOption, 'flipY').onChange(function (v) {
+            tScene.children.forEach(function (v2) {
+                v2.geometry = makeLathe(redGL, tScene);
+            })
+        });
     }
 </script>
 </body>

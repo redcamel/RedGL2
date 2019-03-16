@@ -111,7 +111,7 @@ var RedCatmullRom;
 
         tolerance = tolerance !== undefined ? tolerance : 0.15
         if (tolerance < 0.1) tolerance = 0.1
-
+        tolerance = 0.1
 
         // svg 해석
         var parsedPointList;
@@ -239,11 +239,11 @@ var RedCatmullRom;
                 var x3 = i !== last ? data[i + 4] : x2;
                 var y3 = i !== last ? data[i + 5] : y2;
 
-                var cp1x = x1 + (x2 - x0) / 3 * k;
-                var cp1y = y1 + (y2 - y0) / 3 * k;
+                var cp1x = x1 + (x2 - x0) / 6 * k;
+                var cp1y = y1 + (y2 - y0) / 6 * k;
 
-                var cp2x = x2 - (x3 - x1) / 3 * k;
-                var cp2y = y2 - (y3 - y1) / 3 * k;
+                var cp2x = x2 - (x3 - x1) / 6 * k;
+                var cp2y = y2 - (y3 - y1) / 6 * k;
 
                 path += "C" + [cp1x, cp1y, cp2x, cp2y, x2, y2];
             }
@@ -337,7 +337,7 @@ var RedCatmullRom;
         })
 
 
-        newPointList = parseSVGPath(solve(tList,tension))
+        newPointList = parseSVGPath(solve(tList,tension),flipX, flipY)
         console.log(newPointList)
         tType = 'RedCatmullRom' + '_' + newPointList + '_' + tension + '_' + distance + '_' + tolerance + '_' + flipX + '_' + flipY;
         // 유일키 방어
