@@ -226,6 +226,13 @@ var RedBezier;
                     v['outPoint']
                 )
                 debugMeshList.push(v['debugOutPointMesh'])
+                console.log(v['debugOutPointMesh'].getChildAt(0))
+                v['debugOutPointMesh'].getChildAt(0).addPoint(
+                    -v['outPoint'][0] + v['point'][0],
+                    -v['outPoint'][1] + v['point'][1],
+                    -v['outPoint'][2] + v['point'][2]
+                )
+                v['debugOutPointMesh'].getChildAt(0).addPoint(0, 0, 0)
             } else {
                 if (points[index + 1]) {
                     newPointList.push(
@@ -233,11 +240,34 @@ var RedBezier;
                     )
                     debugMeshList.push(v['debugInPointMesh'])
                     debugMeshList.push(v['debugOutPointMesh'])
+
+
+                    v['debugInPointMesh'].getChildAt(0).addPoint(
+                        -v['inPoint'][0] + v['point'][0],
+                        -v['inPoint'][1] + v['point'][1],
+                        -v['inPoint'][2] + v['point'][2]
+                    )
+                    v['debugInPointMesh'].getChildAt(0).addPoint(0, 0, 0)
+
+                    v['debugOutPointMesh'].getChildAt(0).addPoint(
+                        -v['outPoint'][0] + v['point'][0],
+                        -v['outPoint'][1] + v['point'][1],
+                        -v['outPoint'][2] + v['point'][2]
+                    )
+                    v['debugOutPointMesh'].getChildAt(0).addPoint(0, 0, 0)
+
+
                 } else {
                     newPointList.push(
                         v['inPoint'], v['point']
                     )
                     debugMeshList.push(v['debugInPointMesh'])
+                    v['debugInPointMesh'].getChildAt(0).addPoint(
+                        -v['inPoint'][0] + v['point'][0],
+                        -v['inPoint'][1] + v['point'][1],
+                        -v['inPoint'][2] + v['point'][2]
+                    )
+                    v['debugInPointMesh'].getChildAt(0).addPoint(0, 0, 0)
                 }
 
             }

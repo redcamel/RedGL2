@@ -54,19 +54,24 @@ var RedBezierPoint;
 	 }
      :DOC*/
     RedBezierPoint = function (redGL, x, y, z, inX, inY, inZ, outX, outY, outZ) {
-        this['debugMesh'] = RedMesh(redGL, RedBox(redGL), RedColorMaterial(redGL, '#00ff00'))
+        var t0;
+        this['debugMesh'] = RedMesh(redGL, RedBox(redGL, 3, 3, 3), RedColorMaterial(redGL, '#00ff00'))
         this['debugMesh'].x = x
         this['debugMesh'].y = y
         this['debugMesh'].z = z
         this['point'] = [x, y, z]
 
-        this['debugInPointMesh'] = RedMesh(redGL, RedBox(redGL, 3,3,3), RedColorMaterial(redGL, '#0000ff'))
+        this['debugInPointMesh'] = RedMesh(redGL, RedBox(redGL, 3, 3, 3), RedColorMaterial(redGL, '#0000ff'))
+        t0 = RedLine(redGL, RedColorMaterial(redGL, '#fff', 0.5))
+        this['debugInPointMesh'].addChild(t0)
         this['debugInPointMesh'].x = inX
         this['debugInPointMesh'].y = inY
         this['debugInPointMesh'].z = inZ
         this['inPoint'] = [inX, inY, inZ]
 
-        this['debugOutPointMesh'] = RedMesh(redGL, RedBox(redGL, 3,3,3), RedColorMaterial(redGL, '#ff0000'))
+        this['debugOutPointMesh'] = RedMesh(redGL, RedBox(redGL, 3, 3, 3), RedColorMaterial(redGL, '#ff0000'))
+        t0 = RedLine(redGL, RedColorMaterial(redGL, '#fff', 0.5))
+        this['debugOutPointMesh'].addChild(t0)
         this['debugOutPointMesh'].x = outX
         this['debugOutPointMesh'].y = outY
         this['debugOutPointMesh'].z = outZ
