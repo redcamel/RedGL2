@@ -53,14 +53,29 @@ var RedCatmullRomPoint;
 		 return : 'RedCatmullRomPoint Instance'
 	 }
      :DOC*/
-    RedCatmullRomPoint = function (redGL, x, y, z, inX, inY, inZ, outX, outY, outZ) {
-        this['debugMesh'] = RedMesh(redGL, RedBox(redGL, 3, 3, 3), RedColorMaterial(redGL, '#00ff00'))
+    RedCatmullRomPoint = function (redGL, x, y, z) {
+        var t0;
+    	this['debugMesh'] = RedMesh(redGL, RedBox(redGL, 3, 3, 3), RedColorMaterial(redGL, '#00ff00'))
         this['debugMesh'].x = x
         this['debugMesh'].y = y
         this['debugMesh'].z = z
         this['point'] = [x, y, z]
-        this['inPoint'] = [0,0,0]
-        this['outPoint'] = [0,0,0]
+
+        this['debugInPointMesh'] = RedMesh(redGL, RedBox(redGL, 3, 3, 3), RedColorMaterial(redGL, '#0000ff'))
+        t0 = RedLine(redGL, RedColorMaterial(redGL, '#fff', 0.5))
+        this['debugInPointMesh'].addChild(t0)
+        this['debugInPointMesh'].x = 0
+        this['debugInPointMesh'].y = 0
+        this['debugInPointMesh'].z = 0
+        this['inPoint'] = [0, 0, 0]
+
+        this['debugOutPointMesh'] = RedMesh(redGL, RedBox(redGL, 3, 3, 3), RedColorMaterial(redGL, '#ff0000'))
+        t0 = RedLine(redGL, RedColorMaterial(redGL, '#fff', 0.5))
+        this['debugOutPointMesh'].addChild(t0)
+        this['debugOutPointMesh'].x = 0
+        this['debugOutPointMesh'].y = 0
+        this['debugOutPointMesh'].z = 0
+        this['outPoint'] = [0, 0, 0]
 
         // this['indexBuffer']['isPrimitiveBuffer'] = true
         this['_UUID'] = RedGL.makeUUID();
