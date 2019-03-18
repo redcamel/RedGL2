@@ -101,8 +101,8 @@ var RedBezier;
 		 return : 'RedBezier Instance'
 	 }
      :DOC*/
-    RedBezier = function (redGL, points, numDivisions, capStart, capEnd, startAngle, endAngle, maxAngle, distance, tolerance, flipX, flipY) {
-        if (!(this instanceof RedBezier)) return new RedBezier(redGL, points, numDivisions, capStart, capEnd, startAngle, endAngle, maxAngle, distance, tolerance, flipX, flipY);
+    RedBezier = function (redGL, points, numDivisions, capStart, capEnd, startAngle, endAngle, maxAngle, distance, tolerance) {
+        if (!(this instanceof RedBezier)) return new RedBezier(redGL, points, numDivisions, capStart, capEnd, startAngle, endAngle, maxAngle, distance, tolerance);
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedPrimitive : RedGL Instance만 허용.', redGL);
 
         var tType, tPrimitiveData;
@@ -274,7 +274,7 @@ var RedBezier;
 
         })
         console.log(newPointList)
-        tType = 'RedBezier' + '_' + newPointList + '_' + numDivisions + '_' + capStart + '_' + capEnd + '_' + startAngle + '_' + endAngle + '_' + maxAngle + '_' + distance + '_' + tolerance + '_' + flipX + '_' + flipY;
+        tType = 'RedBezier' + '_' + newPointList + '_' + numDivisions + '_' + capStart + '_' + capEnd + '_' + startAngle + '_' + endAngle + '_' + maxAngle + '_' + distance + '_' + tolerance;
         // 유일키 방어
         if (!redGL['_datas']['Primitives']) redGL['_datas']['Primitives'] = {};
         if (redGL['_datas']['Primitives'][tType]) return redGL['_datas']['Primitives'][tType];

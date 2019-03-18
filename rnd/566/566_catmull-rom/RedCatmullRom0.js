@@ -101,16 +101,17 @@ var RedCatmullRom;
 		 return : 'RedCatmullRom Instance'
 	 }
      :DOC*/
-    RedCatmullRom = function (redGL, points, tension, distance, tolerance) {
-        if (!(this instanceof RedCatmullRom)) return new RedCatmullRom(redGL, points, tension, distance, tolerance);
+    RedCatmullRom = function (redGL, points, tension, distance, tolerance, flipX, flipY) {
+        if (!(this instanceof RedCatmullRom)) return new RedCatmullRom(redGL, points, tension, distance, tolerance, flipX, flipY);
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedPrimitive : RedGL Instance만 허용.', redGL);
 
         var tType, tPrimitiveData;
         distance = distance !== undefined ? distance : 0.4;
-        tension = tension !== undefined ? tension : 1;
+        tension = tension !== undefined ? tension :1;
 
         tolerance = tolerance !== undefined ? tolerance : 0.15
         if (tolerance < 0.1) tolerance = 0.1
+        tolerance = 0.1
 
         // svg 해석
         var parsedPointList;
@@ -143,7 +144,10 @@ var RedCatmullRom;
                 var c1 = points[offset + 1];
                 var c2 = points[offset + 2];
                 var p2 = points[offset + 3];
-
+                p1[2] =0
+                p2[2] =0
+                c1[2] =0
+                c2[2] =0
 
                 var q1 = vec3.lerp([0, 0], p1, c1, t);
                 var q2 = vec3.lerp([0, 0], c1, c2, t);
@@ -209,99 +213,134 @@ var RedCatmullRom;
         parsePoints = function (pointList) {
             return getPointsOnBezierCurves(pointList, tolerance)
         }
-        var newPointList
-        var solve = function (points, tension) {
-            if (tension == null) tension = 1;
-            var size = points.length;
-            var last = size - 2;
-            var i = 0;
-            var p0, p1, p2, p3;
-            for (i; i < size - 1; i++) {
-                // 이전 포인트를 구함
-                p0 = i ? points[i - 1]['point'] : points[i]['point'];
-                // 현재 포인트를 구함
-                p1 = points[i]['point'];
-                // 다음 포인트를 구함
-                p2 = points[i + 1]['point'];
-                // 다다음 포인트를 구함
-                p3 = i == last ? p2 : points[i + 2]['point'];
+        var newPointList = []
+        var debugMeshList = []
 
-                points[i]['outPoint'][0] = p1[0] + (p2[0] - p0[0]) / 6 * tension;
-                points[i]['outPoint'][1] = p1[1] + (p2[1] - p0[1]) / 6 * tension;
-                points[i]['outPoint'][2] = p1[2] + (p2[2] - p0[2]) / 6 * tension;
+        var solve = function (data, k) {
 
-                points[i + 1]['inPoint'][0] = p2[0] - (p3[0] - p1[0]) / 6 * tension;
-                points[i + 1]['inPoint'][1] = p2[1] - (p3[1] - p1[1]) / 6 * tension;
-                points[i + 1]['inPoint'][2] = p2[2] - (p3[2] - p1[2]) / 6 * tension;
+            if (k == null) k = 1;
+
+            var size = data.length;
+            var last = size - 4;
+
+            var path = "M" + [data[0], data[1]];
+
+            for (var i = 0; i < size - 2; i +=2) {
+
+                var x0 = i ? data[i - 2] : data[0];
+                var y0 = i ? data[i - 1] : data[1];
+
+                var x1 = data[i + 0];
+                var y1 = data[i + 1];
+
+                var x2 = data[i + 2];
+                var y2 = data[i + 3];
+
+                var x3 = i !== last ? data[i + 4] : x2;
+                var y3 = i !== last ? data[i + 5] : y2;
+
+                var cp1x = x1 + (x2 - x0) / 6 * k;
+                var cp1y = y1 + (y2 - y0) / 6 * k;
+
+                var cp2x = x2 - (x3 - x1) / 6 * k;
+                var cp2y = y2 - (y3 - y1) / 6 * k;
+
+                path += "C" + [cp1x, cp1y, cp2x, cp2y, x2, y2];
             }
-            return points;
+            console.log(path)
+            return path;
         }
 
 
-        solve(points, tension)
-        console.log(points)
-        var newPointList = []
-        var debugMeshList = []
-        points.forEach(function (v, index) {
-            console.log(v)
-            debugMeshList.push(v['debugMesh'])
-            if (index == 0) {
-                // debugMeshList.push(v['debugInPointMesh'])
-                // debugMeshList.push(v['debugOutPointMesh'])
-                newPointList.push(
-                    v['point'],
-                    v['outPoint']
-                )
-                // debugMeshList.push(v['debugOutPointMesh'])
-                // console.log(v['debugOutPointMesh'].getChildAt(0))
-                // v['debugOutPointMesh'].getChildAt(0).addPoint(
-                //     -v['outPoint'][0] + v['point'][0],
-                //     -v['outPoint'][1] + v['point'][1],
-                //     -v['outPoint'][2] + v['point'][2]
-                // )
-                // v['debugOutPointMesh'].getChildAt(0).addPoint(0, 0, 0)
-            } else {
-                if (points[index + 1]) {
-                    newPointList.push(
-                        v['inPoint'], v['point'], v['outPoint']
-                    )
-                    // debugMeshList.push(v['debugInPointMesh'])
-                    // debugMeshList.push(v['debugOutPointMesh'])
-                    //
-                    //
-                    // v['debugInPointMesh'].getChildAt(0).addPoint(
-                    //     -v['inPoint'][0] + v['point'][0],
-                    //     -v['inPoint'][1] + v['point'][1],
-                    //     -v['inPoint'][2] + v['point'][2]
-                    // )
-                    // v['debugInPointMesh'].getChildAt(0).addPoint(0, 0, 0)
-                    //
-                    // v['debugOutPointMesh'].getChildAt(0).addPoint(
-                    //     -v['outPoint'][0] + v['point'][0],
-                    //     -v['outPoint'][1] + v['point'][1],
-                    //     -v['outPoint'][2] + v['point'][2]
-                    // )
-                    // v['debugOutPointMesh'].getChildAt(0).addPoint(0, 0, 0)
 
+        // points = parseSVGPath(solve(points))
+        // points = solve(points)
+        // console.log(points)
+       var  parseSVGPath = function (svg, flipX, flipY) {
+            var points = [];
+            var delta = false;
+            var keepNext = false;
+            var need = 0;
+            var value = '';
+            var values = [];
+            var lastValues = [0, 0];
+            var nextLastValues = [0, 0];
+            var mode;
 
-                } else {
-                    newPointList.push(
-                        v['inPoint'], v['point']
-                    )
-                    // debugMeshList.push(v['debugInPointMesh'])
-                    // v['debugInPointMesh'].getChildAt(0).addPoint(
-                    //     -v['inPoint'][0] + v['point'][0],
-                    //     -v['inPoint'][1] + v['point'][1],
-                    //     -v['inPoint'][2] + v['point'][2]
-                    // )
-                    // v['debugInPointMesh'].getChildAt(0).addPoint(0, 0, 0)
+            function addValue() {
+                if (value.length > 0) {
+                    var v = parseFloat(value);
+                    if (v > 1000) debugger;  // eslint-disable-line
+                    values.push(v);
+                    if (values.length === 2) {
+                        if (delta) values[0] += lastValues[0], values[1] += lastValues[1], values[2] += lastValues[2]
+                        points.push(values);
+                        if (keepNext) nextLastValues = values.slice();
+                        --need;
+                        if (!need) {
+                            if (mode === 'l') {
+                                var m4 = points.pop();
+                                var m1 = points.pop();
+                                var m2 = vec3.lerp([0, 0], m1, m4, 0.25);
+                                var m3 = vec3.lerp([0, 0], m1, m4, 0.75);
+                                points.push(m1, m2, m3, m4);
+                            }
+                            lastValues = nextLastValues;
+                        }
+                        values = [];
+                    }
+                    value = '';
                 }
-
             }
 
+            var i, len;
+            var svgSplitData = svg.split('');
+            var targetStr;
+            i = 0, len = svgSplitData.length;
+            for (i; i < len; i++) {
+                targetStr = svgSplitData[i];
+                if ((targetStr >= '0' && targetStr <= '9') || targetStr === '.') value += targetStr;
+                else if (targetStr === '-') addValue(), value = '-';
+                else if (targetStr === 'm') addValue(), keepNext = true, need = 1, delta = true, mode = 'm';
+                else if (targetStr === 'c') addValue(), keepNext = true, need = 3, delta = true, mode = 'c';
+                else if (targetStr === 'l') addValue(), keepNext = true, need = 1, delta = false, mode = 'l';
+                else if (targetStr === 'M') addValue(), keepNext = true, need = 1, delta = false, mode = 'm';
+                else if (targetStr === 'C') addValue(), keepNext = true, need = 3, delta = false, mode = 'c';
+                else if (targetStr === 'L') addValue(), keepNext = true, need = 1, delta = false, mode = 'l';
+                else if (targetStr === 'Z') {
+                }// close the loop
+                else if (targetStr === ',') addValue();
+                else if (targetStr === ' ') addValue();
+                else debugger;  // eslint-disable-line
+            }
+            addValue();
+            var min = points[0].slice();
+            var max = points[0].slice();
+            i = 1, len = points.length;
+            for (i; i < len; ++i) min = vec2.min([0, 0], min, points[i]), max = vec2.max([0, 0], max, points[i]);
+            var range = vec2.sub([0, 0], max, min);
+            var halfRange = vec2.scale([0, 0], range, .5);
+            i = 0;
+            var targetPoint
+            for (i; i < len; ++i) {
+                targetPoint = points[i];
+                if (flipX) targetPoint[0] = max[0] - targetPoint[0];
+                else targetPoint[0] = targetPoint[0] - min[0];
+                if (flipY) targetPoint[1] = halfRange[1] - (targetPoint[1] - min[0]);
+                else targetPoint[1] = (targetPoint[1] - min[0]) - halfRange[1];
+            }
+            return points;
+        };
+        var tList = []
+        points.forEach(function(v){
+            tList.push(v['point'][0],v['point'][1])
         })
+
+        console.log(solve(tList,tension))
+
+        newPointList = parseSVGPath(solve(tList,tension),flipX, flipY)
         console.log(newPointList)
-        tType = 'RedCatmullRom' + '_' + newPointList + '_' + tension + '_' + distance + '_' + tolerance;
+        tType = 'RedCatmullRom' + '_' + newPointList + '_' + tension + '_' + distance + '_' + tolerance + '_' + flipX + '_' + flipY;
         // 유일키 방어
         if (!redGL['_datas']['Primitives']) redGL['_datas']['Primitives'] = {};
         if (redGL['_datas']['Primitives'][tType]) return redGL['_datas']['Primitives'][tType];
