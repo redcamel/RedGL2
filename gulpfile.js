@@ -178,6 +178,7 @@ gulp.task('combine-js', function () {
         "src/object3D/RedAxis.js",
         "src/object3D/RedGrid.js",
         "src/object3D/RedMesh.js",
+        "src/object3D/RedLinePoint.js",
         "src/object3D/RedLine.js",
         "src/object3D/RedSkyBox.js",
         "src/object3D/RedSprite3D.js",

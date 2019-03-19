@@ -2,7 +2,7 @@
   {
     "constructorYn": true,
     "title": "RedGLTFLoader",
-    "description": "\n\t GLTF 로더.\n\t 애니메이션 지원함.\n\t COLOR_0, TANGENT는 아직 지원하지 않는다.\n ",
+    "description": "\n\t GLTF 로더.\n\t 애니메이션 지원함.\n ",
     "params": {
       "redGL": [
         {

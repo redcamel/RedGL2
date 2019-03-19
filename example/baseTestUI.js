@@ -187,6 +187,18 @@ baseTestUI.exampleList = [
                 href: 'object3D/RedLine.html'
             },
             {
+                key: 'RedLine LINEAR',
+                href: 'object3D/RedLine_linear_type.html'
+            },
+            {
+                key: 'RedLine CATTMUL_ROM',
+                href: 'object3D/RedLine_cattmul_rom_type.html'
+            },
+            {
+                key: 'RedLine BEZIER',
+                href: 'object3D/RedLine_bezier_type.html'
+            },
+            {
                 key: 'RedMesh',
                 href: 'object3D/RedMesh.html'
             },

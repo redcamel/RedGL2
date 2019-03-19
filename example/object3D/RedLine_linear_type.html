@@ -1,0 +1,130 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>RedGL - RedLine Linear Type</title>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
+    />
+    <link rel="stylesheet" href="../example.css">
+
+    <script src="../dat.gui.min.js"></script>
+    <script src="../baseTestUI.js"></script>
+    <script src="../../release/RedGL.min.js"></script>
+</head>
+
+<body>
+<script id='testSource'>
+    var testUI;
+    var canvas;
+    var assetPath = '../../asset/'
+    var testRedLine
+    var addRandomPoint;
+    canvas = document.createElement('canvas');
+    document.body.appendChild(canvas);
+    RedGL(canvas, function (v) {
+        if (v) {
+            console.log('초기화 성공!');
+            var tWorld, tView, tScene, tController, tRenderer;
+            var setBase = function (redGL) {
+                // 월드 생성
+                redGL['world'] = tWorld = RedWorld();
+                // 씬 생성
+                tScene = RedScene(redGL);
+                // 카메라 생성
+                tController = RedObitController(redGL);
+                tController.pan = 45;
+                tController.tilt = -45;
+                tController.distance = 100;
+                // 렌더러 생성
+                tRenderer = RedRenderer();
+                // 뷰생성 및 적용
+                tView = RedView('HelloRedGL', redGL, tScene, tController);
+                tWorld.addView(tView);
+                // 그리드 설정
+                tScene['grid'] = RedGrid(redGL);
+                // 렌더시작
+                tRenderer.start(redGL, function (time) {
+                });
+                // 렌더 디버거 활성화
+                tRenderer.setDebugButton();
+
+            };
+            setBase(this);
+            // tLine 생성 함수 정의
+
+            testRedLine = RedLine(this, RedColorMaterial(this));
+            testRedLine.useCullFace=false
+            tScene.addChild(testRedLine);
+            // 60번 포인트를 랜덤으로 정의하고 라인추가
+            addRandomPoint = function () {
+                testRedLine.addPoint(Math.random() * 50 - 25, Math.random() * 50 - 25, Math.random() * 50 - 25);
+            };
+            addRandomPoint()
+            addRandomPoint()
+
+            // Test UI
+            testUI(this, tView)
+        } else {
+            console.log('초기화 실패!');
+        }
+    });
+    testUI = function (redGL, view1) {
+        var gui = new baseTestUI(redGL);
+        gui.initCamera(view1['camera']);
+        gui.initScene(view1['scene']);
+        var t0 = gui['gui'].addFolder('RedLine Test - Linear Type');
+        var testData = {
+            addRandomPoint: function () {
+                addRandomPoint(redGL);
+            },
+            targetX: 0,
+            targetY: 0,
+            targetZ: 0,
+            addPoint: function () {
+                testRedLine.addPoint(testData.targetX, testData.targetY, testData.targetZ)
+            },
+            targetX2: 0,
+            targetY2: 0,
+            targetZ2: 0,
+            addPointAt_Index: 0,
+            addPointAt: function () {
+                testRedLine.addPointAt(testData.addPointAt_Index, testData.targetX2, testData.targetY2, testData.targetZ2)
+            },
+            removePointAt_Index: 0,
+            removePointAt: function () {
+                testRedLine.removePointAt(testData.removePointAt_Index)
+            }
+        };
+        t0.open();
+
+        t0.add(testData, 'addRandomPoint');
+        var tFolder;
+        //
+        tFolder = t0.addFolder('addPoint');
+        // tFolder.open()
+        tFolder.add(testData, 'addPoint');
+        tFolder.add(testData, 'targetX', -50, 50, 0.01);
+        tFolder.add(testData, 'targetY', -50, 50, 0.01);
+        tFolder.add(testData, 'targetZ', -50, 50, 0.01);
+        tFolder = t0.addFolder('addPointAt');
+        // tFolder.open()
+        tFolder.add(testData, 'addPointAt');
+        tFolder.add(testData, 'addPointAt_Index').min(0);
+        tFolder.add(testData, 'targetX2', -50, 50, 0.01);
+        tFolder.add(testData, 'targetX2', -50, 50, 0.01);
+        tFolder.add(testData, 'targetX2', -50, 50, 0.01);
+        //
+        t0.add(testRedLine, 'removeAllPoint');
+        tFolder = t0.addFolder('removePointAt');
+        // tFolder.open()
+        tFolder.add(testData, 'removePointAt');
+        tFolder.add(testData, 'removePointAt_Index').min(0);
+        t0.add(testRedLine, 'debug');
+    }
+</script>
+</body>
+
+</html>

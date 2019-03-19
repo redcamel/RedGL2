@@ -30,9 +30,10 @@
         type: RedLine.LINEAR,
         drawMode: 'LINE_STRIP',
         pointSize: 1,
-        distance: 0.1,
+        distance: 0.4,
         tolerance: 0.15,
-        tension: 1
+        tension: 1,
+        debug: false
     }
     var testPointsLaw
     var testUI
@@ -66,7 +67,7 @@
             tScene.removeChild(targetMesh)
             targetMesh = null;
         }
-        targetMesh = RedLine(redGL, null, null)
+        targetMesh = RedLine(redGL)
         console.log(targetMesh)
         console.log(testPointsLaw)
         //
@@ -76,6 +77,7 @@
         });
 
         targetMesh.drawMode = redGL.gl[testOption.drawMode]
+        console.log(targetMesh)
 
         // targetMesh.drawMode = this.gl.POINTS
         targetMesh.pointSize = testOption.pointSize
@@ -149,15 +151,35 @@
         }
         tFolder = gui['gui'].addFolder('RedMesh')
         tFolder.open()
+        tFolder.add(testOption, 'drawMode', ['TRIANGLES', 'TRIANGLE_STRIP', 'TRIANGLE_FAN', 'LINES', 'LINE_LOOP', 'LINE_STRIP', 'POINTS']).onChange(function (v) {
+            tScene.children.forEach(function (v2) {
+                v2.drawMode = redGL.gl[v]
+            })
+        })
+        tFolder.add(testOption, 'pointSize', 1, 100).onChange(function (v) {
+            tScene.children.forEach(function (v2) {
+                v2.pointSize = v
+            })
+        })
         tFolder.add(testOption, 'type', [RedLine.LINEAR, RedLine.CATMULL_ROM, RedLine.BEZIER])
             .onChange(function (v) {
                 tScene.children.forEach(function (v2) {
                     v2.type = v
                 })
             })
-        tFolder.add(testOption, 'tension', 0, 1, 0.01).onChange(function (v) {
+        tFolder.add(testOption, 'tension', 0, 3, 0.01).onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.tension = v
+            })
+        })
+        tFolder.add(testOption, 'distance', 0, 3, 0.01).onChange(function (v) {
+            tScene.children.forEach(function (v2) {
+                v2.distance = v
+            })
+        })
+        tFolder.add(testOption, 'debug').onChange(function (v) {
+            tScene.children.forEach(function (v2) {
+                v2.debug = v
             })
         })
     }

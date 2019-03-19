@@ -18,14 +18,68 @@
         {
           "type": "Number"
         }
+      ],
+      "inX": [
+        {
+          "type": "Number"
+        }
+      ],
+      "inY": [
+        {
+          "type": "Number"
+        }
+      ],
+      "inZ": [
+        {
+          "type": "Number"
+        }
+      ],
+      "outX": [
+        {
+          "type": "Number"
+        }
+      ],
+      "outY": [
+        {
+          "type": "Number"
+        }
+      ],
+      "outZ": [
+        {
+          "type": "Number"
+        }
       ]
     },
     "return": "void"
   },
   {
+    "code": "METHOD",
+    "title": "addPointAt",
+    "description": "\n\t 해당인덱스에 포인트 추가\n ",
+    "return": "void"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "debug",
+    "description": "\n debug 모드 사용 여부\n 기본값 false\n ",
+    "return": "Boolean"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "distance",
+    "description": "\n type이 RedLine.CATMULL_ROM 일 경우의 장력\n 기본값 1\n 최소값 0\n ",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "distance",
+    "description": "\n 포인트간 최소 간격\n 기본값 0.1\n 최소값 0\n ",
+    "return": "Number"
+  },
+  {
     "constructorYn": true,
     "title": "RedLine",
-    "description": "\n\t RedLine Instance 생성기\n ",
+    "description": "\n\t\t RedLine Instance 생성기\n\t ",
     "params": {
       "redGL": [
         {
@@ -36,6 +90,11 @@
         {
           "type": "RedColorMaterial Instance"
         }
+      ],
+      "type": [
+        {
+          "type": "RedLine.LINEAR or RedLine.CATMULL_ROM or RedLine.BEZIER - default : RedLine.LINEAR"
+        }
       ]
     },
     "extends": [
@@ -43,8 +102,32 @@
       "RedBaseObject3D"
     ],
     "demo": "../example/object3D/RedLine.html",
-    "example": "\n          var tLine;\n          var tX, tY, tZ;\n          var i;\n          tLine = RedLine(RedGL Instance, RedColorMaterial( RedGL Instance ) ); // RedLine Instance 생성\n          i = 60;\n          tX = tY = tZ = 0;\n          while (i--) {\n              tX += Math.random() * 0.5;\n              tY += Math.random() * 0.5;\n              tZ += Math.random() * 0.5;\n              tLine.addPoint(tX, tY, tZ); // 포인트 추가\n          }\n ",
+    "example": "\n\n\t ",
     "return": "RedLine Instance"
+  },
+  {
+    "title": "RedLine.BEZIER",
+    "code": "CONST",
+    "description": "RedLine 타입상수",
+    "return": "String"
+  },
+  {
+    "title": "RedLine.CATMULL_ROM",
+    "code": "CONST",
+    "description": "RedLine 타입상수",
+    "return": "String"
+  },
+  {
+    "title": "RedLine.LINEAR",
+    "code": "CONST",
+    "description": "RedLine 타입상수",
+    "return": "String"
+  },
+  {
+    "code": "METHOD",
+    "title": "removeAllPoint",
+    "description": "\n\t 인덱스에 해당하는 포인트 제거\n ",
+    "return": "void"
   },
   {
     "code": "METHOD",
