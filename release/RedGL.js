@@ -16615,7 +16615,8 @@ var RedPlane;
         height = height || 1;
         wSegments = wSegments || 1;
         hSegments = hSegments || 1;
-        tType = 'RedPlane' + '_' + width + '_' + height + '_' + wSegments + '_' + hSegments+'_'+flipY;
+        flipY = flipY ? true : false;
+        tType = 'RedPlane' + '_' + width + '_' + height + '_' + wSegments + '_' + hSegments + '_' + flipY;
         // 유일키 방어
         if (!redGL['_datas']['Primitives']) redGL['_datas']['Primitives'] = {};
         if (redGL['_datas']['Primitives'][tType]) return redGL['_datas']['Primitives'][tType];
@@ -25280,4 +25281,4 @@ var RedGLOffScreen;
         }
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-03-20 11:01:00)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-03-20 11:12:02)' };console.log(RedGL_VERSION);
