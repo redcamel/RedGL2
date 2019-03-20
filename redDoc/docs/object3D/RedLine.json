@@ -3,7 +3,7 @@
     "code": "METHOD",
     "title": "addPoint",
     "description": "\n\t 라인 포인트 추가\n ",
-    "parmas": {
+    "params": {
       "x": [
         {
           "type": "Number"
@@ -56,6 +56,58 @@
     "code": "METHOD",
     "title": "addPointAt",
     "description": "\n\t 해당인덱스에 포인트 추가\n ",
+    "params": {
+      "index": [
+        {
+          "type": "Number"
+        }
+      ],
+      "x": [
+        {
+          "type": "Number"
+        }
+      ],
+      "y": [
+        {
+          "type": "Number"
+        }
+      ],
+      "z": [
+        {
+          "type": "Number"
+        }
+      ],
+      "inX": [
+        {
+          "type": "Number"
+        }
+      ],
+      "inY": [
+        {
+          "type": "Number"
+        }
+      ],
+      "inZ": [
+        {
+          "type": "Number"
+        }
+      ],
+      "outX": [
+        {
+          "type": "Number"
+        }
+      ],
+      "outY": [
+        {
+          "type": "Number"
+        }
+      ],
+      "outZ": [
+        {
+          "type": "Number"
+        }
+      ]
+    },
     "return": "void"
   },
   {
@@ -63,12 +115,6 @@
     "title": "debug",
     "description": "\n debug 모드 사용 여부\n 기본값 false\n ",
     "return": "Boolean"
-  },
-  {
-    "code": "PROPERTY",
-    "title": "distance",
-    "description": "\n type이 RedLine.CATMULL_ROM 일 경우의 장력\n 기본값 1\n 최소값 0\n ",
-    "return": "Number"
   },
   {
     "code": "PROPERTY",
@@ -126,13 +172,32 @@
   {
     "code": "METHOD",
     "title": "removeAllPoint",
-    "description": "\n\t 인덱스에 해당하는 포인트 제거\n ",
+    "description": "\n\t 라인 포인트 전체 제거\n ",
     "return": "void"
   },
   {
     "code": "METHOD",
-    "title": "removeAllPoint",
-    "description": "\n\t 라인 포인트 전체 제거\n ",
+    "title": "removePointAt",
+    "description": "\n\t 인덱스에 해당하는 포인트 제거\n ",
+    "params": {
+      "index": [
+        {
+          "type": "Number"
+        }
+      ]
+    },
     "return": "void"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "tension",
+    "description": "\n type이 RedLine.CATMULL_ROM 일 경우의 장력\n 기본값 1\n 최소값 0\n ",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "type",
+    "description": "\n           라인 타입\n           기본값 : RedLine.LINEAR\n           허용값 : RedLine.LINEAR, RedLine.CATMULL_ROM, RedLine.BEZIER\n ",
+    "return": "string"
   }
 ]

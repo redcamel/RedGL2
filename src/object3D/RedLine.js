@@ -411,7 +411,7 @@ var RedLine;
 		 description : `
 			 라인 포인트 추가
 		 `,
-		 parmas : {
+		 params : {
 			 x : [{type:'Number'}],
 			 y : [{type:'Number'}],
 			 z : [{type:'Number'}],
@@ -454,11 +454,23 @@ var RedLine;
 		 description : `
 			 해당인덱스에 포인트 추가
 		 `,
+		 params : {
+		     index : [{type:'Number'}],
+			 x : [{type:'Number'}],
+			 y : [{type:'Number'}],
+			 z : [{type:'Number'}],
+			 inX : [{type:'Number'}],
+			 inY : [{type:'Number'}],
+			 inZ : [{type:'Number'}],
+			 outX : [{type:'Number'}],
+			 outY : [{type:'Number'}],
+			 outZ : [{type:'Number'}]
+		 },
 		 return : 'void'
 	 }
      :DOC*/
     RedLine.prototype['addPointAt'] = function (index, x, y, z, inX, inY, inZ, outX, outY, outZ) {
-        var tPoint;
+
         typeof x == 'number' || RedGLUtil.throwFunc('RedLine : addPoint - x값은 숫자만 허용', '입력값 : ' + x);
         typeof y == 'number' || RedGLUtil.throwFunc('RedLine : addPoint - y값은 숫자만 허용', '입력값 : ' + y);
         typeof z == 'number' || RedGLUtil.throwFunc('RedLine : addPoint - z값은 숫자만 허용', '입력값 : ' + z);
@@ -486,10 +498,13 @@ var RedLine;
     /**DOC:
      {
 	     code : 'METHOD',
-		 title :`removeAllPoint`,
+		 title :`removePointAt`,
 		 description : `
 			 인덱스에 해당하는 포인트 제거
 		 `,
+		 params : {
+		     index : [{type:'Number'}]
+         },
 		 return : 'void'
 	 }
      :DOC*/
@@ -537,6 +552,18 @@ var RedLine;
             this['_material'] = v;
         }
     });
+    /**DOC:
+     {
+		 code : 'PROPERTY',
+		 title :`type`,
+		 description : `
+             라인 타입
+             기본값 : RedLine.LINEAR
+             허용값 : RedLine.LINEAR, RedLine.CATMULL_ROM, RedLine.BEZIER
+		 `,
+		 return : 'string'
+	 }
+     :DOC*/
     Object.defineProperty(RedLine.prototype, 'type', {
         get: function () {
             return this['_type'];
@@ -550,7 +577,7 @@ var RedLine;
     /**DOC:
      {
 		 code : 'PROPERTY',
-		 title :`distance`,
+		 title :`tension`,
 		 description : `
 		 type이 RedLine.CATMULL_ROM 일 경우의 장력
 		 기본값 1

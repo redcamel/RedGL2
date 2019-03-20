@@ -4,52 +4,61 @@ var RedLatheMesh;
 
     /**DOC:
      {
-		 varructorYn : true,
+		 constructorYn : true,
 		 title :`RedLatheMesh`,
 		 description : `
-			 RedLatheMesh 형태의 RedGeometry 생성
+			 RedLatheMesh 객체
 		 `,
-		 params : {
+		params : {
 			 redGL : [
 				 {type:'RedGL'}
 			 ],
-			 radiusTop : [
-				 {type:'number'},
-				 '기본값 : 1'
+			 pathString : [
+				 {type:'string'},
+				 'path 문자열',
+				  `<code>"m44,434c18,-33 19,-66 15,-111c-4,-45 -37,-104 -39,-132c-2,-28 11,-51 16,-81c5,-30 3,-63 -36,-63"</code>`
 			 ],
-			 radiusBottom : [
-				 {type:'number'},
-				 '기본값 : 1'
-			 ],
-			 height : [
-				 {type:'number'},
-				 '기본값 : 1'
-			 ],
-			 radialSegments : [
+			 numDivisions : [
 				 {type:'uint'},
-				 '기본값 : 8'
+				 '기본값 : 16'
 			 ],
-			 heightSegments : [
-				 {type:'uint'},
-				 '기본값 : 1'
+			 capStart : [
+				 {type:'boolean'},
+				 '기본값 : false'
 			 ],
-			 openEnded : [
-				 {type:'Boolean'},
+			 capEnd : [
+				 {type:'boolean'},
 				 '기본값 : false'
 			 ],
 			 startAngle : [
 				 {type:'number'},
-				 'startAngle'
+				 '기본값 : 0.0'
 			 ],
 			 endAngle : [
+				 {type:'Boolean'},
+				 '기본값 : Math.PI * 2'
+			 ],
+			 maxAngle : [
 				 {type:'number'},
-				 'endAngle'
+				 '기본값 : Math.PI / 180 * 30'
+			 ],
+			 tolerance : [
+				 {type:'number'},
+				 '기본값 : 0.15'
+			 ],
+			 flipX : [
+			    {type:'boolean'},
+				'기본값 : false'
+			 ],
+			 flipY : [
+			    {type:'boolean'},
+				'기본값 : false'
 			 ]
 		 },
 		 extends : [
 		    'RedGeometry'
 		 ],
-		 demo : '../example/primitives/RedLatheMesh.html',
+		 demo : '../example/object3D/RedLatheMesh.html',
 		 return : 'RedLatheMesh Instance'
 	 }
      :DOC*/
@@ -79,16 +88,7 @@ var RedLatheMesh;
 			 return : 'RedGeometry'
 		 }
          :DOC*/
-        this['geometry'] = RedLathe(
-            this._redGL,
-            this._pathString,
-            this._numDivisions,
-            this._capStart, this._capEnd,
-            this._startAngle, this._endAngle, this._maxAngle,
-            this._distance,
-            this._tolerance,
-            this._flipX, this._flipY
-        );
+        resetGeometry()
         /**DOC:
          {
 		     code : 'PROPERTY',
@@ -103,7 +103,7 @@ var RedLatheMesh;
         console.log(this)
     };
     RedLatheMesh.prototype = new RedBaseContainer;
-    var callback = function () {
+    var resetGeometry = function () {
         this['_geometry'] = RedLathe(
             this._redGL,
             this._pathString,
@@ -121,19 +121,83 @@ var RedLatheMesh;
         },
         set: function (v) {
             this['_pathString'] = v;
-            callback.call(this)
+            resetGeometry.call(this)
         }
     });
-    RedDefinePropertyInfo.definePrototype('RedLatheMesh', 'numDivisions', 'number', {min: 0, callback: callback});
-    RedDefinePropertyInfo.definePrototype('RedLatheMesh', 'capStart', 'boolean', {callback: callback});
-    RedDefinePropertyInfo.definePrototype('RedLatheMesh', 'capEnd', 'boolean', {callback: callback});
-    RedDefinePropertyInfo.definePrototype('RedLatheMesh', 'startAngle', 'number', {min: 0, callback: callback});
-    RedDefinePropertyInfo.definePrototype('RedLatheMesh', 'endAngle', 'number', {min: 0, callback: callback});
-    RedDefinePropertyInfo.definePrototype('RedLatheMesh', 'maxAngle', 'number', {min: 0, callback: callback});
-    RedDefinePropertyInfo.definePrototype('RedLatheMesh', 'distance', 'number', {min: 0, callback: callback});
-    RedDefinePropertyInfo.definePrototype('RedLatheMesh', 'tolerance', 'number', {min: 0, callback: callback});
-    RedDefinePropertyInfo.definePrototype('RedLatheMesh', 'flipX', 'boolean', {callback: callback});
-    RedDefinePropertyInfo.definePrototype('RedLatheMesh', 'flipY', 'boolean', {callback: callback});
+    /**DOC:
+        {
+            code : 'PROPERTY',
+            title :`numDivisions`,
+            description : `분할갯수`,
+            return : 'uint'
+        }
+    :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedLatheMesh', 'numDivisions', 'number', {min: 0, callback: resetGeometry});
+    /**DOC:
+     {
+            code : 'PROPERTY',
+            title :`capStart`,
+            description : `상단 닫기`,
+            return : 'boolean'
+        }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedLatheMesh', 'capStart', 'boolean', {callback: resetGeometry});
+    /**DOC:
+     {
+            code : 'PROPERTY',
+            title :`capEnd`,
+            description : `하단 닫기`,
+            return : 'boolean'
+        }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedLatheMesh', 'capEnd', 'boolean', {callback: resetGeometry});
+    /**DOC:
+     {
+            code : 'PROPERTY',
+            title :`startAngle`,
+            description : `시작 앵글`,
+            return : 'number'
+        }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedLatheMesh', 'startAngle', 'number', {min: 0, callback: resetGeometry});
+    /**DOC:
+     {
+            code : 'PROPERTY',
+            title :`endAngle`,
+            description : `종료 앵글`,
+            return : 'number'
+        }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedLatheMesh', 'endAngle', 'number', {min: 0, callback: resetGeometry});
+    RedDefinePropertyInfo.definePrototype('RedLatheMesh', 'maxAngle', 'number', {min: 0, callback: resetGeometry});
+    /**DOC:
+     {
+            code : 'PROPERTY',
+            title :`distance`,
+            description : `분할 거리`,
+            return : 'number'
+        }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedLatheMesh', 'distance', 'number', {min: 0, callback: resetGeometry});
+    RedDefinePropertyInfo.definePrototype('RedLatheMesh', 'tolerance', 'number', {min: 0, callback: resetGeometry});
+    /**DOC:
+     {
+            code : 'PROPERTY',
+            title :`flipX`,
+            description : `좌우반전`,
+            return : 'boolean'
+        }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedLatheMesh', 'flipX', 'boolean', {callback: resetGeometry});
+    /**DOC:
+     {
+            code : 'PROPERTY',
+            title :`flipY`,
+            description : `상하반전`,
+            return : 'boolean'
+        }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedLatheMesh', 'flipY', 'boolean', {callback: resetGeometry});
     Object.freeze(RedLatheMesh);
 })
 ();
