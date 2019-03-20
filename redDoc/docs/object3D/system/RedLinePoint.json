@@ -1,0 +1,97 @@
+[
+  {
+    "code": "PROPERTY",
+    "title": "_inPoint",
+    "description": "\n\t\t컨트롤 포인트1 위치 배열\n\t",
+    "return": "Boolean"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "_outPoint",
+    "description": "\n\t\t컨트롤 포인트2 위치 배열\n\t",
+    "return": "Boolean"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "_point",
+    "description": "\n\t\t포인트 위치 배열\n\t",
+    "return": "Boolean"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedLinePoint",
+    "description": "\n\t RedLinePoint 객체.\n\t RedLine 내부에서 자동 생성됨.\n ",
+    "params": {
+      "x": [
+        {
+          "type": "Number"
+        }
+      ],
+      "y": [
+        {
+          "type": "Number"
+        }
+      ],
+      "z": [
+        {
+          "type": "Number"
+        }
+      ],
+      "inX": [
+        {
+          "type": "Number"
+        },
+        "기본값 : 0",
+        "inPointX 값",
+        "RedLine.LINEAR 모드에서는 사용되지않음",
+        "RedLine.CATMULL_ROM 모드에서는 자동 생성됨"
+      ],
+      "inY": [
+        {
+          "type": "Number"
+        },
+        "기본값 : 0",
+        "inPointY 값",
+        "RedLine.LINEAR 모드에서는 사용되지않음",
+        "RedLine.CATMULL_ROM 모드에서는 자동 생성됨"
+      ],
+      "inZ": [
+        {
+          "type": "Number"
+        },
+        "기본값 : 0",
+        "inPointZ 값",
+        "RedLine.LINEAR 모드에서는 사용되지않음",
+        "RedLine.CATMULL_ROM 모드에서는 자동 생성됨"
+      ],
+      "outX": [
+        {
+          "type": "Number"
+        },
+        "기본값 : 0",
+        "outPointX 값",
+        "RedLine.LINEAR 모드에서는 사용되지않음",
+        "RedLine.CATMULL_ROM 모드에서는 자동 생성됨"
+      ],
+      "outY": [
+        {
+          "type": "Number"
+        },
+        "기본값 : 0",
+        "outPointY 값",
+        "RedLine.LINEAR 모드에서는 사용되지않음",
+        "RedLine.CATMULL_ROM 모드에서는 자동 생성됨"
+      ],
+      "outZ": [
+        {
+          "type": "Number"
+        },
+        "기본값 : 0",
+        "outPointZ 값",
+        "RedLine.LINEAR 모드에서는 사용되지않음",
+        "RedLine.CATMULL_ROM 모드에서는 자동 생성됨"
+      ]
+    },
+    "return": "RedLinePoint Instance"
+  }
+]

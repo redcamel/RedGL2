@@ -87,6 +87,17 @@ var RedDefinePropertyInfo;
                                     if (option && option['callback']) option['callback'].call(this, v)
                                 }
                             }
+                        }else{
+                            result = {
+                                get: function () {
+                                    return this['_' + name];
+                                },
+                                set: function (v) {
+                                    if (typeof v != 'number') RedGLUtil.throwFunc(clsName + ' - ' + name + ' : 숫자만 허용함.', '입력값 : ' + v)
+                                    this['_' + name] = v
+                                    if (option && option['callback']) option['callback'].call(this, v)
+                                }
+                            }
                         }
                     }
                 } else {

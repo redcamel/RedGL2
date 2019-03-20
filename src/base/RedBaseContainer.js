@@ -41,7 +41,7 @@ var RedBaseContainer;
         if (recursive) {
             var i = this.children.length;
             while (i--) {
-                if(this.children[i].sortGeometry)this.children[i].sortGeometry(recursive)
+                if (this.children[i].sortGeometry) this.children[i].sortGeometry(recursive)
             }
         }
         this.children.sort(function (a, b) {
@@ -77,7 +77,7 @@ var RedBaseContainer;
         if (recursive) {
             var i = this.children.length;
             while (i--) {
-                if(this.children[i].sortMaterial) this.children[i].sortMaterial(recursive)
+                if (this.children[i].sortMaterial) this.children[i].sortMaterial(recursive)
             }
         }
         this.children.sort(function (a, b) {
@@ -111,7 +111,7 @@ var RedBaseContainer;
         if (recursive) {
             var i = this.children.length;
             while (i--) {
-                if(this.children[i].sortGeometryAndMaterial) this.children[i].sortGeometryAndMaterial(recursive)
+                if (this.children[i].sortGeometryAndMaterial) this.children[i].sortGeometryAndMaterial(recursive)
             }
         }
         this.children.sort(function (a, b) {
@@ -175,7 +175,7 @@ var RedBaseContainer;
         child instanceof RedBaseObject3D || RedGLUtil.throwFunc('addChildAt', 'RedBaseObject3D Instance만 가능', '입력값 : ' + child);
         if (this['children'].indexOf(child) > -1) this['removeChild'](child);
         if (this['children'].length < index) index = this['children'].length;
-        if (index) this['children'].splice(index, 0, child);
+        if (index != undefined) this['children'].splice(index, 0, child);
         else this['children'].push(child);
     };
     /**DOC:

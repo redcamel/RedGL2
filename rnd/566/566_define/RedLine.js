@@ -136,7 +136,7 @@ var RedLine;
             }
             return outPoints;
         };
-        return function (points, tolerance) {
+        return function (target, points, tolerance) {
             var newPoints = [];
             var numSegments = (points.length - 1) / 3;
             numSegments = Math.floor(numSegments)
@@ -171,7 +171,7 @@ var RedLine;
         })
     };
     setDebugMeshs = function (target) {
-        var debugSize = 1
+        var debugSize = 3
         var tDebugMesh;
         var redGL = target['_redGL'];
         var tDebugRoot;
@@ -191,7 +191,7 @@ var RedLine;
                     if (!tPoint['_debugObjectInPointMesh']) {
                         tPoint['_debugObjectInPointMesh'] = RedMesh(
                             redGL,
-                            RedBox(redGL, debugSize * 0.5, debugSize * 0.5, debugSize * 0.5),
+                            RedBox(redGL, debugSize, debugSize, debugSize),
                             RedColorMaterial(
                                 redGL,
                                 target['_type'] == RedLine.BEZIER ? '#0000ff' : '#fff',
@@ -218,7 +218,7 @@ var RedLine;
                         // 아웃포인트
                         tPoint['_debugObjectOutPointMesh'] = RedMesh(
                             redGL,
-                            RedBox(redGL, debugSize * 0.5, debugSize * 0.5, debugSize * 0.5),
+                            RedBox(redGL, debugSize, debugSize, debugSize),
                             RedColorMaterial(
                                 redGL,
                                 target['_type'] == RedLine.BEZIER ? '#ff0000' : '#fff',
@@ -273,33 +273,27 @@ var RedLine;
 
         switch (target['_type']) {
             case RedLine['CATMULL_ROM'] :
-                if (target['points'].length > 1) {
-                    var newPointList = solveCatmullRomPoint(target['points'], tension);
-                    console.log(newPointList)
-                    target['_serializedPoints'] = serializePoints(newPointList);
-                    newPointList = getPointsOnBezierCurves(target['_serializedPoints'], tolerance);
-                    newPointList = simplifyPoints(newPointList, 0, newPointList.length, distance)
-
-                    var i = 0, len = newPointList.length
-                    for (i; i < len; i++) {
-                        target['_interleaveData'].push(newPointList[i][0], newPointList[i][1], newPointList[i][2])
-                    }
-                } else {
-                    target['_interleaveData'].push(0, 0, 0)
+                // if (target['points'].length > 3) {
+                var newPointList = solveCatmullRomPoint(target['points'], tension);
+                console.log(newPointList)
+                target['_serializedPoints'] = serializePoints(newPointList);
+                newPointList = getPointsOnBezierCurves(target, target['_serializedPoints'], tolerance);
+                newPointList = simplifyPoints(newPointList, 0, newPointList.length, distance)
+                target['_interleaveData'].length = 0
+                var i = 0, len = newPointList.length
+                for (i; i < len; i++) {
+                    target['_interleaveData'].push(newPointList[i][0], newPointList[i][1], newPointList[i][2])
                 }
+                // }
                 break;
             case RedLine['BEZIER'] :
-                if (target['points'].length > 1) {
-                    target['_serializedPoints'] = serializePoints(target['points']);
-                    newPointList = getPointsOnBezierCurves(target['_serializedPoints'], tolerance);
-                    newPointList = simplifyPoints(newPointList, 0, newPointList.length, distance)
-
-                    var i = 0, len = newPointList.length
-                    for (i; i < len; i++) {
-                        target['_interleaveData'].push(newPointList[i][0], newPointList[i][1], newPointList[i][2])
-                    }
-                } else {
-                    target['_interleaveData'].push(0, 0, 0)
+                target['_serializedPoints'] = serializePoints(target['points']);
+                newPointList = getPointsOnBezierCurves(target, target['_serializedPoints'], tolerance);
+                newPointList = simplifyPoints(newPointList, 0, newPointList.length, distance)
+                target['_interleaveData'].length = 0
+                var i = 0, len = newPointList.length
+                for (i; i < len; i++) {
+                    target['_interleaveData'].push(newPointList[i][0], newPointList[i][1], newPointList[i][2])
                 }
                 break;
             default :
@@ -350,7 +344,7 @@ var RedLine;
         tGL = redGL.gl;
         RedBaseObject3D['build'].call(this, tGL);
         this['_redGL'] = redGL;
-        this['_interleaveData'] = [0, 0, 0];
+        this['_interleaveData'] = [];
         // this['_indexData'] = [];
         this['_UUID'] = RedGL.makeUUID();
         this['_interleaveBuffer'] = RedBuffer(
@@ -369,8 +363,8 @@ var RedLine;
         this['points'] = []; // 오리지널 포인트
         this['_serializedPoints'] = []; //직렬화된 포인트
         this['_tension'] = 1
-        this['_tolerance'] = 0.01
-        this['_distance'] = 0.1
+        this['_tolerance'] = 0.1
+        this['_distance'] = 0.4
         this['_type'] = type || RedLine['LINEAR'];
         this['_debug'] = false
         console.log(this)
@@ -411,7 +405,7 @@ var RedLine;
 		 description : `
 			 라인 포인트 추가
 		 `,
-		 params : {
+		 parmas : {
 			 x : [{type:'Number'}],
 			 y : [{type:'Number'}],
 			 z : [{type:'Number'}],
@@ -438,13 +432,14 @@ var RedLine;
         typeof inY == 'number' || RedGLUtil.throwFunc('RedLine : addPoint - inY값은 숫자만 허용', '입력값 : ' + inY);
         typeof inZ == 'number' || RedGLUtil.throwFunc('RedLine : addPoint - inZ값은 숫자만 허용', '입력값 : ' + inZ);
         //
-        outX = outX || 0;
-        outY = outY || 0;
-        outZ = outZ || 0;
+        outX = inX || 0;
+        outY = inY || 0;
+        outZ = inZ || 0;
         typeof outX == 'number' || RedGLUtil.throwFunc('RedLine : addPoint - outX값은 숫자만 허용', '입력값 : ' + outX);
         typeof outY == 'number' || RedGLUtil.throwFunc('RedLine : addPoint - outY값은 숫자만 허용', '입력값 : ' + outY);
         typeof outZ == 'number' || RedGLUtil.throwFunc('RedLine : addPoint - outZ값은 숫자만 허용', '입력값 : ' + outZ);
-        this['points'].push(RedLinePoint(x, y, z, inX, inY, inZ, outX, outY, outZ));
+        this['points'].push(RedLinePoint(x, y, z));
+
         parsePointsByType(this, this['_tension'], this['_tolerance'], this['_distance']);
     };
     /**DOC:
@@ -454,23 +449,11 @@ var RedLine;
 		 description : `
 			 해당인덱스에 포인트 추가
 		 `,
-		 params : {
-		     index : [{type:'Number'}],
-			 x : [{type:'Number'}],
-			 y : [{type:'Number'}],
-			 z : [{type:'Number'}],
-			 inX : [{type:'Number'}],
-			 inY : [{type:'Number'}],
-			 inZ : [{type:'Number'}],
-			 outX : [{type:'Number'}],
-			 outY : [{type:'Number'}],
-			 outZ : [{type:'Number'}]
-		 },
 		 return : 'void'
 	 }
      :DOC*/
     RedLine.prototype['addPointAt'] = function (index, x, y, z, inX, inY, inZ, outX, outY, outZ) {
-
+        var tPoint;
         typeof x == 'number' || RedGLUtil.throwFunc('RedLine : addPoint - x값은 숫자만 허용', '입력값 : ' + x);
         typeof y == 'number' || RedGLUtil.throwFunc('RedLine : addPoint - y값은 숫자만 허용', '입력값 : ' + y);
         typeof z == 'number' || RedGLUtil.throwFunc('RedLine : addPoint - z값은 숫자만 허용', '입력값 : ' + z);
@@ -482,29 +465,26 @@ var RedLine;
         typeof inY == 'number' || RedGLUtil.throwFunc('RedLine : addPoint - inY값은 숫자만 허용', '입력값 : ' + inY);
         typeof inZ == 'number' || RedGLUtil.throwFunc('RedLine : addPoint - inZ값은 숫자만 허용', '입력값 : ' + inZ);
         //
-        outX = outX || 0;
-        outY = outY || 0;
-        outZ = outZ || 0;
+        outX = inX || 0;
+        outY = inY || 0;
+        outZ = inZ || 0;
         typeof outX == 'number' || RedGLUtil.throwFunc('RedLine : addPoint - outX값은 숫자만 허용', '입력값 : ' + outX);
         typeof outY == 'number' || RedGLUtil.throwFunc('RedLine : addPoint - outY값은 숫자만 허용', '입력값 : ' + outY);
         typeof outZ == 'number' || RedGLUtil.throwFunc('RedLine : addPoint - outZ값은 숫자만 허용', '입력값 : ' + outZ);
 
         typeof index == 'number' || RedGLUtil.throwFunc('addPointAt', 'index는 숫자만 입력가능', '입력값 : ' + index);
         if (this['points'].length < index) index = this['points'].length;
-        if (index != undefined) this['points'].splice(index, 0, RedLinePoint(x, y, z, inX, inY, inZ, outX, outY, outZ));
-        else this['points'].push(RedLinePoint(x, y, z, inX, inY, inZ, outX, outY, outZ));
+        if (index != undefined) this['points'].splice(index, 0, RedLinePoint(x, y, z));
+        else this['points'].push(RedLinePoint(x, y, z));
         parsePointsByType(this, this['_tension'], this['_tolerance'], this['_distance']);
     };
     /**DOC:
      {
 	     code : 'METHOD',
-		 title :`removePointAt`,
+		 title :`removeAllPoint`,
 		 description : `
 			 인덱스에 해당하는 포인트 제거
 		 `,
-		 params : {
-		     index : [{type:'Number'}]
-         },
 		 return : 'void'
 	 }
      :DOC*/
@@ -526,7 +506,7 @@ var RedLine;
      :DOC*/
     RedLine.prototype['removeAllPoint'] = function () {
         this['points'].length = 0;
-        parsePointsByType(this, this['_tension'], this['_tolerance'], this['_distance']);
+        this['_interleaveData'].length = 0;
         // indexData.length = 0;
         this['_upload']();
     };
@@ -552,18 +532,6 @@ var RedLine;
             this['_material'] = v;
         }
     });
-    /**DOC:
-     {
-		 code : 'PROPERTY',
-		 title :`type`,
-		 description : `
-             라인 타입
-             기본값 : RedLine.LINEAR
-             허용값 : RedLine.LINEAR, RedLine.CATMULL_ROM, RedLine.BEZIER
-		 `,
-		 return : 'string'
-	 }
-     :DOC*/
     Object.defineProperty(RedLine.prototype, 'type', {
         get: function () {
             return this['_type'];
@@ -577,7 +545,7 @@ var RedLine;
     /**DOC:
      {
 		 code : 'PROPERTY',
-		 title :`tension`,
+		 title :`distance`,
 		 description : `
 		 type이 RedLine.CATMULL_ROM 일 경우의 장력
 		 기본값 1
@@ -587,6 +555,7 @@ var RedLine;
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedLine', 'tension', 'number', {
+        min: 0,
         callback: function (v) {
             parsePointsByType(this, this['_tension'], this['_tolerance'], this['_distance']);
         }
@@ -597,7 +566,7 @@ var RedLine;
 		 title :`distance`,
 		 description : `
 		 포인트간 최소 간격
-		 기본값 0.1
+		 기본값 0.4
 		 최소값 0
 		 `,
 		 return : 'Number'
@@ -626,8 +595,5 @@ var RedLine;
             else destroyDebugMesh(this)
         }
     });
-    RedLine.prototype['_simplifyPoints'] = simplifyPoints;
-    RedLine.prototype['_getPointsOnBezierCurves'] = getPointsOnBezierCurves;
-
     Object.freeze(RedLine);
 })();

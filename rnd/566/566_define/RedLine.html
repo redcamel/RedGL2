@@ -1,0 +1,189 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>redGL - RedLine RnD</title>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
+    />
+    <link rel="stylesheet" href="../../../example/example.css">
+
+    <script src="../../../example/dat.gui.min.js"></script>
+    <script src="../../../example/baseTestUI.js"></script>
+    <script src="../../../release/RedGL.min.js"></script>
+
+    <script src="RedLinePoint.js"></script>
+    <script src="RedLine.js"></script>
+</head>
+
+<body>
+<script id='testSource'>
+    var canvas
+    var assetPath = '../../asset/'
+    canvas = document.createElement('canvas')
+    document.body.appendChild(canvas)
+
+    var targetMesh
+    var testOption = {
+        type: RedLine.LINEAR,
+        drawMode: 'LINE_STRIP',
+        pointSize: 1,
+        distance: 0.4,
+        tolerance: 0.15,
+        tension: 1,
+        debug: false
+    }
+    var testPointsLaw
+    var testUI
+    testPointsLaw = [
+        {
+            point: [100, 350, 0]
+        },
+        {
+            point: [200, 100, 0]
+        },
+        {
+            point: [300, 350, 0]
+        },
+        {
+            point: [400, 150, 0]
+        },
+        {
+            point: [500, 350, 0]
+        },
+        {
+            point: [600, 200, 0]
+        },
+        {
+            point: [700, 350, 0]
+        }
+    ]
+
+    var makeLine = function (redGL, tScene) {
+
+        if (targetMesh) {
+            tScene.removeChild(targetMesh)
+            targetMesh = null;
+        }
+        targetMesh = RedLine(redGL)
+        console.log(targetMesh)
+        console.log(testPointsLaw)
+        //
+        targetMesh.type = RedLine.LINEAR
+        testPointsLaw.forEach(function (v) {
+            targetMesh.addPoint(v['point'][0], v['point'][1], v['point'][2])
+        });
+
+        targetMesh.drawMode = redGL.gl[testOption.drawMode]
+        console.log(targetMesh)
+
+        // targetMesh.drawMode = this.gl.POINTS
+        targetMesh.pointSize = testOption.pointSize
+        targetMesh.useCullFace = false
+        tScene.addChild(targetMesh)
+
+
+    }
+    RedGL(canvas, function (v) {
+        if (v) {
+            console.log('초기화 성공!')
+            var tWorld, tView, tScene, tController, tRenderer
+            var setBase = function (redGL) {
+                // 월드 생성
+                redGL['world'] = tWorld = RedWorld()
+                // 씬 생성
+                tScene = RedScene(redGL)
+                // 카메라 생성
+                tController = RedObitController(redGL)
+                tController.pan = 0
+                tController.tilt = 0
+                tController.distance = 1000
+                tController.speedDistance = 50
+                var tLight = RedDirectionalLight(redGL)
+                tScene.addLight(tLight)
+                tLight.x = 30
+                tLight.y = 30
+                tLight.z = 30
+                tLight.debug = true
+                tLight = RedDirectionalLight(redGL)
+                tScene.addLight(tLight)
+                tLight.x = -30
+                tLight.y = -30
+                tLight.z = -30
+                tLight.debug = true
+                // 렌더러 생성
+                tRenderer = RedRenderer()
+                // 뷰생성 및 적용
+                tView = RedView('HelloRedGL', redGL, tScene, tController)
+                tWorld.addView(tView)
+                // 그리드 설정
+                tScene['grid'] = RedGrid(redGL)
+                tScene['axis'] = RedAxis(redGL)
+                // 렌더시작
+                tRenderer.start(redGL, function (time) {
+                })
+                // 렌더 디버거 활성화
+                tRenderer.setDebugButton()
+                // testUI 호출
+                console.log(redGL)
+            }
+            setBase(this)
+            // Mesh 설정
+
+            testUI(this, tScene)
+            makeLine(this, tScene)
+
+        } else {
+            console.log('초기화 실패!')
+        }
+    })
+    testUI = function (redGL, tScene) {
+        // return
+        console.log('test')
+        var gui = new baseTestUI(redGL)
+        gui.initRedGL()
+
+        var tFolder
+        var testList = {
+            testList: testPointsLaw
+        }
+        tFolder = gui['gui'].addFolder('RedMesh')
+        tFolder.open()
+        tFolder.add(testOption, 'drawMode', ['TRIANGLES', 'TRIANGLE_STRIP', 'TRIANGLE_FAN', 'LINES', 'LINE_LOOP', 'LINE_STRIP', 'POINTS']).onChange(function (v) {
+            tScene.children.forEach(function (v2) {
+                v2.drawMode = redGL.gl[v]
+            })
+        })
+        tFolder.add(testOption, 'pointSize', 1, 100).onChange(function (v) {
+            tScene.children.forEach(function (v2) {
+                v2.pointSize = v
+            })
+        })
+        tFolder.add(testOption, 'type', [RedLine.LINEAR, RedLine.CATMULL_ROM, RedLine.BEZIER])
+            .onChange(function (v) {
+                tScene.children.forEach(function (v2) {
+                    v2.type = v
+                })
+            })
+        tFolder.add(testOption, 'tension', 0, 3, 0.01).onChange(function (v) {
+            tScene.children.forEach(function (v2) {
+                v2.tension = v
+            })
+        })
+        tFolder.add(testOption, 'distance', 0, 3, 0.01).onChange(function (v) {
+            tScene.children.forEach(function (v2) {
+                v2.distance = v
+            })
+        })
+        tFolder.add(testOption, 'debug').onChange(function (v) {
+            tScene.children.forEach(function (v2) {
+                v2.debug = v
+            })
+        })
+    }
+</script>
+</body>
+
+</html>

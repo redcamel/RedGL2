@@ -117,7 +117,8 @@ var RedPlane;
         height = height || 1;
         wSegments = wSegments || 1;
         hSegments = hSegments || 1;
-        tType = 'RedPlane' + '_' + width + '_' + height + '_' + wSegments + '_' + hSegments+'_'+flipY;
+        flipY = flipY ? true : false;
+        tType = 'RedPlane' + '_' + width + '_' + height + '_' + wSegments + '_' + hSegments + '_' + flipY;
         // 유일키 방어
         if (!redGL['_datas']['Primitives']) redGL['_datas']['Primitives'] = {};
         if (redGL['_datas']['Primitives'][tType]) return redGL['_datas']['Primitives'][tType];

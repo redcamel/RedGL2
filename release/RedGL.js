@@ -1501,6 +1501,17 @@ var RedDefinePropertyInfo;
                                     if (option && option['callback']) option['callback'].call(this, v)
                                 }
                             }
+                        }else{
+                            result = {
+                                get: function () {
+                                    return this['_' + name];
+                                },
+                                set: function (v) {
+                                    if (typeof v != 'number') RedGLUtil.throwFunc(clsName + ' - ' + name + ' : 숫자만 허용함.', '입력값 : ' + v)
+                                    this['_' + name] = v
+                                    if (option && option['callback']) option['callback'].call(this, v)
+                                }
+                            }
                         }
                     }
                 } else {
@@ -3731,7 +3742,7 @@ var RedBaseContainer;
         if (recursive) {
             var i = this.children.length;
             while (i--) {
-                if(this.children[i].sortGeometry)this.children[i].sortGeometry(recursive)
+                if (this.children[i].sortGeometry) this.children[i].sortGeometry(recursive)
             }
         }
         this.children.sort(function (a, b) {
@@ -3767,7 +3778,7 @@ var RedBaseContainer;
         if (recursive) {
             var i = this.children.length;
             while (i--) {
-                if(this.children[i].sortMaterial) this.children[i].sortMaterial(recursive)
+                if (this.children[i].sortMaterial) this.children[i].sortMaterial(recursive)
             }
         }
         this.children.sort(function (a, b) {
@@ -3801,7 +3812,7 @@ var RedBaseContainer;
         if (recursive) {
             var i = this.children.length;
             while (i--) {
-                if(this.children[i].sortGeometryAndMaterial) this.children[i].sortGeometryAndMaterial(recursive)
+                if (this.children[i].sortGeometryAndMaterial) this.children[i].sortGeometryAndMaterial(recursive)
             }
         }
         this.children.sort(function (a, b) {
@@ -3865,7 +3876,7 @@ var RedBaseContainer;
         child instanceof RedBaseObject3D || RedGLUtil.throwFunc('addChildAt', 'RedBaseObject3D Instance만 가능', '입력값 : ' + child);
         if (this['children'].indexOf(child) > -1) this['removeChild'](child);
         if (this['children'].length < index) index = this['children'].length;
-        if (index) this['children'].splice(index, 0, child);
+        if (index != undefined) this['children'].splice(index, 0, child);
         else this['children'].push(child);
     };
     /**DOC:
@@ -9701,6 +9712,7 @@ var RedDirectionalLight;
                 )
             )
         );
+
         console.log(this);
     };
     /**DOC:
@@ -13701,6 +13713,657 @@ var RedGLTFLoader;
     Object.freeze(RedGLTFLoader);
 })();
 "use strict";
+var RedLinePoint;
+(function () {
+    /**DOC:
+     {
+		 constructorYn : true,
+		 title :`RedLinePoint`,
+		 description : `
+			 RedLinePoint 객체.
+			 RedLine 내부에서 자동 생성됨.
+		 `,
+		 params : {
+			 x : [
+				 {type:'Number'}
+			 ],
+			 y : [
+				 {type:'Number'}
+			 ],
+			 z : [
+				 {type:'Number'}
+			 ],
+			 inX : [
+				 {type:'Number'},
+				 '기본값 : 0',
+				 'inPointX 값',
+				 'RedLine.LINEAR 모드에서는 사용되지않음',
+				 'RedLine.CATMULL_ROM 모드에서는 자동 생성됨'
+			 ],
+			 inY : [
+				 {type:'Number'},
+				 '기본값 : 0',
+				 'inPointY 값',
+				 'RedLine.LINEAR 모드에서는 사용되지않음',
+				 'RedLine.CATMULL_ROM 모드에서는 자동 생성됨'
+			 ],
+			 inZ : [
+				 {type:'Number'},
+				 '기본값 : 0',
+				 'inPointZ 값',
+				 'RedLine.LINEAR 모드에서는 사용되지않음',
+				 'RedLine.CATMULL_ROM 모드에서는 자동 생성됨'
+			 ],
+			 outX : [
+				 {type:'Number'},
+				 '기본값 : 0',
+				 'outPointX 값',
+				 'RedLine.LINEAR 모드에서는 사용되지않음',
+				 'RedLine.CATMULL_ROM 모드에서는 자동 생성됨'
+			 ],
+			 outY : [
+				 {type:'Number'},
+				 '기본값 : 0',
+				 'outPointY 값',
+				 'RedLine.LINEAR 모드에서는 사용되지않음',
+				 'RedLine.CATMULL_ROM 모드에서는 자동 생성됨'
+			 ],
+			 outZ : [
+				 {type:'Number'},
+				 '기본값 : 0',
+				 'outPointZ 값',
+				 'RedLine.LINEAR 모드에서는 사용되지않음',
+				 'RedLine.CATMULL_ROM 모드에서는 자동 생성됨'
+			 ]
+		 },
+		 return : 'RedLinePoint Instance'
+	 }
+     :DOC*/
+    RedLinePoint = function (x, y, z, inX, inY, inZ, outX, outY, outZ) {
+        if (!(this instanceof RedLinePoint)) return new RedLinePoint(x, y, z, inX, inY, inZ, outX, outY, outZ);
+        this['_inPoint'] = [inX || 0, inY || 0, inZ || 0];
+        this['_point'] = [x || 0, y || 0, z || 0];
+        this['_outPoint'] = [outX || 0, outY || 0, outZ || 0];
+        this['_UUID'] = RedGL.makeUUID();
+        console.log(this)
+    };
+    /**DOC:
+     {
+		code : 'PROPERTY',
+		title :`_point`,
+		description : `
+			포인트 위치 배열
+		`,
+		return : 'Boolean'
+	}
+     :DOC*/
+    /**DOC:
+     {
+		code : 'PROPERTY',
+		title :`_inPoint`,
+		description : `
+			컨트롤 포인트1 위치 배열
+		`,
+		return : 'Boolean'
+	}
+     :DOC*/
+    /**DOC:
+     {
+		code : 'PROPERTY',
+		title :`_outPoint`,
+		description : `
+			컨트롤 포인트2 위치 배열
+		`,
+		return : 'Boolean'
+	}
+     :DOC*/
+    Object.freeze(RedLinePoint);
+})();
+"use strict";
+var RedLathe;
+(function () {
+    // https://webglfundamentals.org/webgl/lessons/webgl-3d-geometry-lathe.html
+    var makeData;
+    var parsePathString;
+    var lerp;
+    var lathePoints;
+    var makeIndexedIndicesFn;
+    var makeUnindexedIndicesFn;
+    var makeIndiceIterator;
+    var generateNormals;
+    parsePathString = function (svg, flipX, flipY) {
+        var points = [];
+        var delta = false;
+        var keepNext = false;
+        var need = 0;
+        var value = '';
+        var values = [];
+        var lastValues = [0, 0];
+        var nextLastValues = [0, 0];
+        var mode;
+
+        function addValue() {
+            if (value.length > 0) {
+                var v = parseFloat(value);
+                // if (v > 1000) debugger;  // eslint-disable-line
+                values.push(v);
+                if (values.length === 2) {
+                    if (delta) values[0] += lastValues[0], values[1] += lastValues[1];
+                    points.push(values);
+                    if (keepNext) nextLastValues = values.slice();
+                    --need;
+                    if (!need) {
+                        if (mode === 'l') {
+                            var m4 = points.pop();
+                            var m1 = points.pop();
+                            var m2 = vec2.lerp([0, 0], m1, m4, 0.25);
+                            var m3 = vec2.lerp([0, 0], m1, m4, 0.75);
+                            points.push(m1, m2, m3, m4);
+                        }
+                        lastValues = nextLastValues;
+                    }
+                    values = [];
+                }
+                value = '';
+            }
+        }
+
+        var i, len;
+        var pathSplitData = svg.split('');
+        var targetStr;
+        i = 0, len = pathSplitData.length;
+        for (i; i < len; i++) {
+            targetStr = pathSplitData[i];
+            if ((targetStr >= '0' && targetStr <= '9') || targetStr === '.') value += targetStr;
+            else if (targetStr === '-') addValue(), value = '-';
+            else if (targetStr === 'm') addValue(), keepNext = true, need = 1, delta = true, mode = 'm';
+            else if (targetStr === 'c') addValue(), keepNext = true, need = 3, delta = true, mode = 'c';
+            else if (targetStr === 'l') addValue(), keepNext = true, need = 1, delta = false, mode = 'l';
+            else if (targetStr === 'M') addValue(), keepNext = true, need = 1, delta = false, mode = 'm';
+            else if (targetStr === 'C') addValue(), keepNext = true, need = 3, delta = false, mode = 'c';
+            else if (targetStr === 'L') addValue(), keepNext = true, need = 1, delta = false, mode = 'l';
+            else if (targetStr === 'Z') {
+            }// close the loop
+            else if (targetStr === ',') addValue();
+            else if (targetStr === ' ') addValue();
+            // else debugger;  // eslint-disable-line
+        }
+        addValue();
+        var min = points[0].slice();
+        var max = points[0].slice();
+        i = 1, len = points.length;
+        for (i; i < len; ++i) min = vec2.min([0, 0], min, points[i]), max = vec2.max([0, 0], max, points[i]);
+        var range = vec2.sub([0, 0], max, min);
+        var halfRange = vec2.scale([0, 0], range, .5);
+        i = 0;
+        var targetPoint;
+        for (i; i < len; ++i) {
+            targetPoint = points[i];
+            if (flipX) targetPoint[0] = max[0] - targetPoint[0];
+            else targetPoint[0] = targetPoint[0] - min[0];
+            if (flipY) targetPoint[1] = halfRange[1] - (targetPoint[1] - min[0]);
+            else targetPoint[1] = (targetPoint[1] - min[0]) - halfRange[1];
+        }
+        return points;
+    };
+
+
+    lerp = function (a, b, t) {
+        return a + (b - a) * t;
+    };
+
+    var makeTexcoord_vList;
+    var makePositionAndTexcoordData;
+    var makeIndexData;
+    makeTexcoord_vList = (function () {
+        var texcoord_vList;
+        var length;
+        var i;
+        var len;
+        return function (points) {
+            texcoord_vList = [];
+            // 포인트의 길이를 일단 구한다.
+            length = 0;
+            i = 0;
+            len = points.length;
+            for (i; i < len - 1; ++i) {
+                texcoord_vList[i] = length;
+                length += vec2.distance(points[i], points[i + 1]);
+            }
+            texcoord_vList.push(length);
+            // 각 포인트를 전체 길이로 나눈 값을 개별 코디네이트 Y로 정한다.
+            texcoord_vList = texcoord_vList.map(function (v) {
+                return v / length;
+            });
+            return texcoord_vList
+        }
+    })();
+    makePositionAndTexcoordData = (function () {
+        var i;
+        var len;
+        var divisionIndex;
+        var tempMAT4 = mat4.create();
+        var texcoord_u;
+        var angle;
+        var angleMTX;
+        return function (points, texcoord_vList, startAngle, endAngle, numDivisions, capStart, capEnd) {
+            var positions = [];
+            var texcoords = [];
+            divisionIndex = 0;
+            for (divisionIndex; divisionIndex <= numDivisions; ++divisionIndex) {
+                texcoord_u = divisionIndex / numDivisions; // 분할갯수를 근거로 코디네이트 X를 정한다.
+                angle = lerp(startAngle, endAngle, texcoord_u) % (Math.PI * 2); // texcoord_u는 0~1이므로 보간 인자값으로 활용가능
+                angleMTX = mat4.fromYRotation(tempMAT4, angle);
+                if (capStart) {
+                    // 상단을 닫을 경우
+                    positions.push(0, points[0][1], 0);
+                    texcoords.push(texcoord_u, 0);
+                }
+                var targetPoint;
+                i = 0;
+                len = points.length;
+                for (i; i < len; i++) {
+                    targetPoint = points[i];
+                    targetPoint = vec3.transformMat4([0, 0, 0], [targetPoint[0], targetPoint[1], 0], angleMTX);
+                    positions.push(targetPoint[0], targetPoint[1], targetPoint[2]);
+                    texcoords.push(texcoord_u, texcoord_vList[i]);
+                }
+                if (capEnd) {
+                    // 하단을 닫을 경우
+                    positions.push(0, points[points.length - 1][1], 0);
+                    texcoords.push(texcoord_u, 1);
+                }
+            }
+            return {
+                positions: positions,
+                texcoords: texcoords
+            }
+        }
+    })();
+    makeIndexData = (function () {
+        var division = 0;
+        var column1Offset;
+        var column2Offset;
+        var quad;
+        return function (numDivisions, pointsPerColumn, quadsDown) {
+            var indices = [];
+            division = 0;
+            for (division; division < numDivisions; ++division) {
+                column1Offset = division * pointsPerColumn;
+                column2Offset = column1Offset + pointsPerColumn;
+                quad = 0;
+                for (quad; quad < quadsDown; ++quad) {
+                    indices.push(column1Offset + quad, column1Offset + quad + 1, column2Offset + quad);
+                    indices.push(column1Offset + quad + 1, column2Offset + quad + 1, column2Offset + quad);
+                }
+            }
+            return indices;
+        }
+    })();
+    lathePoints = function (points,
+                            startAngle,   // 시작각도
+                            endAngle,     // 종료각도
+                            numDivisions, // 분할갯수
+                            capStart,     // 상단닫기
+                            capEnd,  // 하단닫기
+                            flipY
+    ) {
+        var positions;
+        var texcoords;
+        var indices;
+
+        var vOffset = capStart ? 1 : 0;
+        var pointsPerColumn = points.length + vOffset + (capEnd ? 1 : 0);
+        var quadsDown = pointsPerColumn - 1;
+
+        // 세로 코디네이트 생성
+        var texcoord_vList = makeTexcoord_vList(points);
+
+        // 분할 갯수만큼 포인틀를 생성해 나간다.
+        var temp = makePositionAndTexcoordData(points, texcoord_vList, startAngle, endAngle, numDivisions, capStart, capEnd);
+        positions = temp['positions'];
+        texcoords = temp['texcoords'];
+        // 인덱스 생성
+        indices = makeIndexData(numDivisions, pointsPerColumn, quadsDown, flipY);
+        return {
+            position: positions,
+            texcoord: texcoords,
+            indices: indices
+        };
+    };
+    makeIndexedIndicesFn = function (arrays) {
+        var indices = arrays.indices;
+        var ndx = 0;
+        var fn = function () {
+            return indices[ndx++];
+        };
+        fn.reset = function () {
+            ndx = 0;
+        };
+        fn.numElements = indices.length;
+        return fn;
+    };
+
+    makeUnindexedIndicesFn = function (arrays) {
+        console.log('여기로오는일이 있냐');
+        var ndx = 0;
+        var fn = function () {
+            return ndx++;
+        };
+        fn.reset = function () {
+            ndx = 0;
+        };
+        fn.numElements = arrays['positions'].length / 3;
+        return fn;
+    };
+
+    makeIndiceIterator = function (arrays) {
+        return arrays.indices ? makeIndexedIndicesFn(arrays) : makeUnindexedIndicesFn(arrays);
+    };
+
+    generateNormals = function (arrays, maxAngle) {
+        var positions = arrays['position'];
+        var texcoords = arrays['texcoord'];
+        // first compute the normal of each face
+        var getNextIndex = makeIndiceIterator(arrays);
+        var numFaceVerts = getNextIndex['numElements'];
+        var numVerts = arrays['position'].length;
+        var numFaces = numFaceVerts / 3;
+        var faceNormals = [];
+        // Compute the normal for every face.
+        // While doing that, create a new vertex for every face vertex
+        var i = 0;
+        var j;
+        for (i; i < numFaces; ++i) {
+            var n1 = getNextIndex() * 3;
+            var n2 = getNextIndex() * 3;
+            var n3 = getNextIndex() * 3;
+            var v1 = positions.slice(n1, n1 + 3);
+            var v2 = positions.slice(n2, n2 + 3);
+            var v3 = positions.slice(n3, n3 + 3);
+            faceNormals.push(
+                vec3.normalize(
+                    [0, 0, 0],
+                    vec3.cross(
+                        [0, 0, 0],
+                        vec3.sub([0, 0, 0], v1, v2),
+                        vec3.sub([0, 0, 0], v3, v2)
+                    )
+                )
+            );
+        }
+        var tempVerts = {};
+        var tempVertNdx = 0;
+
+        // this assumes vertex positions are an exact match
+        function getVertIndex(v) {
+            var vertId = v;
+            var ndx = tempVerts[vertId];
+            if (ndx !== undefined) return ndx;
+            var newNdx = tempVertNdx++;
+            tempVerts[vertId] = newNdx;
+            return newNdx;
+        }
+
+        // We need to figure out the shared vertices.
+        // It's not as simple as looking at the faces (triangles)
+        // because for example if we have a standard cylinder
+        //
+        //
+        //      3-4
+        //     /   \
+        //    2     5   Looking down a cylinder starting at S
+        //    |     |   and going around to E, E and S are not
+        //    1     6   the same vertex in the data we have
+        //     \   /    as they don't share UV coords.
+        //      S/E
+        //
+        // the vertices at the start and end do not share vertices
+        // since they have different UVs but if you don't consider
+        // them to share vertices they will get the wrong normals
+
+        var vertIndices = [];
+        for (i = 0; i < numVerts; ++i) {
+            var offset = i * 3;
+            var vert = positions.slice(offset, offset + 3);
+            vertIndices.push(getVertIndex(vert));
+        }
+
+        // go through every vertex and record which faces it's on
+        var vertFaces = [];
+        getNextIndex.reset();
+        for (i = 0; i < numFaces; ++i) {
+            for (j = 0; j < 3; ++j) {
+                var ndx = getNextIndex();
+                var sharedNdx = vertIndices[ndx];
+                var faces = vertFaces[sharedNdx];
+                if (!faces) {
+                    faces = [];
+                    vertFaces[sharedNdx] = faces;
+                }
+                faces.push(i);
+            }
+        }
+
+        // now go through every face and compute the normals for each
+        // vertex of the face. Only include faces that aren't more than
+        // maxAngle different. Add the result to arrays of newPositions,
+        // newTexcoords and newNormals, discarding any vertices that
+        // are the same.
+        tempVerts = {};
+        tempVertNdx = 0;
+        var newPositions = [];
+        var newTexcoords = [];
+        var newNormals = [];
+
+        function getNewVertIndex(x, y, z, nx, ny, nz, u, v) {
+            var vertId =
+                x + "," + y + "," + z + "," +
+                nx + "," + ny + "," + nz + "," +
+                u + "," + v;
+
+            var ndx = tempVerts[vertId];
+            if (ndx !== undefined) return ndx;
+            var newNdx = tempVertNdx++;
+            tempVerts[vertId] = newNdx;
+            newPositions.push(x, y, z);
+            newNormals.push(nx, ny, nz);
+            newTexcoords.push(u, v);
+            return newNdx;
+        }
+
+        var newVertIndices = [];
+        getNextIndex.reset();
+        var maxAngleCos = Math.cos(maxAngle);
+        // for each face
+        for (i = 0; i < numFaces; ++i) {
+            // var thisFaceVertexNormals = [];
+            // get the normal for this face
+            var thisFaceNormal = faceNormals[i];
+            // for each vertex on the face
+            for (j = 0; j < 3; ++j) {
+                var ndx = getNextIndex();
+                var sharedNdx = vertIndices[ndx];
+                var faces = vertFaces[sharedNdx];
+                var norm = [0, 0, 0];
+                faces.forEach(function (faceNdx) {
+                    // is this face facing the same way
+                    var otherFaceNormal = faceNormals[faceNdx];
+                    var dot = vec3.dot(thisFaceNormal, otherFaceNormal);
+                    if (dot > maxAngleCos) {
+                        vec3.add(norm, norm, otherFaceNormal);
+                    }
+                });
+                vec3.normalize(norm, norm);
+                var poffset = ndx * 3;
+                var toffset = ndx * 2;
+
+
+                newVertIndices.push(
+                    getNewVertIndex(
+                        positions[poffset + 0], positions[poffset + 1], positions[poffset + 2],
+                        norm[0], norm[1], norm[2],
+                        texcoords[toffset + 0], texcoords[toffset + 1]
+                    )
+                );
+
+            }
+        }
+        return {
+            position: newPositions,
+            texcoord: newTexcoords,
+            normal: newNormals,
+            indices: newVertIndices
+        };
+    };
+
+    makeData = function (redGL, type, finalData) {
+        ////////////////////////////////////////////////////////////////////////////
+        // 데이터 생성!
+        // buffers Data
+        var interleaveData = [];
+        var indexData;
+        var positions = finalData['position'];
+        var normals = finalData['normal'];
+        var texcoords = finalData['texcoord'];
+        indexData = finalData['indices'];
+        var i = 0, len = positions.length / 3;
+        var offset;
+        for (i; i < len; i++) {
+            offset = i * 3;
+            interleaveData.push(positions[offset + 0], positions[offset + 1], positions[offset + 2]);
+            interleaveData.push(normals[offset + 0], normals[offset + 1], normals[offset + 2]);
+            offset = i * 2
+            interleaveData.push(texcoords[offset + 0], texcoords[offset + 1])
+        }
+        ////////////////////////////////////////////////////////////////////////////
+        // console.log(redGL['__datas']['RedPrimitive'])
+        return {
+            interleaveData: interleaveData,
+            indexData: indexData,
+            type: type,
+            interleaveBuffer: RedBuffer(
+                redGL,
+                type + '_interleaveBuffer',
+                RedBuffer.ARRAY_BUFFER,
+                new Float32Array(interleaveData),
+                [
+                    RedInterleaveInfo('aVertexPosition', 3),
+                    RedInterleaveInfo('aVertexNormal', 3),
+                    RedInterleaveInfo('aTexcoord', 2)
+                ]
+            ),
+            indexBuffer: RedBuffer(
+                redGL,
+                type + '_indexBuffer',
+                RedBuffer.ELEMENT_ARRAY_BUFFER,
+                new Uint16Array(indexData)
+            )
+        }
+    };
+    /**DOC:
+     {
+		 constructorYn : true,
+		 title :`RedLathe`,
+		 description : `
+			 RedLathe 형태의 RedGeometry 생성
+		 `,
+		 params : {
+			 redGL : [
+				 {type:'RedGL'}
+			 ],
+			 pathString : [
+				 {type:'string'},
+				 'path 문자열',
+				  `<code>"m44,434c18,-33 19,-66 15,-111c-4,-45 -37,-104 -39,-132c-2,-28 11,-51 16,-81c5,-30 3,-63 -36,-63"</code>`
+			 ],
+			 numDivisions : [
+				 {type:'uint'},
+				 '기본값 : 16'
+			 ],
+			 capStart : [
+				 {type:'boolean'},
+				 '기본값 : false'
+			 ],
+			 capEnd : [
+				 {type:'boolean'},
+				 '기본값 : false'
+			 ],
+			 startAngle : [
+				 {type:'number'},
+				 '기본값 : 0.0'
+			 ],
+			 endAngle : [
+				 {type:'Boolean'},
+				 '기본값 : Math.PI * 2'
+			 ],
+			 maxAngle : [
+				 {type:'number'},
+				 '기본값 : Math.PI / 180 * 30'
+			 ],
+			 tolerance : [
+				 {type:'number'},
+				 '기본값 : 0.15'
+			 ],
+			 flipX : [
+			    {type:'boolean'},
+				'기본값 : false'
+			 ],
+			 flipY : [
+			    {type:'boolean'},
+				'기본값 : false'
+			 ]
+		 },
+		 extends : [
+		    'RedGeometry'
+		 ],
+		 demo : '../example/object3D/RedLatheMesh.html',
+		 return : 'RedLathe Instance'
+	 }
+     :DOC*/
+    RedLathe = function (redGL, pathString, numDivisions, capStart, capEnd, startAngle, endAngle, maxAngle, distance, tolerance, flipX, flipY) {
+        if (!(this instanceof RedLathe)) return new RedLathe(redGL, pathString, numDivisions, capStart, capEnd, startAngle, endAngle, maxAngle, distance, tolerance, flipX, flipY);
+        redGL instanceof RedGL || RedGLUtil.throwFunc('RedPrimitive : RedGL Instance만 허용.', redGL);
+        // 기본값 정의
+        var tType, tPrimitiveData;
+        numDivisions = Math.floor(numDivisions) || 16;
+        capStart = capStart !== undefined ? capStart : false;
+        capEnd = capEnd !== undefined ? capEnd : false;
+        startAngle = startAngle !== undefined ? startAngle : 0.0;
+        endAngle = endAngle !== undefined ? endAngle : Math.PI * 2;
+        distance = distance !== undefined ? distance : 0.4;
+        maxAngle = maxAngle !== undefined ? maxAngle : Math.PI / 180 * 30;
+        tolerance = tolerance !== undefined ? tolerance : 0.15;
+        if (tolerance < 0.1) tolerance = 0.1;
+        // 키생성
+        tType = 'RedLathe' + '_' + pathString + '_' + numDivisions + '_' + capStart + '_' + capEnd + '_' + startAngle + '_' + endAngle + '_' + maxAngle + '_' + distance + '_' + tolerance + '_' + flipX + '_' + flipY;
+        // console.log(tType)
+        // 유일키 방어
+        if (!redGL['_datas']['Primitives']) redGL['_datas']['Primitives'] = {};
+        if (redGL['_datas']['Primitives'][tType]) return redGL['_datas']['Primitives'][tType];
+        else redGL['_datas']['Primitives'][tType] = this;
+
+        // path 문자 해석
+        var parsedPoints = parsePathString(pathString, flipX, flipY);
+        // 베지어 포인트 해석
+        var tempPoints = RedLine.prototype['_getPointsOnBezierCurves'](parsedPoints, tolerance);
+        // 단순화
+        var points = RedLine.prototype['_simplifyPoints'](tempPoints, 0, tempPoints.length, distance);
+        // 레이스 계산
+        var parsedLathePoints = lathePoints(points, startAngle, endAngle, numDivisions, capStart, capEnd);
+        // 노말생성 및 데이터 생성
+        tPrimitiveData = makeData(redGL, tType, generateNormals(parsedLathePoints, maxAngle), numDivisions, capStart, capEnd, startAngle, endAngle);
+        this['interleaveBuffer'] = tPrimitiveData['interleaveBuffer'];
+        this['indexBuffer'] = tPrimitiveData['indexBuffer'];
+        this['interleaveBuffer']['isPrimitiveBuffer'] = true;
+        this['indexBuffer']['isPrimitiveBuffer'] = true;
+        this['_UUID'] = RedGL.makeUUID();
+        console.log(this)
+    };
+    RedLathe.prototype = Object.create(RedGeometry.prototype);
+    Object.freeze(RedLathe);
+})();
+"use strict";
 var RedAxis;
 (function () {
     /**DOC:
@@ -14073,6 +14736,317 @@ var RedMesh;
 "use strict";
 var RedLine;
 (function () {
+    var solveCatmullRomPoint;
+    var getPointsOnBezierCurves;
+    var serializePoints;
+    var parsePointsByType;
+    var setDebugMeshs, destroyDebugMesh;
+    var simplifyPoints;
+    var vec2_distanceToSegmentSq;
+    vec2_distanceToSegmentSq = function (p, v, w) {
+        var l2 = vec2.sqrDist(v, w);
+        if (l2 === 0) return vec2.sqrDist(p, v);
+        var t = ((p[0] - v[0]) * (w[0] - v[0]) + (p[1] - v[1]) * (w[1] - v[1])) / l2;
+        t = Math.max(0, Math.min(1, t));
+        return vec2.sqrDist(p, vec2.lerp([0, 0], v, w, t));
+    };
+    simplifyPoints = function (points, start, end, epsilon, newPoints) {
+        var outPoints = newPoints || [];
+        // find the most distant point from the line formed by the endpoints
+        var s = points[start];
+        var e = points[end - 1];
+        var maxDistSq = 0;
+        var maxNdx = 1;
+        var i = start + 1
+        for (i; i < end - 1; ++i) {
+            var distSq = vec2_distanceToSegmentSq(points[i], s, e);
+            if (distSq > maxDistSq) {
+                maxDistSq = distSq;
+                maxNdx = i;
+            }
+        }
+        // if that point is too far
+        if (Math.sqrt(maxDistSq) > epsilon) {
+            // split
+            simplifyPoints(points, start, maxNdx + 1, epsilon, outPoints);
+            simplifyPoints(points, maxNdx, end, epsilon, outPoints);
+        } else outPoints.push(s, e);// add the 2 end points
+        return outPoints;
+    };
+    solveCatmullRomPoint = function (points, tension) {
+        if (tension == null) tension = 1;
+        var size = points.length;
+        var last = size - 2;
+        var i = 0;
+        var p0, p1, p2, p3;
+        for (i; i < size - 1; i++) {
+            // 이전 포인트를 구함
+            p0 = i ? points[i - 1]['_point'] : points[i]['_point'];
+            // 현재 포인트를 구함
+            p1 = points[i]['_point'];
+            // 다음 포인트를 구함
+            p2 = points[i + 1]['_point'];
+            // 다다음 포인트를 구함
+            p3 = i == last ? p2 : points[i + 2]['_point'];
+
+            points[i]['_outPoint'][0] = p1[0] + (p2[0] - p0[0]) / 6 * tension;
+            points[i]['_outPoint'][1] = p1[1] + (p2[1] - p0[1]) / 6 * tension;
+            points[i]['_outPoint'][2] = p1[2] + (p2[2] - p0[2]) / 6 * tension;
+
+            points[i + 1]['_inPoint'][0] = p2[0] - (p3[0] - p1[0]) / 6 * tension;
+            points[i + 1]['_inPoint'][1] = p2[1] - (p3[1] - p1[1]) / 6 * tension;
+            points[i + 1]['_inPoint'][2] = p2[2] - (p3[2] - p1[2]) / 6 * tension;
+        }
+        return points;
+    };
+    serializePoints = function (points) {
+        var newPointList = [];
+        var i, len;
+        var index = 0;
+        var targetPoint;
+
+        i = 0;
+        len = points.length;
+        for (i; i < len; i++) {
+            targetPoint = points[i];
+
+            if (index == 0) {
+                newPointList[index++] = targetPoint['_point']
+                newPointList[index++] = targetPoint['_outPoint']
+                //
+            } else {
+                newPointList[index++] = targetPoint['_inPoint']
+                newPointList[index++] = targetPoint['_point']
+                if (points[i + 1]) newPointList[index++] = targetPoint['_outPoint']
+
+            }
+        }
+        console.log(newPointList)
+        return newPointList;
+    };
+    getPointsOnBezierCurves = (function () {
+        var flatness
+        var getPointsOnBezierCurveWithSplitting
+
+        flatness = function (points, offset) {
+            var p1 = points[offset + 0];
+            var c1 = points[offset + 1];
+            var c2 = points[offset + 2];
+            var p4 = points[offset + 3];
+            var ux = 3 * c1[0] - 2 * p1[0] - p4[0];
+            var uy = 3 * c1[1] - 2 * p1[1] - p4[1];
+            var vx = 3 * c2[0] - 2 * p4[0] - p1[0];
+            var vy = 3 * c2[1] - 2 * p4[1] - p1[1];
+            ux *= ux, uy *= uy, vx *= vx, vy *= vy;
+            if (ux < vx) ux = vx;
+            if (uy < vy) uy = vy;
+            return ux + uy;
+        };
+        getPointsOnBezierCurveWithSplitting = function (points, offset, tolerance, newPoints) {
+            var outPoints = newPoints || [];
+            if (flatness(points, offset) < tolerance) {
+                // just add the end points of this curve
+                outPoints.push(points[offset + 0]);
+                outPoints.push(points[offset + 3]);
+            } else {
+                // subdivide
+                var t = .5;
+                var p1 = points[offset + 0];
+                var c1 = points[offset + 1];
+                var c2 = points[offset + 2];
+                var p2 = points[offset + 3];
+                //
+                var q1 = vec3.lerp([0, 0], p1, c1, t);
+                var q2 = vec3.lerp([0, 0], c1, c2, t);
+                var q3 = vec3.lerp([0, 0], c2, p2, t);
+                //
+                var r1 = vec3.lerp([0, 0], q1, q2, t);
+                var r2 = vec3.lerp([0, 0], q2, q3, t);
+                //
+                var red = vec3.lerp([0, 0], r1, r2, t);
+                // do 1st half
+                getPointsOnBezierCurveWithSplitting([p1, q1, r1, red], 0, tolerance, outPoints);
+                // do 2nd half
+                getPointsOnBezierCurveWithSplitting([red, r2, q3, p2], 0, tolerance, outPoints);
+            }
+            return outPoints;
+        };
+        return function (points, tolerance) {
+            var newPoints = [];
+            var numSegments = (points.length - 1) / 3;
+            numSegments = Math.floor(numSegments)
+            var i = 0;
+            var offset
+            for (i; i < numSegments; ++i) {
+                offset = i * 3;
+                getPointsOnBezierCurveWithSplitting(points, offset, tolerance, newPoints);
+            }
+            return newPoints;
+        }
+    })();
+    destroyDebugMesh = function (target) {
+        target['points'].forEach(function (tPoint, index) {
+            var t0;
+            if (tPoint['_debugObjectInPointMesh']) {
+                tPoint['_debugObjectPointMesh'].removeChild(t0 = tPoint['_debugObjectInPointMesh'])
+                t0.disposeAll()
+                tPoint['_debugObjectInPointMesh'] = null
+            }
+            if (tPoint['_debugObjectOutPointMesh']) {
+                tPoint['_debugObjectPointMesh'].removeChild(t0 = tPoint['_debugObjectOutPointMesh'])
+                t0.disposeAll()
+                tPoint['_debugObjectOutPointMesh'] = null
+            }
+            if (tPoint['_debugObjectPointMesh']) {
+                target.removeChild(t0 = tPoint['_debugObjectPointMesh'])
+                t0.disposeAll()
+                tPoint['_debugObjectPointMesh'] = null
+            }
+
+        })
+    };
+    setDebugMeshs = function (target) {
+        var debugSize = 1
+        var tDebugMesh;
+        var redGL = target['_redGL'];
+        var tDebugRoot;
+        var t1;
+        destroyDebugMesh(target)
+        target['points'].forEach(function (tPoint, index) {
+            if (!tPoint['_debugObjectPointMesh']) {
+                tPoint['_debugObjectPointMesh'] = RedMesh(redGL, RedBox(redGL, debugSize, debugSize, debugSize), RedColorMaterial(redGL, '#00ff00'));
+                target.addChild(tPoint['_debugObjectPointMesh']);
+            }
+            tDebugRoot = tPoint['_debugObjectPointMesh'];
+            if (target['_type'] == RedLine.LINEAR) {
+
+            } else {
+                // 인포인트
+                if (index) {
+                    if (!tPoint['_debugObjectInPointMesh']) {
+                        tPoint['_debugObjectInPointMesh'] = RedMesh(
+                            redGL,
+                            RedBox(redGL, debugSize * 0.5, debugSize * 0.5, debugSize * 0.5),
+                            RedColorMaterial(
+                                redGL,
+                                target['_type'] == RedLine.BEZIER ? '#0000ff' : '#fff',
+                                target['_type'] == RedLine.BEZIER ? 1 : 0.5
+                            )
+                        );
+                        t1 = RedLine(redGL, RedColorMaterial(redGL, '#fff', 0.5))
+                        t1.drawMode = redGL.gl.LINES
+                        tDebugRoot.addChild(tPoint['_debugObjectInPointMesh'])
+                        tPoint['_debugObjectInPointMesh'].addChild(t1)
+                    }
+                    t1 = tPoint['_debugObjectInPointMesh'].getChildAt(0);
+                    t1['_interleaveData'].length = 0;
+                    t1['_interleaveData'].push(0, 0, 0);
+                    t1['_interleaveData'].push(
+                        tPoint['_point'][0] - tPoint['_inPoint'][0],
+                        tPoint['_point'][1] - tPoint['_inPoint'][1],
+                        tPoint['_point'][2] - tPoint['_inPoint'][2]
+                    );
+                    t1['_upload']();
+                }
+                if (index != target['points'].length - 1) {
+                    if (!tPoint['_debugObjectOutPointMesh']) {
+                        // 아웃포인트
+                        tPoint['_debugObjectOutPointMesh'] = RedMesh(
+                            redGL,
+                            RedBox(redGL, debugSize * 0.5, debugSize * 0.5, debugSize * 0.5),
+                            RedColorMaterial(
+                                redGL,
+                                target['_type'] == RedLine.BEZIER ? '#ff0000' : '#fff',
+                                target['_type'] == RedLine.BEZIER ? 1 : 0.5
+                            )
+                        );
+                        t1 = RedLine(redGL, RedColorMaterial(redGL, '#fff', 0.5))
+                        t1.drawMode = redGL.gl.LINES
+                        tDebugRoot.addChild(tPoint['_debugObjectOutPointMesh'])
+                        tPoint['_debugObjectOutPointMesh'].addChild(t1)
+                    }
+                    t1 = tPoint['_debugObjectOutPointMesh'].getChildAt(0);
+                    t1['_interleaveData'].length = 0;
+                    t1['_interleaveData'].push(0, 0, 0);
+                    t1['_interleaveData'].push(
+                        tPoint['_point'][0] - tPoint['_outPoint'][0],
+                        tPoint['_point'][1] - tPoint['_outPoint'][1],
+                        tPoint['_point'][2] - tPoint['_outPoint'][2]
+                    );
+                    t1['_upload']();
+                }
+
+
+            }
+            if (tPoint['_debugObjectPointMesh']) {
+                tDebugMesh = tPoint['_debugObjectPointMesh']
+                tDebugMesh['x'] = tPoint['_point'][0]
+                tDebugMesh['y'] = tPoint['_point'][1]
+                tDebugMesh['z'] = tPoint['_point'][2]
+            }
+
+            // 아웃 포인트 디버깅
+            if (tPoint['_debugObjectOutPointMesh']) {
+                tPoint['_debugObjectOutPointMesh']['x'] = tPoint['_outPoint'][0] - tPoint['_point'][0]
+                tPoint['_debugObjectOutPointMesh']['y'] = tPoint['_outPoint'][1] - tPoint['_point'][1]
+                tPoint['_debugObjectOutPointMesh']['z'] = tPoint['_outPoint'][2] - tPoint['_point'][2]
+            }
+
+            // 인 포인트 디버깅
+            if (tPoint['_debugObjectInPointMesh']) {
+                tPoint['_debugObjectInPointMesh']['x'] = tPoint['_inPoint'][0] - tPoint['_point'][0]
+                tPoint['_debugObjectInPointMesh']['y'] = tPoint['_inPoint'][1] - tPoint['_point'][1]
+                tPoint['_debugObjectInPointMesh']['z'] = tPoint['_inPoint'][2] - tPoint['_point'][2]
+            }
+
+        });
+    }
+    parsePointsByType = function (target, tension, tolerance, distance) {
+        // 타입별로 파서 분기
+        console.log(target)
+        target['_interleaveData'].length = 0;
+
+        switch (target['_type']) {
+            case RedLine['CATMULL_ROM'] :
+                if (target['points'].length > 1) {
+                    var newPointList = solveCatmullRomPoint(target['points'], tension);
+                    console.log(newPointList)
+                    target['_serializedPoints'] = serializePoints(newPointList);
+                    newPointList = getPointsOnBezierCurves(target['_serializedPoints'], tolerance);
+                    newPointList = simplifyPoints(newPointList, 0, newPointList.length, distance)
+
+                    var i = 0, len = newPointList.length
+                    for (i; i < len; i++) {
+                        target['_interleaveData'].push(newPointList[i][0], newPointList[i][1], newPointList[i][2])
+                    }
+                } else {
+                    target['_interleaveData'].push(0, 0, 0)
+                }
+                break;
+            case RedLine['BEZIER'] :
+                if (target['points'].length > 1) {
+                    target['_serializedPoints'] = serializePoints(target['points']);
+                    newPointList = getPointsOnBezierCurves(target['_serializedPoints'], tolerance);
+                    newPointList = simplifyPoints(newPointList, 0, newPointList.length, distance)
+
+                    var i = 0, len = newPointList.length
+                    for (i; i < len; i++) {
+                        target['_interleaveData'].push(newPointList[i][0], newPointList[i][1], newPointList[i][2])
+                    }
+                } else {
+                    target['_interleaveData'].push(0, 0, 0)
+                }
+                break;
+            default :
+                target['points'].forEach(function (v) {
+                    target['_interleaveData'].push(v['_point'][0], v['_point'][1], v['_point'][2]);
+                })
+        }
+        if (target['debug']) setDebugMeshs(target)
+        console.log(target['_interleaveData'])
+        // target['_indexData'].push(tIndex);
+        target['_upload']();
+    };
     /**DOC:
      {
 		 constructorYn : true,
@@ -14086,6 +15060,9 @@ var RedLine;
 			 ],
 			 material : [
 				 {type:'RedColorMaterial Instance'}
+			 ],
+			 type : [
+				 {type:'RedLine.LINEAR or RedLine.CATMULL_ROM or RedLine.BEZIER - default : RedLine.LINEAR'}
 			 ]
 		 },
 		 extends : [
@@ -14094,32 +15071,22 @@ var RedLine;
 		 ],
 		 demo : '../example/object3D/RedLine.html',
 		 example : `
-            var tLine;
-            var tX, tY, tZ;
-            var i;
-            tLine = RedLine(RedGL Instance, RedColorMaterial( RedGL Instance ) ); // RedLine Instance 생성
-            i = 60;
-            tX = tY = tZ = 0;
-            while (i--) {
-                tX += Math.random() * 0.5;
-                tY += Math.random() * 0.5;
-                tZ += Math.random() * 0.5;
-                tLine.addPoint(tX, tY, tZ); // 포인트 추가
-            }
+
 		 `,
 		 return : 'RedLine Instance'
 	 }
      :DOC*/
-    RedLine = function (redGL, material) {
-        if (!(this instanceof RedLine)) return new RedLine(redGL, material);
+    RedLine = function (redGL, material, type) {
+        if (!(this instanceof RedLine)) return new RedLine(redGL, material, type);
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedLine : RedGL Instance만 허용.', redGL);
         material = material || RedColorMaterial(redGL);
         material instanceof RedColorMaterial || RedGLUtil.throwFunc('RedLine : RedColorMaterial Instance만 허용.');
         var tGL;
         tGL = redGL.gl;
         RedBaseObject3D['build'].call(this, tGL);
-        this['_interleaveData'] = [];
-        this['_indexData'] = [];
+        this['_redGL'] = redGL;
+        this['_interleaveData'] = [0, 0, 0];
+        // this['_indexData'] = [];
         this['_UUID'] = RedGL.makeUUID();
         this['_interleaveBuffer'] = RedBuffer(
             redGL,
@@ -14133,7 +15100,44 @@ var RedLine;
         this['geometry'] = RedGeometry(this['_interleaveBuffer'] /*,this['_indexBuffer']*/);
         this['material'] = material;
         this['drawMode'] = tGL.LINE_STRIP;
+        //
+        this['points'] = []; // 오리지널 포인트
+        this['_serializedPoints'] = []; //직렬화된 포인트
+        this['_tension'] = 1
+        this['_tolerance'] = 0.01
+        this['_distance'] = 0.1
+        this['_type'] = type || RedLine['LINEAR'];
+        this['_debug'] = false
+        console.log(this)
     };
+    /**DOC:
+     {
+		 title :`RedLine.LINEAR`,
+		 code : 'CONST',
+		 description : `RedLine 타입상수`,
+		 return : 'String'
+	 }
+     :DOC*/
+    RedLine['LINEAR'] = 'linear';
+    /**DOC:
+     {
+		 title :`RedLine.CATMULL_ROM`,
+		 code : 'CONST',
+		 description : `RedLine 타입상수`,
+		 return : 'String'
+	 }
+     :DOC*/
+    RedLine['CATMULL_ROM'] = 'catmullRom';
+    /**DOC:
+     {
+		 title :`RedLine.BEZIER`,
+		 code : 'CONST',
+		 description : `RedLine 타입상수`,
+		 return : 'String'
+	 }
+     :DOC*/
+    RedLine['BEZIER'] = 'bezier';
+
     RedLine.prototype = new RedBaseContainer();
     /**DOC:
      {
@@ -14142,22 +15146,108 @@ var RedLine;
 		 description : `
 			 라인 포인트 추가
 		 `,
-		 parmas : {
+		 params : {
 			 x : [{type:'Number'}],
 			 y : [{type:'Number'}],
-			 z : [{type:'Number'}]
+			 z : [{type:'Number'}],
+			 inX : [{type:'Number'}],
+			 inY : [{type:'Number'}],
+			 inZ : [{type:'Number'}],
+			 outX : [{type:'Number'}],
+			 outY : [{type:'Number'}],
+			 outZ : [{type:'Number'}]
 		 },
 		 return : 'void'
 	 }
      :DOC*/
-    RedLine.prototype['addPoint'] = function (x, y, z) {
-        // var tIndex = this['_interleaveData'].length / 3;
+    RedLine.prototype['addPoint'] = function (x, y, z, inX, inY, inZ, outX, outY, outZ) {
+
         typeof x == 'number' || RedGLUtil.throwFunc('RedLine : addPoint - x값은 숫자만 허용', '입력값 : ' + x);
         typeof y == 'number' || RedGLUtil.throwFunc('RedLine : addPoint - y값은 숫자만 허용', '입력값 : ' + y);
         typeof z == 'number' || RedGLUtil.throwFunc('RedLine : addPoint - z값은 숫자만 허용', '입력값 : ' + z);
-        this['_interleaveData'].push(x, y, z);
-        // this['_indexData'].push(tIndex);
-        this['_upload']();
+        //
+        inX = inX || 0;
+        inY = inY || 0;
+        inZ = inZ || 0;
+        typeof inX == 'number' || RedGLUtil.throwFunc('RedLine : addPoint - inX값은 숫자만 허용', '입력값 : ' + inX);
+        typeof inY == 'number' || RedGLUtil.throwFunc('RedLine : addPoint - inY값은 숫자만 허용', '입력값 : ' + inY);
+        typeof inZ == 'number' || RedGLUtil.throwFunc('RedLine : addPoint - inZ값은 숫자만 허용', '입력값 : ' + inZ);
+        //
+        outX = outX || 0;
+        outY = outY || 0;
+        outZ = outZ || 0;
+        typeof outX == 'number' || RedGLUtil.throwFunc('RedLine : addPoint - outX값은 숫자만 허용', '입력값 : ' + outX);
+        typeof outY == 'number' || RedGLUtil.throwFunc('RedLine : addPoint - outY값은 숫자만 허용', '입력값 : ' + outY);
+        typeof outZ == 'number' || RedGLUtil.throwFunc('RedLine : addPoint - outZ값은 숫자만 허용', '입력값 : ' + outZ);
+        this['points'].push(RedLinePoint(x, y, z, inX, inY, inZ, outX, outY, outZ));
+        parsePointsByType(this, this['_tension'], this['_tolerance'], this['_distance']);
+    };
+    /**DOC:
+     {
+	     code : 'METHOD',
+		 title :`addPointAt`,
+		 description : `
+			 해당인덱스에 포인트 추가
+		 `,
+		 params : {
+		     index : [{type:'Number'}],
+			 x : [{type:'Number'}],
+			 y : [{type:'Number'}],
+			 z : [{type:'Number'}],
+			 inX : [{type:'Number'}],
+			 inY : [{type:'Number'}],
+			 inZ : [{type:'Number'}],
+			 outX : [{type:'Number'}],
+			 outY : [{type:'Number'}],
+			 outZ : [{type:'Number'}]
+		 },
+		 return : 'void'
+	 }
+     :DOC*/
+    RedLine.prototype['addPointAt'] = function (index, x, y, z, inX, inY, inZ, outX, outY, outZ) {
+
+        typeof x == 'number' || RedGLUtil.throwFunc('RedLine : addPoint - x값은 숫자만 허용', '입력값 : ' + x);
+        typeof y == 'number' || RedGLUtil.throwFunc('RedLine : addPoint - y값은 숫자만 허용', '입력값 : ' + y);
+        typeof z == 'number' || RedGLUtil.throwFunc('RedLine : addPoint - z값은 숫자만 허용', '입력값 : ' + z);
+        //
+        inX = inX || 0;
+        inY = inY || 0;
+        inZ = inZ || 0;
+        typeof inX == 'number' || RedGLUtil.throwFunc('RedLine : addPoint - inX값은 숫자만 허용', '입력값 : ' + inX);
+        typeof inY == 'number' || RedGLUtil.throwFunc('RedLine : addPoint - inY값은 숫자만 허용', '입력값 : ' + inY);
+        typeof inZ == 'number' || RedGLUtil.throwFunc('RedLine : addPoint - inZ값은 숫자만 허용', '입력값 : ' + inZ);
+        //
+        outX = outX || 0;
+        outY = outY || 0;
+        outZ = outZ || 0;
+        typeof outX == 'number' || RedGLUtil.throwFunc('RedLine : addPoint - outX값은 숫자만 허용', '입력값 : ' + outX);
+        typeof outY == 'number' || RedGLUtil.throwFunc('RedLine : addPoint - outY값은 숫자만 허용', '입력값 : ' + outY);
+        typeof outZ == 'number' || RedGLUtil.throwFunc('RedLine : addPoint - outZ값은 숫자만 허용', '입력값 : ' + outZ);
+
+        typeof index == 'number' || RedGLUtil.throwFunc('addPointAt', 'index는 숫자만 입력가능', '입력값 : ' + index);
+        if (this['points'].length < index) index = this['points'].length;
+        if (index != undefined) this['points'].splice(index, 0, RedLinePoint(x, y, z, inX, inY, inZ, outX, outY, outZ));
+        else this['points'].push(RedLinePoint(x, y, z, inX, inY, inZ, outX, outY, outZ));
+        parsePointsByType(this, this['_tension'], this['_tolerance'], this['_distance']);
+    };
+    /**DOC:
+     {
+	     code : 'METHOD',
+		 title :`removePointAt`,
+		 description : `
+			 인덱스에 해당하는 포인트 제거
+		 `,
+		 params : {
+		     index : [{type:'Number'}]
+         },
+		 return : 'void'
+	 }
+     :DOC*/
+    RedLine.prototype['removePointAt'] = function (index) {
+        if (typeof index != 'number') RedGLUtil.throwFunc('removeChildAt', 'index가 Number형이 아님 ', '입력값 : ' + index);
+        if (this['points'][index]) this['points'].splice(index, 1);
+        else RedGLUtil.throwFunc('removeChildAt', 'index 해당인덱스에 위치한 포인트가 없음.', '입력값 : ' + index);
+        parsePointsByType(this, this['_tension'], this['_tolerance'], this['_distance']);
     };
     /**DOC:
      {
@@ -14170,7 +15260,8 @@ var RedLine;
 	 }
      :DOC*/
     RedLine.prototype['removeAllPoint'] = function () {
-        this['_interleaveData'].length = 0;
+        this['points'].length = 0;
+        parsePointsByType(this, this['_tension'], this['_tolerance'], this['_distance']);
         // indexData.length = 0;
         this['_upload']();
     };
@@ -14196,8 +15287,288 @@ var RedLine;
             this['_material'] = v;
         }
     });
+    /**DOC:
+     {
+		 code : 'PROPERTY',
+		 title :`type`,
+		 description : `
+             라인 타입
+             기본값 : RedLine.LINEAR
+             허용값 : RedLine.LINEAR, RedLine.CATMULL_ROM, RedLine.BEZIER
+		 `,
+		 return : 'string'
+	 }
+     :DOC*/
+    Object.defineProperty(RedLine.prototype, 'type', {
+        get: function () {
+            return this['_type'];
+        },
+        set: function (v) {
+            if (!(v == RedLine.LINEAR || v == RedLine.CATMULL_ROM || v == RedLine.BEZIER)) RedGLUtil.throwFunc('RedLine : 허용하지 않는 타입', '입력값 : ' + v);
+            this['_type'] = v;
+            parsePointsByType(this, this['_tension'], this['_tolerance'], this['_distance']);
+        }
+    });
+    /**DOC:
+     {
+		 code : 'PROPERTY',
+		 title :`tension`,
+		 description : `
+		 type이 RedLine.CATMULL_ROM 일 경우의 장력
+		 기본값 1
+		 최소값 0
+		 `,
+		 return : 'Number'
+	 }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedLine', 'tension', 'number', {
+        callback: function (v) {
+            parsePointsByType(this, this['_tension'], this['_tolerance'], this['_distance']);
+        }
+    });
+    /**DOC:
+     {
+		 code : 'PROPERTY',
+		 title :`distance`,
+		 description : `
+		 포인트간 최소 간격
+		 기본값 0.1
+		 최소값 0
+		 `,
+		 return : 'Number'
+	 }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedLine', 'distance', 'number', {
+        min: 0,
+        callback: function (v) {
+            parsePointsByType(this, this['_tension'], this['_tolerance'], this['_distance']);
+        }
+    });
+    /**DOC:
+     {
+		 code : 'PROPERTY',
+		 title :`debug`,
+		 description : `
+		 debug 모드 사용 여부
+		 기본값 false
+		 `,
+		 return : 'Boolean'
+	 }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedLine', 'debug', 'boolean', {
+        callback: function (v) {
+            if (v) setDebugMeshs(this)
+            else destroyDebugMesh(this)
+        }
+    });
+    RedLine.prototype['_simplifyPoints'] = simplifyPoints;
+    RedLine.prototype['_getPointsOnBezierCurves'] = getPointsOnBezierCurves;
+
     Object.freeze(RedLine);
 })();
+"use strict";
+var RedLatheMesh;
+(function () {
+
+    /**DOC:
+     {
+		 constructorYn : true,
+		 title :`RedLatheMesh`,
+		 description : `
+			 RedLatheMesh 객체
+		 `,
+		params : {
+			 redGL : [
+				 {type:'RedGL'}
+			 ],
+			 pathString : [
+				 {type:'string'},
+				 'path 문자열',
+				  `<code>"m44,434c18,-33 19,-66 15,-111c-4,-45 -37,-104 -39,-132c-2,-28 11,-51 16,-81c5,-30 3,-63 -36,-63"</code>`
+			 ],
+			 numDivisions : [
+				 {type:'uint'},
+				 '기본값 : 16'
+			 ],
+			 capStart : [
+				 {type:'boolean'},
+				 '기본값 : false'
+			 ],
+			 capEnd : [
+				 {type:'boolean'},
+				 '기본값 : false'
+			 ],
+			 startAngle : [
+				 {type:'number'},
+				 '기본값 : 0.0'
+			 ],
+			 endAngle : [
+				 {type:'Boolean'},
+				 '기본값 : Math.PI * 2'
+			 ],
+			 maxAngle : [
+				 {type:'number'},
+				 '기본값 : Math.PI / 180 * 30'
+			 ],
+			 tolerance : [
+				 {type:'number'},
+				 '기본값 : 0.15'
+			 ],
+			 flipX : [
+			    {type:'boolean'},
+				'기본값 : false'
+			 ],
+			 flipY : [
+			    {type:'boolean'},
+				'기본값 : false'
+			 ]
+		 },
+		 extends : [
+		    'RedGeometry'
+		 ],
+		 demo : '../example/object3D/RedLatheMesh.html',
+		 return : 'RedLatheMesh Instance'
+	 }
+     :DOC*/
+    RedLatheMesh = function (redGL, pathString, material, numDivisions, capStart, capEnd, startAngle, endAngle, maxAngle, distance, tolerance, flipX, flipY) {
+        if (!(this instanceof RedLatheMesh)) return new RedLatheMesh(redGL, pathString, material, numDivisions, capStart, capEnd, startAngle, endAngle, maxAngle, distance, tolerance, flipX, flipY);
+        redGL instanceof RedGL || RedGLUtil.throwFunc('RedPrimitive : RedGL Instance만 허용.', redGL);
+        RedBaseObject3D['build'].call(this, redGL.gl);
+        // 기본값 정의
+        this['_pathString'] = pathString;
+        this['_redGL'] = redGL;
+        this['_numDivisions'] = numDivisions = Math.floor(numDivisions) || 16;
+        this['_capStart'] = capStart !== undefined ? capStart : false;
+        this['_capEnd'] = capEnd !== undefined ? capEnd : false;
+        this['_startAngle'] = startAngle !== undefined ? startAngle : 0.0;
+        this['_endAngle'] = endAngle !== undefined ? endAngle : Math.PI * 2;
+        this['_distance'] = distance !== undefined ? distance : 0.4;
+        this['_maxAngle'] = maxAngle !== undefined ? maxAngle : Math.PI / 180 * 30
+        this['_tolerance'] = tolerance !== undefined ? tolerance : 0.15
+        this['_flipX'] = flipX ? true : false;
+        this['_flipY'] = flipY ? true : false;
+        if (this['_tolerance'] < 0.1) this['_tolerance'] = 0.1
+        /**DOC:
+         {
+		     code : 'PROPERTY',
+			 title :`geometry`,
+			 description : `geometry`,
+			 return : 'RedGeometry'
+		 }
+         :DOC*/
+        resetGeometry()
+        /**DOC:
+         {
+		     code : 'PROPERTY',
+			 title :`material`,
+			 description : `material`,
+			 return : 'RedBaseMaterial 확장 Instance'
+		 }
+         :DOC*/
+        this['material'] = material;
+        this['useCullFace'] = false;
+        this['_UUID'] = RedGL.makeUUID();
+        console.log(this)
+    };
+    RedLatheMesh.prototype = new RedBaseContainer;
+    var resetGeometry = function () {
+        this['_geometry'] = RedLathe(
+            this._redGL,
+            this._pathString,
+            this._numDivisions,
+            this._capStart, this._capEnd,
+            this._startAngle, this._endAngle, this._maxAngle,
+            this._distance,
+            this._tolerance,
+            this._flipX, this._flipY
+        );
+    }
+    Object.defineProperty(RedLatheMesh.prototype, 'pathString', {
+        get: function () {
+            return this['_pathString'];
+        },
+        set: function (v) {
+            this['_pathString'] = v;
+            resetGeometry.call(this)
+        }
+    });
+    /**DOC:
+        {
+            code : 'PROPERTY',
+            title :`numDivisions`,
+            description : `분할갯수`,
+            return : 'uint'
+        }
+    :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedLatheMesh', 'numDivisions', 'number', {min: 0, callback: resetGeometry});
+    /**DOC:
+     {
+            code : 'PROPERTY',
+            title :`capStart`,
+            description : `상단 닫기`,
+            return : 'boolean'
+        }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedLatheMesh', 'capStart', 'boolean', {callback: resetGeometry});
+    /**DOC:
+     {
+            code : 'PROPERTY',
+            title :`capEnd`,
+            description : `하단 닫기`,
+            return : 'boolean'
+        }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedLatheMesh', 'capEnd', 'boolean', {callback: resetGeometry});
+    /**DOC:
+     {
+            code : 'PROPERTY',
+            title :`startAngle`,
+            description : `시작 앵글`,
+            return : 'number'
+        }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedLatheMesh', 'startAngle', 'number', {min: 0, callback: resetGeometry});
+    /**DOC:
+     {
+            code : 'PROPERTY',
+            title :`endAngle`,
+            description : `종료 앵글`,
+            return : 'number'
+        }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedLatheMesh', 'endAngle', 'number', {min: 0, callback: resetGeometry});
+    RedDefinePropertyInfo.definePrototype('RedLatheMesh', 'maxAngle', 'number', {min: 0, callback: resetGeometry});
+    /**DOC:
+     {
+            code : 'PROPERTY',
+            title :`distance`,
+            description : `분할 거리`,
+            return : 'number'
+        }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedLatheMesh', 'distance', 'number', {min: 0, callback: resetGeometry});
+    RedDefinePropertyInfo.definePrototype('RedLatheMesh', 'tolerance', 'number', {min: 0, callback: resetGeometry});
+    /**DOC:
+     {
+            code : 'PROPERTY',
+            title :`flipX`,
+            description : `좌우반전`,
+            return : 'boolean'
+        }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedLatheMesh', 'flipX', 'boolean', {callback: resetGeometry});
+    /**DOC:
+     {
+            code : 'PROPERTY',
+            title :`flipY`,
+            description : `상하반전`,
+            return : 'boolean'
+        }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedLatheMesh', 'flipY', 'boolean', {callback: resetGeometry});
+    Object.freeze(RedLatheMesh);
+})
+();
 "use strict";
 var RedSkyBox;
 (function () {
@@ -15438,7 +16809,8 @@ var RedPlane;
         height = height || 1;
         wSegments = wSegments || 1;
         hSegments = hSegments || 1;
-        tType = 'RedPlane' + '_' + width + '_' + height + '_' + wSegments + '_' + hSegments+'_'+flipY;
+        flipY = flipY ? true : false;
+        tType = 'RedPlane' + '_' + width + '_' + height + '_' + wSegments + '_' + hSegments + '_' + flipY;
         // 유일키 방어
         if (!redGL['_datas']['Primitives']) redGL['_datas']['Primitives'] = {};
         if (redGL['_datas']['Primitives'][tType]) return redGL['_datas']['Primitives'][tType];
@@ -24103,4 +25475,4 @@ var RedGLOffScreen;
         }
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-03-07 11:55:51)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-03-20 13:03:16)' };console.log(RedGL_VERSION);
