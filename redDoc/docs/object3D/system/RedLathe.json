@@ -1,0 +1,67 @@
+[
+  {
+    "varructorYn": true,
+    "title": "RedLathe",
+    "description": "\n\t RedLathe 형태의 RedGeometry 생성\n ",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ],
+      "radiusTop": [
+        {
+          "type": "number"
+        },
+        "기본값 : 1"
+      ],
+      "radiusBottom": [
+        {
+          "type": "number"
+        },
+        "기본값 : 1"
+      ],
+      "height": [
+        {
+          "type": "number"
+        },
+        "기본값 : 1"
+      ],
+      "radialSegments": [
+        {
+          "type": "uint"
+        },
+        "기본값 : 8"
+      ],
+      "heightSegments": [
+        {
+          "type": "uint"
+        },
+        "기본값 : 1"
+      ],
+      "openEnded": [
+        {
+          "type": "Boolean"
+        },
+        "기본값 : false"
+      ],
+      "startAngle": [
+        {
+          "type": "number"
+        },
+        "startAngle"
+      ],
+      "endAngle": [
+        {
+          "type": "number"
+        },
+        "endAngle"
+      ]
+    },
+    "extends": [
+      "RedGeometry"
+    ],
+    "demo": "../example/primitives/RedLathe.html",
+    "return": "RedLathe Instance"
+  }
+]

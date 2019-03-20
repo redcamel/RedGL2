@@ -36,19 +36,19 @@ RedGL(document.createElement('canvas'), function (v) {
             redTest("생성시 입력변수에 따른 interleaveBuffer 고유키값이 생성되는지 확인 : RedPlane( tRedGL, 2, 2 )", function (unit, title) {
                 var t0 = RedPlane(tRedGL, 2, 2);
                 unit.run(t0['interleaveBuffer']['key'])
-            }, 'RedPlane_2_2_1_1_interleaveBuffer'),
+            }, 'RedPlane_2_2_1_1_false_interleaveBuffer'),
             redTest("생성시 입력변수에 따른 interleaveBuffer 고유키값이 생성되는지 확인 : RedPlane( tRedGL, 2, 2, 3, 4 )", function (unit, title) {
                 var t0 = RedPlane(tRedGL, 2, 2, 3, 4);
                 unit.run(t0['interleaveBuffer']['key'])
-            }, 'RedPlane_2_2_3_4_interleaveBuffer'),
+            }, 'RedPlane_2_2_3_4_false_interleaveBuffer'),
             redTest("생성시 입력변수에 따른 indexBuffer 고유키값이 생성되는지 확인 : RedPlane( tRedGL, 2, 2 )", function (unit, title) {
                 var t0 = RedPlane(tRedGL, 2, 2);
                 unit.run(t0['indexBuffer']['key'])
-            }, 'RedPlane_2_2_1_1_indexBuffer'),
+            }, 'RedPlane_2_2_1_1_false_indexBuffer'),
             redTest("생성시 입력변수에 따른 indexBuffer 고유키값이 생성되는지 확인 : RedPlane( tRedGL, 2, 2, 3, 4 )", function (unit, title) {
                 var t0 = RedPlane(tRedGL, 2, 2, 3, 4);
                 unit.run(t0['indexBuffer']['key'])
-            }, 'RedPlane_2_2_3_4_indexBuffer')
+            }, 'RedPlane_2_2_3_4_false_indexBuffer')
         )
     )
 })
