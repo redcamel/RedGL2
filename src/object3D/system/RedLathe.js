@@ -1,7 +1,7 @@
 "use strict";
 var RedLathe;
 (function () {
-    //https://webglfundamentals.org/webgl/lessons/webgl-3d-geometry-lathe.html
+    // https://webglfundamentals.org/webgl/lessons/webgl-3d-geometry-lathe.html
     var makeData;
     var parsePathString;
     var lerp;
@@ -24,10 +24,10 @@ var RedLathe;
         function addValue() {
             if (value.length > 0) {
                 var v = parseFloat(value);
-                if (v > 1000) debugger;  // eslint-disable-line
+                // if (v > 1000) debugger;  // eslint-disable-line
                 values.push(v);
                 if (values.length === 2) {
-                    if (delta) values[0] += lastValues[0], values[1] += lastValues[1]
+                    if (delta) values[0] += lastValues[0], values[1] += lastValues[1];
                     points.push(values);
                     if (keepNext) nextLastValues = values.slice();
                     --need;
@@ -65,7 +65,7 @@ var RedLathe;
             }// close the loop
             else if (targetStr === ',') addValue();
             else if (targetStr === ' ') addValue();
-            else debugger;  // eslint-disable-line
+            // else debugger;  // eslint-disable-line
         }
         addValue();
         var min = points[0].slice();
@@ -75,7 +75,7 @@ var RedLathe;
         var range = vec2.sub([0, 0], max, min);
         var halfRange = vec2.scale([0, 0], range, .5);
         i = 0;
-        var targetPoint
+        var targetPoint;
         for (i; i < len; ++i) {
             targetPoint = points[i];
             if (flipX) targetPoint[0] = max[0] - targetPoint[0];
@@ -100,7 +100,7 @@ var RedLathe;
         var i;
         var len;
         return function (points) {
-            texcoord_vList = []
+            texcoord_vList = [];
             // 포인트의 길이를 일단 구한다.
             length = 0;
             i = 0;
@@ -140,7 +140,7 @@ var RedLathe;
                 }
                 var targetPoint;
                 i = 0;
-                len = points.length
+                len = points.length;
                 for (i; i < len; i++) {
                     targetPoint = points[i];
                     targetPoint = vec3.transformMat4([0, 0, 0], [targetPoint[0], targetPoint[1], 0], angleMTX);
@@ -160,7 +160,7 @@ var RedLathe;
         }
     })();
     makeIndexData = (function () {
-        var division = 0
+        var division = 0;
         var column1Offset;
         var column2Offset;
         var quad;
@@ -203,7 +203,7 @@ var RedLathe;
         positions = temp['positions'];
         texcoords = temp['texcoords'];
         // 인덱스 생성
-        indices = makeIndexData(numDivisions, pointsPerColumn, quadsDown, flipY)
+        indices = makeIndexData(numDivisions, pointsPerColumn, quadsDown, flipY);
         return {
             position: positions,
             texcoord: texcoords,
@@ -224,7 +224,7 @@ var RedLathe;
     };
 
     makeUnindexedIndicesFn = function (arrays) {
-        console.log('여기로오는일이 있냐')
+        console.log('여기로오는일이 있냐');
         var ndx = 0;
         var fn = function () {
             return ndx++;
@@ -352,12 +352,11 @@ var RedLathe;
         }
 
         var newVertIndices = [];
-        var interleaveData = []
         getNextIndex.reset();
         var maxAngleCos = Math.cos(maxAngle);
         // for each face
         for (i = 0; i < numFaces; ++i) {
-            var thisFaceVertexNormals = [];
+            // var thisFaceVertexNormals = [];
             // get the normal for this face
             var thisFaceNormal = faceNormals[i];
             // for each vertex on the face
@@ -393,56 +392,54 @@ var RedLathe;
             position: newPositions,
             texcoord: newTexcoords,
             normal: newNormals,
-            indices: newVertIndices,
+            indices: newVertIndices
         };
-    }
+    };
 
-    makeData = (function () {
-
-        //TODO 정리
-        return function (redGL, type, finalData) {
-            ////////////////////////////////////////////////////////////////////////////
-            // 데이터 생성!
-            // buffers Data
-            var interleaveData = [];
-            var indexData;
-            var positions = finalData['position']
-            var normals = finalData['normal']
-            var texcoords = finalData['texcoord']
-            indexData = finalData['indices']
-            var i = 0, len = positions.length / 3
-            for (i; i < len; i++) {
-                interleaveData.push(positions[i * 3 + 0], positions[i * 3 + 1], positions[i * 3 + 2])
-                interleaveData.push(normals[i * 3 + 0], normals[i * 3 + 1], normals[i * 3 + 2])
-                interleaveData.push(texcoords[i * 2 + 0], texcoords[i * 2 + 1])
-            }
-            ////////////////////////////////////////////////////////////////////////////
-            // console.log(redGL['__datas']['RedPrimitive'])
-            return {
-                interleaveData: interleaveData,
-                indexData: indexData,
-                type: type,
-                interleaveBuffer: RedBuffer(
-                    redGL,
-                    type + '_interleaveBuffer',
-                    RedBuffer.ARRAY_BUFFER,
-                    new Float32Array(interleaveData),
-                    [
-                        RedInterleaveInfo('aVertexPosition', 3),
-                        RedInterleaveInfo('aVertexNormal', 3),
-                        RedInterleaveInfo('aTexcoord', 2)
-                    ]
-                ),
-                indexBuffer: RedBuffer(
-                    redGL,
-                    type + '_indexBuffer',
-                    RedBuffer.ELEMENT_ARRAY_BUFFER,
-                    new Uint16Array(indexData)
-                )
-            }
+    makeData = function (redGL, type, finalData) {
+        ////////////////////////////////////////////////////////////////////////////
+        // 데이터 생성!
+        // buffers Data
+        var interleaveData = [];
+        var indexData;
+        var positions = finalData['position'];
+        var normals = finalData['normal'];
+        var texcoords = finalData['texcoord'];
+        indexData = finalData['indices'];
+        var i = 0, len = positions.length / 3;
+        var offset;
+        for (i; i < len; i++) {
+            offset = i * 3;
+            interleaveData.push(positions[offset + 0], positions[offset + 1], positions[offset + 2]);
+            interleaveData.push(normals[offset + 0], normals[offset + 1], normals[offset + 2]);
+            offset = i * 2
+            interleaveData.push(texcoords[offset + 0], texcoords[offset + 1])
         }
-    })();
-
+        ////////////////////////////////////////////////////////////////////////////
+        // console.log(redGL['__datas']['RedPrimitive'])
+        return {
+            interleaveData: interleaveData,
+            indexData: indexData,
+            type: type,
+            interleaveBuffer: RedBuffer(
+                redGL,
+                type + '_interleaveBuffer',
+                RedBuffer.ARRAY_BUFFER,
+                new Float32Array(interleaveData),
+                [
+                    RedInterleaveInfo('aVertexPosition', 3),
+                    RedInterleaveInfo('aVertexNormal', 3),
+                    RedInterleaveInfo('aTexcoord', 2)
+                ]
+            ),
+            indexBuffer: RedBuffer(
+                redGL,
+                type + '_indexBuffer',
+                RedBuffer.ELEMENT_ARRAY_BUFFER,
+                new Uint16Array(indexData)
+            )
+        }
+    };
     /**DOC:
      {
 		 varructorYn : true,
@@ -505,9 +502,9 @@ var RedLathe;
         startAngle = startAngle !== undefined ? startAngle : 0.0;
         endAngle = endAngle !== undefined ? endAngle : Math.PI * 2;
         distance = distance !== undefined ? distance : 0.4;
-        maxAngle = maxAngle !== undefined ? maxAngle : Math.PI / 180 * 30
-        tolerance = tolerance !== undefined ? tolerance : 0.15
-        if (tolerance < 0.1) tolerance = 0.1
+        maxAngle = maxAngle !== undefined ? maxAngle : Math.PI / 180 * 30;
+        tolerance = tolerance !== undefined ? tolerance : 0.15;
+        if (tolerance < 0.1) tolerance = 0.1;
         // 키생성
         tType = 'RedLathe' + '_' + pathString + '_' + numDivisions + '_' + capStart + '_' + capEnd + '_' + startAngle + '_' + endAngle + '_' + maxAngle + '_' + distance + '_' + tolerance + '_' + flipX + '_' + flipY;
         // console.log(tType)
@@ -528,12 +525,11 @@ var RedLathe;
         tPrimitiveData = makeData(redGL, tType, generateNormals(parsedLathePoints, maxAngle), numDivisions, capStart, capEnd, startAngle, endAngle);
         this['interleaveBuffer'] = tPrimitiveData['interleaveBuffer'];
         this['indexBuffer'] = tPrimitiveData['indexBuffer'];
-        this['interleaveBuffer']['isPrimitiveBuffer'] = true
-        this['indexBuffer']['isPrimitiveBuffer'] = true
+        this['interleaveBuffer']['isPrimitiveBuffer'] = true;
+        this['indexBuffer']['isPrimitiveBuffer'] = true;
         this['_UUID'] = RedGL.makeUUID();
         console.log(this)
     };
     RedLathe.prototype = Object.create(RedGeometry.prototype);
     Object.freeze(RedLathe);
-})
-();
+})();

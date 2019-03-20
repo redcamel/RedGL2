@@ -191,8 +191,8 @@ baseTestUI.exampleList = [
                 href: 'object3D/RedLine_linear_type.html'
             },
             {
-                key: 'RedLine CATTMUL_ROM',
-                href: 'object3D/RedLine_cattmul_rom_type.html'
+                key: 'RedLine CATMULL_ROM',
+                href: 'object3D/RedLine_catmull_rom_type.html'
             },
             {
                 key: 'RedLine BEZIER',
@@ -202,6 +202,11 @@ baseTestUI.exampleList = [
                 key: 'RedMesh',
                 href: 'object3D/RedMesh.html'
             },
+            {
+                key: 'RedLatheMesh',
+                href: 'object3D/RedLatheMesh.html'
+            },
+
             {
                 key: 'RedSkyBox',
                 href: 'object3D/RedSkyBox.html'
