@@ -14323,7 +14323,7 @@ var RedLathe;
      :DOC*/
     RedLathe = function (redGL, pathString, numDivisions, capStart, capEnd, startAngle, endAngle, maxAngle, distance, tolerance, flipX, flipY) {
         if (!(this instanceof RedLathe)) return new RedLathe(redGL, pathString, numDivisions, capStart, capEnd, startAngle, endAngle, maxAngle, distance, tolerance, flipX, flipY);
-        redGL instanceof RedGL || RedGLUtil.throwFunc('RedPrimitive : RedGL Instance만 허용.', redGL);
+        redGL instanceof RedGL || RedGLUtil.throwFunc('RedLathe : RedGL Instance만 허용.', redGL);
         // 기본값 정의
         var tType, tPrimitiveData;
         numDivisions = Math.floor(numDivisions) || 16;
@@ -15456,7 +15456,7 @@ var RedLatheMesh;
 			 return : 'RedGeometry'
 		 }
          :DOC*/
-        resetGeometry()
+        resetGeometry.call(this)
         /**DOC:
          {
 		     code : 'PROPERTY',
@@ -25475,4 +25475,4 @@ var RedGLOffScreen;
         }
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-03-20 13:03:16)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-03-20 13:19:08)' };console.log(RedGL_VERSION);
