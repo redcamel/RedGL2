@@ -442,7 +442,7 @@ var RedLathe;
     };
     /**DOC:
      {
-		 varructorYn : true,
+		 constructorYn : true,
 		 title :`RedLathe`,
 		 description : `
 			 RedLathe 형태의 RedGeometry 생성
@@ -451,43 +451,52 @@ var RedLathe;
 			 redGL : [
 				 {type:'RedGL'}
 			 ],
-			 radiusTop : [
-				 {type:'number'},
-				 '기본값 : 1'
+			 pathString : [
+				 {type:'string'},
+				 'path 문자열',
+				  `<code>"m44,434c18,-33 19,-66 15,-111c-4,-45 -37,-104 -39,-132c-2,-28 11,-51 16,-81c5,-30 3,-63 -36,-63"</code>`
 			 ],
-			 radiusBottom : [
-				 {type:'number'},
-				 '기본값 : 1'
-			 ],
-			 height : [
-				 {type:'number'},
-				 '기본값 : 1'
-			 ],
-			 radialSegments : [
+			 numDivisions : [
 				 {type:'uint'},
-				 '기본값 : 8'
+				 '기본값 : 16'
 			 ],
-			 heightSegments : [
-				 {type:'uint'},
-				 '기본값 : 1'
+			 capStart : [
+				 {type:'boolean'},
+				 '기본값 : false'
 			 ],
-			 openEnded : [
-				 {type:'Boolean'},
+			 capEnd : [
+				 {type:'boolean'},
 				 '기본값 : false'
 			 ],
 			 startAngle : [
 				 {type:'number'},
-				 'startAngle'
+				 '기본값 : 0.0'
 			 ],
 			 endAngle : [
+				 {type:'Boolean'},
+				 '기본값 : Math.PI * 2'
+			 ],
+			 maxAngle : [
 				 {type:'number'},
-				 'endAngle'
+				 '기본값 : Math.PI / 180 * 30'
+			 ],
+			 tolerance : [
+				 {type:'number'},
+				 '기본값 : 0.15'
+			 ],
+			 flipX : [
+			    {type:'boolean'},
+				'기본값 : false'
+			 ],
+			 flipY : [
+			    {type:'boolean'},
+				'기본값 : false'
 			 ]
 		 },
 		 extends : [
 		    'RedGeometry'
 		 ],
-		 demo : '../example/primitives/RedLathe.html',
+		 demo : '../example/object3D/RedLatheMesh.html',
 		 return : 'RedLathe Instance'
 	 }
      :DOC*/
