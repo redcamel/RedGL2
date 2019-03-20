@@ -88,7 +88,7 @@ var RedLatheMesh;
 			 return : 'RedGeometry'
 		 }
          :DOC*/
-        resetGeometry()
+        resetGeometry.call(this)
         /**DOC:
          {
 		     code : 'PROPERTY',
