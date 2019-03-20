@@ -502,7 +502,7 @@ var RedLathe;
      :DOC*/
     RedLathe = function (redGL, pathString, numDivisions, capStart, capEnd, startAngle, endAngle, maxAngle, distance, tolerance, flipX, flipY) {
         if (!(this instanceof RedLathe)) return new RedLathe(redGL, pathString, numDivisions, capStart, capEnd, startAngle, endAngle, maxAngle, distance, tolerance, flipX, flipY);
-        redGL instanceof RedGL || RedGLUtil.throwFunc('RedPrimitive : RedGL Instance만 허용.', redGL);
+        redGL instanceof RedGL || RedGLUtil.throwFunc('RedLathe : RedGL Instance만 허용.', redGL);
         // 기본값 정의
         var tType, tPrimitiveData;
         numDivisions = Math.floor(numDivisions) || 16;
