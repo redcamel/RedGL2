@@ -279,12 +279,22 @@ var RedGL;
                 y: 0
             };
             [RedGLDetect.BROWSER_INFO.move, RedGLDetect.BROWSER_INFO.down, RedGLDetect.BROWSER_INFO.up].forEach(function (v) {
+                var tXkey, tYkey;
+                if (RedGLDetect.BROWSER_INFO.browser == 'ie' && RedGLDetect.BROWSER_INFO.browserVer == 11) {
+                    tXkey = 'offsetX';
+                    tYkey = 'offsetY';
+                } else {
+                    tXkey = 'layerX';
+                    tYkey = 'layerY';
+                }
                 self['_canvas'].addEventListener(v, function (e) {
                     e.preventDefault()
+
                     if (RedGLDetect.BROWSER_INFO.isMobile) {
                         if (e.changedTouches[0]) {
                             self['_mouseEventInfo'] = {
                                 type: e.type,
+                                //TODO 모바일에서 확인해야함
                                 x: e.changedTouches[0].clientX * window.devicePixelRatio,
                                 y: e.changedTouches[0].clientY * window.devicePixelRatio
                             }
@@ -293,8 +303,8 @@ var RedGL;
                     else {
                         self['_mouseEventInfo'] = {
                             type: e.type,
-                            x: e.x,
-                            y: e.y
+                            x: e[tXkey],
+                            y: e[tYkey]
                         }
                     }
                 }, false)
@@ -326,9 +336,7 @@ var RedGL;
             return UUID++
         }
     })();
-    RedGL.prototype = {
-
-    };
+    RedGL.prototype = {};
     /**DOC:
      {
 		 title :`renderScale`,
