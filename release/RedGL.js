@@ -2680,12 +2680,22 @@ var RedGL;
                 y: 0
             };
             [RedGLDetect.BROWSER_INFO.move, RedGLDetect.BROWSER_INFO.down, RedGLDetect.BROWSER_INFO.up].forEach(function (v) {
+                var tXkey, tYkey;
+                if (RedGLDetect.BROWSER_INFO.browser == 'ie' && RedGLDetect.BROWSER_INFO.browserVer == 11) {
+                    tXkey = 'offsetX';
+                    tYkey = 'offsetY';
+                } else {
+                    tXkey = 'layerX';
+                    tYkey = 'layerY';
+                }
                 self['_canvas'].addEventListener(v, function (e) {
                     e.preventDefault()
+
                     if (RedGLDetect.BROWSER_INFO.isMobile) {
                         if (e.changedTouches[0]) {
                             self['_mouseEventInfo'] = {
                                 type: e.type,
+                                //TODO 모바일에서 확인해야함
                                 x: e.changedTouches[0].clientX * window.devicePixelRatio,
                                 y: e.changedTouches[0].clientY * window.devicePixelRatio
                             }
@@ -2694,8 +2704,8 @@ var RedGL;
                     else {
                         self['_mouseEventInfo'] = {
                             type: e.type,
-                            x: e.x,
-                            y: e.y
+                            x: e[tXkey],
+                            y: e[tYkey]
                         }
                     }
                 }, false)
@@ -2727,9 +2737,7 @@ var RedGL;
             return UUID++
         }
     })();
-    RedGL.prototype = {
-
-    };
+    RedGL.prototype = {};
     /**DOC:
      {
 		 title :`renderScale`,
@@ -22245,9 +22253,8 @@ var RedMouseEventManager;
                     redRenderer.sceneRender(redGL, tView['scene'], tView['camera'], tView['camera']['orthographicYn'], this['_mouseEventList'], time, renderInfo, this['_mouseEventMaterial']);
                     // 추출
                     gl.readPixels(redGL['_mouseEventInfo'].x * renderScale, (tViewRect[3] - redGL['_mouseEventInfo'].y * renderScale), 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixelValues)
-                    // console.log(pixelValues)
 
-                    var currentInfo = this['_mouseEventListObject'][pixelValues.toString()]
+                    var currentInfo = this['_mouseEventListObject'][pixelValues[0] + ',' + pixelValues[1] + ',' + pixelValues[2] + ',' + pixelValues[3]];
                     var tEventType
                     if (currentInfo) {
                         if (redGL['_mouseEventInfo']['type'] == RedGLDetect.BROWSER_INFO.down) {
@@ -22299,8 +22306,7 @@ var RedMouseEventManager;
                             fireList.push(
                                 {
                                     info: this['_prevInfo'],
-                                    type: tEventType,
-
+                                    type: tEventType
                                 }
                             )
                         }
@@ -22309,8 +22315,8 @@ var RedMouseEventManager;
                     fireEvent()
                     redGL['_mouseEventInfo'] = {
                         type: null,
-                        x: 0,
-                        y: 0
+                        x: redGL['_mouseEventInfo'].x,
+                        y: redGL['_mouseEventInfo'].y
                     }
                     //
                     if (this['_prevInfo']) document.body.style.cursor = 'pointer'
@@ -25475,4 +25481,4 @@ var RedGLOffScreen;
         }
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-03-20 13:19:08)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-03-21 16:59:04)' };console.log(RedGL_VERSION);
