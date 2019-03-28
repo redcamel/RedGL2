@@ -53,6 +53,7 @@ var RedObitController;
         this['_currentPan'] = 0;
         this['_currentTilt'] = 0;
         this['_currentDistance'] = 0;
+        this['needUpdate'] = true;
         (function (self) {
             var HD_down, HD_Move, HD_up, HD_wheel;
             var sX, sY;
@@ -64,35 +65,42 @@ var RedObitController;
             sX = 0, sY = 0;
             mX = 0, mY = 0;
             HD_down = function (e) {
-                if (RedGLDetect.BROWSER_INFO.isMobile) {
-                    console.log(e)
-                    e = e.targetTouches[0]
-                    sX = e['clientX'], sY = e['clientY'];
-                } else {
-                    sX = e['x'], sY = e['y'];
+                if(self['needUpdate']){
+                    if (RedGLDetect.BROWSER_INFO.isMobile) {
+                        console.log(e)
+                        e = e.targetTouches[0]
+                        sX = e['clientX'], sY = e['clientY'];
+                    } else {
+                        sX = e['x'], sY = e['y'];
+                    }
+                    redGL['_canvas'].addEventListener(tMove, HD_Move);
+                    window.addEventListener(tUp, HD_up);
                 }
-                redGL['_canvas'].addEventListener(tMove, HD_Move);
-                window.addEventListener(tUp, HD_up);
+
             };
             HD_Move = function (e) {
-                if (RedGLDetect.BROWSER_INFO.isMobile) {
-                    e = e.targetTouches[0]
-                    mX = e['clientX'] - sX, mY = e['clientY'] - sY;
-                    sX = e['clientX'], sY = e['clientY'];
-                } else {
-                    mX = e['x'] - sX, mY = e['y'] - sY;
-                    sX = e['x'], sY = e['y'];
+                if(self['needUpdate']) {
+                    if (RedGLDetect.BROWSER_INFO.isMobile) {
+                        e = e.targetTouches[0]
+                        mX = e['clientX'] - sX, mY = e['clientY'] - sY;
+                        sX = e['clientX'], sY = e['clientY'];
+                    } else {
+                        mX = e['x'] - sX, mY = e['y'] - sY;
+                        sX = e['x'], sY = e['y'];
+                    }
+                    self['_pan'] -= mX * self['_speedRotation'] * 0.1;
+                    self['_tilt'] -= mY * self['_speedRotation'] * 0.1;
                 }
-                self['_pan'] -= mX * self['_speedRotation'] * 0.1;
-                self['_tilt'] -= mY * self['_speedRotation'] * 0.1;
             };
             HD_up = function () {
                 redGL['_canvas'].removeEventListener(tMove, HD_Move);
                 window.removeEventListener(tUp, HD_up);
             };
             HD_wheel = function (e) {
-                console.log(e);
-                self['distance'] += e['deltaY'] / 100 * self['_speedDistance']
+                if(self['needUpdate']) {
+                    console.log(e);
+                    self['distance'] += e['deltaY'] / 100 * self['_speedDistance']
+                }
             };
             redGL['_canvas'].addEventListener(tDown, HD_down);
             redGL['_canvas'].addEventListener('wheel', HD_wheel);
@@ -239,6 +247,7 @@ var RedObitController;
         var PER_PI;
         PER_PI = Math.PI / 180;
         return function () {
+            if(!this['needUpdate']) return
             if (this['_tilt'] < this['_minTilt']) this['_tilt'] = this['_minTilt'];
             if (this['_tilt'] > this['_maxTilt']) this['_tilt'] = this['_maxTilt'];
             tDelayRotation = this['_delayRotation'];

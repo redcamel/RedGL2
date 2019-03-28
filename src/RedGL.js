@@ -273,11 +273,7 @@ var RedGL;
             ///////////////////////////////////////
             //
 
-            self['_mouseEventInfo'] = {
-                type: null,
-                x: 0,
-                y: 0
-            };
+            self['_mouseEventInfo'] = [];
             [RedGLDetect.BROWSER_INFO.move, RedGLDetect.BROWSER_INFO.down, RedGLDetect.BROWSER_INFO.up].forEach(function (v) {
                 var tXkey, tYkey;
                 if (RedGLDetect.BROWSER_INFO.browser == 'ie' && RedGLDetect.BROWSER_INFO.browserVer == 11) {
@@ -292,20 +288,35 @@ var RedGL;
 
                     if (RedGLDetect.BROWSER_INFO.isMobile) {
                         if (e.changedTouches[0]) {
-                            self['_mouseEventInfo'] = {
-                                type: e.type,
-                                //TODO 모바일에서 확인해야함
-                                x: e.changedTouches[0].clientX * window.devicePixelRatio,
-                                y: e.changedTouches[0].clientY * window.devicePixelRatio
-                            }
+                            self['_mouseEventInfo'].push(
+                                {
+                                    type: e.type,
+                                    //TODO 모바일에서 확인해야함
+                                    x: e.changedTouches[0].clientX * window.devicePixelRatio,
+                                    y: e.changedTouches[0].clientY * window.devicePixelRatio
+                                }
+                            )
                         }
                     }
                     else {
-                        self['_mouseEventInfo'] = {
-                            type: e.type,
-                            x: e[tXkey],
-                            y: e[tYkey]
-                        }
+                        console.log(e)
+                        self['_mouseEventInfo'].push(
+                            {
+                                type: e.type,
+                                x: e[tXkey],
+                                y: e[tYkey]
+                            }
+                        )
+                        // self.world._viewList.forEach(function(view){
+                        //     if(!view['_mouseEventInfo']) view['_mouseEventInfo']=[]
+                        //     view['_mouseEventInfo'].push(
+                        //         {
+                        //             type: e.type,
+                        //             x: e[tXkey],
+                        //             y: e[tYkey]
+                        //         }
+                        //     )
+                        // })
                     }
                 }, false)
             });

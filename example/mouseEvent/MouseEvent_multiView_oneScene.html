@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>RedGL - MouseEvent</title>
+    <title>RedGL - MouseEvent_multiView</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -42,7 +42,14 @@
                 tRenderer = RedRenderer();
                 // 뷰생성 및 적용
                 tView = RedView('HelloRedGL', redGL, tScene, tController);
+                tView.setSize('50%','50%')
                 tWorld.addView(tView);
+                console.log(tView)
+
+                var tView2= RedView('HelloRedGL2', redGL, tScene, tController);
+                tView2.setLocation('50%','50%')
+                tView2.setSize('50%','50%')
+                tWorld.addView(tView2);
                 // 그리드 설정
                 tScene['grid'] = RedGrid(redGL);
                 // 라이트 설정
@@ -85,7 +92,7 @@
             )
             // Mesh 설정
             var makeMesh = function (redGL) {
-                var i = 500
+                var i = 250
                 while (i--) {
                     var tMesh;
                     tMesh = RedMesh(redGL, RedSphere(redGL, 1, 32, 32, 32), tMaterial)
