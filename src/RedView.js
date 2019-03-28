@@ -96,6 +96,7 @@ var RedView;
         this['_x'] = 0;
         this['_y'] = 0;
         this['_viewRect'] = [0, 0, 0, 0];
+        this['_UUID'] = RedGL.makeUUID();
         ViewMap[key] = this;
         console.log(this);
     };
