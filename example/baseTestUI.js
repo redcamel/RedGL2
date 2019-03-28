@@ -405,6 +405,10 @@ baseTestUI.exampleList = [
             {
                 key: 'MouseEvent',
                 href: 'mouseEvent/MouseEvent.html'
+            },
+            {
+                key: 'MouseEvent_multiView_oneScene',
+                href: 'mouseEvent/MouseEvent_multiView_oneScene.html'
             }
         ]
     },
