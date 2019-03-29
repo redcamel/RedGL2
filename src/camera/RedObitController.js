@@ -54,6 +54,7 @@ var RedObitController;
         this['_currentTilt'] = 0;
         this['_currentDistance'] = 0;
         this['needUpdate'] = true;
+        this['targetView'] = null;
         (function (self) {
             var HD_down, HD_Move, HD_up, HD_wheel;
             var sX, sY;
@@ -65,10 +66,25 @@ var RedObitController;
             sX = 0, sY = 0;
             mX = 0, mY = 0;
             HD_down = function (e) {
-                if(self['needUpdate']){
+                if (self['needUpdate']) {
                     if (RedGLDetect.BROWSER_INFO.isMobile) {
                         console.log(e)
                         e = e.targetTouches[0]
+                    }
+                    if (self['targetView']) {
+                        var tX, tY
+                        if (RedGLDetect.BROWSER_INFO.isMobile) {
+                            console.log(e)
+                            tX = e['clientX'], tY = e['clientY'];
+                        } else {
+                            tX = e['x'], tY = e['y'];
+                        }
+                        if (!(self['targetView']['_viewRect'][0] < tX && tX < self['targetView']['_viewRect'][0] + self['targetView']['_viewRect'][2])) return;
+                        if (!(self['targetView']['_viewRect'][1] < tY && tY < self['targetView']['_viewRect'][1] + self['targetView']['_viewRect'][3])) return;
+
+                    }
+                    if (RedGLDetect.BROWSER_INFO.isMobile) {
+                        console.log(e)
                         sX = e['clientX'], sY = e['clientY'];
                     } else {
                         sX = e['x'], sY = e['y'];
@@ -79,7 +95,7 @@ var RedObitController;
 
             };
             HD_Move = function (e) {
-                if(self['needUpdate']) {
+                if (self['needUpdate']) {
                     if (RedGLDetect.BROWSER_INFO.isMobile) {
                         e = e.targetTouches[0]
                         mX = e['clientX'] - sX, mY = e['clientY'] - sY;
@@ -97,7 +113,7 @@ var RedObitController;
                 window.removeEventListener(tUp, HD_up);
             };
             HD_wheel = function (e) {
-                if(self['needUpdate']) {
+                if (self['needUpdate']) {
                     console.log(e);
                     self['distance'] += e['deltaY'] / 100 * self['_speedDistance']
                 }
@@ -247,7 +263,7 @@ var RedObitController;
         var PER_PI;
         PER_PI = Math.PI / 180;
         return function () {
-            if(!this['needUpdate']) return
+            if (!this['needUpdate']) return
             if (this['_tilt'] < this['_minTilt']) this['_tilt'] = this['_minTilt'];
             if (this['_tilt'] > this['_maxTilt']) this['_tilt'] = this['_maxTilt'];
             tDelayRotation = this['_delayRotation'];
