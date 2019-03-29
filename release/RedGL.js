@@ -2685,6 +2685,7 @@ var RedGL;
                     tYkey = 'layerY';
                 }
                 self['_canvas'].addEventListener(v, function (e) {
+                    console.log(e)
                     e.preventDefault()
 
                     if (RedGLDetect.BROWSER_INFO.isMobile) {
@@ -2693,8 +2694,8 @@ var RedGL;
                                 {
                                     type: e.type,
                                     //TODO 모바일에서 확인해야함
-                                    x: e.changedTouches[0].clientX * window.devicePixelRatio,
-                                    y: e.changedTouches[0].clientY * window.devicePixelRatio
+                                    x: e.changedTouches[0].clientX,
+                                    y: e.changedTouches[0].clientY
                                 }
                             )
                         }
@@ -25523,4 +25524,4 @@ var RedGLOffScreen;
         }
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-03-28 21:18:59)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-03-29 13:16:52)' };console.log(RedGL_VERSION);
