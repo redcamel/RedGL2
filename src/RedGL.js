@@ -284,6 +284,7 @@ var RedGL;
                     tYkey = 'layerY';
                 }
                 self['_canvas'].addEventListener(v, function (e) {
+                    console.log(e)
                     e.preventDefault()
 
                     if (RedGLDetect.BROWSER_INFO.isMobile) {
@@ -292,8 +293,8 @@ var RedGL;
                                 {
                                     type: e.type,
                                     //TODO 모바일에서 확인해야함
-                                    x: e.changedTouches[0].clientX * window.devicePixelRatio,
-                                    y: e.changedTouches[0].clientY * window.devicePixelRatio
+                                    x: e.changedTouches[0].clientX,
+                                    y: e.changedTouches[0].clientY
                                 }
                             )
                         }
