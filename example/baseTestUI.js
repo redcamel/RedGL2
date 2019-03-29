@@ -166,9 +166,18 @@ baseTestUI.exampleList = [
                 href: 'camera/RedBasicController.html'
             },
             {
+                key: 'RedBasicController_targetView',
+                href: 'camera/RedBasicController_targetView.html'
+            },
+            {
                 key: 'RedObitController',
                 href: 'camera/RedObitController.html'
+            },
+            {
+                key: 'RedObitController_targetView',
+                href: 'camera/RedObitController_targetView.html'
             }
+
         ]
     },
     {
