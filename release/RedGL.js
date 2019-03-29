@@ -21112,34 +21112,46 @@ var RedObitController;
             var sX, sY;
             var mX, mY;
             var tMove, tUp, tDown;
+            var checkArea;
+            checkArea = function(e){
+                if (self['targetView']) {
+                    var tX, tY
+                    if (RedGLDetect.BROWSER_INFO.isMobile) {
+                        console.log(e)
+                        tX = e['clientX'], tY = e['clientY'];
+                    } else {
+                        tX =e[tXkey], tY =e[tYkey];
+                    }
+                    if (!(self['targetView']['_viewRect'][0] < tX && tX < self['targetView']['_viewRect'][0] + self['targetView']['_viewRect'][2])) return;
+                    if (!(self['targetView']['_viewRect'][1] < tY && tY < self['targetView']['_viewRect'][1] + self['targetView']['_viewRect'][3])) return;
+                }
+                return true
+            }
             tMove = RedGLDetect.BROWSER_INFO.move
             tUp = RedGLDetect.BROWSER_INFO.up
             tDown = RedGLDetect.BROWSER_INFO.down
             sX = 0, sY = 0;
             mX = 0, mY = 0;
+            var tXkey,tYkey;
+            if (RedGLDetect.BROWSER_INFO.browser == 'ie' && RedGLDetect.BROWSER_INFO.browserVer == 11) {
+                tXkey = 'offsetX';
+                tYkey = 'offsetY';
+            } else {
+                tXkey = 'layerX';
+                tYkey = 'layerY';
+            }
             HD_down = function (e) {
                 if (self['needUpdate']) {
                     if (RedGLDetect.BROWSER_INFO.isMobile) {
                         console.log(e)
                         e = e.targetTouches[0]
                     }
-                    if (self['targetView']) {
-                        var tX, tY
-                        if (RedGLDetect.BROWSER_INFO.isMobile) {
-                            console.log(e)
-                            tX = e['clientX'], tY = e['clientY'];
-                        } else {
-                            tX = e['x'], tY = e['y'];
-                        }
-                        if (!(self['targetView']['_viewRect'][0] < tX && tX < self['targetView']['_viewRect'][0] + self['targetView']['_viewRect'][2])) return;
-                        if (!(self['targetView']['_viewRect'][1] < tY && tY < self['targetView']['_viewRect'][1] + self['targetView']['_viewRect'][3])) return;
-
-                    }
+                    if(!checkArea(e)) return;
                     if (RedGLDetect.BROWSER_INFO.isMobile) {
                         console.log(e)
                         sX = e['clientX'], sY = e['clientY'];
                     } else {
-                        sX = e['x'], sY = e['y'];
+                        sX =e[tXkey], sY =e[tYkey];
                     }
                     redGL['_canvas'].addEventListener(tMove, HD_Move);
                     window.addEventListener(tUp, HD_up);
@@ -21153,8 +21165,8 @@ var RedObitController;
                         mX = e['clientX'] - sX, mY = e['clientY'] - sY;
                         sX = e['clientX'], sY = e['clientY'];
                     } else {
-                        mX = e['x'] - sX, mY = e['y'] - sY;
-                        sX = e['x'], sY = e['y'];
+                        mX =e[tXkey] - sX, mY =e[tYkey] - sY;
+                        sX =e[tXkey], sY =e[tYkey];
                     }
                     self['_pan'] -= mX * self['_speedRotation'] * 0.1;
                     self['_tilt'] -= mY * self['_speedRotation'] * 0.1;
@@ -21167,6 +21179,7 @@ var RedObitController;
             HD_wheel = function (e) {
                 if (self['needUpdate']) {
                     console.log(e);
+                    if(!checkArea(e)) return;
                     self['distance'] += e['deltaY'] / 100 * self['_speedDistance']
                 }
             };
@@ -25540,4 +25553,4 @@ var RedGLOffScreen;
         }
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-03-29 18:04:57)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-03-29 18:28:04)' };console.log(RedGL_VERSION);
