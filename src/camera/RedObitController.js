@@ -61,14 +61,14 @@ var RedObitController;
             var mX, mY;
             var tMove, tUp, tDown;
             var checkArea;
-            checkArea = function(e){
+            checkArea = function (e) {
                 if (self['targetView']) {
                     var tX, tY
                     if (RedGLDetect.BROWSER_INFO.isMobile) {
                         console.log(e)
                         tX = e['clientX'], tY = e['clientY'];
                     } else {
-                        tX =e[tXkey], tY =e[tYkey];
+                        tX = e[tXkey], tY = e[tYkey];
                     }
                     if (!(self['targetView']['_viewRect'][0] < tX && tX < self['targetView']['_viewRect'][0] + self['targetView']['_viewRect'][2])) return;
                     if (!(self['targetView']['_viewRect'][1] < tY && tY < self['targetView']['_viewRect'][1] + self['targetView']['_viewRect'][3])) return;
@@ -80,7 +80,7 @@ var RedObitController;
             tDown = RedGLDetect.BROWSER_INFO.down
             sX = 0, sY = 0;
             mX = 0, mY = 0;
-            var tXkey,tYkey;
+            var tXkey, tYkey;
             if (RedGLDetect.BROWSER_INFO.browser == 'ie' && RedGLDetect.BROWSER_INFO.browserVer == 11) {
                 tXkey = 'offsetX';
                 tYkey = 'offsetY';
@@ -94,12 +94,12 @@ var RedObitController;
                         console.log(e)
                         e = e.targetTouches[0]
                     }
-                    if(!checkArea(e)) return;
+                    if (!checkArea(e)) return;
                     if (RedGLDetect.BROWSER_INFO.isMobile) {
                         console.log(e)
                         sX = e['clientX'], sY = e['clientY'];
                     } else {
-                        sX =e[tXkey], sY =e[tYkey];
+                        sX = e[tXkey], sY = e[tYkey];
                     }
                     redGL['_canvas'].addEventListener(tMove, HD_Move);
                     window.addEventListener(tUp, HD_up);
@@ -113,8 +113,8 @@ var RedObitController;
                         mX = e['clientX'] - sX, mY = e['clientY'] - sY;
                         sX = e['clientX'], sY = e['clientY'];
                     } else {
-                        mX =e[tXkey] - sX, mY =e[tYkey] - sY;
-                        sX =e[tXkey], sY =e[tYkey];
+                        mX = e[tXkey] - sX, mY = e[tYkey] - sY;
+                        sX = e[tXkey], sY = e[tYkey];
                     }
                     self['_pan'] -= mX * self['_speedRotation'] * 0.1;
                     self['_tilt'] -= mY * self['_speedRotation'] * 0.1;
@@ -127,7 +127,7 @@ var RedObitController;
             HD_wheel = function (e) {
                 if (self['needUpdate']) {
                     console.log(e);
-                    if(!checkArea(e)) return;
+                    if (!checkArea(e)) return;
                     self['distance'] += e['deltaY'] / 100 * self['_speedDistance']
                 }
             };

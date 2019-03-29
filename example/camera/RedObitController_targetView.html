@@ -1,0 +1,74 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>RedGL - RedObitController_targetView</title>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
+    />
+    <link rel="stylesheet" href="../example.css">
+
+    <script src="../dat.gui.min.js"></script>
+    <script src="../baseTestUI.js"></script>
+    <script src="../../release/RedGL.min.js"></script>
+</head>
+
+<body>
+<script id='testSource'>
+    var testUI;
+    var canvas;
+    var assetPath = '../../asset/'
+    canvas = document.createElement('canvas');
+    document.body.appendChild(canvas);
+    RedGL(canvas, function (v) {
+        if (v) {
+            console.log('초기화 성공!')
+            var tWorld, tScene, tController, tController2, tRenderer;
+            // 월드 생성
+            this['world'] = tWorld = RedWorld();
+            // 씬 생성
+            tScene = RedScene(this);
+            // 카메라 생성
+            tController = RedObitController(this);
+            tController.tilt = -45
+            tController.pan = 45
+            tController2 = RedObitController(this);
+            tController2.tilt = -45
+            tController2.pan = 45
+            // 렌더러 생성
+            tRenderer = RedRenderer();
+            // 뷰생성 및 적용
+            tWorld.addView(RedView('test', this, tScene, tController));
+            tWorld.addView(RedView('test2', this, tScene, tController2));
+            RedView('test').setSize('50%', '100%')
+            RedView('test2').setSize('50%', '100%')
+            RedView('test2').setLocation('50%', 0)
+            tController['targetView'] = RedView('test');
+            tController2['targetView'] = RedView('test2');
+            // 그리드 설정
+            tScene['grid'] = RedGrid(this)
+            // axis 설정
+            tScene['axis'] = RedAxis(this)
+            // 렌더시작
+            tRenderer.start(this, function (time) {
+            })
+            // 렌더 디버거 활성화
+            tRenderer.setDebugButton();
+            //
+            testUI(this, tController)
+        } else {
+            console.log('초기화 실패!')
+        }
+    })
+    testUI = function (redGL, tController) {
+        console.log('test')
+        var gui = new baseTestUI(redGL)
+        gui.initRedGL()
+
+    }
+</script>
+</body>
+
+</html>

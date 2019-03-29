@@ -25,6 +25,7 @@ var RedBasicController;
         var self;
         if (!(this instanceof RedBasicController)) return new RedBasicController(redGL);
         self = this;
+        this['targetView'] = null;
         this['keyBuffer'] = {};
         /**DOC:
          {
@@ -70,6 +71,7 @@ var RedBasicController;
         this['speedRotation'] = 1;
         this['delayRotation'] = 0.1;
         this['maxAcceleration'] = 3;
+        this['_currentAcceleration'] = 0
         /**DOC:
          {
 		     code : 'PROPERTY',
@@ -92,12 +94,44 @@ var RedBasicController;
             var sX, sY;
             var mX, mY;
             var tMove, tUp, tDown;
+            var tXkey, tYkey;
+            if (RedGLDetect.BROWSER_INFO.browser == 'ie' && RedGLDetect.BROWSER_INFO.browserVer == 11) {
+                tXkey = 'offsetX';
+                tYkey = 'offsetY';
+            } else {
+                tXkey = 'layerX';
+                tYkey = 'layerY';
+            }
+            var checkArea;
+            checkArea = function (e) {
+                if (!e) {
+                    e = {
+                        clientX: redGL['_mouseX'],
+                        clientY: redGL['_mouseY']
+                    }
+                    e[tXkey] = redGL['_mouseX'];
+                    e[tYkey] = redGL['_mouseY'];
+                }
+                if (self['targetView']) {
+                    var tX, tY
+                    if (RedGLDetect.BROWSER_INFO.isMobile) {
+                        console.log(e)
+                        tX = e['clientX'], tY = e['clientY'];
+                    } else {
+                        tX = e[tXkey], tY = e[tYkey];
+                    }
+                    if (!(self['targetView']['_viewRect'][0] < tX && tX < self['targetView']['_viewRect'][0] + self['targetView']['_viewRect'][2])) return;
+                    if (!(self['targetView']['_viewRect'][1] < tY && tY < self['targetView']['_viewRect'][1] + self['targetView']['_viewRect'][3])) return;
+                }
+                return true
+            }
             tMove = RedGLDetect.BROWSER_INFO.move
             tUp = RedGLDetect.BROWSER_INFO.up
             tDown = RedGLDetect.BROWSER_INFO.down
             sX = 0, sY = 0;
             mX = 0, mY = 0;
             HD_keyDown = function (e) {
+                if (!checkArea()) return;
                 self['keyBuffer'][e['key']] = 1
             };
             HD_keyUp = function (e) {
@@ -105,10 +139,14 @@ var RedBasicController;
             };
             HD_down = function (e) {
                 if (RedGLDetect.BROWSER_INFO.isMobile) {
+                    console.log(e)
                     e = e.targetTouches[0]
+                }
+                if (!checkArea(e)) return;
+                if (RedGLDetect.BROWSER_INFO.isMobile) {
                     sX = e['clientX'], sY = e['clientY'];
                 } else {
-                    sX = e['x'], sY = e['y'];
+                    sX = e[tXkey], sY = e[tYkey];
                 }
                 redGL['_canvas'].addEventListener(tMove, HD_Move);
                 window.addEventListener(tUp, HD_up);
@@ -119,8 +157,8 @@ var RedBasicController;
                     mX = e['clientX'] - sX, mY = e['clientY'] - sY;
                     sX = e['clientX'], sY = e['clientY'];
                 } else {
-                    mX = e['x'] - sX, mY = e['y'] - sY;
-                    sX = e['x'], sY = e['y'];
+                    mX = e[tXkey] - sX, mY = e[tYkey] - sY;
+                    sX = e[tXkey], sY = e[tYkey];
                 }
                 self['_desirePan'] -= mX * self['_speedRotation'] * 0.1;
                 self['_desireTilt'] -= mY * self['_speedRotation'] * 0.1;
@@ -309,7 +347,7 @@ var RedBasicController;
         var displacementMTX;
         var displacementVec3;
         var tCamera;
-        var currentAcceleration;
+
         var tKeyBuffer;
         var tKeyNameMapper;
         var tDesirePosition;
@@ -317,7 +355,6 @@ var RedBasicController;
         tMTX0 = mat4.create();
         tMTX1 = mat4.create();
         displacementVec3 = vec3.create();
-        currentAcceleration = 0;
         return function () {
             tPan = 0;
             tTilt = 0;
@@ -339,19 +376,19 @@ var RedBasicController;
             if (tKeyBuffer[tKeyNameMapper['turnRight']]) rotate = true, tPan = -tSpeedRotation;
             if (tKeyBuffer[tKeyNameMapper['turnUp']]) rotate = true, tTilt = tSpeedRotation;
             if (tKeyBuffer[tKeyNameMapper['turnDown']]) rotate = true, tTilt = -tSpeedRotation;
-            if (tKeyBuffer[tKeyNameMapper['moveForward']]) move = true, displacementVec3[2] = -currentAcceleration * tSpeed;
-            if (tKeyBuffer[tKeyNameMapper['moveBack']]) move = true, displacementVec3[2] = currentAcceleration * tSpeed;
-            if (tKeyBuffer[tKeyNameMapper['moveLeft']]) move = true, displacementVec3[0] = -currentAcceleration * tSpeed;
-            if (tKeyBuffer[tKeyNameMapper['moveRight']]) move = true, displacementVec3[0] = currentAcceleration * tSpeed;
-            if (tKeyBuffer[tKeyNameMapper['moveUp']]) move = true, displacementVec3[1] = currentAcceleration * tSpeed;
-            if (tKeyBuffer[tKeyNameMapper['moveDown']]) move = true, displacementVec3[1] = -currentAcceleration * tSpeed;
+            if (tKeyBuffer[tKeyNameMapper['moveForward']]) move = true, displacementVec3[2] = -this['_currentAcceleration'] * tSpeed;
+            if (tKeyBuffer[tKeyNameMapper['moveBack']]) move = true, displacementVec3[2] = this['_currentAcceleration'] * tSpeed;
+            if (tKeyBuffer[tKeyNameMapper['moveLeft']]) move = true, displacementVec3[0] = -this['_currentAcceleration'] * tSpeed;
+            if (tKeyBuffer[tKeyNameMapper['moveRight']]) move = true, displacementVec3[0] = this['_currentAcceleration'] * tSpeed;
+            if (tKeyBuffer[tKeyNameMapper['moveUp']]) move = true, displacementVec3[1] = this['_currentAcceleration'] * tSpeed;
+            if (tKeyBuffer[tKeyNameMapper['moveDown']]) move = true, displacementVec3[1] = -this['_currentAcceleration'] * tSpeed;
             // 가속도 계산
             if (rotate || move) {
-                currentAcceleration += 0.1;
-                if (currentAcceleration > this['_maxAcceleration']) currentAcceleration = this['_maxAcceleration']
+                this['_currentAcceleration'] += 0.1;
+                if (this['_currentAcceleration'] > this['_maxAcceleration']) this['_currentAcceleration'] = this['_maxAcceleration']
             } else {
-                currentAcceleration += -0.1;
-                if (currentAcceleration < 0) currentAcceleration = 0
+                this['_currentAcceleration'] += -0.1;
+                if (this['_currentAcceleration'] < 0) this['_currentAcceleration'] = 0
             }
             //
             targetObject = this['_targetObject'];

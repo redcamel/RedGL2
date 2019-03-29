@@ -297,6 +297,8 @@ var RedGL;
                                     y: e.changedTouches[0].clientY
                                 }
                             )
+                            self._mouseX =e.changedTouches[0].clientX
+                            self._mouseY =e.changedTouches[0].clientY
                         }
                     }
                     else {
@@ -308,6 +310,8 @@ var RedGL;
                                 y: e[tYkey]
                             }
                         )
+                        self._mouseX =e[tXkey]
+                        self._mouseY =e[tYkey]
                         // self.world._viewList.forEach(function(view){
                         //     if(!view['_mouseEventInfo']) view['_mouseEventInfo']=[]
                         //     view['_mouseEventInfo'].push(
@@ -321,7 +325,6 @@ var RedGL;
                     }
                 }, false)
             });
-
             self.setSize(self['_width'], self['_height']); // 리사이즈를 초기에 한번 실행.
             callback ? callback.call(self, tGL ? true : false) : 0; // 콜백이 있으면 실행
 
