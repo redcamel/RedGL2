@@ -12,6 +12,7 @@ var RedBaseLight;
 	 }
      :DOC*/
     RedBaseLight = function () {
+        if (!(this instanceof RedBaseLight)) return new RedBaseLight();
     };
     RedBaseLight.prototype = {};
     /**DOC:

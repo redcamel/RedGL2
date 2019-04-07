@@ -4052,6 +4052,7 @@ var RedBaseLight;
 	 }
      :DOC*/
     RedBaseLight = function () {
+        if (!(this instanceof RedBaseLight)) return new RedBaseLight();
     };
     RedBaseLight.prototype = {};
     /**DOC:
@@ -25607,4 +25608,4 @@ var RedGLOffScreen;
         }
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-04-07 15:42:05)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-04-07 16:07:55)' };console.log(RedGL_VERSION);

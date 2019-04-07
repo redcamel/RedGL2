@@ -7,7 +7,8 @@ var RedBaseMaterial;
 		 constructorYn : true,
 		 title :`RedBaseMaterial`,
 		 description : `
-			 RedBaseMaterial 기저층
+			 RedBaseMaterial 기저층.
+			 재질은 이 객체의 확장으로 이루어진다.
 		 `,
 		 return : 'RedBaseMaterial instance'
 	 }
@@ -77,19 +78,7 @@ var RedBaseMaterial;
             };
             makeOptionProgram = function (programList, spaceName, programName, redGL, vSource, fSource, systemOptionList, programOptionList) {
                 programOptionList = programOptionList || [];
-                // console.log('rootName', rootName, list)
-                // programOptionList.forEach(function (key, index) {
-                //     // console.log(key)
-                //     var tOptionName = programOptionList.join('_');
-                //     // console.log('tOptionName', tOptionName)
-                //     if (!programList['basic'][programName + '_' + tOptionName]) programList['basic'][programName + '_' + tOptionName] = new makePrepareProgram(redGL, programList, programName, vSource, fSource, null, programOptionList);
-                //     if (!programList[spaceName][programName + '_' + tOptionName]) programList[spaceName][programName + '_' + tOptionName] = new makePrepareProgram(redGL, programList, programName, vSource, fSource, systemOptionList, programOptionList);
-                //     // else console.log('중복', programName)
-                //     var newList = programOptionList.concat();
-                //     newList.splice(index, 1);
-                //     // console.log('newList', newList)
-                //     makeOptionProgram(programList, spaceName, programName, redGL, vSource, fSource, systemOptionList, newList);
-                // })
+
                 function k_combinations(set, k) {
                     var i, j, combs, head, tailcombs;
                     // There is no way to take e.g. sets of 5 elements from
@@ -97,12 +86,10 @@ var RedBaseMaterial;
                     if (k > set.length || k <= 0) {
                         return [];
                     }
-
                     // K-sized set has only one K-sized subset.
                     if (k == set.length) {
                         return [set];
                     }
-
                     // There is N 1-sized subsets in a N-sized set.
                     if (k == 1) {
                         combs = [];
@@ -125,6 +112,7 @@ var RedBaseMaterial;
                     }
                     return combs;
                 }
+
                 function combinations(set) {
                     var k, i, combs, k_combs;
                     combs = [];
@@ -136,6 +124,7 @@ var RedBaseMaterial;
                     }
                     return combs;
                 }
+
                 // console.log('combinations(programOptionList)',combinations(programOptionList))
                 var tList = combinations(programOptionList)
 
@@ -181,7 +170,7 @@ var RedBaseMaterial;
                     redGL['_datas']['RedProgramGroup'][programName] = target['_programList'];
                 }
                 target['program'] = target['_programList']['basic'][programName];
-                console.log('prepareNum',prepareNum)
+                console.log('prepareNum', prepareNum)
             }
         })(),
         _searchProgram: (function () {
