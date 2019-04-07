@@ -50,7 +50,7 @@
   {
     "constructorYn": true,
     "title": "RedBaseMaterial",
-    "description": "\n\t RedBaseMaterial 기저층\n ",
+    "description": "\n\t RedBaseMaterial 기저층.\n\t 재질은 이 객체의 확장으로 이루어진다.\n ",
     "return": "RedBaseMaterial instance"
   }
 ]
