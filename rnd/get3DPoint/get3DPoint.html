@@ -1,0 +1,263 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>redGL - RedLinearSpline</title>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
+    />
+    <link rel="stylesheet" href="../../example/example.css">
+
+    <script src="../../example/dat.gui.min.js"></script>
+    <script src="../../example/baseTestUI.js"></script>
+    <script src="../../release/RedGL.min.js"></script>
+</head>
+
+<body>
+<script id='testSource'>
+    var testUI;
+    var canvas;
+    var assetPath = '../../asset/'
+    canvas = document.createElement('canvas');
+    document.body.appendChild(canvas);
+
+
+    var testOption = {
+        drawMode: 'TRIANGLES',
+        pointSize: 1,
+        radiusTop: 1,
+        radiusBottom: 1,
+        height: 1,
+        numDivisions: 16,
+        distance: 0.4,
+        capStart: false,
+        capEnd: false,
+        startAngle: 0,
+        endAngle: Math.PI * 2,
+        maxAngle: Math.PI / 180 * 30,
+        tolerance: 0.15,
+        flipX: false,
+        flipY: true
+    }
+    RedGL(canvas, function (v) {
+        if (v) {
+            console.log('초기화 성공!')
+            var self = this
+            var tWorld, tView, tScene, tController, tRenderer;
+            var setBase = function (redGL) {
+                // 월드 생성
+                redGL['world'] = tWorld = RedWorld();
+                // 씬 생성
+                tScene = RedScene(redGL);
+                // 카메라 생성
+                tController = RedObitController(redGL);
+                tController.pan = 0;
+                tController.tilt = 0;
+                tController.distance = 10
+                tController.speedDistance = 1
+                var tLight = RedDirectionalLight(redGL);
+                tScene.addLight(tLight)
+                tLight.x = 30;
+                tLight.y = 30;
+                tLight.z = 30;
+                tLight.debug = true
+                tLight = RedDirectionalLight(redGL);
+                tScene.addLight(tLight)
+                tLight.x = -30
+                tLight.y = -30;
+                tLight.z = -30;
+                tLight.debug = true
+                // 렌더러 생성
+                tRenderer = RedRenderer();
+                // 뷰생성 및 적용
+                tView = RedView('HelloRedGL', redGL, tScene, tController);
+                tWorld.addView(tView);
+                // 그리드 설정
+                tScene['grid'] = RedGrid(redGL);
+                // 렌더시작
+                tRenderer.start(redGL, function (time) {
+                });
+                // 렌더 디버거 활성화
+                tRenderer.setDebugButton();
+                // testUI 호출
+                testUI(redGL, tController, tScene);
+                console.log(redGL);
+            };
+            setBase(this);
+            var tMesh = RedMesh(this, RedBox(this), RedColorMaterial(this))
+            tScene.addChild(tMesh)
+
+            var tMeshTargetPlane = RedMesh(this, RedPlane(this, 100, 100), RedColorMaterial(this, '#ff0000', 0.3))
+            tMeshTargetPlane.useCullFace = false
+            tScene.addChild(tMeshTargetPlane)
+
+            function unproject(out, vec, viewport, invProjectionView) {
+                var viewX = viewport[0],
+                    viewY = viewport[1],
+                    viewWidth = viewport[2],
+                    viewHeight = viewport[3]
+
+                var x = vec[0],
+                    y = vec[1],
+                    z = vec[2]
+
+                x = x - viewX
+                y = viewHeight - y - 1
+                y = y - viewY
+
+                out[0] = (2 * x) / viewWidth - 1
+                out[1] = (2 * y) / viewHeight - 1
+                out[2] = 2 * z - 1
+                vec3.transformMat4(out, out, invProjectionView)
+            }
+
+            function getRayvector(x, y, targetView) {
+                var camera = tController.camera
+                //projection * view matrix
+
+//now invert it
+                var invProjView = mat4.invert([], camera['matrix'])
+
+//viewport bounds
+                var viewport = targetView['_viewRect']
+
+//2D point in screen space
+//z=0 means "near plane"
+                var point = [x, y, 0]
+
+//vec3 output
+                var output = []
+                unproject(output, point, viewport, invProjView)
+                return output
+            };
+            var lookAt = (function () {
+                var up = new Float32Array([0, 1, 0]);
+                var tPosition = [];
+                return function (x, y, z) {
+                    tPosition[0] = x;
+                    tPosition[1] = y;
+                    tPosition[2] = z;
+                    //out, eye, center, up
+                    mat4.identity(tMeshTargetPlane['matrix']);
+                    mat4.targetTo(tMeshTargetPlane['matrix'], [tMeshTargetPlane.x, tMeshTargetPlane.y, tMeshTargetPlane.z], tPosition, up);
+                    //
+                    tMeshTargetPlane.autoUpdateMatrix = false
+
+                    console.log(tMeshTargetPlane['matrix'])
+                }
+            })();
+            document.body.addEventListener(
+                'mousemove', function (e) {
+                    // console.log(e.layerX,e.layerY)
+                    lookAt(tController.camera.x, tController.camera.y, tController.camera.z)
+                    var a = getRayvector(e.layerX, e.layerY, tView)
+                    console.log(a)
+
+                    var t = [tController.camera.x, tController.camera.y, tController.camera.z];
+                    t = vec3.length(t)
+
+                    tMesh.x = (a[0] - tController.camera.x) * t;
+                    // tMesh.y = (a[1] - tController.camera.y) * t;
+                    tMesh.z = (a[2] - tController.camera.z) * t;
+                }
+            )
+
+        } else {
+            console.log('초기화 실패!')
+        }
+    })
+    testUI = function (redGL, tController, tScene) {
+        // console.log('test')
+        // var gui = new baseTestUI(redGL);
+        // gui.initRedGL();
+        //
+        // var tFolder
+        // var testList = {
+        //     testList: testPoints
+        // }
+        //
+        //
+        // tFolder = gui['gui'].addFolder('RedMesh')
+        // tFolder.open()
+        // tFolder.add(testOption, 'drawMode', ['TRIANGLES', 'TRIANGLE_STRIP', 'TRIANGLE_FAN', 'LINES', 'LINE_LOOP', 'LINE_STRIP', 'POINTS']).onChange(function (v) {
+        //     tScene.children.forEach(function (v2) {
+        //         v2.drawMode = redGL.gl[v]
+        //     })
+        // });
+        // tFolder.add(testOption, 'pointSize', 1, 100).onChange(function (v) {
+        //     tScene.children.forEach(function (v2) {
+        //         v2.pointSize = v
+        //     })
+        // });
+        // tFolder = gui['gui'].addFolder('RedLinearSpline')
+        // tFolder.open()
+        // var makeLathe = function () {
+        //
+        //     return RedLinearSpline(redGL, testPoints, testOption.numDivisions, testOption.capStart, testOption.capEnd, testOption.startAngle, testOption.endAngle, testOption.maxAngle, testOption.distance, testOption.tolerance, testOption.flipX, testOption.flipY);
+        // };
+        // 'numDivisions'.split(',').forEach(function (tKey) {
+        //     tFolder.add(testOption, tKey, 0, 60, 1).onChange(function () {
+        //         tScene.children.forEach(function (tMesh) {
+        //             tMesh.geometry = makeLathe();
+        //         })
+        //     })
+        // });
+        // 'distance'.split(',').forEach(function (tKey) {
+        //     tFolder.add(testOption, tKey, 0, 20, 0.001).onChange(function () {
+        //         tScene.children.forEach(function (tMesh) {
+        //             tMesh.geometry = makeLathe();
+        //         })
+        //     })
+        // });
+        // 'maxAngle'.split(',').forEach(function (tKey) {
+        //     tFolder.add(testOption, tKey, 0.0, Math.PI * 2, 0.001).onChange(function () {
+        //         tScene.children.forEach(function (tMesh) {
+        //             tMesh.geometry = makeLathe();
+        //         })
+        //     })
+        // });
+        // 'tolerance'.split(',').forEach(function (tKey) {
+        //     tFolder.add(testOption, tKey, 0.1, 1, 0.00001).onChange(function () {
+        //         tScene.children.forEach(function (tMesh) {
+        //             tMesh.geometry = makeLathe();
+        //         })
+        //     })
+        // });
+        // tFolder.add(testOption, 'capStart').onChange(function (v) {
+        //     tScene.children.forEach(function (v2) {
+        //         v2.geometry = makeLathe();
+        //     })
+        // });
+        //
+        // tFolder.add(testOption, 'capEnd').onChange(function (v) {
+        //     tScene.children.forEach(function (v2) {
+        //         v2.geometry = makeLathe();
+        //     })
+        // });
+        // tFolder.add(testOption, 'startAngle', 0, Math.PI * 2, 0.001).onChange(function (v) {
+        //     tScene.children.forEach(function (v2) {
+        //         v2.geometry = makeLathe();
+        //     })
+        // });
+        // tFolder.add(testOption, 'endAngle', 0, Math.PI * 2, 0.001).onChange(function (v) {
+        //     tScene.children.forEach(function (v2) {
+        //         v2.geometry = makeLathe();
+        //     })
+        // });
+        // tFolder.add(testOption, 'flipX').onChange(function (v) {
+        //     tScene.children.forEach(function (v2) {
+        //         v2.geometry = makeLathe();
+        //     })
+        // });
+        // tFolder.add(testOption, 'flipY').onChange(function (v) {
+        //     tScene.children.forEach(function (v2) {
+        //         v2.geometry = makeLathe();
+        //     })
+        // });
+    }
+</script>
+</body>
+
+</html>

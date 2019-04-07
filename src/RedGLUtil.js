@@ -25,6 +25,11 @@ var RedGLUtil;
         throwFunc: function () {
             throw 'RedGL Error : ' + Array.prototype.slice.call(arguments).join(' ')
         },
+        isUint: function (v, title) {
+            (typeof v == 'number' && v >= 0) || RedGLUtil.throwFunc(title, '입력값 : ' + v);
+            Math.floor(v) == v || RedGLUtil.throwFunc(title, '입력값 : ' + v);
+            return true
+        },
         /**DOC:
          {
 			 code : 'STATIC METHOD',
