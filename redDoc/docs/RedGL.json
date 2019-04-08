@@ -2,13 +2,13 @@
   {
     "code": "PROPERTY",
     "title": "detect",
-    "description": "\n\t 하드웨어 디텍팅 정보\n ",
+    "description": "RedGL 초기화시 생성되는 하드웨어 디텍팅 정보",
     "return": "RedGLDetect Instance"
   },
   {
     "code": "PROPERTY",
     "title": "gl",
-    "description": "\n\t 생성된 WebGL Context\n ",
+    "description": "\n\t RedGL 초기화시 생성된 WebGL Context\n ",
     "return": "WebGL Context Instance"
   },
   {
