@@ -3,7 +3,7 @@ var RedColorPhongTextureMaterial;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'RedColorPhongTextureMaterialProgram';
-    var PROGRAM_OPTION_LIST = ['normalTexture', 'specularTexture', 'displacementTexture', 'emissiveTexture', 'useFlatMode','usePreMultiply'];
+    var PROGRAM_OPTION_LIST = ['normalTexture', 'specularTexture', 'displacementTexture', 'emissiveTexture', 'useFlatMode', 'usePreMultiply'];
     var checked;
     vSource = function () {
         /* @preserve

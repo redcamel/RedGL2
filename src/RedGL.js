@@ -297,8 +297,8 @@ var RedGL;
                                     y: e.changedTouches[0].clientY
                                 }
                             )
-                            self._mouseX =e.changedTouches[0].clientX
-                            self._mouseY =e.changedTouches[0].clientY
+                            self._mouseX = e.changedTouches[0].clientX
+                            self._mouseY = e.changedTouches[0].clientY
                         }
                     }
                     else {
@@ -310,8 +310,8 @@ var RedGL;
                                 y: e[tYkey]
                             }
                         )
-                        self._mouseX =e[tXkey]
-                        self._mouseY =e[tYkey]
+                        self._mouseX = e[tXkey]
+                        self._mouseY = e[tYkey]
                         // self.world._viewList.forEach(function(view){
                         //     if(!view['_mouseEventInfo']) view['_mouseEventInfo']=[]
                         //     view['_mouseEventInfo'].push(

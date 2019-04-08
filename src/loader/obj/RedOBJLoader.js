@@ -378,8 +378,8 @@ var RedOBJLoader;
                 else if (redUV.test(line)) {
                     var tUV;
                     tUV = line.split(' ');
-                    pointInfo['uv'].push(+tUV[1], 1-tUV[2])
-                    pointInfo['uvPoints'][pointInfo['uvPoints'].length] = [+tUV[1], 1-tUV[2]]
+                    pointInfo['uv'].push(+tUV[1], 1 - tUV[2])
+                    pointInfo['uvPoints'][pointInfo['uvPoints'].length] = [+tUV[1], 1 - tUV[2]]
                     // console.log('redUV', line, redUV.test(line))
                 }
                 // 인덱스 검색 1//1 1//1 1//1 v//n

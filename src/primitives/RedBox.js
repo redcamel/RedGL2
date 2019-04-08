@@ -25,7 +25,7 @@ var RedBox;
                         interleaveData.push(vector.x, vector.y, vector.z), // position
                         vector[u] = 0, vector[v] = 0, vector[w] = depth > 0 ? 1 : -1,
                         interleaveData.push(vector.x, vector.y, vector.z), // normal
-                        interleaveData.push(ix / gridX,  (iy / gridY)), // texcoord
+                        interleaveData.push(ix / gridX, (iy / gridY)), // texcoord
                         vertexCounter += 1; // counters
                 }
             }

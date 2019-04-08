@@ -112,7 +112,7 @@ var RedCylinder;
                     // uv
                     uv[0] = (cosTheta * 0.5) + 0.5;
                     uv[1] = (sinTheta * 0.5 * sign) + 0.5;
-                    interleaveData.push(uv[0], 1-uv[1]);
+                    interleaveData.push(uv[0], 1 - uv[1]);
                     // increase index
                     index++;
                 }

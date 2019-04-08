@@ -5,7 +5,7 @@ var RedPBRMaterial_System;
     var PROGRAM_NAME = 'RedPBRMaterialSystemProgram';
     var PROGRAM_OPTION_LIST = [
         'diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture',
-        'useFlatMode', 'useMaterialDoubleSide', 'useVertexTangent','useVertexColor_0','usePreMultiply'
+        'useFlatMode', 'useMaterialDoubleSide', 'useVertexTangent', 'useVertexColor_0', 'usePreMultiply'
     ];
     var checked;
     vSource = function () {
@@ -539,7 +539,7 @@ var RedPBRMaterial_System;
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'usePreMultiply', 'boolean', samplerOption);
-    
+
 
     Object.freeze(RedPBRMaterial_System);
 })();

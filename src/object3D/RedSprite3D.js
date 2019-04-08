@@ -54,7 +54,7 @@ var RedSprite3D;
 		 return : 'Boolean'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedSprite3D', 'perspectiveScale', 'boolean', true);
+    RedDefinePropertyInfo.definePrototype('RedSprite3D', 'perspectiveScale', 'boolean');
     /**DOC:
      {
 		 code : 'PROPERTY',
@@ -66,7 +66,7 @@ var RedSprite3D;
 		 return : 'Boolean'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedSprite3D', 'sprite3DYn', 'boolean', true);
+    RedDefinePropertyInfo.definePrototype('RedSprite3D', 'sprite3DYn', 'boolean');
     /**DOC:
      {
 		 code : 'PROPERTY',

@@ -299,7 +299,7 @@ var RedSheetMaterial;
 		 return : 'Boolean'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'loop', 'boolean', true);
+    RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'loop', 'boolean');
     /**DOC:
      {
  	     code : 'PROPERTY',

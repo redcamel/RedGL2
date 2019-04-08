@@ -606,8 +606,6 @@ var RedBaseObject3D;
             if (this['geometry']) this['geometry']['disposeBuffer'](key)
         }
     };
-    //TODO: xyz,scaleXYZ,rotationXYZ 일단 이 GET/SET을 쓸건지 말껀지 결정해야함
-    //TODO: xyz,scaleXYZ,rotationXYZ 렌더러 계산시 get/set 함수 안타게 추적해야함
     /**DOC:
      {
 	     code : 'PROPERTY',

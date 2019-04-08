@@ -206,8 +206,8 @@ var RedText;
             var tW, tH;
             tW = self['_width'];
             tH = self['_height'];
-            if(tW%2==0) tW+=1;
-            if(tH%2==0) tH+=1;
+            if (tW % 2 == 0) tW += 1;
+            if (tH % 2 == 0) tH += 1;
             self['_cvs'] = window['OffscreenCanvas'] ? new OffscreenCanvas(tW, tH) : document.createElement('canvas');
             self['_ctx'] = self['_cvs'].getContext('2d');
             console.log(tW, tH);
@@ -241,7 +241,7 @@ var RedText;
 		 return : 'boolean'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedText', 'perspectiveScale', 'boolean', true);
+    RedDefinePropertyInfo.definePrototype('RedText', 'perspectiveScale', 'boolean');
     /**DOC:
      {
 	     code : 'PROPERTY',
@@ -250,7 +250,7 @@ var RedText;
 		 return : 'boolean'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedText', 'sprite3DYn', 'boolean', true);
+    RedDefinePropertyInfo.definePrototype('RedText', 'sprite3DYn', 'boolean');
     /**DOC:
      {
 	     code : 'PROPERTY',

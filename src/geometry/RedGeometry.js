@@ -100,9 +100,9 @@ var RedGeometry;
             var stride = this['interleaveBuffer']['stride']
             // if (!volume[this]) {
             minX = minY = minZ = maxX = maxY = maxZ = 0,
-                t = this['interleaveBuffer']['data'], i = 0, len =this['interleaveBuffer']['pointNum']
+                t = this['interleaveBuffer']['data'], i = 0, len = this['interleaveBuffer']['pointNum']
             for (i; i < len; i++) {
-                t0 = i*stride , t1 = t0 + 1, t2 = t0 + 2,
+                t0 = i * stride , t1 = t0 + 1, t2 = t0 + 2,
                     minX = t[t0] < minX ? t[t0] : minX,
                     maxX = t[t0] > maxX ? t[t0] : maxX,
                     minY = t[t1] < minY ? t[t1] : minY,

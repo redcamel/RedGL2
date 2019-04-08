@@ -119,7 +119,7 @@ var RedDAELoader;
             for (i; i < len; i++) {
                 uvPointList.push([
                     tTexcoord[i * 2 + 0],
-                    1-tTexcoord[i * 2 + 1]
+                    1 - tTexcoord[i * 2 + 1]
                 ])
             }
             console.log('pointList', pointList)

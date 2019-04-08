@@ -79,7 +79,7 @@ var RedImageLoader;
         self['_src'] = src
         self['_onLoad'] = onLoad
         self['_onError'] = onError
-        if (window && window['document'] ) {
+        if (window && window['document']) {
             var img;
             var HD_onLoad, HD_onError, clearEvents;
             clearEvents = function (img) {

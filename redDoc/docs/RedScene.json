@@ -2,7 +2,7 @@
   {
     "title": "addLight",
     "code": "METHOD",
-    "description": "\n\t 라이트 추가 매서드.\n\t RedBaseLight 확장객체만 등록가능. ( RedAmbientLight, RedDirectionalLight, RedPointLight ).\n\t 하드웨어 상황에 따른 라이트별 허용갯수까지만 등록가능.\n ",
+    "description": "\n\t 라이트 추가 매서드.\n\t RedBaseLight 확장객체만 등록가능. ( RedAmbientLight, RedDirectionalLight, RedPointLight ).\n\t 하드웨어 상황에 따른 라이트별 허용갯수까지만 등록가능.\n\t RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT\n\t RedSystemShaderCode.MAX_POINT_LIGHT\n ",
     "params": {
       "light": [
         {
@@ -32,6 +32,7 @@
         "ex) #fff, #ffffff"
       ]
     },
+    "example": "\n          var testScene;\n          testScene = RedScene(RedGL Instance); // RedScene 생성\n          testScene.backgroundColor = '#fff';\n       ",
     "return": "hex"
   },
   {
@@ -44,18 +45,21 @@
     "code": "PROPERTY",
     "title": "fogColor",
     "description": "\n     fog 컬러값.\n\t 초기값 : #ffffff\n ",
+    "example": "\n          var testScene;\n          testScene = RedScene(RedGL Instance); // RedScene 생성\n          testScene.fogColor = '#ffffff';\n       ",
     "return": "hex"
   },
   {
     "code": "PROPERTY",
     "title": "fogDensity",
     "description": "\n\t fog 농도.\n\t 초기값 : 0.5\n ",
+    "example": "\n          var testScene;\n          testScene = RedScene(RedGL Instance); // RedScene 생성\n          testScene.fogDensity = 0.5;\n       ",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "fogDistance",
     "description": "\n\t fog 가시거리.\n\t 초기값 : 25.0\n ",
+    "example": "\n          var testScene;\n          testScene = RedScene(RedGL Instance); // RedScene 생성\n          testScene.fogDistance = 50;\n       ",
     "return": "Number"
   },
   {
@@ -64,6 +68,12 @@
     "description": "\n\t 그리드 get/set\n ",
     "example": "\n          var testScene;\n          var testGrid;\n          testScene = RedScene(RedGL Instance); // RedScene 생성 설정\n          testGrid = RedGrid(RedGL Instance); // 그리드 생성\n          testScene.grid = testGrid; // 그리드 설정\n       ",
     "return": "RedGrid Instance"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "mouseManager",
+    "description": "\n\t 마우스 이벤트 매니저.\n\t RedScene Instance생성시 자동생성.\n ",
+    "return": "RedMouseEventManager Instance"
   },
   {
     "constructorYn": true,
@@ -104,6 +114,13 @@
     "return": "void"
   },
   {
+    "title": "removeLightAll",
+    "code": "METHOD",
+    "description": "\n\t 전체 라이트 제거 매서드.\n ",
+    "example": "\n             var testScene;\n             var testLight;\n             testScene = RedScene(RedGL Instance); // RedScene 생성 설정\n             testScene.addLight( RedAmbientLight(RedGL Instance); ); // 라이트 추가\n             testScene.addLight( RedDirectionalLight(RedGL Instance); ); // 라이트 추가\n             testScene.addLight( RedPointLight(RedGL Instance); ); // 라이트 추가\n             testScene.removeLightAll(); // 라이트 제거\n          ",
+    "return": "void"
+  },
+  {
     "code": "PROPERTY",
     "title": "shadowManager",
     "description": "\n\t 그림자 매니저.\n\t RedScene Instance생성시 자동생성.\n ",
@@ -120,12 +137,14 @@
     "code": "PROPERTY",
     "title": "useBackgroundColor",
     "description": "\n\t backgroundColor 사용여부.\n\t 초기값 : true\n ",
+    "example": "\n          var testScene;\n          testScene = RedScene(RedGL Instance); // RedScene 생성\n          testScene.useBackgroundColor = true;\n       ",
     "return": "Boolean"
   },
   {
     "code": "PROPERTY",
     "title": "useFog",
     "description": "\n\t fog 사용여부\n\t 초기값 : true\n ",
+    "example": "\n          var testScene;\n          testScene = RedScene(RedGL Instance); // RedScene 생성\n          testScene.fog = true;\n       ",
     "return": "Boolean"
   }
 ]

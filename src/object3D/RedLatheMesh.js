@@ -125,13 +125,13 @@ var RedLatheMesh;
         }
     });
     /**DOC:
-        {
+     {
             code : 'PROPERTY',
             title :`numDivisions`,
             description : `분할갯수`,
             return : 'uint'
         }
-    :DOC*/
+     :DOC*/
     RedDefinePropertyInfo.definePrototype('RedLatheMesh', 'numDivisions', 'number', {min: 0, callback: resetGeometry});
     /**DOC:
      {
