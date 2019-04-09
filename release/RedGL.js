@@ -2618,11 +2618,11 @@ var RedGL;
                 if (window['HTMLCanvasElement']) {
                     if (typeof W != 'number') {
                         if (W.indexOf('%') > -1) W = (document.documentElement ? document.documentElement.clientWidth : document.body.clientWidth) * parseFloat(W) / 100;
-                        else RedGLUtil.throwFunc('RedGL setSize : width는 0이상의 숫자나 %만 허용.', W);
+                        else RedGLUtil.throwFunc('RedGL setSize : width는 0이상의 숫자나 %만 허용.', '입력값 :', W);
                     }
                     if (typeof H != 'number') {
                         if (H.indexOf('%') > -1) H = window.innerHeight * parseFloat(H) / 100;
-                        else RedGLUtil.throwFunc('RedGL setSize : height는 0이상의 숫자나 %만 허용.', H);
+                        else RedGLUtil.throwFunc('RedGL setSize : height는 0이상의 숫자나 %만 허용.', '입력값 :', H);
                     }
                     ratio = window['devicePixelRatio'] || 1;
                     tCVS = this['_canvas'];
@@ -25764,4 +25764,4 @@ var RedGLOffScreen;
         }
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-04-08 17:33:58)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-04-09 15:05:02)' };console.log(RedGL_VERSION);
