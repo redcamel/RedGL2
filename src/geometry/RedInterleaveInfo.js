@@ -76,6 +76,7 @@ var RedInterleaveInfo;
 		 }
          :DOC*/
         this['offset'] = null;
+        console.log(this)
     };
     Object.freeze(RedInterleaveInfo);
 })();

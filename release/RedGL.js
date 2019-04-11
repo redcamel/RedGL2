@@ -2686,8 +2686,7 @@ var RedGL;
                             self._mouseX = e.changedTouches[0].clientX;
                             self._mouseY = e.changedTouches[0].clientY
                         }
-                    }
-                    else {
+                    } else {
                         self['_mouseEventInfo'].push(
                             {
                                 type: e.type,
@@ -3843,6 +3842,8 @@ var RedBaseContainer;
 	 }
      :DOC*/
     RedBaseContainer = function () {
+        if (!(this instanceof RedBaseContainer)) return new RedBaseContainer();
+        this['children'] = []
     };
     RedBaseContainer.prototype = new RedBaseObject3D();
     /**DOC:
@@ -4879,6 +4880,7 @@ var RedInterleaveInfo;
 		 }
          :DOC*/
         this['offset'] = null;
+        console.log(this)
     };
     Object.freeze(RedInterleaveInfo);
 })();
@@ -25764,4 +25766,4 @@ var RedGLOffScreen;
         }
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-04-09 15:05:02)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-04-11 17:59:40)' };console.log(RedGL_VERSION);

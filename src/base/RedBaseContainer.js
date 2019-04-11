@@ -14,6 +14,8 @@ var RedBaseContainer;
 	 }
      :DOC*/
     RedBaseContainer = function () {
+        if (!(this instanceof RedBaseContainer)) return new RedBaseContainer();
+        this['children'] = []
     };
     RedBaseContainer.prototype = new RedBaseObject3D();
     /**DOC:

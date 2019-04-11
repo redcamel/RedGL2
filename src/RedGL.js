@@ -297,8 +297,7 @@ var RedGL;
                             self._mouseX = e.changedTouches[0].clientX;
                             self._mouseY = e.changedTouches[0].clientY
                         }
-                    }
-                    else {
+                    } else {
                         self['_mouseEventInfo'].push(
                             {
                                 type: e.type,
