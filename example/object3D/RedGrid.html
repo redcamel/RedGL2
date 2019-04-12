@@ -62,7 +62,12 @@
         var gui = new baseTestUI(redGL)
         var tFolder;
         tFolder = gui['gui'].addFolder('RedGrid');
-        ['size', 'divisions'].forEach(function (key) {
+        ['size'].forEach(function (key) {
+            tFolder.add(redGrid, key, 0, 100, 0.1).onChange(function (v) {
+                redGrid[key] = v
+            });
+        });
+        ['divisions'].forEach(function (key) {
             tFolder.add(redGrid, key, 0, 100, 1).onChange(function (v) {
                 redGrid[key] = v
             });

@@ -75,7 +75,7 @@ var RedScene;
 			 return : 'RedMouseEventManager Instance'
 		 }
          :DOC*/
-        this['mouseManager'] = RedMouseEventManager(redGL)
+        this['mouseManager'] = RedMouseEventManager(redGL);
         this['_lightInfo'] = {
             RedAmbientLight: null,
             RedDirectionalLight: [],
@@ -117,11 +117,11 @@ var RedScene;
                     this['_lightInfo'][light['TYPE']] = light;
                     break;
                 case RedDirectionalLight['TYPE']:
-                    if (this['_lightInfo'][light['TYPE']].length == RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT) RedGLUtil.throwFunc('RedScene : RedDirectionalLight ' + RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT + '개 까지 허용.');
+                    if (this['_lightInfo'][light['TYPE']].length === RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT) RedGLUtil.throwFunc('RedScene : RedDirectionalLight ' + RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT + '개 까지 허용.');
                     this['_lightInfo'][light['TYPE']].push(light);
                     break;
                 case RedPointLight['TYPE']:
-                    if (this['_lightInfo'][light['TYPE']].length == RedSystemShaderCode.MAX_POINT_LIGHT) RedGLUtil.throwFunc('RedScene : RedPointLight ' + RedSystemShaderCode.MAX_POINT_LIGHT + '개 까지 허용.');
+                    if (this['_lightInfo'][light['TYPE']].length === RedSystemShaderCode.MAX_POINT_LIGHT) RedGLUtil.throwFunc('RedScene : RedPointLight ' + RedSystemShaderCode.MAX_POINT_LIGHT + '개 까지 허용.');
                     this['_lightInfo'][light['TYPE']].push(light);
                     break;
                 default:
@@ -157,7 +157,7 @@ var RedScene;
             return function (light) {
                 switch (light['TYPE']) {
                     case RedAmbientLight['TYPE']:
-                        if (this['_lightInfo'][light['TYPE']] == light) this['_lightInfo'][light['TYPE']] = null;
+                        if (this['_lightInfo'][light['TYPE']] === light) this['_lightInfo'][light['TYPE']] = null;
                         break;
                     case RedDirectionalLight['TYPE']:
                         tIndex = this['_lightInfo'][light['TYPE']].indexOf(light);
@@ -326,7 +326,7 @@ var RedScene;
                 this['_fogB'] = t0[2];
             }
         })()
-    })
+    });
     /**DOC:
      {
 	     code : 'PROPERTY',

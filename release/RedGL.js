@@ -4377,12 +4377,10 @@ var RedBuffer;
         switch (bufferType) {
             case RedBuffer.ARRAY_BUFFER:
                 return gl.ARRAY_BUFFER;
-                break;
             case RedBuffer.ELEMENT_ARRAY_BUFFER:
                 return gl.ELEMENT_ARRAY_BUFFER;
-                break;
             default:
-                RedGLUtil.throwFunc('RedBuffer : bufferType - 지원하지 않는 버퍼타입입니다. ')
+                RedGLUtil.throwFunc('RedBuffer : bufferType - 지원하지 않는 버퍼타입입니다. ');
         }
     };
     parseInterleaveDefineInfo = (function () {
@@ -4390,14 +4388,14 @@ var RedBuffer;
             //console.log(self, bufferType)
             var totalSize, i, len, tData;
             var tBYTES_PER_ELEMENT;
-            if (data instanceof Float32Array) tBYTES_PER_ELEMENT = Float32Array.BYTES_PER_ELEMENT
-            else if (data instanceof Float64Array) tBYTES_PER_ELEMENT = Float64Array.BYTES_PER_ELEMENT
+            if (data instanceof Float32Array) tBYTES_PER_ELEMENT = Float32Array.BYTES_PER_ELEMENT;
+            else if (data instanceof Float64Array) tBYTES_PER_ELEMENT = Float64Array.BYTES_PER_ELEMENT;
             totalSize = 0;
             switch (bufferType) {
                 case RedBuffer.ARRAY_BUFFER:
                     self['interleaveDefineInfoList'] = interleaveDefineInfoList;
                     if (interleaveDefineInfoList) {
-                        if (interleaveDefineInfoList.length == 0) RedGLUtil.throwFunc('RedBuffer : interleaveDefineInfoList의 정보는 1개이상의 RedInterleaveInfo Instance로 구성되어야함.', interleaveDefineInfoList);
+                        if (!interleaveDefineInfoList.length) RedGLUtil.throwFunc('RedBuffer : interleaveDefineInfoList의 정보는 1개이상의 RedInterleaveInfo Instance로 구성되어야함.', interleaveDefineInfoList);
                         i = 0;
                         len = interleaveDefineInfoList.length;
                         for (i; i < len; i++) {
@@ -4423,7 +4421,7 @@ var RedBuffer;
                             self['pointNum'] = data.length / totalSize;
                         }
                         // 업로드시 포인트가 달라질수 있으므로 확인해야함.
-                        if (self['pointNum'] != parseInt(self['pointNum'])) RedGLUtil.throwFunc('RedBuffer : ARRAY_BUFFER의 pointNum이 정수로 떨어지지 않음. 데이터구성과 interleaveDefineInfoList 구성 확인 필요');
+                        if (self['pointNum'] !== parseInt(self['pointNum'])) RedGLUtil.throwFunc('RedBuffer : ARRAY_BUFFER의 pointNum이 정수로 떨어지지 않음. 데이터구성과 interleaveDefineInfoList 구성 확인 필요');
                     } else RedGLUtil.throwFunc('RedBuffer : interleaveDefineInfoList는 반드시 정의 되어야함.');
                     break;
                 case RedBuffer.ELEMENT_ARRAY_BUFFER:
@@ -4524,7 +4522,9 @@ var RedBuffer;
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedBuffer : RedGL Instance만 허용.', redGL);
         typeof key == 'string' || RedGLUtil.throwFunc('RedBuffer : key - 문자열만 허용.', '입력값 : ' + key);
         bufferType || RedGLUtil.throwFunc('RedBuffer : bufferType : 미입력, 반드시 입력해야함.');
-        bufferType == RedBuffer.ARRAY_BUFFER || bufferType == RedBuffer.ELEMENT_ARRAY_BUFFER || RedGLUtil.throwFunc('RedBuffer : bufferType - RedBuffer.ARRAY_BUFFER or RedBuffer.ELEMENT_ARRAY_BUFFER 만 허용함.', '입력값 : ' + bufferType);
+        bufferType === RedBuffer.ARRAY_BUFFER
+        || bufferType === RedBuffer.ELEMENT_ARRAY_BUFFER
+        || RedGLUtil.throwFunc('RedBuffer : bufferType - RedBuffer.ARRAY_BUFFER or RedBuffer.ELEMENT_ARRAY_BUFFER 만 허용함.', '입력값 : ' + bufferType);
         var tGL = redGL.gl;
         //유일키 방어
         if (!redGL['_datas']['RedBuffer']) {
@@ -4534,7 +4534,7 @@ var RedBuffer;
         }
         if (redGL['_datas']['RedBuffer'][bufferType][key]) return redGL['_datas']['RedBuffer'][bufferType][key];
         else redGL['_datas']['RedBuffer'][bufferType][key] = this;
-        if (bufferType == RedBuffer.ARRAY_BUFFER && !interleaveDefineInfoList) RedGLUtil.throwFunc('RedBuffer : 신규생성시 interleaveDefineInfoList를 반드시 정의해야합니다.', '입력값 : ' + interleaveDefineInfoList);
+        if (bufferType === RedBuffer.ARRAY_BUFFER && !interleaveDefineInfoList) RedGLUtil.throwFunc('RedBuffer : 신규생성시 interleaveDefineInfoList를 반드시 정의해야합니다.', '입력값 : ' + interleaveDefineInfoList);
         /**DOC:
          {
 			 code : 'PROPERTY',
@@ -4605,8 +4605,8 @@ var RedBuffer;
 		 }
          :DOC*/
         this['webglBuffer'] = tGL.createBuffer();
-        this['webglBuffer']['gl'] = tGL
-        this['webglBuffer']['redGL'] = redGL
+        this['webglBuffer']['gl'] = tGL;
+        this['webglBuffer']['redGL'] = redGL;
         this['_UUID'] = RedGL.makeUUID();
         /**DOC:
          {
@@ -4634,13 +4634,13 @@ var RedBuffer;
 		 }
          :DOC*/
         this['upload'] = function (data) {
-            if (this['glArrayType'] == getGlDataTypeByTypeArray(tGL, bufferType, data)) {
+            if (this['glArrayType'] === getGlDataTypeByTypeArray(tGL, bufferType, data)) {
                 this['data'] = data;
                 tGL.bindBuffer(this['glBufferType'], this['webglBuffer']);
                 tGL.bufferData(this['glBufferType'], this['data'], this['drawMode']);
                 parseInterleaveDefineInfo(this, this['bufferType'], this['data'], this['interleaveDefineInfoList']);
-                if (this['bufferType'] == RedBuffer.ARRAY_BUFFER) this['triangleNum'] = this['data'].length / (this['stride'] ? this['stride'] : 3);
-                if (this['bufferType'] == RedBuffer.ELEMENT_ARRAY_BUFFER) this['triangleNum'] = this['pointNum'] / 3;
+                if (this['bufferType'] === RedBuffer.ARRAY_BUFFER) this['triangleNum'] = this['data'].length / (this['stride'] ? this['stride'] : 3);
+                if (this['bufferType'] === RedBuffer.ELEMENT_ARRAY_BUFFER) this['triangleNum'] = this['pointNum'] / 3;
             } else RedGLUtil.throwFunc('RedBuffer : upload - data형식이 기존 형식과 다름', data)
         };
         this['upload'](this['data']);
@@ -4656,11 +4656,11 @@ var RedBuffer;
      :DOC*/
     RedBuffer.prototype['dispose'] = function () {
         if (this['webglBuffer'] && !this['isPrimitiveBuffer']) {
-            this['webglBuffer']['gl'].deleteBuffer(this['webglBuffer'])
-            delete this['webglBuffer']['redGL']['_datas']['RedBuffer'][this['bufferType']][this['key']]
-            this['webglBuffer'] = null
+            this['webglBuffer']['gl'].deleteBuffer(this['webglBuffer']);
+            delete this['webglBuffer']['redGL']['_datas']['RedBuffer'][this['bufferType']][this['key']];
+            this['webglBuffer'] = null;
         }
-    }
+    };
     /**DOC:
      {
 		 code: 'CONST',
@@ -4712,11 +4712,11 @@ var RedGeometry;
     RedGeometry = function (interleaveBuffer, indexBuffer) {
         if (!(this instanceof RedGeometry)) return new RedGeometry(interleaveBuffer, indexBuffer);
         interleaveBuffer instanceof RedBuffer || RedGLUtil.throwFunc('RedGeometry : interleaveBuffer - RedBuffer Instance만 허용.', interleaveBuffer);
-        interleaveBuffer['bufferType'] == RedBuffer.ARRAY_BUFFER || RedGLUtil.throwFunc('RedGeometry : interleaveBuffer - RedBuffer.ARRAY_BUFFER 타입만 허용.', interleaveBuffer);
+        interleaveBuffer['bufferType'] === RedBuffer.ARRAY_BUFFER || RedGLUtil.throwFunc('RedGeometry : interleaveBuffer - RedBuffer.ARRAY_BUFFER 타입만 허용.', interleaveBuffer);
         if (indexBuffer) {
             interleaveBuffer || RedGLUtil.throwFunc('RedGeometry : indexBuffer는 반드시 interleaveBuffer와 쌍으로 입력되어야함.', indexBuffer);
             indexBuffer instanceof RedBuffer || RedGLUtil.throwFunc('RedGeometry : indexBuffer - RedBuffer Instance만 허용.', indexBuffer);
-            indexBuffer['bufferType'] == RedBuffer.ELEMENT_ARRAY_BUFFER || RedGLUtil.throwFunc('RedGeometry : indexBuffer - RedBuffer.ELEMENT_ARRAY_BUFFER 타입만 허용.', indexBuffer);
+            indexBuffer['bufferType'] === RedBuffer.ELEMENT_ARRAY_BUFFER || RedGLUtil.throwFunc('RedGeometry : indexBuffer - RedBuffer.ELEMENT_ARRAY_BUFFER 타입만 허용.', indexBuffer);
         }
         /**DOC:
          {
@@ -4750,10 +4750,11 @@ var RedGeometry;
 		 }
          :DOC*/
         disposeAllBuffer: (function () {
-            var k;
+            var k, tBuffer;
             return function () {
                 for (k in this) {
-                    if (this && this[k] instanceof RedBuffer) this[k].dispose()
+                    tBuffer = this[k];
+                    if (this && tBuffer instanceof RedBuffer) tBuffer.dispose();
                 }
             }
         })(),
@@ -4766,7 +4767,36 @@ var RedGeometry;
 		 }
          :DOC*/
         disposeBuffer: function (key) {
-            if (this && this[key] instanceof RedBuffer) this[key].dispose()
+            if (this && this[key] instanceof RedBuffer) this[key].dispose();
+        },
+        /**DOC:
+         {
+		     code : 'METHOD',
+			 title :`volumeCalculate`,
+			 description : `지오메트리 고유의 볼륨을 재계산함`,
+			 return : 'array : [xVolume, yVolume, zVolume]'
+		 }
+         :DOC*/
+        volumeCalculate: function () {
+            var minX, minY, minZ, maxX, maxY, maxZ, t0, t1, t2, t, i;
+            var stride = this['interleaveBuffer']['stride'];
+            // if (!volume[this]) {
+            minX = minY = minZ = maxX = maxY = maxZ = 0;
+            t = this['interleaveBuffer']['data'];
+            i = 0;
+            len = this['interleaveBuffer']['pointNum'];
+            for (i; i < len; i++) {
+                t0 = i * stride , t1 = t0 + 1, t2 = t0 + 2,
+                    minX = t[t0] < minX ? t[t0] : minX,
+                    maxX = t[t0] > maxX ? t[t0] : maxX,
+                    minY = t[t1] < minY ? t[t1] : minY,
+                    maxY = t[t1] > maxY ? t[t1] : maxY,
+                    minZ = t[t2] < minZ ? t[t2] : minZ,
+                    maxZ = t[t2] > maxZ ? t[t2] : maxZ;
+            }
+            this['_volume'] = [maxX - minX, maxY - minY, maxZ - minZ];
+            // }
+            return this['_volume'];
         }
     };
     /**DOC:
@@ -4779,26 +4809,10 @@ var RedGeometry;
      :DOC*/
     Object.defineProperty(RedGeometry.prototype, 'volume', {
         get: function () {
-            var minX, minY, minZ, maxX, maxY, maxZ, t0, t1, t2, t, i;
-            var stride = this['interleaveBuffer']['stride']
-            // if (!volume[this]) {
-            minX = minY = minZ = maxX = maxY = maxZ = 0,
-                t = this['interleaveBuffer']['data'], i = 0, len = this['interleaveBuffer']['pointNum']
-            for (i; i < len; i++) {
-                t0 = i * stride , t1 = t0 + 1, t2 = t0 + 2,
-                    minX = t[t0] < minX ? t[t0] : minX,
-                    maxX = t[t0] > maxX ? t[t0] : maxX,
-                    minY = t[t1] < minY ? t[t1] : minY,
-                    maxY = t[t1] > maxY ? t[t1] : maxY,
-                    minZ = t[t2] < minZ ? t[t2] : minZ,
-                    maxZ = t[t2] > maxZ ? t[t2] : maxZ;
-
-            }
-            this['_volume'] = [maxX - minX, maxY - minY, maxZ - minZ];
-            // }
+            if (!this['_volume']) this['volumeCalculate']();
             return this['_volume'];
         }
-    })
+    });
 
     Object.freeze(RedGeometry);
 })();
@@ -9694,7 +9708,13 @@ var RedAmbientLight;
 			 ],
 			 alpha : [
 				 {type:'number'},
-				 '기본값 : 0.1'
+				 '기본값 : 0.1',
+				 'range : 0 ~ 1'
+			 ],
+			 intensity : [
+				 {type:'number'},
+				 '기본값 : 1',
+				 'range : 0 ~ 1'
 			 ]
 		 },
 		 extends : [
@@ -9707,13 +9727,13 @@ var RedAmbientLight;
 		 return : 'RedAmbientLight Instance'
 	 }
      :DOC*/
-    RedAmbientLight = function (redGL, hexColor, alpha) {
-        if (!(this instanceof RedAmbientLight)) return new RedAmbientLight(redGL, hexColor, alpha);
+    RedAmbientLight = function (redGL, hexColor, alpha, intensity) {
+        if (!(this instanceof RedAmbientLight)) return new RedAmbientLight(redGL, hexColor, alpha, intensity);
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedAmbientLight : RedGL Instance만 허용.', '입력값 : ' + redGL);
         // 유니폼 프로퍼티
         this['_lightColor'] = new Float32Array(4);
         // 일반 프로퍼티
-        this['intensity'] = 1;
+        this['intensity'] = intensity == undefined ? 1 : intensity;
         this['alpha'] = alpha == undefined ? 0.1 : alpha;
         this['color'] = hexColor ? hexColor : '#fff';
         this['_UUID'] = RedGL.makeUUID();
@@ -9765,7 +9785,13 @@ var RedDirectionalLight;
 			 ],
 			 alpha : [
 				 {type:'number'},
-				 '기본값 : 1'
+				 '기본값 : 1',
+				 'range : 0 ~ 1'
+			 ],
+			 intensity : [
+				 {type:'number'},
+				 '기본값 : 1',
+				 'range : 0 ~ 1'
 			 ]
 		 },
 		 extends : ['RedBaseLight'],
@@ -9776,13 +9802,13 @@ var RedDirectionalLight;
 		 return : 'RedDirectionalLight Instance'
 	 }
      :DOC*/
-    RedDirectionalLight = function (redGL, hexColor, alpha) {
-        if (!(this instanceof RedDirectionalLight)) return new RedDirectionalLight(redGL, hexColor, alpha);
+    RedDirectionalLight = function (redGL, hexColor, alpha,intensity) {
+        if (!(this instanceof RedDirectionalLight)) return new RedDirectionalLight(redGL, hexColor, alpha,intensity);
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedDirectionalLight : RedGL Instance만 허용.', '입력값 : ' + redGL);
         // 유니폼 프로퍼티
         this['_lightColor'] = new Float32Array(4);
         // 일반 프로퍼티
-        this['intensity'] = 1;
+        this['intensity'] = intensity == undefined ? 1 : intensity;
         this['alpha'] = alpha == undefined ? 1 : alpha;
         this['color'] = hexColor ? hexColor : '#fff';
         /**DOC:
@@ -9890,6 +9916,21 @@ var RedPointLight;
 			 alpha : [
 				 {type:'number'},
 				 '기본값 : 1'
+			 ],
+			 alpha : [
+				 {type:'number'},
+				 '기본값 : 1',
+				 'range : 0 ~ 1'
+			 ],
+			 alpha : [
+				 {type:'radius'},
+				 '기본값 : 1',
+				 'range : 0 ~ '
+			 ],
+			 intensity : [
+				 {type:'number'},
+				 '기본값 : 1',
+				 'range : 0 ~ 1'
 			 ]
 		 },
 		 extends : [
@@ -9902,14 +9943,15 @@ var RedPointLight;
 		 return : 'RedPointLight Instance'
 	 }
      :DOC*/
-    RedPointLight = function (redGL, hexColor, alpha) {
-        if (!(this instanceof RedPointLight)) return new RedPointLight(redGL, hexColor, alpha);
+    RedPointLight = function (redGL, hexColor, alpha, radius, intensity) {
+        if (!(this instanceof RedPointLight)) return new RedPointLight(redGL, hexColor, alpha, radius, intensity);
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedPointLight : RedGL Instance만 허용.', '입력값 : ' + redGL);
         // 유니폼 프로퍼티
         this['_lightColor'] = new Float32Array(4);
         // 일반 프로퍼티
-        this['intensity'] = 1;
+        this['intensity'] = intensity == undefined ? 1 : intensity;
         this['alpha'] = alpha == undefined ? 1 : alpha;
+        this['radius'] = radius == undefined ? 1 : radius;
         this['color'] = hexColor ? hexColor : '#fff';
         /**DOC:
          {
@@ -14708,7 +14750,7 @@ var RedGrid;
 		 return : 'Number'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedGrid', 'divisions', 'number', {
+    RedDefinePropertyInfo.definePrototype('RedGrid', 'divisions', 'uint', {
         min: 1,
         callback: function () {
             this['_update']()
@@ -15492,7 +15534,6 @@ var RedLine;
     });
     RedLine.prototype['_simplifyPoints'] = simplifyPoints;
     RedLine.prototype['_getPointsOnBezierCurves'] = getPointsOnBezierCurves;
-
     Object.freeze(RedLine);
 })();
 "use strict";
@@ -15715,6 +15756,11 @@ var RedSkyBox;
 			 srcList : [
 				 {type:'Array'},
 				 `스카이박스 이미지 리스트`
+			 ],
+			 alpha : [
+			    {type:Number},
+			    '기본값 : 1',
+			    '범위 : 0 ~ 1'
 			 ]
 		 },
          extends : [
@@ -15739,17 +15785,23 @@ var RedSkyBox;
 		 return : 'RedSkyBox Instance'
 	 }
      :DOC*/
-    RedSkyBox = function (redGL, srcList) {
-        if (!(this instanceof RedSkyBox)) return new RedSkyBox(redGL, srcList);
+    RedSkyBox = function (redGL, srcList, alpha) {
+        if (!(this instanceof RedSkyBox)) return new RedSkyBox(redGL, srcList, alpha);
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedSkyBox : RedGL Instance만 허용.', redGL);
         RedBaseObject3D['build'].call(this, redGL.gl);
         this['geometry'] = RedBox(redGL);
         this['material'] = RedSkyBoxMaterial(redGL, RedBitmapCubeTexture(redGL, srcList));
         this['cullFace'] = redGL.gl.FRONT;
+        this['alpha'] = alpha == undefined ? 1 : alpha;
         this['_UUID'] = RedGL.makeUUID();
         console.log(this);
     };
     RedSkyBox.prototype = new RedBaseObject3D();
+    RedDefinePropertyInfo.definePrototype('RedSkyBox', 'alpha', 'number', {
+        min: 0, max: 1, callback: function (v) {
+            this['material'].alpha = v
+        }
+    });
     Object.defineProperty(RedSkyBox.prototype, 'geometry', {
         get: function () {
             return this['_geometry'];
@@ -20306,7 +20358,7 @@ var RedScene;
 			 return : 'RedMouseEventManager Instance'
 		 }
          :DOC*/
-        this['mouseManager'] = RedMouseEventManager(redGL)
+        this['mouseManager'] = RedMouseEventManager(redGL);
         this['_lightInfo'] = {
             RedAmbientLight: null,
             RedDirectionalLight: [],
@@ -20348,11 +20400,11 @@ var RedScene;
                     this['_lightInfo'][light['TYPE']] = light;
                     break;
                 case RedDirectionalLight['TYPE']:
-                    if (this['_lightInfo'][light['TYPE']].length == RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT) RedGLUtil.throwFunc('RedScene : RedDirectionalLight ' + RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT + '개 까지 허용.');
+                    if (this['_lightInfo'][light['TYPE']].length === RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT) RedGLUtil.throwFunc('RedScene : RedDirectionalLight ' + RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT + '개 까지 허용.');
                     this['_lightInfo'][light['TYPE']].push(light);
                     break;
                 case RedPointLight['TYPE']:
-                    if (this['_lightInfo'][light['TYPE']].length == RedSystemShaderCode.MAX_POINT_LIGHT) RedGLUtil.throwFunc('RedScene : RedPointLight ' + RedSystemShaderCode.MAX_POINT_LIGHT + '개 까지 허용.');
+                    if (this['_lightInfo'][light['TYPE']].length === RedSystemShaderCode.MAX_POINT_LIGHT) RedGLUtil.throwFunc('RedScene : RedPointLight ' + RedSystemShaderCode.MAX_POINT_LIGHT + '개 까지 허용.');
                     this['_lightInfo'][light['TYPE']].push(light);
                     break;
                 default:
@@ -20388,7 +20440,7 @@ var RedScene;
             return function (light) {
                 switch (light['TYPE']) {
                     case RedAmbientLight['TYPE']:
-                        if (this['_lightInfo'][light['TYPE']] == light) this['_lightInfo'][light['TYPE']] = null;
+                        if (this['_lightInfo'][light['TYPE']] === light) this['_lightInfo'][light['TYPE']] = null;
                         break;
                     case RedDirectionalLight['TYPE']:
                         tIndex = this['_lightInfo'][light['TYPE']].indexOf(light);
@@ -20557,7 +20609,7 @@ var RedScene;
                 this['_fogB'] = t0[2];
             }
         })()
-    })
+    });
     /**DOC:
      {
 	     code : 'PROPERTY',
@@ -21651,10 +21703,12 @@ var RedSkyBoxMaterial;
 
          uniform samplerCube u_skyBoxTexture;
          varying vec3 vReflectionCubeCoord;
+         uniform float u_alpha;
          void main(void) {
              vec4 finalColor = textureCube(u_skyBoxTexture, vReflectionCubeCoord);
              //#REDGL_DEFINE#fog#false# gl_FragColor = finalColor;
              //#REDGL_DEFINE#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
+             gl_FragColor.a = u_alpha;
          }
          */
     };
@@ -21672,6 +21726,11 @@ var RedSkyBoxMaterial;
 			 ],
 			 skyBoxTexture : [
 				 {type:'RedBitmapCubeTexture'}
+			 ],
+			 alpha : [
+			    {type:Number},
+			    '기본값 : 1',
+			    '범위 : 0 ~ 1'
 			 ]
 		 },
 		 extends : [
@@ -21680,8 +21739,8 @@ var RedSkyBoxMaterial;
 		 return : 'RedSkyBoxMaterial Instance'
 	 }
      :DOC*/
-    RedSkyBoxMaterial = function (redGL, skyBoxTexture) {
-        if (!(this instanceof RedSkyBoxMaterial)) return new RedSkyBoxMaterial(redGL, skyBoxTexture);
+    RedSkyBoxMaterial = function (redGL, skyBoxTexture, alpha) {
+        if (!(this instanceof RedSkyBoxMaterial)) return new RedSkyBoxMaterial(redGL, skyBoxTexture, alpha);
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedSkyBoxMaterial : RedGL Instance만 허용.', redGL);
         this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource);
         /////////////////////////////////////////
@@ -21690,6 +21749,7 @@ var RedSkyBoxMaterial;
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['_UUID'] = RedGL.makeUUID();
+        this['alpha'] = alpha == undefined ? 1 : alpha;
         if (!checked) {
             this.checkUniformAndProperty();
             checked = true;
@@ -21706,6 +21766,7 @@ var RedSkyBoxMaterial;
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedSkyBoxMaterial', 'skyBoxTexture', 'samplerCube', {essential: true});
+    RedDefinePropertyInfo.definePrototype('RedSkyBoxMaterial', 'alpha', 'number', {min: 0, max: 1});
     Object.freeze(RedSkyBoxMaterial)
 })();
 "use strict";
@@ -25766,4 +25827,4 @@ var RedGLOffScreen;
         }
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-04-11 17:59:40)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-04-12 19:23:44)' };console.log(RedGL_VERSION);

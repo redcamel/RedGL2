@@ -628,6 +628,5 @@ var RedLine;
     });
     RedLine.prototype['_simplifyPoints'] = simplifyPoints;
     RedLine.prototype['_getPointsOnBezierCurves'] = getPointsOnBezierCurves;
-
     Object.freeze(RedLine);
 })();

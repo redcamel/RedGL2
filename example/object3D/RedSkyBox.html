@@ -66,28 +66,39 @@
     testUI = function (redGL, tScene) {
         var gui = new baseTestUI(redGL);
         var testSkyBox = {
-            srcList: 'skyBox2'
+            srcList: 'skyBox2',
+            alpha: 1
         };
         var folder = gui['gui'].addFolder('RedSkyBox');
-        var tSkyBox1 = RedSkyBox(redGL, [
-            assetPath + 'cubemap/posx.png',
-            assetPath + 'cubemap/negx.png',
-            assetPath + 'cubemap/posy.png',
-            assetPath + 'cubemap/negy.png',
-            assetPath + 'cubemap/posz.png',
-            assetPath + 'cubemap/negz.png'
-        ]);
-        var tSkyBox2 = RedSkyBox(redGL, [
-            assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
-            assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
-            assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
-            assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
-            assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
-            assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
-        ]);
+        folder.add(testSkyBox, 'alpha', 0, 1, 0.01).onChange(function (v) {
+            tScene.skyBox.alpha = v
+        });
         folder.add(testSkyBox, 'srcList', ['skyBox1', 'skyBox2']).onChange(function (v) {
-            if (v == 'skyBox1') tScene.skyBox = tSkyBox1;
-            else tScene.skyBox = tSkyBox2;
+            if (v == 'skyBox1') tScene.skyBox = RedSkyBox(
+                redGL,
+                [
+                    assetPath + 'cubemap/posx.png',
+                    assetPath + 'cubemap/negx.png',
+                    assetPath + 'cubemap/posy.png',
+                    assetPath + 'cubemap/negy.png',
+                    assetPath + 'cubemap/posz.png',
+                    assetPath + 'cubemap/negz.png'
+                ],
+                testSkyBox.alpha
+            );
+            else tScene.skyBox = tScene.skyBox = RedSkyBox(
+                redGL,
+                [
+                    assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
+                    assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
+                    assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
+                    assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
+                    assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
+                    assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
+                ],
+                testSkyBox.alpha
+            );
+            ;
         });
         folder.open();
     }

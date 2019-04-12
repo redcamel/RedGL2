@@ -13,6 +13,11 @@
         {
           "type": "RedBitmapCubeTexture"
         }
+      ],
+      "alpha": [
+        {},
+        "기본값 : 1",
+        "범위 : 0 ~ 1"
       ]
     },
     "extends": [

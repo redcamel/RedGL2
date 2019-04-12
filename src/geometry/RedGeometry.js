@@ -29,11 +29,11 @@ var RedGeometry;
     RedGeometry = function (interleaveBuffer, indexBuffer) {
         if (!(this instanceof RedGeometry)) return new RedGeometry(interleaveBuffer, indexBuffer);
         interleaveBuffer instanceof RedBuffer || RedGLUtil.throwFunc('RedGeometry : interleaveBuffer - RedBuffer Instance만 허용.', interleaveBuffer);
-        interleaveBuffer['bufferType'] == RedBuffer.ARRAY_BUFFER || RedGLUtil.throwFunc('RedGeometry : interleaveBuffer - RedBuffer.ARRAY_BUFFER 타입만 허용.', interleaveBuffer);
+        interleaveBuffer['bufferType'] === RedBuffer.ARRAY_BUFFER || RedGLUtil.throwFunc('RedGeometry : interleaveBuffer - RedBuffer.ARRAY_BUFFER 타입만 허용.', interleaveBuffer);
         if (indexBuffer) {
             interleaveBuffer || RedGLUtil.throwFunc('RedGeometry : indexBuffer는 반드시 interleaveBuffer와 쌍으로 입력되어야함.', indexBuffer);
             indexBuffer instanceof RedBuffer || RedGLUtil.throwFunc('RedGeometry : indexBuffer - RedBuffer Instance만 허용.', indexBuffer);
-            indexBuffer['bufferType'] == RedBuffer.ELEMENT_ARRAY_BUFFER || RedGLUtil.throwFunc('RedGeometry : indexBuffer - RedBuffer.ELEMENT_ARRAY_BUFFER 타입만 허용.', indexBuffer);
+            indexBuffer['bufferType'] === RedBuffer.ELEMENT_ARRAY_BUFFER || RedGLUtil.throwFunc('RedGeometry : indexBuffer - RedBuffer.ELEMENT_ARRAY_BUFFER 타입만 허용.', indexBuffer);
         }
         /**DOC:
          {
@@ -67,10 +67,11 @@ var RedGeometry;
 		 }
          :DOC*/
         disposeAllBuffer: (function () {
-            var k;
+            var k, tBuffer;
             return function () {
                 for (k in this) {
-                    if (this && this[k] instanceof RedBuffer) this[k].dispose()
+                    tBuffer = this[k];
+                    if (this && tBuffer instanceof RedBuffer) tBuffer.dispose();
                 }
             }
         })(),
@@ -83,7 +84,36 @@ var RedGeometry;
 		 }
          :DOC*/
         disposeBuffer: function (key) {
-            if (this && this[key] instanceof RedBuffer) this[key].dispose()
+            if (this && this[key] instanceof RedBuffer) this[key].dispose();
+        },
+        /**DOC:
+         {
+		     code : 'METHOD',
+			 title :`volumeCalculate`,
+			 description : `지오메트리 고유의 볼륨을 재계산함`,
+			 return : 'array : [xVolume, yVolume, zVolume]'
+		 }
+         :DOC*/
+        volumeCalculate: function () {
+            var minX, minY, minZ, maxX, maxY, maxZ, t0, t1, t2, t, i;
+            var stride = this['interleaveBuffer']['stride'];
+            // if (!volume[this]) {
+            minX = minY = minZ = maxX = maxY = maxZ = 0;
+            t = this['interleaveBuffer']['data'];
+            i = 0;
+            len = this['interleaveBuffer']['pointNum'];
+            for (i; i < len; i++) {
+                t0 = i * stride , t1 = t0 + 1, t2 = t0 + 2,
+                    minX = t[t0] < minX ? t[t0] : minX,
+                    maxX = t[t0] > maxX ? t[t0] : maxX,
+                    minY = t[t1] < minY ? t[t1] : minY,
+                    maxY = t[t1] > maxY ? t[t1] : maxY,
+                    minZ = t[t2] < minZ ? t[t2] : minZ,
+                    maxZ = t[t2] > maxZ ? t[t2] : maxZ;
+            }
+            this['_volume'] = [maxX - minX, maxY - minY, maxZ - minZ];
+            // }
+            return this['_volume'];
         }
     };
     /**DOC:
@@ -96,26 +126,10 @@ var RedGeometry;
      :DOC*/
     Object.defineProperty(RedGeometry.prototype, 'volume', {
         get: function () {
-            var minX, minY, minZ, maxX, maxY, maxZ, t0, t1, t2, t, i;
-            var stride = this['interleaveBuffer']['stride']
-            // if (!volume[this]) {
-            minX = minY = minZ = maxX = maxY = maxZ = 0,
-                t = this['interleaveBuffer']['data'], i = 0, len = this['interleaveBuffer']['pointNum']
-            for (i; i < len; i++) {
-                t0 = i * stride , t1 = t0 + 1, t2 = t0 + 2,
-                    minX = t[t0] < minX ? t[t0] : minX,
-                    maxX = t[t0] > maxX ? t[t0] : maxX,
-                    minY = t[t1] < minY ? t[t1] : minY,
-                    maxY = t[t1] > maxY ? t[t1] : maxY,
-                    minZ = t[t2] < minZ ? t[t2] : minZ,
-                    maxZ = t[t2] > maxZ ? t[t2] : maxZ;
-
-            }
-            this['_volume'] = [maxX - minX, maxY - minY, maxZ - minZ];
-            // }
+            if (!this['_volume']) this['volumeCalculate']();
             return this['_volume'];
         }
-    })
+    });
 
     Object.freeze(RedGeometry);
 })();
