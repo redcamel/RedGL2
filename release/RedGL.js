@@ -8151,6 +8151,7 @@ var RedStandardMaterial;
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['_UUID'] = RedGL.makeUUID();
+        this['useFlatMode'] = false;
         this['usePreMultiply'] = false;
         if (!checked) {
             this.checkUniformAndProperty();
@@ -25843,4 +25844,4 @@ var RedGLOffScreen;
         }
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-04-16 15:43:15)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-04-16 18:12:58)' };console.log(RedGL_VERSION);
