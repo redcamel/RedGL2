@@ -203,7 +203,7 @@ RedGL(document.createElement('canvas'), function () {
                     "성공테스트 : 초기값",
                     function () {
                         var t0 = RedBitmapMaterial(tRedGL, tRedGL._datas.emptyTexture['2d']);
-                        RedTest.run(t0['usePreMultiply'])
+                        RedTest.run(t0['usePreMultiply']);
                         tRedGL.gl.getExtension('WEBGL_lose_context').loseContext();
                     },
                     false

@@ -209,6 +209,7 @@ var RedStandardMaterial;
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['_UUID'] = RedGL.makeUUID();
+        this['useFlatMode'] = false;
         this['usePreMultiply'] = false;
         if (!checked) {
             this.checkUniformAndProperty();

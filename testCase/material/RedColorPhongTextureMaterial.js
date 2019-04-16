@@ -246,7 +246,7 @@ RedGL(document.createElement('canvas'), function () {
                     0
                 )
             }
-        )
+        );
         RedTest.testGroup(
             "(RedColorPhongTextureMaterial Instance).<b>displacementPower</b> = value",
             function () {

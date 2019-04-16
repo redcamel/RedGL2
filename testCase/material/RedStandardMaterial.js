@@ -352,43 +352,6 @@ RedGL(document.createElement('canvas'), function () {
             "(RedStandardMaterial Instance).<b>normalPower</b> = value",
             function () {
                 RedTest.test(
-                    "실패테스트 : 숫자만 허용하는지 - 문자입력 ",
-                    function () {
-                        try {
-                            var t0 = RedStandardMaterial(tRedGL, tRedGL._datas.emptyTexture['2d']);
-                            t0['normalPower'] = 'test'
-                        } catch (error) {
-                            RedTest.run(false, error)
-                        }
-                    },
-                    false
-                );
-                RedTest.test(
-                    "실패테스트 : 숫자만 허용하는지 :  Boolean입력 ",
-                    function () {
-                        try {
-                            var t0 = RedStandardMaterial(tRedGL, tRedGL._datas.emptyTexture['2d']);
-                            t0['normalPower'] = true
-                        } catch (error) {
-                            RedTest.run(false, error)
-                        }
-                    },
-                    false
-                );
-                RedTest.test(
-                    "성공테스트 : 숫자만 허용하는지 : 숫자입력",
-                    function () {
-                        try {
-                            var t0 = RedStandardMaterial(tRedGL, tRedGL._datas.emptyTexture['2d']);
-                            t0['normalPower'] = 32;
-                            RedTest.run(true)
-                        } catch (error) {
-                            RedTest.run(false, error)
-                        }
-                    },
-                    true
-                );
-                RedTest.test(
                     "성공테스트 : 0이하입력시 0으로 치환되는지 확인",
                     function () {
                         var t0 = RedStandardMaterial(tRedGL, tRedGL._datas.emptyTexture['2d']);
@@ -396,49 +359,78 @@ RedGL(document.createElement('canvas'), function () {
                         RedTest.run(t0['normalPower'])
                     },
                     0
-                )
+                );
+                RedTest.testListRun(
+                    "0이상만 허용",
+                    [
+                        [1, true],
+                        [1.1, true],
+                        [0, true],
+                        [true, false],
+                        [false, false],
+                        [null, false],
+                        [undefined, false],
+                        ['문자테스트', false],
+                        [function () {
+                        }, false],
+                        [[], false],
+                        [{}, false]
+                    ],
+                    function (v) {
+                        try {
+                            var t0 = RedStandardMaterial(tRedGL, tRedGL._datas.emptyTexture['2d']);
+                            t0['normalPower'] = v[0];
+                            RedTest.run(t0['normalPower'] === v[0])
+                        } catch (error) {
+                            RedTest.run(false, error)
+                        }
+                    }
+                );
+            }
+        );
+        RedTest.testGroup(
+            "(RedStandardMaterial Instance).<b>emissiveFactor</b> = value",
+            function () {
+                RedTest.test(
+                    "성공테스트 : 0이하입력시 0으로 치환되는지 확인",
+                    function () {
+                        var t0 = RedStandardMaterial(tRedGL, tRedGL._datas.emptyTexture['2d']);
+                        t0['emissiveFactor'] = -1;
+                        RedTest.run(t0['emissiveFactor'])
+                    },
+                    0
+                );
+                RedTest.testListRun(
+                    "0이상만 허용",
+                    [
+                        [1, true],
+                        [1.1, true],
+                        [0, true],
+                        [true, false],
+                        [false, false],
+                        [null, false],
+                        [undefined, false],
+                        ['문자테스트', false],
+                        [function () {
+                        }, false],
+                        [[], false],
+                        [{}, false]
+                    ],
+                    function (v) {
+                        try {
+                            var t0 = RedStandardMaterial(tRedGL, tRedGL._datas.emptyTexture['2d']);
+                            t0['emissiveFactor'] = v[0];
+                            RedTest.run(t0['emissiveFactor'] === v[0])
+                        } catch (error) {
+                            RedTest.run(false, error)
+                        }
+                    }
+                );
             }
         );
         RedTest.testGroup(
             "(RedStandardMaterial Instance).<b>shininess</b> = value",
             function () {
-                RedTest.test(
-                    "실패테스트 : 숫자만 허용하는지 - 문자입력 ",
-                    function () {
-                        try {
-                            var t0 = RedStandardMaterial(tRedGL, tRedGL._datas.emptyTexture['2d']);
-                            t0['shininess'] = 'test'
-                        } catch (error) {
-                            RedTest.run(false, error)
-                        }
-                    },
-                    false
-                );
-                RedTest.test(
-                    "실패테스트 : 숫자만 허용하는지 :  Boolean입력 ",
-                    function () {
-                        try {
-                            var t0 = RedStandardMaterial(tRedGL, tRedGL._datas.emptyTexture['2d']);
-                            t0['shininess'] = true
-                        } catch (error) {
-                            RedTest.run(false, error)
-                        }
-                    },
-                    false
-                );
-                RedTest.test(
-                    "성공테스트 : 숫자만 허용하는지 : 숫자입력",
-                    function () {
-                        try {
-                            var t0 = RedStandardMaterial(tRedGL, tRedGL._datas.emptyTexture['2d']);
-                            t0['shininess'] = 32;
-                            RedTest.run(true)
-                        } catch (error) {
-                            RedTest.run(false, error)
-                        }
-                    },
-                    true
-                );
                 RedTest.test(
                     "성공테스트 : 0이하입력시 0으로 치환되는지 확인",
                     function () {
@@ -447,49 +439,38 @@ RedGL(document.createElement('canvas'), function () {
                         RedTest.run(t0['shininess'])
                     },
                     0
-                )
+                );
+                RedTest.testListRun(
+                    "0이상만 허용",
+                    [
+                        [1, true],
+                        [1.1, true],
+                        [0, true],
+                        [true, false],
+                        [false, false],
+                        [null, false],
+                        [undefined, false],
+                        ['문자테스트', false],
+                        [function () {
+                        }, false],
+                        [[], false],
+                        [{}, false]
+                    ],
+                    function (v) {
+                        try {
+                            var t0 = RedStandardMaterial(tRedGL, tRedGL._datas.emptyTexture['2d']);
+                            t0['shininess'] = v[0];
+                            RedTest.run(t0['shininess'] === v[0])
+                        } catch (error) {
+                            RedTest.run(false, error)
+                        }
+                    }
+                );
             }
         );
         RedTest.testGroup(
             "(RedStandardMaterial Instance).<b>specularPower</b> = value",
             function () {
-                RedTest.test(
-                    "실패테스트 : 숫자만 허용하는지 - 문자입력 ",
-                    function () {
-                        try {
-                            var t0 = RedStandardMaterial(tRedGL, tRedGL._datas.emptyTexture['2d']);
-                            t0['specularPower'] = 'test'
-                        } catch (error) {
-                            RedTest.run(false, error)
-                        }
-                    },
-                    false
-                );
-                RedTest.test(
-                    "실패테스트 : 숫자만 허용하는지 :  Boolean입력 ",
-                    function () {
-                        try {
-                            var t0 = RedStandardMaterial(tRedGL, tRedGL._datas.emptyTexture['2d']);
-                            t0['specularPower'] = true
-                        } catch (error) {
-                            RedTest.run(false, error)
-                        }
-                    },
-                    false
-                );
-                RedTest.test(
-                    "성공테스트 : 숫자만 허용하는지 : 숫자입력",
-                    function () {
-                        try {
-                            var t0 = RedStandardMaterial(tRedGL, tRedGL._datas.emptyTexture['2d']);
-                            t0['specularPower'] = 32;
-                            RedTest.run(true)
-                        } catch (error) {
-                            RedTest.run(false, error)
-                        }
-                    },
-                    true
-                );
                 RedTest.test(
                     "성공테스트 : 0이하입력시 0으로 치환되는지 확인",
                     function () {
@@ -498,49 +479,38 @@ RedGL(document.createElement('canvas'), function () {
                         RedTest.run(t0['specularPower'])
                     },
                     0
-                )
+                );
+                RedTest.testListRun(
+                    "0이상만 허용",
+                    [
+                        [1, true],
+                        [1.1, true],
+                        [0, true],
+                        [true, false],
+                        [false, false],
+                        [null, false],
+                        [undefined, false],
+                        ['문자테스트', false],
+                        [function () {
+                        }, false],
+                        [[], false],
+                        [{}, false]
+                    ],
+                    function (v) {
+                        try {
+                            var t0 = RedStandardMaterial(tRedGL, tRedGL._datas.emptyTexture['2d']);
+                            t0['specularPower'] = v[0];
+                            RedTest.run(t0['specularPower'] === v[0])
+                        } catch (error) {
+                            RedTest.run(false, error)
+                        }
+                    }
+                );
             }
         );
         RedTest.testGroup(
             "(RedStandardMaterial Instance).<b>displacementPower</b> = value",
             function () {
-                RedTest.test(
-                    "실패테스트 : 숫자만 허용하는지 - 문자입력 ",
-                    function () {
-                        try {
-                            var t0 = RedStandardMaterial(tRedGL, tRedGL._datas.emptyTexture['2d']);
-                            t0['displacementPower'] = 'test'
-                        } catch (error) {
-                            RedTest.run(false, error)
-                        }
-                    },
-                    false
-                );
-                RedTest.test(
-                    "실패테스트 : 숫자만 허용하는지 :  Boolean입력 ",
-                    function () {
-                        try {
-                            var t0 = RedStandardMaterial(tRedGL, tRedGL._datas.emptyTexture['2d']);
-                            t0['displacementPower'] = true
-                        } catch (error) {
-                            RedTest.run(false, error)
-                        }
-                    },
-                    false
-                );
-                RedTest.test(
-                    "성공테스트 : 숫자만 허용하는지 : 숫자입력",
-                    function () {
-                        try {
-                            var t0 = RedStandardMaterial(tRedGL, tRedGL._datas.emptyTexture['2d']);
-                            t0['displacementPower'] = 32;
-                            RedTest.run(true)
-                        } catch (error) {
-                            RedTest.run(false, error)
-                        }
-                    },
-                    true
-                );
                 RedTest.test(
                     "성공테스트 : 0이하입력시 0으로 치환되는지 확인",
                     function () {
@@ -549,7 +519,69 @@ RedGL(document.createElement('canvas'), function () {
                         RedTest.run(t0['displacementPower'])
                     },
                     0
-                )
+                );
+                RedTest.testListRun(
+                    "0이상만 허용",
+                    [
+                        [1, true],
+                        [1.1, true],
+                        [0, true],
+                        [true, false],
+                        [false, false],
+                        [null, false],
+                        [undefined, false],
+                        ['문자테스트', false],
+                        [function () {
+                        }, false],
+                        [[], false],
+                        [{}, false]
+                    ],
+                    function (v) {
+                        try {
+                            var t0 = RedStandardMaterial(tRedGL, tRedGL._datas.emptyTexture['2d']);
+                            t0['displacementPower'] = v[0];
+                            RedTest.run(t0['displacementPower'] === v[0])
+                        } catch (error) {
+                            RedTest.run(false, error)
+                        }
+                    }
+                );
+            }
+        );
+        RedTest.testGroup(
+            "(RedStandardMaterial Instance).<b>displacementFlowSpeedX</b> = value",
+            function () {
+                RedTest.testListRun(
+                    "Number만 허용",
+                    RedTest.ONLY_NUMBER,
+                    function (v) {
+                        try {
+                            var t0 = RedStandardMaterial(tRedGL, tRedGL._datas.emptyTexture['2d']);
+                            t0['displacementFlowSpeedX'] = v[0];
+                            RedTest.run(t0['displacementFlowSpeedX'] === v[0])
+                        } catch (error) {
+                            RedTest.run(false, error)
+                        }
+                    }
+                );
+            }
+        );
+        RedTest.testGroup(
+            "(RedStandardMaterial Instance).<b>displacementFlowSpeedY</b> = value",
+            function () {
+                RedTest.testListRun(
+                    "Number만 허용",
+                    RedTest.ONLY_NUMBER,
+                    function (v) {
+                        try {
+                            var t0 = RedStandardMaterial(tRedGL, tRedGL._datas.emptyTexture['2d']);
+                            t0['displacementFlowSpeedY'] = v[0];
+                            RedTest.run(t0['displacementFlowSpeedY'] === v[0])
+                        } catch (error) {
+                            RedTest.run(false, error)
+                        }
+                    }
+                );
             }
         );
         RedTest.testGroup(
@@ -560,25 +592,7 @@ RedGL(document.createElement('canvas'), function () {
                     function () {
                         var t0 = RedStandardMaterial(tRedGL, tRedGL._datas.emptyTexture['2d']);
                         RedTest.run(t0['alpha'])
-                    },
-                    1
-                );
-                RedTest.test(
-                    "성공테스트 : 초기값",
-                    function () {
-                        var t0 = RedStandardMaterial(tRedGL, tRedGL._datas.emptyTexture['2d']);
-                        RedTest.run(t0['_alpha'])
-                    },
-                    1
-                );
-                RedTest.test(
-                    "성공테스트 : 0.5입력",
-                    function () {
-                        var t0 = RedStandardMaterial(tRedGL, tRedGL._datas.emptyTexture['2d']);
-                        t0['alpha'] = 0.5;
-                        RedTest.run(t0['alpha'])
-                    },
-                    0.5
+                    }, 1
                 );
                 RedTest.test(
                     "성공테스트 : 1이상을 입력하면 1로 치환되는지",
@@ -595,12 +609,94 @@ RedGL(document.createElement('canvas'), function () {
                         var t0 = RedStandardMaterial(tRedGL, tRedGL._datas.emptyTexture['2d']);
                         t0.alpha = -11111;
                         RedTest.run(t0['alpha']);
-                        tRedGL.gl.getExtension('WEBGL_lose_context').loseContext();
                     },
                     0
-                )
+                );
+                RedTest.testListRun(
+                    "0~1만허용",
+                    [
+                        [0, true],
+                        [1, true],
+                        [0.1, true],
+                        ['1', false],
+                        [true, false],
+                        [false, false],
+                        [null, false],
+                        [undefined, false],
+                        ['문자테스트', false],
+                        [function () {
+                        }, false],
+                        [[], false],
+                        [{}, false]
+                    ],
+                    function (v) {
+                        var t0 = RedStandardMaterial(tRedGL, tRedGL._datas.emptyTexture['2d']);
+                        try {
+                            t0['alpha'] = v[0];
+                            RedTest.run(t0['alpha'] === v[0])
+                        } catch (error) {
+                            RedTest.run(false, error)
+                        }
+                    }
+                );
             }
-        )
+        );
+        RedTest.testGroup(
+            "(RedStandardMaterial Instance).<b>useFlatMode</b> = value",
+            function () {
+                RedTest.testListRun(
+                    "Boolean만 허용",
+                    RedTest.ONLY_BOOLEAN,
+                    function (v) {
+                        var t0 = RedStandardMaterial(tRedGL, tRedGL._datas.emptyTexture['2d']);
+                        try {
+                            t0['useFlatMode'] = v[0];
+                            RedTest.run(t0['useFlatMode'] === v[0])
+
+                        } catch (error) {
+                            RedTest.run(false, error)
+                        }
+                    }
+                );
+                RedTest.test(
+                    "성공테스트 : 초기값",
+                    function () {
+                        var t0 = RedStandardMaterial(tRedGL, tRedGL._datas.emptyTexture['2d']);
+                        RedTest.run(t0['useFlatMode'])
+
+                    },
+                    false
+                );
+            }
+        );
+        RedTest.testGroup(
+            "(RedStandardMaterial Instance).<b>usePreMultiply</b> = value",
+            function () {
+                RedTest.testListRun(
+                    "Boolean만 허용",
+                    RedTest.ONLY_BOOLEAN,
+                    function (v) {
+                        var t0 = RedStandardMaterial(tRedGL, tRedGL._datas.emptyTexture['2d']);
+                        try {
+                            t0['usePreMultiply'] = v[0];
+                            RedTest.run(t0['usePreMultiply'] === v[0])
+
+                        } catch (error) {
+                            RedTest.run(false, error)
+                        }
+                    }
+                );
+                RedTest.test(
+                    "성공테스트 : 초기값",
+                    function () {
+                        var t0 = RedStandardMaterial(tRedGL, tRedGL._datas.emptyTexture['2d']);
+                        RedTest.run(t0['usePreMultiply']);
+                        tRedGL.gl.getExtension('WEBGL_lose_context').loseContext();
+                    },
+                    false
+                );
+            }
+        );
 
     }
 );
