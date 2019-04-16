@@ -1,540 +1,746 @@
-"use strict";
+RedTest.title = "RedScene TEST";
 RedGL.setDoNotPrepareProgram();
+// RedTest.mode = RedTest.REQUEST_MODE;
 RedGL(document.createElement('canvas'), function () {
-    var tRedGL = this;
-    console.log(RedScene(tRedGL));
-    redSuite(
-        "RedScene Test",
-        redGroup(
-            "생성 확인 ( <b>redGL</b>, <b>backgroundColor</b> ) ",
-            redTest("성공테스트 : new 생성확인", function (unit, title) {
-                unit.run(new RedScene(tRedGL) instanceof RedScene)
-            }, true),
-            redTest("성공테스트 : 함수실행 생성확인", function (unit, title) {
-                unit.run(RedScene(tRedGL) instanceof RedScene)
-            }, true),
-            redTest("실패테스트 : redGL - RedGL Instance만 허용", function (unit, title) {
-                try {
-                    RedScene();
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////');
-                    console.log(title, '\n', error);
-                    unit.run(false, error);
-                }
-            }, false),
-            redTest("성공테스트 : backgroundColor : hex형식 or 미지정만 허용", function (unit, title) {
-                var t0 = RedScene(tRedGL, '#ff0000');
-                unit.run(t0['backgroundColor'])
-            }, '#ff0000'),
-            redTest("실패테스트 : backgroundColor : hex형식 or 미지정만 허용", function (unit, title) {
-                try {
-                    var t0 = RedScene(tRedGL, 'test');
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////');
-                    console.log(title, '\n', error);
-                    unit.run(false, error);
-                }
-            }, false)
-        ),
-        redGroup(
-            "(RedScene Instance).useBackgroundColor = value",
-            redTest("초기값 확인 : true", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                unit.run(t0['useBackgroundColor'])
-            }, true),
-            redTest("성공테스트 : false 설정", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                t0['useBackgroundColor'] = false;
-                unit.run(t0['useBackgroundColor'])
-            }, false),
-            redTest("성공테스트 : true 설정", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                t0['useBackgroundColor'] = true;
-                unit.run(t0['useBackgroundColor'])
-            }, true),
-            redTest("실패테스트 : boolean 만 허용", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                try {
-                    t0['useBackgroundColor'] = 1;
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////');
-                    console.log(title, '\n', error);
-                    unit.run(false, error);
-                }
-            }, false)
-        ),
-        redGroup(
-            "(RedScene Instance).backgroundColor = value",
-            redTest("초기값 확인", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                unit.run(t0['backgroundColor'])
-            }, '#000000'),
-            redTest("성공테스트 : #777", function (unit, title) {
-                var t0 = RedScene(tRedGL, '#777');
-                unit.run(t0['backgroundColor'])
-            }, '#777'),
-            redTest("성공테스트 : #xxx 형식이 통과하는지", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                try {
-                    unit.run(t0['backgroundColor'] = '#343')
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////');
-                    console.log(title, '\n', error);
-                    unit.run(false, error);
-                }
-            }, '#343'),
-            redTest("성공테스트 : #xxxxxx 형식이 통과하는지", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                try {
-                    unit.run(t0['backgroundColor'] = '#343222')
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////');
-                    console.log(title, '\n', error);
-                    unit.run(false, error);
-                }
-            }, '#343222'),
-            redTest("실패테스트 : 잘못된 hex형식이 들어올경우 #xxxx", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                try {
-                    t0['backgroundColor'] = '#ff22';
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////');
-                    console.log(title, '\n', error);
-                    unit.run(false, error);
-                }
-            }, false),
-            redTest("실패테스트 : 일반 문자열이 막히는지 확인", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                try {
-                    unit.run(t0['backgroundColor'] = 'color')
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////');
-                    console.log(title, '\n', error);
-                    unit.run(false, error);
-                }
-            }, false),
-            redTest("실패테스트 : 숫자형식이 막히는지 확인", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                try {
-                    unit.run(t0['backgroundColor'] = 1)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////');
-                    console.log(title, '\n', error);
-                    unit.run(false, error);
-                }
-            }, false)
-        ),
-        redGroup(
-            "(RedScene Instance).useFog = value",
-            redTest("초기값", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                unit.run(t0['useFog'])
-            }, false),
-            redTest("성공테스트 : true", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                t0['useFog'] = true;
-                unit.run(t0['useFog'])
-            }, true),
-            redTest("성공테스트 : false", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                t0['useFog'] = false;
-                unit.run(t0['useFog'])
-            }, false),
-            redTest("실패테스트 : boolean만 허용", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                try {
-                    t0['useFog'] = 1;
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////');
-                    console.log(title, '\n', error);
-                    unit.run(false, error);
-                }
-            }, false)
-        ),
-        redGroup(
-            "(RedScene Instance).fogDensity = value",
-            redTest("성공테스트 : 1", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                t0['fogDensity'] = 1;
-                unit.run(t0['fogDensity'])
-            }, 1),
-            redTest("성공테스트 : 2.1", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                t0['fogDensity'] = 2.1;
-                unit.run(t0['fogDensity'])
-            }, 2.1),
-            redTest("성공테스트 : 최소값 0 처리되는지 확인", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                t0['fogDensity'] = -1;
-                unit.run(t0['fogDensity'])
-            }, 0),
-            redTest("실패테스트 : 숫자만 허용하는지 확인", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                try {
-                    t0['fogDensity'] = '1';
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////');
-                    console.log(title, '\n', error);
-                    unit.run(false, error);
-                }
-            }, false)
-        ),
-        redGroup(
-            "(RedScene Instance).fogDistance = value",
-            redTest("성공테스트 : 1", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                t0['fogDistance'] = 1;
-                unit.run(t0['fogDistance'])
-            }, 1),
-            redTest("성공테스트 : 2.1", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                t0['fogDistance'] = 2.1;
-                unit.run(t0['fogDistance'])
-            }, 2.1),
-            redTest("성공테스트 : 최소값 0 처리되는지 확인", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                t0['fogDistance'] = -1;
-                unit.run(t0['fogDistance'])
-            }, 0),
-            redTest("실패테스트 : 숫자만 허용하는지 확인", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                try {
-                    t0['fogDistance'] = '1';
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////');
-                    console.log(title, '\n', error);
-                    unit.run(false, error);
-                }
-            }, false)
-        ),
-        redGroup(
-            "(RedScene Instance).fogColor = value",
-            redTest("초기값 : #ffffff", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                unit.run(t0['fogColor'])
-            }, '#ffffff'),
-            redTest("성공테스트 : #777", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                t0['fogColor'] = '#777';
-                unit.run(t0['fogColor'])
-            }, '#777'),
-            redTest("성공테스트 : #xxx 형식이 통과하는지", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                try {
-                    unit.run(t0['fogColor'] = '#343')
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////');
-                    console.log(title, '\n', error);
-                    unit.run(false, error);
-                }
-            }, '#343'),
-            redTest("성공테스트 : #xxxxxx 형식이 통과하는지", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                try {
-                    unit.run(t0['fogColor'] = '#343222')
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////');
-                    console.log(title, '\n', error);
-                    unit.run(false, error);
-                }
-            }, '#343222'),
-            redTest("실패테스트 : 잘못된 hex형식이 들어올경우 #xxxx", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                try {
-                    t0['fogColor'] = '#ff22';
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////');
-                    console.log(title, '\n', error);
-                    unit.run(false, error);
-                }
-            }, false),
-            redTest("실패테스트 : 일반 문자열이 막히는지 확인", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                try {
-                    unit.run(t0['fogColor'] = 'color')
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////');
-                    console.log(title, '\n', error);
-                    unit.run(false, error);
-                }
-            }, false),
-            redTest("실패테스트 : 숫자형식이 막히는지 확인", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                try {
-                    unit.run(t0['fogColor'] = 1)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////');
-                    console.log(title, '\n', error);
-                    unit.run(false, error);
-                }
-            }, false)
-        ),
-        redGroup(
-            "(RedScene Instance).grid = value",
-            redTest("성공테스트 : RedGrid Instance만  허용하는지 확인", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                t0['grid'] = RedGrid(tRedGL);
-                unit.run(t0['grid'] instanceof RedGrid)
-            }, true),
-            redTest("실패테스트 : RedGrid Instance만  허용하는지 확인", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                try {
-                    t0['grid'] = RedMesh(tRedGL);
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////');
-                    console.log(title, '\n', error);
-                    unit.run(false, error);
-                }
-            }, false),
-            redTest("성공테스트 : null 세팅확인", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                t0['grid'] = RedGrid(tRedGL);
-                t0['grid'] = null;
-                unit.run(t0['grid'])
-            }, null)
-        ),
-        redGroup(
-            "(RedScene Instance).axis = value",
-            redTest("성공테스트 : RedAxis Instance만  허용하는지 확인", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                t0['axis'] = RedAxis(tRedGL);
-                unit.run(t0['axis'] instanceof RedAxis)
-            }, true),
-            redTest("실패테스트 : RedAxis Instance만  허용하는지 확인", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                try {
-                    t0['axis'] = RedMesh(tRedGL);
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////');
-                    console.log(title, '\n', error);
-                    unit.run(false, error);
-                }
-            }, false),
-            redTest("성공테스트 : null 세팅확인", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                t0['axis'] = RedAxis(tRedGL);
-                t0['axis'] = null;
-                unit.run(t0['axis'])
-            }, null)
-        ),
-        redGroup(
-            "(RedScene Instance).skyBox = value",
-            redTest("성공테스트 : RedSkyBox Instance만  허용하는지 확인", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                t0['skyBox'] = RedSkyBox(tRedGL, [
-                    '../asset/cubemap/SwedishRoyalCastle/px.jpg',
-                    '../asset/cubemap/SwedishRoyalCastle/nx.jpg',
-                    '../asset/cubemap/SwedishRoyalCastle/ny.jpg',
-                    '../asset/cubemap/SwedishRoyalCastle/py.jpg',
-                    '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
-                    '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
-                ]);
-                unit.run(t0['skyBox'] instanceof RedSkyBox)
-            }, true),
-            redTest("실패테스트 : RedSkyBox Instance만  허용하는지 확인", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                try {
-                    t0['skyBox'] = RedMesh(tRedGL);
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////');
-                    console.log(title, '\n', error);
-                    unit.run(false, error);
-                }
-            }, false),
-            redTest("성공테스트 : null 세팅확인", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                t0['skyBox'] = RedSkyBox(tRedGL, [
-                    '../asset/cubemap/SwedishRoyalCastle/px.jpg',
-                    '../asset/cubemap/SwedishRoyalCastle/nx.jpg',
-                    '../asset/cubemap/SwedishRoyalCastle/ny.jpg',
-                    '../asset/cubemap/SwedishRoyalCastle/py.jpg',
-                    '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
-                    '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
-                ]);
-                t0['skyBox'] = null;
-                unit.run(t0['skyBox'])
-            }, null)
-        ),
-        redGroup(
-            "(RedScene Instance).addLight( <b>value</b> ) : RedAmbientLight",
-            redTest("성공테스트 : addLight - RedAmbientLight 설정", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                t0.addLight(RedAmbientLight(tRedGL));
-                unit.run(true)
-            }, true),
-            redTest("성공테스트 : addLight - RedAmbientLight 설정데이터 확인", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                var t1 = RedAmbientLight(tRedGL);
-                t0.addLight(t1);
-                unit.run(t0['_lightInfo']['RedAmbientLight'] == t1)
-            }, true),
-            redTest("실패테스트 : addLight - RedAmbientLight가 아닌 데이터 입력", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                try {
-                    t0.addLight('test');
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////');
-                    console.log(title, '\n', error);
-                    unit.run(false, error);
-                }
-            }, false)
-        ),
-        redGroup(
-            "(RedScene Instance).removeLight( <b>value</b> ) : RedAmbientLight",
-            redTest("성공테스트 : removeLight - RedAmbientLight 설정", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                var t1 = RedAmbientLight(tRedGL);
-                t0.addLight(t1);
-                t0.removeLight(t1);
-                unit.run(t0['_lightInfo']['RedAmbientLight'] == null);
-            }, true)
-        ),
-        redGroup(
-            "(RedScene Instance).addLight( <b>value</b> ) : RedDirectionalLight",
-            redTest("성공테스트 : addLight - RedDirectionalLight 설정", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                t0.addLight(RedDirectionalLight(tRedGL));
-                unit.run(true)
-            }, true),
-            redTest("성공테스트 : addLight - RedDirectionalLight 설정데이터 확인", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                var t1 = RedDirectionalLight(tRedGL);
-                t0.addLight(t1);
-                unit.run(t0['_lightInfo']['RedDirectionalLight'][0] == t1)
-            }, true),
-            redTest("성공테스트 : addLight - MAX 갯수 확인", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                var i = RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT;
-                while (i--) {
-                    var t1 = RedDirectionalLight(tRedGL);
-                    t0.addLight(t1);
-                }
-                unit.run(t0['_lightInfo']['RedDirectionalLight'].length == RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT)
-            }, true),
-            redTest("성공테스트 : addLight - MAX 갯수 확인 - 초과시 에러 확인", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                var i = RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT + 1;
-                try {
-                    while (i--) {
-                        var t1 = RedDirectionalLight(tRedGL);
-                        t0.addLight(t1);
-                    }
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////');
-                    console.log(title, '\n', error);
-                    unit.run(false, error);
-                }
-            }, false),
-            redTest("실패테스트 : addLight - RedDirectionalLight가 아닌 데이터 입력", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                try {
-                    t0.addLight('test');
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////');
-                    console.log(title, '\n', error);
-                    unit.run(false, error);
-                }
-            }, false)
-        ),
-        redGroup(
-            "(RedScene Instance).removeLight( <b>value</b> ) : RedDirectionalLight",
-            redTest("성공테스트 : removeLight - RedDirectionalLight 설정데이터 확인", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                var t1 = RedDirectionalLight(tRedGL);
-                t0.addLight(t1);
-                t0.removeLight(t1);
-                unit.run(t0['_lightInfo']['RedDirectionalLight'].length == 0)
-            }, true)
-        ),
-        redGroup(
-            "(RedScene Instance).addLight( <b>value</b> ) : RedPointLight",
-            redTest("성공테스트 : addLight - RedPointLight 설정", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                t0.addLight(RedPointLight(tRedGL));
-                unit.run(true)
-            }, true),
-            redTest("성공테스트 : addLight - RedPointLight 설정데이터 확인", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                var t1 = RedPointLight(tRedGL);
-                t0.addLight(t1);
-                unit.run(t0['_lightInfo']['RedPointLight'][0] == t1)
-            }, true),
-            redTest("성공테스트 : addLight - MAX 갯수 확인", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                var i = RedSystemShaderCode.MAX_POINT_LIGHT;
-                while (i--) {
-                    var t1 = RedPointLight(tRedGL);
-                    t0.addLight(t1);
-                }
-                unit.run(t0['_lightInfo']['RedPointLight'].length == RedSystemShaderCode.MAX_POINT_LIGHT)
-            }, true),
-            redTest("성공테스트 : addLight - MAX 갯수 확인 - 초과시 에러 확인", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                var i = RedSystemShaderCode.MAX_POINT_LIGHT + 1;
-                try {
-                    while (i--) {
-                        var t1 = RedPointLight(tRedGL);
-                        t0.addLight(t1);
-                    }
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////');
-                    console.log(title, '\n', error);
-                    unit.run(false, error);
-                }
-            }, false),
-            redTest("실패테스트 : addLight - RedPointLight가 아닌 데이터 입력", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                try {
-                    t0.addLight('test');
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////');
-                    console.log(title, '\n', error);
-                    unit.run(false, error);
-                }
-            }, false)
-        ),
-        redGroup(
-            "(RedScene Instance).removeLight( <b>value</b> ) : RedPointLight",
-            redTest("성공테스트 : removeLight - RedPointLight 설정데이터 확인", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                var t1 = RedPointLight(tRedGL);
-                t0.addLight(t1);
-                t0.removeLight(t1);
-                unit.run(t0['_lightInfo']['RedPointLight'].length == 0);
-            }, true)
-        ),
-        redGroup(
-            "(RedScene Instance).removeLightAll()",
-            redTest("성공테스트 : removeLightAll()", function (unit, title) {
-                var t0 = RedScene(tRedGL);
-                t0.addLight(RedPointLight(tRedGL));
-                t0.addLight(RedPointLight(tRedGL));
-                t0.addLight(RedDirectionalLight(tRedGL));
-                t0.addLight(RedDirectionalLight(tRedGL));
-                t0.addLight(RedAmbientLight(tRedGL));
-                t0.removeLightAll();
-                unit.run(
-                    t0['_lightInfo']['RedAmbientLight'] == null
-                    && t0['_lightInfo']['RedPointLight'].length == 0
-                    && t0['_lightInfo']['RedDirectionalLight'].length == 0
+        var tRedGL = this;
+
+        RedTest.testGroup(
+            "기본 생성 테스트 RedScene( <b>redGL</b>, <b>backgroundColor</b> )",
+            function () {
+                RedTest.test(
+                    "성공 테스트 : new기반 생성확인",
+                    function () {
+
+                        RedTest.run(new RedScene(tRedGL) instanceof RedScene);
+
+
+                    },
+                    true
                 );
-            }, true)
-        )
-    )
-});
+                RedTest.test(
+                    "성공 테스트 : 실행기반 생성확인",
+                    function () {
+
+                        RedTest.run(RedScene(tRedGL) instanceof RedScene);
+
+                    },
+                    true
+                );
+                RedTest.test(
+                    "실패테스트 : redGL - RedGL Instance만 허용",
+                    function () {
+                        try {
+                            RedScene();
+                            RedTest.run(true)
+                        } catch (error) {
+                            RedTest.run(false, error);
+                        }
+
+                    },
+                    false
+                );
+                RedTest.test(
+                    "성공테스트 : backgroundColor : hex형식 or 미지정만 허용 - 미지정 테스트",
+                    function () {
+
+                        RedTest.run(RedScene(tRedGL) instanceof RedScene);
+
+                    },
+                    true
+                );
+                RedTest.test(
+                    "실패테스트 : backgroundColor : hex형식 or 미지정만 허용 - hex가 아닌 문자열 이력테스트",
+                    function () {
+
+                        try {
+                            RedScene(tRedGL, 'failTest');
+                            RedTest.run(true);
+
+                        } catch (error) {
+                            RedTest.run(false, error);
+
+                        }
+
+                    },
+                    false
+                );
+            }
+        );
+        RedTest.testGroup(
+            "(RedScene Instance).useBackgroundColor = value",
+            function () {
+                RedTest.test(
+                    "성공 테스트 : 초기값 확인",
+                    function () {
+
+                        var tScene = RedScene(tRedGL);
+                        RedTest.run(tScene['useBackgroundColor'])
+
+
+                    },
+                    true
+                );
+                RedTest.testListRun(
+                    'boolean만 허용 테스트',
+                    RedTest.ONLY_BOOLEAN,
+                    function (v) {
+
+                        var tScene = RedScene(tRedGL);
+                        try {
+                            tScene['useBackgroundColor'] = v[0];
+                            RedTest.run(tScene['useBackgroundColor'] === v[0]);
+
+                        } catch (error) {
+                            RedTest.run(tScene['useBackgroundColor'] === v[0], error);
+
+                        }
+
+                    }
+                );
+            }
+        );
+
+        RedTest.testGroup(
+            "(RedScene Instance).backgroundColor = value",
+            function () {
+                RedTest.test(
+                    "초기값 확인",
+                    function () {
+
+                        var tScene = RedScene(tRedGL);
+                        RedTest.run(tScene['backgroundColor']);
+
+
+                    },
+                    '#000000'
+                );
+                RedTest.testListRun(
+                    'hex 만 허용 테스트',
+                    RedTest.ONLY_HEX,
+                    function (v) {
+
+                        var tScene = RedScene(tRedGL);
+                        try {
+                            tScene['backgroundColor'] = v[0];
+                            RedTest.run(tScene['backgroundColor'] === v[0]);
+
+                        } catch (error) {
+                            RedTest.run(tScene['backgroundColor'] === v[0], error);
+
+                        }
+
+                    }
+                );
+            }
+        );
+
+        RedTest.testGroup(
+            "(RedScene Instance).useFog = value",
+            function () {
+                RedTest.test(
+                    "성공 테스트 : 초기값 확인",
+                    function () {
+
+                        var tScene = RedScene(tRedGL);
+                        RedTest.run(tScene['useFog']);
+
+
+                    },
+                    false
+                );
+                RedTest.testListRun(
+                    'boolean만 허용 테스트',
+                    RedTest.ONLY_BOOLEAN,
+                    function (v) {
+
+                        var tScene = RedScene(tRedGL);
+                        try {
+                            tScene['useFog'] = v[0];
+                            RedTest.run(tScene['useFog'] === v[0]);
+
+                        } catch (error) {
+                            RedTest.run(tScene['useFog'] === v[0], error);
+
+                        }
+
+                    }
+                )
+            }
+        );
+
+        RedTest.testGroup(
+            "(RedScene Instance).fogDensity = value",
+            function () {
+
+                RedTest.test(
+                    "성공 테스트 : 최소값 0으로 보정되는지 확인",
+                    function () {
+
+                        var tScene = RedScene(tRedGL);
+                        tScene['fogDensity'] = -1;
+                        RedTest.run(tScene['fogDensity']);
+
+
+                    },
+                    0
+                );
+                RedTest.testListRun(
+                    '0을 포함한 양수만 허용 테스트',
+                    RedTest.NUMBER_POSITIVE_AND_ZERO,
+                    function (v) {
+
+                        var tScene = RedScene(tRedGL);
+                        try {
+                            tScene['fogDensity'] = v[0];
+                            RedTest.run(tScene['fogDensity'] === v[0]);
+
+                        } catch (error) {
+                            RedTest.run(tScene['fogDensity'] === v[0], error);
+
+                        }
+
+                    }
+                )
+            }
+        );
+
+        RedTest.testGroup(
+            "(RedScene Instance).fogDistance = value",
+            function () {
+                RedTest.test(
+                    "성공 테스트 : 최소값 0으로 보정되는지 확인",
+                    function () {
+
+                        var tScene = RedScene(tRedGL);
+                        tScene['fogDistance'] = -1;
+                        RedTest.run(tScene['fogDistance']);
+
+
+                    },
+                    0
+                );
+                RedTest.testListRun(
+                    '0을 포함한 양수만 허용 테스트',
+                    RedTest.NUMBER_POSITIVE_AND_ZERO,
+                    function (v) {
+
+                        var tScene = RedScene(tRedGL);
+                        try {
+                            tScene['fogDistance'] = v[0];
+                            RedTest.run(tScene['fogDistance'] === v[0]);
+
+                        } catch (error) {
+                            RedTest.run(tScene['fogDistance'] === v[0], error);
+
+                        }
+
+                    }
+                )
+            }
+        );
+
+
+        RedTest.testGroup(
+            "(RedScene Instance).fogColor = value",
+            function () {
+                RedTest.testListRun(
+                    'hex 만 허용 테스트',
+                    RedTest.ONLY_HEX,
+                    function (v) {
+
+                        var tScene = RedScene(tRedGL);
+                        try {
+                            tScene['fogColor'] = v[0];
+                            RedTest.run(tScene['fogColor'] === v[0]);
+
+                        } catch (error) {
+                            RedTest.run(tScene['fogColor'] === v[0], error);
+
+                        }
+
+                    }
+                );
+            }
+        );
+        RedTest.testGroup(
+            "(RedScene Instance).grid = value",
+            function () {
+                RedTest.test(
+                    '성공테스트 : RedGrid Instance만  허용하는지 확인',
+                    function () {
+
+                        var tScene = RedScene(tRedGL);
+                        tScene['grid'] = RedGrid(tRedGL);
+                        RedTest.run(tScene['grid'] instanceof RedGrid);
+
+
+                    },
+                    true
+                );
+                RedTest.test(
+                    '성공테스트 : null 세팅 가능 확인',
+                    function () {
+
+                        var tScene = RedScene(tRedGL);
+                        tScene['grid'] = null;
+                        RedTest.run(tScene['grid']);
+
+                    },
+                    null
+                );
+                RedTest.test(
+                    '실패테스트 : RedGrid Instance만  허용하는지 확인',
+                    function () {
+
+                        var tScene = RedScene(tRedGL);
+
+                        try {
+                            tScene['grid'] = 'failTest';
+                            RedTest.run(tScene['grid'] instanceof RedGrid);
+
+                        } catch (error) {
+                            RedTest.run(tScene['grid'] instanceof RedGrid, error);
+
+                        }
+
+                    },
+                    false
+                );
+
+            }
+        );
+
+
+        RedTest.testGroup(
+            "(RedScene Instance).axis = value",
+            function () {
+                RedTest.test(
+                    '성공테스트 : RedAxis Instance만  허용하는지 확인',
+                    function () {
+
+                        var tScene = RedScene(tRedGL);
+                        tScene['axis'] = RedAxis(tRedGL);
+                        RedTest.run(tScene['axis'] instanceof RedAxis);
+
+
+                    },
+                    true
+                );
+                RedTest.test(
+                    '성공테스트 : null 세팅 가능 확인',
+                    function () {
+
+                        var tScene = RedScene(tRedGL);
+                        tScene['axis'] = null;
+                        RedTest.run(tScene['axis']);
+
+
+                    },
+                    null
+                );
+                RedTest.test(
+                    '실패테스트 : RedAxis Instance만  허용하는지 확인',
+                    function () {
+
+                        var tScene = RedScene(tRedGL);
+                        try {
+                            tScene['axis'] = 'failTest';
+                            RedTest.run(tScene['axis'] instanceof RedAxis);
+
+                        } catch (error) {
+                            RedTest.run(tScene['axis'] instanceof RedAxis, error);
+
+                        }
+
+                    },
+                    false
+                );
+            }
+        );
+        RedTest.testGroup(
+            "(RedScene Instance).skybox = value",
+            function () {
+                RedTest.test(
+                    '성공테스트 : RedSkyBox Instance만  허용하는지 확인',
+                    function () {
+
+                        var tScene = RedScene(tRedGL);
+                        tScene['skybox'] = RedSkyBox(tRedGL, [
+                            '../asset/cubemap/SwedishRoyalCastle/px.jpg',
+                            '../asset/cubemap/SwedishRoyalCastle/nx.jpg',
+                            '../asset/cubemap/SwedishRoyalCastle/ny.jpg',
+                            '../asset/cubemap/SwedishRoyalCastle/py.jpg',
+                            '../asset/cubemap/SwedishRoyalCastle/pz.jpg',
+                            '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
+                        ]);
+                        RedTest.run(tScene['skybox'] instanceof RedSkyBox);
+
+
+                    },
+                    true
+                );
+                RedTest.test(
+                    '성공테스트 : null 세팅 가능 확인',
+                    function () {
+
+                        var tScene = RedScene(tRedGL);
+                        tScene['skybox'] = null;
+                        RedTest.run(tScene['skybox']);
+
+
+                    },
+                    null
+                );
+                RedTest.test(
+                    '실패테스트 : RedSkyBox Instance만  허용하는지 확인',
+                    function () {
+
+                        var tScene = RedScene(tRedGL);
+                        try {
+                            tScene['skybox'] = 'failTest';
+                            RedTest.run(tScene['skybox'] instanceof RedSkyBox);
+
+                        } catch (error) {
+                            RedTest.run(tScene['skybox'] instanceof RedSkyBox, error);
+
+                        }
+
+                    },
+                    false
+                );
+            }
+        );
+
+
+        RedTest.testGroup(
+            "(RedScene Instance).addLight( <b>value</b> ) : RedAmbientLight",
+            function () {
+                RedTest.test(
+                    "성공테스트 : addLight - RedAmbientLight 설정",
+                    function () {
+
+                        var tScene = RedScene(tRedGL);
+                        try {
+                            tScene.addLight(RedAmbientLight(tRedGL));
+                            RedTest.run(true);
+
+                        } catch (error) {
+                            RedTest.run(false, error);
+
+                        }
+
+                    },
+                    true
+                );
+                RedTest.test(
+                    "성공테스트 : addLight - RedAmbientLight 설정데이터 확인",
+                    function () {
+
+                        var tAmbient = RedAmbientLight(tRedGL);
+                        var tScene = RedScene(tRedGL);
+                        tScene.addLight(tAmbient);
+                        RedTest.run(tScene['_lightInfo']['RedAmbientLight'] === tAmbient);
+
+
+                    },
+                    true
+                );
+                RedTest.test(
+                    "실패테스트 : addLight - RedAmbientLight가 아닌 데이터 입력",
+                    function () {
+
+                        var tScene = RedScene(tRedGL);
+                        try {
+                            tScene.addLight('test');
+                            RedTest.run(true);
+
+                        } catch (error) {
+                            RedTest.run(false, error);
+
+                        }
+
+                    },
+                    false
+                );
+            }
+        );
+        RedTest.testGroup(
+            "(RedScene Instance).removeLight( <b>value</b> ) : RedAmbientLight",
+            function () {
+                RedTest.test(
+                    "성공테스트 : removeLight - RedAmbientLight 삭제",
+                    function () {
+
+                        var tScene = RedScene(tRedGL);
+                        var tLight = RedAmbientLight(tRedGL);
+                        tScene.addLight(tLight);
+                        tScene.removeLight(tLight);
+                        RedTest.run(tScene['_lightInfo']['RedAmbientLight']);
+
+
+                    },
+                    null
+                );
+            }
+        );
+        RedTest.testGroup(
+            "(RedScene Instance).addLight( <b>value</b> ) : RedDirectionalLight",
+            function () {
+                RedTest.test(
+                    "성공테스트 : addLight - RedDirectionalLight 설정",
+                    function () {
+
+                        var tScene = RedScene(tRedGL);
+                        tScene.addLight(RedDirectionalLight(tRedGL));
+                        RedTest.run(true);
+
+
+                    },
+                    true
+                );
+                RedTest.test(
+                    "성공테스트 : addLight - RedDirectionalLight 설정데이터 확인",
+                    function () {
+
+                        var tScene = RedScene(tRedGL);
+                        var t1 = RedDirectionalLight(tRedGL);
+                        tScene.addLight(t1);
+                        RedTest.run(tScene['_lightInfo']['RedDirectionalLight'][0] === t1);
+
+
+                    },
+                    true
+                );
+                RedTest.test(
+                    "성공테스트 : addLight - MAX 갯수 확인",
+                    function () {
+
+                        var tScene = RedScene(tRedGL);
+                        var i = RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT;
+                        while (i--) {
+                            var t1 = RedDirectionalLight(tRedGL);
+                            tScene.addLight(t1);
+                        }
+                        RedTest.run(tScene['_lightInfo']['RedDirectionalLight'].length === RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT);
+
+
+                    },
+                    true
+                );
+                RedTest.test(
+                    "성공테스트 : addLight - MAX 갯수 확인 - 초과시 에러 확인",
+                    function () {
+
+                        var tScene = RedScene(tRedGL);
+                        var i = RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT + 1;
+                        try {
+                            while (i--) {
+                                var t1 = RedDirectionalLight(tRedGL);
+                                tScene.addLight(t1);
+                            }
+                            RedTest.run(true);
+
+                        } catch (error) {
+                            RedTest.run(false, error);
+
+                        }
+
+                    },
+                    false
+                );
+                RedTest.test(
+                    "실패테스트 : addLight - RedDirectionalLight가 아닌 데이터 입력",
+                    function () {
+
+                        var tScene = RedScene(tRedGL);
+                        try {
+                            tScene.addLight('test');
+                            RedTest.run(true);
+
+                        } catch (error) {
+                            RedTest.run(false, error);
+
+                        }
+
+                    },
+                    false
+                );
+
+            }
+        );
+        RedTest.testGroup(
+            "(RedScene Instance).removeLight( <b>value</b> ) : RedDirectionalLight",
+            function () {
+                RedTest.test(
+                    "성공테스트 : removeLight - RedDirectionalLight 삭제",
+                    function () {
+
+                        var tScene = RedScene(tRedGL);
+                        var t1 = RedDirectionalLight(tRedGL);
+                        tScene.addLight(t1);
+                        tScene.removeLight(t1);
+                        RedTest.run(tScene['_lightInfo']['RedDirectionalLight'].length);
+
+
+                    },
+                    0
+                );
+            }
+        );
+        RedTest.testGroup(
+            "(RedScene Instance).removeLight( <b>value</b> ) : RedAmbientLight",
+            function () {
+                RedTest.test(
+                    "성공테스트 : removeLight - RedAmbientLight 삭제",
+                    function () {
+
+                        var tScene = RedScene(tRedGL);
+                        var tLight = RedAmbientLight(tRedGL);
+                        tScene.addLight(tLight);
+                        tScene.removeLight(tLight);
+                        RedTest.run(tScene['_lightInfo']['RedAmbientLight']);
+
+
+                    },
+                    null
+                );
+            }
+        );
+        RedTest.testGroup(
+            "(RedScene Instance).addLight( <b>value</b> ) : RedPointLight",
+            function () {
+
+                RedTest.test(
+                    "성공테스트 : addLight - RedPointLight 설정",
+                    function () {
+
+
+                        var tScene = RedScene(tRedGL);
+                        tScene.addLight(RedPointLight(tRedGL));
+                        RedTest.run(true);
+
+
+                    },
+                    true
+                );
+                RedTest.test(
+                    "성공테스트 : addLight - RedPointLight 설정데이터 확인",
+                    function () {
+
+                        var tScene = RedScene(tRedGL);
+                        var t1 = RedPointLight(tRedGL);
+                        tScene.addLight(t1);
+                        RedTest.run(tScene['_lightInfo']['RedPointLight'][0] === t1);
+
+
+                    },
+                    true
+                );
+                RedTest.test(
+                    "성공테스트 : addLight - MAX 갯수 확인",
+                    function () {
+
+                        var tScene = RedScene(tRedGL);
+                        var i = RedSystemShaderCode.MAX_POINT_LIGHT;
+                        while (i--) {
+                            var t1 = RedPointLight(tRedGL);
+                            tScene.addLight(t1);
+                        }
+                        RedTest.run(tScene['_lightInfo']['RedPointLight'].length === RedSystemShaderCode.MAX_POINT_LIGHT);
+
+                    },
+                    true
+                );
+                RedTest.test(
+                    "성공테스트 : addLight - MAX 갯수 확인 - 초과시 에러 확인",
+                    function () {
+
+                        var tScene = RedScene(tRedGL);
+                        var i = RedSystemShaderCode.MAX_POINT_LIGHT + 1;
+                        try {
+                            while (i--) {
+                                var t1 = RedPointLight(tRedGL);
+                                tScene.addLight(t1);
+                            }
+                            RedTest.run(true);
+
+                        } catch (error) {
+                            RedTest.run(false, error);
+
+                        }
+
+                    },
+                    false
+                );
+                RedTest.test(
+                    "실패테스트 : addLight - RedPointLight가 아닌 데이터 입력",
+                    function () {
+
+                        var tScene = RedScene(tRedGL);
+                        try {
+                            tScene.addLight('test');
+                            RedTest.run(true);
+
+                        } catch (error) {
+                            RedTest.run(false, error);
+
+                        }
+
+                    },
+                    false
+                )
+
+
+            }
+        );
+        RedTest.testGroup(
+            "(RedScene Instance).removeLight( <b>value</b> ) : RedPointLight",
+            function () {
+                RedTest.test(
+                    "성공테스트 : removeLight - RedPointLight 삭제",
+                    function () {
+
+                        var tScene = RedScene(tRedGL);
+                        var t1 = RedPointLight(tRedGL);
+                        tScene.addLight(t1);
+                        tScene.removeLight(t1);
+                        RedTest.run(tScene['_lightInfo']['RedPointLight'].length);
+
+
+                    },
+                    0
+                );
+            }
+        );
+        RedTest.testGroup(
+            "(RedScene Instance).removeLightAll()",
+            function () {
+
+                RedTest.test(
+                    "성공테스트 : removeLightAll()",
+                    function () {
+
+                        var tScene = RedScene(tRedGL);
+                        tScene.addLight(RedPointLight(tRedGL));
+                        tScene.addLight(RedPointLight(tRedGL));
+                        tScene.addLight(RedDirectionalLight(tRedGL));
+                        tScene.addLight(RedDirectionalLight(tRedGL));
+                        tScene.addLight(RedAmbientLight(tRedGL));
+                        tScene.removeLightAll();
+                        RedTest.run(
+                            tScene['_lightInfo']['RedAmbientLight'] === null
+                            && tScene['_lightInfo']['RedPointLight'].length === 0
+                            && tScene['_lightInfo']['RedDirectionalLight'].length === 0
+                        );
+                        tRedGL.gl.getExtension('WEBGL_lose_context').loseContext();
+
+                    },
+                    true
+                );
+
+            }
+        );
+    }
+);
+
+
