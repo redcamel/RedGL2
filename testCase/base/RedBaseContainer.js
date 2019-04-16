@@ -1,8 +1,6 @@
 "use strict";
 RedGL.setDoNotPrepareProgram();
 RedTest.title = "RedBaseContainer TEST";
-
-
 RedTest.testGroup(
     "(RedBaseContainer 확장 객체 인스턴스).<b>addChild</b>( child )",
     function () {

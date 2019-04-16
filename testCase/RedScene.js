@@ -1,6 +1,7 @@
+'use strict'
 RedTest.title = "RedScene TEST";
 RedGL.setDoNotPrepareProgram();
-// RedTest.mode = RedTest.REQUEST_MODE;
+RedTest.mode = RedTest.REQUEST_MODE;
 RedGL(document.createElement('canvas'), function () {
         var tRedGL = this;
 
@@ -10,19 +11,14 @@ RedGL(document.createElement('canvas'), function () {
                 RedTest.test(
                     "성공 테스트 : new기반 생성확인",
                     function () {
-
                         RedTest.run(new RedScene(tRedGL) instanceof RedScene);
-
-
                     },
                     true
                 );
                 RedTest.test(
                     "성공 테스트 : 실행기반 생성확인",
                     function () {
-
                         RedTest.run(RedScene(tRedGL) instanceof RedScene);
-
                     },
                     true
                 );
@@ -42,9 +38,7 @@ RedGL(document.createElement('canvas'), function () {
                 RedTest.test(
                     "성공테스트 : backgroundColor : hex형식 or 미지정만 허용 - 미지정 테스트",
                     function () {
-
                         RedTest.run(RedScene(tRedGL) instanceof RedScene);
-
                     },
                     true
                 );
@@ -58,7 +52,6 @@ RedGL(document.createElement('canvas'), function () {
 
                         } catch (error) {
                             RedTest.run(false, error);
-
                         }
 
                     },
@@ -72,10 +65,8 @@ RedGL(document.createElement('canvas'), function () {
                 RedTest.test(
                     "성공 테스트 : 초기값 확인",
                     function () {
-
                         var tScene = RedScene(tRedGL);
                         RedTest.run(tScene['useBackgroundColor'])
-
 
                     },
                     true
@@ -84,7 +75,6 @@ RedGL(document.createElement('canvas'), function () {
                     'boolean만 허용 테스트',
                     RedTest.ONLY_BOOLEAN,
                     function (v) {
-
                         var tScene = RedScene(tRedGL);
                         try {
                             tScene['useBackgroundColor'] = v[0];
@@ -106,11 +96,8 @@ RedGL(document.createElement('canvas'), function () {
                 RedTest.test(
                     "초기값 확인",
                     function () {
-
                         var tScene = RedScene(tRedGL);
                         RedTest.run(tScene['backgroundColor']);
-
-
                     },
                     '#000000'
                 );
@@ -118,12 +105,10 @@ RedGL(document.createElement('canvas'), function () {
                     'hex 만 허용 테스트',
                     RedTest.ONLY_HEX,
                     function (v) {
-
                         var tScene = RedScene(tRedGL);
                         try {
                             tScene['backgroundColor'] = v[0];
                             RedTest.run(tScene['backgroundColor'] === v[0]);
-
                         } catch (error) {
                             RedTest.run(tScene['backgroundColor'] === v[0], error);
 
@@ -140,11 +125,8 @@ RedGL(document.createElement('canvas'), function () {
                 RedTest.test(
                     "성공 테스트 : 초기값 확인",
                     function () {
-
                         var tScene = RedScene(tRedGL);
                         RedTest.run(tScene['useFog']);
-
-
                     },
                     false
                 );
@@ -152,7 +134,6 @@ RedGL(document.createElement('canvas'), function () {
                     'boolean만 허용 테스트',
                     RedTest.ONLY_BOOLEAN,
                     function (v) {
-
                         var tScene = RedScene(tRedGL);
                         try {
                             tScene['useFog'] = v[0];
@@ -162,7 +143,6 @@ RedGL(document.createElement('canvas'), function () {
                             RedTest.run(tScene['useFog'] === v[0], error);
 
                         }
-
                     }
                 )
             }
@@ -171,16 +151,12 @@ RedGL(document.createElement('canvas'), function () {
         RedTest.testGroup(
             "(RedScene Instance).fogDensity = value",
             function () {
-
                 RedTest.test(
                     "성공 테스트 : 최소값 0으로 보정되는지 확인",
                     function () {
-
                         var tScene = RedScene(tRedGL);
                         tScene['fogDensity'] = -1;
                         RedTest.run(tScene['fogDensity']);
-
-
                     },
                     0
                 );
@@ -188,7 +164,6 @@ RedGL(document.createElement('canvas'), function () {
                     '0을 포함한 양수만 허용 테스트',
                     RedTest.NUMBER_POSITIVE_AND_ZERO,
                     function (v) {
-
                         var tScene = RedScene(tRedGL);
                         try {
                             tScene['fogDensity'] = v[0];
@@ -210,12 +185,9 @@ RedGL(document.createElement('canvas'), function () {
                 RedTest.test(
                     "성공 테스트 : 최소값 0으로 보정되는지 확인",
                     function () {
-
                         var tScene = RedScene(tRedGL);
                         tScene['fogDistance'] = -1;
                         RedTest.run(tScene['fogDistance']);
-
-
                     },
                     0
                 );
@@ -223,7 +195,6 @@ RedGL(document.createElement('canvas'), function () {
                     '0을 포함한 양수만 허용 테스트',
                     RedTest.NUMBER_POSITIVE_AND_ZERO,
                     function (v) {
-
                         var tScene = RedScene(tRedGL);
                         try {
                             tScene['fogDistance'] = v[0];
@@ -239,7 +210,6 @@ RedGL(document.createElement('canvas'), function () {
             }
         );
 
-
         RedTest.testGroup(
             "(RedScene Instance).fogColor = value",
             function () {
@@ -247,17 +217,13 @@ RedGL(document.createElement('canvas'), function () {
                     'hex 만 허용 테스트',
                     RedTest.ONLY_HEX,
                     function (v) {
-
                         var tScene = RedScene(tRedGL);
                         try {
                             tScene['fogColor'] = v[0];
                             RedTest.run(tScene['fogColor'] === v[0]);
-
                         } catch (error) {
                             RedTest.run(tScene['fogColor'] === v[0], error);
-
                         }
-
                     }
                 );
             }
@@ -268,32 +234,25 @@ RedGL(document.createElement('canvas'), function () {
                 RedTest.test(
                     '성공테스트 : RedGrid Instance만  허용하는지 확인',
                     function () {
-
                         var tScene = RedScene(tRedGL);
                         tScene['grid'] = RedGrid(tRedGL);
                         RedTest.run(tScene['grid'] instanceof RedGrid);
-
-
                     },
                     true
                 );
                 RedTest.test(
                     '성공테스트 : null 세팅 가능 확인',
                     function () {
-
                         var tScene = RedScene(tRedGL);
                         tScene['grid'] = null;
                         RedTest.run(tScene['grid']);
-
                     },
                     null
                 );
                 RedTest.test(
                     '실패테스트 : RedGrid Instance만  허용하는지 확인',
                     function () {
-
                         var tScene = RedScene(tRedGL);
-
                         try {
                             tScene['grid'] = 'failTest';
                             RedTest.run(tScene['grid'] instanceof RedGrid);
