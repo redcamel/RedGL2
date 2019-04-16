@@ -45,6 +45,7 @@
 <hr style="border:0px;border-top:1px solid #333">
 <!-- <hr style="border:0px;border-top:1px solid #222"> -->
 <div style="padding:10px;color:#fff">
+    <div style="color:#fff;" id="totalTestCasePage"></div>
     <a href="https://redcamel.github.io/RedGL2/example">example</a> / <a
         href="https://redcamel.github.io/RedGL2/testCase">testCase</a> / <a
         href="https://redcamel.github.io/RedGL2/redDoc">document</a> / <a href="https://github.com/redcamel/RedGL2/">github</a>
@@ -53,12 +54,19 @@
 <script>
     var len, testList;
     var index
+    var pageNum = 0
+    var totalTestCaseNumS = 0
+    var totalTestCaseNumF = 0
+
+    var iframeList = []
     testList = [
         "RedGL.html",
         //
         "RedScene.html",
         "RedView.html",
         "RedWorld.html",
+        //
+        "base/RedDefinePropertyInfo.html",
         //
         "program/RedShader.html",
         "program/RedProgram.html",
@@ -83,6 +91,7 @@
         "material/RedBitmapPointCloudMaterial.html",
         "material/RedParticleMaterial.html",
         //
+        "base/RedBaseLight.html",
         "light/RedAmbientLight.html",
         "light/RedDirectionalLight.html",
         "light/RedPointLight.html",
@@ -127,14 +136,14 @@
             tStyle.display = 'block',
             tStyle.outline = 'none',
             tStyle.border = '0px',
-            tStyle.width = '300px',
+            tStyle.width = '100%',
             tStyle.fontSize = '13px',
             tStyle.background = '#5b52aa',
             tStyle.font = "#333",
             tFrame = document.createElement('iframe'),
             tStyle = tFrame.style,
             tStyle.border = "0px",
-            tStyle.width = "300px",
+            tStyle.width = '100%',
             tStyle.height = "103px",
             tContainer.appendChild(tFrame),
             tFrame.addEventListener('load', (function () {
@@ -148,12 +157,47 @@
                     tDate = tDate.getFullYear() + '.' + (tDate.getMonth() + 1) + '.' + tDate.getDate() + ' ' + tDate.getHours() + ':' + tDate.getMinutes()
                     title.innerHTML = '<a href = "' + t0 + '"><div style="padding:15px">' + t0.split('/')[t0.split('/').length - 1] + ' - <span style="color:#ccc;font-size:11px">' + tDate + '</span></div></a>'
                     index++
+                    pageNum++
+                    iframeList.push(frame.contentDocument)
                     if (index != len) requestAnimationFrame(run)
+                    else clearInterval(tInterval)
+                    document.getElementById('totalTestCasePage').innerHTML = 'TotalPageNum : ' + pageNum
+                        + ' / totalTestCaseNum : <span style="color:rgb(242, 169, 113)">S</span> - '
+                        + totalTestCaseNumS + ' <span style="color:red">F</span> - ' + totalTestCaseNumF;
                 }
             })());
         tFrame.src = v
     }
     run()
+    var tInterval = setInterval(function () {
+        totalTestCaseNumS = 0
+        totalTestCaseNumF = 0
+        iframeList.forEach(function (v) {
+            var t0 = v.querySelector('.suite_resultNumBox')
+            var t1;
+            if (t0) {
+                t0 = t0.textContent
+                t0 = t0.split('[')[1]
+                if (t0) {
+                    t1 = t0.split('/')
+                    // 성공찾기
+                    t0 = t1[0]
+                    t0 = t0.split(':')[1]
+                    t0 = t0.trim()
+                    totalTestCaseNumS += parseInt(t0)
+                    // 실패찾기
+                    t0 = t1[1]
+                    t0 = t0.split(']')[0]
+                    t0 = t0.split(':')[1]
+                    t0 = t0.trim()
+                    totalTestCaseNumF += parseInt(t0)
+                }
+            }
+        })
+        document.getElementById('totalTestCasePage').innerHTML = 'TotalPageNum : ' + pageNum
+            + ' / totalTestCaseNum : <span style="color:rgb(242, 169, 113)">S</span> - '
+            + totalTestCaseNumS + ' <span style="color:red">F</span> - ' + totalTestCaseNumF;
+    }, 100)
 </script>
 <div style="clear:both"></div>
 

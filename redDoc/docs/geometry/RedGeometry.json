@@ -50,5 +50,11 @@
     "title": "volume",
     "description": "지오메트리 고유의 볼륨을 리턴함",
     "return": "array : [xVolume, yVolume, zVolume]"
+  },
+  {
+    "code": "METHOD",
+    "title": "volumeCalculate",
+    "description": "지오메트리 고유의 볼륨을 재계산함",
+    "return": "array : [xVolume, yVolume, zVolume]"
   }
 ]

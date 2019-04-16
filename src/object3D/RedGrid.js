@@ -134,7 +134,7 @@ var RedGrid;
 		 return : 'Number'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedGrid', 'divisions', 'number', {
+    RedDefinePropertyInfo.definePrototype('RedGrid', 'divisions', 'uint', {
         min: 1,
         callback: function () {
             this['_update']()

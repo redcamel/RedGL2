@@ -1,13 +1,14 @@
 "use strict";
 var RedBaseMaterial;
 (function () {
-    var prepareNum = 0
+    var prepareNum = 0;
     /**DOC:
      {
 		 constructorYn : true,
 		 title :`RedBaseMaterial`,
 		 description : `
-			 RedBaseMaterial 기저층
+			 RedBaseMaterial 기저층.
+			 재질은 이 객체의 확장으로 이루어진다.
 		 `,
 		 return : 'RedBaseMaterial instance'
 	 }
@@ -15,43 +16,7 @@ var RedBaseMaterial;
     RedBaseMaterial = function () {
     };
     RedBaseMaterial.prototype = {
-        /**DOC:
-         {
-			 code : 'METHOD',
-			 title :`makeProgramList`,
-			 description : `
-				 <h1>다중 프로그램 리스트 생성기.
-				 TODO:// 좀더 구체적인 설명 적어야함</h1>
-			 `,
-			 params : {
-			    target : [
-			        { type : 'RedBaseMaterial Instance' }
-			    ],
-			    redGL : [
-			        { type : 'RedGL Instance' }
-			    ],
-			    programName : [
-			        { type : 'String' },
-			        '기본 프로그램이름'
-			    ],
-			    vSource : [
-			        { type : 'String' },
-			        '버텍스 쉐이더 소스'
-			    ],
-			    fSource : [
-			        { type : 'String' },
-			        '프레그먼트 쉐이더'
-			    ],
-			    programOptionList : [
-			        { type : 'Array' },
-			        '옵션키 리스트'
-			    ]
-			 },
-			 return : 'void'
-		 }
-         :DOC*/
         makeProgramList: (function () {
-            //TODO: 이걸좀 정리해야하는데..
             var makePrepareProgram;
             var makeSystemProgram, makeOptionProgram;
             var systemKeyList = ['fog', 'sprite3D', 'skin', 'directionalShadow'];
@@ -77,19 +42,7 @@ var RedBaseMaterial;
             };
             makeOptionProgram = function (programList, spaceName, programName, redGL, vSource, fSource, systemOptionList, programOptionList) {
                 programOptionList = programOptionList || [];
-                // console.log('rootName', rootName, list)
-                // programOptionList.forEach(function (key, index) {
-                //     // console.log(key)
-                //     var tOptionName = programOptionList.join('_');
-                //     // console.log('tOptionName', tOptionName)
-                //     if (!programList['basic'][programName + '_' + tOptionName]) programList['basic'][programName + '_' + tOptionName] = new makePrepareProgram(redGL, programList, programName, vSource, fSource, null, programOptionList);
-                //     if (!programList[spaceName][programName + '_' + tOptionName]) programList[spaceName][programName + '_' + tOptionName] = new makePrepareProgram(redGL, programList, programName, vSource, fSource, systemOptionList, programOptionList);
-                //     // else console.log('중복', programName)
-                //     var newList = programOptionList.concat();
-                //     newList.splice(index, 1);
-                //     // console.log('newList', newList)
-                //     makeOptionProgram(programList, spaceName, programName, redGL, vSource, fSource, systemOptionList, newList);
-                // })
+
                 function k_combinations(set, k) {
                     var i, j, combs, head, tailcombs;
                     // There is no way to take e.g. sets of 5 elements from
@@ -97,14 +50,12 @@ var RedBaseMaterial;
                     if (k > set.length || k <= 0) {
                         return [];
                     }
-
                     // K-sized set has only one K-sized subset.
-                    if (k == set.length) {
+                    if (k === set.length) {
                         return [set];
                     }
-
                     // There is N 1-sized subsets in a N-sized set.
-                    if (k == 1) {
+                    if (k === 1) {
                         combs = [];
                         for (i = 0; i < set.length; i++) {
                             combs.push([set[i]]);
@@ -125,6 +76,7 @@ var RedBaseMaterial;
                     }
                     return combs;
                 }
+
                 function combinations(set) {
                     var k, i, combs, k_combs;
                     combs = [];
@@ -136,8 +88,9 @@ var RedBaseMaterial;
                     }
                     return combs;
                 }
+
                 // console.log('combinations(programOptionList)',combinations(programOptionList))
-                var tList = combinations(programOptionList)
+                var tList = combinations(programOptionList);
 
                 tList.forEach(function (v) {
                     var tOptionName = v.join('_');
@@ -148,7 +101,7 @@ var RedBaseMaterial;
 
             };
             makePrepareProgram = function (redGL, programList, programName, vSource, fSource, systemKey, optionKey) {
-                prepareNum++
+                prepareNum++;
                 optionKey = optionKey || [];
                 this['optionList'] = optionKey.concat(systemKey || []);
                 this['systemKey'] = (systemKey || ['basic']).join('_');
@@ -165,8 +118,7 @@ var RedBaseMaterial;
                 if (redGL['_datas']['RedProgramGroup'][programName]) {
                     target['_programList'] = redGL['_datas']['RedProgramGroup'][programName];
                     console.log('캐싱프로그램그룹사용 :', programName);
-                }
-                else {
+                } else {
                     target['_programList'] = {
                         basic: {}
                     };
@@ -181,9 +133,19 @@ var RedBaseMaterial;
                     redGL['_datas']['RedProgramGroup'][programName] = target['_programList'];
                 }
                 target['program'] = target['_programList']['basic'][programName];
-                console.log('prepareNum',prepareNum)
+                console.log('prepareNum', prepareNum)
             }
         })(),
+        /**DOC:
+         {
+			 code : 'METHOD',
+			 title :`_searchProgram`,
+			 description : `
+				 재질의 상태를 추적하여 적합한 프로그램 찾고 재질이 가진다.
+			 `,
+			 return : 'void'
+		 }
+         :DOC*/
         _searchProgram: (function () {
             var i;
             var tKey;
@@ -233,6 +195,16 @@ var RedBaseMaterial;
                 }
             }
         })(),
+        /**DOC:
+         {
+			 code : 'METHOD',
+			 title :`disposeAllTexture`,
+			 description : `
+				 재질내의 모든 RedBaseTexture 확장객체를 dispose 함
+			 `,
+			 return : 'void'
+		 }
+         :DOC*/
         disposeAllTexture: (function () {
             var k;
             return function () {
@@ -241,6 +213,21 @@ var RedBaseMaterial;
                 }
             }
         })(),
+        /**DOC:
+         {
+			 code : 'METHOD',
+			 title :`disposeTexture`,
+			 description : `
+				 키에 해당하는 RedBaseTexture 확장객체를 dispose 함
+			 `,
+			 params : {
+                 key : [
+                     {type:'String'}
+                 ]
+             },
+			 return : 'void'
+		 }
+         :DOC*/
         disposeTexture: function (key) {
             if (this[key] instanceof RedBaseTexture) this[key].dispose()
         }

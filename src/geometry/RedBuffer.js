@@ -26,12 +26,10 @@ var RedBuffer;
         switch (bufferType) {
             case RedBuffer.ARRAY_BUFFER:
                 return gl.ARRAY_BUFFER;
-                break;
             case RedBuffer.ELEMENT_ARRAY_BUFFER:
                 return gl.ELEMENT_ARRAY_BUFFER;
-                break;
             default:
-                RedGLUtil.throwFunc('RedBuffer : bufferType - 지원하지 않는 버퍼타입입니다. ')
+                RedGLUtil.throwFunc('RedBuffer : bufferType - 지원하지 않는 버퍼타입입니다. ');
         }
     };
     parseInterleaveDefineInfo = (function () {
@@ -39,14 +37,14 @@ var RedBuffer;
             //console.log(self, bufferType)
             var totalSize, i, len, tData;
             var tBYTES_PER_ELEMENT;
-            if (data instanceof Float32Array) tBYTES_PER_ELEMENT = Float32Array.BYTES_PER_ELEMENT
-            else if (data instanceof Float64Array) tBYTES_PER_ELEMENT = Float64Array.BYTES_PER_ELEMENT
+            if (data instanceof Float32Array) tBYTES_PER_ELEMENT = Float32Array.BYTES_PER_ELEMENT;
+            else if (data instanceof Float64Array) tBYTES_PER_ELEMENT = Float64Array.BYTES_PER_ELEMENT;
             totalSize = 0;
             switch (bufferType) {
                 case RedBuffer.ARRAY_BUFFER:
                     self['interleaveDefineInfoList'] = interleaveDefineInfoList;
                     if (interleaveDefineInfoList) {
-                        if (interleaveDefineInfoList.length == 0) RedGLUtil.throwFunc('RedBuffer : interleaveDefineInfoList의 정보는 1개이상의 RedInterleaveInfo Instance로 구성되어야함.', interleaveDefineInfoList);
+                        if (!interleaveDefineInfoList.length) RedGLUtil.throwFunc('RedBuffer : interleaveDefineInfoList의 정보는 1개이상의 RedInterleaveInfo Instance로 구성되어야함.', interleaveDefineInfoList);
                         i = 0;
                         len = interleaveDefineInfoList.length;
                         for (i; i < len; i++) {
@@ -72,7 +70,7 @@ var RedBuffer;
                             self['pointNum'] = data.length / totalSize;
                         }
                         // 업로드시 포인트가 달라질수 있으므로 확인해야함.
-                        if (self['pointNum'] != parseInt(self['pointNum'])) RedGLUtil.throwFunc('RedBuffer : ARRAY_BUFFER의 pointNum이 정수로 떨어지지 않음. 데이터구성과 interleaveDefineInfoList 구성 확인 필요');
+                        if (self['pointNum'] !== parseInt(self['pointNum'])) RedGLUtil.throwFunc('RedBuffer : ARRAY_BUFFER의 pointNum이 정수로 떨어지지 않음. 데이터구성과 interleaveDefineInfoList 구성 확인 필요');
                     } else RedGLUtil.throwFunc('RedBuffer : interleaveDefineInfoList는 반드시 정의 되어야함.');
                     break;
                 case RedBuffer.ELEMENT_ARRAY_BUFFER:
@@ -173,7 +171,9 @@ var RedBuffer;
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedBuffer : RedGL Instance만 허용.', redGL);
         typeof key == 'string' || RedGLUtil.throwFunc('RedBuffer : key - 문자열만 허용.', '입력값 : ' + key);
         bufferType || RedGLUtil.throwFunc('RedBuffer : bufferType : 미입력, 반드시 입력해야함.');
-        bufferType == RedBuffer.ARRAY_BUFFER || bufferType == RedBuffer.ELEMENT_ARRAY_BUFFER || RedGLUtil.throwFunc('RedBuffer : bufferType - RedBuffer.ARRAY_BUFFER or RedBuffer.ELEMENT_ARRAY_BUFFER 만 허용함.', '입력값 : ' + bufferType);
+        bufferType === RedBuffer.ARRAY_BUFFER
+        || bufferType === RedBuffer.ELEMENT_ARRAY_BUFFER
+        || RedGLUtil.throwFunc('RedBuffer : bufferType - RedBuffer.ARRAY_BUFFER or RedBuffer.ELEMENT_ARRAY_BUFFER 만 허용함.', '입력값 : ' + bufferType);
         var tGL = redGL.gl;
         //유일키 방어
         if (!redGL['_datas']['RedBuffer']) {
@@ -183,7 +183,7 @@ var RedBuffer;
         }
         if (redGL['_datas']['RedBuffer'][bufferType][key]) return redGL['_datas']['RedBuffer'][bufferType][key];
         else redGL['_datas']['RedBuffer'][bufferType][key] = this;
-        if (bufferType == RedBuffer.ARRAY_BUFFER && !interleaveDefineInfoList) RedGLUtil.throwFunc('RedBuffer : 신규생성시 interleaveDefineInfoList를 반드시 정의해야합니다.', '입력값 : ' + interleaveDefineInfoList);
+        if (bufferType === RedBuffer.ARRAY_BUFFER && !interleaveDefineInfoList) RedGLUtil.throwFunc('RedBuffer : 신규생성시 interleaveDefineInfoList를 반드시 정의해야합니다.', '입력값 : ' + interleaveDefineInfoList);
         /**DOC:
          {
 			 code : 'PROPERTY',
@@ -254,8 +254,8 @@ var RedBuffer;
 		 }
          :DOC*/
         this['webglBuffer'] = tGL.createBuffer();
-        this['webglBuffer']['gl'] = tGL
-        this['webglBuffer']['redGL'] = redGL
+        this['webglBuffer']['gl'] = tGL;
+        this['webglBuffer']['redGL'] = redGL;
         this['_UUID'] = RedGL.makeUUID();
         /**DOC:
          {
@@ -283,13 +283,13 @@ var RedBuffer;
 		 }
          :DOC*/
         this['upload'] = function (data) {
-            if (this['glArrayType'] == getGlDataTypeByTypeArray(tGL, bufferType, data)) {
+            if (this['glArrayType'] === getGlDataTypeByTypeArray(tGL, bufferType, data)) {
                 this['data'] = data;
                 tGL.bindBuffer(this['glBufferType'], this['webglBuffer']);
                 tGL.bufferData(this['glBufferType'], this['data'], this['drawMode']);
                 parseInterleaveDefineInfo(this, this['bufferType'], this['data'], this['interleaveDefineInfoList']);
-                if (this['bufferType'] == RedBuffer.ARRAY_BUFFER) this['triangleNum'] = this['data'].length / (this['stride'] ? this['stride'] : 3);
-                if (this['bufferType'] == RedBuffer.ELEMENT_ARRAY_BUFFER) this['triangleNum'] = this['pointNum'] / 3;
+                if (this['bufferType'] === RedBuffer.ARRAY_BUFFER) this['triangleNum'] = this['data'].length / (this['stride'] ? this['stride'] : 3);
+                if (this['bufferType'] === RedBuffer.ELEMENT_ARRAY_BUFFER) this['triangleNum'] = this['pointNum'] / 3;
             } else RedGLUtil.throwFunc('RedBuffer : upload - data형식이 기존 형식과 다름', data)
         };
         this['upload'](this['data']);
@@ -305,11 +305,11 @@ var RedBuffer;
      :DOC*/
     RedBuffer.prototype['dispose'] = function () {
         if (this['webglBuffer'] && !this['isPrimitiveBuffer']) {
-            this['webglBuffer']['gl'].deleteBuffer(this['webglBuffer'])
-            delete this['webglBuffer']['redGL']['_datas']['RedBuffer'][this['bufferType']][this['key']]
-            this['webglBuffer'] = null
+            this['webglBuffer']['gl'].deleteBuffer(this['webglBuffer']);
+            delete this['webglBuffer']['redGL']['_datas']['RedBuffer'][this['bufferType']][this['key']];
+            this['webglBuffer'] = null;
         }
-    }
+    };
     /**DOC:
      {
 		 code: 'CONST',

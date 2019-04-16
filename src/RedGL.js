@@ -3,8 +3,8 @@ var RedGL;
 (function () {
     var getGL;
     var setEmptyTextures;
-    var doNotPrepareProgram
-    var _instanceList = []
+    var doNotPrepareProgram;
+    var _instanceList = [];
     window.addEventListener('resize', function () {
         _instanceList.forEach(function (redGL) {
             redGL.setSize(redGL['_width'], redGL['_height'])
@@ -43,7 +43,7 @@ var RedGL;
             initOption = JSON.parse(JSON.stringify(OPTION));
             if (option) for (i in option) initOption[i] = option[i];
             if (targetContext) {
-                tCheckContextList.length = 0
+                tCheckContextList.length = 0;
                 tCheckContextList.push(targetContext)
             } else tCheckContextList = CHECK_CONTEXT_LIST.concat();
             i = tCheckContextList.length;
@@ -78,6 +78,7 @@ var RedGL;
         };
         // 0번은 2D 텍스쳐 생성용공간
         // 1번은 3D 텍스쳐 생성용공간
+        //TODO 이게 아마도 이제 필요없을텐데 확인해봐야함
         while (i--) {
             if (i == 1) {
                 gl.activeTexture(gl.TEXTURE0 + 1);
@@ -164,14 +165,13 @@ var RedGL;
         this['_height'] = '100%';
         this['_renderScale'] = 1;
         this['_viewRect'] = [0, 0, 0, 0];
-        //
         this['_canvas'] = canvas;
         /**DOC:
          {
 			 code : 'PROPERTY',
 			 title :`gl`,
 			 description : `
-				 생성된 WebGL Context
+				 RedGL 초기화시 생성된 WebGL Context
 			 `,
 			 return : 'WebGL Context Instance'
 		 }
@@ -182,14 +182,16 @@ var RedGL;
          {
 			 code : 'PROPERTY',
 			 title :`detect`,
-			 description : `
-				 하드웨어 디텍팅 정보
-			 `,
+			 description : `RedGL 초기화시 생성되는 하드웨어 디텍팅 정보`,
 			 return : 'RedGLDetect Instance'
 		 }
          :DOC*/
         if (tGL) this['detect'] = RedGLDetect(this);
-        else return callback ? callback.call(self, tGL ? true : false) : 0;
+        else {
+            if (callback) return callback.call(self, false); // 실패할경우 콜백 콜백
+            else return
+
+        }
         //
         this['_UUID'] = RedGL.makeUUID();
         /**DOC:
@@ -216,8 +218,8 @@ var RedGL;
             var prevW, prevH;
             var ratio;
             var tCVS;
-            var tW = new Uint32Array(2)
-            var tH = new Uint32Array(2)
+            var tW = new Uint32Array(2);
+            var tH = new Uint32Array(2);
             prevW = 0, prevH = 0;
             return function (width, height, force) {
                 if (width == undefined) RedGLUtil.throwFunc('RedGL setSize : width가 입력되지 않았습니다.');
@@ -227,11 +229,11 @@ var RedGL;
                 if (window['HTMLCanvasElement']) {
                     if (typeof W != 'number') {
                         if (W.indexOf('%') > -1) W = (document.documentElement ? document.documentElement.clientWidth : document.body.clientWidth) * parseFloat(W) / 100;
-                        else RedGLUtil.throwFunc('RedGL setSize : width는 0이상의 숫자나 %만 허용.', W);
+                        else RedGLUtil.throwFunc('RedGL setSize : width는 0이상의 숫자나 %만 허용.', '입력값 :', W);
                     }
                     if (typeof H != 'number') {
                         if (H.indexOf('%') > -1) H = window.innerHeight * parseFloat(H) / 100;
-                        else RedGLUtil.throwFunc('RedGL setSize : height는 0이상의 숫자나 %만 허용.', H);
+                        else RedGLUtil.throwFunc('RedGL setSize : height는 0이상의 숫자나 %만 허용.', '입력값 :', H);
                     }
                     ratio = window['devicePixelRatio'] || 1;
                     tCVS = this['_canvas'];
@@ -248,31 +250,29 @@ var RedGL;
                     this['_viewRect'][3] = prevH;
                     console.log("this['_viewRect']", this['_viewRect'])
                 } else {
-                    W = this['_width'] = width
-                    H = this['_height'] = height
-                    tW[0] = W * this['_renderScale']
-                    tH[0] = H * this['_renderScale']
+                    W = this['_width'] = width;
+                    H = this['_height'] = height;
+                    tW[0] = W * this['_renderScale'];
+                    tH[0] = H * this['_renderScale'];
                     console.log('offscreen - RedGL canvas setSize : ', this.gl.drawingBufferWidth, this.gl.drawingBufferHeight);
                     this['_viewRect'][2] = W;
-                    this['_viewRect'][3] = H
+                    this['_viewRect'][3] = H;
                 }
             }
         })();
-
+        // 쉐이더 코드를 초기화한다(가변요소때문에 이때 결정함)
         if (RedSystemShaderCode['init']) RedSystemShaderCode.init(self);
         ///////////////////////////////////////
         setEmptyTextures(self, tGL); // 빈텍스쳐를 미리 체워둔다.
-        _instanceList.push(self)
+        _instanceList.push(self);
         requestAnimationFrame(function () {
             if (!doNotPrepareProgram) {
-                // 무거운놈만 먼저 해둘까...
-                RedPBRMaterial_System(self);
-                RedStandardMaterial(self, self['_datas']['emptyTexture']['2d']);
-                RedEnvironmentMaterial(self, null, self['_datas']['emptyTexture']['3d']);
+                RedPBRMaterial_System(self); // 무거운 녀석 미리 준비
+                RedStandardMaterial(self, self['_datas']['emptyTexture']['2d']); // 사용 빈도 높은 재질 미리 준비
+                RedEnvironmentMaterial(self, null, self['_datas']['emptyTexture']['3d']); // 사용 빈도 높은 재질 미리 준비
             }
             ///////////////////////////////////////
-            //
-
+            // 마우스 관련 처리 기반 준비
             self['_mouseEventInfo'] = [];
             [RedGLDetect.BROWSER_INFO.move, RedGLDetect.BROWSER_INFO.down, RedGLDetect.BROWSER_INFO.up].forEach(function (v) {
                 var tXkey, tYkey;
@@ -284,53 +284,36 @@ var RedGL;
                     tYkey = 'layerY';
                 }
                 self['_canvas'].addEventListener(v, function (e) {
-                    console.log(e)
-                    e.preventDefault()
-
+                    e.preventDefault();
                     if (RedGLDetect.BROWSER_INFO.isMobile) {
                         if (e.changedTouches[0]) {
                             self['_mouseEventInfo'].push(
                                 {
                                     type: e.type,
-                                    //TODO 모바일에서 확인해야함
                                     x: e.changedTouches[0].clientX,
                                     y: e.changedTouches[0].clientY
                                 }
-                            )
-                            self._mouseX =e.changedTouches[0].clientX
-                            self._mouseY =e.changedTouches[0].clientY
+                            );
+                            self._mouseX = e.changedTouches[0].clientX;
+                            self._mouseY = e.changedTouches[0].clientY
                         }
-                    }
-                    else {
-                        console.log(e)
+                    } else {
                         self['_mouseEventInfo'].push(
                             {
                                 type: e.type,
                                 x: e[tXkey],
                                 y: e[tYkey]
                             }
-                        )
-                        self._mouseX =e[tXkey]
-                        self._mouseY =e[tYkey]
-                        // self.world._viewList.forEach(function(view){
-                        //     if(!view['_mouseEventInfo']) view['_mouseEventInfo']=[]
-                        //     view['_mouseEventInfo'].push(
-                        //         {
-                        //             type: e.type,
-                        //             x: e[tXkey],
-                        //             y: e[tYkey]
-                        //         }
-                        //     )
-                        // })
+                        );
+                        self._mouseX = e[tXkey];
+                        self._mouseY = e[tYkey];
                     }
                 }, false)
             });
             self.setSize(self['_width'], self['_height']); // 리사이즈를 초기에 한번 실행.
-            callback ? callback.call(self, tGL ? true : false) : 0; // 콜백이 있으면 실행
-
-            //
+            if (callback) callback.call(self, true); // 콜백이 있으면 실행
         });
-        console.log(this)
+        console.log(this);
     };
     /**DOC:
      {
@@ -374,6 +357,6 @@ var RedGL;
     });
     RedGL.setDoNotPrepareProgram = function () {
         doNotPrepareProgram = true
-    }
+    };
     Object.freeze(RedGL);
 })();

@@ -6,7 +6,7 @@ var RedParticleMaterial;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'particleProgram';
-    var PROGRAM_OPTION_LIST = ['diffuseTexture','usePreMultiply'];
+    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'usePreMultiply'];
 
     var checked;
     vSource = function () {

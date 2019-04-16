@@ -127,8 +127,15 @@ var RedPlane;
         tPrimitiveData = makeData(redGL, tType, width, height, wSegments, hSegments, flipY);
         this['interleaveBuffer'] = tPrimitiveData['interleaveBuffer'];
         this['indexBuffer'] = tPrimitiveData['indexBuffer'];
-        this['interleaveBuffer']['isPrimitiveBuffer'] = true
-        this['indexBuffer']['isPrimitiveBuffer'] = true
+        this['interleaveBuffer']['isPrimitiveBuffer'] = true;
+        this['indexBuffer']['isPrimitiveBuffer'] = true;
+        this['_makeInfo'] = {
+            width: width,
+            height: height,
+            wSegments: wSegments,
+            hSegments: hSegments,
+            flipY: flipY
+        };
         this['_UUID'] = RedGL.makeUUID();
         console.log(this);
     };

@@ -62,7 +62,7 @@ var RedGLDetect;
             while (i--) this[k][tKey = tList[i]] = gl.getParameter(gl[tKey]);
         }
         this['BROWSER_INFO'] = RedGLDetect.getBrowserInfo();
-        requestAnimationFrame(function(){
+        requestAnimationFrame(function () {
             var canvas = document.createElement('canvas')
             var ctx = canvas.getContext('2d')
             canvas.width = 10
@@ -73,7 +73,7 @@ var RedGLDetect;
             ctx.fillRect(0, 10, 10, 10)
             canvas.style.cssText = 'position:fixed;top:0px;left:0px'
             // document.body.appendChild(canvas)
-            var tTexture  = RedBitmapTexture(redGL,canvas)
+            var tTexture = RedBitmapTexture(redGL, canvas)
 
             var fb = gl.createFramebuffer();
             gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
@@ -81,8 +81,8 @@ var RedGLDetect;
             var pixels = new Uint8Array(1 * 1 * 4);
             gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels)
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-            self['ableCanvasSourceFlipYonTexture'] = pixels[0]==255
-            self['BROWSER_INFO']['ableCanvasSourceFlipYonTexture']  = pixels[0]==255
+            self['ableCanvasSourceFlipYonTexture'] = pixels[0] == 255
+            self['BROWSER_INFO']['ableCanvasSourceFlipYonTexture'] = pixels[0] == 255
             console.log('test', pixels)
         })
 

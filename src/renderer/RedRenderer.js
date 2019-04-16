@@ -349,7 +349,7 @@ var RedRenderer;
                 // 마우스 이벤트 렌더
                 if (tScene['mouseManager']) {
                     updateSystemUniform.apply(self, [redGL, time, tView])
-                    tScene['mouseManager']['render'](redGL, self, tView, time, tRenderInfo,i==len-1)
+                    tScene['mouseManager']['render'](redGL, self, tView, time, tRenderInfo, i == len - 1)
 
                 }
                 // 디렉셔널 쉐도우 렌더

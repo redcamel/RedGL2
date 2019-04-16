@@ -69,16 +69,16 @@ var RedLatheMesh;
         // 기본값 정의
         this['_pathString'] = pathString;
         this['_redGL'] = redGL;
-        this['_numDivisions'] = numDivisions = Math.floor(numDivisions) || 16;
-        this['_capStart'] = capStart !== undefined ? capStart : false;
-        this['_capEnd'] = capEnd !== undefined ? capEnd : false;
-        this['_startAngle'] = startAngle !== undefined ? startAngle : 0.0;
-        this['_endAngle'] = endAngle !== undefined ? endAngle : Math.PI * 2;
-        this['_distance'] = distance !== undefined ? distance : 0.4;
-        this['_maxAngle'] = maxAngle !== undefined ? maxAngle : Math.PI / 180 * 30
-        this['_tolerance'] = tolerance !== undefined ? tolerance : 0.15
-        this['_flipX'] = flipX ? true : false;
-        this['_flipY'] = flipY ? true : false;
+        this['numDivisions'] = numDivisions = Math.floor(numDivisions) || 16;
+        this['capStart'] = capStart !== undefined ? capStart : false;
+        this['capEnd'] = capEnd !== undefined ? capEnd : false;
+        this['startAngle'] = startAngle !== undefined ? startAngle : 0.0;
+        this['endAngle'] = endAngle !== undefined ? endAngle : Math.PI * 2;
+        this['distance'] = distance !== undefined ? distance : 0.4;
+        this['maxAngle'] = maxAngle !== undefined ? maxAngle : Math.PI / 180 * 30
+        this['tolerance'] = tolerance !== undefined ? tolerance : 0.15
+        this['flipX'] = flipX ? true : false;
+        this['flipY'] = flipY ? true : false;
         if (this['_tolerance'] < 0.1) this['_tolerance'] = 0.1
         /**DOC:
          {
@@ -125,13 +125,13 @@ var RedLatheMesh;
         }
     });
     /**DOC:
-        {
+     {
             code : 'PROPERTY',
             title :`numDivisions`,
             description : `분할갯수`,
             return : 'uint'
         }
-    :DOC*/
+     :DOC*/
     RedDefinePropertyInfo.definePrototype('RedLatheMesh', 'numDivisions', 'number', {min: 0, callback: resetGeometry});
     /**DOC:
      {

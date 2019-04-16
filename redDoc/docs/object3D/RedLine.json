@@ -191,7 +191,7 @@
   {
     "code": "PROPERTY",
     "title": "tension",
-    "description": "\n type이 RedLine.CATMULL_ROM 일 경우의 장력\n 기본값 1\n 최소값 0\n ",
+    "description": "\n type이 RedLine.CATMULL_ROM 일 경우의 장력\n 기본값 1\n ",
     "return": "Number"
   },
   {

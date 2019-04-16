@@ -303,7 +303,7 @@ var RedSystemShaderCode;
                         '   return amountInLight;',
                         '}'
                     ].join('\n'),
-                cotangent_frame : [
+                cotangent_frame: [
                     'mat3 cotangent_frame(vec3 N, vec3 p, vec2 uv)',
                     '{',
                     '   vec3 dp1 = dFdx( p );',
@@ -320,7 +320,7 @@ var RedSystemShaderCode;
                     '   return mat3( T * invmax, B * invmax, N );',
                     '}'
                 ].join('\n'),
-                perturb_normal : [
+                perturb_normal: [
                     'vec3 perturb_normal( vec3 N, vec3 V, vec2 texcoord, vec3 normalColor )',
                     '   {',
                     '   ',
@@ -416,5 +416,4 @@ var RedSystemShaderCode;
         console.log(RedSystemShaderCode)
         Object.freeze(RedSystemShaderCode)
     };
-})
-();
+})();

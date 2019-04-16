@@ -371,7 +371,7 @@ var RedLine;
         this['_tension'] = 1
         this['_tolerance'] = 0.01
         this['_distance'] = 0.1
-        this['_type'] = type || RedLine['LINEAR'];
+        this['type'] = type || RedLine['LINEAR'];
         this['_debug'] = false
         console.log(this)
     };
@@ -581,7 +581,6 @@ var RedLine;
 		 description : `
 		 type이 RedLine.CATMULL_ROM 일 경우의 장력
 		 기본값 1
-		 최소값 0
 		 `,
 		 return : 'Number'
 	 }
@@ -628,6 +627,5 @@ var RedLine;
     });
     RedLine.prototype['_simplifyPoints'] = simplifyPoints;
     RedLine.prototype['_getPointsOnBezierCurves'] = getPointsOnBezierCurves;
-
     Object.freeze(RedLine);
 })();

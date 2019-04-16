@@ -14,7 +14,7 @@ RedGL(document.createElement('canvas'), function (v) {
                 } catch (error) {
                     console.log('///////////////////////////////////////////////////////////')
                     console.log(title, '\n', error)
-                    unit.run(false)
+                    unit.run(false, error)
                 }
             }, true),
             redTest("실패테스트  : child - 미입력", function (unit, title) {
@@ -25,7 +25,7 @@ RedGL(document.createElement('canvas'), function (v) {
                 } catch (error) {
                     console.log('///////////////////////////////////////////////////////////')
                     console.log(title, '\n', error)
-                    unit.run(false)
+                    unit.run(false, error)
                 }
             }, false),
             redTest("실패테스트  : child - 숫자입력", function (unit, title) {
@@ -36,7 +36,7 @@ RedGL(document.createElement('canvas'), function (v) {
                 } catch (error) {
                     console.log('///////////////////////////////////////////////////////////')
                     console.log(title, '\n', error)
-                    unit.run(false)
+                    unit.run(false, error)
                 }
             }, false),
             redTest("성공테스트  : 기존에 존재하는 자식을 다시 추가할경우 : 기존을 제거하고 후방추가함", function (unit, title) {
@@ -50,7 +50,7 @@ RedGL(document.createElement('canvas'), function (v) {
             }, true)
         ),
         redGroup(
-            "(RedBaseContainer 확장 객체 인스턴스).<b>addChildAt</b>( child, index )",
+            "(RedBaseContainer 확장 객체 인스턴스).<b>addChildAt</b>( <b>child</b>, index )",
             redTest("성공테스트 : child - RedBaseObject3D Instance만 허용하는지.", function (unit, title) {
                 try {
                     var rootMesh = RedMesh(tRedGL);
@@ -60,7 +60,7 @@ RedGL(document.createElement('canvas'), function (v) {
                 } catch (error) {
                     console.log('///////////////////////////////////////////////////////////')
                     console.log(title, '\n', error)
-                    unit.run(false)
+                    unit.run(false, error)
                 }
             }, true),
             redTest("실패테스트 : child - 숫자입력", function (unit, title) {
@@ -72,9 +72,24 @@ RedGL(document.createElement('canvas'), function (v) {
                 } catch (error) {
                     console.log('///////////////////////////////////////////////////////////')
                     console.log(title, '\n', error)
-                    unit.run(false)
+                    unit.run(false, error)
                 }
-            }, false),
+            }, false)
+        ),
+
+        redGroup(
+            "(RedBaseContainer 확장 객체 인스턴스).<b>addChildAt</b>( child, <b>index</b> )",
+            redTest("성공테스트  : index - 1입력", function (unit, title) {
+                try {
+                    var rootMesh = RedMesh(tRedGL);
+                    rootMesh.addChildAt(RedMesh(tRedGL), 1)
+                    unit.run(true)
+                } catch (error) {
+                    console.log('///////////////////////////////////////////////////////////')
+                    console.log(title, '\n', error)
+                    unit.run(false, error)
+                }
+            }, true),
             redTest("실패테스트  : index - 미입력", function (unit, title) {
                 try {
                     var rootMesh = RedMesh(tRedGL);
@@ -83,7 +98,40 @@ RedGL(document.createElement('canvas'), function (v) {
                 } catch (error) {
                     console.log('///////////////////////////////////////////////////////////')
                     console.log(title, '\n', error)
-                    unit.run(false)
+                    unit.run(false, error)
+                }
+            }, false),
+            redTest("실패테스트  : index - -1입력", function (unit, title) {
+                try {
+                    var rootMesh = RedMesh(tRedGL);
+                    rootMesh.addChildAt(RedMesh(tRedGL), -1)
+                    unit.run(true)
+                } catch (error) {
+                    console.log('///////////////////////////////////////////////////////////')
+                    console.log(title, '\n', error)
+                    unit.run(false, error)
+                }
+            }, false),
+            redTest("실패테스트  : index - 1.1입력", function (unit, title) {
+                try {
+                    var rootMesh = RedMesh(tRedGL);
+                    rootMesh.addChildAt(RedMesh(tRedGL), 1.1)
+                    unit.run(true)
+                } catch (error) {
+                    console.log('///////////////////////////////////////////////////////////')
+                    console.log(title, '\n', error)
+                    unit.run(false, error)
+                }
+            }, false),
+            redTest("실패테스트  : index - -1.1입력", function (unit, title) {
+                try {
+                    var rootMesh = RedMesh(tRedGL);
+                    rootMesh.addChildAt(RedMesh(tRedGL), -1.1)
+                    unit.run(true)
+                } catch (error) {
+                    console.log('///////////////////////////////////////////////////////////')
+                    console.log(title, '\n', error)
+                    unit.run(false, error)
                 }
             }, false),
             redTest("실패테스트  : index - 문자입력", function (unit, title) {
@@ -94,10 +142,9 @@ RedGL(document.createElement('canvas'), function (v) {
                 } catch (error) {
                     console.log('///////////////////////////////////////////////////////////')
                     console.log(title, '\n', error)
-                    unit.run(false)
+                    unit.run(false, error)
                 }
             }, false),
-
             redTest("성공테스트 : index - index위치에 정확히 들어가는지", function (unit, title) {
                 var rootMesh = RedMesh(tRedGL);
                 var t1 = RedLine(tRedGL, RedColorMaterial(tRedGL));
@@ -141,13 +188,116 @@ RedGL(document.createElement('canvas'), function (v) {
                 console.log(rootMesh['children'])
                 unit.run(rootMesh['children'][2] == t1)
             }, true),
-            redTest("성공테스트 : index - 범위를 벗어나는 인덱스를 마지막순서에 입력", function (unit, title) {
+            redTest("성공테스트 : index - 범위를 벗어나는 인덱스는 마지막순서에 입력", function (unit, title) {
                 var rootMesh = RedMesh(tRedGL);
                 var t1 = RedMesh(tRedGL);
                 rootMesh.addChildAt(t1, 10);
                 unit.run(rootMesh['children'][0] == t1)
                 console.log(rootMesh['children'])
             }, true)
+        ),
+        redGroup(
+            "(RedBaseContainer 확장 객체 인스턴스).<b>getChildAt</b>( <b>index</b> )",
+            redTest("성공테스트  : 정상 작동확인", function (unit, title) {
+                try {
+                    var rootMesh = RedMesh(tRedGL);
+                    var t0 = RedMesh(tRedGL)
+                    rootMesh.addChild(t0);
+                    unit.run(rootMesh.getChildAt(0) == t0)
+                } catch (error) {
+                    console.log('///////////////////////////////////////////////////////////')
+                    console.log(title, '\n', error)
+                    unit.run(false, error)
+                }
+            }, true),
+            redTest("실패테스트  : index - 미입력", function (unit, title) {
+                try {
+                    var rootMesh = RedMesh(tRedGL);
+                    rootMesh.addChild(RedMesh(tRedGL));
+                    rootMesh.getChildAt(RedMesh(tRedGL))
+                    unit.run(true)
+                } catch (error) {
+                    console.log('///////////////////////////////////////////////////////////')
+                    console.log(title, '\n', error)
+                    unit.run(false, error)
+                }
+            }, false),
+            redTest("실패테스트  : index - -1입력", function (unit, title) {
+                try {
+                    var rootMesh = RedMesh(tRedGL);
+                    rootMesh.addChild(RedMesh(tRedGL));
+                    rootMesh.getChildAt(-1)
+                    unit.run(true)
+                } catch (error) {
+                    console.log('///////////////////////////////////////////////////////////')
+                    console.log(title, '\n', error)
+                    unit.run(false, error)
+                }
+            }, false),
+            redTest("실패테스트  : index - 1.1입력", function (unit, title) {
+                try {
+                    var rootMesh = RedMesh(tRedGL);
+                    rootMesh.addChild(RedMesh(tRedGL));
+                    rootMesh.getChildAt(1.1)
+                    unit.run(true)
+                } catch (error) {
+                    console.log('///////////////////////////////////////////////////////////')
+                    console.log(title, '\n', error)
+                    unit.run(false, error)
+                }
+            }, false),
+            redTest("실패테스트  : index - -1.1입력", function (unit, title) {
+                try {
+                    var rootMesh = RedMesh(tRedGL);
+                    rootMesh.addChild(RedMesh(tRedGL));
+                    rootMesh.getChildAt(-1.1)
+                    unit.run(true)
+                } catch (error) {
+                    console.log('///////////////////////////////////////////////////////////')
+                    console.log(title, '\n', error)
+                    unit.run(false, error)
+                }
+            }, false),
+            redTest("실패테스트  : index - 문자입력", function (unit, title) {
+                try {
+                    var rootMesh = RedMesh(tRedGL);
+                    rootMesh.addChild(RedMesh(tRedGL));
+                    rootMesh.getChildAt('failTest')
+                    unit.run(true)
+                } catch (error) {
+                    console.log('///////////////////////////////////////////////////////////')
+                    console.log(title, '\n', error)
+                    unit.run(false, error)
+                }
+            }, false)
+        ),
+        redGroup(
+            "(RedBaseContainer 확장 객체 인스턴스).<b>getChildIndex</b>( child )",
+            redTest("성공테스트 : 기본 동작 확인", function (unit, title) {
+                try {
+                    var rootMesh = RedMesh(tRedGL);
+                    var t1 = RedMesh(tRedGL);
+                    rootMesh.addChild(t1)
+                    unit.run(rootMesh.getChildIndex(t1))
+                } catch (error) {
+                    console.log('///////////////////////////////////////////////////////////')
+                    console.log(title, '\n', error)
+                    unit.run(false, error)
+                }
+            }, 0),
+            redTest("실패테스트 : children에 존재하지않는 녀석을 삭제하려할때", function (unit, title) {
+                try {
+                    var rootMesh = RedMesh(tRedGL);
+                    var t1 = RedMesh(tRedGL);
+                    rootMesh.getChildIndex(t1)
+                    console.log(rootMesh)
+                    unit.run(-1)
+                } catch (error) {
+                    console.log('///////////////////////////////////////////////////////////')
+                    console.log(title, '\n', error)
+                    unit.run(false, error)
+                }
+            }, -1)
         ),
         redGroup(
             "(RedBaseContainer 확장 객체 인스턴스).<b>removeChild</b>( child )",
@@ -162,7 +312,7 @@ RedGL(document.createElement('canvas'), function (v) {
                 } catch (error) {
                     console.log('///////////////////////////////////////////////////////////')
                     console.log(title, '\n', error)
-                    unit.run(false)
+                    unit.run(false, error)
                 }
             }, true),
             redTest("실패테스트 : children에 존재하지않는 녀석을 삭제하려할때", function (unit, title) {
@@ -176,7 +326,7 @@ RedGL(document.createElement('canvas'), function (v) {
                 } catch (error) {
                     console.log('///////////////////////////////////////////////////////////')
                     console.log(title, '\n', error)
-                    unit.run(false)
+                    unit.run(false, error)
                 }
             }, false),
             redTest("성공테스트 : 삭제후 children.length가 잘줄어드는지", function (unit, title) {
@@ -229,12 +379,77 @@ RedGL(document.createElement('canvas'), function (v) {
                 } catch (error) {
                     console.log('///////////////////////////////////////////////////////////')
                     console.log(title, '\n', error)
-                    unit.run(false)
+                    unit.run(false, error)
+                }
+            }, false),
+            redTest("실패테스트  : index 0 입력", function (unit, title) {
+                try {
+                    var rootMesh = RedMesh(tRedGL);
+                    rootMesh.addChild(RedMesh(tRedGL))
+                    rootMesh.removeChildAt(0)
+                    console.log(rootMesh)
+                    unit.run(true)
+                } catch (error) {
+                    console.log('///////////////////////////////////////////////////////////')
+                    console.log(title, '\n', error)
+                    unit.run(false, error)
+                }
+            }, true),
+            redTest("실패테스트  : index -1 입력", function (unit, title) {
+                try {
+                    var rootMesh = RedMesh(tRedGL);
+                    rootMesh.addChild(RedMesh(tRedGL))
+                    rootMesh.removeChildAt(-1)
+                    console.log(rootMesh)
+                    unit.run(true)
+                } catch (error) {
+                    console.log('///////////////////////////////////////////////////////////')
+                    console.log(title, '\n', error)
+                    unit.run(false, error)
+                }
+            }, false),
+            redTest("실패테스트  : index -1.1 입력", function (unit, title) {
+                try {
+                    var rootMesh = RedMesh(tRedGL);
+                    rootMesh.addChild(RedMesh(tRedGL))
+                    rootMesh.removeChildAt(-1.1)
+                    console.log(rootMesh)
+                    unit.run(true)
+                } catch (error) {
+                    console.log('///////////////////////////////////////////////////////////')
+                    console.log(title, '\n', error)
+                    unit.run(false, error)
+                }
+            }, false),
+            redTest("실패테스트  : index 1.1 입력", function (unit, title) {
+                try {
+                    var rootMesh = RedMesh(tRedGL);
+                    rootMesh.addChild(RedMesh(tRedGL))
+                    rootMesh.removeChildAt(1.1)
+                    console.log(rootMesh)
+                    unit.run(true)
+                } catch (error) {
+                    console.log('///////////////////////////////////////////////////////////')
+                    console.log(title, '\n', error)
+                    unit.run(false, error)
+                }
+            }, false),
+            redTest("실패테스트  : index 문자 입력", function (unit, title) {
+                try {
+                    var rootMesh = RedMesh(tRedGL);
+                    rootMesh.addChild(RedMesh(tRedGL))
+                    rootMesh.removeChildAt('문자')
+                    console.log(rootMesh)
+                    unit.run(true)
+                } catch (error) {
+                    console.log('///////////////////////////////////////////////////////////')
+                    console.log(title, '\n', error)
+                    unit.run(false, error)
                 }
             }, false)
         ),
         redGroup(
-            "(RedBaseContainer 확장 객체 인스턴스).<b>removeChildAll</b>( index )",
+            "(RedBaseContainer 확장 객체 인스턴스).<b>removeChildAll</b>()",
             redTest("성공테스트 : 기본 동작 확인", function (unit, title) {
                 var rootMesh = RedMesh(tRedGL);
                 rootMesh.addChild(RedMesh(tRedGL))
@@ -248,7 +463,7 @@ RedGL(document.createElement('canvas'), function (v) {
             }, 0)
         ),
         redGroup(
-            "(RedBaseContainer 확장 객체 인스턴스).<b>numChildren</b>( index )",
+            "(RedBaseContainer 확장 객체 인스턴스).<b>numChildren</b>(  )",
             redTest("성공테스트 : 기본 동작 확인", function (unit, title) {
                 var rootMesh = RedMesh(tRedGL);
                 rootMesh.addChild(RedMesh(tRedGL))

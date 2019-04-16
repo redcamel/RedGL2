@@ -86,7 +86,7 @@
   {
     "code": "METHOD",
     "title": "removeChild",
-    "description": "해당 자식을 제거",
+    "description": "\n    해당 자식을 제거.\n    존재하지 않는 자식을 제거하려고 할 경우 에러.\n ",
     "params": {
       "child": [
         {

@@ -5,7 +5,7 @@ var RedSphere;
     makeData = (function () {
         var thetaEnd;
         var ix, iy;
-        var index
+        var index;
         var grid = [];
         var a, b, c, d;
         var vertex = new Float32Array([0, 0, 0]);
@@ -43,7 +43,7 @@ var RedSphere;
                     vec3.normalize(normal, normal);
                     interleaveData.push(normal[0], normal[1], normal[2]);
                     // uv
-                    interleaveData.push(u,  v);
+                    interleaveData.push(u, v);
                     verticesRow.push(index++);
                 }
                 grid.push(verticesRow);
@@ -159,8 +159,17 @@ var RedSphere;
         tPrimitiveData = makeData(redGL, tType, radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength);
         this['interleaveBuffer'] = tPrimitiveData['interleaveBuffer'];
         this['indexBuffer'] = tPrimitiveData['indexBuffer'];
-        this['interleaveBuffer']['isPrimitiveBuffer'] = true
-        this['indexBuffer']['isPrimitiveBuffer'] = true
+        this['interleaveBuffer']['isPrimitiveBuffer'] = true;
+        this['indexBuffer']['isPrimitiveBuffer'] = true;
+        this['_makeInfo'] = {
+            radius: radius,
+            widthSegments: widthSegments,
+            heightSegments: heightSegments,
+            phiStart: phiStart,
+            phiLength: phiLength,
+            thetaStart: thetaStart,
+            thetaLength: thetaLength
+        };
         this['_UUID'] = RedGL.makeUUID();
         console.log(this)
     };

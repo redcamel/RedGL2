@@ -19,7 +19,15 @@
         {
           "type": "number"
         },
-        "기본값 : 0.1"
+        "기본값 : 0.1",
+        "range : 0 ~ 1"
+      ],
+      "intensity": [
+        {
+          "type": "number"
+        },
+        "기본값 : 1",
+        "range : 0 ~ 1"
       ]
     },
     "extends": [

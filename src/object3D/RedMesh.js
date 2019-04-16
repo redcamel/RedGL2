@@ -70,7 +70,7 @@ var RedMesh;
 		 return : 'Boolean'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedMesh', 'perspectiveScale', 'boolean', false);
+    RedDefinePropertyInfo.definePrototype('RedMesh', 'perspectiveScale', 'boolean');
     /**DOC:
      {
 		 code : 'PROPERTY',
@@ -82,6 +82,6 @@ var RedMesh;
 		 return : 'Boolean'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedMesh', 'sprite3DYn', 'boolean', false);
+    RedDefinePropertyInfo.definePrototype('RedMesh', 'sprite3DYn', 'boolean');
     Object.freeze(RedMesh);
 })();
