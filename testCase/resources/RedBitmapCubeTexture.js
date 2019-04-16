@@ -1,514 +1,643 @@
 "use strict";
+RedTest.title = "RedBitmapCubeTexture TEST";
 RedGL.setDoNotPrepareProgram();
-var tRedGL
-RedGL(document.createElement('canvas'), function (v) {
+var tRedGL;
+RedGL(document.createElement('canvas'), function () {
     var testSrcList;
     tRedGL = this;
-    testSrcList = [RedBaseTexture.EMPTY_BASE64, RedBaseTexture.EMPTY_BASE64, RedBaseTexture.EMPTY_BASE64, RedBaseTexture.EMPTY_BASE64, RedBaseTexture.EMPTY_BASE64, RedBaseTexture.EMPTY_BASE64]
-    redSuite(
-        "RedBitmapCubeTexture Test",
-        redGroup(
-            "RedBitmapCubeTexture( redGL, srcList, option, callBack )",
-            redTest("성공테스트 : 기본생성확인", function (unit, title) {
-                var t0;
-                t0 = RedBitmapCubeTexture(tRedGL, testSrcList)
-                unit.run(t0 instanceof RedBitmapCubeTexture)
-            }, true)
-        ),
-        redGroup(
-            "RedBitmapCubeTexture( redGL, <b>srcList</b>, option, callBack )",
-            redTest("실패테스트 : 미입력", function (unit, title) {
-                try {
-                    RedBitmapCubeTexture(tRedGL)
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, false),
-            redTest("실패테스트 : 숫자입력", function (unit, title) {
-                try {
-                    RedBitmapCubeTexture(tRedGL, 1)
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, false),
-            redTest("실패테스트 : 오브젝트 입력", function (unit, title) {
-                try {
-                    RedBitmapCubeTexture(tRedGL, {})
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, false),
-            redTest("실패테스트 : length가 6이 아닐떄", function (unit, title) {
-                try {
-                    RedBitmapCubeTexture(tRedGL, ["src1", "src2", "src3", "src4", "src5"])
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, false)
-        ),
-        redGroup(
-            "RedBitmapCubeTexture( redGL, srcList, option, <b>callBack</b> )",
-            redTest("성공테스트 : 미입력", function (unit, title) {
-                try {
-                    RedBitmapTexture(tRedGL)
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, true),
-            redTest("성공테스트 : 콜백함수 입력", function (unit, title) {
-                RedBitmapCubeTexture(tRedGL, testSrcList, null, function () {
-                    unit.run(true)
-                })
-            }, true),
-            redTest("실패테스트 : 콜백에 함수외 다른것을 입력했을떄", function (unit, title) {
-                try {
-                    RedBitmapCubeTexture(tRedGL, testSrcList, null, 1)
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, false),
-            redTest("성공테스트 : callback : 미입력", function (unit, title) {
-                try {
-                    RedBitmapCubeTexture(tRedGL, testSrcList)
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, true),
-            redTest("성공테스트 : srcList로드 성공시 callback", function (unit, title) {
-                RedBitmapCubeTexture(tRedGL, testSrcList, null, function (v) {
-                    unit.run(v)
-                })
-            }, true),
-            redTest("실패테스트 : srcList로드 실패시 callback", function (unit, title) {
-                RedBitmapCubeTexture(tRedGL, ['~~', '~~', '~~', '~~', '~~', '~~',], null, function (v) {
-                    unit.run(v)
-                })
-            }, false)
-        ),
-        redGroup(
-            "option - min",
-            redTest("option : 미입력", function (unit, title) {
-                try {
-                    RedBitmapCubeTexture(tRedGL, testSrcList)
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, true),
-            redTest("option : min - LINEAR", function (unit, title) {
-                var t0 = RedBitmapCubeTexture(
-                    tRedGL,
-                    testSrcList,
-                    {
-                        min: tRedGL.gl.LINEAR
-                    },
-                    function () {
-                        tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, t0['webglTexture']);
-                        var t1 = tRedGL.gl.getTexParameter(tRedGL.gl.TEXTURE_CUBE_MAP, tRedGL.gl.TEXTURE_MIN_FILTER)
-                        tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, null);
-                        console.log(t1)
-                        unit.run(t1)
+    testSrcList = [RedBaseTexture.EMPTY_BASE64, RedBaseTexture.EMPTY_BASE64, RedBaseTexture.EMPTY_BASE64, RedBaseTexture.EMPTY_BASE64, RedBaseTexture.EMPTY_BASE64, RedBaseTexture.EMPTY_BASE64];
+
+    RedTest.testGroup(
+        "RedBitmapCubeTexture( redGL, srcList, option, callBack )",
+        function () {
+            RedTest.test(
+                "성공테스트 : 기본생성확인",
+                function () {
+                    var t0;
+                    t0 = RedBitmapCubeTexture(tRedGL, testSrcList);
+                    RedTest.run(t0 instanceof RedBitmapCubeTexture)
+                },
+                true
+            )
+        }
+    );
+    RedTest.testGroup(
+        "RedBitmapCubeTexture( redGL, <b>srcList</b>, option, callBack )",
+        function () {
+            RedTest.test(
+                "실패테스트 : 미입력",
+                function () {
+                    try {
+                        RedBitmapCubeTexture(tRedGL);
+                        RedTest.run(true)
+                    } catch (error) {
+                        RedTest.run(false, error)
                     }
-                )
-            }, tRedGL.gl.LINEAR),
-            redTest("option : min - NEAREST", function (unit, title) {
-                var t0 = RedBitmapCubeTexture(
-                    tRedGL,
-                    testSrcList,
-                    {
-                        min: tRedGL.gl.NEAREST
-                    },
-                    function () {
-                        tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, t0['webglTexture']);
-                        var t1 = tRedGL.gl.getTexParameter(tRedGL.gl.TEXTURE_CUBE_MAP, tRedGL.gl.TEXTURE_MIN_FILTER)
-                        tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, null);
-                        console.log(t1)
-                        unit.run(t1)
+                },
+                false
+            );
+            RedTest.test(
+                "실패테스트 : 숫자입력",
+                function () {
+                    try {
+                        RedBitmapCubeTexture(tRedGL, 1);
+                        RedTest.run(true)
+                    } catch (error) {
+                        RedTest.run(false, error)
                     }
-                )
-            }, tRedGL.gl.NEAREST),
-            redTest("option : min - NEAREST_MIPMAP_NEAREST", function (unit, title) {
-                var t0 = RedBitmapCubeTexture(
-                    tRedGL,
-                    testSrcList,
-                    {
-                        min: tRedGL.gl.NEAREST_MIPMAP_NEAREST
-                    },
-                    function () {
-                        tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, t0['webglTexture']);
-                        var t1 = tRedGL.gl.getTexParameter(tRedGL.gl.TEXTURE_CUBE_MAP, tRedGL.gl.TEXTURE_MIN_FILTER)
-                        tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, null);
-                        console.log(t1)
-                        unit.run(t1)
+                },
+                false
+            );
+            RedTest.test(
+                "실패테스트 : 오브젝트 입력",
+                function () {
+                    try {
+                        RedBitmapCubeTexture(tRedGL, {});
+                        RedTest.run(true)
+                    } catch (error) {
+                        RedTest.run(false, error)
                     }
-                )
-            }, tRedGL.gl.NEAREST_MIPMAP_NEAREST),
-            redTest("option : min - LINEAR_MIPMAP_NEAREST", function (unit, title) {
-                var t0 = RedBitmapCubeTexture(
-                    tRedGL,
-                    testSrcList,
-                    {
-                        min: tRedGL.gl.LINEAR_MIPMAP_NEAREST
-                    },
-                    function () {
-                        tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, t0['webglTexture']);
-                        var t1 = tRedGL.gl.getTexParameter(tRedGL.gl.TEXTURE_CUBE_MAP, tRedGL.gl.TEXTURE_MIN_FILTER)
-                        tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, null);
-                        console.log(t1)
-                        unit.run(t1)
+                },
+                false
+            );
+            RedTest.test(
+                "실패테스트 : length가 6이 아닐떄",
+                function () {
+                    try {
+                        RedBitmapCubeTexture(tRedGL, ["src1", "src2", "src3", "src4", "src5"]);
+                        RedTest.run(true)
+                    } catch (error) {
+                        RedTest.run(false, error)
                     }
-                )
-            }, tRedGL.gl.LINEAR_MIPMAP_NEAREST),
-            redTest("option : min - NEAREST_MIPMAP_LINEAR(default)", function (unit, title) {
-                var t0 = RedBitmapCubeTexture(
-                    tRedGL,
-                    testSrcList,
-                    {
-                        min: tRedGL.gl.NEAREST_MIPMAP_LINEAR
-                    },
-                    function () {
-                        tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, t0['webglTexture']);
-                        var t1 = tRedGL.gl.getTexParameter(tRedGL.gl.TEXTURE_CUBE_MAP, tRedGL.gl.TEXTURE_MIN_FILTER)
-                        tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, null);
-                        console.log(t1)
-                        unit.run(t1)
+                },
+                false
+            )
+        }
+    );
+    RedTest.testGroup(
+        "키(srcList.toString() + JSON.stringify(option)) 기반 캐싱 동작확인",
+        function () {
+            RedTest.test(
+                "성공테스트 : 캐싱확인",
+                function () {
+                    try {
+                        var t1 = RedBitmapCubeTexture(tRedGL, testSrcList);
+                        var t2 = RedBitmapCubeTexture(tRedGL, testSrcList);
+                        RedTest.run(t1 === t2)
+                    } catch (error) {
+                        RedTest.run(false, error)
                     }
-                )
-            }, tRedGL.gl.NEAREST_MIPMAP_LINEAR),
-            redTest("option : min - LINEAR_MIPMAP_LINEAR", function (unit, title) {
-                var t0 = RedBitmapCubeTexture(
-                    tRedGL,
-                    testSrcList,
-                    {
-                        min: tRedGL.gl.LINEAR_MIPMAP_LINEAR
-                    },
-                    function () {
-                        tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, t0['webglTexture']);
-                        var t1 = tRedGL.gl.getTexParameter(tRedGL.gl.TEXTURE_CUBE_MAP, tRedGL.gl.TEXTURE_MIN_FILTER)
-                        tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, null);
-                        console.log(t1)
-                        unit.run(t1)
+                },
+                true
+            );
+            RedTest.test(
+                "성공테스트 : 캐싱확인2",
+                function () {
+                    try {
+                        var t1 = RedBitmapCubeTexture(tRedGL, testSrcList, {min: tRedGL.gl.LINEAR});
+                        var t2 = RedBitmapCubeTexture(tRedGL, testSrcList);
+                        RedTest.run(t1 === t2)
+                    } catch (error) {
+                        RedTest.run(false, error)
                     }
-                )
-            }, tRedGL.gl.LINEAR_MIPMAP_LINEAR),
-            redTest("option : min - 허용되지않는값 입력", function (unit, title) {
-                try {
-                    RedBitmapCubeTexture(
+                },
+                false
+            );
+        }
+    );
+    RedTest.testGroup(
+        "RedBitmapCubeTexture( redGL, srcList, option, <b>callBack</b> )",
+        function () {
+            RedTest.test(
+                "성공테스트 : 미입력",
+                function () {
+                    try {
+                        RedBitmapTexture(tRedGL);
+                        RedTest.run(true)
+                    } catch (error) {
+                        RedTest.run(false, error)
+                    }
+                },
+                true
+            );
+            RedTest.test(
+                "성공테스트 : 콜백함수 입력",
+                function () {
+                    RedBitmapCubeTexture(tRedGL, testSrcList, null, function () {
+                        RedTest.run(true)
+                    })
+                },
+                true
+            );
+            RedTest.testListRun(
+                "함수 or falsy 허용",
+                [
+                    [function () {
+                    }, true],
+                    [null, true],
+                    [undefined, true],
+                    [0, true],
+                    [1, false],
+                    [1.1, false],
+                    [-1, false],
+                    [-1.1, false],
+
+                    ['문자테스트', false],
+                    [[], false],
+                    [{}, false]
+                ],
+                function (v) {
+                    try {
+                        RedBitmapCubeTexture(tRedGL, testSrcList, null, v[0]);
+                        RedTest.run(true)
+                    } catch (error) {
+                        RedTest.run(false, error)
+                    }
+                }
+            );
+            RedTest.test(
+                "성공테스트 : srcList로드 성공시 callback",
+                function () {
+                    RedBitmapCubeTexture(tRedGL, testSrcList, null, function (v) {
+                        RedTest.run(v)
+                    })
+                },
+                true
+            );
+            RedTest.test(
+                "실패테스트 : srcList로드 실패시 callback",
+                function () {
+                    RedBitmapCubeTexture(tRedGL, ['~~', '~~', '~~', '~~', '~~', '~~'], null, function (v) {
+                        RedTest.run(v)
+                    })
+                },
+                false
+            )
+        }
+    );
+    RedTest.testGroup(
+        "option - min",
+        function () {
+            RedTest.test(
+                "option : 미입력",
+                function () {
+                    try {
+                        RedBitmapCubeTexture(tRedGL, testSrcList);
+                        RedTest.run(true)
+                    } catch (error) {
+                        RedTest.run(false, error)
+                    }
+                },
+                true
+            );
+            RedTest.test(
+                "option : min - LINEAR",
+                function () {
+                    var t0 = RedBitmapCubeTexture(
                         tRedGL,
                         testSrcList,
                         {
-                            min: 'test'
+                            min: tRedGL.gl.LINEAR
+                        },
+                        function () {
+                            tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, t0['webglTexture']);
+                            var t1 = tRedGL.gl.getTexParameter(tRedGL.gl.TEXTURE_CUBE_MAP, tRedGL.gl.TEXTURE_MIN_FILTER);
+                            tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, null);
+                            console.log(t1);
+                            RedTest.run(t1)
                         }
                     )
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, false)
-        ),
-        redGroup(
-            "option - mag",
-            redTest("option : 미입력", function (unit, title) {
-                try {
-                    RedBitmapCubeTexture(tRedGL, testSrcList)
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, true),
-            redTest("option : mag - LINEAR(default)", function (unit, title) {
-                var t0 = RedBitmapCubeTexture(
-                    tRedGL,
-                    testSrcList,
-                    {
-                        mag: tRedGL.gl.LINEAR
-                    },
-                    function () {
-                        tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, t0['webglTexture']);
-                        var t1 = tRedGL.gl.getTexParameter(tRedGL.gl.TEXTURE_CUBE_MAP, tRedGL.gl.TEXTURE_MAG_FILTER)
-                        tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, null);
-                        console.log(t1)
-                        unit.run(t1)
-                    }
-                )
-            }, tRedGL.gl.LINEAR),
-            redTest("option : mag - NEAREST", function (unit, title) {
-                var t0 = RedBitmapCubeTexture(
-                    tRedGL,
-                    testSrcList,
-                    {
-                        mag: tRedGL.gl.NEAREST
-                    },
-                    function () {
-                        tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, t0['webglTexture']);
-                        var t1 = tRedGL.gl.getTexParameter(tRedGL.gl.TEXTURE_CUBE_MAP, tRedGL.gl.TEXTURE_MAG_FILTER)
-                        tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, null);
-                        console.log(t1)
-                        unit.run(t1)
-                    }
-                )
-            }, tRedGL.gl.NEAREST),
-            redTest("option : mag - NEAREST_MIPMAP_NEAREST (이놈은 허용안됨)", function (unit, title) {
-                try {
-                    RedBitmapCubeTexture(
+                }, tRedGL.gl.LINEAR);
+            RedTest.test(
+                "option : min - NEAREST",
+                function () {
+                    var t0 = RedBitmapCubeTexture(
                         tRedGL,
                         testSrcList,
                         {
-                            mag: tRedGL.gl.NEAREST_MIPMAP_NEAREST
+                            min: tRedGL.gl.NEAREST
+                        },
+                        function () {
+                            tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, t0['webglTexture']);
+                            var t1 = tRedGL.gl.getTexParameter(tRedGL.gl.TEXTURE_CUBE_MAP, tRedGL.gl.TEXTURE_MIN_FILTER);
+                            tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, null);
+                            console.log(t1);
+                            RedTest.run(t1)
                         }
                     )
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, false),
-            redTest("option : mag - LINEAR_MIPMAP_NEAREST (이놈은 허용안됨)", function (unit, title) {
-                try {
-                    RedBitmapCubeTexture(
+                }, tRedGL.gl.NEAREST);
+            RedTest.test(
+                "option : min - NEAREST_MIPMAP_NEAREST",
+                function () {
+                    var t0 = RedBitmapCubeTexture(
                         tRedGL,
                         testSrcList,
                         {
-                            mag: tRedGL.gl.LINEAR_MIPMAP_NEAREST
+                            min: tRedGL.gl.NEAREST_MIPMAP_NEAREST
+                        },
+                        function () {
+                            tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, t0['webglTexture']);
+                            var t1 = tRedGL.gl.getTexParameter(tRedGL.gl.TEXTURE_CUBE_MAP, tRedGL.gl.TEXTURE_MIN_FILTER);
+                            tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, null);
+                            console.log(t1);
+                            RedTest.run(t1)
                         }
                     )
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, false),
-            redTest("option : mag - NEAREST_MIPMAP_LINEAR (이놈은 허용안됨)", function (unit, title) {
-                try {
-                    RedBitmapCubeTexture(
+                }, tRedGL.gl.NEAREST_MIPMAP_NEAREST);
+            RedTest.test(
+                "option : min - LINEAR_MIPMAP_NEAREST",
+                function () {
+                    var t0 = RedBitmapCubeTexture(
                         tRedGL,
                         testSrcList,
                         {
-                            mag: tRedGL.gl.NEAREST_MIPMAP_LINEAR
+                            min: tRedGL.gl.LINEAR_MIPMAP_NEAREST
+                        },
+                        function () {
+                            tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, t0['webglTexture']);
+                            var t1 = tRedGL.gl.getTexParameter(tRedGL.gl.TEXTURE_CUBE_MAP, tRedGL.gl.TEXTURE_MIN_FILTER);
+                            tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, null);
+                            console.log(t1);
+                            RedTest.run(t1)
                         }
                     )
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, false),
-            redTest("option : mag - LINEAR_MIPMAP_LINEAR (이놈은 허용안됨)", function (unit, title) {
-                try {
-                    RedBitmapCubeTexture(
+                }, tRedGL.gl.LINEAR_MIPMAP_NEAREST);
+            RedTest.test(
+                "option : min - NEAREST_MIPMAP_LINEAR(default)",
+                function () {
+                    var t0 = RedBitmapCubeTexture(
                         tRedGL,
                         testSrcList,
                         {
-                            mag: tRedGL.gl.LINEAR_MIPMAP_LINEAR
+                            min: tRedGL.gl.NEAREST_MIPMAP_LINEAR
+                        },
+                        function () {
+                            tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, t0['webglTexture']);
+                            var t1 = tRedGL.gl.getTexParameter(tRedGL.gl.TEXTURE_CUBE_MAP, tRedGL.gl.TEXTURE_MIN_FILTER);
+                            tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, null);
+                            console.log(t1);
+                            RedTest.run(t1)
                         }
                     )
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, false),
-            redTest("option : mag - 허용되지않는값 입력", function (unit, title) {
-                try {
-                    RedBitmapCubeTexture(
+                }, tRedGL.gl.NEAREST_MIPMAP_LINEAR);
+            RedTest.test(
+                "option : min - LINEAR_MIPMAP_LINEAR",
+                function () {
+                    var t0 = RedBitmapCubeTexture(
                         tRedGL,
                         testSrcList,
                         {
-                            mag: 'test'
+                            min: tRedGL.gl.LINEAR_MIPMAP_LINEAR
+                        },
+                        function () {
+                            tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, t0['webglTexture']);
+                            var t1 = tRedGL.gl.getTexParameter(tRedGL.gl.TEXTURE_CUBE_MAP, tRedGL.gl.TEXTURE_MIN_FILTER);
+                            tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, null);
+                            console.log(t1);
+                            RedTest.run(t1)
                         }
                     )
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, false)
-        ),
-        redGroup(
-            "option - wrap_s",
-            redTest("option : 미입력", function (unit, title) {
-                try {
-                    RedBitmapCubeTexture(tRedGL, testSrcList)
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, true),
-            redTest("option : wrap_s - REPEAT(default)", function (unit, title) {
-                var t0 = RedBitmapCubeTexture(
-                    tRedGL,
-                    testSrcList,
-                    {
-                        wrap_s: tRedGL.gl.REPEAT
-                    },
-                    function () {
-                        tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, t0['webglTexture']);
-                        var t1 = tRedGL.gl.getTexParameter(tRedGL.gl.TEXTURE_CUBE_MAP, tRedGL.gl.TEXTURE_WRAP_S)
-                        tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, null);
-                        console.log(t1)
-                        unit.run(t1)
+                }, tRedGL.gl.LINEAR_MIPMAP_LINEAR);
+            RedTest.test(
+                "option : min - 허용되지않는값 입력",
+                function () {
+                    try {
+                        RedBitmapCubeTexture(
+                            tRedGL,
+                            testSrcList,
+                            {
+                                min: 'test'
+                            }
+                        );
+                        RedTest.run(true)
+                    } catch (error) {
+                        RedTest.run(false, error)
                     }
-                )
-            }, tRedGL.gl.REPEAT),
-            redTest("option : wrap_s - CLAMP_TO_EDGE", function (unit, title) {
-                var t0 = RedBitmapCubeTexture(
-                    tRedGL,
-                    testSrcList,
-                    {
-                        wrap_s: tRedGL.gl.CLAMP_TO_EDGE
-                    },
-                    function () {
-                        tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, t0['webglTexture']);
-                        var t1 = tRedGL.gl.getTexParameter(tRedGL.gl.TEXTURE_CUBE_MAP, tRedGL.gl.TEXTURE_WRAP_S)
-                        tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, null);
-                        console.log(t1)
-                        unit.run(t1)
+                },
+                false
+            )
+        }
+    );
+    RedTest.testGroup(
+        "option - mag",
+        function () {
+            RedTest.test(
+                "option : 미입력",
+                function () {
+                    try {
+                        RedBitmapCubeTexture(tRedGL, testSrcList);
+                        RedTest.run(true)
+                    } catch (error) {
+                        RedTest.run(false, error)
                     }
-                )
-            }, tRedGL.gl.CLAMP_TO_EDGE),
-            redTest("option : wrap_s - MIRRORED_REPEAT", function (unit, title) {
-                var t0 = RedBitmapCubeTexture(
-                    tRedGL,
-                    testSrcList,
-                    {
-                        wrap_s: tRedGL.gl.MIRRORED_REPEAT
-                    },
-                    function () {
-                        tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, t0['webglTexture']);
-                        var t1 = tRedGL.gl.getTexParameter(tRedGL.gl.TEXTURE_CUBE_MAP, tRedGL.gl.TEXTURE_WRAP_S)
-                        tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, null);
-                        console.log(t1)
-                        unit.run(t1)
-                    }
-                )
-            }, tRedGL.gl.MIRRORED_REPEAT),
-            redTest("option : wrap_s - 허용되지않는값 입력", function (unit, title) {
-                try {
-                    RedBitmapCubeTexture(
+                },
+                true
+            );
+            RedTest.test(
+                "option : mag - LINEAR(default)",
+                function () {
+                    var t0 = RedBitmapCubeTexture(
                         tRedGL,
                         testSrcList,
                         {
-                            wrap_s: 'test'
+                            mag: tRedGL.gl.LINEAR
+                        },
+                        function () {
+                            tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, t0['webglTexture']);
+                            var t1 = tRedGL.gl.getTexParameter(tRedGL.gl.TEXTURE_CUBE_MAP, tRedGL.gl.TEXTURE_MAG_FILTER);
+                            tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, null);
+                            console.log(t1);
+                            RedTest.run(t1)
                         }
                     )
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, false)
-        ),
-        redGroup(
-            "option - wrap_t",
-            redTest("option : 미입력", function (unit, title) {
-                try {
-                    RedBitmapCubeTexture(tRedGL, testSrcList)
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, true),
-            redTest("option : wrap_t - REPEAT(default)", function (unit, title) {
-                var t0 = RedBitmapCubeTexture(
-                    tRedGL,
-                    testSrcList,
-                    {
-                        wrap_t: tRedGL.gl.REPEAT
-                    },
-                    function () {
-                        tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, t0['webglTexture']);
-                        var t1 = tRedGL.gl.getTexParameter(tRedGL.gl.TEXTURE_CUBE_MAP, tRedGL.gl.TEXTURE_WRAP_T)
-                        tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, null);
-                        console.log(t1)
-                        unit.run(t1)
-                    }
-                )
-            }, tRedGL.gl.REPEAT),
-            redTest("option : wrap_t - CLAMP_TO_EDGE", function (unit, title) {
-                var t0 = RedBitmapCubeTexture(
-                    tRedGL,
-                    testSrcList,
-                    {
-                        wrap_t: tRedGL.gl.CLAMP_TO_EDGE
-                    },
-                    function () {
-                        tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, t0['webglTexture']);
-                        var t1 = tRedGL.gl.getTexParameter(tRedGL.gl.TEXTURE_CUBE_MAP, tRedGL.gl.TEXTURE_WRAP_T)
-                        tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, null);
-                        console.log(t1)
-                        unit.run(t1)
-                    }
-                )
-            }, tRedGL.gl.CLAMP_TO_EDGE),
-            redTest("option : wrap_t - MIRRORED_REPEAT", function (unit, title) {
-                var t0 = RedBitmapCubeTexture(
-                    tRedGL,
-                    testSrcList,
-                    {
-                        wrap_t: tRedGL.gl.MIRRORED_REPEAT
-                    },
-                    function () {
-                        tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, t0['webglTexture']);
-                        var t1 = tRedGL.gl.getTexParameter(tRedGL.gl.TEXTURE_CUBE_MAP, tRedGL.gl.TEXTURE_WRAP_T)
-                        tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, null);
-                        console.log(t1)
-                        unit.run(t1)
-                    }
-                )
-            }, tRedGL.gl.MIRRORED_REPEAT),
-            redTest("option : wrap_t - 허용되지않는값 입력", function (unit, title) {
-                try {
-                    RedBitmapCubeTexture(
+                }, tRedGL.gl.LINEAR);
+            RedTest.test(
+                "option : mag - NEAREST",
+                function () {
+                    var t0 = RedBitmapCubeTexture(
                         tRedGL,
                         testSrcList,
                         {
-                            wrap_t: 'test'
+                            mag: tRedGL.gl.NEAREST
+                        },
+                        function () {
+                            tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, t0['webglTexture']);
+                            var t1 = tRedGL.gl.getTexParameter(tRedGL.gl.TEXTURE_CUBE_MAP, tRedGL.gl.TEXTURE_MAG_FILTER);
+                            tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, null);
+                            console.log(t1);
+                            RedTest.run(t1)
                         }
                     )
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, false)
-        )
+                }, tRedGL.gl.NEAREST);
+            RedTest.test(
+                "option : mag - NEAREST_MIPMAP_NEAREST (이놈은 허용안됨)",
+                function () {
+                    try {
+                        RedBitmapCubeTexture(
+                            tRedGL,
+                            testSrcList,
+                            {
+                                mag: tRedGL.gl.NEAREST_MIPMAP_NEAREST
+                            }
+                        );
+                        RedTest.run(true)
+                    } catch (error) {
+                        RedTest.run(false, error)
+                    }
+                },
+                false
+            );
+            RedTest.test(
+                "option : mag - LINEAR_MIPMAP_NEAREST (이놈은 허용안됨)",
+                function () {
+                    try {
+                        RedBitmapCubeTexture(
+                            tRedGL,
+                            testSrcList,
+                            {
+                                mag: tRedGL.gl.LINEAR_MIPMAP_NEAREST
+                            }
+                        );
+                        RedTest.run(true)
+                    } catch (error) {
+                        RedTest.run(false, error)
+                    }
+                },
+                false
+            );
+            RedTest.test(
+                "option : mag - NEAREST_MIPMAP_LINEAR (이놈은 허용안됨)",
+                function () {
+                    try {
+                        RedBitmapCubeTexture(
+                            tRedGL,
+                            testSrcList,
+                            {
+                                mag: tRedGL.gl.NEAREST_MIPMAP_LINEAR
+                            }
+                        );
+                        RedTest.run(true)
+                    } catch (error) {
+                        RedTest.run(false, error)
+                    }
+                },
+                false
+            );
+            RedTest.test(
+                "option : mag - LINEAR_MIPMAP_LINEAR (이놈은 허용안됨)",
+                function () {
+                    try {
+                        RedBitmapCubeTexture(
+                            tRedGL,
+                            testSrcList,
+                            {
+                                mag: tRedGL.gl.LINEAR_MIPMAP_LINEAR
+                            }
+                        );
+                        RedTest.run(true)
+                    } catch (error) {
+                        RedTest.run(false, error)
+                    }
+                },
+                false
+            );
+            RedTest.test(
+                "option : mag - 허용되지않는값 입력",
+                function () {
+                    try {
+                        RedBitmapCubeTexture(
+                            tRedGL,
+                            testSrcList,
+                            {
+                                mag: 'test'
+                            }
+                        );
+                        RedTest.run(true)
+                    } catch (error) {
+                        RedTest.run(false, error)
+                    }
+                },
+                false
+            )
+        }
+    );
+    RedTest.testGroup(
+        "option - wrap_s",
+        function () {
+            RedTest.test(
+                "option : 미입력",
+                function () {
+                    try {
+                        RedBitmapCubeTexture(tRedGL, testSrcList);
+                        RedTest.run(true)
+                    } catch (error) {
+                        RedTest.run(false, error)
+                    }
+                },
+                true
+            );
+            RedTest.test(
+                "option : wrap_s - REPEAT(default)",
+                function () {
+                    var t0 = RedBitmapCubeTexture(
+                        tRedGL,
+                        testSrcList,
+                        {
+                            wrap_s: tRedGL.gl.REPEAT
+                        },
+                        function () {
+                            tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, t0['webglTexture']);
+                            var t1 = tRedGL.gl.getTexParameter(tRedGL.gl.TEXTURE_CUBE_MAP, tRedGL.gl.TEXTURE_WRAP_S);
+                            tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, null);
+                            console.log(t1);
+                            RedTest.run(t1)
+                        }
+                    )
+                }, tRedGL.gl.REPEAT);
+            RedTest.test(
+                "option : wrap_s - CLAMP_TO_EDGE",
+                function () {
+                    var t0 = RedBitmapCubeTexture(
+                        tRedGL,
+                        testSrcList,
+                        {
+                            wrap_s: tRedGL.gl.CLAMP_TO_EDGE
+                        },
+                        function () {
+                            tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, t0['webglTexture']);
+                            var t1 = tRedGL.gl.getTexParameter(tRedGL.gl.TEXTURE_CUBE_MAP, tRedGL.gl.TEXTURE_WRAP_S);
+                            tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, null);
+                            console.log(t1);
+                            RedTest.run(t1)
+                        }
+                    )
+                }, tRedGL.gl.CLAMP_TO_EDGE);
+            RedTest.test(
+                "option : wrap_s - MIRRORED_REPEAT",
+                function () {
+                    var t0 = RedBitmapCubeTexture(
+                        tRedGL,
+                        testSrcList,
+                        {
+                            wrap_s: tRedGL.gl.MIRRORED_REPEAT
+                        },
+                        function () {
+                            tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, t0['webglTexture']);
+                            var t1 = tRedGL.gl.getTexParameter(tRedGL.gl.TEXTURE_CUBE_MAP, tRedGL.gl.TEXTURE_WRAP_S);
+                            tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, null);
+                            console.log(t1);
+                            RedTest.run(t1)
+                        }
+                    )
+                }, tRedGL.gl.MIRRORED_REPEAT);
+            RedTest.test(
+                "option : wrap_s - 허용되지않는값 입력",
+                function () {
+                    try {
+                        RedBitmapCubeTexture(
+                            tRedGL,
+                            testSrcList,
+                            {
+                                wrap_s: 'test'
+                            }
+                        );
+                        RedTest.run(true)
+                    } catch (error) {
+                        RedTest.run(false, error)
+                    }
+                },
+                false
+            )
+        }
+    );
+    RedTest.testGroup(
+        "option - wrap_t",
+        function () {
+            RedTest.test(
+                "option : 미입력",
+                function () {
+                    try {
+                        RedBitmapCubeTexture(tRedGL, testSrcList);
+                        RedTest.run(true)
+                    } catch (error) {
+                        RedTest.run(false, error)
+                    }
+                },
+                true
+            );
+            RedTest.test(
+                "option : wrap_t - REPEAT(default)",
+                function () {
+                    var t0 = RedBitmapCubeTexture(
+                        tRedGL,
+                        testSrcList,
+                        {
+                            wrap_t: tRedGL.gl.REPEAT
+                        },
+                        function () {
+                            tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, t0['webglTexture']);
+                            var t1 = tRedGL.gl.getTexParameter(tRedGL.gl.TEXTURE_CUBE_MAP, tRedGL.gl.TEXTURE_WRAP_T);
+                            tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, null);
+                            console.log(t1);
+                            RedTest.run(t1)
+                        }
+                    )
+                }, tRedGL.gl.REPEAT);
+            RedTest.test(
+                "option : wrap_t - CLAMP_TO_EDGE",
+                function () {
+                    var t0 = RedBitmapCubeTexture(
+                        tRedGL,
+                        testSrcList,
+                        {
+                            wrap_t: tRedGL.gl.CLAMP_TO_EDGE
+                        },
+                        function () {
+                            tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, t0['webglTexture']);
+                            var t1 = tRedGL.gl.getTexParameter(tRedGL.gl.TEXTURE_CUBE_MAP, tRedGL.gl.TEXTURE_WRAP_T);
+                            tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, null);
+                            console.log(t1);
+                            RedTest.run(t1)
+                        }
+                    )
+                }, tRedGL.gl.CLAMP_TO_EDGE);
+            RedTest.test(
+                "option : wrap_t - MIRRORED_REPEAT",
+                function () {
+                    var t0 = RedBitmapCubeTexture(
+                        tRedGL,
+                        testSrcList,
+                        {
+                            wrap_t: tRedGL.gl.MIRRORED_REPEAT
+                        },
+                        function () {
+                            tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, t0['webglTexture']);
+                            var t1 = tRedGL.gl.getTexParameter(tRedGL.gl.TEXTURE_CUBE_MAP, tRedGL.gl.TEXTURE_WRAP_T);
+                            tRedGL.gl.bindTexture(tRedGL.gl.TEXTURE_CUBE_MAP, null);
+                            console.log(t1);
+                            RedTest.run(t1)
+                        }
+                    )
+                }, tRedGL.gl.MIRRORED_REPEAT);
+            RedTest.test(
+                "option : wrap_t - 허용되지않는값 입력",
+                function () {
+                    try {
+                        RedBitmapCubeTexture(
+                            tRedGL,
+                            testSrcList,
+                            {
+                                wrap_t: 'test'
+                            }
+                        );
+                        RedTest.run(true)
+                    } catch (error) {
+                        RedTest.run(false, error)
+                    }
+                },
+                false
+            )
+        }
     )
-})
+
+});
