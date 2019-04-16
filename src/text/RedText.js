@@ -259,7 +259,7 @@ var RedText;
 		 return : 'Number'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedText', 'width', 'number', {
+    RedDefinePropertyInfo.definePrototype('RedText', 'width', 'uint', {
         min: 2,
         callback: function (v) {
             this['_width'] = v;
@@ -275,7 +275,7 @@ var RedText;
 		 return : 'Number'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedText', 'height', 'number', {
+    RedDefinePropertyInfo.definePrototype('RedText', 'height', 'uint', {
         min: 2,
         callback: function (v) {
             this['_height'] = v;

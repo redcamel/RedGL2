@@ -416,5 +416,4 @@ var RedSystemShaderCode;
         console.log(RedSystemShaderCode)
         Object.freeze(RedSystemShaderCode)
     };
-})
-();
+})();

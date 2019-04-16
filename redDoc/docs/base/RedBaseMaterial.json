@@ -1,48 +1,31 @@
 [
   {
     "code": "METHOD",
+    "title": "_searchProgram",
+    "description": "\n\t 재질의 상태를 추적하여 적합한 프로그램 찾고 재질이 가진다.\n ",
+    "return": "void"
+  },
+  {
+    "code": "METHOD",
     "title": "checkUniformAndProperty",
     "description": "\n\t 재질의 Program에서 사용하고 있는 유니폼키가\n\t 재질의 속성으로 매칭되지 않는 경우 검출.\n\t ex) Program에서 <b>uTestUniform</b>을 사용 할 경우 <b>testUniform</b>이 정의 되어 있어야함.\n ",
     "return": "void"
   },
   {
     "code": "METHOD",
-    "title": "makeProgramList",
-    "description": "\n\t <h1>다중 프로그램 리스트 생성기.\n\t TODO:// 좀더 구체적인 설명 적어야함</h1>\n ",
+    "title": "disposeAllTexture",
+    "description": "\n\t 재질내의 모든 RedBaseTexture 확장객체를 dispose 함\n ",
+    "return": "void"
+  },
+  {
+    "code": "METHOD",
+    "title": "disposeTexture",
+    "description": "\n\t 키에 해당하는 RedBaseTexture 확장객체를 dispose 함\n ",
     "params": {
-      "target": [
+      "key": [
         {
-          "type": "RedBaseMaterial Instance"
+          "type": "String"
         }
-      ],
-      "redGL": [
-        {
-          "type": "RedGL Instance"
-        }
-      ],
-      "programName": [
-        {
-          "type": "String"
-        },
-        "기본 프로그램이름"
-      ],
-      "vSource": [
-        {
-          "type": "String"
-        },
-        "버텍스 쉐이더 소스"
-      ],
-      "fSource": [
-        {
-          "type": "String"
-        },
-        "프레그먼트 쉐이더"
-      ],
-      "programOptionList": [
-        {
-          "type": "Array"
-        },
-        "옵션키 리스트"
       ]
     },
     "return": "void"

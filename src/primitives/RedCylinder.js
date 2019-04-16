@@ -132,7 +132,7 @@ var RedCylinder;
                 // calculate new start value for groups
                 groupStart += groupCount;
 
-            }
+            };
             generateTorso();
             if (openEnded === false) {
                 if (radiusTop > 0) generateCap(true);
@@ -237,8 +237,8 @@ var RedCylinder;
         tPrimitiveData = makeData(redGL, tType, radiusTop, radiusBottom, height, radialSegments, heightSegments, openEnded, thetaStart, thetaLength);
         this['interleaveBuffer'] = tPrimitiveData['interleaveBuffer'];
         this['indexBuffer'] = tPrimitiveData['indexBuffer'];
-        this['interleaveBuffer']['isPrimitiveBuffer'] = true
-        this['indexBuffer']['isPrimitiveBuffer'] = true
+        this['interleaveBuffer']['isPrimitiveBuffer'] = true;
+        this['indexBuffer']['isPrimitiveBuffer'] = true;
         this['_UUID'] = RedGL.makeUUID();
         console.log(this)
     };

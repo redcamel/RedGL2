@@ -12,6 +12,7 @@ var RedBaseController;
 	 }
      :DOC*/
     RedBaseController = function () {
+        if (!(this instanceof RedBaseController)) return new RedBaseController();
     };
     RedBaseController.prototype = {
         update: function () {

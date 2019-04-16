@@ -2763,6 +2763,7 @@ var RedBaseController;
 	 }
      :DOC*/
     RedBaseController = function () {
+        if (!(this instanceof RedBaseController)) return new RedBaseController();
     };
     RedBaseController.prototype = {
         update: function () {
@@ -2948,7 +2949,6 @@ var RedBaseTexture;
                     gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
                     gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
                     // gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
-                    // console.log('nullImage.source',nullImage.source)
                     gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_X, 0, gl.LUMINANCE, 2, 2, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, cubePixelData);
                     gl.texImage2D(gl.TEXTURE_CUBE_MAP_NEGATIVE_X, 0, gl.LUMINANCE, 2, 2, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, cubePixelData);
                     gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_Y, 0, gl.LUMINANCE, 2, 2, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, cubePixelData);
@@ -4901,7 +4901,7 @@ var RedInterleaveInfo;
 "use strict";
 var RedBaseMaterial;
 (function () {
-    var prepareNum = 0
+    var prepareNum = 0;
     /**DOC:
      {
 		 constructorYn : true,
@@ -4916,43 +4916,7 @@ var RedBaseMaterial;
     RedBaseMaterial = function () {
     };
     RedBaseMaterial.prototype = {
-        /**DOC:
-         {
-			 code : 'METHOD',
-			 title :`makeProgramList`,
-			 description : `
-				 <h1>다중 프로그램 리스트 생성기.
-				 TODO:// 좀더 구체적인 설명 적어야함</h1>
-			 `,
-			 params : {
-			    target : [
-			        { type : 'RedBaseMaterial Instance' }
-			    ],
-			    redGL : [
-			        { type : 'RedGL Instance' }
-			    ],
-			    programName : [
-			        { type : 'String' },
-			        '기본 프로그램이름'
-			    ],
-			    vSource : [
-			        { type : 'String' },
-			        '버텍스 쉐이더 소스'
-			    ],
-			    fSource : [
-			        { type : 'String' },
-			        '프레그먼트 쉐이더'
-			    ],
-			    programOptionList : [
-			        { type : 'Array' },
-			        '옵션키 리스트'
-			    ]
-			 },
-			 return : 'void'
-		 }
-         :DOC*/
         makeProgramList: (function () {
-            //TODO: 이걸좀 정리해야하는데..
             var makePrepareProgram;
             var makeSystemProgram, makeOptionProgram;
             var systemKeyList = ['fog', 'sprite3D', 'skin', 'directionalShadow'];
@@ -4987,11 +4951,11 @@ var RedBaseMaterial;
                         return [];
                     }
                     // K-sized set has only one K-sized subset.
-                    if (k == set.length) {
+                    if (k === set.length) {
                         return [set];
                     }
                     // There is N 1-sized subsets in a N-sized set.
-                    if (k == 1) {
+                    if (k === 1) {
                         combs = [];
                         for (i = 0; i < set.length; i++) {
                             combs.push([set[i]]);
@@ -5026,7 +4990,7 @@ var RedBaseMaterial;
                 }
 
                 // console.log('combinations(programOptionList)',combinations(programOptionList))
-                var tList = combinations(programOptionList)
+                var tList = combinations(programOptionList);
 
                 tList.forEach(function (v) {
                     var tOptionName = v.join('_');
@@ -5037,7 +5001,7 @@ var RedBaseMaterial;
 
             };
             makePrepareProgram = function (redGL, programList, programName, vSource, fSource, systemKey, optionKey) {
-                prepareNum++
+                prepareNum++;
                 optionKey = optionKey || [];
                 this['optionList'] = optionKey.concat(systemKey || []);
                 this['systemKey'] = (systemKey || ['basic']).join('_');
@@ -5054,8 +5018,7 @@ var RedBaseMaterial;
                 if (redGL['_datas']['RedProgramGroup'][programName]) {
                     target['_programList'] = redGL['_datas']['RedProgramGroup'][programName];
                     console.log('캐싱프로그램그룹사용 :', programName);
-                }
-                else {
+                } else {
                     target['_programList'] = {
                         basic: {}
                     };
@@ -5073,6 +5036,16 @@ var RedBaseMaterial;
                 console.log('prepareNum', prepareNum)
             }
         })(),
+        /**DOC:
+         {
+			 code : 'METHOD',
+			 title :`_searchProgram`,
+			 description : `
+				 재질의 상태를 추적하여 적합한 프로그램 찾고 재질이 가진다.
+			 `,
+			 return : 'void'
+		 }
+         :DOC*/
         _searchProgram: (function () {
             var i;
             var tKey;
@@ -5122,6 +5095,16 @@ var RedBaseMaterial;
                 }
             }
         })(),
+        /**DOC:
+         {
+			 code : 'METHOD',
+			 title :`disposeAllTexture`,
+			 description : `
+				 재질내의 모든 RedBaseTexture 확장객체를 dispose 함
+			 `,
+			 return : 'void'
+		 }
+         :DOC*/
         disposeAllTexture: (function () {
             var k;
             return function () {
@@ -5130,6 +5113,21 @@ var RedBaseMaterial;
                 }
             }
         })(),
+        /**DOC:
+         {
+			 code : 'METHOD',
+			 title :`disposeTexture`,
+			 description : `
+				 키에 해당하는 RedBaseTexture 확장객체를 dispose 함
+			 `,
+			 params : {
+                 key : [
+                     {type:'String'}
+                 ]
+             },
+			 return : 'void'
+		 }
+         :DOC*/
         disposeTexture: function (key) {
             if (this[key] instanceof RedBaseTexture) this[key].dispose()
         }
@@ -5223,7 +5221,7 @@ var RedBitmapTexture;
         //level,internalFormat, format, type
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, source);
         // gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
-        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 0);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, option['min'] ? option['min'] : gl.LINEAR_MIPMAP_NEAREST);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, option['mag'] ? option['mag'] : gl.LINEAR);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, option['wrap_s'] ? option['wrap_s'] : gl.REPEAT);
@@ -5243,21 +5241,21 @@ var RedBitmapTexture;
         return function (gl, self, texture, src, option, callback) {
             if (!option) option = {};
             if (window['OffscreenCanvas'] && src instanceof OffscreenCanvas || window['HTMLCanvasElement'] && src instanceof HTMLCanvasElement) {
-                var tSource = RedGLUtil.makePowerOf2Source(gl, src, MAX_TEXTURE_SIZE)
-                console.log('tSource', tSource)
+                var tSource = RedGLUtil.makePowerOf2Source(gl, src, MAX_TEXTURE_SIZE);
+                console.log('tSource', tSource);
                 makeWebGLTexture(gl, texture, tSource, option);
                 callback ? callback.call(self, true) : 0;
             }
             else {
                 RedImageLoader(
                     src,
-                    function (v) {
-                        console.log(this)
-                        var tSource = RedGLUtil.makePowerOf2Source(gl, this['source'], MAX_TEXTURE_SIZE)
+                    function () {
+                        console.log(this);
+                        var tSource = RedGLUtil.makePowerOf2Source(gl, this['source'], MAX_TEXTURE_SIZE);
                         makeWebGLTexture(gl, texture, tSource, option);
                         callback ? callback.call(self, true) : 0;
                     },
-                    function (v) {
+                    function () {
                         callback ? callback.call(self, false) : 0
                     }
                 )
@@ -5324,10 +5322,10 @@ var RedBitmapTexture;
         tGL = redGL.gl;
         MAX_TEXTURE_SIZE = redGL['detect']['texture']['MAX_TEXTURE_SIZE'];
 
-        option = option || {}
-        var tKey = src + JSON.stringify(option)
+        option = option || {};
+        var tKey = src + JSON.stringify(option);
         if (typeof src == 'string') {
-            if (!redGL['_datas']['textures']) redGL['_datas']['textures'] = {}
+            if (!redGL['_datas']['textures']) redGL['_datas']['textures'] = {};
             if (redGL['_datas']['textures'][tKey]) {
                 if (callback) {
                     setTimeout(function () {
@@ -5340,17 +5338,17 @@ var RedBitmapTexture;
 
 
         this['webglTexture'] = tGL.createTexture();
-        this['webglTexture']['gl'] = tGL
+        this['webglTexture']['gl'] = tGL;
         this['_load'] = function (needEmpty) {
             RedTextureOptionChecker.check('RedBitmapTexture', option, tGL);
             if (needEmpty) this.setEmptyTexture(tGL, this['webglTexture']);
             if (this['_src']) loadTexture(tGL, this, this['webglTexture'], this['_src'], this['_option'], this['_callback']);
-        }
+        };
         this['_option'] = option;
         this['callback'] = callback;
         this['src'] = src;
         this['_UUID'] = RedGL.makeUUID();
-        redGL['_datas']['textures'][tKey] = this
+        redGL['_datas']['textures'][tKey] = this;
         console.log(this);
     };
     RedBitmapTexture.prototype = new RedBaseTexture();
@@ -5372,7 +5370,7 @@ var RedBitmapTexture;
         set: function (v) {
             if (window['OffscreenCanvas']) {
                 this['_src'] = v;
-                this._load(true)
+                this._load(true);
                 return
             }
             else if (v && typeof v != 'string' && !(window['HTMLCanvasElement'] && v instanceof HTMLCanvasElement)) RedGLUtil.throwFunc('RedBitmapTexture : src는 문자열 or Canvas Element만 허용.', '입력값 : ' + v);
@@ -5413,7 +5411,7 @@ var RedVideoTexture;
         //level,internalFormat, format, type
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, source);
         // gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
-        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 0);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
         gl.bindTexture(gl.TEXTURE_2D, null);
@@ -5443,7 +5441,7 @@ var RedVideoTexture;
                 video = document.createElement(('video'));
                 video.src = src;
             }
-            video.loop = 1;
+            video.loop = true;
             video.muted = true;
             video.setAttribute('autoplay', '');
             //document.body.appendChild(video)
@@ -5491,12 +5489,12 @@ var RedVideoTexture;
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedVideoTexture : RedGL Instance만 허용.', redGL);
         tGL = redGL.gl;
         this['webglTexture'] = tGL.createTexture();
-        this['webglTexture']['gl'] = tGL
+        this['webglTexture']['gl'] = tGL;
         this['_UUID'] = RedGL.makeUUID();
         this['_load'] = function (needEmpty) {
             if (needEmpty) this.setEmptyTexture(tGL, this['webglTexture']);
             if (this['_src']) loadTexture(tGL, this, this['webglTexture'], this['_src'], this['_callback']);
-        }
+        };
         this['callback'] = callback;
         this['src'] = src;
         console.log(this);
@@ -5835,16 +5833,16 @@ var RedBitmapCubeTexture;
             var i, loaded, failNum;
             option = option || {};
             onError = function () {
-                if (failNum == 0) callBack ? callBack.call(self, false) : 0;
+                if (failNum === 0) callBack ? callBack.call(self, false) : 0;
                 failNum++
             };
             onLoad = function () {
                 loaded++;
-                if (loaded == 6) {
+                if (loaded === 6) {
 
                     gl.activeTexture(gl.TEXTURE0);
                     gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
-                    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+                    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 0);
                     gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, option['min'] ? option['min'] : gl.LINEAR_MIPMAP_NEAREST);
                     gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, option['mag'] ? option['mag'] : gl.LINEAR);
                     gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, option['wrap_s'] ? option['wrap_s'] : gl.CLAMP_TO_EDGE);
@@ -5858,7 +5856,7 @@ var RedBitmapCubeTexture;
                     gl.texImage2D(gl.TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, imgList[5]['source']);
 
                     // gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
-                    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+                    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 0);
 
                     try {
                         gl.generateMipmap(gl.TEXTURE_CUBE_MAP)
@@ -5866,7 +5864,7 @@ var RedBitmapCubeTexture;
                         console.log('밉맵을 생성할수 없음', imgList)
                     }
                     gl.bindTexture(gl.TEXTURE_CUBE_MAP, null);
-                    if (failNum == 0) callBack ? callBack.call(self, true) : 0
+                    if (failNum === 0) callBack ? callBack.call(self, true) : 0
                 }
             };
             i = 6;
@@ -5942,10 +5940,10 @@ var RedBitmapCubeTexture;
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedBitmapCubeTexture : RedGL Instance만 허용.', '입력값 : ' + redGL);
         (callback && typeof callback == 'function') || !callback || RedGLUtil.throwFunc('RedBitmapCubeTexture : callback Function만 허용.', callback);
         tGL = redGL.gl;
-        option = option || {}
-        var tKey = srcList.toString() + JSON.stringify(option)
-        if (typeof srcList == 'array') {
-            if (!redGL['_datas']['textures']) redGL['_datas']['textures'] = {}
+        option = option || {};
+        var tKey = srcList.toString() + JSON.stringify(option);
+        if (srcList instanceof Array) {
+            if (!redGL['_datas']['textures']) redGL['_datas']['textures'] = {};
             if (redGL['_datas']['textures'][tKey]) {
                 if (callback) {
                     setTimeout(function () {
@@ -5956,17 +5954,17 @@ var RedBitmapCubeTexture;
             }
         }
         this['webglTexture'] = tGL.createTexture();
-        this['webglTexture']['gl'] = tGL
+        this['webglTexture']['gl'] = tGL;
         this['_UUID'] = RedGL.makeUUID();
         this['_load'] = function (needEmpty) {
             RedTextureOptionChecker.check('RedBitmapCubeTexture', option, tGL);
             if (needEmpty) this.setEmptyTexture(tGL, this['webglTexture']);
             if (this['_srcList']) loadTexture(tGL, this, this['webglTexture'], this['_srcList'], this['_option'], this['_callback']);
-        }
+        };
         this['_option'] = option;
         this['callback'] = callback;
         this['srcList'] = srcList;
-        redGL['_datas']['textures'][tKey] = this
+        redGL['_datas']['textures'][tKey] = this;
         console.log(this);
     };
     RedBitmapCubeTexture.prototype = new RedBaseTexture();
@@ -5987,7 +5985,7 @@ var RedBitmapCubeTexture;
         },
         set: function (srcList) {
             srcList instanceof Array || RedGLUtil.throwFunc('RedBitmapCubeTexture : srcList는 배열만 허용.', '입력값 : ' + srcList);
-            srcList.length == 6 || RedGLUtil.throwFunc('RedBitmapCubeTexture : srcList 길이는 6이어야함', '입력값 : ' + srcList);
+            srcList.length === 6 || RedGLUtil.throwFunc('RedBitmapCubeTexture : srcList 길이는 6이어야함', '입력값 : ' + srcList);
             this['_srcList'] = srcList;
             this._load(true)
         }
@@ -15277,7 +15275,7 @@ var RedLine;
         this['_tension'] = 1
         this['_tolerance'] = 0.01
         this['_distance'] = 0.1
-        this['_type'] = type || RedLine['LINEAR'];
+        this['type'] = type || RedLine['LINEAR'];
         this['_debug'] = false
         console.log(this)
     };
@@ -15487,7 +15485,6 @@ var RedLine;
 		 description : `
 		 type이 RedLine.CATMULL_ROM 일 경우의 장력
 		 기본값 1
-		 최소값 0
 		 `,
 		 return : 'Number'
 	 }
@@ -15607,16 +15604,16 @@ var RedLatheMesh;
         // 기본값 정의
         this['_pathString'] = pathString;
         this['_redGL'] = redGL;
-        this['_numDivisions'] = numDivisions = Math.floor(numDivisions) || 16;
-        this['_capStart'] = capStart !== undefined ? capStart : false;
-        this['_capEnd'] = capEnd !== undefined ? capEnd : false;
-        this['_startAngle'] = startAngle !== undefined ? startAngle : 0.0;
-        this['_endAngle'] = endAngle !== undefined ? endAngle : Math.PI * 2;
-        this['_distance'] = distance !== undefined ? distance : 0.4;
-        this['_maxAngle'] = maxAngle !== undefined ? maxAngle : Math.PI / 180 * 30
-        this['_tolerance'] = tolerance !== undefined ? tolerance : 0.15
-        this['_flipX'] = flipX ? true : false;
-        this['_flipY'] = flipY ? true : false;
+        this['numDivisions'] = numDivisions = Math.floor(numDivisions) || 16;
+        this['capStart'] = capStart !== undefined ? capStart : false;
+        this['capEnd'] = capEnd !== undefined ? capEnd : false;
+        this['startAngle'] = startAngle !== undefined ? startAngle : 0.0;
+        this['endAngle'] = endAngle !== undefined ? endAngle : Math.PI * 2;
+        this['distance'] = distance !== undefined ? distance : 0.4;
+        this['maxAngle'] = maxAngle !== undefined ? maxAngle : Math.PI / 180 * 30
+        this['tolerance'] = tolerance !== undefined ? tolerance : 0.15
+        this['flipX'] = flipX ? true : false;
+        this['flipY'] = flipY ? true : false;
         if (this['_tolerance'] < 0.1) this['_tolerance'] = 0.1
         /**DOC:
          {
@@ -16615,8 +16612,16 @@ var RedBox;
         tPrimitiveData = makeData(redGL, tType, width, height, depth, wSegments, hSegments, dSegments);
         this['interleaveBuffer'] = tPrimitiveData['interleaveBuffer'];
         this['indexBuffer'] = tPrimitiveData['indexBuffer'];
-        this['interleaveBuffer']['isPrimitiveBuffer'] = true
-        this['indexBuffer']['isPrimitiveBuffer'] = true
+        this['interleaveBuffer']['isPrimitiveBuffer'] = true;
+        this['indexBuffer']['isPrimitiveBuffer'] = true;
+        this['_makeInfo'] = {
+            width: width,
+            height: height,
+            depth: depth,
+            wSegments: wSegments,
+            hSegments: hSegments,
+            dSegments: dSegments
+        };
         this['_UUID'] = RedGL.makeUUID();
         console.log(this)
     };
@@ -16758,7 +16763,7 @@ var RedCylinder;
                 // calculate new start value for groups
                 groupStart += groupCount;
 
-            }
+            };
             generateTorso();
             if (openEnded === false) {
                 if (radiusTop > 0) generateCap(true);
@@ -16863,8 +16868,8 @@ var RedCylinder;
         tPrimitiveData = makeData(redGL, tType, radiusTop, radiusBottom, height, radialSegments, heightSegments, openEnded, thetaStart, thetaLength);
         this['interleaveBuffer'] = tPrimitiveData['interleaveBuffer'];
         this['indexBuffer'] = tPrimitiveData['indexBuffer'];
-        this['interleaveBuffer']['isPrimitiveBuffer'] = true
-        this['indexBuffer']['isPrimitiveBuffer'] = true
+        this['interleaveBuffer']['isPrimitiveBuffer'] = true;
+        this['indexBuffer']['isPrimitiveBuffer'] = true;
         this['_UUID'] = RedGL.makeUUID();
         console.log(this)
     };
@@ -17000,8 +17005,15 @@ var RedPlane;
         tPrimitiveData = makeData(redGL, tType, width, height, wSegments, hSegments, flipY);
         this['interleaveBuffer'] = tPrimitiveData['interleaveBuffer'];
         this['indexBuffer'] = tPrimitiveData['indexBuffer'];
-        this['interleaveBuffer']['isPrimitiveBuffer'] = true
-        this['indexBuffer']['isPrimitiveBuffer'] = true
+        this['interleaveBuffer']['isPrimitiveBuffer'] = true;
+        this['indexBuffer']['isPrimitiveBuffer'] = true;
+        this['_makeInfo'] = {
+            width: width,
+            height: height,
+            wSegments: wSegments,
+            hSegments: hSegments,
+            flipY: flipY
+        };
         this['_UUID'] = RedGL.makeUUID();
         console.log(this);
     };
@@ -17015,7 +17027,7 @@ var RedSphere;
     makeData = (function () {
         var thetaEnd;
         var ix, iy;
-        var index
+        var index;
         var grid = [];
         var a, b, c, d;
         var vertex = new Float32Array([0, 0, 0]);
@@ -17169,8 +17181,17 @@ var RedSphere;
         tPrimitiveData = makeData(redGL, tType, radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength);
         this['interleaveBuffer'] = tPrimitiveData['interleaveBuffer'];
         this['indexBuffer'] = tPrimitiveData['indexBuffer'];
-        this['interleaveBuffer']['isPrimitiveBuffer'] = true
-        this['indexBuffer']['isPrimitiveBuffer'] = true
+        this['interleaveBuffer']['isPrimitiveBuffer'] = true;
+        this['indexBuffer']['isPrimitiveBuffer'] = true;
+        this['_makeInfo'] = {
+            radius: radius,
+            widthSegments: widthSegments,
+            heightSegments: heightSegments,
+            phiStart: phiStart,
+            phiLength: phiLength,
+            thetaStart: thetaStart,
+            thetaLength: thetaLength
+        };
         this['_UUID'] = RedGL.makeUUID();
         console.log(this)
     };
@@ -17180,7 +17201,7 @@ var RedSphere;
 "use strict";
 var RedProgram;
 (function () {
-    var makeWebGLProgram, updateLocation;
+    var makeWebGLProgram, searchLocation;
     var samplerIndex, MAX_SAMPLER_INDEX;
     samplerIndex = 2;
     makeWebGLProgram = (function () {
@@ -17215,7 +17236,7 @@ var RedProgram;
             return tProgram;
         }
     })();
-    updateLocation = (function () {
+    searchLocation = (function () {
         var AttributeLocationInfo;
         var UniformLocationInfo;
         var materialPropertyNameMAP = {};
@@ -17270,7 +17291,7 @@ var RedProgram;
                             tRenderMethod = 'uniform1i';
                             tLocationInfo['samplerIndex'] = samplerIndex;
                             samplerIndex++;
-                            if (samplerIndex == MAX_SAMPLER_INDEX) samplerIndex = 2;
+                            if (samplerIndex === MAX_SAMPLER_INDEX) samplerIndex = 2;
                             break;
                         case 'samplerCube':
                             tRenderType = 'samplerCube';
@@ -17278,7 +17299,7 @@ var RedProgram;
                             tRenderMethod = 'uniform1i';
                             tLocationInfo['samplerIndex'] = samplerIndex;
                             samplerIndex++;
-                            if (samplerIndex == MAX_SAMPLER_INDEX) samplerIndex = 2;
+                            if (samplerIndex === MAX_SAMPLER_INDEX) samplerIndex = 2;
                             break;
                         case 'float':
                             tRenderType = 'float';
@@ -17368,8 +17389,7 @@ var RedProgram;
                     if (!tLocationInfo['location']) {
                         tLocationInfo['msg'] = '쉐이더 main 함수에서 사용되고 있지 않음';
                         tLocationInfo['use'] = false;
-                    }
-                    else tLocationInfo['use'] = true;
+                    } else tLocationInfo['use'] = true;
                     if (v['systemUniformYn']) {
                         tIndex = self['systemUniformLocation'].length;
                         if (tLocationInfo['use']) self['systemUniformLocation'][tIndex] = tLocationInfo;
@@ -17482,8 +17502,8 @@ var RedProgram;
         // 쉐이더 로케이션 찾기
         tGL.useProgram(this['webglProgram']);
         MAX_SAMPLER_INDEX = redGL['detect']['texture']['MAX_COMBINED_TEXTURE_IMAGE_UNITS'];
-        updateLocation(this, tGL, vertexShader);
-        updateLocation(this, tGL, fragmentShader);
+        searchLocation(this, tGL, vertexShader);
+        searchLocation(this, tGL, fragmentShader);
         this['_UUID'] = RedGL.makeUUID();
         console.log(this)
     };
@@ -17546,18 +17566,17 @@ var RedProgram;
                 var i = subProgramOption.length;
                 // option에 해당하는 주석을 코드로 전환시킨다.
                 while (i--) {
-                    if (subProgramOption[i] == 'fog') hasFog = true;
-                    if (subProgramOption[i] == 'sprite3D') hasSprite3D = true;
-                    if (subProgramOption[i] == 'directionalShadow') hasDirectionalShadow = true;
-                    if (subProgramOption[i] == 'skin') hasSkin = true;
-                    if (subProgramOption[i] == 'fog' || subProgramOption[i] == 'sprite3D' || subProgramOption[i] == 'directionalShadow' || subProgramOption[i] == 'skin') continue;
+                    if (subProgramOption[i] === 'fog') hasFog = true;
+                    if (subProgramOption[i] === 'sprite3D') hasSprite3D = true;
+                    if (subProgramOption[i] === 'directionalShadow') hasDirectionalShadow = true;
+                    if (subProgramOption[i] === 'skin') hasSkin = true;
+                    if (subProgramOption[i] === 'fog' || subProgramOption[i] == 'sprite3D' || subProgramOption[i] == 'directionalShadow' || subProgramOption[i] == 'skin') continue;
                     t0 = new RegExp('\/\/\#REDGL_DEFINE\#' + subProgramOption[i] + '\#', 'gi');
                     // console.log(t0)
                     vSource = vSource.replace(t0, '');
                     fSource = fSource.replace(t0, '');
                 }
             }
-
             // fog 처리
             t0 = new RegExp('\/\/\#REDGL_DEFINE\#fog\#' + (hasFog ? 'true' : 'false') + '\#', 'gi');
             vSource = vSource.replace(t0, '');
@@ -17574,8 +17593,6 @@ var RedProgram;
             t0 = new RegExp('\/\/\#REDGL_DEFINE\#skin\#' + (hasSkin ? 'true' : 'false') + '\#', 'gi');
             vSource = vSource.replace(t0, '');
             fSource = fSource.replace(t0, '');
-
-            //
             // console.log(vSource, fSource)
             return RedProgram(redGL, programName, vSource, fSource, subProgramOption)
         };
@@ -18000,8 +18017,7 @@ var RedSystemShaderCode;
         console.log(RedSystemShaderCode)
         Object.freeze(RedSystemShaderCode)
     };
-})
-();
+})();
 "use strict";
 var RedShader;
 (function () {
@@ -22405,7 +22421,7 @@ var RedText;
 		 return : 'Number'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedText', 'width', 'number', {
+    RedDefinePropertyInfo.definePrototype('RedText', 'width', 'uint', {
         min: 2,
         callback: function (v) {
             this['_width'] = v;
@@ -22421,7 +22437,7 @@ var RedText;
 		 return : 'Number'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedText', 'height', 'number', {
+    RedDefinePropertyInfo.definePrototype('RedText', 'height', 'uint', {
         min: 2,
         callback: function (v) {
             this['_height'] = v;
@@ -25827,4 +25843,4 @@ var RedGLOffScreen;
         }
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-04-12 19:23:44)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-04-16 15:37:14)' };console.log(RedGL_VERSION);
