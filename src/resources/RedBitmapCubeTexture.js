@@ -113,6 +113,8 @@ var RedBitmapCubeTexture;
     RedBitmapCubeTexture = function (redGL, srcList, option, callback) {
         var tGL;
         if (!(this instanceof RedBitmapCubeTexture)) return new RedBitmapCubeTexture(redGL, srcList, option, callback);
+        console.time('RedBitmapCubeTexture');
+        console.group('RedBitmapCubeTexture');
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedBitmapCubeTexture : RedGL Instance만 허용.', '입력값 : ' + redGL);
         (callback && typeof callback == 'function') || !callback || RedGLUtil.throwFunc('RedBitmapCubeTexture : callback Function만 허용.', callback);
         tGL = redGL.gl;
@@ -142,6 +144,8 @@ var RedBitmapCubeTexture;
         this['srcList'] = srcList;
         redGL['_datas']['textures'][tKey] = this;
         console.log(this);
+        console.timeEnd('RedBitmapCubeTexture');
+        console.groupEnd('RedBitmapCubeTexture');
     };
     RedBitmapCubeTexture.prototype = new RedBaseTexture();
 

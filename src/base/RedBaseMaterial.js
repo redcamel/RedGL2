@@ -113,6 +113,8 @@ var RedBaseMaterial;
                 }
             };
             return function (target, redGL, programName, vSource, fSource, programOptionList) {
+                console.group('makeProgramList - ' + programName);
+                console.time('makeProgramList - ' + programName);
                 if (!programOptionList) programOptionList = [];
                 if (!redGL['_datas']['RedProgramGroup']) redGL['_datas']['RedProgramGroup'] = {};
                 if (redGL['_datas']['RedProgramGroup'][programName]) {
@@ -133,7 +135,9 @@ var RedBaseMaterial;
                     redGL['_datas']['RedProgramGroup'][programName] = target['_programList'];
                 }
                 target['program'] = target['_programList']['basic'][programName];
-                console.log('prepareNum', prepareNum)
+                console.log('prepareNum', prepareNum);
+                console.timeEnd('makeProgramList - ' + programName);
+                console.groupEnd();
             }
         })(),
         /**DOC:
@@ -151,6 +155,7 @@ var RedBaseMaterial;
             var tKey;
             var t0;
             return function (PROGRAM_NAME, keyList) {
+                console.time('_searchProgram - ' + PROGRAM_NAME);
                 t0 = [];
                 if (keyList) {
                     i = keyList.length;
@@ -162,6 +167,7 @@ var RedBaseMaterial;
                     t0 = PROGRAM_NAME + '_' + t0.join('_');
                 } else t0 = PROGRAM_NAME;
                 this['program'] = this['_programList']['basic'][t0];
+                console.timeEnd('_searchProgram - ' + PROGRAM_NAME);
                 // console.log('현재프로그램', this['program'])
             }
         })(),
@@ -181,6 +187,7 @@ var RedBaseMaterial;
             var i;
             var tUniformGroup, tUniformLocationInfo, tWebGLUniformLocation;
             return function () {
+                console.time('checkUniformAndProperty');
                 if (this['program']['_prepareProgramYn']) {
                     this['program'] = this['program']['_makePrepareProgram']()
                 }
@@ -193,6 +200,7 @@ var RedBaseMaterial;
                         RedGLUtil.throwFunc(this['program']['key'] + '- ', tUniformLocationInfo['materialPropertyName'], '속성이 정의 되지않았습니다.');
                     }
                 }
+                console.timeEnd('checkUniformAndProperty');
             }
         })(),
         /**DOC:

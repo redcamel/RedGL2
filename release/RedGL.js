@@ -1633,7 +1633,7 @@ var RedGLDetect;
         if (!(this instanceof RedGLDetect)) return new RedGLDetect(redGL);
         var checkList, i, k, tKey, tList;
         var self = this;
-        var gl = redGL.gl
+        var gl = redGL.gl;
         checkList = {
             basic: [
                 'VENDOR',
@@ -1667,36 +1667,37 @@ var RedGLDetect;
                 'MAX_TEXTURE_IMAGE_UNITS',
                 'MAX_VERTEX_TEXTURE_IMAGE_UNITS'
             ]
-        }
+        };
         for (k in  checkList) {
-            tList = checkList[k]
+            tList = checkList[k];
             i = tList.length;
             this[k] = {};
             while (i--) this[k][tKey = tList[i]] = gl.getParameter(gl[tKey]);
         }
         this['BROWSER_INFO'] = RedGLDetect.getBrowserInfo();
+        if(this['BROWSER_INFO']['browser']=='ie') console.table = console.log;
         requestAnimationFrame(function () {
-            var canvas = document.createElement('canvas')
-            var ctx = canvas.getContext('2d')
-            canvas.width = 10
-            canvas.height = 20
-            ctx.fillStyle = 'red'
-            ctx.fillRect(0, 0, 10, 10)
-            ctx.fillStyle = 'blue'
-            ctx.fillRect(0, 10, 10, 10)
-            canvas.style.cssText = 'position:fixed;top:0px;left:0px'
+            var canvas = document.createElement('canvas');
+            var ctx = canvas.getContext('2d');
+            canvas.width = 10;
+            canvas.height = 20;
+            ctx.fillStyle = 'red';
+            ctx.fillRect(0, 0, 10, 10);
+            ctx.fillStyle = 'blue';
+            ctx.fillRect(0, 10, 10, 10);
+            canvas.style.cssText = 'position:fixed;top:0px;left:0px';
             // document.body.appendChild(canvas)
-            var tTexture = RedBitmapTexture(redGL, canvas)
+            var tTexture = RedBitmapTexture(redGL, canvas);
 
             var fb = gl.createFramebuffer();
             gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
             gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tTexture.webglTexture, 0);
-            var pixels = new Uint8Array(1 * 1 * 4);
-            gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels)
+            var pixels = new Uint8Array(4);
+            gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-            self['ableCanvasSourceFlipYonTexture'] = pixels[0] == 255
-            self['BROWSER_INFO']['ableCanvasSourceFlipYonTexture'] = pixels[0] == 255
-            console.log('test', pixels)
+            self['ableCanvasSourceFlipYonTexture'] = pixels[0] === 255;
+            self['BROWSER_INFO']['ableCanvasSourceFlipYonTexture'] = pixels[0] === 255;
+            // console.log('test', pixels)
         })
 
     };
@@ -1742,9 +1743,9 @@ var RedGLDetect;
      :DOC*/
 
 
-    RedGLDetect.BROWSER_INFO = {}
+    RedGLDetect.BROWSER_INFO = {};
     RedGLDetect.getBrowserInfo = function () {
-        var result = RedGLDetect['BROWSER_INFO']
+        var result = RedGLDetect['BROWSER_INFO'];
         var navi = window['navigator'],
             agent = navi.userAgent.toLowerCase(),
             platform = navi.platform.toLowerCase(),
@@ -1769,7 +1770,7 @@ var RedGLDetect;
             },
             chrome = function () {
                 if (agent.indexOf(i = 'chrome') < 0 && agent.indexOf(i = 'crios') < 0) return;
-                return browser = 'chrome', bv = parseFloat((i == 'chrome' ? /chrome\/([\d]+)/ : /crios\/([\d]+)/).exec(agent)[1]);
+                return browser = 'chrome', bv = parseFloat((i === 'chrome' ? /chrome\/([\d]+)/ : /crios\/([\d]+)/).exec(agent)[1]);
             },
             firefox = function () {
                 return agent.indexOf('firefox') < 0 ? 0 : (browser = 'firefox', bv = parseFloat(/firefox\/([\d]+)/.exec(agent)[1]))
@@ -1779,7 +1780,7 @@ var RedGLDetect;
             },
             opera = function () {
                 var i;
-                return (agent.indexOf(i = 'opera') < 0 && agent.indexOf(i = 'opr') < 0) ? 0 : (browser = 'opera', bv = (i == 'opera') ? parseFloat(/version\/([\d]+)/.exec(agent)[1]) : parseFloat(/opr\/([\d]+)/.exec(agent)[1]));
+                return (agent.indexOf(i = 'opera') < 0 && agent.indexOf(i = 'opr') < 0) ? 0 : (browser = 'opera', bv = (i === 'opera') ? parseFloat(/version\/([\d]+)/.exec(agent)[1]) : parseFloat(/opr\/([\d]+)/.exec(agent)[1]));
             },
             naver = function () {
                 return agent.indexOf('naver') < 0 ? 0 : browser = 'naver'
@@ -1787,12 +1788,12 @@ var RedGLDetect;
         if (!result) result = {};
         if (agent.indexOf('android') > -1) {
             browser = os = 'android',
-                device = agent.indexOf('mobile') == -1 ? (browser += 'Tablet', 'tablet') : 'mobile',
+                device = agent.indexOf('mobile') === -1 ? (browser += 'Tablet', 'tablet') : 'mobile',
                 osv = (i = /android ([\d.]+)/.exec(agent)) ? (i = i[1].split('.'), parseFloat(i[0] + '.' + i[1])) : 0,
                 isMobile = 1,
             whale() || naver() || opera() || chrome() || firefox() || (bv = i = /safari\/([\d.]+)/.exec(agent) ? parseFloat(i[1]) : 0);
         } else if (agent.indexOf(i = 'ipad') > -1 || agent.indexOf(i = 'iphone') > -1) {
-            device = i == 'ipad' ? 'tablet' : 'mobile',
+            device = i === 'ipad' ? 'tablet' : 'mobile',
                 browser = os = i,
                 osv = (i = /os ([\d_]+)/.exec(agent)) ? (i = i[1].split('_'), parseFloat(i[0] + '.' + i[1])) : 0,
                 isMobile = 1,
@@ -1835,7 +1836,7 @@ var RedGLDetect;
             if (t0.hasOwnProperty(i)) result[i] = t0[i];
 
         if (window['OffscreenCanvas']) {
-            var t0 = new window['OffscreenCanvas'](2, 2)
+            var t0 = new window['OffscreenCanvas'](2, 2);
             try {
                 t0.getContext('2d')
             } catch (e) {
@@ -1843,7 +1844,7 @@ var RedGLDetect;
             }
         }
         return result
-    }
+    };
     Object.freeze(RedGLDetect);
 })();
 
@@ -2429,6 +2430,7 @@ var RedGL;
         CHECK_CONTEXT_LIST = 'webkit-3d,moz-webgl,3d,experimental-webgl,webgl'.split(',');
         tCheckContextList = [];
         return function (canvas, option, targetContext) {
+            console.time('getGL');
             initOption = JSON.parse(JSON.stringify(OPTION));
             if (option) for (i in option) initOption[i] = option[i];
             if (targetContext) {
@@ -2441,13 +2443,14 @@ var RedGL;
                     tContext['glExtension'] = {};
                     EXT_KEY_LIST.forEach(function (extensionKey) {
                         tContext['glExtension'][extensionKey] = tContext.getExtension(extensionKey);
-                        if (tContext['glExtension'][extensionKey] && extensionKey == 'WEBGL_debug_renderer_info') {
+                        if (tContext['glExtension'][extensionKey] && extensionKey === 'WEBGL_debug_renderer_info') {
                             tContext['vendor'] = tContext.getParameter(tContext['glExtension'][extensionKey].UNMASKED_VENDOR_WEBGL);
                             tContext['renderer'] = tContext.getParameter(tContext['glExtension'][extensionKey].UNMASKED_RENDERER_WEBGL)
                         }
                         console.log('확장여부 ' + extensionKey + ' :', tContext['glExtension'][extensionKey])
                     });
                     tContext['version'] = tKey;
+                    console.timeEnd('getGL');
                     return tContext;
                 }
             }
@@ -2455,6 +2458,7 @@ var RedGL;
         }
     })();
     setEmptyTextures = function (redGL, gl) {
+        console.time('setEmptyTextures');
         var i;
         var emptyTexture, emptyCubeTexture, src;
         i = redGL['detect']['texture']['MAX_COMBINED_TEXTURE_IMAGE_UNITS'];
@@ -2469,7 +2473,7 @@ var RedGL;
         // 1번은 3D 텍스쳐 생성용공간
         //TODO 이게 아마도 이제 필요없을텐데 확인해봐야함
         while (i--) {
-            if (i == 1) {
+            if (i === 1) {
                 gl.activeTexture(gl.TEXTURE0 + 1);
                 gl.bindTexture(gl.TEXTURE_CUBE_MAP, emptyCubeTexture['webglTexture']);
             } else {
@@ -2477,6 +2481,7 @@ var RedGL;
                 gl.bindTexture(gl.TEXTURE_2D, emptyTexture['webglTexture']);
             }
         }
+        console.timeEnd('setEmptyTextures');
     };
     /**DOC:
      {
@@ -2546,7 +2551,9 @@ var RedGL;
      :DOC*/
     RedGL = function (canvas, callback, option, targetContextKey) {
         if (!(this instanceof RedGL)) return new RedGL(canvas, callback, option, targetContextKey);
-        canvas['tagName'] == 'CANVAS' || RedGLUtil.throwFunc('RedGL : Canvas Element만 허용');
+        console.time('RedGL');
+        console.group('RedGL');
+        canvas['tagName'] === 'CANVAS' || RedGLUtil.throwFunc('RedGL : Canvas Element만 허용');
         var tGL, self;
         self = this;
         this['_datas'] = {};
@@ -2611,8 +2618,8 @@ var RedGL;
             var tH = new Uint32Array(2);
             prevW = 0, prevH = 0;
             return function (width, height, force) {
-                if (width == undefined) RedGLUtil.throwFunc('RedGL setSize : width가 입력되지 않았습니다.');
-                if (height == undefined) RedGLUtil.throwFunc('RedGL setSize : height가 입력되지 않았습니다.');
+                if (width === undefined) RedGLUtil.throwFunc('RedGL setSize : width가 입력되지 않았습니다.');
+                if (height === undefined) RedGLUtil.throwFunc('RedGL setSize : height가 입력되지 않았습니다.');
                 W = this['_width'] = width;
                 H = this['_height'] = height;
                 if (window['HTMLCanvasElement']) {
@@ -2665,7 +2672,7 @@ var RedGL;
             self['_mouseEventInfo'] = [];
             [RedGLDetect.BROWSER_INFO.move, RedGLDetect.BROWSER_INFO.down, RedGLDetect.BROWSER_INFO.up].forEach(function (v) {
                 var tXkey, tYkey;
-                if (RedGLDetect.BROWSER_INFO.browser == 'ie' && RedGLDetect.BROWSER_INFO.browserVer == 11) {
+                if (RedGLDetect.BROWSER_INFO.browser === 'ie' && RedGLDetect.BROWSER_INFO.browserVer === 11) {
                     tXkey = 'offsetX';
                     tYkey = 'offsetY';
                 } else {
@@ -2701,8 +2708,11 @@ var RedGL;
             });
             self.setSize(self['_width'], self['_height']); // 리사이즈를 초기에 한번 실행.
             if (callback) callback.call(self, true); // 콜백이 있으면 실행
+
         });
+        console.timeEnd('RedGL');
         console.log(this);
+        console.groupEnd('RedGL');
     };
     /**DOC:
      {
@@ -4711,6 +4721,9 @@ var RedGeometry;
      :DOC*/
     RedGeometry = function (interleaveBuffer, indexBuffer) {
         if (!(this instanceof RedGeometry)) return new RedGeometry(interleaveBuffer, indexBuffer);
+        this['_UUID'] = RedGL.makeUUID();
+        console.time('RedGeometry - ' + this['_UUID']);
+        console.group('RedGeometry - ' + this['_UUID']);
         interleaveBuffer instanceof RedBuffer || RedGLUtil.throwFunc('RedGeometry : interleaveBuffer - RedBuffer Instance만 허용.', interleaveBuffer);
         interleaveBuffer['bufferType'] === RedBuffer.ARRAY_BUFFER || RedGLUtil.throwFunc('RedGeometry : interleaveBuffer - RedBuffer.ARRAY_BUFFER 타입만 허용.', interleaveBuffer);
         if (indexBuffer) {
@@ -4737,7 +4750,8 @@ var RedGeometry;
          :DOC*/
         this['indexBuffer'] = indexBuffer;
         this['_volume'] = null;
-        this['_UUID'] = RedGL.makeUUID();
+        console.timeEnd('RedGeometry - ' + this['_UUID']);
+        console.groupEnd();
         // console.log(this);
     };
     RedGeometry.prototype = {
@@ -4778,7 +4792,8 @@ var RedGeometry;
 		 }
          :DOC*/
         volumeCalculate: function () {
-            var minX, minY, minZ, maxX, maxY, maxZ, t0, t1, t2, t, i;
+            console.time('volumeCalculate');
+            var minX, minY, minZ, maxX, maxY, maxZ, t0, t1, t2, t, i, len;
             var stride = this['interleaveBuffer']['stride'];
             // if (!volume[this]) {
             minX = minY = minZ = maxX = maxY = maxZ = 0;
@@ -4796,6 +4811,7 @@ var RedGeometry;
             }
             this['_volume'] = [maxX - minX, maxY - minY, maxZ - minZ];
             // }
+            console.time('volumeCalculate');
             return this['_volume'];
         }
     };
@@ -5013,6 +5029,8 @@ var RedBaseMaterial;
                 }
             };
             return function (target, redGL, programName, vSource, fSource, programOptionList) {
+                console.group('makeProgramList - ' + programName);
+                console.time('makeProgramList - ' + programName);
                 if (!programOptionList) programOptionList = [];
                 if (!redGL['_datas']['RedProgramGroup']) redGL['_datas']['RedProgramGroup'] = {};
                 if (redGL['_datas']['RedProgramGroup'][programName]) {
@@ -5033,7 +5051,9 @@ var RedBaseMaterial;
                     redGL['_datas']['RedProgramGroup'][programName] = target['_programList'];
                 }
                 target['program'] = target['_programList']['basic'][programName];
-                console.log('prepareNum', prepareNum)
+                console.log('prepareNum', prepareNum);
+                console.timeEnd('makeProgramList - ' + programName);
+                console.groupEnd();
             }
         })(),
         /**DOC:
@@ -5051,6 +5071,7 @@ var RedBaseMaterial;
             var tKey;
             var t0;
             return function (PROGRAM_NAME, keyList) {
+                console.time('_searchProgram - ' + PROGRAM_NAME);
                 t0 = [];
                 if (keyList) {
                     i = keyList.length;
@@ -5062,6 +5083,7 @@ var RedBaseMaterial;
                     t0 = PROGRAM_NAME + '_' + t0.join('_');
                 } else t0 = PROGRAM_NAME;
                 this['program'] = this['_programList']['basic'][t0];
+                console.timeEnd('_searchProgram - ' + PROGRAM_NAME);
                 // console.log('현재프로그램', this['program'])
             }
         })(),
@@ -5081,6 +5103,7 @@ var RedBaseMaterial;
             var i;
             var tUniformGroup, tUniformLocationInfo, tWebGLUniformLocation;
             return function () {
+                console.time('checkUniformAndProperty');
                 if (this['program']['_prepareProgramYn']) {
                     this['program'] = this['program']['_makePrepareProgram']()
                 }
@@ -5093,6 +5116,7 @@ var RedBaseMaterial;
                         RedGLUtil.throwFunc(this['program']['key'] + '- ', tUniformLocationInfo['materialPropertyName'], '속성이 정의 되지않았습니다.');
                     }
                 }
+                console.timeEnd('checkUniformAndProperty');
             }
         })(),
         /**DOC:
@@ -5317,6 +5341,8 @@ var RedBitmapTexture;
     RedBitmapTexture = function (redGL, src, option, callback) {
         var tGL;
         if (!(this instanceof RedBitmapTexture)) return new RedBitmapTexture(redGL, src, option, callback);
+        console.time('RedBitmapTexture');
+        console.group('RedBitmapTexture');
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedBitmapTexture : RedGL Instance만 허용.', redGL);
         (callback && typeof callback == 'function') || !callback || RedGLUtil.throwFunc('RedBitmapTexture : callback Function만 허용.', callback);
         tGL = redGL.gl;
@@ -5350,6 +5376,8 @@ var RedBitmapTexture;
         this['_UUID'] = RedGL.makeUUID();
         redGL['_datas']['textures'][tKey] = this;
         console.log(this);
+        console.timeEnd('RedBitmapTexture');
+        console.groupEnd('RedBitmapTexture');
     };
     RedBitmapTexture.prototype = new RedBaseTexture();
 
@@ -5937,6 +5965,8 @@ var RedBitmapCubeTexture;
     RedBitmapCubeTexture = function (redGL, srcList, option, callback) {
         var tGL;
         if (!(this instanceof RedBitmapCubeTexture)) return new RedBitmapCubeTexture(redGL, srcList, option, callback);
+        console.time('RedBitmapCubeTexture');
+        console.group('RedBitmapCubeTexture');
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedBitmapCubeTexture : RedGL Instance만 허용.', '입력값 : ' + redGL);
         (callback && typeof callback == 'function') || !callback || RedGLUtil.throwFunc('RedBitmapCubeTexture : callback Function만 허용.', callback);
         tGL = redGL.gl;
@@ -5966,6 +5996,8 @@ var RedBitmapCubeTexture;
         this['srcList'] = srcList;
         redGL['_datas']['textures'][tKey] = this;
         console.log(this);
+        console.timeEnd('RedBitmapCubeTexture');
+        console.groupEnd('RedBitmapCubeTexture');
     };
     RedBitmapCubeTexture.prototype = new RedBaseTexture();
 
@@ -17241,13 +17273,11 @@ var RedProgram;
         var AttributeLocationInfo;
         var UniformLocationInfo;
         var materialPropertyNameMAP = {};
-        var totalUpdateLocationTime = 0;
         AttributeLocationInfo = function () {
         };
         UniformLocationInfo = function () {
         };
         return function (self, gl, shader) {
-            var startTime = performance.now();
             var i, v, tList;
             var tIndex;
             // attributeLocation 정보 생성
@@ -17403,8 +17433,6 @@ var RedProgram;
                 }
                 // })
             }
-            totalUpdateLocationTime += performance.now() - startTime;
-            console.log('totalUpdateLocationTime', self, totalUpdateLocationTime);
         }
     })();
     /**DOC:
@@ -17438,6 +17466,8 @@ var RedProgram;
         var tGL;
         var vertexShader, fragmentShader;
         if (!(this instanceof RedProgram)) return new RedProgram(redGL, key, vSource, fSource);
+        console.time('RedProgram');
+        console.group('RedProgram');
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedProgram : RedGL Instance만 허용.', '입력값 : ' + redGL);
         typeof key == 'string' || RedGLUtil.throwFunc('RedProgram : key - 문자열만 허용.', '입력값 : ' + key);
         tGL = redGL.gl;
@@ -17471,7 +17501,9 @@ var RedProgram;
 			 return : 'WebGLShader'
 		 }
          :DOC*/
+        console.time('makeWebGLProgram - ' + key);
         this['webglProgram'] = makeWebGLProgram(tGL, key, vertexShader, fragmentShader);
+        console.timeEnd('makeWebGLProgram - ' + key);
         /**DOC:
          {
 		     code : 'PROPERTY',
@@ -17503,10 +17535,16 @@ var RedProgram;
         // 쉐이더 로케이션 찾기
         tGL.useProgram(this['webglProgram']);
         MAX_SAMPLER_INDEX = redGL['detect']['texture']['MAX_COMBINED_TEXTURE_IMAGE_UNITS'];
+        console.time('searchLocation - vertexShader - ' + key);
         searchLocation(this, tGL, vertexShader);
+        console.timeEnd('searchLocation - vertexShader - ' + key);
+        console.time('searchLocation - fragmentShader - ' + key);
         searchLocation(this, tGL, fragmentShader);
+        console.timeEnd('searchLocation - fragmentShader - ' + key);
         this['_UUID'] = RedGL.makeUUID();
         console.log(this)
+        console.timeEnd('RedProgram');
+        console.groupEnd();
     };
     RedProgram.prototype = {};
     /**DOC:
@@ -17617,15 +17655,19 @@ var RedSystemShaderCode;
     RedSystemShaderCode = {};
     RedSystemShaderCode['init'] = function (redGL) {
         var maxDirectionalLight = 3;
-        var maxPointLight = 8;
+        var maxPointLight;
         var maxJoint;
-        var tDETECT = redGL.detect
-        console.log('tDETECT', tDETECT);
-        // 버텍스 쉐이더에 100개의 유니폼 벡터 정의를 남겨둔다.;;
-        var maxJoint;
-        maxJoint = parseInt(Math.floor(Math.min((tDETECT.vertexShader.MAX_VERTEX_UNIFORM_VECTORS - 64) / 8, 128)))
-        maxPointLight = parseInt(Math.floor(Math.min((tDETECT.fragmentShader.MAX_FRAGMENT_UNIFORM_VECTORS - 64) / 4, 128)))
-        console.log('maxJoint', maxJoint)
+        var tDETECT = redGL.detect;
+        console.time('RedSystemShaderCode');
+        console.group('RedSystemShaderCode');
+        maxJoint = parseInt(Math.floor(Math.min((tDETECT.vertexShader.MAX_VERTEX_UNIFORM_VECTORS - 64) / 8, 128)));
+        maxPointLight = parseInt(Math.floor(Math.min((tDETECT.fragmentShader.MAX_FRAGMENT_UNIFORM_VECTORS - 64) / 4, 128)));
+        console.group('detect info');
+        console.log(tDETECT);
+        console.log('maxDirectionalLight', maxDirectionalLight);
+        console.log('maxJoint', maxJoint);
+        console.log('maxPointLight', maxPointLight);
+        console.groupEnd();
         // if (RedGLDetect.BROWSER_INFO.browser == 'ie' && RedGLDetect.BROWSER_INFO.browserVer == 11) maxJoint = 50
         // else if (RedGLDetect.BROWSER_INFO.browser == 'iphone' || RedGLDetect.BROWSER_INFO.browser == 'ipad') maxJoint = 8
         // else maxJoint = RedGLDetect.BROWSER_INFO.isMobile ? 64 : 1024
@@ -17960,62 +18002,71 @@ var RedSystemShaderCode;
         RedSystemShaderCode['MAX_JOINT'] = maxJoint;
         [RedSystemShaderCode.vertexShareDeclare, RedSystemShaderCode.fragmentShareDeclare].forEach(function (data) {
             data.forEach(function (v) {
-                v = v.split(' ')
-                if (v[0] == 'uniform') {
+                v = v.split(' ');
+                if (v[0] === 'uniform') {
                     RedSystemShaderCode.systemUniform[v[2]] = 1
                 }
             })
         });
 
         // 맥스갯수를 찾아보자..
-
         var tVertexUniform = [];
-        var tVertexVecNum = 0
+        var tVertexVecNum = 0;
+        var tFragmentUniform = [];
+        var tFragmentVecNum = 0;
         var testMap = {
             bool: 4, float: 4, int: 4, uint: 4,
             sampler2D: 4, samplerCube: 4,
             vec2: 4, vec3: 4, vec4: 4,
             mat2: 4, mat3: 8, mat4: 16
-        }
-        console.log('RedSystemShaderCode.vertexShareDeclare', RedSystemShaderCode.vertexShareDeclare)
+        };
+        console.group('RedSystemShaderCode.vertexShareDeclare');
+        console.table(RedSystemShaderCode.vertexShareDeclare);
         RedSystemShaderCode.vertexShareDeclare.forEach(function (v) {
-            v = v.split(' ')
-            console.log(v[0])
-            if (v[0] == 'uniform') {
+            v = v.split(' ');
+            if (v[0] === 'uniform') {
                 var tNum;
                 var tInfo;
                 tInfo = {
                     value: v,
                     type: v[1],
                     num: tNum = v[2].indexOf('[') > -1 ? +(v[2].split('[')[1].replace(']', '')) * testMap[v[1]] : testMap[v[1]]
-                }
-                tVertexUniform.push(tInfo)
+                };
+                tVertexUniform.push(tInfo);
                 tVertexVecNum += tNum
             }
         });
-        console.log('tVertexUniform', tVertexUniform)
-        console.log('tVertexVecNum', tVertexVecNum / 4)
-        tVertexUniform = []
-        tVertexVecNum = 0
-        RedSystemShaderCode.fragmentShareDeclare.forEach(function (v) {
-            v = v.split(' ')
-            console.log(v[0])
-            if (v[0] == 'uniform') {
-                var tNum;
-                var tInfo;
-                tInfo = {
-                    value: v,
-                    type: v[1],
-                    num: tNum = v[2].indexOf('[') > -1 ? +(v[2].split('[')[1].replace(']', '')) * testMap[v[1]] : testMap[v[1]]
-                }
-                tVertexUniform.push(tInfo)
-                tVertexVecNum += tNum
-            }
-        });
-        console.log('tFragmentUniform', tVertexUniform)
-        console.log('tFragmentVecNum', tVertexVecNum / 4)
+        console.log('target vertexUniform');
+        console.table(tVertexUniform);
+        console.log('target vertexVecNum', tVertexVecNum / 4);
+        console.groupEnd('RedSystemShaderCode.vertexShareDeclare');
 
-        console.log(RedSystemShaderCode)
+
+        console.group('RedSystemShaderCode.fragmentShareDeclare');
+        console.table(RedSystemShaderCode.fragmentShareDeclare);
+        tFragmentUniform = [];
+        tFragmentVecNum = 0;
+        RedSystemShaderCode.fragmentShareDeclare.forEach(function (v) {
+            v = v.split(' ');
+            if (v[0] === 'uniform') {
+                var tNum;
+                var tInfo;
+                tInfo = {
+                    value: v,
+                    type: v[1],
+                    num: tNum = v[2].indexOf('[') > -1 ? +(v[2].split('[')[1].replace(']', '')) * testMap[v[1]] : testMap[v[1]]
+                };
+                tFragmentUniform.push(tInfo);
+                tFragmentVecNum += tNum
+            }
+        });
+        console.log('target fragmentUniform');
+        console.table( tFragmentUniform);
+        console.log('target fragmentVecNum', tFragmentVecNum / 4);
+        console.groupEnd('RedSystemShaderCode.fragmentShareDeclare');
+        console.log(RedSystemShaderCode);
+        console.timeEnd('RedSystemShaderCode');
+        console.groupEnd('RedSystemShaderCode');
         Object.freeze(RedSystemShaderCode)
     };
 })();
@@ -18058,7 +18109,7 @@ var RedShader;
         gl.compileShader(shader);
         if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
             // console.log(parseData)
-            alert(gl.getShaderInfoLog(shader))
+            alert(gl.getShaderInfoLog(shader));
             RedGLUtil.throwFunc('RedShader : 쉐이더 컴파일에 실패하였습니다.\n', gl.getShaderInfoLog(shader))
         }
     };
@@ -18160,8 +18211,7 @@ var RedShader;
                             RedGLUtil.throwFunc('RedShader : 체크되지 못하는값인데 뭐냐', tName, tCheckDefine);
                             break;
                     }
-                }
-                else {
+                } else {
                     console.log('RedShader : 체크되지 못하는값인데 뭐냐', tCheckDefine);
                     RedGLUtil.throwFunc('RedShader : 체크되지 못하는값인데 뭐냐', tCheckDefine);
                     // 아래놈은 이제 사용하지 ㅇ낳음
@@ -18247,9 +18297,11 @@ var RedShader;
     RedShader = function (redGL, key, type, source) {
         var tGL;
         if (!(this instanceof RedShader)) return new RedShader(redGL, key, type, source);
+        console.time('RedShader');
+        console.group('RedShader');
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedShader : RedGL Instance만 허용.', '입력값 : ' + redGL);
         typeof key == 'string' || RedGLUtil.throwFunc('RedShader : key - 문자열만 허용.', '입력값 : ' + key);
-        if (type != RedShader['VERTEX'] && type != RedShader['FRAGMENT']) RedGLUtil.throwFunc('RedShader : type - RedShader.VERTEX or RedShader.FRAGMENT 만 허용.', '입력값 : ' + type);
+        if (type !== RedShader['VERTEX'] && type !== RedShader['FRAGMENT']) RedGLUtil.throwFunc('RedShader : type - RedShader.VERTEX or RedShader.FRAGMENT 만 허용.', '입력값 : ' + type);
         // 데이터 공간확보
         if (!redGL['_datas']['RedShader']) {
             redGL['_datas']['RedShader'] = {};
@@ -18275,7 +18327,9 @@ var RedShader;
 		  return : 'WebGLShader'
 		 }
          :DOC*/
+        console.time('webglShader : ' + key);
         this['webglShader'] = makeWebGLShader(tGL, key, type); // 쉐이더 생성
+        console.timeEnd('webglShader : ' + key);
         /**DOC:
          {
 		  code : 'PROPERTY',
@@ -18284,9 +18338,13 @@ var RedShader;
 		  return : 'Object'
 		 }
          :DOC*/
+        console.time('parserDefine - ' + key);
         this['parseData'] = parserDefine(type, source); // 소스 파싱
+        console.timeEnd('parserDefine - ' + key);
         this['originSource'] = source;
+        console.time('compileWebGLShader - ' + key);
         compileWebGLShader(tGL, type, this['webglShader'], this['parseData']); // 쉐이더 컴파일
+        console.timeEnd('compileWebGLShader - ' + key);
         /**DOC:
          {
 		     code : 'PROPERTY',
@@ -18308,6 +18366,8 @@ var RedShader;
         this['_UUID'] = RedGL.makeUUID();
         Object.freeze(this);
         console.log(this);
+        console.timeEnd('RedShader');
+        console.groupEnd('RedShader');
     };
     /**DOC:
      {
@@ -25844,4 +25904,4 @@ var RedGLOffScreen;
         }
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-04-16 18:12:58)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-04-17 18:09:04)' };console.log(RedGL_VERSION);

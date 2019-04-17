@@ -28,6 +28,9 @@ var RedGeometry;
      :DOC*/
     RedGeometry = function (interleaveBuffer, indexBuffer) {
         if (!(this instanceof RedGeometry)) return new RedGeometry(interleaveBuffer, indexBuffer);
+        this['_UUID'] = RedGL.makeUUID();
+        console.time('RedGeometry - ' + this['_UUID']);
+        console.group('RedGeometry - ' + this['_UUID']);
         interleaveBuffer instanceof RedBuffer || RedGLUtil.throwFunc('RedGeometry : interleaveBuffer - RedBuffer Instance만 허용.', interleaveBuffer);
         interleaveBuffer['bufferType'] === RedBuffer.ARRAY_BUFFER || RedGLUtil.throwFunc('RedGeometry : interleaveBuffer - RedBuffer.ARRAY_BUFFER 타입만 허용.', interleaveBuffer);
         if (indexBuffer) {
@@ -54,7 +57,8 @@ var RedGeometry;
          :DOC*/
         this['indexBuffer'] = indexBuffer;
         this['_volume'] = null;
-        this['_UUID'] = RedGL.makeUUID();
+        console.timeEnd('RedGeometry - ' + this['_UUID']);
+        console.groupEnd();
         // console.log(this);
     };
     RedGeometry.prototype = {
@@ -95,7 +99,8 @@ var RedGeometry;
 		 }
          :DOC*/
         volumeCalculate: function () {
-            var minX, minY, minZ, maxX, maxY, maxZ, t0, t1, t2, t, i;
+            console.time('volumeCalculate');
+            var minX, minY, minZ, maxX, maxY, maxZ, t0, t1, t2, t, i, len;
             var stride = this['interleaveBuffer']['stride'];
             // if (!volume[this]) {
             minX = minY = minZ = maxX = maxY = maxZ = 0;
@@ -113,6 +118,7 @@ var RedGeometry;
             }
             this['_volume'] = [maxX - minX, maxY - minY, maxZ - minZ];
             // }
+            console.time('volumeCalculate');
             return this['_volume'];
         }
     };

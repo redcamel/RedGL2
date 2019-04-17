@@ -37,7 +37,7 @@ var RedShader;
         gl.compileShader(shader);
         if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
             // console.log(parseData)
-            alert(gl.getShaderInfoLog(shader))
+            alert(gl.getShaderInfoLog(shader));
             RedGLUtil.throwFunc('RedShader : 쉐이더 컴파일에 실패하였습니다.\n', gl.getShaderInfoLog(shader))
         }
     };
@@ -139,8 +139,7 @@ var RedShader;
                             RedGLUtil.throwFunc('RedShader : 체크되지 못하는값인데 뭐냐', tName, tCheckDefine);
                             break;
                     }
-                }
-                else {
+                } else {
                     console.log('RedShader : 체크되지 못하는값인데 뭐냐', tCheckDefine);
                     RedGLUtil.throwFunc('RedShader : 체크되지 못하는값인데 뭐냐', tCheckDefine);
                     // 아래놈은 이제 사용하지 ㅇ낳음
@@ -226,9 +225,11 @@ var RedShader;
     RedShader = function (redGL, key, type, source) {
         var tGL;
         if (!(this instanceof RedShader)) return new RedShader(redGL, key, type, source);
+        console.time('RedShader');
+        console.group('RedShader');
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedShader : RedGL Instance만 허용.', '입력값 : ' + redGL);
         typeof key == 'string' || RedGLUtil.throwFunc('RedShader : key - 문자열만 허용.', '입력값 : ' + key);
-        if (type != RedShader['VERTEX'] && type != RedShader['FRAGMENT']) RedGLUtil.throwFunc('RedShader : type - RedShader.VERTEX or RedShader.FRAGMENT 만 허용.', '입력값 : ' + type);
+        if (type !== RedShader['VERTEX'] && type !== RedShader['FRAGMENT']) RedGLUtil.throwFunc('RedShader : type - RedShader.VERTEX or RedShader.FRAGMENT 만 허용.', '입력값 : ' + type);
         // 데이터 공간확보
         if (!redGL['_datas']['RedShader']) {
             redGL['_datas']['RedShader'] = {};
@@ -254,7 +255,9 @@ var RedShader;
 		  return : 'WebGLShader'
 		 }
          :DOC*/
+        console.time('webglShader : ' + key);
         this['webglShader'] = makeWebGLShader(tGL, key, type); // 쉐이더 생성
+        console.timeEnd('webglShader : ' + key);
         /**DOC:
          {
 		  code : 'PROPERTY',
@@ -263,9 +266,13 @@ var RedShader;
 		  return : 'Object'
 		 }
          :DOC*/
+        console.time('parserDefine - ' + key);
         this['parseData'] = parserDefine(type, source); // 소스 파싱
+        console.timeEnd('parserDefine - ' + key);
         this['originSource'] = source;
+        console.time('compileWebGLShader - ' + key);
         compileWebGLShader(tGL, type, this['webglShader'], this['parseData']); // 쉐이더 컴파일
+        console.timeEnd('compileWebGLShader - ' + key);
         /**DOC:
          {
 		     code : 'PROPERTY',
@@ -287,6 +294,8 @@ var RedShader;
         this['_UUID'] = RedGL.makeUUID();
         Object.freeze(this);
         console.log(this);
+        console.timeEnd('RedShader');
+        console.groupEnd('RedShader');
     };
     /**DOC:
      {
