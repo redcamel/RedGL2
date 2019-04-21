@@ -62,7 +62,7 @@ var RedGLDetect;
             while (i--) this[k][tKey = tList[i]] = gl.getParameter(gl[tKey]);
         }
         this['BROWSER_INFO'] = RedGLDetect.getBrowserInfo();
-        if(this['BROWSER_INFO']['browser']=='ie') console.table = console.log;
+        if (this['BROWSER_INFO']['browser'] == 'ie') console.table = console.log;
         requestAnimationFrame(function () {
             var canvas = document.createElement('canvas');
             var ctx = canvas.getContext('2d');

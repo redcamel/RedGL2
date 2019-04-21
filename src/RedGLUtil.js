@@ -126,7 +126,7 @@ var RedGLUtil;
         getStrFromComment: (function () {
             var t0;
             return function (source) {
-                if (typeof source != 'string') RedGLUtil.throwFunc('getStrFromComment : 해석할 값은 문자열만 가능', source)
+                if (typeof source != 'string') RedGLUtil.throwFunc('getStrFromComment : 해석할 값은 문자열만 가능', source);
                 t0 = source.replace('@preserve', '').toString().trim().match(/(\/\*)[\s\S]+(\*\/)/g);
                 if (t0) return t0[0].replace(/\/\*|\*\//g, '').trim();
                 else RedGLUtil.throwFunc('getStrFromComment : 해석할 불가능한 값', source)
@@ -196,9 +196,9 @@ var RedGLUtil;
          :DOC*/
         makePowerOf2Source: (function () {
             var tW, tH;
-            var MAX_TEXTURE_SIZE
+            var MAX_TEXTURE_SIZE;
             return function (gl, source, maxTextureSize) {
-                MAX_TEXTURE_SIZE = maxTextureSize
+                MAX_TEXTURE_SIZE = maxTextureSize;
                 if (!RedGLUtil.isPowerOf2(source.width) || !RedGLUtil.isPowerOf2(source.height)) {
                     tW = RedGLUtil.nextHighestPowerOfTwo(source.width);
                     tH = RedGLUtil.nextHighestPowerOfTwo(source.height);
@@ -207,7 +207,7 @@ var RedGLUtil;
                     var canvas = window['OffscreenCanvas'] ? new OffscreenCanvas(tW, tH) : document.createElement('canvas');
                     var ctx = canvas.getContext("2d");
 
-                    console.log('캔버스 엘리먼트에 대한 리사이즈용캔버스생성', canvas)
+                    console.log('캔버스 엘리먼트에 대한 리사이즈용캔버스생성', canvas);
                     if (!window['OffscreenCanvas']) {
                         canvas.width = tW;
                         canvas.height = tH;
@@ -370,7 +370,7 @@ var RedGLUtil;
 		 }
          :DOC*/
         quaternionToRotation: function (q, order) {
-            var mat = []
+            var mat = [];
             var x = q[0];
             var y = q[1];
             var z = q[2];
@@ -399,7 +399,7 @@ var RedGLUtil;
             mat[15] = 1;
 
             var dest = [0, 0, 0];
-            order = order || 'XYZ'
+            order = order || 'XYZ';
             // Assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)
             var m11 = mat[0], m12 = mat[4], m13 = mat[8];
             var m21 = mat[1], m22 = mat[5], m23 = mat[9];
@@ -473,7 +473,7 @@ var RedGLUtil;
          :DOC*/
         mat4ToEuler: function (mat, dest, order) {
             dest = dest || [0, 0, 0];
-            order = order || 'XYZ'
+            order = order || 'XYZ';
             // Assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)
             var m11 = mat[0], m12 = mat[4], m13 = mat[8];
             var m21 = mat[1], m22 = mat[5], m23 = mat[9];

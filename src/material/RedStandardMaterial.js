@@ -205,7 +205,7 @@ var RedStandardMaterial;
         this['displacementPower'] = 0.1;
         this['displacementFlowSpeedX'] = 0;
         this['displacementFlowSpeedY'] = 0;
-        this['alpha'] = 1
+        this['alpha'] = 1;
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['_UUID'] = RedGL.makeUUID();

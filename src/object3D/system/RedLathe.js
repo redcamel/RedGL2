@@ -412,7 +412,7 @@ var RedLathe;
             offset = i * 3;
             interleaveData.push(positions[offset + 0], positions[offset + 1], positions[offset + 2]);
             interleaveData.push(normals[offset + 0], normals[offset + 1], normals[offset + 2]);
-            offset = i * 2
+            offset = i * 2;
             interleaveData.push(texcoords[offset + 0], texcoords[offset + 1])
         }
         ////////////////////////////////////////////////////////////////////////////

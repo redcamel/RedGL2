@@ -63,9 +63,9 @@ var RedObitController;
             var checkArea;
             checkArea = function (e) {
                 if (self['targetView']) {
-                    var tX, tY
+                    var tX, tY;
                     if (RedGLDetect.BROWSER_INFO.isMobile) {
-                        console.log(e)
+                        console.log(e);
                         tX = e['clientX'], tY = e['clientY'];
                     } else {
                         tX = e[tXkey], tY = e[tYkey];
@@ -74,10 +74,10 @@ var RedObitController;
                     if (!(self['targetView']['_viewRect'][1] < tY && tY < self['targetView']['_viewRect'][1] + self['targetView']['_viewRect'][3])) return;
                 }
                 return true
-            }
-            tMove = RedGLDetect.BROWSER_INFO.move
-            tUp = RedGLDetect.BROWSER_INFO.up
-            tDown = RedGLDetect.BROWSER_INFO.down
+            };
+            tMove = RedGLDetect.BROWSER_INFO.move;
+            tUp = RedGLDetect.BROWSER_INFO.up;
+            tDown = RedGLDetect.BROWSER_INFO.down;
             sX = 0, sY = 0;
             mX = 0, mY = 0;
             var tXkey, tYkey;
@@ -91,12 +91,12 @@ var RedObitController;
             HD_down = function (e) {
                 if (self['needUpdate']) {
                     if (RedGLDetect.BROWSER_INFO.isMobile) {
-                        console.log(e)
+                        console.log(e);
                         e = e.targetTouches[0]
                     }
                     if (!checkArea(e)) return;
                     if (RedGLDetect.BROWSER_INFO.isMobile) {
-                        console.log(e)
+                        console.log(e);
                         sX = e['clientX'], sY = e['clientY'];
                     } else {
                         sX = e[tXkey], sY = e[tYkey];
@@ -109,7 +109,7 @@ var RedObitController;
             HD_Move = function (e) {
                 if (self['needUpdate']) {
                     if (RedGLDetect.BROWSER_INFO.isMobile) {
-                        e = e.targetTouches[0]
+                        e = e.targetTouches[0];
                         mX = e['clientX'] - sX, mY = e['clientY'] - sY;
                         sX = e['clientX'], sY = e['clientY'];
                     } else {
@@ -276,7 +276,7 @@ var RedObitController;
         var PER_PI;
         PER_PI = Math.PI / 180;
         return function () {
-            if (!this['needUpdate']) return
+            if (!this['needUpdate']) return;
             if (this['_tilt'] < this['_minTilt']) this['_tilt'] = this['_minTilt'];
             if (this['_tilt'] > this['_maxTilt']) this['_tilt'] = this['_maxTilt'];
             tDelayRotation = this['_delayRotation'];

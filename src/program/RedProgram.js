@@ -309,7 +309,7 @@ var RedProgram;
         searchLocation(this, tGL, fragmentShader);
         console.timeEnd('searchLocation - fragmentShader - ' + key);
         this['_UUID'] = RedGL.makeUUID();
-        console.log(this)
+        console.log(this);
         console.timeEnd('RedProgram');
         console.groupEnd();
     };
@@ -352,7 +352,7 @@ var RedProgram;
             var hasFog = false;
             var hasSprite3D = false;
             var hasDirectionalShadow = false;
-            var hasSkin = false
+            var hasSkin = false;
 
             // 전처리
             for (var k in RedSystemShaderCode.vertexShareFunc) {

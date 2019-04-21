@@ -232,6 +232,8 @@ var RedGL;
                 if (height === undefined) RedGLUtil.throwFunc('RedGL setSize : height가 입력되지 않았습니다.');
                 W = this['_width'] = width;
                 H = this['_height'] = height;
+                console.time('RedGL - setSize');
+                console.group('RedGL - setSize');
                 if (window['HTMLCanvasElement']) {
                     if (typeof W != 'number') {
                         if (W.indexOf('%') > -1) W = (document.documentElement ? document.documentElement.clientWidth : document.body.clientWidth) * parseFloat(W) / 100;
@@ -264,6 +266,8 @@ var RedGL;
                     this['_viewRect'][2] = W;
                     this['_viewRect'][3] = H;
                 }
+                console.timeEnd('RedGL - setSize');
+                console.groupEnd();
             }
         })();
         // 쉐이더 코드를 초기화한다(가변요소때문에 이때 결정함)

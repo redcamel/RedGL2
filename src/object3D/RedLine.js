@@ -22,7 +22,7 @@ var RedLine;
         var e = points[end - 1];
         var maxDistSq = 0;
         var maxNdx = 1;
-        var i = start + 1
+        var i = start + 1;
         for (i; i < end - 1; ++i) {
             var distSq = vec2_distanceToSegmentSq(points[i], s, e);
             if (distSq > maxDistSq) {
@@ -76,22 +76,22 @@ var RedLine;
             targetPoint = points[i];
 
             if (index == 0) {
-                newPointList[index++] = targetPoint['_point']
+                newPointList[index++] = targetPoint['_point'];
                 newPointList[index++] = targetPoint['_outPoint']
                 //
             } else {
-                newPointList[index++] = targetPoint['_inPoint']
-                newPointList[index++] = targetPoint['_point']
+                newPointList[index++] = targetPoint['_inPoint'];
+                newPointList[index++] = targetPoint['_point'];
                 if (points[i + 1]) newPointList[index++] = targetPoint['_outPoint']
 
             }
         }
-        console.log(newPointList)
+        console.log(newPointList);
         return newPointList;
     };
     getPointsOnBezierCurves = (function () {
-        var flatness
-        var getPointsOnBezierCurveWithSplitting
+        var flatness;
+        var getPointsOnBezierCurveWithSplitting;
 
         flatness = function (points, offset) {
             var p1 = points[offset + 0];
@@ -139,9 +139,9 @@ var RedLine;
         return function (points, tolerance) {
             var newPoints = [];
             var numSegments = (points.length - 1) / 3;
-            numSegments = Math.floor(numSegments)
+            numSegments = Math.floor(numSegments);
             var i = 0;
-            var offset
+            var offset;
             for (i; i < numSegments; ++i) {
                 offset = i * 3;
                 getPointsOnBezierCurveWithSplitting(points, offset, tolerance, newPoints);
@@ -153,30 +153,30 @@ var RedLine;
         target['points'].forEach(function (tPoint, index) {
             var t0;
             if (tPoint['_debugObjectInPointMesh']) {
-                tPoint['_debugObjectPointMesh'].removeChild(t0 = tPoint['_debugObjectInPointMesh'])
-                t0.disposeAll()
+                tPoint['_debugObjectPointMesh'].removeChild(t0 = tPoint['_debugObjectInPointMesh']);
+                t0.disposeAll();
                 tPoint['_debugObjectInPointMesh'] = null
             }
             if (tPoint['_debugObjectOutPointMesh']) {
-                tPoint['_debugObjectPointMesh'].removeChild(t0 = tPoint['_debugObjectOutPointMesh'])
-                t0.disposeAll()
+                tPoint['_debugObjectPointMesh'].removeChild(t0 = tPoint['_debugObjectOutPointMesh']);
+                t0.disposeAll();
                 tPoint['_debugObjectOutPointMesh'] = null
             }
             if (tPoint['_debugObjectPointMesh']) {
-                target.removeChild(t0 = tPoint['_debugObjectPointMesh'])
-                t0.disposeAll()
+                target.removeChild(t0 = tPoint['_debugObjectPointMesh']);
+                t0.disposeAll();
                 tPoint['_debugObjectPointMesh'] = null
             }
 
         })
     };
     setDebugMeshs = function (target) {
-        var debugSize = 1
+        var debugSize = 1;
         var tDebugMesh;
         var redGL = target['_redGL'];
         var tDebugRoot;
         var t1;
-        destroyDebugMesh(target)
+        destroyDebugMesh(target);
         target['points'].forEach(function (tPoint, index) {
             if (!tPoint['_debugObjectPointMesh']) {
                 tPoint['_debugObjectPointMesh'] = RedMesh(redGL, RedBox(redGL, debugSize, debugSize, debugSize), RedColorMaterial(redGL, '#00ff00'));
@@ -198,9 +198,9 @@ var RedLine;
                                 target['_type'] == RedLine.BEZIER ? 1 : 0.5
                             )
                         );
-                        t1 = RedLine(redGL, RedColorMaterial(redGL, '#fff', 0.5))
-                        t1.drawMode = redGL.gl.LINES
-                        tDebugRoot.addChild(tPoint['_debugObjectInPointMesh'])
+                        t1 = RedLine(redGL, RedColorMaterial(redGL, '#fff', 0.5));
+                        t1.drawMode = redGL.gl.LINES;
+                        tDebugRoot.addChild(tPoint['_debugObjectInPointMesh']);
                         tPoint['_debugObjectInPointMesh'].addChild(t1)
                     }
                     t1 = tPoint['_debugObjectInPointMesh'].getChildAt(0);
@@ -225,9 +225,9 @@ var RedLine;
                                 target['_type'] == RedLine.BEZIER ? 1 : 0.5
                             )
                         );
-                        t1 = RedLine(redGL, RedColorMaterial(redGL, '#fff', 0.5))
-                        t1.drawMode = redGL.gl.LINES
-                        tDebugRoot.addChild(tPoint['_debugObjectOutPointMesh'])
+                        t1 = RedLine(redGL, RedColorMaterial(redGL, '#fff', 0.5));
+                        t1.drawMode = redGL.gl.LINES;
+                        tDebugRoot.addChild(tPoint['_debugObjectOutPointMesh']);
                         tPoint['_debugObjectOutPointMesh'].addChild(t1)
                     }
                     t1 = tPoint['_debugObjectOutPointMesh'].getChildAt(0);
@@ -244,43 +244,43 @@ var RedLine;
 
             }
             if (tPoint['_debugObjectPointMesh']) {
-                tDebugMesh = tPoint['_debugObjectPointMesh']
-                tDebugMesh['x'] = tPoint['_point'][0]
-                tDebugMesh['y'] = tPoint['_point'][1]
+                tDebugMesh = tPoint['_debugObjectPointMesh'];
+                tDebugMesh['x'] = tPoint['_point'][0];
+                tDebugMesh['y'] = tPoint['_point'][1];
                 tDebugMesh['z'] = tPoint['_point'][2]
             }
 
             // 아웃 포인트 디버깅
             if (tPoint['_debugObjectOutPointMesh']) {
-                tPoint['_debugObjectOutPointMesh']['x'] = tPoint['_outPoint'][0] - tPoint['_point'][0]
-                tPoint['_debugObjectOutPointMesh']['y'] = tPoint['_outPoint'][1] - tPoint['_point'][1]
+                tPoint['_debugObjectOutPointMesh']['x'] = tPoint['_outPoint'][0] - tPoint['_point'][0];
+                tPoint['_debugObjectOutPointMesh']['y'] = tPoint['_outPoint'][1] - tPoint['_point'][1];
                 tPoint['_debugObjectOutPointMesh']['z'] = tPoint['_outPoint'][2] - tPoint['_point'][2]
             }
 
             // 인 포인트 디버깅
             if (tPoint['_debugObjectInPointMesh']) {
-                tPoint['_debugObjectInPointMesh']['x'] = tPoint['_inPoint'][0] - tPoint['_point'][0]
-                tPoint['_debugObjectInPointMesh']['y'] = tPoint['_inPoint'][1] - tPoint['_point'][1]
+                tPoint['_debugObjectInPointMesh']['x'] = tPoint['_inPoint'][0] - tPoint['_point'][0];
+                tPoint['_debugObjectInPointMesh']['y'] = tPoint['_inPoint'][1] - tPoint['_point'][1];
                 tPoint['_debugObjectInPointMesh']['z'] = tPoint['_inPoint'][2] - tPoint['_point'][2]
             }
 
         });
-    }
+    };
     parsePointsByType = function (target, tension, tolerance, distance) {
         // 타입별로 파서 분기
-        console.log(target)
+        console.log(target);
         target['_interleaveData'].length = 0;
 
         switch (target['_type']) {
             case RedLine['CATMULL_ROM'] :
                 if (target['points'].length > 1) {
                     var newPointList = solveCatmullRomPoint(target['points'], tension);
-                    console.log(newPointList)
+                    console.log(newPointList);
                     target['_serializedPoints'] = serializePoints(newPointList);
                     newPointList = getPointsOnBezierCurves(target['_serializedPoints'], tolerance);
-                    newPointList = simplifyPoints(newPointList, 0, newPointList.length, distance)
+                    newPointList = simplifyPoints(newPointList, 0, newPointList.length, distance);
 
-                    var i = 0, len = newPointList.length
+                    var i = 0, len = newPointList.length;
                     for (i; i < len; i++) {
                         target['_interleaveData'].push(newPointList[i][0], newPointList[i][1], newPointList[i][2])
                     }
@@ -292,9 +292,9 @@ var RedLine;
                 if (target['points'].length > 1) {
                     target['_serializedPoints'] = serializePoints(target['points']);
                     newPointList = getPointsOnBezierCurves(target['_serializedPoints'], tolerance);
-                    newPointList = simplifyPoints(newPointList, 0, newPointList.length, distance)
+                    newPointList = simplifyPoints(newPointList, 0, newPointList.length, distance);
 
-                    var i = 0, len = newPointList.length
+                    var i = 0, len = newPointList.length;
                     for (i; i < len; i++) {
                         target['_interleaveData'].push(newPointList[i][0], newPointList[i][1], newPointList[i][2])
                     }
@@ -307,8 +307,8 @@ var RedLine;
                     target['_interleaveData'].push(v['_point'][0], v['_point'][1], v['_point'][2]);
                 })
         }
-        if (target['debug']) setDebugMeshs(target)
-        console.log(target['_interleaveData'])
+        if (target['debug']) setDebugMeshs(target);
+        console.log(target['_interleaveData']);
         // target['_indexData'].push(tIndex);
         target['_upload']();
     };
@@ -368,11 +368,11 @@ var RedLine;
         //
         this['points'] = []; // 오리지널 포인트
         this['_serializedPoints'] = []; //직렬화된 포인트
-        this['_tension'] = 1
-        this['_tolerance'] = 0.01
-        this['_distance'] = 0.1
+        this['_tension'] = 1;
+        this['_tolerance'] = 0.01;
+        this['_distance'] = 0.1;
         this['type'] = type || RedLine['LINEAR'];
-        this['_debug'] = false
+        this['_debug'] = false;
         console.log(this)
     };
     /**DOC:
@@ -621,7 +621,7 @@ var RedLine;
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedLine', 'debug', 'boolean', {
         callback: function (v) {
-            if (v) setDebugMeshs(this)
+            if (v) setDebugMeshs(this);
             else destroyDebugMesh(this)
         }
     });

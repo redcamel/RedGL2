@@ -15,7 +15,6 @@ var RedShader;
                     t0['key'] = key;
                     t0['type'] = type;
                     return t0;
-                    break;
                 case RedShader.FRAGMENT:
                     t0 = gl.createShader(gl.FRAGMENT_SHADER);
                     if (!t0) {
@@ -25,7 +24,6 @@ var RedShader;
                     t0['key'] = key;
                     t0['type'] = type;
                     return t0;
-                    break;
                 default:
                     RedGLUtil.throwFunc('RedShader : 쉐이더 타입을 확인하세요. RedShader.VERTEX or RedShader.FRAGMENT 만 허용');
                     break
@@ -60,7 +58,7 @@ var RedShader;
             while (i--) {
                 tDefineData = sourceList[i];
                 tDefineData = tDefineData.replace(';', '');
-                if (t0.indexOf(tDefineData) == -1) t0.push(tDefineData);
+                if (t0.indexOf(tDefineData) === -1) t0.push(tDefineData);
                 else {
                     console.log(RedSystemShaderCode);
                     RedGLUtil.throwFunc('RedShader : ', '\n1. 중복 선언 이거나', '\n2. RedSystemShaderCode에 정의된 선언\n', '입력값 : ' + tDefineData);
@@ -94,7 +92,7 @@ var RedShader;
                 source = source.replace(v + ';', '');
                 // console.log(source)
                 tCheckDefine = v.split(' ');
-                if (tCheckDefine[1] == 'highp' || tCheckDefine[1] == 'mediump' || tCheckDefine[1] == 'lowp') {
+                if (tCheckDefine[1] === 'highp' || tCheckDefine[1] === 'mediump' || tCheckDefine[1] === 'lowp') {
                     // uniform highp vec4 uTest4; 같은 선언을 Precision값을 분리함
                     var temp;
                     temp = tCheckDefine[1];
@@ -119,20 +117,20 @@ var RedShader;
                         case 'precision':
                             break;
                         case 'attribute':
-                            if (tName.charAt(0) != 'a') RedGLUtil.throwFunc('RedShader : attribute의 첫글자는 a로 시작해야합니다.', tName, tCheckDefine);
-                            if (tName.charAt(1) != tName.charAt(1).toUpperCase()) RedGLUtil.throwFunc('RedShader : attribute의 두번째 글자는 대문자 시작해야합니다.', tName, tCheckDefine);
+                            if (tName.charAt(0) !== 'a') RedGLUtil.throwFunc('RedShader : attribute의 첫글자는 a로 시작해야합니다.', tName, tCheckDefine);
+                            if (tName.charAt(1) !== tName.charAt(1).toUpperCase()) RedGLUtil.throwFunc('RedShader : attribute의 두번째 글자는 대문자 시작해야합니다.', tName, tCheckDefine);
                             break;
                         case 'uniform':
-                            if (tName.charAt(0) != 'u') RedGLUtil.throwFunc('RedShader : uniform의 첫글자는 u로 시작해야합니다.', tName, tCheckDefine);
-                            if (tName.charAt(1) != tName.charAt(1).toUpperCase()) RedGLUtil.throwFunc('RedShader : uniform의 두번째 글자는 대문자 시작해야합니다.', tName, tCheckDefine);
+                            if (tName.charAt(0) !== 'u') RedGLUtil.throwFunc('RedShader : uniform의 첫글자는 u로 시작해야합니다.', tName, tCheckDefine);
+                            if (tName.charAt(1) !== tName.charAt(1).toUpperCase()) RedGLUtil.throwFunc('RedShader : uniform의 두번째 글자는 대문자 시작해야합니다.', tName, tCheckDefine);
                             break;
                         case 'varying':
-                            if (tName.charAt(0) != 'v') RedGLUtil.throwFunc('RedShader : varying의 첫글자는 v로 시작해야합니다.', tName, tCheckDefine);
-                            if (tName.charAt(1) != tName.charAt(1).toUpperCase()) RedGLUtil.throwFunc('RedShader : varying의 두번째 글자는 대문자 시작해야합니다.', tName, tCheckDefine);
+                            if (tName.charAt(0) !== 'v') RedGLUtil.throwFunc('RedShader : varying의 첫글자는 v로 시작해야합니다.', tName, tCheckDefine);
+                            if (tName.charAt(1) !== tName.charAt(1).toUpperCase()) RedGLUtil.throwFunc('RedShader : varying의 두번째 글자는 대문자 시작해야합니다.', tName, tCheckDefine);
                             break;
                         case 'const':
-                            if (tName.charAt(0) != 'c') RedGLUtil.throwFunc('RedShader : const의 첫글자는 c로 시작해야합니다.', tName, tCheckDefine);
-                            if (tName.charAt(1) != tName.charAt(1).toUpperCase()) RedGLUtil.throwFunc('RedShader : const의 두번째 글자는 대문자 시작해야합니다.', tName, tCheckDefine);
+                            if (tName.charAt(0) !== 'c') RedGLUtil.throwFunc('RedShader : const의 첫글자는 c로 시작해야합니다.', tName, tCheckDefine);
+                            if (tName.charAt(1) !== tName.charAt(1).toUpperCase()) RedGLUtil.throwFunc('RedShader : const의 두번째 글자는 대문자 시작해야합니다.', tName, tCheckDefine);
                             break;
                         default:
                             console.log('RedShader : 체크되지 못하는값인데 뭐냐', tName);
@@ -165,9 +163,9 @@ var RedShader;
                     precision: tPrecision,
                     systemUniformYn: RedSystemShaderCode.systemUniform[tArrayNum ? tName + '[' + tArrayNum + ']' : tName] ? true : false
                 };
-                if (tDefineType == 'uniform') tResultData['uniformType'] = tDataType;
-                if (tDefineType == 'attribute') tResultData['attributeType'] = tDataType;
-                if (tDefineType == 'varying') tResultData['varyingType'] = tDataType;
+                if (tDefineType === 'uniform') tResultData['uniformType'] = tDataType;
+                if (tDefineType === 'attribute') tResultData['attributeType'] = tDataType;
+                if (tDefineType === 'varying') tResultData['varyingType'] = tDataType;
                 parseData[tDefineType]['list'].push(tResultData);
                 parseData[tDefineType]['map'][tName] = v;
                 parseData[tDefineType]['source'] += v + ';\n';
@@ -177,7 +175,7 @@ var RedShader;
             // console.log(source)
             // 메인함수 및 변수 처리
             parseData['etc'] = source + '\n';
-            mergeStr = type == RedShader.FRAGMENT ? '#extension GL_OES_standard_derivatives : enable\n' : '';
+            mergeStr = type === RedShader.FRAGMENT ? '#extension GL_OES_standard_derivatives : enable\n' : '';
             if (parseData['precision']) mergeStr += parseData['precision']['source'] + '\n//const\n';
             if (parseData['const']) mergeStr += parseData['const']['source'] + '\n//attribute\n';
             if (parseData['attribute']) mergeStr += parseData['attribute']['source'] + '\n//uniform\n';
@@ -186,7 +184,7 @@ var RedShader;
             if (parseData['etc']) mergeStr += parseData['etc'];
             parseData.lastSource = mergeStr;
             // console.log(parseData)
-            if (type == RedShader.FRAGMENT && !parseData['precision']) RedGLUtil.throwFunc('RedShader : FRAGMENT Shader는 precision를 반드시 선언해야함');
+            if (type === RedShader.FRAGMENT && !parseData['precision']) RedGLUtil.throwFunc('RedShader : FRAGMENT Shader는 precision를 반드시 선언해야함');
             return parseData;
         }
     })();
@@ -228,7 +226,7 @@ var RedShader;
         console.time('RedShader');
         console.group('RedShader');
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedShader : RedGL Instance만 허용.', '입력값 : ' + redGL);
-        typeof key == 'string' || RedGLUtil.throwFunc('RedShader : key - 문자열만 허용.', '입력값 : ' + key);
+        typeof key === 'string' || RedGLUtil.throwFunc('RedShader : key - 문자열만 허용.', '입력값 : ' + key);
         if (type !== RedShader['VERTEX'] && type !== RedShader['FRAGMENT']) RedGLUtil.throwFunc('RedShader : type - RedShader.VERTEX or RedShader.FRAGMENT 만 허용.', '입력값 : ' + type);
         // 데이터 공간확보
         if (!redGL['_datas']['RedShader']) {
@@ -238,7 +236,7 @@ var RedShader;
         }
         // 소스가 있을 경우 검증
         if (source) {
-            typeof source == 'string' || RedGLUtil.throwFunc('RedShader : source - 문자열만 허용.');
+            typeof source === 'string' || RedGLUtil.throwFunc('RedShader : source - 문자열만 허용.');
             if (RedShader['hasKey'](redGL, key, type)) RedGLUtil.throwFunc('RedShader : key - 이미 정의된 키로 생성을 시도.', '\n키 :', key, '\n타입 :' + type);
             else redGL['_datas']['RedShader'][type][key] = this;
         } else {

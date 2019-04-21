@@ -274,14 +274,14 @@ var RedPBRMaterial;
 
         this['metallicFactor'] = 1;
         this['roughnessFactor'] = 0.1;
-        this['baseColorFactor'] = [1, 1, 1, 1]
+        this['baseColorFactor'] = [1, 1, 1, 1];
         this['emissiveFactor'] = 1;
         this['alpha'] = 1;
         this['cutOff'] = 0;
         /////////////////////////////////////////
         // 일반 프로퍼티
-        this['useFlatMode'] = false
-        this['usePreMultiply'] = false
+        this['useFlatMode'] = false;
+        this['usePreMultiply'] = false;
         this['_UUID'] = RedGL.makeUUID();
         if (!checked) {
             this.checkUniformAndProperty();

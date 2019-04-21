@@ -421,7 +421,7 @@ var RedSystemShaderCode;
             }
         });
         console.log('target fragmentUniform');
-        console.table( tFragmentUniform);
+        console.table(tFragmentUniform);
         console.log('target fragmentVecNum', tFragmentVecNum / 4);
         console.groupEnd('RedSystemShaderCode.fragmentShareDeclare');
         console.log(RedSystemShaderCode);

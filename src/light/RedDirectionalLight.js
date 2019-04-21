@@ -36,8 +36,8 @@ var RedDirectionalLight;
 		 return : 'RedDirectionalLight Instance'
 	 }
      :DOC*/
-    RedDirectionalLight = function (redGL, hexColor, alpha,intensity) {
-        if (!(this instanceof RedDirectionalLight)) return new RedDirectionalLight(redGL, hexColor, alpha,intensity);
+    RedDirectionalLight = function (redGL, hexColor, alpha, intensity) {
+        if (!(this instanceof RedDirectionalLight)) return new RedDirectionalLight(redGL, hexColor, alpha, intensity);
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedDirectionalLight : RedGL Instance만 허용.', '입력값 : ' + redGL);
         // 유니폼 프로퍼티
         this['_lightColor'] = new Float32Array(4);

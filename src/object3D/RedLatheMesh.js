@@ -75,11 +75,11 @@ var RedLatheMesh;
         this['startAngle'] = startAngle !== undefined ? startAngle : 0.0;
         this['endAngle'] = endAngle !== undefined ? endAngle : Math.PI * 2;
         this['distance'] = distance !== undefined ? distance : 0.4;
-        this['maxAngle'] = maxAngle !== undefined ? maxAngle : Math.PI / 180 * 30
-        this['tolerance'] = tolerance !== undefined ? tolerance : 0.15
+        this['maxAngle'] = maxAngle !== undefined ? maxAngle : Math.PI / 180 * 30;
+        this['tolerance'] = tolerance !== undefined ? tolerance : 0.15;
         this['flipX'] = flipX ? true : false;
         this['flipY'] = flipY ? true : false;
-        if (this['_tolerance'] < 0.1) this['_tolerance'] = 0.1
+        if (this['_tolerance'] < 0.1) this['_tolerance'] = 0.1;
         /**DOC:
          {
 		     code : 'PROPERTY',
@@ -88,7 +88,7 @@ var RedLatheMesh;
 			 return : 'RedGeometry'
 		 }
          :DOC*/
-        resetGeometry.call(this)
+        resetGeometry.call(this);
         /**DOC:
          {
 		     code : 'PROPERTY',
@@ -114,7 +114,7 @@ var RedLatheMesh;
             this._tolerance,
             this._flipX, this._flipY
         );
-    }
+    };
     Object.defineProperty(RedLatheMesh.prototype, 'pathString', {
         get: function () {
             return this['_pathString'];

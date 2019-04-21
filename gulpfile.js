@@ -168,7 +168,6 @@ gulp.task('combine-js', function () {
         "src/light/RedDirectionalLight.js",
         "src/light/RedPointLight.js",
         //
-        "src/loader/JsonModelLoader.js",
         "src/loader/obj/RedMTLLoader.js",
         "src/loader/obj/RedOBJLoader.js",
         "src/loader/3ds/Red3DSLoader.js",

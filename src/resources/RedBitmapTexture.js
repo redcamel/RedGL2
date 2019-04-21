@@ -31,7 +31,7 @@ var RedBitmapTexture;
             if (!option) option = {};
             if (window['OffscreenCanvas'] && src instanceof OffscreenCanvas || window['HTMLCanvasElement'] && src instanceof HTMLCanvasElement) {
                 var tSource = RedGLUtil.makePowerOf2Source(gl, src, MAX_TEXTURE_SIZE);
-                console.log('tSource', tSource);
+                // console.log('tSource', tSource);
                 makeWebGLTexture(gl, texture, tSource, option);
                 callback ? callback.call(self, true) : 0;
             }
@@ -39,7 +39,6 @@ var RedBitmapTexture;
                 RedImageLoader(
                     src,
                     function () {
-                        console.log(this);
                         var tSource = RedGLUtil.makePowerOf2Source(gl, this['source'], MAX_TEXTURE_SIZE);
                         makeWebGLTexture(gl, texture, tSource, option);
                         callback ? callback.call(self, true) : 0;

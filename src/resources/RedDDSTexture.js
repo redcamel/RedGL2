@@ -46,17 +46,17 @@ var RedDDSTexture;
         tGL.glExtension['WEBGL_compressed_texture_s3tc'] || RedGLUtil.throwFunc('RedDDSTexture : WEBGL_compressed_texture_s3tc확장을 지원하지않는 하드웨어입니다.');
 
         this['webglTexture'] = tGL.createTexture();
-        this['webglTexture']['gl'] = tGL
+        this['webglTexture']['gl'] = tGL;
         this['_load'] = function (needEmpty) {
             RedTextureOptionChecker.check('RedDDSTexture', option, tGL);
             if (needEmpty) this.setEmptyTexture(tGL, this['webglTexture']);
             if (this['_src']) this.loadDDSTexture(tGL, tGL.glExtension['WEBGL_compressed_texture_s3tc'], this['_src'], this['_callback']);
-        }
+        };
         this['callback'] = callback;
         this['src'] = src;
         this['_UUID'] = RedGL.makeUUID();
         console.log(this);
-    }
+    };
     RedDDSTexture.prototype = new RedBaseTexture();
     /**DOC:
      {
@@ -252,7 +252,7 @@ var RedDDSTexture;
             height *= 0.5;
         }
         return mipmapCount;
-    }
+    };
     /**
      * Creates a texture from the DDS file at the given URL. Simple shortcut for the most common use case
      *
@@ -268,9 +268,9 @@ var RedDDSTexture;
             ddsXhr = new XMLHttpRequest();
         ddsXhr.open('GET', src, true);
         ddsXhr.responseType = "arraybuffer";
-        if (!option) option = {}
+        if (!option) option = {};
         ddsXhr.onload = function () {
-            gl.activeTexture(gl.TEXTURE0 + 0)
+            gl.activeTexture(gl.TEXTURE0 + 0);
             gl.bindTexture(gl.TEXTURE_2D, texture);
             var mipmaps = uploadDDSLevels(gl, ext, this.response);
             // console.log(this.response)
@@ -291,7 +291,7 @@ var RedDDSTexture;
         };
         ddsXhr.onerror = function () {
             if (callback) callback(false);
-        }
+        };
         ddsXhr.send(null);
         return texture;
     }

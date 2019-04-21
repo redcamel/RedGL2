@@ -37,7 +37,7 @@ var RedBaseObject3D;
 	 }
      :DOC*/
     RedBaseObject3D['build'] = function (gl) {
-        this['name'] = 'object3D_' + (RedGL.makeUUID() + 1)
+        this['name'] = 'object3D_' + (RedGL.makeUUID() + 1);
         /**DOC:
          {
 		     code : 'PROPERTY',
@@ -54,7 +54,7 @@ var RedBaseObject3D;
 			 return : 'Boolean'
 		 }
          :DOC*/
-        this['useTransparentSort'] = false
+        this['useTransparentSort'] = false;
         /**DOC:
          {
 		     code : 'PROPERTY',
@@ -311,7 +311,7 @@ var RedBaseObject3D;
             }
             */
         };
-        this['_mouseColorMaterial'] = null
+        this['_mouseColorMaterial'] = null;
         this['_mouseColorID'] = [
             parseInt(Math.random() * 255),
             parseInt(Math.random() * 255),
@@ -766,7 +766,7 @@ var RedBaseObject3D;
             return this['_material'];
         },
         set: function (v) {
-            if (v && !(v instanceof RedBaseMaterial)) RedGLUtil.throwFunc('material : RedBaseMaterial Instance만 허용.', '입력값 : ' + v)
+            if (v && !(v instanceof RedBaseMaterial)) RedGLUtil.throwFunc('material : RedBaseMaterial Instance만 허용.', '입력값 : ' + v);
             this['_material'] = v
         }
     });
