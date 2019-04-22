@@ -102,7 +102,7 @@ var RedTransformController;
         }
         tScene.mouseManager.add(tTransformController['arrowX'], 'down', function (e) {
 
-            tScene.addChild(tTransformController)
+
             tDirection = 0
             tTransformController.x = tMesh.x
             tTransformController.y = tMesh.y
@@ -130,7 +130,7 @@ var RedTransformController;
             })
         });
         tScene.mouseManager.add(tTransformController['arrowY'], 'down', function (e) {
-            tScene.addChild(tTransformController)
+
             tDirection = 1
             tTransformController.x = tMesh.x
             tTransformController.y = tMesh.y
@@ -157,7 +157,7 @@ var RedTransformController;
             })
         });
         tScene.mouseManager.add(tTransformController['arrowZ'], 'down', function (e) {
-            tScene.addChild(tTransformController)
+
             tDirection = 2
             tTransformController.x = tMesh.x
             tTransformController.y = tMesh.y
