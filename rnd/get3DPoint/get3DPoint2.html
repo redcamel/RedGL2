@@ -97,29 +97,43 @@
                     // console.log(e.layerX,e.layerY)
                     var x = 2.0 * e.layerX / tView._viewRect[2] - 1.;
                     var y = -2.0 * e.layerY / tView._viewRect[3] + 1.;
+                    var z = 1
                     var tCamera = tController.camera
                     var resultMTX = mat4.create();
+                    var invViewProjection = mat4.create()
 
                     mat4.multiply(resultMTX, tCamera.perspectiveMTX, tCamera.matrix);
+                    mat4.multiply(invViewProjection, tCamera.perspectiveMTX, tCamera.matrix);
+
 
                     // mat4.multiply(resultMTX, resultMTX, tCamera.matrix);
 
                     mat4.invert(resultMTX, resultMTX)
-                    var point = [x, y, 0]
+                    var point = [x, y, z]
                     var pointMTX = mat4.create()
                     mat4.translate(pointMTX, pointMTX, point)
                     mat4.multiply(resultMTX, resultMTX, pointMTX);
-                    var t = [tController.camera.x, tController.camera.y, tController.camera.z];
-                    t = vec3.length(t)
-                    console.log([
-                        (resultMTX[12] - tCamera.x) ,
-                        (resultMTX[13]) ,
-                        (resultMTX[14] - tCamera.z) ,
-                        resultMTX[15]
-                    ])
-                    // tMesh.x = (resultMTX[12] - tCamera.x)
-                    // tMesh.y = (resultMTX[13] - tCamera.y)
-                    // tMesh.z = (resultMTX[14] - tCamera.z)
+
+                    point = [
+                        resultMTX[12],
+                        resultMTX[13],
+                        resultMTX[14]
+                    ]
+
+                    var m = invViewProjection;
+                    var w = m[12] * x + m[13] * y + m[14] * z + m[15]; // required for perspective divide
+
+                    if (w !== 0) {
+                        var invW = 1 / (w);
+                        point[0] /= invW;
+                        point[1] /= invW;
+                        point[2] /= invW;
+                    }
+                    tMesh.x = point[0] + tCamera.x
+                    tMesh.y = point[1] + tCamera.y
+                    tMesh.z = point[2] + tCamera.z
+
+                    console.log(point)
 
                 }
             )
