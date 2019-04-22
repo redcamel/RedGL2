@@ -42,7 +42,7 @@ var RedDefinePropertyInfo;
                         this['_' + keyName] = v;
                         if (option['callback']) option['callback'].call(this, v);
                     }
-                }
+                };
                 break;
             case 'number' :
                 var hasMin = option.hasOwnProperty('min');

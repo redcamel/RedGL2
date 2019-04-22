@@ -31,7 +31,7 @@ var RedBitmapTexture;
             if (!option) option = {};
             if (window['OffscreenCanvas'] && src instanceof OffscreenCanvas || window['HTMLCanvasElement'] && src instanceof HTMLCanvasElement) {
                 var tSource = RedGLUtil.makePowerOf2Source(gl, src, MAX_TEXTURE_SIZE);
-                console.log('tSource', tSource);
+                // console.log('tSource', tSource);
                 makeWebGLTexture(gl, texture, tSource, option);
                 callback ? callback.call(self, true) : 0;
             }
@@ -39,7 +39,6 @@ var RedBitmapTexture;
                 RedImageLoader(
                     src,
                     function () {
-                        console.log(this);
                         var tSource = RedGLUtil.makePowerOf2Source(gl, this['source'], MAX_TEXTURE_SIZE);
                         makeWebGLTexture(gl, texture, tSource, option);
                         callback ? callback.call(self, true) : 0;
@@ -106,6 +105,8 @@ var RedBitmapTexture;
     RedBitmapTexture = function (redGL, src, option, callback) {
         var tGL;
         if (!(this instanceof RedBitmapTexture)) return new RedBitmapTexture(redGL, src, option, callback);
+        console.time('RedBitmapTexture');
+        console.group('RedBitmapTexture');
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedBitmapTexture : RedGL Instance만 허용.', redGL);
         (callback && typeof callback == 'function') || !callback || RedGLUtil.throwFunc('RedBitmapTexture : callback Function만 허용.', callback);
         tGL = redGL.gl;
@@ -139,6 +140,8 @@ var RedBitmapTexture;
         this['_UUID'] = RedGL.makeUUID();
         redGL['_datas']['textures'][tKey] = this;
         console.log(this);
+        console.timeEnd('RedBitmapTexture');
+        console.groupEnd('RedBitmapTexture');
     };
     RedBitmapTexture.prototype = new RedBaseTexture();
 

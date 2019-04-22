@@ -126,7 +126,7 @@ var RedGLUtil;
         getStrFromComment: (function () {
             var t0;
             return function (source) {
-                if (typeof source != 'string') RedGLUtil.throwFunc('getStrFromComment : 해석할 값은 문자열만 가능', source)
+                if (typeof source != 'string') RedGLUtil.throwFunc('getStrFromComment : 해석할 값은 문자열만 가능', source);
                 t0 = source.replace('@preserve', '').toString().trim().match(/(\/\*)[\s\S]+(\*\/)/g);
                 if (t0) return t0[0].replace(/\/\*|\*\//g, '').trim();
                 else RedGLUtil.throwFunc('getStrFromComment : 해석할 불가능한 값', source)
@@ -196,9 +196,9 @@ var RedGLUtil;
          :DOC*/
         makePowerOf2Source: (function () {
             var tW, tH;
-            var MAX_TEXTURE_SIZE
+            var MAX_TEXTURE_SIZE;
             return function (gl, source, maxTextureSize) {
-                MAX_TEXTURE_SIZE = maxTextureSize
+                MAX_TEXTURE_SIZE = maxTextureSize;
                 if (!RedGLUtil.isPowerOf2(source.width) || !RedGLUtil.isPowerOf2(source.height)) {
                     tW = RedGLUtil.nextHighestPowerOfTwo(source.width);
                     tH = RedGLUtil.nextHighestPowerOfTwo(source.height);
@@ -207,7 +207,7 @@ var RedGLUtil;
                     var canvas = window['OffscreenCanvas'] ? new OffscreenCanvas(tW, tH) : document.createElement('canvas');
                     var ctx = canvas.getContext("2d");
 
-                    console.log('캔버스 엘리먼트에 대한 리사이즈용캔버스생성', canvas)
+                    console.log('캔버스 엘리먼트에 대한 리사이즈용캔버스생성', canvas);
                     if (!window['OffscreenCanvas']) {
                         canvas.width = tW;
                         canvas.height = tH;
@@ -370,7 +370,7 @@ var RedGLUtil;
 		 }
          :DOC*/
         quaternionToRotation: function (q, order) {
-            var mat = []
+            var mat = [];
             var x = q[0];
             var y = q[1];
             var z = q[2];
@@ -399,7 +399,7 @@ var RedGLUtil;
             mat[15] = 1;
 
             var dest = [0, 0, 0];
-            order = order || 'XYZ'
+            order = order || 'XYZ';
             // Assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)
             var m11 = mat[0], m12 = mat[4], m13 = mat[8];
             var m21 = mat[1], m22 = mat[5], m23 = mat[9];
@@ -473,7 +473,7 @@ var RedGLUtil;
          :DOC*/
         mat4ToEuler: function (mat, dest, order) {
             dest = dest || [0, 0, 0];
-            order = order || 'XYZ'
+            order = order || 'XYZ';
             // Assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)
             var m11 = mat[0], m12 = mat[4], m13 = mat[8];
             var m21 = mat[1], m22 = mat[5], m23 = mat[9];
@@ -534,7 +534,46 @@ var RedGLUtil;
                 }
             }
             return dest;
-        }
+        },
+        screenToWorld: (function () {
+            var x,y,z, w;
+            var invW
+            var point = [0, 0, 0];
+            var pointMTX = mat4.create()
+            var invViewProjection = mat4.create()
+            var resultMTX;
+            return function (rect, tCamera) {
+                x = 2.0 * rect[0] / rect[2] - 1;
+                y = -2.0 * rect[1] / rect[3] + 1;
+                z = 1;
+                tCamera = tCamera['camera'] ? tCamera['camera'] : tCamera;
+                mat4.multiply(invViewProjection, tCamera.perspectiveMTX, tCamera.matrix);
+                resultMTX = mat4.clone(invViewProjection);
+
+                mat4.invert(resultMTX, resultMTX)
+                point = [x, y, z]
+                mat4.identity(pointMTX);
+                mat4.translate(pointMTX, pointMTX, point)
+                mat4.multiply(resultMTX, resultMTX, pointMTX);
+
+                point[0] = resultMTX[12];
+                point[1] = resultMTX[13];
+                point[2] = resultMTX[14];
+
+                w = invViewProjection[12] * x + invViewProjection[13] * y + invViewProjection[14] * 0 + invViewProjection[15]; // required for perspective divide
+                if (w !== 0) {
+                    invW = 1 / w;
+                    point[0] /= invW;
+                    point[1] /= invW;
+                    point[2] /= invW;
+                    point[0] = point[0] + (tCamera.x)
+                    point[1] = point[1] + (tCamera.y)
+                    point[2] = point[2] + (tCamera.z)
+                }
+                console.log(point)
+                return point
+            }
+        })()
     };
     Object.freeze(RedGLUtil);
 })();

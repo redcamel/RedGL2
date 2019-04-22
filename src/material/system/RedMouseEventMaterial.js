@@ -62,7 +62,7 @@ var RedMouseEventMaterial;
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['_RedMouseEventMaterialYn'] = true;
-        this['color'] = null
+        this['color'] = null;
         this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource);
         this['_UUID'] = RedGL.makeUUID();
         if (!checked) {

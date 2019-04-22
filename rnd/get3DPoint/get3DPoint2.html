@@ -13,6 +13,7 @@
     <script src="../../example/dat.gui.min.js"></script>
     <script src="../../example/baseTestUI.js"></script>
     <script src="../../release/RedGL.min.js"></script>
+    <script src="RedTransformController.js"></script>
 </head>
 
 <body>
@@ -53,9 +54,9 @@
                 tScene = RedScene(redGL);
                 // 카메라 생성
                 tController = RedObitController(redGL);
-                tController.pan = 0;
-                tController.tilt = 0;
-                tController.distance = 10
+                tController.pan = 30;
+                tController.tilt = -30;
+                tController.distance = 25
                 tController.speedDistance = 1
                 var tLight = RedDirectionalLight(redGL);
                 tScene.addLight(tLight)
@@ -91,61 +92,15 @@
 
             var tMeshTargetPlane = RedMesh(this, RedPlane(this, 100, 100), RedColorMaterial(this, '#ff0000', 0.3))
             tMeshTargetPlane.useCullFace = false
-            tScene.addChild(tMeshTargetPlane)
+            // tScene.addChild(tMeshTargetPlane)
 
 
-            var lookAt = (function () {
-                var up = new Float32Array([0, 1, 0]);
-                var tPosition = [];
-                return function (x, y, z) {
-                    tPosition[0] = x;
-                    tPosition[1] = y;
-                    tPosition[2] = z;
-                    //out, eye, center, up
-                    mat4.identity(tMeshTargetPlane['matrix']);
-                    mat4.targetTo(tMeshTargetPlane['matrix'], [tMeshTargetPlane.x, tMeshTargetPlane.y, tMeshTargetPlane.z], tPosition, up);
-                    //
-                    tMeshTargetPlane.autoUpdateMatrix = false
 
-                    console.log(tMeshTargetPlane['matrix'])
-                }
-            })();
-            document.body.addEventListener(
-                'mousemove', function (e) {
-                    // console.log(e.layerX,e.layerY)
-                    lookAt(tController.camera.x, tController.camera.y, tController.camera.z)
+            var tTransformController = RedTransformController(this)
+            tTransformController.init(tView,tMesh)
+            tScene.addChild(tTransformController)
 
-                    var x = 2.0 * e.layerX / tView._viewRect[2] - 1.;
-                    var y = -2.0 * e.layerY / tView._viewRect[3] + 1.;
-                    var tCamera = tController.camera
-                    var resultMTX = mat4.create();
-                    mat4.multiply(resultMTX, resultMTX, tCamera.matrix);
-                    // mat4.multiply(resultMTX, resultMTX, tCamera.matrix);
 
-                    mat4.invert(resultMTX, resultMTX)
-                    var point = [x, y, 0]
-                    var pointMTX = mat4.create()
-                    mat4.translate(pointMTX, pointMTX, point)
-                    mat4.multiply(resultMTX, resultMTX, pointMTX);
-                    //
-                    var t = [tController.camera.x, tController.camera.y, tController.camera.z];
-                    t = vec3.length(t)
-                    console.log([
-                        resultMTX[12],
-                        resultMTX[13],
-                        resultMTX[14],
-                        resultMTX[15]
-                    ])
-
-                    // var a = getRayvector(e.layerX, e.layerY, tView)
-                    // console.log(a)
-
-                    //
-                    // tMesh.x = (a[0]) ;
-                    // tMesh.y = (a[1]) ;
-                    // tMesh.z = (a[2]) ;
-                }
-            )
 
         } else {
             console.log('초기화 실패!')

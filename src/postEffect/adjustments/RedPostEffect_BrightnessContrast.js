@@ -11,7 +11,7 @@ var RedPostEffect_BrightnessContrast;
              gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
          }
          */
-    }
+    };
     fSource = function () {
         /* @preserve
          precision mediump float;
@@ -26,7 +26,7 @@ var RedPostEffect_BrightnessContrast;
              gl_FragColor = finalColor;
          }
          */
-    }
+    };
     /**DOC:
      {
 		 constructorYn : true,

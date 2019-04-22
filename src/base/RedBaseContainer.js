@@ -60,7 +60,7 @@ var RedBaseContainer;
 	 }
      :DOC*/
     RedBaseContainer.prototype['addChildAt'] = function (child, index) {
-        RedGLUtil['isUint'](index, 'addChildAt : index는 uint만 입력가능')
+        RedGLUtil['isUint'](index, 'addChildAt : index는 uint만 입력가능');
         child instanceof RedBaseObject3D || RedGLUtil.throwFunc('addChildAt', 'RedBaseObject3D Instance만 가능', '입력값 : ' + child);
         if (this['children'].indexOf(child) > -1) this['removeChild'](child);
         if (this['children'].length < index) index = this['children'].length;
@@ -112,7 +112,7 @@ var RedBaseContainer;
 	 }
      :DOC*/
     RedBaseContainer.prototype['removeChildAt'] = function (index) {
-        RedGLUtil['isUint'](index, 'removeChildAt : index는 uint만 입력가능')
+        RedGLUtil['isUint'](index, 'removeChildAt : index는 uint만 입력가능');
         if (this['children'][index]) this['children'].splice(index, 1);
         else RedGLUtil.throwFunc('removeChildAt', 'index 해당인덱스에 위치한 자식이 없음.', '입력값 : ' + index);
     };
@@ -148,7 +148,7 @@ var RedBaseContainer;
 	 }
      :DOC*/
     RedBaseContainer.prototype['getChildAt'] = function (index) {
-        RedGLUtil['isUint'](index, 'getChildAt : index는 uint만 입력가능')
+        RedGLUtil['isUint'](index, 'getChildAt : index는 uint만 입력가능');
         return this['children'][index];
     };
     /**DOC:

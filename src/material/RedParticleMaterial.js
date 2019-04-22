@@ -85,7 +85,7 @@ var RedParticleMaterial;
         this['cutOff'] = 0;
         /////////////////////////////////////////
         // 일반 프로퍼티
-        this['usePreMultiply'] = true
+        this['usePreMultiply'] = true;
         this['_UUID'] = RedGL.makeUUID();
         if (!checked) {
             this.checkUniformAndProperty();

@@ -40,13 +40,11 @@ var RedProgram;
         var AttributeLocationInfo;
         var UniformLocationInfo;
         var materialPropertyNameMAP = {};
-        var totalUpdateLocationTime = 0;
         AttributeLocationInfo = function () {
         };
         UniformLocationInfo = function () {
         };
         return function (self, gl, shader) {
-            var startTime = performance.now();
             var i, v, tList;
             var tIndex;
             // attributeLocation 정보 생성
@@ -202,8 +200,6 @@ var RedProgram;
                 }
                 // })
             }
-            totalUpdateLocationTime += performance.now() - startTime;
-            console.log('totalUpdateLocationTime', self, totalUpdateLocationTime);
         }
     })();
     /**DOC:
@@ -237,6 +233,8 @@ var RedProgram;
         var tGL;
         var vertexShader, fragmentShader;
         if (!(this instanceof RedProgram)) return new RedProgram(redGL, key, vSource, fSource);
+        console.time('RedProgram');
+        console.group('RedProgram');
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedProgram : RedGL Instance만 허용.', '입력값 : ' + redGL);
         typeof key == 'string' || RedGLUtil.throwFunc('RedProgram : key - 문자열만 허용.', '입력값 : ' + key);
         tGL = redGL.gl;
@@ -270,7 +268,9 @@ var RedProgram;
 			 return : 'WebGLShader'
 		 }
          :DOC*/
+        console.time('makeWebGLProgram - ' + key);
         this['webglProgram'] = makeWebGLProgram(tGL, key, vertexShader, fragmentShader);
+        console.timeEnd('makeWebGLProgram - ' + key);
         /**DOC:
          {
 		     code : 'PROPERTY',
@@ -302,10 +302,16 @@ var RedProgram;
         // 쉐이더 로케이션 찾기
         tGL.useProgram(this['webglProgram']);
         MAX_SAMPLER_INDEX = redGL['detect']['texture']['MAX_COMBINED_TEXTURE_IMAGE_UNITS'];
+        console.time('searchLocation - vertexShader - ' + key);
         searchLocation(this, tGL, vertexShader);
+        console.timeEnd('searchLocation - vertexShader - ' + key);
+        console.time('searchLocation - fragmentShader - ' + key);
         searchLocation(this, tGL, fragmentShader);
+        console.timeEnd('searchLocation - fragmentShader - ' + key);
         this['_UUID'] = RedGL.makeUUID();
-        console.log(this)
+        console.log(this);
+        console.timeEnd('RedProgram');
+        console.groupEnd();
     };
     RedProgram.prototype = {};
     /**DOC:
@@ -346,7 +352,7 @@ var RedProgram;
             var hasFog = false;
             var hasSprite3D = false;
             var hasDirectionalShadow = false;
-            var hasSkin = false
+            var hasSkin = false;
 
             // 전처리
             for (var k in RedSystemShaderCode.vertexShareFunc) {

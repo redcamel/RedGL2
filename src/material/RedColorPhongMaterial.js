@@ -145,7 +145,7 @@ var RedColorPhongMaterial;
         this['alpha'] = alpha == undefined ? 1 : alpha;
         /////////////////////////////////////////
         // 일반 프로퍼티
-        this['useFlatMode'] = false
+        this['useFlatMode'] = false;
         this['color'] = hexColor ? hexColor : '#ff0000';
         this['_UUID'] = RedGL.makeUUID();
         if (!checked) {

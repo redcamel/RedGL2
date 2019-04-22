@@ -233,7 +233,7 @@ var RedEnvironmentMaterial;
         this['displacementFlowSpeedY'] = 0;
         this['alpha'] = 1;
         /////////////////////////////////////////
-        this['useFlatMode'] = false
+        this['useFlatMode'] = false;
         this['usePreMultiply'] = false;
         // 일반 프로퍼티
         this['_UUID'] = RedGL.makeUUID();

@@ -330,31 +330,31 @@ var RedPBRMaterial_System;
         this['metallicFactor'] = 1;
         this['roughnessFactor'] = 1;
 
-        this['diffuseTexCoordIndex'] = 0
-        this['occlusionTexCoordIndex'] = 0
-        this['emissiveTexCoordIndex'] = 0
+        this['diffuseTexCoordIndex'] = 0;
+        this['occlusionTexCoordIndex'] = 0;
+        this['emissiveTexCoordIndex'] = 0;
         this['roughnessTexCoordIndex'] = 0;
-        this['normalTexCoordIndex'] = 0
+        this['normalTexCoordIndex'] = 0;
 
         this['occlusionPower'] = 1;
-        this['baseColorFactor'] = null
+        this['baseColorFactor'] = null;
         this['emissiveFactor'] = null;
         this['alpha'] = 1;
         this['cutOff'] = 0;
 
         /////////////////////////////////////////
         // 일반 프로퍼티
-        this['useMaterialDoubleSide'] = false
-        this['useVertexColor_0'] = false
-        this['useFlatMode'] = false
-        this['useVertexTangent'] = false
-        this['usePreMultiply'] = false
+        this['useMaterialDoubleSide'] = false;
+        this['useVertexColor_0'] = false;
+        this['useFlatMode'] = false;
+        this['useVertexTangent'] = false;
+        this['usePreMultiply'] = false;
         this['_UUID'] = RedGL.makeUUID();
         if (!checked) {
             this.checkUniformAndProperty();
             checked = true;
         }
-        this['_needSearchProgram'] = null
+        this['_needSearchProgram'] = null;
         console.log(this);
     };
     RedPBRMaterial_System.prototype = new RedBaseMaterial();
@@ -363,7 +363,7 @@ var RedPBRMaterial_System;
             var self = this;
             cancelAnimationFrame(this['_needSearchProgram']);
             this['_needSearchProgram'] = requestAnimationFrame(function () {
-                self._searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST)
+                self._searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST);
                 self['_needSearchProgram'] = null
             });
 

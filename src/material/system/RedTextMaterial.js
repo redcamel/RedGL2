@@ -113,8 +113,8 @@ var RedTextMaterial;
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['alpha'] = 1;
-        this['width'] = 2
-        this['height'] = 2
+        this['width'] = 2;
+        this['height'] = 2;
         this['_UUID'] = RedGL.makeUUID();
         if (!checked) {
             this.checkUniformAndProperty();

@@ -20,7 +20,7 @@ var RedGLDetect;
         if (!(this instanceof RedGLDetect)) return new RedGLDetect(redGL);
         var checkList, i, k, tKey, tList;
         var self = this;
-        var gl = redGL.gl
+        var gl = redGL.gl;
         checkList = {
             basic: [
                 'VENDOR',
@@ -54,36 +54,37 @@ var RedGLDetect;
                 'MAX_TEXTURE_IMAGE_UNITS',
                 'MAX_VERTEX_TEXTURE_IMAGE_UNITS'
             ]
-        }
+        };
         for (k in  checkList) {
-            tList = checkList[k]
+            tList = checkList[k];
             i = tList.length;
             this[k] = {};
             while (i--) this[k][tKey = tList[i]] = gl.getParameter(gl[tKey]);
         }
         this['BROWSER_INFO'] = RedGLDetect.getBrowserInfo();
+        if (this['BROWSER_INFO']['browser'] == 'ie') console.table = console.log;
         requestAnimationFrame(function () {
-            var canvas = document.createElement('canvas')
-            var ctx = canvas.getContext('2d')
-            canvas.width = 10
-            canvas.height = 20
-            ctx.fillStyle = 'red'
-            ctx.fillRect(0, 0, 10, 10)
-            ctx.fillStyle = 'blue'
-            ctx.fillRect(0, 10, 10, 10)
-            canvas.style.cssText = 'position:fixed;top:0px;left:0px'
+            var canvas = document.createElement('canvas');
+            var ctx = canvas.getContext('2d');
+            canvas.width = 10;
+            canvas.height = 20;
+            ctx.fillStyle = 'red';
+            ctx.fillRect(0, 0, 10, 10);
+            ctx.fillStyle = 'blue';
+            ctx.fillRect(0, 10, 10, 10);
+            canvas.style.cssText = 'position:fixed;top:0px;left:0px';
             // document.body.appendChild(canvas)
-            var tTexture = RedBitmapTexture(redGL, canvas)
+            var tTexture = RedBitmapTexture(redGL, canvas);
 
             var fb = gl.createFramebuffer();
             gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
             gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tTexture.webglTexture, 0);
-            var pixels = new Uint8Array(1 * 1 * 4);
-            gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels)
+            var pixels = new Uint8Array(4);
+            gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-            self['ableCanvasSourceFlipYonTexture'] = pixels[0] == 255
-            self['BROWSER_INFO']['ableCanvasSourceFlipYonTexture'] = pixels[0] == 255
-            console.log('test', pixels)
+            self['ableCanvasSourceFlipYonTexture'] = pixels[0] === 255;
+            self['BROWSER_INFO']['ableCanvasSourceFlipYonTexture'] = pixels[0] === 255;
+            // console.log('test', pixels)
         })
 
     };
@@ -129,9 +130,9 @@ var RedGLDetect;
      :DOC*/
 
 
-    RedGLDetect.BROWSER_INFO = {}
+    RedGLDetect.BROWSER_INFO = {};
     RedGLDetect.getBrowserInfo = function () {
-        var result = RedGLDetect['BROWSER_INFO']
+        var result = RedGLDetect['BROWSER_INFO'];
         var navi = window['navigator'],
             agent = navi.userAgent.toLowerCase(),
             platform = navi.platform.toLowerCase(),
@@ -156,7 +157,7 @@ var RedGLDetect;
             },
             chrome = function () {
                 if (agent.indexOf(i = 'chrome') < 0 && agent.indexOf(i = 'crios') < 0) return;
-                return browser = 'chrome', bv = parseFloat((i == 'chrome' ? /chrome\/([\d]+)/ : /crios\/([\d]+)/).exec(agent)[1]);
+                return browser = 'chrome', bv = parseFloat((i === 'chrome' ? /chrome\/([\d]+)/ : /crios\/([\d]+)/).exec(agent)[1]);
             },
             firefox = function () {
                 return agent.indexOf('firefox') < 0 ? 0 : (browser = 'firefox', bv = parseFloat(/firefox\/([\d]+)/.exec(agent)[1]))
@@ -166,7 +167,7 @@ var RedGLDetect;
             },
             opera = function () {
                 var i;
-                return (agent.indexOf(i = 'opera') < 0 && agent.indexOf(i = 'opr') < 0) ? 0 : (browser = 'opera', bv = (i == 'opera') ? parseFloat(/version\/([\d]+)/.exec(agent)[1]) : parseFloat(/opr\/([\d]+)/.exec(agent)[1]));
+                return (agent.indexOf(i = 'opera') < 0 && agent.indexOf(i = 'opr') < 0) ? 0 : (browser = 'opera', bv = (i === 'opera') ? parseFloat(/version\/([\d]+)/.exec(agent)[1]) : parseFloat(/opr\/([\d]+)/.exec(agent)[1]));
             },
             naver = function () {
                 return agent.indexOf('naver') < 0 ? 0 : browser = 'naver'
@@ -174,12 +175,12 @@ var RedGLDetect;
         if (!result) result = {};
         if (agent.indexOf('android') > -1) {
             browser = os = 'android',
-                device = agent.indexOf('mobile') == -1 ? (browser += 'Tablet', 'tablet') : 'mobile',
+                device = agent.indexOf('mobile') === -1 ? (browser += 'Tablet', 'tablet') : 'mobile',
                 osv = (i = /android ([\d.]+)/.exec(agent)) ? (i = i[1].split('.'), parseFloat(i[0] + '.' + i[1])) : 0,
                 isMobile = 1,
             whale() || naver() || opera() || chrome() || firefox() || (bv = i = /safari\/([\d.]+)/.exec(agent) ? parseFloat(i[1]) : 0);
         } else if (agent.indexOf(i = 'ipad') > -1 || agent.indexOf(i = 'iphone') > -1) {
-            device = i == 'ipad' ? 'tablet' : 'mobile',
+            device = i === 'ipad' ? 'tablet' : 'mobile',
                 browser = os = i,
                 osv = (i = /os ([\d_]+)/.exec(agent)) ? (i = i[1].split('_'), parseFloat(i[0] + '.' + i[1])) : 0,
                 isMobile = 1,
@@ -222,7 +223,7 @@ var RedGLDetect;
             if (t0.hasOwnProperty(i)) result[i] = t0[i];
 
         if (window['OffscreenCanvas']) {
-            var t0 = new window['OffscreenCanvas'](2, 2)
+            var t0 = new window['OffscreenCanvas'](2, 2);
             try {
                 t0.getContext('2d')
             } catch (e) {
@@ -230,6 +231,6 @@ var RedGLDetect;
             }
         }
         return result
-    }
+    };
     Object.freeze(RedGLDetect);
 })();
