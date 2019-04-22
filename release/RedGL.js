@@ -2384,7 +2384,46 @@ var RedGLUtil;
                 }
             }
             return dest;
-        }
+        },
+        screenToWorld: (function () {
+            var z, w;
+            var invW
+            var point = [0, 0, 0];
+            var pointMTX = mat4.create()
+            var invViewProjection = mat4.create()
+            var resultMTX;
+            return function (x, y, width, height, tCamera) {
+                x = 2.0 * x / width - 1;
+                y = -2.0 * y / height + 1;
+                z = 1;
+                tCamera = tCamera['camera'] ? tCamera['camera'] : tCamera;
+                mat4.multiply(invViewProjection, tCamera.perspectiveMTX, tCamera.matrix);
+                resultMTX = mat4.clone(invViewProjection);
+
+                mat4.invert(resultMTX, resultMTX)
+                point = [x, y, z]
+                mat4.identity(pointMTX);
+                mat4.translate(pointMTX, pointMTX, point)
+                mat4.multiply(resultMTX, resultMTX, pointMTX);
+
+                point[0] = resultMTX[12];
+                point[1] = resultMTX[13];
+                point[2] = resultMTX[14];
+
+                w = invViewProjection[12] * x + invViewProjection[13] * y + invViewProjection[14] * 0 + invViewProjection[15]; // required for perspective divide
+                if (w !== 0) {
+                    invW = 1 / w;
+                    point[0] /= invW;
+                    point[1] /= invW;
+                    point[2] /= invW;
+                    point[0] = point[0] + (tCamera.x)
+                    point[1] = point[1] + (tCamera.y)
+                    point[2] = point[2] + (tCamera.z)
+                }
+                console.log(point)
+                return point
+            }
+        })()
     };
     Object.freeze(RedGLUtil);
 })();
@@ -25857,4 +25896,4 @@ var RedGLOffScreen;
         };
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-04-21 23:24:15)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-04-22 16:31:38)' };console.log(RedGL_VERSION);
