@@ -183,6 +183,8 @@ gulp.task('combine-js', function () {
         "src/object3D/RedLatheMesh.js",
         "src/object3D/RedSkyBox.js",
         "src/object3D/RedSprite3D.js",
+        // "src/object3D/RedTransformController.js",
+
         //
         "src/particle/system/RedPointCloud.js",
         "src/particle/system/RedParticleUnit.js",

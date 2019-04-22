@@ -301,7 +301,8 @@ var RedGL;
                                 {
                                     type: e.type,
                                     x: e.changedTouches[0].clientX,
-                                    y: e.changedTouches[0].clientY
+                                    y: e.changedTouches[0].clientY,
+                                    nativeEvent : e
                                 }
                             );
                             self._mouseX = e.changedTouches[0].clientX;
@@ -312,7 +313,8 @@ var RedGL;
                             {
                                 type: e.type,
                                 x: e[tXkey],
-                                y: e[tYkey]
+                                y: e[tYkey],
+                                nativeEvent : e
                             }
                         );
                         self._mouseX = e[tXkey];

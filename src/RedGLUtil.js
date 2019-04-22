@@ -536,15 +536,15 @@ var RedGLUtil;
             return dest;
         },
         screenToWorld: (function () {
-            var z, w;
+            var x,y,z, w;
             var invW
             var point = [0, 0, 0];
             var pointMTX = mat4.create()
             var invViewProjection = mat4.create()
             var resultMTX;
-            return function (x, y, width, height, tCamera) {
-                x = 2.0 * x / width - 1;
-                y = -2.0 * y / height + 1;
+            return function (rect, tCamera) {
+                x = 2.0 * rect[0] / rect[2] - 1;
+                y = -2.0 * rect[1] / rect[3] + 1;
                 z = 1;
                 tCamera = tCamera['camera'] ? tCamera['camera'] : tCamera;
                 mat4.multiply(invViewProjection, tCamera.perspectiveMTX, tCamera.matrix);

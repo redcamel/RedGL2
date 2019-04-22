@@ -13,6 +13,7 @@
     <script src="../../example/dat.gui.min.js"></script>
     <script src="../../example/baseTestUI.js"></script>
     <script src="../../release/RedGL.min.js"></script>
+    <script src="RedTransformController.js"></script>
 </head>
 
 <body>
@@ -53,9 +54,9 @@
                 tScene = RedScene(redGL);
                 // 카메라 생성
                 tController = RedObitController(redGL);
-                tController.pan = 0;
-                tController.tilt = 0;
-                tController.distance = 10
+                tController.pan = 30;
+                tController.tilt = -30;
+                tController.distance = 25
                 tController.speedDistance = 1
                 var tLight = RedDirectionalLight(redGL);
                 tScene.addLight(tLight)
@@ -95,24 +96,9 @@
 
 
 
-            var hd_move = function (e) {
-                var t0 = RedGLUtil.screenToWorld(e.layerX, e.layerY, tView['_viewRect'][2], tView['_viewRect'][3], tController)
-                tMesh.x = t0[0]
-                tMesh.y = t0[1]
-                tMesh.z = t0[2]
-            }
-            tScene.mouseManager.add(tMesh, 'down', function (e) {
-                tController.needUpdate = false
-                document.body.addEventListener(
-                    'mousemove', hd_move
-                )
-                window.addEventListener('click', function () {
-                    tController.needUpdate = true
-                    document.body.removeEventListener(
-                        'mousemove', hd_move
-                    )
-                })
-            })
+            var tTransformController = RedTransformController(this)
+            tTransformController.init(tView,tMesh)
+
 
 
         } else {

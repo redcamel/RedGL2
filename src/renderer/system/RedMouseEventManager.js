@@ -100,7 +100,8 @@ var RedMouseEventManager;
                                 if (tEventType && currentInfo[tEventType]) {
                                     currentInfo[tEventType].call(currentInfo['target'], {
                                         target: currentInfo['target'],
-                                        type: tEventType
+                                        type: tEventType,
+                                        nativeEvent : tEventData.nativeEvent
                                     })
                                 }
                             }
@@ -110,7 +111,8 @@ var RedMouseEventManager;
                                 if (tEventType && currentInfo[tEventType]) {
                                     currentInfo[tEventType].call(currentInfo['target'], {
                                         target: currentInfo['target'],
-                                        type: tEventType
+                                        type: tEventType,
+                                        nativeEvent : tEventData.nativeEvent
                                     })
                                 }
                             }
@@ -129,7 +131,8 @@ var RedMouseEventManager;
                                 if (tEventType && currentInfo[tEventType]) {
                                     currentInfo[tEventType].call(currentInfo['target'], {
                                         target: currentInfo['target'],
-                                        type: tEventType
+                                        type: tEventType,
+                                        nativeEvent : tEventData.nativeEvent
                                     })
                                 }
                                 console.log('오버')
@@ -143,7 +146,8 @@ var RedMouseEventManager;
                                 fireList.push(
                                     {
                                         info: self['_prevInfo'][tView['_UUID']],
-                                        type: tEventType
+                                        type: tEventType,
+                                        nativeEvent : tEventData.nativeEvent
                                     }
                                 )
                             }

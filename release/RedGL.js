@@ -2386,15 +2386,15 @@ var RedGLUtil;
             return dest;
         },
         screenToWorld: (function () {
-            var z, w;
+            var x,y,z, w;
             var invW
             var point = [0, 0, 0];
             var pointMTX = mat4.create()
             var invViewProjection = mat4.create()
             var resultMTX;
-            return function (x, y, width, height, tCamera) {
-                x = 2.0 * x / width - 1;
-                y = -2.0 * y / height + 1;
+            return function (rect, tCamera) {
+                x = 2.0 * rect[0] / rect[2] - 1;
+                y = -2.0 * rect[1] / rect[3] + 1;
                 z = 1;
                 tCamera = tCamera['camera'] ? tCamera['camera'] : tCamera;
                 mat4.multiply(invViewProjection, tCamera.perspectiveMTX, tCamera.matrix);
@@ -2730,7 +2730,8 @@ var RedGL;
                                 {
                                     type: e.type,
                                     x: e.changedTouches[0].clientX,
-                                    y: e.changedTouches[0].clientY
+                                    y: e.changedTouches[0].clientY,
+                                    nativeEvent : e
                                 }
                             );
                             self._mouseX = e.changedTouches[0].clientX;
@@ -2741,7 +2742,8 @@ var RedGL;
                             {
                                 type: e.type,
                                 x: e[tXkey],
-                                y: e[tYkey]
+                                y: e[tYkey],
+                                nativeEvent : e
                             }
                         );
                         self._mouseX = e[tXkey];
@@ -22675,7 +22677,8 @@ var RedMouseEventManager;
                                 if (tEventType && currentInfo[tEventType]) {
                                     currentInfo[tEventType].call(currentInfo['target'], {
                                         target: currentInfo['target'],
-                                        type: tEventType
+                                        type: tEventType,
+                                        nativeEvent : tEventData.nativeEvent
                                     })
                                 }
                             }
@@ -22685,7 +22688,8 @@ var RedMouseEventManager;
                                 if (tEventType && currentInfo[tEventType]) {
                                     currentInfo[tEventType].call(currentInfo['target'], {
                                         target: currentInfo['target'],
-                                        type: tEventType
+                                        type: tEventType,
+                                        nativeEvent : tEventData.nativeEvent
                                     })
                                 }
                             }
@@ -22704,7 +22708,8 @@ var RedMouseEventManager;
                                 if (tEventType && currentInfo[tEventType]) {
                                     currentInfo[tEventType].call(currentInfo['target'], {
                                         target: currentInfo['target'],
-                                        type: tEventType
+                                        type: tEventType,
+                                        nativeEvent : tEventData.nativeEvent
                                     })
                                 }
                                 console.log('오버')
@@ -22718,7 +22723,8 @@ var RedMouseEventManager;
                                 fireList.push(
                                     {
                                         info: self['_prevInfo'][tView['_UUID']],
-                                        type: tEventType
+                                        type: tEventType,
+                                        nativeEvent : tEventData.nativeEvent
                                     }
                                 )
                             }
@@ -25896,4 +25902,4 @@ var RedGLOffScreen;
         };
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-04-22 16:31:38)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-04-22 18:15:34)' };console.log(RedGL_VERSION);
