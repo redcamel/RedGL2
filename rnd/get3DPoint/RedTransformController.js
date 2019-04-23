@@ -153,6 +153,9 @@ var RedTransformController;
         var startPosition = []
         var startControllerPosition = []
         var startRotation = []
+        var startRotation2 = []
+        var tRotationGap = 0
+        var startMouseX = 0
         var hd_move = function (e) {
             var currentPosition = RedGLUtil.screenToWorld(
                 [
@@ -170,8 +173,32 @@ var RedTransformController;
                 tTransformController.y = tMesh.y = startControllerPosition[1] + (currentPosition[1] - startPosition[1]);
                 tTransformController.z = tMesh.z = startControllerPosition[2] + (currentPosition[2] - startPosition[2]);
             }
-            if (tDirection === 4) {
+            var tCameraRotation = RedGLUtil.mat4ToEuler((tController.camera || tController).matrix)
 
+            var tt = 1
+
+            if (tDirection === 4) {
+                tRotationGap = startPosition[1] - currentPosition[1]
+                console.log(startRotation2[0])
+                if (0 < startRotation2[0] && startRotation2[0] < 180) tt = -1
+                tTransformController['rotationXLine'].rotationX = tMesh.rotationX -= tRotationGap * 30 * tt
+                startPosition = JSON.parse(JSON.stringify(currentPosition))
+            }
+            if (tDirection === 5) {
+                tRotationGap = (startMouseX < e.layerX) ? -1 : 1
+                console.log(startRotation2[1])
+                // if (90 < startRotation2[1] && startRotation2[1] < 270) tt = 1
+                // else tt= -1
+                tTransformController['rotationYLine'].rotationY = tMesh.rotationY += tRotationGap * 5 * tt
+                startPosition = JSON.parse(JSON.stringify(currentPosition))
+                startMouseX = e.layerX
+            }
+            if (tDirection === 6) {
+                tRotationGap = startPosition[1] - currentPosition[1]
+
+                if (90 < startRotation2[2] && startRotation2[2] < 270) tt = -1
+                tTransformController['rotationZLine'].rotationZ = tMesh.rotationZ += tRotationGap * 30 * tt
+                startPosition = JSON.parse(JSON.stringify(currentPosition))
             }
         };
         [
@@ -185,6 +212,12 @@ var RedTransformController;
                 tTransformController.y = tMesh.y
                 tTransformController.z = tMesh.z
                 startRotation = [tMesh.rotationX, tMesh.rotationY, tMesh.rotationZ]
+                startRotation2 = [tMesh.rotationX % 360, tMesh.rotationY % 360, tMesh.rotationZ % 360]
+                startRotation2 = [
+                    startRotation2[0] < 0 ? 360 + startRotation2[0] : startRotation2[0],
+                    startRotation2[1] < 0 ? 360 + startRotation2[1] : startRotation2[1],
+                    startRotation2[2] < 0 ? 360 + startRotation2[2] : startRotation2[2]
+                ]
                 console.log(e)
                 startPosition = RedGLUtil.screenToWorld(
                     [
@@ -193,6 +226,7 @@ var RedTransformController;
                     ],
                     tController
                 );
+                startMouseX = e.nativeEvent.layerX
                 startControllerPosition = [tTransformController.x, tTransformController.y, tTransformController.z]
 
                 if (tController.camera) tController.needUpdate = false
