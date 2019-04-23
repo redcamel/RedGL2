@@ -25902,4 +25902,4 @@ var RedGLOffScreen;
         };
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-04-22 18:15:34)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-04-23 14:33:53)' };console.log(RedGL_VERSION);
