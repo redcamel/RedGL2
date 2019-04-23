@@ -87,19 +87,17 @@
                 console.log(redGL);
             };
             setBase(this);
-            var tMesh = RedMesh(this, RedBox(this), RedColorMaterial(this))
+            var tMesh = RedMesh(this, RedBox(this), RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'crate.png')))
             tScene.addChild(tMesh)
 
-            var tMeshTargetPlane = RedMesh(this, RedPlane(this, 100, 100), RedColorMaterial(this, '#ff0000', 0.3))
+            var tMeshTargetPlane = RedMesh(this, RedPlane(this, 100, 100), RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'crate.png')))
             tMeshTargetPlane.useCullFace = false
             // tScene.addChild(tMeshTargetPlane)
 
 
-
             var tTransformController = RedTransformController(this)
-            tTransformController.init(tView,tMesh)
+            tTransformController.init(tView, tMesh)
             tScene.addChild(tTransformController)
-
 
 
         } else {
