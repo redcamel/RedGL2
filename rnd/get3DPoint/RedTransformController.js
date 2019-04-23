@@ -43,8 +43,9 @@ var RedTransformController;
         // xAxis
         tArrowMesh = RedMesh(redGL, tArrow, tMatX);
         tAxis = RedMesh(redGL, tBox, tMatX);
-        // tArrowMesh['depthTestFunc'] = redGL.gl.ALWAYS
-        tAxis.scaleX = tAxis.scaleY = tAxis.scaleZ = 0.1;
+        tAxis['depthTestFunc'] = redGL.gl.ALWAYS
+        tArrowMesh['depthTestFunc'] = redGL.gl.ALWAYS
+        tAxis.scaleX = tAxis.scaleY = tAxis.scaleZ = 0.01;
         tAxis.scaleX = 5;
         tArrowMesh.x = 5;
         tArrowMesh.rotationZ = 90;
@@ -56,8 +57,9 @@ var RedTransformController;
         // yAxis
         tArrowMesh = RedMesh(redGL, tArrow, tMatY);
         tAxis = RedMesh(redGL, tBox, tMatY);
-        // tArrowMesh['depthTestFunc'] = redGL.gl.ALWAYS
-        tAxis.scaleX = tAxis.scaleY = tAxis.scaleZ = 0.1;
+        tAxis['depthTestFunc'] = redGL.gl.ALWAYS
+        tArrowMesh['depthTestFunc'] = redGL.gl.ALWAYS
+        tAxis.scaleX = tAxis.scaleY = tAxis.scaleZ = 0.01;
         tAxis.scaleY = 5;
         tArrowMesh.y = 5;
         tAxis.y = 2.5;
@@ -68,8 +70,9 @@ var RedTransformController;
         // zAxis
         tArrowMesh = RedMesh(redGL, tArrow, tMatZ);
         tAxis = RedMesh(redGL, tBox, tMatZ);
+        tAxis['depthTestFunc'] = redGL.gl.ALWAYS
         tArrowMesh['depthTestFunc'] = redGL.gl.ALWAYS
-        tAxis.scaleX = tAxis.scaleY = tAxis.scaleZ = 0.1;
+        tAxis.scaleX = tAxis.scaleY = tAxis.scaleZ = 0.01;
         tAxis.scaleZ = 5;
         tArrowMesh.z = 5;
         tArrowMesh.rotationX = -90;
@@ -103,7 +106,7 @@ var RedTransformController;
         // this['children'].push(tPlaneMesh)
         this['moveXZ'] = tPlaneMesh
         //
-        tPlaneMesh = RedMesh(redGL, RedSphere(redGL, 0.5, 32, 32, 32), RedColorMaterial(redGL, '#5b52aa', 1));
+        tPlaneMesh = RedMesh(redGL, RedSphere(redGL, 0.1, 32, 32, 32), RedColorMaterial(redGL, '#5b52aa', 1));
         tPlaneMesh['depthTestFunc'] = redGL.gl.ALWAYS
         this['move'] = tPlaneMesh
         this['children'].push(tPlaneMesh)
@@ -124,14 +127,14 @@ var RedTransformController;
         while (i--) rotationZLine.addPoint(Math.sin(PER * i), Math.cos(PER * i), 0);
         rotationZLine.addPoint(Math.sin(PER * i), Math.cos(PER * i), 0);
         var tSphereMesh
-        tSphereMesh = RedMesh(redGL, RedSphere(redGL, 0.2, 32, 32, 32), RedColorMaterial(redGL, '#ff0000', 1));
-        tSphereMesh.y = 1
+        tSphereMesh = RedMesh(redGL, RedSphere(redGL, 1, 32, 32, 32), RedColorMaterial(redGL, '#ff0000', 0.5));
+        tSphereMesh.scaleX=0
         rotationXLine.addChild(tSphereMesh)
-        tSphereMesh = RedMesh(redGL, RedSphere(redGL, 0.2, 32, 32, 32), RedColorMaterial(redGL, '#00ff00', 1));
-        tSphereMesh.z = 1
+        tSphereMesh = RedMesh(redGL, RedSphere(redGL, 1, 32, 32, 32), RedColorMaterial(redGL, '#00ff00', 0.5));
+        tSphereMesh.scaleY=0
         rotationYLine.addChild(tSphereMesh)
-        tSphereMesh = RedMesh(redGL, RedSphere(redGL, 0.2, 32, 32, 32), RedColorMaterial(redGL, '#0000ff', 1));
-        tSphereMesh.x = 1
+        tSphereMesh = RedMesh(redGL, RedSphere(redGL, 1, 32, 32, 32), RedColorMaterial(redGL, '#0000ff', 0.5));
+        tSphereMesh.scaleZ=0
         rotationZLine.addChild(tSphereMesh)
         this['rotationXLine'] = rotationXLine
         this['rotationYLine'] = rotationYLine
@@ -139,6 +142,7 @@ var RedTransformController;
         this['children'].push(rotationXLine)
         this['children'].push(rotationYLine)
         this['children'].push(rotationZLine)
+
         ///////////////////////////////////////////
 
         this['_UUID'] = RedGL.makeUUID();
@@ -185,17 +189,16 @@ var RedTransformController;
                 startPosition = JSON.parse(JSON.stringify(currentPosition))
             }
             if (tDirection === 5) {
-                tRotationGap = (startMouseX < e.layerX) ? -1 : 1
-                console.log(startRotation2[1])
-                // if (90 < startRotation2[1] && startRotation2[1] < 270) tt = 1
-                // else tt= -1
-                tTransformController['rotationYLine'].rotationY = tMesh.rotationY += tRotationGap * 5 * tt
-                startPosition = JSON.parse(JSON.stringify(currentPosition))
-                startMouseX = e.layerX
+                // tRotationGap = (startMouseX < e.layerX) ? -1 : 1
+                // console.log(startRotation2[1])
+                // // if (0 < startRotation2[1] && startRotation2[1] < 180) tt = -1
+                // tt *= tRotationGap;
+                // tTransformController['rotationYLine'].rotationY = tMesh.rotationY = startRotation[1] + vec3.angle(currentPosition, startPosition) * tt * 180 / Math.PI
+                // // startPosition = JSON.parse(JSON.stringify(currentPosition))
+                // // startMouseX = e.layerX
             }
             if (tDirection === 6) {
                 tRotationGap = startPosition[1] - currentPosition[1]
-
                 if (90 < startRotation2[2] && startRotation2[2] < 270) tt = -1
                 tTransformController['rotationZLine'].rotationZ = tMesh.rotationZ += tRotationGap * 30 * tt
                 startPosition = JSON.parse(JSON.stringify(currentPosition))
