@@ -161,7 +161,6 @@ var RedTransformController;
         var startPosition = []
         var startControllerPosition = []
         var startRotation
-        var startMeshPositionX, startMeshPositionY, startMeshPositionZ
         var startMouseX = 0
         var startMouseY = 0
         var hd_move = function (e) {
@@ -190,7 +189,7 @@ var RedTransformController;
                 else t0 = [1, 0, 0]
                 tDot = vec3.dot(t0, currentPosition) * 180 / Math.PI
                 tDot2 = vec3.dot(t0, startPosition) * 180 / Math.PI
-                console.log(tDot)
+                console.log(tDot,tDot2)
                 tMesh.rotationX += tDot - tDot2
                 startPosition = JSON.parse(JSON.stringify(currentPosition))
             }
@@ -231,9 +230,6 @@ var RedTransformController;
                 startRotation = [tMesh.rotationX, tMesh.rotationY, tMesh.rotationZ]
                 console.log(e)
                 startMeshPosition = tMesh.localToWorld(0, 0, 0)
-                startMeshPositionX = tMesh.localToWorld(1, 0, 0)
-                startMeshPositionY = tMesh.localToWorld(0, 1, 0)
-                startMeshPositionZ = tMesh.localToWorld(0, 0, 1)
 
                 startPosition = RedGLUtil.screenToWorld(
                     [
@@ -242,8 +238,8 @@ var RedTransformController;
                     ],
                     tController
                 );
-                console.log('startMeshPosition', startMeshPosition)
-                console.log('startPosition', startPosition)
+                console.log('startMeshPosition',startMeshPosition)
+                console.log('startPosition',startPosition)
                 startMouseX = e.nativeEvent.layerX
                 startMouseY = e.nativeEvent.layerY
                 startControllerPosition = [tTransformController.x, tTransformController.y, tTransformController.z]
