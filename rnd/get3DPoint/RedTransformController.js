@@ -128,21 +128,24 @@ var RedTransformController;
         rotationZLine.addPoint(Math.sin(PER * i), Math.cos(PER * i), 0);
         var tSphereMesh
         tSphereMesh = RedMesh(redGL, RedSphere(redGL, 1, 32, 32, 32), RedColorMaterial(redGL, '#ff0000', 0.5));
-        tSphereMesh.scaleX=0
+        tSphereMesh.scaleX = 0
         rotationXLine.addChild(tSphereMesh)
         tSphereMesh = RedMesh(redGL, RedSphere(redGL, 1, 32, 32, 32), RedColorMaterial(redGL, '#00ff00', 0.5));
-        tSphereMesh.scaleY=0
+        tSphereMesh.scaleY = 0
         rotationYLine.addChild(tSphereMesh)
         tSphereMesh = RedMesh(redGL, RedSphere(redGL, 1, 32, 32, 32), RedColorMaterial(redGL, '#0000ff', 0.5));
-        tSphereMesh.scaleZ=0
+        tSphereMesh.scaleZ = 0
         rotationZLine.addChild(tSphereMesh)
         this['rotationXLine'] = rotationXLine
         this['rotationYLine'] = rotationYLine
         this['rotationZLine'] = rotationZLine
-        this['children'].push(rotationXLine)
-        this['children'].push(rotationYLine)
-        this['children'].push(rotationZLine)
 
+        this['rotationGroup'] = RedMesh(redGL)
+
+        this['rotationGroup']['children'].push(rotationXLine)
+        this['rotationGroup']['children'].push(rotationYLine)
+        this['rotationGroup']['children'].push(rotationZLine)
+        this['children'].push(this['rotationGroup'])
         ///////////////////////////////////////////
 
         this['_UUID'] = RedGL.makeUUID();
@@ -154,12 +157,12 @@ var RedTransformController;
         var tScene = tView['scene'];
         var tController = tView['camera'];
         var tDirection = 0
+        var startMeshPosition
         var startPosition = []
         var startControllerPosition = []
-        var startRotation = []
-        var startRotation2 = []
-        var tRotationGap = 0
+        var startRotation
         var startMouseX = 0
+        var startMouseY = 0
         var hd_move = function (e) {
             var currentPosition = RedGLUtil.screenToWorld(
                 [
@@ -177,30 +180,39 @@ var RedTransformController;
                 tTransformController.y = tMesh.y = startControllerPosition[1] + (currentPosition[1] - startPosition[1]);
                 tTransformController.z = tMesh.z = startControllerPosition[2] + (currentPosition[2] - startPosition[2]);
             }
-            var tCameraRotation = RedGLUtil.mat4ToEuler((tController.camera || tController).matrix)
 
-            var tt = 1
 
             if (tDirection === 4) {
-                tRotationGap = startPosition[1] - currentPosition[1]
-                console.log(startRotation2[0])
-                if (0 < startRotation2[0] && startRotation2[0] < 180) tt = -1
-                tTransformController['rotationXLine'].rotationX = tMesh.rotationX -= tRotationGap * 30 * tt
+                var t0;
+                var tDot, tDot2
+                if (startMouseX < tView['_viewRect'][2] / 2) t0 = [-1, 0, 0]
+                else t0 = [1, 0, 0]
+                tDot = vec3.dot(t0, currentPosition) * 180 / Math.PI
+                tDot2 = vec3.dot(t0, startPosition) * 180 / Math.PI
+                console.log(tDot,tDot2)
+                tMesh.rotationX += tDot - tDot2
                 startPosition = JSON.parse(JSON.stringify(currentPosition))
             }
             if (tDirection === 5) {
-                // tRotationGap = (startMouseX < e.layerX) ? -1 : 1
-                // console.log(startRotation2[1])
-                // // if (0 < startRotation2[1] && startRotation2[1] < 180) tt = -1
-                // tt *= tRotationGap;
-                // tTransformController['rotationYLine'].rotationY = tMesh.rotationY = startRotation[1] + vec3.angle(currentPosition, startPosition) * tt * 180 / Math.PI
-                // // startPosition = JSON.parse(JSON.stringify(currentPosition))
-                // // startMouseX = e.layerX
+                var t0;
+                var tDot, tDot2
+                if (startMouseX < tView['_viewRect'][2] / 2) t0 = [0, 0, -1]
+                else t0 = [0, 0, 1]
+                tDot = vec3.dot(t0, currentPosition) * 180 / Math.PI
+                tDot2 = vec3.dot(t0, startPosition) * 180 / Math.PI
+                console.log(tDot)
+                tMesh.rotationY += tDot - tDot2
+                startPosition = JSON.parse(JSON.stringify(currentPosition))
             }
             if (tDirection === 6) {
-                tRotationGap = startPosition[1] - currentPosition[1]
-                if (90 < startRotation2[2] && startRotation2[2] < 270) tt = -1
-                tTransformController['rotationZLine'].rotationZ = tMesh.rotationZ += tRotationGap * 30 * tt
+                var t0;
+                var tDot, tDot2
+                if (startMouseX < tView['_viewRect'][2] / 2) t0 = [0, 0, -1]
+                else t0 = [0, 0, 1]
+                tDot = vec3.dot(t0, currentPosition) * 180 / Math.PI
+                tDot2 = vec3.dot(t0, startPosition) * 180 / Math.PI
+                console.log(tDot)
+                tMesh.rotationZ += tDot - tDot2
                 startPosition = JSON.parse(JSON.stringify(currentPosition))
             }
         };
@@ -210,18 +222,15 @@ var RedTransformController;
 
         ].forEach(function (v, index) {
             tScene.mouseManager.add(v, 'down', function (e) {
+
                 tDirection = index
                 tTransformController.x = tMesh.x
                 tTransformController.y = tMesh.y
                 tTransformController.z = tMesh.z
                 startRotation = [tMesh.rotationX, tMesh.rotationY, tMesh.rotationZ]
-                startRotation2 = [tMesh.rotationX % 360, tMesh.rotationY % 360, tMesh.rotationZ % 360]
-                startRotation2 = [
-                    startRotation2[0] < 0 ? 360 + startRotation2[0] : startRotation2[0],
-                    startRotation2[1] < 0 ? 360 + startRotation2[1] : startRotation2[1],
-                    startRotation2[2] < 0 ? 360 + startRotation2[2] : startRotation2[2]
-                ]
                 console.log(e)
+                startMeshPosition = tMesh.localToWorld(0, 0, 0)
+
                 startPosition = RedGLUtil.screenToWorld(
                     [
                         e.nativeEvent.layerX, e.nativeEvent.layerY,
@@ -229,7 +238,10 @@ var RedTransformController;
                     ],
                     tController
                 );
+                console.log('startMeshPosition',startMeshPosition)
+                console.log('startPosition',startPosition)
                 startMouseX = e.nativeEvent.layerX
+                startMouseY = e.nativeEvent.layerY
                 startControllerPosition = [tTransformController.x, tTransformController.y, tTransformController.z]
 
                 if (tController.camera) tController.needUpdate = false
