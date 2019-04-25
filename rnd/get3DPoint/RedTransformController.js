@@ -31,10 +31,11 @@ var RedTransformController;
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedTransformController : RedGL Instance만 허용.', redGL);
         var tArrowMesh, tPlaneMesh, tScaleMesh;
         var tAxis;
-        var tBox, tArrow;
+        var tBox, tBox2,tArrow;
         var tMatX, tMatY, tMatZ;
         RedBaseObject3D['build'].call(this, redGL.gl);
         tBox = RedBox(redGL);
+        tBox2 = RedBox(redGL,0.25,0.25,0.25);
         tArrow = RedCylinder(redGL, 0, 0.5);
         tMatX = RedColorMaterial(redGL, '#ff0000');
         tMatY = RedColorMaterial(redGL, '#00ff00');
@@ -44,7 +45,7 @@ var RedTransformController;
         this['children'].push(this['scaleGroup']);
         // xAxis
         tArrowMesh = RedMesh(redGL, tArrow, tMatX);
-        tScaleMesh = RedMesh(redGL, tBox, tMatX);
+        tScaleMesh = RedMesh(redGL, tBox2, tMatX);
         tScaleMesh.x = 4;
         tAxis = RedMesh(redGL, tBox, tMatX);
         tScaleMesh['depthTestFunc'] = redGL.gl.ALWAYS
@@ -63,7 +64,7 @@ var RedTransformController;
         ////////////////////////////////////////////
         // yAxis
         tArrowMesh = RedMesh(redGL, tArrow, tMatY);
-        tScaleMesh = RedMesh(redGL, tBox, tMatX);
+        tScaleMesh = RedMesh(redGL, tBox2, tMatX);
         tScaleMesh.y = 4;
         tAxis = RedMesh(redGL, tBox, tMatY);
 
@@ -82,7 +83,7 @@ var RedTransformController;
         ////////////////////////////////////////////
         // zAxis
         tArrowMesh = RedMesh(redGL, tArrow, tMatZ);
-        tScaleMesh = RedMesh(redGL, tBox, tMatX);
+        tScaleMesh = RedMesh(redGL, tBox2, tMatX);
         tScaleMesh.z = 4;
         tAxis = RedMesh(redGL, tBox, tMatZ);
 
@@ -210,10 +211,14 @@ var RedTransformController;
             if (tDirection === 9) tMesh.scaleZ = startControllerScale[2] + (currentPosition[2] - startPosition[2]);
 
             if (tDirection === 4 || tDirection === 5 || tDirection === 6) {
-                var t0 = RedGLUtil.mat4ToEuler(tMesh.matrix)
-                tTransformController.scaleGroup.rotationX = -t0[0] * 180 / Math.PI
-                tTransformController.scaleGroup.rotationY = -t0[1] * 180 / Math.PI
-                tTransformController.scaleGroup.rotationZ = -t0[2] * 180 / Math.PI
+                var rotationMTX = mat4.create()
+                var tRotation = []
+                var t = mat4.clone(tMesh.matrix)
+                RedGLUtil.quaternionToRotationMat4(mat4.getRotation(quat.create(), t), rotationMTX);
+                RedGLUtil.mat4ToEuler(tMesh.matrix, tRotation);
+                tTransformController.scaleGroup.rotationX = tMesh.rotationX
+                tTransformController.scaleGroup.rotationY = tMesh.rotationY
+                tTransformController.scaleGroup.rotationZ = tMesh.rotationZ
             }
 
             if (tDirection === 4) {
@@ -264,7 +269,6 @@ var RedTransformController;
                 tTransformController.x = tMesh.x
                 tTransformController.y = tMesh.y
                 tTransformController.z = tMesh.z
-
 
 
                 startRotation = [tMesh.rotationX, tMesh.rotationY, tMesh.rotationZ]
