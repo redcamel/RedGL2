@@ -29,7 +29,7 @@ var RedTransformController;
     RedTransformController = function (redGL) {
         if (!(this instanceof RedTransformController)) return new RedTransformController(redGL);
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedTransformController : RedGL Instance만 허용.', redGL);
-        var tArrowMesh, tPlaneMesh;
+        var tArrowMesh, tPlaneMesh, tScaleMesh;
         var tAxis;
         var tBox, tArrow;
         var tMatX, tMatY, tMatZ;
@@ -40,9 +40,14 @@ var RedTransformController;
         tMatY = RedColorMaterial(redGL, '#00ff00');
         tMatZ = RedColorMaterial(redGL, '#0000ff');
         ////////////////////////////////////////////
+        this['scaleGroup'] = RedMesh(redGL)
+        this['children'].push(this['scaleGroup']);
         // xAxis
         tArrowMesh = RedMesh(redGL, tArrow, tMatX);
+        tScaleMesh = RedMesh(redGL, tBox, tMatX);
+        tScaleMesh.x = 4;
         tAxis = RedMesh(redGL, tBox, tMatX);
+        tScaleMesh['depthTestFunc'] = redGL.gl.ALWAYS
         tAxis['depthTestFunc'] = redGL.gl.ALWAYS
         tArrowMesh['depthTestFunc'] = redGL.gl.ALWAYS
         tAxis.scaleX = tAxis.scaleY = tAxis.scaleZ = 0.01;
@@ -51,12 +56,18 @@ var RedTransformController;
         tArrowMesh.rotationZ = 90;
         tAxis.x = 2.5;
         this['arrowX'] = tArrowMesh
+        this['scalePointX'] = tScaleMesh
         this['children'].push(tAxis);
         this['children'].push(tArrowMesh);
+        this['scaleGroup']['children'].push(tScaleMesh);
         ////////////////////////////////////////////
         // yAxis
         tArrowMesh = RedMesh(redGL, tArrow, tMatY);
+        tScaleMesh = RedMesh(redGL, tBox, tMatX);
+        tScaleMesh.y = 4;
         tAxis = RedMesh(redGL, tBox, tMatY);
+
+        tScaleMesh['depthTestFunc'] = redGL.gl.ALWAYS
         tAxis['depthTestFunc'] = redGL.gl.ALWAYS
         tArrowMesh['depthTestFunc'] = redGL.gl.ALWAYS
         tAxis.scaleX = tAxis.scaleY = tAxis.scaleZ = 0.01;
@@ -64,12 +75,18 @@ var RedTransformController;
         tArrowMesh.y = 5;
         tAxis.y = 2.5;
         this['arrowY'] = tArrowMesh
+        this['scalePointY'] = tScaleMesh
         this['children'].push(tAxis);
         this['children'].push(tArrowMesh);
+        this['scaleGroup']['children'].push(tScaleMesh);
         ////////////////////////////////////////////
         // zAxis
         tArrowMesh = RedMesh(redGL, tArrow, tMatZ);
+        tScaleMesh = RedMesh(redGL, tBox, tMatX);
+        tScaleMesh.z = 4;
         tAxis = RedMesh(redGL, tBox, tMatZ);
+
+        tScaleMesh['depthTestFunc'] = redGL.gl.ALWAYS
         tAxis['depthTestFunc'] = redGL.gl.ALWAYS
         tArrowMesh['depthTestFunc'] = redGL.gl.ALWAYS
         tAxis.scaleX = tAxis.scaleY = tAxis.scaleZ = 0.01;
@@ -78,15 +95,17 @@ var RedTransformController;
         tArrowMesh.rotationX = -90;
         tAxis.z = 2.5;
         this['arrowZ'] = tArrowMesh
+        this['scalePointZ'] = tScaleMesh
         this['children'].push(tAxis);
         this['children'].push(tArrowMesh);
+        this['scaleGroup']['children'].push(tScaleMesh);
         ////////////////////////////////////////////
 
         tPlaneMesh = RedMesh(redGL, RedPlane(redGL), RedColorMaterial(redGL, '#ef8d39', 0.5));
         tPlaneMesh.x = 0.55;
         tPlaneMesh.y = 0.55;
         tPlaneMesh['useCullFace'] = false;
-        // tPlaneMesh['depthTestFunc'] = redGL.gl.ALWAYS
+        tPlaneMesh['depthTestFunc'] = redGL.gl.ALWAYS
         this['moveXY'] = tPlaneMesh
         // this['children'].push(tPlaneMesh)
         tPlaneMesh = RedMesh(redGL, RedPlane(redGL), RedColorMaterial(redGL, '#ef8d39', 0.5));
@@ -94,7 +113,7 @@ var RedTransformController;
         tPlaneMesh.z = 0.55;
         tPlaneMesh.y = 0.55;
         tPlaneMesh['useCullFace'] = false;
-        // tPlaneMesh['depthTestFunc'] = redGL.gl.ALWAYS
+        tPlaneMesh['depthTestFunc'] = redGL.gl.ALWAYS
         // this['children'].push(tPlaneMesh)
         this['moveYZ'] = tPlaneMesh
         tPlaneMesh = RedMesh(redGL, RedPlane(redGL), RedColorMaterial(redGL, '#ef8d39', 0.5));
@@ -102,7 +121,7 @@ var RedTransformController;
         tPlaneMesh.x = 0.55;
         tPlaneMesh.z = 0.55;
         tPlaneMesh['useCullFace'] = false;
-        // tPlaneMesh['depthTestFunc'] = redGL.gl.ALWAYS
+        tPlaneMesh['depthTestFunc'] = redGL.gl.ALWAYS
         // this['children'].push(tPlaneMesh)
         this['moveXZ'] = tPlaneMesh
         //
@@ -140,6 +159,7 @@ var RedTransformController;
         this['rotationYLine'] = rotationYLine
         this['rotationZLine'] = rotationZLine
 
+
         this['rotationGroup'] = RedMesh(redGL)
 
         this['rotationGroup']['children'].push(rotationXLine)
@@ -160,11 +180,14 @@ var RedTransformController;
         var startMeshPosition
         var startPosition = []
         var startControllerPosition = []
+        var startControllerScale = []
         var startRotation
         var startMeshPositionX, startMeshPositionY, startMeshPositionZ
         var startMouseX = 0
         var startMouseY = 0
         var hd_move = function (e) {
+
+
             var currentPosition = RedGLUtil.screenToWorld(
                 [
                     e.layerX, e.layerY,
@@ -182,14 +205,26 @@ var RedTransformController;
                 tTransformController.z = tMesh.z = startControllerPosition[2] + (currentPosition[2] - startPosition[2]);
             }
 
+            if (tDirection === 7) tMesh.scaleX = startControllerScale[0] + (currentPosition[0] - startPosition[0]);
+            if (tDirection === 8) tMesh.scaleY = startControllerScale[1] + (currentPosition[1] - startPosition[1]);
+            if (tDirection === 9) tMesh.scaleZ = startControllerScale[2] + (currentPosition[2] - startPosition[2]);
+
+            if (tDirection === 4 || tDirection === 5 || tDirection === 6) {
+                var t0 = RedGLUtil.mat4ToEuler(tMesh.matrix)
+                tTransformController.scaleGroup.rotationX = -t0[0] * 180 / Math.PI
+                tTransformController.scaleGroup.rotationY = -t0[1] * 180 / Math.PI
+                tTransformController.scaleGroup.rotationZ = -t0[2] * 180 / Math.PI
+            }
 
             if (tDirection === 4) {
                 var t0;
                 var tDot, tDot2
                 if (startMouseX < tView['_viewRect'][2] / 2) t0 = [-1, 0, 0]
                 else t0 = [1, 0, 0]
+
                 tDot = vec3.dot(t0, currentPosition) * 180 / Math.PI
                 tDot2 = vec3.dot(t0, startPosition) * 180 / Math.PI
+
                 console.log(tDot)
                 tMesh.rotationX += tDot - tDot2
                 startPosition = JSON.parse(JSON.stringify(currentPosition))
@@ -219,7 +254,8 @@ var RedTransformController;
         };
         [
             tTransformController['arrowX'], tTransformController['arrowY'], tTransformController['arrowZ'], tTransformController['move'],
-            tTransformController['rotationXLine'].getChildAt(0), tTransformController['rotationYLine'].getChildAt(0), tTransformController['rotationZLine'].getChildAt(0)
+            tTransformController['rotationXLine'].getChildAt(0), tTransformController['rotationYLine'].getChildAt(0), tTransformController['rotationZLine'].getChildAt(0),
+            tTransformController['scalePointX'], tTransformController['scalePointY'], tTransformController['scalePointZ']
 
         ].forEach(function (v, index) {
             tScene.mouseManager.add(v, 'down', function (e) {
@@ -228,12 +264,16 @@ var RedTransformController;
                 tTransformController.x = tMesh.x
                 tTransformController.y = tMesh.y
                 tTransformController.z = tMesh.z
+
+
+
                 startRotation = [tMesh.rotationX, tMesh.rotationY, tMesh.rotationZ]
                 console.log(e)
                 startMeshPosition = tMesh.localToWorld(0, 0, 0)
                 startMeshPositionX = tMesh.localToWorld(1, 0, 0)
                 startMeshPositionY = tMesh.localToWorld(0, 1, 0)
                 startMeshPositionZ = tMesh.localToWorld(0, 0, 1)
+                startControllerScale = [tMesh.scaleX, tMesh.scaleY, tMesh.scaleZ]
 
                 startPosition = RedGLUtil.screenToWorld(
                     [
