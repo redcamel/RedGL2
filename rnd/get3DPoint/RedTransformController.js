@@ -227,9 +227,27 @@ var RedTransformController;
             }
 
             if (tDirection === 4) {
-
+                // var t0;
+                // var tDot, tDot2
+                // if (startMouseX < tView['_viewRect'][2] / 2) t0 = [1, 0, 0]
+                // else t0 = [-1, 0, 0]
+                //
+                // tDot = vec3.dot(t0, currentPosition)
+                // tDot2 = vec3.dot(t0, startPosition)
+                //
+                // console.log(tDot)
+                // tMesh.rotationX += tDot - tDot2
+                // startPosition = JSON.parse(JSON.stringify(currentPosition))
             } else if (tDirection === 5) {
-
+                // var t0;
+                // var tDot, tDot2
+                // if (startMouseX < tView['_viewRect'][2] / 2) t0 = [0, -1, 0]
+                // else t0 = [0, 1, 0]
+                // tDot = vec3.dot(t0, currentPosition) * 180 / Math.PI
+                // tDot2 = vec3.dot(t0, startPosition) * 180 / Math.PI
+                // console.log(tDot)
+                // tMesh.rotationY += tDot - tDot2
+                // startPosition = JSON.parse(JSON.stringify(currentPosition))
             } else if (tDirection === 6) {
                 var t0;
                 var tDot, tDot2
