@@ -193,6 +193,15 @@ var RedTransformController;
         var startLocalMTX;
         var startMouseX = 0
         var startMouseY = 0
+        tTransformController.scaleGroup.rotationX = tMesh.rotationX
+        tTransformController.scaleGroup.rotationY = tMesh.rotationY
+        tTransformController.scaleGroup.rotationZ = tMesh.rotationZ
+        tTransformController.rotationGroup.rotationX = tMesh.rotationX
+        tTransformController.rotationGroup.rotationY = tMesh.rotationY
+        tTransformController.rotationGroup.rotationZ = tMesh.rotationZ
+        tTransformController.x = tMesh.x
+        tTransformController.y = tMesh.y
+        tTransformController.z = tMesh.z
         var hd_move = function (e) {
 
 
