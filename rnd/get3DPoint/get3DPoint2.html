@@ -93,6 +93,9 @@
             var tMesh2 = RedMesh(this, RedBox(this), RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'crate.png')))
             tScene.addChild(tMesh2)
 
+            tMesh2.x = 2
+            tMesh2.z = 2
+
             tScene.mouseManager.add(tMesh, 'down', function (e) {
                 tTransformController.init(tView, tMesh)
                 tScene.addChild(tTransformController)
