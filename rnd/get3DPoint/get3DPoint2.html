@@ -90,14 +90,23 @@
             var tMesh = RedMesh(this, RedBox(this), RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'crate.png')))
             tScene.addChild(tMesh)
 
-            var tMeshTargetPlane = RedMesh(this, RedPlane(this, 100, 100), RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'crate.png')))
-            tMeshTargetPlane.useCullFace = false
-            // tScene.addChild(tMeshTargetPlane)
+            var tMesh2 = RedMesh(this, RedBox(this), RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'crate.png')))
+            tScene.addChild(tMesh2)
 
+            tMesh2.x = 2
+            tMesh2.z = 2
 
+            tScene.mouseManager.add(tMesh, 'down', function (e) {
+                tTransformController.init(tView, tMesh)
+                tScene.addChild(tTransformController)
+            })
+            tScene.mouseManager.add(tMesh2, 'down', function (e) {
+                tTransformController.init(tView, tMesh2)
+                tScene.addChild(tTransformController)
+            })
             var tTransformController = RedTransformController(this)
-            tTransformController.init(tView, tMesh)
-            tScene.addChild(tTransformController)
+
+
 
 
         } else {

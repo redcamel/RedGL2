@@ -117,6 +117,12 @@ var RedGeometry;
                     maxZ = t[t2] > maxZ ? t[t2] : maxZ;
             }
             this['_volume'] = [maxX - minX, maxY - minY, maxZ - minZ];
+            this['_volume'].minX = minX
+            this['_volume'].maxX = maxX
+            this['_volume'].minY = minY
+            this['_volume'].maxY = maxY
+            this['_volume'].minZ = minZ
+            this['_volume'].maxZ = maxZ
             // }
             console.time('volumeCalculate');
             return this['_volume'];
