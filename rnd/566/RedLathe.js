@@ -215,7 +215,9 @@ var RedLathe;
         vcoords.push(length);  // the last point
 
         // now divide each by the total length;
-        vcoords = vcoords.map(v => v / length);
+        vcoords = vcoords.map(v = > v / length
+    )
+        ;
 
         // generate points
         var division = 0;

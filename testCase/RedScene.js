@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 RedTest.title = "RedScene TEST";
 RedGL.setDoNotPrepareProgram();
 RedTest.mode = RedTest.REQUEST_MODE;

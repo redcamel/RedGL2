@@ -1,4 +1,5 @@
-<html>
+<!DOCTYPE html>
+<html lang="ko">
 
 <head>
     <meta charset="UTF-8">
@@ -73,7 +74,7 @@
 
             // 체크
             var gl = this.gl
-            var tTexture  = RedBitmapTexture(this,canvas)
+            var tTexture = RedBitmapTexture(this, canvas)
 
             var fb = gl.createFramebuffer();
             gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
@@ -84,7 +85,7 @@
             console.log('test', pixels)
 
 
-            var plane = RedMesh(this, RedPlane(this), RedBitmapMaterial(this,tTexture))
+            var plane = RedMesh(this, RedPlane(this), RedBitmapMaterial(this, tTexture))
             tScene.addChild(plane)
             console.log(this.detect)
 

@@ -1,4 +1,5 @@
-<html>
+<!DOCTYPE html>
+<html lang="ko">
 
 <head>
     <meta charset="UTF-8">
@@ -123,8 +124,8 @@
             testLocation.text = "a.getLineEndX(4) : " + a.getLineEndX(4) + " / a.getLineEndY(4) : " + a.getLineEndY(4)
 
             if (testText.y != parseInt(testText.y)) testText.y += 0.5
-            testLocation.x = testText.x + a.getLineEndX(4)-testText.width/2 + testLocation.width/2
-            testLocation.y = testText.y + a.getLineEndY(4) -testText.height/2 + testLocation.height/2
+            testLocation.x = testText.x + a.getLineEndX(4) - testText.width / 2 + testLocation.width / 2
+            testLocation.y = testText.y + a.getLineEndY(4) - testText.height / 2 + testLocation.height / 2
 
             console.log(testLocation.y)
         })

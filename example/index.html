@@ -1,5 +1,5 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="keywords" content="RedGL,webgl,demo">
@@ -33,14 +33,14 @@
         a, a:hover, a:active, a:visited {
             color: rgb(242, 169, 113);
             text-decoration: none;
-            text-shadow: 0px 1px rgb(0, 0, 0);
+            text-shadow: 0 1px rgb(0, 0, 0);
         }
 
         li {
             list-style: none;
             vertical-align: top;
-            text-shadow: 0px 1px rgb(0, 0, 0);
-            x font-family: Montserrat;
+            text-shadow: 0 1px rgb(0, 0, 0);
+            font-family: Montserrat;
         }
 
         h1, h2 {
@@ -50,7 +50,7 @@
 
         h2 {
             /*font-weight: bold;*/
-            text-shadow: 0px 1px 3px rgb(0, 0, 0);
+            text-shadow: 0 1px 3px rgb(0, 0, 0);
             font-size: 16px;
 
         }
@@ -88,9 +88,10 @@
         window.location.href = 'https://redcamel.github.io/RedGL2/redDoc/index.html'
     }
 </script>
-<img src="../asset/github.png" style="position: fixed;z-index:1;top:30px;right:30px;width:45px;cursor: pointer;"
+<img alt="github" src="../asset/github.png"
+     style="position: fixed;z-index:1;top:30px;right:30px;width:45px;cursor: pointer;"
      onclick="goRedGL()">
-<button style="position: fixed;z-index:1;top:30px;right:85px;width:45px;width:45px;height:45px;font-size:11px;border-radius:50%;cursor: pointer; background: #a138e2;color:#fff;border:0;outline:none;font-weight: bold"
+<button style="position: fixed;z-index:1;top:30px;right:85px;width:45px;height:45px;font-size:11px;border-radius:50%;cursor: pointer; background: #a138e2;color:#fff;border:0;outline:none;font-weight: bold"
         onclick="goRedGLDoc()">DOC
 </button>
 <script>
@@ -174,7 +175,7 @@
     })
 </script>
 <div style="position: absolute;padding-bottom: 70px">
-    <div style="padding:20px 30px 0px 30px;font-size: 40px;text-shadow: 0px 0px 10px rgb(0, 0, 0)">
+    <div style="padding:20px 30px 0 30px;font-size: 40px;text-shadow: 0 0 10px rgb(0, 0, 0)">
         <div>RedGL Example</div>
         <div style="font-size:12px;margin-left:3px;opacity: 0.75">JavaScript 3D library</div>
     </div>
@@ -241,7 +242,7 @@
                         TweenMax.to(tEffect, 0.5, {saturation: -100, ease: Ease.QuintOut})
                         TweenMax.to(tEffect2, 0.5, {
                                 centerX: e.nativeEvent.clientX / document.body.clientWidth - 0.5,
-                                centerY: e.nativeEvent.clientY / document.body.clientHeight - 0.5,
+                                centerY: e.nativeEvent.clientY / window.outerHeight - 0.5,
                                 amount: 15, ease: Ease.QuintOut
                             }
                         )
@@ -277,8 +278,8 @@
 </script>
 
 
-<div style="position: fixed;bottom: 0px;width:100%;background: rgba(0,0,0,0.75)">
-    <hr style="margin:0px; border:0;border-bottom:1px solid #333">
+<div style="position: fixed;bottom: 0;width:100%;background: rgba(0,0,0,0.75)">
+    <hr style="margin:0; border:0;border-bottom:1px solid #333">
     <div style="padding:10px">
         <a href="https://redcamel.github.io/RedGL2/example">example</a> / <a
             href="https://redcamel.github.io/RedGL2/testCase">testCase</a> / <a

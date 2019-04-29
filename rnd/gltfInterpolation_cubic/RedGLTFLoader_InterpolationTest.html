@@ -1,4 +1,5 @@
-<html>
+<!DOCTYPE html>
+<html lang="ko">
 
 <head>
     <meta charset="UTF-8">
@@ -112,11 +113,11 @@
                 tScene.addChild(v['resultMesh'])
                 v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 10
             })
-            RedGLTFLoader(this,  assetPath + 'glTF/basic/', 'InterpolationTest.glb', function (v) {
+            RedGLTFLoader(this, assetPath + 'glTF/basic/', 'InterpolationTest.glb', function (v) {
 
                 tScene.addChild(v['resultMesh'])
             })
-            RedGLTFLoader(this,  assetPath + 'glTF/basic/', 'SimpleMorph.gltf', function (v) {
+            RedGLTFLoader(this, assetPath + 'glTF/basic/', 'SimpleMorph.gltf', function (v) {
 
                 tScene.addChild(v['resultMesh'])
             })

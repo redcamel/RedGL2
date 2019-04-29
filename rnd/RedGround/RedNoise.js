@@ -34,8 +34,7 @@ Better rank ordering method by Stefan Gustavson in 2012.
         var random;
         if (typeof randomOrSeed == 'function') {
             random = randomOrSeed;
-        }
-        else if (randomOrSeed) {
+        } else if (randomOrSeed) {
             random = alea(randomOrSeed);
         } else {
             random = Math.random;
@@ -177,8 +176,7 @@ Better rank ordering method by Stefan Gustavson in 2012.
                     j2 = 0;
                     k2 = 1;
                 } // Z X Y order
-            }
-            else { // x0<y0
+            } else { // x0<y0
                 if (y0 < z0) {
                     i1 = 0;
                     j1 = 0;

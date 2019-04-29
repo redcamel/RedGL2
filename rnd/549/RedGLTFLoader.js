@@ -801,8 +801,7 @@ var RedGLTFLoader;
                     var t0 = RedCamera()
                     if (v['type'] == 'orthographic') {
                         t0.orthographicYn = true
-                    }
-                    else {
+                    } else {
                         t0['fov'] = v['perspective']['yfov'] * 180 / Math.PI
                         t0['farClipping'] = v['perspective']['zfar']
                         t0['nearClipping'] = v['perspective']['znear']
@@ -826,8 +825,7 @@ var RedGLTFLoader;
                 i++;
                 if (i == len) {
                     if (callback) callback()
-                }
-                else requestAnimationFrame(tick);
+                } else requestAnimationFrame(tick);
             }
             requestAnimationFrame(tick);
             // json['scenes'][0]['nodes'].forEach(function (nodeIndex) {
@@ -974,8 +972,7 @@ var RedGLTFLoader;
                             })
                         }
                     })
-                }
-                else {
+                } else {
                     var tGroup
                     // console.log('차일드 정보로 구성된 정보임', info)
 
@@ -1225,8 +1222,7 @@ var RedGLTFLoader;
                                     uvs.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                                 } else if (key == 'TEXCOORD_1') {
                                     uvs1.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-                                }
-                                else RedGLUtil.throwFunc('VEC2에서 현재 지원하고 있지 않는 키', key)
+                                } else RedGLUtil.throwFunc('VEC2에서 현재 지원하고 있지 않는 키', key)
                             }
                             strideIndex++
                         }
@@ -1493,7 +1489,7 @@ var RedGLTFLoader;
                     interleaveData[idx++] = verticesColor_0[i * 4 + 2];
                     interleaveData[idx++] = verticesColor_0[i * 4 + 3];
                     // interleaveData.push(verticesColor_0[i * 4 + 0], verticesColor_0[i * 4 + 1], verticesColor_0[i * 4 + 2], verticesColor_0[i * 4 + 3])
-                }else{
+                } else {
                     interleaveData[idx++] = 0;
                     interleaveData[idx++] = 0;
                     interleaveData[idx++] = 0;
@@ -1516,8 +1512,7 @@ var RedGLTFLoader;
                     interleaveData[idx++] = uvs1[i * 2 + 0];
                     interleaveData[idx++] = uvs1[i * 2 + 1];
                     // interleaveData.push(uvs1[i * 2 + 0], uvs1[i * 2 + 1])
-                }
-                else if (uvs.length) {
+                } else if (uvs.length) {
                     interleaveData[idx++] = uvs[i * 2 + 0];
                     interleaveData[idx++] = uvs[i * 2 + 1];
                     // interleaveData.push(uvs[i * 2 + 0], uvs[i * 2 + 1])
@@ -1542,8 +1537,7 @@ var RedGLTFLoader;
                     interleaveData[idx++] = tangents[i * 4 + 2];
                     interleaveData[idx++] = tangents[i * 4 + 3];
                     // interleaveData.push(tangents[i * 4 + 0], tangents[i * 4 + 1], tangents[i * 4 + 2], tangents[i * 4 + 3])
-                }
-                else {
+                } else {
                     interleaveData[idx++] = 0;
                     interleaveData[idx++] = 0;
                     interleaveData[idx++] = 0;

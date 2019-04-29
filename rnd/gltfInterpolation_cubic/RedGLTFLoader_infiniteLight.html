@@ -1,4 +1,5 @@
-<html>
+<!DOCTYPE html>
+<html lang="ko">
 
 <head>
     <meta charset="UTF-8">
@@ -74,7 +75,7 @@
             var tLightList = []
             i = parseInt(i)
             while (i--) {
-                var tLight = RedPointLight(this, i % 4 == 0 ? '#ff0000' : i % 4 == 1 ? '#00ff00' : i % 4 == 2 ?'#0000ff' : i % 4 == 3 ? '#0f02ff' : '#ff12de')
+                var tLight = RedPointLight(this, i % 4 == 0 ? '#ff0000' : i % 4 == 1 ? '#00ff00' : i % 4 == 2 ? '#0000ff' : i % 4 == 3 ? '#0f02ff' : '#ff12de')
                 tLight.x = Math.random() * 50 - 25
                 tLight.y = Math.random() * 50 - 25
                 tLight.z = Math.random() * 50 - 25

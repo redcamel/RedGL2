@@ -336,8 +336,8 @@ var RedTextSpan;
                 Array.prototype.slice.call(range.getClientRects()).forEach(function (v2) {
                     if (!tLineTemp[v2.y]) {
                         tLineTemp[v2.y] = v2
-                        v2['endX'] = v2['x']+v2['width']
-                        v2['endY'] = v2['y']+v2['height']
+                        v2['endX'] = v2['x'] + v2['width']
+                        v2['endY'] = v2['y'] + v2['height']
                         tLineRectList.push(v2)
                     }
                 })

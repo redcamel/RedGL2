@@ -107,7 +107,7 @@ var RedCatmullRom;
 
         var tType, tPrimitiveData;
         distance = distance !== undefined ? distance : 0.4;
-        tension = tension !== undefined ? tension :1;
+        tension = tension !== undefined ? tension : 1;
 
         tolerance = tolerance !== undefined ? tolerance : 0.15
         if (tolerance < 0.1) tolerance = 0.1
@@ -144,10 +144,10 @@ var RedCatmullRom;
                 var c1 = points[offset + 1];
                 var c2 = points[offset + 2];
                 var p2 = points[offset + 3];
-                p1[2] =0
-                p2[2] =0
-                c1[2] =0
-                c2[2] =0
+                p1[2] = 0
+                p2[2] = 0
+                c1[2] = 0
+                c2[2] = 0
 
                 var q1 = vec3.lerp([0, 0], p1, c1, t);
                 var q2 = vec3.lerp([0, 0], c1, c2, t);
@@ -225,7 +225,7 @@ var RedCatmullRom;
 
             var path = "M" + [data[0], data[1]];
 
-            for (var i = 0; i < size - 2; i +=2) {
+            for (var i = 0; i < size - 2; i += 2) {
 
                 var x0 = i ? data[i - 2] : data[0];
                 var y0 = i ? data[i - 1] : data[1];
@@ -252,11 +252,10 @@ var RedCatmullRom;
         }
 
 
-
         // points = parseSVGPath(solve(points))
         // points = solve(points)
         // console.log(points)
-       var  parseSVGPath = function (svg, flipX, flipY) {
+        var parseSVGPath = function (svg, flipX, flipY) {
             var points = [];
             var delta = false;
             var keepNext = false;
@@ -332,13 +331,13 @@ var RedCatmullRom;
             return points;
         };
         var tList = []
-        points.forEach(function(v){
-            tList.push(v['point'][0],v['point'][1])
+        points.forEach(function (v) {
+            tList.push(v['point'][0], v['point'][1])
         })
 
-        console.log(solve(tList,tension))
+        console.log(solve(tList, tension))
 
-        newPointList = parseSVGPath(solve(tList,tension),flipX, flipY)
+        newPointList = parseSVGPath(solve(tList, tension), flipX, flipY)
         console.log(newPointList)
         tType = 'RedCatmullRom' + '_' + newPointList + '_' + tension + '_' + distance + '_' + tolerance + '_' + flipX + '_' + flipY;
         // 유일키 방어
