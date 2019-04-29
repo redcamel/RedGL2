@@ -1,3 +1,9 @@
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 var baseTestUI = function (redGL, width) {
     // var getQueryParam = function(param) {
     //     var found;

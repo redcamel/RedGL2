@@ -1,3 +1,9 @@
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 var gulp = require('gulp');
 var fs = require('fs');
 var uglify = require('gulp-uglify-es').default;
@@ -120,7 +126,6 @@ gulp.task('combine-js', function () {
     console.log('-------------------------------------------');
     console.log('파일 병합 시작!');
     return gulp.src([
-        "src/LICENSE.js",
         "src/gl-matrix-min.js",
         "src/base/RedDefinePropertyInfo.js",
         "src/detect/RedGLDetect.js",

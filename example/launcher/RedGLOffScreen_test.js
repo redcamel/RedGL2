@@ -1,3 +1,9 @@
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 // 호스트는 함수로만 선언한다
 // 실제로는 RedGLInstance생성이후 발동되는 호스트이다.
 function () {
