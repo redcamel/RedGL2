@@ -1,3 +1,9 @@
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedTransformController;
 (function () {
@@ -40,14 +46,12 @@ var RedTransformController;
 
             var transform = tMesh.matrix
 
-            var x = transform[0]*t[vx] + transform[1]* t[vy] + transform[2]*t[vz] + transform[3];
-            var y = transform[4]*t[vx] + transform[5]* t[vy] + transform[6]*t[vz] + transform[7];
-            var z = transform[8]*t[vx] + transform[9]* t[vy] + transform[10]*t[vz] + transform[11];
+            var x = transform[0] * t[vx] + transform[1] * t[vy] + transform[2] * t[vz] + transform[3];
+            var y = transform[4] * t[vx] + transform[5] * t[vy] + transform[6] * t[vz] + transform[7];
+            var z = transform[8] * t[vx] + transform[9] * t[vy] + transform[10] * t[vz] + transform[11];
 
 
-
-
-                minX = x < minX ? x : minX,
+            minX = x < minX ? x : minX,
                 maxX = x > maxX ? x : maxX,
                 minY = y < minY ? y : minY,
                 maxY = y > maxY ? y : maxY,

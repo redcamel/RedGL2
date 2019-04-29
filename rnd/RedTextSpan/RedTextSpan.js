@@ -1,13 +1,7 @@
 /*
- * TextSelection -- Library on a pure JavaScript that allowed get or set range positions based on text offset.
- *
- * Support all web-browsers except old IE (early than 9).
- *
- * Version 1.0.0.
- *
- * Copyright (c) 2015 Dmitry Zavodnikov.
- *
- * Licensed under the MIT License.
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
  */
 /**
  * Internal method.
@@ -336,8 +330,8 @@ var RedTextSpan;
                 Array.prototype.slice.call(range.getClientRects()).forEach(function (v2) {
                     if (!tLineTemp[v2.y]) {
                         tLineTemp[v2.y] = v2
-                        v2['endX'] = v2['x']+v2['width']
-                        v2['endY'] = v2['y']+v2['height']
+                        v2['endX'] = v2['x'] + v2['width']
+                        v2['endY'] = v2['y'] + v2['height']
                         tLineRectList.push(v2)
                     }
                 })

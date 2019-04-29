@@ -1,3 +1,9 @@
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedRenderer;
 //TODO: 캐싱전략을 좀더 고도화하는게 좋을듯

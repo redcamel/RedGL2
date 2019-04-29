@@ -1,7 +1,15 @@
-<html>
+<!--
+  ~ MIT License
+  ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+  ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+  -->
+
+<!DOCTYPE html>
+<html lang="ko">
 
 <head>
     <meta charset="UTF-8">
+    <meta name="keywords" content="RedGL,webgl,demo">
     <title>RedGL - normalTest</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
@@ -54,8 +62,8 @@
                 tScene.addLight(testDLight)
                 // 렌더시작
                 tRenderer.start(redGL, function (time) {
-                    testDLight.x = Math.sin(time/1000)*3
-                    testDLight.z = Math.cos(time/1000)*3
+                    testDLight.x = Math.sin(time / 1000) * 3
+                    testDLight.z = Math.cos(time / 1000) * 3
                 });
                 // testUI 호출
                 testUI(redGL, tScene);

@@ -1,3 +1,9 @@
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 var index_demo
 (function () {
     var tScene
@@ -7,7 +13,7 @@ var index_demo
     var testEmitter
     var targetRender
     index_demo = {
-        start : function (redGL, tView, tRenderer, tCamera){
+        start: function (redGL, tView, tRenderer, tCamera) {
             tView.scene = tScene
             // 렌더시작
             targetRender.start(redGL, function (time) {

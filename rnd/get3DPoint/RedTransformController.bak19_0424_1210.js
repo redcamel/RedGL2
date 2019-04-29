@@ -1,3 +1,9 @@
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedTransformController;
 (function () {
@@ -189,7 +195,7 @@ var RedTransformController;
                 else t0 = [1, 0, 0]
                 tDot = vec3.dot(t0, currentPosition) * 180 / Math.PI
                 tDot2 = vec3.dot(t0, startPosition) * 180 / Math.PI
-                console.log(tDot,tDot2)
+                console.log(tDot, tDot2)
                 tMesh.rotationX += tDot - tDot2
                 startPosition = JSON.parse(JSON.stringify(currentPosition))
             }
@@ -238,8 +244,8 @@ var RedTransformController;
                     ],
                     tController
                 );
-                console.log('startMeshPosition',startMeshPosition)
-                console.log('startPosition',startPosition)
+                console.log('startMeshPosition', startMeshPosition)
+                console.log('startPosition', startPosition)
                 startMouseX = e.nativeEvent.layerX
                 startMouseY = e.nativeEvent.layerY
                 startControllerPosition = [tTransformController.x, tTransformController.y, tTransformController.z]

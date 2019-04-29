@@ -1,7 +1,15 @@
-<html>
+<!--
+  ~ MIT License
+  ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+  ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+  -->
+
+<!DOCTYPE html>
+<html lang="ko">
 
 <head>
     <meta charset="UTF-8">
+    <meta name="keywords" content="RedGL,webgl,demo">
     <title>RedGL - RedCamera(orthographic mode)</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
@@ -109,7 +117,6 @@
             tScene.addChild(testEmitter)
 
 
-
             //////////////////////////////////////////////////////////////////
             // RedPointCloud 설정
             var i;
@@ -121,7 +128,7 @@
             while (i--) {
                 // position
                 interleaveData.push(
-                    Math.random() * self._viewRect[2] , // x
+                    Math.random() * self._viewRect[2], // x
                     Math.random() * self._viewRect[3], // y
                     0 // z
                 );
@@ -145,8 +152,8 @@
             tRenderer.start(this, function (time) {
                 testEmitter.update(time)
 
-                testEmitter.x = self._viewRect[2] / 2 + Math.sin(time / 750)*300 + Math.cos(time / 1250)*200
-                testEmitter.y = self._viewRect[3] / 2 + Math.cos(time / 1000)*100
+                testEmitter.x = self._viewRect[2] / 2 + Math.sin(time / 750) * 300 + Math.cos(time / 1250) * 200
+                testEmitter.y = self._viewRect[3] / 2 + Math.cos(time / 1000) * 100
                 interleaveData.forEach(function (v, index) {
                     if (index % 4 == 0) interleaveData[index] = v + Math.sin(time / 1000 + index / 100)
                     else if (index % 4 == 1) interleaveData[index] = v + Math.cos(time / 1000 + index / 100)

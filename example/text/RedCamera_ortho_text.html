@@ -1,7 +1,15 @@
-<html>
+<!--
+  ~ MIT License
+  ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+  ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+  -->
+
+<!DOCTYPE html>
+<html lang="ko">
 
 <head>
     <meta charset="UTF-8">
+    <meta name="keywords" content="RedGL,webgl,demo">
     <title>RedGL - RedText(Orthogonal Mode)</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
@@ -63,8 +71,8 @@
             // 렌더시작
             var self = this
             tRenderer.start(this, function (time) {
-                testRedText.x = self._viewRect[2]/2
-                testRedText.y = self._viewRect[3]/2
+                testRedText.x = self._viewRect[2] / 2
+                testRedText.y = self._viewRect[3] / 2
             });
             testUI(this, tScene, testRedText);
             console.log(this);

@@ -1,4 +1,10 @@
-'use strict'
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
+'use strict';
 RedTest.title = "RedScene TEST";
 RedGL.setDoNotPrepareProgram();
 RedTest.mode = RedTest.REQUEST_MODE;

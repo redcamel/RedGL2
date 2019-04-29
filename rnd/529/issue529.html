@@ -1,4 +1,11 @@
-<html>
+<!--
+  ~ MIT License
+  ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+  ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+  -->
+
+<!DOCTYPE html>
+<html lang="ko">
 
 <head>
     <meta charset="UTF-8">
@@ -48,15 +55,14 @@
                 testDLight.x = 3
                 testDLight.y = 3
                 testDLight.z = 3
-                testDLight.debug=true
+                testDLight.debug = true
                 tScene.addLight(testDLight)
-
 
 
                 // 렌더시작
                 tRenderer.start(redGL, function (time) {
-                    testDLight.x = Math.sin(time/1000)*3
-                    testDLight.z = Math.cos(time/1000)*3
+                    testDLight.x = Math.sin(time / 1000) * 3
+                    testDLight.z = Math.cos(time / 1000) * 3
                 });
                 // 렌더 디버거 활성화
                 tRenderer.setDebugButton();

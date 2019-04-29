@@ -1,4 +1,11 @@
-<html>
+<!--
+  ~ MIT License
+  ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+  ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+  -->
+
+<!DOCTYPE html>
+<html lang="ko">
 
 <head>
     <meta charset="UTF-8">
@@ -14,7 +21,7 @@
     <script src="../../example/baseTestUI.js"></script>
     <script src="../../release/RedGL.js"></script>
     <style>
-        html,body{
+        html, body {
             overflow: auto;
         }
     </style>
@@ -32,17 +39,17 @@
     RedGL(canvas, function (v) {
         if (v) {
             console.log(RedSystemShaderCode)
-            this.setSize(0,0)
-            for(var k in RedSystemShaderCode){
+            this.setSize(0, 0)
+            for (var k in RedSystemShaderCode) {
                 var t = document.createElement('ul')
                 t.innerHTML += k;
                 document.body.appendChild(t)
-                if(typeof RedSystemShaderCode[k] =='number'){
+                if (typeof RedSystemShaderCode[k] == 'number') {
                     var t2 = document.createElement('ul')
                     t2.innerHTML += k + ' : ' + RedSystemShaderCode[k]
                     t.appendChild(t2)
-                }else{
-                    for(var k2 in RedSystemShaderCode[k]){
+                } else {
+                    for (var k2 in RedSystemShaderCode[k]) {
                         var t2 = document.createElement('ul')
                         t2.innerHTML += k2 + ' : ' + RedSystemShaderCode[k][k2]
                         t.appendChild(t2)

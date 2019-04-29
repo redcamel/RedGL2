@@ -1,3 +1,9 @@
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedLathe;
 (function () {
@@ -215,7 +221,9 @@ var RedLathe;
         vcoords.push(length);  // the last point
 
         // now divide each by the total length;
-        vcoords = vcoords.map(v => v / length);
+        vcoords = vcoords.map(v = > v / length
+    )
+        ;
 
         // generate points
         var division = 0;

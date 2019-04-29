@@ -1,7 +1,15 @@
-<html>
+<!--
+  ~ MIT License
+  ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+  ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+  -->
+
+<!DOCTYPE html>
+<html lang="ko">
 
 <head>
     <meta charset="UTF-8">
+    <meta name="keywords" content="RedGL,webgl,demo">
     <title>RedGL - MouseEvent_multiView</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
@@ -42,13 +50,13 @@
                 tRenderer = RedRenderer();
                 // 뷰생성 및 적용
                 tView = RedView('HelloRedGL', redGL, tScene, tController);
-                tView.setSize('50%','50%')
+                tView.setSize('50%', '50%')
                 tWorld.addView(tView);
                 console.log(tView)
 
-                var tView2= RedView('HelloRedGL2', redGL, tScene, tController);
-                tView2.setLocation('50%','50%')
-                tView2.setSize('50%','50%')
+                var tView2 = RedView('HelloRedGL2', redGL, tScene, tController);
+                tView2.setLocation('50%', '50%')
+                tView2.setSize('50%', '50%')
                 tWorld.addView(tView2);
                 // 그리드 설정
                 tScene['grid'] = RedGrid(redGL);

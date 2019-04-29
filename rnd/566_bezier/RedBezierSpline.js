@@ -1,3 +1,9 @@
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedLinearSpline;
 (function () {
@@ -179,13 +185,13 @@ var RedLinearSpline;
             var i = 0;
             var offset
             for (i; i < numSegments; ++i) {
-                offset = i ;
+                offset = i;
                 getPointsOnBezierCurveWithSplitting(points, offset, tolerance, newPoints);
             }
             return newPoints;
         };
         parsePoints = function (pointList) {
-            return getPointsOnBezierCurves(pointList,0.1)
+            return getPointsOnBezierCurves(pointList, 0.1)
         }
         parsedPointList = parsePoints(points)
         //

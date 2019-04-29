@@ -1,29 +1,9 @@
-/* @preserve
-author : RedCamel
-github : https://github.com/redcamel/RedGL2
-email : webseon@gmail.com
-Copyright (c) 2018 RedCamel
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
 
-MIT License
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-*/
 /**DOC:
  {
 	 constructorYn : true,
@@ -41,25 +21,6 @@ SOFTWARE.
  * @version 2.4.0
  */
 
-/* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE. */
 !function (t, n) {
     if ("object" == typeof exports && "object" == typeof module) module.exports = n(); else if ("function" == typeof define && define.amd) define([], n); else {
         var r = n();
@@ -1412,6 +1373,12 @@ THE SOFTWARE. */
         }()
     }])
 });
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedDefinePropertyInfo;
 (function () {
@@ -1610,6 +1577,12 @@ var RedDefinePropertyInfo;
     };
     Object.freeze(RedDefinePropertyInfo);
 })();
+
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
 
 "use strict";
 var RedGLDetect;
@@ -1847,6 +1820,12 @@ var RedGLDetect;
     };
     Object.freeze(RedGLDetect);
 })();
+
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
 
 "use strict";
 var RedGLUtil;
@@ -2427,6 +2406,12 @@ var RedGLUtil;
     };
     Object.freeze(RedGLUtil);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedGL;
 (function () {
@@ -2804,6 +2789,13 @@ var RedGL;
     };
     Object.freeze(RedGL);
 })();
+
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedBaseController;
 (function () {
@@ -2827,6 +2819,12 @@ var RedBaseController;
     };
     Object.freeze(RedBaseController);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedImageLoader;
 (function () {
@@ -2950,6 +2948,12 @@ var RedImageLoader;
     };
     Object.freeze(RedImageLoader);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedBaseTexture;
 (function () {
@@ -3105,6 +3109,12 @@ var RedBaseTexture;
     });
     Object.freeze(RedBaseTexture);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedBaseObject3D;
 (function () {
@@ -3880,6 +3890,12 @@ var RedBaseObject3D;
     Object.freeze(RedBaseObject3D);
 })();
 
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedBaseContainer;
 (function () {
@@ -4193,6 +4209,13 @@ var RedBaseContainer;
     Object.freeze(RedBaseContainer);
 })();
 
+
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedBaseLight;
 (function () {
@@ -4264,6 +4287,12 @@ var RedBaseLight;
     });
     Object.freeze(RedBaseLight);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedFrameBuffer;
 (function () {
@@ -4403,6 +4432,12 @@ var RedFrameBuffer;
     RedDefinePropertyInfo.definePrototype('RedFrameBuffer', 'height', 'number', {min: 2});
     Object.freeze(RedFrameBuffer);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedBuffer;
 (function () {
@@ -4739,6 +4774,12 @@ var RedBuffer;
     RedBuffer.ELEMENT_ARRAY_BUFFER = 'elementArrayBuffer';
     Object.freeze(RedBuffer);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedGeometry;
 (function () {
@@ -4886,6 +4927,12 @@ var RedGeometry;
 
     Object.freeze(RedGeometry);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedInterleaveInfo;
 (function () {
@@ -4968,6 +5015,13 @@ var RedInterleaveInfo;
     };
     Object.freeze(RedInterleaveInfo);
 })();
+
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedBaseMaterial;
 (function () {
@@ -5212,6 +5266,12 @@ var RedBaseMaterial;
     };
     Object.freeze(RedBaseMaterial);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedTextureOptionChecker;
 (function () {
@@ -5286,6 +5346,12 @@ var RedTextureOptionChecker;
     };
     Object.freeze(RedTextureOptionChecker);
 })();
+
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
 
 "use strict";
 var RedBitmapTexture;
@@ -5481,6 +5547,12 @@ var RedBitmapTexture;
     Object.freeze(RedBitmapTexture);
 })();
 
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedVideoTexture;
 (function () {
@@ -5603,6 +5675,12 @@ var RedVideoTexture;
     });
     Object.freeze(RedVideoTexture);
 })();
+
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
 
 "use strict";
 var RedDDSTexture;
@@ -5903,6 +5981,12 @@ var RedDDSTexture;
     }
 })(RedDDSTexture.prototype);
 Object.freeze(RedDDSTexture);
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedBitmapCubeTexture;
 (function () {
@@ -6097,6 +6181,12 @@ var RedBitmapCubeTexture;
     Object.freeze(RedBitmapCubeTexture);
 })();
 
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedColorMaterial;
 (function () {
@@ -6245,6 +6335,12 @@ var RedColorMaterial;
     RedDefinePropertyInfo.definePrototype('RedColorMaterial', 'alpha', 'number', RedColorMaterial['DEFINE_OBJECT_ALPHA']);
     Object.freeze(RedColorMaterial);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedColorPhongMaterial;
 (function () {
@@ -6461,6 +6557,12 @@ var RedColorPhongMaterial;
     RedDefinePropertyInfo.definePrototype('RedColorPhongMaterial', 'useFlatMode', 'boolean', samplerOption);
     Object.freeze(RedColorPhongMaterial);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedColorPhongTextureMaterial;
 (function () {
@@ -6823,6 +6925,12 @@ var RedColorPhongTextureMaterial;
     RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'usePreMultiply', 'boolean', samplerOption);
     Object.freeze(RedColorPhongTextureMaterial)
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedEnvironmentMaterial;
 (function () {
@@ -7238,6 +7346,12 @@ var RedEnvironmentMaterial;
     RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'usePreMultiply', 'boolean', samplerOption);
     Object.freeze(RedEnvironmentMaterial);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedBitmapMaterial;
 (function () {
@@ -7379,6 +7493,12 @@ var RedBitmapMaterial;
     RedDefinePropertyInfo.definePrototype('RedBitmapMaterial', 'usePreMultiply', 'boolean', samplerOption);
     Object.freeze(RedBitmapMaterial);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedParticleMaterial;
 //////////////////////////////////////////////////////////
@@ -7524,6 +7644,12 @@ var RedParticleMaterial;
     RedDefinePropertyInfo.definePrototype('RedParticleMaterial', 'usePreMultiply', 'boolean', samplerOption);
     Object.freeze(RedParticleMaterial);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedBitmapPointCloudMaterial;
 (function () {
@@ -7659,6 +7785,12 @@ var RedBitmapPointCloudMaterial;
     RedDefinePropertyInfo.definePrototype('RedBitmapPointCloudMaterial', 'usePreMultiply', 'boolean', samplerOption);
     Object.freeze(RedBitmapPointCloudMaterial)
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedSheetMaterial;
 (function () {
@@ -8025,6 +8157,12 @@ var RedSheetMaterial;
     RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'usePreMultiply', 'boolean', samplerOption);
     Object.freeze(RedSheetMaterial)
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedStandardMaterial;
 (function () {
@@ -8397,6 +8535,12 @@ var RedStandardMaterial;
     RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'usePreMultiply', 'boolean', samplerOption);
     Object.freeze(RedStandardMaterial);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedVideoMaterial;
 (function () {
@@ -8519,6 +8663,12 @@ var RedVideoMaterial;
     RedDefinePropertyInfo.definePrototype('RedVideoMaterial', 'videoTexture', 'samplerVideo', {essential: true});
     Object.freeze(RedVideoMaterial);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedPBRMaterial;
 (function () {
@@ -8974,6 +9124,12 @@ var RedPBRMaterial;
     RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'usePreMultiply', 'boolean', samplerOption);
     Object.freeze(RedPBRMaterial);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedColorPointCloudMaterial;
 (function () {
@@ -9061,6 +9217,12 @@ var RedColorPointCloudMaterial;
     RedDefinePropertyInfo.definePrototype('RedColorPointCloudMaterial', 'alpha', 'number', {min: 0, max: 1});
     Object.freeze(RedColorPointCloudMaterial);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedPBRMaterial_System;
 (function () {
@@ -9606,6 +9768,12 @@ var RedPBRMaterial_System;
 
     Object.freeze(RedPBRMaterial_System);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedTextMaterial;
 (function () {
@@ -9771,6 +9939,12 @@ var RedTextMaterial;
     });
     Object.freeze(RedTextMaterial);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedAmbientLight;
 (function () {
@@ -9848,6 +10022,12 @@ var RedAmbientLight;
     });
     Object.freeze(RedAmbientLight);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedDirectionalLight;
 (function () {
@@ -9979,6 +10159,12 @@ var RedDirectionalLight;
     });
     Object.freeze(RedDirectionalLight);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedPointLight;
 (function () {
@@ -10116,6 +10302,12 @@ var RedPointLight;
     RedDefinePropertyInfo.definePrototype('RedPointLight', 'radius', 'number', {'min': 0});
     Object.freeze(RedPointLight);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedMTLLoader;
 (function () {
@@ -10290,6 +10482,12 @@ var RedMTLLoader;
     };
     Object.freeze(RedMTLLoader);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedOBJLoader;
 (function () {
@@ -10820,6 +11018,12 @@ var RedOBJLoader;
     };
     Object.freeze(RedOBJLoader)
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var Red3DSLoader;
 (function () {
@@ -11575,6 +11779,12 @@ var Red3DSLoader;
     Object.freeze(Red3DSLoader);
 })
 ();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedDAELoader;
 (function () {
@@ -11861,6 +12071,12 @@ var RedDAELoader;
     };
     Object.freeze(RedDAELoader)
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedGLTFLoader;
 (function () {
@@ -13917,6 +14133,12 @@ var RedGLTFLoader;
     })();
     Object.freeze(RedGLTFLoader);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedBoundBox;
 (function () {
@@ -13999,6 +14221,12 @@ var RedBoundBox;
     RedDefinePropertyInfo.definePrototype('RedBoundBox', 'sprite3DYn', 'boolean');
     Object.freeze(RedBoundBox);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedLinePoint;
 (function () {
@@ -14106,6 +14334,12 @@ var RedLinePoint;
      :DOC*/
     Object.freeze(RedLinePoint);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedLathe;
 (function () {
@@ -14650,6 +14884,12 @@ var RedLathe;
     RedLathe.prototype = Object.create(RedGeometry.prototype);
     Object.freeze(RedLathe);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedAxis;
 (function () {
@@ -14730,6 +14970,12 @@ var RedAxis;
     RedAxis.prototype = new RedBaseContainer();
     Object.freeze(RedAxis);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedGrid;
 (function () {
@@ -14933,6 +15179,12 @@ var RedGrid;
     });
     Object.freeze(RedGrid);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedMesh;
 (function () {
@@ -15020,6 +15272,12 @@ var RedMesh;
     RedDefinePropertyInfo.definePrototype('RedMesh', 'sprite3DYn', 'boolean');
     Object.freeze(RedMesh);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedLine;
 (function () {
@@ -15651,6 +15909,12 @@ var RedLine;
     RedLine.prototype['_getPointsOnBezierCurves'] = getPointsOnBezierCurves;
     Object.freeze(RedLine);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedLatheMesh;
 (function () {
@@ -15854,6 +16118,12 @@ var RedLatheMesh;
     Object.freeze(RedLatheMesh);
 })
 ();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedSkyBox;
 (function () {
@@ -15937,6 +16207,12 @@ var RedSkyBox;
     });
     Object.freeze(RedSkyBox);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedSprite3D;
 (function () {
@@ -16032,6 +16308,12 @@ var RedSprite3D;
     });
     Object.freeze(RedSprite3D);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedPointCloud;
 (function () {
@@ -16076,6 +16358,12 @@ var RedPointCloud;
     });
     Object.freeze(RedPointCloud);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedParticleUnit;
 //////////////////////////////////////////////////////////
@@ -16134,6 +16422,12 @@ var RedParticleUnit;
     };
     Object.freeze(RedParticleUnit);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedColorPointCloud;
 (function () {
@@ -16210,6 +16504,12 @@ var RedColorPointCloud;
     });
     Object.freeze(RedColorPointCloud);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedBitmapPointCloud;
 (function () {
@@ -16286,6 +16586,12 @@ var RedBitmapPointCloud;
     });
     Object.freeze(RedBitmapPointCloud);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 //////////////////////////////////////////////////////////
 // 연구중
@@ -16578,6 +16884,12 @@ var RedParticleEmitter;
     });
     Object.freeze(RedParticleEmitter);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedBox;
 (function () {
@@ -16746,6 +17058,12 @@ var RedBox;
     RedBox.prototype = Object.create(RedGeometry.prototype);
     Object.freeze(RedBox);
 })();
+
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
 
 "use strict";
 var RedCylinder;
@@ -16994,6 +17312,12 @@ var RedCylinder;
     RedCylinder.prototype = Object.create(RedGeometry.prototype);
     Object.freeze(RedCylinder);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedPlane;
 (function () {
@@ -17138,6 +17462,12 @@ var RedPlane;
     RedPlane.prototype = Object.create(RedGeometry.prototype);
     Object.freeze(RedPlane);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedSphere;
 (function () {
@@ -17316,6 +17646,12 @@ var RedSphere;
     RedSphere.prototype = Object.create(RedGeometry.prototype);
     Object.freeze(RedSphere);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedProgram;
 (function () {
@@ -17723,6 +18059,12 @@ var RedProgram;
     })();
     Object.freeze(RedProgram);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedSystemShaderCode;
 (function () {
@@ -18155,6 +18497,12 @@ var RedSystemShaderCode;
         Object.freeze(RedSystemShaderCode)
     };
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedShader;
 (function () {
@@ -18499,6 +18847,12 @@ var RedShader;
     RedShader['VERTEX'] = 'vertexShader';
     Object.freeze(RedShader)
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedRenderer;
 //TODO: 캐싱전략을 좀더 고도화하는게 좋을듯
@@ -19539,6 +19893,12 @@ var RedRenderer;
     Object.freeze(RedRenderer);
 })();
 
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedRenderDebuger;
 (function () {
@@ -19657,6 +20017,12 @@ var RedRenderDebuger;
     });
     Object.freeze(RedRenderDebuger);
 })();
+
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
 
 "use strict";
 var RedSystemUniformUpdater;
@@ -20090,6 +20456,12 @@ var RedSystemUniformUpdater;
     Object.freeze(RedSystemUniformUpdater);
 })();
 
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedView;
 (function () {
@@ -20275,6 +20647,12 @@ var RedView;
     Object.freeze(RedView);
 })();
 
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedWorld;
 (function () {
@@ -20439,6 +20817,12 @@ var RedWorld;
     };
     Object.freeze(RedWorld);
 })();
+
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
 
 "use strict";
 var RedScene;
@@ -20853,6 +21237,12 @@ var RedScene;
     Object.freeze(RedScene);
 })();
 
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedCamera;
 (function () {
@@ -21028,6 +21418,12 @@ var RedCamera;
     })();
     Object.freeze(RedCamera);
 })();
+
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
 
 "use strict";
 var RedBasicController;
@@ -21474,6 +21870,12 @@ var RedBasicController;
     Object.freeze(RedBasicController);
 })();
 
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedObitController;
 (function () {
@@ -21778,6 +22180,12 @@ var RedObitController;
     Object.freeze(RedObitController);
 })();
 
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedGridMaterial;
 (function () {
@@ -21838,6 +22246,12 @@ var RedGridMaterial;
     RedGridMaterial.prototype = new RedBaseMaterial();
     Object.freeze(RedGridMaterial);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedSkyBoxMaterial;
 (function () {
@@ -21928,6 +22342,12 @@ var RedSkyBoxMaterial;
     RedDefinePropertyInfo.definePrototype('RedSkyBoxMaterial', 'alpha', 'number', {min: 0, max: 1});
     Object.freeze(RedSkyBoxMaterial)
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedDirectionalShadowMaterial;
 (function () {
@@ -22019,6 +22439,12 @@ var RedDirectionalShadowMaterial;
     RedDirectionalShadowMaterial.prototype = new RedBaseMaterial();
     Object.freeze(RedDirectionalShadowMaterial)
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedPostEffectMaterial;
 (function () {
@@ -22091,6 +22517,12 @@ var RedPostEffectMaterial;
     RedDefinePropertyInfo.definePrototype('RedPostEffectMaterial', 'diffuseTexture', 'sampler2D', {essential: true});
     Object.freeze(RedPostEffectMaterial);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedDirectionalShadow;
 (function () {
@@ -22222,6 +22654,12 @@ var RedDirectionalShadow;
     RedDefinePropertyInfo.definePrototype('RedDirectionalShadow', 'size', 'number', {'min': 1});
     Object.freeze(RedDirectionalShadow);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedShadowManager;
 (function () {
@@ -22303,6 +22741,12 @@ var RedShadowManager;
     });
     Object.freeze(RedShadowManager);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedText;
 (function () {
@@ -22663,6 +23107,12 @@ var RedText;
     });
     Object.freeze(RedText);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedMouseEventManager;
 (function () {
@@ -22839,6 +23289,12 @@ var RedMouseEventManager;
     Object.freeze(RedMouseEventManager);
 })
 ();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedMouseEventMaterial;
 (function () {
@@ -22915,6 +23371,12 @@ var RedMouseEventMaterial;
     RedMouseEventMaterial.prototype = new RedBaseMaterial();
     Object.freeze(RedMouseEventMaterial)
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedPostEffectManager;
 (function () {
@@ -23282,6 +23744,12 @@ var RedPostEffectManager;
     });
     Object.freeze(RedPostEffectManager);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedBasePostEffect;
 (function () {
@@ -23339,6 +23807,12 @@ var RedBasePostEffect;
     RedBasePostEffect.prototype['_subFrameBufferList'] = [];
     Object.freeze(RedBasePostEffect);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedPostEffect_Bloom;
 (function () {
@@ -23494,6 +23968,12 @@ var RedPostEffect_Bloom;
     });
     Object.freeze(RedPostEffect_Bloom);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedPostEffect_BloomThreshold;
 (function () {
@@ -23588,6 +24068,12 @@ var RedPostEffect_BloomThreshold;
     });
     Object.freeze(RedPostEffect_BloomThreshold);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedPostEffect_Blur;
 (function () {
@@ -23678,6 +24164,12 @@ var RedPostEffect_Blur;
     RedDefinePropertyInfo.definePrototype('RedPostEffect_Blur', 'diffuseTexture', 'sampler2D');
     Object.freeze(RedPostEffect_Blur);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedPostEffect_BlurX;
 (function () {
@@ -23783,6 +24275,12 @@ var RedPostEffect_BlurX;
     RedDefinePropertyInfo.definePrototype('RedPostEffect_BlurX', 'size', 'number', {'min': 0});
     Object.freeze(RedPostEffect_BlurX);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedPostEffect_BlurY;
 (function () {
@@ -23888,6 +24386,12 @@ var RedPostEffect_BlurY;
     RedDefinePropertyInfo.definePrototype('RedPostEffect_BlurY', 'size', 'number', {'min': 0});
     Object.freeze(RedPostEffect_BlurY);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedPostEffect_GaussianBlur;
 (function () {
@@ -23954,6 +24458,12 @@ var RedPostEffect_GaussianBlur;
     });
     Object.freeze(RedPostEffect_GaussianBlur);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedPostEffect_ZoomBlur;
 (function () {
@@ -24091,6 +24601,12 @@ var RedPostEffect_ZoomBlur;
     });
     Object.freeze(RedPostEffect_ZoomBlur);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedPostEffect_BrightnessContrast;
 (function () {
@@ -24207,6 +24723,12 @@ var RedPostEffect_BrightnessContrast;
     });
     Object.freeze(RedPostEffect_BrightnessContrast);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedPostEffect_Threshold;
 (function () {
@@ -24304,6 +24826,12 @@ var RedPostEffect_Threshold;
     });
     Object.freeze(RedPostEffect_Threshold);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedPostEffect_Invert;
 (function () {
@@ -24381,6 +24909,12 @@ var RedPostEffect_Invert;
     RedDefinePropertyInfo.definePrototype('RedPostEffect_Invert', 'diffuseTexture', 'sampler2D');
     Object.freeze(RedPostEffect_Invert);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedPostEffect_Gray;
 (function () {
@@ -24456,6 +24990,12 @@ var RedPostEffect_Gray;
     RedDefinePropertyInfo.definePrototype('RedPostEffect_Gray', 'diffuseTexture', 'sampler2D');
     Object.freeze(RedPostEffect_Gray);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedPostEffect_HueSaturation;
 (function () {
@@ -24583,6 +25123,12 @@ var RedPostEffect_HueSaturation;
     });
     Object.freeze(RedPostEffect_HueSaturation);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedPostEffect_HalfTone;
 (function () {
@@ -24744,6 +25290,12 @@ var RedPostEffect_HalfTone;
     RedDefinePropertyInfo.definePrototype('RedPostEffect_HalfTone', 'radius', 'number', {'min': 0});
     Object.freeze(RedPostEffect_HalfTone);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedPostEffect_Pixelize;
 (function () {
@@ -24854,6 +25406,12 @@ var RedPostEffect_Pixelize;
     RedDefinePropertyInfo.definePrototype('RedPostEffect_Pixelize', 'height', 'number', {'min': 0});
     Object.freeze(RedPostEffect_Pixelize);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedPostEffect_Convolution;
 (function () {
@@ -25081,6 +25639,12 @@ var RedPostEffect_Convolution;
     ];
     Object.freeze(RedPostEffect_Convolution);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedPostEffect_DoF;
 (function () {
@@ -25217,6 +25781,12 @@ var RedPostEffect_DoF;
     })());
     Object.freeze(RedPostEffect_DoF);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedPostEffect_DoF_DepthMaterial;
 (function () {
@@ -25310,6 +25880,12 @@ var RedPostEffect_DoF_DepthMaterial;
     RedDefinePropertyInfo.definePrototype('RedPostEffect_DoF_DepthMaterial', 'focusLength', 'number', {'min': 0});
     Object.freeze(RedPostEffect_DoF_DepthMaterial)
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedPostEffect_Film;
 (function () {
@@ -25464,6 +26040,12 @@ var RedPostEffect_Film;
     RedDefinePropertyInfo.definePrototype('RedPostEffect_Film', 'scanlineCount', 'number', {'min': 0});
     Object.freeze(RedPostEffect_Film);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedPostEffect_Vignetting;
 (function () {
@@ -25568,6 +26150,12 @@ var RedPostEffect_Vignetting;
     RedDefinePropertyInfo.definePrototype('RedPostEffect_Vignetting', 'size', 'number', {'min': 0});
     Object.freeze(RedPostEffect_Vignetting);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedPostEffect_FXAA;
 (function () {
@@ -25686,6 +26274,12 @@ var RedPostEffect_FXAA;
     RedDefinePropertyInfo.definePrototype('RedPostEffect_FXAA', 'diffuseTexture', 'sampler2D');
     Object.freeze(RedPostEffect_FXAA);
 })();
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedGLOffScreen;
 (function () {
@@ -25990,4 +26584,4 @@ var RedGLOffScreen;
         };
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-04-26 17:24:55)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-04-29 09:55:38)' };console.log(RedGL_VERSION);
