@@ -55,8 +55,9 @@ var RedBoundBox;
 			 return : 'RedBaseMaterial 확장 Instance'
 		 }
          :DOC*/
-        this['material'] = RedColorMaterial(redGL,'#00ff00');
-        this.drawMode = redGL.gl.LINE_LOOP
+        this['material'] = RedColorMaterial(redGL, '#00ff00');
+        this.drawMode = redGL.gl.LINE_LOOP;
+        this.autoUpdateMatrix = false;
         this['_UUID'] = RedGL.makeUUID();
     };
     RedBoundBox.prototype = new RedBaseContainer();

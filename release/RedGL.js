@@ -4914,7 +4914,11 @@ var RedGeometry;
      {
 		     code : 'METHOD',
 			 title :`volume`,
-			 description : `지오메트리 고유의 볼륨을 리턴함`,
+			 description : `
+			    지오메트리 고유의 볼륨을 리턴함.
+                계산된 볼륨을 리턴함
+                강제 재계산을 실행하고싶다면 volumeCalculate()를 실행해야함
+            `,
 			 return : 'array : [xVolume, yVolume, zVolume]'
 		 }
      :DOC*/
@@ -14190,8 +14194,9 @@ var RedBoundBox;
 			 return : 'RedBaseMaterial 확장 Instance'
 		 }
          :DOC*/
-        this['material'] = RedColorMaterial(redGL,'#00ff00');
-        this.drawMode = redGL.gl.LINE_LOOP
+        this['material'] = RedColorMaterial(redGL, '#00ff00');
+        this.drawMode = redGL.gl.LINE_LOOP;
+        this.autoUpdateMatrix = false;
         this['_UUID'] = RedGL.makeUUID();
     };
     RedBoundBox.prototype = new RedBaseContainer();
@@ -23155,10 +23160,20 @@ var RedMouseEventManager;
             // console.log(this['_mouseEventListObject'])
         },
         remove: function (target, type) {
-            var t0 = this['_mouseEventList'].indexOf(target);
-            if (t0 > -1) {
-                this['_mouseEventList'].splice(t0, 1);
-                delete this['_mouseEventListObject'][target['_mouseColorID']]
+            var key = target['_mouseColorID'];
+            if (this['_mouseEventListObject'][key]) {
+                var test = 0;
+                if (this['_mouseEventListObject'][key][type]) {
+                    delete this['_mouseEventListObject'][key][type]
+                    for (var k in this['_mouseEventListObject'][key]) test++;
+                }
+                if (test === 0) {
+                    var t0 = this['_mouseEventList'].indexOf(target);
+                    if (t0 > -1) {
+                        this['_mouseEventList'].splice(t0, 1);
+                        delete this['_mouseEventListObject'][target['_mouseColorID']]
+                    }
+                }
             }
         },
         render: (function () {
@@ -23216,7 +23231,7 @@ var RedMouseEventManager;
                                     currentInfo[tEventType].call(currentInfo['target'], {
                                         target: currentInfo['target'],
                                         type: tEventType,
-                                        nativeEvent : tEventData.nativeEvent
+                                        nativeEvent: tEventData.nativeEvent
                                     })
                                 }
                             }
@@ -23227,7 +23242,7 @@ var RedMouseEventManager;
                                     currentInfo[tEventType].call(currentInfo['target'], {
                                         target: currentInfo['target'],
                                         type: tEventType,
-                                        nativeEvent : tEventData.nativeEvent
+                                        nativeEvent: tEventData.nativeEvent
                                     })
                                 }
                             }
@@ -23247,7 +23262,7 @@ var RedMouseEventManager;
                                     currentInfo[tEventType].call(currentInfo['target'], {
                                         target: currentInfo['target'],
                                         type: tEventType,
-                                        nativeEvent : tEventData.nativeEvent
+                                        nativeEvent: tEventData.nativeEvent
                                     })
                                 }
                                 console.log('오버')
@@ -23262,7 +23277,7 @@ var RedMouseEventManager;
                                     {
                                         info: self['_prevInfo'][tView['_UUID']],
                                         type: tEventType,
-                                        nativeEvent : tEventData.nativeEvent
+                                        nativeEvent: tEventData.nativeEvent
                                     }
                                 )
                             }
@@ -26584,4 +26599,4 @@ var RedGLOffScreen;
         };
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-04-29 09:55:38)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-04-29 14:34:31)' };console.log(RedGL_VERSION);

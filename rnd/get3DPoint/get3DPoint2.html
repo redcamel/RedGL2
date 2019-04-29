@@ -104,11 +104,11 @@
             tMesh2.z = 2
 
             tScene.mouseManager.add(tMesh, 'down', function (e) {
-                tTransformController.init(tView, tMesh)
+                tTransformController.setTarget(tView, tMesh)
                 tScene.addChild(tTransformController)
             })
             tScene.mouseManager.add(tMesh2, 'down', function (e) {
-                tTransformController.init(tView, tMesh2)
+                tTransformController.setTarget(tView, tMesh2)
                 tScene.addChild(tTransformController)
             })
             var tTransformController = RedTransformController(this)

@@ -46,10 +46,20 @@ var RedMouseEventManager;
             // console.log(this['_mouseEventListObject'])
         },
         remove: function (target, type) {
-            var t0 = this['_mouseEventList'].indexOf(target);
-            if (t0 > -1) {
-                this['_mouseEventList'].splice(t0, 1);
-                delete this['_mouseEventListObject'][target['_mouseColorID']]
+            var key = target['_mouseColorID'];
+            if (this['_mouseEventListObject'][key]) {
+                var test = 0;
+                if (this['_mouseEventListObject'][key][type]) {
+                    delete this['_mouseEventListObject'][key][type]
+                    for (var k in this['_mouseEventListObject'][key]) test++;
+                }
+                if (test === 0) {
+                    var t0 = this['_mouseEventList'].indexOf(target);
+                    if (t0 > -1) {
+                        this['_mouseEventList'].splice(t0, 1);
+                        delete this['_mouseEventListObject'][target['_mouseColorID']]
+                    }
+                }
             }
         },
         render: (function () {
@@ -107,7 +117,7 @@ var RedMouseEventManager;
                                     currentInfo[tEventType].call(currentInfo['target'], {
                                         target: currentInfo['target'],
                                         type: tEventType,
-                                        nativeEvent : tEventData.nativeEvent
+                                        nativeEvent: tEventData.nativeEvent
                                     })
                                 }
                             }
@@ -118,7 +128,7 @@ var RedMouseEventManager;
                                     currentInfo[tEventType].call(currentInfo['target'], {
                                         target: currentInfo['target'],
                                         type: tEventType,
-                                        nativeEvent : tEventData.nativeEvent
+                                        nativeEvent: tEventData.nativeEvent
                                     })
                                 }
                             }
@@ -138,7 +148,7 @@ var RedMouseEventManager;
                                     currentInfo[tEventType].call(currentInfo['target'], {
                                         target: currentInfo['target'],
                                         type: tEventType,
-                                        nativeEvent : tEventData.nativeEvent
+                                        nativeEvent: tEventData.nativeEvent
                                     })
                                 }
                                 console.log('오버')
@@ -153,7 +163,7 @@ var RedMouseEventManager;
                                     {
                                         info: self['_prevInfo'][tView['_UUID']],
                                         type: tEventType,
-                                        nativeEvent : tEventData.nativeEvent
+                                        nativeEvent: tEventData.nativeEvent
                                     }
                                 )
                             }
