@@ -7,7 +7,7 @@ var index_demo
     var testEmitter
     var targetRender
     index_demo = {
-        start : function (redGL, tView, tRenderer, tCamera){
+        start: function (redGL, tView, tRenderer, tCamera) {
             tView.scene = tScene
             // 렌더시작
             targetRender.start(redGL, function (time) {

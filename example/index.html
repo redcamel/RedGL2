@@ -2,6 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="keywords" content="RedGL,webgl,demo">
     <title>RedGL</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
@@ -38,8 +39,8 @@
         li {
             list-style: none;
             vertical-align: top;
-            text-shadow: 0px 1px rgb(0, 0, 0);x
-            font-family: Montserrat;
+            text-shadow: 0px 1px rgb(0, 0, 0);
+            x font-family: Montserrat;
         }
 
         h1, h2 {
@@ -141,7 +142,7 @@
                         'z-index', 2,
                         '<', 'body'
                     );
-                    (Alucard.DETECT.browser=='ie' && Alucard.DETECT.browserVer==11 ? ['index_demo'] : ['index_demo', 'index_demo2']).forEach(
+                    (Alucard.DETECT.browser == 'ie' && Alucard.DETECT.browserVer == 11 ? ['index_demo'] : ['index_demo', 'index_demo2']).forEach(
                         function (v, idx) {
                             window[v].init(self, tView, tRenderer, tCamera)
                             Alucard.Dom('button').S(
@@ -290,7 +291,11 @@
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-134079611-1"></script>
 <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
     gtag('js', new Date());
 
     gtag('config', 'UA-134079611-1');

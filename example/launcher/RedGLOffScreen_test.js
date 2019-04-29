@@ -38,8 +38,8 @@ function () {
             while (num--) {
                 tScene.addChild(t0 = RedMesh(this, RedSphere(this, 1, 16, 16, 16), RedStandardMaterial(
                     this,
-                    RedBitmapTexture(this,'https://redcamel.github.io/RedGL2/asset/brick/Brick03_col.jpg'),
-                    RedBitmapTexture(this,'https://redcamel.github.io/RedGL2/asset/brick/Brick03_nrm.jpg')
+                    RedBitmapTexture(this, 'https://redcamel.github.io/RedGL2/asset/brick/Brick03_col.jpg'),
+                    RedBitmapTexture(this, 'https://redcamel.github.io/RedGL2/asset/brick/Brick03_nrm.jpg')
                 )))
                 t0.scaleX = t0.scaleY = t0.scaleZ = 1
                 t0.x = Math.random() * 100 - 50

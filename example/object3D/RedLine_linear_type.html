@@ -2,6 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="keywords" content="RedGL,webgl,demo">
     <title>RedGL - RedLine Linear Type</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
@@ -56,7 +57,7 @@
             // tLine 생성 함수 정의
 
             testRedLine = RedLine(this, RedColorMaterial(this));
-            testRedLine.useCullFace=false
+            testRedLine.useCullFace = false
             tScene.addChild(testRedLine);
             // 60번 포인트를 랜덤으로 정의하고 라인추가
             addRandomPoint = function () {

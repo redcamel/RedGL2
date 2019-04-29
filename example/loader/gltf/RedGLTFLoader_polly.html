@@ -2,6 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="keywords" content="RedGL,webgl,demo">
     <title>RedGL - RedGLTFLoader</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
@@ -104,7 +105,7 @@
                 tScene.addChild(v['resultMesh'])
                 tView.camera = v['parsingResult']['cameras'][1]
                 tView.camera.nearClipping = 0.1
-            },RedBitmapCubeTexture(this, // environmentTexture
+            }, RedBitmapCubeTexture(this, // environmentTexture
                 [
                     assetPath + 'cubemap/posx.png',
                     assetPath + 'cubemap/negx.png',
