@@ -1,7 +1,8 @@
 <!--
-  ~ MIT License
+  ~ RedGL - MIT License
   ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
   ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+  ~ Last modification time of this file - 2019.4.30 18:58
   -->
 
 <!DOCTYPE html>
@@ -46,7 +47,6 @@
             list-style: none;
             vertical-align: top;
             text-shadow: 0 1px rgb(0, 0, 0);
-            font-family: Montserrat;
         }
 
         h1, h2 {
@@ -89,7 +89,7 @@
 <script>
     var goRedGL = function () {
         window.location.href = 'https://github.com/redcamel/RedGL2'
-    }
+    };
     var goRedGLDoc = function () {
         window.location.href = 'https://redcamel.github.io/RedGL2/redDoc/index.html'
     }
@@ -101,14 +101,12 @@
         onclick="goRedGLDoc()">DOC
 </button>
 <script>
-    var assetPath = '../asset/'
-    var tEffect, tEffect2
+    var assetPath = '../asset/';
+    var tEffect, tEffect2;
     RedGL(document.querySelector('canvas'), function (v) {
         if (v) {
-            console.log('초기화 성공!')
+            console.log('초기화 성공!');
             var tWorld, tView, tScene, tCamera, tRenderer;
-
-
             var setBase = function (redGL) {
                 // 월드 생성
                 redGL['world'] = tWorld = RedWorld();
@@ -123,10 +121,10 @@
                 tView = RedView('HelloRedGL', redGL, tScene, tCamera);
                 tWorld.addView(tView);
 
-                tEffect = RedPostEffect_HueSaturation(redGL)
-                tEffect2 = RedPostEffect_ZoomBlur(redGL)
+                tEffect = RedPostEffect_HueSaturation(redGL);
+                tEffect2 = RedPostEffect_ZoomBlur(redGL);
                 if (!Alucard.DETECT.isMobile) {
-                    tView.postEffectManager.addEffect(tEffect = RedPostEffect_HueSaturation(redGL))
+                    tView.postEffectManager.addEffect(tEffect = RedPostEffect_HueSaturation(redGL));
                     tView.postEffectManager.addEffect(tEffect2 = RedPostEffect_ZoomBlur(redGL))
                 }
                 tEffect2.amount = 0
@@ -149,9 +147,9 @@
                         'z-index', 2,
                         '<', 'body'
                     );
-                    (Alucard.DETECT.browser == 'ie' && Alucard.DETECT.browserVer == 11 ? ['index_demo'] : ['index_demo', 'index_demo2']).forEach(
+                    (Alucard.DETECT.browser === 'ie' && Alucard.DETECT.browserVer === 11 ? ['index_demo'] : ['index_demo', 'index_demo2']).forEach(
                         function (v, idx) {
-                            window[v].init(self, tView, tRenderer, tCamera)
+                            window[v].init(self, tView, tRenderer, tCamera);
                             Alucard.Dom('button').S(
                                 'html', 'BG Demo' + (idx + 1),
                                 'background', '#594665',
@@ -191,31 +189,31 @@
     </div>
 </div>
 <script>
-    var itemList = []
+    var itemList = [];
     var makeItem = function (list, root, depth) {
-        depth = depth || 0
+        depth = depth || 0;
         list.forEach(function (v) {
-            var tIDX = itemList.length
+            var tIDX = itemList.length;
 
 
             var tDom;
             if (!v['href']) {
-                var newGroup
+                var newGroup;
                 root.S(
                     '>', Alucard.Dom('h2').S(
                         'html', v['key']
                     ),
                     '>', newGroup = Alucard.Dom('ul')
-                )
+                );
                 makeItem(v['list'] ? v['list'] : [], depth ? root : newGroup, depth + 1)
             } else {
-                itemList.push(v)
+                itemList.push(v);
                 tDom = Alucard.Dom('li').S(
                     'display', 'inline-block',
                     '<', root
                 );
                 //
-                var tImg
+                var tImg;
                 Alucard.Dom('div').S(
                     'display', 'inline-block',
                     'margin', '5px 15px 0px 0px',
@@ -241,11 +239,11 @@
                         'html', v['key']
                     ),
                     'over', function (e) {
-                        console.log(e)
-                        this.S('z-index', 2)
-                        TweenMax.to(this.dom, 0.2, {scale: 1.3, ease: Ease.QuintInOut})
-                        TweenMax.to(tImg.dom, 0.3, {opacity: 1, ease: Ease.QuintOut})
-                        TweenMax.to(tEffect, 0.5, {saturation: -100, ease: Ease.QuintOut})
+                        console.log(e);
+                        this.S('z-index', 2);
+                        TweenMax.to(this.dom, 0.2, {scale: 1.3, ease: Ease.QuintInOut});
+                        TweenMax.to(tImg.dom, 0.3, {opacity: 1, ease: Ease.QuintOut});
+                        TweenMax.to(tEffect, 0.5, {saturation: -100, ease: Ease.QuintOut});
                         TweenMax.to(tEffect2, 0.5, {
                                 centerX: e.nativeEvent.clientX / document.body.clientWidth - 0.5,
                                 centerY: e.nativeEvent.clientY / window.outerHeight - 0.5,
@@ -255,10 +253,10 @@
 
                     },
                     'out', function () {
-                        this.S('z-index', 1)
-                        TweenMax.to(this.dom, 0.3, {scale: 1, ease: Ease.QuintInOut})
-                        TweenMax.to(tImg.dom, 0.3, {opacity: 0.65, ease: Ease.QuintOut})
-                        TweenMax.to(tEffect, 0.5, {saturation: 0, ease: Ease.QuintOut})
+                        this.S('z-index', 1);
+                        TweenMax.to(this.dom, 0.3, {scale: 1, ease: Ease.QuintInOut});
+                        TweenMax.to(tImg.dom, 0.3, {opacity: 0.65, ease: Ease.QuintOut});
+                        TweenMax.to(tEffect, 0.5, {saturation: 0, ease: Ease.QuintOut});
                         TweenMax.to(tEffect2, 0.5, {
                                 centerX: 0,
                                 centerY: 0,
@@ -271,15 +269,15 @@
                     },
                     '<', tDom
                 );
-                tImg.dom.onerror = function (v) {
+                tImg.dom.onerror = function () {
                     tImg.S('@src', 'thumb/test.jpg')
-                }
+                };
                 makeItem(v['list'] ? v['list'] : [], tDom, depth + 1)
             }
 
         })
-    }
-    var exampleList = baseTestUI.exampleList
+    };
+    var exampleList = baseTestUI.exampleList;
     makeItem(exampleList, Alucard.Dom('#exampleBox'))
 </script>
 

@@ -1,0 +1,56 @@
+[
+  {
+    "title": "boundBoxMode",
+    "code": "PROPERTY",
+    "description": "\n 바운드 박스 계산타입\n RedTransformController.AABB or RedTransformController.OBB 설정가능\n ",
+    "return": "String"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedTransformController",
+    "description": "\n\t RedTransformController Instance 생성기\n ",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ]
+    },
+    "extends": [
+      "RedBaseContainer",
+      "RedBaseObject3D"
+    ],
+    "demo": "../example/object3D/RedTransformController.html",
+    "return": "RedTransformController Instance"
+  },
+  {
+    "title": "RedTransformController.AABB",
+    "code": "CONST",
+    "description": "바운드 박스 계산타입 - AABB",
+    "return": "String"
+  },
+  {
+    "title": "RedTransformController.OBB",
+    "code": "CONST",
+    "description": "바운드 박스 계산타입 - OBB",
+    "return": "String"
+  },
+  {
+    "title": "usePosition",
+    "code": "PROPERTY",
+    "description": "\n 포지션 변경 허용여부\n ",
+    "return": "Boolean"
+  },
+  {
+    "title": "useRotation",
+    "code": "PROPERTY",
+    "description": "\n 회전각 변경 허용여부\n ",
+    "return": "Boolean"
+  },
+  {
+    "title": "useScale",
+    "code": "PROPERTY",
+    "description": "\n 스케일 변경 허용여부\n ",
+    "return": "Boolean"
+  }
+]

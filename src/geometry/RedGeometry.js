@@ -1,7 +1,8 @@
 /*
- * MIT License
+ * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
  */
 
 "use strict";
@@ -138,7 +139,11 @@ var RedGeometry;
      {
 		     code : 'METHOD',
 			 title :`volume`,
-			 description : `지오메트리 고유의 볼륨을 리턴함`,
+			 description : `
+			    지오메트리 고유의 볼륨을 리턴함.
+                계산된 볼륨을 리턴함
+                강제 재계산을 실행하고싶다면 volumeCalculate()를 실행해야함
+            `,
 			 return : 'array : [xVolume, yVolume, zVolume]'
 		 }
      :DOC*/

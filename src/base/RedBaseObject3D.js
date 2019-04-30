@@ -1,7 +1,8 @@
 /*
- * MIT License
+ * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
  */
 
 "use strict";
@@ -738,6 +739,72 @@ var RedBaseObject3D;
 		 return : 'Number'
 	 }
      :DOC*/
+    (function () {
+        var getAABB, getOBB, getTransformVolume;
+        getTransformVolume = function (mesh) {
+            var minX, minY, minZ, maxX, maxY, maxZ, vx, vy, vz, t, i, len;
+            var tx, ty, tz;
+            var volume;
+            var transform = mesh.matrix;
+            var stride = mesh.geometry['interleaveBuffer']['stride'];
+            // if (!volume[this]) {
+            minX = minY = minZ = maxX = maxY = maxZ = 0;
+            t = mesh.geometry['interleaveBuffer']['data'];
+            i = 0;
+            len = mesh.geometry['interleaveBuffer']['pointNum'];
+            for (i; i < len; i++) {
+                vx = i * stride , vy = vx + 1, vz = vx + 2;
+                tx = transform[0] * t[vx] + transform[4] * t[vy] + transform[8] * t[vz];
+                ty = transform[1] * t[vx] + transform[5] * t[vy] + transform[9] * t[vz];
+                tz = transform[2] * t[vx] + transform[6] * t[vy] + transform[10] * t[vz];
+                minX = tx < minX ? tx : minX;
+                maxX = tx > maxX ? tx : maxX;
+                minY = ty < minY ? ty : minY;
+                maxY = ty > maxY ? ty : maxY;
+                minZ = tz < minZ ? tz : minZ;
+                maxZ = tz > maxZ ? tz : maxZ;
+            }
+            volume = [maxX - minX, maxY - minY, maxZ - minZ];
+            volume.minX = minX;
+            volume.maxX = maxX;
+            volume.minY = minY;
+            volume.maxY = maxY;
+            volume.minZ = minZ;
+            volume.maxZ = maxZ;
+            return volume
+        };
+        getAABB = function (mesh) {
+            var volume = getTransformVolume(mesh);
+            var tMTX = mat4.create();
+            mat4.translate(tMTX, tMTX, mesh.localToWorld(0, 0, 0));
+            mat4.scale(tMTX, tMTX, volume);
+            return {
+                worldMatrix: tMTX,
+                volume: volume
+            }
+        };
+        getOBB = function (mesh) {
+            var tVolume = mesh.geometry.volume;
+            var tMTX = mat4.create();
+            mat4.translate(tMTX, tMTX, mesh.localToWorld(0, 0, 0));
+            mat4.rotateX(tMTX, tMTX, -mesh.rotationX * Math.PI / 180);
+            mat4.rotateY(tMTX, tMTX, -mesh.rotationY * Math.PI / 180);
+            mat4.rotateZ(tMTX, tMTX, -mesh.rotationZ * Math.PI / 180);
+            mat4.scale(tMTX, tMTX, tVolume);
+            mat4.scale(tMTX, tMTX, [mesh.scaleX, mesh.scaleY, mesh.scaleZ]);
+            var volume = getTransformVolume(mesh);
+            return {
+                worldMatrix: tMTX,
+                volume: volume
+            }
+        };
+        RedBaseObject3D.prototype['volumeCalculateAABB'] = function () {
+            return this['volumeInfo'] = getAABB(this)
+        };
+        RedBaseObject3D.prototype['volumeCalculateOBB'] = function () {
+            return this['volumeInfo'] = getOBB(this)
+        };
+    })();
     /**DOC:
      {
 			 title :`geometry`,

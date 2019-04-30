@@ -1,7 +1,8 @@
 /*
- * MIT License
+ * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:43
  */
 
 var gulp = require('gulp');
@@ -132,6 +133,7 @@ gulp.task('combine-js', function () {
         "src/RedGLUtil.js",
         "src/RedGL.js",
         // "src/RedXR.js",
+        "src/RedBoxSelection.js",
         //
         "src/base/RedBaseController.js",
         "src/loader/RedImageLoader.js",
@@ -179,7 +181,6 @@ gulp.task('combine-js', function () {
         "src/loader/dae/RedDAELoader.js",
         "src/loader/gltf/RedGLTFLoader.js",
         //
-        "src/object3D/system/RedBoundBox.js",
         "src/object3D/system/RedLinePoint.js",
         "src/object3D/system/RedLathe.js",
         "src/object3D/RedAxis.js",
@@ -189,7 +190,7 @@ gulp.task('combine-js', function () {
         "src/object3D/RedLatheMesh.js",
         "src/object3D/RedSkyBox.js",
         "src/object3D/RedSprite3D.js",
-        // "src/object3D/RedTransformController.js",
+        "src/object3D/RedTransformController.js",
 
         //
         "src/particle/system/RedPointCloud.js",
