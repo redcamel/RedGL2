@@ -2,7 +2,7 @@
   ~ RedGL - MIT License
   ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
   ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
-  ~ Last modification time of this file - 2019.4.30 19:54
+  ~ Last modification time of this file - 2019.4.30 20:40
   -->
 
 <!DOCTYPE html>
@@ -41,9 +41,10 @@
                 // 씬 생성
                 tScene = RedScene(redGL);
                 // 카메라 생성
-                tController = RedObitController(redGL);
-                tController.pan = 0;
-                tController.tilt = -45;
+                tController = RedCamera();
+                tController.z = -10
+                tController.y = 10
+                tController.lookAt(0, 0, 0)
                 // 렌더러 생성
                 tRenderer = RedRenderer();
                 // 뷰생성 및 적용
@@ -86,10 +87,11 @@
             tText.y = 2;
             tMesh.addChild(tText);
             document.body.addEventListener(
-                'mousemove', function (e) {
+                RedGLDetect.BROWSER_INFO.isMobile ? 'touchmove' : 'mousemove', function (e) {
                     var currentPosition = RedGLUtil.screenToWorld(
                         [
-                            e.layerX, e.layerY,
+                            RedGLDetect.BROWSER_INFO.isMobile ? e.changedTouches[0].clientX * window.devicePixelRatio : e.layerX * window.devicePixelRatio,
+                            RedGLDetect.BROWSER_INFO.isMobile ? e.changedTouches[0].clientY * window.devicePixelRatio : e.layerY * window.devicePixelRatio,
                             tView['_viewRect'][2], tView['_viewRect'][3]
                         ],
                         tController
