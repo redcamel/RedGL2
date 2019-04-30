@@ -1,3 +1,10 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedVideoTexture;
 (function () {
@@ -9,7 +16,7 @@ var RedVideoTexture;
         //level,internalFormat, format, type
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, source);
         // gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
-        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 0);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
         gl.bindTexture(gl.TEXTURE_2D, null);
@@ -39,7 +46,7 @@ var RedVideoTexture;
                 video = document.createElement(('video'));
                 video.src = src;
             }
-            video.loop = 1;
+            video.loop = true;
             video.muted = true;
             video.setAttribute('autoplay', '');
             //document.body.appendChild(video)
@@ -87,12 +94,12 @@ var RedVideoTexture;
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedVideoTexture : RedGL Instance만 허용.', redGL);
         tGL = redGL.gl;
         this['webglTexture'] = tGL.createTexture();
-        this['webglTexture']['gl'] = tGL
+        this['webglTexture']['gl'] = tGL;
         this['_UUID'] = RedGL.makeUUID();
         this['_load'] = function (needEmpty) {
             if (needEmpty) this.setEmptyTexture(tGL, this['webglTexture']);
             if (this['_src']) loadTexture(tGL, this, this['webglTexture'], this['_src'], this['_callback']);
-        }
+        };
         this['callback'] = callback;
         this['src'] = src;
         console.log(this);

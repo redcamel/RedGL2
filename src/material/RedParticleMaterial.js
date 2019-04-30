@@ -1,3 +1,10 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedParticleMaterial;
 //////////////////////////////////////////////////////////
@@ -6,7 +13,7 @@ var RedParticleMaterial;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'particleProgram';
-    var PROGRAM_OPTION_LIST = ['diffuseTexture','usePreMultiply'];
+    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'usePreMultiply'];
 
     var checked;
     vSource = function () {
@@ -85,7 +92,7 @@ var RedParticleMaterial;
         this['cutOff'] = 0;
         /////////////////////////////////////////
         // 일반 프로퍼티
-        this['usePreMultiply'] = true
+        this['usePreMultiply'] = true;
         this['_UUID'] = RedGL.makeUUID();
         if (!checked) {
             this.checkUniformAndProperty();

@@ -1,3 +1,10 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedPointLight;
 (function () {
@@ -19,6 +26,21 @@ var RedPointLight;
 			 alpha : [
 				 {type:'number'},
 				 '기본값 : 1'
+			 ],
+			 alpha : [
+				 {type:'number'},
+				 '기본값 : 1',
+				 'range : 0 ~ 1'
+			 ],
+			 alpha : [
+				 {type:'radius'},
+				 '기본값 : 1',
+				 'range : 0 ~ '
+			 ],
+			 intensity : [
+				 {type:'number'},
+				 '기본값 : 1',
+				 'range : 0 ~ 1'
 			 ]
 		 },
 		 extends : [
@@ -31,14 +53,15 @@ var RedPointLight;
 		 return : 'RedPointLight Instance'
 	 }
      :DOC*/
-    RedPointLight = function (redGL, hexColor, alpha) {
-        if (!(this instanceof RedPointLight)) return new RedPointLight(redGL, hexColor, alpha);
+    RedPointLight = function (redGL, hexColor, alpha, radius, intensity) {
+        if (!(this instanceof RedPointLight)) return new RedPointLight(redGL, hexColor, alpha, radius, intensity);
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedPointLight : RedGL Instance만 허용.', '입력값 : ' + redGL);
         // 유니폼 프로퍼티
         this['_lightColor'] = new Float32Array(4);
         // 일반 프로퍼티
-        this['intensity'] = 1;
+        this['intensity'] = intensity == undefined ? 1 : intensity;
         this['alpha'] = alpha == undefined ? 1 : alpha;
+        this['radius'] = radius == undefined ? 1 : radius;
         this['color'] = hexColor ? hexColor : '#fff';
         /**DOC:
          {

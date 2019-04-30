@@ -1,3 +1,10 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedPostEffect_BrightnessContrast;
 (function () {
@@ -11,7 +18,7 @@ var RedPostEffect_BrightnessContrast;
              gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
          }
          */
-    }
+    };
     fSource = function () {
         /* @preserve
          precision mediump float;
@@ -26,7 +33,7 @@ var RedPostEffect_BrightnessContrast;
              gl_FragColor = finalColor;
          }
          */
-    }
+    };
     /**DOC:
      {
 		 constructorYn : true,

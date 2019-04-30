@@ -29,9 +29,17 @@
       ],
       "alpha": [
         {
+          "type": "radius"
+        },
+        "기본값 : 1",
+        "range : 0 ~ "
+      ],
+      "intensity": [
+        {
           "type": "number"
         },
-        "기본값 : 1"
+        "기본값 : 1",
+        "range : 0 ~ 1"
       ]
     },
     "extends": [

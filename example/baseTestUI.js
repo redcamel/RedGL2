@@ -1,3 +1,10 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 19:0
+ */
+
 var baseTestUI = function (redGL, width) {
     // var getQueryParam = function(param) {
     //     var found;
@@ -223,6 +230,10 @@ baseTestUI.exampleList = [
             {
                 key: 'RedSprite3D',
                 href: 'object3D/RedSprite3D.html'
+            },
+            {
+                key: 'RedTransformController',
+                href: 'object3D/RedTransformController.html'
             }
         ]
     },
@@ -284,6 +295,10 @@ baseTestUI.exampleList = [
             {
                 key: 'NormalTextureTest',
                 href: 'etc/normalTest.html'
+            },
+            {
+                key: 'RedBoxSelection',
+                href: 'etc/RedBoxSelection.html'
             }
         ]
     },

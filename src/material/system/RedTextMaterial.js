@@ -1,3 +1,10 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedTextMaterial;
 (function () {
@@ -113,8 +120,8 @@ var RedTextMaterial;
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['alpha'] = 1;
-        this['width'] = 2
-        this['height'] = 2
+        this['width'] = 2;
+        this['height'] = 2;
         this['_UUID'] = RedGL.makeUUID();
         if (!checked) {
             this.checkUniformAndProperty();

@@ -1,3 +1,10 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedLathe;
 (function () {
@@ -412,7 +419,7 @@ var RedLathe;
             offset = i * 3;
             interleaveData.push(positions[offset + 0], positions[offset + 1], positions[offset + 2]);
             interleaveData.push(normals[offset + 0], normals[offset + 1], normals[offset + 2]);
-            offset = i * 2
+            offset = i * 2;
             interleaveData.push(texcoords[offset + 0], texcoords[offset + 1])
         }
         ////////////////////////////////////////////////////////////////////////////

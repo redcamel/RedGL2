@@ -1,3 +1,10 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedText;
 (function () {
@@ -206,8 +213,8 @@ var RedText;
             var tW, tH;
             tW = self['_width'];
             tH = self['_height'];
-            if(tW%2==0) tW+=1;
-            if(tH%2==0) tH+=1;
+            if (tW % 2 == 0) tW += 1;
+            if (tH % 2 == 0) tH += 1;
             self['_cvs'] = window['OffscreenCanvas'] ? new OffscreenCanvas(tW, tH) : document.createElement('canvas');
             self['_ctx'] = self['_cvs'].getContext('2d');
             console.log(tW, tH);
@@ -217,9 +224,9 @@ var RedText;
             // self['scaleX'] = self['_width'];
             // self['scaleY'] = self['_height'];
             self['_ctx'].drawImage(self['_img'], 0, 0, tW, tH);
-            self['material'].width = tW
-            self['material'].height = tH
-            self['material'].diffuseTexture.src = self['_cvs']
+            self['material'].width = tW;
+            self['material'].height = tH;
+            self['material'].diffuseTexture.src = self['_cvs'];
             self['material'].diffuseTexture.option = {
                 min: redGL.gl.LINEAR,
                 mag: redGL.gl.LINEAR,
@@ -228,7 +235,7 @@ var RedText;
             }
 
         };
-        this['useTransparentSort'] = true
+        this['useTransparentSort'] = true;
         this['_UUID'] = RedGL.makeUUID();
         console.log(this);
     };
@@ -241,7 +248,7 @@ var RedText;
 		 return : 'boolean'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedText', 'perspectiveScale', 'boolean', true);
+    RedDefinePropertyInfo.definePrototype('RedText', 'perspectiveScale', 'boolean');
     /**DOC:
      {
 	     code : 'PROPERTY',
@@ -250,7 +257,7 @@ var RedText;
 		 return : 'boolean'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedText', 'sprite3DYn', 'boolean', true);
+    RedDefinePropertyInfo.definePrototype('RedText', 'sprite3DYn', 'boolean');
     /**DOC:
      {
 	     code : 'PROPERTY',
@@ -259,7 +266,7 @@ var RedText;
 		 return : 'Number'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedText', 'width', 'number', {
+    RedDefinePropertyInfo.definePrototype('RedText', 'width', 'uint', {
         min: 2,
         callback: function (v) {
             this['_width'] = v;
@@ -275,7 +282,7 @@ var RedText;
 		 return : 'Number'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedText', 'height', 'number', {
+    RedDefinePropertyInfo.definePrototype('RedText', 'height', 'uint', {
         min: 2,
         callback: function (v) {
             this['_height'] = v;
@@ -305,48 +312,48 @@ var RedText;
                 // console.log(this['_svg'].width)
                 // this['_svg'].setAttribute('width', 100000);
                 // this['_svg'].setAttribute('height', 100000);
-                var self = this
-                var t0 = this['_text'].match(/<img .*?>/g)
-                var t1 = []
+                var self = this;
+                var t0 = this['_text'].match(/<img .*?>/g);
+                var t1 = [];
                 var result = this['_text'];
-                t0 = t0 || []
-                console.log(t0)
-                var max = t0.length
-                var loaded = 0
+                t0 = t0 || [];
+                console.log(t0);
+                var max = t0.length;
+                var loaded = 0;
                 t0.forEach(function (v) {
-                    console.log(v, v.match(/src\s*=\s*(\'|\").*?(\'|\")/g))
-                    var tSrc = v.match(/src\s*=\s*(\'|\").*?(\'|\")/g)[0]
-                    tSrc = tSrc.replace(/src\s*=\s*(\'|\")/g, '').replace(/(\'|\")/g, '')
-                    console.log(tSrc)
-                    var test = document.createElement('div')
+                    console.log(v, v.match(/src\s*=\s*(\'|\").*?(\'|\")/g));
+                    var tSrc = v.match(/src\s*=\s*(\'|\").*?(\'|\")/g)[0];
+                    tSrc = tSrc.replace(/src\s*=\s*(\'|\")/g, '').replace(/(\'|\")/g, '');
+                    console.log(tSrc);
+                    var test = document.createElement('div');
                     test.innerHTML = v;
                     var img = test.querySelector('img');
                     img.onload = function () {
                         var canvas = document.createElement('canvas');
                         canvas.width = img.style.width ? +img.style.width : img.width;
                         canvas.height = img.style.height ? +img.style.height : img.height;
-                        var ctx = canvas.getContext('2d')
-                        ctx.scale(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight)
+                        var ctx = canvas.getContext('2d');
+                        ctx.scale(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight);
                         ctx.drawImage(img, 0, 0);
                         tInfo.result = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink= "http://www.w3.org/1999/xlink" width="' + img.width + '" height="' + img.height + '" display="inline" style="vertical-align: middle;display: inline-block">' +
                             '<image xlink:href="' + (canvas.toDataURL('image/png')) + '" height="' + img.height + 'px" width="' + img.width + 'px" />' +
-                            '</svg>'
-                        loaded++
+                            '</svg>';
+                        loaded++;
                         if (loaded == max) {
                             t1.forEach(function (v) {
                                 result = result.replace(v.source, v.result)
-                            })
+                            });
                             tHTMLContainer.innerHTML = result;
                             setTexture(self)
                         }
                         img.onload = null
 
-                    }
+                    };
                     var tInfo = {
                         source: v,
                         sourceSrc: tSrc,
                         result: ''
-                    }
+                    };
                     t1.push(tInfo)
                 });
                 if (t0.length == 0) {

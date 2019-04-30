@@ -1,3 +1,10 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedSprite3D;
 (function () {
@@ -54,7 +61,7 @@ var RedSprite3D;
 		 return : 'Boolean'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedSprite3D', 'perspectiveScale', 'boolean', true);
+    RedDefinePropertyInfo.definePrototype('RedSprite3D', 'perspectiveScale', 'boolean');
     /**DOC:
      {
 		 code : 'PROPERTY',
@@ -66,7 +73,7 @@ var RedSprite3D;
 		 return : 'Boolean'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedSprite3D', 'sprite3DYn', 'boolean', true);
+    RedDefinePropertyInfo.definePrototype('RedSprite3D', 'sprite3DYn', 'boolean');
     /**DOC:
      {
 		 code : 'PROPERTY',

@@ -1,3 +1,10 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedSkyBoxMaterial;
 (function () {
@@ -22,10 +29,12 @@ var RedSkyBoxMaterial;
 
          uniform samplerCube u_skyBoxTexture;
          varying vec3 vReflectionCubeCoord;
+         uniform float u_alpha;
          void main(void) {
              vec4 finalColor = textureCube(u_skyBoxTexture, vReflectionCubeCoord);
              //#REDGL_DEFINE#fog#false# gl_FragColor = finalColor;
              //#REDGL_DEFINE#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
+             gl_FragColor.a = u_alpha;
          }
          */
     };
@@ -43,6 +52,11 @@ var RedSkyBoxMaterial;
 			 ],
 			 skyBoxTexture : [
 				 {type:'RedBitmapCubeTexture'}
+			 ],
+			 alpha : [
+			    {type:Number},
+			    '기본값 : 1',
+			    '범위 : 0 ~ 1'
 			 ]
 		 },
 		 extends : [
@@ -51,8 +65,8 @@ var RedSkyBoxMaterial;
 		 return : 'RedSkyBoxMaterial Instance'
 	 }
      :DOC*/
-    RedSkyBoxMaterial = function (redGL, skyBoxTexture) {
-        if (!(this instanceof RedSkyBoxMaterial)) return new RedSkyBoxMaterial(redGL, skyBoxTexture);
+    RedSkyBoxMaterial = function (redGL, skyBoxTexture, alpha) {
+        if (!(this instanceof RedSkyBoxMaterial)) return new RedSkyBoxMaterial(redGL, skyBoxTexture, alpha);
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedSkyBoxMaterial : RedGL Instance만 허용.', redGL);
         this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource);
         /////////////////////////////////////////
@@ -61,6 +75,7 @@ var RedSkyBoxMaterial;
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['_UUID'] = RedGL.makeUUID();
+        this['alpha'] = alpha == undefined ? 1 : alpha;
         if (!checked) {
             this.checkUniformAndProperty();
             checked = true;
@@ -77,5 +92,6 @@ var RedSkyBoxMaterial;
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedSkyBoxMaterial', 'skyBoxTexture', 'samplerCube', {essential: true});
+    RedDefinePropertyInfo.definePrototype('RedSkyBoxMaterial', 'alpha', 'number', {min: 0, max: 1});
     Object.freeze(RedSkyBoxMaterial)
 })();

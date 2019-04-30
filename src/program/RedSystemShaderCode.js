@@ -1,3 +1,10 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedSystemShaderCode;
 (function () {
@@ -15,15 +22,19 @@ var RedSystemShaderCode;
     RedSystemShaderCode = {};
     RedSystemShaderCode['init'] = function (redGL) {
         var maxDirectionalLight = 3;
-        var maxPointLight = 8;
+        var maxPointLight;
         var maxJoint;
-        var tDETECT = redGL.detect
-        console.log('tDETECT', tDETECT);
-        // 버텍스 쉐이더에 100개의 유니폼 벡터 정의를 남겨둔다.;;
-        var maxJoint;
-        maxJoint = parseInt(Math.floor(Math.min((tDETECT.vertexShader.MAX_VERTEX_UNIFORM_VECTORS - 64) / 8, 128)))
-        maxPointLight = parseInt(Math.floor(Math.min((tDETECT.fragmentShader.MAX_FRAGMENT_UNIFORM_VECTORS - 64) / 4, 128)))
-        console.log('maxJoint', maxJoint)
+        var tDETECT = redGL.detect;
+        console.time('RedSystemShaderCode');
+        console.group('RedSystemShaderCode');
+        maxJoint = parseInt(Math.floor(Math.min((tDETECT.vertexShader.MAX_VERTEX_UNIFORM_VECTORS - 64) / 8, 128)));
+        maxPointLight = parseInt(Math.floor(Math.min((tDETECT.fragmentShader.MAX_FRAGMENT_UNIFORM_VECTORS - 64) / 4, 128)));
+        console.group('detect info');
+        console.log(tDETECT);
+        console.log('maxDirectionalLight', maxDirectionalLight);
+        console.log('maxJoint', maxJoint);
+        console.log('maxPointLight', maxPointLight);
+        console.groupEnd();
         // if (RedGLDetect.BROWSER_INFO.browser == 'ie' && RedGLDetect.BROWSER_INFO.browserVer == 11) maxJoint = 50
         // else if (RedGLDetect.BROWSER_INFO.browser == 'iphone' || RedGLDetect.BROWSER_INFO.browser == 'ipad') maxJoint = 8
         // else maxJoint = RedGLDetect.BROWSER_INFO.isMobile ? 64 : 1024
@@ -303,7 +314,7 @@ var RedSystemShaderCode;
                         '   return amountInLight;',
                         '}'
                     ].join('\n'),
-                cotangent_frame : [
+                cotangent_frame: [
                     'mat3 cotangent_frame(vec3 N, vec3 p, vec2 uv)',
                     '{',
                     '   vec3 dp1 = dFdx( p );',
@@ -320,7 +331,7 @@ var RedSystemShaderCode;
                     '   return mat3( T * invmax, B * invmax, N );',
                     '}'
                 ].join('\n'),
-                perturb_normal : [
+                perturb_normal: [
                     'vec3 perturb_normal( vec3 N, vec3 V, vec2 texcoord, vec3 normalColor )',
                     '   {',
                     '   ',
@@ -358,63 +369,71 @@ var RedSystemShaderCode;
         RedSystemShaderCode['MAX_JOINT'] = maxJoint;
         [RedSystemShaderCode.vertexShareDeclare, RedSystemShaderCode.fragmentShareDeclare].forEach(function (data) {
             data.forEach(function (v) {
-                v = v.split(' ')
-                if (v[0] == 'uniform') {
+                v = v.split(' ');
+                if (v[0] === 'uniform') {
                     RedSystemShaderCode.systemUniform[v[2]] = 1
                 }
             })
         });
 
         // 맥스갯수를 찾아보자..
-
         var tVertexUniform = [];
-        var tVertexVecNum = 0
+        var tVertexVecNum = 0;
+        var tFragmentUniform = [];
+        var tFragmentVecNum = 0;
         var testMap = {
             bool: 4, float: 4, int: 4, uint: 4,
             sampler2D: 4, samplerCube: 4,
             vec2: 4, vec3: 4, vec4: 4,
             mat2: 4, mat3: 8, mat4: 16
-        }
-        console.log('RedSystemShaderCode.vertexShareDeclare', RedSystemShaderCode.vertexShareDeclare)
+        };
+        console.group('RedSystemShaderCode.vertexShareDeclare');
+        console.table(RedSystemShaderCode.vertexShareDeclare);
         RedSystemShaderCode.vertexShareDeclare.forEach(function (v) {
-            v = v.split(' ')
-            console.log(v[0])
-            if (v[0] == 'uniform') {
+            v = v.split(' ');
+            if (v[0] === 'uniform') {
                 var tNum;
                 var tInfo;
                 tInfo = {
                     value: v,
                     type: v[1],
                     num: tNum = v[2].indexOf('[') > -1 ? +(v[2].split('[')[1].replace(']', '')) * testMap[v[1]] : testMap[v[1]]
-                }
-                tVertexUniform.push(tInfo)
+                };
+                tVertexUniform.push(tInfo);
                 tVertexVecNum += tNum
             }
         });
-        console.log('tVertexUniform', tVertexUniform)
-        console.log('tVertexVecNum', tVertexVecNum / 4)
-        tVertexUniform = []
-        tVertexVecNum = 0
-        RedSystemShaderCode.fragmentShareDeclare.forEach(function (v) {
-            v = v.split(' ')
-            console.log(v[0])
-            if (v[0] == 'uniform') {
-                var tNum;
-                var tInfo;
-                tInfo = {
-                    value: v,
-                    type: v[1],
-                    num: tNum = v[2].indexOf('[') > -1 ? +(v[2].split('[')[1].replace(']', '')) * testMap[v[1]] : testMap[v[1]]
-                }
-                tVertexUniform.push(tInfo)
-                tVertexVecNum += tNum
-            }
-        });
-        console.log('tFragmentUniform', tVertexUniform)
-        console.log('tFragmentVecNum', tVertexVecNum / 4)
+        console.log('target vertexUniform');
+        console.table(tVertexUniform);
+        console.log('target vertexVecNum', tVertexVecNum / 4);
+        console.groupEnd('RedSystemShaderCode.vertexShareDeclare');
 
-        console.log(RedSystemShaderCode)
+
+        console.group('RedSystemShaderCode.fragmentShareDeclare');
+        console.table(RedSystemShaderCode.fragmentShareDeclare);
+        tFragmentUniform = [];
+        tFragmentVecNum = 0;
+        RedSystemShaderCode.fragmentShareDeclare.forEach(function (v) {
+            v = v.split(' ');
+            if (v[0] === 'uniform') {
+                var tNum;
+                var tInfo;
+                tInfo = {
+                    value: v,
+                    type: v[1],
+                    num: tNum = v[2].indexOf('[') > -1 ? +(v[2].split('[')[1].replace(']', '')) * testMap[v[1]] : testMap[v[1]]
+                };
+                tFragmentUniform.push(tInfo);
+                tFragmentVecNum += tNum
+            }
+        });
+        console.log('target fragmentUniform');
+        console.table(tFragmentUniform);
+        console.log('target fragmentVecNum', tFragmentVecNum / 4);
+        console.groupEnd('RedSystemShaderCode.fragmentShareDeclare');
+        console.log(RedSystemShaderCode);
+        console.timeEnd('RedSystemShaderCode');
+        console.groupEnd('RedSystemShaderCode');
         Object.freeze(RedSystemShaderCode)
     };
-})
-();
+})();

@@ -1,8 +1,0 @@
-[
-  {
-    "constructorYn": true,
-    "title": "JsonModelLoader",
-    "description": "\n\t <h1>>현재 단순테스트용</h1>\n\t 실제로 사용할지 여부는 미정.\n ",
-    "return": "void"
-  }
-]

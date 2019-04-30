@@ -1,3 +1,10 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var Red3DSLoader;
 (function () {
@@ -218,7 +225,7 @@ var Red3DSLoader;
     var VIEWPORT_DATA_3 = 0x7012;
     var VIEWPORT_SIZE = 0x7020;
     var NETWORK_VIEW = 0x7030;
-    var parser
+    var parser;
     /**DOC:
      {
 		 constructorYn : true,
@@ -261,16 +268,16 @@ var Red3DSLoader;
 	 }
      :DOC*/
     Red3DSLoader = function (redGL, path, fileName, callback) {
-        if ((!(this instanceof Red3DSLoader))) return new Red3DSLoader(redGL, path, fileName, callback)
-        console.log('~~~~~~~~~~~')
+        if ((!(this instanceof Red3DSLoader))) return new Red3DSLoader(redGL, path, fileName, callback);
+        console.log('~~~~~~~~~~~');
         var self = this;
         var request = new XMLHttpRequest();
         request.open("GET", path + fileName, true);
-        request.responseType = 'arraybuffer'
+        request.responseType = 'arraybuffer';
         request.onreadystatechange = function () {
             if (request.readyState == 4 && request.status === 200) {
-                console.log(request)
-                self['result'] = parser(self, redGL, request['response'])
+                console.log(request);
+                self['result'] = parser(self, redGL, request['response']);
                 if (callback) {
                     console.log('모델 파싱 종료');
                     callback(self['result'])
@@ -278,17 +285,17 @@ var Red3DSLoader;
             } else {
                 console.log(request)
             }
-        }
+        };
         request.send();
         this['redGL'] = redGL;
         this['position'] = 0;
-        this['materials'] = {}
-        this['meshs'] = []
+        this['materials'] = {};
+        this['meshs'] = [];
         this['path'] = path;
         this['fileName'] = fileName;
         this['callback'] = callback;
-        this['resultMesh'] = RedMesh(redGL)
-        this['resultMesh']['name'] = 'instanceOfRed3DSLoader_' + RedGL.makeUUID()
+        this['resultMesh'] = RedMesh(redGL);
+        this['resultMesh']['name'] = 'instanceOfRed3DSLoader_' + RedGL.makeUUID();
         this['result'] = null;
     };
     parser = (function () {
@@ -301,7 +308,7 @@ var Red3DSLoader;
         var readFloat;
         var readNamedObject;
         var readFaceArray;
-        var readMaterialEntry
+        var readMaterialEntry;
         var readMaterialGroup;
         readChunk = function (target, dataView) {
             var t0 = {};
@@ -310,40 +317,40 @@ var Red3DSLoader;
             t0['size'] = readSize(target, dataView);
             t0['end'] = t0['cur'] + t0['size'];
             t0['cur'] += 6;
-            console.log('readChunk', t0)
+            console.log('readChunk', t0);
             return t0;
-        }
+        };
         nextChunk = function (target, dataView, chunk) {
             if (chunk['cur'] >= chunk['end']) return 0;
             target['position'] = chunk['cur'];
             try {
                 var next = readChunk(target, dataView);
                 chunk['cur'] += next['size'];
-                console.log('nextChunk', next['id'])
+                console.log('nextChunk', next['id']);
                 return next['id'];
             } catch (e) {
                 console.log('Unable to read chunk at ' + target['position']);
                 return 0;
             }
-        }
+        };
         endChunk = function (target, chunk) {
             target['position'] = chunk['end'];
-        }
+        };
         readWord = function (target, dataView) {
             var t0 = dataView.getUint16(target['position'], true);
             target['position'] += 2;
             return t0;
-        }
+        };
         readSize = function (target, dataView) {
             var t0 = dataView.getUint32(target['position'], true);
             target['position'] += 4;
             return t0;
-        }
+        };
         readByte = function (target, dataView) {
             var to = dataView.getUint8(target['position'], true);
             target['position'] += 1;
             return to;
-        }
+        };
         readString = function (target, dataView, maxLength) {
             var t0 = '';
             var i, t1;
@@ -353,7 +360,7 @@ var Red3DSLoader;
                 t0 += String.fromCharCode(t1);
             }
             return t0;
-        }
+        };
         readFloat = function (target, dataView) {
             try {
                 var v = dataView.getFloat32(target['position'], true);
@@ -362,23 +369,23 @@ var Red3DSLoader;
             } catch (e) {
                 console.log(e + ' ' + target['position'] + ' ' + dataView.byteLength);
             }
-        }
+        };
         readColor = function (target, dataView) {
             var chunk = readChunk(target, dataView);
             var color;
             if (chunk['id'] === COLOR_24 || chunk['id'] === LIN_COLOR_24) {
-                color = RedGLUtil.rgb2hex(readByte(target, dataView), readByte(target, dataView), readByte(target, dataView))
+                color = RedGLUtil.rgb2hex(readByte(target, dataView), readByte(target, dataView), readByte(target, dataView));
                 console.log('      Color: ' + color);
             } else if (chunk['id'] === COLOR_F || chunk['id'] === LIN_COLOR_F) {
-                color = RedGLUtil.rgb2hex(readByte(target, dataView), readByte(target, dataView), readByte(target, dataView))
+                color = RedGLUtil.rgb2hex(readByte(target, dataView), readByte(target, dataView), readByte(target, dataView));
                 console.log('      Color: ' + color);
             } else console.log('      Unknown color chunk: ' + chunk.toString(16));
             endChunk(target, chunk);
             return color;
-        }
+        };
         resetPosition = function (target) {
             target['position'] -= 6;
-        }
+        };
         readMap = function (target, dataView, path) {
             var chunk = readChunk(target, dataView);
             var next = nextChunk(target, dataView, chunk);
@@ -420,7 +427,7 @@ var Red3DSLoader;
             }
             endChunk(target, chunk);
             return texture;
-        }
+        };
         readMaterialEntry = function (target, dataView, path) {
             var chunk = readChunk(target, dataView);
             var next = nextChunk(target, dataView, chunk);
@@ -470,7 +477,7 @@ var Red3DSLoader;
                         break;
                     case MAT_TEXMAP :
                         console.log('   ColorMap');
-                        console.log(target, dataView)
+                        console.log(target, dataView);
                         resetPosition(target, dataView);
                         materialInfo['diffuseTexture'] = readMap(target, dataView, path);
                         break;
@@ -498,27 +505,27 @@ var Red3DSLoader;
             // 재질 판단
             // TODO: RedEnvironmentMaterial 파싱추가해야됨
             // 회사에 3D맥스를 깔고싶구나 -_-;;
-            var resultMaterial
+            var resultMaterial;
             if (materialInfo['diffuseTexture']) {
                 if ('shininess' in materialInfo) {
-                    resultMaterial = RedStandardMaterial(target['redGL'], materialInfo['diffuseTexture'])
-                    resultMaterial['normalTexture'] = materialInfo['normalTexture']
+                    resultMaterial = RedStandardMaterial(target['redGL'], materialInfo['diffuseTexture']);
+                    resultMaterial['normalTexture'] = materialInfo['normalTexture'];
                     resultMaterial['specularTexture'] = materialInfo['specularTexture']
                 } else resultMaterial = RedBitmapTexture(target['redGL'], materialInfo['diffuseTexture'])
             } else {
-                if (materialInfo['normalTexture'] || materialInfo['specularTexture']) resultMaterial = RedColorPhongTextureMaterial(target['redGL'])
+                if (materialInfo['normalTexture'] || materialInfo['specularTexture']) resultMaterial = RedColorPhongTextureMaterial(target['redGL']);
                 else {
-                    if ('shininess' in materialInfo) resultMaterial = RedColorPhongMaterial(target['redGL'])
+                    if ('shininess' in materialInfo) resultMaterial = RedColorPhongMaterial(target['redGL']);
                     else RedColorMaterial(target['redGL'])
                 }
                 resultMaterial['color'] = materialInfo['color']
             }
             endChunk(target, chunk);
-            console.log('파싱정보', materialInfo)
-            resultMaterial['shininess'] = materialInfo['shininess']
-            resultMaterial['name'] = materialInfo['name']
+            console.log('파싱정보', materialInfo);
+            resultMaterial['shininess'] = materialInfo['shininess'];
+            resultMaterial['name'] = materialInfo['name'];
             target.materials[materialInfo['name']] = resultMaterial;
-        }
+        };
         readMeshData = function (target, dataView, path) {
             var chunk = readChunk(target, dataView);
             var next = nextChunk(target, dataView, chunk);
@@ -531,9 +538,9 @@ var Red3DSLoader;
                     case MASTER_SCALE :
                         var scale = readFloat(target, dataView);
                         console.log('Master scale: ' + scale);
-                        target['resultMesh']['scaleX'] = scale
-                        target['resultMesh']['scaleY'] = scale
-                        target['resultMesh']['scaleZ'] = scale
+                        target['resultMesh']['scaleX'] = scale;
+                        target['resultMesh']['scaleY'] = scale;
+                        target['resultMesh']['scaleZ'] = scale;
                         break;
                     case NAMED_OBJECT :
                         console.log('Named Object');
@@ -551,7 +558,7 @@ var Red3DSLoader;
                 }
                 next = nextChunk(target, dataView, chunk);
             }
-        }
+        };
         readMaterialGroup = function (target, dataView) {
             var chunk = readChunk(target, dataView);
             var name = readString(target, dataView, 64);
@@ -564,7 +571,7 @@ var Red3DSLoader;
                 name: name,
                 index: index
             };
-        }
+        };
         readFaceArray = function (target, dataView, mesh) {
             var chunk = readChunk(target, dataView);
             var faces = readWord(target, dataView);
@@ -582,7 +589,7 @@ var Red3DSLoader;
                     console.log('      Material Group');
                     resetPosition(target, dataView);
                     var tGroup = readMaterialGroup(target, dataView);
-                    console.log(tGroup)
+                    console.log(tGroup);
                     var material = target.materials[tGroup['name']];
                     if (material !== undefined) {
                         mesh['material'] = material;
@@ -593,13 +600,13 @@ var Red3DSLoader;
             }
             endChunk(target, chunk);
             return index
-        }
+        };
         readMesh = function (target, dataView) {
             var chunk = readChunk(target, dataView);
             var next = nextChunk(target, dataView, chunk);
             var uvs = [];
             var indices;
-            var mesh = RedMesh(target['redGL'])
+            var mesh = RedMesh(target['redGL']);
             var i, len;
             while (next !== 0) {
                 switch (next) {
@@ -615,11 +622,11 @@ var Red3DSLoader;
                                 readFloat(target, dataView)
                             );
                         }
-                        break
+                        break;
                     case FACE_ARRAY :
                         resetPosition(target, dataView);
                         indices = readFaceArray(target, dataView, mesh);
-                        break
+                        break;
                     case TEX_VERTS :
                         var texels = readWord(target, dataView);
                         console.log('   UV: ' + texels);
@@ -627,14 +634,14 @@ var Red3DSLoader;
                         var uvs = [];
                         for (i = 0; i < texels; i++) {
                             uvs.push(readFloat(target, dataView));
-                            uvs.push(1-readFloat(target, dataView));
+                            uvs.push(1 - readFloat(target, dataView));
                         }
-                        break
+                        break;
                     case MESH_MATRIX :
                         console.log('   Tranformation Matrix (TODO)');
                         var values = [];
                         for (i = 0; i < 12; i++) values[i] = readFloat(target, dataView);
-                        var matrix = mat4.create()
+                        var matrix = mat4.create();
                         //X Line
                         matrix[0] = values[0];
                         matrix[1] = values[6];
@@ -671,28 +678,28 @@ var Red3DSLoader;
             // geometry.computeVertexNormals();
             var interleaveBuffer;
             var indexBuffer;
-            var normalData = RedGLUtil.calculateNormals(vertices, indices)
-            console.log('vertices', vertices)
-            console.log('normalData', normalData)
-            var interleaveData = []
-            i = 0, len = vertices.length / 3
+            var normalData = RedGLUtil.calculateNormals(vertices, indices);
+            console.log('vertices', vertices);
+            console.log('normalData', normalData);
+            var interleaveData = [];
+            i = 0, len = vertices.length / 3;
             for (i; i < len; i++) {
-                interleaveData.push(vertices[i * 3 + 0], vertices[i * 3 + 1], vertices[i * 3 + 2])
-                interleaveData.push(normalData[i * 3 + 0], normalData[i * 3 + 1], normalData[i * 3 + 2])
+                interleaveData.push(vertices[i * 3 + 0], vertices[i * 3 + 1], vertices[i * 3 + 2]);
+                interleaveData.push(normalData[i * 3 + 0], normalData[i * 3 + 1], normalData[i * 3 + 2]);
                 if (uvs.length) interleaveData.push(uvs[i * 2 + 0], uvs[i * 2 + 1])
             }
-            var interleaveInfo = []
-            interleaveInfo.push(RedInterleaveInfo('aVertexPosition', 3))
-            interleaveInfo.push(RedInterleaveInfo('aVertexNormal', 3))
-            if (uvs.length) interleaveInfo.push(RedInterleaveInfo('aTexcoord', 2))
-            interleaveBuffer = RedBuffer(target['redGL'], 'testRed3DS', RedBuffer.ARRAY_BUFFER, new Float32Array(interleaveData), interleaveInfo)
-            indexBuffer = RedBuffer(target['redGL'], 'testRed3DS', RedBuffer.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices))
-            var tGeo = RedGeometry(interleaveBuffer, indexBuffer)
-            mesh.geometry = tGeo
+            var interleaveInfo = [];
+            interleaveInfo.push(RedInterleaveInfo('aVertexPosition', 3));
+            interleaveInfo.push(RedInterleaveInfo('aVertexNormal', 3));
+            if (uvs.length) interleaveInfo.push(RedInterleaveInfo('aTexcoord', 2));
+            interleaveBuffer = RedBuffer(target['redGL'], 'testRed3DS', RedBuffer.ARRAY_BUFFER, new Float32Array(interleaveData), interleaveInfo);
+            indexBuffer = RedBuffer(target['redGL'], 'testRed3DS', RedBuffer.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices));
+            var tGeo = RedGeometry(interleaveBuffer, indexBuffer);
+            mesh.geometry = tGeo;
             mesh['name'] = 'mesh' + RedGL.makeUUID();
-            mesh.matrix = matrix
+            mesh.matrix = matrix;
             return mesh;
-        }
+        };
         readNamedObject = function (target, dataView) {
             var chunk = readChunk(target, dataView);
             var name = readString(target, dataView, 64);
@@ -704,16 +711,16 @@ var Red3DSLoader;
                     resetPosition(target, dataView);
                     tMesh = readMesh(target, dataView);
                     tMesh['name'] = name;
-                    target['meshs'].push(tMesh)
+                    target['meshs'].push(tMesh);
                     console.log('readNamedObject', name)
                 } else console.log('Unknown named object chunk: ' + next.toString(16));
                 next = nextChunk(target, dataView, chunk);
             }
             endChunk(target, chunk);
-        }
+        };
         readFile = function (target, arrayBuffer, path) {
             var dataView = new DataView(arrayBuffer);
-            console.log('dataView', dataView)
+            console.log('dataView', dataView);
             var chunk = readChunk(target, dataView);
             if (chunk['id'] === MLIBMAGIC || chunk['id'] === CMAGIC || chunk['id'] === M3DMAGIC) {
                 var next = nextChunk(target, dataView, chunk);
@@ -738,11 +745,11 @@ var Red3DSLoader;
         return function (tRed3DSLoader, redGL, rawData) {
             console.log('파싱시작', tRed3DSLoader['path'] + tRed3DSLoader['fileName']);
             // console.log('rawData', rawData);
-            readFile(tRed3DSLoader, rawData, tRed3DSLoader['path'])
-            console.log(tRed3DSLoader)
+            readFile(tRed3DSLoader, rawData, tRed3DSLoader['path']);
+            console.log(tRed3DSLoader);
             tRed3DSLoader.meshs.forEach(function (v) {
                 tRed3DSLoader.resultMesh.addChild(v)
-            })
+            });
             return {
                 fileName: tRed3DSLoader['fileName'],
                 path: tRed3DSLoader['path'],

@@ -1,3 +1,10 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedMouseEventMaterial;
 (function () {
@@ -62,7 +69,7 @@ var RedMouseEventMaterial;
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['_RedMouseEventMaterialYn'] = true;
-        this['color'] = null
+        this['color'] = null;
         this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource);
         this['_UUID'] = RedGL.makeUUID();
         if (!checked) {

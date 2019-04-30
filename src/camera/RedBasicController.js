@@ -1,3 +1,10 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedBasicController;
 (function () {
@@ -71,7 +78,7 @@ var RedBasicController;
         this['speedRotation'] = 1;
         this['delayRotation'] = 0.1;
         this['maxAcceleration'] = 3;
-        this['_currentAcceleration'] = 0
+        this['_currentAcceleration'] = 0;
         /**DOC:
          {
 		     code : 'PROPERTY',
@@ -108,14 +115,14 @@ var RedBasicController;
                     e = {
                         clientX: redGL['_mouseX'],
                         clientY: redGL['_mouseY']
-                    }
+                    };
                     e[tXkey] = redGL['_mouseX'];
                     e[tYkey] = redGL['_mouseY'];
                 }
                 if (self['targetView']) {
-                    var tX, tY
+                    var tX, tY;
                     if (RedGLDetect.BROWSER_INFO.isMobile) {
-                        console.log(e)
+                        console.log(e);
                         tX = e['clientX'], tY = e['clientY'];
                     } else {
                         tX = e[tXkey], tY = e[tYkey];
@@ -124,10 +131,10 @@ var RedBasicController;
                     if (!(self['targetView']['_viewRect'][1] < tY && tY < self['targetView']['_viewRect'][1] + self['targetView']['_viewRect'][3])) return;
                 }
                 return true
-            }
-            tMove = RedGLDetect.BROWSER_INFO.move
-            tUp = RedGLDetect.BROWSER_INFO.up
-            tDown = RedGLDetect.BROWSER_INFO.down
+            };
+            tMove = RedGLDetect.BROWSER_INFO.move;
+            tUp = RedGLDetect.BROWSER_INFO.up;
+            tDown = RedGLDetect.BROWSER_INFO.down;
             sX = 0, sY = 0;
             mX = 0, mY = 0;
             HD_keyDown = function (e) {
@@ -139,7 +146,7 @@ var RedBasicController;
             };
             HD_down = function (e) {
                 if (RedGLDetect.BROWSER_INFO.isMobile) {
-                    console.log(e)
+                    console.log(e);
                     e = e.targetTouches[0]
                 }
                 if (!checkArea(e)) return;
@@ -153,7 +160,7 @@ var RedBasicController;
             };
             HD_Move = function (e) {
                 if (RedGLDetect.BROWSER_INFO.isMobile) {
-                    e = e.targetTouches[0]
+                    e = e.targetTouches[0];
                     mX = e['clientX'] - sX, mY = e['clientY'] - sY;
                     sX = e['clientX'], sY = e['clientY'];
                 } else {
@@ -338,7 +345,7 @@ var RedBasicController;
      :DOC*/
     RedBasicController.prototype['update'] = (function () {
         var up = new Float32Array([0, 1, 0]);
-        var tPan, tTilt
+        var tPan, tTilt;
         var targetObject;
         var move, rotate;
         var tSpeed, tSpeedRotation;

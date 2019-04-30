@@ -1,4 +1,11 @@
-<html>
+<!--
+  ~ MIT License
+  ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+  ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+  -->
+
+<!DOCTYPE html>
+<html lang="ko">
 
 <head>
     <meta charset="UTF-8">
@@ -53,7 +60,6 @@
                 testDLight.z = -3
                 testDLight.debug = true
                 tScene.addLight(testDLight)
-
 
 
                 // 렌더시작
@@ -128,7 +134,7 @@
                 'Horse.glb',
                 function (v) {
                     tScene.addChild(v['resultMesh'])
-                console.log(v)
+                    console.log(v)
                     v['resultMesh'].rotationY = 180
                     v['resultMesh'].z = 200
                     v['resultMesh'].children.forEach(function (v) {

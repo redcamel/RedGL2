@@ -1,29 +1,10 @@
-/* @preserve
-author : RedCamel
-github : https://github.com/redcamel/RedGL2
-email : webseon@gmail.com
-Copyright (c) 2018 RedCamel
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 19:11
+ */
 
-MIT License
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-*/
 /**DOC:
  {
 	 constructorYn : true,
@@ -41,25 +22,6 @@ SOFTWARE.
  * @version 2.4.0
  */
 
-/* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE. */
 !function (t, n) {
     if ("object" == typeof exports && "object" == typeof module) module.exports = n(); else if ("function" == typeof define && define.amd) define([], n); else {
         var r = n();
@@ -1412,6 +1374,13 @@ THE SOFTWARE. */
         }()
     }])
 });
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedDefinePropertyInfo;
 (function () {
@@ -1426,159 +1395,143 @@ var RedDefinePropertyInfo;
 		 return : 'void'
 	 }
      :DOC*/
-    RedDefinePropertyInfo = {}
+    RedDefinePropertyInfo = {};
     var maker;
-    maker = function (targetObject, clsName, name, type, option) {
+    maker = function (targetObject, clsName, keyName, type, option) {
         var result;
-        var samplerTypeKey
-        if (targetObject.hasOwnProperty(name)) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : 이미 정의된 속성')
+        var samplerTypeKey;
+        if (targetObject.hasOwnProperty(keyName)) RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : 이미 정의된 속성');
+        option = option || {};
+        var getterFunc = function () {
+            return this['_' + keyName];
+        };
         switch (type) {
             case 'hex' :
                 result = {
-                    get: function () {
-                        return this['_' + name];
-                    },
+                    get: getterFunc,
                     set: function (v) {
-                        typeof v == 'string' || RedGLUtil.throwFunc(clsName + ' - ' + name + ' 문자열만 허용함', '입력값 : ' + v);
-                        RedGLUtil.regHex(v) || RedGLUtil.throwFunc(clsName + ' - ' + name + ' : hex 형식만 허용함.' + v)
-                        this['_' + name] = v
-                        if (option && option['callback']) option['callback'].call(this, v)
+                        typeof v == 'string' || RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' hex 형식만 허용함.', '입력값 : ' + v);
+                        RedGLUtil.regHex(v) || RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : hex 형식만 허용함.', '입력값 : ' + v);
+                        this['_' + keyName] = v;
+                        if (option['callback']) option['callback'].call(this, v);
                     }
-                }
-                break
+                };
+                break;
             case 'boolean' :
-                option = option != undefined ? option : true
+                result = {
+                    get: getterFunc,
+                    set: function (v) {
+                        if (typeof v != 'boolean') RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : boolean만 허용함.', '입력값 : ' + v);
+                        this['_' + keyName] = v;
+                        if (option['callback']) option['callback'].call(this, v);
+                    }
+                };
+                break;
+            case 'number' :
+                var hasMin = option.hasOwnProperty('min');
+                var hsaMax = option.hasOwnProperty('max');
+                var min = option['min'];
+                var max = option['max'];
+                result = {
+                    get: getterFunc,
+                    set: function (v) {
+                        if (typeof v != 'number') RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : 숫자만 허용함.', '입력값 : ' + v);
+                        if (hasMin && v < min) v = min;
+                        if (hsaMax && v > max) v = max;
+                        this['_' + keyName] = v;
+                        if (option['callback']) option['callback'].call(this, v);
+                    }
+                };
+                break;
+            case 'uint' :
+                var hasMin = option.hasOwnProperty('min');
+                var hsaMax = option.hasOwnProperty('max');
+                var min = option['min'];
+                var max = option['max'];
+                if (hasMin && min < 0) RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : min옵션은 0보다 커야 함.', '입력값 : ' + min);
+                if (hsaMax && max < 0) RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : max옵션은 0보다 커야 함.', '입력값 : ' + max);
+                if (hasMin && hsaMax && max <= min) RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : max옵션은 min옵션보다 커야 함.', 'min 입력값 : ' + min, 'max 입력값 : ' + max);
                 result = {
                     get: function () {
-                        return this['_' + name];
+                        return this['_' + keyName];
                     },
                     set: function (v) {
-                        if (typeof v != 'boolean') RedGLUtil.throwFunc(clsName + ' - ' + name + ' : boolean만 허용함.' + v)
-                        this['_' + name] = v
-                        if (option && option['callback']) option['callback'].call(this, v)
+                        if (typeof v != 'number') RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : uint만 허용함.', '입력값 : ' + v);
+                        if (hasMin && v < min) v = min;
+                        if (hsaMax && v > max) v = max;
+                        if (!(v >= 0 && Math.floor(v) == v)) RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : uint만 허용함(소수점은 허용하지 않음).', '입력값 : ' + v);
+                        this['_' + keyName] = v;
+                        if (option['callback']) option['callback'].call(this, v);
                     }
-                }
-                break
-            case 'number' :
-                if (option) {
-                    var min = option['min']
-                    var max = option['max']
-                    if (option.hasOwnProperty('min') && option.hasOwnProperty('max')) {
-                        result = {
-                            get: function () {
-                                return this['_' + name];
-                            },
-                            set: function (v) {
-                                if (typeof v != 'number') RedGLUtil.throwFunc(clsName + ' - ' + name + ' : 숫자만 허용함.', '입력값 : ' + v)
-                                if (v < min) v = min;
-                                if (v > max) v = max;
-                                this['_' + name] = v
-                                if (option && option['callback']) option['callback'].call(this, v)
-                            }
-                        }
-                    } else {
-                        if (option.hasOwnProperty('min')) {
-                            result = {
-                                get: function () {
-                                    return this['_' + name];
-                                },
-                                set: function (v) {
-                                    if (typeof v != 'number') RedGLUtil.throwFunc(clsName + ' - ' + name + ' : 숫자만 허용함.', '입력값 : ' + v)
-                                    if (v < min) v = min;
-                                    this['_' + name] = v
-                                    if (option && option['callback']) option['callback'].call(this, v)
-                                }
-                            }
-                        } else if (option.hasOwnProperty('max')) {
-                            result = {
-                                get: function () {
-                                    return this['_' + name];
-                                },
-                                set: function (v) {
-                                    if (typeof v != 'number') RedGLUtil.throwFunc(clsName + ' - ' + name + ' : 숫자만 허용함.', '입력값 : ' + v)
-                                    if (v > max) v = max;
-                                    this['_' + name] = v
-                                    if (option && option['callback']) option['callback'].call(this, v)
-                                }
-                            }
-                        }else{
-                            result = {
-                                get: function () {
-                                    return this['_' + name];
-                                },
-                                set: function (v) {
-                                    if (typeof v != 'number') RedGLUtil.throwFunc(clsName + ' - ' + name + ' : 숫자만 허용함.', '입력값 : ' + v)
-                                    this['_' + name] = v
-                                    if (option && option['callback']) option['callback'].call(this, v)
-                                }
-                            }
-                        }
+                };
+                break;
+            case 'int' :
+                var hasMin = option.hasOwnProperty('min');
+                var hsaMax = option.hasOwnProperty('max');
+                var min = option['min'];
+                var max = option['max'];
+                if (hasMin && hsaMax && max <= min) RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : max옵션은 min옵션보다 커야 함.', 'min 입력값 : ' + min, 'max 입력값 : ' + max);
+                result = {
+                    get: getterFunc,
+                    set: function (v) {
+                        if (typeof v != 'number') RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : int만 허용함.', '입력값 : ' + v);
+                        if (hasMin && v < min) v = min;
+                        if (hsaMax && v > max) v = max;
+                        if (!(Math.floor(v) == v)) RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : int만 허용함(소수점은 허용하지 않음).', '입력값 : ' + v);
+                        this['_' + keyName] = v;
+                        if (option['callback']) option['callback'].call(this, v);
                     }
-                } else {
-                    result = {
-                        get: function () {
-                            return this['_' + name];
-                        },
-                        set: function (v) {
-                            if (typeof v != 'number') RedGLUtil.throwFunc(clsName + ' - ' + name + ' : 숫자만 허용함.', '입력값 : ' + v)
-                            this['_' + name] = v
-                        }
-                    }
-                }
-                break
+                };
+                break;
             case 'sampler2D' :
                 samplerTypeKey = 'RedBaseTexture';
-                break
+                break;
             case 'samplerCube' :
                 samplerTypeKey = 'RedBitmapCubeTexture';
-                break
+                break;
             case 'samplerVideo' :
                 samplerTypeKey = 'RedVideoTexture';
-                break
+                break;
             default :
-                RedGLUtil.throwFunc(name + ' - ' + 'type : ' + type + ' / ' + name + ' : 정의할수없는 타입입니다.')
-                break
+                RedGLUtil.throwFunc(keyName + ' - ' + 'type : ' + type + ' / ' + keyName + ' : 정의할수없는 타입입니다.');
+                break;
         }
         if (samplerTypeKey) {
-            var samplerCls = window[samplerTypeKey]
+            var samplerCls = window[samplerTypeKey];
             // console.log(samplerTypeKey, samplerCls)
-            if (option && option['essential']) {
+            if (option['essential']) {
                 result = {
-                    get: function () {
-                        return this['_' + name];
-                    },
+                    get: getterFunc,
                     set: function (v) {
                         if (samplerCls == RedBitmapCubeTexture) {
-                            if (!(v instanceof samplerCls)) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : ' + samplerTypeKey + ' Instance만 허용.', '입력값 : ' + v)
+                            if (!(v instanceof samplerCls)) RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : ' + samplerTypeKey + ' Instance만 허용.', '입력값 : ' + v);
                         } else {
-                            if (v instanceof RedBitmapCubeTexture || !(v instanceof samplerCls)) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : ' + samplerTypeKey + ' Instance만 허용.', '입력값 : ' + v)
+                            if (v instanceof RedBitmapCubeTexture || !(v instanceof samplerCls)) RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : ' + samplerTypeKey + ' Instance만 허용.', '입력값 : ' + v);
                         }
-                        this['_' + name] = v
-                        if (option && option['callback']) option['callback'].call(this)
+                        this['_' + keyName] = v;
+                        if (option['callback']) option['callback'].call(this);
                     }
                 }
             } else {
                 result = {
-                    get: function () {
-                        return this['_' + name];
-                    },
+                    get: getterFunc,
                     set: function (v) {
                         if (v) {
                             if (samplerCls == RedBitmapCubeTexture) {
-                                if (!(v instanceof samplerCls)) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : ' + samplerTypeKey + ' Instance만 허용.', '입력값 : ' + v)
+                                if (!(v instanceof samplerCls)) RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : ' + samplerTypeKey + ' Instance만 허용.', '입력값 : ' + v);
                             } else {
-                                if (v instanceof RedBitmapCubeTexture || !(v instanceof samplerCls)) RedGLUtil.throwFunc(clsName + ' - ' + name + ' : ' + samplerTypeKey + ' Instance만 허용.', '입력값 : ' + v)
+                                if (v instanceof RedBitmapCubeTexture || !(v instanceof samplerCls)) RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : ' + samplerTypeKey + ' Instance만 허용.', '입력값 : ' + v);
                             }
                         }
-                        this['_' + name] = v
-                        if (option && option['callback']) option['callback'].call(this)
+                        this['_' + keyName] = v;
+                        if (option['callback']) option['callback'].call(this);
                     }
                 }
             }
         }
-        targetObject['_' + name] = null
-        Object.defineProperty(targetObject, name, result)
-    }
+        targetObject['_' + keyName] = null;
+        Object.defineProperty(targetObject, keyName, result);
+    };
     /**DOC:
      {
 	     code : 'STATIC METHOD',
@@ -1591,7 +1544,7 @@ var RedDefinePropertyInfo;
 		        {type : 'String'},
 		        '클래스 명 입력'
 		    ],
-		    name : [
+		    keyName : [
 		        {type : 'String'},
 		        '선언할 프로퍼티 명 입력'
 		    ],
@@ -1601,8 +1554,7 @@ var RedDefinePropertyInfo;
 		    ],
 		    option : [
 	            {type : 'Object'},
-	            '타입별 옵션 정의 가능',
-	            //TODO: 추후 예제포함 정리해야함
+	            '타입별 옵션 정의 가능'
 		    ]
 		 },
 		 return : 'void',
@@ -1622,11 +1574,18 @@ var RedDefinePropertyInfo;
 		 `
 	 }
      :DOC*/
-    RedDefinePropertyInfo['definePrototype'] = function (clsName, name, type, option) {
-        maker(window[clsName]['prototype'], clsName, name, type, option)
+    RedDefinePropertyInfo['definePrototype'] = function (clsName, keyName, type, option) {
+        maker(window[clsName]['prototype'], clsName, keyName, type, option);
     };
     Object.freeze(RedDefinePropertyInfo);
 })();
+
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
 
 "use strict";
 var RedGLDetect;
@@ -1650,7 +1609,7 @@ var RedGLDetect;
         if (!(this instanceof RedGLDetect)) return new RedGLDetect(redGL);
         var checkList, i, k, tKey, tList;
         var self = this;
-        var gl = redGL.gl
+        var gl = redGL.gl;
         checkList = {
             basic: [
                 'VENDOR',
@@ -1684,36 +1643,37 @@ var RedGLDetect;
                 'MAX_TEXTURE_IMAGE_UNITS',
                 'MAX_VERTEX_TEXTURE_IMAGE_UNITS'
             ]
-        }
+        };
         for (k in  checkList) {
-            tList = checkList[k]
+            tList = checkList[k];
             i = tList.length;
             this[k] = {};
             while (i--) this[k][tKey = tList[i]] = gl.getParameter(gl[tKey]);
         }
         this['BROWSER_INFO'] = RedGLDetect.getBrowserInfo();
-        requestAnimationFrame(function(){
-            var canvas = document.createElement('canvas')
-            var ctx = canvas.getContext('2d')
-            canvas.width = 10
-            canvas.height = 20
-            ctx.fillStyle = 'red'
-            ctx.fillRect(0, 0, 10, 10)
-            ctx.fillStyle = 'blue'
-            ctx.fillRect(0, 10, 10, 10)
-            canvas.style.cssText = 'position:fixed;top:0px;left:0px'
+        if (this['BROWSER_INFO']['browser'] == 'ie') console.table = console.log;
+        requestAnimationFrame(function () {
+            var canvas = document.createElement('canvas');
+            var ctx = canvas.getContext('2d');
+            canvas.width = 10;
+            canvas.height = 20;
+            ctx.fillStyle = 'red';
+            ctx.fillRect(0, 0, 10, 10);
+            ctx.fillStyle = 'blue';
+            ctx.fillRect(0, 10, 10, 10);
+            canvas.style.cssText = 'position:fixed;top:0px;left:0px';
             // document.body.appendChild(canvas)
-            var tTexture  = RedBitmapTexture(redGL,canvas)
+            var tTexture = RedBitmapTexture(redGL, canvas);
 
             var fb = gl.createFramebuffer();
             gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
             gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tTexture.webglTexture, 0);
-            var pixels = new Uint8Array(1 * 1 * 4);
-            gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels)
+            var pixels = new Uint8Array(4);
+            gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-            self['ableCanvasSourceFlipYonTexture'] = pixels[0]==255
-            self['BROWSER_INFO']['ableCanvasSourceFlipYonTexture']  = pixels[0]==255
-            console.log('test', pixels)
+            self['ableCanvasSourceFlipYonTexture'] = pixels[0] === 255;
+            self['BROWSER_INFO']['ableCanvasSourceFlipYonTexture'] = pixels[0] === 255;
+            // console.log('test', pixels)
         })
 
     };
@@ -1759,9 +1719,9 @@ var RedGLDetect;
      :DOC*/
 
 
-    RedGLDetect.BROWSER_INFO = {}
+    RedGLDetect.BROWSER_INFO = {};
     RedGLDetect.getBrowserInfo = function () {
-        var result = RedGLDetect['BROWSER_INFO']
+        var result = RedGLDetect['BROWSER_INFO'];
         var navi = window['navigator'],
             agent = navi.userAgent.toLowerCase(),
             platform = navi.platform.toLowerCase(),
@@ -1786,7 +1746,7 @@ var RedGLDetect;
             },
             chrome = function () {
                 if (agent.indexOf(i = 'chrome') < 0 && agent.indexOf(i = 'crios') < 0) return;
-                return browser = 'chrome', bv = parseFloat((i == 'chrome' ? /chrome\/([\d]+)/ : /crios\/([\d]+)/).exec(agent)[1]);
+                return browser = 'chrome', bv = parseFloat((i === 'chrome' ? /chrome\/([\d]+)/ : /crios\/([\d]+)/).exec(agent)[1]);
             },
             firefox = function () {
                 return agent.indexOf('firefox') < 0 ? 0 : (browser = 'firefox', bv = parseFloat(/firefox\/([\d]+)/.exec(agent)[1]))
@@ -1796,7 +1756,7 @@ var RedGLDetect;
             },
             opera = function () {
                 var i;
-                return (agent.indexOf(i = 'opera') < 0 && agent.indexOf(i = 'opr') < 0) ? 0 : (browser = 'opera', bv = (i == 'opera') ? parseFloat(/version\/([\d]+)/.exec(agent)[1]) : parseFloat(/opr\/([\d]+)/.exec(agent)[1]));
+                return (agent.indexOf(i = 'opera') < 0 && agent.indexOf(i = 'opr') < 0) ? 0 : (browser = 'opera', bv = (i === 'opera') ? parseFloat(/version\/([\d]+)/.exec(agent)[1]) : parseFloat(/opr\/([\d]+)/.exec(agent)[1]));
             },
             naver = function () {
                 return agent.indexOf('naver') < 0 ? 0 : browser = 'naver'
@@ -1804,12 +1764,12 @@ var RedGLDetect;
         if (!result) result = {};
         if (agent.indexOf('android') > -1) {
             browser = os = 'android',
-                device = agent.indexOf('mobile') == -1 ? (browser += 'Tablet', 'tablet') : 'mobile',
+                device = agent.indexOf('mobile') === -1 ? (browser += 'Tablet', 'tablet') : 'mobile',
                 osv = (i = /android ([\d.]+)/.exec(agent)) ? (i = i[1].split('.'), parseFloat(i[0] + '.' + i[1])) : 0,
                 isMobile = 1,
             whale() || naver() || opera() || chrome() || firefox() || (bv = i = /safari\/([\d.]+)/.exec(agent) ? parseFloat(i[1]) : 0);
         } else if (agent.indexOf(i = 'ipad') > -1 || agent.indexOf(i = 'iphone') > -1) {
-            device = i == 'ipad' ? 'tablet' : 'mobile',
+            device = i === 'ipad' ? 'tablet' : 'mobile',
                 browser = os = i,
                 osv = (i = /os ([\d_]+)/.exec(agent)) ? (i = i[1].split('_'), parseFloat(i[0] + '.' + i[1])) : 0,
                 isMobile = 1,
@@ -1852,7 +1812,7 @@ var RedGLDetect;
             if (t0.hasOwnProperty(i)) result[i] = t0[i];
 
         if (window['OffscreenCanvas']) {
-            var t0 = new window['OffscreenCanvas'](2, 2)
+            var t0 = new window['OffscreenCanvas'](2, 2);
             try {
                 t0.getContext('2d')
             } catch (e) {
@@ -1860,9 +1820,16 @@ var RedGLDetect;
             }
         }
         return result
-    }
+    };
     Object.freeze(RedGLDetect);
 })();
+
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
 
 "use strict";
 var RedGLUtil;
@@ -1890,6 +1857,11 @@ var RedGLUtil;
          :DOC*/
         throwFunc: function () {
             throw 'RedGL Error : ' + Array.prototype.slice.call(arguments).join(' ')
+        },
+        isUint: function (v, title) {
+            (typeof v == 'number' && v >= 0) || RedGLUtil.throwFunc(title, '입력값 : ' + v);
+            Math.floor(v) == v || RedGLUtil.throwFunc(title, '입력값 : ' + v);
+            return true
         },
         /**DOC:
          {
@@ -1987,7 +1959,7 @@ var RedGLUtil;
         getStrFromComment: (function () {
             var t0;
             return function (source) {
-                if (typeof source != 'string') RedGLUtil.throwFunc('getStrFromComment : 해석할 값은 문자열만 가능', source)
+                if (typeof source != 'string') RedGLUtil.throwFunc('getStrFromComment : 해석할 값은 문자열만 가능', source);
                 t0 = source.replace('@preserve', '').toString().trim().match(/(\/\*)[\s\S]+(\*\/)/g);
                 if (t0) return t0[0].replace(/\/\*|\*\//g, '').trim();
                 else RedGLUtil.throwFunc('getStrFromComment : 해석할 불가능한 값', source)
@@ -2057,9 +2029,9 @@ var RedGLUtil;
          :DOC*/
         makePowerOf2Source: (function () {
             var tW, tH;
-            var MAX_TEXTURE_SIZE
+            var MAX_TEXTURE_SIZE;
             return function (gl, source, maxTextureSize) {
-                MAX_TEXTURE_SIZE = maxTextureSize
+                MAX_TEXTURE_SIZE = maxTextureSize;
                 if (!RedGLUtil.isPowerOf2(source.width) || !RedGLUtil.isPowerOf2(source.height)) {
                     tW = RedGLUtil.nextHighestPowerOfTwo(source.width);
                     tH = RedGLUtil.nextHighestPowerOfTwo(source.height);
@@ -2068,7 +2040,7 @@ var RedGLUtil;
                     var canvas = window['OffscreenCanvas'] ? new OffscreenCanvas(tW, tH) : document.createElement('canvas');
                     var ctx = canvas.getContext("2d");
 
-                    console.log('캔버스 엘리먼트에 대한 리사이즈용캔버스생성', canvas)
+                    console.log('캔버스 엘리먼트에 대한 리사이즈용캔버스생성', canvas);
                     if (!window['OffscreenCanvas']) {
                         canvas.width = tW;
                         canvas.height = tH;
@@ -2231,7 +2203,7 @@ var RedGLUtil;
 		 }
          :DOC*/
         quaternionToRotation: function (q, order) {
-            var mat = []
+            var mat = [];
             var x = q[0];
             var y = q[1];
             var z = q[2];
@@ -2260,7 +2232,7 @@ var RedGLUtil;
             mat[15] = 1;
 
             var dest = [0, 0, 0];
-            order = order || 'XYZ'
+            order = order || 'XYZ';
             // Assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)
             var m11 = mat[0], m12 = mat[4], m13 = mat[8];
             var m21 = mat[1], m22 = mat[5], m23 = mat[9];
@@ -2334,7 +2306,7 @@ var RedGLUtil;
          :DOC*/
         mat4ToEuler: function (mat, dest, order) {
             dest = dest || [0, 0, 0];
-            order = order || 'XYZ'
+            order = order || 'XYZ';
             // Assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)
             var m11 = mat[0], m12 = mat[4], m13 = mat[8];
             var m21 = mat[1], m22 = mat[5], m23 = mat[9];
@@ -2395,17 +2367,63 @@ var RedGLUtil;
                 }
             }
             return dest;
-        }
+        },
+        screenToWorld: (function () {
+            var x,y,z, w;
+            var invW
+            var point = [0, 0, 0];
+            var pointMTX = mat4.create()
+            var invViewProjection = mat4.create()
+            var resultMTX;
+            return function (rect, tCamera) {
+                x = 2.0 * rect[0] / rect[2] - 1;
+                y = -2.0 * rect[1] / rect[3] + 1;
+                z = 1;
+                tCamera = tCamera['camera'] ? tCamera['camera'] : tCamera;
+                mat4.multiply(invViewProjection, tCamera.perspectiveMTX, tCamera.matrix);
+                resultMTX = mat4.clone(invViewProjection);
+
+                mat4.invert(resultMTX, resultMTX)
+                point = [x, y, z]
+                mat4.identity(pointMTX);
+                mat4.translate(pointMTX, pointMTX, point)
+                mat4.multiply(resultMTX, resultMTX, pointMTX);
+
+                point[0] = resultMTX[12];
+                point[1] = resultMTX[13];
+                point[2] = resultMTX[14];
+
+                w = invViewProjection[12] * x + invViewProjection[13] * y + invViewProjection[14] * 0 + invViewProjection[15]; // required for perspective divide
+                if (w !== 0) {
+                    invW = 1 / w;
+                    point[0] /= invW;
+                    point[1] /= invW;
+                    point[2] /= invW;
+                    point[0] = point[0] + (tCamera.x)
+                    point[1] = point[1] + (tCamera.y)
+                    point[2] = point[2] + (tCamera.z)
+                }
+                console.log(point)
+                return point
+            }
+        })()
     };
     Object.freeze(RedGLUtil);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedGL;
 (function () {
     var getGL;
     var setEmptyTextures;
-    var doNotPrepareProgram
-    var _instanceList = []
+    var doNotPrepareProgram;
+    var _instanceList = [];
     window.addEventListener('resize', function () {
         _instanceList.forEach(function (redGL) {
             redGL.setSize(redGL['_width'], redGL['_height'])
@@ -2441,10 +2459,11 @@ var RedGL;
         CHECK_CONTEXT_LIST = 'webkit-3d,moz-webgl,3d,experimental-webgl,webgl'.split(',');
         tCheckContextList = [];
         return function (canvas, option, targetContext) {
+            console.time('getGL');
             initOption = JSON.parse(JSON.stringify(OPTION));
             if (option) for (i in option) initOption[i] = option[i];
             if (targetContext) {
-                tCheckContextList.length = 0
+                tCheckContextList.length = 0;
                 tCheckContextList.push(targetContext)
             } else tCheckContextList = CHECK_CONTEXT_LIST.concat();
             i = tCheckContextList.length;
@@ -2453,13 +2472,14 @@ var RedGL;
                     tContext['glExtension'] = {};
                     EXT_KEY_LIST.forEach(function (extensionKey) {
                         tContext['glExtension'][extensionKey] = tContext.getExtension(extensionKey);
-                        if (tContext['glExtension'][extensionKey] && extensionKey == 'WEBGL_debug_renderer_info') {
+                        if (tContext['glExtension'][extensionKey] && extensionKey === 'WEBGL_debug_renderer_info') {
                             tContext['vendor'] = tContext.getParameter(tContext['glExtension'][extensionKey].UNMASKED_VENDOR_WEBGL);
                             tContext['renderer'] = tContext.getParameter(tContext['glExtension'][extensionKey].UNMASKED_RENDERER_WEBGL)
                         }
                         console.log('확장여부 ' + extensionKey + ' :', tContext['glExtension'][extensionKey])
                     });
                     tContext['version'] = tKey;
+                    console.timeEnd('getGL');
                     return tContext;
                 }
             }
@@ -2467,6 +2487,7 @@ var RedGL;
         }
     })();
     setEmptyTextures = function (redGL, gl) {
+        console.time('setEmptyTextures');
         var i;
         var emptyTexture, emptyCubeTexture, src;
         i = redGL['detect']['texture']['MAX_COMBINED_TEXTURE_IMAGE_UNITS'];
@@ -2479,8 +2500,9 @@ var RedGL;
         };
         // 0번은 2D 텍스쳐 생성용공간
         // 1번은 3D 텍스쳐 생성용공간
+        //TODO 이게 아마도 이제 필요없을텐데 확인해봐야함
         while (i--) {
-            if (i == 1) {
+            if (i === 1) {
                 gl.activeTexture(gl.TEXTURE0 + 1);
                 gl.bindTexture(gl.TEXTURE_CUBE_MAP, emptyCubeTexture['webglTexture']);
             } else {
@@ -2488,6 +2510,7 @@ var RedGL;
                 gl.bindTexture(gl.TEXTURE_2D, emptyTexture['webglTexture']);
             }
         }
+        console.timeEnd('setEmptyTextures');
     };
     /**DOC:
      {
@@ -2557,7 +2580,9 @@ var RedGL;
      :DOC*/
     RedGL = function (canvas, callback, option, targetContextKey) {
         if (!(this instanceof RedGL)) return new RedGL(canvas, callback, option, targetContextKey);
-        canvas['tagName'] == 'CANVAS' || RedGLUtil.throwFunc('RedGL : Canvas Element만 허용');
+        console.time('RedGL');
+        console.group('RedGL');
+        canvas['tagName'] === 'CANVAS' || RedGLUtil.throwFunc('RedGL : Canvas Element만 허용');
         var tGL, self;
         self = this;
         this['_datas'] = {};
@@ -2565,14 +2590,13 @@ var RedGL;
         this['_height'] = '100%';
         this['_renderScale'] = 1;
         this['_viewRect'] = [0, 0, 0, 0];
-        //
         this['_canvas'] = canvas;
         /**DOC:
          {
 			 code : 'PROPERTY',
 			 title :`gl`,
 			 description : `
-				 생성된 WebGL Context
+				 RedGL 초기화시 생성된 WebGL Context
 			 `,
 			 return : 'WebGL Context Instance'
 		 }
@@ -2583,14 +2607,16 @@ var RedGL;
          {
 			 code : 'PROPERTY',
 			 title :`detect`,
-			 description : `
-				 하드웨어 디텍팅 정보
-			 `,
+			 description : `RedGL 초기화시 생성되는 하드웨어 디텍팅 정보`,
 			 return : 'RedGLDetect Instance'
 		 }
          :DOC*/
         if (tGL) this['detect'] = RedGLDetect(this);
-        else return callback ? callback.call(self, tGL ? true : false) : 0;
+        else {
+            if (callback) return callback.call(self, false); // 실패할경우 콜백 콜백
+            else return
+
+        }
         //
         this['_UUID'] = RedGL.makeUUID();
         /**DOC:
@@ -2617,22 +2643,24 @@ var RedGL;
             var prevW, prevH;
             var ratio;
             var tCVS;
-            var tW = new Uint32Array(2)
-            var tH = new Uint32Array(2)
+            var tW = new Uint32Array(2);
+            var tH = new Uint32Array(2);
             prevW = 0, prevH = 0;
             return function (width, height, force) {
-                if (width == undefined) RedGLUtil.throwFunc('RedGL setSize : width가 입력되지 않았습니다.');
-                if (height == undefined) RedGLUtil.throwFunc('RedGL setSize : height가 입력되지 않았습니다.');
+                if (width === undefined) RedGLUtil.throwFunc('RedGL setSize : width가 입력되지 않았습니다.');
+                if (height === undefined) RedGLUtil.throwFunc('RedGL setSize : height가 입력되지 않았습니다.');
                 W = this['_width'] = width;
                 H = this['_height'] = height;
+                console.time('RedGL - setSize');
+                console.group('RedGL - setSize');
                 if (window['HTMLCanvasElement']) {
                     if (typeof W != 'number') {
                         if (W.indexOf('%') > -1) W = (document.documentElement ? document.documentElement.clientWidth : document.body.clientWidth) * parseFloat(W) / 100;
-                        else RedGLUtil.throwFunc('RedGL setSize : width는 0이상의 숫자나 %만 허용.', W);
+                        else RedGLUtil.throwFunc('RedGL setSize : width는 0이상의 숫자나 %만 허용.', '입력값 :', W);
                     }
                     if (typeof H != 'number') {
                         if (H.indexOf('%') > -1) H = window.innerHeight * parseFloat(H) / 100;
-                        else RedGLUtil.throwFunc('RedGL setSize : height는 0이상의 숫자나 %만 허용.', H);
+                        else RedGLUtil.throwFunc('RedGL setSize : height는 0이상의 숫자나 %만 허용.', '입력값 :', H);
                     }
                     ratio = window['devicePixelRatio'] || 1;
                     tCVS = this['_canvas'];
@@ -2649,35 +2677,35 @@ var RedGL;
                     this['_viewRect'][3] = prevH;
                     console.log("this['_viewRect']", this['_viewRect'])
                 } else {
-                    W = this['_width'] = width
-                    H = this['_height'] = height
-                    tW[0] = W * this['_renderScale']
-                    tH[0] = H * this['_renderScale']
+                    W = this['_width'] = width;
+                    H = this['_height'] = height;
+                    tW[0] = W * this['_renderScale'];
+                    tH[0] = H * this['_renderScale'];
                     console.log('offscreen - RedGL canvas setSize : ', this.gl.drawingBufferWidth, this.gl.drawingBufferHeight);
                     this['_viewRect'][2] = W;
-                    this['_viewRect'][3] = H
+                    this['_viewRect'][3] = H;
                 }
+                console.timeEnd('RedGL - setSize');
+                console.groupEnd();
             }
         })();
-
+        // 쉐이더 코드를 초기화한다(가변요소때문에 이때 결정함)
         if (RedSystemShaderCode['init']) RedSystemShaderCode.init(self);
         ///////////////////////////////////////
         setEmptyTextures(self, tGL); // 빈텍스쳐를 미리 체워둔다.
-        _instanceList.push(self)
+        _instanceList.push(self);
         requestAnimationFrame(function () {
             if (!doNotPrepareProgram) {
-                // 무거운놈만 먼저 해둘까...
-                RedPBRMaterial_System(self);
-                RedStandardMaterial(self, self['_datas']['emptyTexture']['2d']);
-                RedEnvironmentMaterial(self, null, self['_datas']['emptyTexture']['3d']);
+                RedPBRMaterial_System(self); // 무거운 녀석 미리 준비
+                RedStandardMaterial(self, self['_datas']['emptyTexture']['2d']); // 사용 빈도 높은 재질 미리 준비
+                RedEnvironmentMaterial(self, null, self['_datas']['emptyTexture']['3d']); // 사용 빈도 높은 재질 미리 준비
             }
             ///////////////////////////////////////
-            //
-
+            // 마우스 관련 처리 기반 준비
             self['_mouseEventInfo'] = [];
             [RedGLDetect.BROWSER_INFO.move, RedGLDetect.BROWSER_INFO.down, RedGLDetect.BROWSER_INFO.up].forEach(function (v) {
                 var tXkey, tYkey;
-                if (RedGLDetect.BROWSER_INFO.browser == 'ie' && RedGLDetect.BROWSER_INFO.browserVer == 11) {
+                if (RedGLDetect.BROWSER_INFO.browser === 'ie' && RedGLDetect.BROWSER_INFO.browserVer === 11) {
                     tXkey = 'offsetX';
                     tYkey = 'offsetY';
                 } else {
@@ -2685,53 +2713,41 @@ var RedGL;
                     tYkey = 'layerY';
                 }
                 self['_canvas'].addEventListener(v, function (e) {
-                    console.log(e)
-                    e.preventDefault()
-
+                    e.preventDefault();
                     if (RedGLDetect.BROWSER_INFO.isMobile) {
                         if (e.changedTouches[0]) {
                             self['_mouseEventInfo'].push(
                                 {
                                     type: e.type,
-                                    //TODO 모바일에서 확인해야함
                                     x: e.changedTouches[0].clientX,
-                                    y: e.changedTouches[0].clientY
+                                    y: e.changedTouches[0].clientY,
+                                    nativeEvent : e
                                 }
-                            )
-                            self._mouseX =e.changedTouches[0].clientX
-                            self._mouseY =e.changedTouches[0].clientY
+                            );
+                            self._mouseX = e.changedTouches[0].clientX;
+                            self._mouseY = e.changedTouches[0].clientY
                         }
-                    }
-                    else {
-                        console.log(e)
+                    } else {
                         self['_mouseEventInfo'].push(
                             {
                                 type: e.type,
                                 x: e[tXkey],
-                                y: e[tYkey]
+                                y: e[tYkey],
+                                nativeEvent : e
                             }
-                        )
-                        self._mouseX =e[tXkey]
-                        self._mouseY =e[tYkey]
-                        // self.world._viewList.forEach(function(view){
-                        //     if(!view['_mouseEventInfo']) view['_mouseEventInfo']=[]
-                        //     view['_mouseEventInfo'].push(
-                        //         {
-                        //             type: e.type,
-                        //             x: e[tXkey],
-                        //             y: e[tYkey]
-                        //         }
-                        //     )
-                        // })
+                        );
+                        self._mouseX = e[tXkey];
+                        self._mouseY = e[tYkey];
                     }
                 }, false)
             });
             self.setSize(self['_width'], self['_height']); // 리사이즈를 초기에 한번 실행.
-            callback ? callback.call(self, tGL ? true : false) : 0; // 콜백이 있으면 실행
+            if (callback) callback.call(self, true); // 콜백이 있으면 실행
 
-            //
         });
-        console.log(this)
+        console.timeEnd('RedGL');
+        console.log(this);
+        console.groupEnd('RedGL');
     };
     /**DOC:
      {
@@ -2775,9 +2791,141 @@ var RedGL;
     });
     RedGL.setDoNotPrepareProgram = function () {
         doNotPrepareProgram = true
-    }
+    };
     Object.freeze(RedGL);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+"use strict";
+var RedBoxSelection;
+(function () {
+    var tRectBox;
+    var tXkey, tYkey;
+    var tW, tH;
+    var startPoint = {x: 0, y: 0};
+    var dragPoint = {x: 0, y: 0};
+    var currentRect = [];
+    var looper, calRect;
+    calRect = function (e, targetView) {
+        // console.log(e)
+        dragPoint.x = e[tXkey];
+        dragPoint.y = e[tYkey];
+        tW = dragPoint.x - startPoint.x;
+        tH = dragPoint.y - startPoint.y;
+        currentRect = [startPoint.x, startPoint.y, tW, tH];
+        if (tW < 0) {
+            currentRect[2] = Math.abs(tW);
+            currentRect[0] += tW;
+        }
+        if (tH < 0) {
+            currentRect[3] = Math.abs(tH);
+            currentRect[1] += tH
+        }
+        tRectBox.style.left = currentRect[0] + 'px';
+        tRectBox.style.top = currentRect[1] + 'px';
+        tRectBox.style.width = currentRect[2] + 'px';
+        tRectBox.style.height = currentRect[3] + 'px';
+        // console.log(currentRect);
+        // console.log(looper(targetView.scene, targetView, currentRect))
+        return looper(targetView.scene, targetView, currentRect)
+    };
+    looper = function (list, targetView, rect, result) {
+        if (!result) result = {
+            selectList: [],
+            unSelectList: []
+        };
+        list.children.forEach(function (mesh) {
+            var tPosition = mesh.getScreenPoint(targetView);
+            // console.log('tPosition', tPosition)
+            if (
+                rect[0] <= tPosition[0]
+                && rect[1] <= tPosition[1]
+                && rect[0] + rect[2] >= tPosition[0]
+                && rect[1] + rect[3] >= tPosition[1]
+            ) result.selectList.push(mesh);
+            else result.unSelectList.push(mesh);
+            looper(mesh, targetView, rect, result);
+        });
+        return result
+    };
+    /**DOC:
+     {
+		 constructorYn : true,
+		 title :`RedBoxSelection`,
+		 description : `
+			 RedBoxSelection Instance 생성
+		 `,
+		 params : {
+			 redGL : [
+				 {type:'RedGL'}
+			 ],
+			 redView : [
+				 {type:'RedView'}
+			 ],
+			 callback : [
+				 {type:'Function'}
+			 ]
+		 },
+         demo : '../example/etc/RedBoxSelection.html',
+		 return : 'RedBoxSelection Instance'
+	 }
+     :DOC*/
+    RedBoxSelection = function (redGL, redView, callback) {
+        if (!(this instanceof RedBoxSelection)) return new RedBoxSelection(redGL, redView, callback);
+        redGL instanceof RedGL || RedGLUtil.throwFunc('RedBoxSelection : RedGL Instance만 허용.', redGL);
+        redView instanceof RedView || RedGLUtil.throwFunc('RedBoxSelection : RedView Instance만 허용.', redView);
+        if (!redGL['_datas']['RedBoxSelection']) redGL['_datas']['RedBoxSelection'] = this;
+        else return this;
+        [RedGLDetect.BROWSER_INFO.move, RedGLDetect.BROWSER_INFO.down, RedGLDetect.BROWSER_INFO.up].forEach(function (v) {
+            tXkey = 'clientX';
+            tYkey = 'clientY';
+            var HD;
+            HD = function (e) {
+                var result = calRect(e, redView);
+                if (callback) callback(result)
+            };
+            redGL['_canvas'].addEventListener(v, function (e) {
+                if (e.type === RedGLDetect.BROWSER_INFO.down) {
+                    startPoint.x = e[tXkey];
+                    startPoint.y = e[tYkey];
+                    if (!tRectBox) {
+                        tRectBox = document.createElement('div');
+                        tRectBox.style.cssText = 'position:fixed;border:1px dashed red;z-index:0';
+                    }
+                    tRectBox.style.left = '0px';
+                    tRectBox.style.top = '0px';
+                    tRectBox.style.width = '0px';
+                    tRectBox.style.height = '0px';
+                    document.body.appendChild(tRectBox);
+                    if (redView.camera && redView.camera.camera) redView.camera.needUpdate = false;
+                    HD({});
+                    window.addEventListener('mousemove', HD);
+                    window.addEventListener('click', function () {
+                        if (redView.camera.camera) redView.camera.needUpdate = true;
+                        if (tRectBox.parentNode) document.body.removeChild(tRectBox);
+                        window.removeEventListener(
+                            'mousemove', HD
+                        )
+                    })
+                }
+            })
+        })
+    }
+})();
+
+
+
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedBaseController;
 (function () {
@@ -2792,6 +2940,7 @@ var RedBaseController;
 	 }
      :DOC*/
     RedBaseController = function () {
+        if (!(this instanceof RedBaseController)) return new RedBaseController();
     };
     RedBaseController.prototype = {
         update: function () {
@@ -2800,6 +2949,13 @@ var RedBaseController;
     };
     Object.freeze(RedBaseController);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedImageLoader;
 (function () {
@@ -2821,48 +2977,47 @@ var RedImageLoader;
             byteArrays[sliceIndex] = new Uint8Array(bytes);
         }
         return new Blob(byteArrays, {type: contentType});
-    }
+    };
 
     var makeImageBitmap = function (v, option) {
         return createImageBitmap(v, option ? option : {imageOrientation: 'none'})
-    }
+    };
     var fileLoader = function (src, onLoader, onError, option) {
 
-        var self = this
+        var self = this;
         var request = new XMLHttpRequest();
-        var ended = false
         request.open("GET", src, true);
         request.responseType = "blob";
-        request.onreadystatechange = function (e) {
-            if (request.readyState == 4) {
+        request.onreadystatechange = function () {
+            if (request.readyState === 4) {
                 // console.log(request)
                 // console.log(request.response)
                 if (request.status === 200) {
                     makeImageBitmap(request.response, option ? option : {
                         imageOrientation: 'none'
                     }).then(function (v) {
-                        v['src'] = src
-                        self['source'] = v
+                        v['src'] = src;
+                        self['source'] = v;
                         if (self['_onLoad']) {
-                            self['_onLoad'](request)
-                            self['_onLoad'] = undefined
+                            self['_onLoad'](request);
+                            self['_onLoad'] = undefined;
                             self['_onError'] = undefined
                         }
                         // console.log('fileLoader', v)
                         // console.log('성공!')
-                    }).catch(function (v) {
-                        console.log('에러!')
+                    }).catch(function () {
+                        console.log('에러!');
                         if (self['_onError']) {
-                            self['_onError'](request)
-                            self['_onLoad'] = undefined
+                            self['_onError'](request);
+                            self['_onLoad'] = undefined;
                             self['_onError'] = undefined
                         }
                     })
                 } else {
-                    console.log('에러!')
+                    console.log('에러!');
                     if (self['_onError']) {
-                        self['_onError'](request)
-                        self['_onLoad'] = undefined
+                        self['_onError'](request);
+                        self['_onLoad'] = undefined;
                         self['_onError'] = undefined
                     }
 
@@ -2870,18 +3025,18 @@ var RedImageLoader;
                 }
 
             }
-        }
+        };
 
         request.send();
-    }
+    };
     RedImageLoader = function (src, onLoad, onError, option) {
         var self = this;
         if (!(this instanceof RedImageLoader)) return new RedImageLoader(src, onLoad, onError, option);
-        if (typeof src != 'string') RedGLUtil.throwFunc('RedImageLoader : src는 문자열 만 허용.', '입력값 : ' + src);
-        self['_src'] = src
-        self['_onLoad'] = onLoad
-        self['_onError'] = onError
-        if (window && window['document'] ) {
+        if (typeof src !== 'string') RedGLUtil.throwFunc('RedImageLoader : src는 문자열 만 허용.', '입력값 : ' + src);
+        self['_src'] = src;
+        self['_onLoad'] = onLoad;
+        self['_onError'] = onError;
+        if (window && window['document']) {
             var img;
             var HD_onLoad, HD_onError, clearEvents;
             clearEvents = function (img) {
@@ -2894,7 +3049,7 @@ var RedImageLoader;
             };
             HD_onLoad = function (e) {
                 clearEvents(this);
-                self['source'] = img
+                self['source'] = img;
                 if (self['_onLoad']) self['_onLoad'](e)
             };
             img = new Image();
@@ -2903,16 +3058,16 @@ var RedImageLoader;
             img.addEventListener('error', HD_onError);
             img.addEventListener('load', HD_onLoad);
         } else {
-            if (src.split(',').length == 2 && src.substr(0, 5) == 'data:') {
+            if (src.split(',').length === 2 && src.substr(0, 5) === 'data:') {
                 makeImageBitmap(base64toBlob(src.split(',')[1], 'image/png'), option ? option : {
                     // imageOrientation: 'flipY'
                 }).then(function (v) {
                     // console.log(v)
-                    v['src'] = src
-                    self['source'] = v
+                    v['src'] = src;
+                    self['source'] = v;
                     if (self['_onLoad']) {
-                        self['_onLoad'](v)
-                        self['_onLoad'] = undefined
+                        self['_onLoad'](v);
+                        self['_onLoad'] = undefined;
                         self['_onError'] = undefined
                     }
                     // console.log('베이스이미지성공', v)
@@ -2921,9 +3076,16 @@ var RedImageLoader;
             } else fileLoader.apply(self, [self['_src'], onLoad, onError, option])
         }
 
-    }
+    };
     Object.freeze(RedImageLoader);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedBaseTexture;
 (function () {
@@ -2952,7 +3114,7 @@ var RedBaseTexture;
      :DOC*/
     RedBaseTexture.EMPTY_BASE64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYxIDY0LjE0MDk0OSwgMjAxMC8xMi8wNy0xMDo1NzowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNS4xIFdpbmRvd3MiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NzMxRDhBQzRFNUZFMTFFN0IxMDVGNEEzQjQ0RjAwRDIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NzMxRDhBQzVFNUZFMTFFN0IxMDVGNEEzQjQ0RjAwRDIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo3MzFEOEFDMkU1RkUxMUU3QjEwNUY0QTNCNDRGMDBEMiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo3MzFEOEFDM0U1RkUxMUU3QjEwNUY0QTNCNDRGMDBEMiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PuojYFUAAAAQSURBVHjaYvj//z8DQIABAAj8Av7bok0WAAAAAElFTkSuQmCC';
     nullImage = RedImageLoader(RedBaseTexture.EMPTY_BASE64);
-    console.log('nullImage.source', nullImage)
+    console.log('nullImage.source', nullImage);
     RedBaseTexture.prototype = {
         /**DOC:
          {
@@ -2970,14 +3132,13 @@ var RedBaseTexture;
 		 }
          :DOC*/
         setEmptyTexture: (function () {
-            var cubePixelData = new Uint8Array([0, 0, 0, 0])
+            var cubePixelData = new Uint8Array([0, 0, 0, 0]);
             return function (gl, texture) {
                 if (this instanceof RedBitmapCubeTexture) {
                     gl.activeTexture(gl.TEXTURE0);
                     gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
                     gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
                     // gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
-                    // console.log('nullImage.source',nullImage.source)
                     gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_X, 0, gl.LUMINANCE, 2, 2, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, cubePixelData);
                     gl.texImage2D(gl.TEXTURE_CUBE_MAP_NEGATIVE_X, 0, gl.LUMINANCE, 2, 2, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, cubePixelData);
                     gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_Y, 0, gl.LUMINANCE, 2, 2, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, cubePixelData);
@@ -3065,7 +3226,7 @@ var RedBaseTexture;
      :DOC*/
     RedBaseTexture.prototype['dispose'] = function () {
         if (this['webglTexture'] && this['_src'] != RedBaseTexture.EMPTY_BASE64) {
-            this['webglTexture']['gl'].deleteTexture(this['webglTexture'])
+            this['webglTexture']['gl'].deleteTexture(this['webglTexture']);
             this['webglTexture'] = null
         }
     };
@@ -3080,6 +3241,13 @@ var RedBaseTexture;
     });
     Object.freeze(RedBaseTexture);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedBaseObject3D;
 (function () {
@@ -3094,6 +3262,7 @@ var RedBaseObject3D;
 	 }
      :DOC*/
     RedBaseObject3D = function () {
+        if (!(this instanceof RedBaseObject3D)) return new RedBaseObject3D();
     };
     /**DOC:
      {
@@ -3118,19 +3287,24 @@ var RedBaseObject3D;
 	 }
      :DOC*/
     RedBaseObject3D['build'] = function (gl) {
-        this['name'] = 'object3D_' + (RedGL.makeUUID() + 1)
+        this['name'] = 'object3D_' + (RedGL.makeUUID() + 1);
         /**DOC:
          {
 		     code : 'PROPERTY',
 			 title :`useTransparentSort`,
 			 description : `
-				 투명도 소팅 여부
+				 투명도 소팅 여부. 
+				 true 설정시 렌더링 진행과정중 최종적으로 모아서 그리게된다. (완벽하지 않지만 투명객체 소팅 효과를 얻을 수 있음)
 				 기본값 : false
 			 `,
+			 example : `
+                (RedMesh Instance).useTransparentSort = true;
+                (RedMesh Instance).useTransparentSort = false;
+             `,
 			 return : 'Boolean'
 		 }
          :DOC*/
-        this['useTransparentSort'] = false
+        this['useTransparentSort'] = false;
         /**DOC:
          {
 		     code : 'PROPERTY',
@@ -3139,6 +3313,10 @@ var RedBaseObject3D;
 				 컬링 사용여부
 				 기본값 : true
 			 `,
+			 example : `
+                (RedMesh Instance).useCullFace = true;
+                (RedMesh Instance).useCullFace = false;
+             `,
 			 return : 'Boolean'
 		 }
          :DOC*/
@@ -3151,6 +3329,11 @@ var RedBaseObject3D;
 				 컬링 페이스 설정
 				 기본값 : gl.BACK
 			 `,
+			 example : `
+			    var tGL = (RedGL Instance).gl;
+                (RedMesh Instance).cullFace = tGL.BACK;
+                (RedMesh Instance).cullFace = tGL.FRONT;
+             `,
 			 return : 'gl 상수'
 		 }
          :DOC*/
@@ -3160,9 +3343,13 @@ var RedBaseObject3D;
 		     code : 'PROPERTY',
 			 title :`useDepthMask`,
 			 description : `
-				 뎁스 테스트 사용여부
+				 뎁스 마스크 사용여부
 				 기본값 : true
 			 `,
+			 example : `
+                (RedMesh Instance).useDepthMask = true;
+                (RedMesh Instance).useDepthMask = false;
+             `,
 			 return : 'Boolean'
 		 }
          :DOC*/
@@ -3175,6 +3362,10 @@ var RedBaseObject3D;
 				 뎁스 테스트 사용여부
 				 기본값 : true
 			 `,
+			 example : `
+                (RedMesh Instance).useDepthTest = true;
+                (RedMesh Instance).useDepthTest = false;
+             `,
 			 return : 'Boolean'
 		 }
          :DOC*/
@@ -3187,6 +3378,11 @@ var RedBaseObject3D;
 				 뎁스 테스트 함수 설정
 				 기본값 : gl.LEQUAL
 			 `,
+			 example : `
+			    var tGL = (RedGL Instance).gl;
+                (RedMesh Instance).depthTestFunc = tGL.LEQUAL;
+                (RedMesh Instance).depthTestFunc = tGL.LESS;
+             `,
 			 return : 'gl 상수'
 		 }
          :DOC*/
@@ -3199,6 +3395,10 @@ var RedBaseObject3D;
 				 블렌드 모드 사용여부
 				 기본값 : true
 			 `,
+			 example : `
+                (RedMesh Instance).useBlendMode = true;
+                (RedMesh Instance).useBlendMode = false;
+             `,
 			 return : 'Boolean'
 		 }
          :DOC*/
@@ -3211,6 +3411,11 @@ var RedBaseObject3D;
 				 블렌드 소스값 factor
 				 기본값 : gl.SRC_ALPHA
 			 `,
+			 example : `
+			    var tGL = (RedGL Instance).gl;
+                (RedMesh Instance).blendSrc = tGL.SRC_ALPHA;
+                (RedMesh Instance).blendSrc = tGL.DST_ALPHA;
+             `,
 			 return : 'gl 상수'
 		 }
          :DOC*/
@@ -3223,6 +3428,11 @@ var RedBaseObject3D;
 				 블렌드 목표값 factor
 				 기본값 : gl.ONE_MINUS_SRC_ALPHA
 			 `,
+			 example : `
+			    var tGL = (RedGL Instance).gl;
+                (RedMesh Instance).blendDst = tGL.SRC_ALPHA;
+                (RedMesh Instance).blendDst = tGL.DST_ALPHA;
+             `,
 			 return : 'gl 상수'
 		 }
          :DOC*/
@@ -3235,6 +3445,11 @@ var RedBaseObject3D;
 				 기본값 : gl.TRIANGLES
 				 drawCall시 적용한 드로잉 모드
 			 `,
+			 example : `
+			    var tGL = (RedGL Instance).gl;
+                (RedMesh Instance).drawMode = tGL.TRIANGLES;
+                (RedMesh Instance).drawMode = tGL.LINES;
+             `,
 			 return : 'gl 상수'
 		 }
          :DOC*/
@@ -3246,7 +3461,12 @@ var RedBaseObject3D;
 			 description : `
 				 기본값 : 1
 				 gl.POINTS로 그릴경우 반영될 포인트 사이즈.
+				 성능을 위해서 getter/setter 설정이 되어있지 않음
 			 `,
+			 example : `
+                (RedMesh Instance).pointSize = 1;
+                (RedMesh Instance).pointSize = 2;
+             `,
 			 return : 'Number'
 		 }
          :DOC*/
@@ -3257,11 +3477,17 @@ var RedBaseObject3D;
         /**DOC:
          {
 		    code : 'PROPERTY',
-			title :`matrix`,
+			title :`autoUpdateMatrix`,
 			description : `
-			matrix 자동계산여부
+			    matrix 자동계산여부.
+			    true 설정시 이전에 계산된 매트릭스를 사용한다.
+			    임의 매트릭스 설정도 가능
 			`,
-			return : 'mat4'
+			example : `
+                (RedMesh Instance).autoUpdateMatrix = true;
+                (RedMesh Instance).autoUpdateMatrix = false;
+            `,
+			return : 'boolean'
 		 }
          :DOC*/
         this['autoUpdateMatrix'] = true;
@@ -3271,26 +3497,37 @@ var RedBaseObject3D;
 		    code : 'PROPERTY',
 			title :`matrix`,
 			description : `
-			matrix 렌더링시 자동계산
+			    계산된 누적 메트릭스
+			    matrix 렌더링시 자동계산
 			`,
 			return : 'mat4'
 		 }
          :DOC*/
         this['matrix'] = mat4.create();
-        this['cachedMatrix'] = mat4.create();
+        /**DOC:
+         {
+		    code : 'PROPERTY',
+			title :`localMatrix`,
+			description : `
+			    계산된 로컬 메트릭스
+			    matrix 렌더링시 자동계산
+			`,
+			return : 'mat4'
+		 }
+         :DOC*/
         this['localMatrix'] = mat4.create();
         /**DOC:
          {
 		    code : 'PROPERTY',
 			title :`normalMatrix`,
 			description : `
-			normalMatrix 렌더링시 자동계산
+			    계산된 노멀 메트릭스
+			    normalMatrix 렌더링시 자동계산
 			`,
 			return : 'mat4'
 		 }
          :DOC*/
         this['normalMatrix'] = mat4.create();
-        this['cachedNormalMatrix'] = mat4.create();
         /**DOC:
          {
 		     code : 'PROPERTY',
@@ -3307,6 +3544,10 @@ var RedBaseObject3D;
 		     code : 'PROPERTY',
 			 title :`useLOD`,
 			 description : `LOD사용여부`,
+			 example : `
+                (RedMesh Instance).useLOD = true;
+                (RedMesh Instance).useLOD = false;
+             `,
 			 return : 'Boolean'
 		 }
          :DOC*/
@@ -3320,7 +3561,7 @@ var RedBaseObject3D;
             }
             */
         };
-        this['_mouseColorMaterial'] = null
+        this['_mouseColorMaterial'] = null;
         this['_mouseColorID'] = [
             parseInt(Math.random() * 255),
             parseInt(Math.random() * 255),
@@ -3368,7 +3609,7 @@ var RedBaseObject3D;
             var tData;
             return function (level, distance, geometry, material) {
                 geometry || material || RedGLUtil.throwFunc('RedBaseObject3D - addLOD : geometry, material 둘중하나는 반드시 입력되어야함');
-                typeof level == 'number' || RedGLUtil.throwFunc('RedBaseObject3D - level : 숫자만허용함');
+                RedGLUtil['isUint'](level) || RedGLUtil.throwFunc('RedBaseObject3D - level : uint만 허용함');
                 tData = {
                     level: level,
                     distance: distance,
@@ -3397,6 +3638,7 @@ var RedBaseObject3D;
 		 }
          :DOC*/
         removeLOD: function (level) {
+            RedGLUtil['isUint'](level) || RedGLUtil.throwFunc('RedBaseObject3D - removeLOD : level : uint만 허용함');
             if (this['_lodLevels'][level]) delete this['_lodLevels'][level]
         },
         /**DOC:
@@ -3427,6 +3669,9 @@ var RedBaseObject3D;
             var t0;
             t0 = mat4.create();
             return function (x, y, z) {
+                typeof x == 'number' || RedGLUtil.throwFunc('RedBaseObject3D - localToWorld : x - number만 허용함', '입력값 : ', x);
+                typeof y == 'number' || RedGLUtil.throwFunc('RedBaseObject3D - localToWorld : y - number만 허용함', '입력값 : ', y);
+                typeof z == 'number' || RedGLUtil.throwFunc('RedBaseObject3D - localToWorld : z - number만 허용함', '입력값 : ', z);
                 x = x || 0;
                 y = y || 0;
                 z = z || 0;
@@ -3469,6 +3714,9 @@ var RedBaseObject3D;
             t0 = mat4.create();
             t1 = mat4.create();
             return function (x, y, z) {
+                typeof x == 'number' || RedGLUtil.throwFunc('RedBaseObject3D - worldToLocal : x - number만 허용함', '입력값 : ', x);
+                typeof y == 'number' || RedGLUtil.throwFunc('RedBaseObject3D - worldToLocal : y - number만 허용함', '입력값 : ', y);
+                typeof z == 'number' || RedGLUtil.throwFunc('RedBaseObject3D - worldToLocal : z - number만 허용함', '입력값 : ', z);
                 x = x || 0;
                 y = y || 0;
                 z = z || 0;
@@ -3486,7 +3734,7 @@ var RedBaseObject3D;
 			 title :`getScreenPoint`,
 			 code : 'METHOD',
 			 description : `
-				 스크린 좌표 반환
+				 객체의 중심 좌표를 스크린 좌표로 반환
 			 `,
 			 params : {
 				 redView : [
@@ -3494,7 +3742,7 @@ var RedBaseObject3D;
 				 ]
 			 },
 			 example : `
-                (RedBaseObject3D Instance).getScreenPoint( RedView Instance ); // 로컬 좌표를 스크린상의 좌표로 반환
+                (RedBaseObject3D Instance).getScreenPoint( RedView Instance );
 			 `,
 			 return : 'Array'
 		 }
@@ -3511,6 +3759,7 @@ var RedBaseObject3D;
             };
             return function (redView) {
                 mat4.identity(resultMTX);
+                redView instanceof RedView || RedGLUtil.throwFunc('RedBaseObject3D - getScreenPoint : redView - RedView Instance 만 허용함', '입력값 : ', redView);
                 tCamera = redView['camera'];
                 tViewRect = redView['_viewRect'];
                 if (tCamera instanceof RedBaseController) tCamera = tCamera.camera;
@@ -3607,12 +3856,17 @@ var RedBaseObject3D;
             if (this['geometry']) this['geometry']['disposeBuffer'](key)
         }
     };
-    //TODO: xyz,scaleXYZ,rotationXYZ 일단 이 GET/SET을 쓸건지 말껀지 결정해야함
-    //TODO: xyz,scaleXYZ,rotationXYZ 렌더러 계산시 get/set 함수 안타게 추적해야함
     /**DOC:
      {
 	     code : 'PROPERTY',
 		 title :`x`,
+		 description : `
+		    x 좌표값
+		    성능을 위해서 getter/setter 설정이 되어있지 않음
+        `,
+		 example : `
+            (RedMesh Instance).x = 0;
+         `,
 		 return : 'Number'
 	 }
      :DOC*/
@@ -3620,6 +3874,13 @@ var RedBaseObject3D;
      {
 	     code : 'PROPERTY',
 		 title :`y`,
+		 description : `
+		    y 좌표값
+		    성능을 위해서 getter/setter 설정이 되어있지 않음
+         `,
+		 example : `
+            (RedMesh Instance).y = 0;
+         `,
 		 return : 'Number'
 	 }
      :DOC*/
@@ -3627,16 +3888,27 @@ var RedBaseObject3D;
      {
 	     code : 'PROPERTY',
 		 title :`z`,
+		 description : `
+		    z 좌표값
+		    성능을 위해서 getter/setter 설정이 되어있지 않음
+		 `,
+		 example : `
+            (RedMesh Instance).z = 0;
+         `,
 		 return : 'Number'
 	 }
      :DOC*/
-    // RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'x', 'number');
-    // RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'y', 'number');
-    // RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'z', 'number');
     /**DOC:
      {
 	     code : 'PROPERTY',
 		 title :`rotationX`,
+		 description : `
+		    rotationX 값
+		    성능을 위해서 getter/setter 설정이 되어있지 않음
+		 `,
+		 example : `
+            (RedMesh Instance).rotationX = 0;
+         `,
 		 return : 'Number'
 	 }
      :DOC*/
@@ -3644,6 +3916,13 @@ var RedBaseObject3D;
      {
 	     code : 'PROPERTY',
 		 title :`rotationY`,
+		 description : `
+		    rotationY 값
+		    성능을 위해서 getter/setter 설정이 되어있지 않음
+         `,
+		 example : `
+            (RedMesh Instance).rotationY = 0;
+         `,
 		 return : 'Number'
 	 }
      :DOC*/
@@ -3651,16 +3930,27 @@ var RedBaseObject3D;
      {
 	     code : 'PROPERTY',
 		 title :`rotationZ`,
+		 description : `
+		    rotationZ 값
+		    성능을 위해서 getter/setter 설정이 되어있지 않음
+		 `,
+		 example : `
+            (RedMesh Instance).rotationZ = 0;
+         `,
 		 return : 'Number'
 	 }
      :DOC*/
-    // RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'scaleX', 'number');
-    // RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'scaleY', 'number');
-    // RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'scaleZ', 'number');
     /**DOC:
      {
 	     code : 'PROPERTY',
 		 title :`scaleX`,
+		 description : `
+		    scaleX 값
+		    성능을 위해서 getter/setter 설정이 되어있지 않음
+		 `,
+		 example : `
+            (RedMesh Instance).scaleX = 0;
+         `,
 		 return : 'Number'
 	 }
      :DOC*/
@@ -3668,6 +3958,13 @@ var RedBaseObject3D;
      {
 	     code : 'PROPERTY',
 		 title :`scaleY`,
+		 description : `
+		    scaleY 값
+		    성능을 위해서 getter/setter 설정이 되어있지 않음
+         `,
+		 example : `
+            (RedMesh Instance).scaleY = 0;
+         `,
 		 return : 'Number'
 	 }
      :DOC*/
@@ -3675,12 +3972,82 @@ var RedBaseObject3D;
      {
 	     code : 'PROPERTY',
 		 title :`scaleZ`,
+		 description : `
+		    scaleZ 값
+		    성능을 위해서 getter/setter 설정이 되어있지 않음
+		 `,
+		 example : `
+            (RedMesh Instance).scaleZ = 0;
+         `,
 		 return : 'Number'
 	 }
      :DOC*/
-    // RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'rotationX', 'number');
-    // RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'rotationY', 'number');
-    // RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'rotationZ', 'number');
+    (function () {
+        var getAABB, getOBB, getTransformVolume;
+        getTransformVolume = function (mesh) {
+            var minX, minY, minZ, maxX, maxY, maxZ, vx, vy, vz, t, i, len;
+            var tx, ty, tz;
+            var volume;
+            var transform = mesh.matrix;
+            var stride = mesh.geometry['interleaveBuffer']['stride'];
+            // if (!volume[this]) {
+            minX = minY = minZ = maxX = maxY = maxZ = 0;
+            t = mesh.geometry['interleaveBuffer']['data'];
+            i = 0;
+            len = mesh.geometry['interleaveBuffer']['pointNum'];
+            for (i; i < len; i++) {
+                vx = i * stride , vy = vx + 1, vz = vx + 2;
+                tx = transform[0] * t[vx] + transform[4] * t[vy] + transform[8] * t[vz];
+                ty = transform[1] * t[vx] + transform[5] * t[vy] + transform[9] * t[vz];
+                tz = transform[2] * t[vx] + transform[6] * t[vy] + transform[10] * t[vz];
+                minX = tx < minX ? tx : minX;
+                maxX = tx > maxX ? tx : maxX;
+                minY = ty < minY ? ty : minY;
+                maxY = ty > maxY ? ty : maxY;
+                minZ = tz < minZ ? tz : minZ;
+                maxZ = tz > maxZ ? tz : maxZ;
+            }
+            volume = [maxX - minX, maxY - minY, maxZ - minZ];
+            volume.minX = minX;
+            volume.maxX = maxX;
+            volume.minY = minY;
+            volume.maxY = maxY;
+            volume.minZ = minZ;
+            volume.maxZ = maxZ;
+            return volume
+        };
+        getAABB = function (mesh) {
+            var volume = getTransformVolume(mesh);
+            var tMTX = mat4.create();
+            mat4.translate(tMTX, tMTX, mesh.localToWorld(0, 0, 0));
+            mat4.scale(tMTX, tMTX, volume);
+            return {
+                worldMatrix: tMTX,
+                volume: volume
+            }
+        };
+        getOBB = function (mesh) {
+            var tVolume = mesh.geometry.volume;
+            var tMTX = mat4.create();
+            mat4.translate(tMTX, tMTX, mesh.localToWorld(0, 0, 0));
+            mat4.rotateX(tMTX, tMTX, -mesh.rotationX * Math.PI / 180);
+            mat4.rotateY(tMTX, tMTX, -mesh.rotationY * Math.PI / 180);
+            mat4.rotateZ(tMTX, tMTX, -mesh.rotationZ * Math.PI / 180);
+            mat4.scale(tMTX, tMTX, tVolume);
+            mat4.scale(tMTX, tMTX, [mesh.scaleX, mesh.scaleY, mesh.scaleZ]);
+            var volume = getTransformVolume(mesh);
+            return {
+                worldMatrix: tMTX,
+                volume: volume
+            }
+        };
+        RedBaseObject3D.prototype['volumeCalculateAABB'] = function () {
+            return this['volumeInfo'] = getAABB(this)
+        };
+        RedBaseObject3D.prototype['volumeCalculateOBB'] = function () {
+            return this['volumeInfo'] = getOBB(this)
+        };
+    })();
     /**DOC:
      {
 			 title :`geometry`,
@@ -3715,12 +4082,19 @@ var RedBaseObject3D;
             return this['_material'];
         },
         set: function (v) {
-            if (v && !(v instanceof RedBaseMaterial)) RedGLUtil.throwFunc('material : RedBaseMaterial Instance만 허용.', '입력값 : ' + v)
+            if (v && !(v instanceof RedBaseMaterial)) RedGLUtil.throwFunc('material : RedBaseMaterial Instance만 허용.', '입력값 : ' + v);
             this['_material'] = v
         }
     });
     Object.freeze(RedBaseObject3D);
 })();
+
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
 
 "use strict";
 var RedBaseContainer;
@@ -3738,121 +4112,10 @@ var RedBaseContainer;
 	 }
      :DOC*/
     RedBaseContainer = function () {
+        if (!(this instanceof RedBaseContainer)) return new RedBaseContainer();
+        this['children'] = []
     };
     RedBaseContainer.prototype = new RedBaseObject3D();
-    /**DOC:
-     {
-		 code : 'METHOD',
-		 title :`sortGeometry`,
-		 description : `
-		    지오메트리 순으로 자식들을 정렬.
-		    동일 지오메트리가 다량 사용될 경우 attribute 변경 횟수가 줄어들어 렌더성능이 좋아진다.
-         `,
-		 params:{
-			 recursive : [
-				 {type:'Boolean'},
-				 'true 입력시 하위 자식의 children 까지 모두 정렬'
-			 ]
-		 },
-		 example : `
-		    (RedBaseContainer Instance).sortGeometry();
-		    (RedBaseContainer Instance).sortGeometry(true);
-		 `,
-		 return : 'void'
-	 }
-     :DOC*/
-    RedBaseContainer.prototype['sortGeometry'] = function (recursive) {
-        if (recursive) {
-            var i = this.children.length;
-            while (i--) {
-                if (this.children[i].sortGeometry) this.children[i].sortGeometry(recursive)
-            }
-        }
-        this.children.sort(function (a, b) {
-            a = a['_geometry']['interleaveBuffer']['_UUID'];
-            b = b['_geometry']['interleaveBuffer']['_UUID'];
-            if (a < b) return -1;
-            if (a > b) return 1;
-            return 0
-        })
-    };
-    /**DOC:
-     {
-		 code : 'METHOD',
-		 title :`sortMaterial`,
-		 description : `
-		    재질이 소유한 RedProgram 순으로 자식들을 정렬.
-		    동일 재질이 다량 사용될 경우 프로그램 변경 횟수가 줄어들어 렌더성능이 좋아진다.
-         `,
-		 params:{
-			 recursive : [
-				 {type:'Boolean'},
-				 'true 입력시 하위 자식의 children 까지 모두 정렬'
-			 ]
-		 },
-		 example : `
-		    (RedBaseContainer Instance).sortMaterial();
-		    (RedBaseContainer Instance).sortMaterial(true);
-		 `,
-		 return : 'void'
-	 }
-     :DOC*/
-    RedBaseContainer.prototype['sortMaterial'] = function (recursive) {
-        if (recursive) {
-            var i = this.children.length;
-            while (i--) {
-                if (this.children[i].sortMaterial) this.children[i].sortMaterial(recursive)
-            }
-        }
-        this.children.sort(function (a, b) {
-            a = a['_material']['program']['_UUID'];
-            b = b['_material']['program']['_UUID'];
-            if (a < b) return -1;
-            if (a > b) return 1;
-            return 0
-        })
-    };
-    /**DOC:
-     {
-		 code : 'METHOD',
-		 title :`sortGeometryAndMaterial`,
-		 description : `지오메트리/재질순으로 자식들을 정렬`,
-		 params:{
-			 recursive : [
-				 {type:'Boolean'},
-				 'true 입력시 하위 자식의 children 까지 모두 정렬'
-			 ]
-		 },
-		 example : `
-		    (RedBaseContainer Instance).sortGeometryAndMaterial();
-		    (RedBaseContainer Instance).sortGeometryAndMaterial(true);
-		 `,
-		 return : 'void'
-	 }
-     :DOC*/
-    RedBaseContainer.prototype['sortGeometryAndMaterial'] = function (recursive) {
-        //TODO: 정의,검증 해야함
-        if (recursive) {
-            var i = this.children.length;
-            while (i--) {
-                if (this.children[i].sortGeometryAndMaterial) this.children[i].sortGeometryAndMaterial(recursive)
-            }
-        }
-        this.children.sort(function (a, b) {
-            a = a['_geometry']['interleaveBuffer']['_UUID'];
-            b = b['_geometry']['interleaveBuffer']['_UUID'];
-            if (a == b) {
-                var a2 = a['_material']['program']['_UUID'];
-                var b2 = b['_material']['program']['_UUID'];
-                if (a2 < b2) return -1;
-                if (a2 > b2) return 1;
-                return 0
-            }
-            if (a < b) return -1;
-            if (a > b) return 1;
-            return 0
-        })
-    };
     /**DOC:
      {
 		 code : 'METHOD',
@@ -3895,7 +4158,7 @@ var RedBaseContainer;
 	 }
      :DOC*/
     RedBaseContainer.prototype['addChildAt'] = function (child, index) {
-        typeof index == 'number' || RedGLUtil.throwFunc('addChildAt', 'index는 숫자만 입력가능', '입력값 : ' + index);
+        RedGLUtil['isUint'](index, 'addChildAt : index는 uint만 입력가능');
         child instanceof RedBaseObject3D || RedGLUtil.throwFunc('addChildAt', 'RedBaseObject3D Instance만 가능', '입력값 : ' + child);
         if (this['children'].indexOf(child) > -1) this['removeChild'](child);
         if (this['children'].length < index) index = this['children'].length;
@@ -3906,7 +4169,10 @@ var RedBaseContainer;
      {
 		 code : 'METHOD',
 		 title :`removeChild`,
-		 description : `해당 자식을 제거`,
+		 description : `
+		    해당 자식을 제거.
+		    존재하지 않는 자식을 제거하려고 할 경우 에러.
+		 `,
 		 params:{
 			 child : [
 				 {type:'RedBaseObject3D Instance'}
@@ -3944,7 +4210,7 @@ var RedBaseContainer;
 	 }
      :DOC*/
     RedBaseContainer.prototype['removeChildAt'] = function (index) {
-        if (typeof index != 'number') RedGLUtil.throwFunc('removeChildAt', 'index가 Number형이 아님 ', '입력값 : ' + index);
+        RedGLUtil['isUint'](index, 'removeChildAt : index는 uint만 입력가능');
         if (this['children'][index]) this['children'].splice(index, 1);
         else RedGLUtil.throwFunc('removeChildAt', 'index 해당인덱스에 위치한 자식이 없음.', '입력값 : ' + index);
     };
@@ -3980,7 +4246,7 @@ var RedBaseContainer;
 	 }
      :DOC*/
     RedBaseContainer.prototype['getChildAt'] = function (index) {
-        typeof index == 'number' || RedGLUtil.throwFunc('getChildAt', 'index가 Number형이 아님 ');
+        RedGLUtil['isUint'](index, 'getChildAt : index는 uint만 입력가능');
         return this['children'][index];
     };
     /**DOC:
@@ -4021,8 +4287,135 @@ var RedBaseContainer;
     RedBaseContainer.prototype['numChildren'] = function () {
         return this['children'].length;
     };
+    /**DOC:
+     {
+		 code : 'METHOD',
+		 title :`sortGeometry`,
+		 description : `
+		    지오메트리 순으로 자식들을 정렬.
+		    동일 지오메트리가 다량 사용될 경우 attribute 변경 횟수가 줄어들어 렌더성능이 좋아진다.
+         `,
+		 params:{
+			 recursive : [
+				 {type:'Boolean'},
+				 'true 입력시 하위 자식의 children 까지 모두 정렬'
+			 ]
+		 },
+		 example : `
+		    (RedBaseContainer Instance).sortGeometry();
+		    (RedBaseContainer Instance).sortGeometry(true);
+		 `,
+		 return : 'void'
+	 }
+     :DOC*/
+    RedBaseContainer.prototype['sortGeometry'] = function (recursive) {
+        if (recursive) {
+            var i = this.children.length;
+            while (i--) {
+                if (this.children[i].sortGeometry) this.children[i].sortGeometry(recursive)
+            }
+        }
+        this.children.sort(function (a, b) {
+            if (a['_geometry'] && b['_geometry']) {
+                a = a['_geometry']['interleaveBuffer']['_UUID'];
+                b = b['_geometry']['interleaveBuffer']['_UUID'];
+                if (a < b) return -1;
+                if (a > b) return 1;
+            }
+            return 0
+        })
+    };
+    /**DOC:
+     {
+		 code : 'METHOD',
+		 title :`sortMaterial`,
+		 description : `
+		    재질이 소유한 RedProgram 순으로 자식들을 정렬.
+		    동일 재질이 다량 사용될 경우 프로그램 변경 횟수가 줄어들어 렌더성능이 좋아진다.
+         `,
+		 params:{
+			 recursive : [
+				 {type:'Boolean'},
+				 'true 입력시 하위 자식의 children 까지 모두 정렬'
+			 ]
+		 },
+		 example : `
+		    (RedBaseContainer Instance).sortMaterial();
+		    (RedBaseContainer Instance).sortMaterial(true);
+		 `,
+		 return : 'void'
+	 }
+     :DOC*/
+    RedBaseContainer.prototype['sortMaterial'] = function (recursive) {
+        if (recursive) {
+            var i = this.children.length;
+            while (i--) {
+                if (this.children[i].sortMaterial) this.children[i].sortMaterial(recursive)
+            }
+        }
+        this.children.sort(function (a, b) {
+            if (a['_geometry'] && b['_geometry']) {
+                a = a['_material']['program']['_UUID'];
+                b = b['_material']['program']['_UUID'];
+                if (a < b) return -1;
+                if (a > b) return 1;
+            }
+            return 0
+        })
+    };
+    /**DOC:
+     {
+		 code : 'METHOD',
+		 title :`sortGeometryAndMaterial`,
+		 description : `지오메트리/재질순으로 자식들을 정렬`,
+		 params:{
+			 recursive : [
+				 {type:'Boolean'},
+				 'true 입력시 하위 자식의 children 까지 모두 정렬'
+			 ]
+		 },
+		 example : `
+		    (RedBaseContainer Instance).sortGeometryAndMaterial();
+		    (RedBaseContainer Instance).sortGeometryAndMaterial(true);
+		 `,
+		 return : 'void'
+	 }
+     :DOC*/
+    RedBaseContainer.prototype['sortGeometryAndMaterial'] = function (recursive) {
+        //TODO: 정의,검증 해야함
+        if (recursive) {
+            var i = this.children.length;
+            while (i--) {
+                if (this.children[i].sortGeometryAndMaterial) this.children[i].sortGeometryAndMaterial(recursive)
+            }
+        }
+        this.children.sort(function (a, b) {
+            if (a['_geometry'] && b['_geometry']) {
+                a = a['_geometry']['interleaveBuffer']['_UUID'];
+                b = b['_geometry']['interleaveBuffer']['_UUID'];
+                if (a == b) {
+                    var a2 = a['_material']['program']['_UUID'];
+                    var b2 = b['_material']['program']['_UUID'];
+                    if (a2 < b2) return -1;
+                    if (a2 > b2) return 1;
+                    return 0
+                }
+                if (a < b) return -1;
+                if (a > b) return 1;
+            }
+            return 0
+        })
+    };
     Object.freeze(RedBaseContainer);
 })();
+
+
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
 
 "use strict";
 var RedBaseLight;
@@ -4038,6 +4431,7 @@ var RedBaseLight;
 	 }
      :DOC*/
     RedBaseLight = function () {
+        if (!(this instanceof RedBaseLight)) return new RedBaseLight();
     };
     RedBaseLight.prototype = {};
     /**DOC:
@@ -4094,6 +4488,13 @@ var RedBaseLight;
     });
     Object.freeze(RedBaseLight);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedFrameBuffer;
 (function () {
@@ -4233,6 +4634,13 @@ var RedFrameBuffer;
     RedDefinePropertyInfo.definePrototype('RedFrameBuffer', 'height', 'number', {min: 2});
     Object.freeze(RedFrameBuffer);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedBuffer;
 (function () {
@@ -4261,12 +4669,10 @@ var RedBuffer;
         switch (bufferType) {
             case RedBuffer.ARRAY_BUFFER:
                 return gl.ARRAY_BUFFER;
-                break;
             case RedBuffer.ELEMENT_ARRAY_BUFFER:
                 return gl.ELEMENT_ARRAY_BUFFER;
-                break;
             default:
-                RedGLUtil.throwFunc('RedBuffer : bufferType - 지원하지 않는 버퍼타입입니다. ')
+                RedGLUtil.throwFunc('RedBuffer : bufferType - 지원하지 않는 버퍼타입입니다. ');
         }
     };
     parseInterleaveDefineInfo = (function () {
@@ -4274,14 +4680,14 @@ var RedBuffer;
             //console.log(self, bufferType)
             var totalSize, i, len, tData;
             var tBYTES_PER_ELEMENT;
-            if (data instanceof Float32Array) tBYTES_PER_ELEMENT = Float32Array.BYTES_PER_ELEMENT
-            else if (data instanceof Float64Array) tBYTES_PER_ELEMENT = Float64Array.BYTES_PER_ELEMENT
+            if (data instanceof Float32Array) tBYTES_PER_ELEMENT = Float32Array.BYTES_PER_ELEMENT;
+            else if (data instanceof Float64Array) tBYTES_PER_ELEMENT = Float64Array.BYTES_PER_ELEMENT;
             totalSize = 0;
             switch (bufferType) {
                 case RedBuffer.ARRAY_BUFFER:
                     self['interleaveDefineInfoList'] = interleaveDefineInfoList;
                     if (interleaveDefineInfoList) {
-                        if (interleaveDefineInfoList.length == 0) RedGLUtil.throwFunc('RedBuffer : interleaveDefineInfoList의 정보는 1개이상의 RedInterleaveInfo Instance로 구성되어야함.', interleaveDefineInfoList);
+                        if (!interleaveDefineInfoList.length) RedGLUtil.throwFunc('RedBuffer : interleaveDefineInfoList의 정보는 1개이상의 RedInterleaveInfo Instance로 구성되어야함.', interleaveDefineInfoList);
                         i = 0;
                         len = interleaveDefineInfoList.length;
                         for (i; i < len; i++) {
@@ -4307,7 +4713,7 @@ var RedBuffer;
                             self['pointNum'] = data.length / totalSize;
                         }
                         // 업로드시 포인트가 달라질수 있으므로 확인해야함.
-                        if (self['pointNum'] != parseInt(self['pointNum'])) RedGLUtil.throwFunc('RedBuffer : ARRAY_BUFFER의 pointNum이 정수로 떨어지지 않음. 데이터구성과 interleaveDefineInfoList 구성 확인 필요');
+                        if (self['pointNum'] !== parseInt(self['pointNum'])) RedGLUtil.throwFunc('RedBuffer : ARRAY_BUFFER의 pointNum이 정수로 떨어지지 않음. 데이터구성과 interleaveDefineInfoList 구성 확인 필요');
                     } else RedGLUtil.throwFunc('RedBuffer : interleaveDefineInfoList는 반드시 정의 되어야함.');
                     break;
                 case RedBuffer.ELEMENT_ARRAY_BUFFER:
@@ -4406,9 +4812,13 @@ var RedBuffer;
         // console.log(redGL, key, data, bufferType, interleaveDefineInfoList)
         if (!(this instanceof RedBuffer)) return new RedBuffer(redGL, key, bufferType, typedArrayData, interleaveDefineInfoList, drawMode);
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedBuffer : RedGL Instance만 허용.', redGL);
-        typeof key == 'string' || RedGLUtil.throwFunc('RedBuffer : key - 문자열만 허용.', '입력값 : ' + key);
+        typeof key === 'string' || RedGLUtil.throwFunc('RedBuffer : key - 문자열만 허용.', '입력값 : ' + key);
         bufferType || RedGLUtil.throwFunc('RedBuffer : bufferType : 미입력, 반드시 입력해야함.');
-        bufferType == RedBuffer.ARRAY_BUFFER || bufferType == RedBuffer.ELEMENT_ARRAY_BUFFER || RedGLUtil.throwFunc('RedBuffer : bufferType - RedBuffer.ARRAY_BUFFER or RedBuffer.ELEMENT_ARRAY_BUFFER 만 허용함.', '입력값 : ' + bufferType);
+        console.time('RedBuffer - ' + key);
+        console.group('RedBuffer - ' + key);
+        bufferType === RedBuffer.ARRAY_BUFFER
+        || bufferType === RedBuffer.ELEMENT_ARRAY_BUFFER
+        || RedGLUtil.throwFunc('RedBuffer : bufferType - RedBuffer.ARRAY_BUFFER or RedBuffer.ELEMENT_ARRAY_BUFFER 만 허용함.', '입력값 : ' + bufferType);
         var tGL = redGL.gl;
         //유일키 방어
         if (!redGL['_datas']['RedBuffer']) {
@@ -4418,7 +4828,7 @@ var RedBuffer;
         }
         if (redGL['_datas']['RedBuffer'][bufferType][key]) return redGL['_datas']['RedBuffer'][bufferType][key];
         else redGL['_datas']['RedBuffer'][bufferType][key] = this;
-        if (bufferType == RedBuffer.ARRAY_BUFFER && !interleaveDefineInfoList) RedGLUtil.throwFunc('RedBuffer : 신규생성시 interleaveDefineInfoList를 반드시 정의해야합니다.', '입력값 : ' + interleaveDefineInfoList);
+        if (bufferType === RedBuffer.ARRAY_BUFFER && !interleaveDefineInfoList) RedGLUtil.throwFunc('RedBuffer : 신규생성시 interleaveDefineInfoList를 반드시 정의해야합니다.', '입력값 : ' + interleaveDefineInfoList);
         /**DOC:
          {
 			 code : 'PROPERTY',
@@ -4489,8 +4899,8 @@ var RedBuffer;
 		 }
          :DOC*/
         this['webglBuffer'] = tGL.createBuffer();
-        this['webglBuffer']['gl'] = tGL
-        this['webglBuffer']['redGL'] = redGL
+        this['webglBuffer']['gl'] = tGL;
+        this['webglBuffer']['redGL'] = redGL;
         this['_UUID'] = RedGL.makeUUID();
         /**DOC:
          {
@@ -4518,17 +4928,19 @@ var RedBuffer;
 		 }
          :DOC*/
         this['upload'] = function (data) {
-            if (this['glArrayType'] == getGlDataTypeByTypeArray(tGL, bufferType, data)) {
+            if (this['glArrayType'] === getGlDataTypeByTypeArray(tGL, bufferType, data)) {
                 this['data'] = data;
                 tGL.bindBuffer(this['glBufferType'], this['webglBuffer']);
                 tGL.bufferData(this['glBufferType'], this['data'], this['drawMode']);
                 parseInterleaveDefineInfo(this, this['bufferType'], this['data'], this['interleaveDefineInfoList']);
-                if (this['bufferType'] == RedBuffer.ARRAY_BUFFER) this['triangleNum'] = this['data'].length / (this['stride'] ? this['stride'] : 3);
-                if (this['bufferType'] == RedBuffer.ELEMENT_ARRAY_BUFFER) this['triangleNum'] = this['pointNum'] / 3;
+                if (this['bufferType'] === RedBuffer.ARRAY_BUFFER) this['triangleNum'] = this['data'].length / (this['stride'] ? this['stride'] : 3);
+                if (this['bufferType'] === RedBuffer.ELEMENT_ARRAY_BUFFER) this['triangleNum'] = this['pointNum'] / 3;
             } else RedGLUtil.throwFunc('RedBuffer : upload - data형식이 기존 형식과 다름', data)
         };
         this['upload'](this['data']);
         console.log(this);
+        console.timeEnd('RedBuffer - ' + key);
+        console.groupEnd();
     };
     /**DOC:
      {
@@ -4540,11 +4952,11 @@ var RedBuffer;
      :DOC*/
     RedBuffer.prototype['dispose'] = function () {
         if (this['webglBuffer'] && !this['isPrimitiveBuffer']) {
-            this['webglBuffer']['gl'].deleteBuffer(this['webglBuffer'])
-            delete this['webglBuffer']['redGL']['_datas']['RedBuffer'][this['bufferType']][this['key']]
-            this['webglBuffer'] = null
+            this['webglBuffer']['gl'].deleteBuffer(this['webglBuffer']);
+            delete this['webglBuffer']['redGL']['_datas']['RedBuffer'][this['bufferType']][this['key']];
+            this['webglBuffer'] = null;
         }
-    }
+    };
     /**DOC:
      {
 		 code: 'CONST',
@@ -4565,6 +4977,13 @@ var RedBuffer;
     RedBuffer.ELEMENT_ARRAY_BUFFER = 'elementArrayBuffer';
     Object.freeze(RedBuffer);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedGeometry;
 (function () {
@@ -4595,12 +5014,15 @@ var RedGeometry;
      :DOC*/
     RedGeometry = function (interleaveBuffer, indexBuffer) {
         if (!(this instanceof RedGeometry)) return new RedGeometry(interleaveBuffer, indexBuffer);
+        this['_UUID'] = RedGL.makeUUID();
+        console.time('RedGeometry - ' + this['_UUID']);
+        console.group('RedGeometry - ' + this['_UUID']);
         interleaveBuffer instanceof RedBuffer || RedGLUtil.throwFunc('RedGeometry : interleaveBuffer - RedBuffer Instance만 허용.', interleaveBuffer);
-        interleaveBuffer['bufferType'] == RedBuffer.ARRAY_BUFFER || RedGLUtil.throwFunc('RedGeometry : interleaveBuffer - RedBuffer.ARRAY_BUFFER 타입만 허용.', interleaveBuffer);
+        interleaveBuffer['bufferType'] === RedBuffer.ARRAY_BUFFER || RedGLUtil.throwFunc('RedGeometry : interleaveBuffer - RedBuffer.ARRAY_BUFFER 타입만 허용.', interleaveBuffer);
         if (indexBuffer) {
             interleaveBuffer || RedGLUtil.throwFunc('RedGeometry : indexBuffer는 반드시 interleaveBuffer와 쌍으로 입력되어야함.', indexBuffer);
             indexBuffer instanceof RedBuffer || RedGLUtil.throwFunc('RedGeometry : indexBuffer - RedBuffer Instance만 허용.', indexBuffer);
-            indexBuffer['bufferType'] == RedBuffer.ELEMENT_ARRAY_BUFFER || RedGLUtil.throwFunc('RedGeometry : indexBuffer - RedBuffer.ELEMENT_ARRAY_BUFFER 타입만 허용.', indexBuffer);
+            indexBuffer['bufferType'] === RedBuffer.ELEMENT_ARRAY_BUFFER || RedGLUtil.throwFunc('RedGeometry : indexBuffer - RedBuffer.ELEMENT_ARRAY_BUFFER 타입만 허용.', indexBuffer);
         }
         /**DOC:
          {
@@ -4621,7 +5043,8 @@ var RedGeometry;
          :DOC*/
         this['indexBuffer'] = indexBuffer;
         this['_volume'] = null;
-        this['_UUID'] = RedGL.makeUUID();
+        console.timeEnd('RedGeometry - ' + this['_UUID']);
+        console.groupEnd();
         // console.log(this);
     };
     RedGeometry.prototype = {
@@ -4634,10 +5057,11 @@ var RedGeometry;
 		 }
          :DOC*/
         disposeAllBuffer: (function () {
-            var k;
+            var k, tBuffer;
             return function () {
                 for (k in this) {
-                    if (this && this[k] instanceof RedBuffer) this[k].dispose()
+                    tBuffer = this[k];
+                    if (this && tBuffer instanceof RedBuffer) tBuffer.dispose();
                 }
             }
         })(),
@@ -4650,42 +5074,74 @@ var RedGeometry;
 		 }
          :DOC*/
         disposeBuffer: function (key) {
-            if (this && this[key] instanceof RedBuffer) this[key].dispose()
-        }
-    };
-    /**DOC:
-     {
+            if (this && this[key] instanceof RedBuffer) this[key].dispose();
+        },
+        /**DOC:
+         {
 		     code : 'METHOD',
-			 title :`volume`,
-			 description : `지오메트리 고유의 볼륨을 리턴함`,
+			 title :`volumeCalculate`,
+			 description : `지오메트리 고유의 볼륨을 재계산함`,
 			 return : 'array : [xVolume, yVolume, zVolume]'
 		 }
-     :DOC*/
-    Object.defineProperty(RedGeometry.prototype, 'volume', {
-        get: function () {
-            var minX, minY, minZ, maxX, maxY, maxZ, t0, t1, t2, t, i;
-            var stride = this['interleaveBuffer']['stride']
+         :DOC*/
+        volumeCalculate: function () {
+            console.time('volumeCalculate');
+            var minX, minY, minZ, maxX, maxY, maxZ, t0, t1, t2, t, i, len;
+            var stride = this['interleaveBuffer']['stride'];
             // if (!volume[this]) {
-            minX = minY = minZ = maxX = maxY = maxZ = 0,
-                t = this['interleaveBuffer']['data'], i = 0, len =this['interleaveBuffer']['pointNum']
+            minX = minY = minZ = maxX = maxY = maxZ = 0;
+            t = this['interleaveBuffer']['data'];
+            i = 0;
+            len = this['interleaveBuffer']['pointNum'];
             for (i; i < len; i++) {
-                t0 = i*stride , t1 = t0 + 1, t2 = t0 + 2,
+                t0 = i * stride , t1 = t0 + 1, t2 = t0 + 2,
                     minX = t[t0] < minX ? t[t0] : minX,
                     maxX = t[t0] > maxX ? t[t0] : maxX,
                     minY = t[t1] < minY ? t[t1] : minY,
                     maxY = t[t1] > maxY ? t[t1] : maxY,
                     minZ = t[t2] < minZ ? t[t2] : minZ,
                     maxZ = t[t2] > maxZ ? t[t2] : maxZ;
-
             }
             this['_volume'] = [maxX - minX, maxY - minY, maxZ - minZ];
+            this['_volume'].minX = minX
+            this['_volume'].maxX = maxX
+            this['_volume'].minY = minY
+            this['_volume'].maxY = maxY
+            this['_volume'].minZ = minZ
+            this['_volume'].maxZ = maxZ
             // }
+            console.time('volumeCalculate');
             return this['_volume'];
         }
-    })
+    };
+    /**DOC:
+     {
+		     code : 'METHOD',
+			 title :`volume`,
+			 description : `
+			    지오메트리 고유의 볼륨을 리턴함.
+                계산된 볼륨을 리턴함
+                강제 재계산을 실행하고싶다면 volumeCalculate()를 실행해야함
+            `,
+			 return : 'array : [xVolume, yVolume, zVolume]'
+		 }
+     :DOC*/
+    Object.defineProperty(RedGeometry.prototype, 'volume', {
+        get: function () {
+            if (!this['_volume']) this['volumeCalculate']();
+            return this['_volume'];
+        }
+    });
 
     Object.freeze(RedGeometry);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedInterleaveInfo;
 (function () {
@@ -4720,10 +5176,10 @@ var RedInterleaveInfo;
      :DOC*/
     RedInterleaveInfo = function (attributeKey, size, normalize) {
         if (!(this instanceof RedInterleaveInfo)) return new RedInterleaveInfo(attributeKey, size, normalize);
-        typeof attributeKey == 'string' || RedGLUtil.throwFunc('RedInterleaveInfo : attributeKey - 문자열만 허용', attributeKey);
-        attributeKey.charAt(0) == 'a' || RedGLUtil.throwFunc('RedInterleaveInfo : attributeKey 첫글자는 a로 시작해야합니다.', attributeKey);
-        attributeKey.charAt(1) == attributeKey.charAt(1).toUpperCase() || RedInterleaveInfo.throwFunc('RedInterleaveInfo : attributeKey 두번째 글자는 대문자 시작해야합니다.', attributeKey);
-        typeof size == 'number' || RedGLUtil.throwFunc('RedInterleaveInfo : size - 숫자만 허용', size);
+        typeof attributeKey === 'string' || RedGLUtil.throwFunc('RedInterleaveInfo : attributeKey - 문자열만 허용', attributeKey);
+        attributeKey.charAt(0) === 'a' || RedGLUtil.throwFunc('RedInterleaveInfo : attributeKey 첫글자는 a로 시작해야합니다.', attributeKey);
+        attributeKey.charAt(1) === attributeKey.charAt(1).toUpperCase() || RedInterleaveInfo.throwFunc('RedInterleaveInfo : attributeKey 두번째 글자는 대문자 시작해야합니다.', attributeKey);
+        typeof size === 'number' || RedGLUtil.throwFunc('RedInterleaveInfo : size - 숫자만 허용', size);
         /**DOC:
          {
 		     code : 'PROPERTY',
@@ -4752,7 +5208,7 @@ var RedInterleaveInfo;
 			 return : 'Boolean'
 		 }
          :DOC*/
-        this['normalize'] = normalize == undefined ? false : true;
+        this['normalize'] = normalize !== undefined;
         /**DOC:
          {
 		     code : 'PROPERTY',
@@ -4764,19 +5220,29 @@ var RedInterleaveInfo;
 		 }
          :DOC*/
         this['offset'] = null;
+        console.log(this)
     };
     Object.freeze(RedInterleaveInfo);
 })();
+
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedBaseMaterial;
 (function () {
-    var prepareNum = 0
+    var prepareNum = 0;
     /**DOC:
      {
 		 constructorYn : true,
 		 title :`RedBaseMaterial`,
 		 description : `
-			 RedBaseMaterial 기저층
+			 RedBaseMaterial 기저층.
+			 재질은 이 객체의 확장으로 이루어진다.
 		 `,
 		 return : 'RedBaseMaterial instance'
 	 }
@@ -4784,43 +5250,7 @@ var RedBaseMaterial;
     RedBaseMaterial = function () {
     };
     RedBaseMaterial.prototype = {
-        /**DOC:
-         {
-			 code : 'METHOD',
-			 title :`makeProgramList`,
-			 description : `
-				 <h1>다중 프로그램 리스트 생성기.
-				 TODO:// 좀더 구체적인 설명 적어야함</h1>
-			 `,
-			 params : {
-			    target : [
-			        { type : 'RedBaseMaterial Instance' }
-			    ],
-			    redGL : [
-			        { type : 'RedGL Instance' }
-			    ],
-			    programName : [
-			        { type : 'String' },
-			        '기본 프로그램이름'
-			    ],
-			    vSource : [
-			        { type : 'String' },
-			        '버텍스 쉐이더 소스'
-			    ],
-			    fSource : [
-			        { type : 'String' },
-			        '프레그먼트 쉐이더'
-			    ],
-			    programOptionList : [
-			        { type : 'Array' },
-			        '옵션키 리스트'
-			    ]
-			 },
-			 return : 'void'
-		 }
-         :DOC*/
         makeProgramList: (function () {
-            //TODO: 이걸좀 정리해야하는데..
             var makePrepareProgram;
             var makeSystemProgram, makeOptionProgram;
             var systemKeyList = ['fog', 'sprite3D', 'skin', 'directionalShadow'];
@@ -4846,19 +5276,7 @@ var RedBaseMaterial;
             };
             makeOptionProgram = function (programList, spaceName, programName, redGL, vSource, fSource, systemOptionList, programOptionList) {
                 programOptionList = programOptionList || [];
-                // console.log('rootName', rootName, list)
-                // programOptionList.forEach(function (key, index) {
-                //     // console.log(key)
-                //     var tOptionName = programOptionList.join('_');
-                //     // console.log('tOptionName', tOptionName)
-                //     if (!programList['basic'][programName + '_' + tOptionName]) programList['basic'][programName + '_' + tOptionName] = new makePrepareProgram(redGL, programList, programName, vSource, fSource, null, programOptionList);
-                //     if (!programList[spaceName][programName + '_' + tOptionName]) programList[spaceName][programName + '_' + tOptionName] = new makePrepareProgram(redGL, programList, programName, vSource, fSource, systemOptionList, programOptionList);
-                //     // else console.log('중복', programName)
-                //     var newList = programOptionList.concat();
-                //     newList.splice(index, 1);
-                //     // console.log('newList', newList)
-                //     makeOptionProgram(programList, spaceName, programName, redGL, vSource, fSource, systemOptionList, newList);
-                // })
+
                 function k_combinations(set, k) {
                     var i, j, combs, head, tailcombs;
                     // There is no way to take e.g. sets of 5 elements from
@@ -4866,14 +5284,12 @@ var RedBaseMaterial;
                     if (k > set.length || k <= 0) {
                         return [];
                     }
-
                     // K-sized set has only one K-sized subset.
-                    if (k == set.length) {
+                    if (k === set.length) {
                         return [set];
                     }
-
                     // There is N 1-sized subsets in a N-sized set.
-                    if (k == 1) {
+                    if (k === 1) {
                         combs = [];
                         for (i = 0; i < set.length; i++) {
                             combs.push([set[i]]);
@@ -4894,6 +5310,7 @@ var RedBaseMaterial;
                     }
                     return combs;
                 }
+
                 function combinations(set) {
                     var k, i, combs, k_combs;
                     combs = [];
@@ -4905,8 +5322,9 @@ var RedBaseMaterial;
                     }
                     return combs;
                 }
+
                 // console.log('combinations(programOptionList)',combinations(programOptionList))
-                var tList = combinations(programOptionList)
+                var tList = combinations(programOptionList);
 
                 tList.forEach(function (v) {
                     var tOptionName = v.join('_');
@@ -4917,7 +5335,7 @@ var RedBaseMaterial;
 
             };
             makePrepareProgram = function (redGL, programList, programName, vSource, fSource, systemKey, optionKey) {
-                prepareNum++
+                prepareNum++;
                 optionKey = optionKey || [];
                 this['optionList'] = optionKey.concat(systemKey || []);
                 this['systemKey'] = (systemKey || ['basic']).join('_');
@@ -4929,13 +5347,14 @@ var RedBaseMaterial;
                 }
             };
             return function (target, redGL, programName, vSource, fSource, programOptionList) {
+                console.group('makeProgramList - ' + programName);
+                console.time('makeProgramList - ' + programName);
                 if (!programOptionList) programOptionList = [];
                 if (!redGL['_datas']['RedProgramGroup']) redGL['_datas']['RedProgramGroup'] = {};
                 if (redGL['_datas']['RedProgramGroup'][programName]) {
                     target['_programList'] = redGL['_datas']['RedProgramGroup'][programName];
                     console.log('캐싱프로그램그룹사용 :', programName);
-                }
-                else {
+                } else {
                     target['_programList'] = {
                         basic: {}
                     };
@@ -4950,14 +5369,27 @@ var RedBaseMaterial;
                     redGL['_datas']['RedProgramGroup'][programName] = target['_programList'];
                 }
                 target['program'] = target['_programList']['basic'][programName];
-                console.log('prepareNum',prepareNum)
+                console.log('prepareNum', prepareNum);
+                console.timeEnd('makeProgramList - ' + programName);
+                console.groupEnd();
             }
         })(),
+        /**DOC:
+         {
+			 code : 'METHOD',
+			 title :`_searchProgram`,
+			 description : `
+				 재질의 상태를 추적하여 적합한 프로그램 찾고 재질이 가진다.
+			 `,
+			 return : 'void'
+		 }
+         :DOC*/
         _searchProgram: (function () {
             var i;
             var tKey;
             var t0;
             return function (PROGRAM_NAME, keyList) {
+                console.time('_searchProgram - ' + PROGRAM_NAME);
                 t0 = [];
                 if (keyList) {
                     i = keyList.length;
@@ -4969,6 +5401,7 @@ var RedBaseMaterial;
                     t0 = PROGRAM_NAME + '_' + t0.join('_');
                 } else t0 = PROGRAM_NAME;
                 this['program'] = this['_programList']['basic'][t0];
+                console.timeEnd('_searchProgram - ' + PROGRAM_NAME);
                 // console.log('현재프로그램', this['program'])
             }
         })(),
@@ -4988,6 +5421,7 @@ var RedBaseMaterial;
             var i;
             var tUniformGroup, tUniformLocationInfo, tWebGLUniformLocation;
             return function () {
+                console.time('checkUniformAndProperty');
                 if (this['program']['_prepareProgramYn']) {
                     this['program'] = this['program']['_makePrepareProgram']()
                 }
@@ -5000,8 +5434,19 @@ var RedBaseMaterial;
                         RedGLUtil.throwFunc(this['program']['key'] + '- ', tUniformLocationInfo['materialPropertyName'], '속성이 정의 되지않았습니다.');
                     }
                 }
+                console.timeEnd('checkUniformAndProperty');
             }
         })(),
+        /**DOC:
+         {
+			 code : 'METHOD',
+			 title :`disposeAllTexture`,
+			 description : `
+				 재질내의 모든 RedBaseTexture 확장객체를 dispose 함
+			 `,
+			 return : 'void'
+		 }
+         :DOC*/
         disposeAllTexture: (function () {
             var k;
             return function () {
@@ -5010,12 +5455,34 @@ var RedBaseMaterial;
                 }
             }
         })(),
+        /**DOC:
+         {
+			 code : 'METHOD',
+			 title :`disposeTexture`,
+			 description : `
+				 키에 해당하는 RedBaseTexture 확장객체를 dispose 함
+			 `,
+			 params : {
+                 key : [
+                     {type:'String'}
+                 ]
+             },
+			 return : 'void'
+		 }
+         :DOC*/
         disposeTexture: function (key) {
             if (this[key] instanceof RedBaseTexture) this[key].dispose()
         }
     };
     Object.freeze(RedBaseMaterial);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedTextureOptionChecker;
 (function () {
@@ -5091,6 +5558,13 @@ var RedTextureOptionChecker;
     Object.freeze(RedTextureOptionChecker);
 })();
 
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedBitmapTexture;
 (function () {
@@ -5103,7 +5577,7 @@ var RedBitmapTexture;
         //level,internalFormat, format, type
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, source);
         // gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
-        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 0);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, option['min'] ? option['min'] : gl.LINEAR_MIPMAP_NEAREST);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, option['mag'] ? option['mag'] : gl.LINEAR);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, option['wrap_s'] ? option['wrap_s'] : gl.REPEAT);
@@ -5123,21 +5597,20 @@ var RedBitmapTexture;
         return function (gl, self, texture, src, option, callback) {
             if (!option) option = {};
             if (window['OffscreenCanvas'] && src instanceof OffscreenCanvas || window['HTMLCanvasElement'] && src instanceof HTMLCanvasElement) {
-                var tSource = RedGLUtil.makePowerOf2Source(gl, src, MAX_TEXTURE_SIZE)
-                console.log('tSource', tSource)
+                var tSource = RedGLUtil.makePowerOf2Source(gl, src, MAX_TEXTURE_SIZE);
+                // console.log('tSource', tSource);
                 makeWebGLTexture(gl, texture, tSource, option);
                 callback ? callback.call(self, true) : 0;
             }
             else {
                 RedImageLoader(
                     src,
-                    function (v) {
-                        console.log(this)
-                        var tSource = RedGLUtil.makePowerOf2Source(gl, this['source'], MAX_TEXTURE_SIZE)
+                    function () {
+                        var tSource = RedGLUtil.makePowerOf2Source(gl, this['source'], MAX_TEXTURE_SIZE);
                         makeWebGLTexture(gl, texture, tSource, option);
                         callback ? callback.call(self, true) : 0;
                     },
-                    function (v) {
+                    function () {
                         callback ? callback.call(self, false) : 0
                     }
                 )
@@ -5199,15 +5672,17 @@ var RedBitmapTexture;
     RedBitmapTexture = function (redGL, src, option, callback) {
         var tGL;
         if (!(this instanceof RedBitmapTexture)) return new RedBitmapTexture(redGL, src, option, callback);
+        console.time('RedBitmapTexture');
+        console.group('RedBitmapTexture');
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedBitmapTexture : RedGL Instance만 허용.', redGL);
         (callback && typeof callback == 'function') || !callback || RedGLUtil.throwFunc('RedBitmapTexture : callback Function만 허용.', callback);
         tGL = redGL.gl;
         MAX_TEXTURE_SIZE = redGL['detect']['texture']['MAX_TEXTURE_SIZE'];
 
-        option = option || {}
-        var tKey = src + JSON.stringify(option)
+        option = option || {};
+        var tKey = src + JSON.stringify(option);
         if (typeof src == 'string') {
-            if (!redGL['_datas']['textures']) redGL['_datas']['textures'] = {}
+            if (!redGL['_datas']['textures']) redGL['_datas']['textures'] = {};
             if (redGL['_datas']['textures'][tKey]) {
                 if (callback) {
                     setTimeout(function () {
@@ -5220,18 +5695,20 @@ var RedBitmapTexture;
 
 
         this['webglTexture'] = tGL.createTexture();
-        this['webglTexture']['gl'] = tGL
+        this['webglTexture']['gl'] = tGL;
         this['_load'] = function (needEmpty) {
             RedTextureOptionChecker.check('RedBitmapTexture', option, tGL);
             if (needEmpty) this.setEmptyTexture(tGL, this['webglTexture']);
             if (this['_src']) loadTexture(tGL, this, this['webglTexture'], this['_src'], this['_option'], this['_callback']);
-        }
+        };
         this['_option'] = option;
         this['callback'] = callback;
         this['src'] = src;
         this['_UUID'] = RedGL.makeUUID();
-        redGL['_datas']['textures'][tKey] = this
+        redGL['_datas']['textures'][tKey] = this;
         console.log(this);
+        console.timeEnd('RedBitmapTexture');
+        console.groupEnd('RedBitmapTexture');
     };
     RedBitmapTexture.prototype = new RedBaseTexture();
 
@@ -5252,7 +5729,7 @@ var RedBitmapTexture;
         set: function (v) {
             if (window['OffscreenCanvas']) {
                 this['_src'] = v;
-                this._load(true)
+                this._load(true);
                 return
             }
             else if (v && typeof v != 'string' && !(window['HTMLCanvasElement'] && v instanceof HTMLCanvasElement)) RedGLUtil.throwFunc('RedBitmapTexture : src는 문자열 or Canvas Element만 허용.', '입력값 : ' + v);
@@ -5282,6 +5759,13 @@ var RedBitmapTexture;
     Object.freeze(RedBitmapTexture);
 })();
 
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedVideoTexture;
 (function () {
@@ -5293,7 +5777,7 @@ var RedVideoTexture;
         //level,internalFormat, format, type
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, source);
         // gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
-        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 0);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
         gl.bindTexture(gl.TEXTURE_2D, null);
@@ -5323,7 +5807,7 @@ var RedVideoTexture;
                 video = document.createElement(('video'));
                 video.src = src;
             }
-            video.loop = 1;
+            video.loop = true;
             video.muted = true;
             video.setAttribute('autoplay', '');
             //document.body.appendChild(video)
@@ -5371,12 +5855,12 @@ var RedVideoTexture;
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedVideoTexture : RedGL Instance만 허용.', redGL);
         tGL = redGL.gl;
         this['webglTexture'] = tGL.createTexture();
-        this['webglTexture']['gl'] = tGL
+        this['webglTexture']['gl'] = tGL;
         this['_UUID'] = RedGL.makeUUID();
         this['_load'] = function (needEmpty) {
             if (needEmpty) this.setEmptyTexture(tGL, this['webglTexture']);
             if (this['_src']) loadTexture(tGL, this, this['webglTexture'], this['_src'], this['_callback']);
-        }
+        };
         this['callback'] = callback;
         this['src'] = src;
         console.log(this);
@@ -5404,6 +5888,13 @@ var RedVideoTexture;
     });
     Object.freeze(RedVideoTexture);
 })();
+
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
 
 "use strict";
 var RedDDSTexture;
@@ -5453,17 +5944,17 @@ var RedDDSTexture;
         tGL.glExtension['WEBGL_compressed_texture_s3tc'] || RedGLUtil.throwFunc('RedDDSTexture : WEBGL_compressed_texture_s3tc확장을 지원하지않는 하드웨어입니다.');
 
         this['webglTexture'] = tGL.createTexture();
-        this['webglTexture']['gl'] = tGL
+        this['webglTexture']['gl'] = tGL;
         this['_load'] = function (needEmpty) {
             RedTextureOptionChecker.check('RedDDSTexture', option, tGL);
             if (needEmpty) this.setEmptyTexture(tGL, this['webglTexture']);
             if (this['_src']) this.loadDDSTexture(tGL, tGL.glExtension['WEBGL_compressed_texture_s3tc'], this['_src'], this['_callback']);
-        }
+        };
         this['callback'] = callback;
         this['src'] = src;
         this['_UUID'] = RedGL.makeUUID();
         console.log(this);
-    }
+    };
     RedDDSTexture.prototype = new RedBaseTexture();
     /**DOC:
      {
@@ -5659,7 +6150,7 @@ var RedDDSTexture;
             height *= 0.5;
         }
         return mipmapCount;
-    }
+    };
     /**
      * Creates a texture from the DDS file at the given URL. Simple shortcut for the most common use case
      *
@@ -5675,9 +6166,9 @@ var RedDDSTexture;
             ddsXhr = new XMLHttpRequest();
         ddsXhr.open('GET', src, true);
         ddsXhr.responseType = "arraybuffer";
-        if (!option) option = {}
+        if (!option) option = {};
         ddsXhr.onload = function () {
-            gl.activeTexture(gl.TEXTURE0 + 0)
+            gl.activeTexture(gl.TEXTURE0 + 0);
             gl.bindTexture(gl.TEXTURE_2D, texture);
             var mipmaps = uploadDDSLevels(gl, ext, this.response);
             // console.log(this.response)
@@ -5698,12 +6189,19 @@ var RedDDSTexture;
         };
         ddsXhr.onerror = function () {
             if (callback) callback(false);
-        }
+        };
         ddsXhr.send(null);
         return texture;
     }
 })(RedDDSTexture.prototype);
 Object.freeze(RedDDSTexture);
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedBitmapCubeTexture;
 (function () {
@@ -5715,16 +6213,16 @@ var RedBitmapCubeTexture;
             var i, loaded, failNum;
             option = option || {};
             onError = function () {
-                if (failNum == 0) callBack ? callBack.call(self, false) : 0;
+                if (failNum === 0) callBack ? callBack.call(self, false) : 0;
                 failNum++
             };
             onLoad = function () {
                 loaded++;
-                if (loaded == 6) {
+                if (loaded === 6) {
 
                     gl.activeTexture(gl.TEXTURE0);
                     gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
-                    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+                    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 0);
                     gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, option['min'] ? option['min'] : gl.LINEAR_MIPMAP_NEAREST);
                     gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, option['mag'] ? option['mag'] : gl.LINEAR);
                     gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, option['wrap_s'] ? option['wrap_s'] : gl.CLAMP_TO_EDGE);
@@ -5738,7 +6236,7 @@ var RedBitmapCubeTexture;
                     gl.texImage2D(gl.TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, imgList[5]['source']);
 
                     // gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
-                    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+                    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 0);
 
                     try {
                         gl.generateMipmap(gl.TEXTURE_CUBE_MAP)
@@ -5746,7 +6244,7 @@ var RedBitmapCubeTexture;
                         console.log('밉맵을 생성할수 없음', imgList)
                     }
                     gl.bindTexture(gl.TEXTURE_CUBE_MAP, null);
-                    if (failNum == 0) callBack ? callBack.call(self, true) : 0
+                    if (failNum === 0) callBack ? callBack.call(self, true) : 0
                 }
             };
             i = 6;
@@ -5819,13 +6317,15 @@ var RedBitmapCubeTexture;
     RedBitmapCubeTexture = function (redGL, srcList, option, callback) {
         var tGL;
         if (!(this instanceof RedBitmapCubeTexture)) return new RedBitmapCubeTexture(redGL, srcList, option, callback);
+        console.time('RedBitmapCubeTexture');
+        console.group('RedBitmapCubeTexture');
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedBitmapCubeTexture : RedGL Instance만 허용.', '입력값 : ' + redGL);
         (callback && typeof callback == 'function') || !callback || RedGLUtil.throwFunc('RedBitmapCubeTexture : callback Function만 허용.', callback);
         tGL = redGL.gl;
-        option = option || {}
-        var tKey = srcList.toString() + JSON.stringify(option)
-        if (typeof srcList == 'array') {
-            if (!redGL['_datas']['textures']) redGL['_datas']['textures'] = {}
+        option = option || {};
+        var tKey = srcList.toString() + JSON.stringify(option);
+        if (srcList instanceof Array) {
+            if (!redGL['_datas']['textures']) redGL['_datas']['textures'] = {};
             if (redGL['_datas']['textures'][tKey]) {
                 if (callback) {
                     setTimeout(function () {
@@ -5836,18 +6336,20 @@ var RedBitmapCubeTexture;
             }
         }
         this['webglTexture'] = tGL.createTexture();
-        this['webglTexture']['gl'] = tGL
+        this['webglTexture']['gl'] = tGL;
         this['_UUID'] = RedGL.makeUUID();
         this['_load'] = function (needEmpty) {
             RedTextureOptionChecker.check('RedBitmapCubeTexture', option, tGL);
             if (needEmpty) this.setEmptyTexture(tGL, this['webglTexture']);
             if (this['_srcList']) loadTexture(tGL, this, this['webglTexture'], this['_srcList'], this['_option'], this['_callback']);
-        }
+        };
         this['_option'] = option;
         this['callback'] = callback;
         this['srcList'] = srcList;
-        redGL['_datas']['textures'][tKey] = this
+        redGL['_datas']['textures'][tKey] = this;
         console.log(this);
+        console.timeEnd('RedBitmapCubeTexture');
+        console.groupEnd('RedBitmapCubeTexture');
     };
     RedBitmapCubeTexture.prototype = new RedBaseTexture();
 
@@ -5867,7 +6369,7 @@ var RedBitmapCubeTexture;
         },
         set: function (srcList) {
             srcList instanceof Array || RedGLUtil.throwFunc('RedBitmapCubeTexture : srcList는 배열만 허용.', '입력값 : ' + srcList);
-            srcList.length == 6 || RedGLUtil.throwFunc('RedBitmapCubeTexture : srcList 길이는 6이어야함', '입력값 : ' + srcList);
+            srcList.length === 6 || RedGLUtil.throwFunc('RedBitmapCubeTexture : srcList 길이는 6이어야함', '입력값 : ' + srcList);
             this['_srcList'] = srcList;
             this._load(true)
         }
@@ -5893,6 +6395,13 @@ var RedBitmapCubeTexture;
     });
     Object.freeze(RedBitmapCubeTexture);
 })();
+
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
 
 "use strict";
 var RedColorMaterial;
@@ -6042,6 +6551,13 @@ var RedColorMaterial;
     RedDefinePropertyInfo.definePrototype('RedColorMaterial', 'alpha', 'number', RedColorMaterial['DEFINE_OBJECT_ALPHA']);
     Object.freeze(RedColorMaterial);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedColorPhongMaterial;
 (function () {
@@ -6189,7 +6705,7 @@ var RedColorPhongMaterial;
         this['alpha'] = alpha == undefined ? 1 : alpha;
         /////////////////////////////////////////
         // 일반 프로퍼티
-        this['useFlatMode'] = false
+        this['useFlatMode'] = false;
         this['color'] = hexColor ? hexColor : '#ff0000';
         this['_UUID'] = RedGL.makeUUID();
         if (!checked) {
@@ -6258,12 +6774,19 @@ var RedColorPhongMaterial;
     RedDefinePropertyInfo.definePrototype('RedColorPhongMaterial', 'useFlatMode', 'boolean', samplerOption);
     Object.freeze(RedColorPhongMaterial);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedColorPhongTextureMaterial;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'RedColorPhongTextureMaterialProgram';
-    var PROGRAM_OPTION_LIST = ['normalTexture', 'specularTexture', 'displacementTexture', 'emissiveTexture', 'useFlatMode','usePreMultiply'];
+    var PROGRAM_OPTION_LIST = ['normalTexture', 'specularTexture', 'displacementTexture', 'emissiveTexture', 'useFlatMode', 'usePreMultiply'];
     var checked;
     vSource = function () {
         /* @preserve
@@ -6459,7 +6982,7 @@ var RedColorPhongTextureMaterial;
         // 일반 프로퍼티
         this['color'] = hexColor ? hexColor : '#ff0000';
         this['usePreMultiply'] = false;
-        this['useFlatMode'] = false
+        this['useFlatMode'] = false;
         this['_UUID'] = RedGL.makeUUID();
         if (!checked) {
             this.checkUniformAndProperty();
@@ -6620,12 +7143,19 @@ var RedColorPhongTextureMaterial;
     RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'usePreMultiply', 'boolean', samplerOption);
     Object.freeze(RedColorPhongTextureMaterial)
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedEnvironmentMaterial;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'RedEnvironmentMaterialProgram';
-    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'specularTexture', 'displacementTexture', 'emissiveTexture', 'useFlatMode','usePreMultiply'];
+    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'specularTexture', 'displacementTexture', 'emissiveTexture', 'useFlatMode', 'usePreMultiply'];
     var checked;
     vSource = function () {
         /* @preserve
@@ -6855,7 +7385,7 @@ var RedEnvironmentMaterial;
         this['displacementFlowSpeedY'] = 0;
         this['alpha'] = 1;
         /////////////////////////////////////////
-        this['useFlatMode'] = false
+        this['useFlatMode'] = false;
         this['usePreMultiply'] = false;
         // 일반 프로퍼티
         this['_UUID'] = RedGL.makeUUID();
@@ -7035,6 +7565,13 @@ var RedEnvironmentMaterial;
     RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'usePreMultiply', 'boolean', samplerOption);
     Object.freeze(RedEnvironmentMaterial);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedBitmapMaterial;
 (function () {
@@ -7176,6 +7713,13 @@ var RedBitmapMaterial;
     RedDefinePropertyInfo.definePrototype('RedBitmapMaterial', 'usePreMultiply', 'boolean', samplerOption);
     Object.freeze(RedBitmapMaterial);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedParticleMaterial;
 //////////////////////////////////////////////////////////
@@ -7184,7 +7728,7 @@ var RedParticleMaterial;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'particleProgram';
-    var PROGRAM_OPTION_LIST = ['diffuseTexture','usePreMultiply'];
+    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'usePreMultiply'];
 
     var checked;
     vSource = function () {
@@ -7263,7 +7807,7 @@ var RedParticleMaterial;
         this['cutOff'] = 0;
         /////////////////////////////////////////
         // 일반 프로퍼티
-        this['usePreMultiply'] = true
+        this['usePreMultiply'] = true;
         this['_UUID'] = RedGL.makeUUID();
         if (!checked) {
             this.checkUniformAndProperty();
@@ -7321,6 +7865,13 @@ var RedParticleMaterial;
     RedDefinePropertyInfo.definePrototype('RedParticleMaterial', 'usePreMultiply', 'boolean', samplerOption);
     Object.freeze(RedParticleMaterial);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedBitmapPointCloudMaterial;
 (function () {
@@ -7456,6 +8007,13 @@ var RedBitmapPointCloudMaterial;
     RedDefinePropertyInfo.definePrototype('RedBitmapPointCloudMaterial', 'usePreMultiply', 'boolean', samplerOption);
     Object.freeze(RedBitmapPointCloudMaterial)
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedSheetMaterial;
 (function () {
@@ -7757,7 +8315,7 @@ var RedSheetMaterial;
 		 return : 'Boolean'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'loop', 'boolean', true);
+    RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'loop', 'boolean');
     /**DOC:
      {
  	     code : 'PROPERTY',
@@ -7822,12 +8380,19 @@ var RedSheetMaterial;
     RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'usePreMultiply', 'boolean', samplerOption);
     Object.freeze(RedSheetMaterial)
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedStandardMaterial;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'RedStandardMaterialProgram';
-    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'specularTexture', 'emissiveTexture', 'displacementTexture', 'useFlatMode','usePreMultiply'];
+    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'specularTexture', 'emissiveTexture', 'displacementTexture', 'useFlatMode', 'usePreMultiply'];
     var checked;
     vSource = function () {
         /* @preserve
@@ -8029,10 +8594,11 @@ var RedStandardMaterial;
         this['displacementPower'] = 0.1;
         this['displacementFlowSpeedX'] = 0;
         this['displacementFlowSpeedY'] = 0;
-        this['alpha'] = 1
+        this['alpha'] = 1;
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['_UUID'] = RedGL.makeUUID();
+        this['useFlatMode'] = false;
         this['usePreMultiply'] = false;
         if (!checked) {
             this.checkUniformAndProperty();
@@ -8193,6 +8759,13 @@ var RedStandardMaterial;
     RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'usePreMultiply', 'boolean', samplerOption);
     Object.freeze(RedStandardMaterial);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedVideoMaterial;
 (function () {
@@ -8315,12 +8888,19 @@ var RedVideoMaterial;
     RedDefinePropertyInfo.definePrototype('RedVideoMaterial', 'videoTexture', 'samplerVideo', {essential: true});
     Object.freeze(RedVideoMaterial);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedPBRMaterial;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'RedPBRMaterialProgram';
-    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture', 'useFlatMode','usePreMultiply'];
+    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture', 'useFlatMode', 'usePreMultiply'];
     var checked;
     vSource = function () {
         /* @preserve
@@ -8591,14 +9171,14 @@ var RedPBRMaterial;
 
         this['metallicFactor'] = 1;
         this['roughnessFactor'] = 0.1;
-        this['baseColorFactor'] = [1, 1, 1, 1]
+        this['baseColorFactor'] = [1, 1, 1, 1];
         this['emissiveFactor'] = 1;
         this['alpha'] = 1;
         this['cutOff'] = 0;
         /////////////////////////////////////////
         // 일반 프로퍼티
-        this['useFlatMode'] = false
-        this['usePreMultiply'] = false
+        this['useFlatMode'] = false;
+        this['usePreMultiply'] = false;
         this['_UUID'] = RedGL.makeUUID();
         if (!checked) {
             this.checkUniformAndProperty();
@@ -8770,6 +9350,13 @@ var RedPBRMaterial;
     RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'usePreMultiply', 'boolean', samplerOption);
     Object.freeze(RedPBRMaterial);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedColorPointCloudMaterial;
 (function () {
@@ -8857,6 +9444,13 @@ var RedColorPointCloudMaterial;
     RedDefinePropertyInfo.definePrototype('RedColorPointCloudMaterial', 'alpha', 'number', {min: 0, max: 1});
     Object.freeze(RedColorPointCloudMaterial);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedPBRMaterial_System;
 (function () {
@@ -8864,7 +9458,7 @@ var RedPBRMaterial_System;
     var PROGRAM_NAME = 'RedPBRMaterialSystemProgram';
     var PROGRAM_OPTION_LIST = [
         'diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture',
-        'useFlatMode', 'useMaterialDoubleSide', 'useVertexTangent','useVertexColor_0','usePreMultiply'
+        'useFlatMode', 'useMaterialDoubleSide', 'useVertexTangent', 'useVertexColor_0', 'usePreMultiply'
     ];
     var checked;
     vSource = function () {
@@ -9189,31 +9783,31 @@ var RedPBRMaterial_System;
         this['metallicFactor'] = 1;
         this['roughnessFactor'] = 1;
 
-        this['diffuseTexCoordIndex'] = 0
-        this['occlusionTexCoordIndex'] = 0
-        this['emissiveTexCoordIndex'] = 0
+        this['diffuseTexCoordIndex'] = 0;
+        this['occlusionTexCoordIndex'] = 0;
+        this['emissiveTexCoordIndex'] = 0;
         this['roughnessTexCoordIndex'] = 0;
-        this['normalTexCoordIndex'] = 0
+        this['normalTexCoordIndex'] = 0;
 
         this['occlusionPower'] = 1;
-        this['baseColorFactor'] = null
+        this['baseColorFactor'] = null;
         this['emissiveFactor'] = null;
         this['alpha'] = 1;
         this['cutOff'] = 0;
 
         /////////////////////////////////////////
         // 일반 프로퍼티
-        this['useMaterialDoubleSide'] = false
-        this['useVertexColor_0'] = false
-        this['useFlatMode'] = false
-        this['useVertexTangent'] = false
-        this['usePreMultiply'] = false
+        this['useMaterialDoubleSide'] = false;
+        this['useVertexColor_0'] = false;
+        this['useFlatMode'] = false;
+        this['useVertexTangent'] = false;
+        this['usePreMultiply'] = false;
         this['_UUID'] = RedGL.makeUUID();
         if (!checked) {
             this.checkUniformAndProperty();
             checked = true;
         }
-        this['_needSearchProgram'] = null
+        this['_needSearchProgram'] = null;
         console.log(this);
     };
     RedPBRMaterial_System.prototype = new RedBaseMaterial();
@@ -9222,7 +9816,7 @@ var RedPBRMaterial_System;
             var self = this;
             cancelAnimationFrame(this['_needSearchProgram']);
             this['_needSearchProgram'] = requestAnimationFrame(function () {
-                self._searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST)
+                self._searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST);
                 self['_needSearchProgram'] = null
             });
 
@@ -9398,10 +9992,17 @@ var RedPBRMaterial_System;
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'usePreMultiply', 'boolean', samplerOption);
-    
+
 
     Object.freeze(RedPBRMaterial_System);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedTextMaterial;
 (function () {
@@ -9517,8 +10118,8 @@ var RedTextMaterial;
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['alpha'] = 1;
-        this['width'] = 2
-        this['height'] = 2
+        this['width'] = 2;
+        this['height'] = 2;
         this['_UUID'] = RedGL.makeUUID();
         if (!checked) {
             this.checkUniformAndProperty();
@@ -9567,6 +10168,13 @@ var RedTextMaterial;
     });
     Object.freeze(RedTextMaterial);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedAmbientLight;
 (function () {
@@ -9588,7 +10196,13 @@ var RedAmbientLight;
 			 ],
 			 alpha : [
 				 {type:'number'},
-				 '기본값 : 0.1'
+				 '기본값 : 0.1',
+				 'range : 0 ~ 1'
+			 ],
+			 intensity : [
+				 {type:'number'},
+				 '기본값 : 1',
+				 'range : 0 ~ 1'
 			 ]
 		 },
 		 extends : [
@@ -9601,13 +10215,13 @@ var RedAmbientLight;
 		 return : 'RedAmbientLight Instance'
 	 }
      :DOC*/
-    RedAmbientLight = function (redGL, hexColor, alpha) {
-        if (!(this instanceof RedAmbientLight)) return new RedAmbientLight(redGL, hexColor, alpha);
+    RedAmbientLight = function (redGL, hexColor, alpha, intensity) {
+        if (!(this instanceof RedAmbientLight)) return new RedAmbientLight(redGL, hexColor, alpha, intensity);
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedAmbientLight : RedGL Instance만 허용.', '입력값 : ' + redGL);
         // 유니폼 프로퍼티
         this['_lightColor'] = new Float32Array(4);
         // 일반 프로퍼티
-        this['intensity'] = 1;
+        this['intensity'] = intensity == undefined ? 1 : intensity;
         this['alpha'] = alpha == undefined ? 0.1 : alpha;
         this['color'] = hexColor ? hexColor : '#fff';
         this['_UUID'] = RedGL.makeUUID();
@@ -9638,6 +10252,13 @@ var RedAmbientLight;
     });
     Object.freeze(RedAmbientLight);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedDirectionalLight;
 (function () {
@@ -9659,7 +10280,13 @@ var RedDirectionalLight;
 			 ],
 			 alpha : [
 				 {type:'number'},
-				 '기본값 : 1'
+				 '기본값 : 1',
+				 'range : 0 ~ 1'
+			 ],
+			 intensity : [
+				 {type:'number'},
+				 '기본값 : 1',
+				 'range : 0 ~ 1'
 			 ]
 		 },
 		 extends : ['RedBaseLight'],
@@ -9670,13 +10297,13 @@ var RedDirectionalLight;
 		 return : 'RedDirectionalLight Instance'
 	 }
      :DOC*/
-    RedDirectionalLight = function (redGL, hexColor, alpha) {
-        if (!(this instanceof RedDirectionalLight)) return new RedDirectionalLight(redGL, hexColor, alpha);
+    RedDirectionalLight = function (redGL, hexColor, alpha, intensity) {
+        if (!(this instanceof RedDirectionalLight)) return new RedDirectionalLight(redGL, hexColor, alpha, intensity);
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedDirectionalLight : RedGL Instance만 허용.', '입력값 : ' + redGL);
         // 유니폼 프로퍼티
         this['_lightColor'] = new Float32Array(4);
         // 일반 프로퍼티
-        this['intensity'] = 1;
+        this['intensity'] = intensity == undefined ? 1 : intensity;
         this['alpha'] = alpha == undefined ? 1 : alpha;
         this['color'] = hexColor ? hexColor : '#fff';
         /**DOC:
@@ -9763,6 +10390,13 @@ var RedDirectionalLight;
     });
     Object.freeze(RedDirectionalLight);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedPointLight;
 (function () {
@@ -9784,6 +10418,21 @@ var RedPointLight;
 			 alpha : [
 				 {type:'number'},
 				 '기본값 : 1'
+			 ],
+			 alpha : [
+				 {type:'number'},
+				 '기본값 : 1',
+				 'range : 0 ~ 1'
+			 ],
+			 alpha : [
+				 {type:'radius'},
+				 '기본값 : 1',
+				 'range : 0 ~ '
+			 ],
+			 intensity : [
+				 {type:'number'},
+				 '기본값 : 1',
+				 'range : 0 ~ 1'
 			 ]
 		 },
 		 extends : [
@@ -9796,14 +10445,15 @@ var RedPointLight;
 		 return : 'RedPointLight Instance'
 	 }
      :DOC*/
-    RedPointLight = function (redGL, hexColor, alpha) {
-        if (!(this instanceof RedPointLight)) return new RedPointLight(redGL, hexColor, alpha);
+    RedPointLight = function (redGL, hexColor, alpha, radius, intensity) {
+        if (!(this instanceof RedPointLight)) return new RedPointLight(redGL, hexColor, alpha, radius, intensity);
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedPointLight : RedGL Instance만 허용.', '입력값 : ' + redGL);
         // 유니폼 프로퍼티
         this['_lightColor'] = new Float32Array(4);
         // 일반 프로퍼티
-        this['intensity'] = 1;
+        this['intensity'] = intensity == undefined ? 1 : intensity;
         this['alpha'] = alpha == undefined ? 1 : alpha;
+        this['radius'] = radius == undefined ? 1 : radius;
         this['color'] = hexColor ? hexColor : '#fff';
         /**DOC:
          {
@@ -9884,71 +10534,13 @@ var RedPointLight;
     RedDefinePropertyInfo.definePrototype('RedPointLight', 'radius', 'number', {'min': 0});
     Object.freeze(RedPointLight);
 })();
-"use strict";
-var JsonModelLoader;
-(function () {
-    /**DOC:
-     {
-		 constructorYn : true,
-		 title :`JsonModelLoader`,
-		 description : `
-			 <h1>>현재 단순테스트용</h1>
-			 실제로 사용할지 여부는 미정.
-		 `,
-		 return : 'void'
-	 }
-     :DOC*/
-    JsonModelLoader = function (redGL, key, src, callback) {
-        if ((!(this instanceof JsonModelLoader))) return new JsonModelLoader(redGL, key, src, callback)
-        console.log('~~~~~~~~~~~')
-        var request = new XMLHttpRequest();
-        request.open("GET", src, true);
-        request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8"),
-            request.onreadystatechange = function () {
-                if (request.readyState == 4) {
-                    var jsonData;
-                    var interleaveData, indexData;
-                    var i, len;
-                    interleaveData = []
-                    indexData = []
-                    jsonData = JSON.parse(request.responseText)
-                    i = 0, len = jsonData['position'].length / 3
-                    for (i; i < len; i++) {
-                        interleaveData.push(jsonData['position'][i * 3], jsonData['position'][i * 3 + 1], jsonData['position'][i * 3 + 2])
-                        interleaveData.push(jsonData['normal'][i * 3], jsonData['normal'][i * 3 + 1], jsonData['normal'][i * 3 + 2])
-                        if (jsonData['uvs']) interleaveData.push(jsonData['uvs'][i * 2], jsonData['uvs'][i * 2 + 1])
-                        else interleaveData.push(0, 0)
-                    }
-                    console.log(jsonData)
-                    console.log(interleaveData)
-                    if (callback) {
-                        // TODO: 유일키 방어
-                        callback(
-                            RedBuffer(
-                                redGL,
-                                key,
-                                RedBuffer.ARRAY_BUFFER,
-                                new Float32Array(interleaveData),
-                                [
-                                    RedInterleaveInfo('aVertexPosition', 3),
-                                    RedInterleaveInfo('aVertexNormal', 3),
-                                    RedInterleaveInfo('aTexcoord', 2)
-                                ]
-                            ),
-                            RedBuffer(
-                                redGL,
-                                key,
-                                RedBuffer.ELEMENT_ARRAY_BUFFER,
-                                new Uint16Array(jsonData['index'])
-                            )
-                        )
-                    }
-                }
-            }
-        request.send();
-    }
-    Object.freeze(JsonModelLoader)
-})()
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedMTLLoader;
 (function () {
@@ -10123,6 +10715,13 @@ var RedMTLLoader;
     };
     Object.freeze(RedMTLLoader);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedOBJLoader;
 (function () {
@@ -10173,18 +10772,18 @@ var RedOBJLoader;
     //TODO: 환경맵 파싱
     //TODO: bump 값 상세파싱
     RedOBJLoader = function (redGL, path, fileName, callback) {
-        if ((!(this instanceof RedOBJLoader))) return new RedOBJLoader(redGL, path, fileName, callback)
-        console.log('~~~~~~~~~~~')
+        if ((!(this instanceof RedOBJLoader))) return new RedOBJLoader(redGL, path, fileName, callback);
+        console.log('~~~~~~~~~~~');
         var self = this;
         var request = new XMLHttpRequest();
         request.open("GET", path + fileName, true);
-        request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
+        request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
         request.onreadystatechange = function () {
-            if (request.readyState == 4) {
+            if (request.readyState === 4) {
                 var data;
-                self['result'] = parser(self, redGL, request.responseText)
-                self['modelParsingComplete'] = true
-                self['resultMesh'] = data
+                self['result'] = parser(self, redGL, request.responseText);
+                self['modelParsingComplete'] = true;
+                self['resultMesh'] = data;
                 if (callback) {
                     if (self['mtlLoader']) {
                         if (self['mtlLoader']['complete']) {
@@ -10198,45 +10797,45 @@ var RedOBJLoader;
                     }
                 }
             }
-        }
+        };
         request.send();
         this['path'] = path;
         this['fileName'] = fileName;
         this['mtlLoader'] = null;
         this['modelParsingComplete'] = false;
         this['callback'] = callback;
-        this['resultMesh'] = RedMesh(redGL)
-        this['resultMesh']['name'] = 'instanceOfRedOBJLoader_' + RedGL.makeUUID()
+        this['resultMesh'] = RedMesh(redGL);
+        this['resultMesh']['name'] = 'instanceOfRedOBJLoader_' + RedGL.makeUUID();
         this['result'] = null;
-    }
+    };
     setMaterial = function (redGL, tObjInfo, tMtlLoader) {
         // console.log(tObjInfo)
         // console.log('tMtlLoader', tMtlLoader)
         var k;
-        var tMtlData, tMeshData
+        var tMtlData, tMeshData;
         var cacheTexture;
-        cacheTexture = {}
+        cacheTexture = {};
         for (k in tObjInfo) {
             var tMaterial;
-            var tMesh
+            var tMesh;
             var tTexture;
-            tMeshData = tObjInfo[k]
-            tMesh = tMeshData['mesh']
+            tMeshData = tObjInfo[k];
+            tMesh = tMeshData['mesh'];
             if (tMeshData['use'] && tMeshData['resultInterleave'].length) {
                 var r, g, b;
-                var ableLight
-                ableLight = tMeshData['ableLight']
+                var ableLight;
+                ableLight = tMeshData['ableLight'];
                 // console.log(tMeshData)
                 // console.log('해석할 재질키', tMeshData['materialKey'])
                 //
-                tMtlData = tMtlLoader['parseData'][tMeshData['materialKey']]
+                tMtlData = tMtlLoader['parseData'][tMeshData['materialKey']];
                 if (tMtlData) {
                     if (tMtlData['map_Kd']) {
                         // 비트맵 기반으로 해석
-                        console.log('tMtlData', tMtlData)
-                        if (cacheTexture[tMtlData['map_Kd']]) tTexture = cacheTexture[tMtlData['map_Kd']]
+                        console.log('tMtlData', tMtlData);
+                        if (cacheTexture[tMtlData['map_Kd']]) tTexture = cacheTexture[tMtlData['map_Kd']];
                         else {
-                            tTexture = RedBitmapTexture(redGL, tMtlData['map_Kd'])
+                            tTexture = RedBitmapTexture(redGL, tMtlData['map_Kd']);
                             cacheTexture[tMtlData['map_Kd']] = tTexture
                         }
                         if (ableLight) tMaterial = RedStandardMaterial(redGL, tTexture);
@@ -10256,23 +10855,23 @@ var RedOBJLoader;
                     if (tMaterial) {
                         // 스페큘러텍스쳐
                         if (tMtlData['map_Ns']) {
-                            if (cacheTexture[tMtlData['map_Ns']]) tTexture = cacheTexture[tMtlData['map_Ns']]
+                            if (cacheTexture[tMtlData['map_Ns']]) tTexture = cacheTexture[tMtlData['map_Ns']];
                             else {
-                                tTexture = RedBitmapTexture(redGL, tMtlData['map_Ns'])
+                                tTexture = RedBitmapTexture(redGL, tMtlData['map_Ns']);
                                 cacheTexture[tMtlData['map_Ns']] = tTexture
                             }
                             tMaterial['specularTexture'] = tTexture
                         }
                         if (tMtlData['map_bump']) {
-                            if (cacheTexture[tMtlData['map_bump']]) tTexture = cacheTexture[tMtlData['map_bump']]
+                            if (cacheTexture[tMtlData['map_bump']]) tTexture = cacheTexture[tMtlData['map_bump']];
                             else {
-                                tTexture = RedBitmapTexture(redGL, tMtlData['map_bump'])
+                                tTexture = RedBitmapTexture(redGL, tMtlData['map_bump']);
                                 cacheTexture[tMtlData['map_bump']] = tTexture
                             }
                             tMaterial['normalTexture'] = tTexture
                         }
                         // shininess
-                        if (tMtlData['Ns'] != undefined) tMaterial['shininess'] = tMtlData['Ns']
+                        if (tMtlData['Ns'] !== undefined) tMaterial['shininess'] = tMtlData['Ns'];
                         // 메쉬에 재질 적용
                         tMeshData['mesh']['material'] = tMaterial
                     }
@@ -10281,29 +10880,29 @@ var RedOBJLoader;
                 }
             }
         }
-    }
+    };
     setMesh = function (redGL, parentMesh, childrenInfo) {
         for (var k in childrenInfo) {
             var tData;
-            tData = childrenInfo[k]
+            tData = childrenInfo[k];
             // console.log('!!!', k, tData)
             var tMesh;
             if (!tData['use']) {
                 tMesh = RedMesh(redGL)
             } else {
                 // 인터리브 버퍼 생성
-                var tInterleaveInfo = []
-                var interleaveBuffer, indexBuffer
-                if (tData['resultPosition'].length) tInterleaveInfo.push(RedInterleaveInfo('aVertexPosition', 3))
-                if (tData['resultNormal'].length) tInterleaveInfo.push(RedInterleaveInfo('aVertexNormal', 3))
-                if (tData['resultUV'].length) tInterleaveInfo.push(RedInterleaveInfo('aTexcoord', 2))
+                var tInterleaveInfo = [];
+                var interleaveBuffer, indexBuffer;
+                if (tData['resultPosition'].length) tInterleaveInfo.push(RedInterleaveInfo('aVertexPosition', 3));
+                if (tData['resultNormal'].length) tInterleaveInfo.push(RedInterleaveInfo('aVertexNormal', 3));
+                if (tData['resultUV'].length) tInterleaveInfo.push(RedInterleaveInfo('aTexcoord', 2));
                 interleaveBuffer = RedBuffer(
                     redGL,
                     k + '_interleave',
                     RedBuffer.ARRAY_BUFFER,
                     new Float32Array(tData['resultInterleave'].length ? tData['resultInterleave'] : tData['resultPosition']),
                     tInterleaveInfo
-                )
+                );
                 if (tData['index'].length) {
                     // 인덱스 버퍼 생성
                     if (tData['index'].length) {
@@ -10316,22 +10915,22 @@ var RedOBJLoader;
                     }
                 }
                 var tempMaterial;
-                if (tData['resultUV'].length && tData['resultNormal'].length) tempMaterial = RedColorPhongTextureMaterial(redGL, '#00ff00')
+                if (tData['resultUV'].length && tData['resultNormal'].length) tempMaterial = RedColorPhongTextureMaterial(redGL, '#00ff00');
                 else {
-                    if (tData['resultNormal']) tempMaterial = RedColorPhongMaterial(redGL, '#00ff00')
+                    if (tData['resultNormal']) tempMaterial = RedColorPhongMaterial(redGL, '#00ff00');
                     else tempMaterial = RedColorMaterial(redGL, '#0000ff')
                 }
                 tMesh = RedMesh(redGL, RedGeometry(interleaveBuffer, indexBuffer), tempMaterial);
-                tData['ableUV'] = tData['resultUV'].length ? true : false
-                tData['ableNormal'] = tData['resultNormal'].length ? true : false
+                tData['ableUV'] = tData['resultUV'].length ? true : false;
+                tData['ableNormal'] = tData['resultNormal'].length ? true : false;
                 tData['ableLight'] = tData['ableUV'] & tData['ableNormal'] ? true : false
             }
-            tMesh['name'] = k
-            tData['mesh'] = tMesh
-            parentMesh.addChild(tMesh)
+            tMesh['name'] = k;
+            tData['mesh'] = tMesh;
+            parentMesh.addChild(tMesh);
             setMesh(redGL, tMesh, tData['childrenInfo'])
         }
-    }
+    };
     var parseObj;
     parseObj = (function () {
         var regObject, regGroup;
@@ -10349,7 +10948,7 @@ var RedOBJLoader;
         regIndex = /f\s+(([\d]{1,}[\s]?){3,})+/;
         regIndex2 = /f\s+((([\d]{1,}\/[\d]{1,}[\s]?){3,})+)/;
         regIndex3 = /f\s+((([\d]{1,}\/[\d]{1,}\/[\d]{1,}[\s]?){3,})+)/;
-        regIndex4 = /f\s+((([\d]{1,}\/\/[\d]{1,}[\s]?){3,})+)/
+        regIndex4 = /f\s+((([\d]{1,}\/\/[\d]{1,}[\s]?){3,})+)/;
         return function (redGL, tRedOBJLoader, lineList) {
             var info; // 단편 구조로 정보구성
             var infoHierarchy; // 하이라키 구조로 정보구성
@@ -10370,22 +10969,22 @@ var RedOBJLoader;
                 points: [],
                 normalPoints: [],
                 uvPoints: []
-            }
+            };
             infoHierarchy = {};
             info = {};
             var i;
             var hasObjectName;
-            i = lineList.length
+            i = lineList.length;
             while (i--) {
                 if (regObject.test(lineList[i])) {
-                    hasObjectName = true
+                    hasObjectName = true;
                     break
                 }
             }
             if (!hasObjectName) {
                 var tName;
                 var tInfo;
-                tName = 'objModel' + RedGL.makeUUID()
+                tName = 'objModel' + RedGL.makeUUID();
                 tInfo = {
                     name: tName,
                     groupName: tName,
@@ -10397,44 +10996,44 @@ var RedOBJLoader;
                     resultInterleave: [],
                     use: true,
                     childrenInfo: {}
-                }
+                };
                 infoHierarchy[tName] = currentMeshInfo = tInfo;
-                info[tName] = currentMeshInfo
+                info[tName] = currentMeshInfo;
                 currentGroupName = tName
             }
             lineList.forEach(function (line) {
                 if (regMtllib.test(line)) {
-                    console.log('regMtllib', '재질파일정보', line)
+                    console.log('regMtllib', '재질파일정보', line);
                     tMtlLoader = RedMTLLoader(redGL, tRedOBJLoader['path'], line.split(' ')[1], function (v) {
-                        tRedOBJLoader['mtlLoader'] = v
+                        tRedOBJLoader['mtlLoader'] = v;
                         if (tRedOBJLoader['modelParsingComplete']) {
                             if (tRedOBJLoader['callback']) {
                                 console.log('재질에서 - 재질 파싱 종료 & 재질 파싱 종료');
-                                setMaterial(redGL, info, tMtlLoader)
+                                setMaterial(redGL, info, tMtlLoader);
                                 tRedOBJLoader['callback'](tRedOBJLoader['result'])
                             }
                             else console.log('RedOBJLoader 콜백없음')
                         } else console.log('재질에서 - 파싱 진행중 & 재질 파싱 종료')
-                    })
-                    tRedOBJLoader['mtlLoader'] = tMtlLoader
+                    });
+                    tRedOBJLoader['mtlLoader'] = tMtlLoader;
                     return
                 }
                 if (regUseMtl.test(line)) {
                     var tName;
                     var tInfo;
-                    tName = line.split(' ').slice(1).join('').trim()
-                    info[currentGroupName]['materialKey'] = tName
+                    tName = line.split(' ').slice(1).join('').trim();
+                    info[currentGroupName]['materialKey'] = tName;
                     console.log('regUseMtl', line, '재질사용', regUseMtl.test(line), info[currentGroupName])
                 }
                 // 그룹 검색
                 else if (regGroup.test(line)) {
                     var tName;
                     var tInfo;
-                    tName = line.split(' ').slice(1).join('').trim()
+                    tName = line.split(' ').slice(1).join('').trim();
                     // console.log('name', tName)
                     // console.log('currentGroupName', currentGroupName)
                     // 그룹으로 판정될 경우 현재 그룹은 컨테이너로만 사용한다.
-                    infoHierarchy[currentGroupName]['use'] = false
+                    infoHierarchy[currentGroupName]['use'] = false;
                     tInfo = {
                         name: tName,
                         groupName: currentGroupName,
@@ -10447,7 +11046,7 @@ var RedOBJLoader;
                         resultInterleave: [],
                         use: true,
                         childrenInfo: {}
-                    }
+                    };
                     // 현재 메쉬 정보를 저장
                     info[tName] = currentMeshInfo = tInfo;
                     // 현재 그룹의 자식정보에 현재 메쉬 정보 추가
@@ -10459,7 +11058,7 @@ var RedOBJLoader;
                 else if (regObject.test(line)) {
                     var tName;
                     var tInfo;
-                    tName = line.split(' ').slice(1).join('').trim()
+                    tName = line.split(' ').slice(1).join('').trim();
                     // console.log('name', tName)
                     tInfo = {
                         name: tName,
@@ -10473,7 +11072,7 @@ var RedOBJLoader;
                         resultInterleave: [],
                         use: true,
                         childrenInfo: {}
-                    }
+                    };
                     // 하이라키 정보에 추가
                     infoHierarchy[tName] = currentMeshInfo = tInfo;
                     // 현재 메쉬 정보 저장
@@ -10486,8 +11085,8 @@ var RedOBJLoader;
                 if (regVertex.test(line)) {
                     var tPosition;
                     tPosition = line.split(' ');
-                    pointInfo['position'].push(+tPosition[1], +tPosition[2], +tPosition[3])
-                    currentMeshInfo['position'].push(+tPosition[1], +tPosition[2], +tPosition[3])
+                    pointInfo['position'].push(+tPosition[1], +tPosition[2], +tPosition[3]);
+                    currentMeshInfo['position'].push(+tPosition[1], +tPosition[2], +tPosition[3]);
                     pointInfo['points'][pointInfo['points'].length] = [+tPosition[1], +tPosition[2], +tPosition[3]]
                     // console.log('regVertex', line, regVertex.test(line))
                 }
@@ -10495,7 +11094,7 @@ var RedOBJLoader;
                 else if (regNormal.test(line)) {
                     var tNormal;
                     tNormal = line.split(' ');
-                    pointInfo['normal'].push(+tNormal[1], +tNormal[2], +tNormal[3])
+                    pointInfo['normal'].push(+tNormal[1], +tNormal[2], +tNormal[3]);
                     pointInfo['normalPoints'][pointInfo['normalPoints'].length] = [+tNormal[1], +tNormal[2], +tNormal[3]]
                     // console.log('regNormal', line, regNormal.test(line))
                 }
@@ -10503,8 +11102,8 @@ var RedOBJLoader;
                 else if (redUV.test(line)) {
                     var tUV;
                     tUV = line.split(' ');
-                    pointInfo['uv'].push(+tUV[1], 1-tUV[2])
-                    pointInfo['uvPoints'][pointInfo['uvPoints'].length] = [+tUV[1], 1-tUV[2]]
+                    pointInfo['uv'].push(+tUV[1], 1 - tUV[2]);
+                    pointInfo['uvPoints'][pointInfo['uvPoints'].length] = [+tUV[1], 1 - tUV[2]]
                     // console.log('redUV', line, redUV.test(line))
                 }
                 // 인덱스 검색 1//1 1//1 1//1 v//n
@@ -10515,23 +11114,23 @@ var RedOBJLoader;
                     tData.forEach(function (v) {
                         var tPoint, tNormalPoint;
                         var max;
-                        max = 0
-                        v = v.split('/')
-                        tIndex = +v[0] - 1
-                        tNIndex = +v[2] - 1
-                        tPoint = pointInfo['points'][tIndex]
-                        tNormalPoint = pointInfo['normalPoints'][tNIndex]
-                        if (pointInfo['position'].length) max += 3
-                        if (pointInfo['normal'].length) max += 3
+                        max = 0;
+                        v = v.split('/');
+                        tIndex = +v[0] - 1;
+                        tNIndex = +v[2] - 1;
+                        tPoint = pointInfo['points'][tIndex];
+                        tNormalPoint = pointInfo['normalPoints'][tNIndex];
+                        if (pointInfo['position'].length) max += 3;
+                        if (pointInfo['normal'].length) max += 3;
                         //
-                        currentMeshInfo['index'].push(currentMeshInfo['resultInterleave'].length / max)
+                        currentMeshInfo['index'].push(currentMeshInfo['resultInterleave'].length / max);
                         //
                         if (pointInfo['position'].length) {
-                            currentMeshInfo['resultPosition'].push(tPoint[0], tPoint[1], tPoint[2])
+                            currentMeshInfo['resultPosition'].push(tPoint[0], tPoint[1], tPoint[2]);
                             currentMeshInfo['resultInterleave'].push(tPoint[0], tPoint[1], tPoint[2])
                         }
                         if (pointInfo['normal'].length) {
-                            currentMeshInfo['resultNormal'].push(tNormalPoint[0], tNormalPoint[1], tNormalPoint[2])
+                            currentMeshInfo['resultNormal'].push(tNormalPoint[0], tNormalPoint[1], tNormalPoint[2]);
                             currentMeshInfo['resultInterleave'].push(tNormalPoint[0], tNormalPoint[1], tNormalPoint[2])
                         }
                     })
@@ -10544,39 +11143,39 @@ var RedOBJLoader;
                     var tIndex, tUVIndex, tNIndex;
                     tData = line.split(' ').slice(1, 5);
                     // console.log('tData',tData)
-                    if (tData.length == 4) {
-                        var t0 = tData[3]
-                        tData[3] = tData[0]
-                        tData[4] = tData[2]
+                    if (tData.length === 4) {
+                        var t0 = tData[3];
+                        tData[3] = tData[0];
+                        tData[4] = tData[2];
                         tData[5] = t0
                     }
                     tData.forEach(function (v) {
                         var tPoint, tNormalPoint, tUVPoints;
                         var max;
-                        max = 0
-                        v = v.split('/')
-                        tIndex = +v[0] - 1
-                        tUVIndex = +v[1] - 1
-                        tNIndex = +v[2] - 1
-                        tPoint = pointInfo['points'][tIndex]
-                        tUVPoints = pointInfo['uvPoints'][tUVIndex]
-                        tNormalPoint = pointInfo['normalPoints'][tNIndex]
-                        if (pointInfo['position'].length) max += 3
-                        if (pointInfo['normal'].length) max += 3
-                        if (pointInfo['uv'].length) max += 2
+                        max = 0;
+                        v = v.split('/');
+                        tIndex = +v[0] - 1;
+                        tUVIndex = +v[1] - 1;
+                        tNIndex = +v[2] - 1;
+                        tPoint = pointInfo['points'][tIndex];
+                        tUVPoints = pointInfo['uvPoints'][tUVIndex];
+                        tNormalPoint = pointInfo['normalPoints'][tNIndex];
+                        if (pointInfo['position'].length) max += 3;
+                        if (pointInfo['normal'].length) max += 3;
+                        if (pointInfo['uv'].length) max += 2;
                         //
-                        currentMeshInfo['index'].push(currentMeshInfo['resultInterleave'].length / max)
+                        currentMeshInfo['index'].push(currentMeshInfo['resultInterleave'].length / max);
                         //
                         if (pointInfo['position'].length) {
-                            currentMeshInfo['resultPosition'].push(tPoint[0], tPoint[1], tPoint[2])
+                            currentMeshInfo['resultPosition'].push(tPoint[0], tPoint[1], tPoint[2]);
                             currentMeshInfo['resultInterleave'].push(tPoint[0], tPoint[1], tPoint[2])
                         }
                         if (pointInfo['normal'].length) {
-                            currentMeshInfo['resultNormal'].push(tNormalPoint[0], tNormalPoint[1], tNormalPoint[2])
+                            currentMeshInfo['resultNormal'].push(tNormalPoint[0], tNormalPoint[1], tNormalPoint[2]);
                             currentMeshInfo['resultInterleave'].push(tNormalPoint[0], tNormalPoint[1], tNormalPoint[2])
                         }
                         if (pointInfo['uv'].length) {
-                            currentMeshInfo['resultUV'].push(tUVPoints[0], tUVPoints[1])
+                            currentMeshInfo['resultUV'].push(tUVPoints[0], tUVPoints[1]);
                             currentMeshInfo['resultInterleave'].push(tUVPoints[0], tUVPoints[1])
                         }
                     })
@@ -10590,23 +11189,23 @@ var RedOBJLoader;
                     tData.forEach(function (v) {
                         var tPoint, tUVPoints;
                         var max;
-                        max = 0
-                        v = v.split('/')
-                        tIndex = +v[0] - 1
-                        tUVIndex = +v[1] - 1
-                        tPoint = pointInfo['points'][tIndex]
-                        tUVPoints = pointInfo['uvPoints'][tUVIndex]
-                        if (pointInfo['position'].length) max += 3
-                        if (pointInfo['uv'].length) max += 2
+                        max = 0;
+                        v = v.split('/');
+                        tIndex = +v[0] - 1;
+                        tUVIndex = +v[1] - 1;
+                        tPoint = pointInfo['points'][tIndex];
+                        tUVPoints = pointInfo['uvPoints'][tUVIndex];
+                        if (pointInfo['position'].length) max += 3;
+                        if (pointInfo['uv'].length) max += 2;
                         //
-                        currentMeshInfo['index'].push(currentMeshInfo['resultInterleave'].length / max)
+                        currentMeshInfo['index'].push(currentMeshInfo['resultInterleave'].length / max);
                         //
                         if (pointInfo['position'].length) {
-                            currentMeshInfo['resultPosition'].push(tPoint[0], tPoint[1], tPoint[2])
+                            currentMeshInfo['resultPosition'].push(tPoint[0], tPoint[1], tPoint[2]);
                             currentMeshInfo['resultInterleave'].push(tPoint[0], tPoint[1], tPoint[2])
                         }
                         if (pointInfo['uv'].length) {
-                            currentMeshInfo['resultUV'].push(tUVPoints[0], tUVPoints[1])
+                            currentMeshInfo['resultUV'].push(tUVPoints[0], tUVPoints[1]);
                             currentMeshInfo['resultInterleave'].push(tUVPoints[0], tUVPoints[1])
                         }
                     })
@@ -10617,12 +11216,12 @@ var RedOBJLoader;
                     // 인덱스 검색 1 1 1 1// 인덱스 검색 1 1 1 1
                     var tIndex;
                     tIndex = line.split(' ');
-                    currentMeshInfo['resultInterleave'] = currentMeshInfo['resultPosition'] = currentMeshInfo['position']
-                    currentMeshInfo['index'].push(+tIndex[1] - 1, +tIndex[2] - 1, +tIndex[3] - 1)
+                    currentMeshInfo['resultInterleave'] = currentMeshInfo['resultPosition'] = currentMeshInfo['position'];
+                    currentMeshInfo['index'].push(+tIndex[1] - 1, +tIndex[2] - 1, +tIndex[3] - 1);
                     currentMeshInfo['index'].push(+tIndex[1] - 1, +tIndex[3] - 1, +tIndex[4] - 1)
                     // console.log('regIndex', line, regIndex.test(line))
                 }
-            })
+            });
             return {
                 info: info,
                 infoHierarchy: infoHierarchy
@@ -10630,16 +11229,16 @@ var RedOBJLoader;
         }
     })();
     parser = function (tRedOBJLoader, redGL, rawData) {
-        console.log('파싱시작', tRedOBJLoader['path'] + tRedOBJLoader['fileName'])
+        console.log('파싱시작', tRedOBJLoader['path'] + tRedOBJLoader['fileName']);
         // console.log(rawData)
         rawData = rawData.replace(/^\#[\s\S]+?\n/g, '');
         var RedOBJResult;
-        var parsedData = parseObj(redGL, tRedOBJLoader, rawData.split("\n"))
-        setMesh(redGL, tRedOBJLoader['resultMesh'], parsedData['infoHierarchy'])
+        var parsedData = parseObj(redGL, tRedOBJLoader, rawData.split("\n"));
+        setMesh(redGL, tRedOBJLoader['resultMesh'], parsedData['infoHierarchy']);
         RedOBJResult = function (v) {
             for (var k in v) this[k] = v[k]
             console.log(this)
-        }
+        };
         return new RedOBJResult(
             {
                 fileName: tRedOBJLoader['fileName'],
@@ -10650,9 +11249,16 @@ var RedOBJLoader;
                 parseInfoMaterial: tRedOBJLoader['mtlLoader']
             }
         )
-    }
+    };
     Object.freeze(RedOBJLoader)
-})()
+})();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var Red3DSLoader;
 (function () {
@@ -10873,7 +11479,7 @@ var Red3DSLoader;
     var VIEWPORT_DATA_3 = 0x7012;
     var VIEWPORT_SIZE = 0x7020;
     var NETWORK_VIEW = 0x7030;
-    var parser
+    var parser;
     /**DOC:
      {
 		 constructorYn : true,
@@ -10916,16 +11522,16 @@ var Red3DSLoader;
 	 }
      :DOC*/
     Red3DSLoader = function (redGL, path, fileName, callback) {
-        if ((!(this instanceof Red3DSLoader))) return new Red3DSLoader(redGL, path, fileName, callback)
-        console.log('~~~~~~~~~~~')
+        if ((!(this instanceof Red3DSLoader))) return new Red3DSLoader(redGL, path, fileName, callback);
+        console.log('~~~~~~~~~~~');
         var self = this;
         var request = new XMLHttpRequest();
         request.open("GET", path + fileName, true);
-        request.responseType = 'arraybuffer'
+        request.responseType = 'arraybuffer';
         request.onreadystatechange = function () {
             if (request.readyState == 4 && request.status === 200) {
-                console.log(request)
-                self['result'] = parser(self, redGL, request['response'])
+                console.log(request);
+                self['result'] = parser(self, redGL, request['response']);
                 if (callback) {
                     console.log('모델 파싱 종료');
                     callback(self['result'])
@@ -10933,17 +11539,17 @@ var Red3DSLoader;
             } else {
                 console.log(request)
             }
-        }
+        };
         request.send();
         this['redGL'] = redGL;
         this['position'] = 0;
-        this['materials'] = {}
-        this['meshs'] = []
+        this['materials'] = {};
+        this['meshs'] = [];
         this['path'] = path;
         this['fileName'] = fileName;
         this['callback'] = callback;
-        this['resultMesh'] = RedMesh(redGL)
-        this['resultMesh']['name'] = 'instanceOfRed3DSLoader_' + RedGL.makeUUID()
+        this['resultMesh'] = RedMesh(redGL);
+        this['resultMesh']['name'] = 'instanceOfRed3DSLoader_' + RedGL.makeUUID();
         this['result'] = null;
     };
     parser = (function () {
@@ -10956,7 +11562,7 @@ var Red3DSLoader;
         var readFloat;
         var readNamedObject;
         var readFaceArray;
-        var readMaterialEntry
+        var readMaterialEntry;
         var readMaterialGroup;
         readChunk = function (target, dataView) {
             var t0 = {};
@@ -10965,40 +11571,40 @@ var Red3DSLoader;
             t0['size'] = readSize(target, dataView);
             t0['end'] = t0['cur'] + t0['size'];
             t0['cur'] += 6;
-            console.log('readChunk', t0)
+            console.log('readChunk', t0);
             return t0;
-        }
+        };
         nextChunk = function (target, dataView, chunk) {
             if (chunk['cur'] >= chunk['end']) return 0;
             target['position'] = chunk['cur'];
             try {
                 var next = readChunk(target, dataView);
                 chunk['cur'] += next['size'];
-                console.log('nextChunk', next['id'])
+                console.log('nextChunk', next['id']);
                 return next['id'];
             } catch (e) {
                 console.log('Unable to read chunk at ' + target['position']);
                 return 0;
             }
-        }
+        };
         endChunk = function (target, chunk) {
             target['position'] = chunk['end'];
-        }
+        };
         readWord = function (target, dataView) {
             var t0 = dataView.getUint16(target['position'], true);
             target['position'] += 2;
             return t0;
-        }
+        };
         readSize = function (target, dataView) {
             var t0 = dataView.getUint32(target['position'], true);
             target['position'] += 4;
             return t0;
-        }
+        };
         readByte = function (target, dataView) {
             var to = dataView.getUint8(target['position'], true);
             target['position'] += 1;
             return to;
-        }
+        };
         readString = function (target, dataView, maxLength) {
             var t0 = '';
             var i, t1;
@@ -11008,7 +11614,7 @@ var Red3DSLoader;
                 t0 += String.fromCharCode(t1);
             }
             return t0;
-        }
+        };
         readFloat = function (target, dataView) {
             try {
                 var v = dataView.getFloat32(target['position'], true);
@@ -11017,23 +11623,23 @@ var Red3DSLoader;
             } catch (e) {
                 console.log(e + ' ' + target['position'] + ' ' + dataView.byteLength);
             }
-        }
+        };
         readColor = function (target, dataView) {
             var chunk = readChunk(target, dataView);
             var color;
             if (chunk['id'] === COLOR_24 || chunk['id'] === LIN_COLOR_24) {
-                color = RedGLUtil.rgb2hex(readByte(target, dataView), readByte(target, dataView), readByte(target, dataView))
+                color = RedGLUtil.rgb2hex(readByte(target, dataView), readByte(target, dataView), readByte(target, dataView));
                 console.log('      Color: ' + color);
             } else if (chunk['id'] === COLOR_F || chunk['id'] === LIN_COLOR_F) {
-                color = RedGLUtil.rgb2hex(readByte(target, dataView), readByte(target, dataView), readByte(target, dataView))
+                color = RedGLUtil.rgb2hex(readByte(target, dataView), readByte(target, dataView), readByte(target, dataView));
                 console.log('      Color: ' + color);
             } else console.log('      Unknown color chunk: ' + chunk.toString(16));
             endChunk(target, chunk);
             return color;
-        }
+        };
         resetPosition = function (target) {
             target['position'] -= 6;
-        }
+        };
         readMap = function (target, dataView, path) {
             var chunk = readChunk(target, dataView);
             var next = nextChunk(target, dataView, chunk);
@@ -11075,7 +11681,7 @@ var Red3DSLoader;
             }
             endChunk(target, chunk);
             return texture;
-        }
+        };
         readMaterialEntry = function (target, dataView, path) {
             var chunk = readChunk(target, dataView);
             var next = nextChunk(target, dataView, chunk);
@@ -11125,7 +11731,7 @@ var Red3DSLoader;
                         break;
                     case MAT_TEXMAP :
                         console.log('   ColorMap');
-                        console.log(target, dataView)
+                        console.log(target, dataView);
                         resetPosition(target, dataView);
                         materialInfo['diffuseTexture'] = readMap(target, dataView, path);
                         break;
@@ -11153,27 +11759,27 @@ var Red3DSLoader;
             // 재질 판단
             // TODO: RedEnvironmentMaterial 파싱추가해야됨
             // 회사에 3D맥스를 깔고싶구나 -_-;;
-            var resultMaterial
+            var resultMaterial;
             if (materialInfo['diffuseTexture']) {
                 if ('shininess' in materialInfo) {
-                    resultMaterial = RedStandardMaterial(target['redGL'], materialInfo['diffuseTexture'])
-                    resultMaterial['normalTexture'] = materialInfo['normalTexture']
+                    resultMaterial = RedStandardMaterial(target['redGL'], materialInfo['diffuseTexture']);
+                    resultMaterial['normalTexture'] = materialInfo['normalTexture'];
                     resultMaterial['specularTexture'] = materialInfo['specularTexture']
                 } else resultMaterial = RedBitmapTexture(target['redGL'], materialInfo['diffuseTexture'])
             } else {
-                if (materialInfo['normalTexture'] || materialInfo['specularTexture']) resultMaterial = RedColorPhongTextureMaterial(target['redGL'])
+                if (materialInfo['normalTexture'] || materialInfo['specularTexture']) resultMaterial = RedColorPhongTextureMaterial(target['redGL']);
                 else {
-                    if ('shininess' in materialInfo) resultMaterial = RedColorPhongMaterial(target['redGL'])
+                    if ('shininess' in materialInfo) resultMaterial = RedColorPhongMaterial(target['redGL']);
                     else RedColorMaterial(target['redGL'])
                 }
                 resultMaterial['color'] = materialInfo['color']
             }
             endChunk(target, chunk);
-            console.log('파싱정보', materialInfo)
-            resultMaterial['shininess'] = materialInfo['shininess']
-            resultMaterial['name'] = materialInfo['name']
+            console.log('파싱정보', materialInfo);
+            resultMaterial['shininess'] = materialInfo['shininess'];
+            resultMaterial['name'] = materialInfo['name'];
             target.materials[materialInfo['name']] = resultMaterial;
-        }
+        };
         readMeshData = function (target, dataView, path) {
             var chunk = readChunk(target, dataView);
             var next = nextChunk(target, dataView, chunk);
@@ -11186,9 +11792,9 @@ var Red3DSLoader;
                     case MASTER_SCALE :
                         var scale = readFloat(target, dataView);
                         console.log('Master scale: ' + scale);
-                        target['resultMesh']['scaleX'] = scale
-                        target['resultMesh']['scaleY'] = scale
-                        target['resultMesh']['scaleZ'] = scale
+                        target['resultMesh']['scaleX'] = scale;
+                        target['resultMesh']['scaleY'] = scale;
+                        target['resultMesh']['scaleZ'] = scale;
                         break;
                     case NAMED_OBJECT :
                         console.log('Named Object');
@@ -11206,7 +11812,7 @@ var Red3DSLoader;
                 }
                 next = nextChunk(target, dataView, chunk);
             }
-        }
+        };
         readMaterialGroup = function (target, dataView) {
             var chunk = readChunk(target, dataView);
             var name = readString(target, dataView, 64);
@@ -11219,7 +11825,7 @@ var Red3DSLoader;
                 name: name,
                 index: index
             };
-        }
+        };
         readFaceArray = function (target, dataView, mesh) {
             var chunk = readChunk(target, dataView);
             var faces = readWord(target, dataView);
@@ -11237,7 +11843,7 @@ var Red3DSLoader;
                     console.log('      Material Group');
                     resetPosition(target, dataView);
                     var tGroup = readMaterialGroup(target, dataView);
-                    console.log(tGroup)
+                    console.log(tGroup);
                     var material = target.materials[tGroup['name']];
                     if (material !== undefined) {
                         mesh['material'] = material;
@@ -11248,13 +11854,13 @@ var Red3DSLoader;
             }
             endChunk(target, chunk);
             return index
-        }
+        };
         readMesh = function (target, dataView) {
             var chunk = readChunk(target, dataView);
             var next = nextChunk(target, dataView, chunk);
             var uvs = [];
             var indices;
-            var mesh = RedMesh(target['redGL'])
+            var mesh = RedMesh(target['redGL']);
             var i, len;
             while (next !== 0) {
                 switch (next) {
@@ -11270,11 +11876,11 @@ var Red3DSLoader;
                                 readFloat(target, dataView)
                             );
                         }
-                        break
+                        break;
                     case FACE_ARRAY :
                         resetPosition(target, dataView);
                         indices = readFaceArray(target, dataView, mesh);
-                        break
+                        break;
                     case TEX_VERTS :
                         var texels = readWord(target, dataView);
                         console.log('   UV: ' + texels);
@@ -11282,14 +11888,14 @@ var Red3DSLoader;
                         var uvs = [];
                         for (i = 0; i < texels; i++) {
                             uvs.push(readFloat(target, dataView));
-                            uvs.push(1-readFloat(target, dataView));
+                            uvs.push(1 - readFloat(target, dataView));
                         }
-                        break
+                        break;
                     case MESH_MATRIX :
                         console.log('   Tranformation Matrix (TODO)');
                         var values = [];
                         for (i = 0; i < 12; i++) values[i] = readFloat(target, dataView);
-                        var matrix = mat4.create()
+                        var matrix = mat4.create();
                         //X Line
                         matrix[0] = values[0];
                         matrix[1] = values[6];
@@ -11326,28 +11932,28 @@ var Red3DSLoader;
             // geometry.computeVertexNormals();
             var interleaveBuffer;
             var indexBuffer;
-            var normalData = RedGLUtil.calculateNormals(vertices, indices)
-            console.log('vertices', vertices)
-            console.log('normalData', normalData)
-            var interleaveData = []
-            i = 0, len = vertices.length / 3
+            var normalData = RedGLUtil.calculateNormals(vertices, indices);
+            console.log('vertices', vertices);
+            console.log('normalData', normalData);
+            var interleaveData = [];
+            i = 0, len = vertices.length / 3;
             for (i; i < len; i++) {
-                interleaveData.push(vertices[i * 3 + 0], vertices[i * 3 + 1], vertices[i * 3 + 2])
-                interleaveData.push(normalData[i * 3 + 0], normalData[i * 3 + 1], normalData[i * 3 + 2])
+                interleaveData.push(vertices[i * 3 + 0], vertices[i * 3 + 1], vertices[i * 3 + 2]);
+                interleaveData.push(normalData[i * 3 + 0], normalData[i * 3 + 1], normalData[i * 3 + 2]);
                 if (uvs.length) interleaveData.push(uvs[i * 2 + 0], uvs[i * 2 + 1])
             }
-            var interleaveInfo = []
-            interleaveInfo.push(RedInterleaveInfo('aVertexPosition', 3))
-            interleaveInfo.push(RedInterleaveInfo('aVertexNormal', 3))
-            if (uvs.length) interleaveInfo.push(RedInterleaveInfo('aTexcoord', 2))
-            interleaveBuffer = RedBuffer(target['redGL'], 'testRed3DS', RedBuffer.ARRAY_BUFFER, new Float32Array(interleaveData), interleaveInfo)
-            indexBuffer = RedBuffer(target['redGL'], 'testRed3DS', RedBuffer.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices))
-            var tGeo = RedGeometry(interleaveBuffer, indexBuffer)
-            mesh.geometry = tGeo
+            var interleaveInfo = [];
+            interleaveInfo.push(RedInterleaveInfo('aVertexPosition', 3));
+            interleaveInfo.push(RedInterleaveInfo('aVertexNormal', 3));
+            if (uvs.length) interleaveInfo.push(RedInterleaveInfo('aTexcoord', 2));
+            interleaveBuffer = RedBuffer(target['redGL'], 'testRed3DS', RedBuffer.ARRAY_BUFFER, new Float32Array(interleaveData), interleaveInfo);
+            indexBuffer = RedBuffer(target['redGL'], 'testRed3DS', RedBuffer.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices));
+            var tGeo = RedGeometry(interleaveBuffer, indexBuffer);
+            mesh.geometry = tGeo;
             mesh['name'] = 'mesh' + RedGL.makeUUID();
-            mesh.matrix = matrix
+            mesh.matrix = matrix;
             return mesh;
-        }
+        };
         readNamedObject = function (target, dataView) {
             var chunk = readChunk(target, dataView);
             var name = readString(target, dataView, 64);
@@ -11359,16 +11965,16 @@ var Red3DSLoader;
                     resetPosition(target, dataView);
                     tMesh = readMesh(target, dataView);
                     tMesh['name'] = name;
-                    target['meshs'].push(tMesh)
+                    target['meshs'].push(tMesh);
                     console.log('readNamedObject', name)
                 } else console.log('Unknown named object chunk: ' + next.toString(16));
                 next = nextChunk(target, dataView, chunk);
             }
             endChunk(target, chunk);
-        }
+        };
         readFile = function (target, arrayBuffer, path) {
             var dataView = new DataView(arrayBuffer);
-            console.log('dataView', dataView)
+            console.log('dataView', dataView);
             var chunk = readChunk(target, dataView);
             if (chunk['id'] === MLIBMAGIC || chunk['id'] === CMAGIC || chunk['id'] === M3DMAGIC) {
                 var next = nextChunk(target, dataView, chunk);
@@ -11393,11 +11999,11 @@ var Red3DSLoader;
         return function (tRed3DSLoader, redGL, rawData) {
             console.log('파싱시작', tRed3DSLoader['path'] + tRed3DSLoader['fileName']);
             // console.log('rawData', rawData);
-            readFile(tRed3DSLoader, rawData, tRed3DSLoader['path'])
-            console.log(tRed3DSLoader)
+            readFile(tRed3DSLoader, rawData, tRed3DSLoader['path']);
+            console.log(tRed3DSLoader);
             tRed3DSLoader.meshs.forEach(function (v) {
                 tRed3DSLoader.resultMesh.addChild(v)
-            })
+            });
             return {
                 fileName: tRed3DSLoader['fileName'],
                 path: tRed3DSLoader['path'],
@@ -11408,10 +12014,17 @@ var Red3DSLoader;
     Object.freeze(Red3DSLoader);
 })
 ();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedDAELoader;
 (function () {
-    var parser, parseMaterial, parseMesh, parseAnimation;
+    var parser, parseMaterial, parseMesh;
     var makePointList;
     /**DOC:
      {
@@ -11456,84 +12069,93 @@ var RedDAELoader;
      :DOC*/
 
     RedDAELoader = function (redGL, path, fileName, callback) {
-        if ((!(this instanceof RedDAELoader))) return new RedDAELoader(redGL, path, fileName, callback)
-        console.log('~~~~~~~~~~~')
+        if ((!(this instanceof RedDAELoader))) return new RedDAELoader(redGL, path, fileName, callback);
+        var fullPath = path + fileName;
+        console.time('RedDAELoader' + fullPath);
+        console.group('RedDAELoader' + fullPath);
         var self = this;
         var request = new XMLHttpRequest();
-        request.open("GET", path + fileName, true);
-        request.setRequestHeader("Content-Type", "application/xml; charset=UTF-8")
+        request.open("GET", fullPath, true);
+        request.setRequestHeader("Content-Type", "application/xml; charset=UTF-8");
         request.onreadystatechange = function () {
-            if (request.readyState == 4 && request.status === 200) {
-                console.log(request)
-                console.log(request['responseText'])
+            if (request.readyState === 4 && request.status === 200) {
+                console.log('loaded', fullPath, request);
+                // console.log(request['responseText']);
                 var t0 = new DOMParser();
-                self['result'] = parser(self, redGL, t0.parseFromString(request['responseText'], "text/xml"))
+                self['result'] = parser(self, redGL, t0.parseFromString(request['responseText'], "text/xml"));
                 if (callback) {
-                    console.log('모델 파싱 종료');
                     callback(self['result'])
                 }
+                console.timeEnd('RedDAELoader' + fullPath);
+                console.groupEnd();
             } else {
-                console.log(request)
+                console.log('loading', fullPath, request)
             }
-        }
+        };
         request.send();
         this['path'] = path;
         this['fileName'] = fileName;
         this['callback'] = callback;
-        this['resultMesh'] = RedMesh(redGL)
-        this['resultMesh']['name'] = 'instanceOfRedDAELoader_' + RedGL.makeUUID()
+        this['resultMesh'] = RedMesh(redGL);
+        this['resultMesh']['name'] = 'instanceOfRedDAELoader_' + RedGL.makeUUID();
         this['result'] = null;
-    }
+    };
     makePointList = function (parseSourceDatas) {
-        var i, len;
+        var i, len, offset;
         var t0;
         var tPosition, tNormal, tTexcoord;
         var pointList = [];
         var normalPointList = [];
         var uvPointList = [];
         // 구성을 찾고..
-        t0 = parseSourceDatas[0].querySelector('float_array')
-        tPosition = t0 ? t0.textContent.split(' ').map(Number) : null
-        t0 = parseSourceDatas[1].querySelector('float_array')
-        tNormal = t0 ? t0.textContent.split(' ').map(Number) : null
-        t0 = parseSourceDatas[2].querySelector('float_array')
-        tTexcoord = t0 ? t0.textContent.split(' ').map(Number) : null
-        console.log('tPosition', tPosition)
-        console.log('tNormal', tNormal)
-        console.log('tTexcoord', tTexcoord)
+        t0 = parseSourceDatas[0].querySelector('float_array');
+        tPosition = t0 ? t0.textContent.split(' ').map(Number) : null;
+        t0 = parseSourceDatas[1].querySelector('float_array');
+        tNormal = t0 ? t0.textContent.split(' ').map(Number) : null;
+        t0 = parseSourceDatas[2].querySelector('float_array');
+        tTexcoord = t0 ? t0.textContent.split(' ').map(Number) : null;
+        console.log('tPosition', tPosition);
+        console.log('tNormal', tNormal);
+        console.log('tTexcoord', tTexcoord);
         // 포인트를 만든다
-        i = 0, len = tPosition.length / 3
+        i = 0;
+        len = tPosition.length / 3;
         for (i; i < len; i++) {
+            offset = i * 3;
             pointList.push(
                 [
-                    tPosition[i * 3 + 0],
-                    tPosition[i * 3 + 1],
-                    tPosition[i * 3 + 2]
+                    tPosition[offset],
+                    tPosition[offset + 1],
+                    tPosition[offset + 2]
                 ]
             )
         }
         if (tNormal) {
-            i = 0, len = tNormal.length / 3
+            i = 0;
+            len = tNormal.length / 3;
             for (i; i < len; i++) {
+                offset = i * 3;
                 normalPointList.push(
                     [
-                        tNormal[i * 3 + 0],
-                        tNormal[i * 3 + 1],
-                        tNormal[i * 3 + 2]
+                        tNormal[offset],
+                        tNormal[offset + 1],
+                        tNormal[offset + 2]
                     ]
                 )
             }
         }
         if (tTexcoord) {
-            i = 0, len = tTexcoord.length / 2
+            i = 0;
+            len = tTexcoord.length / 2;
             for (i; i < len; i++) {
+                offset = i * 2;
                 uvPointList.push([
-                    tTexcoord[i * 2 + 0],
-                    1-tTexcoord[i * 2 + 1]
+                    tTexcoord[offset],
+                    1 - tTexcoord[offset + 1]
                 ])
             }
-            console.log('pointList', pointList)
-            console.log('normalPointList', normalPointList)
+            console.log('pointList', pointList);
+            console.log('normalPointList', normalPointList);
             console.log('uvPointList', uvPointList)
         }
         return {
@@ -11541,49 +12163,49 @@ var RedDAELoader;
             normalPointList: normalPointList,
             uvPointList: uvPointList
         }
-    }
+    };
     parseMaterial = (function () {
         var parseLibrary_images;
         var parseLibrary_effects;
         var parseLibrary_materials;
         parseLibrary_images = function (redGL, tRedDAELoader, rawData) {
-            var map = {}
-            var images = rawData.querySelectorAll('library_images image')
+            var map = {};
+            var images = rawData.querySelectorAll('library_images image');
             images.forEach(function (v) {
                 map[v.getAttribute('id')] = RedBitmapTexture(redGL, tRedDAELoader['path'] + v.querySelector('init_from').textContent)
-            })
+            });
             return map
-        }
+        };
         parseLibrary_effects = function (rawData, textureMap) {
-            var map = {}
-            var effects = rawData.querySelectorAll('library_effects effect')
+            var map = {};
+            var effects = rawData.querySelectorAll('library_effects effect');
             effects.forEach(function (v) {
                 if (v.querySelector('newparam init_from')) {
                     map[v.getAttribute('id')] = {
                         texture: textureMap[v.querySelector('newparam init_from').textContent]
                     }
                 }
-            })
+            });
             return map
-        }
+        };
         parseLibrary_materials = function (rawData, effectMap) {
-            var map = {}
-            var materials = rawData.querySelectorAll('library_materials material')
+            var map = {};
+            var materials = rawData.querySelectorAll('library_materials material');
             materials.forEach(function (v) {
-                console.log(v.querySelector('instance_effect').getAttribute('url').replace('#', ''))
+                console.log(v.querySelector('instance_effect').getAttribute('url').replace('#', ''));
                 map[v.getAttribute('id')] = {
                     effect: effectMap[v.querySelector('instance_effect').getAttribute('url').replace('#', '')]
                 }
-            })
+            });
             return map
-        }
+        };
         return function (redGL, tRedDAELoader, rawData) {
-            var textureMap = parseLibrary_images(redGL, tRedDAELoader, rawData)
-            var effectMap = parseLibrary_effects(rawData, textureMap)
-            var materialMap = parseLibrary_materials(rawData, effectMap)
-            console.log('텍스쳐로 만들어야 할 녀석들', textureMap)
-            console.log('이펙트', effectMap)
-            console.log('재직', materialMap)
+            var textureMap = parseLibrary_images(redGL, tRedDAELoader, rawData);
+            var effectMap = parseLibrary_effects(rawData, textureMap);
+            var materialMap = parseLibrary_materials(rawData, effectMap);
+            console.log('텍스쳐로 만들어야 할 녀석들', textureMap);
+            console.log('이펙트', effectMap);
+            console.log('재직', materialMap);
             return {
                 textureMap: textureMap,
                 effectMap: effectMap,
@@ -11592,50 +12214,53 @@ var RedDAELoader;
         }
     })();
     parseMesh = function (tRedDAELoader, redGL, rawData) {
-        var meshList = rawData.querySelectorAll('library_geometries geometry mesh')
+        console.time('parseMesh');
+        var meshList = rawData.querySelectorAll('library_geometries geometry mesh');
         meshList.forEach(function (mesh) {
-            var sourceList
+            var sourceList;
             var pointInfo;
             var materialInfo;
-            sourceList = mesh.querySelectorAll('source')
+            sourceList = mesh.querySelectorAll('source');
             // 포인트 리스트 만들기
-            pointInfo = makePointList(sourceList)
-            console.log('pointInfo', pointInfo)
+            pointInfo = makePointList(sourceList);
+            console.log('pointInfo', pointInfo);
             // 재질 관련 정보를 해석한다.
-            materialInfo = parseMaterial(redGL, tRedDAELoader, rawData)
+            materialInfo = parseMaterial(redGL, tRedDAELoader, rawData);
             // 폴리곤 해석
             var sourceNum = mesh.querySelectorAll('source').length;
-            mesh.querySelectorAll('polylist').forEach(function (pData, pDataIndex) {
-                var tInterleaveBufferData = []
-                var tPolylistIndices = pData.querySelector('p').textContent.split(' ')
-                var t_indexDataIndex = []
-                var t_normalDataindex = []
-                var t_coordDataIndex = []
-                var tResultIndexData = []
+            mesh.querySelectorAll('polylist').forEach(function (pData) {
+                var tInterleaveBufferData = [];
+                var tPolylistIndices = pData.querySelector('p').textContent.split(' ');
+                var t_indexDataIndex = [];
+                var t_normalDataindex = [];
+                var t_coordDataIndex = [];
+                var tResultIndexData = [];
                 var tInterleaveBuffer;
                 var tIndexBuffer;
                 var tResultMesh;
+                var offset;
                 tPolylistIndices.forEach(function (v, index) {
-                    if (index % sourceNum == 0) t_indexDataIndex.push(+v)
-                    else if (index % sourceNum == 1) t_normalDataindex.push(+v)
+                    if (index % sourceNum === 0) t_indexDataIndex.push(+v);
+                    else if (index % sourceNum === 1) t_normalDataindex.push(+v);
                     else if (index % sourceNum === 2) t_coordDataIndex.push(+v)
-                })
+                });
                 // 버퍼데이터생성
-                var idxMap = {}
+                var idxMap = {};
                 t_indexDataIndex.forEach(function (v, index) {
-                    tInterleaveBufferData[v * 8 + 0] = pointInfo['pointList'][v][0]
-                    tInterleaveBufferData[v * 8 + 1] = pointInfo['pointList'][v][1]
-                    tInterleaveBufferData[v * 8 + 2] = pointInfo['pointList'][v][2]
+                    offset = v * 8;
+                    tInterleaveBufferData[offset] = pointInfo['pointList'][v][0];
+                    tInterleaveBufferData[offset + 1] = pointInfo['pointList'][v][1];
+                    tInterleaveBufferData[offset + 2] = pointInfo['pointList'][v][2];
                     // 해당인덱스에 해당하는 인터리브 버퍼상의 위치
-                    if (!idxMap[v]) idxMap[v] = []
-                    idxMap[v].push(index)
-                    tInterleaveBufferData[v * 8 + 3] = pointInfo['normalPointList'][t_normalDataindex[index]][0]
-                    tInterleaveBufferData[v * 8 + 4] = pointInfo['normalPointList'][t_normalDataindex[index]][1]
-                    tInterleaveBufferData[v * 8 + 5] = pointInfo['normalPointList'][t_normalDataindex[index]][2]
-                    tInterleaveBufferData[v * 8 + 6] = pointInfo['uvPointList'][t_coordDataIndex[index]][0]
-                    tInterleaveBufferData[v * 8 + 7] = pointInfo['uvPointList'][t_coordDataIndex[index]][1]
+                    if (!idxMap[v]) idxMap[v] = [];
+                    idxMap[v].push(index);
+                    tInterleaveBufferData[offset + 3] = pointInfo['normalPointList'][t_normalDataindex[index]][0];
+                    tInterleaveBufferData[offset + 4] = pointInfo['normalPointList'][t_normalDataindex[index]][1];
+                    tInterleaveBufferData[offset + 5] = pointInfo['normalPointList'][t_normalDataindex[index]][2];
+                    tInterleaveBufferData[offset + 6] = pointInfo['uvPointList'][t_coordDataIndex[index]][0];
+                    tInterleaveBufferData[offset + 7] = pointInfo['uvPointList'][t_coordDataIndex[index]][1];
                     tResultIndexData.push(v)
-                })
+                });
                 // 버퍼생성
                 tInterleaveBuffer = RedBuffer(
                     redGL,
@@ -11647,42 +12272,52 @@ var RedDAELoader;
                         RedInterleaveInfo('aVertexNormal', 3),
                         RedInterleaveInfo('aTexcoord', 2)
                     ]
-                )
+                );
                 tIndexBuffer = RedBuffer(
                     redGL,
                     'daeIndexData' + RedGL.makeUUID(),
                     RedBuffer.ELEMENT_ARRAY_BUFFER,
                     new Uint16Array(tResultIndexData)
-                )
-                tResultMesh = RedMesh(redGL)
-                tResultMesh['geometry'] = RedGeometry(tInterleaveBuffer, tIndexBuffer)
-                //TODO: 재질 결정 로직 들어가야함
-                console.log('그래서 재질은?', pData.getAttribute('material'))
+                );
+                tResultMesh = RedMesh(redGL);
+                tResultMesh['geometry'] = RedGeometry(tInterleaveBuffer, tIndexBuffer);
+                console.log('그래서 재질은?', pData.getAttribute('material'));
                 if (materialInfo['materialMap'][pData.getAttribute('material')]['effect']) {
-                    var tTexture = materialInfo['materialMap'][pData.getAttribute('material')]['effect']['texture']
+                    var tTexture = materialInfo['materialMap'][pData.getAttribute('material')]['effect']['texture'];
                     tResultMesh['material'] = RedStandardMaterial(redGL, tTexture)
-                } else tResultMesh['material'] = RedColorPhongMaterial(redGL)
-                console.log('그래서 텍스쳐는?', tTexture)
+                } else tResultMesh['material'] = RedColorPhongMaterial(redGL);
+                console.log('그래서 텍스쳐는?', tTexture);
                 // 대상 메쉬를 결과메쉬에 추가
                 tRedDAELoader['resultMesh'].addChild(tResultMesh)
             })
-        })
-    }
+        });
+        console.timeEnd('parseMesh')
+    };
     parser = function (tRedDAELoader, redGL, rawData) {
-        console.log('파싱시작', tRedDAELoader['path'] + tRedDAELoader['fileName'])
-        parseMesh(tRedDAELoader, redGL, rawData)
-        return {
+        var result;
+        console.group('RedDAELoader - parse: ' +  tRedDAELoader['path'] + tRedDAELoader['fileName']);
+        parseMesh(tRedDAELoader, redGL, rawData);
+        result = {
             fileName: tRedDAELoader['fileName'],
             path: tRedDAELoader['path'],
             resultMesh: tRedDAELoader['resultMesh']
-        }
-    }
+        };
+        console.groupEnd();
+        return result;
+    };
     Object.freeze(RedDAELoader)
-})()
+})();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedGLTFLoader;
 (function () {
-    var parser
+    var parser;
     var WEBGL_COMPONENT_TYPES = {
         5120: Int8Array,
         5121: Uint8Array,
@@ -11749,33 +12384,33 @@ var RedGLTFLoader;
         // request.overrideMimeType('model/gltf+json')
         // request.setRequestHeader("Content-Type", (type ? type : "application/xml; ") + 'charset=UTF-8')
         request.onreadystatechange = function (e) {
-            if (request.readyState == 4 && request.status === 200) {
-                console.log(request)
+            if (request.readyState === 4 && request.status === 200) {
+                console.log(request);
                 onLoader(request)
             } else {
                 onError(request, e)
             }
-        }
+        };
         request.send();
-    }
+    };
     var arrayBufferLoader = function (src, onLoader, onError) {
         var request = new XMLHttpRequest();
         request.open("GET", src, true);
-        request.overrideMimeType('application/octet-stream')
+        request.overrideMimeType('application/octet-stream');
         request.responseType = "arraybuffer";
         request.onreadystatechange = function (e) {
-            if (request.readyState == 4 && request.status === 200) {
-                console.log(request)
+            if (request.readyState === 4 && request.status === 200) {
+                console.log(request);
                 onLoader(request)
             } else {
                 onError(request, e)
             }
-        }
+        };
         request.send();
-    }
+    };
     RedGLTFLoader = function (redGL, path, fileName, callback, environmentTexture, parsingOption) {
-        if ((!(this instanceof RedGLTFLoader))) return new RedGLTFLoader(redGL, path, fileName, callback, environmentTexture, parsingOption)
-        console.log('~~~~~~~~~~~')
+        if ((!(this instanceof RedGLTFLoader))) return new RedGLTFLoader(redGL, path, fileName, callback, environmentTexture, parsingOption);
+        console.log('~~~~~~~~~~~');
         var self = this;
         if (fileName.indexOf('.glb') > -1) {
             /////////////////////////
@@ -11795,7 +12430,7 @@ var RedGLTFLoader;
             arrayBufferLoader(
                 path + fileName,
                 function (request) {
-                    console.log(request['response'])
+                    console.log(request['response']);
 
                     var content = null;
                     var contentArray = null;
@@ -11812,8 +12447,8 @@ var RedGLTFLoader;
                         version: headerView.getUint32(4, true),
                         length: headerView.getUint32(8, true)
                     };
-                    console.log(headerView)
-                    console.log(header)
+                    console.log(headerView);
+                    console.log(header);
 
                     var chunkView = new DataView(request['response'], BINPACKER_HEADER_LENGTH);
 
@@ -11847,15 +12482,15 @@ var RedGLTFLoader;
                     var binaryChunk = body;
                     if (jsonChunk['images']) {
                         jsonChunk['images'].forEach(function (v) {
-                            console.log(v)
+                            console.log(v);
                             if (v['mimeType'] === 'image/png' || v['mimeType'] === 'image/jpeg' || v['mimeType'] === 'image/gif') {
-                                console.log(binaryChunk)
+                                console.log(binaryChunk);
                                 var tS, tE;
-                                tS = jsonChunk['bufferViews'][v['bufferView']]['byteOffset'] || 0
+                                tS = jsonChunk['bufferViews'][v['bufferView']]['byteOffset'] || 0;
                                 var tt = binaryChunk.slice(
                                     tS,
                                     tS + jsonChunk['bufferViews'][v['bufferView']]['byteLength']
-                                )
+                                );
 
                                 var test = new Blob([new Uint8Array(tt)], {
                                     type: v['mimeType']
@@ -11867,8 +12502,8 @@ var RedGLTFLoader;
                         })
                     }
 
-                    console.log(jsonChunk)
-                    console.log(binaryChunk)
+                    console.log(jsonChunk);
+                    console.log(binaryChunk);
                     parser(self, redGL, jsonChunk, function () {
                         if (callback) {
                             console.log('모델 파싱 종료');
@@ -11903,8 +12538,8 @@ var RedGLTFLoader;
 
         this['path'] = path;
         this['fileName'] = fileName;
-        this['resultMesh'] = RedMesh(redGL)
-        this['resultMesh']['name'] = 'instanceOfRedGLTFLoader_' + RedGL.makeUUID()
+        this['resultMesh'] = RedMesh(redGL);
+        this['resultMesh']['name'] = 'instanceOfRedGLTFLoader_' + RedGL.makeUUID();
         this['parsingResult'] = {
             groups: [],
             materials: [],
@@ -11914,17 +12549,17 @@ var RedGLTFLoader;
             textures: {},
             cameras: [],
             animations: []
-        }
-        this['parsingOption'] = parsingOption
-        this['environmentTexture'] = environmentTexture || null
-        var _currentAnimationInfo = null
+        };
+        this['parsingOption'] = parsingOption;
+        this['environmentTexture'] = environmentTexture || null;
+        var _currentAnimationInfo = null;
         this['stopAnimation'] = function () {
-            console.log('_currentAnimationInfo', _currentAnimationInfo, loopList.indexOf(_currentAnimationInfo))
+            console.log('_currentAnimationInfo', _currentAnimationInfo, loopList.indexOf(_currentAnimationInfo));
             if (loopList.indexOf(_currentAnimationInfo) > -1) {
                 loopList.splice(loopList.indexOf(_currentAnimationInfo), 1)
             }
             console.log('loopList', loopList)
-        }
+        };
         this['playAnimation'] = function (animationData) {
             loopList.push(
                 _currentAnimationInfo = {
@@ -11933,7 +12568,7 @@ var RedGLTFLoader;
                 }
             )
             // console.log('loopList', loopList)
-        }
+        };
         console.log(this)
     };
     RedDefinePropertyInfo.definePrototype('RedGLTFLoader', 'environmentTexture', 'samplerCube', {
@@ -11943,73 +12578,73 @@ var RedGLTFLoader;
             })
         }
     });
-    var loopList = []
+    var loopList = [];
     RedGLTFLoader['animationLooper'] = (function () {
         var currentTime, previousTime, nextTime;
         var prevRotation, nextRotation;
         var prevTranslation, nextTranslation;
         var prevScale, nextScale;
         var interpolationValue;
-        var targetAnimationData
+        var targetAnimationData;
         return function (time) {
             // console.log('loopList',loopList)
 
             loopList.forEach(function (v) {
-                prevRotation = null
-                nextRotation = null
-                prevTranslation = null
-                nextTranslation = null
-                targetAnimationData = v['targetAnimationData']
+                prevRotation = null;
+                nextRotation = null;
+                prevTranslation = null;
+                nextTranslation = null;
+                targetAnimationData = v['targetAnimationData'];
 
                 targetAnimationData.forEach(function (aniData, stepIndex) {
-                    currentTime = ((time - v['startTime']) % (targetAnimationData['maxTime'] * 1000)) / 1000
+                    currentTime = ((time - v['startTime']) % (targetAnimationData['maxTime'] * 1000)) / 1000;
                     // console.log(currentTime,aniData['minTime'] )
-                    var target = aniData['target']
-                    var nextIndex, prevIndex
-                    prevIndex = aniData['time'].length - 1
-                    nextIndex = 0
-                    previousTime = aniData['time'][prevIndex]
-                    nextTime = aniData['time'][nextIndex]
-                    var len = aniData['time'].length
-                    var i = 0
+                    var target = aniData['target'];
+                    var nextIndex, prevIndex;
+                    prevIndex = aniData['time'].length - 1;
+                    nextIndex = 0;
+                    previousTime = aniData['time'][prevIndex];
+                    nextTime = aniData['time'][nextIndex];
+                    var len = aniData['time'].length;
+                    var i = 0;
                     for (i; i < len; i++) {
-                        var tTime = aniData['time'][i]
-                        var index = i
+                        var tTime = aniData['time'][i];
+                        var index = i;
                         if (tTime < currentTime) {
-                            prevIndex = index
-                            previousTime = aniData['time'][prevIndex]
+                            prevIndex = index;
+                            previousTime = aniData['time'][prevIndex];
                             if (aniData['time'][prevIndex + 1] == undefined) {
-                                nextIndex = 0
+                                nextIndex = 0;
                                 nextTime = aniData['time'][nextIndex]
                             } else {
-                                nextIndex = prevIndex + 1
+                                nextIndex = prevIndex + 1;
                                 nextTime = aniData['time'][nextIndex]
                             }
                         }
                         if (index == 0 && (currentTime < aniData['time'][i])) {
-                            prevIndex = len - 1
-                            previousTime = aniData['time'][prevIndex]
-                            nextIndex = index
-                            nextTime = aniData['time'][nextIndex]
-                            currentTime = tTime
+                            prevIndex = len - 1;
+                            previousTime = aniData['time'][prevIndex];
+                            nextIndex = index;
+                            nextTime = aniData['time'][nextIndex];
+                            currentTime = tTime;
                             break
                         }
                         if (index == len - 1 && (currentTime > tTime)) {
-                            prevIndex = 0
-                            previousTime = aniData['time'][prevIndex]
-                            nextIndex = len - 1
-                            nextTime = aniData['time'][nextIndex]
-                            currentTime = tTime
+                            prevIndex = 0;
+                            previousTime = aniData['time'][prevIndex];
+                            nextIndex = len - 1;
+                            nextTime = aniData['time'][nextIndex];
+                            currentTime = tTime;
                             break
                         }
                     }
 
                     if (aniData['interpolation'] == 'CUBICSPLINE') {
-                        interpolationValue = (currentTime - previousTime) / (nextTime - previousTime)
+                        interpolationValue = (currentTime - previousTime) / (nextTime - previousTime);
                         var interpolationValue = nextTime - previousTime;
-                        if (interpolationValue.toString() == 'NaN') interpolationValue = 0
+                        if (interpolationValue.toString() == 'NaN') interpolationValue = 0;
                         var p = (currentTime - previousTime) / interpolationValue;
-                        if (p.toString() == 'NaN') p = 0
+                        if (p.toString() == 'NaN') p = 0;
                         var pp = p * p;
                         var ppp = pp * p;
 
@@ -12019,28 +12654,28 @@ var RedGLTFLoader;
                         var s1 = s3 - pp + p;
 
                         if (target) {
-                            var startV, startOut, endV, endIn
+                            var startV, startOut, endV, endIn;
                             if (aniData['key'] == 'translation') {
                                 nextTranslation = [
                                     aniData['data'][prevIndex * 9 + 3],
                                     aniData['data'][prevIndex * 9 + 4],
                                     aniData['data'][prevIndex * 9 + 5]
-                                ]
+                                ];
                                 prevTranslation = [
                                     aniData['data'][nextIndex * 9 + 3],
                                     aniData['data'][nextIndex * 9 + 4],
                                     aniData['data'][nextIndex * 9 + 5]
-                                ]
+                                ];
                                 var prevTranslationOut = [
                                     aniData['data'][prevIndex * 9 + 6],
                                     aniData['data'][prevIndex * 9 + 7],
                                     aniData['data'][prevIndex * 9 + 8]
-                                ]
+                                ];
                                 var nextTranslationIn = [
                                     aniData['data'][nextIndex * 9 + 0],
                                     aniData['data'][nextIndex * 9 + 1],
                                     aniData['data'][nextIndex * 9 + 2]
-                                ]
+                                ];
                                 startV = prevTranslation[0];
                                 if (prevIndex != len - 1) {
 
@@ -12069,34 +12704,34 @@ var RedGLTFLoader;
                                     aniData['data'][nextIndex * 12 + 5],
                                     aniData['data'][nextIndex * 12 + 6],
                                     aniData['data'][nextIndex * 12 + 7]
-                                ]
-                                nextRotation = tQuaternion
+                                ];
+                                nextRotation = tQuaternion;
 
                                 var tQuaternion = [
                                     aniData['data'][prevIndex * 12 + 4],
                                     aniData['data'][prevIndex * 12 + 5],
                                     aniData['data'][prevIndex * 12 + 6],
                                     aniData['data'][prevIndex * 12 + 7]
-                                ]
-                                prevRotation = tQuaternion
+                                ];
+                                prevRotation = tQuaternion;
 
                                 var prevRotationOut = [
                                     aniData['data'][prevIndex * 12 + 8],
                                     aniData['data'][prevIndex * 12 + 9],
                                     aniData['data'][prevIndex * 12 + 10],
                                     aniData['data'][prevIndex * 12 + 11]
-                                ]
+                                ];
                                 var nextRotationIn = [
                                     aniData['data'][nextIndex * 12 + 0],
                                     aniData['data'][nextIndex * 12 + 1],
                                     aniData['data'][nextIndex * 12 + 2],
                                     aniData['data'][nextIndex * 12 + 3]
-                                ]
-                                quat.normalize(prevRotation, prevRotation)
-                                quat.normalize(nextRotation, nextRotation)
-                                quat.normalize(prevRotationOut, prevRotationOut)
-                                quat.normalize(nextRotationIn, nextRotationIn)
-                                var tQuat = []
+                                ];
+                                quat.normalize(prevRotation, prevRotation);
+                                quat.normalize(nextRotation, nextRotation);
+                                quat.normalize(prevRotationOut, prevRotationOut);
+                                quat.normalize(nextRotationIn, nextRotationIn);
+                                var tQuat = [];
 
                                 if (prevIndex != len - 1) {
                                     startV = prevRotation[0];
@@ -12123,15 +12758,15 @@ var RedGLTFLoader;
                                     endIn = nextRotationIn[3] * interpolationValue;
                                     tQuat[3] = s0 * startV + s1 * startOut + s2 * endV + s3 * endIn;
 
-                                    var rotationMTX = []
-                                    var tRotation = [0, 0, 0]
-                                    RedGLUtil.quaternionToRotationMat4(tQuat, rotationMTX)
-                                    RedGLUtil.mat4ToEuler(rotationMTX, tRotation)
-                                    tRotation[0] = -(tRotation[0] * 180 / Math.PI)
-                                    tRotation[1] = -(tRotation[1] * 180 / Math.PI)
-                                    tRotation[2] = -(tRotation[2] * 180 / Math.PI)
-                                    target.rotationX = tRotation[0]
-                                    target.rotationY = tRotation[1]
+                                    var rotationMTX = [];
+                                    var tRotation = [0, 0, 0];
+                                    RedGLUtil.quaternionToRotationMat4(tQuat, rotationMTX);
+                                    RedGLUtil.mat4ToEuler(rotationMTX, tRotation);
+                                    tRotation[0] = -(tRotation[0] * 180 / Math.PI);
+                                    tRotation[1] = -(tRotation[1] * 180 / Math.PI);
+                                    tRotation[2] = -(tRotation[2] * 180 / Math.PI);
+                                    target.rotationX = tRotation[0];
+                                    target.rotationY = tRotation[1];
                                     target.rotationZ = tRotation[2]
                                 }
                             }
@@ -12140,22 +12775,22 @@ var RedGLTFLoader;
                                     aniData['data'][prevIndex * 9 + 3],
                                     aniData['data'][prevIndex * 9 + 4],
                                     aniData['data'][prevIndex * 9 + 5]
-                                ]
+                                ];
                                 prevScale = [
                                     aniData['data'][nextIndex * 9 + 3],
                                     aniData['data'][nextIndex * 9 + 4],
                                     aniData['data'][nextIndex * 9 + 5]
-                                ]
+                                ];
                                 var prevScaleOut = [
                                     aniData['data'][prevIndex * 9 + 6],
                                     aniData['data'][prevIndex * 9 + 7],
                                     aniData['data'][prevIndex * 9 + 8]
-                                ]
+                                ];
                                 var nextScaleIn = [
                                     aniData['data'][nextIndex * 9 + 0],
                                     aniData['data'][nextIndex * 9 + 1],
                                     aniData['data'][nextIndex * 9 + 2]
-                                ]
+                                ];
 
                                 startV = prevScale[0];
                                 if (prevIndex != len - 1) {
@@ -12202,46 +12837,46 @@ var RedGLTFLoader;
                                 //     targetMesh['geometry']['interleaveBuffer'].upload(targetData)
                                 // })
                                 aniData['targets'].forEach(function (targetMesh) {
-                                    var targetData = targetMesh['geometry']['interleaveBuffer']['data']
-                                    var originData = targetMesh['_morphInfo']['origin']
-                                    var stride = targetMesh['geometry']['interleaveBuffer']['stride']
+                                    var targetData = targetMesh['geometry']['interleaveBuffer']['data'];
+                                    var originData = targetMesh['_morphInfo']['origin'];
+                                    var stride = targetMesh['geometry']['interleaveBuffer']['stride'];
                                     var index = 0;
-                                    var LOOP_NUM = targetData.length / stride
-                                    var prev, next
-                                    var prev1, next1
-                                    var prev2, next2
-                                    var baseIndex
-                                    var morphLen = targetMesh['_morphInfo']['list'].length
-                                    var tAniData = aniData['data']
-                                    var tMorphList = targetMesh['_morphInfo']['list']
+                                    var LOOP_NUM = targetData.length / stride;
+                                    var prev, next;
+                                    var prev1, next1;
+                                    var prev2, next2;
+                                    var baseIndex;
+                                    var morphLen = targetMesh['_morphInfo']['list'].length;
+                                    var tAniData = aniData['data'];
+                                    var tMorphList = targetMesh['_morphInfo']['list'];
                                     for (index; index < LOOP_NUM; index++) {
-                                        baseIndex = index * stride
-                                        prev = originData[baseIndex]
-                                        next = originData[baseIndex]
-                                        prev1 = originData[baseIndex + 1]
-                                        next1 = originData[baseIndex + 1]
-                                        prev2 = originData[baseIndex + 2]
-                                        next2 = originData[baseIndex + 2]
+                                        baseIndex = index * stride;
+                                        prev = originData[baseIndex];
+                                        next = originData[baseIndex];
+                                        prev1 = originData[baseIndex + 1];
+                                        next1 = originData[baseIndex + 1];
+                                        prev2 = originData[baseIndex + 2];
+                                        next2 = originData[baseIndex + 2];
 
-                                        var morphIndex = morphLen
+                                        var morphIndex = morphLen;
                                         var prevAniData;
                                         var nextAniData;
                                         var morphInterleaveData;
                                         while (morphIndex--) {
                                             if (morphIndex % 3 == 1) {
-                                                prevAniData = tAniData[prevIndex * morphLen + morphIndex]
-                                                nextAniData = tAniData[nextIndex * morphLen + morphIndex]
-                                                morphInterleaveData = tMorphList[morphIndex]['interleaveData']
-                                                prev += prevAniData * morphInterleaveData[baseIndex]
-                                                next += nextAniData * morphInterleaveData[baseIndex]
-                                                prev1 += prevAniData * morphInterleaveData[baseIndex + 1]
-                                                next1 += nextAniData * morphInterleaveData[baseIndex + 1]
-                                                prev2 += prevAniData * morphInterleaveData[baseIndex + 2]
+                                                prevAniData = tAniData[prevIndex * morphLen + morphIndex];
+                                                nextAniData = tAniData[nextIndex * morphLen + morphIndex];
+                                                morphInterleaveData = tMorphList[morphIndex]['interleaveData'];
+                                                prev += prevAniData * morphInterleaveData[baseIndex];
+                                                next += nextAniData * morphInterleaveData[baseIndex];
+                                                prev1 += prevAniData * morphInterleaveData[baseIndex + 1];
+                                                next1 += nextAniData * morphInterleaveData[baseIndex + 1];
+                                                prev2 += prevAniData * morphInterleaveData[baseIndex + 2];
                                                 next2 += nextAniData * morphInterleaveData[baseIndex + 2]
                                             }
                                         }
-                                        targetData[baseIndex] = prev + interpolationValue * (next - prev)
-                                        targetData[baseIndex + 1] = prev1 + interpolationValue * (next1 - prev1)
+                                        targetData[baseIndex] = prev + interpolationValue * (next - prev);
+                                        targetData[baseIndex + 1] = prev1 + interpolationValue * (next1 - prev1);
                                         targetData[baseIndex + 2] = prev2 + interpolationValue * (next2 - prev2)
                                     }
                                     targetMesh['geometry']['interleaveBuffer'].upload(targetData)
@@ -12252,8 +12887,8 @@ var RedGLTFLoader;
                     } else {
                         if (aniData['interpolation'] == 'STEP') {
                             interpolationValue = 0
-                        } else interpolationValue = (currentTime - previousTime) / (nextTime - previousTime)
-                        if (interpolationValue.toString() == 'NaN') interpolationValue = 0
+                        } else interpolationValue = (currentTime - previousTime) / (nextTime - previousTime);
+                        if (interpolationValue.toString() == 'NaN') interpolationValue = 0;
                         if (aniData['key'] == 'rotation') {
                             // var rotationMTX = mat4.create()
                             // var tRotation = [0, 0, 0]
@@ -12262,13 +12897,13 @@ var RedGLTFLoader;
                                 aniData['data'][nextIndex * 4 + 1],
                                 aniData['data'][nextIndex * 4 + 2],
                                 aniData['data'][nextIndex * 4 + 3]
-                            ]
+                            ];
                             // RedGLUtil.quaternionToRotationMat4(tQuaternion, rotationMTX)
                             // RedGLUtil.mat4ToEuler(rotationMTX, tRotation)
                             // tRotation[0] = -(tRotation[0] * 180 / Math.PI)
                             // tRotation[1] = -(tRotation[1] * 180 / Math.PI)
                             // tRotation[2] = -(tRotation[2] * 180 / Math.PI)
-                            nextRotation = tQuaternion
+                            nextRotation = tQuaternion;
                             //
                             // var rotationMTX = mat4.create()
                             // var tRotation = [0, 0, 0]
@@ -12277,7 +12912,7 @@ var RedGLTFLoader;
                                 aniData['data'][prevIndex * 4 + 1],
                                 aniData['data'][prevIndex * 4 + 2],
                                 aniData['data'][prevIndex * 4 + 3]
-                            ]
+                            ];
                             // RedGLUtil.quaternionToRotationMat4(tQuaternion, rotationMTX)
                             // RedGLUtil.mat4ToEuler(rotationMTX, tRotation)
                             // tRotation[0] = -(tRotation[0] * 180 / Math.PI)
@@ -12290,7 +12925,7 @@ var RedGLTFLoader;
                                 aniData['data'][nextIndex * 3],
                                 aniData['data'][nextIndex * 3 + 1],
                                 aniData['data'][nextIndex * 3 + 2]
-                            ]
+                            ];
                             prevTranslation = [
                                 aniData['data'][prevIndex * 3],
                                 aniData['data'][prevIndex * 3 + 1],
@@ -12302,7 +12937,7 @@ var RedGLTFLoader;
                                 aniData['data'][nextIndex * 3],
                                 aniData['data'][nextIndex * 3 + 1],
                                 aniData['data'][nextIndex * 3 + 2]
-                            ]
+                            ];
                             prevScale = [
                                 aniData['data'][prevIndex * 3],
                                 aniData['data'][prevIndex * 3 + 1],
@@ -12312,15 +12947,15 @@ var RedGLTFLoader;
                         if (target) {
                             if (aniData['key'] == 'translation') {
                                 // console.log(interpolationValue,nextTranslation , prevTranslation)
-                                target.x = prevTranslation[0] + interpolationValue * (nextTranslation[0] - prevTranslation[0])
-                                target.y = prevTranslation[1] + interpolationValue * (nextTranslation[1] - prevTranslation[1])
+                                target.x = prevTranslation[0] + interpolationValue * (nextTranslation[0] - prevTranslation[0]);
+                                target.y = prevTranslation[1] + interpolationValue * (nextTranslation[1] - prevTranslation[1]);
                                 target.z = prevTranslation[2] + interpolationValue * (nextTranslation[2] - prevTranslation[2])
                                 // console.log(target.y)
                             }
                             if (aniData['key'] == 'rotation') {
-                                var tQuat = []
-                                quat.normalize(prevRotation, prevRotation)
-                                quat.normalize(nextRotation, nextRotation)
+                                var tQuat = [];
+                                quat.normalize(prevRotation, prevRotation);
+                                quat.normalize(nextRotation, nextRotation);
                                 var ax = prevRotation[0], ay = prevRotation[1], az = prevRotation[2],
                                     aw = prevRotation[3];
                                 var bx = nextRotation[0], by = nextRotation[1], bz = nextRotation[2],
@@ -12357,67 +12992,67 @@ var RedGLTFLoader;
                                 tQuat[2] = scale0 * az + scale1 * bz;
                                 tQuat[3] = scale0 * aw + scale1 * bw;
 
-                                var rotationMTX = []
-                                var tRotation = [0, 0, 0]
-                                RedGLUtil.quaternionToRotationMat4(tQuat, rotationMTX)
-                                RedGLUtil.mat4ToEuler(rotationMTX, tRotation)
-                                tRotation[0] = -(tRotation[0] * 180 / Math.PI)
-                                tRotation[1] = -(tRotation[1] * 180 / Math.PI)
-                                tRotation[2] = -(tRotation[2] * 180 / Math.PI)
+                                var rotationMTX = [];
+                                var tRotation = [0, 0, 0];
+                                RedGLUtil.quaternionToRotationMat4(tQuat, rotationMTX);
+                                RedGLUtil.mat4ToEuler(rotationMTX, tRotation);
+                                tRotation[0] = -(tRotation[0] * 180 / Math.PI);
+                                tRotation[1] = -(tRotation[1] * 180 / Math.PI);
+                                tRotation[2] = -(tRotation[2] * 180 / Math.PI);
                                 // console.log(prevRotation, nextRotation)
-                                target.rotationX = tRotation[0]
-                                target.rotationY = tRotation[1]
+                                target.rotationX = tRotation[0];
+                                target.rotationY = tRotation[1];
                                 target.rotationZ = tRotation[2]
                                 // console.log(prevIndex, nextIndex)
                                 // console.log(parseInt(prevRotation[2]), parseInt(nextRotation[2]))
                                 // console.log(target.rotationX ,target.rotationY ,target.rotationZ )
                             }
                             if (aniData['key'] == 'scale') {
-                                target.scaleX = prevScale[0] + interpolationValue * (nextScale[0] - prevScale[0])
-                                target.scaleY = prevScale[1] + interpolationValue * (nextScale[1] - prevScale[1])
+                                target.scaleX = prevScale[0] + interpolationValue * (nextScale[0] - prevScale[0]);
+                                target.scaleY = prevScale[1] + interpolationValue * (nextScale[1] - prevScale[1]);
                                 target.scaleZ = prevScale[2] + interpolationValue * (nextScale[2] - prevScale[2])
                             }
                             if (aniData['key'] == 'weights') {
                                 // console.log(aniData)
                                 aniData['targets'].forEach(function (targetMesh) {
-                                    var targetData = targetMesh['geometry']['interleaveBuffer']['data']
-                                    var originData = targetMesh['_morphInfo']['origin']
-                                    var stride = targetMesh['geometry']['interleaveBuffer']['stride']
+                                    var targetData = targetMesh['geometry']['interleaveBuffer']['data'];
+                                    var originData = targetMesh['_morphInfo']['origin'];
+                                    var stride = targetMesh['geometry']['interleaveBuffer']['stride'];
                                     var index = 0;
-                                    var LOOP_NUM = targetData.length / stride
-                                    var prev, next
-                                    var prev1, next1
-                                    var prev2, next2
-                                    var baseIndex
-                                    var morphLen = targetMesh['_morphInfo']['list'].length
-                                    var tAniData = aniData['data']
-                                    var tMorphList = targetMesh['_morphInfo']['list']
+                                    var LOOP_NUM = targetData.length / stride;
+                                    var prev, next;
+                                    var prev1, next1;
+                                    var prev2, next2;
+                                    var baseIndex;
+                                    var morphLen = targetMesh['_morphInfo']['list'].length;
+                                    var tAniData = aniData['data'];
+                                    var tMorphList = targetMesh['_morphInfo']['list'];
                                     for (index; index < LOOP_NUM; index++) {
-                                        baseIndex = index * stride
-                                        prev = originData[baseIndex]
-                                        next = originData[baseIndex]
-                                        prev1 = originData[baseIndex + 1]
-                                        next1 = originData[baseIndex + 1]
-                                        prev2 = originData[baseIndex + 2]
-                                        next2 = originData[baseIndex + 2]
+                                        baseIndex = index * stride;
+                                        prev = originData[baseIndex];
+                                        next = originData[baseIndex];
+                                        prev1 = originData[baseIndex + 1];
+                                        next1 = originData[baseIndex + 1];
+                                        prev2 = originData[baseIndex + 2];
+                                        next2 = originData[baseIndex + 2];
 
-                                        var morphIndex = morphLen
+                                        var morphIndex = morphLen;
                                         var prevAniData;
                                         var nextAniData;
                                         var morphInterleaveData;
                                         while (morphIndex--) {
-                                            prevAniData = tAniData[prevIndex * morphLen + morphIndex]
-                                            nextAniData = tAniData[nextIndex * morphLen + morphIndex]
-                                            morphInterleaveData = tMorphList[morphIndex]['interleaveData']
-                                            prev += prevAniData * morphInterleaveData[baseIndex]
-                                            next += nextAniData * morphInterleaveData[baseIndex]
-                                            prev1 += prevAniData * morphInterleaveData[baseIndex + 1]
-                                            next1 += nextAniData * morphInterleaveData[baseIndex + 1]
-                                            prev2 += prevAniData * morphInterleaveData[baseIndex + 2]
+                                            prevAniData = tAniData[prevIndex * morphLen + morphIndex];
+                                            nextAniData = tAniData[nextIndex * morphLen + morphIndex];
+                                            morphInterleaveData = tMorphList[morphIndex]['interleaveData'];
+                                            prev += prevAniData * morphInterleaveData[baseIndex];
+                                            next += nextAniData * morphInterleaveData[baseIndex];
+                                            prev1 += prevAniData * morphInterleaveData[baseIndex + 1];
+                                            next1 += nextAniData * morphInterleaveData[baseIndex + 1];
+                                            prev2 += prevAniData * morphInterleaveData[baseIndex + 2];
                                             next2 += nextAniData * morphInterleaveData[baseIndex + 2]
                                         }
-                                        targetData[baseIndex] = prev + interpolationValue * (next - prev)
-                                        targetData[baseIndex + 1] = prev1 + interpolationValue * (next1 - prev1)
+                                        targetData[baseIndex] = prev + interpolationValue * (next - prev);
+                                        targetData[baseIndex + 1] = prev1 + interpolationValue * (next1 - prev1);
                                         targetData[baseIndex + 2] = prev2 + interpolationValue * (next2 - prev2)
                                     }
                                     targetMesh['geometry']['interleaveBuffer'].upload(targetData)
@@ -12448,41 +13083,41 @@ var RedGLTFLoader;
          */
         checkAsset = function (json) {
             // console.log(json)
-            if (json['asset'] === undefined) RedGLUtil.throwFunc('RedGLTFLoader - asset은 반드시 정의되어야함')
+            if (json['asset'] === undefined) RedGLUtil.throwFunc('RedGLTFLoader - asset은 반드시 정의되어야함');
             if (json['asset'].version[0] < 2) RedGLUtil.throwFunc('RedGLTFLoader - asset의 버전은 2.0이상이어야함')
-        }
+        };
         getBufferResources = function (redGLTFLoader, data, callback) {
-            var allNum = 0, loadedNum = 0
-            var tList = []
+            var allNum = 0, loadedNum = 0;
+            var tList = [];
             data['buffers'].forEach(function (v, index) {
-                v['_redURIkey'] = 'buffers'
-                v['_redURIIndex'] = index
+                v['_redURIkey'] = 'buffers';
+                v['_redURIIndex'] = index;
                 tList.push(v)
-            })
+            });
             tList.forEach(function (v) {
                 // console.log('버퍼테이터', v)
-                allNum++
+                allNum++;
                 if (v['uri'] instanceof ArrayBuffer) {
-                    loadedNum++
+                    loadedNum++;
                     redGLTFLoader['parsingResult']['uris'][v['_redURIkey']][v['_redURIIndex']] = new DataView(v['uri']);
                     if (loadedNum == allNum) {
-                        console.log("redGLTFLoader['parsingResult']['uris']", redGLTFLoader['parsingResult']['uris'])
-                        console.log("uris로딩현황", loadedNum, loadedNum)
+                        console.log("redGLTFLoader['parsingResult']['uris']", redGLTFLoader['parsingResult']['uris']);
+                        console.log("uris로딩현황", loadedNum, loadedNum);
                         if (callback) callback()
                     }
                 } else {
-                    var tSrc = v['uri'].substr(0, 5) == 'data:' ? v['uri'] : redGLTFLoader['path'] + v['uri']
+                    var tSrc = v['uri'].substr(0, 5) == 'data:' ? v['uri'] : redGLTFLoader['path'] + v['uri'];
                     // console.log('tSrc', tSrc)
                     arrayBufferLoader(
                         tSrc,
                         function (request) {
-                            loadedNum++
-                            console.log(request)
+                            loadedNum++;
+                            console.log(request);
                             // console.log(request.response)
                             redGLTFLoader['parsingResult']['uris'][v['_redURIkey']][v['_redURIIndex']] = new DataView(request.response);
                             if (loadedNum == allNum) {
-                                console.log("redGLTFLoader['parsingResult']['uris']", redGLTFLoader['parsingResult']['uris'])
-                                console.log("uris로딩현황", loadedNum, loadedNum)
+                                console.log("redGLTFLoader['parsingResult']['uris']", redGLTFLoader['parsingResult']['uris']);
+                                console.log("uris로딩현황", loadedNum, loadedNum);
                                 if (callback) callback()
                             }
                         },
@@ -12493,7 +13128,7 @@ var RedGLTFLoader;
                 }
 
             })
-        }
+        };
         /*
             전체 데이터중 외부소스데이터를 모두 실제화 해둔다.
          */
@@ -12552,82 +13187,82 @@ var RedGLTFLoader;
             //     }
             // }
             getBufferResources(redGLTFLoader, json, callback);
-        }
+        };
         parseCameras = function (redGLTFLoader, json) {
-            console.log(json)
+            console.log(json);
             if (json['cameras']) {
                 json['cameras'].forEach(function (v) {
-                    console.log('카메라', v)
-                    var t0 = RedCamera()
+                    console.log('카메라', v);
+                    var t0 = RedCamera();
                     if (v['type'] == 'orthographic') {
                         t0.orthographicYn = true
                     }
                     else {
-                        t0['fov'] = v['perspective']['yfov'] * 180 / Math.PI
-                        t0['farClipping'] = v['perspective']['zfar']
+                        t0['fov'] = v['perspective']['yfov'] * 180 / Math.PI;
+                        t0['farClipping'] = v['perspective']['zfar'];
                         t0['nearClipping'] = v['perspective']['znear']
                     }
                     redGLTFLoader['parsingResult']['cameras'].push(t0)
                 })
             }
-        }
+        };
         parseScene = function (redGLTFLoader, json, callback) {
-            console.log('parseScene 시작')
-            console.log(json)
+            console.log('parseScene 시작');
+            console.log(json);
             var i, len;
             var nodesInScene;
             var nodeIndex;
-            nodesInScene = json['scenes'][0]['nodes']
+            nodesInScene = json['scenes'][0]['nodes'];
             i = 0;
             len = nodesInScene.length;
             var tick = function () {
                 nodeIndex = nodesInScene[i];
                 parseNode(redGLTFLoader, json, nodeIndex, json['nodes'][nodeIndex], redGLTFLoader['resultMesh']);
                 i++;
-                if (i == len) {
+                if (i === len) {
                     if (callback) callback()
                 }
                 else requestAnimationFrame(tick);
-            }
+            };
             requestAnimationFrame(tick);
             // json['scenes'][0]['nodes'].forEach(function (nodeIndex) {
             //     // console.log('노드를 찾음', nodeIndex)
             //     parseNode(redGLTFLoader, json, nodeIndex, json['nodes'][nodeIndex], redGLTFLoader['resultMesh'])
             // })
-        }
+        };
         checkTRSAndMATRIX = (function () {
-            var rotationMTX = mat4.create()
-            var tRotation = [0, 0, 0]
-            var tQuaternion = []
-            var tScale = []
-            var tMatrix
+            var rotationMTX = mat4.create();
+            var tRotation = [0, 0, 0];
+            var tQuaternion = [];
+            var tScale = [];
+            var tMatrix;
             return function (target, info) {
                 if ('matrix' in info) {
                     // parseMatrix
-                    tMatrix = info['matrix']
+                    tMatrix = info['matrix'];
                     // console.log('~~~', info, tMatrix)
                     // mat4.getRotation(tQuaternion, tMatrix)
                     // if (tQuaternion[3] < 0) console.log('tQuaternion', tQuaternion)
                     // RedGLUtil.quaternionToRotationMat4(tQuaternion, rotationMTX)
-                    RedGLUtil.mat4ToEuler(tMatrix, tRotation)
-                    target.rotationX = -(tRotation[0] * 180 / Math.PI)
-                    target.rotationY = -(tRotation[1] * 180 / Math.PI)
-                    target.rotationZ = -(tRotation[2] * 180 / Math.PI)
-                    target.x = tMatrix[12]
-                    target.y = tMatrix[13]
-                    target.z = tMatrix[14]
-                    mat4.getScaling(tScale, tMatrix)
-                    target.scaleX = tScale[0]
-                    target.scaleY = tScale[1]
+                    RedGLUtil.mat4ToEuler(tMatrix, tRotation);
+                    target.rotationX = -(tRotation[0] * 180 / Math.PI);
+                    target.rotationY = -(tRotation[1] * 180 / Math.PI);
+                    target.rotationZ = -(tRotation[2] * 180 / Math.PI);
+                    target.x = tMatrix[12];
+                    target.y = tMatrix[13];
+                    target.z = tMatrix[14];
+                    mat4.getScaling(tScale, tMatrix);
+                    target.scaleX = tScale[0];
+                    target.scaleY = tScale[1];
                     target.scaleZ = tScale[2]
                 }
                 if ('rotation' in info) {
                     // 로데이션은 쿼터니언으로 들어온다.
                     tQuaternion = info['rotation'];
-                    RedGLUtil.quaternionToRotationMat4(tQuaternion, rotationMTX)
-                    RedGLUtil.mat4ToEuler(rotationMTX, tRotation)
-                    target.rotationX = -(tRotation[0] * 180 / Math.PI)
-                    target.rotationY = -(tRotation[1] * 180 / Math.PI)
+                    RedGLUtil.quaternionToRotationMat4(tQuaternion, rotationMTX);
+                    RedGLUtil.mat4ToEuler(rotationMTX, tRotation);
+                    target.rotationX = -(tRotation[0] * 180 / Math.PI);
+                    target.rotationY = -(tRotation[1] * 180 / Math.PI);
                     target.rotationZ = -(tRotation[2] * 180 / Math.PI)
                 }
                 if ('translation' in info) {
@@ -12645,35 +13280,35 @@ var RedGLTFLoader;
             }
         })();
         var checkJoint = function (redGLTFLoader, skinInfo, nodes, v) {
-            var tJointMesh = nodes[v]['RedMesh']
+            var tJointMesh = nodes[v]['RedMesh'];
             if (tJointMesh) {
-                var tJointMesh = nodes[v]['RedMesh']
-                skinInfo['joints'].push(tJointMesh)
-                tJointMesh.geometry = RedSphere(redGLTFLoader['redGL'], 0.05, 3, 3, 3)
-                tJointMesh.material = RedColorMaterial(redGLTFLoader['redGL'])
-                tJointMesh.drawMode = redGLTFLoader['redGL'].gl.LINE_LOOP
+                var tJointMesh = nodes[v]['RedMesh'];
+                skinInfo['joints'].push(tJointMesh);
+                tJointMesh.geometry = RedSphere(redGLTFLoader['redGL'], 0.05, 3, 3, 3);
+                tJointMesh.material = RedColorMaterial(redGLTFLoader['redGL']);
+                tJointMesh.drawMode = redGLTFLoader['redGL'].gl.LINE_LOOP;
                 tJointMesh.depthTestFunc = redGLTFLoader['redGL'].gl.NEVER
             } else requestAnimationFrame(function () {
                 checkJoint(redGLTFLoader, skinInfo, nodes, v)
             })
-        }
+        };
         var parseSkin = function (redGLTFLoader, json, info, tMesh) {
-            console.log('스킨설정!', info)
+            console.log('스킨설정!', info);
             var skinInfo = {
                 joints: [],
                 inverseBindMatrices: []
-            }
-            var nodes = json['nodes']
+            };
+            var nodes = json['nodes'];
             info['joints'].forEach(function (v) {
-                console.log(json['nodes'][v])
+                console.log(json['nodes'][v]);
                 checkJoint(redGLTFLoader, skinInfo, nodes, v)
-            })
+            });
             // 스켈레톤 정보가 있으면 정보와 메쉬를 연결해둔다.
-            if (info['skeleton']) skinInfo['skeleton'] = json['nodes'][info['skeleton']]['RedMesh']
+            if (info['skeleton']) skinInfo['skeleton'] = json['nodes'][info['skeleton']]['RedMesh'];
             // 액세서 구하고..
             // 정보 파싱한다.
-            var accessorIndex = info['inverseBindMatrices']
-            var accessorInfo = new RedGLTF_AccessorInfo(redGLTFLoader, json, accessorIndex)
+            var accessorIndex = info['inverseBindMatrices'];
+            var accessorInfo = new RedGLTF_AccessorInfo(redGLTFLoader, json, accessorIndex);
             var tBYTES_PER_ELEMENT = accessorInfo['componentType_BYTES_PER_ELEMENT'];
             var tBufferViewByteStride = accessorInfo['bufferViewByteStride'];
             var tBufferURIDataView = accessorInfo['bufferURIDataView'];
@@ -12681,13 +13316,13 @@ var RedGLTFLoader;
             var tType = accessorInfo['accessor']['type'];
             var tCount = accessorInfo['accessor']['count'];
             var strideIndex = 0;
-            var stridePerElement = tBufferViewByteStride / tBYTES_PER_ELEMENT
-            var i = accessorInfo['startIndex']
-            var len
+            var stridePerElement = tBufferViewByteStride / tBYTES_PER_ELEMENT;
+            var i = accessorInfo['startIndex'];
+            var len;
             switch (tType) {
                 case 'MAT4' :
                     if (tBufferViewByteStride) {
-                        len = i + tCount * (tBufferViewByteStride / tBYTES_PER_ELEMENT)
+                        len = i + tCount * (tBufferViewByteStride / tBYTES_PER_ELEMENT);
                         for (i; i < len; i++) {
                             if (strideIndex % stridePerElement < 16) {
                                 skinInfo['inverseBindMatrices'].push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
@@ -12697,30 +13332,30 @@ var RedGLTFLoader;
                     } else {
                         len = i + tCount * 16;
                         for (i; i < len; i++) {
-                            skinInfo['inverseBindMatrices'].push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+                            skinInfo['inverseBindMatrices'].push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true));
                             strideIndex++
                         }
                     }
-                    break
+                    break;
                 default :
-                    console.log('알수없는 형식 엑세서 타입', tType)
+                    console.log('알수없는 형식 엑세서 타입', tType);
                     break
             }
-            skinInfo['inverseBindMatrices'] = new Float32Array(skinInfo['inverseBindMatrices'])
+            skinInfo['inverseBindMatrices'] = new Float32Array(skinInfo['inverseBindMatrices']);
             tMesh['skinInfo'] = skinInfo
             // console.log(skinInfo)
-        }
+        };
         parseNode = (function () {
             return function (redGLTFLoader, json, nodeIndex, info, parentMesh) {
                 if ('mesh' in info) {
-                    var tMeshIndex = info['mesh']
+                    var tMeshIndex = info['mesh'];
                     // console.log('nodeInfo', info)
                     // console.log('parentMesh', parentMesh)
                     makeMesh(redGLTFLoader, json, json['meshes'][tMeshIndex]).forEach(function (tMesh) {
-                        info['RedMesh'] = tMesh
-                        parentMesh.addChild(tMesh)
+                        info['RedMesh'] = tMesh;
+                        parentMesh.addChild(tMesh);
                         // console.log("메쉬인덱스를 찾음", tMeshIndex, parentMesh)
-                        checkTRSAndMATRIX(tMesh, info)
+                        checkTRSAndMATRIX(tMesh, info);
                         // tMesh.matrix = matrix
                         // tMesh.autoUpdateMatrix = false
                         if ('children' in info) {
@@ -12736,27 +13371,27 @@ var RedGLTFLoader;
                     })
                 }
                 else {
-                    var tGroup
+                    var tGroup;
                     // console.log('차일드 정보로 구성된 정보임', info)
 
                     if (redGLTFLoader['parsingResult']['groups'][nodeIndex]) {
-                        console.log('기존에 존재!', redGLTFLoader['parsingResult']['groups'][nodeIndex])
-                        tGroup = redGLTFLoader['parsingResult']['groups'][nodeIndex]
+                        console.log('기존에 존재!', redGLTFLoader['parsingResult']['groups'][nodeIndex]);
+                        tGroup = redGLTFLoader['parsingResult']['groups'][nodeIndex];
                         info['RedMesh'] = tGroup
                     } else {
-                        tGroup = RedMesh(redGLTFLoader['redGL'])
-                        parentMesh.addChild(tGroup)
-                        info['RedMesh'] = tGroup
-                        redGLTFLoader['parsingResult']['groups'][nodeIndex] = tGroup
+                        tGroup = RedMesh(redGLTFLoader['redGL']);
+                        parentMesh.addChild(tGroup);
+                        info['RedMesh'] = tGroup;
+                        redGLTFLoader['parsingResult']['groups'][nodeIndex] = tGroup;
                         redGLTFLoader['parsingResult']['groups'][nodeIndex]['name'] = info['name']
                     }
-                    checkTRSAndMATRIX(tGroup, info)
+                    checkTRSAndMATRIX(tGroup, info);
                     // 카메라가 있으면 또 연결시킴
                     if ('camera' in info) {
-                        redGLTFLoader['parsingResult']['cameras'][info['camera']]['_parentMesh'] = parentMesh
-                        redGLTFLoader['parsingResult']['cameras'][info['camera']]['_targetMesh'] = tGroup
-                        var tCameraMesh = RedMesh(redGLTFLoader['redGL'])
-                        tGroup.addChild(tCameraMesh)
+                        redGLTFLoader['parsingResult']['cameras'][info['camera']]['_parentMesh'] = parentMesh;
+                        redGLTFLoader['parsingResult']['cameras'][info['camera']]['_targetMesh'] = tGroup;
+                        var tCameraMesh = RedMesh(redGLTFLoader['redGL']);
+                        tGroup.addChild(tCameraMesh);
                         redGLTFLoader['parsingResult']['cameras'][info['camera']]['_cameraMesh'] = tCameraMesh
                     }
                     // tGroup.matrix = matrix
@@ -12773,48 +13408,48 @@ var RedGLTFLoader;
                     }
                 }
             }
-        })()
+        })();
         var parseSparse = function (redGLTFLoader, key, tAccessors, json, vertices, uvs, uvs1, normals, jointWeights, joints) {
             if (tAccessors['sparse']) {
-                var sparseVerties = []
-                var sparseNormals = []
+                var sparseVerties = [];
+                var sparseNormals = [];
                 var sparseUvs = [];
                 (function () {
-                    var tSparse = tAccessors['sparse']
-                    var tSparseValuesAccessors = tSparse['values']
-                    console.log('tSparseValuesAccessors', tSparseValuesAccessors)
-                    var tBufferView = json['bufferViews'][tSparseValuesAccessors['bufferView']]
-                    var tBufferIndex = tBufferView['buffer']
-                    var tBuffer = json['buffers'][tBufferIndex]
+                    var tSparse = tAccessors['sparse'];
+                    var tSparseValuesAccessors = tSparse['values'];
+                    console.log('tSparseValuesAccessors', tSparseValuesAccessors);
+                    var tBufferView = json['bufferViews'][tSparseValuesAccessors['bufferView']];
+                    var tBufferIndex = tBufferView['buffer'];
+                    var tBuffer = json['buffers'][tBufferIndex];
                     var tBufferURIDataView;
                     if (tBuffer['uri']) {
                         tBufferURIDataView = redGLTFLoader['parsingResult']['uris']['buffers'][tBufferIndex]
                     }
                     var i, len;
-                    var tComponentType
+                    var tComponentType;
                     var tMethod;
-                    tComponentType = WEBGL_COMPONENT_TYPES[tAccessors['componentType']]
-                    if (tComponentType == Float32Array) tMethod = 'getFloat32'
-                    if (tComponentType == Uint32Array) tMethod = 'getUint32'
-                    if (tComponentType == Uint16Array) tMethod = 'getUint16'
-                    if (tComponentType == Int16Array) tMethod = 'getInt16'
-                    if (tComponentType == Uint8Array) tMethod = 'getUint8'
-                    if (tComponentType == Int8Array) tMethod = 'getInt8'
-                    var tAccessorBufferOffset = tAccessors['byteOffset'] || 0
-                    var tBufferViewOffset = tBufferView['byteOffset'] || 0
-                    i = (tBufferViewOffset + tAccessorBufferOffset) / tComponentType['BYTES_PER_ELEMENT']
+                    tComponentType = WEBGL_COMPONENT_TYPES[tAccessors['componentType']];
+                    if (tComponentType == Float32Array) tMethod = 'getFloat32';
+                    if (tComponentType == Uint32Array) tMethod = 'getUint32';
+                    if (tComponentType == Uint16Array) tMethod = 'getUint16';
+                    if (tComponentType == Int16Array) tMethod = 'getInt16';
+                    if (tComponentType == Uint8Array) tMethod = 'getUint8';
+                    if (tComponentType == Int8Array) tMethod = 'getInt8';
+                    var tAccessorBufferOffset = tAccessors['byteOffset'] || 0;
+                    var tBufferViewOffset = tBufferView['byteOffset'] || 0;
+                    i = (tBufferViewOffset + tAccessorBufferOffset) / tComponentType['BYTES_PER_ELEMENT'];
                     switch (tAccessors['type']) {
                         case 'VEC3' :
-                            len = i + (tComponentType['BYTES_PER_ELEMENT'] * tSparse['count']) / tComponentType['BYTES_PER_ELEMENT'] * 3
-                            console.log('오오오오', key, i, len)
+                            len = i + (tComponentType['BYTES_PER_ELEMENT'] * tSparse['count']) / tComponentType['BYTES_PER_ELEMENT'] * 3;
+                            console.log('오오오오', key, i, len);
                             for (i; i < len; i++) {
-                                if (key == 'NORMAL') sparseNormals.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
+                                if (key == 'NORMAL') sparseNormals.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true));
                                 else if (key == 'POSITION') sparseVerties.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
                             }
                             // console.log('인터리브 버퍼 데이터', vertices)
-                            break
+                            break;
                         case 'VEC2' :
-                            len = i + (tComponentType['BYTES_PER_ELEMENT'] * tSparse['count']) / tComponentType['BYTES_PER_ELEMENT'] * 2
+                            len = i + (tComponentType['BYTES_PER_ELEMENT'] * tSparse['count']) / tComponentType['BYTES_PER_ELEMENT'] * 2;
                             // console.log(i, len)
                             for (i; i < len; i++) {
                                 if (key == 'TEXCOORD_0') {
@@ -12822,86 +13457,86 @@ var RedGLTFLoader;
                                 }
                             }
                             // console.log('인터리브 버퍼 데이터', vertices)
-                            break
+                            break;
                         default :
-                            console.log('알수없는 형식 엑세서 타입', tAccessors['type'])
+                            console.log('알수없는 형식 엑세서 타입', tAccessors['type']);
                             break
                     }
                 })();
                 // console.log(sparseVerties)
                 // console.log(sparseNormals)
                 // console.log(sparseUvs);
-                var tSparse = tAccessors['sparse']
-                var tSparseAccessors = tSparse['indices']
+                var tSparse = tAccessors['sparse'];
+                var tSparseAccessors = tSparse['indices'];
                 // console.log('tSparseAccessors', tSparseAccessors)
-                var tBufferView = json['bufferViews'][tSparseAccessors['bufferView']]
-                var tBufferIndex = tBufferView['buffer']
-                var tBuffer = json['buffers'][tBufferIndex]
+                var tBufferView = json['bufferViews'][tSparseAccessors['bufferView']];
+                var tBufferIndex = tBufferView['buffer'];
+                var tBuffer = json['buffers'][tBufferIndex];
                 var tBufferURIDataView;
                 if (tBuffer['uri']) {
                     tBufferURIDataView = redGLTFLoader['parsingResult']['uris']['buffers'][tBufferIndex]
                 }
                 var i, len;
-                var tComponentType
+                var tComponentType;
                 var tMethod;
-                tComponentType = WEBGL_COMPONENT_TYPES[tSparseAccessors['componentType']]
-                if (tComponentType == Uint16Array) tMethod = 'getUint16'
-                else if (tComponentType == Uint8Array) tMethod = 'getUint8'
-                var tAccessorBufferOffset = tSparseAccessors['byteOffset'] || 0
-                var tBufferViewOffset = tBufferView['byteOffset'] || 0
-                i = (tBufferViewOffset + tAccessorBufferOffset) / tComponentType['BYTES_PER_ELEMENT']
+                tComponentType = WEBGL_COMPONENT_TYPES[tSparseAccessors['componentType']];
+                if (tComponentType == Uint16Array) tMethod = 'getUint16';
+                else if (tComponentType == Uint8Array) tMethod = 'getUint8';
+                var tAccessorBufferOffset = tSparseAccessors['byteOffset'] || 0;
+                var tBufferViewOffset = tBufferView['byteOffset'] || 0;
+                i = (tBufferViewOffset + tAccessorBufferOffset) / tComponentType['BYTES_PER_ELEMENT'];
                 //
-                len = i + (tComponentType['BYTES_PER_ELEMENT'] * tSparse['count']) / tComponentType['BYTES_PER_ELEMENT']
+                len = i + (tComponentType['BYTES_PER_ELEMENT'] * tSparse['count']) / tComponentType['BYTES_PER_ELEMENT'];
                 // console.log('오오오오', key, i, len)
-                var sparseIndex = 0
+                var sparseIndex = 0;
                 for (i; i < len; i++) {
-                    var targetIndex = tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true)
+                    var targetIndex = tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true);
                     // console.log('몇번째껄 부르는건가', targetIndex)
-                    vertices[targetIndex * 3] = sparseVerties[sparseIndex * 3]
-                    vertices[targetIndex * 3 + 1] = sparseVerties[sparseIndex * 3 + 1]
-                    vertices[targetIndex * 3 + 2] = sparseVerties[sparseIndex * 3 + 2]
+                    vertices[targetIndex * 3] = sparseVerties[sparseIndex * 3];
+                    vertices[targetIndex * 3 + 1] = sparseVerties[sparseIndex * 3 + 1];
+                    vertices[targetIndex * 3 + 2] = sparseVerties[sparseIndex * 3 + 2];
                     sparseIndex++
                     // indices.push(tBufferURIDataView[tMethod](i * tComponentType['BYTES_PER_ELEMENT'], true))
                 }
             }
-        }
+        };
         var RedGLTF_AccessorInfo = function (redGLTFLoader, json, accessorIndex) {
             this['accessor'] = json['accessors'][accessorIndex];
             this['bufferView'] = json['bufferViews'][this['accessor']['bufferView']];
             this['bufferIndex'] = this['bufferView']['buffer'];
-            this['buffer'] = json['buffers'][this['bufferIndex']]
-            this['bufferURIDataView'] = null
+            this['buffer'] = json['buffers'][this['bufferIndex']];
+            this['bufferURIDataView'] = null;
             if (this['buffer']['uri']) {
                 this['bufferURIDataView'] = redGLTFLoader['parsingResult']['uris']['buffers'][this['bufferIndex']]
             }
             ////////////////////////////
-            this['componentType'] = WEBGL_COMPONENT_TYPES[this['accessor']['componentType']]
+            this['componentType'] = WEBGL_COMPONENT_TYPES[this['accessor']['componentType']];
             this['componentType_BYTES_PER_ELEMENT'] = this['componentType']['BYTES_PER_ELEMENT'];
             switch (this['componentType']) {
                 case Float32Array :
-                    this['getMethod'] = 'getFloat32'
-                    break
+                    this['getMethod'] = 'getFloat32';
+                    break;
                 case Uint32Array :
-                    this['getMethod'] = 'getUint32'
-                    break
+                    this['getMethod'] = 'getUint32';
+                    break;
                 case Uint16Array :
-                    this['getMethod'] = 'getUint16'
-                    break
+                    this['getMethod'] = 'getUint16';
+                    break;
                 case Int16Array :
-                    this['getMethod'] = 'getInt16'
-                    break
+                    this['getMethod'] = 'getInt16';
+                    break;
                 case Uint8Array :
-                    this['getMethod'] = 'getUint8'
-                    break
+                    this['getMethod'] = 'getUint8';
+                    break;
                 case Int8Array :
-                    this['getMethod'] = 'getInt8'
-                    break
+                    this['getMethod'] = 'getInt8';
+                    break;
                 default :
                     RedGLUtil.throwFunc('파싱할수없는 타입', this['componentType'])
             }
-            this['accessorBufferOffset'] = this['accessor']['byteOffset'] || 0
-            this['bufferViewOffset'] = this['bufferView']['byteOffset'] || 0
-            this['bufferViewByteStride'] = this['bufferView']['byteStride'] || 0
+            this['accessorBufferOffset'] = this['accessor']['byteOffset'] || 0;
+            this['bufferViewOffset'] = this['bufferView']['byteOffset'] || 0;
+            this['bufferViewByteStride'] = this['bufferView']['byteStride'] || 0;
             this['startIndex'] = (this['bufferViewOffset'] + this['accessorBufferOffset']) / this['componentType_BYTES_PER_ELEMENT'];
             // console.log('해당 bufferView 정보', this['bufferView'])
             // console.log('바라볼 버퍼 인덱스', this['bufferIndex'])
@@ -12912,7 +13547,7 @@ var RedGLTFLoader;
             // console.log("this['getMethod']", this['getMethod'])
             // console.log("this['bufferView']['byteOffset']", this['bufferView']['byteOffset'])
             // console.log("this['accessor']['byteOffset']", this['accessor']['byteOffset'])
-        }
+        };
         var parseAttributeInfo = function (redGLTFLoader, json, key, accessorInfo, vertices, uvs, uvs1, normals, jointWeights, joints, verticesColor_0, tangents) {
             var tBYTES_PER_ELEMENT = accessorInfo['componentType_BYTES_PER_ELEMENT'];
             var tBufferViewByteStride = accessorInfo['bufferViewByteStride'];
@@ -12921,18 +13556,18 @@ var RedGLTFLoader;
             var tType = accessorInfo['accessor']['type'];
             var tCount = accessorInfo['accessor']['count'];
             var strideIndex = 0;
-            var stridePerElement = tBufferViewByteStride / tBYTES_PER_ELEMENT
-            var i = accessorInfo['startIndex']
-            var len
+            var stridePerElement = tBufferViewByteStride / tBYTES_PER_ELEMENT;
+            var i = accessorInfo['startIndex'];
+            var len;
             switch (tType) {
                 case 'VEC4' :
                     if (tBufferViewByteStride) {
-                        len = i + tCount * (tBufferViewByteStride / tBYTES_PER_ELEMENT)
+                        len = i + tCount * (tBufferViewByteStride / tBYTES_PER_ELEMENT);
                         for (i; i < len; i++) {
                             if (strideIndex % stridePerElement < 4) {
-                                if (key == 'WEIGHTS_0') jointWeights.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-                                else if (key == 'JOINTS_0') joints.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-                                else if (key == 'COLOR_0') verticesColor_0.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+                                if (key == 'WEIGHTS_0') jointWeights.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true));
+                                else if (key == 'JOINTS_0') joints.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true));
+                                else if (key == 'COLOR_0') verticesColor_0.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true));
                                 else if (key == 'TANGENT') tangents.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                                 // else RedGLUtil.throwFunc('VEC4에서 현재 지원하고 있지 않는 키', key)
                             }
@@ -12941,24 +13576,24 @@ var RedGLTFLoader;
                     } else {
                         len = i + tCount * 4;
                         for (i; i < len; i++) {
-                            if (key == 'WEIGHTS_0') jointWeights.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-                            else if (key == 'JOINTS_0') joints.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-                            else if (key == 'COLOR_0') verticesColor_0.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-                            else if (key == 'TANGENT') tangents.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+                            if (key == 'WEIGHTS_0') jointWeights.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true));
+                            else if (key == 'JOINTS_0') joints.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true));
+                            else if (key == 'COLOR_0') verticesColor_0.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true));
+                            else if (key == 'TANGENT') tangents.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true));
                             // else RedGLUtil.throwFunc('VEC4에서 현재 지원하고 있지 않는 키', key)
                             strideIndex++
                         }
                     }
-                    break
+                    break;
                 case 'VEC3' :
                     if (tBufferViewByteStride) {
-                        len = i + tCount * (tBufferViewByteStride / tBYTES_PER_ELEMENT)
+                        len = i + tCount * (tBufferViewByteStride / tBYTES_PER_ELEMENT);
                         for (i; i < len; i++) {
                             if (strideIndex % stridePerElement < 3) {
-                                if (key == 'NORMAL') normals.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-                                else if (key == 'POSITION') vertices.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+                                if (key == 'NORMAL') normals.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true));
+                                else if (key == 'POSITION') vertices.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true));
                                 else if (key == 'COLOR_0') {
-                                    verticesColor_0.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+                                    verticesColor_0.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true));
                                     if (strideIndex % stridePerElement == 2) verticesColor_0.push(1)
                                 }
                                 // else if ( key == 'TANGENT' ) tangents.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
@@ -12969,10 +13604,10 @@ var RedGLTFLoader;
                     } else {
                         len = i + tCount * 3;
                         for (i; i < len; i++) {
-                            if (key == 'NORMAL') normals.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-                            else if (key == 'POSITION') vertices.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+                            if (key == 'NORMAL') normals.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true));
+                            else if (key == 'POSITION') vertices.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true));
                             else if (key == 'COLOR_0') {
-                                verticesColor_0.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
+                                verticesColor_0.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true));
                                 if (strideIndex % 3 == 2) verticesColor_0.push(1)
                             }
                             // else if ( key == 'TANGENT' ) tangents.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
@@ -12981,10 +13616,10 @@ var RedGLTFLoader;
                         }
                         // console.log('인터리브 버퍼 데이터', vertices)
                     }
-                    break
+                    break;
                 case 'VEC2' :
                     if (tBufferViewByteStride) {
-                        len = i + tCount * (tBufferViewByteStride / tBYTES_PER_ELEMENT)
+                        len = i + tCount * (tBufferViewByteStride / tBYTES_PER_ELEMENT);
                         for (i; i < len; i++) {
                             if (strideIndex % stridePerElement < 2) {
                                 if (key == 'TEXCOORD_0') {
@@ -13003,18 +13638,18 @@ var RedGLTFLoader;
                                 uvs.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                             } else if (key == 'TEXCOORD_1') {
                                 uvs1.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-                            } else RedGLUtil.throwFunc('VEC2에서 현재 지원하고 있지 않는 키', key)
+                            } else RedGLUtil.throwFunc('VEC2에서 현재 지원하고 있지 않는 키', key);
                             strideIndex++
                         }
                     }
-                    break
+                    break;
                 default :
-                    console.log('알수없는 형식 엑세서 타입', tType)
+                    console.log('알수없는 형식 엑세서 타입', tType);
                     break
             }
-        }
+        };
         var RedGLTF_MorphInfo = function (redGLTFLoader, json, primitiveData, weightsData) {
-            var morphList = []
+            var morphList = [];
             if (primitiveData['targets']) {
                 primitiveData['targets'].forEach(function (v2) {
                     var tMorphData = {
@@ -13026,56 +13661,56 @@ var RedGLTFLoader;
                         jointWeights: [],
                         joints: [],
                         tangents: []
-                    }
-                    morphList.push(tMorphData)
+                    };
+                    morphList.push(tMorphData);
                     for (var key in v2) {
-                        var vertices = tMorphData['vertices']
-                        var verticesColor_0 = tMorphData['verticesColor_0']
-                        var normals = tMorphData['normals']
-                        var uvs = tMorphData['uvs']
-                        var uvs1 = tMorphData['uvs1']
-                        var jointWeights = tMorphData['jointWeights']
-                        var joints = tMorphData['joints']
-                        var tangents = tMorphData['tangents']
-                        var accessorIndex = v2[key]
-                        var accessorInfo = new RedGLTF_AccessorInfo(redGLTFLoader, json, accessorIndex)
+                        var vertices = tMorphData['vertices'];
+                        var verticesColor_0 = tMorphData['verticesColor_0'];
+                        var normals = tMorphData['normals'];
+                        var uvs = tMorphData['uvs'];
+                        var uvs1 = tMorphData['uvs1'];
+                        var jointWeights = tMorphData['jointWeights'];
+                        var joints = tMorphData['joints'];
+                        var tangents = tMorphData['tangents'];
+                        var accessorIndex = v2[key];
+                        var accessorInfo = new RedGLTF_AccessorInfo(redGLTFLoader, json, accessorIndex);
                         // 어트리뷰트 갈궈서 파악함
                         parseAttributeInfo(
                             redGLTFLoader, json, key, accessorInfo,
                             vertices, uvs, uvs1, normals, jointWeights, joints, verticesColor_0, tangents
-                        )
+                        );
                         // 스파스 정보도 갈굼
                         if (accessorInfo['accessor']['sparse']) parseSparse(redGLTFLoader, key, accessorInfo['accessor'], json, vertices, uvs, uvs1, normals, jointWeights, joints)
                     }
                 })
             }
-            this['list'] = morphList
-            morphList['weights'] = weightsData || []
+            this['list'] = morphList;
+            morphList['weights'] = weightsData || [];
             this['origin'] = null
-        }
+        };
         var parseIndicesInfo = function (redGLTFLoader, json, key, accessorInfo, indices) {
             var tBYTES_PER_ELEMENT = accessorInfo['componentType_BYTES_PER_ELEMENT'];
             var tBufferURIDataView = accessorInfo['bufferURIDataView'];
             var tGetMethod = accessorInfo['getMethod'];
             var tType = accessorInfo['accessor']['type'];
             var tCount = accessorInfo['accessor']['count'];
-            var i = accessorInfo['startIndex']
+            var i = accessorInfo['startIndex'];
             var len;
             // console.log('인덱스!!', accessorInfo)
             switch (tType) {
                 case 'SCALAR' :
-                    len = i + tCount
+                    len = i + tCount;
                     // console.log(i, len)
                     for (i; i < len; i++) {
                         indices.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                     }
                     // console.log('인덱스버퍼 데이터', indices)
-                    break
+                    break;
                 default :
-                    console.log('알수없는 형식 엑세서 타입', accessorInfo['accessor'])
+                    console.log('알수없는 형식 엑세서 타입', accessorInfo['accessor']);
                     break
             }
-        }
+        };
         var parseMaterialInfo = (function () {
             var getURL = function (redGLTFLoader, json, sourceIndex) {
                 if (json['images'][sourceIndex]['uri'].indexOf('blob:http') > -1) {
@@ -13083,44 +13718,44 @@ var RedGLTFLoader;
                 } else {
                     return (json['images'][sourceIndex]['uri'].indexOf(';base64,') > -1 ? '' : redGLTFLoader['path']) + json['images'][sourceIndex]['uri']
                 }
-            }
+            };
             var getSamplerInfo = function (redGLTFLoader, json, samplerIndex) {
-                var result = {}
+                var result = {};
                 if (json['samplers']) {
-                    var t0 = json['samplers'][samplerIndex]
-                    if ('magFilter' in t0) result['mag'] = t0['magFilter']
-                    if ('minFilter' in t0) result['min'] = t0['minFilter']
-                    if ('wrapS' in t0) result['wrap_s'] = t0['wrapS']
+                    var t0 = json['samplers'][samplerIndex];
+                    if ('magFilter' in t0) result['mag'] = t0['magFilter'];
+                    if ('minFilter' in t0) result['min'] = t0['minFilter'];
+                    if ('wrapS' in t0) result['wrap_s'] = t0['wrapS'];
                     if ('wrapT' in t0) result['wrap_t'] = t0['wrapT']
                 } else {
                     console.log('있긴하냐', samplerIndex)
                 }
-                result['string'] = JSON.stringify(result)
+                result['string'] = JSON.stringify(result);
                 // console.log('result', result)
                 return result
-            }
+            };
             return function (redGLTFLoader, json, v) {
-                var tMaterial
-                var doubleSide = false
+                var tMaterial;
+                var doubleSide = false;
                 var alphaMode;
-                var alphaCutoff = 0.5
+                var alphaCutoff = 0.5;
                 if ('material' in v) {
-                    var tIndex = v['material']
-                    var tMaterialInfo = json['materials'][tIndex]
-                    if ('doubleSided' in tMaterialInfo) doubleSide = tMaterialInfo['doubleSided'] ? true : false
-                    if ('alphaMode' in tMaterialInfo) alphaMode = tMaterialInfo['alphaMode']
-                    if ('alphaCutoff' in tMaterialInfo) alphaCutoff = tMaterialInfo['alphaCutoff']
+                    var tIndex = v['material'];
+                    var tMaterialInfo = json['materials'][tIndex];
+                    if ('doubleSided' in tMaterialInfo) doubleSide = tMaterialInfo['doubleSided'] ? true : false;
+                    if ('alphaMode' in tMaterialInfo) alphaMode = tMaterialInfo['alphaMode'];
+                    if ('alphaCutoff' in tMaterialInfo) alphaCutoff = tMaterialInfo['alphaCutoff'];
                     var diffseTexture, normalTexture, roughnessTexture, emissiveTexture, occlusionTexture;
                     // console.log('tMaterialInfo', tMaterialInfo)
                     if ('baseColorTexture' in tMaterialInfo['pbrMetallicRoughness']) {
-                        var baseTextureIndex = tMaterialInfo['pbrMetallicRoughness']['baseColorTexture']['index']
-                        var baseTextureInfo = json['textures'][baseTextureIndex]
-                        var diffuseSourceIndex = baseTextureInfo['source']
-                        var tURL = getURL(redGLTFLoader, json, diffuseSourceIndex)
-                        var samplerIndex = baseTextureInfo['sampler']
-                        var option = getSamplerInfo(redGLTFLoader, json, samplerIndex)
-                        var tKey = tURL + option['string']
-                        if (redGLTFLoader['parsingResult']['textures'][tKey]) diffseTexture = redGLTFLoader['parsingResult']['textures'][tKey]
+                        var baseTextureIndex = tMaterialInfo['pbrMetallicRoughness']['baseColorTexture']['index'];
+                        var baseTextureInfo = json['textures'][baseTextureIndex];
+                        var diffuseSourceIndex = baseTextureInfo['source'];
+                        var tURL = getURL(redGLTFLoader, json, diffuseSourceIndex);
+                        var samplerIndex = baseTextureInfo['sampler'];
+                        var option = getSamplerInfo(redGLTFLoader, json, samplerIndex);
+                        var tKey = tURL + option['string'];
+                        if (redGLTFLoader['parsingResult']['textures'][tKey]) diffseTexture = redGLTFLoader['parsingResult']['textures'][tKey];
                         else diffseTexture = redGLTFLoader['parsingResult']['textures'][tKey] = RedBitmapTexture(redGLTFLoader['redGL'], tURL, option)
                         // var t0 = document.createElement('img')
                         // t0.src = json['images'][diffuseSourceIndex]['uri']
@@ -13128,76 +13763,76 @@ var RedGLTFLoader;
                         // document.body.appendChild(t0)
                     }
                     if ('metallicRoughnessTexture' in tMaterialInfo['pbrMetallicRoughness']) {
-                        var roughnessTextureIndex = tMaterialInfo['pbrMetallicRoughness']['metallicRoughnessTexture']['index']
-                        var roughnessTextureInfo = json['textures'][roughnessTextureIndex]
-                        var roughnessSourceIndex = roughnessTextureInfo['source']
-                        var tURL = getURL(redGLTFLoader, json, roughnessSourceIndex)
-                        var samplerIndex = roughnessTextureInfo['sampler']
-                        var option = getSamplerInfo(redGLTFLoader, json, samplerIndex)
-                        var tKey = tURL + option['string']
-                        if (redGLTFLoader['parsingResult']['textures'][tKey]) roughnessTexture = redGLTFLoader['parsingResult']['textures'][tKey]
+                        var roughnessTextureIndex = tMaterialInfo['pbrMetallicRoughness']['metallicRoughnessTexture']['index'];
+                        var roughnessTextureInfo = json['textures'][roughnessTextureIndex];
+                        var roughnessSourceIndex = roughnessTextureInfo['source'];
+                        var tURL = getURL(redGLTFLoader, json, roughnessSourceIndex);
+                        var samplerIndex = roughnessTextureInfo['sampler'];
+                        var option = getSamplerInfo(redGLTFLoader, json, samplerIndex);
+                        var tKey = tURL + option['string'];
+                        if (redGLTFLoader['parsingResult']['textures'][tKey]) roughnessTexture = redGLTFLoader['parsingResult']['textures'][tKey];
                         else roughnessTexture = redGLTFLoader['parsingResult']['textures'][tKey] = RedBitmapTexture(redGLTFLoader['redGL'], tURL, option)
                         // var t0 = document.createElement('img')
                         // t0.src = json['images'][roughnessSourceIndex]['uri']
                         // t0.style.cssText = 'position:absolute;top:0px;left:0px;width:500px'
                         // document.body.appendChild(t0)
                     }
-                    var normalTextureIndex = tMaterialInfo['normalTexture']
+                    var normalTextureIndex = tMaterialInfo['normalTexture'];
                     if (normalTextureIndex != undefined) {
-                        normalTextureIndex = normalTextureIndex['index']
-                        var normalTextureInfo = json['textures'][normalTextureIndex]
-                        var normalSourceIndex = normalTextureInfo['source']
-                        var tURL = getURL(redGLTFLoader, json, normalSourceIndex)
-                        var samplerIndex = normalTextureInfo['sampler']
-                        var option = getSamplerInfo(redGLTFLoader, json, samplerIndex)
-                        var tKey = tURL + option['string']
-                        if (redGLTFLoader['parsingResult']['textures'][tKey]) normalTexture = redGLTFLoader['parsingResult']['textures'][tKey]
+                        normalTextureIndex = normalTextureIndex['index'];
+                        var normalTextureInfo = json['textures'][normalTextureIndex];
+                        var normalSourceIndex = normalTextureInfo['source'];
+                        var tURL = getURL(redGLTFLoader, json, normalSourceIndex);
+                        var samplerIndex = normalTextureInfo['sampler'];
+                        var option = getSamplerInfo(redGLTFLoader, json, samplerIndex);
+                        var tKey = tURL + option['string'];
+                        if (redGLTFLoader['parsingResult']['textures'][tKey]) normalTexture = redGLTFLoader['parsingResult']['textures'][tKey];
                         else normalTexture = redGLTFLoader['parsingResult']['textures'][tKey] = RedBitmapTexture(redGLTFLoader['redGL'], tURL, option)
                         // var t0 = document.createElement('img')
                         // t0.src = json['images'][normalSourceIndex]['uri']
                         // t0.style.cssText = 'position:absolute;top:0px;left:0px;width:500px'
                         // document.body.appendChild(t0)
                     }
-                    var emissiveTextureIndex = tMaterialInfo['emissiveTexture']
+                    var emissiveTextureIndex = tMaterialInfo['emissiveTexture'];
                     if (emissiveTextureIndex != undefined) {
-                        emissiveTextureIndex = emissiveTextureIndex['index']
-                        var emissiveTextureInfo = json['textures'][emissiveTextureIndex]
-                        var emissiveSourceIndex = emissiveTextureInfo['source']
-                        var tURL = getURL(redGLTFLoader, json, emissiveSourceIndex)
-                        var samplerIndex = emissiveTextureInfo['sampler']
-                        var option = getSamplerInfo(redGLTFLoader, json, samplerIndex)
-                        var tKey = tURL + option['string']
-                        if (redGLTFLoader['parsingResult']['textures'][tKey]) emissiveTexture = redGLTFLoader['parsingResult']['textures'][tKey]
+                        emissiveTextureIndex = emissiveTextureIndex['index'];
+                        var emissiveTextureInfo = json['textures'][emissiveTextureIndex];
+                        var emissiveSourceIndex = emissiveTextureInfo['source'];
+                        var tURL = getURL(redGLTFLoader, json, emissiveSourceIndex);
+                        var samplerIndex = emissiveTextureInfo['sampler'];
+                        var option = getSamplerInfo(redGLTFLoader, json, samplerIndex);
+                        var tKey = tURL + option['string'];
+                        if (redGLTFLoader['parsingResult']['textures'][tKey]) emissiveTexture = redGLTFLoader['parsingResult']['textures'][tKey];
                         else emissiveTexture = redGLTFLoader['parsingResult']['textures'][tKey] = RedBitmapTexture(redGLTFLoader['redGL'], tURL, option)
                         // var t0 = document.createElement('img')
                         // t0.src = json['images'][emissiveSourceIndex]['uri']
                         // t0.style.cssText = 'position:absolute;top:0px;left:0px;width:500px'
                         // document.body.appendChild(t0)
                     }
-                    var occlusionTextureIndex = tMaterialInfo['occlusionTexture']
+                    var occlusionTextureIndex = tMaterialInfo['occlusionTexture'];
                     if (occlusionTextureIndex != undefined) {
-                        occlusionTextureIndex = occlusionTextureIndex['index']
-                        var occlusionTextureInfo = json['textures'][occlusionTextureIndex]
-                        var occlusionSourceIndex = occlusionTextureInfo['source']
-                        var tURL = getURL(redGLTFLoader, json, occlusionSourceIndex)
-                        var samplerIndex = occlusionTextureInfo['sampler']
-                        var option = getSamplerInfo(redGLTFLoader, json, samplerIndex)
-                        var tKey = tURL + option['string']
-                        if (redGLTFLoader['parsingResult']['textures'][tKey]) occlusionTexture = redGLTFLoader['parsingResult']['textures'][tKey]
+                        occlusionTextureIndex = occlusionTextureIndex['index'];
+                        var occlusionTextureInfo = json['textures'][occlusionTextureIndex];
+                        var occlusionSourceIndex = occlusionTextureInfo['source'];
+                        var tURL = getURL(redGLTFLoader, json, occlusionSourceIndex);
+                        var samplerIndex = occlusionTextureInfo['sampler'];
+                        var option = getSamplerInfo(redGLTFLoader, json, samplerIndex);
+                        var tKey = tURL + option['string'];
+                        if (redGLTFLoader['parsingResult']['textures'][tKey]) occlusionTexture = redGLTFLoader['parsingResult']['textures'][tKey];
                         else occlusionTexture = redGLTFLoader['parsingResult']['textures'][tKey] = RedBitmapTexture(redGLTFLoader['redGL'], tURL, option)
                         // var t0 = document.createElement('img')
                         // t0.src = json['images'][occlusionSourceIndex]['uri']
                         // t0.style.cssText = 'position:absolute;top:0px;left:0px;width:500px'
                         // document.body.appendChild(t0)
                     }
-                    var metallicFactor, roughnessFactor
+                    var metallicFactor, roughnessFactor;
                     if ('metallicFactor' in tMaterialInfo['pbrMetallicRoughness']) {
                         metallicFactor = tMaterialInfo['pbrMetallicRoughness']['metallicFactor']
                     }
                     if ('roughnessFactor' in tMaterialInfo['pbrMetallicRoughness']) {
                         roughnessFactor = tMaterialInfo['pbrMetallicRoughness']['roughnessFactor']
                     }
-                    var tColor
+                    var tColor;
                     // if (!redGLTFLoader['environmentTexture']) {
                     //     redGLTFLoader['environmentTexture'] = RedBitmapCubeTexture(redGLTFLoader['redGL'], [
                     //         '../asset/cubemap/SwedishRoyalCastle/px.jpg',
@@ -13208,44 +13843,44 @@ var RedGLTFLoader;
                     //         '../asset/cubemap/SwedishRoyalCastle/nz.jpg'
                     //     ])
                     // }
-                    var env = redGLTFLoader['environmentTexture']
+                    var env = redGLTFLoader['environmentTexture'];
                     // Type	Description	Required
                     // baseColorFactor	number [4]	The material's base color factor.	No, default: [1,1,1,1]
                     // baseColorTexture	object	The base color texture.	No
                     // metallicFactor	number	The metalness of the material.	No, default: 1
                     // roughnessFactor	number	The roughness of the material.	No, default: 1
                     // metallicRoughnessTexture	object	The metallic-roughness texture.	No
-                    tMaterial = RedPBRMaterial_System(redGLTFLoader['redGL'], diffseTexture, env, normalTexture, occlusionTexture, emissiveTexture, roughnessTexture, null)
-                    if (tMaterialInfo['pbrMetallicRoughness'] && tMaterialInfo['pbrMetallicRoughness']['baseColorFactor']) tColor = tMaterialInfo['pbrMetallicRoughness']['baseColorFactor']
-                    else tColor = [1.0, 1.0, 1.0, 1.0]
-                    tMaterial['baseColorFactor'] = tColor
+                    tMaterial = RedPBRMaterial_System(redGLTFLoader['redGL'], diffseTexture, env, normalTexture, occlusionTexture, emissiveTexture, roughnessTexture, null);
+                    if (tMaterialInfo['pbrMetallicRoughness'] && tMaterialInfo['pbrMetallicRoughness']['baseColorFactor']) tColor = tMaterialInfo['pbrMetallicRoughness']['baseColorFactor'];
+                    else tColor = [1.0, 1.0, 1.0, 1.0];
+                    tMaterial['baseColorFactor'] = tColor;
                     if (tMaterialInfo['pbrMetallicRoughness']) {
                         tMaterial.metallicFactor = metallicFactor != undefined ? metallicFactor : 1;
                         tMaterial.roughnessFactor = roughnessFactor != undefined ? roughnessFactor : 1;
                     }
                     tMaterial.emissiveFactor = tMaterialInfo.emissiveFactor != undefined ? tMaterialInfo.emissiveFactor : [1, 1, 1];
                     if (tMaterialInfo['pbrMetallicRoughness']) {
-                        if (tMaterialInfo['pbrMetallicRoughness']['metallicRoughnessTexture']) tMaterial['roughnessTexCoordIndex'] = tMaterialInfo['pbrMetallicRoughness']['metallicRoughnessTexture']['texCoord'] || 0
+                        if (tMaterialInfo['pbrMetallicRoughness']['metallicRoughnessTexture']) tMaterial['roughnessTexCoordIndex'] = tMaterialInfo['pbrMetallicRoughness']['metallicRoughnessTexture']['texCoord'] || 0;
                         if (tMaterialInfo['pbrMetallicRoughness']['baseColorTexture']) tMaterial['diffuseTexCoordIndex'] = tMaterialInfo['pbrMetallicRoughness']['baseColorTexture']['texCoord'] || 0
                     }
                     if (tMaterialInfo['occlusionTexture']) {
-                        tMaterial['occlusionTexCoordIndex'] = tMaterialInfo['occlusionTexture']['texCoord'] || 0
+                        tMaterial['occlusionTexCoordIndex'] = tMaterialInfo['occlusionTexture']['texCoord'] || 0;
                         tMaterial['occlusionPower'] = tMaterialInfo['occlusionTexture']['strength'] || 1
                     }
-                    if (tMaterialInfo['emissiveTexture']) tMaterial['emissiveTexCoordIndex'] = tMaterialInfo['emissiveTexture']['texCoord'] || 0
+                    if (tMaterialInfo['emissiveTexture']) tMaterial['emissiveTexCoordIndex'] = tMaterialInfo['emissiveTexture']['texCoord'] || 0;
                     if (tMaterialInfo['normalTexture']) tMaterial['normalTexCoordIndex'] = tMaterialInfo['normalTexture']['texCoord'] || 0
 
                 } else {
-                    var tColor = [(Math.random()), (Math.random()), (Math.random()), 1]
-                    tMaterial = RedPBRMaterial_System(redGLTFLoader['redGL'])
+                    var tColor = [(Math.random()), (Math.random()), (Math.random()), 1];
+                    tMaterial = RedPBRMaterial_System(redGLTFLoader['redGL']);
                     tMaterial['baseColorFactor'] = tColor
                 }
                 return [tMaterial, doubleSide, alphaMode, alphaCutoff]
             }
         })();
         var makeInterleaveData = function (interleaveData, vertices, verticesColor_0, normalData, uvs, uvs1, jointWeights, joints, tangents) {
-            var i = 0, len = vertices.length / 3
-            var idx = 0
+            var i = 0, len = vertices.length / 3;
+            var idx = 0;
             for (i; i < len; i++) {
                 if (vertices.length) {
                     interleaveData[idx++] = vertices[i * 3 + 0];
@@ -13272,7 +13907,7 @@ var RedGLTFLoader;
                     interleaveData[idx++] = normalData[i * 3 + 2];
                     // interleaveData.push(normalData[i * 3 + 0], normalData[i * 3 + 1], normalData[i * 3 + 2])
                 }
-                if (!uvs.length) uvs.push(0, 0)
+                if (!uvs.length) uvs.push(0, 0);
                 if (uvs.length) {
                     interleaveData[idx++] = uvs[i * 2 + 0];
                     interleaveData[idx++] = uvs[i * 2 + 1];
@@ -13317,26 +13952,26 @@ var RedGLTFLoader;
                     // interleaveData.push(0, 0, 0, 0)
                 }
             }
-        }
+        };
         makeMesh = function (redGLTFLoader, json, meshData) {
             // console.log('parseMesh :')
             // console.log(meshData)
-            var tName, tDoubleSide, tAlphaMode, tAlphaCutoff
-            if (meshData['name']) tName = meshData['name']
-            var tMeshList = []
+            var tName, tDoubleSide, tAlphaMode, tAlphaCutoff;
+            if (meshData['name']) tName = meshData['name'];
+            var tMeshList = [];
             meshData['primitives'].forEach(function (v, index) {
                 var tMesh;
-                var tMaterial
-                var indices = []
+                var tMaterial;
+                var indices = [];
                 // 어트리뷰트에서 파싱되는놈들
-                var vertices = []
-                var verticesColor_0 = []
-                var uvs = []
-                var uvs1 = []
-                var normals = []
-                var jointWeights = []
-                var joints = []
-                var tangents = []
+                var vertices = [];
+                var verticesColor_0 = [];
+                var uvs = [];
+                var uvs1 = [];
+                var normals = [];
+                var jointWeights = [];
+                var joints = [];
+                var tangents = [];
                 var tDrawMode;
                 // console.log(v, index)
                 // 형상 파싱
@@ -13346,12 +13981,12 @@ var RedGLTFLoader;
                         // console.log(k, '파싱')
                         // 엑세서를 통해서 정보파악하고
                         var accessorIndex = v['attributes'][key];
-                        var accessorInfo = new RedGLTF_AccessorInfo(redGLTFLoader, json, accessorIndex)
+                        var accessorInfo = new RedGLTF_AccessorInfo(redGLTFLoader, json, accessorIndex);
                         // 어트리뷰트 갈궈서 파악함
                         parseAttributeInfo(
                             redGLTFLoader, json, key, accessorInfo,
                             vertices, uvs, uvs1, normals, jointWeights, joints, verticesColor_0, tangents
-                        )
+                        );
                         // 스파스 정보도 갈굼
                         if (accessorInfo['accessor']['sparse']) parseSparse(redGLTFLoader, key, accessorInfo['accessor'], json, vertices, uvs, uvs1, normals, jointWeights, joints)
                     }
@@ -13360,19 +13995,19 @@ var RedGLTFLoader;
                 if ('indices' in v) {
                     // console.log('TODO: 인덱스 파싱')
                     // 버퍼뷰의 위치를 말하므로...이를 추적파싱항
-                    var accessorIndex = v['indices']
-                    var accessorInfo = new RedGLTF_AccessorInfo(redGLTFLoader, json, accessorIndex)
+                    var accessorIndex = v['indices'];
+                    var accessorInfo = new RedGLTF_AccessorInfo(redGLTFLoader, json, accessorIndex);
                     parseIndicesInfo(
                         redGLTFLoader, json, key, accessorInfo, indices
                     )
                 }
                 // 재질파싱
-                tMaterial = parseMaterialInfo(redGLTFLoader, json, v)
-                tDoubleSide = tMaterial[1]
-                tAlphaMode = tMaterial[2]
-                tAlphaCutoff = tMaterial[3]
-                tMaterial = tMaterial[0]
-                if (tMaterial instanceof RedPBRMaterial_System) redGLTFLoader['parsingResult']['materials'].push(tMaterial)
+                tMaterial = parseMaterialInfo(redGLTFLoader, json, v);
+                tDoubleSide = tMaterial[1];
+                tAlphaMode = tMaterial[2];
+                tAlphaCutoff = tMaterial[3];
+                tMaterial = tMaterial[0];
+                if (tMaterial instanceof RedPBRMaterial_System) redGLTFLoader['parsingResult']['materials'].push(tMaterial);
                 // 모드 파싱
                 if ('mode' in v) {
                     // 0 POINTS
@@ -13385,52 +14020,52 @@ var RedGLTFLoader;
                     // console.log('primitiveMode ', v['mode'])
                     switch (v['mode']) {
                         case 0 :
-                            tDrawMode = redGLTFLoader['redGL'].gl.POINTS
-                            break
+                            tDrawMode = redGLTFLoader['redGL'].gl.POINTS;
+                            break;
                         case 1 :
-                            tDrawMode = redGLTFLoader['redGL'].gl.LINES
-                            break
+                            tDrawMode = redGLTFLoader['redGL'].gl.LINES;
+                            break;
                         case 2 :
-                            tDrawMode = redGLTFLoader['redGL'].gl.LINE_LOOP
-                            break
+                            tDrawMode = redGLTFLoader['redGL'].gl.LINE_LOOP;
+                            break;
                         case 3 :
-                            tDrawMode = redGLTFLoader['redGL'].gl.LINE_STRIP
-                            break
+                            tDrawMode = redGLTFLoader['redGL'].gl.LINE_STRIP;
+                            break;
                         case 4 :
-                            tDrawMode = redGLTFLoader['redGL'].gl.TRIANGLES
-                            break
+                            tDrawMode = redGLTFLoader['redGL'].gl.TRIANGLES;
+                            break;
                         case 5 :
-                            tDrawMode = redGLTFLoader['redGL'].gl.TRIANGLE_STRIP
-                            break
+                            tDrawMode = redGLTFLoader['redGL'].gl.TRIANGLE_STRIP;
+                            break;
                         case 6 :
-                            tDrawMode = redGLTFLoader['redGL'].gl.TRIANGLE_FAN
+                            tDrawMode = redGLTFLoader['redGL'].gl.TRIANGLE_FAN;
                             break
                     }
                 }
                 /////////////////////////////////////////////////////////
                 // 최종데이터 생산
-                var normalData
-                if (normals.length) normalData = normals
-                else normalData = RedGLUtil.calculateNormals(vertices, indices)
+                var normalData;
+                if (normals.length) normalData = normals;
+                else normalData = RedGLUtil.calculateNormals(vertices, indices);
                 // console.log('vertices', vertices)
                 // console.log('normalData', normalData)
-                var interleaveData = []
+                var interleaveData = [];
 
-                makeInterleaveData(interleaveData, vertices, verticesColor_0, normalData, uvs, uvs1, jointWeights, joints, tangents)
+                makeInterleaveData(interleaveData, vertices, verticesColor_0, normalData, uvs, uvs1, jointWeights, joints, tangents);
                 // console.log('interleaveData', interleaveData)
                 /////////////////////////////////////////////////////////
                 // 메쉬 생성
-                var tGeo
-                var tInterleaveInfoList = []
-                if (vertices.length) tInterleaveInfoList.push(RedInterleaveInfo('aVertexPosition', 3))
-                tInterleaveInfoList.push(RedInterleaveInfo('aVertexColor_0', 4))
-                if (normalData.length) tInterleaveInfoList.push(RedInterleaveInfo('aVertexNormal', 3))
-                if (uvs.length) tInterleaveInfoList.push(RedInterleaveInfo('aTexcoord', 2))
-                if (uvs1.length) tInterleaveInfoList.push(RedInterleaveInfo('aTexcoord1', 2))
-                else if (uvs.length) tInterleaveInfoList.push(RedInterleaveInfo('aTexcoord1', 2))
-                if (jointWeights.length) tInterleaveInfoList.push(RedInterleaveInfo('aVertexWeight', 4))
-                if (joints.length) tInterleaveInfoList.push(RedInterleaveInfo('aVertexJoint', 4))
-                tInterleaveInfoList.push(RedInterleaveInfo('aVertexTangent', 4))
+                var tGeo;
+                var tInterleaveInfoList = [];
+                if (vertices.length) tInterleaveInfoList.push(RedInterleaveInfo('aVertexPosition', 3));
+                tInterleaveInfoList.push(RedInterleaveInfo('aVertexColor_0', 4));
+                if (normalData.length) tInterleaveInfoList.push(RedInterleaveInfo('aVertexNormal', 3));
+                if (uvs.length) tInterleaveInfoList.push(RedInterleaveInfo('aTexcoord', 2));
+                if (uvs1.length) tInterleaveInfoList.push(RedInterleaveInfo('aTexcoord1', 2));
+                else if (uvs.length) tInterleaveInfoList.push(RedInterleaveInfo('aTexcoord1', 2));
+                if (jointWeights.length) tInterleaveInfoList.push(RedInterleaveInfo('aVertexWeight', 4));
+                if (joints.length) tInterleaveInfoList.push(RedInterleaveInfo('aVertexJoint', 4));
+                tInterleaveInfoList.push(RedInterleaveInfo('aVertexTangent', 4));
                 tGeo = RedGeometry(
                     RedBuffer(
                         redGLTFLoader['redGL'],
@@ -13445,15 +14080,15 @@ var RedGLTFLoader;
                         RedBuffer.ELEMENT_ARRAY_BUFFER,
                         redGLTFLoader['redGL'].gl.glExtension['OES_element_index_uint'] ? new Uint32Array(indices) : new Uint16Array(indices)
                     ) : null
-                )
+                );
                 if (!tMaterial) {
                     RedGLUtil.throwFunc('재질을 파싱할수없는경우 ', v)
                     // tMaterial = RedColorPhongMaterial(redGLTFLoader['redGL'], RedGLUtil.rgb2hex(parseInt(Math.random() * 255), parseInt(Math.random() * 255), parseInt(Math.random() * 255)))
                 }
                 // console.log('tMaterial', tMaterial)
-                tMesh = RedMesh(redGLTFLoader['redGL'], tGeo, tMaterial)
+                tMesh = RedMesh(redGLTFLoader['redGL'], tGeo, tMaterial);
                 if (tName) {
-                    tMesh.name = tName
+                    tMesh.name = tName;
                     if (redGLTFLoader['parsingOption']) {
                         for (var k in redGLTFLoader['parsingOption']) {
                             if (tName.toLowerCase().indexOf(k) > -1) {
@@ -13463,11 +14098,11 @@ var RedGLTFLoader;
                     }
 
                 }
-                if (tDrawMode) tMesh.drawMode = tDrawMode
-                else tMesh.drawMode = redGLTFLoader['redGL'].gl.TRIANGLES
+                if (tDrawMode) tMesh.drawMode = tDrawMode;
+                else tMesh.drawMode = redGLTFLoader['redGL'].gl.TRIANGLES;
                 //
                 if (tDoubleSide) {
-                    tMesh.useCullFace = false
+                    tMesh.useCullFace = false;
                     tMaterial.useMaterialDoubleSide = true
                 }
                 // console.log('tAlphaMode', tAlphaMode)
@@ -13476,32 +14111,32 @@ var RedGLTFLoader;
                     // TODO
 
                     case 'BLEND' :
-                        tMesh['useTransparentSort'] = true
-                        break
+                        tMesh['useTransparentSort'] = true;
+                        break;
                     case 'MASK' :
-                        tMesh.useBlendMode = false
-                        tMaterial.cutOff = tAlphaCutoff
-                        break
+                        tMesh.useBlendMode = false;
+                        tMaterial.cutOff = tAlphaCutoff;
+                        break;
                     default :
-                        tMesh.useBlendMode = false
+                        tMesh.useBlendMode = false;
                         tMaterial._cutOff = -0.1
                     // tMesh.useBlendMode = false
                 }
-                if (verticesColor_0.length) tMaterial.useVertexColor_0 = true
-                if (tangents.length) tMaterial.useVertexTangent = true
+                if (verticesColor_0.length) tMaterial.useVertexColor_0 = true;
+                if (tangents.length) tMaterial.useVertexTangent = true;
                 // console.log('tDoubleSide', tDoubleSide)
                 // console.log('tMesh', tMesh)
                 /////////////////////////////////////////////////////////
                 // 모프리스트 설정
-                var morphInfo = new RedGLTF_MorphInfo(redGLTFLoader, json, v, meshData['weights'])
+                var morphInfo = new RedGLTF_MorphInfo(redGLTFLoader, json, v, meshData['weights']);
                 morphInfo['list'].forEach(function (v) {
-                    var normalData
-                    if (v['normals'].length) normalData = v['normals']
-                    else normalData = RedGLUtil.calculateNormals(v['vertices'], indices)
+                    var normalData;
+                    if (v['normals'].length) normalData = v['normals'];
+                    else normalData = RedGLUtil.calculateNormals(v['vertices'], indices);
                     // console.log('vertices', vertices)
                     // console.log('normalData', normalData)
-                    var interleaveData = []
-                    makeInterleaveData(interleaveData, v['vertices'], v['verticesColor_0'], normalData, v['uvs'], v['uvs1'], v['jointWeights'], v['joints'], v['tangents'])
+                    var interleaveData = [];
+                    makeInterleaveData(interleaveData, v['vertices'], v['verticesColor_0'], normalData, v['uvs'], v['uvs1'], v['jointWeights'], v['joints'], v['tangents']);
                     // var i = 0, len = v['vertices'].length / 3
                     // for (i; i < len; i++) {
                     //     if (v['vertices'].length) interleaveData.push(v['vertices'][i * 3 + 0], v['vertices'][i * 3 + 1], v['vertices'][i * 3 + 2])
@@ -13520,32 +14155,32 @@ var RedGLTFLoader;
                     // }
                     v['interleaveData'] = interleaveData
                 });
-                tMesh['_morphInfo'] = morphInfo
-                tMesh['_morphInfo']['origin'] = new Float32Array(interleaveData)
-                console.log('모프리스트', tMesh['_morphInfo'])
+                tMesh['_morphInfo'] = morphInfo;
+                tMesh['_morphInfo']['origin'] = new Float32Array(interleaveData);
+                console.log('모프리스트', tMesh['_morphInfo']);
                 // console.log(morphInfo)
                 /////////////////////////////////////////////////////
-                var targetData = tMesh['geometry']['interleaveBuffer']['data']
-                var NUM = 0
+                var targetData = tMesh['geometry']['interleaveBuffer']['data'];
+                var NUM = 0;
                 tInterleaveInfoList.forEach(function (v) {
                     NUM += v['size']
-                })
-                var gap = 0
+                });
+                var gap = 0;
                 tMesh['_morphInfo']['list'].forEach(function (v, index) {
                     // console.log('tInterleaveInfoList', tInterleaveInfoList)
                     // console.log('NUM', NUM)
-                    var i = 0, len = targetData.length / NUM
-                    var tWeights = tMesh['_morphInfo']['list']['weights'][index] == undefined ? 0.5 : tMesh['_morphInfo']['list']['weights'][index]
+                    var i = 0, len = targetData.length / NUM;
+                    var tWeights = tMesh['_morphInfo']['list']['weights'][index] == undefined ? 0.5 : tMesh['_morphInfo']['list']['weights'][index];
                     for (i; i < len; i++) {
-                        targetData[i * NUM + 0] += v['vertices'][i * 3 + 0] * tWeights
-                        targetData[i * NUM + 1] += v['vertices'][i * 3 + 1] * tWeights
+                        targetData[i * NUM + 0] += v['vertices'][i * 3 + 0] * tWeights;
+                        targetData[i * NUM + 1] += v['vertices'][i * 3 + 1] * tWeights;
                         targetData[i * NUM + 2] += v['vertices'][i * 3 + 2] * tWeights
                     }
                 });
-                tMesh['geometry']['interleaveBuffer'].upload(targetData)
-                tMesh['_morphInfo']['origin'] = new Float32Array(targetData)
+                tMesh['geometry']['interleaveBuffer'].upload(targetData);
+                tMesh['_morphInfo']['origin'] = new Float32Array(targetData);
                 /////////////////////////////////////////////////////
-                v['RedMesh'] = tMesh
+                v['RedMesh'] = tMesh;
                 tMeshList.push(tMesh)
                 // console.log('vertices', vertices)
                 // console.log('normalData', normalData)
@@ -13553,15 +14188,15 @@ var RedGLTFLoader;
                 // console.log('joints', joints)
                 // console.log('jointWeights', jointWeights)
                 // console.log('indices', indices)
-            })
+            });
             return tMeshList
-        }
+        };
         parseAnimations = (function () {
             var parseAnimationInfo;
             parseAnimationInfo = function (redGLTFLoader, json, accessorIndex) {
                 // console.log('accessorIndex', accessorIndex)
-                var dataList = []
-                var accessorInfo = new RedGLTF_AccessorInfo(redGLTFLoader, json, accessorIndex)
+                var dataList = [];
+                var accessorInfo = new RedGLTF_AccessorInfo(redGLTFLoader, json, accessorIndex);
                 var tBYTES_PER_ELEMENT = accessorInfo['componentType_BYTES_PER_ELEMENT'];
                 // var tBufferViewByteStride = accessorInfo['bufferViewByteStride'];
                 var tBufferURIDataView = accessorInfo['bufferURIDataView'];
@@ -13570,8 +14205,8 @@ var RedGLTFLoader;
                 var tCount = accessorInfo['accessor']['count'];
                 // var strideIndex = 0;
                 // var stridePerElement = tBufferViewByteStride / tBYTES_PER_ELEMENT
-                var i = accessorInfo['startIndex']
-                var len
+                var i = accessorInfo['startIndex'];
+                var len;
                 switch (tType) {
                     case 'SCALAR' :
                         len = i + tCount * 1;
@@ -13579,46 +14214,46 @@ var RedGLTFLoader;
                             dataList.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                         }
                         // console.log('타임 데이터', dataList)
-                        break
+                        break;
                     case 'VEC4' :
                         len = i + tCount * 4;
                         for (i; i < len; i++) {
                             dataList.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                         }
                         // console.log('값 데이터', dataList)
-                        break
+                        break;
                     case 'VEC3' :
                         len = i + tCount * 3;
                         for (i; i < len; i++) {
                             dataList.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                         }
                         // console.log('값 데이터', dataList)
-                        break
+                        break;
                     default :
-                        console.log('알수없는 형식 엑세서 타입', accessorInfo['accessor'])
+                        console.log('알수없는 형식 엑세서 타입', accessorInfo['accessor']);
                         break
                 }
                 return dataList
-            }
+            };
             return function (redGLTFLoader, json) {
-                console.log('애니메이션 파싱시작')
-                var nodes = json['nodes']
-                var meshes = json['meshes']
-                var accessors = json['accessors']
-                if (!json['animations']) json['animations'] = []
+                console.log('애니메이션 파싱시작');
+                var nodes = json['nodes'];
+                var meshes = json['meshes'];
+                var accessors = json['accessors'];
+                if (!json['animations']) json['animations'] = [];
                 json['animations'].forEach(function (v, index) {
                     // console.log(v)
                     var samplers = v['samplers'];
                     //TODO: 용어를 정리해봐야겠음.
                     // 이걸 애니메이션 클립으로 봐야하는가..
-                    var animationClip = []
+                    var animationClip = [];
 
                     animationClip['minTime'] = 10000000;
                     animationClip['maxTime'] = -1;
                     // animationClip['name'] = 'animation_' + index;
                     animationClip['name'] = v['name'];
                     // 로더에 애니메이션 데이터들을 입력함
-                    redGLTFLoader['parsingResult']['animations'].push(animationClip)
+                    redGLTFLoader['parsingResult']['animations'].push(animationClip);
                     // 채널을 돌면서 파악한다.
                     v['channels'].forEach(function (channel, channelIndex) {
                         var tSampler;
@@ -13626,27 +14261,27 @@ var RedGLTFLoader;
                         var tMesh;
                         var tNode;
                         var aniTrack; //
-                        var targets = []
+                        var targets = [];
                         tSampler = samplers[channel['sampler']];
                         // console.log('tSampler', tSampler)
                         tChannelTargetData = channel['target'];
                         tNode = nodes[tChannelTargetData['node']];
                         if ('mesh' in tNode) {
-                            tMesh = tNode['RedMesh']
+                            tMesh = tNode['RedMesh'];
                             meshes[tNode['mesh']]['primitives'].forEach(function (v) {
-                                targets.push(v['RedMesh'])
+                                targets.push(v['RedMesh']);
                                 v['RedMesh'].geometry.drawMode = redGLTFLoader['redGL']['gl'].DYNAMIC_DRAW
                             })
                         } else {
-                            var tGroup
+                            var tGroup;
                             //TODO: 이거 개선해야함
                             // console.log('여기로 오는경우가 있는건가')
                             if (redGLTFLoader['parsingResult']['groups'][tChannelTargetData['node']]) {
-                                tGroup = redGLTFLoader['parsingResult']['groups'][tChannelTargetData['node']]
+                                tGroup = redGLTFLoader['parsingResult']['groups'][tChannelTargetData['node']];
                                 // console.log('tGroup', tGroup)
                                 tMesh = tGroup;
                             } else {
-                                console.log('여기로 오는경우가 있는건가2')
+                                console.log('여기로 오는경우가 있는건가2');
                                 return
                             }
                         }
@@ -13681,11 +14316,11 @@ var RedGLTFLoader;
                             console.log('파싱할수없는 데이터', tChannelTargetData['path'])
                         }
                         if (aniTrack) {
-                            if (animationClip['minTime'] > aniTrack['time'][0]) animationClip['minTime'] = aniTrack['time'][0]
+                            if (animationClip['minTime'] > aniTrack['time'][0]) animationClip['minTime'] = aniTrack['time'][0];
                             if (animationClip['maxTime'] < aniTrack['time'][aniTrack['time'].length - 1]) animationClip['maxTime'] = aniTrack['time'][aniTrack['time'].length - 1]
                         }
                         // console.log('animationData', animationData)
-                    })
+                    });
                     console.log('animationClip', animationClip)
                 });
                 if (redGLTFLoader['parsingResult']['animations'].length) {
@@ -13704,15 +14339,15 @@ var RedGLTFLoader;
             // console.log('rawData', json);
             checkAsset(json);
             if (binaryChunk) {
-                console.log(json)
-                console.log(binaryChunk)
-                json.buffers[0]['uri'] = binaryChunk
+                console.log(json);
+                console.log(binaryChunk);
+                json.buffers[0]['uri'] = binaryChunk;
                 getBaseResource(redGLTFLoader, json,
                     function () {
                         // 리소스 로딩이 완료되면 다음 진행
-                        parseCameras(redGLTFLoader, json)
+                        parseCameras(redGLTFLoader, json);
                         parseScene(redGLTFLoader, json, function () {
-                            parseAnimations(redGLTFLoader, json)
+                            parseAnimations(redGLTFLoader, json);
                             if (callBack) callBack();
                         })
 
@@ -13722,9 +14357,9 @@ var RedGLTFLoader;
                 getBaseResource(redGLTFLoader, json,
                     function () {
                         // 리소스 로딩이 완료되면 다음 진행
-                        parseCameras(redGLTFLoader, json)
+                        parseCameras(redGLTFLoader, json);
                         parseScene(redGLTFLoader, json, function () {
-                            parseAnimations(redGLTFLoader, json)
+                            parseAnimations(redGLTFLoader, json);
                             if (callBack) callBack();
                         })
 
@@ -13735,6 +14370,13 @@ var RedGLTFLoader;
     })();
     Object.freeze(RedGLTFLoader);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedLinePoint;
 (function () {
@@ -13842,6 +14484,13 @@ var RedLinePoint;
      :DOC*/
     Object.freeze(RedLinePoint);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedLathe;
 (function () {
@@ -14256,7 +14905,7 @@ var RedLathe;
             offset = i * 3;
             interleaveData.push(positions[offset + 0], positions[offset + 1], positions[offset + 2]);
             interleaveData.push(normals[offset + 0], normals[offset + 1], normals[offset + 2]);
-            offset = i * 2
+            offset = i * 2;
             interleaveData.push(texcoords[offset + 0], texcoords[offset + 1])
         }
         ////////////////////////////////////////////////////////////////////////////
@@ -14386,6 +15035,13 @@ var RedLathe;
     RedLathe.prototype = Object.create(RedGeometry.prototype);
     Object.freeze(RedLathe);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedAxis;
 (function () {
@@ -14434,7 +15090,7 @@ var RedAxis;
         tAxis.scaleX = tAxis.scaleY = tAxis.scaleZ = 0.1;
         tAxis.scaleX = 5;
         tArrowMesh.x = 5;
-        tArrowMesh.rotationZ = 90
+        tArrowMesh.rotationZ = 90;
         tAxis.x = 2.5;
         this['children'].push(tAxis);
         this['children'].push(tArrowMesh);
@@ -14455,7 +15111,7 @@ var RedAxis;
         tAxis.scaleX = tAxis.scaleY = tAxis.scaleZ = 0.1;
         tAxis.scaleZ = 5;
         tArrowMesh.z = 5;
-        tArrowMesh.rotationX = -90
+        tArrowMesh.rotationX = -90;
         tAxis.z = 2.5;
         this['children'].push(tAxis);
         this['children'].push(tArrowMesh);
@@ -14466,6 +15122,13 @@ var RedAxis;
     RedAxis.prototype = new RedBaseContainer();
     Object.freeze(RedAxis);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedGrid;
 (function () {
@@ -14602,7 +15265,7 @@ var RedGrid;
 		 return : 'Number'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedGrid', 'divisions', 'number', {
+    RedDefinePropertyInfo.definePrototype('RedGrid', 'divisions', 'uint', {
         min: 1,
         callback: function () {
             this['_update']()
@@ -14629,7 +15292,7 @@ var RedGrid;
         set: function (hex) {
             RedGLUtil.regHex(hex) || RedGLUtil.throwFunc('RedGrid : color1 hex 형식만 허용.', hex);
             this['_color1'] = hex;
-            this['_update']()
+            this['_update']();
             return this['_color1']
         }
     });
@@ -14654,7 +15317,7 @@ var RedGrid;
         set: function (hex) {
             RedGLUtil.regHex(hex) || RedGLUtil.throwFunc('RedGrid : color2 hex 형식만 허용.', hex);
             this['_color2'] = hex;
-            this['_update']()
+            this['_update']();
             return this['_color2']
         }
     });
@@ -14669,6 +15332,13 @@ var RedGrid;
     });
     Object.freeze(RedGrid);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedMesh;
 (function () {
@@ -14741,7 +15411,7 @@ var RedMesh;
 		 return : 'Boolean'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedMesh', 'perspectiveScale', 'boolean', false);
+    RedDefinePropertyInfo.definePrototype('RedMesh', 'perspectiveScale', 'boolean');
     /**DOC:
      {
 		 code : 'PROPERTY',
@@ -14753,9 +15423,16 @@ var RedMesh;
 		 return : 'Boolean'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedMesh', 'sprite3DYn', 'boolean', false);
+    RedDefinePropertyInfo.definePrototype('RedMesh', 'sprite3DYn', 'boolean');
     Object.freeze(RedMesh);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedLine;
 (function () {
@@ -14780,7 +15457,7 @@ var RedLine;
         var e = points[end - 1];
         var maxDistSq = 0;
         var maxNdx = 1;
-        var i = start + 1
+        var i = start + 1;
         for (i; i < end - 1; ++i) {
             var distSq = vec2_distanceToSegmentSq(points[i], s, e);
             if (distSq > maxDistSq) {
@@ -14834,22 +15511,22 @@ var RedLine;
             targetPoint = points[i];
 
             if (index == 0) {
-                newPointList[index++] = targetPoint['_point']
+                newPointList[index++] = targetPoint['_point'];
                 newPointList[index++] = targetPoint['_outPoint']
                 //
             } else {
-                newPointList[index++] = targetPoint['_inPoint']
-                newPointList[index++] = targetPoint['_point']
+                newPointList[index++] = targetPoint['_inPoint'];
+                newPointList[index++] = targetPoint['_point'];
                 if (points[i + 1]) newPointList[index++] = targetPoint['_outPoint']
 
             }
         }
-        console.log(newPointList)
+        console.log(newPointList);
         return newPointList;
     };
     getPointsOnBezierCurves = (function () {
-        var flatness
-        var getPointsOnBezierCurveWithSplitting
+        var flatness;
+        var getPointsOnBezierCurveWithSplitting;
 
         flatness = function (points, offset) {
             var p1 = points[offset + 0];
@@ -14897,9 +15574,9 @@ var RedLine;
         return function (points, tolerance) {
             var newPoints = [];
             var numSegments = (points.length - 1) / 3;
-            numSegments = Math.floor(numSegments)
+            numSegments = Math.floor(numSegments);
             var i = 0;
-            var offset
+            var offset;
             for (i; i < numSegments; ++i) {
                 offset = i * 3;
                 getPointsOnBezierCurveWithSplitting(points, offset, tolerance, newPoints);
@@ -14911,30 +15588,30 @@ var RedLine;
         target['points'].forEach(function (tPoint, index) {
             var t0;
             if (tPoint['_debugObjectInPointMesh']) {
-                tPoint['_debugObjectPointMesh'].removeChild(t0 = tPoint['_debugObjectInPointMesh'])
-                t0.disposeAll()
+                tPoint['_debugObjectPointMesh'].removeChild(t0 = tPoint['_debugObjectInPointMesh']);
+                t0.disposeAll();
                 tPoint['_debugObjectInPointMesh'] = null
             }
             if (tPoint['_debugObjectOutPointMesh']) {
-                tPoint['_debugObjectPointMesh'].removeChild(t0 = tPoint['_debugObjectOutPointMesh'])
-                t0.disposeAll()
+                tPoint['_debugObjectPointMesh'].removeChild(t0 = tPoint['_debugObjectOutPointMesh']);
+                t0.disposeAll();
                 tPoint['_debugObjectOutPointMesh'] = null
             }
             if (tPoint['_debugObjectPointMesh']) {
-                target.removeChild(t0 = tPoint['_debugObjectPointMesh'])
-                t0.disposeAll()
+                target.removeChild(t0 = tPoint['_debugObjectPointMesh']);
+                t0.disposeAll();
                 tPoint['_debugObjectPointMesh'] = null
             }
 
         })
     };
     setDebugMeshs = function (target) {
-        var debugSize = 1
+        var debugSize = 1;
         var tDebugMesh;
         var redGL = target['_redGL'];
         var tDebugRoot;
         var t1;
-        destroyDebugMesh(target)
+        destroyDebugMesh(target);
         target['points'].forEach(function (tPoint, index) {
             if (!tPoint['_debugObjectPointMesh']) {
                 tPoint['_debugObjectPointMesh'] = RedMesh(redGL, RedBox(redGL, debugSize, debugSize, debugSize), RedColorMaterial(redGL, '#00ff00'));
@@ -14956,9 +15633,9 @@ var RedLine;
                                 target['_type'] == RedLine.BEZIER ? 1 : 0.5
                             )
                         );
-                        t1 = RedLine(redGL, RedColorMaterial(redGL, '#fff', 0.5))
-                        t1.drawMode = redGL.gl.LINES
-                        tDebugRoot.addChild(tPoint['_debugObjectInPointMesh'])
+                        t1 = RedLine(redGL, RedColorMaterial(redGL, '#fff', 0.5));
+                        t1.drawMode = redGL.gl.LINES;
+                        tDebugRoot.addChild(tPoint['_debugObjectInPointMesh']);
                         tPoint['_debugObjectInPointMesh'].addChild(t1)
                     }
                     t1 = tPoint['_debugObjectInPointMesh'].getChildAt(0);
@@ -14983,9 +15660,9 @@ var RedLine;
                                 target['_type'] == RedLine.BEZIER ? 1 : 0.5
                             )
                         );
-                        t1 = RedLine(redGL, RedColorMaterial(redGL, '#fff', 0.5))
-                        t1.drawMode = redGL.gl.LINES
-                        tDebugRoot.addChild(tPoint['_debugObjectOutPointMesh'])
+                        t1 = RedLine(redGL, RedColorMaterial(redGL, '#fff', 0.5));
+                        t1.drawMode = redGL.gl.LINES;
+                        tDebugRoot.addChild(tPoint['_debugObjectOutPointMesh']);
                         tPoint['_debugObjectOutPointMesh'].addChild(t1)
                     }
                     t1 = tPoint['_debugObjectOutPointMesh'].getChildAt(0);
@@ -15002,43 +15679,43 @@ var RedLine;
 
             }
             if (tPoint['_debugObjectPointMesh']) {
-                tDebugMesh = tPoint['_debugObjectPointMesh']
-                tDebugMesh['x'] = tPoint['_point'][0]
-                tDebugMesh['y'] = tPoint['_point'][1]
+                tDebugMesh = tPoint['_debugObjectPointMesh'];
+                tDebugMesh['x'] = tPoint['_point'][0];
+                tDebugMesh['y'] = tPoint['_point'][1];
                 tDebugMesh['z'] = tPoint['_point'][2]
             }
 
             // 아웃 포인트 디버깅
             if (tPoint['_debugObjectOutPointMesh']) {
-                tPoint['_debugObjectOutPointMesh']['x'] = tPoint['_outPoint'][0] - tPoint['_point'][0]
-                tPoint['_debugObjectOutPointMesh']['y'] = tPoint['_outPoint'][1] - tPoint['_point'][1]
+                tPoint['_debugObjectOutPointMesh']['x'] = tPoint['_outPoint'][0] - tPoint['_point'][0];
+                tPoint['_debugObjectOutPointMesh']['y'] = tPoint['_outPoint'][1] - tPoint['_point'][1];
                 tPoint['_debugObjectOutPointMesh']['z'] = tPoint['_outPoint'][2] - tPoint['_point'][2]
             }
 
             // 인 포인트 디버깅
             if (tPoint['_debugObjectInPointMesh']) {
-                tPoint['_debugObjectInPointMesh']['x'] = tPoint['_inPoint'][0] - tPoint['_point'][0]
-                tPoint['_debugObjectInPointMesh']['y'] = tPoint['_inPoint'][1] - tPoint['_point'][1]
+                tPoint['_debugObjectInPointMesh']['x'] = tPoint['_inPoint'][0] - tPoint['_point'][0];
+                tPoint['_debugObjectInPointMesh']['y'] = tPoint['_inPoint'][1] - tPoint['_point'][1];
                 tPoint['_debugObjectInPointMesh']['z'] = tPoint['_inPoint'][2] - tPoint['_point'][2]
             }
 
         });
-    }
+    };
     parsePointsByType = function (target, tension, tolerance, distance) {
         // 타입별로 파서 분기
-        console.log(target)
+        console.log(target);
         target['_interleaveData'].length = 0;
 
         switch (target['_type']) {
             case RedLine['CATMULL_ROM'] :
                 if (target['points'].length > 1) {
                     var newPointList = solveCatmullRomPoint(target['points'], tension);
-                    console.log(newPointList)
+                    console.log(newPointList);
                     target['_serializedPoints'] = serializePoints(newPointList);
                     newPointList = getPointsOnBezierCurves(target['_serializedPoints'], tolerance);
-                    newPointList = simplifyPoints(newPointList, 0, newPointList.length, distance)
+                    newPointList = simplifyPoints(newPointList, 0, newPointList.length, distance);
 
-                    var i = 0, len = newPointList.length
+                    var i = 0, len = newPointList.length;
                     for (i; i < len; i++) {
                         target['_interleaveData'].push(newPointList[i][0], newPointList[i][1], newPointList[i][2])
                     }
@@ -15050,9 +15727,9 @@ var RedLine;
                 if (target['points'].length > 1) {
                     target['_serializedPoints'] = serializePoints(target['points']);
                     newPointList = getPointsOnBezierCurves(target['_serializedPoints'], tolerance);
-                    newPointList = simplifyPoints(newPointList, 0, newPointList.length, distance)
+                    newPointList = simplifyPoints(newPointList, 0, newPointList.length, distance);
 
-                    var i = 0, len = newPointList.length
+                    var i = 0, len = newPointList.length;
                     for (i; i < len; i++) {
                         target['_interleaveData'].push(newPointList[i][0], newPointList[i][1], newPointList[i][2])
                     }
@@ -15065,8 +15742,8 @@ var RedLine;
                     target['_interleaveData'].push(v['_point'][0], v['_point'][1], v['_point'][2]);
                 })
         }
-        if (target['debug']) setDebugMeshs(target)
-        console.log(target['_interleaveData'])
+        if (target['debug']) setDebugMeshs(target);
+        console.log(target['_interleaveData']);
         // target['_indexData'].push(tIndex);
         target['_upload']();
     };
@@ -15126,11 +15803,11 @@ var RedLine;
         //
         this['points'] = []; // 오리지널 포인트
         this['_serializedPoints'] = []; //직렬화된 포인트
-        this['_tension'] = 1
-        this['_tolerance'] = 0.01
-        this['_distance'] = 0.1
-        this['_type'] = type || RedLine['LINEAR'];
-        this['_debug'] = false
+        this['_tension'] = 1;
+        this['_tolerance'] = 0.01;
+        this['_distance'] = 0.1;
+        this['type'] = type || RedLine['LINEAR'];
+        this['_debug'] = false;
         console.log(this)
     };
     /**DOC:
@@ -15339,7 +16016,6 @@ var RedLine;
 		 description : `
 		 type이 RedLine.CATMULL_ROM 일 경우의 장력
 		 기본값 1
-		 최소값 0
 		 `,
 		 return : 'Number'
 	 }
@@ -15380,15 +16056,21 @@ var RedLine;
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedLine', 'debug', 'boolean', {
         callback: function (v) {
-            if (v) setDebugMeshs(this)
+            if (v) setDebugMeshs(this);
             else destroyDebugMesh(this)
         }
     });
     RedLine.prototype['_simplifyPoints'] = simplifyPoints;
     RedLine.prototype['_getPointsOnBezierCurves'] = getPointsOnBezierCurves;
-
     Object.freeze(RedLine);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedLatheMesh;
 (function () {
@@ -15460,17 +16142,17 @@ var RedLatheMesh;
         // 기본값 정의
         this['_pathString'] = pathString;
         this['_redGL'] = redGL;
-        this['_numDivisions'] = numDivisions = Math.floor(numDivisions) || 16;
-        this['_capStart'] = capStart !== undefined ? capStart : false;
-        this['_capEnd'] = capEnd !== undefined ? capEnd : false;
-        this['_startAngle'] = startAngle !== undefined ? startAngle : 0.0;
-        this['_endAngle'] = endAngle !== undefined ? endAngle : Math.PI * 2;
-        this['_distance'] = distance !== undefined ? distance : 0.4;
-        this['_maxAngle'] = maxAngle !== undefined ? maxAngle : Math.PI / 180 * 30
-        this['_tolerance'] = tolerance !== undefined ? tolerance : 0.15
-        this['_flipX'] = flipX ? true : false;
-        this['_flipY'] = flipY ? true : false;
-        if (this['_tolerance'] < 0.1) this['_tolerance'] = 0.1
+        this['numDivisions'] = numDivisions = Math.floor(numDivisions) || 16;
+        this['capStart'] = capStart !== undefined ? capStart : false;
+        this['capEnd'] = capEnd !== undefined ? capEnd : false;
+        this['startAngle'] = startAngle !== undefined ? startAngle : 0.0;
+        this['endAngle'] = endAngle !== undefined ? endAngle : Math.PI * 2;
+        this['distance'] = distance !== undefined ? distance : 0.4;
+        this['maxAngle'] = maxAngle !== undefined ? maxAngle : Math.PI / 180 * 30;
+        this['tolerance'] = tolerance !== undefined ? tolerance : 0.15;
+        this['flipX'] = flipX ? true : false;
+        this['flipY'] = flipY ? true : false;
+        if (this['_tolerance'] < 0.1) this['_tolerance'] = 0.1;
         /**DOC:
          {
 		     code : 'PROPERTY',
@@ -15479,7 +16161,7 @@ var RedLatheMesh;
 			 return : 'RedGeometry'
 		 }
          :DOC*/
-        resetGeometry.call(this)
+        resetGeometry.call(this);
         /**DOC:
          {
 		     code : 'PROPERTY',
@@ -15505,7 +16187,7 @@ var RedLatheMesh;
             this._tolerance,
             this._flipX, this._flipY
         );
-    }
+    };
     Object.defineProperty(RedLatheMesh.prototype, 'pathString', {
         get: function () {
             return this['_pathString'];
@@ -15516,13 +16198,13 @@ var RedLatheMesh;
         }
     });
     /**DOC:
-        {
+     {
             code : 'PROPERTY',
             title :`numDivisions`,
             description : `분할갯수`,
             return : 'uint'
         }
-    :DOC*/
+     :DOC*/
     RedDefinePropertyInfo.definePrototype('RedLatheMesh', 'numDivisions', 'number', {min: 0, callback: resetGeometry});
     /**DOC:
      {
@@ -15592,6 +16274,13 @@ var RedLatheMesh;
     Object.freeze(RedLatheMesh);
 })
 ();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedSkyBox;
 (function () {
@@ -15609,6 +16298,11 @@ var RedSkyBox;
 			 srcList : [
 				 {type:'Array'},
 				 `스카이박스 이미지 리스트`
+			 ],
+			 alpha : [
+			    {type:Number},
+			    '기본값 : 1',
+			    '범위 : 0 ~ 1'
 			 ]
 		 },
          extends : [
@@ -15633,17 +16327,23 @@ var RedSkyBox;
 		 return : 'RedSkyBox Instance'
 	 }
      :DOC*/
-    RedSkyBox = function (redGL, srcList) {
-        if (!(this instanceof RedSkyBox)) return new RedSkyBox(redGL, srcList);
+    RedSkyBox = function (redGL, srcList, alpha) {
+        if (!(this instanceof RedSkyBox)) return new RedSkyBox(redGL, srcList, alpha);
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedSkyBox : RedGL Instance만 허용.', redGL);
         RedBaseObject3D['build'].call(this, redGL.gl);
         this['geometry'] = RedBox(redGL);
         this['material'] = RedSkyBoxMaterial(redGL, RedBitmapCubeTexture(redGL, srcList));
         this['cullFace'] = redGL.gl.FRONT;
+        this['alpha'] = alpha == undefined ? 1 : alpha;
         this['_UUID'] = RedGL.makeUUID();
         console.log(this);
     };
     RedSkyBox.prototype = new RedBaseObject3D();
+    RedDefinePropertyInfo.definePrototype('RedSkyBox', 'alpha', 'number', {
+        min: 0, max: 1, callback: function (v) {
+            this['material'].alpha = v
+        }
+    });
     Object.defineProperty(RedSkyBox.prototype, 'geometry', {
         get: function () {
             return this['_geometry'];
@@ -15664,6 +16364,13 @@ var RedSkyBox;
     });
     Object.freeze(RedSkyBox);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedSprite3D;
 (function () {
@@ -15720,7 +16427,7 @@ var RedSprite3D;
 		 return : 'Boolean'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedSprite3D', 'perspectiveScale', 'boolean', true);
+    RedDefinePropertyInfo.definePrototype('RedSprite3D', 'perspectiveScale', 'boolean');
     /**DOC:
      {
 		 code : 'PROPERTY',
@@ -15732,7 +16439,7 @@ var RedSprite3D;
 		 return : 'Boolean'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedSprite3D', 'sprite3DYn', 'boolean', true);
+    RedDefinePropertyInfo.definePrototype('RedSprite3D', 'sprite3DYn', 'boolean');
     /**DOC:
      {
 		 code : 'PROPERTY',
@@ -15759,6 +16466,514 @@ var RedSprite3D;
     });
     Object.freeze(RedSprite3D);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
+"use strict";
+
+var RedTransformController;
+(function () {
+    var calAABB = function (tTransformController, tMesh) {
+        var t0 = tMesh.volumeCalculateAABB();
+        console.log(t0);
+        var tScale = 0;
+        if (tScale < t0['volume'][0]) tScale = t0['volume'][0];
+        if (tScale < t0['volume'][1]) tScale = t0['volume'][1];
+        if (tScale < t0['volume'][2]) tScale = t0['volume'][2];
+        if (tTransformController['useScale']) tTransformController.rotationGroup.scaleX = tTransformController.rotationGroup.scaleY = tTransformController.rotationGroup.scaleZ = tScale;
+        tTransformController['boundBox'].matrix = t0.worldMatrix
+    };
+    var calOBB = function (tTransformController, tMesh) {
+        var t0 = tMesh.volumeCalculateOBB();
+        var tScale = 0;
+        if (tScale < tMesh.scaleX) tScale = tMesh.scaleX;
+        if (tScale < tMesh.scaleY) tScale = tMesh.scaleY;
+        if (tScale < tMesh.scaleZ) tScale = tMesh.scaleZ;
+        if (tTransformController['useScale']) tTransformController.rotationGroup.scaleX = tTransformController.rotationGroup.scaleY = tTransformController.rotationGroup.scaleZ = tScale;
+        tTransformController['boundBox'].matrix = t0.worldMatrix
+
+
+    };
+    var callBoundBox = function (tTransformController, tMesh) {
+        switch (tTransformController['boundBoxMode']) {
+            case RedTransformController.AABB:
+                calAABB(tTransformController, tMesh);
+                break;
+            case RedTransformController.OBB:
+                calOBB(tTransformController, tMesh);
+                break;
+        }
+    };
+    var instanceList = [];
+    /**DOC:
+     {
+		 constructorYn : true,
+		 title :`RedTransformController`,
+		 description : `
+			 RedTransformController Instance 생성기
+		 `,
+		 params : {
+			 redGL : [
+				 {type:'RedGL'}
+			 ],
+		 },
+		 extends : [
+		    'RedBaseContainer',
+		    'RedBaseObject3D'
+		 ],
+		 demo : '../example/object3D/RedTransformController.html',
+		 return : 'RedTransformController Instance'
+	 }
+     :DOC*/
+    RedTransformController = function (redGL) {
+        if (!(this instanceof RedTransformController)) return new RedTransformController(redGL);
+        redGL instanceof RedGL || RedGLUtil.throwFunc('RedTransformController : RedGL Instance만 허용.', redGL);
+        RedBaseObject3D['build'].call(this, redGL.gl);
+        this['_setRotationGroup'](redGL);
+        this['_setScaleGroup'](redGL);
+        this['_setPositionGroup'](redGL);
+        ////////////////////////////////////////////
+        this['boundBox'] = RedMesh(redGL, RedBox(redGL), RedColorMaterial(redGL));
+        this['boundBox'].drawMode = redGL.gl.LINE_LOOP;
+        this['boundBox'].autoUpdateMatrix = false;
+        this['children'].push(this['boundBox']);
+        this['_boundBoxMode'] = RedTransformController.AABB;
+        this['downed'] = false;
+
+        this['useScale'] = true;
+        this['usePosition'] = true;
+        this['useRotation'] = true;
+        ///////////////////////////////////////////
+        instanceList.push(this);
+        this['_UUID'] = RedGL.makeUUID();
+    };
+    /**DOC:
+     {
+		 title :`RedTransformController.AABB`,
+		 code : 'CONST',
+		 description : `바운드 박스 계산타입 - AABB`,
+		 return : 'String'
+	 }
+     :DOC*/
+    RedTransformController.AABB = 'AABB';
+    /**DOC:
+     {
+		 title :`RedTransformController.OBB`,
+		 code : 'CONST',
+		 description : `바운드 박스 계산타입 - OBB`,
+		 return : 'String'
+	 }
+     :DOC*/
+    RedTransformController.OBB = 'OBB';
+    RedTransformController.prototype = new RedBaseContainer();
+
+    /**DOC:
+     {
+		 title :`boundBoxMode`,
+		 code : 'PROPERTY',
+		 description : `
+		 바운드 박스 계산타입
+		 RedTransformController.AABB or RedTransformController.OBB 설정가능
+		 `,
+		 return : 'String'
+	 }
+     :DOC*/
+    Object.defineProperty(RedTransformController.prototype, 'boundBoxMode', {
+            get: function () {
+                return this['_boundBoxMode']
+            },
+            set: function (v) {
+                if (!(v === RedTransformController.AABB || v === RedTransformController.OBB)) RedGLUtil.throwFunc('RedTransformController : boundBoxMode는 RedTransformController.AABB or RedTransformController.OBB만 허용함');
+                this['_boundBoxMode'] = v;
+                callBoundBox(this, this['_targetMesh'])
+            }
+        }
+    );
+    /**DOC:
+     {
+		 title :`useScale`,
+		 code : 'PROPERTY',
+		 description : `
+		 스케일 변경 허용여부
+		 `,
+		 return : 'Boolean'
+	 }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedTransformController', 'useScale', 'boolean', {
+        callback: function (v) {
+            instanceList.forEach(function (tGroup) {
+                tGroup['scaleGroup'].scaleX = tGroup['scaleGroup'].scaleY = tGroup['scaleGroup'].scaleZ = v ? 1 : 0
+            })
+        }
+    });
+    /**DOC:
+     {
+		 title :`usePosition`,
+		 code : 'PROPERTY',
+		 description : `
+		 포지션 변경 허용여부
+		 `,
+		 return : 'Boolean'
+	 }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedTransformController', 'usePosition', 'boolean', {
+        callback: function (v) {
+            instanceList.forEach(function (tGroup) {
+                tGroup['positionGroup'].scaleX = tGroup['positionGroup'].scaleY = tGroup['positionGroup'].scaleZ = v ? 1 : 0
+            })
+        }
+    });
+    /**DOC:
+     {
+		 title :`useRotation`,
+		 code : 'PROPERTY',
+		 description : `
+		 회전각 변경 허용여부
+		 `,
+		 return : 'Boolean'
+	 }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedTransformController', 'useRotation', 'boolean', {
+        callback: function (v) {
+            instanceList.forEach(function (tGroup) {
+                tGroup['rotationGroup'].scaleX = tGroup['rotationGroup'].scaleY = tGroup['rotationGroup'].scaleZ = v ? 1 : 0
+            })
+        }
+    });
+
+    RedTransformController.prototype['_setScaleGroup'] = function (redGL) {
+        var tScaleMesh;
+        var tSphere;
+        var tMatX = RedColorMaterial(redGL, '#ff0000', 0.5);
+        var tMatY = RedColorMaterial(redGL, '#00ff00', 0.5);
+        var tMatZ = RedColorMaterial(redGL, '#0000ff', 0.5);
+        tSphere = RedSphere(redGL, 0.25);
+        ////////////////////////////////////////////
+        this['scaleGroup'] = RedMesh(redGL);
+        this['children'].push(this['scaleGroup']);
+        // xAxis
+        tScaleMesh = RedMesh(redGL, tSphere, tMatX);
+        tScaleMesh.x = 4;
+        tScaleMesh['useCullFace'] = false;
+        tScaleMesh['depthTestFunc'] = redGL.gl.ALWAYS;
+        this['scalePointX'] = tScaleMesh;
+        this['scaleGroup'].addChild(tScaleMesh);
+        ////////////////////////////////////////////
+        // yAxis
+        tScaleMesh = RedMesh(redGL, tSphere, tMatY);
+        tScaleMesh.y = 4;
+        tScaleMesh['useCullFace'] = false;
+        tScaleMesh['depthTestFunc'] = redGL.gl.ALWAYS;
+        this['scalePointY'] = tScaleMesh;
+        this['scaleGroup'].addChild(tScaleMesh);
+        ////////////////////////////////////////////
+        // zAxis
+        tScaleMesh = RedMesh(redGL, tSphere, tMatZ);
+        tScaleMesh.z = 4;
+        tScaleMesh['useCullFace'] = false;
+        tScaleMesh['depthTestFunc'] = redGL.gl.ALWAYS;
+        this['scalePointZ'] = tScaleMesh;
+        this['scaleGroup'].addChild(tScaleMesh);
+    };
+    RedTransformController.prototype ['_setRotationGroup'] = function (redGL) {
+        var rotationXLine;
+        var rotationYLine;
+        var rotationZLine;
+        var tMatX = RedColorMaterial(redGL, '#ff0000', 0.0);
+        var tMatY = RedColorMaterial(redGL, '#00ff00', 0.0);
+        var tMatZ = RedColorMaterial(redGL, '#0000ff', 0.0);
+        this['rotationGroup'] = RedMesh(redGL);
+        this['children'].push(this['rotationGroup']);
+        rotationXLine = RedMesh(redGL, RedSphere(redGL, 1, 32, 32, 32), tMatX);
+        rotationXLine.scaleZ = 0;
+        rotationXLine.rotationX = 90;
+        rotationXLine.rotationY = 90;
+        this['rotationGroup'].addChild(rotationXLine);
+        rotationYLine = RedMesh(redGL, RedSphere(redGL, 1, 32, 32, 32), tMatY);
+        rotationYLine.scaleZ = 0;
+        rotationYLine.rotationZ = 90;
+        rotationYLine.rotationX = 90;
+        this['rotationGroup'].addChild(rotationYLine);
+        rotationZLine = RedMesh(redGL, RedSphere(redGL, 1, 32, 32, 32), tMatZ);
+        rotationZLine.scaleZ = 0;
+        this['rotationGroup'].addChild(rotationZLine);
+        this['rotationXLine'] = rotationXLine;
+        this['rotationYLine'] = rotationYLine;
+        this['rotationZLine'] = rotationZLine;
+        // rotationXLine.useDepthMask = false
+        // rotationYLine.useDepthMask = false
+        // rotationZLine.useDepthMask = false
+
+        rotationXLine = RedLine(redGL, RedColorMaterial(redGL, '#ff0000', 0.75));
+        rotationYLine = RedLine(redGL, RedColorMaterial(redGL, '#00ff00', 0.75));
+        rotationZLine = RedLine(redGL, RedColorMaterial(redGL, '#0000ff', 0.75));
+        var i = 36;
+        var PER = Math.PI * 2 / i;
+        i = 36;
+        while (i--) rotationXLine.addPoint(Math.sin(PER * i), Math.cos(PER * i), 0);
+        rotationXLine.addPoint(Math.sin(PER * i), Math.cos(PER * i), 0);
+        i = 36;
+        while (i--) rotationYLine.addPoint(Math.sin(PER * i), Math.cos(PER * i), 0);
+        rotationYLine.addPoint(Math.sin(PER * i), Math.cos(PER * i), 0);
+        i = 36;
+        while (i--) rotationZLine.addPoint(Math.sin(PER * i), Math.cos(PER * i), 0);
+        rotationZLine.addPoint(Math.sin(PER * i), Math.cos(PER * i), 0);
+        this['rotationXLine'].addChild(rotationXLine);
+        this['rotationYLine'].addChild(rotationYLine);
+        this['rotationZLine'].addChild(rotationZLine);
+
+
+    };
+    RedTransformController.prototype['_setPositionGroup'] = function (redGL) {
+        var tArrowMesh;
+        var tAxis;
+        var tBox, tArrow;
+        var tMatX, tMatY, tMatZ;
+        this['positionGroup'] = RedMesh(redGL);
+        this.addChild(this['positionGroup']);
+        tBox = RedBox(redGL);
+        tArrow = RedCylinder(redGL, 0, 0.5);
+        tMatX = RedColorMaterial(redGL, '#ff0000', 0.5);
+        tMatY = RedColorMaterial(redGL, '#00ff00', 0.5);
+        tMatZ = RedColorMaterial(redGL, '#0000ff', 0.5);
+        ////////////////////////////////////////////
+
+        // xAxis
+        tArrowMesh = RedMesh(redGL, tArrow, tMatX);
+        tAxis = RedMesh(redGL, tBox, tMatX);
+        tAxis['depthTestFunc'] = redGL.gl.ALWAYS;
+        tArrowMesh['depthTestFunc'] = redGL.gl.ALWAYS;
+        tAxis.scaleX = tAxis.scaleY = tAxis.scaleZ = 0.01;
+        tAxis.scaleX = 5;
+        tArrowMesh.x = 5;
+        tArrowMesh.rotationZ = 90;
+        tAxis.x = 2.5;
+        this['arrowX'] = tArrowMesh;
+        this['positionGroup'].addChild(tAxis);
+        this['positionGroup'].addChild(tArrowMesh);
+        ////////////////////////////////////////////
+        // yAxis
+        tArrowMesh = RedMesh(redGL, tArrow, tMatY);
+        tAxis = RedMesh(redGL, tBox, tMatY);
+        tAxis['depthTestFunc'] = redGL.gl.ALWAYS;
+        tArrowMesh['depthTestFunc'] = redGL.gl.ALWAYS;
+        tAxis.scaleX = tAxis.scaleY = tAxis.scaleZ = 0.01;
+        tAxis.scaleY = 5;
+        tArrowMesh.y = 5;
+        tAxis.y = 2.5;
+        this['arrowY'] = tArrowMesh;
+        this['positionGroup'].addChild(tAxis);
+        this['positionGroup'].addChild(tArrowMesh);
+        ////////////////////////////////////////////
+        // zAxis
+        tArrowMesh = RedMesh(redGL, tArrow, tMatZ);
+        tAxis = RedMesh(redGL, tBox, tMatZ);
+        tAxis['depthTestFunc'] = redGL.gl.ALWAYS;
+        tArrowMesh['depthTestFunc'] = redGL.gl.ALWAYS;
+        tAxis.scaleX = tAxis.scaleY = tAxis.scaleZ = 0.01;
+        tAxis.scaleZ = 5;
+        tArrowMesh.z = 5;
+        tArrowMesh.rotationX = -90;
+        tAxis.z = 2.5;
+        this['arrowZ'] = tArrowMesh;
+        this['positionGroup'].addChild(tAxis);
+        this['positionGroup'].addChild(tArrowMesh);
+        ////////////////////////////////////////////
+        var t0 = RedMesh(redGL, RedSphere(redGL, 0.1, 32, 32, 32), RedColorMaterial(redGL, '#5b52aa', 1));
+        t0['depthTestFunc'] = redGL.gl.ALWAYS;
+        this['move'] = t0;
+        this['positionGroup'].addChild(t0);
+    };
+    RedTransformController.prototype['setTarget'] = (function () {
+        return function (tView, tMesh) {
+            var tTransformController = this;
+            var tScene = tView['scene'];
+            var tController = tView['camera'];
+            var tDirection = 0;
+            var startPosition = [];
+            var startControllerPosition = [];
+            var startControllerScale = [];
+            var startRotation;
+            var startLocalMTX;
+            var startMouseX = 0;
+            tTransformController['_targetMesh'] = tMesh
+            tTransformController.scaleGroup.rotationX = tMesh.rotationX;
+            tTransformController.scaleGroup.rotationY = tMesh.rotationY;
+            tTransformController.scaleGroup.rotationZ = tMesh.rotationZ;
+            tTransformController.rotationGroup.rotationX = tMesh.rotationX;
+            tTransformController.rotationGroup.rotationY = tMesh.rotationY;
+            tTransformController.rotationGroup.rotationZ = tMesh.rotationZ;
+            tTransformController.x = tMesh.x;
+            tTransformController.y = tMesh.y;
+            tTransformController.z = tMesh.z;
+
+            var hd_move = function (e) {
+                var currentPosition = RedGLUtil.screenToWorld(
+                    [
+                        e.layerX, e.layerY,
+                        tView['_viewRect'][2], tView['_viewRect'][3]
+                    ],
+                    tController
+                );
+                var t0 = [
+                    startControllerPosition[0] + currentPosition[0] - startPosition[0],
+                    startControllerPosition[1] + currentPosition[1] - startPosition[1],
+                    startControllerPosition[2] + currentPosition[2] - startPosition[2]
+                ];
+                // position
+                if (tTransformController['usePosition']) {
+                    if (tDirection === 3) {
+                        tTransformController.x = tMesh.x = t0[0];
+                        tTransformController.y = tMesh.y = t0[1];
+                        tTransformController.z = tMesh.z = t0[2];
+                    } else {
+                        if (tDirection === 0) tTransformController.x = tMesh.x = t0[0];
+                        else if (tDirection === 1) tTransformController.y = tMesh.y = t0[1];
+                        else if (tDirection === 2) tTransformController.z = tMesh.z = t0[2];
+                    }
+                }
+                // scale
+                if (tTransformController['useScale']) {
+                    if (tDirection === 7) tMesh.scaleX = startControllerScale[0] + (currentPosition[0] - startPosition[0]);
+                    if (tDirection === 8) tMesh.scaleY = startControllerScale[1] + (currentPosition[1] - startPosition[1]);
+                    if (tDirection === 9) tMesh.scaleZ = startControllerScale[2] + (currentPosition[2] - startPosition[2]);
+                }
+                // rotation
+                if (tTransformController['useRotation']) {
+                    if (tDirection === 4 || tDirection === 5 || tDirection === 6) {
+                        tTransformController.scaleGroup.rotationX = tMesh.rotationX;
+                        tTransformController.scaleGroup.rotationY = tMesh.rotationY;
+                        tTransformController.scaleGroup.rotationZ = tMesh.rotationZ;
+                        tTransformController.rotationGroup.rotationX = tMesh.rotationX;
+                        tTransformController.rotationGroup.rotationY = tMesh.rotationY;
+                        tTransformController.rotationGroup.rotationZ = tMesh.rotationZ
+                    }
+
+                    var tAxis;
+                    var tDot, tDot2;
+                    var localMTX;
+                    var resultRotation;
+
+                    if (tDirection === 4) {
+                        if (startMouseX < tView['_viewRect'][2] / 2) tAxis = tMesh.localToWorld(1, 0, 0);
+                        else tAxis = tMesh.localToWorld(-1, 0, 0);
+                        tDot = vec3.dot(tAxis, currentPosition);
+                        tDot2 = vec3.dot(tAxis, startPosition);
+                        localMTX = mat4.clone(startLocalMTX);
+                        mat4.scale(localMTX, localMTX, [1 / tMesh.scaleX, 1 / tMesh.scaleY, 1 / tMesh.scaleZ]);
+                        mat4.rotateX(localMTX, localMTX, -startRotation[0] * Math.PI / 180);
+                        mat4.rotateY(localMTX, localMTX, -startRotation[1] * Math.PI / 180);
+                        mat4.rotateZ(localMTX, localMTX, -startRotation[2] * Math.PI / 180);
+                        mat4.rotateZ(localMTX, localMTX, startRotation[2] * Math.PI / 180);
+                        mat4.rotateY(localMTX, localMTX, startRotation[1] * Math.PI / 180);
+                        mat4.rotateX(localMTX, localMTX, (startRotation[0] * Math.PI / 180 + tDot - tDot2));
+                        RedGLUtil.quaternionToRotationMat4(mat4.getRotation(quat.create(), localMTX), localMTX);
+                        resultRotation = RedGLUtil.mat4ToEuler(localMTX, []);
+                        console.log(resultRotation);
+                        tMesh.rotationX = -resultRotation[0] * 180 / Math.PI;
+                        tMesh.rotationY = -resultRotation[1] * 180 / Math.PI;
+                        tMesh.rotationZ = -resultRotation[2] * 180 / Math.PI;
+                    } else if (tDirection === 5) {
+                        if (startMouseX < tView['_viewRect'][2] / 2) tAxis = tMesh.localToWorld(0, -1, 0);
+                        else tAxis = tMesh.localToWorld(0, 1, 0);
+                        tDot = vec3.dot(tAxis, currentPosition);
+                        tDot2 = vec3.dot(tAxis, startPosition);
+                        localMTX = mat4.clone(startLocalMTX);
+                        mat4.scale(localMTX, localMTX, [1 / tMesh.scaleX, 1 / tMesh.scaleY, 1 / tMesh.scaleZ]);
+                        mat4.rotateY(localMTX, localMTX, -startRotation[1] * Math.PI / 180);
+                        mat4.rotateZ(localMTX, localMTX, -startRotation[2] * Math.PI / 180);
+                        mat4.rotateZ(localMTX, localMTX, startRotation[2] * Math.PI / 180);
+                        mat4.rotateY(localMTX, localMTX, startRotation[1] * Math.PI / 180 + tDot - tDot2);
+                        RedGLUtil.quaternionToRotationMat4(mat4.getRotation(quat.create(), localMTX), localMTX);
+                        resultRotation = RedGLUtil.mat4ToEuler(localMTX, []);
+                        tMesh.rotationX = -resultRotation[0] * 180 / Math.PI;
+                        tMesh.rotationY = -resultRotation[1] * 180 / Math.PI;
+                        tMesh.rotationZ = -resultRotation[2] * 180 / Math.PI;
+                    } else if (tDirection === 6) {
+                        if (startMouseX < tView['_viewRect'][2] / 2) tAxis = [0, 0, -1];
+                        else tAxis = [0, 0, 1];
+                        tDot = vec3.dot(tAxis, currentPosition) * 180 / Math.PI;
+                        tDot2 = vec3.dot(tAxis, startPosition) * 180 / Math.PI;
+                        console.log(tDot);
+                        tMesh.rotationZ += tDot - tDot2;
+                        startPosition = JSON.parse(JSON.stringify(currentPosition))
+                    }
+                }
+                callBoundBox(tTransformController, tMesh)
+            };
+            [tTransformController['rotationXLine'], tTransformController['rotationYLine'], tTransformController['rotationZLine']].forEach(function (v) {
+                tScene.mouseManager.add(v, 'over', function () {
+                    if (!tTransformController['downed']) {
+                        tTransformController['rotationXLine'].material.alpha = 0;
+                        tTransformController['rotationYLine'].material.alpha = 0;
+                        tTransformController['rotationZLine'].material.alpha = 0;
+                        this.material.alpha = 0.25;
+                    }
+                });
+                tScene.mouseManager.add(v, 'out', function () {
+                    if (!tTransformController['downed']) {
+                        tTransformController['rotationXLine'].material.alpha = 0;
+                        tTransformController['rotationYLine'].material.alpha = 0;
+                        tTransformController['rotationZLine'].material.alpha = 0;
+                    }
+                })
+            });
+            // 이벤트 작성
+            [
+                tTransformController['arrowX'], tTransformController['arrowY'], tTransformController['arrowZ'], tTransformController['move'],
+                tTransformController['rotationXLine'], tTransformController['rotationYLine'], tTransformController['rotationZLine'],
+                tTransformController['scalePointX'], tTransformController['scalePointY'], tTransformController['scalePointZ']
+
+            ].forEach(function (v, index) {
+                tScene.mouseManager.remove(v, 'down');
+                tScene.mouseManager.add(v, 'down', function (e) {
+                    tTransformController['downed'] = true;
+                    tDirection = index;
+                    startControllerPosition = [tTransformController.x, tTransformController.y, tTransformController.z];
+                    startControllerScale = [tMesh.scaleX, tMesh.scaleY, tMesh.scaleZ];
+                    startRotation = [tMesh.rotationX, tMesh.rotationY, tMesh.rotationZ];
+                    startLocalMTX = mat4.clone(tMesh.localMatrix);
+                    startPosition = RedGLUtil.screenToWorld(
+                        [
+                            e.nativeEvent.layerX, e.nativeEvent.layerY,
+                            tView['_viewRect'][2], tView['_viewRect'][3]
+                        ],
+                        tController
+                    );
+                    startMouseX = e.nativeEvent.layerX;
+
+                    if (tController.camera) tController.needUpdate = false;
+                    document.body.addEventListener(
+                        'mousemove', hd_move
+                    );
+                    window.addEventListener('click', function () {
+                        if (tController.camera) tController.needUpdate = true;
+                        tTransformController['downed'] = false;
+                        tTransformController['rotationXLine'].material.alpha = 0;
+                        tTransformController['rotationYLine'].material.alpha = 0;
+                        tTransformController['rotationZLine'].material.alpha = 0;
+                        document.body.removeEventListener(
+                            'mousemove', hd_move
+                        )
+                    })
+                });
+            });
+            callBoundBox(tTransformController, tMesh)
+        }
+    })();
+    Object.freeze(RedTransformController);
+})();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedPointCloud;
 (function () {
@@ -15803,6 +17018,13 @@ var RedPointCloud;
     });
     Object.freeze(RedPointCloud);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedParticleUnit;
 //////////////////////////////////////////////////////////
@@ -15861,6 +17083,13 @@ var RedParticleUnit;
     };
     Object.freeze(RedParticleUnit);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedColorPointCloud;
 (function () {
@@ -15937,6 +17166,13 @@ var RedColorPointCloud;
     });
     Object.freeze(RedColorPointCloud);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedBitmapPointCloud;
 (function () {
@@ -16013,6 +17249,13 @@ var RedBitmapPointCloud;
     });
     Object.freeze(RedBitmapPointCloud);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 //////////////////////////////////////////////////////////
 // 연구중
@@ -16072,7 +17315,7 @@ var RedParticleEmitter;
         this['useDepthMask'] = false;
         this['_UUID'] = RedGL.makeUUID();
     };
-    RedParticleEmitter.TINT_RANDOM = 'random'
+    RedParticleEmitter.TINT_RANDOM = 'random';
     RedParticleEmitter.QuintIn = 1;
     RedParticleEmitter.QuintOut = 2;
     RedParticleEmitter.QuintInOut = 3;
@@ -16111,10 +17354,10 @@ var RedParticleEmitter;
     RedParticleEmitter.prototype['reset'] = function () {
         this.list.length = 0;
         this._interleaveData.length = 0;
-    }
+    };
     RedParticleEmitter.prototype['update'] = (function () {
         return function (time) {
-            time = time + 2000
+            time = time + 2000;
             var POW, SIN, COS, SQRT, PI, PI2, HPI;
             var i, i2, tParticle;
             var lifeRatio;
@@ -16305,6 +17548,13 @@ var RedParticleEmitter;
     });
     Object.freeze(RedParticleEmitter);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedBox;
 (function () {
@@ -16332,7 +17582,7 @@ var RedBox;
                         interleaveData.push(vector.x, vector.y, vector.z), // position
                         vector[u] = 0, vector[v] = 0, vector[w] = depth > 0 ? 1 : -1,
                         interleaveData.push(vector.x, vector.y, vector.z), // normal
-                        interleaveData.push(ix / gridX,  (iy / gridY)), // texcoord
+                        interleaveData.push(ix / gridX, (iy / gridY)), // texcoord
                         vertexCounter += 1; // counters
                 }
             }
@@ -16457,14 +17707,29 @@ var RedBox;
         tPrimitiveData = makeData(redGL, tType, width, height, depth, wSegments, hSegments, dSegments);
         this['interleaveBuffer'] = tPrimitiveData['interleaveBuffer'];
         this['indexBuffer'] = tPrimitiveData['indexBuffer'];
-        this['interleaveBuffer']['isPrimitiveBuffer'] = true
-        this['indexBuffer']['isPrimitiveBuffer'] = true
+        this['interleaveBuffer']['isPrimitiveBuffer'] = true;
+        this['indexBuffer']['isPrimitiveBuffer'] = true;
+        this['_makeInfo'] = {
+            width: width,
+            height: height,
+            depth: depth,
+            wSegments: wSegments,
+            hSegments: hSegments,
+            dSegments: dSegments
+        };
         this['_UUID'] = RedGL.makeUUID();
         console.log(this)
     };
     RedBox.prototype = Object.create(RedGeometry.prototype);
     Object.freeze(RedBox);
 })();
+
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
 
 "use strict";
 var RedCylinder;
@@ -16580,7 +17845,7 @@ var RedCylinder;
                     // uv
                     uv[0] = (cosTheta * 0.5) + 0.5;
                     uv[1] = (sinTheta * 0.5 * sign) + 0.5;
-                    interleaveData.push(uv[0], 1-uv[1]);
+                    interleaveData.push(uv[0], 1 - uv[1]);
                     // increase index
                     index++;
                 }
@@ -16600,7 +17865,7 @@ var RedCylinder;
                 // calculate new start value for groups
                 groupStart += groupCount;
 
-            }
+            };
             generateTorso();
             if (openEnded === false) {
                 if (radiusTop > 0) generateCap(true);
@@ -16705,14 +17970,21 @@ var RedCylinder;
         tPrimitiveData = makeData(redGL, tType, radiusTop, radiusBottom, height, radialSegments, heightSegments, openEnded, thetaStart, thetaLength);
         this['interleaveBuffer'] = tPrimitiveData['interleaveBuffer'];
         this['indexBuffer'] = tPrimitiveData['indexBuffer'];
-        this['interleaveBuffer']['isPrimitiveBuffer'] = true
-        this['indexBuffer']['isPrimitiveBuffer'] = true
+        this['interleaveBuffer']['isPrimitiveBuffer'] = true;
+        this['indexBuffer']['isPrimitiveBuffer'] = true;
         this['_UUID'] = RedGL.makeUUID();
         console.log(this)
     };
     RedCylinder.prototype = Object.create(RedGeometry.prototype);
     Object.freeze(RedCylinder);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedPlane;
 (function () {
@@ -16842,14 +18114,28 @@ var RedPlane;
         tPrimitiveData = makeData(redGL, tType, width, height, wSegments, hSegments, flipY);
         this['interleaveBuffer'] = tPrimitiveData['interleaveBuffer'];
         this['indexBuffer'] = tPrimitiveData['indexBuffer'];
-        this['interleaveBuffer']['isPrimitiveBuffer'] = true
-        this['indexBuffer']['isPrimitiveBuffer'] = true
+        this['interleaveBuffer']['isPrimitiveBuffer'] = true;
+        this['indexBuffer']['isPrimitiveBuffer'] = true;
+        this['_makeInfo'] = {
+            width: width,
+            height: height,
+            wSegments: wSegments,
+            hSegments: hSegments,
+            flipY: flipY
+        };
         this['_UUID'] = RedGL.makeUUID();
         console.log(this);
     };
     RedPlane.prototype = Object.create(RedGeometry.prototype);
     Object.freeze(RedPlane);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedSphere;
 (function () {
@@ -16857,7 +18143,7 @@ var RedSphere;
     makeData = (function () {
         var thetaEnd;
         var ix, iy;
-        var index
+        var index;
         var grid = [];
         var a, b, c, d;
         var vertex = new Float32Array([0, 0, 0]);
@@ -16895,7 +18181,7 @@ var RedSphere;
                     vec3.normalize(normal, normal);
                     interleaveData.push(normal[0], normal[1], normal[2]);
                     // uv
-                    interleaveData.push(u,  v);
+                    interleaveData.push(u, v);
                     verticesRow.push(index++);
                 }
                 grid.push(verticesRow);
@@ -17011,18 +18297,34 @@ var RedSphere;
         tPrimitiveData = makeData(redGL, tType, radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength);
         this['interleaveBuffer'] = tPrimitiveData['interleaveBuffer'];
         this['indexBuffer'] = tPrimitiveData['indexBuffer'];
-        this['interleaveBuffer']['isPrimitiveBuffer'] = true
-        this['indexBuffer']['isPrimitiveBuffer'] = true
+        this['interleaveBuffer']['isPrimitiveBuffer'] = true;
+        this['indexBuffer']['isPrimitiveBuffer'] = true;
+        this['_makeInfo'] = {
+            radius: radius,
+            widthSegments: widthSegments,
+            heightSegments: heightSegments,
+            phiStart: phiStart,
+            phiLength: phiLength,
+            thetaStart: thetaStart,
+            thetaLength: thetaLength
+        };
         this['_UUID'] = RedGL.makeUUID();
         console.log(this)
     };
     RedSphere.prototype = Object.create(RedGeometry.prototype);
     Object.freeze(RedSphere);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedProgram;
 (function () {
-    var makeWebGLProgram, updateLocation;
+    var makeWebGLProgram, searchLocation;
     var samplerIndex, MAX_SAMPLER_INDEX;
     samplerIndex = 2;
     makeWebGLProgram = (function () {
@@ -17057,17 +18359,15 @@ var RedProgram;
             return tProgram;
         }
     })();
-    updateLocation = (function () {
+    searchLocation = (function () {
         var AttributeLocationInfo;
         var UniformLocationInfo;
         var materialPropertyNameMAP = {};
-        var totalUpdateLocationTime = 0;
         AttributeLocationInfo = function () {
         };
         UniformLocationInfo = function () {
         };
         return function (self, gl, shader) {
-            var startTime = performance.now();
             var i, v, tList;
             var tIndex;
             // attributeLocation 정보 생성
@@ -17112,7 +18412,7 @@ var RedProgram;
                             tRenderMethod = 'uniform1i';
                             tLocationInfo['samplerIndex'] = samplerIndex;
                             samplerIndex++;
-                            if (samplerIndex == MAX_SAMPLER_INDEX) samplerIndex = 2;
+                            if (samplerIndex === MAX_SAMPLER_INDEX) samplerIndex = 2;
                             break;
                         case 'samplerCube':
                             tRenderType = 'samplerCube';
@@ -17120,7 +18420,7 @@ var RedProgram;
                             tRenderMethod = 'uniform1i';
                             tLocationInfo['samplerIndex'] = samplerIndex;
                             samplerIndex++;
-                            if (samplerIndex == MAX_SAMPLER_INDEX) samplerIndex = 2;
+                            if (samplerIndex === MAX_SAMPLER_INDEX) samplerIndex = 2;
                             break;
                         case 'float':
                             tRenderType = 'float';
@@ -17210,8 +18510,7 @@ var RedProgram;
                     if (!tLocationInfo['location']) {
                         tLocationInfo['msg'] = '쉐이더 main 함수에서 사용되고 있지 않음';
                         tLocationInfo['use'] = false;
-                    }
-                    else tLocationInfo['use'] = true;
+                    } else tLocationInfo['use'] = true;
                     if (v['systemUniformYn']) {
                         tIndex = self['systemUniformLocation'].length;
                         if (tLocationInfo['use']) self['systemUniformLocation'][tIndex] = tLocationInfo;
@@ -17224,8 +18523,6 @@ var RedProgram;
                 }
                 // })
             }
-            totalUpdateLocationTime += performance.now() - startTime;
-            console.log('totalUpdateLocationTime', self,totalUpdateLocationTime);
         }
     })();
     /**DOC:
@@ -17259,6 +18556,8 @@ var RedProgram;
         var tGL;
         var vertexShader, fragmentShader;
         if (!(this instanceof RedProgram)) return new RedProgram(redGL, key, vSource, fSource);
+        console.time('RedProgram');
+        console.group('RedProgram');
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedProgram : RedGL Instance만 허용.', '입력값 : ' + redGL);
         typeof key == 'string' || RedGLUtil.throwFunc('RedProgram : key - 문자열만 허용.', '입력값 : ' + key);
         tGL = redGL.gl;
@@ -17292,7 +18591,9 @@ var RedProgram;
 			 return : 'WebGLShader'
 		 }
          :DOC*/
+        console.time('makeWebGLProgram - ' + key);
         this['webglProgram'] = makeWebGLProgram(tGL, key, vertexShader, fragmentShader);
+        console.timeEnd('makeWebGLProgram - ' + key);
         /**DOC:
          {
 		     code : 'PROPERTY',
@@ -17324,10 +18625,16 @@ var RedProgram;
         // 쉐이더 로케이션 찾기
         tGL.useProgram(this['webglProgram']);
         MAX_SAMPLER_INDEX = redGL['detect']['texture']['MAX_COMBINED_TEXTURE_IMAGE_UNITS'];
-        updateLocation(this, tGL, vertexShader);
-        updateLocation(this, tGL, fragmentShader);
+        console.time('searchLocation - vertexShader - ' + key);
+        searchLocation(this, tGL, vertexShader);
+        console.timeEnd('searchLocation - vertexShader - ' + key);
+        console.time('searchLocation - fragmentShader - ' + key);
+        searchLocation(this, tGL, fragmentShader);
+        console.timeEnd('searchLocation - fragmentShader - ' + key);
         this['_UUID'] = RedGL.makeUUID();
-        console.log(this)
+        console.log(this);
+        console.timeEnd('RedProgram');
+        console.groupEnd();
     };
     RedProgram.prototype = {};
     /**DOC:
@@ -17368,7 +18675,7 @@ var RedProgram;
             var hasFog = false;
             var hasSprite3D = false;
             var hasDirectionalShadow = false;
-            var hasSkin = false
+            var hasSkin = false;
 
             // 전처리
             for (var k in RedSystemShaderCode.vertexShareFunc) {
@@ -17388,18 +18695,17 @@ var RedProgram;
                 var i = subProgramOption.length;
                 // option에 해당하는 주석을 코드로 전환시킨다.
                 while (i--) {
-                    if (subProgramOption[i] == 'fog') hasFog = true;
-                    if (subProgramOption[i] == 'sprite3D') hasSprite3D = true;
-                    if (subProgramOption[i] == 'directionalShadow') hasDirectionalShadow = true;
-                    if (subProgramOption[i] == 'skin') hasSkin = true;
-                    if (subProgramOption[i] == 'fog' || subProgramOption[i] == 'sprite3D' || subProgramOption[i] == 'directionalShadow' || subProgramOption[i] == 'skin') continue;
+                    if (subProgramOption[i] === 'fog') hasFog = true;
+                    if (subProgramOption[i] === 'sprite3D') hasSprite3D = true;
+                    if (subProgramOption[i] === 'directionalShadow') hasDirectionalShadow = true;
+                    if (subProgramOption[i] === 'skin') hasSkin = true;
+                    if (subProgramOption[i] === 'fog' || subProgramOption[i] == 'sprite3D' || subProgramOption[i] == 'directionalShadow' || subProgramOption[i] == 'skin') continue;
                     t0 = new RegExp('\/\/\#REDGL_DEFINE\#' + subProgramOption[i] + '\#', 'gi');
                     // console.log(t0)
                     vSource = vSource.replace(t0, '');
                     fSource = fSource.replace(t0, '');
                 }
             }
-
             // fog 처리
             t0 = new RegExp('\/\/\#REDGL_DEFINE\#fog\#' + (hasFog ? 'true' : 'false') + '\#', 'gi');
             vSource = vSource.replace(t0, '');
@@ -17416,14 +18722,19 @@ var RedProgram;
             t0 = new RegExp('\/\/\#REDGL_DEFINE\#skin\#' + (hasSkin ? 'true' : 'false') + '\#', 'gi');
             vSource = vSource.replace(t0, '');
             fSource = fSource.replace(t0, '');
-
-            //
             // console.log(vSource, fSource)
             return RedProgram(redGL, programName, vSource, fSource, subProgramOption)
         };
     })();
     Object.freeze(RedProgram);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedSystemShaderCode;
 (function () {
@@ -17441,15 +18752,19 @@ var RedSystemShaderCode;
     RedSystemShaderCode = {};
     RedSystemShaderCode['init'] = function (redGL) {
         var maxDirectionalLight = 3;
-        var maxPointLight = 8;
+        var maxPointLight;
         var maxJoint;
-        var tDETECT = redGL.detect
-        console.log('tDETECT', tDETECT);
-        // 버텍스 쉐이더에 100개의 유니폼 벡터 정의를 남겨둔다.;;
-        var maxJoint;
-        maxJoint = parseInt(Math.floor(Math.min((tDETECT.vertexShader.MAX_VERTEX_UNIFORM_VECTORS - 64) / 8, 128)))
-        maxPointLight = parseInt(Math.floor(Math.min((tDETECT.fragmentShader.MAX_FRAGMENT_UNIFORM_VECTORS - 64) / 4, 128)))
-        console.log('maxJoint', maxJoint)
+        var tDETECT = redGL.detect;
+        console.time('RedSystemShaderCode');
+        console.group('RedSystemShaderCode');
+        maxJoint = parseInt(Math.floor(Math.min((tDETECT.vertexShader.MAX_VERTEX_UNIFORM_VECTORS - 64) / 8, 128)));
+        maxPointLight = parseInt(Math.floor(Math.min((tDETECT.fragmentShader.MAX_FRAGMENT_UNIFORM_VECTORS - 64) / 4, 128)));
+        console.group('detect info');
+        console.log(tDETECT);
+        console.log('maxDirectionalLight', maxDirectionalLight);
+        console.log('maxJoint', maxJoint);
+        console.log('maxPointLight', maxPointLight);
+        console.groupEnd();
         // if (RedGLDetect.BROWSER_INFO.browser == 'ie' && RedGLDetect.BROWSER_INFO.browserVer == 11) maxJoint = 50
         // else if (RedGLDetect.BROWSER_INFO.browser == 'iphone' || RedGLDetect.BROWSER_INFO.browser == 'ipad') maxJoint = 8
         // else maxJoint = RedGLDetect.BROWSER_INFO.isMobile ? 64 : 1024
@@ -17729,7 +19044,7 @@ var RedSystemShaderCode;
                         '   return amountInLight;',
                         '}'
                     ].join('\n'),
-                cotangent_frame : [
+                cotangent_frame: [
                     'mat3 cotangent_frame(vec3 N, vec3 p, vec2 uv)',
                     '{',
                     '   vec3 dp1 = dFdx( p );',
@@ -17746,7 +19061,7 @@ var RedSystemShaderCode;
                     '   return mat3( T * invmax, B * invmax, N );',
                     '}'
                 ].join('\n'),
-                perturb_normal : [
+                perturb_normal: [
                     'vec3 perturb_normal( vec3 N, vec3 V, vec2 texcoord, vec3 normalColor )',
                     '   {',
                     '   ',
@@ -17784,66 +19099,81 @@ var RedSystemShaderCode;
         RedSystemShaderCode['MAX_JOINT'] = maxJoint;
         [RedSystemShaderCode.vertexShareDeclare, RedSystemShaderCode.fragmentShareDeclare].forEach(function (data) {
             data.forEach(function (v) {
-                v = v.split(' ')
-                if (v[0] == 'uniform') {
+                v = v.split(' ');
+                if (v[0] === 'uniform') {
                     RedSystemShaderCode.systemUniform[v[2]] = 1
                 }
             })
         });
 
         // 맥스갯수를 찾아보자..
-
         var tVertexUniform = [];
-        var tVertexVecNum = 0
+        var tVertexVecNum = 0;
+        var tFragmentUniform = [];
+        var tFragmentVecNum = 0;
         var testMap = {
             bool: 4, float: 4, int: 4, uint: 4,
             sampler2D: 4, samplerCube: 4,
             vec2: 4, vec3: 4, vec4: 4,
             mat2: 4, mat3: 8, mat4: 16
-        }
-        console.log('RedSystemShaderCode.vertexShareDeclare', RedSystemShaderCode.vertexShareDeclare)
+        };
+        console.group('RedSystemShaderCode.vertexShareDeclare');
+        console.table(RedSystemShaderCode.vertexShareDeclare);
         RedSystemShaderCode.vertexShareDeclare.forEach(function (v) {
-            v = v.split(' ')
-            console.log(v[0])
-            if (v[0] == 'uniform') {
+            v = v.split(' ');
+            if (v[0] === 'uniform') {
                 var tNum;
                 var tInfo;
                 tInfo = {
                     value: v,
                     type: v[1],
                     num: tNum = v[2].indexOf('[') > -1 ? +(v[2].split('[')[1].replace(']', '')) * testMap[v[1]] : testMap[v[1]]
-                }
-                tVertexUniform.push(tInfo)
+                };
+                tVertexUniform.push(tInfo);
                 tVertexVecNum += tNum
             }
         });
-        console.log('tVertexUniform', tVertexUniform)
-        console.log('tVertexVecNum', tVertexVecNum / 4)
-        tVertexUniform = []
-        tVertexVecNum = 0
-        RedSystemShaderCode.fragmentShareDeclare.forEach(function (v) {
-            v = v.split(' ')
-            console.log(v[0])
-            if (v[0] == 'uniform') {
-                var tNum;
-                var tInfo;
-                tInfo = {
-                    value: v,
-                    type: v[1],
-                    num: tNum = v[2].indexOf('[') > -1 ? +(v[2].split('[')[1].replace(']', '')) * testMap[v[1]] : testMap[v[1]]
-                }
-                tVertexUniform.push(tInfo)
-                tVertexVecNum += tNum
-            }
-        });
-        console.log('tFragmentUniform', tVertexUniform)
-        console.log('tFragmentVecNum', tVertexVecNum / 4)
+        console.log('target vertexUniform');
+        console.table(tVertexUniform);
+        console.log('target vertexVecNum', tVertexVecNum / 4);
+        console.groupEnd('RedSystemShaderCode.vertexShareDeclare');
 
-        console.log(RedSystemShaderCode)
+
+        console.group('RedSystemShaderCode.fragmentShareDeclare');
+        console.table(RedSystemShaderCode.fragmentShareDeclare);
+        tFragmentUniform = [];
+        tFragmentVecNum = 0;
+        RedSystemShaderCode.fragmentShareDeclare.forEach(function (v) {
+            v = v.split(' ');
+            if (v[0] === 'uniform') {
+                var tNum;
+                var tInfo;
+                tInfo = {
+                    value: v,
+                    type: v[1],
+                    num: tNum = v[2].indexOf('[') > -1 ? +(v[2].split('[')[1].replace(']', '')) * testMap[v[1]] : testMap[v[1]]
+                };
+                tFragmentUniform.push(tInfo);
+                tFragmentVecNum += tNum
+            }
+        });
+        console.log('target fragmentUniform');
+        console.table(tFragmentUniform);
+        console.log('target fragmentVecNum', tFragmentVecNum / 4);
+        console.groupEnd('RedSystemShaderCode.fragmentShareDeclare');
+        console.log(RedSystemShaderCode);
+        console.timeEnd('RedSystemShaderCode');
+        console.groupEnd('RedSystemShaderCode');
         Object.freeze(RedSystemShaderCode)
     };
-})
-();
+})();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedShader;
 (function () {
@@ -17861,7 +19191,6 @@ var RedShader;
                     t0['key'] = key;
                     t0['type'] = type;
                     return t0;
-                    break;
                 case RedShader.FRAGMENT:
                     t0 = gl.createShader(gl.FRAGMENT_SHADER);
                     if (!t0) {
@@ -17871,7 +19200,6 @@ var RedShader;
                     t0['key'] = key;
                     t0['type'] = type;
                     return t0;
-                    break;
                 default:
                     RedGLUtil.throwFunc('RedShader : 쉐이더 타입을 확인하세요. RedShader.VERTEX or RedShader.FRAGMENT 만 허용');
                     break
@@ -17883,7 +19211,7 @@ var RedShader;
         gl.compileShader(shader);
         if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
             // console.log(parseData)
-            alert(gl.getShaderInfoLog(shader))
+            alert(gl.getShaderInfoLog(shader));
             RedGLUtil.throwFunc('RedShader : 쉐이더 컴파일에 실패하였습니다.\n', gl.getShaderInfoLog(shader))
         }
     };
@@ -17906,7 +19234,7 @@ var RedShader;
             while (i--) {
                 tDefineData = sourceList[i];
                 tDefineData = tDefineData.replace(';', '');
-                if (t0.indexOf(tDefineData) == -1) t0.push(tDefineData);
+                if (t0.indexOf(tDefineData) === -1) t0.push(tDefineData);
                 else {
                     console.log(RedSystemShaderCode);
                     RedGLUtil.throwFunc('RedShader : ', '\n1. 중복 선언 이거나', '\n2. RedSystemShaderCode에 정의된 선언\n', '입력값 : ' + tDefineData);
@@ -17940,7 +19268,7 @@ var RedShader;
                 source = source.replace(v + ';', '');
                 // console.log(source)
                 tCheckDefine = v.split(' ');
-                if (tCheckDefine[1] == 'highp' || tCheckDefine[1] == 'mediump' || tCheckDefine[1] == 'lowp') {
+                if (tCheckDefine[1] === 'highp' || tCheckDefine[1] === 'mediump' || tCheckDefine[1] === 'lowp') {
                     // uniform highp vec4 uTest4; 같은 선언을 Precision값을 분리함
                     var temp;
                     temp = tCheckDefine[1];
@@ -17965,28 +19293,27 @@ var RedShader;
                         case 'precision':
                             break;
                         case 'attribute':
-                            if (tName.charAt(0) != 'a') RedGLUtil.throwFunc('RedShader : attribute의 첫글자는 a로 시작해야합니다.', tName, tCheckDefine);
-                            if (tName.charAt(1) != tName.charAt(1).toUpperCase()) RedGLUtil.throwFunc('RedShader : attribute의 두번째 글자는 대문자 시작해야합니다.', tName, tCheckDefine);
+                            if (tName.charAt(0) !== 'a') RedGLUtil.throwFunc('RedShader : attribute의 첫글자는 a로 시작해야합니다.', tName, tCheckDefine);
+                            if (tName.charAt(1) !== tName.charAt(1).toUpperCase()) RedGLUtil.throwFunc('RedShader : attribute의 두번째 글자는 대문자 시작해야합니다.', tName, tCheckDefine);
                             break;
                         case 'uniform':
-                            if (tName.charAt(0) != 'u') RedGLUtil.throwFunc('RedShader : uniform의 첫글자는 u로 시작해야합니다.', tName, tCheckDefine);
-                            if (tName.charAt(1) != tName.charAt(1).toUpperCase()) RedGLUtil.throwFunc('RedShader : uniform의 두번째 글자는 대문자 시작해야합니다.', tName, tCheckDefine);
+                            if (tName.charAt(0) !== 'u') RedGLUtil.throwFunc('RedShader : uniform의 첫글자는 u로 시작해야합니다.', tName, tCheckDefine);
+                            if (tName.charAt(1) !== tName.charAt(1).toUpperCase()) RedGLUtil.throwFunc('RedShader : uniform의 두번째 글자는 대문자 시작해야합니다.', tName, tCheckDefine);
                             break;
                         case 'varying':
-                            if (tName.charAt(0) != 'v') RedGLUtil.throwFunc('RedShader : varying의 첫글자는 v로 시작해야합니다.', tName, tCheckDefine);
-                            if (tName.charAt(1) != tName.charAt(1).toUpperCase()) RedGLUtil.throwFunc('RedShader : varying의 두번째 글자는 대문자 시작해야합니다.', tName, tCheckDefine);
+                            if (tName.charAt(0) !== 'v') RedGLUtil.throwFunc('RedShader : varying의 첫글자는 v로 시작해야합니다.', tName, tCheckDefine);
+                            if (tName.charAt(1) !== tName.charAt(1).toUpperCase()) RedGLUtil.throwFunc('RedShader : varying의 두번째 글자는 대문자 시작해야합니다.', tName, tCheckDefine);
                             break;
                         case 'const':
-                            if (tName.charAt(0) != 'c') RedGLUtil.throwFunc('RedShader : const의 첫글자는 c로 시작해야합니다.', tName, tCheckDefine);
-                            if (tName.charAt(1) != tName.charAt(1).toUpperCase()) RedGLUtil.throwFunc('RedShader : const의 두번째 글자는 대문자 시작해야합니다.', tName, tCheckDefine);
+                            if (tName.charAt(0) !== 'c') RedGLUtil.throwFunc('RedShader : const의 첫글자는 c로 시작해야합니다.', tName, tCheckDefine);
+                            if (tName.charAt(1) !== tName.charAt(1).toUpperCase()) RedGLUtil.throwFunc('RedShader : const의 두번째 글자는 대문자 시작해야합니다.', tName, tCheckDefine);
                             break;
                         default:
                             console.log('RedShader : 체크되지 못하는값인데 뭐냐', tName);
                             RedGLUtil.throwFunc('RedShader : 체크되지 못하는값인데 뭐냐', tName, tCheckDefine);
                             break;
                     }
-                }
-                else {
+                } else {
                     console.log('RedShader : 체크되지 못하는값인데 뭐냐', tCheckDefine);
                     RedGLUtil.throwFunc('RedShader : 체크되지 못하는값인데 뭐냐', tCheckDefine);
                     // 아래놈은 이제 사용하지 ㅇ낳음
@@ -18012,9 +19339,9 @@ var RedShader;
                     precision: tPrecision,
                     systemUniformYn: RedSystemShaderCode.systemUniform[tArrayNum ? tName + '[' + tArrayNum + ']' : tName] ? true : false
                 };
-                if (tDefineType == 'uniform') tResultData['uniformType'] = tDataType;
-                if (tDefineType == 'attribute') tResultData['attributeType'] = tDataType;
-                if (tDefineType == 'varying') tResultData['varyingType'] = tDataType;
+                if (tDefineType === 'uniform') tResultData['uniformType'] = tDataType;
+                if (tDefineType === 'attribute') tResultData['attributeType'] = tDataType;
+                if (tDefineType === 'varying') tResultData['varyingType'] = tDataType;
                 parseData[tDefineType]['list'].push(tResultData);
                 parseData[tDefineType]['map'][tName] = v;
                 parseData[tDefineType]['source'] += v + ';\n';
@@ -18024,7 +19351,7 @@ var RedShader;
             // console.log(source)
             // 메인함수 및 변수 처리
             parseData['etc'] = source + '\n';
-            mergeStr = type == RedShader.FRAGMENT ? '#extension GL_OES_standard_derivatives : enable\n' : '';
+            mergeStr = type === RedShader.FRAGMENT ? '#extension GL_OES_standard_derivatives : enable\n' : '';
             if (parseData['precision']) mergeStr += parseData['precision']['source'] + '\n//const\n';
             if (parseData['const']) mergeStr += parseData['const']['source'] + '\n//attribute\n';
             if (parseData['attribute']) mergeStr += parseData['attribute']['source'] + '\n//uniform\n';
@@ -18033,7 +19360,7 @@ var RedShader;
             if (parseData['etc']) mergeStr += parseData['etc'];
             parseData.lastSource = mergeStr;
             // console.log(parseData)
-            if (type == RedShader.FRAGMENT && !parseData['precision']) RedGLUtil.throwFunc('RedShader : FRAGMENT Shader는 precision를 반드시 선언해야함');
+            if (type === RedShader.FRAGMENT && !parseData['precision']) RedGLUtil.throwFunc('RedShader : FRAGMENT Shader는 precision를 반드시 선언해야함');
             return parseData;
         }
     })();
@@ -18072,9 +19399,11 @@ var RedShader;
     RedShader = function (redGL, key, type, source) {
         var tGL;
         if (!(this instanceof RedShader)) return new RedShader(redGL, key, type, source);
+        console.time('RedShader');
+        console.group('RedShader');
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedShader : RedGL Instance만 허용.', '입력값 : ' + redGL);
-        typeof key == 'string' || RedGLUtil.throwFunc('RedShader : key - 문자열만 허용.', '입력값 : ' + key);
-        if (type != RedShader['VERTEX'] && type != RedShader['FRAGMENT']) RedGLUtil.throwFunc('RedShader : type - RedShader.VERTEX or RedShader.FRAGMENT 만 허용.', '입력값 : ' + type);
+        typeof key === 'string' || RedGLUtil.throwFunc('RedShader : key - 문자열만 허용.', '입력값 : ' + key);
+        if (type !== RedShader['VERTEX'] && type !== RedShader['FRAGMENT']) RedGLUtil.throwFunc('RedShader : type - RedShader.VERTEX or RedShader.FRAGMENT 만 허용.', '입력값 : ' + type);
         // 데이터 공간확보
         if (!redGL['_datas']['RedShader']) {
             redGL['_datas']['RedShader'] = {};
@@ -18083,7 +19412,7 @@ var RedShader;
         }
         // 소스가 있을 경우 검증
         if (source) {
-            typeof source == 'string' || RedGLUtil.throwFunc('RedShader : source - 문자열만 허용.');
+            typeof source === 'string' || RedGLUtil.throwFunc('RedShader : source - 문자열만 허용.');
             if (RedShader['hasKey'](redGL, key, type)) RedGLUtil.throwFunc('RedShader : key - 이미 정의된 키로 생성을 시도.', '\n키 :', key, '\n타입 :' + type);
             else redGL['_datas']['RedShader'][type][key] = this;
         } else {
@@ -18100,7 +19429,9 @@ var RedShader;
 		  return : 'WebGLShader'
 		 }
          :DOC*/
+        console.time('webglShader : ' + key);
         this['webglShader'] = makeWebGLShader(tGL, key, type); // 쉐이더 생성
+        console.timeEnd('webglShader : ' + key);
         /**DOC:
          {
 		  code : 'PROPERTY',
@@ -18109,9 +19440,13 @@ var RedShader;
 		  return : 'Object'
 		 }
          :DOC*/
+        console.time('parserDefine - ' + key);
         this['parseData'] = parserDefine(type, source); // 소스 파싱
+        console.timeEnd('parserDefine - ' + key);
         this['originSource'] = source;
+        console.time('compileWebGLShader - ' + key);
         compileWebGLShader(tGL, type, this['webglShader'], this['parseData']); // 쉐이더 컴파일
+        console.timeEnd('compileWebGLShader - ' + key);
         /**DOC:
          {
 		     code : 'PROPERTY',
@@ -18133,6 +19468,8 @@ var RedShader;
         this['_UUID'] = RedGL.makeUUID();
         Object.freeze(this);
         console.log(this);
+        console.timeEnd('RedShader');
+        console.groupEnd('RedShader');
     };
     /**DOC:
      {
@@ -18181,26 +19518,33 @@ var RedShader;
     RedShader['VERTEX'] = 'vertexShader';
     Object.freeze(RedShader)
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedRenderer;
 //TODO: 캐싱전략을 좀더 고도화하는게 좋을듯
 (function () {
-    var _renderList = []
+    var _renderList = [];
     var _renderTick;
     _renderTick = function (time) {
         //TODO: 시간보정을 굳이 할피요가 있을까..
-        var i = _renderList.length
+        var i = _renderList.length;
         var tRenderer;
         while (i--) {
-            tRenderer = _renderList[i]
+            tRenderer = _renderList[i];
             tRenderer.worldRender(tRenderer['_redGL'], time);
             tRenderer['_callback'] ? tRenderer['_callback'](time) : 0
 
         }
         requestAnimationFrame(_renderTick)
 
-    }
-    requestAnimationFrame(_renderTick)
+    };
+    requestAnimationFrame(_renderTick);
     /**DOC:
      {
 		 constructorYn : true,
@@ -18236,8 +19580,8 @@ var RedRenderer;
             cacheSystemUniformInfo: []
         };
         this['renderDebuger'] = RedRenderDebuger();
-        this['worldRect'] = []
-        this['_glInitialized'] = false
+        this['worldRect'] = [];
+        this['_glInitialized'] = false;
         console.log(this);
     };
     RedRenderer.prototype = {
@@ -18274,9 +19618,9 @@ var RedRenderer;
             redGL instanceof RedGL || RedGLUtil.throwFunc('RedGL Instance만 허용');
             if (!(redGL.world instanceof RedWorld)) RedGLUtil.throwFunc('RedWorld Instance만 허용');
             var self = this;
-            self.stop()
+            self.stop();
             self.world = redGL.world;
-            self['_redGL'] = redGL
+            self['_redGL'] = redGL;
             self['_callback'] = callback;
             _renderList.push(self)
         },
@@ -18296,11 +19640,11 @@ var RedRenderer;
          :DOC*/
         setDebugButton: function () {
             var sourceViewBt;
-            var self = this
+            var self = this;
             if (window['document']) {
                 document.body.appendChild(sourceViewBt = document.createElement('button'));
-                sourceViewBt.style.cssText = 'position:fixed;left:10px;top:10px;background:rgb(91, 82, 170);color:#fff;z-index:10001;border:0;outline:none;cursor:pointer;padding:8px;font-size:11px;border-radius:5px'
-                sourceViewBt.innerHTML = 'debugRenderInfo - ' + RedGL_VERSION.version
+                sourceViewBt.style.cssText = 'position:fixed;left:10px;top:10px;background:rgb(91, 82, 170);color:#fff;z-index:10001;border:0;outline:none;cursor:pointer;padding:8px;font-size:11px;border-radius:5px';
+                sourceViewBt.innerHTML = 'debugRenderInfo - ' + RedGL_VERSION.version;
                 sourceViewBt.addEventListener('click', function () {
                     self.renderDebuger.visible = !self.renderDebuger.visible
                 })
@@ -18367,7 +19711,7 @@ var RedRenderer;
     };
     // 캐시관련
     var prevProgram_UUID;
-    var transparentList = []
+    var transparentList = [];
     RedRenderer.prototype.worldRender = (function () {
         var tWorldRect;
         var self;
@@ -18375,7 +19719,7 @@ var RedRenderer;
         var updateSystemUniform;
         var glInitialize;
         var lightDebugRenderList;
-        lightDebugRenderList = []
+        lightDebugRenderList = [];
         // 숫자면 숫자로 %면 월드대비 수치로 변경해줌
         valueParser = (function () {
             var i;
@@ -18384,7 +19728,7 @@ var RedRenderer;
                 while (i--) {
                     if (typeof rect[i] == 'number') rect[i] = rect[i];
                     else {
-                        if (i < 2) rect[i] = tWorldRect[i + 2] * parseFloat(rect[i]) / 100
+                        if (i < 2) rect[i] = tWorldRect[i + 2] * parseFloat(rect[i]) / 100;
                         else rect[i] = tWorldRect[i] * parseFloat(rect[i]) / 100
                     }
                 }
@@ -18393,20 +19737,20 @@ var RedRenderer;
         })();
         updateSystemUniform = function (redGL, time, tView) {
             prevProgram_UUID = RedSystemUniformUpdater.update(redGL, this, time, tView, prevProgram_UUID, lightDebugRenderList)
-        }
+        };
         glInitialize = function (gl) {
             // 뎁스데스티 설정
             gl.enable(gl.DEPTH_TEST);
-            gl.depthFunc(gl.LEQUAL)
+            gl.depthFunc(gl.LEQUAL);
             // 컬링 페이스 설정
-            gl.frontFace(gl.CCW)
+            gl.frontFace(gl.CCW);
             gl.enable(gl.CULL_FACE);
-            gl.cullFace(gl.BACK)
+            gl.cullFace(gl.BACK);
             gl.enable(gl.SCISSOR_TEST);
             // 블렌드모드설정
             gl.enable(gl.BLEND);
             gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-            gl.disable(gl.DITHER)
+            gl.disable(gl.DITHER);
             // gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
             // // 픽셀 블렌딩 결정
             // gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
@@ -18416,18 +19760,18 @@ var RedRenderer;
         return function (redGL, time) {
             var gl;
             var tScene;
-            var tRenderInfo
+            var tRenderInfo;
             var tPerspectiveMTX;
-            var tCamera
+            var tCamera;
             var i;
             var len;
             var tView;
             var tViewRect;
             gl = redGL.gl;
             self = this;
-            if (window['RedGLTFLoader']) RedGLTFLoader.animationLooper(time)
+            if (window['RedGLTFLoader']) RedGLTFLoader.animationLooper(time);
             // 캔버스 사이즈 적용
-            tWorldRect = self['worldRect']
+            tWorldRect = self['worldRect'];
             tWorldRect[0] = 0;
             tWorldRect[1] = 0;
             tWorldRect[2] = gl.drawingBufferWidth;
@@ -18435,49 +19779,49 @@ var RedRenderer;
             gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
             gl.scissor(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-            transparentList.length = 0
-            if (!self['_glInitialized']) glInitialize(gl), self['_glInitialized'] = true
+            transparentList.length = 0;
+            if (!self['_glInitialized']) glInitialize(gl), self['_glInitialized'] = true;
             // console.log("worldRender", v['key'], t0)
-            self['renderInfo'] = {}
-            self['cacheInfo']['cacheAttrInfo'].length = 0
+            self['renderInfo'] = {};
+            self['cacheInfo']['cacheAttrInfo'].length = 0;
             // 일단 0번과 1번텍스트는 무조건 체운다.
             redGL.gl.activeTexture(redGL.gl.TEXTURE0);
             redGL.gl.bindTexture(redGL.gl.TEXTURE_2D, redGL['_datas']['emptyTexture']['2d']['webglTexture']);
             redGL.gl.activeTexture(redGL.gl.TEXTURE0 + 1);
             redGL.gl.bindTexture(redGL.gl.TEXTURE_CUBE_MAP, redGL['_datas']['emptyTexture']['3d']['webglTexture']);
             i = 0;
-            len = self['world']['_viewList'].length
+            len = self['world']['_viewList'].length;
             for (i; i < len; i++) {
                 // self['world']['_viewList'].forEach(function (tView) {
-                tView = self['world']['_viewList'][i]
+                tView = self['world']['_viewList'][i];
                 ///////////////////////////////////
                 // view의 위치/크기결정
-                tViewRect = tView['_viewRect']
+                tViewRect = tView['_viewRect'];
                 tViewRect[0] = tView['_x'];
                 tViewRect[1] = tView['_y'];
                 tViewRect[2] = tView['_width'];
                 tViewRect[3] = tView['_height'];
                 tCamera = tView['camera'];
-                tScene = tView['scene']
+                tScene = tView['scene'];
                 // 위치/크기의 % 여부를 파싱
                 valueParser(tViewRect);
                 // 현재뷰에 대한 렌더 디버깅 정보
-                if (!self['renderInfo'][tView['key']]) self['renderInfo'][tView['key']] = {}
-                tRenderInfo = self['renderInfo'][tView['key']]
-                tRenderInfo['orthographicYn'] = tCamera instanceof RedBaseController ? tCamera.camera['orthographicYn'] : tCamera['orthographicYn']
-                tRenderInfo['x'] = tView['_x']
-                tRenderInfo['y'] = tView['_y']
-                tRenderInfo['width'] = tView['_width']
-                tRenderInfo['height'] = tView['_height']
-                tRenderInfo['viewRectX'] = tViewRect[0]
-                tRenderInfo['viewRectY'] = tViewRect[1]
-                tRenderInfo['viewRectWidth'] = tViewRect[2]
-                tRenderInfo['viewRectHeight'] = tViewRect[3]
-                tRenderInfo['key'] = tView['key']
-                tRenderInfo['call'] = 0
-                tRenderInfo['triangleNum'] = 0
-                tRenderInfo['viewRenderTime'] = 0
-                tRenderInfo['postEffectRenderTime'] = 0
+                if (!self['renderInfo'][tView['key']]) self['renderInfo'][tView['key']] = {};
+                tRenderInfo = self['renderInfo'][tView['key']];
+                tRenderInfo['orthographicYn'] = tCamera instanceof RedBaseController ? tCamera.camera['orthographicYn'] : tCamera['orthographicYn'];
+                tRenderInfo['x'] = tView['_x'];
+                tRenderInfo['y'] = tView['_y'];
+                tRenderInfo['width'] = tView['_width'];
+                tRenderInfo['height'] = tView['_height'];
+                tRenderInfo['viewRectX'] = tViewRect[0];
+                tRenderInfo['viewRectY'] = tViewRect[1];
+                tRenderInfo['viewRectWidth'] = tViewRect[2];
+                tRenderInfo['viewRectHeight'] = tViewRect[3];
+                tRenderInfo['key'] = tView['key'];
+                tRenderInfo['call'] = 0;
+                tRenderInfo['triangleNum'] = 0;
+                tRenderInfo['viewRenderTime'] = 0;
+                tRenderInfo['postEffectRenderTime'] = 0;
                 // viewport 크기설정
                 gl.viewport(tViewRect[0], tWorldRect[3] - tViewRect[3] - tViewRect[1], tViewRect[2], tViewRect[3]);
                 gl.scissor(tViewRect[0], tWorldRect[3] - tViewRect[3] - tViewRect[1], tViewRect[2], tViewRect[3]);
@@ -18510,10 +19854,10 @@ var RedRenderer;
                         0.5, // top,
                         -tCamera['farClipping'],
                         tCamera['farClipping']
-                    )
-                    mat4.translate(tPerspectiveMTX, tPerspectiveMTX, [-0.5, 0.5, 0])
+                    );
+                    mat4.translate(tPerspectiveMTX, tPerspectiveMTX, [-0.5, 0.5, 0]);
                     mat4.scale(tPerspectiveMTX, tPerspectiveMTX, [1 / tViewRect[2] * redGL['renderScale'] * window.devicePixelRatio, -1 / tViewRect[3] * redGL['renderScale'] * window.devicePixelRatio, 1]);
-                    mat4.identity(tCamera['matrix'])
+                    mat4.identity(tCamera['matrix']);
                     gl.disable(gl.CULL_FACE);
                     self['cacheState']['useCullFace'] = false
                 } else {
@@ -18531,23 +19875,23 @@ var RedRenderer;
                 self['cacheState']['useDepthMask'] ? 0 : gl.depthMask(self['cacheState']['useDepthMask'] = true);
                 // 마우스 이벤트 렌더
                 if (tScene['mouseManager']) {
-                    updateSystemUniform.apply(self, [redGL, time, tView])
-                    tScene['mouseManager']['render'](redGL, self, tView, time, tRenderInfo,i==len-1)
+                    updateSystemUniform.apply(self, [redGL, time, tView]);
+                    tScene['mouseManager']['render'](redGL, self, tView, time, tRenderInfo, i == len - 1)
 
                 }
                 // 디렉셔널 쉐도우 렌더
                 if (tScene['shadowManager']['_directionalShadow']) {
-                    updateSystemUniform.apply(self, [redGL, time, tView])
+                    updateSystemUniform.apply(self, [redGL, time, tView]);
                     gl.disable(gl.BLEND);
                     gl.blendFunc(gl.ONE, gl.ONE);
-                    self['cacheState']['useBlendMode'] = true
-                    self['cacheState']['blendSrc'] = gl.ONE
-                    self['cacheState']['blendDst'] = gl.ONE
-                    tScene['shadowManager']['render'](redGL, self, tView, time, tRenderInfo)
+                    self['cacheState']['useBlendMode'] = true;
+                    self['cacheState']['blendSrc'] = gl.ONE;
+                    self['cacheState']['blendDst'] = gl.ONE;
+                    tScene['shadowManager']['render'](redGL, self, tView, time, tRenderInfo);
                     gl.enable(gl.BLEND);
                     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-                    self['cacheState']['useBlendMode'] = true
-                    self['cacheState']['blendSrc'] = gl.SRC_ALPHA
+                    self['cacheState']['useBlendMode'] = true;
+                    self['cacheState']['blendSrc'] = gl.SRC_ALPHA;
                     self['cacheState']['blendDst'] = gl.ONE_MINUS_SRC_ALPHA
                 }
 
@@ -18566,12 +19910,12 @@ var RedRenderer;
                 }
                 ///////////////////////////////
                 // 실제렌더 계산
-                updateSystemUniform.apply(self, [redGL, time, tView])
+                updateSystemUniform.apply(self, [redGL, time, tView]);
                 if (tScene['skyBox']) {
-                    tScene['skyBox']['x'] = tCamera.x
-                    tScene['skyBox']['y'] = tCamera.y
-                    tScene['skyBox']['z'] = tCamera.z
-                    tScene['skyBox']['scaleX'] = tScene['skyBox']['scaleY'] = tScene['skyBox']['scaleZ'] = tCamera['farClipping'] * 0.6
+                    tScene['skyBox']['x'] = tCamera.x;
+                    tScene['skyBox']['y'] = tCamera.y;
+                    tScene['skyBox']['z'] = tCamera.z;
+                    tScene['skyBox']['scaleX'] = tScene['skyBox']['scaleY'] = tScene['skyBox']['scaleZ'] = tCamera['farClipping'] * 0.6;
                     self.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], [tScene['skyBox']], time, tRenderInfo);
                 }
                 // 그리드가 있으면 그림
@@ -18586,7 +19930,7 @@ var RedRenderer;
                 if (lightDebugRenderList.length) self.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], lightDebugRenderList, time, tRenderInfo);
                 // 포스트이펙트 최종렌더
                 tRenderInfo['viewRenderTime'] = performance.now();
-                if (tView['postEffectManager']['postEffectList'].length) tView['postEffectManager'].render(redGL, gl, self, tView, time, tRenderInfo)
+                if (tView['postEffectManager']['postEffectList'].length) tView['postEffectManager'].render(redGL, gl, self, tView, time, tRenderInfo);
                 tRenderInfo['postEffectRenderTime'] = performance.now() - tRenderInfo['viewRenderTime'];
                 tRenderInfo['viewRenderTime'] -= time;
                 // })
@@ -18614,7 +19958,7 @@ var RedRenderer;
                          transparentMode) {
             var i, i2;
             // 캐쉬관련
-            var tGL = redGL.gl
+            var tGL = redGL.gl;
             var tCacheInterleaveBuffer = tCacheInfo['cacheAttrInfo'];
             var tCacheUniformInfo = tCacheInfo['cacheUniformInfo'];
             var tCacheSamplerIndex = tCacheInfo['cacheSamplerIndex'];
@@ -18630,9 +19974,9 @@ var RedRenderer;
             var tUniformGroup, tSystemUniformGroup, tUniformLocationInfo, tWebGLUniformLocation,
                 tWebGLAttributeLocation;
             var tInterleaveBuffer, tIndexBufferInfo;
-            var tUniformValue
+            var tUniformValue;
             var tRenderType, tRenderTypeIndex;
-            var tMVMatrix, tNMatrix
+            var tMVMatrix, tNMatrix;
             var tUUID;
             var tSamplerIndex;
             var tSprite3DYn, tLODData, tDirectionalShadowMaterialYn, tSkinInfo, tUseFog;
@@ -18653,16 +19997,16 @@ var RedRenderer;
             // LOD 관련
             var lodX, lodY, lodZ, lodDistance;
             // 프로그램 성택관련
-            var tUseDirectionalShadow
+            var tUseDirectionalShadow;
             var tProgramList;
             var tBaseProgramKey;
             //////////////// 변수값 할당 ////////////////
             CONVERT_RADIAN = Math.PI / 180;
             CPI = 3.141592653589793, CPI2 = 6.283185307179586, C225 = 0.225, C127 = 1.27323954, C045 = 0.405284735, C157 = 1.5707963267948966;
             //////////////// 렌더시작 ////////////////
-            i = children.length
-            var len3 = children.length - 1
-            tUseFog = scene['_useFog']
+            i = children.length;
+            var len3 = children.length - 1;
+            tUseFog = scene['_useFog'];
             while (i--) {
                 renderResultObj['call']++;
                 tMesh = children[len3 - i];
@@ -18670,16 +20014,16 @@ var RedRenderer;
                 tNMatrix = tMesh['normalMatrix'];
                 tGeometry = tMesh['_geometry'];
                 tSprite3DYn = tMesh['_sprite3DYn'];
-                tSkinInfo = tMesh['skinInfo']
+                tSkinInfo = tMesh['skinInfo'];
                 // LOD체크
                 if (tMesh['useLOD']) {
                     lodX = camera.x - tMesh.x;
                     lodY = camera.y - tMesh.y;
-                    lodZ = camera.z - tMesh.z
+                    lodZ = camera.z - tMesh.z;
                     lodDistance = Math.abs(Math.sqrt(lodX * lodX + lodY * lodY + lodZ * lodZ));
-                    tLODInfo = tMesh['_lodLevels']
+                    tLODInfo = tMesh['_lodLevels'];
                     for (var k in tLODInfo) {
-                        tLODData = tLODInfo[k]
+                        tLODData = tLODInfo[k];
                         if (tLODData['distance'] < lodDistance) {
                             tMesh['_geometry'] = tLODData['geometry'];
                             tMesh['_material'] = tLODData['material'];
@@ -18690,13 +20034,13 @@ var RedRenderer;
                     tMaterial = subSceneMaterial ? subSceneMaterial : tMesh['_material'];
                     tDirectionalShadowMaterialYn = tMaterial['_RedDirectionalShadowYn'];
                     // 마우스 이벤트 커러설정
-                    tMaterial['_RedMouseEventMaterialYn'] ? tMaterial['color'] = tMesh['_mouseColorID'] : 0
+                    tMaterial['_RedMouseEventMaterialYn'] ? tMaterial['color'] = tMesh['_mouseColorID'] : 0;
                     // SpriteSheet체크
                     if (tMaterial['__RedSheetMaterialYn']) {
-                        if (!tMaterial['_nextFrameTime']) tMaterial['_nextFrameTime'] = tMaterial['_perFrameTime'] + time
+                        if (!tMaterial['_nextFrameTime']) tMaterial['_nextFrameTime'] = tMaterial['_perFrameTime'] + time;
                         if (tMaterial['_playYn'] && tMaterial['_nextFrameTime'] < time) {
                             var gapFrame = parseInt((time - tMaterial['_nextFrameTime']) / tMaterial['_perFrameTime']);
-                            gapFrame = gapFrame || 1
+                            gapFrame = gapFrame || 1;
                             tMaterial['_nextFrameTime'] = tMaterial['_perFrameTime'] + time;
                             tMaterial['currentIndex'] += gapFrame;
                             if (tMaterial['currentIndex'] >= tMaterial['totalFrame']) {
@@ -18713,29 +20057,28 @@ var RedRenderer;
                     // Program 판단
                     //TODO: 프로그램 생성로직정리후 선택로직 확정
                     tUseDirectionalShadow = scene['shadowManager']['_directionalShadow'];
-                    tProgram = tMaterial['program']
+                    tProgram = tMaterial['program'];
                     if (tProgram['_prepareProgramYn']) {
                         tProgram = tMaterial['program'] = tProgram._makePrepareProgram();
                     }
                     tOptionProgramKey = null;
                     tOptionProgram = null;
-                    tBaseProgramKey = tProgram['key']
-                    tProgramList = tMaterial['_programList']
-                    //TODO: 스킨관련 추가해야함
+                    tBaseProgramKey = tProgram['key'];
+                    tProgramList = tMaterial['_programList'];
                     if (tProgramList) {
                         if (tUseDirectionalShadow) {
-                            if (tUseFog && tSprite3DYn) tOptionProgramKey = 'directionalShadow_fog_sprite3D'
-                            else if (tUseFog && tSkinInfo) tOptionProgramKey = 'directionalShadow_fog_skin'
-                            else if (tSkinInfo) tOptionProgramKey = 'directionalShadow_skin'
-                            else if (tSprite3DYn) tOptionProgramKey = 'directionalShadow_sprite3D'
-                            else if (tUseFog) tOptionProgramKey = 'directionalShadow_fog'
+                            if (tUseFog && tSprite3DYn) tOptionProgramKey = 'directionalShadow_fog_sprite3D';
+                            else if (tUseFog && tSkinInfo) tOptionProgramKey = 'directionalShadow_fog_skin';
+                            else if (tSkinInfo) tOptionProgramKey = 'directionalShadow_skin';
+                            else if (tSprite3DYn) tOptionProgramKey = 'directionalShadow_sprite3D';
+                            else if (tUseFog) tOptionProgramKey = 'directionalShadow_fog';
                             else tOptionProgramKey = 'directionalShadow'
                         }
                         else {
-                            if (tUseFog && tSprite3DYn) tOptionProgramKey = 'fog_sprite3D'
-                            else if (tUseFog && tSkinInfo) tOptionProgramKey = 'fog_skin'
-                            else if (tSkinInfo) tOptionProgramKey = 'skin'
-                            else if (tSprite3DYn) tOptionProgramKey = 'sprite3D'
+                            if (tUseFog && tSprite3DYn) tOptionProgramKey = 'fog_sprite3D';
+                            else if (tUseFog && tSkinInfo) tOptionProgramKey = 'fog_skin';
+                            else if (tSkinInfo) tOptionProgramKey = 'skin';
+                            else if (tSprite3DYn) tOptionProgramKey = 'sprite3D';
                             else if (tUseFog) tOptionProgramKey = 'fog'
                         }
                     }
@@ -18749,7 +20092,7 @@ var RedRenderer;
                         // }
 
                         if (tOptionProgram['_prepareProgramYn']) {
-                            console.log(tProgramList, tOptionProgramKey, tBaseProgramKey)
+                            console.log(tProgramList, tOptionProgramKey, tBaseProgramKey);
                             tOptionProgram = tProgramList[tOptionProgramKey][tBaseProgramKey] = tOptionProgram._makePrepareProgram();
                         }
                         tProgram = tOptionProgram
@@ -18785,7 +20128,7 @@ var RedRenderer;
                          이경우는 버퍼상에는 존재하지만 프로그램에서 사용하지 않는경우이다.
                         */
                         // webgl location도 알아낸다.
-                        tWebGLAttributeLocation = tAttributeLocationInfo['location']
+                        tWebGLAttributeLocation = tAttributeLocationInfo['location'];
                         if (tInterleaveDefineUnit && tCacheInterleaveBuffer[tWebGLAttributeLocation] != tInterleaveDefineUnit['_UUID']) {
                             // 해당로케이션을 활성화된적이없으면 활성화 시킨다
                             tAttributeLocationInfo['enabled'] ? 0 : tGL.enableVertexAttribArray(tWebGLAttributeLocation);
@@ -18826,7 +20169,7 @@ var RedRenderer;
                                     if (tUniformValue['_videoDom']) {
                                         //TODO: 일단 비디오를 우겨넣었으니 정리를 해야함
                                         tGL.bindTexture(tGL.TEXTURE_2D, tUniformValue['webglTexture']);
-                                        if (tUniformValue['_videoDom']['loaded']) tGL.texImage2D(tGL.TEXTURE_2D, 0, tGL.RGBA, tGL.RGBA, tGL.UNSIGNED_BYTE, tUniformValue['_videoDom'])
+                                        if (tUniformValue['_videoDom']['loaded']) tGL.texImage2D(tGL.TEXTURE_2D, 0, tGL.RGBA, tGL.RGBA, tGL.UNSIGNED_BYTE, tUniformValue['_videoDom']);
                                         tCacheTexture = [];
                                     } else tGL.bindTexture(tRenderType == 'sampler2D' ? tGL.TEXTURE_2D : tGL.TEXTURE_CUBE_MAP, tUniformValue['webglTexture']);
                                     tCacheSamplerIndex[tUUID] == tSamplerIndex ? 0 : tGL.uniform1i(tWebGLUniformLocation, tCacheSamplerIndex[tUUID] = tSamplerIndex);
@@ -18980,12 +20323,12 @@ var RedRenderer;
                     }
                     /////////////////////////////////////////////////////////////////////////
                     /////////////////////////////////////////////////////////////////////////
-                    if (tGeometry) tGL.uniformMatrix4fv(tSystemUniformGroup['uMMatrix']['location'], false, tMVMatrix)
+                    if (tGeometry) tGL.uniformMatrix4fv(tSystemUniformGroup['uMMatrix']['location'], false, tMVMatrix);
 
                     if (tSkinInfo) {
-                        var globalTransformOfJointNode = []
-                        var joints = tSkinInfo['joints']
-                        var index = 0, len = joints.length
+                        var globalTransformOfJointNode = [];
+                        var joints = tSkinInfo['joints'];
+                        var index = 0, len = joints.length;
                         var globalTransformOfNodeThatTheMeshIsAttachedTo = [
                             tMesh['matrix'][0],
                             tMesh['matrix'][1],
@@ -19003,7 +20346,7 @@ var RedRenderer;
                             tMesh['matrix'][13],
                             tMesh['matrix'][14],
                             tMesh['matrix'][15]
-                        ]
+                        ];
                         ////////////////////////////////////////////////////////////////////////////////////////////////////////////
                         // 역구하고
                         // getInverse(globalTransformOfNodeThatTheMeshIsAttachedTo, globalTransformOfNodeThatTheMeshIsAttachedTo)
@@ -19045,25 +20388,25 @@ var RedRenderer;
                         //TODO: 여기 캐싱할 방법 찾아야함
                         for (index; index < len; index++) {
                             // 조인트 공간내에서의 전역
-                            globalTransformOfJointNode[index * 16 + 0] = joints[index]['matrix'][0]
-                            globalTransformOfJointNode[index * 16 + 1] = joints[index]['matrix'][1]
-                            globalTransformOfJointNode[index * 16 + 2] = joints[index]['matrix'][2]
-                            globalTransformOfJointNode[index * 16 + 3] = joints[index]['matrix'][3]
-                            globalTransformOfJointNode[index * 16 + 4] = joints[index]['matrix'][4]
-                            globalTransformOfJointNode[index * 16 + 5] = joints[index]['matrix'][5]
-                            globalTransformOfJointNode[index * 16 + 6] = joints[index]['matrix'][6]
-                            globalTransformOfJointNode[index * 16 + 7] = joints[index]['matrix'][7]
-                            globalTransformOfJointNode[index * 16 + 8] = joints[index]['matrix'][8]
-                            globalTransformOfJointNode[index * 16 + 9] = joints[index]['matrix'][9]
-                            globalTransformOfJointNode[index * 16 + 10] = joints[index]['matrix'][10]
-                            globalTransformOfJointNode[index * 16 + 11] = joints[index]['matrix'][11]
-                            globalTransformOfJointNode[index * 16 + 12] = joints[index]['matrix'][12]
-                            globalTransformOfJointNode[index * 16 + 13] = joints[index]['matrix'][13]
-                            globalTransformOfJointNode[index * 16 + 14] = joints[index]['matrix'][14]
+                            globalTransformOfJointNode[index * 16 + 0] = joints[index]['matrix'][0];
+                            globalTransformOfJointNode[index * 16 + 1] = joints[index]['matrix'][1];
+                            globalTransformOfJointNode[index * 16 + 2] = joints[index]['matrix'][2];
+                            globalTransformOfJointNode[index * 16 + 3] = joints[index]['matrix'][3];
+                            globalTransformOfJointNode[index * 16 + 4] = joints[index]['matrix'][4];
+                            globalTransformOfJointNode[index * 16 + 5] = joints[index]['matrix'][5];
+                            globalTransformOfJointNode[index * 16 + 6] = joints[index]['matrix'][6];
+                            globalTransformOfJointNode[index * 16 + 7] = joints[index]['matrix'][7];
+                            globalTransformOfJointNode[index * 16 + 8] = joints[index]['matrix'][8];
+                            globalTransformOfJointNode[index * 16 + 9] = joints[index]['matrix'][9];
+                            globalTransformOfJointNode[index * 16 + 10] = joints[index]['matrix'][10];
+                            globalTransformOfJointNode[index * 16 + 11] = joints[index]['matrix'][11];
+                            globalTransformOfJointNode[index * 16 + 12] = joints[index]['matrix'][12];
+                            globalTransformOfJointNode[index * 16 + 13] = joints[index]['matrix'][13];
+                            globalTransformOfJointNode[index * 16 + 14] = joints[index]['matrix'][14];
                             globalTransformOfJointNode[index * 16 + 15] = joints[index]['matrix'][15]
                         }
-                        tGL.uniformMatrix4fv(tSystemUniformGroup['uGlobalTransformOfNodeThatTheMeshIsAttachedTo']['location'], false, globalTransformOfNodeThatTheMeshIsAttachedTo)
-                        tGL.uniformMatrix4fv(tSystemUniformGroup['uJointMatrix']['location'], false, globalTransformOfJointNode)
+                        tGL.uniformMatrix4fv(tSystemUniformGroup['uGlobalTransformOfNodeThatTheMeshIsAttachedTo']['location'], false, globalTransformOfNodeThatTheMeshIsAttachedTo);
+                        tGL.uniformMatrix4fv(tSystemUniformGroup['uJointMatrix']['location'], false, globalTransformOfJointNode);
                         tGL.uniformMatrix4fv(tSystemUniformGroup['uInverseBindMatrixForJoint']['location'], false, tSkinInfo['inverseBindMatrices'])
                     }
                     /////////////////////////////////////////////////////////////////////////
@@ -19134,10 +20477,10 @@ var RedRenderer;
                         tCacheState['pointSize'] != tMesh['pointSize'] ? tGL.uniform1f(tSystemUniformGroup['uPointSize']['location'], tCacheState['pointSize'] = tMesh['pointSize']) : 0;
                     }
                     if (tSystemUniformGroup['u_PerspectiveScale']['location']) {
-                        tUUID = tSystemUniformGroup['u_PerspectiveScale']['_UUID']
-                        tUniformValue = tMesh['_perspectiveScale']
+                        tUUID = tSystemUniformGroup['u_PerspectiveScale']['_UUID'];
+                        tUniformValue = tMesh['_perspectiveScale'];
                         if (tCacheUniformInfo[tUUID] != tUniformValue) {
-                            tGL[tSystemUniformGroup['u_PerspectiveScale']['renderMethod']](tSystemUniformGroup['u_PerspectiveScale']['location'], tUniformValue)
+                            tGL[tSystemUniformGroup['u_PerspectiveScale']['renderMethod']](tSystemUniformGroup['u_PerspectiveScale']['location'], tUniformValue);
                             tCacheUniformInfo[tUUID] = tUniformValue
                         }
                     }
@@ -19155,9 +20498,9 @@ var RedRenderer;
                     /////////////////////////////////////////////////////////////////////////
                     if (!transparentMode) {
                         if (tMesh['useTransparentSort']) {
-                            transparentList.push(tMesh)
-                            tMesh._renderAutoUpdateMatrix = tMesh.autoUpdateMatrix
-                            tMesh.autoUpdateMatrix = false
+                            transparentList.push(tMesh);
+                            tMesh._renderAutoUpdateMatrix = tMesh.autoUpdateMatrix;
+                            tMesh.autoUpdateMatrix = false;
                             continue
                         }
                     } else {
@@ -19165,7 +20508,7 @@ var RedRenderer;
                     }
                     // 드로우
                     if (tIndexBufferInfo) {
-                        tPrevIndexBuffer_UUID == tIndexBufferInfo['_UUID'] ? 0 : tGL.bindBuffer(tGL.ELEMENT_ARRAY_BUFFER, tIndexBufferInfo['webglBuffer'])
+                        tPrevIndexBuffer_UUID == tIndexBufferInfo['_UUID'] ? 0 : tGL.bindBuffer(tGL.ELEMENT_ARRAY_BUFFER, tIndexBufferInfo['webglBuffer']);
                         //enum mode, long count, enum type, long offset
                         tGL.drawElements(
                             tMesh['drawMode'],
@@ -19176,7 +20519,7 @@ var RedRenderer;
                         tPrevIndexBuffer_UUID = tIndexBufferInfo['_UUID'];
                         renderResultObj['triangleNum'] += tIndexBufferInfo['triangleNum'];
                     } else {
-                        tGL.drawArrays(tMesh['drawMode'], 0, tInterleaveBuffer['pointNum'])
+                        tGL.drawArrays(tMesh['drawMode'], 0, tInterleaveBuffer['pointNum']);
                         renderResultObj['triangleNum'] += tInterleaveBuffer['triangleNum'];
                     }
 
@@ -19185,7 +20528,7 @@ var RedRenderer;
                 /////////////////////////////////////////////////////////////////////////
                 tMesh['children'].length ? draw(redGL, scene, tMesh['children'], camera, orthographicYn, time, renderResultObj, tCacheInfo, tCacheState, tMVMatrix, subSceneMaterial, transparentMode) : 0;
             }
-        }
+        };
         return function (redGL, scene, camera, orthographicYn, children, time, renderResultObj, subSceneMaterial, transparentMode) {
             // if ( this['cacheState']['pointSize'] == undefined ) this['cacheState']['pointSize'] = null
             // if ( !this['cacheState']['useCullFace'] ) this['cacheState']['useCullFace'] = null
@@ -19197,7 +20540,7 @@ var RedRenderer;
             // if ( !this['cacheState']['blendSrc'] ) this['cacheState']['blendSrc'] = null
             // if ( !this['cacheState']['blendDst'] ) this['cacheState']['blendDst'] = null
             // this['cacheSamplerIndex'].length = 0
-            this['cacheInfo']['cacheTexture'].length = 0
+            this['cacheInfo']['cacheTexture'].length = 0;
             // this['cacheInfo']['cacheTexture'][39] = null
             // console.log(this['cacheInfo']['cacheSamplerIndex'])
             tPrevIndexBuffer_UUID = null;
@@ -19218,9 +20561,16 @@ var RedRenderer;
                 transparentMode
             )
         }
-    })()
+    })();
     Object.freeze(RedRenderer);
 })();
+
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
 
 "use strict";
 var RedRenderDebuger;
@@ -19241,13 +20591,13 @@ var RedRenderDebuger;
         if (!(this instanceof RedRenderDebuger)) return new RedRenderDebuger();
         if (window['HTMLCanvasElement']) {
             if (!this['renderResult']) {
-                this['renderResult'] = document.createElement('div')
-                this['_contentBox'] = document.createElement('div')
-                this['_etcBox'] = document.createElement('div')
-                this['renderResult'].appendChild(this['_contentBox'])
-                this['renderResult'].appendChild(this['_etcBox'])
-                this['renderResult'].style.cssText = 'position:absolute;bottom:0px;left:0px;color:#fff;font:11px Lucida Grande,sans-serif;font-size:11px;background:rgba(0,0,0,0.75);padding:3px;width:300px'
-                this['_etcBox'].style.cssText = 'position:relative;color:#fff;font:11px Lucida Grande,sans-serif;font-size:11px;padding:3px;margin-top:10px;'
+                this['renderResult'] = document.createElement('div');
+                this['_contentBox'] = document.createElement('div');
+                this['_etcBox'] = document.createElement('div');
+                this['renderResult'].appendChild(this['_contentBox']);
+                this['renderResult'].appendChild(this['_etcBox']);
+                this['renderResult'].style.cssText = 'position:absolute;bottom:0px;left:0px;color:#fff;font:11px Lucida Grande,sans-serif;font-size:11px;background:rgba(0,0,0,0.75);padding:3px;width:300px';
+                this['_etcBox'].style.cssText = 'position:relative;color:#fff;font:11px Lucida Grande,sans-serif;font-size:11px;padding:3px;margin-top:10px;';
                 var t0 = document.createElement('a');
                 t0.style.padding = '5px';
                 t0.style.borderRadius = '2px';
@@ -19272,14 +20622,14 @@ var RedRenderDebuger;
             }
         }
         this['_visible'] = false
-    }
+    };
     RedRenderDebuger.prototype = {
         update: function (redGL, renderInfo) {
             if (window['HTMLCanvasElement']) {
-                this['_contentBox'].innerHTML = ''
-                var t0 = ''
-                var totalRenderTime = 0
-                var postEffectRenderTime = 0
+                this['_contentBox'].innerHTML = '';
+                var t0 = '';
+                var totalRenderTime = 0;
+                var postEffectRenderTime = 0;
                 for (var k in renderInfo) {
                     // console.log(tRenderer['renderInfo'][k])
                     t0 +=
@@ -19304,16 +20654,16 @@ var RedRenderDebuger;
                     totalRenderTime += renderInfo[k]['viewRenderTime'];
                     postEffectRenderTime += renderInfo[k]['postEffectRenderTime'];
                 }
-                t0 += '<div style="padding:0px 5px">'
-                t0 += '<div>renderScale : <span style="padding:3px;background:#000">' + redGL['renderScale'] + '</span></div>'
-                t0 += '<div>totalRenderTime : <span style="padding:3px;background:#000">' + totalRenderTime.toFixed(2) + 'ms</span></div>'
-                t0 += '<div>baseRenderTime : <span style="padding:3px;background:#000">' + (totalRenderTime - postEffectRenderTime).toFixed(2) + 'ms</span></div>'
-                t0 += '<div>postEffectRenderTime : <span style="padding:3px;background:#000">' + postEffectRenderTime.toFixed(2) + 'ms</span></div>'
+                t0 += '<div style="padding:0px 5px">';
+                t0 += '<div>renderScale : <span style="padding:3px;background:#000">' + redGL['renderScale'] + '</span></div>';
+                t0 += '<div>totalRenderTime : <span style="padding:3px;background:#000">' + totalRenderTime.toFixed(2) + 'ms</span></div>';
+                t0 += '<div>baseRenderTime : <span style="padding:3px;background:#000">' + (totalRenderTime - postEffectRenderTime).toFixed(2) + 'ms</span></div>';
+                t0 += '<div>postEffectRenderTime : <span style="padding:3px;background:#000">' + postEffectRenderTime.toFixed(2) + 'ms</span></div>';
                 t0 += '</div>';
                 this['_contentBox'].innerHTML = t0;
             }
         }
-    }
+    };
     /**DOC:
      {
 	     code : 'PROPERTY',
@@ -19329,17 +20679,24 @@ var RedRenderDebuger;
             return this['_visible']
         },
         set: function (v) {
-            this['_visible'] = v
+            this['_visible'] = v;
             if (window['HTMLCanvasElement']) {
-                if (this['_visible']) document.body.appendChild(this['renderResult'])
+                if (this['_visible']) document.body.appendChild(this['renderResult']);
                 else {
                     if (this['renderResult'].parentNode) document.body.removeChild(this['renderResult'])
                 }
             }
         }
-    })
+    });
     Object.freeze(RedRenderDebuger);
 })();
+
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
 
 "use strict";
 var RedSystemUniformUpdater;
@@ -19416,7 +20773,7 @@ var RedSystemUniformUpdater;
             //
             tVector = new Float32Array(3);
             return function (redGL, redRenderer, time, tView, prevProgram_UUID, lightDebugRenderList) {
-                if (prevRedGL != redGL) checkUniformInfo = null
+                if (prevRedGL != redGL) checkUniformInfo = null;
                 if (!checkUniformInfo) {
                     MAX_DIRECTIONAL_LIGHT_NUM = RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT;
                     MAX_POINT_LIGHT_NUM = RedSystemShaderCode.MAX_POINT_LIGHT;
@@ -19553,8 +20910,8 @@ var RedSystemUniformUpdater;
                             tLightData['_lightColor'][3]
                         ];
                         tCheckData['cacheData'] = tValueStr;
-                        needUpdateUniformInfo['uAmbientLightColor'][0] *= needUpdateUniformInfo['uAmbientLightColor'][3]
-                        needUpdateUniformInfo['uAmbientLightColor'][1] *= needUpdateUniformInfo['uAmbientLightColor'][3]
+                        needUpdateUniformInfo['uAmbientLightColor'][0] *= needUpdateUniformInfo['uAmbientLightColor'][3];
+                        needUpdateUniformInfo['uAmbientLightColor'][1] *= needUpdateUniformInfo['uAmbientLightColor'][3];
                         needUpdateUniformInfo['uAmbientLightColor'][2] *= needUpdateUniformInfo['uAmbientLightColor'][3]
                     }
                     //
@@ -19773,6 +21130,13 @@ var RedSystemUniformUpdater;
     Object.freeze(RedSystemUniformUpdater);
 })();
 
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedView;
 (function () {
@@ -19958,6 +21322,13 @@ var RedView;
     Object.freeze(RedView);
 })();
 
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedWorld;
 (function () {
@@ -20123,6 +21494,13 @@ var RedWorld;
     Object.freeze(RedWorld);
 })();
 
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedScene;
 (function () {
@@ -20189,7 +21567,18 @@ var RedScene;
 		 }
          :DOC*/
         this['shadowManager'] = RedShadowManager(redGL);
-        this['mouseManager'] = RedMouseEventManager(redGL)
+        /**DOC:
+         {
+		     code : 'PROPERTY',
+			 title :`mouseManager`,
+			 description : `
+				 마우스 이벤트 매니저.
+				 RedScene Instance생성시 자동생성.
+			 `,
+			 return : 'RedMouseEventManager Instance'
+		 }
+         :DOC*/
+        this['mouseManager'] = RedMouseEventManager(redGL);
         this['_lightInfo'] = {
             RedAmbientLight: null,
             RedDirectionalLight: [],
@@ -20207,6 +21596,8 @@ var RedScene;
 				 라이트 추가 매서드.
 				 RedBaseLight 확장객체만 등록가능. ( RedAmbientLight, RedDirectionalLight, RedPointLight ).
 				 하드웨어 상황에 따른 라이트별 허용갯수까지만 등록가능.
+				 RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT
+				 RedSystemShaderCode.MAX_POINT_LIGHT
 			 `,
 			 params : {
 			    light : [
@@ -20229,11 +21620,11 @@ var RedScene;
                     this['_lightInfo'][light['TYPE']] = light;
                     break;
                 case RedDirectionalLight['TYPE']:
-                    if (this['_lightInfo'][light['TYPE']].length == RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT) RedGLUtil.throwFunc('RedScene : RedDirectionalLight ' + RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT + '개 까지 허용.');
+                    if (this['_lightInfo'][light['TYPE']].length === RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT) RedGLUtil.throwFunc('RedScene : RedDirectionalLight ' + RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT + '개 까지 허용.');
                     this['_lightInfo'][light['TYPE']].push(light);
                     break;
                 case RedPointLight['TYPE']:
-                    if (this['_lightInfo'][light['TYPE']].length == RedSystemShaderCode.MAX_POINT_LIGHT) RedGLUtil.throwFunc('RedScene : RedPointLight ' + RedSystemShaderCode.MAX_POINT_LIGHT + '개 까지 허용.');
+                    if (this['_lightInfo'][light['TYPE']].length === RedSystemShaderCode.MAX_POINT_LIGHT) RedGLUtil.throwFunc('RedScene : RedPointLight ' + RedSystemShaderCode.MAX_POINT_LIGHT + '개 까지 허용.');
                     this['_lightInfo'][light['TYPE']].push(light);
                     break;
                 default:
@@ -20269,7 +21660,7 @@ var RedScene;
             return function (light) {
                 switch (light['TYPE']) {
                     case RedAmbientLight['TYPE']:
-                        if (this['_lightInfo'][light['TYPE']] == light) this['_lightInfo'][light['TYPE']] = null;
+                        if (this['_lightInfo'][light['TYPE']] === light) this['_lightInfo'][light['TYPE']] = null;
                         break;
                     case RedDirectionalLight['TYPE']:
                         tIndex = this['_lightInfo'][light['TYPE']].indexOf(light);
@@ -20283,7 +21674,31 @@ var RedScene;
                         RedGLUtil.throwFunc('RedScene : RedBaseLight 인스턴스만 가능')
                 }
             }
-        })()
+        })(),
+        /**DOC:
+         {
+			 title :`removeLightAll`,
+			 code : 'METHOD',
+			 description : `
+				 전체 라이트 제거 매서드.
+			 `,
+			 example : `
+                var testScene;
+                var testLight;
+                testScene = RedScene(RedGL Instance); // RedScene 생성 설정
+                testScene.addLight( RedAmbientLight(RedGL Instance); ); // 라이트 추가
+                testScene.addLight( RedDirectionalLight(RedGL Instance); ); // 라이트 추가
+                testScene.addLight( RedPointLight(RedGL Instance); ); // 라이트 추가
+                testScene.removeLightAll(); // 라이트 제거
+             `,
+			 return : 'void'
+		 }
+         :DOC*/
+        removeLightAll: function () {
+            this['_lightInfo'][RedAmbientLight['TYPE']] = null;
+            this['_lightInfo'][RedDirectionalLight['TYPE']].length = 0;
+            this['_lightInfo'][RedPointLight['TYPE']].length = 0;
+        }
     };
     RedScene.prototype = new RedBaseContainer();
     for (var k in prototypeData) RedScene.prototype[k] = prototypeData[k];
@@ -20301,6 +21716,11 @@ var RedScene;
 				 'ex) #fff, #ffffff'
 			 ]
 		 },
+		 example : `
+            var testScene;
+            testScene = RedScene(RedGL Instance); // RedScene 생성
+            testScene.backgroundColor = '#fff';
+         `,
 		 return : 'hex'
 	 }
      :DOC*/
@@ -20323,10 +21743,15 @@ var RedScene;
 			 backgroundColor 사용여부.
 			 초기값 : true
 		 `,
+		 example : `
+            var testScene;
+            testScene = RedScene(RedGL Instance); // RedScene 생성
+            testScene.useBackgroundColor = true;
+         `,
 		 return : 'Boolean'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedScene', 'useBackgroundColor', 'boolean', true);
+    RedDefinePropertyInfo.definePrototype('RedScene', 'useBackgroundColor', 'boolean');
     /**DOC:
      {
 	     code : 'PROPERTY',
@@ -20335,10 +21760,15 @@ var RedScene;
 			 fog 사용여부
 			 초기값 : true
 		 `,
+		 example : `
+            var testScene;
+            testScene = RedScene(RedGL Instance); // RedScene 생성
+            testScene.fog = true;
+         `,
 		 return : 'Boolean'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedScene', 'useFog', 'boolean', true);
+    RedDefinePropertyInfo.definePrototype('RedScene', 'useFog', 'boolean');
     /**DOC:
      {
 	     code : 'PROPERTY',
@@ -20347,6 +21777,11 @@ var RedScene;
 			 fog 농도.
 			 초기값 : 0.5
 		 `,
+		 example : `
+            var testScene;
+            testScene = RedScene(RedGL Instance); // RedScene 생성
+            testScene.fogDensity = 0.5;
+         `,
 		 return : 'Number'
 	 }
      :DOC*/
@@ -20359,6 +21794,11 @@ var RedScene;
 			 fog 가시거리.
 			 초기값 : 25.0
 		 `,
+		 example : `
+            var testScene;
+            testScene = RedScene(RedGL Instance); // RedScene 생성
+            testScene.fogDistance = 50;
+         `,
 		 return : 'Number'
 	 }
      :DOC*/
@@ -20371,6 +21811,11 @@ var RedScene;
 		     fog 컬러값.
 			 초기값 : #ffffff
 		 `,
+		 example : `
+            var testScene;
+            testScene = RedScene(RedGL Instance); // RedScene 생성
+            testScene.fogColor = '#ffffff';
+         `,
 		 return : 'hex'
 	 }
      :DOC*/
@@ -20384,7 +21829,7 @@ var RedScene;
                 this['_fogB'] = t0[2];
             }
         })()
-    })
+    });
     /**DOC:
      {
 	     code : 'PROPERTY',
@@ -20468,6 +21913,13 @@ var RedScene;
     });
     Object.freeze(RedScene);
 })();
+
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
 
 "use strict";
 var RedCamera;
@@ -20645,6 +22097,13 @@ var RedCamera;
     Object.freeze(RedCamera);
 })();
 
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedBasicController;
 (function () {
@@ -20718,7 +22177,7 @@ var RedBasicController;
         this['speedRotation'] = 1;
         this['delayRotation'] = 0.1;
         this['maxAcceleration'] = 3;
-        this['_currentAcceleration'] = 0
+        this['_currentAcceleration'] = 0;
         /**DOC:
          {
 		     code : 'PROPERTY',
@@ -20755,14 +22214,14 @@ var RedBasicController;
                     e = {
                         clientX: redGL['_mouseX'],
                         clientY: redGL['_mouseY']
-                    }
+                    };
                     e[tXkey] = redGL['_mouseX'];
                     e[tYkey] = redGL['_mouseY'];
                 }
                 if (self['targetView']) {
-                    var tX, tY
+                    var tX, tY;
                     if (RedGLDetect.BROWSER_INFO.isMobile) {
-                        console.log(e)
+                        console.log(e);
                         tX = e['clientX'], tY = e['clientY'];
                     } else {
                         tX = e[tXkey], tY = e[tYkey];
@@ -20771,10 +22230,10 @@ var RedBasicController;
                     if (!(self['targetView']['_viewRect'][1] < tY && tY < self['targetView']['_viewRect'][1] + self['targetView']['_viewRect'][3])) return;
                 }
                 return true
-            }
-            tMove = RedGLDetect.BROWSER_INFO.move
-            tUp = RedGLDetect.BROWSER_INFO.up
-            tDown = RedGLDetect.BROWSER_INFO.down
+            };
+            tMove = RedGLDetect.BROWSER_INFO.move;
+            tUp = RedGLDetect.BROWSER_INFO.up;
+            tDown = RedGLDetect.BROWSER_INFO.down;
             sX = 0, sY = 0;
             mX = 0, mY = 0;
             HD_keyDown = function (e) {
@@ -20786,7 +22245,7 @@ var RedBasicController;
             };
             HD_down = function (e) {
                 if (RedGLDetect.BROWSER_INFO.isMobile) {
-                    console.log(e)
+                    console.log(e);
                     e = e.targetTouches[0]
                 }
                 if (!checkArea(e)) return;
@@ -20800,7 +22259,7 @@ var RedBasicController;
             };
             HD_Move = function (e) {
                 if (RedGLDetect.BROWSER_INFO.isMobile) {
-                    e = e.targetTouches[0]
+                    e = e.targetTouches[0];
                     mX = e['clientX'] - sX, mY = e['clientY'] - sY;
                     sX = e['clientX'], sY = e['clientY'];
                 } else {
@@ -20985,7 +22444,7 @@ var RedBasicController;
      :DOC*/
     RedBasicController.prototype['update'] = (function () {
         var up = new Float32Array([0, 1, 0]);
-        var tPan, tTilt
+        var tPan, tTilt;
         var targetObject;
         var move, rotate;
         var tSpeed, tSpeedRotation;
@@ -21090,6 +22549,13 @@ var RedBasicController;
     Object.freeze(RedBasicController);
 })();
 
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedObitController;
 (function () {
@@ -21155,9 +22621,9 @@ var RedObitController;
             var checkArea;
             checkArea = function (e) {
                 if (self['targetView']) {
-                    var tX, tY
+                    var tX, tY;
                     if (RedGLDetect.BROWSER_INFO.isMobile) {
-                        console.log(e)
+                        console.log(e);
                         tX = e['clientX'], tY = e['clientY'];
                     } else {
                         tX = e[tXkey], tY = e[tYkey];
@@ -21166,10 +22632,10 @@ var RedObitController;
                     if (!(self['targetView']['_viewRect'][1] < tY && tY < self['targetView']['_viewRect'][1] + self['targetView']['_viewRect'][3])) return;
                 }
                 return true
-            }
-            tMove = RedGLDetect.BROWSER_INFO.move
-            tUp = RedGLDetect.BROWSER_INFO.up
-            tDown = RedGLDetect.BROWSER_INFO.down
+            };
+            tMove = RedGLDetect.BROWSER_INFO.move;
+            tUp = RedGLDetect.BROWSER_INFO.up;
+            tDown = RedGLDetect.BROWSER_INFO.down;
             sX = 0, sY = 0;
             mX = 0, mY = 0;
             var tXkey, tYkey;
@@ -21183,12 +22649,12 @@ var RedObitController;
             HD_down = function (e) {
                 if (self['needUpdate']) {
                     if (RedGLDetect.BROWSER_INFO.isMobile) {
-                        console.log(e)
+                        console.log(e);
                         e = e.targetTouches[0]
                     }
                     if (!checkArea(e)) return;
                     if (RedGLDetect.BROWSER_INFO.isMobile) {
-                        console.log(e)
+                        console.log(e);
                         sX = e['clientX'], sY = e['clientY'];
                     } else {
                         sX = e[tXkey], sY = e[tYkey];
@@ -21201,7 +22667,7 @@ var RedObitController;
             HD_Move = function (e) {
                 if (self['needUpdate']) {
                     if (RedGLDetect.BROWSER_INFO.isMobile) {
-                        e = e.targetTouches[0]
+                        e = e.targetTouches[0];
                         mX = e['clientX'] - sX, mY = e['clientY'] - sY;
                         sX = e['clientX'], sY = e['clientY'];
                     } else {
@@ -21368,7 +22834,7 @@ var RedObitController;
         var PER_PI;
         PER_PI = Math.PI / 180;
         return function () {
-            if (!this['needUpdate']) return
+            if (!this['needUpdate']) return;
             if (this['_tilt'] < this['_minTilt']) this['_tilt'] = this['_minTilt'];
             if (this['_tilt'] > this['_maxTilt']) this['_tilt'] = this['_maxTilt'];
             tDelayRotation = this['_delayRotation'];
@@ -21393,6 +22859,13 @@ var RedObitController;
     })();
     Object.freeze(RedObitController);
 })();
+
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
 
 "use strict";
 var RedGridMaterial;
@@ -21454,6 +22927,13 @@ var RedGridMaterial;
     RedGridMaterial.prototype = new RedBaseMaterial();
     Object.freeze(RedGridMaterial);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedSkyBoxMaterial;
 (function () {
@@ -21478,10 +22958,12 @@ var RedSkyBoxMaterial;
 
          uniform samplerCube u_skyBoxTexture;
          varying vec3 vReflectionCubeCoord;
+         uniform float u_alpha;
          void main(void) {
              vec4 finalColor = textureCube(u_skyBoxTexture, vReflectionCubeCoord);
              //#REDGL_DEFINE#fog#false# gl_FragColor = finalColor;
              //#REDGL_DEFINE#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
+             gl_FragColor.a = u_alpha;
          }
          */
     };
@@ -21499,6 +22981,11 @@ var RedSkyBoxMaterial;
 			 ],
 			 skyBoxTexture : [
 				 {type:'RedBitmapCubeTexture'}
+			 ],
+			 alpha : [
+			    {type:Number},
+			    '기본값 : 1',
+			    '범위 : 0 ~ 1'
 			 ]
 		 },
 		 extends : [
@@ -21507,8 +22994,8 @@ var RedSkyBoxMaterial;
 		 return : 'RedSkyBoxMaterial Instance'
 	 }
      :DOC*/
-    RedSkyBoxMaterial = function (redGL, skyBoxTexture) {
-        if (!(this instanceof RedSkyBoxMaterial)) return new RedSkyBoxMaterial(redGL, skyBoxTexture);
+    RedSkyBoxMaterial = function (redGL, skyBoxTexture, alpha) {
+        if (!(this instanceof RedSkyBoxMaterial)) return new RedSkyBoxMaterial(redGL, skyBoxTexture, alpha);
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedSkyBoxMaterial : RedGL Instance만 허용.', redGL);
         this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource);
         /////////////////////////////////////////
@@ -21517,6 +23004,7 @@ var RedSkyBoxMaterial;
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['_UUID'] = RedGL.makeUUID();
+        this['alpha'] = alpha == undefined ? 1 : alpha;
         if (!checked) {
             this.checkUniformAndProperty();
             checked = true;
@@ -21533,8 +23021,16 @@ var RedSkyBoxMaterial;
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedSkyBoxMaterial', 'skyBoxTexture', 'samplerCube', {essential: true});
+    RedDefinePropertyInfo.definePrototype('RedSkyBoxMaterial', 'alpha', 'number', {min: 0, max: 1});
     Object.freeze(RedSkyBoxMaterial)
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedDirectionalShadowMaterial;
 (function () {
@@ -21626,6 +23122,13 @@ var RedDirectionalShadowMaterial;
     RedDirectionalShadowMaterial.prototype = new RedBaseMaterial();
     Object.freeze(RedDirectionalShadowMaterial)
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedPostEffectMaterial;
 (function () {
@@ -21698,6 +23201,13 @@ var RedPostEffectMaterial;
     RedDefinePropertyInfo.definePrototype('RedPostEffectMaterial', 'diffuseTexture', 'sampler2D', {essential: true});
     Object.freeze(RedPostEffectMaterial);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedDirectionalShadow;
 (function () {
@@ -21829,6 +23339,13 @@ var RedDirectionalShadow;
     RedDefinePropertyInfo.definePrototype('RedDirectionalShadow', 'size', 'number', {'min': 1});
     Object.freeze(RedDirectionalShadow);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedShadowManager;
 (function () {
@@ -21873,9 +23390,9 @@ var RedShadowManager;
                     tDirectionalShadow['frameBuffer'].bind(redGL.gl);
                     gl.viewport(0, 0, tWidth, tHeight);
                     gl.scissor(0, 0, tWidth, tHeight);
-                    gl.clearColor(0, 0, 0, 1)
-                    gl.clearDepth(1.0)
-                    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+                    gl.clearColor(0, 0, 0, 1);
+                    gl.clearDepth(1.0);
+                    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
                     redRenderer.sceneRender(redGL, tView['scene'], tView['camera'], tView['camera']['orthographicYn'], tDirectionalShadow['_castingList'], time, renderInfo, tDirectionalShadow['_directionalShadowMaterial']);
                     tDirectionalShadow['frameBuffer'].unbind(redGL.gl);
                     gl.viewport(tViewRect[0], tWorldRect[3] - tViewRect[3] - tViewRect[1], tViewRect[2], tViewRect[3]);
@@ -21910,6 +23427,13 @@ var RedShadowManager;
     });
     Object.freeze(RedShadowManager);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedText;
 (function () {
@@ -22118,8 +23642,8 @@ var RedText;
             var tW, tH;
             tW = self['_width'];
             tH = self['_height'];
-            if(tW%2==0) tW+=1;
-            if(tH%2==0) tH+=1;
+            if (tW % 2 == 0) tW += 1;
+            if (tH % 2 == 0) tH += 1;
             self['_cvs'] = window['OffscreenCanvas'] ? new OffscreenCanvas(tW, tH) : document.createElement('canvas');
             self['_ctx'] = self['_cvs'].getContext('2d');
             console.log(tW, tH);
@@ -22129,9 +23653,9 @@ var RedText;
             // self['scaleX'] = self['_width'];
             // self['scaleY'] = self['_height'];
             self['_ctx'].drawImage(self['_img'], 0, 0, tW, tH);
-            self['material'].width = tW
-            self['material'].height = tH
-            self['material'].diffuseTexture.src = self['_cvs']
+            self['material'].width = tW;
+            self['material'].height = tH;
+            self['material'].diffuseTexture.src = self['_cvs'];
             self['material'].diffuseTexture.option = {
                 min: redGL.gl.LINEAR,
                 mag: redGL.gl.LINEAR,
@@ -22140,7 +23664,7 @@ var RedText;
             }
 
         };
-        this['useTransparentSort'] = true
+        this['useTransparentSort'] = true;
         this['_UUID'] = RedGL.makeUUID();
         console.log(this);
     };
@@ -22153,7 +23677,7 @@ var RedText;
 		 return : 'boolean'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedText', 'perspectiveScale', 'boolean', true);
+    RedDefinePropertyInfo.definePrototype('RedText', 'perspectiveScale', 'boolean');
     /**DOC:
      {
 	     code : 'PROPERTY',
@@ -22162,7 +23686,7 @@ var RedText;
 		 return : 'boolean'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedText', 'sprite3DYn', 'boolean', true);
+    RedDefinePropertyInfo.definePrototype('RedText', 'sprite3DYn', 'boolean');
     /**DOC:
      {
 	     code : 'PROPERTY',
@@ -22171,7 +23695,7 @@ var RedText;
 		 return : 'Number'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedText', 'width', 'number', {
+    RedDefinePropertyInfo.definePrototype('RedText', 'width', 'uint', {
         min: 2,
         callback: function (v) {
             this['_width'] = v;
@@ -22187,7 +23711,7 @@ var RedText;
 		 return : 'Number'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedText', 'height', 'number', {
+    RedDefinePropertyInfo.definePrototype('RedText', 'height', 'uint', {
         min: 2,
         callback: function (v) {
             this['_height'] = v;
@@ -22217,48 +23741,48 @@ var RedText;
                 // console.log(this['_svg'].width)
                 // this['_svg'].setAttribute('width', 100000);
                 // this['_svg'].setAttribute('height', 100000);
-                var self = this
-                var t0 = this['_text'].match(/<img .*?>/g)
-                var t1 = []
+                var self = this;
+                var t0 = this['_text'].match(/<img .*?>/g);
+                var t1 = [];
                 var result = this['_text'];
-                t0 = t0 || []
-                console.log(t0)
-                var max = t0.length
-                var loaded = 0
+                t0 = t0 || [];
+                console.log(t0);
+                var max = t0.length;
+                var loaded = 0;
                 t0.forEach(function (v) {
-                    console.log(v, v.match(/src\s*=\s*(\'|\").*?(\'|\")/g))
-                    var tSrc = v.match(/src\s*=\s*(\'|\").*?(\'|\")/g)[0]
-                    tSrc = tSrc.replace(/src\s*=\s*(\'|\")/g, '').replace(/(\'|\")/g, '')
-                    console.log(tSrc)
-                    var test = document.createElement('div')
+                    console.log(v, v.match(/src\s*=\s*(\'|\").*?(\'|\")/g));
+                    var tSrc = v.match(/src\s*=\s*(\'|\").*?(\'|\")/g)[0];
+                    tSrc = tSrc.replace(/src\s*=\s*(\'|\")/g, '').replace(/(\'|\")/g, '');
+                    console.log(tSrc);
+                    var test = document.createElement('div');
                     test.innerHTML = v;
                     var img = test.querySelector('img');
                     img.onload = function () {
                         var canvas = document.createElement('canvas');
                         canvas.width = img.style.width ? +img.style.width : img.width;
                         canvas.height = img.style.height ? +img.style.height : img.height;
-                        var ctx = canvas.getContext('2d')
-                        ctx.scale(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight)
+                        var ctx = canvas.getContext('2d');
+                        ctx.scale(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight);
                         ctx.drawImage(img, 0, 0);
                         tInfo.result = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink= "http://www.w3.org/1999/xlink" width="' + img.width + '" height="' + img.height + '" display="inline" style="vertical-align: middle;display: inline-block">' +
                             '<image xlink:href="' + (canvas.toDataURL('image/png')) + '" height="' + img.height + 'px" width="' + img.width + 'px" />' +
-                            '</svg>'
-                        loaded++
+                            '</svg>';
+                        loaded++;
                         if (loaded == max) {
                             t1.forEach(function (v) {
                                 result = result.replace(v.source, v.result)
-                            })
+                            });
                             tHTMLContainer.innerHTML = result;
                             setTexture(self)
                         }
                         img.onload = null
 
-                    }
+                    };
                     var tInfo = {
                         source: v,
                         sourceSrc: tSrc,
                         result: ''
-                    }
+                    };
                     t1.push(tInfo)
                 });
                 if (t0.length == 0) {
@@ -22270,6 +23794,13 @@ var RedText;
     });
     Object.freeze(RedText);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedMouseEventManager;
 (function () {
@@ -22294,28 +23825,38 @@ var RedMouseEventManager;
         if (!(this instanceof RedMouseEventManager)) return new RedMouseEventManager(redGL);
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedMouseEventManager : RedGL Instance만 허용.', redGL);
         this['frameBuffer'] = RedFrameBuffer(redGL);
-        this['_mouseEventMaterial'] = RedMouseEventMaterial(redGL)
-        this['_mouseEventListObject'] = {}
-        this['_mouseEventList'] = []
-        this['_prevInfo'] = {}
+        this['_mouseEventMaterial'] = RedMouseEventMaterial(redGL);
+        this['_mouseEventListObject'] = {};
+        this['_mouseEventList'] = [];
+        this['_prevInfo'] = {};
         this['_UUID'] = RedGL.makeUUID();
         console.log(this);
     };
     RedMouseEventManager.prototype = {
         add: function (target, type, handler) {
-            var key = target['_mouseColorID']
+            var key = target['_mouseColorID'];
             if (!this['_mouseEventListObject'][key]) {
-                this['_mouseEventListObject'][key] = {target: target}
+                this['_mouseEventListObject'][key] = {target: target};
                 this['_mouseEventList'].push(target)
             }
             this['_mouseEventListObject'][key][type] = handler
             // console.log(this['_mouseEventListObject'])
         },
         remove: function (target, type) {
-            var t0 = this['_mouseEventList'].indexOf(target)
-            if (t0 > -1) {
-                this['_mouseEventList'].splice(t0, 1)
-                delete this['_mouseEventListObject'][target['_mouseColorID']]
+            var key = target['_mouseColorID'];
+            if (this['_mouseEventListObject'][key]) {
+                var test = 0;
+                if (this['_mouseEventListObject'][key][type]) {
+                    delete this['_mouseEventListObject'][key][type]
+                }
+                for (var k in this['_mouseEventListObject'][key]) test++;
+                if (test === 1) {
+                    var t0 = this['_mouseEventList'].indexOf(target);
+                    if (t0 > -1) {
+                        this['_mouseEventList'].splice(t0, 1);
+                        delete this['_mouseEventListObject'][key]
+                    }
+                }
             }
         },
         render: (function () {
@@ -22323,19 +23864,19 @@ var RedMouseEventManager;
             var tViewRect, tWorldRect;
             var tWidth, tHeight;
             var pixelValues = new Uint8Array(4);
-            var renderScale = 1
-            var fireList = []
-            var cursorState = 'default'
+            var renderScale = 1;
+            var fireList = [];
+            var cursorState = 'default';
             var fireEvent = function () {
                 if (fireList.length) {
-                    var v = fireList.shift()
+                    var v = fireList.shift();
                     v['info'][v['type']].call(v['info']['target'], {
                         target: v['info']['target'],
                         type: 'out'
                     })
                 }
 
-            }
+            };
             return function (redGL, redRenderer, tView, time, renderInfo, clearListYn) {
 
                 if (this['_mouseEventList'].length) {
@@ -22348,7 +23889,7 @@ var RedMouseEventManager;
                     this['frameBuffer'].width = tWidth;
                     this['frameBuffer'].height = tHeight;
                     this['frameBuffer'].bind(redGL.gl);
-                    var self = this
+                    var self = this;
                     redRenderer.sceneRender(redGL, tView['scene'], tView['camera'], tView['camera']['orthographicYn'], this['_mouseEventList'], time, renderInfo, this['_mouseEventMaterial']);
                     // 추출
 
@@ -22358,37 +23899,39 @@ var RedMouseEventManager;
                     i = 0;
                     len = tMouseEventInfo.length;
                     for (i; i < len; i++) {
-                        tEventData = tMouseEventInfo[i]
-                        console.log(tEventData)
-                        gl.readPixels(tEventData.x * renderScale, (tHeight - tEventData.y * renderScale), 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixelValues)
+                        tEventData = tMouseEventInfo[i];
+                        console.log(tEventData);
+                        gl.readPixels(tEventData.x * renderScale, (tHeight - tEventData.y * renderScale), 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixelValues);
                         var currentInfo = self['_mouseEventListObject'][pixelValues[0] + ',' + pixelValues[1] + ',' + pixelValues[2] + ',' + pixelValues[3]];
 
-                        var tEventType
+                        var tEventType;
                         if (currentInfo) {
-                            var targetUUID = currentInfo['target']['_UUID']
+                            var targetUUID = currentInfo['target']['_UUID'];
                             if (tEventData['type'] == RedGLDetect.BROWSER_INFO.down) {
-                                tEventType = 'down'
-                                console.log('다운')
+                                tEventType = 'down';
+                                console.log('다운');
                                 if (tEventType && currentInfo[tEventType]) {
                                     currentInfo[tEventType].call(currentInfo['target'], {
                                         target: currentInfo['target'],
-                                        type: tEventType
+                                        type: tEventType,
+                                        nativeEvent: tEventData.nativeEvent
                                     })
                                 }
                             }
                             if (tEventData['type'] == RedGLDetect.BROWSER_INFO.up) {
-                                tEventType = 'up'
-                                console.log('업')
+                                tEventType = 'up';
+                                console.log('업');
                                 if (tEventType && currentInfo[tEventType]) {
                                     currentInfo[tEventType].call(currentInfo['target'], {
                                         target: currentInfo['target'],
-                                        type: tEventType
+                                        type: tEventType,
+                                        nativeEvent: tEventData.nativeEvent
                                     })
                                 }
                             }
                             if (self['_prevInfo'][tView['_UUID']] && self['_prevInfo'][tView['_UUID']] != currentInfo) {
-                                tEventType = 'out'
-                                console.log('아웃')
+                                tEventType = 'out';
+                                console.log('아웃');
                                 if (tEventType && self['_prevInfo'][tView['_UUID']][tEventType]) {
                                     self['_prevInfo'][tView['_UUID']][tEventType].call(self['_prevInfo'][tView['_UUID']]['target'], {
                                         target: self['_prevInfo'][tView['_UUID']]['target'],
@@ -22397,11 +23940,12 @@ var RedMouseEventManager;
                                 }
                             }
                             if (self['_prevInfo'][tView['_UUID']] != currentInfo) {
-                                tEventType = 'over'
+                                tEventType = 'over';
                                 if (tEventType && currentInfo[tEventType]) {
                                     currentInfo[tEventType].call(currentInfo['target'], {
                                         target: currentInfo['target'],
-                                        type: tEventType
+                                        type: tEventType,
+                                        nativeEvent: tEventData.nativeEvent
                                     })
                                 }
                                 console.log('오버')
@@ -22409,13 +23953,14 @@ var RedMouseEventManager;
 
                             self['_prevInfo'][tView['_UUID']] = currentInfo
                         } else {
-                            tEventType = 'out'
+                            tEventType = 'out';
                             if (self['_prevInfo'][tView['_UUID']] && self['_prevInfo'][tView['_UUID']][tEventType]) {
-                                console.log('아웃')
+                                console.log('아웃');
                                 fireList.push(
                                     {
                                         info: self['_prevInfo'][tView['_UUID']],
-                                        type: tEventType
+                                        type: tEventType,
+                                        nativeEvent: tEventData.nativeEvent
                                     }
                                 )
                             }
@@ -22424,10 +23969,10 @@ var RedMouseEventManager;
                         fireEvent()
                     }
 
-                    if (this['_prevInfo'][tView['_UUID']]) cursorState = 'pointer'
+                    if (this['_prevInfo'][tView['_UUID']]) cursorState = 'pointer';
                     if (clearListYn) {
-                        redGL['_mouseEventInfo'].length = 0
-                        document.body.style.cursor = cursorState
+                        redGL['_mouseEventInfo'].length = 0;
+                        document.body.style.cursor = cursorState;
                         cursorState = 'default'
                     }
 
@@ -22438,10 +23983,17 @@ var RedMouseEventManager;
             }
         })
         ()
-    }
+    };
     Object.freeze(RedMouseEventManager);
 })
 ();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedMouseEventMaterial;
 (function () {
@@ -22506,7 +24058,7 @@ var RedMouseEventMaterial;
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['_RedMouseEventMaterialYn'] = true;
-        this['color'] = null
+        this['color'] = null;
         this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource);
         this['_UUID'] = RedGL.makeUUID();
         if (!checked) {
@@ -22518,6 +24070,13 @@ var RedMouseEventMaterial;
     RedMouseEventMaterial.prototype = new RedBaseMaterial();
     Object.freeze(RedMouseEventMaterial)
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedPostEffectManager;
 (function () {
@@ -22885,6 +24444,13 @@ var RedPostEffectManager;
     });
     Object.freeze(RedPostEffectManager);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedBasePostEffect;
 (function () {
@@ -22942,6 +24508,13 @@ var RedBasePostEffect;
     RedBasePostEffect.prototype['_subFrameBufferList'] = [];
     Object.freeze(RedBasePostEffect);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedPostEffect_Bloom;
 (function () {
@@ -23097,6 +24670,13 @@ var RedPostEffect_Bloom;
     });
     Object.freeze(RedPostEffect_Bloom);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedPostEffect_BloomThreshold;
 (function () {
@@ -23191,6 +24771,13 @@ var RedPostEffect_BloomThreshold;
     });
     Object.freeze(RedPostEffect_BloomThreshold);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedPostEffect_Blur;
 (function () {
@@ -23281,6 +24868,13 @@ var RedPostEffect_Blur;
     RedDefinePropertyInfo.definePrototype('RedPostEffect_Blur', 'diffuseTexture', 'sampler2D');
     Object.freeze(RedPostEffect_Blur);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedPostEffect_BlurX;
 (function () {
@@ -23386,6 +24980,13 @@ var RedPostEffect_BlurX;
     RedDefinePropertyInfo.definePrototype('RedPostEffect_BlurX', 'size', 'number', {'min': 0});
     Object.freeze(RedPostEffect_BlurX);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedPostEffect_BlurY;
 (function () {
@@ -23491,6 +25092,13 @@ var RedPostEffect_BlurY;
     RedDefinePropertyInfo.definePrototype('RedPostEffect_BlurY', 'size', 'number', {'min': 0});
     Object.freeze(RedPostEffect_BlurY);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedPostEffect_GaussianBlur;
 (function () {
@@ -23557,6 +25165,13 @@ var RedPostEffect_GaussianBlur;
     });
     Object.freeze(RedPostEffect_GaussianBlur);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedPostEffect_ZoomBlur;
 (function () {
@@ -23694,6 +25309,13 @@ var RedPostEffect_ZoomBlur;
     });
     Object.freeze(RedPostEffect_ZoomBlur);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedPostEffect_BrightnessContrast;
 (function () {
@@ -23707,7 +25329,7 @@ var RedPostEffect_BrightnessContrast;
              gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
          }
          */
-    }
+    };
     fSource = function () {
         /* @preserve
          precision mediump float;
@@ -23722,7 +25344,7 @@ var RedPostEffect_BrightnessContrast;
              gl_FragColor = finalColor;
          }
          */
-    }
+    };
     /**DOC:
      {
 		 constructorYn : true,
@@ -23810,6 +25432,13 @@ var RedPostEffect_BrightnessContrast;
     });
     Object.freeze(RedPostEffect_BrightnessContrast);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedPostEffect_Threshold;
 (function () {
@@ -23907,6 +25536,13 @@ var RedPostEffect_Threshold;
     });
     Object.freeze(RedPostEffect_Threshold);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedPostEffect_Invert;
 (function () {
@@ -23984,6 +25620,13 @@ var RedPostEffect_Invert;
     RedDefinePropertyInfo.definePrototype('RedPostEffect_Invert', 'diffuseTexture', 'sampler2D');
     Object.freeze(RedPostEffect_Invert);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedPostEffect_Gray;
 (function () {
@@ -24059,6 +25702,13 @@ var RedPostEffect_Gray;
     RedDefinePropertyInfo.definePrototype('RedPostEffect_Gray', 'diffuseTexture', 'sampler2D');
     Object.freeze(RedPostEffect_Gray);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedPostEffect_HueSaturation;
 (function () {
@@ -24186,6 +25836,13 @@ var RedPostEffect_HueSaturation;
     });
     Object.freeze(RedPostEffect_HueSaturation);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedPostEffect_HalfTone;
 (function () {
@@ -24347,6 +26004,13 @@ var RedPostEffect_HalfTone;
     RedDefinePropertyInfo.definePrototype('RedPostEffect_HalfTone', 'radius', 'number', {'min': 0});
     Object.freeze(RedPostEffect_HalfTone);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedPostEffect_Pixelize;
 (function () {
@@ -24457,6 +26121,13 @@ var RedPostEffect_Pixelize;
     RedDefinePropertyInfo.definePrototype('RedPostEffect_Pixelize', 'height', 'number', {'min': 0});
     Object.freeze(RedPostEffect_Pixelize);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedPostEffect_Convolution;
 (function () {
@@ -24684,6 +26355,13 @@ var RedPostEffect_Convolution;
     ];
     Object.freeze(RedPostEffect_Convolution);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedPostEffect_DoF;
 (function () {
@@ -24820,6 +26498,13 @@ var RedPostEffect_DoF;
     })());
     Object.freeze(RedPostEffect_DoF);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedPostEffect_DoF_DepthMaterial;
 (function () {
@@ -24913,6 +26598,13 @@ var RedPostEffect_DoF_DepthMaterial;
     RedDefinePropertyInfo.definePrototype('RedPostEffect_DoF_DepthMaterial', 'focusLength', 'number', {'min': 0});
     Object.freeze(RedPostEffect_DoF_DepthMaterial)
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedPostEffect_Film;
 (function () {
@@ -25067,6 +26759,13 @@ var RedPostEffect_Film;
     RedDefinePropertyInfo.definePrototype('RedPostEffect_Film', 'scanlineCount', 'number', {'min': 0});
     Object.freeze(RedPostEffect_Film);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedPostEffect_Vignetting;
 (function () {
@@ -25171,6 +26870,13 @@ var RedPostEffect_Vignetting;
     RedDefinePropertyInfo.definePrototype('RedPostEffect_Vignetting', 'size', 'number', {'min': 0});
     Object.freeze(RedPostEffect_Vignetting);
 })();
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedPostEffect_FXAA;
 (function () {
@@ -25289,7 +26995,14 @@ var RedPostEffect_FXAA;
     RedDefinePropertyInfo.definePrototype('RedPostEffect_FXAA', 'diffuseTexture', 'sampler2D');
     Object.freeze(RedPostEffect_FXAA);
 })();
-"use strict"
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
+"use strict";
 var RedGLOffScreen;
 (function () {
     var RedWorkerCode;
@@ -25340,7 +27053,7 @@ var RedGLOffScreen;
      :DOC*/
     RedGLOffScreen = function (canvas, w, h, redGLSrc, hostSrc) {
         if (!(this instanceof RedGLOffScreen)) return new RedGLOffScreen(canvas, w, h, redGLSrc, hostSrc);
-        RedGLDetect.getBrowserInfo()
+        RedGLDetect.getBrowserInfo();
         var self = this;
         self['htmlCanvas'] = canvas;
         self['redGLSrc'] = redGLSrc;
@@ -25389,10 +27102,10 @@ var RedGLOffScreen;
                 var customEvent = {};
                 MOUSE_KEY_LIST.forEach(function (v) {
                     if (v == 'targetTouches' && e[v]) {
-                        var t0 = []
-                        var i = e[v].length
+                        var t0 = [];
+                        var i = e[v].length;
                         while (i--) {
-                            var v2 = e[v][i]
+                            var v2 = e[v][i];
                             t0.push({
                                 clientX: v2['clientX'],
                                 clientY: v2['clientY'],
@@ -25490,15 +27203,15 @@ var RedGLOffScreen;
                 prevW = W;
                 prevH = H;
             }
-            W = parseInt(W)
-            H = parseInt(H)
+            W = parseInt(W);
+            H = parseInt(H);
             this._init(this['htmlCanvas'], W, H);
         }
     })();
     ////////////////////////
     (function () {
         RedWorkerCode = function () {
-            this['window'] = this
+            this['window'] = this;
             console.log(window);
             var WorkerMain; // 호스트 문자열을 함수로 생성
             var WorkerMainInstance; // 인스턴스 (실제론 RedGL 인스턴스)
@@ -25590,7 +27303,7 @@ var RedGLOffScreen;
                         break;
                 }
             }
-        }
+        };
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-03-29 19:19:48)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-04-30 19:11:40)' };console.log(RedGL_VERSION);

@@ -1,3 +1,10 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedColorPhongMaterial;
 (function () {
@@ -145,7 +152,7 @@ var RedColorPhongMaterial;
         this['alpha'] = alpha == undefined ? 1 : alpha;
         /////////////////////////////////////////
         // 일반 프로퍼티
-        this['useFlatMode'] = false
+        this['useFlatMode'] = false;
         this['color'] = hexColor ? hexColor : '#ff0000';
         this['_UUID'] = RedGL.makeUUID();
         if (!checked) {

@@ -1,7 +1,16 @@
-<html>
+<!--
+  ~ RedGL - MIT License
+  ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+  ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+  ~ Last modification time of this file - 2019.4.30 18:52
+  -->
+
+<!DOCTYPE html>
+<html lang="ko">
 
 <head>
     <meta charset="UTF-8">
+    <meta name="keywords" content="RedGL,webgl,demo">
     <title>RedGL - RedDAELoader</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
@@ -80,9 +89,8 @@
         } else {
             console.log('초기화 실패!')
         }
-    })
+    });
     testUI = function (redGL) {
-        console.log('test')
         var gui = new baseTestUI(redGL);
         gui.initRedGL();
     }

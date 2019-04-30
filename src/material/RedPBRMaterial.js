@@ -1,9 +1,16 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedPBRMaterial;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'RedPBRMaterialProgram';
-    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture', 'useFlatMode','usePreMultiply'];
+    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture', 'useFlatMode', 'usePreMultiply'];
     var checked;
     vSource = function () {
         /* @preserve
@@ -274,14 +281,14 @@ var RedPBRMaterial;
 
         this['metallicFactor'] = 1;
         this['roughnessFactor'] = 0.1;
-        this['baseColorFactor'] = [1, 1, 1, 1]
+        this['baseColorFactor'] = [1, 1, 1, 1];
         this['emissiveFactor'] = 1;
         this['alpha'] = 1;
         this['cutOff'] = 0;
         /////////////////////////////////////////
         // 일반 프로퍼티
-        this['useFlatMode'] = false
-        this['usePreMultiply'] = false
+        this['useFlatMode'] = false;
+        this['usePreMultiply'] = false;
         this['_UUID'] = RedGL.makeUUID();
         if (!checked) {
             this.checkUniformAndProperty();

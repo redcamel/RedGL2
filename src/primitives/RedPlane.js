@@ -1,3 +1,10 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedPlane;
 (function () {
@@ -127,8 +134,15 @@ var RedPlane;
         tPrimitiveData = makeData(redGL, tType, width, height, wSegments, hSegments, flipY);
         this['interleaveBuffer'] = tPrimitiveData['interleaveBuffer'];
         this['indexBuffer'] = tPrimitiveData['indexBuffer'];
-        this['interleaveBuffer']['isPrimitiveBuffer'] = true
-        this['indexBuffer']['isPrimitiveBuffer'] = true
+        this['interleaveBuffer']['isPrimitiveBuffer'] = true;
+        this['indexBuffer']['isPrimitiveBuffer'] = true;
+        this['_makeInfo'] = {
+            width: width,
+            height: height,
+            wSegments: wSegments,
+            hSegments: hSegments,
+            flipY: flipY
+        };
         this['_UUID'] = RedGL.makeUUID();
         console.log(this);
     };

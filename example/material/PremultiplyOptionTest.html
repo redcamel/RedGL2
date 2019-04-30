@@ -1,7 +1,16 @@
-<html>
+<!--
+  ~ RedGL - MIT License
+  ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+  ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+  ~ Last modification time of this file - 2019.4.30 18:52
+  -->
+
+<!DOCTYPE html>
+<html lang="ko">
 
 <head>
     <meta charset="UTF-8">
+    <meta name="keywords" content="RedGL,webgl,demo">
     <title>RedGL - PremultiplyOptionTest</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
@@ -130,7 +139,7 @@
                 tText.textAlign = 'center'
                 tText.sprite3DYn = true
                 tText.perspectiveScale = false
-                tText.useDepthTest=false
+                tText.useDepthTest = false
                 tText.scaleX = 0.5
                 tText.scaleY = 0.5
                 return tText
@@ -140,8 +149,8 @@
                 var testMesh = RedMesh(self, RedBox(self, 2, 2, 2), testMaterials[i][1])
                 console.log(testMaterials[i][1])
                 testMaterials[i][1].useFlatMode = true
-                testMesh.x = Math.sin(Math.PI*2/(max)*i) * 3
-                testMesh.z = Math.cos(Math.PI*2/(max)*i) * 3
+                testMesh.x = Math.sin(Math.PI * 2 / (max) * i) * 3
+                testMesh.z = Math.cos(Math.PI * 2 / (max) * i) * 3
                 testMesh.useTransparentSort = true
                 // testMesh.useCullFace=false
                 tScene.addChild(testMesh)

@@ -1,3 +1,10 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 //////////////////////////////////////////////////////////
 // 연구중
@@ -57,7 +64,7 @@ var RedParticleEmitter;
         this['useDepthMask'] = false;
         this['_UUID'] = RedGL.makeUUID();
     };
-    RedParticleEmitter.TINT_RANDOM = 'random'
+    RedParticleEmitter.TINT_RANDOM = 'random';
     RedParticleEmitter.QuintIn = 1;
     RedParticleEmitter.QuintOut = 2;
     RedParticleEmitter.QuintInOut = 3;
@@ -96,10 +103,10 @@ var RedParticleEmitter;
     RedParticleEmitter.prototype['reset'] = function () {
         this.list.length = 0;
         this._interleaveData.length = 0;
-    }
+    };
     RedParticleEmitter.prototype['update'] = (function () {
         return function (time) {
-            time = time + 2000
+            time = time + 2000;
             var POW, SIN, COS, SQRT, PI, PI2, HPI;
             var i, i2, tParticle;
             var lifeRatio;

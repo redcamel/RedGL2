@@ -1,3 +1,10 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedBitmapCubeTexture;
 (function () {
@@ -9,16 +16,16 @@ var RedBitmapCubeTexture;
             var i, loaded, failNum;
             option = option || {};
             onError = function () {
-                if (failNum == 0) callBack ? callBack.call(self, false) : 0;
+                if (failNum === 0) callBack ? callBack.call(self, false) : 0;
                 failNum++
             };
             onLoad = function () {
                 loaded++;
-                if (loaded == 6) {
+                if (loaded === 6) {
 
                     gl.activeTexture(gl.TEXTURE0);
                     gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
-                    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+                    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 0);
                     gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, option['min'] ? option['min'] : gl.LINEAR_MIPMAP_NEAREST);
                     gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, option['mag'] ? option['mag'] : gl.LINEAR);
                     gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, option['wrap_s'] ? option['wrap_s'] : gl.CLAMP_TO_EDGE);
@@ -32,7 +39,7 @@ var RedBitmapCubeTexture;
                     gl.texImage2D(gl.TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, imgList[5]['source']);
 
                     // gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
-                    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+                    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 0);
 
                     try {
                         gl.generateMipmap(gl.TEXTURE_CUBE_MAP)
@@ -40,7 +47,7 @@ var RedBitmapCubeTexture;
                         console.log('밉맵을 생성할수 없음', imgList)
                     }
                     gl.bindTexture(gl.TEXTURE_CUBE_MAP, null);
-                    if (failNum == 0) callBack ? callBack.call(self, true) : 0
+                    if (failNum === 0) callBack ? callBack.call(self, true) : 0
                 }
             };
             i = 6;
@@ -113,13 +120,15 @@ var RedBitmapCubeTexture;
     RedBitmapCubeTexture = function (redGL, srcList, option, callback) {
         var tGL;
         if (!(this instanceof RedBitmapCubeTexture)) return new RedBitmapCubeTexture(redGL, srcList, option, callback);
+        console.time('RedBitmapCubeTexture');
+        console.group('RedBitmapCubeTexture');
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedBitmapCubeTexture : RedGL Instance만 허용.', '입력값 : ' + redGL);
         (callback && typeof callback == 'function') || !callback || RedGLUtil.throwFunc('RedBitmapCubeTexture : callback Function만 허용.', callback);
         tGL = redGL.gl;
-        option = option || {}
-        var tKey = srcList.toString() + JSON.stringify(option)
-        if (typeof srcList == 'array') {
-            if (!redGL['_datas']['textures']) redGL['_datas']['textures'] = {}
+        option = option || {};
+        var tKey = srcList.toString() + JSON.stringify(option);
+        if (srcList instanceof Array) {
+            if (!redGL['_datas']['textures']) redGL['_datas']['textures'] = {};
             if (redGL['_datas']['textures'][tKey]) {
                 if (callback) {
                     setTimeout(function () {
@@ -130,18 +139,20 @@ var RedBitmapCubeTexture;
             }
         }
         this['webglTexture'] = tGL.createTexture();
-        this['webglTexture']['gl'] = tGL
+        this['webglTexture']['gl'] = tGL;
         this['_UUID'] = RedGL.makeUUID();
         this['_load'] = function (needEmpty) {
             RedTextureOptionChecker.check('RedBitmapCubeTexture', option, tGL);
             if (needEmpty) this.setEmptyTexture(tGL, this['webglTexture']);
             if (this['_srcList']) loadTexture(tGL, this, this['webglTexture'], this['_srcList'], this['_option'], this['_callback']);
-        }
+        };
         this['_option'] = option;
         this['callback'] = callback;
         this['srcList'] = srcList;
-        redGL['_datas']['textures'][tKey] = this
+        redGL['_datas']['textures'][tKey] = this;
         console.log(this);
+        console.timeEnd('RedBitmapCubeTexture');
+        console.groupEnd('RedBitmapCubeTexture');
     };
     RedBitmapCubeTexture.prototype = new RedBaseTexture();
 
@@ -161,7 +172,7 @@ var RedBitmapCubeTexture;
         },
         set: function (srcList) {
             srcList instanceof Array || RedGLUtil.throwFunc('RedBitmapCubeTexture : srcList는 배열만 허용.', '입력값 : ' + srcList);
-            srcList.length == 6 || RedGLUtil.throwFunc('RedBitmapCubeTexture : srcList 길이는 6이어야함', '입력값 : ' + srcList);
+            srcList.length === 6 || RedGLUtil.throwFunc('RedBitmapCubeTexture : srcList 길이는 6이어야함', '입력값 : ' + srcList);
             this['_srcList'] = srcList;
             this._load(true)
         }

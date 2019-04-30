@@ -1,7 +1,16 @@
-<html>
+<!--
+  ~ RedGL - MIT License
+  ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+  ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+  ~ Last modification time of this file - 2019.4.30 18:52
+  -->
+
+<!DOCTYPE html>
+<html lang="ko">
 
 <head>
     <meta charset="UTF-8">
+    <meta name="keywords" content="RedGL,webgl,demo">
     <title>RedGL - RedGLTFLoader</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
@@ -70,7 +79,7 @@
                     testPLight.x = Math.sin(time / 1000) * 1
                     testPLight.y = Math.cos(time / 1000) * 1 + 1
                     testPLight.z = Math.cos(time / 1000) * 1
-                    if(tMesh) tMesh.rotationY +=0.1
+                    if (tMesh) tMesh.rotationY += 0.1
                 });
                 // 렌더 디버거 활성화
                 tRenderer.setDebugButton();

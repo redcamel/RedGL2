@@ -1,3 +1,10 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedBitmapTexture;
 (function () {
@@ -10,7 +17,7 @@ var RedBitmapTexture;
         //level,internalFormat, format, type
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, source);
         // gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
-        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 0);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, option['min'] ? option['min'] : gl.LINEAR_MIPMAP_NEAREST);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, option['mag'] ? option['mag'] : gl.LINEAR);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, option['wrap_s'] ? option['wrap_s'] : gl.REPEAT);
@@ -30,21 +37,20 @@ var RedBitmapTexture;
         return function (gl, self, texture, src, option, callback) {
             if (!option) option = {};
             if (window['OffscreenCanvas'] && src instanceof OffscreenCanvas || window['HTMLCanvasElement'] && src instanceof HTMLCanvasElement) {
-                var tSource = RedGLUtil.makePowerOf2Source(gl, src, MAX_TEXTURE_SIZE)
-                console.log('tSource', tSource)
+                var tSource = RedGLUtil.makePowerOf2Source(gl, src, MAX_TEXTURE_SIZE);
+                // console.log('tSource', tSource);
                 makeWebGLTexture(gl, texture, tSource, option);
                 callback ? callback.call(self, true) : 0;
             }
             else {
                 RedImageLoader(
                     src,
-                    function (v) {
-                        console.log(this)
-                        var tSource = RedGLUtil.makePowerOf2Source(gl, this['source'], MAX_TEXTURE_SIZE)
+                    function () {
+                        var tSource = RedGLUtil.makePowerOf2Source(gl, this['source'], MAX_TEXTURE_SIZE);
                         makeWebGLTexture(gl, texture, tSource, option);
                         callback ? callback.call(self, true) : 0;
                     },
-                    function (v) {
+                    function () {
                         callback ? callback.call(self, false) : 0
                     }
                 )
@@ -106,15 +112,17 @@ var RedBitmapTexture;
     RedBitmapTexture = function (redGL, src, option, callback) {
         var tGL;
         if (!(this instanceof RedBitmapTexture)) return new RedBitmapTexture(redGL, src, option, callback);
+        console.time('RedBitmapTexture');
+        console.group('RedBitmapTexture');
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedBitmapTexture : RedGL Instance만 허용.', redGL);
         (callback && typeof callback == 'function') || !callback || RedGLUtil.throwFunc('RedBitmapTexture : callback Function만 허용.', callback);
         tGL = redGL.gl;
         MAX_TEXTURE_SIZE = redGL['detect']['texture']['MAX_TEXTURE_SIZE'];
 
-        option = option || {}
-        var tKey = src + JSON.stringify(option)
+        option = option || {};
+        var tKey = src + JSON.stringify(option);
         if (typeof src == 'string') {
-            if (!redGL['_datas']['textures']) redGL['_datas']['textures'] = {}
+            if (!redGL['_datas']['textures']) redGL['_datas']['textures'] = {};
             if (redGL['_datas']['textures'][tKey]) {
                 if (callback) {
                     setTimeout(function () {
@@ -127,18 +135,20 @@ var RedBitmapTexture;
 
 
         this['webglTexture'] = tGL.createTexture();
-        this['webglTexture']['gl'] = tGL
+        this['webglTexture']['gl'] = tGL;
         this['_load'] = function (needEmpty) {
             RedTextureOptionChecker.check('RedBitmapTexture', option, tGL);
             if (needEmpty) this.setEmptyTexture(tGL, this['webglTexture']);
             if (this['_src']) loadTexture(tGL, this, this['webglTexture'], this['_src'], this['_option'], this['_callback']);
-        }
+        };
         this['_option'] = option;
         this['callback'] = callback;
         this['src'] = src;
         this['_UUID'] = RedGL.makeUUID();
-        redGL['_datas']['textures'][tKey] = this
+        redGL['_datas']['textures'][tKey] = this;
         console.log(this);
+        console.timeEnd('RedBitmapTexture');
+        console.groupEnd('RedBitmapTexture');
     };
     RedBitmapTexture.prototype = new RedBaseTexture();
 
@@ -159,7 +169,7 @@ var RedBitmapTexture;
         set: function (v) {
             if (window['OffscreenCanvas']) {
                 this['_src'] = v;
-                this._load(true)
+                this._load(true);
                 return
             }
             else if (v && typeof v != 'string' && !(window['HTMLCanvasElement'] && v instanceof HTMLCanvasElement)) RedGLUtil.throwFunc('RedBitmapTexture : src는 문자열 or Canvas Element만 허용.', '입력값 : ' + v);

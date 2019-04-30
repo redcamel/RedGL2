@@ -1,7 +1,14 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedProgram;
 (function () {
-    var makeWebGLProgram, updateLocation;
+    var makeWebGLProgram, searchLocation;
     var samplerIndex, MAX_SAMPLER_INDEX;
     samplerIndex = 2;
     makeWebGLProgram = (function () {
@@ -36,17 +43,15 @@ var RedProgram;
             return tProgram;
         }
     })();
-    updateLocation = (function () {
+    searchLocation = (function () {
         var AttributeLocationInfo;
         var UniformLocationInfo;
         var materialPropertyNameMAP = {};
-        var totalUpdateLocationTime = 0;
         AttributeLocationInfo = function () {
         };
         UniformLocationInfo = function () {
         };
         return function (self, gl, shader) {
-            var startTime = performance.now();
             var i, v, tList;
             var tIndex;
             // attributeLocation 정보 생성
@@ -91,7 +96,7 @@ var RedProgram;
                             tRenderMethod = 'uniform1i';
                             tLocationInfo['samplerIndex'] = samplerIndex;
                             samplerIndex++;
-                            if (samplerIndex == MAX_SAMPLER_INDEX) samplerIndex = 2;
+                            if (samplerIndex === MAX_SAMPLER_INDEX) samplerIndex = 2;
                             break;
                         case 'samplerCube':
                             tRenderType = 'samplerCube';
@@ -99,7 +104,7 @@ var RedProgram;
                             tRenderMethod = 'uniform1i';
                             tLocationInfo['samplerIndex'] = samplerIndex;
                             samplerIndex++;
-                            if (samplerIndex == MAX_SAMPLER_INDEX) samplerIndex = 2;
+                            if (samplerIndex === MAX_SAMPLER_INDEX) samplerIndex = 2;
                             break;
                         case 'float':
                             tRenderType = 'float';
@@ -189,8 +194,7 @@ var RedProgram;
                     if (!tLocationInfo['location']) {
                         tLocationInfo['msg'] = '쉐이더 main 함수에서 사용되고 있지 않음';
                         tLocationInfo['use'] = false;
-                    }
-                    else tLocationInfo['use'] = true;
+                    } else tLocationInfo['use'] = true;
                     if (v['systemUniformYn']) {
                         tIndex = self['systemUniformLocation'].length;
                         if (tLocationInfo['use']) self['systemUniformLocation'][tIndex] = tLocationInfo;
@@ -203,8 +207,6 @@ var RedProgram;
                 }
                 // })
             }
-            totalUpdateLocationTime += performance.now() - startTime;
-            console.log('totalUpdateLocationTime', self,totalUpdateLocationTime);
         }
     })();
     /**DOC:
@@ -238,6 +240,8 @@ var RedProgram;
         var tGL;
         var vertexShader, fragmentShader;
         if (!(this instanceof RedProgram)) return new RedProgram(redGL, key, vSource, fSource);
+        console.time('RedProgram');
+        console.group('RedProgram');
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedProgram : RedGL Instance만 허용.', '입력값 : ' + redGL);
         typeof key == 'string' || RedGLUtil.throwFunc('RedProgram : key - 문자열만 허용.', '입력값 : ' + key);
         tGL = redGL.gl;
@@ -271,7 +275,9 @@ var RedProgram;
 			 return : 'WebGLShader'
 		 }
          :DOC*/
+        console.time('makeWebGLProgram - ' + key);
         this['webglProgram'] = makeWebGLProgram(tGL, key, vertexShader, fragmentShader);
+        console.timeEnd('makeWebGLProgram - ' + key);
         /**DOC:
          {
 		     code : 'PROPERTY',
@@ -303,10 +309,16 @@ var RedProgram;
         // 쉐이더 로케이션 찾기
         tGL.useProgram(this['webglProgram']);
         MAX_SAMPLER_INDEX = redGL['detect']['texture']['MAX_COMBINED_TEXTURE_IMAGE_UNITS'];
-        updateLocation(this, tGL, vertexShader);
-        updateLocation(this, tGL, fragmentShader);
+        console.time('searchLocation - vertexShader - ' + key);
+        searchLocation(this, tGL, vertexShader);
+        console.timeEnd('searchLocation - vertexShader - ' + key);
+        console.time('searchLocation - fragmentShader - ' + key);
+        searchLocation(this, tGL, fragmentShader);
+        console.timeEnd('searchLocation - fragmentShader - ' + key);
         this['_UUID'] = RedGL.makeUUID();
-        console.log(this)
+        console.log(this);
+        console.timeEnd('RedProgram');
+        console.groupEnd();
     };
     RedProgram.prototype = {};
     /**DOC:
@@ -347,7 +359,7 @@ var RedProgram;
             var hasFog = false;
             var hasSprite3D = false;
             var hasDirectionalShadow = false;
-            var hasSkin = false
+            var hasSkin = false;
 
             // 전처리
             for (var k in RedSystemShaderCode.vertexShareFunc) {
@@ -367,18 +379,17 @@ var RedProgram;
                 var i = subProgramOption.length;
                 // option에 해당하는 주석을 코드로 전환시킨다.
                 while (i--) {
-                    if (subProgramOption[i] == 'fog') hasFog = true;
-                    if (subProgramOption[i] == 'sprite3D') hasSprite3D = true;
-                    if (subProgramOption[i] == 'directionalShadow') hasDirectionalShadow = true;
-                    if (subProgramOption[i] == 'skin') hasSkin = true;
-                    if (subProgramOption[i] == 'fog' || subProgramOption[i] == 'sprite3D' || subProgramOption[i] == 'directionalShadow' || subProgramOption[i] == 'skin') continue;
+                    if (subProgramOption[i] === 'fog') hasFog = true;
+                    if (subProgramOption[i] === 'sprite3D') hasSprite3D = true;
+                    if (subProgramOption[i] === 'directionalShadow') hasDirectionalShadow = true;
+                    if (subProgramOption[i] === 'skin') hasSkin = true;
+                    if (subProgramOption[i] === 'fog' || subProgramOption[i] == 'sprite3D' || subProgramOption[i] == 'directionalShadow' || subProgramOption[i] == 'skin') continue;
                     t0 = new RegExp('\/\/\#REDGL_DEFINE\#' + subProgramOption[i] + '\#', 'gi');
                     // console.log(t0)
                     vSource = vSource.replace(t0, '');
                     fSource = fSource.replace(t0, '');
                 }
             }
-
             // fog 처리
             t0 = new RegExp('\/\/\#REDGL_DEFINE\#fog\#' + (hasFog ? 'true' : 'false') + '\#', 'gi');
             vSource = vSource.replace(t0, '');
@@ -395,8 +406,6 @@ var RedProgram;
             t0 = new RegExp('\/\/\#REDGL_DEFINE\#skin\#' + (hasSkin ? 'true' : 'false') + '\#', 'gi');
             vSource = vSource.replace(t0, '');
             fSource = fSource.replace(t0, '');
-
-            //
             // console.log(vSource, fSource)
             return RedProgram(redGL, programName, vSource, fSource, subProgramOption)
         };

@@ -1,9 +1,16 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedStandardMaterial;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'RedStandardMaterialProgram';
-    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'specularTexture', 'emissiveTexture', 'displacementTexture', 'useFlatMode','usePreMultiply'];
+    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'specularTexture', 'emissiveTexture', 'displacementTexture', 'useFlatMode', 'usePreMultiply'];
     var checked;
     vSource = function () {
         /* @preserve
@@ -205,10 +212,11 @@ var RedStandardMaterial;
         this['displacementPower'] = 0.1;
         this['displacementFlowSpeedX'] = 0;
         this['displacementFlowSpeedY'] = 0;
-        this['alpha'] = 1
+        this['alpha'] = 1;
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['_UUID'] = RedGL.makeUUID();
+        this['useFlatMode'] = false;
         this['usePreMultiply'] = false;
         if (!checked) {
             this.checkUniformAndProperty();

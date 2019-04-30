@@ -1,19 +1,22 @@
+<!--
+  ~ RedGL - MIT License
+  ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+  ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+  ~ Last modification time of this file - 2019.4.30 18:53
+  -->
+
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
-    <meta charset="utf-8"/>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <meta name="format-detection" content="telephone=no"/>
-    <meta name="apple-mobile-web-app-capable" content="yes"/>
-    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
-    />
+    <meta charset="UTF-8">
+    <title>RedGL TestCase</title>
+    <meta name="keywords" content="RedGL,webgl,testCase">
+    <script src="https://redcamel.github.io/RedTest/core/RedTest.js"></script>
+    <link href="https://redcamel.github.io/RedTest/core/RedTest.css" rel="stylesheet"/>
+    <link href="https://redcamel.github.io/RedTest/core/prism.css" rel="stylesheet"/>
     <style>
-        html {
-            background: #111;
-            font-family: Nanum Gothic
+        a {
+            font-size: 12px;
         }
 
         a:link {
@@ -31,132 +34,91 @@
         }
     </style>
 </head>
-
 <body>
-<script>
-    (function () {
-        var temp = window.location.href.split('/')
-        var title = document.createElement('div')
-        document.body.appendChild(title)
-        title.style.cssText = 'color:#fff;margin-left:7px;font-size:32px;margin-top:15px;margin-bottom:20px'
-        title.innerHTML = 'RedGL Test Suite'
-    })()
-</script>
-<hr style="border:0px;border-top:1px solid #333">
-<!-- <hr style="border:0px;border-top:1px solid #222"> -->
-<div style="padding:10px;color:#fff">
-    <a href="https://redcamel.github.io/RedGL2/example">example</a> / <a
-        href="https://redcamel.github.io/RedGL2/testCase">testCase</a> / <a
-        href="https://redcamel.github.io/RedGL2/redDoc">document</a> / <a href="https://github.com/redcamel/RedGL2/">github</a>
-    <div>This project is maintained by <a href="https://github.com/redcamel/">Redcamel</a></div>
+<div style="position:absolute;top:30px;right:20px;text-align: right">
+    <!-- <hr style="border:0px;border-top:1px solid #222"> -->
+    <div style="padding:10px;color:#90a9ba">
+        <div style="color:#fff;" id="totalTestCasePage"></div>
+        <a href="https://redcamel.github.io/RedGL2/example">example</a> / <a
+            href="https://redcamel.github.io/RedGL2/testCase">testCase</a> / <a
+            href="https://redcamel.github.io/RedGL2/redDoc">document</a> / <a
+            href="https://github.com/redcamel/RedGL2/">github</a>
+        <div>This project is maintained by <a href="https://github.com/redcamel/">Redcamel</a></div>
+    </div>
 </div>
 <script>
-    var len, testList;
-    var index
-    testList = [
-        "RedGL.html",
-        //
-        "RedScene.html",
-        "RedView.html",
-        "RedWorld.html",
-        //
-        "program/RedShader.html",
-        "program/RedProgram.html",
-        //
-        'geometry/RedInterleaveInfo.html',
-        "geometry/RedBuffer.html",
-        "geometry/RedGeometry.html",
-        //
-        "primitives/RedPlane.html",
-        "primitives/RedBox.html",
-        "primitives/RedSphere.html",
-        //
-        "base/RedBaseMaterial.html",
-        "material/RedColorMaterial.html",
-        "material/RedColorPhongMaterial.html",
-        "material/RedColorPhongTextureMaterial.html",
-        "material/RedBitmapMaterial.html",
-        "material/RedStandardMaterial.html",
-        "material/RedEnvironmentMaterial.html",
-        "material/RedVideoMaterial.html",
-        "material/RedColorPointCloudMaterial.html",
-        "material/RedBitmapPointCloudMaterial.html",
-        "material/RedParticleMaterial.html",
-        //
-        "light/RedAmbientLight.html",
-        "light/RedDirectionalLight.html",
-        "light/RedPointLight.html",
-        //
-        "resources/RedBitmapTexture.html",
-        "resources/RedBitmapCubeTexture.html",
-        "resources/RedVideoTexture.html",
-        //
-        "base/RedBaseContainer.html",
-        "object3D/RedMesh.html",
-        "object3D/RedSprite3D.html",
-        "object3D/RedSkyBox.html",
-        "object3D/RedGrid.html",
-        "object3D/RedLine.html",
-        //
-        "text/RedText.html",
-        //
-        // "particle/RedParticleEmitter.html",
-        // "particle/RedPointCloud.html",
-        //
-        "frameBuffer/RedFrameBuffer.html",
-        //
-        "postEffect/RedPostEffectManager.html"
-    ]
-    len = testList.length;
-    index = 0;
-    var run = function () {
-        var tFrame, tContainer, tTitle, tStyle;
-        var v = testList[index]
-        tContainer = document.createElement('span'),
-            document.body.appendChild(tContainer),
-            tStyle = tContainer.style,
-            tStyle.float = "left",
-            tStyle.height = "150px",
-            tStyle.background = '#2c3239',
-            tStyle.margin = "5px",
-            tStyle.boxShadow = "5px 5px 20px rgba(0,0,0,0.3)",
-            tTitle = document.createElement('button'),
-            tContainer.appendChild(tTitle),
-            tTitle.innerHTML = '<a href = "' + v + '"><div style="padding:15px">' + v.split('/')[v.split('/').length - 1] + '</div></a>',
-            tStyle = tTitle.style,
-            tStyle.display = 'block',
-            tStyle.outline = 'none',
-            tStyle.border = '0px',
-            tStyle.width = '300px',
-            tStyle.fontSize = '13px',
-            tStyle.background = '#5b52aa',
-            tStyle.font = "#333",
-            tFrame = document.createElement('iframe'),
-            tStyle = tFrame.style,
-            tStyle.border = "0px",
-            tStyle.width = "300px",
-            tStyle.height = "103px",
-            tContainer.appendChild(tFrame),
-            tFrame.addEventListener('load', (function () {
-                var t0 = v
-                var frame = tFrame
-                var title = tTitle
-                var tDate
-                return function () {
-                    tDate = frame.contentDocument.lastModified
-                    tDate = new Date(tDate)
-                    tDate = tDate.getFullYear() + '.' + (tDate.getMonth() + 1) + '.' + tDate.getDate() + ' ' + tDate.getHours() + ':' + tDate.getMinutes()
-                    title.innerHTML = '<a href = "' + t0 + '"><div style="padding:15px">' + t0.split('/')[t0.split('/').length - 1] + ' - <span style="color:#ccc;font-size:11px">' + tDate + '</span></div></a>'
-                    index++
-                    if (index != len) requestAnimationFrame(run)
-                }
-            })());
-        tFrame.src = v
-    }
-    run()
+    RedTest.initIndex(
+        'RedGL Test',
+        [
+            "RedGL.html",
+            "RedWorld.html",
+            "RedScene.html",
+            "base/RedDefinePropertyInfo.html",
+            "base/RedBaseContainer.html",
+            "base/RedBaseController.html",
+            "base/RedBaseLight.html",
+            // "base/RedBaseMaterial.html",
+            // "base/RedBaseObject3D.html",
+            // "base/RedBasePostEffect.html",
+            // "base/RedBaseTexture.html",
+            // "camera/RedBasicController.html",
+            // "camera/RedCamera.html",
+            // "camera/RedObitController.html",
+            // "detect/RedDetect.html",
+            "frameBuffer/RedFrameBuffer.html",
+            "geometry/RedBuffer.html",
+            "geometry/RedGeometry.html",
+            "geometry/RedInterleaveInfo.html",
+            "light/RedAmbientLight.html",
+            "light/RedDirectionalLight.html",
+            "light/RedPointLight.html",
+
+            "material/RedBitmapMaterial.html",
+            "material/RedBitmapPointCloudMaterial.html",
+            "material/RedColorMaterial.html",
+            "material/RedColorPhongMaterial.html",
+            "material/RedColorPhongTextureMaterial.html",
+            "material/RedColorPointCloudMaterial.html",
+            "material/RedEnvironmentMaterial.html",
+            "material/RedEnvironmentMaterial.html",
+            "material/RedParticleMaterial.html",
+            "material/RedStandardMaterial.html",
+            "material/RedVideoMaterial.html",
+
+            // "object3D/system/RedLathe.html",
+            // "object3D/system/RedLinePoint.html",
+            "object3D/RedAxis.html",
+            "object3D/RedGrid.html",
+            // "object3D/RedLatheMesh.html",
+            "object3D/RedLine.html",
+            "object3D/RedMesh.html",
+            "object3D/RedSkyBox.html",
+            "object3D/RedSprite3D.html",
+            // "particle/system/RedParticleUnit.html",
+            // "particle/system/RedPointCloud.html",
+            "particle/RedBitmapPointCloud.html",
+            "particle/RedColorPointCloud.html",
+            // "particle/RedParticleEmitter.html",
+            'postEffect/RedPostEffectManager.html',
+            'primitives/RedBox.html',
+            'primitives/RedPlane.html',
+            'primitives/RedSphere.html',
+            'program/RedProgram.html',
+            'program/RedShader.html',
+            // 'program/RedSystemShaderCode.html',
+            // 'renderer/system/RedMouseEventManager.html',
+            // 'renderer/system/RedRenderDebuger.html',
+            // 'renderer/system/RedSystemUniformUpdater.html',
+            // 'renderer/RedRenderer.html',
+            // 'resources/system/RedSystemShaderCode.html',
+            'resources/RedBitmapCubeTexture.html',
+            'resources/RedBitmapTexture.html',
+            'resources/RedVideoTexture.html',
+            // 'shadow/RedDirectionalShadow.html',
+            // 'shadow/RedShadowManager.html',
+            'text/RedText.html'
+        ]
+    );
 </script>
-<div style="clear:both"></div>
-
 </body>
-
 </html>

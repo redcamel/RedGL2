@@ -1,3 +1,10 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 /**DOC:
  {
@@ -76,6 +83,7 @@ let RedXR;
             });
             [canvas, xrButton.domElement].forEach(el => document.body.appendChild(el));
             if (navigator.xr) {
+                console.log(xrButton)
                 navigator.xr.requestDevice().then(device => device.supportsSession({immersive: true}).then(_ => xrButton.setDevice(device)));
             }
             const start = session => {

@@ -1,3 +1,10 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedInterleaveInfo;
 (function () {
@@ -32,10 +39,10 @@ var RedInterleaveInfo;
      :DOC*/
     RedInterleaveInfo = function (attributeKey, size, normalize) {
         if (!(this instanceof RedInterleaveInfo)) return new RedInterleaveInfo(attributeKey, size, normalize);
-        typeof attributeKey == 'string' || RedGLUtil.throwFunc('RedInterleaveInfo : attributeKey - 문자열만 허용', attributeKey);
-        attributeKey.charAt(0) == 'a' || RedGLUtil.throwFunc('RedInterleaveInfo : attributeKey 첫글자는 a로 시작해야합니다.', attributeKey);
-        attributeKey.charAt(1) == attributeKey.charAt(1).toUpperCase() || RedInterleaveInfo.throwFunc('RedInterleaveInfo : attributeKey 두번째 글자는 대문자 시작해야합니다.', attributeKey);
-        typeof size == 'number' || RedGLUtil.throwFunc('RedInterleaveInfo : size - 숫자만 허용', size);
+        typeof attributeKey === 'string' || RedGLUtil.throwFunc('RedInterleaveInfo : attributeKey - 문자열만 허용', attributeKey);
+        attributeKey.charAt(0) === 'a' || RedGLUtil.throwFunc('RedInterleaveInfo : attributeKey 첫글자는 a로 시작해야합니다.', attributeKey);
+        attributeKey.charAt(1) === attributeKey.charAt(1).toUpperCase() || RedInterleaveInfo.throwFunc('RedInterleaveInfo : attributeKey 두번째 글자는 대문자 시작해야합니다.', attributeKey);
+        typeof size === 'number' || RedGLUtil.throwFunc('RedInterleaveInfo : size - 숫자만 허용', size);
         /**DOC:
          {
 		     code : 'PROPERTY',
@@ -64,7 +71,7 @@ var RedInterleaveInfo;
 			 return : 'Boolean'
 		 }
          :DOC*/
-        this['normalize'] = normalize == undefined ? false : true;
+        this['normalize'] = normalize !== undefined;
         /**DOC:
          {
 		     code : 'PROPERTY',
@@ -76,6 +83,7 @@ var RedInterleaveInfo;
 		 }
          :DOC*/
         this['offset'] = null;
+        console.log(this)
     };
     Object.freeze(RedInterleaveInfo);
 })();

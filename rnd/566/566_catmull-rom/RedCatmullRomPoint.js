@@ -1,3 +1,9 @@
+/*
+ * MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ */
+
 "use strict";
 var RedCatmullRomPoint;
 (function () {
@@ -55,7 +61,7 @@ var RedCatmullRomPoint;
      :DOC*/
     RedCatmullRomPoint = function (redGL, x, y, z) {
         var t0;
-    	this['debugMesh'] = RedMesh(redGL, RedBox(redGL, 3, 3, 3), RedColorMaterial(redGL, '#00ff00'))
+        this['debugMesh'] = RedMesh(redGL, RedBox(redGL, 3, 3, 3), RedColorMaterial(redGL, '#00ff00'))
         this['debugMesh'].x = x
         this['debugMesh'].y = y
         this['debugMesh'].z = z

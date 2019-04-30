@@ -1,4 +1,11 @@
-<html>
+<!--
+  ~ MIT License
+  ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+  ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+  -->
+
+<!DOCTYPE html>
+<html lang="ko">
 
 <head>
     <meta charset="UTF-8">
@@ -35,7 +42,7 @@
                 tController = RedObitController(redGL);
                 tController.pan = 25;
                 tController.tilt = -15;
-                tController.distance =5;
+                tController.distance = 5;
                 // 렌더러 생성
                 tRenderer = RedRenderer();
                 // 뷰생성 및 적용
@@ -76,11 +83,11 @@
                 assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
             ])
 
-            RedGLTFLoader(this,  assetPath + 'glTF/basic/', 'NormalTangentTest.gltf', function (v) {
+            RedGLTFLoader(this, assetPath + 'glTF/basic/', 'NormalTangentTest.gltf', function (v) {
                 console.log('호잇!', v)
                 tScene.addChild(v['resultMesh'])
                 v['resultMesh'].z = -1
-            },RedBitmapCubeTexture(this,[
+            }, RedBitmapCubeTexture(this, [
                 assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
                 assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
                 assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
@@ -88,11 +95,11 @@
                 assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
                 assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
             ]))
-            RedGLTFLoader(this,  assetPath + 'glTF/basic/', 'NormalTangentMirrorTest.gltf', function (v) {
+            RedGLTFLoader(this, assetPath + 'glTF/basic/', 'NormalTangentMirrorTest.gltf', function (v) {
                 console.log('호잇!', v)
                 tScene.addChild(v['resultMesh'])
                 v['resultMesh'].z = 1
-            },RedBitmapCubeTexture(this,[
+            }, RedBitmapCubeTexture(this, [
                 assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
                 assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
                 assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',

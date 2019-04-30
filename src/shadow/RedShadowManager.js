@@ -1,3 +1,10 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedShadowManager;
 (function () {
@@ -42,9 +49,9 @@ var RedShadowManager;
                     tDirectionalShadow['frameBuffer'].bind(redGL.gl);
                     gl.viewport(0, 0, tWidth, tHeight);
                     gl.scissor(0, 0, tWidth, tHeight);
-                    gl.clearColor(0, 0, 0, 1)
-                    gl.clearDepth(1.0)
-                    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+                    gl.clearColor(0, 0, 0, 1);
+                    gl.clearDepth(1.0);
+                    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
                     redRenderer.sceneRender(redGL, tView['scene'], tView['camera'], tView['camera']['orthographicYn'], tDirectionalShadow['_castingList'], time, renderInfo, tDirectionalShadow['_directionalShadowMaterial']);
                     tDirectionalShadow['frameBuffer'].unbind(redGL.gl);
                     gl.viewport(tViewRect[0], tWorldRect[3] - tViewRect[3] - tViewRect[1], tViewRect[2], tViewRect[3]);
