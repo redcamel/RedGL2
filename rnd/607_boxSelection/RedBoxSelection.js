@@ -12,10 +12,11 @@ var RedBoxSelection;
     var startPoint = {x: 0, y: 0};
     var dragPoint = {x: 0, y: 0};
     var currentRect = [];
-    var hd_move = function (e) {
-        console.log(e)
-        dragPoint.x = e[tXkey] ;
-        dragPoint.y = e[tYkey] ;
+    var looper;
+    var hd_move = function (e, targetView) {
+        // console.log(e)
+        dragPoint.x = e[tXkey];
+        dragPoint.y = e[tYkey];
         tW = dragPoint.x - startPoint.x;
         tH = dragPoint.y - startPoint.y;
         currentRect = [startPoint.x, startPoint.y, tW, tH];
@@ -31,18 +32,40 @@ var RedBoxSelection;
         tRectBox.style.top = currentRect[1] + 'px';
         tRectBox.style.width = currentRect[2] + 'px';
         tRectBox.style.height = currentRect[3] + 'px';
-        console.log(currentRect);
+        // console.log(currentRect);
+        // console.log(looper(targetView.scene, targetView, currentRect))
+        return looper(targetView.scene, targetView, currentRect)
     };
-    RedBoxSelection = function (redGL, redView) {
-        if (!(this instanceof RedBoxSelection)) return new RedBoxSelection(redGL, redView);
+    looper = function (list, targetView, rect, result) {
+        if (!result) result = {
+            selectList: [],
+            unSelectList: []
+        };
+        list.children.forEach(function (mesh) {
+            var tPosition = mesh.getScreenPoint(targetView)
+            // console.log('tPosition', tPosition)
+            if (
+                rect[0] <= tPosition[0]
+                && rect[1] <= tPosition[1]
+                && rect[0] + rect[2] >= tPosition[0]
+                && rect[1] + rect[3] >= tPosition[1]
+            ) result.selectList.push(mesh);
+            else result.unSelectList.push(mesh);
+            looper(mesh, targetView, rect, result);
+        });
+        return result
+    };
+    RedBoxSelection = function (redGL, redView, callback) {
+        if (!(this instanceof RedBoxSelection)) return new RedBoxSelection(redGL, redView, callback);
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedBoxSelection : RedGL Instance만 허용.', redGL);
         redView instanceof RedView || RedGLUtil.throwFunc('RedBoxSelection : RedView Instance만 허용.', redView);
+        var self = this;
+        this.targetView = redView;
 
-        self['_mouseEventInfo'] = [];
         [RedGLDetect.BROWSER_INFO.move, RedGLDetect.BROWSER_INFO.down, RedGLDetect.BROWSER_INFO.up].forEach(function (v) {
             tXkey = 'clientX';
             tYkey = 'clientY';
-            window.addEventListener(v, function (e) {
+            redGL['_canvas'].addEventListener(v, function (e) {
                 if (e.type === RedGLDetect.BROWSER_INFO.down) {
                     startPoint.x = e[tXkey];
                     startPoint.y = e[tYkey];
@@ -55,15 +78,22 @@ var RedBoxSelection;
                     tRectBox.style.width = 0;
                     tRectBox.style.height = 0;
                     document.body.appendChild(tRectBox)
+
                     if (redView.camera && redView.camera.camera) redView.camera.needUpdate = false;
+                    var HD;
+                    HD = function (e) {
+                        var result = hd_move(e, self.targetView)
+                        if (callback) callback(result)
+                    }
+                    HD({})
                     window.addEventListener(
-                        'mousemove', hd_move
+                        'mousemove', HD
                     );
                     window.addEventListener('click', function () {
                         if (redView.camera.camera) redView.camera.needUpdate = true;
-                        if(tRectBox.parentNode) document.body.removeChild(tRectBox)
+                        if (tRectBox.parentNode) document.body.removeChild(tRectBox)
                         window.removeEventListener(
-                            'mousemove', hd_move
+                            'mousemove', HD
                         )
                     })
                 }

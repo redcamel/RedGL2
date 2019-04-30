@@ -67,10 +67,6 @@
                 // 그리드 설정
                 tScene['grid'] = RedGrid(redGL);
 
-                tView = RedView('HelloRedGL', redGL, tScene, tController);
-                tWorld.addView(tView);
-                // 그리드 설정
-                tScene['grid'] = RedGrid(redGL);
                 // 렌더시작
                 tRenderer.start(redGL, function (time) {
                 });
@@ -81,9 +77,26 @@
                 console.log(redGL);
             };
             setBase(this);
-            var tMesh = RedMesh(this, RedBox(this), RedColorMaterial(this))
-            tScene.addChild(tMesh)
-            RedBoxSelection(this, tView)
+            var i = 500
+            while (i--) {
+                var tMesh = RedMesh(this, RedBox(this), RedColorMaterial(this))
+                tScene.addChild(tMesh)
+                tMesh.x = Math.random() * 100 - 50;
+                tMesh.y = Math.random() * 100 - 50;
+                tMesh.z = -Math.random() * 25-15;
+                tMesh.rotationX = Math.random() *360;
+                tMesh.rotationY = Math.random() *360;
+                tMesh.rotationZ = Math.random() *360;
+            }
+
+            RedBoxSelection(this, tView, function (v) {
+                v['selectList'].forEach(function (mesh) {
+                    mesh.material.alpha = 0.5
+                });
+                v['unSelectList'].forEach(function (mesh) {
+                    mesh.material.alpha = 1
+                })
+            })
 
 
         } else {
