@@ -2,22 +2,31 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 19:6
+ * Last modification time of this file - 2019.4.30 20:58
  */
 "use strict";
 var RedBoxSelection;
 (function () {
     var tRectBox;
-    var tXkey, tYkey;
     var tW, tH;
     var startPoint = {x: 0, y: 0};
     var dragPoint = {x: 0, y: 0};
     var currentRect = [];
     var looper, calRect;
     calRect = function (e, targetView) {
-        // console.log(e)
-        dragPoint.x = e[tXkey];
-        dragPoint.y = e[tYkey];
+        console.log(e)
+        if (RedGLDetect.BROWSER_INFO.isMobile) {
+            if (e.changedTouches) {
+                dragPoint.x = e.changedTouches[0].clientX;
+                dragPoint.y = e.changedTouches[0].clientY;
+            } else {
+                dragPoint.x = startPoint.x;
+                dragPoint.y = startPoint.y;
+            }
+        } else {
+            dragPoint.x = e.clientX;
+            dragPoint.y = e.clientY;
+        }
         tW = dragPoint.x - startPoint.x;
         tH = dragPoint.y - startPoint.y;
         currentRect = [startPoint.x, startPoint.y, tW, tH];
@@ -85,8 +94,7 @@ var RedBoxSelection;
         if (!redGL['_datas']['RedBoxSelection']) redGL['_datas']['RedBoxSelection'] = this;
         else return this;
         [RedGLDetect.BROWSER_INFO.move, RedGLDetect.BROWSER_INFO.down, RedGLDetect.BROWSER_INFO.up].forEach(function (v) {
-            tXkey = 'clientX';
-            tYkey = 'clientY';
+
             var HD;
             HD = function (e) {
                 var result = calRect(e, redView);
@@ -94,8 +102,8 @@ var RedBoxSelection;
             };
             redGL['_canvas'].addEventListener(v, function (e) {
                 if (e.type === RedGLDetect.BROWSER_INFO.down) {
-                    startPoint.x = e[tXkey];
-                    startPoint.y = e[tYkey];
+                    dragPoint.x = startPoint.x = RedGLDetect.BROWSER_INFO.isMobile ? e.changedTouches[0].clientX : e.clientX;
+                    dragPoint.y = startPoint.y = RedGLDetect.BROWSER_INFO.isMobile ? e.changedTouches[0].clientY : e.clientY;
                     if (!tRectBox) {
                         tRectBox = document.createElement('div');
                         tRectBox.style.cssText = 'position:fixed;border:1px dashed red;z-index:0';
@@ -107,12 +115,12 @@ var RedBoxSelection;
                     document.body.appendChild(tRectBox);
                     if (redView.camera && redView.camera.camera) redView.camera.needUpdate = false;
                     HD({});
-                    window.addEventListener('mousemove', HD);
-                    window.addEventListener('click', function () {
+                    window.addEventListener(RedGLDetect.BROWSER_INFO.move, HD);
+                    window.addEventListener(RedGLDetect.BROWSER_INFO.isMobile ? 'touchend' : 'click', function () {
                         if (redView.camera.camera) redView.camera.needUpdate = true;
                         if (tRectBox.parentNode) document.body.removeChild(tRectBox);
                         window.removeEventListener(
-                            'mousemove', HD
+                            RedGLDetect.BROWSER_INFO.move, HD
                         )
                     })
                 }
