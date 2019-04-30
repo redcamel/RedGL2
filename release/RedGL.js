@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 19:11
+ * Last modification time of this file - 2019.4.30 19:55
  */
 
 /**DOC:
@@ -1860,7 +1860,7 @@ var RedGLUtil;
         },
         isUint: function (v, title) {
             (typeof v == 'number' && v >= 0) || RedGLUtil.throwFunc(title, '입력값 : ' + v);
-            Math.floor(v) == v || RedGLUtil.throwFunc(title, '입력값 : ' + v);
+            Math.floor(v) === v || RedGLUtil.throwFunc(title, '입력값 : ' + v);
             return true
         },
         /**DOC:
@@ -1886,7 +1886,7 @@ var RedGLUtil;
             if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
                 t1 = [];
                 t0 = hex.substring(1).split('');
-                if (t0.length == 3) t0 = [t0[0], t0[0], t0[1], t0[1], t0[2], t0[2]];
+                if (t0.length === 3) t0 = [t0[0], t0[0], t0[1], t0[1], t0[2], t0[2]];
                 t0 = '0x' + t0.join('');
                 t1[0] = ((t0 >> 16) & 255) / 255;
                 t1[1] = ((t0 >> 8) & 255) / 255;
@@ -1986,7 +1986,7 @@ var RedGLUtil;
 		 }
          :DOC*/
         isPowerOf2: function (v) {
-            return (v & (v - 1)) == 0;
+            return (v & (v - 1)) === 0;
         },
         /**DOC:
          {
@@ -2119,7 +2119,7 @@ var RedGLUtil;
                 nn[y] = result[i + y];
                 nn[z] = result[i + z];
                 var len = Math.sqrt((nn[x] * nn[x]) + (nn[y] * nn[y]) + (nn[z] * nn[z]));
-                if (len == 0) len = 1.0;
+                if (len === 0) len = 1.0;
                 nn[x] = nn[x] / len;
                 nn[y] = nn[y] / len;
                 nn[z] = nn[z] / len;
@@ -2369,11 +2369,11 @@ var RedGLUtil;
             return dest;
         },
         screenToWorld: (function () {
-            var x,y,z, w;
-            var invW
+            var x, y, z, w;
+            var invW;
             var point = [0, 0, 0];
-            var pointMTX = mat4.create()
-            var invViewProjection = mat4.create()
+            var pointMTX = mat4.create();
+            var invViewProjection = mat4.create();
             var resultMTX;
             return function (rect, tCamera) {
                 x = 2.0 * rect[0] / rect[2] - 1;
@@ -2383,27 +2383,28 @@ var RedGLUtil;
                 mat4.multiply(invViewProjection, tCamera.perspectiveMTX, tCamera.matrix);
                 resultMTX = mat4.clone(invViewProjection);
 
-                mat4.invert(resultMTX, resultMTX)
-                point = [x, y, z]
+                mat4.invert(resultMTX, resultMTX);
+                point = [x, y, z];
                 mat4.identity(pointMTX);
-                mat4.translate(pointMTX, pointMTX, point)
+                mat4.translate(pointMTX, pointMTX, point);
                 mat4.multiply(resultMTX, resultMTX, pointMTX);
 
                 point[0] = resultMTX[12];
                 point[1] = resultMTX[13];
                 point[2] = resultMTX[14];
 
-                w = invViewProjection[12] * x + invViewProjection[13] * y + invViewProjection[14] * 0 + invViewProjection[15]; // required for perspective divide
+                // w = invViewProjection[12] * x + invViewProjection[13] * y + invViewProjection[14] * 0 + invViewProjection[15]; // required for perspective divide
+                w = invViewProjection[12] * x + invViewProjection[13] * y + invViewProjection[15]; // required for perspective divide
                 if (w !== 0) {
                     invW = 1 / w;
                     point[0] /= invW;
                     point[1] /= invW;
                     point[2] /= invW;
-                    point[0] = point[0] + (tCamera.x)
-                    point[1] = point[1] + (tCamera.y)
-                    point[2] = point[2] + (tCamera.z)
+                    point[0] = point[0] + (tCamera.x);
+                    point[1] = point[1] + (tCamera.y);
+                    point[2] = point[2] + (tCamera.z);
                 }
-                console.log(point)
+                console.log(point);
                 return point
             }
         })()
@@ -2798,7 +2799,7 @@ var RedGL;
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.4.30 19:6
  */
 "use strict";
 var RedBoxSelection;
@@ -16470,7 +16471,7 @@ var RedSprite3D;
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.4.30 19:11
  */
 
 "use strict";
@@ -27306,4 +27307,4 @@ var RedGLOffScreen;
         };
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-04-30 19:11:40)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-04-30 19:55:25)' };console.log(RedGL_VERSION);

@@ -1,0 +1,114 @@
+<!--
+  ~ RedGL - MIT License
+  ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+  ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+  ~ Last modification time of this file - 2019.4.30 19:54
+  -->
+
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="RedGL,webgl,demo">
+    <title>RedGL - localToWorld, worldToLocal, getScreenPoint</title>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
+    />
+    <link rel="stylesheet" href="../example.css">
+    <script src="../dat.gui.min.js"></script>
+    <script src="../baseTestUI.js"></script>
+    <script src="../../release/RedGL.min.js"></script>
+</head>
+
+<body>
+<script id='testSource'>
+    var testUI;
+    var canvas;
+    var assetPath = '../../asset/'
+    canvas = document.createElement('canvas');
+    document.body.appendChild(canvas);
+    RedGL(canvas, function (v) {
+        if (v) {
+            //TODO 코드정리
+            console.log('초기화 성공!');
+            var tWorld, tView, tScene, tController, tRenderer;
+            var setBase = function (redGL) {
+                // 월드 생성
+                redGL['world'] = tWorld = RedWorld();
+                // 씬 생성
+                tScene = RedScene(redGL);
+                // 카메라 생성
+                tController = RedObitController(redGL);
+                tController.pan = 0;
+                tController.tilt = -45;
+                // 렌더러 생성
+                tRenderer = RedRenderer();
+                // 뷰생성 및 적용
+                tView = RedView('HelloRedGL', redGL, tScene, tController);
+                tWorld.addView(tView);
+                // 그리드 설정
+                tScene['grid'] = RedGrid(redGL);
+                // 스카이박스 설정
+                tScene.skyBox =
+                    RedSkyBox(redGL, [
+                            assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
+                            assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
+                            assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
+                            assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
+                            assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
+                            assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
+                        ]
+                    );
+                // 렌더시작
+                tRenderer.start(redGL, function (time) {
+                });
+                // 렌더 디버거 활성화
+                tRenderer.setDebugButton();
+                // testUI 호출
+                testUI(redGL, tScene);
+                console.log(redGL);
+            };
+            setBase(this);
+            //////////////////////////////////////
+            var tMesh = RedMesh(this, RedBox(this), RedColorMaterial(this));
+            tScene.addChild(tMesh);
+            var tText = RedText(this, 500)
+            tText.color = '#fff'
+            tText.background = 'rgba(0,0,0,0.0)'
+            tText.textAlign = 'center'
+            tText.fontSize = 34;
+            tText.sprite3DYn = true;
+            tText.perspectiveScale = false;
+            tText.useDepthTest = false;
+            tText.y = 2;
+            tMesh.addChild(tText);
+            document.body.addEventListener(
+                'mousemove', function (e) {
+                    var currentPosition = RedGLUtil.screenToWorld(
+                        [
+                            e.layerX, e.layerY,
+                            tView['_viewRect'][2], tView['_viewRect'][3]
+                        ],
+                        tController
+                    );
+                    tMesh.x = currentPosition[0];
+                    tMesh.y = currentPosition[1];
+                    tMesh.z = currentPosition[2];
+                    tText.text = 'x : ' + currentPosition[0].toFixed(2) + ' / y : ' + currentPosition[1].toFixed(2) + ' / z : ' + currentPosition[2].toFixed(2);
+                }
+            );
+        } else {
+            console.log('초기화 실패!')
+        }
+    });
+    testUI = function (redGL, tScene) {
+        var gui = new baseTestUI(redGL)
+        gui.initRedGL()
+    }
+</script>
+</body>
+
+</html>
