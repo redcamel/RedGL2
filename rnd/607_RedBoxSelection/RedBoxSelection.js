@@ -3,7 +3,7 @@
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
  */
-"use strict"
+"use strict";
 var RedBoxSelection;
 (function () {
     var tRectBox;
@@ -12,8 +12,8 @@ var RedBoxSelection;
     var startPoint = {x: 0, y: 0};
     var dragPoint = {x: 0, y: 0};
     var currentRect = [];
-    var looper;
-    var hd_move = function (e, targetView) {
+    var looper, calRect;
+    calRect = function (e, targetView) {
         // console.log(e)
         dragPoint.x = e[tXkey];
         dragPoint.y = e[tYkey];
@@ -42,7 +42,7 @@ var RedBoxSelection;
             unSelectList: []
         };
         list.children.forEach(function (mesh) {
-            var tPosition = mesh.getScreenPoint(targetView)
+            var tPosition = mesh.getScreenPoint(targetView);
             // console.log('tPosition', tPosition)
             if (
                 rect[0] <= tPosition[0]
@@ -59,39 +59,35 @@ var RedBoxSelection;
         if (!(this instanceof RedBoxSelection)) return new RedBoxSelection(redGL, redView, callback);
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedBoxSelection : RedGL Instance만 허용.', redGL);
         redView instanceof RedView || RedGLUtil.throwFunc('RedBoxSelection : RedView Instance만 허용.', redView);
-        var self = this;
-        this.targetView = redView;
-
+        if (!redGL['_datas']['RedBoxSelection']) redGL['_datas']['RedBoxSelection'] = this;
+        else return this;
         [RedGLDetect.BROWSER_INFO.move, RedGLDetect.BROWSER_INFO.down, RedGLDetect.BROWSER_INFO.up].forEach(function (v) {
             tXkey = 'clientX';
             tYkey = 'clientY';
+            var HD;
+            HD = function (e) {
+                var result = calRect(e, redView);
+                if (callback) callback(result)
+            };
             redGL['_canvas'].addEventListener(v, function (e) {
                 if (e.type === RedGLDetect.BROWSER_INFO.down) {
                     startPoint.x = e[tXkey];
                     startPoint.y = e[tYkey];
                     if (!tRectBox) {
-                        tRectBox = document.createElement('div')
+                        tRectBox = document.createElement('div');
                         tRectBox.style.cssText = 'position:fixed;border:1px dashed red;z-index:0';
                     }
-                    tRectBox.style.left = 0;
-                    tRectBox.style.top = 0;
-                    tRectBox.style.width = 0;
-                    tRectBox.style.height = 0;
-                    document.body.appendChild(tRectBox)
-
+                    tRectBox.style.left = '0px';
+                    tRectBox.style.top = '0px';
+                    tRectBox.style.width = '0px';
+                    tRectBox.style.height = '0px';
+                    document.body.appendChild(tRectBox);
                     if (redView.camera && redView.camera.camera) redView.camera.needUpdate = false;
-                    var HD;
-                    HD = function (e) {
-                        var result = hd_move(e, self.targetView)
-                        if (callback) callback(result)
-                    }
-                    HD({})
-                    window.addEventListener(
-                        'mousemove', HD
-                    );
+                    HD({});
+                    window.addEventListener('mousemove', HD);
                     window.addEventListener('click', function () {
                         if (redView.camera.camera) redView.camera.needUpdate = true;
-                        if (tRectBox.parentNode) document.body.removeChild(tRectBox)
+                        if (tRectBox.parentNode) document.body.removeChild(tRectBox);
                         window.removeEventListener(
                             'mousemove', HD
                         )

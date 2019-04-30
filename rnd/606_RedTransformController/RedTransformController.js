@@ -33,65 +33,36 @@ var RedTransformController;
 		 return : 'RedTransformController Instance'
 	 }
      :DOC*/
-    var calBoundBox = function (tTransformController, tMesh) {
-
-        var minX, minY, minZ, maxX, maxY, maxZ, vx, vy, vz, t, i, len;
-        var stride = tMesh.geometry['interleaveBuffer']['stride'];
-        // if (!volume[this]) {
-        minX = minY = minZ = maxX = maxY = maxZ = 0;
-        t = tMesh.geometry['interleaveBuffer']['data'];
-        i = 0;
-        len = tMesh.geometry['interleaveBuffer']['pointNum'];
-        for (i; i < len; i++) {
-            vx = i * stride , vy = vx + 1, vz = vx + 2;
-            var transform = tMesh.matrix;
-            var x = transform[0] * t[vx] + transform[4] * t[vy] + transform[8] * t[vz];
-            var y = transform[1] * t[vx] + transform[5] * t[vy] + transform[9] * t[vz];
-            var z = transform[2] * t[vx] + transform[6] * t[vy] + transform[10] * t[vz];
-            minX = x < minX ? x : minX;
-            maxX = x > maxX ? x : maxX;
-            minY = y < minY ? y : minY;
-            maxY = y > maxY ? y : maxY;
-            minZ = z < minZ ? z : minZ;
-            maxZ = z > maxZ ? z : maxZ;
-        }
-        tMesh.geometry['_volume'] = [maxX - minX, maxY - minY, maxZ - minZ];
-        tMesh.geometry['_volume'].minX = minX;
-        tMesh.geometry['_volume'].maxX = maxX;
-        tMesh.geometry['_volume'].minY = minY;
-        tMesh.geometry['_volume'].maxY = maxY;
-        tMesh.geometry['_volume'].minZ = minZ;
-        tMesh.geometry['_volume'].maxZ = maxZ;
-
-
-        var tMTX = mat4.create();
-        mat4.translate(tMTX, tMTX, tMesh.localToWorld(0, 0, 0));
-        mat4.scale(tMTX, tMTX, tMesh.geometry['_volume']);
+    var calAABB = function (tTransformController, tMesh) {
+        var t0 = tMesh.volumeCalculateAABB();
+        console.log(t0);
         var tScale = 0;
-        if (tScale < tMesh.geometry['_volume'][0]) tScale = tMesh.geometry['_volume'][0];
-        if (tScale < tMesh.geometry['_volume'][1]) tScale = tMesh.geometry['_volume'][1];
-        if (tScale < tMesh.geometry['_volume'][2]) tScale = tMesh.geometry['_volume'][2];
-        if (_useScale) tTransformController.rotationGroup.scaleX = tTransformController.rotationGroup.scaleY = tTransformController.rotationGroup.scaleZ = tScale;
-        tTransformController['boundBox'].matrix = tMTX
+        if (tScale < t0['volume'][0]) tScale = t0['volume'][0];
+        if (tScale < t0['volume'][1]) tScale = t0['volume'][1];
+        if (tScale < t0['volume'][2]) tScale = t0['volume'][2];
+        if (tTransformController['useScale']) tTransformController.rotationGroup.scaleX = tTransformController.rotationGroup.scaleY = tTransformController.rotationGroup.scaleZ = tScale;
+        tTransformController['boundBox'].matrix = t0.worldMatrix
     };
-    var calBoundBox2 = function (tTransformController, tMesh) {
-        var tVolume = tMesh.geometry.volume;
-        console.log(tVolume);
-        var tMTX = mat4.create();
-        mat4.translate(tMTX, tMTX, tMesh.localToWorld(0, 0, 0));
-        mat4.rotateX(tMTX, tMTX, -tMesh.rotationX * Math.PI / 180);
-        mat4.rotateY(tMTX, tMTX, -tMesh.rotationY * Math.PI / 180);
-        mat4.rotateZ(tMTX, tMTX, -tMesh.rotationZ * Math.PI / 180);
-        mat4.scale(tMTX, tMTX, tVolume);
-        mat4.scale(tMTX, tMTX, [tMesh.scaleX, tMesh.scaleY, tMesh.scaleZ]);
-
-
+    var calOBB = function (tTransformController, tMesh) {
+        var t0 = tMesh.volumeCalculateOBB();
         var tScale = 0;
         if (tScale < tMesh.scaleX) tScale = tMesh.scaleX;
         if (tScale < tMesh.scaleY) tScale = tMesh.scaleY;
         if (tScale < tMesh.scaleZ) tScale = tMesh.scaleZ;
-        if (_useScale) tTransformController.rotationGroup.scaleX = tTransformController.rotationGroup.scaleY = tTransformController.rotationGroup.scaleZ = tScale;
-        tTransformController['boundBox'].matrix = tMTX
+        if (tTransformController['useScale']) tTransformController.rotationGroup.scaleX = tTransformController.rotationGroup.scaleY = tTransformController.rotationGroup.scaleZ = tScale;
+        tTransformController['boundBox'].matrix = t0.worldMatrix
+
+
+    };
+    var callBoundBox = function (tTransformController, tMesh) {
+        switch (tTransformController['boundBoxMode']) {
+            case RedTransformController.AABB:
+                calAABB(tTransformController, tMesh);
+                break;
+            case RedTransformController.OBB:
+                calOBB(tTransformController, tMesh);
+                break;
+        }
     };
     var instanceList = [];
     RedTransformController = function (redGL) {
@@ -102,49 +73,45 @@ var RedTransformController;
         this['setScaleGroup'](redGL);
         this['setPositionGroup'](redGL);
         ////////////////////////////////////////////
-        this['boundBox'] = RedBoundBox(redGL);
+        this['boundBox'] = RedMesh(redGL, RedBox(redGL), RedColorMaterial(redGL));
+        this['boundBox'].drawMode = redGL.gl.LINE_LOOP;
+        this['boundBox'].autoUpdateMatrix = false;
         this['children'].push(this['boundBox']);
+        this['boundBoxMode'] = RedTransformController.AABB;
+        this['downed'] = false;
+
+        this['useScale'] = true;
+        this['usePosition'] = true;
+        this['useRotation'] = true;
         ///////////////////////////////////////////
-        instanceList.push(this)
+        instanceList.push(this);
         this['_UUID'] = RedGL.makeUUID();
     };
+    RedTransformController.AABB = 'AABB';
+    RedTransformController.OBB = 'OBB';
     RedTransformController.prototype = new RedBaseContainer();
-    var _useScale = true;
-    var _usePosition = true;
-    var _useRotation = true
-    Object.defineProperty(RedTransformController, 'useScale', {
-        get: function () {
-            return _useScale
-        },
-        set: function (v) {
-            _useScale = v
+    RedDefinePropertyInfo.definePrototype('RedTransformController', 'useScale', 'boolean', {
+        callback: function (v) {
             instanceList.forEach(function (tGroup) {
                 tGroup['scaleGroup'].scaleX = tGroup['scaleGroup'].scaleY = tGroup['scaleGroup'].scaleZ = v ? 1 : 0
             })
         }
     });
-    Object.defineProperty(RedTransformController, 'usePosition', {
-        get: function () {
-            return _usePosition
-        },
-        set: function (v) {
-            _usePosition = v
+    RedDefinePropertyInfo.definePrototype('RedTransformController', 'usePosition', 'boolean', {
+        callback: function (v) {
             instanceList.forEach(function (tGroup) {
                 tGroup['positionGroup'].scaleX = tGroup['positionGroup'].scaleY = tGroup['positionGroup'].scaleZ = v ? 1 : 0
             })
         }
     });
-    Object.defineProperty(RedTransformController, 'useRotation', {
-        get: function () {
-            return _useRotation
-        },
-        set: function (v) {
-            _useRotation = v
+    RedDefinePropertyInfo.definePrototype('RedTransformController', 'useRotation', 'boolean', {
+        callback: function (v) {
             instanceList.forEach(function (tGroup) {
                 tGroup['rotationGroup'].scaleX = tGroup['rotationGroup'].scaleY = tGroup['rotationGroup'].scaleZ = v ? 1 : 0
             })
         }
-    })
+    });
+
     RedTransformController.prototype['setScaleGroup'] = function (redGL) {
         var tScaleMesh;
         var tSphere;
@@ -183,9 +150,9 @@ var RedTransformController;
         var rotationXLine;
         var rotationYLine;
         var rotationZLine;
-        var tMatX = RedColorMaterial(redGL, '#ff0000', 0.5);
-        var tMatY = RedColorMaterial(redGL, '#00ff00', 0.5);
-        var tMatZ = RedColorMaterial(redGL, '#0000ff', 0.5);
+        var tMatX = RedColorMaterial(redGL, '#ff0000', 0.0);
+        var tMatY = RedColorMaterial(redGL, '#00ff00', 0.0);
+        var tMatZ = RedColorMaterial(redGL, '#0000ff', 0.0);
         this['rotationGroup'] = RedMesh(redGL);
         this['children'].push(this['rotationGroup']);
         rotationXLine = RedMesh(redGL, RedSphere(redGL, 1, 32, 32, 32), tMatX);
@@ -204,6 +171,29 @@ var RedTransformController;
         this['rotationXLine'] = rotationXLine;
         this['rotationYLine'] = rotationYLine;
         this['rotationZLine'] = rotationZLine;
+        // rotationXLine.useDepthMask = false
+        // rotationYLine.useDepthMask = false
+        // rotationZLine.useDepthMask = false
+
+        rotationXLine = RedLine(redGL, RedColorMaterial(redGL, '#ff0000', 0.75));
+        rotationYLine = RedLine(redGL, RedColorMaterial(redGL, '#00ff00', 0.75));
+        rotationZLine = RedLine(redGL, RedColorMaterial(redGL, '#0000ff', 0.75));
+        var i = 36;
+        var PER = Math.PI * 2 / i;
+        i = 36;
+        while (i--) rotationXLine.addPoint(Math.sin(PER * i), Math.cos(PER * i), 0);
+        rotationXLine.addPoint(Math.sin(PER * i), Math.cos(PER * i), 0);
+        i = 36;
+        while (i--) rotationYLine.addPoint(Math.sin(PER * i), Math.cos(PER * i), 0);
+        rotationYLine.addPoint(Math.sin(PER * i), Math.cos(PER * i), 0);
+        i = 36;
+        while (i--) rotationZLine.addPoint(Math.sin(PER * i), Math.cos(PER * i), 0);
+        rotationZLine.addPoint(Math.sin(PER * i), Math.cos(PER * i), 0);
+        this['rotationXLine'].addChild(rotationXLine);
+        this['rotationYLine'].addChild(rotationYLine);
+        this['rotationZLine'].addChild(rotationZLine);
+
+
     };
     RedTransformController.prototype['setPositionGroup'] = function (redGL) {
         var tArrowMesh;
@@ -278,7 +268,6 @@ var RedTransformController;
             var startRotation;
             var startLocalMTX;
             var startMouseX = 0;
-            var startMouseY = 0;
             tTransformController.scaleGroup.rotationX = tMesh.rotationX;
             tTransformController.scaleGroup.rotationY = tMesh.rotationY;
             tTransformController.scaleGroup.rotationZ = tMesh.rotationZ;
@@ -297,25 +286,31 @@ var RedTransformController;
                     ],
                     tController
                 );
+                var t0 = [
+                    startControllerPosition[0] + currentPosition[0] - startPosition[0],
+                    startControllerPosition[1] + currentPosition[1] - startPosition[1],
+                    startControllerPosition[2] + currentPosition[2] - startPosition[2]
+                ];
                 // position
-                if (_usePosition) {
-                    if (tDirection === 0) tTransformController.x = tMesh.x = startControllerPosition[0] + (currentPosition[0] - startPosition[0]);
-                    if (tDirection === 1) tTransformController.y = tMesh.y = startControllerPosition[1] + (currentPosition[1] - startPosition[1]);
-                    if (tDirection === 2) tTransformController.z = tMesh.z = startControllerPosition[2] + (currentPosition[2] - startPosition[2]);
+                if (tTransformController['usePosition']) {
                     if (tDirection === 3) {
-                        tTransformController.x = tMesh.x = startControllerPosition[0] + (currentPosition[0] - startPosition[0]);
-                        tTransformController.y = tMesh.y = startControllerPosition[1] + (currentPosition[1] - startPosition[1]);
-                        tTransformController.z = tMesh.z = startControllerPosition[2] + (currentPosition[2] - startPosition[2]);
+                        tTransformController.x = tMesh.x = t0[0];
+                        tTransformController.y = tMesh.y = t0[1];
+                        tTransformController.z = tMesh.z = t0[2];
+                    } else {
+                        if (tDirection === 0) tTransformController.x = tMesh.x = t0[0];
+                        else if (tDirection === 1) tTransformController.y = tMesh.y = t0[1];
+                        else if (tDirection === 2) tTransformController.z = tMesh.z = t0[2];
                     }
                 }
                 // scale
-                if (_useScale) {
+                if (tTransformController['useScale']) {
                     if (tDirection === 7) tMesh.scaleX = startControllerScale[0] + (currentPosition[0] - startPosition[0]);
                     if (tDirection === 8) tMesh.scaleY = startControllerScale[1] + (currentPosition[1] - startPosition[1]);
                     if (tDirection === 9) tMesh.scaleZ = startControllerScale[2] + (currentPosition[2] - startPosition[2]);
                 }
                 // rotation
-                if (_useRotation) {
+                if (tTransformController['useRotation']) {
                     if (tDirection === 4 || tDirection === 5 || tDirection === 6) {
                         tTransformController.scaleGroup.rotationX = tMesh.rotationX;
                         tTransformController.scaleGroup.rotationY = tMesh.rotationY;
@@ -329,9 +324,10 @@ var RedTransformController;
                     var tDot, tDot2;
                     var localMTX;
                     var resultRotation;
-                    if (startMouseX < tView['_viewRect'][2] / 2) tAxis = [0, 0, -1];
-                    else tAxis = [0, 0, 1];
+
                     if (tDirection === 4) {
+                        if (startMouseX < tView['_viewRect'][2] / 2) tAxis = tMesh.localToWorld(1, 0, 0);
+                        else tAxis = tMesh.localToWorld(-1, 0, 0);
                         tDot = vec3.dot(tAxis, currentPosition);
                         tDot2 = vec3.dot(tAxis, startPosition);
                         localMTX = mat4.clone(startLocalMTX);
@@ -349,6 +345,8 @@ var RedTransformController;
                         tMesh.rotationY = -resultRotation[1] * 180 / Math.PI;
                         tMesh.rotationZ = -resultRotation[2] * 180 / Math.PI;
                     } else if (tDirection === 5) {
+                        if (startMouseX < tView['_viewRect'][2] / 2) tAxis = tMesh.localToWorld(0, -1, 0);
+                        else tAxis = tMesh.localToWorld(0, 1, 0);
                         tDot = vec3.dot(tAxis, currentPosition);
                         tDot2 = vec3.dot(tAxis, startPosition);
                         localMTX = mat4.clone(startLocalMTX);
@@ -363,6 +361,8 @@ var RedTransformController;
                         tMesh.rotationY = -resultRotation[1] * 180 / Math.PI;
                         tMesh.rotationZ = -resultRotation[2] * 180 / Math.PI;
                     } else if (tDirection === 6) {
+                        if (startMouseX < tView['_viewRect'][2] / 2) tAxis = [0, 0, -1];
+                        else tAxis = [0, 0, 1];
                         tDot = vec3.dot(tAxis, currentPosition) * 180 / Math.PI;
                         tDot2 = vec3.dot(tAxis, startPosition) * 180 / Math.PI;
                         console.log(tDot);
@@ -370,9 +370,25 @@ var RedTransformController;
                         startPosition = JSON.parse(JSON.stringify(currentPosition))
                     }
                 }
-
-                calBoundBox(tTransformController, tMesh)
+                callBoundBox(tTransformController, tMesh)
             };
+            [tTransformController['rotationXLine'], tTransformController['rotationYLine'], tTransformController['rotationZLine']].forEach(function (v) {
+                tScene.mouseManager.add(v, 'over', function () {
+                    if (!tTransformController['downed']) {
+                        tTransformController['rotationXLine'].material.alpha = 0;
+                        tTransformController['rotationYLine'].material.alpha = 0;
+                        tTransformController['rotationZLine'].material.alpha = 0;
+                        this.material.alpha = 0.25;
+                    }
+                });
+                tScene.mouseManager.add(v, 'out', function () {
+                    if (!tTransformController['downed']) {
+                        tTransformController['rotationXLine'].material.alpha = 0;
+                        tTransformController['rotationYLine'].material.alpha = 0;
+                        tTransformController['rotationZLine'].material.alpha = 0;
+                    }
+                })
+            });
             // 이벤트 작성
             [
                 tTransformController['arrowX'], tTransformController['arrowY'], tTransformController['arrowZ'], tTransformController['move'],
@@ -380,8 +396,9 @@ var RedTransformController;
                 tTransformController['scalePointX'], tTransformController['scalePointY'], tTransformController['scalePointZ']
 
             ].forEach(function (v, index) {
-                tScene.mouseManager.remove(v, 'down')
+                tScene.mouseManager.remove(v, 'down');
                 tScene.mouseManager.add(v, 'down', function (e) {
+                    tTransformController['downed'] = true;
                     tDirection = index;
                     startControllerPosition = [tTransformController.x, tTransformController.y, tTransformController.z];
                     startControllerScale = [tMesh.scaleX, tMesh.scaleY, tMesh.scaleZ];
@@ -395,7 +412,6 @@ var RedTransformController;
                         tController
                     );
                     startMouseX = e.nativeEvent.layerX;
-                    startMouseY = e.nativeEvent.layerY;
 
                     if (tController.camera) tController.needUpdate = false;
                     document.body.addEventListener(
@@ -403,13 +419,17 @@ var RedTransformController;
                     );
                     window.addEventListener('click', function () {
                         if (tController.camera) tController.needUpdate = true;
+                        tTransformController['downed'] = false;
+                        tTransformController['rotationXLine'].material.alpha = 0;
+                        tTransformController['rotationYLine'].material.alpha = 0;
+                        tTransformController['rotationZLine'].material.alpha = 0;
                         document.body.removeEventListener(
                             'mousemove', hd_move
                         )
                     })
                 });
             });
-            calBoundBox(tTransformController, tMesh)
+            callBoundBox(tTransformController, tMesh)
         }
     })();
     Object.freeze(RedTransformController);

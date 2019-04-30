@@ -9,7 +9,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>redGL - RedLinearSpline</title>
+    <title>redGL - RedTransformController</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -20,6 +20,7 @@
     <script src="../../example/dat.gui.min.js"></script>
     <script src="../../example/baseTestUI.js"></script>
     <script src="../../release/RedGL.min.js"></script>
+    <script src="RedTransformController.js"></script>
 </head>
 
 <body>
@@ -60,8 +61,8 @@
                 tScene = RedScene(redGL);
                 // 카메라 생성
                 tController = RedObitController(redGL);
-                tController.pan = 0;
-                tController.tilt = 0;
+                tController.pan = 30;
+                tController.tilt = -30;
                 tController.distance = 10
                 tController.speedDistance = 1
                 var tLight = RedDirectionalLight(redGL);
@@ -88,99 +89,59 @@
                 });
                 // 렌더 디버거 활성화
                 tRenderer.setDebugButton();
-                // testUI 호출
-                testUI(redGL, tController, tScene);
+
                 console.log(redGL);
             };
             setBase(this);
-            var tMesh = RedMesh(this, RedBox(this), RedColorMaterial(this))
+            var tMesh = RedMesh(this, RedBox(this), RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'crate.png')))
             tScene.addChild(tMesh)
 
-            var tMeshTargetPlane = RedMesh(this, RedPlane(this, 100, 100), RedColorMaterial(this, '#ff0000', 0.3))
-            tMeshTargetPlane.useCullFace = false
-            tScene.addChild(tMeshTargetPlane)
+            var tMesh2 = RedMesh(this, RedBox(this), RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'crate.png')))
+            tScene.addChild(tMesh2)
 
+            tMesh2.x = 2
+            tMesh2.z = 2
 
-            var lookAt = (function () {
-                var up = new Float32Array([0, 1, 0]);
-                var tPosition = [];
-                return function (x, y, z) {
-                    tPosition[0] = x;
-                    tPosition[1] = y;
-                    tPosition[2] = z;
-                    //out, eye, center, up
-                    mat4.identity(tMeshTargetPlane['matrix']);
-                    mat4.targetTo(tMeshTargetPlane['matrix'], [tMeshTargetPlane.x, tMeshTargetPlane.y, tMeshTargetPlane.z], tPosition, up);
-                    //
-                    tMeshTargetPlane.autoUpdateMatrix = false
-
-                    console.log(tMeshTargetPlane['matrix'])
-                }
-            })();
-            document.body.addEventListener(
-                'mousemove', function (e) {
-                    // console.log(e.layerX,e.layerY)
-                    lookAt(tController.camera.x, tController.camera.y, tController.camera.z)
-
-                    var x = 2.0 * e.layerX / tView._viewRect[2] - 1.;
-                    var y = -2.0 * e.layerY / tView._viewRect[3] + 1.;
-                    var tCamera = tController.camera
-                    var resultMTX = mat4.create();
-                    mat4.multiply(resultMTX, resultMTX, tCamera.matrix);
-                    // mat4.multiply(resultMTX, resultMTX, tCamera.matrix);
-
-                    mat4.invert(resultMTX, resultMTX)
-                    var point = [x, y, 0]
-                    var pointMTX = mat4.create()
-                    mat4.translate(pointMTX, pointMTX, point)
-                    mat4.multiply(resultMTX, resultMTX, pointMTX);
-                    //
-                    var t = [tController.camera.x, tController.camera.y, tController.camera.z];
-                    t = vec3.length(t)
-                    console.log([
-                        resultMTX[12],
-                        resultMTX[13],
-                        resultMTX[14],
-                        resultMTX[15]
-                    ])
-
-                    // var a = getRayvector(e.layerX, e.layerY, tView)
-                    // console.log(a)
-
-                    //
-                    // tMesh.x = (a[0]) ;
-                    // tMesh.y = (a[1]) ;
-                    // tMesh.z = (a[2]) ;
-                }
-            )
+            tScene.mouseManager.add(tMesh, 'down', function (e) {
+                tTransformController.setTarget(tView, tMesh)
+                tScene.addChild(tTransformController)
+            })
+            tScene.mouseManager.add(tMesh2, 'down', function (e) {
+                tTransformController.setTarget(tView, tMesh2)
+                tScene.addChild(tTransformController)
+            })
+            var tTransformController = RedTransformController(this)
+            console.log(tTransformController)
+            // testUI 호출
+            testUI(this, tTransformController, tScene);
 
         } else {
             console.log('초기화 실패!')
         }
     })
-    testUI = function (redGL, tController, tScene) {
+    testUI = function (redGL, tTransformController, tScene) {
         // console.log('test')
-        // var gui = new baseTestUI(redGL);
-        // gui.initRedGL();
+        var gui = new baseTestUI(redGL);
+        gui.initRedGL();
         //
-        // var tFolder
-        // var testList = {
-        //     testList: testPoints
-        // }
+        var tFolder
+
         //
         //
-        // tFolder = gui['gui'].addFolder('RedMesh')
-        // tFolder.open()
-        // tFolder.add(testOption, 'drawMode', ['TRIANGLES', 'TRIANGLE_STRIP', 'TRIANGLE_FAN', 'LINES', 'LINE_LOOP', 'LINE_STRIP', 'POINTS']).onChange(function (v) {
-        //     tScene.children.forEach(function (v2) {
-        //         v2.drawMode = redGL.gl[v]
-        //     })
-        // });
-        // tFolder.add(testOption, 'pointSize', 1, 100).onChange(function (v) {
-        //     tScene.children.forEach(function (v2) {
-        //         v2.pointSize = v
-        //     })
-        // });
+        tFolder = gui['gui'].addFolder('RedTransformController')
+        tFolder.open()
+        tFolder.add(tTransformController, 'boundBoxMode', [RedTransformController.AABB,RedTransformController.OBB]).onChange(function (v) {
+            tTransformController.boundBoxMode = v
+        });
+        tFolder.add(tTransformController, 'usePosition').onChange(function (v) {
+            tTransformController.usePosition = v
+        });
+        tFolder.add(tTransformController, 'useRotation').onChange(function (v) {
+            tTransformController.useRotation = v
+        });
+        tFolder.add(tTransformController, 'useScale').onChange(function (v) {
+            tTransformController.useScale = v
+        });
         // tFolder = gui['gui'].addFolder('RedLinearSpline')
         // tFolder.open()
         // var makeLathe = function () {

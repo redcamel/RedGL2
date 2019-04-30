@@ -51,13 +51,13 @@ var RedMouseEventManager;
                 var test = 0;
                 if (this['_mouseEventListObject'][key][type]) {
                     delete this['_mouseEventListObject'][key][type]
-                    for (var k in this['_mouseEventListObject'][key]) test++;
                 }
-                if (test === 0) {
+                for (var k in this['_mouseEventListObject'][key]) test++;
+                if (test === 1) {
                     var t0 = this['_mouseEventList'].indexOf(target);
                     if (t0 > -1) {
                         this['_mouseEventList'].splice(t0, 1);
-                        delete this['_mouseEventListObject'][target['_mouseColorID']]
+                        delete this['_mouseEventListObject'][key]
                     }
                 }
             }

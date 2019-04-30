@@ -9,7 +9,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>redGL - RedLinearSpline</title>
+    <title>redGL - RedBoxSelection</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -79,14 +79,14 @@
             setBase(this);
             var i = 500
             while (i--) {
-                var tMesh = RedMesh(this, RedBox(this), RedColorMaterial(this))
+                var tMesh = RedMesh(this, RedBox(this), RedColorPhongMaterial(this))
                 tScene.addChild(tMesh)
                 tMesh.x = Math.random() * 100 - 50;
                 tMesh.y = Math.random() * 100 - 50;
-                tMesh.z = -Math.random() * 25-15;
-                tMesh.rotationX = Math.random() *360;
-                tMesh.rotationY = Math.random() *360;
-                tMesh.rotationZ = Math.random() *360;
+                tMesh.z = -Math.random() * 25 - 15;
+                tMesh.rotationX = Math.random() * 360;
+                tMesh.rotationY = Math.random() * 360;
+                tMesh.rotationZ = Math.random() * 360;
             }
 
             RedBoxSelection(this, tView, function (v) {

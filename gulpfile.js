@@ -179,7 +179,6 @@ gulp.task('combine-js', function () {
         "src/loader/dae/RedDAELoader.js",
         "src/loader/gltf/RedGLTFLoader.js",
         //
-        "src/object3D/system/RedBoundBox.js",
         "src/object3D/system/RedLinePoint.js",
         "src/object3D/system/RedLathe.js",
         "src/object3D/RedAxis.js",
