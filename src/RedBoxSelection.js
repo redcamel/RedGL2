@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.4.30 19:6
  */
 "use strict";
 var RedBoxSelection;
@@ -56,6 +56,28 @@ var RedBoxSelection;
         });
         return result
     };
+    /**DOC:
+     {
+		 constructorYn : true,
+		 title :`RedBoxSelection`,
+		 description : `
+			 RedBoxSelection Instance 생성
+		 `,
+		 params : {
+			 redGL : [
+				 {type:'RedGL'}
+			 ],
+			 redView : [
+				 {type:'RedView'}
+			 ],
+			 callback : [
+				 {type:'Function'}
+			 ]
+		 },
+         demo : '../example/etc/RedBoxSelection.html',
+		 return : 'RedBoxSelection Instance'
+	 }
+     :DOC*/
     RedBoxSelection = function (redGL, redView, callback) {
         if (!(this instanceof RedBoxSelection)) return new RedBoxSelection(redGL, redView, callback);
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedBoxSelection : RedGL Instance만 허용.', redGL);

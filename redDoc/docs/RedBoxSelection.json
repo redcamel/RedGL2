@@ -1,0 +1,26 @@
+[
+  {
+    "constructorYn": true,
+    "title": "RedBoxSelection",
+    "description": "\n\t RedBoxSelection Instance 생성\n ",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ],
+      "redView": [
+        {
+          "type": "RedView"
+        }
+      ],
+      "callback": [
+        {
+          "type": "Function"
+        }
+      ]
+    },
+    "demo": "../example/etc/RedBoxSelection.html",
+    "return": "RedBoxSelection Instance"
+  }
+]

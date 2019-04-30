@@ -2,38 +2,13 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.4.30 19:11
  */
 
 "use strict";
 
 var RedTransformController;
 (function () {
-    /**DOC:
-     {
-		 constructorYn : true,
-		 title :`RedTransformController`,
-		 description : `
-			 RedTransformController Instance 생성기
-		 `,
-		 params : {
-			 redGL : [
-				 {type:'RedGL'}
-			 ],
-		 },
-		 extends : [
-		    'RedBaseContainer',
-		    'RedBaseObject3D'
-		 ],
-		 demo : '../example/object3D/RedTransformController.html',
-		 example : `
-			 var tScene;
-			 tScene = RedScene();
-			 tScene['axis'] = RedTransformController(redGL Instance)
-		 `,
-		 return : 'RedTransformController Instance'
-	 }
-     :DOC*/
     var calAABB = function (tTransformController, tMesh) {
         var t0 = tMesh.volumeCalculateAABB();
         console.log(t0);
@@ -66,13 +41,33 @@ var RedTransformController;
         }
     };
     var instanceList = [];
+    /**DOC:
+     {
+		 constructorYn : true,
+		 title :`RedTransformController`,
+		 description : `
+			 RedTransformController Instance 생성기
+		 `,
+		 params : {
+			 redGL : [
+				 {type:'RedGL'}
+			 ],
+		 },
+		 extends : [
+		    'RedBaseContainer',
+		    'RedBaseObject3D'
+		 ],
+		 demo : '../example/object3D/RedTransformController.html',
+		 return : 'RedTransformController Instance'
+	 }
+     :DOC*/
     RedTransformController = function (redGL) {
         if (!(this instanceof RedTransformController)) return new RedTransformController(redGL);
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedTransformController : RedGL Instance만 허용.', redGL);
         RedBaseObject3D['build'].call(this, redGL.gl);
-        this['setRotationGroup'](redGL);
-        this['setScaleGroup'](redGL);
-        this['setPositionGroup'](redGL);
+        this['_setRotationGroup'](redGL);
+        this['_setScaleGroup'](redGL);
+        this['_setPositionGroup'](redGL);
         ////////////////////////////////////////////
         this['boundBox'] = RedMesh(redGL, RedBox(redGL), RedColorMaterial(redGL));
         this['boundBox'].drawMode = redGL.gl.LINE_LOOP;
@@ -88,10 +83,37 @@ var RedTransformController;
         instanceList.push(this);
         this['_UUID'] = RedGL.makeUUID();
     };
+    /**DOC:
+     {
+		 title :`RedTransformController.AABB`,
+		 code : 'CONST',
+		 description : `바운드 박스 계산타입 - AABB`,
+		 return : 'String'
+	 }
+     :DOC*/
     RedTransformController.AABB = 'AABB';
+    /**DOC:
+     {
+		 title :`RedTransformController.OBB`,
+		 code : 'CONST',
+		 description : `바운드 박스 계산타입 - OBB`,
+		 return : 'String'
+	 }
+     :DOC*/
     RedTransformController.OBB = 'OBB';
     RedTransformController.prototype = new RedBaseContainer();
 
+    /**DOC:
+     {
+		 title :`boundBoxMode`,
+		 code : 'PROPERTY',
+		 description : `
+		 바운드 박스 계산타입
+		 RedTransformController.AABB or RedTransformController.OBB 설정가능
+		 `,
+		 return : 'String'
+	 }
+     :DOC*/
     Object.defineProperty(RedTransformController.prototype, 'boundBoxMode', {
             get: function () {
                 return this['_boundBoxMode']
@@ -103,6 +125,16 @@ var RedTransformController;
             }
         }
     );
+    /**DOC:
+     {
+		 title :`useScale`,
+		 code : 'PROPERTY',
+		 description : `
+		 스케일 변경 허용여부
+		 `,
+		 return : 'Boolean'
+	 }
+     :DOC*/
     RedDefinePropertyInfo.definePrototype('RedTransformController', 'useScale', 'boolean', {
         callback: function (v) {
             instanceList.forEach(function (tGroup) {
@@ -110,6 +142,16 @@ var RedTransformController;
             })
         }
     });
+    /**DOC:
+     {
+		 title :`usePosition`,
+		 code : 'PROPERTY',
+		 description : `
+		 포지션 변경 허용여부
+		 `,
+		 return : 'Boolean'
+	 }
+     :DOC*/
     RedDefinePropertyInfo.definePrototype('RedTransformController', 'usePosition', 'boolean', {
         callback: function (v) {
             instanceList.forEach(function (tGroup) {
@@ -117,6 +159,16 @@ var RedTransformController;
             })
         }
     });
+    /**DOC:
+     {
+		 title :`useRotation`,
+		 code : 'PROPERTY',
+		 description : `
+		 회전각 변경 허용여부
+		 `,
+		 return : 'Boolean'
+	 }
+     :DOC*/
     RedDefinePropertyInfo.definePrototype('RedTransformController', 'useRotation', 'boolean', {
         callback: function (v) {
             instanceList.forEach(function (tGroup) {
@@ -125,7 +177,7 @@ var RedTransformController;
         }
     });
 
-    RedTransformController.prototype['setScaleGroup'] = function (redGL) {
+    RedTransformController.prototype['_setScaleGroup'] = function (redGL) {
         var tScaleMesh;
         var tSphere;
         var tMatX = RedColorMaterial(redGL, '#ff0000', 0.5);
@@ -159,7 +211,7 @@ var RedTransformController;
         this['scalePointZ'] = tScaleMesh;
         this['scaleGroup'].addChild(tScaleMesh);
     };
-    RedTransformController.prototype ['setRotationGroup'] = function (redGL) {
+    RedTransformController.prototype ['_setRotationGroup'] = function (redGL) {
         var rotationXLine;
         var rotationYLine;
         var rotationZLine;
@@ -208,7 +260,7 @@ var RedTransformController;
 
 
     };
-    RedTransformController.prototype['setPositionGroup'] = function (redGL) {
+    RedTransformController.prototype['_setPositionGroup'] = function (redGL) {
         var tArrowMesh;
         var tAxis;
         var tBox, tArrow;
