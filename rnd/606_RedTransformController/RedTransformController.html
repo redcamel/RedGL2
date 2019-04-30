@@ -1,7 +1,8 @@
 <!--
-  ~ MIT License
+  ~ RedGL - MIT License
   ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
   ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+  ~ Last modification time of this file - 2019.4.30 18:39
   -->
 
 <!DOCTYPE html>
@@ -125,12 +126,9 @@
         gui.initRedGL();
         //
         var tFolder
-
-        //
-        //
         tFolder = gui['gui'].addFolder('RedTransformController')
         tFolder.open()
-        tFolder.add(tTransformController, 'boundBoxMode', [RedTransformController.AABB,RedTransformController.OBB]).onChange(function (v) {
+        tFolder.add(tTransformController, 'boundBoxMode', [RedTransformController.AABB, RedTransformController.OBB]).onChange(function (v) {
             tTransformController.boundBoxMode = v
         });
         tFolder.add(tTransformController, 'usePosition').onChange(function (v) {
@@ -142,71 +140,6 @@
         tFolder.add(tTransformController, 'useScale').onChange(function (v) {
             tTransformController.useScale = v
         });
-        // tFolder = gui['gui'].addFolder('RedLinearSpline')
-        // tFolder.open()
-        // var makeLathe = function () {
-        //
-        //     return RedLinearSpline(redGL, testPoints, testOption.numDivisions, testOption.capStart, testOption.capEnd, testOption.startAngle, testOption.endAngle, testOption.maxAngle, testOption.distance, testOption.tolerance, testOption.flipX, testOption.flipY);
-        // };
-        // 'numDivisions'.split(',').forEach(function (tKey) {
-        //     tFolder.add(testOption, tKey, 0, 60, 1).onChange(function () {
-        //         tScene.children.forEach(function (tMesh) {
-        //             tMesh.geometry = makeLathe();
-        //         })
-        //     })
-        // });
-        // 'distance'.split(',').forEach(function (tKey) {
-        //     tFolder.add(testOption, tKey, 0, 20, 0.001).onChange(function () {
-        //         tScene.children.forEach(function (tMesh) {
-        //             tMesh.geometry = makeLathe();
-        //         })
-        //     })
-        // });
-        // 'maxAngle'.split(',').forEach(function (tKey) {
-        //     tFolder.add(testOption, tKey, 0.0, Math.PI * 2, 0.001).onChange(function () {
-        //         tScene.children.forEach(function (tMesh) {
-        //             tMesh.geometry = makeLathe();
-        //         })
-        //     })
-        // });
-        // 'tolerance'.split(',').forEach(function (tKey) {
-        //     tFolder.add(testOption, tKey, 0.1, 1, 0.00001).onChange(function () {
-        //         tScene.children.forEach(function (tMesh) {
-        //             tMesh.geometry = makeLathe();
-        //         })
-        //     })
-        // });
-        // tFolder.add(testOption, 'capStart').onChange(function (v) {
-        //     tScene.children.forEach(function (v2) {
-        //         v2.geometry = makeLathe();
-        //     })
-        // });
-        //
-        // tFolder.add(testOption, 'capEnd').onChange(function (v) {
-        //     tScene.children.forEach(function (v2) {
-        //         v2.geometry = makeLathe();
-        //     })
-        // });
-        // tFolder.add(testOption, 'startAngle', 0, Math.PI * 2, 0.001).onChange(function (v) {
-        //     tScene.children.forEach(function (v2) {
-        //         v2.geometry = makeLathe();
-        //     })
-        // });
-        // tFolder.add(testOption, 'endAngle', 0, Math.PI * 2, 0.001).onChange(function (v) {
-        //     tScene.children.forEach(function (v2) {
-        //         v2.geometry = makeLathe();
-        //     })
-        // });
-        // tFolder.add(testOption, 'flipX').onChange(function (v) {
-        //     tScene.children.forEach(function (v2) {
-        //         v2.geometry = makeLathe();
-        //     })
-        // });
-        // tFolder.add(testOption, 'flipY').onChange(function (v) {
-        //     tScene.children.forEach(function (v2) {
-        //         v2.geometry = makeLathe();
-        //     })
-        // });
     }
 </script>
 </body>

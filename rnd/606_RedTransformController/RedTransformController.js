@@ -1,7 +1,8 @@
 /*
- * MIT License
+ * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:42
  */
 
 "use strict";
@@ -77,7 +78,7 @@ var RedTransformController;
         this['boundBox'].drawMode = redGL.gl.LINE_LOOP;
         this['boundBox'].autoUpdateMatrix = false;
         this['children'].push(this['boundBox']);
-        this['boundBoxMode'] = RedTransformController.AABB;
+        this['_boundBoxMode'] = RedTransformController.AABB;
         this['downed'] = false;
 
         this['useScale'] = true;
@@ -90,6 +91,18 @@ var RedTransformController;
     RedTransformController.AABB = 'AABB';
     RedTransformController.OBB = 'OBB';
     RedTransformController.prototype = new RedBaseContainer();
+
+    Object.defineProperty(RedTransformController.prototype, 'boundBoxMode', {
+            get: function () {
+                return this['_boundBoxMode']
+            },
+            set: function (v) {
+                if (!(v === RedTransformController.AABB || v === RedTransformController.OBB)) RedGLUtil.throwFunc('RedTransformController : boundBoxMode는 RedTransformController.AABB or RedTransformController.OBB만 허용함');
+                this['_boundBoxMode'] = v;
+                callBoundBox(this, this['_targetMesh'])
+            }
+        }
+    );
     RedDefinePropertyInfo.definePrototype('RedTransformController', 'useScale', 'boolean', {
         callback: function (v) {
             instanceList.forEach(function (tGroup) {
@@ -255,7 +268,6 @@ var RedTransformController;
         this['move'] = t0;
         this['positionGroup'].addChild(t0);
     };
-
     RedTransformController.prototype['setTarget'] = (function () {
         return function (tView, tMesh) {
             var tTransformController = this;
@@ -268,6 +280,7 @@ var RedTransformController;
             var startRotation;
             var startLocalMTX;
             var startMouseX = 0;
+            tTransformController['_targetMesh'] = tMesh
             tTransformController.scaleGroup.rotationX = tMesh.rotationX;
             tTransformController.scaleGroup.rotationY = tMesh.rotationY;
             tTransformController.scaleGroup.rotationZ = tMesh.rotationZ;
