@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 20:58
+ * Last modification time of this file - 2019.5.2 12:54
  */
 
 /**DOC:
@@ -2799,7 +2799,7 @@ var RedGL;
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 19:6
+ * Last modification time of this file - 2019.4.30 20:58
  */
 "use strict";
 var RedBoxSelection;
@@ -7742,16 +7742,16 @@ var RedParticleMaterial;
     var checked;
     vSource = function () {
         /* @preserve
-         const mat4 cOrtho = mat4(
+         const mat4 cMode2D = mat4(
                 0.5, 0.0, 0.0, 0.0,
                 0.0, 0.5, 0.0, 0.0,
                 0.0, 0.0, 0.5, 0.0,
                 0.0, 0.0, 0.0, 1.0
         );
          void main(void) {
-            if(uOrthographicYn){
+            if(uMode2DYn){
 
-                gl_Position = uPMatrix * uCameraMatrix * cOrtho * uMMatrix * vec4(aVertexPosition.x, -aVertexPosition.y, aVertexPosition.z, 1.0);
+                gl_Position = uPMatrix * uCameraMatrix * cMode2D * uMMatrix * vec4(aVertexPosition.x, -aVertexPosition.y, aVertexPosition.z, 1.0);
                 gl_PointSize = abs(aPointSize)/gl_Position.w;
             }else {
                 gl_Position = uPMatrix * uCameraMatrix * uMMatrix * vec4(aVertexPosition, 1.0);
@@ -7893,7 +7893,7 @@ var RedBitmapPointCloudMaterial;
         /* @preserve
 
          void main(void) {
-            if(uOrthographicYn){
+            if(uMode2DYn){
 
                 gl_Position = uPMatrix * uCameraMatrix * uMMatrix * vec4(aVertexPosition.x, -aVertexPosition.y, aVertexPosition.z, 1.0);
                 gl_PointSize = abs(aPointSize)/gl_Position.w;
@@ -9377,7 +9377,7 @@ var RedColorPointCloudMaterial;
 
          void main(void) {
             vVertexColor = aVertexColor;
-            if(uOrthographicYn){
+            if(uMode2DYn){
                 gl_Position = uPMatrix * uCameraMatrix * uMMatrix * vec4(aVertexPosition.x, -aVertexPosition.y, aVertexPosition.z, 1.0);
                 gl_PointSize = abs(aPointSize)/gl_Position.w;
             }else {
@@ -10040,7 +10040,7 @@ var RedTextMaterial;
 
                 // position 계산
                 mat4 targetMatrix;
-                if(uOrthographicYn){
+                if(uMode2DYn){
                       targetMatrix = uMMatrix * mat4(
                         u_width, 0.0, 0.0, 0.0,
                         0.0, u_height, 0.0, 0.0,
@@ -13204,7 +13204,7 @@ var RedGLTFLoader;
                     console.log('카메라', v);
                     var t0 = RedCamera();
                     if (v['type'] == 'orthographic') {
-                        t0.orthographicYn = true
+                        t0.mode2DYn = true
                     }
                     else {
                         t0['fov'] = v['perspective']['yfov'] * 180 / Math.PI;
@@ -18806,7 +18806,7 @@ var RedSystemShaderCode;
                 'varying vec2 vTexcoord',
                 'varying vec2 vTexcoord1',
 
-                'uniform bool uOrthographicYn',
+                'uniform bool uMode2DYn',
 
                 // 'uniform vec4 uAtlascoord',
                 'uniform float uTime',
@@ -19817,7 +19817,7 @@ var RedRenderer;
                 // 현재뷰에 대한 렌더 디버깅 정보
                 if (!self['renderInfo'][tView['key']]) self['renderInfo'][tView['key']] = {};
                 tRenderInfo = self['renderInfo'][tView['key']];
-                tRenderInfo['orthographicYn'] = tCamera instanceof RedBaseController ? tCamera.camera['orthographicYn'] : tCamera['orthographicYn'];
+                tRenderInfo['mode2DYn'] = tCamera instanceof RedBaseController ? tCamera.camera['mode2DYn'] : tCamera['mode2DYn'];
                 tRenderInfo['x'] = tView['_x'];
                 tRenderInfo['y'] = tView['_y'];
                 tRenderInfo['width'] = tView['_width'];
@@ -19854,7 +19854,7 @@ var RedRenderer;
                 // view 에 적용할 카메라 퍼스펙티브를 계산
                 tPerspectiveMTX = tCamera['perspectiveMTX'];
                 mat4.identity(tPerspectiveMTX);
-                if (tCamera['orthographicYn']) {
+                if (tCamera['mode2DYn']) {
                     mat4.ortho(
                         tPerspectiveMTX,
                         -0.5, // left
@@ -19925,18 +19925,18 @@ var RedRenderer;
                     tScene['skyBox']['y'] = tCamera.y;
                     tScene['skyBox']['z'] = tCamera.z;
                     tScene['skyBox']['scaleX'] = tScene['skyBox']['scaleY'] = tScene['skyBox']['scaleZ'] = tCamera['farClipping'] * 0.6;
-                    self.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], [tScene['skyBox']], time, tRenderInfo);
+                    self.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], [tScene['skyBox']], time, tRenderInfo);
                 }
                 // 그리드가 있으면 그림
-                if (tScene['grid']) self.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], [tScene['grid']], time, tRenderInfo);
+                if (tScene['grid']) self.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], [tScene['grid']], time, tRenderInfo);
                 // 씬렌더 호출
-                self.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], tScene['children'], time, tRenderInfo);
-                if (transparentList.length) self.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], transparentList, time, tRenderInfo, null, true);
+                self.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], tScene['children'], time, tRenderInfo);
+                if (transparentList.length) self.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], transparentList, time, tRenderInfo, null, true);
 
                 // asix가 있으면 그림
-                if (tScene['axis']) self.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], tScene['axis']['children'], time, tRenderInfo);
+                if (tScene['axis']) self.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], tScene['axis']['children'], time, tRenderInfo);
                 // 디버깅 라이트 업데이트
-                if (lightDebugRenderList.length) self.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], lightDebugRenderList, time, tRenderInfo);
+                if (lightDebugRenderList.length) self.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], lightDebugRenderList, time, tRenderInfo);
                 // 포스트이펙트 최종렌더
                 tRenderInfo['viewRenderTime'] = performance.now();
                 if (tView['postEffectManager']['postEffectList'].length) tView['postEffectManager'].render(redGL, gl, self, tView, time, tRenderInfo);
@@ -19957,7 +19957,7 @@ var RedRenderer;
                          scene,
                          children,
                          camera,
-                         orthographicYn,
+                         mode2DYn,
                          time,
                          renderResultObj,
                          tCacheInfo,
@@ -19973,7 +19973,7 @@ var RedRenderer;
             var tCacheSamplerIndex = tCacheInfo['cacheSamplerIndex'];
             var tCacheTexture = tCacheInfo['cacheTexture'];
             // 오쏘고날 스케일 비율
-            var orthographicYnScale = orthographicYn ? -1 : 1;
+            var mode2DYnScale = mode2DYn ? -1 : 1;
             //
             var CONVERT_RADIAN;
             //
@@ -20289,7 +20289,7 @@ var RedRenderer;
                             a[4] = a00 * b10 + a10 * b11 + a20 * b12, a[5] = a01 * b10 + a11 * b11 + a21 * b12, a[6] = a02 * b10 + a12 * b11 + a22 * b12,
                             a[8] = a00 * b20 + a10 * b21 + a20 * b22, a[9] = a01 * b20 + a11 * b21 + a21 * b22, a[10] = a02 * b20 + a12 * b21 + a22 * b22,
                             // tMVMatrix scale
-                            aX = tMesh['scaleX'], aY = tMesh['scaleY'] * orthographicYnScale, aZ = tMesh['scaleZ'],
+                            aX = tMesh['scaleX'], aY = tMesh['scaleY'] * mode2DYnScale, aZ = tMesh['scaleZ'],
                             a[0] = a[0] * aX, a[1] = a[1] * aX, a[2] = a[2] * aX, a[3] = a[3] * aX,
                             a[4] = a[4] * aY, a[5] = a[5] * aY, a[6] = a[6] * aY, a[7] = a[7] * aY,
                             a[8] = a[8] * aZ, a[9] = a[9] * aZ, a[10] = a[10] * aZ, a[11] = a[11] * aZ,
@@ -20535,10 +20535,10 @@ var RedRenderer;
                 }
                 /////////////////////////////////////////////////////////////////////////
                 /////////////////////////////////////////////////////////////////////////
-                tMesh['children'].length ? draw(redGL, scene, tMesh['children'], camera, orthographicYn, time, renderResultObj, tCacheInfo, tCacheState, tMVMatrix, subSceneMaterial, transparentMode) : 0;
+                tMesh['children'].length ? draw(redGL, scene, tMesh['children'], camera, mode2DYn, time, renderResultObj, tCacheInfo, tCacheState, tMVMatrix, subSceneMaterial, transparentMode) : 0;
             }
         };
-        return function (redGL, scene, camera, orthographicYn, children, time, renderResultObj, subSceneMaterial, transparentMode) {
+        return function (redGL, scene, camera, mode2DYn, children, time, renderResultObj, subSceneMaterial, transparentMode) {
             // if ( this['cacheState']['pointSize'] == undefined ) this['cacheState']['pointSize'] = null
             // if ( !this['cacheState']['useCullFace'] ) this['cacheState']['useCullFace'] = null
             // if ( !this['cacheState']['cullFace'] ) this['cacheState']['cullFace'] = null
@@ -20560,7 +20560,7 @@ var RedRenderer;
                 scene,
                 children,
                 camera,
-                orthographicYn,
+                mode2DYn,
                 time,
                 renderResultObj,
                 this['cacheInfo'],
@@ -20644,7 +20644,7 @@ var RedRenderDebuger;
                     t0 +=
                         '<div style="padding:5px">' +
                         '<div><b style="color:rgb(242, 169, 113)">RedView : key - ' + renderInfo[k]['key'] + '</b></div>' +
-                        ' orthographicYn - ' + '<b style="color:rgb(191, 82, 170)">' + renderInfo[k]['orthographicYn'] + '</b>' +
+                        ' mode2DYn - ' + '<b style="color:rgb(191, 82, 170)">' + renderInfo[k]['mode2DYn'] + '</b>' +
                         ' <br>call - ' + '<b style="color:rgb(191, 82, 170)">' + renderInfo[k]['call'] + '</b>' +
                         ' <br>triangleNum - ' + '<b style="color:rgb(191, 82, 170)">' + renderInfo[k]['triangleNum'] + '</b>' +
                         ' <br> width - ' + '<b style="color:rgb(191, 82, 170)">' + renderInfo[k]['width'] + '</b>' +
@@ -20795,7 +20795,7 @@ var RedSystemUniformUpdater;
                         uCameraMatrix: {cacheData: null, data: null},
                         uCameraPosition: {cacheData: null, data: new Float32Array([0, 0, 0])},
                         uPMatrix: {cacheData: null, data: null},
-                        uOrthographicYn: {cacheData: null, data: false},
+                        uMode2DYn: {cacheData: null, data: false},
                         uAmbientLightColor: {cacheData: null, data: new Float32Array([0, 0, 0, 0])},
                         uAmbientIntensity: {cacheData: null, data: 1},
                         uDirectionalLightPositionList: {cacheData: null, data: []},
@@ -20893,10 +20893,10 @@ var RedSystemUniformUpdater;
                 }
 
 
-                tValueStr = JSON.stringify(tCamera['orthographicYn']);
-                tCheckData = checkUniformInfo['uOrthographicYn'];
+                tValueStr = JSON.stringify(tCamera['mode2DYn']);
+                tCheckData = checkUniformInfo['uMode2DYn'];
                 if (tCheckData['cacheData'] != tValueStr || changedProgramNum) {
-                    needUpdateUniformInfo['uOrthographicYn'] = tCheckData['data'] = tCamera['orthographicYn'];
+                    needUpdateUniformInfo['uMode2DYn'] = tCheckData['data'] = tCamera['mode2DYn'];
                     tCheckData['cacheData'] = tValueStr;
                 }
 
@@ -22038,12 +22038,12 @@ var RedCamera;
         /**DOC:
          {
 			 code:`PROPERTY`,
-			 title :`orthographicYn`,
+			 title :`mode2DYn`,
 			 description : `기본값 : false`,
 			 return : 'Boolean'
 		 }
          :DOC*/
-        this['orthographicYn'] = false;
+        this['mode2DYn'] = false;
         /**DOC:
          {
 			 code:`PROPERTY`,
@@ -22060,7 +22060,7 @@ var RedCamera;
 			 code:`PROPERTY`,
 			 title :`perspectiveMTX`,
 			 description : `
-			 orthographicYn값에따라 렌더링시 퍼스펙티브 or 오쏘고날 매트릭스로 자동 변경됨
+			 mode2DYn값에따라 렌더링시 퍼스펙티브 or 오쏘고날 매트릭스로 자동 변경됨
 			 `,
 			 return : 'mat4'
 		 }
@@ -23402,7 +23402,7 @@ var RedShadowManager;
                     gl.clearColor(0, 0, 0, 1);
                     gl.clearDepth(1.0);
                     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-                    redRenderer.sceneRender(redGL, tView['scene'], tView['camera'], tView['camera']['orthographicYn'], tDirectionalShadow['_castingList'], time, renderInfo, tDirectionalShadow['_directionalShadowMaterial']);
+                    redRenderer.sceneRender(redGL, tView['scene'], tView['camera'], tView['camera']['mode2DYn'], tDirectionalShadow['_castingList'], time, renderInfo, tDirectionalShadow['_directionalShadowMaterial']);
                     tDirectionalShadow['frameBuffer'].unbind(redGL.gl);
                     gl.viewport(tViewRect[0], tWorldRect[3] - tViewRect[3] - tViewRect[1], tViewRect[2], tViewRect[3]);
                     gl.scissor(tViewRect[0], tWorldRect[3] - tViewRect[3] - tViewRect[1], tViewRect[2], tViewRect[3]);
@@ -23899,7 +23899,7 @@ var RedMouseEventManager;
                     this['frameBuffer'].height = tHeight;
                     this['frameBuffer'].bind(redGL.gl);
                     var self = this;
-                    redRenderer.sceneRender(redGL, tView['scene'], tView['camera'], tView['camera']['orthographicYn'], this['_mouseEventList'], time, renderInfo, this['_mouseEventMaterial']);
+                    redRenderer.sceneRender(redGL, tView['scene'], tView['camera'], tView['camera']['mode2DYn'], this['_mouseEventList'], time, renderInfo, this['_mouseEventMaterial']);
                     // 추출
 
                     var tMouseEventInfo = redGL['_mouseEventInfo'];
@@ -24343,7 +24343,7 @@ var RedPostEffectManager;
                         tSubScene['frameBuffer']['height'] = tViewRect[3];
                         tSubScene['frameBuffer'].bind(tGL);
                         tGL.clear(tGL.COLOR_BUFFER_BIT | tGL.DEPTH_BUFFER_BIT);
-                        redRenderer.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], tScene['children'], time, renderInfo, tSubScene['renderMaterial'], true, true);
+                        redRenderer.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], tScene['children'], time, renderInfo, tSubScene['renderMaterial'], true, true);
                         tSubScene['frameBuffer'].unbind(tGL);
                         prevWidth = tSubScene['frameBuffer']['width'];
                         prevHeight = tSubScene['frameBuffer']['height'];
@@ -27315,4 +27315,4 @@ var RedGLOffScreen;
         };
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-04-30 20:58:25)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-05-02 12:54:38)' };console.log(RedGL_VERSION);

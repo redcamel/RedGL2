@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.5.2 12:46
  */
 
 "use strict";
@@ -67,7 +67,7 @@ var RedSystemShaderCode;
                 'varying vec2 vTexcoord',
                 'varying vec2 vTexcoord1',
 
-                'uniform bool uOrthographicYn',
+                'uniform bool uMode2DYn',
 
                 // 'uniform vec4 uAtlascoord',
                 'uniform float uTime',

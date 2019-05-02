@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 19:52
+ * Last modification time of this file - 2019.5.2 12:40
  */
 
 var baseTestUI = function (redGL, width) {
@@ -165,8 +165,8 @@ baseTestUI.exampleList = [
                 href: 'camera/RedCamera.html'
             },
             {
-                key: 'RedCamera(orthographicMode)',
-                href: 'camera/RedCamera_ortho.html'
+                key: 'RedCamera(mode2D)',
+                href: 'camera/RedCamera_mode2D.html'
             },
             {
                 key: 'RedBasicController',
@@ -399,8 +399,8 @@ baseTestUI.exampleList = [
                 href: 'text/RedText.html'
             },
             {
-                key: 'RedText(Orthogonal Mode)',
-                href: 'text/RedCamera_ortho_text.html'
+                key: 'RedText(mode2D)',
+                href: 'text/RedText(mode2D).html'
             }
 
         ]
@@ -762,7 +762,7 @@ baseTestUI.prototype = {
     initCamera: function (camera, open) {
         var t0 = this['gui'].addFolder('camera')
         camera = camera instanceof RedCamera ? camera : camera.camera;
-        t0.add(camera, 'orthographicYn', true, false);
+        t0.add(camera, 'mode2DYn', true, false);
         t0.add(camera, 'nearClipping', 0, 20, 0.01);
         t0.add(camera, 'farClipping', 0, 10000, 0.01);
         t0.add(camera, 'fov', 0, 100, 0.01);
