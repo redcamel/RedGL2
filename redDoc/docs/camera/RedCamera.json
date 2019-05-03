@@ -43,20 +43,20 @@
   },
   {
     "code": "PROPERTY",
+    "title": "mode2DYn",
+    "description": "기본값 : false",
+    "return": "Boolean"
+  },
+  {
+    "code": "PROPERTY",
     "title": "nearClipping",
     "description": "기본값 : 0.1",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
-    "title": "orthographicYn",
-    "description": "기본값 : false",
-    "return": "Boolean"
-  },
-  {
-    "code": "PROPERTY",
     "title": "perspectiveMTX",
-    "description": "\n orthographicYn값에따라 렌더링시 퍼스펙티브 or 오쏘고날 매트릭스로 자동 변경됨\n ",
+    "description": "\n mode2DYn값에따라 렌더링시 퍼스펙티브 or 오쏘고날 매트릭스로 자동 변경됨\n ",
     "return": "mat4"
   },
   {

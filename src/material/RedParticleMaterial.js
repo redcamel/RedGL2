@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.5.2 13:44
  */
 
 "use strict";
@@ -18,16 +18,15 @@ var RedParticleMaterial;
     var checked;
     vSource = function () {
         /* @preserve
-         const mat4 cOrtho = mat4(
+         const mat4 cMode2D = mat4(
                 0.5, 0.0, 0.0, 0.0,
                 0.0, 0.5, 0.0, 0.0,
                 0.0, 0.0, 0.5, 0.0,
                 0.0, 0.0, 0.0, 1.0
         );
          void main(void) {
-            if(uOrthographicYn){
-
-                gl_Position = uPMatrix * uCameraMatrix * cOrtho * uMMatrix * vec4(aVertexPosition.x, -aVertexPosition.y, aVertexPosition.z, 1.0);
+            if(uMode2DYn){
+                gl_Position = uPMatrix * uCameraMatrix * cMode2D * uMMatrix * vec4(aVertexPosition.x, -aVertexPosition.y, aVertexPosition.z, 1.0);
                 gl_PointSize = abs(aPointSize)/gl_Position.w;
             }else {
                 gl_Position = uPMatrix * uCameraMatrix * uMMatrix * vec4(aVertexPosition, 1.0);

@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.5.2 12:37
  */
 
 "use strict";
@@ -886,7 +886,7 @@ var RedGLTFLoader;
                     console.log('카메라', v);
                     var t0 = RedCamera();
                     if (v['type'] == 'orthographic') {
-                        t0.orthographicYn = true
+                        t0.mode2DYn = true
                     }
                     else {
                         t0['fov'] = v['perspective']['yfov'] * 180 / Math.PI;

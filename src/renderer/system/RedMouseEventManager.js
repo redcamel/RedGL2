@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.5.2 12:37
  */
 
 "use strict";
@@ -94,7 +94,7 @@ var RedMouseEventManager;
                     this['frameBuffer'].height = tHeight;
                     this['frameBuffer'].bind(redGL.gl);
                     var self = this;
-                    redRenderer.sceneRender(redGL, tView['scene'], tView['camera'], tView['camera']['orthographicYn'], this['_mouseEventList'], time, renderInfo, this['_mouseEventMaterial']);
+                    redRenderer.sceneRender(redGL, tView['scene'], tView['camera'], tView['camera']['mode2DYn'], this['_mouseEventList'], time, renderInfo, this['_mouseEventMaterial']);
                     // 추출
 
                     var tMouseEventInfo = redGL['_mouseEventInfo'];

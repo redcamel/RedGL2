@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.5.2 12:46
  */
 
 "use strict";
@@ -93,7 +93,7 @@ var RedSystemUniformUpdater;
                         uCameraMatrix: {cacheData: null, data: null},
                         uCameraPosition: {cacheData: null, data: new Float32Array([0, 0, 0])},
                         uPMatrix: {cacheData: null, data: null},
-                        uOrthographicYn: {cacheData: null, data: false},
+                        uMode2DYn: {cacheData: null, data: false},
                         uAmbientLightColor: {cacheData: null, data: new Float32Array([0, 0, 0, 0])},
                         uAmbientIntensity: {cacheData: null, data: 1},
                         uDirectionalLightPositionList: {cacheData: null, data: []},
@@ -191,10 +191,10 @@ var RedSystemUniformUpdater;
                 }
 
 
-                tValueStr = JSON.stringify(tCamera['orthographicYn']);
-                tCheckData = checkUniformInfo['uOrthographicYn'];
+                tValueStr = JSON.stringify(tCamera['mode2DYn']);
+                tCheckData = checkUniformInfo['uMode2DYn'];
                 if (tCheckData['cacheData'] != tValueStr || changedProgramNum) {
-                    needUpdateUniformInfo['uOrthographicYn'] = tCheckData['data'] = tCamera['orthographicYn'];
+                    needUpdateUniformInfo['uMode2DYn'] = tCheckData['data'] = tCamera['mode2DYn'];
                     tCheckData['cacheData'] = tValueStr;
                 }
 

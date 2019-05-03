@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.5.2 12:37
  */
 
 "use strict";
@@ -68,7 +68,7 @@ var RedRenderDebuger;
                     t0 +=
                         '<div style="padding:5px">' +
                         '<div><b style="color:rgb(242, 169, 113)">RedView : key - ' + renderInfo[k]['key'] + '</b></div>' +
-                        ' orthographicYn - ' + '<b style="color:rgb(191, 82, 170)">' + renderInfo[k]['orthographicYn'] + '</b>' +
+                        ' mode2DYn - ' + '<b style="color:rgb(191, 82, 170)">' + renderInfo[k]['mode2DYn'] + '</b>' +
                         ' <br>call - ' + '<b style="color:rgb(191, 82, 170)">' + renderInfo[k]['call'] + '</b>' +
                         ' <br>triangleNum - ' + '<b style="color:rgb(191, 82, 170)">' + renderInfo[k]['triangleNum'] + '</b>' +
                         ' <br> width - ' + '<b style="color:rgb(191, 82, 170)">' + renderInfo[k]['width'] + '</b>' +
