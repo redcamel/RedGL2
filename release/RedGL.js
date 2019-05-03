@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.2 12:54
+ * Last modification time of this file - 2019.5.3 19:53
  */
 
 /**DOC:
@@ -7726,7 +7726,7 @@ var RedBitmapMaterial;
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.5.2 12:46
  */
 
 "use strict";
@@ -7750,7 +7750,6 @@ var RedParticleMaterial;
         );
          void main(void) {
             if(uMode2DYn){
-
                 gl_Position = uPMatrix * uCameraMatrix * cMode2D * uMMatrix * vec4(aVertexPosition.x, -aVertexPosition.y, aVertexPosition.z, 1.0);
                 gl_PointSize = abs(aPointSize)/gl_Position.w;
             }else {
@@ -7878,7 +7877,7 @@ var RedParticleMaterial;
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.5.2 12:46
  */
 
 "use strict";
@@ -9363,7 +9362,7 @@ var RedPBRMaterial;
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.5.2 12:46
  */
 
 "use strict";
@@ -10009,7 +10008,7 @@ var RedPBRMaterial_System;
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.5.2 12:46
  */
 
 "use strict";
@@ -10023,12 +10022,6 @@ var RedTextMaterial;
         /* @preserve
             // Sprite3D
             //#REDGL_DEFINE#vertexShareFunc#getSprite3DMatrix#
-            const mat4 c3dScale = mat4(
-                1.0/1024.0, 0.0, 0.0, 0.0,
-                0.0, 1.0/1024.0, 0.0, 0.0,
-                0.0, 0.0, 1.0, 0.0,
-                0.0, 0.0, 0.0, 1.0
-            );
 
             uniform float u_width;
             uniform float u_height;
@@ -12320,7 +12313,7 @@ var RedDAELoader;
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.5.2 12:37
  */
 
 "use strict";
@@ -18741,7 +18734,7 @@ var RedProgram;
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.5.2 12:46
  */
 
 "use strict";
@@ -19531,7 +19524,7 @@ var RedShader;
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.5.2 12:37
  */
 
 "use strict";
@@ -19932,6 +19925,9 @@ var RedRenderer;
                 // 씬렌더 호출
                 self.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], tScene['children'], time, tRenderInfo);
                 if (transparentList.length) self.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], transparentList, time, tRenderInfo, null, true);
+                if (tScene.mirrorManager) {
+                    tScene.mirrorManager.render(redGL, self, tView, time, tRenderInfo, updateSystemUniform);
+                }
 
                 // asix가 있으면 그림
                 if (tScene['axis']) self.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], tScene['axis']['children'], time, tRenderInfo);
@@ -20082,8 +20078,7 @@ var RedRenderer;
                             else if (tSprite3DYn) tOptionProgramKey = 'directionalShadow_sprite3D';
                             else if (tUseFog) tOptionProgramKey = 'directionalShadow_fog';
                             else tOptionProgramKey = 'directionalShadow'
-                        }
-                        else {
+                        } else {
                             if (tUseFog && tSprite3DYn) tOptionProgramKey = 'fog_sprite3D';
                             else if (tUseFog && tSkinInfo) tOptionProgramKey = 'fog_skin';
                             else if (tSkinInfo) tOptionProgramKey = 'skin';
@@ -20193,8 +20188,7 @@ var RedRenderer;
                                 // 		tCacheUniformInfo[tUUID] = tUniformValue['atlascoord']['data']['_UUID']
                                 // 	}
                                 // }
-                            }
-                            else {
+                            } else {
                                 // TODO: 이제는 이놈들을 날릴수있을듯한데...
                                 // console.log('설마',tUniformLocationInfo['materialPropertyName'])
                                 if (tRenderType == 'sampler2D') {
@@ -20578,7 +20572,7 @@ var RedRenderer;
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.5.2 12:37
  */
 
 "use strict";
@@ -20704,7 +20698,7 @@ var RedRenderDebuger;
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.5.2 12:46
  */
 
 "use strict";
@@ -21927,7 +21921,7 @@ var RedScene;
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.5.2 12:37
  */
 
 "use strict";
@@ -22968,8 +22962,12 @@ var RedSkyBoxMaterial;
          uniform samplerCube u_skyBoxTexture;
          varying vec3 vReflectionCubeCoord;
          uniform float u_alpha;
+         uniform bool u_mirrorMode;
+
          void main(void) {
-             vec4 finalColor = textureCube(u_skyBoxTexture, vReflectionCubeCoord);
+            vec4 finalColor ;
+            if(u_mirrorMode) finalColor = textureCube(u_skyBoxTexture, vec3(1.0-vReflectionCubeCoord.x,vReflectionCubeCoord.y,1.0-vReflectionCubeCoord.z));
+            else finalColor = textureCube(u_skyBoxTexture, vReflectionCubeCoord);
              //#REDGL_DEFINE#fog#false# gl_FragColor = finalColor;
              //#REDGL_DEFINE#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
              gl_FragColor.a = u_alpha;
@@ -23014,6 +23012,7 @@ var RedSkyBoxMaterial;
         // 일반 프로퍼티
         this['_UUID'] = RedGL.makeUUID();
         this['alpha'] = alpha == undefined ? 1 : alpha;
+        this['mirrorMode'] = false;
         if (!checked) {
             this.checkUniformAndProperty();
             checked = true;
@@ -23031,6 +23030,7 @@ var RedSkyBoxMaterial;
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedSkyBoxMaterial', 'skyBoxTexture', 'samplerCube', {essential: true});
     RedDefinePropertyInfo.definePrototype('RedSkyBoxMaterial', 'alpha', 'number', {min: 0, max: 1});
+    RedDefinePropertyInfo.definePrototype('RedSkyBoxMaterial', 'mirrorMode', 'boolean');
     Object.freeze(RedSkyBoxMaterial)
 })();
 /*
@@ -23352,7 +23352,7 @@ var RedDirectionalShadow;
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.5.2 12:37
  */
 
 "use strict";
@@ -23807,7 +23807,7 @@ var RedText;
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.5.2 12:37
  */
 
 "use strict";
@@ -24083,7 +24083,7 @@ var RedMouseEventMaterial;
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.5.2 12:37
  */
 
 "use strict";
@@ -27315,4 +27315,4 @@ var RedGLOffScreen;
         };
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-05-02 12:54:38)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-05-03 19:53:41)' };console.log(RedGL_VERSION);

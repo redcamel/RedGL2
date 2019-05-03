@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.2 12:37
+ * Last modification time of this file - 2019.5.3 12:15
  */
 
 "use strict";
@@ -403,6 +403,9 @@ var RedRenderer;
                 // 씬렌더 호출
                 self.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], tScene['children'], time, tRenderInfo);
                 if (transparentList.length) self.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], transparentList, time, tRenderInfo, null, true);
+                if (tScene.mirrorManager) {
+                    tScene.mirrorManager.render(redGL, self, tView, time, tRenderInfo, updateSystemUniform);
+                }
 
                 // asix가 있으면 그림
                 if (tScene['axis']) self.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], tScene['axis']['children'], time, tRenderInfo);
@@ -553,8 +556,7 @@ var RedRenderer;
                             else if (tSprite3DYn) tOptionProgramKey = 'directionalShadow_sprite3D';
                             else if (tUseFog) tOptionProgramKey = 'directionalShadow_fog';
                             else tOptionProgramKey = 'directionalShadow'
-                        }
-                        else {
+                        } else {
                             if (tUseFog && tSprite3DYn) tOptionProgramKey = 'fog_sprite3D';
                             else if (tUseFog && tSkinInfo) tOptionProgramKey = 'fog_skin';
                             else if (tSkinInfo) tOptionProgramKey = 'skin';
@@ -664,8 +666,7 @@ var RedRenderer;
                                 // 		tCacheUniformInfo[tUUID] = tUniformValue['atlascoord']['data']['_UUID']
                                 // 	}
                                 // }
-                            }
-                            else {
+                            } else {
                                 // TODO: 이제는 이놈들을 날릴수있을듯한데...
                                 // console.log('설마',tUniformLocationInfo['materialPropertyName'])
                                 if (tRenderType == 'sampler2D') {
