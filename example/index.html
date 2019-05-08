@@ -2,7 +2,7 @@
   ~ RedGL - MIT License
   ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
   ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
-  ~ Last modification time of this file - 2019.4.30 18:58
+  ~ Last modification time of this file - 2019.5.8 11:40
   -->
 
 <!DOCTYPE html>
@@ -10,7 +10,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="keywords" content="RedGL,webgl,demo">
-    <title>RedGL</title>
+    <title>RedGL - Examples</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -105,7 +105,6 @@
     var tEffect, tEffect2;
     RedGL(document.querySelector('canvas'), function (v) {
         if (v) {
-            console.log('초기화 성공!');
             var tWorld, tView, tScene, tCamera, tRenderer;
             var setBase = function (redGL) {
                 // 월드 생성
@@ -171,7 +170,7 @@
                     index_demo.start(self, tView, tRenderer, tCamera)
                 }
             }, 16)
-
+            console.log(this)
 
         } else {
             console.log('초기화 실패!')

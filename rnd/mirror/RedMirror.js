@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.7 17:15
+ * Last modification time of this file - 2019.5.8 10:54
  */
 
 var RedMirror;
@@ -65,44 +65,53 @@ var RedMirror;
 
             // l - 2 * dot(N,I) * N
 
-            var position = [temp.camera.x - this.x, temp.camera.y - this.y, temp.camera.z - this.z]
-            var normal =this.localToWorld(0,0,1)
+            var position = [temp.camera.x, temp.camera.y, temp.camera.z]
+            var normal = [0,0,-1]
 
-            vec3.normalize(normal,normal)
             var dot = vec3.dot(normal, position)
+
             var t0 = [0, 0, 0]
             vec3.scale(t0, normal, dot * 2)
+
+
             // console.log(t0)
             var resultPosition = [0, 0, 0]
-            vec3.subtract(resultPosition, position, t0)
-
-            // vec3.negate(resultPosition,resultPosition)
+            vec3.subtract(resultPosition, position,t0)
             // console.log(resultPosition)
 
-            vec3.normalize(resultPosition,resultPosition)
-            vec3.scale(resultPosition, resultPosition, 180 / 4)
+            this['camera'].x = resultPosition[0]
+            this['camera'].y = resultPosition[1]
+            this['camera'].z = resultPosition[2]
+            this['camera'].lookAt(0,0,0)
+            // var t = this.localToWorld(0, 0, 1)
+            // this['camera'].lookAt(t[0],t[1],t[2])
 
-            console.log(temp.distance)
 
-            this['camera'].x = resultPosition[0]+this.x
-            this['camera'].y = resultPosition[1]-this.y
-            this['camera'].z = resultPosition[2]+this.z
-            // console.log(resultPosition)
-            this['camera'].lookAt(-resultPosition[0]-this.x, -resultPosition[1]-this.y, -resultPosition[2]-this.z)
+            // this['camera'].matrix[15] = 1
 
+
+            // mat4.ortho(
+            //     this['camera'].perspectiveMTX,
+            //     -0.5, // left
+            //     0.5, // right
+            //     -0.5, // bottom
+            //     0.5, // top,
+            //     -temp.camera['farClipping'],
+            //     temp.camera['farClipping']
+            // );
 
             mat4.perspective(
                 this['camera'].perspectiveMTX,
-                this['camera'].fov* Math.PI/180,
+                Math.PI / 4,
                 1,
-                -this.z,
+                temp.camera['nearClipping'],
                 temp.camera['farClipping']
             );
 
-            // var t =1/10
+            // var t =1/ vec3.length([this.x,this.y,this.z]) /2
             // // console.log(t)
-            // mat4.scale(this['camera'].matrix, this['camera'].matrix,[t, t, t])
-
+            // mat4.scale(this['camera'].perspectiveMTX, this['camera'].perspectiveMTX,[t, t, t])
+            // this['camera'].matrix[15] = t
             if (targetView['scene']['skyBox']) {
                 targetView['scene']['skyBox'].material.mirrorMode = true;
                 redRenderer.sceneRender(redGL, targetView['scene'], this['camera'], this['camera']['mode2DYn'], [targetView['scene']['skyBox']], time, renderInfo);
