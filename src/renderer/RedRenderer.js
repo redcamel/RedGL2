@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.3 12:15
+ * Last modification time of this file - 2019.5.8 17:39
  */
 
 "use strict";
@@ -894,7 +894,6 @@ var RedRenderer;
                     /////////////////////////////////////////////////////////////////////////
                     // 노말매트릭스를 사용할경우
                     if (tGeometry && tSystemUniformGroup && tSystemUniformGroup['uNMatrix']['location']) {
-                        //클론
                         // mat4Inverse
                         inverse_c = tMVMatrix[0], inverse_d = tMVMatrix[1], inverse_e = tMVMatrix[2], inverse_g = tMVMatrix[3],
                             inverse_f = tMVMatrix[4], inverse_h = tMVMatrix[5], inverse_i = tMVMatrix[6], inverse_j = tMVMatrix[7],
