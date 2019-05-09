@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.8 17:39
+ * Last modification time of this file - 2019.5.9 11:6
  */
 
 "use strict";
@@ -184,7 +184,7 @@ var RedRenderer;
             var t0;
             return function () {
                 t0 = _renderList.indexOf(this);
-                if (t0 == -1) {
+                if (t0 === -1) {
                 } else _renderList.splice(t0, 1);
             }
         })()
@@ -357,7 +357,6 @@ var RedRenderer;
                 if (tScene['mouseManager']) {
                     updateSystemUniform.apply(self, [redGL, time, tView]);
                     tScene['mouseManager']['render'](redGL, self, tView, time, tRenderInfo, i == len - 1)
-
                 }
                 // 디렉셔널 쉐도우 렌더
                 if (tScene['shadowManager']['_directionalShadow']) {
@@ -446,8 +445,7 @@ var RedRenderer;
             var tCacheUniformInfo = tCacheInfo['cacheUniformInfo'];
             var tCacheSamplerIndex = tCacheInfo['cacheSamplerIndex'];
             var tCacheTexture = tCacheInfo['cacheTexture'];
-            // 오쏘고날 스케일 비율
-            var mode2DYnScale = mode2DYn ? -1 : 1;
+
             //
             var CONVERT_RADIAN;
             //
@@ -654,7 +652,7 @@ var RedRenderer;
                                         if (tUniformValue['_videoDom']['loaded']) tGL.texImage2D(tGL.TEXTURE_2D, 0, tGL.RGBA, tGL.RGBA, tGL.UNSIGNED_BYTE, tUniformValue['_videoDom']);
                                         tCacheTexture = [];
                                     } else tGL.bindTexture(tRenderType == 'sampler2D' ? tGL.TEXTURE_2D : tGL.TEXTURE_CUBE_MAP, tUniformValue['webglTexture']);
-                                    tCacheSamplerIndex[tUUID] == tSamplerIndex ? 0 : tGL.uniform1i(tWebGLUniformLocation, tCacheSamplerIndex[tUUID] = tSamplerIndex);
+                                    tCacheSamplerIndex[tUUID] == tSamplerIndex ? 0 : tGL.uniform1iv(tWebGLUniformLocation, [tCacheSamplerIndex[tUUID] = tSamplerIndex]);
                                     tCacheTexture[tSamplerIndex] = tUniformValue['_UUID'];
 
                                 }
@@ -673,7 +671,7 @@ var RedRenderer;
                                     if (tCacheTexture[tSamplerIndex] != 0) {
                                         // tPrevSamplerIndex == 0 ? 0 : tGL.activeTexture(tGL.TEXTURE0);
                                         // tGL.bindTexture(tGL.TEXTURE_2D, redGL['_datas']['emptyTexture']['2d']['webglTexture']);
-                                        tCacheSamplerIndex[tUUID] == 0 ? 0 : tGL.uniform1i(tWebGLUniformLocation, tCacheSamplerIndex[tUUID] = 0);
+                                        tCacheSamplerIndex[tUUID] == 0 ? 0 : tGL.uniform1iv(tWebGLUniformLocation, [tCacheSamplerIndex[tUUID] = 0]);
                                         tCacheTexture[tSamplerIndex] = 0;
                                         tPrevSamplerIndex = 0;
                                     }
@@ -681,7 +679,7 @@ var RedRenderer;
                                     if (tCacheTexture[tSamplerIndex] != 1) {
                                         // tPrevSamplerIndex == 1 ? 0 : tGL.activeTexture(tGL.TEXTURE0 + 1);
                                         // tGL.bindTexture(tGL.TEXTURE_CUBE_MAP, redGL['_datas']['emptyTexture']['3d']['webglTexture']);
-                                        tCacheSamplerIndex[tUUID] == 1 ? 0 : tGL.uniform1i(tWebGLUniformLocation, tCacheSamplerIndex[tUUID] = 1);
+                                        tCacheSamplerIndex[tUUID] == 1 ? 0 : tGL.uniform1iv(tWebGLUniformLocation, [tCacheSamplerIndex[tUUID] = 1]);
                                         tCacheTexture[tSamplerIndex] = 1;
                                         tPrevSamplerIndex = 1;
                                     }
@@ -761,15 +759,15 @@ var RedRenderer;
                             a[4] = a00 * b10 + a10 * b11 + a20 * b12, a[5] = a01 * b10 + a11 * b11 + a21 * b12, a[6] = a02 * b10 + a12 * b11 + a22 * b12,
                             a[8] = a00 * b20 + a10 * b21 + a20 * b22, a[9] = a01 * b20 + a11 * b21 + a21 * b22, a[10] = a02 * b20 + a12 * b21 + a22 * b22,
                             // tMVMatrix scale
-                            aX = tMesh['scaleX'], aY = tMesh['scaleY'] * mode2DYnScale, aZ = tMesh['scaleZ'],
+                            aX = tMesh['scaleX'], aY = tMesh['scaleY'] * (mode2DYn ? -1 : 1), aZ = tMesh['scaleZ'],
                             a[0] = a[0] * aX, a[1] = a[1] * aX, a[2] = a[2] * aX, a[3] = a[3] * aX,
                             a[4] = a[4] * aY, a[5] = a[5] * aY, a[6] = a[6] * aY, a[7] = a[7] * aY,
                             a[8] = a[8] * aZ, a[9] = a[9] * aZ, a[10] = a[10] * aZ, a[11] = a[11] * aZ,
                             a[12] = a[12], a[13] = a[13], a[14] = a[14], a[15] = a[15],
                             // localMatrix
-                            tMesh['localMatrix'][0] = a[0] , tMesh['localMatrix'][1] = a[1] , tMesh['localMatrix'][2] = a[2] , tMesh['localMatrix'][3] = a[3] ,
-                            tMesh['localMatrix'][4] = a[4] , tMesh['localMatrix'][5] = a[5] , tMesh['localMatrix'][6] = a[6] , tMesh['localMatrix'][7] = a[7] ,
-                        tMesh['localMatrix'][8] = a[8] , tMesh['localMatrix'][9] = a[9] , tMesh['localMatrix'][10] = a[10], tMesh['localMatrix'][11] = a[11] ,
+                            tMesh['localMatrix'][0] = a[0] , tMesh['localMatrix'][1] = a[1] , tMesh['localMatrix'][2] = a[2] , tMesh['localMatrix'][3] = a[3],
+                            tMesh['localMatrix'][4] = a[4] , tMesh['localMatrix'][5] = a[5] , tMesh['localMatrix'][6] = a[6] , tMesh['localMatrix'][7] = a[7],
+                        tMesh['localMatrix'][8] = a[8] , tMesh['localMatrix'][9] = a[9] , tMesh['localMatrix'][10] = a[10], tMesh['localMatrix'][11] = a[11],
                         tMesh['localMatrix'][12] = a[12], tMesh['localMatrix'][13] = a[13], tMesh['localMatrix'][14] = a[14], tMesh['localMatrix'][15] = a[15],
                         // 부모가있으면 곱함
                         parentMTX ? (
@@ -811,22 +809,22 @@ var RedRenderer;
                         var joints = tSkinInfo['joints'];
                         var index = 0, len = joints.length;
                         var globalTransformOfNodeThatTheMeshIsAttachedTo = [
-                            tMesh['matrix'][0],
-                            tMesh['matrix'][1],
-                            tMesh['matrix'][2],
-                            tMesh['matrix'][3],
-                            tMesh['matrix'][4],
-                            tMesh['matrix'][5],
-                            tMesh['matrix'][6],
-                            tMesh['matrix'][7],
-                            tMesh['matrix'][8],
-                            tMesh['matrix'][9],
-                            tMesh['matrix'][10],
-                            tMesh['matrix'][11],
-                            tMesh['matrix'][12],
-                            tMesh['matrix'][13],
-                            tMesh['matrix'][14],
-                            tMesh['matrix'][15]
+                            tMVMatrix[0],
+                            tMVMatrix[1],
+                            tMVMatrix[2],
+                            tMVMatrix[3],
+                            tMVMatrix[4],
+                            tMVMatrix[5],
+                            tMVMatrix[6],
+                            tMVMatrix[7],
+                            tMVMatrix[8],
+                            tMVMatrix[9],
+                            tMVMatrix[10],
+                            tMVMatrix[11],
+                            tMVMatrix[12],
+                            tMVMatrix[13],
+                            tMVMatrix[14],
+                            tMVMatrix[15]
                         ];
                         ////////////////////////////////////////////////////////////////////////////////////////////////////////////
                         // 역구하고
@@ -867,24 +865,26 @@ var RedRenderer;
                         ////////////////////////////////////////////////////////////////////////////////////////////////////////////
                         // 글로벌 조인트 노드병합함
                         //TODO: 여기 캐싱할 방법 찾아야함
+                        var tJointMTX ;
                         for (index; index < len; index++) {
                             // 조인트 공간내에서의 전역
-                            globalTransformOfJointNode[index * 16 + 0] = joints[index]['matrix'][0];
-                            globalTransformOfJointNode[index * 16 + 1] = joints[index]['matrix'][1];
-                            globalTransformOfJointNode[index * 16 + 2] = joints[index]['matrix'][2];
-                            globalTransformOfJointNode[index * 16 + 3] = joints[index]['matrix'][3];
-                            globalTransformOfJointNode[index * 16 + 4] = joints[index]['matrix'][4];
-                            globalTransformOfJointNode[index * 16 + 5] = joints[index]['matrix'][5];
-                            globalTransformOfJointNode[index * 16 + 6] = joints[index]['matrix'][6];
-                            globalTransformOfJointNode[index * 16 + 7] = joints[index]['matrix'][7];
-                            globalTransformOfJointNode[index * 16 + 8] = joints[index]['matrix'][8];
-                            globalTransformOfJointNode[index * 16 + 9] = joints[index]['matrix'][9];
-                            globalTransformOfJointNode[index * 16 + 10] = joints[index]['matrix'][10];
-                            globalTransformOfJointNode[index * 16 + 11] = joints[index]['matrix'][11];
-                            globalTransformOfJointNode[index * 16 + 12] = joints[index]['matrix'][12];
-                            globalTransformOfJointNode[index * 16 + 13] = joints[index]['matrix'][13];
-                            globalTransformOfJointNode[index * 16 + 14] = joints[index]['matrix'][14];
-                            globalTransformOfJointNode[index * 16 + 15] = joints[index]['matrix'][15]
+                            tJointMTX = joints[index]['matrix'];
+                            globalTransformOfJointNode[index * 16 + 0] = tJointMTX[0];
+                            globalTransformOfJointNode[index * 16 + 1] = tJointMTX[1];
+                            globalTransformOfJointNode[index * 16 + 2] = tJointMTX[2];
+                            globalTransformOfJointNode[index * 16 + 3] = tJointMTX[3];
+                            globalTransformOfJointNode[index * 16 + 4] = tJointMTX[4];
+                            globalTransformOfJointNode[index * 16 + 5] = tJointMTX[5];
+                            globalTransformOfJointNode[index * 16 + 6] = tJointMTX[6];
+                            globalTransformOfJointNode[index * 16 + 7] = tJointMTX[7];
+                            globalTransformOfJointNode[index * 16 + 8] = tJointMTX[8];
+                            globalTransformOfJointNode[index * 16 + 9] = tJointMTX[9];
+                            globalTransformOfJointNode[index * 16 + 10] = tJointMTX[10];
+                            globalTransformOfJointNode[index * 16 + 11] = tJointMTX[11];
+                            globalTransformOfJointNode[index * 16 + 12] = tJointMTX[12];
+                            globalTransformOfJointNode[index * 16 + 13] = tJointMTX[13];
+                            globalTransformOfJointNode[index * 16 + 14] = tJointMTX[14];
+                            globalTransformOfJointNode[index * 16 + 15] = tJointMTX[15]
                         }
                         tGL.uniformMatrix4fv(tSystemUniformGroup['uGlobalTransformOfNodeThatTheMeshIsAttachedTo']['location'], false, globalTransformOfNodeThatTheMeshIsAttachedTo);
                         tGL.uniformMatrix4fv(tSystemUniformGroup['uJointMatrix']['location'], false, globalTransformOfJointNode);

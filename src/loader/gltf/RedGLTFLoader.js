@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.2 12:37
+ * Last modification time of this file - 2019.5.9 10:39
  */
 
 "use strict";
@@ -502,31 +502,8 @@ var RedGLTFLoader;
                                     endIn = nextScaleIn[2] * interpolationValue;
                                     target.scaleZ = s0 * startV + s1 * startOut + s2 * endV + s3 * endIn;
                                 }
-                                ;
                             }
                             if (aniData['key'] == 'weights') {
-                                // console.log(aniData)
-                                // aniData['targets'].forEach(function (targetMesh) {
-                                //     var targetData = targetMesh['geometry']['interleaveBuffer']['data']
-                                //     var originData = targetMesh['_morphInfo']['origin']
-                                //     targetData.forEach(function (v, index) {
-                                //         if (index % targetMesh['geometry']['interleaveBuffer']['stride'] < 3) {
-                                //             var prev, next
-                                //             prev = originData[index]
-                                //             next = originData[index]
-                                //             var morphLen = targetMesh['_morphInfo']['list'].length
-                                //             targetMesh['_morphInfo']['list'].forEach(function (v, morphIndex) {
-                                //                 if (morphIndex % 3 == 1) {
-                                //                     prev += aniData['data'][prevIndex * morphLen + morphIndex] * v['interleaveData'][index]
-                                //                     next += aniData['data'][nextIndex * morphLen + morphIndex] * v['interleaveData'][index]
-                                //                 }
-                                //
-                                //             })
-                                //             targetData[index] = prev + interpolationValue * (next - prev)
-                                //         }
-                                //     })
-                                //     targetMesh['geometry']['interleaveBuffer'].upload(targetData)
-                                // })
                                 aniData['targets'].forEach(function (targetMesh) {
                                     var targetData = targetMesh['geometry']['interleaveBuffer']['data'];
                                     var originData = targetMesh['_morphInfo']['origin'];
@@ -581,34 +558,19 @@ var RedGLTFLoader;
                         } else interpolationValue = (currentTime - previousTime) / (nextTime - previousTime);
                         if (interpolationValue.toString() == 'NaN') interpolationValue = 0;
                         if (aniData['key'] == 'rotation') {
-                            // var rotationMTX = mat4.create()
-                            // var tRotation = [0, 0, 0]
                             var tQuaternion = [
                                 aniData['data'][nextIndex * 4],
                                 aniData['data'][nextIndex * 4 + 1],
                                 aniData['data'][nextIndex * 4 + 2],
                                 aniData['data'][nextIndex * 4 + 3]
                             ];
-                            // RedGLUtil.quaternionToRotationMat4(tQuaternion, rotationMTX)
-                            // RedGLUtil.mat4ToEuler(rotationMTX, tRotation)
-                            // tRotation[0] = -(tRotation[0] * 180 / Math.PI)
-                            // tRotation[1] = -(tRotation[1] * 180 / Math.PI)
-                            // tRotation[2] = -(tRotation[2] * 180 / Math.PI)
                             nextRotation = tQuaternion;
-                            //
-                            // var rotationMTX = mat4.create()
-                            // var tRotation = [0, 0, 0]
                             var tQuaternion = [
                                 aniData['data'][prevIndex * 4],
                                 aniData['data'][prevIndex * 4 + 1],
                                 aniData['data'][prevIndex * 4 + 2],
                                 aniData['data'][prevIndex * 4 + 3]
                             ];
-                            // RedGLUtil.quaternionToRotationMat4(tQuaternion, rotationMTX)
-                            // RedGLUtil.mat4ToEuler(rotationMTX, tRotation)
-                            // tRotation[0] = -(tRotation[0] * 180 / Math.PI)
-                            // tRotation[1] = -(tRotation[1] * 180 / Math.PI)
-                            // tRotation[2] = -(tRotation[2] * 180 / Math.PI)
                             prevRotation = tQuaternion
                         }
                         if (aniData['key'] == 'translation') {
@@ -705,49 +667,105 @@ var RedGLTFLoader;
                             }
                             if (aniData['key'] == 'weights') {
                                 // console.log(aniData)
-                                aniData['targets'].forEach(function (targetMesh) {
-                                    var targetData = targetMesh['geometry']['interleaveBuffer']['data'];
-                                    var originData = targetMesh['_morphInfo']['origin'];
-                                    var stride = targetMesh['geometry']['interleaveBuffer']['stride'];
-                                    var index = 0;
-                                    var LOOP_NUM = targetData.length / stride;
+                                (function () {
+                                    var i = aniData['targets'].length;
+                                    var targetMesh
+                                    var targetData;
+                                    var originData;
+                                    var stride;
+                                    var index;
+                                    var LOOP_NUM;
                                     var prev, next;
                                     var prev1, next1;
                                     var prev2, next2;
                                     var baseIndex;
-                                    var morphLen = targetMesh['_morphInfo']['list'].length;
-                                    var tAniData = aniData['data'];
-                                    var tMorphList = targetMesh['_morphInfo']['list'];
-                                    for (index; index < LOOP_NUM; index++) {
-                                        baseIndex = index * stride;
-                                        prev = originData[baseIndex];
-                                        next = originData[baseIndex];
-                                        prev1 = originData[baseIndex + 1];
-                                        next1 = originData[baseIndex + 1];
-                                        prev2 = originData[baseIndex + 2];
-                                        next2 = originData[baseIndex + 2];
-
-                                        var morphIndex = morphLen;
-                                        var prevAniData;
-                                        var nextAniData;
-                                        var morphInterleaveData;
-                                        while (morphIndex--) {
-                                            prevAniData = tAniData[prevIndex * morphLen + morphIndex];
-                                            nextAniData = tAniData[nextIndex * morphLen + morphIndex];
-                                            morphInterleaveData = tMorphList[morphIndex]['interleaveData'];
-                                            prev += prevAniData * morphInterleaveData[baseIndex];
-                                            next += nextAniData * morphInterleaveData[baseIndex];
-                                            prev1 += prevAniData * morphInterleaveData[baseIndex + 1];
-                                            next1 += nextAniData * morphInterleaveData[baseIndex + 1];
-                                            prev2 += prevAniData * morphInterleaveData[baseIndex + 2];
-                                            next2 += nextAniData * morphInterleaveData[baseIndex + 2]
+                                    var morphLen;
+                                    var tAniData;
+                                    var tMorphList;
+                                    var morphIndex;
+                                    var prevAniData;
+                                    var nextAniData;
+                                    var morphInterleaveData;
+                                    while (i--) {
+                                        targetMesh = aniData['targets'][i]
+                                        targetData = targetMesh['geometry']['interleaveBuffer']['data'];
+                                        originData = targetMesh['_morphInfo']['origin'];
+                                        stride = targetMesh['geometry']['interleaveBuffer']['stride'];
+                                        index = 0;
+                                        LOOP_NUM = targetData.length / stride;
+                                        morphLen = targetMesh['_morphInfo']['list'].length;
+                                        tAniData = aniData['data'];
+                                        tMorphList = targetMesh['_morphInfo']['list'];
+                                        for (index; index < LOOP_NUM; index++) {
+                                            baseIndex = index * stride;
+                                            prev = originData[baseIndex];
+                                            next = originData[baseIndex];
+                                            prev1 = originData[baseIndex + 1];
+                                            next1 = originData[baseIndex + 1];
+                                            prev2 = originData[baseIndex + 2];
+                                            next2 = originData[baseIndex + 2];
+                                            morphIndex = morphLen;
+                                            while (morphIndex--) {
+                                                prevAniData = tAniData[prevIndex * morphLen + morphIndex];
+                                                nextAniData = tAniData[nextIndex * morphLen + morphIndex];
+                                                morphInterleaveData = tMorphList[morphIndex]['interleaveData'];
+                                                prev += prevAniData * morphInterleaveData[baseIndex];
+                                                next += nextAniData * morphInterleaveData[baseIndex];
+                                                prev1 += prevAniData * morphInterleaveData[baseIndex + 1];
+                                                next1 += nextAniData * morphInterleaveData[baseIndex + 1];
+                                                prev2 += prevAniData * morphInterleaveData[baseIndex + 2];
+                                                next2 += nextAniData * morphInterleaveData[baseIndex + 2]
+                                            }
+                                            targetData[baseIndex] = prev + interpolationValue * (next - prev);
+                                            targetData[baseIndex + 1] = prev1 + interpolationValue * (next1 - prev1);
+                                            targetData[baseIndex + 2] = prev2 + interpolationValue * (next2 - prev2)
                                         }
-                                        targetData[baseIndex] = prev + interpolationValue * (next - prev);
-                                        targetData[baseIndex + 1] = prev1 + interpolationValue * (next1 - prev1);
-                                        targetData[baseIndex + 2] = prev2 + interpolationValue * (next2 - prev2)
+                                        targetMesh['geometry']['interleaveBuffer'].upload(targetData)
                                     }
-                                    targetMesh['geometry']['interleaveBuffer'].upload(targetData)
-                                })
+                                })();
+                                // aniData['targets'].forEach(function (targetMesh) {
+                                //     var targetData = targetMesh['geometry']['interleaveBuffer']['data'];
+                                //     var originData = targetMesh['_morphInfo']['origin'];
+                                //     var stride = targetMesh['geometry']['interleaveBuffer']['stride'];
+                                //     var index = 0;
+                                //     var LOOP_NUM = targetData.length / stride;
+                                //     var prev, next;
+                                //     var prev1, next1;
+                                //     var prev2, next2;
+                                //     var baseIndex;
+                                //     var morphLen = targetMesh['_morphInfo']['list'].length;
+                                //     var tAniData = aniData['data'];
+                                //     var tMorphList = targetMesh['_morphInfo']['list'];
+                                //     for (index; index < LOOP_NUM; index++) {
+                                //         baseIndex = index * stride;
+                                //         prev = originData[baseIndex];
+                                //         next = originData[baseIndex];
+                                //         prev1 = originData[baseIndex + 1];
+                                //         next1 = originData[baseIndex + 1];
+                                //         prev2 = originData[baseIndex + 2];
+                                //         next2 = originData[baseIndex + 2];
+                                //
+                                //         var morphIndex = morphLen;
+                                //         var prevAniData;
+                                //         var nextAniData;
+                                //         var morphInterleaveData;
+                                //         while (morphIndex--) {
+                                //             prevAniData = tAniData[prevIndex * morphLen + morphIndex];
+                                //             nextAniData = tAniData[nextIndex * morphLen + morphIndex];
+                                //             morphInterleaveData = tMorphList[morphIndex]['interleaveData'];
+                                //             prev += prevAniData * morphInterleaveData[baseIndex];
+                                //             next += nextAniData * morphInterleaveData[baseIndex];
+                                //             prev1 += prevAniData * morphInterleaveData[baseIndex + 1];
+                                //             next1 += nextAniData * morphInterleaveData[baseIndex + 1];
+                                //             prev2 += prevAniData * morphInterleaveData[baseIndex + 2];
+                                //             next2 += nextAniData * morphInterleaveData[baseIndex + 2]
+                                //         }
+                                //         targetData[baseIndex] = prev + interpolationValue * (next - prev);
+                                //         targetData[baseIndex + 1] = prev1 + interpolationValue * (next1 - prev1);
+                                //         targetData[baseIndex + 2] = prev2 + interpolationValue * (next2 - prev2)
+                                //     }
+                                //     targetMesh['geometry']['interleaveBuffer'].upload(targetData)
+                                // })
 
 
                             }
@@ -887,8 +905,7 @@ var RedGLTFLoader;
                     var t0 = RedCamera();
                     if (v['type'] == 'orthographic') {
                         t0.mode2DYn = true
-                    }
-                    else {
+                    } else {
                         t0['fov'] = v['perspective']['yfov'] * 180 / Math.PI;
                         t0['farClipping'] = v['perspective']['zfar'];
                         t0['nearClipping'] = v['perspective']['znear']
@@ -912,8 +929,7 @@ var RedGLTFLoader;
                 i++;
                 if (i === len) {
                     if (callback) callback()
-                }
-                else requestAnimationFrame(tick);
+                } else requestAnimationFrame(tick);
             };
             requestAnimationFrame(tick);
             // json['scenes'][0]['nodes'].forEach(function (nodeIndex) {
@@ -1060,8 +1076,7 @@ var RedGLTFLoader;
                             })
                         }
                     })
-                }
-                else {
+                } else {
                     var tGroup;
                     // console.log('차일드 정보로 구성된 정보임', info)
 
@@ -1317,8 +1332,7 @@ var RedGLTFLoader;
                                     uvs.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                                 } else if (key == 'TEXCOORD_1') {
                                     uvs1.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-                                }
-                                else RedGLUtil.throwFunc('VEC2에서 현재 지원하고 있지 않는 키', key)
+                                } else RedGLUtil.throwFunc('VEC2에서 현재 지원하고 있지 않는 키', key)
                             }
                             strideIndex++
                         }
@@ -1608,8 +1622,7 @@ var RedGLTFLoader;
                     interleaveData[idx++] = uvs1[i * 2 + 0];
                     interleaveData[idx++] = uvs1[i * 2 + 1];
                     // interleaveData.push(uvs1[i * 2 + 0], uvs1[i * 2 + 1])
-                }
-                else if (uvs.length) {
+                } else if (uvs.length) {
                     interleaveData[idx++] = uvs[i * 2 + 0];
                     interleaveData[idx++] = uvs[i * 2 + 1];
                     // interleaveData.push(uvs[i * 2 + 0], uvs[i * 2 + 1])
@@ -1634,8 +1647,7 @@ var RedGLTFLoader;
                     interleaveData[idx++] = tangents[i * 4 + 2];
                     interleaveData[idx++] = tangents[i * 4 + 3];
                     // interleaveData.push(tangents[i * 4 + 0], tangents[i * 4 + 1], tangents[i * 4 + 2], tangents[i * 4 + 3])
-                }
-                else {
+                } else {
                     interleaveData[idx++] = 0;
                     interleaveData[idx++] = 0;
                     interleaveData[idx++] = 0;
