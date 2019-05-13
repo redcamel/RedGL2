@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.9 11:6
+ * Last modification time of this file - 2019.5.13 16:0
  */
 
 "use strict";
@@ -488,6 +488,21 @@ var RedRenderer;
             i = children.length;
             var len3 = children.length - 1;
             tUseFog = scene['_useFog'];
+            tUseDirectionalShadow = scene['shadowManager']['_directionalShadow'];
+            if (tUseDirectionalShadow) {
+                if (tUseFog && tSprite3DYn) tOptionProgramKey = 'directionalShadow_fog_sprite3D';
+                else if (tUseFog && tSkinInfo) tOptionProgramKey = 'directionalShadow_fog_skin';
+                else if (tSkinInfo) tOptionProgramKey = 'directionalShadow_skin';
+                else if (tSprite3DYn) tOptionProgramKey = 'directionalShadow_sprite3D';
+                else if (tUseFog) tOptionProgramKey = 'directionalShadow_fog';
+                else tOptionProgramKey = 'directionalShadow'
+            } else {
+                if (tUseFog && tSprite3DYn) tOptionProgramKey = 'fog_sprite3D';
+                else if (tUseFog && tSkinInfo) tOptionProgramKey = 'fog_skin';
+                else if (tSkinInfo) tOptionProgramKey = 'skin';
+                else if (tSprite3DYn) tOptionProgramKey = 'sprite3D';
+                else if (tUseFog) tOptionProgramKey = 'fog'
+            }
             while (i--) {
                 renderResultObj['call']++;
                 tMesh = children[len3 - i];
@@ -503,6 +518,7 @@ var RedRenderer;
                     lodZ = camera.z - tMesh.z;
                     lodDistance = Math.abs(Math.sqrt(lodX * lodX + lodY * lodY + lodZ * lodZ));
                     tLODInfo = tMesh['_lodLevels'];
+                    //TODO 여기 최적화해야함
                     for (var k in tLODInfo) {
                         tLODData = tLODInfo[k];
                         if (tLODData['distance'] < lodDistance) {
@@ -537,40 +553,15 @@ var RedRenderer;
                     // 재질 캐싱
                     // Program 판단
                     //TODO: 프로그램 생성로직정리후 선택로직 확정
-                    tUseDirectionalShadow = scene['shadowManager']['_directionalShadow'];
+
                     tProgram = tMaterial['program'];
-                    if (tProgram['_prepareProgramYn']) {
-                        tProgram = tMaterial['program'] = tProgram._makePrepareProgram();
-                    }
-                    tOptionProgramKey = null;
-                    tOptionProgram = null;
+                    if (tProgram['_prepareProgramYn']) tProgram = tMaterial['program'] = tProgram._makePrepareProgram();
+
                     tBaseProgramKey = tProgram['key'];
                     tProgramList = tMaterial['_programList'];
-                    if (tProgramList) {
-                        if (tUseDirectionalShadow) {
-                            if (tUseFog && tSprite3DYn) tOptionProgramKey = 'directionalShadow_fog_sprite3D';
-                            else if (tUseFog && tSkinInfo) tOptionProgramKey = 'directionalShadow_fog_skin';
-                            else if (tSkinInfo) tOptionProgramKey = 'directionalShadow_skin';
-                            else if (tSprite3DYn) tOptionProgramKey = 'directionalShadow_sprite3D';
-                            else if (tUseFog) tOptionProgramKey = 'directionalShadow_fog';
-                            else tOptionProgramKey = 'directionalShadow'
-                        } else {
-                            if (tUseFog && tSprite3DYn) tOptionProgramKey = 'fog_sprite3D';
-                            else if (tUseFog && tSkinInfo) tOptionProgramKey = 'fog_skin';
-                            else if (tSkinInfo) tOptionProgramKey = 'skin';
-                            else if (tSprite3DYn) tOptionProgramKey = 'sprite3D';
-                            else if (tUseFog) tOptionProgramKey = 'fog'
-                        }
-                    }
 
-                    if (tOptionProgramKey) {
+                    if (tProgramList && tOptionProgramKey) {
                         tOptionProgram = tProgramList[tOptionProgramKey][tBaseProgramKey];
-                        // try {
-                        //     tOptionProgram['_prepareProgramYn']
-                        // } catch (e) {
-                        //     console.log(e, tProgram, tProgramList, tOptionProgramKey, tBaseProgramKey)
-                        // }
-
                         if (tOptionProgram['_prepareProgramYn']) {
                             console.log(tProgramList, tOptionProgramKey, tBaseProgramKey);
                             tOptionProgram = tProgramList[tOptionProgramKey][tBaseProgramKey] = tOptionProgram._makePrepareProgram();
@@ -640,7 +631,7 @@ var RedRenderer;
                         tRenderType = tUniformLocationInfo['renderType'];
                         tUniformValue = tMaterial[tUniformLocationInfo['materialPropertyName']];
                         // console.log(tCacheInfo)
-                        if (tRenderType == 'sampler2D' || tRenderType == 'samplerCube') {
+                        if (tRenderTypeIndex < 2) {
                             tSamplerIndex = tUniformLocationInfo['samplerIndex'];
                             // samplerIndex : 0,1 번은 생성용으로 쓴다.
                             if (tUniformValue) {
@@ -667,7 +658,7 @@ var RedRenderer;
                             } else {
                                 // TODO: 이제는 이놈들을 날릴수있을듯한데...
                                 // console.log('설마',tUniformLocationInfo['materialPropertyName'])
-                                if (tRenderType == 'sampler2D') {
+                                if (tRenderTypeIndex == 0) {
                                     if (tCacheTexture[tSamplerIndex] != 0) {
                                         // tPrevSamplerIndex == 0 ? 0 : tGL.activeTexture(tGL.TEXTURE0);
                                         // tGL.bindTexture(tGL.TEXTURE_2D, redGL['_datas']['emptyTexture']['2d']['webglTexture']);
@@ -865,7 +856,7 @@ var RedRenderer;
                         ////////////////////////////////////////////////////////////////////////////////////////////////////////////
                         // 글로벌 조인트 노드병합함
                         //TODO: 여기 캐싱할 방법 찾아야함
-                        var tJointMTX ;
+                        var tJointMTX;
                         for (index; index < len; index++) {
                             // 조인트 공간내에서의 전역
                             tJointMTX = joints[index]['matrix'];
