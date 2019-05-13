@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.3 20:0
+ * Last modification time of this file - 2019.5.8 10:54
  */
 
 var RedMirror;
@@ -61,36 +61,35 @@ var RedMirror;
             // console.log(temp.distance)
             // 카메라를 구하는게 관건이군..
             targetView.camera = this['camera']
-            this['camera'].x = -temp.camera.x + this.x
-            this['camera'].y = +temp.camera.y + this.y
-            this['camera'].z = -temp.camera.z + this.z
-            this['camera'].x = -temp.camera.x + this.x
-            this['camera'].y = temp.camera.y + this.y
-            this['camera'].z = -temp.camera.z + this.z
 
 
-            var t0, t1
-            t0 = this.localToWorld(0, 0, 1);
-            t1 = this.localToWorld(0, 0, -1);
-            var tLine = []
-            vec3.subtract(tLine, t0, t1)
-            var tCameraLine = [0, 0, 0]
-            vec3.subtract(tCameraLine, [temp.camera.x, -this['camera'].y, temp.camera.z], this.localToWorld(0, 1, 0))
+            // l - 2 * dot(N,I) * N
 
-            var crossPoint = []
+            var position = [temp.camera.x, temp.camera.y, temp.camera.z]
+            var normal = [0,0,-1]
+
+            var dot = vec3.dot(normal, position)
+
+            var t0 = [0, 0, 0]
+            vec3.scale(t0, normal, dot * 2)
 
 
-            vec3.normalize(tCameraLine, tCameraLine)
-            vec3.normalize(tLine, tLine)
-            vec3.cross(crossPoint, tCameraLine, tLine)
-            // console.log(crossPoint)
-            var t = this.localToWorld(0, 0, -1)
-            this['camera'].lookAt(-crossPoint[0], -temp.camera.y, -crossPoint[2])
-            // var t = this.localToWorld(0, 0, -1)
-            // this['camera'].lookAt(  crossPoint[0]-this.x,crossPoint[1],crossPoint[2]+this.z)
+            // console.log(t0)
+            var resultPosition = [0, 0, 0]
+            vec3.subtract(resultPosition, position,t0)
+            // console.log(resultPosition)
+
+            this['camera'].x = resultPosition[0]
+            this['camera'].y = resultPosition[1]
+            this['camera'].z = resultPosition[2]
+            this['camera'].lookAt(0,0,0)
+            // var t = this.localToWorld(0, 0, 1)
+            // this['camera'].lookAt(t[0],t[1],t[2])
+
+
             // this['camera'].matrix[15] = 1
 
-            // mat4.multiply(this['camera'].matrix,this['camera'].matrix,temp['camera'].matrix)
+
             // mat4.ortho(
             //     this['camera'].perspectiveMTX,
             //     -0.5, // left
@@ -100,7 +99,7 @@ var RedMirror;
             //     -temp.camera['farClipping'],
             //     temp.camera['farClipping']
             // );
-            //
+
             mat4.perspective(
                 this['camera'].perspectiveMTX,
                 Math.PI / 4,
@@ -109,6 +108,10 @@ var RedMirror;
                 temp.camera['farClipping']
             );
 
+            // var t =1/ vec3.length([this.x,this.y,this.z]) /2
+            // // console.log(t)
+            // mat4.scale(this['camera'].perspectiveMTX, this['camera'].perspectiveMTX,[t, t, t])
+            // this['camera'].matrix[15] = t
             if (targetView['scene']['skyBox']) {
                 targetView['scene']['skyBox'].material.mirrorMode = true;
                 redRenderer.sceneRender(redGL, targetView['scene'], this['camera'], this['camera']['mode2DYn'], [targetView['scene']['skyBox']], time, renderInfo);
