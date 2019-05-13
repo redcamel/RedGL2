@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.13 16:36
+ * Last modification time of this file - 2019.5.13 16:33
  */
 
 "use strict";
@@ -583,7 +583,6 @@ var RedRenderer;
                     // 실제 버퍼 바인딩하고
                     // 프로그램의 어트리뷰트를 순환한다.
                     i2 = tAttrGroup.length;
-                    if(tUniformGroup.length>i2) i2 = tUniformGroup.length;
                     // interleaveDefineInfoList 정보를 가져온다.
                     tInterleaveDefineInfo = tInterleaveBuffer['interleaveDefineInfoList'];
                     tPrevInterleaveBuffer_UUID == tUUID ? 0 : tGL.bindBuffer(tGL.ARRAY_BUFFER, tInterleaveBuffer['webglBuffer']);
@@ -591,90 +590,103 @@ var RedRenderer;
                     while (i2--) {
                         // 대상 어트리뷰트의 로케이션 정보를 구함
                         tAttributeLocationInfo = tAttrGroup[i2];
-                        if(tAttributeLocationInfo){
-                            // 대상 어트리뷰트의 이름으로 interleaveDefineInfoList에서 단위 인터리브 정보를 가져온다.
-                            tInterleaveDefineUnit = tInterleaveDefineInfo[tAttributeLocationInfo['name']];
-                            /*
-                             어트리뷰트 정보매칭이 안되는 녀석은 무시한다
-                             이경우는 버퍼상에는 존재하지만 프로그램에서 사용하지 않는경우이다.
-                            */
-                            // webgl location도 알아낸다.
-                            tWebGLAttributeLocation = tAttributeLocationInfo['location'];
-                            if (tInterleaveDefineUnit && tCacheInterleaveBuffer[tWebGLAttributeLocation] != tInterleaveDefineUnit['_UUID']) {
-                                // 해당로케이션을 활성화된적이없으면 활성화 시킨다
-                                tAttributeLocationInfo['enabled'] ? 0 : tGL.enableVertexAttribArray(tWebGLAttributeLocation);
-                                tAttributeLocationInfo['enabled'] = 1;
-                                tGL.vertexAttribPointer(
-                                    tWebGLAttributeLocation,
-                                    tInterleaveDefineUnit['size'],
-                                    tInterleaveBuffer['glArrayType'],
-                                    tInterleaveDefineUnit['normalize'],
-                                    tInterleaveBuffer['stride_BYTES_PER_ELEMENT'], //stride
-                                    tInterleaveDefineUnit['offset_BYTES_PER_ELEMENT'] //offset
-                                    // tInterleaveBuffer['stride'] * BYTES_PER_ELEMENT, //stride
-                                    // tInterleaveDefineUnit['offset'] * BYTES_PER_ELEMENT //offset
-                                );
-                                // 상태 캐싱
-                                tCacheInterleaveBuffer[tWebGLAttributeLocation] = tInterleaveDefineUnit['_UUID']
-                            }
+                        // 대상 어트리뷰트의 이름으로 interleaveDefineInfoList에서 단위 인터리브 정보를 가져온다.
+                        tInterleaveDefineUnit = tInterleaveDefineInfo[tAttributeLocationInfo['name']];
+                        /*
+                         어트리뷰트 정보매칭이 안되는 녀석은 무시한다
+                         이경우는 버퍼상에는 존재하지만 프로그램에서 사용하지 않는경우이다.
+                        */
+                        // webgl location도 알아낸다.
+                        tWebGLAttributeLocation = tAttributeLocationInfo['location'];
+                        if (tInterleaveDefineUnit && tCacheInterleaveBuffer[tWebGLAttributeLocation] != tInterleaveDefineUnit['_UUID']) {
+                            // 해당로케이션을 활성화된적이없으면 활성화 시킨다
+                            tAttributeLocationInfo['enabled'] ? 0 : tGL.enableVertexAttribArray(tWebGLAttributeLocation);
+                            tAttributeLocationInfo['enabled'] = 1;
+                            tGL.vertexAttribPointer(
+                                tWebGLAttributeLocation,
+                                tInterleaveDefineUnit['size'],
+                                tInterleaveBuffer['glArrayType'],
+                                tInterleaveDefineUnit['normalize'],
+                                tInterleaveBuffer['stride_BYTES_PER_ELEMENT'], //stride
+                                tInterleaveDefineUnit['offset_BYTES_PER_ELEMENT'] //offset
+                                // tInterleaveBuffer['stride'] * BYTES_PER_ELEMENT, //stride
+                                // tInterleaveDefineUnit['offset'] * BYTES_PER_ELEMENT //offset
+                            );
+                            // 상태 캐싱
+                            tCacheInterleaveBuffer[tWebGLAttributeLocation] = tInterleaveDefineUnit['_UUID']
                         }
-                        // 유니폼 업데이트
-                        tUniformLocationInfo = tUniformGroup[i2];
-                        if(tUniformLocationInfo){
-                            tWebGLUniformLocation = tUniformLocationInfo['location'];
-                            tUUID = tUniformLocationInfo['_UUID'];
-                            tRenderTypeIndex = tUniformLocationInfo['renderTypeIndex'];
-                            tRenderType = tUniformLocationInfo['renderType'];
-                            tUniformValue = tMaterial[tUniformLocationInfo['materialPropertyName']];
-                            // console.log(tCacheInfo)
-                            if (tRenderTypeIndex < 2) {
-                                tSamplerIndex = tUniformLocationInfo['samplerIndex'];
-                                // samplerIndex : 0,1 번은 생성용으로 쓴다.
-                                if (tUniformValue) {
-                                    if (tCacheTexture[tSamplerIndex] != tUniformValue['_UUID']) {
-                                        tPrevSamplerIndex == tSamplerIndex ? 0 : tGL.activeTexture(tGL.TEXTURE0 + (tPrevSamplerIndex = tSamplerIndex));
-                                        if (tUniformValue['_videoDom']) {
-                                            //TODO: 일단 비디오를 우겨넣었으니 정리를 해야함
-                                            tGL.bindTexture(tGL.TEXTURE_2D, tUniformValue['webglTexture']);
-                                            if (tUniformValue['_videoDom']['loaded']) tGL.texImage2D(tGL.TEXTURE_2D, 0, tGL.RGBA, tGL.RGBA, tGL.UNSIGNED_BYTE, tUniformValue['_videoDom']);
-                                            tCacheTexture = [];
-                                        } else tGL.bindTexture(tRenderType == 'sampler2D' ? tGL.TEXTURE_2D : tGL.TEXTURE_CUBE_MAP, tUniformValue['webglTexture']);
-                                        tCacheSamplerIndex[tUUID] == tSamplerIndex ? 0 : tGL.uniform1iv(tWebGLUniformLocation, [tCacheSamplerIndex[tUUID] = tSamplerIndex]);
-                                        tCacheTexture[tSamplerIndex] = tUniformValue['_UUID'];
 
+                    }
+                    /////////////////////////////////////////////////////////////////////////
+                    /////////////////////////////////////////////////////////////////////////
+                    // 유니폼 업데이트
+                    i2 = tUniformGroup.length;
+                    while (i2--) {
+                        tUniformLocationInfo = tUniformGroup[i2];
+                        tWebGLUniformLocation = tUniformLocationInfo['location'];
+                        tUUID = tUniformLocationInfo['_UUID'];
+                        tRenderTypeIndex = tUniformLocationInfo['renderTypeIndex'];
+                        tRenderType = tUniformLocationInfo['renderType'];
+                        tUniformValue = tMaterial[tUniformLocationInfo['materialPropertyName']];
+                        // console.log(tCacheInfo)
+                        if (tRenderTypeIndex < 2) {
+                            tSamplerIndex = tUniformLocationInfo['samplerIndex'];
+                            // samplerIndex : 0,1 번은 생성용으로 쓴다.
+                            if (tUniformValue) {
+                                if (tCacheTexture[tSamplerIndex] != tUniformValue['_UUID']) {
+                                    tPrevSamplerIndex == tSamplerIndex ? 0 : tGL.activeTexture(tGL.TEXTURE0 + (tPrevSamplerIndex = tSamplerIndex));
+                                    if (tUniformValue['_videoDom']) {
+                                        //TODO: 일단 비디오를 우겨넣었으니 정리를 해야함
+                                        tGL.bindTexture(tGL.TEXTURE_2D, tUniformValue['webglTexture']);
+                                        if (tUniformValue['_videoDom']['loaded']) tGL.texImage2D(tGL.TEXTURE_2D, 0, tGL.RGBA, tGL.RGBA, tGL.UNSIGNED_BYTE, tUniformValue['_videoDom']);
+                                        tCacheTexture = [];
+                                    } else tGL.bindTexture(tRenderType == 'sampler2D' ? tGL.TEXTURE_2D : tGL.TEXTURE_CUBE_MAP, tUniformValue['webglTexture']);
+                                    tCacheSamplerIndex[tUUID] == tSamplerIndex ? 0 : tGL.uniform1iv(tWebGLUniformLocation, [tCacheSamplerIndex[tUUID] = tSamplerIndex]);
+                                    tCacheTexture[tSamplerIndex] = tUniformValue['_UUID'];
+
+                                }
+                                // // 아틀라스 UV검색
+                                // if ( tSystemUniformGroup['uAtlascoord']['location'] ) {
+                                // 	tUUID = tSystemUniformGroup['uAtlascoord']['_UUID']
+                                // 	if ( tCacheUniformInfo[tUUID] != tUniformValue['atlascoord']['data']['_UUID'] ) {
+                                // 		tGL.uniform4fv(tSystemUniformGroup['uAtlascoord']['location'], tUniformValue['atlascoord']['data'])
+                                // 		tCacheUniformInfo[tUUID] = tUniformValue['atlascoord']['data']['_UUID']
+                                // 	}
+                                // }
+                            } else {
+                                // TODO: 이제는 이놈들을 날릴수있을듯한데...
+                                // console.log('설마',tUniformLocationInfo['materialPropertyName'])
+                                if (tRenderTypeIndex == 0) {
+                                    if (tCacheTexture[tSamplerIndex] != 0) {
+                                        // tPrevSamplerIndex == 0 ? 0 : tGL.activeTexture(tGL.TEXTURE0);
+                                        // tGL.bindTexture(tGL.TEXTURE_2D, redGL['_datas']['emptyTexture']['2d']['webglTexture']);
+                                        tCacheSamplerIndex[tUUID] == 0 ? 0 : tGL.uniform1iv(tWebGLUniformLocation, [tCacheSamplerIndex[tUUID] = 0]);
+                                        tCacheTexture[tSamplerIndex] = 0;
+                                        tPrevSamplerIndex = 0;
                                     }
                                 } else {
-                                    // TODO: 이제는 이놈들을 날릴수있을듯한데...
-                                    // console.log('설마',tUniformLocationInfo['materialPropertyName'])
-                                    if (tRenderTypeIndex == 0) {
-                                        if (tCacheTexture[tSamplerIndex] != 0) {
-                                            tCacheSamplerIndex[tUUID] == 0 ? 0 : tGL.uniform1iv(tWebGLUniformLocation, [tCacheSamplerIndex[tUUID] = 0]);
-                                            tCacheTexture[tSamplerIndex] = 0;
-                                            tPrevSamplerIndex = 0;
-                                        }
-                                    } else {
-                                        if (tCacheTexture[tSamplerIndex] != 1) {
-                                            tCacheSamplerIndex[tUUID] == 1 ? 0 : tGL.uniform1iv(tWebGLUniformLocation, [tCacheSamplerIndex[tUUID] = 1]);
-                                            tCacheTexture[tSamplerIndex] = 1;
-                                            tPrevSamplerIndex = 1;
-                                        }
+                                    if (tCacheTexture[tSamplerIndex] != 1) {
+                                        // tPrevSamplerIndex == 1 ? 0 : tGL.activeTexture(tGL.TEXTURE0 + 1);
+                                        // tGL.bindTexture(tGL.TEXTURE_CUBE_MAP, redGL['_datas']['emptyTexture']['3d']['webglTexture']);
+                                        tCacheSamplerIndex[tUUID] == 1 ? 0 : tGL.uniform1iv(tWebGLUniformLocation, [tCacheSamplerIndex[tUUID] = 1]);
+                                        tCacheTexture[tSamplerIndex] = 1;
+                                        tPrevSamplerIndex = 1;
                                     }
                                 }
-                            } else {
-                                tUniformValue == undefined ? RedGLUtil.throwFunc('RedRenderer : Material에 ', tUniformLocationInfo['materialPropertyName'], '이 정의 되지않았습니다.') : 0;
-                                //TODO: 비교계산을 줄일수는 없을까...
-                                tRenderTypeIndex < 13 ? tCacheUniformInfo[tUUID] == tUniformValue ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tRenderTypeIndex == 12 ? null : tUniformValue, tUniformValue)) :
-                                    tRenderTypeIndex == 13 ? tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, false, tUniformValue) :
-                                        RedGLUtil.throwFunc('RedRenderer : 처리할수없는 타입입니다.', 'tRenderType -', tRenderType)
-                                // tRenderType == 'float' || tRenderType == 'int' || tRenderType == 'bool' ? tCacheUniformInfo[tUUID] == tUniformValue ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue, tUniformValue)) :
-                                // 	// tRenderType == 'int' ? noChangeUniform ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue, tUniformValue)) :
-                                // 	// 	tRenderType == 'bool' ? noChangeUniform ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue, tUniformValue)) :
-                                // 	tRenderType == 'vec' ? tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tUniformValue) :
-                                // 		tRenderType == 'mat' ? tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, false, tUniformValue) :
-                                // 			RedGLUtil.throwFunc('RedRenderer : 처리할수없는 타입입니다.', 'tRenderType -', tRenderType)
                             }
+                        } else {
+                            tUniformValue == undefined ? RedGLUtil.throwFunc('RedRenderer : Material에 ', tUniformLocationInfo['materialPropertyName'], '이 정의 되지않았습니다.') : 0;
+                            //TODO: 비교계산을 줄일수는 없을까...
+                            tRenderTypeIndex < 13 ? tCacheUniformInfo[tUUID] == tUniformValue ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tRenderTypeIndex == 12 ? null : tUniformValue, tUniformValue)) :
+                                tRenderTypeIndex == 13 ? tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, false, tUniformValue) :
+                                    RedGLUtil.throwFunc('RedRenderer : 처리할수없는 타입입니다.', 'tRenderType -', tRenderType)
+                            // tRenderType == 'float' || tRenderType == 'int' || tRenderType == 'bool' ? tCacheUniformInfo[tUUID] == tUniformValue ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue, tUniformValue)) :
+                            // 	// tRenderType == 'int' ? noChangeUniform ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue, tUniformValue)) :
+                            // 	// 	tRenderType == 'bool' ? noChangeUniform ? 0 : tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, (tCacheUniformInfo[tUUID] = tUniformValue.length ? null : tUniformValue, tUniformValue)) :
+                            // 	tRenderType == 'vec' ? tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, tUniformValue) :
+                            // 		tRenderType == 'mat' ? tGL[tUniformLocationInfo['renderMethod']](tWebGLUniformLocation, false, tUniformValue) :
+                            // 			RedGLUtil.throwFunc('RedRenderer : 처리할수없는 타입입니다.', 'tRenderType -', tRenderType)
                         }
-
                     }
                 }
                 /////////////////////////////////////////////////////////////////////////
