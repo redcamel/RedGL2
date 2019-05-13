@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.13 17:0
+ * Last modification time of this file - 2019.5.13 17:21
  */
 
 "use strict";
@@ -461,7 +461,7 @@ var RedRenderer;
             var tUUID;
             var tSamplerIndex;
             var tSprite3DYn, tLODData, tDirectionalShadowMaterialYn, tSkinInfo, tUseFog;
-            var tProgram, tOptionProgramKey, tOptionProgram;
+            var tProgram, tOptionProgramKey, tOptionProgram, baseOptionKey;
             // matix 관련
             var a,
                 aSx, aSy, aSz, aCx, aCy, aCz, tRx, tRy, tRz,
@@ -490,10 +490,10 @@ var RedRenderer;
             tUseFog = scene['_useFog'];
             tUseDirectionalShadow = scene['shadowManager']['_directionalShadow'];
             if (tUseDirectionalShadow) {
-                if (tUseFog) tOptionProgramKey = 'directionalShadow_fog';
-                else tOptionProgramKey = 'directionalShadow'
+                if (tUseFog) baseOptionKey = 'directionalShadow_fog';
+                else baseOptionKey = 'directionalShadow'
             } else {
-                if (tUseFog) tOptionProgramKey = 'fog'
+                if (tUseFog) baseOptionKey = 'fog'
             }
             while (i--) {
                 renderResultObj['call']++;
@@ -550,9 +550,8 @@ var RedRenderer;
                     if (tProgram['_prepareProgramYn']) tProgram = tMaterial['program'] = tProgram._makePrepareProgram();
                     tBaseProgramKey = tProgram['key'];
                     tProgramList = tMaterial['_programList'];
-                    if(tSkinInfo || tSprite3DYn){
-                        var temp0;
-                        temp0 = tOptionProgramKey
+                    if (tSkinInfo || tSprite3DYn) {
+
                         if (tUseDirectionalShadow) {
                             if (tUseFog && tSprite3DYn) tOptionProgramKey = 'directionalShadow_fog_sprite3D';
                             else if (tUseFog && tSkinInfo) tOptionProgramKey = 'directionalShadow_fog_skin';
@@ -567,26 +566,19 @@ var RedRenderer;
                             else if (tSprite3DYn) tOptionProgramKey = 'sprite3D';
                             else if (tUseFog) tOptionProgramKey = 'fog'
                         }
-                        if (tProgramList && tOptionProgramKey) {
-                            tOptionProgram = tProgramList[tOptionProgramKey][tBaseProgramKey];
-                            if (tOptionProgram['_prepareProgramYn']) {
-                                console.log(tProgramList, tOptionProgramKey, tBaseProgramKey);
-                                tOptionProgram = tProgramList[tOptionProgramKey][tBaseProgramKey] = tOptionProgram._makePrepareProgram();
-                            }
-                            tProgram = tOptionProgram
-                        }
-                        tOptionProgramKey = temp0
-                    }else{
-                        if (tProgramList && tOptionProgramKey) {
-                            tOptionProgram = tProgramList[tOptionProgramKey][tBaseProgramKey];
-                            if (tOptionProgram['_prepareProgramYn']) {
-                                console.log(tProgramList, tOptionProgramKey, tBaseProgramKey);
-                                tOptionProgram = tProgramList[tOptionProgramKey][tBaseProgramKey] = tOptionProgram._makePrepareProgram();
-                            }
-                            tProgram = tOptionProgram
-                        }
-                    }
 
+
+                    } else {
+                        tOptionProgramKey = baseOptionKey
+                    }
+                    if (tProgramList && tOptionProgramKey) {
+                        tOptionProgram = tProgramList[tOptionProgramKey][tBaseProgramKey];
+                        if (tOptionProgram['_prepareProgramYn']) {
+                            console.log(tProgramList, tOptionProgramKey, tBaseProgramKey);
+                            tOptionProgram = tProgramList[tOptionProgramKey][tBaseProgramKey] = tOptionProgram._makePrepareProgram();
+                        }
+                        tProgram = tOptionProgram
+                    }
                     //
                     prevProgram_UUID == tProgram['_UUID'] ? 0 : tGL.useProgram(tProgram['webglProgram']);
                     prevProgram_UUID = tProgram['_UUID'];
@@ -604,7 +596,7 @@ var RedRenderer;
                     // 실제 버퍼 바인딩하고
                     // 프로그램의 어트리뷰트를 순환한다.
                     i2 = tAttrGroup.length;
-                    if(tUniformGroup.length>i2) i2 = tUniformGroup.length;
+                    if (tUniformGroup.length > i2) i2 = tUniformGroup.length;
                     // interleaveDefineInfoList 정보를 가져온다.
                     tInterleaveDefineInfo = tInterleaveBuffer['interleaveDefineInfoList'];
                     tPrevInterleaveBuffer_UUID == tUUID ? 0 : tGL.bindBuffer(tGL.ARRAY_BUFFER, tInterleaveBuffer['webglBuffer']);
@@ -612,7 +604,7 @@ var RedRenderer;
                     while (i2--) {
                         // 대상 어트리뷰트의 로케이션 정보를 구함
                         tAttributeLocationInfo = tAttrGroup[i2];
-                        if(tAttributeLocationInfo){
+                        if (tAttributeLocationInfo) {
                             // 대상 어트리뷰트의 이름으로 interleaveDefineInfoList에서 단위 인터리브 정보를 가져온다.
                             tInterleaveDefineUnit = tInterleaveDefineInfo[tAttributeLocationInfo['name']];
                             /*
@@ -641,7 +633,7 @@ var RedRenderer;
                         }
                         // 유니폼 업데이트
                         tUniformLocationInfo = tUniformGroup[i2];
-                        if(tUniformLocationInfo){
+                        if (tUniformLocationInfo) {
                             tWebGLUniformLocation = tUniformLocationInfo['location'];
                             tUUID = tUniformLocationInfo['_UUID'];
                             tRenderTypeIndex = tUniformLocationInfo['renderTypeIndex'];
