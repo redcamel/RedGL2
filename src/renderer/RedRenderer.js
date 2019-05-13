@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.13 16:52
+ * Last modification time of this file - 2019.5.13 17:0
  */
 
 "use strict";
@@ -490,14 +490,10 @@ var RedRenderer;
             tUseFog = scene['_useFog'];
             tUseDirectionalShadow = scene['shadowManager']['_directionalShadow'];
             if (tUseDirectionalShadow) {
-                if (tUseFog && tSprite3DYn) tOptionProgramKey = 'directionalShadow_fog_sprite3D';
-                else if (tSprite3DYn) tOptionProgramKey = 'directionalShadow_sprite3D';
-                else if (tUseFog) tOptionProgramKey = 'directionalShadow_fog';
+                if (tUseFog) tOptionProgramKey = 'directionalShadow_fog';
                 else tOptionProgramKey = 'directionalShadow'
             } else {
-                if (tUseFog && tSprite3DYn) tOptionProgramKey = 'fog_sprite3D';
-                else if (tSprite3DYn) tOptionProgramKey = 'sprite3D';
-                else if (tUseFog) tOptionProgramKey = 'fog'
+                if (tUseFog) tOptionProgramKey = 'fog'
             }
             while (i--) {
                 renderResultObj['call']++;
@@ -554,7 +550,7 @@ var RedRenderer;
                     if (tProgram['_prepareProgramYn']) tProgram = tMaterial['program'] = tProgram._makePrepareProgram();
                     tBaseProgramKey = tProgram['key'];
                     tProgramList = tMaterial['_programList'];
-                    if(tSkinInfo){
+                    if(tSkinInfo || tSprite3DYn){
                         var temp0;
                         temp0 = tOptionProgramKey
                         if (tUseDirectionalShadow) {
