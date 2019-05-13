@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.13 16:36
+ * Last modification time of this file - 2019.5.13 16:52
  */
 
 "use strict";
@@ -491,15 +491,11 @@ var RedRenderer;
             tUseDirectionalShadow = scene['shadowManager']['_directionalShadow'];
             if (tUseDirectionalShadow) {
                 if (tUseFog && tSprite3DYn) tOptionProgramKey = 'directionalShadow_fog_sprite3D';
-                else if (tUseFog && tSkinInfo) tOptionProgramKey = 'directionalShadow_fog_skin';
-                else if (tSkinInfo) tOptionProgramKey = 'directionalShadow_skin';
                 else if (tSprite3DYn) tOptionProgramKey = 'directionalShadow_sprite3D';
                 else if (tUseFog) tOptionProgramKey = 'directionalShadow_fog';
                 else tOptionProgramKey = 'directionalShadow'
             } else {
                 if (tUseFog && tSprite3DYn) tOptionProgramKey = 'fog_sprite3D';
-                else if (tUseFog && tSkinInfo) tOptionProgramKey = 'fog_skin';
-                else if (tSkinInfo) tOptionProgramKey = 'skin';
                 else if (tSprite3DYn) tOptionProgramKey = 'sprite3D';
                 else if (tUseFog) tOptionProgramKey = 'fog'
             }
@@ -558,14 +554,43 @@ var RedRenderer;
                     if (tProgram['_prepareProgramYn']) tProgram = tMaterial['program'] = tProgram._makePrepareProgram();
                     tBaseProgramKey = tProgram['key'];
                     tProgramList = tMaterial['_programList'];
-                    if (tProgramList && tOptionProgramKey) {
-                        tOptionProgram = tProgramList[tOptionProgramKey][tBaseProgramKey];
-                        if (tOptionProgram['_prepareProgramYn']) {
-                            console.log(tProgramList, tOptionProgramKey, tBaseProgramKey);
-                            tOptionProgram = tProgramList[tOptionProgramKey][tBaseProgramKey] = tOptionProgram._makePrepareProgram();
+                    if(tSkinInfo){
+                        var temp0;
+                        temp0 = tOptionProgramKey
+                        if (tUseDirectionalShadow) {
+                            if (tUseFog && tSprite3DYn) tOptionProgramKey = 'directionalShadow_fog_sprite3D';
+                            else if (tUseFog && tSkinInfo) tOptionProgramKey = 'directionalShadow_fog_skin';
+                            else if (tSkinInfo) tOptionProgramKey = 'directionalShadow_skin';
+                            else if (tSprite3DYn) tOptionProgramKey = 'directionalShadow_sprite3D';
+                            else if (tUseFog) tOptionProgramKey = 'directionalShadow_fog';
+                            else tOptionProgramKey = 'directionalShadow'
+                        } else {
+                            if (tUseFog && tSprite3DYn) tOptionProgramKey = 'fog_sprite3D';
+                            else if (tUseFog && tSkinInfo) tOptionProgramKey = 'fog_skin';
+                            else if (tSkinInfo) tOptionProgramKey = 'skin';
+                            else if (tSprite3DYn) tOptionProgramKey = 'sprite3D';
+                            else if (tUseFog) tOptionProgramKey = 'fog'
                         }
-                        tProgram = tOptionProgram
+                        if (tProgramList && tOptionProgramKey) {
+                            tOptionProgram = tProgramList[tOptionProgramKey][tBaseProgramKey];
+                            if (tOptionProgram['_prepareProgramYn']) {
+                                console.log(tProgramList, tOptionProgramKey, tBaseProgramKey);
+                                tOptionProgram = tProgramList[tOptionProgramKey][tBaseProgramKey] = tOptionProgram._makePrepareProgram();
+                            }
+                            tProgram = tOptionProgram
+                        }
+                        tOptionProgramKey = temp0
+                    }else{
+                        if (tProgramList && tOptionProgramKey) {
+                            tOptionProgram = tProgramList[tOptionProgramKey][tBaseProgramKey];
+                            if (tOptionProgram['_prepareProgramYn']) {
+                                console.log(tProgramList, tOptionProgramKey, tBaseProgramKey);
+                                tOptionProgram = tProgramList[tOptionProgramKey][tBaseProgramKey] = tOptionProgram._makePrepareProgram();
+                            }
+                            tProgram = tOptionProgram
+                        }
                     }
+
                     //
                     prevProgram_UUID == tProgram['_UUID'] ? 0 : tGL.useProgram(tProgram['webglProgram']);
                     prevProgram_UUID = tProgram['_UUID'];
@@ -631,6 +656,8 @@ var RedRenderer;
                                 tSamplerIndex = tUniformLocationInfo['samplerIndex'];
                                 // samplerIndex : 0,1 번은 생성용으로 쓴다.
                                 if (tUniformValue) {
+                                    // tRenderTypeIndex 0 : sampler2d
+                                    // tRenderTypeIndex 1 : samplerCube
                                     if (tCacheTexture[tSamplerIndex] != tUniformValue['_UUID']) {
                                         tPrevSamplerIndex == tSamplerIndex ? 0 : tGL.activeTexture(tGL.TEXTURE0 + (tPrevSamplerIndex = tSamplerIndex));
                                         if (tUniformValue['_videoDom']) {
@@ -638,7 +665,7 @@ var RedRenderer;
                                             tGL.bindTexture(tGL.TEXTURE_2D, tUniformValue['webglTexture']);
                                             if (tUniformValue['_videoDom']['loaded']) tGL.texImage2D(tGL.TEXTURE_2D, 0, tGL.RGBA, tGL.RGBA, tGL.UNSIGNED_BYTE, tUniformValue['_videoDom']);
                                             tCacheTexture = [];
-                                        } else tGL.bindTexture(tRenderType == 'sampler2D' ? tGL.TEXTURE_2D : tGL.TEXTURE_CUBE_MAP, tUniformValue['webglTexture']);
+                                        } else tGL.bindTexture(tRenderTypeIndex == 0 ? tGL.TEXTURE_2D : tGL.TEXTURE_CUBE_MAP, tUniformValue['webglTexture']);
                                         tCacheSamplerIndex[tUUID] == tSamplerIndex ? 0 : tGL.uniform1iv(tWebGLUniformLocation, [tCacheSamplerIndex[tUUID] = tSamplerIndex]);
                                         tCacheTexture[tSamplerIndex] = tUniformValue['_UUID'];
 
@@ -646,18 +673,10 @@ var RedRenderer;
                                 } else {
                                     // TODO: 이제는 이놈들을 날릴수있을듯한데...
                                     // console.log('설마',tUniformLocationInfo['materialPropertyName'])
-                                    if (tRenderTypeIndex == 0) {
-                                        if (tCacheTexture[tSamplerIndex] != 0) {
-                                            tCacheSamplerIndex[tUUID] == 0 ? 0 : tGL.uniform1iv(tWebGLUniformLocation, [tCacheSamplerIndex[tUUID] = 0]);
-                                            tCacheTexture[tSamplerIndex] = 0;
-                                            tPrevSamplerIndex = 0;
-                                        }
-                                    } else {
-                                        if (tCacheTexture[tSamplerIndex] != 1) {
-                                            tCacheSamplerIndex[tUUID] == 1 ? 0 : tGL.uniform1iv(tWebGLUniformLocation, [tCacheSamplerIndex[tUUID] = 1]);
-                                            tCacheTexture[tSamplerIndex] = 1;
-                                            tPrevSamplerIndex = 1;
-                                        }
+                                    if (tCacheTexture[tSamplerIndex] != tRenderTypeIndex) {
+                                        tCacheSamplerIndex[tUUID] == tRenderTypeIndex ? 0 : tGL.uniform1iv(tWebGLUniformLocation, [tCacheSamplerIndex[tUUID] = tRenderTypeIndex]);
+                                        tCacheTexture[tSamplerIndex] = tRenderTypeIndex;
+                                        tPrevSamplerIndex = tRenderTypeIndex;
                                     }
                                 }
                             } else {
