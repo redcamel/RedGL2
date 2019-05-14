@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.2 12:40
+ * Last modification time of this file - 2019.5.14 19:44
  */
 
 var baseTestUI = function (redGL, width) {
@@ -157,6 +157,16 @@ baseTestUI.exampleList = [
             }
         ]
     },
+    {
+        key: 'Program',
+        list: [
+            {
+                key: 'testAutoProgram',
+                href: 'program/testAutoProgram.html'
+            }
+        ]
+    },
+
     {
         key: 'Controller',
         list: [
@@ -371,7 +381,10 @@ baseTestUI.exampleList = [
                 key: 'RedGLTFLoader_Multi_morphTarget',
                 href: 'loader/gltf/RedGLTFLoader_Multi_morphTarget.html'
             },
-
+            {
+                key: 'RedGLTFLoader_Multi_morphTarget_performance',
+                href: 'loader/gltf/RedGLTFLoader_Multi_morphTarget_performance.html'
+            },
             {
                 key: 'RedGLTFLoader_skin',
                 href: 'loader/gltf/RedGLTFLoader_skin.html'
