@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.13 17:0
+ * Last modification time of this file - 2019.5.14 12:37
  */
 
 "use strict";
@@ -457,11 +457,11 @@ var RedRenderer;
             var tInterleaveBuffer, tIndexBufferInfo;
             var tUniformValue;
             var tRenderType, tRenderTypeIndex;
-            var tMVMatrix, tNMatrix;
+            var tMVMatrix, tNMatrix, tLocalMatrix;
             var tUUID;
             var tSamplerIndex;
             var tSprite3DYn, tLODData, tDirectionalShadowMaterialYn, tSkinInfo, tUseFog;
-            var tProgram, tOptionProgramKey, tOptionProgram;
+            var tProgram, tOptionProgramKey, tOptionProgram, baseOptionKey;
             // matix 관련
             var a,
                 aSx, aSy, aSz, aCx, aCy, aCz, tRx, tRy, tRz,
@@ -490,16 +490,17 @@ var RedRenderer;
             tUseFog = scene['_useFog'];
             tUseDirectionalShadow = scene['shadowManager']['_directionalShadow'];
             if (tUseDirectionalShadow) {
-                if (tUseFog) tOptionProgramKey = 'directionalShadow_fog';
-                else tOptionProgramKey = 'directionalShadow'
+                if (tUseFog) baseOptionKey = 'directionalShadow_fog';
+                else baseOptionKey = 'directionalShadow'
             } else {
-                if (tUseFog) tOptionProgramKey = 'fog'
+                if (tUseFog) baseOptionKey = 'fog'
             }
             while (i--) {
                 renderResultObj['call']++;
                 tMesh = children[len3 - i];
                 tMVMatrix = tMesh['matrix'];
                 tNMatrix = tMesh['normalMatrix'];
+                tLocalMatrix = tMesh['localMatrix'];
                 tGeometry = tMesh['_geometry'];
                 tSprite3DYn = tMesh['_sprite3DYn'];
                 tSkinInfo = tMesh['skinInfo'];
@@ -550,9 +551,7 @@ var RedRenderer;
                     if (tProgram['_prepareProgramYn']) tProgram = tMaterial['program'] = tProgram._makePrepareProgram();
                     tBaseProgramKey = tProgram['key'];
                     tProgramList = tMaterial['_programList'];
-                    if(tSkinInfo || tSprite3DYn){
-                        var temp0;
-                        temp0 = tOptionProgramKey
+                    if (tSkinInfo || tSprite3DYn) {
                         if (tUseDirectionalShadow) {
                             if (tUseFog && tSprite3DYn) tOptionProgramKey = 'directionalShadow_fog_sprite3D';
                             else if (tUseFog && tSkinInfo) tOptionProgramKey = 'directionalShadow_fog_skin';
@@ -567,26 +566,19 @@ var RedRenderer;
                             else if (tSprite3DYn) tOptionProgramKey = 'sprite3D';
                             else if (tUseFog) tOptionProgramKey = 'fog'
                         }
-                        if (tProgramList && tOptionProgramKey) {
-                            tOptionProgram = tProgramList[tOptionProgramKey][tBaseProgramKey];
-                            if (tOptionProgram['_prepareProgramYn']) {
-                                console.log(tProgramList, tOptionProgramKey, tBaseProgramKey);
-                                tOptionProgram = tProgramList[tOptionProgramKey][tBaseProgramKey] = tOptionProgram._makePrepareProgram();
-                            }
-                            tProgram = tOptionProgram
-                        }
-                        tOptionProgramKey = temp0
-                    }else{
-                        if (tProgramList && tOptionProgramKey) {
-                            tOptionProgram = tProgramList[tOptionProgramKey][tBaseProgramKey];
-                            if (tOptionProgram['_prepareProgramYn']) {
-                                console.log(tProgramList, tOptionProgramKey, tBaseProgramKey);
-                                tOptionProgram = tProgramList[tOptionProgramKey][tBaseProgramKey] = tOptionProgram._makePrepareProgram();
-                            }
-                            tProgram = tOptionProgram
-                        }
-                    }
 
+
+                    } else {
+                        tOptionProgramKey = baseOptionKey
+                    }
+                    if (tProgramList && tOptionProgramKey) {
+                        tOptionProgram = tProgramList[tOptionProgramKey][tBaseProgramKey];
+                        if (tOptionProgram['_prepareProgramYn']) {
+                            console.log(tProgramList, tOptionProgramKey, tBaseProgramKey);
+                            tOptionProgram = tProgramList[tOptionProgramKey][tBaseProgramKey] = tOptionProgram._makePrepareProgram();
+                        }
+                        tProgram = tOptionProgram
+                    }
                     //
                     prevProgram_UUID == tProgram['_UUID'] ? 0 : tGL.useProgram(tProgram['webglProgram']);
                     prevProgram_UUID = tProgram['_UUID'];
@@ -604,7 +596,7 @@ var RedRenderer;
                     // 실제 버퍼 바인딩하고
                     // 프로그램의 어트리뷰트를 순환한다.
                     i2 = tAttrGroup.length;
-                    if(tUniformGroup.length>i2) i2 = tUniformGroup.length;
+                    if (tUniformGroup.length > i2) i2 = tUniformGroup.length;
                     // interleaveDefineInfoList 정보를 가져온다.
                     tInterleaveDefineInfo = tInterleaveBuffer['interleaveDefineInfoList'];
                     tPrevInterleaveBuffer_UUID == tUUID ? 0 : tGL.bindBuffer(tGL.ARRAY_BUFFER, tInterleaveBuffer['webglBuffer']);
@@ -612,7 +604,7 @@ var RedRenderer;
                     while (i2--) {
                         // 대상 어트리뷰트의 로케이션 정보를 구함
                         tAttributeLocationInfo = tAttrGroup[i2];
-                        if(tAttributeLocationInfo){
+                        if (tAttributeLocationInfo) {
                             // 대상 어트리뷰트의 이름으로 interleaveDefineInfoList에서 단위 인터리브 정보를 가져온다.
                             tInterleaveDefineUnit = tInterleaveDefineInfo[tAttributeLocationInfo['name']];
                             /*
@@ -641,7 +633,7 @@ var RedRenderer;
                         }
                         // 유니폼 업데이트
                         tUniformLocationInfo = tUniformGroup[i2];
-                        if(tUniformLocationInfo){
+                        if (tUniformLocationInfo) {
                             tWebGLUniformLocation = tUniformLocationInfo['location'];
                             tUUID = tUniformLocationInfo['_UUID'];
                             tRenderTypeIndex = tUniformLocationInfo['renderTypeIndex'];
@@ -757,10 +749,10 @@ var RedRenderer;
                             a[8] = a[8] * aZ, a[9] = a[9] * aZ, a[10] = a[10] * aZ, a[11] = a[11] * aZ,
                             a[12] = a[12], a[13] = a[13], a[14] = a[14], a[15] = a[15],
                             // localMatrix
-                            tMesh['localMatrix'][0] = a[0] , tMesh['localMatrix'][1] = a[1] , tMesh['localMatrix'][2] = a[2] , tMesh['localMatrix'][3] = a[3],
-                            tMesh['localMatrix'][4] = a[4] , tMesh['localMatrix'][5] = a[5] , tMesh['localMatrix'][6] = a[6] , tMesh['localMatrix'][7] = a[7],
-                        tMesh['localMatrix'][8] = a[8] , tMesh['localMatrix'][9] = a[9] , tMesh['localMatrix'][10] = a[10], tMesh['localMatrix'][11] = a[11],
-                        tMesh['localMatrix'][12] = a[12], tMesh['localMatrix'][13] = a[13], tMesh['localMatrix'][14] = a[14], tMesh['localMatrix'][15] = a[15],
+                            tLocalMatrix[0] = a[0], tLocalMatrix[1] = a[1], tLocalMatrix[2] = a[2], tLocalMatrix[3] = a[3],
+                            tLocalMatrix[4] = a[4], tLocalMatrix[5] = a[5], tLocalMatrix[6] = a[6], tLocalMatrix[7] = a[7],
+                        tLocalMatrix[8] = a[8], tLocalMatrix[9] = a[9] , tLocalMatrix[10] = a[10], tLocalMatrix[11] = a[11],
+                        tLocalMatrix[12] = a[12], tLocalMatrix[13] = a[13], tLocalMatrix[14] = a[14], tLocalMatrix[15] = a[15],
                         // 부모가있으면 곱함
                         parentMTX ? (
                             // 부모매트릭스 복사
@@ -794,12 +786,62 @@ var RedRenderer;
                     }
                     /////////////////////////////////////////////////////////////////////////
                     /////////////////////////////////////////////////////////////////////////
-                    if (tGeometry) tGL.uniformMatrix4fv(tSystemUniformGroup['uMMatrix']['location'], false, tMVMatrix);
-
+                    if (tGeometry) {
+                        tGL.uniformMatrix4fv(tSystemUniformGroup['uMMatrix']['location'], false, tMVMatrix);
+                        /////////////////////////////////////////////////////////////////////////
+                        /////////////////////////////////////////////////////////////////////////
+                        // 노말매트릭스를 사용할경우
+                        if (tSystemUniformGroup['uNMatrix']['location']) {
+                            // mat4Inverse
+                            inverse_c = tMVMatrix[0], inverse_d = tMVMatrix[1], inverse_e = tMVMatrix[2], inverse_g = tMVMatrix[3],
+                                inverse_f = tMVMatrix[4], inverse_h = tMVMatrix[5], inverse_i = tMVMatrix[6], inverse_j = tMVMatrix[7],
+                                inverse_k = tMVMatrix[8], inverse_l = tMVMatrix[9], inverse_n = tMVMatrix[10], inverse_o = tMVMatrix[11],
+                                inverse_m = tMVMatrix[12], inverse_p = tMVMatrix[13], inverse_r = tMVMatrix[14], inverse_s = tMVMatrix[15],
+                                inverse_A = inverse_c * inverse_h - inverse_d * inverse_f,
+                                inverse_B = inverse_c * inverse_i - inverse_e * inverse_f,
+                                inverse_t = inverse_c * inverse_j - inverse_g * inverse_f,
+                                inverse_u = inverse_d * inverse_i - inverse_e * inverse_h,
+                                inverse_v = inverse_d * inverse_j - inverse_g * inverse_h,
+                                inverse_w = inverse_e * inverse_j - inverse_g * inverse_i,
+                                inverse_x = inverse_k * inverse_p - inverse_l * inverse_m,
+                                inverse_y = inverse_k * inverse_r - inverse_n * inverse_m,
+                                inverse_z = inverse_k * inverse_s - inverse_o * inverse_m,
+                                inverse_C = inverse_l * inverse_r - inverse_n * inverse_p,
+                                inverse_D = inverse_l * inverse_s - inverse_o * inverse_p,
+                                inverse_E = inverse_n * inverse_s - inverse_o * inverse_r,
+                                inverse_q = inverse_A * inverse_E - inverse_B * inverse_D + inverse_t * inverse_C + inverse_u * inverse_z - inverse_v * inverse_y + inverse_w * inverse_x,
+                                inverse_q = 1 / inverse_q,
+                                tNMatrix[0] = (inverse_h * inverse_E - inverse_i * inverse_D + inverse_j * inverse_C) * inverse_q,
+                                tNMatrix[1] = (-inverse_d * inverse_E + inverse_e * inverse_D - inverse_g * inverse_C) * inverse_q,
+                                tNMatrix[2] = (inverse_p * inverse_w - inverse_r * inverse_v + inverse_s * inverse_u) * inverse_q,
+                                tNMatrix[3] = (-inverse_l * inverse_w + inverse_n * inverse_v - inverse_o * inverse_u) * inverse_q,
+                                tNMatrix[4] = (-inverse_f * inverse_E + inverse_i * inverse_z - inverse_j * inverse_y) * inverse_q,
+                                tNMatrix[5] = (inverse_c * inverse_E - inverse_e * inverse_z + inverse_g * inverse_y) * inverse_q,
+                                tNMatrix[6] = (-inverse_m * inverse_w + inverse_r * inverse_t - inverse_s * inverse_B) * inverse_q,
+                                tNMatrix[7] = (inverse_k * inverse_w - inverse_n * inverse_t + inverse_o * inverse_B) * inverse_q,
+                                tNMatrix[8] = (inverse_f * inverse_D - inverse_h * inverse_z + inverse_j * inverse_x) * inverse_q,
+                                tNMatrix[9] = (-inverse_c * inverse_D + inverse_d * inverse_z - inverse_g * inverse_x) * inverse_q,
+                                tNMatrix[10] = (inverse_m * inverse_v - inverse_p * inverse_t + inverse_s * inverse_A) * inverse_q,
+                                tNMatrix[11] = (-inverse_k * inverse_v + inverse_l * inverse_t - inverse_o * inverse_A) * inverse_q,
+                                tNMatrix[12] = (-inverse_f * inverse_C + inverse_h * inverse_y - inverse_i * inverse_x) * inverse_q,
+                                tNMatrix[13] = (inverse_c * inverse_C - inverse_d * inverse_y + inverse_e * inverse_x) * inverse_q,
+                                tNMatrix[14] = (-inverse_m * inverse_u + inverse_p * inverse_B - inverse_r * inverse_A) * inverse_q,
+                                tNMatrix[15] = (inverse_k * inverse_u - inverse_l * inverse_B + inverse_n * inverse_A) * inverse_q,
+                                // transpose
+                                a01 = tNMatrix[1], a02 = tNMatrix[2], a03 = tNMatrix[3],
+                                a12 = tNMatrix[6], a13 = tNMatrix[7], a23 = tNMatrix[11],
+                                tNMatrix[1] = tNMatrix[4], tNMatrix[2] = tNMatrix[8], tNMatrix[3] = tNMatrix[12], tNMatrix[4] = a01, tNMatrix[6] = tNMatrix[9],
+                                tNMatrix[7] = tNMatrix[13], tNMatrix[8] = a02, tNMatrix[9] = a12, tNMatrix[11] = tNMatrix[14],
+                                tNMatrix[12] = a03, tNMatrix[13] = a13, tNMatrix[14] = a23,
+                                // uNMatrix 입력
+                                tGL.uniformMatrix4fv(tSystemUniformGroup['uNMatrix']['location'], false, tNMatrix)
+                        }
+                    }
                     if (tSkinInfo) {
                         var globalTransformOfJointNode = [];
                         var joints = tSkinInfo['joints'];
                         var index = 0, len = joints.length;
+                        var tJointMTX;
                         var globalTransformOfNodeThatTheMeshIsAttachedTo = [
                             tMVMatrix[0],
                             tMVMatrix[1],
@@ -819,8 +861,7 @@ var RedRenderer;
                             tMVMatrix[15]
                         ];
                         ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                        // 역구하고
-                        // getInverse(globalTransformOfNodeThatTheMeshIsAttachedTo, globalTransformOfNodeThatTheMeshIsAttachedTo)
+                        // Inverse
                         var te = globalTransformOfNodeThatTheMeshIsAttachedTo,
                             me = globalTransformOfNodeThatTheMeshIsAttachedTo,
                             n11 = me[0], n21 = me[1], n31 = me[2], n41 = me[3],
@@ -857,7 +898,7 @@ var RedRenderer;
                         ////////////////////////////////////////////////////////////////////////////////////////////////////////////
                         // 글로벌 조인트 노드병합함
                         //TODO: 여기 캐싱할 방법 찾아야함
-                        var tJointMTX;
+
                         for (index; index < len; index++) {
                             // 조인트 공간내에서의 전역
                             tJointMTX = joints[index]['matrix'];
@@ -881,54 +922,6 @@ var RedRenderer;
                         tGL.uniformMatrix4fv(tSystemUniformGroup['uGlobalTransformOfNodeThatTheMeshIsAttachedTo']['location'], false, globalTransformOfNodeThatTheMeshIsAttachedTo);
                         tGL.uniformMatrix4fv(tSystemUniformGroup['uJointMatrix']['location'], false, globalTransformOfJointNode);
                         tGL.uniformMatrix4fv(tSystemUniformGroup['uInverseBindMatrixForJoint']['location'], false, tSkinInfo['inverseBindMatrices'])
-                    }
-                    /////////////////////////////////////////////////////////////////////////
-                    /////////////////////////////////////////////////////////////////////////
-                    // 노말매트릭스를 사용할경우
-                    if (tGeometry && tSystemUniformGroup && tSystemUniformGroup['uNMatrix']['location']) {
-                        // mat4Inverse
-                        inverse_c = tMVMatrix[0], inverse_d = tMVMatrix[1], inverse_e = tMVMatrix[2], inverse_g = tMVMatrix[3],
-                            inverse_f = tMVMatrix[4], inverse_h = tMVMatrix[5], inverse_i = tMVMatrix[6], inverse_j = tMVMatrix[7],
-                            inverse_k = tMVMatrix[8], inverse_l = tMVMatrix[9], inverse_n = tMVMatrix[10], inverse_o = tMVMatrix[11],
-                            inverse_m = tMVMatrix[12], inverse_p = tMVMatrix[13], inverse_r = tMVMatrix[14], inverse_s = tMVMatrix[15],
-                            inverse_A = inverse_c * inverse_h - inverse_d * inverse_f,
-                            inverse_B = inverse_c * inverse_i - inverse_e * inverse_f,
-                            inverse_t = inverse_c * inverse_j - inverse_g * inverse_f,
-                            inverse_u = inverse_d * inverse_i - inverse_e * inverse_h,
-                            inverse_v = inverse_d * inverse_j - inverse_g * inverse_h,
-                            inverse_w = inverse_e * inverse_j - inverse_g * inverse_i,
-                            inverse_x = inverse_k * inverse_p - inverse_l * inverse_m,
-                            inverse_y = inverse_k * inverse_r - inverse_n * inverse_m,
-                            inverse_z = inverse_k * inverse_s - inverse_o * inverse_m,
-                            inverse_C = inverse_l * inverse_r - inverse_n * inverse_p,
-                            inverse_D = inverse_l * inverse_s - inverse_o * inverse_p,
-                            inverse_E = inverse_n * inverse_s - inverse_o * inverse_r,
-                            inverse_q = inverse_A * inverse_E - inverse_B * inverse_D + inverse_t * inverse_C + inverse_u * inverse_z - inverse_v * inverse_y + inverse_w * inverse_x,
-                            inverse_q = 1 / inverse_q,
-                            tNMatrix[0] = (inverse_h * inverse_E - inverse_i * inverse_D + inverse_j * inverse_C) * inverse_q,
-                            tNMatrix[1] = (-inverse_d * inverse_E + inverse_e * inverse_D - inverse_g * inverse_C) * inverse_q,
-                            tNMatrix[2] = (inverse_p * inverse_w - inverse_r * inverse_v + inverse_s * inverse_u) * inverse_q,
-                            tNMatrix[3] = (-inverse_l * inverse_w + inverse_n * inverse_v - inverse_o * inverse_u) * inverse_q,
-                            tNMatrix[4] = (-inverse_f * inverse_E + inverse_i * inverse_z - inverse_j * inverse_y) * inverse_q,
-                            tNMatrix[5] = (inverse_c * inverse_E - inverse_e * inverse_z + inverse_g * inverse_y) * inverse_q,
-                            tNMatrix[6] = (-inverse_m * inverse_w + inverse_r * inverse_t - inverse_s * inverse_B) * inverse_q,
-                            tNMatrix[7] = (inverse_k * inverse_w - inverse_n * inverse_t + inverse_o * inverse_B) * inverse_q,
-                            tNMatrix[8] = (inverse_f * inverse_D - inverse_h * inverse_z + inverse_j * inverse_x) * inverse_q,
-                            tNMatrix[9] = (-inverse_c * inverse_D + inverse_d * inverse_z - inverse_g * inverse_x) * inverse_q,
-                            tNMatrix[10] = (inverse_m * inverse_v - inverse_p * inverse_t + inverse_s * inverse_A) * inverse_q,
-                            tNMatrix[11] = (-inverse_k * inverse_v + inverse_l * inverse_t - inverse_o * inverse_A) * inverse_q,
-                            tNMatrix[12] = (-inverse_f * inverse_C + inverse_h * inverse_y - inverse_i * inverse_x) * inverse_q,
-                            tNMatrix[13] = (inverse_c * inverse_C - inverse_d * inverse_y + inverse_e * inverse_x) * inverse_q,
-                            tNMatrix[14] = (-inverse_m * inverse_u + inverse_p * inverse_B - inverse_r * inverse_A) * inverse_q,
-                            tNMatrix[15] = (inverse_k * inverse_u - inverse_l * inverse_B + inverse_n * inverse_A) * inverse_q,
-                            // transpose
-                            a01 = tNMatrix[1], a02 = tNMatrix[2], a03 = tNMatrix[3],
-                            a12 = tNMatrix[6], a13 = tNMatrix[7], a23 = tNMatrix[11],
-                            tNMatrix[1] = tNMatrix[4], tNMatrix[2] = tNMatrix[8], tNMatrix[3] = tNMatrix[12], tNMatrix[4] = a01, tNMatrix[6] = tNMatrix[9],
-                            tNMatrix[7] = tNMatrix[13], tNMatrix[8] = a02, tNMatrix[9] = a12, tNMatrix[11] = tNMatrix[14],
-                            tNMatrix[12] = a03, tNMatrix[13] = a13, tNMatrix[14] = a23,
-                            // uNMatrix 입력
-                            tGL.uniformMatrix4fv(tSystemUniformGroup['uNMatrix']['location'], false, tNMatrix)
                     }
                 }
                 if (tGeometry) {

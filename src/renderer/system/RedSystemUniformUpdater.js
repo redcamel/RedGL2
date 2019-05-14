@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.2 12:46
+ * Last modification time of this file - 2019.5.14 12:11
  */
 
 "use strict";
@@ -81,6 +81,7 @@ var RedSystemUniformUpdater;
             tVector = new Float32Array(3);
             return function (redGL, redRenderer, time, tView, prevProgram_UUID, lightDebugRenderList) {
                 if (prevRedGL != redGL) checkUniformInfo = null;
+                prevRedGL = redGL;
                 if (!checkUniformInfo) {
                     MAX_DIRECTIONAL_LIGHT_NUM = RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT;
                     MAX_POINT_LIGHT_NUM = RedSystemShaderCode.MAX_POINT_LIGHT;
@@ -184,8 +185,8 @@ var RedSystemUniformUpdater;
 
                 if (tCamera['camera']) tValueStr = [tCamera.camera.x, tCamera.camera.y, tCamera.camera.z];
                 else tValueStr = [tCamera.x, tCamera.y, tCamera.z];
+                tCheckData = checkUniformInfo['uCameraPosition'];
                 if (tCheckData['cacheData'] != tValueStr.join(',') || changedProgramNum) {
-                    tCheckData = checkUniformInfo['uCameraPosition'];
                     needUpdateUniformInfo['uCameraPosition'] = tCheckData['data'] = tValueStr;
                     tCheckData['cacheData'] = tValueStr.join(',');
                 }
