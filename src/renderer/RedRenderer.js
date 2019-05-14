@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.14 11:53
+ * Last modification time of this file - 2019.5.14 12:37
  */
 
 "use strict";
@@ -841,6 +841,7 @@ var RedRenderer;
                         var globalTransformOfJointNode = [];
                         var joints = tSkinInfo['joints'];
                         var index = 0, len = joints.length;
+                        var tJointMTX;
                         var globalTransformOfNodeThatTheMeshIsAttachedTo = [
                             tMVMatrix[0],
                             tMVMatrix[1],
@@ -860,8 +861,7 @@ var RedRenderer;
                             tMVMatrix[15]
                         ];
                         ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                        // 역구하고
-                        // getInverse(globalTransformOfNodeThatTheMeshIsAttachedTo, globalTransformOfNodeThatTheMeshIsAttachedTo)
+                        // Inverse
                         var te = globalTransformOfNodeThatTheMeshIsAttachedTo,
                             me = globalTransformOfNodeThatTheMeshIsAttachedTo,
                             n11 = me[0], n21 = me[1], n31 = me[2], n41 = me[3],
@@ -898,7 +898,7 @@ var RedRenderer;
                         ////////////////////////////////////////////////////////////////////////////////////////////////////////////
                         // 글로벌 조인트 노드병합함
                         //TODO: 여기 캐싱할 방법 찾아야함
-                        var tJointMTX;
+
                         for (index; index < len; index++) {
                             // 조인트 공간내에서의 전역
                             tJointMTX = joints[index]['matrix'];
@@ -923,7 +923,6 @@ var RedRenderer;
                         tGL.uniformMatrix4fv(tSystemUniformGroup['uJointMatrix']['location'], false, globalTransformOfJointNode);
                         tGL.uniformMatrix4fv(tSystemUniformGroup['uInverseBindMatrixForJoint']['location'], false, tSkinInfo['inverseBindMatrices'])
                     }
-
                 }
                 if (tGeometry) {
                     /////////////////////////////////////////////////////////////////////////
