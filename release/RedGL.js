@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.14 12:41
+ * Last modification time of this file - 2019.5.14 13:7
  */
 
 /**DOC:
@@ -12590,19 +12590,24 @@ var RedGLTFLoader;
         var targetAnimationData;
         return function (time) {
             // console.log('loopList',loopList)
-
-            loopList.forEach(function (v) {
+            var loopIDX = loopList.length
+            while (loopIDX--) {
+                var v = loopList[loopIDX]
                 prevRotation = null;
                 nextRotation = null;
                 prevTranslation = null;
                 nextTranslation = null;
                 targetAnimationData = v['targetAnimationData'];
-
-                targetAnimationData.forEach(function (aniData, stepIndex) {
+                var targetAnimationDataLoopIDX = targetAnimationData.length
+                var aniData
+                while (targetAnimationDataLoopIDX--) {
+                    aniData = targetAnimationData[targetAnimationDataLoopIDX]
                     currentTime = ((time - v['startTime']) % (targetAnimationData['maxTime'] * 1000)) / 1000;
                     // console.log(currentTime,aniData['minTime'] )
                     var target = aniData['target'];
+                    /////////////////////////////////////////////////////////////
                     var nextIndex, prevIndex;
+                    var offset
                     prevIndex = aniData['time'].length - 1;
                     nextIndex = 0;
                     previousTime = aniData['time'][prevIndex];
@@ -12640,7 +12645,7 @@ var RedGLTFLoader;
                             break
                         }
                     }
-
+                    /////////////////////////////////////////////////////////////
                     if (aniData['interpolation'] == 'CUBICSPLINE') {
                         interpolationValue = (currentTime - previousTime) / (nextTime - previousTime);
                         var interpolationValue = nextTime - previousTime;
@@ -12649,12 +12654,10 @@ var RedGLTFLoader;
                         if (p.toString() == 'NaN') p = 0;
                         var pp = p * p;
                         var ppp = pp * p;
-
                         var s2 = -2 * ppp + 3 * pp;
                         var s3 = ppp - pp;
                         var s0 = 1 - s2;
                         var s1 = s3 - pp + p;
-
                         if (target) {
                             var startV, startOut, endV, endIn;
                             if (aniData['key'] == 'translation') {
@@ -12868,118 +12871,105 @@ var RedGLTFLoader;
                             interpolationValue = 0
                         } else interpolationValue = (currentTime - previousTime) / (nextTime - previousTime);
                         if (interpolationValue.toString() == 'NaN') interpolationValue = 0;
-                        if (aniData['key'] == 'rotation') {
-                            var tQuaternion = [
-                                aniData['data'][nextIndex * 4],
-                                aniData['data'][nextIndex * 4 + 1],
-                                aniData['data'][nextIndex * 4 + 2],
-                                aniData['data'][nextIndex * 4 + 3]
-                            ];
-                            nextRotation = tQuaternion;
-                            var tQuaternion = [
-                                aniData['data'][prevIndex * 4],
-                                aniData['data'][prevIndex * 4 + 1],
-                                aniData['data'][prevIndex * 4 + 2],
-                                aniData['data'][prevIndex * 4 + 3]
-                            ];
-                            prevRotation = tQuaternion
-                        }
-                        if (aniData['key'] == 'translation') {
-                            nextTranslation = [
-                                aniData['data'][nextIndex * 3],
-                                aniData['data'][nextIndex * 3 + 1],
-                                aniData['data'][nextIndex * 3 + 2]
-                            ];
-                            prevTranslation = [
-                                aniData['data'][prevIndex * 3],
-                                aniData['data'][prevIndex * 3 + 1],
-                                aniData['data'][prevIndex * 3 + 2]
-                            ]
-                        }
-                        if (aniData['key'] == 'scale') {
-                            nextScale = [
-                                aniData['data'][nextIndex * 3],
-                                aniData['data'][nextIndex * 3 + 1],
-                                aniData['data'][nextIndex * 3 + 2]
-                            ];
-                            prevScale = [
-                                aniData['data'][prevIndex * 3],
-                                aniData['data'][prevIndex * 3 + 1],
-                                aniData['data'][prevIndex * 3 + 2]
-                            ]
-                        }
                         if (target) {
-                            if (aniData['key'] == 'translation') {
-                                // console.log(interpolationValue,nextTranslation , prevTranslation)
-                                target.x = prevTranslation[0] + interpolationValue * (nextTranslation[0] - prevTranslation[0]);
-                                target.y = prevTranslation[1] + interpolationValue * (nextTranslation[1] - prevTranslation[1]);
-                                target.z = prevTranslation[2] + interpolationValue * (nextTranslation[2] - prevTranslation[2])
-                                // console.log(target.y)
-                            }
-                            if (aniData['key'] == 'rotation') {
-                                var tQuat = [];
-                                quat.normalize(prevRotation, prevRotation);
-                                quat.normalize(nextRotation, nextRotation);
-                                var ax = prevRotation[0], ay = prevRotation[1], az = prevRotation[2],
-                                    aw = prevRotation[3];
-                                var bx = nextRotation[0], by = nextRotation[1], bz = nextRotation[2],
-                                    bw = nextRotation[3];
+                            switch (aniData['key']) {
+                                case 'rotation' :
+                                    offset = nextIndex * 4;
+                                    nextRotation = [
+                                        aniData['data'][offset],
+                                        aniData['data'][offset + 1],
+                                        aniData['data'][offset + 2],
+                                        aniData['data'][offset + 3]
+                                    ];//tQuaternion
+                                    offset = prevIndex * 4;
+                                    prevRotation = [
+                                        aniData['data'][offset],
+                                        aniData['data'][offset + 1],
+                                        aniData['data'][offset + 2],
+                                        aniData['data'][offset + 3]
+                                    ];//tQuaternion
+                                    var tQuat = [];
+                                    quat.normalize(prevRotation, prevRotation);
+                                    quat.normalize(nextRotation, nextRotation);
+                                    var ax = prevRotation[0], ay = prevRotation[1], az = prevRotation[2],
+                                        aw = prevRotation[3];
+                                    var bx = nextRotation[0], by = nextRotation[1], bz = nextRotation[2],
+                                        bw = nextRotation[3];
 
 
-                                var omega, cosom, sinom, scale0, scale1;
-                                // calc cosine
-                                cosom = ax * bx + ay * by + az * bz + aw * bw;
-                                // adjust signs (if necessary)
-                                if (cosom < 0.0) {
-                                    cosom = -cosom;
-                                    bx = -bx;
-                                    by = -by;
-                                    bz = -bz;
-                                    bw = -bw;
-                                }
-                                // calculate coefficients
-                                if ((1.0 - cosom) > glMatrix.EPSILON) {
-                                    // standard case (slerp)
-                                    omega = Math.acos(cosom);
-                                    sinom = Math.sin(omega);
-                                    scale0 = Math.sin((1.0 - interpolationValue) * omega) / sinom;
-                                    scale1 = Math.sin(interpolationValue * omega) / sinom;
-                                } else {
-                                    // "from" and "to" quaternions are very close
-                                    //  ... so we can do a linear interpolation
-                                    scale0 = 1.0 - interpolationValue;
-                                    scale1 = interpolationValue;
-                                }
-                                // calculate final values
-                                tQuat[0] = scale0 * ax + scale1 * bx;
-                                tQuat[1] = scale0 * ay + scale1 * by;
-                                tQuat[2] = scale0 * az + scale1 * bz;
-                                tQuat[3] = scale0 * aw + scale1 * bw;
+                                    var omega, cosom, sinom, scale0, scale1;
+                                    // calc cosine
+                                    cosom = ax * bx + ay * by + az * bz + aw * bw;
+                                    // adjust signs (if necessary)
+                                    if (cosom < 0.0) {
+                                        cosom = -cosom;
+                                        bx = -bx;
+                                        by = -by;
+                                        bz = -bz;
+                                        bw = -bw;
+                                    }
+                                    // calculate coefficients
+                                    if ((1.0 - cosom) > glMatrix.EPSILON) {
+                                        // standard case (slerp)
+                                        omega = Math.acos(cosom);
+                                        sinom = Math.sin(omega);
+                                        scale0 = Math.sin((1.0 - interpolationValue) * omega) / sinom;
+                                        scale1 = Math.sin(interpolationValue * omega) / sinom;
+                                    } else {
+                                        // "from" and "to" quaternions are very close
+                                        //  ... so we can do a linear interpolation
+                                        scale0 = 1.0 - interpolationValue;
+                                        scale1 = interpolationValue;
+                                    }
+                                    // calculate final values
+                                    tQuat[0] = scale0 * ax + scale1 * bx;
+                                    tQuat[1] = scale0 * ay + scale1 * by;
+                                    tQuat[2] = scale0 * az + scale1 * bz;
+                                    tQuat[3] = scale0 * aw + scale1 * bw;
 
-                                var rotationMTX = [];
-                                var tRotation = [0, 0, 0];
-                                RedGLUtil.quaternionToRotationMat4(tQuat, rotationMTX);
-                                RedGLUtil.mat4ToEuler(rotationMTX, tRotation);
-                                tRotation[0] = -(tRotation[0] * 180 / Math.PI);
-                                tRotation[1] = -(tRotation[1] * 180 / Math.PI);
-                                tRotation[2] = -(tRotation[2] * 180 / Math.PI);
-                                // console.log(prevRotation, nextRotation)
-                                target.rotationX = tRotation[0];
-                                target.rotationY = tRotation[1];
-                                target.rotationZ = tRotation[2]
-                                // console.log(prevIndex, nextIndex)
-                                // console.log(parseInt(prevRotation[2]), parseInt(nextRotation[2]))
-                                // console.log(target.rotationX ,target.rotationY ,target.rotationZ )
-                            }
-                            if (aniData['key'] == 'scale') {
-                                target.scaleX = prevScale[0] + interpolationValue * (nextScale[0] - prevScale[0]);
-                                target.scaleY = prevScale[1] + interpolationValue * (nextScale[1] - prevScale[1]);
-                                target.scaleZ = prevScale[2] + interpolationValue * (nextScale[2] - prevScale[2])
-                            }
-                            if (aniData['key'] == 'weights') {
-                                // console.log(aniData)
-                                (function () {
-                                    var i = aniData['targets'].length;
+                                    var rotationMTX = [];
+                                    var tRotation = [0, 0, 0];
+                                    RedGLUtil.quaternionToRotationMat4(tQuat, rotationMTX);
+                                    RedGLUtil.mat4ToEuler(rotationMTX, tRotation);
+                                    tRotation[0] = -(tRotation[0] * 180 / Math.PI);
+                                    tRotation[1] = -(tRotation[1] * 180 / Math.PI);
+                                    tRotation[2] = -(tRotation[2] * 180 / Math.PI);
+                                    target.rotationX = tRotation[0];
+                                    target.rotationY = tRotation[1];
+                                    target.rotationZ = tRotation[2]
+                                    break
+                                case 'translation' :
+                                    nextTranslation = [
+                                        aniData['data'][nextIndex * 3],
+                                        aniData['data'][nextIndex * 3 + 1],
+                                        aniData['data'][nextIndex * 3 + 2]
+                                    ];
+                                    prevTranslation = [
+                                        aniData['data'][prevIndex * 3],
+                                        aniData['data'][prevIndex * 3 + 1],
+                                        aniData['data'][prevIndex * 3 + 2]
+                                    ]
+                                    target.x = prevTranslation[0] + interpolationValue * (nextTranslation[0] - prevTranslation[0]);
+                                    target.y = prevTranslation[1] + interpolationValue * (nextTranslation[1] - prevTranslation[1]);
+                                    target.z = prevTranslation[2] + interpolationValue * (nextTranslation[2] - prevTranslation[2])
+                                    break
+                                case 'scale' :
+                                    nextScale = [
+                                        aniData['data'][nextIndex * 3],
+                                        aniData['data'][nextIndex * 3 + 1],
+                                        aniData['data'][nextIndex * 3 + 2]
+                                    ];
+                                    prevScale = [
+                                        aniData['data'][prevIndex * 3],
+                                        aniData['data'][prevIndex * 3 + 1],
+                                        aniData['data'][prevIndex * 3 + 2]
+                                    ]
+                                    target.scaleX = prevScale[0] + interpolationValue * (nextScale[0] - prevScale[0]);
+                                    target.scaleY = prevScale[1] + interpolationValue * (nextScale[1] - prevScale[1]);
+                                    target.scaleZ = prevScale[2] + interpolationValue * (nextScale[2] - prevScale[2])
+                                    break
+                                case 'weights' :
+                                    var weightIDX = aniData['targets'].length;
                                     var targetMesh
                                     var targetData;
                                     var originData;
@@ -12997,8 +12987,8 @@ var RedGLTFLoader;
                                     var prevAniData;
                                     var nextAniData;
                                     var morphInterleaveData;
-                                    while (i--) {
-                                        targetMesh = aniData['targets'][i]
+                                    while (weightIDX--) {
+                                        targetMesh = aniData['targets'][weightIDX]
                                         targetData = targetMesh['geometry']['interleaveBuffer']['data'];
                                         originData = targetMesh['_morphInfo']['origin'];
                                         stride = targetMesh['geometry']['interleaveBuffer']['stride'];
@@ -13033,58 +13023,14 @@ var RedGLTFLoader;
                                         }
                                         targetMesh['geometry']['interleaveBuffer'].upload(targetData)
                                     }
-                                })();
-                                // aniData['targets'].forEach(function (targetMesh) {
-                                //     var targetData = targetMesh['geometry']['interleaveBuffer']['data'];
-                                //     var originData = targetMesh['_morphInfo']['origin'];
-                                //     var stride = targetMesh['geometry']['interleaveBuffer']['stride'];
-                                //     var index = 0;
-                                //     var LOOP_NUM = targetData.length / stride;
-                                //     var prev, next;
-                                //     var prev1, next1;
-                                //     var prev2, next2;
-                                //     var baseIndex;
-                                //     var morphLen = targetMesh['_morphInfo']['list'].length;
-                                //     var tAniData = aniData['data'];
-                                //     var tMorphList = targetMesh['_morphInfo']['list'];
-                                //     for (index; index < LOOP_NUM; index++) {
-                                //         baseIndex = index * stride;
-                                //         prev = originData[baseIndex];
-                                //         next = originData[baseIndex];
-                                //         prev1 = originData[baseIndex + 1];
-                                //         next1 = originData[baseIndex + 1];
-                                //         prev2 = originData[baseIndex + 2];
-                                //         next2 = originData[baseIndex + 2];
-                                //
-                                //         var morphIndex = morphLen;
-                                //         var prevAniData;
-                                //         var nextAniData;
-                                //         var morphInterleaveData;
-                                //         while (morphIndex--) {
-                                //             prevAniData = tAniData[prevIndex * morphLen + morphIndex];
-                                //             nextAniData = tAniData[nextIndex * morphLen + morphIndex];
-                                //             morphInterleaveData = tMorphList[morphIndex]['interleaveData'];
-                                //             prev += prevAniData * morphInterleaveData[baseIndex];
-                                //             next += nextAniData * morphInterleaveData[baseIndex];
-                                //             prev1 += prevAniData * morphInterleaveData[baseIndex + 1];
-                                //             next1 += nextAniData * morphInterleaveData[baseIndex + 1];
-                                //             prev2 += prevAniData * morphInterleaveData[baseIndex + 2];
-                                //             next2 += nextAniData * morphInterleaveData[baseIndex + 2]
-                                //         }
-                                //         targetData[baseIndex] = prev + interpolationValue * (next - prev);
-                                //         targetData[baseIndex + 1] = prev1 + interpolationValue * (next1 - prev1);
-                                //         targetData[baseIndex + 2] = prev2 + interpolationValue * (next2 - prev2)
-                                //     }
-                                //     targetMesh['geometry']['interleaveBuffer'].upload(targetData)
-                                // })
-
-
+                                    break
                             }
+
+
                         }
                     }
-
-                })
-            })
+                }
+            }
         }
     })();
     parser = (function () {
@@ -19536,7 +19482,7 @@ var RedShader;
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.14 11:53
+ * Last modification time of this file - 2019.5.14 12:37
  */
 
 "use strict";
@@ -27312,4 +27258,4 @@ var RedGLOffScreen;
         };
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-05-14 12:41:19)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-05-14 13:07:43)' };console.log(RedGL_VERSION);
