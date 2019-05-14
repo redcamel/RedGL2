@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.14 15:15
+ * Last modification time of this file - 2019.5.14 18:31
  */
 
 "use strict";
@@ -69,21 +69,30 @@ var RedGLTFLoader;
 	 }
      :DOC*/
 
-    var fileLoader = function (src, type, onLoader, onError) {
-        var request = new XMLHttpRequest();
-        request.open("GET", src, true);
-        // request.overrideMimeType('model/gltf+json')
-        // request.setRequestHeader("Content-Type", (type ? type : "application/xml; ") + 'charset=UTF-8')
-        request.onreadystatechange = function (e) {
-            if (request.readyState === 4 && request.status === 200) {
-                console.log(request);
-                onLoader(request)
+    var fileLoader = (function () {
+        var cache = {}
+        return function (src, type, onLoader, onError) {
+            if (cache[src]) {
+                onLoader(cache[src])
             } else {
-                onError(request, e)
+                var request = new XMLHttpRequest();
+                request.open("GET", src, true);
+                // request.overrideMimeType('model/gltf+json')
+                // request.setRequestHeader("Content-Type", (type ? type : "application/xml; ") + 'charset=UTF-8')
+                request.onreadystatechange = function (e) {
+                    if (request.readyState === 4 && request.status === 200) {
+                        console.log(request);
+                        cache[src] = request
+                        onLoader(request)
+                    } else {
+                        onError(request, e)
+                    }
+                };
+                request.send();
             }
-        };
-        request.send();
-    };
+
+        }
+    })();
     var arrayBufferLoader = function (src, onLoader, onError) {
         var request = new XMLHttpRequest();
         request.open("GET", src, true);
@@ -275,32 +284,35 @@ var RedGLTFLoader;
         var prevRotation, nextRotation;
         var prevTranslation, nextTranslation;
         var prevScale, nextScale;
-        var interpolationValue;
-        var targetAnimationData;
+
+
         return function (time) {
             // console.log('loopList',loopList)
-
-            loopList.forEach(function (v) {
+            var loopListIDX = loopList.length
+            var targetAnimationData;
+            var interpolationValue;
+            var loopListItem
+            while (loopListIDX--) {
+                loopListItem = loopList[loopListIDX]
                 prevRotation = null;
                 nextRotation = null;
                 prevTranslation = null;
                 nextTranslation = null;
-                targetAnimationData = v['targetAnimationData'];
-
-                targetAnimationData.forEach(function (aniData, stepIndex) {
-                    currentTime = ((time - v['startTime']) % (targetAnimationData['maxTime'] * 1000)) / 1000;
-                    // console.log(currentTime,aniData['minTime'] )
+                targetAnimationData = loopListItem['targetAnimationData'];
+                currentTime = ((time - loopListItem['startTime']) % (targetAnimationData['maxTime'] * 1000)) / 1000;
+                targetAnimationData.forEach(function (aniData) {
+                    /////////////////////////////////////////////////////////////////////////////////
                     var target = aniData['target'];
                     var nextIndex, prevIndex;
                     prevIndex = aniData['time'].length - 1;
                     nextIndex = 0;
                     previousTime = aniData['time'][prevIndex];
                     nextTime = aniData['time'][nextIndex];
-                    var len = aniData['time'].length;
-                    var i = 0;
-                    for (i; i < len; i++) {
-                        var tTime = aniData['time'][i];
-                        var index = i;
+                    var aniDataTime_Length = aniData['time'].length;
+                    var aniDataTimeIDX = 0;
+                    for (aniDataTimeIDX; aniDataTimeIDX < aniDataTime_Length; aniDataTimeIDX++) {
+                        var tTime = aniData['time'][aniDataTimeIDX];
+                        var index = aniDataTimeIDX;
                         if (tTime < currentTime) {
                             prevIndex = index;
                             previousTime = aniData['time'][prevIndex];
@@ -312,27 +324,26 @@ var RedGLTFLoader;
                                 nextTime = aniData['time'][nextIndex]
                             }
                         }
-                        if (index == 0 && (currentTime < aniData['time'][i])) {
-                            prevIndex = len - 1;
+                        if (index == 0 && (currentTime < aniData['time'][aniDataTimeIDX])) {
+                            prevIndex = aniDataTime_Length - 1;
                             previousTime = aniData['time'][prevIndex];
                             nextIndex = index;
                             nextTime = aniData['time'][nextIndex];
                             currentTime = tTime;
                             break
                         }
-                        if (index == len - 1 && (currentTime > tTime)) {
+                        if (index == aniDataTime_Length - 1 && (currentTime > tTime)) {
                             prevIndex = 0;
                             previousTime = aniData['time'][prevIndex];
-                            nextIndex = len - 1;
+                            nextIndex = aniDataTime_Length - 1;
                             nextTime = aniData['time'][nextIndex];
                             currentTime = tTime;
                             break
                         }
                     }
-
+                    /////////////////////////////////////////////////////////////////////////////////
                     if (aniData['interpolation'] == 'CUBICSPLINE') {
-                        interpolationValue = (currentTime - previousTime) / (nextTime - previousTime);
-                        var interpolationValue = nextTime - previousTime;
+                        interpolationValue = nextTime - previousTime;
                         if (interpolationValue.toString() == 'NaN') interpolationValue = 0;
                         var p = (currentTime - previousTime) / interpolationValue;
                         if (p.toString() == 'NaN') p = 0;
@@ -368,7 +379,7 @@ var RedGLTFLoader;
                                     aniData['data'][nextIndex * 9 + 2]
                                 ];
                                 startV = prevTranslation[0];
-                                if (prevIndex != len - 1) {
+                                if (prevIndex != aniDataTime_Length - 1) {
 
                                     startOut = prevTranslationOut[0] * interpolationValue;
                                     endV = nextTranslation[0];
@@ -424,7 +435,7 @@ var RedGLTFLoader;
                                 quat.normalize(nextRotationIn, nextRotationIn);
                                 var tQuat = [];
 
-                                if (prevIndex != len - 1) {
+                                if (prevIndex != aniDataTime_Length - 1) {
                                     startV = prevRotation[0];
                                     startOut = prevRotationOut[0] * interpolationValue;
                                     endV = nextRotation[0];
@@ -484,7 +495,7 @@ var RedGLTFLoader;
                                 ];
 
                                 startV = prevScale[0];
-                                if (prevIndex != len - 1) {
+                                if (prevIndex != aniDataTime_Length - 1) {
                                     startOut = prevScaleOut[0] * interpolationValue;
                                     endV = nextScale[0];
                                     endIn = nextScaleIn[0] * interpolationValue;
@@ -553,9 +564,8 @@ var RedGLTFLoader;
                         }
                         return
                     } else {
-                        if (aniData['interpolation'] == 'STEP') {
-                            interpolationValue = 0
-                        } else interpolationValue = (currentTime - previousTime) / (nextTime - previousTime);
+                        if (aniData['interpolation'] == 'STEP') interpolationValue = 0;
+                        else interpolationValue = (currentTime - previousTime) / (nextTime - previousTime);
                         if (interpolationValue.toString() == 'NaN') interpolationValue = 0;
                         if (aniData['key'] == 'rotation') {
                             var tQuaternion = [
@@ -573,7 +583,7 @@ var RedGLTFLoader;
                             ];
                             prevRotation = tQuaternion
                         }
-                        if (aniData['key'] == 'translation') {
+                        else if (aniData['key'] == 'translation') {
                             nextTranslation = [
                                 aniData['data'][nextIndex * 3],
                                 aniData['data'][nextIndex * 3 + 1],
@@ -585,7 +595,7 @@ var RedGLTFLoader;
                                 aniData['data'][prevIndex * 3 + 2]
                             ]
                         }
-                        if (aniData['key'] == 'scale') {
+                        else if (aniData['key'] == 'scale') {
                             nextScale = [
                                 aniData['data'][nextIndex * 3],
                                 aniData['data'][nextIndex * 3 + 1],
@@ -604,8 +614,7 @@ var RedGLTFLoader;
                                 target.y = prevTranslation[1] + interpolationValue * (nextTranslation[1] - prevTranslation[1]);
                                 target.z = prevTranslation[2] + interpolationValue * (nextTranslation[2] - prevTranslation[2])
                                 // console.log(target.y)
-                            }
-                            if (aniData['key'] == 'rotation') {
+                            } else if (aniData['key'] == 'rotation') {
                                 var tQuat = [];
                                 quat.normalize(prevRotation, prevRotation);
                                 quat.normalize(nextRotation, nextRotation);
@@ -659,45 +668,53 @@ var RedGLTFLoader;
                                 // console.log(prevIndex, nextIndex)
                                 // console.log(parseInt(prevRotation[2]), parseInt(nextRotation[2]))
                                 // console.log(target.rotationX ,target.rotationY ,target.rotationZ )
-                            }
-                            if (aniData['key'] == 'scale') {
+                            } else if (aniData['key'] == 'scale') {
                                 target.scaleX = prevScale[0] + interpolationValue * (nextScale[0] - prevScale[0]);
                                 target.scaleY = prevScale[1] + interpolationValue * (nextScale[1] - prevScale[1]);
                                 target.scaleZ = prevScale[2] + interpolationValue * (nextScale[2] - prevScale[2])
-                            }
-                            if (aniData['key'] == 'weights') {
+                            } else if (aniData['key'] == 'weights') {
                                 // console.log(aniData)
-                                (function () {
-                                    var i = aniData['targets'].length;
-                                    var targetMesh
-                                    var targetData;
-                                    var originData;
-                                    var stride;
-                                    var index;
-                                    var LOOP_NUM;
-                                    var prev, next;
-                                    var prev1, next1;
-                                    var prev2, next2;
-                                    var baseIndex;
-                                    var morphLen;
-                                    var tAniData;
-                                    var tMorphList;
-                                    var morphIndex;
-                                    var prevAniData;
-                                    var nextAniData;
-                                    var morphInterleaveData;
-                                    while (i--) {
-                                        targetMesh = aniData['targets'][i]
-                                        targetData = targetMesh['geometry']['interleaveBuffer']['data'];
-                                        originData = targetMesh['_morphInfo']['origin'];
-                                        stride = targetMesh['geometry']['interleaveBuffer']['stride'];
-                                        index = 0;
-                                        LOOP_NUM = targetData.length / stride;
-                                        morphLen = targetMesh['_morphInfo']['list'].length;
-                                        tAniData = aniData['data'];
-                                        tMorphList = targetMesh['_morphInfo']['list'];
-                                        for (index; index < LOOP_NUM; index++) {
-                                            baseIndex = index * stride;
+                                var aniTargetsIDX = aniData['targets'].length;
+                                var targetMesh
+                                var targetData;
+                                var originData;
+                                var stride;
+                                var index;
+                                var LOOP_NUM;
+                                var prev, next;
+                                var prev1, next1;
+                                var prev2, next2;
+                                var baseIndex;
+                                var morphLen;
+                                var tAniData;
+                                var tMorphList;
+                                var morphIndex;
+                                var prevAniData;
+                                var nextAniData;
+                                var morphInterleaveData;
+                                while (aniTargetsIDX--) {
+                                    targetMesh = aniData['targets'][aniTargetsIDX]
+                                    targetData = targetMesh['geometry']['interleaveBuffer']['data'];
+                                    originData = targetMesh['_morphInfo']['origin'];
+                                    stride = targetMesh['geometry']['interleaveBuffer']['stride'];
+                                    index = 0;
+                                    LOOP_NUM = targetData.length / stride;
+                                    morphLen = targetMesh['_morphInfo']['list'].length;
+                                    tAniData = aniData['data'];
+                                    tMorphList = targetMesh['_morphInfo']['list'];
+                                    if (!tMorphList['cacheData']) tMorphList['cacheData'] = {}
+                                    var t, t1
+                                    for (index; index < LOOP_NUM; index++) {
+                                        baseIndex = index * stride;
+                                        t = tMorphList['cacheData'][baseIndex + '_' + prevIndex + '_' + nextIndex];
+                                        if (t) {
+                                            prev = t[0];
+                                            next = t[1];
+                                            prev1 = t[2];
+                                            next1 = t[3];
+                                            prev2 = t[4];
+                                            next2 = t[5];
+                                        } else {
                                             prev = originData[baseIndex];
                                             next = originData[baseIndex];
                                             prev1 = originData[baseIndex + 1];
@@ -709,20 +726,26 @@ var RedGLTFLoader;
                                                 prevAniData = tAniData[prevIndex * morphLen + morphIndex];
                                                 nextAniData = tAniData[nextIndex * morphLen + morphIndex];
                                                 morphInterleaveData = tMorphList[morphIndex]['interleaveData'];
-                                                prev += prevAniData * morphInterleaveData[baseIndex];
-                                                next += nextAniData * morphInterleaveData[baseIndex];
-                                                prev1 += prevAniData * morphInterleaveData[baseIndex + 1];
-                                                next1 += nextAniData * morphInterleaveData[baseIndex + 1];
-                                                prev2 += prevAniData * morphInterleaveData[baseIndex + 2];
-                                                next2 += nextAniData * morphInterleaveData[baseIndex + 2]
+                                                t1 = morphInterleaveData[baseIndex]
+                                                prev += prevAniData * t1;
+                                                next += nextAniData * t1;
+                                                t1 = morphInterleaveData[baseIndex + 1]
+                                                prev1 += prevAniData * t1;
+                                                next1 += nextAniData * t1;
+                                                t1 = morphInterleaveData[baseIndex + 2]
+                                                prev2 += prevAniData * t1;
+                                                next2 += nextAniData * t1
                                             }
-                                            targetData[baseIndex] = prev + interpolationValue * (next - prev);
-                                            targetData[baseIndex + 1] = prev1 + interpolationValue * (next1 - prev1);
-                                            targetData[baseIndex + 2] = prev2 + interpolationValue * (next2 - prev2)
+                                            tMorphList['cacheData'][baseIndex + '_' + prevIndex + '_' + nextIndex] = [prev, next, prev1, next1, prev2, next2]
                                         }
-                                        targetMesh['geometry']['interleaveBuffer'].upload(targetData)
+
+                                        targetData[baseIndex] = prev + interpolationValue * (next - prev);
+                                        targetData[baseIndex + 1] = prev1 + interpolationValue * (next1 - prev1);
+                                        targetData[baseIndex + 2] = prev2 + interpolationValue * (next2 - prev2)
                                     }
-                                })();
+                                    targetMesh['geometry']['interleaveBuffer'].upload(targetData)
+                                }
+
                                 // aniData['targets'].forEach(function (targetMesh) {
                                 //     var targetData = targetMesh['geometry']['interleaveBuffer']['data'];
                                 //     var originData = targetMesh['_morphInfo']['origin'];
@@ -773,7 +796,7 @@ var RedGLTFLoader;
                     }
 
                 })
-            })
+            }
         }
     })();
     parser = (function () {
