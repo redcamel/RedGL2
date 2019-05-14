@@ -2,7 +2,7 @@
   ~ RedGL - MIT License
   ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
   ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
-  ~ Last modification time of this file - 2019.5.14 12:51
+  ~ Last modification time of this file - 2019.5.14 14:47
   -->
 
 <!DOCTYPE html>
@@ -69,20 +69,31 @@
             };
             setBase(this);
             // GLTF 로딩
-
-            var i = 10
-            while (i--) {
-                RedGLTFLoader(this, 'https://cdn.rawgit.com/mrdoob/rome-gltf/784089b4/files/models/life_soup/', 'quadruped_horse.gltf', function (v) {
-                        tScene.addChild(v['resultMesh'])
-                        v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.5
-                        v['resultMesh'].children.forEach(function (v) {
-                            v.useCullFace = false
-                        })
-                        v['resultMesh'].x = Math.random() * 200 - 100
-                        v['resultMesh'].z = Math.random() * 200 - 100
+            var self = this
+            RedGLTFLoader(this, 'https://cdn.rawgit.com/mrdoob/rome-gltf/784089b4/files/models/life_soup/', 'quadruped_horse.gltf', function (v) {
+                    tScene.addChild(v['resultMesh'])
+                    v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.5
+                    v['resultMesh'].children.forEach(function (v) {
+                        v.useCullFace = false
+                    })
+                    v['resultMesh'].x = Math.random() * 400 - 200
+                    v['resultMesh'].z = Math.random() * 400 - 200
+                    var i = 20
+                    while (i--) {
+                        RedGLTFLoader(self, 'https://cdn.rawgit.com/mrdoob/rome-gltf/784089b4/files/models/life_soup/', 'quadruped_horse.gltf', function (v) {
+                                tScene.addChild(v['resultMesh'])
+                                v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.5
+                                v['resultMesh'].children.forEach(function (v) {
+                                    v.useCullFace = false
+                                })
+                                v['resultMesh'].x = Math.random() * 400 - 200
+                                v['resultMesh'].z = Math.random() * 400 - 200
+                            }
+                        )
                     }
-                )
-            }
+                }
+            )
+
         } else {
             console.log('초기화 실패!')
         }
