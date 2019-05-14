@@ -2,7 +2,7 @@
   ~ RedGL - MIT License
   ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
   ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
-  ~ Last modification time of this file - 2019.5.14 18:45
+  ~ Last modification time of this file - 2019.5.14 19:45
   -->
 
 <!DOCTYPE html>
@@ -70,7 +70,7 @@
             setBase(this);
             // GLTF 로딩
             var self = this
-            var i = 10
+            var i = 5
             while (i--) {
                 RedGLTFLoader(this, 'https://cdn.rawgit.com/mrdoob/rome-gltf/784089b4/files/models/life_soup/', 'quadruped_fox.gltf', function (v) {
                         // tScene.addChild(v['resultMesh'])
@@ -78,11 +78,11 @@
                         // v['resultMesh'].children.forEach(function (v) {
                         //     v.useCullFace = false
                         // })
-                        var i2 = 20
+                        var i2 = 100
                         while (i2--) {
                             var tMesh = RedMesh(self, v['resultMesh'].geometry, v['resultMesh'].material)
                             tScene.addChild(tMesh)
-                            tMesh.scaleX = tMesh.scaleY = tMesh.scaleZ = 0.5
+                            tMesh.scaleX = tMesh.scaleY = tMesh.scaleZ =0.5
                             v['resultMesh'].children.forEach(function (v) {
                                 tMesh.addChild(v)
                                 v.useCullFace = false
