@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.15 15:40
+ * Last modification time of this file - 2019.5.15 16:34
  */
 
 "use strict";
@@ -836,10 +836,11 @@ var RedRenderer;
                         }
                     }
                     if (tSkinInfo) {
-                        var globalTransformOfJointNode = [];
+
                         var joints = tSkinInfo['joints'];
                         var index = 0, len = joints.length;
                         var tJointMTX;
+                        var globalTransformOfJointNode = new Float32Array(len*16);
                         var globalTransformOfNodeThatTheMeshIsAttachedTo = [
                             tMVMatrix[0],
                             tMVMatrix[1],

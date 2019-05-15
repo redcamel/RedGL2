@@ -2,7 +2,7 @@
   ~ RedGL - MIT License
   ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
   ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
-  ~ Last modification time of this file - 2019.5.15 15:27
+  ~ Last modification time of this file - 2019.5.15 16:42
   -->
 
 <!DOCTYPE html>
@@ -11,7 +11,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="keywords" content="RedGL,webgl,demo">
-    <title>RedGL - RedGLTFLoader</title>
+    <title>RedGL - RedGLTFLoader skinning performance</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -72,7 +72,7 @@
                 });
                 // 렌더 디버거 활성화
                 tRenderer.setDebugButton();
-                testUI(redGL, tController)
+                testUI(redGL, tScene)
             };
             setBase(this);
 
@@ -81,7 +81,7 @@
                 tScene.addChild(v['resultMesh'])
                 v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.0012
                 v['resultMesh'].x = 0
-                var i = 50
+                var i = 60
                 while (i--) {
                     RedGLTFLoader(self, assetPath + 'glTF/breakDance/', 'scene.gltf', function (v) {
                         tScene.addChild(v['resultMesh'])
@@ -97,10 +97,22 @@
             console.log('초기화 실패!')
         }
     })
-    testUI = function (redGL) {
+    testUI = function (redGL, tScene) {
         console.log('test')
         var gui = new baseTestUI(redGL);
         gui.initRedGL();
+
+        var testData = {
+            addObject: function () {
+                RedGLTFLoader(redGL, assetPath + 'glTF/breakDance/', 'scene.gltf', function (v) {
+                    tScene.addChild(v['resultMesh'])
+                    v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.002
+                    v['resultMesh'].x = Math.random() * 30 - 15
+                    v['resultMesh'].z = Math.random() * 30 - 15
+                })
+            }
+        };
+        gui['gui'].add(testData, 'addObject');
     }
 </script>
 </body>
