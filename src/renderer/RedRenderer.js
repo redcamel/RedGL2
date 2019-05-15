@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.15 14:3
+ * Last modification time of this file - 2019.5.15 15:40
  */
 
 "use strict";
@@ -566,8 +566,6 @@ var RedRenderer;
                             else if (tSprite3DYn) tOptionProgramKey = 'sprite3D';
                             else if (tUseFog) tOptionProgramKey = 'fog'
                         }
-
-
                     } else {
                         tOptionProgramKey = baseOptionKey
                     }
