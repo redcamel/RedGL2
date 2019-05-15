@@ -2,7 +2,7 @@
   ~ RedGL - MIT License
   ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
   ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
-  ~ Last modification time of this file - 2019.5.15 16:42
+  ~ Last modification time of this file - 2019.5.15 16:50
   -->
 
 <!DOCTYPE html>
@@ -11,7 +11,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="keywords" content="RedGL,webgl,demo">
-    <title>RedGL - RedGLTFLoader skinning performance</title>
+    <title>RedGL Example - RedGLTFLoader skinning performance</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -81,7 +81,7 @@
                 tScene.addChild(v['resultMesh'])
                 v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.0012
                 v['resultMesh'].x = 0
-                var i = 60
+                var i = 40
                 while (i--) {
                     RedGLTFLoader(self, assetPath + 'glTF/breakDance/', 'scene.gltf', function (v) {
                         tScene.addChild(v['resultMesh'])

@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.15 16:38
+ * Last modification time of this file - 2019.5.15 16:50
  */
 
 /**DOC:
@@ -3254,7 +3254,7 @@ var RedBaseTexture;
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.15 14:3
+ * Last modification time of this file - 2019.5.15 16:32
  */
 
 "use strict";
@@ -12313,7 +12313,7 @@ var RedDAELoader;
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.15 15:47
+ * Last modification time of this file - 2019.5.15 16:21
  */
 
 "use strict";
@@ -19517,7 +19517,7 @@ var RedShader;
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.15 15:40
+ * Last modification time of this file - 2019.5.15 16:34
  */
 
 "use strict";
@@ -27297,4 +27297,4 @@ var RedGLOffScreen;
         };
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-05-15 16:38:09)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-05-15 16:50:29)' };console.log(RedGL_VERSION);
