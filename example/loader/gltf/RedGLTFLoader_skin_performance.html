@@ -11,7 +11,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="keywords" content="RedGL,webgl,demo">
-    <title>RedGL Example - RedGLTFLoader</title>
+    <title>RedGL Example - RedGLTFLoader skinning performance</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -34,7 +34,6 @@
     RedGL(canvas, function (v) {
         if (v) {
             var tWorld, tView, tScene, tController, tRenderer;
-            var tShadow
             var setBase = function (redGL) {
                 // 월드 생성
                 redGL['world'] = tWorld = RedWorld();
@@ -44,9 +43,7 @@
                 tController = RedObitController(redGL);
                 tController.pan = 25;
                 tController.tilt = -15;
-                tController.distance = 1000;
-                tController.speedDistance = 50;
-                tController.camera.nearClipping = 1
+                tController.distance = 30;
                 // 렌더러 생성
                 tRenderer = RedRenderer();
                 // 뷰생성 및 적용
@@ -54,15 +51,6 @@
                 tWorld.addView(tView);
                 // 그리드 설정
                 tScene['grid'] = RedGrid(redGL);
-                tScene.skyBox =
-                    RedSkyBox(redGL, [
-                        assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
-                        assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
-                        assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
-                        assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
-                        assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
-                        assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
-                    ]);
                 // 라이트 설정
                 var testDLight;
                 testDLight = RedDirectionalLight(redGL)
@@ -70,34 +58,61 @@
                 testDLight.y = 2
                 testDLight.z = 3
                 tScene.addLight(testDLight);
-                tShadow = RedDirectionalShadow(redGL, testDLight)
-                tScene.shadowManager.directionalShadow = tShadow
-                tShadow.size = 500
+                tScene['skyBox'] = RedSkyBox(redGL, [
+                    assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
+                    assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
+                    assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
+                    assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
+                    assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
+                    assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
+                ])
                 // 렌더시작
                 tRenderer.start(redGL, function (time) {
-                    testDLight.x = Math.sin(time / 1500) * 1250
-                    testDLight.y = 3500
-                    testDLight.z = Math.cos(time / 1500) * 1250
+
                 });
                 // 렌더 디버거 활성화
                 tRenderer.setDebugButton();
-                testUI(redGL, tController)
+                testUI(redGL, tScene)
             };
             setBase(this);
 
-            // GLTF 로딩
-            RedGLTFLoader(this, assetPath + 'glTF/tokyo/', 'scene.gltf', function (v) {
-                tShadow.addCasting(v['resultMesh'], true);
+            var self = this
+            RedGLTFLoader(this, assetPath + 'glTF/breakDance/', 'scene.gltf', function (v) {
                 tScene.addChild(v['resultMesh'])
-            });
+                v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.0012
+                v['resultMesh'].x = 0
+                var i = 40
+                while (i--) {
+                    RedGLTFLoader(self, assetPath + 'glTF/breakDance/', 'scene.gltf', function (v) {
+                        tScene.addChild(v['resultMesh'])
+                        v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.002
+                        v['resultMesh'].x = Math.random() * 30 - 15
+                        v['resultMesh'].z = Math.random() * 30 - 15
+
+                    })
+                }
+            })
+
         } else {
             console.log('초기화 실패!')
         }
     })
-    testUI = function (redGL) {
+    testUI = function (redGL, tScene) {
         console.log('test')
         var gui = new baseTestUI(redGL);
         gui.initRedGL();
+
+        var testData = {
+            addObject: function () {
+                RedGLTFLoader(redGL, assetPath + 'glTF/breakDance/', 'scene.gltf', function (v) {
+                    tScene.addChild(v['resultMesh'])
+                    v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.002
+                    v['resultMesh'].x = Math.random() * 30 - 15
+                    v['resultMesh'].z = Math.random() * 30 - 15
+                })
+            }
+        };
+        gui['gui'].add(testData, 'addObject');
     }
 </script>
 </body>

@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.14 12:37
+ * Last modification time of this file - 2019.5.15 16:34
  */
 
 "use strict";
@@ -566,8 +566,6 @@ var RedRenderer;
                             else if (tSprite3DYn) tOptionProgramKey = 'sprite3D';
                             else if (tUseFog) tOptionProgramKey = 'fog'
                         }
-
-
                     } else {
                         tOptionProgramKey = baseOptionKey
                     }
@@ -838,10 +836,11 @@ var RedRenderer;
                         }
                     }
                     if (tSkinInfo) {
-                        var globalTransformOfJointNode = [];
+
                         var joints = tSkinInfo['joints'];
                         var index = 0, len = joints.length;
                         var tJointMTX;
+                        var globalTransformOfJointNode = new Float32Array(len*16);
                         var globalTransformOfNodeThatTheMeshIsAttachedTo = [
                             tMVMatrix[0],
                             tMVMatrix[1],
@@ -897,8 +896,6 @@ var RedRenderer;
                         }
                         ////////////////////////////////////////////////////////////////////////////////////////////////////////////
                         // 글로벌 조인트 노드병합함
-                        //TODO: 여기 캐싱할 방법 찾아야함
-
                         for (index; index < len; index++) {
                             // 조인트 공간내에서의 전역
                             tJointMTX = joints[index]['matrix'];
@@ -921,7 +918,14 @@ var RedRenderer;
                         }
                         tGL.uniformMatrix4fv(tSystemUniformGroup['uGlobalTransformOfNodeThatTheMeshIsAttachedTo']['location'], false, globalTransformOfNodeThatTheMeshIsAttachedTo);
                         tGL.uniformMatrix4fv(tSystemUniformGroup['uJointMatrix']['location'], false, globalTransformOfJointNode);
-                        tGL.uniformMatrix4fv(tSystemUniformGroup['uInverseBindMatrixForJoint']['location'], false, tSkinInfo['inverseBindMatrices'])
+                        if (!tSkinInfo['inverseBindMatrices']['_UUID']) tSkinInfo['inverseBindMatrices']['_UUID'] = JSON.stringify(tSkinInfo['inverseBindMatrices'])
+                        tUUID = tSystemUniformGroup['uInverseBindMatrixForJoint']['_UUID']
+                        if (tCacheUniformInfo[tUUID] != tSkinInfo['inverseBindMatrices']['_UUID']) {
+                            tGL.uniformMatrix4fv(tSystemUniformGroup['uInverseBindMatrixForJoint']['location'], false, tSkinInfo['inverseBindMatrices'])
+                            tCacheUniformInfo[tUUID] = tSkinInfo['inverseBindMatrices']['_UUID']
+                        }
+
+
                     }
                 }
                 if (tGeometry) {
@@ -961,15 +965,15 @@ var RedRenderer;
                     }
                     /////////////////////////////////////////////////////////////////////////
                     /////////////////////////////////////////////////////////////////////////
-                    if (!transparentMode) {
+                    if (transparentMode) {
+                        tMesh.autoUpdateMatrix = tMesh._renderAutoUpdateMatrix
+                    } else {
                         if (tMesh['useTransparentSort']) {
                             transparentList.push(tMesh);
                             tMesh._renderAutoUpdateMatrix = tMesh.autoUpdateMatrix;
                             tMesh.autoUpdateMatrix = false;
                             continue
                         }
-                    } else {
-                        tMesh.autoUpdateMatrix = tMesh._renderAutoUpdateMatrix
                     }
                     // 드로우
                     if (tIndexBufferInfo) {
