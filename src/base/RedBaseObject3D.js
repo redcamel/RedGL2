@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.5.15 14:3
  */
 
 "use strict";
@@ -260,7 +260,7 @@ var RedBaseObject3D;
 			return : 'mat4'
 		 }
          :DOC*/
-        this['matrix'] = mat4.create();
+        this['matrix'] = [];
         /**DOC:
          {
 		    code : 'PROPERTY',
@@ -272,7 +272,7 @@ var RedBaseObject3D;
 			return : 'mat4'
 		 }
          :DOC*/
-        this['localMatrix'] = mat4.create();
+        this['localMatrix'] = [];
         /**DOC:
          {
 		    code : 'PROPERTY',
@@ -284,7 +284,7 @@ var RedBaseObject3D;
 			return : 'mat4'
 		 }
          :DOC*/
-        this['normalMatrix'] = mat4.create();
+        this['normalMatrix'] = [];
         /**DOC:
          {
 		     code : 'PROPERTY',

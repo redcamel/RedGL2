@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.15 11:33
+ * Last modification time of this file - 2019.5.15 15:28
  */
 
 /**DOC:
@@ -3512,7 +3512,7 @@ var RedBaseObject3D;
 			return : 'mat4'
 		 }
          :DOC*/
-        this['matrix'] = mat4.create();
+        this['matrix'] = [];
         /**DOC:
          {
 		    code : 'PROPERTY',
@@ -3524,7 +3524,7 @@ var RedBaseObject3D;
 			return : 'mat4'
 		 }
          :DOC*/
-        this['localMatrix'] = mat4.create();
+        this['localMatrix'] = [];
         /**DOC:
          {
 		    code : 'PROPERTY',
@@ -3536,7 +3536,7 @@ var RedBaseObject3D;
 			return : 'mat4'
 		 }
          :DOC*/
-        this['normalMatrix'] = mat4.create();
+        this['normalMatrix'] = [];
         /**DOC:
          {
 		     code : 'PROPERTY',
@@ -12313,7 +12313,7 @@ var RedDAELoader;
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.14 18:31
+ * Last modification time of this file - 2019.5.15 11:33
  */
 
 "use strict";
@@ -12384,7 +12384,9 @@ var RedGLTFLoader;
         var cache = {}
         return function (src, type, onLoader, onError) {
             if (cache[src]) {
-                onLoader(cache[src])
+                requestAnimationFrame(function () {
+                    onLoader(cache[src])
+                })
             } else {
                 var request = new XMLHttpRequest();
                 request.open("GET", src, true);
@@ -12401,14 +12403,15 @@ var RedGLTFLoader;
                 };
                 request.send();
             }
-
         }
     })();
     var arrayBufferLoader = (function () {
         var cache = {}
         return function (src, onLoader, onError) {
             if (cache[src]) {
-                onLoader(cache[src])
+                requestAnimationFrame(function () {
+                    onLoader(cache[src])
+                })
             } else {
                 var request = new XMLHttpRequest();
                 request.open("GET", src, true);
@@ -12597,479 +12600,531 @@ var RedGLTFLoader;
         }
     });
     var loopList = [];
-    RedGLTFLoader['animationLooper'] = (function () {
+    RedGLTFLoader['animationLooper'] = function (time) {
+        // console.log('loopList',loopList)
         var currentTime, previousTime, nextTime;
         var prevRotation, nextRotation;
         var prevTranslation, nextTranslation;
         var prevScale, nextScale;
-        return function (time) {
-            // console.log('loopList',loopList)
-            var loopListIDX = loopList.length
-            var targetAnimationData;
-            var interpolationValue;
-            var loopListItem
-            while (loopListIDX--) {
-                loopListItem = loopList[loopListIDX]
-                prevRotation = null;
-                nextRotation = null;
-                prevTranslation = null;
-                nextTranslation = null;
-                targetAnimationData = loopListItem['targetAnimationData'];
+        var loopListIDX = loopList.length
+        var targetAnimationData;
+        var interpolationValue;
+        var loopListItem
+        while (loopListIDX--) {
+            loopListItem = loopList[loopListIDX]
+            prevRotation = null;
+            nextRotation = null;
+            prevTranslation = null;
+            nextTranslation = null;
+            targetAnimationData = loopListItem['targetAnimationData'];
 
-                targetAnimationData.forEach(function (aniData) {
-                    currentTime = ((time - loopListItem['startTime']) % (targetAnimationData['maxTime'] * 1000)) / 1000;
-                    /////////////////////////////////////////////////////////////////////////////////
-                    var target = aniData['target'];
-                    var nextIndex, prevIndex;
-                    prevIndex = aniData['time'].length - 1;
-                    nextIndex = 0;
-                    previousTime = aniData['time'][prevIndex];
-                    nextTime = aniData['time'][nextIndex];
-                    var aniDataTime_Length = aniData['time'].length;
-                    var aniDataTimeIDX = 0;
-                    for (aniDataTimeIDX; aniDataTimeIDX < aniDataTime_Length; aniDataTimeIDX++) {
-                        var tTime = aniData['time'][aniDataTimeIDX];
-                        var index = aniDataTimeIDX;
-                        if (tTime < currentTime) {
-                            prevIndex = index;
-                            previousTime = aniData['time'][prevIndex];
-                            if (aniData['time'][prevIndex + 1] == undefined) {
-                                nextIndex = 0;
-                                nextTime = aniData['time'][nextIndex]
-                            } else {
-                                nextIndex = prevIndex + 1;
-                                nextTime = aniData['time'][nextIndex]
-                            }
-                        }
-                        if (index == 0 && (currentTime < aniData['time'][aniDataTimeIDX])) {
-                            prevIndex = aniDataTime_Length - 1;
-                            previousTime = aniData['time'][prevIndex];
-                            nextIndex = index;
-                            nextTime = aniData['time'][nextIndex];
-                            currentTime = tTime;
-                            break
-                        }
-                        if (index == aniDataTime_Length - 1 && (currentTime > tTime)) {
-                            prevIndex = 0;
-                            previousTime = aniData['time'][prevIndex];
-                            nextIndex = aniDataTime_Length - 1;
-                            nextTime = aniData['time'][nextIndex];
-                            currentTime = tTime;
-                            break
+            var targetAnimationDataLen = targetAnimationData.length
+            var targetAnimationDataIDX = 0
+            var aniData
+            var target;
+            var nextIndex, prevIndex;
+            var tTimeData
+            var tAniData
+            var aniDataTime_Length
+            var aniDataTimeIDX
+            for (targetAnimationDataIDX; targetAnimationDataIDX < targetAnimationDataLen; targetAnimationDataIDX++) {
+                aniData = targetAnimationData[targetAnimationDataIDX];
+                // targetAnimationData.forEach(function (aniData) {
+                currentTime = ((time - loopListItem['startTime']) % (targetAnimationData['maxTime'] * 1000)) / 1000;
+                /////////////////////////////////////////////////////////////////////////////////
+                target = aniData['target'];
+                tTimeData = aniData['time']
+                tAniData = aniData['time']
+                aniDataTime_Length = tTimeData.length;
+                aniDataTimeIDX = 0;
+                prevIndex = tTimeData.length - 1;
+                nextIndex = 0;
+                previousTime = tTimeData[prevIndex];
+                nextTime = tTimeData[nextIndex];
+                for (aniDataTimeIDX; aniDataTimeIDX < aniDataTime_Length; aniDataTimeIDX++) {
+                    var tTime = tTimeData[aniDataTimeIDX];
+                    if (tTime < currentTime) {
+                        prevIndex = aniDataTimeIDX;
+                        previousTime = tTimeData[prevIndex];
+                        if (tTimeData[prevIndex + 1] == undefined) {
+                            nextIndex = 0;
+                            nextTime = tTimeData[nextIndex]
+                        } else {
+                            nextIndex = prevIndex + 1;
+                            nextTime = tTimeData[nextIndex]
                         }
                     }
-                    /////////////////////////////////////////////////////////////////////////////////
-                    if (aniData['interpolation'] == 'CUBICSPLINE') {
-                        interpolationValue = nextTime - previousTime;
-                        if (interpolationValue.toString() == 'NaN') interpolationValue = 0;
-                        var p = (currentTime - previousTime) / interpolationValue;
-                        if (p.toString() == 'NaN') p = 0;
-                        var pp = p * p;
-                        var ppp = pp * p;
+                    if (aniDataTimeIDX == 0 && (currentTime < tTimeData[aniDataTimeIDX])) {
+                        prevIndex = aniDataTime_Length - 1;
+                        previousTime = tTimeData[prevIndex];
+                        nextIndex = aniDataTimeIDX;
+                        nextTime = tTimeData[nextIndex];
+                        currentTime = tTime;
+                        break
+                    }
+                    if (aniDataTimeIDX == aniDataTime_Length - 1 && (currentTime > tTime)) {
+                        prevIndex = 0;
+                        previousTime = tTimeData[prevIndex];
+                        nextIndex = aniDataTime_Length - 1;
+                        nextTime = tTimeData[nextIndex];
+                        currentTime = tTime;
+                        break
+                    }
+                }
+                /////////////////////////////////////////////////////////////////////////////////
+                if (aniData['interpolation'] == 'CUBICSPLINE') {
+                    interpolationValue = nextTime - previousTime;
+                    if (interpolationValue.toString() == 'NaN') interpolationValue = 0;
+                    var p = (currentTime - previousTime) / interpolationValue;
+                    if (p.toString() == 'NaN') p = 0;
+                    var pp = p * p;
+                    var ppp = pp * p;
 
-                        var s2 = -2 * ppp + 3 * pp;
-                        var s3 = ppp - pp;
-                        var s0 = 1 - s2;
-                        var s1 = s3 - pp + p;
+                    var s2 = -2 * ppp + 3 * pp;
+                    var s3 = ppp - pp;
+                    var s0 = 1 - s2;
+                    var s1 = s3 - pp + p;
 
-                        if (target) {
-                            var startV, startOut, endV, endIn;
-                            if (aniData['key'] == 'translation') {
+                    if (target) {
+                        var startV, startOut, endV, endIn;
+                        if (aniData['key'] == 'translation') {
+                            nextTranslation = [
+                                aniData['data'][prevIndex * 9 + 3],
+                                aniData['data'][prevIndex * 9 + 4],
+                                aniData['data'][prevIndex * 9 + 5]
+                            ];
+                            prevTranslation = [
+                                aniData['data'][nextIndex * 9 + 3],
+                                aniData['data'][nextIndex * 9 + 4],
+                                aniData['data'][nextIndex * 9 + 5]
+                            ];
+                            var prevTranslationOut = [
+                                aniData['data'][prevIndex * 9 + 6],
+                                aniData['data'][prevIndex * 9 + 7],
+                                aniData['data'][prevIndex * 9 + 8]
+                            ];
+                            var nextTranslationIn = [
+                                aniData['data'][nextIndex * 9 + 0],
+                                aniData['data'][nextIndex * 9 + 1],
+                                aniData['data'][nextIndex * 9 + 2]
+                            ];
+                            startV = prevTranslation[0];
+                            if (prevIndex != aniDataTime_Length - 1) {
+
+                                startOut = prevTranslationOut[0] * interpolationValue;
+                                endV = nextTranslation[0];
+                                endIn = nextTranslationIn[0] * interpolationValue;
+                                target.x = s0 * startV + s1 * startOut + s2 * endV + s3 * endIn;
+                                startV = prevTranslation[1];
+                                startOut = prevTranslationOut[1] * interpolationValue;
+                                endV = nextTranslation[1];
+                                endIn = nextTranslationIn[1] * interpolationValue;
+                                target.y = s0 * startV + s1 * startOut + s2 * endV + s3 * endIn;
+                                startV = prevTranslation[2];
+                                startOut = prevTranslationOut[2] * interpolationValue;
+                                endV = nextTranslation[2];
+                                endIn = nextTranslationIn[2] * interpolationValue;
+                                target.z = s0 * startV + s1 * startOut + s2 * endV + s3 * endIn;
+                            }
+                            // console.log(target.y)
+                        }
+                        if (aniData['key'] == 'rotation') {
+                            // var rotationMTX = mat4.create()
+                            // var tRotation = [0, 0, 0]
+                            var tQuaternion = [
+                                aniData['data'][nextIndex * 12 + 4],
+                                aniData['data'][nextIndex * 12 + 5],
+                                aniData['data'][nextIndex * 12 + 6],
+                                aniData['data'][nextIndex * 12 + 7]
+                            ];
+                            nextRotation = tQuaternion;
+
+                            var tQuaternion = [
+                                aniData['data'][prevIndex * 12 + 4],
+                                aniData['data'][prevIndex * 12 + 5],
+                                aniData['data'][prevIndex * 12 + 6],
+                                aniData['data'][prevIndex * 12 + 7]
+                            ];
+                            prevRotation = tQuaternion;
+
+                            var prevRotationOut = [
+                                aniData['data'][prevIndex * 12 + 8],
+                                aniData['data'][prevIndex * 12 + 9],
+                                aniData['data'][prevIndex * 12 + 10],
+                                aniData['data'][prevIndex * 12 + 11]
+                            ];
+                            var nextRotationIn = [
+                                aniData['data'][nextIndex * 12 + 0],
+                                aniData['data'][nextIndex * 12 + 1],
+                                aniData['data'][nextIndex * 12 + 2],
+                                aniData['data'][nextIndex * 12 + 3]
+                            ];
+                            quat.normalize(prevRotation, prevRotation);
+                            quat.normalize(nextRotation, nextRotation);
+                            quat.normalize(prevRotationOut, prevRotationOut);
+                            quat.normalize(nextRotationIn, nextRotationIn);
+                            var tQuat = [];
+
+                            if (prevIndex != aniDataTime_Length - 1) {
+                                startV = prevRotation[0];
+                                startOut = prevRotationOut[0] * interpolationValue;
+                                endV = nextRotation[0];
+                                endIn = nextRotationIn[0] * interpolationValue;
+                                tQuat[0] = s0 * startV + s1 * startOut + s2 * endV + s3 * endIn;
+                                //
+                                startV = prevRotation[1];
+                                startOut = prevRotationOut[1] * interpolationValue;
+                                endV = nextRotation[1];
+                                endIn = nextRotationIn[1] * interpolationValue;
+                                tQuat[1] = s0 * startV + s1 * startOut + s2 * endV + s3 * endIn;
+                                //
+                                startV = prevRotation[2];
+                                startOut = prevRotationOut[2] * interpolationValue;
+                                endV = nextRotation[2];
+                                endIn = nextRotationIn[2] * interpolationValue;
+                                tQuat[2] = s0 * startV + s1 * startOut + s2 * endV + s3 * endIn;
+                                //
+                                startV = prevRotation[3];
+                                startOut = prevRotationOut[3] * interpolationValue;
+                                endV = nextRotation[3];
+                                endIn = nextRotationIn[3] * interpolationValue;
+                                tQuat[3] = s0 * startV + s1 * startOut + s2 * endV + s3 * endIn;
+
+                                var rotationMTX = [];
+                                var tRotation = [0, 0, 0];
+                                RedGLUtil.quaternionToRotationMat4(tQuat, rotationMTX);
+                                RedGLUtil.mat4ToEuler(rotationMTX, tRotation);
+                                tRotation[0] = -(tRotation[0] * 180 / Math.PI);
+                                tRotation[1] = -(tRotation[1] * 180 / Math.PI);
+                                tRotation[2] = -(tRotation[2] * 180 / Math.PI);
+                                target.rotationX = tRotation[0];
+                                target.rotationY = tRotation[1];
+                                target.rotationZ = tRotation[2]
+                            }
+                        }
+                        if (aniData['key'] == 'scale') {
+                            nextScale = [
+                                aniData['data'][prevIndex * 9 + 3],
+                                aniData['data'][prevIndex * 9 + 4],
+                                aniData['data'][prevIndex * 9 + 5]
+                            ];
+                            prevScale = [
+                                aniData['data'][nextIndex * 9 + 3],
+                                aniData['data'][nextIndex * 9 + 4],
+                                aniData['data'][nextIndex * 9 + 5]
+                            ];
+                            var prevScaleOut = [
+                                aniData['data'][prevIndex * 9 + 6],
+                                aniData['data'][prevIndex * 9 + 7],
+                                aniData['data'][prevIndex * 9 + 8]
+                            ];
+                            var nextScaleIn = [
+                                aniData['data'][nextIndex * 9 + 0],
+                                aniData['data'][nextIndex * 9 + 1],
+                                aniData['data'][nextIndex * 9 + 2]
+                            ];
+                            startV = prevScale[0];
+                            if (prevIndex != aniDataTime_Length - 1) {
+                                startOut = prevScaleOut[0] * interpolationValue;
+                                endV = nextScale[0];
+                                endIn = nextScaleIn[0] * interpolationValue;
+                                target.scaleX = s0 * startV + s1 * startOut + s2 * endV + s3 * endIn;
+                                //
+                                startV = prevScale[1];
+                                startOut = prevScaleOut[1] * interpolationValue;
+                                endV = nextScale[1];
+                                endIn = nextScaleIn[1] * interpolationValue;
+                                target.scaleY = s0 * startV + s1 * startOut + s2 * endV + s3 * endIn;
+                                //
+                                startV = prevScale[2];
+                                startOut = prevScaleOut[2] * interpolationValue;
+                                endV = nextScale[2];
+                                endIn = nextScaleIn[2] * interpolationValue;
+                                target.scaleZ = s0 * startV + s1 * startOut + s2 * endV + s3 * endIn;
+                            }
+                        }
+                        if (aniData['key'] == 'weights') {
+                            aniData['targets'].forEach(function (targetMesh) {
+                                var targetData = targetMesh['geometry']['interleaveBuffer']['data'];
+                                var originData = targetMesh['_morphInfo']['origin'];
+                                var stride = targetMesh['geometry']['interleaveBuffer']['stride'];
+                                var index = 0;
+                                var LOOP_NUM = targetData.length / stride;
+                                var prev, next;
+                                var prev1, next1;
+                                var prev2, next2;
+                                var baseIndex;
+                                var morphLen = targetMesh['_morphInfo']['list'].length;
+                                var tAniData = aniData['data'];
+                                var tMorphList = targetMesh['_morphInfo']['list'];
+                                for (index; index < LOOP_NUM; index++) {
+                                    baseIndex = index * stride;
+                                    prev = originData[baseIndex];
+                                    next = originData[baseIndex];
+                                    prev1 = originData[baseIndex + 1];
+                                    next1 = originData[baseIndex + 1];
+                                    prev2 = originData[baseIndex + 2];
+                                    next2 = originData[baseIndex + 2];
+
+                                    var morphIndex = morphLen;
+                                    var prevAniData;
+                                    var nextAniData;
+                                    var morphInterleaveData;
+                                    while (morphIndex--) {
+                                        if (morphIndex % 3 == 1) {
+                                            prevAniData = tAniData[prevIndex * morphLen + morphIndex];
+                                            nextAniData = tAniData[nextIndex * morphLen + morphIndex];
+                                            morphInterleaveData = tMorphList[morphIndex]['interleaveData'];
+                                            prev += prevAniData * morphInterleaveData[baseIndex];
+                                            next += nextAniData * morphInterleaveData[baseIndex];
+                                            prev1 += prevAniData * morphInterleaveData[baseIndex + 1];
+                                            next1 += nextAniData * morphInterleaveData[baseIndex + 1];
+                                            prev2 += prevAniData * morphInterleaveData[baseIndex + 2];
+                                            next2 += nextAniData * morphInterleaveData[baseIndex + 2]
+                                        }
+                                    }
+                                    targetData[baseIndex] = prev + interpolationValue * (next - prev);
+                                    targetData[baseIndex + 1] = prev1 + interpolationValue * (next1 - prev1);
+                                    targetData[baseIndex + 2] = prev2 + interpolationValue * (next2 - prev2)
+                                }
+                                targetMesh['geometry']['interleaveBuffer'].upload(targetData)
+                            })
+                        }
+                    }
+
+                } else {
+                    if (aniData['interpolation'] == 'STEP') interpolationValue = 0;
+                    else interpolationValue = (currentTime - previousTime) / (nextTime - previousTime);
+                    if (interpolationValue.toString() == 'NaN') interpolationValue = 0;
+                    if (target) {
+                        var tAniData_data = aniData['data'];
+                        switch (aniData['key']) {
+                            case 'rotation':
+
+                                /////////////////////////////////////////////
+                                // quat.normalize(prevRotation, prevRotation);
+                                // quat.normalize(nextRotation, nextRotation);
+                                var x, y, z, w, len;
+                                var ax, ay, az, aw;
+                                var bx, by, bz, bw;
+                                // prevRotation
+                                x = tAniData_data[prevIndex * 4];
+                                y = tAniData_data[prevIndex * 4 + 1];
+                                z = tAniData_data[prevIndex * 4 + 2];
+                                w = tAniData_data[prevIndex * 4 + 3];
+                                len = x * x + y * y + z * z + w * w;
+                                if (len > 0) len = 1 / Math.sqrt(len);
+                                ax = x * len;
+                                ay = y * len;
+                                az = z * len;
+                                aw = w * len;
+                                // nextRotation
+                                x = tAniData_data[nextIndex * 4];
+                                y = tAniData_data[nextIndex * 4 + 1];
+                                z = tAniData_data[nextIndex * 4 + 2];
+                                w = tAniData_data[nextIndex * 4 + 3];
+                                len = x * x + y * y + z * z + w * w;
+                                if (len > 0) len = 1 / Math.sqrt(len);
+                                bx = x * len;
+                                by = y * len;
+                                bz = z * len;
+                                bw = w * len;
+                                /////////////////////////////////////////////
+                                var omega, cosom, sinom, scale0, scale1;
+                                // calc cosine
+                                cosom = ax * bx + ay * by + az * bz + aw * bw;
+                                // adjust signs (if necessary)
+                                if (cosom < 0.0) {
+                                    cosom = -cosom;
+                                    bx = -bx;
+                                    by = -by;
+                                    bz = -bz;
+                                    bw = -bw;
+                                }
+                                // calculate coefficients
+                                if ((1.0 - cosom) > glMatrix.EPSILON) {
+                                    // standard case (slerp)
+                                    omega = Math.acos(cosom);
+                                    sinom = Math.sin(omega);
+                                    scale0 = Math.sin((1.0 - interpolationValue) * omega) / sinom;
+                                    scale1 = Math.sin(interpolationValue * omega) / sinom;
+                                } else {
+                                    // "from" and "to" quaternions are very close
+                                    //  ... so we can do a linear interpolation
+                                    scale0 = 1.0 - interpolationValue;
+                                    scale1 = interpolationValue;
+                                }
+                                // calculate final values
+                                // tQuat
+                                x = scale0 * ax + scale1 * bx;
+                                y = scale0 * ay + scale1 * by;
+                                z = scale0 * az + scale1 * bz;
+                                w = scale0 * aw + scale1 * bw;
+                                var rotationMTX = [];
+                                var tRotation = [0, 0, 0];
+                                // RedGLUtil.quaternionToRotationMat4(tQuat, rotationMTX);
+                                // RedGLUtil.mat4ToEuler(rotationMTX, tRotation);
+                                //////////////////////////////////////////////////////////
+                                var x2 = x + x, y2 = y + y, z2 = z + z;
+                                var xx = x * x2, xy = x * y2, xz = x * z2;
+                                var yy = y * y2, yz = y * z2, zz = z * z2;
+                                var wx = w * x2, wy = w * y2, wz = w * z2;
+                                rotationMTX[0] = 1 - (yy + zz);
+                                rotationMTX[4] = xy - wz;
+                                rotationMTX[8] = xz + wy;
+                                rotationMTX[1] = xy + wz;
+                                rotationMTX[5] = 1 - (xx + zz);
+                                rotationMTX[9] = yz - wx;
+                                rotationMTX[2] = xz - wy;
+                                rotationMTX[6] = yz + wx;
+                                rotationMTX[10] = 1 - (xx + yy);
+                                // last column
+                                rotationMTX[3] = 0;
+                                rotationMTX[7] = 0;
+                                rotationMTX[11] = 0;
+                                // bottom row
+                                rotationMTX[12] = 0;
+                                rotationMTX[13] = 0;
+                                rotationMTX[14] = 0;
+                                rotationMTX[15] = 1;
+                                // Assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)
+                                var m11 = rotationMTX[0], m12 = rotationMTX[4], m13 = rotationMTX[8];
+                                var m21 = rotationMTX[1], m22 = rotationMTX[5], m23 = rotationMTX[9];
+                                var m31 = rotationMTX[2], m32 = rotationMTX[6], m33 = rotationMTX[10];
+                                tRotation[1] = Math.asin(Math.max(-1, Math.min(1, m13)));
+                                if (Math.abs(m13) < 0.99999) {
+                                    tRotation[0] = Math.atan2(-m23, m33);
+                                    tRotation[2] = Math.atan2(-m12, m11);
+                                } else {
+                                    tRotation[0] = Math.atan2(m32, m22);
+                                    tRotation[2] = 0;
+                                }
+                                //////////////////////////////////////////////////////////
+                                tRotation[0] = -(tRotation[0] * 180 / Math.PI);
+                                tRotation[1] = -(tRotation[1] * 180 / Math.PI);
+                                tRotation[2] = -(tRotation[2] * 180 / Math.PI);
+                                // console.log(prevRotation, nextRotation)
+                                target.rotationX = tRotation[0];
+                                target.rotationY = tRotation[1];
+                                target.rotationZ = tRotation[2]
+                                // console.log(prevIndex, nextIndex)
+                                // console.log(parseInt(prevRotation[2]), parseInt(nextRotation[2]))
+                                // console.log(target.rotationX ,target.rotationY ,target.rotationZ )
+                                break
+                            case 'translation':
                                 nextTranslation = [
-                                    aniData['data'][prevIndex * 9 + 3],
-                                    aniData['data'][prevIndex * 9 + 4],
-                                    aniData['data'][prevIndex * 9 + 5]
+                                    tAniData_data[nextIndex * 3],
+                                    tAniData_data[nextIndex * 3 + 1],
+                                    tAniData_data[nextIndex * 3 + 2]
                                 ];
                                 prevTranslation = [
-                                    aniData['data'][nextIndex * 9 + 3],
-                                    aniData['data'][nextIndex * 9 + 4],
-                                    aniData['data'][nextIndex * 9 + 5]
-                                ];
-                                var prevTranslationOut = [
-                                    aniData['data'][prevIndex * 9 + 6],
-                                    aniData['data'][prevIndex * 9 + 7],
-                                    aniData['data'][prevIndex * 9 + 8]
-                                ];
-                                var nextTranslationIn = [
-                                    aniData['data'][nextIndex * 9 + 0],
-                                    aniData['data'][nextIndex * 9 + 1],
-                                    aniData['data'][nextIndex * 9 + 2]
-                                ];
-                                startV = prevTranslation[0];
-                                if (prevIndex != aniDataTime_Length - 1) {
-
-                                    startOut = prevTranslationOut[0] * interpolationValue;
-                                    endV = nextTranslation[0];
-                                    endIn = nextTranslationIn[0] * interpolationValue;
-                                    target.x = s0 * startV + s1 * startOut + s2 * endV + s3 * endIn;
-                                    startV = prevTranslation[1];
-                                    startOut = prevTranslationOut[1] * interpolationValue;
-                                    endV = nextTranslation[1];
-                                    endIn = nextTranslationIn[1] * interpolationValue;
-                                    target.y = s0 * startV + s1 * startOut + s2 * endV + s3 * endIn;
-                                    startV = prevTranslation[2];
-                                    startOut = prevTranslationOut[2] * interpolationValue;
-                                    endV = nextTranslation[2];
-                                    endIn = nextTranslationIn[2] * interpolationValue;
-                                    target.z = s0 * startV + s1 * startOut + s2 * endV + s3 * endIn;
-                                }
-                                // console.log(target.y)
-                            }
-                            if (aniData['key'] == 'rotation') {
-                                // var rotationMTX = mat4.create()
-                                // var tRotation = [0, 0, 0]
-                                var tQuaternion = [
-                                    aniData['data'][nextIndex * 12 + 4],
-                                    aniData['data'][nextIndex * 12 + 5],
-                                    aniData['data'][nextIndex * 12 + 6],
-                                    aniData['data'][nextIndex * 12 + 7]
-                                ];
-                                nextRotation = tQuaternion;
-
-                                var tQuaternion = [
-                                    aniData['data'][prevIndex * 12 + 4],
-                                    aniData['data'][prevIndex * 12 + 5],
-                                    aniData['data'][prevIndex * 12 + 6],
-                                    aniData['data'][prevIndex * 12 + 7]
-                                ];
-                                prevRotation = tQuaternion;
-
-                                var prevRotationOut = [
-                                    aniData['data'][prevIndex * 12 + 8],
-                                    aniData['data'][prevIndex * 12 + 9],
-                                    aniData['data'][prevIndex * 12 + 10],
-                                    aniData['data'][prevIndex * 12 + 11]
-                                ];
-                                var nextRotationIn = [
-                                    aniData['data'][nextIndex * 12 + 0],
-                                    aniData['data'][nextIndex * 12 + 1],
-                                    aniData['data'][nextIndex * 12 + 2],
-                                    aniData['data'][nextIndex * 12 + 3]
-                                ];
-                                quat.normalize(prevRotation, prevRotation);
-                                quat.normalize(nextRotation, nextRotation);
-                                quat.normalize(prevRotationOut, prevRotationOut);
-                                quat.normalize(nextRotationIn, nextRotationIn);
-                                var tQuat = [];
-
-                                if (prevIndex != aniDataTime_Length - 1) {
-                                    startV = prevRotation[0];
-                                    startOut = prevRotationOut[0] * interpolationValue;
-                                    endV = nextRotation[0];
-                                    endIn = nextRotationIn[0] * interpolationValue;
-                                    tQuat[0] = s0 * startV + s1 * startOut + s2 * endV + s3 * endIn;
-                                    //
-                                    startV = prevRotation[1];
-                                    startOut = prevRotationOut[1] * interpolationValue;
-                                    endV = nextRotation[1];
-                                    endIn = nextRotationIn[1] * interpolationValue;
-                                    tQuat[1] = s0 * startV + s1 * startOut + s2 * endV + s3 * endIn;
-                                    //
-                                    startV = prevRotation[2];
-                                    startOut = prevRotationOut[2] * interpolationValue;
-                                    endV = nextRotation[2];
-                                    endIn = nextRotationIn[2] * interpolationValue;
-                                    tQuat[2] = s0 * startV + s1 * startOut + s2 * endV + s3 * endIn;
-                                    //
-                                    startV = prevRotation[3];
-                                    startOut = prevRotationOut[3] * interpolationValue;
-                                    endV = nextRotation[3];
-                                    endIn = nextRotationIn[3] * interpolationValue;
-                                    tQuat[3] = s0 * startV + s1 * startOut + s2 * endV + s3 * endIn;
-
-                                    var rotationMTX = [];
-                                    var tRotation = [0, 0, 0];
-                                    RedGLUtil.quaternionToRotationMat4(tQuat, rotationMTX);
-                                    RedGLUtil.mat4ToEuler(rotationMTX, tRotation);
-                                    tRotation[0] = -(tRotation[0] * 180 / Math.PI);
-                                    tRotation[1] = -(tRotation[1] * 180 / Math.PI);
-                                    tRotation[2] = -(tRotation[2] * 180 / Math.PI);
-                                    target.rotationX = tRotation[0];
-                                    target.rotationY = tRotation[1];
-                                    target.rotationZ = tRotation[2]
-                                }
-                            }
-                            if (aniData['key'] == 'scale') {
+                                    tAniData_data[prevIndex * 3],
+                                    tAniData_data[prevIndex * 3 + 1],
+                                    tAniData_data[prevIndex * 3 + 2]
+                                ]
+                                // console.log(interpolationValue,nextTranslation , prevTranslation)
+                                target.x = prevTranslation[0] + interpolationValue * (nextTranslation[0] - prevTranslation[0]);
+                                target.y = prevTranslation[1] + interpolationValue * (nextTranslation[1] - prevTranslation[1]);
+                                target.z = prevTranslation[2] + interpolationValue * (nextTranslation[2] - prevTranslation[2])
+                                break
+                            case 'scale':
                                 nextScale = [
-                                    aniData['data'][prevIndex * 9 + 3],
-                                    aniData['data'][prevIndex * 9 + 4],
-                                    aniData['data'][prevIndex * 9 + 5]
+                                    tAniData_data[nextIndex * 3],
+                                    tAniData_data[nextIndex * 3 + 1],
+                                    tAniData_data[nextIndex * 3 + 2]
                                 ];
                                 prevScale = [
-                                    aniData['data'][nextIndex * 9 + 3],
-                                    aniData['data'][nextIndex * 9 + 4],
-                                    aniData['data'][nextIndex * 9 + 5]
-                                ];
-                                var prevScaleOut = [
-                                    aniData['data'][prevIndex * 9 + 6],
-                                    aniData['data'][prevIndex * 9 + 7],
-                                    aniData['data'][prevIndex * 9 + 8]
-                                ];
-                                var nextScaleIn = [
-                                    aniData['data'][nextIndex * 9 + 0],
-                                    aniData['data'][nextIndex * 9 + 1],
-                                    aniData['data'][nextIndex * 9 + 2]
-                                ];
-
-                                startV = prevScale[0];
-                                if (prevIndex != aniDataTime_Length - 1) {
-                                    startOut = prevScaleOut[0] * interpolationValue;
-                                    endV = nextScale[0];
-                                    endIn = nextScaleIn[0] * interpolationValue;
-                                    target.scaleX = s0 * startV + s1 * startOut + s2 * endV + s3 * endIn;
-                                    //
-                                    startV = prevScale[1];
-                                    startOut = prevScaleOut[1] * interpolationValue;
-                                    endV = nextScale[1];
-                                    endIn = nextScaleIn[1] * interpolationValue;
-                                    target.scaleY = s0 * startV + s1 * startOut + s2 * endV + s3 * endIn;
-                                    //
-                                    startV = prevScale[2];
-                                    startOut = prevScaleOut[2] * interpolationValue;
-                                    endV = nextScale[2];
-                                    endIn = nextScaleIn[2] * interpolationValue;
-                                    target.scaleZ = s0 * startV + s1 * startOut + s2 * endV + s3 * endIn;
-                                }
-                            }
-                            if (aniData['key'] == 'weights') {
-                                aniData['targets'].forEach(function (targetMesh) {
-                                    var targetData = targetMesh['geometry']['interleaveBuffer']['data'];
-                                    var originData = targetMesh['_morphInfo']['origin'];
-                                    var stride = targetMesh['geometry']['interleaveBuffer']['stride'];
-                                    var index = 0;
-                                    var LOOP_NUM = targetData.length / stride;
-                                    var prev, next;
-                                    var prev1, next1;
-                                    var prev2, next2;
-                                    var baseIndex;
-                                    var morphLen = targetMesh['_morphInfo']['list'].length;
-                                    var tAniData = aniData['data'];
-                                    var tMorphList = targetMesh['_morphInfo']['list'];
+                                    tAniData_data[prevIndex * 3],
+                                    tAniData_data[prevIndex * 3 + 1],
+                                    tAniData_data[prevIndex * 3 + 2]
+                                ]
+                                target.scaleX = prevScale[0] + interpolationValue * (nextScale[0] - prevScale[0]);
+                                target.scaleY = prevScale[1] + interpolationValue * (nextScale[1] - prevScale[1]);
+                                target.scaleZ = prevScale[2] + interpolationValue * (nextScale[2] - prevScale[2])
+                                break
+                            case 'weights' :
+                                // console.log(aniData)
+                                var aniTargetsIDX = aniData['targets'].length;
+                                var targetMesh
+                                var targetData;
+                                var originData;
+                                var stride;
+                                var index;
+                                var LOOP_NUM;
+                                var prev, next;
+                                var prev1, next1;
+                                var prev2, next2;
+                                var baseIndex;
+                                var morphLen;
+                                var tAniData;
+                                var tMorphList;
+                                var morphIndex;
+                                var prevAniData;
+                                var nextAniData;
+                                var morphInterleaveData;
+                                while (aniTargetsIDX--) {
+                                    targetMesh = aniData['targets'][aniTargetsIDX]
+                                    targetData = targetMesh['geometry']['interleaveBuffer']['data'];
+                                    originData = targetMesh['_morphInfo']['origin'];
+                                    stride = targetMesh['geometry']['interleaveBuffer']['stride'];
+                                    aniDataTimeIDX = 0;
+                                    LOOP_NUM = targetData.length / stride;
+                                    morphLen = targetMesh['_morphInfo']['list'].length;
+                                    tAniData = aniData['data'];
+                                    tMorphList = targetMesh['_morphInfo']['list'];
+                                    if (!tMorphList['cacheData']) tMorphList['cacheData'] = {}
+                                    var t, t1
+                                    var index = 0
                                     for (index; index < LOOP_NUM; index++) {
                                         baseIndex = index * stride;
-                                        prev = originData[baseIndex];
-                                        next = originData[baseIndex];
-                                        prev1 = originData[baseIndex + 1];
-                                        next1 = originData[baseIndex + 1];
-                                        prev2 = originData[baseIndex + 2];
-                                        next2 = originData[baseIndex + 2];
-
-                                        var morphIndex = morphLen;
-                                        var prevAniData;
-                                        var nextAniData;
-                                        var morphInterleaveData;
-                                        while (morphIndex--) {
-                                            if (morphIndex % 3 == 1) {
+                                        t = tMorphList['cacheData'][baseIndex + '_' + prevIndex + '_' + nextIndex];
+                                        if (t) {
+                                            prev = t[0];
+                                            next = t[1];
+                                            prev1 = t[2];
+                                            next1 = t[3];
+                                            prev2 = t[4];
+                                            next2 = t[5];
+                                        } else {
+                                            prev = originData[baseIndex];
+                                            next = originData[baseIndex];
+                                            prev1 = originData[baseIndex + 1];
+                                            next1 = originData[baseIndex + 1];
+                                            prev2 = originData[baseIndex + 2];
+                                            next2 = originData[baseIndex + 2];
+                                            morphIndex = morphLen;
+                                            while (morphIndex--) {
                                                 prevAniData = tAniData[prevIndex * morphLen + morphIndex];
                                                 nextAniData = tAniData[nextIndex * morphLen + morphIndex];
                                                 morphInterleaveData = tMorphList[morphIndex]['interleaveData'];
-                                                prev += prevAniData * morphInterleaveData[baseIndex];
-                                                next += nextAniData * morphInterleaveData[baseIndex];
-                                                prev1 += prevAniData * morphInterleaveData[baseIndex + 1];
-                                                next1 += nextAniData * morphInterleaveData[baseIndex + 1];
-                                                prev2 += prevAniData * morphInterleaveData[baseIndex + 2];
-                                                next2 += nextAniData * morphInterleaveData[baseIndex + 2]
+                                                t1 = morphInterleaveData[baseIndex]
+                                                prev += prevAniData * t1;
+                                                next += nextAniData * t1;
+                                                t1 = morphInterleaveData[baseIndex + 1]
+                                                prev1 += prevAniData * t1;
+                                                next1 += nextAniData * t1;
+                                                t1 = morphInterleaveData[baseIndex + 2]
+                                                prev2 += prevAniData * t1;
+                                                next2 += nextAniData * t1
                                             }
+                                            tMorphList['cacheData'][baseIndex + '_' + prevIndex + '_' + nextIndex] = [prev, next, prev1, next1, prev2, next2]
                                         }
+
                                         targetData[baseIndex] = prev + interpolationValue * (next - prev);
                                         targetData[baseIndex + 1] = prev1 + interpolationValue * (next1 - prev1);
                                         targetData[baseIndex + 2] = prev2 + interpolationValue * (next2 - prev2)
                                     }
                                     targetMesh['geometry']['interleaveBuffer'].upload(targetData)
-                                })
-                            }
+                                }
+                                break
                         }
-                        return
-                    } else {
-                        if (aniData['interpolation'] == 'STEP') interpolationValue = 0;
-                        else interpolationValue = (currentTime - previousTime) / (nextTime - previousTime);
-                        if (interpolationValue.toString() == 'NaN') interpolationValue = 0;
-                        if (target) {
-                            switch (aniData['key']) {
-                                case 'rotation':
-                                    var tQuaternion = [
-                                        aniData['data'][nextIndex * 4],
-                                        aniData['data'][nextIndex * 4 + 1],
-                                        aniData['data'][nextIndex * 4 + 2],
-                                        aniData['data'][nextIndex * 4 + 3]
-                                    ];
-                                    nextRotation = tQuaternion;
-                                    var tQuaternion = [
-                                        aniData['data'][prevIndex * 4],
-                                        aniData['data'][prevIndex * 4 + 1],
-                                        aniData['data'][prevIndex * 4 + 2],
-                                        aniData['data'][prevIndex * 4 + 3]
-                                    ];
-                                    prevRotation = tQuaternion
-                                    var tQuat = [];
-                                    quat.normalize(prevRotation, prevRotation);
-                                    quat.normalize(nextRotation, nextRotation);
-                                    var ax = prevRotation[0], ay = prevRotation[1], az = prevRotation[2],
-                                        aw = prevRotation[3];
-                                    var bx = nextRotation[0], by = nextRotation[1], bz = nextRotation[2],
-                                        bw = nextRotation[3];
-
-
-                                    var omega, cosom, sinom, scale0, scale1;
-                                    // calc cosine
-                                    cosom = ax * bx + ay * by + az * bz + aw * bw;
-                                    // adjust signs (if necessary)
-                                    if (cosom < 0.0) {
-                                        cosom = -cosom;
-                                        bx = -bx;
-                                        by = -by;
-                                        bz = -bz;
-                                        bw = -bw;
-                                    }
-                                    // calculate coefficients
-                                    if ((1.0 - cosom) > glMatrix.EPSILON) {
-                                        // standard case (slerp)
-                                        omega = Math.acos(cosom);
-                                        sinom = Math.sin(omega);
-                                        scale0 = Math.sin((1.0 - interpolationValue) * omega) / sinom;
-                                        scale1 = Math.sin(interpolationValue * omega) / sinom;
-                                    } else {
-                                        // "from" and "to" quaternions are very close
-                                        //  ... so we can do a linear interpolation
-                                        scale0 = 1.0 - interpolationValue;
-                                        scale1 = interpolationValue;
-                                    }
-                                    // calculate final values
-                                    tQuat[0] = scale0 * ax + scale1 * bx;
-                                    tQuat[1] = scale0 * ay + scale1 * by;
-                                    tQuat[2] = scale0 * az + scale1 * bz;
-                                    tQuat[3] = scale0 * aw + scale1 * bw;
-
-                                    var rotationMTX = [];
-                                    var tRotation = [0, 0, 0];
-                                    RedGLUtil.quaternionToRotationMat4(tQuat, rotationMTX);
-                                    RedGLUtil.mat4ToEuler(rotationMTX, tRotation);
-                                    tRotation[0] = -(tRotation[0] * 180 / Math.PI);
-                                    tRotation[1] = -(tRotation[1] * 180 / Math.PI);
-                                    tRotation[2] = -(tRotation[2] * 180 / Math.PI);
-                                    // console.log(prevRotation, nextRotation)
-                                    target.rotationX = tRotation[0];
-                                    target.rotationY = tRotation[1];
-                                    target.rotationZ = tRotation[2]
-                                    // console.log(prevIndex, nextIndex)
-                                    // console.log(parseInt(prevRotation[2]), parseInt(nextRotation[2]))
-                                    // console.log(target.rotationX ,target.rotationY ,target.rotationZ )
-                                    break
-                                case 'translation':
-                                    nextTranslation = [
-                                        aniData['data'][nextIndex * 3],
-                                        aniData['data'][nextIndex * 3 + 1],
-                                        aniData['data'][nextIndex * 3 + 2]
-                                    ];
-                                    prevTranslation = [
-                                        aniData['data'][prevIndex * 3],
-                                        aniData['data'][prevIndex * 3 + 1],
-                                        aniData['data'][prevIndex * 3 + 2]
-                                    ]
-                                    // console.log(interpolationValue,nextTranslation , prevTranslation)
-                                    target.x = prevTranslation[0] + interpolationValue * (nextTranslation[0] - prevTranslation[0]);
-                                    target.y = prevTranslation[1] + interpolationValue * (nextTranslation[1] - prevTranslation[1]);
-                                    target.z = prevTranslation[2] + interpolationValue * (nextTranslation[2] - prevTranslation[2])
-                                    break
-                                case 'scale':
-                                    nextScale = [
-                                        aniData['data'][nextIndex * 3],
-                                        aniData['data'][nextIndex * 3 + 1],
-                                        aniData['data'][nextIndex * 3 + 2]
-                                    ];
-                                    prevScale = [
-                                        aniData['data'][prevIndex * 3],
-                                        aniData['data'][prevIndex * 3 + 1],
-                                        aniData['data'][prevIndex * 3 + 2]
-                                    ]
-                                    target.scaleX = prevScale[0] + interpolationValue * (nextScale[0] - prevScale[0]);
-                                    target.scaleY = prevScale[1] + interpolationValue * (nextScale[1] - prevScale[1]);
-                                    target.scaleZ = prevScale[2] + interpolationValue * (nextScale[2] - prevScale[2])
-                                    break
-                                case 'weights' :
-                                    // console.log(aniData)
-                                    var aniTargetsIDX = aniData['targets'].length;
-                                    var targetMesh
-                                    var targetData;
-                                    var originData;
-                                    var stride;
-                                    var index;
-                                    var LOOP_NUM;
-                                    var prev, next;
-                                    var prev1, next1;
-                                    var prev2, next2;
-                                    var baseIndex;
-                                    var morphLen;
-                                    var tAniData;
-                                    var tMorphList;
-                                    var morphIndex;
-                                    var prevAniData;
-                                    var nextAniData;
-                                    var morphInterleaveData;
-                                    while (aniTargetsIDX--) {
-                                        targetMesh = aniData['targets'][aniTargetsIDX]
-                                        targetData = targetMesh['geometry']['interleaveBuffer']['data'];
-                                        originData = targetMesh['_morphInfo']['origin'];
-                                        stride = targetMesh['geometry']['interleaveBuffer']['stride'];
-                                        index = 0;
-                                        LOOP_NUM = targetData.length / stride;
-                                        morphLen = targetMesh['_morphInfo']['list'].length;
-                                        tAniData = aniData['data'];
-                                        tMorphList = targetMesh['_morphInfo']['list'];
-                                        if (!tMorphList['cacheData']) tMorphList['cacheData'] = {}
-                                        var t, t1
-                                        for (index; index < LOOP_NUM; index++) {
-                                            baseIndex = index * stride;
-                                            t = tMorphList['cacheData'][baseIndex + '_' + prevIndex + '_' + nextIndex];
-                                            if (t) {
-                                                prev = t[0];
-                                                next = t[1];
-                                                prev1 = t[2];
-                                                next1 = t[3];
-                                                prev2 = t[4];
-                                                next2 = t[5];
-                                            } else {
-                                                prev = originData[baseIndex];
-                                                next = originData[baseIndex];
-                                                prev1 = originData[baseIndex + 1];
-                                                next1 = originData[baseIndex + 1];
-                                                prev2 = originData[baseIndex + 2];
-                                                next2 = originData[baseIndex + 2];
-                                                morphIndex = morphLen;
-                                                while (morphIndex--) {
-                                                    prevAniData = tAniData[prevIndex * morphLen + morphIndex];
-                                                    nextAniData = tAniData[nextIndex * morphLen + morphIndex];
-                                                    morphInterleaveData = tMorphList[morphIndex]['interleaveData'];
-                                                    t1 = morphInterleaveData[baseIndex]
-                                                    prev += prevAniData * t1;
-                                                    next += nextAniData * t1;
-                                                    t1 = morphInterleaveData[baseIndex + 1]
-                                                    prev1 += prevAniData * t1;
-                                                    next1 += nextAniData * t1;
-                                                    t1 = morphInterleaveData[baseIndex + 2]
-                                                    prev2 += prevAniData * t1;
-                                                    next2 += nextAniData * t1
-                                                }
-                                                tMorphList['cacheData'][baseIndex + '_' + prevIndex + '_' + nextIndex] = [prev, next, prev1, next1, prev2, next2]
-                                            }
-
-                                            targetData[baseIndex] = prev + interpolationValue * (next - prev);
-                                            targetData[baseIndex + 1] = prev1 + interpolationValue * (next1 - prev1);
-                                            targetData[baseIndex + 2] = prev2 + interpolationValue * (next2 - prev2)
-                                        }
-                                        targetMesh['geometry']['interleaveBuffer'].upload(targetData)
-                                    }
-                                    break
-                            }
-                        }
-
-
                     }
+                }
 
-                })
+                // })
             }
         }
-    })();
+    }
     parser = (function () {
         var checkAsset;
         var getBaseResource;
@@ -13232,8 +13287,8 @@ var RedGLTFLoader;
             if (tJointMesh) {
                 var tJointMesh = nodes[v]['RedMesh'];
                 skinInfo['joints'].push(tJointMesh);
-                tJointMesh.geometry = RedSphere(redGLTFLoader['redGL'], 0.05, 3, 3, 3);
-                tJointMesh.material = RedColorMaterial(redGLTFLoader['redGL']);
+                // tJointMesh.geometry = RedSphere(redGLTFLoader['redGL'], 0.05, 3, 3, 3);
+                tJointMesh.material = RedColorMaterial(redGLTFLoader['redGL'], '#ff0000');
                 tJointMesh.drawMode = redGLTFLoader['redGL'].gl.LINE_LOOP;
                 tJointMesh.depthTestFunc = redGLTFLoader['redGL'].gl.NEVER
             } else requestAnimationFrame(function () {
@@ -20361,8 +20416,6 @@ var RedRenderer;
                         }
                         ////////////////////////////////////////////////////////////////////////////////////////////////////////////
                         // 글로벌 조인트 노드병합함
-                        //TODO: 여기 캐싱할 방법 찾아야함
-
                         for (index; index < len; index++) {
                             // 조인트 공간내에서의 전역
                             tJointMTX = joints[index]['matrix'];
@@ -20385,7 +20438,14 @@ var RedRenderer;
                         }
                         tGL.uniformMatrix4fv(tSystemUniformGroup['uGlobalTransformOfNodeThatTheMeshIsAttachedTo']['location'], false, globalTransformOfNodeThatTheMeshIsAttachedTo);
                         tGL.uniformMatrix4fv(tSystemUniformGroup['uJointMatrix']['location'], false, globalTransformOfJointNode);
-                        tGL.uniformMatrix4fv(tSystemUniformGroup['uInverseBindMatrixForJoint']['location'], false, tSkinInfo['inverseBindMatrices'])
+                        if (!tSkinInfo['inverseBindMatrices']['_UUID']) tSkinInfo['inverseBindMatrices']['_UUID'] = JSON.stringify(tSkinInfo['inverseBindMatrices'])
+                        tUUID = tSystemUniformGroup['uInverseBindMatrixForJoint']['_UUID']
+                        if (tCacheUniformInfo[tUUID] != tSkinInfo['inverseBindMatrices']['_UUID']) {
+                            tGL.uniformMatrix4fv(tSystemUniformGroup['uInverseBindMatrixForJoint']['location'], false, tSkinInfo['inverseBindMatrices'])
+                            tCacheUniformInfo[tUUID] = tSkinInfo['inverseBindMatrices']['_UUID']
+                        }
+
+
                     }
                 }
                 if (tGeometry) {
@@ -20425,15 +20485,15 @@ var RedRenderer;
                     }
                     /////////////////////////////////////////////////////////////////////////
                     /////////////////////////////////////////////////////////////////////////
-                    if (!transparentMode) {
+                    if (transparentMode) {
+                        tMesh.autoUpdateMatrix = tMesh._renderAutoUpdateMatrix
+                    } else {
                         if (tMesh['useTransparentSort']) {
                             transparentList.push(tMesh);
                             tMesh._renderAutoUpdateMatrix = tMesh.autoUpdateMatrix;
                             tMesh.autoUpdateMatrix = false;
                             continue
                         }
-                    } else {
-                        tMesh.autoUpdateMatrix = tMesh._renderAutoUpdateMatrix
                     }
                     // 드로우
                     if (tIndexBufferInfo) {
@@ -27242,4 +27302,4 @@ var RedGLOffScreen;
         };
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-05-15 11:33:42)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-05-15 15:28:14)' };console.log(RedGL_VERSION);
