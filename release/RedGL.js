@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.15 16:50
+ * Last modification time of this file - 2019.5.17 19:23
  */
 
 /**DOC:
@@ -3571,12 +3571,12 @@ var RedBaseObject3D;
             */
         };
         this['_mouseColorMaterial'] = null;
-        this['_mouseColorID'] = [
+        this['_mouseColorID'] = new Float32Array([
             parseInt(Math.random() * 255),
             parseInt(Math.random() * 255),
             parseInt(Math.random() * 255),
             255
-        ]
+        ])
 
     };
     RedBaseObject3D.prototype = {
@@ -13850,12 +13850,12 @@ var RedGLTFLoader;
                     tMaterial = RedPBRMaterial_System(redGLTFLoader['redGL'], diffseTexture, env, normalTexture, occlusionTexture, emissiveTexture, roughnessTexture, null);
                     if (tMaterialInfo['pbrMetallicRoughness'] && tMaterialInfo['pbrMetallicRoughness']['baseColorFactor']) tColor = tMaterialInfo['pbrMetallicRoughness']['baseColorFactor'];
                     else tColor = [1.0, 1.0, 1.0, 1.0];
-                    tMaterial['baseColorFactor'] = tColor;
+                    tMaterial['baseColorFactor'] = new Float32Array(tColor);
                     if (tMaterialInfo['pbrMetallicRoughness']) {
                         tMaterial.metallicFactor = metallicFactor != undefined ? metallicFactor : 1;
                         tMaterial.roughnessFactor = roughnessFactor != undefined ? roughnessFactor : 1;
                     }
-                    tMaterial.emissiveFactor = tMaterialInfo.emissiveFactor != undefined ? tMaterialInfo.emissiveFactor : [1, 1, 1];
+                    tMaterial.emissiveFactor = tMaterialInfo.emissiveFactor != undefined ? tMaterialInfo.emissiveFactor : new Float32Array([1, 1, 1]);
                     if (tMaterialInfo['pbrMetallicRoughness']) {
                         if (tMaterialInfo['pbrMetallicRoughness']['metallicRoughnessTexture']) tMaterial['roughnessTexCoordIndex'] = tMaterialInfo['pbrMetallicRoughness']['metallicRoughnessTexture']['texCoord'] || 0;
                         if (tMaterialInfo['pbrMetallicRoughness']['baseColorTexture']) tMaterial['diffuseTexCoordIndex'] = tMaterialInfo['pbrMetallicRoughness']['baseColorTexture']['texCoord'] || 0
@@ -13870,7 +13870,7 @@ var RedGLTFLoader;
                 } else {
                     var tColor = [(Math.random()), (Math.random()), (Math.random()), 1];
                     tMaterial = RedPBRMaterial_System(redGLTFLoader['redGL']);
-                    tMaterial['baseColorFactor'] = tColor
+                    tMaterial['baseColorFactor'] = new Float32Array(tColor);
                 }
                 return [tMaterial, doubleSide, alphaMode, alphaCutoff]
             }
@@ -20266,6 +20266,7 @@ var RedRenderer;
                             tLocalMatrix[4] = a[4], tLocalMatrix[5] = a[5], tLocalMatrix[6] = a[6], tLocalMatrix[7] = a[7],
                         tLocalMatrix[8] = a[8], tLocalMatrix[9] = a[9] , tLocalMatrix[10] = a[10], tLocalMatrix[11] = a[11],
                         tLocalMatrix[12] = a[12], tLocalMatrix[13] = a[13], tLocalMatrix[14] = a[14], tLocalMatrix[15] = a[15],
+
                         // 부모가있으면 곱함
                         parentMTX ? (
                             // 부모매트릭스 복사
@@ -20296,6 +20297,7 @@ var RedRenderer;
                                 tMVMatrix[14] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
                                 tMVMatrix[15] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33
                         ) : 0;
+
                     }
                     /////////////////////////////////////////////////////////////////////////
                     /////////////////////////////////////////////////////////////////////////
@@ -20355,7 +20357,7 @@ var RedRenderer;
                         var joints = tSkinInfo['joints'];
                         var index = 0, len = joints.length;
                         var tJointMTX;
-                        var globalTransformOfJointNode = new Float32Array(len*16);
+                        var globalTransformOfJointNode = new Float32Array(len * 16);
                         var globalTransformOfNodeThatTheMeshIsAttachedTo = [
                             tMVMatrix[0],
                             tMVMatrix[1],
@@ -27297,4 +27299,4 @@ var RedGLOffScreen;
         };
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-05-15 16:50:29)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-05-17 19:23:28)' };console.log(RedGL_VERSION);

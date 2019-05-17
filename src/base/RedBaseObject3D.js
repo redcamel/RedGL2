@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.15 16:32
+ * Last modification time of this file - 2019.5.17 18:35
  */
 
 "use strict";
@@ -319,12 +319,12 @@ var RedBaseObject3D;
             */
         };
         this['_mouseColorMaterial'] = null;
-        this['_mouseColorID'] = [
+        this['_mouseColorID'] = new Float32Array([
             parseInt(Math.random() * 255),
             parseInt(Math.random() * 255),
             parseInt(Math.random() * 255),
             255
-        ]
+        ])
 
     };
     RedBaseObject3D.prototype = {

@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.15 16:21
+ * Last modification time of this file - 2019.5.17 18:39
  */
 
 "use strict";
@@ -1539,12 +1539,12 @@ var RedGLTFLoader;
                     tMaterial = RedPBRMaterial_System(redGLTFLoader['redGL'], diffseTexture, env, normalTexture, occlusionTexture, emissiveTexture, roughnessTexture, null);
                     if (tMaterialInfo['pbrMetallicRoughness'] && tMaterialInfo['pbrMetallicRoughness']['baseColorFactor']) tColor = tMaterialInfo['pbrMetallicRoughness']['baseColorFactor'];
                     else tColor = [1.0, 1.0, 1.0, 1.0];
-                    tMaterial['baseColorFactor'] = tColor;
+                    tMaterial['baseColorFactor'] = new Float32Array(tColor);
                     if (tMaterialInfo['pbrMetallicRoughness']) {
                         tMaterial.metallicFactor = metallicFactor != undefined ? metallicFactor : 1;
                         tMaterial.roughnessFactor = roughnessFactor != undefined ? roughnessFactor : 1;
                     }
-                    tMaterial.emissiveFactor = tMaterialInfo.emissiveFactor != undefined ? tMaterialInfo.emissiveFactor : [1, 1, 1];
+                    tMaterial.emissiveFactor = tMaterialInfo.emissiveFactor != undefined ? tMaterialInfo.emissiveFactor : new Float32Array([1, 1, 1]);
                     if (tMaterialInfo['pbrMetallicRoughness']) {
                         if (tMaterialInfo['pbrMetallicRoughness']['metallicRoughnessTexture']) tMaterial['roughnessTexCoordIndex'] = tMaterialInfo['pbrMetallicRoughness']['metallicRoughnessTexture']['texCoord'] || 0;
                         if (tMaterialInfo['pbrMetallicRoughness']['baseColorTexture']) tMaterial['diffuseTexCoordIndex'] = tMaterialInfo['pbrMetallicRoughness']['baseColorTexture']['texCoord'] || 0
@@ -1559,7 +1559,7 @@ var RedGLTFLoader;
                 } else {
                     var tColor = [(Math.random()), (Math.random()), (Math.random()), 1];
                     tMaterial = RedPBRMaterial_System(redGLTFLoader['redGL']);
-                    tMaterial['baseColorFactor'] = tColor
+                    tMaterial['baseColorFactor'] = new Float32Array(tColor);
                 }
                 return [tMaterial, doubleSide, alphaMode, alphaCutoff]
             }

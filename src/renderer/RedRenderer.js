@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.15 16:34
+ * Last modification time of this file - 2019.5.17 19:21
  */
 
 "use strict";
@@ -751,6 +751,7 @@ var RedRenderer;
                             tLocalMatrix[4] = a[4], tLocalMatrix[5] = a[5], tLocalMatrix[6] = a[6], tLocalMatrix[7] = a[7],
                         tLocalMatrix[8] = a[8], tLocalMatrix[9] = a[9] , tLocalMatrix[10] = a[10], tLocalMatrix[11] = a[11],
                         tLocalMatrix[12] = a[12], tLocalMatrix[13] = a[13], tLocalMatrix[14] = a[14], tLocalMatrix[15] = a[15],
+
                         // 부모가있으면 곱함
                         parentMTX ? (
                             // 부모매트릭스 복사
@@ -781,6 +782,7 @@ var RedRenderer;
                                 tMVMatrix[14] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
                                 tMVMatrix[15] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33
                         ) : 0;
+
                     }
                     /////////////////////////////////////////////////////////////////////////
                     /////////////////////////////////////////////////////////////////////////
@@ -840,7 +842,7 @@ var RedRenderer;
                         var joints = tSkinInfo['joints'];
                         var index = 0, len = joints.length;
                         var tJointMTX;
-                        var globalTransformOfJointNode = new Float32Array(len*16);
+                        var globalTransformOfJointNode = new Float32Array(len * 16);
                         var globalTransformOfNodeThatTheMeshIsAttachedTo = [
                             tMVMatrix[0],
                             tMVMatrix[1],
