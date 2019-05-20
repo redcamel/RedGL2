@@ -2,14 +2,14 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.5.20 20:2
  */
 
 "use strict";
 var RedProgram;
 (function () {
     var makeWebGLProgram, searchLocation;
-    var samplerIndex, MAX_SAMPLER_INDEX;
+    var samplerIndex, MAX_SAMPLER_INDEX,samplerIndexMap={};
     samplerIndex = 2;
     makeWebGLProgram = (function () {
         var tProgram;
