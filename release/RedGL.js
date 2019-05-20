@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.20 20:25
+ * Last modification time of this file - 2019.5.20 21:15
  */
 
 /**DOC:
@@ -18313,7 +18313,7 @@ var RedSphere;
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.5.20 20:2
  */
 
 "use strict";
@@ -19517,7 +19517,7 @@ var RedShader;
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.17 19:21
+ * Last modification time of this file - 2019.5.20 20:24
  */
 
 "use strict";
@@ -20255,7 +20255,6 @@ var RedRenderer;
                         tLocalMatrix[4] = tLocalMatrix[4] * aY, tLocalMatrix[5] = tLocalMatrix[5] * aY, tLocalMatrix[6] = tLocalMatrix[6] * aY, tLocalMatrix[7] = tLocalMatrix[7] * aY,
                         tLocalMatrix[8] = tLocalMatrix[8] * aZ, tLocalMatrix[9] = tLocalMatrix[9] * aZ, tLocalMatrix[10] = tLocalMatrix[10] * aZ, tLocalMatrix[11] = tLocalMatrix[11] * aZ,
                         tLocalMatrix[12] = tLocalMatrix[12], tLocalMatrix[13] = tLocalMatrix[13], tLocalMatrix[14] = tLocalMatrix[14], tLocalMatrix[15] = tLocalMatrix[15],
-
                         // 부모가있으면 곱함
                         parentMTX ?
                             (
@@ -20349,9 +20348,8 @@ var RedRenderer;
                     }
                 }
                 if (tSkinInfo) {
-
                     var joints = tSkinInfo['joints'];
-                    var index = 0, len = joints.length;
+                    var joint_i = 0, len = joints.length;
                     var tJointMTX;
                     var globalTransformOfJointNode = new Float32Array(len * 16);
                     var globalTransformOfNodeThatTheMeshIsAttachedTo = [
@@ -20409,25 +20407,25 @@ var RedRenderer;
                     }
                     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
                     // 글로벌 조인트 노드병합함
-                    for (index; index < len; index++) {
+                    for (joint_i; joint_i < len; joint_i++) {
                         // 조인트 공간내에서의 전역
-                        tJointMTX = joints[index]['matrix'];
-                        globalTransformOfJointNode[index * 16 + 0] = tJointMTX[0];
-                        globalTransformOfJointNode[index * 16 + 1] = tJointMTX[1];
-                        globalTransformOfJointNode[index * 16 + 2] = tJointMTX[2];
-                        globalTransformOfJointNode[index * 16 + 3] = tJointMTX[3];
-                        globalTransformOfJointNode[index * 16 + 4] = tJointMTX[4];
-                        globalTransformOfJointNode[index * 16 + 5] = tJointMTX[5];
-                        globalTransformOfJointNode[index * 16 + 6] = tJointMTX[6];
-                        globalTransformOfJointNode[index * 16 + 7] = tJointMTX[7];
-                        globalTransformOfJointNode[index * 16 + 8] = tJointMTX[8];
-                        globalTransformOfJointNode[index * 16 + 9] = tJointMTX[9];
-                        globalTransformOfJointNode[index * 16 + 10] = tJointMTX[10];
-                        globalTransformOfJointNode[index * 16 + 11] = tJointMTX[11];
-                        globalTransformOfJointNode[index * 16 + 12] = tJointMTX[12];
-                        globalTransformOfJointNode[index * 16 + 13] = tJointMTX[13];
-                        globalTransformOfJointNode[index * 16 + 14] = tJointMTX[14];
-                        globalTransformOfJointNode[index * 16 + 15] = tJointMTX[15]
+                        tJointMTX = joints[joint_i]['matrix'];
+                        globalTransformOfJointNode[joint_i * 16 + 0] = tJointMTX[0];
+                        globalTransformOfJointNode[joint_i * 16 + 1] = tJointMTX[1];
+                        globalTransformOfJointNode[joint_i * 16 + 2] = tJointMTX[2];
+                        globalTransformOfJointNode[joint_i * 16 + 3] = tJointMTX[3];
+                        globalTransformOfJointNode[joint_i * 16 + 4] = tJointMTX[4];
+                        globalTransformOfJointNode[joint_i * 16 + 5] = tJointMTX[5];
+                        globalTransformOfJointNode[joint_i * 16 + 6] = tJointMTX[6];
+                        globalTransformOfJointNode[joint_i * 16 + 7] = tJointMTX[7];
+                        globalTransformOfJointNode[joint_i * 16 + 8] = tJointMTX[8];
+                        globalTransformOfJointNode[joint_i * 16 + 9] = tJointMTX[9];
+                        globalTransformOfJointNode[joint_i * 16 + 10] = tJointMTX[10];
+                        globalTransformOfJointNode[joint_i * 16 + 11] = tJointMTX[11];
+                        globalTransformOfJointNode[joint_i * 16 + 12] = tJointMTX[12];
+                        globalTransformOfJointNode[joint_i * 16 + 13] = tJointMTX[13];
+                        globalTransformOfJointNode[joint_i * 16 + 14] = tJointMTX[14];
+                        globalTransformOfJointNode[joint_i * 16 + 15] = tJointMTX[15]
                     }
                     tGL.uniformMatrix4fv(tSystemUniformGroup['uGlobalTransformOfNodeThatTheMeshIsAttachedTo']['location'], false, globalTransformOfNodeThatTheMeshIsAttachedTo);
                     tGL.uniformMatrix4fv(tSystemUniformGroup['uJointMatrix']['location'], false, globalTransformOfJointNode);
@@ -27294,4 +27292,4 @@ var RedGLOffScreen;
         };
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-05-20 20:25:48)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-05-20 21:15:54)' };console.log(RedGL_VERSION);
