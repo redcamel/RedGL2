@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.5.3 14:3
  */
 
 "use strict";
@@ -30,8 +30,12 @@ var RedSkyBoxMaterial;
          uniform samplerCube u_skyBoxTexture;
          varying vec3 vReflectionCubeCoord;
          uniform float u_alpha;
+         uniform bool u_mirrorMode;
+
          void main(void) {
-             vec4 finalColor = textureCube(u_skyBoxTexture, vReflectionCubeCoord);
+            vec4 finalColor ;
+            if(u_mirrorMode) finalColor = textureCube(u_skyBoxTexture, vec3(1.0-vReflectionCubeCoord.x,vReflectionCubeCoord.y,1.0-vReflectionCubeCoord.z));
+            else finalColor = textureCube(u_skyBoxTexture, vReflectionCubeCoord);
              //#REDGL_DEFINE#fog#false# gl_FragColor = finalColor;
              //#REDGL_DEFINE#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
              gl_FragColor.a = u_alpha;
@@ -76,6 +80,7 @@ var RedSkyBoxMaterial;
         // 일반 프로퍼티
         this['_UUID'] = RedGL.makeUUID();
         this['alpha'] = alpha == undefined ? 1 : alpha;
+        this['mirrorMode'] = false;
         if (!checked) {
             this.checkUniformAndProperty();
             checked = true;
@@ -93,5 +98,6 @@ var RedSkyBoxMaterial;
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedSkyBoxMaterial', 'skyBoxTexture', 'samplerCube', {essential: true});
     RedDefinePropertyInfo.definePrototype('RedSkyBoxMaterial', 'alpha', 'number', {min: 0, max: 1});
+    RedDefinePropertyInfo.definePrototype('RedSkyBoxMaterial', 'mirrorMode', 'boolean');
     Object.freeze(RedSkyBoxMaterial)
 })();

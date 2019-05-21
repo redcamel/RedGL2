@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 20:58
+ * Last modification time of this file - 2019.5.21 16:9
  */
 
 /**DOC:
@@ -2799,7 +2799,7 @@ var RedGL;
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 19:6
+ * Last modification time of this file - 2019.4.30 20:58
  */
 "use strict";
 var RedBoxSelection;
@@ -3254,7 +3254,7 @@ var RedBaseTexture;
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.5.21 11:33
  */
 
 "use strict";
@@ -3561,7 +3561,7 @@ var RedBaseObject3D;
 		 }
          :DOC*/
         this['useLOD'] = false;
-        this['_lodLevels'] = {
+        this['_lodLevels'] = [
             /* 1: {
                 geometry : ~~,
                 material : ~~~
@@ -3569,14 +3569,14 @@ var RedBaseObject3D;
                 하나만 입력할경우 없는쪽은 오리지날 속성이 부여된다.
             }
             */
-        };
+        ];
         this['_mouseColorMaterial'] = null;
-        this['_mouseColorID'] = [
+        this['_mouseColorID'] = new Float32Array([
             parseInt(Math.random() * 255),
             parseInt(Math.random() * 255),
             parseInt(Math.random() * 255),
             255
-        ]
+        ])
 
     };
     RedBaseObject3D.prototype = {
@@ -3615,17 +3615,27 @@ var RedBaseObject3D;
 		 }
          :DOC*/
         addLOD: (function () {
-            var tData;
+            var tData, needPush;
+            var i;
             return function (level, distance, geometry, material) {
                 geometry || material || RedGLUtil.throwFunc('RedBaseObject3D - addLOD : geometry, material 둘중하나는 반드시 입력되어야함');
-                RedGLUtil['isUint'](level) || RedGLUtil.throwFunc('RedBaseObject3D - level : uint만 허용함');
+                RedGLUtil['isUint'](level) || RedGLUtil.throwFunc('RedBaseObject3D - addLOD : level은 uint만 허용함');
+                if (level > 4) RedGLUtil.throwFunc('RedBaseObject3D - addLOD : level은 0~4 level 까지 허용함');
                 tData = {
                     level: level,
                     distance: distance,
                     geometry: geometry ? geometry : this['geometry'],
                     material: material ? material : this['material']
                 };
-                this['_lodLevels'][level] = tData;
+                i = this['_lodLevels'].length;
+                needPush = true;
+                while (i--) {
+                    if (this['_lodLevels'][i]['level'] == level) {
+                        this['_lodLevels'][i]=tData;
+                        needPush = false;
+                    }
+                }
+                if (needPush) this['_lodLevels'].push(tData)
             }
         })(),
         /**DOC:
@@ -3648,7 +3658,13 @@ var RedBaseObject3D;
          :DOC*/
         removeLOD: function (level) {
             RedGLUtil['isUint'](level) || RedGLUtil.throwFunc('RedBaseObject3D - removeLOD : level : uint만 허용함');
-            if (this['_lodLevels'][level]) delete this['_lodLevels'][level]
+            var i = this['_lodLevels'].length;
+            while (i--) {
+                if (this['_lodLevels'][i]['level'] == level) {
+                    this['_lodLevels'].splice(i, 1);
+                    break
+                }
+            }
         },
         /**DOC:
          {
@@ -7726,7 +7742,7 @@ var RedBitmapMaterial;
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.5.2 13:44
  */
 
 "use strict";
@@ -7742,16 +7758,15 @@ var RedParticleMaterial;
     var checked;
     vSource = function () {
         /* @preserve
-         const mat4 cOrtho = mat4(
+         const mat4 cMode2D = mat4(
                 0.5, 0.0, 0.0, 0.0,
                 0.0, 0.5, 0.0, 0.0,
                 0.0, 0.0, 0.5, 0.0,
                 0.0, 0.0, 0.0, 1.0
         );
          void main(void) {
-            if(uOrthographicYn){
-
-                gl_Position = uPMatrix * uCameraMatrix * cOrtho * uMMatrix * vec4(aVertexPosition.x, -aVertexPosition.y, aVertexPosition.z, 1.0);
+            if(uMode2DYn){
+                gl_Position = uPMatrix * uCameraMatrix * cMode2D * uMMatrix * vec4(aVertexPosition.x, -aVertexPosition.y, aVertexPosition.z, 1.0);
                 gl_PointSize = abs(aPointSize)/gl_Position.w;
             }else {
                 gl_Position = uPMatrix * uCameraMatrix * uMMatrix * vec4(aVertexPosition, 1.0);
@@ -7878,7 +7893,7 @@ var RedParticleMaterial;
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.5.2 12:46
  */
 
 "use strict";
@@ -7893,7 +7908,7 @@ var RedBitmapPointCloudMaterial;
         /* @preserve
 
          void main(void) {
-            if(uOrthographicYn){
+            if(uMode2DYn){
 
                 gl_Position = uPMatrix * uCameraMatrix * uMMatrix * vec4(aVertexPosition.x, -aVertexPosition.y, aVertexPosition.z, 1.0);
                 gl_PointSize = abs(aPointSize)/gl_Position.w;
@@ -9363,7 +9378,7 @@ var RedPBRMaterial;
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.5.2 12:46
  */
 
 "use strict";
@@ -9377,7 +9392,7 @@ var RedColorPointCloudMaterial;
 
          void main(void) {
             vVertexColor = aVertexColor;
-            if(uOrthographicYn){
+            if(uMode2DYn){
                 gl_Position = uPMatrix * uCameraMatrix * uMMatrix * vec4(aVertexPosition.x, -aVertexPosition.y, aVertexPosition.z, 1.0);
                 gl_PointSize = abs(aPointSize)/gl_Position.w;
             }else {
@@ -10009,7 +10024,7 @@ var RedPBRMaterial_System;
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.5.2 13:44
  */
 
 "use strict";
@@ -10023,12 +10038,6 @@ var RedTextMaterial;
         /* @preserve
             // Sprite3D
             //#REDGL_DEFINE#vertexShareFunc#getSprite3DMatrix#
-            const mat4 c3dScale = mat4(
-                1.0/1024.0, 0.0, 0.0, 0.0,
-                0.0, 1.0/1024.0, 0.0, 0.0,
-                0.0, 0.0, 1.0, 0.0,
-                0.0, 0.0, 0.0, 1.0
-            );
 
             uniform float u_width;
             uniform float u_height;
@@ -10040,7 +10049,7 @@ var RedTextMaterial;
 
                 // position 계산
                 mat4 targetMatrix;
-                if(uOrthographicYn){
+                if(uMode2DYn){
                       targetMatrix = uMMatrix * mat4(
                         u_width, 0.0, 0.0, 0.0,
                         0.0, u_height, 0.0, 0.0,
@@ -12320,7 +12329,7 @@ var RedDAELoader;
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.5.17 18:39
  */
 
 "use strict";
@@ -12387,36 +12396,56 @@ var RedGLTFLoader;
 	 }
      :DOC*/
 
-    var fileLoader = function (src, type, onLoader, onError) {
-        var request = new XMLHttpRequest();
-        request.open("GET", src, true);
-        // request.overrideMimeType('model/gltf+json')
-        // request.setRequestHeader("Content-Type", (type ? type : "application/xml; ") + 'charset=UTF-8')
-        request.onreadystatechange = function (e) {
-            if (request.readyState === 4 && request.status === 200) {
-                console.log(request);
-                onLoader(request)
+    var fileLoader = (function () {
+        var cache = {}
+        return function (src, type, onLoader, onError) {
+            if (cache[src]) {
+                requestAnimationFrame(function () {
+                    onLoader(cache[src])
+                })
             } else {
-                onError(request, e)
+                var request = new XMLHttpRequest();
+                request.open("GET", src, true);
+                // request.overrideMimeType('model/gltf+json')
+                // request.setRequestHeader("Content-Type", (type ? type : "application/xml; ") + 'charset=UTF-8')
+                request.onreadystatechange = function (e) {
+                    if (request.readyState === 4 && request.status === 200) {
+                        console.log(request);
+                        cache[src] = request
+                        onLoader(request)
+                    } else {
+                        onError(request, e)
+                    }
+                };
+                request.send();
             }
-        };
-        request.send();
-    };
-    var arrayBufferLoader = function (src, onLoader, onError) {
-        var request = new XMLHttpRequest();
-        request.open("GET", src, true);
-        request.overrideMimeType('application/octet-stream');
-        request.responseType = "arraybuffer";
-        request.onreadystatechange = function (e) {
-            if (request.readyState === 4 && request.status === 200) {
-                console.log(request);
-                onLoader(request)
+        }
+    })();
+    var arrayBufferLoader = (function () {
+        var cache = {}
+        return function (src, onLoader, onError) {
+            if (cache[src]) {
+                requestAnimationFrame(function () {
+                    onLoader(cache[src])
+                })
             } else {
-                onError(request, e)
+                var request = new XMLHttpRequest();
+                request.open("GET", src, true);
+                request.overrideMimeType('application/octet-stream');
+                request.responseType = "arraybuffer";
+                request.onreadystatechange = function (e) {
+                    if (request.readyState === 4 && request.status === 200) {
+                        console.log(request);
+                        cache[src] = request
+                        onLoader(request)
+                    } else {
+                        onError(request, e)
+                    }
+                };
+                request.send();
             }
-        };
-        request.send();
-    };
+        }
+    })();
     RedGLTFLoader = function (redGL, path, fileName, callback, environmentTexture, parsingOption) {
         if ((!(this instanceof RedGLTFLoader))) return new RedGLTFLoader(redGL, path, fileName, callback, environmentTexture, parsingOption);
         console.log('~~~~~~~~~~~');
@@ -12544,7 +12573,6 @@ var RedGLTFLoader;
         }
 
         this['redGL'] = redGL;
-
         this['path'] = path;
         this['fileName'] = fileName;
         this['resultMesh'] = RedMesh(redGL);
@@ -12588,189 +12616,224 @@ var RedGLTFLoader;
         }
     });
     var loopList = [];
-    RedGLTFLoader['animationLooper'] = (function () {
+    RedGLTFLoader['animationLooper'] = function (time) {
+        // console.log('loopList',loopList)
         var currentTime, previousTime, nextTime;
-        var prevRotation, nextRotation;
-        var prevTranslation, nextTranslation;
-        var prevScale, nextScale;
-        var interpolationValue;
+        var nX, nY, nZ, nW, nXOut, nYOut, nZOut, nXIn, nYIn, nZIn, nWIn;
+        var pX, pY, pZ, pW, pXOut, pYOut, pZOut, pWOut;
+        var x, y, z, w, len;
+        var loopListIDX = loopList.length
         var targetAnimationData;
-        return function (time) {
-            // console.log('loopList',loopList)
+        var interpolationValue;
+        var loopListItem
+        var targetAnimationDataIDX
+        var aniData
+        var target;
+        var nextIndex, prevIndex;
+        var tTimeData
+        var tAniData
+        var aniDataTime_Length
+        var aniDataTimeIDX
+        //weights
+        var weights_aniTargetsIDX;
+        var weights_targetMesh
+        var weights_targetData;
+        var weights_originData;
+        var weights_stride;
+        var weights_index;
+        var weights_LOOP_NUM;
+        var weights_prev, weights_next;
+        var weights_prev1, weights_next1;
+        var weights_prev2, weights_next2;
+        var weights_baseIndex;
+        var weights_morphLen;
+        var weights_tMorphList;
+        var weights_morphIndex;
+        var weights_prevAniData;
+        var weights_nextAniData;
+        var weights_morphInterleaveData;
+        var weights_cacheKey;
+        while (loopListIDX--) {
+            loopListItem = loopList[loopListIDX]
 
-            loopList.forEach(function (v) {
-                prevRotation = null;
-                nextRotation = null;
-                prevTranslation = null;
-                nextTranslation = null;
-                targetAnimationData = v['targetAnimationData'];
-
-                targetAnimationData.forEach(function (aniData, stepIndex) {
-                    currentTime = ((time - v['startTime']) % (targetAnimationData['maxTime'] * 1000)) / 1000;
-                    // console.log(currentTime,aniData['minTime'] )
-                    var target = aniData['target'];
-                    var nextIndex, prevIndex;
-                    prevIndex = aniData['time'].length - 1;
-                    nextIndex = 0;
-                    previousTime = aniData['time'][prevIndex];
-                    nextTime = aniData['time'][nextIndex];
-                    var len = aniData['time'].length;
-                    var i = 0;
-                    for (i; i < len; i++) {
-                        var tTime = aniData['time'][i];
-                        var index = i;
-                        if (tTime < currentTime) {
-                            prevIndex = index;
-                            previousTime = aniData['time'][prevIndex];
-                            if (aniData['time'][prevIndex + 1] == undefined) {
-                                nextIndex = 0;
-                                nextTime = aniData['time'][nextIndex]
-                            } else {
-                                nextIndex = prevIndex + 1;
-                                nextTime = aniData['time'][nextIndex]
-                            }
-                        }
-                        if (index == 0 && (currentTime < aniData['time'][i])) {
-                            prevIndex = len - 1;
-                            previousTime = aniData['time'][prevIndex];
-                            nextIndex = index;
-                            nextTime = aniData['time'][nextIndex];
-                            currentTime = tTime;
-                            break
-                        }
-                        if (index == len - 1 && (currentTime > tTime)) {
-                            prevIndex = 0;
-                            previousTime = aniData['time'][prevIndex];
-                            nextIndex = len - 1;
-                            nextTime = aniData['time'][nextIndex];
-                            currentTime = tTime;
-                            break
+            targetAnimationData = loopListItem['targetAnimationData'];
+            targetAnimationDataIDX = targetAnimationData.length
+            while (targetAnimationDataIDX--) {
+                aniData = targetAnimationData[targetAnimationDataIDX];
+                // targetAnimationData.forEach(function (aniData) {
+                currentTime = ((time - loopListItem['startTime']) % (targetAnimationData['maxTime'] * 1000)) / 1000;
+                /////////////////////////////////////////////////////////////////////////////////
+                target = aniData['target'];
+                tTimeData = aniData['time']
+                tAniData = aniData['time']
+                aniDataTime_Length = tTimeData.length;
+                aniDataTimeIDX = 0;
+                prevIndex = tTimeData.length - 1;
+                nextIndex = 0;
+                previousTime = tTimeData[prevIndex];
+                nextTime = tTimeData[nextIndex];
+                for (aniDataTimeIDX; aniDataTimeIDX < aniDataTime_Length; aniDataTimeIDX++) {
+                    var tTime = tTimeData[aniDataTimeIDX];
+                    if (tTime < currentTime) {
+                        prevIndex = aniDataTimeIDX;
+                        previousTime = tTimeData[prevIndex];
+                        if (tTimeData[prevIndex + 1] == undefined) {
+                            nextIndex = 0;
+                            nextTime = tTimeData[nextIndex]
+                        } else {
+                            nextIndex = prevIndex + 1;
+                            nextTime = tTimeData[nextIndex]
                         }
                     }
+                    if (aniDataTimeIDX == 0 && (currentTime < tTimeData[aniDataTimeIDX])) {
+                        prevIndex = aniDataTime_Length - 1;
+                        previousTime = tTimeData[prevIndex];
+                        nextIndex = aniDataTimeIDX;
+                        nextTime = tTimeData[nextIndex];
+                        currentTime = tTime;
+                        break
+                    }
+                    if (aniDataTimeIDX == aniDataTime_Length - 1 && (currentTime > tTime)) {
+                        prevIndex = 0;
+                        previousTime = tTimeData[prevIndex];
+                        nextIndex = aniDataTime_Length - 1;
+                        nextTime = tTimeData[nextIndex];
+                        currentTime = tTime;
+                        break
+                    }
+                }
+                /////////////////////////////////////////////////////////////////////////////////
+                if (aniData['interpolation'] == 'CUBICSPLINE') {
+                    interpolationValue = nextTime - previousTime;
+                    if (interpolationValue.toString() == 'NaN') interpolationValue = 0;
+                    var p = (currentTime - previousTime) / interpolationValue;
+                    if (p.toString() == 'NaN') p = 0;
+                    var pp = p * p;
+                    var ppp = pp * p;
 
-                    if (aniData['interpolation'] == 'CUBICSPLINE') {
-                        interpolationValue = (currentTime - previousTime) / (nextTime - previousTime);
-                        var interpolationValue = nextTime - previousTime;
-                        if (interpolationValue.toString() == 'NaN') interpolationValue = 0;
-                        var p = (currentTime - previousTime) / interpolationValue;
-                        if (p.toString() == 'NaN') p = 0;
-                        var pp = p * p;
-                        var ppp = pp * p;
+                    var s2 = -2 * ppp + 3 * pp;
+                    var s3 = ppp - pp;
+                    var s0 = 1 - s2;
+                    var s1 = s3 - pp + p;
 
-                        var s2 = -2 * ppp + 3 * pp;
-                        var s3 = ppp - pp;
-                        var s0 = 1 - s2;
-                        var s1 = s3 - pp + p;
+                    if (target) {
+                        var startV, startOut, endV, endIn;
+                        var tAniData_data = aniData['data'];
+                        switch (aniData['key']) {
+                            case 'rotation' :
+                                // quat.normalize(prevRotation, prevRotation);
+                                // quat.normalize(nextRotation, nextRotation);
+                                // quat.normalize(prevRotationOut, prevRotationOut);
+                                // quat.normalize(nextRotationIn, nextRotationIn);
+                                // prevRotation
+                                x = tAniData_data[prevIndex * 12 + 4];
+                                y = tAniData_data[prevIndex * 12 + 5];
+                                z = tAniData_data[prevIndex * 12 + 6];
+                                w = tAniData_data[prevIndex * 12 + 7];
+                                len = x * x + y * y + z * z + w * w;
+                                if (len > 0) len = 1 / Math.sqrt(len);
+                                pX = x * len;
+                                pY = y * len;
+                                pZ = z * len;
+                                pW = w * len;
+                                // nextRotation
+                                x = tAniData_data[nextIndex * 12 + 4];
+                                y = tAniData_data[nextIndex * 12 + 5];
+                                z = tAniData_data[nextIndex * 12 + 6];
+                                w = tAniData_data[nextIndex * 12 + 7];
+                                len = x * x + y * y + z * z + w * w;
+                                if (len > 0) len = 1 / Math.sqrt(len);
+                                nX = x * len;
+                                nY = y * len;
+                                nZ = z * len;
+                                nW = w * len;
+                                // prevRotationOut
+                                x = tAniData_data[prevIndex * 12 + 8];
+                                y = tAniData_data[prevIndex * 12 + 9];
+                                z = tAniData_data[prevIndex * 12 + 10];
+                                w = tAniData_data[prevIndex * 12 + 11];
+                                len = x * x + y * y + z * z + w * w;
+                                if (len > 0) len = 1 / Math.sqrt(len);
+                                pXOut = x * len;
+                                pYOut = y * len;
+                                pZOut = z * len;
+                                pWOut = w * len;
+                                // nexRotationIn
+                                x = tAniData_data[prevIndex * 12 + 0];
+                                y = tAniData_data[prevIndex * 12 + 1];
+                                z = tAniData_data[prevIndex * 12 + 2];
+                                w = tAniData_data[prevIndex * 12 + 3];
+                                len = x * x + y * y + z * z + w * w;
+                                if (len > 0) len = 1 / Math.sqrt(len);
+                                nXIn = x * len;
+                                nYIn = y * len;
+                                nZIn = z * len;
+                                nWIn = w * len;
 
-                        if (target) {
-                            var startV, startOut, endV, endIn;
-                            if (aniData['key'] == 'translation') {
-                                nextTranslation = [
-                                    aniData['data'][prevIndex * 9 + 3],
-                                    aniData['data'][prevIndex * 9 + 4],
-                                    aniData['data'][prevIndex * 9 + 5]
-                                ];
-                                prevTranslation = [
-                                    aniData['data'][nextIndex * 9 + 3],
-                                    aniData['data'][nextIndex * 9 + 4],
-                                    aniData['data'][nextIndex * 9 + 5]
-                                ];
-                                var prevTranslationOut = [
-                                    aniData['data'][prevIndex * 9 + 6],
-                                    aniData['data'][prevIndex * 9 + 7],
-                                    aniData['data'][prevIndex * 9 + 8]
-                                ];
-                                var nextTranslationIn = [
-                                    aniData['data'][nextIndex * 9 + 0],
-                                    aniData['data'][nextIndex * 9 + 1],
-                                    aniData['data'][nextIndex * 9 + 2]
-                                ];
-                                startV = prevTranslation[0];
-                                if (prevIndex != len - 1) {
-
-                                    startOut = prevTranslationOut[0] * interpolationValue;
-                                    endV = nextTranslation[0];
-                                    endIn = nextTranslationIn[0] * interpolationValue;
-                                    target.x = s0 * startV + s1 * startOut + s2 * endV + s3 * endIn;
-                                    startV = prevTranslation[1];
-                                    startOut = prevTranslationOut[1] * interpolationValue;
-                                    endV = nextTranslation[1];
-                                    endIn = nextTranslationIn[1] * interpolationValue;
-                                    target.y = s0 * startV + s1 * startOut + s2 * endV + s3 * endIn;
-                                    startV = prevTranslation[2];
-                                    startOut = prevTranslationOut[2] * interpolationValue;
-                                    endV = nextTranslation[2];
-                                    endIn = nextTranslationIn[2] * interpolationValue;
-                                    target.z = s0 * startV + s1 * startOut + s2 * endV + s3 * endIn;
-                                }
-                                // console.log(target.y)
-                            }
-                            if (aniData['key'] == 'rotation') {
-                                // var rotationMTX = mat4.create()
-                                // var tRotation = [0, 0, 0]
-                                var tQuaternion = [
-                                    aniData['data'][nextIndex * 12 + 4],
-                                    aniData['data'][nextIndex * 12 + 5],
-                                    aniData['data'][nextIndex * 12 + 6],
-                                    aniData['data'][nextIndex * 12 + 7]
-                                ];
-                                nextRotation = tQuaternion;
-
-                                var tQuaternion = [
-                                    aniData['data'][prevIndex * 12 + 4],
-                                    aniData['data'][prevIndex * 12 + 5],
-                                    aniData['data'][prevIndex * 12 + 6],
-                                    aniData['data'][prevIndex * 12 + 7]
-                                ];
-                                prevRotation = tQuaternion;
-
-                                var prevRotationOut = [
-                                    aniData['data'][prevIndex * 12 + 8],
-                                    aniData['data'][prevIndex * 12 + 9],
-                                    aniData['data'][prevIndex * 12 + 10],
-                                    aniData['data'][prevIndex * 12 + 11]
-                                ];
-                                var nextRotationIn = [
-                                    aniData['data'][nextIndex * 12 + 0],
-                                    aniData['data'][nextIndex * 12 + 1],
-                                    aniData['data'][nextIndex * 12 + 2],
-                                    aniData['data'][nextIndex * 12 + 3]
-                                ];
-                                quat.normalize(prevRotation, prevRotation);
-                                quat.normalize(nextRotation, nextRotation);
-                                quat.normalize(prevRotationOut, prevRotationOut);
-                                quat.normalize(nextRotationIn, nextRotationIn);
-                                var tQuat = [];
-
-                                if (prevIndex != len - 1) {
-                                    startV = prevRotation[0];
-                                    startOut = prevRotationOut[0] * interpolationValue;
-                                    endV = nextRotation[0];
-                                    endIn = nextRotationIn[0] * interpolationValue;
-                                    tQuat[0] = s0 * startV + s1 * startOut + s2 * endV + s3 * endIn;
+                                // tQuat
+                                if (prevIndex != aniDataTime_Length - 1) {
+                                    startV = pX;
+                                    startOut = pXOut * interpolationValue;
+                                    endV = nX;
+                                    endIn = nXIn * interpolationValue;
+                                    x = s0 * startV + s1 * startOut + s2 * endV + s3 * endIn;
                                     //
-                                    startV = prevRotation[1];
-                                    startOut = prevRotationOut[1] * interpolationValue;
-                                    endV = nextRotation[1];
-                                    endIn = nextRotationIn[1] * interpolationValue;
-                                    tQuat[1] = s0 * startV + s1 * startOut + s2 * endV + s3 * endIn;
+                                    startV = pY;
+                                    startOut = pYOut * interpolationValue;
+                                    endV = nY;
+                                    endIn = nYIn * interpolationValue;
+                                    y = s0 * startV + s1 * startOut + s2 * endV + s3 * endIn;
                                     //
-                                    startV = prevRotation[2];
-                                    startOut = prevRotationOut[2] * interpolationValue;
-                                    endV = nextRotation[2];
-                                    endIn = nextRotationIn[2] * interpolationValue;
-                                    tQuat[2] = s0 * startV + s1 * startOut + s2 * endV + s3 * endIn;
+                                    startV = pZ;
+                                    startOut = pZOut * interpolationValue;
+                                    endV = nZ;
+                                    endIn = nZIn * interpolationValue;
+                                    z = s0 * startV + s1 * startOut + s2 * endV + s3 * endIn;
                                     //
-                                    startV = prevRotation[3];
-                                    startOut = prevRotationOut[3] * interpolationValue;
-                                    endV = nextRotation[3];
-                                    endIn = nextRotationIn[3] * interpolationValue;
-                                    tQuat[3] = s0 * startV + s1 * startOut + s2 * endV + s3 * endIn;
+                                    startV = pW;
+                                    startOut = pWOut * interpolationValue;
+                                    endV = nW;
+                                    endIn = nWIn * interpolationValue;
+                                    w = s0 * startV + s1 * startOut + s2 * endV + s3 * endIn;
 
                                     var rotationMTX = [];
                                     var tRotation = [0, 0, 0];
-                                    RedGLUtil.quaternionToRotationMat4(tQuat, rotationMTX);
-                                    RedGLUtil.mat4ToEuler(rotationMTX, tRotation);
+                                    // RedGLUtil.quaternionToRotationMat4(tQuat, rotationMTX);
+                                    // RedGLUtil.mat4ToEuler(rotationMTX, tRotation);
+                                    var x2 = x + x, y2 = y + y, z2 = z + z;
+                                    var xx = x * x2, xy = x * y2, xz = x * z2;
+                                    var yy = y * y2, yz = y * z2, zz = z * z2;
+                                    var wx = w * x2, wy = w * y2, wz = w * z2;
+                                    rotationMTX[0] = 1 - (yy + zz);
+                                    rotationMTX[4] = xy - wz;
+                                    rotationMTX[8] = xz + wy;
+                                    rotationMTX[1] = xy + wz;
+                                    rotationMTX[5] = 1 - (xx + zz);
+                                    rotationMTX[9] = yz - wx;
+                                    rotationMTX[2] = xz - wy;
+                                    rotationMTX[6] = yz + wx;
+                                    rotationMTX[10] = 1 - (xx + yy);
+                                    // last column
+                                    rotationMTX[3] = 0;
+                                    rotationMTX[7] = 0;
+                                    rotationMTX[11] = 0;
+                                    // bottom row
+                                    rotationMTX[12] = 0;
+                                    rotationMTX[13] = 0;
+                                    rotationMTX[14] = 0;
+                                    rotationMTX[15] = 1;
+                                    // Assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)
+                                    var m11 = rotationMTX[0], m12 = rotationMTX[4], m13 = rotationMTX[8];
+                                    var m21 = rotationMTX[1], m22 = rotationMTX[5], m23 = rotationMTX[9];
+                                    var m31 = rotationMTX[2], m32 = rotationMTX[6], m33 = rotationMTX[10];
+                                    tRotation[1] = Math.asin(Math.max(-1, Math.min(1, m13)));
+                                    if (Math.abs(m13) < 0.99999) {
+                                        tRotation[0] = Math.atan2(-m23, m33);
+                                        tRotation[2] = Math.atan2(-m12, m11);
+                                    } else {
+                                        tRotation[0] = Math.atan2(m32, m22);
+                                        tRotation[2] = 0;
+                                    }
                                     tRotation[0] = -(tRotation[0] * 180 / Math.PI);
                                     tRotation[1] = -(tRotation[1] * 180 / Math.PI);
                                     tRotation[2] = -(tRotation[2] * 180 / Math.PI);
@@ -12778,209 +12841,173 @@ var RedGLTFLoader;
                                     target.rotationY = tRotation[1];
                                     target.rotationZ = tRotation[2]
                                 }
-                            }
-                            if (aniData['key'] == 'scale') {
-                                nextScale = [
-                                    aniData['data'][prevIndex * 9 + 3],
-                                    aniData['data'][prevIndex * 9 + 4],
-                                    aniData['data'][prevIndex * 9 + 5]
-                                ];
-                                prevScale = [
-                                    aniData['data'][nextIndex * 9 + 3],
-                                    aniData['data'][nextIndex * 9 + 4],
-                                    aniData['data'][nextIndex * 9 + 5]
-                                ];
-                                var prevScaleOut = [
-                                    aniData['data'][prevIndex * 9 + 6],
-                                    aniData['data'][prevIndex * 9 + 7],
-                                    aniData['data'][prevIndex * 9 + 8]
-                                ];
-                                var nextScaleIn = [
-                                    aniData['data'][nextIndex * 9 + 0],
-                                    aniData['data'][nextIndex * 9 + 1],
-                                    aniData['data'][nextIndex * 9 + 2]
-                                ];
-
-                                startV = prevScale[0];
-                                if (prevIndex != len - 1) {
-                                    startOut = prevScaleOut[0] * interpolationValue;
-                                    endV = nextScale[0];
-                                    endIn = nextScaleIn[0] * interpolationValue;
+                                break
+                            case 'translation' :
+                                nX = tAniData_data[prevIndex * 9 + 3];
+                                nY = tAniData_data[prevIndex * 9 + 4];
+                                nZ = tAniData_data[prevIndex * 9 + 5];
+                                pX = tAniData_data[nextIndex * 9 + 3];
+                                pY = tAniData_data[nextIndex * 9 + 4];
+                                pZ = tAniData_data[nextIndex * 9 + 5];
+                                pXOut = tAniData_data[prevIndex * 9 + 6];
+                                pYOut = tAniData_data[prevIndex * 9 + 7];
+                                pZOut = tAniData_data[prevIndex * 9 + 8];
+                                nXOut = tAniData_data[nextIndex * 9 + 0];
+                                nYOut = tAniData_data[nextIndex * 9 + 1];
+                                nZOut = tAniData_data[nextIndex * 9 + 2];
+                                if (prevIndex != aniDataTime_Length - 1) {
+                                    startV = pX;
+                                    startOut = pXOut * interpolationValue;
+                                    endV = nX;
+                                    endIn = nXOut * interpolationValue;
+                                    target.x = s0 * startV + s1 * startOut + s2 * endV + s3 * endIn;
+                                    startV = pY;
+                                    startOut = pYOut * interpolationValue;
+                                    endV = nY;
+                                    endIn = nYOut * interpolationValue;
+                                    target.y = s0 * startV + s1 * startOut + s2 * endV + s3 * endIn;
+                                    startV = pZ;
+                                    startOut = pZOut * interpolationValue;
+                                    endV = nZ;
+                                    endIn = nZOut * interpolationValue;
+                                    target.z = s0 * startV + s1 * startOut + s2 * endV + s3 * endIn;
+                                }
+                                break
+                            case 'scale' :
+                                nX = tAniData_data[prevIndex * 9 + 3];
+                                nY = tAniData_data[prevIndex * 9 + 4];
+                                nZ = tAniData_data[prevIndex * 9 + 5];
+                                pX = tAniData_data[nextIndex * 9 + 3];
+                                pY = tAniData_data[nextIndex * 9 + 4];
+                                pZ = tAniData_data[nextIndex * 9 + 5];
+                                pXOut = tAniData_data[prevIndex * 9 + 6];
+                                pYOut = tAniData_data[prevIndex * 9 + 7];
+                                pZOut = tAniData_data[prevIndex * 9 + 8];
+                                nXOut = tAniData_data[nextIndex * 9 + 0];
+                                nYOut = tAniData_data[nextIndex * 9 + 1];
+                                nZOut = tAniData_data[nextIndex * 9 + 2];
+                                if (prevIndex != aniDataTime_Length - 1) {
+                                    startV = pX;
+                                    startOut = pXOut * interpolationValue;
+                                    endV = nX;
+                                    endIn = nXOut * interpolationValue;
                                     target.scaleX = s0 * startV + s1 * startOut + s2 * endV + s3 * endIn;
-                                    //
-                                    startV = prevScale[1];
-                                    startOut = prevScaleOut[1] * interpolationValue;
-                                    endV = nextScale[1];
-                                    endIn = nextScaleIn[1] * interpolationValue;
+                                    startV = pY;
+                                    startOut = pYOut * interpolationValue;
+                                    endV = nY;
+                                    endIn = nYOut * interpolationValue;
                                     target.scaleY = s0 * startV + s1 * startOut + s2 * endV + s3 * endIn;
-                                    //
-                                    startV = prevScale[2];
-                                    startOut = prevScaleOut[2] * interpolationValue;
-                                    endV = nextScale[2];
-                                    endIn = nextScaleIn[2] * interpolationValue;
+                                    startV = pZ;
+                                    startOut = pZOut * interpolationValue;
+                                    endV = nZ;
+                                    endIn = nZOut * interpolationValue;
                                     target.scaleZ = s0 * startV + s1 * startOut + s2 * endV + s3 * endIn;
                                 }
-                                ;
-                            }
-                            if (aniData['key'] == 'weights') {
-                                // console.log(aniData)
-                                // aniData['targets'].forEach(function (targetMesh) {
-                                //     var targetData = targetMesh['geometry']['interleaveBuffer']['data']
-                                //     var originData = targetMesh['_morphInfo']['origin']
-                                //     targetData.forEach(function (v, index) {
-                                //         if (index % targetMesh['geometry']['interleaveBuffer']['stride'] < 3) {
-                                //             var prev, next
-                                //             prev = originData[index]
-                                //             next = originData[index]
-                                //             var morphLen = targetMesh['_morphInfo']['list'].length
-                                //             targetMesh['_morphInfo']['list'].forEach(function (v, morphIndex) {
-                                //                 if (morphIndex % 3 == 1) {
-                                //                     prev += aniData['data'][prevIndex * morphLen + morphIndex] * v['interleaveData'][index]
-                                //                     next += aniData['data'][nextIndex * morphLen + morphIndex] * v['interleaveData'][index]
-                                //                 }
-                                //
-                                //             })
-                                //             targetData[index] = prev + interpolationValue * (next - prev)
-                                //         }
-                                //     })
-                                //     targetMesh['geometry']['interleaveBuffer'].upload(targetData)
-                                // })
-                                aniData['targets'].forEach(function (targetMesh) {
-                                    var targetData = targetMesh['geometry']['interleaveBuffer']['data'];
-                                    var originData = targetMesh['_morphInfo']['origin'];
-                                    var stride = targetMesh['geometry']['interleaveBuffer']['stride'];
-                                    var index = 0;
-                                    var LOOP_NUM = targetData.length / stride;
-                                    var prev, next;
-                                    var prev1, next1;
-                                    var prev2, next2;
-                                    var baseIndex;
-                                    var morphLen = targetMesh['_morphInfo']['list'].length;
-                                    var tAniData = aniData['data'];
-                                    var tMorphList = targetMesh['_morphInfo']['list'];
-                                    for (index; index < LOOP_NUM; index++) {
-                                        baseIndex = index * stride;
-                                        prev = originData[baseIndex];
-                                        next = originData[baseIndex];
-                                        prev1 = originData[baseIndex + 1];
-                                        next1 = originData[baseIndex + 1];
-                                        prev2 = originData[baseIndex + 2];
-                                        next2 = originData[baseIndex + 2];
-
-                                        var morphIndex = morphLen;
-                                        var prevAniData;
-                                        var nextAniData;
-                                        var morphInterleaveData;
-                                        while (morphIndex--) {
-                                            if (morphIndex % 3 == 1) {
-                                                prevAniData = tAniData[prevIndex * morphLen + morphIndex];
-                                                nextAniData = tAniData[nextIndex * morphLen + morphIndex];
-                                                morphInterleaveData = tMorphList[morphIndex]['interleaveData'];
-                                                prev += prevAniData * morphInterleaveData[baseIndex];
-                                                next += nextAniData * morphInterleaveData[baseIndex];
-                                                prev1 += prevAniData * morphInterleaveData[baseIndex + 1];
-                                                next1 += nextAniData * morphInterleaveData[baseIndex + 1];
-                                                prev2 += prevAniData * morphInterleaveData[baseIndex + 2];
-                                                next2 += nextAniData * morphInterleaveData[baseIndex + 2]
+                                break
+                            case 'weights' :
+                                weights_aniTargetsIDX = aniData['targets'].length;
+                                while (weights_aniTargetsIDX--) {
+                                    weights_targetMesh = aniData['targets'][weights_aniTargetsIDX]
+                                    weights_targetData = weights_targetMesh['geometry']['interleaveBuffer']['data'];
+                                    weights_originData = weights_targetMesh['_morphInfo']['origin'];
+                                    weights_stride = weights_targetMesh['geometry']['interleaveBuffer']['stride'];
+                                    weights_LOOP_NUM = weights_targetData.length / weights_stride;
+                                    weights_morphLen = weights_targetMesh['_morphInfo']['list'].length;
+                                    tAniData = aniData['data'];
+                                    weights_tMorphList = weights_targetMesh['_morphInfo']['list'];
+                                    if (!weights_tMorphList['cacheData']) weights_tMorphList['cacheData'] = {}
+                                    var  t1
+                                    weights_index = 0
+                                    for (weights_index; weights_index < weights_LOOP_NUM; weights_index++) {
+                                        weights_baseIndex = weights_index * weights_stride;
+                                        weights_cacheKey = weights_tMorphList['cacheData'][weights_baseIndex + '_' + prevIndex + '_' + nextIndex];
+                                        if (weights_cacheKey) {
+                                            weights_prev = weights_cacheKey[0];
+                                            weights_next = weights_cacheKey[1];
+                                            weights_prev1 = weights_cacheKey[2];
+                                            weights_next1 = weights_cacheKey[3];
+                                            weights_prev2 = weights_cacheKey[4];
+                                            weights_next2 = weights_cacheKey[5];
+                                        } else {
+                                            weights_prev = weights_originData[weights_baseIndex];
+                                            weights_next = weights_originData[weights_baseIndex];
+                                            weights_prev1 = weights_originData[weights_baseIndex + 1];
+                                            weights_next1 = weights_originData[weights_baseIndex + 1];
+                                            weights_prev2 = weights_originData[weights_baseIndex + 2];
+                                            weights_next2 = weights_originData[weights_baseIndex + 2];
+                                            weights_morphIndex = weights_morphLen;
+                                            while (weights_morphIndex--) {
+                                                if (weights_morphIndex % 3 == 1) {
+                                                    weights_prevAniData = tAniData[prevIndex * weights_morphLen + weights_morphIndex];
+                                                    weights_nextAniData = tAniData[nextIndex * weights_morphLen + weights_morphIndex];
+                                                    weights_morphInterleaveData = weights_tMorphList[weights_morphIndex]['interleaveData'];
+                                                    t1 = weights_morphInterleaveData[weights_baseIndex];
+                                                    weights_prev += weights_prevAniData * t1;
+                                                    weights_next += weights_nextAniData * t1;
+                                                    t1 = weights_morphInterleaveData[weights_baseIndex + 1];
+                                                    weights_prev1 += weights_prevAniData * t1;
+                                                    weights_next1 += weights_nextAniData * t1;
+                                                    t1 = weights_morphInterleaveData[weights_baseIndex + 2];
+                                                    weights_prev2 += weights_prevAniData * t1;
+                                                    weights_next2 += weights_nextAniData * t1;
+                                                }
                                             }
+                                            weights_tMorphList['cacheData'][weights_baseIndex + '_' + prevIndex + '_' + nextIndex] = [weights_prev, weights_next, weights_prev1, weights_next1, weights_prev2, weights_next2]
                                         }
-                                        targetData[baseIndex] = prev + interpolationValue * (next - prev);
-                                        targetData[baseIndex + 1] = prev1 + interpolationValue * (next1 - prev1);
-                                        targetData[baseIndex + 2] = prev2 + interpolationValue * (next2 - prev2)
+                                        weights_targetData[weights_baseIndex] = weights_prev + interpolationValue * (weights_next - weights_prev);
+                                        weights_targetData[weights_baseIndex + 1] = weights_prev1 + interpolationValue * (weights_next1 - weights_prev1);
+                                        weights_targetData[weights_baseIndex + 2] = weights_prev2 + interpolationValue * (weights_next2 - weights_prev2)
                                     }
-                                    targetMesh['geometry']['interleaveBuffer'].upload(targetData)
-                                })
-                            }
+                                    weights_targetMesh['geometry']['interleaveBuffer'].upload(weights_targetData)
+                                }
+                                break
                         }
-                        return
-                    } else {
-                        if (aniData['interpolation'] == 'STEP') {
-                            interpolationValue = 0
-                        } else interpolationValue = (currentTime - previousTime) / (nextTime - previousTime);
-                        if (interpolationValue.toString() == 'NaN') interpolationValue = 0;
-                        if (aniData['key'] == 'rotation') {
-                            // var rotationMTX = mat4.create()
-                            // var tRotation = [0, 0, 0]
-                            var tQuaternion = [
-                                aniData['data'][nextIndex * 4],
-                                aniData['data'][nextIndex * 4 + 1],
-                                aniData['data'][nextIndex * 4 + 2],
-                                aniData['data'][nextIndex * 4 + 3]
-                            ];
-                            // RedGLUtil.quaternionToRotationMat4(tQuaternion, rotationMTX)
-                            // RedGLUtil.mat4ToEuler(rotationMTX, tRotation)
-                            // tRotation[0] = -(tRotation[0] * 180 / Math.PI)
-                            // tRotation[1] = -(tRotation[1] * 180 / Math.PI)
-                            // tRotation[2] = -(tRotation[2] * 180 / Math.PI)
-                            nextRotation = tQuaternion;
-                            //
-                            // var rotationMTX = mat4.create()
-                            // var tRotation = [0, 0, 0]
-                            var tQuaternion = [
-                                aniData['data'][prevIndex * 4],
-                                aniData['data'][prevIndex * 4 + 1],
-                                aniData['data'][prevIndex * 4 + 2],
-                                aniData['data'][prevIndex * 4 + 3]
-                            ];
-                            // RedGLUtil.quaternionToRotationMat4(tQuaternion, rotationMTX)
-                            // RedGLUtil.mat4ToEuler(rotationMTX, tRotation)
-                            // tRotation[0] = -(tRotation[0] * 180 / Math.PI)
-                            // tRotation[1] = -(tRotation[1] * 180 / Math.PI)
-                            // tRotation[2] = -(tRotation[2] * 180 / Math.PI)
-                            prevRotation = tQuaternion
-                        }
-                        if (aniData['key'] == 'translation') {
-                            nextTranslation = [
-                                aniData['data'][nextIndex * 3],
-                                aniData['data'][nextIndex * 3 + 1],
-                                aniData['data'][nextIndex * 3 + 2]
-                            ];
-                            prevTranslation = [
-                                aniData['data'][prevIndex * 3],
-                                aniData['data'][prevIndex * 3 + 1],
-                                aniData['data'][prevIndex * 3 + 2]
-                            ]
-                        }
-                        if (aniData['key'] == 'scale') {
-                            nextScale = [
-                                aniData['data'][nextIndex * 3],
-                                aniData['data'][nextIndex * 3 + 1],
-                                aniData['data'][nextIndex * 3 + 2]
-                            ];
-                            prevScale = [
-                                aniData['data'][prevIndex * 3],
-                                aniData['data'][prevIndex * 3 + 1],
-                                aniData['data'][prevIndex * 3 + 2]
-                            ]
-                        }
-                        if (target) {
-                            if (aniData['key'] == 'translation') {
-                                // console.log(interpolationValue,nextTranslation , prevTranslation)
-                                target.x = prevTranslation[0] + interpolationValue * (nextTranslation[0] - prevTranslation[0]);
-                                target.y = prevTranslation[1] + interpolationValue * (nextTranslation[1] - prevTranslation[1]);
-                                target.z = prevTranslation[2] + interpolationValue * (nextTranslation[2] - prevTranslation[2])
-                                // console.log(target.y)
-                            }
-                            if (aniData['key'] == 'rotation') {
-                                var tQuat = [];
-                                quat.normalize(prevRotation, prevRotation);
-                                quat.normalize(nextRotation, nextRotation);
-                                var ax = prevRotation[0], ay = prevRotation[1], az = prevRotation[2],
-                                    aw = prevRotation[3];
-                                var bx = nextRotation[0], by = nextRotation[1], bz = nextRotation[2],
-                                    bw = nextRotation[3];
+                    }
+                } else {
+                    if (aniData['interpolation'] == 'STEP') interpolationValue = 0;
+                    else interpolationValue = (currentTime - previousTime) / (nextTime - previousTime);
+                    if (interpolationValue.toString() == 'NaN') interpolationValue = 0;
+                    if (target) {
+                        var tAniData_data = aniData['data'];
+                        switch (aniData['key']) {
+                            case 'rotation':
+                                /////////////////////////////////////////////
+                                // quat.normalize(prevRotation, prevRotation);
+                                // quat.normalize(nextRotation, nextRotation);
 
-
+                                // prevRotation
+                                x = tAniData_data[prevIndex * 4];
+                                y = tAniData_data[prevIndex * 4 + 1];
+                                z = tAniData_data[prevIndex * 4 + 2];
+                                w = tAniData_data[prevIndex * 4 + 3];
+                                len = x * x + y * y + z * z + w * w;
+                                if (len > 0) len = 1 / Math.sqrt(len);
+                                pX = x * len;
+                                pY = y * len;
+                                pZ = z * len;
+                                pW = w * len;
+                                // nextRotation
+                                x = tAniData_data[nextIndex * 4];
+                                y = tAniData_data[nextIndex * 4 + 1];
+                                z = tAniData_data[nextIndex * 4 + 2];
+                                w = tAniData_data[nextIndex * 4 + 3];
+                                len = x * x + y * y + z * z + w * w;
+                                if (len > 0) len = 1 / Math.sqrt(len);
+                                nX = x * len;
+                                nY = y * len;
+                                nZ = z * len;
+                                nW = w * len;
+                                /////////////////////////////////////////////
                                 var omega, cosom, sinom, scale0, scale1;
                                 // calc cosine
-                                cosom = ax * bx + ay * by + az * bz + aw * bw;
+                                cosom = pX * nX + pY * nY + pZ * nZ + pW * nW;
                                 // adjust signs (if necessary)
                                 if (cosom < 0.0) {
                                     cosom = -cosom;
-                                    bx = -bx;
-                                    by = -by;
-                                    bz = -bz;
-                                    bw = -bw;
+                                    nX = -nX;
+                                    nY = -nY;
+                                    nZ = -nZ;
+                                    nW = -nW;
                                 }
                                 // calculate coefficients
                                 if ((1.0 - cosom) > glMatrix.EPSILON) {
@@ -12996,15 +13023,51 @@ var RedGLTFLoader;
                                     scale1 = interpolationValue;
                                 }
                                 // calculate final values
-                                tQuat[0] = scale0 * ax + scale1 * bx;
-                                tQuat[1] = scale0 * ay + scale1 * by;
-                                tQuat[2] = scale0 * az + scale1 * bz;
-                                tQuat[3] = scale0 * aw + scale1 * bw;
-
+                                // tQuat
+                                x = scale0 * pX + scale1 * nX;
+                                y = scale0 * pY + scale1 * nY;
+                                z = scale0 * pZ + scale1 * nZ;
+                                w = scale0 * pW + scale1 * nW;
                                 var rotationMTX = [];
                                 var tRotation = [0, 0, 0];
-                                RedGLUtil.quaternionToRotationMat4(tQuat, rotationMTX);
-                                RedGLUtil.mat4ToEuler(rotationMTX, tRotation);
+                                // RedGLUtil.quaternionToRotationMat4(tQuat, rotationMTX);
+                                // RedGLUtil.mat4ToEuler(rotationMTX, tRotation);
+                                //////////////////////////////////////////////////////////
+                                var x2 = x + x, y2 = y + y, z2 = z + z;
+                                var xx = x * x2, xy = x * y2, xz = x * z2;
+                                var yy = y * y2, yz = y * z2, zz = z * z2;
+                                var wx = w * x2, wy = w * y2, wz = w * z2;
+                                rotationMTX[0] = 1 - (yy + zz);
+                                rotationMTX[4] = xy - wz;
+                                rotationMTX[8] = xz + wy;
+                                rotationMTX[1] = xy + wz;
+                                rotationMTX[5] = 1 - (xx + zz);
+                                rotationMTX[9] = yz - wx;
+                                rotationMTX[2] = xz - wy;
+                                rotationMTX[6] = yz + wx;
+                                rotationMTX[10] = 1 - (xx + yy);
+                                // last column
+                                rotationMTX[3] = 0;
+                                rotationMTX[7] = 0;
+                                rotationMTX[11] = 0;
+                                // bottom row
+                                rotationMTX[12] = 0;
+                                rotationMTX[13] = 0;
+                                rotationMTX[14] = 0;
+                                rotationMTX[15] = 1;
+                                // Assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)
+                                var m11 = rotationMTX[0], m12 = rotationMTX[4], m13 = rotationMTX[8];
+                                var m21 = rotationMTX[1], m22 = rotationMTX[5], m23 = rotationMTX[9];
+                                var m31 = rotationMTX[2], m32 = rotationMTX[6], m33 = rotationMTX[10];
+                                tRotation[1] = Math.asin(Math.max(-1, Math.min(1, m13)));
+                                if (Math.abs(m13) < 0.99999) {
+                                    tRotation[0] = Math.atan2(-m23, m33);
+                                    tRotation[2] = Math.atan2(-m12, m11);
+                                } else {
+                                    tRotation[0] = Math.atan2(m32, m22);
+                                    tRotation[2] = 0;
+                                }
+                                //////////////////////////////////////////////////////////
                                 tRotation[0] = -(tRotation[0] * 180 / Math.PI);
                                 tRotation[1] = -(tRotation[1] * 180 / Math.PI);
                                 tRotation[2] = -(tRotation[2] * 180 / Math.PI);
@@ -13015,67 +13078,97 @@ var RedGLTFLoader;
                                 // console.log(prevIndex, nextIndex)
                                 // console.log(parseInt(prevRotation[2]), parseInt(nextRotation[2]))
                                 // console.log(target.rotationX ,target.rotationY ,target.rotationZ )
-                            }
-                            if (aniData['key'] == 'scale') {
-                                target.scaleX = prevScale[0] + interpolationValue * (nextScale[0] - prevScale[0]);
-                                target.scaleY = prevScale[1] + interpolationValue * (nextScale[1] - prevScale[1]);
-                                target.scaleZ = prevScale[2] + interpolationValue * (nextScale[2] - prevScale[2])
-                            }
-                            if (aniData['key'] == 'weights') {
+                                break
+                            case 'translation' :
+                                // nextTranslation
+                                nX = tAniData_data[nextIndex * 3];
+                                nY = tAniData_data[nextIndex * 3 + 1];
+                                nZ = tAniData_data[nextIndex * 3 + 2];
+                                // prevTranslation
+                                pX = tAniData_data[prevIndex * 3];
+                                pY = tAniData_data[prevIndex * 3 + 1];
+                                pZ = tAniData_data[prevIndex * 3 + 2];
+                                target.x = pX + interpolationValue * (nX - pX);
+                                target.y = pY + interpolationValue * (nY - pY);
+                                target.z = pZ + interpolationValue * (nZ - pZ)
+                                break
+                            case 'scale':
+                                // nextScale
+                                nX = tAniData_data[nextIndex * 3];
+                                nY = tAniData_data[nextIndex * 3 + 1];
+                                nZ = tAniData_data[nextIndex * 3 + 2];
+                                // prevScale
+                                pX = tAniData_data[prevIndex * 3];
+                                pY = tAniData_data[prevIndex * 3 + 1];
+                                pZ = tAniData_data[prevIndex * 3 + 2];
+                                target.scaleX = pX + interpolationValue * (nX - pX);
+                                target.scaleY = pY + interpolationValue * (nY - pY);
+                                target.scaleZ = pZ + interpolationValue * (nZ - pZ)
+                                break
+                            case 'weights' :
                                 // console.log(aniData)
-                                aniData['targets'].forEach(function (targetMesh) {
-                                    var targetData = targetMesh['geometry']['interleaveBuffer']['data'];
-                                    var originData = targetMesh['_morphInfo']['origin'];
-                                    var stride = targetMesh['geometry']['interleaveBuffer']['stride'];
-                                    var index = 0;
-                                    var LOOP_NUM = targetData.length / stride;
-                                    var prev, next;
-                                    var prev1, next1;
-                                    var prev2, next2;
-                                    var baseIndex;
-                                    var morphLen = targetMesh['_morphInfo']['list'].length;
-                                    var tAniData = aniData['data'];
-                                    var tMorphList = targetMesh['_morphInfo']['list'];
-                                    for (index; index < LOOP_NUM; index++) {
-                                        baseIndex = index * stride;
-                                        prev = originData[baseIndex];
-                                        next = originData[baseIndex];
-                                        prev1 = originData[baseIndex + 1];
-                                        next1 = originData[baseIndex + 1];
-                                        prev2 = originData[baseIndex + 2];
-                                        next2 = originData[baseIndex + 2];
-
-                                        var morphIndex = morphLen;
-                                        var prevAniData;
-                                        var nextAniData;
-                                        var morphInterleaveData;
-                                        while (morphIndex--) {
-                                            prevAniData = tAniData[prevIndex * morphLen + morphIndex];
-                                            nextAniData = tAniData[nextIndex * morphLen + morphIndex];
-                                            morphInterleaveData = tMorphList[morphIndex]['interleaveData'];
-                                            prev += prevAniData * morphInterleaveData[baseIndex];
-                                            next += nextAniData * morphInterleaveData[baseIndex];
-                                            prev1 += prevAniData * morphInterleaveData[baseIndex + 1];
-                                            next1 += nextAniData * morphInterleaveData[baseIndex + 1];
-                                            prev2 += prevAniData * morphInterleaveData[baseIndex + 2];
-                                            next2 += nextAniData * morphInterleaveData[baseIndex + 2]
+                                 weights_aniTargetsIDX = aniData['targets'].length;
+                                while (weights_aniTargetsIDX--) {
+                                    weights_targetMesh = aniData['targets'][weights_aniTargetsIDX]
+                                    weights_targetData = weights_targetMesh['geometry']['interleaveBuffer']['data'];
+                                    weights_originData = weights_targetMesh['_morphInfo']['origin'];
+                                    weights_stride = weights_targetMesh['geometry']['interleaveBuffer']['stride'];
+                                    weights_LOOP_NUM = weights_targetData.length / weights_stride;
+                                    weights_morphLen = weights_targetMesh['_morphInfo']['list'].length;
+                                    tAniData = aniData['data'];
+                                    weights_tMorphList = weights_targetMesh['_morphInfo']['list'];
+                                    if (!weights_tMorphList['cacheData']) weights_tMorphList['cacheData'] = {}
+                                    var t1
+                                    weights_index = 0
+                                    for (weights_index; weights_index < weights_LOOP_NUM; weights_index++) {
+                                        weights_baseIndex = weights_index * weights_stride;
+                                        weights_cacheKey = weights_tMorphList['cacheData'][weights_baseIndex + '_' + prevIndex + '_' + nextIndex];
+                                        if (weights_cacheKey) {
+                                            weights_prev = weights_cacheKey[0];
+                                            weights_next = weights_cacheKey[1];
+                                            weights_prev1 = weights_cacheKey[2];
+                                            weights_next1 = weights_cacheKey[3];
+                                            weights_prev2 = weights_cacheKey[4];
+                                            weights_next2 = weights_cacheKey[5];
+                                        } else {
+                                            weights_prev = weights_originData[weights_baseIndex];
+                                            weights_next = weights_originData[weights_baseIndex];
+                                            weights_prev1 = weights_originData[weights_baseIndex + 1];
+                                            weights_next1 = weights_originData[weights_baseIndex + 1];
+                                            weights_prev2 = weights_originData[weights_baseIndex + 2];
+                                            weights_next2 = weights_originData[weights_baseIndex + 2];
+                                            weights_morphIndex = weights_morphLen;
+                                            while (weights_morphIndex--) {
+                                                weights_prevAniData = tAniData[prevIndex * weights_morphLen + weights_morphIndex];
+                                                weights_nextAniData = tAniData[nextIndex * weights_morphLen + weights_morphIndex];
+                                                weights_morphInterleaveData = weights_tMorphList[weights_morphIndex]['interleaveData'];
+                                                t1 = weights_morphInterleaveData[weights_baseIndex]
+                                                weights_prev += weights_prevAniData * t1;
+                                                weights_next += weights_nextAniData * t1;
+                                                t1 = weights_morphInterleaveData[weights_baseIndex + 1]
+                                                weights_prev1 += weights_prevAniData * t1;
+                                                weights_next1 += weights_nextAniData * t1;
+                                                t1 = weights_morphInterleaveData[weights_baseIndex + 2]
+                                                weights_prev2 += weights_prevAniData * t1;
+                                                weights_next2 += weights_nextAniData * t1
+                                            }
+                                            weights_tMorphList['cacheData'][weights_baseIndex + '_' + prevIndex + '_' + nextIndex] = [weights_prev, weights_next, weights_prev1, weights_next1, weights_prev2, weights_next2]
                                         }
-                                        targetData[baseIndex] = prev + interpolationValue * (next - prev);
-                                        targetData[baseIndex + 1] = prev1 + interpolationValue * (next1 - prev1);
-                                        targetData[baseIndex + 2] = prev2 + interpolationValue * (next2 - prev2)
+
+                                        weights_targetData[weights_baseIndex] = weights_prev + interpolationValue * (weights_next - weights_prev);
+                                        weights_targetData[weights_baseIndex + 1] = weights_prev1 + interpolationValue * (weights_next1 - weights_prev1);
+                                        weights_targetData[weights_baseIndex + 2] = weights_prev2 + interpolationValue * (weights_next2 - weights_prev2)
                                     }
-                                    targetMesh['geometry']['interleaveBuffer'].upload(targetData)
-                                })
-
-
-                            }
+                                    weights_targetMesh['geometry']['interleaveBuffer'].upload(weights_targetData)
+                                }
+                                break
                         }
                     }
-
-                })
-            })
+                }
+                // })
+            }
         }
-    })();
+    }
     parser = (function () {
         var checkAsset;
         var getBaseResource;
@@ -13142,59 +13235,6 @@ var RedGLTFLoader;
             전체 데이터중 외부소스데이터를 모두 실제화 해둔다.
          */
         getBaseResource = function (redGLTFLoader, json, callback) {
-            // for (var k in json) {
-            //     // console.log(k, json[k])
-            //     switch (k) {
-            //         case 'asset' :
-            //             console.log('TODO : asset 내부 리소스 로딩');
-            //             break;
-            //         case 'scene' :
-            //             console.log('TODO : scene 내부 리소스 로딩');
-            //             break;
-            //         case 'scenes' :
-            //             console.log('TODO : scenes 내부 리소스 로딩');
-            //             break;
-            //         case 'nodes' :
-            //             console.log('TODO : nodes 내부 리소스 로딩');
-            //             break;
-            //         case 'meshes' :
-            //             console.log('TODO : meshes 내부 리소스 로딩');
-            //             break;
-            //         case 'buffers' :
-            //             console.log('TODO : buffers 내부 리소스 로딩');
-            //             break;
-            //         case 'bufferViews' :
-            //             console.log('TODO : bufferViews 내부 리소스 로딩');
-            //             break;
-            //         case 'skins' :
-            //             console.log('TODO : skins 내부 리소스 로딩');
-            //             break;
-            //         case 'accessors' :
-            //             console.log('TODO : accessors 내부 리소스 로딩');
-            //             break;
-            //         case 'images' :
-            //             console.log('TODO : images 내부 리소스 로딩');
-            //             break;
-            //         case 'materials' :
-            //             console.log('TODO : materials 내부 리소스 로딩');
-            //             break;
-            //         case 'samplers' :
-            //             console.log('TODO : samplers 내부 리소스 로딩');
-            //             break;
-            //         case 'textures' :
-            //             console.log('TODO : textures 내부 리소스 로딩');
-            //             break;
-            //         case 'cameras' :
-            //             console.log('TODO : images 내부 리소스 로딩');
-            //             break;
-            //         case 'animations' :
-            //             console.log('TODO : images 내부 리소스 로딩');
-            //             break;
-            //         default :
-            //             console.log(k, '고려안한거임');
-            //             break;
-            //     }
-            // }
             getBufferResources(redGLTFLoader, json, callback);
         };
         parseCameras = function (redGLTFLoader, json) {
@@ -13204,9 +13244,8 @@ var RedGLTFLoader;
                     console.log('카메라', v);
                     var t0 = RedCamera();
                     if (v['type'] == 'orthographic') {
-                        t0.orthographicYn = true
-                    }
-                    else {
+                        t0.mode2DYn = true
+                    } else {
                         t0['fov'] = v['perspective']['yfov'] * 180 / Math.PI;
                         t0['farClipping'] = v['perspective']['zfar'];
                         t0['nearClipping'] = v['perspective']['znear']
@@ -13230,8 +13269,7 @@ var RedGLTFLoader;
                 i++;
                 if (i === len) {
                     if (callback) callback()
-                }
-                else requestAnimationFrame(tick);
+                } else requestAnimationFrame(tick);
             };
             requestAnimationFrame(tick);
             // json['scenes'][0]['nodes'].forEach(function (nodeIndex) {
@@ -13293,8 +13331,8 @@ var RedGLTFLoader;
             if (tJointMesh) {
                 var tJointMesh = nodes[v]['RedMesh'];
                 skinInfo['joints'].push(tJointMesh);
-                tJointMesh.geometry = RedSphere(redGLTFLoader['redGL'], 0.05, 3, 3, 3);
-                tJointMesh.material = RedColorMaterial(redGLTFLoader['redGL']);
+                // tJointMesh.geometry = RedSphere(redGLTFLoader['redGL'], 0.05, 3, 3, 3);
+                tJointMesh.material = RedColorMaterial(redGLTFLoader['redGL'], '#ff0000');
                 tJointMesh.drawMode = redGLTFLoader['redGL'].gl.LINE_LOOP;
                 tJointMesh.depthTestFunc = redGLTFLoader['redGL'].gl.NEVER
             } else requestAnimationFrame(function () {
@@ -13378,8 +13416,7 @@ var RedGLTFLoader;
                             })
                         }
                     })
-                }
-                else {
+                } else {
                     var tGroup;
                     // console.log('차일드 정보로 구성된 정보임', info)
 
@@ -13635,8 +13672,7 @@ var RedGLTFLoader;
                                     uvs.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
                                 } else if (key == 'TEXCOORD_1') {
                                     uvs1.push(tBufferURIDataView[tGetMethod](i * tBYTES_PER_ELEMENT, true))
-                                }
-                                else RedGLUtil.throwFunc('VEC2에서 현재 지원하고 있지 않는 키', key)
+                                } else RedGLUtil.throwFunc('VEC2에서 현재 지원하고 있지 않는 키', key)
                             }
                             strideIndex++
                         }
@@ -13862,12 +13898,12 @@ var RedGLTFLoader;
                     tMaterial = RedPBRMaterial_System(redGLTFLoader['redGL'], diffseTexture, env, normalTexture, occlusionTexture, emissiveTexture, roughnessTexture, null);
                     if (tMaterialInfo['pbrMetallicRoughness'] && tMaterialInfo['pbrMetallicRoughness']['baseColorFactor']) tColor = tMaterialInfo['pbrMetallicRoughness']['baseColorFactor'];
                     else tColor = [1.0, 1.0, 1.0, 1.0];
-                    tMaterial['baseColorFactor'] = tColor;
+                    tMaterial['baseColorFactor'] = new Float32Array(tColor);
                     if (tMaterialInfo['pbrMetallicRoughness']) {
                         tMaterial.metallicFactor = metallicFactor != undefined ? metallicFactor : 1;
                         tMaterial.roughnessFactor = roughnessFactor != undefined ? roughnessFactor : 1;
                     }
-                    tMaterial.emissiveFactor = tMaterialInfo.emissiveFactor != undefined ? tMaterialInfo.emissiveFactor : [1, 1, 1];
+                    tMaterial.emissiveFactor = tMaterialInfo.emissiveFactor != undefined ? tMaterialInfo.emissiveFactor : new Float32Array([1, 1, 1]);
                     if (tMaterialInfo['pbrMetallicRoughness']) {
                         if (tMaterialInfo['pbrMetallicRoughness']['metallicRoughnessTexture']) tMaterial['roughnessTexCoordIndex'] = tMaterialInfo['pbrMetallicRoughness']['metallicRoughnessTexture']['texCoord'] || 0;
                         if (tMaterialInfo['pbrMetallicRoughness']['baseColorTexture']) tMaterial['diffuseTexCoordIndex'] = tMaterialInfo['pbrMetallicRoughness']['baseColorTexture']['texCoord'] || 0
@@ -13882,7 +13918,7 @@ var RedGLTFLoader;
                 } else {
                     var tColor = [(Math.random()), (Math.random()), (Math.random()), 1];
                     tMaterial = RedPBRMaterial_System(redGLTFLoader['redGL']);
-                    tMaterial['baseColorFactor'] = tColor
+                    tMaterial['baseColorFactor'] = new Float32Array(tColor);
                 }
                 return [tMaterial, doubleSide, alphaMode, alphaCutoff]
             }
@@ -13926,8 +13962,7 @@ var RedGLTFLoader;
                     interleaveData[idx++] = uvs1[i * 2 + 0];
                     interleaveData[idx++] = uvs1[i * 2 + 1];
                     // interleaveData.push(uvs1[i * 2 + 0], uvs1[i * 2 + 1])
-                }
-                else if (uvs.length) {
+                } else if (uvs.length) {
                     interleaveData[idx++] = uvs[i * 2 + 0];
                     interleaveData[idx++] = uvs[i * 2 + 1];
                     // interleaveData.push(uvs[i * 2 + 0], uvs[i * 2 + 1])
@@ -13952,8 +13987,7 @@ var RedGLTFLoader;
                     interleaveData[idx++] = tangents[i * 4 + 2];
                     interleaveData[idx++] = tangents[i * 4 + 3];
                     // interleaveData.push(tangents[i * 4 + 0], tangents[i * 4 + 1], tangents[i * 4 + 2], tangents[i * 4 + 3])
-                }
-                else {
+                } else {
                     interleaveData[idx++] = 0;
                     interleaveData[idx++] = 0;
                     interleaveData[idx++] = 0;
@@ -18327,14 +18361,14 @@ var RedSphere;
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.5.20 20:2
  */
 
 "use strict";
 var RedProgram;
 (function () {
     var makeWebGLProgram, searchLocation;
-    var samplerIndex, MAX_SAMPLER_INDEX;
+    var samplerIndex, MAX_SAMPLER_INDEX,samplerIndexMap={};
     samplerIndex = 2;
     makeWebGLProgram = (function () {
         var tProgram;
@@ -18741,7 +18775,7 @@ var RedProgram;
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.5.2 12:46
  */
 
 "use strict";
@@ -18806,7 +18840,7 @@ var RedSystemShaderCode;
                 'varying vec2 vTexcoord',
                 'varying vec2 vTexcoord1',
 
-                'uniform bool uOrthographicYn',
+                'uniform bool uMode2DYn',
 
                 // 'uniform vec4 uAtlascoord',
                 'uniform float uTime',
@@ -19531,7 +19565,7 @@ var RedShader;
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.5.21 11:40
  */
 
 "use strict";
@@ -19713,423 +19747,415 @@ var RedRenderer;
             var t0;
             return function () {
                 t0 = _renderList.indexOf(this);
-                if (t0 == -1) {
+                if (t0 === -1) {
                 } else _renderList.splice(t0, 1);
             }
         })()
     };
     // 캐시관련
-    var prevProgram_UUID;
-    var transparentList = [];
-    RedRenderer.prototype.worldRender = (function () {
-        var tWorldRect;
-        var self;
-        var valueParser;
-        var updateSystemUniform;
-        var glInitialize;
-        var lightDebugRenderList;
-        lightDebugRenderList = [];
-        // 숫자면 숫자로 %면 월드대비 수치로 변경해줌
-        valueParser = (function () {
-            var i;
-            return function (rect) {
-                i = rect.length;
-                while (i--) {
-                    if (typeof rect[i] == 'number') rect[i] = rect[i];
-                    else {
-                        if (i < 2) rect[i] = tWorldRect[i + 2] * parseFloat(rect[i]) / 100;
-                        else rect[i] = tWorldRect[i] * parseFloat(rect[i]) / 100
-                    }
+    var worldRender_prevProgram_UUID;
+    var worldRender_transparentList = [];
+    var worldRender_tWorldRect;
+    var worldRender_self;
+    var worldRender_valueParser;
+    var worldRender_updateSystemUniform;
+    var worldRender_glInitialize;
+    var worldRender_lightDebugRenderList;
+    worldRender_lightDebugRenderList = [];
+    // 숫자면 숫자로 %면 월드대비 수치로 변경해줌
+    worldRender_valueParser = (function () {
+        var i;
+        return function (rect) {
+            i = rect.length;
+            while (i--) {
+                if (typeof rect[i] == 'number') rect[i] = rect[i];
+                else {
+                    if (i < 2) rect[i] = worldRender_tWorldRect[i + 2] * parseFloat(rect[i]) / 100;
+                    else rect[i] = worldRender_tWorldRect[i] * parseFloat(rect[i]) / 100
                 }
-                return rect;
             }
-        })();
-        updateSystemUniform = function (redGL, time, tView) {
-            prevProgram_UUID = RedSystemUniformUpdater.update(redGL, this, time, tView, prevProgram_UUID, lightDebugRenderList)
-        };
-        glInitialize = function (gl) {
-            // 뎁스데스티 설정
-            gl.enable(gl.DEPTH_TEST);
-            gl.depthFunc(gl.LEQUAL);
-            // 컬링 페이스 설정
-            gl.frontFace(gl.CCW);
-            gl.enable(gl.CULL_FACE);
-            gl.cullFace(gl.BACK);
-            gl.enable(gl.SCISSOR_TEST);
-            // 블렌드모드설정
-            gl.enable(gl.BLEND);
-            gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-            gl.disable(gl.DITHER);
-            // gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
-            // // 픽셀 블렌딩 결정
-            // gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
-            // 픽셀 플립 기본설정
-            gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
-        };
-        return function (redGL, time) {
-            var gl;
-            var tScene;
-            var tRenderInfo;
-            var tPerspectiveMTX;
-            var tCamera;
-            var i;
-            var len;
-            var tView;
-            var tViewRect;
-            gl = redGL.gl;
-            self = this;
-            if (window['RedGLTFLoader']) RedGLTFLoader.animationLooper(time);
-            // 캔버스 사이즈 적용
-            tWorldRect = self['worldRect'];
-            tWorldRect[0] = 0;
-            tWorldRect[1] = 0;
-            tWorldRect[2] = gl.drawingBufferWidth;
-            tWorldRect[3] = gl.drawingBufferHeight;
-            gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
-            gl.scissor(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
-            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-            transparentList.length = 0;
-            if (!self['_glInitialized']) glInitialize(gl), self['_glInitialized'] = true;
-            // console.log("worldRender", v['key'], t0)
-            self['renderInfo'] = {};
-            self['cacheInfo']['cacheAttrInfo'].length = 0;
-            // 일단 0번과 1번텍스트는 무조건 체운다.
-            redGL.gl.activeTexture(redGL.gl.TEXTURE0);
-            redGL.gl.bindTexture(redGL.gl.TEXTURE_2D, redGL['_datas']['emptyTexture']['2d']['webglTexture']);
-            redGL.gl.activeTexture(redGL.gl.TEXTURE0 + 1);
-            redGL.gl.bindTexture(redGL.gl.TEXTURE_CUBE_MAP, redGL['_datas']['emptyTexture']['3d']['webglTexture']);
-            i = 0;
-            len = self['world']['_viewList'].length;
-            for (i; i < len; i++) {
-                // self['world']['_viewList'].forEach(function (tView) {
-                tView = self['world']['_viewList'][i];
-                ///////////////////////////////////
-                // view의 위치/크기결정
-                tViewRect = tView['_viewRect'];
-                tViewRect[0] = tView['_x'];
-                tViewRect[1] = tView['_y'];
-                tViewRect[2] = tView['_width'];
-                tViewRect[3] = tView['_height'];
-                tCamera = tView['camera'];
-                tScene = tView['scene'];
-                // 위치/크기의 % 여부를 파싱
-                valueParser(tViewRect);
-                // 현재뷰에 대한 렌더 디버깅 정보
-                if (!self['renderInfo'][tView['key']]) self['renderInfo'][tView['key']] = {};
-                tRenderInfo = self['renderInfo'][tView['key']];
-                tRenderInfo['orthographicYn'] = tCamera instanceof RedBaseController ? tCamera.camera['orthographicYn'] : tCamera['orthographicYn'];
-                tRenderInfo['x'] = tView['_x'];
-                tRenderInfo['y'] = tView['_y'];
-                tRenderInfo['width'] = tView['_width'];
-                tRenderInfo['height'] = tView['_height'];
-                tRenderInfo['viewRectX'] = tViewRect[0];
-                tRenderInfo['viewRectY'] = tViewRect[1];
-                tRenderInfo['viewRectWidth'] = tViewRect[2];
-                tRenderInfo['viewRectHeight'] = tViewRect[3];
-                tRenderInfo['key'] = tView['key'];
-                tRenderInfo['call'] = 0;
-                tRenderInfo['triangleNum'] = 0;
-                tRenderInfo['viewRenderTime'] = 0;
-                tRenderInfo['postEffectRenderTime'] = 0;
-                // viewport 크기설정
-                gl.viewport(tViewRect[0], tWorldRect[3] - tViewRect[3] - tViewRect[1], tViewRect[2], tViewRect[3]);
-                gl.scissor(tViewRect[0], tWorldRect[3] - tViewRect[3] - tViewRect[1], tViewRect[2], tViewRect[3]);
-                // 배경 설정
-                if (tScene['_useBackgroundColor']) {
-                    if (tScene['_useFog']) gl.clearColor(tScene['_fogR'], tScene['_fogG'], tScene['_fogB'], 1);
-                    else gl.clearColor(tScene['_r'], tScene['_g'], tScene['_b'], 1);
-                    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-                } else {
-                    gl.clearColor(0, 0, 0, 1);
-                    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-                }
-                // 카메라 메트릭스 설정
-                if (tCamera instanceof RedBaseController) {
-                    // 카메라 형식이 아닌경우 컨트롤러로 판단함
-                    tCamera['update']();
-                    tCamera = tCamera['camera'];
-                }
-                if (tCamera['autoUpdateMatrix']) tCamera['update']();
-                // 퍼스펙티브 매트릭스 설정
-                // view 에 적용할 카메라 퍼스펙티브를 계산
-                tPerspectiveMTX = tCamera['perspectiveMTX'];
-                mat4.identity(tPerspectiveMTX);
-                if (tCamera['orthographicYn']) {
-                    mat4.ortho(
-                        tPerspectiveMTX,
-                        -0.5, // left
-                        0.5, // right
-                        -0.5, // bottom
-                        0.5, // top,
-                        -tCamera['farClipping'],
-                        tCamera['farClipping']
-                    );
-                    mat4.translate(tPerspectiveMTX, tPerspectiveMTX, [-0.5, 0.5, 0]);
-                    mat4.scale(tPerspectiveMTX, tPerspectiveMTX, [1 / tViewRect[2] * redGL['renderScale'] * window.devicePixelRatio, -1 / tViewRect[3] * redGL['renderScale'] * window.devicePixelRatio, 1]);
-                    mat4.identity(tCamera['matrix']);
-                    gl.disable(gl.CULL_FACE);
-                    self['cacheState']['useCullFace'] = false
-                } else {
-                    mat4.perspective(
-                        tPerspectiveMTX,
-                        tCamera['fov'] * Math.PI / 180,
-                        tViewRect[2] / tViewRect[3],
-                        tCamera['nearClipping'],
-                        tCamera['farClipping']
-                    );
-                    gl.enable(gl.CULL_FACE);
-                    self['cacheState']['useCullFace'] = true
-                }
-                // 뎁스마스크 원상복구
-                self['cacheState']['useDepthMask'] ? 0 : gl.depthMask(self['cacheState']['useDepthMask'] = true);
-                // 마우스 이벤트 렌더
-                if (tScene['mouseManager']) {
-                    updateSystemUniform.apply(self, [redGL, time, tView]);
-                    tScene['mouseManager']['render'](redGL, self, tView, time, tRenderInfo, i == len - 1)
-
-                }
-                // 디렉셔널 쉐도우 렌더
-                if (tScene['shadowManager']['_directionalShadow']) {
-                    updateSystemUniform.apply(self, [redGL, time, tView]);
-                    gl.disable(gl.BLEND);
-                    gl.blendFunc(gl.ONE, gl.ONE);
-                    self['cacheState']['useBlendMode'] = true;
-                    self['cacheState']['blendSrc'] = gl.ONE;
-                    self['cacheState']['blendDst'] = gl.ONE;
-                    tScene['shadowManager']['render'](redGL, self, tView, time, tRenderInfo);
-                    gl.enable(gl.BLEND);
-                    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-                    self['cacheState']['useBlendMode'] = true;
-                    self['cacheState']['blendSrc'] = gl.SRC_ALPHA;
-                    self['cacheState']['blendDst'] = gl.ONE_MINUS_SRC_ALPHA
-                }
-
-                // 포스트이펙트 확인
-                if (tView['postEffectManager']['postEffectList'].length) {
-                    tView['postEffectManager'].bind(gl);
-                    // mat4.perspective(
-                    // 	tPerspectiveMTX,
-                    // 	tCamera['fov'] * Math.PI / 180,
-                    // 	tView['postEffectManager']['frameBuffer']['width'] / tView['postEffectManager']['frameBuffer']['height'],
-                    // 	tCamera['nearClipping'],
-                    // 	tCamera['farClipping']
-                    // );
-                    gl.viewport(0, 0, tView['postEffectManager']['frameBuffer']['width'], tView['postEffectManager']['frameBuffer']['height']);
-                    gl.scissor(0, 0, tView['postEffectManager']['frameBuffer']['width'], tView['postEffectManager']['frameBuffer']['height']);
-                }
-                ///////////////////////////////
-                // 실제렌더 계산
-                updateSystemUniform.apply(self, [redGL, time, tView]);
-                if (tScene['skyBox']) {
-                    tScene['skyBox']['x'] = tCamera.x;
-                    tScene['skyBox']['y'] = tCamera.y;
-                    tScene['skyBox']['z'] = tCamera.z;
-                    tScene['skyBox']['scaleX'] = tScene['skyBox']['scaleY'] = tScene['skyBox']['scaleZ'] = tCamera['farClipping'] * 0.6;
-                    self.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], [tScene['skyBox']], time, tRenderInfo);
-                }
-                // 그리드가 있으면 그림
-                if (tScene['grid']) self.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], [tScene['grid']], time, tRenderInfo);
-                // 씬렌더 호출
-                self.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], tScene['children'], time, tRenderInfo);
-                if (transparentList.length) self.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], transparentList, time, tRenderInfo, null, true);
-
-                // asix가 있으면 그림
-                if (tScene['axis']) self.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], tScene['axis']['children'], time, tRenderInfo);
-                // 디버깅 라이트 업데이트
-                if (lightDebugRenderList.length) self.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], lightDebugRenderList, time, tRenderInfo);
-                // 포스트이펙트 최종렌더
-                tRenderInfo['viewRenderTime'] = performance.now();
-                if (tView['postEffectManager']['postEffectList'].length) tView['postEffectManager'].render(redGL, gl, self, tView, time, tRenderInfo);
-                tRenderInfo['postEffectRenderTime'] = performance.now() - tRenderInfo['viewRenderTime'];
-                tRenderInfo['viewRenderTime'] -= time;
-                // })
-            }
-            if (this['renderDebuger']['visible']) this['renderDebuger'].update(redGL, self['renderInfo'])
-
+            return rect;
         }
     })();
-    RedRenderer.prototype.sceneRender = (function () {
-        var draw;
-        var tPrevIndexBuffer_UUID;
-        var tPrevInterleaveBuffer_UUID;
-        var tPrevSamplerIndex;
-        draw = function (redGL,
-                         scene,
-                         children,
-                         camera,
-                         orthographicYn,
-                         time,
-                         renderResultObj,
-                         tCacheInfo,
-                         tCacheState,
-                         parentMTX,
-                         subSceneMaterial,
-                         transparentMode) {
-            var i, i2;
-            // 캐쉬관련
-            var tGL = redGL.gl;
-            var tCacheInterleaveBuffer = tCacheInfo['cacheAttrInfo'];
-            var tCacheUniformInfo = tCacheInfo['cacheUniformInfo'];
-            var tCacheSamplerIndex = tCacheInfo['cacheSamplerIndex'];
-            var tCacheTexture = tCacheInfo['cacheTexture'];
-            // 오쏘고날 스케일 비율
-            var orthographicYnScale = orthographicYn ? -1 : 1;
-            //
-            var CONVERT_RADIAN;
-            //
-            var tMesh, tGeometry, tMaterial;
-            var tLODInfo;
-            var tAttrGroup, tAttributeLocationInfo, tInterleaveDefineInfo, tInterleaveDefineUnit;
-            var tUniformGroup, tSystemUniformGroup, tUniformLocationInfo, tWebGLUniformLocation,
-                tWebGLAttributeLocation;
-            var tInterleaveBuffer, tIndexBufferInfo;
-            var tUniformValue;
-            var tRenderType, tRenderTypeIndex;
-            var tMVMatrix, tNMatrix;
-            var tUUID;
-            var tSamplerIndex;
-            var tSprite3DYn, tLODData, tDirectionalShadowMaterialYn, tSkinInfo, tUseFog;
-            var tProgram, tOptionProgramKey, tOptionProgram;
-            // matix 관련
-            var a,
-                aSx, aSy, aSz, aCx, aCy, aCz, tRx, tRy, tRz,
-                a00, a01, a02, a03, a10, a11, a12, a13, a20, a21, a22, a23, a30, a31, a32, a33,
-                b0, b1, b2, b3,
-                b00, b01, b02, b10, b11, b12, b20, b21, b22,
-                aX, aY, aZ,
-                inverse_c, inverse_d, inverse_e, inverse_g, inverse_f, inverse_h, inverse_i, inverse_j, inverse_k,
-                inverse_l, inverse_n, inverse_o, inverse_A, inverse_m, inverse_p, inverse_r, inverse_s, inverse_B,
-                inverse_t, inverse_u, inverse_v, inverse_w, inverse_x, inverse_y, inverse_z, inverse_C, inverse_D,
-                inverse_E, inverse_q;
-            // sin,cos 관련
-            var tRadian, CPI, CPI2, C225, C127, C045, C157;
-            // LOD 관련
-            var lodX, lodY, lodZ, lodDistance;
-            // 프로그램 성택관련
-            var tUseDirectionalShadow;
-            var tProgramList;
-            var tBaseProgramKey;
-            //////////////// 변수값 할당 ////////////////
-            CONVERT_RADIAN = Math.PI / 180;
-            CPI = 3.141592653589793, CPI2 = 6.283185307179586, C225 = 0.225, C127 = 1.27323954, C045 = 0.405284735, C157 = 1.5707963267948966;
-            //////////////// 렌더시작 ////////////////
-            i = children.length;
-            var len3 = children.length - 1;
-            tUseFog = scene['_useFog'];
-            while (i--) {
-                renderResultObj['call']++;
-                tMesh = children[len3 - i];
-                tMVMatrix = tMesh['matrix'];
-                tNMatrix = tMesh['normalMatrix'];
-                tGeometry = tMesh['_geometry'];
-                tSprite3DYn = tMesh['_sprite3DYn'];
-                tSkinInfo = tMesh['skinInfo'];
-                // LOD체크
-                if (tMesh['useLOD']) {
-                    lodX = camera.x - tMesh.x;
-                    lodY = camera.y - tMesh.y;
-                    lodZ = camera.z - tMesh.z;
-                    lodDistance = Math.abs(Math.sqrt(lodX * lodX + lodY * lodY + lodZ * lodZ));
-                    tLODInfo = tMesh['_lodLevels'];
-                    for (var k in tLODInfo) {
-                        tLODData = tLODInfo[k];
-                        if (tLODData['distance'] < lodDistance) {
-                            tMesh['_geometry'] = tLODData['geometry'];
-                            tMesh['_material'] = tLODData['material'];
+    worldRender_updateSystemUniform = function (redGL, time, tView) {
+        worldRender_prevProgram_UUID = RedSystemUniformUpdater.update(redGL, this, time, tView, worldRender_prevProgram_UUID, worldRender_lightDebugRenderList)
+    };
+    worldRender_glInitialize = function (gl) {
+        // 뎁스데스티 설정
+        gl.enable(gl.DEPTH_TEST);
+        gl.depthFunc(gl.LEQUAL);
+        // 컬링 페이스 설정
+        gl.frontFace(gl.CCW);
+        gl.enable(gl.CULL_FACE);
+        gl.cullFace(gl.BACK);
+        gl.enable(gl.SCISSOR_TEST);
+        // 블렌드모드설정
+        gl.enable(gl.BLEND);
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+        gl.disable(gl.DITHER);
+        // gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+        // // 픽셀 블렌딩 결정
+        // gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
+        // 픽셀 플립 기본설정
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+    };
+    RedRenderer.prototype.worldRender = function (redGL, time) {
+        var gl;
+        var tScene;
+        var tRenderInfo;
+        var tPerspectiveMTX;
+        var tCamera;
+        var i;
+        var len;
+        var tView;
+        var tViewRect;
+        gl = redGL.gl;
+        worldRender_self = this;
+        if (window['RedGLTFLoader']) RedGLTFLoader.animationLooper(time);
+        // 캔버스 사이즈 적용
+        worldRender_tWorldRect = worldRender_self['worldRect'];
+        worldRender_tWorldRect[0] = 0;
+        worldRender_tWorldRect[1] = 0;
+        worldRender_tWorldRect[2] = gl.drawingBufferWidth;
+        worldRender_tWorldRect[3] = gl.drawingBufferHeight;
+        gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+        gl.scissor(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        worldRender_transparentList.length = 0;
+        if (!worldRender_self['_glInitialized']) worldRender_glInitialize(gl), worldRender_self['_glInitialized'] = true;
+        // console.log("worldRender", v['key'], t0)
+        worldRender_self['renderInfo'] = {};
+        worldRender_self['cacheInfo']['cacheAttrInfo'].length = 0;
+        // 일단 0번과 1번텍스트는 무조건 체운다.
+        redGL.gl.activeTexture(redGL.gl.TEXTURE0);
+        redGL.gl.bindTexture(redGL.gl.TEXTURE_2D, redGL['_datas']['emptyTexture']['2d']['webglTexture']);
+        redGL.gl.activeTexture(redGL.gl.TEXTURE0 + 1);
+        redGL.gl.bindTexture(redGL.gl.TEXTURE_CUBE_MAP, redGL['_datas']['emptyTexture']['3d']['webglTexture']);
+        i = 0;
+        len = worldRender_self['world']['_viewList'].length;
+        for (i; i < len; i++) {
+            // worldRender_self['world']['_viewList'].forEach(function (tView) {
+            tView = worldRender_self['world']['_viewList'][i];
+            ///////////////////////////////////
+            // view의 위치/크기결정
+            tViewRect = tView['_viewRect'];
+            tViewRect[0] = tView['_x'];
+            tViewRect[1] = tView['_y'];
+            tViewRect[2] = tView['_width'];
+            tViewRect[3] = tView['_height'];
+            tCamera = tView['camera'];
+            tScene = tView['scene'];
+            // 위치/크기의 % 여부를 파싱
+            worldRender_valueParser(tViewRect);
+            // 현재뷰에 대한 렌더 디버깅 정보
+            if (!worldRender_self['renderInfo'][tView['key']]) worldRender_self['renderInfo'][tView['key']] = {};
+            tRenderInfo = worldRender_self['renderInfo'][tView['key']];
+            tRenderInfo['mode2DYn'] = tCamera instanceof RedBaseController ? tCamera.camera['mode2DYn'] : tCamera['mode2DYn'];
+            tRenderInfo['x'] = tView['_x'];
+            tRenderInfo['y'] = tView['_y'];
+            tRenderInfo['width'] = tView['_width'];
+            tRenderInfo['height'] = tView['_height'];
+            tRenderInfo['viewRectX'] = tViewRect[0];
+            tRenderInfo['viewRectY'] = tViewRect[1];
+            tRenderInfo['viewRectWidth'] = tViewRect[2];
+            tRenderInfo['viewRectHeight'] = tViewRect[3];
+            tRenderInfo['key'] = tView['key'];
+            tRenderInfo['call'] = 0;
+            tRenderInfo['triangleNum'] = 0;
+            tRenderInfo['viewRenderTime'] = 0;
+            tRenderInfo['postEffectRenderTime'] = 0;
+            // viewport 크기설정
+            gl.viewport(tViewRect[0], worldRender_tWorldRect[3] - tViewRect[3] - tViewRect[1], tViewRect[2], tViewRect[3]);
+            gl.scissor(tViewRect[0], worldRender_tWorldRect[3] - tViewRect[3] - tViewRect[1], tViewRect[2], tViewRect[3]);
+            // 배경 설정
+            if (tScene['_useBackgroundColor']) {
+                if (tScene['_useFog']) gl.clearColor(tScene['_fogR'], tScene['_fogG'], tScene['_fogB'], 1);
+                else gl.clearColor(tScene['_r'], tScene['_g'], tScene['_b'], 1);
+                gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+            } else {
+                gl.clearColor(0, 0, 0, 1);
+                gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+            }
+            // 카메라 메트릭스 설정
+            if (tCamera instanceof RedBaseController) {
+                // 카메라 형식이 아닌경우 컨트롤러로 판단함
+                tCamera['update']();
+                tCamera = tCamera['camera'];
+            }
+            if (tCamera['autoUpdateMatrix']) tCamera['update']();
+            // 퍼스펙티브 매트릭스 설정
+            // view 에 적용할 카메라 퍼스펙티브를 계산
+            tPerspectiveMTX = tCamera['perspectiveMTX'];
+            mat4.identity(tPerspectiveMTX);
+            if (tCamera['mode2DYn']) {
+                mat4.ortho(
+                    tPerspectiveMTX,
+                    -0.5, // left
+                    0.5, // right
+                    -0.5, // bottom
+                    0.5, // top,
+                    -tCamera['farClipping'],
+                    tCamera['farClipping']
+                );
+                mat4.translate(tPerspectiveMTX, tPerspectiveMTX, [-0.5, 0.5, 0]);
+                mat4.scale(tPerspectiveMTX, tPerspectiveMTX, [1 / tViewRect[2] * redGL['renderScale'] * window.devicePixelRatio, -1 / tViewRect[3] * redGL['renderScale'] * window.devicePixelRatio, 1]);
+                mat4.identity(tCamera['matrix']);
+                gl.disable(gl.CULL_FACE);
+                worldRender_self['cacheState']['useCullFace'] = false
+            } else {
+                mat4.perspective(
+                    tPerspectiveMTX,
+                    tCamera['fov'] * Math.PI / 180,
+                    tViewRect[2] / tViewRect[3],
+                    tCamera['nearClipping'],
+                    tCamera['farClipping']
+                );
+                gl.enable(gl.CULL_FACE);
+                worldRender_self['cacheState']['useCullFace'] = true
+            }
+            // 뎁스마스크 원상복구
+            worldRender_self['cacheState']['useDepthMask'] ? 0 : gl.depthMask(worldRender_self['cacheState']['useDepthMask'] = true);
+            // 마우스 이벤트 렌더
+            if (tScene['mouseManager']) {
+                worldRender_updateSystemUniform.apply(worldRender_self, [redGL, time, tView]);
+                tScene['mouseManager']['render'](redGL, worldRender_self, tView, time, tRenderInfo, i == len - 1)
+            }
+            // 디렉셔널 쉐도우 렌더
+            if (tScene['shadowManager']['_directionalShadow']) {
+                worldRender_updateSystemUniform.apply(worldRender_self, [redGL, time, tView]);
+                gl.disable(gl.BLEND);
+                gl.blendFunc(gl.ONE, gl.ONE);
+                worldRender_self['cacheState']['useBlendMode'] = true;
+                worldRender_self['cacheState']['blendSrc'] = gl.ONE;
+                worldRender_self['cacheState']['blendDst'] = gl.ONE;
+                tScene['shadowManager']['render'](redGL, worldRender_self, tView, time, tRenderInfo);
+                gl.enable(gl.BLEND);
+                gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+                worldRender_self['cacheState']['useBlendMode'] = true;
+                worldRender_self['cacheState']['blendSrc'] = gl.SRC_ALPHA;
+                worldRender_self['cacheState']['blendDst'] = gl.ONE_MINUS_SRC_ALPHA
+            }
+
+            // 포스트이펙트 확인
+            if (tView['postEffectManager']['postEffectList'].length) {
+                tView['postEffectManager'].bind(gl);
+                // mat4.perspective(
+                // 	tPerspectiveMTX,
+                // 	tCamera['fov'] * Math.PI / 180,
+                // 	tView['postEffectManager']['frameBuffer']['width'] / tView['postEffectManager']['frameBuffer']['height'],
+                // 	tCamera['nearClipping'],
+                // 	tCamera['farClipping']
+                // );
+                gl.viewport(0, 0, tView['postEffectManager']['frameBuffer']['width'], tView['postEffectManager']['frameBuffer']['height']);
+                gl.scissor(0, 0, tView['postEffectManager']['frameBuffer']['width'], tView['postEffectManager']['frameBuffer']['height']);
+            }
+            ///////////////////////////////
+            // 실제렌더 계산
+            worldRender_updateSystemUniform.apply(worldRender_self, [redGL, time, tView]);
+            if (tScene['skyBox']) {
+                tScene['skyBox']['x'] = tCamera.x;
+                tScene['skyBox']['y'] = tCamera.y;
+                tScene['skyBox']['z'] = tCamera.z;
+                tScene['skyBox']['scaleX'] = tScene['skyBox']['scaleY'] = tScene['skyBox']['scaleZ'] = tCamera['farClipping'] * 0.6;
+                worldRender_self.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], [tScene['skyBox']], time, tRenderInfo);
+            }
+            // 그리드가 있으면 그림
+            if (tScene['grid']) worldRender_self.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], [tScene['grid']], time, tRenderInfo);
+            // 씬렌더 호출
+            worldRender_self.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], tScene['children'], time, tRenderInfo);
+            if (worldRender_transparentList.length) worldRender_self.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], worldRender_transparentList, time, tRenderInfo, null, true);
+            if (tScene.mirrorManager) {
+                tScene.mirrorManager.render(redGL, worldRender_self, tView, time, tRenderInfo, worldRender_updateSystemUniform);
+            }
+
+            // asix가 있으면 그림
+            if (tScene['axis']) worldRender_self.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], tScene['axis']['children'], time, tRenderInfo);
+            // 디버깅 라이트 업데이트
+            if (worldRender_lightDebugRenderList.length) worldRender_self.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], worldRender_lightDebugRenderList, time, tRenderInfo);
+            // 포스트이펙트 최종렌더
+            tRenderInfo['viewRenderTime'] = performance.now();
+            if (tView['postEffectManager']['postEffectList'].length) tView['postEffectManager'].render(redGL, gl, worldRender_self, tView, time, tRenderInfo);
+            tRenderInfo['postEffectRenderTime'] = performance.now() - tRenderInfo['viewRenderTime'];
+            tRenderInfo['viewRenderTime'] -= time;
+            // })
+        }
+        if (this['renderDebuger']['visible']) this['renderDebuger'].update(redGL, worldRender_self['renderInfo'])
+
+    };
+    var draw;
+    var tPrevIndexBuffer_UUID;
+    var tPrevInterleaveBuffer_UUID;
+    var tPrevSamplerIndex;
+    draw = function (redGL,
+                     scene,
+                     children,
+                     camera,
+                     mode2DYn,
+                     time,
+                     renderResultObj,
+                     tCacheInfo,
+                     tCacheState,
+                     parentMTX,
+                     subSceneMaterial,
+                     transparentMode) {
+        var i, i2;
+        // 캐쉬관련
+        var tGL = redGL.gl;
+        var tCacheInterleaveBuffer = tCacheInfo['cacheAttrInfo'];
+        var tCacheUniformInfo = tCacheInfo['cacheUniformInfo'];
+        var tCacheSamplerIndex = tCacheInfo['cacheSamplerIndex'];
+        var tCacheTexture = tCacheInfo['cacheTexture'];
+
+        //
+        var CONVERT_RADIAN;
+        //
+        var tMesh, tGeometry, tMaterial;
+        var tLODInfo;
+        var tAttrGroup, tAttributeLocationInfo, tInterleaveDefineInfo, tInterleaveDefineUnit;
+        var tUniformGroup, tSystemUniformGroup, tUniformLocationInfo, tWebGLUniformLocation,
+            tWebGLAttributeLocation;
+        var tInterleaveBuffer, tIndexBufferInfo;
+        var tUniformValue;
+        var tRenderType, tRenderTypeIndex;
+        var tMVMatrix, tNMatrix, tLocalMatrix;
+        var tUUID;
+        var tSamplerIndex;
+        var tSprite3DYn, tLODData, tDirectionalShadowMaterialYn, tSkinInfo, tUseFog;
+        var tProgram, tOptionProgramKey, tOptionProgram, baseOptionKey;
+        // matix 관련
+        var aSx, aSy, aSz, aCx, aCy, aCz, aX, aY, aZ,
+            a00, a01, a02, a03, a10, a11, a12, a13, a20, a21, a22, a23, a30, a31, a32, a33,
+            b0, b1, b2, b3,
+            b00, b01, b02, b10, b11, b12, b20, b21, b22
+        // sin,cos 관련
+        var tRadian, CPI, CPI2, C225, C127, C045, C157;
+        // LOD 관련
+        var lodDistance, lodTarget;
+        // 프로그램 성택관련
+        var tUseDirectionalShadow;
+        var tProgramList;
+        var tBaseProgramKey;
+        //////////////// 변수값 할당 ////////////////
+        CONVERT_RADIAN = Math.PI / 180;
+        CPI = 3.141592653589793, CPI2 = 6.283185307179586, C225 = 0.225, C127 = 1.27323954, C045 = 0.405284735, C157 = 1.5707963267948966;
+        //////////////// 렌더시작 ////////////////
+        i = children.length;
+        var len3 = children.length - 1;
+        tUseFog = scene['_useFog'];
+        tUseDirectionalShadow = scene['shadowManager']['_directionalShadow'];
+        if (tUseDirectionalShadow) {
+            if (tUseFog) baseOptionKey = 'directionalShadow_fog';
+            else baseOptionKey = 'directionalShadow'
+        } else {
+            if (tUseFog) baseOptionKey = 'fog'
+        }
+        while (i--) {
+            renderResultObj['call']++;
+            tMesh = children[len3 - i];
+            tMVMatrix = tMesh['matrix'];
+            tNMatrix = tMesh['normalMatrix'];
+            tLocalMatrix = tMesh['localMatrix'];
+            tGeometry = tMesh['_geometry'];
+            tSprite3DYn = tMesh['_sprite3DYn'];
+            tSkinInfo = tMesh['skinInfo'];
+            // LOD체크
+            if (tMesh['useLOD']) {
+                aX = camera.x - tMesh.x;
+                aY = camera.y - tMesh.y;
+                aZ = camera.z - tMesh.z;
+                lodDistance = Math.abs(Math.sqrt(aX * aX + aY * aY + aZ * aZ));
+                tLODInfo = tMesh['_lodLevels'];
+                // 0~4레벨까지 허용
+                (tLODData = tLODInfo[0]) && tLODData['distance'] < lodDistance ? lodTarget = tLODData : 0,
+                    (tLODData = tLODInfo[1]) && tLODData['distance'] < lodDistance ? lodTarget = tLODData : 0,
+                    (tLODData = tLODInfo[2]) && tLODData['distance'] < lodDistance ? lodTarget = tLODData : 0,
+                    (tLODData = tLODInfo[3]) && tLODData['distance'] < lodDistance ? lodTarget = tLODData : 0,
+                    (tLODData = tLODInfo[4]) && tLODData['distance'] < lodDistance ? lodTarget = tLODData : 0,
+                    lodTarget ? (tMesh['_geometry'] = lodTarget['geometry'], tMesh['_material'] = lodTarget['material']) : 0
+            }
+            if (tGeometry) {
+                tMaterial = subSceneMaterial ? subSceneMaterial : tMesh['_material'];
+                tDirectionalShadowMaterialYn = tMaterial['_RedDirectionalShadowYn'];
+                // 마우스 이벤트 커러설정
+                tMaterial['_RedMouseEventMaterialYn'] ? tMaterial['color'] = tMesh['_mouseColorID'] : 0;
+                // SpriteSheet체크
+                if (tMaterial['__RedSheetMaterialYn']) {
+                    if (!tMaterial['_nextFrameTime']) tMaterial['_nextFrameTime'] = tMaterial['_perFrameTime'] + time;
+                    if (tMaterial['_playYn'] && tMaterial['_nextFrameTime'] < time) {
+                        var gapFrame = parseInt((time - tMaterial['_nextFrameTime']) / tMaterial['_perFrameTime']);
+                        gapFrame = gapFrame || 1;
+                        tMaterial['_nextFrameTime'] = tMaterial['_perFrameTime'] + time;
+                        tMaterial['currentIndex'] += gapFrame;
+                        if (tMaterial['currentIndex'] >= tMaterial['totalFrame']) {
+                            if (tMaterial['_loop']) tMaterial['_playYn'] = true, tMaterial['currentIndex'] = 0;
+                            else tMaterial['_playYn'] = false, tMaterial['currentIndex'] = tMaterial['totalFrame'] - 1
                         }
                     }
+                    tMaterial['_sheetRect'][0] = 1 / tMaterial['_segmentW'];
+                    tMaterial['_sheetRect'][1] = 1 / tMaterial['_segmentH'];
+                    tMaterial['_sheetRect'][2] = (tMaterial['currentIndex'] % tMaterial['_segmentW']) / tMaterial['_segmentW'];
+                    tMaterial['_sheetRect'][3] = Math.floor(tMaterial['currentIndex'] / tMaterial['_segmentH']) / tMaterial['_segmentH'];
                 }
-                if (tGeometry) {
-                    tMaterial = subSceneMaterial ? subSceneMaterial : tMesh['_material'];
-                    tDirectionalShadowMaterialYn = tMaterial['_RedDirectionalShadowYn'];
-                    // 마우스 이벤트 커러설정
-                    tMaterial['_RedMouseEventMaterialYn'] ? tMaterial['color'] = tMesh['_mouseColorID'] : 0;
-                    // SpriteSheet체크
-                    if (tMaterial['__RedSheetMaterialYn']) {
-                        if (!tMaterial['_nextFrameTime']) tMaterial['_nextFrameTime'] = tMaterial['_perFrameTime'] + time;
-                        if (tMaterial['_playYn'] && tMaterial['_nextFrameTime'] < time) {
-                            var gapFrame = parseInt((time - tMaterial['_nextFrameTime']) / tMaterial['_perFrameTime']);
-                            gapFrame = gapFrame || 1;
-                            tMaterial['_nextFrameTime'] = tMaterial['_perFrameTime'] + time;
-                            tMaterial['currentIndex'] += gapFrame;
-                            if (tMaterial['currentIndex'] >= tMaterial['totalFrame']) {
-                                if (tMaterial['_loop']) tMaterial['_playYn'] = true, tMaterial['currentIndex'] = 0;
-                                else tMaterial['_playYn'] = false, tMaterial['currentIndex'] = tMaterial['totalFrame'] - 1
-                            }
-                        }
-                        tMaterial['_sheetRect'][0] = 1 / tMaterial['_segmentW'];
-                        tMaterial['_sheetRect'][1] = 1 / tMaterial['_segmentH'];
-                        tMaterial['_sheetRect'][2] = (tMaterial['currentIndex'] % tMaterial['_segmentW']) / tMaterial['_segmentW'];
-                        tMaterial['_sheetRect'][3] = Math.floor(tMaterial['currentIndex'] / tMaterial['_segmentH']) / tMaterial['_segmentH'];
-                    }
-                    // 재질 캐싱
-                    // Program 판단
-                    //TODO: 프로그램 생성로직정리후 선택로직 확정
-                    tUseDirectionalShadow = scene['shadowManager']['_directionalShadow'];
-                    tProgram = tMaterial['program'];
-                    if (tProgram['_prepareProgramYn']) {
-                        tProgram = tMaterial['program'] = tProgram._makePrepareProgram();
-                    }
-                    tOptionProgramKey = null;
-                    tOptionProgram = null;
-                    tBaseProgramKey = tProgram['key'];
-                    tProgramList = tMaterial['_programList'];
-                    if (tProgramList) {
-                        if (tUseDirectionalShadow) {
-                            if (tUseFog && tSprite3DYn) tOptionProgramKey = 'directionalShadow_fog_sprite3D';
-                            else if (tUseFog && tSkinInfo) tOptionProgramKey = 'directionalShadow_fog_skin';
-                            else if (tSkinInfo) tOptionProgramKey = 'directionalShadow_skin';
-                            else if (tSprite3DYn) tOptionProgramKey = 'directionalShadow_sprite3D';
-                            else if (tUseFog) tOptionProgramKey = 'directionalShadow_fog';
-                            else tOptionProgramKey = 'directionalShadow'
-                        }
-                        else {
-                            if (tUseFog && tSprite3DYn) tOptionProgramKey = 'fog_sprite3D';
-                            else if (tUseFog && tSkinInfo) tOptionProgramKey = 'fog_skin';
-                            else if (tSkinInfo) tOptionProgramKey = 'skin';
-                            else if (tSprite3DYn) tOptionProgramKey = 'sprite3D';
-                            else if (tUseFog) tOptionProgramKey = 'fog'
-                        }
-                    }
+                // 재질 캐싱
+                // Program 판단
+                //TODO: 프로그램 생성로직정리후 선택로직 확정
 
-                    if (tOptionProgramKey) {
-                        tOptionProgram = tProgramList[tOptionProgramKey][tBaseProgramKey];
-                        // try {
-                        //     tOptionProgram['_prepareProgramYn']
-                        // } catch (e) {
-                        //     console.log(e, tProgram, tProgramList, tOptionProgramKey, tBaseProgramKey)
-                        // }
-
-                        if (tOptionProgram['_prepareProgramYn']) {
-                            console.log(tProgramList, tOptionProgramKey, tBaseProgramKey);
-                            tOptionProgram = tProgramList[tOptionProgramKey][tBaseProgramKey] = tOptionProgram._makePrepareProgram();
-                        }
-                        tProgram = tOptionProgram
+                tProgram = tMaterial['program'];
+                if (tProgram['_prepareProgramYn']) tProgram = tMaterial['program'] = tProgram._makePrepareProgram();
+                tBaseProgramKey = tProgram['key'];
+                tProgramList = tMaterial['_programList'];
+                if (tSkinInfo || tSprite3DYn) {
+                    if (tUseDirectionalShadow) {
+                        if (tUseFog && tSprite3DYn) tOptionProgramKey = 'directionalShadow_fog_sprite3D';
+                        else if (tUseFog && tSkinInfo) tOptionProgramKey = 'directionalShadow_fog_skin';
+                        else if (tSkinInfo) tOptionProgramKey = 'directionalShadow_skin';
+                        else if (tSprite3DYn) tOptionProgramKey = 'directionalShadow_sprite3D';
+                        else if (tUseFog) tOptionProgramKey = 'directionalShadow_fog';
+                        else tOptionProgramKey = 'directionalShadow'
+                    } else {
+                        if (tUseFog && tSprite3DYn) tOptionProgramKey = 'fog_sprite3D';
+                        else if (tUseFog && tSkinInfo) tOptionProgramKey = 'fog_skin';
+                        else if (tSkinInfo) tOptionProgramKey = 'skin';
+                        else if (tSprite3DYn) tOptionProgramKey = 'sprite3D';
+                        else if (tUseFog) tOptionProgramKey = 'fog'
                     }
-                    //
-                    prevProgram_UUID == tProgram['_UUID'] ? 0 : tGL.useProgram(tProgram['webglProgram']);
-                    prevProgram_UUID = tProgram['_UUID'];
-                    // 업데이트할 어트리뷰트와 유니폼 정보를 가져옴
-                    tAttrGroup = tProgram['attributeLocation'];
-                    tUniformGroup = tProgram['uniformLocation'];
-                    tSystemUniformGroup = tProgram['systemUniformLocation'];
-                    // 버퍼를 찾는다.
-                    tInterleaveBuffer = tGeometry['interleaveBuffer']; // 인터리브 버퍼
-                    tIndexBufferInfo = tGeometry['indexBuffer']; // 엘리먼트 버퍼
-                    /////////////////////////////////////////////////////////////////////////
-                    /////////////////////////////////////////////////////////////////////////
-                    // 버퍼의 UUID
-                    tUUID = tInterleaveBuffer['_UUID'];
-                    // 실제 버퍼 바인딩하고
-                    // 프로그램의 어트리뷰트를 순환한다.
-                    i2 = tAttrGroup.length;
-                    // interleaveDefineInfoList 정보를 가져온다.
-                    tInterleaveDefineInfo = tInterleaveBuffer['interleaveDefineInfoList'];
-                    tPrevInterleaveBuffer_UUID == tUUID ? 0 : tGL.bindBuffer(tGL.ARRAY_BUFFER, tInterleaveBuffer['webglBuffer']);
-                    tPrevInterleaveBuffer_UUID = tUUID;
-                    while (i2--) {
-                        // 대상 어트리뷰트의 로케이션 정보를 구함
-                        tAttributeLocationInfo = tAttrGroup[i2];
+                } else {
+                    tOptionProgramKey = baseOptionKey
+                }
+                if (tProgramList && tOptionProgramKey) {
+                    tOptionProgram = tProgramList[tOptionProgramKey][tBaseProgramKey];
+                    if (tOptionProgram['_prepareProgramYn']) {
+                        console.log(tProgramList, tOptionProgramKey, tBaseProgramKey);
+                        tOptionProgram = tProgramList[tOptionProgramKey][tBaseProgramKey] = tOptionProgram._makePrepareProgram();
+                    }
+                    tProgram = tOptionProgram
+                }
+                //
+                worldRender_prevProgram_UUID == tProgram['_UUID'] ? 0 : tGL.useProgram(tProgram['webglProgram']);
+                worldRender_prevProgram_UUID = tProgram['_UUID'];
+                // 업데이트할 어트리뷰트와 유니폼 정보를 가져옴
+                tAttrGroup = tProgram['attributeLocation'];
+                tUniformGroup = tProgram['uniformLocation'];
+                tSystemUniformGroup = tProgram['systemUniformLocation'];
+                // 버퍼를 찾는다.
+                tInterleaveBuffer = tGeometry['interleaveBuffer']; // 인터리브 버퍼
+                tIndexBufferInfo = tGeometry['indexBuffer']; // 엘리먼트 버퍼
+                /////////////////////////////////////////////////////////////////////////
+                /////////////////////////////////////////////////////////////////////////
+                // 버퍼의 UUID
+                tUUID = tInterleaveBuffer['_UUID'];
+                // 실제 버퍼 바인딩하고
+                // 프로그램의 어트리뷰트를 순환한다.
+                i2 = tAttrGroup.length;
+                if (tUniformGroup.length > i2) i2 = tUniformGroup.length;
+                // interleaveDefineInfoList 정보를 가져온다.
+                tInterleaveDefineInfo = tInterleaveBuffer['interleaveDefineInfoList'];
+                tPrevInterleaveBuffer_UUID == tUUID ? 0 : tGL.bindBuffer(tGL.ARRAY_BUFFER, tInterleaveBuffer['webglBuffer']);
+                tPrevInterleaveBuffer_UUID = tUUID;
+                while (i2--) {
+                    // 대상 어트리뷰트의 로케이션 정보를 구함
+                    tAttributeLocationInfo = tAttrGroup[i2];
+                    if (tAttributeLocationInfo) {
                         // 대상 어트리뷰트의 이름으로 interleaveDefineInfoList에서 단위 인터리브 정보를 가져온다.
                         tInterleaveDefineUnit = tInterleaveDefineInfo[tAttributeLocationInfo['name']];
                         /*
@@ -20155,24 +20181,22 @@ var RedRenderer;
                             // 상태 캐싱
                             tCacheInterleaveBuffer[tWebGLAttributeLocation] = tInterleaveDefineUnit['_UUID']
                         }
-
                     }
-                    /////////////////////////////////////////////////////////////////////////
-                    /////////////////////////////////////////////////////////////////////////
                     // 유니폼 업데이트
-                    i2 = tUniformGroup.length;
-                    while (i2--) {
-                        tUniformLocationInfo = tUniformGroup[i2];
+                    tUniformLocationInfo = tUniformGroup[i2];
+                    if (tUniformLocationInfo) {
                         tWebGLUniformLocation = tUniformLocationInfo['location'];
                         tUUID = tUniformLocationInfo['_UUID'];
                         tRenderTypeIndex = tUniformLocationInfo['renderTypeIndex'];
                         tRenderType = tUniformLocationInfo['renderType'];
                         tUniformValue = tMaterial[tUniformLocationInfo['materialPropertyName']];
                         // console.log(tCacheInfo)
-                        if (tRenderType == 'sampler2D' || tRenderType == 'samplerCube') {
+                        if (tRenderTypeIndex < 2) {
                             tSamplerIndex = tUniformLocationInfo['samplerIndex'];
                             // samplerIndex : 0,1 번은 생성용으로 쓴다.
                             if (tUniformValue) {
+                                // tRenderTypeIndex 0 : sampler2d
+                                // tRenderTypeIndex 1 : samplerCube
                                 if (tCacheTexture[tSamplerIndex] != tUniformValue['_UUID']) {
                                     tPrevSamplerIndex == tSamplerIndex ? 0 : tGL.activeTexture(tGL.TEXTURE0 + (tPrevSamplerIndex = tSamplerIndex));
                                     if (tUniformValue['_videoDom']) {
@@ -20180,39 +20204,18 @@ var RedRenderer;
                                         tGL.bindTexture(tGL.TEXTURE_2D, tUniformValue['webglTexture']);
                                         if (tUniformValue['_videoDom']['loaded']) tGL.texImage2D(tGL.TEXTURE_2D, 0, tGL.RGBA, tGL.RGBA, tGL.UNSIGNED_BYTE, tUniformValue['_videoDom']);
                                         tCacheTexture = [];
-                                    } else tGL.bindTexture(tRenderType == 'sampler2D' ? tGL.TEXTURE_2D : tGL.TEXTURE_CUBE_MAP, tUniformValue['webglTexture']);
-                                    tCacheSamplerIndex[tUUID] == tSamplerIndex ? 0 : tGL.uniform1i(tWebGLUniformLocation, tCacheSamplerIndex[tUUID] = tSamplerIndex);
+                                    } else tGL.bindTexture(tRenderTypeIndex == 0 ? tGL.TEXTURE_2D : tGL.TEXTURE_CUBE_MAP, tUniformValue['webglTexture']);
+                                    tCacheSamplerIndex[tUUID] == tSamplerIndex ? 0 : tGL.uniform1iv(tWebGLUniformLocation, [tCacheSamplerIndex[tUUID] = tSamplerIndex]);
                                     tCacheTexture[tSamplerIndex] = tUniformValue['_UUID'];
 
                                 }
-                                // // 아틀라스 UV검색
-                                // if ( tSystemUniformGroup['uAtlascoord']['location'] ) {
-                                // 	tUUID = tSystemUniformGroup['uAtlascoord']['_UUID']
-                                // 	if ( tCacheUniformInfo[tUUID] != tUniformValue['atlascoord']['data']['_UUID'] ) {
-                                // 		tGL.uniform4fv(tSystemUniformGroup['uAtlascoord']['location'], tUniformValue['atlascoord']['data'])
-                                // 		tCacheUniformInfo[tUUID] = tUniformValue['atlascoord']['data']['_UUID']
-                                // 	}
-                                // }
-                            }
-                            else {
+                            } else {
                                 // TODO: 이제는 이놈들을 날릴수있을듯한데...
                                 // console.log('설마',tUniformLocationInfo['materialPropertyName'])
-                                if (tRenderType == 'sampler2D') {
-                                    if (tCacheTexture[tSamplerIndex] != 0) {
-                                        // tPrevSamplerIndex == 0 ? 0 : tGL.activeTexture(tGL.TEXTURE0);
-                                        // tGL.bindTexture(tGL.TEXTURE_2D, redGL['_datas']['emptyTexture']['2d']['webglTexture']);
-                                        tCacheSamplerIndex[tUUID] == 0 ? 0 : tGL.uniform1i(tWebGLUniformLocation, tCacheSamplerIndex[tUUID] = 0);
-                                        tCacheTexture[tSamplerIndex] = 0;
-                                        tPrevSamplerIndex = 0;
-                                    }
-                                } else {
-                                    if (tCacheTexture[tSamplerIndex] != 1) {
-                                        // tPrevSamplerIndex == 1 ? 0 : tGL.activeTexture(tGL.TEXTURE0 + 1);
-                                        // tGL.bindTexture(tGL.TEXTURE_CUBE_MAP, redGL['_datas']['emptyTexture']['3d']['webglTexture']);
-                                        tCacheSamplerIndex[tUUID] == 1 ? 0 : tGL.uniform1i(tWebGLUniformLocation, tCacheSamplerIndex[tUUID] = 1);
-                                        tCacheTexture[tSamplerIndex] = 1;
-                                        tPrevSamplerIndex = 1;
-                                    }
+                                if (tCacheTexture[tSamplerIndex] != tRenderTypeIndex) {
+                                    tCacheSamplerIndex[tUUID] == tRenderTypeIndex ? 0 : tGL.uniform1iv(tWebGLUniformLocation, [tCacheSamplerIndex[tUUID] = tRenderTypeIndex]);
+                                    tCacheTexture[tSamplerIndex] = tRenderTypeIndex;
+                                    tPrevSamplerIndex = tRenderTypeIndex;
                                 }
                             }
                         } else {
@@ -20229,348 +20232,377 @@ var RedRenderer;
                             // 			RedGLUtil.throwFunc('RedRenderer : 처리할수없는 타입입니다.', 'tRenderType -', tRenderType)
                         }
                     }
+
+                }
+            }
+            /////////////////////////////////////////////////////////////////////////
+            /////////////////////////////////////////////////////////////////////////
+            // tMVMatrix
+            // tMVMatrix 초기화
+            if (tMaterial && tMaterial['_RedMouseEventMaterialYn']) {
+                if (tGeometry) tGL.uniformMatrix4fv(tSystemUniformGroup['uMMatrix']['location'], false, tMVMatrix)
+            } else {
+                if (tMesh['autoUpdateMatrix']) {
+                    a00 = 1, a01 = 0, a02 = 0,
+                        a10 = 0, a11 = 1, a12 = 0,
+                        a20 = 0, a21 = 0, a22 = 1,
+                        // tLocalMatrix translate
+                        tLocalMatrix[12] = tMesh['x'],
+                        tLocalMatrix[13] = tMesh['y'],
+                        tLocalMatrix[14] = tMesh['z'],
+                        tLocalMatrix[15] = 1,
+                        // tLocalMatrix rotate
+                        tSprite3DYn ?
+                            (aX = aY = aZ = 0) :
+                            (aX = tMesh['rotationX'] * CONVERT_RADIAN, aY = tMesh['rotationY'] * CONVERT_RADIAN, aZ = tMesh['rotationZ'] * CONVERT_RADIAN),
+                        /////////////////////////
+                        tRadian = aX % CPI2,
+                        tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
+                        tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
+                        aSx = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
+                        tRadian = (aX + C157) % CPI2,
+                        tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
+                        tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
+                        aCx = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
+                        tRadian = aY % CPI2,
+                        tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
+                        tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
+                        aSy = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
+                        tRadian = (aY + C157) % CPI2,
+                        tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
+                        tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
+                        aCy = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
+                        tRadian = aZ % CPI2,
+                        tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
+                        tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
+                        aSz = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
+                        tRadian = (aZ + C157) % CPI2,
+                        tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
+                        tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
+                        aCz = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
+                        /////////////////////////
+                        b00 = aCy * aCz, b01 = aSx * aSy * aCz - aCx * aSz, b02 = aCx * aSy * aCz + aSx * aSz,
+                        b10 = aCy * aSz, b11 = aSx * aSy * aSz + aCx * aCz, b12 = aCx * aSy * aSz - aSx * aCz,
+                        b20 = -aSy, b21 = aSx * aCy, b22 = aCx * aCy,
+                        // tLocalMatrix scale
+                        aX = tMesh['scaleX'], aY = tMesh['scaleY'] * (mode2DYn ? -1 : 1), aZ = tMesh['scaleZ'],
+                        tLocalMatrix[0] = (a00 * b00 + a10 * b01 + a20 * b02) * aX,
+                        tLocalMatrix[1] = (a01 * b00 + a11 * b01 + a21 * b02) * aX,
+                        tLocalMatrix[2] = (a02 * b00 + a12 * b01 + a22 * b02) * aX,
+                        tLocalMatrix[3] = tLocalMatrix[3] * aX,
+                        tLocalMatrix[4] = (a00 * b10 + a10 * b11 + a20 * b12) * aY,
+                        tLocalMatrix[5] = (a01 * b10 + a11 * b11 + a21 * b12) * aY,
+                        tLocalMatrix[6] = (a02 * b10 + a12 * b11 + a22 * b12) * aY,
+                        tLocalMatrix[7] = tLocalMatrix[7] * aY,
+                        tLocalMatrix[8] = (a00 * b20 + a10 * b21 + a20 * b22) * aZ,
+                        tLocalMatrix[9] = (a01 * b20 + a11 * b21 + a21 * b22) * aZ,
+                        tLocalMatrix[10] = (a02 * b20 + a12 * b21 + a22 * b22) * aZ,
+                        tLocalMatrix[11] = tLocalMatrix[11] * aZ,
+                        // tLocalMatrix[0] = a00 * b00 + a10 * b01 + a20 * b02, tLocalMatrix[1] = a01 * b00 + a11 * b01 + a21 * b02, tLocalMatrix[2] = a02 * b00 + a12 * b01 + a22 * b02,
+                        // tLocalMatrix[4] = a00 * b10 + a10 * b11 + a20 * b12, tLocalMatrix[5] = a01 * b10 + a11 * b11 + a21 * b12, tLocalMatrix[6] = a02 * b10 + a12 * b11 + a22 * b12,
+                        // tLocalMatrix[8] = a00 * b20 + a10 * b21 + a20 * b22, tLocalMatrix[9] = a01 * b20 + a11 * b21 + a21 * b22, tLocalMatrix[10] = a02 * b20 + a12 * b21 + a22 * b22,
+                        // // tLocalMatrix scale
+                        // aX = tMesh['scaleX'], aY = tMesh['scaleY'] * (mode2DYn ? -1 : 1), aZ = tMesh['scaleZ'],
+                        // tLocalMatrix[0] = tLocalMatrix[0] * aX, tLocalMatrix[1] = tLocalMatrix[1] * aX, tLocalMatrix[2] = tLocalMatrix[2] * aX, tLocalMatrix[3] = tLocalMatrix[3] * aX,
+                        // tLocalMatrix[4] = tLocalMatrix[4] * aY, tLocalMatrix[5] = tLocalMatrix[5] * aY, tLocalMatrix[6] = tLocalMatrix[6] * aY, tLocalMatrix[7] = tLocalMatrix[7] * aY,
+                        // tLocalMatrix[8] = tLocalMatrix[8] * aZ, tLocalMatrix[9] = tLocalMatrix[9] * aZ, tLocalMatrix[10] = tLocalMatrix[10] * aZ, tLocalMatrix[11] = tLocalMatrix[11] * aZ,
+                        // tLocalMatrix[12] = tLocalMatrix[12], tLocalMatrix[13] = tLocalMatrix[13], tLocalMatrix[14] = tLocalMatrix[14], tLocalMatrix[15] = tLocalMatrix[15],
+                        // 부모가있으면 곱함
+                        parentMTX ?
+                            (
+                                // 부모매트릭스 복사
+                                // 매트립스 곱
+                                a00 = parentMTX[0], a01 = parentMTX[1], a02 = parentMTX[2], a03 = parentMTX[3],
+                                    a10 = parentMTX[4], a11 = parentMTX[5], a12 = parentMTX[6], a13 = parentMTX[7],
+                                    a20 = parentMTX[8], a21 = parentMTX[9], a22 = parentMTX[10], a23 = parentMTX[11],
+                                    a30 = parentMTX[12], a31 = parentMTX[13], a32 = parentMTX[14], a33 = parentMTX[15],
+                                    // Cache only the current line of the second matrix
+                                    b0 = tLocalMatrix[0], b1 = tLocalMatrix[1], b2 = tLocalMatrix[2], b3 = tLocalMatrix[3],
+                                    tMVMatrix[0] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30,
+                                    tMVMatrix[1] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
+                                    tMVMatrix[2] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
+                                    tMVMatrix[3] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33,
+                                    b0 = tLocalMatrix[4], b1 = tLocalMatrix[5], b2 = tLocalMatrix[6], b3 = tLocalMatrix[7],
+                                    tMVMatrix[4] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30,
+                                    tMVMatrix[5] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
+                                    tMVMatrix[6] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
+                                    tMVMatrix[7] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33,
+                                    b0 = tLocalMatrix[8], b1 = tLocalMatrix[9], b2 = tLocalMatrix[10], b3 = tLocalMatrix[11],
+                                    tMVMatrix[8] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30,
+                                    tMVMatrix[9] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
+                                    tMVMatrix[10] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
+                                    tMVMatrix[11] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33,
+                                    b0 = tLocalMatrix[12], b1 = tLocalMatrix[13], b2 = tLocalMatrix[14], b3 = tLocalMatrix[15],
+                                    tMVMatrix[12] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30,
+                                    tMVMatrix[13] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
+                                    tMVMatrix[14] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
+                                    tMVMatrix[15] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33
+                            )
+                            : (
+                                tMVMatrix[0] = tLocalMatrix[0], tMVMatrix[1] = tLocalMatrix[1], tMVMatrix[2] = tLocalMatrix[2], tMVMatrix[3] = tLocalMatrix[3],
+                                    tMVMatrix[4] = tLocalMatrix[4], tMVMatrix[5] = tLocalMatrix[5], tMVMatrix[6] = tLocalMatrix[6], tMVMatrix[7] = tLocalMatrix[7],
+                                    tMVMatrix[8] = tLocalMatrix[8], tMVMatrix[9] = tLocalMatrix[9] , tMVMatrix[10] = tLocalMatrix[10], tMVMatrix[11] = tLocalMatrix[11],
+                                    tMVMatrix[12] = tLocalMatrix[12], tMVMatrix[13] = tLocalMatrix[13], tMVMatrix[14] = tLocalMatrix[14], tMVMatrix[15] = tLocalMatrix[15]
+                            );
+
                 }
                 /////////////////////////////////////////////////////////////////////////
                 /////////////////////////////////////////////////////////////////////////
-                // tMVMatrix
-                // tMVMatrix 초기화
-                if (tMaterial && tMaterial['_RedMouseEventMaterialYn']) {
-                    if (tGeometry) tGL.uniformMatrix4fv(tSystemUniformGroup['uMMatrix']['location'], false, tMVMatrix)
-                } else {
-                    if (tMesh['autoUpdateMatrix']) {
-                        tMVMatrix[0] = 1, tMVMatrix[1] = 0, tMVMatrix[2] = 0, tMVMatrix[3] = 0,
-                            tMVMatrix[4] = 0, tMVMatrix[5] = 1, tMVMatrix[6] = 0, tMVMatrix[7] = 0,
-                            tMVMatrix[8] = 0, tMVMatrix[9] = 0, tMVMatrix[10] = 1, tMVMatrix[11] = 0,
-                            tMVMatrix[12] = 0, tMVMatrix[13] = 0, tMVMatrix[14] = 0, tMVMatrix[15] = 1,
-                            a = tMVMatrix,
-                            // tMVMatrix translate
-                            aX = tMesh['x'], aY = tMesh['y'], aZ = tMesh['z'],
-                            a[12] = a[0] * aX + a[4] * aY + a[8] * aZ + a[12],
-                            a[13] = a[1] * aX + a[5] * aY + a[9] * aZ + a[13],
-                            a[14] = a[2] * aX + a[6] * aY + a[10] * aZ + a[14],
-                            a[15] = a[3] * aX + a[7] * aY + a[11] * aZ + a[15],
-                            // tMVMatrix rotate
-                            tSprite3DYn ?
-                                (tRx = tRy = tRz = 0) :
-                                (tRx = tMesh['rotationX'] * CONVERT_RADIAN, tRy = tMesh['rotationY'] * CONVERT_RADIAN, tRz = tMesh['rotationZ'] * CONVERT_RADIAN),
-                            /////////////////////////
-                            tRadian = tRx % CPI2,
-                            tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
-                            tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
-                            aSx = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
-                            tRadian = (tRx + C157) % CPI2,
-                            tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
-                            tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
-                            aCx = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
-                            tRadian = tRy % CPI2,
-                            tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
-                            tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
-                            aSy = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
-                            tRadian = (tRy + C157) % CPI2,
-                            tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
-                            tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
-                            aCy = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
-                            tRadian = tRz % CPI2,
-                            tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
-                            tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
-                            aSz = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
-                            tRadian = (tRz + C157) % CPI2,
-                            tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
-                            tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
-                            aCz = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
-                            /////////////////////////
-                            a00 = a[0], a01 = a[1], a02 = a[2],
-                            a10 = a[4], a11 = a[5], a12 = a[6],
-                            a20 = a[8], a21 = a[9], a22 = a[10],
-                            b00 = aCy * aCz, b01 = aSx * aSy * aCz - aCx * aSz, b02 = aCx * aSy * aCz + aSx * aSz,
-                            b10 = aCy * aSz, b11 = aSx * aSy * aSz + aCx * aCz, b12 = aCx * aSy * aSz - aSx * aCz,
-                            b20 = -aSy, b21 = aSx * aCy, b22 = aCx * aCy,
-                            a[0] = a00 * b00 + a10 * b01 + a20 * b02, a[1] = a01 * b00 + a11 * b01 + a21 * b02, a[2] = a02 * b00 + a12 * b01 + a22 * b02,
-                            a[4] = a00 * b10 + a10 * b11 + a20 * b12, a[5] = a01 * b10 + a11 * b11 + a21 * b12, a[6] = a02 * b10 + a12 * b11 + a22 * b12,
-                            a[8] = a00 * b20 + a10 * b21 + a20 * b22, a[9] = a01 * b20 + a11 * b21 + a21 * b22, a[10] = a02 * b20 + a12 * b21 + a22 * b22,
-                            // tMVMatrix scale
-                            aX = tMesh['scaleX'], aY = tMesh['scaleY'] * orthographicYnScale, aZ = tMesh['scaleZ'],
-                            a[0] = a[0] * aX, a[1] = a[1] * aX, a[2] = a[2] * aX, a[3] = a[3] * aX,
-                            a[4] = a[4] * aY, a[5] = a[5] * aY, a[6] = a[6] * aY, a[7] = a[7] * aY,
-                            a[8] = a[8] * aZ, a[9] = a[9] * aZ, a[10] = a[10] * aZ, a[11] = a[11] * aZ,
-                            a[12] = a[12], a[13] = a[13], a[14] = a[14], a[15] = a[15],
-                            // localMatrix
-                            tMesh['localMatrix'][0] = a[0] , tMesh['localMatrix'][1] = a[1] , tMesh['localMatrix'][2] = a[2] , tMesh['localMatrix'][3] = a[3] ,
-                            tMesh['localMatrix'][4] = a[4] , tMesh['localMatrix'][5] = a[5] , tMesh['localMatrix'][6] = a[6] , tMesh['localMatrix'][7] = a[7] ,
-                        tMesh['localMatrix'][8] = a[8] , tMesh['localMatrix'][9] = a[9] , tMesh['localMatrix'][10] = a[10], tMesh['localMatrix'][11] = a[11] ,
-                        tMesh['localMatrix'][12] = a[12], tMesh['localMatrix'][13] = a[13], tMesh['localMatrix'][14] = a[14], tMesh['localMatrix'][15] = a[15],
-                        // 부모가있으면 곱함
-                        parentMTX ? (
-                            // 부모매트릭스 복사
-                            // 매트립스 곱
-                            a00 = parentMTX[0], a01 = parentMTX[1], a02 = parentMTX[2], a03 = parentMTX[3],
-                                a10 = parentMTX[4], a11 = parentMTX[5], a12 = parentMTX[6], a13 = parentMTX[7],
-                                a20 = parentMTX[8], a21 = parentMTX[9], a22 = parentMTX[10], a23 = parentMTX[11],
-                                a30 = parentMTX[12], a31 = parentMTX[13], a32 = parentMTX[14], a33 = parentMTX[15],
-                                // Cache only the current line of the second matrix
-                                b0 = tMVMatrix[0], b1 = tMVMatrix[1], b2 = tMVMatrix[2], b3 = tMVMatrix[3],
-                                tMVMatrix[0] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30,
-                                tMVMatrix[1] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
-                                tMVMatrix[2] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
-                                tMVMatrix[3] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33,
-                                b0 = tMVMatrix[4], b1 = tMVMatrix[5], b2 = tMVMatrix[6], b3 = tMVMatrix[7],
-                                tMVMatrix[4] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30,
-                                tMVMatrix[5] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
-                                tMVMatrix[6] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
-                                tMVMatrix[7] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33,
-                                b0 = tMVMatrix[8], b1 = tMVMatrix[9], b2 = tMVMatrix[10], b3 = tMVMatrix[11],
-                                tMVMatrix[8] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30,
-                                tMVMatrix[9] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
-                                tMVMatrix[10] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
-                                tMVMatrix[11] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33,
-                                b0 = tMVMatrix[12], b1 = tMVMatrix[13], b2 = tMVMatrix[14], b3 = tMVMatrix[15],
-                                tMVMatrix[12] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30,
-                                tMVMatrix[13] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
-                                tMVMatrix[14] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
-                                tMVMatrix[15] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33
-                        ) : 0;
-                    }
-                    /////////////////////////////////////////////////////////////////////////
-                    /////////////////////////////////////////////////////////////////////////
-                    if (tGeometry) tGL.uniformMatrix4fv(tSystemUniformGroup['uMMatrix']['location'], false, tMVMatrix);
-
-                    if (tSkinInfo) {
-                        var globalTransformOfJointNode = [];
-                        var joints = tSkinInfo['joints'];
-                        var index = 0, len = joints.length;
-                        var globalTransformOfNodeThatTheMeshIsAttachedTo = [
-                            tMesh['matrix'][0],
-                            tMesh['matrix'][1],
-                            tMesh['matrix'][2],
-                            tMesh['matrix'][3],
-                            tMesh['matrix'][4],
-                            tMesh['matrix'][5],
-                            tMesh['matrix'][6],
-                            tMesh['matrix'][7],
-                            tMesh['matrix'][8],
-                            tMesh['matrix'][9],
-                            tMesh['matrix'][10],
-                            tMesh['matrix'][11],
-                            tMesh['matrix'][12],
-                            tMesh['matrix'][13],
-                            tMesh['matrix'][14],
-                            tMesh['matrix'][15]
-                        ];
-                        ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                        // 역구하고
-                        // getInverse(globalTransformOfNodeThatTheMeshIsAttachedTo, globalTransformOfNodeThatTheMeshIsAttachedTo)
-                        var te = globalTransformOfNodeThatTheMeshIsAttachedTo,
-                            me = globalTransformOfNodeThatTheMeshIsAttachedTo,
-                            n11 = me[0], n21 = me[1], n31 = me[2], n41 = me[3],
-                            n12 = me[4], n22 = me[5], n32 = me[6], n42 = me[7],
-                            n13 = me[8], n23 = me[9], n33 = me[10], n43 = me[11],
-                            n14 = me[12], n24 = me[13], n34 = me[14], n44 = me[15],
-                            t11 = n23 * n34 * n42 - n24 * n33 * n42 + n24 * n32 * n43 - n22 * n34 * n43 - n23 * n32 * n44 + n22 * n33 * n44,
-                            t12 = n14 * n33 * n42 - n13 * n34 * n42 - n14 * n32 * n43 + n12 * n34 * n43 + n13 * n32 * n44 - n12 * n33 * n44,
-                            t13 = n13 * n24 * n42 - n14 * n23 * n42 + n14 * n22 * n43 - n12 * n24 * n43 - n13 * n22 * n44 + n12 * n23 * n44,
-                            t14 = n14 * n23 * n32 - n13 * n24 * n32 - n14 * n22 * n33 + n12 * n24 * n33 + n13 * n22 * n34 - n12 * n23 * n34;
-                        var det = n11 * t11 + n21 * t12 + n31 * t13 + n41 * t14;
-                        if (det === 0) {
-                            console.warn("can't invert matrix, determinant is 0");
-                            return mat4.identity(globalTransformOfNodeThatTheMeshIsAttachedTo);
-                        } else {
-                            var detInv = 1 / det;
-                            te[0] = t11 * detInv;
-                            te[1] = (n24 * n33 * n41 - n23 * n34 * n41 - n24 * n31 * n43 + n21 * n34 * n43 + n23 * n31 * n44 - n21 * n33 * n44) * detInv;
-                            te[2] = (n22 * n34 * n41 - n24 * n32 * n41 + n24 * n31 * n42 - n21 * n34 * n42 - n22 * n31 * n44 + n21 * n32 * n44) * detInv;
-                            te[3] = (n23 * n32 * n41 - n22 * n33 * n41 - n23 * n31 * n42 + n21 * n33 * n42 + n22 * n31 * n43 - n21 * n32 * n43) * detInv;
-                            te[4] = t12 * detInv;
-                            te[5] = (n13 * n34 * n41 - n14 * n33 * n41 + n14 * n31 * n43 - n11 * n34 * n43 - n13 * n31 * n44 + n11 * n33 * n44) * detInv;
-                            te[6] = (n14 * n32 * n41 - n12 * n34 * n41 - n14 * n31 * n42 + n11 * n34 * n42 + n12 * n31 * n44 - n11 * n32 * n44) * detInv;
-                            te[7] = (n12 * n33 * n41 - n13 * n32 * n41 + n13 * n31 * n42 - n11 * n33 * n42 - n12 * n31 * n43 + n11 * n32 * n43) * detInv;
-                            te[8] = t13 * detInv;
-                            te[9] = (n14 * n23 * n41 - n13 * n24 * n41 - n14 * n21 * n43 + n11 * n24 * n43 + n13 * n21 * n44 - n11 * n23 * n44) * detInv;
-                            te[10] = (n12 * n24 * n41 - n14 * n22 * n41 + n14 * n21 * n42 - n11 * n24 * n42 - n12 * n21 * n44 + n11 * n22 * n44) * detInv;
-                            te[11] = (n13 * n22 * n41 - n12 * n23 * n41 - n13 * n21 * n42 + n11 * n23 * n42 + n12 * n21 * n43 - n11 * n22 * n43) * detInv;
-                            te[12] = t14 * detInv;
-                            te[13] = (n13 * n24 * n31 - n14 * n23 * n31 + n14 * n21 * n33 - n11 * n24 * n33 - n13 * n21 * n34 + n11 * n23 * n34) * detInv;
-                            te[14] = (n14 * n22 * n31 - n12 * n24 * n31 - n14 * n21 * n32 + n11 * n24 * n32 + n12 * n21 * n34 - n11 * n22 * n34) * detInv;
-                            te[15] = (n12 * n23 * n31 - n13 * n22 * n31 + n13 * n21 * n32 - n11 * n23 * n32 - n12 * n21 * n33 + n11 * n22 * n33) * detInv;
-                        }
-                        ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                        // 글로벌 조인트 노드병합함
-                        //TODO: 여기 캐싱할 방법 찾아야함
-                        for (index; index < len; index++) {
-                            // 조인트 공간내에서의 전역
-                            globalTransformOfJointNode[index * 16 + 0] = joints[index]['matrix'][0];
-                            globalTransformOfJointNode[index * 16 + 1] = joints[index]['matrix'][1];
-                            globalTransformOfJointNode[index * 16 + 2] = joints[index]['matrix'][2];
-                            globalTransformOfJointNode[index * 16 + 3] = joints[index]['matrix'][3];
-                            globalTransformOfJointNode[index * 16 + 4] = joints[index]['matrix'][4];
-                            globalTransformOfJointNode[index * 16 + 5] = joints[index]['matrix'][5];
-                            globalTransformOfJointNode[index * 16 + 6] = joints[index]['matrix'][6];
-                            globalTransformOfJointNode[index * 16 + 7] = joints[index]['matrix'][7];
-                            globalTransformOfJointNode[index * 16 + 8] = joints[index]['matrix'][8];
-                            globalTransformOfJointNode[index * 16 + 9] = joints[index]['matrix'][9];
-                            globalTransformOfJointNode[index * 16 + 10] = joints[index]['matrix'][10];
-                            globalTransformOfJointNode[index * 16 + 11] = joints[index]['matrix'][11];
-                            globalTransformOfJointNode[index * 16 + 12] = joints[index]['matrix'][12];
-                            globalTransformOfJointNode[index * 16 + 13] = joints[index]['matrix'][13];
-                            globalTransformOfJointNode[index * 16 + 14] = joints[index]['matrix'][14];
-                            globalTransformOfJointNode[index * 16 + 15] = joints[index]['matrix'][15]
-                        }
-                        tGL.uniformMatrix4fv(tSystemUniformGroup['uGlobalTransformOfNodeThatTheMeshIsAttachedTo']['location'], false, globalTransformOfNodeThatTheMeshIsAttachedTo);
-                        tGL.uniformMatrix4fv(tSystemUniformGroup['uJointMatrix']['location'], false, globalTransformOfJointNode);
-                        tGL.uniformMatrix4fv(tSystemUniformGroup['uInverseBindMatrixForJoint']['location'], false, tSkinInfo['inverseBindMatrices'])
-                    }
+                if (tGeometry) {
+                    tGL.uniformMatrix4fv(tSystemUniformGroup['uMMatrix']['location'], false, tMVMatrix);
                     /////////////////////////////////////////////////////////////////////////
                     /////////////////////////////////////////////////////////////////////////
                     // 노말매트릭스를 사용할경우
-                    if (tGeometry && tSystemUniformGroup && tSystemUniformGroup['uNMatrix']['location']) {
-                        //클론
+                    if (tSystemUniformGroup['uNMatrix']['location']) {
                         // mat4Inverse
-                        inverse_c = tMVMatrix[0], inverse_d = tMVMatrix[1], inverse_e = tMVMatrix[2], inverse_g = tMVMatrix[3],
-                            inverse_f = tMVMatrix[4], inverse_h = tMVMatrix[5], inverse_i = tMVMatrix[6], inverse_j = tMVMatrix[7],
-                            inverse_k = tMVMatrix[8], inverse_l = tMVMatrix[9], inverse_n = tMVMatrix[10], inverse_o = tMVMatrix[11],
-                            inverse_m = tMVMatrix[12], inverse_p = tMVMatrix[13], inverse_r = tMVMatrix[14], inverse_s = tMVMatrix[15],
-                            inverse_A = inverse_c * inverse_h - inverse_d * inverse_f,
-                            inverse_B = inverse_c * inverse_i - inverse_e * inverse_f,
-                            inverse_t = inverse_c * inverse_j - inverse_g * inverse_f,
-                            inverse_u = inverse_d * inverse_i - inverse_e * inverse_h,
-                            inverse_v = inverse_d * inverse_j - inverse_g * inverse_h,
-                            inverse_w = inverse_e * inverse_j - inverse_g * inverse_i,
-                            inverse_x = inverse_k * inverse_p - inverse_l * inverse_m,
-                            inverse_y = inverse_k * inverse_r - inverse_n * inverse_m,
-                            inverse_z = inverse_k * inverse_s - inverse_o * inverse_m,
-                            inverse_C = inverse_l * inverse_r - inverse_n * inverse_p,
-                            inverse_D = inverse_l * inverse_s - inverse_o * inverse_p,
-                            inverse_E = inverse_n * inverse_s - inverse_o * inverse_r,
-                            inverse_q = inverse_A * inverse_E - inverse_B * inverse_D + inverse_t * inverse_C + inverse_u * inverse_z - inverse_v * inverse_y + inverse_w * inverse_x,
-                            inverse_q = 1 / inverse_q,
-                            tNMatrix[0] = (inverse_h * inverse_E - inverse_i * inverse_D + inverse_j * inverse_C) * inverse_q,
-                            tNMatrix[1] = (-inverse_d * inverse_E + inverse_e * inverse_D - inverse_g * inverse_C) * inverse_q,
-                            tNMatrix[2] = (inverse_p * inverse_w - inverse_r * inverse_v + inverse_s * inverse_u) * inverse_q,
-                            tNMatrix[3] = (-inverse_l * inverse_w + inverse_n * inverse_v - inverse_o * inverse_u) * inverse_q,
-                            tNMatrix[4] = (-inverse_f * inverse_E + inverse_i * inverse_z - inverse_j * inverse_y) * inverse_q,
-                            tNMatrix[5] = (inverse_c * inverse_E - inverse_e * inverse_z + inverse_g * inverse_y) * inverse_q,
-                            tNMatrix[6] = (-inverse_m * inverse_w + inverse_r * inverse_t - inverse_s * inverse_B) * inverse_q,
-                            tNMatrix[7] = (inverse_k * inverse_w - inverse_n * inverse_t + inverse_o * inverse_B) * inverse_q,
-                            tNMatrix[8] = (inverse_f * inverse_D - inverse_h * inverse_z + inverse_j * inverse_x) * inverse_q,
-                            tNMatrix[9] = (-inverse_c * inverse_D + inverse_d * inverse_z - inverse_g * inverse_x) * inverse_q,
-                            tNMatrix[10] = (inverse_m * inverse_v - inverse_p * inverse_t + inverse_s * inverse_A) * inverse_q,
-                            tNMatrix[11] = (-inverse_k * inverse_v + inverse_l * inverse_t - inverse_o * inverse_A) * inverse_q,
-                            tNMatrix[12] = (-inverse_f * inverse_C + inverse_h * inverse_y - inverse_i * inverse_x) * inverse_q,
-                            tNMatrix[13] = (inverse_c * inverse_C - inverse_d * inverse_y + inverse_e * inverse_x) * inverse_q,
-                            tNMatrix[14] = (-inverse_m * inverse_u + inverse_p * inverse_B - inverse_r * inverse_A) * inverse_q,
-                            tNMatrix[15] = (inverse_k * inverse_u - inverse_l * inverse_B + inverse_n * inverse_A) * inverse_q,
+                        a00 = tMVMatrix[0], a01 = tMVMatrix[1], a02 = tMVMatrix[2], a03 = tMVMatrix[3],
+                            a10 = tMVMatrix[4], a11 = tMVMatrix[5], a12 = tMVMatrix[6], a13 = tMVMatrix[7],
+                            a20 = tMVMatrix[8], a21 = tMVMatrix[9], a22 = tMVMatrix[10], a23 = tMVMatrix[11],
+                            a31 = tMVMatrix[12], a32 = tMVMatrix[13], a33 = tMVMatrix[14], b0 = tMVMatrix[15],
+                            a30 = a00 * a11 - a01 * a10,
+                            b1 = a00 * a12 - a02 * a10, b2 = a00 * a13 - a03 * a10, b3 = a01 * a12 - a02 * a11,
+                            b00 = a01 * a13 - a03 * a11, b01 = a02 * a13 - a03 * a12, b02 = a20 * a32 - a21 * a31,
+                            b10 = a20 * a33 - a22 * a31, b11 = a20 * b0 - a23 * a31, b12 = a21 * a33 - a22 * a32,
+                            b20 = a21 * b0 - a23 * a32, b12 = a22 * b0 - a23 * a33, b22 = a30 * b12 - b1 * b20 + b2 * b12 + b3 * b11 - b00 * b10 + b01 * b02,
+                            b22 = 1 / b22,
+
+                            tNMatrix[0] = (a11 * b12 - a12 * b20 + a13 * b12) * b22,
+                            tNMatrix[4] = (-a01 * b12 + a02 * b20 - a03 * b12) * b22,
+                            tNMatrix[8] = (a32 * b01 - a33 * b00 + b0 * b3) * b22,
+                            tNMatrix[12] = (-a21 * b01 + a22 * b00 - a23 * b3) * b22,
+                            tNMatrix[1] = (-a10 * b12 + a12 * b11 - a13 * b10) * b22,
+                            tNMatrix[5] = (a00 * b12 - a02 * b11 + a03 * b10) * b22,
+                            tNMatrix[9] = (-a31 * b01 + a33 * b2 - b0 * b1) * b22,
+                            tNMatrix[13] = (a20 * b01 - a22 * b2 + a23 * b1) * b22,
+                            tNMatrix[2] = (a10 * b20 - a11 * b11 + a13 * b02) * b22,
+                            tNMatrix[6] = (-a00 * b20 + a01 * b11 - a03 * b02) * b22,
+                            tNMatrix[10] = (a31 * b00 - a32 * b2 + b0 * a30) * b22,
+                            tNMatrix[14] = (-a20 * b00 + a21 * b2 - a23 * a30) * b22,
+                            tNMatrix[3] = (-a10 * b12 + a11 * b10 - a12 * b02) * b22,
+                            tNMatrix[7] = (a00 * b12 - a01 * b10 + a02 * b02) * b22,
+                            tNMatrix[11] = (-a31 * b3 + a32 * b1 - a33 * a30) * b22,
+                            tNMatrix[15] = (a20 * b3 - a21 * b1 + a22 * a30) * b22,
+
+                            // tNMatrix[0] = (a11 * b12 - a12 * b20 + a13 * b12) * b22,
+                            // tNMatrix[1] = (-a01 * b12 + a02 * b20 - a03 * b12) * b22,
+                            // tNMatrix[2] = (a32 * b01 - a33 * b00 + b0 * b3) * b22,
+                            // tNMatrix[3] = (-a21 * b01 + a22 * b00 - a23 * b3) * b22,
+                            // tNMatrix[4] = (-a10 * b12 + a12 * b11 - a13 * b10) * b22,
+                            // tNMatrix[5] = (a00 * b12 - a02 * b11 + a03 * b10) * b22,
+                            // tNMatrix[6] = (-a31 * b01 + a33 * b2 - b0 * b1) * b22,
+                            // tNMatrix[7] = (a20 * b01 - a22 * b2 + a23 * b1) * b22,
+                            // tNMatrix[8] = (a10 * b20 - a11 * b11 + a13 * b02) * b22,
+                            // tNMatrix[9] = (-a00 * b20 + a01 * b11 - a03 * b02) * b22,
+                            // tNMatrix[10] = (a31 * b00 - a32 * b2 + b0 * a30) * b22,
+                            // tNMatrix[11] = (-a20 * b00 + a21 * b2 - a23 * a30) * b22,
+                            // tNMatrix[12] = (-a10 * b12 + a11 * b10 - a12 * b02) * b22,
+                            // tNMatrix[13] = (a00 * b12 - a01 * b10 + a02 * b02) * b22,
+                            // tNMatrix[14] = (-a31 * b3 + a32 * b1 - a33 * a30) * b22,
+                            // tNMatrix[15] = (a20 * b3 - a21 * b1 + a22 * a30) * b22,
                             // transpose
-                            a01 = tNMatrix[1], a02 = tNMatrix[2], a03 = tNMatrix[3],
-                            a12 = tNMatrix[6], a13 = tNMatrix[7], a23 = tNMatrix[11],
-                            tNMatrix[1] = tNMatrix[4], tNMatrix[2] = tNMatrix[8], tNMatrix[3] = tNMatrix[12], tNMatrix[4] = a01, tNMatrix[6] = tNMatrix[9],
-                            tNMatrix[7] = tNMatrix[13], tNMatrix[8] = a02, tNMatrix[9] = a12, tNMatrix[11] = tNMatrix[14],
-                            tNMatrix[12] = a03, tNMatrix[13] = a13, tNMatrix[14] = a23,
+                            // a01 = tNMatrix[1], a02 = tNMatrix[2], a03 = tNMatrix[3],
+                            // a12 = tNMatrix[6], a13 = tNMatrix[7], a23 = tNMatrix[11],
+                            // tNMatrix[1] = tNMatrix[4], tNMatrix[2] = tNMatrix[8], tNMatrix[3] = tNMatrix[12], tNMatrix[4] = a01, tNMatrix[6] = tNMatrix[9],
+                            // tNMatrix[7] = tNMatrix[13], tNMatrix[8] = a02, tNMatrix[9] = a12, tNMatrix[11] = tNMatrix[14],
+                            // tNMatrix[12] = a03, tNMatrix[13] = a13, tNMatrix[14] = a23,
                             // uNMatrix 입력
                             tGL.uniformMatrix4fv(tSystemUniformGroup['uNMatrix']['location'], false, tNMatrix)
                     }
                 }
-                if (tGeometry) {
-                    /////////////////////////////////////////////////////////////////////////
-                    /////////////////////////////////////////////////////////////////////////
-                    // 상태처리
-                    // 컬페이스 사용여부 캐싱처리
-                    tCacheState['useCullFace'] != tMesh['useCullFace'] ? (tCacheState['useCullFace'] = tMesh['useCullFace']) ? tGL.enable(tGL.CULL_FACE) : tGL.disable(tGL.CULL_FACE) : 0;
-                    // 컬페이스 캐싱처리
-                    tCacheState['useCullFace'] ? tCacheState['cullFace'] != tMesh['cullFace'] ? tGL.cullFace(tCacheState['cullFace'] = tMesh['cullFace']) : 0 : 0;
-                    // 뎁스마스크처리
-                    tCacheState['useDepthMask'] != tMesh['useDepthMask'] ? tGL.depthMask(tCacheState['useDepthMask'] = tMesh['useDepthMask']) : 0;
-                    // 뎁스테스트 사용여부 캐싱처리
-                    tCacheState['useDepthTest'] != tMesh['useDepthTest'] ? (tCacheState['useDepthTest'] = tMesh['useDepthTest']) ? tGL.enable(tGL.DEPTH_TEST) : tGL.disable(tGL.DEPTH_TEST) : 0;
-                    // 뎁스테스팅 캐싱처리
-                    tCacheState['useDepthTest'] ? tCacheState['depthTestFunc'] != tMesh['depthTestFunc'] ? tGL.depthFunc(tCacheState['depthTestFunc'] = tMesh['depthTestFunc']) : 0 : 0;
-                    if (tSystemUniformGroup['uPointSize']['use']) {
-                        tCacheState['pointSize'] != tMesh['pointSize'] ? tGL.uniform1f(tSystemUniformGroup['uPointSize']['location'], tCacheState['pointSize'] = tMesh['pointSize']) : 0;
-                    }
-                    if (tSystemUniformGroup['u_PerspectiveScale']['location']) {
-                        tUUID = tSystemUniformGroup['u_PerspectiveScale']['_UUID'];
-                        tUniformValue = tMesh['_perspectiveScale'];
-                        if (tCacheUniformInfo[tUUID] != tUniformValue) {
-                            tGL[tSystemUniformGroup['u_PerspectiveScale']['renderMethod']](tSystemUniformGroup['u_PerspectiveScale']['location'], tUniformValue);
-                            tCacheUniformInfo[tUUID] = tUniformValue
-                        }
-                    }
-                    // // 블렌딩 사용여부 캐싱처리
-                    if (!tDirectionalShadowMaterialYn) {
-                        tCacheState['useBlendMode'] != tMesh['useBlendMode'] ? (tCacheState['useBlendMode'] = tMesh['useBlendMode']) ? tGL.enable(tGL.BLEND) : tGL.disable(tGL.BLEND) : 0;
-                        // 블렌딩팩터 캐싱처리
-                        if (tCacheState['blendSrc'] != tMesh['blendSrc'] || tCacheState['blendDst'] != tMesh['blendDst']) {
-                            tGL.blendFunc(tMesh['blendSrc'], tMesh['blendDst']);
-                            tCacheState['blendSrc'] = tMesh['blendSrc'];
-                            tCacheState['blendDst'] = tMesh['blendDst'];
-                        }
-                    }
-                    /////////////////////////////////////////////////////////////////////////
-                    /////////////////////////////////////////////////////////////////////////
-                    if (!transparentMode) {
-                        if (tMesh['useTransparentSort']) {
-                            transparentList.push(tMesh);
-                            tMesh._renderAutoUpdateMatrix = tMesh.autoUpdateMatrix;
-                            tMesh.autoUpdateMatrix = false;
-                            continue
-                        }
+                if (tSkinInfo) {
+                    var joints = tSkinInfo['joints'];
+                    var joint_i = 0, len = joints.length;
+                    var tJointMTX;
+                    var globalTransformOfJointNode = new Float32Array(len * 16);
+                    var globalTransformOfNodeThatTheMeshIsAttachedTo = [
+                        tMVMatrix[0],
+                        tMVMatrix[1],
+                        tMVMatrix[2],
+                        tMVMatrix[3],
+                        tMVMatrix[4],
+                        tMVMatrix[5],
+                        tMVMatrix[6],
+                        tMVMatrix[7],
+                        tMVMatrix[8],
+                        tMVMatrix[9],
+                        tMVMatrix[10],
+                        tMVMatrix[11],
+                        tMVMatrix[12],
+                        tMVMatrix[13],
+                        tMVMatrix[14],
+                        tMVMatrix[15]
+                    ];
+                    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                    // Inverse
+                    var te = globalTransformOfNodeThatTheMeshIsAttachedTo,
+                        me = globalTransformOfNodeThatTheMeshIsAttachedTo,
+                        n11 = me[0], n21 = me[1], n31 = me[2], n41 = me[3],
+                        n12 = me[4], n22 = me[5], n32 = me[6], n42 = me[7],
+                        n13 = me[8], n23 = me[9], n33 = me[10], n43 = me[11],
+                        n14 = me[12], n24 = me[13], n34 = me[14], n44 = me[15],
+                        t11 = n23 * n34 * n42 - n24 * n33 * n42 + n24 * n32 * n43 - n22 * n34 * n43 - n23 * n32 * n44 + n22 * n33 * n44,
+                        t12 = n14 * n33 * n42 - n13 * n34 * n42 - n14 * n32 * n43 + n12 * n34 * n43 + n13 * n32 * n44 - n12 * n33 * n44,
+                        t13 = n13 * n24 * n42 - n14 * n23 * n42 + n14 * n22 * n43 - n12 * n24 * n43 - n13 * n22 * n44 + n12 * n23 * n44,
+                        t14 = n14 * n23 * n32 - n13 * n24 * n32 - n14 * n22 * n33 + n12 * n24 * n33 + n13 * n22 * n34 - n12 * n23 * n34;
+                    var det = n11 * t11 + n21 * t12 + n31 * t13 + n41 * t14;
+                    if (det === 0) {
+                        console.warn("can't invert matrix, determinant is 0");
+                        return mat4.identity(globalTransformOfNodeThatTheMeshIsAttachedTo);
                     } else {
-                        tMesh.autoUpdateMatrix = tMesh._renderAutoUpdateMatrix
+                        var detInv = 1 / det;
+                        te[0] = t11 * detInv;
+                        te[1] = (n24 * n33 * n41 - n23 * n34 * n41 - n24 * n31 * n43 + n21 * n34 * n43 + n23 * n31 * n44 - n21 * n33 * n44) * detInv;
+                        te[2] = (n22 * n34 * n41 - n24 * n32 * n41 + n24 * n31 * n42 - n21 * n34 * n42 - n22 * n31 * n44 + n21 * n32 * n44) * detInv;
+                        te[3] = (n23 * n32 * n41 - n22 * n33 * n41 - n23 * n31 * n42 + n21 * n33 * n42 + n22 * n31 * n43 - n21 * n32 * n43) * detInv;
+                        te[4] = t12 * detInv;
+                        te[5] = (n13 * n34 * n41 - n14 * n33 * n41 + n14 * n31 * n43 - n11 * n34 * n43 - n13 * n31 * n44 + n11 * n33 * n44) * detInv;
+                        te[6] = (n14 * n32 * n41 - n12 * n34 * n41 - n14 * n31 * n42 + n11 * n34 * n42 + n12 * n31 * n44 - n11 * n32 * n44) * detInv;
+                        te[7] = (n12 * n33 * n41 - n13 * n32 * n41 + n13 * n31 * n42 - n11 * n33 * n42 - n12 * n31 * n43 + n11 * n32 * n43) * detInv;
+                        te[8] = t13 * detInv;
+                        te[9] = (n14 * n23 * n41 - n13 * n24 * n41 - n14 * n21 * n43 + n11 * n24 * n43 + n13 * n21 * n44 - n11 * n23 * n44) * detInv;
+                        te[10] = (n12 * n24 * n41 - n14 * n22 * n41 + n14 * n21 * n42 - n11 * n24 * n42 - n12 * n21 * n44 + n11 * n22 * n44) * detInv;
+                        te[11] = (n13 * n22 * n41 - n12 * n23 * n41 - n13 * n21 * n42 + n11 * n23 * n42 + n12 * n21 * n43 - n11 * n22 * n43) * detInv;
+                        te[12] = t14 * detInv;
+                        te[13] = (n13 * n24 * n31 - n14 * n23 * n31 + n14 * n21 * n33 - n11 * n24 * n33 - n13 * n21 * n34 + n11 * n23 * n34) * detInv;
+                        te[14] = (n14 * n22 * n31 - n12 * n24 * n31 - n14 * n21 * n32 + n11 * n24 * n32 + n12 * n21 * n34 - n11 * n22 * n34) * detInv;
+                        te[15] = (n12 * n23 * n31 - n13 * n22 * n31 + n13 * n21 * n32 - n11 * n23 * n32 - n12 * n21 * n33 + n11 * n22 * n33) * detInv;
                     }
-                    // 드로우
-                    if (tIndexBufferInfo) {
-                        tPrevIndexBuffer_UUID == tIndexBufferInfo['_UUID'] ? 0 : tGL.bindBuffer(tGL.ELEMENT_ARRAY_BUFFER, tIndexBufferInfo['webglBuffer']);
-                        //enum mode, long count, enum type, long offset
-                        tGL.drawElements(
-                            tMesh['drawMode'],
-                            tIndexBufferInfo['pointNum'],
-                            tIndexBufferInfo['glArrayType'],
-                            0
-                        );
-                        tPrevIndexBuffer_UUID = tIndexBufferInfo['_UUID'];
-                        renderResultObj['triangleNum'] += tIndexBufferInfo['triangleNum'];
-                    } else {
-                        tGL.drawArrays(tMesh['drawMode'], 0, tInterleaveBuffer['pointNum']);
-                        renderResultObj['triangleNum'] += tInterleaveBuffer['triangleNum'];
+                    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                    // 글로벌 조인트 노드병합함
+                    for (joint_i; joint_i < len; joint_i++) {
+                        // 조인트 공간내에서의 전역
+                        tJointMTX = joints[joint_i]['matrix'];
+                        globalTransformOfJointNode[joint_i * 16 + 0] = tJointMTX[0];
+                        globalTransformOfJointNode[joint_i * 16 + 1] = tJointMTX[1];
+                        globalTransformOfJointNode[joint_i * 16 + 2] = tJointMTX[2];
+                        globalTransformOfJointNode[joint_i * 16 + 3] = tJointMTX[3];
+                        globalTransformOfJointNode[joint_i * 16 + 4] = tJointMTX[4];
+                        globalTransformOfJointNode[joint_i * 16 + 5] = tJointMTX[5];
+                        globalTransformOfJointNode[joint_i * 16 + 6] = tJointMTX[6];
+                        globalTransformOfJointNode[joint_i * 16 + 7] = tJointMTX[7];
+                        globalTransformOfJointNode[joint_i * 16 + 8] = tJointMTX[8];
+                        globalTransformOfJointNode[joint_i * 16 + 9] = tJointMTX[9];
+                        globalTransformOfJointNode[joint_i * 16 + 10] = tJointMTX[10];
+                        globalTransformOfJointNode[joint_i * 16 + 11] = tJointMTX[11];
+                        globalTransformOfJointNode[joint_i * 16 + 12] = tJointMTX[12];
+                        globalTransformOfJointNode[joint_i * 16 + 13] = tJointMTX[13];
+                        globalTransformOfJointNode[joint_i * 16 + 14] = tJointMTX[14];
+                        globalTransformOfJointNode[joint_i * 16 + 15] = tJointMTX[15]
+                    }
+                    tGL.uniformMatrix4fv(tSystemUniformGroup['uGlobalTransformOfNodeThatTheMeshIsAttachedTo']['location'], false, globalTransformOfNodeThatTheMeshIsAttachedTo);
+                    tGL.uniformMatrix4fv(tSystemUniformGroup['uJointMatrix']['location'], false, globalTransformOfJointNode);
+                    if (!tSkinInfo['inverseBindMatrices']['_UUID']) tSkinInfo['inverseBindMatrices']['_UUID'] = JSON.stringify(tSkinInfo['inverseBindMatrices'])
+                    tUUID = tSystemUniformGroup['uInverseBindMatrixForJoint']['_UUID']
+                    if (tCacheUniformInfo[tUUID] != tSkinInfo['inverseBindMatrices']['_UUID']) {
+                        tGL.uniformMatrix4fv(tSystemUniformGroup['uInverseBindMatrixForJoint']['location'], false, tSkinInfo['inverseBindMatrices'])
+                        tCacheUniformInfo[tUUID] = tSkinInfo['inverseBindMatrices']['_UUID']
                     }
 
+
+                }
+            }
+            if (tGeometry) {
+                /////////////////////////////////////////////////////////////////////////
+                /////////////////////////////////////////////////////////////////////////
+                // 상태처리
+                // 컬페이스 사용여부 캐싱처리
+                tCacheState['useCullFace'] != tMesh['useCullFace'] ? (tCacheState['useCullFace'] = tMesh['useCullFace']) ? tGL.enable(tGL.CULL_FACE) : tGL.disable(tGL.CULL_FACE) : 0;
+                // 컬페이스 캐싱처리
+                tCacheState['useCullFace'] ? tCacheState['cullFace'] != tMesh['cullFace'] ? tGL.cullFace(tCacheState['cullFace'] = tMesh['cullFace']) : 0 : 0;
+                // 뎁스마스크처리
+                tCacheState['useDepthMask'] != tMesh['useDepthMask'] ? tGL.depthMask(tCacheState['useDepthMask'] = tMesh['useDepthMask']) : 0;
+                // 뎁스테스트 사용여부 캐싱처리
+                tCacheState['useDepthTest'] != tMesh['useDepthTest'] ? (tCacheState['useDepthTest'] = tMesh['useDepthTest']) ? tGL.enable(tGL.DEPTH_TEST) : tGL.disable(tGL.DEPTH_TEST) : 0;
+                // 뎁스테스팅 캐싱처리
+                tCacheState['useDepthTest'] ? tCacheState['depthTestFunc'] != tMesh['depthTestFunc'] ? tGL.depthFunc(tCacheState['depthTestFunc'] = tMesh['depthTestFunc']) : 0 : 0;
+                if (tSystemUniformGroup['uPointSize']['use']) {
+                    tCacheState['pointSize'] != tMesh['pointSize'] ? tGL.uniform1f(tSystemUniformGroup['uPointSize']['location'], tCacheState['pointSize'] = tMesh['pointSize']) : 0;
+                }
+                if (tSystemUniformGroup['u_PerspectiveScale']['location']) {
+                    tUUID = tSystemUniformGroup['u_PerspectiveScale']['_UUID'];
+                    tUniformValue = tMesh['_perspectiveScale'];
+                    if (tCacheUniformInfo[tUUID] != tUniformValue) {
+                        tGL[tSystemUniformGroup['u_PerspectiveScale']['renderMethod']](tSystemUniformGroup['u_PerspectiveScale']['location'], tUniformValue);
+                        tCacheUniformInfo[tUUID] = tUniformValue
+                    }
+                }
+                // // 블렌딩 사용여부 캐싱처리
+                if (!tDirectionalShadowMaterialYn) {
+                    tCacheState['useBlendMode'] != tMesh['useBlendMode'] ? (tCacheState['useBlendMode'] = tMesh['useBlendMode']) ? tGL.enable(tGL.BLEND) : tGL.disable(tGL.BLEND) : 0;
+                    // 블렌딩팩터 캐싱처리
+                    if (tCacheState['blendSrc'] != tMesh['blendSrc'] || tCacheState['blendDst'] != tMesh['blendDst']) {
+                        tGL.blendFunc(tMesh['blendSrc'], tMesh['blendDst']);
+                        tCacheState['blendSrc'] = tMesh['blendSrc'];
+                        tCacheState['blendDst'] = tMesh['blendDst'];
+                    }
                 }
                 /////////////////////////////////////////////////////////////////////////
                 /////////////////////////////////////////////////////////////////////////
-                tMesh['children'].length ? draw(redGL, scene, tMesh['children'], camera, orthographicYn, time, renderResultObj, tCacheInfo, tCacheState, tMVMatrix, subSceneMaterial, transparentMode) : 0;
+                if (transparentMode) {
+                    tMesh.autoUpdateMatrix = tMesh._renderAutoUpdateMatrix
+                } else {
+                    if (tMesh['useTransparentSort']) {
+                        worldRender_transparentList.push(tMesh);
+                        tMesh._renderAutoUpdateMatrix = tMesh.autoUpdateMatrix;
+                        tMesh.autoUpdateMatrix = false;
+                        continue
+                    }
+                }
+                // 드로우
+                if (tIndexBufferInfo) {
+                    tPrevIndexBuffer_UUID == tIndexBufferInfo['_UUID'] ? 0 : tGL.bindBuffer(tGL.ELEMENT_ARRAY_BUFFER, tIndexBufferInfo['webglBuffer']);
+                    //enum mode, long count, enum type, long offset
+                    tGL.drawElements(
+                        tMesh['drawMode'],
+                        tIndexBufferInfo['pointNum'],
+                        tIndexBufferInfo['glArrayType'],
+                        0
+                    );
+                    tPrevIndexBuffer_UUID = tIndexBufferInfo['_UUID'];
+                    renderResultObj['triangleNum'] += tIndexBufferInfo['triangleNum'];
+                } else {
+                    tGL.drawArrays(tMesh['drawMode'], 0, tInterleaveBuffer['pointNum']);
+                    renderResultObj['triangleNum'] += tInterleaveBuffer['triangleNum'];
+                }
+
             }
-        };
-        return function (redGL, scene, camera, orthographicYn, children, time, renderResultObj, subSceneMaterial, transparentMode) {
-            // if ( this['cacheState']['pointSize'] == undefined ) this['cacheState']['pointSize'] = null
-            // if ( !this['cacheState']['useCullFace'] ) this['cacheState']['useCullFace'] = null
-            // if ( !this['cacheState']['cullFace'] ) this['cacheState']['cullFace'] = null
-            // if ( !this['cacheState']['useDepthTest'] ) this['cacheState']['useDepthTest'] = null
-            // if ( !this['cacheState']['useDepthMask'] ) this['cacheState']['useDepthMask'] = null
-            // if ( !this['cacheState']['depthTestFunc'] ) this['cacheState']['depthTestFunc'] = null
-            // if ( !this['cacheState']['useBlendMode'] ) this['cacheState']['useBlendMode'] = null
-            // if ( !this['cacheState']['blendSrc'] ) this['cacheState']['blendSrc'] = null
-            // if ( !this['cacheState']['blendDst'] ) this['cacheState']['blendDst'] = null
-            // this['cacheSamplerIndex'].length = 0
-            this['cacheInfo']['cacheTexture'].length = 0;
-            // this['cacheInfo']['cacheTexture'][39] = null
-            // console.log(this['cacheInfo']['cacheSamplerIndex'])
-            tPrevIndexBuffer_UUID = null;
-            tPrevInterleaveBuffer_UUID = null;
-            tPrevSamplerIndex = null;
-            draw(
-                redGL,
-                scene,
-                children,
-                camera,
-                orthographicYn,
-                time,
-                renderResultObj,
-                this['cacheInfo'],
-                this['cacheState'],
-                undefined,
-                subSceneMaterial,
-                transparentMode
-            )
+            /////////////////////////////////////////////////////////////////////////
+            /////////////////////////////////////////////////////////////////////////
+            tMesh['children'].length ? draw(redGL, scene, tMesh['children'], camera, mode2DYn, time, renderResultObj, tCacheInfo, tCacheState, tMVMatrix, subSceneMaterial, transparentMode) : 0;
         }
-    })();
+    };
+    RedRenderer.prototype.sceneRender = function (redGL, scene, camera, mode2DYn, children, time, renderResultObj, subSceneMaterial, transparentMode) {
+        // if ( this['cacheState']['pointSize'] == undefined ) this['cacheState']['pointSize'] = null
+        // if ( !this['cacheState']['useCullFace'] ) this['cacheState']['useCullFace'] = null
+        // if ( !this['cacheState']['cullFace'] ) this['cacheState']['cullFace'] = null
+        // if ( !this['cacheState']['useDepthTest'] ) this['cacheState']['useDepthTest'] = null
+        // if ( !this['cacheState']['useDepthMask'] ) this['cacheState']['useDepthMask'] = null
+        // if ( !this['cacheState']['depthTestFunc'] ) this['cacheState']['depthTestFunc'] = null
+        // if ( !this['cacheState']['useBlendMode'] ) this['cacheState']['useBlendMode'] = null
+        // if ( !this['cacheState']['blendSrc'] ) this['cacheState']['blendSrc'] = null
+        // if ( !this['cacheState']['blendDst'] ) this['cacheState']['blendDst'] = null
+        // this['cacheSamplerIndex'].length = 0
+        this['cacheInfo']['cacheTexture'].length = 0;
+        // this['cacheInfo']['cacheTexture'][39] = null
+        // console.log(this['cacheInfo']['cacheSamplerIndex'])
+        tPrevIndexBuffer_UUID = null;
+        tPrevInterleaveBuffer_UUID = null;
+        tPrevSamplerIndex = null;
+        draw(
+            redGL,
+            scene,
+            children,
+            camera,
+            mode2DYn,
+            time,
+            renderResultObj,
+            this['cacheInfo'],
+            this['cacheState'],
+            undefined,
+            subSceneMaterial,
+            transparentMode
+        )
+    };
     Object.freeze(RedRenderer);
 })();
 
@@ -20578,7 +20610,7 @@ var RedRenderer;
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.5.2 12:37
  */
 
 "use strict";
@@ -20644,7 +20676,7 @@ var RedRenderDebuger;
                     t0 +=
                         '<div style="padding:5px">' +
                         '<div><b style="color:rgb(242, 169, 113)">RedView : key - ' + renderInfo[k]['key'] + '</b></div>' +
-                        ' orthographicYn - ' + '<b style="color:rgb(191, 82, 170)">' + renderInfo[k]['orthographicYn'] + '</b>' +
+                        ' mode2DYn - ' + '<b style="color:rgb(191, 82, 170)">' + renderInfo[k]['mode2DYn'] + '</b>' +
                         ' <br>call - ' + '<b style="color:rgb(191, 82, 170)">' + renderInfo[k]['call'] + '</b>' +
                         ' <br>triangleNum - ' + '<b style="color:rgb(191, 82, 170)">' + renderInfo[k]['triangleNum'] + '</b>' +
                         ' <br> width - ' + '<b style="color:rgb(191, 82, 170)">' + renderInfo[k]['width'] + '</b>' +
@@ -20704,7 +20736,7 @@ var RedRenderDebuger;
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.5.14 12:11
  */
 
 "use strict";
@@ -20783,6 +20815,7 @@ var RedSystemUniformUpdater;
             tVector = new Float32Array(3);
             return function (redGL, redRenderer, time, tView, prevProgram_UUID, lightDebugRenderList) {
                 if (prevRedGL != redGL) checkUniformInfo = null;
+                prevRedGL = redGL;
                 if (!checkUniformInfo) {
                     MAX_DIRECTIONAL_LIGHT_NUM = RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT;
                     MAX_POINT_LIGHT_NUM = RedSystemShaderCode.MAX_POINT_LIGHT;
@@ -20795,7 +20828,7 @@ var RedSystemUniformUpdater;
                         uCameraMatrix: {cacheData: null, data: null},
                         uCameraPosition: {cacheData: null, data: new Float32Array([0, 0, 0])},
                         uPMatrix: {cacheData: null, data: null},
-                        uOrthographicYn: {cacheData: null, data: false},
+                        uMode2DYn: {cacheData: null, data: false},
                         uAmbientLightColor: {cacheData: null, data: new Float32Array([0, 0, 0, 0])},
                         uAmbientIntensity: {cacheData: null, data: 1},
                         uDirectionalLightPositionList: {cacheData: null, data: []},
@@ -20886,17 +20919,17 @@ var RedSystemUniformUpdater;
 
                 if (tCamera['camera']) tValueStr = [tCamera.camera.x, tCamera.camera.y, tCamera.camera.z];
                 else tValueStr = [tCamera.x, tCamera.y, tCamera.z];
+                tCheckData = checkUniformInfo['uCameraPosition'];
                 if (tCheckData['cacheData'] != tValueStr.join(',') || changedProgramNum) {
-                    tCheckData = checkUniformInfo['uCameraPosition'];
                     needUpdateUniformInfo['uCameraPosition'] = tCheckData['data'] = tValueStr;
                     tCheckData['cacheData'] = tValueStr.join(',');
                 }
 
 
-                tValueStr = JSON.stringify(tCamera['orthographicYn']);
-                tCheckData = checkUniformInfo['uOrthographicYn'];
+                tValueStr = JSON.stringify(tCamera['mode2DYn']);
+                tCheckData = checkUniformInfo['uMode2DYn'];
                 if (tCheckData['cacheData'] != tValueStr || changedProgramNum) {
-                    needUpdateUniformInfo['uOrthographicYn'] = tCheckData['data'] = tCamera['orthographicYn'];
+                    needUpdateUniformInfo['uMode2DYn'] = tCheckData['data'] = tCamera['mode2DYn'];
                     tCheckData['cacheData'] = tValueStr;
                 }
 
@@ -21927,7 +21960,7 @@ var RedScene;
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.5.2 12:37
  */
 
 "use strict";
@@ -22038,12 +22071,12 @@ var RedCamera;
         /**DOC:
          {
 			 code:`PROPERTY`,
-			 title :`orthographicYn`,
+			 title :`mode2DYn`,
 			 description : `기본값 : false`,
 			 return : 'Boolean'
 		 }
          :DOC*/
-        this['orthographicYn'] = false;
+        this['mode2DYn'] = false;
         /**DOC:
          {
 			 code:`PROPERTY`,
@@ -22060,7 +22093,7 @@ var RedCamera;
 			 code:`PROPERTY`,
 			 title :`perspectiveMTX`,
 			 description : `
-			 orthographicYn값에따라 렌더링시 퍼스펙티브 or 오쏘고날 매트릭스로 자동 변경됨
+			 mode2DYn값에따라 렌더링시 퍼스펙티브 or 오쏘고날 매트릭스로 자동 변경됨
 			 `,
 			 return : 'mat4'
 		 }
@@ -22940,7 +22973,7 @@ var RedGridMaterial;
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.5.3 14:3
  */
 
 "use strict";
@@ -22968,8 +23001,12 @@ var RedSkyBoxMaterial;
          uniform samplerCube u_skyBoxTexture;
          varying vec3 vReflectionCubeCoord;
          uniform float u_alpha;
+         uniform bool u_mirrorMode;
+
          void main(void) {
-             vec4 finalColor = textureCube(u_skyBoxTexture, vReflectionCubeCoord);
+            vec4 finalColor ;
+            if(u_mirrorMode) finalColor = textureCube(u_skyBoxTexture, vec3(1.0-vReflectionCubeCoord.x,vReflectionCubeCoord.y,1.0-vReflectionCubeCoord.z));
+            else finalColor = textureCube(u_skyBoxTexture, vReflectionCubeCoord);
              //#REDGL_DEFINE#fog#false# gl_FragColor = finalColor;
              //#REDGL_DEFINE#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
              gl_FragColor.a = u_alpha;
@@ -23014,6 +23051,7 @@ var RedSkyBoxMaterial;
         // 일반 프로퍼티
         this['_UUID'] = RedGL.makeUUID();
         this['alpha'] = alpha == undefined ? 1 : alpha;
+        this['mirrorMode'] = false;
         if (!checked) {
             this.checkUniformAndProperty();
             checked = true;
@@ -23031,6 +23069,7 @@ var RedSkyBoxMaterial;
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedSkyBoxMaterial', 'skyBoxTexture', 'samplerCube', {essential: true});
     RedDefinePropertyInfo.definePrototype('RedSkyBoxMaterial', 'alpha', 'number', {min: 0, max: 1});
+    RedDefinePropertyInfo.definePrototype('RedSkyBoxMaterial', 'mirrorMode', 'boolean');
     Object.freeze(RedSkyBoxMaterial)
 })();
 /*
@@ -23352,7 +23391,7 @@ var RedDirectionalShadow;
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.5.2 12:37
  */
 
 "use strict";
@@ -23402,7 +23441,7 @@ var RedShadowManager;
                     gl.clearColor(0, 0, 0, 1);
                     gl.clearDepth(1.0);
                     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-                    redRenderer.sceneRender(redGL, tView['scene'], tView['camera'], tView['camera']['orthographicYn'], tDirectionalShadow['_castingList'], time, renderInfo, tDirectionalShadow['_directionalShadowMaterial']);
+                    redRenderer.sceneRender(redGL, tView['scene'], tView['camera'], tView['camera']['mode2DYn'], tDirectionalShadow['_castingList'], time, renderInfo, tDirectionalShadow['_directionalShadowMaterial']);
                     tDirectionalShadow['frameBuffer'].unbind(redGL.gl);
                     gl.viewport(tViewRect[0], tWorldRect[3] - tViewRect[3] - tViewRect[1], tViewRect[2], tViewRect[3]);
                     gl.scissor(tViewRect[0], tWorldRect[3] - tViewRect[3] - tViewRect[1], tViewRect[2], tViewRect[3]);
@@ -23807,7 +23846,7 @@ var RedText;
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.5.2 12:37
  */
 
 "use strict";
@@ -23899,7 +23938,7 @@ var RedMouseEventManager;
                     this['frameBuffer'].height = tHeight;
                     this['frameBuffer'].bind(redGL.gl);
                     var self = this;
-                    redRenderer.sceneRender(redGL, tView['scene'], tView['camera'], tView['camera']['orthographicYn'], this['_mouseEventList'], time, renderInfo, this['_mouseEventMaterial']);
+                    redRenderer.sceneRender(redGL, tView['scene'], tView['camera'], tView['camera']['mode2DYn'], this['_mouseEventList'], time, renderInfo, this['_mouseEventMaterial']);
                     // 추출
 
                     var tMouseEventInfo = redGL['_mouseEventInfo'];
@@ -24083,7 +24122,7 @@ var RedMouseEventMaterial;
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.5.2 12:37
  */
 
 "use strict";
@@ -24343,7 +24382,7 @@ var RedPostEffectManager;
                         tSubScene['frameBuffer']['height'] = tViewRect[3];
                         tSubScene['frameBuffer'].bind(tGL);
                         tGL.clear(tGL.COLOR_BUFFER_BIT | tGL.DEPTH_BUFFER_BIT);
-                        redRenderer.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], tScene['children'], time, renderInfo, tSubScene['renderMaterial'], true, true);
+                        redRenderer.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], tScene['children'], time, renderInfo, tSubScene['renderMaterial'], true, true);
                         tSubScene['frameBuffer'].unbind(tGL);
                         prevWidth = tSubScene['frameBuffer']['width'];
                         prevHeight = tSubScene['frameBuffer']['height'];
@@ -27315,4 +27354,4 @@ var RedGLOffScreen;
         };
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-04-30 20:58:25)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-05-21 16:09:39)' };console.log(RedGL_VERSION);

@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.5.2 13:44
  */
 
 "use strict";
@@ -16,12 +16,6 @@ var RedTextMaterial;
         /* @preserve
             // Sprite3D
             //#REDGL_DEFINE#vertexShareFunc#getSprite3DMatrix#
-            const mat4 c3dScale = mat4(
-                1.0/1024.0, 0.0, 0.0, 0.0,
-                0.0, 1.0/1024.0, 0.0, 0.0,
-                0.0, 0.0, 1.0, 0.0,
-                0.0, 0.0, 0.0, 1.0
-            );
 
             uniform float u_width;
             uniform float u_height;
@@ -33,7 +27,7 @@ var RedTextMaterial;
 
                 // position 계산
                 mat4 targetMatrix;
-                if(uOrthographicYn){
+                if(uMode2DYn){
                       targetMatrix = uMMatrix * mat4(
                         u_width, 0.0, 0.0, 0.0,
                         0.0, u_height, 0.0, 0.0,

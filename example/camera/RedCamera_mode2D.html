@@ -2,7 +2,7 @@
   ~ RedGL - MIT License
   ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
   ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
-  ~ Last modification time of this file - 2019.4.30 18:52
+  ~ Last modification time of this file - 2019.5.20 20:27
   -->
 
 <!DOCTYPE html>
@@ -11,7 +11,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="keywords" content="RedGL,webgl,demo">
-    <title>RedGL - RedCamera(orthographic mode)</title>
+    <title>RedGL Example - RedCamera(orthographic mode)</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -59,7 +59,7 @@
                 tScene = RedScene(redGL);
                 // 카메라 생성
                 tCamera = RedCamera();
-                tCamera.orthographicYn = true
+                tCamera.mode2DYn = true
                 tCamera.x = 0;
                 tCamera.y = 0;
                 tCamera.z = 10;
@@ -80,7 +80,7 @@
             var self = this
             // Box 설정
             var tMesh;
-            var i = 1000
+            var i = 5000
             tMaterial = RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'crate.png'))
             tMaterial2 = RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'UV_Grid_Sm.jpg'))
 

@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:43
+ * Last modification time of this file - 2019.5.14 12:38
  */
 
 var gulp = require('gulp');
@@ -127,7 +127,7 @@ gulp.task('combine-js', function () {
     console.log('-------------------------------------------');
     console.log('파일 병합 시작!');
     return gulp.src([
-        "src/gl-matrix-min.js",
+        "src/gl-matrix-min.2.4.js",
         "src/base/RedDefinePropertyInfo.js",
         "src/detect/RedGLDetect.js",
         "src/RedGLUtil.js",
@@ -272,9 +272,6 @@ gulp.task('combine-js', function () {
         ))
         .pipe(replace(/\n\s{2,}/g, '\n'))
         .pipe(gulp.dest('release'))
-
-
-        .pipe(gulp.dest('release'));
 });
 gulp.task('default', gulp.series('combine-js','make-doc','make-doc-list',   function (done) {
     console.log('-------------------------------------------');
