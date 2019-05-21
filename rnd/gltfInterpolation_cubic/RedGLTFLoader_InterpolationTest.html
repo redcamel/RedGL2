@@ -1,7 +1,8 @@
 <!--
-  ~ MIT License
+  ~ RedGL - MIT License
   ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
   ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+  ~ Last modification time of this file - 2019.5.21 13:43
   -->
 
 <!DOCTYPE html>
@@ -42,7 +43,7 @@
                 tController = RedObitController(redGL);
                 tController.pan = 25;
                 tController.tilt = -15;
-                tController.distance = 5;
+                tController.distance = 15;
                 // tController.speedDistance = 50
                 // 렌더러 생성
                 tRenderer = RedRenderer();
@@ -115,18 +116,18 @@
             //
             //     }
             // )
-            RedGLTFLoader(this, assetPath + 'glTF/basic/MorphPrimitivesTest/', 'MorphPrimitivesTest.gltf', function (v) {
-                tScene.addChild(v['resultMesh'])
-                v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 10
-            })
+            // RedGLTFLoader(this, assetPath + 'glTF/basic/MorphPrimitivesTest/', 'MorphPrimitivesTest.gltf', function (v) {
+            //     tScene.addChild(v['resultMesh'])
+            //     v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 10
+            // })
             RedGLTFLoader(this, assetPath + 'glTF/basic/', 'InterpolationTest.glb', function (v) {
 
                 tScene.addChild(v['resultMesh'])
             })
-            RedGLTFLoader(this, assetPath + 'glTF/basic/', 'SimpleMorph.gltf', function (v) {
-
-                tScene.addChild(v['resultMesh'])
-            })
+            // RedGLTFLoader(this, assetPath + 'glTF/basic/', 'SimpleMorph.gltf', function (v) {
+            //
+            //     tScene.addChild(v['resultMesh'])
+            // })
             // RedGLTFLoader(this,  assetPath + 'glTF/basic/', 'AlphaBlendModeTest.gltf', function (v) {
             //     console.log('호잇!', v)
             //     tScene.addChild(v['resultMesh'])
