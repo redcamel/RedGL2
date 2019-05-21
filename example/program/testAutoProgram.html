@@ -2,7 +2,7 @@
   ~ RedGL - MIT License
   ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
   ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
-  ~ Last modification time of this file - 2019.5.15 16:50
+  ~ Last modification time of this file - 2019.5.21 13:41
   -->
 
 <!DOCTYPE html>
@@ -204,8 +204,11 @@
             testMaterial.displacementTexture = null;
             testMaterial.specularTexture = null;
             testMaterial.emissiveTexture = null;
+            testMaterial.useFlatMode = false
+            testMaterial.usePreMultiply = false
             v.forEach(function (k) {
-                testMaterial[k] = testTextureMap[k]
+                if (k == 'useFlatMode' || k == 'usePreMultiply') testMaterial[k] = true
+                else testMaterial[k] = testTextureMap[k]
             });
             console.log(v)
         });
