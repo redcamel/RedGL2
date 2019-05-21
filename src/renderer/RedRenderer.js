@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.21 10:26
+ * Last modification time of this file - 2019.5.21 11:40
  */
 
 "use strict";
@@ -460,19 +460,14 @@ var RedRenderer;
         var tSprite3DYn, tLODData, tDirectionalShadowMaterialYn, tSkinInfo, tUseFog;
         var tProgram, tOptionProgramKey, tOptionProgram, baseOptionKey;
         // matix 관련
-        var aSx, aSy, aSz, aCx, aCy, aCz, tRx, tRy, tRz,
+        var aSx, aSy, aSz, aCx, aCy, aCz, aX, aY, aZ,
             a00, a01, a02, a03, a10, a11, a12, a13, a20, a21, a22, a23, a30, a31, a32, a33,
             b0, b1, b2, b3,
-            b00, b01, b02, b10, b11, b12, b20, b21, b22,
-            aX, aY, aZ
-        // a00, a01, a02, a03, a10, a11, a12, a13, a20,
-        // a21, a22, a23, a30, a31, a32, a33, b0, b1,
-        // b2, b3, b00, b01, b02, b10, b11, b12, b20,
-        // b12, b22;
+            b00, b01, b02, b10, b11, b12, b20, b21, b22
         // sin,cos 관련
         var tRadian, CPI, CPI2, C225, C127, C045, C157;
         // LOD 관련
-        var lodX, lodY, lodZ, lodDistance;
+        var lodDistance, lodTarget;
         // 프로그램 성택관련
         var tUseDirectionalShadow;
         var tProgramList;
@@ -502,19 +497,18 @@ var RedRenderer;
             tSkinInfo = tMesh['skinInfo'];
             // LOD체크
             if (tMesh['useLOD']) {
-                lodX = camera.x - tMesh.x;
-                lodY = camera.y - tMesh.y;
-                lodZ = camera.z - tMesh.z;
-                lodDistance = Math.abs(Math.sqrt(lodX * lodX + lodY * lodY + lodZ * lodZ));
+                aX = camera.x - tMesh.x;
+                aY = camera.y - tMesh.y;
+                aZ = camera.z - tMesh.z;
+                lodDistance = Math.abs(Math.sqrt(aX * aX + aY * aY + aZ * aZ));
                 tLODInfo = tMesh['_lodLevels'];
-                //TODO 여기 최적화해야함
-                for (var k in tLODInfo) {
-                    tLODData = tLODInfo[k];
-                    if (tLODData['distance'] < lodDistance) {
-                        tMesh['_geometry'] = tLODData['geometry'];
-                        tMesh['_material'] = tLODData['material'];
-                    }
-                }
+                // 0~4레벨까지 허용
+                (tLODData = tLODInfo[0]) && tLODData['distance'] < lodDistance ? lodTarget = tLODData : 0,
+                    (tLODData = tLODInfo[1]) && tLODData['distance'] < lodDistance ? lodTarget = tLODData : 0,
+                    (tLODData = tLODInfo[2]) && tLODData['distance'] < lodDistance ? lodTarget = tLODData : 0,
+                    (tLODData = tLODInfo[3]) && tLODData['distance'] < lodDistance ? lodTarget = tLODData : 0,
+                    (tLODData = tLODInfo[4]) && tLODData['distance'] < lodDistance ? lodTarget = tLODData : 0,
+                    lodTarget ? (tMesh['_geometry'] = lodTarget['geometry'], tMesh['_material'] = lodTarget['material']) : 0
             }
             if (tGeometry) {
                 tMaterial = subSceneMaterial ? subSceneMaterial : tMesh['_material'];
@@ -696,30 +690,30 @@ var RedRenderer;
                         tLocalMatrix[15] = 1,
                         // tLocalMatrix rotate
                         tSprite3DYn ?
-                            (tRx = tRy = tRz = 0) :
-                            (tRx = tMesh['rotationX'] * CONVERT_RADIAN, tRy = tMesh['rotationY'] * CONVERT_RADIAN, tRz = tMesh['rotationZ'] * CONVERT_RADIAN),
+                            (aX = aY = aZ = 0) :
+                            (aX = tMesh['rotationX'] * CONVERT_RADIAN, aY = tMesh['rotationY'] * CONVERT_RADIAN, aZ = tMesh['rotationZ'] * CONVERT_RADIAN),
                         /////////////////////////
-                        tRadian = tRx % CPI2,
+                        tRadian = aX % CPI2,
                         tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
                         tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
                         aSx = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
-                        tRadian = (tRx + C157) % CPI2,
+                        tRadian = (aX + C157) % CPI2,
                         tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
                         tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
                         aCx = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
-                        tRadian = tRy % CPI2,
+                        tRadian = aY % CPI2,
                         tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
                         tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
                         aSy = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
-                        tRadian = (tRy + C157) % CPI2,
+                        tRadian = (aY + C157) % CPI2,
                         tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
                         tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
                         aCy = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
-                        tRadian = tRz % CPI2,
+                        tRadian = aZ % CPI2,
                         tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
                         tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
                         aSz = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
-                        tRadian = (tRz + C157) % CPI2,
+                        tRadian = (aZ + C157) % CPI2,
                         tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
                         tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
                         aCz = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
