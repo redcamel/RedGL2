@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.17 18:35
+ * Last modification time of this file - 2019.5.21 11:33
  */
 
 "use strict";
@@ -309,7 +309,7 @@ var RedBaseObject3D;
 		 }
          :DOC*/
         this['useLOD'] = false;
-        this['_lodLevels'] = {
+        this['_lodLevels'] = [
             /* 1: {
                 geometry : ~~,
                 material : ~~~
@@ -317,7 +317,7 @@ var RedBaseObject3D;
                 하나만 입력할경우 없는쪽은 오리지날 속성이 부여된다.
             }
             */
-        };
+        ];
         this['_mouseColorMaterial'] = null;
         this['_mouseColorID'] = new Float32Array([
             parseInt(Math.random() * 255),
@@ -363,17 +363,27 @@ var RedBaseObject3D;
 		 }
          :DOC*/
         addLOD: (function () {
-            var tData;
+            var tData, needPush;
+            var i;
             return function (level, distance, geometry, material) {
                 geometry || material || RedGLUtil.throwFunc('RedBaseObject3D - addLOD : geometry, material 둘중하나는 반드시 입력되어야함');
-                RedGLUtil['isUint'](level) || RedGLUtil.throwFunc('RedBaseObject3D - level : uint만 허용함');
+                RedGLUtil['isUint'](level) || RedGLUtil.throwFunc('RedBaseObject3D - addLOD : level은 uint만 허용함');
+                if (level > 4) RedGLUtil.throwFunc('RedBaseObject3D - addLOD : level은 0~4 level 까지 허용함');
                 tData = {
                     level: level,
                     distance: distance,
                     geometry: geometry ? geometry : this['geometry'],
                     material: material ? material : this['material']
                 };
-                this['_lodLevels'][level] = tData;
+                i = this['_lodLevels'].length;
+                needPush = true;
+                while (i--) {
+                    if (this['_lodLevels'][i]['level'] == level) {
+                        this['_lodLevels'][i]=tData;
+                        needPush = false;
+                    }
+                }
+                if (needPush) this['_lodLevels'].push(tData)
             }
         })(),
         /**DOC:
@@ -396,7 +406,13 @@ var RedBaseObject3D;
          :DOC*/
         removeLOD: function (level) {
             RedGLUtil['isUint'](level) || RedGLUtil.throwFunc('RedBaseObject3D - removeLOD : level : uint만 허용함');
-            if (this['_lodLevels'][level]) delete this['_lodLevels'][level]
+            var i = this['_lodLevels'].length;
+            while (i--) {
+                if (this['_lodLevels'][i]['level'] == level) {
+                    this['_lodLevels'].splice(i, 1);
+                    break
+                }
+            }
         },
         /**DOC:
          {

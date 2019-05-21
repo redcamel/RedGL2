@@ -2,7 +2,7 @@
   ~ RedGL - MIT License
   ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
   ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
-  ~ Last modification time of this file - 2019.5.15 16:50
+  ~ Last modification time of this file - 2019.5.21 10:15
   -->
 
 <!DOCTYPE html>
@@ -110,9 +110,21 @@
                     v['resultMesh'].x = Math.random() * 30 - 15
                     v['resultMesh'].z = Math.random() * 30 - 15
                 })
+            },
+            addObject10: function () {
+                var i = 10
+                while (i--) {
+                    RedGLTFLoader(redGL, assetPath + 'glTF/breakDance/', 'scene.gltf', function (v) {
+                        tScene.addChild(v['resultMesh'])
+                        v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.002
+                        v['resultMesh'].x = Math.random() * 30 - 15
+                        v['resultMesh'].z = Math.random() * 30 - 15
+                    })
+                }
             }
         };
         gui['gui'].add(testData, 'addObject');
+        gui['gui'].add(testData, 'addObject10');
     }
 </script>
 </body>

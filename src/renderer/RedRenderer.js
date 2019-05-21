@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.20 20:24
+ * Last modification time of this file - 2019.5.21 11:40
  */
 
 "use strict";
@@ -460,19 +460,14 @@ var RedRenderer;
         var tSprite3DYn, tLODData, tDirectionalShadowMaterialYn, tSkinInfo, tUseFog;
         var tProgram, tOptionProgramKey, tOptionProgram, baseOptionKey;
         // matix 관련
-        var aSx, aSy, aSz, aCx, aCy, aCz, tRx, tRy, tRz,
+        var aSx, aSy, aSz, aCx, aCy, aCz, aX, aY, aZ,
             a00, a01, a02, a03, a10, a11, a12, a13, a20, a21, a22, a23, a30, a31, a32, a33,
             b0, b1, b2, b3,
-            b00, b01, b02, b10, b11, b12, b20, b21, b22,
-            aX, aY, aZ
-        // a00, a01, a02, a03, a10, a11, a12, a13, a20,
-        // a21, a22, a23, a30, a31, a32, a33, b0, b1,
-        // b2, b3, b00, b01, b02, b10, b11, b12, b20,
-        // b12, b22;
+            b00, b01, b02, b10, b11, b12, b20, b21, b22
         // sin,cos 관련
         var tRadian, CPI, CPI2, C225, C127, C045, C157;
         // LOD 관련
-        var lodX, lodY, lodZ, lodDistance;
+        var lodDistance, lodTarget;
         // 프로그램 성택관련
         var tUseDirectionalShadow;
         var tProgramList;
@@ -502,19 +497,18 @@ var RedRenderer;
             tSkinInfo = tMesh['skinInfo'];
             // LOD체크
             if (tMesh['useLOD']) {
-                lodX = camera.x - tMesh.x;
-                lodY = camera.y - tMesh.y;
-                lodZ = camera.z - tMesh.z;
-                lodDistance = Math.abs(Math.sqrt(lodX * lodX + lodY * lodY + lodZ * lodZ));
+                aX = camera.x - tMesh.x;
+                aY = camera.y - tMesh.y;
+                aZ = camera.z - tMesh.z;
+                lodDistance = Math.abs(Math.sqrt(aX * aX + aY * aY + aZ * aZ));
                 tLODInfo = tMesh['_lodLevels'];
-                //TODO 여기 최적화해야함
-                for (var k in tLODInfo) {
-                    tLODData = tLODInfo[k];
-                    if (tLODData['distance'] < lodDistance) {
-                        tMesh['_geometry'] = tLODData['geometry'];
-                        tMesh['_material'] = tLODData['material'];
-                    }
-                }
+                // 0~4레벨까지 허용
+                (tLODData = tLODInfo[0]) && tLODData['distance'] < lodDistance ? lodTarget = tLODData : 0,
+                    (tLODData = tLODInfo[1]) && tLODData['distance'] < lodDistance ? lodTarget = tLODData : 0,
+                    (tLODData = tLODInfo[2]) && tLODData['distance'] < lodDistance ? lodTarget = tLODData : 0,
+                    (tLODData = tLODInfo[3]) && tLODData['distance'] < lodDistance ? lodTarget = tLODData : 0,
+                    (tLODData = tLODInfo[4]) && tLODData['distance'] < lodDistance ? lodTarget = tLODData : 0,
+                    lodTarget ? (tMesh['_geometry'] = lodTarget['geometry'], tMesh['_material'] = lodTarget['material']) : 0
             }
             if (tGeometry) {
                 tMaterial = subSceneMaterial ? subSceneMaterial : tMesh['_material'];
@@ -686,10 +680,9 @@ var RedRenderer;
                 if (tGeometry) tGL.uniformMatrix4fv(tSystemUniformGroup['uMMatrix']['location'], false, tMVMatrix)
             } else {
                 if (tMesh['autoUpdateMatrix']) {
-                        tLocalMatrix[0] = 1, tLocalMatrix[1] = 0, tLocalMatrix[2] = 0, tLocalMatrix[3] = 0,
-                        tLocalMatrix[4] = 0, tLocalMatrix[5] = 1, tLocalMatrix[6] = 0, tLocalMatrix[7] = 0,
-                        tLocalMatrix[8] = 0, tLocalMatrix[9] = 0, tLocalMatrix[10] = 1, tLocalMatrix[11] = 0,
-                        tLocalMatrix[12] = 0, tLocalMatrix[13] = 0, tLocalMatrix[14] = 0, tLocalMatrix[15] = 1,
+                    a00 = 1, a01 = 0, a02 = 0,
+                        a10 = 0, a11 = 1, a12 = 0,
+                        a20 = 0, a21 = 0, a22 = 1,
                         // tLocalMatrix translate
                         tLocalMatrix[12] = tMesh['x'],
                         tLocalMatrix[13] = tMesh['y'],
@@ -697,50 +690,60 @@ var RedRenderer;
                         tLocalMatrix[15] = 1,
                         // tLocalMatrix rotate
                         tSprite3DYn ?
-                            (tRx = tRy = tRz = 0) :
-                            (tRx = tMesh['rotationX'] * CONVERT_RADIAN, tRy = tMesh['rotationY'] * CONVERT_RADIAN, tRz = tMesh['rotationZ'] * CONVERT_RADIAN),
+                            (aX = aY = aZ = 0) :
+                            (aX = tMesh['rotationX'] * CONVERT_RADIAN, aY = tMesh['rotationY'] * CONVERT_RADIAN, aZ = tMesh['rotationZ'] * CONVERT_RADIAN),
                         /////////////////////////
-                        tRadian = tRx % CPI2,
+                        tRadian = aX % CPI2,
                         tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
                         tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
                         aSx = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
-                        tRadian = (tRx + C157) % CPI2,
+                        tRadian = (aX + C157) % CPI2,
                         tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
                         tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
                         aCx = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
-                        tRadian = tRy % CPI2,
+                        tRadian = aY % CPI2,
                         tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
                         tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
                         aSy = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
-                        tRadian = (tRy + C157) % CPI2,
+                        tRadian = (aY + C157) % CPI2,
                         tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
                         tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
                         aCy = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
-                        tRadian = tRz % CPI2,
+                        tRadian = aZ % CPI2,
                         tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
                         tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
                         aSz = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
-                        tRadian = (tRz + C157) % CPI2,
+                        tRadian = (aZ + C157) % CPI2,
                         tRadian < -CPI ? tRadian = tRadian + CPI2 : tRadian > CPI ? tRadian = tRadian - CPI2 : 0,
                         tRadian = tRadian < 0 ? C127 * tRadian + C045 * tRadian * tRadian : C127 * tRadian - C045 * tRadian * tRadian,
                         aCz = tRadian < 0 ? C225 * (tRadian * -tRadian - tRadian) + tRadian : C225 * (tRadian * tRadian - tRadian) + tRadian,
                         /////////////////////////
-                        a00 = tLocalMatrix[0], a01 = tLocalMatrix[1], a02 = tLocalMatrix[2],
-                        a10 = tLocalMatrix[4], a11 = tLocalMatrix[5], a12 = tLocalMatrix[6],
-                        a20 = tLocalMatrix[8], a21 = tLocalMatrix[9], a22 = tLocalMatrix[10],
                         b00 = aCy * aCz, b01 = aSx * aSy * aCz - aCx * aSz, b02 = aCx * aSy * aCz + aSx * aSz,
                         b10 = aCy * aSz, b11 = aSx * aSy * aSz + aCx * aCz, b12 = aCx * aSy * aSz - aSx * aCz,
                         b20 = -aSy, b21 = aSx * aCy, b22 = aCx * aCy,
-                        tLocalMatrix[0] = a00 * b00 + a10 * b01 + a20 * b02, tLocalMatrix[1] = a01 * b00 + a11 * b01 + a21 * b02, tLocalMatrix[2] = a02 * b00 + a12 * b01 + a22 * b02,
-                        tLocalMatrix[4] = a00 * b10 + a10 * b11 + a20 * b12, tLocalMatrix[5] = a01 * b10 + a11 * b11 + a21 * b12, tLocalMatrix[6] = a02 * b10 + a12 * b11 + a22 * b12,
-                        tLocalMatrix[8] = a00 * b20 + a10 * b21 + a20 * b22, tLocalMatrix[9] = a01 * b20 + a11 * b21 + a21 * b22, tLocalMatrix[10] = a02 * b20 + a12 * b21 + a22 * b22,
                         // tLocalMatrix scale
                         aX = tMesh['scaleX'], aY = tMesh['scaleY'] * (mode2DYn ? -1 : 1), aZ = tMesh['scaleZ'],
-                        tLocalMatrix[0] = tLocalMatrix[0] * aX, tLocalMatrix[1] = tLocalMatrix[1] * aX, tLocalMatrix[2] = tLocalMatrix[2] * aX, tLocalMatrix[3] = tLocalMatrix[3] * aX,
-                        tLocalMatrix[4] = tLocalMatrix[4] * aY, tLocalMatrix[5] = tLocalMatrix[5] * aY, tLocalMatrix[6] = tLocalMatrix[6] * aY, tLocalMatrix[7] = tLocalMatrix[7] * aY,
-                        tLocalMatrix[8] = tLocalMatrix[8] * aZ, tLocalMatrix[9] = tLocalMatrix[9] * aZ, tLocalMatrix[10] = tLocalMatrix[10] * aZ, tLocalMatrix[11] = tLocalMatrix[11] * aZ,
-                        tLocalMatrix[12] = tLocalMatrix[12], tLocalMatrix[13] = tLocalMatrix[13], tLocalMatrix[14] = tLocalMatrix[14], tLocalMatrix[15] = tLocalMatrix[15],
-
+                        tLocalMatrix[0] = (a00 * b00 + a10 * b01 + a20 * b02) * aX,
+                        tLocalMatrix[1] = (a01 * b00 + a11 * b01 + a21 * b02) * aX,
+                        tLocalMatrix[2] = (a02 * b00 + a12 * b01 + a22 * b02) * aX,
+                        tLocalMatrix[3] = tLocalMatrix[3] * aX,
+                        tLocalMatrix[4] = (a00 * b10 + a10 * b11 + a20 * b12) * aY,
+                        tLocalMatrix[5] = (a01 * b10 + a11 * b11 + a21 * b12) * aY,
+                        tLocalMatrix[6] = (a02 * b10 + a12 * b11 + a22 * b12) * aY,
+                        tLocalMatrix[7] = tLocalMatrix[7] * aY,
+                        tLocalMatrix[8] = (a00 * b20 + a10 * b21 + a20 * b22) * aZ,
+                        tLocalMatrix[9] = (a01 * b20 + a11 * b21 + a21 * b22) * aZ,
+                        tLocalMatrix[10] = (a02 * b20 + a12 * b21 + a22 * b22) * aZ,
+                        tLocalMatrix[11] = tLocalMatrix[11] * aZ,
+                        // tLocalMatrix[0] = a00 * b00 + a10 * b01 + a20 * b02, tLocalMatrix[1] = a01 * b00 + a11 * b01 + a21 * b02, tLocalMatrix[2] = a02 * b00 + a12 * b01 + a22 * b02,
+                        // tLocalMatrix[4] = a00 * b10 + a10 * b11 + a20 * b12, tLocalMatrix[5] = a01 * b10 + a11 * b11 + a21 * b12, tLocalMatrix[6] = a02 * b10 + a12 * b11 + a22 * b12,
+                        // tLocalMatrix[8] = a00 * b20 + a10 * b21 + a20 * b22, tLocalMatrix[9] = a01 * b20 + a11 * b21 + a21 * b22, tLocalMatrix[10] = a02 * b20 + a12 * b21 + a22 * b22,
+                        // // tLocalMatrix scale
+                        // aX = tMesh['scaleX'], aY = tMesh['scaleY'] * (mode2DYn ? -1 : 1), aZ = tMesh['scaleZ'],
+                        // tLocalMatrix[0] = tLocalMatrix[0] * aX, tLocalMatrix[1] = tLocalMatrix[1] * aX, tLocalMatrix[2] = tLocalMatrix[2] * aX, tLocalMatrix[3] = tLocalMatrix[3] * aX,
+                        // tLocalMatrix[4] = tLocalMatrix[4] * aY, tLocalMatrix[5] = tLocalMatrix[5] * aY, tLocalMatrix[6] = tLocalMatrix[6] * aY, tLocalMatrix[7] = tLocalMatrix[7] * aY,
+                        // tLocalMatrix[8] = tLocalMatrix[8] * aZ, tLocalMatrix[9] = tLocalMatrix[9] * aZ, tLocalMatrix[10] = tLocalMatrix[10] * aZ, tLocalMatrix[11] = tLocalMatrix[11] * aZ,
+                        // tLocalMatrix[12] = tLocalMatrix[12], tLocalMatrix[13] = tLocalMatrix[13], tLocalMatrix[14] = tLocalMatrix[14], tLocalMatrix[15] = tLocalMatrix[15],
                         // 부모가있으면 곱함
                         parentMTX ?
                             (
@@ -794,49 +797,58 @@ var RedRenderer;
                             a20 = tMVMatrix[8], a21 = tMVMatrix[9], a22 = tMVMatrix[10], a23 = tMVMatrix[11],
                             a31 = tMVMatrix[12], a32 = tMVMatrix[13], a33 = tMVMatrix[14], b0 = tMVMatrix[15],
                             a30 = a00 * a11 - a01 * a10,
-                            b1 = a00 * a12 - a02 * a10,
-                            b2 = a00 * a13 - a03 * a10,
-                            b3 = a01 * a12 - a02 * a11,
-                            b00 = a01 * a13 - a03 * a11,
-                            b01 = a02 * a13 - a03 * a12,
-                            b02 = a20 * a32 - a21 * a31,
-                            b10 = a20 * a33 - a22 * a31,
-                            b11 = a20 * b0 - a23 * a31,
-                            b12 = a21 * a33 - a22 * a32,
-                            b20 = a21 * b0 - a23 * a32,
-                            b12 = a22 * b0 - a23 * a33,
-                            b22 = a30 * b12 - b1 * b20 + b2 * b12 + b3 * b11 - b00 * b10 + b01 * b02,
+                            b1 = a00 * a12 - a02 * a10, b2 = a00 * a13 - a03 * a10, b3 = a01 * a12 - a02 * a11,
+                            b00 = a01 * a13 - a03 * a11, b01 = a02 * a13 - a03 * a12, b02 = a20 * a32 - a21 * a31,
+                            b10 = a20 * a33 - a22 * a31, b11 = a20 * b0 - a23 * a31, b12 = a21 * a33 - a22 * a32,
+                            b20 = a21 * b0 - a23 * a32, b12 = a22 * b0 - a23 * a33, b22 = a30 * b12 - b1 * b20 + b2 * b12 + b3 * b11 - b00 * b10 + b01 * b02,
                             b22 = 1 / b22,
+
                             tNMatrix[0] = (a11 * b12 - a12 * b20 + a13 * b12) * b22,
-                            tNMatrix[1] = (-a01 * b12 + a02 * b20 - a03 * b12) * b22,
-                            tNMatrix[2] = (a32 * b01 - a33 * b00 + b0 * b3) * b22,
-                            tNMatrix[3] = (-a21 * b01 + a22 * b00 - a23 * b3) * b22,
-                            tNMatrix[4] = (-a10 * b12 + a12 * b11 - a13 * b10) * b22,
+                            tNMatrix[4] = (-a01 * b12 + a02 * b20 - a03 * b12) * b22,
+                            tNMatrix[8] = (a32 * b01 - a33 * b00 + b0 * b3) * b22,
+                            tNMatrix[12] = (-a21 * b01 + a22 * b00 - a23 * b3) * b22,
+                            tNMatrix[1] = (-a10 * b12 + a12 * b11 - a13 * b10) * b22,
                             tNMatrix[5] = (a00 * b12 - a02 * b11 + a03 * b10) * b22,
-                            tNMatrix[6] = (-a31 * b01 + a33 * b2 - b0 * b1) * b22,
-                            tNMatrix[7] = (a20 * b01 - a22 * b2 + a23 * b1) * b22,
-                            tNMatrix[8] = (a10 * b20 - a11 * b11 + a13 * b02) * b22,
-                            tNMatrix[9] = (-a00 * b20 + a01 * b11 - a03 * b02) * b22,
+                            tNMatrix[9] = (-a31 * b01 + a33 * b2 - b0 * b1) * b22,
+                            tNMatrix[13] = (a20 * b01 - a22 * b2 + a23 * b1) * b22,
+                            tNMatrix[2] = (a10 * b20 - a11 * b11 + a13 * b02) * b22,
+                            tNMatrix[6] = (-a00 * b20 + a01 * b11 - a03 * b02) * b22,
                             tNMatrix[10] = (a31 * b00 - a32 * b2 + b0 * a30) * b22,
-                            tNMatrix[11] = (-a20 * b00 + a21 * b2 - a23 * a30) * b22,
-                            tNMatrix[12] = (-a10 * b12 + a11 * b10 - a12 * b02) * b22,
-                            tNMatrix[13] = (a00 * b12 - a01 * b10 + a02 * b02) * b22,
-                            tNMatrix[14] = (-a31 * b3 + a32 * b1 - a33 * a30) * b22,
+                            tNMatrix[14] = (-a20 * b00 + a21 * b2 - a23 * a30) * b22,
+                            tNMatrix[3] = (-a10 * b12 + a11 * b10 - a12 * b02) * b22,
+                            tNMatrix[7] = (a00 * b12 - a01 * b10 + a02 * b02) * b22,
+                            tNMatrix[11] = (-a31 * b3 + a32 * b1 - a33 * a30) * b22,
                             tNMatrix[15] = (a20 * b3 - a21 * b1 + a22 * a30) * b22,
+
+                            // tNMatrix[0] = (a11 * b12 - a12 * b20 + a13 * b12) * b22,
+                            // tNMatrix[1] = (-a01 * b12 + a02 * b20 - a03 * b12) * b22,
+                            // tNMatrix[2] = (a32 * b01 - a33 * b00 + b0 * b3) * b22,
+                            // tNMatrix[3] = (-a21 * b01 + a22 * b00 - a23 * b3) * b22,
+                            // tNMatrix[4] = (-a10 * b12 + a12 * b11 - a13 * b10) * b22,
+                            // tNMatrix[5] = (a00 * b12 - a02 * b11 + a03 * b10) * b22,
+                            // tNMatrix[6] = (-a31 * b01 + a33 * b2 - b0 * b1) * b22,
+                            // tNMatrix[7] = (a20 * b01 - a22 * b2 + a23 * b1) * b22,
+                            // tNMatrix[8] = (a10 * b20 - a11 * b11 + a13 * b02) * b22,
+                            // tNMatrix[9] = (-a00 * b20 + a01 * b11 - a03 * b02) * b22,
+                            // tNMatrix[10] = (a31 * b00 - a32 * b2 + b0 * a30) * b22,
+                            // tNMatrix[11] = (-a20 * b00 + a21 * b2 - a23 * a30) * b22,
+                            // tNMatrix[12] = (-a10 * b12 + a11 * b10 - a12 * b02) * b22,
+                            // tNMatrix[13] = (a00 * b12 - a01 * b10 + a02 * b02) * b22,
+                            // tNMatrix[14] = (-a31 * b3 + a32 * b1 - a33 * a30) * b22,
+                            // tNMatrix[15] = (a20 * b3 - a21 * b1 + a22 * a30) * b22,
                             // transpose
-                            a01 = tNMatrix[1], a02 = tNMatrix[2], a03 = tNMatrix[3],
-                            a12 = tNMatrix[6], a13 = tNMatrix[7], a23 = tNMatrix[11],
-                            tNMatrix[1] = tNMatrix[4], tNMatrix[2] = tNMatrix[8], tNMatrix[3] = tNMatrix[12], tNMatrix[4] = a01, tNMatrix[6] = tNMatrix[9],
-                            tNMatrix[7] = tNMatrix[13], tNMatrix[8] = a02, tNMatrix[9] = a12, tNMatrix[11] = tNMatrix[14],
-                            tNMatrix[12] = a03, tNMatrix[13] = a13, tNMatrix[14] = a23,
+                            // a01 = tNMatrix[1], a02 = tNMatrix[2], a03 = tNMatrix[3],
+                            // a12 = tNMatrix[6], a13 = tNMatrix[7], a23 = tNMatrix[11],
+                            // tNMatrix[1] = tNMatrix[4], tNMatrix[2] = tNMatrix[8], tNMatrix[3] = tNMatrix[12], tNMatrix[4] = a01, tNMatrix[6] = tNMatrix[9],
+                            // tNMatrix[7] = tNMatrix[13], tNMatrix[8] = a02, tNMatrix[9] = a12, tNMatrix[11] = tNMatrix[14],
+                            // tNMatrix[12] = a03, tNMatrix[13] = a13, tNMatrix[14] = a23,
                             // uNMatrix 입력
                             tGL.uniformMatrix4fv(tSystemUniformGroup['uNMatrix']['location'], false, tNMatrix)
                     }
                 }
                 if (tSkinInfo) {
-
                     var joints = tSkinInfo['joints'];
-                    var index = 0, len = joints.length;
+                    var joint_i = 0, len = joints.length;
                     var tJointMTX;
                     var globalTransformOfJointNode = new Float32Array(len * 16);
                     var globalTransformOfNodeThatTheMeshIsAttachedTo = [
@@ -894,25 +906,25 @@ var RedRenderer;
                     }
                     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
                     // 글로벌 조인트 노드병합함
-                    for (index; index < len; index++) {
+                    for (joint_i; joint_i < len; joint_i++) {
                         // 조인트 공간내에서의 전역
-                        tJointMTX = joints[index]['matrix'];
-                        globalTransformOfJointNode[index * 16 + 0] = tJointMTX[0];
-                        globalTransformOfJointNode[index * 16 + 1] = tJointMTX[1];
-                        globalTransformOfJointNode[index * 16 + 2] = tJointMTX[2];
-                        globalTransformOfJointNode[index * 16 + 3] = tJointMTX[3];
-                        globalTransformOfJointNode[index * 16 + 4] = tJointMTX[4];
-                        globalTransformOfJointNode[index * 16 + 5] = tJointMTX[5];
-                        globalTransformOfJointNode[index * 16 + 6] = tJointMTX[6];
-                        globalTransformOfJointNode[index * 16 + 7] = tJointMTX[7];
-                        globalTransformOfJointNode[index * 16 + 8] = tJointMTX[8];
-                        globalTransformOfJointNode[index * 16 + 9] = tJointMTX[9];
-                        globalTransformOfJointNode[index * 16 + 10] = tJointMTX[10];
-                        globalTransformOfJointNode[index * 16 + 11] = tJointMTX[11];
-                        globalTransformOfJointNode[index * 16 + 12] = tJointMTX[12];
-                        globalTransformOfJointNode[index * 16 + 13] = tJointMTX[13];
-                        globalTransformOfJointNode[index * 16 + 14] = tJointMTX[14];
-                        globalTransformOfJointNode[index * 16 + 15] = tJointMTX[15]
+                        tJointMTX = joints[joint_i]['matrix'];
+                        globalTransformOfJointNode[joint_i * 16 + 0] = tJointMTX[0];
+                        globalTransformOfJointNode[joint_i * 16 + 1] = tJointMTX[1];
+                        globalTransformOfJointNode[joint_i * 16 + 2] = tJointMTX[2];
+                        globalTransformOfJointNode[joint_i * 16 + 3] = tJointMTX[3];
+                        globalTransformOfJointNode[joint_i * 16 + 4] = tJointMTX[4];
+                        globalTransformOfJointNode[joint_i * 16 + 5] = tJointMTX[5];
+                        globalTransformOfJointNode[joint_i * 16 + 6] = tJointMTX[6];
+                        globalTransformOfJointNode[joint_i * 16 + 7] = tJointMTX[7];
+                        globalTransformOfJointNode[joint_i * 16 + 8] = tJointMTX[8];
+                        globalTransformOfJointNode[joint_i * 16 + 9] = tJointMTX[9];
+                        globalTransformOfJointNode[joint_i * 16 + 10] = tJointMTX[10];
+                        globalTransformOfJointNode[joint_i * 16 + 11] = tJointMTX[11];
+                        globalTransformOfJointNode[joint_i * 16 + 12] = tJointMTX[12];
+                        globalTransformOfJointNode[joint_i * 16 + 13] = tJointMTX[13];
+                        globalTransformOfJointNode[joint_i * 16 + 14] = tJointMTX[14];
+                        globalTransformOfJointNode[joint_i * 16 + 15] = tJointMTX[15]
                     }
                     tGL.uniformMatrix4fv(tSystemUniformGroup['uGlobalTransformOfNodeThatTheMeshIsAttachedTo']['location'], false, globalTransformOfNodeThatTheMeshIsAttachedTo);
                     tGL.uniformMatrix4fv(tSystemUniformGroup['uJointMatrix']['location'], false, globalTransformOfJointNode);
