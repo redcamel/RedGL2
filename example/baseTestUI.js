@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.15 16:48
+ * Last modification time of this file - 2019.6.5 11:37
  */
 
 var baseTestUI = function (redGL, width) {
@@ -244,6 +244,10 @@ baseTestUI.exampleList = [
             {
                 key: 'RedTransformController',
                 href: 'object3D/RedTransformController.html'
+            },
+            {
+                key: 'object3D lookAt',
+                href: 'object3D/object3D_lookAt.html'
             }
         ]
     },
