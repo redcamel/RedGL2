@@ -7,6 +7,7 @@ This project is maintained by [RedCamel](mailto:webseon@gmail.com)
 
 ### Release Notes ###
 - [Releases](https://github.com/redcamel/RedGL2/releases)
+- [Release Note V5.0](https://github.com/redcamel/RedGL2/releases/tag/Master_V5.0)
 - [Release Note V4.0](https://github.com/redcamel/RedGL2/releases/tag/Master_V4.0)
 - [Release Note V3.0](https://github.com/redcamel/RedGL2/releases/tag/Master_V3.0)
 - [Release Note V2.0](https://github.com/redcamel/RedGL2/releases/tag/Master_V2.0)
