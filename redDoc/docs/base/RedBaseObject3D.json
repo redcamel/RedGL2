@@ -172,6 +172,29 @@
     "return": "Array"
   },
   {
+    "code": "PROPERTY",
+    "title": "lookAt",
+    "description": "\n          lookAt\n ",
+    "params": {
+      "x": [
+        {
+          "type": "Number"
+        }
+      ],
+      "y": [
+        {
+          "type": "Number"
+        }
+      ],
+      "z": [
+        {
+          "type": "Number"
+        }
+      ]
+    },
+    "return": "void"
+  },
+  {
     "title": "material",
     "code": "PROPERTY",
     "description": "\n\t material\n ",

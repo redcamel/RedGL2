@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.21 11:33
+ * Last modification time of this file - 2019.6.5 11:42
  */
 
 "use strict";
@@ -379,7 +379,7 @@ var RedBaseObject3D;
                 needPush = true;
                 while (i--) {
                     if (this['_lodLevels'][i]['level'] == level) {
-                        this['_lodLevels'][i]=tData;
+                        this['_lodLevels'][i] = tData;
                         needPush = false;
                     }
                 }
@@ -820,6 +820,42 @@ var RedBaseObject3D;
         RedBaseObject3D.prototype['volumeCalculateOBB'] = function () {
             return this['volumeInfo'] = getOBB(this)
         };
+    })();
+    /**DOC:
+     {
+		 code:`PROPERTY`,
+		 title :`lookAt`,
+		 description : `
+            lookAt
+		 `,
+		 params : {
+			 x : [{type : "Number"}],
+			 y : [{type : "Number"}],
+			 z : [{type : "Number"}]
+		 },
+		 return : 'void'
+	 }
+     :DOC*/
+    RedBaseObject3D.prototype['lookAt'] = (function () {
+        var up = new Float32Array([0, 1, 0]);
+        var tPosition = [];
+        var tQuaternion;
+        var tRotation = []
+        return function (x, y, z) {
+            tPosition[0] = x;
+            tPosition[1] = y;
+            tPosition[2] = z;
+            //out, eye, center, up
+            mat4.identity(this['matrix']);
+            mat4.targetTo(this['matrix'], [this.x, this.y, this.z], tPosition, up);
+            tQuaternion = quat.create();
+            mat4.getRotation(tQuaternion, this['matrix'])
+            tRotation = RedGLUtil.quaternionToRotation(tQuaternion)
+            tRotation = RedGLUtil.mat4ToEuler(this['matrix'], []);
+            this.rotationX = -tRotation[0] * 180 / Math.PI;
+            this.rotationY = -tRotation[1] * 180 / Math.PI;
+            this.rotationZ = -tRotation[2] * 180 / Math.PI;
+        }
     })();
     /**DOC:
      {
