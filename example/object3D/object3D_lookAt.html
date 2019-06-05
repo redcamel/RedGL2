@@ -1,9 +1,8 @@
-
 <!--
   ~ RedGL - MIT License
   ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
   ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
-  ~ Last modification time of this file - 2019.6.4 17:20
+  ~ Last modification time of this file - 2019.6.5 11:48
   -->
 
 <!DOCTYPE html>
@@ -11,7 +10,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>RedGL - RedTransformController</title>
+    <title>RedGL - object3D_lookAt</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -46,8 +45,8 @@
                 tController = RedObitController(redGL);
                 tController.pan = 30;
                 tController.tilt = -30;
-                tController.distance = 10
-                tController.speedDistance = 1
+                tController.distance = 50
+                tController.speedDistance = 4
                 var tLight = RedDirectionalLight(redGL);
                 tScene.addLight(tLight)
                 tLight.x = 30;
@@ -70,52 +69,50 @@
                 console.log(redGL);
             };
             setBase(this);
-            var tMesh = RedMesh(this, RedBox(this), RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'crate.png')))
-            tScene.addChild(tMesh)
+            var i = 500
+            while (i--) {
+                var tMesh = RedMesh(this, RedBox(this, 1, 1, 3), RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'crate.png')))
+                tMesh.x = Math.random() * 50 - 25
+                tMesh.y = Math.random() * 50 - 25
+                tMesh.z = Math.random() * 50 - 25
+                // tMesh.x = Math.sin(Math.PI*2 / 50 * i) * 8
+                // // tMesh.y = Math.random() * 15 - 7.5
+                // tMesh.z = Math.cos(Math.PI*2 / 50 * i) * 8
+                tMesh.lookAt(0, 0, 0)
+                tScene.addChild(tMesh)
+            }
+            var centerMesh = RedMesh(this, RedSphere(this,0.5,16,16,16), RedColorPhongMaterial(this))
+            tScene.addChild(centerMesh)
+            testUI(this, tScene, centerMesh)
 
-            var tMesh2 = RedMesh(this, RedBox(this), RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'crate.png')))
-            tScene.addChild(tMesh2)
-
-            tMesh2.x = 2
-            tMesh2.z = 2
-
-            tScene.mouseManager.add(tMesh, 'down', function (e) {
-                tTransformController.setTarget(tView, tMesh)
-                tScene.addChild(tTransformController)
-            })
-            tScene.mouseManager.add(tMesh2, 'down', function (e) {
-                tTransformController.setTarget(tView, tMesh2)
-                tScene.addChild(tTransformController)
-            })
-            var tTransformController = RedTransformController(this)
-            console.log(tTransformController)
-            // testUI 호출
-            testUI(this, tTransformController, tScene);
 
         } else {
             console.log('초기화 실패!')
         }
-    })
-    testUI = function (redGL, tTransformController, tScene) {
-        // console.log('test')
+
+    });
+    testUI = function (redGL, tScene, centerMesh) {
         var gui = new baseTestUI(redGL);
         gui.initRedGL();
-        //
-        var tFolder
-        tFolder = gui['gui'].addFolder('RedTransformController')
-        tFolder.open()
-        tFolder.add(tTransformController, 'boundBoxMode', [RedTransformController.AABB, RedTransformController.OBB]).onChange(function (v) {
-            tTransformController.boundBoxMode = v
+        gui.gui.add(centerMesh, 'x', -10, 10, 0.01).onChange(function (v) {
+            centerMesh.x = v
+            tScene.children.forEach(function (tMesh) {
+                tMesh.lookAt(centerMesh.x, centerMesh.y, centerMesh.z)
+            })
         });
-        tFolder.add(tTransformController, 'usePosition').onChange(function (v) {
-            tTransformController.usePosition = v
+        gui.gui.add(centerMesh, 'y', -10, 10, 0.01).onChange(function (v) {
+            centerMesh.x = v
+            tScene.children.forEach(function (tMesh) {
+                tMesh.lookAt(centerMesh.x, centerMesh.y, centerMesh.z)
+            })
         });
-        tFolder.add(tTransformController, 'useRotation').onChange(function (v) {
-            tTransformController.useRotation = v
+        gui.gui.add(centerMesh, 'z', -10, 10, 0.01).onChange(function (v) {
+            centerMesh.x = v
+            tScene.children.forEach(function (tMesh) {
+                tMesh.lookAt(centerMesh.x, centerMesh.y, centerMesh.z)
+            })
         });
-        tFolder.add(tTransformController, 'useScale').onChange(function (v) {
-            tTransformController.useScale = v
-        });
+
     }
 </script>
 </body>
