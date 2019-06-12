@@ -1,3 +1,10 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedBox;
 (function () {
@@ -25,7 +32,7 @@ var RedBox;
                         interleaveData.push(vector.x, vector.y, vector.z), // position
                         vector[u] = 0, vector[v] = 0, vector[w] = depth > 0 ? 1 : -1,
                         interleaveData.push(vector.x, vector.y, vector.z), // normal
-                        interleaveData.push(ix / gridX, 1 - (iy / gridY)), // texcoord
+                        interleaveData.push(ix / gridX, (iy / gridY)), // texcoord
                         vertexCounter += 1; // counters
                 }
             }
@@ -150,8 +157,16 @@ var RedBox;
         tPrimitiveData = makeData(redGL, tType, width, height, depth, wSegments, hSegments, dSegments);
         this['interleaveBuffer'] = tPrimitiveData['interleaveBuffer'];
         this['indexBuffer'] = tPrimitiveData['indexBuffer'];
-        this['interleaveBuffer']['isPrimitiveBuffer'] = true
-        this['indexBuffer']['isPrimitiveBuffer'] = true
+        this['interleaveBuffer']['isPrimitiveBuffer'] = true;
+        this['indexBuffer']['isPrimitiveBuffer'] = true;
+        this['_makeInfo'] = {
+            width: width,
+            height: height,
+            depth: depth,
+            wSegments: wSegments,
+            hSegments: hSegments,
+            dSegments: dSegments
+        };
         this['_UUID'] = RedGL.makeUUID();
         console.log(this)
     };

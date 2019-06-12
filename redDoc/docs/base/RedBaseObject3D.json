@@ -30,14 +30,23 @@
   },
   {
     "code": "PROPERTY",
+    "title": "autoUpdateMatrix",
+    "description": "\n    matrix 자동계산여부.\n    true 설정시 이전에 계산된 매트릭스를 사용한다.\n    임의 매트릭스 설정도 가능\n",
+    "example": "\n             (RedMesh Instance).autoUpdateMatrix = true;\n             (RedMesh Instance).autoUpdateMatrix = false;\n         ",
+    "return": "boolean"
+  },
+  {
+    "code": "PROPERTY",
     "title": "blendDst",
     "description": "\n\t 블렌드 목표값 factor\n\t 기본값 : gl.ONE_MINUS_SRC_ALPHA\n ",
+    "example": "\n    var tGL = (RedGL Instance).gl;\n             (RedMesh Instance).blendDst = tGL.SRC_ALPHA;\n             (RedMesh Instance).blendDst = tGL.DST_ALPHA;\n          ",
     "return": "gl 상수"
   },
   {
     "code": "PROPERTY",
     "title": "blendSrc",
-    "description": "\n\t 블렌드 소스값 factor\n\t 기본값 : gl.ONE\n ",
+    "description": "\n\t 블렌드 소스값 factor\n\t 기본값 : gl.SRC_ALPHA\n ",
+    "example": "\n    var tGL = (RedGL Instance).gl;\n             (RedMesh Instance).blendSrc = tGL.SRC_ALPHA;\n             (RedMesh Instance).blendSrc = tGL.DST_ALPHA;\n          ",
     "return": "gl 상수"
   },
   {
@@ -50,12 +59,14 @@
     "code": "PROPERTY",
     "title": "cullFace",
     "description": "\n\t 컬링 페이스 설정\n\t 기본값 : gl.BACK\n ",
+    "example": "\n    var tGL = (RedGL Instance).gl;\n             (RedMesh Instance).cullFace = tGL.BACK;\n             (RedMesh Instance).cullFace = tGL.FRONT;\n          ",
     "return": "gl 상수"
   },
   {
     "code": "PROPERTY",
     "title": "depthTestFunc",
     "description": "\n\t 뎁스 테스트 함수 설정\n\t 기본값 : gl.LEQUAL\n ",
+    "example": "\n    var tGL = (RedGL Instance).gl;\n             (RedMesh Instance).depthTestFunc = tGL.LEQUAL;\n             (RedMesh Instance).depthTestFunc = tGL.LESS;\n          ",
     "return": "gl 상수"
   },
   {
@@ -107,6 +118,7 @@
     "code": "PROPERTY",
     "title": "drawMode",
     "description": "\n\t 기본값 : gl.TRIANGLES\n\t drawCall시 적용한 드로잉 모드\n ",
+    "example": "\n    var tGL = (RedGL Instance).gl;\n             (RedMesh Instance).drawMode = tGL.TRIANGLES;\n             (RedMesh Instance).drawMode = tGL.LINES;\n          ",
     "return": "gl 상수"
   },
   {
@@ -118,7 +130,7 @@
   {
     "title": "getScreenPoint",
     "code": "METHOD",
-    "description": "\n\t 스크린 좌표 반환\n ",
+    "description": "\n\t 객체의 중심 좌표를 스크린 좌표로 반환\n ",
     "params": {
       "redView": [
         {
@@ -126,8 +138,14 @@
         }
       ]
     },
-    "example": "\n             (RedBaseObject3D Instance).getScreenPoint( RedView Instance ); // 로컬 좌표를 스크린상의 좌표로 반환\n ",
+    "example": "\n             (RedBaseObject3D Instance).getScreenPoint( RedView Instance );\n ",
     "return": "Array"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "localMatrix",
+    "description": "\n    계산된 로컬 메트릭스\n    matrix 렌더링시 자동계산\n",
+    "return": "mat4"
   },
   {
     "title": "localToWorld",
@@ -154,6 +172,29 @@
     "return": "Array"
   },
   {
+    "code": "PROPERTY",
+    "title": "lookAt",
+    "description": "\n          lookAt\n ",
+    "params": {
+      "x": [
+        {
+          "type": "Number"
+        }
+      ],
+      "y": [
+        {
+          "type": "Number"
+        }
+      ],
+      "z": [
+        {
+          "type": "Number"
+        }
+      ]
+    },
+    "return": "void"
+  },
+  {
     "title": "material",
     "code": "PROPERTY",
     "description": "\n\t material\n ",
@@ -162,25 +203,20 @@
   {
     "code": "PROPERTY",
     "title": "matrix",
-    "description": "\nmatrix 렌더링시 자동계산\n",
-    "return": "mat4"
-  },
-  {
-    "code": "PROPERTY",
-    "title": "matrix",
-    "description": "\nmatrix 자동계산여부\n",
+    "description": "\n    계산된 누적 메트릭스\n    matrix 렌더링시 자동계산\n",
     "return": "mat4"
   },
   {
     "code": "PROPERTY",
     "title": "normalMatrix",
-    "description": "\nnormalMatrix 렌더링시 자동계산\n",
+    "description": "\n    계산된 노멀 메트릭스\n    normalMatrix 렌더링시 자동계산\n",
     "return": "mat4"
   },
   {
     "code": "PROPERTY",
     "title": "pointSize",
-    "description": "\n\t 기본값 : 1\n\t gl.POINTS로 그릴경우 반영될 포인트 사이즈.\n ",
+    "description": "\n\t 기본값 : 1\n\t gl.POINTS로 그릴경우 반영될 포인트 사이즈.\n\t 성능을 위해서 getter/setter 설정이 되어있지 않음\n ",
+    "example": "\n             (RedMesh Instance).pointSize = 1;\n             (RedMesh Instance).pointSize = 2;\n          ",
     "return": "Number"
   },
   {
@@ -220,67 +256,85 @@
   {
     "code": "PROPERTY",
     "title": "rotationX",
+    "description": "\n    rotationX 값\n    성능을 위해서 getter/setter 설정이 되어있지 않음\n ",
+    "example": "\n          (RedMesh Instance).rotationX = 0;\n       ",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "rotationY",
+    "description": "\n    rotationY 값\n    성능을 위해서 getter/setter 설정이 되어있지 않음\n       ",
+    "example": "\n          (RedMesh Instance).rotationY = 0;\n       ",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "rotationZ",
+    "description": "\n    rotationZ 값\n    성능을 위해서 getter/setter 설정이 되어있지 않음\n ",
+    "example": "\n          (RedMesh Instance).rotationZ = 0;\n       ",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "scaleX",
+    "description": "\n    scaleX 값\n    성능을 위해서 getter/setter 설정이 되어있지 않음\n ",
+    "example": "\n          (RedMesh Instance).scaleX = 0;\n       ",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "scaleY",
+    "description": "\n    scaleY 값\n    성능을 위해서 getter/setter 설정이 되어있지 않음\n       ",
+    "example": "\n          (RedMesh Instance).scaleY = 0;\n       ",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "scaleZ",
+    "description": "\n    scaleZ 값\n    성능을 위해서 getter/setter 설정이 되어있지 않음\n ",
+    "example": "\n          (RedMesh Instance).scaleZ = 0;\n       ",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "useBlendMode",
     "description": "\n\t 블렌드 모드 사용여부\n\t 기본값 : true\n ",
+    "example": "\n             (RedMesh Instance).useBlendMode = true;\n             (RedMesh Instance).useBlendMode = false;\n          ",
     "return": "Boolean"
   },
   {
     "code": "PROPERTY",
     "title": "useCullFace",
     "description": "\n\t 컬링 사용여부\n\t 기본값 : true\n ",
+    "example": "\n             (RedMesh Instance).useCullFace = true;\n             (RedMesh Instance).useCullFace = false;\n          ",
     "return": "Boolean"
   },
   {
     "code": "PROPERTY",
     "title": "useDepthMask",
-    "description": "\n\t 뎁스 테스트 사용여부\n\t 기본값 : true\n ",
+    "description": "\n\t 뎁스 마스크 사용여부\n\t 기본값 : true\n ",
+    "example": "\n             (RedMesh Instance).useDepthMask = true;\n             (RedMesh Instance).useDepthMask = false;\n          ",
     "return": "Boolean"
   },
   {
     "code": "PROPERTY",
     "title": "useDepthTest",
     "description": "\n\t 뎁스 테스트 사용여부\n\t 기본값 : true\n ",
+    "example": "\n             (RedMesh Instance).useDepthTest = true;\n             (RedMesh Instance).useDepthTest = false;\n          ",
     "return": "Boolean"
   },
   {
     "code": "PROPERTY",
     "title": "useLOD",
     "description": "LOD사용여부",
+    "example": "\n             (RedMesh Instance).useLOD = true;\n             (RedMesh Instance).useLOD = false;\n          ",
     "return": "Boolean"
   },
   {
     "code": "PROPERTY",
     "title": "useTransparentSort",
-    "description": "\n\t 투명도 소팅 여부\n\t 기본값 : false\n ",
+    "description": "\n\t 투명도 소팅 여부. \n\t true 설정시 렌더링 진행과정중 최종적으로 모아서 그리게된다. (완벽하지 않지만 투명객체 소팅 효과를 얻을 수 있음)\n\t 기본값 : false\n ",
+    "example": "\n             (RedMesh Instance).useTransparentSort = true;\n             (RedMesh Instance).useTransparentSort = false;\n          ",
     "return": "Boolean"
   },
   {
@@ -310,16 +364,22 @@
   {
     "code": "PROPERTY",
     "title": "x",
+    "description": "\n    x 좌표값\n    성능을 위해서 getter/setter 설정이 되어있지 않음\n      ",
+    "example": "\n          (RedMesh Instance).x = 0;\n       ",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "y",
+    "description": "\n    y 좌표값\n    성능을 위해서 getter/setter 설정이 되어있지 않음\n       ",
+    "example": "\n          (RedMesh Instance).y = 0;\n       ",
     "return": "Number"
   },
   {
     "code": "PROPERTY",
     "title": "z",
+    "description": "\n    z 좌표값\n    성능을 위해서 getter/setter 설정이 되어있지 않음\n ",
+    "example": "\n          (RedMesh Instance).z = 0;\n       ",
     "return": "Number"
   }
 ]

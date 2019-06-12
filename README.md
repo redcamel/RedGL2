@@ -5,6 +5,12 @@ This project is maintained by [RedCamel](mailto:webseon@gmail.com)
 ### JavaScript 3D library
 **이 프로젝트의 기본 지향점은 모든 브라우저 / 디바이스(PC, Mobile)에서 최적의 성능을 내는 webgl 라이브러리를 만드는 것입니다.**
 
+### Release Notes ###
+- [Releases](https://github.com/redcamel/RedGL2/releases)
+- [Release Note V5.0](https://github.com/redcamel/RedGL2/releases/tag/Master_V5.0)
+- [Release Note V4.0](https://github.com/redcamel/RedGL2/releases/tag/Master_V4.0)
+- [Release Note V3.0](https://github.com/redcamel/RedGL2/releases/tag/Master_V3.0)
+- [Release Note V2.0](https://github.com/redcamel/RedGL2/releases/tag/Master_V2.0)
 
 ### Documentation
 - [Documentation](https://redcamel.github.io/RedGL2/redDoc/index.html)

@@ -1,3 +1,10 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedColorPhongMaterial;
 (function () {
@@ -16,7 +23,8 @@ var RedColorPhongMaterial;
             void main(void) {
                 gl_PointSize = uPointSize;
                 // normal 계산
-                vVertexNormal = vec3(uNMatrix * vec4(aVertexNormal,1.0));
+                //#REDGL_DEFINE#skin#true# vVertexNormal = (uNMatrix * getSkinMatrix() * vec4(aVertexNormal,0.0)).xyz;
+               //#REDGL_DEFINE#skin#false# vVertexNormal = (uNMatrix *  vec4(aVertexNormal,1.0)).xyz;
 
                 // position 계산
                 //#REDGL_DEFINE#skin#true# mat4 targetMatrix = uMMatrix *  getSkinMatrix() ;
@@ -26,7 +34,7 @@ var RedColorPhongMaterial;
                 //#REDGL_DEFINE#sprite3D#true# gl_Position = uPMatrix * getSprite3DMatrix(uCameraMatrix , targetMatrix) *  vec4(aVertexPosition, 1.0);
                 //#REDGL_DEFINE#sprite3D#true# if(!u_PerspectiveScale){
                 //#REDGL_DEFINE#sprite3D#true#   gl_Position /= gl_Position.w;
-                //#REDGL_DEFINE#sprite3D#true#   gl_Position.xy += aVertexPosition.xy * vec2(targetMatrix[0][0],targetMatrix[1][1] * uResolution.x/uResolution.y);
+                //#REDGL_DEFINE#sprite3D#true#   gl_Position.xy += aVertexPosition.xy * vec2((uPMatrix * targetMatrix)[0][0],(uPMatrix * targetMatrix)[1][1]);
                 //#REDGL_DEFINE#sprite3D#true# }
                 //#REDGL_DEFINE#sprite3D#false# gl_Position = uPMatrix * uCameraMatrix * targetMatrix *  vec4(aVertexPosition, 1.0);
 
@@ -69,7 +77,6 @@ var RedColorPhongMaterial;
          void main(void) {
 
              texelColor = u_color;
-             // texelColor.rgb *= texelColor.a;
 
              N = normalize(vVertexNormal);
              //#REDGL_DEFINE#useFlatMode# N = getFlatNormal(vVertexPosition.xyz);
@@ -95,7 +102,6 @@ var RedColorPhongMaterial;
                 u_specularPower
              );
 
-             finalColor.rgb *= texelColor.a;
              finalColor.a = texelColor.a;
              if(finalColor.a == 0.0) discard;
 
@@ -146,7 +152,7 @@ var RedColorPhongMaterial;
         this['alpha'] = alpha == undefined ? 1 : alpha;
         /////////////////////////////////////////
         // 일반 프로퍼티
-        this['useFlatMode'] = false
+        this['useFlatMode'] = false;
         this['color'] = hexColor ? hexColor : '#ff0000';
         this['_UUID'] = RedGL.makeUUID();
         if (!checked) {

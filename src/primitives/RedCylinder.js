@@ -1,3 +1,10 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedCylinder;
 (function () {
@@ -48,7 +55,7 @@ var RedCylinder;
                         vec3.normalize(normal, normal);
                         interleaveData.push(normal[0], normal[1], normal[2]);
                         // uv
-                        interleaveData.push(u, 1 - v);
+                        interleaveData.push(u, v);
                         // save index of vertex in respective row
                         indexRow.push(index++);
                     }
@@ -112,7 +119,7 @@ var RedCylinder;
                     // uv
                     uv[0] = (cosTheta * 0.5) + 0.5;
                     uv[1] = (sinTheta * 0.5 * sign) + 0.5;
-                    interleaveData.push(uv[0], uv[1]);
+                    interleaveData.push(uv[0], 1 - uv[1]);
                     // increase index
                     index++;
                 }
@@ -132,7 +139,7 @@ var RedCylinder;
                 // calculate new start value for groups
                 groupStart += groupCount;
 
-            }
+            };
             generateTorso();
             if (openEnded === false) {
                 if (radiusTop > 0) generateCap(true);
@@ -237,8 +244,8 @@ var RedCylinder;
         tPrimitiveData = makeData(redGL, tType, radiusTop, radiusBottom, height, radialSegments, heightSegments, openEnded, thetaStart, thetaLength);
         this['interleaveBuffer'] = tPrimitiveData['interleaveBuffer'];
         this['indexBuffer'] = tPrimitiveData['indexBuffer'];
-        this['interleaveBuffer']['isPrimitiveBuffer'] = true
-        this['indexBuffer']['isPrimitiveBuffer'] = true
+        this['interleaveBuffer']['isPrimitiveBuffer'] = true;
+        this['indexBuffer']['isPrimitiveBuffer'] = true;
         this['_UUID'] = RedGL.makeUUID();
         console.log(this)
     };

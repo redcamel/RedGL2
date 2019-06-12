@@ -1,7 +1,16 @@
-<html>
+<!--
+  ~ RedGL - MIT License
+  ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+  ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+  ~ Last modification time of this file - 2019.4.30 18:52
+  -->
+
+<!DOCTYPE html>
+<html lang="ko">
 
 <head>
     <meta charset="UTF-8">
+    <meta name="keywords" content="RedGL,webgl,demo">
     <title>RedParticleMaterial</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
@@ -149,6 +158,8 @@
             });
         });
         //
+
+
         tFolder = gui['gui'].addFolder('DEFINE_DATA');
         tFolder.open();
         tFolder.add(defineData, 'max', 0, 1000, 1).onChange(function (v) {
@@ -164,6 +175,7 @@
         });
         //
         var tRoot = tFolder
+
         //
         var TINT_TEST_DATA = {
             tint: defineData['tint'].toString(),
@@ -217,6 +229,7 @@
             ]
         }
         tFolder = tRoot.addFolder('blendMode')
+        tFolder.open()
         var blendSrc, blendDst
         tFolder.add(emitter, 'useBlendMode').onChange(function (v) {
             if (v) {
@@ -333,6 +346,10 @@
             })
             // 이징 설정
             makeEase(tFolder, tKey)
+        });
+        tFolder = tRoot.addFolder('_material.usePreMultiply')
+        tFolder.add(emitter._material, 'usePreMultiply').onChange(function (v) {
+            defineData['usePreMultiply'] = v
         });
         ///////////////////////////////////////////////////////////////
         var t0, particle_JSON_DATA;

@@ -1,3 +1,10 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.5.2 12:37
+ */
+
 "use strict";
 var RedPostEffectManager;
 (function () {
@@ -44,7 +51,7 @@ var RedPostEffectManager;
 		}
          :DOC*/
         Object.defineProperty(this, 'postEffectList', {value: []});
-        Object.defineProperty(this, 'children', {value: [RedMesh(redGL, RedPlane(redGL), this['finalMaterial'])]});
+        Object.defineProperty(this, 'children', {value: [RedMesh(redGL, RedPlane(redGL, 1, 1, 1, 1, true), this['finalMaterial'])]});
         this['_UUID'] = RedGL.makeUUID();
         console.log(this);
     };
@@ -255,7 +262,7 @@ var RedPostEffectManager;
                         tSubScene['frameBuffer']['height'] = tViewRect[3];
                         tSubScene['frameBuffer'].bind(tGL);
                         tGL.clear(tGL.COLOR_BUFFER_BIT | tGL.DEPTH_BUFFER_BIT);
-                        redRenderer.sceneRender(redGL, tScene, tCamera, tCamera['orthographicYn'], tScene['children'], time, renderInfo, tSubScene['renderMaterial'], true, true);
+                        redRenderer.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], tScene['children'], time, renderInfo, tSubScene['renderMaterial'], true, true);
                         tSubScene['frameBuffer'].unbind(tGL);
                         prevWidth = tSubScene['frameBuffer']['width'];
                         prevHeight = tSubScene['frameBuffer']['height'];

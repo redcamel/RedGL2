@@ -1,3 +1,10 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.5.2 13:44
+ */
+
 "use strict";
 var RedTextMaterial;
 (function () {
@@ -9,12 +16,10 @@ var RedTextMaterial;
         /* @preserve
             // Sprite3D
             //#REDGL_DEFINE#vertexShareFunc#getSprite3DMatrix#
-            const mat4 c3dScale = mat4(
-                1.0/1024.0, 0.0, 0.0, 0.0,
-                0.0, 1.0/1024.0, 0.0, 0.0,
-                0.0, 0.0, 1.0, 0.0,
-                0.0, 0.0, 0.0, 1.0
-            );
+
+            uniform float u_width;
+            uniform float u_height;
+
             void main(void) {
                 gl_PointSize = uPointSize;
 
@@ -22,17 +27,29 @@ var RedTextMaterial;
 
                 // position 계산
                 mat4 targetMatrix;
-                if(uOrthographicYn){
-                    targetMatrix = uMMatrix;
+                if(uMode2DYn){
+                      targetMatrix = uMMatrix * mat4(
+                        u_width, 0.0, 0.0, 0.0,
+                        0.0, u_height, 0.0, 0.0,
+                        0.0, 0.0, 1.0, 0.0,
+                        0.0, 0.0, 0.0, 1.0
+                    ) ;
+                    gl_Position = uPMatrix * uCameraMatrix * targetMatrix *  vec4(aVertexPosition, 1.0);
                 }else{
-                    targetMatrix = uMMatrix * c3dScale ;
+                    targetMatrix = uMMatrix * mat4(
+                        u_width/uResolution.y, 0.0, 0.0, 0.0,
+                        0.0, u_height/uResolution.y, 0.0, 0.0,
+                        0.0, 0.0, 1.0, 0.0,
+                        0.0, 0.0, 0.0, 1.0
+                    ) ;
+                    //#REDGL_DEFINE#sprite3D#true# gl_Position = uPMatrix * getSprite3DMatrix(uCameraMatrix , targetMatrix) *  vec4(aVertexPosition, 1.0);
+                    //#REDGL_DEFINE#sprite3D#true# if(!u_PerspectiveScale){
+                    //#REDGL_DEFINE#sprite3D#true#   gl_Position /= gl_Position.w;
+                    //#REDGL_DEFINE#sprite3D#true#   gl_Position.xy += aVertexPosition.xy * vec2((uPMatrix * targetMatrix)[0][0],(uPMatrix * targetMatrix)[1][1]);
+                    //#REDGL_DEFINE#sprite3D#true# }
+                    //#REDGL_DEFINE#sprite3D#false# gl_Position = uPMatrix * uCameraMatrix * targetMatrix *  vec4(aVertexPosition, 1.0);
                 }
-                //#REDGL_DEFINE#sprite3D#true# gl_Position = uPMatrix * getSprite3DMatrix(uCameraMatrix , targetMatrix) *  vec4(aVertexPosition, 1.0);
-                //#REDGL_DEFINE#sprite3D#true# if(!u_PerspectiveScale){
-                //#REDGL_DEFINE#sprite3D#true#   gl_Position /= gl_Position.w;
-                //#REDGL_DEFINE#sprite3D#true#   gl_Position.xy += aVertexPosition.xy * vec2(targetMatrix[0][0],targetMatrix[1][1] * uResolution.x/uResolution.y);
-                //#REDGL_DEFINE#sprite3D#true# }
-                //#REDGL_DEFINE#sprite3D#false# gl_Position = uPMatrix * uCameraMatrix * targetMatrix *  vec4(aVertexPosition, 1.0);
+
 
                 //#REDGL_DEFINE#directionalShadow#true# vResolution = uResolution;
                 //#REDGL_DEFINE#directionalShadow#true# vShadowPos = cTexUnitConverter  *  uDirectionalShadowLightMatrix * targetMatrix * vec4(aVertexPosition, 1.0);
@@ -55,7 +72,6 @@ var RedTextMaterial;
 
          void main(void) {
              vec4 finalColor = texture2D(u_diffuseTexture, vTexcoord);
-             finalColor.rgb *= finalColor.a;
              finalColor.a *= u_alpha;
              if(finalColor.a == 0.0) discard;
 
@@ -98,6 +114,8 @@ var RedTextMaterial;
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['alpha'] = 1;
+        this['width'] = 2;
+        this['height'] = 2;
         this['_UUID'] = RedGL.makeUUID();
         if (!checked) {
             this.checkUniformAndProperty();
@@ -124,5 +142,25 @@ var RedTextMaterial;
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedTextMaterial', 'alpha', 'number', {min: 0, max: 1});
+    RedDefinePropertyInfo.definePrototype('RedTextMaterial', 'width', 'number', {
+        min: 2,
+        callback: function (v) {
+            this['_width'] = v;
+        }
+    });
+    /**DOC:
+     {
+	     code : 'PROPERTY',
+		 title :`height`,
+		 description : `세로영역크기`,
+		 return : 'Number'
+	 }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedTextMaterial', 'height', 'number', {
+        min: 2,
+        callback: function (v) {
+            this['_height'] = v;
+        }
+    });
     Object.freeze(RedTextMaterial);
 })();

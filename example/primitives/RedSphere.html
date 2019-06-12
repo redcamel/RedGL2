@@ -1,8 +1,17 @@
-<html>
+<!--
+  ~ RedGL - MIT License
+  ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+  ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+  ~ Last modification time of this file - 2019.6.4 17:20
+  -->
+
+<!DOCTYPE html>
+<html lang="ko">
 
 <head>
     <meta charset="UTF-8">
-    <title>redGL - RedSphere</title>
+    <meta name="keywords" content="RedGL,webgl,demo">
+    <title>RedGL - RedSphere</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -97,31 +106,38 @@
         tFolder.add(test, 'radius', 1, 5, 1).onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.geometry = makeSphere();
+                console.log('volume', v2.geometry.volume)
+                v2.geometry.volume = 1
             })
         })
         tFolder.add(test, 'widthSegments', 1, 32, 1).onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.geometry = makeSphere();
+                console.log('volume', v2.geometry.volume)
             })
         })
         tFolder.add(test, 'heightSegments', 1, 32, 1).onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.geometry = makeSphere();
+                console.log('volume', v2.geometry.volume)
             })
         })
         tFolder.add(test, 'phiStart', 0, Math.PI * 2, Math.PI / 180).onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.geometry = makeSphere();
+                console.log('volume', v2.geometry.volume)
             })
         })
         tFolder.add(test, 'phiLength', 0, Math.PI * 2, Math.PI / 180).onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.geometry = makeSphere();
+                console.log('volume', v2.geometry.volume)
             })
         })
         tFolder.add(test, 'thetaStart', 0, Math.PI * 2, Math.PI / 180).onChange(function (v) {
             tScene.children.forEach(function (v2) {
                 v2.geometry = makeSphere();
+                console.log('volume', v2.geometry.volume)
             })
         })
     }

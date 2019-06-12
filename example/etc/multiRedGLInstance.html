@@ -1,0 +1,113 @@
+<!--
+  ~ RedGL - MIT License
+  ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+  ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+  ~ Last modification time of this file - 2019.5.15 16:50
+  -->
+
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="RedGL,webgl,demo">
+    <title>RedGL Example - Multi RedGL Instance</title>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
+    />
+    <link rel="stylesheet" href="../example.css">
+    <script src="../dat.gui.min.js"></script>
+    <script src="../baseTestUI.js"></script>
+    <script src="../../release/RedGL.min.js"></script>
+</head>
+
+<body>
+<script id='testSource'>
+    var testUI;
+    testUI = function (redGL) {
+        var gui = new baseTestUI(redGL);
+    }
+    var assetPath = '../../asset/'
+    var test = []
+
+    var MAX = 6
+    var i = MAX
+
+    while (i--) {
+        var canvas;
+        canvas = document.createElement('canvas');
+        document.body.appendChild(canvas);
+        test.push(canvas)
+    }
+
+
+    test.forEach(function (tCanvas, index) {
+        RedGL(tCanvas, function (v) {
+            if (v) {
+                if (index == 0) testUI(this)
+                //TODO 코드정리
+                console.log('초기화 성공!');
+                this.setSize((100 / MAX) + '%', '100%')
+                var tWorld, tView, tScene, tController, tRenderer;
+                var setBase = function (redGL) {
+                    // 월드 생성
+                    redGL['world'] = tWorld = RedWorld();
+                    // 씬 생성
+                    tScene = RedScene(redGL);
+                    // 카메라 생성
+                    tController = RedCamera(this);
+                    // tController.pan = 0;
+                    // tController.tilt = -45;
+                    // 렌더러 생성
+
+                    // 뷰생성 및 적용
+                    tView = RedView('HelloRedGL' + index, redGL, tScene, tController);
+
+                    tWorld.addView(tView);
+                    // 그리드 설정
+                    tScene['grid'] = RedGrid(redGL);
+                    // 렌더 디버거 활성화
+                    // tRenderer.setDebugButton();
+                    // 렌더시작
+
+                    var testDLight;
+                    testDLight = RedDirectionalLight(redGL)
+                    testDLight.x = 3
+                    testDLight.y = 2
+                    testDLight.z = 3
+                    // testDLight.debug = true
+                    tScene.addLight(testDLight)
+
+                    tRenderer = RedRenderer();
+                    tRenderer.start(redGL, function (time) {
+                        tController.x = Math.sin(time / 1500) * 10
+                        tController.z = Math.cos(time / 1500) * 10
+                        tController.y = Math.tan(time / 1500) * 10
+                        tController.lookAt(0, 0, 0)
+                    });
+
+
+                };
+                setBase(this);
+                var tMesh;
+                console.log(this)
+                tMesh = RedMesh(this, RedBox(this), RedStandardMaterial(this, RedBitmapTexture(this, assetPath + 'UV_Grid_Sm.jpg')))
+                tScene.addChild(tMesh)
+
+                tMesh = RedMesh(this, RedBox(this), RedStandardMaterial(this, RedBitmapTexture(this, assetPath + 'crate.png')))
+                tMesh.x = 1
+                tScene.addChild(tMesh)
+
+
+            } else {
+                console.log('초기화 실패!')
+            }
+        });
+    })
+
+</script>
+</body>
+
+</html>

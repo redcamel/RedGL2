@@ -1,3 +1,10 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedScene;
 (function () {
@@ -64,7 +71,18 @@ var RedScene;
 		 }
          :DOC*/
         this['shadowManager'] = RedShadowManager(redGL);
-        this['mouseManager'] = RedMouseEventManager(redGL)
+        /**DOC:
+         {
+		     code : 'PROPERTY',
+			 title :`mouseManager`,
+			 description : `
+				 마우스 이벤트 매니저.
+				 RedScene Instance생성시 자동생성.
+			 `,
+			 return : 'RedMouseEventManager Instance'
+		 }
+         :DOC*/
+        this['mouseManager'] = RedMouseEventManager(redGL);
         this['_lightInfo'] = {
             RedAmbientLight: null,
             RedDirectionalLight: [],
@@ -82,6 +100,8 @@ var RedScene;
 				 라이트 추가 매서드.
 				 RedBaseLight 확장객체만 등록가능. ( RedAmbientLight, RedDirectionalLight, RedPointLight ).
 				 하드웨어 상황에 따른 라이트별 허용갯수까지만 등록가능.
+				 RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT
+				 RedSystemShaderCode.MAX_POINT_LIGHT
 			 `,
 			 params : {
 			    light : [
@@ -104,11 +124,11 @@ var RedScene;
                     this['_lightInfo'][light['TYPE']] = light;
                     break;
                 case RedDirectionalLight['TYPE']:
-                    if (this['_lightInfo'][light['TYPE']].length == RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT) RedGLUtil.throwFunc('RedScene : RedDirectionalLight ' + RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT + '개 까지 허용.');
+                    if (this['_lightInfo'][light['TYPE']].length === RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT) RedGLUtil.throwFunc('RedScene : RedDirectionalLight ' + RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT + '개 까지 허용.');
                     this['_lightInfo'][light['TYPE']].push(light);
                     break;
                 case RedPointLight['TYPE']:
-                    if (this['_lightInfo'][light['TYPE']].length == RedSystemShaderCode.MAX_POINT_LIGHT) RedGLUtil.throwFunc('RedScene : RedPointLight ' + RedSystemShaderCode.MAX_POINT_LIGHT + '개 까지 허용.');
+                    if (this['_lightInfo'][light['TYPE']].length === RedSystemShaderCode.MAX_POINT_LIGHT) RedGLUtil.throwFunc('RedScene : RedPointLight ' + RedSystemShaderCode.MAX_POINT_LIGHT + '개 까지 허용.');
                     this['_lightInfo'][light['TYPE']].push(light);
                     break;
                 default:
@@ -144,7 +164,7 @@ var RedScene;
             return function (light) {
                 switch (light['TYPE']) {
                     case RedAmbientLight['TYPE']:
-                        if (this['_lightInfo'][light['TYPE']] == light) this['_lightInfo'][light['TYPE']] = null;
+                        if (this['_lightInfo'][light['TYPE']] === light) this['_lightInfo'][light['TYPE']] = null;
                         break;
                     case RedDirectionalLight['TYPE']:
                         tIndex = this['_lightInfo'][light['TYPE']].indexOf(light);
@@ -158,7 +178,31 @@ var RedScene;
                         RedGLUtil.throwFunc('RedScene : RedBaseLight 인스턴스만 가능')
                 }
             }
-        })()
+        })(),
+        /**DOC:
+         {
+			 title :`removeLightAll`,
+			 code : 'METHOD',
+			 description : `
+				 전체 라이트 제거 매서드.
+			 `,
+			 example : `
+                var testScene;
+                var testLight;
+                testScene = RedScene(RedGL Instance); // RedScene 생성 설정
+                testScene.addLight( RedAmbientLight(RedGL Instance); ); // 라이트 추가
+                testScene.addLight( RedDirectionalLight(RedGL Instance); ); // 라이트 추가
+                testScene.addLight( RedPointLight(RedGL Instance); ); // 라이트 추가
+                testScene.removeLightAll(); // 라이트 제거
+             `,
+			 return : 'void'
+		 }
+         :DOC*/
+        removeLightAll: function () {
+            this['_lightInfo'][RedAmbientLight['TYPE']] = null;
+            this['_lightInfo'][RedDirectionalLight['TYPE']].length = 0;
+            this['_lightInfo'][RedPointLight['TYPE']].length = 0;
+        }
     };
     RedScene.prototype = new RedBaseContainer();
     for (var k in prototypeData) RedScene.prototype[k] = prototypeData[k];
@@ -176,6 +220,11 @@ var RedScene;
 				 'ex) #fff, #ffffff'
 			 ]
 		 },
+		 example : `
+            var testScene;
+            testScene = RedScene(RedGL Instance); // RedScene 생성
+            testScene.backgroundColor = '#fff';
+         `,
 		 return : 'hex'
 	 }
      :DOC*/
@@ -198,10 +247,15 @@ var RedScene;
 			 backgroundColor 사용여부.
 			 초기값 : true
 		 `,
+		 example : `
+            var testScene;
+            testScene = RedScene(RedGL Instance); // RedScene 생성
+            testScene.useBackgroundColor = true;
+         `,
 		 return : 'Boolean'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedScene', 'useBackgroundColor', 'boolean', true);
+    RedDefinePropertyInfo.definePrototype('RedScene', 'useBackgroundColor', 'boolean');
     /**DOC:
      {
 	     code : 'PROPERTY',
@@ -210,10 +264,15 @@ var RedScene;
 			 fog 사용여부
 			 초기값 : true
 		 `,
+		 example : `
+            var testScene;
+            testScene = RedScene(RedGL Instance); // RedScene 생성
+            testScene.fog = true;
+         `,
 		 return : 'Boolean'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedScene', 'useFog', 'boolean', true);
+    RedDefinePropertyInfo.definePrototype('RedScene', 'useFog', 'boolean');
     /**DOC:
      {
 	     code : 'PROPERTY',
@@ -222,6 +281,11 @@ var RedScene;
 			 fog 농도.
 			 초기값 : 0.5
 		 `,
+		 example : `
+            var testScene;
+            testScene = RedScene(RedGL Instance); // RedScene 생성
+            testScene.fogDensity = 0.5;
+         `,
 		 return : 'Number'
 	 }
      :DOC*/
@@ -234,6 +298,11 @@ var RedScene;
 			 fog 가시거리.
 			 초기값 : 25.0
 		 `,
+		 example : `
+            var testScene;
+            testScene = RedScene(RedGL Instance); // RedScene 생성
+            testScene.fogDistance = 50;
+         `,
 		 return : 'Number'
 	 }
      :DOC*/
@@ -246,6 +315,11 @@ var RedScene;
 		     fog 컬러값.
 			 초기값 : #ffffff
 		 `,
+		 example : `
+            var testScene;
+            testScene = RedScene(RedGL Instance); // RedScene 생성
+            testScene.fogColor = '#ffffff';
+         `,
 		 return : 'hex'
 	 }
      :DOC*/
@@ -259,7 +333,7 @@ var RedScene;
                 this['_fogB'] = t0[2];
             }
         })()
-    })
+    });
     /**DOC:
      {
 	     code : 'PROPERTY',

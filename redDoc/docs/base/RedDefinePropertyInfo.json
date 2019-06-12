@@ -16,7 +16,7 @@
         },
         "클래스 명 입력"
       ],
-      "name": [
+      "keyName": [
         {
           "type": "String"
         },

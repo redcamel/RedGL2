@@ -1,3 +1,10 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedDirectionalLight;
 (function () {
@@ -19,7 +26,13 @@ var RedDirectionalLight;
 			 ],
 			 alpha : [
 				 {type:'number'},
-				 '기본값 : 1'
+				 '기본값 : 1',
+				 'range : 0 ~ 1'
+			 ],
+			 intensity : [
+				 {type:'number'},
+				 '기본값 : 1',
+				 'range : 0 ~ 1'
 			 ]
 		 },
 		 extends : ['RedBaseLight'],
@@ -30,13 +43,13 @@ var RedDirectionalLight;
 		 return : 'RedDirectionalLight Instance'
 	 }
      :DOC*/
-    RedDirectionalLight = function (redGL, hexColor, alpha) {
-        if (!(this instanceof RedDirectionalLight)) return new RedDirectionalLight(redGL, hexColor, alpha);
+    RedDirectionalLight = function (redGL, hexColor, alpha, intensity) {
+        if (!(this instanceof RedDirectionalLight)) return new RedDirectionalLight(redGL, hexColor, alpha, intensity);
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedDirectionalLight : RedGL Instance만 허용.', '입력값 : ' + redGL);
         // 유니폼 프로퍼티
         this['_lightColor'] = new Float32Array(4);
         // 일반 프로퍼티
-        this['intensity'] = 1;
+        this['intensity'] = intensity == undefined ? 1 : intensity;
         this['alpha'] = alpha == undefined ? 1 : alpha;
         this['color'] = hexColor ? hexColor : '#fff';
         /**DOC:
@@ -95,6 +108,7 @@ var RedDirectionalLight;
                 )
             )
         );
+
         console.log(this);
     };
     /**DOC:

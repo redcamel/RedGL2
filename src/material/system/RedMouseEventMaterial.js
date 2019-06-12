@@ -1,3 +1,10 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedMouseEventMaterial;
 (function () {
@@ -21,7 +28,7 @@ var RedMouseEventMaterial;
             //#REDGL_DEFINE#sprite3D#true# gl_Position = uPMatrix * getSprite3DMatrix(uCameraMatrix , targetMatrix) *  vec4(aVertexPosition, 1.0);
             //#REDGL_DEFINE#sprite3D#true# if(!u_PerspectiveScale){
             //#REDGL_DEFINE#sprite3D#true#   gl_Position /= gl_Position.w;
-            //#REDGL_DEFINE#sprite3D#true#   gl_Position.xy += aVertexPosition.xy * vec2(targetMatrix[0][0],targetMatrix[1][1] * uResolution.x/uResolution.y);
+            //#REDGL_DEFINE#sprite3D#true#   gl_Position.xy += aVertexPosition.xy * vec2((uPMatrix * targetMatrix)[0][0],(uPMatrix * targetMatrix)[1][1]);
             //#REDGL_DEFINE#sprite3D#true# }
             //#REDGL_DEFINE#sprite3D#false# gl_Position = uPMatrix * uCameraMatrix * targetMatrix *  vec4(aVertexPosition, 1.0);
 
@@ -62,7 +69,7 @@ var RedMouseEventMaterial;
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['_RedMouseEventMaterialYn'] = true;
-        this['color'] = null
+        this['color'] = null;
         this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource);
         this['_UUID'] = RedGL.makeUUID();
         if (!checked) {

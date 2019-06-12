@@ -1,9 +1,16 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedEnvironmentMaterial;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'RedEnvironmentMaterialProgram';
-    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'specularTexture', 'displacementTexture', 'emissiveTexture', 'useFlatMode'];
+    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'specularTexture', 'displacementTexture', 'emissiveTexture', 'useFlatMode', 'usePreMultiply'];
     var checked;
     vSource = function () {
         /* @preserve
@@ -25,7 +32,8 @@ var RedEnvironmentMaterial;
                 vTexcoord = aTexcoord;
 
                 // normal 계산
-                vVertexNormal = (uNMatrix * vec4(aVertexNormal,1.0)).xyz;
+                //#REDGL_DEFINE#skin#true# vVertexNormal = (uNMatrix * getSkinMatrix() * vec4(aVertexNormal,0.0)).xyz;
+               //#REDGL_DEFINE#skin#false# vVertexNormal = (uNMatrix *  vec4(aVertexNormal,1.0)).xyz;
 
                 // position 계산
                 //#REDGL_DEFINE#skin#true# mat4 targetMatrix = uMMatrix *  getSkinMatrix() ;
@@ -41,7 +49,7 @@ var RedEnvironmentMaterial;
                 //#REDGL_DEFINE#sprite3D#true# gl_Position = uPMatrix * getSprite3DMatrix(uCameraMatrix , targetMatrix) *  vec4(aVertexPosition, 1.0);
                 //#REDGL_DEFINE#sprite3D#true# if(!u_PerspectiveScale){
                 //#REDGL_DEFINE#sprite3D#true#   gl_Position /= gl_Position.w;
-                //#REDGL_DEFINE#sprite3D#true#   gl_Position.xy += aVertexPosition.xy * vec2(targetMatrix[0][0],targetMatrix[1][1] * uResolution.x/uResolution.y);
+                //#REDGL_DEFINE#sprite3D#true#   gl_Position.xy += aVertexPosition.xy * vec2((uPMatrix * targetMatrix)[0][0],(uPMatrix * targetMatrix)[1][1]);
                 //#REDGL_DEFINE#sprite3D#true# }
                 //#REDGL_DEFINE#sprite3D#false# gl_Position = uPMatrix * uCameraMatrix * vVertexPosition;
 
@@ -64,7 +72,8 @@ var RedEnvironmentMaterial;
 
         // flat노말
         //#REDGL_DEFINE#fragmentShareFunc#getFlatNormal#
-        //#REDGL_DEFINE#fragmentShareFunc#getPerturbNormal2Arb#
+        //#REDGL_DEFINE#fragmentShareFunc#cotangent_frame#
+        //#REDGL_DEFINE#fragmentShareFunc#perturb_normal#
 
         // 라이트
         //#REDGL_DEFINE#fragmentShareFunc#getDirectionalLightColor#
@@ -99,21 +108,21 @@ var RedEnvironmentMaterial;
 
              texelColor = vec4(0.0,0.0,0.0,0.0);
              //#REDGL_DEFINE#diffuseTexture# texelColor = texture2D(u_diffuseTexture, vTexcoord);
-             //#REDGL_DEFINE#diffuseTexture# texelColor.rgb *= texelColor.a;
+             //#REDGL_DEFINE#diffuseTexture# //#REDGL_DEFINE#usePreMultiply# texelColor.rgb *= texelColor.a;
              //#REDGL_DEFINE#diffuseTexture# if(texelColor.a ==0.0) discard;
 
              //#REDGL_DEFINE#emissiveTexture# emissiveColor = texture2D(u_emissiveTexture, vTexcoord);
-             //#REDGL_DEFINE#emissiveTexture# emissiveColor.rgb *= texelColor.a;
+             //#REDGL_DEFINE#emissiveTexture# //#REDGL_DEFINE#usePreMultiply# emissiveColor.rgb *= texelColor.a;
 
              N = normalize(vVertexNormal);
              vec4 normalColor = vec4(0.0);
              //#REDGL_DEFINE#normalTexture# normalColor = texture2D(u_normalTexture, vTexcoord);
              //#REDGL_DEFINE#useFlatMode# N = getFlatNormal(vVertexPosition.xyz);
-             //#REDGL_DEFINE#normalTexture# N = getPerturbNormal2Arb(vVertexPosition.xyz, N, normalColor, vTexcoord) ;
+             //#REDGL_DEFINE#normalTexture# N = perturb_normal(N, vVertexPosition.xyz, vTexcoord, normalColor.rgb) ;
 
              vec3 R = reflect( vVertexPosition.xyz - uCameraPosition, N);
              reflectionColor = textureCube(u_environmentTexture, R);
-             texelColor = mix(texelColor,reflectionColor ,u_reflectionPower);
+             texelColor = mix(texelColor, reflectionColor ,u_reflectionPower);
 
              specularLightColor = vec4(1.0, 1.0, 1.0, 1.0);
              specularTextureValue = 1.0;
@@ -138,7 +147,6 @@ var RedEnvironmentMaterial;
              );
 
              //#REDGL_DEFINE#emissiveTexture# finalColor.rgb += emissiveColor.rgb * u_emissiveFactor;
-             finalColor.rgb *= texelColor.a;
              finalColor.a = texelColor.a * u_alpha;
 
              //#REDGL_DEFINE#directionalShadow#true# finalColor.rgb = mix(finalColor.rgb, finalColor.rgb * getShadowColor( vShadowPos, vResolution, uDirectionalShadowTexture), 0.5);
@@ -232,7 +240,8 @@ var RedEnvironmentMaterial;
         this['displacementFlowSpeedY'] = 0;
         this['alpha'] = 1;
         /////////////////////////////////////////
-        this['useFlatMode'] = false
+        this['useFlatMode'] = false;
+        this['usePreMultiply'] = false;
         // 일반 프로퍼티
         this['_UUID'] = RedGL.makeUUID();
         if (!checked) {
@@ -397,5 +406,17 @@ var RedEnvironmentMaterial;
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'useFlatMode', 'boolean', samplerOption);
+    /**DOC:
+     {
+	     code : 'PROPERTY',
+		 title :`usePreMultiply`,
+		 description : `
+		    usePreMultiply 사용여부
+		    기본값 : false
+		 `,
+		 return : 'boolean'
+	 }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'usePreMultiply', 'boolean', samplerOption);
     Object.freeze(RedEnvironmentMaterial);
 })();

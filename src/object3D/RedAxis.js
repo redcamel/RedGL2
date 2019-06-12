@@ -1,3 +1,10 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedAxis;
 (function () {
@@ -46,7 +53,7 @@ var RedAxis;
         tAxis.scaleX = tAxis.scaleY = tAxis.scaleZ = 0.1;
         tAxis.scaleX = 5;
         tArrowMesh.x = 5;
-        tArrowMesh.rotationZ = 90
+        tArrowMesh.rotationZ = 90;
         tAxis.x = 2.5;
         this['children'].push(tAxis);
         this['children'].push(tArrowMesh);
@@ -67,7 +74,7 @@ var RedAxis;
         tAxis.scaleX = tAxis.scaleY = tAxis.scaleZ = 0.1;
         tAxis.scaleZ = 5;
         tArrowMesh.z = 5;
-        tArrowMesh.rotationX = -90
+        tArrowMesh.rotationX = -90;
         tAxis.z = 2.5;
         this['children'].push(tAxis);
         this['children'].push(tArrowMesh);

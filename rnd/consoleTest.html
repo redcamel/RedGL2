@@ -1,0 +1,78 @@
+<!--
+  ~ RedGL - MIT License
+  ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+  ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+  ~ Last modification time of this file - 2019.5.30 15:39
+  -->
+
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>RedGL - RedGL</title>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"/>
+    <link rel="stylesheet" href="../example/example.css">
+    <script src="../example/dat.gui.min.js"></script>
+    <script src="../example/baseTestUI.js"></script>
+    <script src="../release/RedGL.js"></script>
+</head>
+
+<body>
+<script id='testSource'>
+
+    if( 1==1) 'ok'
+    else 'no'
+
+    1 == 1 ? 'ok' : 'no'
+
+
+        var testUI;
+    var assetPath = '../../asset/';
+    var canvas;
+    canvas = document.createElement('canvas');
+    document.body.appendChild(canvas);
+    RedGL(canvas, function (v) {
+        if (v) {
+
+            console.log('초기화 성공!');
+            var tWorld, tView, tScene, tController, tRenderer;
+            // 월드 생성
+            this['world'] = tWorld = RedWorld();
+            // 씬 생성
+            tScene = RedScene(this);
+            // 카메라 생성
+            tController = RedObitController(this);
+            tController.pan = 45;
+            tController.tilt = -45;
+            // 렌더러 생성
+            tRenderer = RedRenderer();
+            // 뷰생성 및 적용
+            tView = RedView('HelloRedGL', this, tScene, tController);
+            tWorld.addView(tView);
+            // 그리드 설정
+            tScene['grid'] = RedGrid(this);
+            // axis 설정
+            tScene['axis'] = RedAxis(this);
+            // 렌더시작
+            tRenderer.start(this, function (time) {
+            });
+            // 렌더 디버거 활성화
+            tRenderer.setDebugButton();
+            // testUI 호출
+            testUI(this, tScene);
+            console.log(this);
+        } else {
+            alert('초기화 실패!')
+        }
+    });
+    testUI = function (redGL) {
+        var gui = new baseTestUI(redGL);
+        gui.initRedGL().open();
+    };
+</script>
+</body>
+</html>

@@ -1,3 +1,10 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedSkyBox;
 (function () {
@@ -15,6 +22,11 @@ var RedSkyBox;
 			 srcList : [
 				 {type:'Array'},
 				 `스카이박스 이미지 리스트`
+			 ],
+			 alpha : [
+			    {type:Number},
+			    '기본값 : 1',
+			    '범위 : 0 ~ 1'
 			 ]
 		 },
          extends : [
@@ -39,17 +51,23 @@ var RedSkyBox;
 		 return : 'RedSkyBox Instance'
 	 }
      :DOC*/
-    RedSkyBox = function (redGL, srcList) {
-        if (!(this instanceof RedSkyBox)) return new RedSkyBox(redGL, srcList);
+    RedSkyBox = function (redGL, srcList, alpha) {
+        if (!(this instanceof RedSkyBox)) return new RedSkyBox(redGL, srcList, alpha);
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedSkyBox : RedGL Instance만 허용.', redGL);
         RedBaseObject3D['build'].call(this, redGL.gl);
         this['geometry'] = RedBox(redGL);
         this['material'] = RedSkyBoxMaterial(redGL, RedBitmapCubeTexture(redGL, srcList));
         this['cullFace'] = redGL.gl.FRONT;
+        this['alpha'] = alpha == undefined ? 1 : alpha;
         this['_UUID'] = RedGL.makeUUID();
         console.log(this);
     };
     RedSkyBox.prototype = new RedBaseObject3D();
+    RedDefinePropertyInfo.definePrototype('RedSkyBox', 'alpha', 'number', {
+        min: 0, max: 1, callback: function (v) {
+            this['material'].alpha = v
+        }
+    });
     Object.defineProperty(RedSkyBox.prototype, 'geometry', {
         get: function () {
             return this['_geometry'];

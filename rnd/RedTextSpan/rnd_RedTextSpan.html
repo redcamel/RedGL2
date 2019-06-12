@@ -1,4 +1,12 @@
-<html>
+<!--
+  ~ RedGL - MIT License
+  ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+  ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+  ~ Last modification time of this file - 2019.5.2 12:37
+  -->
+
+<!DOCTYPE html>
+<html lang="ko">
 
 <head>
     <meta charset="UTF-8">
@@ -36,7 +44,7 @@
         tScene3D = RedScene(this);
         tCamera = RedCamera();
 
-        tCamera.orthographicYn = true
+        tCamera.mode2DYn = true
         tRenderer = RedRenderer();
 
         tWorld.addView(RedView('test', this, tScene3D, tCamera));
@@ -123,8 +131,8 @@
             testLocation.text = "a.getLineEndX(4) : " + a.getLineEndX(4) + " / a.getLineEndY(4) : " + a.getLineEndY(4)
 
             if (testText.y != parseInt(testText.y)) testText.y += 0.5
-            testLocation.x = testText.x + a.getLineEndX(4)-testText.width/2 + testLocation.width/2
-            testLocation.y = testText.y + a.getLineEndY(4) -testText.height/2 + testLocation.height/2
+            testLocation.x = testText.x + a.getLineEndX(4) - testText.width / 2 + testLocation.width / 2
+            testLocation.y = testText.y + a.getLineEndY(4) - testText.height / 2 + testLocation.height / 2
 
             console.log(testLocation.y)
         })

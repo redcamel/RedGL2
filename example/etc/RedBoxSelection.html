@@ -1,0 +1,108 @@
+<!--
+  ~ RedGL - MIT License
+  ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+  ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+  ~ Last modification time of this file - 2019.6.4 17:20
+  -->
+
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>RedGL - RedBoxSelection</title>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
+    />
+    <link rel="stylesheet" href="../../example/example.css">
+
+    <script src="../../example/dat.gui.min.js"></script>
+    <script src="../../example/baseTestUI.js"></script>
+    <script src="../../release/RedGL.min.js"></script>
+</head>
+
+<body>
+<script id='testSource'>
+    var testUI;
+    var canvas;
+    var assetPath = '../../asset/'
+    canvas = document.createElement('canvas');
+    document.body.appendChild(canvas);
+
+    RedGL(canvas, function (v) {
+        if (v) {
+            console.log('초기화 성공!')
+            var self = this
+            var tWorld, tView, tScene, tController, tRenderer;
+            var setBase = function (redGL) {
+                // 월드 생성
+                redGL['world'] = tWorld = RedWorld();
+                // 씬 생성
+                tScene = RedScene(redGL);
+                // 카메라 생성
+                tController = RedObitController(redGL);
+                tController.pan = 0;
+                tController.tilt = 0;
+                tController.distance = 10
+                tController.speedDistance = 1
+                var tLight = RedDirectionalLight(redGL);
+                tScene.addLight(tLight)
+                tLight.x = 30;
+                tLight.y = 30;
+                tLight.z = 30;
+                tLight.debug = true
+                tLight = RedDirectionalLight(redGL);
+                // 렌더러 생성
+                tRenderer = RedRenderer();
+                // 뷰생성 및 적용
+                tView = RedView('HelloRedGL', redGL, tScene, tController);
+                tWorld.addView(tView);
+                // 그리드 설정
+                tScene['grid'] = RedGrid(redGL);
+
+                // 렌더시작
+                tRenderer.start(redGL, function (time) {
+                });
+                // 렌더 디버거 활성화
+                tRenderer.setDebugButton();
+                // testUI 호출
+                testUI(redGL, tController, tScene);
+                console.log(redGL);
+            };
+            setBase(this);
+            var i = 500
+            while (i--) {
+                var tMesh = RedMesh(this, RedBox(this), RedColorPhongMaterial(this))
+                tScene.addChild(tMesh)
+                tMesh.x = Math.random() * 100 - 50;
+                tMesh.y = Math.random() * 100 - 50;
+                tMesh.z = -Math.random() * 25 - 15;
+                tMesh.rotationX = Math.random() * 360;
+                tMesh.rotationY = Math.random() * 360;
+                tMesh.rotationZ = Math.random() * 360;
+            }
+
+            RedBoxSelection(this, tView, function (v) {
+                v['selectList'].forEach(function (mesh) {
+                    mesh.material.alpha = 0.5
+                });
+                v['unSelectList'].forEach(function (mesh) {
+                    mesh.material.alpha = 1
+                })
+            })
+
+
+        } else {
+            console.log('초기화 실패!')
+        }
+    })
+    testUI = function (redGL, tController, tScene) {
+        var gui = new baseTestUI(redGL)
+        gui.initRedGL()
+    }
+</script>
+</body>
+
+</html>

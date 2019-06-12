@@ -1,3 +1,10 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.5.14 12:38
+ */
+
 var gulp = require('gulp');
 var fs = require('fs');
 var uglify = require('gulp-uglify-es').default;
@@ -120,13 +127,13 @@ gulp.task('combine-js', function () {
     console.log('-------------------------------------------');
     console.log('파일 병합 시작!');
     return gulp.src([
-        "src/LICENSE.js",
-        "src/gl-matrix-min.js",
+        "src/gl-matrix-min.2.4.js",
         "src/base/RedDefinePropertyInfo.js",
         "src/detect/RedGLDetect.js",
         "src/RedGLUtil.js",
         "src/RedGL.js",
         // "src/RedXR.js",
+        "src/RedBoxSelection.js",
         //
         "src/base/RedBaseController.js",
         "src/loader/RedImageLoader.js",
@@ -168,19 +175,23 @@ gulp.task('combine-js', function () {
         "src/light/RedDirectionalLight.js",
         "src/light/RedPointLight.js",
         //
-        "src/loader/JsonModelLoader.js",
         "src/loader/obj/RedMTLLoader.js",
         "src/loader/obj/RedOBJLoader.js",
         "src/loader/3ds/Red3DSLoader.js",
         "src/loader/dae/RedDAELoader.js",
         "src/loader/gltf/RedGLTFLoader.js",
         //
+        "src/object3D/system/RedLinePoint.js",
+        "src/object3D/system/RedLathe.js",
         "src/object3D/RedAxis.js",
         "src/object3D/RedGrid.js",
         "src/object3D/RedMesh.js",
         "src/object3D/RedLine.js",
+        "src/object3D/RedLatheMesh.js",
         "src/object3D/RedSkyBox.js",
         "src/object3D/RedSprite3D.js",
+        "src/object3D/RedTransformController.js",
+
         //
         "src/particle/system/RedPointCloud.js",
         "src/particle/system/RedParticleUnit.js",
@@ -261,9 +272,6 @@ gulp.task('combine-js', function () {
         ))
         .pipe(replace(/\n\s{2,}/g, '\n'))
         .pipe(gulp.dest('release'))
-
-
-        .pipe(gulp.dest('release'));
 });
 gulp.task('default', gulp.series('combine-js','make-doc','make-doc-list',   function (done) {
     console.log('-------------------------------------------');

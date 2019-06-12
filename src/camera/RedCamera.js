@@ -1,3 +1,10 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.5.2 12:37
+ */
+
 "use strict";
 var RedCamera;
 (function () {
@@ -106,12 +113,12 @@ var RedCamera;
         /**DOC:
          {
 			 code:`PROPERTY`,
-			 title :`orthographicYn`,
+			 title :`mode2DYn`,
 			 description : `기본값 : false`,
 			 return : 'Boolean'
 		 }
          :DOC*/
-        this['orthographicYn'] = false;
+        this['mode2DYn'] = false;
         /**DOC:
          {
 			 code:`PROPERTY`,
@@ -128,7 +135,7 @@ var RedCamera;
 			 code:`PROPERTY`,
 			 title :`perspectiveMTX`,
 			 description : `
-			 orthographicYn값에따라 렌더링시 퍼스펙티브 or 오쏘고날 매트릭스로 자동 변경됨
+			 mode2DYn값에따라 렌더링시 퍼스펙티브 or 오쏘고날 매트릭스로 자동 변경됨
 			 `,
 			 return : 'mat4'
 		 }

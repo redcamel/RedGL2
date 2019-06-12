@@ -1,8 +1,17 @@
-<html>
+<!--
+  ~ RedGL - MIT License
+  ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+  ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+  ~ Last modification time of this file - 2019.6.4 17:20
+  -->
+
+<!DOCTYPE html>
+<html lang="ko">
 
 <head>
     <meta charset="UTF-8">
-    <title>redGL - RedBox</title>
+    <meta name="keywords" content="RedGL,webgl,demo">
+    <title>RedGL - RedBox</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -56,6 +65,7 @@
             tMesh = RedMesh(this, RedBox(this), RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'UV_Grid_Sm.jpg')));
             tMesh.useCullFace = false
             tScene.addChild(tMesh)
+
         } else {
             console.log('초기화 실패!')
         }
@@ -91,6 +101,7 @@
             tFolder.add(primitiveTestData, tKey, 1, 20, 0.1).onChange(function () {
                 tScene.children.forEach(function (tMesh) {
                     tMesh.geometry = RedBox(redGL, primitiveTestData.width, primitiveTestData.height, primitiveTestData.depth, primitiveTestData.wSegments, primitiveTestData.hSegments, primitiveTestData.dSegments);
+                    console.log('volume', tMesh.geometry.volume)
                 })
             })
         });

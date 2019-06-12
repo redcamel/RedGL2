@@ -1,3 +1,11 @@
+
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedBaseLight;
 (function () {
@@ -12,6 +20,7 @@ var RedBaseLight;
 	 }
      :DOC*/
     RedBaseLight = function () {
+        if (!(this instanceof RedBaseLight)) return new RedBaseLight();
     };
     RedBaseLight.prototype = {};
     /**DOC:

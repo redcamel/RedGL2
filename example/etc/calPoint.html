@@ -1,8 +1,17 @@
-<html>
+<!--
+  ~ RedGL - MIT License
+  ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+  ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+  ~ Last modification time of this file - 2019.5.15 16:50
+  -->
+
+<!DOCTYPE html>
+<html lang="ko">
 
 <head>
     <meta charset="UTF-8">
-    <title>RedGL - localToWorld, worldToLocal, getScreenPoint</title>
+    <meta name="keywords" content="RedGL,webgl,demo">
+    <title>RedGL Example - localToWorld, worldToLocal, getScreenPoint</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -116,13 +125,13 @@
                 testMesh2.rotationZ += 0.2
                 ////////////////////////////////////////////////////////////////////////////////////
                 var testPoint = testMesh.getScreenPoint(RedView('HelloRedGL'))
-                getScreenPointBox.style.top = testPoint[1]
-                getScreenPointBox.style.left = testPoint[0]
+                getScreenPointBox.style.top = testPoint[1]+'px'
+                getScreenPointBox.style.left = testPoint[0]+'px'
                 getScreenPointBox.innerHTML = 'testMesh / getScreenPointBox Test<br>screen X : ' + testPoint[0] + '<br>' + 'screen Y : ' + testPoint[1]
                 ////////////////////////////////////////////////////////////////////////////////////
                 var testPoint2 = testMesh2.getScreenPoint(RedView('HelloRedGL'))
-                getScreenPointBox2.style.top = testPoint2[1]
-                getScreenPointBox2.style.left = testPoint2[0]
+                getScreenPointBox2.style.top = testPoint2[1]+'px'
+                getScreenPointBox2.style.left = testPoint2[0]+'px'
                 getScreenPointBox2.innerHTML = 'testMesh2 / getScreenPointBox2 Test<br>screen X : ' + testPoint2[0] + '<br>' + 'screen Y : ' + testPoint2[1]
                 ////////////////////////////////////////////////////////////////////////////////////
                 var testLocalInput3 = [-1, 1, 0]
@@ -131,8 +140,8 @@
                 testMesh3.x = testLocalToWorld3[0]
                 testMesh3.y = testLocalToWorld3[1]
                 testMesh3.z = testLocalToWorld3[2]
-                localToWorldBox3.style.top = testPoint3[1]
-                localToWorldBox3.style.left = testPoint3[0]
+                localToWorldBox3.style.top = testPoint3[1]+'px'
+                localToWorldBox3.style.left = testPoint3[0]+'px'
                 localToWorldBox3.innerHTML = 'tesMesh3 / localToWorldBox3 Test<br>testMesh2.localToWorld(-1,1,0)<br>'
                     + '<br>world X : ' + testLocalToWorld3[0] + '<br>' + 'world Y : ' + testLocalToWorld3[1] + '<br>' + 'world Z : ' + testLocalToWorld3[2]
                     + '<br>screen X : ' + testPoint3[0] + '<br>' + 'screen Y : ' + testPoint3[1]
@@ -143,8 +152,8 @@
                 testMesh4.x = testWorldToLocal4[0]
                 testMesh4.y = testWorldToLocal4[1]
                 testMesh4.z = testWorldToLocal4[2]
-                worldToLocalBox4.style.top = testPoint4[1]
-                worldToLocalBox4.style.left = testPoint4[0]
+                worldToLocalBox4.style.top = testPoint4[1]+'px'
+                worldToLocalBox4.style.left = testPoint4[0]+'px'
                 worldToLocalBox4.innerHTML = 'testMesh4 / worldToLocalBox4 Test<br>input world X: ' + testWolrdInput4[0] + '<br>' + 'input world Y : ' + testWolrdInput4[1] + '<br>' + 'input world Z : ' + testWolrdInput4[2]
                     + '<br>local X: ' + testWorldToLocal4[0] + '<br>' + 'local Y : ' + testWorldToLocal4[1] + '<br>' + 'local Z : ' + testWorldToLocal4[2]
                 ////////////////////////////////////////////////////////////////////////////////////

@@ -1,8 +1,17 @@
-<html>
+<!--
+  ~ RedGL - MIT License
+  ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+  ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+  ~ Last modification time of this file - 2019.5.15 16:50
+  -->
+
+<!DOCTYPE html>
+<html lang="ko">
 
 <head>
     <meta charset="UTF-8">
-    <title>RedGL - RedBitmapPointCloudMaterial</title>
+    <meta name="keywords" content="RedGL,webgl,demo">
+    <title>RedGL Example - RedBitmapPointCloudMaterial</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -20,6 +29,8 @@
     var testUI;
     var canvas;
     var assetPath = '../../asset/'
+    var testRedPointCloud;
+    var testRedBitmapPointCloudMaterial
     canvas = document.createElement('canvas');
     document.body.appendChild(canvas);
     RedGL(canvas, function (v) {
@@ -48,14 +59,14 @@
                 });
                 // 렌더 디버거 활성화
                 tRenderer.setDebugButton();
-                testUI(redGL);
+
             };
             setBase(this);
             //////////////////////////////////////////////////////////////////
             // RedPointCloud 설정
             var i;
             var interleaveData;
-            var testRedPointCloud;
+
             // 인터리브 정보 생성
             interleaveData = [];
             i = 100000
@@ -79,12 +90,10 @@
                     RedInterleaveInfo('aVertexColor', 4)
                 ],
                 // 포인트 재질 생성
-                RedBitmapPointCloudMaterial(this, RedBitmapTexture(this, assetPath + 'particle.png'))
+                testRedBitmapPointCloudMaterial = RedBitmapPointCloudMaterial(this, RedBitmapTexture(this, assetPath + 'particle.png'))
             );
-            // 블렌드모드 설정
-            testRedPointCloud['blendSrc'] = this.gl.ONE;
-            testRedPointCloud['blendDst'] = this.gl.ONE;
             tScene.addChild(testRedPointCloud);
+            testUI(this);
 
         } else {
             console.log('초기화 실패!')
@@ -93,6 +102,53 @@
     testUI = function (redGL) {
         var gui = new baseTestUI(redGL)
         gui.initRedGL()
+        var BLEND_TEST_DATA = {
+            blendSrc: 'SRC_ALPHA',
+            blendDst: 'ONE_MINUS_SRC_ALPHA',
+            blendFuncList: [
+                'ZERO',
+                'ONE',
+                'SRC_COLOR',
+                'ONE_MINUS_SRC_COLOR',
+                'DST_COLOR',
+                'ONE_MINUS_DST_COLOR',
+                'SRC_ALPHA',
+                'ONE_MINUS_SRC_ALPHA',
+                'DST_ALPHA',
+                'ONE_MINUS_DST_ALPHA',
+                'CONSTANT_COLOR',
+                'ONE_MINUS_CONSTANT_COLOR',
+                'CONSTANT_ALPHA',
+                'ONE_MINUS_CONSTANT_ALPHA',
+                'SRC_ALPHA_SATURATE'
+            ]
+        }
+        var tFolder = gui.gui.addFolder('RedPointCloud')
+        var blendSrc, blendDst
+        tFolder.add(testRedPointCloud, 'useBlendMode').onChange(function (v) {
+            if (v) {
+                blendSrc.domElement.style.display = 'block'
+                blendDst.domElement.style.display = 'block'
+            } else {
+                blendSrc.domElement.style.display = 'none'
+                blendDst.domElement.style.display = 'none'
+            }
+        })
+        blendSrc = tFolder.add(BLEND_TEST_DATA, 'blendSrc', BLEND_TEST_DATA['blendFuncList'])
+        blendSrc.onChange(function (v) {
+            testRedPointCloud.blendSrc = redGL.gl[v]
+        })
+        blendDst = tFolder.add(BLEND_TEST_DATA, 'blendDst', BLEND_TEST_DATA['blendFuncList'])
+        blendDst.onChange(function (v) {
+            testRedPointCloud.blendDst = redGL.gl[v]
+        })
+        blendDst.onChange(function (v) {
+            testRedPointCloud.blendDst = redGL.gl[v]
+        })
+        tFolder.open()
+        tFolder = gui.gui.addFolder('RedBitmapPointCloudMaterial')
+        tFolder.add(testRedBitmapPointCloudMaterial, 'usePreMultiply')
+        tFolder.open()
     }
 </script>
 </body>

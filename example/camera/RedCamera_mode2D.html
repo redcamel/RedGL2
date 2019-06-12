@@ -1,0 +1,208 @@
+<!--
+  ~ RedGL - MIT License
+  ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+  ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+  ~ Last modification time of this file - 2019.5.20 20:27
+  -->
+
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="RedGL,webgl,demo">
+    <title>RedGL Example - RedCamera(orthographic mode)</title>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
+    />
+    <link rel="stylesheet" href="../example.css">
+
+    <script src="../dat.gui.min.js"></script>
+    <script src="../baseTestUI.js"></script>
+    <script src="../../release/RedGL.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.2/TweenMax.min.js"></script>
+</head>
+<body>
+<script id='testSource'>
+    var testUI;
+    var canvas;
+    var assetPath = '../../asset/'
+    var tMaterial;
+    var tMaterial2;
+    var testTween = function (redGL, target) {
+        var tScale = Math.random() * 32 + 6
+        TweenMax.to(target, Math.random() * 2 + 1, {
+            x: Math.random() * redGL._viewRect[2],
+            y: Math.random() * redGL._viewRect[3],
+            scaleX: tScale,
+            scaleY: tScale,
+            rotationZ: Math.random() * 360,
+            ease: Ease.QuintInOut,
+            onComplete: function () {
+                testTween(redGL, this.target)
+            }
+        })
+    }
+    canvas = document.createElement('canvas');
+    document.body.appendChild(canvas);
+    RedGL(canvas, function (v) {
+        if (v) {
+            console.log('초기화 성공!');
+            var tWorld, tView, tScene, tCamera, tRenderer;
+            var setBase = function (redGL) {
+                // 월드 생성
+                redGL['world'] = tWorld = RedWorld();
+                // 씬 생성
+                tScene = RedScene(redGL);
+                // 카메라 생성
+                tCamera = RedCamera();
+                tCamera.mode2DYn = true
+                tCamera.x = 0;
+                tCamera.y = 0;
+                tCamera.z = 10;
+                // 렌더러 생성
+                tRenderer = RedRenderer();
+                // 뷰생성 및 적용
+                tView = RedView('HelloRedGL', redGL, tScene, tCamera);
+                tWorld.addView(tView);
+                // 그리드 설정
+                tScene['grid'] = RedGrid(redGL);
+
+                // 렌더 디버거 활성화
+                tRenderer.setDebugButton();
+                testUI(redGL, tScene)
+            };
+            setBase(this);
+
+            var self = this
+            // Box 설정
+            var tMesh;
+            var i = 5000
+            tMaterial = RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'crate.png'))
+            tMaterial2 = RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'UV_Grid_Sm.jpg'))
+
+
+            while (i--) {
+                // 2D 테스트용
+                tMesh = RedMesh(this, RedPlane(this), tMaterial)
+                tMesh.x = Math.random() * 1280 + 10
+                tMesh.y = Math.random() * 600
+                tMesh.scaleX = tMesh.scaleY = Math.random() * 16 + 2
+                testTween(this, tMesh)
+                tScene.addChild(tMesh)
+            }
+            tScene.sortMaterial(true)
+            //////////////////////
+            var PARTICLE_DEFINE_DATA = {
+                max: 200,
+                emitCount: 2,
+                lifeTime: [1000, 2000],
+                particle: {
+                    movementX: {start: [0, 0], end: [-100, 100], ease: RedParticleEmitter.QuadInOut},
+                    movementY: {start: [0, 0], end: [0, -500], ease: RedParticleEmitter.QuadInOut},
+                    movementZ: {start: [0, 0], end: [0, 0], ease: RedParticleEmitter.QuadInOut},
+                    scale: {start: [4, 4], end: [32, 128], ease: RedParticleEmitter.QuadInOut},
+                    alpha: {start: [0.5, 1], end: [0, 0], ease: RedParticleEmitter.QuadInOut}
+                },
+                tint: RedParticleEmitter.TINT_RANDOM,
+                gravity: 0
+            }
+            var testEmitter = new RedParticleEmitter(
+                this,
+                PARTICLE_DEFINE_DATA,
+                RedBitmapTexture(this, assetPath + 'particle.png')
+            )
+            tScene.addChild(testEmitter)
+
+
+            //////////////////////////////////////////////////////////////////
+            // RedPointCloud 설정
+            var i;
+            var interleaveData;
+            var testRedPointCloud;
+            // 인터리브 정보 생성
+            interleaveData = [];
+            i = 2000
+            while (i--) {
+                // position
+                interleaveData.push(
+                    Math.random() * self._viewRect[2], // x
+                    Math.random() * self._viewRect[3], // y
+                    0 // z
+                );
+                // pointSize
+                interleaveData.push(Math.random() * 16);
+            }
+            // 포인트 유닛 생성
+            testRedPointCloud = RedBitmapPointCloud(
+                this,
+                interleaveData,
+                [
+                    RedInterleaveInfo('aVertexPosition', 3),
+                    RedInterleaveInfo('aPointSize', 1)
+                ],
+                // 포인트 재질 생성
+                RedBitmapPointCloudMaterial(this, RedBitmapTexture(this, assetPath + 'particle.png'))
+            );
+            tScene.addChild(testRedPointCloud);
+
+            // 렌더시작
+            tRenderer.start(this, function (time) {
+                testEmitter.update(time)
+
+                testEmitter.x = self._viewRect[2] / 2 + Math.sin(time / 750) * 300 + Math.cos(time / 1250) * 200
+                testEmitter.y = self._viewRect[3] / 2 + Math.cos(time / 1000) * 100
+                interleaveData.forEach(function (v, index) {
+                    if (index % 4 == 0) interleaveData[index] = v + Math.sin(time / 1000 + index / 100)
+                    else if (index % 4 == 1) interleaveData[index] = v + Math.cos(time / 1000 + index / 100)
+                });
+                testRedPointCloud.update(interleaveData);
+            });
+            console.log(this)
+        } else {
+            console.log('초기화 실패!')
+        }
+    })
+    testUI = function (redGL, tScene) {
+        var gui = new baseTestUI(redGL)
+        gui.initRedGL();
+        var testData = {
+            addObject: function () {
+                var i = 500
+
+                while (i--) {
+                    // 2D 테스트용
+                    var tMesh = RedMesh(redGL, RedPlane(redGL), tMaterial2)
+                    tMesh.x = Math.random() * redGL._viewRect[2]
+                    tMesh.y = Math.random() * redGL._viewRect[3]
+                    tMesh.scaleX = tMesh.scaleY = Math.random() * 16 + 2
+                    tScene.addChild(tMesh)
+                }
+                tScene.sortMaterial(true)
+            },
+            addObjectWithTween: function () {
+                var i = 500
+
+                while (i--) {
+                    // 2D 테스트용
+                    var tMesh = RedMesh(redGL, RedPlane(redGL), tMaterial)
+                    tMesh.x = Math.random() * redGL._viewRect[2]
+                    tMesh.y = Math.random() * redGL._viewRect[3]
+                    tMesh.scaleX = tMesh.scaleY = Math.random() * 16 + 2
+                    testTween(redGL, tMesh)
+                    tScene.addChild(tMesh)
+                }
+                tScene.sortMaterial(true)
+            }
+        }
+        gui['gui'].add(testData, 'addObject')
+        gui['gui'].add(testData, 'addObjectWithTween')
+
+    }
+</script>
+</body>
+
+</html>

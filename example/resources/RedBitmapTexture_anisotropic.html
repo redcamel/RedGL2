@@ -1,8 +1,17 @@
-<html>
+<!--
+  ~ RedGL - MIT License
+  ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+  ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+  ~ Last modification time of this file - 2019.5.15 16:50
+  -->
+
+<!DOCTYPE html>
+<html lang="ko">
 
 <head>
     <meta charset="UTF-8">
-    <title>RedGL - RedBitmapMaterial</title>
+    <meta name="keywords" content="RedGL,webgl,demo">
+    <title>RedGL Example - RedBitmapMaterial</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -75,13 +84,19 @@
             )
             var tText
             var setOptionText = function (target, v) {
-                tText = RedText(target, 1024, 300)
+                tText = RedText(target, 300, 64)
                 tText.color = '#fff'
                 tText.background = 'rgba(0,0,0,0.5)'
                 tText.text = v
-                tText.fontSize = '100px'
+                tText.fontSize = '34px'
+                tText.lineHeight = '30px'
+                tText.padding = '5px'
+                tText.textAlign = 'center'
                 tText.sprite3DYn = true
-                tText.perspectiveScale = true
+                tText.perspectiveScale = false
+                tText.useDepthTest = false
+                tText.scaleX = 0.5
+                tText.scaleY = 0.5
                 tText.z = 0.5
                 tText.y = 0.25
             }

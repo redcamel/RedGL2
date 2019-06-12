@@ -44,5 +44,17 @@
     "demo": "../example/RedBuffer.html",
     "example": "\n\t RedGeometry(interleaveBuffer,indexBuffer)\n ",
     "return": "RedGeometry Instance"
+  },
+  {
+    "code": "METHOD",
+    "title": "volume",
+    "description": "\n    지오메트리 고유의 볼륨을 리턴함.\n             계산된 볼륨을 리턴함\n             강제 재계산을 실행하고싶다면 volumeCalculate()를 실행해야함\n         ",
+    "return": "array : [xVolume, yVolume, zVolume]"
+  },
+  {
+    "code": "METHOD",
+    "title": "volumeCalculate",
+    "description": "지오메트리 고유의 볼륨을 재계산함",
+    "return": "array : [xVolume, yVolume, zVolume]"
   }
 ]

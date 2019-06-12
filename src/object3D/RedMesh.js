@@ -1,3 +1,10 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedMesh;
 (function () {
@@ -70,7 +77,7 @@ var RedMesh;
 		 return : 'Boolean'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedMesh', 'perspectiveScale', 'boolean', false);
+    RedDefinePropertyInfo.definePrototype('RedMesh', 'perspectiveScale', 'boolean');
     /**DOC:
      {
 		 code : 'PROPERTY',
@@ -82,6 +89,6 @@ var RedMesh;
 		 return : 'Boolean'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedMesh', 'sprite3DYn', 'boolean', false);
+    RedDefinePropertyInfo.definePrototype('RedMesh', 'sprite3DYn', 'boolean');
     Object.freeze(RedMesh);
 })();

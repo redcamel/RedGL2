@@ -1,3 +1,10 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.5.2 12:46
+ */
+
 "use strict";
 var RedSystemShaderCode;
 (function () {
@@ -13,14 +20,24 @@ var RedSystemShaderCode;
 	 }
      :DOC*/
     RedSystemShaderCode = {};
-    RedSystemShaderCode['init'] = function () {
+    RedSystemShaderCode['init'] = function (redGL) {
         var maxDirectionalLight = 3;
-        var maxPointLight = 5;
+        var maxPointLight;
         var maxJoint;
-        if (RedGLDetect.BROWSER_INFO.browser == 'ie' && RedGLDetect.BROWSER_INFO.browserVer == 11) maxJoint = 50
-        else if (RedGLDetect.BROWSER_INFO.browser == 'iphone' || RedGLDetect.BROWSER_INFO.browser == 'ipad') maxJoint = 8
-        else maxJoint = 64
-        //TODO 조인트 맥스 갯수 찾는 부분을 분기하거나 다른 방법으로 전달할 방법 생각해야함
+        var tDETECT = redGL.detect;
+        console.time('RedSystemShaderCode');
+        console.group('RedSystemShaderCode');
+        maxJoint = parseInt(Math.floor(Math.min((tDETECT.vertexShader.MAX_VERTEX_UNIFORM_VECTORS - 64) / 8, 128)));
+        maxPointLight = parseInt(Math.floor(Math.min((tDETECT.fragmentShader.MAX_FRAGMENT_UNIFORM_VECTORS - 64) / 4, 128)));
+        console.group('detect info');
+        console.log(tDETECT);
+        console.log('maxDirectionalLight', maxDirectionalLight);
+        console.log('maxJoint', maxJoint);
+        console.log('maxPointLight', maxPointLight);
+        console.groupEnd();
+        // if (RedGLDetect.BROWSER_INFO.browser == 'ie' && RedGLDetect.BROWSER_INFO.browserVer == 11) maxJoint = 50
+        // else if (RedGLDetect.BROWSER_INFO.browser == 'iphone' || RedGLDetect.BROWSER_INFO.browser == 'ipad') maxJoint = 8
+        // else maxJoint = RedGLDetect.BROWSER_INFO.isMobile ? 64 : 1024
         RedSystemShaderCode = {
             /**DOC:
              {
@@ -38,10 +55,10 @@ var RedSystemShaderCode;
                 'attribute vec4 aVertexColor',
                 'attribute vec4 aVertexWeight',
                 'attribute vec4 aVertexJoint',
-                'attribute vec4 aVertexTangent',
+
                 'varying vec4 vVertexPosition',
                 'varying vec3 vVertexNormal',
-                'varying vec4 vVertexTangent',
+
                 'varying vec4 vVertexColor',
                 'attribute float aPointSize',
                 'uniform float uPointSize',
@@ -50,11 +67,7 @@ var RedSystemShaderCode;
                 'varying vec2 vTexcoord',
                 'varying vec2 vTexcoord1',
 
-                'uniform bool uOrthographicYn',
-                'uniform mat4 uJointMatrix[' + maxJoint + ']',
-                'uniform mat4 uInverseBindMatrixForJoint[' + maxJoint + ']',
-                'uniform mat4 uGlobalTransformOfNodeThatTheMeshIsAttachedTo',
-
+                'uniform bool uMode2DYn',
 
                 // 'uniform vec4 uAtlascoord',
                 'uniform float uTime',
@@ -69,7 +82,11 @@ var RedSystemShaderCode;
                 // shadow
                 'uniform mat4 uDirectionalShadowLightMatrix',
                 'varying highp vec4 vShadowPos',
-                'const mat4 cTexUnitConverter = mat4(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.5, 0.5, 0.5, 1.0)'
+                'const mat4 cTexUnitConverter = mat4(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.5, 0.5, 0.5, 1.0)',
+
+                'uniform mat4 uJointMatrix[' + maxJoint + ']',
+                'uniform mat4 uInverseBindMatrixForJoint[' + maxJoint + ']',
+                'uniform mat4 uGlobalTransformOfNodeThatTheMeshIsAttachedTo'
             ],
             /**DOC:
              {
@@ -84,7 +101,7 @@ var RedSystemShaderCode;
             fragmentShareDeclare: [
                 'varying vec4 vVertexPosition',
                 'varying vec3 vVertexNormal',
-                'varying vec4 vVertexTangent',
+
                 'varying vec4 vVertexColor',
                 'varying vec2 vTexcoord',
                 'varying vec2 vTexcoord1',
@@ -240,8 +257,8 @@ var RedSystemShaderCode;
                         '          lambertTerm = dot(N,-L);',
                         '          if(lambertTerm > 0.0){',
                         '             ld += uPointLightColorList[i] * texelColor * lambertTerm * attenuation * uPointLightIntensityList[i] ;',
-                        '             specular = pow( max(dot( reflect(L, N), -L), 0.0), shininess) * specularPower * specularTextureValue;',
-                        '             ls +=  specularLightColor * specular * uPointLightIntensityList[i]  * uPointLightColorList[i].a ;',
+                        '             specular = pow( max(dot( reflect(L, N), -N), 0.0), shininess) * specularPower * specularTextureValue;',
+                        '             ls +=  specularLightColor * specular  * uPointLightIntensityList[i]  * uPointLightColorList[i].a ;',
                         '          }',
                         '      }',
                         '   }',
@@ -297,26 +314,34 @@ var RedSystemShaderCode;
                         '   return amountInLight;',
                         '}'
                     ].join('\n'),
-                getPerturbNormal2Arb:
-                    [
-                        'vec3 getPerturbNormal2Arb( vec3 eye_pos, vec3 surf_norm, vec4 normalColor , vec2 vUv) {',
-                        '   vec3 q0 = dFdx( eye_pos.xyz );',
-                        '   vec3 q1 = dFdy( eye_pos.xyz );',
-                        '   vec2 st0 = dFdx( vUv.st );',
-                        '   vec2 st1 = dFdy( vUv.st );',
-
-                        '   vec3 S = normalize(  q0 * st1.t - q1 * st0.t );',
-                        '   vec3 T = normalize( -q0 * st1.s + q1 * st0.s );',
-                        '   vec3 N = normalize( surf_norm );',
-
-                        '   vec3 nmap = normalColor.xyz;',
-                        '   // nmap.y = 1.0 - nmap.y;',
-                        '   vec3 mapN = nmap * 2.0 - 1.0;',
-                        '   mapN.xy = u_normalPower * mapN.xy;',
-                        '   mat3 tsn = mat3( S, T, N );',
-                        '   return normalize( tsn * mapN );',
-                        '}'
-                    ].join('\n')
+                cotangent_frame: [
+                    'mat3 cotangent_frame(vec3 N, vec3 p, vec2 uv)',
+                    '{',
+                    '   vec3 dp1 = dFdx( p );',
+                    '   vec3 dp2 = dFdy( p );',
+                    '   vec2 duv1 = dFdx( uv );',
+                    '   vec2 duv2 = dFdy( uv );',
+                    '   ',
+                    '   vec3 dp2perp = cross( dp2, N );',
+                    '   vec3 dp1perp = cross( N, dp1 );',
+                    '   vec3 T = dp2perp * duv1.x + dp1perp * duv2.x;',
+                    '   vec3 B = dp2perp * duv1.y + dp1perp * duv2.y;',
+                    '   ',
+                    '   float invmax = inversesqrt( max( dot(T,T), dot(B,B) ) );',
+                    '   return mat3( T * invmax, B * invmax, N );',
+                    '}'
+                ].join('\n'),
+                perturb_normal: [
+                    'vec3 perturb_normal( vec3 N, vec3 V, vec2 texcoord, vec3 normalColor )',
+                    '   {',
+                    '   ',
+                    '   vec3 map = normalColor;',
+                    '   map =  map * 255./127. - 128./127.;',
+                    '   map.xy *= u_normalPower;',
+                    '   mat3 TBN = cotangent_frame(N, V, texcoord);',
+                    '   return normalize(TBN * map);',
+                    '}'
+                ].join('\n')
             }
         };
         /**DOC:
@@ -344,14 +369,71 @@ var RedSystemShaderCode;
         RedSystemShaderCode['MAX_JOINT'] = maxJoint;
         [RedSystemShaderCode.vertexShareDeclare, RedSystemShaderCode.fragmentShareDeclare].forEach(function (data) {
             data.forEach(function (v) {
-                v = v.split(' ')
-                if (v[0] == 'uniform') {
+                v = v.split(' ');
+                if (v[0] === 'uniform') {
                     RedSystemShaderCode.systemUniform[v[2]] = 1
                 }
             })
         });
-        console.log(RedSystemShaderCode)
+
+        // 맥스갯수를 찾아보자..
+        var tVertexUniform = [];
+        var tVertexVecNum = 0;
+        var tFragmentUniform = [];
+        var tFragmentVecNum = 0;
+        var testMap = {
+            bool: 4, float: 4, int: 4, uint: 4,
+            sampler2D: 4, samplerCube: 4,
+            vec2: 4, vec3: 4, vec4: 4,
+            mat2: 4, mat3: 8, mat4: 16
+        };
+        console.group('RedSystemShaderCode.vertexShareDeclare');
+        console.table(RedSystemShaderCode.vertexShareDeclare);
+        RedSystemShaderCode.vertexShareDeclare.forEach(function (v) {
+            v = v.split(' ');
+            if (v[0] === 'uniform') {
+                var tNum;
+                var tInfo;
+                tInfo = {
+                    value: v,
+                    type: v[1],
+                    num: tNum = v[2].indexOf('[') > -1 ? +(v[2].split('[')[1].replace(']', '')) * testMap[v[1]] : testMap[v[1]]
+                };
+                tVertexUniform.push(tInfo);
+                tVertexVecNum += tNum
+            }
+        });
+        console.log('target vertexUniform');
+        console.table(tVertexUniform);
+        console.log('target vertexVecNum', tVertexVecNum / 4);
+        console.groupEnd('RedSystemShaderCode.vertexShareDeclare');
+
+
+        console.group('RedSystemShaderCode.fragmentShareDeclare');
+        console.table(RedSystemShaderCode.fragmentShareDeclare);
+        tFragmentUniform = [];
+        tFragmentVecNum = 0;
+        RedSystemShaderCode.fragmentShareDeclare.forEach(function (v) {
+            v = v.split(' ');
+            if (v[0] === 'uniform') {
+                var tNum;
+                var tInfo;
+                tInfo = {
+                    value: v,
+                    type: v[1],
+                    num: tNum = v[2].indexOf('[') > -1 ? +(v[2].split('[')[1].replace(']', '')) * testMap[v[1]] : testMap[v[1]]
+                };
+                tFragmentUniform.push(tInfo);
+                tFragmentVecNum += tNum
+            }
+        });
+        console.log('target fragmentUniform');
+        console.table(tFragmentUniform);
+        console.log('target fragmentVecNum', tFragmentVecNum / 4);
+        console.groupEnd('RedSystemShaderCode.fragmentShareDeclare');
+        console.log(RedSystemShaderCode);
+        console.timeEnd('RedSystemShaderCode');
+        console.groupEnd('RedSystemShaderCode');
         Object.freeze(RedSystemShaderCode)
     };
-})
-();
+})();

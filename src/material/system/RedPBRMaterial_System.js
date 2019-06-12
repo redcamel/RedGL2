@@ -1,9 +1,19 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedPBRMaterial_System;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'RedPBRMaterialSystemProgram';
-    var PROGRAM_OPTION_LIST = ['diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture', 'useFlatMode'];
+    var PROGRAM_OPTION_LIST = [
+        'diffuseTexture', 'normalTexture', 'environmentTexture', 'occlusionTexture', 'emissiveTexture', 'roughnessTexture',
+        'useFlatMode', 'useMaterialDoubleSide', 'useVertexTangent', 'useVertexColor_0', 'usePreMultiply'
+    ];
     var checked;
     vSource = function () {
         /* @preserve
@@ -12,15 +22,20 @@ var RedPBRMaterial_System;
 
             // Sprite3D
             //#REDGL_DEFINE#vertexShareFunc#getSprite3DMatrix#
-
+            //#REDGL_DEFINE#useVertexColor_0# attribute vec4 aVertexColor_0;
+            //#REDGL_DEFINE#useVertexColor_0# varying vec4 vVertexColor_0;
+            //#REDGL_DEFINE#useVertexTangent# attribute vec4 aVertexTangent;
+            //#REDGL_DEFINE#useVertexTangent# varying vec4 vVertexTangent;
             void main(void) {
                 gl_PointSize = uPointSize;
                 // UV설정
                 vTexcoord = aTexcoord;
                 vTexcoord1 = aTexcoord1;
-
+                //#REDGL_DEFINE#useVertexColor_0# vVertexColor_0 = aVertexColor_0;
+                //#REDGL_DEFINE#useVertexTangent# vVertexTangent = aVertexTangent;
                 // normal 계산
-                vVertexNormal = (uNMatrix * vec4(aVertexNormal,1.0)).xyz;
+               //#REDGL_DEFINE#skin#true# vVertexNormal = (uNMatrix * getSkinMatrix() * vec4(aVertexNormal,0.0)).xyz;
+               //#REDGL_DEFINE#skin#false# vVertexNormal = (uNMatrix *  vec4(aVertexNormal,1.0)).xyz;
 
                // position 계산
                 //#REDGL_DEFINE#skin#true# mat4 targetMatrix = uMMatrix *  getSkinMatrix() ;
@@ -31,7 +46,7 @@ var RedPBRMaterial_System;
                 //#REDGL_DEFINE#sprite3D#true# gl_Position = uPMatrix * getSprite3DMatrix(uCameraMatrix , targetMatrix) *  vec4(aVertexPosition, 1.0);
                 //#REDGL_DEFINE#sprite3D#true# if(!u_PerspectiveScale){
                 //#REDGL_DEFINE#sprite3D#true#   gl_Position /= gl_Position.w;
-                //#REDGL_DEFINE#sprite3D#true#   gl_Position.xy += aVertexPosition.xy * vec2(targetMatrix[0][0],targetMatrix[1][1] * uResolution.x/uResolution.y);
+                //#REDGL_DEFINE#sprite3D#true#   gl_Position.xy += aVertexPosition.xy * vec2((uPMatrix * targetMatrix)[0][0],(uPMatrix * targetMatrix)[1][1]);
                 //#REDGL_DEFINE#sprite3D#true# }
                 //#REDGL_DEFINE#sprite3D#false# gl_Position = uPMatrix * uCameraMatrix * vVertexPosition;
 
@@ -54,9 +69,11 @@ var RedPBRMaterial_System;
 
         // flat노말
         //#REDGL_DEFINE#fragmentShareFunc#getFlatNormal#
+        //#REDGL_DEFINE#fragmentShareFunc#cotangent_frame#
+		//#REDGL_DEFINE#fragmentShareFunc#perturb_normal#
 
-		//#REDGL_DEFINE#fragmentShareFunc#getPerturbNormal2Arb#
-
+        //#REDGL_DEFINE#useVertexColor_0# varying vec4 vVertexColor_0;
+        //#REDGL_DEFINE#useVertexTangent# varying vec4 vVertexTangent;
          uniform vec4 uBaseColorFactor;
          uniform vec3 uEmissiveFactor;
          uniform float u_cutOff;
@@ -86,6 +103,8 @@ var RedPBRMaterial_System;
 
 
 
+
+
          vec4 la;
          vec4 ld;
          vec4 ls;
@@ -110,6 +129,8 @@ var RedPBRMaterial_System;
         vec2 u_roughnessTexCoord;
         vec2 u_normalTexCoord;
 
+
+
          void main(void) {
             la = uAmbientLightColor * uAmbientLightColor.a;
             ld = vec4(0.0, 0.0, 0.0, 1.0);
@@ -129,21 +150,49 @@ var RedPBRMaterial_System;
             //#REDGL_DEFINE#roughnessTexture# tRoughnessPower *= roughnessColor.g; // 거칠기 산출 roughnessColor.g
 
             // diffuse 색상 산출
+
             texelColor = uBaseColorFactor;
+            //#REDGL_DEFINE#useVertexColor_0# texelColor *= clamp(vVertexColor_0,0.0,1.0) ;
+
+
             //#REDGL_DEFINE#diffuseTexture# texelColor *= texture2D(u_diffuseTexture, u_diffuseTexCoord);
-            texelColor.rgb *= texelColor.a;
+            //#REDGL_DEFINE#usePreMultiply# //#REDGL_DEFINE#diffuseTexture# texelColor.rgb *= texelColor.a;
+
 
             // 노멀값 계산
             N = normalize(vVertexNormal);
+            //#REDGL_DEFINE#useMaterialDoubleSide# vec3 fdx = dFdx(vVertexPosition.xyz);
+            //#REDGL_DEFINE#useMaterialDoubleSide# vec3 fdy = dFdy(vVertexPosition.xyz);
+            //#REDGL_DEFINE#useMaterialDoubleSide# vec3 faceNormal = normalize(cross(fdx,fdy));
+            bool backFaceYn = false;
+            //#REDGL_DEFINE#useMaterialDoubleSide# if (dot (vVertexNormal, faceNormal) < 0.0) { N = -N; backFaceYn = true; };
+
+
             vec4 normalColor = vec4(0.0);
             //#REDGL_DEFINE#normalTexture# normalColor = texture2D(u_normalTexture, u_normalTexCoord);
-            //#REDGL_DEFINE#normalTexture# N = getPerturbNormal2Arb(vVertexPosition.xyz, N, normalColor, u_normalTexCoord) ;
             //#REDGL_DEFINE#useFlatMode# N = getFlatNormal(vVertexPosition.xyz);
+            //#REDGL_DEFINE#normalTexture# N = perturb_normal(N, vVertexPosition.xyz, backFaceYn ?  1.0 - u_normalTexCoord : u_normalTexCoord, vec3(normalColor.r, 1.0- normalColor.g, normalColor.b) );
+
+
+
+            //#REDGL_DEFINE#useVertexTangent# //#REDGL_DEFINE#normalTexture# vec3 pos_dx = dFdx(vVertexPosition.xyz);
+            //#REDGL_DEFINE#useVertexTangent# //#REDGL_DEFINE#normalTexture# vec3 pos_dy = dFdy(vVertexPosition.xyz);
+            //#REDGL_DEFINE#useVertexTangent# //#REDGL_DEFINE#normalTexture# vec3 tex_dx = dFdx(vec3(u_normalTexCoord, 0.0));
+            //#REDGL_DEFINE#useVertexTangent# //#REDGL_DEFINE#normalTexture# vec3 tex_dy = dFdy(vec3(u_normalTexCoord, 0.0));
+            //#REDGL_DEFINE#useVertexTangent# //#REDGL_DEFINE#normalTexture# vec3 t = (tex_dy.t * pos_dx - tex_dx.t * pos_dy) / (tex_dx.s * tex_dy.t - tex_dy.s * tex_dx.t);
+            //#REDGL_DEFINE#useVertexTangent# //#REDGL_DEFINE#normalTexture# vec3 ng = normalize(vVertexNormal);
+            //#REDGL_DEFINE#useVertexTangent# //#REDGL_DEFINE#normalTexture# t = normalize(t - ng * dot(ng, t));
+            //#REDGL_DEFINE#useVertexTangent# //#REDGL_DEFINE#normalTexture# vec3 b = normalize(cross(ng, t));
+            //#REDGL_DEFINE#useVertexTangent# //#REDGL_DEFINE#normalTexture# mat3 tbn = mat3(t, b, ng);
+            //#REDGL_DEFINE#useVertexTangent# //#REDGL_DEFINE#normalTexture# N = normalize(tbn * ((2.0 * normalColor.rgb - 1.0) * vec3(1.0, 1.0 * vVertexTangent.w,1.0)));
+            //#REDGL_DEFINE#useVertexTangent# //#REDGL_DEFINE#normalTexture# N = backFaceYn ? -N : N;
+
+
 
             // 환경맵 계산
             vec3 R = reflect( vVertexPosition.xyz-uCameraPosition, N);
             //#REDGL_DEFINE#environmentTexture# reflectionColor = textureCube(u_environmentTexture, R);
-            //#REDGL_DEFINE#environmentTexture# reflectionColor.rgb *= reflectionColor.a;
+            //#REDGL_DEFINE#usePreMultiply# //#REDGL_DEFINE#environmentTexture# reflectionColor.rgb *= reflectionColor.a;
 
             // 환경맵 합성
             //#REDGL_DEFINE#environmentTexture# texelColor.rgb = mix( texelColor.rgb , reflectionColor.rgb , max(tMetallicPower-tRoughnessPower,0.0)*(1.0-tRoughnessPower));
@@ -178,7 +227,7 @@ var RedPBRMaterial_System;
                   lambertTerm = dot(N,-L);
                   if(lambertTerm > 0.0){
                      ld += uPointLightColorList[i] * texelColor * lambertTerm * attenuation * uPointLightIntensityList[i] ;
-                     specular = pow( max(dot(reflect(L, N), -L), 0.0), pow(shininess, 1.0-tRoughnessPower+0.04) );
+                     specular = pow( max(dot(reflect(L, N), -N), 0.0), pow(shininess, 1.0-tRoughnessPower+0.04) );
                      specular *= pow(1.0-tRoughnessPower+0.04, 2.0 * (1.0-tMetallicPower)) ;
                      ls +=  specularLightColor * specular * uPointLightIntensityList[i]  * uPointLightColorList[i].a * (1.0-tRoughnessPower+0.04) ;
                   }
@@ -193,7 +242,7 @@ var RedPBRMaterial_System;
 
             // 이미시브합성
             //#REDGL_DEFINE#emissiveTexture# emissiveColor = texture2D(u_emissiveTexture, u_emissiveTexCoord);
-            //#REDGL_DEFINE#emissiveTexture# emissiveColor.rgb *= emissiveColor.a;
+            //#REDGL_DEFINE#usePreMultiply# //#REDGL_DEFINE#emissiveTexture# emissiveColor.rgb *= emissiveColor.a;
             //#REDGL_DEFINE#emissiveTexture# emissiveColor.rgb *= uEmissiveFactor;
             //#REDGL_DEFINE#emissiveTexture# finalColor.rgb += emissiveColor.rgb;
 
@@ -273,7 +322,7 @@ var RedPBRMaterial_System;
             roughnessTexture
         );
         redGL instanceof RedGL || RedGLUtil.throwFunc('RedPBRMaterial_System : RedGL Instance만 허용.', redGL);
-        this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource, PROGRAM_OPTION_LIST);
+        this.makeProgramList(this, redGL, PROGRAM_NAME, RedGLUtil.getStrFromComment(vSource.toString()), RedGLUtil.getStrFromComment(fSource.toString()), PROGRAM_OPTION_LIST);
         /////////////////////////////////////////
         // 유니폼 프로퍼티
         this['diffuseTexture'] = diffuseTexture;
@@ -288,32 +337,43 @@ var RedPBRMaterial_System;
         this['metallicFactor'] = 1;
         this['roughnessFactor'] = 1;
 
-        this['diffuseTexCoordIndex'] = 0
-        this['occlusionTexCoordIndex'] = 0
-        this['emissiveTexCoordIndex'] = 0
+        this['diffuseTexCoordIndex'] = 0;
+        this['occlusionTexCoordIndex'] = 0;
+        this['emissiveTexCoordIndex'] = 0;
         this['roughnessTexCoordIndex'] = 0;
-        this['normalTexCoordIndex'] = 0
-
+        this['normalTexCoordIndex'] = 0;
 
         this['occlusionPower'] = 1;
-        this['baseColorFactor'] = null
+        this['baseColorFactor'] = null;
         this['emissiveFactor'] = null;
         this['alpha'] = 1;
         this['cutOff'] = 0;
+
         /////////////////////////////////////////
         // 일반 프로퍼티
-        this['useFlatMode'] = false
+        this['useMaterialDoubleSide'] = false;
+        this['useVertexColor_0'] = false;
+        this['useFlatMode'] = false;
+        this['useVertexTangent'] = false;
+        this['usePreMultiply'] = false;
         this['_UUID'] = RedGL.makeUUID();
         if (!checked) {
             this.checkUniformAndProperty();
             checked = true;
         }
+        this['_needSearchProgram'] = null;
         console.log(this);
     };
     RedPBRMaterial_System.prototype = new RedBaseMaterial();
     var samplerOption = {
         callback: function () {
-            this._searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST)
+            var self = this;
+            cancelAnimationFrame(this['_needSearchProgram']);
+            this['_needSearchProgram'] = requestAnimationFrame(function () {
+                self._searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST);
+                self['_needSearchProgram'] = null
+            });
+
         }
     };
     /**DOC:
@@ -448,5 +508,45 @@ var RedPBRMaterial_System;
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'useFlatMode', 'boolean', samplerOption);
+    /**DOC:
+     {
+	     code : 'PROPERTY',
+		 title :`useMaterialDoubleSide`,
+		 description : `
+		    gltf 파싱에 따른 재질에서 더블사이드 사용여부
+		    기본값 : false
+		 `,
+		 return : 'boolean'
+	 }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'useMaterialDoubleSide', 'boolean', samplerOption);
+
+    /**DOC:
+     {
+	     code : 'PROPERTY',
+		 title :`useVertexColor_0`,
+		 description : `
+		    aVertexColor_0 사용여부
+		    기본값 : true
+		 `,
+		 return : 'boolean'
+	 }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'useVertexColor_0', 'boolean', samplerOption);
+    RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'useVertexTangent', 'boolean', samplerOption);
+    /**DOC:
+     {
+	     code : 'PROPERTY',
+		 title :`usePreMultiply`,
+		 description : `
+		    usePreMultiply 사용여부
+		    기본값 : false
+		 `,
+		 return : 'boolean'
+	 }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'usePreMultiply', 'boolean', samplerOption);
+
+
     Object.freeze(RedPBRMaterial_System);
 })();

@@ -1,3 +1,10 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedGrid;
 (function () {
@@ -134,7 +141,7 @@ var RedGrid;
 		 return : 'Number'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedGrid', 'divisions', 'number', {
+    RedDefinePropertyInfo.definePrototype('RedGrid', 'divisions', 'uint', {
         min: 1,
         callback: function () {
             this['_update']()
@@ -161,7 +168,7 @@ var RedGrid;
         set: function (hex) {
             RedGLUtil.regHex(hex) || RedGLUtil.throwFunc('RedGrid : color1 hex 형식만 허용.', hex);
             this['_color1'] = hex;
-            this['_update']()
+            this['_update']();
             return this['_color1']
         }
     });
@@ -186,7 +193,7 @@ var RedGrid;
         set: function (hex) {
             RedGLUtil.regHex(hex) || RedGLUtil.throwFunc('RedGrid : color2 hex 형식만 허용.', hex);
             this['_color2'] = hex;
-            this['_update']()
+            this['_update']();
             return this['_color2']
         }
     });

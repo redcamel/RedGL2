@@ -1,445 +1,528 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 RedGL.setDoNotPrepareProgram();
-RedGL(document.createElement('canvas'), function (v) {
-    var tRedGL = this;
-    console.log(tRedGL)
-    redSuite(
-        "RedColorPhongTextureMaterial 테스트",
-        redGroup(
+RedTest.title = "RedColorPhongTextureMaterial TEST";
+RedGL(document.createElement('canvas'), function () {
+        var tRedGL = this;
+        console.log(tRedGL);
+        RedTest.testGroup(
             "RedColorPhongTextureMaterial( redGL, hexColor, alpha )",
-            redTest("성공테스트 : 기본 생성 테스트", function (unit, title) {
-                try {
-                    RedColorPhongTextureMaterial(tRedGL);
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, true),
-            redTest("실패테스트 : RedGL instance만 허용.", function (unit, title) {
-                try {
-                    RedColorPhongTextureMaterial(1);
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, false)
-        ),
-        redGroup(
+            function () {
+                RedTest.test(
+                    "성공테스트 : 기본 생성 테스트",
+                    function () {
+                        try {
+                            RedColorPhongTextureMaterial(tRedGL);
+                            RedTest.run(true)
+                        } catch (error) {
+                            RedTest.run(false, error)
+                        }
+                    },
+                    true
+                );
+                RedTest.test(
+                    "실패테스트 : RedGL instance만 허용.",
+                    function () {
+                        try {
+                            RedColorPhongTextureMaterial(1);
+                            RedTest.run(true)
+                        } catch (error) {
+                            RedTest.run(false, error)
+                        }
+                    },
+                    false
+                )
+            }
+        );
+        RedTest.testGroup(
             "RedColorPhongTextureMaterial( redGL, <b>hexColor</b>, alpha )",
-            redTest("성공테스트 :  미입력시 초기값이 hex형태로 입력되어있는지", function (unit, title) {
-                var t0 = RedColorPhongTextureMaterial(tRedGL);
-                unit.run(RedGLUtil.regHex(t0.color))
-            }, true),
-            redTest("실패테스트 : #xxxxxx or #xxx 만 허용 - 숫자입력시", function (unit, title) {
-                try {
-                    RedColorPhongTextureMaterial(tRedGL, 1);
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, false),
-            redTest("실패테스트 : hexColor - #xxxxxx or #xxx 만 허용 - '#2233'", function (unit, title) {
-                try {
-                    RedColorPhongTextureMaterial(tRedGL, '#2233');
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, false),
-            redTest("성공테스트 : #556677", function (unit, title) {
-                var t0 = RedColorPhongTextureMaterial(tRedGL, '#556677');
-                unit.run(t0['color'])
-            }, '#556677'),
-            redTest("성공테스트 : #fff", function (unit, title) {
-                var t0 = RedColorPhongTextureMaterial(tRedGL, '#fff');
-                unit.run(t0['color'])
-            }, '#fff'),
-            redTest("성공테스트 : zeroToOne rgb 컬러로 변환되어 반영되는지 확인", function (unit, title) {
-                var t0 = RedColorPhongTextureMaterial(tRedGL, '#00ff00');
-                unit.run(t0['_color'][0] + '_' + t0['_color'][1] + '_' + t0['_color'][2])
-            }, '0_1_0')
-        ),
-        redGroup(
+            function () {
+                RedTest.test(
+                    "성공테스트 :  미입력시 초기값이 hex형태로 입력되어있는지",
+                    function () {
+                        var t0 = RedColorPhongTextureMaterial(tRedGL);
+                        RedTest.run(RedGLUtil.regHex(t0.color))
+                    },
+                    true
+                );
+                RedTest.testListRun(
+                    "Hex만 허용",
+                    RedTest.ONLY_HEX,
+                    function (v) {
+                        try {
+                            var t0 = RedColorPhongTextureMaterial(tRedGL, v[0]);
+                            RedTest.run(v[0] === t0['color'])
+                        } catch (error) {
+                            RedTest.run(false, error)
+                        }
+                    }
+                );
+                RedTest.test(
+                    "성공테스트 : zeroToOne rgb 컬러로 변환되어 반영되는지 확인",
+                    function () {
+                        var t0 = RedColorPhongTextureMaterial(tRedGL, '#00ff00');
+                        RedTest.run(t0['_color'][0] + '_' + t0['_color'][1] + '_' + t0['_color'][2])
+                    },
+                    '0_1_0'
+                )
+            }
+        );
+        RedTest.testGroup(
             "RedColorPhongTextureMaterial( redGL, hexColor, <b>alpha</b> )",
-            redTest("성공테스트 : 0.5", function (unit, title) {
-                var t0 = RedColorPhongTextureMaterial(tRedGL, '#556677', 0.5);
-                unit.run(t0['alpha'])
-            }, 0.5),
-            redTest("성공테스트 : 0.5", function (unit, title) {
-                var t0 = RedColorPhongTextureMaterial(tRedGL, '#556677', 0.5);
-                unit.run(t0['_color'][3])
-            }, 0.5),
-            redTest("성공테스트 : hexColor & alpha", function (unit, title) {
-                var t0 = RedColorPhongTextureMaterial(tRedGL, '#fff', 0.5);
-                unit.run(t0['_color'][0] + '_' + t0['_color'][1] + '_' + t0['_color'][2] + '_' + t0['_color'][3])
-            }, '1_1_1_0.5'),
-            redTest("실패테스트  : 생성인자 반영되는지 체크 : 숫자만 허용하는지", function (unit, title) {
-                try {
-                    RedColorPhongTextureMaterial(tRedGL, '#fff', 'test');
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, false),
-            redTest("성공테스트 : 1이상을 입력하면 1로 치환되는지", function (unit, title) {
-                var t0 = RedColorPhongTextureMaterial(tRedGL, '#fff', 1111);
-                unit.run(t0['alpha'])
-            }, 1),
-            redTest("성공테스트 : 0이하를 입력하면 0으로 치환되는지", function (unit, title) {
-                var t0 = RedColorPhongTextureMaterial(tRedGL, '#fff', -12345);
-                unit.run(t0['alpha'])
-            }, 0)
-        ),
-        redGroup(
+            function () {
+                RedTest.test(
+                    "성공테스트 : 초기값",
+                    function () {
+                        var t0 = RedColorPhongTextureMaterial(tRedGL);
+                        RedTest.run(t0['alpha'])
+                    }, 1
+                );
+
+                RedTest.testListRun(
+                    "0~1만허용",
+                    [
+                        [0, true],
+                        [1, true],
+                        [0.1, true],
+                        ['1', false],
+                        [true, false],
+                        [false, false],
+                        [null, false],
+                        [undefined, false],
+                        ['문자테스트', false],
+                        [function () {
+                        }, false],
+                        [[], false],
+                        [{}, false]
+                    ],
+                    function (v) {
+                        var t0 = RedColorPhongTextureMaterial(tRedGL);
+                        try {
+                            t0['alpha'] = v[0];
+                            RedTest.run(t0['alpha'] === v[0])
+                        } catch (error) {
+                            RedTest.run(false, error)
+
+                        }
+                    }
+                );
+                RedTest.test(
+                    "성공테스트 : 1이상을 입력하면 1로 치환되는지",
+                    function () {
+                        var t0 = RedColorPhongTextureMaterial(tRedGL);
+                        t0.alpha = 11111;
+                        RedTest.run(t0['alpha'])
+                    },
+                    1
+                );
+                RedTest.test(
+                    "성공테스트 : 0이하를 입력하면 0으로 치환되는지",
+                    function () {
+                        var t0 = RedColorPhongTextureMaterial(tRedGL);
+                        t0.alpha = -11111;
+                        RedTest.run(t0['alpha']);
+
+                    },
+                    0
+                );
+            }
+        );
+        RedTest.testGroup(
             "(RedColorPhongTextureMaterial Instance).<b>normalPower</b> = value",
-            redTest("실패테스트 : 숫자만 허용하는지 - 문자입력 ", function (unit, title) {
-                try {
-                    var t0 = RedColorPhongTextureMaterial(tRedGL);
-                    t0['normalPower'] = 'test'
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, false),
-            redTest("실패테스트 : 숫자만 허용하는지 :  Boolean입력 ", function (unit, title) {
-                try {
-                    var t0 = RedColorPhongTextureMaterial(tRedGL);
-                    t0['normalPower'] = true
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, false),
-            redTest("성공테스트 : 숫자만 허용하는지 : 숫자입력", function (unit, title) {
-                try {
-                    var t0 = RedColorPhongTextureMaterial(tRedGL);
-                    t0['normalPower'] = 32
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, true),
-            redTest("성공테스트 : 0이하입력시 0으로 치환되는지 확인", function (unit, title) {
-                var t0 = RedColorPhongTextureMaterial(tRedGL);
-                t0['normalPower'] = -1
-                unit.run(t0['normalPower'])
-            }, 0)
-        ),
-        redGroup(
+            function () {
+                RedTest.test(
+                    "성공테스트 : 0이하입력시 0으로 치환되는지 확인",
+                    function () {
+                        var t0 = RedColorPhongTextureMaterial(tRedGL);
+                        t0['normalPower'] = -1;
+                        RedTest.run(t0['normalPower'])
+                    },
+                    0
+                );
+                RedTest.testListRun(
+                    "0이상만 허용",
+                    [
+                        [1, true],
+                        [1.1, true],
+                        [0, true],
+                        [true, false],
+                        [false, false],
+                        [null, false],
+                        [undefined, false],
+                        ['문자테스트', false],
+                        [function () {
+                        }, false],
+                        [[], false],
+                        [{}, false]
+                    ],
+                    function (v) {
+                        try {
+                            var t0 = RedColorPhongTextureMaterial(tRedGL);
+                            t0['normalPower'] = v[0];
+                            RedTest.run(t0['normalPower'] === v[0])
+                        } catch (error) {
+                            RedTest.run(false, error)
+                        }
+                    }
+                );
+            }
+        );
+        RedTest.testGroup(
             "(RedColorPhongTextureMaterial Instance).<b>shininess</b> = value",
-            redTest("실패테스트 : 숫자만 허용하는지 - 문자입력 ", function (unit, title) {
-                try {
-                    var t0 = RedColorPhongTextureMaterial(tRedGL);
-                    t0['shininess'] = 'test'
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, false),
-            redTest("실패테스트 : 숫자만 허용하는지 :  Boolean입력 ", function (unit, title) {
-                try {
-                    var t0 = RedColorPhongTextureMaterial(tRedGL);
-                    t0['shininess'] = true
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, false),
-            redTest("성공테스트 : 숫자만 허용하는지 : 숫자입력", function (unit, title) {
-                try {
-                    var t0 = RedColorPhongTextureMaterial(tRedGL);
-                    t0['shininess'] = 32
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, true),
-            redTest("성공테스트 : 0이하입력시 0으로 치환되는지 확인", function (unit, title) {
-                var t0 = RedColorPhongTextureMaterial(tRedGL);
-                t0['shininess'] = -1
-                unit.run(t0['shininess'])
-            }, 0)
-        ),
-        redGroup(
+            function () {
+                RedTest.test(
+                    "성공테스트 : 0이하입력시 0으로 치환되는지 확인",
+                    function () {
+                        var t0 = RedColorPhongTextureMaterial(tRedGL);
+                        t0['shininess'] = -1;
+                        RedTest.run(t0['shininess'])
+                    },
+                    0
+                );
+                RedTest.testListRun(
+                    "0이상만 허용",
+                    [
+                        [1, true],
+                        [1.1, true],
+                        [0, true],
+                        [true, false],
+                        [false, false],
+                        [null, false],
+                        [undefined, false],
+                        ['문자테스트', false],
+                        [function () {
+                        }, false],
+                        [[], false],
+                        [{}, false]
+                    ],
+                    function (v) {
+                        try {
+                            var t0 = RedColorPhongTextureMaterial(tRedGL);
+                            t0['shininess'] = v[0];
+                            RedTest.run(t0['shininess'] === v[0])
+                        } catch (error) {
+                            RedTest.run(false, error)
+                        }
+                    }
+                );
+            }
+        );
+        RedTest.testGroup(
             "(RedColorPhongTextureMaterial Instance).<b>specularPower</b> = value",
-            redTest("실패테스트 : 숫자만 허용하는지 - 문자입력 ", function (unit, title) {
-                try {
-                    var t0 = RedColorPhongTextureMaterial(tRedGL);
-                    t0['specularPower'] = 'test'
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, false),
-            redTest("실패테스트 : 숫자만 허용하는지 :  Boolean입력 ", function (unit, title) {
-                try {
-                    var t0 = RedColorPhongTextureMaterial(tRedGL);
-                    t0['specularPower'] = true
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, false),
-            redTest("성공테스트 : 숫자만 허용하는지 : 숫자입력", function (unit, title) {
-                try {
-                    var t0 = RedColorPhongTextureMaterial(tRedGL);
-                    t0['specularPower'] = 32
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, true),
-            redTest("성공테스트 : 0이하입력시 0으로 치환되는지 확인", function (unit, title) {
-                var t0 = RedColorPhongTextureMaterial(tRedGL);
-                t0['specularPower'] = -1
-                unit.run(t0['specularPower'])
-            }, 0)
-        ),
-        redGroup(
+            function () {
+                RedTest.testListRun(
+                    "0이상만 허용",
+                    [
+                        [1, true],
+                        [1.1, true],
+                        [0, true],
+                        [true, false],
+                        [false, false],
+                        [null, false],
+                        [undefined, false],
+                        ['문자테스트', false],
+                        [function () {
+                        }, false],
+                        [[], false],
+                        [{}, false]
+                    ],
+                    function (v) {
+                        try {
+                            var t0 = RedColorPhongTextureMaterial(tRedGL);
+                            t0['specularPower'] = v[0];
+                            RedTest.run(t0['specularPower'] === v[0])
+                        } catch (error) {
+                            RedTest.run(false, error)
+                        }
+                    }
+                );
+                RedTest.test(
+                    "성공테스트 : 0이하입력시 0으로 치환되는지 확인",
+                    function () {
+                        var t0 = RedColorPhongTextureMaterial(tRedGL);
+                        t0['specularPower'] = -1;
+                        RedTest.run(t0['specularPower']);
+
+                    },
+                    0
+                )
+            }
+        );
+        RedTest.testGroup(
             "(RedColorPhongTextureMaterial Instance).<b>displacementPower</b> = value",
-            redTest("실패테스트 : 숫자만 허용하는지 - 문자입력 ", function (unit, title) {
-                try {
-                    var t0 = RedColorPhongTextureMaterial(tRedGL);
-                    t0['displacementPower'] = 'test'
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, false),
-            redTest("실패테스트 : 숫자만 허용하는지 :  Boolean입력 ", function (unit, title) {
-                try {
-                    var t0 = RedColorPhongTextureMaterial(tRedGL);
-                    t0['displacementPower'] = true
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, false),
-            redTest("성공테스트 : 숫자만 허용하는지 : 숫자입력", function (unit, title) {
-                try {
-                    var t0 = RedColorPhongTextureMaterial(tRedGL);
-                    t0['displacementPower'] = 32
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, true),
-            redTest("성공테스트 : 0이하입력시 0으로 치환되는지 확인", function (unit, title) {
-                var t0 = RedColorPhongTextureMaterial(tRedGL);
-                t0['displacementPower'] = -1
-                unit.run(t0['displacementPower'])
-            }, 0)
-        ),
-        redGroup(
+            function () {
+                RedTest.test(
+                    "성공테스트 : 0이하입력시 0으로 치환되는지 확인",
+                    function () {
+                        var t0 = RedColorPhongTextureMaterial(tRedGL);
+                        t0['displacementPower'] = -1;
+                        RedTest.run(t0['displacementPower'])
+                    },
+                    0
+                );
+                RedTest.testListRun(
+                    "0이상만 허용",
+                    [
+                        [1, true],
+                        [1.1, true],
+                        [0, true],
+                        [true, false],
+                        [false, false],
+                        [null, false],
+                        [undefined, false],
+                        ['문자테스트', false],
+                        [function () {
+                        }, false],
+                        [[], false],
+                        [{}, false]
+                    ],
+                    function (v) {
+                        try {
+                            var t0 = RedColorPhongTextureMaterial(tRedGL);
+                            t0['displacementPower'] = v[0];
+                            RedTest.run(t0['displacementPower'] === v[0])
+                        } catch (error) {
+                            RedTest.run(false, error)
+                        }
+                    }
+                );
+            }
+        );
+        RedTest.testGroup(
             "(RedColorPhongTextureMaterial Instance).<b>normalTexture</b> = value",
-            redTest("성공테스트 : 생성인자 테스트 - RedBitmapTexture Instance 입력", function (unit, title) {
-                var t0 = RedColorPhongTextureMaterial(tRedGL, '#fff', 1, tRedGL._datas.emptyTexture['2d']);
-                unit.run(t0['normalTexture'])
-            }, tRedGL._datas.emptyTexture['2d']),
-            redTest("실패테스트 : 생성인자 테스트 - 문자입력 ", function (unit, title) {
-                try {
-                    var t0 = RedColorPhongTextureMaterial(tRedGL, '#fff', 1, 'failTest');
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, false),
-            redTest("실패테스트 : 생성인자 테스트 - RedBitmapCubeTexture Instance 입력 ", function (unit, title) {
-                try {
-                    var t0 = RedColorPhongTextureMaterial(tRedGL, '#fff', 1, tRedGL._datas.emptyTexture['3d']);
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, false),
-            redTest("성공테스트 : RedBitmapTexture Instance 입력 ", function (unit, title) {
-                try {
-                    var t0 = RedColorPhongTextureMaterial(tRedGL);
-                    t0['normalTexture'] = tRedGL._datas.emptyTexture['2d']
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, true),
-            redTest("실패테스트 : 문자입력 ", function (unit, title) {
-                try {
-                    var t0 = RedColorPhongTextureMaterial(tRedGL);
-                    t0['normalTexture'] = 'failTest'
-                    console.log(t0)
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, false),
-            redTest("실패테스트 : RedBitmapCubeTexture Instance 입력 ", function (unit, title) {
-                try {
-                    var t0 = RedColorPhongTextureMaterial(tRedGL);
-                    t0['normalTexture'] = tRedGL._datas.emptyTexture['3d']
-                    console.log(t0)
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, false)
-        ),
-        redGroup(
+            function () {
+                RedTest.test(
+                    "성공테스트 : 생성인자 테스트 - RedBitmapTexture Instance 입력",
+                    function () {
+                        var t0 = RedColorPhongTextureMaterial(tRedGL, '#fff', 1, tRedGL._datas.emptyTexture['2d']);
+                        RedTest.run(t0['normalTexture'])
+                    }, tRedGL._datas.emptyTexture['2d']);
+                RedTest.test(
+                    "실패테스트 : 생성인자 테스트 - 문자입력 ",
+                    function () {
+                        try {
+                            RedColorPhongTextureMaterial(tRedGL, '#fff', 1, 'failTest');
+                            RedTest.run(true)
+                        } catch (error) {
+                            RedTest.run(false, error)
+                        }
+                    },
+                    false
+                );
+                RedTest.test(
+                    "실패테스트 : 생성인자 테스트 - RedBitmapCubeTexture Instance 입력 ",
+                    function () {
+                        try {
+                            RedColorPhongTextureMaterial(tRedGL, '#fff', 1, tRedGL._datas.emptyTexture['3d']);
+                            RedTest.run(true)
+                        } catch (error) {
+                            RedTest.run(false, error)
+                        }
+                    },
+                    false
+                );
+                RedTest.test(
+                    "성공테스트 : RedBitmapTexture Instance 입력 ",
+                    function () {
+                        try {
+                            var t0 = RedColorPhongTextureMaterial(tRedGL);
+                            t0['normalTexture'] = tRedGL._datas.emptyTexture['2d'];
+                            RedTest.run(true)
+                        } catch (error) {
+                            RedTest.run(false, error)
+                        }
+                    },
+                    true
+                );
+                RedTest.test(
+                    "실패테스트 : 문자입력 ",
+                    function () {
+                        try {
+                            var t0 = RedColorPhongTextureMaterial(tRedGL);
+                            t0['normalTexture'] = 'failTest';
+                            console.log(t0);
+                            RedTest.run(true)
+                        } catch (error) {
+                            RedTest.run(false, error)
+                        }
+                    },
+                    false
+                );
+                RedTest.test(
+                    "실패테스트 : RedBitmapCubeTexture Instance 입력 ",
+                    function () {
+                        try {
+                            var t0 = RedColorPhongTextureMaterial(tRedGL);
+                            t0['normalTexture'] = tRedGL._datas.emptyTexture['3d'];
+                            console.log(t0);
+                            RedTest.run(true)
+                        } catch (error) {
+                            RedTest.run(false, error)
+                        }
+                    },
+                    false
+                )
+            }
+        );
+        RedTest.testGroup(
             "(RedColorPhongTextureMaterial Instance).<b>specularTexture</b> = value",
-            redTest("성공테스트 : 생성인자 테스트 - RedBitmapTexture Instance 입력", function (unit, title) {
-                var t0 = RedColorPhongTextureMaterial(tRedGL, '#fff', 1, tRedGL._datas.emptyTexture['2d'], tRedGL._datas.emptyTexture['2d']);
-                unit.run(t0['specularTexture'])
-            }, tRedGL._datas.emptyTexture['2d']),
-            redTest("실패테스트 : 생성인자 테스트 - 문자입력 ", function (unit, title) {
-                try {
-                    var t0 = RedColorPhongTextureMaterial(tRedGL, '#fff', 1, 'failTest');
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, false),
-            redTest("실패테스트 : 생성인자 테스트 - RedBitmapCubeTexture Instance 입력 ", function (unit, title) {
-                try {
-                    var t0 = RedColorPhongTextureMaterial(tRedGL, '#fff', 1, tRedGL._datas.emptyTexture['2d'], tRedGL._datas.emptyTexture['3d']);
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, false),
-            redTest("성공테스트 : RedBitmapTexture Instance 입력 ", function (unit, title) {
-                try {
-                    var t0 = RedColorPhongTextureMaterial(tRedGL);
-                    t0['specularTexture'] = tRedGL._datas.emptyTexture['2d']
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, true),
-            redTest("실패테스트 : 문자입력 ", function (unit, title) {
-                try {
-                    var t0 = RedColorPhongTextureMaterial(tRedGL);
-                    t0['specularTexture'] = 'failTest'
-                    console.log(t0)
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, false),
-            redTest("실패테스트 : RedBitmapCubeTexture Instance 입력 ", function (unit, title) {
-                try {
-                    var t0 = RedColorPhongTextureMaterial(tRedGL);
-                    t0['specularTexture'] = tRedGL._datas.emptyTexture['3d']
-                    console.log(t0)
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, false)
-        ),
-        redGroup(
+            function () {
+                RedTest.test(
+                    "성공테스트 : 생성인자 테스트 - RedBitmapTexture Instance 입력",
+                    function () {
+                        var t0 = RedColorPhongTextureMaterial(tRedGL, '#fff', 1, tRedGL._datas.emptyTexture['2d'], tRedGL._datas.emptyTexture['2d']);
+                        RedTest.run(t0['specularTexture'])
+                    }, tRedGL._datas.emptyTexture['2d']);
+                RedTest.test(
+                    "실패테스트 : 생성인자 테스트 - 문자입력 ",
+                    function () {
+                        try {
+                            RedColorPhongTextureMaterial(tRedGL, '#fff', 1, 'failTest');
+                            RedTest.run(true)
+                        } catch (error) {
+                            RedTest.run(false, error)
+                        }
+                    },
+                    false
+                );
+                RedTest.test(
+                    "실패테스트 : 생성인자 테스트 - RedBitmapCubeTexture Instance 입력 ",
+                    function () {
+                        try {
+                            RedColorPhongTextureMaterial(tRedGL, '#fff', 1, tRedGL._datas.emptyTexture['2d'], tRedGL._datas.emptyTexture['3d']);
+                            RedTest.run(true)
+                        } catch (error) {
+                            RedTest.run(false, error)
+                        }
+                    },
+                    false
+                );
+                RedTest.test(
+                    "성공테스트 : RedBitmapTexture Instance 입력 ",
+                    function () {
+                        try {
+                            var t0 = RedColorPhongTextureMaterial(tRedGL);
+                            t0['specularTexture'] = tRedGL._datas.emptyTexture['2d'];
+                            RedTest.run(true)
+                        } catch (error) {
+                            RedTest.run(false, error)
+                        }
+                    },
+                    true
+                );
+                RedTest.test(
+                    "실패테스트 : 문자입력 ",
+                    function () {
+                        try {
+                            var t0 = RedColorPhongTextureMaterial(tRedGL);
+                            t0['specularTexture'] = 'failTest';
+                            console.log(t0);
+                            RedTest.run(true)
+                        } catch (error) {
+                            RedTest.run(false, error)
+                        }
+                    },
+                    false
+                );
+                RedTest.test(
+                    "실패테스트 : RedBitmapCubeTexture Instance 입력 ",
+                    function () {
+                        try {
+                            var t0 = RedColorPhongTextureMaterial(tRedGL);
+                            t0['specularTexture'] = tRedGL._datas.emptyTexture['3d'];
+                            console.log(t0);
+                            RedTest.run(true)
+                        } catch (error) {
+                            RedTest.run(false, error)
+                        }
+                    },
+                    false
+                )
+            }
+        );
+        RedTest.testGroup(
             "(RedColorPhongTextureMaterial Instance).<b>displacementTexture</b> = value",
-            redTest("성공테스트 : 생성인자 테스트 - RedBitmapTexture Instance 입력", function (unit, title) {
-                var t0 = RedColorPhongTextureMaterial(tRedGL, '#fff', 1, tRedGL._datas.emptyTexture['2d'], tRedGL._datas.emptyTexture['2d'], tRedGL._datas.emptyTexture['2d']);
-                unit.run(t0['displacementTexture'])
-            }, tRedGL._datas.emptyTexture['2d']),
-            redTest("실패테스트 : 생성인자 테스트 - 문자입력 ", function (unit, title) {
-                try {
-                    var t0 = RedColorPhongTextureMaterial(tRedGL, '#fff', 1, 'failTest');
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, false),
-            redTest("실패테스트 : 생성인자 테스트 - RedBitmapCubeTexture Instance 입력 ", function (unit, title) {
-                try {
-                    var t0 = RedColorPhongTextureMaterial(tRedGL, '#fff', 1, tRedGL._datas.emptyTexture['2d'], tRedGL._datas.emptyTexture['2d'], tRedGL._datas.emptyTexture['3d']);
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, false),
-            redTest("성공테스트 : RedBitmapTexture Instance 입력 ", function (unit, title) {
-                try {
-                    var t0 = RedColorPhongTextureMaterial(tRedGL);
-                    t0['displacementTexture'] = tRedGL._datas.emptyTexture['2d']
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, true),
-            redTest("실패테스트 : 문자입력 ", function (unit, title) {
-                try {
-                    var t0 = RedColorPhongTextureMaterial(tRedGL);
-                    t0['displacementTexture'] = 'failTest'
-                    console.log(t0)
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, false),
-            redTest("실패테스트 : RedBitmapCubeTexture Instance 입력 ", function (unit, title) {
-                try {
-                    var t0 = RedColorPhongTextureMaterial(tRedGL);
-                    t0['displacementTexture'] = tRedGL._datas.emptyTexture['3d']
-                    console.log(t0)
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, false)
+            function () {
+                RedTest.test(
+                    "성공테스트 : 생성인자 테스트 - RedBitmapTexture Instance 입력",
+                    function () {
+                        var t0 = RedColorPhongTextureMaterial(tRedGL, '#fff', 1, tRedGL._datas.emptyTexture['2d'], tRedGL._datas.emptyTexture['2d'], tRedGL._datas.emptyTexture['2d']);
+                        RedTest.run(t0['displacementTexture'])
+                    }, tRedGL._datas.emptyTexture['2d']);
+                RedTest.test(
+                    "실패테스트 : 생성인자 테스트 - 문자입력 ",
+                    function () {
+                        try {
+                            RedColorPhongTextureMaterial(tRedGL, '#fff', 1, 'failTest');
+                            RedTest.run(true)
+                        } catch (error) {
+                            RedTest.run(false, error)
+                        }
+                    },
+                    false
+                );
+                RedTest.test(
+                    "실패테스트 : 생성인자 테스트 - RedBitmapCubeTexture Instance 입력 ",
+                    function () {
+                        try {
+                            RedColorPhongTextureMaterial(tRedGL, '#fff', 1, tRedGL._datas.emptyTexture['2d'], tRedGL._datas.emptyTexture['2d'], tRedGL._datas.emptyTexture['3d']);
+                            RedTest.run(true)
+                        } catch (error) {
+                            RedTest.run(false, error)
+                        }
+                    },
+                    false
+                );
+                RedTest.test(
+                    "성공테스트 : RedBitmapTexture Instance 입력 ",
+                    function () {
+                        try {
+                            var t0 = RedColorPhongTextureMaterial(tRedGL);
+                            t0['displacementTexture'] = tRedGL._datas.emptyTexture['2d'];
+                            RedTest.run(true)
+                        } catch (error) {
+                            RedTest.run(false, error)
+                        }
+                    },
+                    true
+                );
+                RedTest.test(
+                    "실패테스트 : 문자입력 ",
+                    function () {
+                        try {
+                            var t0 = RedColorPhongTextureMaterial(tRedGL);
+                            t0['displacementTexture'] = 'failTest';
+                            console.log(t0);
+                            RedTest.run(true)
+                        } catch (error) {
+                            RedTest.run(false, error)
+                        }
+                    },
+                    false
+                );
+                RedTest.test(
+                    "실패테스트 : RedBitmapCubeTexture Instance 입력 ",
+                    function () {
+                        try {
+                            var t0 = RedColorPhongTextureMaterial(tRedGL);
+                            t0['displacementTexture'] = tRedGL._datas.emptyTexture['3d'];
+                            console.log(t0);
+                            RedTest.run(true);
+                            tRedGL.gl.getExtension('WEBGL_lose_context').loseContext();
+                        } catch (error) {
+                            RedTest.run(false, error);
+                            tRedGL.gl.getExtension('WEBGL_lose_context').loseContext();
+                        }
+                    },
+                    false
+                )
+            }
         )
-    )
-})
+    }
+);

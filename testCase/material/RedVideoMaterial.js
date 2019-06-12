@@ -1,197 +1,244 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 RedGL.setDoNotPrepareProgram();
-"use strict";
-RedGL.setDoNotPrepareProgram();
-RedGL(document.createElement('canvas'), function (v) {
-    var tRedGL = this;
-    var testVideoTexture = RedVideoTexture(tRedGL, '../../asset/mov_bbb.mp4')
-    redSuite(
-        "RedVideoMaterial 테스트",
-        redGroup(
+RedTest.title = "RedAmbientLight TEST";
+RedGL(document.createElement('canvas'), function () {
+        var tRedGL = this;
+        var testVideoTexture = RedVideoTexture(tRedGL, '../../asset/mov_bbb.mp4');
+
+        RedTest.testGroup(
             "RedVideoMaterial( redGL, diffuseTexture )",
-            redTest("성공테스트 : 기본 생성 테스트", function (unit, title) {
-                try {
-                    RedVideoMaterial(tRedGL, testVideoTexture);
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, true),
-            redTest("실패테스트 : RedGL instance만 허용.", function (unit, title) {
-                try {
-                    RedVideoMaterial(1);
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, false)
-        ),
-        redGroup(
+            function () {
+                RedTest.test(
+                    "성공테스트 : 기본 생성 테스트",
+                    function () {
+                        try {
+                            RedVideoMaterial(tRedGL, testVideoTexture);
+                            RedTest.run(true)
+                        } catch (error) {
+                            RedTest.run(false, error)
+                        }
+                    },
+                    true
+                );
+                RedTest.test(
+                    "실패테스트 : RedGL instance만 허용.",
+                    function () {
+                        try {
+                            RedVideoMaterial(1);
+                            RedTest.run(true)
+                        } catch (error) {
+                            RedTest.run(false, error)
+                        }
+                    },
+                    false
+                )
+            }
+        );
+        RedTest.testGroup(
             "RedVideoMaterial( redGL, <b>diffuseTexture</b> )",
-            redTest("실패테스트 : 미입력", function (unit, title) {
-                try {
-                    RedVideoMaterial(tRedGL);
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, false),
-            redTest("실패테스트 : 숫자입력", function (unit, title) {
-                try {
-                    RedVideoMaterial(tRedGL, 1);
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, false),
-            redTest("성공테스트 : RedVideoTexture Instance 입력", function (unit, title) {
-                try {
-                    RedVideoMaterial(tRedGL, testVideoTexture);
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, true),
-            redTest("실패테스트 : RedBitmapTexture Instance 입력", function (unit, title) {
-                try {
-                    RedVideoMaterial(tRedGL, tRedGL._datas.emptyTexture['2d']);
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, false),
-            redTest("실패테스트 : RedBitmapCubeTexture Instance 입력", function (unit, title) {
-                try {
-                    RedVideoMaterial(tRedGL, tRedGL._datas.emptyTexture['3d']);
-                    unit.run(true)
-                } catch (error) {
-                    console.log('///////////////////////////////////////////////////////////')
-                    console.log(title, '\n', error)
-                    unit.run(false)
-                }
-            }, false)
-        ),
-        redGroup(
+            function () {
+                RedTest.test(
+                    "실패테스트 : 미입력",
+                    function () {
+                        try {
+                            RedVideoMaterial(tRedGL);
+                            RedTest.run(true)
+                        } catch (error) {
+                            RedTest.run(false, error)
+                        }
+                    },
+                    false
+                );
+                RedTest.test(
+                    "실패테스트 : 숫자입력",
+                    function () {
+                        try {
+                            RedVideoMaterial(tRedGL, 1);
+                            RedTest.run(true)
+                        } catch (error) {
+                            RedTest.run(false, error)
+                        }
+                    },
+                    false
+                );
+                RedTest.test(
+                    "성공테스트 : RedVideoTexture Instance 입력",
+                    function () {
+                        try {
+                            RedVideoMaterial(tRedGL, testVideoTexture);
+                            RedTest.run(true)
+                        } catch (error) {
+                            RedTest.run(false, error)
+                        }
+                    },
+                    true
+                );
+                RedTest.test(
+                    "실패테스트 : RedBitmapTexture Instance 입력",
+                    function () {
+                        try {
+                            RedVideoMaterial(tRedGL, tRedGL._datas.emptyTexture['2d']);
+                            RedTest.run(true)
+                        } catch (error) {
+                            RedTest.run(false, error)
+                        }
+                    },
+                    false
+                );
+                RedTest.test(
+                    "실패테스트 : RedBitmapCubeTexture Instance 입력",
+                    function () {
+                        try {
+                            RedVideoMaterial(tRedGL, tRedGL._datas.emptyTexture['3d']);
+                            RedTest.run(true)
+                        } catch (error) {
+                            RedTest.run(false, error)
+                        }
+                    },
+                    false
+                )
+            }
+        );
+        RedTest.testGroup(
             "(RedVideoMaterial Instance).<b>alpha</b> = value",
-            redTest("성공테스트 : 초기값", function (unit, title) {
-                var t0 = RedVideoMaterial(tRedGL, testVideoTexture);
-                unit.run(t0['alpha'])
-            }, 1),
-            redTest("성공테스트 : 초기값", function (unit, title) {
-                var t0 = RedVideoMaterial(tRedGL, testVideoTexture);
-                unit.run(t0['_alpha'])
-            }, 1),
-            redTest("성공테스트 : 0.5입력", function (unit, title) {
-                var t0 = RedVideoMaterial(tRedGL, testVideoTexture);
-                t0['alpha'] = 0.5
-                unit.run(t0['alpha'])
-            }, 0.5),
-            redTest("성공테스트 : 1이상을 입력하면 1로 치환되는지", function (unit, title) {
-                var t0 = RedVideoMaterial(tRedGL, testVideoTexture);
-                t0.alpha = 11111
-                unit.run(t0['alpha'])
-            }, 1),
-            redTest("성공테스트 : 0이하를 입력하면 0으로 치환되는지", function (unit, title) {
-                var t0 = RedVideoMaterial(tRedGL, testVideoTexture);
-                t0.alpha = -11111
-                unit.run(t0['alpha'])
-            }, 0)
+            function () {
+                RedTest.test(
+                    "성공테스트 : 초기값",
+                    function () {
+                        var t0 = RedVideoMaterial(tRedGL, testVideoTexture);
+                        RedTest.run(t0['alpha'])
+                    },
+                    1
+                );
+                RedTest.test(
+                    "성공테스트 : 초기값",
+                    function () {
+                        var t0 = RedVideoMaterial(tRedGL, testVideoTexture);
+                        RedTest.run(t0['_alpha'])
+                    },
+                    1
+                );
+                RedTest.test(
+                    "성공테스트 : 0.5입력",
+                    function () {
+                        var t0 = RedVideoMaterial(tRedGL, testVideoTexture);
+                        t0['alpha'] = 0.5;
+                        RedTest.run(t0['alpha'])
+                    },
+                    0.5
+                );
+                RedTest.test(
+                    "성공테스트 : 1이상을 입력하면 1로 치환되는지",
+                    function () {
+                        var t0 = RedVideoMaterial(tRedGL, testVideoTexture);
+                        t0.alpha = 11111;
+                        RedTest.run(t0['alpha'])
+                    },
+                    1
+                );
+                RedTest.test(
+                    "성공테스트 : 0이하를 입력하면 0으로 치환되는지",
+                    function () {
+                        var t0 = RedVideoMaterial(tRedGL, testVideoTexture);
+                        t0.alpha = -11111;
+                        RedTest.run(t0['alpha']);
+                        tRedGL.gl.getExtension('WEBGL_lose_context').loseContext();
+                    },
+                    0
+                )
+            }
         )
-    )
-})
+
+    }
+);
 //
 // RedGL( document.createElement( 'canvas' ), function ( v ) {
 // 	var tRedGL = this;
 // 	redSuite(
 // 		"RedVideoMaterial 테스트",
-// 		redGroup(
+// 		RedTest.testGroup(
 // 			"생성 확인",
-// 			redTest( "기본 생성 테스트", function ( unit, title ) {
+// 			RedTest.test( "기본 생성 테스트", function ( unit, title ) {
 // 				try {
 // 					RedVideoMaterial( tRedGL, testVideoTexture );
-// 					unit.run( true )
+// 					RedTest.run( true )
 // 				} catch ( error ) {
 // 					console.log( '///////////////////////////////////////////////////////////' )
 // 					console.log( title, '\n', error )
-// 					unit.run( false )
+// 					RedTest.run( false )
 // 				}
 // 			}, true )
 // 		),
-// 		redGroup(
+// 		RedTest.testGroup(
 // 			"인자테스트 - redGL",
-// 			redTest( "인자테스트 ( redGL, videoTexture ) : redGL - RedGL instance만 허용.", function ( unit, title ) {
+// 			RedTest.test( "인자테스트 ( redGL, videoTexture ) : redGL - RedGL instance만 허용.", function ( unit, title ) {
 // 				try {
 // 					RedVideoMaterial( 1 );
-// 					unit.run( true )
+// 					RedTest.run( true )
 // 				} catch ( error ) {
 // 					console.log( '///////////////////////////////////////////////////////////' )
 // 					console.log( title, '\n', error )
-// 					unit.run( false )
+// 					RedTest.run( false )
 // 				}
 // 			}, false )
 // 		),
-// 		redGroup(
+// 		RedTest.testGroup(
 // 			"인자테스트 - videoTexture",
-// 			redTest( "인자테스트 ( redGL, videoTexture ) : RedVideoTexture Instance 만 허용 - 미입력시", function ( unit, title ) {
+// 			RedTest.test( "인자테스트 ( redGL, videoTexture ) : RedVideoTexture Instance 만 허용 - 미입력시", function ( unit, title ) {
 // 				try {
 // 					RedVideoMaterial( tRedGL );
-// 					unit.run( true )
+// 					RedTest.run( true )
 // 				} catch ( error ) {
 // 					console.log( '///////////////////////////////////////////////////////////' )
 // 					console.log( title, '\n', error )
-// 					unit.run( false )
+// 					RedTest.run( false )
 // 				}
 // 			}, false ),
-// 			redTest( "인자테스트 ( redGL, videoTexture ) : RedVideoTexture Instance 만 허용 - 숫자입력시", function ( unit, title ) {
+// 			RedTest.test( "인자테스트 ( redGL, videoTexture ) : RedVideoTexture Instance 만 허용 - 숫자입력시", function ( unit, title ) {
 // 				try {
 // 					RedVideoMaterial( tRedGL, 1 );
-// 					unit.run( true )
+// 					RedTest.run( true )
 // 				} catch ( error ) {
 // 					console.log( '///////////////////////////////////////////////////////////' )
 // 					console.log( title, '\n', error )
-// 					unit.run( false )
+// 					RedTest.run( false )
 // 				}
 // 			}, false ),
-// 			redTest( "인자테스트 ( redGL, videoTexture ) : RedVideoTexture Instance 만 허용 - RedVideoTexture Instance 입력시", function ( unit, title ) {
+// 			RedTest.test( "인자테스트 ( redGL, videoTexture ) : RedVideoTexture Instance 만 허용 - RedVideoTexture Instance 입력시", function ( unit, title ) {
 // 				try {
 // 					RedVideoMaterial( tRedGL, testVideoTexture );
-// 					unit.run( true )
+// 					RedTest.run( true )
 // 				} catch ( error ) {
 // 					console.log( '///////////////////////////////////////////////////////////' )
 // 					console.log( title, '\n', error )
-// 					unit.run( false )
+// 					RedTest.run( false )
 // 				}
 // 			}, true ),
-// 			redTest( "인자테스트 ( redGL, videoTexture ) : RedVideoTexture Instance 만 허용 - RedBitmapTexture Instance 입력시", function ( unit, title ) {
+// 			RedTest.test( "인자테스트 ( redGL, videoTexture ) : RedVideoTexture Instance 만 허용 - RedBitmapTexture Instance 입력시", function ( unit, title ) {
 // 				try {
 // 					RedVideoMaterial( tRedGL, tRedGL._datas.emptyTexture['2d'] );
-// 					unit.run( true )
+// 					RedTest.run( true )
 // 				} catch ( error ) {
 // 					console.log( '///////////////////////////////////////////////////////////' )
 // 					console.log( title, '\n', error )
-// 					unit.run( false )
+// 					RedTest.run( false )
 // 				}
 // 			}, false ),
-// 			redTest( "인자테스트 ( redGL, videoTexture ) : RedVideoTexture Instance 만 허용 - RedBitmapCubeTexture Instance 입력시", function ( unit, title ) {
+// 			RedTest.test( "인자테스트 ( redGL, videoTexture ) : RedVideoTexture Instance 만 허용 - RedBitmapCubeTexture Instance 입력시", function ( unit, title ) {
 // 				try {
 // 					RedVideoMaterial( tRedGL, tRedGL._datas.emptyTexture['3d'] );
-// 					unit.run( true )
+// 					RedTest.run( true )
 // 				} catch ( error ) {
 // 					console.log( '///////////////////////////////////////////////////////////' )
 // 					console.log( title, '\n', error )
-// 					unit.run( false )
+// 					RedTest.run( false )
 // 				}
 // 			}, false )
 // 		)

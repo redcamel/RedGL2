@@ -1,8 +1,17 @@
-<html>
+<!--
+  ~ RedGL - MIT License
+  ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+  ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+  ~ Last modification time of this file - 2019.5.15 16:50
+  -->
+
+<!DOCTYPE html>
+<html lang="ko">
 
 <head>
     <meta charset="UTF-8">
-    <title>RedGL - RedColorPointCloud</title>
+    <meta name="keywords" content="RedGL,webgl,demo">
+    <title>RedGL Example - RedColorPointCloud</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -79,9 +88,6 @@
                     RedInterleaveInfo('aVertexColor', 4)
                 ]
             );
-            // 블렌드모드 설정
-            testRedPointCloud['blendSrc'] = this.gl.ONE;
-            testRedPointCloud['blendDst'] = this.gl.ONE;
             tScene.addChild(testRedPointCloud);
             // 렌더시작
             tRenderer.start(this, function (time) {

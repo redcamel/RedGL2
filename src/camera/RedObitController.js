@@ -1,3 +1,10 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedObitController;
 (function () {
@@ -53,46 +60,83 @@ var RedObitController;
         this['_currentPan'] = 0;
         this['_currentTilt'] = 0;
         this['_currentDistance'] = 0;
+        this['needUpdate'] = true;
+        this['targetView'] = null;
         (function (self) {
             var HD_down, HD_Move, HD_up, HD_wheel;
             var sX, sY;
             var mX, mY;
             var tMove, tUp, tDown;
-            tMove = RedGLDetect.BROWSER_INFO.move
-            tUp = RedGLDetect.BROWSER_INFO.up
-            tDown = RedGLDetect.BROWSER_INFO.down
+            var checkArea;
+            checkArea = function (e) {
+                if (self['targetView']) {
+                    var tX, tY;
+                    if (RedGLDetect.BROWSER_INFO.isMobile) {
+                        console.log(e);
+                        tX = e['clientX'], tY = e['clientY'];
+                    } else {
+                        tX = e[tXkey], tY = e[tYkey];
+                    }
+                    if (!(self['targetView']['_viewRect'][0] < tX && tX < self['targetView']['_viewRect'][0] + self['targetView']['_viewRect'][2])) return;
+                    if (!(self['targetView']['_viewRect'][1] < tY && tY < self['targetView']['_viewRect'][1] + self['targetView']['_viewRect'][3])) return;
+                }
+                return true
+            };
+            tMove = RedGLDetect.BROWSER_INFO.move;
+            tUp = RedGLDetect.BROWSER_INFO.up;
+            tDown = RedGLDetect.BROWSER_INFO.down;
             sX = 0, sY = 0;
             mX = 0, mY = 0;
+            var tXkey, tYkey;
+            if (RedGLDetect.BROWSER_INFO.browser == 'ie' && RedGLDetect.BROWSER_INFO.browserVer == 11) {
+                tXkey = 'offsetX';
+                tYkey = 'offsetY';
+            } else {
+                tXkey = 'layerX';
+                tYkey = 'layerY';
+            }
             HD_down = function (e) {
-                if (RedGLDetect.BROWSER_INFO.isMobile) {
-                    console.log(e)
-                    e = e.targetTouches[0]
-                    sX = e['clientX'], sY = e['clientY'];
-                } else {
-                    sX = e['x'], sY = e['y'];
+                if (self['needUpdate']) {
+                    if (RedGLDetect.BROWSER_INFO.isMobile) {
+                        console.log(e);
+                        e = e.targetTouches[0]
+                    }
+                    if (!checkArea(e)) return;
+                    if (RedGLDetect.BROWSER_INFO.isMobile) {
+                        console.log(e);
+                        sX = e['clientX'], sY = e['clientY'];
+                    } else {
+                        sX = e[tXkey], sY = e[tYkey];
+                    }
+                    redGL['_canvas'].addEventListener(tMove, HD_Move);
+                    window.addEventListener(tUp, HD_up);
                 }
-                redGL['_canvas'].addEventListener(tMove, HD_Move);
-                window.addEventListener(tUp, HD_up);
+
             };
             HD_Move = function (e) {
-                if (RedGLDetect.BROWSER_INFO.isMobile) {
-                    e = e.targetTouches[0]
-                    mX = e['clientX'] - sX, mY = e['clientY'] - sY;
-                    sX = e['clientX'], sY = e['clientY'];
-                } else {
-                    mX = e['x'] - sX, mY = e['y'] - sY;
-                    sX = e['x'], sY = e['y'];
+                if (self['needUpdate']) {
+                    if (RedGLDetect.BROWSER_INFO.isMobile) {
+                        e = e.targetTouches[0];
+                        mX = e['clientX'] - sX, mY = e['clientY'] - sY;
+                        sX = e['clientX'], sY = e['clientY'];
+                    } else {
+                        mX = e[tXkey] - sX, mY = e[tYkey] - sY;
+                        sX = e[tXkey], sY = e[tYkey];
+                    }
+                    self['_pan'] -= mX * self['_speedRotation'] * 0.1;
+                    self['_tilt'] -= mY * self['_speedRotation'] * 0.1;
                 }
-                self['_pan'] -= mX * self['_speedRotation'] * 0.1;
-                self['_tilt'] -= mY * self['_speedRotation'] * 0.1;
             };
             HD_up = function () {
                 redGL['_canvas'].removeEventListener(tMove, HD_Move);
                 window.removeEventListener(tUp, HD_up);
             };
             HD_wheel = function (e) {
-                console.log(e);
-                self['distance'] += e['deltaY'] / 100 * self['_speedDistance']
+                if (self['needUpdate']) {
+                    console.log(e);
+                    if (!checkArea(e)) return;
+                    self['distance'] += e['deltaY'] / 100 * self['_speedDistance']
+                }
             };
             redGL['_canvas'].addEventListener(tDown, HD_down);
             redGL['_canvas'].addEventListener('wheel', HD_wheel);
@@ -239,6 +283,7 @@ var RedObitController;
         var PER_PI;
         PER_PI = Math.PI / 180;
         return function () {
+            if (!this['needUpdate']) return;
             if (this['_tilt'] < this['_minTilt']) this['_tilt'] = this['_minTilt'];
             if (this['_tilt'] > this['_maxTilt']) this['_tilt'] = this['_maxTilt'];
             tDelayRotation = this['_delayRotation'];

@@ -1,0 +1,111 @@
+<!--
+  ~ MIT License
+  ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+  ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+  -->
+
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>RedGL - RedGLTFLoader</title>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
+    />
+    <link rel="stylesheet" href="../../example/example.css">
+
+    <script src="../../example/dat.gui.min.js"></script>
+    <script src="../../example/baseTestUI.js"></script>
+    <script src="../../release/RedGL.min.js"></script>
+    <!--<script src="RedGLTFLoader.js"></script>-->
+</head>
+
+<body>
+<script id='testSource'>
+    var testUI;
+    var canvas;
+    var assetPath = '../../asset/'
+    canvas = document.createElement('canvas');
+    document.body.appendChild(canvas);
+    RedGL.setDoNotPrepareProgram()
+    RedGL(canvas, function (v) {
+        if (v) {
+            var tWorld, tView, tScene, tController, tRenderer;
+            var setBase = function (redGL) {
+                // 월드 생성
+                redGL['world'] = tWorld = RedWorld();
+                // 씬 생성
+                tScene = RedScene(redGL);
+                // 카메라 생성
+                tController = RedObitController(redGL);
+                tController.pan = 25;
+                tController.tilt = -15;
+                // tController.distance = 75;
+                // 렌더러 생성
+                tRenderer = RedRenderer();
+                // 뷰생성 및 적용
+                tView = RedView('HelloRedGL', redGL, tScene, tController);
+                tWorld.addView(tView);
+                // 그리드 설정
+                // tScene['grid'] = RedGrid(redGL);
+                // 라이트 설정
+                var testDLight;
+                testDLight = RedDirectionalLight(redGL)
+                // testDLight.intensity = 0.3
+                testDLight.x = 100
+                testDLight.y = 100
+                testDLight.z = 100
+                // tScene.addLight(testDLight)
+                // 렌더시작
+                tRenderer.start(redGL, function (time) {
+                });
+                // 렌더 디버거 활성화
+                tRenderer.setDebugButton();
+                testUI(redGL, tController)
+            };
+            setBase(this);
+            ///////////////////////////////////////////////////
+            var canvas = document.createElement('canvas')
+            var ctx = canvas.getContext('2d')
+            canvas.width = 10
+            canvas.height = 20
+            ctx.fillStyle = 'red'
+            ctx.fillRect(0, 0, 10, 10)
+            ctx.fillStyle = 'blue'
+            ctx.fillRect(0, 10, 10, 10)
+            canvas.style.cssText = 'position:fixed;top:0px;left:0px'
+
+            // 체크
+            var gl = this.gl
+            var tTexture = RedBitmapTexture(this, canvas)
+
+            var fb = gl.createFramebuffer();
+            gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
+            gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tTexture.webglTexture, 0);
+            var pixels = new Uint8Array(1 * 1 * 4);
+            gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels)
+            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+            console.log('test', pixels)
+
+
+            var plane = RedMesh(this, RedPlane(this), RedBitmapMaterial(this, tTexture))
+            tScene.addChild(plane)
+            console.log(this.detect)
+
+
+        } else {
+            console.log('초기화 실패!')
+        }
+    })
+    testUI = function (redGL) {
+        console.log('test')
+        var gui = new baseTestUI(redGL);
+        gui.initRedGL();
+    }
+</script>
+</body>
+
+</html>

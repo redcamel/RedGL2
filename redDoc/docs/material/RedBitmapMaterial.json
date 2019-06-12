@@ -33,5 +33,11 @@
     "demo": "../example/material/RedBitmapMaterial.html",
     "example": "\n\t RedBitmapMaterial( RedGL Instance, RedBitmapTexture(RedGL Instance, src) )\n ",
     "return": "RedBitmapMaterial Instance"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "usePreMultiply",
+    "description": "\n    usePreMultiply 사용여부\n    기본값 : false\n ",
+    "return": "boolean"
   }
 ]

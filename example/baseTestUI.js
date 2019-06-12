@@ -1,3 +1,9 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.6.5 11:37
+ */
 
 var baseTestUI = function (redGL, width) {
     // var getQueryParam = function(param) {
@@ -11,9 +17,22 @@ var baseTestUI = function (redGL, width) {
     // };
     // console.log(getQueryParam('name'))
     document.body.appendChild(testBt = document.createElement('div'));
-    testBt.innerHTML =   'created by Redcamel'
+    testBt.innerHTML = 'created by Redcamel'
     testBt.style.cssText = "position: fixed;top:40px;padding:0px;left:15px;font-size:11px; color:#fff;border:0;outline:none;"
     //
+
+    // Global site tag (gtag.js) - Google Analytics
+    var t0 = document.createElement('script');
+    t0.setAttribute('async', '');
+    t0.setAttribute('src', 'https://www.googletagmanager.com/gtag/js?id=UA-134079611-1');
+    document.head.appendChild(t0)
+    //
+    t0 = document.createElement('script');
+    t0.innerHTML = 'window.dataLayer = window.dataLayer || [];';
+    t0.innerHTML += 'function gtag(){dataLayer.push(arguments);}';
+    t0.innerHTML += 'gtag(\'js\', new Date());';
+    t0.innerHTML += 'gtag(\'config\', \'UA-134079611-1\');';
+    document.head.appendChild(t0);
 
 
     baseTestUI.makeBaseUI();
@@ -95,7 +114,7 @@ baseTestUI.makeBaseUI = function () {
     document.head.appendChild(t0);
     makeSourceView();
 };
-baseTestUI.exampleList =  [
+baseTestUI.exampleList = [
     {
         key: 'RedGL',
         list: [
@@ -110,6 +129,10 @@ baseTestUI.exampleList =  [
             {
                 key: 'RedView',
                 href: 'etc/RedView.html'
+            },
+            {
+                key: 'Multi RedGL Instance',
+                href: 'etc/multiRedGLInstance.html'
             }
         ]
     },
@@ -135,6 +158,16 @@ baseTestUI.exampleList =  [
         ]
     },
     {
+        key: 'Program',
+        list: [
+            {
+                key: 'testAutoProgram',
+                href: 'program/testAutoProgram.html'
+            }
+        ]
+    },
+
+    {
         key: 'Controller',
         list: [
             {
@@ -142,17 +175,26 @@ baseTestUI.exampleList =  [
                 href: 'camera/RedCamera.html'
             },
             {
-                key: 'RedCamera(orthographicMode)',
-                href: 'camera/RedCamera_ortho.html'
+                key: 'RedCamera(mode2D)',
+                href: 'camera/RedCamera_mode2D.html'
             },
             {
                 key: 'RedBasicController',
                 href: 'camera/RedBasicController.html'
             },
             {
+                key: 'RedBasicController_targetView',
+                href: 'camera/RedBasicController_targetView.html'
+            },
+            {
                 key: 'RedObitController',
                 href: 'camera/RedObitController.html'
+            },
+            {
+                key: 'RedObitController_targetView',
+                href: 'camera/RedObitController_targetView.html'
             }
+
         ]
     },
     {
@@ -171,9 +213,26 @@ baseTestUI.exampleList =  [
                 href: 'object3D/RedLine.html'
             },
             {
+                key: 'RedLine LINEAR',
+                href: 'object3D/RedLine_linear_type.html'
+            },
+            {
+                key: 'RedLine CATMULL_ROM',
+                href: 'object3D/RedLine_catmull_rom_type.html'
+            },
+            {
+                key: 'RedLine BEZIER',
+                href: 'object3D/RedLine_bezier_type.html'
+            },
+            {
                 key: 'RedMesh',
                 href: 'object3D/RedMesh.html'
             },
+            {
+                key: 'RedLatheMesh',
+                href: 'object3D/RedLatheMesh.html'
+            },
+
             {
                 key: 'RedSkyBox',
                 href: 'object3D/RedSkyBox.html'
@@ -181,6 +240,14 @@ baseTestUI.exampleList =  [
             {
                 key: 'RedSprite3D',
                 href: 'object3D/RedSprite3D.html'
+            },
+            {
+                key: 'RedTransformController',
+                href: 'object3D/RedTransformController.html'
+            },
+            {
+                key: 'object3D lookAt',
+                href: 'object3D/object3D_lookAt.html'
             }
         ]
     },
@@ -224,16 +291,28 @@ baseTestUI.exampleList =  [
                 href: 'material/RedVideoMaterial.html'
             },
             {
-                key: 'FlatModeMaterial',
-                href: 'material/FlatModeMaterial.html'
-            },
-            {
                 key: 'RedBitmapPointCloudMaterial',
                 href: 'material/RedBitmapPointCloudMaterial.html'
             },
             {
                 key: 'RedColorPointCloudMaterial',
                 href: 'material/RedColorPointCloudMaterial.html'
+            },
+            {
+                key: 'FlatModeMaterial',
+                href: 'material/FlatModeMaterial.html'
+            },
+            {
+                key: 'UVTest',
+                href: 'etc/uvTest.html'
+            },
+            {
+                key: 'NormalTextureTest',
+                href: 'etc/normalTest.html'
+            },
+            {
+                key: 'RedBoxSelection',
+                href: 'etc/RedBoxSelection.html'
             }
         ]
     },
@@ -303,8 +382,20 @@ baseTestUI.exampleList =  [
                 href: 'loader/gltf/RedGLTFLoader_morph.html'
             },
             {
+                key: 'RedGLTFLoader_Multi_morphTarget',
+                href: 'loader/gltf/RedGLTFLoader_Multi_morphTarget.html'
+            },
+            {
+                key: 'RedGLTFLoader_Multi_morphTarget_performance',
+                href: 'loader/gltf/RedGLTFLoader_Multi_morphTarget_performance.html'
+            },
+            {
                 key: 'RedGLTFLoader_skin',
                 href: 'loader/gltf/RedGLTFLoader_skin.html'
+            },
+            {
+                key: 'RedGLTFLoader_skin_performance',
+                href: 'loader/gltf/RedGLTFLoader_skin_performance.html'
             },
             {
                 key: 'RedGLTFLoader_hardTest',
@@ -313,7 +404,12 @@ baseTestUI.exampleList =  [
             {
                 key: 'RedGLTFLoader_glb',
                 href: 'loader/gltf/RedGLTFLoader_glb.html'
+            },
+            {
+                key: 'RedGLTFLoader_polly',
+                href: 'loader/gltf/RedGLTFLoader_polly.html'
             }
+
         ]
     },
     {
@@ -324,8 +420,8 @@ baseTestUI.exampleList =  [
                 href: 'text/RedText.html'
             },
             {
-                key: 'RedText(Orthogonal Mode)',
-                href: 'text/RedCamera_ortho_text.html'
+                key: 'RedText(mode2D)',
+                href: 'text/RedText(mode2D).html'
             }
 
         ]
@@ -354,6 +450,10 @@ baseTestUI.exampleList =  [
             {
                 key: 'MouseEvent',
                 href: 'mouseEvent/MouseEvent.html'
+            },
+            {
+                key: 'MouseEvent_multiView_oneScene',
+                href: 'mouseEvent/MouseEvent_multiView_oneScene.html'
             }
         ]
     },
@@ -379,7 +479,7 @@ baseTestUI.exampleList =  [
             },
             {
                 key: 'RedPostEffect_FXAA',
-                href: 'postEffect/RedPostEffect_FXAA.html'
+                href: 'postEffect/antialiasing/RedPostEffect_FXAA.html'
             },
             {
                 key: 'RedPostEffect_DoF',
@@ -477,6 +577,10 @@ baseTestUI.exampleList =  [
             {
                 key: 'calPoint',
                 href: 'etc/calPoint.html'
+            },
+            {
+                key: 'screenToWorld',
+                href: 'etc/screenToWorld.html'
             }
         ]
     },
@@ -527,7 +631,7 @@ var makeItem = function (list, depth) {
 
     })
 }
-baseTestUI.itemList= []
+baseTestUI.itemList = []
 makeItem(baseTestUI.exampleList)
 baseTestUI.prototype = {
     initRedGL: function (open) {
@@ -679,7 +783,7 @@ baseTestUI.prototype = {
     initCamera: function (camera, open) {
         var t0 = this['gui'].addFolder('camera')
         camera = camera instanceof RedCamera ? camera : camera.camera;
-        t0.add(camera, 'orthographicYn', true, false);
+        t0.add(camera, 'mode2DYn', true, false);
         t0.add(camera, 'nearClipping', 0, 20, 0.01);
         t0.add(camera, 'farClipping', 0, 10000, 0.01);
         t0.add(camera, 'fov', 0, 100, 0.01);

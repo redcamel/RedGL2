@@ -1,8 +1,17 @@
-<html>
+<!--
+  ~ RedGL - MIT License
+  ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+  ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+  ~ Last modification time of this file - 2019.5.15 16:50
+  -->
+
+<!DOCTYPE html>
+<html lang="ko">
 
 <head>
     <meta charset="UTF-8">
-    <title>RedGL - RedGrid</title>
+    <meta name="keywords" content="RedGL,webgl,demo">
+    <title>RedGL Example - RedGrid</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -62,7 +71,12 @@
         var gui = new baseTestUI(redGL)
         var tFolder;
         tFolder = gui['gui'].addFolder('RedGrid');
-        ['size', 'divisions'].forEach(function (key) {
+        ['size'].forEach(function (key) {
+            tFolder.add(redGrid, key, 0, 100, 0.1).onChange(function (v) {
+                redGrid[key] = v
+            });
+        });
+        ['divisions'].forEach(function (key) {
             tFolder.add(redGrid, key, 0, 100, 1).onChange(function (v) {
                 redGrid[key] = v
             });

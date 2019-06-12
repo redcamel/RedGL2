@@ -1,0 +1,154 @@
+<!--
+  ~ RedGL - MIT License
+  ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+  ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+  ~ Last modification time of this file - 2019.5.15 16:50
+  -->
+
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="RedGL,webgl,demo">
+    <title>RedGL Example - MouseEvent_multiView</title>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
+    />
+    <link rel="stylesheet" href="../example.css">
+
+    <script src="../dat.gui.min.js"></script>
+    <script src="../baseTestUI.js"></script>
+    <script src="../../release/RedGL.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.2/TweenMax.min.js"></script>
+</head>
+
+<body>
+<script id='testSource'>
+    var testUI;
+    var canvas;
+    var assetPath = '../../asset/'
+    canvas = document.createElement('canvas');
+    document.body.appendChild(canvas);
+    RedGL(canvas, function (v) {
+        if (v) {
+            console.log('초기화 성공!')
+            var tWorld, tView, tScene, tController, tRenderer, tLight;
+            var setBase = function (redGL) {
+                // 월드 생성
+                redGL['world'] = tWorld = RedWorld();
+                // 씬 생성
+                tScene = RedScene(redGL);
+                // 카메라 생성
+                tController = RedObitController(redGL);
+                tController.pan = 25;
+                tController.tilt = -15;
+                tController.distance = 20;
+
+                // 렌더러 생성
+                tRenderer = RedRenderer();
+                // 뷰생성 및 적용
+                tView = RedView('HelloRedGL', redGL, tScene, tController);
+                tView.setSize('50%', '50%')
+                tWorld.addView(tView);
+                console.log(tView)
+
+                var tView2 = RedView('HelloRedGL2', redGL, tScene, tController);
+                tView2.setLocation('50%', '50%')
+                tView2.setSize('50%', '50%')
+                tWorld.addView(tView2);
+                // 그리드 설정
+                tScene['grid'] = RedGrid(redGL);
+                // 라이트 설정
+                tLight = RedDirectionalLight(redGL);
+                tScene.addLight(tLight)
+                tLight.x = 10;
+                tLight.y = 10;
+                tLight.z = 10;
+                tLight = RedDirectionalLight(redGL, '#ff00ff');
+                tScene.addLight(tLight)
+                tLight.x = -10;
+                tLight.y = 10;
+                tLight.z = -10;
+                // 렌더시작
+                tRenderer.start(redGL, function (time) {
+                    tScene.children.forEach(function (tMesh) {
+                        tMesh.rotationX += 1
+                        tMesh.rotationY += 1
+                        tMesh.rotationZ += 1
+                    })
+                });
+                // 렌더 디버거 활성화
+                tRenderer.setDebugButton();
+            };
+            setBase(this);
+            // Material 설정
+            var tMaterial = RedEnvironmentMaterial(this,
+                RedBitmapTexture(this, assetPath + 'brick/Brick03_col.jpg'),
+                RedBitmapCubeTexture(this, [
+                    assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
+                    assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
+                    assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
+                    assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
+                    assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
+                    assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
+                ]),
+                RedBitmapTexture(this, assetPath + 'brick/Brick03_nrm.jpg'),
+                null,
+                RedBitmapTexture(this, assetPath + 'brick/Brick03_disp.jpg')
+            )
+            // Mesh 설정
+            var makeMesh = function (redGL) {
+                var i = 250
+                while (i--) {
+                    var tMesh;
+                    tMesh = RedMesh(redGL, RedSphere(redGL, 1, 32, 32, 32), tMaterial)
+                    tMesh.x = Math.random() * 60 - 30
+                    tMesh.y = Math.random() * 60 - 30
+                    tMesh.z = Math.random() * 60 - 30
+                    tScene.mouseManager.add(tMesh, 'over', function (e) {
+                        var tValue = 2
+                        TweenMax.to(this, 0.5, {
+                            scaleX: tValue,
+                            scaleY: tValue,
+                            scaleZ: tValue,
+                            ease: Back.easeOut,
+                            rotationX: Math.random() * 360
+                        });
+                        console.log(e)
+                    })
+                    tScene.mouseManager.add(tMesh, 'out', function (e) {
+                        var tValue = 1
+                        TweenMax.to(this, 0.5, {scaleX: tValue, scaleY: tValue, scaleZ: tValue, ease: Back.easeOut});
+                        console.log(e)
+                    })
+                    tScene.mouseManager.add(tMesh, 'down', function (e) {
+                        var tValue = 3
+                        TweenMax.to(this, 0.5, {scaleX: tValue, scaleY: tValue, scaleZ: tValue, ease: Back.easeOut});
+                        console.log(e)
+                    })
+                    tScene.mouseManager.add(tMesh, 'up', function (e) {
+                        var tValue = 2
+                        TweenMax.to(this, 0.5, {scaleX: tValue, scaleY: tValue, scaleZ: tValue, ease: Back.easeOut});
+                        console.log(e)
+                    })
+                    tScene.addChild(tMesh)
+                }
+            }
+            makeMesh(this);
+            testUI(this, tScene)
+        } else {
+            console.log('초기화 실패!')
+        }
+    })
+    testUI = function (redGL, tScene) {
+        var gui = new baseTestUI(redGL)
+        gui.initRedGL().open()
+
+    }
+</script>
+</body>
+
+</html>

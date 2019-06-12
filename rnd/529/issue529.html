@@ -1,0 +1,107 @@
+<!--
+  ~ MIT License
+  ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+  ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+  -->
+
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>RedGL - RedGLTFLoader</title>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
+    />
+    <link rel="stylesheet" href="../../example/example.css">
+
+    <script src="../../example/dat.gui.min.js"></script>
+    <script src="../../example/baseTestUI.js"></script>
+    <script src="../../release/RedGL.js"></script>
+</head>
+
+<body>
+<script id='testSource'>
+    var testUI;
+    var canvas;
+    var assetPath = '../../asset/'
+    canvas = document.createElement('canvas');
+    document.body.appendChild(canvas);
+    RedGL.setDoNotPrepareProgram()
+    RedGL(canvas, function (v) {
+        if (v) {
+            var tWorld, tView, tScene, tController, tRenderer;
+            var setBase = function (redGL) {
+                // 월드 생성
+                redGL['world'] = tWorld = RedWorld();
+                // 씬 생성
+                tScene = RedScene(redGL);
+                // 카메라 생성
+                tController = RedObitController(redGL);
+                tController.pan = 25;
+                tController.tilt = -15;
+                // 렌더러 생성
+                tRenderer = RedRenderer();
+                // 뷰생성 및 적용
+                tView = RedView('HelloRedGL', redGL, tScene, tController);
+                tWorld.addView(tView);
+                // 그리드 설정
+                tScene['grid'] = RedGrid(redGL);
+                // 라이트 설정
+                var testDLight;
+                testDLight = RedDirectionalLight(redGL)
+                testDLight.x = 3
+                testDLight.y = 3
+                testDLight.z = 3
+                testDLight.debug = true
+                tScene.addLight(testDLight)
+
+
+                // 렌더시작
+                tRenderer.start(redGL, function (time) {
+                    testDLight.x = Math.sin(time / 1000) * 3
+                    testDLight.z = Math.cos(time / 1000) * 3
+                });
+                // 렌더 디버거 활성화
+                tRenderer.setDebugButton();
+                testUI(redGL, tController)
+            };
+            setBase(this);
+            ///////////////////////////////////////////////////
+            //     RedGLTFLoader(this,  'https://ft-lab.github.io/gltf/occlusion/', 'occlusion_leaves.glb', function (v) {
+            RedGLTFLoader(this, 'https://ft-lab.github.io/gltf/yunomi/', 'Yunomi_normal_20.glb', function (v) {
+                // RedGLTFLoader(this,  'https://ft-lab.github.io/gltf/normal_map/', 'normal_test_02.glb', function (v) {
+                console.log('호잇!', v)
+                tScene.addChild(v['resultMesh'])
+                v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 5
+
+            })
+            RedGLTFLoader(this, 'https://ft-lab.github.io/gltf/normal_map/', 'normal_test_02.glb', function (v) {
+                console.log('호잇!', v)
+                tScene.addChild(v['resultMesh'])
+                v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.5
+                v['resultMesh'].x = 1
+
+            })
+            // RedGLTFLoader(this, 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/SciFiHelmet/glTF/', 'SciFiHelmet.gltf', function (v) {
+            //     console.log('호잇!', v)
+            //     tScene.addChild(v['resultMesh'])
+            //     v['resultMesh'].z = -3
+            //
+            // })
+
+        } else {
+            console.log('초기화 실패!')
+        }
+    })
+    testUI = function (redGL) {
+        console.log('test')
+        var gui = new baseTestUI(redGL);
+        gui.initRedGL();
+    }
+</script>
+</body>
+
+</html>

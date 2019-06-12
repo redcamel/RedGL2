@@ -1,3 +1,10 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:52
+ */
+
 var index_demo
 (function () {
     var tScene
@@ -7,7 +14,7 @@ var index_demo
     var testEmitter
     var targetRender
     index_demo = {
-        start : function (redGL, tView, tRenderer, tCamera){
+        start: function (redGL, tView, tRenderer, tCamera) {
             tView.scene = tScene
             // 렌더시작
             targetRender.start(redGL, function (time) {
@@ -175,7 +182,7 @@ var index_demo
                 //////////////////////////////////////////////////////////////////
                 // RedPointCloud 설정
                 var i;
-
+                var testRedBitmapPointCloudMaterial
                 // 인터리브 정보 생성
                 interleaveData = [];
                 i = 20000
@@ -190,6 +197,7 @@ var index_demo
                     interleaveData.push(Math.random() * 1);
                 }
                 // 포인트 유닛 생성
+
                 testRedPointCloud = RedBitmapPointCloud(
                     redGL,
                     interleaveData,
@@ -198,11 +206,13 @@ var index_demo
                         RedInterleaveInfo('aPointSize', 1)
                     ],
                     // 포인트 재질 생성
-                    RedBitmapPointCloudMaterial(redGL, RedBitmapTexture(redGL, assetPath + 'particle.png'))
+                    testRedBitmapPointCloudMaterial = RedBitmapPointCloudMaterial(redGL, RedBitmapTexture(redGL, assetPath + 'particle.png'))
                 );
                 // 블렌드모드 설정
                 testRedPointCloud['blendSrc'] = redGL.gl.ONE;
                 testRedPointCloud['blendDst'] = redGL.gl.ONE;
+                // 재질 프리멀티브 설정
+                testRedBitmapPointCloudMaterial.usePreMultiply = true
                 tScene.addChild(testRedPointCloud);
                 ////////////////////////////////////////////////
                 //파티클 설정

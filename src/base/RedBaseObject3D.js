@@ -1,3 +1,10 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.6.5 11:42
+ */
+
 "use strict";
 var RedBaseObject3D;
 (function () {
@@ -12,6 +19,7 @@ var RedBaseObject3D;
 	 }
      :DOC*/
     RedBaseObject3D = function () {
+        if (!(this instanceof RedBaseObject3D)) return new RedBaseObject3D();
     };
     /**DOC:
      {
@@ -36,19 +44,24 @@ var RedBaseObject3D;
 	 }
      :DOC*/
     RedBaseObject3D['build'] = function (gl) {
-        this['name'] = 'object3D_' + (RedGL.makeUUID() + 1)
+        this['name'] = 'object3D_' + (RedGL.makeUUID() + 1);
         /**DOC:
          {
 		     code : 'PROPERTY',
 			 title :`useTransparentSort`,
 			 description : `
-				 투명도 소팅 여부
+				 투명도 소팅 여부. 
+				 true 설정시 렌더링 진행과정중 최종적으로 모아서 그리게된다. (완벽하지 않지만 투명객체 소팅 효과를 얻을 수 있음)
 				 기본값 : false
 			 `,
+			 example : `
+                (RedMesh Instance).useTransparentSort = true;
+                (RedMesh Instance).useTransparentSort = false;
+             `,
 			 return : 'Boolean'
 		 }
          :DOC*/
-        this['useTransparentSort'] = false
+        this['useTransparentSort'] = false;
         /**DOC:
          {
 		     code : 'PROPERTY',
@@ -57,6 +70,10 @@ var RedBaseObject3D;
 				 컬링 사용여부
 				 기본값 : true
 			 `,
+			 example : `
+                (RedMesh Instance).useCullFace = true;
+                (RedMesh Instance).useCullFace = false;
+             `,
 			 return : 'Boolean'
 		 }
          :DOC*/
@@ -69,6 +86,11 @@ var RedBaseObject3D;
 				 컬링 페이스 설정
 				 기본값 : gl.BACK
 			 `,
+			 example : `
+			    var tGL = (RedGL Instance).gl;
+                (RedMesh Instance).cullFace = tGL.BACK;
+                (RedMesh Instance).cullFace = tGL.FRONT;
+             `,
 			 return : 'gl 상수'
 		 }
          :DOC*/
@@ -78,9 +100,13 @@ var RedBaseObject3D;
 		     code : 'PROPERTY',
 			 title :`useDepthMask`,
 			 description : `
-				 뎁스 테스트 사용여부
+				 뎁스 마스크 사용여부
 				 기본값 : true
 			 `,
+			 example : `
+                (RedMesh Instance).useDepthMask = true;
+                (RedMesh Instance).useDepthMask = false;
+             `,
 			 return : 'Boolean'
 		 }
          :DOC*/
@@ -93,6 +119,10 @@ var RedBaseObject3D;
 				 뎁스 테스트 사용여부
 				 기본값 : true
 			 `,
+			 example : `
+                (RedMesh Instance).useDepthTest = true;
+                (RedMesh Instance).useDepthTest = false;
+             `,
 			 return : 'Boolean'
 		 }
          :DOC*/
@@ -105,6 +135,11 @@ var RedBaseObject3D;
 				 뎁스 테스트 함수 설정
 				 기본값 : gl.LEQUAL
 			 `,
+			 example : `
+			    var tGL = (RedGL Instance).gl;
+                (RedMesh Instance).depthTestFunc = tGL.LEQUAL;
+                (RedMesh Instance).depthTestFunc = tGL.LESS;
+             `,
 			 return : 'gl 상수'
 		 }
          :DOC*/
@@ -117,6 +152,10 @@ var RedBaseObject3D;
 				 블렌드 모드 사용여부
 				 기본값 : true
 			 `,
+			 example : `
+                (RedMesh Instance).useBlendMode = true;
+                (RedMesh Instance).useBlendMode = false;
+             `,
 			 return : 'Boolean'
 		 }
          :DOC*/
@@ -127,8 +166,13 @@ var RedBaseObject3D;
 			 title :`blendSrc`,
 			 description : `
 				 블렌드 소스값 factor
-				 기본값 : gl.ONE
+				 기본값 : gl.SRC_ALPHA
 			 `,
+			 example : `
+			    var tGL = (RedGL Instance).gl;
+                (RedMesh Instance).blendSrc = tGL.SRC_ALPHA;
+                (RedMesh Instance).blendSrc = tGL.DST_ALPHA;
+             `,
 			 return : 'gl 상수'
 		 }
          :DOC*/
@@ -141,6 +185,11 @@ var RedBaseObject3D;
 				 블렌드 목표값 factor
 				 기본값 : gl.ONE_MINUS_SRC_ALPHA
 			 `,
+			 example : `
+			    var tGL = (RedGL Instance).gl;
+                (RedMesh Instance).blendDst = tGL.SRC_ALPHA;
+                (RedMesh Instance).blendDst = tGL.DST_ALPHA;
+             `,
 			 return : 'gl 상수'
 		 }
          :DOC*/
@@ -153,6 +202,11 @@ var RedBaseObject3D;
 				 기본값 : gl.TRIANGLES
 				 drawCall시 적용한 드로잉 모드
 			 `,
+			 example : `
+			    var tGL = (RedGL Instance).gl;
+                (RedMesh Instance).drawMode = tGL.TRIANGLES;
+                (RedMesh Instance).drawMode = tGL.LINES;
+             `,
 			 return : 'gl 상수'
 		 }
          :DOC*/
@@ -164,7 +218,12 @@ var RedBaseObject3D;
 			 description : `
 				 기본값 : 1
 				 gl.POINTS로 그릴경우 반영될 포인트 사이즈.
+				 성능을 위해서 getter/setter 설정이 되어있지 않음
 			 `,
+			 example : `
+                (RedMesh Instance).pointSize = 1;
+                (RedMesh Instance).pointSize = 2;
+             `,
 			 return : 'Number'
 		 }
          :DOC*/
@@ -175,11 +234,17 @@ var RedBaseObject3D;
         /**DOC:
          {
 		    code : 'PROPERTY',
-			title :`matrix`,
+			title :`autoUpdateMatrix`,
 			description : `
-			matrix 자동계산여부
+			    matrix 자동계산여부.
+			    true 설정시 이전에 계산된 매트릭스를 사용한다.
+			    임의 매트릭스 설정도 가능
 			`,
-			return : 'mat4'
+			example : `
+                (RedMesh Instance).autoUpdateMatrix = true;
+                (RedMesh Instance).autoUpdateMatrix = false;
+            `,
+			return : 'boolean'
 		 }
          :DOC*/
         this['autoUpdateMatrix'] = true;
@@ -189,26 +254,37 @@ var RedBaseObject3D;
 		    code : 'PROPERTY',
 			title :`matrix`,
 			description : `
-			matrix 렌더링시 자동계산
+			    계산된 누적 메트릭스
+			    matrix 렌더링시 자동계산
 			`,
 			return : 'mat4'
 		 }
          :DOC*/
         this['matrix'] = mat4.create();
-        this['cachedMatrix'] = mat4.create();
+        /**DOC:
+         {
+		    code : 'PROPERTY',
+			title :`localMatrix`,
+			description : `
+			    계산된 로컬 메트릭스
+			    matrix 렌더링시 자동계산
+			`,
+			return : 'mat4'
+		 }
+         :DOC*/
         this['localMatrix'] = mat4.create();
         /**DOC:
          {
 		    code : 'PROPERTY',
 			title :`normalMatrix`,
 			description : `
-			normalMatrix 렌더링시 자동계산
+			    계산된 노멀 메트릭스
+			    normalMatrix 렌더링시 자동계산
 			`,
 			return : 'mat4'
 		 }
          :DOC*/
         this['normalMatrix'] = mat4.create();
-        this['cachedNormalMatrix'] = mat4.create();
         /**DOC:
          {
 		     code : 'PROPERTY',
@@ -225,11 +301,15 @@ var RedBaseObject3D;
 		     code : 'PROPERTY',
 			 title :`useLOD`,
 			 description : `LOD사용여부`,
+			 example : `
+                (RedMesh Instance).useLOD = true;
+                (RedMesh Instance).useLOD = false;
+             `,
 			 return : 'Boolean'
 		 }
          :DOC*/
         this['useLOD'] = false;
-        this['_lodLevels'] = {
+        this['_lodLevels'] = [
             /* 1: {
                 geometry : ~~,
                 material : ~~~
@@ -237,14 +317,14 @@ var RedBaseObject3D;
                 하나만 입력할경우 없는쪽은 오리지날 속성이 부여된다.
             }
             */
-        };
-        this['_mouseColorMaterial'] = null
-        this['_mouseColorID'] = [
+        ];
+        this['_mouseColorMaterial'] = null;
+        this['_mouseColorID'] = new Float32Array([
             parseInt(Math.random() * 255),
             parseInt(Math.random() * 255),
             parseInt(Math.random() * 255),
             255
-        ]
+        ])
 
     };
     RedBaseObject3D.prototype = {
@@ -283,17 +363,27 @@ var RedBaseObject3D;
 		 }
          :DOC*/
         addLOD: (function () {
-            var tData;
+            var tData, needPush;
+            var i;
             return function (level, distance, geometry, material) {
                 geometry || material || RedGLUtil.throwFunc('RedBaseObject3D - addLOD : geometry, material 둘중하나는 반드시 입력되어야함');
-                typeof level == 'number' || RedGLUtil.throwFunc('RedBaseObject3D - level : 숫자만허용함');
+                RedGLUtil['isUint'](level) || RedGLUtil.throwFunc('RedBaseObject3D - addLOD : level은 uint만 허용함');
+                if (level > 4) RedGLUtil.throwFunc('RedBaseObject3D - addLOD : level은 0~4 level 까지 허용함');
                 tData = {
                     level: level,
                     distance: distance,
                     geometry: geometry ? geometry : this['geometry'],
                     material: material ? material : this['material']
                 };
-                this['_lodLevels'][level] = tData;
+                i = this['_lodLevels'].length;
+                needPush = true;
+                while (i--) {
+                    if (this['_lodLevels'][i]['level'] == level) {
+                        this['_lodLevels'][i] = tData;
+                        needPush = false;
+                    }
+                }
+                if (needPush) this['_lodLevels'].push(tData)
             }
         })(),
         /**DOC:
@@ -315,7 +405,14 @@ var RedBaseObject3D;
 		 }
          :DOC*/
         removeLOD: function (level) {
-            if (this['_lodLevels'][level]) delete this['_lodLevels'][level]
+            RedGLUtil['isUint'](level) || RedGLUtil.throwFunc('RedBaseObject3D - removeLOD : level : uint만 허용함');
+            var i = this['_lodLevels'].length;
+            while (i--) {
+                if (this['_lodLevels'][i]['level'] == level) {
+                    this['_lodLevels'].splice(i, 1);
+                    break
+                }
+            }
         },
         /**DOC:
          {
@@ -345,6 +442,9 @@ var RedBaseObject3D;
             var t0;
             t0 = mat4.create();
             return function (x, y, z) {
+                typeof x == 'number' || RedGLUtil.throwFunc('RedBaseObject3D - localToWorld : x - number만 허용함', '입력값 : ', x);
+                typeof y == 'number' || RedGLUtil.throwFunc('RedBaseObject3D - localToWorld : y - number만 허용함', '입력값 : ', y);
+                typeof z == 'number' || RedGLUtil.throwFunc('RedBaseObject3D - localToWorld : z - number만 허용함', '입력값 : ', z);
                 x = x || 0;
                 y = y || 0;
                 z = z || 0;
@@ -387,6 +487,9 @@ var RedBaseObject3D;
             t0 = mat4.create();
             t1 = mat4.create();
             return function (x, y, z) {
+                typeof x == 'number' || RedGLUtil.throwFunc('RedBaseObject3D - worldToLocal : x - number만 허용함', '입력값 : ', x);
+                typeof y == 'number' || RedGLUtil.throwFunc('RedBaseObject3D - worldToLocal : y - number만 허용함', '입력값 : ', y);
+                typeof z == 'number' || RedGLUtil.throwFunc('RedBaseObject3D - worldToLocal : z - number만 허용함', '입력값 : ', z);
                 x = x || 0;
                 y = y || 0;
                 z = z || 0;
@@ -404,7 +507,7 @@ var RedBaseObject3D;
 			 title :`getScreenPoint`,
 			 code : 'METHOD',
 			 description : `
-				 스크린 좌표 반환
+				 객체의 중심 좌표를 스크린 좌표로 반환
 			 `,
 			 params : {
 				 redView : [
@@ -412,7 +515,7 @@ var RedBaseObject3D;
 				 ]
 			 },
 			 example : `
-                (RedBaseObject3D Instance).getScreenPoint( RedView Instance ); // 로컬 좌표를 스크린상의 좌표로 반환
+                (RedBaseObject3D Instance).getScreenPoint( RedView Instance );
 			 `,
 			 return : 'Array'
 		 }
@@ -429,6 +532,7 @@ var RedBaseObject3D;
             };
             return function (redView) {
                 mat4.identity(resultMTX);
+                redView instanceof RedView || RedGLUtil.throwFunc('RedBaseObject3D - getScreenPoint : redView - RedView Instance 만 허용함', '입력값 : ', redView);
                 tCamera = redView['camera'];
                 tViewRect = redView['_viewRect'];
                 if (tCamera instanceof RedBaseController) tCamera = tCamera.camera;
@@ -525,12 +629,17 @@ var RedBaseObject3D;
             if (this['geometry']) this['geometry']['disposeBuffer'](key)
         }
     };
-    //TODO: xyz,scaleXYZ,rotationXYZ 일단 이 GET/SET을 쓸건지 말껀지 결정해야함
-    //TODO: xyz,scaleXYZ,rotationXYZ 렌더러 계산시 get/set 함수 안타게 추적해야함
     /**DOC:
      {
 	     code : 'PROPERTY',
 		 title :`x`,
+		 description : `
+		    x 좌표값
+		    성능을 위해서 getter/setter 설정이 되어있지 않음
+        `,
+		 example : `
+            (RedMesh Instance).x = 0;
+         `,
 		 return : 'Number'
 	 }
      :DOC*/
@@ -538,6 +647,13 @@ var RedBaseObject3D;
      {
 	     code : 'PROPERTY',
 		 title :`y`,
+		 description : `
+		    y 좌표값
+		    성능을 위해서 getter/setter 설정이 되어있지 않음
+         `,
+		 example : `
+            (RedMesh Instance).y = 0;
+         `,
 		 return : 'Number'
 	 }
      :DOC*/
@@ -545,16 +661,27 @@ var RedBaseObject3D;
      {
 	     code : 'PROPERTY',
 		 title :`z`,
+		 description : `
+		    z 좌표값
+		    성능을 위해서 getter/setter 설정이 되어있지 않음
+		 `,
+		 example : `
+            (RedMesh Instance).z = 0;
+         `,
 		 return : 'Number'
 	 }
      :DOC*/
-    // RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'x', 'number');
-    // RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'y', 'number');
-    // RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'z', 'number');
     /**DOC:
      {
 	     code : 'PROPERTY',
 		 title :`rotationX`,
+		 description : `
+		    rotationX 값
+		    성능을 위해서 getter/setter 설정이 되어있지 않음
+		 `,
+		 example : `
+            (RedMesh Instance).rotationX = 0;
+         `,
 		 return : 'Number'
 	 }
      :DOC*/
@@ -562,6 +689,13 @@ var RedBaseObject3D;
      {
 	     code : 'PROPERTY',
 		 title :`rotationY`,
+		 description : `
+		    rotationY 값
+		    성능을 위해서 getter/setter 설정이 되어있지 않음
+         `,
+		 example : `
+            (RedMesh Instance).rotationY = 0;
+         `,
 		 return : 'Number'
 	 }
      :DOC*/
@@ -569,16 +703,27 @@ var RedBaseObject3D;
      {
 	     code : 'PROPERTY',
 		 title :`rotationZ`,
+		 description : `
+		    rotationZ 값
+		    성능을 위해서 getter/setter 설정이 되어있지 않음
+		 `,
+		 example : `
+            (RedMesh Instance).rotationZ = 0;
+         `,
 		 return : 'Number'
 	 }
      :DOC*/
-    // RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'scaleX', 'number');
-    // RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'scaleY', 'number');
-    // RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'scaleZ', 'number');
     /**DOC:
      {
 	     code : 'PROPERTY',
 		 title :`scaleX`,
+		 description : `
+		    scaleX 값
+		    성능을 위해서 getter/setter 설정이 되어있지 않음
+		 `,
+		 example : `
+            (RedMesh Instance).scaleX = 0;
+         `,
 		 return : 'Number'
 	 }
      :DOC*/
@@ -586,6 +731,13 @@ var RedBaseObject3D;
      {
 	     code : 'PROPERTY',
 		 title :`scaleY`,
+		 description : `
+		    scaleY 값
+		    성능을 위해서 getter/setter 설정이 되어있지 않음
+         `,
+		 example : `
+            (RedMesh Instance).scaleY = 0;
+         `,
 		 return : 'Number'
 	 }
      :DOC*/
@@ -593,12 +745,118 @@ var RedBaseObject3D;
      {
 	     code : 'PROPERTY',
 		 title :`scaleZ`,
+		 description : `
+		    scaleZ 값
+		    성능을 위해서 getter/setter 설정이 되어있지 않음
+		 `,
+		 example : `
+            (RedMesh Instance).scaleZ = 0;
+         `,
 		 return : 'Number'
 	 }
      :DOC*/
-    // RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'rotationX', 'number');
-    // RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'rotationY', 'number');
-    // RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'rotationZ', 'number');
+    (function () {
+        var getAABB, getOBB, getTransformVolume;
+        getTransformVolume = function (mesh) {
+            var minX, minY, minZ, maxX, maxY, maxZ, vx, vy, vz, t, i, len;
+            var tx, ty, tz;
+            var volume;
+            var transform = mesh.matrix;
+            var stride = mesh.geometry['interleaveBuffer']['stride'];
+            // if (!volume[this]) {
+            minX = minY = minZ = maxX = maxY = maxZ = 0;
+            t = mesh.geometry['interleaveBuffer']['data'];
+            i = 0;
+            len = mesh.geometry['interleaveBuffer']['pointNum'];
+            for (i; i < len; i++) {
+                vx = i * stride , vy = vx + 1, vz = vx + 2;
+                tx = transform[0] * t[vx] + transform[4] * t[vy] + transform[8] * t[vz];
+                ty = transform[1] * t[vx] + transform[5] * t[vy] + transform[9] * t[vz];
+                tz = transform[2] * t[vx] + transform[6] * t[vy] + transform[10] * t[vz];
+                minX = tx < minX ? tx : minX;
+                maxX = tx > maxX ? tx : maxX;
+                minY = ty < minY ? ty : minY;
+                maxY = ty > maxY ? ty : maxY;
+                minZ = tz < minZ ? tz : minZ;
+                maxZ = tz > maxZ ? tz : maxZ;
+            }
+            volume = [maxX - minX, maxY - minY, maxZ - minZ];
+            volume.minX = minX;
+            volume.maxX = maxX;
+            volume.minY = minY;
+            volume.maxY = maxY;
+            volume.minZ = minZ;
+            volume.maxZ = maxZ;
+            return volume
+        };
+        getAABB = function (mesh) {
+            var volume = getTransformVolume(mesh);
+            var tMTX = mat4.create();
+            mat4.translate(tMTX, tMTX, mesh.localToWorld(0, 0, 0));
+            mat4.scale(tMTX, tMTX, volume);
+            return {
+                worldMatrix: tMTX,
+                volume: volume
+            }
+        };
+        getOBB = function (mesh) {
+            var tVolume = mesh.geometry.volume;
+            var tMTX = mat4.create();
+            mat4.translate(tMTX, tMTX, mesh.localToWorld(0, 0, 0));
+            mat4.rotateX(tMTX, tMTX, -mesh.rotationX * Math.PI / 180);
+            mat4.rotateY(tMTX, tMTX, -mesh.rotationY * Math.PI / 180);
+            mat4.rotateZ(tMTX, tMTX, -mesh.rotationZ * Math.PI / 180);
+            mat4.scale(tMTX, tMTX, tVolume);
+            mat4.scale(tMTX, tMTX, [mesh.scaleX, mesh.scaleY, mesh.scaleZ]);
+            var volume = getTransformVolume(mesh);
+            return {
+                worldMatrix: tMTX,
+                volume: volume
+            }
+        };
+        RedBaseObject3D.prototype['volumeCalculateAABB'] = function () {
+            return this['volumeInfo'] = getAABB(this)
+        };
+        RedBaseObject3D.prototype['volumeCalculateOBB'] = function () {
+            return this['volumeInfo'] = getOBB(this)
+        };
+    })();
+    /**DOC:
+     {
+		 code:`PROPERTY`,
+		 title :`lookAt`,
+		 description : `
+            lookAt
+		 `,
+		 params : {
+			 x : [{type : "Number"}],
+			 y : [{type : "Number"}],
+			 z : [{type : "Number"}]
+		 },
+		 return : 'void'
+	 }
+     :DOC*/
+    RedBaseObject3D.prototype['lookAt'] = (function () {
+        var up = new Float32Array([0, 1, 0]);
+        var tPosition = [];
+        var tQuaternion;
+        var tRotation = []
+        return function (x, y, z) {
+            tPosition[0] = x;
+            tPosition[1] = y;
+            tPosition[2] = z;
+            //out, eye, center, up
+            mat4.identity(this['matrix']);
+            mat4.targetTo(this['matrix'], [this.x, this.y, this.z], tPosition, up);
+            tQuaternion = quat.create();
+            mat4.getRotation(tQuaternion, this['matrix'])
+            tRotation = RedGLUtil.quaternionToRotation(tQuaternion)
+            tRotation = RedGLUtil.mat4ToEuler(this['matrix'], []);
+            this.rotationX = -tRotation[0] * 180 / Math.PI;
+            this.rotationY = -tRotation[1] * 180 / Math.PI;
+            this.rotationZ = -tRotation[2] * 180 / Math.PI;
+        }
+    })();
     /**DOC:
      {
 			 title :`geometry`,
@@ -633,7 +891,7 @@ var RedBaseObject3D;
             return this['_material'];
         },
         set: function (v) {
-            if (v && !(v instanceof RedBaseMaterial)) RedGLUtil.throwFunc('material : RedBaseMaterial Instance만 허용.', '입력값 : ' + v)
+            if (v && !(v instanceof RedBaseMaterial)) RedGLUtil.throwFunc('material : RedBaseMaterial Instance만 허용.', '입력값 : ' + v);
             this['_material'] = v
         }
     });

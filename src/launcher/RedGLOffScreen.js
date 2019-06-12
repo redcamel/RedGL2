@@ -1,4 +1,11 @@
-"use strict"
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
+"use strict";
 var RedGLOffScreen;
 (function () {
     var RedWorkerCode;
@@ -49,7 +56,7 @@ var RedGLOffScreen;
      :DOC*/
     RedGLOffScreen = function (canvas, w, h, redGLSrc, hostSrc) {
         if (!(this instanceof RedGLOffScreen)) return new RedGLOffScreen(canvas, w, h, redGLSrc, hostSrc);
-        RedGLDetect.getBrowserInfo()
+        RedGLDetect.getBrowserInfo();
         var self = this;
         self['htmlCanvas'] = canvas;
         self['redGLSrc'] = redGLSrc;
@@ -98,10 +105,10 @@ var RedGLOffScreen;
                 var customEvent = {};
                 MOUSE_KEY_LIST.forEach(function (v) {
                     if (v == 'targetTouches' && e[v]) {
-                        var t0 = []
-                        var i = e[v].length
+                        var t0 = [];
+                        var i = e[v].length;
                         while (i--) {
-                            var v2 = e[v][i]
+                            var v2 = e[v][i];
                             t0.push({
                                 clientX: v2['clientX'],
                                 clientY: v2['clientY'],
@@ -199,15 +206,15 @@ var RedGLOffScreen;
                 prevW = W;
                 prevH = H;
             }
-            W = parseInt(W)
-            H = parseInt(H)
+            W = parseInt(W);
+            H = parseInt(H);
             this._init(this['htmlCanvas'], W, H);
         }
     })();
     ////////////////////////
     (function () {
         RedWorkerCode = function () {
-            this['window'] = this
+            this['window'] = this;
             console.log(window);
             var WorkerMain; // 호스트 문자열을 함수로 생성
             var WorkerMainInstance; // 인스턴스 (실제론 RedGL 인스턴스)
@@ -299,7 +306,7 @@ var RedGLOffScreen;
                         break;
                 }
             }
-        }
+        };
         RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
     })();
 })();

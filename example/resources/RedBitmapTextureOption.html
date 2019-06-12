@@ -1,8 +1,17 @@
-<html>
+<!--
+  ~ RedGL - MIT License
+  ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+  ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+  ~ Last modification time of this file - 2019.5.15 16:50
+  -->
+
+<!DOCTYPE html>
+<html lang="ko">
 
 <head>
     <meta charset="UTF-8">
-    <title>RedGL - RedBitmapMaterial</title>
+    <meta name="keywords" content="RedGL,webgl,demo">
+    <title>RedGL Example - RedBitmapMaterial</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -59,12 +68,12 @@
                 var indexData;
                 var testInterleaveBuffer, testIndexBuffer;
                 interleaveData = new Float32Array([
-                    -0.5, -0.5, 0.0, 0.0, 0.0,
-                    0.5, -0.5, 0.0, 2.0, 0.0,
-                    0.5, 0.5, 0.0, 2.0, 2.0,
-                    -0.5, 0.5, 0.0, 0.0, 2.0
+                    -0.5, 0.5, 0.0, 0.0, 0.0,
+                    0.5, 0.5, 0.0, 2.0, 0.0,
+                    -0.5, -0.5, 0.0, 0.0, 2.0,
+                    0.5, -0.5, 0.0, 2.0, 2.0
                 ]);
-                indexData = new Uint16Array([0, 1, 2, 0, 2, 3]);
+                indexData = new Uint16Array([0, 2, 1, 2, 3, 1]);
                 testInterleaveBuffer = RedBuffer(
                     redGL,
                     'testInterleaveBuffer',
@@ -88,17 +97,19 @@
             var tDiffuse1, tDiffuse2, tDiffuse3
 
             var setOptionText = function (target, v) {
-                var tText
-                tText = RedText(target, 1350, 512)
+                var tText = RedText(target, 512, 200)
                 tText.color = '#fff'
                 tText.background = 'rgba(0,0,0,0.5)'
                 tText.text = v
-                tText.fontSize = '80px'
-                tText.lineHeight = '95px'
-                tText.padding = '35px'
+                tText.fontSize = '30px'
+                tText.lineHeight = '35px'
+                tText.padding = '15px'
                 tText.textAlign = 'left'
                 tText.sprite3DYn = true
                 tText.perspectiveScale = true
+                tText.useDepthTest = false
+                tText.scaleX = 2
+                tText.scaleY = 2
                 tText.z = 0.5
                 tText.y = 0.25
                 return tText

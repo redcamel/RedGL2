@@ -1,9 +1,16 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedSheetMaterial;
 (function () {
     var vSource, fSource;
     var PROGRAM_NAME = 'RedSheetMaterialProgram';
-    var PROGRAM_OPTION_LIST = [];
+    var PROGRAM_OPTION_LIST = ['usePreMultiply'];
     var checked;
     vSource = function () {
         /* @preserve
@@ -30,7 +37,7 @@ var RedSheetMaterial;
                 //#REDGL_DEFINE#sprite3D#true# gl_Position = uPMatrix * getSprite3DMatrix(uCameraMatrix , targetMatrix) *  vec4(aVertexPosition, 1.0);
                 //#REDGL_DEFINE#sprite3D#true# if(!u_PerspectiveScale){
                 //#REDGL_DEFINE#sprite3D#true#   gl_Position /= gl_Position.w;
-                //#REDGL_DEFINE#sprite3D#true#   gl_Position.xy += aVertexPosition.xy * vec2(targetMatrix[0][0],targetMatrix[1][1] * uResolution.x/uResolution.y);
+                //#REDGL_DEFINE#sprite3D#true#   gl_Position.xy += aVertexPosition.xy * vec2((uPMatrix * targetMatrix)[0][0],(uPMatrix * targetMatrix)[1][1]);
                 //#REDGL_DEFINE#sprite3D#true# }
                 //#REDGL_DEFINE#sprite3D#false# gl_Position = uPMatrix * uCameraMatrix * targetMatrix *  vec4(aVertexPosition, 1.0);
 
@@ -54,7 +61,7 @@ var RedSheetMaterial;
          uniform float u_alpha;
          void main(void) {
              vec4 finalColor = texture2D(u_diffuseTexture, vTexcoord);
-             finalColor.rgb *= finalColor.a;
+             //#REDGL_DEFINE#usePreMultiply# finalColor.rgb *= finalColor.a;
              finalColor.a *= u_alpha;
              if(finalColor.a ==0.0) discard;
 
@@ -103,6 +110,7 @@ var RedSheetMaterial;
         /////////////////////////////////////////
         // 일반 프로퍼티
         this['alpha'] = 1;
+        this['usePreMultiply'] = false;
         this['_perFrameTime'] = 0; // 단위당 시간
         this['_nextFrameTime'] = 0; // 다음 프레임 호출 시간
         this['_playYn'] = true;
@@ -121,7 +129,13 @@ var RedSheetMaterial;
         }
         console.log(this);
     };
+    var samplerOption = {
+        callback: function () {
+            this._searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST)
+        }
+    };
     RedSheetMaterial.prototype = new RedBaseMaterial();
+
     /**DOC:
      {
 		 title :`addAction`,
@@ -292,7 +306,7 @@ var RedSheetMaterial;
 		 return : 'Boolean'
 	 }
      :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'loop', 'boolean', true);
+    RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'loop', 'boolean');
     /**DOC:
      {
  	     code : 'PROPERTY',
@@ -343,5 +357,17 @@ var RedSheetMaterial;
 	 }
      :DOC*/
     RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'alpha', 'number', {min: 0, max: 1});
+    /**DOC:
+     {
+	     code : 'PROPERTY',
+		 title :`usePreMultiply`,
+		 description : `
+		    usePreMultiply 사용여부
+		    기본값 : false
+		 `,
+		 return : 'boolean'
+	 }
+     :DOC*/
+    RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'usePreMultiply', 'boolean', samplerOption);
     Object.freeze(RedSheetMaterial)
 })();

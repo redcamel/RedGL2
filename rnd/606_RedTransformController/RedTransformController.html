@@ -1,0 +1,147 @@
+<!--
+  ~ RedGL - MIT License
+  ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+  ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+  ~ Last modification time of this file - 2019.4.30 18:39
+  -->
+
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>redGL - RedTransformController</title>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
+    />
+    <link rel="stylesheet" href="../../example/example.css">
+
+    <script src="../../example/dat.gui.min.js"></script>
+    <script src="../../example/baseTestUI.js"></script>
+    <script src="../../release/RedGL.min.js"></script>
+    <script src="RedTransformController.js"></script>
+</head>
+
+<body>
+<script id='testSource'>
+    var testUI;
+    var canvas;
+    var assetPath = '../../asset/'
+    canvas = document.createElement('canvas');
+    document.body.appendChild(canvas);
+
+
+    var testOption = {
+        drawMode: 'TRIANGLES',
+        pointSize: 1,
+        radiusTop: 1,
+        radiusBottom: 1,
+        height: 1,
+        numDivisions: 16,
+        distance: 0.4,
+        capStart: false,
+        capEnd: false,
+        startAngle: 0,
+        endAngle: Math.PI * 2,
+        maxAngle: Math.PI / 180 * 30,
+        tolerance: 0.15,
+        flipX: false,
+        flipY: true
+    }
+    RedGL(canvas, function (v) {
+        if (v) {
+            console.log('초기화 성공!')
+            var self = this
+            var tWorld, tView, tScene, tController, tRenderer;
+            var setBase = function (redGL) {
+                // 월드 생성
+                redGL['world'] = tWorld = RedWorld();
+                // 씬 생성
+                tScene = RedScene(redGL);
+                // 카메라 생성
+                tController = RedObitController(redGL);
+                tController.pan = 30;
+                tController.tilt = -30;
+                tController.distance = 10
+                tController.speedDistance = 1
+                var tLight = RedDirectionalLight(redGL);
+                tScene.addLight(tLight)
+                tLight.x = 30;
+                tLight.y = 30;
+                tLight.z = 30;
+                tLight.debug = true
+                tLight = RedDirectionalLight(redGL);
+                tScene.addLight(tLight)
+                tLight.x = -30
+                tLight.y = -30;
+                tLight.z = -30;
+                tLight.debug = true
+                // 렌더러 생성
+                tRenderer = RedRenderer();
+                // 뷰생성 및 적용
+                tView = RedView('HelloRedGL', redGL, tScene, tController);
+                tWorld.addView(tView);
+                // 그리드 설정
+                tScene['grid'] = RedGrid(redGL);
+                // 렌더시작
+                tRenderer.start(redGL, function (time) {
+                });
+                // 렌더 디버거 활성화
+                tRenderer.setDebugButton();
+
+                console.log(redGL);
+            };
+            setBase(this);
+            var tMesh = RedMesh(this, RedBox(this), RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'crate.png')))
+            tScene.addChild(tMesh)
+
+            var tMesh2 = RedMesh(this, RedBox(this), RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'crate.png')))
+            tScene.addChild(tMesh2)
+
+            tMesh2.x = 2
+            tMesh2.z = 2
+
+            tScene.mouseManager.add(tMesh, 'down', function (e) {
+                tTransformController.setTarget(tView, tMesh)
+                tScene.addChild(tTransformController)
+            })
+            tScene.mouseManager.add(tMesh2, 'down', function (e) {
+                tTransformController.setTarget(tView, tMesh2)
+                tScene.addChild(tTransformController)
+            })
+            var tTransformController = RedTransformController(this)
+            console.log(tTransformController)
+            // testUI 호출
+            testUI(this, tTransformController, tScene);
+
+        } else {
+            console.log('초기화 실패!')
+        }
+    })
+    testUI = function (redGL, tTransformController, tScene) {
+        // console.log('test')
+        var gui = new baseTestUI(redGL);
+        gui.initRedGL();
+        //
+        var tFolder
+        tFolder = gui['gui'].addFolder('RedTransformController')
+        tFolder.open()
+        tFolder.add(tTransformController, 'boundBoxMode', [RedTransformController.AABB, RedTransformController.OBB]).onChange(function (v) {
+            tTransformController.boundBoxMode = v
+        });
+        tFolder.add(tTransformController, 'usePosition').onChange(function (v) {
+            tTransformController.usePosition = v
+        });
+        tFolder.add(tTransformController, 'useRotation').onChange(function (v) {
+            tTransformController.useRotation = v
+        });
+        tFolder.add(tTransformController, 'useScale').onChange(function (v) {
+            tTransformController.useScale = v
+        });
+    }
+</script>
+</body>
+
+</html>

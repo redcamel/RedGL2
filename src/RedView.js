@@ -1,3 +1,10 @@
+/*
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:53
+ */
+
 "use strict";
 var RedView;
 (function () {
@@ -96,6 +103,7 @@ var RedView;
         this['_x'] = 0;
         this['_y'] = 0;
         this['_viewRect'] = [0, 0, 0, 0];
+        this['_UUID'] = RedGL.makeUUID();
         ViewMap[key] = this;
         console.log(this);
     };
