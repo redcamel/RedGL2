@@ -230,150 +230,153 @@ var RedStandardMaterial;
 		}
 	};
 	RedStandardMaterial.prototype = new RedBaseMaterial();
-	/*DOC:
-	 {
-         code : 'PROPERTY',
-		 title :`alpha`,
-		 description : `기본값 : 1`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'alpha', 'number', {min: 0, max: 1});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`diffuseTexture`,
-		 description : `diffuseTexture`,
-		 return : 'RedBitmapTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'diffuseTexture', 'sampler2D', {
-		essential: true,
-		callback: samplerOption.callback
-	});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`normalTexture`,
-		 description : `normalTexture`,
-		 return : 'RedBitmapTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'normalTexture', 'sampler2D', samplerOption);
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`specularTexture`,
-		 description : `specularTexture`,
-		 return : 'RedBitmapTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'specularTexture', 'sampler2D', samplerOption);
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`emissiveTexture`,
-		 description : `emissiveTexture`,
-		 return : 'RedBitmapTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'emissiveTexture', 'sampler2D', samplerOption);
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`displacementTexture`,
-		 description : `displacementTexture`,
-		 return : 'RedBitmapTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'displacementTexture', 'sampler2D', samplerOption);
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`normalPower`,
-		 description : `기본값 : 1`,
-		 return : 'number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'normalPower', 'number', {'min': 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`shininess`,
-		 description : `기본값 : 16`,
-		 return : 'number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'shininess', 'number', {'min': 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`specularPower`,
-		 description : `기본값 : 1`,
-		 return : 'number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'specularPower', 'number', {'min': 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`emissiveFactor`,
-		 description : `기본값 : 1`,
-		 return : 'number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'emissiveFactor', 'number', {'min': 0});
+	RedDefinePropertyInfo.definePrototypes(
+		'RedStandardMaterial',
+		/*DOC:
+		 {
+	         code : 'PROPERTY',
+			 title :`alpha`,
+			 description : `기본값 : 1`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['alpha', 'number', {min: 0, max: 1}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`diffuseTexture`,
+			 description : `diffuseTexture`,
+			 return : 'RedBitmapTexture'
+		 }
+		 :DOC*/
+		['diffuseTexture', 'sampler2D', {
+			essential: true,
+			callback: samplerOption.callback
+		}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`normalTexture`,
+			 description : `normalTexture`,
+			 return : 'RedBitmapTexture'
+		 }
+		 :DOC*/
+		['normalTexture', 'sampler2D', samplerOption],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`specularTexture`,
+			 description : `specularTexture`,
+			 return : 'RedBitmapTexture'
+		 }
+		 :DOC*/
+		['specularTexture', 'sampler2D', samplerOption],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`emissiveTexture`,
+			 description : `emissiveTexture`,
+			 return : 'RedBitmapTexture'
+		 }
+		 :DOC*/
+		['emissiveTexture', 'sampler2D', samplerOption],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`displacementTexture`,
+			 description : `displacementTexture`,
+			 return : 'RedBitmapTexture'
+		 }
+		 :DOC*/
+		['displacementTexture', 'sampler2D', samplerOption],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`normalPower`,
+			 description : `기본값 : 1`,
+			 return : 'number'
+		 }
+		 :DOC*/
+		['normalPower', 'number', {'min': 0}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`shininess`,
+			 description : `기본값 : 16`,
+			 return : 'number'
+		 }
+		 :DOC*/
+		['shininess', 'number', {'min': 0}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`specularPower`,
+			 description : `기본값 : 1`,
+			 return : 'number'
+		 }
+		 :DOC*/
+		['specularPower', 'number', {'min': 0}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`emissiveFactor`,
+			 description : `기본값 : 1`,
+			 return : 'number'
+		 }
+		 :DOC*/
+		['emissiveFactor', 'number', {'min': 0}],
 
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`displacementPower`,
-		 description : `기본값 : 0`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'displacementPower', 'number', {'min': 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`displacementFlowSpeedX`,
-		 description : `기본값 : 0`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'displacementFlowSpeedX', 'number');
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`displacementFlowSpeedY`,
-		 description : `기본값 : 0`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'displacementFlowSpeedY', 'number');
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`useFlatMode`,
-		 description : `
-		    flatMode 사용여부
-		    기본값 : true
-		 `,
-		 return : 'boolean'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'useFlatMode', 'boolean', samplerOption);
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`usePreMultiply`,
-		 description : `
-		    usePreMultiply 사용여부
-		    기본값 : false
-		 `,
-		 return : 'boolean'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'usePreMultiply', 'boolean', samplerOption);
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`displacementPower`,
+			 description : `기본값 : 0`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['displacementPower', 'number', {'min': 0}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`displacementFlowSpeedX`,
+			 description : `기본값 : 0`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['displacementFlowSpeedX', 'number'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`displacementFlowSpeedY`,
+			 description : `기본값 : 0`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['displacementFlowSpeedY', 'number'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`useFlatMode`,
+			 description : `
+			    flatMode 사용여부
+			    기본값 : true
+			 `,
+			 return : 'boolean'
+		 }
+		 :DOC*/
+		['useFlatMode', 'boolean', samplerOption],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`usePreMultiply`,
+			 description : `
+			    usePreMultiply 사용여부
+			    기본값 : false
+			 `,
+			 return : 'boolean'
+		 }
+		 :DOC*/
+		['usePreMultiply', 'boolean', samplerOption]
+	);
 	Object.freeze(RedStandardMaterial);
 })();

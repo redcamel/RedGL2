@@ -4,7 +4,6 @@
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
  * Last modification time of this file - 2019.4.30 18:53
  */
-
 "use strict";
 var RedFrameBuffer;
 (function () {
@@ -120,27 +119,30 @@ var RedFrameBuffer;
 			gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 		}
 	};
-	/*DOC:
-	 {
-		 code:`PROPERTY`,
-		 title :`width`,
-		 description : `
-		    기본값 : 1920 or 하드웨어 최대값
-		 `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedFrameBuffer', 'width', 'number', {min: 2});
-	/*DOC:
-	 {
-		 code:`PROPERTY`,
-		 title :`height`,
-		 description : `
-		    기본값 : 1080 or 하드웨어 최대값
-	    `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedFrameBuffer', 'height', 'number', {min: 2});
+	RedDefinePropertyInfo.definePrototypes(
+		'RedFrameBuffer',
+		/*DOC:
+		 {
+			 code:`PROPERTY`,
+			 title :`width`,
+			 description : `
+				기본값 : 1920 or 하드웨어 최대값
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['width', 'number', {min: 2}],
+		/*DOC:
+		 {
+			 code:`PROPERTY`,
+			 title :`height`,
+			 description : `
+				기본값 : 1080 or 하드웨어 최대값
+			`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['height', 'number', {min: 2}]
+	);
 	Object.freeze(RedFrameBuffer);
 })();

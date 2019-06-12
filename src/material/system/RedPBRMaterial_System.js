@@ -4,7 +4,6 @@
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
  * Last modification time of this file - 2019.4.30 18:53
  */
-
 "use strict";
 var RedPBRMaterial_System;
 (function () {
@@ -331,24 +330,20 @@ var RedPBRMaterial_System;
 		this['occlusionTexture'] = occlusionTexture;
 		this['emissiveTexture'] = emissiveTexture;
 		this['roughnessTexture'] = roughnessTexture;
-
 		this['normalPower'] = 1;
 		this['specularPower'] = 1;
 		this['metallicFactor'] = 1;
 		this['roughnessFactor'] = 1;
-
 		this['diffuseTexCoordIndex'] = 0;
 		this['occlusionTexCoordIndex'] = 0;
 		this['emissiveTexCoordIndex'] = 0;
 		this['roughnessTexCoordIndex'] = 0;
 		this['normalTexCoordIndex'] = 0;
-
 		this['occlusionPower'] = 1;
 		this['baseColorFactor'] = null;
 		this['emissiveFactor'] = null;
 		this['alpha'] = 1;
 		this['cutOff'] = 0;
-
 		/////////////////////////////////////////
 		// 일반 프로퍼티
 		this['useMaterialDoubleSide'] = false;
@@ -373,180 +368,176 @@ var RedPBRMaterial_System;
 				self._searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST);
 				self['_needSearchProgram'] = null
 			});
-
 		}
 	};
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`alpha`,
-		 description : `기본값 : 1`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'alpha', 'number', {min: 0, max: 1});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`cutOff`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'cutOff', 'number', {min: 0, max: 1});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`diffuseTexture`,
-		 return : 'RedBitmapTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'diffuseTexture', 'sampler2D', samplerOption);
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'diffuseTexCoordIndex', 'number');
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`environmentTexture`,
-		 return : 'RedBitmapCubeTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'environmentTexture', 'samplerCube', {
-		callback: samplerOption.callback
-	});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`normalTexture`,
-		 return : 'RedBitmapTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'normalTexture', 'sampler2D', samplerOption);
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'normalTexCoordIndex', 'number');
-
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`occlusionTexture`,
-		 return : 'RedBitmapTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'occlusionTexture', 'sampler2D', samplerOption);
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'occlusionTexCoordIndex', 'number');
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`emissiveTexture`,
-		 return : 'RedBitmapTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'emissiveTexture', 'sampler2D', samplerOption);
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'emissiveTexCoordIndex', 'number');
-
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`roughnessTexture`,
-		 return : 'RedBitmapTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'roughnessTexture', 'sampler2D', samplerOption);
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'roughnessTexCoordIndex', 'number');
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`normalPower`,
-		 description : `기본값 : 1`,
-		 return : 'number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'normalPower', 'number', {'min': 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`specularPower`,
-		 description : `기본값 : 1`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'specularPower', 'number', {'min': 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`metallicFactor`,
-		 description : `기본값 : 1`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'metallicFactor', 'number', {'min': 0, 'max': 1});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`roughnessFactor`,
-		 description : `기본값 : 1`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'roughnessFactor', 'number', {'min': 0, 'max': 1});
-
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`occlusionPower`,
-		 description : `기본값 : 1`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'occlusionPower', 'number', {'min': 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`useFlatMode`,
-		 description : `
-		    flatMode 사용여부
-		    기본값 : true
-		 `,
-		 return : 'boolean'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'useFlatMode', 'boolean', samplerOption);
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`useMaterialDoubleSide`,
-		 description : `
-		    gltf 파싱에 따른 재질에서 더블사이드 사용여부
-		    기본값 : false
-		 `,
-		 return : 'boolean'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'useMaterialDoubleSide', 'boolean', samplerOption);
-
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`useVertexColor_0`,
-		 description : `
-		    aVertexColor_0 사용여부
-		    기본값 : true
-		 `,
-		 return : 'boolean'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'useVertexColor_0', 'boolean', samplerOption);
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'useVertexTangent', 'boolean', samplerOption);
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`usePreMultiply`,
-		 description : `
-		    usePreMultiply 사용여부
-		    기본값 : false
-		 `,
-		 return : 'boolean'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'usePreMultiply', 'boolean', samplerOption);
-
-
+	RedDefinePropertyInfo.definePrototypes(
+		'RedPBRMaterial_System',
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`alpha`,
+			 description : `기본값 : 1`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['alpha', 'number', {min: 0, max: 1}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`cutOff`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['cutOff', 'number', {min: 0, max: 1}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`diffuseTexture`,
+			 return : 'RedBitmapTexture'
+		 }
+		 :DOC*/
+		['diffuseTexture', 'sampler2D', samplerOption],
+		['diffuseTexCoordIndex', 'number'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`environmentTexture`,
+			 return : 'RedBitmapCubeTexture'
+		 }
+		 :DOC*/
+		['environmentTexture', 'samplerCube', {
+			callback: samplerOption.callback
+		}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`normalTexture`,
+			 return : 'RedBitmapTexture'
+		 }
+		 :DOC*/
+		['normalTexture', 'sampler2D', samplerOption],
+		['normalTexCoordIndex', 'number'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`occlusionTexture`,
+			 return : 'RedBitmapTexture'
+		 }
+		 :DOC*/
+		['occlusionTexture', 'sampler2D', samplerOption],
+		['occlusionTexCoordIndex', 'number'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`emissiveTexture`,
+			 return : 'RedBitmapTexture'
+		 }
+		 :DOC*/
+		['emissiveTexture', 'sampler2D', samplerOption],
+		['emissiveTexCoordIndex', 'number'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`roughnessTexture`,
+			 return : 'RedBitmapTexture'
+		 }
+		 :DOC*/
+		['roughnessTexture', 'sampler2D', samplerOption],
+		['roughnessTexCoordIndex', 'number'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`normalPower`,
+			 description : `기본값 : 1`,
+			 return : 'number'
+		 }
+		 :DOC*/
+		['normalPower', 'number', {'min': 0}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`specularPower`,
+			 description : `기본값 : 1`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['specularPower', 'number', {'min': 0}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`metallicFactor`,
+			 description : `기본값 : 1`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['metallicFactor', 'number', {'min': 0, 'max': 1}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`roughnessFactor`,
+			 description : `기본값 : 1`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['roughnessFactor', 'number', {'min': 0, 'max': 1}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`occlusionPower`,
+			 description : `기본값 : 1`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['occlusionPower', 'number', {'min': 0}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`useFlatMode`,
+			 description : `
+			    flatMode 사용여부
+			    기본값 : true
+			 `,
+			 return : 'boolean'
+		 }
+		 :DOC*/
+		['useFlatMode', 'boolean', samplerOption],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`useMaterialDoubleSide`,
+			 description : `
+			    gltf 파싱에 따른 재질에서 더블사이드 사용여부
+			    기본값 : false
+			 `,
+			 return : 'boolean'
+		 }
+		 :DOC*/
+		['useMaterialDoubleSide', 'boolean', samplerOption],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`useVertexColor_0`,
+			 description : `
+			    aVertexColor_0 사용여부
+			    기본값 : true
+			 `,
+			 return : 'boolean'
+		 }
+		 :DOC*/
+		['useVertexColor_0', 'boolean', samplerOption],
+		['useVertexTangent', 'boolean', samplerOption],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`usePreMultiply`,
+			 description : `
+			    usePreMultiply 사용여부
+			    기본값 : false
+			 `,
+			 return : 'boolean'
+		 }
+		 :DOC*/
+		['usePreMultiply', 'boolean', samplerOption]
+	);
 	Object.freeze(RedPBRMaterial_System);
 })();

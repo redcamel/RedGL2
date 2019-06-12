@@ -1717,8 +1717,6 @@ var RedGLDetect;
 		 return : 'Object'
 	 }
 	 :DOC*/
-
-
 	RedGLDetect.BROWSER_INFO = {};
 	RedGLDetect.getBrowserInfo = function () {
 		var result = RedGLDetect['BROWSER_INFO'];
@@ -4550,7 +4548,6 @@ var RedBaseLight;
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
  * Last modification time of this file - 2019.4.30 18:53
  */
-
 "use strict";
 var RedFrameBuffer;
 (function () {
@@ -4666,28 +4663,31 @@ var RedFrameBuffer;
 			gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 		}
 	};
-	/*DOC:
-	 {
-		 code:`PROPERTY`,
-		 title :`width`,
-		 description : `
-		    기본값 : 1920 or 하드웨어 최대값
-		 `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedFrameBuffer', 'width', 'number', {min: 2});
-	/*DOC:
-	 {
-		 code:`PROPERTY`,
-		 title :`height`,
-		 description : `
-		    기본값 : 1080 or 하드웨어 최대값
-	    `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedFrameBuffer', 'height', 'number', {min: 2});
+	RedDefinePropertyInfo.definePrototypes(
+		'RedFrameBuffer',
+		/*DOC:
+		 {
+			 code:`PROPERTY`,
+			 title :`width`,
+			 description : `
+				기본값 : 1920 or 하드웨어 최대값
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['width', 'number', {min: 2}],
+		/*DOC:
+		 {
+			 code:`PROPERTY`,
+			 title :`height`,
+			 description : `
+				기본값 : 1080 or 하드웨어 최대값
+			`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['height', 'number', {min: 2}]
+	);
 	Object.freeze(RedFrameBuffer);
 })();
 /*
@@ -6610,7 +6610,6 @@ var RedColorMaterial;
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
  * Last modification time of this file - 2019.4.30 18:53
  */
-
 "use strict";
 var RedColorPhongMaterial;
 (function () {
@@ -6782,49 +6781,52 @@ var RedColorPhongMaterial;
 	 }
 	 :DOC*/
 	Object.defineProperty(RedColorPhongMaterial.prototype, 'color', RedColorMaterial['DEFINE_OBJECT_COLOR']);
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`alpha`,
-		 description : `
-		    기본값 : 1
-		    최소값 : 0
-		    최대값 : 1
-		 `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedColorPhongMaterial', 'alpha', 'number', RedColorMaterial['DEFINE_OBJECT_ALPHA']);
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`shininess`,
-		 description : `기본값 : 16`,
-		 return : 'shininess'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedColorPhongMaterial', 'shininess', 'number', {'min': 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`specularPower`,
-		 description : `기본값 : 1`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedColorPhongMaterial', 'specularPower', 'number', {'min': 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`useFlatMode`,
-		 description : `
-		    flatMode 사용여부
-		    기본값 : true
-		 `,
-		 return : 'boolean'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedColorPhongMaterial', 'useFlatMode', 'boolean', samplerOption);
+	RedDefinePropertyInfo.definePrototypes(
+		'RedColorPhongMaterial',
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`alpha`,
+			 description : `
+			    기본값 : 1
+			    최소값 : 0
+			    최대값 : 1
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['alpha', 'number', RedColorMaterial['DEFINE_OBJECT_ALPHA']],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`shininess`,
+			 description : `기본값 : 16`,
+			 return : 'shininess'
+		 }
+		 :DOC*/
+		['shininess', 'number', {'min': 0}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`specularPower`,
+			 description : `기본값 : 1`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['specularPower', 'number', {'min': 0}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`useFlatMode`,
+			 description : `
+			    flatMode 사용여부
+			    기본값 : true
+			 `,
+			 return : 'boolean'
+		 }
+		 :DOC*/
+		['useFlatMode', 'boolean', samplerOption]
+	);
 	Object.freeze(RedColorPhongMaterial);
 })();
 /*
@@ -6833,7 +6835,6 @@ var RedColorPhongMaterial;
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
  * Last modification time of this file - 2019.4.30 18:53
  */
-
 "use strict";
 var RedColorPhongTextureMaterial;
 (function () {
@@ -7058,142 +7059,145 @@ var RedColorPhongTextureMaterial;
 	 }
 	 :DOC*/
 	Object.defineProperty(RedColorPhongTextureMaterial.prototype, 'color', RedColorMaterial['DEFINE_OBJECT_COLOR']);
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`alpha`,
-		 description : `
-		    기본값 : 1
-		    최소값 : 0
-		    최대값 : 1
-         `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'alpha', 'number', RedColorMaterial['DEFINE_OBJECT_ALPHA']);
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`normalTexture`,
-		 description :`normalTexture`,
-		 return : 'RedBitmapTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'normalTexture', 'sampler2D', samplerOption);
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`specularTexture`,
-		 description :`normalTexture`,
-		 return : 'RedBitmapTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'specularTexture', 'sampler2D', samplerOption);
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`displacementTexture`,
-		 description :`displacementTexture`,
-		 return : 'RedBitmapTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'displacementTexture', 'sampler2D', samplerOption);
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`emissiveTexture`,
-		 description :`emissiveTexture`,
-		 return : 'RedBitmapTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'emissiveTexture', 'sampler2D', samplerOption);
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`normalPower`,
-		 description : `기본값 : 1`,
-		 return : 'number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'normalPower', 'number', {'min': 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`shininess`,
-		 description : `기본값 : 16`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'shininess', 'number', {'min': 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`specularPower`,
-		 description : `기본값 : 1`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'specularPower', 'number', {'min': 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`emissiveFactor`,
-		 description : `기본값 : 1`,
-		 return : 'number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'emissiveFactor', 'number', {'min': 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`displacementPower`,
-		 description : `기본값 : 0`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'displacementPower', 'number', {'min': 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`displacementFlowSpeedX`,
-		 description : `기본값 : 0`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'displacementFlowSpeedX', 'number');
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`displacementFlowSpeedY`,
-		 description : `기본값 : 0`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'displacementFlowSpeedY', 'number');
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`useFlatMode`,
-		 description : `
-		    flatMode 사용여부
-		    기본값 : true
-		 `,
-		 return : 'boolean'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'useFlatMode', 'boolean', samplerOption);
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`usePreMultiply`,
-		 description : `
-		    usePreMultiply 사용여부
-		    기본값 : false
-		 `,
-		 return : 'boolean'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedColorPhongTextureMaterial', 'usePreMultiply', 'boolean', samplerOption);
+	RedDefinePropertyInfo.definePrototypes(
+		'RedColorPhongTextureMaterial',
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`alpha`,
+			 description : `
+				기본값 : 1
+				최소값 : 0
+				최대값 : 1
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['alpha', 'number', RedColorMaterial['DEFINE_OBJECT_ALPHA']],
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`normalTexture`,
+			 description :`normalTexture`,
+			 return : 'RedBitmapTexture'
+		 }
+		 :DOC*/
+		['normalTexture', 'sampler2D', samplerOption],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`specularTexture`,
+			 description :`normalTexture`,
+			 return : 'RedBitmapTexture'
+		 }
+		 :DOC*/
+		['specularTexture', 'sampler2D', samplerOption],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`displacementTexture`,
+			 description :`displacementTexture`,
+			 return : 'RedBitmapTexture'
+		 }
+		 :DOC*/
+		['displacementTexture', 'sampler2D', samplerOption],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`emissiveTexture`,
+			 description :`emissiveTexture`,
+			 return : 'RedBitmapTexture'
+		 }
+		 :DOC*/
+		['emissiveTexture', 'sampler2D', samplerOption],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`normalPower`,
+			 description : `기본값 : 1`,
+			 return : 'number'
+		 }
+		 :DOC*/
+		['normalPower', 'number', {'min': 0}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`shininess`,
+			 description : `기본값 : 16`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['shininess', 'number', {'min': 0}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`specularPower`,
+			 description : `기본값 : 1`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['specularPower', 'number', {'min': 0}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`emissiveFactor`,
+			 description : `기본값 : 1`,
+			 return : 'number'
+		 }
+		 :DOC*/
+		['emissiveFactor', 'number', {'min': 0}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`displacementPower`,
+			 description : `기본값 : 0`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['displacementPower', 'number', {'min': 0}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`displacementFlowSpeedX`,
+			 description : `기본값 : 0`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['displacementFlowSpeedX', 'number'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`displacementFlowSpeedY`,
+			 description : `기본값 : 0`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['displacementFlowSpeedY', 'number'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`useFlatMode`,
+			 description : `
+			    flatMode 사용여부
+			    기본값 : true
+			 `,
+			 return : 'boolean'
+		 }
+		 :DOC*/
+		['useFlatMode', 'boolean', samplerOption],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`usePreMultiply`,
+			 description : `
+			    usePreMultiply 사용여부
+			    기본값 : false
+			 `,
+			 return : 'boolean'
+		 }
+		 :DOC*/
+		['usePreMultiply', 'boolean', samplerOption]
+	);
 	Object.freeze(RedColorPhongTextureMaterial)
 })();
 /*
@@ -7202,7 +7206,6 @@ var RedColorPhongTextureMaterial;
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
  * Last modification time of this file - 2019.4.30 18:53
  */
-
 "use strict";
 var RedEnvironmentMaterial;
 (function () {
@@ -7454,168 +7457,171 @@ var RedEnvironmentMaterial;
 			this._searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST)
 		}
 	};
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`alpha`,
-		 description : `기본값 : 1`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'alpha', 'number', {min: 0, max: 1});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`diffuseTexture`,
-		 description :`diffuseTexture`,
-		 return : 'RedBitmapTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'diffuseTexture', 'sampler2D', samplerOption);
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`environmentTexture`,
-		 description :`environmentTexture`,
-		 return : 'RedBitmapCubeTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'environmentTexture', 'samplerCube', {
-		essential: true,
-		callback: samplerOption.callback
-	});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`normalTexture`,
-		 description :`normalTexture`,
-		 return : 'RedBitmapTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'normalTexture', 'sampler2D', samplerOption);
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`specularTexture`,
-		 description :`specularTexture`,
-		 return : 'RedBitmapTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'specularTexture', 'sampler2D', samplerOption);
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`displacementTexture`,
-		 description :`displacementTexture`,
-		 return : 'RedBitmapTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'displacementTexture', 'sampler2D', samplerOption);
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`emissiveTexture`,
-		 description :`emissiveTexture`,
-		 return : 'RedBitmapTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'emissiveTexture', 'sampler2D', samplerOption);
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`normalPower`,
-		 description : `기본값 : 1`,
-		 return : 'number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'normalPower', 'number', {'min': 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`shininess`,
-		 description : `기본값 : 16`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'shininess', 'number', {'min': 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`specularPower`,
-		 description : `기본값 : 1`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'specularPower', 'number', {'min': 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`emissiveFactor`,
-		 description : `기본값 : 1`,
-		 return : 'number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'emissiveFactor', 'number', {'min': 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`reflectionPower`,
-		 description : `기본값 : 1`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'reflectionPower', 'number', {'min': 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`displacementPower`,
-		 description : `기본값 : 0`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'displacementPower', 'number', {'min': 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`displacementFlowSpeedX`,
-		 description : `기본값 : 0`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'displacementFlowSpeedX', 'number');
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`displacementFlowSpeedY`,
-		 description : `기본값 : 0`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'displacementFlowSpeedY', 'number');
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`useFlatMode`,
-		 description : `
-		    flatMode 사용여부
-		    기본값 : true
-		 `,
-		 return : 'boolean'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'useFlatMode', 'boolean', samplerOption);
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`usePreMultiply`,
-		 description : `
-		    usePreMultiply 사용여부
-		    기본값 : false
-		 `,
-		 return : 'boolean'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedEnvironmentMaterial', 'usePreMultiply', 'boolean', samplerOption);
+	RedDefinePropertyInfo.definePrototypes(
+		'RedEnvironmentMaterial',
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`alpha`,
+			 description : `기본값 : 1`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['alpha', 'number', {min: 0, max: 1}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`diffuseTexture`,
+			 description :`diffuseTexture`,
+			 return : 'RedBitmapTexture'
+		 }
+		 :DOC*/
+		['diffuseTexture', 'sampler2D', samplerOption],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`environmentTexture`,
+			 description :`environmentTexture`,
+			 return : 'RedBitmapCubeTexture'
+		 }
+		 :DOC*/
+		['environmentTexture', 'samplerCube', {
+			essential: true,
+			callback: samplerOption.callback
+		}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`normalTexture`,
+			 description :`normalTexture`,
+			 return : 'RedBitmapTexture'
+		 }
+		 :DOC*/
+		['normalTexture', 'sampler2D', samplerOption],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`specularTexture`,
+			 description :`specularTexture`,
+			 return : 'RedBitmapTexture'
+		 }
+		 :DOC*/
+		['specularTexture', 'sampler2D', samplerOption],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`displacementTexture`,
+			 description :`displacementTexture`,
+			 return : 'RedBitmapTexture'
+		 }
+		 :DOC*/
+		['displacementTexture', 'sampler2D', samplerOption],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`emissiveTexture`,
+			 description :`emissiveTexture`,
+			 return : 'RedBitmapTexture'
+		 }
+		 :DOC*/
+		['emissiveTexture', 'sampler2D', samplerOption],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`normalPower`,
+			 description : `기본값 : 1`,
+			 return : 'number'
+		 }
+		 :DOC*/
+		['normalPower', 'number', {'min': 0}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`shininess`,
+			 description : `기본값 : 16`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['shininess', 'number', {'min': 0}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`specularPower`,
+			 description : `기본값 : 1`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['specularPower', 'number', {'min': 0}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`emissiveFactor`,
+			 description : `기본값 : 1`,
+			 return : 'number'
+		 }
+		 :DOC*/
+		['emissiveFactor', 'number', {'min': 0}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`reflectionPower`,
+			 description : `기본값 : 1`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['reflectionPower', 'number', {'min': 0}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`displacementPower`,
+			 description : `기본값 : 0`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['displacementPower', 'number', {'min': 0}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`displacementFlowSpeedX`,
+			 description : `기본값 : 0`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['displacementFlowSpeedX', 'number'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`displacementFlowSpeedY`,
+			 description : `기본값 : 0`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['displacementFlowSpeedY', 'number'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`useFlatMode`,
+			 description : `
+			    flatMode 사용여부
+			    기본값 : true
+			 `,
+			 return : 'boolean'
+		 }
+		 :DOC*/
+		['useFlatMode', 'boolean', samplerOption],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`usePreMultiply`,
+			 description : `
+			    usePreMultiply 사용여부
+			    기본값 : false
+			 `,
+			 return : 'boolean'
+		 }
+		 :DOC*/
+		['usePreMultiply', 'boolean', samplerOption]
+	);
 	Object.freeze(RedEnvironmentMaterial);
 })();
 /*
@@ -7624,7 +7630,6 @@ var RedEnvironmentMaterial;
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
  * Last modification time of this file - 2019.4.30 18:53
  */
-
 "use strict";
 var RedBitmapMaterial;
 (function () {
@@ -7734,36 +7739,39 @@ var RedBitmapMaterial;
 			this._searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST)
 		}
 	};
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`diffuseTexture`,
-		 description : `diffuseTexture`,
-		 return : 'RedBitmapTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedBitmapMaterial', 'diffuseTexture', 'sampler2D', {essential: true});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`alpha`,
-		 description : `기본값 : 1`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedBitmapMaterial', 'alpha', 'number', {min: 0, max: 1});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`usePreMultiply`,
-		 description : `
-		    usePreMultiply 사용여부
-		    기본값 : false
-		 `,
-		 return : 'boolean'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedBitmapMaterial', 'usePreMultiply', 'boolean', samplerOption);
+	RedDefinePropertyInfo.definePrototypes(
+		'RedBitmapMaterial',
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`diffuseTexture`,
+			 description : `diffuseTexture`,
+			 return : 'RedBitmapTexture'
+		 }
+		 :DOC*/
+		['diffuseTexture', 'sampler2D', {essential: true}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`alpha`,
+			 description : `기본값 : 1`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['alpha', 'number', {min: 0, max: 1}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`usePreMultiply`,
+			 description : `
+			    usePreMultiply 사용여부
+			    기본값 : false
+			 `,
+			 return : 'boolean'
+		 }
+		 :DOC*/
+		['usePreMultiply', 'boolean', samplerOption]
+	);
 	Object.freeze(RedBitmapMaterial);
 })();
 /*
@@ -7772,7 +7780,6 @@ var RedBitmapMaterial;
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
  * Last modification time of this file - 2019.5.2 13:44
  */
-
 "use strict";
 var RedParticleMaterial;
 //////////////////////////////////////////////////////////
@@ -7782,7 +7789,6 @@ var RedParticleMaterial;
 	var vSource, fSource;
 	var PROGRAM_NAME = 'particleProgram';
 	var PROGRAM_OPTION_LIST = ['diffuseTexture', 'usePreMultiply'];
-
 	var checked;
 	vSource = function () {
 		/* @preserve
@@ -7873,48 +7879,51 @@ var RedParticleMaterial;
 		}
 	};
 	RedParticleMaterial.prototype = new RedBaseMaterial();
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`diffuseTexture`,
-		 return : 'RedBitmapTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedParticleMaterial', 'diffuseTexture', 'sampler2D', {
-		callback: function () {
-			this._searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST)
-		}
-	});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`alpha`,
-		 description : `기본값 : 1`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedParticleMaterial', 'alpha', 'number', {min: 0, max: 1});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`cutOff`,
-		 description : `기본값 : 0.01`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedParticleMaterial', 'cutOff', 'number', {min: 0, max: 1});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`usePreMultiply`,
-		 description : `
-		    usePreMultiply 사용여부
-		    기본값 : true
-		 `,
-		 return : 'boolean'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedParticleMaterial', 'usePreMultiply', 'boolean', samplerOption);
+	RedDefinePropertyInfo.definePrototypes(
+		'RedParticleMaterial',
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`diffuseTexture`,
+			 return : 'RedBitmapTexture'
+		 }
+		 :DOC*/
+		['diffuseTexture', 'sampler2D', {
+			callback: function () {
+				this._searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST)
+			}
+		}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`alpha`,
+			 description : `기본값 : 1`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['alpha', 'number', {min: 0, max: 1}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`cutOff`,
+			 description : `기본값 : 0.01`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['cutOff', 'number', {min: 0, max: 1}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`usePreMultiply`,
+			 description : `
+			    usePreMultiply 사용여부
+			    기본값 : true
+			 `,
+			 return : 'boolean'
+		 }
+		 :DOC*/
+		['usePreMultiply', 'boolean', samplerOption]
+	);
 	Object.freeze(RedParticleMaterial);
 })();
 /*
@@ -7923,14 +7932,12 @@ var RedParticleMaterial;
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
  * Last modification time of this file - 2019.5.2 12:46
  */
-
 "use strict";
 var RedBitmapPointCloudMaterial;
 (function () {
 	var vSource, fSource;
 	var PROGRAM_NAME = 'bitmapPointCloudProgram';
 	var PROGRAM_OPTION_LIST = ['usePreMultiply'];
-
 	var checked;
 	vSource = function () {
 		/* @preserve
@@ -8015,48 +8022,51 @@ var RedBitmapPointCloudMaterial;
 			this._searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST)
 		}
 	};
-	/*DOC:
-	 {
- 	     code : 'PROPERTY',
-		 title :`alpha`,
-		 description : `기본값 : 1`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedBitmapPointCloudMaterial', 'alpha', 'number', {min: 0, max: 1});
-	/*DOC:
-	 {
- 	     code : 'PROPERTY',
-		 title :`cutOff`,
-		 description : `
-		 기본값 : 0.1
-		 해당값보다 알파값이 작을경우 discard 처리됨.
-		 `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedBitmapPointCloudMaterial', 'cutOff', 'number', {min: 0, max: 1});
-	/*DOC:
-	 {
- 	     code : 'PROPERTY',
-		 title :`diffuseTexture`,
-		 description : `diffuseTexture`,
-		 return : 'RedBitmapTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedBitmapPointCloudMaterial', 'diffuseTexture', 'sampler2D', {essential: true});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`usePreMultiply`,
-		 description : `
-		    usePreMultiply 사용여부
-		    기본값 : false
-		 `,
-		 return : 'boolean'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedBitmapPointCloudMaterial', 'usePreMultiply', 'boolean', samplerOption);
+	RedDefinePropertyInfo.definePrototypes(
+		'RedBitmapPointCloudMaterial',
+		/*DOC:
+		 {
+	         code : 'PROPERTY',
+			 title :`alpha`,
+			 description : `기본값 : 1`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['alpha', 'number', {min: 0, max: 1}],
+		/*DOC:
+		 {
+	         code : 'PROPERTY',
+			 title :`cutOff`,
+			 description : `
+			 기본값 : 0.1
+			 해당값보다 알파값이 작을경우 discard 처리됨.
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['cutOff', 'number', {min: 0, max: 1}],
+		/*DOC:
+		 {
+	         code : 'PROPERTY',
+			 title :`diffuseTexture`,
+			 description : `diffuseTexture`,
+			 return : 'RedBitmapTexture'
+		 }
+		 :DOC*/
+		['diffuseTexture', 'sampler2D', {essential: true}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`usePreMultiply`,
+			 description : `
+			    usePreMultiply 사용여부
+			    기본값 : false
+			 `,
+			 return : 'boolean'
+		 }
+		 :DOC*/
+		['usePreMultiply', 'boolean', samplerOption]
+	);
 	Object.freeze(RedBitmapPointCloudMaterial)
 })();
 /*
@@ -8065,7 +8075,6 @@ var RedBitmapPointCloudMaterial;
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
  * Last modification time of this file - 2019.4.30 18:53
  */
-
 "use strict";
 var RedSheetMaterial;
 (function () {
@@ -8196,7 +8205,6 @@ var RedSheetMaterial;
 		}
 	};
 	RedSheetMaterial.prototype = new RedBaseMaterial();
-
 	/*DOC:
 	 {
 		 title :`addAction`,
@@ -8338,98 +8346,101 @@ var RedSheetMaterial;
 		this['currentIndex'] = index;
 		this['_nextFrameTime'] = 0;
 	};
-	/*DOC:
-	 {
-         code : 'PROPERTY',
-		 title :`diffuseTexture`,
-		 description : `diffuseTexture`,
-		 return : 'RedBitmapTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'diffuseTexture', 'sampler2D', {essential: true});
-	/*DOC:
-	 {
- 	     code : 'PROPERTY',
-		 title :`totalFrame`,
-		 description : `최소값 : 1`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'totalFrame', 'number', {'min': 1});
-	/*DOC:
-	 {
- 	     code : 'PROPERTY',
-		 title :`loop`,
-		 description : `
-		    반복여부 설정.
-		    기본값 : true
-         `,
-		 return : 'Boolean'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'loop', 'boolean');
-	/*DOC:
-	 {
- 	     code : 'PROPERTY',
-		 title :`frameRate`,
-		 description : `
-		    초당 프레임 속도
-		    최소값 : 1
-        `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'frameRate', 'number', {
-		min: 1,
-		callback: function () {
-			this['_perFrameTime'] = 1000 / this['_frameRate'];
-		}
-	});
-	/*DOC:
-	 {
- 	     code : 'PROPERTY',
-		 title :`segmentW`,
-		 description : `
-		    가로 분할 수
-		    최소값 : 1
-         `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'segmentW', 'number', {min: 1});
-	/*DOC:
-	 {
- 	     code : 'PROPERTY',
-		 title :`segmentH`,
-		 description : `
-		    세로 분할 수
-		    최소값 : 1
-         `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'segmentH', 'number', {min: 1});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`alpha`,
-		 description : `기본값 : 1`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'alpha', 'number', {min: 0, max: 1});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`usePreMultiply`,
-		 description : `
-		    usePreMultiply 사용여부
-		    기본값 : false
-		 `,
-		 return : 'boolean'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'usePreMultiply', 'boolean', samplerOption);
+	RedDefinePropertyInfo.definePrototypes(
+		'RedSheetMaterial',
+		/*DOC:
+		 {
+	         code : 'PROPERTY',
+			 title :`diffuseTexture`,
+			 description : `diffuseTexture`,
+			 return : 'RedBitmapTexture'
+		 }
+		 :DOC*/
+		['diffuseTexture', 'sampler2D', {essential: true}],
+		/*DOC:
+		 {
+	         code : 'PROPERTY',
+			 title :`totalFrame`,
+			 description : `최소값 : 1`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['totalFrame', 'number', {'min': 1}],
+		/*DOC:
+		 {
+	         code : 'PROPERTY',
+			 title :`loop`,
+			 description : `
+			    반복여부 설정.
+			    기본값 : true
+	         `,
+			 return : 'Boolean'
+		 }
+		 :DOC*/
+		['loop', 'boolean'],
+		/*DOC:
+		 {
+	         code : 'PROPERTY',
+			 title :`frameRate`,
+			 description : `
+			    초당 프레임 속도
+			    최소값 : 1
+	        `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['frameRate', 'number', {
+			min: 1,
+			callback: function () {
+				this['_perFrameTime'] = 1000 / this['_frameRate'];
+			}
+		}],
+		/*DOC:
+		 {
+	         code : 'PROPERTY',
+			 title :`segmentW`,
+			 description : `
+			    가로 분할 수
+			    최소값 : 1
+	         `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['segmentW', 'number', {min: 1}],
+		/*DOC:
+		 {
+	         code : 'PROPERTY',
+			 title :`segmentH`,
+			 description : `
+			    세로 분할 수
+			    최소값 : 1
+	         `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['segmentH', 'number', {min: 1}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`alpha`,
+			 description : `기본값 : 1`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['alpha', 'number', {min: 0, max: 1}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`usePreMultiply`,
+			 description : `
+			    usePreMultiply 사용여부
+			    기본값 : false
+			 `,
+			 return : 'boolean'
+		 }
+		 :DOC*/
+		['usePreMultiply', 'boolean', samplerOption]
+	);
 	Object.freeze(RedSheetMaterial)
 })();
 /*
@@ -8664,151 +8675,154 @@ var RedStandardMaterial;
 		}
 	};
 	RedStandardMaterial.prototype = new RedBaseMaterial();
-	/*DOC:
-	 {
-         code : 'PROPERTY',
-		 title :`alpha`,
-		 description : `기본값 : 1`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'alpha', 'number', {min: 0, max: 1});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`diffuseTexture`,
-		 description : `diffuseTexture`,
-		 return : 'RedBitmapTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'diffuseTexture', 'sampler2D', {
-		essential: true,
-		callback: samplerOption.callback
-	});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`normalTexture`,
-		 description : `normalTexture`,
-		 return : 'RedBitmapTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'normalTexture', 'sampler2D', samplerOption);
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`specularTexture`,
-		 description : `specularTexture`,
-		 return : 'RedBitmapTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'specularTexture', 'sampler2D', samplerOption);
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`emissiveTexture`,
-		 description : `emissiveTexture`,
-		 return : 'RedBitmapTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'emissiveTexture', 'sampler2D', samplerOption);
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`displacementTexture`,
-		 description : `displacementTexture`,
-		 return : 'RedBitmapTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'displacementTexture', 'sampler2D', samplerOption);
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`normalPower`,
-		 description : `기본값 : 1`,
-		 return : 'number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'normalPower', 'number', {'min': 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`shininess`,
-		 description : `기본값 : 16`,
-		 return : 'number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'shininess', 'number', {'min': 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`specularPower`,
-		 description : `기본값 : 1`,
-		 return : 'number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'specularPower', 'number', {'min': 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`emissiveFactor`,
-		 description : `기본값 : 1`,
-		 return : 'number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'emissiveFactor', 'number', {'min': 0});
+	RedDefinePropertyInfo.definePrototypes(
+		'RedStandardMaterial',
+		/*DOC:
+		 {
+	         code : 'PROPERTY',
+			 title :`alpha`,
+			 description : `기본값 : 1`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['alpha', 'number', {min: 0, max: 1}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`diffuseTexture`,
+			 description : `diffuseTexture`,
+			 return : 'RedBitmapTexture'
+		 }
+		 :DOC*/
+		['diffuseTexture', 'sampler2D', {
+			essential: true,
+			callback: samplerOption.callback
+		}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`normalTexture`,
+			 description : `normalTexture`,
+			 return : 'RedBitmapTexture'
+		 }
+		 :DOC*/
+		['normalTexture', 'sampler2D', samplerOption],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`specularTexture`,
+			 description : `specularTexture`,
+			 return : 'RedBitmapTexture'
+		 }
+		 :DOC*/
+		['specularTexture', 'sampler2D', samplerOption],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`emissiveTexture`,
+			 description : `emissiveTexture`,
+			 return : 'RedBitmapTexture'
+		 }
+		 :DOC*/
+		['emissiveTexture', 'sampler2D', samplerOption],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`displacementTexture`,
+			 description : `displacementTexture`,
+			 return : 'RedBitmapTexture'
+		 }
+		 :DOC*/
+		['displacementTexture', 'sampler2D', samplerOption],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`normalPower`,
+			 description : `기본값 : 1`,
+			 return : 'number'
+		 }
+		 :DOC*/
+		['normalPower', 'number', {'min': 0}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`shininess`,
+			 description : `기본값 : 16`,
+			 return : 'number'
+		 }
+		 :DOC*/
+		['shininess', 'number', {'min': 0}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`specularPower`,
+			 description : `기본값 : 1`,
+			 return : 'number'
+		 }
+		 :DOC*/
+		['specularPower', 'number', {'min': 0}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`emissiveFactor`,
+			 description : `기본값 : 1`,
+			 return : 'number'
+		 }
+		 :DOC*/
+		['emissiveFactor', 'number', {'min': 0}],
 
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`displacementPower`,
-		 description : `기본값 : 0`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'displacementPower', 'number', {'min': 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`displacementFlowSpeedX`,
-		 description : `기본값 : 0`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'displacementFlowSpeedX', 'number');
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`displacementFlowSpeedY`,
-		 description : `기본값 : 0`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'displacementFlowSpeedY', 'number');
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`useFlatMode`,
-		 description : `
-		    flatMode 사용여부
-		    기본값 : true
-		 `,
-		 return : 'boolean'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'useFlatMode', 'boolean', samplerOption);
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`usePreMultiply`,
-		 description : `
-		    usePreMultiply 사용여부
-		    기본값 : false
-		 `,
-		 return : 'boolean'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedStandardMaterial', 'usePreMultiply', 'boolean', samplerOption);
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`displacementPower`,
+			 description : `기본값 : 0`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['displacementPower', 'number', {'min': 0}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`displacementFlowSpeedX`,
+			 description : `기본값 : 0`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['displacementFlowSpeedX', 'number'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`displacementFlowSpeedY`,
+			 description : `기본값 : 0`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['displacementFlowSpeedY', 'number'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`useFlatMode`,
+			 description : `
+			    flatMode 사용여부
+			    기본값 : true
+			 `,
+			 return : 'boolean'
+		 }
+		 :DOC*/
+		['useFlatMode', 'boolean', samplerOption],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`usePreMultiply`,
+			 description : `
+			    usePreMultiply 사용여부
+			    기본값 : false
+			 `,
+			 return : 'boolean'
+		 }
+		 :DOC*/
+		['usePreMultiply', 'boolean', samplerOption]
+	);
 	Object.freeze(RedStandardMaterial);
 })();
 /*
@@ -8817,7 +8831,6 @@ var RedStandardMaterial;
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
  * Last modification time of this file - 2019.4.30 18:53
  */
-
 "use strict";
 var RedVideoMaterial;
 (function () {
@@ -8920,24 +8933,27 @@ var RedVideoMaterial;
 		console.log(this);
 	};
 	RedVideoMaterial.prototype = new RedBaseMaterial();
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`alpha`,
-		 description : `기본값 : 1`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedVideoMaterial', 'alpha', 'number', {min: 0, max: 1});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`videoTexture`,
-		 description : `videoTexture`,
-		 return : 'RedVideoTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedVideoMaterial', 'videoTexture', 'samplerVideo', {essential: true});
+	RedDefinePropertyInfo.definePrototypes(
+		'RedVideoMaterial',
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`alpha`,
+			 description : `기본값 : 1`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['alpha', 'number', {min: 0, max: 1}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`videoTexture`,
+			 description : `videoTexture`,
+			 return : 'RedVideoTexture'
+		 }
+		 :DOC*/
+		['videoTexture', 'samplerVideo', {essential: true}]
+	);
 	Object.freeze(RedVideoMaterial);
 })();
 /*
@@ -8946,7 +8962,6 @@ var RedVideoMaterial;
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
  * Last modification time of this file - 2019.4.30 18:53
  */
-
 "use strict";
 var RedPBRMaterial;
 (function () {
@@ -9215,12 +9230,9 @@ var RedPBRMaterial;
 		this['occlusionTexture'] = occlusionTexture;
 		this['emissiveTexture'] = emissiveTexture;
 		this['roughnessTexture'] = roughnessTexture;
-
 		this['normalPower'] = 1;
 		this['specularPower'] = 1;
 		this['occlusionPower'] = 1;
-
-
 		this['metallicFactor'] = 1;
 		this['roughnessFactor'] = 0.1;
 		this['baseColorFactor'] = [1, 1, 1, 1];
@@ -9244,162 +9256,161 @@ var RedPBRMaterial;
 			this._searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST)
 		}
 	};
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`alpha`,
-		 description : `기본값 : 1`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'alpha', 'number', {min: 0, max: 1});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`cutOff`,
-		 description : `기본값 : 0`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'cutOff', 'number', {min: 0, max: 1});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`diffuseTexture`,
-		 description : `diffuseTexture`,
-		 return : 'RedBitmapTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'diffuseTexture', 'sampler2D', samplerOption);
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`environmentTexture`,
-		 description : `environmentTexture`,
-		 return : 'RedBitmapCubeTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'environmentTexture', 'samplerCube', {
-		callback: samplerOption.callback
-	});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`normalTexture`,
-		 description : `normalTexture`,
-		 return : 'RedBitmapTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'normalTexture', 'sampler2D', samplerOption);
-
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`occlusionTexture`,
-		 description : `occlusionTexture`,
-		 return : 'RedBitmapTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'occlusionTexture', 'sampler2D', samplerOption);
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`emissiveTexture`,
-		 description : `emissiveTexture`,
-		 return : 'RedBitmapTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'emissiveTexture', 'sampler2D', samplerOption);
-
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`roughnessTexture`,
-		 description : `roughnessTexture`,
-		 return : 'RedBitmapTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'roughnessTexture', 'sampler2D', samplerOption);
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`normalPower`,
-		 description : `기본값 : 1`,
-		 return : 'number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'normalPower', 'number', {'min': 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`specularPower`,
-		 description : `기본값 : 1`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'specularPower', 'number', {'min': 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`metallicFactor`,
-		 description : `기본값 : 1`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'metallicFactor', 'number', {'min': 0, 'max': 1});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`emissiveFactor`,
-		 description : `기본값 : 1`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'emissiveFactor', 'number', {'min': 0, 'max': 1});
-
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`roughnessFactor`,
-		 description : `기본값 : 0.1`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'roughnessFactor', 'number', {'min': 0, 'max': 1});
-
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`occlusionPower`,
-		 description : `기본값 : 1`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'occlusionPower', 'number', {'min': 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`useFlatMode`,
-		 description : `
-		    flatMode 사용여부
-		    기본값 : true
-		 `,
-		 return : 'boolean'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'useFlatMode', 'boolean', samplerOption);
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`usePreMultiply`,
-		 description : `
-		    usePreMultiply 사용여부
-		    기본값 : false
-		 `,
-		 return : 'boolean'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial', 'usePreMultiply', 'boolean', samplerOption);
+	RedDefinePropertyInfo.definePrototypes(
+		'RedPBRMaterial',
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`alpha`,
+			 description : `기본값 : 1`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['alpha', 'number', {min: 0, max: 1}],
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`cutOff`,
+			 description : `기본값 : 0`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['cutOff', 'number', {min: 0, max: 1}],
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`diffuseTexture`,
+			 description : `diffuseTexture`,
+			 return : 'RedBitmapTexture'
+		 }
+		 :DOC*/
+		['diffuseTexture', 'sampler2D', samplerOption],
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`environmentTexture`,
+			 description : `environmentTexture`,
+			 return : 'RedBitmapCubeTexture'
+		 }
+		 :DOC*/
+		['environmentTexture', 'samplerCube', {
+			callback: samplerOption.callback
+		}],
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`normalTexture`,
+			 description : `normalTexture`,
+			 return : 'RedBitmapTexture'
+		 }
+		 :DOC*/
+		['normalTexture', 'sampler2D', samplerOption],
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`occlusionTexture`,
+			 description : `occlusionTexture`,
+			 return : 'RedBitmapTexture'
+		 }
+		 :DOC*/
+		['occlusionTexture', 'sampler2D', samplerOption],
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`emissiveTexture`,
+			 description : `emissiveTexture`,
+			 return : 'RedBitmapTexture'
+		 }
+		 :DOC*/
+		['emissiveTexture', 'sampler2D', samplerOption],
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`roughnessTexture`,
+			 description : `roughnessTexture`,
+			 return : 'RedBitmapTexture'
+		 }
+		 :DOC*/
+		['roughnessTexture', 'sampler2D', samplerOption],
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`normalPower`,
+			 description : `기본값 : 1`,
+			 return : 'number'
+		 }
+		 :DOC*/
+		['normalPower', 'number', {'min': 0}],
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`specularPower`,
+			 description : `기본값 : 1`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['specularPower', 'number', {'min': 0}],
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`metallicFactor`,
+			 description : `기본값 : 1`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['metallicFactor', 'number', {'min': 0, 'max': 1}],
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`emissiveFactor`,
+			 description : `기본값 : 1`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['emissiveFactor', 'number', {'min': 0, 'max': 1}],
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`roughnessFactor`,
+			 description : `기본값 : 0.1`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['roughnessFactor', 'number', {'min': 0, 'max': 1}],
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`occlusionPower`,
+			 description : `기본값 : 1`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['occlusionPower', 'number', {'min': 0}],
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`useFlatMode`,
+			 description : `
+				flatMode 사용여부
+				기본값 : true
+			 `,
+			 return : 'boolean'
+		 }
+		 :DOC*/
+		['useFlatMode', 'boolean', samplerOption],
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`usePreMultiply`,
+			 description : `
+				usePreMultiply 사용여부
+				기본값 : false
+			 `,
+			 return : 'boolean'
+		 }
+		 :DOC*/
+		['usePreMultiply', 'boolean', samplerOption]
+	);
 	Object.freeze(RedPBRMaterial);
 })();
 /*
@@ -9502,7 +9513,6 @@ var RedColorPointCloudMaterial;
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
  * Last modification time of this file - 2019.4.30 18:53
  */
-
 "use strict";
 var RedPBRMaterial_System;
 (function () {
@@ -9829,24 +9839,20 @@ var RedPBRMaterial_System;
 		this['occlusionTexture'] = occlusionTexture;
 		this['emissiveTexture'] = emissiveTexture;
 		this['roughnessTexture'] = roughnessTexture;
-
 		this['normalPower'] = 1;
 		this['specularPower'] = 1;
 		this['metallicFactor'] = 1;
 		this['roughnessFactor'] = 1;
-
 		this['diffuseTexCoordIndex'] = 0;
 		this['occlusionTexCoordIndex'] = 0;
 		this['emissiveTexCoordIndex'] = 0;
 		this['roughnessTexCoordIndex'] = 0;
 		this['normalTexCoordIndex'] = 0;
-
 		this['occlusionPower'] = 1;
 		this['baseColorFactor'] = null;
 		this['emissiveFactor'] = null;
 		this['alpha'] = 1;
 		this['cutOff'] = 0;
-
 		/////////////////////////////////////////
 		// 일반 프로퍼티
 		this['useMaterialDoubleSide'] = false;
@@ -9871,181 +9877,177 @@ var RedPBRMaterial_System;
 				self._searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST);
 				self['_needSearchProgram'] = null
 			});
-
 		}
 	};
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`alpha`,
-		 description : `기본값 : 1`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'alpha', 'number', {min: 0, max: 1});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`cutOff`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'cutOff', 'number', {min: 0, max: 1});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`diffuseTexture`,
-		 return : 'RedBitmapTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'diffuseTexture', 'sampler2D', samplerOption);
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'diffuseTexCoordIndex', 'number');
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`environmentTexture`,
-		 return : 'RedBitmapCubeTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'environmentTexture', 'samplerCube', {
-		callback: samplerOption.callback
-	});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`normalTexture`,
-		 return : 'RedBitmapTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'normalTexture', 'sampler2D', samplerOption);
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'normalTexCoordIndex', 'number');
-
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`occlusionTexture`,
-		 return : 'RedBitmapTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'occlusionTexture', 'sampler2D', samplerOption);
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'occlusionTexCoordIndex', 'number');
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`emissiveTexture`,
-		 return : 'RedBitmapTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'emissiveTexture', 'sampler2D', samplerOption);
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'emissiveTexCoordIndex', 'number');
-
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`roughnessTexture`,
-		 return : 'RedBitmapTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'roughnessTexture', 'sampler2D', samplerOption);
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'roughnessTexCoordIndex', 'number');
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`normalPower`,
-		 description : `기본값 : 1`,
-		 return : 'number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'normalPower', 'number', {'min': 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`specularPower`,
-		 description : `기본값 : 1`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'specularPower', 'number', {'min': 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`metallicFactor`,
-		 description : `기본값 : 1`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'metallicFactor', 'number', {'min': 0, 'max': 1});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`roughnessFactor`,
-		 description : `기본값 : 1`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'roughnessFactor', 'number', {'min': 0, 'max': 1});
-
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`occlusionPower`,
-		 description : `기본값 : 1`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'occlusionPower', 'number', {'min': 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`useFlatMode`,
-		 description : `
-		    flatMode 사용여부
-		    기본값 : true
-		 `,
-		 return : 'boolean'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'useFlatMode', 'boolean', samplerOption);
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`useMaterialDoubleSide`,
-		 description : `
-		    gltf 파싱에 따른 재질에서 더블사이드 사용여부
-		    기본값 : false
-		 `,
-		 return : 'boolean'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'useMaterialDoubleSide', 'boolean', samplerOption);
-
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`useVertexColor_0`,
-		 description : `
-		    aVertexColor_0 사용여부
-		    기본값 : true
-		 `,
-		 return : 'boolean'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'useVertexColor_0', 'boolean', samplerOption);
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'useVertexTangent', 'boolean', samplerOption);
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`usePreMultiply`,
-		 description : `
-		    usePreMultiply 사용여부
-		    기본값 : false
-		 `,
-		 return : 'boolean'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPBRMaterial_System', 'usePreMultiply', 'boolean', samplerOption);
-
-
+	RedDefinePropertyInfo.definePrototypes(
+		'RedPBRMaterial_System',
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`alpha`,
+			 description : `기본값 : 1`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['alpha', 'number', {min: 0, max: 1}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`cutOff`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['cutOff', 'number', {min: 0, max: 1}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`diffuseTexture`,
+			 return : 'RedBitmapTexture'
+		 }
+		 :DOC*/
+		['diffuseTexture', 'sampler2D', samplerOption],
+		['diffuseTexCoordIndex', 'number'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`environmentTexture`,
+			 return : 'RedBitmapCubeTexture'
+		 }
+		 :DOC*/
+		['environmentTexture', 'samplerCube', {
+			callback: samplerOption.callback
+		}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`normalTexture`,
+			 return : 'RedBitmapTexture'
+		 }
+		 :DOC*/
+		['normalTexture', 'sampler2D', samplerOption],
+		['normalTexCoordIndex', 'number'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`occlusionTexture`,
+			 return : 'RedBitmapTexture'
+		 }
+		 :DOC*/
+		['occlusionTexture', 'sampler2D', samplerOption],
+		['occlusionTexCoordIndex', 'number'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`emissiveTexture`,
+			 return : 'RedBitmapTexture'
+		 }
+		 :DOC*/
+		['emissiveTexture', 'sampler2D', samplerOption],
+		['emissiveTexCoordIndex', 'number'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`roughnessTexture`,
+			 return : 'RedBitmapTexture'
+		 }
+		 :DOC*/
+		['roughnessTexture', 'sampler2D', samplerOption],
+		['roughnessTexCoordIndex', 'number'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`normalPower`,
+			 description : `기본값 : 1`,
+			 return : 'number'
+		 }
+		 :DOC*/
+		['normalPower', 'number', {'min': 0}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`specularPower`,
+			 description : `기본값 : 1`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['specularPower', 'number', {'min': 0}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`metallicFactor`,
+			 description : `기본값 : 1`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['metallicFactor', 'number', {'min': 0, 'max': 1}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`roughnessFactor`,
+			 description : `기본값 : 1`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['roughnessFactor', 'number', {'min': 0, 'max': 1}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`occlusionPower`,
+			 description : `기본값 : 1`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['occlusionPower', 'number', {'min': 0}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`useFlatMode`,
+			 description : `
+			    flatMode 사용여부
+			    기본값 : true
+			 `,
+			 return : 'boolean'
+		 }
+		 :DOC*/
+		['useFlatMode', 'boolean', samplerOption],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`useMaterialDoubleSide`,
+			 description : `
+			    gltf 파싱에 따른 재질에서 더블사이드 사용여부
+			    기본값 : false
+			 `,
+			 return : 'boolean'
+		 }
+		 :DOC*/
+		['useMaterialDoubleSide', 'boolean', samplerOption],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`useVertexColor_0`,
+			 description : `
+			    aVertexColor_0 사용여부
+			    기본값 : true
+			 `,
+			 return : 'boolean'
+		 }
+		 :DOC*/
+		['useVertexColor_0', 'boolean', samplerOption],
+		['useVertexTangent', 'boolean', samplerOption],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`usePreMultiply`,
+			 description : `
+			    usePreMultiply 사용여부
+			    기본값 : false
+			 `,
+			 return : 'boolean'
+		 }
+		 :DOC*/
+		['usePreMultiply', 'boolean', samplerOption]
+	);
 	Object.freeze(RedPBRMaterial_System);
 })();
 /*
@@ -10174,44 +10176,47 @@ var RedTextMaterial;
 		console.log(this);
 	};
 	RedTextMaterial.prototype = new RedBaseMaterial();
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`diffuseTexture`,
-		 description : `diffuseTexture`,
-		 return : 'RedBitmapTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedTextMaterial', 'diffuseTexture', 'sampler2D', {essential: true});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`alpha`,
-		 description : `기본값 : 1`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedTextMaterial', 'alpha', 'number', {min: 0, max: 1});
-	RedDefinePropertyInfo.definePrototype('RedTextMaterial', 'width', 'number', {
-		min: 2,
-		callback: function (v) {
-			this['_width'] = v;
-		}
-	});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`height`,
-		 description : `세로영역크기`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedTextMaterial', 'height', 'number', {
-		min: 2,
-		callback: function (v) {
-			this['_height'] = v;
-		}
-	});
+	RedDefinePropertyInfo.definePrototypes(
+		'RedTextMaterial',
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`diffuseTexture`,
+			 description : `diffuseTexture`,
+			 return : 'RedBitmapTexture'
+		 }
+		 :DOC*/
+		['diffuseTexture', 'sampler2D', {essential: true}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`alpha`,
+			 description : `기본값 : 1`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['alpha', 'number', {min: 0, max: 1}],
+		['width', 'number', {
+			min: 2,
+			callback: function (v) {
+				this['_width'] = v;
+			}
+		}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`height`,
+			 description : `세로영역크기`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['height', 'number', {
+			min: 2,
+			callback: function (v) {
+				this['_height'] = v;
+			}
+		}]
+	);
 	Object.freeze(RedTextMaterial);
 })();
 /*
@@ -27355,4 +27360,4 @@ var RedGLOffScreen;
 		};
 		RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
 	})();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-06-13 02:49:59)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-06-13 03:32:09)' };console.log(RedGL_VERSION);

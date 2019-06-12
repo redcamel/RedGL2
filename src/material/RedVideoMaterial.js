@@ -4,7 +4,6 @@
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
  * Last modification time of this file - 2019.4.30 18:53
  */
-
 "use strict";
 var RedVideoMaterial;
 (function () {
@@ -107,23 +106,26 @@ var RedVideoMaterial;
 		console.log(this);
 	};
 	RedVideoMaterial.prototype = new RedBaseMaterial();
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`alpha`,
-		 description : `기본값 : 1`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedVideoMaterial', 'alpha', 'number', {min: 0, max: 1});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`videoTexture`,
-		 description : `videoTexture`,
-		 return : 'RedVideoTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedVideoMaterial', 'videoTexture', 'samplerVideo', {essential: true});
+	RedDefinePropertyInfo.definePrototypes(
+		'RedVideoMaterial',
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`alpha`,
+			 description : `기본값 : 1`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['alpha', 'number', {min: 0, max: 1}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`videoTexture`,
+			 description : `videoTexture`,
+			 return : 'RedVideoTexture'
+		 }
+		 :DOC*/
+		['videoTexture', 'samplerVideo', {essential: true}]
+	);
 	Object.freeze(RedVideoMaterial);
 })();

@@ -135,8 +135,6 @@ var RedGLDetect;
 		 return : 'Object'
 	 }
 	 :DOC*/
-
-
 	RedGLDetect.BROWSER_INFO = {};
 	RedGLDetect.getBrowserInfo = function () {
 		var result = RedGLDetect['BROWSER_INFO'];
