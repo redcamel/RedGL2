@@ -201,5 +201,14 @@ var RedDefinePropertyInfo;
 	RedDefinePropertyInfo['definePrototype'] = function (clsName, keyName, type, option) {
 		maker(window[clsName]['prototype'], clsName, keyName, type, option);
 	};
+
+	RedDefinePropertyInfo['definePrototypes'] = function (clsName /*defineInfo, defineInfo, defineInfo*/) {
+		var i = arguments.length;
+		var t0;
+		while (i-- > 1) {
+			t0 = arguments[i];
+			maker(window[clsName]['prototype'], clsName, t0[0], t0[1], t0[2]);
+		}
+	};
 	Object.freeze(RedDefinePropertyInfo);
 })();
