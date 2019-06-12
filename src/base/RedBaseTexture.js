@@ -4,7 +4,6 @@
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
  * Last modification time of this file - 2019.4.30 18:53
  */
-
 "use strict";
 var RedBaseTexture;
 (function () {
@@ -103,10 +102,9 @@ var RedBaseTexture;
 					gl.bindTexture(gl.TEXTURE_2D, null);
 				}
 			}
-		})()
-	};
-	/*DOC:
-	 {
+		})(),
+		/*DOC:
+		 {
 			 code : 'METHOD',
 			 title :`_load`,
 			 description : `
@@ -115,12 +113,12 @@ var RedBaseTexture;
 			 `,
 			 return : 'void'
 		 }
-	 :DOC*/
-	RedBaseTexture.prototype['_load'] = function () {
-		RedGLUtil.throwFunc('RedBaseTexture - _load : 반드시 재정의해야함')
-	};
-	/*DOC:
-	 {
+		 :DOC*/
+		_load: function () {
+			RedGLUtil.throwFunc('RedBaseTexture - _load : 반드시 재정의해야함')
+		},
+		/*DOC:
+		 {
 			 code : 'PROPERTY',
 			 title :`src`,
 			 description : `
@@ -129,12 +127,12 @@ var RedBaseTexture;
 			 `,
 			 return : 'void'
 		 }
-	 :DOC*/
-	RedBaseTexture.prototype['src'] = function () {
-		RedGLUtil.throwFunc('RedBaseTexture - src : 반드시 재정의해야함')
-	};
-	/*DOC:
-	 {
+		 :DOC*/
+		src: function () {
+			RedGLUtil.throwFunc('RedBaseTexture - src : 반드시 재정의해야함')
+		},
+		/*DOC:
+		 {
 			 code : 'METHOD',
 			 title :`dispose`,
 			 description : `
@@ -142,11 +140,12 @@ var RedBaseTexture;
 			 `,
 			 return : 'void'
 		 }
-	 :DOC*/
-	RedBaseTexture.prototype['dispose'] = function () {
-		if (this['webglTexture'] && this['_src'] != RedBaseTexture.EMPTY_BASE64) {
-			this['webglTexture']['gl'].deleteTexture(this['webglTexture']);
-			this['webglTexture'] = null
+		 :DOC*/
+		dispose: function () {
+			if (this['webglTexture'] && this['_src'] != RedBaseTexture.EMPTY_BASE64) {
+				this['webglTexture']['gl'].deleteTexture(this['webglTexture']);
+				this['webglTexture'] = null
+			}
 		}
 	};
 	Object.defineProperty(RedBaseTexture.prototype, 'callback', {

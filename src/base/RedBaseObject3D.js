@@ -4,7 +4,6 @@
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
  * Last modification time of this file - 2019.6.7 12:10
  */
-
 "use strict";
 var RedBaseObject3D;
 (function () {
@@ -325,7 +324,6 @@ var RedBaseObject3D;
 			parseInt(Math.random() * 255),
 			255
 		])
-
 	};
 	RedBaseObject3D.prototype = {
 		/*DOC:

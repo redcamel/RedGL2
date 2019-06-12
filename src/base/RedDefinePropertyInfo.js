@@ -4,7 +4,6 @@
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
  * Last modification time of this file - 2019.4.30 18:53
  */
-
 "use strict";
 var RedDefinePropertyInfo;
 (function () {
@@ -201,7 +200,6 @@ var RedDefinePropertyInfo;
 	RedDefinePropertyInfo['definePrototype'] = function (clsName, keyName, type, option) {
 		maker(window[clsName]['prototype'], clsName, keyName, type, option);
 	};
-
 	RedDefinePropertyInfo['definePrototypes'] = function (clsName /*defineInfo, defineInfo, defineInfo*/) {
 		var i = arguments.length;
 		var t0;

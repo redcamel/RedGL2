@@ -4,10 +4,10 @@
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
  * Last modification time of this file - 2019.4.30 18:53
  */
-
 "use strict";
 var RedBasePostEffect;
 (function () {
+	var tPrototype;
 	/*DOC:
 	 {
 		 constructorYn : true,
@@ -21,9 +21,9 @@ var RedBasePostEffect;
 	 :DOC*/
 	RedBasePostEffect = function () {
 	};
-	RedBasePostEffect.prototype = new RedBaseMaterial();
-	RedBasePostEffect.prototype['bind'] = RedPostEffectManager.prototype['bind'];
-	RedBasePostEffect.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
+	tPrototype = RedBasePostEffect.prototype = new RedBaseMaterial();
+	tPrototype['bind'] = RedPostEffectManager.prototype['bind'];
+	tPrototype['unbind'] = RedPostEffectManager.prototype['unbind'];
 	/*DOC:
 	 {
 		title :`updateTexture`,
@@ -35,7 +35,7 @@ var RedBasePostEffect;
 		return : 'void'
 	}
 	 :DOC*/
-	RedBasePostEffect.prototype['updateTexture'] = function () {
+	tPrototype['updateTexture'] = function () {
 		RedGLUtil.throwFunc('RedBasePostEffect - updateTexture : 반드시 재정의해야함')
 	};
 	/*DOC:
@@ -48,7 +48,7 @@ var RedBasePostEffect;
 		return : 'void'
 	}
 	 :DOC*/
-	RedBasePostEffect.prototype['_process'] = [];
+	tPrototype['_process'] = [];
 	/*DOC:
 	 {
 		title :`_subFrameBufferList`,
@@ -59,6 +59,6 @@ var RedBasePostEffect;
 		return : 'void'
 	}
 	 :DOC*/
-	RedBasePostEffect.prototype['_subFrameBufferList'] = [];
+	tPrototype['_subFrameBufferList'] = [];
 	Object.freeze(RedBasePostEffect);
 })();

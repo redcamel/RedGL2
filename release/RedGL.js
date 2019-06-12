@@ -3192,10 +3192,9 @@ var RedBaseTexture;
 					gl.bindTexture(gl.TEXTURE_2D, null);
 				}
 			}
-		})()
-	};
-	/*DOC:
-	 {
+		})(),
+		/*DOC:
+		 {
 			 code : 'METHOD',
 			 title :`_load`,
 			 description : `
@@ -3204,12 +3203,12 @@ var RedBaseTexture;
 			 `,
 			 return : 'void'
 		 }
-	 :DOC*/
-	RedBaseTexture.prototype['_load'] = function () {
-		RedGLUtil.throwFunc('RedBaseTexture - _load : 반드시 재정의해야함')
-	};
-	/*DOC:
-	 {
+		 :DOC*/
+		_load: function () {
+			RedGLUtil.throwFunc('RedBaseTexture - _load : 반드시 재정의해야함')
+		},
+		/*DOC:
+		 {
 			 code : 'PROPERTY',
 			 title :`src`,
 			 description : `
@@ -3218,12 +3217,12 @@ var RedBaseTexture;
 			 `,
 			 return : 'void'
 		 }
-	 :DOC*/
-	RedBaseTexture.prototype['src'] = function () {
-		RedGLUtil.throwFunc('RedBaseTexture - src : 반드시 재정의해야함')
-	};
-	/*DOC:
-	 {
+		 :DOC*/
+		src: function () {
+			RedGLUtil.throwFunc('RedBaseTexture - src : 반드시 재정의해야함')
+		},
+		/*DOC:
+		 {
 			 code : 'METHOD',
 			 title :`dispose`,
 			 description : `
@@ -3231,11 +3230,12 @@ var RedBaseTexture;
 			 `,
 			 return : 'void'
 		 }
-	 :DOC*/
-	RedBaseTexture.prototype['dispose'] = function () {
-		if (this['webglTexture'] && this['_src'] != RedBaseTexture.EMPTY_BASE64) {
-			this['webglTexture']['gl'].deleteTexture(this['webglTexture']);
-			this['webglTexture'] = null
+		 :DOC*/
+		dispose: function () {
+			if (this['webglTexture'] && this['_src'] != RedBaseTexture.EMPTY_BASE64) {
+				this['webglTexture']['gl'].deleteTexture(this['webglTexture']);
+				this['webglTexture'] = null
+			}
 		}
 	};
 	Object.defineProperty(RedBaseTexture.prototype, 'callback', {
@@ -4155,6 +4155,7 @@ var RedBaseObject3D;
 "use strict";
 var RedBaseContainer;
 (function () {
+	var tPrototype;
 	/*DOC:
 	 {
 		 constructorYn : true,
@@ -24524,6 +24525,7 @@ var RedPostEffectManager;
 "use strict";
 var RedBasePostEffect;
 (function () {
+	var tPrototype;
 	/*DOC:
 	 {
 		 constructorYn : true,
@@ -24537,9 +24539,9 @@ var RedBasePostEffect;
 	 :DOC*/
 	RedBasePostEffect = function () {
 	};
-	RedBasePostEffect.prototype = new RedBaseMaterial();
-	RedBasePostEffect.prototype['bind'] = RedPostEffectManager.prototype['bind'];
-	RedBasePostEffect.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
+	tPrototype = RedBasePostEffect.prototype = new RedBaseMaterial();
+	tPrototype['bind'] = RedPostEffectManager.prototype['bind'];
+	tPrototype['unbind'] = RedPostEffectManager.prototype['unbind'];
 	/*DOC:
 	 {
 		title :`updateTexture`,
@@ -24551,7 +24553,7 @@ var RedBasePostEffect;
 		return : 'void'
 	}
 	 :DOC*/
-	RedBasePostEffect.prototype['updateTexture'] = function () {
+	tPrototype['updateTexture'] = function () {
 		RedGLUtil.throwFunc('RedBasePostEffect - updateTexture : 반드시 재정의해야함')
 	};
 	/*DOC:
@@ -24564,7 +24566,7 @@ var RedBasePostEffect;
 		return : 'void'
 	}
 	 :DOC*/
-	RedBasePostEffect.prototype['_process'] = [];
+	tPrototype['_process'] = [];
 	/*DOC:
 	 {
 		title :`_subFrameBufferList`,
@@ -24575,7 +24577,7 @@ var RedBasePostEffect;
 		return : 'void'
 	}
 	 :DOC*/
-	RedBasePostEffect.prototype['_subFrameBufferList'] = [];
+	tPrototype['_subFrameBufferList'] = [];
 	Object.freeze(RedBasePostEffect);
 })();
 /*
@@ -27376,4 +27378,4 @@ var RedGLOffScreen;
 		};
 		RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
 	})();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-06-13 01:59:42)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-06-13 02:32:39)' };console.log(RedGL_VERSION);
