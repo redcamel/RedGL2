@@ -26,86 +26,86 @@
 
 <body>
 <script id='testSource'>
-    var testUI;
-    var canvas;
-    var assetPath = '../../asset/'
-    canvas = document.createElement('canvas');
-    document.body.appendChild(canvas);
-    RedGL(canvas, function (v) {
-        if (v) {
-            var tWorld, tView, tScene, tController, tRenderer;
-            var setBase = function (redGL) {
-                // 월드 생성
-                redGL['world'] = tWorld = RedWorld();
-                // 씬 생성
-                tScene = RedScene(redGL);
-                // 카메라 생성
-                tController = RedObitController(redGL);
-                tController.pan = 0;
-                tController.tilt = -45;
-                // 렌더러 생성
-                tRenderer = RedRenderer();
-                // 뷰생성 및 적용
-                tView = RedView('HelloRedGL', redGL, tScene, tController);
-                tWorld.addView(tView);
-                // 그리드 설정
-                tScene['grid'] = RedGrid(redGL);
-                // 렌더시작
-                tRenderer.start(redGL, function (time) {
-                });
-                // 렌더 디버거 활성화
-                tRenderer.setDebugButton();
-                // testUI 호출
-                testUI(redGL, tController, tScene);
-                console.log(redGL);
-            };
-            setBase(this);
-            // Mesh 설정
-            var tMesh;
-            tMesh = RedMesh(this, RedBox(this), RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'UV_Grid_Sm.jpg')));
-            tMesh.useCullFace = false
-            tScene.addChild(tMesh)
+	var testUI;
+	var canvas;
+	var assetPath = '../../asset/'
+	canvas = document.createElement('canvas');
+	document.body.appendChild(canvas);
+	RedGL(canvas, function (v) {
+		if (v) {
+			var tWorld, tView, tScene, tController, tRenderer;
+			var setBase = function (redGL) {
+				// 월드 생성
+				redGL['world'] = tWorld = RedWorld();
+				// 씬 생성
+				tScene = RedScene(redGL);
+				// 카메라 생성
+				tController = RedObitController(redGL);
+				tController.pan = 0;
+				tController.tilt = -45;
+				// 렌더러 생성
+				tRenderer = RedRenderer();
+				// 뷰생성 및 적용
+				tView = RedView('HelloRedGL', redGL, tScene, tController);
+				tWorld.addView(tView);
+				// 그리드 설정
+				tScene['grid'] = RedGrid(redGL);
+				// 렌더시작
+				tRenderer.start(redGL, function (time) {
+				});
+				// 렌더 디버거 활성화
+				tRenderer.setDebugButton();
+				// testUI 호출
+				testUI(redGL, tController, tScene);
+				console.log(redGL);
+			};
+			setBase(this);
+			// Mesh 설정
+			var tMesh;
+			tMesh = RedMesh(this, RedBox(this), RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'UV_Grid_Sm.jpg')));
+			tMesh.useCullFace = false
+			tScene.addChild(tMesh)
 
-        } else {
-            console.log('초기화 실패!')
-        }
-    });
-    testUI = function (redGL, tController, tScene) {
-        var gui = new baseTestUI(redGL);
-        gui.initRedGL();
-        var primitiveTestData = {
-            drawMode: 'TRIANGLES',
-            pointSize: 1,
-            width: 1,
-            height: 1,
-            depth: 1,
-            wSegments: 1,
-            hSegments: 1,
-            dSegments: 1
-        }
-        var tFolder = gui['gui'].addFolder('RedMesh')
-        tFolder.open();
-        tFolder.add(primitiveTestData, 'drawMode', ['TRIANGLES', 'TRIANGLE_STRIP', 'TRIANGLE_FAN', 'LINES', 'LINE_LOOP', 'LINE_STRIP', 'POINTS']).onChange(function (v) {
-            tScene.children.forEach(function (tMesh) {
-                tMesh.drawMode = redGL.gl[v];
-            })
-        });
-        tFolder.add(primitiveTestData, 'pointSize', 1, 100).onChange(function (v) {
-            tScene.children.forEach(function (tMesh) {
-                tMesh.pointSize = v;
-            })
-        });
-        tFolder = gui['gui'].addFolder('RedPlane')
-        tFolder.open();
-        'width,height,depth,wSegments,hSegments,dSegments'.split(',').forEach(function (tKey) {
-            tFolder.add(primitiveTestData, tKey, 1, 20, 0.1).onChange(function () {
-                tScene.children.forEach(function (tMesh) {
-                    tMesh.geometry = RedBox(redGL, primitiveTestData.width, primitiveTestData.height, primitiveTestData.depth, primitiveTestData.wSegments, primitiveTestData.hSegments, primitiveTestData.dSegments);
-                    console.log('volume', tMesh.geometry.volume)
-                })
-            })
-        });
-    }
+		} else {
+			console.log('초기화 실패!')
+		}
+	});
+	testUI = function (redGL, tController, tScene) {
+		var gui = new baseTestUI(redGL);
+		gui.initRedGL();
+		var primitiveTestData = {
+			drawMode: 'TRIANGLES',
+			pointSize: 1,
+			width: 1,
+			height: 1,
+			depth: 1,
+			wSegments: 1,
+			hSegments: 1,
+			dSegments: 1
+		}
+		var tFolder = gui['gui'].addFolder('RedMesh')
+		tFolder.open();
+		tFolder.add(primitiveTestData, 'drawMode', ['TRIANGLES', 'TRIANGLE_STRIP', 'TRIANGLE_FAN', 'LINES', 'LINE_LOOP', 'LINE_STRIP', 'POINTS']).onChange(function (v) {
+			tScene.children.forEach(function (tMesh) {
+				tMesh.drawMode = redGL.gl[v];
+			})
+		});
+		tFolder.add(primitiveTestData, 'pointSize', 1, 100).onChange(function (v) {
+			tScene.children.forEach(function (tMesh) {
+				tMesh.pointSize = v;
+			})
+		});
+		tFolder = gui['gui'].addFolder('RedPlane')
+		tFolder.open();
+		'width,height,depth,wSegments,hSegments,dSegments'.split(',').forEach(function (tKey) {
+			tFolder.add(primitiveTestData, tKey, 1, 20, 0.1).onChange(function () {
+				tScene.children.forEach(function (tMesh) {
+					tMesh.geometry = RedBox(redGL, primitiveTestData.width, primitiveTestData.height, primitiveTestData.depth, primitiveTestData.wSegments, primitiveTestData.hSegments, primitiveTestData.dSegments);
+					console.log('volume', tMesh.geometry.volume)
+				})
+			})
+		});
+	}
 </script>
 </body>
 

@@ -26,57 +26,57 @@
 
 <body>
 <script id='testSource'>
-    var testUI;
-    var canvas;
-    var assetPath = '../../asset/'
-    canvas = document.createElement('canvas');
-    document.body.appendChild(canvas);
-    RedGL(canvas, function (v) {
-        if (v) {
-            console.log('초기화 성공!')
-            var tWorld, tView, tScene, tController, tRenderer, tLight;
-            var setBase = function (redGL) {
-                // 월드 생성
-                redGL['world'] = tWorld = RedWorld();
-                // 씬 생성
-                tScene = RedScene(redGL);
-                // 카메라 생성
-                tController = RedObitController(redGL);
-                tController.pan = -25;
-                tController.tilt = -25;
-                tController.distance = 5;
-                tController.speedDistance = 0.5
-                // 렌더러 생성
-                tRenderer = RedRenderer();
-                // 뷰생성 및 적용
-                tView = RedView('HelloRedGL', redGL, tScene, tController);
-                tWorld.addView(tView);
-                // 그리드 설정
-                tScene['grid'] = RedGrid(redGL);
-                // 렌더시작
-                tRenderer.start(redGL, function (time) {
-                });
-                // 렌더 디버거 활성화
-                tRenderer.setDebugButton();
-                testUI(redGL, tScene);
-            };
-            setBase(this);
-            // BitmapTexture 설정
-            var tTexture = RedBitmapTexture(this, assetPath + 'UV_Grid_Sm.jpg');
-            // 재질설정
-            var tMaterial = RedBitmapMaterial(this, tTexture);
-            // Mesh 설정
-            var tMesh;
-            tMesh = RedMesh(this, RedBox(this), tMaterial);
-            tScene.addChild(tMesh)
-        } else {
-            console.log('초기화 실패!')
-        }
-    })
-    testUI = function (redGL, tScene) {
-        var gui = new baseTestUI(redGL)
-        gui.initRedGL()
-    }
+	var testUI;
+	var canvas;
+	var assetPath = '../../asset/'
+	canvas = document.createElement('canvas');
+	document.body.appendChild(canvas);
+	RedGL(canvas, function (v) {
+		if (v) {
+			console.log('초기화 성공!')
+			var tWorld, tView, tScene, tController, tRenderer, tLight;
+			var setBase = function (redGL) {
+				// 월드 생성
+				redGL['world'] = tWorld = RedWorld();
+				// 씬 생성
+				tScene = RedScene(redGL);
+				// 카메라 생성
+				tController = RedObitController(redGL);
+				tController.pan = -25;
+				tController.tilt = -25;
+				tController.distance = 5;
+				tController.speedDistance = 0.5
+				// 렌더러 생성
+				tRenderer = RedRenderer();
+				// 뷰생성 및 적용
+				tView = RedView('HelloRedGL', redGL, tScene, tController);
+				tWorld.addView(tView);
+				// 그리드 설정
+				tScene['grid'] = RedGrid(redGL);
+				// 렌더시작
+				tRenderer.start(redGL, function (time) {
+				});
+				// 렌더 디버거 활성화
+				tRenderer.setDebugButton();
+				testUI(redGL, tScene);
+			};
+			setBase(this);
+			// BitmapTexture 설정
+			var tTexture = RedBitmapTexture(this, assetPath + 'UV_Grid_Sm.jpg');
+			// 재질설정
+			var tMaterial = RedBitmapMaterial(this, tTexture);
+			// Mesh 설정
+			var tMesh;
+			tMesh = RedMesh(this, RedBox(this), tMaterial);
+			tScene.addChild(tMesh)
+		} else {
+			console.log('초기화 실패!')
+		}
+	})
+	testUI = function (redGL, tScene) {
+		var gui = new baseTestUI(redGL)
+		gui.initRedGL()
+	}
 </script>
 </body>
 

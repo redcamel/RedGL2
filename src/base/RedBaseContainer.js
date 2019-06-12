@@ -8,8 +8,8 @@
 "use strict";
 var RedBaseContainer;
 (function () {
-    /**DOC:
-     {
+	/*DOC:
+	 {
 		 constructorYn : true,
 		 title :`RedBaseContainer`,
 		 description : `
@@ -19,14 +19,14 @@ var RedBaseContainer;
 		 extends : ['RedBaseObject3D'],
 		 return : 'RedBaseContainer Instance'
 	 }
-     :DOC*/
-    RedBaseContainer = function () {
-        if (!(this instanceof RedBaseContainer)) return new RedBaseContainer();
-        this['children'] = []
-    };
-    RedBaseContainer.prototype = new RedBaseObject3D();
-    /**DOC:
-     {
+	 :DOC*/
+	RedBaseContainer = function () {
+		if (!(this instanceof RedBaseContainer)) return new RedBaseContainer();
+		this['children'] = []
+	};
+	RedBaseContainer.prototype = new RedBaseObject3D();
+	/*DOC:
+	 {
 		 code : 'METHOD',
 		 title :`addChild`,
 		 description : `자식추가`,
@@ -40,14 +40,14 @@ var RedBaseContainer;
 		 `,
 		 return : 'void'
 	 }
-     :DOC*/
-    RedBaseContainer.prototype['addChild'] = function (child) {
-        child instanceof RedBaseObject3D || RedGLUtil.throwFunc('addChild', 'RedBaseObject3D Instance만 가능', '입력값 : ' + child);
-        if (this['children'].indexOf(child) > -1) this['removeChild'](child);
-        this['children'].push(child);
-    };
-    /**DOC:
-     {
+	 :DOC*/
+	RedBaseContainer.prototype['addChild'] = function (child) {
+		child instanceof RedBaseObject3D || RedGLUtil.throwFunc('addChild', 'RedBaseObject3D Instance만 가능', '입력값 : ' + child);
+		if (this['children'].indexOf(child) > -1) this['removeChild'](child);
+		this['children'].push(child);
+	};
+	/*DOC:
+	 {
 		 code : 'METHOD',
 		 title :`addChildAt`,
 		 description : `인덱스 위치에 자식을 추가`,
@@ -65,17 +65,17 @@ var RedBaseContainer;
 		 `,
 		 return : 'void'
 	 }
-     :DOC*/
-    RedBaseContainer.prototype['addChildAt'] = function (child, index) {
-        RedGLUtil['isUint'](index, 'addChildAt : index는 uint만 입력가능');
-        child instanceof RedBaseObject3D || RedGLUtil.throwFunc('addChildAt', 'RedBaseObject3D Instance만 가능', '입력값 : ' + child);
-        if (this['children'].indexOf(child) > -1) this['removeChild'](child);
-        if (this['children'].length < index) index = this['children'].length;
-        if (index != undefined) this['children'].splice(index, 0, child);
-        else this['children'].push(child);
-    };
-    /**DOC:
-     {
+	 :DOC*/
+	RedBaseContainer.prototype['addChildAt'] = function (child, index) {
+		RedGLUtil['isUint'](index, 'addChildAt : index는 uint만 입력가능');
+		child instanceof RedBaseObject3D || RedGLUtil.throwFunc('addChildAt', 'RedBaseObject3D Instance만 가능', '입력값 : ' + child);
+		if (this['children'].indexOf(child) > -1) this['removeChild'](child);
+		if (this['children'].length < index) index = this['children'].length;
+		if (index != undefined) this['children'].splice(index, 0, child);
+		else this['children'].push(child);
+	};
+	/*DOC:
+	 {
 		 code : 'METHOD',
 		 title :`removeChild`,
 		 description : `
@@ -92,17 +92,17 @@ var RedBaseContainer;
 		 `,
 		 return : 'void'
 	 }
-     :DOC*/
-    RedBaseContainer.prototype['removeChild'] = (function () {
-        var t0;
-        return function (child) {
-            t0 = this['children'].indexOf(child);
-            if (t0 == -1) RedGLUtil.throwFunc('removeChild', '존재하지 않는 RedMesh를 삭제하려고 함');
-            else this['children'].splice(t0, 1);
-        }
-    })();
-    /**DOC:
-     {
+	 :DOC*/
+	RedBaseContainer.prototype['removeChild'] = (function () {
+		var t0;
+		return function (child) {
+			t0 = this['children'].indexOf(child);
+			if (t0 == -1) RedGLUtil.throwFunc('removeChild', '존재하지 않는 RedMesh를 삭제하려고 함');
+			else this['children'].splice(t0, 1);
+		}
+	})();
+	/*DOC:
+	 {
 		 code : 'METHOD',
 		 title :`removeChildAt`,
 		 description : `인덱스 위치에 있는 자식을 제거`,
@@ -117,14 +117,14 @@ var RedBaseContainer;
 		 `,
 		 return : 'void'
 	 }
-     :DOC*/
-    RedBaseContainer.prototype['removeChildAt'] = function (index) {
-        RedGLUtil['isUint'](index, 'removeChildAt : index는 uint만 입력가능');
-        if (this['children'][index]) this['children'].splice(index, 1);
-        else RedGLUtil.throwFunc('removeChildAt', 'index 해당인덱스에 위치한 자식이 없음.', '입력값 : ' + index);
-    };
-    /**DOC:
-     {
+	 :DOC*/
+	RedBaseContainer.prototype['removeChildAt'] = function (index) {
+		RedGLUtil['isUint'](index, 'removeChildAt : index는 uint만 입력가능');
+		if (this['children'][index]) this['children'].splice(index, 1);
+		else RedGLUtil.throwFunc('removeChildAt', 'index 해당인덱스에 위치한 자식이 없음.', '입력값 : ' + index);
+	};
+	/*DOC:
+	 {
 		 code : 'METHOD',
 		 title :`removeChildAll`,
 		 description : `전체 자식을 제거`,
@@ -133,12 +133,12 @@ var RedBaseContainer;
 		 `,
 		 return : 'void'
 	 }
-     :DOC*/
-    RedBaseContainer.prototype['removeChildAll'] = function () {
-        this['children'].length = 0
-    };
-    /**DOC:
-     {
+	 :DOC*/
+	RedBaseContainer.prototype['removeChildAll'] = function () {
+		this['children'].length = 0
+	};
+	/*DOC:
+	 {
 		 code : 'METHOD',
 		 title :`getChildAt`,
 		 description : `해당위치의 자식을 반환`,
@@ -153,13 +153,13 @@ var RedBaseContainer;
 		 `,
 		 return : 'RedBaseObject3D Instance'
 	 }
-     :DOC*/
-    RedBaseContainer.prototype['getChildAt'] = function (index) {
-        RedGLUtil['isUint'](index, 'getChildAt : index는 uint만 입력가능');
-        return this['children'][index];
-    };
-    /**DOC:
-     {
+	 :DOC*/
+	RedBaseContainer.prototype['getChildAt'] = function (index) {
+		RedGLUtil['isUint'](index, 'getChildAt : index는 uint만 입력가능');
+		return this['children'][index];
+	};
+	/*DOC:
+	 {
 		 code : 'METHOD',
 		 title :`getChildIndex`,
 		 description : `해당객체의 인덱스 번호를 반환`,
@@ -173,12 +173,12 @@ var RedBaseContainer;
 		 `,
 		 return : 'int'
 	 }
-     :DOC*/
-    RedBaseContainer.prototype['getChildIndex'] = function (child) {
-        return this['children'].indexOf(child);
-    };
-    /**DOC:
-     {
+	 :DOC*/
+	RedBaseContainer.prototype['getChildIndex'] = function (child) {
+		return this['children'].indexOf(child);
+	};
+	/*DOC:
+	 {
 		 code : 'METHOD',
 		 title :`numChildren`,
 		 description : `자식갯수 반환`,
@@ -192,12 +192,12 @@ var RedBaseContainer;
 		 `,
 		 return : 'uint'
 	 }
-     :DOC*/
-    RedBaseContainer.prototype['numChildren'] = function () {
-        return this['children'].length;
-    };
-    /**DOC:
-     {
+	 :DOC*/
+	RedBaseContainer.prototype['numChildren'] = function () {
+		return this['children'].length;
+	};
+	/*DOC:
+	 {
 		 code : 'METHOD',
 		 title :`sortGeometry`,
 		 description : `
@@ -216,26 +216,26 @@ var RedBaseContainer;
 		 `,
 		 return : 'void'
 	 }
-     :DOC*/
-    RedBaseContainer.prototype['sortGeometry'] = function (recursive) {
-        if (recursive) {
-            var i = this.children.length;
-            while (i--) {
-                if (this.children[i].sortGeometry) this.children[i].sortGeometry(recursive)
-            }
-        }
-        this.children.sort(function (a, b) {
-            if (a['_geometry'] && b['_geometry']) {
-                a = a['_geometry']['interleaveBuffer']['_UUID'];
-                b = b['_geometry']['interleaveBuffer']['_UUID'];
-                if (a < b) return -1;
-                if (a > b) return 1;
-            }
-            return 0
-        })
-    };
-    /**DOC:
-     {
+	 :DOC*/
+	RedBaseContainer.prototype['sortGeometry'] = function (recursive) {
+		if (recursive) {
+			var i = this.children.length;
+			while (i--) {
+				if (this.children[i].sortGeometry) this.children[i].sortGeometry(recursive)
+			}
+		}
+		this.children.sort(function (a, b) {
+			if (a['_geometry'] && b['_geometry']) {
+				a = a['_geometry']['interleaveBuffer']['_UUID'];
+				b = b['_geometry']['interleaveBuffer']['_UUID'];
+				if (a < b) return -1;
+				if (a > b) return 1;
+			}
+			return 0
+		})
+	};
+	/*DOC:
+	 {
 		 code : 'METHOD',
 		 title :`sortMaterial`,
 		 description : `
@@ -254,26 +254,26 @@ var RedBaseContainer;
 		 `,
 		 return : 'void'
 	 }
-     :DOC*/
-    RedBaseContainer.prototype['sortMaterial'] = function (recursive) {
-        if (recursive) {
-            var i = this.children.length;
-            while (i--) {
-                if (this.children[i].sortMaterial) this.children[i].sortMaterial(recursive)
-            }
-        }
-        this.children.sort(function (a, b) {
-            if (a['_geometry'] && b['_geometry']) {
-                a = a['_material']['program']['_UUID'];
-                b = b['_material']['program']['_UUID'];
-                if (a < b) return -1;
-                if (a > b) return 1;
-            }
-            return 0
-        })
-    };
-    /**DOC:
-     {
+	 :DOC*/
+	RedBaseContainer.prototype['sortMaterial'] = function (recursive) {
+		if (recursive) {
+			var i = this.children.length;
+			while (i--) {
+				if (this.children[i].sortMaterial) this.children[i].sortMaterial(recursive)
+			}
+		}
+		this.children.sort(function (a, b) {
+			if (a['_geometry'] && b['_geometry']) {
+				a = a['_material']['program']['_UUID'];
+				b = b['_material']['program']['_UUID'];
+				if (a < b) return -1;
+				if (a > b) return 1;
+			}
+			return 0
+		})
+	};
+	/*DOC:
+	 {
 		 code : 'METHOD',
 		 title :`sortGeometryAndMaterial`,
 		 description : `지오메트리/재질순으로 자식들을 정렬`,
@@ -289,31 +289,31 @@ var RedBaseContainer;
 		 `,
 		 return : 'void'
 	 }
-     :DOC*/
-    RedBaseContainer.prototype['sortGeometryAndMaterial'] = function (recursive) {
-        //TODO: 정의,검증 해야함
-        if (recursive) {
-            var i = this.children.length;
-            while (i--) {
-                if (this.children[i].sortGeometryAndMaterial) this.children[i].sortGeometryAndMaterial(recursive)
-            }
-        }
-        this.children.sort(function (a, b) {
-            if (a['_geometry'] && b['_geometry']) {
-                a = a['_geometry']['interleaveBuffer']['_UUID'];
-                b = b['_geometry']['interleaveBuffer']['_UUID'];
-                if (a == b) {
-                    var a2 = a['_material']['program']['_UUID'];
-                    var b2 = b['_material']['program']['_UUID'];
-                    if (a2 < b2) return -1;
-                    if (a2 > b2) return 1;
-                    return 0
-                }
-                if (a < b) return -1;
-                if (a > b) return 1;
-            }
-            return 0
-        })
-    };
-    Object.freeze(RedBaseContainer);
+	 :DOC*/
+	RedBaseContainer.prototype['sortGeometryAndMaterial'] = function (recursive) {
+		//TODO: 정의,검증 해야함
+		if (recursive) {
+			var i = this.children.length;
+			while (i--) {
+				if (this.children[i].sortGeometryAndMaterial) this.children[i].sortGeometryAndMaterial(recursive)
+			}
+		}
+		this.children.sort(function (a, b) {
+			if (a['_geometry'] && b['_geometry']) {
+				a = a['_geometry']['interleaveBuffer']['_UUID'];
+				b = b['_geometry']['interleaveBuffer']['_UUID'];
+				if (a == b) {
+					var a2 = a['_material']['program']['_UUID'];
+					var b2 = b['_material']['program']['_UUID'];
+					if (a2 < b2) return -1;
+					if (a2 > b2) return 1;
+					return 0
+				}
+				if (a < b) return -1;
+				if (a > b) return 1;
+			}
+			return 0
+		})
+	};
+	Object.freeze(RedBaseContainer);
 })();

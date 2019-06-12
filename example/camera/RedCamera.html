@@ -25,68 +25,68 @@
 </head>
 <body>
 <script id='testSource'>
-    var testUI;
-    var canvas;
-    var assetPath = '../../asset/'
-    canvas = document.createElement('canvas');
-    document.body.appendChild(canvas);
-    RedGL(canvas, function (v) {
-        if (v) {
-            console.log('초기화 성공!');
-            var tWorld, tView, tScene, tCamera, tRenderer;
-            var setBase = function (redGL) {
-                // 월드 생성
-                redGL['world'] = tWorld = RedWorld();
-                // 씬 생성
-                tScene = RedScene(redGL);
-                // 카메라 생성
-                tCamera = RedCamera();
-                tCamera.x = 0;
-                tCamera.y = 0;
-                tCamera.z = 10;
-                // 렌더러 생성
-                tRenderer = RedRenderer();
-                // 뷰생성 및 적용
-                tView = RedView('HelloRedGL', redGL, tScene, tCamera);
-                tWorld.addView(tView);
-                // 그리드 설정
-                tScene['grid'] = RedGrid(redGL);
-                // 렌더시작
-                tRenderer.start(redGL, function (time) {
-                });
-                // 렌더 디버거 활성화
-                tRenderer.setDebugButton();
-                testUI(redGL, tCamera)
-            };
-            setBase(this);
+	var testUI;
+	var canvas;
+	var assetPath = '../../asset/'
+	canvas = document.createElement('canvas');
+	document.body.appendChild(canvas);
+	RedGL(canvas, function (v) {
+		if (v) {
+			console.log('초기화 성공!');
+			var tWorld, tView, tScene, tCamera, tRenderer;
+			var setBase = function (redGL) {
+				// 월드 생성
+				redGL['world'] = tWorld = RedWorld();
+				// 씬 생성
+				tScene = RedScene(redGL);
+				// 카메라 생성
+				tCamera = RedCamera();
+				tCamera.x = 0;
+				tCamera.y = 0;
+				tCamera.z = 10;
+				// 렌더러 생성
+				tRenderer = RedRenderer();
+				// 뷰생성 및 적용
+				tView = RedView('HelloRedGL', redGL, tScene, tCamera);
+				tWorld.addView(tView);
+				// 그리드 설정
+				tScene['grid'] = RedGrid(redGL);
+				// 렌더시작
+				tRenderer.start(redGL, function (time) {
+				});
+				// 렌더 디버거 활성화
+				tRenderer.setDebugButton();
+				testUI(redGL, tCamera)
+			};
+			setBase(this);
 
-            // Box 설정
-            var tMesh;
-            var i = 1000
-            while (i--) {
-                // 3D 테스트용
-                tMesh = RedMesh(this, RedBox(this), RedColorMaterial(this))
-                tMesh.x = Math.random() * 500 - 250
-                tMesh.y = Math.random() * 500 - 250
-                tMesh.z = Math.random() * 500 - 250
-                tScene.addChild(tMesh)
-                // 2D 테스트용
-                tMesh = RedMesh(this, RedBox(this), RedColorMaterial(this, '#00ff00'))
-                tMesh.x = Math.random() * 1280 + 10
-                tMesh.y = Math.random() * 600
-                tMesh.scaleX = tMesh.scaleY = Math.random() * 10
-                tScene.addChild(tMesh)
-            }
-        } else {
-            console.log('초기화 실패!')
-        }
-    })
-    testUI = function (redGL, tCamera) {
-        console.log('test')
-        var gui = new baseTestUI(redGL)
-        gui.initRedGL();
-        gui.initCamera(tCamera).open();
-    }
+			// Box 설정
+			var tMesh;
+			var i = 1000
+			while (i--) {
+				// 3D 테스트용
+				tMesh = RedMesh(this, RedBox(this), RedColorMaterial(this))
+				tMesh.x = Math.random() * 500 - 250
+				tMesh.y = Math.random() * 500 - 250
+				tMesh.z = Math.random() * 500 - 250
+				tScene.addChild(tMesh)
+				// 2D 테스트용
+				tMesh = RedMesh(this, RedBox(this), RedColorMaterial(this, '#00ff00'))
+				tMesh.x = Math.random() * 1280 + 10
+				tMesh.y = Math.random() * 600
+				tMesh.scaleX = tMesh.scaleY = Math.random() * 10
+				tScene.addChild(tMesh)
+			}
+		} else {
+			console.log('초기화 실패!')
+		}
+	})
+	testUI = function (redGL, tCamera) {
+		console.log('test')
+		var gui = new baseTestUI(redGL)
+		gui.initRedGL();
+		gui.initCamera(tCamera).open();
+	}
 </script>
 </body>
 

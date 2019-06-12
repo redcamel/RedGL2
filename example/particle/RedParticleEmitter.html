@@ -26,77 +26,77 @@
 
 <body>
 <script id='testSource'>
-    var canvas;
-    var assetPath = '../../asset/'
-    canvas = document.createElement('canvas');
-    document.body.appendChild(canvas);
-    RedGL(canvas, function (v) {
-        var tGL;
-        var self;
-        self = this
-        tGL = this.gl;
-        console.log('초기화 성공!');
-        var tWorld, tView, tScene, tController, tRenderer;
-        var setBase = function (redGL) {
-            // 월드 생성
-            redGL['world'] = tWorld = RedWorld();
-            // 씬 생성
-            tScene = RedScene(redGL);
-            // 카메라 생성
-            tController = RedObitController(redGL);
-            tController.pan = 45;
-            tController.tilt = -45;
-            // 렌더러 생성
-            tRenderer = RedRenderer();
-            // 뷰생성 및 적용
-            tView = RedView('HelloRedGL', redGL, tScene, tController);
-            tWorld.addView(tView);
-            // 그리드 설정
+	var canvas;
+	var assetPath = '../../asset/'
+	canvas = document.createElement('canvas');
+	document.body.appendChild(canvas);
+	RedGL(canvas, function (v) {
+		var tGL;
+		var self;
+		self = this
+		tGL = this.gl;
+		console.log('초기화 성공!');
+		var tWorld, tView, tScene, tController, tRenderer;
+		var setBase = function (redGL) {
+			// 월드 생성
+			redGL['world'] = tWorld = RedWorld();
+			// 씬 생성
+			tScene = RedScene(redGL);
+			// 카메라 생성
+			tController = RedObitController(redGL);
+			tController.pan = 45;
+			tController.tilt = -45;
+			// 렌더러 생성
+			tRenderer = RedRenderer();
+			// 뷰생성 및 적용
+			tView = RedView('HelloRedGL', redGL, tScene, tController);
+			tWorld.addView(tView);
+			// 그리드 설정
 
-            tScene.skyBox =
-                RedSkyBox(redGL, [
-                    assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
-                    assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
-                    assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
-                    assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
-                    assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
-                    assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
-                ]);
-            // 렌더 디버거 활성화
-            tRenderer.setDebugButton();
+			tScene.skyBox =
+				RedSkyBox(redGL, [
+					assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
+					assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
+					assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
+					assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
+					assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
+					assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
+				]);
+			// 렌더 디버거 활성화
+			tRenderer.setDebugButton();
 
-        };
-        setBase(this);
-        var PARTICLE_DEFINE_DATA = {
-            max: 200,
-            emitCount: 1,
-            lifeTime: [1000, 1500],
-            particle: {
-                movementX: {start: [0, 0], end: [-7, 7], ease: RedParticleEmitter.QuadInOut},
-                movementY: {start: [0, 0], end: [-7, 7], ease: RedParticleEmitter.QuadInOut},
-                movementZ: {start: [0, 0], end: [-7, 7], ease: RedParticleEmitter.QuadInOut},
-                scale: {start: [0.5, 0], end: [2, 6], ease: RedParticleEmitter.QuadInOut},
-                alpha: {start: [0.5, 1], end: [0, 0], ease: RedParticleEmitter.QuadInOut}
-            },
-            tint: [1, 1, 1],
-            gravity: 0
-        }
-        var testEmitter = new RedParticleEmitter(
-            this,
-            PARTICLE_DEFINE_DATA,
-            RedBitmapTexture(this, assetPath + 'particle.png')
-        )
-        testEmitter.scaleY = 0.2
-        tScene.addChild(testEmitter)
-        tRenderer.start(this, function (time) {
-            testEmitter.update(time)
-            PARTICLE_DEFINE_DATA['tint'][1] = Math.cos(time / 1000)
-            PARTICLE_DEFINE_DATA['tint'][2] = Math.cos(time / 1000) + Math.sin(time / 1000)
-        })
-        console.log(tScene)
+		};
+		setBase(this);
+		var PARTICLE_DEFINE_DATA = {
+			max: 200,
+			emitCount: 1,
+			lifeTime: [1000, 1500],
+			particle: {
+				movementX: {start: [0, 0], end: [-7, 7], ease: RedParticleEmitter.QuadInOut},
+				movementY: {start: [0, 0], end: [-7, 7], ease: RedParticleEmitter.QuadInOut},
+				movementZ: {start: [0, 0], end: [-7, 7], ease: RedParticleEmitter.QuadInOut},
+				scale: {start: [0.5, 0], end: [2, 6], ease: RedParticleEmitter.QuadInOut},
+				alpha: {start: [0.5, 1], end: [0, 0], ease: RedParticleEmitter.QuadInOut}
+			},
+			tint: [1, 1, 1],
+			gravity: 0
+		}
+		var testEmitter = new RedParticleEmitter(
+			this,
+			PARTICLE_DEFINE_DATA,
+			RedBitmapTexture(this, assetPath + 'particle.png')
+		)
+		testEmitter.scaleY = 0.2
+		tScene.addChild(testEmitter)
+		tRenderer.start(this, function (time) {
+			testEmitter.update(time)
+			PARTICLE_DEFINE_DATA['tint'][1] = Math.cos(time / 1000)
+			PARTICLE_DEFINE_DATA['tint'][2] = Math.cos(time / 1000) + Math.sin(time / 1000)
+		})
+		console.log(tScene)
 
 
-    })
+	})
 </script>
 </body>
 

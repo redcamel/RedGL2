@@ -26,107 +26,107 @@
 
 <body>
 <script id='testSource'>
-    var testUI;
-    var canvas;
-    var assetPath = '../../asset/'
-    canvas = document.createElement('canvas');
-    document.body.appendChild(canvas);
-    RedGL(canvas, function (v) {
-        if (v) {
-            console.log('초기화 성공!')
-            var tWorld, tView, tScene, tController, tRenderer;
-            var setBase = function (redGL) {
-                // 월드 생성
-                redGL['world'] = tWorld = RedWorld();
-                // 씬 생성
-                tScene = RedScene(redGL);
-                // 카메라 생성
-                tController = RedObitController(redGL);
-                tController.pan = 0;
-                tController.tilt = -45;
-                // 렌더러 생성
-                tRenderer = RedRenderer();
-                // 뷰생성 및 적용
-                tView = RedView('HelloRedGL', redGL, tScene, tController);
-                tWorld.addView(tView);
-                // 그리드 설정
-                tScene['grid'] = RedGrid(redGL);
-                // 렌더시작
-                tRenderer.start(redGL, function (time) {
-                });
-                // 렌더 디버거 활성화
-                tRenderer.setDebugButton();
-                // testUI 호출
-                testUI(redGL, tController, tScene);
-                console.log(redGL);
-            };
-            setBase(this);
-            // Mesh 설정
-            var tMesh;
-            tMesh = RedMesh(this, RedCylinder(this), RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'UV_Grid_Sm.jpg')));
-            tMesh.useCullFace = false
-            tScene.addChild(tMesh)
+	var testUI;
+	var canvas;
+	var assetPath = '../../asset/'
+	canvas = document.createElement('canvas');
+	document.body.appendChild(canvas);
+	RedGL(canvas, function (v) {
+		if (v) {
+			console.log('초기화 성공!')
+			var tWorld, tView, tScene, tController, tRenderer;
+			var setBase = function (redGL) {
+				// 월드 생성
+				redGL['world'] = tWorld = RedWorld();
+				// 씬 생성
+				tScene = RedScene(redGL);
+				// 카메라 생성
+				tController = RedObitController(redGL);
+				tController.pan = 0;
+				tController.tilt = -45;
+				// 렌더러 생성
+				tRenderer = RedRenderer();
+				// 뷰생성 및 적용
+				tView = RedView('HelloRedGL', redGL, tScene, tController);
+				tWorld.addView(tView);
+				// 그리드 설정
+				tScene['grid'] = RedGrid(redGL);
+				// 렌더시작
+				tRenderer.start(redGL, function (time) {
+				});
+				// 렌더 디버거 활성화
+				tRenderer.setDebugButton();
+				// testUI 호출
+				testUI(redGL, tController, tScene);
+				console.log(redGL);
+			};
+			setBase(this);
+			// Mesh 설정
+			var tMesh;
+			tMesh = RedMesh(this, RedCylinder(this), RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'UV_Grid_Sm.jpg')));
+			tMesh.useCullFace = false
+			tScene.addChild(tMesh)
 
-        } else {
-            console.log('초기화 실패!')
-        }
-    })
-    testUI = function (redGL, tController, tScene) {
-        console.log('test')
-        var gui = new baseTestUI(redGL);
-        gui.initRedGL();
-        var test = {
-            drawMode: 'TRIANGLES',
-            pointSize: 1,
-            radiusTop: 1,
-            radiusBottom: 1,
-            height: 1,
-            radialSegments: 8,
-            heightSegments: 1,
-            openEnded: false,
-            thetaStart: 0,
-            thetaLength: Math.PI * 2
-        }
-        var tFolder = gui['gui'].addFolder('RedMesh')
-        tFolder.open()
-        tFolder.add(test, 'drawMode', ['TRIANGLES', 'TRIANGLE_STRIP', 'TRIANGLE_FAN', 'LINES', 'LINE_LOOP', 'LINE_STRIP', 'POINTS']).onChange(function (v) {
-            tScene.children.forEach(function (v2) {
-                v2.drawMode = redGL.gl[v]
-            })
-        });
-        tFolder.add(test, 'pointSize', 1, 100).onChange(function (v) {
-            tScene.children.forEach(function (v2) {
-                v2.pointSize = v
-            })
-        });
-        tFolder = gui['gui'].addFolder('RedCylinder')
-        tFolder.open()
-        var makeCylinder = function () {
-            return RedCylinder(redGL, test.radiusTop, test.radiusBottom, test.height, test.radialSegments, test.heightSegments, test.openEnded, test.thetaStart, test.thetaLength);
-        };
-        'radiusTop,radiusBottom,height,radialSegments,heightSegments'.split(',').forEach(function (tKey) {
-            tFolder.add(test, tKey, 0, 20, 0.1).onChange(function () {
-                tScene.children.forEach(function (tMesh) {
-                    tMesh.geometry = makeCylinder();
-                })
-            })
-        });
-        tFolder.add(test, 'openEnded').onChange(function (v) {
-            tScene.children.forEach(function (v2) {
-                v2.geometry = makeCylinder();
-            })
-        });
-        tFolder.add(test, 'thetaStart', 0, Math.PI * 2, 0.001).onChange(function (v) {
-            tScene.children.forEach(function (v2) {
-                v2.geometry = makeCylinder();
-            })
-        });
-        tFolder.add(test, 'thetaLength', 0, Math.PI * 2, 0.001).onChange(function (v) {
-            tScene.children.forEach(function (v2) {
-                v2.geometry = makeCylinder();
-            })
-        });
-    }
+		} else {
+			console.log('초기화 실패!')
+		}
+	})
+	testUI = function (redGL, tController, tScene) {
+		console.log('test')
+		var gui = new baseTestUI(redGL);
+		gui.initRedGL();
+		var test = {
+			drawMode: 'TRIANGLES',
+			pointSize: 1,
+			radiusTop: 1,
+			radiusBottom: 1,
+			height: 1,
+			radialSegments: 8,
+			heightSegments: 1,
+			openEnded: false,
+			thetaStart: 0,
+			thetaLength: Math.PI * 2
+		}
+		var tFolder = gui['gui'].addFolder('RedMesh')
+		tFolder.open()
+		tFolder.add(test, 'drawMode', ['TRIANGLES', 'TRIANGLE_STRIP', 'TRIANGLE_FAN', 'LINES', 'LINE_LOOP', 'LINE_STRIP', 'POINTS']).onChange(function (v) {
+			tScene.children.forEach(function (v2) {
+				v2.drawMode = redGL.gl[v]
+			})
+		});
+		tFolder.add(test, 'pointSize', 1, 100).onChange(function (v) {
+			tScene.children.forEach(function (v2) {
+				v2.pointSize = v
+			})
+		});
+		tFolder = gui['gui'].addFolder('RedCylinder')
+		tFolder.open()
+		var makeCylinder = function () {
+			return RedCylinder(redGL, test.radiusTop, test.radiusBottom, test.height, test.radialSegments, test.heightSegments, test.openEnded, test.thetaStart, test.thetaLength);
+		};
+		'radiusTop,radiusBottom,height,radialSegments,heightSegments'.split(',').forEach(function (tKey) {
+			tFolder.add(test, tKey, 0, 20, 0.1).onChange(function () {
+				tScene.children.forEach(function (tMesh) {
+					tMesh.geometry = makeCylinder();
+				})
+			})
+		});
+		tFolder.add(test, 'openEnded').onChange(function (v) {
+			tScene.children.forEach(function (v2) {
+				v2.geometry = makeCylinder();
+			})
+		});
+		tFolder.add(test, 'thetaStart', 0, Math.PI * 2, 0.001).onChange(function (v) {
+			tScene.children.forEach(function (v2) {
+				v2.geometry = makeCylinder();
+			})
+		});
+		tFolder.add(test, 'thetaLength', 0, Math.PI * 2, 0.001).onChange(function (v) {
+			tScene.children.forEach(function (v2) {
+				v2.geometry = makeCylinder();
+			})
+		});
+	}
 </script>
 </body>
 

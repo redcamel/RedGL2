@@ -8,8 +8,8 @@
 "use strict";
 var RedWorld;
 (function () {
-    /**DOC:
-     {
+	/*DOC:
+	 {
 		 constructorYn : true,
 		 title :`RedWorld`,
 		 description : `
@@ -24,18 +24,18 @@ var RedWorld;
 		 `,
 		 return : 'RedWorld Instance'
 	 }
-     :DOC*/
-    RedWorld = function () {
-        if (!(this instanceof RedWorld)) return new RedWorld();
-        this['_viewList'] = [];
-        this['_viewMap'] = {};
-        this['_UUID'] = RedGL.makeUUID();
-        //Object.seal(this)
-        console.log(this);
-    };
-    RedWorld.prototype = {
-        /**DOC:
-         {
+	 :DOC*/
+	RedWorld = function () {
+		if (!(this instanceof RedWorld)) return new RedWorld();
+		this['_viewList'] = [];
+		this['_viewMap'] = {};
+		this['_UUID'] = RedGL.makeUUID();
+		//Object.seal(this)
+		console.log(this);
+	};
+	RedWorld.prototype = {
+		/*DOC:
+		 {
 			 code:`METHOD`,
 			 title :`addView`,
 			 description : `getViewList`,
@@ -52,14 +52,14 @@ var RedWorld;
 			`,
 			 return : 'void'
 		 }
-         :DOC*/
-        addView: function (redView) {
-            redView instanceof RedView || RedGLUtil.throwFunc('RedWorld :addView Instance만 허용함.', '입력값 : ' + redView);
-            this['_viewMap'][redView['key']] = redView;
-            this['_viewList'].push(redView);
-        },
-        /**DOC:
-         {
+		 :DOC*/
+		addView: function (redView) {
+			redView instanceof RedView || RedGLUtil.throwFunc('RedWorld :addView Instance만 허용함.', '입력값 : ' + redView);
+			this['_viewMap'][redView['key']] = redView;
+			this['_viewList'].push(redView);
+		},
+		/*DOC:
+		 {
 			 code:`METHOD`,
 			 title :`getView`,
 			 description : `고유키 기반 뷰 검색`,
@@ -79,13 +79,13 @@ var RedWorld;
 			`,
 			 return : 'RedView'
 		 }
-         :DOC*/
-        getView: function (key) {
-            typeof key == 'string' || RedGLUtil.throwFunc('RedWorld :getView 문자열만 허용함.', '입력값 : ' + key);
-            return this['_viewMap'][key]
-        },
-        /**DOC:
-         {
+		 :DOC*/
+		getView: function (key) {
+			typeof key == 'string' || RedGLUtil.throwFunc('RedWorld :getView 문자열만 허용함.', '입력값 : ' + key);
+			return this['_viewMap'][key]
+		},
+		/*DOC:
+		 {
 			 code:`METHOD`,
 			 title :`delView`,
 			 description : `고유키 기반 뷰 삭제`,
@@ -105,20 +105,20 @@ var RedWorld;
 			`,
 			 return : 'void'
 		 }
-         :DOC*/
-        delView: (function () {
-            var t0, t1;
-            return function (key) {
-                typeof key == 'string' || RedGLUtil.throwFunc('RedWorld :delView 문자열만 허용함.', '입력값 : ' + key);
-                if (t0 = this['_viewMap'][key]) {
-                    t1 = this['_viewList'].indexOf(t0);
-                    this['_viewList'].splice(t1, 1);
-                    delete this['_viewMap'][key];
-                }
-            }
-        })(),
-        /**DOC:
-         {
+		 :DOC*/
+		delView: (function () {
+			var t0, t1;
+			return function (key) {
+				typeof key == 'string' || RedGLUtil.throwFunc('RedWorld :delView 문자열만 허용함.', '입력값 : ' + key);
+				if (t0 = this['_viewMap'][key]) {
+					t1 = this['_viewList'].indexOf(t0);
+					this['_viewList'].splice(t1, 1);
+					delete this['_viewMap'][key];
+				}
+			}
+		})(),
+		/*DOC:
+		 {
 			 code:`METHOD`,
 			 title :`hasView`,
 			 description : `고유키 기반 뷰 존재여부 반환.`,
@@ -136,13 +136,13 @@ var RedWorld;
 			`,
 			 return : 'Boolean'
 		 }
-         :DOC*/
-        hasView: function (key) {
-            typeof key == 'string' || RedGLUtil.throwFunc('RedWorld :hasView 문자열만 허용함.', '입력값 : ' + key);
-            return this['_viewMap'][key] ? true : false;
-        },
-        /**DOC:
-         {
+		 :DOC*/
+		hasView: function (key) {
+			typeof key == 'string' || RedGLUtil.throwFunc('RedWorld :hasView 문자열만 허용함.', '입력값 : ' + key);
+			return this['_viewMap'][key] ? true : false;
+		},
+		/*DOC:
+		 {
 			 code:`METHOD`,
 			 title :`getViewList`,
 			 description : `고유키 기반 렌더정보 검색`,
@@ -162,10 +162,10 @@ var RedWorld;
 			`,
 			 return : 'Array'
 		 }
-         :DOC*/
-        getViewList: function () {
-            return this['_viewList'].concat();
-        }
-    };
-    Object.freeze(RedWorld);
+		 :DOC*/
+		getViewList: function () {
+			return this['_viewList'].concat();
+		}
+	};
+	Object.freeze(RedWorld);
 })();

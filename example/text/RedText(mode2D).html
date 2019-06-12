@@ -25,114 +25,114 @@
 </head>
 <body>
 <script id='testSource'>
-    var testUI;
-    var canvas;
-    var assetPath = '../../asset/';
-    canvas = document.createElement('canvas');
-    document.body.appendChild(canvas);
-    RedGL(canvas, function (v) {
-        if (v) {
-            var tWorld, tView, tScene, tCamera, tRenderer;
-            var setBase = function (redGL) {
-                // 월드 생성
-                redGL['world'] = tWorld = RedWorld();
-                // 씬 생성
-                tScene = RedScene(redGL);
-                // 카메라 생성
-                tCamera = RedCamera();
-                tCamera.mode2DYn = true
-                // 렌더러 생성
-                tRenderer = RedRenderer();
-                // 뷰생성 및 적용
-                tView = RedView('HelloRedGL', redGL, tScene, tCamera);
-                tWorld.addView(tView);
+	var testUI;
+	var canvas;
+	var assetPath = '../../asset/';
+	canvas = document.createElement('canvas');
+	document.body.appendChild(canvas);
+	RedGL(canvas, function (v) {
+		if (v) {
+			var tWorld, tView, tScene, tCamera, tRenderer;
+			var setBase = function (redGL) {
+				// 월드 생성
+				redGL['world'] = tWorld = RedWorld();
+				// 씬 생성
+				tScene = RedScene(redGL);
+				// 카메라 생성
+				tCamera = RedCamera();
+				tCamera.mode2DYn = true
+				// 렌더러 생성
+				tRenderer = RedRenderer();
+				// 뷰생성 및 적용
+				tView = RedView('HelloRedGL', redGL, tScene, tCamera);
+				tWorld.addView(tView);
 
 
-                // 렌더 디버거 활성화
-                tRenderer.setDebugButton();
-            };
-            setBase(this);
-            //////////////////////////////////////////////////////////////////////////////////////////////
-            // 테스트 문자열
-            var str = "Baby won't you tell me why there is sadness in your eyes<br>" +
-                "I don't wanna say goodbye to you<br>" +
-                "Love is one big illusion I should try to forget<br>" +
-                "But there is something left in my head";
-            //////////////////////////////////////////////////////////////////////////////////////////////
-            // RedText 테스트 객체
-            var testRedText = RedText(this);
-            testRedText.text = str;
-            testRedText.background = 'rgb(91, 82, 170)';
-            testRedText.width = 512;
-            testRedText.height = 256;
-            testRedText.x = 128
-            testRedText.y = 128
-            tScene.addChild(testRedText);
-            //////////////////////////////////////////////////////////////////////////////////////////////
-            // 렌더시작
-            var self = this
-            tRenderer.start(this, function (time) {
-                testRedText.x = self._viewRect[2] / 2
-                testRedText.y = self._viewRect[3] / 2
-            });
-            testUI(this, tScene, testRedText);
-            console.log(this);
-            console.log(testRedText);
-        } else {
-            console.log('초기화 실패!');
-        }
-    });
-    testUI = function (redGL, tScene, testRedText) {
-        var gui = new baseTestUI(redGL);
-        var t0 = gui['gui'].addFolder('RedText');
-        var testData = {
-            background: testRedText.background,
-            color: testRedText.color,
-            sprite3DYn: testRedText.sprite3DYn,
-            perspectiveScale: testRedText.perspectiveScale
-        };
+				// 렌더 디버거 활성화
+				tRenderer.setDebugButton();
+			};
+			setBase(this);
+			//////////////////////////////////////////////////////////////////////////////////////////////
+			// 테스트 문자열
+			var str = "Baby won't you tell me why there is sadness in your eyes<br>" +
+				"I don't wanna say goodbye to you<br>" +
+				"Love is one big illusion I should try to forget<br>" +
+				"But there is something left in my head";
+			//////////////////////////////////////////////////////////////////////////////////////////////
+			// RedText 테스트 객체
+			var testRedText = RedText(this);
+			testRedText.text = str;
+			testRedText.background = 'rgb(91, 82, 170)';
+			testRedText.width = 512;
+			testRedText.height = 256;
+			testRedText.x = 128
+			testRedText.y = 128
+			tScene.addChild(testRedText);
+			//////////////////////////////////////////////////////////////////////////////////////////////
+			// 렌더시작
+			var self = this
+			tRenderer.start(this, function (time) {
+				testRedText.x = self._viewRect[2] / 2
+				testRedText.y = self._viewRect[3] / 2
+			});
+			testUI(this, tScene, testRedText);
+			console.log(this);
+			console.log(testRedText);
+		} else {
+			console.log('초기화 실패!');
+		}
+	});
+	testUI = function (redGL, tScene, testRedText) {
+		var gui = new baseTestUI(redGL);
+		var t0 = gui['gui'].addFolder('RedText');
+		var testData = {
+			background: testRedText.background,
+			color: testRedText.color,
+			sprite3DYn: testRedText.sprite3DYn,
+			perspectiveScale: testRedText.perspectiveScale
+		};
 
-        t0.add(testRedText, 'width', 2, 512, 1);
-        t0.add(testRedText, 'height', 2, 512, 1);
-        t0.add(testRedText, 'padding', 0, 100, 0.1);
-        t0.add(testRedText, 'fontFamily', ['Arial', 'Times New Roman', 'Times', 'serif']);
-        t0.add(testRedText, 'fontSize', 0, 100, 0.1);
-        t0.add(testRedText, 'fontWeight', ['normal', 'bold']);
-        t0.add(testRedText, 'fontStyle', ['normal', 'italic']);
-        t0.add(testRedText, 'lineHeight', 0, 100, 0.1);
-        t0.add(testRedText, 'letterSpacing', 0, 4, 0.01);
-        t0.add(testRedText, 'wordBreak', ['normal', 'break-all', 'break-word', 'keep-all', 'unset']);
-        t0.add(testRedText, 'verticalAlign', ['top', 'middle', 'bottom']);
-        t0.add(testRedText, 'textAlign', ['left', 'center', 'right']);
+		t0.add(testRedText, 'width', 2, 512, 1);
+		t0.add(testRedText, 'height', 2, 512, 1);
+		t0.add(testRedText, 'padding', 0, 100, 0.1);
+		t0.add(testRedText, 'fontFamily', ['Arial', 'Times New Roman', 'Times', 'serif']);
+		t0.add(testRedText, 'fontSize', 0, 100, 0.1);
+		t0.add(testRedText, 'fontWeight', ['normal', 'bold']);
+		t0.add(testRedText, 'fontStyle', ['normal', 'italic']);
+		t0.add(testRedText, 'lineHeight', 0, 100, 0.1);
+		t0.add(testRedText, 'letterSpacing', 0, 4, 0.01);
+		t0.add(testRedText, 'wordBreak', ['normal', 'break-all', 'break-word', 'keep-all', 'unset']);
+		t0.add(testRedText, 'verticalAlign', ['top', 'middle', 'bottom']);
+		t0.add(testRedText, 'textAlign', ['left', 'center', 'right']);
 
-        t0.addColor(testData, 'background').onChange(function (v) {
-            tScene.children.forEach(function (redText) {
-                if (redText instanceof RedText) redText.background = v
-            })
-        });
-        ['color'].forEach(function (k) {
-            t0.addColor(testData, k).onChange(function (v) {
-                testRedText[k] = v
-            })
-        });
-        t0.open();
-        var t0, t1;
-        t0 = document.createElement('div');
-        t0.style.cssText = 'position:absolute;bottom:10px;left:10px';
-        document.body.appendChild(t0);
-        t1 = document.createElement('div');
-        t1.style.cssText = 'position:absolute;bottom:225px;left:10px;color:#fff;width:500px;font-weight:bold;text-shadow:1px 1px 0px rgba(255,255,255,0.4)';
-        t1.innerHTML = 'TextContent or HTML';
-        t0.appendChild(t1);
-        t1 = document.createElement('div');
-        t1.setAttribute('contenteditable', true);
-        t1.style.cssText = 'position:absolute;bottom:40px;left:0px;color:#fff;width:500px;height:160px;padding:10px;font-size:12;font-weight:bold;background:1px 1px 0px rgba(255,255,255,0.5);border:1px solid #333';
-        t1.textContent = testRedText.text;
-        t0.appendChild(t1);
-        t1.addEventListener('input', function () {
-            testRedText['text'] = this.textContent;
-        })
-    }
+		t0.addColor(testData, 'background').onChange(function (v) {
+			tScene.children.forEach(function (redText) {
+				if (redText instanceof RedText) redText.background = v
+			})
+		});
+		['color'].forEach(function (k) {
+			t0.addColor(testData, k).onChange(function (v) {
+				testRedText[k] = v
+			})
+		});
+		t0.open();
+		var t0, t1;
+		t0 = document.createElement('div');
+		t0.style.cssText = 'position:absolute;bottom:10px;left:10px';
+		document.body.appendChild(t0);
+		t1 = document.createElement('div');
+		t1.style.cssText = 'position:absolute;bottom:225px;left:10px;color:#fff;width:500px;font-weight:bold;text-shadow:1px 1px 0px rgba(255,255,255,0.4)';
+		t1.innerHTML = 'TextContent or HTML';
+		t0.appendChild(t1);
+		t1 = document.createElement('div');
+		t1.setAttribute('contenteditable', true);
+		t1.style.cssText = 'position:absolute;bottom:40px;left:0px;color:#fff;width:500px;height:160px;padding:10px;font-size:12;font-weight:bold;background:1px 1px 0px rgba(255,255,255,0.5);border:1px solid #333';
+		t1.textContent = testRedText.text;
+		t0.appendChild(t1);
+		t1.addEventListener('input', function () {
+			testRedText['text'] = this.textContent;
+		})
+	}
 </script>
 </body>
 </html>

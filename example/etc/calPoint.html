@@ -25,147 +25,147 @@
 
 <body>
 <script id='testSource'>
-    var testUI;
-    var canvas;
-    var assetPath = '../../asset/'
-    canvas = document.createElement('canvas');
-    document.body.appendChild(canvas);
-    RedGL(canvas, function (v) {
-        if (v) {
-            //TODO 코드정리
-            console.log('초기화 성공!');
-            var tWorld, tView, tScene, tController, tRenderer;
-            var setBase = function (redGL) {
-                // 월드 생성
-                redGL['world'] = tWorld = RedWorld();
-                // 씬 생성
-                tScene = RedScene(redGL);
-                // 카메라 생성
-                tController = RedObitController(redGL);
-                tController.pan = 0;
-                tController.tilt = -45;
-                // 렌더러 생성
-                tRenderer = RedRenderer();
-                // 뷰생성 및 적용
-                tView = RedView('HelloRedGL', redGL, tScene, tController);
-                tWorld.addView(tView);
-                // 그리드 설정
-                tScene['grid'] = RedGrid(redGL);
-                tScene['axis'] = RedAxis(redGL)
-                // 렌더 디버거 활성화
-                tRenderer.setDebugButton();
-                // testUI 호출
-                testUI(redGL, tScene);
-                console.log(redGL);
-            };
-            setBase(this);
-            //////////////////////////////////////
-            var testMesh, testMesh2, testMesh3, testMesh4
-            var testMaterial;
-            testMaterial = RedStandardMaterial(this, RedBitmapTexture(this, assetPath + 'brick/Brick03_col.jpg'))
-            testMesh = RedMesh(this, RedBox(this), testMaterial)
-            testMesh.x = 1
-            testMesh.y = 1
-            testMesh.z = 1
-            tScene.addChild(testMesh)
-            /////////////////////////////////////////////////////////
-            testMesh2 = RedMesh(this, RedBox(this), testMaterial)
-            testMesh2.x = -2
-            testMesh.addChild(testMesh2)
-            /////////////////////////////////////////////////////////
-            testMesh3 = RedMesh(this, RedBox(this), RedColorMaterial(this))
-            testMesh3.scaleX = testMesh3.scaleY = testMesh3.scaleZ = 1.1
-            tScene.addChild(testMesh3)
-            /////////////////////////////////////////////////////////
-            testMesh4 = RedMesh(this, RedBox(this), RedColorMaterial(this, '#00ff00'))
-            testMesh4.scaleX = testMesh4.scaleY = testMesh4.scaleZ = 1
-            testMesh4.x = 2
-            testMesh.addChild(testMesh4)
-            /////////////////////////////////////////////////////////
-            var testDLight, testALight;
-            testDLight = RedDirectionalLight(this, '#fff')
-            testDLight.x = 3
-            testDLight.y = 3
-            testDLight.z = 3
-            tScene.addLight(testDLight)
-            testALight = RedAmbientLight(this)
-            tScene.addLight(testALight)
-            ////////////////////////
-            var getScreenPointBox, getScreenPointBox2;
-            var localToWorldBox3
-            var worldToLocalBox4;
-            getScreenPointBox = document.createElement('div')
-            getScreenPointBox.style.cssText =
-                'position:absolute;top:0px;left:0px;color:#fff;font-size:12px;background:rgba(0,0,0,0.6);padding:10px;min-width:200px'
-            getScreenPointBox.innerHTML = 'getScreenPointBox Test'
-            document.body.appendChild(getScreenPointBox)
-            getScreenPointBox2 = document.createElement('div')
-            getScreenPointBox2.style.cssText =
-                'position:absolute;top:0px;left:0px;color:#fff;font-size:12px;background:rgba(0,0,0,0.6);padding:10px;min-width:200px'
-            getScreenPointBox2.innerHTML = 'getScreenPointBox2 Test'
-            document.body.appendChild(getScreenPointBox2)
-            localToWorldBox3 = document.createElement('div')
-            localToWorldBox3.style.cssText =
-                'position:absolute;top:0px;left:0px;color:#fff;font-size:12px;background:rgba(0,100,100,0.6);padding:10px;min-width:200px'
-            localToWorldBox3.innerHTML = 'localToWorldBox3 Test'
-            document.body.appendChild(localToWorldBox3)
-            worldToLocalBox4 = document.createElement('div')
-            worldToLocalBox4.style.cssText =
-                'position:absolute;top:0px;left:0px;color:#fff;font-size:12px;background:rgba(0,0,100,0.6);padding:10px;min-width:200px'
-            worldToLocalBox4.innerHTML = 'worldToLocalBox Test'
-            document.body.appendChild(worldToLocalBox4)
-            ////////////////////////
-            // 렌더시작
-            tRenderer.start(this, function (time) {
-                testMesh.rotationX += 0.2
-                testMesh.rotationY += 0.2
-                testMesh.rotationZ += 0.2
-                testMesh2.rotationX += 0.2
-                testMesh2.rotationY += 0.2
-                testMesh2.rotationZ += 0.2
-                ////////////////////////////////////////////////////////////////////////////////////
-                var testPoint = testMesh.getScreenPoint(RedView('HelloRedGL'))
-                getScreenPointBox.style.top = testPoint[1]+'px'
-                getScreenPointBox.style.left = testPoint[0]+'px'
-                getScreenPointBox.innerHTML = 'testMesh / getScreenPointBox Test<br>screen X : ' + testPoint[0] + '<br>' + 'screen Y : ' + testPoint[1]
-                ////////////////////////////////////////////////////////////////////////////////////
-                var testPoint2 = testMesh2.getScreenPoint(RedView('HelloRedGL'))
-                getScreenPointBox2.style.top = testPoint2[1]+'px'
-                getScreenPointBox2.style.left = testPoint2[0]+'px'
-                getScreenPointBox2.innerHTML = 'testMesh2 / getScreenPointBox2 Test<br>screen X : ' + testPoint2[0] + '<br>' + 'screen Y : ' + testPoint2[1]
-                ////////////////////////////////////////////////////////////////////////////////////
-                var testLocalInput3 = [-1, 1, 0]
-                var testLocalToWorld3 = testMesh2.localToWorld(testLocalInput3[0], testLocalInput3[1], testLocalInput3[2])
-                var testPoint3 = testMesh3.getScreenPoint(RedView('HelloRedGL'))
-                testMesh3.x = testLocalToWorld3[0]
-                testMesh3.y = testLocalToWorld3[1]
-                testMesh3.z = testLocalToWorld3[2]
-                localToWorldBox3.style.top = testPoint3[1]+'px'
-                localToWorldBox3.style.left = testPoint3[0]+'px'
-                localToWorldBox3.innerHTML = 'tesMesh3 / localToWorldBox3 Test<br>testMesh2.localToWorld(-1,1,0)<br>'
-                    + '<br>world X : ' + testLocalToWorld3[0] + '<br>' + 'world Y : ' + testLocalToWorld3[1] + '<br>' + 'world Z : ' + testLocalToWorld3[2]
-                    + '<br>screen X : ' + testPoint3[0] + '<br>' + 'screen Y : ' + testPoint3[1]
-                ////////////////////////////////////////////////////////////////////////////////////
-                var testWolrdInput4 = [3, 0, 1]
-                var testWorldToLocal4 = testMesh4.worldToLocal(testWolrdInput4[0], testWolrdInput4[1], testWolrdInput4[2])
-                var testPoint4 = testMesh4.getScreenPoint(RedView('HelloRedGL'))
-                testMesh4.x = testWorldToLocal4[0]
-                testMesh4.y = testWorldToLocal4[1]
-                testMesh4.z = testWorldToLocal4[2]
-                worldToLocalBox4.style.top = testPoint4[1]+'px'
-                worldToLocalBox4.style.left = testPoint4[0]+'px'
-                worldToLocalBox4.innerHTML = 'testMesh4 / worldToLocalBox4 Test<br>input world X: ' + testWolrdInput4[0] + '<br>' + 'input world Y : ' + testWolrdInput4[1] + '<br>' + 'input world Z : ' + testWolrdInput4[2]
-                    + '<br>local X: ' + testWorldToLocal4[0] + '<br>' + 'local Y : ' + testWorldToLocal4[1] + '<br>' + 'local Z : ' + testWorldToLocal4[2]
-                ////////////////////////////////////////////////////////////////////////////////////
-            })
-        } else {
-            console.log('초기화 실패!')
-        }
-    });
-    testUI = function (redGL, tScene) {
-        // var gui = new baseTestUI(redGL)
-        // gui.initRedGL()
-    }
+	var testUI;
+	var canvas;
+	var assetPath = '../../asset/'
+	canvas = document.createElement('canvas');
+	document.body.appendChild(canvas);
+	RedGL(canvas, function (v) {
+		if (v) {
+			//TODO 코드정리
+			console.log('초기화 성공!');
+			var tWorld, tView, tScene, tController, tRenderer;
+			var setBase = function (redGL) {
+				// 월드 생성
+				redGL['world'] = tWorld = RedWorld();
+				// 씬 생성
+				tScene = RedScene(redGL);
+				// 카메라 생성
+				tController = RedObitController(redGL);
+				tController.pan = 0;
+				tController.tilt = -45;
+				// 렌더러 생성
+				tRenderer = RedRenderer();
+				// 뷰생성 및 적용
+				tView = RedView('HelloRedGL', redGL, tScene, tController);
+				tWorld.addView(tView);
+				// 그리드 설정
+				tScene['grid'] = RedGrid(redGL);
+				tScene['axis'] = RedAxis(redGL)
+				// 렌더 디버거 활성화
+				tRenderer.setDebugButton();
+				// testUI 호출
+				testUI(redGL, tScene);
+				console.log(redGL);
+			};
+			setBase(this);
+			//////////////////////////////////////
+			var testMesh, testMesh2, testMesh3, testMesh4
+			var testMaterial;
+			testMaterial = RedStandardMaterial(this, RedBitmapTexture(this, assetPath + 'brick/Brick03_col.jpg'))
+			testMesh = RedMesh(this, RedBox(this), testMaterial)
+			testMesh.x = 1
+			testMesh.y = 1
+			testMesh.z = 1
+			tScene.addChild(testMesh)
+			/////////////////////////////////////////////////////////
+			testMesh2 = RedMesh(this, RedBox(this), testMaterial)
+			testMesh2.x = -2
+			testMesh.addChild(testMesh2)
+			/////////////////////////////////////////////////////////
+			testMesh3 = RedMesh(this, RedBox(this), RedColorMaterial(this))
+			testMesh3.scaleX = testMesh3.scaleY = testMesh3.scaleZ = 1.1
+			tScene.addChild(testMesh3)
+			/////////////////////////////////////////////////////////
+			testMesh4 = RedMesh(this, RedBox(this), RedColorMaterial(this, '#00ff00'))
+			testMesh4.scaleX = testMesh4.scaleY = testMesh4.scaleZ = 1
+			testMesh4.x = 2
+			testMesh.addChild(testMesh4)
+			/////////////////////////////////////////////////////////
+			var testDLight, testALight;
+			testDLight = RedDirectionalLight(this, '#fff')
+			testDLight.x = 3
+			testDLight.y = 3
+			testDLight.z = 3
+			tScene.addLight(testDLight)
+			testALight = RedAmbientLight(this)
+			tScene.addLight(testALight)
+			////////////////////////
+			var getScreenPointBox, getScreenPointBox2;
+			var localToWorldBox3
+			var worldToLocalBox4;
+			getScreenPointBox = document.createElement('div')
+			getScreenPointBox.style.cssText =
+				'position:absolute;top:0px;left:0px;color:#fff;font-size:12px;background:rgba(0,0,0,0.6);padding:10px;min-width:200px'
+			getScreenPointBox.innerHTML = 'getScreenPointBox Test'
+			document.body.appendChild(getScreenPointBox)
+			getScreenPointBox2 = document.createElement('div')
+			getScreenPointBox2.style.cssText =
+				'position:absolute;top:0px;left:0px;color:#fff;font-size:12px;background:rgba(0,0,0,0.6);padding:10px;min-width:200px'
+			getScreenPointBox2.innerHTML = 'getScreenPointBox2 Test'
+			document.body.appendChild(getScreenPointBox2)
+			localToWorldBox3 = document.createElement('div')
+			localToWorldBox3.style.cssText =
+				'position:absolute;top:0px;left:0px;color:#fff;font-size:12px;background:rgba(0,100,100,0.6);padding:10px;min-width:200px'
+			localToWorldBox3.innerHTML = 'localToWorldBox3 Test'
+			document.body.appendChild(localToWorldBox3)
+			worldToLocalBox4 = document.createElement('div')
+			worldToLocalBox4.style.cssText =
+				'position:absolute;top:0px;left:0px;color:#fff;font-size:12px;background:rgba(0,0,100,0.6);padding:10px;min-width:200px'
+			worldToLocalBox4.innerHTML = 'worldToLocalBox Test'
+			document.body.appendChild(worldToLocalBox4)
+			////////////////////////
+			// 렌더시작
+			tRenderer.start(this, function (time) {
+				testMesh.rotationX += 0.2
+				testMesh.rotationY += 0.2
+				testMesh.rotationZ += 0.2
+				testMesh2.rotationX += 0.2
+				testMesh2.rotationY += 0.2
+				testMesh2.rotationZ += 0.2
+				////////////////////////////////////////////////////////////////////////////////////
+				var testPoint = testMesh.getScreenPoint(RedView('HelloRedGL'))
+				getScreenPointBox.style.top = testPoint[1] + 'px'
+				getScreenPointBox.style.left = testPoint[0] + 'px'
+				getScreenPointBox.innerHTML = 'testMesh / getScreenPointBox Test<br>screen X : ' + testPoint[0] + '<br>' + 'screen Y : ' + testPoint[1]
+				////////////////////////////////////////////////////////////////////////////////////
+				var testPoint2 = testMesh2.getScreenPoint(RedView('HelloRedGL'))
+				getScreenPointBox2.style.top = testPoint2[1] + 'px'
+				getScreenPointBox2.style.left = testPoint2[0] + 'px'
+				getScreenPointBox2.innerHTML = 'testMesh2 / getScreenPointBox2 Test<br>screen X : ' + testPoint2[0] + '<br>' + 'screen Y : ' + testPoint2[1]
+				////////////////////////////////////////////////////////////////////////////////////
+				var testLocalInput3 = [-1, 1, 0]
+				var testLocalToWorld3 = testMesh2.localToWorld(testLocalInput3[0], testLocalInput3[1], testLocalInput3[2])
+				var testPoint3 = testMesh3.getScreenPoint(RedView('HelloRedGL'))
+				testMesh3.x = testLocalToWorld3[0]
+				testMesh3.y = testLocalToWorld3[1]
+				testMesh3.z = testLocalToWorld3[2]
+				localToWorldBox3.style.top = testPoint3[1] + 'px'
+				localToWorldBox3.style.left = testPoint3[0] + 'px'
+				localToWorldBox3.innerHTML = 'tesMesh3 / localToWorldBox3 Test<br>testMesh2.localToWorld(-1,1,0)<br>'
+					+ '<br>world X : ' + testLocalToWorld3[0] + '<br>' + 'world Y : ' + testLocalToWorld3[1] + '<br>' + 'world Z : ' + testLocalToWorld3[2]
+					+ '<br>screen X : ' + testPoint3[0] + '<br>' + 'screen Y : ' + testPoint3[1]
+				////////////////////////////////////////////////////////////////////////////////////
+				var testWolrdInput4 = [3, 0, 1]
+				var testWorldToLocal4 = testMesh4.worldToLocal(testWolrdInput4[0], testWolrdInput4[1], testWolrdInput4[2])
+				var testPoint4 = testMesh4.getScreenPoint(RedView('HelloRedGL'))
+				testMesh4.x = testWorldToLocal4[0]
+				testMesh4.y = testWorldToLocal4[1]
+				testMesh4.z = testWorldToLocal4[2]
+				worldToLocalBox4.style.top = testPoint4[1] + 'px'
+				worldToLocalBox4.style.left = testPoint4[0] + 'px'
+				worldToLocalBox4.innerHTML = 'testMesh4 / worldToLocalBox4 Test<br>input world X: ' + testWolrdInput4[0] + '<br>' + 'input world Y : ' + testWolrdInput4[1] + '<br>' + 'input world Z : ' + testWolrdInput4[2]
+					+ '<br>local X: ' + testWorldToLocal4[0] + '<br>' + 'local Y : ' + testWorldToLocal4[1] + '<br>' + 'local Z : ' + testWorldToLocal4[2]
+				////////////////////////////////////////////////////////////////////////////////////
+			})
+		} else {
+			console.log('초기화 실패!')
+		}
+	});
+	testUI = function (redGL, tScene) {
+		// var gui = new baseTestUI(redGL)
+		// gui.initRedGL()
+	}
 </script>
 </body>
 

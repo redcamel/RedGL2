@@ -26,122 +26,122 @@
 
 <body>
 <script id='testSource'>
-    var testUI;
-    var canvas;
-    var assetPath = '../../asset/'
-    canvas = document.createElement('canvas');
-    document.body.appendChild(canvas);
-    RedGL(canvas, function (v) {
-        if (v) {
-            console.log('초기화 성공!')
-            var tWorld, tView, tScene, tController, tRenderer, tLight;
-            var setBase = function (redGL) {
-                // 월드 생성
-                redGL['world'] = tWorld = RedWorld();
-                // 씬 생성
-                tScene = RedScene(redGL);
-                // 카메라 생성
-                tController = RedObitController(redGL);
-                tController.pan = 0;
-                tController.tilt = -25;
-                tController.distance = 7;
-                tController.speedDistance = 0.5
-                // 렌더러 생성
-                tRenderer = RedRenderer();
-                // 뷰생성 및 적용
-                tView = RedView('HelloRedGL', redGL, tScene, tController);
-                tWorld.addView(tView);
-                // 그리드 설정
-                tScene['grid'] = RedGrid(redGL);
-                // 렌더시작
-                tRenderer.start(redGL, function (time) {
-                });
-                // 렌더 디버거 활성화
-                tRenderer.setDebugButton();
-                testUI(redGL, tScene)
-            };
-            setBase(this);
-            // 재질설정
-            var tMaterial = RedSheetMaterial(this, RedBitmapTexture(this, assetPath + 'sheet/spriteSheet.png'), 24, 5, 3, 15);
-            // Mesh 설정
-            var tMesh;
-            tMesh = RedMesh(this, RedPlane(this, 5, 5), tMaterial)
-            tMesh.useCullFace = false
-            tScene.addChild(tMesh)
-            console.log(this)
-        } else {
-            console.log('초기화 실패!')
-        }
-    })
-    testUI = function (redGL, tScene) {
-        var gui = new baseTestUI(redGL)
-        gui.initRedGL()
-        var alphaTest = {
-            diffuseTexture: 'spriteSheet',
-            alpha: 1,
-            loop: true,
-            frameRate: 24,
-            play: function () {
-                tScene.children.forEach(function (v2) {
-                    v2.material.play()
-                })
-            },
-            stop: function () {
-                tScene.children.forEach(function (v2) {
-                    v2.material.stop()
-                })
-            },
-            gotoAndStop: 1,
-            gotoAndPlay: 1
-        }
-        var folder;
-        folder = gui['gui'].addFolder('RedSheetMaterial')
-        folder.add(alphaTest, 'diffuseTexture', ['spriteSheet', 'spriteSheet2'], 0).onChange(function (v) {
-            tScene.children.forEach(function (v2) {
-                if (v == 'spriteSheet') {
-                    v2.material.diffuseTexture = RedBitmapTexture(redGL, assetPath + 'sheet/spriteSheet.png')
-                    v2.material.frameRate = 24
-                    v2.material.segmentW = 5
-                    v2.material.segmentH = 3
-                    v2.material.totalFrame = 15
-                } else if (v == 'spriteSheet2') {
-                    v2.material.diffuseTexture = RedBitmapTexture(redGL, assetPath + 'sheet/spriteSheet2.png')
-                    v2.material.frameRate = 24
-                    v2.material.segmentW = 6
-                    v2.material.segmentH = 4
-                    v2.material.totalFrame = 24
-                }
-            })
-        })
-        folder.add(alphaTest, 'alpha', 0, 1).onChange(function (v) {
-            tScene.children.forEach(function (v2) {
-                v2.material.alpha = v
-            })
-        })
-        folder.add(alphaTest, 'loop').onChange(function (v) {
-            tScene.children.forEach(function (v2) {
-                v2.material.loop = v
-            })
-        })
-        folder.add(alphaTest, 'frameRate', 0, 60).onChange(function (v) {
-            tScene.children.forEach(function (v2) {
-                v2.material.frameRate = v
-            })
-        })
-        folder.add(alphaTest, 'gotoAndStop', 1, 15, 1).onChange(function (v) {
-            tScene.children.forEach(function (v2) {
-                v2.material.gotoAndStop(v)
-            })
-        })
-        folder.add(alphaTest, 'gotoAndPlay', 1, 15, 1).onChange(function (v) {
-            tScene.children.forEach(function (v2) {
-                v2.material.gotoAndPlay(v)
-            })
-        })
-        folder.add(alphaTest, 'play')
-        folder.add(alphaTest, 'stop')
-        folder.open()
-    }
+	var testUI;
+	var canvas;
+	var assetPath = '../../asset/'
+	canvas = document.createElement('canvas');
+	document.body.appendChild(canvas);
+	RedGL(canvas, function (v) {
+		if (v) {
+			console.log('초기화 성공!')
+			var tWorld, tView, tScene, tController, tRenderer, tLight;
+			var setBase = function (redGL) {
+				// 월드 생성
+				redGL['world'] = tWorld = RedWorld();
+				// 씬 생성
+				tScene = RedScene(redGL);
+				// 카메라 생성
+				tController = RedObitController(redGL);
+				tController.pan = 0;
+				tController.tilt = -25;
+				tController.distance = 7;
+				tController.speedDistance = 0.5
+				// 렌더러 생성
+				tRenderer = RedRenderer();
+				// 뷰생성 및 적용
+				tView = RedView('HelloRedGL', redGL, tScene, tController);
+				tWorld.addView(tView);
+				// 그리드 설정
+				tScene['grid'] = RedGrid(redGL);
+				// 렌더시작
+				tRenderer.start(redGL, function (time) {
+				});
+				// 렌더 디버거 활성화
+				tRenderer.setDebugButton();
+				testUI(redGL, tScene)
+			};
+			setBase(this);
+			// 재질설정
+			var tMaterial = RedSheetMaterial(this, RedBitmapTexture(this, assetPath + 'sheet/spriteSheet.png'), 24, 5, 3, 15);
+			// Mesh 설정
+			var tMesh;
+			tMesh = RedMesh(this, RedPlane(this, 5, 5), tMaterial)
+			tMesh.useCullFace = false
+			tScene.addChild(tMesh)
+			console.log(this)
+		} else {
+			console.log('초기화 실패!')
+		}
+	})
+	testUI = function (redGL, tScene) {
+		var gui = new baseTestUI(redGL)
+		gui.initRedGL()
+		var alphaTest = {
+			diffuseTexture: 'spriteSheet',
+			alpha: 1,
+			loop: true,
+			frameRate: 24,
+			play: function () {
+				tScene.children.forEach(function (v2) {
+					v2.material.play()
+				})
+			},
+			stop: function () {
+				tScene.children.forEach(function (v2) {
+					v2.material.stop()
+				})
+			},
+			gotoAndStop: 1,
+			gotoAndPlay: 1
+		}
+		var folder;
+		folder = gui['gui'].addFolder('RedSheetMaterial')
+		folder.add(alphaTest, 'diffuseTexture', ['spriteSheet', 'spriteSheet2'], 0).onChange(function (v) {
+			tScene.children.forEach(function (v2) {
+				if (v == 'spriteSheet') {
+					v2.material.diffuseTexture = RedBitmapTexture(redGL, assetPath + 'sheet/spriteSheet.png')
+					v2.material.frameRate = 24
+					v2.material.segmentW = 5
+					v2.material.segmentH = 3
+					v2.material.totalFrame = 15
+				} else if (v == 'spriteSheet2') {
+					v2.material.diffuseTexture = RedBitmapTexture(redGL, assetPath + 'sheet/spriteSheet2.png')
+					v2.material.frameRate = 24
+					v2.material.segmentW = 6
+					v2.material.segmentH = 4
+					v2.material.totalFrame = 24
+				}
+			})
+		})
+		folder.add(alphaTest, 'alpha', 0, 1).onChange(function (v) {
+			tScene.children.forEach(function (v2) {
+				v2.material.alpha = v
+			})
+		})
+		folder.add(alphaTest, 'loop').onChange(function (v) {
+			tScene.children.forEach(function (v2) {
+				v2.material.loop = v
+			})
+		})
+		folder.add(alphaTest, 'frameRate', 0, 60).onChange(function (v) {
+			tScene.children.forEach(function (v2) {
+				v2.material.frameRate = v
+			})
+		})
+		folder.add(alphaTest, 'gotoAndStop', 1, 15, 1).onChange(function (v) {
+			tScene.children.forEach(function (v2) {
+				v2.material.gotoAndStop(v)
+			})
+		})
+		folder.add(alphaTest, 'gotoAndPlay', 1, 15, 1).onChange(function (v) {
+			tScene.children.forEach(function (v2) {
+				v2.material.gotoAndPlay(v)
+			})
+		})
+		folder.add(alphaTest, 'play')
+		folder.add(alphaTest, 'stop')
+		folder.open()
+	}
 
 </script>
 </body>

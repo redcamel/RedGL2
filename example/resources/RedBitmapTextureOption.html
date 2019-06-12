@@ -26,239 +26,239 @@
 
 <body>
 <script id='testSource'>
-    var testUI;
-    var canvas;
-    var assetPath = '../../asset/'
-    canvas = document.createElement('canvas');
-    document.body.appendChild(canvas);
-    RedGL(canvas, function (v) {
-        if (v) {
-            console.log('초기화 성공!')
-            var tWorld, tView, tScene, tController, tRenderer, tLight;
-            var setBase = function (redGL) {
-                // 월드 생성
-                redGL['world'] = tWorld = RedWorld();
-                // 씬 생성
-                tScene = RedScene(redGL);
-                // 카메라 생성
-                tController = RedObitController(redGL);
-                tController.pan = -25;
-                tController.tilt = -25;
-                tController.distance = 5;
-                tController.speedDistance = 0.5
-                // 렌더러 생성
-                tRenderer = RedRenderer();
-                // 뷰생성 및 적용
-                tView = RedView('HelloRedGL', redGL, tScene, tController);
-                tWorld.addView(tView);
-                // 그리드 설정
-                tScene['grid'] = RedGrid(redGL);
-                // 렌더시작
-                tRenderer.start(redGL, function (time) {
-                });
-                // 렌더 디버거 활성화
-                tRenderer.setDebugButton();
-                testUI(redGL, tScene);
-            };
-            setBase(this);
-            // Custom Geometry 생성
-            var tGeo;
-            (function (redGL) {
-                var interleaveData;
-                var indexData;
-                var testInterleaveBuffer, testIndexBuffer;
-                interleaveData = new Float32Array([
-                    -0.5, 0.5, 0.0, 0.0, 0.0,
-                    0.5, 0.5, 0.0, 2.0, 0.0,
-                    -0.5, -0.5, 0.0, 0.0, 2.0,
-                    0.5, -0.5, 0.0, 2.0, 2.0
-                ]);
-                indexData = new Uint16Array([0, 2, 1, 2, 3, 1]);
-                testInterleaveBuffer = RedBuffer(
-                    redGL,
-                    'testInterleaveBuffer',
-                    RedBuffer.ARRAY_BUFFER,
-                    interleaveData,
-                    [
-                        RedInterleaveInfo('aVertexPosition', 3),
-                        RedInterleaveInfo('aTexcoord', 2)
-                    ]
-                );
-                testIndexBuffer = RedBuffer(
-                    redGL,
-                    'testIndexBuffer',
-                    RedBuffer.ELEMENT_ARRAY_BUFFER,
-                    indexData
-                );
-                tGeo = RedGeometry(testInterleaveBuffer, testIndexBuffer);
-            })(this);
-            // Mesh 설정
-            var tMesh;
-            var tDiffuse1, tDiffuse2, tDiffuse3
+	var testUI;
+	var canvas;
+	var assetPath = '../../asset/'
+	canvas = document.createElement('canvas');
+	document.body.appendChild(canvas);
+	RedGL(canvas, function (v) {
+		if (v) {
+			console.log('초기화 성공!')
+			var tWorld, tView, tScene, tController, tRenderer, tLight;
+			var setBase = function (redGL) {
+				// 월드 생성
+				redGL['world'] = tWorld = RedWorld();
+				// 씬 생성
+				tScene = RedScene(redGL);
+				// 카메라 생성
+				tController = RedObitController(redGL);
+				tController.pan = -25;
+				tController.tilt = -25;
+				tController.distance = 5;
+				tController.speedDistance = 0.5
+				// 렌더러 생성
+				tRenderer = RedRenderer();
+				// 뷰생성 및 적용
+				tView = RedView('HelloRedGL', redGL, tScene, tController);
+				tWorld.addView(tView);
+				// 그리드 설정
+				tScene['grid'] = RedGrid(redGL);
+				// 렌더시작
+				tRenderer.start(redGL, function (time) {
+				});
+				// 렌더 디버거 활성화
+				tRenderer.setDebugButton();
+				testUI(redGL, tScene);
+			};
+			setBase(this);
+			// Custom Geometry 생성
+			var tGeo;
+			(function (redGL) {
+				var interleaveData;
+				var indexData;
+				var testInterleaveBuffer, testIndexBuffer;
+				interleaveData = new Float32Array([
+					-0.5, 0.5, 0.0, 0.0, 0.0,
+					0.5, 0.5, 0.0, 2.0, 0.0,
+					-0.5, -0.5, 0.0, 0.0, 2.0,
+					0.5, -0.5, 0.0, 2.0, 2.0
+				]);
+				indexData = new Uint16Array([0, 2, 1, 2, 3, 1]);
+				testInterleaveBuffer = RedBuffer(
+					redGL,
+					'testInterleaveBuffer',
+					RedBuffer.ARRAY_BUFFER,
+					interleaveData,
+					[
+						RedInterleaveInfo('aVertexPosition', 3),
+						RedInterleaveInfo('aTexcoord', 2)
+					]
+				);
+				testIndexBuffer = RedBuffer(
+					redGL,
+					'testIndexBuffer',
+					RedBuffer.ELEMENT_ARRAY_BUFFER,
+					indexData
+				);
+				tGeo = RedGeometry(testInterleaveBuffer, testIndexBuffer);
+			})(this);
+			// Mesh 설정
+			var tMesh;
+			var tDiffuse1, tDiffuse2, tDiffuse3
 
-            var setOptionText = function (target, v) {
-                var tText = RedText(target, 512, 200)
-                tText.color = '#fff'
-                tText.background = 'rgba(0,0,0,0.5)'
-                tText.text = v
-                tText.fontSize = '30px'
-                tText.lineHeight = '35px'
-                tText.padding = '15px'
-                tText.textAlign = 'left'
-                tText.sprite3DYn = true
-                tText.perspectiveScale = true
-                tText.useDepthTest = false
-                tText.scaleX = 2
-                tText.scaleY = 2
-                tText.z = 0.5
-                tText.y = 0.25
-                return tText
-            };
-            // REPEAT
-            tDiffuse1 = RedBitmapTexture(
-                this,
-                assetPath + 'crate.png',
-                {
-                    min: this.gl.LINEAR,
-                    mag: this.gl.LINEAR,
-                    wrap_s: this.gl.REPEAT,
-                    wrap_t: this.gl.REPEAT
-                }
-            );
-            tDiffuse2 = RedBitmapTexture(
-                this,
-                assetPath + 'crate.png',
-                {
-                    min: this.gl.NEAREST,
-                    mag: this.gl.NEAREST,
-                    wrap_s: this.gl.REPEAT,
-                    wrap_t: this.gl.REPEAT
-                }
-            );
-            tDiffuse3 = RedBitmapTexture(
-                this,
-                assetPath + 'crate.png',
-                {
-                    min: this.gl.LINEAR_MIPMAP_NEAREST,
-                    mag: this.gl.LINEAR,
-                    wrap_s: this.gl.REPEAT,
-                    wrap_t: this.gl.REPEAT
-                }
-            );
-            tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse1));
-            tMesh.addChild(setOptionText(this, 'min: LINEAR<br>' + 'mag: LINEAR<br>' + 'wrap_s: REPEAT<br>' + 'wrap_t: REPEAT'));
-            tMesh.x = -1.1;
-            tScene.addChild(tMesh);
-            tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse2));
-            tMesh.x = 0;
-            tMesh.addChild(setOptionText(this, 'min: NEAREST<br>' + 'mag: NEAREST<br>' + 'wrap_s: REPEAT<br>' + 'wrap_t: REPEAT'));
-            tScene.addChild(tMesh);
-            tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse3));
-            tMesh.x = 1.1
-            tMesh.addChild(setOptionText(this, 'min: LINEAR_MIPMAP_NEAREST<br>' + 'mag: LINEAR<br>' + 'wrap_s: REPEAT<br>' + 'wrap_t: REPEAT'))
-            tScene.addChild(tMesh)
-            // MIRRORED_REPEAT
-            tDiffuse1 = RedBitmapTexture(
-                this,
-                assetPath + 'crate.png',
-                {
-                    min: this.gl.LINEAR,
-                    mag: this.gl.LINEAR,
-                    wrap_s: this.gl.MIRRORED_REPEAT,
-                    wrap_t: this.gl.MIRRORED_REPEAT
-                }
-            )
-            tDiffuse2 = RedBitmapTexture(
-                this,
-                assetPath + 'crate.png',
-                {
-                    min: this.gl.NEAREST,
-                    mag: this.gl.NEAREST,
-                    wrap_s: this.gl.MIRRORED_REPEAT,
-                    wrap_t: this.gl.MIRRORED_REPEAT
-                }
-            )
-            tDiffuse3 = RedBitmapTexture(
-                this,
-                assetPath + 'crate.png',
-                {
-                    min: this.gl.LINEAR_MIPMAP_NEAREST,
-                    mag: this.gl.LINEAR,
-                    wrap_s: this.gl.MIRRORED_REPEAT,
-                    wrap_t: this.gl.MIRRORED_REPEAT
-                }
-            )
-            tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse1))
-            tMesh.x = -1.1
-            tMesh.y = 1.1
-            tMesh.addChild(setOptionText(this, 'min: LINEAR<br>' + 'mag: LINEAR<br>' + 'wrap_s: MIRRORED_REPEAT<br>' + 'wrap_t: MIRRORED_REPEAT'))
-            tScene.addChild(tMesh)
-            tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse2))
-            tMesh.x = 0
-            tMesh.y = 1.1
-            tMesh.addChild(setOptionText(this, 'min: NEAREST<br>' + 'mag: NEAREST<br>' + 'wrap_s: MIRRORED_REPEAT<br>' + 'wrap_t: MIRRORED_REPEAT'))
-            tScene.addChild(tMesh)
-            tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse3))
-            tMesh.x = 1.1
-            tMesh.y = 1.1
-            tMesh.addChild(setOptionText(this, 'min: LINEAR_MIPMAP_NEAREST<br>' + 'mag: LINEAR<br>' + 'wrap_s: MIRRORED_REPEAT<br>' + 'wrap_t: MIRRORED_REPEAT'))
-            tScene.addChild(tMesh)
-            // CLAMP_TO_EDGE
-            tDiffuse1 = RedBitmapTexture(
-                this,
-                assetPath + 'crate.png',
-                {
-                    min: this.gl.LINEAR,
-                    mag: this.gl.LINEAR,
-                    wrap_s: this.gl.CLAMP_TO_EDGE,
-                    wrap_t: this.gl.CLAMP_TO_EDGE
-                }
-            )
-            tDiffuse2 = RedBitmapTexture(
-                this,
-                assetPath + 'crate.png',
-                {
-                    min: this.gl.NEAREST,
-                    mag: this.gl.NEAREST,
-                    wrap_s: this.gl.CLAMP_TO_EDGE,
-                    wrap_t: this.gl.CLAMP_TO_EDGE
-                }
-            )
-            tDiffuse3 = RedBitmapTexture(
-                this,
-                assetPath + 'crate.png',
-                {
-                    min: this.gl.LINEAR_MIPMAP_NEAREST,
-                    mag: this.gl.LINEAR,
-                    wrap_s: this.gl.CLAMP_TO_EDGE,
-                    wrap_t: this.gl.CLAMP_TO_EDGE
-                }
-            )
-            tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse1))
-            tMesh.x = -1.1
-            tMesh.y = -1.1
-            tMesh.addChild(setOptionText(this, 'min: LINEAR<br>' + 'mag: LINEAR<br>' + 'wrap_s: CLAMP_TO_EDGE<br>' + 'wrap_t: CLAMP_TO_EDGE'))
-            tScene.addChild(tMesh)
-            tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse2))
-            tMesh.x = 0
-            tMesh.y = -1.1
+			var setOptionText = function (target, v) {
+				var tText = RedText(target, 512, 200)
+				tText.color = '#fff'
+				tText.background = 'rgba(0,0,0,0.5)'
+				tText.text = v
+				tText.fontSize = '30px'
+				tText.lineHeight = '35px'
+				tText.padding = '15px'
+				tText.textAlign = 'left'
+				tText.sprite3DYn = true
+				tText.perspectiveScale = true
+				tText.useDepthTest = false
+				tText.scaleX = 2
+				tText.scaleY = 2
+				tText.z = 0.5
+				tText.y = 0.25
+				return tText
+			};
+			// REPEAT
+			tDiffuse1 = RedBitmapTexture(
+				this,
+				assetPath + 'crate.png',
+				{
+					min: this.gl.LINEAR,
+					mag: this.gl.LINEAR,
+					wrap_s: this.gl.REPEAT,
+					wrap_t: this.gl.REPEAT
+				}
+			);
+			tDiffuse2 = RedBitmapTexture(
+				this,
+				assetPath + 'crate.png',
+				{
+					min: this.gl.NEAREST,
+					mag: this.gl.NEAREST,
+					wrap_s: this.gl.REPEAT,
+					wrap_t: this.gl.REPEAT
+				}
+			);
+			tDiffuse3 = RedBitmapTexture(
+				this,
+				assetPath + 'crate.png',
+				{
+					min: this.gl.LINEAR_MIPMAP_NEAREST,
+					mag: this.gl.LINEAR,
+					wrap_s: this.gl.REPEAT,
+					wrap_t: this.gl.REPEAT
+				}
+			);
+			tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse1));
+			tMesh.addChild(setOptionText(this, 'min: LINEAR<br>' + 'mag: LINEAR<br>' + 'wrap_s: REPEAT<br>' + 'wrap_t: REPEAT'));
+			tMesh.x = -1.1;
+			tScene.addChild(tMesh);
+			tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse2));
+			tMesh.x = 0;
+			tMesh.addChild(setOptionText(this, 'min: NEAREST<br>' + 'mag: NEAREST<br>' + 'wrap_s: REPEAT<br>' + 'wrap_t: REPEAT'));
+			tScene.addChild(tMesh);
+			tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse3));
+			tMesh.x = 1.1
+			tMesh.addChild(setOptionText(this, 'min: LINEAR_MIPMAP_NEAREST<br>' + 'mag: LINEAR<br>' + 'wrap_s: REPEAT<br>' + 'wrap_t: REPEAT'))
+			tScene.addChild(tMesh)
+			// MIRRORED_REPEAT
+			tDiffuse1 = RedBitmapTexture(
+				this,
+				assetPath + 'crate.png',
+				{
+					min: this.gl.LINEAR,
+					mag: this.gl.LINEAR,
+					wrap_s: this.gl.MIRRORED_REPEAT,
+					wrap_t: this.gl.MIRRORED_REPEAT
+				}
+			)
+			tDiffuse2 = RedBitmapTexture(
+				this,
+				assetPath + 'crate.png',
+				{
+					min: this.gl.NEAREST,
+					mag: this.gl.NEAREST,
+					wrap_s: this.gl.MIRRORED_REPEAT,
+					wrap_t: this.gl.MIRRORED_REPEAT
+				}
+			)
+			tDiffuse3 = RedBitmapTexture(
+				this,
+				assetPath + 'crate.png',
+				{
+					min: this.gl.LINEAR_MIPMAP_NEAREST,
+					mag: this.gl.LINEAR,
+					wrap_s: this.gl.MIRRORED_REPEAT,
+					wrap_t: this.gl.MIRRORED_REPEAT
+				}
+			)
+			tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse1))
+			tMesh.x = -1.1
+			tMesh.y = 1.1
+			tMesh.addChild(setOptionText(this, 'min: LINEAR<br>' + 'mag: LINEAR<br>' + 'wrap_s: MIRRORED_REPEAT<br>' + 'wrap_t: MIRRORED_REPEAT'))
+			tScene.addChild(tMesh)
+			tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse2))
+			tMesh.x = 0
+			tMesh.y = 1.1
+			tMesh.addChild(setOptionText(this, 'min: NEAREST<br>' + 'mag: NEAREST<br>' + 'wrap_s: MIRRORED_REPEAT<br>' + 'wrap_t: MIRRORED_REPEAT'))
+			tScene.addChild(tMesh)
+			tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse3))
+			tMesh.x = 1.1
+			tMesh.y = 1.1
+			tMesh.addChild(setOptionText(this, 'min: LINEAR_MIPMAP_NEAREST<br>' + 'mag: LINEAR<br>' + 'wrap_s: MIRRORED_REPEAT<br>' + 'wrap_t: MIRRORED_REPEAT'))
+			tScene.addChild(tMesh)
+			// CLAMP_TO_EDGE
+			tDiffuse1 = RedBitmapTexture(
+				this,
+				assetPath + 'crate.png',
+				{
+					min: this.gl.LINEAR,
+					mag: this.gl.LINEAR,
+					wrap_s: this.gl.CLAMP_TO_EDGE,
+					wrap_t: this.gl.CLAMP_TO_EDGE
+				}
+			)
+			tDiffuse2 = RedBitmapTexture(
+				this,
+				assetPath + 'crate.png',
+				{
+					min: this.gl.NEAREST,
+					mag: this.gl.NEAREST,
+					wrap_s: this.gl.CLAMP_TO_EDGE,
+					wrap_t: this.gl.CLAMP_TO_EDGE
+				}
+			)
+			tDiffuse3 = RedBitmapTexture(
+				this,
+				assetPath + 'crate.png',
+				{
+					min: this.gl.LINEAR_MIPMAP_NEAREST,
+					mag: this.gl.LINEAR,
+					wrap_s: this.gl.CLAMP_TO_EDGE,
+					wrap_t: this.gl.CLAMP_TO_EDGE
+				}
+			)
+			tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse1))
+			tMesh.x = -1.1
+			tMesh.y = -1.1
+			tMesh.addChild(setOptionText(this, 'min: LINEAR<br>' + 'mag: LINEAR<br>' + 'wrap_s: CLAMP_TO_EDGE<br>' + 'wrap_t: CLAMP_TO_EDGE'))
+			tScene.addChild(tMesh)
+			tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse2))
+			tMesh.x = 0
+			tMesh.y = -1.1
 
-            tMesh.addChild(setOptionText(this, 'min: NEAREST<br>' + 'mag: NEAREST<br>' + 'wrap_s: CLAMP_TO_EDGE<br>' + 'wrap_t: CLAMP_TO_EDGE'))
-            tScene.addChild(tMesh)
-            tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse3))
-            tMesh.x = 1.1
-            tMesh.y = -1.1
-            tMesh.addChild(setOptionText(this, 'min: LINEAR_MIPMAP_NEAREST<br>' + 'mag: LINEAR<br>' + 'wrap_s: CLAMP_TO_EDGE<br>' + 'wrap_t: CLAMP_TO_EDGE'))
-            tScene.addChild(tMesh)
+			tMesh.addChild(setOptionText(this, 'min: NEAREST<br>' + 'mag: NEAREST<br>' + 'wrap_s: CLAMP_TO_EDGE<br>' + 'wrap_t: CLAMP_TO_EDGE'))
+			tScene.addChild(tMesh)
+			tMesh = RedMesh(this, tGeo, RedBitmapMaterial(this, tDiffuse3))
+			tMesh.x = 1.1
+			tMesh.y = -1.1
+			tMesh.addChild(setOptionText(this, 'min: LINEAR_MIPMAP_NEAREST<br>' + 'mag: LINEAR<br>' + 'wrap_s: CLAMP_TO_EDGE<br>' + 'wrap_t: CLAMP_TO_EDGE'))
+			tScene.addChild(tMesh)
 
-        } else {
-            console.log('초기화 실패!')
-        }
-    })
-    testUI = function (redGL, tScene) {
-        var gui = new baseTestUI(redGL)
-        gui.initRedGL()
-    }
+		} else {
+			console.log('초기화 실패!')
+		}
+	})
+	testUI = function (redGL, tScene) {
+		var gui = new baseTestUI(redGL)
+		gui.initRedGL()
+	}
 </script>
 </body>
 

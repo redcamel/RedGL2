@@ -1,4 +1,3 @@
-
 /*
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
@@ -9,8 +8,8 @@
 "use strict";
 var RedBaseController;
 (function () {
-    /**DOC:
-     {
+	/*DOC:
+	 {
 		 constructorYn : true,
 		 title :`RedBaseController`,
 		 description : `
@@ -18,14 +17,14 @@ var RedBaseController;
 		 `,
 		 return : 'RedBaseController instance'
 	 }
-     :DOC*/
-    RedBaseController = function () {
-        if (!(this instanceof RedBaseController)) return new RedBaseController();
-    };
-    RedBaseController.prototype = {
-        update: function () {
-            RedGLUtil.throwFunc('RedBaseController : update - 재정의 해서 써라')
-        }
-    };
-    Object.freeze(RedBaseController);
+	 :DOC*/
+	RedBaseController = function () {
+		if (!(this instanceof RedBaseController)) return new RedBaseController();
+	};
+	RedBaseController.prototype = {
+		update: function () {
+			RedGLUtil.throwFunc('RedBaseController : update - 재정의 해서 써라')
+		}
+	};
+	Object.freeze(RedBaseController);
 })();

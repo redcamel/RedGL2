@@ -26,99 +26,99 @@
 
 <body>
 <script id='testSource'>
-    var testUI;
-    var canvas;
-    var assetPath = '../../asset/'
-    canvas = document.createElement('canvas');
-    document.body.appendChild(canvas);
-    RedGL(canvas, function (v) {
-        if (v) {
-            console.log('초기화 성공!')
-            var tWorld, tView, tScene, tController, tRenderer, tLight;
-            var setBase = function (redGL) {
-                // 월드 생성
-                redGL['world'] = tWorld = RedWorld();
-                // 씬 생성
-                tScene = RedScene(redGL);
-                // 카메라 생성
-                tController = RedObitController(redGL);
-                tController.pan = -25;
-                tController.tilt = -25;
-                tController.distance = 5;
-                tController.speedDistance = 0.5
-                // 렌더러 생성
-                tRenderer = RedRenderer();
-                // 뷰생성 및 적용
-                tView = RedView('HelloRedGL', redGL, tScene, tController);
-                tWorld.addView(tView);
-                // 그리드 설정
-                tScene['grid'] = RedGrid(redGL);
-                // 렌더시작
-                tRenderer.start(redGL, function (time) {
-                });
-                // 렌더 디버거 활성화
-                tRenderer.setDebugButton();
-                testUI(redGL, tScene);
-            };
-            setBase(this);
-            // Mesh 설정
-            var tMesh;
-            var tDiffuse_anisotropic, tDiffuse_none_anisotropic;
-            // REPEAT
-            tDiffuse_anisotropic = RedBitmapTexture(
-                this,
-                assetPath + 'crate.png',
-                {
-                    min: this.gl.NEAREST,
-                    mag: this.gl.NEAREST,
-                    anisotropic: 16
-                }
-            )
-            tDiffuse_none_anisotropic = RedBitmapTexture(
-                this,
-                assetPath + 'crate.png',
-                {
-                    min: this.gl.NEAREST,
-                    mag: this.gl.NEAREST
-                }
-            )
-            var tText
-            var setOptionText = function (target, v) {
-                tText = RedText(target, 300, 64)
-                tText.color = '#fff'
-                tText.background = 'rgba(0,0,0,0.5)'
-                tText.text = v
-                tText.fontSize = '34px'
-                tText.lineHeight = '30px'
-                tText.padding = '5px'
-                tText.textAlign = 'center'
-                tText.sprite3DYn = true
-                tText.perspectiveScale = false
-                tText.useDepthTest = false
-                tText.scaleX = 0.5
-                tText.scaleY = 0.5
-                tText.z = 0.5
-                tText.y = 0.25
-            }
-            tMesh = RedMesh(this, RedPlane(this), RedBitmapMaterial(this, tDiffuse_anisotropic))
-            tMesh.y = 0.6
-            setOptionText(this, 'anisotropic : 16')
-            tMesh.addChild(tText)
-            tScene.addChild(tMesh)
-            tMesh = RedMesh(this, RedPlane(this), RedBitmapMaterial(this, tDiffuse_none_anisotropic))
-            tMesh.y = -0.6
-            setOptionText(this, 'none : anisotropic')
-            tMesh.addChild(tText)
-            tScene.addChild(tMesh)
+	var testUI;
+	var canvas;
+	var assetPath = '../../asset/'
+	canvas = document.createElement('canvas');
+	document.body.appendChild(canvas);
+	RedGL(canvas, function (v) {
+		if (v) {
+			console.log('초기화 성공!')
+			var tWorld, tView, tScene, tController, tRenderer, tLight;
+			var setBase = function (redGL) {
+				// 월드 생성
+				redGL['world'] = tWorld = RedWorld();
+				// 씬 생성
+				tScene = RedScene(redGL);
+				// 카메라 생성
+				tController = RedObitController(redGL);
+				tController.pan = -25;
+				tController.tilt = -25;
+				tController.distance = 5;
+				tController.speedDistance = 0.5
+				// 렌더러 생성
+				tRenderer = RedRenderer();
+				// 뷰생성 및 적용
+				tView = RedView('HelloRedGL', redGL, tScene, tController);
+				tWorld.addView(tView);
+				// 그리드 설정
+				tScene['grid'] = RedGrid(redGL);
+				// 렌더시작
+				tRenderer.start(redGL, function (time) {
+				});
+				// 렌더 디버거 활성화
+				tRenderer.setDebugButton();
+				testUI(redGL, tScene);
+			};
+			setBase(this);
+			// Mesh 설정
+			var tMesh;
+			var tDiffuse_anisotropic, tDiffuse_none_anisotropic;
+			// REPEAT
+			tDiffuse_anisotropic = RedBitmapTexture(
+				this,
+				assetPath + 'crate.png',
+				{
+					min: this.gl.NEAREST,
+					mag: this.gl.NEAREST,
+					anisotropic: 16
+				}
+			)
+			tDiffuse_none_anisotropic = RedBitmapTexture(
+				this,
+				assetPath + 'crate.png',
+				{
+					min: this.gl.NEAREST,
+					mag: this.gl.NEAREST
+				}
+			)
+			var tText
+			var setOptionText = function (target, v) {
+				tText = RedText(target, 300, 64)
+				tText.color = '#fff'
+				tText.background = 'rgba(0,0,0,0.5)'
+				tText.text = v
+				tText.fontSize = '34px'
+				tText.lineHeight = '30px'
+				tText.padding = '5px'
+				tText.textAlign = 'center'
+				tText.sprite3DYn = true
+				tText.perspectiveScale = false
+				tText.useDepthTest = false
+				tText.scaleX = 0.5
+				tText.scaleY = 0.5
+				tText.z = 0.5
+				tText.y = 0.25
+			}
+			tMesh = RedMesh(this, RedPlane(this), RedBitmapMaterial(this, tDiffuse_anisotropic))
+			tMesh.y = 0.6
+			setOptionText(this, 'anisotropic : 16')
+			tMesh.addChild(tText)
+			tScene.addChild(tMesh)
+			tMesh = RedMesh(this, RedPlane(this), RedBitmapMaterial(this, tDiffuse_none_anisotropic))
+			tMesh.y = -0.6
+			setOptionText(this, 'none : anisotropic')
+			tMesh.addChild(tText)
+			tScene.addChild(tMesh)
 
-        } else {
-            console.log('초기화 실패!')
-        }
-    })
-    testUI = function (redGL, tScene) {
-        var gui = new baseTestUI(redGL)
-        gui.initRedGL()
-    }
+		} else {
+			console.log('초기화 실패!')
+		}
+	})
+	testUI = function (redGL, tScene) {
+		var gui = new baseTestUI(redGL)
+		gui.initRedGL()
+	}
 </script>
 </body>
 

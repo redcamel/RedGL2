@@ -8,8 +8,8 @@
 "use strict";
 var RedSkyBox;
 (function () {
-    /**DOC:
-     {
+	/*DOC:
+	 {
 		 constructorYn : true,
 		 title :`RedSkyBox`,
 		 description : `
@@ -50,41 +50,41 @@ var RedSkyBox;
 		 `,
 		 return : 'RedSkyBox Instance'
 	 }
-     :DOC*/
-    RedSkyBox = function (redGL, srcList, alpha) {
-        if (!(this instanceof RedSkyBox)) return new RedSkyBox(redGL, srcList, alpha);
-        redGL instanceof RedGL || RedGLUtil.throwFunc('RedSkyBox : RedGL Instance만 허용.', redGL);
-        RedBaseObject3D['build'].call(this, redGL.gl);
-        this['geometry'] = RedBox(redGL);
-        this['material'] = RedSkyBoxMaterial(redGL, RedBitmapCubeTexture(redGL, srcList));
-        this['cullFace'] = redGL.gl.FRONT;
-        this['alpha'] = alpha == undefined ? 1 : alpha;
-        this['_UUID'] = RedGL.makeUUID();
-        console.log(this);
-    };
-    RedSkyBox.prototype = new RedBaseObject3D();
-    RedDefinePropertyInfo.definePrototype('RedSkyBox', 'alpha', 'number', {
-        min: 0, max: 1, callback: function (v) {
-            this['material'].alpha = v
-        }
-    });
-    Object.defineProperty(RedSkyBox.prototype, 'geometry', {
-        get: function () {
-            return this['_geometry'];
-        },
-        set: function (v) {
-            if (this['_geometry']) RedGLUtil.throwFunc('RedSkyBox : geometry - 임의로 설정을 허용하지 않음', '입력값 : ' + v);
-            this['_geometry'] = v;
-        }
-    });
-    Object.defineProperty(RedSkyBox.prototype, 'material', {
-        get: function () {
-            return this['_material'];
-        },
-        set: function (v) {
-            v instanceof RedSkyBoxMaterial || RedGLUtil.throwFunc('RedSkyBox : RedSkyBoxMaterial Instance만 허용.', '입력값 : ' + v);
-            this['_material'] = v;
-        }
-    });
-    Object.freeze(RedSkyBox);
+	 :DOC*/
+	RedSkyBox = function (redGL, srcList, alpha) {
+		if (!(this instanceof RedSkyBox)) return new RedSkyBox(redGL, srcList, alpha);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedSkyBox : RedGL Instance만 허용.', redGL);
+		RedBaseObject3D['build'].call(this, redGL.gl);
+		this['geometry'] = RedBox(redGL);
+		this['material'] = RedSkyBoxMaterial(redGL, RedBitmapCubeTexture(redGL, srcList));
+		this['cullFace'] = redGL.gl.FRONT;
+		this['alpha'] = alpha == undefined ? 1 : alpha;
+		this['_UUID'] = RedGL.makeUUID();
+		console.log(this);
+	};
+	RedSkyBox.prototype = new RedBaseObject3D();
+	RedDefinePropertyInfo.definePrototype('RedSkyBox', 'alpha', 'number', {
+		min: 0, max: 1, callback: function (v) {
+			this['material'].alpha = v
+		}
+	});
+	Object.defineProperty(RedSkyBox.prototype, 'geometry', {
+		get: function () {
+			return this['_geometry'];
+		},
+		set: function (v) {
+			if (this['_geometry']) RedGLUtil.throwFunc('RedSkyBox : geometry - 임의로 설정을 허용하지 않음', '입력값 : ' + v);
+			this['_geometry'] = v;
+		}
+	});
+	Object.defineProperty(RedSkyBox.prototype, 'material', {
+		get: function () {
+			return this['_material'];
+		},
+		set: function (v) {
+			v instanceof RedSkyBoxMaterial || RedGLUtil.throwFunc('RedSkyBox : RedSkyBoxMaterial Instance만 허용.', '입력값 : ' + v);
+			this['_material'] = v;
+		}
+	});
+	Object.freeze(RedSkyBox);
 })();
