@@ -15410,7 +15410,6 @@ var RedGrid;
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
  * Last modification time of this file - 2019.4.30 18:53
  */
-
 "use strict";
 var RedMesh;
 (function () {
@@ -15472,30 +15471,33 @@ var RedMesh;
 		this['_UUID'] = RedGL.makeUUID();
 	};
 	RedMesh.prototype = new RedBaseContainer();
-	/*DOC:
-	 {
-		 code : 'PROPERTY',
-		 title :`perspectiveScale`,
-		 description : `
-		 퍼스펙티브에 스케일이 반응할것인가 여부
-		 기본값 true
-		 `,
-		 return : 'Boolean'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedMesh', 'perspectiveScale', 'boolean');
-	/*DOC:
-	 {
-		 code : 'PROPERTY',
-		 title :`sprite3DYn`,
-		 description : `
-		 sprite3D 모드 사용 여부
-		 기본값 true
-		 `,
-		 return : 'Boolean'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedMesh', 'sprite3DYn', 'boolean');
+	RedDefinePropertyInfo.definePrototypes(
+		'RedMesh',
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`perspectiveScale`,
+			 description : `
+			 퍼스펙티브에 스케일이 반응할것인가 여부
+			 기본값 true
+			 `,
+			 return : 'Boolean'
+		 }
+		 :DOC*/
+		['perspectiveScale', 'boolean'],
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`sprite3DYn`,
+			 description : `
+			 sprite3D 모드 사용 여부
+			 기본값 true
+			 `,
+			 return : 'Boolean'
+		 }
+		 :DOC*/
+		['sprite3DYn', 'boolean']
+	);
 	Object.freeze(RedMesh);
 })();
 /*
@@ -16488,30 +16490,33 @@ var RedSprite3D;
 		this['_UUID'] = RedGL.makeUUID();
 	};
 	RedSprite3D.prototype = new RedBaseContainer();
-	/*DOC:
-	 {
-		 code : 'PROPERTY',
-		 title :`perspectiveScale`,
-		 description : `
-		 퍼스펙티브에 스케일이 반응할것인가 여부
-		 기본값 true
-		 `,
-		 return : 'Boolean'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedSprite3D', 'perspectiveScale', 'boolean');
-	/*DOC:
-	 {
-		 code : 'PROPERTY',
-		 title :`sprite3DYn`,
-		 description : `
-		 sprite3D 모드 사용 여부
-		 기본값 true
-		 `,
-		 return : 'Boolean'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedSprite3D', 'sprite3DYn', 'boolean');
+	RedDefinePropertyInfo.definePrototypes(
+		'RedSprite3D',
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`perspectiveScale`,
+			 description : `
+			 퍼스펙티브에 스케일이 반응할것인가 여부
+			 기본값 true
+			 `,
+			 return : 'Boolean'
+		 }
+		 :DOC*/
+		['perspectiveScale', 'boolean'],
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`sprite3DYn`,
+			 description : `
+			 sprite3D 모드 사용 여부
+			 기본값 true
+			 `,
+			 return : 'Boolean'
+		 }
+		 :DOC*/
+		['sprite3DYn', 'boolean']
+	);
 	/*DOC:
 	 {
 		 code : 'PROPERTY',
@@ -27360,4 +27365,4 @@ var RedGLOffScreen;
 		};
 		RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
 	})();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-06-13 03:32:09)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-06-13 03:36:50)' };console.log(RedGL_VERSION);

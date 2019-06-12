@@ -50,30 +50,33 @@ var RedSprite3D;
 		this['_UUID'] = RedGL.makeUUID();
 	};
 	RedSprite3D.prototype = new RedBaseContainer();
-	/*DOC:
-	 {
-		 code : 'PROPERTY',
-		 title :`perspectiveScale`,
-		 description : `
-		 퍼스펙티브에 스케일이 반응할것인가 여부
-		 기본값 true
-		 `,
-		 return : 'Boolean'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedSprite3D', 'perspectiveScale', 'boolean');
-	/*DOC:
-	 {
-		 code : 'PROPERTY',
-		 title :`sprite3DYn`,
-		 description : `
-		 sprite3D 모드 사용 여부
-		 기본값 true
-		 `,
-		 return : 'Boolean'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedSprite3D', 'sprite3DYn', 'boolean');
+	RedDefinePropertyInfo.definePrototypes(
+		'RedSprite3D',
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`perspectiveScale`,
+			 description : `
+			 퍼스펙티브에 스케일이 반응할것인가 여부
+			 기본값 true
+			 `,
+			 return : 'Boolean'
+		 }
+		 :DOC*/
+		['perspectiveScale', 'boolean'],
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`sprite3DYn`,
+			 description : `
+			 sprite3D 모드 사용 여부
+			 기본값 true
+			 `,
+			 return : 'Boolean'
+		 }
+		 :DOC*/
+		['sprite3DYn', 'boolean']
+	);
 	/*DOC:
 	 {
 		 code : 'PROPERTY',
