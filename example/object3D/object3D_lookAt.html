@@ -2,7 +2,7 @@
   ~ RedGL - MIT License
   ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
   ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
-  ~ Last modification time of this file - 2019.6.5 11:48
+  ~ Last modification time of this file - 2019.6.5 16:36
   -->
 
 <!DOCTYPE html>
@@ -81,7 +81,7 @@
                 tMesh.lookAt(0, 0, 0)
                 tScene.addChild(tMesh)
             }
-            var centerMesh = RedMesh(this, RedSphere(this,0.5,16,16,16), RedColorPhongMaterial(this))
+            var centerMesh = RedMesh(this, RedSphere(this, 0.5, 16, 16, 16), RedColorPhongMaterial(this))
             tScene.addChild(centerMesh)
             testUI(this, tScene, centerMesh)
 
@@ -94,24 +94,15 @@
     testUI = function (redGL, tScene, centerMesh) {
         var gui = new baseTestUI(redGL);
         gui.initRedGL();
-        gui.gui.add(centerMesh, 'x', -10, 10, 0.01).onChange(function (v) {
-            centerMesh.x = v
-            tScene.children.forEach(function (tMesh) {
-                tMesh.lookAt(centerMesh.x, centerMesh.y, centerMesh.z)
-            })
+        ['x', 'y', 'z'].forEach(function (key) {
+            gui.gui.add(centerMesh, key, -10, 10, 0.01).onChange(function (v) {
+                centerMesh[key] = v
+                tScene.children.forEach(function (tMesh) {
+                    tMesh.lookAt(centerMesh.x, centerMesh.y, centerMesh.z)
+                })
+            });
         });
-        gui.gui.add(centerMesh, 'y', -10, 10, 0.01).onChange(function (v) {
-            centerMesh.x = v
-            tScene.children.forEach(function (tMesh) {
-                tMesh.lookAt(centerMesh.x, centerMesh.y, centerMesh.z)
-            })
-        });
-        gui.gui.add(centerMesh, 'z', -10, 10, 0.01).onChange(function (v) {
-            centerMesh.x = v
-            tScene.children.forEach(function (tMesh) {
-                tMesh.lookAt(centerMesh.x, centerMesh.y, centerMesh.z)
-            })
-        });
+
 
     }
 </script>
