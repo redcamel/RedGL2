@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.6.13 12:52
  */
 
 "use strict";
@@ -240,56 +240,59 @@ var RedText;
 		console.log(this);
 	};
 	RedText.prototype = new RedBaseObject3D();
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`perspectiveScale`,
-		 description : `perspectiveScale`,
-		 return : 'boolean'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedText', 'perspectiveScale', 'boolean');
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`sprite3DYn`,
-		 description : `sprite3DYn`,
-		 return : 'boolean'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedText', 'sprite3DYn', 'boolean');
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`width`,
-		 description : `가로영역크기`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedText', 'width', 'uint', {
-		min: 2,
-		callback: function (v) {
-			this['_width'] = v;
-			this['material']['width'] = v;
-			setTexture(this);
-		}
-	});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`height`,
-		 description : `세로영역크기`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedText', 'height', 'uint', {
-		min: 2,
-		callback: function (v) {
-			this['_height'] = v;
-			this['material']['height'] = v;
-			setTexture(this);
-		}
-	});
+	RedDefinePropertyInfo.definePrototypes(
+		'RedText',
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`perspectiveScale`,
+			 description : `perspectiveScale`,
+			 return : 'boolean'
+		 }
+		 :DOC*/
+		['perspectiveScale', 'boolean'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`sprite3DYn`,
+			 description : `sprite3DYn`,
+			 return : 'boolean'
+		 }
+		 :DOC*/
+		['sprite3DYn', 'boolean'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`width`,
+			 description : `가로영역크기`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['width', 'uint', {
+			min: 2,
+			callback: function (v) {
+				this['_width'] = v;
+				this['material']['width'] = v;
+				setTexture(this);
+			}
+		}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`height`,
+			 description : `세로영역크기`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['height', 'uint', {
+			min: 2,
+			callback: function (v) {
+				this['_height'] = v;
+				this['material']['height'] = v;
+				setTexture(this);
+			}
+		}]
+	);
 	/*DOC:
 	 {
 	     code : 'PROPERTY',

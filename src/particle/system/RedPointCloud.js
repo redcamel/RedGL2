@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.6.13 11:7
  */
 
 "use strict";
@@ -27,10 +27,10 @@ var RedPointCloud;
 		 title :`update`,
 		 description : `인터리브 정보 업데이터`,
 		 params : {
-		    interleaveData : [
-		        { type : 'Array' },
-		        '인터리브 데이터'
-		    ]
+			interleaveData : [
+				{ type : 'Array' },
+				'인터리브 데이터'
+			]
 		 },
 		 return : 'void'
 	 }

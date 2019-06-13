@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.6.13 12:50
  */
 
 "use strict";
@@ -45,11 +45,11 @@ var RedDirectionalShadow;
 			 그림자 케스팅할 오브젝트 추가
 		 `,
 		 params : {
-		    target : [
-		        { type : 'RedBaseObject3D' }
-		    ]
+			target : [
+				{ type : 'RedBaseObject3D' }
+			]
 		 },
-	     return : 'void'
+		 return : 'void'
 	 }
 	 :DOC*/
 	RedDirectionalShadow.prototype['addCasting'] = function (target) {
@@ -66,9 +66,9 @@ var RedDirectionalShadow;
 			 캐스팅 제거
 		 `,
 		 params : {
-		    target : [
-		        { type : 'RedBaseObject3D' }
-		    ]
+			target : [
+				{ type : 'RedBaseObject3D' }
+			]
 		 },
 		 return : 'void'
 	 }
@@ -101,38 +101,41 @@ var RedDirectionalShadow;
 			this['_light'] = v;
 		}
 	});
-	/*DOC:
-	 {
-		 code:`PROPERTY`,
-		 title :`width`,
-		 description : `
-			 프레임버퍼 width
-		 `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedDirectionalShadow', 'width', 'number', {'min': 1});
-	/*DOC:
-	 {
-		 code:`PROPERTY`,
-		 title :`height`,
-		 description : `
-			 프레임버퍼 height
-		 `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedDirectionalShadow', 'height', 'number', {'min': 1});
-	/*DOC:
-	 {
-		 code:`PROPERTY`,
-		 title :`size`,
-		 description : `
-			 그림자 영역 크기
-		 `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedDirectionalShadow', 'size', 'number', {'min': 1});
+	RedDefinePropertyInfo.definePrototypes(
+		'RedDirectionalShadow',
+		/*DOC:
+		 {
+			 code:`PROPERTY`,
+			 title :`width`,
+			 description : `
+				 프레임버퍼 width
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['width', 'number', {'min': 1}],
+		/*DOC:
+		 {
+			 code:`PROPERTY`,
+			 title :`height`,
+			 description : `
+				 프레임버퍼 height
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['height', 'number', {'min': 1}],
+		/*DOC:
+		 {
+			 code:`PROPERTY`,
+			 title :`size`,
+			 description : `
+				 그림자 영역 크기
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['size', 'number', {'min': 1}]
+	);
 	Object.freeze(RedDirectionalShadow);
 })();

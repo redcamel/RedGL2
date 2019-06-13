@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.6.13 11:7
  */
 
 "use strict";
@@ -88,15 +88,15 @@ var RedPostEffect_FXAA;
 			 ]
 		 },
 		 extends : [
-		    'RedBasePostEffect',
-		    'RedBaseMaterial'
+			'RedBasePostEffect',
+			'RedBaseMaterial'
 		 ],
 		 demo : '../example/postEffect/antialiasing/RedPostEffect_FXAA.html',
 		 example : `
-            var effect;
-            effect = RedPostEffect_FXAA(RedGL Instance); // 포스트이펙트 생성
-            // postEffectManager는 RedView 생성시 자동생성됨.
-            (RedView Instance)['postEffectManager']['antialiasing'] = effect; // 뷰에 이펙트 설정
+			var effect;
+			effect = RedPostEffect_FXAA(RedGL Instance); // 포스트이펙트 생성
+			// postEffectManager는 RedView 생성시 자동생성됨.
+			(RedView Instance)['postEffectManager']['antialiasing'] = effect; // 뷰에 이펙트 설정
 		 `,
 		 return : 'RedPostEffect_FXAA Instance'
 	 }

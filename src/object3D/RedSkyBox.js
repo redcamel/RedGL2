@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.6.13 11:7
  */
 
 "use strict";
@@ -24,29 +24,29 @@ var RedSkyBox;
 				 `스카이박스 이미지 리스트`
 			 ],
 			 alpha : [
-			    {type:Number},
-			    '기본값 : 1',
-			    '범위 : 0 ~ 1'
+				{type:Number},
+				'기본값 : 1',
+				'범위 : 0 ~ 1'
 			 ]
 		 },
-         extends : [
-		    'RedBaseObject3D'
+		 extends : [
+			'RedBaseObject3D'
 		 ],
 		 demo : '../example/object3D/RedSkyBox.html',
 		 example : `
-            var tScene3D;
-            tScene3D = RedScene( RedGL Instance );
-            tScene3D.skyBox = RedSkyBox(
-                RedGL Instance,
-                [
-                'asset/cubemap/SwedishRoyalCastle/px.jpg',
-                'asset/cubemap/SwedishRoyalCastle/nx.jpg',
-                'asset/cubemap/SwedishRoyalCastle/ny.jpg',
-                'asset/cubemap/SwedishRoyalCastle/py.jpg',
-                'asset/cubemap/SwedishRoyalCastle/pz.jpg',
-                'asset/cubemap/SwedishRoyalCastle/nz.jpg'
-                ]
-            );
+			var tScene3D;
+			tScene3D = RedScene( RedGL Instance );
+			tScene3D.skyBox = RedSkyBox(
+				RedGL Instance,
+				[
+				'asset/cubemap/SwedishRoyalCastle/px.jpg',
+				'asset/cubemap/SwedishRoyalCastle/nx.jpg',
+				'asset/cubemap/SwedishRoyalCastle/ny.jpg',
+				'asset/cubemap/SwedishRoyalCastle/py.jpg',
+				'asset/cubemap/SwedishRoyalCastle/pz.jpg',
+				'asset/cubemap/SwedishRoyalCastle/nz.jpg'
+				]
+			);
 		 `,
 		 return : 'RedSkyBox Instance'
 	 }

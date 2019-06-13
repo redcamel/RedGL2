@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.6.13 12:47
  */
 
 "use strict";
@@ -80,32 +80,35 @@ var RedPostEffect_Vignetting;
 	RedPostEffect_Vignetting.prototype['updateTexture'] = function (lastFrameBufferTexture) {
 		this['diffuseTexture'] = lastFrameBufferTexture;
 	};
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_Vignetting', 'diffuseTexture', 'sampler2D');
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`intensity`,
-		 description : `
-			 비네팅 강도
-			 기본값 : 0.85
-			 min : 0
-	 `,
-	 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_Vignetting', 'intensity', 'number', {'min': 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`size`,
-		 description : `
-			 비네팅사이즈
-			 기본값 : 0.1
-			 min : 0
+	RedDefinePropertyInfo.definePrototypes(
+		'RedPostEffect_Vignetting',
+		['diffuseTexture', 'sampler2D'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`intensity`,
+			 description : `
+				 비네팅 강도
+				 기본값 : 0.85
+				 min : 0
 		 `,
 		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_Vignetting', 'size', 'number', {'min': 0});
+		 }
+		 :DOC*/
+		['intensity', 'number', {'min': 0}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`size`,
+			 description : `
+				 비네팅사이즈
+				 기본값 : 0.1
+				 min : 0
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['size', 'number', {'min': 0}]
+	);
 	Object.freeze(RedPostEffect_Vignetting);
 })();

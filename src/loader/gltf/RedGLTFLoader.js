@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.21 16:6
+ * Last modification time of this file - 2019.6.13 11:7
  */
 
 "use strict";
@@ -43,26 +43,26 @@ var RedGLTFLoader;
 			 ]
 		 },
 		 example : `
-		    // GLTF 로딩
-            RedGLTFLoader(
-                RedGL Instance, // redGL
-                assetPath + 'glTF/basic/', // assetRootPath
-                'DamagedHelmet.gltf', // fileName
-                function (v) { // callBack
-                    tScene.addChild(v['resultMesh'])
-                },
-                RedBitmapCubeTexture( // environmentTexture
-                    RedGL Instance,
-                    [
-                        assetPath + 'cubemap/posx.png',
-                        assetPath + 'cubemap/negx.png',
-                        assetPath + 'cubemap/posy.png',
-                        assetPath + 'cubemap/negy.png',
-                        assetPath + 'cubemap/posz.png',
-                        assetPath + 'cubemap/negz.png'
-                    ]
-                )
-            );
+			// GLTF 로딩
+			RedGLTFLoader(
+				RedGL Instance, // redGL
+				assetPath + 'glTF/basic/', // assetRootPath
+				'DamagedHelmet.gltf', // fileName
+				function (v) { // callBack
+					tScene.addChild(v['resultMesh'])
+				},
+				RedBitmapCubeTexture( // environmentTexture
+					RedGL Instance,
+					[
+						assetPath + 'cubemap/posx.png',
+						assetPath + 'cubemap/negx.png',
+						assetPath + 'cubemap/posy.png',
+						assetPath + 'cubemap/negy.png',
+						assetPath + 'cubemap/posz.png',
+						assetPath + 'cubemap/negz.png'
+					]
+				)
+			);
 		 `,
 		 demo : '../example/loader/gltf/RedGLTFLoader.html',
 		 return : 'void'

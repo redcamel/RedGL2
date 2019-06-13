@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.6.13 11:7
  */
 
 "use strict";
@@ -39,15 +39,15 @@ var RedParticleUnit;
 		 code : 'addRule',
 		 title :`addRule`,
 		 description : `
-		    룰 추가 매서드
+			룰 추가 매서드
 		 `,
 		 params : {
-		    key : [
-		        {type : 'String'}
-		    ],
-		    option : [
-		        {type : 'Object'}
-		    ]
+			key : [
+				{type : 'String'}
+			],
+			option : [
+				{type : 'Object'}
+			]
 		 },
 		 return : 'void'
 	 }

@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.6.13 11:7
  */
 "use strict";
 var RedBaseMaterial;
@@ -232,10 +232,10 @@ var RedBaseMaterial;
 				 키에 해당하는 RedBaseTexture 확장객체를 dispose 함
 			 `,
 			 params : {
-                 key : [
-                     {type:'String'}
-                 ]
-             },
+				 key : [
+					 {type:'String'}
+				 ]
+			 },
 			 return : 'void'
 		 }
 		 :DOC*/

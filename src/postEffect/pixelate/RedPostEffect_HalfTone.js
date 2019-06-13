@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.6.13 12:45
  */
 
 "use strict";
@@ -107,62 +107,65 @@ var RedPostEffect_HalfTone;
 	RedPostEffect_HalfTone.prototype['updateTexture'] = function (lastFrameBufferTexture) {
 		this['diffuseTexture'] = lastFrameBufferTexture;
 	};
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_HalfTone', 'diffuseTexture', 'sampler2D');
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`centerX`,
-		 description : `
-			 기본값 0.0
-		 `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_HalfTone', 'centerX', 'number');
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`centerY`,
-		 description : `
-			 기본값 0.0
-		 `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_HalfTone', 'centerY', 'number');
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`angle`,
-		 description : `
-			 기본값 0.0
-		 `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_HalfTone', 'angle', 'number');
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`grayMode`,
-		 description : `
-			 기본값 false
-		 `,
-		 return : 'Boolean'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_HalfTone', 'grayMode', 'boolean');
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`radius`,
-		 description : `
-			 기본값 2
-			 min : 0
-		 `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_HalfTone', 'radius', 'number', {'min': 0});
+	RedDefinePropertyInfo.definePrototypes(
+		'RedPostEffect_HalfTone',
+		['diffuseTexture', 'sampler2D'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`centerX`,
+			 description : `
+				 기본값 0.0
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['centerX', 'number'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`centerY`,
+			 description : `
+				 기본값 0.0
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['centerY', 'number'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`angle`,
+			 description : `
+				 기본값 0.0
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['angle', 'number'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`grayMode`,
+			 description : `
+				 기본값 false
+			 `,
+			 return : 'Boolean'
+		 }
+		 :DOC*/
+		['grayMode', 'boolean'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`radius`,
+			 description : `
+				 기본값 2
+				 min : 0
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['radius', 'number', {'min': 0}]
+	);
 	Object.freeze(RedPostEffect_HalfTone);
 })();

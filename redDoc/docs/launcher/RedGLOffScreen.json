@@ -36,7 +36,7 @@
       "RedBaseMaterial"
     ],
     "demo": "../example/launcher/RedGLOffScreen.html",
-    "example": "\n\t<body>\n              <canvas id=\"testCanvas\"></canvas>\n              <script>\n                  var canvas = document.getElementById('testCanvas')\n                  var redGLSrc = '../release/RedGL.min.js' // redGL 라이브러리 경로\n                  var hostSrc = 'workerHost2.js' // 호스트 코드 경로\n                  RedGLOffScreen(canvas, 1024, 768, redGLSrc, hostSrc)\n              </script>\n\t</body>\n ",
+    "example": "\n\t<body>\n\t\t<canvas id=\"testCanvas\"></canvas>\n\t\t<script>\n\t\t\tvar canvas = document.getElementById('testCanvas')\n\t\t\tvar redGLSrc = '../release/RedGL.min.js' // redGL 라이브러리 경로\n\t\t\tvar hostSrc = 'workerHost2.js' // 호스트 코드 경로\n\t\t\tRedGLOffScreen(canvas, 1024, 768, redGLSrc, hostSrc)\n\t\t</script>\n\t</body>\n ",
     "return": "RedGLOffScreen Instance"
   }
 ]

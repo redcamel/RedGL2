@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.6.13 12:39
  */
 
 "use strict";
@@ -81,24 +81,31 @@ var RedPostEffect_Threshold;
 	RedPostEffect_Threshold.prototype['updateTexture'] = function (lastFrameBufferTexture) {
 		this['diffuseTexture'] = lastFrameBufferTexture;
 	};
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_Threshold', 'diffuseTexture', 'sampler2D');
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`threshold`,
-		 description : `
-			 최소 유효값
-			 기본값 : 128
-			 min: 1
-			 max: 255
-		 `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_Threshold', 'threshold', 'number', {
-		min: 1, max: 255, callback: function (v) {
-			this['_threshold_value'] = v / 255
-		}
-	});
+	RedDefinePropertyInfo.definePrototypes(
+		'RedPostEffect_Threshold',
+		['diffuseTexture', 'sampler2D'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`threshold`,
+			 description : `
+				 최소 유효값
+				 기본값 : 128
+				 min: 1
+				 max: 255
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		[
+			'threshold', 'number',
+			{
+				min: 1, max: 255, callback: function (v) {
+					this['_threshold_value'] = v / 255
+				}
+			}
+		]
+	);
+
 	Object.freeze(RedPostEffect_Threshold);
 })();

@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.6.13 11:7
  */
 
 "use strict";
@@ -37,18 +37,18 @@ var RedGLOffScreen;
 			 ]
 		 },
 		 extends : [
-		    'RedBaseMaterial'
+			'RedBaseMaterial'
 		 ],
 		 demo : '../example/launcher/RedGLOffScreen.html',
 		 example : `
 			<body>
-                <canvas id="testCanvas"></canvas>
-                <script>
-                    var canvas = document.getElementById('testCanvas')
-                    var redGLSrc = '../release/RedGL.min.js' // redGL 라이브러리 경로
-                    var hostSrc = 'workerHost2.js' // 호스트 코드 경로
-                    RedGLOffScreen(canvas, 1024, 768, redGLSrc, hostSrc)
-                </script>
+				<canvas id="testCanvas"></canvas>
+				<script>
+					var canvas = document.getElementById('testCanvas')
+					var redGLSrc = '../release/RedGL.min.js' // redGL 라이브러리 경로
+					var hostSrc = 'workerHost2.js' // 호스트 코드 경로
+					RedGLOffScreen(canvas, 1024, 768, redGLSrc, hostSrc)
+				</script>
 			</body>
 		 `,
 		 return : 'RedGLOffScreen Instance'

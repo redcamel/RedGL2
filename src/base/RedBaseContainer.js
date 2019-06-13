@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.6.13 11:7
  */
 "use strict";
 var RedBaseContainer;
@@ -36,7 +36,7 @@ var RedBaseContainer;
 			 ]
 		 },
 		 example : `
-		    (RedBaseContainer Instance).addChild( RedBaseObject3D Instance );
+			(RedBaseContainer Instance).addChild( RedBaseObject3D Instance );
 		 `,
 		 return : 'void'
 	 }
@@ -60,8 +60,8 @@ var RedBaseContainer;
 			 ]
 		 },
 		 example : `
-		    (RedBaseContainer Instance).addChildAt( RedBaseObject3D Instance, 0 ); // 0번째에 자식추가
-		    (RedBaseContainer Instance).addChildAt( RedBaseObject3D Instance, 2 ); // 2번째에 자식추가
+			(RedBaseContainer Instance).addChildAt( RedBaseObject3D Instance, 0 ); // 0번째에 자식추가
+			(RedBaseContainer Instance).addChildAt( RedBaseObject3D Instance, 2 ); // 2번째에 자식추가
 		 `,
 		 return : 'void'
 	 }
@@ -79,8 +79,8 @@ var RedBaseContainer;
 		 code : 'METHOD',
 		 title :`removeChild`,
 		 description : `
-		    해당 자식을 제거.
-		    존재하지 않는 자식을 제거하려고 할 경우 에러.
+			해당 자식을 제거.
+			존재하지 않는 자식을 제거하려고 할 경우 에러.
 		 `,
 		 params:{
 			 child : [
@@ -88,7 +88,7 @@ var RedBaseContainer;
 			 ]
 		 },
 		 example : `
-		    (RedBaseContainer Instance).removeChild( RedBaseObject3D Instance ); // 해당 자식 제거
+			(RedBaseContainer Instance).removeChild( RedBaseObject3D Instance ); // 해당 자식 제거
 		 `,
 		 return : 'void'
 	 }
@@ -112,8 +112,8 @@ var RedBaseContainer;
 			 ]
 		 },
 		 example : `
-		    (RedBaseContainer Instance).removeChildAt( 0 ); // 0번째 자식 제거
-		    (RedBaseContainer Instance).removeChildAt( 1 ); // 1번째 자식 제거
+			(RedBaseContainer Instance).removeChildAt( 0 ); // 0번째 자식 제거
+			(RedBaseContainer Instance).removeChildAt( 1 ); // 1번째 자식 제거
 		 `,
 		 return : 'void'
 	 }
@@ -129,7 +129,7 @@ var RedBaseContainer;
 		 title :`removeChildAll`,
 		 description : `전체 자식을 제거`,
 		 example : `
-		    (RedBaseContainer Instance).removeChildAll(); // 전체 자식 제거
+			(RedBaseContainer Instance).removeChildAll(); // 전체 자식 제거
 		 `,
 		 return : 'void'
 	 }
@@ -148,8 +148,8 @@ var RedBaseContainer;
 			 ]
 		 },
 		 example : `
-		    (RedBaseContainer Instance).getChildAt( 0 ); // 0번째 자식 반환
-		    (RedBaseContainer Instance).getChildAt( 2 ); // 2번째 자식 반환
+			(RedBaseContainer Instance).getChildAt( 0 ); // 0번째 자식 반환
+			(RedBaseContainer Instance).getChildAt( 2 ); // 2번째 자식 반환
 		 `,
 		 return : 'RedBaseObject3D Instance'
 	 }
@@ -169,7 +169,7 @@ var RedBaseContainer;
 			 ]
 		 },
 		 example : `
-		    (RedBaseContainer Instance).getChildIndex( RedBaseObject3D Instance ); // 해당객체가 부모메쉬의 몇번째 자식인지 인덱스 반환
+			(RedBaseContainer Instance).getChildIndex( RedBaseObject3D Instance ); // 해당객체가 부모메쉬의 몇번째 자식인지 인덱스 반환
 		 `,
 		 return : 'int'
 	 }
@@ -187,8 +187,8 @@ var RedBaseContainer;
 				 {type:'RedBaseObject3D Instance'}
 			 ]
 		 },
-          example : `
-		    (RedBaseContainer Instance).numChildren(); // 자식갯수 반환
+		  example : `
+			(RedBaseContainer Instance).numChildren(); // 자식갯수 반환
 		 `,
 		 return : 'uint'
 	 }
@@ -201,9 +201,9 @@ var RedBaseContainer;
 		 code : 'METHOD',
 		 title :`sortGeometry`,
 		 description : `
-		    지오메트리 순으로 자식들을 정렬.
-		    동일 지오메트리가 다량 사용될 경우 attribute 변경 횟수가 줄어들어 렌더성능이 좋아진다.
-         `,
+			지오메트리 순으로 자식들을 정렬.
+			동일 지오메트리가 다량 사용될 경우 attribute 변경 횟수가 줄어들어 렌더성능이 좋아진다.
+		 `,
 		 params:{
 			 recursive : [
 				 {type:'Boolean'},
@@ -211,8 +211,8 @@ var RedBaseContainer;
 			 ]
 		 },
 		 example : `
-		    (RedBaseContainer Instance).sortGeometry();
-		    (RedBaseContainer Instance).sortGeometry(true);
+			(RedBaseContainer Instance).sortGeometry();
+			(RedBaseContainer Instance).sortGeometry(true);
 		 `,
 		 return : 'void'
 	 }
@@ -239,9 +239,9 @@ var RedBaseContainer;
 		 code : 'METHOD',
 		 title :`sortMaterial`,
 		 description : `
-		    재질이 소유한 RedProgram 순으로 자식들을 정렬.
-		    동일 재질이 다량 사용될 경우 프로그램 변경 횟수가 줄어들어 렌더성능이 좋아진다.
-         `,
+			재질이 소유한 RedProgram 순으로 자식들을 정렬.
+			동일 재질이 다량 사용될 경우 프로그램 변경 횟수가 줄어들어 렌더성능이 좋아진다.
+		 `,
 		 params:{
 			 recursive : [
 				 {type:'Boolean'},
@@ -249,8 +249,8 @@ var RedBaseContainer;
 			 ]
 		 },
 		 example : `
-		    (RedBaseContainer Instance).sortMaterial();
-		    (RedBaseContainer Instance).sortMaterial(true);
+			(RedBaseContainer Instance).sortMaterial();
+			(RedBaseContainer Instance).sortMaterial(true);
 		 `,
 		 return : 'void'
 	 }
@@ -284,8 +284,8 @@ var RedBaseContainer;
 			 ]
 		 },
 		 example : `
-		    (RedBaseContainer Instance).sortGeometryAndMaterial();
-		    (RedBaseContainer Instance).sortGeometryAndMaterial(true);
+			(RedBaseContainer Instance).sortGeometryAndMaterial();
+			(RedBaseContainer Instance).sortGeometryAndMaterial(true);
 		 `,
 		 return : 'void'
 	 }

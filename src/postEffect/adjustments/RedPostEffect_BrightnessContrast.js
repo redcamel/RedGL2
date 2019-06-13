@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.6.13 12:39
  */
 
 "use strict";
@@ -82,42 +82,45 @@ var RedPostEffect_BrightnessContrast;
 	RedPostEffect_BrightnessContrast.prototype['updateTexture'] = function (lastFrameBufferTexture) {
 		this['diffuseTexture'] = lastFrameBufferTexture;
 	};
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_BrightnessContrast', 'diffuseTexture', 'sampler2D');
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`brightness`,
-		 description : `
-			 밝기
-			 기본값 : 0
-			 min : -150
-			 max : 150
-		 `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_BrightnessContrast', 'brightness', 'number', {
-		min: -150, max: 150, callback: function (v) {
-			this['_brightness_value'] = v / 255
-		}
-	});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`contrast`,
-		 description : `
-			 대조
-			 기본값 : 0
-			 min: -50
-			 max: 100
-		 `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_BrightnessContrast', 'contrast', 'number', {
-		min: -50, max: 100, callback: function (v) {
-			this['_contrast_value'] = v / 255
-		}
-	});
+	RedDefinePropertyInfo.definePrototypes(
+		'RedPostEffect_BrightnessContrast',
+		['diffuseTexture', 'sampler2D'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`brightness`,
+			 description : `
+				 밝기
+				 기본값 : 0
+				 min : -150
+				 max : 150
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['brightness', 'number', {
+			min: -150, max: 150, callback: function (v) {
+				this['_brightness_value'] = v / 255
+			}
+		}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`contrast`,
+			 description : `
+				 대조
+				 기본값 : 0
+				 min: -50
+				 max: 100
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['contrast', 'number', {
+			min: -50, max: 100, callback: function (v) {
+				this['_contrast_value'] = v / 255
+			}
+		}]
+	);
 	Object.freeze(RedPostEffect_BrightnessContrast);
 })();
