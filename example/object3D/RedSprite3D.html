@@ -26,74 +26,74 @@
 
 <body>
 <script id='testSource'>
-    var testUI;
-    var canvas;
-    var assetPath = '../../asset/'
-    canvas = document.createElement('canvas');
-    document.body.appendChild(canvas);
-    RedGL(canvas, function (v) {
-        if (v) {
-            console.log('초기화 성공!');
-            var tWorld, tView, tScene, tController, tRenderer;
-            var setBase = function (redGL) {
-                // 월드 생성
-                redGL['world'] = tWorld = RedWorld();
-                // 씬 생성
-                tScene = RedScene(redGL);
-                // 카메라 생성
-                tController = RedObitController(redGL);
-                tController.pan = 45;
-                tController.tilt = -45;
-                // 렌더러 생성
-                tRenderer = RedRenderer();
-                // 뷰생성 및 적용
-                tView = RedView('HelloRedGL', redGL, tScene, tController);
-                tWorld.addView(tView);
-                // 그리드 설정
-                tScene['grid'] = RedGrid(redGL);
-                // 렌더시작
-                tRenderer.start(redGL, function (time) {
-                });
-                // 렌더 디버거 활성화
-                tRenderer.setDebugButton();
-            };
-            setBase(this);
-            // Box 설정
-            var i = 10
-            while (i--) {
-                var tSprite3D = RedSprite3D(this, RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'crate.png')))
-                tSprite3D.x = Math.sin(Math.PI * 2 / 10 * i) * 3
-                tSprite3D.y = Math.cos(Math.PI * 2 / 10 * i) * 3
-                tSprite3D.scaleX = 0.1
-                tSprite3D.scaleY = 0.1
-                tScene.addChild(tSprite3D)
-            }
+	var testUI;
+	var canvas;
+	var assetPath = '../../asset/'
+	canvas = document.createElement('canvas');
+	document.body.appendChild(canvas);
+	RedGL(canvas, function (v) {
+		if (v) {
+			console.log('초기화 성공!');
+			var tWorld, tView, tScene, tController, tRenderer;
+			var setBase = function (redGL) {
+				// 월드 생성
+				redGL['world'] = tWorld = RedWorld();
+				// 씬 생성
+				tScene = RedScene(redGL);
+				// 카메라 생성
+				tController = RedObitController(redGL);
+				tController.pan = 45;
+				tController.tilt = -45;
+				// 렌더러 생성
+				tRenderer = RedRenderer();
+				// 뷰생성 및 적용
+				tView = RedView('HelloRedGL', redGL, tScene, tController);
+				tWorld.addView(tView);
+				// 그리드 설정
+				tScene['grid'] = RedGrid(redGL);
+				// 렌더시작
+				tRenderer.start(redGL, function (time) {
+				});
+				// 렌더 디버거 활성화
+				tRenderer.setDebugButton();
+			};
+			setBase(this);
+			// Box 설정
+			var i = 10
+			while (i--) {
+				var tSprite3D = RedSprite3D(this, RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'crate.png')))
+				tSprite3D.x = Math.sin(Math.PI * 2 / 10 * i) * 3
+				tSprite3D.y = Math.cos(Math.PI * 2 / 10 * i) * 3
+				tSprite3D.scaleX = 0.1
+				tSprite3D.scaleY = 0.1
+				tScene.addChild(tSprite3D)
+			}
 
-            testUI(this, tScene)
-        } else {
-            console.log('초기화 실패!')
-        }
-    })
-    testUI = function (redGL, tScene) {
-        console.log('test')
-        var gui = new baseTestUI(redGL)
-        gui.initRedGL()
-        var t0 = gui['gui'].addFolder('Sprite3D')
-        var testSprite = {
-            sprite3DYn: true,
-            perspectiveScale: true
-        };
-        ['perspectiveScale', 'sprite3DYn'].forEach(function (tKey) {
-            t0.add(testSprite, tKey).onChange(function (v) {
-                var i = tScene.numChildren()
-                while (i--) {
-                    console.log(tScene['children'][i])
-                    tScene['children'][i][tKey] = v
-                }
-            });
-        });
-        t0.open()
-    }
+			testUI(this, tScene)
+		} else {
+			console.log('초기화 실패!')
+		}
+	})
+	testUI = function (redGL, tScene) {
+		console.log('test')
+		var gui = new baseTestUI(redGL)
+		gui.initRedGL()
+		var t0 = gui['gui'].addFolder('Sprite3D')
+		var testSprite = {
+			sprite3DYn: true,
+			perspectiveScale: true
+		};
+		['perspectiveScale', 'sprite3DYn'].forEach(function (tKey) {
+			t0.add(testSprite, tKey).onChange(function (v) {
+				var i = tScene.numChildren()
+				while (i--) {
+					console.log(tScene['children'][i])
+					tScene['children'][i][tKey] = v
+				}
+			});
+		});
+		t0.open()
+	}
 </script>
 </body>
 

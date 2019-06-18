@@ -4,12 +4,12 @@
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
  * Last modification time of this file - 2019.4.30 18:53
  */
-
 "use strict";
 var RedBasePostEffect;
 (function () {
-    /**DOC:
-     {
+	var tPrototype;
+	/*DOC:
+	 {
 		 constructorYn : true,
 		 title :`RedBasePostEffect`,
 		 description : `
@@ -18,14 +18,14 @@ var RedBasePostEffect;
 		 extends:['RedBaseMaterial'],
 		 return : 'RedBasePostEffect Instance'
 	 }
-     :DOC*/
-    RedBasePostEffect = function () {
-    };
-    RedBasePostEffect.prototype = new RedBaseMaterial();
-    RedBasePostEffect.prototype['bind'] = RedPostEffectManager.prototype['bind'];
-    RedBasePostEffect.prototype['unbind'] = RedPostEffectManager.prototype['unbind'];
-    /**DOC:
-     {
+	 :DOC*/
+	RedBasePostEffect = function () {
+	};
+	tPrototype = RedBasePostEffect.prototype = new RedBaseMaterial();
+	tPrototype['bind'] = RedPostEffectManager.prototype['bind'];
+	tPrototype['unbind'] = RedPostEffectManager.prototype['unbind'];
+	/*DOC:
+	 {
 		title :`updateTexture`,
 		code : 'METHOD',
 		description : `
@@ -34,12 +34,12 @@ var RedBasePostEffect;
 		`,
 		return : 'void'
 	}
-     :DOC*/
-    RedBasePostEffect.prototype['updateTexture'] = function () {
-        RedGLUtil.throwFunc('RedBasePostEffect - updateTexture : 반드시 재정의해야함')
-    };
-    /**DOC:
-     {
+	 :DOC*/
+	tPrototype['updateTexture'] = function () {
+		RedGLUtil.throwFunc('RedBasePostEffect - updateTexture : 반드시 재정의해야함')
+	};
+	/*DOC:
+	 {
 		title :`_process`,
 		code : 'PROPERTY',
 		description : `
@@ -47,10 +47,10 @@ var RedBasePostEffect;
 		`,
 		return : 'void'
 	}
-     :DOC*/
-    RedBasePostEffect.prototype['_process'] = [];
-    /**DOC:
-     {
+	 :DOC*/
+	tPrototype['_process'] = [];
+	/*DOC:
+	 {
 		title :`_subFrameBufferList`,
 		code : 'PROPERTY',
 		description : `
@@ -58,7 +58,7 @@ var RedBasePostEffect;
 		`,
 		return : 'void'
 	}
-     :DOC*/
-    RedBasePostEffect.prototype['_subFrameBufferList'] = [];
-    Object.freeze(RedBasePostEffect);
+	 :DOC*/
+	tPrototype['_subFrameBufferList'] = [];
+	Object.freeze(RedBasePostEffect);
 })();

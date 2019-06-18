@@ -37,7 +37,7 @@
       "RedBaseTexture"
     ],
     "demo": "../example/resources/RedBitmapTexture.html",
-    "example": "\n          RedBitmapTexture(\n              RedGL Instance,\n              src,\n              {\n                  min: gl.LINEAR_MIPMAP_NEAREST,\n                  mag: gl.LINEAR,\n                  wrap_s: gl.REPEAT,\n                  wrap_t: gl.REPEAT\n              }\n          )\n ",
+    "example": "\n\tRedBitmapTexture(\n\t\tRedGL Instance,\n\t\tsrc,\n\t\t{\n\t\t\tmin: gl.LINEAR_MIPMAP_NEAREST,\n\t\t\tmag: gl.LINEAR,\n\t\t\twrap_s: gl.REPEAT,\n\t\t\twrap_t: gl.REPEAT\n\t\t}\n\t)\n ",
     "return": "RedBitmapTexture Instance"
   },
   {

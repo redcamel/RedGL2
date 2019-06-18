@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.6.13 11:7
  */
 
 "use strict";
@@ -11,8 +11,8 @@ var RedParticleUnit;
 // 연구중
 //////////////////////////////////////////////////////////
 (function () {
-    /**DOC:
-     {
+	/*DOC:
+	 {
 		 constructorYn : true,
 		 title :`RedParticleUnit`,
 		 description : `
@@ -26,40 +26,40 @@ var RedParticleUnit;
 		 },
 		 return : 'RedParticleUnit Instance'
 	 }
-     :DOC*/
-    RedParticleUnit = function (lifeTime) {
-        this['startTime'] = null;
-        this['age'] = 0;
-        this['lifeTime'] = lifeTime.length == 2 ? Math.random() * (lifeTime[1] - lifeTime[0]) + lifeTime[0] : lifeTime[0];
-        this['initLifeTime'] = this['lifeTime'];
-        this['_gravitySum'] = 0;
-    };
-    /**DOC:
-     {
+	 :DOC*/
+	RedParticleUnit = function (lifeTime) {
+		this['startTime'] = null;
+		this['age'] = 0;
+		this['lifeTime'] = lifeTime.length == 2 ? Math.random() * (lifeTime[1] - lifeTime[0]) + lifeTime[0] : lifeTime[0];
+		this['initLifeTime'] = this['lifeTime'];
+		this['_gravitySum'] = 0;
+	};
+	/*DOC:
+	 {
 		 code : 'addRule',
 		 title :`addRule`,
 		 description : `
-		    룰 추가 매서드
+			룰 추가 매서드
 		 `,
 		 params : {
-		    key : [
-		        {type : 'String'}
-		    ],
-		    option : [
-		        {type : 'Object'}
-		    ]
+			key : [
+				{type : 'String'}
+			],
+			option : [
+				{type : 'Object'}
+			]
 		 },
 		 return : 'void'
 	 }
-     :DOC*/
-    RedParticleUnit.prototype.addRule = function (key, option) {
-        this[key] = {
-            startCenter: null,
-            start: option['start'].length == 2 ? Math.random() * (option['start'][1] - option['start'][0]) + option['start'][0] : option['start'],
-            end: option['end'].length == 2 ? Math.random() * (option['end'][1] - option['end'][0]) + option['end'][0] : option['end'],
-            ease: option['ease']
-        };
-        this[key]['gap'] = this[key]['end'] - this[key]['start']
-    };
-    Object.freeze(RedParticleUnit);
+	 :DOC*/
+	RedParticleUnit.prototype.addRule = function (key, option) {
+		this[key] = {
+			startCenter: null,
+			start: option['start'].length == 2 ? Math.random() * (option['start'][1] - option['start'][0]) + option['start'][0] : option['start'],
+			end: option['end'].length == 2 ? Math.random() * (option['end'][1] - option['end'][0]) + option['end'][0] : option['end'],
+			ease: option['ease']
+		};
+		this[key]['gap'] = this[key]['end'] - this[key]['start']
+	};
+	Object.freeze(RedParticleUnit);
 })();

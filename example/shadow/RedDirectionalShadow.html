@@ -27,262 +27,262 @@
 
 <body>
 <script id='testSource'>
-    var testUI;
-    var canvas;
-    var assetPath = '../../asset/'
-    canvas = document.createElement('canvas');
-    document.body.appendChild(canvas);
+	var testUI;
+	var canvas;
+	var assetPath = '../../asset/'
+	canvas = document.createElement('canvas');
+	document.body.appendChild(canvas);
 
-    document.getElementById('test')
-    RedGL(canvas, function (v) {
-        console.log('초기화 성공!')
-        var tWorld, tView, tScene, tController, tRenderer, tDirectionalLight;
-        var setBase = function (redGL) {
-            // 월드 생성
-            redGL['world'] = tWorld = RedWorld();
-            // 씬 생성
-            tScene = RedScene(redGL);
-            // 카메라 생성
-            tController = RedObitController(redGL);
-            tController.pan = 25;
-            tController.tilt = -45;
-            tController.distance = 100;
-            // 렌더러 생성
-            tRenderer = RedRenderer();
-            // 뷰생성 및 적용
-            tView = RedView('HelloRedGL', redGL, tScene, tController);
-            tWorld.addView(tView);
-            tScene.skyBox =
-                RedSkyBox(redGL, [
-                    assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
-                    assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
-                    assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
-                    assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
-                    assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
-                    assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
-                ]);
-            // 라이트 설정
-            tDirectionalLight = RedDirectionalLight(redGL);
-            tScene.addLight(tDirectionalLight)
-            tDirectionalLight.x = 10;
-            tDirectionalLight.y = 10;
-            tDirectionalLight.z = 10;
-            // fog 거리 설정
-            tScene.fogDistance = 100
-            // 렌더시작
-            tRenderer.start(redGL, function (time) {
-            });
-            // 렌더 디버거 활성화
-            tRenderer.setDebugButton();
-        };
-        setBase(this);
+	document.getElementById('test')
+	RedGL(canvas, function (v) {
+		console.log('초기화 성공!')
+		var tWorld, tView, tScene, tController, tRenderer, tDirectionalLight;
+		var setBase = function (redGL) {
+			// 월드 생성
+			redGL['world'] = tWorld = RedWorld();
+			// 씬 생성
+			tScene = RedScene(redGL);
+			// 카메라 생성
+			tController = RedObitController(redGL);
+			tController.pan = 25;
+			tController.tilt = -45;
+			tController.distance = 100;
+			// 렌더러 생성
+			tRenderer = RedRenderer();
+			// 뷰생성 및 적용
+			tView = RedView('HelloRedGL', redGL, tScene, tController);
+			tWorld.addView(tView);
+			tScene.skyBox =
+				RedSkyBox(redGL, [
+					assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
+					assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
+					assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
+					assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
+					assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
+					assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
+				]);
+			// 라이트 설정
+			tDirectionalLight = RedDirectionalLight(redGL);
+			tScene.addLight(tDirectionalLight)
+			tDirectionalLight.x = 10;
+			tDirectionalLight.y = 10;
+			tDirectionalLight.z = 10;
+			// fog 거리 설정
+			tScene.fogDistance = 100
+			// 렌더시작
+			tRenderer.start(redGL, function (time) {
+			});
+			// 렌더 디버거 활성화
+			tRenderer.setDebugButton();
+		};
+		setBase(this);
 
-        // 쉐도우 생성
-        var tShadow = RedDirectionalShadow(this, tDirectionalLight)
-        tShadow.size = 50
-        // 쉐도우 설정
-        tScene.shadowManager.directionalShadow = tShadow
-        var makeTestMeshs1, makeTestMeshs2, makeTestMeshs3, makeTestMeshs4;
-        makeTestMeshs1 = function (redGL) {
-            var tMaterial = RedStandardMaterial(
-                redGL,
-                RedBitmapTexture(redGL, assetPath + 'brick/Brick03_col.jpg'),
-                RedBitmapTexture(redGL, assetPath + 'brick/Brick03_nrm.jpg'),
-                null,
-                RedBitmapTexture(redGL, assetPath + 'brick/Brick03_disp.jpg')
-            );
-            // Mesh 설정
-            var makeMesh = function (redGL, y) {
-                var tMesh;
-                //RedCylinder
-                tMesh = RedMesh(redGL, RedCylinder(redGL, 7.5, 7.5, 5), tMaterial)
-                tMesh.x = -30
-                tMesh.y = y
-                tMesh.z = -20
-                tScene.addChild(tMesh)
-                tShadow.addCasting(tMesh) // 그림자 케스팅
-                //RedSphere
-                tMesh = RedMesh(redGL, RedSphere(redGL, 3.75, 32, 32, 32), tMaterial)
-                tMesh.x = -15
-                tMesh.y = y
-                tMesh.z = -20
-                tScene.addChild(tMesh)
-                tShadow.addCasting(tMesh) // 캐스팅
-                //RedBox
-                tMesh = RedMesh(redGL, RedBox(redGL, 7.5, 7.5, 7.5, 16, 16, 16), tMaterial)
-                tMesh.x = 0
-                tMesh.y = y
-                tMesh.z = -20
-                tScene.addChild(tMesh)
-                tShadow.addCasting(tMesh) // 그림자 케스팅
-                //RedPlane
-                tMesh = RedMesh(redGL, RedPlane(redGL, 7.5, 7.5, 16, 16), tMaterial)
-                tMesh.useCullFace = false;
-                tMesh.x = 15
-                tMesh.y = y
-                tMesh.z = -20
-                tScene.addChild(tMesh)
-                tShadow.addCasting(tMesh) // 그림자 케스팅
-                //RedCylinder
-                tMesh = RedMesh(redGL, RedCylinder(redGL, 0, 7.5, 5), tMaterial)
-                tMesh.x = 30
-                tMesh.y = y
-                tMesh.z = -20
-                tScene.addChild(tMesh)
-                tShadow.addCasting(tMesh) // 그림자 케스팅
-            }
-            makeMesh(redGL, 0);
-            makeMesh(redGL, 10);
-            makeMesh(redGL, 20);
-        };
-        makeTestMeshs2 = function (redGL) {
-            var i;
-            var tMesh;
-            var tGeo = RedCylinder(redGL, 0, 2, 5)
-            var tMaterial = RedStandardMaterial(
-                redGL,
-                RedBitmapTexture(redGL, assetPath + 'brick/Brick03_col.jpg'),
-                RedBitmapTexture(redGL, assetPath + 'brick/Brick03_nrm.jpg'),
-                null,
-                RedBitmapTexture(redGL, assetPath + 'brick/Brick03_disp.jpg')
-            )
-            var tMaterial2 = RedColorMaterial(redGL)
-            var tMaterial3 = RedColorPhongMaterial(redGL)
-            i = 50;
-            while (i--) {
-                tMesh = RedMesh(redGL, tGeo, Math.random() < 0.5 ? tMaterial : Math.random() < 0.5 ? tMaterial2 : tMaterial3)
-                tMesh.rotationX = tMesh.rotationY = tMesh.rotationZ = Math.random() * 360
-                tMesh.x = Math.random() * 100 - 50;
-                tMesh.y = Math.random() * 25;
-                tMesh.z = Math.random() * 25 + 25;
-                if (Math.random() < 0.5) tMesh.drawMode = redGL.gl.LINES
-                tScene.addChild(tMesh);
-                tShadow.addCasting(tMesh); // 그림자 케스팅
-            }
-        }
-        makeTestMeshs3 = function (redGL) {
-            // GLTF 로딩
-            RedGLTFLoader(
-                redGL, // redGL
-                assetPath + 'glTF/basic/', // assetRootPath
-                'DamagedHelmet.gltf', // fileName
-                function (v) { // callBack
-                    v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 5
-                    v['resultMesh'].y = 7
-                    tScene.addChild(v['resultMesh'])
-                    tShadow.addCasting(v['resultMesh']) // 그림자 케스팅
-                },
-                RedBitmapCubeTexture(redGL, // environmentTexture
-                    [
-                        assetPath + 'cubemap/posx.png',
-                        assetPath + 'cubemap/negx.png',
-                        assetPath + 'cubemap/posy.png',
-                        assetPath + 'cubemap/negy.png',
-                        assetPath + 'cubemap/posz.png',
-                        assetPath + 'cubemap/negz.png'
-                    ]
-                )
-            );
-            RedOBJLoader(redGL, assetPath + 'obj/rabbit/', 'Rabbit.obj', function (v) {
+		// 쉐도우 생성
+		var tShadow = RedDirectionalShadow(this, tDirectionalLight)
+		tShadow.size = 50
+		// 쉐도우 설정
+		tScene.shadowManager.directionalShadow = tShadow
+		var makeTestMeshs1, makeTestMeshs2, makeTestMeshs3, makeTestMeshs4;
+		makeTestMeshs1 = function (redGL) {
+			var tMaterial = RedStandardMaterial(
+				redGL,
+				RedBitmapTexture(redGL, assetPath + 'brick/Brick03_col.jpg'),
+				RedBitmapTexture(redGL, assetPath + 'brick/Brick03_nrm.jpg'),
+				null,
+				RedBitmapTexture(redGL, assetPath + 'brick/Brick03_disp.jpg')
+			);
+			// Mesh 설정
+			var makeMesh = function (redGL, y) {
+				var tMesh;
+				//RedCylinder
+				tMesh = RedMesh(redGL, RedCylinder(redGL, 7.5, 7.5, 5), tMaterial)
+				tMesh.x = -30
+				tMesh.y = y
+				tMesh.z = -20
+				tScene.addChild(tMesh)
+				tShadow.addCasting(tMesh) // 그림자 케스팅
+				//RedSphere
+				tMesh = RedMesh(redGL, RedSphere(redGL, 3.75, 32, 32, 32), tMaterial)
+				tMesh.x = -15
+				tMesh.y = y
+				tMesh.z = -20
+				tScene.addChild(tMesh)
+				tShadow.addCasting(tMesh) // 캐스팅
+				//RedBox
+				tMesh = RedMesh(redGL, RedBox(redGL, 7.5, 7.5, 7.5, 16, 16, 16), tMaterial)
+				tMesh.x = 0
+				tMesh.y = y
+				tMesh.z = -20
+				tScene.addChild(tMesh)
+				tShadow.addCasting(tMesh) // 그림자 케스팅
+				//RedPlane
+				tMesh = RedMesh(redGL, RedPlane(redGL, 7.5, 7.5, 16, 16), tMaterial)
+				tMesh.useCullFace = false;
+				tMesh.x = 15
+				tMesh.y = y
+				tMesh.z = -20
+				tScene.addChild(tMesh)
+				tShadow.addCasting(tMesh) // 그림자 케스팅
+				//RedCylinder
+				tMesh = RedMesh(redGL, RedCylinder(redGL, 0, 7.5, 5), tMaterial)
+				tMesh.x = 30
+				tMesh.y = y
+				tMesh.z = -20
+				tScene.addChild(tMesh)
+				tShadow.addCasting(tMesh) // 그림자 케스팅
+			}
+			makeMesh(redGL, 0);
+			makeMesh(redGL, 10);
+			makeMesh(redGL, 20);
+		};
+		makeTestMeshs2 = function (redGL) {
+			var i;
+			var tMesh;
+			var tGeo = RedCylinder(redGL, 0, 2, 5)
+			var tMaterial = RedStandardMaterial(
+				redGL,
+				RedBitmapTexture(redGL, assetPath + 'brick/Brick03_col.jpg'),
+				RedBitmapTexture(redGL, assetPath + 'brick/Brick03_nrm.jpg'),
+				null,
+				RedBitmapTexture(redGL, assetPath + 'brick/Brick03_disp.jpg')
+			)
+			var tMaterial2 = RedColorMaterial(redGL)
+			var tMaterial3 = RedColorPhongMaterial(redGL)
+			i = 50;
+			while (i--) {
+				tMesh = RedMesh(redGL, tGeo, Math.random() < 0.5 ? tMaterial : Math.random() < 0.5 ? tMaterial2 : tMaterial3)
+				tMesh.rotationX = tMesh.rotationY = tMesh.rotationZ = Math.random() * 360
+				tMesh.x = Math.random() * 100 - 50;
+				tMesh.y = Math.random() * 25;
+				tMesh.z = Math.random() * 25 + 25;
+				if (Math.random() < 0.5) tMesh.drawMode = redGL.gl.LINES
+				tScene.addChild(tMesh);
+				tShadow.addCasting(tMesh); // 그림자 케스팅
+			}
+		}
+		makeTestMeshs3 = function (redGL) {
+			// GLTF 로딩
+			RedGLTFLoader(
+				redGL, // redGL
+				assetPath + 'glTF/basic/', // assetRootPath
+				'DamagedHelmet.gltf', // fileName
+				function (v) { // callBack
+					v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 5
+					v['resultMesh'].y = 7
+					tScene.addChild(v['resultMesh'])
+					tShadow.addCasting(v['resultMesh']) // 그림자 케스팅
+				},
+				RedBitmapCubeTexture(redGL, // environmentTexture
+					[
+						assetPath + 'cubemap/posx.png',
+						assetPath + 'cubemap/negx.png',
+						assetPath + 'cubemap/posy.png',
+						assetPath + 'cubemap/negy.png',
+						assetPath + 'cubemap/posz.png',
+						assetPath + 'cubemap/negz.png'
+					]
+				)
+			);
+			RedOBJLoader(redGL, assetPath + 'obj/rabbit/', 'Rabbit.obj', function (v) {
 
-                tScene.addChild(v['resultMesh'])
-                tShadow.addCasting(v['resultMesh']) // 그림자 케스팅
-                v['resultMesh'].x = -16
-                v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 10
-            })
-            RedOBJLoader(redGL, assetPath + 'obj/', 'female.obj', function (v) {
-                v['resultMesh'].x = -8
-                v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.05
-                tShadow.addCasting(v['resultMesh'], false)
-                tScene.addChild(v['resultMesh'])
+				tScene.addChild(v['resultMesh'])
+				tShadow.addCasting(v['resultMesh']) // 그림자 케스팅
+				v['resultMesh'].x = -16
+				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 10
+			})
+			RedOBJLoader(redGL, assetPath + 'obj/', 'female.obj', function (v) {
+				v['resultMesh'].x = -8
+				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.05
+				tShadow.addCasting(v['resultMesh'], false)
+				tScene.addChild(v['resultMesh'])
 
-            })
-            RedOBJLoader(redGL, assetPath + 'obj/', 'WaltHead.obj', function (v) {
+			})
+			RedOBJLoader(redGL, assetPath + 'obj/', 'WaltHead.obj', function (v) {
 
-                tScene.addChild(v['resultMesh'])
-                tShadow.addCasting(v['resultMesh']) // 그림자 케스팅
-                v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.25
-                v['resultMesh'].x = 16
-            })
-            RedOBJLoader(redGL, assetPath + 'obj/', 'cube.obj', function (v) {
+				tScene.addChild(v['resultMesh'])
+				tShadow.addCasting(v['resultMesh']) // 그림자 케스팅
+				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.25
+				v['resultMesh'].x = 16
+			})
+			RedOBJLoader(redGL, assetPath + 'obj/', 'cube.obj', function (v) {
 
-                tScene.addChild(v['resultMesh'])
-                v['resultMesh'].y = 3
-                v['resultMesh'].x = 32
-                tShadow.addCasting(v['resultMesh']) // 그림자 케스팅
-            })
-            RedOBJLoader(redGL, assetPath + 'obj/', 'tree.obj', function (v) {
+				tScene.addChild(v['resultMesh'])
+				v['resultMesh'].y = 3
+				v['resultMesh'].x = 32
+				tShadow.addCasting(v['resultMesh']) // 그림자 케스팅
+			})
+			RedOBJLoader(redGL, assetPath + 'obj/', 'tree.obj', function (v) {
 
-                tScene.addChild(v['resultMesh'])
-                v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 20
-                v['resultMesh'].x = -28
-                tShadow.addCasting(v['resultMesh']) // 그림자 케스팅
-            });
-        };
-        makeTestMeshs4 = function (redGL) {
-            var tGroundMaterial = RedStandardMaterial(
-                redGL,
-                RedBitmapTexture(redGL, assetPath + 'brick/Brick03_col.jpg'),
-                RedBitmapTexture(redGL, assetPath + 'brick/Brick03_nrm.jpg'),
-                null,
-                RedBitmapTexture(redGL, assetPath + 'brick/Brick03_disp.jpg')
-            )
-            tGroundMaterial.displacementPower = 1.5
-            var tGroundMesh = RedMesh(redGL, RedBox(redGL, 100, 100, 100, 64, 64, 64), tGroundMaterial)
-            tGroundMesh.scaleX = tGroundMesh.scaleY = tGroundMesh.scaleZ = 1
-            tGroundMesh.y = -50
-            tGroundMesh.name = 'testGroundMesh'
-            tScene.addChild(tGroundMesh)
-            console.log(tGroundMesh)
-        };
-        makeTestMeshs1(this); // 기본 프리미티브 매쉬
-        makeTestMeshs2(this); // 랜덤 포지션 매쉬
-        makeTestMeshs3(this); // 3D 파일 메쉬
-        makeTestMeshs4(this); // 그라운드
-        tRenderer.start(this, function (time) {
-            tDirectionalLight.x = Math.sin(time / 1000) * 30
-            tDirectionalLight.z = Math.cos(time / 1000) * 30
-            tDirectionalLight.y = 30
-            var i = tScene.children.length
-            while (i--) {
-                if (tScene['children'][i].name != 'testGroundMesh') {
-                    tScene['children'][i].rotationY -= 1
-                }
+				tScene.addChild(v['resultMesh'])
+				v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 20
+				v['resultMesh'].x = -28
+				tShadow.addCasting(v['resultMesh']) // 그림자 케스팅
+			});
+		};
+		makeTestMeshs4 = function (redGL) {
+			var tGroundMaterial = RedStandardMaterial(
+				redGL,
+				RedBitmapTexture(redGL, assetPath + 'brick/Brick03_col.jpg'),
+				RedBitmapTexture(redGL, assetPath + 'brick/Brick03_nrm.jpg'),
+				null,
+				RedBitmapTexture(redGL, assetPath + 'brick/Brick03_disp.jpg')
+			)
+			tGroundMaterial.displacementPower = 1.5
+			var tGroundMesh = RedMesh(redGL, RedBox(redGL, 100, 100, 100, 64, 64, 64), tGroundMaterial)
+			tGroundMesh.scaleX = tGroundMesh.scaleY = tGroundMesh.scaleZ = 1
+			tGroundMesh.y = -50
+			tGroundMesh.name = 'testGroundMesh'
+			tScene.addChild(tGroundMesh)
+			console.log(tGroundMesh)
+		};
+		makeTestMeshs1(this); // 기본 프리미티브 매쉬
+		makeTestMeshs2(this); // 랜덤 포지션 매쉬
+		makeTestMeshs3(this); // 3D 파일 메쉬
+		makeTestMeshs4(this); // 그라운드
+		tRenderer.start(this, function (time) {
+			tDirectionalLight.x = Math.sin(time / 1000) * 30
+			tDirectionalLight.z = Math.cos(time / 1000) * 30
+			tDirectionalLight.y = 30
+			var i = tScene.children.length
+			while (i--) {
+				if (tScene['children'][i].name != 'testGroundMesh') {
+					tScene['children'][i].rotationY -= 1
+				}
 
-            }
-        })
-        testUI(this, tScene, tShadow)
-    });
-    testUI = function (redGL, tScene, tShadow) {
-        var bloom = RedPostEffect_Bloom(redGL)
-        redGL['gui'] = new baseTestUI(redGL)['gui']
-        var testBloom = {
-            useBloom: false
-        }
-        var t0 = redGL['gui'].addFolder('bloom')
-        t0.add(bloom, 'exposure', 0, 2, 0.01)
-        t0.add(bloom, 'bloomStrength', 0, 2, 0.01)
-        t0.add(bloom, 'blur', 0, 100, 0.01)
-        t0.add(bloom, 'threshold', 0, 100, 0.01)
-        t0.add(testBloom, 'useBloom').onChange(function (v) {
-            v ? RedView('HelloRedGL').postEffectManager.addEffect(bloom) : RedView('HelloRedGL').postEffectManager.removeEffect(bloom)
-        });
-        t0.open()
-        var t0 = redGL['gui'].addFolder('directionalShadow')
-        t0.add(tShadow, 'width', 1, 4086)
-        t0.add(tShadow, 'height', 1, 4086)
-        t0.add(tShadow, 'size', 1, 100)
-        var testData = {
-            useShadow: true
-        }
-        t0.add(testData, 'useShadow').onChange(function (v) {
-            tScene.shadowManager.directionalShadow = v ? tShadow : null
-        })
-        t0.open()
-        var t0 = redGL['gui'].addFolder('scene')
-        t0.add(tScene, 'useFog')
-        t0.open();
-    }
+			}
+		})
+		testUI(this, tScene, tShadow)
+	});
+	testUI = function (redGL, tScene, tShadow) {
+		var bloom = RedPostEffect_Bloom(redGL)
+		redGL['gui'] = new baseTestUI(redGL)['gui']
+		var testBloom = {
+			useBloom: false
+		}
+		var t0 = redGL['gui'].addFolder('bloom')
+		t0.add(bloom, 'exposure', 0, 2, 0.01)
+		t0.add(bloom, 'bloomStrength', 0, 2, 0.01)
+		t0.add(bloom, 'blur', 0, 100, 0.01)
+		t0.add(bloom, 'threshold', 0, 100, 0.01)
+		t0.add(testBloom, 'useBloom').onChange(function (v) {
+			v ? RedView('HelloRedGL').postEffectManager.addEffect(bloom) : RedView('HelloRedGL').postEffectManager.removeEffect(bloom)
+		});
+		t0.open()
+		var t0 = redGL['gui'].addFolder('directionalShadow')
+		t0.add(tShadow, 'width', 1, 4086)
+		t0.add(tShadow, 'height', 1, 4086)
+		t0.add(tShadow, 'size', 1, 100)
+		var testData = {
+			useShadow: true
+		}
+		t0.add(testData, 'useShadow').onChange(function (v) {
+			tScene.shadowManager.directionalShadow = v ? tShadow : null
+		})
+		t0.open()
+		var t0 = redGL['gui'].addFolder('scene')
+		t0.add(tScene, 'useFog')
+		t0.open();
+	}
 </script>
 </body>
 

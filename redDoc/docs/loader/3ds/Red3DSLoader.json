@@ -28,7 +28,7 @@
         "로딩완료시 실행될 콜백"
       ]
     },
-    "example": "\n    // 3ds 로딩\n          Red3DSLoader(\n              RedGL Instance, // redGL\n              assetPath + '3ds/portalgun/', // assetRootPath\n              'portalgun.3ds', // fileName\n              function (v) { // callback\n                  console.log('로딩성공', v);\n                  (RedScene Instance).addChild(v['resultMesh']);\n              }\n          )\n ",
+    "example": "\n\t// 3ds 로딩\n\tRed3DSLoader(\n\t\tRedGL Instance, // redGL\n\t\tassetPath + '3ds/portalgun/', // assetRootPath\n\t\t'portalgun.3ds', // fileName\n\t\tfunction (v) { // callback\n\t\t\tconsole.log('로딩성공', v);\n\t\t\t(RedScene Instance).addChild(v['resultMesh']);\n\t\t}\n\t)\n ",
     "demo": "../example/loader/3ds/Red3DSLoader.html",
     "return": "void"
   }

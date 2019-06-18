@@ -26,68 +26,68 @@
 
 <body>
 <script id='testSource'>
-    var testUI;
-    var canvas;
-    var assetPath = '../../asset/'
-    canvas = document.createElement('canvas');
-    document.body.appendChild(canvas);
-    RedGL(canvas, function (v) {
-        if (v) {
-            console.log('초기화 성공!');
-            var tWorld, tView, tScene, tController, tRenderer;
-            var setBase = function (redGL) {
-                // 월드 생성
-                redGL['world'] = tWorld = RedWorld();
-                // 씬 생성
-                tScene = RedScene(redGL);
-                // 카메라 생성
-                tController = RedObitController(redGL);
-                tController.pan = 45;
-                tController.tilt = -45;
-                // 렌더러 생성
-                tRenderer = RedRenderer();
-                // 뷰생성 및 적용
-                tView = RedView('HelloRedGL', redGL, tScene, tController);
-                tWorld.addView(tView);
+	var testUI;
+	var canvas;
+	var assetPath = '../../asset/'
+	canvas = document.createElement('canvas');
+	document.body.appendChild(canvas);
+	RedGL(canvas, function (v) {
+		if (v) {
+			console.log('초기화 성공!');
+			var tWorld, tView, tScene, tController, tRenderer;
+			var setBase = function (redGL) {
+				// 월드 생성
+				redGL['world'] = tWorld = RedWorld();
+				// 씬 생성
+				tScene = RedScene(redGL);
+				// 카메라 생성
+				tController = RedObitController(redGL);
+				tController.pan = 45;
+				tController.tilt = -45;
+				// 렌더러 생성
+				tRenderer = RedRenderer();
+				// 뷰생성 및 적용
+				tView = RedView('HelloRedGL', redGL, tScene, tController);
+				tWorld.addView(tView);
 
-                // 렌더시작
-                tRenderer.start(redGL, function (time) {
-                });
-                // 렌더 디버거 활성화
-                tRenderer.setDebugButton();
+				// 렌더시작
+				tRenderer.start(redGL, function (time) {
+				});
+				// 렌더 디버거 활성화
+				tRenderer.setDebugButton();
 
-            };
-            setBase(this);
-            // 그리드 설정
-            tScene['grid'] = RedGrid(this);
-            // testUI 호출
-            testUI(this, tScene['grid']);
-            console.log(this);
-        } else {
-            console.log('초기화 실패!')
-        }
-    })
-    testUI = function (redGL, redGrid) {
-        var gui = new baseTestUI(redGL)
-        var tFolder;
-        tFolder = gui['gui'].addFolder('RedGrid');
-        ['size'].forEach(function (key) {
-            tFolder.add(redGrid, key, 0, 100, 0.1).onChange(function (v) {
-                redGrid[key] = v
-            });
-        });
-        ['divisions'].forEach(function (key) {
-            tFolder.add(redGrid, key, 0, 100, 1).onChange(function (v) {
-                redGrid[key] = v
-            });
-        });
-        ['color1', 'color2'].forEach(function (key) {
-            tFolder.addColor(redGrid, key).onChange(function (v) {
-                redGrid[key] = v
-            });
-        });
-        tFolder.open();
-    }
+			};
+			setBase(this);
+			// 그리드 설정
+			tScene['grid'] = RedGrid(this);
+			// testUI 호출
+			testUI(this, tScene['grid']);
+			console.log(this);
+		} else {
+			console.log('초기화 실패!')
+		}
+	})
+	testUI = function (redGL, redGrid) {
+		var gui = new baseTestUI(redGL)
+		var tFolder;
+		tFolder = gui['gui'].addFolder('RedGrid');
+		['size'].forEach(function (key) {
+			tFolder.add(redGrid, key, 0, 100, 0.1).onChange(function (v) {
+				redGrid[key] = v
+			});
+		});
+		['divisions'].forEach(function (key) {
+			tFolder.add(redGrid, key, 0, 100, 1).onChange(function (v) {
+				redGrid[key] = v
+			});
+		});
+		['color1', 'color2'].forEach(function (key) {
+			tFolder.addColor(redGrid, key).onChange(function (v) {
+				redGrid[key] = v
+			});
+		});
+		tFolder.open();
+	}
 </script>
 </body>
 

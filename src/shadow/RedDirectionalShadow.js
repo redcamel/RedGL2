@@ -2,14 +2,14 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.6.13 12:50
  */
 
 "use strict";
 var RedDirectionalShadow;
 (function () {
-    /**DOC:
-     {
+	/*DOC:
+	 {
 		 constructorYn : true,
 		 title :`RedDirectionalShadow`,
 		 description : `
@@ -23,67 +23,67 @@ var RedDirectionalShadow;
 		 demo : '../example/shadow/RedDirectionalShadow.html',
 		 return : 'RedDirectionalShadow Instance'
 	 }
-     :DOC*/
-    RedDirectionalShadow = function (redGL, light) {
-        if (!(this instanceof RedDirectionalShadow)) return new RedDirectionalShadow(redGL, light);
-        redGL instanceof RedGL || RedGLUtil.throwFunc('RedDirectionalShadow : RedGL Instance만 허용.', redGL);
-        this['_directionalShadowMaterial'] = RedDirectionalShadowMaterial(redGL);
-        this['frameBuffer'] = RedFrameBuffer(redGL);
-        this['light'] = light;
-        this['width'] = 2048;
-        this['height'] = 2048;
-        this['size'] = 20;
-        this['_UUID'] = RedGL.makeUUID();
-        this['_castingList'] = [];
-        console.log(this);
-    };
-    /**DOC:
-     {
+	 :DOC*/
+	RedDirectionalShadow = function (redGL, light) {
+		if (!(this instanceof RedDirectionalShadow)) return new RedDirectionalShadow(redGL, light);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedDirectionalShadow : RedGL Instance만 허용.', redGL);
+		this['_directionalShadowMaterial'] = RedDirectionalShadowMaterial(redGL);
+		this['frameBuffer'] = RedFrameBuffer(redGL);
+		this['light'] = light;
+		this['width'] = 2048;
+		this['height'] = 2048;
+		this['size'] = 20;
+		this['_UUID'] = RedGL.makeUUID();
+		this['_castingList'] = [];
+		console.log(this);
+	};
+	/*DOC:
+	 {
 		 code:`METHOD`,
 		 title :`addCasting`,
 		 description : `
 			 그림자 케스팅할 오브젝트 추가
 		 `,
 		 params : {
-		    target : [
-		        { type : 'RedBaseObject3D' }
-		    ]
+			target : [
+				{ type : 'RedBaseObject3D' }
+			]
 		 },
-	     return : 'void'
+		 return : 'void'
 	 }
-     :DOC*/
-    RedDirectionalShadow.prototype['addCasting'] = function (target) {
-        if (!(target instanceof RedBaseObject3D)) RedGLUtil.throwFunc('addCasting', 'RedBaseObject3D Instance만 가능', '입력값 : ' + target);
-        this['_castingList'].push(target)
+	 :DOC*/
+	RedDirectionalShadow.prototype['addCasting'] = function (target) {
+		if (!(target instanceof RedBaseObject3D)) RedGLUtil.throwFunc('addCasting', 'RedBaseObject3D Instance만 가능', '입력값 : ' + target);
+		this['_castingList'].push(target)
 
 
-    };
-    /**DOC:
-     {
+	};
+	/*DOC:
+	 {
 		 code:`METHOD`,
 		 title :`removeCasting`,
 		 description : `
 			 캐스팅 제거
 		 `,
 		 params : {
-		    target : [
-		        { type : 'RedBaseObject3D' }
-		    ]
+			target : [
+				{ type : 'RedBaseObject3D' }
+			]
 		 },
 		 return : 'void'
 	 }
-     :DOC*/
-    RedDirectionalShadow.prototype['removeCasting'] = (function () {
-        var t0;
-        return function (v) {
-            t0 = this['_castingList'].indexOf(v);
-            if (t0 == -1) RedGLUtil.throwFunc('removeCasting', '존재하지 않는 대상을 삭제하려고 함');
-            else this['_castingList'].splice(t0, 1);
+	 :DOC*/
+	RedDirectionalShadow.prototype['removeCasting'] = (function () {
+		var t0;
+		return function (v) {
+			t0 = this['_castingList'].indexOf(v);
+			if (t0 == -1) RedGLUtil.throwFunc('removeCasting', '존재하지 않는 대상을 삭제하려고 함');
+			else this['_castingList'].splice(t0, 1);
 
-        }
-    })();
-    /**DOC:
-     {
+		}
+	})();
+	/*DOC:
+	 {
 		 code:`PROPERTY`,
 		 title :`light`,
 		 description : `
@@ -91,48 +91,51 @@ var RedDirectionalShadow;
 		 `,
 		 return : 'RedDirectionalLight Instance'
 	 }
-     :DOC*/
-    Object.defineProperty(RedDirectionalShadow.prototype, 'light', {
-        get: function () {
-            return this['_light']
-        },
-        set: function (v) {
-            (v && v instanceof RedDirectionalLight) || RedGLUtil.throwFunc('RedDirectionalShadow - light : RedDirectionalLight Instance만 허용.', v);
-            this['_light'] = v;
-        }
-    });
-    /**DOC:
-     {
-		 code:`PROPERTY`,
-		 title :`width`,
-		 description : `
-			 프레임버퍼 width
-		 `,
-		 return : 'Number'
-	 }
-     :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedDirectionalShadow', 'width', 'number', {'min': 1});
-    /**DOC:
-     {
-		 code:`PROPERTY`,
-		 title :`height`,
-		 description : `
-			 프레임버퍼 height
-		 `,
-		 return : 'Number'
-	 }
-     :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedDirectionalShadow', 'height', 'number', {'min': 1});
-    /**DOC:
-     {
-		 code:`PROPERTY`,
-		 title :`size`,
-		 description : `
-			 그림자 영역 크기
-		 `,
-		 return : 'Number'
-	 }
-     :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedDirectionalShadow', 'size', 'number', {'min': 1});
-    Object.freeze(RedDirectionalShadow);
+	 :DOC*/
+	Object.defineProperty(RedDirectionalShadow.prototype, 'light', {
+		get: function () {
+			return this['_light']
+		},
+		set: function (v) {
+			(v && v instanceof RedDirectionalLight) || RedGLUtil.throwFunc('RedDirectionalShadow - light : RedDirectionalLight Instance만 허용.', v);
+			this['_light'] = v;
+		}
+	});
+	RedDefinePropertyInfo.definePrototypes(
+		'RedDirectionalShadow',
+		/*DOC:
+		 {
+			 code:`PROPERTY`,
+			 title :`width`,
+			 description : `
+				 프레임버퍼 width
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['width', 'number', {'min': 1}],
+		/*DOC:
+		 {
+			 code:`PROPERTY`,
+			 title :`height`,
+			 description : `
+				 프레임버퍼 height
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['height', 'number', {'min': 1}],
+		/*DOC:
+		 {
+			 code:`PROPERTY`,
+			 title :`size`,
+			 description : `
+				 그림자 영역 크기
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['size', 'number', {'min': 1}]
+	);
+	Object.freeze(RedDirectionalShadow);
 })();

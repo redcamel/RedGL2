@@ -25,53 +25,53 @@
 
 <body>
 <script id='testSource'>
-    var testUI;
-    var canvas;
-    var assetPath = '../../asset/';
-    canvas = document.createElement('canvas');
-    document.body.appendChild(canvas);
-    RedGL(canvas, function (v) {
-        if (v) {
-            console.log('초기화 성공!');
-            var tWorld, tView, tScene, tController, tRenderer;
-            var setBase = function (redGL) {
-                // 월드 생성
-                redGL['world'] = tWorld = RedWorld();
-                // 씬 생성
-                tScene = RedScene(redGL);
-                // 카메라 생성
-                tController = RedObitController(redGL);
-                tController.pan = 45;
-                tController.tilt = -45;
-                // 렌더러 생성
-                tRenderer = RedRenderer();
-                // 뷰생성 및 적용
-                tView = RedView('HelloRedGL', redGL, tScene, tController);
-                tWorld.addView(tView);
-                // 그리드 설정
-                tScene['grid'] = RedGrid(redGL);
-                // 렌더시작
-                tRenderer.start(redGL, function (time) {
-                });
-                // 렌더 디버거 활성화
-                tRenderer.setDebugButton();
+	var testUI;
+	var canvas;
+	var assetPath = '../../asset/';
+	canvas = document.createElement('canvas');
+	document.body.appendChild(canvas);
+	RedGL(canvas, function (v) {
+		if (v) {
+			console.log('초기화 성공!');
+			var tWorld, tView, tScene, tController, tRenderer;
+			var setBase = function (redGL) {
+				// 월드 생성
+				redGL['world'] = tWorld = RedWorld();
+				// 씬 생성
+				tScene = RedScene(redGL);
+				// 카메라 생성
+				tController = RedObitController(redGL);
+				tController.pan = 45;
+				tController.tilt = -45;
+				// 렌더러 생성
+				tRenderer = RedRenderer();
+				// 뷰생성 및 적용
+				tView = RedView('HelloRedGL', redGL, tScene, tController);
+				tWorld.addView(tView);
+				// 그리드 설정
+				tScene['grid'] = RedGrid(redGL);
+				// 렌더시작
+				tRenderer.start(redGL, function (time) {
+				});
+				// 렌더 디버거 활성화
+				tRenderer.setDebugButton();
 
-            };
-            setBase(this);
-            // Axis 설정
-            tScene['axis'] = RedAxis(this);
-            // testUI 호출
-            testUI(this, tView);
-            console.log(this);
-        } else {
-            console.log('초기화 실패!');
-        }
-    });
-    testUI = function (redGL, redView) {
-        var gui = new baseTestUI(redGL);
-        gui.initCamera(redView['camera']);
-        gui.initScene(redView['scene'], true, assetPath);
-    }
+			};
+			setBase(this);
+			// Axis 설정
+			tScene['axis'] = RedAxis(this);
+			// testUI 호출
+			testUI(this, tView);
+			console.log(this);
+		} else {
+			console.log('초기화 실패!');
+		}
+	});
+	testUI = function (redGL, redView) {
+		var gui = new baseTestUI(redGL);
+		gui.initCamera(redView['camera']);
+		gui.initScene(redView['scene'], true, assetPath);
+	}
 </script>
 </body>
 

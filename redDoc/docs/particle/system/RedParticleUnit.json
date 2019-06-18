@@ -2,7 +2,7 @@
   {
     "code": "addRule",
     "title": "addRule",
-    "description": "\n    룰 추가 매서드\n ",
+    "description": "\n\t룰 추가 매서드\n ",
     "params": {
       "key": [
         {

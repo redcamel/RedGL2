@@ -8,8 +8,8 @@
 "use strict";
 var RedScene;
 (function () {
-    /**DOC:
-     {
+	/*DOC:
+	 {
 		 constructorYn : true,
 		 title :`RedScene`,
 		 description : `
@@ -40,27 +40,27 @@ var RedScene;
 		 extends : ['RedBaseContainer'],
 		 return : 'RedScene Instance'
 	 }
-     :DOC*/
-    RedScene = function (redGL, backgroundColor) {
-        if (!(this instanceof RedScene)) return new RedScene(redGL, backgroundColor);
-        redGL instanceof RedGL || RedGLUtil.throwFunc('RedScene : RedGL Instance만 허용.', redGL);
-        this['backgroundColor'] = backgroundColor ? backgroundColor : '#000000';
-        this['useBackgroundColor'] = true;
-        this['useFog'] = false;
-        this['fogDensity'] = 0.5;
-        this['fogDistance'] = 25;
-        this['fogColor'] = '#ffffff';
-        /**DOC:
-         {
+	 :DOC*/
+	RedScene = function (redGL, backgroundColor) {
+		if (!(this instanceof RedScene)) return new RedScene(redGL, backgroundColor);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedScene : RedGL Instance만 허용.', redGL);
+		this['backgroundColor'] = backgroundColor ? backgroundColor : '#000000';
+		this['useBackgroundColor'] = true;
+		this['useFog'] = false;
+		this['fogDensity'] = 0.5;
+		this['fogDistance'] = 25;
+		this['fogColor'] = '#ffffff';
+		/*DOC:
+		 {
 		     code : 'PROPERTY',
 			 title :`children`,
 			 description : `자식 리스트`,
 			 return : 'Array'
 		 }
-         :DOC*/
-        this['children'] = [];
-        /**DOC:
-         {
+		 :DOC*/
+		this['children'] = [];
+		/*DOC:
+		 {
 		     code : 'PROPERTY',
 			 title :`shadowManager`,
 			 description : `
@@ -69,10 +69,10 @@ var RedScene;
 			 `,
 			 return : 'RedShadowManager Instance'
 		 }
-         :DOC*/
-        this['shadowManager'] = RedShadowManager(redGL);
-        /**DOC:
-         {
+		 :DOC*/
+		this['shadowManager'] = RedShadowManager(redGL);
+		/*DOC:
+		 {
 		     code : 'PROPERTY',
 			 title :`mouseManager`,
 			 description : `
@@ -81,19 +81,19 @@ var RedScene;
 			 `,
 			 return : 'RedMouseEventManager Instance'
 		 }
-         :DOC*/
-        this['mouseManager'] = RedMouseEventManager(redGL);
-        this['_lightInfo'] = {
-            RedAmbientLight: null,
-            RedDirectionalLight: [],
-            RedPointLight: []
-        };
-        this['_UUID'] = RedGL.makeUUID();
-        console.log(this);
-    };
-    var prototypeData = {
-        /**DOC:
-         {
+		 :DOC*/
+		this['mouseManager'] = RedMouseEventManager(redGL);
+		this['_lightInfo'] = {
+			RedAmbientLight: null,
+			RedDirectionalLight: [],
+			RedPointLight: []
+		};
+		this['_UUID'] = RedGL.makeUUID();
+		console.log(this);
+	};
+	var prototypeData = {
+		/*DOC:
+		 {
 			 title :`addLight`,
 			 code : 'METHOD',
 			 description : `
@@ -117,26 +117,26 @@ var RedScene;
              `,
 			 return : 'void'
 		 }
-         :DOC*/
-        addLight: function (light) {
-            switch (light['TYPE']) {
-                case RedAmbientLight['TYPE']:
-                    this['_lightInfo'][light['TYPE']] = light;
-                    break;
-                case RedDirectionalLight['TYPE']:
-                    if (this['_lightInfo'][light['TYPE']].length === RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT) RedGLUtil.throwFunc('RedScene : RedDirectionalLight ' + RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT + '개 까지 허용.');
-                    this['_lightInfo'][light['TYPE']].push(light);
-                    break;
-                case RedPointLight['TYPE']:
-                    if (this['_lightInfo'][light['TYPE']].length === RedSystemShaderCode.MAX_POINT_LIGHT) RedGLUtil.throwFunc('RedScene : RedPointLight ' + RedSystemShaderCode.MAX_POINT_LIGHT + '개 까지 허용.');
-                    this['_lightInfo'][light['TYPE']].push(light);
-                    break;
-                default:
-                    RedGLUtil.throwFunc('RedScene : RedBaseLight 인스턴스만 가능');
-            }
-        },
-        /**DOC:
-         {
+		 :DOC*/
+		addLight: function (light) {
+			switch (light['TYPE']) {
+				case RedAmbientLight['TYPE']:
+					this['_lightInfo'][light['TYPE']] = light;
+					break;
+				case RedDirectionalLight['TYPE']:
+					if (this['_lightInfo'][light['TYPE']].length === RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT) RedGLUtil.throwFunc('RedScene : RedDirectionalLight ' + RedSystemShaderCode.MAX_DIRECTIONAL_LIGHT + '개 까지 허용.');
+					this['_lightInfo'][light['TYPE']].push(light);
+					break;
+				case RedPointLight['TYPE']:
+					if (this['_lightInfo'][light['TYPE']].length === RedSystemShaderCode.MAX_POINT_LIGHT) RedGLUtil.throwFunc('RedScene : RedPointLight ' + RedSystemShaderCode.MAX_POINT_LIGHT + '개 까지 허용.');
+					this['_lightInfo'][light['TYPE']].push(light);
+					break;
+				default:
+					RedGLUtil.throwFunc('RedScene : RedBaseLight 인스턴스만 가능');
+			}
+		},
+		/*DOC:
+		 {
 			 title :`removeLight`,
 			 code : 'METHOD',
 			 description : `
@@ -158,29 +158,29 @@ var RedScene;
              `,
 			 return : 'void'
 		 }
-         :DOC*/
-        removeLight: (function () {
-            var tIndex;
-            return function (light) {
-                switch (light['TYPE']) {
-                    case RedAmbientLight['TYPE']:
-                        if (this['_lightInfo'][light['TYPE']] === light) this['_lightInfo'][light['TYPE']] = null;
-                        break;
-                    case RedDirectionalLight['TYPE']:
-                        tIndex = this['_lightInfo'][light['TYPE']].indexOf(light);
-                        if (tIndex > -1) this['_lightInfo'][light['TYPE']].splice(tIndex, 1);
-                        break;
-                    case RedPointLight['TYPE']:
-                        tIndex = this['_lightInfo'][light['TYPE']].indexOf(light);
-                        if (tIndex > -1) this['_lightInfo'][light['TYPE']].splice(tIndex, 1);
-                        break;
-                    default:
-                        RedGLUtil.throwFunc('RedScene : RedBaseLight 인스턴스만 가능')
-                }
-            }
-        })(),
-        /**DOC:
-         {
+		 :DOC*/
+		removeLight: (function () {
+			var tIndex;
+			return function (light) {
+				switch (light['TYPE']) {
+					case RedAmbientLight['TYPE']:
+						if (this['_lightInfo'][light['TYPE']] === light) this['_lightInfo'][light['TYPE']] = null;
+						break;
+					case RedDirectionalLight['TYPE']:
+						tIndex = this['_lightInfo'][light['TYPE']].indexOf(light);
+						if (tIndex > -1) this['_lightInfo'][light['TYPE']].splice(tIndex, 1);
+						break;
+					case RedPointLight['TYPE']:
+						tIndex = this['_lightInfo'][light['TYPE']].indexOf(light);
+						if (tIndex > -1) this['_lightInfo'][light['TYPE']].splice(tIndex, 1);
+						break;
+					default:
+						RedGLUtil.throwFunc('RedScene : RedBaseLight 인스턴스만 가능')
+				}
+			}
+		})(),
+		/*DOC:
+		 {
 			 title :`removeLightAll`,
 			 code : 'METHOD',
 			 description : `
@@ -197,17 +197,17 @@ var RedScene;
              `,
 			 return : 'void'
 		 }
-         :DOC*/
-        removeLightAll: function () {
-            this['_lightInfo'][RedAmbientLight['TYPE']] = null;
-            this['_lightInfo'][RedDirectionalLight['TYPE']].length = 0;
-            this['_lightInfo'][RedPointLight['TYPE']].length = 0;
-        }
-    };
-    RedScene.prototype = new RedBaseContainer();
-    for (var k in prototypeData) RedScene.prototype[k] = prototypeData[k];
-    /**DOC:
-     {
+		 :DOC*/
+		removeLightAll: function () {
+			this['_lightInfo'][RedAmbientLight['TYPE']] = null;
+			this['_lightInfo'][RedDirectionalLight['TYPE']].length = 0;
+			this['_lightInfo'][RedPointLight['TYPE']].length = 0;
+		}
+	};
+	RedScene.prototype = new RedBaseContainer();
+	for (var k in prototypeData) RedScene.prototype[k] = prototypeData[k];
+	/*DOC:
+	 {
 		 code : 'PROPERTY',
 		 title :`backgroundColor`,
 		 description : `
@@ -227,20 +227,20 @@ var RedScene;
          `,
 		 return : 'hex'
 	 }
-     :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedScene', 'backgroundColor', 'hex', {
-        callback: (function () {
-            var t0;
-            return function () {
-                t0 = RedGLUtil.hexToRGB_ZeroToOne.call(this, this['_backgroundColor']);
-                this['_r'] = t0[0];
-                this['_g'] = t0[1];
-                this['_b'] = t0[2];
-            }
-        })()
-    });
-    /**DOC:
-     {
+	 :DOC*/
+	RedDefinePropertyInfo.definePrototype('RedScene', 'backgroundColor', 'hex', {
+		callback: (function () {
+			var t0;
+			return function () {
+				t0 = RedGLUtil.hexToRGB_ZeroToOne.call(this, this['_backgroundColor']);
+				this['_r'] = t0[0];
+				this['_g'] = t0[1];
+				this['_b'] = t0[2];
+			}
+		})()
+	});
+	/*DOC:
+	 {
 	     code : 'PROPERTY',
 		 title :`useBackgroundColor`,
 		 description : `
@@ -254,10 +254,10 @@ var RedScene;
          `,
 		 return : 'Boolean'
 	 }
-     :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedScene', 'useBackgroundColor', 'boolean');
-    /**DOC:
-     {
+	 :DOC*/
+	RedDefinePropertyInfo.definePrototype('RedScene', 'useBackgroundColor', 'boolean');
+	/*DOC:
+	 {
 	     code : 'PROPERTY',
 		 title :`useFog`,
 		 description : `
@@ -271,10 +271,10 @@ var RedScene;
          `,
 		 return : 'Boolean'
 	 }
-     :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedScene', 'useFog', 'boolean');
-    /**DOC:
-     {
+	 :DOC*/
+	RedDefinePropertyInfo.definePrototype('RedScene', 'useFog', 'boolean');
+	/*DOC:
+	 {
 	     code : 'PROPERTY',
 		 title :`fogDensity`,
 		 description : `
@@ -288,10 +288,10 @@ var RedScene;
          `,
 		 return : 'Number'
 	 }
-     :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedScene', 'fogDensity', 'number', {'min': 0});
-    /**DOC:
-     {
+	 :DOC*/
+	RedDefinePropertyInfo.definePrototype('RedScene', 'fogDensity', 'number', {'min': 0});
+	/*DOC:
+	 {
 	     code : 'PROPERTY',
 		 title :`fogDistance`,
 		 description : `
@@ -305,10 +305,10 @@ var RedScene;
          `,
 		 return : 'Number'
 	 }
-     :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedScene', 'fogDistance', 'number', {'min': 0});
-    /**DOC:
-     {
+	 :DOC*/
+	RedDefinePropertyInfo.definePrototype('RedScene', 'fogDistance', 'number', {'min': 0});
+	/*DOC:
+	 {
 	     code : 'PROPERTY',
 		 title :`fogColor`,
 		 description : `
@@ -322,20 +322,20 @@ var RedScene;
          `,
 		 return : 'hex'
 	 }
-     :DOC*/
-    RedDefinePropertyInfo.definePrototype('RedScene', 'fogColor', 'hex', {
-        callback: (function () {
-            var t0;
-            return function () {
-                t0 = RedGLUtil.hexToRGB_ZeroToOne.call(this, this['_fogColor']);
-                this['_fogR'] = t0[0];
-                this['_fogG'] = t0[1];
-                this['_fogB'] = t0[2];
-            }
-        })()
-    });
-    /**DOC:
-     {
+	 :DOC*/
+	RedDefinePropertyInfo.definePrototype('RedScene', 'fogColor', 'hex', {
+		callback: (function () {
+			var t0;
+			return function () {
+				t0 = RedGLUtil.hexToRGB_ZeroToOne.call(this, this['_fogColor']);
+				this['_fogR'] = t0[0];
+				this['_fogG'] = t0[1];
+				this['_fogB'] = t0[2];
+			}
+		})()
+	});
+	/*DOC:
+	 {
 	     code : 'PROPERTY',
 		 title :`skyBox`,
 		 description : `
@@ -350,19 +350,19 @@ var RedScene;
          `,
 		 return : 'RedSkyBox Instance'
 	 }
-     :DOC*/
-    Object.defineProperty(RedScene.prototype, 'skyBox', {
-        get: function () {
-            return this['_skyBoxMesh']
-        },
-        set: function (v) {
-            if (v && !(v instanceof RedSkyBox)) RedGLUtil.throwFunc('RedScene : RedSkyBox Instance만 허용.');
-            this['_skyBoxMesh'] = v;
-            return this['_skyBoxMesh']
-        }
-    });
-    /**DOC:
-     {
+	 :DOC*/
+	Object.defineProperty(RedScene.prototype, 'skyBox', {
+		get: function () {
+			return this['_skyBoxMesh']
+		},
+		set: function (v) {
+			if (v && !(v instanceof RedSkyBox)) RedGLUtil.throwFunc('RedScene : RedSkyBox Instance만 허용.');
+			this['_skyBoxMesh'] = v;
+			return this['_skyBoxMesh']
+		}
+	});
+	/*DOC:
+	 {
 	     code : 'PROPERTY',
 		 title :`grid`,
 		 description : `
@@ -377,19 +377,19 @@ var RedScene;
          `,
 		 return : 'RedGrid Instance'
 	 }
-     :DOC*/
-    Object.defineProperty(RedScene.prototype, 'grid', {
-        get: function () {
-            return this['_gridMesh']
-        },
-        set: function (v) {
-            if (v && !(v instanceof RedGrid)) RedGLUtil.throwFunc('RedScene : RedGrid Instance만 허용.');
-            this['_gridMesh'] = v;
-            return this['_gridMesh'];
-        }
-    });
-    /**DOC:
-     {
+	 :DOC*/
+	Object.defineProperty(RedScene.prototype, 'grid', {
+		get: function () {
+			return this['_gridMesh']
+		},
+		set: function (v) {
+			if (v && !(v instanceof RedGrid)) RedGLUtil.throwFunc('RedScene : RedGrid Instance만 허용.');
+			this['_gridMesh'] = v;
+			return this['_gridMesh'];
+		}
+	});
+	/*DOC:
+	 {
 	     code : 'PROPERTY',
 		 title :`axis`,
 		 description : `
@@ -404,16 +404,16 @@ var RedScene;
          `,
 		 return : 'RedAxis Instance'
 	 }
-     :DOC*/
-    Object.defineProperty(RedScene.prototype, 'axis', {
-        get: function () {
-            return this['_axisMesh']
-        },
-        set: function (v) {
-            if (v && !(v instanceof RedAxis)) RedGLUtil.throwFunc('RedScene : RedAxis Instance만 허용.');
-            this['_axisMesh'] = v;
-            return this['_axisMesh'];
-        }
-    });
-    Object.freeze(RedScene);
+	 :DOC*/
+	Object.defineProperty(RedScene.prototype, 'axis', {
+		get: function () {
+			return this['_axisMesh']
+		},
+		set: function (v) {
+			if (v && !(v instanceof RedAxis)) RedGLUtil.throwFunc('RedScene : RedAxis Instance만 허용.');
+			this['_axisMesh'] = v;
+			return this['_axisMesh'];
+		}
+	});
+	Object.freeze(RedScene);
 })();

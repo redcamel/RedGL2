@@ -4,13 +4,12 @@
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
  * Last modification time of this file - 2019.4.30 18:53
  */
-
 "use strict";
 var RedDefinePropertyInfo;
 (function () {
-    //TODO: 코드 정리좀 해야함
-    /**DOC:
-     {
+	//TODO: 코드 정리좀 해야함
+	/*DOC:
+	 {
 		 constructorYn : true,
 		 title :`RedDefinePropertyInfo`,
 		 description : `
@@ -18,146 +17,146 @@ var RedDefinePropertyInfo;
 		 `,
 		 return : 'void'
 	 }
-     :DOC*/
-    RedDefinePropertyInfo = {};
-    var maker;
-    maker = function (targetObject, clsName, keyName, type, option) {
-        var result;
-        var samplerTypeKey;
-        if (targetObject.hasOwnProperty(keyName)) RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : 이미 정의된 속성');
-        option = option || {};
-        var getterFunc = function () {
-            return this['_' + keyName];
-        };
-        switch (type) {
-            case 'hex' :
-                result = {
-                    get: getterFunc,
-                    set: function (v) {
-                        typeof v == 'string' || RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' hex 형식만 허용함.', '입력값 : ' + v);
-                        RedGLUtil.regHex(v) || RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : hex 형식만 허용함.', '입력값 : ' + v);
-                        this['_' + keyName] = v;
-                        if (option['callback']) option['callback'].call(this, v);
-                    }
-                };
-                break;
-            case 'boolean' :
-                result = {
-                    get: getterFunc,
-                    set: function (v) {
-                        if (typeof v != 'boolean') RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : boolean만 허용함.', '입력값 : ' + v);
-                        this['_' + keyName] = v;
-                        if (option['callback']) option['callback'].call(this, v);
-                    }
-                };
-                break;
-            case 'number' :
-                var hasMin = option.hasOwnProperty('min');
-                var hsaMax = option.hasOwnProperty('max');
-                var min = option['min'];
-                var max = option['max'];
-                result = {
-                    get: getterFunc,
-                    set: function (v) {
-                        if (typeof v != 'number') RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : 숫자만 허용함.', '입력값 : ' + v);
-                        if (hasMin && v < min) v = min;
-                        if (hsaMax && v > max) v = max;
-                        this['_' + keyName] = v;
-                        if (option['callback']) option['callback'].call(this, v);
-                    }
-                };
-                break;
-            case 'uint' :
-                var hasMin = option.hasOwnProperty('min');
-                var hsaMax = option.hasOwnProperty('max');
-                var min = option['min'];
-                var max = option['max'];
-                if (hasMin && min < 0) RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : min옵션은 0보다 커야 함.', '입력값 : ' + min);
-                if (hsaMax && max < 0) RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : max옵션은 0보다 커야 함.', '입력값 : ' + max);
-                if (hasMin && hsaMax && max <= min) RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : max옵션은 min옵션보다 커야 함.', 'min 입력값 : ' + min, 'max 입력값 : ' + max);
-                result = {
-                    get: function () {
-                        return this['_' + keyName];
-                    },
-                    set: function (v) {
-                        if (typeof v != 'number') RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : uint만 허용함.', '입력값 : ' + v);
-                        if (hasMin && v < min) v = min;
-                        if (hsaMax && v > max) v = max;
-                        if (!(v >= 0 && Math.floor(v) == v)) RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : uint만 허용함(소수점은 허용하지 않음).', '입력값 : ' + v);
-                        this['_' + keyName] = v;
-                        if (option['callback']) option['callback'].call(this, v);
-                    }
-                };
-                break;
-            case 'int' :
-                var hasMin = option.hasOwnProperty('min');
-                var hsaMax = option.hasOwnProperty('max');
-                var min = option['min'];
-                var max = option['max'];
-                if (hasMin && hsaMax && max <= min) RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : max옵션은 min옵션보다 커야 함.', 'min 입력값 : ' + min, 'max 입력값 : ' + max);
-                result = {
-                    get: getterFunc,
-                    set: function (v) {
-                        if (typeof v != 'number') RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : int만 허용함.', '입력값 : ' + v);
-                        if (hasMin && v < min) v = min;
-                        if (hsaMax && v > max) v = max;
-                        if (!(Math.floor(v) == v)) RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : int만 허용함(소수점은 허용하지 않음).', '입력값 : ' + v);
-                        this['_' + keyName] = v;
-                        if (option['callback']) option['callback'].call(this, v);
-                    }
-                };
-                break;
-            case 'sampler2D' :
-                samplerTypeKey = 'RedBaseTexture';
-                break;
-            case 'samplerCube' :
-                samplerTypeKey = 'RedBitmapCubeTexture';
-                break;
-            case 'samplerVideo' :
-                samplerTypeKey = 'RedVideoTexture';
-                break;
-            default :
-                RedGLUtil.throwFunc(keyName + ' - ' + 'type : ' + type + ' / ' + keyName + ' : 정의할수없는 타입입니다.');
-                break;
-        }
-        if (samplerTypeKey) {
-            var samplerCls = window[samplerTypeKey];
-            // console.log(samplerTypeKey, samplerCls)
-            if (option['essential']) {
-                result = {
-                    get: getterFunc,
-                    set: function (v) {
-                        if (samplerCls == RedBitmapCubeTexture) {
-                            if (!(v instanceof samplerCls)) RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : ' + samplerTypeKey + ' Instance만 허용.', '입력값 : ' + v);
-                        } else {
-                            if (v instanceof RedBitmapCubeTexture || !(v instanceof samplerCls)) RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : ' + samplerTypeKey + ' Instance만 허용.', '입력값 : ' + v);
-                        }
-                        this['_' + keyName] = v;
-                        if (option['callback']) option['callback'].call(this);
-                    }
-                }
-            } else {
-                result = {
-                    get: getterFunc,
-                    set: function (v) {
-                        if (v) {
-                            if (samplerCls == RedBitmapCubeTexture) {
-                                if (!(v instanceof samplerCls)) RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : ' + samplerTypeKey + ' Instance만 허용.', '입력값 : ' + v);
-                            } else {
-                                if (v instanceof RedBitmapCubeTexture || !(v instanceof samplerCls)) RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : ' + samplerTypeKey + ' Instance만 허용.', '입력값 : ' + v);
-                            }
-                        }
-                        this['_' + keyName] = v;
-                        if (option['callback']) option['callback'].call(this);
-                    }
-                }
-            }
-        }
-        targetObject['_' + keyName] = null;
-        Object.defineProperty(targetObject, keyName, result);
-    };
-    /**DOC:
-     {
+	 :DOC*/
+	RedDefinePropertyInfo = {};
+	var maker;
+	maker = function (targetObject, clsName, keyName, type, option) {
+		var result;
+		var samplerTypeKey;
+		if (targetObject.hasOwnProperty(keyName)) RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : 이미 정의된 속성');
+		option = option || {};
+		var getterFunc = function () {
+			return this['_' + keyName];
+		};
+		switch (type) {
+			case 'hex' :
+				result = {
+					get: getterFunc,
+					set: function (v) {
+						typeof v == 'string' || RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' hex 형식만 허용함.', '입력값 : ' + v);
+						RedGLUtil.regHex(v) || RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : hex 형식만 허용함.', '입력값 : ' + v);
+						this['_' + keyName] = v;
+						if (option['callback']) option['callback'].call(this, v);
+					}
+				};
+				break;
+			case 'boolean' :
+				result = {
+					get: getterFunc,
+					set: function (v) {
+						if (typeof v != 'boolean') RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : boolean만 허용함.', '입력값 : ' + v);
+						this['_' + keyName] = v;
+						if (option['callback']) option['callback'].call(this, v);
+					}
+				};
+				break;
+			case 'number' :
+				var hasMin = option.hasOwnProperty('min');
+				var hsaMax = option.hasOwnProperty('max');
+				var min = option['min'];
+				var max = option['max'];
+				result = {
+					get: getterFunc,
+					set: function (v) {
+						if (typeof v != 'number') RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : 숫자만 허용함.', '입력값 : ' + v);
+						if (hasMin && v < min) v = min;
+						if (hsaMax && v > max) v = max;
+						this['_' + keyName] = v;
+						if (option['callback']) option['callback'].call(this, v);
+					}
+				};
+				break;
+			case 'uint' :
+				var hasMin = option.hasOwnProperty('min');
+				var hsaMax = option.hasOwnProperty('max');
+				var min = option['min'];
+				var max = option['max'];
+				if (hasMin && min < 0) RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : min옵션은 0보다 커야 함.', '입력값 : ' + min);
+				if (hsaMax && max < 0) RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : max옵션은 0보다 커야 함.', '입력값 : ' + max);
+				if (hasMin && hsaMax && max <= min) RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : max옵션은 min옵션보다 커야 함.', 'min 입력값 : ' + min, 'max 입력값 : ' + max);
+				result = {
+					get: function () {
+						return this['_' + keyName];
+					},
+					set: function (v) {
+						if (typeof v != 'number') RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : uint만 허용함.', '입력값 : ' + v);
+						if (hasMin && v < min) v = min;
+						if (hsaMax && v > max) v = max;
+						if (!(v >= 0 && Math.floor(v) == v)) RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : uint만 허용함(소수점은 허용하지 않음).', '입력값 : ' + v);
+						this['_' + keyName] = v;
+						if (option['callback']) option['callback'].call(this, v);
+					}
+				};
+				break;
+			case 'int' :
+				var hasMin = option.hasOwnProperty('min');
+				var hsaMax = option.hasOwnProperty('max');
+				var min = option['min'];
+				var max = option['max'];
+				if (hasMin && hsaMax && max <= min) RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : max옵션은 min옵션보다 커야 함.', 'min 입력값 : ' + min, 'max 입력값 : ' + max);
+				result = {
+					get: getterFunc,
+					set: function (v) {
+						if (typeof v != 'number') RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : int만 허용함.', '입력값 : ' + v);
+						if (hasMin && v < min) v = min;
+						if (hsaMax && v > max) v = max;
+						if (!(Math.floor(v) == v)) RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : int만 허용함(소수점은 허용하지 않음).', '입력값 : ' + v);
+						this['_' + keyName] = v;
+						if (option['callback']) option['callback'].call(this, v);
+					}
+				};
+				break;
+			case 'sampler2D' :
+				samplerTypeKey = 'RedBaseTexture';
+				break;
+			case 'samplerCube' :
+				samplerTypeKey = 'RedBitmapCubeTexture';
+				break;
+			case 'samplerVideo' :
+				samplerTypeKey = 'RedVideoTexture';
+				break;
+			default :
+				RedGLUtil.throwFunc(keyName + ' - ' + 'type : ' + type + ' / ' + keyName + ' : 정의할수없는 타입입니다.');
+				break;
+		}
+		if (samplerTypeKey) {
+			var samplerCls = window[samplerTypeKey];
+			// console.log(samplerTypeKey, samplerCls)
+			if (option['essential']) {
+				result = {
+					get: getterFunc,
+					set: function (v) {
+						if (samplerCls == RedBitmapCubeTexture) {
+							if (!(v instanceof samplerCls)) RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : ' + samplerTypeKey + ' Instance만 허용.', '입력값 : ' + v);
+						} else {
+							if (v instanceof RedBitmapCubeTexture || !(v instanceof samplerCls)) RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : ' + samplerTypeKey + ' Instance만 허용.', '입력값 : ' + v);
+						}
+						this['_' + keyName] = v;
+						if (option['callback']) option['callback'].call(this);
+					}
+				}
+			} else {
+				result = {
+					get: getterFunc,
+					set: function (v) {
+						if (v) {
+							if (samplerCls == RedBitmapCubeTexture) {
+								if (!(v instanceof samplerCls)) RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : ' + samplerTypeKey + ' Instance만 허용.', '입력값 : ' + v);
+							} else {
+								if (v instanceof RedBitmapCubeTexture || !(v instanceof samplerCls)) RedGLUtil.throwFunc(clsName + ' - ' + keyName + ' : ' + samplerTypeKey + ' Instance만 허용.', '입력값 : ' + v);
+							}
+						}
+						this['_' + keyName] = v;
+						if (option['callback']) option['callback'].call(this);
+					}
+				}
+			}
+		}
+		targetObject['_' + keyName] = null;
+		Object.defineProperty(targetObject, keyName, result);
+	};
+	/*DOC:
+	 {
 	     code : 'STATIC METHOD',
 		 title :`RedDefinePropertyInfo.definePrototype`,
 		 description : `
@@ -197,9 +196,17 @@ var RedDefinePropertyInfo;
             );
 		 `
 	 }
-     :DOC*/
-    RedDefinePropertyInfo['definePrototype'] = function (clsName, keyName, type, option) {
-        maker(window[clsName]['prototype'], clsName, keyName, type, option);
-    };
-    Object.freeze(RedDefinePropertyInfo);
+	 :DOC*/
+	RedDefinePropertyInfo['definePrototype'] = function (clsName, keyName, type, option) {
+		maker(window[clsName]['prototype'], clsName, keyName, type, option);
+	};
+	RedDefinePropertyInfo['definePrototypes'] = function (clsName /*defineInfo, defineInfo, defineInfo*/) {
+		var i = arguments.length;
+		var t0;
+		while (i-- > 1) {
+			t0 = arguments[i];
+			maker(window[clsName]['prototype'], clsName, t0[0], t0[1], t0[2]);
+		}
+	};
+	Object.freeze(RedDefinePropertyInfo);
 })();

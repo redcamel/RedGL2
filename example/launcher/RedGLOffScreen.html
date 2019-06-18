@@ -28,49 +28,49 @@
 <canvas id="testCanvas"></canvas>
 <div id="testUI" style="position: absolute;top:0;left: 0;"></div>
 <script id='testSource'>
-    var testUI;
-    var canvas = document.getElementById('testCanvas')
-    var redGLSrc = '../../release/RedGL.min.js' // redGL 라이브러리 경로
-    var hostSrc = 'RedGLOffScreen_test.js' // 호스트 코드 경로
-    var redOffScreen = RedGLOffScreen(canvas, '100%', '100%', redGLSrc, hostSrc)
-    testUI = function () {
-        // 사이즈 조정 생성
-        var testList = [
-            [256, 512],
-            [512, 512],
-            [1024, 512],
-            [1024, 768],
-            [1280, 1024],
-            [1680, 1024],
-            [1920, 1280],
-            ['100%', '100%']
-        ]
-        var tGroup = document.createElement('div')
-        document.getElementById('testUI').appendChild(tGroup)
-        testList.forEach(function (v) {
-            var t0 = document.createElement('button')
-            tGroup.appendChild(t0)
-            t0.style.verticalAlign = 'top'
-            t0.style.margin = '5px'
-            t0.innerHTML = v.toString()
-            t0.addEventListener('mousedown', function () {
-                redOffScreen.setSize(v[0], v[1])
-            })
-        })
-        // 인터페이스 매서드 실행
-        var testInterface = document.createElement('button')
-        testInterface.innerHTML = '외부에서 오브젝트추가'
-        tGroup.appendChild(testInterface)
-        testInterface.addEventListener('mousedown', function () {
-            redOffScreen.updatePostMessage(
-                {
-                    name: 'addObject',
-                    args: [100]
-                }
-            );
-        });
-    }
-    testUI()
+	var testUI;
+	var canvas = document.getElementById('testCanvas')
+	var redGLSrc = '../../release/RedGL.min.js' // redGL 라이브러리 경로
+	var hostSrc = 'RedGLOffScreen_test.js' // 호스트 코드 경로
+	var redOffScreen = RedGLOffScreen(canvas, '100%', '100%', redGLSrc, hostSrc)
+	testUI = function () {
+		// 사이즈 조정 생성
+		var testList = [
+			[256, 512],
+			[512, 512],
+			[1024, 512],
+			[1024, 768],
+			[1280, 1024],
+			[1680, 1024],
+			[1920, 1280],
+			['100%', '100%']
+		]
+		var tGroup = document.createElement('div')
+		document.getElementById('testUI').appendChild(tGroup)
+		testList.forEach(function (v) {
+			var t0 = document.createElement('button')
+			tGroup.appendChild(t0)
+			t0.style.verticalAlign = 'top'
+			t0.style.margin = '5px'
+			t0.innerHTML = v.toString()
+			t0.addEventListener('mousedown', function () {
+				redOffScreen.setSize(v[0], v[1])
+			})
+		})
+		// 인터페이스 매서드 실행
+		var testInterface = document.createElement('button')
+		testInterface.innerHTML = '외부에서 오브젝트추가'
+		tGroup.appendChild(testInterface)
+		testInterface.addEventListener('mousedown', function () {
+			redOffScreen.updatePostMessage(
+				{
+					name: 'addObject',
+					args: [100]
+				}
+			);
+		});
+	}
+	testUI()
 </script>
 </body>
 

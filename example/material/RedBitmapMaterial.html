@@ -25,98 +25,98 @@
 
 <body>
 <script id='testSource'>
-    var testUI, assetPath;
-    var canvas;
-    assetPath = '../../asset/'
-    canvas = document.createElement('canvas');
-    document.body.appendChild(canvas);
-    RedGL(canvas, function (v) {
-        if (v) {
-            console.log('초기화 성공!')
-            var tWorld, tView, tScene, tController, tRenderer, tLight;
-            var setBase = function (redGL) {
-                // 월드 생성
-                redGL['world'] = tWorld = RedWorld();
-                // 씬 생성
-                tScene = RedScene(redGL);
-                // 카메라 생성
-                tController = RedObitController(redGL);
-                tController.pan = -25;
-                tController.tilt = -25;
-                tController.distance = 5;
-                tController.speedDistance = 0.5
-                // 렌더러 생성
-                tRenderer = RedRenderer();
-                // 뷰생성 및 적용
-                tView = RedView('HelloRedGL', redGL, tScene, tController);
-                tWorld.addView(tView);
-                // 그리드 설정
-                tScene['grid'] = RedGrid(redGL);
-                // 렌더시작
-                tRenderer.start(redGL, function (time) {
-                });
-                // 렌더 디버거 활성화
-                tRenderer.setDebugButton();
-                testUI(redGL, tScene);
-            };
-            setBase(this);
-            // 재질설정
-            var tMaterial = RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'UV_Grid_Sm.jpg'))
+	var testUI, assetPath;
+	var canvas;
+	assetPath = '../../asset/'
+	canvas = document.createElement('canvas');
+	document.body.appendChild(canvas);
+	RedGL(canvas, function (v) {
+		if (v) {
+			console.log('초기화 성공!')
+			var tWorld, tView, tScene, tController, tRenderer, tLight;
+			var setBase = function (redGL) {
+				// 월드 생성
+				redGL['world'] = tWorld = RedWorld();
+				// 씬 생성
+				tScene = RedScene(redGL);
+				// 카메라 생성
+				tController = RedObitController(redGL);
+				tController.pan = -25;
+				tController.tilt = -25;
+				tController.distance = 5;
+				tController.speedDistance = 0.5
+				// 렌더러 생성
+				tRenderer = RedRenderer();
+				// 뷰생성 및 적용
+				tView = RedView('HelloRedGL', redGL, tScene, tController);
+				tWorld.addView(tView);
+				// 그리드 설정
+				tScene['grid'] = RedGrid(redGL);
+				// 렌더시작
+				tRenderer.start(redGL, function (time) {
+				});
+				// 렌더 디버거 활성화
+				tRenderer.setDebugButton();
+				testUI(redGL, tScene);
+			};
+			setBase(this);
+			// 재질설정
+			var tMaterial = RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'UV_Grid_Sm.jpg'))
 
-            // Mesh 설정
-            var makeMesh = function (redGL, y) {
-                var tMesh;
-                tMesh = RedMesh(redGL, RedSphere(redGL, 0.5, 32, 32, 32), tMaterial)
-                tMesh.x = -1.5
-                tMesh.y = y
-                tScene.addChild(tMesh)
-                tMesh = RedMesh(redGL, RedBox(redGL), tMaterial)
-                tMesh.x = 0
-                tMesh.y = y
-                tScene.addChild(tMesh)
-                tMesh = RedMesh(redGL, RedPlane(redGL), tMaterial)
-                tMesh.useCullFace = false;
-                tMesh.x = 1.5
-                tMesh.y = y
-                tScene.addChild(tMesh)
-            }
-            makeMesh(this, -1.5);
-            makeMesh(this, 0);
-            makeMesh(this, 1.5);
+			// Mesh 설정
+			var makeMesh = function (redGL, y) {
+				var tMesh;
+				tMesh = RedMesh(redGL, RedSphere(redGL, 0.5, 32, 32, 32), tMaterial)
+				tMesh.x = -1.5
+				tMesh.y = y
+				tScene.addChild(tMesh)
+				tMesh = RedMesh(redGL, RedBox(redGL), tMaterial)
+				tMesh.x = 0
+				tMesh.y = y
+				tScene.addChild(tMesh)
+				tMesh = RedMesh(redGL, RedPlane(redGL), tMaterial)
+				tMesh.useCullFace = false;
+				tMesh.x = 1.5
+				tMesh.y = y
+				tScene.addChild(tMesh)
+			}
+			makeMesh(this, -1.5);
+			makeMesh(this, 0);
+			makeMesh(this, 1.5);
 
-            console.log(this)
-        } else {
-            console.log('초기화 실패!')
-        }
-    })
-    testUI = function (redGL, tScene) {
-        var gui = new baseTestUI(redGL)
-        gui.initRedGL()
-        var alphaTest = {
-            alpha: 1,
-            diffuseTexture: assetPath + 'UV_Grid_Sm.jpg'
-        }
-        var folder;
-        folder = gui['gui'].addFolder('RedBitmapMaterial')
-        folder.add(alphaTest, 'alpha', 0, 1).onChange(function (v) {
-            tScene.children.forEach(function (v2) {
-                v2.material.alpha = v
-            })
-        })
-        folder.add(alphaTest, 'diffuseTexture', [assetPath + 'crate.png', assetPath + 'UV_Grid_Sm.jpg', assetPath + 'alphaTest.png'], 0).onChange(function (v) {
-            tScene.children.forEach(function (v2) {
-                v2.material.diffuseTexture = RedBitmapTexture(
-                    redGL,
-                    v,
-                    v == assetPath + 'UV_Grid_Sm.png' ? {
-                        min: redGL.gl.NEAREST,
-                        mag: redGL.gl.NEAREST
-                    } : null
-                )
-            })
-        })
-        folder.open()
-    }
+			console.log(this)
+		} else {
+			console.log('초기화 실패!')
+		}
+	})
+	testUI = function (redGL, tScene) {
+		var gui = new baseTestUI(redGL)
+		gui.initRedGL()
+		var alphaTest = {
+			alpha: 1,
+			diffuseTexture: assetPath + 'UV_Grid_Sm.jpg'
+		}
+		var folder;
+		folder = gui['gui'].addFolder('RedBitmapMaterial')
+		folder.add(alphaTest, 'alpha', 0, 1).onChange(function (v) {
+			tScene.children.forEach(function (v2) {
+				v2.material.alpha = v
+			})
+		})
+		folder.add(alphaTest, 'diffuseTexture', [assetPath + 'crate.png', assetPath + 'UV_Grid_Sm.jpg', assetPath + 'alphaTest.png'], 0).onChange(function (v) {
+			tScene.children.forEach(function (v2) {
+				v2.material.diffuseTexture = RedBitmapTexture(
+					redGL,
+					v,
+					v == assetPath + 'UV_Grid_Sm.png' ? {
+						min: redGL.gl.NEAREST,
+						mag: redGL.gl.NEAREST
+					} : null
+				)
+			})
+		})
+		folder.open()
+	}
 
 </script>
 </body>

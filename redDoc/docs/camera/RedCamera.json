@@ -32,7 +32,7 @@
         }
       ]
     },
-    "example": "\n    RedCamera().lookAt(0,0,0); // 0,0,0을 바라보도록 설정\n ",
+    "example": "\n\tRedCamera().lookAt(0,0,0); // 0,0,0을 바라보도록 설정\n ",
     "return": "mat4"
   },
   {

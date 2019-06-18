@@ -10,7 +10,7 @@
         }
       ]
     },
-    "example": "\n    (RedBaseContainer Instance).addChild( RedBaseObject3D Instance );\n ",
+    "example": "\n\t(RedBaseContainer Instance).addChild( RedBaseObject3D Instance );\n ",
     "return": "void"
   },
   {
@@ -29,7 +29,7 @@
         }
       ]
     },
-    "example": "\n    (RedBaseContainer Instance).addChildAt( RedBaseObject3D Instance, 0 ); // 0번째에 자식추가\n    (RedBaseContainer Instance).addChildAt( RedBaseObject3D Instance, 2 ); // 2번째에 자식추가\n ",
+    "example": "\n\t(RedBaseContainer Instance).addChildAt( RedBaseObject3D Instance, 0 ); // 0번째에 자식추가\n\t(RedBaseContainer Instance).addChildAt( RedBaseObject3D Instance, 2 ); // 2번째에 자식추가\n ",
     "return": "void"
   },
   {
@@ -43,7 +43,7 @@
         }
       ]
     },
-    "example": "\n    (RedBaseContainer Instance).getChildAt( 0 ); // 0번째 자식 반환\n    (RedBaseContainer Instance).getChildAt( 2 ); // 2번째 자식 반환\n ",
+    "example": "\n\t(RedBaseContainer Instance).getChildAt( 0 ); // 0번째 자식 반환\n\t(RedBaseContainer Instance).getChildAt( 2 ); // 2번째 자식 반환\n ",
     "return": "RedBaseObject3D Instance"
   },
   {
@@ -57,7 +57,7 @@
         }
       ]
     },
-    "example": "\n    (RedBaseContainer Instance).getChildIndex( RedBaseObject3D Instance ); // 해당객체가 부모메쉬의 몇번째 자식인지 인덱스 반환\n ",
+    "example": "\n\t(RedBaseContainer Instance).getChildIndex( RedBaseObject3D Instance ); // 해당객체가 부모메쉬의 몇번째 자식인지 인덱스 반환\n ",
     "return": "int"
   },
   {
@@ -71,7 +71,7 @@
         }
       ]
     },
-    "example": "\n    (RedBaseContainer Instance).numChildren(); // 자식갯수 반환\n ",
+    "example": "\n\t(RedBaseContainer Instance).numChildren(); // 자식갯수 반환\n ",
     "return": "uint"
   },
   {
@@ -86,7 +86,7 @@
   {
     "code": "METHOD",
     "title": "removeChild",
-    "description": "\n    해당 자식을 제거.\n    존재하지 않는 자식을 제거하려고 할 경우 에러.\n ",
+    "description": "\n\t해당 자식을 제거.\n\t존재하지 않는 자식을 제거하려고 할 경우 에러.\n ",
     "params": {
       "child": [
         {
@@ -94,14 +94,14 @@
         }
       ]
     },
-    "example": "\n    (RedBaseContainer Instance).removeChild( RedBaseObject3D Instance ); // 해당 자식 제거\n ",
+    "example": "\n\t(RedBaseContainer Instance).removeChild( RedBaseObject3D Instance ); // 해당 자식 제거\n ",
     "return": "void"
   },
   {
     "code": "METHOD",
     "title": "removeChildAll",
     "description": "전체 자식을 제거",
-    "example": "\n    (RedBaseContainer Instance).removeChildAll(); // 전체 자식 제거\n ",
+    "example": "\n\t(RedBaseContainer Instance).removeChildAll(); // 전체 자식 제거\n ",
     "return": "void"
   },
   {
@@ -115,13 +115,13 @@
         }
       ]
     },
-    "example": "\n    (RedBaseContainer Instance).removeChildAt( 0 ); // 0번째 자식 제거\n    (RedBaseContainer Instance).removeChildAt( 1 ); // 1번째 자식 제거\n ",
+    "example": "\n\t(RedBaseContainer Instance).removeChildAt( 0 ); // 0번째 자식 제거\n\t(RedBaseContainer Instance).removeChildAt( 1 ); // 1번째 자식 제거\n ",
     "return": "void"
   },
   {
     "code": "METHOD",
     "title": "sortGeometry",
-    "description": "\n    지오메트리 순으로 자식들을 정렬.\n    동일 지오메트리가 다량 사용될 경우 attribute 변경 횟수가 줄어들어 렌더성능이 좋아진다.\n       ",
+    "description": "\n\t지오메트리 순으로 자식들을 정렬.\n\t동일 지오메트리가 다량 사용될 경우 attribute 변경 횟수가 줄어들어 렌더성능이 좋아진다.\n ",
     "params": {
       "recursive": [
         {
@@ -130,7 +130,7 @@
         "true 입력시 하위 자식의 children 까지 모두 정렬"
       ]
     },
-    "example": "\n    (RedBaseContainer Instance).sortGeometry();\n    (RedBaseContainer Instance).sortGeometry(true);\n ",
+    "example": "\n\t(RedBaseContainer Instance).sortGeometry();\n\t(RedBaseContainer Instance).sortGeometry(true);\n ",
     "return": "void"
   },
   {
@@ -145,13 +145,13 @@
         "true 입력시 하위 자식의 children 까지 모두 정렬"
       ]
     },
-    "example": "\n    (RedBaseContainer Instance).sortGeometryAndMaterial();\n    (RedBaseContainer Instance).sortGeometryAndMaterial(true);\n ",
+    "example": "\n\t(RedBaseContainer Instance).sortGeometryAndMaterial();\n\t(RedBaseContainer Instance).sortGeometryAndMaterial(true);\n ",
     "return": "void"
   },
   {
     "code": "METHOD",
     "title": "sortMaterial",
-    "description": "\n    재질이 소유한 RedProgram 순으로 자식들을 정렬.\n    동일 재질이 다량 사용될 경우 프로그램 변경 횟수가 줄어들어 렌더성능이 좋아진다.\n       ",
+    "description": "\n\t재질이 소유한 RedProgram 순으로 자식들을 정렬.\n\t동일 재질이 다량 사용될 경우 프로그램 변경 횟수가 줄어들어 렌더성능이 좋아진다.\n ",
     "params": {
       "recursive": [
         {
@@ -160,7 +160,7 @@
         "true 입력시 하위 자식의 children 까지 모두 정렬"
       ]
     },
-    "example": "\n    (RedBaseContainer Instance).sortMaterial();\n    (RedBaseContainer Instance).sortMaterial(true);\n ",
+    "example": "\n\t(RedBaseContainer Instance).sortMaterial();\n\t(RedBaseContainer Instance).sortMaterial(true);\n ",
     "return": "void"
   }
 ]

@@ -4,12 +4,11 @@
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
  * Last modification time of this file - 2019.6.7 12:10
  */
-
 "use strict";
 var RedBaseObject3D;
 (function () {
-    /**DOC:
-     {
+	/*DOC:
+	 {
 		 constructorYn : true,
 		 title :`RedBaseObject3D`,
 		 description : `
@@ -17,12 +16,12 @@ var RedBaseObject3D;
 		 `,
 		 return : 'RedBaseObject3D Instance'
 	 }
-     :DOC*/
-    RedBaseObject3D = function () {
-        if (!(this instanceof RedBaseObject3D)) return new RedBaseObject3D();
-    };
-    /**DOC:
-     {
+	 :DOC*/
+	RedBaseObject3D = function () {
+		if (!(this instanceof RedBaseObject3D)) return new RedBaseObject3D();
+	};
+	/*DOC:
+	 {
 		 title :`RedBaseObject3D.build`,
 		 code : 'STATIC METHOD',
 		 description : `
@@ -42,11 +41,11 @@ var RedBaseObject3D;
 		 `,
 		 return : 'void'
 	 }
-     :DOC*/
-    RedBaseObject3D['build'] = function (gl) {
-        this['name'] = 'object3D_' + (RedGL.makeUUID() + 1);
-        /**DOC:
-         {
+	 :DOC*/
+	RedBaseObject3D['build'] = function (gl) {
+		this['name'] = 'object3D_' + (RedGL.makeUUID() + 1);
+		/*DOC:
+		 {
 		     code : 'PROPERTY',
 			 title :`useTransparentSort`,
 			 description : `
@@ -60,10 +59,10 @@ var RedBaseObject3D;
              `,
 			 return : 'Boolean'
 		 }
-         :DOC*/
-        this['useTransparentSort'] = false;
-        /**DOC:
-         {
+		 :DOC*/
+		this['useTransparentSort'] = false;
+		/*DOC:
+		 {
 		     code : 'PROPERTY',
 			 title :`useCullFace`,
 			 description : `
@@ -76,10 +75,10 @@ var RedBaseObject3D;
              `,
 			 return : 'Boolean'
 		 }
-         :DOC*/
-        this['useCullFace'] = true;
-        /**DOC:
-         {
+		 :DOC*/
+		this['useCullFace'] = true;
+		/*DOC:
+		 {
              code : 'PROPERTY',
 			 title :`cullFace`,
 			 description : `
@@ -93,10 +92,10 @@ var RedBaseObject3D;
              `,
 			 return : 'gl 상수'
 		 }
-         :DOC*/
-        this['cullFace'] = gl.BACK;
-        /**DOC:
-         {
+		 :DOC*/
+		this['cullFace'] = gl.BACK;
+		/*DOC:
+		 {
 		     code : 'PROPERTY',
 			 title :`useDepthMask`,
 			 description : `
@@ -109,10 +108,10 @@ var RedBaseObject3D;
              `,
 			 return : 'Boolean'
 		 }
-         :DOC*/
-        this['useDepthMask'] = true;
-        /**DOC:
-         {
+		 :DOC*/
+		this['useDepthMask'] = true;
+		/*DOC:
+		 {
 		     code : 'PROPERTY',
 			 title :`useDepthTest`,
 			 description : `
@@ -125,10 +124,10 @@ var RedBaseObject3D;
              `,
 			 return : 'Boolean'
 		 }
-         :DOC*/
-        this['useDepthTest'] = true;
-        /**DOC:
-         {
+		 :DOC*/
+		this['useDepthTest'] = true;
+		/*DOC:
+		 {
 		     code : 'PROPERTY',
 			 title :`depthTestFunc`,
 			 description : `
@@ -142,10 +141,10 @@ var RedBaseObject3D;
              `,
 			 return : 'gl 상수'
 		 }
-         :DOC*/
-        this['depthTestFunc'] = gl.LEQUAL;
-        /**DOC:
-         {
+		 :DOC*/
+		this['depthTestFunc'] = gl.LEQUAL;
+		/*DOC:
+		 {
 		     code : 'PROPERTY',
 			 title :`useBlendMode`,
 			 description : `
@@ -158,10 +157,10 @@ var RedBaseObject3D;
              `,
 			 return : 'Boolean'
 		 }
-         :DOC*/
-        this['useBlendMode'] = true;
-        /**DOC:
-         {
+		 :DOC*/
+		this['useBlendMode'] = true;
+		/*DOC:
+		 {
 		     code : 'PROPERTY',
 			 title :`blendSrc`,
 			 description : `
@@ -175,10 +174,10 @@ var RedBaseObject3D;
              `,
 			 return : 'gl 상수'
 		 }
-         :DOC*/
-        this['blendSrc'] = gl.SRC_ALPHA;
-        /**DOC:
-         {
+		 :DOC*/
+		this['blendSrc'] = gl.SRC_ALPHA;
+		/*DOC:
+		 {
 		     code : 'PROPERTY',
 			 title :`blendDst`,
 			 description : `
@@ -192,10 +191,10 @@ var RedBaseObject3D;
              `,
 			 return : 'gl 상수'
 		 }
-         :DOC*/
-        this['blendDst'] = gl.ONE_MINUS_SRC_ALPHA;
-        /**DOC:
-         {
+		 :DOC*/
+		this['blendDst'] = gl.ONE_MINUS_SRC_ALPHA;
+		/*DOC:
+		 {
 		     code : 'PROPERTY',
 			 title :`drawMode`,
 			 description : `
@@ -209,10 +208,10 @@ var RedBaseObject3D;
              `,
 			 return : 'gl 상수'
 		 }
-         :DOC*/
-        this['drawMode'] = gl.TRIANGLES;
-        /**DOC:
-         {
+		 :DOC*/
+		this['drawMode'] = gl.TRIANGLES;
+		/*DOC:
+		 {
 		     code : 'PROPERTY',
 			 title :`pointSize`,
 			 description : `
@@ -226,13 +225,13 @@ var RedBaseObject3D;
              `,
 			 return : 'Number'
 		 }
-         :DOC*/
-        this['pointSize'] = 1;
-        this['x'] = this['y'] = this['z'] = 0;
-        this['rotationX'] = this['rotationY'] = this['rotationZ'] = 0;
-        this['scaleX'] = this['scaleY'] = this['scaleZ'] = 1;
-        /**DOC:
-         {
+		 :DOC*/
+		this['pointSize'] = 1;
+		this['x'] = this['y'] = this['z'] = 0;
+		this['rotationX'] = this['rotationY'] = this['rotationZ'] = 0;
+		this['scaleX'] = this['scaleY'] = this['scaleZ'] = 1;
+		/*DOC:
+		 {
 		    code : 'PROPERTY',
 			title :`autoUpdateMatrix`,
 			description : `
@@ -246,11 +245,11 @@ var RedBaseObject3D;
             `,
 			return : 'boolean'
 		 }
-         :DOC*/
-        this['autoUpdateMatrix'] = true;
-        this['_renderAutoUpdateMatrix'] = true;
-        /**DOC:
-         {
+		 :DOC*/
+		this['autoUpdateMatrix'] = true;
+		this['_renderAutoUpdateMatrix'] = true;
+		/*DOC:
+		 {
 		    code : 'PROPERTY',
 			title :`matrix`,
 			description : `
@@ -259,10 +258,10 @@ var RedBaseObject3D;
 			`,
 			return : 'mat4'
 		 }
-         :DOC*/
-        this['matrix'] = mat4.create();
-        /**DOC:
-         {
+		 :DOC*/
+		this['matrix'] = mat4.create();
+		/*DOC:
+		 {
 		    code : 'PROPERTY',
 			title :`localMatrix`,
 			description : `
@@ -271,10 +270,10 @@ var RedBaseObject3D;
 			`,
 			return : 'mat4'
 		 }
-         :DOC*/
-        this['localMatrix'] = mat4.create();
-        /**DOC:
-         {
+		 :DOC*/
+		this['localMatrix'] = mat4.create();
+		/*DOC:
+		 {
 		    code : 'PROPERTY',
 			title :`normalMatrix`,
 			description : `
@@ -283,10 +282,10 @@ var RedBaseObject3D;
 			`,
 			return : 'mat4'
 		 }
-         :DOC*/
-        this['normalMatrix'] = mat4.create();
-        /**DOC:
-         {
+		 :DOC*/
+		this['normalMatrix'] = mat4.create();
+		/*DOC:
+		 {
 		     code : 'PROPERTY',
 			 title :`children`,
 			 description : `
@@ -294,10 +293,10 @@ var RedBaseObject3D;
 			 `,
 			 return : 'Array'
 		 }
-         :DOC*/
-        this['children'] = [];
-        /**DOC:
-         {
+		 :DOC*/
+		this['children'] = [];
+		/*DOC:
+		 {
 		     code : 'PROPERTY',
 			 title :`useLOD`,
 			 description : `LOD사용여부`,
@@ -307,29 +306,28 @@ var RedBaseObject3D;
              `,
 			 return : 'Boolean'
 		 }
-         :DOC*/
-        this['useLOD'] = false;
-        this['_lodLevels'] = [
-            /* 1: {
-                geometry : ~~,
-                material : ~~~
-                둘중하나는 있어야하며
-                하나만 입력할경우 없는쪽은 오리지날 속성이 부여된다.
-            }
-            */
-        ];
-        this['_mouseColorMaterial'] = null;
-        this['_mouseColorID'] = new Float32Array([
-            parseInt(Math.random() * 255),
-            parseInt(Math.random() * 255),
-            parseInt(Math.random() * 255),
-            255
-        ])
-
-    };
-    RedBaseObject3D.prototype = {
-        /**DOC:
-         {
+		 :DOC*/
+		this['useLOD'] = false;
+		this['_lodLevels'] = [
+			/* 1: {
+				geometry : ~~,
+				material : ~~~
+				둘중하나는 있어야하며
+				하나만 입력할경우 없는쪽은 오리지날 속성이 부여된다.
+			}
+			*/
+		];
+		this['_mouseColorMaterial'] = null;
+		this['_mouseColorID'] = new Float32Array([
+			parseInt(Math.random() * 255),
+			parseInt(Math.random() * 255),
+			parseInt(Math.random() * 255),
+			255
+		])
+	};
+	RedBaseObject3D.prototype = {
+		/*DOC:
+		 {
 			 title :`addLOD`,
 			 code : 'METHOD',
 			 description : `
@@ -361,33 +359,33 @@ var RedBaseObject3D;
 			 `,
 			 return : 'void'
 		 }
-         :DOC*/
-        addLOD: (function () {
-            var tData, needPush;
-            var i;
-            return function (level, distance, geometry, material) {
-                geometry || material || RedGLUtil.throwFunc('RedBaseObject3D - addLOD : geometry, material 둘중하나는 반드시 입력되어야함');
-                RedGLUtil['isUint'](level) || RedGLUtil.throwFunc('RedBaseObject3D - addLOD : level은 uint만 허용함');
-                if (level > 4) RedGLUtil.throwFunc('RedBaseObject3D - addLOD : level은 0~4 level 까지 허용함');
-                tData = {
-                    level: level,
-                    distance: distance,
-                    geometry: geometry ? geometry : this['geometry'],
-                    material: material ? material : this['material']
-                };
-                i = this['_lodLevels'].length;
-                needPush = true;
-                while (i--) {
-                    if (this['_lodLevels'][i]['level'] == level) {
-                        this['_lodLevels'][i] = tData;
-                        needPush = false;
-                    }
-                }
-                if (needPush) this['_lodLevels'].push(tData)
-            }
-        })(),
-        /**DOC:
-         {
+		 :DOC*/
+		addLOD: (function () {
+			var tData, needPush;
+			var i;
+			return function (level, distance, geometry, material) {
+				geometry || material || RedGLUtil.throwFunc('RedBaseObject3D - addLOD : geometry, material 둘중하나는 반드시 입력되어야함');
+				RedGLUtil['isUint'](level) || RedGLUtil.throwFunc('RedBaseObject3D - addLOD : level은 uint만 허용함');
+				if (level > 4) RedGLUtil.throwFunc('RedBaseObject3D - addLOD : level은 0~4 level 까지 허용함');
+				tData = {
+					level: level,
+					distance: distance,
+					geometry: geometry ? geometry : this['geometry'],
+					material: material ? material : this['material']
+				};
+				i = this['_lodLevels'].length;
+				needPush = true;
+				while (i--) {
+					if (this['_lodLevels'][i]['level'] == level) {
+						this['_lodLevels'][i] = tData;
+						needPush = false;
+					}
+				}
+				if (needPush) this['_lodLevels'].push(tData)
+			}
+		})(),
+		/*DOC:
+		 {
 			 title :`removeLOD`,
 			 code : 'METHOD',
 			 description : `LOD 삭제`,
@@ -403,19 +401,19 @@ var RedBaseObject3D;
 			 `,
 			 return : 'void'
 		 }
-         :DOC*/
-        removeLOD: function (level) {
-            RedGLUtil['isUint'](level) || RedGLUtil.throwFunc('RedBaseObject3D - removeLOD : level : uint만 허용함');
-            var i = this['_lodLevels'].length;
-            while (i--) {
-                if (this['_lodLevels'][i]['level'] == level) {
-                    this['_lodLevels'].splice(i, 1);
-                    break
-                }
-            }
-        },
-        /**DOC:
-         {
+		 :DOC*/
+		removeLOD: function (level) {
+			RedGLUtil['isUint'](level) || RedGLUtil.throwFunc('RedBaseObject3D - removeLOD : level : uint만 허용함');
+			var i = this['_lodLevels'].length;
+			while (i--) {
+				if (this['_lodLevels'][i]['level'] == level) {
+					this['_lodLevels'].splice(i, 1);
+					break
+				}
+			}
+		},
+		/*DOC:
+		 {
 			 title :`localToWorld`,
 			 code : 'METHOD',
 			 description : `
@@ -437,29 +435,29 @@ var RedBaseObject3D;
 			 `,
 			 return : 'Array'
 		 }
-         :DOC*/
-        localToWorld: (function () {
-            var t0;
-            t0 = mat4.create();
-            return function (x, y, z) {
-                typeof x == 'number' || RedGLUtil.throwFunc('RedBaseObject3D - localToWorld : x - number만 허용함', '입력값 : ', x);
-                typeof y == 'number' || RedGLUtil.throwFunc('RedBaseObject3D - localToWorld : y - number만 허용함', '입력값 : ', y);
-                typeof z == 'number' || RedGLUtil.throwFunc('RedBaseObject3D - localToWorld : z - number만 허용함', '입력값 : ', z);
-                x = x || 0;
-                y = y || 0;
-                z = z || 0;
-                mat4.identity(t0);
-                mat4.translate(t0, t0, [x, y, z]);
-                mat4.multiply(t0, this['matrix'], t0);
-                return [
-                    t0[12],
-                    t0[13],
-                    t0[14]
-                ]
-            }
-        })(),
-        /**DOC:
-         {
+		 :DOC*/
+		localToWorld: (function () {
+			var t0;
+			t0 = mat4.create();
+			return function (x, y, z) {
+				typeof x == 'number' || RedGLUtil.throwFunc('RedBaseObject3D - localToWorld : x - number만 허용함', '입력값 : ', x);
+				typeof y == 'number' || RedGLUtil.throwFunc('RedBaseObject3D - localToWorld : y - number만 허용함', '입력값 : ', y);
+				typeof z == 'number' || RedGLUtil.throwFunc('RedBaseObject3D - localToWorld : z - number만 허용함', '입력값 : ', z);
+				x = x || 0;
+				y = y || 0;
+				z = z || 0;
+				mat4.identity(t0);
+				mat4.translate(t0, t0, [x, y, z]);
+				mat4.multiply(t0, this['matrix'], t0);
+				return [
+					t0[12],
+					t0[13],
+					t0[14]
+				]
+			}
+		})(),
+		/*DOC:
+		 {
 			 title :`worldToLocal`,
 			 code : 'METHOD',
 			 description : `
@@ -481,29 +479,29 @@ var RedBaseObject3D;
 			 `,
 			 return : 'Array'
 		 }
-         :DOC*/
-        worldToLocal: (function () {
-            var t0, t1;
-            t0 = mat4.create();
-            t1 = mat4.create();
-            return function (x, y, z) {
-                typeof x == 'number' || RedGLUtil.throwFunc('RedBaseObject3D - worldToLocal : x - number만 허용함', '입력값 : ', x);
-                typeof y == 'number' || RedGLUtil.throwFunc('RedBaseObject3D - worldToLocal : y - number만 허용함', '입력값 : ', y);
-                typeof z == 'number' || RedGLUtil.throwFunc('RedBaseObject3D - worldToLocal : z - number만 허용함', '입력값 : ', z);
-                x = x || 0;
-                y = y || 0;
-                z = z || 0;
-                mat4.translate(t0, t0, [x, y, z]);
-                mat4.multiply(t1, t0, this['matrix']);
-                return [
-                    t1[0] * x + t1[1] * y + t1[2] * z + t1[3],
-                    t1[4] * x + t1[5] * y + t1[6] * z + t1[7],
-                    t1[8] * x + t1[9] * y + t1[10] * z + t1[11]
-                ]
-            }
-        })(),
-        /**DOC:
-         {
+		 :DOC*/
+		worldToLocal: (function () {
+			var t0, t1;
+			t0 = mat4.create();
+			t1 = mat4.create();
+			return function (x, y, z) {
+				typeof x == 'number' || RedGLUtil.throwFunc('RedBaseObject3D - worldToLocal : x - number만 허용함', '입력값 : ', x);
+				typeof y == 'number' || RedGLUtil.throwFunc('RedBaseObject3D - worldToLocal : y - number만 허용함', '입력값 : ', y);
+				typeof z == 'number' || RedGLUtil.throwFunc('RedBaseObject3D - worldToLocal : z - number만 허용함', '입력값 : ', z);
+				x = x || 0;
+				y = y || 0;
+				z = z || 0;
+				mat4.translate(t0, t0, [x, y, z]);
+				mat4.multiply(t1, t0, this['matrix']);
+				return [
+					t1[0] * x + t1[1] * y + t1[2] * z + t1[3],
+					t1[4] * x + t1[5] * y + t1[6] * z + t1[7],
+					t1[8] * x + t1[9] * y + t1[10] * z + t1[11]
+				]
+			}
+		})(),
+		/*DOC:
+		 {
 			 title :`getScreenPoint`,
 			 code : 'METHOD',
 			 description : `
@@ -519,39 +517,39 @@ var RedBaseObject3D;
 			 `,
 			 return : 'Array'
 		 }
-         :DOC*/
-        getScreenPoint: (function () {
-            var resultMTX = mat4.create();
-            var tCamera, tViewRect;
-            var resultPosition;
-            resultPosition = {
-                x: 0,
-                y: 0,
-                z: 0,
-                w: 0
-            };
-            return function (redView) {
-                mat4.identity(resultMTX);
-                redView instanceof RedView || RedGLUtil.throwFunc('RedBaseObject3D - getScreenPoint : redView - RedView Instance 만 허용함', '입력값 : ', redView);
-                tCamera = redView['camera'];
-                tViewRect = redView['_viewRect'];
-                if (tCamera instanceof RedBaseController) tCamera = tCamera.camera;
-                mat4.multiply(resultMTX, tCamera.perspectiveMTX, tCamera.matrix);
-                mat4.multiply(resultMTX, resultMTX, this['matrix']);
-                resultPosition.x = resultMTX[12];
-                resultPosition.y = resultMTX[13];
-                resultPosition.z = resultMTX[14];
-                resultPosition.w = resultMTX[15];
-                resultPosition.x = resultPosition.x * 0.5 / resultPosition.w + 0.5;
-                resultPosition.y = resultPosition.y * 0.5 / resultPosition.w + 0.5;
-                return [
-                    (tViewRect[0] + resultPosition.x * tViewRect[2]) / window.devicePixelRatio,
-                    (tViewRect[1] + (1 - resultPosition.y) * tViewRect[3]) / window.devicePixelRatio
-                ]
-            }
-        })(),
-        /**DOC:
-         {
+		 :DOC*/
+		getScreenPoint: (function () {
+			var resultMTX = mat4.create();
+			var tCamera, tViewRect;
+			var resultPosition;
+			resultPosition = {
+				x: 0,
+				y: 0,
+				z: 0,
+				w: 0
+			};
+			return function (redView) {
+				mat4.identity(resultMTX);
+				redView instanceof RedView || RedGLUtil.throwFunc('RedBaseObject3D - getScreenPoint : redView - RedView Instance 만 허용함', '입력값 : ', redView);
+				tCamera = redView['camera'];
+				tViewRect = redView['_viewRect'];
+				if (tCamera instanceof RedBaseController) tCamera = tCamera.camera;
+				mat4.multiply(resultMTX, tCamera.perspectiveMTX, tCamera.matrix);
+				mat4.multiply(resultMTX, resultMTX, this['matrix']);
+				resultPosition.x = resultMTX[12];
+				resultPosition.y = resultMTX[13];
+				resultPosition.z = resultMTX[14];
+				resultPosition.w = resultMTX[15];
+				resultPosition.x = resultPosition.x * 0.5 / resultPosition.w + 0.5;
+				resultPosition.y = resultPosition.y * 0.5 / resultPosition.w + 0.5;
+				return [
+					(tViewRect[0] + resultPosition.x * tViewRect[2]) / window.devicePixelRatio,
+					(tViewRect[1] + (1 - resultPosition.y) * tViewRect[3]) / window.devicePixelRatio
+				]
+			}
+		})(),
+		/*DOC:
+		 {
 			 title :`disposeAll`,
 			 code : 'METHOD',
 			 description : `
@@ -559,13 +557,13 @@ var RedBaseObject3D;
 			 `,
 			 return : 'void'
 		 }
-         :DOC*/
-        disposeAll: function () {
-            this.disposeAllTexture();
-            this.disposeAllBuffer()
-        },
-        /**DOC:
-         {
+		 :DOC*/
+		disposeAll: function () {
+			this.disposeAllTexture();
+			this.disposeAllBuffer()
+		},
+		/*DOC:
+		 {
 			 title :`disposeAllTexture`,
 			 code : 'METHOD',
 			 description : `
@@ -573,12 +571,12 @@ var RedBaseObject3D;
 			 `,
 			 return : 'void'
 		 }
-         :DOC*/
-        disposeAllTexture: function () {
-            if (this['material']) this['material']['disposeAllTexture']()
-        },
-        /**DOC:
-         {
+		 :DOC*/
+		disposeAllTexture: function () {
+			if (this['material']) this['material']['disposeAllTexture']()
+		},
+		/*DOC:
+		 {
 			 title :`disposeTexture`,
 			 code : 'METHOD',
 			 description : `
@@ -592,12 +590,12 @@ var RedBaseObject3D;
 			 },
 			 return : 'void'
 		 }
-         :DOC*/
-        disposeTexture: function (key) {
-            if (this['material']) this['material']['disposeTexture'](key)
-        },
-        /**DOC:
-         {
+		 :DOC*/
+		disposeTexture: function (key) {
+			if (this['material']) this['material']['disposeTexture'](key)
+		},
+		/*DOC:
+		 {
 			 title :`disposeAllBuffer`,
 			 code : 'METHOD',
 			 description : `
@@ -605,12 +603,12 @@ var RedBaseObject3D;
 			 `,
 			 return : 'void'
 		 }
-         :DOC*/
-        disposeAllBuffer: function () {
-            if (this['geometry']) this['geometry']['disposeAllBuffer']()
-        },
-        /**DOC:
-         {
+		 :DOC*/
+		disposeAllBuffer: function () {
+			if (this['geometry']) this['geometry']['disposeAllBuffer']()
+		},
+		/*DOC:
+		 {
 			 title :`disposeBuffer`,
 			 code : 'METHOD',
 			 description : `
@@ -624,13 +622,13 @@ var RedBaseObject3D;
 			 },
 			 return : 'void'
 		 }
-         :DOC*/
-        disposeBuffer: function (key) {
-            if (this['geometry']) this['geometry']['disposeBuffer'](key)
-        }
-    };
-    /**DOC:
-     {
+		 :DOC*/
+		disposeBuffer: function (key) {
+			if (this['geometry']) this['geometry']['disposeBuffer'](key)
+		}
+	};
+	/*DOC:
+	 {
 	     code : 'PROPERTY',
 		 title :`x`,
 		 description : `
@@ -642,9 +640,9 @@ var RedBaseObject3D;
          `,
 		 return : 'Number'
 	 }
-     :DOC*/
-    /**DOC:
-     {
+	 :DOC*/
+	/*DOC:
+	 {
 	     code : 'PROPERTY',
 		 title :`y`,
 		 description : `
@@ -656,9 +654,9 @@ var RedBaseObject3D;
          `,
 		 return : 'Number'
 	 }
-     :DOC*/
-    /**DOC:
-     {
+	 :DOC*/
+	/*DOC:
+	 {
 	     code : 'PROPERTY',
 		 title :`z`,
 		 description : `
@@ -670,9 +668,9 @@ var RedBaseObject3D;
          `,
 		 return : 'Number'
 	 }
-     :DOC*/
-    /**DOC:
-     {
+	 :DOC*/
+	/*DOC:
+	 {
 	     code : 'PROPERTY',
 		 title :`rotationX`,
 		 description : `
@@ -684,9 +682,9 @@ var RedBaseObject3D;
          `,
 		 return : 'Number'
 	 }
-     :DOC*/
-    /**DOC:
-     {
+	 :DOC*/
+	/*DOC:
+	 {
 	     code : 'PROPERTY',
 		 title :`rotationY`,
 		 description : `
@@ -698,9 +696,9 @@ var RedBaseObject3D;
          `,
 		 return : 'Number'
 	 }
-     :DOC*/
-    /**DOC:
-     {
+	 :DOC*/
+	/*DOC:
+	 {
 	     code : 'PROPERTY',
 		 title :`rotationZ`,
 		 description : `
@@ -712,9 +710,9 @@ var RedBaseObject3D;
          `,
 		 return : 'Number'
 	 }
-     :DOC*/
-    /**DOC:
-     {
+	 :DOC*/
+	/*DOC:
+	 {
 	     code : 'PROPERTY',
 		 title :`scaleX`,
 		 description : `
@@ -726,9 +724,9 @@ var RedBaseObject3D;
          `,
 		 return : 'Number'
 	 }
-     :DOC*/
-    /**DOC:
-     {
+	 :DOC*/
+	/*DOC:
+	 {
 	     code : 'PROPERTY',
 		 title :`scaleY`,
 		 description : `
@@ -740,9 +738,9 @@ var RedBaseObject3D;
          `,
 		 return : 'Number'
 	 }
-     :DOC*/
-    /**DOC:
-     {
+	 :DOC*/
+	/*DOC:
+	 {
 	     code : 'PROPERTY',
 		 title :`scaleZ`,
 		 description : `
@@ -754,75 +752,75 @@ var RedBaseObject3D;
          `,
 		 return : 'Number'
 	 }
-     :DOC*/
-    (function () {
-        var getAABB, getOBB, getTransformVolume;
-        getTransformVolume = function (mesh) {
-            var minX, minY, minZ, maxX, maxY, maxZ, vx, vy, vz, t, i, len;
-            var tx, ty, tz;
-            var volume;
-            var transform = mesh.matrix;
-            var stride = mesh.geometry['interleaveBuffer']['stride'];
-            // if (!volume[this]) {
-            minX = minY = minZ = maxX = maxY = maxZ = 0;
-            t = mesh.geometry['interleaveBuffer']['data'];
-            i = 0;
-            len = mesh.geometry['interleaveBuffer']['pointNum'];
-            for (i; i < len; i++) {
-                vx = i * stride , vy = vx + 1, vz = vx + 2;
-                tx = transform[0] * t[vx] + transform[4] * t[vy] + transform[8] * t[vz];
-                ty = transform[1] * t[vx] + transform[5] * t[vy] + transform[9] * t[vz];
-                tz = transform[2] * t[vx] + transform[6] * t[vy] + transform[10] * t[vz];
-                minX = tx < minX ? tx : minX;
-                maxX = tx > maxX ? tx : maxX;
-                minY = ty < minY ? ty : minY;
-                maxY = ty > maxY ? ty : maxY;
-                minZ = tz < minZ ? tz : minZ;
-                maxZ = tz > maxZ ? tz : maxZ;
-            }
-            volume = [maxX - minX, maxY - minY, maxZ - minZ];
-            volume.minX = minX;
-            volume.maxX = maxX;
-            volume.minY = minY;
-            volume.maxY = maxY;
-            volume.minZ = minZ;
-            volume.maxZ = maxZ;
-            return volume
-        };
-        getAABB = function (mesh) {
-            var volume = getTransformVolume(mesh);
-            var tMTX = mat4.create();
-            mat4.translate(tMTX, tMTX, mesh.localToWorld(0, 0, 0));
-            mat4.scale(tMTX, tMTX, volume);
-            return {
-                worldMatrix: tMTX,
-                volume: volume
-            }
-        };
-        getOBB = function (mesh) {
-            var tVolume = mesh.geometry.volume;
-            var tMTX = mat4.create();
-            mat4.translate(tMTX, tMTX, mesh.localToWorld(0, 0, 0));
-            mat4.rotateX(tMTX, tMTX, -mesh.rotationX * Math.PI / 180);
-            mat4.rotateY(tMTX, tMTX, -mesh.rotationY * Math.PI / 180);
-            mat4.rotateZ(tMTX, tMTX, -mesh.rotationZ * Math.PI / 180);
-            mat4.scale(tMTX, tMTX, tVolume);
-            mat4.scale(tMTX, tMTX, [mesh.scaleX, mesh.scaleY, mesh.scaleZ]);
-            var volume = getTransformVolume(mesh);
-            return {
-                worldMatrix: tMTX,
-                volume: volume
-            }
-        };
-        RedBaseObject3D.prototype['volumeCalculateAABB'] = function () {
-            return this['volumeInfo'] = getAABB(this)
-        };
-        RedBaseObject3D.prototype['volumeCalculateOBB'] = function () {
-            return this['volumeInfo'] = getOBB(this)
-        };
-    })();
-    /**DOC:
-     {
+	 :DOC*/
+	(function () {
+		var getAABB, getOBB, getTransformVolume;
+		getTransformVolume = function (mesh) {
+			var minX, minY, minZ, maxX, maxY, maxZ, vx, vy, vz, t, i, len;
+			var tx, ty, tz;
+			var volume;
+			var transform = mesh.matrix;
+			var stride = mesh.geometry['interleaveBuffer']['stride'];
+			// if (!volume[this]) {
+			minX = minY = minZ = maxX = maxY = maxZ = 0;
+			t = mesh.geometry['interleaveBuffer']['data'];
+			i = 0;
+			len = mesh.geometry['interleaveBuffer']['pointNum'];
+			for (i; i < len; i++) {
+				vx = i * stride , vy = vx + 1, vz = vx + 2;
+				tx = transform[0] * t[vx] + transform[4] * t[vy] + transform[8] * t[vz];
+				ty = transform[1] * t[vx] + transform[5] * t[vy] + transform[9] * t[vz];
+				tz = transform[2] * t[vx] + transform[6] * t[vy] + transform[10] * t[vz];
+				minX = tx < minX ? tx : minX;
+				maxX = tx > maxX ? tx : maxX;
+				minY = ty < minY ? ty : minY;
+				maxY = ty > maxY ? ty : maxY;
+				minZ = tz < minZ ? tz : minZ;
+				maxZ = tz > maxZ ? tz : maxZ;
+			}
+			volume = [maxX - minX, maxY - minY, maxZ - minZ];
+			volume.minX = minX;
+			volume.maxX = maxX;
+			volume.minY = minY;
+			volume.maxY = maxY;
+			volume.minZ = minZ;
+			volume.maxZ = maxZ;
+			return volume
+		};
+		getAABB = function (mesh) {
+			var volume = getTransformVolume(mesh);
+			var tMTX = mat4.create();
+			mat4.translate(tMTX, tMTX, mesh.localToWorld(0, 0, 0));
+			mat4.scale(tMTX, tMTX, volume);
+			return {
+				worldMatrix: tMTX,
+				volume: volume
+			}
+		};
+		getOBB = function (mesh) {
+			var tVolume = mesh.geometry.volume;
+			var tMTX = mat4.create();
+			mat4.translate(tMTX, tMTX, mesh.localToWorld(0, 0, 0));
+			mat4.rotateX(tMTX, tMTX, -mesh.rotationX * Math.PI / 180);
+			mat4.rotateY(tMTX, tMTX, -mesh.rotationY * Math.PI / 180);
+			mat4.rotateZ(tMTX, tMTX, -mesh.rotationZ * Math.PI / 180);
+			mat4.scale(tMTX, tMTX, tVolume);
+			mat4.scale(tMTX, tMTX, [mesh.scaleX, mesh.scaleY, mesh.scaleZ]);
+			var volume = getTransformVolume(mesh);
+			return {
+				worldMatrix: tMTX,
+				volume: volume
+			}
+		};
+		RedBaseObject3D.prototype['volumeCalculateAABB'] = function () {
+			return this['volumeInfo'] = getAABB(this)
+		};
+		RedBaseObject3D.prototype['volumeCalculateOBB'] = function () {
+			return this['volumeInfo'] = getOBB(this)
+		};
+	})();
+	/*DOC:
+	 {
 		 code:`PROPERTY`,
 		 title :`lookAt`,
 		 description : `
@@ -835,26 +833,26 @@ var RedBaseObject3D;
 		 },
 		 return : 'void'
 	 }
-     :DOC*/
-    RedBaseObject3D.prototype['lookAt'] = (function () {
-        var up = new Float32Array([0, 1, 0]);
-        var tPosition = [];
-        var tRotation = []
-        return function (x, y, z) {
-            tPosition[0] = x;
-            tPosition[1] = y;
-            tPosition[2] = z;
-            //out, eye, center, up
-            mat4.identity(this['matrix']);
-            mat4.targetTo(this['matrix'], [this.x, this.y, this.z], tPosition, up);
-            tRotation = RedGLUtil.mat4ToEuler(this['matrix'], []);
-            this.rotationX = -tRotation[0] * 180 / Math.PI;
-            this.rotationY = -tRotation[1] * 180 / Math.PI;
-            this.rotationZ = -tRotation[2] * 180 / Math.PI;
-        }
-    })();
-    /**DOC:
-     {
+	 :DOC*/
+	RedBaseObject3D.prototype['lookAt'] = (function () {
+		var up = new Float32Array([0, 1, 0]);
+		var tPosition = [];
+		var tRotation = []
+		return function (x, y, z) {
+			tPosition[0] = x;
+			tPosition[1] = y;
+			tPosition[2] = z;
+			//out, eye, center, up
+			mat4.identity(this['matrix']);
+			mat4.targetTo(this['matrix'], [this.x, this.y, this.z], tPosition, up);
+			tRotation = RedGLUtil.mat4ToEuler(this['matrix'], []);
+			this.rotationX = -tRotation[0] * 180 / Math.PI;
+			this.rotationY = -tRotation[1] * 180 / Math.PI;
+			this.rotationZ = -tRotation[2] * 180 / Math.PI;
+		}
+	})();
+	/*DOC:
+	 {
 			 title :`geometry`,
 			 code : 'PROPERTY',
 			 description : `
@@ -862,18 +860,18 @@ var RedBaseObject3D;
 			 `,
 			 return : 'RedGeometry Instance'
 		 }
-     :DOC*/
-    Object.defineProperty(RedBaseObject3D.prototype, 'geometry', {
-        get: function () {
-            return this['_geometry'];
-        },
-        set: function (v) {
-            if (v && !(v instanceof RedGeometry)) RedGLUtil.throwFunc('geometry : RedGeometry Instance만 허용.', '입력값 : ' + v);
-            this['_geometry'] = v
-        }
-    });
-    /**DOC:
-     {
+	 :DOC*/
+	Object.defineProperty(RedBaseObject3D.prototype, 'geometry', {
+		get: function () {
+			return this['_geometry'];
+		},
+		set: function (v) {
+			if (v && !(v instanceof RedGeometry)) RedGLUtil.throwFunc('geometry : RedGeometry Instance만 허용.', '입력값 : ' + v);
+			this['_geometry'] = v
+		}
+	});
+	/*DOC:
+	 {
 			 title :`material`,
 			 code : 'PROPERTY',
 			 description : `
@@ -881,15 +879,15 @@ var RedBaseObject3D;
 			 `,
 			 return : 'RedMaterial Instance'
 		 }
-     :DOC*/
-    Object.defineProperty(RedBaseObject3D.prototype, 'material', {
-        get: function () {
-            return this['_material'];
-        },
-        set: function (v) {
-            if (v && !(v instanceof RedBaseMaterial)) RedGLUtil.throwFunc('material : RedBaseMaterial Instance만 허용.', '입력값 : ' + v);
-            this['_material'] = v
-        }
-    });
-    Object.freeze(RedBaseObject3D);
+	 :DOC*/
+	Object.defineProperty(RedBaseObject3D.prototype, 'material', {
+		get: function () {
+			return this['_material'];
+		},
+		set: function (v) {
+			if (v && !(v instanceof RedBaseMaterial)) RedGLUtil.throwFunc('material : RedBaseMaterial Instance만 허용.', '입력값 : ' + v);
+			this['_material'] = v
+		}
+	});
+	Object.freeze(RedBaseObject3D);
 })();

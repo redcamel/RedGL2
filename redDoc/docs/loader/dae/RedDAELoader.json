@@ -29,7 +29,7 @@
       ]
     },
     "demo": "../example/loader/dae/RedDAELoader.html",
-    "example": "\n    // DAE 로딩\n          RedDAELoader(\n              RedGL Instance, // redGL\n              assetPath + 'dae/', // assetRootPath\n              'test1.dae', // fileName\n              function (v) { // callback\n                  console.log('로딩성공', v);\n                  (RedScene Instance).addChild(v['resultMesh']);\n              }\n          )\n ",
+    "example": "\n\t// DAE 로딩\n\tRedDAELoader(\n\t\tRedGL Instance, // redGL\n\t\tassetPath + 'dae/', // assetRootPath\n\t\t'test1.dae', // fileName\n\t\tfunction (v) { // callback\n\t\t\tconsole.log('로딩성공', v);\n\t\t\t(RedScene Instance).addChild(v['resultMesh']);\n\t\t}\n\t)\n ",
     "return": "void"
   }
 ]

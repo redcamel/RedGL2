@@ -2,7 +2,7 @@
   {
     "code": "PROPERTY",
     "title": "alpha",
-    "description": "\n    기본값 : 1\n    최소값 : 0\n    최대값 : 1\n       ",
+    "description": "\n\t기본값 : 1\n\t최소값 : 0\n\t최대값 : 1\n ",
     "return": "Number"
   },
   {

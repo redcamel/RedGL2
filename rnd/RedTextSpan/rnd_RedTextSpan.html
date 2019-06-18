@@ -33,110 +33,110 @@
 <body>
 <canvas id="test" style="border: none;"></canvas>
 <script>
-    document.getElementById('test')
-    RedGL(document.getElementById('test'), function (v) {
-        console.log(v)
-        var tWorld, tScene3D, tCamera
-        var tRenderer;
-        var self;
-        self = this
-        this.world = tWorld = RedWorld();
-        tScene3D = RedScene(this);
-        tCamera = RedCamera();
+	document.getElementById('test')
+	RedGL(document.getElementById('test'), function (v) {
+		console.log(v)
+		var tWorld, tScene3D, tCamera
+		var tRenderer;
+		var self;
+		self = this
+		this.world = tWorld = RedWorld();
+		tScene3D = RedScene(this);
+		tCamera = RedCamera();
 
-        tCamera.mode2DYn = true
-        tRenderer = RedRenderer();
+		tCamera.mode2DYn = true
+		tRenderer = RedRenderer();
 
-        tWorld.addView(RedView('test', this, tScene3D, tCamera));
+		tWorld.addView(RedView('test', this, tScene3D, tCamera));
 
-        var testDLight;
-        testDLight = RedDirectionalLight(this, '#ff00ff', 0.3)
-        testDLight.x = -30
-        testDLight.y = 20
-        testDLight.z = -30
-        tScene3D.addLight(testDLight)
-        testDLight = RedDirectionalLight(this)
-        testDLight.x = -3
-        testDLight.y = 2
-        testDLight.z = -3
-        tScene3D.addLight(testDLight)
+		var testDLight;
+		testDLight = RedDirectionalLight(this, '#ff00ff', 0.3)
+		testDLight.x = -30
+		testDLight.y = 20
+		testDLight.z = -30
+		tScene3D.addLight(testDLight)
+		testDLight = RedDirectionalLight(this)
+		testDLight.x = -3
+		testDLight.y = 2
+		testDLight.z = -3
+		tScene3D.addLight(testDLight)
 
-        ////
-        var a = new RedTextSpan('')
-        a._dom.style.width = 256 + 'px'
-        a._dom.style.height = 256 + 'px'
-        var testText = RedText(this, 256, 256)
-        a.addPlain('Hi~ RedTextSpan ~ bobobobobobbo')
-        a.addPlain(' 마지막에 붙어랏')
-        a.addLink('RedGL - github', 'https://github.com/redcamel/RedGL2')
-        a.addColor('컬러야 붙어랏!', '#ff3392')
-        a.setColor('red', 0, 10)
-        a.setColor('blue', 2, 7)
-        // a.getTextPosition(10)
-        var tSelect = a.getSelection(1, 10)
-        tSelect.color('#ffff23')
-        tSelect.backgroundColor('#346732')
-        tSelect.replace('바껴라')
-        tSelect.insertBefore('앞에 붙어라')
-        tSelect.insertAfter('뒤에 붙어라')
-        //
-        tSelect = a.getSelection(13, 15)
-        tSelect.fontSize('30px')
-        // tSelect.remove()
-        console.log(a)
-        console.log("a.getLineRectInfo(2)", a.getLineRectInfo(1))
-        console.log("a.getLineX(2)", a.getLineX(1))
-        console.log("a.getLineY(2)", a.getLineY(1))
+		////
+		var a = new RedTextSpan('')
+		a._dom.style.width = 256 + 'px'
+		a._dom.style.height = 256 + 'px'
+		var testText = RedText(this, 256, 256)
+		a.addPlain('Hi~ RedTextSpan ~ bobobobobobbo')
+		a.addPlain(' 마지막에 붙어랏')
+		a.addLink('RedGL - github', 'https://github.com/redcamel/RedGL2')
+		a.addColor('컬러야 붙어랏!', '#ff3392')
+		a.setColor('red', 0, 10)
+		a.setColor('blue', 2, 7)
+		// a.getTextPosition(10)
+		var tSelect = a.getSelection(1, 10)
+		tSelect.color('#ffff23')
+		tSelect.backgroundColor('#346732')
+		tSelect.replace('바껴라')
+		tSelect.insertBefore('앞에 붙어라')
+		tSelect.insertAfter('뒤에 붙어라')
+		//
+		tSelect = a.getSelection(13, 15)
+		tSelect.fontSize('30px')
+		// tSelect.remove()
+		console.log(a)
+		console.log("a.getLineRectInfo(2)", a.getLineRectInfo(1))
+		console.log("a.getLineX(2)", a.getLineX(1))
+		console.log("a.getLineY(2)", a.getLineY(1))
 
-        // var t = document.createElement('div')
-        // t.style.cssText = 'position:absolute;top:' + a.getLineY(1) + 'px;left:' + a.getLineX(1) + 'px;color:#fff;padding:5px;background:rgba(255,0,0,0.75);font-size:9px;transform:translate(-100%,0)'
-        // t.innerHTML = "a.getLineX(2) : " + a.getLineX(1) + " / a.getLineY(2) : " + a.getLineY(1)
-        // document.body.appendChild(t)
-        //
-        // var t = document.createElement('div')
-        // t.style.cssText = 'position:absolute;top:' + a.getLineY(1) + 'px;left:' + a.getLineEndX(1) + 'px;color:#fff;padding:5px;background:rgba(255,0,0,0.75);font-size:9px;'
-        // t.innerHTML = "a.getLineEndX(2) : " + a.getLineEndX(1) + " / a.getLineY(2) : " + a.getLineY(1)
-        // document.body.appendChild(t)
+		// var t = document.createElement('div')
+		// t.style.cssText = 'position:absolute;top:' + a.getLineY(1) + 'px;left:' + a.getLineX(1) + 'px;color:#fff;padding:5px;background:rgba(255,0,0,0.75);font-size:9px;transform:translate(-100%,0)'
+		// t.innerHTML = "a.getLineX(2) : " + a.getLineX(1) + " / a.getLineY(2) : " + a.getLineY(1)
+		// document.body.appendChild(t)
+		//
+		// var t = document.createElement('div')
+		// t.style.cssText = 'position:absolute;top:' + a.getLineY(1) + 'px;left:' + a.getLineEndX(1) + 'px;color:#fff;padding:5px;background:rgba(255,0,0,0.75);font-size:9px;'
+		// t.innerHTML = "a.getLineEndX(2) : " + a.getLineEndX(1) + " / a.getLineY(2) : " + a.getLineY(1)
+		// document.body.appendChild(t)
 
-        var t = document.createElement('div')
-        t.style.cssText = 'position:absolute;top:' + a.getLineEndY(4) + 'px;left:' + a.getLineEndX(4) + 'px;color:#fff;padding:5px;background:rgba(255,0,0,0.75);font-size:12px;'
-        t.innerHTML = "a.getLineEndX(4) : " + a.getLineEndX(4) + " / a.getLineEndY(4) : " + a.getLineEndY(4)
-        document.body.appendChild(t)
+		var t = document.createElement('div')
+		t.style.cssText = 'position:absolute;top:' + a.getLineEndY(4) + 'px;left:' + a.getLineEndX(4) + 'px;color:#fff;padding:5px;background:rgba(255,0,0,0.75);font-size:12px;'
+		t.innerHTML = "a.getLineEndX(4) : " + a.getLineEndX(4) + " / a.getLineEndY(4) : " + a.getLineEndY(4)
+		document.body.appendChild(t)
 
 
-        /// 아래쪽 세팅은 자동화하도록 유도하면 되것군..
-        a._dom.style.background = 'rgba(255,0,0,0.3)'
-        testText.background = 'rgba(255,0,0,0.3)'
-        testText.verticalAlign = 'top'
-        testText.color = '#fff'
-        testText.lineHeight = a._dom.style.lineHeight
-        testText.fontSize = a._dom.style.fontSize
-        testText.padding = a._dom.style.padding
-        testText.letterSpacing = a._dom.style.letterSpacing
-        testText.fontFamily = 'auto'
-        tScene3D.addChild(testText)
-        testText.text = a._dom.innerHTML
+		/// 아래쪽 세팅은 자동화하도록 유도하면 되것군..
+		a._dom.style.background = 'rgba(255,0,0,0.3)'
+		testText.background = 'rgba(255,0,0,0.3)'
+		testText.verticalAlign = 'top'
+		testText.color = '#fff'
+		testText.lineHeight = a._dom.style.lineHeight
+		testText.fontSize = a._dom.style.fontSize
+		testText.padding = a._dom.style.padding
+		testText.letterSpacing = a._dom.style.letterSpacing
+		testText.fontFamily = 'auto'
+		tScene3D.addChild(testText)
+		testText.text = a._dom.innerHTML
 
-        ///
-        var testLocation = RedText(this, 296, 32)
+		///
+		var testLocation = RedText(this, 296, 32)
 
-        testLocation.background = 'rgba(255,0,0,0.8)'
-        testLocation.fontSize = 12
-        testLocation.color = '#fff'
-        tScene3D.addChild(testLocation)
-        //
-        tRenderer.start(this, function (time) {
-            testText.x = RedView('test')._viewRect[2] / 2
-            testText.y = RedView('test')._viewRect[3] / 2
-            testLocation.text = "a.getLineEndX(4) : " + a.getLineEndX(4) + " / a.getLineEndY(4) : " + a.getLineEndY(4)
+		testLocation.background = 'rgba(255,0,0,0.8)'
+		testLocation.fontSize = 12
+		testLocation.color = '#fff'
+		tScene3D.addChild(testLocation)
+		//
+		tRenderer.start(this, function (time) {
+			testText.x = RedView('test')._viewRect[2] / 2
+			testText.y = RedView('test')._viewRect[3] / 2
+			testLocation.text = "a.getLineEndX(4) : " + a.getLineEndX(4) + " / a.getLineEndY(4) : " + a.getLineEndY(4)
 
-            if (testText.y != parseInt(testText.y)) testText.y += 0.5
-            testLocation.x = testText.x + a.getLineEndX(4) - testText.width / 2 + testLocation.width / 2
-            testLocation.y = testText.y + a.getLineEndY(4) - testText.height / 2 + testLocation.height / 2
+			if (testText.y != parseInt(testText.y)) testText.y += 0.5
+			testLocation.x = testText.x + a.getLineEndX(4) - testText.width / 2 + testLocation.width / 2
+			testLocation.y = testText.y + a.getLineEndY(4) - testText.height / 2 + testLocation.height / 2
 
-            console.log(testLocation.y)
-        })
-    })
+			console.log(testLocation.y)
+		})
+	})
 </script>
 </body>
 </html>

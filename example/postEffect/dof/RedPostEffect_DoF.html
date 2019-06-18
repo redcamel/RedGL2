@@ -32,105 +32,105 @@
     Normal View
 </div>
 <script id='testSource'>
-    var testUI;
-    var canvas;
-    var assetPath = '../../../asset/'
-    canvas = document.createElement('canvas');
-    document.body.appendChild(canvas);
-    RedGL(canvas, function (v) {
-        if (v) {
-            console.log('초기화 성공!')
-            var tWorld, tView, tView_postEffectTest, tScene, tController, tRenderer, tLight;
-            var setBase = function (redGL) {
-                // 월드 생성
-                redGL['world'] = tWorld = RedWorld();
-                // 씬 생성
-                tScene = RedScene(redGL);
-                // 카메라 생성
-                tController = RedObitController(redGL);
-                tController.tilt = -15;
-                tController.distance = 0;
-                tController.speedDistance = 0.5
-                // 렌더러 생성
-                tRenderer = RedRenderer();
-                // 뷰생성 및 적용
-                tView = RedView('HelloRedGL', redGL, tScene, tController);
-                tView_postEffectTest = RedView('HelloRedGL_testPostEffect', redGL, tScene, tController);
-                tView.setSize('50%', '100%');
-                tView.setLocation('50%', '0%');
-                tView_postEffectTest.setSize('50%', '100%');
-                tView_postEffectTest.setLocation('0%', '0%');
-                tWorld.addView(tView);
-                tWorld.addView(tView_postEffectTest);
-                // 스카이박스 설정
-                tScene.skyBox =
-                    RedSkyBox(redGL, [
-                        assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
-                        assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
-                        assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
-                        assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
-                        assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
-                        assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
-                    ]);
-                // 라이트 설정
-                tLight = RedDirectionalLight(redGL);
-                tScene.addLight(tLight)
-                tLight.x = 10;
-                tLight.y = 10;
-                tLight.z = 10;
-                // Mesh 설정
-                var setMeshs = function (redGL) {
-                    var MAX;
-                    var i, j, k;
-                    var tMesh;
-                    var tGeo = RedSphere(redGL, 0.5, 16, 16, 16)
-                    var tMaterial;
-                    i = j = MAX = 11;
-                    tMaterial = RedStandardMaterial(
-                        redGL,
-                        RedBitmapTexture(redGL, assetPath + 'brick/Brick03_col.jpg'),
-                        RedBitmapTexture(redGL, assetPath + 'brick/Brick03_nrm.jpg'),
-                        null,
-                        RedBitmapTexture(redGL, assetPath + 'brick/Brick03_disp.jpg')
-                    );
-                    tMaterial.normalPower = 2;
-                    while (i--) {
-                        j = MAX
-                        while (j--) {
-                            k = MAX
-                            while (k--) {
-                                tMesh = RedMesh(redGL, tGeo, tMaterial)
-                                tMesh.x = (i - MAX / 2) * 2
-                                tMesh.y = (j - MAX / 2) * 2
-                                tMesh.z = (k - MAX / 2) * 2
-                                tScene.addChild(tMesh)
-                            }
-                        }
-                    }
-                };
-                setMeshs(redGL);
-                // 렌더시작
-                tRenderer.start(redGL, function (time) {
-                });
-                // 렌더 디버거 활성화
-                tRenderer.setDebugButton();
-            };
-            setBase(this);
-            // 이펙트 적용
-            var effect;
-            effect = RedPostEffect_DoF(this);
-            tView_postEffectTest['postEffectManager'].addEffect(effect);
-            testUI(this, effect)
-        } else {
-            console.log('초기화 실패!')
-        }
-    })
-    testUI = function (redGL, effect) {
-        var gui = new baseTestUI(redGL)
-        gui.initRedGL()
-        gui.initPostEffect('RedPostEffect_DoF', effect, true);
+	var testUI;
+	var canvas;
+	var assetPath = '../../../asset/'
+	canvas = document.createElement('canvas');
+	document.body.appendChild(canvas);
+	RedGL(canvas, function (v) {
+		if (v) {
+			console.log('초기화 성공!')
+			var tWorld, tView, tView_postEffectTest, tScene, tController, tRenderer, tLight;
+			var setBase = function (redGL) {
+				// 월드 생성
+				redGL['world'] = tWorld = RedWorld();
+				// 씬 생성
+				tScene = RedScene(redGL);
+				// 카메라 생성
+				tController = RedObitController(redGL);
+				tController.tilt = -15;
+				tController.distance = 0;
+				tController.speedDistance = 0.5
+				// 렌더러 생성
+				tRenderer = RedRenderer();
+				// 뷰생성 및 적용
+				tView = RedView('HelloRedGL', redGL, tScene, tController);
+				tView_postEffectTest = RedView('HelloRedGL_testPostEffect', redGL, tScene, tController);
+				tView.setSize('50%', '100%');
+				tView.setLocation('50%', '0%');
+				tView_postEffectTest.setSize('50%', '100%');
+				tView_postEffectTest.setLocation('0%', '0%');
+				tWorld.addView(tView);
+				tWorld.addView(tView_postEffectTest);
+				// 스카이박스 설정
+				tScene.skyBox =
+					RedSkyBox(redGL, [
+						assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
+						assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
+						assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
+						assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
+						assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
+						assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
+					]);
+				// 라이트 설정
+				tLight = RedDirectionalLight(redGL);
+				tScene.addLight(tLight)
+				tLight.x = 10;
+				tLight.y = 10;
+				tLight.z = 10;
+				// Mesh 설정
+				var setMeshs = function (redGL) {
+					var MAX;
+					var i, j, k;
+					var tMesh;
+					var tGeo = RedSphere(redGL, 0.5, 16, 16, 16)
+					var tMaterial;
+					i = j = MAX = 11;
+					tMaterial = RedStandardMaterial(
+						redGL,
+						RedBitmapTexture(redGL, assetPath + 'brick/Brick03_col.jpg'),
+						RedBitmapTexture(redGL, assetPath + 'brick/Brick03_nrm.jpg'),
+						null,
+						RedBitmapTexture(redGL, assetPath + 'brick/Brick03_disp.jpg')
+					);
+					tMaterial.normalPower = 2;
+					while (i--) {
+						j = MAX
+						while (j--) {
+							k = MAX
+							while (k--) {
+								tMesh = RedMesh(redGL, tGeo, tMaterial)
+								tMesh.x = (i - MAX / 2) * 2
+								tMesh.y = (j - MAX / 2) * 2
+								tMesh.z = (k - MAX / 2) * 2
+								tScene.addChild(tMesh)
+							}
+						}
+					}
+				};
+				setMeshs(redGL);
+				// 렌더시작
+				tRenderer.start(redGL, function (time) {
+				});
+				// 렌더 디버거 활성화
+				tRenderer.setDebugButton();
+			};
+			setBase(this);
+			// 이펙트 적용
+			var effect;
+			effect = RedPostEffect_DoF(this);
+			tView_postEffectTest['postEffectManager'].addEffect(effect);
+			testUI(this, effect)
+		} else {
+			console.log('초기화 실패!')
+		}
+	})
+	testUI = function (redGL, effect) {
+		var gui = new baseTestUI(redGL)
+		gui.initRedGL()
+		gui.initPostEffect('RedPostEffect_DoF', effect, true);
 
-    }
+	}
 </script>
 </body>
 

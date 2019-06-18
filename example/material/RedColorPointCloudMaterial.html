@@ -26,125 +26,125 @@
 
 <body>
 <script id='testSource'>
-    var testUI;
-    var canvas;
-    var assetPath = '../../asset/'
-    var testRedPointCloud;
-    var testRedBitmapPointCloudMaterial
-    canvas = document.createElement('canvas');
-    document.body.appendChild(canvas);
-    RedGL(canvas, function (v) {
-        if (v) {
-            console.log('초기화 성공!')
-            var tWorld, tView, tScene, tController, tRenderer, tLight;
-            var setBase = function (redGL) {
-                // 월드 생성
-                redGL['world'] = tWorld = RedWorld();
-                // 씬 생성
-                tScene = RedScene(redGL);
-                // 카메라 생성
-                tController = RedObitController(redGL);
-                tController.tilt = -25;
-                tController.distance = 15;
-                tController.speedDistance = 0.5
-                // 렌더러 생성
-                tRenderer = RedRenderer();
-                // 뷰생성 및 적용
-                tView = RedView('HelloRedGL', redGL, tScene, tController);
-                tWorld.addView(tView);
-                // 그리드 설정
-                tScene['grid'] = RedGrid(redGL);
-                // 렌더시작
-                tRenderer.start(redGL, function (time) {
-                });
-                // 렌더 디버거 활성화
-                tRenderer.setDebugButton();
+	var testUI;
+	var canvas;
+	var assetPath = '../../asset/'
+	var testRedPointCloud;
+	var testRedBitmapPointCloudMaterial
+	canvas = document.createElement('canvas');
+	document.body.appendChild(canvas);
+	RedGL(canvas, function (v) {
+		if (v) {
+			console.log('초기화 성공!')
+			var tWorld, tView, tScene, tController, tRenderer, tLight;
+			var setBase = function (redGL) {
+				// 월드 생성
+				redGL['world'] = tWorld = RedWorld();
+				// 씬 생성
+				tScene = RedScene(redGL);
+				// 카메라 생성
+				tController = RedObitController(redGL);
+				tController.tilt = -25;
+				tController.distance = 15;
+				tController.speedDistance = 0.5
+				// 렌더러 생성
+				tRenderer = RedRenderer();
+				// 뷰생성 및 적용
+				tView = RedView('HelloRedGL', redGL, tScene, tController);
+				tWorld.addView(tView);
+				// 그리드 설정
+				tScene['grid'] = RedGrid(redGL);
+				// 렌더시작
+				tRenderer.start(redGL, function (time) {
+				});
+				// 렌더 디버거 활성화
+				tRenderer.setDebugButton();
 
-            };
-            setBase(this);
-            //////////////////////////////////////////////////////////////////
-            // RedPointCloud 설정
-            var i;
-            var interleaveData;
-            // 인터리브 정보 생성
-            interleaveData = [];
-            i = 100000
-            while (i--) {
-                // position
-                interleaveData.push(
-                    Math.random() * 100 - 50, // x
-                    Math.random() * 100 - 50, // y
-                    Math.random() * 100 - 50 // z
-                );
-                // pointSize
-                interleaveData.push(Math.random() * 0.1);
-                // color
-                interleaveData.push(Math.random(), Math.random(), Math.random(), Math.random());
-            }
-            // 포인트 유닛 생성
-            testRedPointCloud = RedColorPointCloud(
-                this,
-                interleaveData,
-                [
-                    RedInterleaveInfo('aVertexPosition', 3),
-                    RedInterleaveInfo('aPointSize', 1),
-                    RedInterleaveInfo('aVertexColor', 4)
-                ]
-            );
-            tScene.addChild(testRedPointCloud)
-            testUI(this);
-        } else {
-            console.log('초기화 실패!')
-        }
-    })
-    testUI = function (redGL) {
-        var gui = new baseTestUI(redGL)
-        gui.initRedGL()
-        var BLEND_TEST_DATA = {
-            blendSrc: 'SRC_ALPHA',
-            blendDst: 'ONE_MINUS_SRC_ALPHA',
-            blendFuncList: [
-                'ZERO',
-                'ONE',
-                'SRC_COLOR',
-                'ONE_MINUS_SRC_COLOR',
-                'DST_COLOR',
-                'ONE_MINUS_DST_COLOR',
-                'SRC_ALPHA',
-                'ONE_MINUS_SRC_ALPHA',
-                'DST_ALPHA',
-                'ONE_MINUS_DST_ALPHA',
-                'CONSTANT_COLOR',
-                'ONE_MINUS_CONSTANT_COLOR',
-                'CONSTANT_ALPHA',
-                'ONE_MINUS_CONSTANT_ALPHA',
-                'SRC_ALPHA_SATURATE'
-            ]
-        }
-        var tFolder = gui.gui.addFolder('RedPointCloud')
-        var blendSrc, blendDst
-        tFolder.add(testRedPointCloud, 'useBlendMode').onChange(function (v) {
-            if (v) {
-                blendSrc.domElement.style.display = 'block'
-                blendDst.domElement.style.display = 'block'
-            } else {
-                blendSrc.domElement.style.display = 'none'
-                blendDst.domElement.style.display = 'none'
-            }
-        })
-        blendSrc = tFolder.add(BLEND_TEST_DATA, 'blendSrc', BLEND_TEST_DATA['blendFuncList'])
-        blendSrc.onChange(function (v) {
-            testRedPointCloud.blendSrc = redGL.gl[v]
-        })
-        blendDst = tFolder.add(BLEND_TEST_DATA, 'blendDst', BLEND_TEST_DATA['blendFuncList'])
-        blendDst.onChange(function (v) {
-            testRedPointCloud.blendDst = redGL.gl[v]
-        })
-        blendDst.onChange(function (v) {
-            testRedPointCloud.blendDst = redGL.gl[v]
-        })
-        tFolder.open()
-    }
+			};
+			setBase(this);
+			//////////////////////////////////////////////////////////////////
+			// RedPointCloud 설정
+			var i;
+			var interleaveData;
+			// 인터리브 정보 생성
+			interleaveData = [];
+			i = 100000
+			while (i--) {
+				// position
+				interleaveData.push(
+					Math.random() * 100 - 50, // x
+					Math.random() * 100 - 50, // y
+					Math.random() * 100 - 50 // z
+				);
+				// pointSize
+				interleaveData.push(Math.random() * 0.1);
+				// color
+				interleaveData.push(Math.random(), Math.random(), Math.random(), Math.random());
+			}
+			// 포인트 유닛 생성
+			testRedPointCloud = RedColorPointCloud(
+				this,
+				interleaveData,
+				[
+					RedInterleaveInfo('aVertexPosition', 3),
+					RedInterleaveInfo('aPointSize', 1),
+					RedInterleaveInfo('aVertexColor', 4)
+				]
+			);
+			tScene.addChild(testRedPointCloud)
+			testUI(this);
+		} else {
+			console.log('초기화 실패!')
+		}
+	})
+	testUI = function (redGL) {
+		var gui = new baseTestUI(redGL)
+		gui.initRedGL()
+		var BLEND_TEST_DATA = {
+			blendSrc: 'SRC_ALPHA',
+			blendDst: 'ONE_MINUS_SRC_ALPHA',
+			blendFuncList: [
+				'ZERO',
+				'ONE',
+				'SRC_COLOR',
+				'ONE_MINUS_SRC_COLOR',
+				'DST_COLOR',
+				'ONE_MINUS_DST_COLOR',
+				'SRC_ALPHA',
+				'ONE_MINUS_SRC_ALPHA',
+				'DST_ALPHA',
+				'ONE_MINUS_DST_ALPHA',
+				'CONSTANT_COLOR',
+				'ONE_MINUS_CONSTANT_COLOR',
+				'CONSTANT_ALPHA',
+				'ONE_MINUS_CONSTANT_ALPHA',
+				'SRC_ALPHA_SATURATE'
+			]
+		}
+		var tFolder = gui.gui.addFolder('RedPointCloud')
+		var blendSrc, blendDst
+		tFolder.add(testRedPointCloud, 'useBlendMode').onChange(function (v) {
+			if (v) {
+				blendSrc.domElement.style.display = 'block'
+				blendDst.domElement.style.display = 'block'
+			} else {
+				blendSrc.domElement.style.display = 'none'
+				blendDst.domElement.style.display = 'none'
+			}
+		})
+		blendSrc = tFolder.add(BLEND_TEST_DATA, 'blendSrc', BLEND_TEST_DATA['blendFuncList'])
+		blendSrc.onChange(function (v) {
+			testRedPointCloud.blendSrc = redGL.gl[v]
+		})
+		blendDst = tFolder.add(BLEND_TEST_DATA, 'blendDst', BLEND_TEST_DATA['blendFuncList'])
+		blendDst.onChange(function (v) {
+			testRedPointCloud.blendDst = redGL.gl[v]
+		})
+		blendDst.onChange(function (v) {
+			testRedPointCloud.blendDst = redGL.gl[v]
+		})
+		tFolder.open()
+	}
 </script>
 </body>
 

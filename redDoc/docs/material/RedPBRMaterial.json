@@ -134,13 +134,13 @@
   {
     "code": "PROPERTY",
     "title": "useFlatMode",
-    "description": "\n    flatMode 사용여부\n    기본값 : true\n ",
+    "description": "\n\tflatMode 사용여부\n\t기본값 : true\n ",
     "return": "boolean"
   },
   {
     "code": "PROPERTY",
     "title": "usePreMultiply",
-    "description": "\n    usePreMultiply 사용여부\n    기본값 : false\n ",
+    "description": "\n\tusePreMultiply 사용여부\n\t기본값 : false\n ",
     "return": "boolean"
   }
 ]
