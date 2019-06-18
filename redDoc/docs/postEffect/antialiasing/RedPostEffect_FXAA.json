@@ -15,7 +15,7 @@
       "RedBaseMaterial"
     ],
     "demo": "../example/postEffect/antialiasing/RedPostEffect_FXAA.html",
-    "example": "\n          var effect;\n          effect = RedPostEffect_FXAA(RedGL Instance); // 포스트이펙트 생성\n          // postEffectManager는 RedView 생성시 자동생성됨.\n          (RedView Instance)['postEffectManager']['antialiasing'] = effect; // 뷰에 이펙트 설정\n ",
+    "example": "\n\tvar effect;\n\teffect = RedPostEffect_FXAA(RedGL Instance); // 포스트이펙트 생성\n\t// postEffectManager는 RedView 생성시 자동생성됨.\n\t(RedView Instance)['postEffectManager']['antialiasing'] = effect; // 뷰에 이펙트 설정\n ",
     "return": "RedPostEffect_FXAA Instance"
   }
 ]

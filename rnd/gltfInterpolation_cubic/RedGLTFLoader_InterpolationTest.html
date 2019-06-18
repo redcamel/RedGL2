@@ -26,138 +26,138 @@
 
 <body>
 <script id='testSource'>
-    var testUI;
-    var canvas;
-    var assetPath = '../../asset/'
-    canvas = document.createElement('canvas');
-    document.body.appendChild(canvas);
-    RedGL(canvas, function (v) {
-        if (v) {
-            var tWorld, tView, tScene, tController, tRenderer;
-            var setBase = function (redGL) {
-                // 월드 생성
-                redGL['world'] = tWorld = RedWorld();
-                // 씬 생성
-                tScene = RedScene(redGL);
-                // 카메라 생성
-                tController = RedObitController(redGL);
-                tController.pan = 25;
-                tController.tilt = -15;
-                tController.distance = 15;
-                // tController.speedDistance = 50
-                // 렌더러 생성
-                tRenderer = RedRenderer();
-                // 뷰생성 및 적용
-                tView = RedView('HelloRedGL', redGL, tScene, tController);
-                tWorld.addView(tView);
-                // 그리드 설정
-                tScene['grid'] = RedGrid(redGL);
-                // 라이트 설정
-                var testDLight;
-                testDLight = RedDirectionalLight(redGL)
-                testDLight.x = 100
-                testDLight.y = 100
-                testDLight.z = 100
-                tScene.addLight(testDLight)
-                // 렌더시작
-                tRenderer.start(redGL, function (time) {
-                });
-                // 렌더 디버거 활성화
-                tRenderer.setDebugButton();
-                testUI(redGL, tController)
-            };
+	var testUI;
+	var canvas;
+	var assetPath = '../../asset/'
+	canvas = document.createElement('canvas');
+	document.body.appendChild(canvas);
+	RedGL(canvas, function (v) {
+		if (v) {
+			var tWorld, tView, tScene, tController, tRenderer;
+			var setBase = function (redGL) {
+				// 월드 생성
+				redGL['world'] = tWorld = RedWorld();
+				// 씬 생성
+				tScene = RedScene(redGL);
+				// 카메라 생성
+				tController = RedObitController(redGL);
+				tController.pan = 25;
+				tController.tilt = -15;
+				tController.distance = 15;
+				// tController.speedDistance = 50
+				// 렌더러 생성
+				tRenderer = RedRenderer();
+				// 뷰생성 및 적용
+				tView = RedView('HelloRedGL', redGL, tScene, tController);
+				tWorld.addView(tView);
+				// 그리드 설정
+				tScene['grid'] = RedGrid(redGL);
+				// 라이트 설정
+				var testDLight;
+				testDLight = RedDirectionalLight(redGL)
+				testDLight.x = 100
+				testDLight.y = 100
+				testDLight.z = 100
+				tScene.addLight(testDLight)
+				// 렌더시작
+				tRenderer.start(redGL, function (time) {
+				});
+				// 렌더 디버거 활성화
+				tRenderer.setDebugButton();
+				testUI(redGL, tController)
+			};
 
-            setBase(this);
-            console.log(this)
+			setBase(this);
+			console.log(this)
 
-            // GLTF 로딩
-            tScene['skyBox'] = RedSkyBox(this, [
-                assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
-                assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
-                assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
-                assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
-                assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
-                assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
-            ])
-            // RedGLTFLoader(this,  'https://cdn.rawgit.com/ft-lab/ft-lab.github.io/c56ef016/gltf/grass/', 'rocks_trees_ao.glb', function (v) {
-            //     tScene.addChild(v['resultMesh'])
-            //     v['resultMesh'].x = -2
-            // })
-            // RedGLTFLoader(this,  'https://cdn.rawgit.com/mrdoob/three.js/dev/examples/models/gltf/', 'PrimaryIonDrive.glb', function (v) {
-            //     tScene.addChild(v['resultMesh'])
-            //     v['resultMesh'].x = 2
-            // })
-            // RedGLTFLoader(this,  assetPath + 'glTF/basic/', 'VertexColorTest.gltf', function (v) {
-            //     tScene.addChild(v['resultMesh'])
-            //     v['resultMesh'].z = -4
-            //     v['resultMesh'].x = -2
-            // })
-            // RedGLTFLoader(this,  'https://cx20.github.io/gltf-test/sampleModels/BoxVertexColors/glTF-Binary/', 'BoxVertexColors.glb', function (v) {
-            //
-            //     tScene.addChild(v['resultMesh'])
-            //     v['resultMesh'].z = -4
-            //     v['resultMesh'].x = 2
-            // })
-            // RedGLTFLoader(this,  'https://cdn.rawgit.com/mrdoob/rome-gltf/784089b4/files/models/life_soup/', 'quadruped_fox.gltf', function (v) {
-            // 'http://hankuro.sakura.ne.jp/glTF/life_soup/birdsA_eagle.gltf',
-            //     'http://hankuro.sakura.ne.jp/glTF/life_soup/birdsA_parrot.gltf',
-            //     'http://hankuro.sakura.ne.jp/glTF/life_soup/quadruped_bear.gltf',
-            //     'http://hankuro.sakura.ne.jp/glTF/life_soup/quadruped_chow.gltf',
-            //     'http://hankuro.sakura.ne.jp/glTF/life_soup/quadruped_fox.gltf',
-            //     'http://hankuro.sakura.ne.jp/glTF/life_soup/quadruped_horse.gltf'
+			// GLTF 로딩
+			tScene['skyBox'] = RedSkyBox(this, [
+				assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
+				assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
+				assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
+				assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
+				assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
+				assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
+			])
+			// RedGLTFLoader(this,  'https://cdn.rawgit.com/ft-lab/ft-lab.github.io/c56ef016/gltf/grass/', 'rocks_trees_ao.glb', function (v) {
+			//     tScene.addChild(v['resultMesh'])
+			//     v['resultMesh'].x = -2
+			// })
+			// RedGLTFLoader(this,  'https://cdn.rawgit.com/mrdoob/three.js/dev/examples/models/gltf/', 'PrimaryIonDrive.glb', function (v) {
+			//     tScene.addChild(v['resultMesh'])
+			//     v['resultMesh'].x = 2
+			// })
+			// RedGLTFLoader(this,  assetPath + 'glTF/basic/', 'VertexColorTest.gltf', function (v) {
+			//     tScene.addChild(v['resultMesh'])
+			//     v['resultMesh'].z = -4
+			//     v['resultMesh'].x = -2
+			// })
+			// RedGLTFLoader(this,  'https://cx20.github.io/gltf-test/sampleModels/BoxVertexColors/glTF-Binary/', 'BoxVertexColors.glb', function (v) {
+			//
+			//     tScene.addChild(v['resultMesh'])
+			//     v['resultMesh'].z = -4
+			//     v['resultMesh'].x = 2
+			// })
+			// RedGLTFLoader(this,  'https://cdn.rawgit.com/mrdoob/rome-gltf/784089b4/files/models/life_soup/', 'quadruped_fox.gltf', function (v) {
+			// 'http://hankuro.sakura.ne.jp/glTF/life_soup/birdsA_eagle.gltf',
+			//     'http://hankuro.sakura.ne.jp/glTF/life_soup/birdsA_parrot.gltf',
+			//     'http://hankuro.sakura.ne.jp/glTF/life_soup/quadruped_bear.gltf',
+			//     'http://hankuro.sakura.ne.jp/glTF/life_soup/quadruped_chow.gltf',
+			//     'http://hankuro.sakura.ne.jp/glTF/life_soup/quadruped_fox.gltf',
+			//     'http://hankuro.sakura.ne.jp/glTF/life_soup/quadruped_horse.gltf'
 
-            // RedGLTFLoader(this,  'https://cdn.rawgit.com/mrdoob/rome-gltf/784089b4/files/models/life_soup/', 'birdsA_eagle.gltf', function (v) {
-            // RedGLTFLoader(this,  'https://cdn.rawgit.com/mrdoob/rome-gltf/784089b4/files/models/life_soup/', 'birdsA_parrot.gltf', function (v) {
-            // RedGLTFLoader(this,  'https://cdn.rawgit.com/mrdoob/rome-gltf/784089b4/files/models/life_soup/', 'quadruped_bear.gltf', function (v) {
-            // RedGLTFLoader(this, 'https://cdn.rawgit.com/mrdoob/rome-gltf/784089b4/files/models/life_soup/', 'quadruped_chow.gltf', function (v) {
-            // RedGLTFLoader(this, 'https://cdn.rawgit.com/mrdoob/rome-gltf/784089b4/files/models/life_soup/', 'quadruped_fox.gltf', function (v) {
-            // // RedGLTFLoader(this, 'https://cdn.rawgit.com/mrdoob/rome-gltf/784089b4/files/models/life_soup/', 'quadruped_horse.gltf', function (v) {
-            //         tScene.addChild(v['resultMesh'])
-            //
-            //     }
-            // )
-            // RedGLTFLoader(this, assetPath + 'glTF/basic/MorphPrimitivesTest/', 'MorphPrimitivesTest.gltf', function (v) {
-            //     tScene.addChild(v['resultMesh'])
-            //     v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 10
-            // })
-            RedGLTFLoader(this, assetPath + 'glTF/basic/', 'InterpolationTest.glb', function (v) {
+			// RedGLTFLoader(this,  'https://cdn.rawgit.com/mrdoob/rome-gltf/784089b4/files/models/life_soup/', 'birdsA_eagle.gltf', function (v) {
+			// RedGLTFLoader(this,  'https://cdn.rawgit.com/mrdoob/rome-gltf/784089b4/files/models/life_soup/', 'birdsA_parrot.gltf', function (v) {
+			// RedGLTFLoader(this,  'https://cdn.rawgit.com/mrdoob/rome-gltf/784089b4/files/models/life_soup/', 'quadruped_bear.gltf', function (v) {
+			// RedGLTFLoader(this, 'https://cdn.rawgit.com/mrdoob/rome-gltf/784089b4/files/models/life_soup/', 'quadruped_chow.gltf', function (v) {
+			// RedGLTFLoader(this, 'https://cdn.rawgit.com/mrdoob/rome-gltf/784089b4/files/models/life_soup/', 'quadruped_fox.gltf', function (v) {
+			// // RedGLTFLoader(this, 'https://cdn.rawgit.com/mrdoob/rome-gltf/784089b4/files/models/life_soup/', 'quadruped_horse.gltf', function (v) {
+			//         tScene.addChild(v['resultMesh'])
+			//
+			//     }
+			// )
+			// RedGLTFLoader(this, assetPath + 'glTF/basic/MorphPrimitivesTest/', 'MorphPrimitivesTest.gltf', function (v) {
+			//     tScene.addChild(v['resultMesh'])
+			//     v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 10
+			// })
+			RedGLTFLoader(this, assetPath + 'glTF/basic/', 'InterpolationTest.glb', function (v) {
 
-                tScene.addChild(v['resultMesh'])
-            })
-            // RedGLTFLoader(this, assetPath + 'glTF/basic/', 'SimpleMorph.gltf', function (v) {
-            //
-            //     tScene.addChild(v['resultMesh'])
-            // })
-            // RedGLTFLoader(this,  assetPath + 'glTF/basic/', 'AlphaBlendModeTest.gltf', function (v) {
-            //     console.log('호잇!', v)
-            //     tScene.addChild(v['resultMesh'])
-            //     v['resultMesh'].z = 2
-            // })
+				tScene.addChild(v['resultMesh'])
+			})
+			// RedGLTFLoader(this, assetPath + 'glTF/basic/', 'SimpleMorph.gltf', function (v) {
+			//
+			//     tScene.addChild(v['resultMesh'])
+			// })
+			// RedGLTFLoader(this,  assetPath + 'glTF/basic/', 'AlphaBlendModeTest.gltf', function (v) {
+			//     console.log('호잇!', v)
+			//     tScene.addChild(v['resultMesh'])
+			//     v['resultMesh'].z = 2
+			// })
 
 
-            //
-            //             RedGLTFLoader(this,  'https://rawcdn.githack.com/BabylonJS/Exporters/9bc140006be149687be045f60b4a25cdb45ce4fc/Maya/Samples/glTF 2.0/T-Rex/', 'trex_running.gltf', function (v) {
-            //                 tScene.addChild(v['resultMesh'])
-            //
-            //                 v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.001
-            //                 v['resultMesh'].x = -1
-            //             })
-            //
-            //             RedGLTFLoader(this, assetPath + 'glTF/basic/', 'TextureSettingsTest.gltf', function (v) {
-            //                 console.log('호잇!', v)
-            //                 tScene.addChild(v['resultMesh'])
-            //
-            // //			v['resultMesh'].x = 5
-            //             })
-        } else {
-            console.log('초기화 실패!')
-        }
-    })
-    testUI = function (redGL) {
-        console.log('test')
-        var gui = new baseTestUI(redGL);
-        gui.initRedGL();
-    }
+			//
+			//             RedGLTFLoader(this,  'https://rawcdn.githack.com/BabylonJS/Exporters/9bc140006be149687be045f60b4a25cdb45ce4fc/Maya/Samples/glTF 2.0/T-Rex/', 'trex_running.gltf', function (v) {
+			//                 tScene.addChild(v['resultMesh'])
+			//
+			//                 v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 0.001
+			//                 v['resultMesh'].x = -1
+			//             })
+			//
+			//             RedGLTFLoader(this, assetPath + 'glTF/basic/', 'TextureSettingsTest.gltf', function (v) {
+			//                 console.log('호잇!', v)
+			//                 tScene.addChild(v['resultMesh'])
+			//
+			// //			v['resultMesh'].x = 5
+			//             })
+		} else {
+			console.log('초기화 실패!')
+		}
+	})
+	testUI = function (redGL) {
+		console.log('test')
+		var gui = new baseTestUI(redGL);
+		gui.initRedGL();
+	}
 </script>
 </body>
 

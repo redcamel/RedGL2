@@ -2,7 +2,7 @@
   ~ RedGL - MIT License
   ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
   ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
-  ~ Last modification time of this file - 2019.6.5 11:48
+  ~ Last modification time of this file - 2019.6.5 16:36
   -->
 
 <!DOCTYPE html>
@@ -25,95 +25,86 @@
 
 <body>
 <script id='testSource'>
-    var testUI;
-    var canvas;
-    var assetPath = '../../asset/'
-    canvas = document.createElement('canvas');
-    document.body.appendChild(canvas);
+	var testUI;
+	var canvas;
+	var assetPath = '../../asset/'
+	canvas = document.createElement('canvas');
+	document.body.appendChild(canvas);
 
-    RedGL(canvas, function (v) {
-        if (v) {
-            console.log('초기화 성공!')
-            var self = this
-            var tWorld, tView, tScene, tController, tRenderer;
-            var setBase = function (redGL) {
-                // 월드 생성
-                redGL['world'] = tWorld = RedWorld();
-                // 씬 생성
-                tScene = RedScene(redGL);
-                // 카메라 생성
-                tController = RedObitController(redGL);
-                tController.pan = 30;
-                tController.tilt = -30;
-                tController.distance = 50
-                tController.speedDistance = 4
-                var tLight = RedDirectionalLight(redGL);
-                tScene.addLight(tLight)
-                tLight.x = 30;
-                tLight.y = 30;
-                tLight.z = 30;
-                tLight.debug = true
-                // 렌더러 생성
-                tRenderer = RedRenderer();
-                // 뷰생성 및 적용
-                tView = RedView('HelloRedGL', redGL, tScene, tController);
-                tWorld.addView(tView);
-                // 그리드 설정
-                tScene['grid'] = RedGrid(redGL);
-                // 렌더시작
-                tRenderer.start(redGL, function (time) {
-                });
-                // 렌더 디버거 활성화
-                tRenderer.setDebugButton();
+	RedGL(canvas, function (v) {
+		if (v) {
+			console.log('초기화 성공!')
+			var self = this
+			var tWorld, tView, tScene, tController, tRenderer;
+			var setBase = function (redGL) {
+				// 월드 생성
+				redGL['world'] = tWorld = RedWorld();
+				// 씬 생성
+				tScene = RedScene(redGL);
+				// 카메라 생성
+				tController = RedObitController(redGL);
+				tController.pan = 30;
+				tController.tilt = -30;
+				tController.distance = 50
+				tController.speedDistance = 4
+				var tLight = RedDirectionalLight(redGL);
+				tScene.addLight(tLight)
+				tLight.x = 30;
+				tLight.y = 30;
+				tLight.z = 30;
+				tLight.debug = true
+				// 렌더러 생성
+				tRenderer = RedRenderer();
+				// 뷰생성 및 적용
+				tView = RedView('HelloRedGL', redGL, tScene, tController);
+				tWorld.addView(tView);
+				// 그리드 설정
+				tScene['grid'] = RedGrid(redGL);
+				// 렌더시작
+				tRenderer.start(redGL, function (time) {
+				});
+				// 렌더 디버거 활성화
+				tRenderer.setDebugButton();
 
-                console.log(redGL);
-            };
-            setBase(this);
-            var i = 500
-            while (i--) {
-                var tMesh = RedMesh(this, RedBox(this, 1, 1, 3), RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'crate.png')))
-                tMesh.x = Math.random() * 50 - 25
-                tMesh.y = Math.random() * 50 - 25
-                tMesh.z = Math.random() * 50 - 25
-                // tMesh.x = Math.sin(Math.PI*2 / 50 * i) * 8
-                // // tMesh.y = Math.random() * 15 - 7.5
-                // tMesh.z = Math.cos(Math.PI*2 / 50 * i) * 8
-                tMesh.lookAt(0, 0, 0)
-                tScene.addChild(tMesh)
-            }
-            var centerMesh = RedMesh(this, RedSphere(this,0.5,16,16,16), RedColorPhongMaterial(this))
-            tScene.addChild(centerMesh)
-            testUI(this, tScene, centerMesh)
+				console.log(redGL);
+			};
+			setBase(this);
+			var i = 500
+			while (i--) {
+				var tMesh = RedMesh(this, RedBox(this, 1, 1, 3), RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'crate.png')))
+				tMesh.x = Math.random() * 50 - 25
+				tMesh.y = Math.random() * 50 - 25
+				tMesh.z = Math.random() * 50 - 25
+				// tMesh.x = Math.sin(Math.PI*2 / 50 * i) * 8
+				// // tMesh.y = Math.random() * 15 - 7.5
+				// tMesh.z = Math.cos(Math.PI*2 / 50 * i) * 8
+				tMesh.lookAt(0, 0, 0)
+				tScene.addChild(tMesh)
+			}
+			var centerMesh = RedMesh(this, RedSphere(this, 0.5, 16, 16, 16), RedColorPhongMaterial(this))
+			tScene.addChild(centerMesh)
+			testUI(this, tScene, centerMesh)
 
 
-        } else {
-            console.log('초기화 실패!')
-        }
+		} else {
+			console.log('초기화 실패!')
+		}
 
-    });
-    testUI = function (redGL, tScene, centerMesh) {
-        var gui = new baseTestUI(redGL);
-        gui.initRedGL();
-        gui.gui.add(centerMesh, 'x', -10, 10, 0.01).onChange(function (v) {
-            centerMesh.x = v
-            tScene.children.forEach(function (tMesh) {
-                tMesh.lookAt(centerMesh.x, centerMesh.y, centerMesh.z)
-            })
-        });
-        gui.gui.add(centerMesh, 'y', -10, 10, 0.01).onChange(function (v) {
-            centerMesh.x = v
-            tScene.children.forEach(function (tMesh) {
-                tMesh.lookAt(centerMesh.x, centerMesh.y, centerMesh.z)
-            })
-        });
-        gui.gui.add(centerMesh, 'z', -10, 10, 0.01).onChange(function (v) {
-            centerMesh.x = v
-            tScene.children.forEach(function (tMesh) {
-                tMesh.lookAt(centerMesh.x, centerMesh.y, centerMesh.z)
-            })
-        });
+	});
+	testUI = function (redGL, tScene, centerMesh) {
+		var gui = new baseTestUI(redGL);
+		gui.initRedGL();
+		['x', 'y', 'z'].forEach(function (key) {
+			gui.gui.add(centerMesh, key, -10, 10, 0.01).onChange(function (v) {
+				centerMesh[key] = v
+				tScene.children.forEach(function (tMesh) {
+					tMesh.lookAt(centerMesh.x, centerMesh.y, centerMesh.z)
+				})
+			});
+		});
 
-    }
+
+	}
 </script>
 </body>
 

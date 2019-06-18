@@ -33,7 +33,7 @@
           "type": "Object"
         },
         "초기화 옵션을 지정한다.",
-        "\n              <code>\n              // 초기값\n              {\n                  alpha: false,\n                  depth: true,\n                  stencil: false,\n                  antialias: true,\n                  premultipliedAlpha: false,\n                  preserveDrawingBuffer: false,\n                  powerPreference: 'default', // default, high-performance, low-power\n                  failIfMajorPerformanceCaveat: false\n              }\n              </code>\n\t\t "
+        "\n\t\t<code>\n\t\t// 초기값\n\t\t{\n\t\t\talpha: false,\n\t\t\tdepth: true,\n\t\t\tstencil: false,\n\t\t\tantialias: true,\n\t\t\tpremultipliedAlpha: false,\n\t\t\tpreserveDrawingBuffer: false,\n\t\t\tpowerPreference: 'default', // default, high-performance, low-power\n\t\t\tfailIfMajorPerformanceCaveat: false\n\t\t}\n\t\t</code>\n\t\t "
       ],
       "targetContextKey": [
         {
@@ -44,7 +44,7 @@
       ]
     },
     "demo": "../example/etc/RedGL.html",
-    "example": "\n          var canvas = document.createElement('canvas');\n          document.body.appendChild(canvas);\n          // 기초 초기화\n          RedGL(\n              canvas,\n              function(v){\n                  // 성공,실패에 따라 v값이 true or false.\n                  if(v){\n                      // 초기화 성공\n                      console.log(this.detect); // 디텍팅정보\n                      console.log(this.gl); // webGL context\n                      console.log(this.renderScale); // 렌더스케일 (기본값 : 1)\n                      this.setSize('100%', '100%'); // 사이즈 설정 : 숫자형, %형 둘다 허용\n                  }else{\n                      // 초기화실패\n                  }\n              }\n          )\n ",
+    "example": "\n\tvar canvas = document.createElement('canvas');\n\tdocument.body.appendChild(canvas);\n\t// 기초 초기화\n\tRedGL(\n\t\tcanvas,\n\t\tfunction(v){\n\t\t\t// 성공,실패에 따라 v값이 true or false.\n\t\t\tif(v){\n\t\t\t\t// 초기화 성공\n\t\t\t\tconsole.log(this.detect); // 디텍팅정보\n\t\t\t\tconsole.log(this.gl); // webGL context\n\t\t\t\tconsole.log(this.renderScale); // 렌더스케일 (기본값 : 1)\n\t\t\t\tthis.setSize('100%', '100%'); // 사이즈 설정 : 숫자형, %형 둘다 허용\n\t\t\t}else{\n\t\t\t\t// 초기화실패\n\t\t\t}\n\t\t}\n\t)\n ",
     "return": "RedGL Instance"
   },
   {

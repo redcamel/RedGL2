@@ -25,201 +25,201 @@
 
 <body>
 <script id='testSource'>
-    var testUI, assetPath;
-    var canvas;
-    var tBitmapPointCloudMaterial
-    assetPath = '../../asset/'
-    canvas = document.createElement('canvas');
-    document.body.appendChild(canvas);
-    RedGL(canvas, function (v) {
-        if (v) {
-            console.log('초기화 성공!', this)
-            var self = this;
-            console.log('초기화 성공!')
-            var tWorld, tView, tScene, tController, tRenderer, tLight;
-            var setBase = function (redGL) {
-                // 월드 생성
-                redGL['world'] = tWorld = RedWorld();
-                // 씬 생성
-                tScene = RedScene(redGL);
-                // 카메라 생성
-                tController = RedObitController(redGL);
-                tController.pan = 25;
-                tController.tilt = -15;
-                tController.distance = 15;
-                tController.speedDistance = 0.5
-                // 렌더러 생성
-                tRenderer = RedRenderer();
-                // 뷰생성 및 적용
-                tView = RedView('HelloRedGL', redGL, tScene, tController);
-                tWorld.addView(tView);
-                // 그리드 설정
-                tScene['grid'] = RedGrid(redGL);
-                tScene['backgroundColor'] = '#ff34ff';
-                // 라이트 설정
-                tLight = RedDirectionalLight(redGL);
-                tScene.addLight(tLight)
-                tLight.x = 10;
-                tLight.y = 10;
-                tLight.z = 10;
-                tLight = RedDirectionalLight(redGL, '#ff00ff');
-                tScene.addLight(tLight)
-                tLight.x = -10;
-                tLight.y = 10;
-                tLight.z = -10;
-                tScene['skyBox'] = RedSkyBox(redGL, [
-                    assetPath + 'cubemap/posx.png',
-                    assetPath + 'cubemap/negx.png',
-                    assetPath + 'cubemap/posy.png',
-                    assetPath + 'cubemap/negy.png',
-                    assetPath + 'cubemap/posz.png',
-                    assetPath + 'cubemap/negz.png'
-                ])
-                // 렌더시작
-                tRenderer.start(redGL, function (time) {
+	var testUI, assetPath;
+	var canvas;
+	var tBitmapPointCloudMaterial
+	assetPath = '../../asset/'
+	canvas = document.createElement('canvas');
+	document.body.appendChild(canvas);
+	RedGL(canvas, function (v) {
+		if (v) {
+			console.log('초기화 성공!', this)
+			var self = this;
+			console.log('초기화 성공!')
+			var tWorld, tView, tScene, tController, tRenderer, tLight;
+			var setBase = function (redGL) {
+				// 월드 생성
+				redGL['world'] = tWorld = RedWorld();
+				// 씬 생성
+				tScene = RedScene(redGL);
+				// 카메라 생성
+				tController = RedObitController(redGL);
+				tController.pan = 25;
+				tController.tilt = -15;
+				tController.distance = 15;
+				tController.speedDistance = 0.5
+				// 렌더러 생성
+				tRenderer = RedRenderer();
+				// 뷰생성 및 적용
+				tView = RedView('HelloRedGL', redGL, tScene, tController);
+				tWorld.addView(tView);
+				// 그리드 설정
+				tScene['grid'] = RedGrid(redGL);
+				tScene['backgroundColor'] = '#ff34ff';
+				// 라이트 설정
+				tLight = RedDirectionalLight(redGL);
+				tScene.addLight(tLight)
+				tLight.x = 10;
+				tLight.y = 10;
+				tLight.z = 10;
+				tLight = RedDirectionalLight(redGL, '#ff00ff');
+				tScene.addLight(tLight)
+				tLight.x = -10;
+				tLight.y = 10;
+				tLight.z = -10;
+				tScene['skyBox'] = RedSkyBox(redGL, [
+					assetPath + 'cubemap/posx.png',
+					assetPath + 'cubemap/negx.png',
+					assetPath + 'cubemap/posy.png',
+					assetPath + 'cubemap/negy.png',
+					assetPath + 'cubemap/posz.png',
+					assetPath + 'cubemap/negz.png'
+				])
+				// 렌더시작
+				tRenderer.start(redGL, function (time) {
 
-                });
-                // 렌더 디버거 활성화
-                tRenderer.setDebugButton();
-                testUI(redGL, tScene)
-            };
-            setBase(this);
-            // Mesh 설정
-            var tPBR
-            var tENV
+				});
+				// 렌더 디버거 활성화
+				tRenderer.setDebugButton();
+				testUI(redGL, tScene)
+			};
+			setBase(this);
+			// Mesh 설정
+			var tPBR
+			var tENV
 
-            var testMaterials = [
-                // ['RedColorPhongTextureMaterial', RedColorPhongTextureMaterial(self)],
-                ['RedBitmapMaterial', RedBitmapMaterial(self, RedBitmapTexture(self, assetPath + 'alphaTest.png'))],
-                ['RedStandardMaterial', RedStandardMaterial(self, RedBitmapTexture(self, assetPath + 'alphaTest.png'))],
-                ['RedSheetMaterial', RedSheetMaterial(self, RedBitmapTexture(self, assetPath + 'sheet/spriteSheet.png'), 24, 5, 3, 15)],
-                ['RedEnvironmentMaterial', tENV = RedEnvironmentMaterial(
-                    self,
-                    RedBitmapTexture(self, assetPath + 'alphaTest.png'),
-                    RedBitmapCubeTexture(self, [
-                        assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
-                        assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
-                        assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
-                        assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
-                        assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
-                        assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
-                    ]),
-                    RedBitmapTexture(self, assetPath + 'brick/Brick03_nrm.jpg'),
-                    RedBitmapTexture(self, assetPath + 'specular.png')
-                )],
-                ['RedPBRMaterial', tPBR = RedPBRMaterial(
-                    self,
-                    RedBitmapTexture(self, assetPath + 'alphaTest.png'),
-                    RedBitmapCubeTexture(self, [
-                        assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
-                        assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
-                        assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
-                        assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
-                        assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
-                        assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
-                    ]),
-                    RedBitmapTexture(self, assetPath + 'brick/Brick03_nrm.jpg')
-                )]
-            ];
-            tBitmapPointCloudMaterial = RedBitmapPointCloudMaterial(self, RedBitmapTexture(self, assetPath + 'particle.png'))
-            tENV.reflectionPower = 0.5
-            tPBR.baseColorFactor = [1, 1, 1, 1]
-            tPBR.metallicFactor = 0.5
-            tPBR.roughnessFactor = 0.1
-            var max = testMaterials.length
-            var i = max
-            var setOptionText = function (target, v) {
-                var tText = RedText(target, 512, 256)
-                tText.color = '#fff'
-                tText.background = 'rgba(0,0,0,0.0)'
-                tText.text = v
-                tText.fontSize = '34px'
-                tText.lineHeight = '30px'
-                tText.padding = '5px'
-                tText.textAlign = 'center'
-                tText.sprite3DYn = true
-                tText.perspectiveScale = false
-                tText.useDepthTest = false
-                tText.scaleX = 0.5
-                tText.scaleY = 0.5
-                return tText
-            }
+			var testMaterials = [
+				// ['RedColorPhongTextureMaterial', RedColorPhongTextureMaterial(self)],
+				['RedBitmapMaterial', RedBitmapMaterial(self, RedBitmapTexture(self, assetPath + 'alphaTest.png'))],
+				['RedStandardMaterial', RedStandardMaterial(self, RedBitmapTexture(self, assetPath + 'alphaTest.png'))],
+				['RedSheetMaterial', RedSheetMaterial(self, RedBitmapTexture(self, assetPath + 'sheet/spriteSheet.png'), 24, 5, 3, 15)],
+				['RedEnvironmentMaterial', tENV = RedEnvironmentMaterial(
+					self,
+					RedBitmapTexture(self, assetPath + 'alphaTest.png'),
+					RedBitmapCubeTexture(self, [
+						assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
+						assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
+						assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
+						assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
+						assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
+						assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
+					]),
+					RedBitmapTexture(self, assetPath + 'brick/Brick03_nrm.jpg'),
+					RedBitmapTexture(self, assetPath + 'specular.png')
+				)],
+				['RedPBRMaterial', tPBR = RedPBRMaterial(
+					self,
+					RedBitmapTexture(self, assetPath + 'alphaTest.png'),
+					RedBitmapCubeTexture(self, [
+						assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
+						assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
+						assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
+						assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
+						assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
+						assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
+					]),
+					RedBitmapTexture(self, assetPath + 'brick/Brick03_nrm.jpg')
+				)]
+			];
+			tBitmapPointCloudMaterial = RedBitmapPointCloudMaterial(self, RedBitmapTexture(self, assetPath + 'particle.png'))
+			tENV.reflectionPower = 0.5
+			tPBR.baseColorFactor = [1, 1, 1, 1]
+			tPBR.metallicFactor = 0.5
+			tPBR.roughnessFactor = 0.1
+			var max = testMaterials.length
+			var i = max
+			var setOptionText = function (target, v) {
+				var tText = RedText(target, 512, 256)
+				tText.color = '#fff'
+				tText.background = 'rgba(0,0,0,0.0)'
+				tText.text = v
+				tText.fontSize = '34px'
+				tText.lineHeight = '30px'
+				tText.padding = '5px'
+				tText.textAlign = 'center'
+				tText.sprite3DYn = true
+				tText.perspectiveScale = false
+				tText.useDepthTest = false
+				tText.scaleX = 0.5
+				tText.scaleY = 0.5
+				return tText
+			}
 
-            while (i--) {
-                var testMesh = RedMesh(self, RedBox(self, 2, 2, 2), testMaterials[i][1])
-                console.log(testMaterials[i][1])
-                testMaterials[i][1].useFlatMode = true
-                testMesh.x = Math.sin(Math.PI * 2 / (max) * i) * 3
-                testMesh.z = Math.cos(Math.PI * 2 / (max) * i) * 3
-                testMesh.useTransparentSort = true
-                // testMesh.useCullFace=false
-                tScene.addChild(testMesh)
-                var t = setOptionText(this, testMaterials[i][0])
-                t.y = 1.5
-                testMesh.addChild(t)
-            }
+			while (i--) {
+				var testMesh = RedMesh(self, RedBox(self, 2, 2, 2), testMaterials[i][1])
+				console.log(testMaterials[i][1])
+				testMaterials[i][1].useFlatMode = true
+				testMesh.x = Math.sin(Math.PI * 2 / (max) * i) * 3
+				testMesh.z = Math.cos(Math.PI * 2 / (max) * i) * 3
+				testMesh.useTransparentSort = true
+				// testMesh.useCullFace=false
+				tScene.addChild(testMesh)
+				var t = setOptionText(this, testMaterials[i][0])
+				t.y = 1.5
+				testMesh.addChild(t)
+			}
 
-            //////////////////////////////////////////////////////////////////
-            // RedPointCloud 설정
-            var i;
-            var interleaveData;
-            var testRedPointCloud;
-            // 인터리브 정보 생성
-            interleaveData = [];
-            i = 100000
-            while (i--) {
-                // position
-                interleaveData.push(
-                    Math.random() * 100 - 50, // x
-                    Math.random() * 100 - 50, // y
-                    Math.random() * 100 - 50 // z
-                );
-                // pointSize
-                interleaveData.push(Math.random() * 1);
-            }
-            // 포인트 유닛 생성
-            testRedPointCloud = RedBitmapPointCloud(
-                this,
-                interleaveData,
-                [
-                    RedInterleaveInfo('aVertexPosition', 3),
-                    RedInterleaveInfo('aPointSize', 1),
-                    RedInterleaveInfo('aVertexColor', 4)
-                ],
-                // 포인트 재질 생성
-                tBitmapPointCloudMaterial
-            );
+			//////////////////////////////////////////////////////////////////
+			// RedPointCloud 설정
+			var i;
+			var interleaveData;
+			var testRedPointCloud;
+			// 인터리브 정보 생성
+			interleaveData = [];
+			i = 100000
+			while (i--) {
+				// position
+				interleaveData.push(
+					Math.random() * 100 - 50, // x
+					Math.random() * 100 - 50, // y
+					Math.random() * 100 - 50 // z
+				);
+				// pointSize
+				interleaveData.push(Math.random() * 1);
+			}
+			// 포인트 유닛 생성
+			testRedPointCloud = RedBitmapPointCloud(
+				this,
+				interleaveData,
+				[
+					RedInterleaveInfo('aVertexPosition', 3),
+					RedInterleaveInfo('aPointSize', 1),
+					RedInterleaveInfo('aVertexColor', 4)
+				],
+				// 포인트 재질 생성
+				tBitmapPointCloudMaterial
+			);
 
-            tScene.addChild(testRedPointCloud)
+			tScene.addChild(testRedPointCloud)
 
 
-        } else {
-            console.log('초기화 실패!')
-        }
-    })
-    testUI = function (redGL, tScene) {
-        var gui = new baseTestUI(redGL)
-        gui.initRedGL()
-        var alphaTest = {
-            alpha: 1,
-            usePreMultiply: false
-        }
-        var folder;
-        folder = gui['gui'].addFolder('RedBitmapMaterial')
-        folder.add(alphaTest, 'alpha', 0, 1, 0.01).onChange(function (v) {
-            tScene.children.forEach(function (v2) {
-                v2.material.alpha = v
-            })
-            tBitmapPointCloudMaterial.alpha = v
-        })
-        folder.add(alphaTest, 'usePreMultiply').onChange(function (v) {
-            tScene.children.forEach(function (v2) {
-                v2.material.usePreMultiply = v
-            })
-            tBitmapPointCloudMaterial.usePreMultiply = v
-        })
-        folder.open()
-    }
+		} else {
+			console.log('초기화 실패!')
+		}
+	})
+	testUI = function (redGL, tScene) {
+		var gui = new baseTestUI(redGL)
+		gui.initRedGL()
+		var alphaTest = {
+			alpha: 1,
+			usePreMultiply: false
+		}
+		var folder;
+		folder = gui['gui'].addFolder('RedBitmapMaterial')
+		folder.add(alphaTest, 'alpha', 0, 1, 0.01).onChange(function (v) {
+			tScene.children.forEach(function (v2) {
+				v2.material.alpha = v
+			})
+			tBitmapPointCloudMaterial.alpha = v
+		})
+		folder.add(alphaTest, 'usePreMultiply').onChange(function (v) {
+			tScene.children.forEach(function (v2) {
+				v2.material.usePreMultiply = v
+			})
+			tBitmapPointCloudMaterial.usePreMultiply = v
+		})
+		folder.open()
+	}
 
 </script>
 </body>

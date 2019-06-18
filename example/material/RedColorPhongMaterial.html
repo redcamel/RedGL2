@@ -26,111 +26,111 @@
 
 <body>
 <script id='testSource'>
-    var testUI;
-    var canvas;
-    var assetPath = '../../asset/'
-    canvas = document.createElement('canvas');
-    document.body.appendChild(canvas);
-    RedGL(canvas, function (v) {
-        if (v) {
-            console.log('초기화 성공!');
-            var tWorld, tView, tScene, tController, tRenderer, tLight;
-            var setBase = function (redGL) {
-                // 월드 생성
-                redGL['world'] = tWorld = RedWorld();
-                // 씬 생성
-                tScene = RedScene(redGL);
-                // 카메라 생성
-                tController = RedObitController(redGL);
-                tController.pan = 0;
-                tController.tilt = -15;
-                tController.distance = 3;
-                tController.speedDistance = 0.5
-                // 렌더러 생성
-                tRenderer = RedRenderer();
-                // 뷰생성 및 적용
-                tView = RedView('HelloRedGL', redGL, tScene, tController);
-                tWorld.addView(tView);
-                // 그리드 설정
-                tScene['grid'] = RedGrid(redGL);
-                // 라이트 설정
-                tLight = RedDirectionalLight(redGL);
-                tScene.addLight(tLight)
-                tLight.x = 10;
-                tLight.y = 10;
-                tLight.z = 10;
-                // 렌더시작
-                tRenderer.start(redGL, function (time) {
-                    tScene.children.forEach(function (tMesh) {
-                        tMesh.rotationX += 1
-                        tMesh.rotationY += 1
-                        tMesh.rotationZ += 1
-                    })
-                });
-                // 렌더 디버거 활성화
-                tRenderer.setDebugButton();
-            };
-            setBase(this);
-            // 재질설정
-            var tMaterial = RedColorPhongMaterial(this, '#ff0000');
-            // Mesh 설정
-            var makeMesh = function (redGL, y) {
-                var tMesh;
-                tMesh = RedMesh(redGL, RedSphere(redGL, 0.5, 32, 32, 32), tMaterial)
-                tMesh.x = -0.75
-                tMesh.y = y
-                tScene.addChild(tMesh)
-                tMesh = RedMesh(redGL, RedCylinder(redGL, 0, 0.5, 1, 16, 16), tMaterial)
-                tMesh.x = 0.75
-                tMesh.y = y
-                tScene.addChild(tMesh)
-            }
-            makeMesh(this, -0.75);
-            makeMesh(this, 0.75);
-            //
-            testUI(this, tScene);
-        } else {
-            console.log('초기화 실패!')
-        }
-    })
-    testUI = function (redGL, tScene) {
-        var gui = new baseTestUI(redGL)
-        gui.initRedGL()
-        var folder = gui['gui'].addFolder('RedColorPhongMaterial')
-        var testColorPhong = {
-            color: '#ff0000',
-            alpha: 1,
-            shininess: 16,
-            specularPower: 1,
-            useFlatMode: false
-        }
-        folder.addColor(testColorPhong, 'color').onChange(function (v) {
-            tScene.children.forEach(function (v2) {
-                v2.material.color = v
-            })
-        });
-        folder.add(testColorPhong, 'alpha', 0, 1, 0.01).onChange(function (v) {
-            tScene.children.forEach(function (v2) {
-                v2.material.alpha = v
-            })
-        });
-        folder.add(testColorPhong, 'shininess', 1, 128, 0.1).onChange(function (v) {
-            tScene.children.forEach(function (v2) {
-                v2.material.shininess = v
-            })
-        });
-        folder.add(testColorPhong, 'specularPower', 0.1, 10, 0.1).onChange(function (v) {
-            tScene.children.forEach(function (v2) {
-                v2.material.specularPower = v
-            })
-        });
-        folder.add(testColorPhong, 'useFlatMode').onChange(function (v) {
-            tScene.children.forEach(function (v2) {
-                v2.material.useFlatMode = v
-            })
-        });
-        folder.open()
-    }
+	var testUI;
+	var canvas;
+	var assetPath = '../../asset/'
+	canvas = document.createElement('canvas');
+	document.body.appendChild(canvas);
+	RedGL(canvas, function (v) {
+		if (v) {
+			console.log('초기화 성공!');
+			var tWorld, tView, tScene, tController, tRenderer, tLight;
+			var setBase = function (redGL) {
+				// 월드 생성
+				redGL['world'] = tWorld = RedWorld();
+				// 씬 생성
+				tScene = RedScene(redGL);
+				// 카메라 생성
+				tController = RedObitController(redGL);
+				tController.pan = 0;
+				tController.tilt = -15;
+				tController.distance = 3;
+				tController.speedDistance = 0.5
+				// 렌더러 생성
+				tRenderer = RedRenderer();
+				// 뷰생성 및 적용
+				tView = RedView('HelloRedGL', redGL, tScene, tController);
+				tWorld.addView(tView);
+				// 그리드 설정
+				tScene['grid'] = RedGrid(redGL);
+				// 라이트 설정
+				tLight = RedDirectionalLight(redGL);
+				tScene.addLight(tLight)
+				tLight.x = 10;
+				tLight.y = 10;
+				tLight.z = 10;
+				// 렌더시작
+				tRenderer.start(redGL, function (time) {
+					tScene.children.forEach(function (tMesh) {
+						tMesh.rotationX += 1
+						tMesh.rotationY += 1
+						tMesh.rotationZ += 1
+					})
+				});
+				// 렌더 디버거 활성화
+				tRenderer.setDebugButton();
+			};
+			setBase(this);
+			// 재질설정
+			var tMaterial = RedColorPhongMaterial(this, '#ff0000');
+			// Mesh 설정
+			var makeMesh = function (redGL, y) {
+				var tMesh;
+				tMesh = RedMesh(redGL, RedSphere(redGL, 0.5, 32, 32, 32), tMaterial)
+				tMesh.x = -0.75
+				tMesh.y = y
+				tScene.addChild(tMesh)
+				tMesh = RedMesh(redGL, RedCylinder(redGL, 0, 0.5, 1, 16, 16), tMaterial)
+				tMesh.x = 0.75
+				tMesh.y = y
+				tScene.addChild(tMesh)
+			}
+			makeMesh(this, -0.75);
+			makeMesh(this, 0.75);
+			//
+			testUI(this, tScene);
+		} else {
+			console.log('초기화 실패!')
+		}
+	})
+	testUI = function (redGL, tScene) {
+		var gui = new baseTestUI(redGL)
+		gui.initRedGL()
+		var folder = gui['gui'].addFolder('RedColorPhongMaterial')
+		var testColorPhong = {
+			color: '#ff0000',
+			alpha: 1,
+			shininess: 16,
+			specularPower: 1,
+			useFlatMode: false
+		}
+		folder.addColor(testColorPhong, 'color').onChange(function (v) {
+			tScene.children.forEach(function (v2) {
+				v2.material.color = v
+			})
+		});
+		folder.add(testColorPhong, 'alpha', 0, 1, 0.01).onChange(function (v) {
+			tScene.children.forEach(function (v2) {
+				v2.material.alpha = v
+			})
+		});
+		folder.add(testColorPhong, 'shininess', 1, 128, 0.1).onChange(function (v) {
+			tScene.children.forEach(function (v2) {
+				v2.material.shininess = v
+			})
+		});
+		folder.add(testColorPhong, 'specularPower', 0.1, 10, 0.1).onChange(function (v) {
+			tScene.children.forEach(function (v2) {
+				v2.material.specularPower = v
+			})
+		});
+		folder.add(testColorPhong, 'useFlatMode').onChange(function (v) {
+			tScene.children.forEach(function (v2) {
+				v2.material.useFlatMode = v
+			})
+		});
+		folder.open()
+	}
 </script>
 </body>
 

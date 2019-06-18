@@ -26,111 +26,111 @@
 
 <body>
 <script id='testSource'>
-    var testUI;
-    var canvas;
-    var assetPath = '../../asset/';
-    canvas = document.createElement('canvas');
-    document.body.appendChild(canvas);
-    RedGL(canvas, function (v) {
-        if (v) {
-            console.log('초기화 성공!');
-            var tWorld, tView, tScene, tController, tRenderer;
-            var setBase = function (redGL) {
-                // 월드 생성
-                redGL['world'] = tWorld = RedWorld();
-                // 씬 생성
-                tScene = RedScene(redGL);
-                // 카메라 생성
-                tController = RedObitController(redGL);
-                tController.pan = 45;
-                tController.tilt = -45;
-                // 렌더러 생성
-                tRenderer = RedRenderer();
-                // 뷰생성 및 적용
-                tView = RedView('HelloRedGL', redGL, tScene, tController);
-                tWorld.addView(tView);
-                // 그리드 설정
-                tScene['grid'] = RedGrid(redGL);
-                // 렌더시작
-                tRenderer.start(redGL, function (time) {
-                });
-                // 렌더 디버거 활성화
-                tRenderer.setDebugButton();
+	var testUI;
+	var canvas;
+	var assetPath = '../../asset/';
+	canvas = document.createElement('canvas');
+	document.body.appendChild(canvas);
+	RedGL(canvas, function (v) {
+		if (v) {
+			console.log('초기화 성공!');
+			var tWorld, tView, tScene, tController, tRenderer;
+			var setBase = function (redGL) {
+				// 월드 생성
+				redGL['world'] = tWorld = RedWorld();
+				// 씬 생성
+				tScene = RedScene(redGL);
+				// 카메라 생성
+				tController = RedObitController(redGL);
+				tController.pan = 45;
+				tController.tilt = -45;
+				// 렌더러 생성
+				tRenderer = RedRenderer();
+				// 뷰생성 및 적용
+				tView = RedView('HelloRedGL', redGL, tScene, tController);
+				tWorld.addView(tView);
+				// 그리드 설정
+				tScene['grid'] = RedGrid(redGL);
+				// 렌더시작
+				tRenderer.start(redGL, function (time) {
+				});
+				// 렌더 디버거 활성화
+				tRenderer.setDebugButton();
 
-            };
-            setBase(this);
-            // Box 설정
-            var tGeometry = RedCylinder(this, 2, 1, 5, 20, 20, true, 0, Math.PI * 2);
-            var tMaterial = RedBitmapMaterial(
-                this,
-                RedBitmapTexture(this, assetPath + 'brick/Brick03_col.jpg')
-            );
-            var tMesh = RedMesh(this, tGeometry, tMaterial);
-            tScene.addChild(tMesh);
-            testUI(this, tScene);
-        } else {
-            console.log('초기화 실패!');
-        }
-    });
-    testUI = function (redGL, tScene) {
-        var gui = new baseTestUI(redGL);
-        gui.initRedGL();
-        var test = {
-            drawMode: 'TRIANGLES',
-            pointSize: 1,
-            useCullFace: true,
-            useDepthTest: true,
-            x: 0,
-            y: 0,
-            z: 0,
-            scaleX: 1,
-            scaleY: 5,
-            scaleZ: 1,
-            rotationX: 0,
-            rotationY: 0,
-            rotationZ: 0
-        }
-        var tFolder = gui['gui'].addFolder('RedMesh')
-        tFolder.open()
-        tFolder.add(test, 'drawMode', ['TRIANGLES', 'TRIANGLE_STRIP', 'TRIANGLE_FAN', 'LINES', 'LINE_LOOP', 'LINE_STRIP', 'POINTS']).onChange(function (v) {
-            tScene.children.forEach(function (v2) {
-                v2.drawMode = redGL.gl[v]
-            })
-        });
-        tFolder.add(test, 'pointSize', 1, 100).onChange(function (v) {
-            tScene.children.forEach(function (v2) {
-                v2.pointSize = v
-            })
-        });
-        'x,y,z'.split(',').forEach(function (tKey) {
-            tFolder.add(test, tKey, -10, 10, 0.01).onChange(function (v) {
-                tScene.children.forEach(function (tMesh) {
-                    tMesh[tKey] = v
-                })
-            })
-        });
-        'scaleX,scaleY,scaleZ'.split(',').forEach(function (tKey) {
-            tFolder.add(test, tKey, 0, 5, 0.01).onChange(function (v) {
-                tScene.children.forEach(function (tMesh) {
-                    tMesh[tKey] = v
-                })
-            })
-        });
-        'rotationX,rotationY,rotationZ'.split(',').forEach(function (tKey) {
-            tFolder.add(test, tKey, 0, 360, 0.01).onChange(function (v) {
-                tScene.children.forEach(function (tMesh) {
-                    tMesh[tKey] = v
-                })
-            })
-        });
-        'useCullFace,useDepthTest'.split(',').forEach(function (tKey) {
-            tFolder.add(test, tKey).onChange(function (v) {
-                tScene.children.forEach(function (tMesh) {
-                    tMesh[tKey] = v
-                })
-            })
-        });
-    }
+			};
+			setBase(this);
+			// Box 설정
+			var tGeometry = RedCylinder(this, 2, 1, 5, 20, 20, true, 0, Math.PI * 2);
+			var tMaterial = RedBitmapMaterial(
+				this,
+				RedBitmapTexture(this, assetPath + 'brick/Brick03_col.jpg')
+			);
+			var tMesh = RedMesh(this, tGeometry, tMaterial);
+			tScene.addChild(tMesh);
+			testUI(this, tScene);
+		} else {
+			console.log('초기화 실패!');
+		}
+	});
+	testUI = function (redGL, tScene) {
+		var gui = new baseTestUI(redGL);
+		gui.initRedGL();
+		var test = {
+			drawMode: 'TRIANGLES',
+			pointSize: 1,
+			useCullFace: true,
+			useDepthTest: true,
+			x: 0,
+			y: 0,
+			z: 0,
+			scaleX: 1,
+			scaleY: 5,
+			scaleZ: 1,
+			rotationX: 0,
+			rotationY: 0,
+			rotationZ: 0
+		}
+		var tFolder = gui['gui'].addFolder('RedMesh')
+		tFolder.open()
+		tFolder.add(test, 'drawMode', ['TRIANGLES', 'TRIANGLE_STRIP', 'TRIANGLE_FAN', 'LINES', 'LINE_LOOP', 'LINE_STRIP', 'POINTS']).onChange(function (v) {
+			tScene.children.forEach(function (v2) {
+				v2.drawMode = redGL.gl[v]
+			})
+		});
+		tFolder.add(test, 'pointSize', 1, 100).onChange(function (v) {
+			tScene.children.forEach(function (v2) {
+				v2.pointSize = v
+			})
+		});
+		'x,y,z'.split(',').forEach(function (tKey) {
+			tFolder.add(test, tKey, -10, 10, 0.01).onChange(function (v) {
+				tScene.children.forEach(function (tMesh) {
+					tMesh[tKey] = v
+				})
+			})
+		});
+		'scaleX,scaleY,scaleZ'.split(',').forEach(function (tKey) {
+			tFolder.add(test, tKey, 0, 5, 0.01).onChange(function (v) {
+				tScene.children.forEach(function (tMesh) {
+					tMesh[tKey] = v
+				})
+			})
+		});
+		'rotationX,rotationY,rotationZ'.split(',').forEach(function (tKey) {
+			tFolder.add(test, tKey, 0, 360, 0.01).onChange(function (v) {
+				tScene.children.forEach(function (tMesh) {
+					tMesh[tKey] = v
+				})
+			})
+		});
+		'useCullFace,useDepthTest'.split(',').forEach(function (tKey) {
+			tFolder.add(test, tKey).onChange(function (v) {
+				tScene.children.forEach(function (tMesh) {
+					tMesh[tKey] = v
+				})
+			})
+		});
+	}
 </script>
 </body>
 

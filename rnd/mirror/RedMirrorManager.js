@@ -8,8 +8,8 @@
 "use strict";
 var RedMirrorManager;
 (function () {
-    /**DOC:
-     {
+	/**DOC:
+	 {
 		 constructorYn : true,
 		 title :`RedMirrorManager`,
 		 description : `
@@ -23,22 +23,22 @@ var RedMirrorManager;
 		 },
 		 return : 'RedMirrorManager Instance'
 	 }
-     :DOC*/
-    RedMirrorManager = function (redGL) {
-        if (!(this instanceof RedMirrorManager)) return new RedMirrorManager(redGL);
-        redGL instanceof RedGL || RedGLUtil.throwFunc('RedMirrorManager : RedGL Instance만 허용.', redGL);
-        this['_UUID'] = RedGL.makeUUID();
-        console.log(this);
-    };
-    RedMirrorManager.prototype = {
-        mirrorList: [],
-        render: (function () {
-            return function (redGL, redRenderer, tView, time, tRenderInfo,updateSystemUniform) {
-                this.mirrorList.forEach(function (v) {
-                    v.render(redGL, redRenderer, tView, tView.scene.children, time, tRenderInfo,updateSystemUniform)
-                })
-            }
-        })()
-    };
-    Object.freeze(RedMirrorManager);
+	 :DOC*/
+	RedMirrorManager = function (redGL) {
+		if (!(this instanceof RedMirrorManager)) return new RedMirrorManager(redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedMirrorManager : RedGL Instance만 허용.', redGL);
+		this['_UUID'] = RedGL.makeUUID();
+		console.log(this);
+	};
+	RedMirrorManager.prototype = {
+		mirrorList: [],
+		render: (function () {
+			return function (redGL, redRenderer, tView, time, tRenderInfo, updateSystemUniform) {
+				this.mirrorList.forEach(function (v) {
+					v.render(redGL, redRenderer, tView, tView.scene.children, time, tRenderInfo, updateSystemUniform)
+				})
+			}
+		})()
+	};
+	Object.freeze(RedMirrorManager);
 })();

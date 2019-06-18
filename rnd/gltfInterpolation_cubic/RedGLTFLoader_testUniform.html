@@ -30,44 +30,44 @@
 
 <body>
 <script id='testSource'>
-    var testUI;
-    var canvas;
-    var assetPath = '../../asset/'
-    canvas = document.createElement('canvas');
-    document.body.appendChild(canvas);
-    // RedGL.setDoNotPrepareProgram()
-    RedGL(canvas, function (v) {
-        if (v) {
-            console.log(RedSystemShaderCode)
-            this.setSize(0, 0)
-            for (var k in RedSystemShaderCode) {
-                var t = document.createElement('ul')
-                t.innerHTML += k;
-                document.body.appendChild(t)
-                if (typeof RedSystemShaderCode[k] == 'number') {
-                    var t2 = document.createElement('ul')
-                    t2.innerHTML += k + ' : ' + RedSystemShaderCode[k]
-                    t.appendChild(t2)
-                } else {
-                    for (var k2 in RedSystemShaderCode[k]) {
-                        var t2 = document.createElement('ul')
-                        t2.innerHTML += k2 + ' : ' + RedSystemShaderCode[k][k2]
-                        t.appendChild(t2)
+	var testUI;
+	var canvas;
+	var assetPath = '../../asset/'
+	canvas = document.createElement('canvas');
+	document.body.appendChild(canvas);
+	// RedGL.setDoNotPrepareProgram()
+	RedGL(canvas, function (v) {
+		if (v) {
+			console.log(RedSystemShaderCode)
+			this.setSize(0, 0)
+			for (var k in RedSystemShaderCode) {
+				var t = document.createElement('ul')
+				t.innerHTML += k;
+				document.body.appendChild(t)
+				if (typeof RedSystemShaderCode[k] == 'number') {
+					var t2 = document.createElement('ul')
+					t2.innerHTML += k + ' : ' + RedSystemShaderCode[k]
+					t.appendChild(t2)
+				} else {
+					for (var k2 in RedSystemShaderCode[k]) {
+						var t2 = document.createElement('ul')
+						t2.innerHTML += k2 + ' : ' + RedSystemShaderCode[k][k2]
+						t.appendChild(t2)
 
-                    }
-                }
+					}
+				}
 
 
-            }
-        } else {
-            console.log('초기화 실패!')
-        }
-    })
-    testUI = function (redGL) {
-        console.log('test')
-        var gui = new baseTestUI(redGL);
-        gui.initRedGL();
-    }
+			}
+		} else {
+			console.log('초기화 실패!')
+		}
+	})
+	testUI = function (redGL) {
+		console.log('test')
+		var gui = new baseTestUI(redGL);
+		gui.initRedGL();
+	}
 </script>
 </body>
 

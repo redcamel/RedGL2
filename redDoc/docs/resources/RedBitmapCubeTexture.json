@@ -37,7 +37,7 @@
       "RedBaseTexture"
     ],
     "demo": "../example/resources/RedBitmapCubeTexture.html",
-    "example": "\n          RedBitmapCubeTexture(\n              RedGL Instance,\n              srcList,\n              {\n                  min: gl.LINEAR_MIPMAP_NEAREST,\n                  mag: gl.LINEAR,\n                  wrap_s: gl.REPEAT,\n                  wrap_t: gl.REPEAT\n              }\n          )\n ",
+    "example": "\n\tRedBitmapCubeTexture(\n\t\tRedGL Instance,\n\t\tsrcList,\n\t\t{\n\t\t\tmin: gl.LINEAR_MIPMAP_NEAREST,\n\t\t\tmag: gl.LINEAR,\n\t\t\twrap_s: gl.REPEAT,\n\t\t\twrap_t: gl.REPEAT\n\t\t}\n\t)\n ",
     "return": "RedBitmapCubeTexture Instance"
   },
   {
