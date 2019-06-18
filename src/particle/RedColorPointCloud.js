@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.6.13 11:7
  */
 
 "use strict";
@@ -31,8 +31,8 @@ var RedColorPointCloud;
 		 },
 		 demo : '../example/particle/RedColorPointCloud.html',
 		 extends : [
-		    'RedBaseContainer',
-		    'RedBaseObject3D'
+			'RedBaseContainer',
+			'RedBaseObject3D'
 		 ],
 		 return : 'RedColorPointCloud Instance'
 	 }

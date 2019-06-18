@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.6.13 12:46
  */
 
 "use strict";
@@ -105,57 +105,60 @@ var RedPostEffect_Film;
 	RedPostEffect_Film.prototype['updateTexture'] = function (lastFrameBufferTexture) {
 		this['diffuseTexture'] = lastFrameBufferTexture;
 	};
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_Film', 'diffuseTexture', 'sampler2D');
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`grayMode`,
-		 description : `
-			 그레이모드
-			 기본값 : false
-		 `,
-		 return : 'Boolean'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_Film', 'grayMode', 'boolean');
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`scanlineIntensity`,
-		 description : `
-			 스캔라인강도
-			 기본값 : 0.5
-			 min : 0
-		 `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_Film', 'scanlineIntensity', 'number', {'min': 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`noiseIntensity`,
-		 description : `
-			 노이즈강도
-			 기본값 : 0.5
-			 min : 0
-		 `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_Film', 'noiseIntensity', 'number', {'min': 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`scanlineCount`,
-		 description : `
-			 스캔라인 수
-			 기본값 : 2048
-			 min : 0
-		 `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_Film', 'scanlineCount', 'number', {'min': 0});
+	RedDefinePropertyInfo.definePrototypes(
+		'RedPostEffect_Film',
+		[ 'diffuseTexture', 'sampler2D'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`grayMode`,
+			 description : `
+				 그레이모드
+				 기본값 : false
+			 `,
+			 return : 'Boolean'
+		 }
+		 :DOC*/
+		[ 'grayMode', 'boolean'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`scanlineIntensity`,
+			 description : `
+				 스캔라인강도
+				 기본값 : 0.5
+				 min : 0
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		[ 'scanlineIntensity', 'number', {'min': 0}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`noiseIntensity`,
+			 description : `
+				 노이즈강도
+				 기본값 : 0.5
+				 min : 0
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		[ 'noiseIntensity', 'number', {'min': 0}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`scanlineCount`,
+			 description : `
+				 스캔라인 수
+				 기본값 : 2048
+				 min : 0
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		[ 'scanlineCount', 'number', {'min': 0}]
+	);
 	Object.freeze(RedPostEffect_Film);
 })();

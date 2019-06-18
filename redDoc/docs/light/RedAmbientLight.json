@@ -2,7 +2,7 @@
   {
     "constructorYn": true,
     "title": "RedAmbientLight",
-    "description": "\n    기본 환경광.\n\tRedAmbientLight Instance 생성자.\n ",
+    "description": "\n\t기본 환경광.\n\tRedAmbientLight Instance 생성자.\n ",
     "params": {
       "redGL": [
         {

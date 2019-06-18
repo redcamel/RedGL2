@@ -124,43 +124,46 @@ var RedTextMaterial;
 		console.log(this);
 	};
 	RedTextMaterial.prototype = new RedBaseMaterial();
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`diffuseTexture`,
-		 description : `diffuseTexture`,
-		 return : 'RedBitmapTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedTextMaterial', 'diffuseTexture', 'sampler2D', {essential: true});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`alpha`,
-		 description : `기본값 : 1`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedTextMaterial', 'alpha', 'number', {min: 0, max: 1});
-	RedDefinePropertyInfo.definePrototype('RedTextMaterial', 'width', 'number', {
-		min: 2,
-		callback: function (v) {
-			this['_width'] = v;
-		}
-	});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`height`,
-		 description : `세로영역크기`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedTextMaterial', 'height', 'number', {
-		min: 2,
-		callback: function (v) {
-			this['_height'] = v;
-		}
-	});
+	RedDefinePropertyInfo.definePrototypes(
+		'RedTextMaterial',
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`diffuseTexture`,
+			 description : `diffuseTexture`,
+			 return : 'RedBitmapTexture'
+		 }
+		 :DOC*/
+		['diffuseTexture', 'sampler2D', {essential: true}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`alpha`,
+			 description : `기본값 : 1`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['alpha', 'number', {min: 0, max: 1}],
+		['width', 'number', {
+			min: 2,
+			callback: function (v) {
+				this['_width'] = v;
+			}
+		}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`height`,
+			 description : `세로영역크기`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['height', 'number', {
+			min: 2,
+			callback: function (v) {
+				this['_height'] = v;
+			}
+		}]
+	);
 	Object.freeze(RedTextMaterial);
 })();

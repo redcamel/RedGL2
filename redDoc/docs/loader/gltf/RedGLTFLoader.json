@@ -28,7 +28,7 @@
         "로딩완료시 실행될 콜백"
       ]
     },
-    "example": "\n    // GLTF 로딩\n          RedGLTFLoader(\n              RedGL Instance, // redGL\n              assetPath + 'glTF/basic/', // assetRootPath\n              'DamagedHelmet.gltf', // fileName\n              function (v) { // callBack\n                  tScene.addChild(v['resultMesh'])\n              },\n              RedBitmapCubeTexture( // environmentTexture\n                  RedGL Instance,\n                  [\n                      assetPath + 'cubemap/posx.png',\n                      assetPath + 'cubemap/negx.png',\n                      assetPath + 'cubemap/posy.png',\n                      assetPath + 'cubemap/negy.png',\n                      assetPath + 'cubemap/posz.png',\n                      assetPath + 'cubemap/negz.png'\n                  ]\n              )\n          );\n ",
+    "example": "\n\t// GLTF 로딩\n\tRedGLTFLoader(\n\t\tRedGL Instance, // redGL\n\t\tassetPath + 'glTF/basic/', // assetRootPath\n\t\t'DamagedHelmet.gltf', // fileName\n\t\tfunction (v) { // callBack\n\t\t\ttScene.addChild(v['resultMesh'])\n\t\t},\n\t\tRedBitmapCubeTexture( // environmentTexture\n\t\t\tRedGL Instance,\n\t\t\t[\n\t\t\t\tassetPath + 'cubemap/posx.png',\n\t\t\t\tassetPath + 'cubemap/negx.png',\n\t\t\t\tassetPath + 'cubemap/posy.png',\n\t\t\t\tassetPath + 'cubemap/negy.png',\n\t\t\t\tassetPath + 'cubemap/posz.png',\n\t\t\t\tassetPath + 'cubemap/negz.png'\n\t\t\t]\n\t\t)\n\t);\n ",
     "demo": "../example/loader/gltf/RedGLTFLoader.html",
     "return": "void"
   }

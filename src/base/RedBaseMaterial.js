@@ -2,9 +2,8 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.6.13 11:7
  */
-
 "use strict";
 var RedBaseMaterial;
 (function () {
@@ -98,14 +97,11 @@ var RedBaseMaterial;
 
 				// console.log('combinations(programOptionList)',combinations(programOptionList))
 				var tList = combinations(programOptionList);
-
 				tList.forEach(function (v) {
 					var tOptionName = v.join('_');
 					if (!programList['basic'][programName + '_' + tOptionName]) programList['basic'][programName + '_' + tOptionName] = new makePrepareProgram(redGL, programList, programName, vSource, fSource, null, v);
 					if (!programList[spaceName][programName + '_' + tOptionName]) programList[spaceName][programName + '_' + tOptionName] = new makePrepareProgram(redGL, programList, programName, vSource, fSource, systemOptionList, v);
-
 				})
-
 			};
 			makePrepareProgram = function (redGL, programList, programName, vSource, fSource, systemKey, optionKey) {
 				prepareNum++;
@@ -236,10 +232,10 @@ var RedBaseMaterial;
 				 키에 해당하는 RedBaseTexture 확장객체를 dispose 함
 			 `,
 			 params : {
-                 key : [
-                     {type:'String'}
-                 ]
-             },
+				 key : [
+					 {type:'String'}
+				 ]
+			 },
 			 return : 'void'
 		 }
 		 :DOC*/

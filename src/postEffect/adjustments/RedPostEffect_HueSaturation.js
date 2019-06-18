@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.6.13 12:41
  */
 
 "use strict";
@@ -93,42 +93,45 @@ var RedPostEffect_HueSaturation;
 	RedPostEffect_HueSaturation.prototype['updateTexture'] = function (lastFrameBufferTexture) {
 		this['diffuseTexture'] = lastFrameBufferTexture;
 	};
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_HueSaturation', 'diffuseTexture', 'sampler2D');
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`hue`,
-		 description : `
-			 색조
-			 기본값 : 0
-			 min: -180
-			 max: 180
-		 `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_HueSaturation', 'hue', 'number', {
-		min: -180, max: 180, callback: function (v) {
-			this['_hue_value'] = v / 180
-		}
-	});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`saturation`,
-		 description : `
-			 채도
-			 기본값 : 0
-			 min: -100
-			 max: 100
-		 `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_HueSaturation', 'saturation', 'number', {
-		min: -100, max: 100, callback: function (v) {
-			this['_saturation_value'] = v / 100
-		}
-	});
+	RedDefinePropertyInfo.definePrototypes(
+		'RedPostEffect_HueSaturation',
+		['diffuseTexture', 'sampler2D'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`hue`,
+			 description : `
+				 색조
+				 기본값 : 0
+				 min: -180
+				 max: 180
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['hue', 'number', {
+			min: -180, max: 180, callback: function (v) {
+				this['_hue_value'] = v / 180
+			}
+		}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`saturation`,
+			 description : `
+				 채도
+				 기본값 : 0
+				 min: -100
+				 max: 100
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['saturation', 'number', {
+			min: -100, max: 100, callback: function (v) {
+				this['_saturation_value'] = v / 100
+			}
+		}]
+	);
 	Object.freeze(RedPostEffect_HueSaturation);
 })();

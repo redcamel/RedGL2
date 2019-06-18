@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.6.13 12:43
  */
 
 "use strict";
@@ -97,48 +97,51 @@ var RedPostEffect_ZoomBlur;
 	RedPostEffect_ZoomBlur.prototype['updateTexture'] = function (lastFrameBufferTexture) {
 		this['diffuseTexture'] = lastFrameBufferTexture;
 	};
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_ZoomBlur', 'diffuseTexture', 'sampler2D');
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`centerX`,
-		 description : `
-			 정중앙 중심의 가로 위치
-			 기본값 : 0.0
-		 `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_ZoomBlur', 'centerX', 'number');
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`centerY`,
-		 description : `
-			 정중앙 중심의 세로 위치
-			 기본값 : 0.0
-		 `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_ZoomBlur', 'centerY', 'number');
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`amount`,
-		 description : `
-			 강도
-			 기본값 : 38
-			 min: 1
-			 max: 100
-		 `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_ZoomBlur', 'amount', 'number', {
-		min: 1, max: 100, callback: function (v) {
-			this['_amount_value'] = v / 100
-		}
-	});
+	RedDefinePropertyInfo.definePrototypes(
+		'RedPostEffect_ZoomBlur',
+		['diffuseTexture', 'sampler2D'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`centerX`,
+			 description : `
+				 정중앙 중심의 가로 위치
+				 기본값 : 0.0
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['centerX', 'number'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`centerY`,
+			 description : `
+				 정중앙 중심의 세로 위치
+				 기본값 : 0.0
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['centerY', 'number'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`amount`,
+			 description : `
+				 강도
+				 기본값 : 38
+				 min: 1
+				 max: 100
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['amount', 'number', {
+			min: 1, max: 100, callback: function (v) {
+				this['_amount_value'] = v / 100
+			}
+		}]
+	);
 	Object.freeze(RedPostEffect_ZoomBlur);
 })();

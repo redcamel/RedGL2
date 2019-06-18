@@ -4,14 +4,12 @@
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
  * Last modification time of this file - 2019.5.2 12:46
  */
-
 "use strict";
 var RedBitmapPointCloudMaterial;
 (function () {
 	var vSource, fSource;
 	var PROGRAM_NAME = 'bitmapPointCloudProgram';
 	var PROGRAM_OPTION_LIST = ['usePreMultiply'];
-
 	var checked;
 	vSource = function () {
 		/* @preserve
@@ -96,47 +94,50 @@ var RedBitmapPointCloudMaterial;
 			this._searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST)
 		}
 	};
-	/*DOC:
-	 {
- 	     code : 'PROPERTY',
-		 title :`alpha`,
-		 description : `기본값 : 1`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedBitmapPointCloudMaterial', 'alpha', 'number', {min: 0, max: 1});
-	/*DOC:
-	 {
- 	     code : 'PROPERTY',
-		 title :`cutOff`,
-		 description : `
-		 기본값 : 0.1
-		 해당값보다 알파값이 작을경우 discard 처리됨.
-		 `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedBitmapPointCloudMaterial', 'cutOff', 'number', {min: 0, max: 1});
-	/*DOC:
-	 {
- 	     code : 'PROPERTY',
-		 title :`diffuseTexture`,
-		 description : `diffuseTexture`,
-		 return : 'RedBitmapTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedBitmapPointCloudMaterial', 'diffuseTexture', 'sampler2D', {essential: true});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`usePreMultiply`,
-		 description : `
-		    usePreMultiply 사용여부
-		    기본값 : false
-		 `,
-		 return : 'boolean'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedBitmapPointCloudMaterial', 'usePreMultiply', 'boolean', samplerOption);
+	RedDefinePropertyInfo.definePrototypes(
+		'RedBitmapPointCloudMaterial',
+		/*DOC:
+		 {
+	         code : 'PROPERTY',
+			 title :`alpha`,
+			 description : `기본값 : 1`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['alpha', 'number', {min: 0, max: 1}],
+		/*DOC:
+		 {
+	         code : 'PROPERTY',
+			 title :`cutOff`,
+			 description : `
+			 기본값 : 0.1
+			 해당값보다 알파값이 작을경우 discard 처리됨.
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['cutOff', 'number', {min: 0, max: 1}],
+		/*DOC:
+		 {
+	         code : 'PROPERTY',
+			 title :`diffuseTexture`,
+			 description : `diffuseTexture`,
+			 return : 'RedBitmapTexture'
+		 }
+		 :DOC*/
+		['diffuseTexture', 'sampler2D', {essential: true}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`usePreMultiply`,
+			 description : `
+			    usePreMultiply 사용여부
+			    기본값 : false
+			 `,
+			 return : 'boolean'
+		 }
+		 :DOC*/
+		['usePreMultiply', 'boolean', samplerOption]
+	);
 	Object.freeze(RedBitmapPointCloudMaterial)
 })();

@@ -25,7 +25,7 @@
       "RedBaseObject3D"
     ],
     "demo": "../example/object3D/RedSkyBox.html",
-    "example": "\n          var tScene3D;\n          tScene3D = RedScene( RedGL Instance );\n          tScene3D.skyBox = RedSkyBox(\n              RedGL Instance,\n              [\n              'asset/cubemap/SwedishRoyalCastle/px.jpg',\n              'asset/cubemap/SwedishRoyalCastle/nx.jpg',\n              'asset/cubemap/SwedishRoyalCastle/ny.jpg',\n              'asset/cubemap/SwedishRoyalCastle/py.jpg',\n              'asset/cubemap/SwedishRoyalCastle/pz.jpg',\n              'asset/cubemap/SwedishRoyalCastle/nz.jpg'\n              ]\n          );\n ",
+    "example": "\n\tvar tScene3D;\n\ttScene3D = RedScene( RedGL Instance );\n\ttScene3D.skyBox = RedSkyBox(\n\t\tRedGL Instance,\n\t\t[\n\t\t'asset/cubemap/SwedishRoyalCastle/px.jpg',\n\t\t'asset/cubemap/SwedishRoyalCastle/nx.jpg',\n\t\t'asset/cubemap/SwedishRoyalCastle/ny.jpg',\n\t\t'asset/cubemap/SwedishRoyalCastle/py.jpg',\n\t\t'asset/cubemap/SwedishRoyalCastle/pz.jpg',\n\t\t'asset/cubemap/SwedishRoyalCastle/nz.jpg'\n\t\t]\n\t);\n ",
     "return": "RedSkyBox Instance"
   }
 ]

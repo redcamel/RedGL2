@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.6.13 12:46
  */
 
 "use strict";
@@ -86,32 +86,35 @@ var RedPostEffect_Pixelize;
 	RedPostEffect_Pixelize.prototype['updateTexture'] = function (lastFrameBufferTexture) {
 		this['diffuseTexture'] = lastFrameBufferTexture;
 	};
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_Pixelize', 'diffuseTexture', 'sampler2D');
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`width`,
-		 description : `
-			 픽셀화 가로 크기
-			 기본값 : 5
-			 min : 0
-		 `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_Pixelize', 'width', 'number', {'min': 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`height`,
-		 description : `
-			 픽셀화 세로 크기
-			 기본값 : 5
-			 min : 0
-		 `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_Pixelize', 'height', 'number', {'min': 0});
+	RedDefinePropertyInfo.definePrototypes(
+		'RedPostEffect_Pixelize',
+		['diffuseTexture', 'sampler2D'],
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`width`,
+			 description : `
+				 픽셀화 가로 크기
+				 기본값 : 5
+				 min : 0
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['width', 'number', {'min': 0}],
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`height`,
+			 description : `
+				 픽셀화 세로 크기
+				 기본값 : 5
+				 min : 0
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['height', 'number', {'min': 0}]
+	);
 	Object.freeze(RedPostEffect_Pixelize);
 })();

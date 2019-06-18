@@ -4,7 +4,6 @@
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
  * Last modification time of this file - 2019.4.30 18:53
  */
-
 "use strict";
 var RedBasicController;
 (function () {
@@ -180,66 +179,69 @@ var RedBasicController;
 		})(this);
 	};
 	RedBasicController.prototype = new RedBaseController();
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`speed`,
-		 description : `
-			 이동 속도
-			 기본값 : 1
-		 `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedBasicController', 'speed', 'number', {min: 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`delay`,
-		 description : `
-			 이동 지연 속도
-			 기본값 : 0.1
-		 `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedBasicController', 'delay', 'number', {min: 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`speedRotation`,
-		 description : `
-			 회전 속도
-			 기본값 : 1
-		 `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedBasicController', 'speedRotation', 'number', {min: 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`delayRotation`,
-		 description : `
-			 회전 지연 속도
-			 기본값 : 0.1
-		 `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedBasicController', 'delayRotation', 'number', {min: 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`maxAcceleration`,
-		 description : `
-			 최대 가속도 ( 이동 속도와 합쳐짐 )
-			 기본값 : 3
-		 `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedBasicController', 'maxAcceleration', 'number', {min: 0});
+	RedDefinePropertyInfo.definePrototypes(
+		'RedBasicController',
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`speed`,
+			 description : `
+				 이동 속도
+				 기본값 : 1
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['speed', 'number', {min: 0}],
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`delay`,
+			 description : `
+				 이동 지연 속도
+				 기본값 : 0.1
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['delay', 'number', {min: 0}],
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`speedRotation`,
+			 description : `
+				 회전 속도
+				 기본값 : 1
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['speedRotation', 'number', {min: 0}],
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`delayRotation`,
+			 description : `
+				 회전 지연 속도
+				 기본값 : 0.1
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['delayRotation', 'number', {min: 0}],
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`maxAcceleration`,
+			 description : `
+				 최대 가속도 ( 이동 속도와 합쳐짐 )
+				 기본값 : 3
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['maxAcceleration', 'number', {min: 0}]
+	);
 	/*DOC:
 	 {
 	     code : 'PROPERTY',
@@ -248,17 +250,6 @@ var RedBasicController;
 		 return : 'Number'
 	 }
 	 :DOC*/
-	Object.defineProperty(RedBasicController.prototype, 'x', (function () {
-		return {
-			get: function () {
-				return this['_targetObject']['x']
-			},
-			set: function (v) {
-				this['_targetObject']['x'] = v;
-				this['_desirePosition'][0] = v;
-			}
-		}
-	})());
 	/*DOC:
 	 {
 	     code : 'PROPERTY',
@@ -267,17 +258,6 @@ var RedBasicController;
 		 return : 'Number'
 	 }
 	 :DOC*/
-	Object.defineProperty(RedBasicController.prototype, 'y', (function () {
-		return {
-			get: function () {
-				return this['_targetObject']['y']
-			},
-			set: function (v) {
-				this['_targetObject']['y'] = v;
-				this['_desirePosition'][1] = v;
-			}
-		}
-	})());
 	/*DOC:
 	 {
 	     code : 'PROPERTY',
@@ -286,17 +266,17 @@ var RedBasicController;
 		 return : 'Number'
 	 }
 	 :DOC*/
-	Object.defineProperty(RedBasicController.prototype, 'z', (function () {
-		return {
+	['x','y','z'].forEach(function(key, index){
+		Object.defineProperty(RedBasicController.prototype, key, {
 			get: function () {
-				return this['_targetObject']['z']
+				return this['_targetObject'][key]
 			},
 			set: function (v) {
-				this['_targetObject']['z'] = v;
-				this['_desirePosition'][2] = v;
+				this['_targetObject'][key] = v;
+				this['_desirePosition'][index] = v;
 			}
-		}
-	})());
+		})
+	});
 	/*DOC:
 	 {
 	     code : 'PROPERTY',
@@ -354,7 +334,6 @@ var RedBasicController;
 		var displacementMTX;
 		var displacementVec3;
 		var tCamera;
-
 		var tKeyBuffer;
 		var tKeyNameMapper;
 		var tDesirePosition;
@@ -441,7 +420,6 @@ var RedBasicController;
 			tCamera['x'] = tMTX1[12];
 			tCamera['y'] = tMTX1[13];
 			tCamera['z'] = tMTX1[14];
-
 			// 카메라는 대상 오브젝트를 바라봄
 			tCamera.lookAt(targetObject['x'], targetObject['y'], targetObject['z']);
 			// console.log('RedBasicController update')

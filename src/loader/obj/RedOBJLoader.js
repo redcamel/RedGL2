@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.6.13 11:7
  */
 
 "use strict";
@@ -38,16 +38,16 @@ var RedOBJLoader;
 		 },
 		 demo : '../example/loader/obj/RedOBJLoader.html',
 		 example : `
-		    // OBJ 로딩
-            RedOBJLoader(
-                RedGL Instance, // redGL
-                assetPath + 'obj/', // assetRootPath
-                'female.obj', // fileName
-                function (v) { // callback
-                    console.log(v);
-                    tScene.addChild(v['resultMesh'])
-                }
-            )
+			// OBJ 로딩
+			RedOBJLoader(
+				RedGL Instance, // redGL
+				assetPath + 'obj/', // assetRootPath
+				'female.obj', // fileName
+				function (v) { // callback
+					console.log(v);
+					tScene.addChild(v['resultMesh'])
+				}
+			)
 		 `,
 		 return : 'void'
 	 }

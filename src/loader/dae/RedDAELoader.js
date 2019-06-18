@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.6.13 11:7
  */
 
 "use strict";
@@ -35,18 +35,18 @@ var RedDAELoader;
 				 '로딩완료시 실행될 콜백'
 			 ]
 		 },
-	     demo : '../example/loader/dae/RedDAELoader.html',
+		 demo : '../example/loader/dae/RedDAELoader.html',
 		 example : `
-		    // DAE 로딩
-            RedDAELoader(
-                RedGL Instance, // redGL
-                assetPath + 'dae/', // assetRootPath
-                'test1.dae', // fileName
-                function (v) { // callback
-                    console.log('로딩성공', v);
-                    (RedScene Instance).addChild(v['resultMesh']);
-                }
-            )
+			// DAE 로딩
+			RedDAELoader(
+				RedGL Instance, // redGL
+				assetPath + 'dae/', // assetRootPath
+				'test1.dae', // fileName
+				function (v) { // callback
+					console.log('로딩성공', v);
+					(RedScene Instance).addChild(v['resultMesh']);
+				}
+			)
 		 `,
 		 return : 'void'
 	 }

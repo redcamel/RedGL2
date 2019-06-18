@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.6.13 11:7
  */
 
 "use strict";
@@ -95,24 +95,24 @@ var RedBitmapCubeTexture;
 				 `
 			 ],
 			 callBack : [
-			    {type:'Function'}
+				{type:'Function'}
 			 ]
 		 },
 		 extends : [
-		    'RedBaseTexture'
+			'RedBaseTexture'
 		 ],
-         demo : '../example/resources/RedBitmapCubeTexture.html',
+		 demo : '../example/resources/RedBitmapCubeTexture.html',
 		 example : `
-            RedBitmapCubeTexture(
-                RedGL Instance,
-                srcList,
-                {
-                    min: gl.LINEAR_MIPMAP_NEAREST,
-                    mag: gl.LINEAR,
-                    wrap_s: gl.REPEAT,
-                    wrap_t: gl.REPEAT
-                }
-            )
+			RedBitmapCubeTexture(
+				RedGL Instance,
+				srcList,
+				{
+					min: gl.LINEAR_MIPMAP_NEAREST,
+					mag: gl.LINEAR,
+					wrap_s: gl.REPEAT,
+					wrap_t: gl.REPEAT
+				}
+			)
 		 `,
 		 return : 'RedBitmapCubeTexture Instance'
 	 }

@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.2 12:37
+ * Last modification time of this file - 2019.6.13 11:7
  */
 
 "use strict";
@@ -161,7 +161,7 @@ var RedCamera;
 			 z : [{type : "Number"}]
 		 },
 		 example:`
-		    RedCamera().lookAt(0,0,0); // 0,0,0을 바라보도록 설정
+			RedCamera().lookAt(0,0,0); // 0,0,0을 바라보도록 설정
 		 `,
 		 return : 'mat4'
 	 }

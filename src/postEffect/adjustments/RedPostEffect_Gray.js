@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.6.13 11:7
  */
 
 "use strict";
@@ -45,15 +45,15 @@ var RedPostEffect_Gray;
 			 ]
 		 },
 		 extends : [
-		    'RedBasePostEffect',
-		    'RedBaseMaterial'
+			'RedBasePostEffect',
+			'RedBaseMaterial'
 		 ],
 		 demo : '../example/postEffect/adjustments/RedPostEffect_Gray.html',
 		 example : `
-            var effect;
-            effect = RedPostEffect_Gray(RedGL Instance); // 포스트이펙트 생성
-            // postEffectManager는 RedView 생성시 자동생성됨.
-            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
+			var effect;
+			effect = RedPostEffect_Gray(RedGL Instance); // 포스트이펙트 생성
+			// postEffectManager는 RedView 생성시 자동생성됨.
+			(RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
 		 `,
 		 return : 'RedPostEffect_Gray Instance'
 	 }

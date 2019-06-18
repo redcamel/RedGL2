@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.6.13 12:42
  */
 
 "use strict";
@@ -80,22 +80,28 @@ var RedPostEffect_BloomThreshold;
 	RedPostEffect_BloomThreshold.prototype['updateTexture'] = function (lastFrameBufferTexture) {
 		this['diffuseTexture'] = lastFrameBufferTexture;
 	};
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_BloomThreshold', 'diffuseTexture', 'sampler2D');
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`threshold`,
-		 description : `
-			 최소 유효값
-			 기본값 : 128
-		 `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_BloomThreshold', 'threshold', 'number', {
-		min: 0, max: 255, callback: function (v) {
-			this['_threshold_value'] = v / 255
-		}
-	});
+	RedDefinePropertyInfo.definePrototypes(
+		'RedPostEffect_BloomThreshold',
+		['diffuseTexture', 'sampler2D'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`threshold`,
+			 description : `
+				 최소 유효값
+				 기본값 : 128
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		[
+			'threshold', 'number',
+			{
+				min: 0, max: 255, callback: function (v) {
+					this['_threshold_value'] = v / 255
+				}
+			}
+		]
+	);
 	Object.freeze(RedPostEffect_BloomThreshold);
 })();

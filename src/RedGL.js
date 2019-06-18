@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.6.13 11:7
  */
 
 "use strict";
@@ -121,47 +121,47 @@ var RedGL;
 				 {type:'Object'},
 				 `초기화 옵션을 지정한다.`,
 				 `
-                <code>
-                // 초기값
-                {
-                    alpha: false,
-                    depth: true,
-                    stencil: false,
-                    antialias: true,
-                    premultipliedAlpha: false,
-                    preserveDrawingBuffer: false,
-                    powerPreference: 'default', // default, high-performance, low-power
-                    failIfMajorPerformanceCaveat: false
-                }
-                </code>
+				<code>
+				// 초기값
+				{
+					alpha: false,
+					depth: true,
+					stencil: false,
+					antialias: true,
+					premultipliedAlpha: false,
+					preserveDrawingBuffer: false,
+					powerPreference: 'default', // default, high-performance, low-power
+					failIfMajorPerformanceCaveat: false
+				}
+				</code>
 				 `
 			 ],
 			 targetContextKey : [
-			    {type:'String'},
-			    `컨텍스트 키를 명시적으로 지정할 경우 사용`,
-			    `입력하지 않을경우 <b>webkit-3d,moz-webgl,3d,experimental-webgl, webgl</b> 중에서 가장 높은 값으로 선택됨`
+				{type:'String'},
+				`컨텍스트 키를 명시적으로 지정할 경우 사용`,
+				`입력하지 않을경우 <b>webkit-3d,moz-webgl,3d,experimental-webgl, webgl</b> 중에서 가장 높은 값으로 선택됨`
 			 ]
 		 },
-	     demo : '../example/etc/RedGL.html',
+		 demo : '../example/etc/RedGL.html',
 		 example : `
-            var canvas = document.createElement('canvas');
-            document.body.appendChild(canvas);
-            // 기초 초기화
-            RedGL(
-                canvas,
-                function(v){
-                    // 성공,실패에 따라 v값이 true or false.
-                    if(v){
-                        // 초기화 성공
-                        console.log(this.detect); // 디텍팅정보
-                        console.log(this.gl); // webGL context
-                        console.log(this.renderScale); // 렌더스케일 (기본값 : 1)
-                        this.setSize('100%', '100%'); // 사이즈 설정 : 숫자형, %형 둘다 허용
-                    }else{
-                        // 초기화실패
-                    }
-                }
-            )
+			var canvas = document.createElement('canvas');
+			document.body.appendChild(canvas);
+			// 기초 초기화
+			RedGL(
+				canvas,
+				function(v){
+					// 성공,실패에 따라 v값이 true or false.
+					if(v){
+						// 초기화 성공
+						console.log(this.detect); // 디텍팅정보
+						console.log(this.gl); // webGL context
+						console.log(this.renderScale); // 렌더스케일 (기본값 : 1)
+						this.setSize('100%', '100%'); // 사이즈 설정 : 숫자형, %형 둘다 허용
+					}else{
+						// 초기화실패
+					}
+				}
+			)
 		 `,
 		 return : 'RedGL Instance'
 	 }
@@ -216,12 +216,12 @@ var RedGL;
 				 px, %단위만 입력가능.
 			 `,
 			 params : {
-			    width : [
-			        { type : 'Number or %' }
-			    ],
-			    height : [
-			        { type : 'Number or %' }
-			    ]
+				width : [
+					{ type : 'Number or %' }
+				],
+				height : [
+					{ type : 'Number or %' }
+				]
 			 },
 			 return : 'void'
 		 }

@@ -4,7 +4,6 @@
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
  * Last modification time of this file - 2019.4.30 18:53
  */
-
 "use strict";
 var RedBitmapMaterial;
 (function () {
@@ -114,35 +113,38 @@ var RedBitmapMaterial;
 			this._searchProgram(PROGRAM_NAME, PROGRAM_OPTION_LIST)
 		}
 	};
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`diffuseTexture`,
-		 description : `diffuseTexture`,
-		 return : 'RedBitmapTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedBitmapMaterial', 'diffuseTexture', 'sampler2D', {essential: true});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`alpha`,
-		 description : `기본값 : 1`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedBitmapMaterial', 'alpha', 'number', {min: 0, max: 1});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`usePreMultiply`,
-		 description : `
-		    usePreMultiply 사용여부
-		    기본값 : false
-		 `,
-		 return : 'boolean'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedBitmapMaterial', 'usePreMultiply', 'boolean', samplerOption);
+	RedDefinePropertyInfo.definePrototypes(
+		'RedBitmapMaterial',
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`diffuseTexture`,
+			 description : `diffuseTexture`,
+			 return : 'RedBitmapTexture'
+		 }
+		 :DOC*/
+		['diffuseTexture', 'sampler2D', {essential: true}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`alpha`,
+			 description : `기본값 : 1`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['alpha', 'number', {min: 0, max: 1}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`usePreMultiply`,
+			 description : `
+			    usePreMultiply 사용여부
+			    기본값 : false
+			 `,
+			 return : 'boolean'
+		 }
+		 :DOC*/
+		['usePreMultiply', 'boolean', samplerOption]
+	);
 	Object.freeze(RedBitmapMaterial);
 })();

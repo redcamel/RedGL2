@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.6.13 12:49
  */
 
 "use strict";
@@ -40,40 +40,45 @@ var RedTextureOptionChecker;
 		 :DOC*/
 		check: function (type, option, gl) {
 			if (option) {
+				var tOptionValue;
+				tOptionValue = option['min'];
 				if (
-					option['min']
+					tOptionValue
 					&& !(
-						option['min'] == gl.LINEAR
-						|| option['min'] == gl.NEAREST
-						|| option['min'] == gl.NEAREST_MIPMAP_NEAREST
-						|| option['min'] == gl.LINEAR_MIPMAP_NEAREST
-						|| option['min'] == gl.NEAREST_MIPMAP_LINEAR
-						|| option['min'] == gl.LINEAR_MIPMAP_LINEAR
+						tOptionValue == gl.LINEAR
+						|| tOptionValue == gl.NEAREST
+						|| tOptionValue == gl.NEAREST_MIPMAP_NEAREST
+						|| tOptionValue == gl.LINEAR_MIPMAP_NEAREST
+						|| tOptionValue == gl.NEAREST_MIPMAP_LINEAR
+						|| tOptionValue == gl.LINEAR_MIPMAP_LINEAR
 					)
-				) RedGLUtil.throwFunc(type + ': min 텍스쳐 옵션에서 사용할수 없는값 입력됨.', '입력값 : ' + option['min']);
+				) RedGLUtil.throwFunc(type + ': min 텍스쳐 옵션에서 사용할수 없는값 입력됨.', '입력값 : ' + tOptionValue);
+				tOptionValue = option['mag'];
 				if (
-					option['mag']
+					tOptionValue
 					&& !(
-						option['mag'] == gl.LINEAR
-						|| option['mag'] == gl.NEAREST
+						tOptionValue == gl.LINEAR
+						|| tOptionValue == gl.NEAREST
 					)
-				) RedGLUtil.throwFunc(type + ' : mag 텍스쳐 옵션에서 사용할수 없는값 입력됨.', '입력값 : ' + option['mag']);
+				) RedGLUtil.throwFunc(type + ' : mag 텍스쳐 옵션에서 사용할수 없는값 입력됨.', '입력값 : ' + tOptionValue);
+				tOptionValue = option['wrap_s'];
 				if (
-					option['wrap_s']
+					tOptionValue
 					&& !(
-						option['wrap_s'] == gl.REPEAT
-						|| option['wrap_s'] == gl.CLAMP_TO_EDGE
-						|| option['wrap_s'] == gl.MIRRORED_REPEAT
+						tOptionValue == gl.REPEAT
+						|| tOptionValue == gl.CLAMP_TO_EDGE
+						|| tOptionValue == gl.MIRRORED_REPEAT
 					)
-				) RedGLUtil.throwFunc(type + ' : wrap_s 텍스쳐 옵션에서 사용할수 없는값 입력됨.', '입력값 : ' + option['wrap_s']);
+				) RedGLUtil.throwFunc(type + ' : wrap_s 텍스쳐 옵션에서 사용할수 없는값 입력됨.', '입력값 : ' + tOptionValue);
+				tOptionValue = option['wrap_t'];
 				if (
-					option['wrap_t']
+					tOptionValue
 					&& !(
-						option['wrap_t'] == gl.REPEAT
-						|| option['wrap_t'] == gl.CLAMP_TO_EDGE
-						|| option['wrap_t'] == gl.MIRRORED_REPEAT
+						tOptionValue == gl.REPEAT
+						|| tOptionValue == gl.CLAMP_TO_EDGE
+						|| tOptionValue == gl.MIRRORED_REPEAT
 					)
-				) RedGLUtil.throwFunc(type + ' : wrap_t 텍스쳐 옵션에서 사용할수 없는값 입력됨.', '입력값 : ' + option['wrap_t']);
+				) RedGLUtil.throwFunc(type + ' : wrap_t 텍스쳐 옵션에서 사용할수 없는값 입력됨.', '입력값 : ' + tOptionValue);
 			}
 		}
 	};

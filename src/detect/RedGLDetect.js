@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.6.13 11:7
  */
 
 "use strict";
@@ -16,9 +16,9 @@ var RedGLDetect;
 			 GL과 관련된 값들을 디텍팅.
 		 `,
 		 params : {
-		    gl : [
-		        {type:'WebGL Context'}
-		    ]
+			gl : [
+				{type:'WebGL Context'}
+			]
 		 },
 		 return : 'RedGLDetect Instance'
 	 }
@@ -135,8 +135,6 @@ var RedGLDetect;
 		 return : 'Object'
 	 }
 	 :DOC*/
-
-
 	RedGLDetect.BROWSER_INFO = {};
 	RedGLDetect.getBrowserInfo = function () {
 		var result = RedGLDetect['BROWSER_INFO'];

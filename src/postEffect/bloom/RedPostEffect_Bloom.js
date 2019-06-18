@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.6.13 12:41
  */
 
 "use strict";
@@ -93,70 +93,73 @@ var RedPostEffect_Bloom;
 		this['diffuseTexture'] = parentFrameBufferTexture;
 		this['blurTexture'] = lastFrameBufferTexture;
 	};
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_Bloom', 'diffuseTexture', 'sampler2D');
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_Bloom', 'blurTexture', 'sampler2D');
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`exposure`,
-		 description : `
-			 확산 강도.
-			 기본값 : 1
-			 min : 0
-		 `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_Bloom', 'exposure', 'number', {'min': 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`bloomStrength`,
-		 description : `
-			 블룸 강도
-			 기본값 : 1.2
-			 min : 0
-		 `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_Bloom', 'bloomStrength', 'number', {'min': 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`threshold`,
-		 description : `
-			 최소 유효값
-			 기본값 : 75
-			 min : 0
-		 `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_Bloom', 'threshold', 'number', {
-		min: 0,
-		callback: function (v) {
-			this['_process'][0]['threshold'] = v;
-			this['_threshold'] = this['_process'][0]['threshold']
-		}
-	});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`blur`,
-		 description : `
-			 blur 정도.
-			 기본값 : 20
-			 min : 0
-		 `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_Bloom', 'blur', 'number', {
-		min: 0, callback: function (v) {
-			this['_process'][1]['size'] = v;
-			this['_process'][2]['size'] = v;
-		}
-	});
+	RedDefinePropertyInfo.definePrototypes(
+		'RedPostEffect_Bloom',
+		['diffuseTexture', 'sampler2D'],
+		['blurTexture', 'sampler2D'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`exposure`,
+			 description : `
+				 확산 강도.
+				 기본값 : 1
+				 min : 0
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['exposure', 'number', {'min': 0}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`bloomStrength`,
+			 description : `
+				 블룸 강도
+				 기본값 : 1.2
+				 min : 0
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['bloomStrength', 'number', {'min': 0}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`threshold`,
+			 description : `
+				 최소 유효값
+				 기본값 : 75
+				 min : 0
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['threshold', 'number', {
+			min: 0,
+			callback: function (v) {
+				this['_process'][0]['threshold'] = v;
+				this['_threshold'] = this['_process'][0]['threshold']
+			}
+		}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`blur`,
+			 description : `
+				 blur 정도.
+				 기본값 : 20
+				 min : 0
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['blur', 'number', {
+			min: 0, callback: function (v) {
+				this['_process'][1]['size'] = v;
+				this['_process'][2]['size'] = v;
+			}
+		}]
+	);
 	Object.freeze(RedPostEffect_Bloom);
 })();

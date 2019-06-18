@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.6.13 11:7
  */
 
 "use strict";
@@ -252,16 +252,16 @@ var Red3DSLoader;
 			 ]
 		 },
 		 example : `
-		    // 3ds 로딩
-            Red3DSLoader(
-                RedGL Instance, // redGL
-                assetPath + '3ds/portalgun/', // assetRootPath
-                'portalgun.3ds', // fileName
-                function (v) { // callback
-                    console.log('로딩성공', v);
-                    (RedScene Instance).addChild(v['resultMesh']);
-                }
-            )
+			// 3ds 로딩
+			Red3DSLoader(
+				RedGL Instance, // redGL
+				assetPath + '3ds/portalgun/', // assetRootPath
+				'portalgun.3ds', // fileName
+				function (v) { // callback
+					console.log('로딩성공', v);
+					(RedScene Instance).addChild(v['resultMesh']);
+				}
+			)
 		 `,
 		 demo : '../example/loader/3ds/Red3DSLoader.html',
 		 return : 'void'

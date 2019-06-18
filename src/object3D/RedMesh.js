@@ -4,7 +4,6 @@
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
  * Last modification time of this file - 2019.4.30 18:53
  */
-
 "use strict";
 var RedMesh;
 (function () {
@@ -66,29 +65,32 @@ var RedMesh;
 		this['_UUID'] = RedGL.makeUUID();
 	};
 	RedMesh.prototype = new RedBaseContainer();
-	/*DOC:
-	 {
-		 code : 'PROPERTY',
-		 title :`perspectiveScale`,
-		 description : `
-		 퍼스펙티브에 스케일이 반응할것인가 여부
-		 기본값 true
-		 `,
-		 return : 'Boolean'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedMesh', 'perspectiveScale', 'boolean');
-	/*DOC:
-	 {
-		 code : 'PROPERTY',
-		 title :`sprite3DYn`,
-		 description : `
-		 sprite3D 모드 사용 여부
-		 기본값 true
-		 `,
-		 return : 'Boolean'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedMesh', 'sprite3DYn', 'boolean');
+	RedDefinePropertyInfo.definePrototypes(
+		'RedMesh',
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`perspectiveScale`,
+			 description : `
+			 퍼스펙티브에 스케일이 반응할것인가 여부
+			 기본값 true
+			 `,
+			 return : 'Boolean'
+		 }
+		 :DOC*/
+		['perspectiveScale', 'boolean'],
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`sprite3DYn`,
+			 description : `
+			 sprite3D 모드 사용 여부
+			 기본값 true
+			 `,
+			 return : 'Boolean'
+		 }
+		 :DOC*/
+		['sprite3DYn', 'boolean']
+	);
 	Object.freeze(RedMesh);
 })();

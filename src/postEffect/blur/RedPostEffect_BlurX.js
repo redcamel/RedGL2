@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.6.13 12:42
  */
 
 "use strict";
@@ -94,19 +94,22 @@ var RedPostEffect_BlurX;
 	RedPostEffect_BlurX.prototype['updateTexture'] = function (lastFrameBufferTexture) {
 		this['diffuseTexture'] = lastFrameBufferTexture;
 	};
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_BlurX', 'diffuseTexture', 'sampler2D');
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`size`,
-		 description : `
-			 블러 사이즈
-			 기본값 : 50
-			 min : 0
-		 `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_BlurX', 'size', 'number', {'min': 0});
+	RedDefinePropertyInfo.definePrototypes(
+		'RedPostEffect_BlurX',
+		['diffuseTexture', 'sampler2D'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`size`,
+			 description : `
+				 블러 사이즈
+				 기본값 : 50
+				 min : 0
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['size', 'number', {'min': 0}]
+	);
 	Object.freeze(RedPostEffect_BlurX);
 })();

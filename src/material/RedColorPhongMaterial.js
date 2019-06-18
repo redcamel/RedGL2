@@ -4,7 +4,6 @@
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
  * Last modification time of this file - 2019.4.30 18:53
  */
-
 "use strict";
 var RedColorPhongMaterial;
 (function () {
@@ -176,48 +175,51 @@ var RedColorPhongMaterial;
 	 }
 	 :DOC*/
 	Object.defineProperty(RedColorPhongMaterial.prototype, 'color', RedColorMaterial['DEFINE_OBJECT_COLOR']);
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`alpha`,
-		 description : `
-		    기본값 : 1
-		    최소값 : 0
-		    최대값 : 1
-		 `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedColorPhongMaterial', 'alpha', 'number', RedColorMaterial['DEFINE_OBJECT_ALPHA']);
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`shininess`,
-		 description : `기본값 : 16`,
-		 return : 'shininess'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedColorPhongMaterial', 'shininess', 'number', {'min': 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`specularPower`,
-		 description : `기본값 : 1`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedColorPhongMaterial', 'specularPower', 'number', {'min': 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`useFlatMode`,
-		 description : `
-		    flatMode 사용여부
-		    기본값 : true
-		 `,
-		 return : 'boolean'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedColorPhongMaterial', 'useFlatMode', 'boolean', samplerOption);
+	RedDefinePropertyInfo.definePrototypes(
+		'RedColorPhongMaterial',
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`alpha`,
+			 description : `
+			    기본값 : 1
+			    최소값 : 0
+			    최대값 : 1
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['alpha', 'number', RedColorMaterial['DEFINE_OBJECT_ALPHA']],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`shininess`,
+			 description : `기본값 : 16`,
+			 return : 'shininess'
+		 }
+		 :DOC*/
+		['shininess', 'number', {'min': 0}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`specularPower`,
+			 description : `기본값 : 1`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['specularPower', 'number', {'min': 0}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`useFlatMode`,
+			 description : `
+			    flatMode 사용여부
+			    기본값 : true
+			 `,
+			 return : 'boolean'
+		 }
+		 :DOC*/
+		['useFlatMode', 'boolean', samplerOption]
+	);
 	Object.freeze(RedColorPhongMaterial);
 })();

@@ -24,7 +24,7 @@
       "RedBaseTexture"
     ],
     "demo": "../example/resources/RedVideoTexture.html",
-    "example": "\n          RedVideoTexture(\n              RedGL Instance,\n              src or HTMLVideoElement\n          )\n ",
+    "example": "\n\tRedVideoTexture(\n\t\tRedGL Instance,\n\t\tsrc or HTMLVideoElement\n\t)\n ",
     "return": "RedVideoTexture Instance"
   },
   {

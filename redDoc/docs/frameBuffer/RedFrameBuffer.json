@@ -15,7 +15,7 @@
   {
     "code": "PROPERTY",
     "title": "height",
-    "description": "\n    기본값 : 1080 or 하드웨어 최대값\n   ",
+    "description": "\n\t기본값 : 1080 or 하드웨어 최대값\n",
     "return": "Number"
   },
   {
@@ -60,7 +60,7 @@
   {
     "code": "PROPERTY",
     "title": "width",
-    "description": "\n    기본값 : 1920 or 하드웨어 최대값\n ",
+    "description": "\n\t기본값 : 1920 or 하드웨어 최대값\n ",
     "return": "Number"
   }
 ]

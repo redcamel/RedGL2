@@ -4,7 +4,6 @@
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
  * Last modification time of this file - 2019.4.30 18:53
  */
-
 "use strict";
 var RedSheetMaterial;
 (function () {
@@ -135,7 +134,6 @@ var RedSheetMaterial;
 		}
 	};
 	RedSheetMaterial.prototype = new RedBaseMaterial();
-
 	/*DOC:
 	 {
 		 title :`addAction`,
@@ -277,97 +275,100 @@ var RedSheetMaterial;
 		this['currentIndex'] = index;
 		this['_nextFrameTime'] = 0;
 	};
-	/*DOC:
-	 {
-         code : 'PROPERTY',
-		 title :`diffuseTexture`,
-		 description : `diffuseTexture`,
-		 return : 'RedBitmapTexture'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'diffuseTexture', 'sampler2D', {essential: true});
-	/*DOC:
-	 {
- 	     code : 'PROPERTY',
-		 title :`totalFrame`,
-		 description : `최소값 : 1`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'totalFrame', 'number', {'min': 1});
-	/*DOC:
-	 {
- 	     code : 'PROPERTY',
-		 title :`loop`,
-		 description : `
-		    반복여부 설정.
-		    기본값 : true
-         `,
-		 return : 'Boolean'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'loop', 'boolean');
-	/*DOC:
-	 {
- 	     code : 'PROPERTY',
-		 title :`frameRate`,
-		 description : `
-		    초당 프레임 속도
-		    최소값 : 1
-        `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'frameRate', 'number', {
-		min: 1,
-		callback: function () {
-			this['_perFrameTime'] = 1000 / this['_frameRate'];
-		}
-	});
-	/*DOC:
-	 {
- 	     code : 'PROPERTY',
-		 title :`segmentW`,
-		 description : `
-		    가로 분할 수
-		    최소값 : 1
-         `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'segmentW', 'number', {min: 1});
-	/*DOC:
-	 {
- 	     code : 'PROPERTY',
-		 title :`segmentH`,
-		 description : `
-		    세로 분할 수
-		    최소값 : 1
-         `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'segmentH', 'number', {min: 1});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`alpha`,
-		 description : `기본값 : 1`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'alpha', 'number', {min: 0, max: 1});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`usePreMultiply`,
-		 description : `
-		    usePreMultiply 사용여부
-		    기본값 : false
-		 `,
-		 return : 'boolean'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedSheetMaterial', 'usePreMultiply', 'boolean', samplerOption);
+	RedDefinePropertyInfo.definePrototypes(
+		'RedSheetMaterial',
+		/*DOC:
+		 {
+	         code : 'PROPERTY',
+			 title :`diffuseTexture`,
+			 description : `diffuseTexture`,
+			 return : 'RedBitmapTexture'
+		 }
+		 :DOC*/
+		['diffuseTexture', 'sampler2D', {essential: true}],
+		/*DOC:
+		 {
+	         code : 'PROPERTY',
+			 title :`totalFrame`,
+			 description : `최소값 : 1`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['totalFrame', 'number', {'min': 1}],
+		/*DOC:
+		 {
+	         code : 'PROPERTY',
+			 title :`loop`,
+			 description : `
+			    반복여부 설정.
+			    기본값 : true
+	         `,
+			 return : 'Boolean'
+		 }
+		 :DOC*/
+		['loop', 'boolean'],
+		/*DOC:
+		 {
+	         code : 'PROPERTY',
+			 title :`frameRate`,
+			 description : `
+			    초당 프레임 속도
+			    최소값 : 1
+	        `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['frameRate', 'number', {
+			min: 1,
+			callback: function () {
+				this['_perFrameTime'] = 1000 / this['_frameRate'];
+			}
+		}],
+		/*DOC:
+		 {
+	         code : 'PROPERTY',
+			 title :`segmentW`,
+			 description : `
+			    가로 분할 수
+			    최소값 : 1
+	         `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['segmentW', 'number', {min: 1}],
+		/*DOC:
+		 {
+	         code : 'PROPERTY',
+			 title :`segmentH`,
+			 description : `
+			    세로 분할 수
+			    최소값 : 1
+	         `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['segmentH', 'number', {min: 1}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`alpha`,
+			 description : `기본값 : 1`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['alpha', 'number', {min: 0, max: 1}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`usePreMultiply`,
+			 description : `
+			    usePreMultiply 사용여부
+			    기본값 : false
+			 `,
+			 return : 'boolean'
+		 }
+		 :DOC*/
+		['usePreMultiply', 'boolean', samplerOption]
+	);
 	Object.freeze(RedSheetMaterial)
 })();

@@ -4,7 +4,6 @@
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
  * Last modification time of this file - 2019.4.30 18:53
  */
-
 "use strict";
 var RedObitController;
 (function () {
@@ -111,7 +110,6 @@ var RedObitController;
 					redGL['_canvas'].addEventListener(tMove, HD_Move);
 					window.addEventListener(tUp, HD_up);
 				}
-
 			};
 			HD_Move = function (e) {
 				if (self['needUpdate']) {
@@ -143,8 +141,9 @@ var RedObitController;
 		})(this);
 	};
 	RedObitController.prototype = new RedBaseController();
-
-	/*DOC:
+	RedDefinePropertyInfo.definePrototypes(
+		'RedObitController',
+		/*DOC:
 	 {
 	     code : 'PROPERTY',
 		 title :`centerX`,
@@ -152,122 +151,123 @@ var RedObitController;
 		 return : 'Number'
 	 }
 	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedObitController', 'centerX', 'number');
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`centerY`,
-		 description : `회전축 Y 포지션`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedObitController', 'centerY', 'number');
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`centerZ`,
-		 description : `회전축 Z 포지션`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedObitController', 'centerZ', 'number');
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`distance`,
-		 description : `회전축과의 거리`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedObitController', 'distance', 'number', {min: 1});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`speedDistance`,
-		 description : `
-			 거리 속도
-			 기본값 : 2
-		 `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedObitController', 'speedDistance', 'number', {min: 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`delayDistance`,
-		 description : `
-			 거리 지연 속도
-			 기본값 : 0.1
-		 `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedObitController', 'delayDistance', 'number', {min: 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`speedRotation`,
-		 description : `
-			 회전 속도
-			 기본값 : 3
-		 `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedObitController', 'speedRotation', 'number', {min: 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`delayRotation`,
-		 description : `
-			 회전 지연 속도
-			 기본값 : 0.1
-		 `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedObitController', 'delayRotation', 'number', {min: 0});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`pan`,
-		 description : `pan`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedObitController', 'pan', 'number');
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`tilt`,
-		 description : `tilt`,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedObitController', 'tilt', 'number');
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`maxTilt`,
-		  description : `
-			 기본값 : 90
-		 `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedObitController', 'maxTilt', 'number', {min: -90, max: 90});
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`minTilt`,
-		  description : `
-			 기본값 : -90
-		 `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedObitController', 'minTilt', 'number', {min: -90, max: 90});
+		['centerX', 'number'],
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`centerY`,
+			 description : `회전축 Y 포지션`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['centerY', 'number'],
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`centerZ`,
+			 description : `회전축 Z 포지션`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['centerZ', 'number'],
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`distance`,
+			 description : `회전축과의 거리`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['distance', 'number', {min: 1}],
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`speedDistance`,
+			 description : `
+				 거리 속도
+				 기본값 : 2
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['speedDistance', 'number', {min: 0}],
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`delayDistance`,
+			 description : `
+				 거리 지연 속도
+				 기본값 : 0.1
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['delayDistance', 'number', {min: 0}],
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`speedRotation`,
+			 description : `
+				 회전 속도
+				 기본값 : 3
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['speedRotation', 'number', {min: 0}],
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`delayRotation`,
+			 description : `
+				 회전 지연 속도
+				 기본값 : 0.1
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['delayRotation', 'number', {min: 0}],
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`pan`,
+			 description : `pan`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['pan', 'number'],
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`tilt`,
+			 description : `tilt`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['tilt', 'number'],
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`maxTilt`,
+			  description : `
+				 기본값 : 90
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['maxTilt', 'number', {min: -90, max: 90}],
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`minTilt`,
+			  description : `
+				 기본값 : -90
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['minTilt', 'number', {min: -90, max: 90}]
+	);
 	/*DOC:
 	 {
 	     code : 'METHOD',

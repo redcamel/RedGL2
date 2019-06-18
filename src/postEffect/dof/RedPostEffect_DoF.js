@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.6.13 12:44
  */
 
 "use strict";
@@ -97,27 +97,30 @@ var RedPostEffect_DoF;
 		this['blurTexture'] = lastFrameBufferTexture;
 		this['depthTexture'] = this['_subFrameBufferList'][0]['frameBuffer']['texture']
 	};
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_DoF', 'diffuseTexture', 'sampler2D');
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_DoF', 'blurTexture', 'sampler2D');
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_DoF', 'depthTexture', 'sampler2D');
-	/*DOC:
-	 {
-	     code : 'PROPERTY',
-		 title :`blur`,
-		 description : `
-			 blur
-			 기본값 : 50
-			 min : 0
-		 `,
-		 return : 'Number'
-	 }
-	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedPostEffect_DoF', 'blur', 'number', {
-		min: 0, callback: function (v) {
-			this['_process'][0]['size'] = v;
-			this['_process'][1]['size'] = v;
-		}
-	});
+	RedDefinePropertyInfo.definePrototypes(
+		'RedPostEffect_DoF',
+		['diffuseTexture', 'sampler2D'],
+		['blurTexture', 'sampler2D'],
+		['depthTexture', 'sampler2D'],
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`blur`,
+			 description : `
+				 blur
+				 기본값 : 50
+				 min : 0
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['blur', 'number', {
+			min: 0, callback: function (v) {
+				this['_process'][0]['size'] = v;
+				this['_process'][1]['size'] = v;
+			}
+		}]
+	);
 	/*DOC:
 	 {
 	     code : 'PROPERTY',
