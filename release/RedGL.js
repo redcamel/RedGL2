@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.6.18 12:33
+ * Last modification time of this file - 2019.6.20 15:2
  */
 
 /*DOC:
@@ -24582,6 +24582,16 @@ var RedBasePostEffect;
 	}
 	 :DOC*/
 	tPrototype['_subFrameBufferList'] = [];
+	RedBasePostEffect['baseVertexShaderSource1'] = function () {
+		/* @preserve
+		 void main(void) {
+			 vTexcoord = aTexcoord;
+			 vResolution = uResolution;
+			 vTime = uTime;
+			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
+		 }
+		 */
+	};
 	Object.freeze(RedBasePostEffect);
 })();
 /*
@@ -24597,14 +24607,7 @@ var RedPostEffect_Bloom;
 	var vSource, fSource;
 	var PROGRAM_NAME = 'RedPostEffectBloomProgram';
 	var checked;
-	vSource = function () {
-		/* @preserve
-		 void main(void) {
-		 vTexcoord = aTexcoord;
-			gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
-		 }
-		 */
-	};
+	vSource = RedBasePostEffect['baseVertexShaderSource1']
 	fSource = function () {
 		/* @preserve
 		 precision mediump float;
@@ -24762,14 +24765,7 @@ var RedPostEffect_BloomThreshold;
 	var vSource, fSource;
 	var PROGRAM_NAME;
 	var checked;
-	vSource = function () {
-		/* @preserve
-		 void main(void) {
-			 vTexcoord = aTexcoord;
-			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
-		 }
-		 */
-	};
+	vSource = RedBasePostEffect['baseVertexShaderSource1']
 	fSource = function () {
 		/* @preserve
 		 precision highp float;
@@ -24869,15 +24865,7 @@ var RedPostEffect_Blur;
 	var vSource, fSource;
 	var PROGRAM_NAME = 'RedPostEffectBlurProgram';
 	var checked;
-	vSource = function () {
-		/* @preserve
-		 void main(void) {
-			 vTexcoord = aTexcoord;
-			 vResolution = uResolution;
-			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
-		 }
-		 */
-	};
+	vSource = RedBasePostEffect['baseVertexShaderSource1']
 	fSource = function () {
 		/* @preserve
 		 precision mediump float;
@@ -24966,15 +24954,7 @@ var RedPostEffect_BlurX;
 	var vSource, fSource;
 	var PROGRAM_NAME = 'RedPostEffectBlurXProgram';
 	var checked;
-	vSource = function () {
-		/* @preserve
-		 void main(void) {
-			 vTexcoord = aTexcoord;
-			 vResolution = uResolution;
-			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
-		 }
-		 */
-	};
+	vSource = RedBasePostEffect['baseVertexShaderSource1']
 	fSource = function () {
 		/* @preserve
 		 precision mediump float;
@@ -25081,15 +25061,7 @@ var RedPostEffect_BlurY;
 	var vSource, fSource;
 	var PROGRAM_NAME = 'RedPostEffectBlurYProgram';
 	var checked;
-	vSource = function () {
-		/* @preserve
-		 void main(void) {
-			 vTexcoord = aTexcoord;
-			 vResolution = uResolution;
-			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
-		 }
-		 */
-	};
+	vSource = RedBasePostEffect['baseVertexShaderSource1']
 	fSource = function () {
 		/* @preserve
 		 precision mediump float;
@@ -25269,14 +25241,7 @@ var RedPostEffect_ZoomBlur;
 	var vSource, fSource;
 	var PROGRAM_NAME = 'RedPostEffectZoomBlurProgram';
 	var checked;
-	vSource = function () {
-		/* @preserve
-		 void main(void) {
-			 vTexcoord = aTexcoord;
-			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
-		 }
-		 */
-	};
+	vSource = RedBasePostEffect['baseVertexShaderSource1']
 	fSource = function () {
 		/* @preserve
 		 precision mediump float;
@@ -25416,14 +25381,7 @@ var RedPostEffect_BrightnessContrast;
 	var vSource, fSource;
 	var PROGRAM_NAME = 'RedPostEffectBrightnessContrastProgram';
 	var checked;
-	vSource = function () {
-		/* @preserve
-		 void main(void) {
-			 vTexcoord = aTexcoord;
-			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
-		 }
-		 */
-	};
+	vSource = RedBasePostEffect['baseVertexShaderSource1']
 	fSource = function () {
 		/* @preserve
 		 precision mediump float;
@@ -25542,14 +25500,7 @@ var RedPostEffect_Threshold;
 	var vSource, fSource;
 	var PROGRAM_NAME = 'RedPostEffectThresholdProgram';
 	var checked;
-	vSource = function () {
-		/* @preserve
-		 void main(void) {
-			 vTexcoord = aTexcoord;
-			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
-		 }
-		 */
-	};
+	vSource = RedBasePostEffect['baseVertexShaderSource1']
 	fSource = function () {
 		/* @preserve
 		 precision highp float;
@@ -25653,14 +25604,7 @@ var RedPostEffect_Invert;
 	var vSource, fSource;
 	var PROGRAM_NAME = 'RedPostEffectInvertProgram';
 	var checked;
-	vSource = function () {
-		/* @preserve
-		 void main(void) {
-			 vTexcoord = aTexcoord;
-			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
-		 }
-		 */
-	};
+	vSource = RedBasePostEffect['baseVertexShaderSource1']
 	fSource = function () {
 		/* @preserve
 		 precision mediump float;
@@ -25737,15 +25681,7 @@ var RedPostEffect_Gray;
 	var vSource, fSource;
 	var PROGRAM_NAME = 'RedPostEffectGrayProgram';
 	var checked;
-	vSource = function () {
-		/* @preserve
-		 void main(void) {
-			 vTexcoord = aTexcoord;
-			 vResolution = uResolution;
-			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
-		 }
-		 */
-	};
+	vSource = RedBasePostEffect['baseVertexShaderSource1']
 	fSource = function () {
 		/* @preserve
 		 precision mediump float;
@@ -25819,14 +25755,7 @@ var RedPostEffect_HueSaturation;
 	var vSource, fSource;
 	var PROGRAM_NAME = 'RedPostEffectHueSaturationProgram';
 	var checked;
-	vSource = function () {
-		/* @preserve
-		 void main(void) {
-			 vTexcoord = aTexcoord;
-			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
-		 }
-		 */
-	};
+	vSource = RedBasePostEffect['baseVertexShaderSource1']
 	fSource = function () {
 		/* @preserve
 		 precision mediump float;
@@ -25956,15 +25885,7 @@ var RedPostEffect_HalfTone;
 	var vSource, fSource;
 	var PROGRAM_NAME = 'RedPostEffectHalfToneProgram';
 	var checked;
-	vSource = function () {
-		/* @preserve
-		 void main(void) {
-			 vTexcoord = aTexcoord;
-			 vResolution = uResolution;
-			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
-		 }
-		 */
-	};
+	vSource = RedBasePostEffect['baseVertexShaderSource1']
 	fSource = function () {
 		/* @preserve
 		 precision mediump float;
@@ -26127,15 +26048,7 @@ var RedPostEffect_Pixelize;
 	var vSource, fSource;
 	var PROGRAM_NAME = 'RedPostEffectPixelizeProgram';
 	var checked;
-	vSource = function () {
-		/* @preserve
-		 void main(void) {
-			 vTexcoord = aTexcoord;
-			 vResolution = uResolution;
-			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
-		 }
-		 */
-	};
+	vSource = RedBasePostEffect['baseVertexShaderSource1']
 	fSource = function () {
 		/* @preserve
 		 precision mediump float;
@@ -26247,15 +26160,7 @@ var RedPostEffect_Convolution;
 	var vSource, fSource;
 	var PROGRAM_NAME = 'RedPostEffectConvolutionProgram';
 	var checked;
-	vSource = function () {
-		/* @preserve
-		 void main(void) {
-			 vTexcoord = aTexcoord;
-			 vResolution = uResolution;
-			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
-		 }
-		 */
-	};
+	vSource = RedBasePostEffect['baseVertexShaderSource1']
 	fSource = function () {
 		/* @preserve
 		 precision mediump float;
@@ -26481,14 +26386,7 @@ var RedPostEffect_DoF;
 	var vSource, fSource;
 	var PROGRAM_NAME = 'RedPostEffectDoFProgram';
 	var checked;
-	vSource = function () {
-		/* @preserve
-		 void main(void) {
-			 vTexcoord = aTexcoord;
-			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
-		 }
-		 */
-	};
+	vSource = RedBasePostEffect['baseVertexShaderSource1']
 	fSource = function () {
 		/* @preserve
 		 precision mediump float;
@@ -26727,15 +26625,7 @@ var RedPostEffect_Film;
 	var vSource, fSource;
 	var PROGRAM_NAME = 'RedPostEffectFilmProgram';
 	var checked;
-	vSource = function () {
-		/* @preserve
-		 void main(void) {
-			 vTexcoord = aTexcoord;
-			 vTime = uTime;
-			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
-		 }
-		 */
-	};
+	vSource = RedBasePostEffect['baseVertexShaderSource1']
 	fSource = function () {
 		/* @preserve
 		 precision mediump float;
@@ -26891,14 +26781,7 @@ var RedPostEffect_Vignetting;
 	var vSource, fSource;
 	var PROGRAM_NAME = 'RedPostEffectVignettingProgram';
 	var checked;
-	vSource = function () {
-		/* @preserve
-		 void main(void) {
-			vTexcoord = aTexcoord;
-			gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
-		 }
-		 */
-	};
+	vSource = RedBasePostEffect['baseVertexShaderSource1']
 	fSource = function () {
 		/* @preserve
 		 precision mediump float;
@@ -27005,15 +26888,7 @@ var RedPostEffect_FXAA;
 	var vSource, fSource;
 	var PROGRAM_NAME = 'RedPostEffectFXAAProgram';
 	var checked;
-	vSource = function () {
-		/* @preserve
-		 void main(void) {
-			 vTexcoord = aTexcoord;
-			 vResolution = uResolution;
-			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
-		 }
-		 */
-	};
+	vSource = RedBasePostEffect['baseVertexShaderSource1']
 	fSource = function () {
 		/* @preserve
 		 precision mediump float;
@@ -27428,4 +27303,4 @@ var RedGLOffScreen;
 		};
 		RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
 	})();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-06-18 12:33:06)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-06-20 15:02:12)' };console.log(RedGL_VERSION);

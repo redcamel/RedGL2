@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.14 12:38
+ * Last modification time of this file - 2019.6.20 15:0
  */
 
 var gulp = require('gulp');
@@ -22,7 +22,8 @@ var name = "RedGL";
 var transformString = function (s) {
 	var reg = /\/\*DOC\:[\s\S]+?\:\DOC\*\//g;
 	var list = s.match(reg)
-	var dedent = function (callSite, ...args) {
+	var dedent = function (callSite,...args)
+	{
 		var tList = callSite.trim().split('\n')
 		var tList2 = []
 		var min = 100000000
@@ -270,6 +271,7 @@ gulp.task('combine-js', function () {
 			}
 		))
 		.pipe(replace(/\n\s{2,}/g, '\n'))
+		.pipe(replace(/^\/\/[^#||^g].+[^;]\n/gm, ''))
 		.pipe(gulp.dest('release'))
 });
 gulp.task('default', gulp.series('combine-js', 'make-doc', 'make-doc-list', function (done) {
