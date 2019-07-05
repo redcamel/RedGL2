@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.6.7 12:10
+ * Last modification time of this file - 2019.7.5 11:49
  */
 "use strict";
 var RedBaseObject3D;
@@ -230,6 +230,51 @@ var RedBaseObject3D;
 		this['x'] = this['y'] = this['z'] = 0;
 		this['rotationX'] = this['rotationY'] = this['rotationZ'] = 0;
 		this['scaleX'] = this['scaleY'] = this['scaleZ'] = 1;
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`pivotX`,
+			 description : `
+				 기본값 : 0
+				 피벗 포인트 X
+			 `,
+			 example : `
+                (RedMesh Instance).pivotX = 1;
+             `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		this['pivotX'] = 0;
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`pivotY`,
+			 description : `
+				 기본값 : 0
+				 피벗 포인트 Y
+			 `,
+			 example : `
+                (RedMesh Instance).pivotY = 1;
+             `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		this['pivotY'] = 0;
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`pivotZ`,
+			 description : `
+				 기본값 : 0
+				 피벗 포인트 Z
+			 `,
+			 example : `
+                (RedMesh Instance).pivotZ = 1;
+             `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		this['pivotZ'] = 0;
 		/*DOC:
 		 {
 		    code : 'PROPERTY',
