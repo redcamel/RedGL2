@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.21 11:40
+ * Last modification time of this file - 2019.7.5 11:41
  */
 
 "use strict";
@@ -684,9 +684,9 @@ var RedRenderer;
 						a10 = 0, a11 = 1, a12 = 0,
 						a20 = 0, a21 = 0, a22 = 1,
 						// tLocalMatrix translate
-						tLocalMatrix[12] = tMesh['x'],
-						tLocalMatrix[13] = tMesh['y'],
-						tLocalMatrix[14] = tMesh['z'],
+						tLocalMatrix[12] = tMesh['x']+tMesh['pivotX'],
+						tLocalMatrix[13] = tMesh['y']+tMesh['pivotY'],
+						tLocalMatrix[14] = tMesh['z']+tMesh['pivotZ'],
 						tLocalMatrix[15] = 1,
 						// tLocalMatrix rotate
 						tSprite3DYn ?
@@ -744,6 +744,35 @@ var RedRenderer;
 						// tLocalMatrix[4] = tLocalMatrix[4] * aY, tLocalMatrix[5] = tLocalMatrix[5] * aY, tLocalMatrix[6] = tLocalMatrix[6] * aY, tLocalMatrix[7] = tLocalMatrix[7] * aY,
 						// tLocalMatrix[8] = tLocalMatrix[8] * aZ, tLocalMatrix[9] = tLocalMatrix[9] * aZ, tLocalMatrix[10] = tLocalMatrix[10] * aZ, tLocalMatrix[11] = tLocalMatrix[11] * aZ,
 						// tLocalMatrix[12] = tLocalMatrix[12], tLocalMatrix[13] = tLocalMatrix[13], tLocalMatrix[14] = tLocalMatrix[14], tLocalMatrix[15] = tLocalMatrix[15],
+						(tMesh['pivotX'] || tMesh['pivotY'] || tMesh['pivotZ']) ? (
+							// 피봇처리
+							// 매트립스 곱
+							a00 = tLocalMatrix[0], a01 = tLocalMatrix[1], a02 = tLocalMatrix[2], a03 = tLocalMatrix[3],
+								a10 = tLocalMatrix[4], a11 = tLocalMatrix[5], a12 = tLocalMatrix[6], a13 = tLocalMatrix[7],
+								a20 = tLocalMatrix[8], a21 = tLocalMatrix[9], a22 = tLocalMatrix[10], a23 = tLocalMatrix[11],
+								a30 = tLocalMatrix[12], a31 = tLocalMatrix[13], a32 = tLocalMatrix[14], a33 = tLocalMatrix[15],
+								// Cache only the current line of the second matrix
+								b0 = 1, b1 = 0, b2 = 0, b3 = 0,
+								tLocalMatrix[0] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30,
+								tLocalMatrix[1] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
+								tLocalMatrix[2] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
+								tLocalMatrix[3] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33,
+								b0 = 0, b1 = 1, b2 = 0, b3 = 0,
+								tLocalMatrix[4] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30,
+								tLocalMatrix[5] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
+								tLocalMatrix[6] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
+								tLocalMatrix[7] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33,
+								b0 = 0, b1 = 0, b2 = 1, b3 = 0,
+								tLocalMatrix[8] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30,
+								tLocalMatrix[9] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
+								tLocalMatrix[10] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
+								tLocalMatrix[11] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33,
+								b0 = tMesh['pivotX'], b1 = tMesh['pivotY'], b2 = tMesh['pivotZ'], b3 = 1,
+								tLocalMatrix[12] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30,
+								tLocalMatrix[13] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
+								tLocalMatrix[14] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
+								tLocalMatrix[15] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33
+						) : 0,
 						// 부모가있으면 곱함
 						parentMTX ?
 							(

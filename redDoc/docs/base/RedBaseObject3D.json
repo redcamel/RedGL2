@@ -214,6 +214,27 @@
   },
   {
     "code": "PROPERTY",
+    "title": "pivotX",
+    "description": "\n\t 기본값 : 0\n\t 피벗 포인트 X\n ",
+    "example": "\n             (RedMesh Instance).pivotX = 1;\n          ",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "pivotY",
+    "description": "\n\t 기본값 : 0\n\t 피벗 포인트 Y\n ",
+    "example": "\n             (RedMesh Instance).pivotY = 1;\n          ",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "pivotZ",
+    "description": "\n\t 기본값 : 0\n\t 피벗 포인트 Z\n ",
+    "example": "\n             (RedMesh Instance).pivotZ = 1;\n          ",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
     "title": "pointSize",
     "description": "\n\t 기본값 : 1\n\t gl.POINTS로 그릴경우 반영될 포인트 사이즈.\n\t 성능을 위해서 getter/setter 설정이 되어있지 않음\n ",
     "example": "\n             (RedMesh Instance).pointSize = 1;\n             (RedMesh Instance).pointSize = 2;\n          ",
