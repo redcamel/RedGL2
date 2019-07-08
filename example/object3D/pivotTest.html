@@ -2,7 +2,7 @@
   ~ RedGL - MIT License
   ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
   ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
-  ~ Last modification time of this file - 2019.7.5 11:51
+  ~ Last modification time of this file - 2019.7.8 15:8
   -->
 
 <!DOCTYPE html>
@@ -46,7 +46,7 @@
 				// 렌더러 생성
 				tRenderer = RedRenderer();
 				// 뷰생성 및 적용
-				tView = RedView('HelloRedGL', redGL, tScene, tController);
+				tView = RedView(redGL, tScene, tController);
 				tWorld.addView(tView);
 				// 그리드 설정
 				tScene['grid'] = RedGrid(redGL);
@@ -91,7 +91,7 @@
 				tMesh.z = -Math.random() * 100 - 2
 				tScene.addChild(tMesh);
 			}
-			var tMesh = RedMesh(this, tGeometry,  RedBitmapMaterial(
+			var tMesh = RedMesh(this, tGeometry, RedBitmapMaterial(
 				this,
 				RedBitmapTexture(this, assetPath + 'UV_Grid_Sm.jpg')
 			));
@@ -102,12 +102,12 @@
 			var tPivotPoint = RedMesh(this, RedSphere(this, 0.2), RedColorMaterial(this, '#00ff00'));
 			tPivotPoint.useCullFace = false
 			tScene.addChild(tPivotPoint);
-			testUI(this, tScene,tMesh, tPivotPoint);
+			testUI(this, tScene, tMesh, tPivotPoint);
 		} else {
 			console.log('초기화 실패!');
 		}
 	});
-	testUI = function (redGL, tScene,tMesh, tPivotPoint) {
+	testUI = function (redGL, tScene, tMesh, tPivotPoint) {
 		var gui = new baseTestUI(redGL);
 		gui.initRedGL();
 		var test = {

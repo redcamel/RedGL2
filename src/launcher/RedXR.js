@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.7.8 15:36
  */
 
 "use strict";
@@ -115,12 +115,12 @@ let RedXR;
 				const tUUID = +RedGL.makeUUID()
 				const tLeftViewName = 'left'
 				const tRightViewName = 'right'
-				world.addView(RedView(tLeftViewName, redGL, scene, camL));
-				RedView(tLeftViewName).setSize('50%', '100%');
-				RedView(tLeftViewName).setLocation('0%', '0%');
-				world.addView(RedView(tRightViewName, redGL, scene, camR));
-				RedView(tRightViewName).setSize('50%', '100%');
-				RedView(tRightViewName).setLocation('50%', '0%');
+				world.addView(RedView(redGL, scene, camL),tLeftViewName);
+				world.getView(tLeftViewName).setSize('50%', '100%');
+				world.getView(tLeftViewName).setLocation('0%', '0%');
+				world.addView(RedView(redGL, scene, camR),tRightViewName);
+				world.getView(tRightViewName).setSize('50%', '100%');
+				world.getView(tRightViewName).setLocation('50%', '0%');
 				const resultObject = {
 					world: world,
 					scene: scene
@@ -140,8 +140,8 @@ let RedXR;
 						const cam = viewport.x == 0 ? camL : camR;
 						const viewName = viewport.x == 0 ? tLeftViewName : tRightViewName
 
-						RedView(viewName).setSize(viewport.width, viewport.height)
-						RedView(viewName).setLocation(viewport.x, viewport.y)
+						world.getView(viewName).setSize(viewport.width, viewport.height)
+						world.getView(viewName).setLocation(viewport.x, viewport.y)
 						cam.perspectiveMTX = view.projectionMatrix;
 						cam.matrix = pose.getViewMatrix(view);
 					}

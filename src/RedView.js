@@ -2,28 +2,21 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.7.8 15:3
  */
 
 "use strict";
 var RedView;
 (function () {
-	var ViewMap;
-	ViewMap = {};
 	/*DOC:
 	 {
 		 constructorYn : true,
 		 title :`RedView`,
 		 description : `
-			 고유 키를 기반으로 <b>RedScene</b>과 <b>RedCamera를</b> 쌍으로 하는 정보를 소유.
+			 <b>RedScene</b>과 <b>RedCamera를</b> 쌍으로 하는 정보를 소유.
 			 <b>RedWorld</b>에 등록되어지며 실제 렌더링시 필요한 그려질 <b>크기</b>와 <b>위치</b>를 결정한다.
 		 `,
 		 params : {
-			 key :[
-				 {type:'String'},
-				 '고유키',
-				 'key만 입력시에 기존에 존재하는 키일경우 <b>캐쉬된 Instance</b>를 반환'
-			 ],
 			 redGL : [
 			    {type:'RedGL'},
 			 ],
@@ -39,34 +32,18 @@ var RedView;
 		 demo : '../example/etc/RedView.html',
 		 example : `
 			 var tWorld;
-			 RedView('테스트뷰1', RedGL Instance, RedScene Instance, RedCamera Instance); // "테스트뷰1" 라는 키값을 가진 RedView 생성
-			 RedView('테스트뷰2', RedGL Instance, RedScene Instance, RedCamera Instance); // "테스트뷰2" 라는 키값을 가진 RedView 생성
+			 RedView( RedGL Instance, RedScene Instance, RedCamera Instance); // "테스트뷰1" 라는 키값을 가진 RedView 생성
+			 RedView( RedGL Instance, RedScene Instance, RedCamera Instance); // "테스트뷰2" 라는 키값을 가진 RedView 생성
 		 `,
 		 return : 'RedView Instance'
 	 }
 	 :DOC*/
-	RedView = function (key, redGL, scene, camera) {
-		if (ViewMap[key]) {
-			if (scene || camera) RedGLUtil.throwFunc('RedView : ' + key, '는 이미 생성된 RedView key입니다.', '입력값 : ' + key);
-			else return ViewMap[key];
-		}
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedScene : RedGL Instance만 허용.', redGL);
-		if (!(this instanceof RedView)) return new RedView(key, redGL, scene, camera);
-		typeof key == 'string' || RedGLUtil.throwFunc('RedView : key : 문자열만 허용', '입력값 : ' + key);
-		if (!scene && !camera) RedGLUtil.throwFunc('RedView : 존재하지 않는 key입니다.', '입력값 : ' + key);
+	RedView = function (redGL, scene, camera) {
+		if (!(this instanceof RedView)) return new RedView(redGL, scene, camera);
 		if (scene && !(scene instanceof RedScene)) RedGLUtil.throwFunc('RedView : RedScene Instance만 허용', '입력값 : ' + scene);
 		if (camera) {
 			if (camera && !(camera instanceof RedCamera) && !(camera instanceof RedBaseController)) RedGLUtil.throwFunc('RedView : RedCamera or XXController Instance만 허용');
 		} else RedGLUtil.throwFunc('RedView : RedCamera or XXController Instance만 허용', '입력값 : ' + camera);
-		/*DOC:
-		 {
-		     code : 'PROPERTY',
-			 title :`key`,
-			 description : `고유키`,
-			 return : 'String'
-		 }
-		 :DOC*/
-		this['key'] = key;
 		/*DOC:
 		 {
 		     code : 'PROPERTY',
@@ -103,7 +80,6 @@ var RedView;
 		this['_y'] = 0;
 		this['_viewRect'] = [0, 0, 0, 0];
 		this['_UUID'] = RedGL.makeUUID();
-		ViewMap[key] = this;
 		console.log(this);
 	};
 	RedView.prototype = {

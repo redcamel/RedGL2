@@ -2,7 +2,7 @@
   ~ RedGL - MIT License
   ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
   ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
-  ~ Last modification time of this file - 2019.5.8 11:40
+  ~ Last modification time of this file - 2019.7.8 15:8
   -->
 
 <!DOCTYPE html>
@@ -117,7 +117,7 @@
 				// 씬 생성
 				tScene = RedScene(redGL);
 				// 뷰생성 및 적용
-				tView = RedView('HelloRedGL', redGL, tScene, tCamera);
+				tView = RedView(redGL, tScene, tCamera);
 				tWorld.addView(tView);
 
 				tEffect = RedPostEffect_HueSaturation(redGL);

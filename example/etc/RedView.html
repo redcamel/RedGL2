@@ -2,7 +2,7 @@
   ~ RedGL - MIT License
   ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
   ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
-  ~ Last modification time of this file - 2019.5.15 16:50
+  ~ Last modification time of this file - 2019.7.8 15:4
   -->
 
 <!DOCTYPE html>
@@ -50,13 +50,13 @@
 			tScene2.backgroundColor = '#010c20'
 			tScene3.backgroundColor = '#3e0946'
 			// 뷰생성 및 적용
-			tView = RedView('HelloRedGL', this, tScene, tController);
+			tView = RedView(this, tScene, tController);
 			tView.setSize('50%', '100%');
 			tView.setLocation(0, 0);
-			tView2 = RedView('HelloRedGL2', this, tScene2, tController);
+			tView2 = RedView(this, tScene2, tController);
 			tView2.setSize('50%', '100%');
 			tView2.setLocation('50%', 0);
-			tView3 = RedView('HelloRedGL3', this, tScene3, tController);
+			tView3 = RedView(this, tScene3, tController);
 			tView3.setSize('20%', '20%');
 			tView3.setLocation('40%', '40%');
 			tWorld.addView(tView);

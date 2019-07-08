@@ -2,7 +2,7 @@
   ~ RedGL - MIT License
   ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
   ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
-  ~ Last modification time of this file - 2019.4.30 18:52
+  ~ Last modification time of this file - 2019.7.8 15:8
   -->
 
 <!DOCTYPE html>
@@ -50,7 +50,7 @@
 			// 렌더러 생성
 			tRenderer = RedRenderer();
 			// 뷰생성 및 적용
-			tView = RedView('HelloRedGL', redGL, tScene, tController);
+			tView = RedView(redGL, tScene, tController);
 			tWorld.addView(tView);
 			tScene.skyBox =
 				RedSkyBox(redGL, [
@@ -265,7 +265,7 @@
 		t0.add(bloom, 'blur', 0, 100, 0.01)
 		t0.add(bloom, 'threshold', 0, 100, 0.01)
 		t0.add(testBloom, 'useBloom').onChange(function (v) {
-			v ? RedView('HelloRedGL').postEffectManager.addEffect(bloom) : RedView('HelloRedGL').postEffectManager.removeEffect(bloom)
+			v ? RedView().postEffectManager.addEffect(bloom) : RedView().postEffectManager.removeEffect(bloom)
 		});
 		t0.open()
 		var t0 = redGL['gui'].addFolder('directionalShadow')

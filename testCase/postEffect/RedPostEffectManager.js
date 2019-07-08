@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.7.8 15:40
  */
 
 "use strict";
@@ -46,7 +46,7 @@ RedGL(document.createElement('canvas'), function () {
 					"성공테스트 : RedScene Instance 생성시 postEffectManager속성에 RedPostEffectManager Instance가 생김",
 					function () {
 
-						var t0 = RedView('test', tRedGL, RedScene(tRedGL), RedCamera());
+						var t0 = RedView( tRedGL, RedScene(tRedGL), RedCamera());
 						RedTest.run(t0['postEffectManager'] instanceof RedPostEffectManager);
 
 
