@@ -9,24 +9,30 @@
           "type": "RedView"
         },
         "추가할 RedView Instance"
+      ],
+      "key": [
+        {
+          "type": "String"
+        },
+        "키 등록시 고유키로 동작하고 미등록시 무시함"
       ]
     },
-    "example": "\n\t var testWorld = RedWorld(); // 월드생성\n\t var testView = RedView( '뷰이름', RedGL Instance, RedScene Instance, RedCamera Instance ); // 뷰생성\n\t testWorld.addView( testView ); // 뷰등록\n",
+    "example": "\n\t var testWorld = RedWorld(); // 월드생성\n\t var testView = RedView( RedGL Instance, RedScene Instance, RedCamera Instance ); // 뷰생성\n\t testWorld.addView( testView ); // 뷰등록\n",
     "return": "void"
   },
   {
     "code": "METHOD",
     "title": "delView",
-    "description": "고유키 기반 뷰 삭제",
+    "description": "고유키 기반 or RedView 인스턴스 기반 뷰 삭제",
     "params": {
-      "key": [
+      "value": [
         {
-          "type": "String"
+          "type": "String or RedView"
         },
         "고유키"
       ]
     },
-    "example": "\n\t var testWorld = RedWorld(); // 월드생성\n\t var testView = RedView( '뷰이름', RedGL Instance, RedScene Instance, RedCamera Instance ); // 뷰생성\n\t testWorld.addView( testView ); // 뷰등록\n\t console.log( testWorld.getView('뷰이름') ); // testView 반환\n\t testWorld.delView('뷰이름');\n\t console.log( testWorld.getView('뷰이름') ); // undefined 반환\n",
+    "example": "\n\t var testWorld = RedWorld(); // 월드생성\n\t var testView = RedView( RedGL Instance, RedScene Instance, RedCamera Instance ); // 뷰생성\n\t testWorld.addView( testView ); // 뷰등록\n\t console.log( testWorld.getView('뷰이름') ); // testView 반환\n\t testWorld.delView('뷰이름');\n\t console.log( testWorld.getView('뷰이름') ); // undefined 반환\n",
     "return": "void"
   },
   {
@@ -41,7 +47,7 @@
         "고유키"
       ]
     },
-    "example": "\n\t var testWorld = RedWorld(); // 월드생성\n\t var testView = RedView( '뷰이름', RedGL Instance, RedScene Instance, RedCamera Instance ); // 뷰생성\n\t testWorld.addView( testView ); // 뷰등록\n\t console.log( testWorld.getView('뷰이름') ); // testView 반환\n\t testWorld.delView('뷰이름');\n\t console.log( testWorld.getView('뷰이름') ); // undefined 반환\n",
+    "example": "\n\t var testWorld = RedWorld(); // 월드생성\n\t var testView = RedView( RedGL Instance, RedScene Instance, RedCamera Instance ); // 뷰생성\n\t testWorld.addView( testView ); // 뷰등록\n\t console.log( testWorld.getView('뷰이름') ); // testView 반환\n\t testWorld.delView('뷰이름');\n\t console.log( testWorld.getView('뷰이름') ); // undefined 반환\n",
     "return": "RedView"
   },
   {
@@ -49,29 +55,29 @@
     "title": "getViewList",
     "description": "고유키 기반 렌더정보 검색",
     "params": {
-      "key": [
+      "value": [
         {
           "type": "String"
         },
         "고유키"
       ]
     },
-    "example": "\n\t var testWorld = RedWorld(); // 월드생성\n\t var testView = RedView( '뷰이름', RedGL Instance, RedScene Instance, RedCamera Instance ); // 뷰생성\n\t var testView2 = RedView( '뷰이름2', RedGL Instance, RedScene Instance, RedCamera Instance ); // 뷰생성\n\t testWorld.addView( testView ); // 뷰등록\n\t testWorld.addView( testView2 ); // 뷰등록\n\t console.log(testWorld.getViewList()); // 뷰리스트 반환\n",
+    "example": "\n\t var testWorld = RedWorld(); // 월드생성\n\t var testView = RedView( RedGL Instance, RedScene Instance, RedCamera Instance ); // 뷰생성\n\t var testView2 = RedView(  RedGL Instance, RedScene Instance, RedCamera Instance ); // 뷰생성\n\t testWorld.addView( testView ); // 뷰등록\n\t testWorld.addView( testView2 ); // 뷰등록\n\t console.log(testWorld.getViewList()); // 뷰리스트 반환\n",
     "return": "Array"
   },
   {
     "code": "METHOD",
     "title": "hasView",
-    "description": "고유키 기반 뷰 존재여부 반환.",
+    "description": "고유키 기반 or RedView 인스턴스 기반 존재여부 반환.",
     "params": {
-      "key": [
+      "value": [
         {
           "type": "String"
         },
         "고유키"
       ]
     },
-    "example": "\n\t var testWorld = RedWorld(); // 월드생성\n\t var testView = RedView( '뷰이름', RedGL Instance, RedScene Instance, RedCamera Instance ); // 뷰생성\n\t testWorld.addView( testView ); // 뷰등록\n\t console.log(testWorld.hasView('뷰이름')) // true 반환\n",
+    "example": "\n\t var testWorld = RedWorld(); // 월드생성\n\t var testView = RedView( RedGL Instance, RedScene Instance, RedCamera Instance ); // 뷰생성\n\t testWorld.addView( testView ); // 뷰등록\n\t console.log(testWorld.hasView('뷰이름')) // true 반환\n",
     "return": "Boolean"
   },
   {

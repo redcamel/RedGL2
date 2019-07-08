@@ -7,12 +7,6 @@
   },
   {
     "code": "PROPERTY",
-    "title": "key",
-    "description": "고유키",
-    "return": "String"
-  },
-  {
-    "code": "PROPERTY",
     "title": "postEffectManager",
     "description": "\n\t 포스트 이펙트 매니저.\n\t RedView 생성시 기본적으로 생성되어있음.\n ",
     "return": "RedPostEffectManager Instance"
@@ -20,15 +14,8 @@
   {
     "constructorYn": true,
     "title": "RedView",
-    "description": "\n\t 고유 키를 기반으로 <b>RedScene</b>과 <b>RedCamera를</b> 쌍으로 하는 정보를 소유.\n\t <b>RedWorld</b>에 등록되어지며 실제 렌더링시 필요한 그려질 <b>크기</b>와 <b>위치</b>를 결정한다.\n ",
+    "description": "\n\t <b>RedScene</b>과 <b>RedCamera를</b> 쌍으로 하는 정보를 소유.\n\t <b>RedWorld</b>에 등록되어지며 실제 렌더링시 필요한 그려질 <b>크기</b>와 <b>위치</b>를 결정한다.\n ",
     "params": {
-      "key": [
-        {
-          "type": "String"
-        },
-        "고유키",
-        "key만 입력시에 기존에 존재하는 키일경우 <b>캐쉬된 Instance</b>를 반환"
-      ],
       "redGL": [
         {
           "type": "RedGL"
@@ -48,7 +35,7 @@
       ]
     },
     "demo": "../example/etc/RedView.html",
-    "example": "\n\t var tWorld;\n\t RedView('테스트뷰1', RedGL Instance, RedScene Instance, RedCamera Instance); // \"테스트뷰1\" 라는 키값을 가진 RedView 생성\n\t RedView('테스트뷰2', RedGL Instance, RedScene Instance, RedCamera Instance); // \"테스트뷰2\" 라는 키값을 가진 RedView 생성\n ",
+    "example": "\n\t var tWorld;\n\t RedView( RedGL Instance, RedScene Instance, RedCamera Instance); // \"테스트뷰1\" 라는 키값을 가진 RedView 생성\n\t RedView( RedGL Instance, RedScene Instance, RedCamera Instance); // \"테스트뷰2\" 라는 키값을 가진 RedView 생성\n ",
     "return": "RedView Instance"
   },
   {

@@ -2,7 +2,7 @@
   ~ RedGL - MIT License
   ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
   ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
-  ~ Last modification time of this file - 2019.5.15 16:50
+  ~ Last modification time of this file - 2019.7.8 15:33
   -->
 
 <!DOCTYPE html>
@@ -47,8 +47,8 @@
 				// 렌더러 생성
 				tRenderer = RedRenderer();
 				// 뷰생성 및 적용
-				tView = RedView('HelloRedGL', redGL, tScene, tController);
-				tWorld.addView(tView);
+				tView = RedView(redGL, tScene, tController);
+				tWorld.addView(tView, 'HelloRedGL');
 				// 그리드 설정
 				tScene['grid'] = RedGrid(redGL);
 				tScene['axis'] = RedAxis(redGL)
@@ -124,19 +124,19 @@
 				testMesh2.rotationY += 0.2
 				testMesh2.rotationZ += 0.2
 				////////////////////////////////////////////////////////////////////////////////////
-				var testPoint = testMesh.getScreenPoint(RedView('HelloRedGL'))
+				var testPoint = testMesh.getScreenPoint(tWorld.getView('HelloRedGL'))
 				getScreenPointBox.style.top = testPoint[1] + 'px'
 				getScreenPointBox.style.left = testPoint[0] + 'px'
 				getScreenPointBox.innerHTML = 'testMesh / getScreenPointBox Test<br>screen X : ' + testPoint[0] + '<br>' + 'screen Y : ' + testPoint[1]
 				////////////////////////////////////////////////////////////////////////////////////
-				var testPoint2 = testMesh2.getScreenPoint(RedView('HelloRedGL'))
+				var testPoint2 = testMesh2.getScreenPoint(tWorld.getView('HelloRedGL'))
 				getScreenPointBox2.style.top = testPoint2[1] + 'px'
 				getScreenPointBox2.style.left = testPoint2[0] + 'px'
 				getScreenPointBox2.innerHTML = 'testMesh2 / getScreenPointBox2 Test<br>screen X : ' + testPoint2[0] + '<br>' + 'screen Y : ' + testPoint2[1]
 				////////////////////////////////////////////////////////////////////////////////////
 				var testLocalInput3 = [-1, 1, 0]
 				var testLocalToWorld3 = testMesh2.localToWorld(testLocalInput3[0], testLocalInput3[1], testLocalInput3[2])
-				var testPoint3 = testMesh3.getScreenPoint(RedView('HelloRedGL'))
+				var testPoint3 = testMesh3.getScreenPoint(tWorld.getView('HelloRedGL'))
 				testMesh3.x = testLocalToWorld3[0]
 				testMesh3.y = testLocalToWorld3[1]
 				testMesh3.z = testLocalToWorld3[2]
@@ -148,7 +148,7 @@
 				////////////////////////////////////////////////////////////////////////////////////
 				var testWolrdInput4 = [3, 0, 1]
 				var testWorldToLocal4 = testMesh4.worldToLocal(testWolrdInput4[0], testWolrdInput4[1], testWolrdInput4[2])
-				var testPoint4 = testMesh4.getScreenPoint(RedView('HelloRedGL'))
+				var testPoint4 = testMesh4.getScreenPoint(tWorld.getView('HelloRedGL'))
 				testMesh4.x = testWorldToLocal4[0]
 				testMesh4.y = testWorldToLocal4[1]
 				testMesh4.z = testWorldToLocal4[2]
