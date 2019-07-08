@@ -2,7 +2,7 @@
   ~ RedGL - MIT License
   ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
   ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
-  ~ Last modification time of this file - 2019.6.4 17:20
+  ~ Last modification time of this file - 2019.7.8 15:29
   -->
 
 <!DOCTYPE html>
@@ -53,8 +53,8 @@
 				// 렌더러 생성
 				tRenderer = RedRenderer();
 				// 뷰생성 및 적용
-				tView = RedView('HelloRedGL', redGL, tScene, tController);
-				tView_postEffectTest = RedView('HelloRedGL_testPostEffect', redGL, tScene, tController);
+				tView = RedView(redGL, tScene, tController);
+				tView_postEffectTest = RedView(redGL, tScene, tController);
 				tView.setSize('50%', '100%');
 				tView.setLocation('50%', '0%');
 				tView_postEffectTest.setSize('50%', '100%');
