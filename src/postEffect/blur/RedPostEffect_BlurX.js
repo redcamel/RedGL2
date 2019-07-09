@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.6.13 12:42
+ * Last modification time of this file - 2019.6.20 11:36
  */
 
 "use strict";
@@ -11,15 +11,7 @@ var RedPostEffect_BlurX;
 	var vSource, fSource;
 	var PROGRAM_NAME = 'RedPostEffectBlurXProgram';
 	var checked;
-	vSource = function () {
-		/* @preserve
-		 void main(void) {
-			 vTexcoord = aTexcoord;
-			 vResolution = uResolution;
-			 gl_Position = uPMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
-		 }
-		 */
-	};
+	vSource = RedBasePostEffect['baseVertexShaderSource1']
 	fSource = function () {
 		/* @preserve
 		 precision mediump float;

@@ -2,7 +2,7 @@
   ~ RedGL - MIT License
   ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
   ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
-  ~ Last modification time of this file - 2019.5.15 16:50
+  ~ Last modification time of this file - 2019.7.8 15:16
   -->
 
 <!DOCTYPE html>
@@ -50,13 +50,13 @@
 			// 렌더러 생성
 			tRenderer = RedRenderer();
 			// 뷰생성 및 적용
-			tWorld.addView(RedView('test', this, tScene, tController));
-			tWorld.addView(RedView('test2', this, tScene, tController2));
-			RedView('test').setSize('50%', '100%')
-			RedView('test2').setSize('50%', '100%')
-			RedView('test2').setLocation('50%', 0)
-			tController['targetView'] = RedView('test');
-			tController2['targetView'] = RedView('test2');
+			tWorld.addView(RedView(this, tScene, tController),'test');
+			tWorld.addView(RedView(this, tScene, tController2),'test2');
+			tWorld.getView('test').setSize('50%', '100%')
+			tWorld.getView('test2').setSize('50%', '100%')
+			tWorld.getView('test2').setLocation('50%', 0)
+			tController['targetView'] = tWorld.getView('test');
+			tController2['targetView'] = tWorld.getView('test2');
 			// 그리드 설정
 			tScene['grid'] = RedGrid(this)
 			// axis 설정

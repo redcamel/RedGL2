@@ -11,7 +11,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="keywords" content="RedGL,webgl,demo">
-    <title>RedGL - RedPlane</title>
+    <title>RedGL Example - PivotTest</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -28,7 +28,7 @@
 <script id='testSource'>
 	var testUI;
 	var canvas;
-	var assetPath = '../../asset/'
+	var assetPath = '../../asset/';
 	canvas = document.createElement('canvas');
 	document.body.appendChild(canvas);
 	RedGL(canvas, function (v) {
@@ -42,8 +42,7 @@
 				tScene = RedScene(redGL);
 				// 카메라 생성
 				tController = RedObitController(redGL);
-				tController.pan = 0;
-				tController.tilt = -45;
+				tController.distance = 30
 				// 렌더러 생성
 				tRenderer = RedRenderer();
 				// 뷰생성 및 적용
@@ -53,57 +52,80 @@
 				tScene['grid'] = RedGrid(redGL);
 				// 렌더시작
 				tRenderer.start(redGL, function (time) {
+					var i = tScene.children.length
+					var tMesh
+					while (i--) {
+						tMesh = tScene.children[i]
+						if (tMesh != tPivotPoint) {
+							// tMesh.rotationX += 1
+							// tMesh.rotationY += 1
+							tMesh.rotationZ += 1
+						}
+
+					}
+
 				});
 				// 렌더 디버거 활성화
 				tRenderer.setDebugButton();
-				// testUI 호출
-				testUI(redGL, tController, tScene);
-				console.log(redGL);
+
 			};
 			setBase(this);
-			// 메쉬생성
-			var tMesh;
-			tMesh = RedMesh(this, RedPlane(this), RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'UV_Grid_Sm.jpg')));
-			tMesh.useCullFace = false;
+			// Box 설정
+			var tGeometry = RedPlane(this);
+			var tMaterial = RedBitmapMaterial(
+				this,
+				RedBitmapTexture(this, assetPath + 'brick/Brick03_col.jpg')
+			);
+			var i = 5000
+			while (i--) {
+				var tMesh = RedMesh(this, tGeometry, tMaterial);
+				tMesh.useCullFace = false
+				tMesh.pivotX = Math.random() * 3 - 1.5
+				tMesh.pivotY = Math.random() * 3 - 1.5
+				tMesh.pivotZ = Math.random() * 3 - 1.5
+				tMesh.rotationX = Math.random() * 360
+				tMesh.rotationY = Math.random() * 360
+				tMesh.rotationZ = Math.random() * 360
+				tMesh.x = Math.random() * 100 - 50
+				tMesh.y = Math.random() * 100 - 50
+				tMesh.z = -Math.random() * 100 - 2
+				tScene.addChild(tMesh);
+			}
+			var tMesh = RedMesh(this, tGeometry, RedBitmapMaterial(
+				this,
+				RedBitmapTexture(this, assetPath + 'UV_Grid_Sm.jpg')
+			));
+			tMesh.useCullFace = false
+			tMesh.pivot = [0, 0, 0]
+			tMesh.scaleX = tMesh.scaleY = tMesh.scaleZ = 3
 			tScene.addChild(tMesh);
-
+			var tPivotPoint = RedMesh(this, RedSphere(this, 0.2), RedColorMaterial(this, '#00ff00'));
+			tPivotPoint.useCullFace = false
+			tScene.addChild(tPivotPoint);
+			testUI(this, tScene, tMesh, tPivotPoint);
 		} else {
 			console.log('초기화 실패!');
 		}
 	});
-	testUI = function (redGL, tCamera, tScene) {
-		var gui = new baseTestUI(redGL)
-		gui.initRedGL()
-		var primitiveTestData = {
-			drawMode: 'TRIANGLES',
-			pointSize: 1,
-			width: 1,
-			height: 1,
-			wSegments: 1,
-			hSegments: 1
+	testUI = function (redGL, tScene, tMesh, tPivotPoint) {
+		var gui = new baseTestUI(redGL);
+		gui.initRedGL();
+		var test = {
+			pivotX: 0,
+			pivotY: 0,
+			pivotZ: 0
+
 		}
 		var tFolder = gui['gui'].addFolder('RedMesh')
 		tFolder.open()
-		tFolder.add(primitiveTestData, 'drawMode', ['TRIANGLES', 'TRIANGLE_STRIP', 'TRIANGLE_FAN', 'LINES', 'LINE_LOOP', 'LINE_STRIP', 'POINTS']).onChange(function (v) {
-			tScene.children.forEach(function (tMesh) {
-				tMesh.drawMode = redGL.gl[v]
+		'pivotX,pivotY,pivotZ'.split(',').forEach(function (tKey) {
+			tFolder.add(test, tKey, -10, 10, 0.01).onChange(function (v) {
+				tMesh[tKey] = v
+				tPivotPoint.x = test['pivotX']
+				tPivotPoint.y = test['pivotY']
+				tPivotPoint.z = test['pivotZ']
 			})
 		});
-		tFolder.add(primitiveTestData, 'pointSize', 1, 100).onChange(function (v) {
-			tScene.children.forEach(function (tMesh) {
-				tMesh.pointSize = v
-			})
-		});
-		tFolder = gui['gui'].addFolder('RedPlane')
-		tFolder.open()
-		'width,height,wSegments,hSegments'.split(',').forEach(function (tKey) {
-			tFolder.add(primitiveTestData, tKey, 1, 20, 0.1).onChange(function () {
-				tScene.children.forEach(function (tMesh) {
-					tMesh.geometry = RedPlane(redGL, primitiveTestData.width, primitiveTestData.height, primitiveTestData.wSegments, primitiveTestData.hSegments)
-				})
-			})
-		});
-
 	}
 </script>
 </body>

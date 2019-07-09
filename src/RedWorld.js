@@ -2,7 +2,7 @@
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ * Last modification time of this file - 2019.7.8 16:20
  */
 
 "use strict";
@@ -43,19 +43,29 @@ var RedWorld;
 				 redView :[
 					 {type:'RedView'},
 					 '추가할 RedView Instance'
+				 ],
+				 key :[
+					 {type:'String'},
+					 '키 등록시 고유키로 동작하고 미등록시 무시함'
 				 ]
 			 },
 			 example : `
 				 var testWorld = RedWorld(); // 월드생성
-				 var testView = RedView( '뷰이름', RedGL Instance, RedScene Instance, RedCamera Instance ); // 뷰생성
+				 var testView = RedView( RedGL Instance, RedScene Instance, RedCamera Instance ); // 뷰생성
 				 testWorld.addView( testView ); // 뷰등록
 			`,
 			 return : 'void'
 		 }
 		 :DOC*/
-		addView: function (redView) {
+		addView: function (redView, key) {
 			redView instanceof RedView || RedGLUtil.throwFunc('RedWorld :addView Instance만 허용함.', '입력값 : ' + redView);
-			this['_viewMap'][redView['key']] = redView;
+			if (key) {
+				if(this['_viewMap'][key]){
+					RedGLUtil.throwFunc('RedWorld :key 중복', '입력값 : ' + key);
+				}else{
+					this['_viewMap'][key] = redView;
+				}
+			}
 			this['_viewList'].push(redView);
 		},
 		/*DOC:
@@ -71,7 +81,7 @@ var RedWorld;
 			 },
 			 example : `
 				 var testWorld = RedWorld(); // 월드생성
-				 var testView = RedView( '뷰이름', RedGL Instance, RedScene Instance, RedCamera Instance ); // 뷰생성
+				 var testView = RedView( RedGL Instance, RedScene Instance, RedCamera Instance ); // 뷰생성
 				 testWorld.addView( testView ); // 뷰등록
 				 console.log( testWorld.getView('뷰이름') ); // testView 반환
 				 testWorld.delView('뷰이름');
@@ -88,16 +98,16 @@ var RedWorld;
 		 {
 			 code:`METHOD`,
 			 title :`delView`,
-			 description : `고유키 기반 뷰 삭제`,
+			 description : `고유키 기반 or RedView 인스턴스 기반 뷰 삭제`,
 			 params : {
-				 key :[
-					 {type:'String'},
+				 value :[
+					 {type:'String or RedView'},
 					 '고유키'
 				 ]
 			 },
 			 example : `
 				 var testWorld = RedWorld(); // 월드생성
-				 var testView = RedView( '뷰이름', RedGL Instance, RedScene Instance, RedCamera Instance ); // 뷰생성
+				 var testView = RedView( RedGL Instance, RedScene Instance, RedCamera Instance ); // 뷰생성
 				 testWorld.addView( testView ); // 뷰등록
 				 console.log( testWorld.getView('뷰이름') ); // testView 반환
 				 testWorld.delView('뷰이름');
@@ -108,38 +118,53 @@ var RedWorld;
 		 :DOC*/
 		delView: (function () {
 			var t0, t1;
-			return function (key) {
-				typeof key == 'string' || RedGLUtil.throwFunc('RedWorld :delView 문자열만 허용함.', '입력값 : ' + key);
-				if (t0 = this['_viewMap'][key]) {
-					t1 = this['_viewList'].indexOf(t0);
+			return function (value) {
+				if (!(typeof value == 'string' || value instanceof RedView)) RedGLUtil.throwFunc('RedWorld :delView 문자열이나 RedView 만 허용함.', '입력값 : ' + value);
+				if (typeof value == 'string') {
+					if (t0 = this['_viewMap'][value]) {
+						t1 = this['_viewList'].indexOf(t0);
+						this['_viewList'].splice(t1, 1);
+						delete this['_viewMap'][value];
+					}
+				} else {
+					t1 = this['_viewList'].indexOf(value);
 					this['_viewList'].splice(t1, 1);
-					delete this['_viewMap'][key];
+					for(var k in this['_viewMap']){
+						if(this['_viewMap'][k] == value) delete this['_viewMap'][k];
+					}
 				}
+
 			}
 		})(),
 		/*DOC:
 		 {
 			 code:`METHOD`,
 			 title :`hasView`,
-			 description : `고유키 기반 뷰 존재여부 반환.`,
+			 description : `고유키 기반 or RedView 인스턴스 기반 존재여부 반환.`,
 			 params : {
-				 key :[
+				 value :[
 					 {type:'String'},
 					 '고유키'
 				 ]
 			 },
 			 example : `
 				 var testWorld = RedWorld(); // 월드생성
-				 var testView = RedView( '뷰이름', RedGL Instance, RedScene Instance, RedCamera Instance ); // 뷰생성
+				 var testView = RedView( RedGL Instance, RedScene Instance, RedCamera Instance ); // 뷰생성
 				 testWorld.addView( testView ); // 뷰등록
 				 console.log(testWorld.hasView('뷰이름')) // true 반환
 			`,
 			 return : 'Boolean'
 		 }
 		 :DOC*/
-		hasView: function (key) {
-			typeof key == 'string' || RedGLUtil.throwFunc('RedWorld :hasView 문자열만 허용함.', '입력값 : ' + key);
-			return this['_viewMap'][key] ? true : false;
+		hasView: function (value) {
+			if (!(typeof value == 'string' || value instanceof RedView)) RedGLUtil.throwFunc('RedWorld :hasView 문자열이나 RedView 만 허용함.', '입력값 : ' + value);
+			if(typeof value == 'string' ){
+				return this['_viewMap'][value] ? true : false;
+			}else{
+				var t1 = this['_viewList'].indexOf(value);
+				return this['_viewList'][t1] ? true : false;
+			}
+
 		},
 		/*DOC:
 		 {
@@ -147,15 +172,15 @@ var RedWorld;
 			 title :`getViewList`,
 			 description : `고유키 기반 렌더정보 검색`,
 			 params : {
-				 key :[
+				 value :[
 					 {type:'String'},
 					 '고유키'
 				 ]
 			 },
 			 example : `
 				 var testWorld = RedWorld(); // 월드생성
-				 var testView = RedView( '뷰이름', RedGL Instance, RedScene Instance, RedCamera Instance ); // 뷰생성
-				 var testView2 = RedView( '뷰이름2', RedGL Instance, RedScene Instance, RedCamera Instance ); // 뷰생성
+				 var testView = RedView( RedGL Instance, RedScene Instance, RedCamera Instance ); // 뷰생성
+				 var testView2 = RedView(  RedGL Instance, RedScene Instance, RedCamera Instance ); // 뷰생성
 				 testWorld.addView( testView ); // 뷰등록
 				 testWorld.addView( testView2 ); // 뷰등록
 				 console.log(testWorld.getViewList()); // 뷰리스트 반환
