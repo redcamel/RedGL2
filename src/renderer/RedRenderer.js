@@ -1,8 +1,9 @@
 /*
- * RedGL - MIT License
- * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
- * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.7.5 11:41
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2019.7.10 15:43:31
+ *
  */
 
 "use strict";
@@ -192,6 +193,7 @@ var RedRenderer;
 	// 캐시관련
 	var worldRender_prevProgram_UUID;
 	var worldRender_transparentList = [];
+	var worldRender_outlineList = [],worldRender_outlineNum = 0;
 	var worldRender_tWorldRect;
 	var worldRender_self;
 	var worldRender_valueParser;
@@ -259,6 +261,10 @@ var RedRenderer;
 		gl.scissor(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
 		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 		worldRender_transparentList.length = 0;
+		var prevWorldRender_outlineList = worldRender_outlineList.concat();
+		worldRender_outlineList.length = 0;
+		worldRender_outlineNum = 0;
+
 		if (!worldRender_self['_glInitialized']) worldRender_glInitialize(gl), worldRender_self['_glInitialized'] = true;
 		// console.log("worldRender", v['key'], t0)
 		worldRender_self['renderInfo'] = {};
@@ -398,6 +404,13 @@ var RedRenderer;
 			}
 			// 그리드가 있으면 그림
 			if (tScene['grid']) worldRender_self.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], [tScene['grid']], time, tRenderInfo);
+			// 아웃라인 드로우 호출
+			// 아웃라인 검출
+			if (!tOutlineMaterial) tOutlineMaterial = RedOutlineMaterial(redGL)
+			if (prevWorldRender_outlineList.length) {
+				worldRender_self.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], prevWorldRender_outlineList, time, tRenderInfo, tOutlineMaterial, false, true);
+				gl.clear(gl.DEPTH_BUFFER_BIT);
+			}
 			// 씬렌더 호출
 			worldRender_self.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], tScene['children'], time, tRenderInfo);
 			if (worldRender_transparentList.length) worldRender_self.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], worldRender_transparentList, time, tRenderInfo, null, true);
@@ -423,6 +436,7 @@ var RedRenderer;
 	var tPrevIndexBuffer_UUID;
 	var tPrevInterleaveBuffer_UUID;
 	var tPrevSamplerIndex;
+	var tOutlineMaterial;
 	draw = function (redGL,
 	                 scene,
 	                 children,
@@ -434,7 +448,8 @@ var RedRenderer;
 	                 tCacheState,
 	                 parentMTX,
 	                 subSceneMaterial,
-	                 transparentMode) {
+	                 transparentMode,
+	                 outlineMode) {
 		var i, i2;
 		// 캐쉬관련
 		var tGL = redGL.gl;
@@ -684,9 +699,9 @@ var RedRenderer;
 						a10 = 0, a11 = 1, a12 = 0,
 						a20 = 0, a21 = 0, a22 = 1,
 						// tLocalMatrix translate
-						tLocalMatrix[12] = tMesh['x']+tMesh['pivotX'],
-						tLocalMatrix[13] = tMesh['y']+tMesh['pivotY'],
-						tLocalMatrix[14] = tMesh['z']+tMesh['pivotZ'],
+						tLocalMatrix[12] = tMesh['x'] + tMesh['pivotX'],
+						tLocalMatrix[13] = tMesh['y'] + tMesh['pivotY'],
+						tLocalMatrix[14] = tMesh['z'] + tMesh['pivotZ'],
 						tLocalMatrix[15] = 1,
 						// tLocalMatrix rotate
 						tSprite3DYn ?
@@ -971,16 +986,30 @@ var RedRenderer;
 				/////////////////////////////////////////////////////////////////////////
 				/////////////////////////////////////////////////////////////////////////
 				// 상태처리
-				// 컬페이스 사용여부 캐싱처리
-				tCacheState['useCullFace'] != tMesh['useCullFace'] ? (tCacheState['useCullFace'] = tMesh['useCullFace']) ? tGL.enable(tGL.CULL_FACE) : tGL.disable(tGL.CULL_FACE) : 0;
-				// 컬페이스 캐싱처리
-				tCacheState['useCullFace'] ? tCacheState['cullFace'] != tMesh['cullFace'] ? tGL.cullFace(tCacheState['cullFace'] = tMesh['cullFace']) : 0 : 0;
 				// 뎁스마스크처리
 				tCacheState['useDepthMask'] != tMesh['useDepthMask'] ? tGL.depthMask(tCacheState['useDepthMask'] = tMesh['useDepthMask']) : 0;
 				// 뎁스테스트 사용여부 캐싱처리
 				tCacheState['useDepthTest'] != tMesh['useDepthTest'] ? (tCacheState['useDepthTest'] = tMesh['useDepthTest']) ? tGL.enable(tGL.DEPTH_TEST) : tGL.disable(tGL.DEPTH_TEST) : 0;
-				// 뎁스테스팅 캐싱처리
-				tCacheState['useDepthTest'] ? tCacheState['depthTestFunc'] != tMesh['depthTestFunc'] ? tGL.depthFunc(tCacheState['depthTestFunc'] = tMesh['depthTestFunc']) : 0 : 0;
+				// 컬페이스 사용여부 캐싱처리
+				if (outlineMode) {
+					// 아웃라인 모드일떄
+					tCacheState['uOutlineThickness'] != tMesh['outlineThickness'] ? tGL.uniform1f(tSystemUniformGroup['uOutlineThickness']['location'], tCacheState['uOutlineThickness'] = tMesh['outlineThickness']) : 0;
+					tGL.uniform4fv(tSystemUniformGroup['uOutlineColor']['location'], tCacheState['uOutlineColor'] = tMesh['_outlineColor'])
+					if (tGeometry instanceof RedPlane) {
+						tCacheState['useCullFace'] != false ? (tCacheState['useCullFace'] = false, tGL.disable(tGL.CULL_FACE)) : 0;
+					} else {
+						tCacheState['useCullFace'] != true ? (tCacheState['useCullFace'] = true, tGL.enable(tGL.CULL_FACE)) : 0;
+						tCacheState['cullFace'] != tGL.FRONT ? tGL.cullFace(tCacheState['cullFace'] = tGL.FRONT) : 0
+					}
+				} else {
+					tCacheState['useCullFace'] != tMesh['useCullFace'] ? (tCacheState['useCullFace'] = tMesh['useCullFace']) ? tGL.enable(tGL.CULL_FACE) : tGL.disable(tGL.CULL_FACE) : 0;
+					// 컬페이스 캐싱처리
+					tCacheState['useCullFace'] ? tCacheState['cullFace'] != tMesh['cullFace'] ? tGL.cullFace(tCacheState['cullFace'] = tMesh['cullFace']) : 0 : 0;
+					// 뎁스테스팅 캐싱처리
+					tCacheState['useDepthTest'] ? tCacheState['depthTestFunc'] != tMesh['depthTestFunc'] ? tGL.depthFunc(tCacheState['depthTestFunc'] = tMesh['depthTestFunc']) : 0 : 0;
+					if (tMesh['outlineThickness']) worldRender_outlineList[worldRender_outlineNum++]=tMesh;
+				}
+
 				if (tSystemUniformGroup['uPointSize']['use']) {
 					tCacheState['pointSize'] != tMesh['pointSize'] ? tGL.uniform1f(tSystemUniformGroup['uPointSize']['location'], tCacheState['pointSize'] = tMesh['pointSize']) : 0;
 				}
@@ -1014,6 +1043,8 @@ var RedRenderer;
 						continue
 					}
 				}
+
+
 				// 드로우
 				if (tIndexBufferInfo) {
 					tPrevIndexBuffer_UUID == tIndexBufferInfo['_UUID'] ? 0 : tGL.bindBuffer(tGL.ELEMENT_ARRAY_BUFFER, tIndexBufferInfo['webglBuffer']);
@@ -1030,14 +1061,14 @@ var RedRenderer;
 					tGL.drawArrays(tMesh['drawMode'], 0, tInterleaveBuffer['pointNum']);
 					renderResultObj['triangleNum'] += tInterleaveBuffer['triangleNum'];
 				}
-
 			}
+
 			/////////////////////////////////////////////////////////////////////////
 			/////////////////////////////////////////////////////////////////////////
-			tMesh['children'].length ? draw(redGL, scene, tMesh['children'], camera, mode2DYn, time, renderResultObj, tCacheInfo, tCacheState, tMVMatrix, subSceneMaterial, transparentMode) : 0;
+			tMesh['children'].length ? draw(redGL, scene, tMesh['children'], camera, mode2DYn, time, renderResultObj, tCacheInfo, tCacheState, tMVMatrix, subSceneMaterial, transparentMode, outlineMode) : 0;
 		}
 	};
-	RedRenderer.prototype.sceneRender = function (redGL, scene, camera, mode2DYn, children, time, renderResultObj, subSceneMaterial, transparentMode) {
+	RedRenderer.prototype.sceneRender = function (redGL, scene, camera, mode2DYn, children, time, renderResultObj, subSceneMaterial, transparentMode, outlineMode) {
 		// if ( this['cacheState']['pointSize'] == undefined ) this['cacheState']['pointSize'] = null
 		// if ( !this['cacheState']['useCullFace'] ) this['cacheState']['useCullFace'] = null
 		// if ( !this['cacheState']['cullFace'] ) this['cacheState']['cullFace'] = null
@@ -1066,7 +1097,8 @@ var RedRenderer;
 			this['cacheState'],
 			undefined,
 			subSceneMaterial,
-			transparentMode
+			transparentMode,
+			outlineMode
 		)
 	};
 	Object.freeze(RedRenderer);

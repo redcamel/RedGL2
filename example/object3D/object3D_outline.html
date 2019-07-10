@@ -1,0 +1,172 @@
+<!--
+  ~   RedGL - MIT License
+  ~   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+  ~   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+  ~   Last modification time of this file - 2019.7.10 15:43:31
+  ~
+  -->
+
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="RedGL,webgl,demo">
+    <title>RedGL Example - Object3D outline property</title>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
+    />
+    <link rel="stylesheet" href="../../example/example.css">
+    <script src="../../example/dat.gui.min.js"></script>
+    <script src="../../example/baseTestUI.js"></script>
+    <script src="../../release/RedGL.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.2/TweenMax.min.js"></script>
+</head>
+<body>
+<script id='testSource'>
+	var testUI;
+	var canvas;
+	var assetPath = '../../asset/'
+	var tMaterial;
+	var testTween = function (redGL, target) {
+		var tScale = Math.random() * 20 + 5
+		TweenMax.to(target, 3, {
+			x: Math.random() * redGL._viewRect[2],
+			y: Math.random() * redGL._viewRect[3],
+			scaleX: tScale,
+			scaleY: tScale,
+			scaleZ: tScale,
+			rotationX: Math.random() * 360,
+			rotationY: Math.random() * 360,
+			rotationZ: Math.random() * 360,
+			ease: Ease.QuintInOut,
+			onComplete: function () {
+				testTween(redGL, this.target)
+			}
+		})
+	}
+	canvas = document.createElement('canvas');
+	document.body.appendChild(canvas);
+	RedGL(canvas, function (v) {
+		if (v) {
+			console.log('초기화 성공!');
+			var tWorld, tView, tScene, tCamera, tRenderer;
+			var setBase = function (redGL) {
+				// 월드 생성
+				redGL['world'] = tWorld = RedWorld();
+				// 씬 생성
+				tScene = RedScene(redGL);
+				// 카메라 생성
+				tCamera = RedCamera();
+				tCamera.mode2DYn = true
+				// 렌더러 생성
+				tRenderer = RedRenderer();
+				// 뷰생성 및 적용
+				tView = RedView(redGL, tScene, tCamera);
+				tWorld.addView(tView);
+				// 그리드 설정
+				tScene['grid'] = RedGrid(redGL);
+				// 렌더 디버거 활성화
+				tRenderer.setDebugButton();
+				testUI(redGL, tScene)
+			};
+			setBase(this);
+
+			var tMesh;
+			var i = 500
+			tMaterial = RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'crate.png'))
+			while (i--) {
+				// 2D 테스트용
+				tMesh = RedMesh(this, RedPlane(this), tMaterial)
+
+				tMesh.x = Math.random() * 1280 + 10
+				tMesh.y = Math.random() * 900
+				// tMesh.x = tMesh.y = 100
+				tMesh.scaleX = tMesh.scaleY = tMesh.scaleZ = 50
+				tMesh.useCullFace = false
+				tMesh.rotationZ = Math.random() * 360
+				// tMesh.rotationX = Math.random() * 360
+				tMesh.outlineThickness = 3
+				tMesh.outlineAlpha = 1
+				tMesh.outlineColor = "#000000".replace(/0/g, function () {
+					return (~~(Math.random() * 16)).toString(16);
+				});
+				testTween(this, tMesh)
+				tScene.addChild(tMesh)
+			}
+
+			// 렌더시작
+			tRenderer.start(this, function (time) {
+
+			});
+			console.log(this)
+		} else {
+			console.log('초기화 실패!')
+		}
+	})
+	testUI = function (redGL, tScene) {
+		var gui = new baseTestUI(redGL)
+		gui.initRedGL();
+		var testData = {
+			outlineThickness: 3,
+			random_outlineThickness: function () {
+				tScene.children.forEach(function (v2) {
+					v2.outlineThickness = Math.random() * 10
+				})
+			},
+			outlineColor: '#ff0000',
+			outlineAlpha: 1,
+			random_outlineColor: function () {
+				tScene.children.forEach(function (v2) {
+					v2.outlineColor = "#000000".replace(/0/g, function () {
+						return (~~(Math.random() * 16)).toString(16);
+					});
+				})
+			},
+			geometry: 'RedPlane'
+		};
+		gui['gui'].add(testData, 'outlineThickness', 0, 15).onChange(function (v) {
+			tScene.children.forEach(function (v2) {
+				v2.outlineThickness = v
+			})
+		});
+		gui['gui'].add(testData, 'random_outlineThickness');
+		gui['gui'].addColor(testData, 'outlineColor').onChange(function (v) {
+			tScene.children.forEach(function (v2) {
+				v2.outlineColor = v
+			})
+		});
+		gui['gui'].add(testData, 'random_outlineColor');
+		gui['gui'].add(testData, 'outlineAlpha', 0, 1).onChange(function (v) {
+			tScene.children.forEach(function (v2) {
+				v2.outlineAlpha = v
+			})
+		});
+		gui['gui'].add(testData, 'geometry', ['RedPlane', 'RedBox', 'RedSphere', 'RedCylinder']).onChange(function (v) {
+			var tGeo;
+			switch (v) {
+				case  'RedPlane':
+					tGeo = RedPlane(redGL, 5, 5)
+					break
+				case  'RedBox':
+					tGeo = RedBox(redGL)
+					break
+				case  'RedSphere':
+					tGeo = RedSphere(redGL, 1, 16, 16, 16)
+					break
+				case  'RedCylinder':
+					tGeo = RedCylinder(redGL)
+					break
+			}
+			tScene.children.forEach(function (v2) {
+				v2.geometry = tGeo
+			})
+		});
+
+	}
+</script>
+</body>
+
+</html>
