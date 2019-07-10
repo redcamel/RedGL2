@@ -214,6 +214,24 @@
   },
   {
     "code": "PROPERTY",
+    "title": "outlineAlpha",
+    "description": "\n    기본값 : 1\n    최소값 : 0\n    최대값 : 1\n       ",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "outlineColor",
+    "description": "기본값 : #ff0000",
+    "return": "hex"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "outlineThickness",
+    "description": "\n\t기본값 : 0\n\t최소값 : 0\n ",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
     "title": "pivotX",
     "description": "\n\t 기본값 : 0\n\t 피벗 포인트 X\n ",
     "example": "\n             (RedMesh Instance).pivotX = 1;\n          ",

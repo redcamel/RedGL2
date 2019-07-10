@@ -1,8 +1,9 @@
 /*
- * RedGL - MIT License
- * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
- * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.6.20 15:0
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2019.7.10 15:43:31
+ *
  */
 
 var gulp = require('gulp');
@@ -170,6 +171,7 @@ gulp.task('combine-js', function () {
 		"src/material/system/RedColorPointCloudMaterial.js",
 		"src/material/system/RedPBRMaterial_system.js",
 		"src/material/system/RedTextMaterial.js",
+		"src/material/system/RedOutlineMaterial.js",
 		//
 		"src/light/RedAmbientLight.js",
 		"src/light/RedDirectionalLight.js",

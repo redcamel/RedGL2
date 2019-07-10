@@ -2,7 +2,7 @@
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.7.9 12:29:9
+ *   Last modification time of this file - 2019.7.10 15:43:31
  *
  */
 
@@ -3623,7 +3623,25 @@ var RedBaseObject3D;
 			parseInt(Math.random() * 255),
 			parseInt(Math.random() * 255),
 			255
-		])
+		]);
+		// 아웃라인
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`outlineThickness`,
+			 description : `
+				기본값 : 0
+				최소값 : 0
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		this['outlineThickness'] = 0;
+		this['_outlineAlpha'] = 1;
+		this['_outlineColor'] = new Float32Array(4)
+		this['outlineColor'] = '#ff0000';
+
+
 	};
 	RedBaseObject3D.prototype = {
 		/*DOC:
@@ -4187,6 +4205,48 @@ var RedBaseObject3D;
 		set: function (v) {
 			if (v && !(v instanceof RedBaseMaterial)) RedGLUtil.throwFunc('material : RedBaseMaterial Instance만 허용.', '입력값 : ' + v);
 			this['_material'] = v
+		}
+	});
+	/*DOC:
+	 {
+	     code : 'PROPERTY',
+		 title :`outlineColor`,
+		 description : `기본값 : #ff0000`,
+		 return : 'hex'
+	 }
+	 :DOC*/
+	Object.defineProperty(RedBaseObject3D.prototype, 'outlineColor', {
+		get: function () {
+			return this['_outlineColorHex']
+		},
+		set: (function () {
+			var t0;
+			return function (hex) {
+				this['_outlineColorHex'] = hex ? hex : '#ff0000';
+				t0 = RedGLUtil.hexToRGB_ZeroToOne.call(this, this['_outlineColorHex']);
+				this['_outlineColor'][0] = t0[0];
+				this['_outlineColor'][1] = t0[1];
+				this['_outlineColor'][2] = t0[2];
+				this['_outlineColor'][3] = this['_outlineAlpha'];
+			}
+		})()
+	});
+	/*DOC:
+	 {
+	     code : 'PROPERTY',
+		 title :`outlineAlpha`,
+		 description : `
+		    기본값 : 1
+		    최소값 : 0
+		    최대값 : 1
+         `,
+		 return : 'Number'
+	 }
+	 :DOC*/
+	RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'outlineAlpha', 'number', {
+		'min': 0, 'max': 1,
+		callback: function (v) {
+			this['_outlineColor'][3] = this['_outlineAlpha'] = v
 		}
 	});
 	Object.freeze(RedBaseObject3D);
@@ -10275,6 +10335,165 @@ var RedTextMaterial;
 		}]
 	);
 	Object.freeze(RedTextMaterial);
+})();
+/*
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2019.7.9 18:1:10
+ *
+ */
+
+"use strict";
+var RedOutlineMaterial;
+(function () {
+	var vSource, fSource;
+	var PROGRAM_NAME = 'RedOutlineMaterialProgram';
+	var PROGRAM_OPTION_LIST = [];
+	var checked;
+	vSource = function () {
+		/* @preserve
+		// 스키닝
+		//#REDGL_DEFINE#vertexShareFunc#getSkinMatrix#
+
+		// Sprite3D
+		//#REDGL_DEFINE#vertexShareFunc#getSprite3DMatrix#
+		void main(void) {
+			gl_PointSize = uPointSize;
+			float outlineSize = uOutlineThickness;
+			float tScaleX = length(vec3(uMMatrix[0][0], uMMatrix[0][1], uMMatrix[0][2]));
+			float tScaleY = length(vec3(uMMatrix[1][0], uMMatrix[1][1], uMMatrix[1][2]));
+			float tScaleZ = length(vec3(uMMatrix[2][0], uMMatrix[2][1], uMMatrix[2][2]));
+
+			// position 계산
+			//#REDGL_DEFINE#skin#true# mat4 targetMatrix = uMMatrix *  getSkinMatrix() ;
+			//#REDGL_DEFINE#skin#false# mat4 targetMatrix = uMMatrix;
+			vVertexPosition =  targetMatrix *  vec4(aVertexPosition, 1.0);
+
+			//#REDGL_DEFINE#sprite3D#true# gl_Position = uPMatrix * getSprite3DMatrix(uCameraMatrix , targetMatrix) *  vec4(aVertexPosition, 1.0);
+			//#REDGL_DEFINE#sprite3D#true# if(!u_PerspectiveScale){
+			//#REDGL_DEFINE#sprite3D#true#   gl_Position /= gl_Position.w;
+			//#REDGL_DEFINE#sprite3D#true#   gl_Position.xy += aVertexPosition.xy * vec2((uPMatrix * targetMatrix)[0][0],(uPMatrix * targetMatrix)[1][1]);
+			//#REDGL_DEFINE#sprite3D#true# }
+			//#REDGL_DEFINE#sprite3D#false# gl_Position = uPMatrix * uCameraMatrix * targetMatrix * vec4(aVertexPosition * vec3(1.0+outlineSize/tScaleX,1.0+outlineSize/tScaleY,1.0+outlineSize/tScaleZ) , 1.0);
+
+
+			//#REDGL_DEFINE#directionalShadow#true# vResolution = uResolution;
+			//#REDGL_DEFINE#directionalShadow#true# vShadowPos = cTexUnitConverter  *  uDirectionalShadowLightMatrix * targetMatrix * vec4(aVertexPosition, 1.0);
+		}
+		 */
+	};
+	fSource = function () {
+		/* @preserve
+		 precision mediump float;
+		// 안개
+		//#REDGL_DEFINE#fragmentShareFunc#fogFactor#
+		//#REDGL_DEFINE#fragmentShareFunc#fog#
+
+		// 그림자
+		//#REDGL_DEFINE#fragmentShareFunc#decodeFloatShadow#
+		//#REDGL_DEFINE#fragmentShareFunc#getShadowColor#
+
+		 void main(void) {
+			vec4 finalColor = uOutlineColor;
+			//#REDGL_DEFINE#directionalShadow#true# finalColor.rgb *= getShadowColor( vShadowPos, vResolution, uDirectionalShadowTexture);
+			//#REDGL_DEFINE#fog#false# gl_FragColor = finalColor;
+			//#REDGL_DEFINE#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
+		 }
+		 */
+	};
+	/*DOC:
+	 {
+		 constructorYn : true,
+		 title :`RedOutlineMaterial`,
+		 description : `
+			 RedOutlineMaterial Instance 생성
+		 `,
+		 params : {
+			 redGL : [
+				 {type:'RedGL'}
+			 ],
+			 hexColor : [
+				 {type:'hex'},
+				 '기본값 : #ff0000'
+			 ],
+			 alpha : [
+				 {type:'number'},
+				 '기본값 : 1'
+			 ]
+		 },
+		 extends : ['RedBaseMaterial'],
+		 demo : '../example/material/RedOutlineMaterial.html',
+		 example : `
+			 RedOutlineMaterial(RedGL Instance, hex)
+		 `,
+		 return : 'RedOutlineMaterial Instance'
+	 }
+	 :DOC*/
+	RedOutlineMaterial = function (redGL, hexColor, alpha) {
+		if (!(this instanceof RedOutlineMaterial)) return new RedOutlineMaterial(redGL, hexColor, alpha);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedOutlineMaterial : RedGL Instance만 허용.', '입력값 : ' + redGL);
+		this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource, PROGRAM_OPTION_LIST);
+		/////////////////////////////////////////
+		// 유니폼 프로퍼티
+		this['_color'] = new Float32Array(4);
+		this['alpha'] = alpha == undefined ? 1 : alpha;
+		/////////////////////////////////////////
+		// 일반 프로퍼티
+		this['color'] = hexColor ? hexColor : '#ff0000';
+		this['_UUID'] = RedGL.makeUUID();
+		if (!checked) {
+			this.checkUniformAndProperty();
+			checked = true;
+		}
+		console.log(this);
+	};
+	RedOutlineMaterial.prototype = new RedBaseMaterial();
+	RedOutlineMaterial['DEFINE_OBJECT_COLOR'] = {
+		get: function () {
+			return this['_colorHex']
+		},
+		set: (function () {
+			var t0;
+			return function (hex) {
+				this['_colorHex'] = hex ? hex : '#ff2211';
+				t0 = RedGLUtil.hexToRGB_ZeroToOne.call(this, this['_colorHex']);
+				this['_color'][0] = t0[0];
+				this['_color'][1] = t0[1];
+				this['_color'][2] = t0[2];
+				this['_color'][3] = this['_alpha'];
+			}
+		})()
+	};
+	RedOutlineMaterial['DEFINE_OBJECT_ALPHA'] = {
+		'min': 0, 'max': 1,
+		callback: function (v) {
+			this['_color'][3] = this['_alpha'] = v
+		}
+	};
+	/*DOC:
+	 {
+	     code : 'PROPERTY',
+		 title :`color`,
+		 description : `기본값 : #ff2211`,
+		 return : 'hex'
+	 }
+	 :DOC*/
+	Object.defineProperty(RedOutlineMaterial.prototype, 'color', RedOutlineMaterial['DEFINE_OBJECT_COLOR']);
+	/*DOC:
+	 {
+	     code : 'PROPERTY',
+		 title :`alpha`,
+		 description : `
+		    기본값 : 1
+		    최소값 : 0
+		    최대값 : 1
+         `,
+		 return : 'Number'
+	 }
+	 :DOC*/
+	RedDefinePropertyInfo.definePrototype('RedOutlineMaterial', 'alpha', 'number', RedOutlineMaterial['DEFINE_OBJECT_ALPHA']);
+	Object.freeze(RedOutlineMaterial);
 })();
 /*
  * RedGL - MIT License
@@ -18943,6 +19162,8 @@ var RedSystemShaderCode;
 				'uniform mat4 uPMatrix',
 				'uniform mat4 uCameraMatrix',
 				'uniform bool u_PerspectiveScale',
+				'uniform float uOutlineThickness',
+
 				// shadow
 				'uniform mat4 uDirectionalShadowLightMatrix',
 				'varying highp vec4 vShadowPos',
@@ -18972,6 +19193,8 @@ var RedSystemShaderCode;
 				'varying float vTime',
 				'varying vec2 vResolution',
 				'uniform vec3 uCameraPosition',
+
+				'uniform vec4 uOutlineColor',
 
 				// fog
 				'uniform float u_FogDistance',
@@ -19846,6 +20069,7 @@ var RedRenderer;
 	// 캐시관련
 	var worldRender_prevProgram_UUID;
 	var worldRender_transparentList = [];
+	var worldRender_outlineList = [],worldRender_outlineNum = 0;
 	var worldRender_tWorldRect;
 	var worldRender_self;
 	var worldRender_valueParser;
@@ -19913,6 +20137,10 @@ var RedRenderer;
 		gl.scissor(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
 		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 		worldRender_transparentList.length = 0;
+		var prevWorldRender_outlineList = worldRender_outlineList.concat();
+		worldRender_outlineList.length = 0;
+		worldRender_outlineNum = 0;
+
 		if (!worldRender_self['_glInitialized']) worldRender_glInitialize(gl), worldRender_self['_glInitialized'] = true;
 		// console.log("worldRender", v['key'], t0)
 		worldRender_self['renderInfo'] = {};
@@ -20052,6 +20280,13 @@ var RedRenderer;
 			}
 			// 그리드가 있으면 그림
 			if (tScene['grid']) worldRender_self.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], [tScene['grid']], time, tRenderInfo);
+			// 아웃라인 드로우 호출
+			// 아웃라인 검출
+			if (!tOutlineMaterial) tOutlineMaterial = RedOutlineMaterial(redGL)
+			if (prevWorldRender_outlineList.length) {
+				worldRender_self.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], prevWorldRender_outlineList, time, tRenderInfo, tOutlineMaterial, false, true);
+				gl.clear(gl.DEPTH_BUFFER_BIT);
+			}
 			// 씬렌더 호출
 			worldRender_self.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], tScene['children'], time, tRenderInfo);
 			if (worldRender_transparentList.length) worldRender_self.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], worldRender_transparentList, time, tRenderInfo, null, true);
@@ -20077,6 +20312,7 @@ var RedRenderer;
 	var tPrevIndexBuffer_UUID;
 	var tPrevInterleaveBuffer_UUID;
 	var tPrevSamplerIndex;
+	var tOutlineMaterial;
 	draw = function (redGL,
 	                 scene,
 	                 children,
@@ -20088,7 +20324,8 @@ var RedRenderer;
 	                 tCacheState,
 	                 parentMTX,
 	                 subSceneMaterial,
-	                 transparentMode) {
+	                 transparentMode,
+	                 outlineMode) {
 		var i, i2;
 		// 캐쉬관련
 		var tGL = redGL.gl;
@@ -20338,9 +20575,9 @@ var RedRenderer;
 						a10 = 0, a11 = 1, a12 = 0,
 						a20 = 0, a21 = 0, a22 = 1,
 						// tLocalMatrix translate
-						tLocalMatrix[12] = tMesh['x']+tMesh['pivotX'],
-						tLocalMatrix[13] = tMesh['y']+tMesh['pivotY'],
-						tLocalMatrix[14] = tMesh['z']+tMesh['pivotZ'],
+						tLocalMatrix[12] = tMesh['x'] + tMesh['pivotX'],
+						tLocalMatrix[13] = tMesh['y'] + tMesh['pivotY'],
+						tLocalMatrix[14] = tMesh['z'] + tMesh['pivotZ'],
 						tLocalMatrix[15] = 1,
 						// tLocalMatrix rotate
 						tSprite3DYn ?
@@ -20625,16 +20862,30 @@ var RedRenderer;
 				/////////////////////////////////////////////////////////////////////////
 				/////////////////////////////////////////////////////////////////////////
 				// 상태처리
-				// 컬페이스 사용여부 캐싱처리
-				tCacheState['useCullFace'] != tMesh['useCullFace'] ? (tCacheState['useCullFace'] = tMesh['useCullFace']) ? tGL.enable(tGL.CULL_FACE) : tGL.disable(tGL.CULL_FACE) : 0;
-				// 컬페이스 캐싱처리
-				tCacheState['useCullFace'] ? tCacheState['cullFace'] != tMesh['cullFace'] ? tGL.cullFace(tCacheState['cullFace'] = tMesh['cullFace']) : 0 : 0;
 				// 뎁스마스크처리
 				tCacheState['useDepthMask'] != tMesh['useDepthMask'] ? tGL.depthMask(tCacheState['useDepthMask'] = tMesh['useDepthMask']) : 0;
 				// 뎁스테스트 사용여부 캐싱처리
 				tCacheState['useDepthTest'] != tMesh['useDepthTest'] ? (tCacheState['useDepthTest'] = tMesh['useDepthTest']) ? tGL.enable(tGL.DEPTH_TEST) : tGL.disable(tGL.DEPTH_TEST) : 0;
-				// 뎁스테스팅 캐싱처리
-				tCacheState['useDepthTest'] ? tCacheState['depthTestFunc'] != tMesh['depthTestFunc'] ? tGL.depthFunc(tCacheState['depthTestFunc'] = tMesh['depthTestFunc']) : 0 : 0;
+				// 컬페이스 사용여부 캐싱처리
+				if (outlineMode) {
+					// 아웃라인 모드일떄
+					tCacheState['uOutlineThickness'] != tMesh['outlineThickness'] ? tGL.uniform1f(tSystemUniformGroup['uOutlineThickness']['location'], tCacheState['uOutlineThickness'] = tMesh['outlineThickness']) : 0;
+					tGL.uniform4fv(tSystemUniformGroup['uOutlineColor']['location'], tCacheState['uOutlineColor'] = tMesh['_outlineColor'])
+					if (tGeometry instanceof RedPlane) {
+						tCacheState['useCullFace'] != false ? (tCacheState['useCullFace'] = false, tGL.disable(tGL.CULL_FACE)) : 0;
+					} else {
+						tCacheState['useCullFace'] != true ? (tCacheState['useCullFace'] = true, tGL.enable(tGL.CULL_FACE)) : 0;
+						tCacheState['cullFace'] != tGL.FRONT ? tGL.cullFace(tCacheState['cullFace'] = tGL.FRONT) : 0
+					}
+				} else {
+					tCacheState['useCullFace'] != tMesh['useCullFace'] ? (tCacheState['useCullFace'] = tMesh['useCullFace']) ? tGL.enable(tGL.CULL_FACE) : tGL.disable(tGL.CULL_FACE) : 0;
+					// 컬페이스 캐싱처리
+					tCacheState['useCullFace'] ? tCacheState['cullFace'] != tMesh['cullFace'] ? tGL.cullFace(tCacheState['cullFace'] = tMesh['cullFace']) : 0 : 0;
+					// 뎁스테스팅 캐싱처리
+					tCacheState['useDepthTest'] ? tCacheState['depthTestFunc'] != tMesh['depthTestFunc'] ? tGL.depthFunc(tCacheState['depthTestFunc'] = tMesh['depthTestFunc']) : 0 : 0;
+					if (tMesh['outlineThickness']) worldRender_outlineList[worldRender_outlineNum++]=tMesh;
+				}
+
 				if (tSystemUniformGroup['uPointSize']['use']) {
 					tCacheState['pointSize'] != tMesh['pointSize'] ? tGL.uniform1f(tSystemUniformGroup['uPointSize']['location'], tCacheState['pointSize'] = tMesh['pointSize']) : 0;
 				}
@@ -20668,6 +20919,8 @@ var RedRenderer;
 						continue
 					}
 				}
+
+
 				// 드로우
 				if (tIndexBufferInfo) {
 					tPrevIndexBuffer_UUID == tIndexBufferInfo['_UUID'] ? 0 : tGL.bindBuffer(tGL.ELEMENT_ARRAY_BUFFER, tIndexBufferInfo['webglBuffer']);
@@ -20684,14 +20937,14 @@ var RedRenderer;
 					tGL.drawArrays(tMesh['drawMode'], 0, tInterleaveBuffer['pointNum']);
 					renderResultObj['triangleNum'] += tInterleaveBuffer['triangleNum'];
 				}
-
 			}
+
 			/////////////////////////////////////////////////////////////////////////
 			/////////////////////////////////////////////////////////////////////////
-			tMesh['children'].length ? draw(redGL, scene, tMesh['children'], camera, mode2DYn, time, renderResultObj, tCacheInfo, tCacheState, tMVMatrix, subSceneMaterial, transparentMode) : 0;
+			tMesh['children'].length ? draw(redGL, scene, tMesh['children'], camera, mode2DYn, time, renderResultObj, tCacheInfo, tCacheState, tMVMatrix, subSceneMaterial, transparentMode, outlineMode) : 0;
 		}
 	};
-	RedRenderer.prototype.sceneRender = function (redGL, scene, camera, mode2DYn, children, time, renderResultObj, subSceneMaterial, transparentMode) {
+	RedRenderer.prototype.sceneRender = function (redGL, scene, camera, mode2DYn, children, time, renderResultObj, subSceneMaterial, transparentMode, outlineMode) {
 		// if ( this['cacheState']['pointSize'] == undefined ) this['cacheState']['pointSize'] = null
 		// if ( !this['cacheState']['useCullFace'] ) this['cacheState']['useCullFace'] = null
 		// if ( !this['cacheState']['cullFace'] ) this['cacheState']['cullFace'] = null
@@ -20720,7 +20973,8 @@ var RedRenderer;
 			this['cacheState'],
 			undefined,
 			subSceneMaterial,
-			transparentMode
+			transparentMode,
+			outlineMode
 		)
 	};
 	Object.freeze(RedRenderer);
@@ -27379,4 +27633,4 @@ var RedGLOffScreen;
 		};
 		RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
 	})();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-07-09 12:27:18)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-07-10 15:31:47)' };console.log(RedGL_VERSION);

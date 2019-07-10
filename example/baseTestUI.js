@@ -1,8 +1,9 @@
 /*
- * RedGL - MIT License
- * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
- * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.7.5 11:56
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2019.7.10 15:43:31
+ *
  */
 
 var baseTestUI = function (redGL, width) {
@@ -252,6 +253,10 @@ baseTestUI.exampleList = [
 			{
 				key: 'object3D pivotTest',
 				href: 'object3D/pivotTest.html'
+			},
+			{
+				key: 'object3D outline',
+				href: 'object3D/object3D_outline.html'
 			}
 		]
 	},

@@ -1,8 +1,9 @@
 /*
- * RedGL - MIT License
- * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
- * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.7.5 11:49
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2019.7.10 15:43:31
+ *
  */
 "use strict";
 var RedBaseObject3D;
@@ -368,7 +369,25 @@ var RedBaseObject3D;
 			parseInt(Math.random() * 255),
 			parseInt(Math.random() * 255),
 			255
-		])
+		]);
+		// 아웃라인
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`outlineThickness`,
+			 description : `
+				기본값 : 0
+				최소값 : 0
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		this['outlineThickness'] = 0;
+		this['_outlineAlpha'] = 1;
+		this['_outlineColor'] = new Float32Array(4)
+		this['outlineColor'] = '#ff0000';
+
+
 	};
 	RedBaseObject3D.prototype = {
 		/*DOC:
@@ -932,6 +951,48 @@ var RedBaseObject3D;
 		set: function (v) {
 			if (v && !(v instanceof RedBaseMaterial)) RedGLUtil.throwFunc('material : RedBaseMaterial Instance만 허용.', '입력값 : ' + v);
 			this['_material'] = v
+		}
+	});
+	/*DOC:
+	 {
+	     code : 'PROPERTY',
+		 title :`outlineColor`,
+		 description : `기본값 : #ff0000`,
+		 return : 'hex'
+	 }
+	 :DOC*/
+	Object.defineProperty(RedBaseObject3D.prototype, 'outlineColor', {
+		get: function () {
+			return this['_outlineColorHex']
+		},
+		set: (function () {
+			var t0;
+			return function (hex) {
+				this['_outlineColorHex'] = hex ? hex : '#ff0000';
+				t0 = RedGLUtil.hexToRGB_ZeroToOne.call(this, this['_outlineColorHex']);
+				this['_outlineColor'][0] = t0[0];
+				this['_outlineColor'][1] = t0[1];
+				this['_outlineColor'][2] = t0[2];
+				this['_outlineColor'][3] = this['_outlineAlpha'];
+			}
+		})()
+	});
+	/*DOC:
+	 {
+	     code : 'PROPERTY',
+		 title :`outlineAlpha`,
+		 description : `
+		    기본값 : 1
+		    최소값 : 0
+		    최대값 : 1
+         `,
+		 return : 'Number'
+	 }
+	 :DOC*/
+	RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'outlineAlpha', 'number', {
+		'min': 0, 'max': 1,
+		callback: function (v) {
+			this['_outlineColor'][3] = this['_outlineAlpha'] = v
 		}
 	});
 	Object.freeze(RedBaseObject3D);

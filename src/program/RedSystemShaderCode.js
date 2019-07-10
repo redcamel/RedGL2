@@ -1,8 +1,9 @@
 /*
- * RedGL - MIT License
- * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
- * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.2 12:46
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2019.7.10 15:43:31
+ *
  */
 
 "use strict";
@@ -79,6 +80,8 @@ var RedSystemShaderCode;
 				'uniform mat4 uPMatrix',
 				'uniform mat4 uCameraMatrix',
 				'uniform bool u_PerspectiveScale',
+				'uniform float uOutlineThickness',
+
 				// shadow
 				'uniform mat4 uDirectionalShadowLightMatrix',
 				'varying highp vec4 vShadowPos',
@@ -108,6 +111,8 @@ var RedSystemShaderCode;
 				'varying float vTime',
 				'varying vec2 vResolution',
 				'uniform vec3 uCameraPosition',
+
+				'uniform vec4 uOutlineColor',
 
 				// fog
 				'uniform float u_FogDistance',
