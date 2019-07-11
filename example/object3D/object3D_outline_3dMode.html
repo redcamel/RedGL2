@@ -12,7 +12,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="keywords" content="RedGL,webgl,demo">
-    <title>RedGL Example - outline property(2D mode)</title>
+    <title>RedGL Example - outline property(3D mode)</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -31,10 +31,10 @@
 	var assetPath = '../../asset/'
 	var tMaterial;
 	var testTween = function (redGL, target) {
-		var tScale = Math.random() * 50 + 5
+		var tScale = Math.random()
 		TweenMax.to(target, 3, {
-			x: Math.random() * redGL._viewRect[2],
-			y: Math.random() * redGL._viewRect[3],
+			x: Math.random() * 30 - 15,
+			y: Math.random() * 30 - 15,
 			scaleX: tScale,
 			scaleY: tScale,
 			scaleZ: tScale,
@@ -60,8 +60,7 @@
 				tScene = RedScene(redGL);
 				// 카메라 생성
 				tCamera = RedCamera();
-				// tCamera.z = 1500
-				tCamera.mode2DYn = true
+				tCamera.z = 10
 				// 렌더러 생성
 				tRenderer = RedRenderer();
 				// 뷰생성 및 적용
@@ -77,24 +76,17 @@
 
 			var tMesh;
 			var i = 50
-			tMaterial = RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'UV_Grid_Sm.jpg'))
+			tMaterial = RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'crate.png'))
 			while (i--) {
-				// 2D 테스트용
 				tMesh = RedMesh(this, RedPlane(this), tMaterial)
-
-				tMesh.x = Math.random() * 1280 + 10
-				tMesh.y = Math.random() * 900
-				tMesh.x = Math.random() * 900
-				tMesh.y = Math.random() * 900
-				tMesh.z = Math.random() * 900
-				tMesh.rotationZ= Math.random() * 360,
-				// tMesh.x = tMesh.y = tMesh.z = 0
-				tMesh.x = Math.random() * this._viewRect[2]
-				tMesh.y = Math.random() * this._viewRect[3]
-				tMesh.scaleX = tMesh.scaleY = tMesh.scaleZ = 100
-
+				tMesh.x = Math.random() * 10 - 5
+				tMesh.y = Math.random() * 10 - 5
+				tMesh.z = -Math.random() * 10 - 5
+				tMesh.rotationX = Math.random() * 360
+				tMesh.rotationY = Math.random() * 360
+				tMesh.rotationZ = Math.random() * 360
 				tMesh.useCullFace = false
-				tMesh.outlineThickness = 5
+				tMesh.outlineThickness = 0.1
 				tMesh.outlineAlpha = 1
 				tMesh.outlineColor = "#000000".replace(/0/g, function () {
 					return (~~(Math.random() * 16)).toString(16);
@@ -109,7 +101,7 @@
 					if (i2 == 2) tMesh2.y = 2
 					if (i2 == 3) tMesh2.y = -2
 					tMesh2.scaleX = tMesh2.scaleY = tMesh2.scaleZ = 0.5
-					tMesh2.outlineThickness = 5
+					tMesh2.outlineThickness = 0.1
 					tMesh2.outlineAlpha = 1
 					tMesh2.outlineColor = "#000000".replace(/0/g, function () {
 						return (~~(Math.random() * 16)).toString(16);
@@ -121,16 +113,14 @@
 					if (i2 == 2) tMesh3.y = 2
 					if (i2 == 3) tMesh3.y = -2
 					tMesh3.scaleX = tMesh3.scaleY = tMesh3.scaleZ = 0.25
-					tMesh3.outlineThickness = 5
+					tMesh3.outlineThickness = 0.1
 					tMesh3.outlineAlpha = 1
 					tMesh3.outlineColor = "#000000".replace(/0/g, function () {
 						return (~~(Math.random() * 16)).toString(16);
 					});
 					tMesh2.addChild(tMesh3)
 				}
-
 			}
-
 			// 렌더시작
 			tRenderer.start(this, function (time) {
 
@@ -144,7 +134,7 @@
 		var gui = new baseTestUI(redGL)
 		gui.initRedGL();
 		var testData = {
-			outlineThickness: 3,
+			outlineThickness: 0.1,
 			random_outlineThickness: function () {
 				tScene.children.forEach(function (v2) {
 					v2.outlineThickness = Math.random() * 10
@@ -161,7 +151,7 @@
 			},
 			geometry: 'RedPlane'
 		};
-		gui['gui'].add(testData, 'outlineThickness', 0, 15).onChange(function (v) {
+		gui['gui'].add(testData, 'outlineThickness', 0, 1).onChange(function (v) {
 			tScene.children.forEach(function (v2) {
 				v2.outlineThickness = v
 			})

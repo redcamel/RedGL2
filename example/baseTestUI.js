@@ -2,7 +2,7 @@
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.7.10 15:43:31
+ *   Last modification time of this file - 2019.7.11 18:28:15
  *
  */
 
@@ -255,8 +255,16 @@ baseTestUI.exampleList = [
 				href: 'object3D/pivotTest.html'
 			},
 			{
-				key: 'object3D outline',
+				key: 'object3D outline(2D mode)',
 				href: 'object3D/object3D_outline.html'
+			},
+			{
+				key: 'object3D outline(3D mode)',
+				href: 'object3D/object3D_outline_3dMode.html'
+			},
+			{
+				key: 'object3D outline skin',
+				href: 'object3D/object3D_outline_skin.html'
 			}
 		]
 	},
