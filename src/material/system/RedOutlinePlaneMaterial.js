@@ -7,10 +7,10 @@
  */
 
 "use strict";
-var RedOutlineMaterial;
+var RedOutlinePlaneMaterial;
 (function () {
 	var vSource, fSource;
-	var PROGRAM_NAME = 'RedOutlineMaterialProgram';
+	var PROGRAM_NAME = 'RedOutlinePlaneMaterialProgram';
 	var PROGRAM_OPTION_LIST = [];
 	var checked;
 	vSource = function () {
@@ -28,17 +28,18 @@ var RedOutlineMaterial;
 			//#REDGL_DEFINE#skin#true# mat4 targetMatrix = uMMatrix *  getSkinMatrix() ;
 			//#REDGL_DEFINE#skin#false# mat4 targetMatrix = uMMatrix;
 			vVertexPosition =  targetMatrix *  vec4(aVertexPosition, 1.0);
-			float tScaleX = length(vec3(uMMatrix[0][0], uMMatrix[0][1], uMMatrix[0][2]));
-			float tScaleY = length(vec3(uMMatrix[1][0], uMMatrix[1][1], uMMatrix[1][2]));
-			float tScaleZ = length(vec3(uMMatrix[2][0], uMMatrix[2][1], uMMatrix[2][2]));
+			float tScaleX = length(vec3(targetMatrix[0][0], targetMatrix[0][1], targetMatrix[0][2]));
+			float tScaleY = length(vec3(targetMatrix[1][0], targetMatrix[1][1], targetMatrix[1][2]));
+			float tScaleZ = length(vec3(targetMatrix[2][0], targetMatrix[2][1], targetMatrix[2][2]));
 
 			//#REDGL_DEFINE#sprite3D#true# gl_Position = uPMatrix * getSprite3DMatrix(uCameraMatrix , targetMatrix) *  vec4(aVertexPosition, 1.0);
 			//#REDGL_DEFINE#sprite3D#true# if(!u_PerspectiveScale){
 			//#REDGL_DEFINE#sprite3D#true#   gl_Position /= gl_Position.w;
 			//#REDGL_DEFINE#sprite3D#true#   gl_Position.xy += aVertexPosition.xy * vec2((uPMatrix * targetMatrix)[0][0],(uPMatrix * targetMatrix)[1][1]);
 			//#REDGL_DEFINE#sprite3D#true# }
-			//#REDGL_DEFINE#skin#false#//#REDGL_DEFINE#sprite3D#false# gl_Position = uPMatrix * uCameraMatrix * targetMatrix * vec4(aVertexPosition * vec3(1.0+outlineSize/tScaleX,1.0+outlineSize/tScaleY,1.0+outlineSize/tScaleZ) , 1.0);
-			//#REDGL_DEFINE#skin#true#//#REDGL_DEFINE#sprite3D#false#  gl_Position = uPMatrix * uCameraMatrix *  targetMatrix *  vec4(aVertexPosition + vec3( aVertexNormal * vec3(outlineSize/tScaleX,outlineSize/tScaleY,outlineSize/tScaleZ)), 1.0);
+			//#REDGL_DEFINE#sprite3D#false# gl_Position = uPMatrix * uCameraMatrix * targetMatrix * vec4(aVertexPosition * vec3(1.0+outlineSize/tScaleX,1.0+outlineSize/tScaleY,1.0+outlineSize/tScaleZ) , 1.0);
+			vTexcoord = aTexcoord-0.5;
+			vTexcoord *= vec2(1.0+outlineSize/tScaleX,1.0+outlineSize/tScaleY);
 
 
 			//#REDGL_DEFINE#directionalShadow#true# vResolution = uResolution;
@@ -57,14 +58,13 @@ var RedOutlineMaterial;
 		//#REDGL_DEFINE#fragmentShareFunc#decodeFloatShadow#
 		//#REDGL_DEFINE#fragmentShareFunc#getShadowColor#
 
-		float roundRect(in vec2 distFromCenter, in vec2 halfSize, in float cornerRadius)
-		{
-		    float t = length(max(abs(distFromCenter) - (halfSize - cornerRadius), 0.)) - cornerRadius;
-		    return smoothstep(-1., 1.,t);
-
-		}
 		 void main(void) {
 			vec4 finalColor = uOutlineColor;
+			if(-0.495 <vTexcoord.x && vTexcoord.x<0.495 && -0.495 <vTexcoord.y && vTexcoord.y<0.495) {
+				if(-0.490 <vTexcoord.x && vTexcoord.x<0.490 && -0.490 <vTexcoord.y && vTexcoord.y<0.490) discard;
+				else finalColor.a *= 0.5;
+			}
+
 			//#REDGL_DEFINE#directionalShadow#true# finalColor.rgb *= getShadowColor( vShadowPos, vResolution, uDirectionalShadowTexture);
 			//#REDGL_DEFINE#fog#false# gl_FragColor = finalColor;
 			//#REDGL_DEFINE#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
@@ -74,9 +74,9 @@ var RedOutlineMaterial;
 	/*DOC:
 	 {
 		 constructorYn : true,
-		 title :`RedOutlineMaterial`,
+		 title :`RedOutlinePlaneMaterial`,
 		 description : `
-			 RedOutlineMaterial Instance 생성
+			 RedOutlinePlaneMaterial Instance 생성
 		 `,
 		 params : {
 			 redGL : [
@@ -92,16 +92,16 @@ var RedOutlineMaterial;
 			 ]
 		 },
 		 extends : ['RedBaseMaterial'],
-		 demo : '../example/material/RedOutlineMaterial.html',
+		 demo : '../example/material/RedOutlinePlaneMaterial.html',
 		 example : `
-			 RedOutlineMaterial(RedGL Instance, hex)
+			 RedOutlinePlaneMaterial(RedGL Instance, hex)
 		 `,
-		 return : 'RedOutlineMaterial Instance'
+		 return : 'RedOutlinePlaneMaterial Instance'
 	 }
 	 :DOC*/
-	RedOutlineMaterial = function (redGL, hexColor, alpha) {
-		if (!(this instanceof RedOutlineMaterial)) return new RedOutlineMaterial(redGL, hexColor, alpha);
-		redGL instanceof RedGL || RedGLUtil.throwFunc('RedOutlineMaterial : RedGL Instance만 허용.', '입력값 : ' + redGL);
+	RedOutlinePlaneMaterial = function (redGL, hexColor, alpha) {
+		if (!(this instanceof RedOutlinePlaneMaterial)) return new RedOutlinePlaneMaterial(redGL, hexColor, alpha);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedOutlinePlaneMaterial : RedGL Instance만 허용.', '입력값 : ' + redGL);
 		this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource, PROGRAM_OPTION_LIST);
 		/////////////////////////////////////////
 		// 유니폼 프로퍼티
@@ -117,8 +117,8 @@ var RedOutlineMaterial;
 		}
 		console.log(this);
 	};
-	RedOutlineMaterial.prototype = new RedBaseMaterial();
-	RedOutlineMaterial['DEFINE_OBJECT_COLOR'] = {
+	RedOutlinePlaneMaterial.prototype = new RedBaseMaterial();
+	RedOutlinePlaneMaterial['DEFINE_OBJECT_COLOR'] = {
 		get: function () {
 			return this['_colorHex']
 		},
@@ -134,7 +134,7 @@ var RedOutlineMaterial;
 			}
 		})()
 	};
-	RedOutlineMaterial['DEFINE_OBJECT_ALPHA'] = {
+	RedOutlinePlaneMaterial['DEFINE_OBJECT_ALPHA'] = {
 		'min': 0, 'max': 1,
 		callback: function (v) {
 			this['_color'][3] = this['_alpha'] = v
@@ -148,7 +148,7 @@ var RedOutlineMaterial;
 		 return : 'hex'
 	 }
 	 :DOC*/
-	Object.defineProperty(RedOutlineMaterial.prototype, 'color', RedOutlineMaterial['DEFINE_OBJECT_COLOR']);
+	Object.defineProperty(RedOutlinePlaneMaterial.prototype, 'color', RedOutlinePlaneMaterial['DEFINE_OBJECT_COLOR']);
 	/*DOC:
 	 {
 	     code : 'PROPERTY',
@@ -161,6 +161,6 @@ var RedOutlineMaterial;
 		 return : 'Number'
 	 }
 	 :DOC*/
-	RedDefinePropertyInfo.definePrototype('RedOutlineMaterial', 'alpha', 'number', RedOutlineMaterial['DEFINE_OBJECT_ALPHA']);
-	Object.freeze(RedOutlineMaterial);
+	RedDefinePropertyInfo.definePrototype('RedOutlinePlaneMaterial', 'alpha', 'number', RedOutlinePlaneMaterial['DEFINE_OBJECT_ALPHA']);
+	Object.freeze(RedOutlinePlaneMaterial);
 })();
