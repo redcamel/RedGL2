@@ -2,7 +2,7 @@
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.7.11 18:28:15
+ *   Last modification time of this file - 2019.7.12 14:22:51
  *
  */
 
@@ -10341,7 +10341,7 @@ var RedTextMaterial;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.7.10 15:43:32
+ *   Last modification time of this file - 2019.7.11 18:28:15
  *
  */
 
@@ -10396,12 +10396,6 @@ var RedOutlineMaterial;
 		//#REDGL_DEFINE#fragmentShareFunc#decodeFloatShadow#
 		//#REDGL_DEFINE#fragmentShareFunc#getShadowColor#
 
-		float roundRect(in vec2 distFromCenter, in vec2 halfSize, in float cornerRadius)
-		{
-		    float t = length(max(abs(distFromCenter) - (halfSize - cornerRadius), 0.)) - cornerRadius;
-		    return smoothstep(-1., 1.,t);
-
-		}
 		 void main(void) {
 			vec4 finalColor = uOutlineColor;
 			//#REDGL_DEFINE#directionalShadow#true# finalColor.rgb *= getShadowColor( vShadowPos, vResolution, uDirectionalShadowTexture);
@@ -10507,7 +10501,7 @@ var RedOutlineMaterial;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.7.11 13:14:41
+ *   Last modification time of this file - 2019.7.11 18:28:15
  *
  */
 
@@ -20054,7 +20048,7 @@ var RedShader;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.7.10 15:43:31
+ *   Last modification time of this file - 2019.7.11 18:28:15
  *
  */
 
@@ -20465,12 +20459,13 @@ var RedRenderer;
 
 			// 씬렌더 호출
 			worldRender_self.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], tScene['children'], time, tRenderInfo);
-			if (worldRender_transparentList.length) worldRender_self.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], worldRender_transparentList, time, tRenderInfo, null, true);
+
 			if (worldRender_outlineList.length) {
 				worldRender_self.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], worldRender_outlineList, time, tRenderInfo, null, false, true);
 				worldRender_outlineList.length = 0;
 				worldRender_outlineNum = 0;
 			}
+			if (worldRender_transparentList.length) worldRender_self.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], worldRender_transparentList, time, tRenderInfo, null, true);
 			if (tScene.mirrorManager) {
 				tScene.mirrorManager.render(redGL, worldRender_self, tView, time, tRenderInfo, worldRender_updateSystemUniform);
 			}
@@ -24669,10 +24664,11 @@ var RedMouseEventMaterial;
 	Object.freeze(RedMouseEventMaterial)
 })();
 /*
- * RedGL - MIT License
- * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
- * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.2 12:37
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2019.7.11 18:28:15
+ *
  */
 
 "use strict";
@@ -27825,4 +27821,4 @@ var RedGLOffScreen;
 		};
 		RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
 	})();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-07-11 18:27:12)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-07-12 14:20:52)' };console.log(RedGL_VERSION);

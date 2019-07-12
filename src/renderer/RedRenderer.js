@@ -2,7 +2,7 @@
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.7.11 18:28:15
+ *   Last modification time of this file - 2019.7.12 14:22:52
  *
  */
 
@@ -413,12 +413,13 @@ var RedRenderer;
 
 			// 씬렌더 호출
 			worldRender_self.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], tScene['children'], time, tRenderInfo);
-			if (worldRender_transparentList.length) worldRender_self.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], worldRender_transparentList, time, tRenderInfo, null, true);
+
 			if (worldRender_outlineList.length) {
 				worldRender_self.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], worldRender_outlineList, time, tRenderInfo, null, false, true);
 				worldRender_outlineList.length = 0;
 				worldRender_outlineNum = 0;
 			}
+			if (worldRender_transparentList.length) worldRender_self.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], worldRender_transparentList, time, tRenderInfo, null, true);
 			if (tScene.mirrorManager) {
 				tScene.mirrorManager.render(redGL, worldRender_self, tView, time, tRenderInfo, worldRender_updateSystemUniform);
 			}
