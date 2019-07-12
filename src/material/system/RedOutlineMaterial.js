@@ -2,7 +2,7 @@
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.7.11 18:28:15
+ *   Last modification time of this file - 2019.7.12 14:22:52
  *
  */
 
@@ -57,12 +57,6 @@ var RedOutlineMaterial;
 		//#REDGL_DEFINE#fragmentShareFunc#decodeFloatShadow#
 		//#REDGL_DEFINE#fragmentShareFunc#getShadowColor#
 
-		float roundRect(in vec2 distFromCenter, in vec2 halfSize, in float cornerRadius)
-		{
-		    float t = length(max(abs(distFromCenter) - (halfSize - cornerRadius), 0.)) - cornerRadius;
-		    return smoothstep(-1., 1.,t);
-
-		}
 		 void main(void) {
 			vec4 finalColor = uOutlineColor;
 			//#REDGL_DEFINE#directionalShadow#true# finalColor.rgb *= getShadowColor( vShadowPos, vResolution, uDirectionalShadowTexture);
