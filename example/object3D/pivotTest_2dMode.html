@@ -12,7 +12,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="keywords" content="RedGL,webgl,demo">
-    <title>RedGL Example - PivotTest</title>
+    <title>RedGL Example - PivotTest 2D Mode</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -42,8 +42,9 @@
 				// 씬 생성
 				tScene = RedScene(redGL);
 				// 카메라 생성
-				tController = RedObitController(redGL);
-				tController.distance = 30
+				tController = RedCamera();
+				tController.mode2DYn = true
+				tController.z = 10
 				// 렌더러 생성
 				tRenderer = RedRenderer();
 				// 뷰생성 및 적용
@@ -101,7 +102,9 @@
 			));
 			tMesh.useCullFace = false
 			tMesh.pivot = [0, 0, 0]
-			tMesh.scaleX = tMesh.scaleY = tMesh.scaleZ = 10
+			tMesh.scaleX = tMesh.scaleY = tMesh.scaleZ = 200
+			tMesh.x = 500
+			tMesh.y = 500
 			tScene.addChild(tMesh);
 			var tPivotPoint1 = RedMesh(this, RedSphere(this, 0.2), RedColorMaterial(this, '#00ff00'));
 			tPivotPoint1.useCullFace = false
@@ -141,28 +144,26 @@
 		var tFolder = gui['gui'].addFolder('RedMesh')
 		tFolder.open();
 		'x,y,z'.split(',').forEach(function (tKey) {
-			tFolder.add(tMesh, tKey, -10, 10, 0.01).onChange(function (v) {
+			tFolder.add(tMesh, tKey, 0, 1000, 0.01).onChange(function (v) {
 				tMesh[tKey] = v
 			})
 
 		});
-		'pivotX,pivotY,pivotZ'.split(',').forEach(function (tKey) {
-			tFolder.add(test, tKey, -1, 1, 0.01).onChange(function (v) {
+		'pivotX,pivotY'.split(',').forEach(function (tKey) {
+			tFolder.add(test, tKey, -100, 100, 0.01).onChange(function (v) {
 				tMesh[tKey] = v
-				tPivotPoint1.x = test['pivotX']
-				tPivotPoint1.y = test['pivotY']
-				tPivotPoint1.z = test['pivotZ']
+				tPivotPoint1.x = test['pivotX']/200
+				tPivotPoint1.y = test['pivotY']/200
 			})
 
 		});
 		var tFolder = gui['gui'].addFolder('RedMesh2')
 		tFolder.open()
-		'pivotX,pivotY,pivotZ'.split(',').forEach(function (tKey) {
-			tFolder.add(test2, tKey, -1, 1, 0.01).onChange(function (v) {
+		'pivotX,pivotY'.split(',').forEach(function (tKey) {
+			tFolder.add(test2, tKey, -0.5, 0.5, 0.01).onChange(function (v) {
 				tMesh2[tKey] = v
 				tPivotPoint2.x = test2['pivotX']
 				tPivotPoint2.y = test2['pivotY']
-				tPivotPoint2.z = test2['pivotZ']
 			})
 		});
 

@@ -2,7 +2,7 @@
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.7.12 14:22:51
+ *   Last modification time of this file - 2019.7.31 11:1:42
  *
  */
 
@@ -10341,7 +10341,7 @@ var RedTextMaterial;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.7.11 18:28:15
+ *   Last modification time of this file - 2019.7.12 14:22:52
  *
  */
 
@@ -20048,7 +20048,7 @@ var RedShader;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.7.11 18:28:15
+ *   Last modification time of this file - 2019.7.12 14:22:52
  *
  */
 
@@ -20753,9 +20753,9 @@ var RedRenderer;
 						a10 = 0, a11 = 1, a12 = 0,
 						a20 = 0, a21 = 0, a22 = 1,
 						// tLocalMatrix translate
-						tLocalMatrix[12] = tMesh['x'] + tMesh['pivotX'],
-						tLocalMatrix[13] = (tMesh['y'] + tMesh['pivotY']) * (mode2DYn ? -1 : 1),
-						tLocalMatrix[14] = tMesh['z'] + tMesh['pivotZ'],
+						tLocalMatrix[12] = tMesh['x'] ,
+						tLocalMatrix[13] = tMesh['y'] * (mode2DYn ? -1 : 1),
+						tLocalMatrix[14] = tMesh['z'],
 						tLocalMatrix[15] = 1,
 						// tLocalMatrix rotate
 						tSprite3DYn ?
@@ -20813,7 +20813,7 @@ var RedRenderer;
 						// tLocalMatrix[4] = tLocalMatrix[4] * aY, tLocalMatrix[5] = tLocalMatrix[5] * aY, tLocalMatrix[6] = tLocalMatrix[6] * aY, tLocalMatrix[7] = tLocalMatrix[7] * aY,
 						// tLocalMatrix[8] = tLocalMatrix[8] * aZ, tLocalMatrix[9] = tLocalMatrix[9] * aZ, tLocalMatrix[10] = tLocalMatrix[10] * aZ, tLocalMatrix[11] = tLocalMatrix[11] * aZ,
 						// tLocalMatrix[12] = tLocalMatrix[12], tLocalMatrix[13] = tLocalMatrix[13], tLocalMatrix[14] = tLocalMatrix[14], tLocalMatrix[15] = tLocalMatrix[15],
-						(tMesh['pivotX'] || tMesh['pivotY']* (mode2DYn ? -1 : 1) || tMesh['pivotZ']) ? (
+						(tMesh['pivotX'] || tMesh['pivotY'] || tMesh['pivotZ']) ? (
 							// 피봇처리
 							// 매트립스 곱
 							a00 = tLocalMatrix[0], a01 = tLocalMatrix[1], a02 = tLocalMatrix[2], a03 = tLocalMatrix[3],
@@ -20836,7 +20836,9 @@ var RedRenderer;
 								tLocalMatrix[9] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
 								tLocalMatrix[10] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
 								tLocalMatrix[11] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33,
-								b0 = tMesh['pivotX'], b1 = tMesh['pivotY'], b2 = tMesh['pivotZ'], b3 = 1,
+								mode2DYn
+									? (b0 = -tMesh['pivotX']/renderResultObj['viewRectWidth'], b1 = -tMesh['pivotY']/renderResultObj['viewRectHeight'], b2 = -tMesh['pivotZ']/renderResultObj['viewRectHeight'], b3 = 1)
+								    : (b0 = -tMesh['pivotX'], b1 = -tMesh['pivotY'], b2 = -tMesh['pivotZ'], b3 = 1),
 								tLocalMatrix[12] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30,
 								tLocalMatrix[13] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
 								tLocalMatrix[14] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
@@ -27821,4 +27823,4 @@ var RedGLOffScreen;
 		};
 		RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
 	})();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-07-12 14:20:52)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-07-31 11:00:16)' };console.log(RedGL_VERSION);
