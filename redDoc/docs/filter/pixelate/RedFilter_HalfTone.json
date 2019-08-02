@@ -1,0 +1,51 @@
+[
+  {
+    "code": "PROPERTY",
+    "title": "angle",
+    "description": "\n\t 기본값 0.0\n ",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "centerX",
+    "description": "\n\t 기본값 0.0\n ",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "centerY",
+    "description": "\n\t 기본값 0.0\n ",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "grayMode",
+    "description": "\n\t 기본값 false\n ",
+    "return": "Boolean"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "radius",
+    "description": "\n\t 기본값 2\n\t min : 0\n ",
+    "return": "Number"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedFilter_HalfTone",
+    "description": "\n\t HalfTone 이펙트\n ",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ]
+    },
+    "extends": [
+      "RedBaseFilter",
+      "RedBaseMaterial"
+    ],
+    "demo": "../example/postEffect/pixelate/RedFilter_HalfTone.html",
+    "example": "\n          var effect;\n          effect = RedFilter_HalfTone(RedGL Instance); // 포스트이펙트 생성\n          // postEffectManager는 RedView 생성시 자동생성됨.\n          (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가\n ",
+    "return": "RedFilter_HalfTone Instance"
+  }
+]

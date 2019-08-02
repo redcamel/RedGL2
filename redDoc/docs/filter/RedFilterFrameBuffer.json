@@ -1,0 +1,66 @@
+[
+  {
+    "code": "METHOD",
+    "title": "bind",
+    "description": "소유하고있는 <b>webglFrameBuffer, webglTexture, webglRenderBuffer</b>를 binding.",
+    "params": {
+      "gl": [
+        {
+          "type": "WebGL Context"
+        }
+      ]
+    },
+    "return": "void"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "height",
+    "description": "\n\t기본값 : 1080 or 하드웨어 최대값\n",
+    "return": "Number"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedFilterFrameBuffer",
+    "description": "\n\t RedFilterFrameBuffer Instance 생성자.\n ",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL Instance"
+        }
+      ],
+      "width": [
+        {
+          "type": "Number"
+        },
+        "기기허용 최대값보다 큰경우 기기허용 최대값으로 설정됨"
+      ],
+      "height": [
+        {
+          "type": "Number"
+        },
+        "기기허용 최대값보다 큰경우 기기허용 최대값으로 설정됨"
+      ]
+    },
+    "example": "\n\t RedFilterFrameBuffer( RedGL Instance );\n ",
+    "return": "RedGeometry Instance"
+  },
+  {
+    "code": "METHOD",
+    "title": "unbind",
+    "description": "소유하고있는 <b>webglFrameBuffer, webglTexture, webglRenderBuffer</b>를 unbinding.",
+    "params": {
+      "gl": [
+        {
+          "type": "WebGL Context"
+        }
+      ]
+    },
+    "return": "void"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "width",
+    "description": "\n\t기본값 : 1920 or 하드웨어 최대값\n ",
+    "return": "Number"
+  }
+]

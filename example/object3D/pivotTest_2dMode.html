@@ -2,7 +2,7 @@
   ~   RedGL - MIT License
   ~   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
   ~   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
-  ~   Last modification time of this file - 2019.7.31 11:1:42
+  ~   Last modification time of this file - 2019.8.2 18:16:21
   ~
   -->
 
@@ -59,11 +59,7 @@
 					var tMesh
 					while (i--) {
 						tMesh = tScene.children[i]
-						if (tMesh != tPivotPoint1) {
-							// tMesh.rotationX += 1
-							// tMesh.rotationY += 1
-							tMesh.rotationZ += 1
-						}
+						tMesh.rotationZ += 1
 
 
 					}

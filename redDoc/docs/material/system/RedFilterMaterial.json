@@ -1,0 +1,30 @@
+[
+  {
+    "code": "PROPERTY",
+    "title": "diffuseTexture",
+    "description": "diffuseTexture",
+    "return": "RedFilterMaterial"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedFilterMaterial",
+    "description": "\n\t 메쉬 필터 최종 이미지를 생성하기 위한재질.\n\t 시스템적으로 사용됨.\n ",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ],
+      "diffuseTexture": [
+        {
+          "type": "RedBitmapTexture"
+        },
+        "RedBitmapTexture Instance"
+      ]
+    },
+    "extends": [
+      "RedBaseMaterial"
+    ],
+    "return": "RedFilterMaterial Instance"
+  }
+]
