@@ -2,7 +2,7 @@
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.6 17:36:25
+ *   Last modification time of this file - 2019.8.6 18:9:29
  *
  */
 
@@ -20102,7 +20102,7 @@ var RedShader;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.2 18:16:21
+ *   Last modification time of this file - 2019.8.6 17:36:26
  *
  */
 
@@ -27751,7 +27751,7 @@ var RedFilterFrameBuffer;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.6 14:20:40
+ *   Last modification time of this file - 2019.8.6 17:36:26
  *
  */
 
@@ -28384,7 +28384,7 @@ var RedFilter_Gray;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.6 14:20:40
+ *   Last modification time of this file - 2019.8.6 17:36:26
  *
  */
 
@@ -28791,7 +28791,7 @@ var RedFilter_Blur;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.6 14:20:40
+ *   Last modification time of this file - 2019.8.6 17:36:26
  *
  */
 
@@ -28821,14 +28821,14 @@ var RedFilter_BlurX;
 			float weight;
 			 for (float t = -5.0; t <= 5.0; t+=1.0) {
 				 float percent = (t + offset - 0.5) / 5.0;
-				 float weight = 1.0 - abs(t/5.0);
+				 float weight = 1.0 - abs(percent);
 				 vec4 sample = texture2D(u_diffuseTexture, testCoord + delta * percent);
-				 // sample.rgb *= sample.a;
+				 sample.rgb *= sample.a;
 				 finalColor += sample * weight;
 				 total += weight;
 			 }
 			 finalColor = finalColor / total;
-			 // finalColor.rgb /= finalColor.a + 0.00001;
+			 finalColor.rgb /= finalColor.a + 0.00001;
 			 gl_FragColor =  finalColor ;
 		 }
 		 */
@@ -28902,7 +28902,7 @@ var RedFilter_BlurX;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.6 14:20:40
+ *   Last modification time of this file - 2019.8.6 17:36:26
  *
  */
 
@@ -30092,4 +30092,4 @@ var RedGLOffScreen;
 		};
 		RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
 	})();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-08-06 17:35:11)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-08-06 18:08:14)' };console.log(RedGL_VERSION);
