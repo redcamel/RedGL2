@@ -2,7 +2,7 @@
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.2 18:16:21
+ *   Last modification time of this file - 2019.8.6 14:20:40
  *
  */
 
@@ -15,10 +15,9 @@ var RedFilter_BlurX;
 	vSource = RedBaseFilter['baseVertexShaderSource1']
 	fSource = function () {
 		/* @preserve
-		 precision lowp float;
+		 precision mediump float;
 		 uniform sampler2D u_diffuseTexture;
 		 uniform float u_size;
-		 uniform int u_sampleNum;
 		 float random(vec3 scale, float seed) {
 			return fract(sin(dot(gl_FragCoord.xyz + seed, scale)) * 43758.5453 + seed);
 		 }
@@ -26,16 +25,16 @@ var RedFilter_BlurX;
 			 vec4 finalColor = vec4(0.0);
 			 vec2 delta;
 			 float total = 0.0;
-			 float offset = random(vec3(12.9898, 78.233, 151.7182), 0.0);
+			 float offset = random(vec3(12.9898, 78.233, 151.7182), 0.0)*2.0;
 			 delta = vec2(u_size/vResolution.x,0.0);
 			vec2 testCoord = gl_FragCoord.xy/vResolution.xy;
 			float percent;
 			float weight;
-			 for (float t = -2.0; t <= 2.0; t++) {
-				 float percent = (t + offset - 0.5) / 2.0;
+			 for (float t = -5.0; t <= 5.0; t+=1.0) {
+				 float percent = (t + offset - 0.5) / 5.0;
 				 float weight = 1.0 - abs(percent);
 				 vec4 sample = texture2D(u_diffuseTexture, testCoord + delta * percent);
-				 sample.rgb *= sample.a;
+				 // sample.rgb *= sample.a;
 				 finalColor += sample * weight;
 				 total += weight;
 			 }
@@ -77,7 +76,6 @@ var RedFilter_BlurX;
 		this['frameBuffer'] = RedFilterFrameBuffer(redGL);
 		this['diffuseTexture'] = null;
 		this['size'] = 50;
-		this['sampleNum'] = 2
 		/////////////////////////////////////////
 		// 일반 프로퍼티
 		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
@@ -107,8 +105,7 @@ var RedFilter_BlurX;
 			 return : 'Number'
 		 }
 		 :DOC*/
-		['size', 'number', {'min': 0}],
-		['sampleNum', 'int', {'min': 2, 'max': 10}]
+		['size', 'number', {'min': 0}]
 	);
 	Object.freeze(RedFilter_BlurX);
 })();

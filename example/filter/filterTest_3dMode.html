@@ -2,7 +2,7 @@
   ~   RedGL - MIT License
   ~   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
   ~   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
-  ~   Last modification time of this file - 2019.8.2 18:16:21
+  ~   Last modification time of this file - 2019.8.6 14:20:40
   ~
   -->
 
@@ -150,18 +150,14 @@
 				tMesh.scaleX = tMesh.scaleY = tMesh.scaleZ = 5
 
 
-				if (i % 13 == 0) tMesh.addFilter(testFilter_BlurX)
-				else if (i % 13 == 1) tMesh.addFilter(testFilter_BlurY)
-				else if (i % 13 == 2) tMesh.addFilter(testFilter_Blur)
-				else if (i % 13 == 3) tMesh.addFilter(testFilter_Gray)
-				else if (i % 13 == 4) tMesh.addFilter(testFilter_Invert)
-				else if (i % 13 == 5) tMesh.addFilter(testFilter_Pixelize)
-				else if (i % 13 == 6) tMesh.addFilter(testFilter_HalfTone)
-				else if (i % 13 == 7) tMesh.addFilter(testFilter_Threshold)
-				else if (i % 13 == 8) tMesh.addFilter(testFilter_Bloom)
-				else if (i % 13 == 9) tMesh.addFilter(testFilter_Film)
-				else if (i % 13 == 11) tMesh.addFilter(testFilter_HueSaturation)
-				else tMesh.addFilter(testFilter_GaussianBlur)
+				if (i % 8 == 0) tMesh.addFilter(testFilter_Gray)
+				else if (i % 8 == 1) tMesh.addFilter(testFilter_Invert)
+				else if (i % 8 == 2) tMesh.addFilter(testFilter_Pixelize)
+				else if (i % 8 == 3) tMesh.addFilter(testFilter_HalfTone)
+				else if (i % 8 == 4) tMesh.addFilter(testFilter_Threshold)
+				else if (i % 8 == 5) tMesh.addFilter(testFilter_Bloom)
+				else if (i % 8 == 6) tMesh.addFilter(testFilter_Film)
+				else if (i % 8 == 7) tMesh.addFilter(testFilter_HueSaturation)
 
 				testTween(this, tMesh)
 				tScene.addChild(tMesh)
