@@ -2,7 +2,7 @@
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.6 14:20:40
+ *   Last modification time of this file - 2019.8.6 17:36:26
  *
  */
 
@@ -20,6 +20,7 @@ var RedFilter_Invert;
 
 		 void main(void) {
 			 vec4 finalColor = texture2D(u_diffuseTexture, gl_FragCoord.xy/vResolution);
+			 if(finalColor.a == 0.0) discard;
 			 finalColor.r = 1.0 - finalColor.r;
 			 finalColor.g = 1.0 - finalColor.g;
 			 finalColor.b = 1.0 - finalColor.b;

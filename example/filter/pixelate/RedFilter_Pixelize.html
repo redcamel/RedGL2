@@ -1,0 +1,160 @@
+<!--
+  ~   RedGL - MIT License
+  ~   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+  ~   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+  ~   Last modification time of this file - 2019.8.6 17:36:25
+  ~
+  -->
+
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="RedGL,webgl,demo">
+    <title>RedGL - RedFilter_Pixelize</title>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
+    />
+    <link rel="stylesheet" href="../../example.css">
+
+    <script src="../../dat.gui.min.js"></script>
+    <script src="../../baseTestUI.js"></script>
+    <script src="../../../release/RedGL.min.js"></script>
+</head>
+
+<body>
+<div style="position:fixed;bottom:0;right:50%;margin-right:1px;padding:10px;background: rgb(91, 82, 170);color:#fff;font-size: 12px;font-weight: bold">
+    PostEffect View
+</div>
+<div style="position:fixed;bottom:0;left:50%;padding:10px;background: rgb(91, 82, 170);color:#fff;font-size: 12px;font-weight: bold">
+    Normal View
+</div>
+<script id='testSource'>
+	var testUI;
+	var canvas;
+	var assetPath = '../../../asset/'
+	canvas = document.createElement('canvas');
+	document.body.appendChild(canvas);
+	RedGL(canvas, function (v) {
+		if (v) {
+			var tWorld, tView, tView_FilterTest, tScene, tController, tRenderer, tLight;
+			var setBase = function (redGL) {
+				// 월드 생성
+				redGL['world'] = tWorld = RedWorld();
+				// 씬 생성
+				tScene = RedScene(redGL);
+				// 카메라 생성
+				tController = RedObitController(redGL);
+				tController.tilt = -15;
+				tController.distance = 15;
+				tController.speedDistance = 0.5
+				// 렌더러 생성
+				tRenderer = RedRenderer();
+				// 뷰생성 및 적용
+				tView = RedView(redGL, tScene, tController);
+				tView_FilterTest = RedView(redGL, tScene, tController);
+				tView.setSize('50%', '100%');
+				tView.setLocation('50%', '0%');
+				tView_FilterTest.setSize('50%', '100%');
+				tView_FilterTest.setLocation('0%', '0%');
+				tWorld.addView(tView);
+				tWorld.addView(tView_FilterTest);
+				// 스카이박스 설정
+				tScene.skyBox =
+					RedSkyBox(redGL, [
+						assetPath + 'cubemap/SwedishRoyalCastle/px.jpg',
+						assetPath + 'cubemap/SwedishRoyalCastle/nx.jpg',
+						assetPath + 'cubemap/SwedishRoyalCastle/py.jpg',
+						assetPath + 'cubemap/SwedishRoyalCastle/ny.jpg',
+						assetPath + 'cubemap/SwedishRoyalCastle/pz.jpg',
+						assetPath + 'cubemap/SwedishRoyalCastle/nz.jpg'
+					]);
+				// 라이트 설정
+				tLight = RedDirectionalLight(redGL);
+				tScene.addLight(tLight)
+				tLight.x = 10;
+				tLight.y = 10;
+				tLight.z = 10;
+				tLight = RedDirectionalLight(redGL, '#ff00ff');
+				tScene.addLight(tLight)
+				tLight.x = -10;
+				tLight.y = 10;
+				tLight.z = -10;
+				// Mesh 설정
+				var setMeshs = function (redGL) {
+					var MAX;
+					var i, j;
+					var tMesh;
+					var tGeo = RedSphere(redGL, 1, 32, 32, 32)
+					var tMaterial;
+					i = j = MAX = 10;
+					tMaterial = RedStandardMaterial(
+						redGL,
+						RedBitmapTexture(redGL, assetPath + 'brick/Brick03_col.jpg'),
+						RedBitmapTexture(redGL, assetPath + 'brick/Brick03_nrm.jpg'),
+						null,
+						RedBitmapTexture(redGL, assetPath + 'brick/Brick03_disp.jpg')
+					);
+					tMaterial.normalPower = 2;
+					while (i--) {
+						j = MAX
+						while (j--) {
+							tMesh = RedMesh(redGL, tGeo, tMaterial)
+							tMesh.x = Math.sin(Math.PI * 2 / (MAX - 1) * i) * j * 3;
+							tMesh.z = Math.cos(Math.PI * 2 / (MAX - 1) * i) * j * 3;
+							tScene.addChild(tMesh);
+						}
+					}
+				};
+				setMeshs(redGL);
+				// GLTF 로딩
+				RedGLTFLoader(
+					redGL, // redGL
+					assetPath + 'glTF/basic/', // assetRootPath
+					'DamagedHelmet.gltf', // fileName
+					function (v) { // callBack
+						v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 3
+						v['resultMesh'].y = 4
+						tScene.addChild(v['resultMesh'])
+					},
+					RedBitmapCubeTexture(redGL, // environmentTexture
+						[
+							assetPath + 'cubemap/posx.png',
+							assetPath + 'cubemap/negx.png',
+							assetPath + 'cubemap/posy.png',
+							assetPath + 'cubemap/negy.png',
+							assetPath + 'cubemap/posz.png',
+							assetPath + 'cubemap/negz.png'
+						]
+					)
+				);
+				// 렌더시작
+				tRenderer.start(redGL, function (time) {
+				});
+				// 렌더 디버거 활성화
+				tRenderer.setDebugButton();
+			};
+			setBase(this);
+			// 이펙트 적용
+			var effect;
+			effect = RedFilter_Pixelize(this);
+			tView_FilterTest['FilterManager'].addFilter(effect)
+			console.log(effect)
+			testUI(this, tScene, effect)
+		} else {
+			console.log('초기화 실패!')
+		}
+	})
+	testUI = function (redGL, tScene, effect) {
+
+		var gui = new baseTestUI(redGL)
+		gui.initRedGL();
+		gui.initPostEffect('RedFilter_Pixelize', effect, true);
+	}
+</script>
+</body>
+
+</html>

@@ -2,7 +2,7 @@
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.2 18:16:21
+ *   Last modification time of this file - 2019.8.6 17:36:26
  *
  */
 
@@ -1076,10 +1076,9 @@ var RedRenderer;
 					worldRender_self['_filterManager']['filterList'] = tMesh['_filterList']
 					worldRender_self['_filterManager']['frameBuffer']['width'] = renderResultObj['viewRectWidth']
 					worldRender_self['_filterManager']['frameBuffer']['height'] = renderResultObj['viewRectHeight']
-
-					worldRender_self['_filterManager'].bind(tGL)
 					tGL.clearColor(0, 0, 0, 0)
-					tGL.clear(tGL.COLOR_BUFFER_BIT)
+					worldRender_self['_filterManager'].bind(tGL)
+
 
 					// 드로우
 					if (tIndexBufferInfo) {

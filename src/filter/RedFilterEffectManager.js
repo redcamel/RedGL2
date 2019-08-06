@@ -2,7 +2,7 @@
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.6 14:20:40
+ *   Last modification time of this file - 2019.8.6 17:36:26
  *
  */
 
@@ -211,13 +211,13 @@ var RedFilterEffectManager;
 						}
 					}
 					//////////////////////////////////////////////////////////////////////
-					if (!tCamera['mode2DYn'] || depth || length > 1) {
+					// if (!tCamera['mode2DYn'] || depth || length > 1) {
 						gl.bindFramebuffer(gl.FRAMEBUFFER, tFrameBuffer['webglFrameBuffer']);
 						gl.activeTexture(gl.TEXTURE0);
 						gl.bindTexture(gl.TEXTURE_2D, tFrameBuffer['texture']['webglTexture']);
 
 						if (tFrameBuffer['_prevWidth'] != tFrameBuffer['width'] || tFrameBuffer['_prevHeight'] != tFrameBuffer['height']) {
-							gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, parseInt(tFrameBuffer['width']), parseInt(tFrameBuffer['height']), 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+							gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, tFrameBuffer['width'], tFrameBuffer['height'], 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
 						} else {
 							gl.clear(gl.COLOR_BUFFER_BIT)
 						}
@@ -225,7 +225,7 @@ var RedFilterEffectManager;
 
 						tFrameBuffer._prevWidth = tFrameBuffer['width'];
 						tFrameBuffer._prevHeight = tFrameBuffer['height']
-					}
+					// }
 					// 해당 이펙트의 기본 텍스쳐를 지난 이펙트의 최종 텍스쳐로 업로드
 					if (effect['_process'] && effect['_process'].length) {
 						effect.updateTexture(
@@ -238,9 +238,9 @@ var RedFilterEffectManager;
 					// 해당 이펙트를 렌더링하고
 					redRenderer.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], quadChildren, time, renderInfo);
 					// 해당 이펙트의 프레임 버퍼를 언바인딩한다.
-					if (!tCamera['mode2DYn'] || depth || length > 1) {
+					// if (!tCamera['mode2DYn'] || depth || length > 1) {
 						gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-					}
+					// }
 					// 현재 이펙트를 최종 텍스쳐로 기록하고 다음 이펙트가 있을경우 활용한다.
 					lastFrameBufferTexture = tFrameBuffer['texture'];
 				}
@@ -278,13 +278,13 @@ var RedFilterEffectManager;
 					vx = i * stride , vy = vx + 1, vz = vx + 2;
 					tx = tMatrix[0] * t[vx] + tMatrix[4] * t[vy] + tMatrix[8] * t[vz];
 					ty = tMatrix[1] * t[vx] + tMatrix[5] * t[vy] + tMatrix[9] * t[vz];
-					// tz = tMatrix[2] * t[vx] + tMatrix[6] * t[vy] + tMatrix[10] * t[vz];
+					tz = tMatrix[2] * t[vx] + tMatrix[6] * t[vy] + tMatrix[10] * t[vz];
 					minX = tx < minX ? tx : minX;
 					maxX = tx > maxX ? tx : maxX;
 					minY = ty < minY ? ty : minY;
 					maxY = ty > maxY ? ty : maxY;
-					// minZ = tz < minZ ? tz : minZ;
-					// maxZ = tz > maxZ ? tz : maxZ;
+					minZ = tz < minZ ? tz : minZ;
+					maxZ = tz > maxZ ? tz : maxZ;
 				}
 				currentAABB = [maxX - minX, maxY - minY, maxZ - minZ];
 				/////////////////////////////////////////////////////////////////////
@@ -301,8 +301,8 @@ var RedFilterEffectManager;
 						tEffectList[tEffectList.length] = tEffect;
 						// 스케일 계산
 						if (tEffect instanceof RedFilter_Blur) {
-							tScaleTestX = currentAABB[0] + (tCamera['mode2DYn'] ? 10 : 0)
-							tScaleTestY = currentAABB[1] + (tCamera['mode2DYn'] ? 10 : 0)
+							tScaleTestX = currentAABB[0] + (tCamera['mode2DYn'] ? 5 : 0)
+							tScaleTestY = currentAABB[1] + (tCamera['mode2DYn'] ? 5 : 0)
 						} else if (tEffect instanceof RedFilter_BlurX || tEffect instanceof RedFilter_BlurY) {
 							tScaleTestX = currentAABB[0] + tEffect['size'] * 2;
 							tScaleTestY = currentAABB[1] + tEffect['size'] * 2;
@@ -333,6 +333,7 @@ var RedFilterEffectManager;
 					// 2D 일떄
 					tQuadMesh.scaleX = tScaleX;
 					tQuadMesh.scaleY = tScaleY;
+					tQuadMesh.scaleZ = 1;
 				} else {
 					// 3D 일때
 					tRadius = Math.sqrt(currentAABB[0] * currentAABB[0] + currentAABB[1] * currentAABB[1]);
@@ -347,12 +348,13 @@ var RedFilterEffectManager;
 				// 최종결과는 RedView의 사이즈와 동일하게 한다.
 				this['frameBuffer']['_width'] = tViewRect[2];
 				this['frameBuffer']['_height'] = tViewRect[3];
+
 				if (tCamera['mode2DYn']) {
 					gl.scissor(
-						tMesh.x * redGL._renderScale * window.devicePixelRatio - tQuadMesh.scaleX / 2 * window.devicePixelRatio,
-						tViewRect[3] - tMesh.y * redGL._renderScale * window.devicePixelRatio - tQuadMesh.scaleY / 2 * window.devicePixelRatio,
-						tQuadMesh.scaleX * window.devicePixelRatio,
-						tQuadMesh.scaleY * window.devicePixelRatio
+						parseInt(tMesh.x * redGL._renderScale * window.devicePixelRatio - tQuadMesh.scaleX / 2 * window.devicePixelRatio)-10,
+						parseInt(tViewRect[3] - tMesh.y * redGL._renderScale * window.devicePixelRatio - tQuadMesh.scaleY / 2 * window.devicePixelRatio)-10,
+						parseInt(tQuadMesh.scaleX * window.devicePixelRatio)+20,
+						parseInt(tQuadMesh.scaleY * window.devicePixelRatio)+20
 					);
 				} else {
 					var tScreen_point;
@@ -387,8 +389,7 @@ var RedFilterEffectManager;
 						parseInt(tRadius)
 					);
 				}
-				gl.activeTexture(gl.TEXTURE0);
-				gl.clearColor(0, 0, 0, 0);
+
 				////////////////////////////////////////////////////////////////////////////
 				// 이펙트 렌더
 				i = 0;

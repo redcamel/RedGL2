@@ -2,7 +2,7 @@
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.6 14:20:40
+ *   Last modification time of this file - 2019.8.6 17:36:25
  *
  */
 
@@ -21176,10 +21176,9 @@ var RedRenderer;
 					worldRender_self['_filterManager']['filterList'] = tMesh['_filterList']
 					worldRender_self['_filterManager']['frameBuffer']['width'] = renderResultObj['viewRectWidth']
 					worldRender_self['_filterManager']['frameBuffer']['height'] = renderResultObj['viewRectHeight']
-
-					worldRender_self['_filterManager'].bind(tGL)
 					tGL.clearColor(0, 0, 0, 0)
-					tGL.clear(tGL.COLOR_BUFFER_BIT)
+					worldRender_self['_filterManager'].bind(tGL)
+
 
 					// 드로우
 					if (tIndexBufferInfo) {
@@ -27752,7 +27751,7 @@ var RedFilterFrameBuffer;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.2 18:16:21
+ *   Last modification time of this file - 2019.8.6 14:20:40
  *
  */
 
@@ -27961,13 +27960,13 @@ var RedFilterEffectManager;
 						}
 					}
 					//////////////////////////////////////////////////////////////////////
-					if (!tCamera['mode2DYn'] || depth || length > 1) {
+					// if (!tCamera['mode2DYn'] || depth || length > 1) {
 						gl.bindFramebuffer(gl.FRAMEBUFFER, tFrameBuffer['webglFrameBuffer']);
 						gl.activeTexture(gl.TEXTURE0);
 						gl.bindTexture(gl.TEXTURE_2D, tFrameBuffer['texture']['webglTexture']);
 
 						if (tFrameBuffer['_prevWidth'] != tFrameBuffer['width'] || tFrameBuffer['_prevHeight'] != tFrameBuffer['height']) {
-							gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, parseInt(tFrameBuffer['width']), parseInt(tFrameBuffer['height']), 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+							gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, tFrameBuffer['width'], tFrameBuffer['height'], 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
 						} else {
 							gl.clear(gl.COLOR_BUFFER_BIT)
 						}
@@ -27975,7 +27974,7 @@ var RedFilterEffectManager;
 
 						tFrameBuffer._prevWidth = tFrameBuffer['width'];
 						tFrameBuffer._prevHeight = tFrameBuffer['height']
-					}
+					// }
 					// 해당 이펙트의 기본 텍스쳐를 지난 이펙트의 최종 텍스쳐로 업로드
 					if (effect['_process'] && effect['_process'].length) {
 						effect.updateTexture(
@@ -27988,9 +27987,9 @@ var RedFilterEffectManager;
 					// 해당 이펙트를 렌더링하고
 					redRenderer.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], quadChildren, time, renderInfo);
 					// 해당 이펙트의 프레임 버퍼를 언바인딩한다.
-					if (!tCamera['mode2DYn'] || depth || length > 1) {
+					// if (!tCamera['mode2DYn'] || depth || length > 1) {
 						gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-					}
+					// }
 					// 현재 이펙트를 최종 텍스쳐로 기록하고 다음 이펙트가 있을경우 활용한다.
 					lastFrameBufferTexture = tFrameBuffer['texture'];
 				}
@@ -28028,13 +28027,13 @@ var RedFilterEffectManager;
 					vx = i * stride , vy = vx + 1, vz = vx + 2;
 					tx = tMatrix[0] * t[vx] + tMatrix[4] * t[vy] + tMatrix[8] * t[vz];
 					ty = tMatrix[1] * t[vx] + tMatrix[5] * t[vy] + tMatrix[9] * t[vz];
-					// tz = tMatrix[2] * t[vx] + tMatrix[6] * t[vy] + tMatrix[10] * t[vz];
+					tz = tMatrix[2] * t[vx] + tMatrix[6] * t[vy] + tMatrix[10] * t[vz];
 					minX = tx < minX ? tx : minX;
 					maxX = tx > maxX ? tx : maxX;
 					minY = ty < minY ? ty : minY;
 					maxY = ty > maxY ? ty : maxY;
-					// minZ = tz < minZ ? tz : minZ;
-					// maxZ = tz > maxZ ? tz : maxZ;
+					minZ = tz < minZ ? tz : minZ;
+					maxZ = tz > maxZ ? tz : maxZ;
 				}
 				currentAABB = [maxX - minX, maxY - minY, maxZ - minZ];
 				/////////////////////////////////////////////////////////////////////
@@ -28051,8 +28050,8 @@ var RedFilterEffectManager;
 						tEffectList[tEffectList.length] = tEffect;
 						// 스케일 계산
 						if (tEffect instanceof RedFilter_Blur) {
-							tScaleTestX = currentAABB[0] + (tCamera['mode2DYn'] ? 10 : 0)
-							tScaleTestY = currentAABB[1] + (tCamera['mode2DYn'] ? 10 : 0)
+							tScaleTestX = currentAABB[0] + (tCamera['mode2DYn'] ? 5 : 0)
+							tScaleTestY = currentAABB[1] + (tCamera['mode2DYn'] ? 5 : 0)
 						} else if (tEffect instanceof RedFilter_BlurX || tEffect instanceof RedFilter_BlurY) {
 							tScaleTestX = currentAABB[0] + tEffect['size'] * 2;
 							tScaleTestY = currentAABB[1] + tEffect['size'] * 2;
@@ -28083,6 +28082,7 @@ var RedFilterEffectManager;
 					// 2D 일떄
 					tQuadMesh.scaleX = tScaleX;
 					tQuadMesh.scaleY = tScaleY;
+					tQuadMesh.scaleZ = 1;
 				} else {
 					// 3D 일때
 					tRadius = Math.sqrt(currentAABB[0] * currentAABB[0] + currentAABB[1] * currentAABB[1]);
@@ -28097,12 +28097,13 @@ var RedFilterEffectManager;
 				// 최종결과는 RedView의 사이즈와 동일하게 한다.
 				this['frameBuffer']['_width'] = tViewRect[2];
 				this['frameBuffer']['_height'] = tViewRect[3];
+
 				if (tCamera['mode2DYn']) {
 					gl.scissor(
-						tMesh.x * redGL._renderScale * window.devicePixelRatio - tQuadMesh.scaleX / 2 * window.devicePixelRatio,
-						tViewRect[3] - tMesh.y * redGL._renderScale * window.devicePixelRatio - tQuadMesh.scaleY / 2 * window.devicePixelRatio,
-						tQuadMesh.scaleX * window.devicePixelRatio,
-						tQuadMesh.scaleY * window.devicePixelRatio
+						parseInt(tMesh.x * redGL._renderScale * window.devicePixelRatio - tQuadMesh.scaleX / 2 * window.devicePixelRatio)-10,
+						parseInt(tViewRect[3] - tMesh.y * redGL._renderScale * window.devicePixelRatio - tQuadMesh.scaleY / 2 * window.devicePixelRatio)-10,
+						parseInt(tQuadMesh.scaleX * window.devicePixelRatio)+20,
+						parseInt(tQuadMesh.scaleY * window.devicePixelRatio)+20
 					);
 				} else {
 					var tScreen_point;
@@ -28137,8 +28138,7 @@ var RedFilterEffectManager;
 						parseInt(tRadius)
 					);
 				}
-				gl.activeTexture(gl.TEXTURE0);
-				gl.clearColor(0, 0, 0, 0);
+
 				////////////////////////////////////////////////////////////////////////////
 				// 이펙트 렌더
 				i = 0;
@@ -28309,7 +28309,7 @@ var RedFilterMaterial;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.2 18:16:22
+ *   Last modification time of this file - 2019.8.6 14:20:40
  *
  */
 
@@ -28384,7 +28384,7 @@ var RedFilter_Gray;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.2 18:16:22
+ *   Last modification time of this file - 2019.8.6 14:20:40
  *
  */
 
@@ -28402,6 +28402,7 @@ var RedFilter_Invert;
 
 		 void main(void) {
 			 vec4 finalColor = texture2D(u_diffuseTexture, gl_FragCoord.xy/vResolution);
+			 if(finalColor.a == 0.0) discard;
 			 finalColor.r = 1.0 - finalColor.r;
 			 finalColor.g = 1.0 - finalColor.g;
 			 finalColor.b = 1.0 - finalColor.b;
@@ -28462,7 +28463,7 @@ var RedFilter_Invert;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.2 18:16:22
+ *   Last modification time of this file - 2019.8.6 14:20:40
  *
  */
 
@@ -28567,7 +28568,7 @@ var RedFilter_Threshold;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.2 18:16:22
+ *   Last modification time of this file - 2019.8.6 14:20:40
  *
  */
 
@@ -28699,7 +28700,7 @@ var RedFilter_HueSaturation;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.2 18:16:22
+ *   Last modification time of this file - 2019.8.6 14:20:40
  *
  */
 
@@ -28790,7 +28791,7 @@ var RedFilter_Blur;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.2 18:16:22
+ *   Last modification time of this file - 2019.8.6 14:20:40
  *
  */
 
@@ -28813,21 +28814,21 @@ var RedFilter_BlurX;
 			 vec4 finalColor = vec4(0.0);
 			 vec2 delta;
 			 float total = 0.0;
-			 float offset = random(vec3(12.9898, 78.233, 151.7182), 0.0)*2.0;
+			 float offset = random(vec3(12.9898, 78.233, 151.7182), 0.0);
 			 delta = vec2(u_size/vResolution.x,0.0);
 			vec2 testCoord = gl_FragCoord.xy/vResolution.xy;
 			float percent;
 			float weight;
 			 for (float t = -5.0; t <= 5.0; t+=1.0) {
 				 float percent = (t + offset - 0.5) / 5.0;
-				 float weight = 1.0 - abs(percent);
+				 float weight = 1.0 - abs(t/5.0);
 				 vec4 sample = texture2D(u_diffuseTexture, testCoord + delta * percent);
 				 // sample.rgb *= sample.a;
 				 finalColor += sample * weight;
 				 total += weight;
 			 }
 			 finalColor = finalColor / total;
-			 finalColor.rgb /= finalColor.a + 0.00001;
+			 // finalColor.rgb /= finalColor.a + 0.00001;
 			 gl_FragColor =  finalColor ;
 		 }
 		 */
@@ -28863,7 +28864,7 @@ var RedFilter_BlurX;
 		redGL instanceof RedGL || RedGLUtil.throwFunc('RedFilter_BlurX : RedGL Instance만 허용.', redGL);
 		this['frameBuffer'] = RedFilterFrameBuffer(redGL);
 		this['diffuseTexture'] = null;
-		this['size'] = 50;
+		this['size'] = 25;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
 		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
@@ -28901,7 +28902,7 @@ var RedFilter_BlurX;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.2 18:16:22
+ *   Last modification time of this file - 2019.8.6 14:20:40
  *
  */
 
@@ -28924,7 +28925,7 @@ var RedFilter_BlurY;
 			 vec4 finalColor = vec4(0.0);
 			 vec2 delta;
 			 float total = 0.0;
-			 float offset = random(vec3(12.9898, 78.233, 151.7182), 0.0)*2.0;
+			 float offset = random(vec3(12.9898, 78.233, 151.7182), 0.0);
 			 delta = vec2(0.0, u_size/vResolution.y);
 			  vec2 testCoord = gl_FragCoord.xy/vResolution.xy;
 
@@ -28932,7 +28933,7 @@ var RedFilter_BlurY;
 				 float percent = (t + offset - 0.5) / 5.0;
 				 float weight = 1.0 - abs(percent);
 				 vec4 sample = texture2D(u_diffuseTexture, testCoord + delta * percent);
-				 // sample.rgb *= sample.a;
+				 sample.rgb *= sample.a;
 				 finalColor += sample * weight;
 				 total += weight;
 			 }
@@ -28973,7 +28974,7 @@ var RedFilter_BlurY;
 		redGL instanceof RedGL || RedGLUtil.throwFunc('RedFilter_BlurY : RedGL Instance만 허용.', redGL);
 		this['frameBuffer'] = RedFilterFrameBuffer(redGL);
 		this['diffuseTexture'] = null;
-		this['size'] = 50;
+		this['size'] = 25;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
 		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
@@ -29011,7 +29012,7 @@ var RedFilter_BlurY;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.2 18:16:22
+ *   Last modification time of this file - 2019.8.6 14:20:40
  *
  */
 
@@ -29085,7 +29086,7 @@ var RedFilter_GaussianBlur;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.2 18:16:22
+ *   Last modification time of this file - 2019.8.6 14:20:40
  *
  */
 
@@ -29199,7 +29200,7 @@ var RedFilter_Pixelize;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.2 18:16:22
+ *   Last modification time of this file - 2019.8.6 14:20:40
  *
  */
 
@@ -29365,7 +29366,7 @@ var RedFilter_HalfTone;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.2 18:16:22
+ *   Last modification time of this file - 2019.8.6 14:20:40
  *
  */
 
@@ -29524,7 +29525,7 @@ var RedFilter_Bloom;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.2 18:16:22
+ *   Last modification time of this file - 2019.8.6 14:20:40
  *
  */
 
@@ -30091,4 +30092,4 @@ var RedGLOffScreen;
 		};
 		RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
 	})();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-08-06 13:54:14)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-08-06 17:35:11)' };console.log(RedGL_VERSION);

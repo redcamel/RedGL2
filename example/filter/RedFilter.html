@@ -1,0 +1,143 @@
+<!--
+  ~   RedGL - MIT License
+  ~   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+  ~   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+  ~   Last modification time of this file - 2019.8.6 17:36:25
+  ~
+  -->
+
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="RedGL,webgl,demo">
+    <title>RedGL - Filter</title>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
+    />
+    <link rel="stylesheet" href="../example.css">
+
+    <script src="../dat.gui.min.js"></script>
+    <script src="../baseTestUI.js"></script>
+    <script src="../../release/RedGL.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.2/TweenMax.min.js"></script>
+</head>
+
+<body>
+
+<script id='testSource'>
+	var testUI;
+	var canvas;
+	var assetPath = '../../asset/'
+	canvas = document.createElement('canvas');
+	document.body.appendChild(canvas);
+	var testTween = function (redGL, target) {
+		var tScale = Math.random() * 50 + 35
+		TweenMax.to(target, Math.random() * 2 + 1, {
+			x: Math.random() * redGL._viewRect[2],
+			y: Math.random() * redGL._viewRect[3],
+			scaleX: tScale,
+			scaleY: tScale,
+
+
+			// rotationZ: Math.random() * 360,
+			ease: Ease.QuintInOut,
+			onComplete: function () {
+				testTween(redGL, this.target)
+			}
+		})
+	}
+	RedGL(canvas, function (v) {
+		if (v) {
+			var tWorld, tView, tView_FilterTest, tScene, tController, tRenderer, tLight;
+			var setBase = function (redGL) {
+				// 월드 생성
+				redGL['world'] = tWorld = RedWorld();
+				// 씬 생성
+				tScene = RedScene(redGL);
+				// 카메라 생성
+				tController = RedCamera();
+				tController.mode2DYn = true
+				// 렌더러 생성
+				tRenderer = RedRenderer();
+				// 뷰생성 및 적용
+				tView = RedView(redGL, tScene, tController);
+
+				tWorld.addView(tView);
+
+				// 렌더시작
+				tRenderer.start(redGL, function (time) {
+				});
+				// 렌더 디버거 활성화
+				tRenderer.setDebugButton();
+			};
+			setBase(this);
+			//
+			var tMesh;
+			var tMaterial = RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'crate.png'))
+			var i = 100
+			while (i--) {
+				tMesh = RedMesh(this, RedPlane(this), tMaterial)
+				tMesh.useCullFace = false
+				tMesh.x = Math.random() * 1000
+				tMesh.y = Math.random() * 800
+				tMesh.scaleX = tMesh.scaleY = tMesh.scaleZ = 100
+				tScene.addChild(tMesh)
+				testTween(this, tMesh)
+			}
+			testUI(this, tScene, tView_FilterTest)
+		} else {
+			console.log('초기화 실패!')
+		}
+	})
+	testUI = function (redGL, tScene) {
+		var effectList;
+		effectList = {
+			RedFilter_Invert: RedFilter_Invert(redGL),
+			RedFilter_Blur: RedFilter_Blur(redGL),
+			RedFilter_BlurX: RedFilter_BlurX(redGL),
+			RedFilter_BlurY: RedFilter_BlurY(redGL),
+			RedFilter_GaussianBlur: RedFilter_GaussianBlur(redGL),
+			RedFilter_Gray: RedFilter_Gray(redGL),
+			RedFilter_Pixelize: RedFilter_Pixelize(redGL),
+			// RedFilter_Convolution: RedFilter_Convolution(redGL, RedFilter_Convolution['EMBOSS']),
+			RedFilter_HueSaturation: RedFilter_HueSaturation(redGL),
+			// RedFilter_BrightnessContrast: RedFilter_BrightnessContrast(redGL),
+			RedFilter_HalfTone: RedFilter_HalfTone(redGL),
+			RedFilter_Bloom: RedFilter_Bloom(redGL)
+		}
+		effectList['RedFilter_GaussianBlur'].radius = 30
+		effectList['RedFilter_HueSaturation'].hue = 100
+		effectList['RedFilter_BlurX'].size = 20
+		effectList['RedFilter_BlurY'].size = 20
+		var gui = new baseTestUI(redGL)
+		gui.initRedGL()
+		var testData = function () {
+			for (var k in effectList) this[k] = false
+		}
+		testData = new testData()
+		for (var k in testData) {
+			(function () {
+				var tFolder = gui.initPostEffect(k, effectList[k], true);
+				console.log(tFolder)
+				tFolder.add(testData, k).name('use ' + k.replace('RedFilter_', '')).onChange((function () {
+					var tEffect = effectList[k]
+					return function (v) {
+						tScene['children'].forEach(function (tMesh) {
+							if (v) tMesh.addFilter(tEffect)
+							else tMesh.removeFilter(tEffect)
+						})
+						console.log(tScene['children'][0]['_filterList'])
+					}
+				})());
+			})();
+
+		}
+	}
+</script>
+</body>
+
+</html>
