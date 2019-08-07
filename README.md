@@ -70,7 +70,7 @@ RedGL(canvas, function (v) {
 });
 ```
 
-### How to build your own RedGL
+### How to run tests
 
 ```sh
 git clone git@github.com:redcamel/RedGL2.git
