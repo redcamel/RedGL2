@@ -8,7 +8,7 @@
   {
     "constructorYn": true,
     "title": "RedFilter_GaussianBlur",
-    "description": "\n\t 가우시안 블러 이펙트\n ",
+    "description": "\n\t\t 가우시안 블러 이펙트\n\t ",
     "params": {
       "redGL": [
         {
@@ -20,8 +20,7 @@
       "RedBaseFilter",
       "RedBaseMaterial"
     ],
-    "demo": "../example/postEffect/blur/RedFilter_GaussianBlur.html",
-    "example": "\n          var effect;\n          effect = RedFilter_GaussianBlur(RedGL Instance); // 포스트이펙트 생성\n          // postEffectManager는 RedView 생성시 자동생성됨.\n          (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가\n ",
+    "demo": "../example/filter/blur/RedFilter_GaussianBlur.html",
     "return": "RedFilter_GaussianBlur Instance"
   }
 ]

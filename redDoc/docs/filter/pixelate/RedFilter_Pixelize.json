@@ -8,7 +8,7 @@
   {
     "constructorYn": true,
     "title": "RedFilter_Pixelize",
-    "description": "\n\t Pixelize 효과\n ",
+    "description": "\n\t\t Pixelize 효과\n\t ",
     "params": {
       "redGL": [
         {
@@ -20,8 +20,7 @@
       "RedBaseFilter",
       "RedBaseMaterial"
     ],
-    "demo": "../example/postEffect/pixelate/RedFilter_Pixelize.html",
-    "example": "\n          var effect;\n          effect = RedFilter_Pixelize(RedGL Instance); // 포스트이펙트 생성\n          // postEffectManager는 RedView 생성시 자동생성됨.\n          (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가\n ",
+    "demo": "../example/filter/pixelate/RedFilter_Pixelize.html",
     "return": "RedFilter_Pixelize Instance"
   },
   {
