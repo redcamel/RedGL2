@@ -18,6 +18,8 @@ The main goal of this project is to create a WebGL library that will perform opt
 ## [Examples](https://redcamel.github.io/RedGL2/example/index.html)
    - See the [example](https://redcamel.github.io/RedGL2/example/index.html). Various examples are available.
    
+   ![RedGL](img_example.png)
+
 ## [TestCase](https://redcamel.github.io/RedGL2/testCase/index.html)
 
 ## Usage
