@@ -31,27 +31,36 @@ RedGL(canvas, function (v) {
     if (v) {
         console.log('Initialization successful!');
         var tWorld, tView, tScene, tController, tRenderer;
+        
         // create RedWorld Instance
         this['world'] = tWorld = RedWorld();
+        
         // create RedScene Instance
         tScene = RedScene(this);
+        
         // create camera
         tController = RedObitController(this);
         tController.pan = 45;
         tController.tilt = -45;
+        
         // create RedRenderer
         tRenderer = RedRenderer();
+        
         // create a RedView instance and add to the RedWorld instance
         tView = RedView('HelloRedGL', this, tScene, tController);
         tWorld.addView(tView);
+        
         // set grid debuger
         tScene['grid'] = RedGrid(this);
+        
         // set axis debuger
         tScene['axis'] = RedAxis(this);
+        
         // start rendering
         tRenderer.start(this, function (time) {
           console.log(time)
         });
+        
         // set renderDebugPanel
         tRenderer.setDebugButton();
         console.log(this);
