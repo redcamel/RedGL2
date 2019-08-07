@@ -2,7 +2,7 @@
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.2 18:16:21
+ *   Last modification time of this file - 2019.8.7 11:21:57
  *
  */
 
@@ -265,6 +265,7 @@ gulp.task('combine-js', function () {
 		"src/base/RedBaseFilter.js",
 		"src/material/system/RedFilterMaterial.js",
 
+		"src/filter/adjustments/RedFilter_BrightnessContrast.js",
 		"src/filter/adjustments/RedFilter_Gray.js",
 		"src/filter/adjustments/RedFilter_Invert.js",
 		"src/filter/adjustments/RedFilter_Threshold.js",
@@ -278,6 +279,7 @@ gulp.task('combine-js', function () {
 		"src/filter/bloom/RedFilter_Bloom.js",
 		"src/filter/bloom/RedFilter_BloomThreshold.js",
 		"src/filter/RedFilter_Film.js",
+		"src/filter/RedFilter_Convolution.js",
 
 
 		//

@@ -2,7 +2,7 @@
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.6 17:36:26
+ *   Last modification time of this file - 2019.8.7 11:21:57
  *
  */
 
@@ -23,7 +23,7 @@ var RedFilterEffectManager;
 				 {type:'RedGL'}
 			 ]
 		 },
-		 demo : '../example/RedFilter.html',
+		 demo : '../example/RedFilters.html',
 		 return : 'RedFilterEffectManager Instance'
 	 }
 	 :DOC*/
@@ -304,14 +304,14 @@ var RedFilterEffectManager;
 							tScaleTestX = currentAABB[0] + (tCamera['mode2DYn'] ? 5 : 0)
 							tScaleTestY = currentAABB[1] + (tCamera['mode2DYn'] ? 5 : 0)
 						} else if (tEffect instanceof RedFilter_BlurX || tEffect instanceof RedFilter_BlurY) {
-							tScaleTestX = currentAABB[0] + tEffect['size'] * 2;
-							tScaleTestY = currentAABB[1] + tEffect['size'] * 2;
+							tScaleTestX = currentAABB[0] + tEffect['_size'] ;
+							tScaleTestY = currentAABB[1] + tEffect['_size'] ;
 						} else if (tEffect instanceof RedFilter_GaussianBlur) {
-							tScaleTestX = currentAABB[0] + tEffect['radius'];
-							tScaleTestY = currentAABB[1] + tEffect['radius'];
+							tScaleTestX = currentAABB[0] + tEffect['_radius'];
+							tScaleTestY = currentAABB[1] + tEffect['_radius'];
 						} else if (tEffect instanceof RedFilter_Bloom) {
-							tScaleTestX = currentAABB[0] + tEffect['blur'];
-							tScaleTestY = currentAABB[1] + tEffect['blur'];
+							tScaleTestX = currentAABB[0] + tEffect['_blur'];
+							tScaleTestY = currentAABB[1] + tEffect['_blur'];
 						} else {
 							tScaleTestX = currentAABB[0];
 							tScaleTestY = currentAABB[1]

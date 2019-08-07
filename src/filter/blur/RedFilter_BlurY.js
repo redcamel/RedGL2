@@ -2,7 +2,7 @@
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.6 17:36:26
+ *   Last modification time of this file - 2019.8.7 11:21:57
  *
  */
 
@@ -29,8 +29,8 @@ var RedFilter_BlurY;
 			 delta = vec2(0.0, u_size/vResolution.y);
 			  vec2 testCoord = gl_FragCoord.xy/vResolution.xy;
 
-			 for (float t = -5.0; t <= 5.0; t++) {
-				 float percent = (t + offset - 0.5) / 5.0;
+			 for (float t = -4.0; t <= 4.0; t++) {
+				 float percent = (t + offset - 0.5) / 4.0;
 				 float weight = 1.0 - abs(percent);
 				 vec4 sample = texture2D(u_diffuseTexture, testCoord + delta * percent);
 				 sample.rgb *= sample.a;

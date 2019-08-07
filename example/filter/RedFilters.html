@@ -2,7 +2,7 @@
   ~   RedGL - MIT License
   ~   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
   ~   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
-  ~   Last modification time of this file - 2019.8.6 17:36:25
+  ~   Last modification time of this file - 2019.8.7 11:21:57
   ~
   -->
 
@@ -12,7 +12,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="keywords" content="RedGL,webgl,demo">
-    <title>RedGL - Filter</title>
+    <title>RedGL - Filters</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -41,9 +41,7 @@
 			y: Math.random() * redGL._viewRect[3],
 			scaleX: tScale,
 			scaleY: tScale,
-
-
-			// rotationZ: Math.random() * 360,
+			rotationZ: Math.random() * 360,
 			ease: Ease.QuintInOut,
 			onComplete: function () {
 				testTween(redGL, this.target)
@@ -97,22 +95,25 @@
 		var effectList;
 		effectList = {
 			RedFilter_Invert: RedFilter_Invert(redGL),
+			RedFilter_Gray: RedFilter_Gray(redGL),
+			// RedFilter_Convolution: RedFilter_Convolution(redGL, RedFilter_Convolution['EMBOSS']),
+			RedFilter_HueSaturation: RedFilter_HueSaturation(redGL),
+			RedFilter_BrightnessContrast: RedFilter_BrightnessContrast(redGL),
+			RedFilter_Threshold : RedFilter_Threshold(redGL),
+			RedFilter_Pixelize: RedFilter_Pixelize(redGL),
+			RedFilter_HalfTone: RedFilter_HalfTone(redGL),
+			RedFilter_Bloom: RedFilter_Bloom(redGL),
 			RedFilter_Blur: RedFilter_Blur(redGL),
 			RedFilter_BlurX: RedFilter_BlurX(redGL),
 			RedFilter_BlurY: RedFilter_BlurY(redGL),
 			RedFilter_GaussianBlur: RedFilter_GaussianBlur(redGL),
-			RedFilter_Gray: RedFilter_Gray(redGL),
-			RedFilter_Pixelize: RedFilter_Pixelize(redGL),
-			// RedFilter_Convolution: RedFilter_Convolution(redGL, RedFilter_Convolution['EMBOSS']),
-			RedFilter_HueSaturation: RedFilter_HueSaturation(redGL),
-			// RedFilter_BrightnessContrast: RedFilter_BrightnessContrast(redGL),
-			RedFilter_HalfTone: RedFilter_HalfTone(redGL),
-			RedFilter_Bloom: RedFilter_Bloom(redGL)
+			RedFilter_Film: RedFilter_Film(redGL)
 		}
 		effectList['RedFilter_GaussianBlur'].radius = 30
 		effectList['RedFilter_HueSaturation'].hue = 100
 		effectList['RedFilter_BlurX'].size = 20
 		effectList['RedFilter_BlurY'].size = 20
+		effectList['RedFilter_BrightnessContrast'].contrast = 100
 		var gui = new baseTestUI(redGL)
 		gui.initRedGL()
 		var testData = function () {
@@ -133,6 +134,50 @@
 						console.log(tScene['children'][0]['_filterList'])
 					}
 				})());
+				console.log(k)
+				switch (k) {
+					case 'RedFilter_Threshold':
+						tFolder.add(effectList[k], 'threshold', 1, 255);
+						break;
+					case 'RedFilter_Film':
+						tFolder.add(effectList[k], 'scanlineIntensity', -1, 1, 0.01);
+						tFolder.add(effectList[k], 'noiseIntensity', 0, 1, 0.01);
+						tFolder.add(effectList[k], 'scanlineCount', 0, 4096);
+						tFolder.add(effectList[k], 'grayMode');
+						break;
+					case 'RedFilter_BlurX' :
+					case 'RedFilter_BlurY' :
+						tFolder.add(effectList[k], 'size', 0, 50)
+						break
+					case 'RedFilter_GaussianBlur' :
+						tFolder.add(effectList[k], 'radius', 0, 50)
+						break
+					case 'RedFilter_Pixelize' :
+						tFolder.add(effectList[k], 'width', 0, 50)
+						tFolder.add(effectList[k], 'height', 0, 50)
+						break
+					case 'RedFilter_HueSaturation' :
+						tFolder.add(effectList[k], 'hue', -180, 180)
+						tFolder.add(effectList[k], 'saturation', -100, 100)
+						break
+					case 'RedFilter_BrightnessContrast' :
+						tFolder.add(effectList[k], 'contrast', -50, 100)
+						tFolder.add(effectList[k], 'brightness', -150, 150)
+						break
+					case 'RedFilter_HalfTone' :
+						tFolder.add(effectList[k], 'centerX', -1, 1, 0.01);
+						tFolder.add(effectList[k], 'centerY', -1, 1, 0.01);
+						tFolder.add(effectList[k], 'radius', 0, 25, 0.01);
+						tFolder.add(effectList[k], 'angle', 0, 360, 0.01);
+						tFolder.add(effectList[k], 'grayMode')
+						break
+					case 'RedFilter_Bloom':
+						tFolder.add(effectList[k], 'blur', 0, 100);
+						tFolder.add(effectList[k], 'exposure', 0, 5);
+						tFolder.add(effectList[k], 'bloomStrength', 0, 5);
+						tFolder.add(effectList[k], 'threshold', 1, 255);
+						break;
+				}
 			})();
 
 		}

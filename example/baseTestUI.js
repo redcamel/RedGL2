@@ -2,7 +2,7 @@
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.6 14:20:40
+ *   Last modification time of this file - 2019.8.7 11:21:57
  *
  */
 
@@ -347,6 +347,10 @@ baseTestUI.exampleList = [
 			{
 				key: 'filterTest(3D Mode)',
 				href: 'filter/filterTest_3dMode.html'
+			},
+			{
+				key: 'filters',
+				href: 'filter/RedFilters.html'
 			}
 		]
 	},

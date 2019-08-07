@@ -2,7 +2,7 @@
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.6 14:20:40
+ *   Last modification time of this file - 2019.8.7 11:21:57
  *
  */
 
@@ -60,7 +60,7 @@ var RedFilter_Threshold;
 		redGL instanceof RedGL || RedGLUtil.throwFunc('RedFilter_Threshold : RedGL Instance만 허용.', redGL);
 		this['frameBuffer'] = RedFilterFrameBuffer(redGL);
 		this['diffuseTexture'] = null;
-		this['threshold'] = 128;
+		this['threshold'] = 50;
 		/////////////////////////////////////////
 		// 일반 프로퍼티
 		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
