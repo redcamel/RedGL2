@@ -13,12 +13,13 @@ The main goal of this project is to create a WebGL library that will perform opt
  - [Release Note V3.0](https://github.com/redcamel/RedGL2/releases/tag/Master_V3.0)
  - [Release Note V2.0](https://github.com/redcamel/RedGL2/releases/tag/Master_V2.0)
 
-## [Documentation](https://redcamel.github.io/RedGL2/redDoc/index.html)
-
 ## [Examples](https://redcamel.github.io/RedGL2/example/index.html)
    - See the [example](https://redcamel.github.io/RedGL2/example/index.html). Various examples are available.
    
    ![RedGL](img_example.png)
+
+## [Documentation](https://redcamel.github.io/RedGL2/redDoc/index.html)
+
 
 ## [TestCase](https://redcamel.github.io/RedGL2/testCase/index.html)
 
