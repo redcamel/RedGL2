@@ -2,8 +2,8 @@
 [![Software License](https://img.shields.io/github/license/swisnl/build-size.svg)](LICENSE)
 
 ### JavaScript 3D library
-**이 프로젝트의 기본 지향점은 모든 브라우저 / 디바이스(PC, Mobile)에서 최적의 성능을 내는 webgl 라이브러리를 만드는 것입니다.**
-(The main goal of this project is to create a webgl library that will perform optimally on all browsers / devices (PC, Mobile).)
+**이 프로젝트의 기본 지향점은 모든 브라우저 / 디바이스(PC, Mobile)에서 최적의 성능을 내는 WebGL 라이브러리를 만드는 것입니다.**
+(The main goal of this project is to create a WebGL library that will perform optimally on all browsers / devices (PC, Mobile).)
 
 ### [Release Notes](https://github.com/redcamel/RedGL2/releases) ###
 - [Release Note V7.0](https://github.com/redcamel/RedGL2/releases/tag/Master_V7.0)
