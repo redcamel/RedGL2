@@ -2,7 +2,7 @@
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.7 11:32:13
+ *   Last modification time of this file - 2019.8.7 11:52:14
  *
  */
 
@@ -28145,6 +28145,17 @@ var RedFilterEffectManager;
 				len = tEffectList.length;
 				for (i; i < len; i++) drawEffect(redGL, tEffectList[i], this['children'], redView, tCamera, redRenderer, time, renderInfo, tMesh, 0, len);
 				////////////////////////////////////////////////////////////////////////////
+				if (redView['postEffectManager']['postEffectList'].length) {
+					var tPostEffectManagerFrameBuffer = redView['postEffectManager']['frameBuffer']
+					gl.bindFramebuffer(gl.FRAMEBUFFER, tPostEffectManagerFrameBuffer['webglFrameBuffer']);
+					gl.activeTexture(gl.TEXTURE0);
+					gl.bindTexture(gl.TEXTURE_2D, tPostEffectManagerFrameBuffer['texture']['webglTexture']);
+					// 렌더버퍼 세팅
+					gl.bindRenderbuffer(gl.RENDERBUFFER, tPostEffectManagerFrameBuffer['webglRenderBuffer']);
+					// 프레임버퍼 세팅
+					gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tPostEffectManagerFrameBuffer['texture']['webglTexture'], 0);
+					gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, tPostEffectManagerFrameBuffer['webglRenderBuffer']);
+				}
 				if (lastFrameBufferTexture != originFrameBufferTexture) {
 					this['finalMaterial']['_diffuseTexture'] = lastFrameBufferTexture;
 					tQuadMesh._material = this['finalMaterial'];
@@ -29905,7 +29916,7 @@ var RedFilter_Film;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.7 11:21:57
+ *   Last modification time of this file - 2019.8.7 11:32:14
  *
  */
 
@@ -30435,4 +30446,4 @@ var RedGLOffScreen;
 		};
 		RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
 	})();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-08-07 11:30:49)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-08-07 11:46:16)' };console.log(RedGL_VERSION);

@@ -12,7 +12,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="keywords" content="RedGL,webgl,demo">
-    <title>RedGL Example - Mesh filter Test (2D Mode)</title>
+    <title>RedGL Example - Mesh filter with PostEffect</title>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
@@ -157,6 +157,8 @@
 				testTween(this, tMesh)
 				tScene.addChild(tMesh)
 			}
+			tView['postEffectManager'].addEffect(RedPostEffect_Gray(this))
+			tView['postEffectManager'].addEffect(RedPostEffect_Invert(this))
 			// 렌더시작
 			tRenderer.start(this, function (time) {
 
