@@ -14,7 +14,7 @@
   {
     "constructorYn": true,
     "title": "RedFilter_Film",
-    "description": "\n\t Film 이펙트\n ",
+    "description": "\n\t\t Film 이펙트\n\t ",
     "params": {
       "redGL": [
         {
@@ -26,8 +26,7 @@
       "RedBaseFilter",
       "RedBaseMaterial"
     ],
-    "demo": "../example/postEffect/RedFilter_Film.html",
-    "example": "\n          var effect;\n          effect = RedFilter_Film(RedGL Instance); // 포스트이펙트 생성\n          // postEffectManager는 RedView 생성시 자동생성됨.\n          (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가\n ",
+    "demo": "../example/filter/RedFilter_Film.html",
     "return": "RedFilter_Film Instance"
   },
   {

@@ -35,7 +35,7 @@
         }
       ]
     },
-    "demo": "../example/RedFilter.html",
+    "demo": "../example/RedFilters.html",
     "return": "RedFilterEffectManager Instance"
   },
   {

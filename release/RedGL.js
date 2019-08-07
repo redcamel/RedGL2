@@ -2,7 +2,7 @@
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.7 11:52:14
+ *   Last modification time of this file - 2019.8.7 15:37:40
  *
  */
 
@@ -27751,7 +27751,7 @@ var RedFilterFrameBuffer;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.7 11:21:57
+ *   Last modification time of this file - 2019.8.7 11:52:14
  *
  */
 
@@ -28352,7 +28352,7 @@ var RedFilter_BrightnessContrast;
 		 title :`RedFilter_BrightnessContrast`,
 		 description : `
 			 BrightnessContrast 이펙트
-			 postEffectManager.addEffect( effect Instance ) 로 추가.
+			 filterManager.addEffect( effect Instance ) 로 추가.
 		 `,
 		 params : {
 			 redGL : [
@@ -28363,13 +28363,8 @@ var RedFilter_BrightnessContrast;
 		    'RedBaseFilter',
 		    'RedBaseMaterial'
 		 ],
-		 demo : '../example/postEffect/adjustments/RedFilter_BrightnessContrast.html',
-		 example : `
-            var effect;
-            effect = RedFilter_BrightnessContrast(RedGL Instance); // 포스트이펙트 생성
-            // postEffectManager는 RedView 생성시 자동생성됨.
-            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
-		 `,
+		 demo : '../example/filter/adjustments/RedFilter_BrightnessContrast.html',
+
 		 return : 'RedFilter_BrightnessContrast Instance'
 	 }
 	 :DOC*/
@@ -28468,7 +28463,7 @@ var RedFilter_Gray;
 		 title :`RedFilter_Gray`,
 		 description : `
 			 Gray 이펙트
-			 postEffectManager.addEffect( effect Instance ) 로 추가.
+			 filterManager.addEffect( effect Instance ) 로 추가.
 		 `,
 		 params : {
 			 redGL : [
@@ -28479,13 +28474,8 @@ var RedFilter_Gray;
 			'RedBaseFilter',
 			'RedBaseMaterial'
 		 ],
-		 demo : '../example/postEffect/adjustments/RedFilter_Gray.html',
-		 example : `
-			var effect;
-			effect = RedFilter_Gray(RedGL Instance); // 포스트이펙트 생성
-			// postEffectManager는 RedView 생성시 자동생성됨.
-			(RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
-		 `,
+		 demo : '../example/filter/adjustments/RedFilter_Gray.html',
+
 		 return : 'RedFilter_Gray Instance'
 	 }
 	 :DOC*/
@@ -28547,7 +28537,7 @@ var RedFilter_Invert;
 		 title :`RedFilter_Invert`,
 		 description : `
 			 Invert 이펙트
-			 postEffectManager.addEffect( effect Instance ) 로 추가.
+			 filterManager.addEffect( effect Instance ) 로 추가.
 		 `,
 		 params : {
 			 redGL : [
@@ -28558,13 +28548,8 @@ var RedFilter_Invert;
 			'RedBaseFilter',
 			'RedBaseMaterial'
 		 ],
-		 demo : '../example/postEffect/adjustments/RedFilter_Invert.html',
-		 example : `
-			var effect;
-			effect = RedFilter_Invert(RedGL Instance); // 포스트이펙트 생성
-			// postEffectManager는 RedView 생성시 자동생성됨.
-			(RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
-		 `,
+		 demo : '../example/filter/adjustments/RedFilter_Invert.html',
+
 		 return : 'RedFilter_Invert Instance'
 	 }
 	 :DOC*/
@@ -28626,7 +28611,7 @@ var RedFilter_Threshold;
 		 title :`RedFilter_Threshold`,
 		 description : `
 			 Threshold 이펙트
-			 postEffectManager.addEffect( effect Instance ) 로 추가.
+			 filterManager.addEffect( effect Instance ) 로 추가.
 		 `,
 		 params : {
 			 redGL : [
@@ -28637,13 +28622,8 @@ var RedFilter_Threshold;
 		    'RedBaseFilter',
 		    'RedBaseMaterial'
 		 ],
-		 demo : '../example/postEffect/adjustments/RedFilter_Threshold.html',
-		 example : `
-            var effect;
-            effect = RedFilter_Threshold(RedGL Instance); // 포스트이펙트 생성
-            // postEffectManager는 RedView 생성시 자동생성됨.
-            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
-		 `,
+		 demo : '../example/filter/adjustments/RedFilter_Threshold.html',
+
 		 return : 'RedFilter_Threshold Instance'
 	 }
 	 :DOC*/
@@ -28743,7 +28723,7 @@ var RedFilter_HueSaturation;
 		 title :`RedFilter_HueSaturation`,
 		 description : `
 			 HueSaturation 이펙트
-			 postEffectManager.addEffect( effect Instance ) 로 추가.
+			 filterManager.addEffect( effect Instance ) 로 추가.
 		 `,
 		 params : {
 			 redGL : [
@@ -28754,13 +28734,8 @@ var RedFilter_HueSaturation;
 		    'RedBaseFilter',
 		    'RedBaseMaterial'
 		 ],
-		 demo : '../example/postEffect/adjustments/RedFilter_HueSaturation.html',
-		 example : `
-            var effect;
-            effect = RedFilter_HueSaturation(RedGL Instance); // 포스트이펙트 생성
-            // postEffectManager는 RedView 생성시 자동생성됨.
-            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
-		 `,
+		 demo : '../example/filter/adjustments/RedFilter_HueSaturation.html',
+
 		 return : 'RedFilter_HueSaturation Instance'
 	 }
 	 :DOC*/
@@ -28875,7 +28850,7 @@ var RedFilter_Blur;
 		 title :`RedFilter_Blur`,
 		 description : `
 			 기본 블러 이펙트
-			 postEffectManager.addEffect( effect Instance ) 로 추가.
+			 filterManager.addEffect( effect Instance ) 로 추가.
 		 `,
 		 params : {
 			 redGL : [
@@ -28886,13 +28861,8 @@ var RedFilter_Blur;
 			'RedBaseFilter',
 			'RedBaseMaterial'
 		 ],
-		 demo : '../example/postEffect/blur/RedFilter_Blur.html',
-		 example : `
-			var effect;
-			effect = RedFilter_Blur(RedGL Instance); // 포스트이펙트 생성
-			// postEffectManager는 RedView 생성시 자동생성됨.
-			(RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
-		 `,
+		 demo : '../example/filter/blur/RedFilter_Blur.html',
+
 		 return : 'RedFilter_Blur Instance'
 	 }
 	 :DOC*/
@@ -28980,13 +28950,8 @@ var RedFilter_BlurX;
 		    'RedBaseFilter',
 		    'RedBaseMaterial'
 		 ],
-		 demo : '../example/postEffect/blur/RedFilter_BlurX.html',
-		 example : `
-            var effect;
-            effect = RedFilter_BlurX(RedGL Instance); // 포스트이펙트 생성
-            // postEffectManager는 RedView 생성시 자동생성됨.
-            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
-		 `,
+		 demo : '../example/filter/blur/RedFilter_BlurX.html',
+
 		 return : 'RedFilter_BlurX Instance'
 	 }
 	 :DOC*/
@@ -29090,13 +29055,8 @@ var RedFilter_BlurY;
 		    'RedBaseFilter',
 		    'RedBaseMaterial'
 		 ],
-		 demo : '../example/postEffect/blur/RedFilter_BlurY.html',
-		 example : `
-            var effect;
-            effect = RedFilter_BlurY(RedGL Instance); // 포스트이펙트 생성
-            // postEffectManager는 RedView 생성시 자동생성됨.
-            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
-		 `,
+		 demo : '../example/filter/blur/RedFilter_BlurY.html',
+
 		 return : 'RedFilter_BlurY Instance'
 	 }
 	 :DOC*/
@@ -29166,13 +29126,8 @@ var RedFilter_GaussianBlur;
 		    'RedBaseFilter',
 		    'RedBaseMaterial'
 		 ],
-		 demo : '../example/postEffect/blur/RedFilter_GaussianBlur.html',
-		 example : `
-            var effect;
-            effect = RedFilter_GaussianBlur(RedGL Instance); // 포스트이펙트 생성
-            // postEffectManager는 RedView 생성시 자동생성됨.
-            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
-		 `,
+		 demo : '../example/filter/blur/RedFilter_GaussianBlur.html',
+
 		 return : 'RedFilter_GaussianBlur Instance'
 	 }
 	 :DOC*/
@@ -29264,13 +29219,8 @@ var RedFilter_Pixelize;
 		    'RedBaseFilter',
 		    'RedBaseMaterial'
 		 ],
-		 demo : '../example/postEffect/pixelate/RedFilter_Pixelize.html',
-		 example : `
-            var effect;
-            effect = RedFilter_Pixelize(RedGL Instance); // 포스트이펙트 생성
-            // postEffectManager는 RedView 생성시 자동생성됨.
-            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
-		 `,
+		 demo : '../example/filter/pixelate/RedFilter_Pixelize.html',
+
 		 return : 'RedFilter_Pixelize Instance'
 	 }
 	 :DOC*/
@@ -29397,13 +29347,8 @@ var RedFilter_HalfTone;
 		    'RedBaseFilter',
 		    'RedBaseMaterial'
 		 ],
-		 demo : '../example/postEffect/pixelate/RedFilter_HalfTone.html',
-		 example : `
-            var effect;
-            effect = RedFilter_HalfTone(RedGL Instance); // 포스트이펙트 생성
-            // postEffectManager는 RedView 생성시 자동생성됨.
-            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
-		 `,
+		 demo : '../example/filter/pixelate/RedFilter_HalfTone.html',
+
 		 return : 'RedFilter_HalfTone Instance'
 	 }
 	 :DOC*/
@@ -29531,7 +29476,7 @@ var RedFilter_Bloom;
 		 title :`RedFilter_Bloom`,
 		 description : `
 			 Bloom 이펙트
-			 postEffectManager.addEffect( effect Instance ) 로 추가.
+			 filterManager.addEffect( effect Instance ) 로 추가.
 		 `,
 		 params : {
 			 redGL : [
@@ -29542,13 +29487,8 @@ var RedFilter_Bloom;
 		    'RedBaseFilter',
 		    'RedBaseMaterial'
 		 ],
-		 demo : '../example/postEffect/bloom/RedFilter_Bloom.html',
-		 example : `
-            var effect;
-            effect = RedFilter_Bloom(RedGL Instance); // 포스트이펙트 생성
-            // postEffectManager는 RedView 생성시 자동생성됨.
-            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
-		 `,
+		 demo : '../example/filter/bloom/RedFilter_Bloom.html',
+
 		 return : 'RedFilter_Bloom Instance'
 	 }
 	 :DOC*/
@@ -29699,12 +29639,7 @@ var RedFilter_BloomThreshold;
 		    'RedBaseFilter',
 		    'RedBaseMaterial'
 		 ],
-		 example : `
-            var effect;
-            effect = RedFilter_BloomThreshold(RedGL Instance); // 포스트이펙트 생성
-            // postEffectManager는 RedView 생성시 자동생성됨.
-            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
-		 `,
+
 		 return : 'RedFilter_BloomThreshold Instance'
 	 }
 	 :DOC*/
@@ -29822,13 +29757,8 @@ var RedFilter_Film;
 		    'RedBaseFilter',
 		    'RedBaseMaterial'
 		 ],
-		 demo : '../example/postEffect/RedFilter_Film.html',
-		 example : `
-            var effect;
-            effect = RedFilter_Film(RedGL Instance); // 포스트이펙트 생성
-            // postEffectManager는 RedView 생성시 자동생성됨.
-            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
-		 `,
+		 demo : '../example/filter/RedFilter_Film.html',
+
 		 return : 'RedFilter_Film Instance'
 	 }
 	 :DOC*/
@@ -29966,13 +29896,8 @@ var RedFilter_Convolution;
 		    'RedBaseFilter',
 		    'RedBaseMaterial'
 		 ],
-		 demo : '../example/postEffect/RedFilter_Convolution.html',
-		 example : `
-            var effect;
-            effect = RedFilter_DoF(RedGL Instance, RedFilter_Convolution.SHARPEN); // 포스트이펙트 생성
-            // postEffectManager는 RedView 생성시 자동생성됨.
-            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
-		 `,
+		 demo : '../example/filter/RedFilter_Convolution.html',
+
 		 return : 'RedFilter_Convolution Instance'
 	 }
 	 :DOC*/
@@ -30446,4 +30371,4 @@ var RedGLOffScreen;
 		};
 		RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
 	})();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-08-07 11:46:16)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-08-07 15:35:28)' };console.log(RedGL_VERSION);

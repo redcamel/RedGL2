@@ -1,0 +1,32 @@
+[
+  {
+    "code": "PROPERTY",
+    "title": "brightness",
+    "description": "\n\t 밝기\n\t 기본값 : 0\n\t min : -150\n\t max : 150\n ",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "contrast",
+    "description": "\n\t 대조\n\t 기본값 : 0\n\t min: -50\n\t max: 100\n ",
+    "return": "Number"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedFilter_BrightnessContrast",
+    "description": "\n\t\t BrightnessContrast 이펙트\n\t\t filterManager.addEffect( effect Instance ) 로 추가.\n\t ",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ]
+    },
+    "extends": [
+      "RedBaseFilter",
+      "RedBaseMaterial"
+    ],
+    "demo": "../example/filter/adjustments/RedFilter_BrightnessContrast.html",
+    "return": "RedFilter_BrightnessContrast Instance"
+  }
+]
