@@ -2,7 +2,7 @@
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.7 15:37:41
+ *   Last modification time of this file - 2019.8.7 15:42:44
  *
  */
 
@@ -32,8 +32,8 @@ var RedFilter_BloomThreshold;
 		 constructorYn : true,
 		 title :`RedFilter_BloomThreshold`,
 		 description : `
-			 BloomThreshold 이펙트
-			 RedFilter_Bloom 내부에서 사용하는 절차 이펙트
+			 BloomThreshold 필터
+			 RedFilter_Bloom 내부에서 사용하는 절차 필터
 			 시스템적으로 사용됨.
 		 `,
 		 params : {

@@ -2,7 +2,7 @@
   {
     "constructorYn": true,
     "title": "RedFilter_BloomThreshold",
-    "description": "\n\t\t BloomThreshold 이펙트\n\t\t RedFilter_Bloom 내부에서 사용하는 절차 이펙트\n\t\t 시스템적으로 사용됨.\n\t ",
+    "description": "\n\t\t BloomThreshold 필터\n\t\t RedFilter_Bloom 내부에서 사용하는 절차 필터\n\t\t 시스템적으로 사용됨.\n\t ",
     "params": {
       "redGL": [
         {

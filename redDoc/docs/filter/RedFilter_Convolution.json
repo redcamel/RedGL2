@@ -8,7 +8,7 @@
   {
     "constructorYn": true,
     "title": "RedFilter_Convolution",
-    "description": "\n\t\t Convolution 이펙트\n\t ",
+    "description": "\n\t\t Convolution 필터\n\t ",
     "params": {
       "redGL": [
         {
