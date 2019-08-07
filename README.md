@@ -16,7 +16,7 @@
 
 ### [Documentation](https://redcamel.github.io/RedGL2/redDoc/index.html)
 ### [Examples](https://redcamel.github.io/RedGL2/example/index.html)
-   - See the example. Various examples are available.
+   - See the [example](https://redcamel.github.io/RedGL2/example/index.html). Various examples are available.
 ### [TestCase](https://redcamel.github.io/RedGL2/testCase/index.html)
 
 ### Usage
