@@ -1,8 +1,9 @@
 /*
- * RedGL - MIT License
- * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
- * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2019.8.2 18:16:21
+ *
  */
 
 "use strict";
@@ -233,6 +234,174 @@ RedGL(document.createElement('canvas'), function () {
 							},
 							true
 						);
+					}
+				);
+				RedTest.testGroup(
+					"(RedBaseObject3D extended Instance).<b>addFilter</b>( filter )",
+					function () {
+						RedTest.test(
+							"실패테스트 : 미입력",
+							function () {
+
+								var t0 = RedMesh(
+									tRedGL,
+									RedBox(tRedGL),
+									RedColorMaterial(tRedGL)
+								);
+								try {
+									t0.addFilter(null);
+									RedTest.run(true);
+
+								} catch (error) {
+									RedTest.run(false, error);
+
+								}
+
+							},
+							false
+						);
+						RedTest.test(
+							"성공테스트 : RedBaseFilter 확장 인스턴스 입력",
+							function () {
+
+								var t0 = RedMesh(
+									tRedGL,
+									RedBox(tRedGL),
+									RedColorMaterial(tRedGL)
+								);
+								var tFilter0 = RedFilter_Gray(tRedGL);
+								t0.addFilter(tFilter0);
+								RedTest.run(t0['_filterList'][0] === tFilter0);
+
+
+							},
+							true
+						);
+						RedTest.test(
+							"실패테스트 : 문자입력",
+							function () {
+
+								var t0 = RedMesh(
+									tRedGL,
+									RedBox(tRedGL),
+									RedColorMaterial(tRedGL)
+								);
+								try {
+									t0.addFilter('failTest');
+									RedTest.run(true);
+
+								} catch (error) {
+									RedTest.run(false, error);
+
+								}
+
+							},
+							false
+						);
+						RedTest.test(
+							"성공테스트 : 추가후 _filterList.length 정상적으로 늘어나는지 확인",
+							function () {
+
+								var t0 = RedMesh(
+									tRedGL,
+									RedBox(tRedGL),
+									RedColorMaterial(tRedGL)
+								);
+								var tFilter0 = RedFilter_Gray(tRedGL);
+								t0.addFilter(tFilter0);
+								t0.addFilter(tFilter0);
+								RedTest.run(t0['_filterList'].length);
+
+
+							}, 2)
+					}
+				);
+				RedTest.testGroup(
+					"(RedBaseObject3D extended Instance).<b>removeFilter</b>( filter )",
+					function () {
+						RedTest.test(
+							"성공테스트 : 동작 확인",
+							function () {
+
+								var t0 = RedMesh(
+									tRedGL,
+									RedBox(tRedGL),
+									RedColorMaterial(tRedGL)
+								);
+								var tFilter0 = RedFilter_Gray(tRedGL);
+								t0.addFilter(tFilter0);
+								t0.removeFilter(tFilter0);
+								RedTest.run(t0['_filterList'].length);
+
+
+							}, 0);
+						RedTest.test(
+							"성공테스트 : 미입력 해도 에러가 안나야함",
+							function () {
+
+								var t0 = RedMesh(
+									tRedGL,
+									RedBox(tRedGL),
+									RedColorMaterial(tRedGL)
+								);
+								try {
+									t0.removeFilter();
+									RedTest.run(true);
+
+								} catch (error) {
+									RedTest.run(false, error);
+
+								}
+
+							},
+							true
+						);
+						RedTest.test(
+							"성공테스트 : _filterList에 없는 녀석을 제거를 시도해도 에러가 안나야함",
+							function () {
+
+								var t0 = RedMesh(
+									tRedGL,
+									RedBox(tRedGL),
+									RedColorMaterial(tRedGL)
+								);
+								var tFilter0 = RedFilter_Gray(tRedGL);
+								t0.addFilter(tFilter0);
+								t0.removeFilter(RedFilter_Threshold(tRedGL));
+								RedTest.run(t0['_filterList'].length);
+
+
+							}, 1)
+					}
+				);
+				RedTest.testGroup(
+					"(RedBaseObject3D extended Instance).<b>removeAllFilter</b>()",
+					function () {
+						RedTest.test(
+							"동작 확인",
+							function () {
+
+								var t0 = RedMesh(
+									tRedGL,
+									RedBox(tRedGL),
+									RedColorMaterial(tRedGL)
+								);
+								var tFilter0 = RedFilter_Gray(tRedGL);
+								t0.addFilter(tFilter0);
+								t0.addFilter(tFilter0);
+								t0.addFilter(tFilter0);
+								t0.addFilter(tFilter0);
+								t0.addFilter(tFilter0);
+								t0.addFilter(tFilter0);
+								t0.addFilter(tFilter0);
+								t0.addFilter(tFilter0);
+								t0.addFilter(tFilter0);
+								console.log(t0['_filterList'].length);
+								t0.removeAllFilter();
+								RedTest.run(t0['_filterList'].length);
+
+
+							}, 0)
 					}
 				);
 			}

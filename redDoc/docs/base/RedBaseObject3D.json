@@ -1,5 +1,18 @@
 [
   {
+    "title": "addFilter",
+    "code": "METHOD",
+    "description": "\n\t\tfilter 추가\n\t",
+    "params": {
+      "filter": [
+        {
+          "type": "RedBaseFilter Instance"
+        }
+      ]
+    },
+    "return": "void"
+  },
+  {
     "title": "addLOD",
     "code": "METHOD",
     "description": "\n\t LOD 추가.\n\t 추가시 geometry, material 둘중 하나는 반드시 입력되어야함.\n ",
@@ -276,6 +289,25 @@
       ]
     },
     "example": "\n var testMesh = function (redGL) {\n\t var tGL;\n\t tGL = redGL.gl;\n\t RedBaseObject3D['build'].call(this, tGL)\n }\n ",
+    "return": "void"
+  },
+  {
+    "title": "removeAllFilter",
+    "code": "METHOD",
+    "description": "\n\t\t모든 filter 제거\n\t",
+    "return": "void"
+  },
+  {
+    "title": "removeFilter",
+    "code": "METHOD",
+    "description": "\n\t\tfilter 제거\n\t",
+    "params": {
+      "filter": [
+        {
+          "type": "RedBaseFilter Instance"
+        }
+      ]
+    },
     "return": "void"
   },
   {

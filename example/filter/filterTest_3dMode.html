@@ -1,0 +1,181 @@
+<!--
+  ~   RedGL - MIT License
+  ~   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+  ~   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+  ~   Last modification time of this file - 2019.8.6 14:20:40
+  ~
+  -->
+
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="RedGL,webgl,demo">
+    <title>RedGL Example - Mesh filter Test (3D Mode)</title>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
+    />
+    <link rel="stylesheet" href="../example.css">
+
+    <script src="../dat.gui.min.js"></script>
+    <script src="../baseTestUI.js"></script>
+    <script src="../../release/RedGL.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.2/TweenMax.min.js"></script>
+</head>
+<body>
+<script id='testSource'>
+	var testUI;
+	var canvas;
+	var assetPath = '../../asset/'
+	var tMaterial;
+	var tMaterial2;
+	var testTween = function (redGL, target) {
+		var tScale = Math.random() * 10
+		TweenMax.to(target, Math.random() * 2 + 1, {
+			x: Math.random() * 150 - 75,
+			y: Math.random() * 150 - 75,
+			z: Math.random() * 150 - 75,
+			scaleX: tScale,
+			scaleY: tScale,
+			scaleZ: tScale,
+			rotationX: Math.random() * 360,
+			rotationY: Math.random() * 360,
+			rotationZ: Math.random() * 360,
+			ease: Ease.QuintInOut,
+			onComplete: function () {
+				testTween(redGL, this.target)
+			}
+		})
+	}
+	canvas = document.createElement('canvas');
+	document.body.appendChild(canvas);
+	var testFilter_BlurX
+	var testFilter_BlurY
+
+	var testFilter_Blur
+	var testFilter_Gray
+	var testFilter_Invert
+	var testFilter_Pixelize
+	var testFilter_HalfTone
+	var testFilter_Threshold
+	var testFilter_Bloom
+	var testFilter_Film
+	var testFilter_HueSaturation
+	var testFilter_GaussianBlur
+	RedGL(canvas, function (v) {
+		if (v) {
+			console.log('초기화 성공!');
+			var tWorld, tView, tScene, tCamera, tRenderer;
+			var setBase = function (redGL) {
+				// 월드 생성
+				redGL['world'] = tWorld = RedWorld();
+				// 씬 생성
+				tScene = RedScene(redGL);
+				// 카메라 생성
+				tCamera = RedObitController(redGL);
+				tCamera.tilt = -45
+				tCamera.distance = 150
+				// 렌더러 생성
+				tRenderer = RedRenderer();
+				// 뷰생성 및 적용
+				tView = RedView(redGL, tScene, tCamera);
+				tWorld.addView(tView);
+				// 그리드 설정
+
+				tScene['skyBox'] = RedSkyBox(redGL, [
+					assetPath + 'cubemap/posx.png',
+					assetPath + 'cubemap/negx.png',
+					assetPath + 'cubemap/posy.png',
+					assetPath + 'cubemap/negy.png',
+					assetPath + 'cubemap/posz.png',
+					assetPath + 'cubemap/negz.png'
+				])
+				// 렌더 디버거 활성화
+				tRenderer.setDebugButton();
+				testUI(redGL, tScene)
+			};
+			setBase(this);
+
+			// 필터 설정
+
+			testFilter_BlurX = RedFilter_BlurX(this)
+			testFilter_BlurX.size = 30
+			testFilter_BlurY = RedFilter_BlurY(this)
+			testFilter_BlurY.size = 30
+			testFilter_Blur = RedFilter_Blur(this)
+			testFilter_Gray = RedFilter_Gray(this)
+			testFilter_Invert = RedFilter_Invert(this)
+			testFilter_Pixelize = RedFilter_Pixelize(this)
+			testFilter_Pixelize.width = 15
+			testFilter_Pixelize.height = 15
+			testFilter_HalfTone = RedFilter_HalfTone(this)
+			testFilter_HalfTone.grayMode = true
+			testFilter_Threshold = RedFilter_Threshold(this)
+			testFilter_Threshold.threshold = 64
+			testFilter_Bloom = RedFilter_Bloom(this)
+			testFilter_Bloom.exposure = 2
+			testFilter_Bloom.blur = 30
+			testFilter_Film = RedFilter_Film(this)
+			testFilter_HueSaturation = RedFilter_HueSaturation(this)
+			testFilter_HueSaturation.hue = 100
+			testFilter_GaussianBlur = RedFilter_GaussianBlur(this)
+			testFilter_GaussianBlur.radius = 30
+
+			// Mesh 설정
+			var tMesh;
+			var i = 0, len = 100
+			tMaterial = RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'crate.png'))
+			tMaterial2 = RedBitmapMaterial(this, RedBitmapTexture(this, assetPath + 'UV_Grid_Sm.jpg'))
+			for (i; i < len; i++) {
+				// 2D 테스트용
+				var t = Math.random()
+				if (t < 0.25) tMesh = RedMesh(this, RedSphere(this), tMaterial)
+				else if (t < 0.50) tMesh = RedMesh(this, RedBox(this), tMaterial)
+				else if (t < 0.75) tMesh = RedMesh(this, RedCylinder(this), tMaterial)
+				else {
+					tMesh = RedMesh(this, RedPlane(this), tMaterial)
+					tMesh.useCullFace = false
+				}
+
+				tMesh.x = Math.random() * 100 - 50
+				tMesh.y = Math.random() * 100 - 50
+				tMesh.z = Math.random() * 100 - 50
+				tMesh.rotationX = Math.random() * 360
+				tMesh.rotationY = Math.random() * 360
+				tMesh.rotationZ = Math.random() * 360
+				tMesh.scaleX = tMesh.scaleY = tMesh.scaleZ = 5
+
+
+				if (i % 8 == 0) tMesh.addFilter(testFilter_Gray)
+				else if (i % 8 == 1) tMesh.addFilter(testFilter_Invert)
+				else if (i % 8 == 2) tMesh.addFilter(testFilter_Pixelize)
+				else if (i % 8 == 3) tMesh.addFilter(testFilter_HalfTone)
+				else if (i % 8 == 4) tMesh.addFilter(testFilter_Threshold)
+				else if (i % 8 == 5) tMesh.addFilter(testFilter_Bloom)
+				else if (i % 8 == 6) tMesh.addFilter(testFilter_Film)
+				else if (i % 8 == 7) tMesh.addFilter(testFilter_HueSaturation)
+
+				testTween(this, tMesh)
+				tScene.addChild(tMesh)
+			}
+
+			// 렌더시작
+			tRenderer.start(this, function (time) {
+			});
+			console.log(this)
+		} else {
+			console.log('초기화 실패!')
+		}
+	})
+	testUI = function (redGL, tScene) {
+		var gui = new baseTestUI(redGL);
+		gui.initRedGL();
+	}
+</script>
+</body>
+
+</html>

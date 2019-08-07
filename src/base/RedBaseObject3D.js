@@ -2,7 +2,7 @@
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.7.10 15:43:31
+ *   Last modification time of this file - 2019.8.2 18:16:21
  *
  */
 "use strict";
@@ -386,10 +386,64 @@ var RedBaseObject3D;
 		this['_outlineAlpha'] = 1;
 		this['_outlineColor'] = new Float32Array(4)
 		this['outlineColor'] = '#ff0000';
-
+		this['_filterList'] = [];
 
 	};
 	RedBaseObject3D.prototype = {
+		/*DOC:
+		 {
+			title :`addFilter`,
+			code : 'METHOD',
+			description : `
+				filter 추가
+			`,
+			params : {
+				filter : [
+					{type:'RedBaseFilter Instance'}
+				]
+			},
+			return : 'void'
+		}
+		 :DOC*/
+		addFilter: function (filter) {
+			filter instanceof RedBaseFilter || RedGLUtil.throwFunc('RedFilterEffectManager : addFilter - RedBaseFilter Instance만 허용.', '입력값 : ' + filter);
+			this['_filterList'].push(filter);
+		},
+		/*DOC:
+		 {
+			title :`removeFilter`,
+			code : 'METHOD',
+			description : `
+				filter 제거
+			`,
+			params : {
+				filter : [
+					{type:'RedBaseFilter Instance'}
+				]
+			},
+			return : 'void'
+		}
+		 :DOC*/
+		removeFilter: (function () {
+			var t0;
+			return function (filter) {
+				t0 = this['_filterList'].indexOf(filter);
+				if (t0 != -1) this['_filterList'].splice(t0, 1);
+			}
+		})(),
+		/*DOC:
+		 {
+			title :`removeAllFilter`,
+			code : 'METHOD',
+			description : `
+				모든 filter 제거
+			`,
+			return : 'void'
+		}
+		 :DOC*/
+		removeAllFilter: function () {
+			this['_filterList'].length = 0;
+		},
 		/*DOC:
 		 {
 			 title :`addLOD`,
