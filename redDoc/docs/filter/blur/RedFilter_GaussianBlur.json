@@ -8,7 +8,7 @@
   {
     "constructorYn": true,
     "title": "RedFilter_GaussianBlur",
-    "description": "\n\t\t 가우시안 블러 이펙트\n\t ",
+    "description": "\n\t\t 가우시안 블러 필터\n\t ",
     "params": {
       "redGL": [
         {

@@ -32,7 +32,7 @@
   {
     "constructorYn": true,
     "title": "RedFilter_HalfTone",
-    "description": "\n\t\t HalfTone 이펙트\n\t ",
+    "description": "\n\t\t HalfTone 필터\n\t ",
     "params": {
       "redGL": [
         {

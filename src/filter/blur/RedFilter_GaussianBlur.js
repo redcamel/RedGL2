@@ -2,7 +2,7 @@
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.7 15:37:41
+ *   Last modification time of this file - 2019.8.7 15:42:44
  *
  */
 
@@ -14,7 +14,7 @@ var RedFilter_GaussianBlur;
 		 constructorYn : true,
 		 title :`RedFilter_GaussianBlur`,
 		 description : `
-			 가우시안 블러 이펙트
+			 가우시안 블러 필터
 		 `,
 		 params : {
 			 redGL : [
