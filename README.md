@@ -29,34 +29,34 @@ canvas = document.createElement('canvas');
 document.body.appendChild(canvas);
 RedGL(canvas, function (v) {
     if (v) {
-        console.log('초기화 성공!');
+        console.log('Initialization successful!');
         var tWorld, tView, tScene, tController, tRenderer;
-        // 월드 생성
+        // create RedWorld Instance
         this['world'] = tWorld = RedWorld();
-        // 씬 생성
+        // create RedScene Instance
         tScene = RedScene(this);
-        // 카메라 생성
+        // create camera
         tController = RedObitController(this);
         tController.pan = 45;
         tController.tilt = -45;
-        // 렌더러 생성
+        // create RedRenderer
         tRenderer = RedRenderer();
-        // 뷰생성 및 적용
+        // create a RedView instance and add to the RedWorld instance
         tView = RedView('HelloRedGL', this, tScene, tController);
         tWorld.addView(tView);
-        // 그리드 설정
+        // set grid debuger
         tScene['grid'] = RedGrid(this);
-        // axis 설정
+        // set axis debuger
         tScene['axis'] = RedAxis(this);
-        // 렌더시작
+        // start rendering
         tRenderer.start(this, function (time) {
           console.log(time)
         });
-        // 렌더 디버거 활성화
+        // set renderDebugPanel
         tRenderer.setDebugButton();
         console.log(this);
     } else {
-        alert('초기화 실패!')
+        alert('Initialization fail!')
     }
 });
 ```
