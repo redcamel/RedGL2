@@ -1,0 +1,33 @@
+[
+  {
+    "code": "PROPERTY",
+    "title": "hue",
+    "description": "\n\t 색조\n\t 기본값 : 0\n\t min: -180\n\t max: 180\n ",
+    "return": "Number"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedFilter_HueSaturation",
+    "description": "\n\t HueSaturation 이펙트\n\t postEffectManager.addEffect( effect Instance ) 로 추가.\n ",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ]
+    },
+    "extends": [
+      "RedBaseFilter",
+      "RedBaseMaterial"
+    ],
+    "demo": "../example/postEffect/adjustments/RedFilter_HueSaturation.html",
+    "example": "\n          var effect;\n          effect = RedFilter_HueSaturation(RedGL Instance); // 포스트이펙트 생성\n          // postEffectManager는 RedView 생성시 자동생성됨.\n          (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가\n ",
+    "return": "RedFilter_HueSaturation Instance"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "saturation",
+    "description": "\n\t 채도\n\t 기본값 : 0\n\t min: -100\n\t max: 100\n ",
+    "return": "Number"
+  }
+]

@@ -1,0 +1,23 @@
+[
+  {
+    "title": "_process",
+    "code": "PROPERTY",
+    "description": "\n\t\t해당메쉬 필터 처리전 전처리과정이 필요할 경우 사용.\n\t",
+    "return": "void"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedBaseFilter",
+    "description": "\n\t 메쉬 필터 정의 사용되는 기저층\n ",
+    "extends": [
+      "RedBaseMaterial"
+    ],
+    "return": "RedBaseFilter Instance"
+  },
+  {
+    "title": "updateTexture",
+    "code": "METHOD",
+    "description": "\n\t\t메쉬 필터 정의시 반드시 재정의 되어야함.\n\t\t메쉬 필터 내부에서 사용되는 텍스쳐를 업데이트함.\n\t",
+    "return": "void"
+  }
+]

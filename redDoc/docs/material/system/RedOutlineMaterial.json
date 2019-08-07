@@ -1,0 +1,44 @@
+[
+  {
+    "code": "PROPERTY",
+    "title": "alpha",
+    "description": "\n    기본값 : 1\n    최소값 : 0\n    최대값 : 1\n       ",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "color",
+    "description": "기본값 : #ff2211",
+    "return": "hex"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedOutlineMaterial",
+    "description": "\n\t RedOutlineMaterial Instance 생성\n ",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ],
+      "hexColor": [
+        {
+          "type": "hex"
+        },
+        "기본값 : #ff0000"
+      ],
+      "alpha": [
+        {
+          "type": "number"
+        },
+        "기본값 : 1"
+      ]
+    },
+    "extends": [
+      "RedBaseMaterial"
+    ],
+    "demo": "../example/material/RedOutlineMaterial.html",
+    "example": "\n\t RedOutlineMaterial(RedGL Instance, hex)\n ",
+    "return": "RedOutlineMaterial Instance"
+  }
+]

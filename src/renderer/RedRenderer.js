@@ -2,7 +2,7 @@
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.7.12 14:22:52
+ *   Last modification time of this file - 2019.8.6 17:36:26
  *
  */
 
@@ -298,6 +298,7 @@ var RedRenderer;
 			tRenderInfo['y'] = tView['_y'];
 			tRenderInfo['width'] = tView['_width'];
 			tRenderInfo['height'] = tView['_height'];
+			tRenderInfo['view'] = tView;
 			tRenderInfo['viewRectX'] = tViewRect[0];
 			tRenderInfo['viewRectY'] = tViewRect[1];
 			tRenderInfo['viewRectWidth'] = tViewRect[2];
@@ -707,9 +708,9 @@ var RedRenderer;
 						a10 = 0, a11 = 1, a12 = 0,
 						a20 = 0, a21 = 0, a22 = 1,
 						// tLocalMatrix translate
-						tLocalMatrix[12] = tMesh['x'] + tMesh['pivotX'],
-						tLocalMatrix[13] = (tMesh['y'] + tMesh['pivotY']) * (mode2DYn ? -1 : 1),
-						tLocalMatrix[14] = tMesh['z'] + tMesh['pivotZ'],
+						tLocalMatrix[12] = tMesh['x'] ,
+						tLocalMatrix[13] = tMesh['y'] * (mode2DYn ? -1 : 1),
+						tLocalMatrix[14] = tMesh['z'],
 						tLocalMatrix[15] = 1,
 						// tLocalMatrix rotate
 						tSprite3DYn ?
@@ -767,7 +768,7 @@ var RedRenderer;
 						// tLocalMatrix[4] = tLocalMatrix[4] * aY, tLocalMatrix[5] = tLocalMatrix[5] * aY, tLocalMatrix[6] = tLocalMatrix[6] * aY, tLocalMatrix[7] = tLocalMatrix[7] * aY,
 						// tLocalMatrix[8] = tLocalMatrix[8] * aZ, tLocalMatrix[9] = tLocalMatrix[9] * aZ, tLocalMatrix[10] = tLocalMatrix[10] * aZ, tLocalMatrix[11] = tLocalMatrix[11] * aZ,
 						// tLocalMatrix[12] = tLocalMatrix[12], tLocalMatrix[13] = tLocalMatrix[13], tLocalMatrix[14] = tLocalMatrix[14], tLocalMatrix[15] = tLocalMatrix[15],
-						(tMesh['pivotX'] || tMesh['pivotY']* (mode2DYn ? -1 : 1) || tMesh['pivotZ']) ? (
+						(tMesh['pivotX'] || tMesh['pivotY'] || tMesh['pivotZ']) ? (
 							// 피봇처리
 							// 매트립스 곱
 							a00 = tLocalMatrix[0], a01 = tLocalMatrix[1], a02 = tLocalMatrix[2], a03 = tLocalMatrix[3],
@@ -790,7 +791,13 @@ var RedRenderer;
 								tLocalMatrix[9] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
 								tLocalMatrix[10] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
 								tLocalMatrix[11] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33,
-								b0 = tMesh['pivotX'], b1 = tMesh['pivotY'], b2 = tMesh['pivotZ'], b3 = 1,
+								mode2DYn
+									? (
+										parentMTX
+											? (b0 = -tMesh['pivotX'], b1 = tMesh['pivotY'], b2 = -tMesh['pivotZ'], b3 = 1)
+											: (b0 = -tMesh['pivotX'] / aX, b1 = tMesh['pivotY'] / aY, b2 = -tMesh['pivotZ'], b3 = 1)
+									)
+									: (b0 = -tMesh['pivotX'], b1 = -tMesh['pivotY'], b2 = -tMesh['pivotZ'], b3 = 1),
 								tLocalMatrix[12] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30,
 								tLocalMatrix[13] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
 								tLocalMatrix[14] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
@@ -1062,21 +1069,54 @@ var RedRenderer;
 				}
 
 
-				// 드로우
-				if (tIndexBufferInfo) {
-					tPrevIndexBuffer_UUID == tIndexBufferInfo['_UUID'] ? 0 : tGL.bindBuffer(tGL.ELEMENT_ARRAY_BUFFER, tIndexBufferInfo['webglBuffer']);
-					//enum mode, long count, enum type, long offset
-					tGL.drawElements(
-						tMesh['drawMode'],
-						tIndexBufferInfo['pointNum'],
-						tIndexBufferInfo['glArrayType'],
-						0
-					);
-					tPrevIndexBuffer_UUID = tIndexBufferInfo['_UUID'];
-					renderResultObj['triangleNum'] += tIndexBufferInfo['triangleNum'];
+				if (!worldRender_self['_filterManager']) {
+					worldRender_self['_filterManager'] = RedFilterEffectManager(redGL)
+				}
+				if (tMesh['_filterList'].length && tMesh != worldRender_self['_filterManager']['children'][0]) {
+					worldRender_self['_filterManager']['filterList'] = tMesh['_filterList']
+					worldRender_self['_filterManager']['frameBuffer']['width'] = renderResultObj['viewRectWidth']
+					worldRender_self['_filterManager']['frameBuffer']['height'] = renderResultObj['viewRectHeight']
+					tGL.clearColor(0, 0, 0, 0)
+					worldRender_self['_filterManager'].bind(tGL)
+
+
+					// 드로우
+					if (tIndexBufferInfo) {
+						tPrevIndexBuffer_UUID == tIndexBufferInfo['_UUID'] ? 0 : tGL.bindBuffer(tGL.ELEMENT_ARRAY_BUFFER, tIndexBufferInfo['webglBuffer']);
+						//enum mode, long count, enum type, long offset
+						tGL.drawElements(
+							tMesh['drawMode'],
+							tIndexBufferInfo['pointNum'],
+							tIndexBufferInfo['glArrayType'],
+							0
+						);
+						tPrevIndexBuffer_UUID = tIndexBufferInfo['_UUID'];
+						renderResultObj['triangleNum'] += tIndexBufferInfo['triangleNum'];
+					} else {
+						tGL.drawArrays(tMesh['drawMode'], 0, tInterleaveBuffer['pointNum']);
+						renderResultObj['triangleNum'] += tInterleaveBuffer['triangleNum'];
+					}
+					worldRender_self['_filterManager'].unbind(tGL);
+					worldRender_self['_filterManager'].render(redGL, tGL, worldRender_self, renderResultObj['view'], time, renderResultObj, tMesh);
+					worldRender_self['_filterManager']['filterList'] = [];
+
 				} else {
-					tGL.drawArrays(tMesh['drawMode'], 0, tInterleaveBuffer['pointNum']);
-					renderResultObj['triangleNum'] += tInterleaveBuffer['triangleNum'];
+					// 드로우
+					if (tIndexBufferInfo) {
+						tPrevIndexBuffer_UUID == tIndexBufferInfo['_UUID'] ? 0 : tGL.bindBuffer(tGL.ELEMENT_ARRAY_BUFFER, tIndexBufferInfo['webglBuffer']);
+						//enum mode, long count, enum type, long offset
+						tGL.drawElements(
+							tMesh['drawMode'],
+							tIndexBufferInfo['pointNum'],
+							tIndexBufferInfo['glArrayType'],
+							0
+						);
+						tPrevIndexBuffer_UUID = tIndexBufferInfo['_UUID'];
+						renderResultObj['triangleNum'] += tIndexBufferInfo['triangleNum'];
+					} else {
+						tGL.drawArrays(tMesh['drawMode'], 0, tInterleaveBuffer['pointNum']);
+						renderResultObj['triangleNum'] += tInterleaveBuffer['triangleNum'];
+					}
 				}
 			}
 
