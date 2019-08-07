@@ -2,21 +2,21 @@
 [![Software License](https://img.shields.io/github/license/swisnl/build-size.svg)](LICENSE)
 
 ### JavaScript 3D library
-**이 프로젝트의 기본 지향점은 모든 브라우저 / 디바이스(PC, Mobile)에서 최적의 성능을 내는 WebGL 라이브러리를 만드는 것입니다.**
-(The main goal of this project is to create a WebGL library that will perform optimally on all browsers / devices (PC, Mobile).)
+The main goal of this project is to create a WebGL library that will perform optimally on all browsers / devices (PC, Mobile).
 
 ### [Release Notes](https://github.com/redcamel/RedGL2/releases) ###
-- [Release Note V7.0](https://github.com/redcamel/RedGL2/releases/tag/Master_V7.0)
-- [Release Note V6.0](https://github.com/redcamel/RedGL2/releases/tag/Master_V6.0)
-- [Release Note V5.0](https://github.com/redcamel/RedGL2/releases/tag/Master_V5.0)
-- [Release Note V4.0](https://github.com/redcamel/RedGL2/releases/tag/Master_V4.0)
-- [Release Note V3.0](https://github.com/redcamel/RedGL2/releases/tag/Master_V3.0)
-- [Release Note V2.0](https://github.com/redcamel/RedGL2/releases/tag/Master_V2.0)
-
+ - [Release Note V7.0](https://github.com/redcamel/RedGL2/releases/tag/Master_V7.0)
+ - [Release Note V6.0](https://github.com/redcamel/RedGL2/releases/tag/Master_V6.0)
+ - [Release Note V5.0](https://github.com/redcamel/RedGL2/releases/tag/Master_V5.0)
+ - [Release Note V4.0](https://github.com/redcamel/RedGL2/releases/tag/Master_V4.0)
+ - [Release Note V3.0](https://github.com/redcamel/RedGL2/releases/tag/Master_V3.0)
+ - [Release Note V2.0](https://github.com/redcamel/RedGL2/releases/tag/Master_V2.0)
 
 ### [Documentation](https://redcamel.github.io/RedGL2/redDoc/index.html)
+
 ### [Examples](https://redcamel.github.io/RedGL2/example/index.html)
    - See the [example](https://redcamel.github.io/RedGL2/example/index.html). Various examples are available.
+   
 ### [TestCase](https://redcamel.github.io/RedGL2/testCase/index.html)
 
 ### Usage
@@ -77,6 +77,6 @@ git clone git@github.com:redcamel/RedGL2.git
 cd RedGL2
 npm install
 npm run build
-# `release` 폴더에서 빌드된 RedGL 파일을 확인할 수 있습니다.
+# You can see the built RedGL files in the `release` folder.
 ```
 This project is maintained by [RedCamel](mailto:webseon@gmail.com)
