@@ -1,8 +1,9 @@
 /*
- * RedGL - MIT License
- * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
- * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.7.5 11:49
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2019.8.2 18:16:21
+ *
  */
 "use strict";
 var RedBaseObject3D;
@@ -368,9 +369,81 @@ var RedBaseObject3D;
 			parseInt(Math.random() * 255),
 			parseInt(Math.random() * 255),
 			255
-		])
+		]);
+		// 아웃라인
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`outlineThickness`,
+			 description : `
+				기본값 : 0
+				최소값 : 0
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		this['outlineThickness'] = 0;
+		this['_outlineAlpha'] = 1;
+		this['_outlineColor'] = new Float32Array(4)
+		this['outlineColor'] = '#ff0000';
+		this['_filterList'] = [];
+
 	};
 	RedBaseObject3D.prototype = {
+		/*DOC:
+		 {
+			title :`addFilter`,
+			code : 'METHOD',
+			description : `
+				filter 추가
+			`,
+			params : {
+				filter : [
+					{type:'RedBaseFilter Instance'}
+				]
+			},
+			return : 'void'
+		}
+		 :DOC*/
+		addFilter: function (filter) {
+			filter instanceof RedBaseFilter || RedGLUtil.throwFunc('RedFilterEffectManager : addFilter - RedBaseFilter Instance만 허용.', '입력값 : ' + filter);
+			this['_filterList'].push(filter);
+		},
+		/*DOC:
+		 {
+			title :`removeFilter`,
+			code : 'METHOD',
+			description : `
+				filter 제거
+			`,
+			params : {
+				filter : [
+					{type:'RedBaseFilter Instance'}
+				]
+			},
+			return : 'void'
+		}
+		 :DOC*/
+		removeFilter: (function () {
+			var t0;
+			return function (filter) {
+				t0 = this['_filterList'].indexOf(filter);
+				if (t0 != -1) this['_filterList'].splice(t0, 1);
+			}
+		})(),
+		/*DOC:
+		 {
+			title :`removeAllFilter`,
+			code : 'METHOD',
+			description : `
+				모든 filter 제거
+			`,
+			return : 'void'
+		}
+		 :DOC*/
+		removeAllFilter: function () {
+			this['_filterList'].length = 0;
+		},
 		/*DOC:
 		 {
 			 title :`addLOD`,
@@ -932,6 +1005,48 @@ var RedBaseObject3D;
 		set: function (v) {
 			if (v && !(v instanceof RedBaseMaterial)) RedGLUtil.throwFunc('material : RedBaseMaterial Instance만 허용.', '입력값 : ' + v);
 			this['_material'] = v
+		}
+	});
+	/*DOC:
+	 {
+	     code : 'PROPERTY',
+		 title :`outlineColor`,
+		 description : `기본값 : #ff0000`,
+		 return : 'hex'
+	 }
+	 :DOC*/
+	Object.defineProperty(RedBaseObject3D.prototype, 'outlineColor', {
+		get: function () {
+			return this['_outlineColorHex']
+		},
+		set: (function () {
+			var t0;
+			return function (hex) {
+				this['_outlineColorHex'] = hex ? hex : '#ff0000';
+				t0 = RedGLUtil.hexToRGB_ZeroToOne.call(this, this['_outlineColorHex']);
+				this['_outlineColor'][0] = t0[0];
+				this['_outlineColor'][1] = t0[1];
+				this['_outlineColor'][2] = t0[2];
+				this['_outlineColor'][3] = this['_outlineAlpha'];
+			}
+		})()
+	});
+	/*DOC:
+	 {
+	     code : 'PROPERTY',
+		 title :`outlineAlpha`,
+		 description : `
+		    기본값 : 1
+		    최소값 : 0
+		    최대값 : 1
+         `,
+		 return : 'Number'
+	 }
+	 :DOC*/
+	RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'outlineAlpha', 'number', {
+		'min': 0, 'max': 1,
+		callback: function (v) {
+			this['_outlineColor'][3] = this['_outlineAlpha'] = v
 		}
 	});
 	Object.freeze(RedBaseObject3D);

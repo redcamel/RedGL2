@@ -1,0 +1,170 @@
+<!--
+  ~   RedGL - MIT License
+  ~   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+  ~   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+  ~   Last modification time of this file - 2019.8.2 18:16:21
+  ~
+  -->
+
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="RedGL,webgl,demo">
+    <title>RedGL Example - PivotTest 2D Mode</title>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
+    />
+    <link rel="stylesheet" href="../example.css">
+
+    <script src="../dat.gui.min.js"></script>
+    <script src="../baseTestUI.js"></script>
+    <script src="../../release/RedGL.js"></script>
+</head>
+
+<body>
+<script id='testSource'>
+	var testUI;
+	var canvas;
+	var assetPath = '../../asset/';
+	canvas = document.createElement('canvas');
+	document.body.appendChild(canvas);
+	RedGL(canvas, function (v) {
+		if (v) {
+			console.log('초기화 성공!');
+			var tWorld, tView, tScene, tController, tRenderer;
+			var setBase = function (redGL) {
+				// 월드 생성
+				redGL['world'] = tWorld = RedWorld();
+				// 씬 생성
+				tScene = RedScene(redGL);
+				// 카메라 생성
+				tController = RedCamera();
+				tController.mode2DYn = true
+				tController.z = 10
+				// 렌더러 생성
+				tRenderer = RedRenderer();
+				// 뷰생성 및 적용
+				tView = RedView(redGL, tScene, tController);
+				tWorld.addView(tView);
+				// 그리드 설정
+				tScene['grid'] = RedGrid(redGL);
+				// tScene['axis'] = RedAxis(redGL);
+				// 렌더시작
+				tRenderer.start(redGL, function (time) {
+					var i = tScene.children.length
+					var tMesh
+					while (i--) {
+						tMesh = tScene.children[i]
+						tMesh.rotationZ += 1
+
+
+					}
+					tMesh2.rotationZ +=0.5
+
+				});
+				// 렌더 디버거 활성화
+				tRenderer.setDebugButton();
+
+			};
+			setBase(this);
+			// Box 설정
+			var tGeometry = RedPlane(this);
+			var tMaterial = RedBitmapMaterial(
+				this,
+				RedBitmapTexture(this, assetPath + 'brick/Brick03_col.jpg')
+			);
+			var i = 5000
+			while (i--) {
+				var tMesh = RedMesh(this, tGeometry, tMaterial);
+				tMesh.useCullFace = false
+				tMesh.pivotX = Math.random() * 3 - 1.5
+				tMesh.pivotY = Math.random() * 3 - 1.5
+				tMesh.pivotZ = Math.random() * 3 - 1.5
+				tMesh.rotationX = Math.random() * 360
+				tMesh.rotationY = Math.random() * 360
+				tMesh.rotationZ = Math.random() * 360
+				tMesh.x = Math.random() * 100 - 50
+				tMesh.y = Math.random() * 100 - 50
+				tMesh.z = -Math.random() * 100 - 2
+				tScene.addChild(tMesh);
+			}
+			var tMesh = RedMesh(this, tGeometry, RedBitmapMaterial(
+				this,
+				RedBitmapTexture(this, assetPath + 'UV_Grid_Sm.jpg')
+			));
+			tMesh.useCullFace = false
+			tMesh.pivot = [0, 0, 0]
+			tMesh.scaleX = tMesh.scaleY = tMesh.scaleZ = 200
+			tMesh.x = 500
+			tMesh.y = 500
+			tScene.addChild(tMesh);
+			var tPivotPoint1 = RedMesh(this, RedSphere(this, 0.2), RedColorMaterial(this, '#00ff00'));
+			tPivotPoint1.useCullFace = false
+			tMesh.addChild(tPivotPoint1);
+			///
+			var tMesh2 = RedMesh(this, tGeometry, RedBitmapMaterial(
+				this,
+				RedBitmapTexture(this, assetPath + 'UV_Grid_Sm.jpg')
+			));
+			tMesh2.useCullFace = false
+			tMesh2.pivot = [0, 0, 0]
+			tMesh2.scaleX = tMesh2.scaleY = tMesh2.scaleZ = 1
+			tMesh2.x = 2
+			tMesh.addChild(tMesh2);
+			var tPivotPoint2 = RedMesh(this, RedSphere(this, 0.2), RedColorMaterial(this, '#ff0000'));
+			tPivotPoint2.useCullFace = false
+			tMesh2.addChild(tPivotPoint2);
+
+			testUI(this, tScene, tMesh,tMesh2, tPivotPoint1,tPivotPoint2);
+		} else {
+			console.log('초기화 실패!');
+		}
+	});
+	testUI = function (redGL, tScene, tMesh, tMesh2,tPivotPoint1,tPivotPoint2) {
+		var gui = new baseTestUI(redGL);
+		gui.initRedGL();
+		var test = {
+			pivotX: 0,
+			pivotY: 0,
+			pivotZ: 0
+		}
+		var test2 = {
+			pivotX: 0,
+			pivotY: 0,
+			pivotZ: 0
+		}
+		var tFolder = gui['gui'].addFolder('RedMesh')
+		tFolder.open();
+		'x,y,z'.split(',').forEach(function (tKey) {
+			tFolder.add(tMesh, tKey, 0, 1000, 0.01).onChange(function (v) {
+				tMesh[tKey] = v
+			})
+
+		});
+		'pivotX,pivotY'.split(',').forEach(function (tKey) {
+			tFolder.add(test, tKey, -100, 100, 0.01).onChange(function (v) {
+				tMesh[tKey] = v
+				tPivotPoint1.x = test['pivotX']/200
+				tPivotPoint1.y = test['pivotY']/200
+			})
+
+		});
+		var tFolder = gui['gui'].addFolder('RedMesh2')
+		tFolder.open()
+		'pivotX,pivotY'.split(',').forEach(function (tKey) {
+			tFolder.add(test2, tKey, -0.5, 0.5, 0.01).onChange(function (v) {
+				tMesh2[tKey] = v
+				tPivotPoint2.x = test2['pivotX']
+				tPivotPoint2.y = test2['pivotY']
+			})
+		});
+
+	}
+</script>
+</body>
+
+</html>

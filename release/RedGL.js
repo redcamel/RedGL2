@@ -2,7 +2,7 @@
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.7.9 12:29:9
+ *   Last modification time of this file - 2019.8.7 11:52:14
  *
  */
 
@@ -3254,10 +3254,11 @@ var RedBaseTexture;
 	Object.freeze(RedBaseTexture);
 })();
 /*
- * RedGL - MIT License
- * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
- * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.7.5 11:49
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2019.8.2 18:16:21
+ *
  */
 "use strict";
 var RedBaseObject3D;
@@ -3623,9 +3624,81 @@ var RedBaseObject3D;
 			parseInt(Math.random() * 255),
 			parseInt(Math.random() * 255),
 			255
-		])
+		]);
+		// 아웃라인
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`outlineThickness`,
+			 description : `
+				기본값 : 0
+				최소값 : 0
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		this['outlineThickness'] = 0;
+		this['_outlineAlpha'] = 1;
+		this['_outlineColor'] = new Float32Array(4)
+		this['outlineColor'] = '#ff0000';
+		this['_filterList'] = [];
+
 	};
 	RedBaseObject3D.prototype = {
+		/*DOC:
+		 {
+			title :`addFilter`,
+			code : 'METHOD',
+			description : `
+				filter 추가
+			`,
+			params : {
+				filter : [
+					{type:'RedBaseFilter Instance'}
+				]
+			},
+			return : 'void'
+		}
+		 :DOC*/
+		addFilter: function (filter) {
+			filter instanceof RedBaseFilter || RedGLUtil.throwFunc('RedFilterEffectManager : addFilter - RedBaseFilter Instance만 허용.', '입력값 : ' + filter);
+			this['_filterList'].push(filter);
+		},
+		/*DOC:
+		 {
+			title :`removeFilter`,
+			code : 'METHOD',
+			description : `
+				filter 제거
+			`,
+			params : {
+				filter : [
+					{type:'RedBaseFilter Instance'}
+				]
+			},
+			return : 'void'
+		}
+		 :DOC*/
+		removeFilter: (function () {
+			var t0;
+			return function (filter) {
+				t0 = this['_filterList'].indexOf(filter);
+				if (t0 != -1) this['_filterList'].splice(t0, 1);
+			}
+		})(),
+		/*DOC:
+		 {
+			title :`removeAllFilter`,
+			code : 'METHOD',
+			description : `
+				모든 filter 제거
+			`,
+			return : 'void'
+		}
+		 :DOC*/
+		removeAllFilter: function () {
+			this['_filterList'].length = 0;
+		},
 		/*DOC:
 		 {
 			 title :`addLOD`,
@@ -4187,6 +4260,48 @@ var RedBaseObject3D;
 		set: function (v) {
 			if (v && !(v instanceof RedBaseMaterial)) RedGLUtil.throwFunc('material : RedBaseMaterial Instance만 허용.', '입력값 : ' + v);
 			this['_material'] = v
+		}
+	});
+	/*DOC:
+	 {
+	     code : 'PROPERTY',
+		 title :`outlineColor`,
+		 description : `기본값 : #ff0000`,
+		 return : 'hex'
+	 }
+	 :DOC*/
+	Object.defineProperty(RedBaseObject3D.prototype, 'outlineColor', {
+		get: function () {
+			return this['_outlineColorHex']
+		},
+		set: (function () {
+			var t0;
+			return function (hex) {
+				this['_outlineColorHex'] = hex ? hex : '#ff0000';
+				t0 = RedGLUtil.hexToRGB_ZeroToOne.call(this, this['_outlineColorHex']);
+				this['_outlineColor'][0] = t0[0];
+				this['_outlineColor'][1] = t0[1];
+				this['_outlineColor'][2] = t0[2];
+				this['_outlineColor'][3] = this['_outlineAlpha'];
+			}
+		})()
+	});
+	/*DOC:
+	 {
+	     code : 'PROPERTY',
+		 title :`outlineAlpha`,
+		 description : `
+		    기본값 : 1
+		    최소값 : 0
+		    최대값 : 1
+         `,
+		 return : 'Number'
+	 }
+	 :DOC*/
+	RedDefinePropertyInfo.definePrototype('RedBaseObject3D', 'outlineAlpha', 'number', {
+		'min': 0, 'max': 1,
+		callback: function (v) {
+			this['_outlineColor'][3] = this['_outlineAlpha'] = v
 		}
 	});
 	Object.freeze(RedBaseObject3D);
@@ -10275,6 +10390,332 @@ var RedTextMaterial;
 		}]
 	);
 	Object.freeze(RedTextMaterial);
+})();
+/*
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2019.7.12 14:22:52
+ *
+ */
+
+"use strict";
+var RedOutlineMaterial;
+(function () {
+	var vSource, fSource;
+	var PROGRAM_NAME = 'RedOutlineMaterialProgram';
+	var PROGRAM_OPTION_LIST = [];
+	var checked;
+	vSource = function () {
+		/* @preserve
+		// 스키닝
+		//#REDGL_DEFINE#vertexShareFunc#getSkinMatrix#
+
+		// Sprite3D
+		//#REDGL_DEFINE#vertexShareFunc#getSprite3DMatrix#
+		void main(void) {
+			gl_PointSize = uPointSize;
+			float outlineSize = uOutlineThickness;
+
+			// position 계산
+			//#REDGL_DEFINE#skin#true# mat4 targetMatrix = uMMatrix *  getSkinMatrix() ;
+			//#REDGL_DEFINE#skin#false# mat4 targetMatrix = uMMatrix;
+			vVertexPosition =  targetMatrix *  vec4(aVertexPosition, 1.0);
+			float tScaleX = length(vec3(uMMatrix[0][0], uMMatrix[0][1], uMMatrix[0][2]));
+			float tScaleY = length(vec3(uMMatrix[1][0], uMMatrix[1][1], uMMatrix[1][2]));
+			float tScaleZ = length(vec3(uMMatrix[2][0], uMMatrix[2][1], uMMatrix[2][2]));
+
+			//#REDGL_DEFINE#sprite3D#true# gl_Position = uPMatrix * getSprite3DMatrix(uCameraMatrix , targetMatrix) *  vec4(aVertexPosition, 1.0);
+			//#REDGL_DEFINE#sprite3D#true# if(!u_PerspectiveScale){
+			//#REDGL_DEFINE#sprite3D#true#   gl_Position /= gl_Position.w;
+			//#REDGL_DEFINE#sprite3D#true#   gl_Position.xy += aVertexPosition.xy * vec2((uPMatrix * targetMatrix)[0][0],(uPMatrix * targetMatrix)[1][1]);
+			//#REDGL_DEFINE#sprite3D#true# }
+			//#REDGL_DEFINE#skin#false#//#REDGL_DEFINE#sprite3D#false# gl_Position = uPMatrix * uCameraMatrix * targetMatrix * vec4(aVertexPosition * vec3(1.0+outlineSize/tScaleX,1.0+outlineSize/tScaleY,1.0+outlineSize/tScaleZ) , 1.0);
+			//#REDGL_DEFINE#skin#true#//#REDGL_DEFINE#sprite3D#false#  gl_Position = uPMatrix * uCameraMatrix *  targetMatrix *  vec4(aVertexPosition + vec3( aVertexNormal * vec3(outlineSize/tScaleX,outlineSize/tScaleY,outlineSize/tScaleZ)), 1.0);
+
+
+			//#REDGL_DEFINE#directionalShadow#true# vResolution = uResolution;
+			//#REDGL_DEFINE#directionalShadow#true# vShadowPos = cTexUnitConverter  *  uDirectionalShadowLightMatrix * targetMatrix * vec4(aVertexPosition, 1.0);
+		}
+		 */
+	};
+	fSource = function () {
+		/* @preserve
+		 precision mediump float;
+		// 안개
+		//#REDGL_DEFINE#fragmentShareFunc#fogFactor#
+		//#REDGL_DEFINE#fragmentShareFunc#fog#
+
+		// 그림자
+		//#REDGL_DEFINE#fragmentShareFunc#decodeFloatShadow#
+		//#REDGL_DEFINE#fragmentShareFunc#getShadowColor#
+
+		 void main(void) {
+			vec4 finalColor = uOutlineColor;
+			//#REDGL_DEFINE#directionalShadow#true# finalColor.rgb *= getShadowColor( vShadowPos, vResolution, uDirectionalShadowTexture);
+			//#REDGL_DEFINE#fog#false# gl_FragColor = finalColor;
+			//#REDGL_DEFINE#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
+		 }
+		 */
+	};
+	/*DOC:
+	 {
+		 constructorYn : true,
+		 title :`RedOutlineMaterial`,
+		 description : `
+			 RedOutlineMaterial Instance 생성
+		 `,
+		 params : {
+			 redGL : [
+				 {type:'RedGL'}
+			 ],
+			 hexColor : [
+				 {type:'hex'},
+				 '기본값 : #ff0000'
+			 ],
+			 alpha : [
+				 {type:'number'},
+				 '기본값 : 1'
+			 ]
+		 },
+		 extends : ['RedBaseMaterial'],
+		 demo : '../example/material/RedOutlineMaterial.html',
+		 example : `
+			 RedOutlineMaterial(RedGL Instance, hex)
+		 `,
+		 return : 'RedOutlineMaterial Instance'
+	 }
+	 :DOC*/
+	RedOutlineMaterial = function (redGL, hexColor, alpha) {
+		if (!(this instanceof RedOutlineMaterial)) return new RedOutlineMaterial(redGL, hexColor, alpha);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedOutlineMaterial : RedGL Instance만 허용.', '입력값 : ' + redGL);
+		this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource, PROGRAM_OPTION_LIST);
+		/////////////////////////////////////////
+		// 유니폼 프로퍼티
+		this['_color'] = new Float32Array(4);
+		this['alpha'] = alpha == undefined ? 1 : alpha;
+		/////////////////////////////////////////
+		// 일반 프로퍼티
+		this['color'] = hexColor ? hexColor : '#ff0000';
+		this['_UUID'] = RedGL.makeUUID();
+		if (!checked) {
+			this.checkUniformAndProperty();
+			checked = true;
+		}
+		console.log(this);
+	};
+	RedOutlineMaterial.prototype = new RedBaseMaterial();
+	RedOutlineMaterial['DEFINE_OBJECT_COLOR'] = {
+		get: function () {
+			return this['_colorHex']
+		},
+		set: (function () {
+			var t0;
+			return function (hex) {
+				this['_colorHex'] = hex ? hex : '#ff2211';
+				t0 = RedGLUtil.hexToRGB_ZeroToOne.call(this, this['_colorHex']);
+				this['_color'][0] = t0[0];
+				this['_color'][1] = t0[1];
+				this['_color'][2] = t0[2];
+				this['_color'][3] = this['_alpha'];
+			}
+		})()
+	};
+	RedOutlineMaterial['DEFINE_OBJECT_ALPHA'] = {
+		'min': 0, 'max': 1,
+		callback: function (v) {
+			this['_color'][3] = this['_alpha'] = v
+		}
+	};
+	/*DOC:
+	 {
+	     code : 'PROPERTY',
+		 title :`color`,
+		 description : `기본값 : #ff2211`,
+		 return : 'hex'
+	 }
+	 :DOC*/
+	Object.defineProperty(RedOutlineMaterial.prototype, 'color', RedOutlineMaterial['DEFINE_OBJECT_COLOR']);
+	/*DOC:
+	 {
+	     code : 'PROPERTY',
+		 title :`alpha`,
+		 description : `
+		    기본값 : 1
+		    최소값 : 0
+		    최대값 : 1
+         `,
+		 return : 'Number'
+	 }
+	 :DOC*/
+	RedDefinePropertyInfo.definePrototype('RedOutlineMaterial', 'alpha', 'number', RedOutlineMaterial['DEFINE_OBJECT_ALPHA']);
+	Object.freeze(RedOutlineMaterial);
+})();
+/*
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2019.7.11 18:28:15
+ *
+ */
+
+"use strict";
+var RedOutlinePlaneMaterial;
+(function () {
+	var vSource, fSource;
+	var PROGRAM_NAME = 'RedOutlinePlaneMaterialProgram';
+	var PROGRAM_OPTION_LIST = [];
+	var checked;
+	vSource = function () {
+		/* @preserve
+		// 스키닝
+		//#REDGL_DEFINE#vertexShareFunc#getSkinMatrix#
+
+		// Sprite3D
+		//#REDGL_DEFINE#vertexShareFunc#getSprite3DMatrix#
+		void main(void) {
+			gl_PointSize = uPointSize;
+			float outlineSize = uOutlineThickness;
+
+			// position 계산
+			//#REDGL_DEFINE#skin#true# mat4 targetMatrix = uMMatrix *  getSkinMatrix() ;
+			//#REDGL_DEFINE#skin#false# mat4 targetMatrix = uMMatrix;
+			vVertexPosition =  targetMatrix *  vec4(aVertexPosition, 1.0);
+			float tScaleX = length(vec3(targetMatrix[0][0], targetMatrix[0][1], targetMatrix[0][2]));
+			float tScaleY = length(vec3(targetMatrix[1][0], targetMatrix[1][1], targetMatrix[1][2]));
+			float tScaleZ = length(vec3(targetMatrix[2][0], targetMatrix[2][1], targetMatrix[2][2]));
+
+			//#REDGL_DEFINE#sprite3D#true# gl_Position = uPMatrix * getSprite3DMatrix(uCameraMatrix , targetMatrix) *  vec4(aVertexPosition, 1.0);
+			//#REDGL_DEFINE#sprite3D#true# if(!u_PerspectiveScale){
+			//#REDGL_DEFINE#sprite3D#true#   gl_Position /= gl_Position.w;
+			//#REDGL_DEFINE#sprite3D#true#   gl_Position.xy += aVertexPosition.xy * vec2((uPMatrix * targetMatrix)[0][0],(uPMatrix * targetMatrix)[1][1]);
+			//#REDGL_DEFINE#sprite3D#true# }
+			//#REDGL_DEFINE#sprite3D#false# gl_Position = uPMatrix * uCameraMatrix * targetMatrix * vec4(aVertexPosition * vec3(1.0+outlineSize/tScaleX,1.0+outlineSize/tScaleY,1.0+outlineSize/tScaleZ) , 1.0);
+			vTexcoord = aTexcoord-0.5;
+			vTexcoord *= vec2(1.0+outlineSize/tScaleX,1.0+outlineSize/tScaleY);
+
+
+			//#REDGL_DEFINE#directionalShadow#true# vResolution = uResolution;
+			//#REDGL_DEFINE#directionalShadow#true# vShadowPos = cTexUnitConverter  *  uDirectionalShadowLightMatrix * targetMatrix * vec4(aVertexPosition, 1.0);
+		}
+		 */
+	};
+	fSource = function () {
+		/* @preserve
+		 precision mediump float;
+		// 안개
+		//#REDGL_DEFINE#fragmentShareFunc#fogFactor#
+		//#REDGL_DEFINE#fragmentShareFunc#fog#
+
+		// 그림자
+		//#REDGL_DEFINE#fragmentShareFunc#decodeFloatShadow#
+		//#REDGL_DEFINE#fragmentShareFunc#getShadowColor#
+
+		 void main(void) {
+			vec4 finalColor = uOutlineColor;
+			if(-0.495 <vTexcoord.x && vTexcoord.x<0.495 && -0.495 <vTexcoord.y && vTexcoord.y<0.495) {
+				if(-0.490 <vTexcoord.x && vTexcoord.x<0.490 && -0.490 <vTexcoord.y && vTexcoord.y<0.490) discard;
+				else finalColor.a *= 0.5;
+			}
+
+			//#REDGL_DEFINE#directionalShadow#true# finalColor.rgb *= getShadowColor( vShadowPos, vResolution, uDirectionalShadowTexture);
+			//#REDGL_DEFINE#fog#false# gl_FragColor = finalColor;
+			//#REDGL_DEFINE#fog#true# gl_FragColor = fog( fogFactor(u_FogDistance, u_FogDensity), uFogColor, finalColor);
+		 }
+		 */
+	};
+	/*DOC:
+	 {
+		 constructorYn : true,
+		 title :`RedOutlinePlaneMaterial`,
+		 description : `
+			 RedOutlinePlaneMaterial Instance 생성
+		 `,
+		 params : {
+			 redGL : [
+				 {type:'RedGL'}
+			 ],
+			 hexColor : [
+				 {type:'hex'},
+				 '기본값 : #ff0000'
+			 ],
+			 alpha : [
+				 {type:'number'},
+				 '기본값 : 1'
+			 ]
+		 },
+		 extends : ['RedBaseMaterial'],
+		 demo : '../example/material/RedOutlinePlaneMaterial.html',
+		 example : `
+			 RedOutlinePlaneMaterial(RedGL Instance, hex)
+		 `,
+		 return : 'RedOutlinePlaneMaterial Instance'
+	 }
+	 :DOC*/
+	RedOutlinePlaneMaterial = function (redGL, hexColor, alpha) {
+		if (!(this instanceof RedOutlinePlaneMaterial)) return new RedOutlinePlaneMaterial(redGL, hexColor, alpha);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedOutlinePlaneMaterial : RedGL Instance만 허용.', '입력값 : ' + redGL);
+		this.makeProgramList(this, redGL, PROGRAM_NAME, vSource, fSource, PROGRAM_OPTION_LIST);
+		/////////////////////////////////////////
+		// 유니폼 프로퍼티
+		this['_color'] = new Float32Array(4);
+		this['alpha'] = alpha == undefined ? 1 : alpha;
+		/////////////////////////////////////////
+		// 일반 프로퍼티
+		this['color'] = hexColor ? hexColor : '#ff0000';
+		this['_UUID'] = RedGL.makeUUID();
+		if (!checked) {
+			this.checkUniformAndProperty();
+			checked = true;
+		}
+		console.log(this);
+	};
+	RedOutlinePlaneMaterial.prototype = new RedBaseMaterial();
+	RedOutlinePlaneMaterial['DEFINE_OBJECT_COLOR'] = {
+		get: function () {
+			return this['_colorHex']
+		},
+		set: (function () {
+			var t0;
+			return function (hex) {
+				this['_colorHex'] = hex ? hex : '#ff2211';
+				t0 = RedGLUtil.hexToRGB_ZeroToOne.call(this, this['_colorHex']);
+				this['_color'][0] = t0[0];
+				this['_color'][1] = t0[1];
+				this['_color'][2] = t0[2];
+				this['_color'][3] = this['_alpha'];
+			}
+		})()
+	};
+	RedOutlinePlaneMaterial['DEFINE_OBJECT_ALPHA'] = {
+		'min': 0, 'max': 1,
+		callback: function (v) {
+			this['_color'][3] = this['_alpha'] = v
+		}
+	};
+	/*DOC:
+	 {
+	     code : 'PROPERTY',
+		 title :`color`,
+		 description : `기본값 : #ff2211`,
+		 return : 'hex'
+	 }
+	 :DOC*/
+	Object.defineProperty(RedOutlinePlaneMaterial.prototype, 'color', RedOutlinePlaneMaterial['DEFINE_OBJECT_COLOR']);
+	/*DOC:
+	 {
+	     code : 'PROPERTY',
+		 title :`alpha`,
+		 description : `
+		    기본값 : 1
+		    최소값 : 0
+		    최대값 : 1
+         `,
+		 return : 'Number'
+	 }
+	 :DOC*/
+	RedDefinePropertyInfo.definePrototype('RedOutlinePlaneMaterial', 'alpha', 'number', RedOutlinePlaneMaterial['DEFINE_OBJECT_ALPHA']);
+	Object.freeze(RedOutlinePlaneMaterial);
 })();
 /*
  * RedGL - MIT License
@@ -18863,10 +19304,11 @@ var RedProgram;
 	Object.freeze(RedProgram);
 })();
 /*
- * RedGL - MIT License
- * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
- * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.2 12:46
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2019.7.10 15:43:31
+ *
  */
 
 "use strict";
@@ -18943,6 +19385,8 @@ var RedSystemShaderCode;
 				'uniform mat4 uPMatrix',
 				'uniform mat4 uCameraMatrix',
 				'uniform bool u_PerspectiveScale',
+				'uniform float uOutlineThickness',
+
 				// shadow
 				'uniform mat4 uDirectionalShadowLightMatrix',
 				'varying highp vec4 vShadowPos',
@@ -18972,6 +19416,8 @@ var RedSystemShaderCode;
 				'varying float vTime',
 				'varying vec2 vResolution',
 				'uniform vec3 uCameraPosition',
+
+				'uniform vec4 uOutlineColor',
 
 				// fog
 				'uniform float u_FogDistance',
@@ -19653,10 +20099,11 @@ var RedShader;
 	Object.freeze(RedShader)
 })();
 /*
- * RedGL - MIT License
- * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
- * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.7.5 11:41
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2019.8.6 17:36:26
+ *
  */
 
 "use strict";
@@ -19846,6 +20293,7 @@ var RedRenderer;
 	// 캐시관련
 	var worldRender_prevProgram_UUID;
 	var worldRender_transparentList = [];
+	var worldRender_outlineList = [], worldRender_outlineNum = 0;
 	var worldRender_tWorldRect;
 	var worldRender_self;
 	var worldRender_valueParser;
@@ -19913,6 +20361,9 @@ var RedRenderer;
 		gl.scissor(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
 		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 		worldRender_transparentList.length = 0;
+		worldRender_outlineList.length = 0;
+		worldRender_outlineNum = 0;
+
 		if (!worldRender_self['_glInitialized']) worldRender_glInitialize(gl), worldRender_self['_glInitialized'] = true;
 		// console.log("worldRender", v['key'], t0)
 		worldRender_self['renderInfo'] = {};
@@ -19924,6 +20375,7 @@ var RedRenderer;
 		redGL.gl.bindTexture(redGL.gl.TEXTURE_CUBE_MAP, redGL['_datas']['emptyTexture']['3d']['webglTexture']);
 		i = 0;
 		len = worldRender_self['world']['_viewList'].length;
+
 		for (i; i < len; i++) {
 			// worldRender_self['world']['_viewList'].forEach(function (tView) {
 			tView = worldRender_self['world']['_viewList'][i];
@@ -19946,6 +20398,7 @@ var RedRenderer;
 			tRenderInfo['y'] = tView['_y'];
 			tRenderInfo['width'] = tView['_width'];
 			tRenderInfo['height'] = tView['_height'];
+			tRenderInfo['view'] = tView;
 			tRenderInfo['viewRectX'] = tViewRect[0];
 			tRenderInfo['viewRectY'] = tViewRect[1];
 			tRenderInfo['viewRectWidth'] = tViewRect[2];
@@ -19989,7 +20442,7 @@ var RedRenderer;
 					tCamera['farClipping']
 				);
 				mat4.translate(tPerspectiveMTX, tPerspectiveMTX, [-0.5, 0.5, 0]);
-				mat4.scale(tPerspectiveMTX, tPerspectiveMTX, [1 / tViewRect[2] * redGL['renderScale'] * window.devicePixelRatio, -1 / tViewRect[3] * redGL['renderScale'] * window.devicePixelRatio, 1]);
+				mat4.scale(tPerspectiveMTX, tPerspectiveMTX, [1 / tViewRect[2] * redGL['renderScale'] * window.devicePixelRatio, 1 / tViewRect[3] * redGL['renderScale'] * window.devicePixelRatio, 1]);
 				mat4.identity(tCamera['matrix']);
 				gl.disable(gl.CULL_FACE);
 				worldRender_self['cacheState']['useCullFace'] = false
@@ -20052,8 +20505,21 @@ var RedRenderer;
 			}
 			// 그리드가 있으면 그림
 			if (tScene['grid']) worldRender_self.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], [tScene['grid']], time, tRenderInfo);
+			// 아웃라인 드로우 호출
+			// 아웃라인 검출
+			if (!tOutlineMaterial) {
+				tOutlineMaterial = RedOutlineMaterial(redGL)
+				tOutlinePlaneMaterial = RedOutlinePlaneMaterial(redGL)
+			}
+
 			// 씬렌더 호출
 			worldRender_self.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], tScene['children'], time, tRenderInfo);
+
+			if (worldRender_outlineList.length) {
+				worldRender_self.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], worldRender_outlineList, time, tRenderInfo, null, false, true);
+				worldRender_outlineList.length = 0;
+				worldRender_outlineNum = 0;
+			}
 			if (worldRender_transparentList.length) worldRender_self.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], worldRender_transparentList, time, tRenderInfo, null, true);
 			if (tScene.mirrorManager) {
 				tScene.mirrorManager.render(redGL, worldRender_self, tView, time, tRenderInfo, worldRender_updateSystemUniform);
@@ -20063,6 +20529,7 @@ var RedRenderer;
 			if (tScene['axis']) worldRender_self.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], tScene['axis']['children'], time, tRenderInfo);
 			// 디버깅 라이트 업데이트
 			if (worldRender_lightDebugRenderList.length) worldRender_self.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], worldRender_lightDebugRenderList, time, tRenderInfo);
+
 			// 포스트이펙트 최종렌더
 			tRenderInfo['viewRenderTime'] = performance.now();
 			if (tView['postEffectManager']['postEffectList'].length) tView['postEffectManager'].render(redGL, gl, worldRender_self, tView, time, tRenderInfo);
@@ -20077,6 +20544,7 @@ var RedRenderer;
 	var tPrevIndexBuffer_UUID;
 	var tPrevInterleaveBuffer_UUID;
 	var tPrevSamplerIndex;
+	var tOutlineMaterial, tOutlinePlaneMaterial;
 	draw = function (redGL,
 	                 scene,
 	                 children,
@@ -20088,7 +20556,8 @@ var RedRenderer;
 	                 tCacheState,
 	                 parentMTX,
 	                 subSceneMaterial,
-	                 transparentMode) {
+	                 transparentMode,
+	                 outlineMode) {
 		var i, i2;
 		// 캐쉬관련
 		var tGL = redGL.gl;
@@ -20166,6 +20635,7 @@ var RedRenderer;
 			}
 			if (tGeometry) {
 				tMaterial = subSceneMaterial ? subSceneMaterial : tMesh['_material'];
+				if (outlineMode) tMaterial = tMesh['_material'] && tGeometry instanceof RedPlane ? tOutlinePlaneMaterial : tOutlineMaterial;
 				tDirectionalShadowMaterialYn = tMaterial['_RedDirectionalShadowYn'];
 				// 마우스 이벤트 커러설정
 				tMaterial['_RedMouseEventMaterialYn'] ? tMaterial['color'] = tMesh['_mouseColorID'] : 0;
@@ -20338,9 +20808,9 @@ var RedRenderer;
 						a10 = 0, a11 = 1, a12 = 0,
 						a20 = 0, a21 = 0, a22 = 1,
 						// tLocalMatrix translate
-						tLocalMatrix[12] = tMesh['x']+tMesh['pivotX'],
-						tLocalMatrix[13] = tMesh['y']+tMesh['pivotY'],
-						tLocalMatrix[14] = tMesh['z']+tMesh['pivotZ'],
+						tLocalMatrix[12] = tMesh['x'] ,
+						tLocalMatrix[13] = tMesh['y'] * (mode2DYn ? -1 : 1),
+						tLocalMatrix[14] = tMesh['z'],
 						tLocalMatrix[15] = 1,
 						// tLocalMatrix rotate
 						tSprite3DYn ?
@@ -20376,7 +20846,7 @@ var RedRenderer;
 						b10 = aCy * aSz, b11 = aSx * aSy * aSz + aCx * aCz, b12 = aCx * aSy * aSz - aSx * aCz,
 						b20 = -aSy, b21 = aSx * aCy, b22 = aCx * aCy,
 						// tLocalMatrix scale
-						aX = tMesh['scaleX'], aY = tMesh['scaleY'] * (mode2DYn ? -1 : 1), aZ = tMesh['scaleZ'],
+						aX = tMesh['scaleX'], aY = tMesh['scaleY'] , aZ = tMesh['scaleZ'],
 						tLocalMatrix[0] = (a00 * b00 + a10 * b01 + a20 * b02) * aX,
 						tLocalMatrix[1] = (a01 * b00 + a11 * b01 + a21 * b02) * aX,
 						tLocalMatrix[2] = (a02 * b00 + a12 * b01 + a22 * b02) * aX,
@@ -20421,7 +20891,13 @@ var RedRenderer;
 								tLocalMatrix[9] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
 								tLocalMatrix[10] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
 								tLocalMatrix[11] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33,
-								b0 = tMesh['pivotX'], b1 = tMesh['pivotY'], b2 = tMesh['pivotZ'], b3 = 1,
+								mode2DYn
+									? (
+										parentMTX
+											? (b0 = -tMesh['pivotX'], b1 = tMesh['pivotY'], b2 = -tMesh['pivotZ'], b3 = 1)
+											: (b0 = -tMesh['pivotX'] / aX, b1 = tMesh['pivotY'] / aY, b2 = -tMesh['pivotZ'], b3 = 1)
+									)
+									: (b0 = -tMesh['pivotX'], b1 = -tMesh['pivotY'], b2 = -tMesh['pivotZ'], b3 = 1),
 								tLocalMatrix[12] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30,
 								tLocalMatrix[13] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31,
 								tLocalMatrix[14] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32,
@@ -20625,16 +21101,39 @@ var RedRenderer;
 				/////////////////////////////////////////////////////////////////////////
 				/////////////////////////////////////////////////////////////////////////
 				// 상태처리
-				// 컬페이스 사용여부 캐싱처리
-				tCacheState['useCullFace'] != tMesh['useCullFace'] ? (tCacheState['useCullFace'] = tMesh['useCullFace']) ? tGL.enable(tGL.CULL_FACE) : tGL.disable(tGL.CULL_FACE) : 0;
-				// 컬페이스 캐싱처리
-				tCacheState['useCullFace'] ? tCacheState['cullFace'] != tMesh['cullFace'] ? tGL.cullFace(tCacheState['cullFace'] = tMesh['cullFace']) : 0 : 0;
 				// 뎁스마스크처리
 				tCacheState['useDepthMask'] != tMesh['useDepthMask'] ? tGL.depthMask(tCacheState['useDepthMask'] = tMesh['useDepthMask']) : 0;
 				// 뎁스테스트 사용여부 캐싱처리
 				tCacheState['useDepthTest'] != tMesh['useDepthTest'] ? (tCacheState['useDepthTest'] = tMesh['useDepthTest']) ? tGL.enable(tGL.DEPTH_TEST) : tGL.disable(tGL.DEPTH_TEST) : 0;
-				// 뎁스테스팅 캐싱처리
-				tCacheState['useDepthTest'] ? tCacheState['depthTestFunc'] != tMesh['depthTestFunc'] ? tGL.depthFunc(tCacheState['depthTestFunc'] = tMesh['depthTestFunc']) : 0 : 0;
+
+				// 컬페이스 사용여부 캐싱처리
+				if (outlineMode) {
+					// 아웃라인 모드일떄
+					tUUID = tSystemUniformGroup['uOutlineThickness']['_UUID'];
+					tCacheUniformInfo[tUUID] != tMesh['outlineThickness'] ? tGL.uniform1f(tSystemUniformGroup['uOutlineThickness']['location'], tCacheState[tUUID] = tMesh['outlineThickness']) : 0;
+					tGL.uniform4fv(tSystemUniformGroup['uOutlineColor']['location'], tCacheState['uOutlineColor'] = tMesh['_outlineColor'])
+					tMesh.autoUpdateMatrix = tMesh._renderAutoUpdateMatrix
+					if (tGeometry instanceof RedPlane) {
+						tCacheState['useCullFace'] != false ? (tCacheState['useCullFace'] = false, tGL.disable(tGL.CULL_FACE)) : 0;
+					} else {
+						tCacheState['useCullFace'] != true ? (tCacheState['useCullFace'] = true, tGL.enable(tGL.CULL_FACE)) : 0;
+						tCacheState['cullFace'] != tGL.FRONT ? tGL.cullFace(tCacheState['cullFace'] = tGL.FRONT) : 0;
+					}
+				} else {
+					// 뎁스테스팅 캐싱처리
+					tCacheState['useDepthTest'] ? tCacheState['depthTestFunc'] != tMesh['depthTestFunc'] ? tGL.depthFunc(tCacheState['depthTestFunc'] = tMesh['depthTestFunc']) : 0 : 0;
+					tCacheState['useCullFace'] != tMesh['useCullFace'] ? (tCacheState['useCullFace'] = tMesh['useCullFace']) ? tGL.enable(tGL.CULL_FACE) : tGL.disable(tGL.CULL_FACE) : 0;
+					// 컬페이스 캐싱처리
+					tCacheState['useCullFace'] ? tCacheState['cullFace'] != tMesh['cullFace'] ? tGL.cullFace(tCacheState['cullFace'] = tMesh['cullFace']) : 0 : 0;
+					if (tMesh['outlineThickness']) {
+						worldRender_outlineList[worldRender_outlineNum++] = tMesh;
+						tMesh._renderAutoUpdateMatrix = tMesh.autoUpdateMatrix;
+						tMesh.autoUpdateMatrix = false;
+					}
+
+
+				}
+
 				if (tSystemUniformGroup['uPointSize']['use']) {
 					tCacheState['pointSize'] != tMesh['pointSize'] ? tGL.uniform1f(tSystemUniformGroup['uPointSize']['location'], tCacheState['pointSize'] = tMesh['pointSize']) : 0;
 				}
@@ -20668,30 +21167,65 @@ var RedRenderer;
 						continue
 					}
 				}
-				// 드로우
-				if (tIndexBufferInfo) {
-					tPrevIndexBuffer_UUID == tIndexBufferInfo['_UUID'] ? 0 : tGL.bindBuffer(tGL.ELEMENT_ARRAY_BUFFER, tIndexBufferInfo['webglBuffer']);
-					//enum mode, long count, enum type, long offset
-					tGL.drawElements(
-						tMesh['drawMode'],
-						tIndexBufferInfo['pointNum'],
-						tIndexBufferInfo['glArrayType'],
-						0
-					);
-					tPrevIndexBuffer_UUID = tIndexBufferInfo['_UUID'];
-					renderResultObj['triangleNum'] += tIndexBufferInfo['triangleNum'];
-				} else {
-					tGL.drawArrays(tMesh['drawMode'], 0, tInterleaveBuffer['pointNum']);
-					renderResultObj['triangleNum'] += tInterleaveBuffer['triangleNum'];
-				}
 
+
+				if (!worldRender_self['_filterManager']) {
+					worldRender_self['_filterManager'] = RedFilterEffectManager(redGL)
+				}
+				if (tMesh['_filterList'].length && tMesh != worldRender_self['_filterManager']['children'][0]) {
+					worldRender_self['_filterManager']['filterList'] = tMesh['_filterList']
+					worldRender_self['_filterManager']['frameBuffer']['width'] = renderResultObj['viewRectWidth']
+					worldRender_self['_filterManager']['frameBuffer']['height'] = renderResultObj['viewRectHeight']
+					tGL.clearColor(0, 0, 0, 0)
+					worldRender_self['_filterManager'].bind(tGL)
+
+
+					// 드로우
+					if (tIndexBufferInfo) {
+						tPrevIndexBuffer_UUID == tIndexBufferInfo['_UUID'] ? 0 : tGL.bindBuffer(tGL.ELEMENT_ARRAY_BUFFER, tIndexBufferInfo['webglBuffer']);
+						//enum mode, long count, enum type, long offset
+						tGL.drawElements(
+							tMesh['drawMode'],
+							tIndexBufferInfo['pointNum'],
+							tIndexBufferInfo['glArrayType'],
+							0
+						);
+						tPrevIndexBuffer_UUID = tIndexBufferInfo['_UUID'];
+						renderResultObj['triangleNum'] += tIndexBufferInfo['triangleNum'];
+					} else {
+						tGL.drawArrays(tMesh['drawMode'], 0, tInterleaveBuffer['pointNum']);
+						renderResultObj['triangleNum'] += tInterleaveBuffer['triangleNum'];
+					}
+					worldRender_self['_filterManager'].unbind(tGL);
+					worldRender_self['_filterManager'].render(redGL, tGL, worldRender_self, renderResultObj['view'], time, renderResultObj, tMesh);
+					worldRender_self['_filterManager']['filterList'] = [];
+
+				} else {
+					// 드로우
+					if (tIndexBufferInfo) {
+						tPrevIndexBuffer_UUID == tIndexBufferInfo['_UUID'] ? 0 : tGL.bindBuffer(tGL.ELEMENT_ARRAY_BUFFER, tIndexBufferInfo['webglBuffer']);
+						//enum mode, long count, enum type, long offset
+						tGL.drawElements(
+							tMesh['drawMode'],
+							tIndexBufferInfo['pointNum'],
+							tIndexBufferInfo['glArrayType'],
+							0
+						);
+						tPrevIndexBuffer_UUID = tIndexBufferInfo['_UUID'];
+						renderResultObj['triangleNum'] += tIndexBufferInfo['triangleNum'];
+					} else {
+						tGL.drawArrays(tMesh['drawMode'], 0, tInterleaveBuffer['pointNum']);
+						renderResultObj['triangleNum'] += tInterleaveBuffer['triangleNum'];
+					}
+				}
 			}
+
 			/////////////////////////////////////////////////////////////////////////
 			/////////////////////////////////////////////////////////////////////////
-			tMesh['children'].length ? draw(redGL, scene, tMesh['children'], camera, mode2DYn, time, renderResultObj, tCacheInfo, tCacheState, tMVMatrix, subSceneMaterial, transparentMode) : 0;
+			!outlineMode && tMesh['children'].length ? draw(redGL, scene, tMesh['children'], camera, mode2DYn, time, renderResultObj, tCacheInfo, tCacheState, tMVMatrix, subSceneMaterial, transparentMode, outlineMode) : 0;
 		}
 	};
-	RedRenderer.prototype.sceneRender = function (redGL, scene, camera, mode2DYn, children, time, renderResultObj, subSceneMaterial, transparentMode) {
+	RedRenderer.prototype.sceneRender = function (redGL, scene, camera, mode2DYn, children, time, renderResultObj, subSceneMaterial, transparentMode, outlineMode) {
 		// if ( this['cacheState']['pointSize'] == undefined ) this['cacheState']['pointSize'] = null
 		// if ( !this['cacheState']['useCullFace'] ) this['cacheState']['useCullFace'] = null
 		// if ( !this['cacheState']['cullFace'] ) this['cacheState']['cullFace'] = null
@@ -20720,7 +21254,8 @@ var RedRenderer;
 			this['cacheState'],
 			undefined,
 			subSceneMaterial,
-			transparentMode
+			transparentMode,
+			outlineMode
 		)
 	};
 	Object.freeze(RedRenderer);
@@ -24223,10 +24758,11 @@ var RedMouseEventMaterial;
 	Object.freeze(RedMouseEventMaterial)
 })();
 /*
- * RedGL - MIT License
- * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
- * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.2 12:37
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2019.7.11 18:28:15
+ *
  */
 
 "use strict";
@@ -24415,7 +24951,7 @@ var RedPostEffectManager;
 								-camera['farClipping'],
 								camera['farClipping']
 							);
-							mat4.scale(tPerspectiveMTX, tPerspectiveMTX, [1, -1, 1]);
+							mat4.scale(tPerspectiveMTX, tPerspectiveMTX, [1, 1, 1]);
 							tValueStr = JSON.stringify(tPerspectiveMTX);
 							if (tCacheSystemUniformInfo[tUUID] != tValueStr) {
 								gl.uniformMatrix4fv(tLocation, false, tPerspectiveMTX);
@@ -24486,7 +25022,7 @@ var RedPostEffectManager;
 						tSubScene['frameBuffer']['height'] = tViewRect[3];
 						tSubScene['frameBuffer'].bind(tGL);
 						tGL.clear(tGL.COLOR_BUFFER_BIT | tGL.DEPTH_BUFFER_BIT);
-						redRenderer.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], tScene['children'], time, renderInfo, tSubScene['renderMaterial'], true, true);
+						redRenderer.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], tScene['children'], time, renderInfo, tSubScene['renderMaterial'], true, false);
 						tSubScene['frameBuffer'].unbind(tGL);
 						prevWidth = tSubScene['frameBuffer']['width'];
 						prevHeight = tSubScene['frameBuffer']['height'];
@@ -24510,7 +25046,7 @@ var RedPostEffectManager;
 						tParentFrameBufferTexture
 					);
 					// 해당 이펙트를 렌더링하고
-					redRenderer.sceneRender(redGL, tScene, tCamera, true, quadChildren, time, renderInfo, null, true, true);
+					redRenderer.sceneRender(redGL, tScene, tCamera, true, quadChildren, time, renderInfo, null, true, false);
 					// 해당 이펙트의 프레임 버퍼를 언바인딩한다.
 					effect.unbind(tGL);
 					// 현재 이펙트를 최종 텍스쳐로 기록하고 다음 이펙트가 있을경우 활용한다.
@@ -27069,6 +27605,2537 @@ var RedPostEffect_FXAA;
 	Object.freeze(RedPostEffect_FXAA);
 })();
 /*
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2019.8.2 18:16:21
+ *
+ */
+"use strict";
+var RedFilterFrameBuffer;
+(function () {
+	/*DOC:
+	 {
+		 constructorYn : true,
+		 title :`RedFilterFrameBuffer`,
+		 description : `
+			 RedFilterFrameBuffer Instance 생성자.
+		 `,
+		 params : {
+	         redGL : [
+				 {type:'RedGL Instance'}
+			 ],
+			 width : [
+				 {type:'Number'},
+				 '기기허용 최대값보다 큰경우 기기허용 최대값으로 설정됨'
+			 ],
+			 height : [
+				 {type:'Number'},
+				 '기기허용 최대값보다 큰경우 기기허용 최대값으로 설정됨'
+			 ]
+		 },
+		 example : `
+			 RedFilterFrameBuffer( RedGL Instance );
+		 `,
+		 return : 'RedGeometry Instance'
+	 }
+	 :DOC*/
+	var testMap = {}
+	RedFilterFrameBuffer = function (redGL, width, height) {
+		if (!(this instanceof RedFilterFrameBuffer)) return new RedFilterFrameBuffer(redGL, width, height);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedFilterFrameBuffer : RedGL Instance만 허용.', redGL);
+		if (width) typeof width == 'number' || RedGLUtil.throwFunc('RedFilterFrameBuffer : width - 숫자만 허용', '입력값 : ', width);
+		if (height) typeof height == 'number' || RedGLUtil.throwFunc('RedFilterFrameBuffer : height - 숫자만 허용', '입력값 : ', height);
+		var gl;
+		gl = redGL['gl'];
+		width = width || 1920;
+		height = height || 1080;
+		if (width > redGL['detect']['texture']['MAX_TEXTURE_SIZE']) width = redGL['detect']['texture']['MAX_TEXTURE_SIZE'];
+		if (height > redGL['detect']['texture']['MAX_TEXTURE_SIZE']) height = redGL['detect']['texture']['MAX_TEXTURE_SIZE'];
+		this['redGL'] = redGL;
+		this['width'] = width;
+		this['height'] = height;
+		this._prevWidth = null
+		this._prevHeight = null
+		this['webglFrameBuffer'] = gl.createFramebuffer();
+		this['webglRenderBuffer'] = gl.createRenderbuffer();
+		this['texture'] = RedBitmapTexture(redGL);
+		this['_UUID'] = RedGL.makeUUID();
+		gl.bindFramebuffer(gl.FRAMEBUFFER, this['webglFrameBuffer']);
+		// 텍스쳐 세팅
+		gl.activeTexture(gl.TEXTURE0);
+		gl.bindTexture(gl.TEXTURE_2D, this['texture']['webglTexture']);
+		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this['width'], this['height'], 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+		gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+		// gl.generateMipmap(gl.TEXTURE_2D);
+		// 프레임버퍼 세팅
+		gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this['texture']['webglTexture'], 0);
+		//
+		gl.bindTexture(gl.TEXTURE_2D, null);
+		gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+		console.log(this)
+	};
+	RedFilterFrameBuffer.prototype = {
+		/*DOC:
+		 {
+			 code : 'METHOD',
+			 title :`bind`,
+			 description : `소유하고있는 <b>webglFrameBuffer, webglTexture, webglRenderBuffer</b>를 binding.`,
+			 params : {
+                 gl : [{type:'WebGL Context'}]
+			 },
+			 return : 'void'
+		 }
+		 :DOC*/
+		bind: function (gl) {
+			gl.bindFramebuffer(gl.FRAMEBUFFER, this['webglFrameBuffer']);
+			gl.activeTexture(gl.TEXTURE0);
+			gl.bindTexture(gl.TEXTURE_2D, this['texture']['webglTexture']);
+			if (this['_prevWidth'] != this['width'] || this['_prevHeight'] != this['height']) {
+				gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, parseInt(this['width']), parseInt(this['height']), 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+			} else {
+				gl.clear(gl.COLOR_BUFFER_BIT)
+			}
+
+			this._prevWidth = this['width']
+			this._prevHeight = this['height']
+
+		},
+		/*DOC:
+		 {
+			 code : 'METHOD',
+			 title :`unbind`,
+			 description : `소유하고있는 <b>webglFrameBuffer, webglTexture, webglRenderBuffer</b>를 unbinding.`,
+			 params : {
+                 gl : [{type:'WebGL Context'}]
+			 },
+			 return : 'void'
+		 }
+		 :DOC*/
+		unbind: function (gl) {
+			gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+		}
+	};
+	RedDefinePropertyInfo.definePrototypes(
+		'RedFilterFrameBuffer',
+		/*DOC:
+		 {
+			 code:`PROPERTY`,
+			 title :`width`,
+			 description : `
+				기본값 : 1920 or 하드웨어 최대값
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['width', 'number', {min: 2}],
+		/*DOC:
+		 {
+			 code:`PROPERTY`,
+			 title :`height`,
+			 description : `
+				기본값 : 1080 or 하드웨어 최대값
+			`,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['height', 'number', {min: 2}]
+	);
+	Object.freeze(RedFilterFrameBuffer);
+})();
+/*
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2019.8.7 11:21:57
+ *
+ */
+
+"use strict";
+var RedFilterEffectManager;
+(function () {
+	var tRedGL;
+	/*DOC:
+	 {
+		 constructorYn : true,
+		 title :`RedFilterEffectManager`,
+		 description : `
+			 RedFilterEffectManager Instance 생성.
+			 RedScene 생성시 내부속성으로 자동생성됨.
+		 `,
+		 params : {
+			 redGL : [
+				 {type:'RedGL'}
+			 ]
+		 },
+		 demo : '../example/RedFilters.html',
+		 return : 'RedFilterEffectManager Instance'
+	 }
+	 :DOC*/
+	RedFilterEffectManager = function (redGL) {
+		if (!(this instanceof RedFilterEffectManager)) return new RedFilterEffectManager(redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedFilterEffectManager : RedGL Instance만 허용.', redGL);
+		/*DOC:
+		 {
+			title :`frameBuffer`,
+			code : 'PROPERTY',
+			description : `
+				이펙트 렌더링시 사용될 프레임버퍼
+			`,
+			return : 'RedFrameBuffer Instance'
+		}
+		 :DOC*/
+		Object.defineProperty(this, 'frameBuffer', {value: RedFilterFrameBuffer(redGL)});
+		Object.defineProperty(this, 'finalMaterial', {value: RedFilterMaterial(redGL, this['frameBuffer']['texture'])});
+		/*DOC:
+		 {
+			title :`filterList`,
+			code : 'PROPERTY',
+			description : `
+				이펙트 리스트
+			`,
+			return : 'Array'
+		}
+		 :DOC*/
+		this['filterList'] = [];
+		var quadMesh = RedMesh(redGL, RedPlane(redGL, 1, 1, 1, 1, true), this['finalMaterial']);
+		quadMesh.useCullFace = false;
+		Object.defineProperty(this, 'children', {value: [quadMesh]});
+		this['_UUID'] = RedGL.makeUUID();
+		console.log(this);
+	};
+	RedFilterEffectManager.prototype = {
+		/*DOC:
+		 {
+			title :`bind`,
+			code : 'METHOD',
+			description : `
+				프레임 버퍼 바인딩.
+				렌더러에서 자동호출됨.
+			`,
+			params : {
+				gl : [
+					{type:'WebGL Context'}
+				]
+			},
+			return : 'void'
+		}
+		 :DOC*/
+		bind: function (gl) {
+			this['frameBuffer'].bind(gl);
+		},
+		/*DOC:
+		 {
+			title :`unbind`,
+			code : 'METHOD',
+			description : `
+				프레임 버퍼 언바인딩.
+				렌더러에서 자동호출됨.
+			`,
+			params : {
+				gl : [
+					{type:'WebGL Context'}
+				]
+			},
+			return : 'void'
+		}
+		 :DOC*/
+		unbind: function (gl) {
+			this['frameBuffer'].unbind(gl);
+		},
+		render: (function () {
+			var tQuadMesh;
+			var originFrameBufferTexture, lastFrameBufferTexture;
+
+			var drawEffect;
+			var tCacheSystemUniformInfo;
+			var tEffectList;
+			tEffectList = [];
+			drawEffect = function (redGL, effect, quadChildren, redView, tCamera, redRenderer, time, renderInfo, tMesh, depth, length) {
+				var tPerspectiveMTX = [];
+				var tProgram;
+				var tLocationInfo;
+				var tSystemUniformLocation;
+				var tLocation;
+				var tUUID;
+				var tValueStr;
+				var tParentFrameBufferTexture;
+				var gl;
+				var i, len;
+				var tScene, tViewRect;
+				var tFrameBuffer;
+				gl = redGL.gl;
+				tScene = redView['scene'];
+				tViewRect = redView['_viewRect'];
+				////////////////////////////////////////////////////////////////////////////
+				if (effect['_process'] && effect['_process'].length) {
+					tParentFrameBufferTexture = lastFrameBufferTexture;
+					i = 0;
+					len = effect['_process'].length;
+					for (i; i < len; i++) {
+						drawEffect(redGL, effect['_process'][i], quadChildren, redView, tCamera, redRenderer, time, renderInfo, tMesh, depth + 1);
+					}
+				}
+				tFrameBuffer = effect['frameBuffer'];
+				if (tFrameBuffer) {
+					// 최종메쉬의 재질을 현재 이펙트로 변경
+					tFrameBuffer['_width'] = parseInt(tViewRect[2]);
+					tFrameBuffer['_height'] = parseInt(tViewRect[3]);
+					tQuadMesh['_material'] = effect;
+					// 프로그램을 변경
+					tProgram = tQuadMesh['_material']['program'];
+					gl.useProgram(tProgram['webglProgram']);
+					// 시스템 유니폼중 업데이트 해야할 목록 처리
+					tSystemUniformLocation = tProgram['systemUniformLocation'];
+					// 퍼스펙티브 매트릭스 처리
+					tLocationInfo = tSystemUniformLocation['uPMatrix'];
+					if (tLocationInfo) {
+						tLocation = tLocationInfo['location'];
+						tUUID = tLocationInfo['_UUID'];
+						if (tLocation) {
+							if (tCamera['mode2DYn']) {
+								var x, y, z;
+								// mat4.ortho(
+								// 	tPerspectiveMTX,
+								// 	-0.5, // left
+								// 	0.5, // right
+								// 	-0.5, // bottom
+								// 	0.5, // top,
+								// 	-tCamera['farClipping'],
+								// 	tCamera['farClipping']
+								// );
+								// mat4.translate(tPerspectiveMTX, tPerspectiveMTX, [-0.5, 0.5, 0]);
+								// mat4.scale(tPerspectiveMTX, tPerspectiveMTX, [1 / parseInt(tViewRect[2]) * tRedGL.renderScale * window.devicePixelRatio, 1 / parseInt(tViewRect[3]) * tRedGL.renderScale * window.devicePixelRatio, 1])
+								//ortho
+								tPerspectiveMTX[0] = 2;
+								tPerspectiveMTX[1] = 0;
+								tPerspectiveMTX[2] = 0;
+								tPerspectiveMTX[3] = 0;
+								tPerspectiveMTX[4] = 0;
+								tPerspectiveMTX[5] = 2;
+								tPerspectiveMTX[6] = 0;
+								tPerspectiveMTX[7] = 0;
+								tPerspectiveMTX[8] = 0;
+								tPerspectiveMTX[9] = 0;
+								tPerspectiveMTX[10] = 2 * -1 / tCamera['farClipping'] * 2;
+								tPerspectiveMTX[11] = 0;
+								tPerspectiveMTX[12] = 0;
+								tPerspectiveMTX[13] = 0;
+								tPerspectiveMTX[14] = 0;
+								tPerspectiveMTX[15] = 1;
+								x = -0.5, y = 0.5, z = 0;
+								tPerspectiveMTX[12] = tPerspectiveMTX[0] * x + tPerspectiveMTX[4] * y + tPerspectiveMTX[8] * z + tPerspectiveMTX[12];
+								tPerspectiveMTX[13] = tPerspectiveMTX[1] * x + tPerspectiveMTX[5] * y + tPerspectiveMTX[9] * z + tPerspectiveMTX[13];
+								tPerspectiveMTX[14] = tPerspectiveMTX[2] * x + tPerspectiveMTX[6] * y + tPerspectiveMTX[10] * z + tPerspectiveMTX[14];
+								tPerspectiveMTX[15] = tPerspectiveMTX[3] * x + tPerspectiveMTX[7] * y + tPerspectiveMTX[11] * z + tPerspectiveMTX[15];
+								x = 1 / parseInt(tViewRect[2]) * tRedGL.renderScale * window.devicePixelRatio;
+								y = 1 / parseInt(tViewRect[3]) * tRedGL.renderScale * window.devicePixelRatio;
+								z = 1;
+								tPerspectiveMTX[0] = tPerspectiveMTX[0] * x;
+								tPerspectiveMTX[1] = tPerspectiveMTX[1] * x;
+								tPerspectiveMTX[2] = tPerspectiveMTX[2] * x;
+								tPerspectiveMTX[3] = tPerspectiveMTX[3] * x;
+								tPerspectiveMTX[4] = tPerspectiveMTX[4] * y;
+								tPerspectiveMTX[5] = tPerspectiveMTX[5] * y;
+								tPerspectiveMTX[6] = tPerspectiveMTX[6] * y;
+								tPerspectiveMTX[7] = tPerspectiveMTX[7] * y;
+								tPerspectiveMTX[8] = tPerspectiveMTX[8] * z;
+								tPerspectiveMTX[9] = tPerspectiveMTX[9] * z;
+								tPerspectiveMTX[10] = tPerspectiveMTX[10] * z;
+								tPerspectiveMTX[11] = tPerspectiveMTX[11] * z;
+
+
+							} else {
+								tPerspectiveMTX = tCamera['perspectiveMTX']
+							}
+							tValueStr = JSON.stringify(tPerspectiveMTX);
+							if (tCacheSystemUniformInfo[tUUID] != tValueStr) {
+								gl.uniformMatrix4fv(tLocation, false, tPerspectiveMTX);
+								tCacheSystemUniformInfo[tUUID] = tValueStr;
+							}
+						}
+					}
+					//////////////////////////////////////////////////////////////////////
+					// if (!tCamera['mode2DYn'] || depth || length > 1) {
+						gl.bindFramebuffer(gl.FRAMEBUFFER, tFrameBuffer['webglFrameBuffer']);
+						gl.activeTexture(gl.TEXTURE0);
+						gl.bindTexture(gl.TEXTURE_2D, tFrameBuffer['texture']['webglTexture']);
+
+						if (tFrameBuffer['_prevWidth'] != tFrameBuffer['width'] || tFrameBuffer['_prevHeight'] != tFrameBuffer['height']) {
+							gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, tFrameBuffer['width'], tFrameBuffer['height'], 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+						} else {
+							gl.clear(gl.COLOR_BUFFER_BIT)
+						}
+
+
+						tFrameBuffer._prevWidth = tFrameBuffer['width'];
+						tFrameBuffer._prevHeight = tFrameBuffer['height']
+					// }
+					// 해당 이펙트의 기본 텍스쳐를 지난 이펙트의 최종 텍스쳐로 업로드
+					if (effect['_process'] && effect['_process'].length) {
+						effect.updateTexture(
+							lastFrameBufferTexture,
+							tParentFrameBufferTexture
+						);
+					} else {
+						effect['_diffuseTexture'] = lastFrameBufferTexture;
+					}
+					// 해당 이펙트를 렌더링하고
+					redRenderer.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], quadChildren, time, renderInfo);
+					// 해당 이펙트의 프레임 버퍼를 언바인딩한다.
+					// if (!tCamera['mode2DYn'] || depth || length > 1) {
+						gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+					// }
+					// 현재 이펙트를 최종 텍스쳐로 기록하고 다음 이펙트가 있을경우 활용한다.
+					lastFrameBufferTexture = tFrameBuffer['texture'];
+				}
+			};
+			return function (redGL, gl, redRenderer, redView, time, renderInfo, tMesh) {
+				var tCamera;
+				var tScene;
+				var tViewRect, tWorldRect;
+				var minX, minY, minZ, maxX, maxY, maxZ, vx, vy, vz, t, i, len;
+				var tx, ty, tz;
+				var tMatrix;
+				var stride;
+				var currentAABB;
+				var tRadius;
+				var tScaleX, tScaleY, tScaleTestX, tScaleTestY;
+				var prevEffect, tEffect;
+				prevEffect = null;
+				tScaleX = tScaleY = 0;
+				tRedGL = redGL;
+				tScene = redView['scene'];
+				tRadius = 0;
+				tCamera = redView['camera'] instanceof RedBaseController ? redView['camera']['camera'] : redView['camera'];
+				tViewRect = redView['_viewRect'];
+				tWorldRect = redRenderer['worldRect'];
+				tCacheSystemUniformInfo = redRenderer['cacheInfo']['cacheSystemUniformInfo'];
+				/////////////////////////////////////////////////////////////////////
+				// 쿼드메쉬 영역 계산
+				tMatrix = tMesh.matrix;
+				stride = tMesh._geometry['interleaveBuffer']['stride'];
+				minX = minY = minZ = maxX = maxY = maxZ = 0;
+				t = tMesh._geometry['interleaveBuffer']['data'];
+				i = 0;
+				len = tMesh._geometry['interleaveBuffer']['pointNum'];
+				for (i; i < len; i++) {
+					vx = i * stride , vy = vx + 1, vz = vx + 2;
+					tx = tMatrix[0] * t[vx] + tMatrix[4] * t[vy] + tMatrix[8] * t[vz];
+					ty = tMatrix[1] * t[vx] + tMatrix[5] * t[vy] + tMatrix[9] * t[vz];
+					tz = tMatrix[2] * t[vx] + tMatrix[6] * t[vy] + tMatrix[10] * t[vz];
+					minX = tx < minX ? tx : minX;
+					maxX = tx > maxX ? tx : maxX;
+					minY = ty < minY ? ty : minY;
+					maxY = ty > maxY ? ty : maxY;
+					minZ = tz < minZ ? tz : minZ;
+					maxZ = tz > maxZ ? tz : maxZ;
+				}
+				currentAABB = [maxX - minX, maxY - minY, maxZ - minZ];
+				/////////////////////////////////////////////////////////////////////
+				// 렌더링할 이펙트 리스트를 정리한다.
+				tEffectList.length = 0;
+				i = 0;
+				len = this['filterList'].length;
+				tQuadMesh = this['children'][0];
+				for (i; i < len; i++) {
+					tEffect = this['filterList'][i];
+
+					if (prevEffect != tEffect) {
+						// 최종 이펙트 리스트에 등록
+						tEffectList[tEffectList.length] = tEffect;
+						// 스케일 계산
+						if (tEffect instanceof RedFilter_Blur) {
+							tScaleTestX = currentAABB[0] + (tCamera['mode2DYn'] ? 5 : 0)
+							tScaleTestY = currentAABB[1] + (tCamera['mode2DYn'] ? 5 : 0)
+						} else if (tEffect instanceof RedFilter_BlurX || tEffect instanceof RedFilter_BlurY) {
+							tScaleTestX = currentAABB[0] + tEffect['_size'] ;
+							tScaleTestY = currentAABB[1] + tEffect['_size'] ;
+						} else if (tEffect instanceof RedFilter_GaussianBlur) {
+							tScaleTestX = currentAABB[0] + tEffect['_radius'];
+							tScaleTestY = currentAABB[1] + tEffect['_radius'];
+						} else if (tEffect instanceof RedFilter_Bloom) {
+							tScaleTestX = currentAABB[0] + tEffect['_blur'];
+							tScaleTestY = currentAABB[1] + tEffect['_blur'];
+						} else {
+							tScaleTestX = currentAABB[0];
+							tScaleTestY = currentAABB[1]
+						}
+
+						tScaleX = tScaleX < tScaleTestX ? tScaleTestX : tScaleX;
+						tScaleY = tScaleY < tScaleTestY ? tScaleTestY : tScaleY;
+					}
+
+					prevEffect = tEffect
+				}
+
+				// 쿼드메쉬 위치 설정
+				tQuadMesh.x = tMesh.x;
+				tQuadMesh.y = tMesh.y;
+				tQuadMesh.z = tMesh.z;
+				// 쿼드메쉬 영역 설정
+				if (tCamera['mode2DYn']) {
+					// 2D 일떄
+					tQuadMesh.scaleX = tScaleX;
+					tQuadMesh.scaleY = tScaleY;
+					tQuadMesh.scaleZ = 1;
+				} else {
+					// 3D 일때
+					tRadius = Math.sqrt(currentAABB[0] * currentAABB[0] + currentAABB[1] * currentAABB[1]);
+					tQuadMesh.scaleY = tQuadMesh.scaleX = tQuadMesh.scaleZ = tRadius
+					tQuadMesh.lookAt(tCamera.x, tCamera.y, tCamera.z)
+
+				}
+				////////////////////////////////////////////////////////////////////////////
+				// 프레임 버퍼 정보를 캐싱
+				lastFrameBufferTexture = originFrameBufferTexture = this['frameBuffer']['texture'];
+				////////////////////////////////////////////////////////////////////////////
+				// 최종결과는 RedView의 사이즈와 동일하게 한다.
+				this['frameBuffer']['_width'] = tViewRect[2];
+				this['frameBuffer']['_height'] = tViewRect[3];
+
+				if (tCamera['mode2DYn']) {
+					gl.scissor(
+						parseInt(tMesh.x * redGL._renderScale * window.devicePixelRatio - tQuadMesh.scaleX / 2 * window.devicePixelRatio)-10,
+						parseInt(tViewRect[3] - tMesh.y * redGL._renderScale * window.devicePixelRatio - tQuadMesh.scaleY / 2 * window.devicePixelRatio)-10,
+						parseInt(tQuadMesh.scaleX * window.devicePixelRatio)+20,
+						parseInt(tQuadMesh.scaleY * window.devicePixelRatio)+20
+					);
+				} else {
+					var tScreen_point;
+					var tScreen_distance;
+					var tScreen_resultMTX;
+					var tScreen_resultPosition;
+					tScreen_resultPosition = {x: 0, y: 0, z: 0, w: 0};
+					tScreen_resultMTX = [
+						1, 0, 0, 0,
+						0, 1, 0, 0,
+						0, 0, 1, 0,
+						0, 0, 0, 1
+					];
+					/////////////////////////////////////////////////////////////////////////////////
+					mat4.multiply(tScreen_resultMTX, tCamera.perspectiveMTX, tCamera.matrix);
+					mat4.multiply(tScreen_resultMTX, tScreen_resultMTX, tQuadMesh['matrix']);
+					////////////////////////////////////////////////////////////////////////////////
+					tScreen_resultPosition.x = tScreen_resultMTX[12], tScreen_resultPosition.y = tScreen_resultMTX[13], tScreen_resultPosition.z = tScreen_resultMTX[14], tScreen_resultPosition.w = tScreen_resultMTX[15];
+					tScreen_resultPosition.x = tScreen_resultPosition.x * 0.5 / tScreen_resultPosition.w + 0.5;
+					tScreen_resultPosition.y = tScreen_resultPosition.y * 0.5 / tScreen_resultPosition.w + 0.5;
+					tScreen_point = [
+						(tViewRect[0] + tScreen_resultPosition.x * tViewRect[2]) / window.devicePixelRatio,
+						(tViewRect[1] + (1 - tScreen_resultPosition.y) * tViewRect[3]) / window.devicePixelRatio
+					];
+					tScreen_distance = vec3.distance([tCamera.x, tCamera.y, tCamera.z], [tMesh.x, tMesh.y, tMesh.z]);
+					tRadius = tRadius / (tScreen_distance) * tViewRect[3]
+					if (tRadius > tViewRect[3]) tRadius = tViewRect[3]
+					gl.scissor(
+						parseInt(tScreen_point[0] * window.devicePixelRatio - tRadius / 2),
+						parseInt(tWorldRect[3] - tScreen_point[1] * window.devicePixelRatio - tRadius / 2),
+						parseInt(tRadius),
+						parseInt(tRadius)
+					);
+				}
+
+				////////////////////////////////////////////////////////////////////////////
+				// 이펙트 렌더
+				i = 0;
+				len = tEffectList.length;
+				for (i; i < len; i++) drawEffect(redGL, tEffectList[i], this['children'], redView, tCamera, redRenderer, time, renderInfo, tMesh, 0, len);
+				////////////////////////////////////////////////////////////////////////////
+				if (redView['postEffectManager']['postEffectList'].length) {
+					var tPostEffectManagerFrameBuffer = redView['postEffectManager']['frameBuffer']
+					gl.bindFramebuffer(gl.FRAMEBUFFER, tPostEffectManagerFrameBuffer['webglFrameBuffer']);
+					gl.activeTexture(gl.TEXTURE0);
+					gl.bindTexture(gl.TEXTURE_2D, tPostEffectManagerFrameBuffer['texture']['webglTexture']);
+					// 렌더버퍼 세팅
+					gl.bindRenderbuffer(gl.RENDERBUFFER, tPostEffectManagerFrameBuffer['webglRenderBuffer']);
+					// 프레임버퍼 세팅
+					gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tPostEffectManagerFrameBuffer['texture']['webglTexture'], 0);
+					gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, tPostEffectManagerFrameBuffer['webglRenderBuffer']);
+				}
+				if (lastFrameBufferTexture != originFrameBufferTexture) {
+					this['finalMaterial']['_diffuseTexture'] = lastFrameBufferTexture;
+					tQuadMesh._material = this['finalMaterial'];
+					redRenderer.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], this['children'], time, renderInfo);
+				}
+				gl.scissor(tViewRect[0], tWorldRect[3] - tViewRect[3] - tViewRect[1], tViewRect[2], tViewRect[3]);
+				this['finalMaterial']['_diffuseTexture'] = this['frameBuffer']['texture'];
+			}
+		})()
+	};
+	Object.freeze(RedFilterEffectManager);
+})();
+/*
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2019.8.2 18:16:21
+ *
+ */
+"use strict";
+var RedBaseFilter;
+(function () {
+	var tPrototype;
+	/*DOC:
+	 {
+		 constructorYn : true,
+		 title :`RedBaseFilter`,
+		 description : `
+			 메쉬 필터 정의 사용되는 기저층
+		 `,
+		 extends:['RedBaseMaterial'],
+		 return : 'RedBaseFilter Instance'
+	 }
+	 :DOC*/
+	RedBaseFilter = function () {};
+	tPrototype = RedBaseFilter.prototype = new RedBaseMaterial();
+	tPrototype['bind'] = RedFilterEffectManager.prototype['bind'];
+	tPrototype['unbind'] = RedFilterEffectManager.prototype['unbind'];
+	/*DOC:
+	 {
+		title :`updateTexture`,
+		code : 'METHOD',
+		description : `
+			메쉬 필터 정의시 반드시 재정의 되어야함.
+			메쉬 필터 내부에서 사용되는 텍스쳐를 업데이트함.
+		`,
+		return : 'void'
+	}
+	 :DOC*/
+	tPrototype['updateTexture'] = function () {
+		RedGLUtil.throwFunc('RedBaseFilter - updateTexture : 반드시 재정의해야함')
+	};
+	/*DOC:
+	 {
+		title :`_process`,
+		code : 'PROPERTY',
+		description : `
+			해당메쉬 필터 처리전 전처리과정이 필요할 경우 사용.
+		`,
+		return : 'void'
+	}
+	 :DOC*/
+	tPrototype['_process'] = [];
+	RedBaseFilter['baseVertexShaderSource1'] = function () {
+		/* @preserve
+		 void main(void) {
+			 vTexcoord = aTexcoord;
+			 vResolution = uResolution;
+			 vTime = uTime;
+			 gl_Position = uPMatrix * uCameraMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
+		 }
+		 */
+	};
+	Object.freeze(RedBaseFilter);
+})();
+/*
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2019.8.2 18:16:21
+ *
+ */
+
+"use strict";
+var RedFilterMaterial;
+(function () {
+	var vSource, fSource;
+	var PROGRAM_NAME = 'RedFilterMaterialProgram';
+	var checked;
+	vSource = function () {
+		/* @preserve
+		 void main(void) {
+			 vTexcoord = aTexcoord;
+			 gl_Position = uPMatrix * uCameraMatrix * uMMatrix *  vec4(aVertexPosition, 1.0);
+			 vResolution = uResolution;
+		 }
+		 */
+	};
+	fSource = function () {
+		/* @preserve
+		 precision lowp float;
+		 uniform sampler2D u_diffuseTexture;
+		 void main(void) {
+			 gl_FragColor = texture2D(u_diffuseTexture, gl_FragCoord.xy/vResolution.xy);
+			 // gl_FragColor.r = 1.0;
+			 // gl_FragColor.a = 0.5;
+			 if(gl_FragColor.a == 0.0) discard;
+
+		 }
+		 */
+	};
+	/*DOC:
+	 {
+		 constructorYn : true,
+		 title :`RedFilterMaterial`,
+		 description : `
+			 메쉬 필터 최종 이미지를 생성하기 위한재질.
+			 시스템적으로 사용됨.
+		 `,
+		 params : {
+			 redGL : [
+				 {type:'RedGL'}
+			 ],
+			 diffuseTexture : [
+				 {type:'RedBitmapTexture'},
+				 'RedBitmapTexture Instance'
+			 ]
+		 },
+		 extends : ['RedBaseMaterial'],
+		 return : 'RedFilterMaterial Instance'
+	 }
+	 :DOC*/
+	RedFilterMaterial = function (redGL, diffuseTexture) {
+		if (!(this instanceof RedFilterMaterial)) return new RedFilterMaterial(redGL, diffuseTexture);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedFilterMaterial : RedGL Instance만 허용.', redGL);
+		/////////////////////////////////////////
+		// 유니폼 프로퍼티
+		this['diffuseTexture'] = diffuseTexture;
+		/////////////////////////////////////////
+		// 일반 프로퍼티
+		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
+		this['_UUID'] = RedGL.makeUUID();
+		if (!checked) {
+			this.checkUniformAndProperty();
+			checked = true;
+		}
+		console.log(this);
+	};
+	RedFilterMaterial.prototype = new RedBaseMaterial();
+	/*DOC:
+	 {
+	     code : 'PROPERTY',
+		 title :`diffuseTexture`,
+		 description :`diffuseTexture`,
+		 return : 'RedFilterMaterial'
+	 }
+	 :DOC*/
+	RedDefinePropertyInfo.definePrototype('RedFilterMaterial', 'diffuseTexture', 'sampler2D', {essential: true});
+	Object.freeze(RedFilterMaterial);
+})();
+/*
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2019.8.7 11:21:57
+ *
+ */
+
+"use strict";
+var RedFilter_BrightnessContrast;
+(function () {
+	var vSource, fSource;
+	var PROGRAM_NAME = 'RedFilterBrightnessContrastProgram';
+	var checked;
+	vSource = RedBaseFilter['baseVertexShaderSource1']
+	fSource = function () {
+		/* @preserve
+		 precision mediump float;
+		 uniform sampler2D u_diffuseTexture;
+		 uniform float u_brightness_value;
+		 uniform float u_contrast_value;
+		 void main(void) {
+			 vec4 finalColor = texture2D(u_diffuseTexture, gl_FragCoord.xy/vResolution );
+			 if (u_contrast_value > 0.0) finalColor.rgb = (finalColor.rgb - 0.5) / (1.0 - u_contrast_value) + 0.5;
+			 else finalColor.rgb = (finalColor.rgb - 0.5) * (1.0 + u_contrast_value) + 0.5;
+			 finalColor.rgb += u_brightness_value;
+			 gl_FragColor = finalColor;
+		 }
+		 */
+	};
+	/*DOC:
+	 {
+		 constructorYn : true,
+		 title :`RedFilter_BrightnessContrast`,
+		 description : `
+			 BrightnessContrast 이펙트
+			 postEffectManager.addEffect( effect Instance ) 로 추가.
+		 `,
+		 params : {
+			 redGL : [
+				 {type:'RedGL'}
+			 ]
+		 },
+		 extends : [
+		    'RedBaseFilter',
+		    'RedBaseMaterial'
+		 ],
+		 demo : '../example/postEffect/adjustments/RedFilter_BrightnessContrast.html',
+		 example : `
+            var effect;
+            effect = RedFilter_BrightnessContrast(RedGL Instance); // 포스트이펙트 생성
+            // postEffectManager는 RedView 생성시 자동생성됨.
+            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
+		 `,
+		 return : 'RedFilter_BrightnessContrast Instance'
+	 }
+	 :DOC*/
+	RedFilter_BrightnessContrast = function (redGL) {
+		if (!(this instanceof RedFilter_BrightnessContrast)) return new RedFilter_BrightnessContrast(redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedFilter_BrightnessContrast : RedGL Instance만 허용.', redGL);
+		this['frameBuffer'] = RedFilterFrameBuffer(redGL);
+		this['diffuseTexture'] = null;
+		this['brightness'] = 0;
+		this['contrast'] = 0;
+		/////////////////////////////////////////
+		// 일반 프로퍼티
+		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
+		this['_UUID'] = RedGL.makeUUID();
+		if (!checked) {
+			this.checkUniformAndProperty();
+			checked = true;
+		}
+		console.log(this);
+	};
+	RedFilter_BrightnessContrast.prototype = new RedBaseFilter();
+	RedFilter_BrightnessContrast.prototype['updateTexture'] = function (lastFrameBufferTexture) {
+		this['diffuseTexture'] = lastFrameBufferTexture;
+	};
+	RedDefinePropertyInfo.definePrototypes(
+		'RedFilter_BrightnessContrast',
+		['diffuseTexture', 'sampler2D'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`brightness`,
+			 description : `
+				 밝기
+				 기본값 : 0
+				 min : -150
+				 max : 150
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['brightness', 'number', {
+			min: -150, max: 150, callback: function (v) {
+				this['_brightness_value'] = v / 255
+			}
+		}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`contrast`,
+			 description : `
+				 대조
+				 기본값 : 0
+				 min: -50
+				 max: 100
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['contrast', 'number', {
+			min: -50, max: 100, callback: function (v) {
+				this['_contrast_value'] = v / 255
+			}
+		}]
+	);
+	Object.freeze(RedFilter_BrightnessContrast);
+})();
+/*
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2019.8.6 14:20:40
+ *
+ */
+
+"use strict";
+var RedFilter_Gray;
+(function () {
+	var vSource, fSource;
+	var PROGRAM_NAME = 'RedFilterGrayProgram';
+	var checked;
+	vSource = RedBaseFilter['baseVertexShaderSource1']
+	fSource = function () {
+		/* @preserve
+		 precision lowp float;
+		 uniform sampler2D u_diffuseTexture;
+		 void main(void) {
+			 vec4 finalColor = texture2D(u_diffuseTexture, gl_FragCoord.xy/vResolution);
+			 highp float gray = (finalColor.r  + finalColor.g + finalColor.b)/3.0;
+			 gl_FragColor = vec4( gray, gray, gray, finalColor.a);
+		 }
+		 */
+	};
+	/*DOC:
+	 {
+		 constructorYn : true,
+		 title :`RedFilter_Gray`,
+		 description : `
+			 Gray 이펙트
+			 postEffectManager.addEffect( effect Instance ) 로 추가.
+		 `,
+		 params : {
+			 redGL : [
+				 {type:'RedGL'}
+			 ]
+		 },
+		 extends : [
+			'RedBaseFilter',
+			'RedBaseMaterial'
+		 ],
+		 demo : '../example/postEffect/adjustments/RedFilter_Gray.html',
+		 example : `
+			var effect;
+			effect = RedFilter_Gray(RedGL Instance); // 포스트이펙트 생성
+			// postEffectManager는 RedView 생성시 자동생성됨.
+			(RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
+		 `,
+		 return : 'RedFilter_Gray Instance'
+	 }
+	 :DOC*/
+	RedFilter_Gray = function (redGL) {
+		if (!(this instanceof RedFilter_Gray)) return new RedFilter_Gray(redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedFilter_Gray : RedGL Instance만 허용.', redGL);
+		this['frameBuffer'] = RedFilterFrameBuffer(redGL);
+		this['diffuseTexture'] = null;
+		/////////////////////////////////////////
+		// 일반 프로퍼티
+		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
+		this['_UUID'] = RedGL.makeUUID();
+		if (!checked) {
+			this.checkUniformAndProperty();
+			checked = true;
+		}
+		console.log(this);
+	};
+	RedFilter_Gray.prototype = new RedBaseFilter();
+	RedFilter_Gray.prototype['updateTexture'] = function (lastFrameBufferTexture) {
+		this['diffuseTexture'] = lastFrameBufferTexture;
+	};
+	RedDefinePropertyInfo.definePrototype('RedFilter_Gray', 'diffuseTexture', 'sampler2D');
+	Object.freeze(RedFilter_Gray);
+})();
+/*
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2019.8.6 17:36:26
+ *
+ */
+
+"use strict";
+var RedFilter_Invert;
+(function () {
+	var vSource, fSource;
+	var PROGRAM_NAME = 'RedFilterInvertProgram';
+	var checked;
+	vSource = RedBaseFilter['baseVertexShaderSource1']
+	fSource = function () {
+		/* @preserve
+		 precision lowp float;
+		 uniform sampler2D u_diffuseTexture;
+
+		 void main(void) {
+			 vec4 finalColor = texture2D(u_diffuseTexture, gl_FragCoord.xy/vResolution);
+			 if(finalColor.a == 0.0) discard;
+			 finalColor.r = 1.0 - finalColor.r;
+			 finalColor.g = 1.0 - finalColor.g;
+			 finalColor.b = 1.0 - finalColor.b;
+			 gl_FragColor = finalColor;
+		 }
+		 */
+	};
+	/*DOC:
+	 {
+		 constructorYn : true,
+		 title :`RedFilter_Invert`,
+		 description : `
+			 Invert 이펙트
+			 postEffectManager.addEffect( effect Instance ) 로 추가.
+		 `,
+		 params : {
+			 redGL : [
+				 {type:'RedGL'}
+			 ]
+		 },
+		 extends : [
+			'RedBaseFilter',
+			'RedBaseMaterial'
+		 ],
+		 demo : '../example/postEffect/adjustments/RedFilter_Invert.html',
+		 example : `
+			var effect;
+			effect = RedFilter_Invert(RedGL Instance); // 포스트이펙트 생성
+			// postEffectManager는 RedView 생성시 자동생성됨.
+			(RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
+		 `,
+		 return : 'RedFilter_Invert Instance'
+	 }
+	 :DOC*/
+	RedFilter_Invert = function (redGL) {
+		if (!(this instanceof RedFilter_Invert)) return new RedFilter_Invert(redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedFilter_Invert : RedGL Instance만 허용.', redGL);
+		this['frameBuffer'] = RedFilterFrameBuffer(redGL);
+		this['diffuseTexture'] = null;
+		/////////////////////////////////////////
+		// 일반 프로퍼티
+		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
+		this['_UUID'] = RedGL.makeUUID();
+		if (!checked) {
+			this.checkUniformAndProperty();
+			checked = true;
+		}
+		console.log(this);
+	};
+	RedFilter_Invert.prototype = new RedBaseFilter();
+	RedFilter_Invert.prototype['updateTexture'] = function (lastFrameBufferTexture) {
+		this['diffuseTexture'] = lastFrameBufferTexture;
+	};
+	RedDefinePropertyInfo.definePrototype('RedFilter_Invert', 'diffuseTexture', 'sampler2D');
+	Object.freeze(RedFilter_Invert);
+})();
+/*
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2019.8.7 11:21:57
+ *
+ */
+
+"use strict";
+var RedFilter_Threshold;
+(function () {
+	var vSource, fSource;
+	var PROGRAM_NAME = 'RedFilterThresholdProgram';
+	var checked;
+	vSource = RedBaseFilter['baseVertexShaderSource1']
+	fSource = function () {
+		/* @preserve
+		 precision lowp float;
+		 uniform sampler2D u_diffuseTexture;
+		 uniform float u_threshold_value;
+		 void main() {
+			 vec4 finalColor = texture2D(u_diffuseTexture,  gl_FragCoord.xy/vResolution.xy);
+			 float v;
+			 if(0.2126 * finalColor.r + 0.7152 * finalColor.g + 0.0722 * finalColor.b >= u_threshold_value) v = 1.0;
+			 else v = 0.0;
+			 finalColor.r = finalColor.g = finalColor.b = v;
+			 gl_FragColor = finalColor;
+		 }
+		 */
+	};
+	/*DOC:
+	 {
+		 constructorYn : true,
+		 title :`RedFilter_Threshold`,
+		 description : `
+			 Threshold 이펙트
+			 postEffectManager.addEffect( effect Instance ) 로 추가.
+		 `,
+		 params : {
+			 redGL : [
+				 {type:'RedGL'}
+			 ]
+		 },
+		 extends : [
+		    'RedBaseFilter',
+		    'RedBaseMaterial'
+		 ],
+		 demo : '../example/postEffect/adjustments/RedFilter_Threshold.html',
+		 example : `
+            var effect;
+            effect = RedFilter_Threshold(RedGL Instance); // 포스트이펙트 생성
+            // postEffectManager는 RedView 생성시 자동생성됨.
+            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
+		 `,
+		 return : 'RedFilter_Threshold Instance'
+	 }
+	 :DOC*/
+	RedFilter_Threshold = function (redGL) {
+		if (!(this instanceof RedFilter_Threshold)) return new RedFilter_Threshold(redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedFilter_Threshold : RedGL Instance만 허용.', redGL);
+		this['frameBuffer'] = RedFilterFrameBuffer(redGL);
+		this['diffuseTexture'] = null;
+		this['threshold'] = 50;
+		/////////////////////////////////////////
+		// 일반 프로퍼티
+		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
+		this['_UUID'] = RedGL.makeUUID();
+		if (!checked) {
+			this.checkUniformAndProperty();
+			checked = true;
+		}
+		console.log(this);
+	};
+	RedFilter_Threshold.prototype = new RedBaseFilter();
+	RedFilter_Threshold.prototype['updateTexture'] = function (lastFrameBufferTexture) {
+		this['diffuseTexture'] = lastFrameBufferTexture;
+	};
+	RedDefinePropertyInfo.definePrototypes(
+		'RedFilter_Threshold',
+		['diffuseTexture', 'sampler2D'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`threshold`,
+			 description : `
+				 최소 유효값
+				 기본값 : 128
+				 min: 1
+				 max: 255
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		[
+			'threshold', 'number',
+			{
+				min: 1, max: 255, callback: function (v) {
+					this['_threshold_value'] = v / 255
+				}
+			}
+		]
+	);
+
+	Object.freeze(RedFilter_Threshold);
+})();
+/*
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2019.8.6 14:20:40
+ *
+ */
+
+"use strict";
+var RedFilter_HueSaturation;
+(function () {
+	var vSource, fSource;
+	var PROGRAM_NAME = 'RedFilterHueSaturationProgram';
+	var checked;
+	vSource = RedBaseFilter['baseVertexShaderSource1']
+	fSource = function () {
+		/* @preserve
+		 precision lowp float;
+		 uniform sampler2D u_diffuseTexture;
+		 uniform float u_hue_value;
+		 uniform float u_saturation_value;
+		 void main(void) {
+		   vec2 testCoord = gl_FragCoord.xy/vResolution.xy;
+			 vec4 finalColor = texture2D(u_diffuseTexture, testCoord );
+			 float angle = u_hue_value * 3.1415926535897932384626433832795;
+			 float s = sin(angle), c = cos(angle);
+			 vec3 weights = (vec3(2.0 * c, -sqrt(3.0) * s - c, sqrt(3.0) * s - c) + 1.0) / 3.0;
+			 float len = length(finalColor.rgb);
+
+			 finalColor.rgb = vec3(
+				 dot(finalColor.rgb, weights.xyz),
+				 dot(finalColor.rgb, weights.zxy),
+				 dot(finalColor.rgb, weights.yzx)
+			 );
+
+			 float average = (finalColor.r + finalColor.g + finalColor.b) / 3.0;
+			 if (u_saturation_value > 0.0) finalColor.rgb += (average - finalColor.rgb) * (1.0 - 1.0 / (1.001 - u_saturation_value));
+			 else finalColor.rgb += (average - finalColor.rgb) * (-u_saturation_value);
+			 gl_FragColor = finalColor;
+		 }
+		 */
+	};
+	/*DOC:
+	 {
+		 constructorYn : true,
+		 title :`RedFilter_HueSaturation`,
+		 description : `
+			 HueSaturation 이펙트
+			 postEffectManager.addEffect( effect Instance ) 로 추가.
+		 `,
+		 params : {
+			 redGL : [
+				 {type:'RedGL'}
+			 ]
+		 },
+		 extends : [
+		    'RedBaseFilter',
+		    'RedBaseMaterial'
+		 ],
+		 demo : '../example/postEffect/adjustments/RedFilter_HueSaturation.html',
+		 example : `
+            var effect;
+            effect = RedFilter_HueSaturation(RedGL Instance); // 포스트이펙트 생성
+            // postEffectManager는 RedView 생성시 자동생성됨.
+            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
+		 `,
+		 return : 'RedFilter_HueSaturation Instance'
+	 }
+	 :DOC*/
+	RedFilter_HueSaturation = function (redGL) {
+		if (!(this instanceof RedFilter_HueSaturation)) return new RedFilter_HueSaturation(redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedFilter_HueSaturation : RedGL Instance만 허용.', redGL);
+		this['frameBuffer'] = RedFilterFrameBuffer(redGL);
+		this['diffuseTexture'] = null;
+		this['hue'] = 0;
+		this['saturation'] = 0;
+		/////////////////////////////////////////
+		// 일반 프로퍼티
+		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
+		this['_UUID'] = RedGL.makeUUID();
+		if (!checked) {
+			this.checkUniformAndProperty();
+			checked = true;
+		}
+		console.log(this);
+	};
+	RedFilter_HueSaturation.prototype = new RedBaseFilter();
+	RedFilter_HueSaturation.prototype['updateTexture'] = function (lastFrameBufferTexture) {
+		this['diffuseTexture'] = lastFrameBufferTexture;
+	};
+	RedDefinePropertyInfo.definePrototypes(
+		'RedFilter_HueSaturation',
+		['diffuseTexture', 'sampler2D'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`hue`,
+			 description : `
+				 색조
+				 기본값 : 0
+				 min: -180
+				 max: 180
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['hue', 'number', {
+			min: -180, max: 180, callback: function (v) {
+				this['_hue_value'] = v / 180
+			}
+		}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`saturation`,
+			 description : `
+				 채도
+				 기본값 : 0
+				 min: -100
+				 max: 100
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['saturation', 'number', {
+			min: -100, max: 100, callback: function (v) {
+				this['_saturation_value'] = v / 100
+			}
+		}]
+	);
+	Object.freeze(RedFilter_HueSaturation);
+})();
+/*
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2019.8.6 14:20:40
+ *
+ */
+
+"use strict";
+var RedFilter_Blur;
+(function () {
+	var vSource, fSource;
+	var PROGRAM_NAME = 'RedFilterBlurProgram';
+	var checked;
+	vSource = RedBaseFilter['baseVertexShaderSource1']
+	fSource = function () {
+		/* @preserve
+		 precision lowp float;
+		 uniform sampler2D u_diffuseTexture;
+		 void main(void) {
+			 vec2 px = vec2(1.0/vResolution.x, 1.0/vResolution.y);
+			 vec4 finalColor = vec4(0.0);
+			 vec2 testCoord = gl_FragCoord.xy/vResolution.xy;
+			 finalColor += texture2D(u_diffuseTexture, testCoord + vec2(-7.0*px.x, -7.0*px.y))*0.0044299121055113265;
+			 finalColor += texture2D(u_diffuseTexture, testCoord + vec2(-6.0*px.x, -6.0*px.y))*0.00895781211794;
+			 finalColor += texture2D(u_diffuseTexture, testCoord + vec2(-5.0*px.x, -5.0*px.y))*0.0215963866053;
+			 finalColor += texture2D(u_diffuseTexture, testCoord + vec2(-4.0*px.x, -4.0*px.y))*0.0443683338718;
+			 finalColor += texture2D(u_diffuseTexture, testCoord + vec2(-3.0*px.x, -3.0*px.y))*0.0776744219933;
+			 finalColor += texture2D(u_diffuseTexture, testCoord + vec2(-2.0*px.x, -2.0*px.y))*0.115876621105;
+			 finalColor += texture2D(u_diffuseTexture, testCoord + vec2(-1.0*px.x, -1.0*px.y))*0.147308056121;
+			 finalColor += texture2D(u_diffuseTexture, testCoord                             )*0.159576912161;
+			 finalColor += texture2D(u_diffuseTexture, testCoord + vec2( 1.0*px.x,  1.0*px.y))*0.147308056121;
+			 finalColor += texture2D(u_diffuseTexture, testCoord + vec2( 2.0*px.x,  2.0*px.y))*0.115876621105;
+			 finalColor += texture2D(u_diffuseTexture, testCoord + vec2( 3.0*px.x,  3.0*px.y))*0.0776744219933;
+			 finalColor += texture2D(u_diffuseTexture, testCoord + vec2( 4.0*px.x,  4.0*px.y))*0.0443683338718;
+			 finalColor += texture2D(u_diffuseTexture, testCoord + vec2( 5.0*px.x,  5.0*px.y))*0.0215963866053;
+			 finalColor += texture2D(u_diffuseTexture, testCoord + vec2( 6.0*px.x,  6.0*px.y))*0.00895781211794;
+			 finalColor += texture2D(u_diffuseTexture, testCoord + vec2( 7.0*px.x,  7.0*px.y))*0.0044299121055113265;
+			 gl_FragColor = finalColor;
+		 }
+		 */
+	};
+	/*DOC:
+	 {
+		 constructorYn : true,
+		 title :`RedFilter_Blur`,
+		 description : `
+			 기본 블러 이펙트
+			 postEffectManager.addEffect( effect Instance ) 로 추가.
+		 `,
+		 params : {
+			 redGL : [
+				 {type:'RedGL'}
+			 ]
+		 },
+		 extends : [
+			'RedBaseFilter',
+			'RedBaseMaterial'
+		 ],
+		 demo : '../example/postEffect/blur/RedFilter_Blur.html',
+		 example : `
+			var effect;
+			effect = RedFilter_Blur(RedGL Instance); // 포스트이펙트 생성
+			// postEffectManager는 RedView 생성시 자동생성됨.
+			(RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
+		 `,
+		 return : 'RedFilter_Blur Instance'
+	 }
+	 :DOC*/
+	RedFilter_Blur = function (redGL) {
+		if (!(this instanceof RedFilter_Blur)) return new RedFilter_Blur(redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedFilter_Blur : RedGL Instance만 허용.', redGL);
+		this['frameBuffer'] = RedFilterFrameBuffer(redGL);
+		this['diffuseTexture'] = null;
+		/////////////////////////////////////////
+		// 일반 프로퍼티
+		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
+		this['_UUID'] = RedGL.makeUUID();
+		if (!checked) {
+			this.checkUniformAndProperty();
+			checked = true;
+		}
+		console.log(this);
+	};
+	RedFilter_Blur.prototype = new RedBaseFilter();
+	RedFilter_Blur.prototype['updateTexture'] = function (lastFrameBufferTexture) {
+		this['diffuseTexture'] = lastFrameBufferTexture;
+	};
+	RedDefinePropertyInfo.definePrototype('RedFilter_Blur', 'diffuseTexture', 'sampler2D');
+	Object.freeze(RedFilter_Blur);
+})();
+/*
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2019.8.7 11:21:57
+ *
+ */
+
+"use strict";
+var RedFilter_BlurX;
+(function () {
+	var vSource, fSource;
+	var PROGRAM_NAME = 'RedFilterBlurXProgram';
+	var checked;
+	vSource = RedBaseFilter['baseVertexShaderSource1']
+	fSource = function () {
+		/* @preserve
+		 precision mediump float;
+		 uniform sampler2D u_diffuseTexture;
+		 uniform float u_size;
+		 float random(vec3 scale, float seed) {
+			return fract(sin(dot(gl_FragCoord.xyz + seed, scale)) * 43758.5453 + seed);
+		 }
+		 void main() {
+			 vec4 finalColor = vec4(0.0);
+			 vec2 delta;
+			 float total = 0.0;
+			 float offset = random(vec3(12.9898, 78.233, 151.7182), 0.0);
+			 delta = vec2(u_size/vResolution.x,0.0);
+			vec2 testCoord = gl_FragCoord.xy/vResolution.xy;
+			float percent;
+			float weight;
+			 for (float t = -4.0; t <= 4.0; t+=1.0) {
+				 float percent = (t + offset - 0.5) / 4.0;
+				 float weight = 1.0 - abs(percent);
+				 vec4 sample = texture2D(u_diffuseTexture, testCoord + delta * percent);
+				 sample.rgb *= sample.a;
+				 finalColor += sample * weight;
+				 total += weight;
+			 }
+			 finalColor = finalColor / total;
+			 finalColor.rgb /= finalColor.a + 0.00001;
+			 gl_FragColor =  finalColor ;
+		 }
+		 */
+	};
+	/*DOC:
+	 {
+		 constructorYn : true,
+		 title :`RedFilter_BlurX`,
+		 description : `
+			 X축 블러 이펙트
+		 `,
+		 params : {
+			 redGL : [
+				 {type:'RedGL'}
+			 ]
+		 },
+		 extends : [
+		    'RedBaseFilter',
+		    'RedBaseMaterial'
+		 ],
+		 demo : '../example/postEffect/blur/RedFilter_BlurX.html',
+		 example : `
+            var effect;
+            effect = RedFilter_BlurX(RedGL Instance); // 포스트이펙트 생성
+            // postEffectManager는 RedView 생성시 자동생성됨.
+            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
+		 `,
+		 return : 'RedFilter_BlurX Instance'
+	 }
+	 :DOC*/
+	RedFilter_BlurX = function (redGL) {
+		if (!(this instanceof RedFilter_BlurX)) return new RedFilter_BlurX(redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedFilter_BlurX : RedGL Instance만 허용.', redGL);
+		this['frameBuffer'] = RedFilterFrameBuffer(redGL);
+		this['diffuseTexture'] = null;
+		this['size'] = 50;
+		/////////////////////////////////////////
+		// 일반 프로퍼티
+		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
+		this['_UUID'] = RedGL.makeUUID();
+		if (!checked) {
+			this.checkUniformAndProperty();
+			checked = true;
+		}
+		console.log(this);
+	};
+	RedFilter_BlurX.prototype = new RedBaseFilter();
+	RedFilter_BlurX.prototype['updateTexture'] = function (lastFrameBufferTexture) {
+		this['diffuseTexture'] = lastFrameBufferTexture;
+	};
+	RedDefinePropertyInfo.definePrototypes(
+		'RedFilter_BlurX',
+		['diffuseTexture', 'sampler2D'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`size`,
+			 description : `
+				 블러 사이즈
+				 기본값 : 50
+				 min : 0
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['size', 'number', {'min': 0}]
+	);
+	Object.freeze(RedFilter_BlurX);
+})();
+/*
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2019.8.7 11:21:57
+ *
+ */
+
+"use strict";
+var RedFilter_BlurY;
+(function () {
+	var vSource, fSource;
+	var PROGRAM_NAME = 'RedFilterBlurYProgram';
+	var checked;
+	vSource = RedBaseFilter['baseVertexShaderSource1']
+	fSource = function () {
+		/* @preserve
+		 precision lowp float;
+		 uniform sampler2D u_diffuseTexture;
+		 uniform float u_size;
+		 float random(vec3 scale, float seed) {
+			return fract(sin(dot(gl_FragCoord.xyz + seed, scale)) * 43758.5453 + seed);
+		 }
+		 void main() {
+			 vec4 finalColor = vec4(0.0);
+			 vec2 delta;
+			 float total = 0.0;
+			 float offset = random(vec3(12.9898, 78.233, 151.7182), 0.0);
+			 delta = vec2(0.0, u_size/vResolution.y);
+			  vec2 testCoord = gl_FragCoord.xy/vResolution.xy;
+
+			 for (float t = -4.0; t <= 4.0; t++) {
+				 float percent = (t + offset - 0.5) / 4.0;
+				 float weight = 1.0 - abs(percent);
+				 vec4 sample = texture2D(u_diffuseTexture, testCoord + delta * percent);
+				 sample.rgb *= sample.a;
+				 finalColor += sample * weight;
+				 total += weight;
+			 }
+			 finalColor = finalColor / total;
+			 finalColor.rgb /= finalColor.a + 0.00001;
+			 gl_FragColor =   finalColor ;
+		 }
+		 */
+	};
+	/*DOC:
+	 {
+		 constructorYn : true,
+		 title :`RedFilter_BlurY`,
+		 description : `
+			 X축 블러 이펙트
+		 `,
+		 params : {
+			 redGL : [
+				 {type:'RedGL'}
+			 ]
+		 },
+		 extends : [
+		    'RedBaseFilter',
+		    'RedBaseMaterial'
+		 ],
+		 demo : '../example/postEffect/blur/RedFilter_BlurY.html',
+		 example : `
+            var effect;
+            effect = RedFilter_BlurY(RedGL Instance); // 포스트이펙트 생성
+            // postEffectManager는 RedView 생성시 자동생성됨.
+            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
+		 `,
+		 return : 'RedFilter_BlurY Instance'
+	 }
+	 :DOC*/
+	RedFilter_BlurY = function (redGL) {
+		if (!(this instanceof RedFilter_BlurY)) return new RedFilter_BlurY(redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedFilter_BlurY : RedGL Instance만 허용.', redGL);
+		this['frameBuffer'] = RedFilterFrameBuffer(redGL);
+		this['diffuseTexture'] = null;
+		this['size'] = 25;
+		/////////////////////////////////////////
+		// 일반 프로퍼티
+		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
+		this['_UUID'] = RedGL.makeUUID();
+		if (!checked) {
+			this.checkUniformAndProperty();
+			checked = true;
+		}
+		console.log(this);
+	};
+	RedFilter_BlurY.prototype = new RedBaseFilter();
+	RedFilter_BlurY.prototype['updateTexture'] = function (lastFrameBufferTexture) {
+		this['diffuseTexture'] = lastFrameBufferTexture;
+	};
+	RedDefinePropertyInfo.definePrototypes(
+		'RedFilter_BlurY',
+		['diffuseTexture', 'sampler2D'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`size`,
+			 description : `
+				 블러 사이즈
+				 기본값 : 50
+				 min : 0
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['size', 'number', {'min': 0}]
+	);
+	Object.freeze(RedFilter_BlurY);
+})();
+/*
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2019.8.6 14:20:40
+ *
+ */
+
+"use strict";
+var RedFilter_GaussianBlur;
+(function () {
+	/*DOC:
+	 {
+		 constructorYn : true,
+		 title :`RedFilter_GaussianBlur`,
+		 description : `
+			 가우시안 블러 이펙트
+		 `,
+		 params : {
+			 redGL : [
+				 {type:'RedGL'}
+			 ]
+		 },
+		 extends : [
+		    'RedBaseFilter',
+		    'RedBaseMaterial'
+		 ],
+		 demo : '../example/postEffect/blur/RedFilter_GaussianBlur.html',
+		 example : `
+            var effect;
+            effect = RedFilter_GaussianBlur(RedGL Instance); // 포스트이펙트 생성
+            // postEffectManager는 RedView 생성시 자동생성됨.
+            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
+		 `,
+		 return : 'RedFilter_GaussianBlur Instance'
+	 }
+	 :DOC*/
+	RedFilter_GaussianBlur = function (redGL) {
+		if (!(this instanceof RedFilter_GaussianBlur)) return new RedFilter_GaussianBlur(redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedFilter_GaussianBlur : RedGL Instance만 허용.', redGL);
+		/////////////////////////////////////////
+		// 일반 프로퍼티
+		this['_UUID'] = RedGL.makeUUID();
+		this['_process'] = [
+			RedFilter_BlurX(redGL),
+			RedFilter_BlurY(redGL)
+		];
+		this['radius'] = 1;
+		console.log(this);
+	};
+	RedFilter_GaussianBlur.prototype = new RedBaseFilter();
+	RedFilter_GaussianBlur.prototype['updateTexture'] = function () {
+	};
+	/*DOC:
+	 {
+	     code : 'PROPERTY',
+		 title :`radius`,
+		 description : `
+			 가우시간 블러강도
+			 기본값 : 1
+			 min: 0.1
+			 max: 255
+		 `,
+		 return : 'Number'
+	 }
+	 :DOC*/
+	RedDefinePropertyInfo.definePrototype('RedFilter_GaussianBlur', 'radius', 'number', {
+		min: 0.1, max: 255, callback: function (v) {
+			this['_process'][0]['size'] = v;
+			this['_process'][1]['size'] = v;
+		}
+	});
+	Object.freeze(RedFilter_GaussianBlur);
+})();
+/*
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2019.8.6 14:20:40
+ *
+ */
+
+"use strict";
+var RedFilter_Pixelize;
+(function () {
+	var vSource, fSource;
+	var PROGRAM_NAME = 'RedFilterPixelizeProgram';
+	var checked;
+	vSource = RedBaseFilter['baseVertexShaderSource1']
+	fSource = function () {
+		/* @preserve
+		 precision lowp float;
+		 uniform sampler2D u_diffuseTexture;
+		 uniform float u_width;
+		 uniform float u_height;
+		 void main(void) {
+			 vec4 finalColor;
+			 float dx = 1.0/vResolution.x * u_width;
+			 float dy = 1.0/vResolution.y * u_height;
+			    vec2 testCoord = gl_FragCoord.xy/vResolution.xy;
+			 vec2 coord = vec2(
+				 dx * (floor(testCoord.x / dx) + 0.5),
+				 dy * (floor(testCoord.y / dy) + 0.5)
+			 );
+			 finalColor = texture2D(u_diffuseTexture, coord);
+			 gl_FragColor = finalColor;
+		 }
+		 */
+	};
+	/*DOC:
+	 {
+		 constructorYn : true,
+		 title :`RedFilter_Pixelize`,
+		 description : `
+			 Pixelize 효과
+		 `,
+		 params : {
+			 redGL : [
+				 {type:'RedGL'}
+			 ]
+		 },
+		 extends : [
+		    'RedBaseFilter',
+		    'RedBaseMaterial'
+		 ],
+		 demo : '../example/postEffect/pixelate/RedFilter_Pixelize.html',
+		 example : `
+            var effect;
+            effect = RedFilter_Pixelize(RedGL Instance); // 포스트이펙트 생성
+            // postEffectManager는 RedView 생성시 자동생성됨.
+            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
+		 `,
+		 return : 'RedFilter_Pixelize Instance'
+	 }
+	 :DOC*/
+	RedFilter_Pixelize = function (redGL) {
+		if (!(this instanceof RedFilter_Pixelize)) return new RedFilter_Pixelize(redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedFilter_Pixelize : RedGL Instance만 허용.', redGL);
+		this['frameBuffer'] = RedFilterFrameBuffer(redGL);
+		this['diffuseTexture'] = null;
+		this['width'] = 5;
+		this['height'] = 5;
+		/////////////////////////////////////////
+		// 일반 프로퍼티
+		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
+		this['_UUID'] = RedGL.makeUUID();
+		if (!checked) {
+			this.checkUniformAndProperty();
+			checked = true;
+		}
+		console.log(this);
+	};
+	RedFilter_Pixelize.prototype = new RedBaseFilter();
+	RedFilter_Pixelize.prototype['updateTexture'] = function (lastFrameBufferTexture) {
+		this['diffuseTexture'] = lastFrameBufferTexture;
+	};
+	RedDefinePropertyInfo.definePrototypes(
+		'RedFilter_Pixelize',
+		['diffuseTexture', 'sampler2D'],
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`width`,
+			 description : `
+				 픽셀화 가로 크기
+				 기본값 : 5
+				 min : 0
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['width', 'number', {'min': 0}],
+		/*DOC:
+		 {
+			 code : 'PROPERTY',
+			 title :`height`,
+			 description : `
+				 픽셀화 세로 크기
+				 기본값 : 5
+				 min : 0
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['height', 'number', {'min': 0}]
+	);
+	Object.freeze(RedFilter_Pixelize);
+})();
+/*
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2019.8.6 14:20:40
+ *
+ */
+
+"use strict";
+var RedFilter_HalfTone;
+(function () {
+	var vSource, fSource;
+	var PROGRAM_NAME = 'RedFilterHalfToneProgram';
+	var checked;
+	vSource = RedBaseFilter['baseVertexShaderSource1']
+	fSource = function () {
+		/* @preserve
+		 precision lowp float;
+		 uniform sampler2D u_diffuseTexture;
+		 uniform float u_centerX;
+		 uniform float u_centerY;
+		 uniform float u_angle;
+		 uniform float u_radius;
+		 uniform bool u_grayMode;
+
+		 float pattern(float angle, vec2 testCoord) {
+			 angle = angle * 3.141592653589793/180.0;
+			 float s = sin(angle), c = cos(angle);
+			 vec2 tex = testCoord;
+			 tex.x -= u_centerX + 0.5;
+			 tex.y -= u_centerY + 0.5;
+			 vec2 point = vec2(
+			 c * tex.x - s * tex.y,
+			 s * tex.x + c * tex.y
+			 ) * vResolution / u_radius;
+			 return (sin(point.x) * sin(point.y)) * 4.0;
+		 }
+		 void main(void) {
+		     vec2 testCoord = gl_FragCoord.xy/vResolution.xy;
+			 vec4 finalColor = texture2D(u_diffuseTexture, testCoord);
+			 if(u_grayMode) {
+				 float average = (finalColor.r + finalColor.g + finalColor.b) / 3.0;
+				 gl_FragColor = vec4(vec3(average * 10.0 - 5.0 + pattern(u_angle,testCoord)), finalColor.a);
+			 }else{
+				 vec3 cmy = 1.0 - finalColor.rgb;
+				 float k = min(cmy.x, min(cmy.y, cmy.z));
+				 cmy = (cmy - k) / (1.0 - k);
+				 cmy = clamp(cmy * 10.0 - 3.0 + vec3(pattern(u_angle + 0.26179,testCoord), pattern(u_angle + 1.30899,testCoord), pattern(u_angle,testCoord)), 0.0, 1.0);
+				 k = clamp(k * 10.0 - 5.0 + pattern(u_angle + 0.78539,testCoord), 0.0, 1.0);
+				 gl_FragColor = vec4(1.0 - cmy - k, finalColor.a);
+			}
+		 }
+		 */
+	};
+	/*DOC:
+	 {
+		 constructorYn : true,
+		 title :`RedFilter_HalfTone`,
+		 description : `
+			 HalfTone 이펙트
+		 `,
+		 params : {
+			 redGL : [
+				 {type:'RedGL'}
+			 ]
+		 },
+		 extends : [
+		    'RedBaseFilter',
+		    'RedBaseMaterial'
+		 ],
+		 demo : '../example/postEffect/pixelate/RedFilter_HalfTone.html',
+		 example : `
+            var effect;
+            effect = RedFilter_HalfTone(RedGL Instance); // 포스트이펙트 생성
+            // postEffectManager는 RedView 생성시 자동생성됨.
+            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
+		 `,
+		 return : 'RedFilter_HalfTone Instance'
+	 }
+	 :DOC*/
+	RedFilter_HalfTone = function (redGL) {
+		if (!(this instanceof RedFilter_HalfTone)) return new RedFilter_HalfTone(redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedFilter_HalfTone : RedGL Instance만 허용.', redGL);
+		this['frameBuffer'] = RedFilterFrameBuffer(redGL);
+		this['diffuseTexture'] = null;
+		this['centerX'] = 0.0;
+		this['centerY'] = 0.0;
+		this['angle'] = 0;
+		this['radius'] = 2;
+		this['grayMode'] = false;
+		/////////////////////////////////////////
+		// 일반 프로퍼티
+		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
+		this['_UUID'] = RedGL.makeUUID();
+		if (!checked) {
+			this.checkUniformAndProperty();
+			checked = true;
+		}
+		console.log(this);
+	};
+	RedFilter_HalfTone.prototype = new RedBaseFilter();
+	RedFilter_HalfTone.prototype['updateTexture'] = function (lastFrameBufferTexture) {
+		this['diffuseTexture'] = lastFrameBufferTexture;
+	};
+	RedDefinePropertyInfo.definePrototypes(
+		'RedFilter_HalfTone',
+		['diffuseTexture', 'sampler2D'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`centerX`,
+			 description : `
+				 기본값 0.0
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['centerX', 'number'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`centerY`,
+			 description : `
+				 기본값 0.0
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['centerY', 'number'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`angle`,
+			 description : `
+				 기본값 0.0
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['angle', 'number'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`grayMode`,
+			 description : `
+				 기본값 false
+			 `,
+			 return : 'Boolean'
+		 }
+		 :DOC*/
+		['grayMode', 'boolean'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`radius`,
+			 description : `
+				 기본값 2
+				 min : 0
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['radius', 'number', {'min': 0}]
+	);
+	Object.freeze(RedFilter_HalfTone);
+})();
+/*
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2019.8.6 14:20:40
+ *
+ */
+
+"use strict";
+var RedFilter_Bloom;
+(function () {
+	var vSource, fSource;
+	var PROGRAM_NAME = 'RedFilterBloomProgram';
+	var checked;
+	vSource = RedBaseFilter['baseVertexShaderSource1']
+	fSource = function () {
+		/* @preserve
+		 precision lowp float;
+		 uniform sampler2D u_diffuseTexture;
+		 uniform sampler2D u_blurTexture;
+		 uniform float u_exposure;
+		 uniform float u_bloomStrength;
+
+		 void main() {
+			 vec4 finalColor = texture2D(u_diffuseTexture, gl_FragCoord.xy/vResolution.xy);
+			 vec4 thresholdColor = finalColor;
+			 vec4 blurColor = texture2D(u_blurTexture, gl_FragCoord.xy/vResolution.xy);
+			 finalColor.rgb = (finalColor.rgb  + blurColor.rgb * u_bloomStrength) * u_exposure;
+			 gl_FragColor = finalColor ;
+		 }
+		 */
+	};
+	/*DOC:
+	 {
+		 constructorYn : true,
+		 title :`RedFilter_Bloom`,
+		 description : `
+			 Bloom 이펙트
+			 postEffectManager.addEffect( effect Instance ) 로 추가.
+		 `,
+		 params : {
+			 redGL : [
+				 {type:'RedGL'}
+			 ]
+		 },
+		 extends : [
+		    'RedBaseFilter',
+		    'RedBaseMaterial'
+		 ],
+		 demo : '../example/postEffect/bloom/RedFilter_Bloom.html',
+		 example : `
+            var effect;
+            effect = RedFilter_Bloom(RedGL Instance); // 포스트이펙트 생성
+            // postEffectManager는 RedView 생성시 자동생성됨.
+            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
+		 `,
+		 return : 'RedFilter_Bloom Instance'
+	 }
+	 :DOC*/
+	RedFilter_Bloom = function (redGL) {
+		if (!(this instanceof RedFilter_Bloom)) return new RedFilter_Bloom(redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedFilter_Bloom : RedGL Instance만 허용.', redGL);
+		this['frameBuffer'] = RedFilterFrameBuffer(redGL);
+		this['diffuseTexture'] = null;
+		this['blurTexture'] = null;
+		this['exposure'] = 1;
+		this['bloomStrength'] = 1.2;
+		/////////////////////////////////////////
+		// 일반 프로퍼티
+		this['_process'] = [
+			RedFilter_BloomThreshold(redGL),
+			RedFilter_BlurX(redGL),
+			RedFilter_BlurY(redGL)
+		];
+		this['blur'] = 20;
+		this['threshold'] = 75;
+		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
+		this['_UUID'] = RedGL.makeUUID();
+		if (!checked) {
+			this.checkUniformAndProperty();
+			checked = true;
+		}
+		console.log(this);
+	};
+	RedFilter_Bloom.prototype = new RedBaseFilter();
+	RedFilter_Bloom.prototype['updateTexture'] = function (lastFrameBufferTexture, parentFrameBufferTexture) {
+		this['diffuseTexture'] = parentFrameBufferTexture;
+		this['blurTexture'] = lastFrameBufferTexture;
+	};
+	RedDefinePropertyInfo.definePrototypes(
+		'RedFilter_Bloom',
+		['diffuseTexture', 'sampler2D'],
+		['blurTexture', 'sampler2D'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`exposure`,
+			 description : `
+				 확산 강도.
+				 기본값 : 1
+				 min : 0
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['exposure', 'number', {'min': 0}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`bloomStrength`,
+			 description : `
+				 블룸 강도
+				 기본값 : 1.2
+				 min : 0
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['bloomStrength', 'number', {'min': 0}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`threshold`,
+			 description : `
+				 최소 유효값
+				 기본값 : 75
+				 min : 0
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['threshold', 'number', {
+			min: 0,
+			callback: function (v) {
+				this['_process'][0]['threshold'] = v;
+				this['_threshold'] = this['_process'][0]['threshold']
+			}
+		}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`blur`,
+			 description : `
+				 blur 정도.
+				 기본값 : 20
+				 min : 0
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		['blur', 'number', {
+			min: 0, callback: function (v) {
+				this['_process'][1]['size'] = v;
+				this['_process'][2]['size'] = v;
+			}
+		}]
+	);
+	Object.freeze(RedFilter_Bloom);
+})();
+/*
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2019.8.6 14:20:40
+ *
+ */
+
+"use strict";
+var RedFilter_BloomThreshold;
+(function () {
+	var vSource, fSource;
+	var PROGRAM_NAME;
+	var checked;
+	vSource = RedBaseFilter['baseVertexShaderSource1']
+	fSource = function () {
+		/* @preserve
+		 precision lowp float;
+		 uniform sampler2D u_diffuseTexture;
+		 uniform float u_threshold_value;
+
+		 void main() {
+			 vec4 finalColor = texture2D(u_diffuseTexture, gl_FragCoord.xy/vResolution.xy);
+			 if(0.2126 * finalColor.r + 0.7152 * finalColor.g + 0.0722 * finalColor.b < u_threshold_value)  finalColor.r = finalColor.g = finalColor.b = 0.0;
+			 gl_FragColor = finalColor;
+		 }
+		 */
+	};
+	PROGRAM_NAME = 'RedFilterBloomThresholdProgram';
+	/*DOC:
+	 {
+		 constructorYn : true,
+		 title :`RedFilter_BloomThreshold`,
+		 description : `
+			 BloomThreshold 이펙트
+			 RedFilter_Bloom 내부에서 사용하는 절차 이펙트
+			 시스템적으로 사용됨.
+		 `,
+		 params : {
+			 redGL : [
+				 {type:'RedGL'}
+			 ]
+		 },
+		 extends : [
+		    'RedBaseFilter',
+		    'RedBaseMaterial'
+		 ],
+		 example : `
+            var effect;
+            effect = RedFilter_BloomThreshold(RedGL Instance); // 포스트이펙트 생성
+            // postEffectManager는 RedView 생성시 자동생성됨.
+            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
+		 `,
+		 return : 'RedFilter_BloomThreshold Instance'
+	 }
+	 :DOC*/
+	RedFilter_BloomThreshold = function (redGL) {
+		if (!(this instanceof RedFilter_BloomThreshold)) return new RedFilter_BloomThreshold(redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedFilter_BloomThreshold : RedGL Instance만 허용.', redGL);
+		this['frameBuffer'] = RedFilterFrameBuffer(redGL);
+		this['diffuseTexture'] = null;
+		this['renderScale'] = 0.5
+		this['threshold'] = 128;
+		/////////////////////////////////////////
+		// 일반 프로퍼티
+		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
+		this['_UUID'] = RedGL.makeUUID();
+		if (!checked) {
+			this.checkUniformAndProperty();
+			checked = true;
+		}
+		console.log(this);
+	};
+	RedFilter_BloomThreshold.prototype = new RedBaseFilter();
+	RedFilter_BloomThreshold.prototype['updateTexture'] = function (lastFrameBufferTexture) {
+		this['diffuseTexture'] = lastFrameBufferTexture;
+	};
+	RedDefinePropertyInfo.definePrototypes(
+		'RedFilter_BloomThreshold',
+		['diffuseTexture', 'sampler2D'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`threshold`,
+			 description : `
+				 최소 유효값
+				 기본값 : 128
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		[
+			'threshold', 'number',
+			{
+				min: 0, max: 255, callback: function (v) {
+					this['_threshold_value'] = v / 255
+				}
+			}
+		]
+	);
+	Object.freeze(RedFilter_BloomThreshold);
+})();
+/*
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2019.8.2 18:16:21
+ *
+ */
+
+"use strict";
+var RedFilter_Film;
+(function () {
+	var vSource, fSource;
+	var PROGRAM_NAME = 'RedFilterFilmProgram';
+	var checked;
+	vSource = RedBaseFilter['baseVertexShaderSource1']
+	fSource = function () {
+		/* @preserve
+		 precision lowp float;
+		 uniform bool u_grayMode;
+		 uniform sampler2D u_diffuseTexture;
+		 uniform float u_noiseIntensity; // noise effect intensity value (0 = no effect, 1 = full effect)
+		 uniform float u_scanlineIntensity; // scanlines effect intensity value (0 = no effect, 1 = full effect)
+		 uniform float u_scanlineCount; // scanlines effect count value (0 = no effect, 4096 = full effect)
+
+		 void main() {
+			 // sample the source
+			   vec2 testCoord = gl_FragCoord.xy/vResolution.xy;
+			 vec4 diffuseColor = texture2D( u_diffuseTexture, testCoord );
+
+			 // make some noise
+			 float x = testCoord.x * testCoord.y * vTime;
+			 x = mod( x, 13.0 ) * mod( x, 123.0 );
+			 float dx = mod( x, 0.01 );
+
+			 // add noise
+			 vec3 finalColor = diffuseColor.rgb + diffuseColor.rgb * clamp( 0.1 + dx * 100.0, 0.0, 1.0 );
+
+			 // get us a sine and cosine
+			 vec2 sc = vec2( sin( testCoord.y * u_scanlineCount ), cos( testCoord.y * u_scanlineCount ) );
+
+			 // add scanlines
+			 finalColor += diffuseColor.rgb * vec3( sc.x, sc.y, sc.x ) * u_scanlineIntensity;
+
+			 // interpolate between source and result by intensity
+			 finalColor = diffuseColor.rgb + clamp( u_noiseIntensity, 0.0, 1.0 ) * ( finalColor - diffuseColor.rgb );
+
+			 // convert to grayscale if desired
+			 if( u_grayMode ) finalColor = vec3( finalColor.r * 0.3 + finalColor.g * 0.59 + finalColor.b * 0.11 );
+			 gl_FragColor =  vec4( finalColor, diffuseColor.a );
+		 }
+		 */
+	};
+	/*DOC:
+	 {
+		 constructorYn : true,
+		 title :`RedFilter_Film`,
+		 description : `
+			 Film 이펙트
+		 `,
+		 params : {
+			 redGL : [
+				 {type:'RedGL'}
+			 ]
+		 },
+		 extends : [
+		    'RedBaseFilter',
+		    'RedBaseMaterial'
+		 ],
+		 demo : '../example/postEffect/RedFilter_Film.html',
+		 example : `
+            var effect;
+            effect = RedFilter_Film(RedGL Instance); // 포스트이펙트 생성
+            // postEffectManager는 RedView 생성시 자동생성됨.
+            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
+		 `,
+		 return : 'RedFilter_Film Instance'
+	 }
+	 :DOC*/
+	RedFilter_Film = function (redGL) {
+		if (!(this instanceof RedFilter_Film)) return new RedFilter_Film(redGL);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedFilter_Film : RedGL Instance만 허용.', redGL);
+		this['frameBuffer'] = RedFilterFrameBuffer(redGL);
+		this['diffuseTexture'] = null;
+		this['grayMode'] = false;
+		this['scanlineIntensity'] = 0.5;
+		this['noiseIntensity'] = 0.5;
+		this['scanlineCount'] = 2048;
+		/////////////////////////////////////////
+		// 일반 프로퍼티
+		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
+		this['_UUID'] = RedGL.makeUUID();
+		if (!checked) {
+			this.checkUniformAndProperty();
+			checked = true;
+		}
+		console.log(this);
+	};
+	RedFilter_Film.prototype = new RedBaseFilter();
+	RedFilter_Film.prototype['updateTexture'] = function (lastFrameBufferTexture) {
+		this['diffuseTexture'] = lastFrameBufferTexture;
+	};
+	RedDefinePropertyInfo.definePrototypes(
+		'RedFilter_Film',
+		[ 'diffuseTexture', 'sampler2D'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`grayMode`,
+			 description : `
+				 그레이모드
+				 기본값 : false
+			 `,
+			 return : 'Boolean'
+		 }
+		 :DOC*/
+		[ 'grayMode', 'boolean'],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`scanlineIntensity`,
+			 description : `
+				 스캔라인강도
+				 기본값 : 0.5
+				 min : 0
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		[ 'scanlineIntensity', 'number', {'min': 0}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`noiseIntensity`,
+			 description : `
+				 노이즈강도
+				 기본값 : 0.5
+				 min : 0
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		[ 'noiseIntensity', 'number', {'min': 0}],
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`scanlineCount`,
+			 description : `
+				 스캔라인 수
+				 기본값 : 2048
+				 min : 0
+			 `,
+			 return : 'Number'
+		 }
+		 :DOC*/
+		[ 'scanlineCount', 'number', {'min': 0}]
+	);
+	Object.freeze(RedFilter_Film);
+})();
+/*
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2019.8.7 11:32:14
+ *
+ */
+
+"use strict";
+var RedFilter_Convolution;
+(function () {
+	var vSource, fSource;
+	var PROGRAM_NAME = 'RedFilterConvolutionProgram';
+	var checked;
+	vSource = RedBaseFilter['baseVertexShaderSource1']
+	fSource = function () {
+		/* @preserve
+		 precision mediump float;
+		 uniform sampler2D u_diffuseTexture;
+		 uniform mat3 u_kernel;
+		 uniform float uKernelWeight;
+		 void main(void) {
+			 vec2 perPX = vec2(1.0/vResolution.x, 1.0/vResolution.y);
+			   vec2 testCoord = gl_FragCoord.xy/vResolution.xy;
+			 vec4 finalColor = vec4(0.0);
+			 finalColor += texture2D(u_diffuseTexture, testCoord + perPX * vec2(-1.0, -1.0)) * u_kernel[0][0] ;
+			 finalColor += texture2D(u_diffuseTexture, testCoord + perPX * vec2( 0.0, -1.0)) * u_kernel[0][1] ;
+			 finalColor += texture2D(u_diffuseTexture, testCoord + perPX * vec2( 1.0, -1.0)) * u_kernel[0][2] ;
+			 finalColor += texture2D(u_diffuseTexture, testCoord + perPX * vec2(-1.0,  0.0)) * u_kernel[1][0] ;
+			 finalColor += texture2D(u_diffuseTexture, testCoord + perPX * vec2( 0.0,  0.0)) * u_kernel[1][1] ;
+			 finalColor += texture2D(u_diffuseTexture, testCoord + perPX * vec2( 1.0,  0.0)) * u_kernel[1][2] ;
+			 finalColor += texture2D(u_diffuseTexture, testCoord + perPX * vec2(-1.0,  1.0)) * u_kernel[2][0] ;
+			 finalColor += texture2D(u_diffuseTexture, testCoord + perPX * vec2( 0.0,  1.0)) * u_kernel[2][1] ;
+			 finalColor += texture2D(u_diffuseTexture, testCoord + perPX * vec2( 1.0,  1.0)) * u_kernel[2][2] ;
+			 gl_FragColor = vec4((finalColor / uKernelWeight).rgb, finalColor.a);
+		 }
+		 */
+	};
+	/*DOC:
+	 {
+		 constructorYn : true,
+		 title :`RedFilter_Convolution`,
+		 description : `
+			 Convolution 이펙트
+		 `,
+		 params : {
+			 redGL : [
+				 {type:'RedGL'}
+			 ]
+		 },
+		 extends : [
+		    'RedBaseFilter',
+		    'RedBaseMaterial'
+		 ],
+		 demo : '../example/postEffect/RedFilter_Convolution.html',
+		 example : `
+            var effect;
+            effect = RedFilter_DoF(RedGL Instance, RedFilter_Convolution.SHARPEN); // 포스트이펙트 생성
+            // postEffectManager는 RedView 생성시 자동생성됨.
+            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
+		 `,
+		 return : 'RedFilter_Convolution Instance'
+	 }
+	 :DOC*/
+	RedFilter_Convolution = function (redGL, kernel) {
+		if (!(this instanceof RedFilter_Convolution)) return new RedFilter_Convolution(redGL, kernel);
+		redGL instanceof RedGL || RedGLUtil.throwFunc('RedFilter_Convolution : RedGL Instance만 허용.', redGL);
+		this['frameBuffer'] = RedFilterFrameBuffer(redGL);
+		this['diffuseTexture'] = null;
+		this['kernel'] = kernel;
+		/////////////////////////////////////////
+		// 일반 프로퍼티
+		this['program'] = RedProgram['makeProgram'](redGL, PROGRAM_NAME, vSource, fSource);
+		this['_UUID'] = RedGL.makeUUID();
+		if (!checked) {
+			this.checkUniformAndProperty();
+			checked = true;
+		}
+		console.log(this);
+	};
+	RedFilter_Convolution.prototype = new RedBaseFilter();
+	RedFilter_Convolution.prototype['updateTexture'] = function (lastFrameBufferTexture) {
+		this['diffuseTexture'] = lastFrameBufferTexture;
+	};
+	RedDefinePropertyInfo.definePrototype('RedFilter_Convolution', 'diffuseTexture', 'sampler2D');
+	/*DOC:
+	 {
+	     code : 'PROPERTY',
+		 title :`kernel`,
+		 description : `
+			 커널값.
+			 3 * 3 매트릭스 형식의 배열
+		 `,
+		 return : 'Array'
+	 }
+	 :DOC*/
+	Object.defineProperty(RedFilter_Convolution.prototype, 'kernel', {
+		get: function () {
+			if (!this['_kernel']) this['_kernel'] = RedFilter_Convolution['NORMAL'];
+			return this['_kernel']
+		},
+		set: function (v) {
+			this['_kernel'] = v
+		}
+	});
+	Object.defineProperty(RedFilter_Convolution.prototype, 'kernelWeight', (function () {
+		var sum;
+		var k;
+		return {
+			get: function () {
+				sum = 0;
+				for (k in this['kernel']) sum += this['kernel'][k];
+				return sum;
+			}
+		}
+	})());
+	/*DOC:
+	 {
+		 title :`RedFilter_Convolution.NORMAL`,
+		 code : 'CONST',
+		 description : `
+			 <code>
+			 [
+				 0, 0, 0,
+				 0, 1, 0,
+				 0, 0, 0
+			 ]
+			 </code>
+		 `,
+		 return : 'Array'
+	 }
+	 :DOC*/
+	RedFilter_Convolution['NORMAL'] = [
+		0, 0, 0,
+		0, 1, 0,
+		0, 0, 0
+	];
+	/*DOC:
+	 {
+		 title :`RedFilter_Convolution.SHARPEN`,
+		 code : 'CONST',
+		 description : `
+			 <code>
+			 [
+				 0, -1, 0,
+				 -1, 5, -1,
+				 0, -1, 0
+			 ]
+			 </code>
+		 `,
+		 return : 'Array'
+	 }
+	 :DOC*/
+	RedFilter_Convolution['SHARPEN'] = [
+		0, -1, 0,
+		-1, 5, -1,
+		0, -1, 0
+	];
+	/*DOC:
+	 {
+		 title :`RedFilter_Convolution.BLUR`,
+		 code : 'CONST',
+		 description : `
+			 <code>
+			 [
+				 1, 1, 1,
+				 1, 1, 1,
+				 1, 1, 1
+			 ]
+			 </code>
+		 `,
+		 return : 'Array'
+	 }
+	 :DOC*/
+	RedFilter_Convolution['BLUR'] = [
+		1, 1, 1,
+		1, 1, 1,
+		1, 1, 1
+	];
+	/*DOC:
+	 {
+		 title :`RedFilter_Convolution.EDGE`,
+		 code : 'CONST',
+		 description : `
+			 <code>
+			 [
+				 0, 1, 0,
+				 1, -4, 1,
+				 0, 1, 0
+			 ]
+			 </code>
+		 `,
+		 return : 'Array'
+	 }
+	 :DOC*/
+	RedFilter_Convolution['EDGE'] = [
+		0, 1, 0,
+		1, -4, 1,
+		0, 1, 0
+	];
+	/*DOC:
+	 {
+		 title :`RedFilter_Convolution.EMBOSS`,
+		 code : 'CONST',
+		 description : `
+			 <code>
+			 [
+				 -2, -1, 0,
+				 -1, 1, 1,
+				 0, 1, 2
+			 ]
+			 </code>
+		 `,
+		 return : 'Array'
+	 }
+	 :DOC*/
+	RedFilter_Convolution['EMBOSS'] = [
+		-2, -1, 0,
+		-1, 1, 1,
+		0, 1, 2
+	];
+	Object.freeze(RedFilter_Convolution);
+})();
+/*
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
  * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
@@ -27379,4 +30446,4 @@ var RedGLOffScreen;
 		};
 		RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
 	})();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-07-09 12:27:18)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-08-07 11:46:16)' };console.log(RedGL_VERSION);

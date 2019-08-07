@@ -1,0 +1,45 @@
+[
+  {
+    "code": "PROPERTY",
+    "title": "grayMode",
+    "description": "\n\t 그레이모드\n\t 기본값 : false\n ",
+    "return": "Boolean"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "noiseIntensity",
+    "description": "\n\t 노이즈강도\n\t 기본값 : 0.5\n\t min : 0\n ",
+    "return": "Number"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedFilter_Film",
+    "description": "\n\t Film 이펙트\n ",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ]
+    },
+    "extends": [
+      "RedBaseFilter",
+      "RedBaseMaterial"
+    ],
+    "demo": "../example/postEffect/RedFilter_Film.html",
+    "example": "\n          var effect;\n          effect = RedFilter_Film(RedGL Instance); // 포스트이펙트 생성\n          // postEffectManager는 RedView 생성시 자동생성됨.\n          (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가\n ",
+    "return": "RedFilter_Film Instance"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "scanlineCount",
+    "description": "\n\t 스캔라인 수\n\t 기본값 : 2048\n\t min : 0\n ",
+    "return": "Number"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "scanlineIntensity",
+    "description": "\n\t 스캔라인강도\n\t 기본값 : 0.5\n\t min : 0\n ",
+    "return": "Number"
+  }
+]

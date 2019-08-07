@@ -1,8 +1,9 @@
 /*
- * RedGL - MIT License
- * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
- * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.6.20 15:0
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2019.8.7 11:21:57
+ *
  */
 
 var gulp = require('gulp');
@@ -22,7 +23,8 @@ var name = "RedGL";
 var transformString = function (s) {
 	var reg = /\/\*DOC\:[\s\S]+?\:\DOC\*\//g;
 	var list = s.match(reg)
-	var dedent = function (callSite,...args)
+	var dedent = function (callSite,...args
+)
 	{
 		var tList = callSite.trim().split('\n')
 		var tList2 = []
@@ -170,6 +172,8 @@ gulp.task('combine-js', function () {
 		"src/material/system/RedColorPointCloudMaterial.js",
 		"src/material/system/RedPBRMaterial_system.js",
 		"src/material/system/RedTextMaterial.js",
+		"src/material/system/RedOutlineMaterial.js",
+		"src/material/system/RedOutlinePlaneMaterial.js",
 		//
 		"src/light/RedAmbientLight.js",
 		"src/light/RedDirectionalLight.js",
@@ -255,6 +259,29 @@ gulp.task('combine-js', function () {
 		"src/postEffect/RedPostEffect_Vignetting.js",
 		"src/postEffect/RedPostEffect_Vignetting.js",
 		"src/postEffect/antialiasing/RedPostEffect_FXAA.js",
+
+		"src/filter/RedFilterFrameBuffer.js",
+		"src/filter/RedFilterEffectManager.js",
+		"src/base/RedBaseFilter.js",
+		"src/material/system/RedFilterMaterial.js",
+
+		"src/filter/adjustments/RedFilter_BrightnessContrast.js",
+		"src/filter/adjustments/RedFilter_Gray.js",
+		"src/filter/adjustments/RedFilter_Invert.js",
+		"src/filter/adjustments/RedFilter_Threshold.js",
+		"src/filter/adjustments/RedFilter_HueSaturation.js",
+		"src/filter/blur/RedFilter_Blur.js",
+		"src/filter/blur/RedFilter_BlurX.js",
+		"src/filter/blur/RedFilter_BlurY.js",
+		"src/filter/blur/RedFilter_GaussianBlur.js",
+		"src/filter/pixelate/RedFilter_Pixelize.js",
+		"src/filter/pixelate/RedFilter_HalfTone.js",
+		"src/filter/bloom/RedFilter_Bloom.js",
+		"src/filter/bloom/RedFilter_BloomThreshold.js",
+		"src/filter/RedFilter_Film.js",
+		"src/filter/RedFilter_Convolution.js",
+
+
 		//
 		"src/launcher/RedGLOffScreen.js"
 	])

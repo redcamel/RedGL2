@@ -1,8 +1,9 @@
 <!--
-  ~ RedGL - MIT License
-  ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
-  ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
-  ~ Last modification time of this file - 2019.7.8 15:8
+  ~   RedGL - MIT License
+  ~   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+  ~   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+  ~   Last modification time of this file - 2019.7.31 11:1:42
+  ~
   -->
 
 <!DOCTYPE html>
@@ -21,7 +22,7 @@
 
     <script src="../dat.gui.min.js"></script>
     <script src="../baseTestUI.js"></script>
-    <script src="../../release/RedGL.min.js"></script>
+    <script src="../../release/RedGL.js"></script>
 </head>
 
 <body>
@@ -50,19 +51,22 @@
 				tWorld.addView(tView);
 				// 그리드 설정
 				tScene['grid'] = RedGrid(redGL);
+				// tScene['axis'] = RedAxis(redGL);
 				// 렌더시작
 				tRenderer.start(redGL, function (time) {
 					var i = tScene.children.length
 					var tMesh
 					while (i--) {
 						tMesh = tScene.children[i]
-						if (tMesh != tPivotPoint) {
+						if (tMesh != tPivotPoint1) {
 							// tMesh.rotationX += 1
 							// tMesh.rotationY += 1
 							tMesh.rotationZ += 1
 						}
 
+
 					}
+					tMesh2.rotationZ +=0.5
 
 				});
 				// 렌더 디버거 활성화
@@ -97,35 +101,71 @@
 			));
 			tMesh.useCullFace = false
 			tMesh.pivot = [0, 0, 0]
-			tMesh.scaleX = tMesh.scaleY = tMesh.scaleZ = 3
+			tMesh.scaleX = tMesh.scaleY = tMesh.scaleZ = 10
 			tScene.addChild(tMesh);
-			var tPivotPoint = RedMesh(this, RedSphere(this, 0.2), RedColorMaterial(this, '#00ff00'));
-			tPivotPoint.useCullFace = false
-			tScene.addChild(tPivotPoint);
-			testUI(this, tScene, tMesh, tPivotPoint);
+			var tPivotPoint1 = RedMesh(this, RedSphere(this, 0.2), RedColorMaterial(this, '#00ff00'));
+			tPivotPoint1.useCullFace = false
+			tMesh.addChild(tPivotPoint1);
+			///
+			var tMesh2 = RedMesh(this, tGeometry, RedBitmapMaterial(
+				this,
+				RedBitmapTexture(this, assetPath + 'UV_Grid_Sm.jpg')
+			));
+			tMesh2.useCullFace = false
+			tMesh2.pivot = [0, 0, 0]
+			tMesh2.scaleX = tMesh2.scaleY = tMesh2.scaleZ = 1
+			tMesh2.x = 2
+			tMesh.addChild(tMesh2);
+			var tPivotPoint2 = RedMesh(this, RedSphere(this, 0.2), RedColorMaterial(this, '#ff0000'));
+			tPivotPoint2.useCullFace = false
+			tMesh2.addChild(tPivotPoint2);
+
+			testUI(this, tScene, tMesh,tMesh2, tPivotPoint1,tPivotPoint2);
 		} else {
 			console.log('초기화 실패!');
 		}
 	});
-	testUI = function (redGL, tScene, tMesh, tPivotPoint) {
+	testUI = function (redGL, tScene, tMesh, tMesh2,tPivotPoint1,tPivotPoint2) {
 		var gui = new baseTestUI(redGL);
 		gui.initRedGL();
 		var test = {
 			pivotX: 0,
 			pivotY: 0,
 			pivotZ: 0
-
+		}
+		var test2 = {
+			pivotX: 0,
+			pivotY: 0,
+			pivotZ: 0
 		}
 		var tFolder = gui['gui'].addFolder('RedMesh')
+		tFolder.open();
+		'x,y,z'.split(',').forEach(function (tKey) {
+			tFolder.add(tMesh, tKey, -10, 10, 0.01).onChange(function (v) {
+				tMesh[tKey] = v
+			})
+
+		});
+		'pivotX,pivotY,pivotZ'.split(',').forEach(function (tKey) {
+			tFolder.add(test, tKey, -1, 1, 0.01).onChange(function (v) {
+				tMesh[tKey] = v
+				tPivotPoint1.x = test['pivotX']
+				tPivotPoint1.y = test['pivotY']
+				tPivotPoint1.z = test['pivotZ']
+			})
+
+		});
+		var tFolder = gui['gui'].addFolder('RedMesh2')
 		tFolder.open()
 		'pivotX,pivotY,pivotZ'.split(',').forEach(function (tKey) {
-			tFolder.add(test, tKey, -10, 10, 0.01).onChange(function (v) {
-				tMesh[tKey] = v
-				tPivotPoint.x = test['pivotX']
-				tPivotPoint.y = test['pivotY']
-				tPivotPoint.z = test['pivotZ']
+			tFolder.add(test2, tKey, -1, 1, 0.01).onChange(function (v) {
+				tMesh2[tKey] = v
+				tPivotPoint2.x = test2['pivotX']
+				tPivotPoint2.y = test2['pivotY']
+				tPivotPoint2.z = test2['pivotZ']
 			})
 		});
+
 	}
 </script>
 </body>
