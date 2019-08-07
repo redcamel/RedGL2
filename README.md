@@ -1,11 +1,11 @@
 # RedGL
 [![Software License](https://img.shields.io/github/license/swisnl/build-size.svg)](LICENSE)
 
-## JavaScript 3D library
+### JavaScript 3D library
 
 The main goal of this project is to create a WebGL library that will perform optimally on all browsers / devices (PC, Mobile).
 
-## [Release Notes](https://github.com/redcamel/RedGL2/releases) 
+### [Release Notes](https://github.com/redcamel/RedGL2/releases) 
  - [Release Note V7.0](https://github.com/redcamel/RedGL2/releases/tag/Master_V7.0)
  - [Release Note V6.0](https://github.com/redcamel/RedGL2/releases/tag/Master_V6.0)
  - [Release Note V5.0](https://github.com/redcamel/RedGL2/releases/tag/Master_V5.0)
@@ -13,14 +13,14 @@ The main goal of this project is to create a WebGL library that will perform opt
  - [Release Note V3.0](https://github.com/redcamel/RedGL2/releases/tag/Master_V3.0)
  - [Release Note V2.0](https://github.com/redcamel/RedGL2/releases/tag/Master_V2.0)
 
-## [Documentation](https://redcamel.github.io/RedGL2/redDoc/index.html)
+### [Documentation](https://redcamel.github.io/RedGL2/redDoc/index.html)
 
-## [Examples](https://redcamel.github.io/RedGL2/example/index.html)
+### [Examples](https://redcamel.github.io/RedGL2/example/index.html)
    - See the [example](https://redcamel.github.io/RedGL2/example/index.html). Various examples are available.
    
-## [TestCase](https://redcamel.github.io/RedGL2/testCase/index.html)
+### [TestCase](https://redcamel.github.io/RedGL2/testCase/index.html)
 
-## Usage
+### Usage
 ```html
 <script src="https://redcamel.github.io/RedGL2/release/RedGL.min.js"></script>
 ```
