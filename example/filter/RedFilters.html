@@ -2,7 +2,7 @@
   ~   RedGL - MIT License
   ~   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
   ~   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
-  ~   Last modification time of this file - 2019.8.7 11:21:57
+  ~   Last modification time of this file - 2019.8.7 11:32:13
   ~
   -->
 
@@ -96,7 +96,7 @@
 		effectList = {
 			RedFilter_Invert: RedFilter_Invert(redGL),
 			RedFilter_Gray: RedFilter_Gray(redGL),
-			// RedFilter_Convolution: RedFilter_Convolution(redGL, RedFilter_Convolution['EMBOSS']),
+			RedFilter_Convolution: RedFilter_Convolution(redGL, RedFilter_Convolution['EMBOSS']),
 			RedFilter_HueSaturation: RedFilter_HueSaturation(redGL),
 			RedFilter_BrightnessContrast: RedFilter_BrightnessContrast(redGL),
 			RedFilter_Threshold : RedFilter_Threshold(redGL),
@@ -136,6 +136,21 @@
 				})());
 				console.log(k)
 				switch (k) {
+					case 'RedFilter_Convolution':
+						var convolution_testData = {
+							list : 'EMBOSS'
+                        }
+                        var tEffect = effectList[k]
+						tFolder.add(convolution_testData, 'list', [
+							'NORMAL',
+							'SHARPEN',
+							'BLUR',
+							'EDGE',
+							'EMBOSS'
+						]).onChange(function (v) {
+							tEffect['kernel'] = RedFilter_Convolution[v]
+						});
+						break;
 					case 'RedFilter_Threshold':
 						tFolder.add(effectList[k], 'threshold', 1, 255);
 						break;
