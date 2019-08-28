@@ -1,8 +1,9 @@
 /*
- * RedGL - MIT License
- * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
- * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 19:34
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2019.8.28 11:6:29
+ *
  */
 
 "use strict";
@@ -57,6 +58,12 @@ var RedGLUtil;
 		 :DOC*/
 		hexToRGB_ZeroToOne: function (hex) {
 			var t0, t1;
+			if(hex.indexOf('rgba')>-1){
+				hex = hex.replace('rgba(','')
+				hex = hex.replace(')','')
+				hex = hex.split(',')
+				hex = RedGLUtil.rgb2hex(hex[0],hex[1],hex[2])
+			}
 			if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
 				t1 = [];
 				t0 = hex.substring(1).split('');

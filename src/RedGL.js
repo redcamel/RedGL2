@@ -1,8 +1,9 @@
 /*
- * RedGL - MIT License
- * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
- * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.6.13 11:7
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2019.8.28 11:6:29
+ *
  */
 
 "use strict";
@@ -297,8 +298,8 @@ var RedGL;
 					tXkey = 'offsetX';
 					tYkey = 'offsetY';
 				} else {
-					tXkey = 'layerX';
-					tYkey = 'layerY';
+					tXkey = 'offsetX';
+					tYkey = 'offsetY';
 				}
 				self['_canvas'].addEventListener(v, function (e) {
 					e.preventDefault();
