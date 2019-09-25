@@ -19,7 +19,7 @@ The main goal of this project is to create a WebGL library that will perform opt
    ![RedGL](img_example.png)
 
 ## [Documentation](https://redcamel.github.io/RedGL2/redDoc/index.html)
-
+   - See the [doc](https://redcamel.github.io/RedGL2/redDoc/index.html).
 
 ## [TestCase](https://redcamel.github.io/RedGL2/testCase/index.html)
 
