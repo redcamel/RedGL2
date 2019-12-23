@@ -2,7 +2,7 @@
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.7 15:42:43
+ *   Last modification time of this file - 2019.12.23 15:55:1
  *
  */
 
@@ -1831,10 +1831,11 @@ var RedGLDetect;
 })();
 
 /*
- * RedGL - MIT License
- * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
- * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 19:34
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2019.8.28 11:6:29
+ *
  */
 
 "use strict";
@@ -1889,6 +1890,12 @@ var RedGLUtil;
 		 :DOC*/
 		hexToRGB_ZeroToOne: function (hex) {
 			var t0, t1;
+			if(hex.indexOf('rgba')>-1){
+				hex = hex.replace('rgba(','')
+				hex = hex.replace(')','')
+				hex = hex.split(',')
+				hex = RedGLUtil.rgb2hex(hex[0],hex[1],hex[2])
+			}
 			if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
 				t1 = [];
 				t0 = hex.substring(1).split('');
@@ -2418,10 +2425,11 @@ var RedGLUtil;
 	Object.freeze(RedGLUtil);
 })();
 /*
- * RedGL - MIT License
- * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
- * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.6.13 11:7
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2019.8.28 11:6:29
+ *
  */
 
 "use strict";
@@ -2716,8 +2724,8 @@ var RedGL;
 					tXkey = 'offsetX';
 					tYkey = 'offsetY';
 				} else {
-					tXkey = 'layerX';
-					tYkey = 'layerY';
+					tXkey = 'offsetX';
+					tYkey = 'offsetY';
 				}
 				self['_canvas'].addEventListener(v, function (e) {
 					e.preventDefault();
@@ -10260,12 +10268,20 @@ var RedTextMaterial;
 					) ;
 					gl_Position = uPMatrix * uCameraMatrix * targetMatrix *  vec4(aVertexPosition, 1.0);
 				}else{
-					targetMatrix = uMMatrix * mat4(
-						u_width/uResolution.y, 0.0, 0.0, 0.0,
-						0.0, u_height/uResolution.y, 0.0, 0.0,
-						0.0, 0.0, 1.0, 0.0,
-						0.0, 0.0, 0.0, 1.0
-					) ;
+					//#REDGL_DEFINE#sprite3D#true# targetMatrix = uMMatrix * mat4(
+					//#REDGL_DEFINE#sprite3D#true#    u_width/uResolution.y, 0.0, 0.0, 0.0,
+                    //#REDGL_DEFINE#sprite3D#true#    0.0, u_height/uResolution.y, 0.0, 0.0,
+					//#REDGL_DEFINE#sprite3D#true# 	0.0, 0.0, 1.0, 0.0,
+					//#REDGL_DEFINE#sprite3D#true# 	0.0, 0.0, 0.0, 1.0
+					//#REDGL_DEFINE#sprite3D#true# ) ;
+
+					//#REDGL_DEFINE#sprite3D#false# targetMatrix = uMMatrix * mat4(
+					//#REDGL_DEFINE#sprite3D#false#    u_width/max(u_width,u_height), 0.0, 0.0, 0.0,
+                    //#REDGL_DEFINE#sprite3D#false#    0.0, u_height/max(u_width,u_height), 0.0, 0.0,
+					//#REDGL_DEFINE#sprite3D#false# 	0.0, 0.0, 1.0, 0.0,
+					//#REDGL_DEFINE#sprite3D#false# 	0.0, 0.0, 0.0, 1.0
+					//#REDGL_DEFINE#sprite3D#false# ) ;
+
 					//#REDGL_DEFINE#sprite3D#true# gl_Position = uPMatrix * getSprite3DMatrix(uCameraMatrix , targetMatrix) *  vec4(aVertexPosition, 1.0);
 					//#REDGL_DEFINE#sprite3D#true# if(!u_PerspectiveScale){
 					//#REDGL_DEFINE#sprite3D#true#   gl_Position /= gl_Position.w;
@@ -27751,7 +27767,7 @@ var RedFilterFrameBuffer;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.7 11:52:14
+ *   Last modification time of this file - 2019.8.7 15:42:44
  *
  */
 
@@ -28320,7 +28336,7 @@ var RedFilterMaterial;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.7 15:37:40
+ *   Last modification time of this file - 2019.8.7 15:42:44
  *
  */
 
@@ -28435,7 +28451,7 @@ var RedFilter_BrightnessContrast;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.7 15:37:40
+ *   Last modification time of this file - 2019.8.7 15:42:44
  *
  */
 
@@ -28505,7 +28521,7 @@ var RedFilter_Gray;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.7 15:37:40
+ *   Last modification time of this file - 2019.8.7 15:42:44
  *
  */
 
@@ -28579,7 +28595,7 @@ var RedFilter_Invert;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.7 15:37:40
+ *   Last modification time of this file - 2019.8.7 15:42:44
  *
  */
 
@@ -28679,7 +28695,7 @@ var RedFilter_Threshold;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.7 15:37:40
+ *   Last modification time of this file - 2019.8.7 15:42:44
  *
  */
 
@@ -28806,7 +28822,7 @@ var RedFilter_HueSaturation;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.7 15:37:41
+ *   Last modification time of this file - 2019.8.7 15:42:44
  *
  */
 
@@ -28892,7 +28908,7 @@ var RedFilter_Blur;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.7 15:37:41
+ *   Last modification time of this file - 2019.8.7 15:42:44
  *
  */
 
@@ -28998,7 +29014,7 @@ var RedFilter_BlurX;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.7 15:37:41
+ *   Last modification time of this file - 2019.8.7 15:42:44
  *
  */
 
@@ -29103,7 +29119,7 @@ var RedFilter_BlurY;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.7 15:37:41
+ *   Last modification time of this file - 2019.8.7 15:42:44
  *
  */
 
@@ -29281,7 +29297,7 @@ var RedFilter_Pixelize;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.7 15:37:41
+ *   Last modification time of this file - 2019.8.7 15:42:44
  *
  */
 
@@ -29442,7 +29458,7 @@ var RedFilter_HalfTone;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.7 15:37:40
+ *   Last modification time of this file - 2019.8.7 15:42:44
  *
  */
 
@@ -29596,7 +29612,7 @@ var RedFilter_Bloom;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.7 15:37:41
+ *   Last modification time of this file - 2019.8.7 15:42:44
  *
  */
 
@@ -29693,7 +29709,7 @@ var RedFilter_BloomThreshold;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.7 15:37:41
+ *   Last modification time of this file - 2019.8.7 15:42:44
  *
  */
 
@@ -29846,7 +29862,7 @@ var RedFilter_Film;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.7 15:37:41
+ *   Last modification time of this file - 2019.8.7 15:42:44
  *
  */
 
@@ -30371,4 +30387,4 @@ var RedGLOffScreen;
 		};
 		RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
 	})();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-08-07 15:41:37)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-12-23 15:53:23)' };console.log(RedGL_VERSION);
