@@ -1,8 +1,9 @@
 /*
- * RedGL - MIT License
- * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
- * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.2 13:44
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2019.12.23 15:55:1
+ *
  */
 
 "use strict";
@@ -36,12 +37,20 @@ var RedTextMaterial;
 					) ;
 					gl_Position = uPMatrix * uCameraMatrix * targetMatrix *  vec4(aVertexPosition, 1.0);
 				}else{
-					targetMatrix = uMMatrix * mat4(
-						u_width/uResolution.y, 0.0, 0.0, 0.0,
-						0.0, u_height/uResolution.y, 0.0, 0.0,
-						0.0, 0.0, 1.0, 0.0,
-						0.0, 0.0, 0.0, 1.0
-					) ;
+					//#REDGL_DEFINE#sprite3D#true# targetMatrix = uMMatrix * mat4(
+					//#REDGL_DEFINE#sprite3D#true#    u_width/uResolution.y, 0.0, 0.0, 0.0,
+                    //#REDGL_DEFINE#sprite3D#true#    0.0, u_height/uResolution.y, 0.0, 0.0,
+					//#REDGL_DEFINE#sprite3D#true# 	0.0, 0.0, 1.0, 0.0,
+					//#REDGL_DEFINE#sprite3D#true# 	0.0, 0.0, 0.0, 1.0
+					//#REDGL_DEFINE#sprite3D#true# ) ;
+
+					//#REDGL_DEFINE#sprite3D#false# targetMatrix = uMMatrix * mat4(
+					//#REDGL_DEFINE#sprite3D#false#    u_width/max(u_width,u_height), 0.0, 0.0, 0.0,
+                    //#REDGL_DEFINE#sprite3D#false#    0.0, u_height/max(u_width,u_height), 0.0, 0.0,
+					//#REDGL_DEFINE#sprite3D#false# 	0.0, 0.0, 1.0, 0.0,
+					//#REDGL_DEFINE#sprite3D#false# 	0.0, 0.0, 0.0, 1.0
+					//#REDGL_DEFINE#sprite3D#false# ) ;
+
 					//#REDGL_DEFINE#sprite3D#true# gl_Position = uPMatrix * getSprite3DMatrix(uCameraMatrix , targetMatrix) *  vec4(aVertexPosition, 1.0);
 					//#REDGL_DEFINE#sprite3D#true# if(!u_PerspectiveScale){
 					//#REDGL_DEFINE#sprite3D#true#   gl_Position /= gl_Position.w;
