@@ -44,7 +44,7 @@
 				tController = RedObitController(redGL);
 				tController.pan = 25;
 				tController.tilt = -15;
-				tController.distance = 15;
+				tController.distance = 300;
 				// tController.speedDistance = 50
 				// 렌더러 생성
 				tRenderer = RedRenderer();
@@ -121,7 +121,11 @@
 			//     tScene.addChild(v['resultMesh'])
 			//     v['resultMesh'].scaleX = v['resultMesh'].scaleY = v['resultMesh'].scaleZ = 10
 			// })
-			RedGLTFLoader(this, assetPath + 'glTF/basic/', 'InterpolationTest.glb', function (v) {
+			// RedGLTFLoader(this, assetPath + 'glTF/basic/', 'InterpolationTest.glb', function (v) {
+            //
+			// 	tScene.addChild(v['resultMesh'])
+			// })
+			RedGLTFLoader(this, 'https://cx20.github.io/gltf-test/sampleModels/Fox/glTF/', 'Fox.gltf', function (v) {
 
 				tScene.addChild(v['resultMesh'])
 			})

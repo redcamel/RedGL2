@@ -2,7 +2,7 @@
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.28 11:6:29
+ *   Last modification time of this file - 2020.2.4 10:17:36
  *
  */
 
@@ -260,12 +260,15 @@ var RedGLUtil;
 			var y = 1;
 			var z = 2;
 			var result = [];
+			var newIndexArray = []
 			for (i = 0; i < vertexArray.length; i = i + 3) {
 				//for each vertex, initialize normal x, normal y, normal z
 				result[i + x] = 0.0;
 				result[i + y] = 0.0;
 				result[i + z] = 0.0;
+				if(!indexArray.length) newIndexArray.push(i/3)
 			}
+			if(!indexArray.length) indexArray = newIndexArray;
 			for (i = 0; i < indexArray.length; i = i + 3) { //we work on triads of vertices to calculate normals so i = i+3 (i = indices index)
 				var v1 = [];
 				var v2 = [];
