@@ -2,7 +2,7 @@
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.12.23 15:55:1
+ *   Last modification time of this file - 2020.2.4 10:17:35
  *
  */
 
@@ -2092,12 +2092,15 @@ var RedGLUtil;
 			var y = 1;
 			var z = 2;
 			var result = [];
+			var newIndexArray = []
 			for (i = 0; i < vertexArray.length; i = i + 3) {
 				//for each vertex, initialize normal x, normal y, normal z
 				result[i + x] = 0.0;
 				result[i + y] = 0.0;
 				result[i + z] = 0.0;
+				if(!indexArray.length) newIndexArray.push(i/3)
 			}
+			if(!indexArray.length) indexArray = newIndexArray;
 			for (i = 0; i < indexArray.length; i = i + 3) { //we work on triads of vertices to calculate normals so i = i+3 (i = indices index)
 				var v1 = [];
 				var v2 = [];
@@ -2424,6 +2427,7 @@ var RedGLUtil;
 	};
 	Object.freeze(RedGLUtil);
 })();
+
 /*
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
@@ -3313,7 +3317,7 @@ var RedBaseObject3D;
 		     code : 'PROPERTY',
 			 title :`useTransparentSort`,
 			 description : `
-				 투명도 소팅 여부. 
+				 투명도 소팅 여부.
 				 true 설정시 렌더링 진행과정중 최종적으로 모아서 그리게된다. (완벽하지 않지만 투명객체 소팅 효과를 얻을 수 있음)
 				 기본값 : false
 			 `,
@@ -10230,11 +10234,13 @@ var RedPBRMaterial_System;
 	);
 	Object.freeze(RedPBRMaterial_System);
 })();
+
 /*
- * RedGL - MIT License
- * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
- * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.2 13:44
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2019.12.23 15:55:1
+ *
  */
 
 "use strict";
@@ -14956,6 +14962,7 @@ var RedGLTFLoader;
 	})();
 	Object.freeze(RedGLTFLoader);
 })();
+
 /*
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
@@ -30387,4 +30394,4 @@ var RedGLOffScreen;
 		};
 		RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
 	})();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-12-23 15:53:23)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2020-02-04 10:14:30)' };console.log(RedGL_VERSION);
