@@ -20,7 +20,7 @@
   {
     "constructorYn": true,
     "title": "RedFilter_Bloom",
-    "description": "\n\t Bloom 이펙트\n\t postEffectManager.addEffect( effect Instance ) 로 추가.\n ",
+    "description": "\n\t\t Bloom 필터\n\n\t ",
     "params": {
       "redGL": [
         {
@@ -32,8 +32,7 @@
       "RedBaseFilter",
       "RedBaseMaterial"
     ],
-    "demo": "../example/postEffect/bloom/RedFilter_Bloom.html",
-    "example": "\n          var effect;\n          effect = RedFilter_Bloom(RedGL Instance); // 포스트이펙트 생성\n          // postEffectManager는 RedView 생성시 자동생성됨.\n          (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가\n ",
+    "demo": "../example/filter/bloom/RedFilter_Bloom.html",
     "return": "RedFilter_Bloom Instance"
   },
   {

@@ -2,7 +2,7 @@
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.2 18:16:21
+ *   Last modification time of this file - 2019.8.7 15:42:44
  *
  */
 
@@ -55,7 +55,7 @@ var RedFilter_Film;
 		 constructorYn : true,
 		 title :`RedFilter_Film`,
 		 description : `
-			 Film 이펙트
+			 Film 필터
 		 `,
 		 params : {
 			 redGL : [
@@ -66,13 +66,8 @@ var RedFilter_Film;
 		    'RedBaseFilter',
 		    'RedBaseMaterial'
 		 ],
-		 demo : '../example/postEffect/RedFilter_Film.html',
-		 example : `
-            var effect;
-            effect = RedFilter_Film(RedGL Instance); // 포스트이펙트 생성
-            // postEffectManager는 RedView 생성시 자동생성됨.
-            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
-		 `,
+		 demo : '../example/filter/RedFilter_Film.html',
+
 		 return : 'RedFilter_Film Instance'
 	 }
 	 :DOC*/

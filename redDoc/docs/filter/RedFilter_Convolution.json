@@ -1,0 +1,56 @@
+[
+  {
+    "code": "PROPERTY",
+    "title": "kernel",
+    "description": "\n\t 커널값.\n\t 3 * 3 매트릭스 형식의 배열\n ",
+    "return": "Array"
+  },
+  {
+    "constructorYn": true,
+    "title": "RedFilter_Convolution",
+    "description": "\n\t\t Convolution 필터\n\t ",
+    "params": {
+      "redGL": [
+        {
+          "type": "RedGL"
+        }
+      ]
+    },
+    "extends": [
+      "RedBaseFilter",
+      "RedBaseMaterial"
+    ],
+    "demo": "../example/filter/RedFilter_Convolution.html",
+    "return": "RedFilter_Convolution Instance"
+  },
+  {
+    "title": "RedFilter_Convolution.BLUR",
+    "code": "CONST",
+    "description": "\n\t <code>\n\t [\n\t\t 1, 1, 1,\n\t\t 1, 1, 1,\n\t\t 1, 1, 1\n\t ]\n\t </code>\n ",
+    "return": "Array"
+  },
+  {
+    "title": "RedFilter_Convolution.EDGE",
+    "code": "CONST",
+    "description": "\n\t <code>\n\t [\n\t\t 0, 1, 0,\n\t\t 1, -4, 1,\n\t\t 0, 1, 0\n\t ]\n\t </code>\n ",
+    "return": "Array"
+  },
+  {
+    "title": "RedFilter_Convolution.EMBOSS",
+    "code": "CONST",
+    "description": "\n\t <code>\n\t [\n\t\t -2, -1, 0,\n\t\t -1, 1, 1,\n\t\t 0, 1, 2\n\t ]\n\t </code>\n ",
+    "return": "Array"
+  },
+  {
+    "title": "RedFilter_Convolution.NORMAL",
+    "code": "CONST",
+    "description": "\n\t <code>\n\t [\n\t\t 0, 0, 0,\n\t\t 0, 1, 0,\n\t\t 0, 0, 0\n\t ]\n\t </code>\n ",
+    "return": "Array"
+  },
+  {
+    "title": "RedFilter_Convolution.SHARPEN",
+    "code": "CONST",
+    "description": "\n\t <code>\n\t [\n\t\t 0, -1, 0,\n\t\t -1, 5, -1,\n\t\t 0, -1, 0\n\t ]\n\t </code>\n ",
+    "return": "Array"
+  }
+]

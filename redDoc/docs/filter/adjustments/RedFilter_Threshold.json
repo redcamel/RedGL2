@@ -2,7 +2,7 @@
   {
     "constructorYn": true,
     "title": "RedFilter_Threshold",
-    "description": "\n\t Threshold 이펙트\n\t postEffectManager.addEffect( effect Instance ) 로 추가.\n ",
+    "description": "\n\t\t Threshold 필터\n\n\t ",
     "params": {
       "redGL": [
         {
@@ -14,8 +14,7 @@
       "RedBaseFilter",
       "RedBaseMaterial"
     ],
-    "demo": "../example/postEffect/adjustments/RedFilter_Threshold.html",
-    "example": "\n          var effect;\n          effect = RedFilter_Threshold(RedGL Instance); // 포스트이펙트 생성\n          // postEffectManager는 RedView 생성시 자동생성됨.\n          (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가\n ",
+    "demo": "../example/filter/adjustments/RedFilter_Threshold.html",
     "return": "RedFilter_Threshold Instance"
   },
   {

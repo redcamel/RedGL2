@@ -1,9 +1,8 @@
 /*
- *   RedGL - MIT License
- *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
- *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.7 11:52:14
- *
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:57
  */
 
 /*DOC:
@@ -1831,10 +1830,11 @@ var RedGLDetect;
 })();
 
 /*
- * RedGL - MIT License
- * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
- * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 19:34
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2020.2.4 10:17:36
+ *
  */
 
 "use strict";
@@ -1889,6 +1889,12 @@ var RedGLUtil;
 		 :DOC*/
 		hexToRGB_ZeroToOne: function (hex) {
 			var t0, t1;
+			if(hex.indexOf('rgba')>-1){
+				hex = hex.replace('rgba(','')
+				hex = hex.replace(')','')
+				hex = hex.split(',')
+				hex = RedGLUtil.rgb2hex(hex[0],hex[1],hex[2])
+			}
 			if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
 				t1 = [];
 				t0 = hex.substring(1).split('');
@@ -2085,12 +2091,15 @@ var RedGLUtil;
 			var y = 1;
 			var z = 2;
 			var result = [];
+			var newIndexArray = []
 			for (i = 0; i < vertexArray.length; i = i + 3) {
 				//for each vertex, initialize normal x, normal y, normal z
 				result[i + x] = 0.0;
 				result[i + y] = 0.0;
 				result[i + z] = 0.0;
+				if(!indexArray.length) newIndexArray.push(i/3)
 			}
+			if(!indexArray.length) indexArray = newIndexArray;
 			for (i = 0; i < indexArray.length; i = i + 3) { //we work on triads of vertices to calculate normals so i = i+3 (i = indices index)
 				var v1 = [];
 				var v2 = [];
@@ -2417,11 +2426,13 @@ var RedGLUtil;
 	};
 	Object.freeze(RedGLUtil);
 })();
+
 /*
- * RedGL - MIT License
- * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
- * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.6.13 11:7
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2019.8.28 11:6:29
+ *
  */
 
 "use strict";
@@ -2716,8 +2727,8 @@ var RedGL;
 					tXkey = 'offsetX';
 					tYkey = 'offsetY';
 				} else {
-					tXkey = 'layerX';
-					tYkey = 'layerY';
+					tXkey = 'offsetX';
+					tYkey = 'offsetY';
 				}
 				self['_canvas'].addEventListener(v, function (e) {
 					e.preventDefault();
@@ -9129,10 +9140,11 @@ var RedVideoMaterial;
 	Object.freeze(RedVideoMaterial);
 })();
 /*
- * RedGL - MIT License
- * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
- * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2020.3.18 13:58:43
+ *
  */
 "use strict";
 var RedPBRMaterial;
@@ -9269,7 +9281,7 @@ var RedPBRMaterial;
 			//#REDGL_DEFINE#environmentTexture# reflectionColor.rgb *= reflectionColor.a;
 
 			// 환경맵 합성
-			//#REDGL_DEFINE#environmentTexture# texelColor.rgb = mix( texelColor.rgb , reflectionColor.rgb , max(tMetallicPower-tRoughnessPower,0.0)*(1.0-tRoughnessPower));
+			//#REDGL_DEFINE#environmentTexture# texelColor.rgb = mix( texelColor.rgb , reflectionColor.rgb , max(tMetallicPower-tRoughnessPower,0.1)*(1.0-tRoughnessPower));
 			//#REDGL_DEFINE#environmentTexture# texelColor = mix( texelColor , vec4(0.04, 0.04, 0.04, 1.0) , tRoughnessPower * (tMetallicPower) * 0.5);
 
 
@@ -9680,10 +9692,11 @@ var RedColorPointCloudMaterial;
 	Object.freeze(RedColorPointCloudMaterial);
 })();
 /*
- * RedGL - MIT License
- * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
- * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2020.3.18 13:58:43
+ *
  */
 "use strict";
 var RedPBRMaterial_System;
@@ -9875,7 +9888,7 @@ var RedPBRMaterial_System;
 			//#REDGL_DEFINE#usePreMultiply# //#REDGL_DEFINE#environmentTexture# reflectionColor.rgb *= reflectionColor.a;
 
 			// 환경맵 합성
-			//#REDGL_DEFINE#environmentTexture# texelColor.rgb = mix( texelColor.rgb , reflectionColor.rgb , max(tMetallicPower-tRoughnessPower,0.0)*(1.0-tRoughnessPower));
+			//#REDGL_DEFINE#environmentTexture# texelColor.rgb = mix( texelColor.rgb , reflectionColor.rgb , max(tMetallicPower-tRoughnessPower,0.1)*(1.0-tRoughnessPower));
 			//#REDGL_DEFINE#environmentTexture# texelColor = mix( texelColor , vec4(0.04, 0.04, 0.04, 1.0) , tRoughnessPower * (tMetallicPower) * 0.5);
 
 			// 컷오프 계산
@@ -10222,11 +10235,13 @@ var RedPBRMaterial_System;
 	);
 	Object.freeze(RedPBRMaterial_System);
 })();
+
 /*
- * RedGL - MIT License
- * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
- * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.5.2 13:44
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2019.12.23 15:55:1
+ *
  */
 
 "use strict";
@@ -10260,12 +10275,20 @@ var RedTextMaterial;
 					) ;
 					gl_Position = uPMatrix * uCameraMatrix * targetMatrix *  vec4(aVertexPosition, 1.0);
 				}else{
-					targetMatrix = uMMatrix * mat4(
-						u_width/uResolution.y, 0.0, 0.0, 0.0,
-						0.0, u_height/uResolution.y, 0.0, 0.0,
-						0.0, 0.0, 1.0, 0.0,
-						0.0, 0.0, 0.0, 1.0
-					) ;
+					//#REDGL_DEFINE#sprite3D#true# targetMatrix = uMMatrix * mat4(
+					//#REDGL_DEFINE#sprite3D#true#    u_width/uResolution.y, 0.0, 0.0, 0.0,
+                    //#REDGL_DEFINE#sprite3D#true#    0.0, u_height/uResolution.y, 0.0, 0.0,
+					//#REDGL_DEFINE#sprite3D#true# 	0.0, 0.0, 1.0, 0.0,
+					//#REDGL_DEFINE#sprite3D#true# 	0.0, 0.0, 0.0, 1.0
+					//#REDGL_DEFINE#sprite3D#true# ) ;
+
+					//#REDGL_DEFINE#sprite3D#false# targetMatrix = uMMatrix * mat4(
+					//#REDGL_DEFINE#sprite3D#false#    u_width/max(u_width,u_height), 0.0, 0.0, 0.0,
+                    //#REDGL_DEFINE#sprite3D#false#    0.0, u_height/max(u_width,u_height), 0.0, 0.0,
+					//#REDGL_DEFINE#sprite3D#false# 	0.0, 0.0, 1.0, 0.0,
+					//#REDGL_DEFINE#sprite3D#false# 	0.0, 0.0, 0.0, 1.0
+					//#REDGL_DEFINE#sprite3D#false# ) ;
+
 					//#REDGL_DEFINE#sprite3D#true# gl_Position = uPMatrix * getSprite3DMatrix(uCameraMatrix , targetMatrix) *  vec4(aVertexPosition, 1.0);
 					//#REDGL_DEFINE#sprite3D#true# if(!u_PerspectiveScale){
 					//#REDGL_DEFINE#sprite3D#true#   gl_Position /= gl_Position.w;
@@ -12853,10 +12876,11 @@ var RedDAELoader;
 	Object.freeze(RedDAELoader)
 })();
 /*
- * RedGL - MIT License
- * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
- * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.6.13 11:7
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2020.2.4 10:17:36
+ *
  */
 
 "use strict";
@@ -14295,10 +14319,13 @@ var RedGLTFLoader;
 				var result = {};
 				if (json['samplers']) {
 					var t0 = json['samplers'][samplerIndex];
-					if ('magFilter' in t0) result['mag'] = t0['magFilter'];
-					if ('minFilter' in t0) result['min'] = t0['minFilter'];
-					if ('wrapS' in t0) result['wrap_s'] = t0['wrapS'];
-					if ('wrapT' in t0) result['wrap_t'] = t0['wrapT']
+					if(t0){
+						if ('magFilter' in t0) result['mag'] = t0['magFilter'];
+						if ('minFilter' in t0) result['min'] = t0['minFilter'];
+						if ('wrapS' in t0) result['wrap_s'] = t0['wrapS'];
+						if ('wrapT' in t0) result['wrap_t'] = t0['wrapT']
+					}
+
 				} else {
 					console.log('있긴하냐', samplerIndex)
 				}
@@ -14940,6 +14967,7 @@ var RedGLTFLoader;
 	})();
 	Object.freeze(RedGLTFLoader);
 })();
+
 /*
  * RedGL - MIT License
  * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
@@ -27751,7 +27779,7 @@ var RedFilterFrameBuffer;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.7 11:21:57
+ *   Last modification time of this file - 2019.8.7 15:42:44
  *
  */
 
@@ -27784,7 +27812,7 @@ var RedFilterEffectManager;
 			title :`frameBuffer`,
 			code : 'PROPERTY',
 			description : `
-				이펙트 렌더링시 사용될 프레임버퍼
+				필터 렌더링시 사용될 프레임버퍼
 			`,
 			return : 'RedFrameBuffer Instance'
 		}
@@ -27796,7 +27824,7 @@ var RedFilterEffectManager;
 			title :`filterList`,
 			code : 'PROPERTY',
 			description : `
-				이펙트 리스트
+				필터 리스트
 			`,
 			return : 'Array'
 		}
@@ -27882,7 +27910,7 @@ var RedFilterEffectManager;
 				}
 				tFrameBuffer = effect['frameBuffer'];
 				if (tFrameBuffer) {
-					// 최종메쉬의 재질을 현재 이펙트로 변경
+					// 최종메쉬의 재질을 현재 필터로 변경
 					tFrameBuffer['_width'] = parseInt(tViewRect[2]);
 					tFrameBuffer['_height'] = parseInt(tViewRect[3]);
 					tQuadMesh['_material'] = effect;
@@ -27975,7 +28003,7 @@ var RedFilterEffectManager;
 						tFrameBuffer._prevWidth = tFrameBuffer['width'];
 						tFrameBuffer._prevHeight = tFrameBuffer['height']
 					// }
-					// 해당 이펙트의 기본 텍스쳐를 지난 이펙트의 최종 텍스쳐로 업로드
+					// 해당 필터의 기본 텍스쳐를 지난 필터의 최종 텍스쳐로 업로드
 					if (effect['_process'] && effect['_process'].length) {
 						effect.updateTexture(
 							lastFrameBufferTexture,
@@ -27984,13 +28012,13 @@ var RedFilterEffectManager;
 					} else {
 						effect['_diffuseTexture'] = lastFrameBufferTexture;
 					}
-					// 해당 이펙트를 렌더링하고
+					// 해당 필터를 렌더링하고
 					redRenderer.sceneRender(redGL, tScene, tCamera, tCamera['mode2DYn'], quadChildren, time, renderInfo);
-					// 해당 이펙트의 프레임 버퍼를 언바인딩한다.
+					// 해당 필터의 프레임 버퍼를 언바인딩한다.
 					// if (!tCamera['mode2DYn'] || depth || length > 1) {
 						gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 					// }
-					// 현재 이펙트를 최종 텍스쳐로 기록하고 다음 이펙트가 있을경우 활용한다.
+					// 현재 필터를 최종 텍스쳐로 기록하고 다음 필터가 있을경우 활용한다.
 					lastFrameBufferTexture = tFrameBuffer['texture'];
 				}
 			};
@@ -28037,7 +28065,7 @@ var RedFilterEffectManager;
 				}
 				currentAABB = [maxX - minX, maxY - minY, maxZ - minZ];
 				/////////////////////////////////////////////////////////////////////
-				// 렌더링할 이펙트 리스트를 정리한다.
+				// 렌더링할 필터 리스트를 정리한다.
 				tEffectList.length = 0;
 				i = 0;
 				len = this['filterList'].length;
@@ -28046,7 +28074,7 @@ var RedFilterEffectManager;
 					tEffect = this['filterList'][i];
 
 					if (prevEffect != tEffect) {
-						// 최종 이펙트 리스트에 등록
+						// 최종 필터 리스트에 등록
 						tEffectList[tEffectList.length] = tEffect;
 						// 스케일 계산
 						if (tEffect instanceof RedFilter_Blur) {
@@ -28140,7 +28168,7 @@ var RedFilterEffectManager;
 				}
 
 				////////////////////////////////////////////////////////////////////////////
-				// 이펙트 렌더
+				// 필터 렌더
 				i = 0;
 				len = tEffectList.length;
 				for (i; i < len; i++) drawEffect(redGL, tEffectList[i], this['children'], redView, tCamera, redRenderer, time, renderInfo, tMesh, 0, len);
@@ -28320,7 +28348,7 @@ var RedFilterMaterial;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.7 11:21:57
+ *   Last modification time of this file - 2019.8.7 15:42:44
  *
  */
 
@@ -28351,8 +28379,8 @@ var RedFilter_BrightnessContrast;
 		 constructorYn : true,
 		 title :`RedFilter_BrightnessContrast`,
 		 description : `
-			 BrightnessContrast 이펙트
-			 postEffectManager.addEffect( effect Instance ) 로 추가.
+			 BrightnessContrast 필터
+
 		 `,
 		 params : {
 			 redGL : [
@@ -28363,13 +28391,8 @@ var RedFilter_BrightnessContrast;
 		    'RedBaseFilter',
 		    'RedBaseMaterial'
 		 ],
-		 demo : '../example/postEffect/adjustments/RedFilter_BrightnessContrast.html',
-		 example : `
-            var effect;
-            effect = RedFilter_BrightnessContrast(RedGL Instance); // 포스트이펙트 생성
-            // postEffectManager는 RedView 생성시 자동생성됨.
-            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
-		 `,
+		 demo : '../example/filter/adjustments/RedFilter_BrightnessContrast.html',
+
 		 return : 'RedFilter_BrightnessContrast Instance'
 	 }
 	 :DOC*/
@@ -28440,7 +28463,7 @@ var RedFilter_BrightnessContrast;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.6 14:20:40
+ *   Last modification time of this file - 2019.8.7 15:42:44
  *
  */
 
@@ -28467,8 +28490,8 @@ var RedFilter_Gray;
 		 constructorYn : true,
 		 title :`RedFilter_Gray`,
 		 description : `
-			 Gray 이펙트
-			 postEffectManager.addEffect( effect Instance ) 로 추가.
+			 Gray 필터
+
 		 `,
 		 params : {
 			 redGL : [
@@ -28479,13 +28502,8 @@ var RedFilter_Gray;
 			'RedBaseFilter',
 			'RedBaseMaterial'
 		 ],
-		 demo : '../example/postEffect/adjustments/RedFilter_Gray.html',
-		 example : `
-			var effect;
-			effect = RedFilter_Gray(RedGL Instance); // 포스트이펙트 생성
-			// postEffectManager는 RedView 생성시 자동생성됨.
-			(RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
-		 `,
+		 demo : '../example/filter/adjustments/RedFilter_Gray.html',
+
 		 return : 'RedFilter_Gray Instance'
 	 }
 	 :DOC*/
@@ -28515,7 +28533,7 @@ var RedFilter_Gray;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.6 17:36:26
+ *   Last modification time of this file - 2019.8.7 15:42:44
  *
  */
 
@@ -28546,8 +28564,8 @@ var RedFilter_Invert;
 		 constructorYn : true,
 		 title :`RedFilter_Invert`,
 		 description : `
-			 Invert 이펙트
-			 postEffectManager.addEffect( effect Instance ) 로 추가.
+			 Invert 필터
+
 		 `,
 		 params : {
 			 redGL : [
@@ -28558,13 +28576,8 @@ var RedFilter_Invert;
 			'RedBaseFilter',
 			'RedBaseMaterial'
 		 ],
-		 demo : '../example/postEffect/adjustments/RedFilter_Invert.html',
-		 example : `
-			var effect;
-			effect = RedFilter_Invert(RedGL Instance); // 포스트이펙트 생성
-			// postEffectManager는 RedView 생성시 자동생성됨.
-			(RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
-		 `,
+		 demo : '../example/filter/adjustments/RedFilter_Invert.html',
+
 		 return : 'RedFilter_Invert Instance'
 	 }
 	 :DOC*/
@@ -28594,7 +28607,7 @@ var RedFilter_Invert;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.7 11:21:57
+ *   Last modification time of this file - 2019.8.7 15:42:44
  *
  */
 
@@ -28625,8 +28638,8 @@ var RedFilter_Threshold;
 		 constructorYn : true,
 		 title :`RedFilter_Threshold`,
 		 description : `
-			 Threshold 이펙트
-			 postEffectManager.addEffect( effect Instance ) 로 추가.
+			 Threshold 필터
+
 		 `,
 		 params : {
 			 redGL : [
@@ -28637,13 +28650,8 @@ var RedFilter_Threshold;
 		    'RedBaseFilter',
 		    'RedBaseMaterial'
 		 ],
-		 demo : '../example/postEffect/adjustments/RedFilter_Threshold.html',
-		 example : `
-            var effect;
-            effect = RedFilter_Threshold(RedGL Instance); // 포스트이펙트 생성
-            // postEffectManager는 RedView 생성시 자동생성됨.
-            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
-		 `,
+		 demo : '../example/filter/adjustments/RedFilter_Threshold.html',
+
 		 return : 'RedFilter_Threshold Instance'
 	 }
 	 :DOC*/
@@ -28699,7 +28707,7 @@ var RedFilter_Threshold;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.6 14:20:40
+ *   Last modification time of this file - 2019.8.7 15:42:44
  *
  */
 
@@ -28742,8 +28750,8 @@ var RedFilter_HueSaturation;
 		 constructorYn : true,
 		 title :`RedFilter_HueSaturation`,
 		 description : `
-			 HueSaturation 이펙트
-			 postEffectManager.addEffect( effect Instance ) 로 추가.
+			 HueSaturation 필터
+
 		 `,
 		 params : {
 			 redGL : [
@@ -28754,13 +28762,8 @@ var RedFilter_HueSaturation;
 		    'RedBaseFilter',
 		    'RedBaseMaterial'
 		 ],
-		 demo : '../example/postEffect/adjustments/RedFilter_HueSaturation.html',
-		 example : `
-            var effect;
-            effect = RedFilter_HueSaturation(RedGL Instance); // 포스트이펙트 생성
-            // postEffectManager는 RedView 생성시 자동생성됨.
-            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
-		 `,
+		 demo : '../example/filter/adjustments/RedFilter_HueSaturation.html',
+
 		 return : 'RedFilter_HueSaturation Instance'
 	 }
 	 :DOC*/
@@ -28831,7 +28834,7 @@ var RedFilter_HueSaturation;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.6 14:20:40
+ *   Last modification time of this file - 2019.8.7 15:42:44
  *
  */
 
@@ -28874,8 +28877,8 @@ var RedFilter_Blur;
 		 constructorYn : true,
 		 title :`RedFilter_Blur`,
 		 description : `
-			 기본 블러 이펙트
-			 postEffectManager.addEffect( effect Instance ) 로 추가.
+			 기본 블러 필터
+
 		 `,
 		 params : {
 			 redGL : [
@@ -28886,13 +28889,8 @@ var RedFilter_Blur;
 			'RedBaseFilter',
 			'RedBaseMaterial'
 		 ],
-		 demo : '../example/postEffect/blur/RedFilter_Blur.html',
-		 example : `
-			var effect;
-			effect = RedFilter_Blur(RedGL Instance); // 포스트이펙트 생성
-			// postEffectManager는 RedView 생성시 자동생성됨.
-			(RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
-		 `,
+		 demo : '../example/filter/blur/RedFilter_Blur.html',
+
 		 return : 'RedFilter_Blur Instance'
 	 }
 	 :DOC*/
@@ -28922,7 +28920,7 @@ var RedFilter_Blur;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.7 11:21:57
+ *   Last modification time of this file - 2019.8.7 15:42:44
  *
  */
 
@@ -28969,7 +28967,7 @@ var RedFilter_BlurX;
 		 constructorYn : true,
 		 title :`RedFilter_BlurX`,
 		 description : `
-			 X축 블러 이펙트
+			 X축 블러 필터
 		 `,
 		 params : {
 			 redGL : [
@@ -28980,13 +28978,8 @@ var RedFilter_BlurX;
 		    'RedBaseFilter',
 		    'RedBaseMaterial'
 		 ],
-		 demo : '../example/postEffect/blur/RedFilter_BlurX.html',
-		 example : `
-            var effect;
-            effect = RedFilter_BlurX(RedGL Instance); // 포스트이펙트 생성
-            // postEffectManager는 RedView 생성시 자동생성됨.
-            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
-		 `,
+		 demo : '../example/filter/blur/RedFilter_BlurX.html',
+
 		 return : 'RedFilter_BlurX Instance'
 	 }
 	 :DOC*/
@@ -29033,7 +29026,7 @@ var RedFilter_BlurX;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.7 11:21:57
+ *   Last modification time of this file - 2019.8.7 15:42:44
  *
  */
 
@@ -29079,7 +29072,7 @@ var RedFilter_BlurY;
 		 constructorYn : true,
 		 title :`RedFilter_BlurY`,
 		 description : `
-			 X축 블러 이펙트
+			 X축 블러 필터
 		 `,
 		 params : {
 			 redGL : [
@@ -29090,13 +29083,8 @@ var RedFilter_BlurY;
 		    'RedBaseFilter',
 		    'RedBaseMaterial'
 		 ],
-		 demo : '../example/postEffect/blur/RedFilter_BlurY.html',
-		 example : `
-            var effect;
-            effect = RedFilter_BlurY(RedGL Instance); // 포스트이펙트 생성
-            // postEffectManager는 RedView 생성시 자동생성됨.
-            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
-		 `,
+		 demo : '../example/filter/blur/RedFilter_BlurY.html',
+
 		 return : 'RedFilter_BlurY Instance'
 	 }
 	 :DOC*/
@@ -29143,7 +29131,7 @@ var RedFilter_BlurY;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.6 14:20:40
+ *   Last modification time of this file - 2019.8.7 15:42:44
  *
  */
 
@@ -29155,7 +29143,7 @@ var RedFilter_GaussianBlur;
 		 constructorYn : true,
 		 title :`RedFilter_GaussianBlur`,
 		 description : `
-			 가우시안 블러 이펙트
+			 가우시안 블러 필터
 		 `,
 		 params : {
 			 redGL : [
@@ -29166,13 +29154,8 @@ var RedFilter_GaussianBlur;
 		    'RedBaseFilter',
 		    'RedBaseMaterial'
 		 ],
-		 demo : '../example/postEffect/blur/RedFilter_GaussianBlur.html',
-		 example : `
-            var effect;
-            effect = RedFilter_GaussianBlur(RedGL Instance); // 포스트이펙트 생성
-            // postEffectManager는 RedView 생성시 자동생성됨.
-            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
-		 `,
+		 demo : '../example/filter/blur/RedFilter_GaussianBlur.html',
+
 		 return : 'RedFilter_GaussianBlur Instance'
 	 }
 	 :DOC*/
@@ -29217,7 +29200,7 @@ var RedFilter_GaussianBlur;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.6 14:20:40
+ *   Last modification time of this file - 2019.8.7 15:37:41
  *
  */
 
@@ -29264,13 +29247,8 @@ var RedFilter_Pixelize;
 		    'RedBaseFilter',
 		    'RedBaseMaterial'
 		 ],
-		 demo : '../example/postEffect/pixelate/RedFilter_Pixelize.html',
-		 example : `
-            var effect;
-            effect = RedFilter_Pixelize(RedGL Instance); // 포스트이펙트 생성
-            // postEffectManager는 RedView 생성시 자동생성됨.
-            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
-		 `,
+		 demo : '../example/filter/pixelate/RedFilter_Pixelize.html',
+
 		 return : 'RedFilter_Pixelize Instance'
 	 }
 	 :DOC*/
@@ -29331,7 +29309,7 @@ var RedFilter_Pixelize;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.6 14:20:40
+ *   Last modification time of this file - 2019.8.7 15:42:44
  *
  */
 
@@ -29386,7 +29364,7 @@ var RedFilter_HalfTone;
 		 constructorYn : true,
 		 title :`RedFilter_HalfTone`,
 		 description : `
-			 HalfTone 이펙트
+			 HalfTone 필터
 		 `,
 		 params : {
 			 redGL : [
@@ -29397,13 +29375,8 @@ var RedFilter_HalfTone;
 		    'RedBaseFilter',
 		    'RedBaseMaterial'
 		 ],
-		 demo : '../example/postEffect/pixelate/RedFilter_HalfTone.html',
-		 example : `
-            var effect;
-            effect = RedFilter_HalfTone(RedGL Instance); // 포스트이펙트 생성
-            // postEffectManager는 RedView 생성시 자동생성됨.
-            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
-		 `,
+		 demo : '../example/filter/pixelate/RedFilter_HalfTone.html',
+
 		 return : 'RedFilter_HalfTone Instance'
 	 }
 	 :DOC*/
@@ -29497,7 +29470,7 @@ var RedFilter_HalfTone;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.6 14:20:40
+ *   Last modification time of this file - 2019.8.7 15:42:44
  *
  */
 
@@ -29530,8 +29503,8 @@ var RedFilter_Bloom;
 		 constructorYn : true,
 		 title :`RedFilter_Bloom`,
 		 description : `
-			 Bloom 이펙트
-			 postEffectManager.addEffect( effect Instance ) 로 추가.
+			 Bloom 필터
+
 		 `,
 		 params : {
 			 redGL : [
@@ -29542,13 +29515,8 @@ var RedFilter_Bloom;
 		    'RedBaseFilter',
 		    'RedBaseMaterial'
 		 ],
-		 demo : '../example/postEffect/bloom/RedFilter_Bloom.html',
-		 example : `
-            var effect;
-            effect = RedFilter_Bloom(RedGL Instance); // 포스트이펙트 생성
-            // postEffectManager는 RedView 생성시 자동생성됨.
-            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
-		 `,
+		 demo : '../example/filter/bloom/RedFilter_Bloom.html',
+
 		 return : 'RedFilter_Bloom Instance'
 	 }
 	 :DOC*/
@@ -29656,7 +29624,7 @@ var RedFilter_Bloom;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.6 14:20:40
+ *   Last modification time of this file - 2019.8.7 15:42:44
  *
  */
 
@@ -29686,8 +29654,8 @@ var RedFilter_BloomThreshold;
 		 constructorYn : true,
 		 title :`RedFilter_BloomThreshold`,
 		 description : `
-			 BloomThreshold 이펙트
-			 RedFilter_Bloom 내부에서 사용하는 절차 이펙트
+			 BloomThreshold 필터
+			 RedFilter_Bloom 내부에서 사용하는 절차 필터
 			 시스템적으로 사용됨.
 		 `,
 		 params : {
@@ -29699,12 +29667,7 @@ var RedFilter_BloomThreshold;
 		    'RedBaseFilter',
 		    'RedBaseMaterial'
 		 ],
-		 example : `
-            var effect;
-            effect = RedFilter_BloomThreshold(RedGL Instance); // 포스트이펙트 생성
-            // postEffectManager는 RedView 생성시 자동생성됨.
-            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
-		 `,
+
 		 return : 'RedFilter_BloomThreshold Instance'
 	 }
 	 :DOC*/
@@ -29758,7 +29721,7 @@ var RedFilter_BloomThreshold;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.2 18:16:21
+ *   Last modification time of this file - 2019.8.7 15:42:44
  *
  */
 
@@ -29811,7 +29774,7 @@ var RedFilter_Film;
 		 constructorYn : true,
 		 title :`RedFilter_Film`,
 		 description : `
-			 Film 이펙트
+			 Film 필터
 		 `,
 		 params : {
 			 redGL : [
@@ -29822,13 +29785,8 @@ var RedFilter_Film;
 		    'RedBaseFilter',
 		    'RedBaseMaterial'
 		 ],
-		 demo : '../example/postEffect/RedFilter_Film.html',
-		 example : `
-            var effect;
-            effect = RedFilter_Film(RedGL Instance); // 포스트이펙트 생성
-            // postEffectManager는 RedView 생성시 자동생성됨.
-            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
-		 `,
+		 demo : '../example/filter/RedFilter_Film.html',
+
 		 return : 'RedFilter_Film Instance'
 	 }
 	 :DOC*/
@@ -29916,7 +29874,7 @@ var RedFilter_Film;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.7 11:32:14
+ *   Last modification time of this file - 2019.8.7 15:42:44
  *
  */
 
@@ -29955,7 +29913,7 @@ var RedFilter_Convolution;
 		 constructorYn : true,
 		 title :`RedFilter_Convolution`,
 		 description : `
-			 Convolution 이펙트
+			 Convolution 필터
 		 `,
 		 params : {
 			 redGL : [
@@ -29966,13 +29924,8 @@ var RedFilter_Convolution;
 		    'RedBaseFilter',
 		    'RedBaseMaterial'
 		 ],
-		 demo : '../example/postEffect/RedFilter_Convolution.html',
-		 example : `
-            var effect;
-            effect = RedFilter_DoF(RedGL Instance, RedFilter_Convolution.SHARPEN); // 포스트이펙트 생성
-            // postEffectManager는 RedView 생성시 자동생성됨.
-            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
-		 `,
+		 demo : '../example/filter/RedFilter_Convolution.html',
+
 		 return : 'RedFilter_Convolution Instance'
 	 }
 	 :DOC*/
@@ -30446,4 +30399,4 @@ var RedGLOffScreen;
 		};
 		RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
 	})();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2019-08-07 11:46:16)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2021-07-19 13:51:59)' };console.log(RedGL_VERSION);

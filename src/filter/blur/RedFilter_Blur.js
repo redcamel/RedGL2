@@ -2,7 +2,7 @@
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.6 14:20:40
+ *   Last modification time of this file - 2019.8.7 15:42:44
  *
  */
 
@@ -45,8 +45,8 @@ var RedFilter_Blur;
 		 constructorYn : true,
 		 title :`RedFilter_Blur`,
 		 description : `
-			 기본 블러 이펙트
-			 postEffectManager.addEffect( effect Instance ) 로 추가.
+			 기본 블러 필터
+
 		 `,
 		 params : {
 			 redGL : [
@@ -57,13 +57,8 @@ var RedFilter_Blur;
 			'RedBaseFilter',
 			'RedBaseMaterial'
 		 ],
-		 demo : '../example/postEffect/blur/RedFilter_Blur.html',
-		 example : `
-			var effect;
-			effect = RedFilter_Blur(RedGL Instance); // 포스트이펙트 생성
-			// postEffectManager는 RedView 생성시 자동생성됨.
-			(RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
-		 `,
+		 demo : '../example/filter/blur/RedFilter_Blur.html',
+
 		 return : 'RedFilter_Blur Instance'
 	 }
 	 :DOC*/

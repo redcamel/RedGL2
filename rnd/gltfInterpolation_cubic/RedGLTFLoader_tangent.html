@@ -1,7 +1,9 @@
 <!--
-  ~ MIT License
-  ~ Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
-  ~ https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+  ~   RedGL - MIT License
+  ~   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+  ~   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+  ~   Last modification time of this file - 2020.2.4 10:17:36
+  ~
   -->
 
 <!DOCTYPE html>
@@ -46,7 +48,7 @@
 				// 렌더러 생성
 				tRenderer = RedRenderer();
 				// 뷰생성 및 적용
-				tView = RedView('HelloRedGL', redGL, tScene, tController);
+				tView = RedView( redGL, tScene, tController);
 				tWorld.addView(tView);
 				// 그리드 설정
 				tScene['grid'] = RedGrid(redGL);

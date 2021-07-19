@@ -1,8 +1,9 @@
 /*
- * RedGL - MIT License
- * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
- * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 19:34
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2020.2.4 10:17:36
+ *
  */
 
 "use strict";
@@ -57,6 +58,12 @@ var RedGLUtil;
 		 :DOC*/
 		hexToRGB_ZeroToOne: function (hex) {
 			var t0, t1;
+			if(hex.indexOf('rgba')>-1){
+				hex = hex.replace('rgba(','')
+				hex = hex.replace(')','')
+				hex = hex.split(',')
+				hex = RedGLUtil.rgb2hex(hex[0],hex[1],hex[2])
+			}
 			if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
 				t1 = [];
 				t0 = hex.substring(1).split('');
@@ -253,12 +260,15 @@ var RedGLUtil;
 			var y = 1;
 			var z = 2;
 			var result = [];
+			var newIndexArray = []
 			for (i = 0; i < vertexArray.length; i = i + 3) {
 				//for each vertex, initialize normal x, normal y, normal z
 				result[i + x] = 0.0;
 				result[i + y] = 0.0;
 				result[i + z] = 0.0;
+				if(!indexArray.length) newIndexArray.push(i/3)
 			}
+			if(!indexArray.length) indexArray = newIndexArray;
 			for (i = 0; i < indexArray.length; i = i + 3) { //we work on triads of vertices to calculate normals so i = i+3 (i = indices index)
 				var v1 = [];
 				var v2 = [];

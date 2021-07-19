@@ -2,7 +2,7 @@
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.7 11:21:57
+ *   Last modification time of this file - 2019.8.7 15:42:44
  *
  */
 
@@ -33,8 +33,8 @@ var RedFilter_BrightnessContrast;
 		 constructorYn : true,
 		 title :`RedFilter_BrightnessContrast`,
 		 description : `
-			 BrightnessContrast 이펙트
-			 postEffectManager.addEffect( effect Instance ) 로 추가.
+			 BrightnessContrast 필터
+
 		 `,
 		 params : {
 			 redGL : [
@@ -45,13 +45,8 @@ var RedFilter_BrightnessContrast;
 		    'RedBaseFilter',
 		    'RedBaseMaterial'
 		 ],
-		 demo : '../example/postEffect/adjustments/RedFilter_BrightnessContrast.html',
-		 example : `
-            var effect;
-            effect = RedFilter_BrightnessContrast(RedGL Instance); // 포스트이펙트 생성
-            // postEffectManager는 RedView 생성시 자동생성됨.
-            (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가
-		 `,
+		 demo : '../example/filter/adjustments/RedFilter_BrightnessContrast.html',
+
 		 return : 'RedFilter_BrightnessContrast Instance'
 	 }
 	 :DOC*/

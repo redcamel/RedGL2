@@ -2,7 +2,7 @@
   {
     "constructorYn": true,
     "title": "RedFilter_BlurY",
-    "description": "\n\t X축 블러 이펙트\n ",
+    "description": "\n\t\t X축 블러 필터\n\t ",
     "params": {
       "redGL": [
         {
@@ -14,8 +14,7 @@
       "RedBaseFilter",
       "RedBaseMaterial"
     ],
-    "demo": "../example/postEffect/blur/RedFilter_BlurY.html",
-    "example": "\n          var effect;\n          effect = RedFilter_BlurY(RedGL Instance); // 포스트이펙트 생성\n          // postEffectManager는 RedView 생성시 자동생성됨.\n          (RedView Instance)['postEffectManager'].addEffect(effect); // 뷰에 이펙트 추가\n ",
+    "demo": "../example/filter/blur/RedFilter_BlurY.html",
     "return": "RedFilter_BlurY Instance"
   },
   {

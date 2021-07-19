@@ -15,13 +15,13 @@
   {
     "title": "filterList",
     "code": "PROPERTY",
-    "description": "\n\t\t이펙트 리스트\n\t",
+    "description": "\n\t\t필터 리스트\n\t",
     "return": "Array"
   },
   {
     "title": "frameBuffer",
     "code": "PROPERTY",
-    "description": "\n\t\t이펙트 렌더링시 사용될 프레임버퍼\n\t",
+    "description": "\n\t\t필터 렌더링시 사용될 프레임버퍼\n\t",
     "return": "RedFrameBuffer Instance"
   },
   {
@@ -35,7 +35,7 @@
         }
       ]
     },
-    "demo": "../example/RedFilter.html",
+    "demo": "../example/RedFilters.html",
     "return": "RedFilterEffectManager Instance"
   },
   {
