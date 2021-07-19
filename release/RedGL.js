@@ -1,9 +1,8 @@
 /*
- *   RedGL - MIT License
- *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
- *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2020.3.18 13:58:42
- *
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:57
  */
 
 /*DOC:
@@ -9141,10 +9140,11 @@ var RedVideoMaterial;
 	Object.freeze(RedVideoMaterial);
 })();
 /*
- * RedGL - MIT License
- * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
- * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2020.3.18 13:58:43
+ *
  */
 "use strict";
 var RedPBRMaterial;
@@ -9695,7 +9695,7 @@ var RedColorPointCloudMaterial;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2020.2.4 10:17:36
+ *   Last modification time of this file - 2020.3.18 13:58:43
  *
  */
 "use strict";
@@ -14319,10 +14319,13 @@ var RedGLTFLoader;
 				var result = {};
 				if (json['samplers']) {
 					var t0 = json['samplers'][samplerIndex];
-					if ('magFilter' in t0) result['mag'] = t0['magFilter'];
-					if ('minFilter' in t0) result['min'] = t0['minFilter'];
-					if ('wrapS' in t0) result['wrap_s'] = t0['wrapS'];
-					if ('wrapT' in t0) result['wrap_t'] = t0['wrapT']
+					if(t0){
+						if ('magFilter' in t0) result['mag'] = t0['magFilter'];
+						if ('minFilter' in t0) result['min'] = t0['minFilter'];
+						if ('wrapS' in t0) result['wrap_s'] = t0['wrapS'];
+						if ('wrapT' in t0) result['wrap_t'] = t0['wrapT']
+					}
+
 				} else {
 					console.log('있긴하냐', samplerIndex)
 				}
@@ -30396,4 +30399,4 @@ var RedGLOffScreen;
 		};
 		RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
 	})();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2020-03-18 13:46:45)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2021-07-19 13:51:59)' };console.log(RedGL_VERSION);

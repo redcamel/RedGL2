@@ -1442,10 +1442,13 @@ var RedGLTFLoader;
 				var result = {};
 				if (json['samplers']) {
 					var t0 = json['samplers'][samplerIndex];
-					if ('magFilter' in t0) result['mag'] = t0['magFilter'];
-					if ('minFilter' in t0) result['min'] = t0['minFilter'];
-					if ('wrapS' in t0) result['wrap_s'] = t0['wrapS'];
-					if ('wrapT' in t0) result['wrap_t'] = t0['wrapT']
+					if(t0){
+						if ('magFilter' in t0) result['mag'] = t0['magFilter'];
+						if ('minFilter' in t0) result['min'] = t0['minFilter'];
+						if ('wrapS' in t0) result['wrap_s'] = t0['wrapS'];
+						if ('wrapT' in t0) result['wrap_t'] = t0['wrapT']
+					}
+
 				} else {
 					console.log('있긴하냐', samplerIndex)
 				}
