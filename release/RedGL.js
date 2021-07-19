@@ -1,9 +1,8 @@
 /*
- *   RedGL - MIT License
- *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
- *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2020.2.4 10:17:35
- *
+ * RedGL - MIT License
+ * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
+ * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ * Last modification time of this file - 2019.4.30 18:57
  */
 
 /*DOC:
@@ -1834,7 +1833,7 @@ var RedGLDetect;
  *   RedGL - MIT License
  *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
  *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- *   Last modification time of this file - 2019.8.28 11:6:29
+ *   Last modification time of this file - 2020.2.4 10:17:36
  *
  */
 
@@ -3317,7 +3316,7 @@ var RedBaseObject3D;
 		     code : 'PROPERTY',
 			 title :`useTransparentSort`,
 			 description : `
-				 투명도 소팅 여부.
+				 투명도 소팅 여부. 
 				 true 설정시 렌더링 진행과정중 최종적으로 모아서 그리게된다. (완벽하지 않지만 투명객체 소팅 효과를 얻을 수 있음)
 				 기본값 : false
 			 `,
@@ -9141,10 +9140,11 @@ var RedVideoMaterial;
 	Object.freeze(RedVideoMaterial);
 })();
 /*
- * RedGL - MIT License
- * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
- * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2020.3.18 13:58:43
+ *
  */
 "use strict";
 var RedPBRMaterial;
@@ -9281,7 +9281,7 @@ var RedPBRMaterial;
 			//#REDGL_DEFINE#environmentTexture# reflectionColor.rgb *= reflectionColor.a;
 
 			// 환경맵 합성
-			//#REDGL_DEFINE#environmentTexture# texelColor.rgb = mix( texelColor.rgb , reflectionColor.rgb , max(tMetallicPower-tRoughnessPower,0.0)*(1.0-tRoughnessPower));
+			//#REDGL_DEFINE#environmentTexture# texelColor.rgb = mix( texelColor.rgb , reflectionColor.rgb , max(tMetallicPower-tRoughnessPower,0.1)*(1.0-tRoughnessPower));
 			//#REDGL_DEFINE#environmentTexture# texelColor = mix( texelColor , vec4(0.04, 0.04, 0.04, 1.0) , tRoughnessPower * (tMetallicPower) * 0.5);
 
 
@@ -9692,10 +9692,11 @@ var RedColorPointCloudMaterial;
 	Object.freeze(RedColorPointCloudMaterial);
 })();
 /*
- * RedGL - MIT License
- * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
- * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.4.30 18:53
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2020.3.18 13:58:43
+ *
  */
 "use strict";
 var RedPBRMaterial_System;
@@ -9887,7 +9888,7 @@ var RedPBRMaterial_System;
 			//#REDGL_DEFINE#usePreMultiply# //#REDGL_DEFINE#environmentTexture# reflectionColor.rgb *= reflectionColor.a;
 
 			// 환경맵 합성
-			//#REDGL_DEFINE#environmentTexture# texelColor.rgb = mix( texelColor.rgb , reflectionColor.rgb , max(tMetallicPower-tRoughnessPower,0.0)*(1.0-tRoughnessPower));
+			//#REDGL_DEFINE#environmentTexture# texelColor.rgb = mix( texelColor.rgb , reflectionColor.rgb , max(tMetallicPower-tRoughnessPower,0.1)*(1.0-tRoughnessPower));
 			//#REDGL_DEFINE#environmentTexture# texelColor = mix( texelColor , vec4(0.04, 0.04, 0.04, 1.0) , tRoughnessPower * (tMetallicPower) * 0.5);
 
 			// 컷오프 계산
@@ -12875,10 +12876,11 @@ var RedDAELoader;
 	Object.freeze(RedDAELoader)
 })();
 /*
- * RedGL - MIT License
- * Copyright (c) 2018 - 2019 By RedCamel(webseon@gmail.com)
- * https://github.com/redcamel/RedGL2/blob/dev/LICENSE
- * Last modification time of this file - 2019.6.13 11:7
+ *   RedGL - MIT License
+ *   Copyright (c) 2018 - 2019 By RedCamel( webseon@gmail.com )
+ *   https://github.com/redcamel/RedGL2/blob/dev/LICENSE
+ *   Last modification time of this file - 2020.2.4 10:17:36
+ *
  */
 
 "use strict";
@@ -14317,10 +14319,13 @@ var RedGLTFLoader;
 				var result = {};
 				if (json['samplers']) {
 					var t0 = json['samplers'][samplerIndex];
-					if ('magFilter' in t0) result['mag'] = t0['magFilter'];
-					if ('minFilter' in t0) result['min'] = t0['minFilter'];
-					if ('wrapS' in t0) result['wrap_s'] = t0['wrapS'];
-					if ('wrapT' in t0) result['wrap_t'] = t0['wrapT']
+					if(t0){
+						if ('magFilter' in t0) result['mag'] = t0['magFilter'];
+						if ('minFilter' in t0) result['min'] = t0['minFilter'];
+						if ('wrapS' in t0) result['wrap_s'] = t0['wrapS'];
+						if ('wrapT' in t0) result['wrap_t'] = t0['wrapT']
+					}
+
 				} else {
 					console.log('있긴하냐', samplerIndex)
 				}
@@ -30394,4 +30399,4 @@ var RedGLOffScreen;
 		};
 		RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
 	})();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2020-02-04 10:14:30)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2021-07-19 13:51:59)' };console.log(RedGL_VERSION);
