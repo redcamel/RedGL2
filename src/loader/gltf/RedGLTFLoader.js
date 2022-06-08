@@ -1469,6 +1469,7 @@ var RedGLTFLoader;
 					if ('alphaCutoff' in tMaterialInfo) alphaCutoff = tMaterialInfo['alphaCutoff'];
 					var diffseTexture, normalTexture, roughnessTexture, emissiveTexture, occlusionTexture;
 					// console.log('tMaterialInfo', tMaterialInfo)
+					tMaterialInfo['pbrMetallicRoughness'] = tMaterialInfo['pbrMetallicRoughness'] || {}
 					if ('baseColorTexture' in tMaterialInfo['pbrMetallicRoughness']) {
 						var baseTextureIndex = tMaterialInfo['pbrMetallicRoughness']['baseColorTexture']['index'];
 						var baseTextureInfo = json['textures'][baseTextureIndex];
