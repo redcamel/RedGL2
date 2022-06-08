@@ -14346,6 +14346,7 @@ var RedGLTFLoader;
 					if ('alphaCutoff' in tMaterialInfo) alphaCutoff = tMaterialInfo['alphaCutoff'];
 					var diffseTexture, normalTexture, roughnessTexture, emissiveTexture, occlusionTexture;
 					// console.log('tMaterialInfo', tMaterialInfo)
+					tMaterialInfo['pbrMetallicRoughness'] = tMaterialInfo['pbrMetallicRoughness'] || {}
 					if ('baseColorTexture' in tMaterialInfo['pbrMetallicRoughness']) {
 						var baseTextureIndex = tMaterialInfo['pbrMetallicRoughness']['baseColorTexture']['index'];
 						var baseTextureInfo = json['textures'][baseTextureIndex];
@@ -30399,4 +30400,4 @@ var RedGLOffScreen;
 		};
 		RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
 	})();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2021-07-19 13:51:59)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2022-06-08 14:17:06)' };console.log(RedGL_VERSION);
