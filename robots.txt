@@ -1,3 +1,0 @@
-https://redcamel.github.io/RedGL2/robots.txt
-User-agent: *
-Disallow:
