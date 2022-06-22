@@ -25,14 +25,14 @@ var baseTestUI = function (redGL, width) {
 	// Global site tag (gtag.js) - Google Analytics
 	var t0 = document.createElement('script');
 	t0.setAttribute('async', '');
-	t0.setAttribute('src', 'https://www.googletagmanager.com/gtag/js?id=UA-134079611-1');
+	t0.setAttribute('src', 'https://www.googletagmanager.com/gtag/js?id=G-JN0J85WJ35');
 	document.head.appendChild(t0)
 	//
 	t0 = document.createElement('script');
 	t0.innerHTML = 'window.dataLayer = window.dataLayer || [];';
 	t0.innerHTML += 'function gtag(){dataLayer.push(arguments);}';
 	t0.innerHTML += 'gtag(\'js\', new Date());';
-	t0.innerHTML += 'gtag(\'config\', \'UA-134079611-1\');';
+	t0.innerHTML += 'gtag(\'config\', \'G-JN0J85WJ35\');';
 	document.head.appendChild(t0);
 
 
