@@ -677,6 +677,7 @@ var makeItem = function (list, depth) {
 baseTestUI.itemList = []
 makeItem(baseTestUI.exampleList)
 baseTestUI.prototype = {
+	exampleList : baseTestUI.exampleList,
 	initRedGL: function (open) {
 		var self, redGLTestData, tFolder;
 		self = this;
