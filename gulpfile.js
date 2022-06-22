@@ -19,13 +19,13 @@ var d = dt.toFormat('YYYY-MM-DD HH24:MI:SS');
 var rename = require("gulp-rename");
 var replace = require('gulp-string-replace');
 var name = "RedGL";
+
 /////////////////////////////////////////////////////////////
 var transformString = function (s) {
 	var reg = /\/\*DOC\:[\s\S]+?\:\DOC\*\//g;
 	var list = s.match(reg)
-	var dedent = function (callSite,...args
-)
-	{
+	var dedent = function (callSite, ...args
+	) {
 		var tList = callSite.trim().split('\n')
 		var tList2 = []
 		var min = 100000000
@@ -74,6 +74,63 @@ var transformString = function (s) {
 	return list
 };
 var myTransformation = textTransformation(transformString);
+gulp.task('make-sitemap', function (done) {
+	console.log('-------------------------------------------');
+	console.log('시작!');
+	const str = fs.readFileSync('example/baseTestUI.js', 'utf-8')
+	const t0 = eval(str)['exampleList']
+// <?xml version="1.0" encoding="UTF-8"?>
+// 	<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+// 			<url>
+// 			<loc>https://doc.red-gradient.com/markdown-page</loc>
+// 		<changefreq>weekly</changefreq>
+// 		<priority>0.5</priority>
+// 	</url>
+// 	</urlset>
+// </xml>
+	let listStr = ''
+	const parseList = (v)=>{
+		v['list'].forEach(v2 => {
+			listStr += `
+				<url>
+					<loc>https://redcamel.github.io/RedGL2/example/${v2['href']}</loc>
+					<changefreq>weekly</changefreq>
+					<priority>0.5</priority>
+				</url>
+				`
+		})
+	}
+	t0.forEach(v => {
+		if(v['list']) parseList(v)
+		v['list'].forEach(v2 => {
+			listStr += `
+				<url>
+					<loc>https://redcamel.github.io/RedGL2/example/${v2['href']}</loc>
+					<changefreq>weekly</changefreq>
+					<priority>0.5</priority>
+				</url>
+				`
+		})
+	})
+	const result = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+		${listStr}
+</urlset>`
+	var file = 'sitemap.xml';
+	fs.open(file, 'w', function (err, fd) {
+		if (err) throw err;
+		console.log('file open complete');
+		fs.writeFile('sitemap.xml', result, 'utf8', function (err) {
+			if (err) throw err;
+			console.log('write end');
+			done();
+		});
+	});
+	console.log(t0)
+	console.log(result)
+	console.log('종료!');
+	console.log('-------------------------------------------');
+});
 gulp.task('make-doc-list', function (done) {
 	console.log('-------------------------------------------');
 	console.log('시작!');
