@@ -17,6 +17,10 @@ var baseTestUI = function (redGL, width) {
 	//     return found;
 	// };
 	// console.log(getQueryParam('name'))
+	document.head.appendChild(testBt = document.createElement('meta'));
+	testBt.setAttribute('name','description')
+	testBt.setAttribute('content',document.querySelector('title')?.innerHTML || '')
+	//
 	document.body.appendChild(testBt = document.createElement('div'));
 	testBt.innerHTML = 'created by Redcamel'
 	testBt.style.cssText = "position: fixed;top:40px;padding:0px;left:15px;font-size:11px; color:#fff;border:0;outline:none;"
