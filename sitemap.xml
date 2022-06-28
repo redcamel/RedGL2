@@ -512,19 +512,73 @@
 				</url>
 				
 				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/undefined</loc>
+					<loc>https://redcamel.github.io/RedGL2/example/postEffect/adjustments/RedPostEffect_BrightnessContrast.html</loc>
 					<changefreq>weekly</changefreq>
 					<priority>0.5</priority>
 				</url>
 				
 				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/undefined</loc>
+					<loc>https://redcamel.github.io/RedGL2/example/postEffect/adjustments/RedPostEffect_Threshold.html</loc>
 					<changefreq>weekly</changefreq>
 					<priority>0.5</priority>
 				</url>
 				
 				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/undefined</loc>
+					<loc>https://redcamel.github.io/RedGL2/example/postEffect/adjustments/RedPostEffect_Invert.html</loc>
+					<changefreq>weekly</changefreq>
+					<priority>0.5</priority>
+				</url>
+				
+				<url>
+					<loc>https://redcamel.github.io/RedGL2/example/postEffect/adjustments/RedPostEffect_Gray.html</loc>
+					<changefreq>weekly</changefreq>
+					<priority>0.5</priority>
+				</url>
+				
+				<url>
+					<loc>https://redcamel.github.io/RedGL2/example/postEffect/adjustments/RedPostEffect_HueSaturation.html</loc>
+					<changefreq>weekly</changefreq>
+					<priority>0.5</priority>
+				</url>
+				
+				<url>
+					<loc>https://redcamel.github.io/RedGL2/example/postEffect/blur/RedPostEffect_Blur.html</loc>
+					<changefreq>weekly</changefreq>
+					<priority>0.5</priority>
+				</url>
+				
+				<url>
+					<loc>https://redcamel.github.io/RedGL2/example/postEffect/blur/RedPostEffect_BlurX.html</loc>
+					<changefreq>weekly</changefreq>
+					<priority>0.5</priority>
+				</url>
+				
+				<url>
+					<loc>https://redcamel.github.io/RedGL2/example/postEffect/blur/RedPostEffect_BlurY.html</loc>
+					<changefreq>weekly</changefreq>
+					<priority>0.5</priority>
+				</url>
+				
+				<url>
+					<loc>https://redcamel.github.io/RedGL2/example/postEffect/blur/RedPostEffect_GaussianBlur.html</loc>
+					<changefreq>weekly</changefreq>
+					<priority>0.5</priority>
+				</url>
+				
+				<url>
+					<loc>https://redcamel.github.io/RedGL2/example/postEffect/blur/RedPostEffect_ZoomBlur.html</loc>
+					<changefreq>weekly</changefreq>
+					<priority>0.5</priority>
+				</url>
+				
+				<url>
+					<loc>https://redcamel.github.io/RedGL2/example/postEffect/pixelate/RedPostEffect_HalfTone.html</loc>
+					<changefreq>weekly</changefreq>
+					<priority>0.5</priority>
+				</url>
+				
+				<url>
+					<loc>https://redcamel.github.io/RedGL2/example/postEffect/pixelate/RedPostEffect_Pixelize.html</loc>
 					<changefreq>weekly</changefreq>
 					<priority>0.5</priority>
 				</url>
