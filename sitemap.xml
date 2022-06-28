@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
 		
 				<url>
 					<loc>https://redcamel.github.io/RedGL2/example/etc/RedGL.html</loc>
@@ -26,30 +26,6 @@
 				</url>
 				
 				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/etc/RedGL.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/etc/RedScene.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/etc/RedView.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/etc/multiRedGLInstance.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
 					<loc>https://redcamel.github.io/RedGL2/example/primitives/RedPlane.html</loc>
 					<changefreq>weekly</changefreq>
 					<priority>0.5</priority>
@@ -69,36 +45,6 @@
 				
 				<url>
 					<loc>https://redcamel.github.io/RedGL2/example/primitives/RedCylinder.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/primitives/RedPlane.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/primitives/RedBox.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/primitives/RedSphere.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/primitives/RedCylinder.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/program/testAutoProgram.html</loc>
 					<changefreq>weekly</changefreq>
 					<priority>0.5</priority>
 				</url>
@@ -141,144 +87,6 @@
 				
 				<url>
 					<loc>https://redcamel.github.io/RedGL2/example/camera/RedObitController_targetView.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/camera/RedCamera.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/camera/RedCamera_mode2D.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/camera/RedBasicController.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/camera/RedBasicController_targetView.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/camera/RedObitController.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/camera/RedObitController_targetView.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/object3D/RedAxis.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/object3D/RedGrid.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/object3D/RedLine.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/object3D/RedLine_linear_type.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/object3D/RedLine_catmull_rom_type.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/object3D/RedLine_bezier_type.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/object3D/RedMesh.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/object3D/RedLatheMesh.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/object3D/RedSkyBox.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/object3D/RedSprite3D.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/object3D/RedTransformController.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/object3D/object3D_lookAt.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/object3D/pivotTest.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/object3D/pivotTest_2dMode.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/object3D/object3D_outline.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/object3D/object3D_outline_3dMode.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/object3D/object3D_outline_skin.html</loc>
 					<changefreq>weekly</changefreq>
 					<priority>0.5</priority>
 				</url>
@@ -476,120 +284,6 @@
 				</url>
 				
 				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/material/RedColorMaterial.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/material/RedColorPhongMaterial.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/material/RedColorPhongTextureMaterial.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/material/RedBitmapMaterial.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/material/RedStandardMaterial.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/material/RedEnvironmentMaterial.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/material/RedPBRMaterial.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/material/RedSheetMaterial.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/material/RedVideoMaterial.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/material/RedBitmapPointCloudMaterial.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/material/RedColorPointCloudMaterial.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/material/FlatModeMaterial.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/etc/uvTest.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/etc/normalTest.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/etc/RedBoxSelection.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/filter/filterTest_2dMode.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/filter/filterTest_3dMode.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/filter/RedFilters.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/filter/filterWithPostEffect.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
 					<loc>https://redcamel.github.io/RedGL2/example/filter/filterTest_2dMode.html</loc>
 					<changefreq>weekly</changefreq>
 					<priority>0.5</priority>
@@ -639,60 +333,6 @@
 				
 				<url>
 					<loc>https://redcamel.github.io/RedGL2/example/resources/RedDDSTexture.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/resources/RedBitmapTexture.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/resources/RedBitmapTextureOption.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/resources/RedBitmapTexture_anisotropic.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/resources/RedBitmapCubeTexture.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/resources/RedDDSTexture.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/light/RedLights.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/light/RedAmbientLight.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/light/RedDirectionalLight.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/light/RedPointLight.html</loc>
 					<changefreq>weekly</changefreq>
 					<priority>0.5</priority>
 				</url>
@@ -788,84 +428,6 @@
 				</url>
 				
 				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/loader/obj/RedOBJLoader.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/loader/dae/RedDAELoader.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/loader/gltf/RedGLTFLoader.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/loader/gltf/RedGLTFLoader_morph.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/loader/gltf/RedGLTFLoader_Multi_morphTarget.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/loader/gltf/RedGLTFLoader_Multi_morphTarget_performance.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/loader/gltf/RedGLTFLoader_skin.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/loader/gltf/RedGLTFLoader_skin_performance.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/loader/gltf/RedGLTFLoader_hardTest.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/loader/gltf/RedGLTFLoader_glb.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/loader/gltf/RedGLTFLoader_polly.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/text/RedText.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/text/RedText(mode2D).html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
 					<loc>https://redcamel.github.io/RedGL2/example/text/RedText.html</loc>
 					<changefreq>weekly</changefreq>
 					<priority>0.5</priority>
@@ -884,18 +446,6 @@
 				</url>
 				
 				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/etc/Fog_example.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/etc/LOD_example.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
 					<loc>https://redcamel.github.io/RedGL2/example/etc/LOD_example.html</loc>
 					<changefreq>weekly</changefreq>
 					<priority>0.5</priority>
@@ -909,24 +459,6 @@
 				
 				<url>
 					<loc>https://redcamel.github.io/RedGL2/example/mouseEvent/MouseEvent_multiView_oneScene.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/mouseEvent/MouseEvent.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/mouseEvent/MouseEvent_multiView_oneScene.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/shadow/RedDirectionalShadow.html</loc>
 					<changefreq>weekly</changefreq>
 					<priority>0.5</priority>
 				</url>
@@ -998,85 +530,7 @@
 				</url>
 				
 				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/postEffect/RedPostEffect.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/postEffect/RedPostEffect_Vignetting.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/postEffect/antialiasing/RedPostEffect_FXAA.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/postEffect/dof/RedPostEffect_DoF.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/postEffect/bloom/RedPostEffect_Bloom.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/postEffect/RedPostEffect_Convolution.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/postEffect/RedPostEffect_Film.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/undefined</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/undefined</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/undefined</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
 					<loc>https://redcamel.github.io/RedGL2/example/geometry/RedBuffer.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/geometry/RedBuffer.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/etc/calPoint.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/etc/screenToWorld.html</loc>
 					<changefreq>weekly</changefreq>
 					<priority>0.5</priority>
 				</url>
@@ -1113,42 +567,6 @@
 				
 				<url>
 					<loc>https://redcamel.github.io/RedGL2/example/particle/RedBitmapPointCloud.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/particle/RedParticleEmitter.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/particle/RedParticleEmitter_editor.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/particle/RedColorPointCloud.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/particle/RedBitmapPointCloud.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/launcher/RedGLOffScreen.html</loc>
-					<changefreq>weekly</changefreq>
-					<priority>0.5</priority>
-				</url>
-				
-				<url>
-					<loc>https://redcamel.github.io/RedGL2/example/launcher/RedXR.html</loc>
 					<changefreq>weekly</changefreq>
 					<priority>0.5</priority>
 				</url>
