@@ -1,5 +1,8 @@
 # RedGL
-[![Software License](https://img.shields.io/github/license/swisnl/build-size.svg)](LICENSE)
+<p>
+  <a href="https://twitter.com/redcamel15"><img src="https://img.shields.io/twitter/follow/redcamel15.svg?style=social" alt="Twitter Follow" /></a>
+  <a href="LICENSE.md"><img src="https://img.shields.io/github/license/sourcerer-io/hall-of-fame.svg?colorB=ff0000"></a>
+</p>
 
 ## JavaScript 3D library
 
