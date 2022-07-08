@@ -13,17 +13,25 @@ var index_demo
 	var testRedPointCloud;
 	var testEmitter
 	var targetRender
+	var main,sub
 	index_demo = {
 		start: function (redGL, tView, tRenderer, tCamera) {
 			tView.scene = tScene
+
 			// 렌더시작
 			targetRender.start(redGL, function (time) {
-				tCamera.x = Math.sin(time / 1500) * 20
-				tCamera.y = Math.cos(time / 1500) * 10 + 15
+				// tCamera.x = Math.sin(time / 1500) * 20
+				// tCamera.y = Math.cos(time / 1500) * 10 + 15
+				// tCamera.z = Math.cos(time / 1500) * 20
+				tCamera.x = Math.sin(time / 2000) * 30
+				tCamera.y = Math.cos(time / 2500) * 20 + 15
 				tCamera.z = Math.cos(time / 1500) * 20
+				tCamera.lookAt(0, 0, 0)
 				// 파티클 업데이트
 				testEmitter.update(time)
-
+				main.rotationX += 0.05
+				main.rotationY += 0.03
+				sub.rotationX -= 0.08
 				testEmitter.x = Math.sin(time / 700) * 6
 				// testEmitter.y = Math.cos(time / 1500) * 4
 				testEmitter.z = Math.cos(time / 700) * 6
@@ -41,6 +49,12 @@ var index_demo
 			targetRender = tRenderer
 			if (!tScene) {
 				tScene = RedScene(redGL);
+
+				const effect = new RedPostEffect_Bloom(redGL)
+				effect.bloomStrength = 0.4
+				effect.exposure = 1.3
+				tView.postEffectManager.addEffect(effect)
+
 				tLight = RedDirectionalLight(redGL, '#fff0ff');
 				tScene.addLight(tLight)
 				tLight.x = 10;
@@ -177,8 +191,133 @@ var index_demo
 					}));
 
 				}
-				makeMesh(redGL, 0);
+				///////////////////////////////////////////////////////////////////////////////////////////
+				// material setup
+				const material1 = new RedBitmapMaterial(redGL, new RedBitmapTexture(redGL, '../asset/hud_003.png'))
+				const material2 = new RedBitmapMaterial(redGL, new RedBitmapTexture(redGL, '../asset/hud_001.png'))
+				const material3 = new RedBitmapMaterial(redGL, new RedBitmapTexture(redGL, '../asset/hud_006.png'))
+				material1.alpha = 0.6
+				material2.alpha = 0.7
+				material3.alpha = 0.8
+				///////////////////////////////////////////////////////////////////////////////////////////
+				// make obejct
+				const makeCyber = () => {
+					let rootMesh = new RedMesh(redGL);
 
+					let tGeo = new RedSphere(redGL, 8, 8, 8, 8)
+					let positionList = []
+					let i = 0
+					let len = tGeo.interleaveBuffer.data.length / 8
+					for (i; i < len; i++) {
+						positionList.push(
+							[
+								tGeo.interleaveBuffer.data[i * 8],
+								tGeo.interleaveBuffer.data[i * 8 + 1],
+								tGeo.interleaveBuffer.data[i * 8 + 2]
+							]
+						)
+					}
+					// console.log(positionList)
+					i = positionList.length - 1
+					while (i--) {
+						let tMesh = new RedMesh(redGL, new RedPlane(redGL), material1)
+						tMesh.scaleX = tMesh.scaleY = (Math.sqrt(positionList[i][0] * positionList[i][0] + positionList[i][2] * positionList[i][2])) * 0.5 + Math.random() * 10
+						tMesh.useCullFace = false;
+						tMesh.useDepthMask = false;
+
+						tMesh.useTransparentSort = true
+						rootMesh.addChild(tMesh)
+						//
+						const t = Math.random() * 6 + 1
+						tMesh.x = positionList[i][0] * t
+						tMesh.y = positionList[i][1] * t
+						tMesh.z = positionList[i][2] * t
+						tMesh.lookAt(0, 0, 0)
+						tMesh.rotationZ = Math.random() * 360
+						tMesh.opacity = Math.random() * 0.5
+
+						//
+						let tMesh2 = new RedMesh(redGL, new RedPlane(redGL), material2)
+						tMesh2.scaleX = tMesh2.scaleY = Math.random() * 0.25
+						tMesh2.z = Math.random()
+						tMesh2.useCullFace = false;
+						tMesh2.useDepthMask = false;
+						tMesh2.useTransparentSort = true
+						tMesh.addChild(tMesh2)
+
+						{
+							let tRandomPositionScale = Math.random() - 0.5 + 5.5
+							let tPosition = [
+								positionList[i][0],
+								positionList[i][1],
+								positionList[i][2]
+							]
+							let tScale = Math.random() * 0.5 + 0.5
+							TweenMax.to(tMesh, Math.random() * 4 + 0.5, {
+								x: tPosition[0] * tRandomPositionScale,
+								y: tPosition[1] * tRandomPositionScale,
+								z: tPosition[2] * tRandomPositionScale,
+								scaleX: tScale,
+								scaleY: tScale,
+								yoyo: true,
+								repeat: -1,
+								ease: Quint.easeInOut
+							})
+							TweenMax.to(tMesh, Math.random() * 2 + 0.3, {
+								rotationZ: tMesh.rotationZ + Math.random() * 90 - 45,
+								yoyo: true,
+								repeat: -1,
+								ease: Quint.easeInOut
+							})
+							let tScale2 = Math.random() *  0.5 - 0.25 + 1
+							TweenMax.to(tMesh2, Math.random() * 2 + 0.5, {
+								scaleX: tScale2,
+								scaleY: tScale2,
+								z: Math.random(),
+								yoyo: true,
+								repeat: -1,
+								ease: Quint.easeInOut
+							})
+							TweenMax.to(tMesh2, Math.random() * 2 + 0.3, {
+								rotationZ: tMesh2.rotationZ + Math.random() * 90 - 45,
+								yoyo: true,
+								repeat: -1,
+								ease: Quint.easeInOut
+							})
+						}
+
+						{
+
+							let tMesh3 = new RedMesh(redGL, new RedPlane(redGL), material3)
+							tMesh3.scaleX = tMesh3.scaleY = 0.25
+							tMesh3.z = -Math.random() * 2
+							tMesh3.useCullFace = false;
+							tMesh3.useDepthMask = false;
+							tMesh3.useTransparentSort = true
+							tMesh3.addChild(tMesh3)
+
+							let tScale = Math.random() * 0.5 - 0.25 + 0.5
+							TweenMax.to(tMesh3, Math.random() * 3 + 1, {
+								scaleX: tScale,
+								scaleY: tScale,
+								rotationZ: Math.random() * 360,
+								yoyo: true,
+								repeat: -1,
+								ease: Quint.easeInOut
+							})
+						}
+
+					}
+					return rootMesh
+				}
+				makeMesh(redGL, 0);
+				 main = makeCyber();
+				 sub = makeCyber();
+				tScene.addChild(main)
+				tScene.addChild(sub)
+				sub.rotationX = sub.rotationY = sub.rotationZ = Math.random() * 360
+				sub.scaleX = sub.scaleY = sub.scaleZ = 0.8
+				sub.opacity = 0.5
 				//////////////////////////////////////////////////////////////////
 				// RedPointCloud 설정
 				var i;
@@ -236,7 +375,9 @@ var index_demo
 					RedBitmapTexture(redGL, assetPath + 'particle.png')
 				)
 
+
 				tScene.addChild(testEmitter)
+
 			}
 
 		}
