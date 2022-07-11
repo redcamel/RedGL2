@@ -50,6 +50,20 @@
   },
   {
     "code": "PROPERTY",
+    "title": "blendAlphaDst",
+    "description": "\n\t 블렌드 목표값 factor\n\t 기본값 : gl.ONE_MINUS_SRC_ALPHA\n ",
+    "example": "\n    var tGL = (RedGL Instance).gl;\n             (RedMesh Instance).blendAlphaDst = tGL.SRC_ALPHA;\n             (RedMesh Instance).blendAlphaDst = tGL.DST_ALPHA;\n          ",
+    "return": "gl 상수"
+  },
+  {
+    "code": "PROPERTY",
+    "title": "blendAlphaSrc",
+    "description": "\n\t 블렌드 소스값 factor\n\t 기본값 : gl.ONE\n ",
+    "example": "\n    var tGL = (RedGL Instance).gl;\n             (RedMesh Instance).blendAlphaSrc = tGL.SRC_ALPHA;\n             (RedMesh Instance).blendAlphaSrc = tGL.DST_ALPHA;\n          ",
+    "return": "gl 상수"
+  },
+  {
+    "code": "PROPERTY",
     "title": "blendDst",
     "description": "\n\t 블렌드 목표값 factor\n\t 기본값 : gl.ONE_MINUS_SRC_ALPHA\n ",
     "example": "\n    var tGL = (RedGL Instance).gl;\n             (RedMesh Instance).blendDst = tGL.SRC_ALPHA;\n             (RedMesh Instance).blendDst = tGL.DST_ALPHA;\n          ",
