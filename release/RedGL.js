@@ -3463,6 +3463,40 @@ var RedBaseObject3D;
 		/*DOC:
 		 {
 		     code : 'PROPERTY',
+			 title :`blendAlphaSrc`,
+			 description : `
+				 블렌드 소스값 factor
+				 기본값 : gl.ONE
+			 `,
+			 example : `
+			    var tGL = (RedGL Instance).gl;
+                (RedMesh Instance).blendAlphaSrc = tGL.SRC_ALPHA;
+                (RedMesh Instance).blendAlphaSrc = tGL.DST_ALPHA;
+             `,
+			 return : 'gl 상수'
+		 }
+		 :DOC*/
+		this['blendAlphaSrc'] = gl.ONE;
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`blendAlphaDst`,
+			 description : `
+				 블렌드 목표값 factor
+				 기본값 : gl.ONE_MINUS_SRC_ALPHA
+			 `,
+			 example : `
+			    var tGL = (RedGL Instance).gl;
+                (RedMesh Instance).blendAlphaDst = tGL.SRC_ALPHA;
+                (RedMesh Instance).blendAlphaDst = tGL.DST_ALPHA;
+             `,
+			 return : 'gl 상수'
+		 }
+		 :DOC*/
+		this['blendAlphaDst'] = gl.ONE_MINUS_SRC_ALPHA;
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
 			 title :`drawMode`,
 			 description : `
 				 기본값 : gl.TRIANGLES
@@ -21178,10 +21212,17 @@ var RedRenderer;
 				if (!tDirectionalShadowMaterialYn) {
 					tCacheState['useBlendMode'] != tMesh['useBlendMode'] ? (tCacheState['useBlendMode'] = tMesh['useBlendMode']) ? tGL.enable(tGL.BLEND) : tGL.disable(tGL.BLEND) : 0;
 					// 블렌딩팩터 캐싱처리
-					if (tCacheState['blendSrc'] != tMesh['blendSrc'] || tCacheState['blendDst'] != tMesh['blendDst']) {
-						tGL.blendFuncSeparate(tMesh['blendSrc'], tMesh['blendDst'],tGL.ONE,tGL.ONE_MINUS_SRC_ALPHA);
+					if (
+						tCacheState['blendSrc'] != tMesh['blendSrc']
+						|| tCacheState['blendDst'] != tMesh['blendDst']
+						|| tCacheState['blendAlphaSrc'] != tMesh['blendAlphaSrc']
+						|| tCacheState['blendAlphaDst'] != tMesh['blendAlphaDst']
+					) {
+						tGL.blendFuncSeparate(tMesh['blendSrc'], tMesh['blendDst'],tMesh['blendAlphaSrc'], tMesh['blendAlphaDst']);
 						tCacheState['blendSrc'] = tMesh['blendSrc'];
 						tCacheState['blendDst'] = tMesh['blendDst'];
+						tCacheState['blendAlphaSrc'] = tMesh['blendAlphaSrc'];
+						tCacheState['blendAlphaDst'] = tMesh['blendAlphaDst'];
 					}
 				}
 				/////////////////////////////////////////////////////////////////////////
@@ -30400,4 +30441,4 @@ var RedGLOffScreen;
 		};
 		RedWorkerCode = RedWorkerCode.toString().replace(/^function ?. ?\) ?\{|\}\;?$/g, '');
 	})();
-})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2022-07-08 14:05:55)' };console.log(RedGL_VERSION);
+})();var RedGL_VERSION = {version : 'RedGL Release. last update( 2022-07-11 15:52:49)' };console.log(RedGL_VERSION);

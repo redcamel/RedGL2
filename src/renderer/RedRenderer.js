@@ -1049,10 +1049,17 @@ var RedRenderer;
 				if (!tDirectionalShadowMaterialYn) {
 					tCacheState['useBlendMode'] != tMesh['useBlendMode'] ? (tCacheState['useBlendMode'] = tMesh['useBlendMode']) ? tGL.enable(tGL.BLEND) : tGL.disable(tGL.BLEND) : 0;
 					// 블렌딩팩터 캐싱처리
-					if (tCacheState['blendSrc'] != tMesh['blendSrc'] || tCacheState['blendDst'] != tMesh['blendDst']) {
-						tGL.blendFuncSeparate(tMesh['blendSrc'], tMesh['blendDst'],tGL.ONE,tGL.ONE_MINUS_SRC_ALPHA);
+					if (
+						tCacheState['blendSrc'] != tMesh['blendSrc']
+						|| tCacheState['blendDst'] != tMesh['blendDst']
+						|| tCacheState['blendAlphaSrc'] != tMesh['blendAlphaSrc']
+						|| tCacheState['blendAlphaDst'] != tMesh['blendAlphaDst']
+					) {
+						tGL.blendFuncSeparate(tMesh['blendSrc'], tMesh['blendDst'],tMesh['blendAlphaSrc'], tMesh['blendAlphaDst']);
 						tCacheState['blendSrc'] = tMesh['blendSrc'];
 						tCacheState['blendDst'] = tMesh['blendDst'];
+						tCacheState['blendAlphaSrc'] = tMesh['blendAlphaSrc'];
+						tCacheState['blendAlphaDst'] = tMesh['blendAlphaDst'];
 					}
 				}
 				/////////////////////////////////////////////////////////////////////////
