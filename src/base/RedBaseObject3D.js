@@ -197,6 +197,40 @@ var RedBaseObject3D;
 		/*DOC:
 		 {
 		     code : 'PROPERTY',
+			 title :`blendAlphaSrc`,
+			 description : `
+				 블렌드 소스값 factor
+				 기본값 : gl.ONE
+			 `,
+			 example : `
+			    var tGL = (RedGL Instance).gl;
+                (RedMesh Instance).blendAlphaSrc = tGL.SRC_ALPHA;
+                (RedMesh Instance).blendAlphaSrc = tGL.DST_ALPHA;
+             `,
+			 return : 'gl 상수'
+		 }
+		 :DOC*/
+		this['blendAlphaSrc'] = gl.ONE;
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
+			 title :`blendAlphaDst`,
+			 description : `
+				 블렌드 목표값 factor
+				 기본값 : gl.ONE_MINUS_SRC_ALPHA
+			 `,
+			 example : `
+			    var tGL = (RedGL Instance).gl;
+                (RedMesh Instance).blendAlphaDst = tGL.SRC_ALPHA;
+                (RedMesh Instance).blendAlphaDst = tGL.DST_ALPHA;
+             `,
+			 return : 'gl 상수'
+		 }
+		 :DOC*/
+		this['blendAlphaDst'] = gl.ONE_MINUS_SRC_ALPHA;
+		/*DOC:
+		 {
+		     code : 'PROPERTY',
 			 title :`drawMode`,
 			 description : `
 				 기본값 : gl.TRIANGLES
