@@ -26,18 +26,18 @@ var baseTestUI = function (redGL, width) {
 	testBt.style.cssText = "position: fixed;top:40px;padding:0px;left:15px;font-size:11px; color:#fff;border:0;outline:none;"
 	//
 
-	// Global site tag (gtag.js) - Google Analytics
-	var t0 = document.createElement('script');
-	t0.setAttribute('async', '');
-	t0.setAttribute('src', 'https://www.googletagmanager.com/gtag/js?id=G-JN0J85WJ35');
-	document.head.appendChild(t0)
-	//
-	t0 = document.createElement('script');
-	t0.innerHTML = 'window.dataLayer = window.dataLayer || [];';
-	t0.innerHTML += 'function gtag(){dataLayer.push(arguments);}';
-	t0.innerHTML += 'gtag(\'js\', new Date());';
-	t0.innerHTML += 'gtag(\'config\', \'G-JN0J85WJ35\');';
-	document.head.appendChild(t0);
+	// // Global site tag (gtag.js) - Google Analytics
+	// var t0 = document.createElement('script');
+	// t0.setAttribute('async', '');
+	// t0.setAttribute('src', 'https://www.googletagmanager.com/gtag/js?id=G-JN0J85WJ35');
+	// document.head.appendChild(t0)
+	// //
+	// t0 = document.createElement('script');
+	// t0.innerHTML = 'window.dataLayer = window.dataLayer || [];';
+	// t0.innerHTML += 'function gtag(){dataLayer.push(arguments);}';
+	// t0.innerHTML += 'gtag(\'js\', new Date());';
+	// t0.innerHTML += 'gtag(\'config\', \'G-JN0J85WJ35\');';
+	// document.head.appendChild(t0);
 
 
 	baseTestUI.makeBaseUI();
